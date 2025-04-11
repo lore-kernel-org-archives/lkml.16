@@ -1,48 +1,49 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F057278E41;
-	Fri, 11 Apr 2025 10:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A233238C09;
+	Fri, 11 Apr 2025 10:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744368999; cv=none; b=RlUMbqEgoEArDh59s7u7BOwxmv7pVuFCUEOb1C4xG2lgaxaq/cYQ9DYj+/obCsB6QJmjsfPlKedhk2i0OcLgiWz1Yhd+LYKXfI10blvU6IoQs3kctBgvCDh78KVNv8BU4hTi2D0d9Gd8pRqGqeX4SbRcM2qAyY7doSedB5+ohPc=
+	t=1744369005; cv=none; b=d/rnmknTBZ0cIW+Nshd5DLo7Vf+1OwCpbwvLjMu+AAAptBiM9EwWtqQxHEpKsPBBmGmMj4HobffgVB4hfHYFp8DCUtPnV8ORkaQn3zn9Ag7/WQQjR1VtEkZF41hRj617gRqUWZwnsKGi+ViRYdJiQCl/v/r+q2QZ0JlDsfXuKY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744368999; c=relaxed/simple;
-	bh=hS8tQiKEMB/su+TOXT4QOpwnxLxBDvzzTd0CgutPTBE=;
+	s=arc-20240116; t=1744369005; c=relaxed/simple;
+	bh=oy5d/S4pW5MASgYEOTGgUSbVs+pUxqnQeCfcjnI416o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NbTBxIoEvx4mSjBlHjocBZUS/mk4RwXIlj0mwDNXHGwhWt4gKsroHjMULxHJCLIhwWhmGskAL/BpysHgnT6westYHp+tpC13qXYWV4dnIjOfKFmWFuZz3PafURNFBHGJXr9li1ATwB7+awkmdrLB9E3p35seT1bpAa2VwWpvpmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=S7SW79Q9; arc=none smtp.client-ip=54.206.34.216
+	 MIME-Version; b=LEH2FKgObPLbRUmv+Tr9jjfGGmvMMrV2A8WM5D3jjN6w+Ah/KwnAAEkrjjRPXwyEfaNfV2IWYQxtnqOz/F/xCg1SE+J1wLMRz3P4KnSILmLfrOi+FFiTagZqCak6UAOKscOxKRVQiarBQlhaKXJPaHrz326YOIpvWWetw5IFVbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=UspNZreF; arc=none smtp.client-ip=54.254.200.128
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="S7SW79Q9"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="UspNZreF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744368977;
-	bh=V4V3m9D93m7/64N9/8MnQi5QwU2s8DrpyNkKMdC8oU0=;
+	s=onoh2408; t=1744368988;
+	bh=g48Qtb2HgrJLkqkNBpiJ1SxVJhJHuhOOWJNEegE8LW4=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=S7SW79Q922ONMYBYEHZcqAn99Os4GQ3bcLbLLOF9Rfn2qPnoRI7hywnBI/wf2EhO3
-	 8/Csbx8LFjzxd3mg93106uwmR25dXt7I+0P/F7PjityyV/ImAp9/kTbYqMgTCln+Mf
-	 D5LysnNbQxCSxXPrI8qI+guFV8jlT9xqwM5bF+qg=
-X-QQ-mid: bizesmtp23t1744368970t8864be8
-X-QQ-Originating-IP: ew478SCyhKNuqsmH0zRg5i87XBYdfzy7c67CdcI4cqs=
+	b=UspNZreFEoDVooUaoW8dbiO13tV7z8eDKK+4rco/RDwLbLhghTFObAMB70fyChXiI
+	 R4YsEsK+i8LPLeC0hC/XuwSn5Q6H27/WqVTO/hNb9YtyDKjHn+w48Vf+WWZw4TRSWX
+	 snW80FC/G5+evua+4sa3OF9i7TkiKgi6C+UZO8SQ=
+X-QQ-mid: bizesmtp23t1744368963t53fc982
+X-QQ-Originating-IP: 2fxz1gLvHhLKZ3VuxioAS5pWAz4jebflTDRToLk4ZBA=
 Received: from localhost.localdomain ( [113.57.152.160])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 11 Apr 2025 18:56:05 +0800 (CST)
+	id ; Fri, 11 Apr 2025 18:55:57 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 915609387296721397
-EX-QQ-RecipientCnt: 7
+X-BIZMAIL-ID: 402799742258955829
+EX-QQ-RecipientCnt: 8
 From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Winston Wen <wentao@uniontech.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	linux-integrity@vger.kernel.org,
+To: Chengchang Tang <tangchengchang@huawei.com>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>,
+	Winston Wen <wentao@uniontech.com>,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 6/7] tpm: add __always_inline for tpm_is_hwrng_enabled
-Date: Fri, 11 Apr 2025 18:54:54 +0800
-Message-ID: <D513EE4F40467A51+20250411105459.90782-6-chenlinxuan@uniontech.com>
+Subject: [RFC PATCH 5/7] RDMA/hns: initialize db in update_srq_db()
+Date: Fri, 11 Apr 2025 18:54:53 +0800
+Message-ID: <FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250411105459.90782-1-chenlinxuan@uniontech.com>
 References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
@@ -56,65 +57,83 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: OC3CwsoFpuZ9mh1INc04VqNc/1WQudc/cfiBvNnFXQQudRui56PDnGdU
-	Gw9835E7gqTzQA6KPmkOOVphCRkuLUvO8NfUmrsgtLFeRWB52QukI0QvFs/5Xx8somIsBpF
-	sA9hpYNVVrYNrZ3izgO0DezxkeUgdu1tfnVzAWYOdX984jijZeDCJBiM7OftZQm4hU3Xgk2
-	STiv559k79y1CYMMz5n90mjXn/5lVpbpSen1hVNttwgN9JKkYMPXr9BPtbDGmOPSaTBC84s
-	QzzdIOxck7B0X8YXOVVDy1jvlIw0n817RG1huguhft7clJTJMw6fFEmTd1qjsAHKGLUIXCm
-	2XYzFUh1zo3RGj7IBLylwp7cpIezugtD+x1GiF0Tz9dv+HXxeK702+3XKlWl5wpMt8ZWdGM
-	IfjXRCwr5/zI18d1Wfvliri2mz0vorz6ni7vA8r+6IpR40UggiIlhx2FFoMEA+lISdqmRtd
-	0aX+OravoFkC5dKQH68jJYAhnXi3vfpNay+gQOm6Sn/lGD/zvC8ydIEvqYWbr7Ceg2yuM89
-	MDhCeVkGT9uYWAVy/SYhZ/qMI7JLfQnl0JIEcSADUtY/VpM3YnitO5skGR7nWcTstkjcd9Q
-	h6AGWolYTNXtVIZo/GZ5aV8lNyx5k1Jb8uzu0zcuxz9TlFbc8DF/S/aVjkIdj/GaQUy2lcY
-	2bpcnLkV/q3EbwlHSBHz4jQizZmw0PbQzXJsFLuMAE8WTDwbz/HIUnVl72yQ3Lh/+K4T6y6
-	rEvpPDxKNC8s0e6Js53C8d2RX6epeKJgUBIwBd6pPQeid6eWkNJ6lj3RyutcXohBnuygqJh
-	h5SykPsMGiqt55T+PW0NGZ8SRz3viTY8Shi3WkAOJSLY/RC/4XUuRaXgfnKfopFaodtIsrC
-	kf/bTpKJIl/u9LUTe1xY8Jpv5PX/poTGrSiKuFI4m3/rl4aktr9YAF+ky44RqKeUgskGtAg
-	tjnkT9+zRuYTrLwbYWna/ie22vunEzXQx5DOlS28VenloAqnYRWv3K0Zb1KX9X3ZCF28mHs
-	iuhV5LMtdQ/oSvs5Q485fKlOn4M8B/5rhYOmBYrg==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-XMAILINFO: OAj1qrjhA85AfHsK+j36bU99pHpvKn9xm6f++7FHQ2suVasozllnp2XU
+	OiLmm6z+ScOETPPNgheUFvkn6YEZZafvtnDRKsBt/6Ra2bJ2XyGVguQmgPYUul2YmVRkTVp
+	hwfGXISY7XaOlpPNR/Jzsae/zbBhkQWbenWC4vbYfpV7/4MOJCsWdJ5cRMUHpj/ylKKtk7U
+	YQnfS601mfeOP6gW/DjXbe0e3yg0ecTBxxGWkSeN6dqVQUa2njETm/mRpNKl5DRKnWY1Ier
+	Zwb6Ck06WUhqMOhA+ZzXGj9meWECie8q8fvFsX/TvVuJARcEBgVJb8jwmjtIfPcl914r26P
+	10YynOm09utG5NuAGKBVteQnBYRiDL76hUGWIlz7FuO3C+WDeSGSJdWl3guMLskj8cPdaC7
+	+Bk+dbX/SUyPvUdKzXitSurVWh/jUsgczZ+D5dRMYsfO6VjPUdtVpzSYgS6Ix2nwtXhCwqV
+	ttKokWkr6QV02owuSe8DXhIEfopKYaDh/RGi9K6mNDezD6/SQrfIF7ie8SqdC9F3g+jeq5y
+	wVQip7dUJxG3cj1PiE2j+BnnDvDLhwvdzSMk2maiDqz9wM3ZPasvgvMpcTCXeHNtVY8l/CI
+	NrGK4hqEQIq3fNTSlCgOupJecIEAZ6pylStQdi2g+KTCGJOkGhxh+Lsa3QWeYu+dYw9TH3X
+	6QY9uSRK0qhi1mrUDd6lJar8lqByn0Dz8CHl46M5JpqELocPQihSn9gDUJ3gth2WRLr0wVb
+	YQ2SZR0YAcSRLJkrZseJPrdfrGODKNbWlt4ZkIKYj+HtlgvTXD2hYl/jGHH49y6vV4V1+oS
+	weTYriFQi7+DbQD7MVjLnzIhtFdAUJDaSFeRUEw4xwe44ZwleEI/ltJZ7MRmXKNCYX7w8YE
+	2Zms2Tpz3sNhJTDAkONnP8GcsY3BpL+hqZfhX+NaEx0PZnKPfT92NMOnvg6FovGFOP3aD5q
+	WDEIZD3pXsby/IhyDEXSDL0cLyp9UBANSm4mGO8EIr2LZGns4UYHb7u1H80frosZXmmgVFl
+	6KadT0Rg==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
 X-QQ-RECHKSPAM: 0
 
-From: Winston Wen <wentao@uniontech.com>
-
-On x86_64 with gcc version 13.3.0, I compile kernel with:
+On x86_64 with gcc version 13.3.0, I compile
+drivers/infiniband/hw/hns/hns_roce_hw_v2.c with:
 
   make defconfig
   ./scripts/kconfig/merge_config.sh .config <(
-    echo CONFIG_TCG_TPM=y
-    echo CONFIG_HW_RANDOM=m
+    echo CONFIG_COMPILE_TEST=y
+    echo CONFIG_HNS3=m
+    echo CONFIG_INFINIBAND=m
+    echo CONFIG_INFINIBAND_HNS_HIP08=m
   )
-  make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once"
+  make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once" \
+    drivers/infiniband/hw/hns/hns_roce_hw_v2.o
 
-Then I get a link error:
+Then I get a compile error:
 
-  ld: vmlinux.o: in function `tpm_add_hwrng':
-  tpm-chip.c:(.text+0x6c5924): undefined reference to `hwrng_register'
-  ld: vmlinux.o: in function `tpm_chip_unregister':
-  (.text+0x6c5bc9): undefined reference to `hwrng_unregister'
-  ld: vmlinux.o: in function `tpm_chip_register':
-  (.text+0x6c5c9b): undefined reference to `hwrng_unregister'
+    CALL    scripts/checksyscalls.sh
+    DESCEND objtool
+    INSTALL libsubcmd_headers
+    CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+  In file included from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:47:
+  drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'update_srq_db':
+  drivers/infiniband/hw/hns/hns_roce_common.h:74:17: error: 'db' is used uninitialized [-Werror=uninitialized]
+     74 |                 *((__le32 *)_ptr + (field_h) / 32) &=                          \
+        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_common.h:90:17: note: in expansion of macro '_hr_reg_clear'
+     90 |                 _hr_reg_clear(ptr, field_type, field_h, field_l);              \
+        |                 ^~~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_common.h:95:39: note: in expansion of macro '_hr_reg_write'
+     95 | #define hr_reg_write(ptr, field, val) _hr_reg_write(ptr, field, val)
+        |                                       ^~~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_hw_v2.c:948:9: note: in expansion of macro 'hr_reg_write'
+    948 |         hr_reg_write(&db, DB_TAG, srq->srqn);
+        |         ^~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_hw_v2.c:946:31: note: 'db' declared here
+    946 |         struct hns_roce_v2_db db;
+        |                               ^~
+  cc1: all warnings being treated as errors
 
-Signed-off-by: Winston Wen <wentao@uniontech.com>
-Co-Developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
 Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Co-Developed-by: Winston Wen <wentao@uniontech.com>
+Signed-off-by: Winston Wen <wentao@uniontech.com>
 ---
- drivers/char/tpm/tpm-chip.c | 2 +-
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index e25daf2396d3..48cc74d84247 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -534,7 +534,7 @@ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
- 	return tpm_get_random(chip, data, max);
- }
- 
--static bool tpm_is_hwrng_enabled(struct tpm_chip *chip)
-+static __always_inline bool tpm_is_hwrng_enabled(struct tpm_chip *chip)
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 160e8927d364..7d6c0cfa1ded 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -943,7 +943,7 @@ static void fill_wqe_idx(struct hns_roce_srq *srq, unsigned int wqe_idx)
+ static void update_srq_db(struct hns_roce_srq *srq)
  {
- 	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM))
- 		return false;
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(srq->ibsrq.device);
+-	struct hns_roce_v2_db db;
++	struct hns_roce_v2_db db = { 0 };
+ 
+ 	hr_reg_write(&db, DB_TAG, srq->srqn);
+ 	hr_reg_write(&db, DB_CMD, HNS_ROCE_V2_SRQ_DB);
 -- 
 2.48.1
 
