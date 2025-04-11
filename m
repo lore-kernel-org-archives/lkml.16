@@ -1,163 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A553B233153;
-	Fri, 11 Apr 2025 19:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F941232395;
+	Fri, 11 Apr 2025 19:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744399488; cv=none; b=ozFnIfUdeh11sW6LWT3Ot+G3xdykwmDHeW2K8OL3NVpFqXFonY9YKDosllJ+2fimetFJ2n9Liz8RnaYBUw5P5oWc7RL2XdQNJBSjbuZbDETI7VfRVZEZUGODL6ja5XqG+KgEqwWS0NXwdjhi80nOqgSIAPcD3+aZXJsTNFtjzaI=
+	t=1744399492; cv=none; b=TUkGxQ23O2ZweOmbiTB4ZPZuDAa+q/vV735sv339NJLISGwF1vA8dNOTcQ1EqlH3TVXCNid1uq5NLukeeRQuJjUVazCBa6ccJX19bC6xExIyN0Irfy+DW7ON2jBYohFxCiZGCQzO9uXjewKYwINPN9dtye7hU/2f2zK9dSDbmJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744399488; c=relaxed/simple;
-	bh=JedUTcfeYTCorFNspiCeOPahUYA07g0aSU7WDXE6Qac=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwq5khn5rZsi9Qj1L0+aCzc/737qWZ5uSZhPfocP7+NeAB10Y4ByIV1Sami8yw9YcBpZ7ldrYDP7NKe2Mlji/axkA4RNdFHm7rmE8M4AQijlDZPetza3Vrk/ayXp5KCb8eQC0Q2qWf+Tl/VIq8VrPAERJBaPnqrhlkMVVvkZx+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602E3C4CEE2;
-	Fri, 11 Apr 2025 19:24:46 +0000 (UTC)
-Date: Fri, 11 Apr 2025 15:26:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
- <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
- <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20250411152610.64d555bf@gandalf.local.home>
-In-Reply-To: <20250411151358.1d4fd8c7@gandalf.local.home>
-References: <20250227185804.639525399@goodmis.org>
-	<20250227185822.810321199@goodmis.org>
-	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
-	<20250410131745.04c126eb@gandalf.local.home>
-	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
-	<20250411124552.36564a07@gandalf.local.home>
-	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
-	<20250411131254.3e6155ea@gandalf.local.home>
-	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-	<9dafc156-1272-4039-a9c0-3448a1bd6d1f@sirena.org.uk>
-	<20250411142427.3abfb3c3@gandalf.local.home>
-	<20250411143132.56096f76@gandalf.local.home>
-	<20250411151358.1d4fd8c7@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744399492; c=relaxed/simple;
+	bh=9VMbXJK31PLZybTQVziy1hqetP2iBYbxW2h7Q6gWJrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KpTpaGVcd9v3KaQukYijw5qR2K4pez3ke73f2EXFsWcPfEGTCW1hyQuKalCtZL5xPJGOsrBgCi6cgO52TJna0YgtOsgItpLpSq30y0lIE6qmQX1JCXS1SARPmXEIdsdSA1vsaEf5GiJcEQ1pNtBC5N9OaUD4pMoca3U1A6Ckt88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFdeOe9u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFdeOe9u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F25C4CEE2;
+	Fri, 11 Apr 2025 19:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744399491;
+	bh=9VMbXJK31PLZybTQVziy1hqetP2iBYbxW2h7Q6gWJrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RFdeOe9uMlrjVjPwwGP2lnKd5NszvMxaneyCw/ow9MxtqIYB1MMctkYVMiErM6aw6
+	 KaLwZKJPge7fv3T/LsCCiNxzziZErcKQOd+t2OhGhFpvaGzDDpgVKJhFTSLv+7aq/i
+	 VhSdy5bfLu2i6PdN2O2aQ2/4P+B10jPVaG1RISn0366H+FMQyyZODSwNXzzgo+28nf
+	 k+kIaqM6NndPFh4Tqlm/FIcqu0lwj7lWbMjL5phi36Xgj4SDOHc0qCmVMbpOztvbVI
+	 Bt9uCkCr68KTkGJGggvx93iWM1SX1FPvrZ0U+/2m4A9VzkJTqOvuW/KV2KZQDwgioW
+	 36L9XMCRTz2gQ==
+Date: Fri, 11 Apr 2025 14:24:50 -0500
+From: Rob Herring <robh@kernel.org>
+To: Antoni Pokusinski <apokusinski01@gmail.com>
+Cc: alexandre.belloni@bootlin.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	alexander.stein@ew.tq-group.com, linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] rtc: pcf85063: add support for RV8063
+Message-ID: <20250411192450.GA3750226-robh@kernel.org>
+References: <20250410202317.25873-1-apokusinski01@gmail.com>
+ <20250410202317.25873-4-apokusinski01@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250410202317.25873-4-apokusinski01@gmail.com>
 
+On Thu, Apr 10, 2025 at 10:23:17PM +0200, Antoni Pokusinski wrote:
+> Microcrystal RV8063 is a real-time clock with SPI interface. Its
+> functionality is very similar to the RV8263 rtc.
+> 
+> Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
+> ---
+>  drivers/rtc/Kconfig        | 21 +++++-----
+>  drivers/rtc/rtc-pcf85063.c | 80 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 91 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 838bdc138ffe..1b9be96faa13 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -483,15 +483,6 @@ config RTC_DRV_PCF8523
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-pcf8523.
+>  
+> -config RTC_DRV_PCF85063
+> -	tristate "NXP PCF85063"
+> -	select REGMAP_I2C
+> -	help
+> -	  If you say yes here you get support for the PCF85063 RTC chip
+> -
+> -	  This driver can also be built as a module. If so, the module
+> -	  will be called rtc-pcf85063.
+> -
+>  config RTC_DRV_PCF85363
+>  	tristate "NXP PCF85363"
+>  	select REGMAP_I2C
+> @@ -971,6 +962,18 @@ config RTC_DRV_PCF2127
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-pcf2127.
+>  
+> +config RTC_DRV_PCF85063
+> +	tristate "NXP PCF85063"
+> +	depends on RTC_I2C_AND_SPI
+> +	select REGMAP_I2C if I2C
+> +	select REGMAP_SPI if SPI_MASTER
+> +	help
+> +	  If you say yes here you get support for the PCF85063 and RV8063
+> +	  RTC chips.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called rtc-pcf85063.
+> +
+>  config RTC_DRV_RV3029C2
+>  	tristate "Micro Crystal RV3029/3049"
+>  	depends on RTC_I2C_AND_SPI
+> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+> index 03dfc58f4cd7..bcfefe823044 100644
+> --- a/drivers/rtc/rtc-pcf85063.c
+> +++ b/drivers/rtc/rtc-pcf85063.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/of.h>
+>  #include <linux/pm_wakeirq.h>
+>  #include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
+>  
+>  /*
+>   * Information for this driver was pulled from the following datasheets.
+> @@ -29,6 +30,9 @@
+>   *
+>   *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8263-C7_App-Manual.pdf
+>   *  RV8263 -- Rev. 1.0 — January 2019
+> + *
+> + *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8063-C7_App-Manual.pdf
+> + *  RV8063 -- Rev. 1.1 - October 2018
+>   */
+>  
+>  #define PCF85063_REG_CTRL1		0x00 /* status */
+> @@ -559,6 +563,18 @@ static const struct pcf85063_config config_rv8263 = {
+>  	.force_cap_7000 = 1,
+>  };
+>  
+> +static const struct pcf85063_config config_rv8063 = {
+> +	.regmap = {
+> +		.reg_bits = 8,
+> +		.val_bits = 8,
+> +		.max_register = 0x11,
+> +		.read_flag_mask = BIT(7) | BIT(5),
+> +		.write_flag_mask = BIT(5),
+> +	},
+> +	.has_alarms = 1,
+> +	.force_cap_7000 = 1,
+> +};
+> +
+>  static int pcf85063_probe(struct device *dev, struct regmap *regmap, int irq,
+>  			  const struct pcf85063_config *config)
+>  {
+> @@ -725,14 +741,76 @@ static void pcf85063_unregister_driver(void)
+>  
+>  #endif /* IS_ENABLED(CONFIG_I2C) */
+>  
+> +#if IS_ENABLED(CONFIG_SPI_MASTER)
+> +
+> +static const struct spi_device_id rv8063_id[] = {
+> +	{ "rv8063" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, rv8063_id);
 
-Replying to my email as it appears gmail blocked it. Probably due to all
-the escape characters my output had. Resending with that cut out.
+You need the of_device_id table too.
 
-Masami, I was sent a message from gmail that it blocked this from you.
-
-If you want to see the original email:
-
-  https://lore.kernel.org/all/20250411151358.1d4fd8c7@gandalf.local.home/
-
--- Steve
-
-On Fri, 11 Apr 2025 15:13:58 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Fri, 11 Apr 2025 14:31:32 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > Hmm, I just tested this, and it fails on my box too (I test on a debian VM).
-> > 
-> > It fails with and without setting it to bash. I'll take a look too.  
-> 
-> Hmm, maybe it is a bashism.
-> 
-> The test has this:
-> 
->   # Max arguments limitation
->   MAX_ARGS=128
->   EXCEED_ARGS=$((MAX_ARGS + 1))
-> 
->   check_max_args() { # event_header
->     TEST_STRING=$1
->     # Acceptable
->     for i in `seq 1 $MAX_ARGS`; do
->       TEST_STRING="$TEST_STRING \\$i"
->     done
->     echo "$TEST_STRING" >> dynamic_events
->     echo > dynamic_events
->     # Error
->     TEST_STRING="$TEST_STRING \\$EXCEED_ARGS"
->     ! echo "$TEST_STRING" >> dynamic_events
->     return 0
->   }
-> 
->   # Kprobe max args limitation
->   if grep -q "kprobe_events" README; then
->     check_max_args "p vfs_read"
->   fi
-> 
-> So I tried manually executing this in bash:
-> 
-> --------------------------8<--------------------------
-> # TEST_STRING='p vfs_read'
-> # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
-> # echo $TEST_STRING
-> p vfs_read \1 \2
-
-[ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
-
-> # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
-> # echo $?
-> 0
-> # cat /sys/kernel/tracing/dynamic_events
-> p:kprobes/p_vfs_read_0 vfs_read arg1=\1
-
-[ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
-
-> -------------------------->8--------------------------  
-> 
-> Doing the same in dash:
-> 
-> --------------------------8<--------------------------
-> # dash
-> # TEST_STRING='p vfs_read'
-> # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
-> # echo $TEST_STRING
-> p vfs_read         \8 \9 	 
-
-[ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
-
-> # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
-> dash: 8: echo: echo: I/O error
-> -------------------------->8--------------------------  
-> 
-> Looks like dash will translate those "\#" into the ASCII equivalent,
-> whereas bash does not.
-> 
-> This patch seems to fix it:
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-> index 6b94b678741a..ebe2a34cbf92 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-> @@ -11,7 +11,7 @@ check_max_args() { # event_header
->    TEST_STRING=$1
->    # Acceptable
->    for i in `seq 1 $MAX_ARGS`; do
-> -    TEST_STRING="$TEST_STRING \\$i"
-> +    TEST_STRING="$TEST_STRING \\\\$i"
->    done
->    echo "$TEST_STRING" >> dynamic_events
->    echo > dynamic_events
-> 
-> 
-> Masami, you just recently added this test (it's dated March 27th 2025), did
-> you mean to write in the ASCII characters? Why the backslash?
-> 
-> -- Steve
-
+Rob
