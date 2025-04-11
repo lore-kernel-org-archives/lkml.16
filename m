@@ -1,72 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616732F5A;
-	Fri, 11 Apr 2025 05:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3E2188006;
+	Fri, 11 Apr 2025 05:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744347981; cv=none; b=LA64FcG4s+8zTP+OmhCGGVmqwX0OHCeyEn9AH2MnefPItTaU3gUbKCPHBuDXpFDj92scTKuGG5raOlWC2mrpHcSn75xXc1063p5Nsw96xcpByKRM19hxll9NMgZcH/zJ2fuk3KpywWN9AURL9ItRhlUCXOayx6ZahEzkPCOrSkw=
+	t=1744348002; cv=none; b=FVt2A7B2s9houCqGrfK5PpJjQRRf37tTtoi7mRDyOth4zw6AGXe4sUMClLmNZlcRMN8fKZAIkzj9wbYpRU3yV1TGDxFyOBoqdjmSY/dE6NIIZk12kX6A7fsYrMAkuoY+lA3hmfJbNx8yLxLpyzXhl7OpccHmcTfJU9cXybGSDVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744347981; c=relaxed/simple;
-	bh=vJDg156xDbHiFBc2HkJHcAvsBnrz0LlE9fmMNpCgXuk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JDxAViKa3Y3HNRsS3461IX4l7CCwvo6LoUIf2o9dLqebTAVwHfBbimuMQgrDiQ9bcOW12J3G5/VykUC+XLCtx9GMxL+Al5pnL+6ByGkVW+/pSNeWzPORq8N8KcWvJp1nottHJG/wze516ylY26if12Ee26RhFDX4Cb6sp3v5EAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=udd7Vot1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744348002; c=relaxed/simple;
+	bh=TbDuMl/Sq2ZXQvnZuR7kS1Hdjn8lYRMBDvDmno+c6x8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UNtf1qmrb4qKAKkl6JV8VmyKsOoIIorXwIc0muTlJHmDfHN2d/xuyBrjWDDZlQ/tA878itfPLeUjkI8iyZgbvNp6PdhJT/tAFF4PDBSdBm3xPPgGep4k5Q25HFFg/1LngKTxuBL4RgBPIu6tgOAwCp9ooi67VnKBviLArJ1rGdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQs5h59b; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="udd7Vot1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CA6C4CEE2;
-	Fri, 11 Apr 2025 05:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744347979;
-	bh=vJDg156xDbHiFBc2HkJHcAvsBnrz0LlE9fmMNpCgXuk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=udd7Vot1d91cmE9l1YiWBC4Dpwq9GRa3cyguds5yLksbeH+ka4qJiHtlZPcV7dxiz
-	 PTqsv4jKvTF24ekQUZuli8taGYj+db6x4dVwLr2JectjKgKm5IHXr7co+cVzpUzR0V
-	 U8uct76BUcBbAnEmI9p0CAYRJmya6upqIFP5rUQY=
-Date: Thu, 10 Apr 2025 22:06:18 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song
- <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, Waiman Long
- <llong@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, Meta kernel team
- <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-Message-Id: <20250410220618.405d00875ca61043c4ffa6e1@linux-foundation.org>
-In-Reply-To: <20250410210623.1016767-1-shakeel.butt@linux.dev>
-References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQs5h59b"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47664364628so16986541cf.1;
+        Thu, 10 Apr 2025 22:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744347999; x=1744952799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WRb/BCzXnzLKk6r4YRRQWPkMbuh8VxUF58IC7wx4Qyo=;
+        b=eQs5h59bReedvxOqO/rBHlw67zz3Kbntt6zmnc/1vF//DoX8a8xZwxxITMztajxdYT
+         ejpaLDNgB8kWjDgKNuF680vCY9niW0LQDaugmPvRbrkHkAcoGdEYosFwKz6M3JJIpzYF
+         Bn1inqWnDQ4Uy6QUL4OZp1tPzY0Zlli4BFT7c8RZvs1uJYN89QjN4lSKPNp40HQhH6CD
+         bliEe2GijtX3vX9jJjzYveYk3a9sUNn1alJ4/fqb3otxQmhrmaPZqwa4rvK2vfLZkloy
+         wrAMdX115TmdFb7YoDDFDyT7Z5iXU45Ax6bUcBZ2A87F/8XHrWRPCu3+HSVlfRsgErmR
+         4mIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744347999; x=1744952799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WRb/BCzXnzLKk6r4YRRQWPkMbuh8VxUF58IC7wx4Qyo=;
+        b=nhJ63BNQlJB94siZNyTzEIUygvsF73vRm5Ke5HpB3FQ8egfwrMiDJTSn4wJNmGcOv+
+         LGTxPUKo8dBEKOji6VUVlpCfJI/v7SYsR1yGpMPs2R7JcUcW7kVoalphJi5m1ovBWXzE
+         b2ats85DVjwUvVHxPv6gOlg/WgMwDwiYiRpHzym5i9lrLWe2bx2YYA79PeSthrXXTNcI
+         dc3XGeQaZEtmNsmepB56oM1KTkfKQYk+ALsp+QH27gxqbWB0C0prT66bF0GmAzS+0jWd
+         1q5NZco5eiWBpK72MDHKfhxsqsiHg8W63N2jryOYGlHSfuRL/MjRy4no4OG0w8xJKqnc
+         gDSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuEyEOoF6bWbkFiLTbtDa+oeJCK7RMCBN1SpQt2OhB+F9mzD/e2dDoZxgGEwRaJDEBtve192CxsVwy0vU=@vger.kernel.org, AJvYcCWHkGFGedzhlCl/uJuK71KFPk0KzsDpmgIdfQvfKfbDHSls3TYDZ5XmclDxnHJGDdoou1r2QF9oVLzAer4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzti2XnR8TFyUfEpoIiWstfYxxAP7mTzMoifmYrI1NOtOHwQ61O
+	d383X1hUB3bcwM4S78irFK7MmeT9zWiETQBMQqhXkijkJF6niJFGenSpLW6RVsQAeCHU5/4BxN9
+	yNvcrJfvic797ZSeYrMzpDz9qAOo=
+X-Gm-Gg: ASbGncuZGIsTxbuWCHeq3pJww+4EdkcoaAOs59NcXQA1b6uJjtZyDSdz26Xiq2Sr97N
+	XR5gB/AiIhl8nDA23zjfooHmXo8Y0eCtF+tDhuwlYOX70NlVaZZJVD/dXfrOCXPLqohvF6Gx0GV
+	yoPShHpwc3I1fwKd/HBlKyJCw4Lxl1LJ6z+oqaREfBwLAckRXy9+qPWA==
+X-Google-Smtp-Source: AGHT+IGH8blIjeDOAZg5z0GQj77DusDHZUwOzxUmaMEMsOsLsHxldpdQ9ObvlObvrzkIXG3Wp0sbtxtNfEKUkMgBckA=
+X-Received: by 2002:a05:622a:180b:b0:471:9e02:365e with SMTP id
+ d75a77b69052e-47976cf0474mr26662631cf.8.1744347998872; Thu, 10 Apr 2025
+ 22:06:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <67e26157.0c0a0220.36adcd.506e@mx.google.com> <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
+ <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com>
+ <20250326001336.GA23984@pendragon.ideasonboard.com> <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
+ <20250402002948.GC4845@pendragon.ideasonboard.com> <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
+ <20250409205426.GA12162@pendragon.ideasonboard.com>
+In-Reply-To: <20250409205426.GA12162@pendragon.ideasonboard.com>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Fri, 11 Apr 2025 01:05:00 -0400
+X-Gm-Features: ATxdqUH8eL4Lmr0vwwzRy8Nge0IwfyWriQBevvgqTS8bu8Att64H7FTQtit9JFQ
+Message-ID: <CAKUZ0zKow-wstck4nq7JFbXfxYXR94phRG_bEuWBY2H7p3EWyg@mail.gmail.com>
+Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com, mchehab@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
+	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 10 Apr 2025 14:06:23 -0700 Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> > > Can you share the USB descriptors.
+> >
+> > The USB descriptors via the Syzkaller reproducer:
+> >          "\x12\x01\x00\x00\xfb\x5d\x7d\x08\x6d\x04\xc3\x08\x16\x6b\x01\=
+x02\x03"
+> >          "\x01\x09\x02\x50\x00\x01\x00\x00\x00\x00\x09\x04\x1f\x00\x00\=
+xff\x01"
+> >          "\x00\x00\x0a\x24\x02\x00\x00\x05\x02\x01\x02\x07\x24\x07\x05\=
+x00\x00"
+> >          "\x18\xc2\x24\x08\x05\x04\x00\x04\x96\x0d\x24\x06\x01\x01\x03\=
+x02\x00"
+> >          "\x01\x00\x06\x00\x06\x09\x24\x03\x05\x05\x03\x06\x05\x81\x09\=
+x24\x03"
+> >          "\x06\x01\x01\x04\x05\x05\x07\x24\x04\x05\x01\x00\x9c\xbd\x89"
+>
+> If I haven't made any mistake in the manual decode process (is there any
+> Linux tool that can decode a binary descriptors dump the same way lsusb
+> decodes descriptors from a device ?), the relevant UVC descriptors there
+> are
+I tried looking around and couldn=E2=80=99t find anything. The closest I co=
+uld
+find was defining the structure and then using a parser or reverse
+engineering it using wireshark. Do you think there is a need for such
+a tool? I would be interested in making one.
 
-> The function memcg_hotplug_cpu_dead works on the stock of a remote dead
-> CPU and drain_obj_stock works on the given stock instead of local stock,
-> so there is no need to take local stock_lock anymore.
-> 
-> @@ -1964,10 +1964,10 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
->  
->  	stock = &per_cpu(memcg_stock, cpu);
->  
-> -	/* drain_obj_stock requires stock_lock */
-> -	local_lock_irqsave(&memcg_stock.stock_lock, flags);
-> -	drain_obj_stock(stock);
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	local_irq_save(flag);
-> +	/* stock of a remote dead cpu, no need for stock_lock. */
-> +	__drain_obj_stock(stock);
-> +	local_irq_restore(flag);
->  
+>
+> 0x0a            bLength
+> 0x24            bDescriptorType USB_DT_CS_INTERFACE
+> 0x02            bDescriptorSubtype VC_INPUT_TERMINAL
+> 0x00            bTerminalID 0 (invalid)
+> 0x00, 0x05      bTerminalType 0x0500 (invalid)
+> 0x02            bAssocTerminal 2 (invalid)
+> 0x01            iTerminal 1
+> 0x02, 0x07
+>
+> 0x09            bLength
+> 0x24            bDescriptorType USB_DT_CS_INTERFACE
+> 0x03            bDescriptorSubtype VC_OUTPUT_TERMINAL
+> 0x06            bTerminalID 6
+> 0x01, 0x01      bTerminalType TT_STREAMING
+> 0x04            bAssocTerminal 4 (invalid)
+> 0x05            bSourceID 5
+> 0x05            iTerminal 5
+>
+> 0x07            bLength
+> 0x24            bDescriptorType USB_DT_CS_INTERFACE
+> 0x04            bDescriptorSubtype VC_SELECTOR_UNIT
+> 0x05            bUnitID 5
+> 0x01            bNrInPins 1
+> 0x00            baSourceID(1) 0
+> 0x9c            iSelector 156
+This looks correct. I compared it with the Universal Serial Bus Device
+Class Definition for Video Devices: Video Device Examples (revision
+1.5 2012). I only got slightly different results (only formatting
+related - w prefix instead of b for 2 bytes).
 
-s/flag/flags/
+>
+> Ignoring a few invalid values (bTerminalID shouldb't be 0, bTerminalType
+> 0x0500 is defined by the specification, and the two bAssocTerminal ids
+> are also invalid), this creates the following chain:
+>
+> VC_INPUT_TERMINAL (0) -> VC_SELECTOR_UNIT (5) -> VC_OUTPUT_TERMINAL (6)
+>
+> Looking at uvc_mc_init_entity() where the media_entity->num_pads field
+> gets assigned by calling media_entity_pads_init(), a media entity is
+> only initialized when the entity type is not TT_STREAMING (so it's a
+> subdev), or when the entity has an associated video device. I think
+> that what is happening here is that the second entity in the above list
+> (VC_OUTPUT_TERMINAL, id 6) fails to initialize properly in
+> uvc_register_terms() is there is no corresponding streaming interface in
+> the device. This is confirmed by the
+>
+> usb 1-1: No streaming interface found for terminal 6.
+>
+> message in the syzbot kernel log. No video device is created for the
+> terminal, and no media_entity is initialized. Trying to later link the
+> entity in uvc_mc_create_links() then fails.
+>
+> I don't want to address this in uvc_mc_create_links() as the invalid
+> terminal in the chain means we could have other issues elsewhere. One
+> option is to fail turn the missing streaming interface check in a hard
+> failure, at least for the chain being registered. The driver could still
+> proceed to registering other chains.
+>
+> There's a small risk of regression for buggy devices. If that's a
+> problem, we could instead remove invalid terminals from the device
+> entities list before we proceed to scanning chains.
+Which solution do you recommend? I can try implementing the one for
+the hard failure while letting it proceed to register other chains. It
+seems like testing for a regression would require feedback from the
+community which might be hard since it would most likely only affect a
+few devices.
 
-Obviously what-i-got isn't what-you-tested.  Please check what happened
-here,
+
+
+
+
+>
+> > > > I confirmed this by changing the terminal ID in the format descript=
+or
+> > > > from 6 to 5, which eliminates both warnings. This shows the warning=
+ is
+> > > > correctly identifying an invalid descriptor configuration, not a
+> > > > kernel bug.
+> > >
+> > > There's still something not quite right. uvc_entity->num_pads should
+> > > always be equal to the corresponding media_entity->num_pads. That's n=
+ot
+> > > the case here, and I think it indicates a bug.
+> >
+> > Ah ok - the mismatch itself shouldn't happen regardless of the descript=
+or
+> >
+> > > > Since the USB descriptor is invalid, I believe the warning is
+> > > > necessary and should remain. The code should stay as is.
+> > >
+> > > There should be a warning, but I think it needs to be caught in a
+> > > different place, earlier.
+> >
+> > Got it.
+> >
+> > > > On Tue, Mar 25, 2025 at 8:13=E2=80=AFPM Laurent Pinchart wrote:
+> > > > > On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
+> > > > > > Hi Ricardo,
+> > > > > >
+> > > > > > > I cannot reach that URL
+> > > > > > I was unable to access the URL from my email client when I init=
+ially
+> > > > > > sent the email, but a couple of hours later, I was able to. Ini=
+tially,
+> > > > > > copying and pasting the URL into the browser provided a workaro=
+und.
+> > > > > >
+> > > > > > > Shouldn't it be?:
+> > > > > > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices f=
+or each entity")
+> > > > > > You're right, I incorrectly referenced the wrong commit. Howeve=
+r, I=E2=80=99m
+> > > > > > not certain if it should reference a96aa5342d57 (Fixes: a96aa53=
+42d57 -
+> > > > > > '[media] uvcvideo: Ignore entities for terminals with no suppor=
+ted
+> > > > > > format') as it's the latest commit affecting the line I'm chang=
+ing or
+> > > > > > the one you mentioned.
+> > > > > >
+> > > > > > > Shouldn't source->num_pads be the same as remote->num_pads?
+> > > > > > The fuzzer (Syzkaller) that triggered the warning appears to ha=
+ve
+> > > > > > encountered a case where source->num_pads and remote->num_pads =
+were
+> > > > > > different. When analyzing the case in GDB, remote->num_pads was=
+ 1,
+> > > > > > while source->num_pads was 0.
+> > > > >
+> > > > > This seems like the real bug that should be fixed.
+> > > > >
+> > > > > > > Are you sure that your kernel does not contain?
+> > > > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/=
+linux.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=3D41ddb251c68ac75c10=
+1d3a50a68c4629c9055e4c
+> > > > > > Yes, it should be included since I am running the upstream kern=
+el.
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
