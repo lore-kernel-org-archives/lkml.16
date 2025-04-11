@@ -1,164 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6C728F952;
-	Fri, 11 Apr 2025 08:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD461DDC04
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358533; cv=none; b=qCc+3ml0updI1fav7wm1x04isYyPnfK5lLsli9PBA2ui4DUq0Pyfw/D+G/m1mAAHnxNw66MsqNaka0qtRIJqFAHCSuNOZS17fSHISe4EPAg49QUbE2LWj0jVBpfIAtSIGHUFGqL7aXg/of4TFyikG9mHnMi8Cw0G9rNkIQKC28U=
+	t=1744358655; cv=none; b=Gq4jtTvsl54Qc/4hXYHkU12rqIFmzpnJ7CJnvBjNPoImq38DHkmRRfXxqcPwXnDLKpD8POSYcc+LPePy1TrDWK0wGiWPGRgJgZWfDwSl9xy9CxVNsCaMbS8yOJg/wowHOssShdt+Gd+Oa6Y9O7l8TodnvmPx9DGhpzXlo3WAOVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358533; c=relaxed/simple;
-	bh=VPv4id2m4TY8Fmb1lSfEPtllue99RBkAXzud15Ip3W0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZSKCrcGBvxUzk2KHRjlo4RdShymcSC6V7+Mk6DSzeQJQOzMJKd32zlN9edYV/hPnZh3CLRRaMwtyz2tEVJ1c91dwLy0172Zja/TTi10Kw0RLkajvZb6NML/QUg86i5iakkvwPvea8A6e2Tnn4Q5fbDQo4phmAPQxVftxPtBNRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XDCsGvAQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744358655; c=relaxed/simple;
+	bh=l2VcdA3YeulrePkCB9vvQsx8l22MvCKUb0C19JBaY5U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OszY3+JRItSRisPuo0AWCTtNVFvMlzXm2fQCO5UnK5jXg8akw3+F9RRPWvKk/9dDU2p9/sV3vY9C9fozBR3S60oe4vIm+CEXrv68ZGC7vKSs+oYY22sg5UNLCk8uaoGIM14Pj4cSUe/5TLkdXtdve0Gj8TLLVxK2VqlEpaVDRHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=QGebh9SC; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XDCsGvAQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A32CC4CEE7;
-	Fri, 11 Apr 2025 08:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744358533;
-	bh=VPv4id2m4TY8Fmb1lSfEPtllue99RBkAXzud15Ip3W0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XDCsGvAQ8EQmSpGiAiVKosUQ9uBt3exxAWyP481bbStxDVQwS4eJ79B8S4NGkCmCT
-	 nJ5CsOaHvC/o1FzuDVp1mcnO9Sh9tR70w7Zh6DI9flpFudcf2lWZ6QQNTJQbYhf0Pa
-	 FF30ur8SeO40b8O7f+YboIUQ1J1JKUgjcj5vLaUMbfS+HjTXgAN1vxefw1PBlltTvU
-	 /FpU8Ohu4m7d5U1Llu9alh0gIOjzReL/k1v01DtP5+IhDrT8dYnPWdSNoBAsGJEZoH
-	 PrjkEkNXQin43eFG5My76D+QovQly6n/PzrK0bFhYhnzhKvEcCtcRIXEa0yylqi+mH
-	 i+8MUxrk0BvyQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u39L6-000000004FW-2zsh;
-	Fri, 11 Apr 2025 10:02:16 +0200
-Date: Fri, 11 Apr 2025 10:02:16 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="QGebh9SC"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso1962971f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1744358652; x=1744963452; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=fRXgc2yeSotpusr+TwNESYUQv74jCMGOVv7hGlcYd3k=;
+        b=QGebh9SC2JWyJKZJskrHI8qas/GJHNUQpdJYCtn0IIShZf+w0AtB0FKUzMVck6cD4n
+         DrUZL5vehUkSCrT9F6/+iS2Es8tlKk1fW/iK9MCvuQ5gm0SA9w/aUh8yFqGqXmAt4YJ7
+         MJnH3fJQIQknZ2wHNL9HWfrWy2gSk/JYkifnN9PyepkLgUo4ThnldEcw00nVMLksAYXx
+         morczaQZ4YM28BAS06NJD9YXpkE8iJgYXIVvyQ/iyE4BFRuES9I/I2gAru7BW7S1sT9H
+         Lw8rY2V2q9WWnOqXItxZaWe1eVc7YAvN4XVYjsUN05lsyXA7vz+FMzzQvDK2iGNSsFeO
+         rF1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744358652; x=1744963452;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fRXgc2yeSotpusr+TwNESYUQv74jCMGOVv7hGlcYd3k=;
+        b=mVQLCatjiwJ28HpdJZpzFMJxiXMwT6+2W9lUmQ6OKAjZfa9YTSAvIuBDsgrRizY4zZ
+         I33QM44epzd/a7k+2sHtJOeBebYdhAXZwKJbcJtsNmghhcfWOW3LbBFYMSPzWIf2VW+W
+         a6Pu8KpFCK1bchQf1s8iyWgmb+Zkcy5/OioSM82Y4yvPjGxJI2eBEQ+DRih69XPlJlfn
+         S8G8YGsIrXTBzULOA7vHzIJjG5xLD8eKNnq0q6qkC/WKbIR/+SNoxMurZn/tfBonYggr
+         xoEnQmcSOcfMgv0l4fHtEgmT2uvP7bg1Ie0l7aRkZtGS5CegAfU2ovPgRM1XVEhR7LgS
+         VnBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOZNmfRVMwUY6n847bCTHaxGA1rxvX3jY4k5Lk+Migt5FnEU4/ih1yHCelm03CgqOcVPCNnRGbnSdBYt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2vL0bU08aPMT/Tgul8on73i6suwvDnObyc+lbxkBDGC/hRO2N
+	1lPugqflqyBn0NoFIlGc6Om1r77IViaV++hwIrGMvwVpn8vYSB3dUCMGnOeeR4r4PgOWItvRtJ+
+	1Ug7LMhiNABTBuwhNAKHvtrm0Mv9BoPtplv2LnlLrV5FaGuzL944gJFQ=
+X-Gm-Gg: ASbGnctCgOKfMbuSgO5b/fh2kCnctIMzvpNN0vugdKFdkt5NReWO+w07QASeFju5Wcf
+	O43vjGL1GRAVWE1XHDdkUt2aO99sbQj0YCQEFw3BjJfHtQg0M6A9e5XFmqtdzsef06hAh4n43G6
+	CfIygaLYhwlWffN7J8902XV4Me1YkVEJ/UjxOVq9umSzR/eXfS4GP3o91J/U2lRHwbWruClSrvc
+	KuHBLoPAL+pmh5lsJKxrHCKKq4/9oMMiF9CMmxfTS5YgYyw4fxuj30XVgoDi6us4oFoYwJxgKdh
+	sATdVcC95UadWba6ARst4K/xI3BVJ0B2zzXmwbXSvynbhPptxzFFJYfPB6zwAy7BNmELJwFX0zg
+	g/Kc=
+X-Google-Smtp-Source: AGHT+IENyVLM5p/12g1chaFoiAzlC11eK8uC+Ot8/0ux7IvOoPgK3CJzBt98Vrnsaq3XDTmh9tIEpQ==
+X-Received: by 2002:a05:6000:250a:b0:391:39bd:a381 with SMTP id ffacd0b85a97d-39ea521193amr1291092f8f.30.1744358652166;
+        Fri, 11 Apr 2025 01:04:12 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:e8be:40be:972d:7ee4? ([2001:67c:2fbc:1:e8be:40be:972d:7ee4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96400dsm1286529f8f.11.2025.04.11.01.04.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:04:11 -0700 (PDT)
+Message-ID: <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
+Date: Fri, 11 Apr 2025 10:04:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
+ Offload (ovpn)
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, sd@queasysnail.net, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Xiao Liang <shaw.leon@gmail.com>, steffen.klassert@secunet.com,
+ antony.antony@secunet.com
+References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+ <20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
+ <20250410195440.3ba7ba0f@kernel.org>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <20250410195440.3ba7ba0f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Robin,
+Hi Jakub,
 
-On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
-> In hindsight, there were some crucial subtleties overlooked when moving
-> {of,acpi}_dma_configure() to driver probe time to allow waiting for
-> IOMMU drivers with -EPROBE_DEFER, and these have become an
-> ever-increasing source of problems. The IOMMU API has some fundamental
-> assumptions that iommu_probe_device() is called for every device added
-> to the system, in the order in which they are added. Calling it in a
-> random order or not at all dependent on driver binding leads to
-> malformed groups, a potential lack of isolation for devices with no
-> driver, and all manner of unexpected concurrency and race conditions.
-> We've attempted to mitigate the latter with point-fix bodges like
-> iommu_probe_device_lock, but it's a losing battle and the time has come
-> to bite the bullet and address the true source of the problem instead.
+thanks for taking the time to go through my patchset :)
 
-> @@ -426,6 +438,12 @@ static int iommu_init_device(struct device *dev)
->  		ret = -ENODEV;
->  		goto err_free;
->  	}
-> +	/*
-> +	 * And if we do now see any replay calls, they would indicate someone
-> +	 * misusing the dma_configure path outside bus code.
-> +	 */
-> +	if (dev->driver)
-> +		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
->  
->  	if (!try_module_get(ops->owner)) {
->  		ret = -EINVAL;
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index e10a68b5ffde..6b989a62def2 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
->  		dev_iommu_free(dev);
->  	mutex_unlock(&iommu_probe_device_lock);
->  
-> -	if (!err && dev->bus)
-> +	/*
-> +	 * If we're not on the iommu_probe_device() path (as indicated by the
-> +	 * initial dev->iommu) then try to simulate it. This should no longer
-> +	 * happen unless of_dma_configure() is being misused outside bus code.
-> +	 */
+On 11/04/2025 04:54, Jakub Kicinski wrote:
+> On Mon, 07 Apr 2025 21:46:09 +0200 Antonio Quartulli wrote:
+>> +static int ovpn_netdev_notifier_call(struct notifier_block *nb,
+>> +				     unsigned long state, void *ptr)
+>> +{
+>> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+>> +
+>> +	if (!ovpn_dev_is_valid(dev))
+>> +		return NOTIFY_DONE;
+>> +
+>> +	switch (state) {
+>> +	case NETDEV_REGISTER:
+>> +		/* add device to internal list for later destruction upon
+>> +		 * unregistration
+>> +		 */
+>> +		break;
+>> +	case NETDEV_UNREGISTER:
+>> +		/* can be delivered multiple times, so check registered flag,
+>> +		 * then destroy the interface
+>> +		 */
+>> +		break;
+>> +	case NETDEV_POST_INIT:
+>> +	case NETDEV_GOING_DOWN:
+>> +	case NETDEV_DOWN:
+>> +	case NETDEV_UP:
+>> +	case NETDEV_PRE_UP:
+>> +	default:
+>> +		return NOTIFY_DONE;
+>> +	}
+> 
+> Why are you using a notifier to get events for your own device?
 
-This assumption does not hold as there is nothing preventing iommu
-driver probe from racing with a client driver probe.
+My understanding is that this is the standard approach to:
+1) hook in the middle of registration/deregistration;
+2) handle events generated by other components/routines.
 
-> +	if (!err && dev->bus && !dev_iommu_present)
->  		err = iommu_probe_device(dev);
->  
->  	if (err && err != -EPROBE_DEFER)
+I see in /drivers/net/ almost every driver registers a notifier for 
+their own device.
 
-I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
-is probed late due to a clock dependency and can end up probing in
-parallel with the GPU driver.
+Isn't this expected?
 
-[    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
-[    3.806007] arm-smmu 3da0000.iommu: SMMUv2 with:
-[    3.806843] arm-smmu 3da0000.iommu:  stage 1 translation
-[    3.807562] arm-smmu 3da0000.iommu:  coherent table walk
-[    3.808253] arm-smmu 3da0000.iommu:  stream matching with 24 register groups
-[    3.808957] arm-smmu 3da0000.iommu:  22 context banks (0 stage-2 only)
-[    3.809651] arm-smmu 3da0000.iommu:  Supported page sizes: 0x61311000
-[    3.810339] arm-smmu 3da0000.iommu:  Stage-1: 48-bit VA -> 40-bit IPA
-[    3.811130] arm-smmu 3da0000.iommu:  preserved 0 boot mappings
+> 
+>> +	return NOTIFY_OK;
+>> +}
+> 
+>> +MODULE_DESCRIPTION("OpenVPN data channel offload (ovpn)");
+>> +MODULE_AUTHOR("(C) 2020-2025 OpenVPN, Inc.");
+> 
+> Companies can't author code, only people. Note that MODULE_AUTHOR()
+> is optional.
 
-[    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
+Ouch, thanks. Will get this addressed.
 
-[    3.992050] ------------[ cut here ]------------
-[    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
-[    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
+Regards,
 
-[    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT 
-[    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
+-- 
+Antonio Quartulli
+OpenVPN Inc.
 
-[    4.025943] Call trace:
-[    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
-[    4.030453]  iommu_probe_device+0x38/0x7c
-[    4.030455]  of_iommu_configure+0x188/0x26c
-[    4.030457]  of_dma_configure_id+0xcc/0x300
-[    4.030460]  platform_dma_configure+0x74/0xac
-[    4.030462]  really_probe+0x74/0x38c
-[    4.030464]  __driver_probe_device+0x7c/0x160
-[    4.030465]  driver_probe_device+0x40/0x110
-[    4.030467]  __device_attach_driver+0xbc/0x158
-[    4.030468]  bus_for_each_drv+0x84/0xe0
-[    4.030470]  __device_attach+0xa8/0x1d4
-[    4.030472]  device_initial_probe+0x14/0x20
-[    4.030473]  bus_probe_device+0xb0/0xb4
-[    4.030476]  deferred_probe_work_func+0xa0/0xf4
-
-[    4.030501] ---[ end trace 0000000000000000 ]---
-[    4.031269] adreno 3d00000.gpu: Adding to iommu group 9
-
-Johan
