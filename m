@@ -1,79 +1,121 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BD516419
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9226E10A1E;
+	Fri, 11 Apr 2025 00:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744331973; cv=none; b=DnxnsYQy1VNqDfO84lxx1BX7RKZqZtN0kh+6MtFQ92KMKZGsD+nvBjKSwV4Gt63GVPghnmfQEG2hvM4KgcKRwwv0E4jvAcB1YRtO+53dQfOZgQ9PKrRt2oauVSrwyWTO/fYsbMaM70ZRYzxVuE3ksKyK/8WgIpUNgue/W2ajylU=
+	t=1744331988; cv=none; b=MShvdWWG2U9FonI9qnczqWqFvJoTe9t12J3pxWg0jg/HZBmRzYMM9uuWFmoc76/o7QLcm5oB0kF5YLTLliNPWMCm/4HEizJlUXuouXGE4Z0f9j+w+0SScxnWuiXTbHxyXB1XyBeFyVM78hFMKXXO5B2SLv/6BJdq2KtqTKpWeAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744331973; c=relaxed/simple;
-	bh=e9D0qS5c9xuGHL/ortzIXle6NYY2SiyUiI7O3e/dBck=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ew8+4WgAxDsr48kCsmve2YuN4QzhnLC+lzRxZ6D/ZVEyVp36aQbE/1Xenc/itCcgaiJXE8Aal8/T0FlydDsq0D5prXyvGPiYSr1dYktC/aZMazIuwzEKel/+klegRxQjH2sTwa2fspyhRQa2cDz6r9NHFfTFqwJfV2KpwyRsI58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2254e0b4b79so19902545ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:39:31 -0700 (PDT)
+	s=arc-20240116; t=1744331988; c=relaxed/simple;
+	bh=hUmYTmAvcs2uf7zk3vjXCVXow3V8zdSVau9bQr5WKPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gjnA+S70WT4/AN5WOJtHEA5j+A4JzAn0tkGwdzzfdf719uMvOVGgtdOArMYiS36zmQz/7hoByVRlgVxB0vIogHIMSzhHLugam8o0ZEpXpduRRe1SyQfVh0Hmod5LmsDf3bo2gGpDk2MFhUdJFuNN84w3nbmA/PT2Y5ErWKQ6Ls8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=embZIpTu; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="embZIpTu"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so11731251fa.2;
+        Thu, 10 Apr 2025 17:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744331985; x=1744936785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T38zkrO9x36m4etdaLiyiX7JPZf+RzDpwj3Zgm9TBys=;
+        b=embZIpTuZjxn0jsIwnxfYFIIQf12YpS1MlBdZ9YOQ5yTi0yQwlrwrZrnjdaRIDNXYG
+         Z8dEik7aMcXxYZy+Ciz7wIYoGYGhVtMOw/HiAaXOo9V97YovR/kNtpJy8WZtpDz1XtKQ
+         9bYADYQ3SQQjFFyMDtanKc+tJCMEdXEQU5dGZe2UHzZRQJsgIDJyGWPz42xLhv227qJa
+         VPgWZq2OIG6SeiaarGLEkB58Nqm8MO8AGoL+fe0zTtvZkDYrSZ3vs/yElIuL/vWaI/TM
+         V2fiJooRtqrjB2zAZn/DK4FRkqwghP55ScAOP8Ox4u4bvr6ptHwqa2VmDgRibdElTUxJ
+         GjJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744331971; x=1744936771;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9D0qS5c9xuGHL/ortzIXle6NYY2SiyUiI7O3e/dBck=;
-        b=DeJCkvW+e4Y54azsE6XLHeWb3/qJc8yXcBGmJO0Z3GvtF3Yc6S+rDktBfI7VSlIBMF
-         AmPZ4qBUK9eHIJDjDI7cnYquP7ttymn2u4nfFg0IsN4/XcTyScy+rJlFxyLm/KTHEU5f
-         VSPS6FzyUfhzHgL5NXfsIdcpBg1iEkk5A2+xtoAZH0Nacj89YtDps2nIYi0gK/cn+PNW
-         loiFYr4oaVBn+gQ0faCa6RuO468yj6UrAEs7UVfy7LtVSNSRWjr4pdLFVCy20lcsKmo+
-         uXpYJ9Ybj6JykoHgEU6eMTpYjR8wJI2bDpTg5wdoEHaPcVWWQtvijKabBUVMtRicfBDH
-         vIQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXE0yhvRFIbxpoId3a6Y/yV114EvhQ+V9JzMxNz5UuzOTiXpV+K15Yjqa66+WD4UDxvfYmY6t6f5G6WqbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+S9s91XXf8kWS2HFwfGNjQ+LK1+X0xSWE0tewtmXOWNYtZdBO
-	6L8TLup2mnS2Hf10UH9wBhnHQvX4OOonAu6i0PNuuCQblXmkUWVxFpmSz36Am1I=
-X-Gm-Gg: ASbGncuhWHlQ30wLVGUVGHSAfQiITF2HOR409o2Ps7HRduEFQ2QR083o2mD0vVQ+ucA
-	1yllE3rs/HmoMfZn2LY+9qMu+0iHZXbaPATKN5zssnYAaTLCFPotN5Py3RWnmcfqdYupQ+5FHqs
-	zR2SyK0JJ10miM+12KybElp0xSD4xsQAWQsoy/1hrGNFl5k4vf0n/ku58XSBsdspWlZa64PzRsF
-	7S6E5oTjK5vU5xKyKDyFPEhFDbrYmtFfNgb6zma7UPpKMYu6dA/jkE3OVyX2dDZfCfzWWq9orkk
-	vsCGkJHzRnfmu7u4M6GAVY106nCDVwV+rFQMfCTN44atZtW15A==
-X-Google-Smtp-Source: AGHT+IHE46ZClxLKC9hdNZdcLjjMQRYqIyIdTcUA0yqBYfKQO0vYwM2JBDfdFcSq7VTlGW9xIaW8WA==
-X-Received: by 2002:a17:902:ccc5:b0:224:376:7a21 with SMTP id d9443c01a7336-22bea4fde7cmr10776535ad.42.1744331971575;
-        Thu, 10 Apr 2025 17:39:31 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb5c5sm37254655ad.222.2025.04.10.17.39.31
+        d=1e100.net; s=20230601; t=1744331985; x=1744936785;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T38zkrO9x36m4etdaLiyiX7JPZf+RzDpwj3Zgm9TBys=;
+        b=YhbyO15c7fP0dfPSZBhtVvyxz1vWexWcE7FA5Y3F5uvdv93LFqoSrlnDGU3nwyHs1q
+         rEHEGbjM5A8kz7Hda6n4r0lnkSNZhl1os/4lCfC+gvo4mXz2JV8L5Jdy+SU6sKUzm9FO
+         bjy+TrkI3A03GC1ro/1PLgoxPA4/ypspKGY3W1kLGQYUlVxXg9dUafy/d/6aISoLb9wS
+         7U5JvlNabYxbrJpYnWCA3mYLCen/kLto4tubTs2iPm3YodPFvxX6P4VAVF2iSgYPVDDR
+         myvSwGrpRjlbINAd5iSHdZ5byOc7G3DKaEDDzCYElCkLvfNlL9+rXEQsU0uqZzsF7nUL
+         KaVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdPXlTGuxu+8Bl6+ynCMeiv7SnjTam5WEdNUYhUdvT35ECEi0S98ccm4WKVaAEAvFta93OuTa1XV8=@vger.kernel.org, AJvYcCWELvvoV+C23HnGtw4CeVOFD/kiFWeyeO44WGgpjzfRGb56hIHHDXaBX+Rh6J4bNA3K4JQOcGYoacl4@vger.kernel.org, AJvYcCXa89xU0RpIQF1qfT/ShVnH/QT+GC1vn9WocujAHMrtDofu0nBdtoUAg1qZuD6hQPAO1BA5ibpzcjs2z84c@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQh4T8uSI+7c8R2YwKPQcchaesDrQlYQLknSwlrIXNEwj2MEQ0
+	/GKBbQ5ippjQSENNN5jrd12ca/NygBAL1jy84wZKyjg+BGUNdi1f
+X-Gm-Gg: ASbGncvwyfHZ4Sh6kePNKzTX9Qlveliz3VW0IG2Ik4yvAmAcu99xunlM0UOr0FRTEnY
+	dV9TQ8eWE1Q92WDhrsFJRRCJRTpgtfnv9tHwGyFkYe7qC9+9ZQoDm4LdYXxng48H3Ep+uha14el
+	xKIq/lpLfY5phLi4J6cc0K9RET1NJ2uGKaDh1pPoXlZD9VhQL8qXIkJzkxpYj02I3CamRqg1D08
+	B0e3CXBgvBz4BAlXYQnmSLY6JZ05XgqfwcuvTMCy3ZuCJNi2dawCSPMzONrPzRsF5T5YqCSsNXi
+	QU+Z0foZJUHkGOkfnEClSAP8JaMTCDd/N23X59Ml3zBojW9hsw==
+X-Google-Smtp-Source: AGHT+IFbxnSm5FcYra/NhgQKMu+OkU4ccH3bURF6g7KgB4DcFLTWIFmK1C48nXnn+TaTiHuSf8qBLw==
+X-Received: by 2002:a2e:ad86:0:b0:30c:1358:6400 with SMTP id 38308e7fff4ca-310499b4447mr1902191fa.5.1744331984565;
+        Thu, 10 Apr 2025 17:39:44 -0700 (PDT)
+Received: from localhost.localdomain ([176.106.241.81])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464ea5c6sm6344251fa.62.2025.04.10.17.39.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 17:39:31 -0700 (PDT)
-From: Kevin Hilman <khilman@kernel.org>
-To: David Heidelberg <david@ixit.cz>, Tony Lindgren <tony@atomide.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Pali
- =?utf-8?Q?Roh=C3=A1r?=
- <pali@kernel.org>
-Cc: David Heidelberg <david@ixit.cz>, linux-omap@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: nokia n900: remove useless io-channel-cells
- property
-In-Reply-To: <20250213203208.93316-1-david@ixit.cz>
-References: <20250213203208.93316-1-david@ixit.cz>
-Date: Thu, 10 Apr 2025 17:39:30 -0700
-Message-ID: <7htt6vwmyl.fsf@baylibre.com>
+        Thu, 10 Apr 2025 17:39:44 -0700 (PDT)
+From: iuncuim <iuncuim@gmail.com>
+To: Vasily Khoruzhick <anarsoul@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Andre Przywara <andre.przywara@arm.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Subject: [PATCH 2/6] thermal/drivers/sun8i: replace devm_reset_control_get to shared
+Date: Fri, 11 Apr 2025 08:38:22 +0800
+Message-ID: <20250411003827.782544-3-iuncuim@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250411003827.782544-1-iuncuim@gmail.com>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-David Heidelberg <david@ixit.cz> writes:
+From: Mikhail Kalashnikov <iuncuim@gmail.com>
 
-> This property is irrelevant for the ad5820 DAC,
-> the driver nor the hardware indicate use of channel cells.
->
-> Fixes: d510d12f26f4 ("ARM: dts: nokia n900: update dts with camera support")
-> Signed-off-by: David Heidelberg <david@ixit.cz>
+The A523 processor has two temperature controllers, but they share a common
+reset line. We need to use devm_reset_control_get_shared() instead of
+devm_reset_control_get()
 
-Queued for v6.16,
+Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+---
+ drivers/thermal/sun8i_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index 1f3908a60..dc4055c9c 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -391,7 +391,7 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+ 		return PTR_ERR(tmdev->regmap);
+ 
+ 	if (tmdev->chip->has_bus_clk_reset) {
+-		tmdev->reset = devm_reset_control_get(dev, NULL);
++		tmdev->reset = devm_reset_control_get_shared(dev, NULL);
+ 		if (IS_ERR(tmdev->reset))
+ 			return PTR_ERR(tmdev->reset);
+ 
+-- 
+2.49.0
 
-Kevin
