@@ -1,81 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C942367DC;
-	Fri, 11 Apr 2025 18:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F0B25D546;
+	Fri, 11 Apr 2025 18:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744396186; cv=none; b=u9/O64ubhBm3l5G//RYvUC4u2tVpyWveqfEqLktQYttG266775CinHXkFdMSvk1Uh/2Dg4MpgogVxV6ShrWPr1lslwMPDLsWDmR6LotUE7EzEEA2D47jrE8SQNLsM/Z7BmEOBzDJDVI7+h3FRjy4qikMbH3OCzGOrRfpZbj3/Mc=
+	t=1744396210; cv=none; b=jTGTAqL1vDaUPxSCuI6yLmn1qQsc/l3vGDeAwch+h5g9HdI4xcMlNfqipjaXCZEaN1P4lWYNlOyq0AvxbmkLbto20IvR/d+yPBtJa7gKNJxdfNNy0x80EU1CrMVGzOM9HATYzhfmqOSkdQ0Hpvc8TFovEPm/oFNeGouj9rm/qa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744396186; c=relaxed/simple;
-	bh=CzoWDLggbQ35EU7dIhJdBlfGx2o0jRfrpK7rR1Z9fZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fC6ZRHre1Y4rmvD6a93c2E1NyvEJ4xl28iz3dq88MQ4ZcB8WImRVxUM/Rui7xSlFr6aDVu4vgQLvG53vziF1+vU5WDVb8jtlHMnVXwKvAA6xy1j/2BLQHPGKqceZk2vxPh43m4VKA/be0eltE32pz3mKd4L3FUJ9o7AqNQsJBMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdz9gLQ0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdz9gLQ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DFF1C4CEE2;
-	Fri, 11 Apr 2025 18:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744396185;
-	bh=CzoWDLggbQ35EU7dIhJdBlfGx2o0jRfrpK7rR1Z9fZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kdz9gLQ08RPj3Ev2eETay9KKUOXvzU/POkFSrk+hBNhsrF8NVWFkca/PDU2u358Mu
-	 kRzOY5uZwDc6BzBqQketTIeae930n3LbBoW4aWvEDj3qIjshVGDixq/E1oaMu40D7s
-	 kTcJ2udErRjCndUWEFkEMbw/zwWOPyvHHOn2RGoRTdWT519ufqPpVjUUGkfVIFk8G5
-	 nXf/dei6wMGKBkQ3OzCGqz+Kdim6As/PvSmPaCQY89qzjNj0JG7Ka8xLOsoZNAvxW7
-	 z8rpPGBUF9YOpO7IU+myyjQ4BVz9mvJHWHpoA3DUnZqayvQx3KcrfZC36NOvi/bLqK
-	 t/4wADjdvafqA==
-Date: Fri, 11 Apr 2025 19:29:40 +0100
-From: Simon Horman <horms@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH iwl-net] idpf: protect shutdown from reset
-Message-ID: <20250411182940.GO395307@horms.kernel.org>
-References: <20250410115225.59462-1-larysa.zaremba@intel.com>
+	s=arc-20240116; t=1744396210; c=relaxed/simple;
+	bh=ArKeCzMECIeznxe92yZD6S9MVYQS+ypYFcv2rPdukvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mcbQIBXssvg50dbLaFhijV+4uzzauxM7WtdkUdW5DyH5asWMe/kaWkSzwaTZ6Yzd5ToSRV3yBxJly4bjPoyupu8HKM54FmZSP/LpqED79nMEtH4cDQ4nQD0VfzZyPNdWi3rDN2raGhWMWbvqHWZgC/F88iby+tEIoDcDH2v1KPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 700D9C4CEE2;
+	Fri, 11 Apr 2025 18:30:08 +0000 (UTC)
+Date: Fri, 11 Apr 2025 14:31:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
+ <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
+ <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250411143132.56096f76@gandalf.local.home>
+In-Reply-To: <20250411142427.3abfb3c3@gandalf.local.home>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+	<20250411124552.36564a07@gandalf.local.home>
+	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
+	<20250411131254.3e6155ea@gandalf.local.home>
+	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
+	<9dafc156-1272-4039-a9c0-3448a1bd6d1f@sirena.org.uk>
+	<20250411142427.3abfb3c3@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410115225.59462-1-larysa.zaremba@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 10, 2025 at 01:52:23PM +0200, Larysa Zaremba wrote:
-> Before the referenced commit, the shutdown just called idpf_remove(),
-> this way IDPF_REMOVE_IN_PROG was protecting us from the serv_task
-> rescheduling reset. Without this flag set the shutdown process is
-> vulnerable to HW reset or any other triggering conditions (such as
-> default mailbox being destroyed).
-> 
-> When one of conditions checked in idpf_service_task becomes true,
-> vc_event_task can be rescheduled during shutdown, this leads to accessing
-> freed memory e.g. idpf_req_rel_vector_indexes() trying to read
-> vport->q_vector_idxs. This in turn causes the system to become defunct
-> during e.g. systemctl kexec.
-> 
-> Considering using IDPF_REMOVE_IN_PROG would lead to more heavy shutdown
-> process, instead just cancel the serv_task before cancelling
-> adapter->serv_task before cancelling adapter->vc_event_task to ensure that
-> reset will not be scheduled while we are doing a shutdown.
-> 
-> Fixes: 4c9106f4906a ("idpf: fix adapter NULL pointer dereference on reboot")
-> Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+On Fri, 11 Apr 2025 14:24:27 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> > Yeah, if I bodge ftracetest to be a bash script then the test runs fine
+> > so it'll be a bashism.  We're running the tests in a Debian rootfs so
+> > /bin/sh will be dash.  
+> 
+> Interesting, as one of the ftracetests checks for bashisms:
+> 
+>   test.d/selftest/bashisms.tc
+> 
+> Did it not catch something?
 
+Hmm, I just tested this, and it fails on my box too (I test on a debian VM).
+
+It fails with and without setting it to bash. I'll take a look too.
+
+-- Steve
