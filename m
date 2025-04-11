@@ -1,197 +1,149 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F15C29C32A
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB6B29C33C;
+	Fri, 11 Apr 2025 12:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375006; cv=none; b=XKr+74fkLqgpIkeruL+VHfBN3i2//1v1dhTGJLNAtnkK1zQ+KCO9tamD6RzRIkA8eNcI/jvMH3u1mqVFB3DCiDcEhbjq+ypIwKtwdSiB87g6CJ58boWQGU1mswqD2dvHJap7muKZ5yuXxOyiWqrH4vub3z/6otvpw569nw5vK5w=
+	t=1744375009; cv=none; b=us5e3p9Jog3tAqsNqcnrhYIPZy4cqtDI6x3wDO6ddnv7AXTN/FOv2vo/ZB7gstwFdZrADKb2qHRdfLNJcD1sRNJTBlYHVsIqQZOsmxkissENDGgwGbOLUVJgGTZxLgdKnzGf7pSJmJYskTM2+yvo3t+K3kPDPnlQmPBz3JNa9PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375006; c=relaxed/simple;
-	bh=vGUfgBYd/nqdiWhakMrxzcEEIqB0t/sqp/diq7LMGlc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FCA3RParGuVDy8W/+svjUIGsYloGCh6Fzz6iSbAdKZPfsnWKg8CEt6REB4dcGF/2BolfLdMOKAGQWRv6g0rlAwatplxcYe1TK2+xYmEAQWwtVvqvd7+adzV4ymr6L7OGp8gsaPhCirgFy/BydMtS26DDzHQ2nmAS3MFguhl0XT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RArPY3MD; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744375009; c=relaxed/simple;
+	bh=442iTi1RNwcosl6qNVoczMJmJravZdgS2cI9stGoKsk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aCvmyDJiNo5Gst5xrWncJkVYWEq0crwrUTbEWuMrmAZz92P6WYN2vYobDzZqusng1Kuf+jHkfj7KHCSRzPJCs1twpyc2llE81jTiRp1e2AGYrU3rtW0qkiU9S31xAGtbZe+1abRStZCTrW058UoTEXwzbQZUEZOvnDUclMMtXN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=JIPEVil3; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RArPY3MD"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso2302497b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744375003; x=1744979803; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wWvOtZ2Ij96tOi1o1hUr0b9qGVWu80vcBedKzsseg9k=;
-        b=RArPY3MDH2P26+1MurZ2G5433n6JbjHnVEzDtnNEeQYlFFlPXzDtA4R4c70CY0+hGg
-         3X01IAK5Y97ijCubaueulHJk1a1SyMIgniFtJMeWdXq4pKx+NPCnMjyh/y2Do0DfTbYt
-         6iaPBvF3yU4KPk1Pq1WzbZANLd1DszyioRPVpEPD4a03aU4R61OLyGeitY876utK2F/o
-         XsDTsucntkTkWcGbE4TbKBFBcOQDFX1584oT/Ebb6EkdfbeudlQePbvC/lU7SknTJXXq
-         jbQbOsMG8+MHnhIs4TiUrxv2SP+pROB3C3usccOHUdvIQDsBTNak9IFfmLsBi+zqY3Su
-         3yaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744375003; x=1744979803;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wWvOtZ2Ij96tOi1o1hUr0b9qGVWu80vcBedKzsseg9k=;
-        b=U/Zz5Ru0MWXCWPqditQjQx0unRxEAxv726Xc2pYR0acFydoMcO1IA6bt6nARC84deF
-         6vr0qP24ub8gW6USy7ydUJjJyi+CIE4bof+FnC8mbHrWQvJ3QWaYTcr7VOaIt9xH87s3
-         Rrke3KH4gU/1Etz2sNaNMGi5T7Hk+9htCbvkU5+h1l7HK3PyczXRzawrdsw22odVrfvX
-         3abJjyTY5IeRvuoYnjgi23eY1OOrxa4nf+aql5y+mlL/BTWY7Plu/if3PNCn7rKJVzsG
-         IDfMnqyQ6oRook/y1sKNR7U7C9cHaaSjj7F0F2FHZaZ7ChrLajcw7PGjVdDHVuqo4+8J
-         lEew==
-X-Forwarded-Encrypted: i=1; AJvYcCWNT2Rj5V171OA+qBJ7soaFkQchui3yj8mv9bW4sSk3g0+y8QUnOvJn+vRbopjNIY8dyc6/HMTnMR7wans=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXPIDQgBNKZH4dnsDyjPgkcyvbSmYnyF+wPkICTtykhWXzYjQi
-	WzqtQiA+XRyYq3NbHeXdAGl4E7mShkQ2s76wpRxlDoO7wFS1wAZfTjnD3XWVnzRJYE1HOsDRuco
-	J6wQ=
-X-Gm-Gg: ASbGncuNrFjicgo8T4mxwzl5hY/K1+4uAh1J7vILKJqlDm44uw6taC/CMFsSoCIBvjH
-	FkWwwBtVQfYbTmK1su6hU6wt7ts+HDKzajuoebLeoKGqKxei10OSHoiWTvnPTrDYjoiQkgpd//8
-	ig0q5jNDZ+4hPK0NKj//tUB6YNYyPejSSePyUBqosxgBtY84ei69bFzMJET4uW2b8HH4e7Mq9CL
-	RO1q8ebRH/AXJZVEjha816E/dTbf07wWMlnLc29uLlVzAZbC3exd/7B63YSjFLnYFlpHLBM4qMF
-	G6DnREDwMNdlI9QB1KnjTxx1263uPib3lTew5LSg/+o=
-X-Google-Smtp-Source: AGHT+IHHr6PfcniD19K70c7n3k5QYjLiwj66+qa8B+xXfSPCuWN5/YZWkukIqVWOva+qdLyKiB11mg==
-X-Received: by 2002:a05:6a00:3908:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-73bd129c6d1mr3275598b3a.21.1744375003638;
-        Fri, 11 Apr 2025 05:36:43 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:e0a:5ee:79d0:cf9d:bb30:5951:692])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd22f8253sm1408292b3a.93.2025.04.11.05.36.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 05:36:43 -0700 (PDT)
-From: Alexandre Mergnat <amergnat@baylibre.com>
-Date: Fri, 11 Apr 2025 14:35:56 +0200
-Subject: [PATCH v3 3/5] rtc: Fix the RTC time comparison issues adding cast
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="JIPEVil3"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BA5YuE015128;
+	Fri, 11 Apr 2025 08:36:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=aexCs
+	pUfsridXQVw3Sf/TXKjWK5UbOJ/ylP/lpKeGDI=; b=JIPEVil3rfztxNAOBr1Zf
+	nYXzVmpy7Z86S/WyB+4uM19f352uvGsI1j307xcTR/FAWQ8qyKCaEbv6qJA0eCzY
+	l3JrhO100cjIJeiEnGYHbu/Hga7UHNyaLsPgKKePozNsUToE4OWS8UE9fT4jyQYT
+	hgwDezsV3CZd3tZJ3Zk3j/aWj3MEtlu06uJo3brDfwUlEDGmVaduIlXatdrLHGh+
+	dJ46svxNpqGSPVam7XjBcRRzaKoy/7aEgSMJJq5O0o+GG7U53YhCqieRM+Ti2ruS
+	k0q3rsQXQoTdUovdR2A7WJT9RiChQUPPD2rqb+gkC8jaFQx6J8gYnHh7RtxJdPBq
+	A==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45u1e6u55h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 08:36:44 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53BCahEs005158
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 08:36:43 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 11 Apr
+ 2025 08:36:43 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 11 Apr 2025 08:36:43 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.151])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53BCaTPO006015;
+	Fri, 11 Apr 2025 08:36:38 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v2 04/13] iio: backend: add support for sync status
+Date: Fri, 11 Apr 2025 15:36:18 +0300
+Message-ID: <20250411123627.6114-5-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250411123627.6114-1-antoniu.miclaus@analog.com>
+References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250109-enable-rtc-v3-3-f003e8144419@baylibre.com>
-References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
-In-Reply-To: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
-To: Eddie Huang <eddie.huang@mediatek.com>, 
- Sean Wang <sean.wang@mediatek.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Alexandre Mergnat <amergnat@baylibre.com>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3840; i=amergnat@baylibre.com;
- h=from:subject:message-id; bh=vGUfgBYd/nqdiWhakMrxzcEEIqB0t/sqp/diq7LMGlc=;
- b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBn+Qy+G925gTSnI2f/g5RRp1mmiZxGxczjO4K3kNYm
- 9g+lrSyJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZ/kMvgAKCRArRkmdfjHURcl9D/
- wP0ww2kkK7+Wdz6lCWG8tR0wOKrrvr2qjTu4xuKN9SRbZGSWhA9QmDb/dWzu4/0eAm8sl3qJMEk5Yk
- 72cNB66JOZpwVfgY4Xp+ppUa5CNpHWBGe3QOQegRAvq9iSOBZ0Befi0rR5kfl788zp72w+3x1VXO7E
- R1BFLx8c2FhBePEp0TmhPL/thzoVTQhUv/11ONiQwlSewTu3UTlymMfTRZ8D6pSsM3pfNhSLzDLCh1
- yybqickSMBVYd4qqOnp08M4WsDnTHYsFYb51RyUczq3CSXrZ7Tw3/8rnGoaMFfRoe+9a2GaVNfcena
- LCt1tD6kBkx31OUdTCgi2xU4TbUkN0KBgcGLu8G6MH2r4Zj/Ul3Dd8BAHPtQdYc1qL86ylvzmkLCT+
- XZ04Bh+xraV8u4h7iUkZAoDEn12HInoSfG5xk2AIlsUP6jWf5w1VGcBHbwuBvVfUQr4IF3WsZNJb5p
- +iS8HHZgWKGNJaC7hsERyf63bEwLaYX/v9yCj9JsPBJ8kN+CnJ9QvKUqS39GqOS0fNyH34jfvnBUSv
- eX9nVxrWHyd4x5cifMm5s4lhMt2iZinXa7klv9V8rXsvW5aXOUmt9iBd0RF3YBmxDj+xcv5XUVKG6H
- MPHZrxIA9oPg2KHF1+4pye8NG1q1tx7stersv89cat7tXtLmaMbi2Fs7UNbQ==
-X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
- fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: KbxxqnpQJHYDqz02l-DBlgDLb3iPLhGi
+X-Authority-Analysis: v=2.4 cv=cdjSrmDM c=1 sm=1 tr=0 ts=67f90cdc cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=x1tXHNgHMfKpHKJ5ZLIA:9
+X-Proofpoint-GUID: KbxxqnpQJHYDqz02l-DBlgDLb3iPLhGi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999
+ phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110080
 
-The RTC subsystem was experiencing comparison issues between signed and
-unsigned time values. When comparing time64_t variables (signed) with
-potentially unsigned range values, incorrect results could occur leading
-to runtime errors.
+Add iio backend support for synchronization status read.
+The return value is a boolean stating if the synchronization is enabled
+or disabled.
 
-Adds explicit type casts to time64_t for critical RTC time comparisons
-in both class.c and interface.c files. The changes ensure proper
-handling of negative time values during range validation and offset
-calculations, particularly when dealing with timestamps before 1970.
-
-The previous implementation might incorrectly interpret negative values
-as extremely large positive values, causing unexpected behavior in the
-RTC hardware abstraction logic.
-
-Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 ---
- drivers/rtc/class.c     | 6 +++---
- drivers/rtc/interface.c | 8 ++++----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+no changes in v2.
+ drivers/iio/industrialio-backend.c | 14 ++++++++++++++
+ include/linux/iio/backend.h        |  3 +++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-index e31fa0ad127e9..1ee3f609f92ea 100644
---- a/drivers/rtc/class.c
-+++ b/drivers/rtc/class.c
-@@ -282,7 +282,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
- 	 * then we can not expand the RTC range by adding or subtracting one
- 	 * offset.
- 	 */
--	if (rtc->range_min == rtc->range_max)
-+	if (rtc->range_min == (time64_t)rtc->range_max)
- 		return;
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index cb23433b22c6..0b27f88d6c27 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -860,6 +860,20 @@ int iio_backend_self_sync_disable(struct iio_backend *back)
+ }
+ EXPORT_SYMBOL_NS_GPL(iio_backend_self_sync_disable, "IIO_BACKEND");
  
- 	ret = device_property_read_u32(rtc->dev.parent, "start-year",
-@@ -299,7 +299,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
- 	if (!rtc->set_start_time)
- 		return;
- 
--	range_secs = rtc->range_max - rtc->range_min + 1;
-+	range_secs = (time64_t)rtc->range_max - rtc->range_min + 1;
- 
- 	/*
- 	 * If the start_secs is larger than the maximum seconds (rtc->range_max)
-@@ -327,7 +327,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
- 	 *
- 	 * Otherwise the offset seconds should be 0.
- 	 */
--	if (rtc->start_secs > rtc->range_max ||
-+	if (rtc->start_secs > (time64_t)rtc->range_max ||
- 	    rtc->start_secs + range_secs - 1 < rtc->range_min)
- 		rtc->offset_secs = rtc->start_secs - rtc->range_min;
- 	else if (rtc->start_secs > rtc->range_min)
-diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-index aaf76406cd7d7..93bdf06807f23 100644
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -37,7 +37,7 @@ static void rtc_add_offset(struct rtc_device *rtc, struct rtc_time *tm)
- 	 */
- 	if ((rtc->start_secs > rtc->range_min && secs >= rtc->start_secs) ||
- 	    (rtc->start_secs < rtc->range_min &&
--	     secs <= (rtc->start_secs + rtc->range_max - rtc->range_min)))
-+	     secs <= (time64_t)(rtc->start_secs + rtc->range_max - rtc->range_min)))
- 		return;
- 
- 	rtc_time64_to_tm(secs + rtc->offset_secs, tm);
-@@ -58,7 +58,7 @@ static void rtc_subtract_offset(struct rtc_device *rtc, struct rtc_time *tm)
- 	 * device. Otherwise we need to subtract the offset to make the time
- 	 * values are valid for RTC hardware device.
- 	 */
--	if (secs >= rtc->range_min && secs <= rtc->range_max)
-+	if (secs >= rtc->range_min && secs <= (time64_t)rtc->range_max)
- 		return;
- 
- 	rtc_time64_to_tm(secs - rtc->offset_secs, tm);
-@@ -66,7 +66,7 @@ static void rtc_subtract_offset(struct rtc_device *rtc, struct rtc_time *tm)
- 
- static int rtc_valid_range(struct rtc_device *rtc, struct rtc_time *tm)
- {
--	if (rtc->range_min != rtc->range_max) {
-+	if (rtc->range_min != (time64_t)rtc->range_max) {
- 		time64_t time = rtc_tm_to_time64(tm);
- 		time64_t range_min = rtc->set_start_time ? rtc->start_secs :
- 			rtc->range_min;
-@@ -74,7 +74,7 @@ static int rtc_valid_range(struct rtc_device *rtc, struct rtc_time *tm)
- 			(rtc->start_secs + rtc->range_max - rtc->range_min) :
- 			rtc->range_max;
- 
--		if (time < range_min || time > range_max)
-+		if (time < range_min || time > (time64_t)range_max)
- 			return -ERANGE;
- 	}
- 
-
++/**
++ * iio_backend_sync_status_get - Read the syncronization status
++ * @back: Backend device
++ * @sync_en: Synchronization status returned (enabled or disabled)
++ *
++ * RETURNS:
++ * 0 on success, negative error number on failure.
++ */
++int iio_backend_sync_status_get(struct iio_backend *back, bool *sync_en)
++{
++	return iio_backend_op_call(back, sync_status_get, sync_en);
++}
++EXPORT_SYMBOL_NS_GPL(iio_backend_sync_status_get, "IIO_BACKEND");
++
+ /**
+  * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate) mode
+  * @back: Backend device
+diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+index 6d006cb0da5a..9bf03181c5c1 100644
+--- a/include/linux/iio/backend.h
++++ b/include/linux/iio/backend.h
+@@ -106,6 +106,7 @@ enum iio_backend_interface_type {
+  * @data_alignment_disable: Disable sync process.
+  * @self_sync_enable: Enable the self sync data capture.
+  * @self_sync_disable: Disable the self sync data capture.
++ * @sync_status_get: Get the syncronization status (enabled/disabled).
+  * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
+  * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
+  * @data_stream_enable: Enable data stream.
+@@ -162,6 +163,7 @@ struct iio_backend_ops {
+ 	int (*data_alignment_disable)(struct iio_backend *back);
+ 	int (*self_sync_enable)(struct iio_backend *back);
+ 	int (*self_sync_disable)(struct iio_backend *back);
++	int (*sync_status_get)(struct iio_backend *back, bool *sync_en);
+ 	int (*ddr_enable)(struct iio_backend *back);
+ 	int (*ddr_disable)(struct iio_backend *back);
+ 	int (*data_stream_enable)(struct iio_backend *back);
+@@ -208,6 +210,7 @@ int iio_backend_data_alignment_enable(struct iio_backend *back);
+ int iio_backend_data_alignment_disable(struct iio_backend *back);
+ int iio_backend_self_sync_enable(struct iio_backend *back);
+ int iio_backend_self_sync_disable(struct iio_backend *back);
++int iio_backend_sync_status_get(struct iio_backend *back, bool *sync_en);
+ int iio_backend_ddr_enable(struct iio_backend *back);
+ int iio_backend_ddr_disable(struct iio_backend *back);
+ int iio_backend_data_stream_enable(struct iio_backend *back);
 -- 
-2.25.1
+2.49.0
 
