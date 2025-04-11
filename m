@@ -1,173 +1,171 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179BB290BC0
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9A729DB7B;
+	Fri, 11 Apr 2025 23:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744413975; cv=none; b=eGDpC88VGYPMKXldcWlZLBxvHuCQ9r7GNo8XMfvD8X9cMrafZRzC8wig/l0fCQ5t284ynhPrJchQLeS5KEQ43VF9ZCjLJLy07JBKJ2sP3q4P4M2cbe0mnQg0CbROCpqWOlAjzhA+dSwSPKemKRUdtc5aTrLn3v+H78TmiBkM/Qs=
+	t=1744414131; cv=none; b=ddt5fX7LPRdsCVic2DhEKF+0jiYhSXM4aHTkSGZDRx9Ib8DNBTS7ZeMD91zOqYwHK9jOnVOlIXDV5KLZ9ncnSq4xzD+Q96EMgQEGKmckyklksVhXbRHVWN6EZSg2Sodmsbqw8aUjd7XdnUvz5ek0wzBUY8e86IeyiJ9dhEGGGpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744413975; c=relaxed/simple;
-	bh=V/HmqSsw49B0iA0sXtWqxb6ZKdFvyeYgbWEg2Qp5R24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D53nN/acITaE+YehZ77XyW/VKISf/ZWdIumUvfvnsrH3BNFPhGek6370MDFnDYze+9vnF7cHZ1OQ3yphlWlQOFGziuvpTIBie1DS7s6u9hQnn2c+/eznD9rSqrRwj4kjy17zbWiC0otUMljZs1Df0pmGV6TW7pZjkTlMurzL+xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PSKDqGOj; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744414131; c=relaxed/simple;
+	bh=dSvC1EEFJ0pyt4oMgiDtpsgtB3ByVDFhaXNFrpFOr2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IbB7fRb80NbWuXCrg5PZ2CvJHhybCyvFIZ0m8W4JZ0Z5cjkpDbx2GL5Ysu4b79mcjbDONEMsBi1128AR9MK8Acc4xInOt6Q03DyAoFDOXDyd80ADQrCdwSUmMwyxB0lHOpiNl82eZBFj+6CCy6mOelZXWwOvY08zjl9AwaGpHzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fj/QHMnP; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PSKDqGOj"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72bbc03d436so1511137a34.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:26:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fj/QHMnP"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476ae781d21so24401071cf.3;
+        Fri, 11 Apr 2025 16:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744413971; x=1745018771; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5GZyvI2XLRL6983WEyW7fk4u8vu6YYokKaErcKJZw8g=;
-        b=PSKDqGOjsUHl4gPKOplW4nZEA/ogdifhtHm4Np0zTCflCM4Y/WL8Mjy02UxaInz+Ri
-         pPuJMzbLkMT8oXTdpRUG+de+x2yWdFWdSpiJrPEyzwHqrWXcAXJUloUF8uIJJv6hIH0T
-         UwSSBAdC0AvsrfoFUppl5RZUO+Dyf9Z/jRKIKfayBkH6XvM1z7ZXAi4ETA932ixbiiqt
-         iJIZyK2BObr2iIj9rbw9dk7WZHLL4OdftNkXvWcuzGVNDnk5MhBfriEJFDULF7ghwFJD
-         Woj61Y/DaYXawV/z9tMPBIi33H+A/lhIVLJ11fW73ZnDdXfaKgItInPcjcnLi8XSkuUy
-         t+7A==
+        d=gmail.com; s=20230601; t=1744414127; x=1745018927; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UvhHzpdybge7k/1xu+C8wVpLlcBQbPdkbGL/bYzd4aw=;
+        b=Fj/QHMnPSKpxdAKGYSxvUfr3+if3NuUNgYIYO7T2WGHrRvGLFKKtPvEJETwZhOOg/M
+         zFCzhhOe9+W8GeHF9/hqtayGiTt7D1GbBLwvZXX09xZ6zV9ublCGOSHA21eyiygZbTP0
+         CnLIrVflgnjy4VL4y7nWLSCy8WgnI+r1GnyYpddVBt1eLici9lGF/VXaoLfsSTYuPqBe
+         pkZH9M7CljTD4uTTuqz5Z0uuS5T/20VuH/nOgm85xPFBv4PBhlwHSyXJAwwZZRUFm2Yf
+         aQwBAH1Ke4MRxXy9jxUir//gVw8rMu1eGC4rIKH8PlpNC27+RRaAk2LSbnU8sev5WfHJ
+         NnuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744413971; x=1745018771;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5GZyvI2XLRL6983WEyW7fk4u8vu6YYokKaErcKJZw8g=;
-        b=vfgfAhpZ0WgY9Di6NWJvD1929g9LFxSkFtmyw+OrAO88dr2Hk+73ILh+42+UFVQFLZ
-         MmP8Rd/HJdpUSWT/kVepO/5ZTgkHcPBTU5yMtdn98DzndZykbfwmH9I6o8bU0Kx6s3gw
-         N3gyz9/oc9hfiiUNYqnMLkbfeiVObu0cUhW2vaPRn9P/zP2ZzeT+XibuoeRb7L3BhIac
-         lLRIDO1DOaYoJHVdNn3ohVjP2vKoxtU3kMztUeiHPVUByZSmJahFnHyPWwM4XeiVOwvU
-         p17kG8NDYIHjJNAKTquEaDWHG0B+VlHDqDcDtpqFWPSySOUHg2CMp8XIArsQl/sru6vZ
-         T2UA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7wAujAVrkbhK7CxAa4M68dMZaNA/mnOXJ5o0+uoUULJL9svTyiMmjlLokxk6WJf51xUt0kw6PGAIi3wk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtf//Xw0jq9C2yePRFu2a0AetkoZyJql1b+fYQBEafWueA1DRA
-	x3i8pjbCw8LBme7cn8MVhfu89O5ItEi/5BgPHZz3BLBhad0dVsgjXcPxaTjWAcg=
-X-Gm-Gg: ASbGnctBzlLR8G0NQ47C7Lf85DcvxymIYlmTZccOUl+eqHQKS4m3BpinYnrobb1DuPt
-	LLviRxix50S2GyvKzQni9oa2NAvf5uZA6xQKMv7J6zVEjE5B4IStYx52etZyxyESyPXctv5Xi5/
-	O1mf0xk77WoAu+/+aIZVwHzXXEmj8oSrvGJYS3KWk27vJU4nOhwnRDcdnr4PPu6uKtTSOaHk7Fk
-	v9R4JTEwBI16VmN1hv4eXy7b0GxMddpJwMsF9gdY1k3wQdnLTx4mNNlkBe/VDG25pSGpfgswEdc
-	/cIoH7ISqEhzjAnqe48/mjxW0jWoxPXtRtjl7sbtyNiTnJeUOw2rJ+4m6b217bR008gtk5EkfG/
-	EXQ==
-X-Google-Smtp-Source: AGHT+IGW7pFNc5nsIkwQxDBSYzjjR5YXgf6KeUTb67LI0heNBL6cMHzjIGL4Ij3lbZixsILkVxuEKg==
-X-Received: by 2002:a05:6830:258a:b0:72a:e8b:a849 with SMTP id 46e09a7af769-72e863c35c8mr3394273a34.27.1744413971065;
-        Fri, 11 Apr 2025 16:26:11 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d8d3bbsm1128472a34.33.2025.04.11.16.26.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 16:26:10 -0700 (PDT)
-Message-ID: <3a87627f-3210-4350-bfdc-0007de5671b7@baylibre.com>
-Date: Fri, 11 Apr 2025 18:26:09 -0500
+        d=1e100.net; s=20230601; t=1744414127; x=1745018927;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UvhHzpdybge7k/1xu+C8wVpLlcBQbPdkbGL/bYzd4aw=;
+        b=TmwwV23BMoGr/FFuCdQEM2s15owNS0WTJ529XZVl8VdKb/zgH4SgBZs1ZsO8Y0XV4a
+         uJBVDlltF7XI+aXIxWvpdg+EjWOjdSwVeb5DyEJVtgts8dxaZsFuGHtbzgDZyGCxGVI1
+         h4Ee0sQW9mmCJCIp5x1s+yvkD7jc+80LwtSTbrM6cOEdgRAZ4xVPFb/E8xOEQRrdvcUp
+         b3vqSfNfaWtiHMpwW+ASQonUbO+S+JPZx7TRIL3v6FmsNSlkAujUXB95bQDfYEfG04mf
+         bbqcrRJ977Bs2Ap66gAJSx3IYLJXVE4eW14KyumJe8Fhv+SDQe3Lo3YNxi6RZzXuVhpJ
+         z1Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYltkDE16vdJfCFZxv8MPsfcpf/UMeXqNyxsEZtda0P3R01rVZGRKUWrCzCy7lDu4mbVfxxiZruG26@vger.kernel.org, AJvYcCWzBdA0JJtAiZL/65o//BNlulMx/HuCNNUYYC/ihPDtS6iOIb7uiCr3S7e+QUdYcYqcuGGP6nTvKTHagUVL@vger.kernel.org, AJvYcCXU0NpvSXrfZ+7tiVvlq491rYM/XK4bhOf78ZqVQRGKpTfpkNP32AY6xgmduP2zx44aYK7OIrs6f2U8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOvMyEnQ86KHoc8DNOc+gCwnGJlPlsBDLDV6AMqADF2fY40U/d
+	ScphBSjB8UNjH3e93MzK9nOGxhrx7oIqCsWQIRE2atN7PJV33co2
+X-Gm-Gg: ASbGncskkyyl+LAYCLvMqg0oWm9KDIx2n6Nw68lA7xw2xu3x8pkgTICchqXIqzgXRBY
+	CttZYobeI4E5sUeXKgXjJdq/AgtcV3awt70QP87QqnyRMOPT8WNxa6f6E4J4ffoEM1PrrevIpvD
+	WMXlz8atknUh5R1SlR5EL14j2rnD8vt7cdYS2rN1OOasP0jPRwYnFpiKR4xr7OPpprifAUNot1J
+	YW8GvPFGGHviHB78KKoFkB8lXjJzjhBxaDxQ1LtHgC3tiOxrN6vw7Xjgyeo0XvNoDCtbaA+VfGo
+	hSEU90A2O3AfkB7FMvcBirwloBg=
+X-Google-Smtp-Source: AGHT+IEULaHSVU7/79T4sGgtSLDudJBk/aXEwPTYZC6UzLhe6HrogH+KkmZ3Al7QHscxwG8JxOb5sg==
+X-Received: by 2002:ac8:5fd6:0:b0:476:980c:10a8 with SMTP id d75a77b69052e-4797752ddf6mr68207601cf.21.1744414126840;
+        Fri, 11 Apr 2025 16:28:46 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4796ed9bcdcsm33442711cf.49.2025.04.11.16.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 16:28:46 -0700 (PDT)
+Date: Sat, 12 Apr 2025 07:28:07 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alex Elder <elder@riscstar.com>, Yixun Lan <dlan@gentoo.org>, 
+	Guodong Xu <guodong@riscstar.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, 
+	hal.feng@starfivetech.com, unicorn_wang@outlook.com, duje.mihanovic@skole.hr, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support
+ for BPI-F3
+Message-ID: <j35vjluiykbu2gxg5zkoxm67muj5y66zn6tjwhdbnolkyeilh7@cubjbzouewiy>
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-8-guodong@riscstar.com>
+ <20250411140510-GYA22364@gentoo>
+ <d2c26d3e-787a-490e-9134-8ffe2f6b8333@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/14] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, jonath4nns@gmail.com, Pop Paul <paul.pop@analog.com>
-References: <cover.1744325346.git.Jonathan.Santos@analog.com>
- <e5ea27f88607d1cc12daecf310c18f71383a3bbe.1744325346.git.Jonathan.Santos@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <e5ea27f88607d1cc12daecf310c18f71383a3bbe.1744325346.git.Jonathan.Santos@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2c26d3e-787a-490e-9134-8ffe2f6b8333@riscstar.com>
 
-On 4/11/25 10:58 AM, Jonathan Santos wrote:
-> Separate filter type and decimation rate from the sampling frequency
-> attribute. The new filter type attribute enables sinc3, sinc3+rej60
-> and wideband filters, which were previously unavailable.
+On Fri, Apr 11, 2025 at 09:23:29AM -0500, Alex Elder wrote:
+> On 4/11/25 9:05 AM, Yixun Lan wrote:
+> > 
+> > On 21:14 Fri 11 Apr     , Guodong Xu wrote:
+> > > Add a PWM-based backlight node for the Banana Pi BPI-F3 board,
+> > > using PWM14. The backlight is defined as a 'pwm-backlight' device with
+> > > brightness levels and a default brightness setting. PWM14 is assigned
+> > > a period length of 2000 nanoseconds.
+> > > 
+> > > This configuration was used to verify PWM driver changes, with PWM14
+> > > tested and its waveform confirmed as correct.
+> > > 
+> > > The node status is set to "disabled", and should be enabled when the
+> > > display driver is ready.
+> > > 
+> > .. see comments below
+> > > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > > ---
+> > >   .../boot/dts/spacemit/k1-bananapi-f3.dts      | 32 +++++++++++++++++++
+> > >   1 file changed, 32 insertions(+)
+> > > 
+> > > diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > > index 816ef1bc358e..d04b57ddeb46 100644
+> > > --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > > +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > > @@ -28,6 +28,32 @@ led1 {
+> > >   			default-state = "on";
+> > >   		};
+> > >   	};
+> > > +
+> > > +	pwm_bl: lcd_backlight {
+> > > +		compatible = "pwm-backlight";
+> > > +
+> > > +		pwms = <&pwm14 2000>;
+> > > +		brightness-levels = <
+> > > +			0   40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
+> > > +			40  40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
+> > > +			40  40  40  40  40  40  40  40  40  41  42  43  44  45  46  47
+> > > +			48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+> > > +			64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
+> > > +			80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
+> > > +			96  97  98  99  100 101 102 103 104 105 106 107 108 109 110 111
+> > > +			112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+> > > +			128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+> > > +			144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+> > > +			160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+> > > +			176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+> > > +			192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+> > > +			208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+> > > +			224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+> > > +			240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
+> > > +		>;
+> > > +		default-brightness-level = <100>;
+> > > +		status = "disabled";
+> > I'm confused, has DT in board file with disabled status doesn't make sense?
+> > it doesn't really useful for placeholder, even worse that functionality may not
+> > verified, so I'd suggest sending along with display driver while at it..
 > 
-> Previously, combining decimation and MCLK divider in the sampling
-> frequency obscured performance trade-offs. Lower MCLK divider
-> settings increase power usage, while lower decimation rates reduce
-> precision by decreasing averaging. By creating an oversampling
-> attribute, which controls the decimation, users gain finer control
-> over performance.
+> I think I suggested he include this.  Guodong tested PWM using
+> a backlight on a display connected to a Banana Pi PBI-F3 board.
+> The above numbers come directly from the downstream code, which
+> uses this PWM consistently as a display back light.
 > 
-> The addition of those attributes allows a wider range of sampling
-> frequencies and more access to the device features. Sampling frequency
-> table is updated after every digital filter paramerter change.
-
-s/paramerter/parameter/
-
+> But you're right, the exact set of numbers to use is dependent
+> on the display used, so it's better to add them when the display
+> gets integrated.
 > 
-> Co-developed-by: Pop Paul <paul.pop@analog.com>
-> Signed-off-by: Pop Paul <paul.pop@analog.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
+> The pwm14 node could update still be added here, but that too
+> might as well wait until there's something to use it.  So I
+> think this patch can just be dropped.
+> 
 
-The hardware designers sure didn't make this one easy for us. I'm very
-impressed that you were able to write code that actually makes sense to me
-without me having to read the data sheet 10 times. Nice work! :-)
+If this patch will be applied as it is after applying the display
+driver. I recommend to preserve this patch, but move out of this
+series and resend it as RFC. If this is only for test purpose, it
+is better to move this into the cover letter and address it is for
+testing. 
 
-A few minor things to fix, but otherwise...
+In most case, patches with some unmeet dependency should follow
+maintainer's request, or has specific purposes. It also needed to
+be marked as RFC.
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+Regards,
+Inochi
 
-> -static const struct ad7768_clk_configuration ad7768_clk_config[] = {
-> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_8, 16,  AD7768_FAST_MODE },
-> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_16, 32,  AD7768_FAST_MODE },
-
-Extra spaces should be removed.
-
-> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_32, 64, AD7768_FAST_MODE },
-> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_64, 128, AD7768_FAST_MODE },
-> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_128, 256, AD7768_FAST_MODE },
-> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_128, 512, AD7768_MED_MODE },
-> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_256, 1024, AD7768_MED_MODE },
-> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_512, 2048, AD7768_MED_MODE },
-> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_1024, 4096, AD7768_MED_MODE },
-> -	{ AD7768_MCLK_DIV_8, AD7768_DEC_RATE_1024, 8192, AD7768_MED_MODE },
-> -	{ AD7768_MCLK_DIV_16, AD7768_DEC_RATE_1024, 16384, AD7768_ECO_MODE },
-> +static const int ad7768_dec_rate_values[8] = {
-> +	8, 16, 32, 64, 128, 256, 512, 1024,
-> +};
-
-...
-
-> +/*
-> + * The AD7768-1 supports three primary filter types:
-> + * Sinc5, Sinc3, and Wideband.
-> + * However, the filter register values can also encode additional parameters
-> + * such as decimation rates and 60Hz rejection. This utility function separates
-
-Technically, this is an array, not a function.
-
-> + * the filter type from these parameters.
-> + */
-
-...
-
-> +static const struct iio_enum ad7768_flt_type_iio_enum = {
-> +	.items = ad7768_filter_enum,
-> +	.num_items = ARRAY_SIZE(ad7768_filter_enum),
-> +	.set = ad7768_set_fil_type_attr,
-> +	.get = ad7768_get_fil_type_attr,
-
-Can we spell out filter here? It took me quite a while to figure out what "fil"
-is.
-
-> +};
-> +
-> +static struct iio_chan_spec_ext_info ad7768_ext_info[] = {
-> +	IIO_ENUM("filter_type", IIO_SHARED_BY_ALL, &ad7768_flt_type_iio_enum),
-> +	IIO_ENUM_AVAILABLE("filter_type", IIO_SHARED_BY_ALL, &ad7768_flt_type_iio_enum),
-
-"flt" is a bit more obvious, but still would be nice to spell it out too.
-
-> +	{ }
-> +};
-> +
