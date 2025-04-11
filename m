@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA2C293B55;
-	Fri, 11 Apr 2025 22:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1268C290BC0;
+	Fri, 11 Apr 2025 22:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744409321; cv=none; b=fBH3b29yAcwjsOMiYKAPxa7DLCdxriuwN5BW89mHMQXGtXiIUWWN2IQWJZ2KYmcHtzajC132+KVNDSSmOM4CpxuvwIfwCN/zdB2piphPjVFMQHd0+oYs4sbElFkWs9F93W0J3rVeqmhdaghKXk2V4E1Wd0WyAQzwIatq3zYPjMY=
+	t=1744409321; cv=none; b=brpAHhHEB720lEt4UtghYVE2uG+gtYkkd4BCMAjYgDcaag3+GU6O972gtL5DpmeJXnXJqBhjg0hflJLhiz7nXlOA/i/hRGakA6D0YAiR0g2pse/nzfESzNe9VOY2xYx6MpcxxeTZqNBfGDe739DoLo1lI4+lEc8GsVEIpKf3zxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744409321; c=relaxed/simple;
-	bh=WZrpMsoJEf8McqfhVmNx1nWCMR+cyym2/nGipLZ6fy0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ugSVdv1v6XcaemEyflJvWMp3+14GqsRKySQyXh51X0zqnGzUtYtTrMO3gu1JAxvdEjVX+ffWR5L+vCvp920hLoaKSzC7cvnFXYzA0pyr5mHGgLFNy4FxdvQLrv2Fj5+8oVmnBE5Umg4geEgbXpgne2nwEVPUKIAQundMiOvZkug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EnIErEt1; arc=none smtp.client-ip=13.77.154.182
+	bh=31xar6e/IMxi5dIGGBqk0EkwQW+N0Ku1fqXbRY2PWIA=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=IU3B3q+7wAdfIRb8jQrgZhV0htpQ6dqVFQ4n63xYvSNiOh72pXUfculQ+2omojjJ/Fn2QFj/I/rQ9eIjr5lZeteefknsaw1g8Pc0jfUdYt6pGPcz0/73+//uujI73zEeGDjnUtHm2UpJpg+uJM1N3DLsQLN6cDUAxWS3b9P9CqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tHVKOYoS; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EnIErEt1"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tHVKOYoS"
 Received: by linux.microsoft.com (Postfix, from userid 1053)
-	id A4B4221165AD; Fri, 11 Apr 2025 15:08:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A4B4221165AD
+	id 88BD821165AA; Fri, 11 Apr 2025 15:08:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88BD821165AA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1744409319;
-	bh=Pes897Jv0hoGSjWuzaZIkP/52WpUpaObjwqPMl/Gn1s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EnIErEt1pDfI/+HsXzjVSaE/SIB4/opE5rI0TkdaaH0PrkZyd+IHFLanNP90Lp7Mu
-	 pJItHVB/NUGDXpsAZBVps8kq94718ThDZDWsCFu+ei5ZnYHmdJsqZW5J4QgLuKCM7D
-	 q78CFGZQEh3Z7YsvCBuMuMPlNSYS4m3lz+buDe28=
+	bh=NScl/Ivan4EQzfeSemtbsghq5c09TU6KnZY4GQMHH28=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tHVKOYoSB+aUWGMnGU/JNxLrcyX0yto2Z5Yx9SxVOy/aKzVjHK0Fr3QEdqOHFaVS0
+	 jQ0qkruvuGI5IUKMSFEc+cCxBTypHRHJDdOV1MqXomspzYg1IfPYla0pnUf7ES+l8f
+	 mdBbWO6+GdB7chT0u+w7cJupoa9jkf9ygLWV/Hzs=
 From: Vijay Balakrishna <vijayb@linux.microsoft.com>
 To: Borislav Petkov <bp@alien8.de>,
 	Tony Luck <tony.luck@intel.com>,
@@ -40,51 +40,84 @@ Cc: James Morse <james.morse@arm.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	devicetree@vger.kernel.org,
 	Vijay Balakrishna <vijayb@linux.microsoft.com>
-Subject: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
-Date: Fri, 11 Apr 2025 15:08:39 -0700
-Message-Id: <1744409319-24912-3-git-send-email-vijayb@linux.microsoft.com>
+Subject: [v7 PATCH 0/2] Add L1 and L2 error detection for A53, A57 and A72
+Date: Fri, 11 Apr 2025 15:08:37 -0700
+Message-Id: <1744409319-24912-1-git-send-email-vijayb@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1744409319-24912-1-git-send-email-vijayb@linux.microsoft.com>
-References: <1744409319-24912-1-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+Hello,
 
-Some ARM Cortex CPUs like the A53, A57 and A72 have Error Detection And
-Correction (EDAC) support on their L1 and L2 caches. This is implemented
-in implementation defined registers, so usage of this functionality is
-not safe in virtualized environments or when EL3 already uses these
-registers. This patch adds a edac-enabled flag which can be explicitly
-set when EDAC can be used.
+This is an attempt to revive [v5] series. I have attempted to address comments
+and suggestions from Marc Zyngier since [v5]. Additionally, I have extended
+support for A72 processors. Testing on a problematic A72 SoC has led to the
+detection of Correctable Errors (CEs). I am eager to hear your suggestions and
+feedback on this series.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-[vijayb: Added A72 to the commit message]
-Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
----
- Documentation/devicetree/bindings/arm/cpus.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thanks,
+Vijay
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index 2e666b2a4dcd..d1dc0a843d07 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -331,6 +331,12 @@ properties:
-       corresponding to the index of an SCMI performance domain provider, must be
-       "perf".
- 
-+  edac-enabled:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Some CPUs support Error Detection And Correction (EDAC) on their L1 and
-+      L2 caches. This flag marks this function as usable.
-+
-   qcom,saw:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description: |
+[v5] https://lore.kernel.org/all/20210401110615.15326-1-s.hauer@pengutronix.de/#t
+[v6] https://lore.kernel.org/all/1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com/
+
+Changes since v6:
+- restore the change made in [v5] to clear CPU/L2 syndrome registers
+  back to read_errors() (Tyler)
+- upon detecting a valid error, clear syndrome registers immediately
+  to avoid clobbering between the read and write (Marc)
+- NULL return check for of_get_cpu_node() (Tyler)
+- of_node_put() to avoid refcount issue (Tyler)
+- quotes are dropped in yaml file (Krzysztof)
+
+Changes since v5:
+- rebase on v6.15-rc1
+- the syndrome registers for CPU/L2 memory errors are cleared only upon
+  detecting an error and an isb() after for synchronization (Marc)
+- "edac-enabled" hunk moved to initial patch to avoid breaking virtual
+  environments (Marc)
+- to ensure compatibility across all three families, we are not reporting
+  "L1 Dirty RAM," documented only in the A53 TRM
+- above prompted changing default CPU L1 error meesage from "unknown"
+  to "Unspecified" 
+- capturing CPUID/WAY information in L2 memory error log (Marc)
+- module license from "GPL v2" to "GPL" (checkpatch.pl warning)
+- extend support for A72
+
+Changes since v4:
+- Rebase on v5.12-rc5
+
+Changes since v3:
+- Add edac-enabled property to make EDAC 3support optional
+
+Changes since v2:
+- drop usage of virtual dt node (Robh)
+- use read_sysreg_s instead of open coded variant (James Morse)
+- separate error retrieving from error reporting
+- use smp_call_function_single rather than smp_call_function_single_async
+- make driver single instance and register all 'cpu' hierarchy up front once
+
+Changes since v1:
+- Split dt-binding into separate patch
+- Sort local function variables in reverse-xmas tree order
+- drop unnecessary comparison and make variable bool
+
+Sascha Hauer (2):
+  drivers/edac: Add L1 and L2 error detection for A53, A57 and A72
+  dt-bindings: arm: cpus: Add edac-enabled property
+
+ .../devicetree/bindings/arm/cpus.yaml         |   6 +
+ drivers/edac/Kconfig                          |   9 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/cortex_arm64_l1_l2.c             | 232 ++++++++++++++++++
+ 4 files changed, 248 insertions(+)
+ create mode 100644 drivers/edac/cortex_arm64_l1_l2.c
+
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 -- 
 2.49.0
 
