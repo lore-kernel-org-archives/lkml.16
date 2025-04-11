@@ -1,129 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C490D278E5D
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B531A17D2;
+	Fri, 11 Apr 2025 10:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367562; cv=none; b=ZJy4Z3Z4GiDZ1cb8O02mJkvXYrpHabtHPu3gI09h3vWFOyABdzE24bcaUZ7P5+oXIE68pIwnv234cwcHYGMwhXo/k7krcbFeY3hgbCgWhVqVG+n6cDqNpsOhM+tkYS8lWxz582Dg5pUZv6cDPFbgvgKrfJyqQXcXQAkhXSTeL9s=
+	t=1744367718; cv=none; b=E2xmDdNHrsrWYdrelgtugji0OGzj0sv6uWzJVw+IahMVMrxZLx/K2sAp/05uwm55EfGfM9L8prDBL1nhFRXhByQP7eGRq+OH+vCCcXI/rAtwn3iE7+fU+QSZ0quUl2boHcoY41/zH2Wmb/QDjnSj/H8vnC/RkWisCuJoUeWDWS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367562; c=relaxed/simple;
-	bh=dZAp+0aFkf7MK8MICOzGUOv26hrZwzczT8o2iMxm/5A=;
+	s=arc-20240116; t=1744367718; c=relaxed/simple;
+	bh=ZzgqBVvUJRx01Xdr3ZUB0nMTq1IDHwQSF+NS92g+sto=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Utz+IedmYXAo025BtOTPEJdgM+5ZBj7Km7yUbiLpfeuSI+lpEWAf4mRRtPlW8VAm+WI2gk4yPxAMXU2Yiql3GmF1RvVrXswfpJJcIQHD0OFWQwrOCWiUjC07FpF6vJ56K5PBbWa4g6LUIPwzFnBRmLGaCaw8bBQriTK+niwyp3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hU5nJAaI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lKLtWNF7CQ2dCgUV35j5Nb3EN3BISHVCBWzDv/XqdWf6kRCjxpQITK0WHUKMQsIAgPwUsdr/QMP9u6LBQ9iIUha4WD5Ev8eFRTV1wguxlV7gvNBi/sPUIWd3VAke841D49Vn+8lpfGIdeRNbv4u1Ls0ixZ45NFllx35GkWArg44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2CEKUpf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hU5nJAaI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744367559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Y+9d61eT9fS3Nx5t35n8P/kCjRV2k1+1b7KNobnOYs=;
-	b=hU5nJAaIQaJNWI75mBI1kKDJRG2IS8FVrAiZ+2OHFVY/XMZUJYcoyPwpwgibeaG3LlwPER
-	V6LG++kTMiuUJjWjPZMK6B/HYxUCqxpcaCwMsPeYibiGv5fkYlquTRA20Gvs+0SeBNv9V2
-	hLWo3NHmGZ+lNIW6Q2Jo6J12FcfhgEE=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-455-ics3rMmcMOWkC3EIzg9BOA-1; Fri, 11 Apr 2025 06:32:38 -0400
-X-MC-Unique: ics3rMmcMOWkC3EIzg9BOA-1
-X-Mimecast-MFC-AGG-ID: ics3rMmcMOWkC3EIzg9BOA_1744367557
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e82ed0f826so1776808a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:32:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744367557; x=1744972357;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Y+9d61eT9fS3Nx5t35n8P/kCjRV2k1+1b7KNobnOYs=;
-        b=md58m2hut1jqL6uX/EHgcq0OW/IkewzXeHDvaOHY+5gRMZBVgKDDrz3ZJ7QiM+JsGj
-         i5gt+f0Z3oCLtvsklR3TB81GPPvZ0zlpQo9UBgpZcXjKVlDYFNkWAXjnhFNNzi9HHiGF
-         E0+3vaQHpyrqSN+VDMigPi74tqQ7Z9RVRxAeCgkrxBuz/e1f1Z4NhEZ+TbbFmaT5gGXb
-         31/NVtdyGcqvqUHfYPFlSm5a0qO0FnvLHLMxnvrAbQ/+COvQCWSTytG7VpJKWtMfKU7u
-         z4ZKyV6fDIzvrVc0xd84/Q6XsF6pmsXnt6KkXvoqjb9n991KwDgXumh6/M9JMuUQ9m/e
-         X33w==
-X-Forwarded-Encrypted: i=1; AJvYcCVRwN4wxakm1yhr+EdVh46tgAlDJFHknkDVflvIErJPfyqM4C5sk6WeiwSSqVX+/vB19QAJZvg/lvYKTfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcO/3y2ki8vIRYvWvxbdStDt/o3rjoMwD36dPRvLFCMh3cHhpo
-	xiH8xOauQD/VF9yPD+fevexZ6QpN+kXbB0L9kRho+8pewnpkCWxR532cTwZjGkv4hMG0Zu6Mksc
-	rE58vub2/ZuEII0XzCmNIvAQVCttjrjcgK3nSuEWIGpZcVuwH3Z3RV8Kx3ZaukA==
-X-Gm-Gg: ASbGnctbDihoAICALAx1PcBxNbHmdI+58tCwYSvpUT6CNKYZy8atIAaXqxbEoRdut3t
-	sKGLR8eV2AqsXOukK4XT02qnnGxeiGkGdbaZ789V/fBAuycjIZulS/sYjsxMM/oP7f//gSZCiJ0
-	Jep6wONWxFa44maVNJ8jBxhVncad6zy3eE82oawyYSCSadBsavT0zsfQvyaTfPTYbL1nr/kmesx
-	4brWaIOoCAUnl7l0Ooz/ulP/mWSceLMLThniyl3GrMvLhWIxffIGRhQ4jIYDvdhp77gbpxEIB10
-	CBA+qk4AQSX+RTLQi9fnZNZLXLJfT9B+I2W4xcZmbkOhUgqsKpoyZikME4JN
-X-Received: by 2002:a05:6402:5106:b0:5ec:cd52:27c9 with SMTP id 4fb4d7f45d1cf-5f370298d8dmr1508109a12.31.1744367557233;
-        Fri, 11 Apr 2025 03:32:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+YAD1Ckz71pvCMRdEbnpWp0EQ9xGd4Ocngq4UiSw7duGE/YHv0R0ZgCt/NsMlKk+AEHR8Kw==
-X-Received: by 2002:a05:6402:5106:b0:5ec:cd52:27c9 with SMTP id 4fb4d7f45d1cf-5f370298d8dmr1508083a12.31.1744367556669;
-        Fri, 11 Apr 2025 03:32:36 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54e11sm789475a12.2.2025.04.11.03.32.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 03:32:36 -0700 (PDT)
-Date: Fri, 11 Apr 2025 12:32:31 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Michal Luczaj <mhal@rbox.co>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
-Subject: Re: [PATCH net-next 1/2] vsock: Linger on unsent data
-Message-ID: <hu4kfdobwdhrvlm5egbbfzxjiyi6q32666hpdinywi2fd5kl5j@36dvktqp753a>
-References: <20250407-vsock-linger-v1-0-1458038e3492@rbox.co>
- <20250407-vsock-linger-v1-1-1458038e3492@rbox.co>
- <22ad09e7-f2b3-48c3-9a6b-8a7b9fd935fe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2CEKUpf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F3ECC4CEE2;
+	Fri, 11 Apr 2025 10:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744367716;
+	bh=ZzgqBVvUJRx01Xdr3ZUB0nMTq1IDHwQSF+NS92g+sto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M2CEKUpfHqqDerKDhIYJp2apcdLnhC17OX9lzAT0gqybRu8mnxS4/2j400RoTWHqZ
+	 MW4opsgFLHwG5t8qbVvdDm2HI4ODPreciwiieWudZ28LdRCnamyB/B1o7JVQrdnplJ
+	 NTe2vWrHcZrqccNFgG7yE+C9M2kYstoD5Ag8ivFLCjdTGiB9LT/XH9KiX2gvFLR8JB
+	 vT7293e8orUWPGoB+8ZowaN/RmIf4wIfifcou+2Dgq5n8AdPiMQ98SjFQSqborUQQC
+	 n+T9o5k9u3Xtd5OhebnmyFYfaaX01pZKaSrR7OU3PH8xuo1S9Ug4yLlHPpP+/csAec
+	 xu1O2TmaAooHg==
+Date: Fri, 11 Apr 2025 12:35:10 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] rust: fix building firmware abstraction on 32bit arm
+Message-ID: <Z_jwXsQae9DjLWha@pollux>
+References: <20250411-rust_arm_fix_fw_abstaction-v1-1-0a9e598451c6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <22ad09e7-f2b3-48c3-9a6b-8a7b9fd935fe@redhat.com>
+In-Reply-To: <20250411-rust_arm_fix_fw_abstaction-v1-1-0a9e598451c6@gmail.com>
 
-On Thu, Apr 10, 2025 at 12:51:48PM +0200, Paolo Abeni wrote:
->On 4/7/25 8:41 PM, Michal Luczaj wrote:
->> Change the behaviour of a lingering close(): instead of waiting for all
->> data to be consumed, block until data is considered sent, i.e. until worker
->> picks the packets and decrements virtio_vsock_sock::bytes_unsent down to 0.
->
->I think it should be better to expand the commit message explaining the
->rationale.
->
->> Do linger on shutdown() just as well.
->
->Why? Generally speaking shutdown() is not supposed to block. I think you
->should omit this part.
+On Fri, Apr 11, 2025 at 09:14:48AM +0200, Christian Schrefl wrote:
+> When trying to build the rust firmware abstractions on 32 bit arm the
+> following build error occures:
+> 
+> ```
+> error[E0308]: mismatched types
+>   --> rust/kernel/firmware.rs:20:14
+>    |
+> 20 |         Self(bindings::request_firmware)
+>    |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found fn item
+>    |         |
+>    |         arguments to this function are incorrect
+>    |
+>    = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
+>                  found fn item `unsafe extern "C" fn(_, *const u8, _) -> _ {request_firmware}`
 
-I thought the same, but discussing with Michal we discovered this on
-socket(7) man page:
+This looks like you have local changes in your tree, running in this error. I
+get the exact same errors when I apply the following diff:
 
-   SO_LINGER
-          Sets or gets the SO_LINGER option.  The argument is a
-          linger structure.
+diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+index f04b058b09b2..a67047e3aa6b 100644
+--- a/rust/kernel/firmware.rs
++++ b/rust/kernel/firmware.rs
+@@ -12,7 +12,7 @@
+ /// One of the following: `bindings::request_firmware`, `bindings::firmware_request_nowarn`,
+ /// `bindings::firmware_request_platform`, `bindings::request_firmware_direct`.
+ struct FwFunc(
+-    unsafe extern "C" fn(*mut *const bindings::firmware, *const u8, *mut bindings::device) -> i32,
++    unsafe extern "C" fn(*mut *const bindings::firmware, *const i8, *mut bindings::device) -> i32,
+ );
 
-              struct linger {
-                  int l_onoff;    /* linger active */
-                  int l_linger;   /* how many seconds to linger for */
-              };
+> note: tuple struct defined here
+>   --> rust/kernel/firmware.rs:14:8
+>    |
+> 14 | struct FwFunc(
+>    |        ^^^^^^
+> 
+> error[E0308]: mismatched types
+>   --> rust/kernel/firmware.rs:24:14
+>    |
+> 24 |         Self(bindings::firmware_request_nowarn)
+>    |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found fn item
+>    |         |
+>    |         arguments to this function are incorrect
+>    |
+>    = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
+>                  found fn item `unsafe extern "C" fn(_, *const u8, _) -> _ {firmware_request_nowarn}`
+> note: tuple struct defined here
+>   --> rust/kernel/firmware.rs:14:8
+>    |
+> 14 | struct FwFunc(
+>    |        ^^^^^^
+> 
+> error[E0308]: mismatched types
+>   --> rust/kernel/firmware.rs:64:45
+>    |
+> 64 |         let ret = unsafe { func.0(pfw as _, name.as_char_ptr(), dev.as_raw()) };
+>    |                            ------           ^^^^^^^^^^^^^^^^^^ expected `*const i8`, found `*const u8`
+>    |                            |
+>    |                            arguments to this function are incorrect
+>    |
+>    = note: expected raw pointer `*const i8`
+>               found raw pointer `*const u8`
+> 
+> error: aborting due to 3 previous errors
+> ```
 
-          When enabled, a close(2) or shutdown(2) will not return
-          until all queued messages for the socket have been
-          successfully sent or the linger timeout has been reached.
-          Otherwise, the call returns immediately and the closing is
-          done in the background.  When the socket is closed as part
-          of exit(2), it always lingers in the background.
+I did a test build with multi_v7_defconfig and I can't reproduce this issue.
 
-In AF_VSOCK we supported SO_LINGER only on close(), but it seems that 
-shutdown must also do it from the manpage.
+I think the kernel does always use -funsigned-char, as also documented in commit
+1bae8729e50a ("rust: map `long` to `isize` and `char` to `u8`")?
 
-Thanks,
-Stefano
+> 
+> To fix this error the char pointer type in `FwFunc` is converted to
+> `ffi::c_char`.
+> 
+> Fixes: de6582833db0 ("rust: add firmware abstractions")
+> Cc: stable@vger.kernel.org # Backport only to 6.15 needed
+> 
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+> ---
+>  rust/kernel/firmware.rs | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+> index f04b058b09b2d2397e26344d0e055b3aa5061432..1d6284316f2a4652ef3f76272670e5e29b0ff924 100644
+> --- a/rust/kernel/firmware.rs
+> +++ b/rust/kernel/firmware.rs
+> @@ -5,14 +5,18 @@
+>  //! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h)
+>  
+>  use crate::{bindings, device::Device, error::Error, error::Result, str::CStr};
+> -use core::ptr::NonNull;
+> +use core::{ffi, ptr::NonNull};
 
+The change itself seems to be fine anyways, but I think we should use crate::ffi
+instead.
