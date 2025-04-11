@@ -1,114 +1,109 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B9817C208;
-	Fri, 11 Apr 2025 14:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289691F4CBC;
+	Fri, 11 Apr 2025 14:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380927; cv=none; b=c0lbAY2MzSy51z8Ap6m5Q095U99I++E2KLaJHwM0v+9c9OS7L13bx8W1cg+xog0s8kU5pP0Poeob4p8tCuA69sgOcj0Ch8o9UbqNKRg+d+nSfzVfmxy+gKzMjO9zEg/bHFeg3ciDjXA/2OcTy9+zFmqjF8wly0EktmN2aq/FWpU=
+	t=1744380931; cv=none; b=BtYY0kQwxt/8l6TjpKwPnXB3Mv5aY8kUsJrA8K5Hi/plcqMPJBWaULKsx0JXyRb729802hinu79Oq28tgPggvjdiUNzn0Q7PTrBq1Eg9LOpwSzGwsFGpTAA0btwQGSbRdrqFNHtFI8myzeVpBP+AXYMxCyrSPbfL1H4agAJAHds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380927; c=relaxed/simple;
-	bh=FSFkpzzGGBz0qe7fkRYUbnTeO49Cx5ANriYjuk/BOZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VtVJobNlpFtYlJv9EoUd8oRElwSBOq8vSbywpHcAy/d5NvrDT8WAa24ZEcXbhD4JNPLO3hi6TgjGfX+K9qeTkY0AG9vUpvfkkZepsm1hrW4LB7RQ4V7hWAm9d4+tVbUvKF+b0bceomeD87+bjBaTNZ6rcAIX2eLZFvFVbx/kFeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXad2fQu; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1744380931; c=relaxed/simple;
+	bh=bw+p5SNhnX6pOkgl0Ry3vJZPsdlpYeSd8CNTNZIG8aI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O2+f07V5JItnSFkGRI8GFz//ONS12z2KwvHcqShjMIWL77XWd8L6HkY3CHT/yAUcRLo7CdUIWhYD4p497ff9cPkwL9Qatl8vhMxsYkrYyTMRH6ZSELbzQ6ZwJ7wzh1Tft2sAoEQk57pRBzIP1uDj4J8T89Xtl3KpaFJpzm96V3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j86PcWch; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXad2fQu"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224341bbc1dso19374985ad.3;
-        Fri, 11 Apr 2025 07:15:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j86PcWch"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2243803b776so28962845ad.0;
+        Fri, 11 Apr 2025 07:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744380925; x=1744985725; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G+G9Jy1y2uI9JGUJS5ikQwWYrZoZSDBZRFdvs7aJRh8=;
-        b=NXad2fQupQu9+mPMt9YgZZD5hB5nZgAGdD2AR55t9wCnqpy7G4UzPgc3nKF5K1yhpu
-         my2aAV3F6nUGTIyioDBs8zh3t6NUFdt1XBlGUZOOU2MAVYhkMuuU/1esdl/SJEvM5izU
-         Zb0Cm9qpfjTIttaJr4biP7aXSI29mniVgBA1RMKbDqd+lr2p/1J+W034aClKuLzhMqkf
-         v+zYRtB+FKrJ0OKup4oCQSGj7jnBTCz4TurOiPdEDiHgBUP4/xW+VM+jB3b06YhhD5zr
-         7dwrglgi58xtcQqlqiAoCRCShUJByNpDwEdeA9lL7hq2mIRxFbXt9wYyXVJSIoqS5168
-         VQkA==
+        d=gmail.com; s=20230601; t=1744380929; x=1744985729; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSq0iC5oDVYO2Sr114HUoyiQ9ytidsd6EJphTwPnpOY=;
+        b=j86PcWch6eh738IOzvfs1sf7EzwfCNo82viN8Qsq+0WoTCVQXLgiQbjLs1ZuaOeRZm
+         izhh9qSVe3B8FXM633bA84xKS5ih4SIXPy/73EwhhdVefpLzzFTm7HYQUPsf72jnQMRN
+         1QM3H+aUTgJ2sCsHmJOwMjRjCO+Cxvvy32AUakTC8trs1WxZfvKmU4FpQFsd6G8OCWwr
+         B00F6+TBC5BUlSmlYkz/RtohCWV3fZhfCpx0PeQASxV3Sgrd3/DC45QHyxMstOIqNcC2
+         ZyVNoFBa968TNI0k20+y15ZCGAlpQuOG0loHjb6a4NEUTumMr3WPX6MsHChK5xVhZADV
+         4v1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380925; x=1744985725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G+G9Jy1y2uI9JGUJS5ikQwWYrZoZSDBZRFdvs7aJRh8=;
-        b=idjYepTZ6kw7Hst2c03nkJzHdXe9Vw4gCJ25gZCtSmmVcIZFAtcGzuLefYqr5RJCc2
-         oFiq05fyPQC3sXb7Lv+83LAZjaUH9VaB0lgql/9ExP3yY2o7/V8+3btPkw9Ma2DvM5Z2
-         iQy97FtYAVF7LDRMkX5Q2kzunvIqGm4JTIATGmZGF8DbRdcC2rk4KNpE7RxxDVTjA19z
-         hKi7DSGRLAwY9+Hv+JfFVY12kGQbbyhecMaKUQex7ypP2q1iRIYIBGGKUja61cYIvWvq
-         6nk7hBpYW6236eiHDJK8S/YKb9dAsNOfhT5x1AHWrRyAlYt05BB05i6ruSGzAvINW0/l
-         6z1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4BUVjzUo5iXPdR3QWwYpHDZ2EgoV9qurBuabOJk0XYxo4KeWca48sT4c9bjX5Nh15pMSacKb+JbnAuQ==@vger.kernel.org, AJvYcCW3pW2ws6OOa10chcbDjhgRQzPW6tHk0BsUa6cStF9PgzbxMCpX+YhFmdw8yJkZwV3177+UeSOjKd2tcciu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8i+fgAsQ+kjL/rxP3kOb6txyQxlvUs+FrMJ5jZksDTyiA9Gtp
-	iBu00eBiufz9LJ1F/hqAvSEKvLUmdHTTk41twCkghOyvQlwezIrWzgPYKw==
-X-Gm-Gg: ASbGncuT1o7bca859OrA2Ds5Opa7wIYbsGcon4WFHD8+ZwiRqKwDvaPLuUXth+UQ66p
-	7oJd08sUhaDnkdpKyCybgHaHBxSpXPEWoW5A+0LoYVFrSGh4yln8zeQMhSySrm+ZQ7jobigq+tD
-	Bt/AaiP34UacAmomaKqCa7XGKq5BB/jle5enlUfVoCA6GA0aKGyWxEIgk4B93q5gvLeQC4Oaxu5
-	wmOvkXXR0fz3ezNTWa38Q/SyArFB4K5RzRdYhPOeaQse4hh+zxyxiRCc+IAiRsl+Y1PFEHGpw5p
-	e5/RFM3dzIPA4J1xGvBDOoSpznibhZsb0T/SnlVgp8gchfJbvFb7og==
-X-Google-Smtp-Source: AGHT+IFHbAnB2ypXi79cUfpFWUCDRj63BaQojKKoxescZtrzPLPM7NbB/idMuzVDAo84gc/ucjri3A==
-X-Received: by 2002:a17:902:d550:b0:224:1ec0:8a0c with SMTP id d9443c01a7336-22bea4bd74dmr47046475ad.29.1744380924516;
-        Fri, 11 Apr 2025 07:15:24 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb529esm49223525ad.168.2025.04.11.07.15.23
+        d=1e100.net; s=20230601; t=1744380929; x=1744985729;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NSq0iC5oDVYO2Sr114HUoyiQ9ytidsd6EJphTwPnpOY=;
+        b=S6SbR1mGyxaFjlRHQi4BGmnkvSyDfxus3/0R7UNgAVysIlFItHlWlcAgLGc696zR5K
+         oqND49VrgRWClerme87g8NzG4IFCcZ+KbolvRjCVVFUX/mBJkTUBzSuKHqPdCpWSkBNJ
+         tklLyAzlxx36619q8JS+z1RUhzncwvxYxdA+eqTyRW3Q2OBTGuLDHlaPEIS9tZRTndwR
+         s1PTFJz44ej/wCWU2c1NuHtr0F4tN/BVp9m5lAL2+kHL7o4Mz3h+jOrvNwYjYiSu44/R
+         farxvXFnhq+Jfhgg/aMva4ZgrYUMCKgpkLBkcCioRhy/9fwh8aubXZ8TfndtuFpb7pqb
+         blog==
+X-Forwarded-Encrypted: i=1; AJvYcCVM3HMm9T8W0hYfg0lu/3pci0S242baEiPlU9z40l3Dg8nO+K2neesO+0vW4GxpcBlazDr4bTC6@vger.kernel.org, AJvYcCVWo+wenMqiUh7nGrjjZOzLvGSLd8U3i38LxJTVEXfkwxGdWRBtEXvPfEmajs+f3TTUoauPWOJ6C7OE4VM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWsjWIg4i+tiurOnnkA1r8YxWCQlcM6wcD/S0tXen8pW7bc/02
+	69cbtCNhhp+nnMI5OUhG/yqx9rtJc3vC37HeaTq1B/y+0u0AZ3sx
+X-Gm-Gg: ASbGncuoQEIwTP+ILx8RQFynaw+Pt5DX/Oeh/ofYNIP9l9s84DtCS0YvMVlTVDFcNVd
+	xmviWKRwKyrQ/AZKuwBmcfH95ekeYF79z85Awfi5bDhU1gXmThqBayS/iVrdaXtJC/5fMXVA3iC
+	6iOc7vddm970LbzBVgTRjtTkUvMZOA50qCEs//wJ7I/TeKhvwPmOsFzMn7bQpE8JlUo/kg1Zi+4
+	HsQy6YBJtO58kjy/ie0D4jH1ZcN4BU2lFdmeL5HEIWfTyqRTXr9zHxMqQ+dvcNH23Iat8zMCOnv
+	THhK3ncnV1JQrlf47js4qEVr2V1LMGTO5hcuVe5w
+X-Google-Smtp-Source: AGHT+IH/Xc9tf94+92Rkwg8MozsvgNOe2K98JTK8HgIrcsGLWh8rs77bvMZ/KPW7UA+oma8PtOE6zQ==
+X-Received: by 2002:a17:903:1450:b0:223:6180:1bea with SMTP id d9443c01a7336-22bea4ef0b3mr43856725ad.37.1744380929022;
+        Fri, 11 Apr 2025 07:15:29 -0700 (PDT)
+Received: from [192.168.1.26] ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c4e69sm1575899b3a.53.2025.04.11.07.15.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 07:15:24 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 11 Apr 2025 07:15:22 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Huisong Li <lihuisong@huawei.com>,
-	Adam Young <admiyo@os.amperecomputing.com>,
-	Robbie King <robbiek@xsightlabs.com>,
-	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v3 11/13] hwmon: (xgene-hwmon) Simplify PCC shared memory
- region handling
-Message-ID: <0be30d7d-f091-4497-bb72-fdcad276285e@roeck-us.net>
-References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
- <20250313-pcc_fixes_updates-v3-11-019a4aa74d0f@arm.com>
+        Fri, 11 Apr 2025 07:15:28 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/2] platform/x86: alienware-wmi-wmax: Extend support to
+ more laptops
+Date: Fri, 11 Apr 2025 11:14:34 -0300
+Message-Id: <20250411-awcc-support-v1-0-09a130ec4560@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313-pcc_fixes_updates-v3-11-019a4aa74d0f@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAMoj+WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0ND3cTy5GTd4tKCgvyiEt0040QLQ4tUQ3MzIyMloJaCotS0zAqwcdG
+ xtbUAbkaUTF4AAAA=
+X-Change-ID: 20250411-awcc-support-f3a818e17622
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On Thu, Mar 13, 2025 at 03:28:57PM +0000, Sudeep Holla wrote:
-> The PCC driver now handles mapping and unmapping of shared memory
-> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
-> this xgene hwmon driver did handling of those mappings like several
-> other PCC mailbox client drivers.
-> 
-> There were redundant operations, leading to unnecessary code. Maintaining
-> the consistency across these driver was harder due to scattered handling
-> of shmem.
-> 
-> Just use the mapped shmem and remove all redundant operations from this
-> driver.
-> 
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Hi all,
 
-Not that it matters, but I keep wondering: Why don't people use auxiliary
-devices for situations like this, and keep the subsystem code where it
-belongs ?
+This two patches are based on the pdx86/fixes branch.
 
-I am not requesting that you do it, I just wonder why the mechanism isn't
-used. I would have thought that it would be perfect for situations like
-this, so I guess I must be missing something, and I'd like to understand
-what that something is.
+To: Hans de Goede <hdegoede@redhat.com>
+To: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Dell.Client.Kernel@dell.com
+Cc: linux-kernel@vger.kernel.org
 
-Thanks,
-Guenter
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Kurt Borja (2):
+      platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1
+      platform/x86: alienware-wmi-wmax: Extend support to more laptops
+
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 48 ++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+---
+base-commit: d8455a63f731b4f585acc4d49fd7ad78db63b3d0
+change-id: 20250411-awcc-support-f3a818e17622
+
+Best regards,
+-- 
+ ~ Kurt
+
