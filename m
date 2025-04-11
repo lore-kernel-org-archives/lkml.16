@@ -1,120 +1,165 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f99.google.com (mail-qv1-f99.google.com [209.85.219.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B691096F;
-	Fri, 11 Apr 2025 16:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D41C1F4C8F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388264; cv=none; b=noGIsue0T8Yhe8sgXwqIJchtS/pDtuxvl2BqEkqNGcye/simVZ6w6n8E2YCQXYrpikZJ+R35CX7ew88Oz0R9n6JRgGdwa/5PhY7iDTVi4EHUPvKZCTlRAlRhp/2jPlu6IRPHsbnLbFVrCKHf2IjRyexvPzp5Tf8K7OeA2RfUWD8=
+	t=1744388278; cv=none; b=q+P7TBRp5BDH+mPvdX8W6o2oAkFDh1gd9qv1sBn/8etZpDg45MXiFbx6tAHF5uG9C/8D1dQm2+b+1MGAvHpMFrRlH+o5XrnDK4tg3CXrxu8VNGB+w52N7pWp1s9a2R8/o/95VaUOuHi7SbW3qCm84SUcWVm6VIGDZ+3gKNH2iiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388264; c=relaxed/simple;
-	bh=ofn7XasYbL6HV6msHMWQ5/n1EDKYsh7K8ld9N4uLdI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bWHtig6NQ5BczjMWyTGQQuMiumOF9DOTg4nbW5hBSLdn5Ke5Ci5sQAzjsYtaD7D1zKYMLUsbx0QJZxSQDOpOr9OpUWi4jfCVj0zD2U+KC2u4OMm9utQC38G8gMkLfl3t9RNBIYoCp/6Do+s8+1Yb5nc6NoIb5qKxkfTdBPQq1W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hFr0NUvD; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744388278; c=relaxed/simple;
+	bh=KP2RaWUafBmA0oEogZi6scAsh+hqCLzFLKjiCrsxxtw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sy10qSrzAuDc9eOi47i+9YZ6punWuSp5UcWZ7icuNWwSqjGENnumKrsx95cWq27Qb1eqFT85rdf6iy+sSboqYp2yAzYuIHBc1UsDpWfCr0cu0IyPRvCkPDErMr9bLYgYX8HBIRb1mDdyngRXio80t4BdzZbz3e1bY1XNz7eJgsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=cAa0k9oQ; arc=none smtp.client-ip=209.85.219.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hFr0NUvD"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53BGGYuW556229
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 11 Apr 2025 09:16:35 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53BGGYuW556229
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744388197;
-	bh=Je4jjtqDg1lupTlCqhCqlBHURcIemD1LKF6L79eZeQ4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hFr0NUvDO0KxnqHVd5tvh9wlEpPLoXj5+Fk6VRp98Oufm46awXFQUGmxV/fTfgMrx
-	 GzKsVKrNaQ4GKWIS49y82WqrPyQZdWjzvwEUzzMeF18SIrRIxD7pRirRv3yvheYKEE
-	 qAUhHwHGouynqmSNswzUfCwMzXOIh7q1kaCMyUTDJJTa9yd+hAnd6McuU1bc7BfoPc
-	 eQneZepAltsYPsjYuY/TJFnv79plc+f+g/zZNkbo0sIfICoW48HmlTCXZhE1q5HFkw
-	 m3fln8o2KWtLCxcgstTZDEqws5rEYsoFSuQi9X+5Dtycrj6nld6wkvj3/RmP2kBtIf
-	 z2Gw0Sp7D9H9w==
-Message-ID: <c1481083-ee0d-4d58-aa07-01e43fec7c9f@zytor.com>
-Date: Fri, 11 Apr 2025 09:16:33 -0700
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="cAa0k9oQ"
+Received: by mail-qv1-f99.google.com with SMTP id 6a1803df08f44-6eae4819112so2248476d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744388275; x=1744993075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RYQ1Awm7jT8q0TCxAtt2I3/JHwOa1nftjKAz6rDAB3M=;
+        b=cAa0k9oQUw8gWf+wWrJYuZxjHzfuiFgzTEzOU+V9CCZvb1nJ+OU5XCNRn3t2pg7eRN
+         ie68FEoxIH9ycIdL/1y5+Y1R9i+xNerBY1uVGPLrmLWz7T/XFdQ5WJrvQSeqJXe1taPS
+         o1+6oFuYkwgHf5WIfh7n8aXSQ2rQZbHSnLlSi6u36Y/I69aksCbocOBx8CDBO/0P4SRZ
+         4tTPJIESzMP2UZ97GJIvuH1i7iRaO3sQG4f+rlrH0/rm/Lai9fjusIVVBEDHp6Qe70rq
+         pntWc/OpYc3hCX7+9K7XNDBnowQ1mMwQs7tHovbnw0iv0S1DfDQY4eBH7B+GenG9dHCO
+         KwVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744388275; x=1744993075;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RYQ1Awm7jT8q0TCxAtt2I3/JHwOa1nftjKAz6rDAB3M=;
+        b=JKcpYnxbGuhQXVCfI3rNmRdXptHRIYk3/0Nu4o/GcKW4isny3oJ4PeHqi1ioKlEzuM
+         KN7vwAiInQAZKaO1+2BtyG31qH8QB1p02206lYEjbtIk8CjfQ+dogE6zCa8vLLEVj0y3
+         pD3SInTrj7qXuRyHDWo7C62PfSgkEkGQJya5I0qzbPhgM/4G/3Dhr47pwDB51/TdL3kb
+         n9e6LBZnGLDuymgmQdgUqqmqlKsmloIIh5ve4R6HDhRZRC/0Ae7P323LMuLtKvT8B0s+
+         gFzT0skCXY9yQnw5wimvg2ePmgVbVb6+9neWcUAnYnvwb9ddGEFHqV9xOUQm/tsnHUW0
+         24KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2jJw9EQxUafLlIRzn7UfpJpXuF9uycJwURDayr6KpqKQQfzzaKA/GRPUwI2X6wwj/mItKJRy8nUFSXPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuEq3p9OU6f9r9P99/l0BZrT5Rgz3VXK4n/WFDfZNkytQoh0BO
+	heBMD/8MNM3fgW9qqeAL9Qnit52xHUrgEqcOkmMuQT+ok4+GavBB1XdM2Vq/T4JV4mVLsJq52lp
+	p4IJoi/0QSetjkiRcvtzRyJq+fLuNXvop2xUrXTN2HvyfUowE
+X-Gm-Gg: ASbGnctqc2pYLzUUpJQvbySRoYwaytcPO+/KQq7QE11RCeRwXhfYYWL2BOpldt3Ok1i
+	meA5I7zFtv/qaLRHMhJIXUNgmtlA/VIvrWktte1w9RN25VwyDRqAijWPlv93X6i0k62aEuKkKmX
+	YwuQxnVaA/qHtZMAhGGm6MfANAUHpBy5B1TYzh8v3QAicCX3V2+vij+njH9BtSthmzStBrZeN5q
+	4WSVrZ/MBIaWd2eDmA0iGGioMWt7JsNWAJmBA4xfkYAM5Xzsqklrf9SkeZR2OPIJ50WPDU6JHWN
+	S9MVsgqOEn8wuiQtTSo5c3riY56otQ==
+X-Google-Smtp-Source: AGHT+IGyXtJUelEeTrI9PO9zYxEbOAMa4KjH3KhcKQWJOI2gGu9pzXcD3jwqgXdC4OFN2hVEZ2Em+TwYVBpM
+X-Received: by 2002:a05:6214:409:b0:6e8:9fc6:e41 with SMTP id 6a1803df08f44-6f23f164237mr17764476d6.10.1744388275256;
+        Fri, 11 Apr 2025 09:17:55 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f0de96e48asm3974236d6.25.2025.04.11.09.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 09:17:55 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 40E2B3402B1;
+	Fri, 11 Apr 2025 10:17:54 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 35CDBE41DAB; Fri, 11 Apr 2025 10:17:54 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Eric Mueller <emueller@purestorage.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] mm: remove unused mmap tracepoints
+Date: Fri, 11 Apr 2025 10:17:45 -0600
+Message-ID: <20250411161746.1043239-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/19] x86/cea: Export per CPU array
- 'cea_exception_stacks' for KVM to use
-To: Dave Hansen <dave.hansen@intel.com>, Christoph Hellwig <hch@infradead.org>
-Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
-        chao.gao@intel.com, xin3.li@intel.com
-References: <20250328171205.2029296-1-xin@zytor.com>
- <20250328171205.2029296-5-xin@zytor.com> <Z_eHGjzR33LMqLfL@infradead.org>
- <e88be442-1163-4163-8f2f-06a37d1e595a@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <e88be442-1163-4163-8f2f-06a37d1e595a@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/10/2025 7:18 AM, Dave Hansen wrote:
-> On 4/10/25 01:53, Christoph Hellwig wrote:
->> On Fri, Mar 28, 2025 at 10:11:50AM -0700, Xin Li (Intel) wrote:
->>> The per CPU array 'cea_exception_stacks' points to per CPU stacks
->>> +/*
->>> + * FRED introduced new fields in the host-state area of the VMCS for
->>> + * stack levels 1->3 (HOST_IA32_FRED_RSP[123]), each respectively
->>> + * corresponding to per CPU stacks for #DB, NMI and #DF.  KVM must
->>> + * populate these each time a vCPU is loaded onto a CPU.
->>> + */
->>> +EXPORT_PER_CPU_SYMBOL(cea_exception_stacks);
->> Exporting data vs accessors for it is usually a bad idea.  Doing a
->> non-_GPl for such a very low level data struture is even worse.
-> 
-> Big ack on this.
-> 
-> I don't even see a single caller of __this_cpu_ist_top_va() that's
-> remotely performance sensitive or that needs to be inline.
-> 
-> Just make the __this_cpu_ist_top/bottom_va() macros into real functions
-> and export __this_cpu_ist_top_va(). It's going to be a pretty tiny
-> function but I think that's tolerable.
-> 
+The vma_mas_szero and vma_store tracepoints are unused since commit
+fbcc3104b843 ("mmap: convert __vma_adjust() to use vma iterator").
+Remove them so they are no longer listed as available tracepoints.
 
-Right, that does make sense to me.
+Reported-by: Eric Mueller <emueller@purestorage.com>
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+---
+ include/trace/events/mmap.h | 52 -------------------------------------
+ 1 file changed, 52 deletions(-)
+
+diff --git a/include/trace/events/mmap.h b/include/trace/events/mmap.h
+index f8d61485de16..ee2843a5daef 100644
+--- a/include/trace/events/mmap.h
++++ b/include/trace/events/mmap.h
+@@ -41,62 +41,10 @@ TRACE_EVENT(vm_unmapped_area,
+ 		__entry->total_vm, __entry->flags, __entry->length,
+ 		__entry->low_limit, __entry->high_limit, __entry->align_mask,
+ 		__entry->align_offset)
+ );
+ 
+-TRACE_EVENT(vma_mas_szero,
+-	TP_PROTO(struct maple_tree *mt, unsigned long start,
+-		 unsigned long end),
+-
+-	TP_ARGS(mt, start, end),
+-
+-	TP_STRUCT__entry(
+-			__field(struct maple_tree *, mt)
+-			__field(unsigned long, start)
+-			__field(unsigned long, end)
+-	),
+-
+-	TP_fast_assign(
+-			__entry->mt		= mt;
+-			__entry->start		= start;
+-			__entry->end		= end;
+-	),
+-
+-	TP_printk("mt_mod %p, (NULL), SNULL, %lu, %lu,",
+-		  __entry->mt,
+-		  (unsigned long) __entry->start,
+-		  (unsigned long) __entry->end
+-	)
+-);
+-
+-TRACE_EVENT(vma_store,
+-	TP_PROTO(struct maple_tree *mt, struct vm_area_struct *vma),
+-
+-	TP_ARGS(mt, vma),
+-
+-	TP_STRUCT__entry(
+-			__field(struct maple_tree *, mt)
+-			__field(struct vm_area_struct *, vma)
+-			__field(unsigned long, vm_start)
+-			__field(unsigned long, vm_end)
+-	),
+-
+-	TP_fast_assign(
+-			__entry->mt		= mt;
+-			__entry->vma		= vma;
+-			__entry->vm_start	= vma->vm_start;
+-			__entry->vm_end		= vma->vm_end - 1;
+-	),
+-
+-	TP_printk("mt_mod %p, (%p), STORE, %lu, %lu,",
+-		  __entry->mt, __entry->vma,
+-		  (unsigned long) __entry->vm_start,
+-		  (unsigned long) __entry->vm_end
+-	)
+-);
+-
+-
+ TRACE_EVENT(exit_mmap,
+ 	TP_PROTO(struct mm_struct *mm),
+ 
+ 	TP_ARGS(mm),
+ 
+-- 
+2.45.2
+
