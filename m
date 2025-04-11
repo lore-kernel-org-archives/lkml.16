@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A89221577
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10DBE221F04
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389801; cv=none; b=YzM+dgThz0JO416RlIOgPlbGwVt5we3ZF5l+u4Nyh64yBy5FFH7fvY/QwtI7onWdzqduqeoRlmZaJH8jfVrgilbAYVXXk/m4fmXi0NKu0HLPxQeQolPceAPNJzL65eC8/7/zVakXPtUdHXgTXm6zNnRVIP6IILgNzjnWYVWW0eg=
+	t=1744389804; cv=none; b=k0gBS0B8xZKqhz01jIszchghPygt92RrYrGTq95QhppWNj9bVzqY6sgWVdJAe8RXB7Nu2MW/rn2YXrOrCccCwaQkvwBPXlqueADdqEmDq1c/5wyciJ7tRFO1/By+73Bd6lK2nfPnZ3hdb/Ei7cIU3JtdVjoiZnowzmEuTtT188U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389801; c=relaxed/simple;
-	bh=zd6p1DqQQ14aMlHzn39OBiTFaE9Vtfg2CUY/I3uSVyU=;
+	s=arc-20240116; t=1744389804; c=relaxed/simple;
+	bh=vGhk9fxYLKIvvEn8Lylrv76TlQcHdCc1Adj46N23Dzg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YP4VMTOjDqcSLOz8F1+0+RyTMvRu4RPl6dOIM9oeH3W/tp5VME4IZx3yr3Gsef54x03e8Zbl4WPRzLcv6Au13BLzcif8aF0uWThqNGYrp2oFchykuRmsBk0/6XfGILq9Z3MKW9kxqRJul+pUhFEFsI11xqcrZ9fqMc3hVIZzflc=
+	 MIME-Version; b=o7agoAvzPwQTcIt8CptbVDeMAYzKXrsicocikI8so/7k5IgNTvN5Yz8+rI4rtrrVexm3rQ0qiz7e7Hl1zIPHCDnqHXjk8+13g5J/TYwEkwBlK2QspdDYMFsJyBWiPnsnP3DLQrb/S76FLMlNC5AlgBW6hi7dLV36MGdh0Y3vXbQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32547153B;
-	Fri, 11 Apr 2025 09:43:18 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB69B1596;
+	Fri, 11 Apr 2025 09:43:21 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2900B3F694;
-	Fri, 11 Apr 2025 09:43:15 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C72EB3F694;
+	Fri, 11 Apr 2025 09:43:18 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -47,10 +47,11 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	fenghuay@nvidia.com,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Babu Moger <babu.moger@amd.com>
-Subject: [PATCH v8 02/21] x86/resctrl: Remove the limit on the number of CLOSID
-Date: Fri, 11 Apr 2025 16:42:10 +0000
-Message-Id: <20250411164229.23413-3-james.morse@arm.com>
+	Babu Moger <babu.moger@amd.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v8 03/21] x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+Date: Fri, 11 Apr 2025 16:42:11 +0000
+Message-Id: <20250411164229.23413-4-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250411164229.23413-1-james.morse@arm.com>
 References: <20250411164229.23413-1-james.morse@arm.com>
@@ -62,185 +63,134 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Amit Singh Tomar <amitsinght@marvell.com>
+resctrl_sched_in() loads the architecture specific CPU MSRs with the
+CLOSID and RMID values. This function was named before resctrl was
+split to have architecture specific code, and generic filesystem code.
 
-Resctrl allocates and finds free CLOSID values using the bits of a u32.
-This restricts the number of control groups that can be created by
-user-space.
+This function is obviously architecture specific, but does not begin
+with 'resctrl_arch_', making it the odd one out in the functions an
+architecture needs to support to enable resctrl.
 
-MPAM has an architectural limit of 2^16 CLOSID values, Intel x86 could
-be extended beyond 32 values. There is at least one MPAM platform which
-supports more than 32 CLOSID values.
+Rename it for consistency. This is purely cosmetic.
 
-Replace the fixed size bitmap with calls to the bitmap API to allocate
-an array of a sufficient size.
-
-ffs() returns '1' for bit 0, hence the existing code subtracts 1 from
-the index to get the CLOSID value. find_first_bit() returns the bit
-number which does not need adjusting.
-
-Signed-off-by: Amit Singh Tomar <amitsinght@marvell.com>
-[ morse: fixed the off-by-one in the allocator and the wrong
- not-found value. Removed the limit. Rephrase the commit message. ]
 Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 ---
-Changes since v7:
- * Moved closid_exit() earlier in rdt_kill_sb() to match what
-   rdt_get_tree() does.
+ arch/x86/include/asm/resctrl.h         |  4 ++--
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++------
+ arch/x86/kernel/process_32.c           |  2 +-
+ arch/x86/kernel/process_64.c           |  2 +-
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-Changes since v6:
- * Set variable to NULL after kfree()ing it.
- * Call closid_exit() from rdt_kill_sb() to prevent a memory leak.
-
-Changes since v5:
- * This patch got pulled into this series.
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 47 +++++++++++++++++---------
- 1 file changed, 31 insertions(+), 16 deletions(-)
-
+diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
+index 011bf67a1866..7a39728b0743 100644
+--- a/arch/x86/include/asm/resctrl.h
++++ b/arch/x86/include/asm/resctrl.h
+@@ -175,7 +175,7 @@ static inline bool resctrl_arch_match_rmid(struct task_struct *tsk, u32 ignored,
+ 	return READ_ONCE(tsk->rmid) == rmid;
+ }
+ 
+-static inline void resctrl_sched_in(struct task_struct *tsk)
++static inline void resctrl_arch_sched_in(struct task_struct *tsk)
+ {
+ 	if (static_branch_likely(&rdt_enable_key))
+ 		__resctrl_sched_in(tsk);
+@@ -212,7 +212,7 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c);
+ 
+ #else
+ 
+-static inline void resctrl_sched_in(struct task_struct *tsk) {}
++static inline void resctrl_arch_sched_in(struct task_struct *tsk) {}
+ static inline void resctrl_cpu_detect(struct cpuinfo_x86 *c) {}
+ 
+ #endif /* CONFIG_X86_CPU_RESCTRL */
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 776c8e347654..4e0308040c6e 100644
+index 4e0308040c6e..fdf2616c7ca0 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -130,8 +130,8 @@ static bool resctrl_is_mbm_event(int e)
+@@ -372,7 +372,7 @@ static int rdtgroup_cpus_show(struct kernfs_open_file *of,
  }
  
  /*
-- * Trivial allocator for CLOSIDs. Since h/w only supports a small number,
-- * we can keep a bitmap of free CLOSIDs in a single integer.
-+ * Trivial allocator for CLOSIDs. Use BITMAP APIs to manipulate a bitmap
-+ * of free CLOSIDs.
-  *
-  * Using a global CLOSID across all resources has some advantages and
-  * some drawbacks:
-@@ -144,7 +144,7 @@ static bool resctrl_is_mbm_event(int e)
-  * - Our choices on how to configure each resource become progressively more
-  *   limited as the number of resources grows.
-  */
--static unsigned long closid_free_map;
-+static unsigned long *closid_free_map;
- static int closid_free_map_len;
- 
- int closids_supported(void)
-@@ -152,20 +152,31 @@ int closids_supported(void)
- 	return closid_free_map_len;
+- * This is safe against resctrl_sched_in() called from __switch_to()
++ * This is safe against resctrl_arch_sched_in() called from __switch_to()
+  * because __switch_to() is executed with interrupts disabled. A local call
+  * from update_closid_rmid() is protected against __switch_to() because
+  * preemption is disabled.
+@@ -391,7 +391,7 @@ void resctrl_arch_sync_cpu_closid_rmid(void *info)
+ 	 * executing task might have its own closid selected. Just reuse
+ 	 * the context switch code.
+ 	 */
+-	resctrl_sched_in(current);
++	resctrl_arch_sched_in(current);
  }
  
--static void closid_init(void)
-+static int closid_init(void)
- {
- 	struct resctrl_schema *s;
--	u32 rdt_min_closid = 32;
-+	u32 rdt_min_closid = ~0;
- 
- 	/* Compute rdt_min_closid across all resources */
- 	list_for_each_entry(s, &resctrl_schema_all, list)
- 		rdt_min_closid = min(rdt_min_closid, s->num_closid);
- 
--	closid_free_map = BIT_MASK(rdt_min_closid) - 1;
-+	closid_free_map = bitmap_alloc(rdt_min_closid, GFP_KERNEL);
-+	if (!closid_free_map)
-+		return -ENOMEM;
-+	bitmap_fill(closid_free_map, rdt_min_closid);
- 
- 	/* RESCTRL_RESERVED_CLOSID is always reserved for the default group */
--	__clear_bit(RESCTRL_RESERVED_CLOSID, &closid_free_map);
-+	__clear_bit(RESCTRL_RESERVED_CLOSID, closid_free_map);
- 	closid_free_map_len = rdt_min_closid;
-+
-+	return 0;
-+}
-+
-+static void closid_exit(void)
-+{
-+	bitmap_free(closid_free_map);
-+	closid_free_map = NULL;
+ /*
+@@ -616,7 +616,7 @@ static void _update_task_closid_rmid(void *task)
+ 	 * Otherwise, the MSR is updated when the task is scheduled in.
+ 	 */
+ 	if (task == current)
+-		resctrl_sched_in(task);
++		resctrl_arch_sched_in(task);
  }
  
- static int closid_alloc(void)
-@@ -182,12 +193,11 @@ static int closid_alloc(void)
- 			return cleanest_closid;
- 		closid = cleanest_closid;
- 	} else {
--		closid = ffs(closid_free_map);
--		if (closid == 0)
-+		closid = find_first_bit(closid_free_map, closid_free_map_len);
-+		if (closid == closid_free_map_len)
- 			return -ENOSPC;
--		closid--;
- 	}
--	__clear_bit(closid, &closid_free_map);
-+	__clear_bit(closid, closid_free_map);
+ static void update_task_closid_rmid(struct task_struct *t)
+@@ -674,7 +674,7 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
+ 	 * Ensure the task's closid and rmid are written before determining if
+ 	 * the task is current that will decide if it will be interrupted.
+ 	 * This pairs with the full barrier between the rq->curr update and
+-	 * resctrl_sched_in() during context switch.
++	 * resctrl_arch_sched_in() during context switch.
+ 	 */
+ 	smp_mb();
  
- 	return closid;
+@@ -2990,8 +2990,8 @@ static void rdt_move_group_tasks(struct rdtgroup *from, struct rdtgroup *to,
+ 			/*
+ 			 * Order the closid/rmid stores above before the loads
+ 			 * in task_curr(). This pairs with the full barrier
+-			 * between the rq->curr update and resctrl_sched_in()
+-			 * during context switch.
++			 * between the rq->curr update and
++			 * resctrl_arch_sched_in() during context switch.
+ 			 */
+ 			smp_mb();
+ 
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index 4636ef359973..f1429fdac11c 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -211,7 +211,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	switch_fpu_finish(next_p);
+ 
+ 	/* Load the Intel cache allocation PQR MSR. */
+-	resctrl_sched_in(next_p);
++	resctrl_arch_sched_in(next_p);
+ 
+ 	return prev_p;
  }
-@@ -196,7 +206,7 @@ void closid_free(int closid)
- {
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	__set_bit(closid, &closid_free_map);
-+	__set_bit(closid, closid_free_map);
- }
- 
- /**
-@@ -210,7 +220,7 @@ bool closid_allocated(unsigned int closid)
- {
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	return !test_bit(closid, &closid_free_map);
-+	return !test_bit(closid, closid_free_map);
- }
- 
- /**
-@@ -2765,20 +2775,22 @@ static int rdt_get_tree(struct fs_context *fc)
- 		goto out_ctx;
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 7196ca7048be..642fc3232cec 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -707,7 +707,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
  	}
  
--	closid_init();
-+	ret = closid_init();
-+	if (ret)
-+		goto out_schemata_free;
+ 	/* Load the Intel cache allocation PQR MSR. */
+-	resctrl_sched_in(next_p);
++	resctrl_arch_sched_in(next_p);
  
- 	if (resctrl_arch_mon_capable())
- 		flags |= RFTYPE_MON;
- 
- 	ret = rdtgroup_add_files(rdtgroup_default.kn, flags);
- 	if (ret)
--		goto out_schemata_free;
-+		goto out_closid_exit;
- 
- 	kernfs_activate(rdtgroup_default.kn);
- 
- 	ret = rdtgroup_create_info_dir(rdtgroup_default.kn);
- 	if (ret < 0)
--		goto out_schemata_free;
-+		goto out_closid_exit;
- 
- 	if (resctrl_arch_mon_capable()) {
- 		ret = mongroup_create_dir(rdtgroup_default.kn,
-@@ -2829,6 +2841,8 @@ static int rdt_get_tree(struct fs_context *fc)
- 		kernfs_remove(kn_mongrp);
- out_info:
- 	kernfs_remove(kn_info);
-+out_closid_exit:
-+	closid_exit();
- out_schemata_free:
- 	schemata_list_destroy();
- out_ctx:
-@@ -3076,6 +3090,7 @@ static void rdt_kill_sb(struct super_block *sb)
- 	rmdir_all_sub();
- 	rdt_pseudo_lock_release();
- 	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
-+	closid_exit();
- 	schemata_list_destroy();
- 	rdtgroup_destroy_root();
- 	if (resctrl_arch_alloc_capable())
+ 	return prev_p;
+ }
 -- 
 2.20.1
 
