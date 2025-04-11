@@ -1,344 +1,275 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5F715D5B6
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BFA290BD6
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361760; cv=none; b=eaXfF4kRjcbXCFeQJ4tlaxbKa+QhaPxqR/9LbYgY29cqo7+JaeqNu1MfNxwc8L4XEi+eracJgHQIi5a6wcrUtcJ9KnERizbJ3h0Y3nQj1APNWsycg7i5APxHe2VCUpM6YTxYM4ZsGU6D5dn25j3/CPuCzvt0nYiRK+1T9PCt96A=
+	t=1744361802; cv=none; b=NevTRzTFfAdu+0eMLvsWFpmymYb+j5ZgZCeD53ETWwavc0/g8K3Y7vUoF4gdpfhXaCmtKiPLotVZmT5B66yQVltYWbKPUoTsQ+m12Fgd5xcAJ1ejSQptukofotNOiLbW4dQXNve8HqmwT7KvP4toZ9PbovdUnN8rjkVgGXeFiTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361760; c=relaxed/simple;
-	bh=2tgMt1sse1LvM8GVxklg0FPJWv5iZuw3NO90IPBMi+M=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GNLfwJIVz2vwWW0v1dw6/1FqNJwtmSPV91JEupyrFCrSBnIT+yQB0Q7xirQ/3iLngqgRiyK3MnvgQkB/tpeGghYvUouM6g0eHzozEoas/qe7SgBLFjVcebd3r+/yuLWUhy7C0Vfd8zJoObceAFkuaGTsS1pGyWdj9+Iotvzpkb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IgSHOxYs; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744361802; c=relaxed/simple;
+	bh=ZMeLY9TMS6LoideelZk2anXsuwUmf3hd8R0bNlUbBEQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mipkfNXX/MhLm6kGJoJsNzgJ47ueBzqhA793RS2NLAuI/kcZiJksJ11JPQBy65wxpMxKAnOY9F2cfYaVNXJHTKyn5ODBcMva0i/v2w9+DTrW+n6j4Rw+7AnA5x1iPiUfsWk6s8Ris8JveH1fEskg3/KS0tftmuNUOjF7fMqZxnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OF/wa1DW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IgSHOxYs"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so19594635e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744361756; x=1744966556; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GgQKbWLox9NVg1QwDNLTEsGI9L1B5W9chUOopG1dkzI=;
-        b=IgSHOxYsUqdTK6XKVa7rvhgTTnaSYnBCVCYH/ziuEyQdPa9GuVFCP46hgg1F1dwkh4
-         L+7RROcF/VIj4GeUXV+q9l0CnmUSWf9doCBP6ATDj+s11xUz/+auIoNi7yxEWczCHMU5
-         S0bsDeZtgf8sGxEnZ9wOMY1QTbAxZtKImDGhVmfDCGuhNOnczk+hyy/Ur+S25ALgHa8b
-         QCNNp3GXMw2Ex6HvRqFj+Bpmq1CoNp/NtjggLwVQeRKfQIFH1Y6q61skUs7fvhrljZMQ
-         PoWsKZIpcB2UIWETCl6ZsporfvCibd+18QseARn7vPOTQS2z0d7l/dCaOKf5qCxMJ21q
-         Xvbw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OF/wa1DW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744361799;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZMeLY9TMS6LoideelZk2anXsuwUmf3hd8R0bNlUbBEQ=;
+	b=OF/wa1DW7XIl3uFba/9OH/zs4whBV1lBlYzoZxjfMbi6smYB8VsWyaO67cK5eRXPMk3iZC
+	ycW6qoVz89fOJAsKVZhOeAVb8ghTzrd62fkhwLbODhZrQiUyEgFXzBbpz1TSB8eFp2Tp3z
+	iSzggMcRZfp364hDG0biRJNd1ecsL80=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-649-JFiztMF0PIyxC9cEke9m5w-1; Fri, 11 Apr 2025 04:56:36 -0400
+X-MC-Unique: JFiztMF0PIyxC9cEke9m5w-1
+X-Mimecast-MFC-AGG-ID: JFiztMF0PIyxC9cEke9m5w_1744361795
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so12117475e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:56:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361756; x=1744966556;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GgQKbWLox9NVg1QwDNLTEsGI9L1B5W9chUOopG1dkzI=;
-        b=YDvD3uznd8jaPoI+KOCpGjdijck4KCaOnJKdGTHxR7rYaBFuQz8PMv4TnEvGCNyLKh
-         4aU8AlvNWO0UjyiNKxkU3STTI+fR7nQkjAlKCsi4K8SDCwTM2ogZynU9n2qVV3EFr43B
-         fLnNYuCOG5BNGmpoo0lQSEL0e82CK5qgQmYw9t6MQVtMZv7jnbMo2CDXPHxUUK+2Dj4I
-         cHLOn63Np8Leo2Jb4pHHti61CQt3mM2GdmmWnWhchplFvzx/dLp//H85g6G/+uaWMt/N
-         VHI2mAg+P83MzKrw46WHzPPSro0SdgnFt8FwboEQwZC80KbcgRq32NZcgrlXpsynMNz1
-         fsYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDaN81WcIA8Zc3pmkpeB2kfdGPZMeR1rWzkkQaFwkS8rvEzDQQJ4dxVlAxVGfgeUorjBy+18kMrwuZnRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk4Y3IVXBjIKY+XUfTCXeARm0WWn6Cbeqw9rL7CZXybl32bPhu
-	fcng3vHp+HtYgAFqY4WgE/d9x7E3qFkrNqBXQZeuDySIGZHbkXWQPDMp+8QvcrM=
-X-Gm-Gg: ASbGncuuFLdG/ZXYU3Tqhww+Ru8RLMb1WKPSgWiQDRHm9Z2zZvpoi/QODaJs29/3rpg
-	UP3ZsAK1vawuwzrh11SplSZBygapUEU0wL/U0gixErXOIvza7jxR9YdZZq74rm02YatPLzRoq7n
-	7bKeSk8LzYheAW1jWOnA1oXx4mpevFfBmSZXLv/teL90SOlePyyfKIAVtm40DBpEOgatopZ0f7P
-	/+66IbmeCJXc1R3Hek1HmW9Y4phB21I22IS6RCDxz+BYK6QWRzznoeQZGvKAQ6FqPydAc/MTwE8
-	bpDzbcNfTt4qAs6O0UHoc0EQ3Gk6vjCQN1Qyx4Ad/JgeCm8ROR699R9s/fZ1JVDrlXN1VWd43ip
-	4g1LqUiyyGVzIVkzIBg==
-X-Google-Smtp-Source: AGHT+IEVq2vyPSDk3mZeBJ2nFdHQf/8MPDkyfLJnef1pf5xR+tKiYrLMkUUN01oPGLJiHTMgAUdnsw==
-X-Received: by 2002:a05:6000:4022:b0:38d:e0a9:7e5e with SMTP id ffacd0b85a97d-39d8f2676a3mr4601535f8f.6.1744361756583;
-        Fri, 11 Apr 2025 01:55:56 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96bf97sm1354424f8f.25.2025.04.11.01.55.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:55:56 -0700 (PDT)
-Message-ID: <3d0cff04-07f3-49cb-83cc-afd4f052e8d5@linaro.org>
-Date: Fri, 11 Apr 2025 10:55:55 +0200
+        d=1e100.net; s=20230601; t=1744361795; x=1744966595;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZMeLY9TMS6LoideelZk2anXsuwUmf3hd8R0bNlUbBEQ=;
+        b=aSBDRH6lZOYgmiQfodqoJjvqqGAcsO15zf5vrHHGiA488CW8BwrKEEZ1/BZf1J9RIY
+         s/ERJhESlQAs27bPPyQDSwugf3tBjuGgz6NJqBSgIO2gnQZnDgXYXS41Qj4INYjr+tDU
+         ylZCKBLQAxDIR5HuwqXWpCOo+uyGnnEV/KNJik9M6niKzFUC+zlY6aPzJETx1slHaBQJ
+         q0O57g8Ox5DwoKbLXhPFSLuqwbe+ydQRemsJUCun2AKvQ0IiHYQs0FFBWqvnv+tWv/19
+         5iE8slIXgAmBw59TDTe5cg9Dr6PMc9NyoXA0Wh3Ozw9mAYvx91cNZ0yJMbEzCUxai4bT
+         UA9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVhqUte323rjE1TvETCIRaO51PkEmnXuCgmSUBSmvU7Cva3jZhYoH+KUHOyVhLfMCYlUH1Zc7ycd3zpBmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJExzvRfd/aue1zr9jMYMgN6C5Qy5pFhA5p4gf8MCrAScgad8V
+	1MwmG3e7dCPjI76wBxtfStlLQUgtZD/H1K7r6+YfHAJXnbWhbwdbJtRcdWp7vg/LCy3YTvJ2eEJ
+	42Anze3kzW0m5ymkfDVE4rgQz0wLdpxyIRdTpf6049QciwR8dIr0p2+q2uMl2bA==
+X-Gm-Gg: ASbGncu1NtUriqptBZxxRV7P35kdlwlA8108tb6FuhPFfxsYnBpWwC400jdncnHMzmg
+	4HNJqjelKowfbVAfk1HtjHUp3YMnqfgfSAj4h7sZIz+vpriAOc5XeYrjQTbG6S1PXoKYGdyVsrF
+	J7ZpcSgKdb/lfkVGhpeX6lY/anfjOXWOSgiJZKwcxTERqH6c9pCU5zTH+khlNVza7IUa0zUPKMU
+	wL3P+m3+c1FTGfsJ68x9LYXuOfQYVe7BJivSdtt1+Hhg1f7VimeGEwGj3u7xU6Wc0jq93lWrXMX
+	fm0vk3jD6hfwvFkjxbZSfhgdJUaccF2PcaotEQ==
+X-Received: by 2002:a05:6000:22c4:b0:38d:e304:7470 with SMTP id ffacd0b85a97d-39ea520702emr1348179f8f.25.1744361795530;
+        Fri, 11 Apr 2025 01:56:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFgWE01/s/69VbwckOORglh3fKMNqgEgRa/lnQj4myqjDBez6hDKqGKm35iy1mSbxBUcHFdxw==
+X-Received: by 2002:a05:6000:22c4:b0:38d:e304:7470 with SMTP id ffacd0b85a97d-39ea520702emr1348161f8f.25.1744361795169;
+        Fri, 11 Apr 2025 01:56:35 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f204c500bsm83499365e9.0.2025.04.11.01.56.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 01:56:34 -0700 (PDT)
+Message-ID: <03f2bf17986dd2811e02bace17fadf6f36c7080a.camel@redhat.com>
+Subject: Re: [PATCH v2 07/22] verification/dot2k: Replace is_container()
+ hack with subparsers
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de
+Date: Fri, 11 Apr 2025 10:56:32 +0200
+In-Reply-To: <76c013727c81db5979f8f22c41794371bbaa5ba5.1744355018.git.namcao@linutronix.de>
+References: <cover.1744355018.git.namcao@linutronix.de>
+	 <76c013727c81db5979f8f22c41794371bbaa5ba5.1744355018.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 7/7] drm/panel: make prepare/enable and disable/unprepare
- calls return void
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
- <20250401-panel-return-void-v1-7-93e1be33dc8d@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250401-panel-return-void-v1-7-93e1be33dc8d@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 01/04/2025 07:11, Dmitry Baryshkov wrote:
-> Now there are no users of the return value of the drm_panel_prepare(),
-> drm_panel_unprepare(), drm_panel_enable() and drm_panel_disable() calls.
-> Usually these calls are performed from the atomic callbacks, where it is
-> impossible to return an error. Stop returning error codes and return
-> void instead.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+
+On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
+> dot2k is used for both generating deterministic automaton (DA)
+> monitor and
+> generating container monitor.
+>=20
+> Generating DA monitor and generating container requires different
+> parameters. This is implemented by peeking at sys.argv and check
+> whether
+> "--container" is specified, and use that information to make some
+> parameters optional or required.
+>=20
+> This works, but is quite hacky and ugly.
+>=20
+> Replace this hack with Python's built-in subparsers.
+>=20
+
+Yeah, that's much neater, thanks!
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+> The old commands:
+>=20
+> =C2=A0 python3 dot2/dot2k -d wip.dot -t per_cpu
+> =C2=A0 python3 dot2/dot2k -n sched --container
+>=20
+> are equivalent to the new commands:
+>=20
+> =C2=A0 python3 dot2/dot2k monitor -d wip.dot -t per_cpu
+> =C2=A0 python3 dot2/dot2k container -n sched
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 > ---
->   drivers/gpu/drm/drm_panel.c                     | 54 +++++++++----------------
->   drivers/gpu/drm/panel/panel-newvision-nv3051d.c |  9 +----
->   include/drm/drm_panel.h                         |  8 ++--
->   3 files changed, 26 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> index c627e42a7ce70459f50eb5095fffc806ca45dabf..faa7a76b63b53b3a45b3400d8bf3b58a027a340e 100644
-> --- a/drivers/gpu/drm/drm_panel.c
-> +++ b/drivers/gpu/drm/drm_panel.c
-> @@ -105,21 +105,21 @@ EXPORT_SYMBOL(drm_panel_remove);
->    *
->    * Calling this function will enable power and deassert any reset signals to
->    * the panel. After this has completed it is possible to communicate with any
-> - * integrated circuitry via a command bus.
-> - *
-> - * Return: 0 on success or a negative error code on failure.
-> + * integrated circuitry via a command bus. This function cannot fail (as it is
-> + * called from the pre_enable call chain). There will always be a call to
-> + * drm_panel_disable() afterwards.
->    */
-> -int drm_panel_prepare(struct drm_panel *panel)
-> +void drm_panel_prepare(struct drm_panel *panel)
->   {
->   	struct drm_panel_follower *follower;
->   	int ret;
->   
->   	if (!panel)
-> -		return -EINVAL;
-> +		return;
->   
->   	if (panel->prepared) {
->   		dev_warn(panel->dev, "Skipping prepare of already prepared panel\n");
-> -		return 0;
-> +		return;
->   	}
->   
->   	mutex_lock(&panel->follower_lock);
-> @@ -138,11 +138,8 @@ int drm_panel_prepare(struct drm_panel *panel)
->   				 follower->funcs->panel_prepared, ret);
->   	}
->   
-> -	ret = 0;
->   exit:
->   	mutex_unlock(&panel->follower_lock);
+> =C2=A0tools/verification/dot2/dot2/dot2k.py |=C2=A0 2 +-
+> =C2=A0tools/verification/dot2/dot2k=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 37 +++++++++++++++----------
+> --
+> =C2=A02 files changed, 21 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/tools/verification/dot2/dot2/dot2k.py
+> b/tools/verification/dot2/dot2/dot2k.py
+> index 0922754454b9..9ec99e297012 100644
+> --- a/tools/verification/dot2/dot2/dot2k.py
+> +++ b/tools/verification/dot2/dot2/dot2k.py
+> @@ -19,7 +19,7 @@ class dot2k(Dot2c):
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_type =3D "per_cpu"
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0 def __init__(self, file_path, MonitorType, extra=
+_params=3D{}):
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.container =3D extra_para=
+ms.get("container")
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.container =3D extra_para=
+ms.get("subcmd") =3D=3D "container"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.parent =3D extra_pa=
+rams.get("parent")
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.__fill_rv_templates=
+_dir()
+> =C2=A0
+> diff --git a/tools/verification/dot2/dot2k
+> b/tools/verification/dot2/dot2k
+> index 767064f415e7..133fb17d9d47 100644
+> --- a/tools/verification/dot2/dot2k
+> +++ b/tools/verification/dot2/dot2k
+> @@ -13,30 +13,33 @@ if __name__ =3D=3D '__main__':
+> =C2=A0=C2=A0=C2=A0=C2=A0 import argparse
+> =C2=A0=C2=A0=C2=A0=C2=A0 import sys
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0 def is_container():
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """Should work even before pa=
+rsing the arguments"""
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return "-c" in sys.argv or "-=
+-container" in sys.argv
 > -
-> -	return ret;
->   }
->   EXPORT_SYMBOL(drm_panel_prepare);
->   
-> @@ -154,16 +151,14 @@ EXPORT_SYMBOL(drm_panel_prepare);
->    * reset, turn off power supplies, ...). After this function has completed, it
->    * is usually no longer possible to communicate with the panel until another
->    * call to drm_panel_prepare().
-> - *
-> - * Return: 0 on success or a negative error code on failure.
->    */
-> -int drm_panel_unprepare(struct drm_panel *panel)
-> +void drm_panel_unprepare(struct drm_panel *panel)
->   {
->   	struct drm_panel_follower *follower;
->   	int ret;
->   
->   	if (!panel)
-> -		return -EINVAL;
-> +		return;
->   
->   	/*
->   	 * If you are seeing the warning below it likely means one of two things:
-> @@ -176,7 +171,7 @@ int drm_panel_unprepare(struct drm_panel *panel)
->   	 */
->   	if (!panel->prepared) {
->   		dev_warn(panel->dev, "Skipping unprepare of already unprepared panel\n");
-> -		return 0;
-> +		return;
->   	}
->   
->   	mutex_lock(&panel->follower_lock);
-> @@ -195,11 +190,8 @@ int drm_panel_unprepare(struct drm_panel *panel)
->   	}
->   	panel->prepared = false;
->   
-> -	ret = 0;
->   exit:
->   	mutex_unlock(&panel->follower_lock);
-> -
-> -	return ret;
->   }
->   EXPORT_SYMBOL(drm_panel_unprepare);
->   
-> @@ -209,26 +201,26 @@ EXPORT_SYMBOL(drm_panel_unprepare);
->    *
->    * Calling this function will cause the panel display drivers to be turned on
->    * and the backlight to be enabled. Content will be visible on screen after
-> - * this call completes.
-> - *
-> - * Return: 0 on success or a negative error code on failure.
-> + * this call completes. This function cannot fail (as it is called from the
-> + * enable call chain). There will always be a call to drm_panel_disable()
-> + * afterwards.
->    */
-> -int drm_panel_enable(struct drm_panel *panel)
-> +void drm_panel_enable(struct drm_panel *panel)
->   {
->   	int ret;
->   
->   	if (!panel)
-> -		return -EINVAL;
-> +		return;
->   
->   	if (panel->enabled) {
->   		dev_warn(panel->dev, "Skipping enable of already enabled panel\n");
-> -		return 0;
-> +		return;
->   	}
->   
->   	if (panel->funcs && panel->funcs->enable) {
->   		ret = panel->funcs->enable(panel);
->   		if (ret < 0)
-> -			return ret;
-> +			return;
->   	}
->   	panel->enabled = true;
->   
-> @@ -236,8 +228,6 @@ int drm_panel_enable(struct drm_panel *panel)
->   	if (ret < 0)
->   		DRM_DEV_INFO(panel->dev, "failed to enable backlight: %d\n",
->   			     ret);
-> -
-> -	return 0;
->   }
->   EXPORT_SYMBOL(drm_panel_enable);
->   
-> @@ -248,15 +238,13 @@ EXPORT_SYMBOL(drm_panel_enable);
->    * This will typically turn off the panel's backlight or disable the display
->    * drivers. For smart panels it should still be possible to communicate with
->    * the integrated circuitry via any command bus after this call.
-> - *
-> - * Return: 0 on success or a negative error code on failure.
->    */
-> -int drm_panel_disable(struct drm_panel *panel)
-> +void drm_panel_disable(struct drm_panel *panel)
->   {
->   	int ret;
->   
->   	if (!panel)
-> -		return -EINVAL;
-> +		return;
->   
->   	/*
->   	 * If you are seeing the warning below it likely means one of two things:
-> @@ -269,7 +257,7 @@ int drm_panel_disable(struct drm_panel *panel)
->   	 */
->   	if (!panel->enabled) {
->   		dev_warn(panel->dev, "Skipping disable of already disabled panel\n");
-> -		return 0;
-> +		return;
->   	}
->   
->   	ret = backlight_disable(panel->backlight);
-> @@ -280,11 +268,9 @@ int drm_panel_disable(struct drm_panel *panel)
->   	if (panel->funcs && panel->funcs->disable) {
->   		ret = panel->funcs->disable(panel);
->   		if (ret < 0)
-> -			return ret;
-> +			return;
->   	}
->   	panel->enabled = false;
-> -
-> -	return 0;
->   }
->   EXPORT_SYMBOL(drm_panel_disable);
->   
-> diff --git a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-> index 5d115ecd5dd44c8e5e7d1fb8afe573324e987f59..b6429795e8f518646443dd8179f3ec28cef4dc0f 100644
-> --- a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-> +++ b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-> @@ -413,15 +413,10 @@ static int panel_nv3051d_probe(struct mipi_dsi_device *dsi)
->   static void panel_nv3051d_shutdown(struct mipi_dsi_device *dsi)
->   {
->   	struct panel_nv3051d *ctx = mipi_dsi_get_drvdata(dsi);
-> -	int ret;
->   
-> -	ret = drm_panel_unprepare(&ctx->panel);
-> -	if (ret < 0)
-> -		dev_err(&dsi->dev, "Failed to unprepare panel: %d\n", ret);
-> +	drm_panel_unprepare(&ctx->panel);
->   
-> -	ret = drm_panel_disable(&ctx->panel);
-> -	if (ret < 0)
-> -		dev_err(&dsi->dev, "Failed to disable panel: %d\n", ret);
-> +	drm_panel_disable(&ctx->panel);
->   }
->   
->   static void panel_nv3051d_remove(struct mipi_dsi_device *dsi)
-> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> index a9c042c8dea1a82ef979c7a68204e0b55483fc28..18bf338c8b96254dc3f2880106b944e71ea4c9a7 100644
-> --- a/include/drm/drm_panel.h
-> +++ b/include/drm/drm_panel.h
-> @@ -275,11 +275,11 @@ void drm_panel_init(struct drm_panel *panel, struct device *dev,
->   void drm_panel_add(struct drm_panel *panel);
->   void drm_panel_remove(struct drm_panel *panel);
->   
-> -int drm_panel_prepare(struct drm_panel *panel);
-> -int drm_panel_unprepare(struct drm_panel *panel);
-> +void drm_panel_prepare(struct drm_panel *panel);
-> +void drm_panel_unprepare(struct drm_panel *panel);
->   
-> -int drm_panel_enable(struct drm_panel *panel);
-> -int drm_panel_disable(struct drm_panel *panel);
-> +void drm_panel_enable(struct drm_panel *panel);
-> +void drm_panel_disable(struct drm_panel *panel);
->   
->   int drm_panel_get_modes(struct drm_panel *panel, struct drm_connector *connector);
->   
-> 
+> =C2=A0=C2=A0=C2=A0=C2=A0 parser =3D argparse.ArgumentParser(description=
+=3D'transform .dot
+> file into kernel rv monitor')
+> -=C2=A0=C2=A0=C2=A0 parser.add_argument('-d', "--dot", dest=3D"dot_file",=
+ required=3Dnot
+> is_container())
+> -=C2=A0=C2=A0=C2=A0 parser.add_argument('-t', "--monitor_type", dest=3D"m=
+onitor_type",
+> required=3Dnot is_container(),
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3Df=
+"Available options: {',
+> '.join(dot2k.monitor_types.keys())}")
+> -=C2=A0=C2=A0=C2=A0 parser.add_argument('-n', "--model_name", dest=3D"mod=
+el_name",
+> required=3Dis_container())
+> =C2=A0=C2=A0=C2=A0=C2=A0 parser.add_argument("-D", "--description", dest=
+=3D"description",
+> required=3DFalse)
+> =C2=A0=C2=A0=C2=A0=C2=A0 parser.add_argument("-a", "--auto_patch", dest=
+=3D"auto_patch",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ac=
+tion=3D"store_true", required=3DFalse,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 he=
+lp=3D"Patch the kernel in place")
+> -=C2=A0=C2=A0=C2=A0 parser.add_argument("-p", "--parent", dest=3D"parent"=
+,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 required=
+=3DFalse, help=3D"Create a monitor
+> nested to parent")
+> -=C2=A0=C2=A0=C2=A0 parser.add_argument("-c", "--container", dest=3D"cont=
+ainer",
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 action=
+=3D"store_true", required=3DFalse,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3D"=
+Create an empty monitor to be used as
+> a container")
+> +
+> +=C2=A0=C2=A0=C2=A0 subparsers =3D parser.add_subparsers(dest=3D"subcmd",=
+ required=3DTrue)
+> +
+> +=C2=A0=C2=A0=C2=A0 monitor_parser =3D subparsers.add_parser("monitor")
+> +=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-n', "--model_name",
+> dest=3D"model_name")
+> +=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument("-p", "--parent", dest=3D=
+"parent",
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 required=3DFalse, help=3D"Create a
+> monitor nested to parent")
+> +=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-d', "--dot", dest=3D"do=
+t_file")
+> +=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-t', "--monitor_type",
+> dest=3D"monitor_type",
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3Df"Available options: {',
+> '.join(dot2k.monitor_types.keys())}")
+> +
+> +=C2=A0=C2=A0=C2=A0 container_parser =3D subparsers.add_parser("container=
+")
+> +=C2=A0=C2=A0=C2=A0 container_parser.add_argument('-n', "--model_name",
+> dest=3D"model_name", required=3DTrue)
+> +
+> =C2=A0=C2=A0=C2=A0=C2=A0 params =3D parser.parse_args()
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0 if not is_container():
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print("Opening and parsing th=
+e dot file %s" %
+> params.dot_file)
+> =C2=A0=C2=A0=C2=A0=C2=A0 try:
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monitor=3Ddot2k(params.dot_fi=
+le, params.monitor_type,
+> vars(params))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if params.subcmd =3D=3D "moni=
+tor":
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
+("Opening and parsing the dot file %s" %
+> params.dot_file)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monit=
+or =3D dot2k(params.dot_file, params.monitor_type,
+> vars(params))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monit=
+or =3D dot2k(None, None, vars(params))
+> =C2=A0=C2=A0=C2=A0=C2=A0 except Exception as e:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print('Error: '+ str(e))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print("Sorry : :-(")
+> @@ -45,7 +48,7 @@ if __name__ =3D=3D '__main__':
+> =C2=A0=C2=A0=C2=A0=C2=A0 print("Writing the monitor into the directory %s=
+" %
+> monitor.name)
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor.print_files()
+> =C2=A0=C2=A0=C2=A0=C2=A0 print("Almost done, checklist")
+> -=C2=A0=C2=A0=C2=A0 if not is_container():
+> +=C2=A0=C2=A0=C2=A0 if params.subcmd =3D=3D "monitor":
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print("=C2=A0 - Edit the=
+ %s/%s.c to add the instrumentation" %
+> (monitor.name, monitor.name))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print(monitor.fill_trace=
+point_tooltip())
+> =C2=A0=C2=A0=C2=A0=C2=A0 print(monitor.fill_makefile_tooltip())
 
-LGTM
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
