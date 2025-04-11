@@ -1,158 +1,197 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7218C1C3BEB;
-	Fri, 11 Apr 2025 13:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF2A1D86FB
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379457; cv=none; b=N0gwma7Skw0kxG5g8wQH+vPwBbZNVJA1mnpQXr5JU7c0QA3/ebI3u6VorFNtNak40s/a4CRqWG5YTwBWUNDQ0EphB4viW2Sm/pe+aD4gJZVOa5LA2CKWzuVTQC8dw/p1FQtI+O4mgoQYzB2WcvTWcHc3oeXWHWoaC0n8MMXaNmg=
+	t=1744379551; cv=none; b=WlYEsbPD7XJ7uL0XXZJj2hx1AFzDg+pez1+Gm04InyvvsvlAy5srey87/C7c5UC8E2jrJ4jT3ixak0IKcEgYp+soomVXJEU/pFu5J7cuXrEtXyz1s2NQPuGwpjYpmVtuzRJgxtgoJ+2JEyGNOAQEJ9B39otqVzNhg1Q9PNeZuDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379457; c=relaxed/simple;
-	bh=qtOV60ECJZu9Fi40Bf5lH+RBr8bVEl7SPzPMLSpbslo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TtgGemACEBpDKCsa8KvWOynEi4Z3HFuBLTNxRcFgWSqFCBe9DMJhxZzf0C9a8qJpV9uTesi9YVDWj3W2YYo9Od7+Gzo9gnbWJvbmEZJ6HAzrCYGTtZvdquumMXDYJ7WSeH0lI044U3a4v5g2NcGlX/5sgZZCDNObJUsSP+qV8AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=lynEyBVh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XHXPK9Yc; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	s=arc-20240116; t=1744379551; c=relaxed/simple;
+	bh=szzDNYi10SZeGHWmUnxazURY4qRgxQ93N4avMNpODMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t5UD7Y+dQMKNyJTS/PZFadwN8WgaUnmOQqD49SViKCwyikPTtw+wAD1dj0C6cs2BBLonzts9obIA3DwlP7oYX8JW+8vyT6UzAX5U6/AIyeSb1tDRp9yS3bue5c2ce2q+CjQchCRYNuayBki9WzqeZJH6nhZAQ0WZN1SFAxGnp/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Cbbo/L4N; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7vnG/ak7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e9nshYrh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HbDhCzK7; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="lynEyBVh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XHXPK9Yc"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 6439B13802B1;
-	Fri, 11 Apr 2025 09:50:53 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Fri, 11 Apr 2025 09:50:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1744379453; x=
-	1744465853; bh=Y1OSHZSZRnVHTncatSZJml8c2A69m+s5Vr0UXqqvqfQ=; b=l
-	ynEyBVhe4Sz+Xi3AgsWBDOxUNFh1FL2InBt59AGa0xdbXkhQbP3Py3G+rIiJ/muD
-	uUAx72fAM68BKOMI8SsflJXBdxdj8iF7hYB2VSn68oEezdOA2JM5hcXzTwxLBw5+
-	SUh/HUyGIlm5+gmzhvGNkztrKNXmm5+oQJ++g8Jq2YZak3QJMX9tTyEOtg5Wp51M
-	8VaAFzToLV4boXfRtUsOmCkzUKIhUH170zQez89cehVjTQ4SEHlu2TOaG4BA6nae
-	khQRT9xB5xdWFvwbWWFtqW3DyxL9UOc3xESSWCzs6iuCEKYtb20kaoKxP2COSmvl
-	g0m//ZjNJJt3JEpbQzMCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744379453; x=1744465853; bh=Y1OSHZSZRnVHTncatSZJml8c2A69m+s5Vr0
-	UXqqvqfQ=; b=XHXPK9Yci0zzoHLVvgAwg6ZA28WsHFw+TPedlNEN/8jdvkxE+ue
-	Q2yja/SAS3xV1Ys8uqmqQpFHaPYNWPFDqmVrQpj5eXhg+CY35o6px4EKw+6T14aW
-	Rv+H7v7H/jrWjOm6s7zo1mD/SDGftbgh2h87SFkvG8Q3cmfDx1i7LBp7bMv2fEeG
-	gkxuiiS4bdRiI+ihbVi+/PhvkYTwktIL/4xlRcXQZjQTzHmwWw+pqjHMTxhFAJrn
-	LiyDV8qg+UnkDQZ53OKIOvLJkzCbQ7zHGEC3C7F3uk/GweJYrU2AxfZ+BOpRIFWB
-	HPgS65+AuPKK86Drjw8VCedc4H4py3RJ/qA==
-X-ME-Sender: <xms:PB75Z3PdTJWbL-EYX19JeLDwA77yl_nbEC3AUrCvQdrLM5Dw8OQyvA>
-    <xme:PB75Zx-4qciYr6TILHli5NCvqcg72ZXbvOHQgnYIxKiN_oqR_dB3GX08Xg7Rh3Ixz
-    j7PjHDXRniOeGiQtMM>
-X-ME-Received: <xmr:PB75Z2SXo4FLPtLgP3cE6RJRZFw92yb4F_2ChNYkc5tPDtP2kv5i8KDHkcxb>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduleekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
-    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
-    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
-    sggprhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
-    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehp
-    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
-    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
-    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
-X-ME-Proxy: <xmx:PB75Z7u5vrlCWPEgZTQsqDxNamNyQkNBDuL0n0IXaH8LXqRleJZCiA>
-    <xmx:PB75Z_faug92tfCJp0aKdS57AkNXwJ0P11VU0mwuKnqz7FzwrU5GeA>
-    <xmx:PB75Z33B4yHa1LlSkzJ-o-9W3PKUeMMklwsDAoqjWDC2chNLdoGcTw>
-    <xmx:PB75Z79BqUUcq0xQYbFg3nn2Sj4DmiSy_fOEwUu_oNrBtEMe9KP0Tg>
-    <xmx:PR75Z6rliDh_6ma4bSc2SFswX7tQTDhYEiTk5D2w52UXpS81YpxnnaTy>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 11 Apr 2025 09:50:51 -0400 (EDT)
-Date: Fri, 11 Apr 2025 15:50:49 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
-	steffen.klassert@secunet.com, antony.antony@secunet.com
-Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
- Offload (ovpn)
-Message-ID: <Z_keORW4OWc8i5Vz@krikkit>
-References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
- <20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
- <20250410195440.3ba7ba0f@kernel.org>
- <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Cbbo/L4N";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7vnG/ak7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e9nshYrh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HbDhCzK7"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E8DFE1F457;
+	Fri, 11 Apr 2025 13:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744379548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bn4vEdF7BMMX6U/j8Vn/KS84WNVVfGH2V+Zaq+K+Ek0=;
+	b=Cbbo/L4N1VXWJr1Dzw8LiAPuOKSos9kURIN1aiZ/74aStqjsHYBMISn9Azq19Tb4d0WMkB
+	4kJYeJbxjhyUfjkheX7pn1QMhlPA3A3qUc62slwlpXBUOCEhMY/k0ZdoV81BksCv6nRjrJ
+	zB3VDCq0MIW2aQxdqVEyaDHIdTG/8mI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744379548;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bn4vEdF7BMMX6U/j8Vn/KS84WNVVfGH2V+Zaq+K+Ek0=;
+	b=7vnG/ak7/3Rrc3uWUSYH32fTThIuHTnHkd5/hl6udGLyUlkQTbwkjW/C42QALuxB9PHHio
+	iF2xWSLpzNX4+hCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744379547; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bn4vEdF7BMMX6U/j8Vn/KS84WNVVfGH2V+Zaq+K+Ek0=;
+	b=e9nshYrhpApkfcZ0wX7eDzXN5ykgD6XNdquem1rKe7T5GjkM0r1WAX0qk1Vs6o4BvOzgC3
+	hVdNUMa6TLmkRusZWBgZ1SQfs6xf7Jmy27k3X+X1/QBAp2chP1JPBqp+/GBsGNmPi09zX3
+	3ZW23c1OmVdjod6FFAeXIREmrcQ5qdU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744379547;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bn4vEdF7BMMX6U/j8Vn/KS84WNVVfGH2V+Zaq+K+Ek0=;
+	b=HbDhCzK7/5/yDt1WArz2pENtbzWSMMAh60B68pU+lFEGRQX9suf5rVZy75yNS3fpNZ87NV
+	uSZbfbHUJcOQZhBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 86C2613886;
+	Fri, 11 Apr 2025 13:52:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OuMKH5se+WfHfQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 11 Apr 2025 13:52:27 +0000
+Message-ID: <f455789b-c0bb-469d-b6bf-35774d0323c1@suse.de>
+Date: Fri, 11 Apr 2025 15:52:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/efidrm: ensure screen_base is initialized
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ Arnd Bergmann <arnd@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20250411125554.1453825-1-arnd@kernel.org>
+ <8734ee3ksz.fsf@minerva.mail-host-address-is-not-set>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <8734ee3ksz.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[lkml];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FREEMAIL_TO(0.00)[redhat.com,kernel.org,linux.intel.com,gmail.com,ffwll.ch];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[arndb.de,gmail.com,google.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-2025-04-11, 10:04:10 +0200, Antonio Quartulli wrote:
-> Hi Jakub,
-> 
-> thanks for taking the time to go through my patchset :)
-> 
-> On 11/04/2025 04:54, Jakub Kicinski wrote:
-> > On Mon, 07 Apr 2025 21:46:09 +0200 Antonio Quartulli wrote:
-> > > +static int ovpn_netdev_notifier_call(struct notifier_block *nb,
-> > > +				     unsigned long state, void *ptr)
-> > > +{
-> > > +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> > > +
-> > > +	if (!ovpn_dev_is_valid(dev))
-> > > +		return NOTIFY_DONE;
-> > > +
-> > > +	switch (state) {
-> > > +	case NETDEV_REGISTER:
-> > > +		/* add device to internal list for later destruction upon
-> > > +		 * unregistration
-> > > +		 */
-> > > +		break;
-> > > +	case NETDEV_UNREGISTER:
-> > > +		/* can be delivered multiple times, so check registered flag,
-> > > +		 * then destroy the interface
-> > > +		 */
-> > > +		break;
-> > > +	case NETDEV_POST_INIT:
-> > > +	case NETDEV_GOING_DOWN:
-> > > +	case NETDEV_DOWN:
-> > > +	case NETDEV_UP:
-> > > +	case NETDEV_PRE_UP:
-> > > +	default:
-> > > +		return NOTIFY_DONE;
-> > > +	}
-> > 
-> > Why are you using a notifier to get events for your own device?
-> 
-> My understanding is that this is the standard approach to:
-> 1) hook in the middle of registration/deregistration;
-> 2) handle events generated by other components/routines.
-> 
-> I see in /drivers/net/ almost every driver registers a notifier for their
-> own device.
+Hi Arnd
 
-I think most of them register a notifier for their lower device
-(bridge port, real device under a vlan, or similar).
+Am 11.04.25 um 15:11 schrieb Javier Martinez Canillas:
+> Arnd Bergmann <arnd@kernel.org> writes:
+>
+> Hello Arnd,
+>
+>> From: Arnd Bergmann <arnd@arndb.de>
 
-I've mentioned at some point that it would be more usual to replace
-this notifier with a custom dellink, and that ovpn->registered could
-likely be replaced with checking for NETREG_REGISTERED. I just thought
-it could be cleaned up a bit later, but it seems Jakub wants it done
-before taking the patches :)
+Thanks for the fix.
+
+>>
+>> clang points out that there is a code path that leads to undefined behavior:
+>>
+>> drivers/gpu/drm/sysfb/efidrm.c:353:11: error: variable 'screen_base' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+>>    353 |         else if (mem_flags & EFI_MEMORY_WB)
+>>        |                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>
+>> Add the missing initialization.
+>>
+>> Fixes: 32ae90c66fb6 ("drm/sysfb: Add efidrm for EFI displays")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+> A similar patch has been proposed by Nathan already and acked by Thomas:
+>
+> https://lists.freedesktop.org/archives/dri-devel/2025-April/500539.html
+
+I've meanwhile merged this patch into drm-misc-next.
+
+Best regards
+Thomas
+
+>
 
 -- 
-Sabrina
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
