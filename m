@@ -1,154 +1,165 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A8B2111;
-	Fri, 11 Apr 2025 10:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55361204840
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367214; cv=none; b=XxYT7ThvxQSeDjwcDlpmyeNyYw/Xe07tpzMGuNnUWMBE79v1VGfmGSq2uI/YCqn476prJWlxe3hjWPEL/zXr4AUddrf7JCNCBNfM4GLRZTufq/3fEGC3Td9N1sVOe0WSRykZrHOh2VMmKyqjJNvuyoPa/gmp8whvp6b1a2bIA/A=
+	t=1744367318; cv=none; b=piPPn4eBpDf8EShWqumYteTBiVk2lmJp58ekDTBglmtYa/1N7y0/Qvpzpx+EBe+00Ym4rTZEpkevGe1ahSjrBOczJCc+yKtD1F/SH/c/JPI1ZaMLnICnMceVJuvC/y8bhENBZUlDZQ4gWhOsSm5UEd5qEATf1YZy+PCWib/0lEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367214; c=relaxed/simple;
-	bh=O4KqdYjRC64H8ToIuxhL6xWWnBNvLP/zVgr8FU/xhpY=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ocrMvknkPrSc8+7N99KFRqaSwWntJnWQE394PjTs1Cp7nYzRaDDrBEZHL2PqWa/HrH9QIn1zq7ug+70bCMuUSvSOIh2gfR8jsmrPxGlXnsp3KpehVX10AM68aeFky1vM8Y6R+8YJM1gCMliIc03uZw9fOT/C7FK59tpmEdVSVGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZUJcqXaG; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUJcqXaG"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso2402998b3a.2;
-        Fri, 11 Apr 2025 03:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744367212; x=1744972012; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZjuoOar/qHDJlB0wKmDqj4coUEnm9uYJr4sa2p38wPo=;
-        b=ZUJcqXaGYlkliE9q13Mu8qTAVxeCJ82NYpxI4Ew6wFW/Jiv8G9VjZSCxXBraKjEMex
-         6BJWyI9EAlVmtYZaylVxjCsJtxlTzXwlXnHREivZW0i0KkrqOA1YWFMJnOLwVnxGrqXb
-         26P0YyY8ruyUyGeMMa4cEm2CZ0lRe4m9zBmKq8oXislisGN/T3xAwTdkUlyQoEVQDr7/
-         R6uVJzvnAFFO4l/6gSEvuxKNUKHr6QwrEpOT5rUTplobljxawCts7e59TLJlQiEgnRGP
-         4nUVSOTnkMVi2iLmxH9lmeCP093WunqoSesoDIOphogOmtPq7gyB2FfCZN4DGarbLRI9
-         vA6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744367212; x=1744972012;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZjuoOar/qHDJlB0wKmDqj4coUEnm9uYJr4sa2p38wPo=;
-        b=LnpT+a5sfL6fmeDpHCRUGLVjZN8cBQbd7R4+zGegBnp6rch8ih1uw8ox8v2FRW/Mby
-         fa1ivJaTFqiqn8ArZa0SYrWshowrxMHtDhnuwZIFH+vW6AAlH7O4gehHeMAx1JMjxlzJ
-         DGCOSYxNFUVzvgi10YCGAv7p3Bohcf/FsrGZccsSWOq79sBjQr/CrtwoZyJK3FZrN07X
-         tLbEm7T2Voak6AixnWaQd/Fglg/U/dF6I5gKSvAByBAmJBz8z8hxdqEkZhTNB3Xd2bQi
-         FuNFFZrwH+0/gYeF0YPh2raCfg1ltQgui+wrSSR6ffAXrwsnKoJAUkXP8vBjJbdiotzj
-         bnig==
-X-Forwarded-Encrypted: i=1; AJvYcCUMeknluhcyprsuqyNCJayRhw6J96dIDWeSR928qjVAISIR5GjvfnxDzgDhnF+wWqaJQLkd4McW6lIov4Y=@vger.kernel.org, AJvYcCWsEqnaTr1zuRAji4DO0W2c0S9LkvlXxZvV25+wkvGYzDI3kCyvfjcoVfktahe3aPvKm8fAC8Kus05+bZIR5AQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaBqqWlj1Y2waPbES6g7uzG9luk1Yuy8N/JlrlHXfuMW68ZrEy
-	L/F5/536drpVMy0U86l5b528M9ehjstcVPaPYj1WuxpKFooivsQ+
-X-Gm-Gg: ASbGncsZhU4rCaxYtR0k9oNDv6i58Hg2WNakQyEQBDa4wcDww0DqGXeRgkhbWESAuAq
-	I6gc9JXJC0HDfU22sam5pRfLOIjoWBauKDo6qySDHyRMlWrJPZg8bqevQFlFo9bQcy7jMawD1xJ
-	sX68sDfrPeCJ24uf5ARemKXW1a4r6rD4xmf5LEtQgmxDuVedshdp8XZIC9RhbrdcRjfvFjI6AQv
-	p0JSNGc0xJrWuebsZN0TtP3n6PchU7XMmcEn6B6P+dS9KqxMwF02aS2nyLTOIeSfrttTLoJplqa
-	o5dpVGLqPiMBEC3O+Hogs6b0uqySx+l3TwC0JBadL7524RlGRcyjgpq0XffWXAXqkrDTT19UxW6
-	MU8mih9D/QXTt8TRCv/j5rQk=
-X-Google-Smtp-Source: AGHT+IEWwDnbyVwPFqOVnCdkN/psx+fU+RkZ4Yv6uyoCWCO9dzSq7uhsjoNHIVZn8mcG7IiTkxxcWQ==
-X-Received: by 2002:a05:6a00:4f90:b0:736:34ff:be8 with SMTP id d2e1a72fcca58-73bd1261635mr3426662b3a.19.1744367212470;
-        Fri, 11 Apr 2025 03:26:52 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c62ecsm1170202b3a.62.2025.04.11.03.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 03:26:51 -0700 (PDT)
-Date: Fri, 11 Apr 2025 19:26:47 +0900 (JST)
-Message-Id: <20250411.192647.1837707035806943183.fujita.tomonori@gmail.com>
-To: dakr@kernel.org
-Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
- abdiel.janulgue@gmail.com, daniel.almeida@collabora.com,
- robin.murphy@arm.com, a.hindborg@kernel.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, aliceryhl@google.com,
- tmgross@umich.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: helpers: Add dma_alloc_attrs() and
- dma_free_attrs()
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <Z_jmBz6FBoYMMGyi@cassiopeiae>
-References: <20250410234332.153242-1-fujita.tomonori@gmail.com>
-	<Z_jmBz6FBoYMMGyi@cassiopeiae>
+	s=arc-20240116; t=1744367318; c=relaxed/simple;
+	bh=rtNvKOHo+CDWwX6v8e8oLDBWT5FTySvzXMltZLlA9ME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nk1m6xZTPZzQ45xqI875b5FAMMPSmsBGbKUFH1l4YyNuwazm04Lgut9jRD25SEFEOcPtJGRmtwP+UoUsPbWhMnHUvTR1qGXdb229Qc6uydS3NCTFoWJZwJF6LKVFoLFLBPcfJGtck3NYL7n+dkLWUgK9lWDZAuveOuO1lJAgZ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A86844195;
+	Fri, 11 Apr 2025 10:28:32 +0000 (UTC)
+Message-ID: <bbdfe17e-a58a-4a14-9e74-8794b08fdda6@ghiti.fr>
+Date: Fri, 11 Apr 2025 12:28:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH fixes] riscv: Properly export reserved regions in
+ /proc/iomem
+Content-Language: en-US
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Nick Kossifidis <mick@ics.forth.gr>,
+ linux-riscv@lists.infradead.org
+Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ linux-kernel@vger.kernel.org
+References: <20250409182129.634415-1-bjorn@kernel.org>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250409182129.634415-1-bjorn@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedtgeeuhffhveeujeetveevieekleekvdffudefleevgefgieekkefggefhtddtveenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeejpdhrtghpthhtohepsghjohhrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepmhhitghksehitghsrdhfohhrthhhrdhgrhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhin
+ hgtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-On Fri, 11 Apr 2025 11:51:03 +0200
-Danilo Krummrich <dakr@kernel.org> wrote:
+Hi Bjorn,
 
-> On Fri, Apr 11, 2025 at 08:43:32AM +0900, FUJITA Tomonori wrote:
->> Add dma_alloc_attrs() and dma_free_attrs() helpers to fix a build
->> error when CONFIG_HAS_DMA is not enabled.
->> 
->> Note that when CONFIG_HAS_DMA is enabled, dma_alloc_attrs() and
->> dma_free_attrs() are included in both bindings_generated.rs and
->> bindings_helpers_generated.rs. The former takes precedence so behavior
->> remains unchanged in that case.
->> 
->> This fixes the following build error on UML:
->> 
->> error[E0425]: cannot find function `dma_alloc_attrs` in crate `bindings`
->>      --> rust/kernel/dma.rs:171:23
->>       |
->> 171   |               bindings::dma_alloc_attrs(
->>       |                         ^^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_alloc_pages`
->>       |
->>      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44568:5
->>       |
->> 44568 | /     pub fn dma_alloc_pages(
->> 44569 | |         dev: *mut device,
->> 44570 | |         size: usize,
->> 44571 | |         dma_handle: *mut dma_addr_t,
->> 44572 | |         dir: dma_data_direction,
->> 44573 | |         gfp: gfp_t,
->> 44574 | |     ) -> *mut page;
->>       | |___________________- similarly named function `dma_alloc_pages` defined here
->> 
->> error[E0425]: cannot find function `dma_free_attrs` in crate `bindings`
->>      --> rust/kernel/dma.rs:293:23
->>       |
->> 293   |               bindings::dma_free_attrs(
->>       |                         ^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_free_pages`
->>       |
->>      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44577:5
->>       |
->> 44577 | /     pub fn dma_free_pages(
->> 44578 | |         dev: *mut device,
->> 44579 | |         size: usize,
->> 44580 | |         page: *mut page,
->> 44581 | |         dma_handle: dma_addr_t,
->> 44582 | |         dir: dma_data_direction,
->> 44583 | |     );
->>       | |______- similarly named function `dma_free_pages` defined here
->> 
->> Fixes: ad2907b4e308 ("rust: add dma coherent allocator abstraction")
->> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-> 
-> Please add the new file to the corresponding MAINTAINERS entry. Whith that,
-> 
-> 	Acked-by: Danilo Krummrich <dakr@kernel.org>
+On 09/04/2025 20:21, Björn Töpel wrote:
+> From: Björn Töpel <bjorn@rivosinc.com>
+>
+> The /proc/iomem represents the kernel's memory map. Regions marked
+> with "Reserved" tells the user that the range should not be tampered
+> with. Kexec-tools, when using the older kexec_load syscall relies on
+> the "Reserved" regions to build the memory segments, that will be the
+> target of the new kexec'd kernel.
+>
+> The RISC-V port tries to expose all reserved regions to userland, but
+> some regions were not properly exposed: Regions that resided in both
+> the "regular" and reserved memory block, e.g. the EFI Memory Map. A
+> missing entry could result in reserved memory being overwritten.
+>
+> It turns out, that arm64, and loongarch had a similar issue a while
+> back:
+>
+>    commit d91680e687f4 ("arm64: Fix /proc/iomem for reserved but not memory regions")
+>    commit 50d7ba36b916 ("arm64: export memblock_reserve()d regions via /proc/iomem")
+>
+> Similar to the other ports, resolve the issue by splitting the regions
+> in an arch initcall, since we need a working allocator.
+>
+> Fixes: ffe0e5261268 ("RISC-V: Improve init_resources()")
+> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+> ---
+>   arch/riscv/kernel/setup.c | 36 +++++++++++++++++++++++++++++++++++-
+>   1 file changed, 35 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index c174544eefc8..f7c9a1caa83e 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -66,6 +66,9 @@ static struct resource bss_res = { .name = "Kernel bss", };
+>   static struct resource elfcorehdr_res = { .name = "ELF Core hdr", };
+>   #endif
+>   
+> +static int num_standard_resources;
+> +static struct resource *standard_resources;
+> +
+>   static int __init add_resource(struct resource *parent,
+>   				struct resource *res)
+>   {
+> @@ -139,7 +142,7 @@ static void __init init_resources(void)
+>   	struct resource *res = NULL;
+>   	struct resource *mem_res = NULL;
+>   	size_t mem_res_sz = 0;
+> -	int num_resources = 0, res_idx = 0;
+> +	int num_resources = 0, res_idx = 0, non_resv_res = 0;
+>   	int ret = 0;
+>   
+>   	/* + 1 as memblock_alloc() might increase memblock.reserved.cnt */
+> @@ -193,6 +196,7 @@ static void __init init_resources(void)
+>   	/* Add /memory regions to the resource tree */
+>   	for_each_mem_region(region) {
+>   		res = &mem_res[res_idx--];
+> +		non_resv_res++;
+>   
+>   		if (unlikely(memblock_is_nomap(region))) {
+>   			res->name = "Reserved";
+> @@ -210,6 +214,9 @@ static void __init init_resources(void)
+>   			goto error;
+>   	}
+>   
+> +	num_standard_resources = non_resv_res;
+> +	standard_resources = &mem_res[res_idx + 1];
+> +
+>   	/* Clean-up any unused pre-allocated resources */
+>   	if (res_idx >= 0)
+>   		memblock_free(mem_res, (res_idx + 1) * sizeof(*mem_res));
+> @@ -221,6 +228,33 @@ static void __init init_resources(void)
+>   	memblock_free(mem_res, mem_res_sz);
+>   }
+>   
+> +static int __init reserve_memblock_reserved_regions(void)
+> +{
+> +	u64 i, j;
+> +
+> +	for (i = 0; i < num_standard_resources; i++) {
+> +		struct resource *mem = &standard_resources[i];
+> +		phys_addr_t r_start, r_end, mem_size = resource_size(mem);
+> +
+> +		if (!memblock_is_region_reserved(mem->start, mem_size))
+> +			continue;
+> +
+> +		for_each_reserved_mem_range(j, &r_start, &r_end) {
+> +			resource_size_t start, end;
+> +
+> +			start = max(PFN_PHYS(PFN_DOWN(r_start)), mem->start);
+> +			end = min(PFN_PHYS(PFN_UP(r_end)) - 1, mem->end);
+> +
+> +			if (start > mem->end || end < mem->start)
+> +				continue;
+> +
+> +			reserve_region_with_split(mem, start, end, "Reserved");
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +arch_initcall(reserve_memblock_reserved_regions);
+>   
+>   static void __init parse_dtb(void)
+>   {
+>
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
 
-I'll include the following changes in the next version.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..bec614ef35d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7020,6 +7020,7 @@ L:	rust-for-linux@vger.kernel.org
- S:	Supported
- W:	https://rust-for-linux.com
- T:	git https://github.com/Rust-for-Linux/linux.git alloc-next
-+F:	rust/helpers/dma.c
- F:	rust/kernel/dma.rs
- F:	samples/rust/rust_dma.rs
- 
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+It will be merged with other fixes in the next rc-ish!
+
+Thanks,
+
+Alex
 
