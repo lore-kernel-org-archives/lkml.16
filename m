@@ -1,219 +1,238 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D41F3BB8;
-	Fri, 11 Apr 2025 14:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD84A1F2B90
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380520; cv=none; b=ZN8z2Pv+PUOxb2LtzU2KBo1VDb14gze3rvss7TIOp3y9E7UwXebQtCdwS7uyQqQKO1o1QLcP/EAIUm5wHZMmF4srVJPErZmWKUoGauRHaix8+PgUThNBuTpkbN9Aau4hQuRrvk4hEWQjKdYwT5xTSo1rT3Fa/O5jvzMOGADYZMQ=
+	t=1744380535; cv=none; b=SUSX7C9tJ60zv36DrJJbQ3xEczZKtKWses+itqPXLpcMihGOWdlyJV6iUEnbQ5XCRzfJNGDL4zaV1sbuVXUhGzCXP/jUuuqynLFNVjzITFalnz5ilzLo/cnoNGTO+ub2dgaPxYNKyxLtO10DtIrl8bYPjXyNWtvY557ugfGgZj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380520; c=relaxed/simple;
-	bh=Q3eaWd+6wGMNRQPZybiIJSiRvz0UKOQRz+P7X6jycHs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=udRTdI+6fKPzItv/S1ucECP0kJRi2K04EhhDfOYHE+0TZj8kj3MFxC/I4Nkpgo2KQXOF4qU5L6dJn/WEcb1x0GHRXFZk4acauGvctvAlBFedR/oWM+6l/KpQ0tBHO8FZiJyQE3nmspGXLKiB5HOd41UaF8TwDW6VWA2reWLTzeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3IJbWDl; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744380535; c=relaxed/simple;
+	bh=AXf+TOIsxTe7gFokC/cK4t5yaKBEpqCAZ7YE7r0VXAA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=eccsL6EUmu9BtpjANcDZ3NfmUwrzo3LlUsOfBAdiVt4KmCBDT1cx3RQVeX2rKkwKAmPMu3HBM6fXSTTg3UozPWCU6GkM5RUNUsybsTzdHntC9XzFb+vpTxC4Qf/ZEh+SsV0otCBn5oivuQiE5tItAsr5DP05o+F4kIt/GXI/mU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U/JwKS2V; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3IJbWDl"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47677b77725so20505301cf.3;
-        Fri, 11 Apr 2025 07:08:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U/JwKS2V"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3914a5def6bso1179545f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744380517; x=1744985317; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yzM0vwTr4TmNBoJJcVUz9Je6wZw8hkznV+w3yMHTmLs=;
-        b=h3IJbWDlhW13bfKWuhbx4beyHVzzKAJhM8muhfO+fXXZAjgws/P3lxupwl2zLbmLaA
-         YDuZ9SbcRYNG79Lwo/HTTFe5kEllNiSUNm2Abh9PUKlN7125an9a9rKr9ABMj3zBnkY2
-         Vo85ZUuRlB+4wmqDsIPiBIsbT3TIEEzChOLON7dl/ToVzTbNiv19PhHB6Nt6IRGfUm9s
-         pNmt03uCfIMZ2Hw3XkXGIir0Y8BqiIYPJ2w1T7tuQcfAxcq4p3dEcxYttbVaJctCRd3z
-         PuBGSjy8SzYn0ZEhj5btFAdPxCXpt+ro7LbKIRc+cUpfeodvI6RrMNoh+mxgq4F+dtEJ
-         3JVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380517; x=1744985317;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1744380532; x=1744985332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yzM0vwTr4TmNBoJJcVUz9Je6wZw8hkznV+w3yMHTmLs=;
-        b=mZSMMmKMvfcMmmMwizBMylqwH5QGRGNvlS69bnPlhrohxlV56eBcA9fcgsCk0lkgCn
-         Hr5u2Bjt5DmPF06joFDAkhy1kcX1a0wKG+xJqV4n4gFUEezmpweSqg5ZioAcJ/H7MD3S
-         HJXPBEueZtYfDwXQMqGUcSBcqeldInL4IymjPHpIgkY3uCp0jYoVgGd7w0Mfcm55fnyZ
-         s50PdqMPzIvU7tQcVhI2YrFggdx6HxUntw4k1lPvafMUsrnGc5a9NSwDKSFI+kI1xVpq
-         uGpedXx/5rZVQmvzoATA/lRNwj2plkB8n6LNiCWM8TYr6S6x7cX9PnimJcqpY/EJThwo
-         /xvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUt9AIRz/j66Vn9h3SzmSjvnCCgZMZCn/pT2QwYuFlFOUcFTA/s6T8+NjU9GF4D878eolsTVkV5fM8wn+xAgso=@vger.kernel.org, AJvYcCVDcclDcwx1CiF6+7yc8XfC8llTCIkrjjyicgZtBUemL+nVnOB787ACyCO7TExPU+r8JCkla74gTWHY@vger.kernel.org, AJvYcCVN541V6xF43beR4nP3AeqN9L9Xo0ja2O3dUwfptIBSOW9wbCLYVITkApHDnYpzKXM1Zo9ICgM3k424Q8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC86SK6uhqFFQQDWq5z+q0XZtDP4qqYXQZYO1eY7EplTpI388D
-	L90tkSdqymw/6ZK7G6AuE2y5mZDS2k0DwaH3NrV6OjbaoaIn1LCPFE8q3BI5
-X-Gm-Gg: ASbGnctefUipodzp0EgxdWascyzELf7aECQPloWAWIg63j7GGkQM5dDtFtGTq3XSLnc
-	Fi97FW/a++PhLu3ffk4jacs2VqTdUTZTT8y8J3ESdp3rNc56TB+M40m3vNUefvEEd5hdfcP6Wlh
-	17MZ6mDsp0XmrP3tyPJIK/fjYt77lNr6iILlpto+pG2B78B4uwsbW6yM44bIFXeEahGoAVeFRvv
-	xBp8AG2g/J+eItSdQZFhBuNVXWR98Q6usX3ZxEocmo2pus2vaap1o10e2uDSozu4VLcYm9cfDHs
-	rKvMw45b8kqEzyF11nihQ0+C7nHGtN1ABAB/x43mRK9mWUZwo1Eg4BPX5jGK5iO46qE=
-X-Google-Smtp-Source: AGHT+IEkZCpPSOfFFs4p/DramAWWHRy0xJDNth8YSq+TvpMzGWw9fJchjS6mFS3f28qolg0RykLZ5g==
-X-Received: by 2002:ac8:5745:0:b0:476:add4:d2a9 with SMTP id d75a77b69052e-4797755dfcemr41402541cf.30.1744380516812;
-        Fri, 11 Apr 2025 07:08:36 -0700 (PDT)
-Received: from [192.168.1.159] ([2600:4041:5be7:7c00:1d83:73da:5aa:7e95])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cc64sm25872641cf.62.2025.04.11.07.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 07:08:36 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 11 Apr 2025 10:08:27 -0400
-Subject: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
+        bh=rBj/6se5tCkgHEuB0Gb6HuXLXKWv7TpLm9YNzyiLklA=;
+        b=U/JwKS2VoK4GSEnoSmZ5UIhsnSsruTiG1gcT9l+WaU+GbxkxxBH4jIJqj2O5ypkuFS
+         1ib+MPil0sX2GNtqutJNtVrm1Q1Muhr6QOrLmJVZvi2gF0bjsfqEaWicXgNBD8W6jn82
+         /HyQOhXZzHL8LvJFSxZcGGdXac1DwNPB78mx2hPqPsdovEbiU+AVGkFzg4g+smx/P10y
+         Fz3Zfv4jUPlcImpmYLAB6i7OPK+3AK9DN8uMVIsna8D6O8sC6bTPz+6zv2E5sRQmIlXf
+         71DeVPQTovr8EDkg66JOGFHdIuD6oQjaJ6ECUK3pI4vbxgFYOgBEUvT9nq9JPHvsgALc
+         3gqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380532; x=1744985332;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rBj/6se5tCkgHEuB0Gb6HuXLXKWv7TpLm9YNzyiLklA=;
+        b=o4UxrpvZDZHxAIvzn6O4Gdcgxp10c27WykbRawEbPTco3ZzfryFhL7HxJgy/6WhApM
+         xwK/IC5wvM3kcwR5dS/IRVA2ifV5B2mMUVs8trWtxtHNZJZByjmdq86QL12uGb0B7Un4
+         v2zDssFA57OjKblufo3sXGirky+BsKqu1Lgwqn8whOee6bfpnA0vvUeSSSUikHXE3BeI
+         sX+BGubHVrQqwxL9Y+I7tKTraZSKOpUFxoF0e9+ySGMFDJnml8WogFM6VG/jhUeb5ad9
+         EPjprduPrjLnjzx+1NAcZPpe74k90yh40GbrtpDllO4ZjHmwEwrI8Q79nbFnc7YMFLRM
+         In/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXNRR3bBejjxIOLhG0035p36ddsQNeH50VfKibkU9bQLjTRNY9HeaVPKomMV8gNWx40e5Os8K+NvtaQw8I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPPzTFmXPi/XwK7VaSpDvpU4TPzYstsDkguUhfRPUsqegralnF
+	atwvbdtfC0nTU33ILdQw2RW81ovBBf7hAGvaDOLrJ7DTfxEPT9T4DGm8Sj1PXfo=
+X-Gm-Gg: ASbGnctRWAokvCtAcvCPCtfrxr1dACHeio7v/QvlMH6OVRGc6a1q1k3AURcJKmK4WZS
+	ml4P3JqUrJj9rYG6CPxHylQLR4qjn7kN3LwST+onHWqPq0UVb1bSXHsAsUXIt8R637NbNsmtKl4
+	BxYDlF+PwOXe3aFRBwPaibfYhKc2kbXesK4Ws/am/29DFZOyBc0s1xDAZFw9rmKnz9SKlv/LHjR
+	+PK9wnHQvlaH+zir2LJAe/LEBKHr/XcLRVopvG4IKVcImVx50PSbSEwJYD7HdvcOCnaCy5+S3tp
+	L1zmha5ZYuRQX1KuEftqb2pWqWsze5s3f4R0YhY0bCSz5oGChhqLQO93D2z8CLmyFxv+hq80UOT
+	zO+EaN+/4xQkyDqdM9w==
+X-Google-Smtp-Source: AGHT+IFnB9Qn0xYinsQMUfheUpu1Su+V1dXaFUExJ5EgbBZlHAOQb/p3lWxk4FDMVN2HW/UOMS4Sww==
+X-Received: by 2002:a05:6000:22c7:b0:391:487f:282a with SMTP id ffacd0b85a97d-39eaaecd643mr2208108f8f.50.1744380531857;
+        Fri, 11 Apr 2025 07:08:51 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ccd8sm2127969f8f.72.2025.04.11.07.08.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 07:08:51 -0700 (PDT)
+Message-ID: <6d406ffb-7e2b-4e3c-b316-82a2a6ab57eb@linaro.org>
+Date: Fri, 11 Apr 2025 16:08:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v6 0/6] usb: dwc3: qcom: Flatten dwc3 structure
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+ Wesley Cheng <quic_wcheng@quicinc.com>,
+ Saravana Kannan <saravanak@google.com>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410-dwc3-refactor-v6-0-dc0d1b336135@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250410-dwc3-refactor-v6-0-dc0d1b336135@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAFoi+WcC/22QzW7DIBCEX8XiXCr+jMGnvkeVAz9LglRDCsRqF
- PndQxKp9aHH2d0ZfbM3VKFEqGgebqjAGmvMqQv+NiB3MukIOPquESNsJJxMOGWcQ6jQMAjJpZz
- MxIJF/f5cIMSfZ9bnoetTrC2X6zN6pY/pfykrxQQTNzEVJLdSu4/jYuLXu8sLeqSs7M8piN47W
- Xd6bxRQQY0meu/cXkAFvi+9U3tRIWsq4L5fYpsHYgIL0gK1ginK1WglVc4qabwWEjx4orRxCu1
- /MQ+/JC6nZmKC0oHwcmkJasWWjtwbK7hSfu6tD9t2BwJidGRkAQAA
-X-Change-ID: 20250307-no-offset-e463667a72fb
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
 
-Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
-the interface of `HasWork` and replacing pointer arithmetic with
-`container_of!`. Remove the provided implementation of
-`HasWork::get_work_offset` without replacement; an implementation is
-already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
-`HasWork::work_container_of` which was apparently necessary to access
-`OFFSET` as `OFFSET` no longer exists.
+On 11/04/2025 05:50, Bjorn Andersson wrote:
+> The USB IP-block found in most Qualcomm platforms is modelled in the
+> Linux kernel as 3 different independent device drivers, but as shown by
+> the already existing layering violations in the Qualcomm glue driver
+> they can not be operated independently.
+> 
+> With the current implementation, the glue driver registers the core and
+> has no way to know when this is done. As a result, e.g. the suspend
+> callbacks needs to guard against NULL pointer dereferences when trying
+> to peek into the struct dwc3 found in the drvdata of the child.
+> 
+> Missing from the upstream Qualcomm USB support is proper handling of
+> role switching, in which the glue needs to be notified upon DRD mode
+> changes. Several attempts has been made through the years to register
+> callbacks etc, but they always fall short when it comes to handling of
+> the core's probe deferral on resources etc.
+> 
+> Furhtermore, the DeviceTree binding is a direct representation of the
+> Linux driver model, and doesn't necessarily describe "the USB IP-block".
+> 
+> This series therefor attempts to flatten the driver split, and operate
+> the glue and core out of the same platform_device instance. And in order
+> to do this, the DeviceTree representation of the IP block is flattened.
+> 
+> Departing from previous versions' attempts at runtime-convert the
+> Devicetree representation is swapped out and instead a snapshot of the
+> current dwc3-qcom driver is proposed to be carried for a limited time.
+> 
+> A patch to convert a single platform - sc8280xp - was included in the
+> series. This, and others, will be submitted in a separate series as soon
+> as its introduction won't break bisection.
+> 
+> ---
+> Changes in v6:
+> - Change legacy driver's name, to avoid collision if both are loaded
+> - Drop duplicate pm_runtime_{allow,disable}() from dwc3_qcom_remove()
+> - Drop DeviceTree example patch, as this should be picked up separately
+> - Replace __maybe_unused for PM and PM_SLEEP functions in dwc3-qcom.c
+>    with guards, to match the exported functions from the core
+> - Add missing pm_runtime idle wrapper from dwc3-qcom
+> - Add missing "dma-coherent" to the qcom,snps-dwc3 binding
+> - Link to v5: https://lore.kernel.org/r/20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com
+> 
+> Changes in v5:
+> - Moved the snapshot commit first, to get a clean copy
+> - Add missing kernel-doc in glue.h
+> - Used a local "struct device" variable in PM functions to reduce the
+>    patch size
+> - Replaced initialization with default values with zero-initalizing the
+>    dwc3_probe_data in dwc3_probe()
+> - Add TODO about extcon, as a role-switch callback needs to be
+>    implemented
+> - Corrected &usb_2 mmio region length
+> - Changes the timeline expressed in the commit message to suggest the
+>    legacy driver to be dropped after next LTS
+> - Integrated qcom,dwc3.yaml changes since v4
+> - Link to v4: https://lore.kernel.org/r/20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com
+> 
+> Changes in v4:
+> - dwc3_{init,uninit}() renamed to dwc3_core_probe() and dwc3_core_remove()
+> - dwc3_{suspend, resume, complete}() changed to dwc3_pm_*()
+> - Arguments to dwc3_core_probe() are wrapped in a struct to better
+>    handle the expected growing list of parameters.
+> - Add the lost call to dwc3_core_remove() from the Qualcomm glue driver
+> - Removed now unused cleanup.h, of_address.h, and of_irq.h includes from
+>    dwc3-qcom.c
+> - Link to v3: https://lore.kernel.org/r/20250113-dwc3-refactor-v3-0-d1722075df7b@oss.qualcomm.com
+> 
+> Changes in v3:
+> - Replaced the handcoded migration logic of compatible, reg, interrupts,
+>    phys with overlays.
+> - Move the migration logic (and overlays) to a new drivers/of/overlays
+>    directory and apply this at postcore, so that it takes effect prior to
+>    the relevant platform_devices are created
+> - struct dwc3 is embedded in the glue context, rather than having a
+>    separate object allocated
+> - The hack of using of_address_to_resource() to avoid platform_resource
+>    being stale is removed (thanks to applying migration at postcore)
+> - Link to v2: https://lore.kernel.org/r/20240811-dwc3-refactor-v2-0-91f370d61ad2@quicinc.com
+> 
+> Changes in v2:
+> - Rewrite after ACPI removal, multiport support and interrupt fixes
+> - Completely changed strategy for DeviceTree binding, as previous idea
+>    of using snps,dwc3 as a generic fallback required unreasonable changes
+>    to that binding.
+> - Abandoned idea of supporting both flattened and unflattened device
+>    model in the one driver. As Johan pointed out, it will leave the race
+>    condition holes and will make the code harder to understand.
+>    Furthermore, the role switching logic that we intend to introduce
+>    following this would have depended on the user updating their
+>    DeviceTree blobs.
+> - Per above, introduced the dynamic DeviceTree rewrite
+> - Link to v1: https://lore.kernel.org/all/20231016-dwc3-refactor-v1-0-ab4a84165470@quicinc.com/
+> 
+> ---
+> Bjorn Andersson (6):
+>        usb: dwc3: qcom: Snapshot driver for backwards compatibilty
+>        dt-bindings: usb: Introduce qcom,snps-dwc3
+>        usb: dwc3: core: Expose core driver as library
+>        usb: dwc3: core: Don't touch resets and clocks
+>        usb: dwc3: qcom: Don't rely on drvdata during probe
+>        usb: dwc3: qcom: Transition to flattened model
+> 
+>   .../devicetree/bindings/usb/qcom,dwc3.yaml         |  13 +-
+>   .../devicetree/bindings/usb/qcom,snps-dwc3.yaml    | 622 ++++++++++++++
+>   drivers/usb/dwc3/Makefile                          |   1 +
+>   drivers/usb/dwc3/core.c                            | 160 ++--
+>   drivers/usb/dwc3/dwc3-qcom-legacy.c                | 935 +++++++++++++++++++++
+>   drivers/usb/dwc3/dwc3-qcom.c                       | 182 ++--
+>   drivers/usb/dwc3/glue.h                            |  35 +
+>   7 files changed, 1808 insertions(+), 140 deletions(-)
+> ---
+> base-commit: 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18
+> change-id: 20231016-dwc3-refactor-931e3b08a8b9
+> 
+> Best regards,
 
-A similar API change was discussed on the hrtimer series[1].
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-QRD
 
-Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Tested-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
-Changes in v3:
-- Extract first commit to its own series as it is shared with other
-  series.
-- Reword `HasWork` safety comment.
-- Link to v2: https://lore.kernel.org/r/20250409-no-offset-v2-0-dda8e141a909@gmail.com
-
-Changes in v2:
-- Rebase on v6.15-rc1.
-- Add WORKQUEUE maintainers to cc.
-- Link to v1: https://lore.kernel.org/r/20250307-no-offset-v1-0-0c728f63b69c@gmail.com
----
- rust/kernel/workqueue.rs | 50 ++++++++++++++++--------------------------------
- 1 file changed, 17 insertions(+), 33 deletions(-)
-
-diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-index f98bd02b838f..d092112d843f 100644
---- a/rust/kernel/workqueue.rs
-+++ b/rust/kernel/workqueue.rs
-@@ -429,51 +429,28 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
- ///
- /// # Safety
- ///
--/// The [`OFFSET`] constant must be the offset of a field in `Self` of type [`Work<T, ID>`]. The
--/// methods on this trait must have exactly the behavior that the definitions given below have.
-+/// The methods [`raw_get_work`] and [`work_container_of`] must return valid pointers and must be
-+/// true inverses of each other; that is, they must satisfy the following invariants:
-+/// - `work_container_of(raw_get_work(ptr)) == ptr` for any `ptr: *mut Self`.
-+/// - `raw_get_work(work_container_of(ptr)) == ptr` for any `ptr: *mut Work<T, ID>`.
- ///
- /// [`impl_has_work!`]: crate::impl_has_work
--/// [`OFFSET`]: HasWork::OFFSET
-+/// [`raw_get_work`]: HasWork::raw_get_work
-+/// [`work_container_of`]: HasWork::work_container_of
- pub unsafe trait HasWork<T, const ID: u64 = 0> {
--    /// The offset of the [`Work<T, ID>`] field.
--    const OFFSET: usize;
--
--    /// Returns the offset of the [`Work<T, ID>`] field.
--    ///
--    /// This method exists because the [`OFFSET`] constant cannot be accessed if the type is not
--    /// [`Sized`].
--    ///
--    /// [`OFFSET`]: HasWork::OFFSET
--    #[inline]
--    fn get_work_offset(&self) -> usize {
--        Self::OFFSET
--    }
--
-     /// Returns a pointer to the [`Work<T, ID>`] field.
-     ///
-     /// # Safety
-     ///
-     /// The provided pointer must point at a valid struct of type `Self`.
--    #[inline]
--    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID> {
--        // SAFETY: The caller promises that the pointer is valid.
--        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut Work<T, ID> }
--    }
-+    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID>;
- 
-     /// Returns a pointer to the struct containing the [`Work<T, ID>`] field.
-     ///
-     /// # Safety
-     ///
-     /// The pointer must point at a [`Work<T, ID>`] field in a struct of type `Self`.
--    #[inline]
--    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
--    where
--        Self: Sized,
--    {
--        // SAFETY: The caller promises that the pointer points at a field of the right type in the
--        // right kind of struct.
--        unsafe { (ptr as *mut u8).sub(Self::OFFSET) as *mut Self }
--    }
-+    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self;
- }
- 
- /// Used to safely implement the [`HasWork<T, ID>`] trait.
-@@ -504,8 +481,6 @@ macro_rules! impl_has_work {
-         // SAFETY: The implementation of `raw_get_work` only compiles if the field has the right
-         // type.
-         unsafe impl$(<$($generics)+>)? $crate::workqueue::HasWork<$work_type $(, $id)?> for $self {
--            const OFFSET: usize = ::core::mem::offset_of!(Self, $field) as usize;
--
-             #[inline]
-             unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_type $(, $id)?> {
-                 // SAFETY: The caller promises that the pointer is not dangling.
-@@ -513,6 +488,15 @@ unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_typ
-                     ::core::ptr::addr_of_mut!((*ptr).$field)
-                 }
-             }
-+
-+            #[inline]
-+            unsafe fn work_container_of(
-+                ptr: *mut $crate::workqueue::Work<$work_type $(, $id)?>,
-+            ) -> *mut Self {
-+                // SAFETY: The caller promises that the pointer points at a field of the right type
-+                // in the right kind of struct.
-+                unsafe { $crate::container_of!(ptr, Self, $field) }
-+            }
-         }
-     )*};
- }
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250307-no-offset-e463667a72fb
-prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
-prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
-
-Best regards,
--- 
-Tamir Duberstein <tamird@gmail.com>
-
+Thanks!
+Neil
