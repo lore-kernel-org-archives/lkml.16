@@ -1,106 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9592F20F08E;
-	Fri, 11 Apr 2025 18:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3A0202F88
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394595; cv=none; b=bOSRdyMQkV8Assg9dULzi8KglOa/hpkFRymu9IP8Gjomnm3DjYUt8QgCvszItR0sdW2blbiaUgQ7l8pqa5BeOG8p/8e7fT8IzEoGM83605EHaxffIcxc/kFcGvD6v7fjDqOG1e5NbB14Le/luHh/Bybpo5Z9ffwt0fRHkUdtOlI=
+	t=1744394638; cv=none; b=QURSG+28dkoqrJww4sy+gzFs3ay3E/bhxQjRGj8F6NgQ95dG5EK6aS7y/Lwn2cqQuQ9xYUgeVo5YOdUNxJh2OAyrS07vXnyxk59zzcLS2F0kmC+9apk4cADgoDaWNhxbSmCndNAjRvJsl1T3g9L07LHtiRJyjYTc++o/LcWo2zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394595; c=relaxed/simple;
-	bh=WkEFiBHfIO5jmz+oePTSYJtLhr8/7pRTP8FdSbo0DRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRO0+i2Udc/T3bNRgwnpL+wm6ZXB94uvv1kX/GtOJ0J7eIjkHB2wSQgOqGyl1ruJ27gSbN6MBJrcKKV2vp5D2pPBQQ3IXkvr+3u+hKprT/GdHSB0ifWG98y/7RV8e5hn68Bi8fQfzyHV9rV4LbEVcXR1yzJ3FQu3XlE/azNgW1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBErLamH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744394638; c=relaxed/simple;
+	bh=x8x+1RUUuoyKVvm4rwiW1cGjTypYl2uDQbLP7Tq+/ZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XsOIJcHPiVHZgICcFyZBMI+MLjecqrxbKtCAvyYGZzEiyAEHVBC0sXIMTku5dUWvT4T3MA80YcFq454vAElqPPlWlyRrqRk+64+FVLvgh40/kwHMncDXUzweehH0Ke+O6W6SUHulePs2l9jJSQBv27ZeyQNewSXHZYoGZBCBRKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=DXEJAYp/; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBErLamH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08ECC4CEE2;
-	Fri, 11 Apr 2025 18:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744394594;
-	bh=WkEFiBHfIO5jmz+oePTSYJtLhr8/7pRTP8FdSbo0DRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fBErLamHQUxnHJPSUBr1MbBfvq4joYezZ4Tv91nkmPSkeyfyRQabkQ0PC2YFRAi+f
-	 dRTuo3Zfws9w6Grxq98FAwT0GZBAs/9oujAIvnov/AorEZ0V9i4yhY+L8p3IEzOZ2+
-	 2wUIVpf5FJ+79CaXE/CCgitlyarSvoRPGFq6MLZr2aAbNemQAOC4ggi5LKMCY5y0W7
-	 b2Jwh/779qAluQjcDTKei3/0FykUwpefLmabh2MaPWUKjM87tUweCehu3EJ+poRZFm
-	 T3b0IMSMNeUJouZGOTCUBh3zxeK91npz1yKSO5yTxfwbxvc32Dna3YY8yOVUsIzjhm
-	 3Dt28LH9EAk9Q==
-Date: Fri, 11 Apr 2025 20:03:04 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V9 09/17] rust: cpu: Add from_cpu()
-Message-ID: <Z_lZWPr1vBCrYbkA@cassiopeiae>
-References: <cover.1744366571.git.viresh.kumar@linaro.org>
- <475bc73d8d11290446a4135af76aea123c6d80ee.1744366571.git.viresh.kumar@linaro.org>
- <Z_lAyGy1o80MPVOC@yury>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="DXEJAYp/"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e7040987879so2094495276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1744394635; x=1744999435; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fwUA3HJN+kY+Z/XkRzxrR6K4yzKq89b6kJGOJP40UfI=;
+        b=DXEJAYp/YUT7qY6hWE5d6lyGPp2cKofR+BrACFakl3jhGZK4x7NOmb7mrlsQcidUne
+         Z7iolTqlMEpZXIWQAQs+2UG+8Sms2U2H34sDS6L0SvEQSrQ9SATrHLkpmaoDayLcSFue
+         hcZnJ0rqsXhF5MA6Oc6um1Re4WKSBcskP30SssltzMccn+NrC5UL7ZU6Q3yQCuGsSUoE
+         a3qqiZ73WokBSChm+m5VNK1lV1Z6ahrStLtLyVfMuL3GoDQh4NBwD3qUGamOwTv6crD9
+         K0xjJt3YiypUckpk3H+HPP9uwIdzDK1v5TpEze5ugZ5XOSXTWizUJLL6q/Oq+4zz3Rs3
+         QIOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744394635; x=1744999435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fwUA3HJN+kY+Z/XkRzxrR6K4yzKq89b6kJGOJP40UfI=;
+        b=EfWkLD1Mydcrn+uRUPJorOB+9TR8hHCkxCSOnNCc7n9BCfY1ZReQSX5IO8CJYQVh84
+         mnL6ZweVTauq8uuXDYpR3Ck4R9N2SdasxTCrqCO44Crj9UEWKkg3FVFk9IsbgMnvXhcJ
+         ic/y/mEtJAVWImqJNk8g14d3HXTaiUARjY9hWJT1j/WmKuMlc90KAv7pTRhtieq3MuYN
+         Ctp4lzlKROw7ZsAJocWTG7uKkRhNOw+kZ2vfouGI9qcBcDQUEs/ZI2b99uTxC70cMFEV
+         uBLZZIqaRyewGtBUy/WykmJ/oYn8nQ5ZCzUtEGsRbsLsCjtLcBiBT3pFOM0DIaW9k903
+         9R/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXfSCmy7tmTEOvvic7UGN/CDQt0fyhdpHsUjenTAPijjIEbleLPssWKGS4CESJPsI7sebNDwkHfVXDqVQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwokVm37Z1MMheEfS/8dGD5aVTHtZt4/GgRT926l7N0XXm/JikU
+	HJ9E0EoxTW9bXV8XdPzRJtqqI1xqbZutE8/Jw6GyzpiTINa0mcNLU2m+iea1OsT3EkpAxxyMxLs
+	nww7aopCbNtiArwzxh+XM+W3PEd/l9NtYviJi
+X-Gm-Gg: ASbGnctDyG/YwEhE58EqNvQAvckm6P7HeFTN1I1ZdIh+fTP69l2y9emLvnxRH005+kp
+	aqF4zlPQ7WNo8v2dl6LVpGNmW3u3IF/QdjmJt8zq3EDGRnWYUSs6Rd1rmNQJ5OsW95VYsE+7aF6
+	JA4iMNG0zMBPnBnGIGVkOEdw==
+X-Google-Smtp-Source: AGHT+IEECo1qjKE9+f5KAGYFBltXYqlNcShZy0OxIxRF/dripUpXcghaKlFEoodTVnpFvHNNqn3e9noR9gmhbN9E1gs=
+X-Received: by 2002:a05:6902:1404:b0:e6d:f0a6:4cdc with SMTP id
+ 3f1490d57ef6-e704deca03bmr6577544276.20.1744394635152; Fri, 11 Apr 2025
+ 11:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_lAyGy1o80MPVOC@yury>
+References: <20250313085343.241623-1-andriy.shevchenko@linux.intel.com> <c7f860b806603cd8af7740c73db68197@paul-moore.com>
+In-Reply-To: <c7f860b806603cd8af7740c73db68197@paul-moore.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 11 Apr 2025 14:03:44 -0400
+X-Gm-Features: ATxdqUEPAvVP9dZVohwiFoxW7AmOhM6emkPlKEK8JPh8cs8epZY_MHf0QmZ7qQk
+Message-ID: <CAHC9VhT9VKQuWONEoosKtB_n=xLz6rrRubmEZi8_+dQrJe3nBA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] audit: Mark audit_log_vformat() with __printf() attribute
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, audit@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Eric Paris <eparis@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 12:18:26PM -0400, Yury Norov wrote:
-> On Fri, Apr 11, 2025 at 04:25:08PM +0530, Viresh Kumar wrote:
-> > +/// Creates a new instance of CPU's device.
-> > +///
-> > +/// # Safety
-> > +///
-> > +/// Reference counting is not implemented for the CPU device in the C code. When a CPU is
-> > +/// hot-unplugged, the corresponding CPU device is unregistered, but its associated memory
-> > +/// is not freed.
-> > +///
-> > +/// Callers must ensure that the CPU device is not used after it has been unregistered.
-> > +/// This can be achieved, for example, by registering a CPU hotplug notifier and removing
-> > +/// any references to the CPU device within the notifier's callback.
-> > +pub unsafe fn from_cpu(cpu: u32) -> Result<&'static Device> {
-> > +    // SAFETY: The pointer returned by `get_cpu_device()`, if not `NULL`, is a valid pointer to
-> > +    // a `struct device` and is never freed by the C code.
-> > +    let ptr = unsafe { bindings::get_cpu_device(cpu) };
+On Thu, Mar 20, 2025 at 6:02=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
+ote:
+> On Mar 13, 2025 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote=
+:
+> >
+> > audit_log_vformat() is using printf() type of format, and GCC compiler
+> > (Debian 14.2.0-17) is not happy about this:
+> >
+> > kernel/audit.c:1978:9: error: function =E2=80=98audit_log_vformat=E2=80=
+=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribute =
+[-Werror=3Dsuggest-attribute=3Dformat]
+> > kernel/audit.c:1987:17: error: function =E2=80=98audit_log_vformat=E2=
+=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribu=
+te [-Werror=3Dsuggest-attribute=3Dformat]
+> >
+> > Fix the compilation errors (`make W=3D1` when CONFIG_WERROR=3Dy, which =
+is default)
+> > by adding __printf() attribute.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > v2: added necessary technical information to the commit message (Paul)
+> >
+> >  kernel/audit.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> Merged into audit/dev-staging, this will move to audit/dev after the
+> upcoming merge window.
 
-You don't need to justify the return value here, you need to justify why cpu is
-a valid value to call get_cpu_device() with.
+... and now it is in audit/dev, thanks.
 
-> > +    if ptr.is_null() {
-> > +        return Err(ENODEV);
-> > +    }
-> > +
-> > +    // SAFETY: The pointer returned by `get_cpu_device()`, if not `NULL`, is a valid pointer to
-> > +    // a `struct device` and is never freed by the C code.
-
-Here, the comment is good.
-
-> If you think that writing the same thing twice would help in SAFETY
-> department, I'd recommend you to write it for a couple more times.
-
-Fixing the above, should also fix the duplication. :)
-
-> > +    Ok(unsafe { Device::as_ref(ptr) })
+--=20
+paul-moore.com
