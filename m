@@ -1,181 +1,298 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA5910A1E;
-	Fri, 11 Apr 2025 15:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA27310A1E;
+	Fri, 11 Apr 2025 15:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744384554; cv=none; b=PV9c3X1AdOVFvJP2AIyvPYzoY/b9AxNNlwxbfjpTDV1s0Lk10j1JrZ1s3xhsmqKmm9k8Euw9XLbuItFm8WKrJTdxLTvn6LcmFbqnuZKkBWy4w4vKulGHFhOo0clXh67OdpEt1ZbFiX0qOV91DKwE02KmL/zv3bR1ew0nayXTBa4=
+	t=1744384564; cv=none; b=CVV+H+Fv6C2WuK5Ub6G2rdpmVGY7HizPdfLAPdB+7YGV5wPSmYVLLKdncv2jb4UaYu8FSiEUxYf0Htydhkxur8xEstxKSt01i1pWQwrrTJqxsyKE9w768AfU57uQXwVCQf4Ds6ds/Lu/M/DYJifhdNw4jCTeggJ6Z3qUc+XaOaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744384554; c=relaxed/simple;
-	bh=pOzo9gl+06nuScpgNkLpBddBRrPwWPW2vetdG6X3tV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lx+3Mp3chn7/5EslFdp2ivNBu011veFqLD53Q+mkNwNUsZjd1I+5oExKpHYMAx41uPxlofZOrtv0g06tdik1uc5gTlayTifdCxe68NFlXQYIRQIWgThOjYYVQUQbKhWf4xsOFiRn/5R0Dyc1e2+NgN12NsZzhYFvoxflLjtLGI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPkeaLo/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744384564; c=relaxed/simple;
+	bh=U6OoqkNqz6S6tODC5IKLn/+wZf0r4dCyIk6KgClnSDQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MZU8MufOhtKDDuUkFTm1orYkEqJV+6CDHK6OvGJGuuP/hgleKb76PgtWiMkAVX+1AeTJd7/SrpsY66HBDN4m7HXbSdkjXEl+Wx3AaDqE6EChZy2iuUo4JkMrT7T8FvdguENqQ/Xt7A07ZzF47OwnhMQ3+UngTVXQDDU6v1k0nZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kb1VQrOI; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPkeaLo/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE72C4CEE2;
-	Fri, 11 Apr 2025 15:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744384553;
-	bh=pOzo9gl+06nuScpgNkLpBddBRrPwWPW2vetdG6X3tV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CPkeaLo/fccnmntzxFzQxJPer3+02uVBRTbhfJZxbJ47QdMCHTrSSaNHTr8R81bQv
-	 kVcjpHF7Xi3kbIvlrKPW/vQGTYIdJWZclGrZZ+y6i+SCn2MkIUHGz7OeF4ANC/TUF6
-	 GZHFQpUuX9SGy3fM9JuYrnOQElwBrW7BDTQSwo2lf7/sc4hgE1Imzw//RIxWVRMBB4
-	 s8nFdf/w7gUXqQew8Whqy8aPvCT6BgTh2TgXigzhPOoi34xRHDG3/WBIWP5lNoNMp4
-	 SVMp9eFY1tWgDbC0/u1UF55oxt8Gv/x+fGc3XZHBLOaVNACEPL/4PN/tMunRKKBQpv
-	 835IQe/VTqg/A==
-Date: Fri, 11 Apr 2025 10:15:52 -0500
-From: Rob Herring <robh@kernel.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	kernel@pengutronix.de,
-	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-Subject: Re: [PATCH 3/3] dt-bindings: clock: add TI CDCE6214 binding
-Message-ID: <20250411151552.GA3258510-robh@kernel.org>
-References: <20250408-clk-cdce6214-v1-0-bd4e7092a91f@pengutronix.de>
- <20250408-clk-cdce6214-v1-3-bd4e7092a91f@pengutronix.de>
- <5766d152-51e7-42f5-864f-5cb1798606a3@kernel.org>
- <Z_U6fUGbOV2SdO_C@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kb1VQrOI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744384563; x=1775920563;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=U6OoqkNqz6S6tODC5IKLn/+wZf0r4dCyIk6KgClnSDQ=;
+  b=Kb1VQrOIFYHq5472vbgfNaz/tjE/n04Nu9AqJAsh/mYrT3hMlYoiC1rf
+   kHn5GrBtrT9YAza17aDluA4lzSULtASwtcOtw45PzdpgLmH7TBg8c0+kN
+   ROSO8VtQD36uT65EPwaGfC//9cIfbNl1JIQcNOqsoV9DIGn3gEmawNOLy
+   DnC/GVj9YebC5ICTdG+5AYssgiE8sefsR9oDRwwUKYwipo2IGmzgfoGpD
+   9ynC7u/KY7PBafC/obiJ56YBb0VfEBpv/2CAv4oW165aD7ucNrYHniLH0
+   FyKEB+ouBTAoyT8LiVr9+db0nzSjyseVm9Q7zUnJ41oDOupUNOS5abtvx
+   A==;
+X-CSE-ConnectionGUID: wyEusCv2Ru+LDregJr9vHw==
+X-CSE-MsgGUID: n/e94ocdSTyvYOqhbmZzFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="56924653"
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="56924653"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:16:00 -0700
+X-CSE-ConnectionGUID: uBHWmv1vTjSyrkivvcgF0Q==
+X-CSE-MsgGUID: vN2aYTqTROmVlf9MaFXDgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="166412811"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:15:54 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 11 Apr 2025 18:15:49 +0300 (EEST)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
+    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
+    Jonathan Corbet <corbet@lwn.net>, 
+    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
+    Derek J Clark <derekjohn.clark@gmail.com>, 
+    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
+    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
+    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
+    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
+    mario.limonciello@amd.com
+Subject: Re: [PATCH v8 09/14] platform/x86: oxpec: Move pwm value read/write
+ to separate functions
+In-Reply-To: <20250322103606.680401-10-lkml@antheas.dev>
+Message-ID: <9356d39d-f23f-2d7b-5593-0b8004e40a61@linux.intel.com>
+References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-10-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_U6fUGbOV2SdO_C@pengutronix.de>
+Content-Type: multipart/mixed; boundary="8323328-936839061-1744384549=:944"
 
-On Tue, Apr 08, 2025 at 05:02:21PM +0200, Sascha Hauer wrote:
-> On Tue, Apr 08, 2025 at 04:27:23PM +0200, Krzysztof Kozlowski wrote:
-> > On 08/04/2025 14:00, Sascha Hauer wrote:
-> > > +
-> > 
-> > A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
-> > prefix is already stating that these are bindings.
-> > See also:
-> > https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-> > 
-> > 
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - ti,cdce6214
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    minItems: 1
-> > > +    maxItems: 2
-> > > +
-> > > +  clock-names:
-> > > +    minItems: 1
-> > > +    items:
-> > > +      - const: priref
-> > > +      - const: secref
-> > 
-> > So one input is optional?
-> 
-> The chip has two clock inputs and to be operational it needs at least
-> one clock, could be priref or secref or both.
-> 
-> Is there a proper way to express this situation?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-If I understand correctly that only 'secref' is possible then you want:
+--8323328-936839061-1744384549=:944
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-items:
-  - enum: [ priref, secref ]
-  - const: secref
+On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
 
-(By default, entries have to be unique, so that eliminates 'secref' in 
-both)
+> Currently, this driver breaks hwmon ABI by using auto as 0 and manual
+> as 1. However, for pwm_enable, 0 is full speed, 1 is manual, and 2 is
+> auto. For the correction to be possible, this means that the pwm_enable
+> endpoint will need access to both pwm enable and value (as for
+> the 0th value, the fan needs to be set to full power).
+>=20
+> Therefore, move the pwm value read/write to separate functions.
+>=20
+> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  drivers/platform/x86/oxpec.c | 162 +++++++++++++++++++----------------
+>  1 file changed, 87 insertions(+), 75 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+> index 2f31490fde64c..67bfd397802d1 100644
+> --- a/drivers/platform/x86/oxpec.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -599,6 +599,91 @@ static umode_t oxp_ec_hwmon_is_visible(const void *d=
+rvdata,
+>  =09}
+>  }
+> =20
+> +/* PWM input read/write functions */
+> +static int oxp_pwm_input_write(long val)
+> +{
+> +=09if (val < 0 || val > 255)
+> +=09=09return -EINVAL;
 
-> 
-> 
-> > > +  "^clk@[2-9]$":
-> > > +    type: object
-> > > +    description: |
-> > > +      optional child node that can be used to specify output pin parameters.  The reg
-> > > +      properties match the CDCE6214_CLK_* defines.
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +    properties:
-> > > +      reg:
-> > > +        description:
-> > > +          clock output identifier.
-> > > +        minimum: 2
-> > > +        maximum: 9
-> > > +
-> > > +      ti,lphcsl:
-> > > +        type: boolean
-> > > +        description: |
-> > > +          If true enable LP-HCSL output mode for this clock
-> > > +
-> > > +      ti,lvds:
-> > > +        type: boolean
-> > > +        description: |
-> > > +          If true enable LVDS output mode for this clock
-> > > +
-> > > +      ti,cmosp:
-> > > +        type: boolean
-> > > +        description: |
-> > > +          If true enable CMOSP output for this clock
-> > > +
-> > > +      ti,cmosn:
-> > > +        type: boolean
-> > > +        description: |
-> > > +          If true enable CMOSN output for this clock
-> > 
-> > Looks the same here. Anyway having these as subnodes is too much. You
-> > have fixed number of clocks, so you need one or two array properties in
-> > top-level.
-> 
-> There are several properties I haven't yet modeled, like
-> 
-> - 1.8V / 2.5V output
-> - sync_delay
-> - LVDS common-mode trim increment/decrement
-> - differential buffer BIAS trim
-> - slew rate
-> - BIAS current setting for XTAL mode
-> - load capacity for XTAL mode
-> 
-> I don't know which of them will ever be supported, but I thought having a
-> node per pin would add a natural place to add these properties. Do you
-> still think arrays would be more appropriate?
+Please add an empty line here.
 
-Assuming they are connected to something in DT (if not, why care), you 
-could add a flags cell so the consumer side can define what they need.
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-> 
-> > 
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clocks
-> > > +  - "#clock-cells"
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/ti,cdce6214.h>
-> > 
-> > This file does not exist. Something is odd in this example.
-> 
-> It is added in the driver patch. Should it come with the binding patch
-> instead?
+> +=09switch (board) {
+> +=09case orange_pi_neo:
+> +=09=09/* scale to range [1-244] */
+> +=09=09val =3D ((val - 1) * 243 / 254) + 1;
+> +=09=09return write_to_ec(ORANGEPI_SENSOR_PWM_REG, val);
+> +=09case oxp_2:
+> +=09case oxp_x1:
+> +=09=09/* scale to range [0-184] */
+> +=09=09val =3D (val * 184) / 255;
+> +=09=09return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> +=09case aya_neo_2:
+> +=09case aya_neo_air:
+> +=09case aya_neo_air_1s:
+> +=09case aya_neo_air_plus_mendo:
+> +=09case aya_neo_air_pro:
+> +=09case aya_neo_flip:
+> +=09case aya_neo_geek:
+> +=09case aya_neo_kun:
+> +=09case oxp_mini_amd:
+> +=09case oxp_mini_amd_a07:
+> +=09=09/* scale to range [0-100] */
+> +=09=09val =3D (val * 100) / 255;
+> +=09=09return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> +=09case aok_zoe_a1:
+> +=09case oxp_fly:
+> +=09case oxp_mini_amd_pro:
+> +=09=09return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> +=09default:
+> +=09=09return -EOPNOTSUPP;
+> +=09}
+> +}
+> +
+> +static int oxp_pwm_input_read(long *val)
+> +{
+> +=09int ret;
+> +
+> +=09switch (board) {
+> +=09case orange_pi_neo:
+> +=09=09ret =3D read_from_ec(ORANGEPI_SENSOR_PWM_REG, 1, val);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09=09/* scale from range [1-244] */
+> +=09=09*val =3D ((*val - 1) * 254 / 243) + 1;
+> +=09=09break;
+> +=09case oxp_2:
+> +=09case oxp_x1:
+> +=09=09ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09=09/* scale from range [0-184] */
+> +=09=09*val =3D (*val * 255) / 184;
+> +=09=09break;
+> +=09case aya_neo_2:
+> +=09case aya_neo_air:
+> +=09case aya_neo_air_1s:
+> +=09case aya_neo_air_plus_mendo:
+> +=09case aya_neo_air_pro:
+> +=09case aya_neo_flip:
+> +=09case aya_neo_geek:
+> +=09case aya_neo_kun:
+> +=09case oxp_mini_amd:
+> +=09case oxp_mini_amd_a07:
+> +=09=09ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09=09/* scale from range [0-100] */
+> +=09=09*val =3D (*val * 255) / 100;
+> +=09=09break;
+> +=09case aok_zoe_a1:
+> +=09case oxp_fly:
+> +=09case oxp_mini_amd_pro:
+> +=09default:
+> +=09=09ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09=09break;
+> +=09}
+> +=09return 0;
+> +}
+> +
+>  static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types=
+ type,
+>  =09=09=09     u32 attr, int channel, long *val)
+>  {
+> @@ -639,48 +724,7 @@ static int oxp_platform_read(struct device *dev, enu=
+m hwmon_sensor_types type,
+>  =09case hwmon_pwm:
+>  =09=09switch (attr) {
+>  =09=09case hwmon_pwm_input:
+> -=09=09=09switch (board) {
+> -=09=09=09case orange_pi_neo:
+> -=09=09=09=09ret =3D read_from_ec(ORANGEPI_SENSOR_PWM_REG, 1, val);
+> -=09=09=09=09if (ret)
+> -=09=09=09=09=09return ret;
+> -=09=09=09=09/* scale from range [1-244] */
+> -=09=09=09=09*val =3D ((*val - 1) * 254 / 243) + 1;
+> -=09=09=09=09break;
+> -=09=09=09case oxp_2:
+> -=09=09=09case oxp_x1:
+> -=09=09=09=09ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> -=09=09=09=09if (ret)
+> -=09=09=09=09=09return ret;
+> -=09=09=09=09/* scale from range [0-184] */
+> -=09=09=09=09*val =3D (*val * 255) / 184;
+> -=09=09=09=09break;
+> -=09=09=09case aya_neo_2:
+> -=09=09=09case aya_neo_air:
+> -=09=09=09case aya_neo_air_1s:
+> -=09=09=09case aya_neo_air_plus_mendo:
+> -=09=09=09case aya_neo_air_pro:
+> -=09=09=09case aya_neo_flip:
+> -=09=09=09case aya_neo_geek:
+> -=09=09=09case aya_neo_kun:
+> -=09=09=09case oxp_mini_amd:
+> -=09=09=09case oxp_mini_amd_a07:
+> -=09=09=09=09ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> -=09=09=09=09if (ret)
+> -=09=09=09=09=09return ret;
+> -=09=09=09=09/* scale from range [0-100] */
+> -=09=09=09=09*val =3D (*val * 255) / 100;
+> -=09=09=09=09break;
+> -=09=09=09case aok_zoe_a1:
+> -=09=09=09case oxp_fly:
+> -=09=09=09case oxp_mini_amd_pro:
+> -=09=09=09default:
+> -=09=09=09=09ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> -=09=09=09=09if (ret)
+> -=09=09=09=09=09return ret;
+> -=09=09=09=09break;
+> -=09=09=09}
+> -=09=09=09return 0;
+> +=09=09=09return oxp_pwm_input_read(val);
+>  =09=09case hwmon_pwm_enable:
+>  =09=09=09return oxp_pwm_read(val);
+>  =09=09default:
+> @@ -706,39 +750,7 @@ static int oxp_platform_write(struct device *dev, en=
+um hwmon_sensor_types type,
+>  =09=09=09=09return oxp_pwm_disable();
+>  =09=09=09return -EINVAL;
+>  =09=09case hwmon_pwm_input:
+> -=09=09=09if (val < 0 || val > 255)
+> -=09=09=09=09return -EINVAL;
+> -=09=09=09switch (board) {
+> -=09=09=09case orange_pi_neo:
+> -=09=09=09=09/* scale to range [1-244] */
+> -=09=09=09=09val =3D ((val - 1) * 243 / 254) + 1;
+> -=09=09=09=09return write_to_ec(ORANGEPI_SENSOR_PWM_REG, val);
+> -=09=09=09case oxp_2:
+> -=09=09=09case oxp_x1:
+> -=09=09=09=09/* scale to range [0-184] */
+> -=09=09=09=09val =3D (val * 184) / 255;
+> -=09=09=09=09return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> -=09=09=09case aya_neo_2:
+> -=09=09=09case aya_neo_air:
+> -=09=09=09case aya_neo_air_1s:
+> -=09=09=09case aya_neo_air_plus_mendo:
+> -=09=09=09case aya_neo_air_pro:
+> -=09=09=09case aya_neo_flip:
+> -=09=09=09case aya_neo_geek:
+> -=09=09=09case aya_neo_kun:
+> -=09=09=09case oxp_mini_amd:
+> -=09=09=09case oxp_mini_amd_a07:
+> -=09=09=09=09/* scale to range [0-100] */
+> -=09=09=09=09val =3D (val * 100) / 255;
+> -=09=09=09=09return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> -=09=09=09case aok_zoe_a1:
+> -=09=09=09case oxp_fly:
+> -=09=09=09case oxp_mini_amd_pro:
+> -=09=09=09=09return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> -=09=09=09default:
+> -=09=09=09=09break;
+> -=09=09=09}
+> -=09=09=09break;
+> +=09=09=09return oxp_pwm_input_write(val);
+>  =09=09default:
+>  =09=09=09break;
+>  =09=09}
+>=20
 
-Yes.
+--=20
+ i.
 
-Rob
+--8323328-936839061-1744384549=:944--
