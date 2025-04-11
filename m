@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E937529AB0F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E07627EC8F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350156; cv=none; b=JCGTivkqafS7ZD520kGRiVgDEF8JU8907YlVnlp4c/3iG4REH/NStd1pANHBR5VsU/F809BMrrxgYpzamOZH1db4gJklIGgaUWFzEUorR5I85jsjRX1Ev5aqDfUcmYH8+Qf3r6HFGTArhwYRZ0C1F4Aho30RBEMC9xCr+fIsN1Y=
+	t=1744350158; cv=none; b=W60BM63ui80rt9d+IYvqTFmrpRhH1wkH58R5LITrIaemGqrojUvAcmKJbumvPGQiwQovFPp6E3GXkLN35Ev+hk4yHjy++OGB//FxKZDEhBaJ/8S++BEgqyGQEYae4T4i0HlsZjU0rOi3NazB/AQypJ+IluoapXfBM9+SCBCdZl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350156; c=relaxed/simple;
-	bh=lktWMWsyBreqWNLqEhBiEo/wBoVvh7RxDk06AUoYyn4=;
+	s=arc-20240116; t=1744350158; c=relaxed/simple;
+	bh=HGw5sBbPivY24BHzcOkn/hmosqOGzdaca6k0lHUME1g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rKRTiGycerIS25FXi5/YaZrkAR5HFG2DrCr2g4u6ILuOhAYKCOq12Qm7+zVGinHW5mrkat8wl3XSGXLwXliHhR2c2crjxafWa8ZZAxdUaxrqh9wYmP4Zi09Ehf9kEVfwE/uXu9ZweP3BZwCgoEjlBcbfgf8moJC3sebKYdwKhGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJtiEEbF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J2R9Thr0rCINg3s2BKUewp0VGBFzTHUsPojIT8JO/PkToS7bYlG2DGXJlb2iCgeXeyx9dL5bnnUiS5Up3H/Je0xY7YnletBl/RZyK+jXkLWmXIbk+tpJC8DaAKvGcCz28o0NEne4+kZRfN/JLO0FI/yMf0NNc9CxIvjK6XFM/V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iBhwWFlJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJtiEEbF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC343C4CEE9;
-	Fri, 11 Apr 2025 05:42:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iBhwWFlJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49816C4CEE2;
+	Fri, 11 Apr 2025 05:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350155;
-	bh=lktWMWsyBreqWNLqEhBiEo/wBoVvh7RxDk06AUoYyn4=;
+	s=k20201202; t=1744350158;
+	bh=HGw5sBbPivY24BHzcOkn/hmosqOGzdaca6k0lHUME1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mJtiEEbFAFB4LHagFiVhAOaLhevNpyfWDVx5GK/6PcsPgzpI4rRMruaK8SSVpbZCi
-	 vV2XnOo87TOBomq0R9oSDau9/1xmwRocspQ2HfGENUT2V4HPt60RWbCo4Tjk98Ho1z
-	 SmeNrbc9RVJmgvHEeY/aCIeho2Z1SLNn83Q6eO88efaSzAdZhlZjni0N4RI8Oe0BB9
-	 XKY2DSqHrkkFfM1ATUFT6fgySYatL83MsFWdvnd2EZ6/1fO1pNRHR6MJxj/Qdplhs1
-	 oAjUNBf6ILN3n6/DcdN6PP7C+B+PMONr+YMFwSGivhX+6q/O7+q3TcHpZBPOWQXtyl
-	 0iBbd52SsObPw==
+	b=iBhwWFlJfnSoNcR5toAPMp+6QfVkaH4JOSapQItB5z7KD9o9h8S235PEifSPQVTzF
+	 f5HiLRuZlkQrPoNNWmRYJUjQzKIVqFBBq3Sj/FiMGxE0NtvkO8Piv0UR0lHszn24k+
+	 KOhpKsAgNLP7ijS7sfUBgUzhrCTGiL0/hS86CrMw52Gfze4gpAsFdTcPi1CLbmtBL/
+	 UldkNMDBYZmUzH0Ztp+G860b+Jk6Ts9gQiW9Q2BiKZZtk8neQjvvVvi8pCmnIbpQkZ
+	 xNxRbYj7vAhSC76lz0TnLfBgHpbSGICDt04XU+gewDjCZQPAIHZK1nWKIG+jn29/sv
+	 TsrHNJPYNncyw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 35/53] x86/alternatives: Move the text_poke_array manipulation into text_poke_int3_loc_init() and rename it to __smp_text_poke_batch_add()
-Date: Fri, 11 Apr 2025 07:40:47 +0200
-Message-ID: <20250411054105.2341982-36-mingo@kernel.org>
+Subject: [PATCH 36/53] x86/alternatives: Remove the mixed-patching restriction on smp_text_poke_single()
+Date: Fri, 11 Apr 2025 07:40:48 +0200
+Message-ID: <20250411054105.2341982-37-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -49,65 +49,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This simplifies the code and code generation a bit:
+At this point smp_text_poke_single(addr, opcode, len, emulate) is equivalent to:
 
-   text	   data	    bss	    dec	    hex	filename
-  14802	   1029	   4112	  19943	   4de7	alternative.o.before
-  14784	   1029	   4112	  19925	   4dd5	alternative.o.after
+	smp_text_poke_batch_add(addr, opcode, len, emulate);
+	smp_text_poke_batch_finish();
+
+So remove the restriction on mixing single-instruction patching
+with multi-instruction patching.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ arch/x86/kernel/alternative.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 08ac3c7ad6f8..eb0da270043b 100644
+index eb0da270043b..f0bb2158f27b 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2752,12 +2752,14 @@ static void smp_text_poke_batch_process(void)
- 	}
- }
- 
--static void text_poke_int3_loc_init(struct smp_text_poke_loc *tp, void *addr,
--			       const void *opcode, size_t len, const void *emulate)
-+static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
- {
-+	struct smp_text_poke_loc *tp;
- 	struct insn insn;
- 	int ret, i = 0;
- 
-+	tp = &text_poke_array.vec[text_poke_array.nr_entries++];
-+
- 	if (len == 6)
- 		i = 1;
- 	memcpy((void *)tp->text, opcode+i, len-i);
-@@ -2873,12 +2875,8 @@ static void smp_text_poke_batch_flush(void *addr)
- 
- void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
- {
--	struct smp_text_poke_loc *tp;
--
- 	smp_text_poke_batch_flush(addr);
--
--	tp = &text_poke_array.vec[text_poke_array.nr_entries++];
--	text_poke_int3_loc_init(tp, addr, opcode, len, emulate);
-+	__smp_text_poke_batch_add(addr, opcode, len, emulate);
- }
- 
- /**
-@@ -2894,13 +2892,9 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
+@@ -2892,9 +2892,6 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
   */
  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
  {
--	struct smp_text_poke_loc *tp;
+-	/* Batch-patching should not be mixed with single-patching: */
+-	WARN_ON_ONCE(text_poke_array.nr_entries != 0);
 -
- 	/* Batch-patching should not be mixed with single-patching: */
- 	WARN_ON_ONCE(text_poke_array.nr_entries != 0);
- 
--	tp = &text_poke_array.vec[text_poke_array.nr_entries++];
--	text_poke_int3_loc_init(tp, addr, opcode, len, emulate);
--
-+	__smp_text_poke_batch_add(addr, opcode, len, emulate);
+ 	__smp_text_poke_batch_add(addr, opcode, len, emulate);
  	smp_text_poke_batch_finish();
  }
 -- 
