@@ -1,168 +1,148 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57852036FD
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AA3293B4F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744356426; cv=none; b=NU+U3cTCb9dVryk0fCV2fIIYsJJOopNVcErHauQiwhHwyaY50VSXQzWCFulAHJlNjorr6rv0Qadw0l0/bKZif810+NWieLflowx/6XC3I8//QPv/MeCUEmWdvJbhxcxPHrHZjG5qrmQglb0YaVOn+KxNxjbg2kJc62OZhbk9nXY=
+	t=1744356429; cv=none; b=KmdrFsfIOoLCfxycbwOhWcX6dNjvDbggSjfELAQfS315ItKMVNR/XTKAFNBHziNxQ2WuVLrab8PN2Ly7Mka1Ll9u92EodLQezd1ywcsR8OONHlfPmorjFNi4nuwsaLbv7gpnLUuuxX67in80ShF37+QA6ItiUCgHSh1jEQx8rKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744356426; c=relaxed/simple;
-	bh=iOidn7l9NBNpeJnxah+wYGgaGQgm9n4v7YKZnNqAmSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sOehObQnsvbKMoP/YW2NctgxZQ9ZJbEDodTWcpMjt89JCKaNCgc8CA04uZqsmTSGUTKJUodBeDZ6CyNq6d0KwqjuifUYSUolbT8nBlqVSe1erVu+DjsFIKSO8yqE6eC/MmTX+UVo+ovJSr9UUoV5Hk3KgXd5jrX2L3i7xwZSR6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DhVNVtVq; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744356429; c=relaxed/simple;
+	bh=6iospfpiXarFhMAbeZMPrqrrUAFFsDXq8Q7IfWRbt20=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pKMD4V/Z32O9lsvGE/RGV5tnIN8VtWra4dWThGtx4KBou/EGBm6Si/7KPUfXu0PZUH6c9Vj6nrLWtGpzesoAAEmzBs+6frmNtYyY2tTVXnW5gqmsy8cU6lsnx6LTaGlH9vfsxPcg9Gc5jy5pkqjnq472/e+TDmCiXNlT3s6F8bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=KBk2pUoI; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DhVNVtVq"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id 38WbufXqZiuzS38muuvoCo; Fri, 11 Apr 2025 07:26:56 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 38mtucaY97b2o38mtuHvsY; Fri, 11 Apr 2025 07:26:55 +0000
-X-Authority-Analysis: v=2.4 cv=EZXOQumC c=1 sm=1 tr=0 ts=67f8c43f
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
- a=0jM7oEE7EF-Y5LCAcXEA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=l/zosEz8AhTGxiuaGjJlq1yFgsiJbd3WrDaBZ/z6su0=; b=DhVNVtVq885OUFdIbXryphjU0c
-	4/ZrblqXNy1b9xM2mKc6AzzrEpOyO469J0QIe+7J85BPST3IDVMtd3hAk9WN6O7KZqO9TJcDwWWXm
-	kKrreeDDQw2eO7jQvtxtnpLayd9m0uLC2xtv6wBMSR1R2pt6/w8tgOeNcOT3ZdETx4x9+DfVn4e0F
-	fFZwHNvH1yQ1/VKjS0vzdbdAx1dsRLOZFdWlgG1IBciDmDlNw1Z/PoeK0SYrwuuDXwAuI+VWQ4+ip
-	O3P2fvJlmFScdSFp6aj+uq7eIlYRPA5EurB5dG+MaL5MMsia379ug/dQAi2FP2NpSs5cDGWNC7i+w
-	XTLDsyIg==;
-Received: from [201.172.174.147] (port=33292 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u38ms-00000002ADY-286a;
-	Fri, 11 Apr 2025 02:26:54 -0500
-Message-ID: <25518061-7b9d-4a43-be53-c5aee80c0f1d@embeddedor.com>
-Date: Fri, 11 Apr 2025 01:26:15 -0600
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KBk2pUoI"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22403cbb47fso17589165ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1744356427; x=1744961227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OEkz9sj9aVBNDIp/tCSuFWlfQARpupwyYG7ODnJ3fr0=;
+        b=KBk2pUoIqmLeNBYYBDfS1/HiT+ojwrIwqpMIiK+aIU6Bpyau5/o2NeMMuu0Dq5aVjI
+         J/RMienB9K3eXrwwNrKCXxy2LfBD/TGtej77T4eBfrb9Y2QAdG1wYPz8PZVc5c3bnkR+
+         bbIxshFOdd4UiVmoQjIZZ58K+fHBn3w0PHNwqERXxvj9TpykGdFA6698MItO7XVvKMrN
+         8YrboybcIGyQbfrIGjkUSbTPLGpFmPkx6vf485eK6kxfPv2Fo3tEI3cXTnCjAt/K4crd
+         5r0U6YPrn9ZoTcyH1biWqYQCoyp6k8+pkNZVjouUMXI4mzzHuNcITjLaPLnXORTHzfAW
+         JvrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744356427; x=1744961227;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OEkz9sj9aVBNDIp/tCSuFWlfQARpupwyYG7ODnJ3fr0=;
+        b=RCg2rhLed+E/DPCR2fu3wYqupXUxnHOZNe23LdWI17zuvNAKVxdPRuwSgKaEWHptdN
+         zeDSrAwA85YetGDaibU8C2TPIrYP3OtSChTCMV71yNOSSSrOjbhTwcEfKBN6DEMKEOmn
+         YhbXoCfIV+gNRbaJLSIj7Ljxojbxqc4VlybtpnRzC9dPTznUj0cfboJKqq6aGJfX2RBp
+         e5laG1WN5XvSaH1Su+7CFeVZqmyAzpyEOunYBZngvkgEFL2C4qSxbjO109+BjX8ZXTuN
+         bv+xC2h86CES/Lfr5IJpA2KNdPj5op+lTRh2jt2bAMxHX2i+TpcB+n9wwXq4EaTPkmlh
+         Y0dA==
+X-Gm-Message-State: AOJu0YxiRxGC16ulo8PmdP+Tk/sQDrGOrXIMx3rayts2RHJbuYBdn8kw
+	5svp2MKpj/+NxdSuUqfQ+3sedrxZtRA4MfALMdjYhtD/5jloB4Fs9X5ycbxYbFzmLNFQwIsJ35l
+	opRMGX0LxvxqRmdXy+3KtHCqeAMFSMyWAF7HYd8q7RtXnsogkTgj4I7C0kbGIb0TX+j+MGYDw3I
+	C8VhBjCdtWK4sHt+dh8YTn8SxVVCw4dyIRrhnBkXH1NLMkD3g=
+X-Gm-Gg: ASbGnctc19MrA34lgu3JlVLMdrL6dYrFHYVpYsPUqr4YKkCWcPtF7OGo7ZQEhZesyWE
+	TsyZ2KVhhIGEi1yMHHMjoBC/OXNYQNqzbJhjwMn9VU+fYSiFnXA/6mV6I5rGWvHLsYw2vB2OpY0
+	+6yf0snSv2HiL9J6f+024DzOJKPxBn6VpZqEnis5BjAuAWT6MlDZu/977f4FLCHLBOjjs7ZDR9e
+	qFqiaaY14U7n750FjfhqG6wW8g4ObxHq/fnkxAzigTsY1KKRHCXH3/yomsh0Z7Y25fDFB7CCtxm
+	vFeKvhceiVIsqtSUxUp67RQsCvPh4h8KGXakYCux7I9Et7IFo9lZLiktR8B0tAi5yP/10hA5xLi
+	dUg==
+X-Google-Smtp-Source: AGHT+IHGaeBskLQLYpXz2YaNwdKixufR57YYfZ8SkaOfywMMlz5BGlU3CvKcG4DzeH1HMJO/YjugXQ==
+X-Received: by 2002:a17:903:1a08:b0:224:1294:1d26 with SMTP id d9443c01a7336-22bea4b6dd7mr24156105ad.13.1744356426996;
+        Fri, 11 Apr 2025 00:27:06 -0700 (PDT)
+Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b654adsm42523585ad.1.2025.04.11.00.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 00:27:06 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	charlie@rivosinc.com,
+	jesse@rivosinc.com,
+	evan@rivosinc.com,
+	nylon.chen@sifive.com,
+	cleger@rivosinc.com,
+	zhangchunyan@iscas.ac.cn,
+	samuel.holland@sifive.com,
+	zong.li@sifive.com
+Subject: [PATCH 2/2] riscv: misaligned: fix sleeping function called during misaligned access handling
+Date: Fri, 11 Apr 2025 15:38:50 +0800
+Message-Id: <20250411073850.3699180-3-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250411073850.3699180-1-nylon.chen@sifive.com>
+References: <20250411073850.3699180-1-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: chan: Avoid
- -Wflex-array-member-not-at-end warnings
-To: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-67Hm9uHEJs0RGw@kspp> <202504071227.E8484EB@keescook>
- <d8e63b8a-7a2c-46dc-a15c-9399044a23ee@embeddedor.com>
- <202504071336.0C708FCAB8@keescook>
- <a6dccb66-3f97-443f-85e5-fe089cd93a5e@embeddedor.com>
- <202504081637.D17F824CE@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202504081637.D17F824CE@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u38ms-00000002ADY-286a
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.174.147]:33292
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfB4B7BdIK19shpiWZJq5Q3wWDmxCii4PHJhwh1td5iAI4DV+y1UmfxL20VdUBS/jYgcwfOJ/Tx36WAehmX3gF9ds+BJuVXCIwKsb6VLpZZHB4i8o6lZj
- 0tL6cOw0Xd8oJqNSYAj81rTh861BOPC8vXKbGBOb/E/jm5je06MLPyYNRGcaHbKfIEH/AaKm1bmpXm5ITganJe7U2c9xg1lVIzTkSDYdi9vWYwTyJTB11G8M
+Content-Transfer-Encoding: 8bit
 
+Use copy_from_user_nofault() and copy_to_user_nofault() instead of
+copy_from/to_user functions in the misaligned access trap handlers.
 
+The following bug report was found when executing misaligned memory
+accesses:
 
-On 08/04/25 17:40, Kees Cook wrote:
-> On Mon, Apr 07, 2025 at 05:35:47PM -0600, Gustavo A. R. Silva wrote:
->> [..]
->>
->>>>>> -	struct {
->>>>>> -		struct nvif_chan_v0 chan;
->>>>>> -		char name[TASK_COMM_LEN+16];
->>>>>> -	} args;
->>>>>> +	DEFINE_RAW_FLEX(struct nvif_chan_v0, args, name, TASK_COMM_LEN + 16);
->>>>>>     	struct nvif_device *device = &cli->device;
->>>>>>     	struct nouveau_channel *chan;
->>>>>>     	const u64 plength = 0x10000;
->>>>>> @@ -298,28 +295,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
->>>>>>     		return ret;
->>>>>>     	/* create channel object */
->>>>>> -	args.chan.version = 0;
->>>>>> -	args.chan.namelen = sizeof(args.name);
->>>>>> -	args.chan.runlist = __ffs64(runm);
->>>>>> -	args.chan.runq = 0;
->>>>>> -	args.chan.priv = priv;
->>>>>> -	args.chan.devm = BIT(0);
->>>>>> +	args->version = 0;
->>>>>> +	args->namelen = __struct_size(args) - sizeof(*args);
->>>>>
->>>>> Does __struct_size(args->name) work here (and later)?
->>>>
->>>> Why not?
->>>
->>> Uhm, I'm genuinely curious. I *think* it will work, but because it's
->>> within the struct, not outside of it, I'm unclear if it'll DTRT for
->>> finding the size (since __builtin_object_size() can be touchy).
->>>
->>>> I mean, this should be equivalent to `TASK_COMM_LEN+16`, I could
->>>> use the latter if people prefer it (see my comments below).
->>>
->>> Right, it should be the same. I think __struct_size(args->name) would be
->>> much more readable ... if it works. :)
->>
->> OK, I'll double check this.
-> 
-> Ah-ha, yes, I'm already testing this with KUnit:
-> 
-> struct bar {
->          int a;
->          u32 counter;
->          s16 array[];
-> };
-> ...
->          DEFINE_RAW_FLEX(struct bar, two, array, 2);
-> 	...
->          KUNIT_EXPECT_EQ(test, sizeof(*two), sizeof(struct bar));
->          KUNIT_EXPECT_EQ(test, __struct_size(two), sizeof(struct bar) + 2 * sizeof(s16));
->          KUNIT_EXPECT_EQ(test, __member_size(two), sizeof(struct bar) + 2 * sizeof(s16));
->          KUNIT_EXPECT_EQ(test, __struct_size(two->array), 2 * sizeof(s16));
->          KUNIT_EXPECT_EQ(test, __member_size(two->array), 2 * sizeof(s16));
+BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:162
+in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 115, name: two
+preempt_count: 0, expected: 0
+CPU: 0 UID: 0 PID: 115 Comm: two Not tainted 6.14.0-rc5 #24
+Hardware name: riscv-virtio,qemu (DT)
+Call Trace:
+ [<ffffffff800160ea>] dump_backtrace+0x1c/0x24
+ [<ffffffff80002304>] show_stack+0x28/0x34
+ [<ffffffff80010fae>] dump_stack_lvl+0x4a/0x68
+ [<ffffffff80010fe0>] dump_stack+0x14/0x1c
+ [<ffffffff8004e44e>] __might_resched+0xfa/0x104
+ [<ffffffff8004e496>] __might_sleep+0x3e/0x62
+ [<ffffffff801963c4>] __might_fault+0x1c/0x24
+ [<ffffffff80425352>] _copy_from_user+0x28/0xaa
+ [<ffffffff8000296c>] handle_misaligned_store+0x204/0x254
+ [<ffffffff809eae82>] do_trap_store_misaligned+0x24/0xee
+ [<ffffffff809f4f1a>] handle_exception+0x146/0x152
 
-Nice! I was taking a look at this, and now I want to use __member_size(p->array)
-instead of __struct_size(p->array). ^.^
+Fixes: b686ecdeacf6 ("riscv: misaligned: Restrict user access to kernel memory")
+Fixes: 441381506ba7 ("riscv: misaligned: remove CONFIG_RISCV_M_MODE specific code")
 
-> 
-> 
->> I really don't want to condition -Wflex-array-member-not-at-end patches
->> on counted_by patches, for now.
-> 
-> Fair enough. :) One thing at a time is wise!
-> 
+Signed-off-by: Zong Li <zong.li@sifive.com>
+Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+---
+ arch/riscv/kernel/traps_misaligned.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-\o/
-
---
-Gustavo
+diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+index d7275dfb6b7e..563f73f88fa8 100644
+--- a/arch/riscv/kernel/traps_misaligned.c
++++ b/arch/riscv/kernel/traps_misaligned.c
+@@ -455,7 +455,7 @@ static int handle_scalar_misaligned_load(struct pt_regs *regs)
+ 
+ 	val.data_u64 = 0;
+ 	if (user_mode(regs)) {
+-		if (copy_from_user(&val, (u8 __user *)addr, len))
++		if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
+ 			return -1;
+ 	} else {
+ 		memcpy(&val, (u8 *)addr, len);
+@@ -556,7 +556,7 @@ static int handle_scalar_misaligned_store(struct pt_regs *regs)
+ 		return -EOPNOTSUPP;
+ 
+ 	if (user_mode(regs)) {
+-		if (copy_to_user((u8 __user *)addr, &val, len))
++		if (copy_to_user_nofault((u8 __user *)addr, &val, len))
+ 			return -1;
+ 	} else {
+ 		memcpy((u8 *)addr, &val, len);
+-- 
+2.34.1
 
