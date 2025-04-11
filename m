@@ -1,143 +1,139 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3223284B25;
-	Fri, 11 Apr 2025 07:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AB62853F6;
+	Fri, 11 Apr 2025 07:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355735; cv=none; b=jjGPlOy6U2dFKX/GmaRNzAkOEaX0RbVhFN+Hf5QIdfFZweh+EM8xlhsIYu7yo2e1CbmqkRHYAXvq3XUR5V2aMyWvEXn+29HK1sBneavsoNmFTIw1xJgRowKGCEVIxsM2esE1ua053yjfcA7kIZVgrR/Z9c3sHoZk711rEQ29PHc=
+	t=1744355793; cv=none; b=ZM4UCSv4ACmExA2MM3I0A8eTsX0O4ywQ1sbwwAEDY5Ek4qcbVh13+5aV6BJWW5kep2SOcv2KC9qI6QKSspQs/5kt8KHWrpJIaKW2QBaQWBvAy+AEz2+l9KoWPqKyPP1s2hoDWd7B9VGUVFdWurACdC2I/4lKwCaS9ho0Uuv2uoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355735; c=relaxed/simple;
-	bh=TrwxdgLjWzXSBBbE3BhGl/lACl9M/ITPx5sp3AmTGuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ad3M5MRXXEWRnXgp6ybPgKp4TkDbxtEqAZtL1g8MfvShZTqNE56alxVrvY/a2qMPIi2WHCMVaJwhSUjvKNwcw+RRI/NrHV5LD/ULSGPwO0litMg5ll/uPe9gZoAmQVUH8bukv0axcPXZUwHatJzbOFUAAqQJavMYfnScU6Jx/w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FjDsGHUC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744355793; c=relaxed/simple;
+	bh=zua8Zt9PCF9PeIPdm0Sm86CS+6Yzk4xhdcr+ZvilYoY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=XWtZYAwSBNGyaV1b6+R0MZgJI5GfS8YEpqrR00IqdwzBZil0X0wg78F1iYOFa3qh7yRUnKcYSMCviugtzky5oA6CqLNy9ZHGuh7qo1jy5Kx54ypX/OrqUheV/R9fapKPGa0tlEHPWoUj+2BmoRJxmrhi7wa7FigPEXLBhtdLHns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3Ahmj5w; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FjDsGHUC"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B6EI2B017269;
-	Fri, 11 Apr 2025 07:15:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZfYkhUpUgtKwc//Gy0tDAVnYvs/5csupN4sTyud6bLA=; b=FjDsGHUC6NhQXTur
-	Dv1jTVWEj1AOi1fyLIwj7q+WMt0TuSu2RVqXUzs3byldL8G+XhZASO7AUDuoH+yt
-	zAyTrI6a5QJBVIbeE3vYw0TtsHEclKuEuznOmQWmDKD7wQU0gFincjiBTTHYUWhE
-	0WA0FsAcrICBjV3v3EOXdh2l+kepBLORGdsHJUpYtq8aBO44J86z9BOKDzTCNma7
-	6m5nwoaizAaXbczCkzPtEzabVPPKxYP0mNVKPLrI8Txi1eNDW6Yl9TiPh4ylRjnz
-	/9NF6PmPLySZwn1Ctt05PSXnW6ODUHwzyCCMdh4x3ZUTWfFJNwpQpLOdFBnOXs+B
-	TNKfGA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1sbwm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 07:15:26 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53B7FP7e024004
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 07:15:25 GMT
-Received: from [10.218.22.7] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 11 Apr
- 2025 00:15:20 -0700
-Message-ID: <9eb6dfd7-2716-4150-9392-98e26892d82d@quicinc.com>
-Date: Fri, 11 Apr 2025 12:45:17 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3Ahmj5w"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso18389825ad.2;
+        Fri, 11 Apr 2025 00:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744355791; x=1744960591; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8AZYV1raCKCE7T+GJKC63E8g42JVSDuGR93rMhn9HOQ=;
+        b=R3Ahmj5w3N7gdLG7N+JtTivHGs5/cDS/dsdQhSzA+vN2DCHskiC4MTCc60IhlCojbq
+         0nQp4BMHn3vSDqv9tfLHw844HGO16RwS1/x72intxtRREJ7P3pLsej2z8asXhwwxXSs6
+         SLNusH39T5l+biiPu/I50s1cU833tbezkeYHAhBVdKY/pzCkxU81HzFuCcX5Iu66h9Zz
+         c8QZQbRTRJ+eNybiTJ7Ae48HbUFNxBVWFiBBtlTUOkue8sRz+L0u5BiuNMmOyFl5wCrp
+         ZbWH0Wo6ZOKbCOHK8c0ZpfdvY5ZqwiJk5CwsTfminACXmfk+s2WZvTDyPytvb2RuXHjZ
+         +DRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744355791; x=1744960591;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8AZYV1raCKCE7T+GJKC63E8g42JVSDuGR93rMhn9HOQ=;
+        b=EDM9nhNy0x8W93oOMjYFlRUPv+bZORPdBP26o7TZevdCF6z4jKHOb5WBz2ixXYE5kw
+         1VXCKfRL37t+eNEuGjl6Rk1ddXZkBocE+b3z+ZuFN2wbSvqILERlsLFicWfYZzH9H3ol
+         iV+IZf+txfPZQGSUYtjm3SalEL/pV92gyBxmMsbP3qTs3czBL8a4w4WPHhvUgJTao1mo
+         DQ10ZBqWQjQ4MpDsVoNZ2fSHSAT3Z08H/PbvUwfph0Pg4lKns5dM5Uqfjd+X7jznggqR
+         GeVxCREGQ35KNXPlhXv7BkqWVDsrajFqn00PBDM+jfsJjRYm0At5gRxDuKt2Onh/Q/Bd
+         +pyg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2CLIHRSYjEGmlXbeWyMiwOEUr3Xyxhw6KBhj/xGT+reGYwlieyvJa44pAXYeZwpuRDCg5y4ElLzbZmA==@vger.kernel.org, AJvYcCVwYTw4qY1I4lFJM/wUMG+iGOEft7RkkeuOMbxPtZYX66RcM584YrjHl4ZGfiZgaCpgIWLaQMPdK2WY/g==@vger.kernel.org, AJvYcCWqniOLUOZdTtmYVJG2gzUWiShKl/zKiUHgLqLb/Ze64KZYru1euPa+s7D2CJASxhMYq87wEG6XkS+QDSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaoXIngwLdV+vz5r4aYkW2+NHAqApYJp7ZpxkBCO1TkVpCpC5b
+	H3zIbEv52KXfn8aUMfk4gqJY0Sn6Ju5t+sGneaDURYE+7tXlHaxf
+X-Gm-Gg: ASbGncuxzf5HH5EFPKXh/QbTvJFOuAOC39CRiPpNz8CuwEm1Xp0h8VehhyIZZ7UIkMK
+	mwmyhFoKiWd5BaEgElzhzs9zRua6D0QetZurSmqXZ/lLntH+svux0Le1cSo6eXZGSX62AJK3G1p
+	2BwoIyagt0UTHORKp1Fd7qHK/NUmb11KKzGMm6tO7CzcYx8quTLX6n4fLb6fS9IEtE8OYaMPjYg
+	BjumjnisRMQ3ikXUew3a25+GsoD+opAFj7q5ZJ9wlhTtPKo/2vIQWTZkJrHX3pyD9Hl/j2qD3C1
+	N6UYkcQauqrc4T0VqWxG+8OufjcyqIi/Sg==
+X-Google-Smtp-Source: AGHT+IHEcvyi3TC9JEHNBrBd62VdoZ1tkH8a7fjLbKQXjCafKk3/popDo8PXG6WTmR/MWpJCm32MMg==
+X-Received: by 2002:a17:903:1447:b0:223:5c33:56a2 with SMTP id d9443c01a7336-22bea4bd57fmr30624525ad.28.1744355791439;
+        Fri, 11 Apr 2025 00:16:31 -0700 (PDT)
+Received: from localhost ([220.253.99.94])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb5047sm42114385ad.170.2025.04.11.00.16.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 00:16:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: sm6350: Add video clock
- controller
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Luca Weiss
-	<luca.weiss@fairphone.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        "Michael
- Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Konrad
- Dybcio" <konradybcio@kernel.org>
-CC: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
- <20250324-sm6350-videocc-v2-4-cc22386433f4@fairphone.com>
- <1c09fee5-9626-4540-83fb-6d90db2ce595@oss.qualcomm.com>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <1c09fee5-9626-4540-83fb-6d90db2ce595@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: bXE2AU8sT8-88aAfD7Uefr2mpi41Spjm
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f8c18e cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=6H0WHjuAAAAA:8
- a=hrSR9ppxl6sQH_nEVi8A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-GUID: bXE2AU8sT8-88aAfD7Uefr2mpi41Spjm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110049
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Apr 2025 17:16:24 +1000
+Message-Id: <D93MIOI9YLAD.1WDMNT59MMEM2@gmail.com>
+Cc: "Hugh Dickins" <hughd@google.com>, "Guenter Roeck" <linux@roeck-us.net>,
+ "Juergen Gross" <jgross@suse.com>, "Jeremy Fitzhardinge" <jeremy@goop.org>,
+ <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+ <kasan-dev@googlegroups.com>, <sparclinux@vger.kernel.org>,
+ <xen-devel@lists.xenproject.org>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH v1 4/4] mm: Allow detection of wrong
+ arch_enter_lazy_mmu_mode() context
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
+X-Mailer: aerc 0.19.0
+References: <cover.1744037648.git.agordeev@linux.ibm.com>
+ <5204eaec309f454efcb5a799c9e0ed9da1dff971.1744037648.git.agordeev@linux.ibm.com>
+In-Reply-To: <5204eaec309f454efcb5a799c9e0ed9da1dff971.1744037648.git.agordeev@linux.ibm.com>
 
+On Tue Apr 8, 2025 at 1:11 AM AEST, Alexander Gordeev wrote:
+> The lazy MMU batching may be only be entered and left under the
+> protection of the page table locks for all page tables which may
+> be modified. Yet, there were cases arch_enter_lazy_mmu_mode()
+> was called without the locks taken, e.g. commit b9ef323ea168
+> ("powerpc/64s: Disable preemption in hash lazy mmu mode").
+>
+> Make default arch_enter|leave|flush_lazy_mmu_mode() callbacks
+> complain at least in case the preemption is enabled to detect
+> wrong contexts.
+>
+> Most platforms do not implement the callbacks, so to aovid a
+> performance impact allow the complaint when CONFIG_DEBUG_VM
+> option is enabled only.
+>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 
+This is a good debugging feature independent of how the fix
+is done. I would just warn once, since it's not a bug for
+the arch and could fire frequently if it fires at all.
 
-On 4/1/2025 10:03 PM, Konrad Dybcio wrote:
-> On 3/24/25 9:41 AM, Luca Weiss wrote:
->> Add a node for the videocc found on the SM6350 SoC.
->>
->> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sm6350.dtsi | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
->> index 42f9d16c2fa6da66a8bb524a33c2687a1e4b40e0..4498d6dfd61a7e30a050a8654d54dae2d06c220c 100644
->> --- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
->> @@ -1952,6 +1952,20 @@ usb_1_dwc3_ss_out: endpoint {
->>  			};
->>  		};
->>  
->> +		videocc: clock-controller@aaf0000 {
->> +			compatible = "qcom,sm6350-videocc";
->> +			reg = <0x0 0x0aaf0000 0x0 0x10000>;
->> +			clocks = <&gcc GCC_VIDEO_AHB_CLK>,
->> +				 <&rpmhcc RPMH_CXO_CLK>,
->> +				 <&sleep_clk>;
->> +			clock-names = "iface",
->> +				      "bi_tcxo",
->> +				      "sleep_clk";
->> +			#clock-cells = <1>;
->> +			#reset-cells = <1>;
->> +			#power-domain-cells = <1>;
->> +		};
-> 
-> You'll probably want to hook up some additional power domains here, see
-> 
-> https://lore.kernel.org/linux-arm-msm/20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com/
-> 
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-On SM6350, videocc doesn't need multiple power domains at HW level, it is only on CX rail which would be ON
-when system is active, hence power-domains are not mandatory here.
+> ---
+>  include/linux/pgtable.h | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index e2b705c14945..959590bb66da 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -232,9 +232,18 @@ static inline int pmd_dirty(pmd_t pmd)
+>   * and the mode cannot be used in interrupt context.
+>   */
+>  #ifndef __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+> -#define arch_enter_lazy_mmu_mode()	do {} while (0)
+> -#define arch_leave_lazy_mmu_mode()	do {} while (0)
+> -#define arch_flush_lazy_mmu_mode()	do {} while (0)
+> +static inline void arch_enter_lazy_mmu_mode(void)
+> +{
+> +	VM_WARN_ON(preemptible());
+> +}
+> +static inline void arch_leave_lazy_mmu_mode(void)
+> +{
+> +	VM_WARN_ON(preemptible());
+> +}
+> +static inline void arch_flush_lazy_mmu_mode(void)
+> +{
+> +	VM_WARN_ON(preemptible());
+> +}
+>  #endif
+> =20
+>  #ifndef pte_batch_hint
 
-Thanks,
-Jagadeesh 
-
-> Konrad
-> 
