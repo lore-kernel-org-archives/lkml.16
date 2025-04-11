@@ -1,69 +1,43 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80970238C08
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F039D20AF66
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369684; cv=none; b=RUotKnj5D08EcoR2JZXYFcDw1Lbtb5VKzLyfrtGD10V0GwOsP21hu2A8hZRiuLnW7vCMQMj2+DaomoUGSfIQ90nZ2CHeK6IFN8VDurQvKtzQw9+KVSsesOlunNUi5KxV9nplN48wOerogLOT4unzojRONCO7DE1/QmCPYQ8wL8A=
+	t=1744369697; cv=none; b=Slp4TV32mQpcsQEGZkuHvhAN20i0fEmDNgOGmq8CvT2XpMGGXDe/aglbnqALBxSZmdePb1RsdMlX0XZKnK4TMIdNXTdTvHGYPuUd/UkFoYQQxYY6JT+mLQXzR1FMkxothW1MrdH+bkAdoXaF8XUGE+FFjagvv4BHyDB4x567xzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369684; c=relaxed/simple;
-	bh=Xt3HnaLjnmfu3dmsKJ+Lpqr7W9FxtsAPlW98fpknUrY=;
+	s=arc-20240116; t=1744369697; c=relaxed/simple;
+	bh=XnWf18T4aDc2xmNps0it2JLrQ9AKau7dBuKwdDKj6zE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otbj2YglmtuPOSHBpFgILkSWth2orv+fItyabB7UPyO+XQ5Cwyx+fE3SZ+uVHUXsQpfFmttxESyXkP/IRTMzysTESgoPgh0G7j4xSuvPkrqziq4jKazPwaORAAu10ySdP38latHSONyK5pYDeDuMA1ad3jnhF0AlEGHghdAcSUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FTuTOidj; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=kPKh2eLLa/pC8lqm+DdZaBpidh24PRMOgS2gf4wiAX2ES5eI8E70Bj/AXHvWLgq2qXGLvT927f3kximGJ0cxxjEyxgn2fChSNzMXHDRDNHILTNiI9Ap7yvUn3oDz/dnoINHPePdKTw28j6LZQ3Y6RBABCGOH3fUSdTAs9DNPFxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyGoBPYB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FTuTOidj"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4164440E01FF;
-	Fri, 11 Apr 2025 11:07:54 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7q0eZ2auchsl; Fri, 11 Apr 2025 11:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744369671; bh=3eLRUX41W6VApjLhj24T7O5VZEN+1pBEnQln+Zvqtzk=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyGoBPYB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF32BC4CEEA;
+	Fri, 11 Apr 2025 11:08:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744369695;
+	bh=XnWf18T4aDc2xmNps0it2JLrQ9AKau7dBuKwdDKj6zE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FTuTOidjj9iBAos2bf3/to0ecfFXSGcJpyR7Mjjc+C0O1rrKeDLURiSukLW3zg8bi
-	 OFnBLpeTouotbl3pYexcZsvWjnIsoHr+lbMR8Vqt7ADdpGE/dQUIhKDg0aBTuTAVh4
-	 PriOQxuUyqrVLnTTINwuR1OQ1A70R3ykaMZqspkAJmXljlfgo5eGyiv8UbWUTGQdZU
-	 NzIdgZMdnGYBRgNsn0P/YgXx78Oh1c/a7KyqWIEGfr0Dj44Wrc2IODJrgW8f+UoBhf
-	 wZXUVHz/YUmfS7MQuKnf0OwU6HvPMCW/ESZRU3vwWOFT3Ch9zjNNS7M/MQpSHJSRam
-	 H3NEATdL5LcgRw1aIHDImYfGTWX0QpopRlnErXmnw8G8Wj10xQw657uA25Q3FhqMdS
-	 7ZYSn9S2NrqD6u/wCFzmYuDGohphXaMkt3UKhXERnBBQthNqk2Q5ZEvFCAOXHBOHJM
-	 P3zC0VnH1bWMxXFOitFz73CLpGQN24nDf5V8bV3KHdhQeCqM0bMYRA9GRKSmQ3zenD
-	 UTuNHM4/cEzdPnIpP026dUHlzUo50vqSWQJ8dluKl7TG6lPrSGWdllqnSW7kdQLBCs
-	 gS9Ad0QQJNurLSCNBx8T9y2VySDqFQ2UhIlDn1Mqf4c7v+CZuLecbrDgdv9+9Vcom+
-	 cQWzvFbNFUO56vj8lB6DWmnQ=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C909C40E0243;
-	Fri, 11 Apr 2025 11:07:42 +0000 (UTC)
-Date: Fri, 11 Apr 2025 13:07:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kevin Koster <lkml@ombertech.com>, Oerg866 <oerg866@googlemail.com>,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Consolidate the loader enablement
-Message-ID: <20250411110741.GCZ_j3_dLFQ5fGhHqw@fat_crate.local>
-References: <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
- <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
- <20250406174633.2c581923c145687476191753@ombertech.com>
- <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
- <20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
- <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
- <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
- <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local>
- <20250408172250.GCZ_VbaqKsshMYTdaE@fat_crate.local>
- <875xjcteq2.ffs@tglx>
+	b=dyGoBPYBNvz7vzJ1/ucwrebmsgt1MrVYBzyUbG6S/gx4cA5hYAGFVNGIMXrewXIiY
+	 wmCKjFCDUliOvMo+AXMElY9iaxEL61dHP5lMYU/adTVxXjvk9hqqThiB367HNQ3hgK
+	 XReqfvhwqX2kFdrpSDeMhJnmqetg8qQQhZ9V33sxpLOXOZ6nhgSBU2Hu1IxoGO7Bi2
+	 JOaNeCYWiH2qfg9W4mwSQeSQOXCLuYq99P6x/XwXf5IPHql1xWRFN2ezVWaLdpKggm
+	 OjO5zQnKHBScQqMErg4QOI74gzO+kOARfI40m1n177cLW51RdLkGLsDrhoI6t3w9oX
+	 54ITeqWvlxJcg==
+Date: Fri, 11 Apr 2025 13:08:12 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Alex Shi <seakeel@gmail.com>
+Cc: alexs@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 2/4] sched/isolation: clean up housekeeping_cpu
+Message-ID: <Z_j4HIVRUcF-TwDP@pavilion.home>
+References: <20250410092423.9831-1-alexs@kernel.org>
+ <20250410092423.9831-2-alexs@kernel.org>
+ <Z_fFlstqFYGPFLEB@localhost.localdomain>
+ <CAJy-Am=oORjnBx09phsBCkNxF+bK_CyWA_eBMHUG0WdE9pb63A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,28 +46,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <875xjcteq2.ffs@tglx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJy-Am=oORjnBx09phsBCkNxF+bK_CyWA_eBMHUG0WdE9pb63A@mail.gmail.com>
 
-On Thu, Apr 10, 2025 at 01:53:25PM +0200, Thomas Gleixner wrote:
-> It just exists to make the above a one time operation. What's wrong with
-> having:
+Le Fri, Apr 11, 2025 at 08:58:45AM +0800, Alex Shi a écrit :
+> Frederic Weisbecker <frederic@kernel.org> 于2025年4月10日周四 21:20写道：
+> >
+> > Le Thu, Apr 10, 2025 at 05:24:17PM +0800, alexs@kernel.org a écrit :
+> > > From: Alex Shi <alexs@kernel.org>
+> > >
+> > > housekeeping_test_cpu will check 'housekeeping_overridden' again in
+> > > itself so we don't need do it again outside. just call
+> > > housekeeping_test_cpu is fine.
+> >
+> > The point is to do it in the headers, so there is no function
+> > call in the off case.
 > 
-> static void __init microcode_check_cmdline(void)
-> {
-> 	if (cmdline_find_option_bool(boot_command_line, "dis_ucode_ldr") <= 0)
-> 		dis_ucode_ldr = false;
-> }
-> 
-> and call that once at the proper place?
+> Thanks for comments, Frederic,
+> But the function is 'inline', and further more, the
+> CONFIG_CPU_ISOLATION is in defconfig
+> and most of puplar popular Linux vendor. So it still be compiled.
 
-Yeah, I had that done for the mk_early_pgtbl_32() to avoid doing __pa gunk in
-the loader. But if we're going to do it unconditionally now, I don't need the
-tristate anymore.
+housekeeping_cpu() is inline and does the static branch test, which is
+most of the time off. If it's on, then we enter the slow path and call
+the real function housekeeping_test_cpu().
 
-Lemme zap it.
+So the point is to optimize the fast path, which 99.999% of the uses
+since nohz_full is a rare workload.
+
+But housekeeping_test_cpu() is still built on most distros just in case
+a distro user ever needs nohz_full.
+
+Thanks.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Frederic Weisbecker
+SUSE Labs
