@@ -1,81 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3862AF11;
-	Fri, 11 Apr 2025 14:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9C02AF11
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381271; cv=none; b=V+nLTTjpaOuWJAm9+k8T/Y7EFbhi2d9LPforJxpD54rXY/zuiSHJYzr62Wk7Ivl+nvEQ5Zm4sCWEl+QpBqPvPPRalZXnN0omuODNVAyQuzHDXhDYvvH9W9Eix3V0zbEoRQu4rqaLsNs6uVUWRQj8+WrxfRvvm6uyc0uM9N58tDE=
+	t=1744381309; cv=none; b=Kjr5S/fAyjn9Ukx64K+ei9+2DKyUzIOorLEX92yMCEEoHmSU5bKj5HCqkqYlKG29eRVJ8zpH2MTLKun7arO3lhO3kByxVDysflck9AER42wcvI65xyv8O0fmMJ5+RkJKqyZg1sDRAx6FQq4uND3kZV3OPa56sRHFx7g8f6nirjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381271; c=relaxed/simple;
-	bh=R47KmscxgQp8l9bKGgmTbbSqU0yi0fHEDgacMiINS18=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bNsEincf7OCvZxQJ15r2y9r1NwxP+3dR0cNfY98WczRoA/55paju0f2JjPtxsKb2t+Pn29b/MQNzUt7o5YvW67Rf2PJKVsHTL6w0hjBBWetchNSZNySbshfFhV0dWlEPY3X9HOBDXepyv0tJ7ElE6cqp6D8YMEAADG9lwcF7WQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kG2XSX0f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744381309; c=relaxed/simple;
+	bh=zMQ5uKY/6zWhNuy6u2YZy5lpu11P/rMOuhYhxVwIu8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGLqpEjyjKM0ewmoq6uTjjcPftO8mPp8GCOaSDcMckdIE9nDkVGMENYFYm/y2VSHXfBIjR2i5bFC5FLgxNq5qU6hLQQvL4pYLc9Bkb0cDOBxA8VCxrU2QFSdHlxX1gCgy4x/5SaAgEt2Ae3/hOA+sklf7dkwz85OXbD0gptgbbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KfmHQex8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kG2XSX0f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 947E9C4CEE2;
-	Fri, 11 Apr 2025 14:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744381270;
-	bh=R47KmscxgQp8l9bKGgmTbbSqU0yi0fHEDgacMiINS18=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kG2XSX0f7eS8a3BzpXp+vHqiXpwNhmnthK5JCudmNbcigM3QiK9/61UKGFoJtryVF
-	 VCnMe1z234piD4fDi/7yjR0Q4xSfCq6OyDEXF9yrkUL2/JMCRLS1Gi4pziCt5RvTQg
-	 lIU4AK5bJCm1Qd6oNT0L8HZi47yw6EyfzTLhaHueP2vHH0RI9FrMJ80St6DcIU0sWC
-	 hKE+xMQRocMGe3o5m8Ex+ymerrI/z+1SARbIA7xIel9HzjOa0HSinsvY8Bz3Ye9N1+
-	 T4REnRZTotPIL2/E3uYmqXqJwcbQg9/EYp1+pDoUOhGhjXpBcGKVeGb7QAHHr2XPgi
-	 w0YV6/fuejIdw==
-From: Christian Brauner <brauner@kernel.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: (subset) [PATCH 4/5] fs/fs_parse: Correct comments of fs_validate_description()
-Date: Fri, 11 Apr 2025 16:20:49 +0200
-Message-ID: <20250411-rennrad-plural-1fe72c1e43f3@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250410-fix_fs-v1-4-7c14ccc8ebaa@quicinc.com>
-References: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com> <20250410-fix_fs-v1-4-7c14ccc8ebaa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KfmHQex8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YtT01ajOsSmZLSUYde+7t7bxHp2pbObLzVWdGuotdHQ=; b=KfmHQex8aMJwIORN5vrOuV7n6/
+	eyLo9D8CBDcLdEKIkPodWF8II4y9l7R+FQfmO90ZqVU56KHIK8CkuMGGfrOUX/mkbs+i7KxSgBCtM
+	AvSjTQK5o5rWof890naGoKIIHNmCeHiOixCBMcBBXsUrpgAgGR3Zxx52/xEl7tVA9t/hAyyoXV1OP
+	incV+dcc+2RwwtaWk74EqH4zRVIX6Qsh//FVWLjfZhktYpvx/BxVxCFuh/p6lr1tNyrGHul6/Akxl
+	MN9tZIfMicPQ7eoFB+ziUvyRAnpif2ub+YPAosWZe9ildBdq8nuzqlaYaA7ORCWJEdCcJlr3yh0uu
+	MZ5hEPRA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u3FGI-00000004Lk8-3IgK;
+	Fri, 11 Apr 2025 14:21:42 +0000
+Date: Fri, 11 Apr 2025 15:21:42 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm,hugetlb: Allocate frozen pages in
+ alloc_buddy_hugetlb_folio
+Message-ID: <Z_kldseGr033Hqny@casper.infradead.org>
+References: <20250411132359.312708-1-osalvador@suse.de>
+ <f0373427-b4e8-4612-b668-980d93febe26@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1156; i=brauner@kernel.org; h=from:subject:message-id; bh=R47KmscxgQp8l9bKGgmTbbSqU0yi0fHEDgacMiINS18=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VA3cYyqUEnJxMpfJG6mnvJNVKpf5sLC9upizdePcU 7NyVph7dJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExkmwgjw1HR68dYC/7t2Hox kS95sueTr+usA12/vHJf/fzgxHvl07YxMmxXuPN7m1IVg9+Be/sE1vFszWi/0/PT+okO47t9ovu 9vvIDAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0373427-b4e8-4612-b668-980d93febe26@redhat.com>
 
-On Thu, 10 Apr 2025 19:45:30 +0800, Zijun Hu wrote:
-> For fs_validate_description(), its comments easily mislead reader that
-> the function will search array @desc for duplicated entries with name
-> specified by parameter @name, but @name is not used for search actually.
+On Fri, Apr 11, 2025 at 03:44:31PM +0200, David Hildenbrand wrote:
+> I assume htlb_alloc_mask() will always include _GFP_COMP.
+
+static inline gfp_t htlb_alloc_mask(struct hstate *h)
+{
+        gfp_t gfp = __GFP_COMP | __GFP_NOWARN;
+
+> But semantically, it might be wrong: __folio_alloc() will in the memdesc
+> world also make sure to allocate the memdesc, __alloc_frozen_pages() not.
 > 
-> Fix by marking name as owner's name of these parameter specifications.
-> 
-> 
-> [...]
+> Maybe one would want a __alloc_frozen_folio() .... @willy?
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
+This is fine.  Yes, it'll need to be modified when we get to the
+separately allocated memdesc, but there's a number of places that
+cast the freshly allocated page to a folio, and I'll have to come up
+with a way to catch them all.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Oscar, if you want to take on the gigantic allocation next ...
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
-
-[4/5] fs/fs_parse: Correct comments of fs_validate_description()
-      https://git.kernel.org/vfs/vfs/c/a8fca9b51158
+ - I don't think we need folio_alloc_gigantic() to be wrapped in
+   alloc_hooks
+ - folio_alloc_gigantic() should return a frozen folio
+ - as should hugetlb_cma_alloc_folio()
