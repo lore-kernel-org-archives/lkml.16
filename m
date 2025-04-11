@@ -1,70 +1,74 @@
 Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB4A263C97
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F05C263898
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:31:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744396278; cv=none; b=WuOVeFQVYTLY0OlF7C1F7fjO9cRszFXuKGqiKRGtaPr4SfBU3j98rHeAwrH2vVIoXYWoRMe+Q6OV6D6vN5eURtUsDg/qjGWcnsbJHd/Cxsz6/TDyJdVlAhc5JKeTLWdn6RsZwhvycZu/Dw2k4MU7G4NSv3GMwpHwF4qrQNg31Fo=
+	t=1744396286; cv=none; b=RfomDKp+yEd/h9bDxeU+KWvKz70ozvAxAQFmE2Hs4h7H2rxGu/EEVnqPrc8VyIuGtIE4Y5tclpnI7VS7W2TpCVnDe6gXd0zGVRE4TqDhBomntn/o7DPbj/rKMcw5/+p22piGhLVQtKnkPNRoHm8GhqckCHTedVhheE1ecVPxElI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744396278; c=relaxed/simple;
-	bh=M8BnE7y4pCyI756pxYEVmi0J7DoEWU3Ee5ThcHEeydc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j4FmfMgwSAjcfTDL/5/DK7oFFV9iqIXjSc4bEjR+lGtp4W5KnDzTRIOHWsZeQlZ0HKtqrwo9mZr9Esqw8U2tlwpudLiVaFnQT6rg6+Lu2UGITTyut+9D+1/NAvTDUWpTtiWW5GsaUICCKDCNO8lM+T9lv8Mgqir4hTgL+JUDJ+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxTQEIbO; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1744396286; c=relaxed/simple;
+	bh=vYIH9CVcwhoi0vLUkNUg59Jsq+NQkoxMiA5AdiUfit4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LzuKi2FyIBkHWNPhP0CXxgCaaTqQYqaB9qT8pBu56ZabZ97U0tis3pqYjHzv87Bqe49G1RHBLlkdO0yz0FymkPiR+hwlRWVdHjimmHUKfY+BRjGGmuMC4s9nMHzqsNPpsijULHfyZFRD0WqpkwoleGXqP1H9PO01fPPLVA2dSS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EGy7z8sR; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxTQEIbO"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227b828de00so22783805ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:31:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGy7z8sR"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22403cbb47fso26058135ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744396276; x=1745001076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqLCPzFXeiQ78a77xW/BVwb74EuVbQh9e+hd5aQQ4q0=;
-        b=dxTQEIbOlIXXuzIIhcNVg8l9RQDIMsGQmhs/jecp/aMomrSqk/A9O04BkJmx35Mr7V
-         OrhonhB9YEO1LYmeHRlUUEwasBc+BlNYJBSOjW2yZUYUf77U0fg5meWunWAU2bV3Pato
-         CKeT5tHAjVI62YQE4n9PtdhDWNKYqmys0m+8HBjCXEzZAuYTvsdaRGlp0v20qR7gddOG
-         4Fj+G/nOb/OiGJDshsGwdM1bZR2z2tf6dYiyK9GulLs+beUX1u5CGeRTevrI/BpuPhyc
-         H9EOtLfHIbgxDcus0OPv2A8EIxfZuI1PJLoJ5QD5vGAIzbpsuh/jwKeO7gzwmI2/AdEL
-         mBAQ==
+        d=gmail.com; s=20230601; t=1744396284; x=1745001084; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ql6xemgsTeTnj5OBzjSrp7KTsy6FsJl8WG9i01Bevqo=;
+        b=EGy7z8sRuMw/w2dz4jWzQTQUy8A5vClKWysehLzMD3dX+mPVT/Bcj8OldqocXYgEBV
+         +aBgyWhHgsNzEJExvhPGEVEaKmTHqvbl6v3d63N3u+gVJ8rgWWknu89OL+Tg+/kzFKo6
+         ZLA+zqjxf0xEMd6XcP+98DIH+9Q5zdf5VoOBpZuBUsVandSQjMSy9iCxJBNn5WL7QTsu
+         R9Ukns0bteKLseGPWsWh2fwVH3M3RdeRCA02kmk/m/Fg85MJZCBOFBAYyxVF/MGqp9B2
+         JfGaEsPrFQsqSFdF3pmMq0tgcO0ACwsuEIMcqRU3gWjlgj3ewxKbJ7hwZ5yO4Q02MKQ+
+         srvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744396276; x=1745001076;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hqLCPzFXeiQ78a77xW/BVwb74EuVbQh9e+hd5aQQ4q0=;
-        b=SQmkLvKAwzbFiHg7WqdSk+FUZ6lZUKQYLO9qhMH+jgpkg1JM94r9aUdjLcaxKqAWX3
-         JBuQpWIGDr00ZbYuUsGscOt92uhaU6NTj6DMDGPagwTJwpuNHvT1Iej9x9Yjpd5wL5wV
-         YgWdakJ5+CGYDktE3eUkG2MiSQyguctfsI1iJv2V4kqPGNe8hp55iVbHKXigARaxuEGB
-         Ujz2ehm1bUxwQnl0LNgsNkBnZyRVBIvts60qiHOctToW3MkukLBWoT14MaB31+wgX+Xr
-         RDDSBq2W92swcsICkFCg5OvLkdNz5y8pEh6DNv0s8J6B9oagQovzD7LZjY7Ue58FK+Qt
-         aETQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUl11ybZPA4zMAn5PpGGi6+6tnZKv53LgN3DtZh2soevvesVFqdDUl8IfvetrAt2AxyWabiBW52T1nrPys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPCO6Nf6aU/QIZSfL3jSvQhWBXKKqzb6R81Vu7WTkpiIswYxOQ
-	X4kX9kpsbynm1w6mOKtDYrWDw9Hv1uKcEtIsso36PByiuakA8L0L
-X-Gm-Gg: ASbGncspMkcea+QIjGrqWE+h4bjsfqeL7p0YpOjavhbLNltLhikBkAviTBJbUuOFpsR
-	0nHJKHjUJKO7VdxsbX95n9+LU7457fvTaIHEdcXYLQUOURyT5JuIT7Ho4axoYu/TbY2K9/jokUO
-	ALTTCsZ1pLfo7c5Tfj3DnFRwu4f7YJ/ErP2U+1FokQm2CWzEENEpQHOa5Zn6zZE7EpF9S9Itx9K
-	euzOFdicb4OuYgkrRIlQxwpM/r0ubKMqmeGs45fnqEbG41X969cIq7yrw5bGHwvpxzzMB6Lj6wH
-	sBxzJ/dkNlxijJJ9nXkCQfHCwxG88el9fZ4U7bsqUUugCRtmifE=
-X-Google-Smtp-Source: AGHT+IEXOJDs2wXgxcFgUbdNAfxLHWUacypzxby1mTgd93J+HYC9pcfOuZKdGA9KMKK8PT1SKNnS6Q==
-X-Received: by 2002:a17:902:d481:b0:223:325c:89f6 with SMTP id d9443c01a7336-22bea4957b9mr53480645ad.10.1744396275764;
-        Fri, 11 Apr 2025 11:31:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744396284; x=1745001084;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ql6xemgsTeTnj5OBzjSrp7KTsy6FsJl8WG9i01Bevqo=;
+        b=mNkbB5SxWcuziHG7VbP72XbYs5QUH45XmCy/08WM8X7ets/rR7KAp0hJ3KYIv53FGu
+         ndzAizRaECe5SH2Mwnlr3loLyS5gORJ1bc2j+8Q06g6zhW4l6oIOiQRJLIb8M1XPfVIv
+         sd0rMuJzgA1dfmPQMTepkOfhvnxZWI/VQ1LP14K82Ta5UlSq1AzjQJWNuNw2ygYMjLgj
+         Y7lwPyiSmR5CPEPs2GD9yD4DN9MlUQ0vJma5gWFk0G9j0bkeekqCGN6z1qtDA+NdSfvQ
+         swMCZ+lt/35PW0Ija4b0ghYcyyrWy9eMlUsufv41KUKKnigeBrcWYKJOPLv0OXTtjqFP
+         0Dtg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDHqa0iD54GLqpi4ckscVDm3BRCIPXgaxOiTwnRsdf9zzM4CwMK4QAJHZzRB5TWb9RUk3VyZCUbLjSxo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEic+ZVk8BJNHztmQHDGzRZe7/bNQr3gqQs0ErOiyTNjDwg554
+	bK1DXC/Iv70M8ZpfdsjvILaOmSxWS1UWX+1m64i5o4smnwFmIuzE
+X-Gm-Gg: ASbGncuaFUfs8UGft/m5sFsLeaF2XGCxCcAIcr32OxhykLMJ0fnekj1GvyxKe12TxqH
+	vLvDf0waktsv4uXURm0ykGUtJREVCSi2DbdHfKAbe/uMKb0+erkXuYixypTQ1a9Hk15q2Re4ou4
+	1C/hZrrer3Ct2xBcCnDENsBIG+muJjU4x0MXENiu2Aq5EkywfFlxDetDRWM3BntJubgV7yq9l3w
+	vYjwZPz/ToXZ9yszM0ytd6G1QS9ZBrBi3+O9vc93iMY666sIv7hWJVG/iRBLtacVTwXQzzjGRNc
+	t8dgG4I7QCpLXgoDru643P1csjeXCjirf/ME2lIumAfmGFUcbbM=
+X-Google-Smtp-Source: AGHT+IEEo9h/z0kik2OsRdO8MlrRqDu0viVFKS7VlyPrm4TiRdh0ZrD6kKmbu129uRROwwkNBMLY1w==
+X-Received: by 2002:a17:903:3c44:b0:224:162:a3e0 with SMTP id d9443c01a7336-22bea50dfb1mr52127375ad.49.1744396283596;
+        Fri, 11 Apr 2025 11:31:23 -0700 (PDT)
 Received: from VM-16-38-fedora.. ([43.135.149.86])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cdcsm53279515ad.118.2025.04.11.11.31.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cdcsm53279515ad.118.2025.04.11.11.31.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 11:31:15 -0700 (PDT)
+        Fri, 11 Apr 2025 11:31:23 -0700 (PDT)
 From: alexjlzheng@gmail.com
 X-Google-Original-From: alexjlzheng@tencent.com
 To: gregkh@linuxfoundation.org,
 	tj@kernel.org
 Cc: alexjlzheng@tencent.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH kernfs 0/3] kernfs: switch global locks to per-fs lock
-Date: Sat, 12 Apr 2025 02:31:06 +0800
-Message-ID: <20250411183109.6334-1-alexjlzheng@tencent.com>
+Subject: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to per-fs lock
+Date: Sat, 12 Apr 2025 02:31:07 +0800
+Message-ID: <20250411183109.6334-2-alexjlzheng@tencent.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250411183109.6334-1-alexjlzheng@tencent.com>
+References: <20250411183109.6334-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,24 +79,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Jinliang Zheng <alexjlzheng@tencent.com>
 
-The kernfs implementation has big lock granularity so every kernfs-based
-(e.g., sysfs, cgroup) fs are able to compete the locks. This patchset
-switches the global locks to per-fs locks.
+The kernfs implementation has big lock granularity(kernfs_idr_lock) so
+every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
 
-In fact, the implementation of global locks has not yet introduced
-performance issues. But in the long run, more and more file systems will
-be implemented based on the kernfs framework, so this optimization is
-meaningful.
+This patch switches the global kernfs_idr_lock to per-fs lock, which
+put the spinlock into kernfs_root.
 
-Jinliang Zheng (3):
-  kernfs: switch global kernfs_idr_lock to per-fs lock
-  kernfs: switch global kernfs_rename_lock to per-fs lock
-  kernfs: switch global kernfs_pr_cont_lock to per-fs lock
+Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+---
+ fs/kernfs/dir.c             | 14 +++++++-------
+ fs/kernfs/kernfs-internal.h |  1 +
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
- fs/kernfs/dir.c             | 74 ++++++++++++++++++-------------------
- fs/kernfs/kernfs-internal.h | 27 ++++++++++++--
- 2 files changed, 59 insertions(+), 42 deletions(-)
-
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index fc70d72c3fe8..355d943ffe27 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -27,7 +27,6 @@ DEFINE_RWLOCK(kernfs_rename_lock);	/* kn->parent and ->name */
+  */
+ static DEFINE_SPINLOCK(kernfs_pr_cont_lock);
+ static char kernfs_pr_cont_buf[PATH_MAX];	/* protected by pr_cont_lock */
+-static DEFINE_SPINLOCK(kernfs_idr_lock);	/* root->ino_idr */
+ 
+ #define rb_to_kn(X) rb_entry((X), struct kernfs_node, rb)
+ 
+@@ -584,9 +583,9 @@ void kernfs_put(struct kernfs_node *kn)
+ 	if (kernfs_type(kn) == KERNFS_LINK)
+ 		kernfs_put(kn->symlink.target_kn);
+ 
+-	spin_lock(&kernfs_idr_lock);
++	spin_lock(&root->kernfs_idr_lock);
+ 	idr_remove(&root->ino_idr, (u32)kernfs_ino(kn));
+-	spin_unlock(&kernfs_idr_lock);
++	spin_unlock(&root->kernfs_idr_lock);
+ 
+ 	call_rcu(&kn->rcu, kernfs_free_rcu);
+ 
+@@ -639,13 +638,13 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+ 		goto err_out1;
+ 
+ 	idr_preload(GFP_KERNEL);
+-	spin_lock(&kernfs_idr_lock);
++	spin_lock(&root->kernfs_idr_lock);
+ 	ret = idr_alloc_cyclic(&root->ino_idr, kn, 1, 0, GFP_ATOMIC);
+ 	if (ret >= 0 && ret < root->last_id_lowbits)
+ 		root->id_highbits++;
+ 	id_highbits = root->id_highbits;
+ 	root->last_id_lowbits = ret;
+-	spin_unlock(&kernfs_idr_lock);
++	spin_unlock(&root->kernfs_idr_lock);
+ 	idr_preload_end();
+ 	if (ret < 0)
+ 		goto err_out2;
+@@ -681,9 +680,9 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+ 	return kn;
+ 
+  err_out3:
+-	spin_lock(&kernfs_idr_lock);
++	spin_lock(&root->kernfs_idr_lock);
+ 	idr_remove(&root->ino_idr, (u32)kernfs_ino(kn));
+-	spin_unlock(&kernfs_idr_lock);
++	spin_unlock(&root->kernfs_idr_lock);
+  err_out2:
+ 	kmem_cache_free(kernfs_node_cache, kn);
+  err_out1:
+@@ -989,6 +988,7 @@ struct kernfs_root *kernfs_create_root(struct kernfs_syscall_ops *scops,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	idr_init(&root->ino_idr);
++	spin_lock_init(&root->kernfs_idr_lock);
+ 	init_rwsem(&root->kernfs_rwsem);
+ 	init_rwsem(&root->kernfs_iattr_rwsem);
+ 	init_rwsem(&root->kernfs_supers_rwsem);
+diff --git a/fs/kernfs/kernfs-internal.h b/fs/kernfs/kernfs-internal.h
+index 40a2a9cd819d..24e9514565ac 100644
+--- a/fs/kernfs/kernfs-internal.h
++++ b/fs/kernfs/kernfs-internal.h
+@@ -40,6 +40,7 @@ struct kernfs_root {
+ 
+ 	/* private fields, do not use outside kernfs proper */
+ 	struct idr		ino_idr;
++	spinlock_t		kernfs_idr_lock;	/* root->ino_idr */
+ 	u32			last_id_lowbits;
+ 	u32			id_highbits;
+ 	struct kernfs_syscall_ops *syscall_ops;
 -- 
 2.48.1
 
