@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F11298CDF;
-	Fri, 11 Apr 2025 09:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F22929AAFE;
+	Fri, 11 Apr 2025 09:01:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744362115; cv=none; b=b71LQ//XThsvsIKd0wS2NsaQ3PL3Jp+WDcPenRBwFWw3SboipkJWHAf/7DwLq9rXptSFeAs5qX0uNOd7moE87iKRcNG6cCPNaMc2/DsNmbAeCo6h13W+uXjsJsMvsFrtQ4wvv9ulp3ReIOSXGXdDgecTwH2S8CA+JTi4FLhH5dI=
+	t=1744362116; cv=none; b=RXimBsWyVBx+mpZBkDj1gxFn1ZJ6uCMsE7u80+CeB0umEDbEXYhWBMo5tpAqrqD97T98nimgmHhOLxgUtpExx3fvKZqYjkPDe0Bh3gUjhgFBmmpi0UwWuQTcDVI3/XuHwbMBIXEc/ml5UotQY7fYCORUTh0KKfu4fK7UeFugwwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744362115; c=relaxed/simple;
-	bh=LGVMuklXgCkpJyincccVHRHsRYbHKB8kTUjlwhV0ovw=;
+	s=arc-20240116; t=1744362116; c=relaxed/simple;
+	bh=6pkon7Kh5/SE7q0KZvHsGJsIG9RSM3sGqKstS7SVzkM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IQxEPRwY13h4SU/AwJlfmlwkWGiocjHU1lH5SS2x3bJY8rcIYt8iu+NnTyMAX0EnUwlBGJ6lGdg+ZEty3quAxwpGHHgRkeRl+9sonYxPwVoLjUt4flBWwNJrTLmCA/K9saYvE/aCZRTXYZotnJZBerjkk2Dt4ifLwf3mSZIUC3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FN7Td7Wb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7G8B7I5K; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=nzLH3YXfvYPqhd7mugnPs7qjdyKofhZm8j4Xgd0iM1PKpsLgB0jkg1MytXI3gmf6cLypu4axoymjS62Ug1b8poS6kjf31POUz7/s8UtV/opyjGaPIuvZXsdbCCstAvsN14WhuhtRuSoPHtPBNJFHj1LjcsGZbdcFOBFZCWTnoaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j0iKOsu1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qlF/havO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FN7Td7Wb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7G8B7I5K"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j0iKOsu1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qlF/havO"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744362111;
+	s=2020; t=1744362112;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z7VvCGnYllIwWlmCyX7MyWOjcCjHF74d/AC9380lrt0=;
-	b=FN7Td7WbVj//5bhgC8Sue7qDOKKWCiKFQVOZhDfzoEJunTuF0GXNCuPOVMp6AB/HkoELfF
-	gTviTKJC1/BYODUHegPMraBcmJ/Y93ertJ/qXjOcP/pUWELyw5CsBfM8UUZoYI33HyDsNs
-	MueHtzi+8zpKyvUqDkpugOc9R1auZes2gY4i/jp+e4yJZuV9s7oh7JmnH/ebAMAXCYX9AU
-	qhPxEiG6gTFgQ61TSkCxGJyOO6iMcmRjtqNp0PQSDscWso6Cv0MYhT+LHYGZKA7ocRdUAU
-	FZ2ppzYLDO21xwglj06vSqff4p9GHL1zk5eHd62HEtEQeb94jHH0R3FJA5tZ6Q==
+	bh=pv+09698FZpTal/X+RrmmE1s8VEJjIksZePhFfpyAqw=;
+	b=j0iKOsu18oiEUNgNOE8CVIsb0H9sim8pETp6mzxBXQ3f4vqffu9nGARXhmOnm851ieq+vy
+	RMQgR98SohJanuy1CRRHRbIY5lUCZvMYoPhKVFNiEZTTAYkTxXtzBkdC1jNPxTLBHRyNWB
+	g6lLcz+56a6b7QGxo2L6lsBq9kufFTRYqVsIH+sCjgQUQFL1edfmXBqG3W31hkbkOlB79I
+	1AgcFY1+rhiYQBWhjcTFaqXv7melegvl0nj0zYjpAskrDdQka1MRfj/XIRZba4gbfjtH/K
+	kDKEbDOqGLK0KlTJcqqnYdr8znovtj+jlf7bzjGDpIJ+pwbqZtlMs6+EAAVFSg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744362111;
+	s=2020e; t=1744362112;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z7VvCGnYllIwWlmCyX7MyWOjcCjHF74d/AC9380lrt0=;
-	b=7G8B7I5KzlBh2ZbB3HjwujV0zM7BGn6PbwFzy2Qn7614PD3v0uoL2mWv+ZP6x0vVm1Y8Sw
-	raQCSkOmgVL68BCQ==
-Date: Fri, 11 Apr 2025 11:00:35 +0200
-Subject: [PATCH v3 11/32] selftests: harness: Add teardown callback to test
- metadata
+	bh=pv+09698FZpTal/X+RrmmE1s8VEJjIksZePhFfpyAqw=;
+	b=qlF/havOm+ShT0iGjIKdYWaYEQCTm1uNPlv9w+EjrOEoP5+5mebyYqMww7Saa7rV4MMHHH
+	mfAKPRblecQN7vBw==
+Date: Fri, 11 Apr 2025 11:00:37 +0200
+Subject: [PATCH v3 13/32] selftests: harness: Guard includes on nolibc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250411-nolibc-kselftest-harness-v3-11-4d9c0295893f@linutronix.de>
+Message-Id: <20250411-nolibc-kselftest-harness-v3-13-4d9c0295893f@linutronix.de>
 References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
 In-Reply-To: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -60,75 +59,50 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
 Cc: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744362103; l=2758;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744362103; l=1082;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=LGVMuklXgCkpJyincccVHRHsRYbHKB8kTUjlwhV0ovw=;
- b=MSwLorvdyFqtJdr1shsNeIruj4rE0vaKAB7FtnDoPy3GOy6s/mbSzom/aGaC35vkf+ybn6T5w
- qEtq8IEpLbBC0b7OiU1Ux+bxZi7zJUdaEVE4htNSNJQaMBJOwruj+ux
+ bh=6pkon7Kh5/SE7q0KZvHsGJsIG9RSM3sGqKstS7SVzkM=;
+ b=nkmvSPwyAfvw3Pmbz00BOtB0EXSLxcrIheXUDR3XoctIlWrjySQNDF2oYWyqVeWSfwZoXzS74
+ YB2vstKp4UhBAxH7uKy1wWn2jj/xooSkabPEX1ImpuEsVMqr4/wrmtX
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-To get rid of setjmp()/longjmp(), the teardown logic needs to be usable
-from __bail(). Introduce a new callback for it.
+Nolibc doesn't provide all normal header files.
+
+Don't try to include these non-existent header files, as the symbols are
+available unconditionally anyways.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/kselftest_harness.h | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ tools/testing/selftests/kselftest_harness.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 790445c541aa3875d8d42822ab979295cc869d39..5373b8da8886aef5df3368aeff95080636ae2343 100644
+index 1e584f39a42023c400988dea96f0274d4dc3645b..4247c67b3060fbe9d224c1171f3ec998ae6b1080 100644
 --- a/tools/testing/selftests/kselftest_harness.h
 +++ b/tools/testing/selftests/kselftest_harness.h
-@@ -441,14 +441,10 @@
- 			} \
- 		} \
- 		if (child == 0) { \
--			if (!fixture_name##_teardown_parent && \
--					!__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_RELAXED)) \
--				fixture_name##_teardown(_metadata, self, variant->data); \
-+			_metadata->teardown_fn(false, _metadata, self, variant->data); \
- 			_exit(0); \
- 		} \
--		if (fixture_name##_teardown_parent && \
--				!__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_RELAXED)) \
--			fixture_name##_teardown(_metadata, self, variant->data); \
-+		_metadata->teardown_fn(true, _metadata, self, variant->data); \
- 		munmap(_metadata->no_teardown, sizeof(*_metadata->no_teardown)); \
- 		_metadata->no_teardown = NULL; \
- 		if (self && fixture_name##_teardown_parent) \
-@@ -462,6 +458,14 @@
- 		} \
- 		__test_check_assert(_metadata); \
- 	} \
-+	static void wrapper_##fixture_name##_##test_name##_teardown( \
-+		bool in_parent, struct __test_metadata *_metadata, \
-+		void *self, const void *variant) \
-+	{ \
-+		if (fixture_name##_teardown_parent == in_parent && \
-+				!__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_RELAXED)) \
-+			fixture_name##_teardown(_metadata, self, variant); \
-+	} \
- 	static struct __test_metadata *_##fixture_name##_##test_name##_object; \
- 	static void __attribute__((constructor)) \
- 			_register_##fixture_name##_##test_name(void) \
-@@ -471,6 +475,7 @@
- 		object->name = #test_name; \
- 		object->fn = &wrapper_##fixture_name##_##test_name; \
- 		object->fixture = &_##fixture_name##_fixture_object; \
-+		object->teardown_fn = &wrapper_##fixture_name##_##test_name##_teardown; \
- 		object->termsig = signal; \
- 		object->timeout = tmout; \
- 		_##fixture_name##_##test_name##_object = object; \
-@@ -914,6 +919,8 @@ struct __test_metadata {
- 		   struct __fixture_variant_metadata *);
- 	pid_t pid;	/* pid of test when being run */
- 	struct __fixture_metadata *fixture;
-+	void (*teardown_fn)(bool in_parent, struct __test_metadata *_metadata,
-+			    void *self, const void *variant);
- 	int termsig;
- 	int exit_code;
- 	int trigger; /* extra handler after the evaluation */
+@@ -57,16 +57,19 @@
+ #include <ctype.h>
+ #include <errno.h>
+ #include <linux/unistd.h>
+-#include <poll.h>
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <unistd.h>
++
++#ifndef NOLIBC
++#include <poll.h>
+ #include <sys/mman.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+-#include <unistd.h>
++#endif
+ 
+ #include "kselftest.h"
+ 
 
 -- 
 2.49.0
