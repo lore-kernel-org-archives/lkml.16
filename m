@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D782BE7AC
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A096280A3D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350196; cv=none; b=srgswKZZY6hMTxbmT+IEo+iCc1Ea09ITkcpp3Ft1g0AUBcvWhQYvR4vkPfM8kCI4IQexeZppEwA/afrPAF0a2EVywpHLHJLxfHpH0VSgz4+/UxVNWIN6tAoFQ4DBqA3cRJzsqOi+VkUD4T4ZH1yPdP0T1+yV7uLfeSWTqE63GiA=
+	t=1744350199; cv=none; b=FRxxn2WPycN5JWRJCKKOhCMIk7uRwV+rZrD00VISXVP/y8Pp9FoY7C8pH3btnCS1wjuJiX+dVPGkOKYkEUdT9wymq+e/3TG5+rVji4VcMEOTks8gZEgkL/Y3NRXb3xSawqAnk2MjRsty0ky0MAN1FOrtJ+eJLtiuV9PbeIncaus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350196; c=relaxed/simple;
-	bh=EFn+5AyjrVdlK00O2v7ECfvpshL8IgYUH9Ij5AZDLac=;
+	s=arc-20240116; t=1744350199; c=relaxed/simple;
+	bh=UIdMzgbZmy/Hx3MCBOeO26dCBR19yi0+Lbwoq7DqXQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OI5g5+YcydTx1WOIIgPN5w2N9/cFSO9Xm+MnH4Nd3XC6+OfjJh1uH7NTjeo0GgrQXVKneiMSS17VIBnRfqVrybhdiigQnCd+MpER4uwxc7y5M6agU0Y30vlFQedfhoUITz4XJQ7jHGHDrVKtbsfcgiJOO2rZnJEQhYqqYuvex+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KuRLmuTj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QOoeH+CknRqvlcpM49Y4nmna+s3yA0mC9Z+8lixo08VCEa8QMqwoKcM4rOtDVb8r2yVSoTxkjvCjIMz2QnBWmljdvob3+GKvtDV2V/NpiYtvmpngwlGfomVjr3A8s5p52Bq65GlIqUOBw1f9vdxRwvzKvlTZHmzvOTv/x9ifXvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6pKshpj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KuRLmuTj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E33C4CEE5;
-	Fri, 11 Apr 2025 05:43:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6pKshpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9847C4CEE5;
+	Fri, 11 Apr 2025 05:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350196;
-	bh=EFn+5AyjrVdlK00O2v7ECfvpshL8IgYUH9Ij5AZDLac=;
+	s=k20201202; t=1744350198;
+	bh=UIdMzgbZmy/Hx3MCBOeO26dCBR19yi0+Lbwoq7DqXQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KuRLmuTj1Y5U/2VgaJkOtj/ToLebzAdyPU0s/vWeke84VGZIzhdYjT7Z3ow5kQYaE
-	 NDufGw7EDINZ2lfVnEvCGQrxhkh0e159jCGjJE0+9oL1xeD71l7dF7ue/J+bakJuxU
-	 TQ9McPRWSayEbBAhCi/LDXYptHoXpxAidq+CNMP7WOwWXaOvnkZ6Zr6YuxUC9C6rPi
-	 qdU4fl9VCgamD7Sf0rF8hOGWcxZonZh9PUwnyuHZSVwP7h2nKeJ3HR561KDhL24PBm
-	 +3xThuz1eCHdew6H/KWhPv7k94S8cARP/wrxiMBEuTSHiQZmj2GaYtW4I0AlyFHj6I
-	 enCvCgkLVSD5g==
+	b=D6pKshpjB/tan7xD5mLSJxsixIBlKk7k9TyyU4g4bJ0WYB+SmMVzY1SsPTSIjoNX/
+	 B4BnIztTVRZ2ZAfHugqCCAkXGgEAMTQQj3+93qXhhBP4lWu2Yr3SCrR3NxKNExarwZ
+	 enBW8/IDhn5hF57zWLumae335uOqECi3A/e8uEENCP4CAh3hBlP0BuCCBVjEQezJYb
+	 AbYjXUofdG67XbDdawULmYrdqH3YnMlitpBS9OHXpMaQmP72xA82bBnRN+AEeg0Fs5
+	 gzqoem86DvWQB84fuDuKu8JAOeVvNCgQ+is6rdDB7dTwnQ++MfglWjZT8upAFFoZHi
+	 BnAy+ZjSkXvsg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -34,10 +34,11 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
+	Nikolay Borisov <nik.borisov@suse.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 52/53] x86/alternatives: Add comment about noinstr expectations
-Date: Fri, 11 Apr 2025 07:41:04 +0200
-Message-ID: <20250411054105.2341982-53-mingo@kernel.org>
+Subject: [PATCH 53/53] x86/alternatives: Make smp_text_poke_batch_process() subsume smp_text_poke_batch_finish()
+Date: Fri, 11 Apr 2025 07:41:05 +0200
+Message-ID: <20250411054105.2341982-54-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -49,27 +50,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+From: Nikolay Borisov <nik.borisov@suse.com>
+
+Simplify the alternatives interface some more by moving the
+poke_batch_finish check into poke_batch_process and renaming the latter.
+The net effect is one less function name to consider when reading the
+code.
+
+Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250403153956.1913607-1-nik.borisov@suse.com
 ---
- arch/x86/kernel/alternative.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/alternative.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 231b2acbe360..604dd608d281 100644
+index 604dd608d281..f785d2335812 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2447,6 +2447,11 @@ static struct smp_text_poke_array {
+@@ -2434,7 +2434,7 @@ struct smp_text_poke_loc {
+ 	u8 len;
+ 	u8 opcode;
+ 	const u8 text[TEXT_POKE_MAX_OPCODE_SIZE];
+-	/* see smp_text_poke_batch_process() */
++	/* see smp_text_poke_batch_finish() */
+ 	u8 old;
+ };
  
- static DEFINE_PER_CPU(atomic_t, text_poke_array_refs);
+@@ -2507,7 +2507,7 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+ 		return 0;
  
-+/*
-+ * These four __always_inline annotations imply noinstr, necessary
-+ * due to smp_text_poke_int3_handler() being noinstr:
-+ */
-+
- static __always_inline bool try_get_text_poke_array(void)
+ 	/*
+-	 * Discount the INT3. See smp_text_poke_batch_process().
++	 * Discount the INT3. See smp_text_poke_batch_finish().
+ 	 */
+ 	ip = (void *) regs->ip - INT3_INSN_SIZE;
+ 
+@@ -2565,7 +2565,7 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+ }
+ 
+ /**
+- * smp_text_poke_batch_process() -- update instructions on live kernel on SMP
++ * smp_text_poke_batch_finish() -- update instructions on live kernel on SMP
+  *
+  * Input state:
+  *  text_poke_array.vec: vector of instructions to patch
+@@ -2587,12 +2587,15 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+  *		  replacing opcode
+  *	- SMP sync all CPUs
+  */
+-static void smp_text_poke_batch_process(void)
++void smp_text_poke_batch_finish(void)
  {
- 	atomic_t *refs = this_cpu_ptr(&text_poke_array_refs);
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+ 	int do_sync;
+ 
++	if (!text_poke_array.nr_entries)
++		return;
++
+ 	lockdep_assert_held(&text_mutex);
+ 
+ 	/*
+@@ -2832,12 +2835,6 @@ static bool text_poke_addr_ordered(void *addr)
+ 	return true;
+ }
+ 
+-void smp_text_poke_batch_finish(void)
+-{
+-	if (text_poke_array.nr_entries)
+-		smp_text_poke_batch_process();
+-}
+-
+ /**
+  * smp_text_poke_batch_add() -- update instruction on live kernel on SMP, batched
+  * @addr:	address to patch
+@@ -2854,7 +2851,7 @@ void smp_text_poke_batch_finish(void)
+ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+ 	if (text_poke_array.nr_entries == TEXT_POKE_ARRAY_MAX || !text_poke_addr_ordered(addr))
+-		smp_text_poke_batch_process();
++		smp_text_poke_batch_finish();
+ 	__smp_text_poke_batch_add(addr, opcode, len, emulate);
+ }
+ 
 -- 
 2.45.2
 
