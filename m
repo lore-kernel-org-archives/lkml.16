@@ -1,194 +1,153 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043C81F8BD6
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744397269; cv=none; b=pQBP2dLEZB8N83tkjohjgb9tPryuEltGEJgVXvvoRTLg64c3rva/cTpDBk6iW+50QpwacMODJWBdEmi8utfbDwCsXozUOWlgbhjrhiZ5qBl5lpLTpOpzRSWiFi7wAeuEJiYmJnrl5MdKlFwTzuipncPFTxFaX+NN7dYWXwAjjd0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744397269; c=relaxed/simple;
-	bh=igfmk052ohOfBX0sJswb9359FPqtwwRUyoS0iYxyj+w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S54HG0kJYcw08CfqbA0N36JkVtAmmbAUHBfC+83sXU116YRUnaPS5+N23dhpxDlJB2rHGzEyutbCqhmK5K0Q5aGugUj7Op3GFm8+WoPyH9ukYaqN84gEzfsnkYlW/MniACHr10qJQZFWoLKs/X2WfiWIXJYcPeutlLLJj9mGsKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=zBsWChSo; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A280268C7A;
+	Fri, 11 Apr 2025 18:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744397320; cv=pass; b=CUoj2Lsee0CHrIMDc2tFDc90vhOm5oM25ArL+32snoyrFtHkvx+8UhRXu/m27kRNFbviV6KU++851wNZ+V86C7u9OKeYYMoKnMlwiNqgrQkVLAjMsV7UitE/Bd1y357raAtXQLJOKxQHwQe7bRYdMBakG/9sUN4wkco6kEzR8ms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744397320; c=relaxed/simple;
+	bh=LE76KWKf1TUuZ/ELXhNwHgx8So09SkSzh4x0nNz+20A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Su0qRtDoXELUjV6oxVhJRDZaoE8rkoDjPGD4yk4mJz/BK+73nHpc+uHt1Xxc0aY7X6sX/iA1TAJltdsvJZusqGluZf3SxrG61FIEhgco3vIzEpN56UaFoPJzpX2FRaTj6X3jcl6116T6gApIArMVL+0BMkNkAFJ6/Hzd9KCeIvQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=P3rhv1wq; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="zBsWChSo"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5b2472969so237197685a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1744397267; x=1745002067; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WsKwnpTHjMkgeZIljAagk5lvn0NCV/Em7Uj95pOpDGI=;
-        b=zBsWChSox7ZhlMvsteMOMcQqiUximK3oCwHzZQ4O778uJdwX9oTFMz9C5u5l0D42h1
-         bc9FykbUc4zzcfPnIRT637kMziKAlQjxejIeEzU2LYYAIxPwMhijU9RlUlwXOyaaOO77
-         WhkZiD1uw5+S1lwLQW1lVQ2EvQl7aq7c6ZF41sbcM+BbM/eavj6wfVvVd8AKWhQr3KH3
-         c0R8/T0PVsn/mbYteUk8O+JJ+r7Fpd6sZ2CzuZ13V637RBYcR5y4CDAMWdMEDlMsycsv
-         9/kfRnzkBTe/DlcCk5Ul8XHqA+xK2Y2evDtedBuTzfPQevWnEu6K3aWZ+Xq044rgKZGv
-         6iBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744397267; x=1745002067;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WsKwnpTHjMkgeZIljAagk5lvn0NCV/Em7Uj95pOpDGI=;
-        b=aves1ehTEiMkf7YfeiuvbcEjcUFm4sYT7htqRcLBfkqgHfQ6cKZbrdHVUuhD5p6HxJ
-         P80y8Xj13qNtak/nBeD8zQd3P/+Ns/yKMPKPZTxMW5iskkVOJl4SXJhZUPrvlcZDyAPS
-         Odta3kw5wtWbBc3Pmms2IXZWZNMP6yUNTCjNT02BefDZ0Uub0etSglusbP1vdkxqpAMQ
-         oUZCpFeupuAdmeRU8nzGWeOVM+uS6tiF1SAAEW8XfgaDN1CCToCU0xtfi3lRjdQTI8mI
-         AUjGsERjmZ4HBPSjNMlH1wB+QXDVn9YRO77U8u2G3YNVHdae3R5IxhvhG5sZCK5AaKSq
-         rnvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUE/BLNJloFR/u/wRC1ApiTlP+KG7zba8/X0thC3kRfFWUaAO2u+LoSv1NUBLlmsDqNHqLg+52/Gag24Ro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvaXECJl2p6o9ZBjmTud+Fp9+ZyaeAprfH2yASBcizWGuk63rh
-	LDBWyceeJPOBti+SW6VK3EF1r0bSdxwjq6kKyshl2O+1WXyNBZo07mVBhrfesfg=
-X-Gm-Gg: ASbGncu30JVmBwvPeYwkj30g8tVr4CetJZESmse+vrQU3/3KEn8Nkh0Z122AUDGDovu
-	Qj/xjM33YMGQDm6KaET/AJ9CJadjuFCu097m9jIvi5yc27K6dzv+Ap/4ODcw0OyyE8saoGJ8KHK
-	GLqhyopfsSTzZIbPlqOJpRKiAZUl0H5iviWoz7voph8ZxLC85I+3Uw+2i5fG6FAsV7kWPzcoHti
-	AiJo6Edbf7noBXRKLL7PVr/rUmlxj32ewTePX3hi6QZhLmrFhCiGIBvJc8wK9A9GmhYZyxT73kU
-	wjQonsF/+mhXgNY73qcM9oYOmA2r2Mt7dO4P/9jENKQZow==
-X-Google-Smtp-Source: AGHT+IFtKnV9+w0FwXGSzvq+4jUfFCuVoEptoZcv67KhNBh18LEdtioKg5wo6qZbIxlKb9n37yn5ZQ==
-X-Received: by 2002:a05:620a:17a9:b0:7c5:57d6:ce3c with SMTP id af79cd13be357-7c7af1328a8mr627352285a.22.1744397266859;
-        Fri, 11 Apr 2025 11:47:46 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8951969sm298592885a.45.2025.04.11.11.47.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 11:47:46 -0700 (PDT)
-Message-ID: <588eb09a61dea0c07e02c8b474972c6ca9b3b3e8.camel@ndufresne.ca>
-Subject: Re: [PATCH v4 1/4] media: imx-jpeg: Move mxc_jpeg_free_slot_data()
- ahead
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Frank Li <Frank.li@nxp.com>, ming.qian@oss.nxp.com
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
- mirela.rabulea@oss.nxp.com, 	shawnguo@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, 	festevam@gmail.com, xiahong.bao@nxp.com,
- eagle.zhou@nxp.com, linux-imx@nxp.com, 	imx@lists.linux.dev,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Date: Fri, 11 Apr 2025 14:47:44 -0400
-In-Reply-To: <Z/kpBXvJe/n2YHg7@lizhi-Precision-Tower-5810>
-References: <20250411074347.809-1-ming.qian@oss.nxp.com>
-	 <20250411074347.809-2-ming.qian@oss.nxp.com>
-	 <Z/kpBXvJe/n2YHg7@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="P3rhv1wq"
+ARC-Seal: i=1; a=rsa-sha256; t=1744397285; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NQ2nvxaL5awMeOZSXUSpit+frxRsL9wjjd+2JHmizE+F72u7RJQxhnWC6GvclxBrFi6d2D00wrPNKKj3hyGKwbbedHzyJ3uhpzZ8n3BvzbCAgTdRho0itEd8OH5klBhDvBxEoSyTPjI3zhZy5ecIzLuVOPebAzsk7E3tt0AMpnI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744397285; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=H4VYQgUZUTAIbZwaL9rNIdwM4HSJ9e2mWGOC049gXec=; 
+	b=XzG5SoqDKtn2EA/+c4SPdgt+6sqn2ID+sbic2/sH3gseIBrP7Y+3M0ZO6Us5O+l5o+2h9R92WvZrmyJQ5dgfk/uor/G4FiJjSArOf4Jk6joqiYlYU2GGkVSLDf0/f0YaPD5AA6NnWy9qCEfprN2ODnst7ZjanRWbvie/JxnKxZg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744397285;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=H4VYQgUZUTAIbZwaL9rNIdwM4HSJ9e2mWGOC049gXec=;
+	b=P3rhv1wqbnoFq5Cp5Oclw3g35slv6ZllfWNbUiBXcLOBGqix75vM+OGG3FyAuiww
+	/KCZgHXtQHmh2zOxVgEHzr8SOqrasdPpvMuvHQYpWWnenkZa2qyEH4xqJnJJ5VV4H5B
+	k14YHgidxE/KH/QYbGkkS2xQTYycAG45iAkenduw=
+Received: by mx.zohomail.com with SMTPS id 1744397283575257.1353051014321;
+	Fri, 11 Apr 2025 11:48:03 -0700 (PDT)
+Message-ID: <6a2ad952-6a34-40d2-a6bc-f0f505fb9667@collabora.com>
+Date: Fri, 11 Apr 2025 23:47:52 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
+ <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>,
+ Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>,
+ Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>,
+ Kunwu Chan <chentao@kylinos.cn>, kernel@collabora.com, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
+References: <20250410145704.207969-1-usama.anjum@collabora.com>
+ <2025041039-unhearing-undaunted-6244@gregkh>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <2025041039-unhearing-undaunted-6244@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Le vendredi 11 avril 2025 =C3=A0 10:36 -0400, Frank Li a =C3=A9crit=C2=A0:
-> On Fri, Apr 11, 2025 at 03:43:40PM +0800, ming.qian@oss.nxp.com=C2=A0wrot=
-e:
-> > From: Ming Qian <ming.qian@oss.nxp.com>
-> >=20
-> > Move function mxc_jpeg_free_slot_data() above mxc_jpeg_alloc_slot_data(=
-)
-> > allowing to call that function during allocation failures.
-> > No functional changes are made.
-> >=20
-> > Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-> > Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > ---
-> > =C2=A0.../media/platform/nxp/imx-jpeg/mxc-jpeg.c=C2=A0=C2=A0=C2=A0 | 46=
- +++++++++++--------
-> > =C2=A01 file changed, 26 insertions(+), 20 deletions(-)
-> >=20
-> > diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/m=
-edia/platform/nxp/imx-jpeg/mxc-jpeg.c
-> > index 0e6ee997284b..b2f7e9ad1885 100644
-> > --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> > +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> > @@ -752,6 +752,32 @@ static int mxc_get_free_slot(struct mxc_jpeg_slot_=
-data *slot_data)
-> > =C2=A0	return -1;
-> > =C2=A0}
-> >=20
-> > +static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> > +{
-> > +	/* free descriptor for decoding/encoding phase */
-> > +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> > +			=C2=A0 jpeg->slot_data.desc,
-> > +			=C2=A0 jpeg->slot_data.desc_handle);
-> > +	jpeg->slot_data.desc =3D NULL;
-> > +	jpeg->slot_data.desc_handle =3D 0;
->=20
-> You add above two lines, it is not simple move function. Move above two
-> line change to next patch.
+On 4/10/25 10:00 PM, Greg Kroah-Hartman wrote:
+> On Thu, Apr 10, 2025 at 07:56:54PM +0500, Muhammad Usama Anjum wrote:
+>> Fix dma_direct_alloc() failure at resume time during bhie_table
+>> allocation. There is a crash report where at resume time, the memory
+>> from the dma doesn't get allocated and MHI fails to re-initialize.
+>> There may be fragmentation of some kind which fails the allocation
+>> call.
+>>
+>> To fix it, don't free the memory at power down during suspend /
+>> hibernation. Instead, use the same allocated memory again after every
+>> resume / hibernation. This patch has been tested with resume and
+>> hibernation both.
+>>
+>> The rddm is of constant size for a given hardware. While the fbc_image
+>> size depends on the firmware. If the firmware changes, we'll free and
+>> allocate new memory for it.
+>>
+>> Here are the crash logs:
+>>
+>> [ 3029.338587] mhi mhi0: Requested to power ON
+>> [ 3029.338621] mhi mhi0: Power on setup success
+>> [ 3029.668654] kworker/u33:8: page allocation failure: order:7, mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
+>> [ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted 6.11.11-valve10-1-neptune-611-gb69e902b4338 #1ed779c892334112fb968aaa3facf9686b5ff0bd7
+>> [ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112 08/01/2024
+>> [ 3029.668694] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
+>> [ 3029.668717] Call Trace:
+>> [ 3029.668722]  <TASK>
+>> [ 3029.668728]  dump_stack_lvl+0x4e/0x70
+>> [ 3029.668738]  warn_alloc+0x164/0x190
+>> [ 3029.668747]  ? srso_return_thunk+0x5/0x5f
+>> [ 3029.668754]  ? __alloc_pages_direct_compact+0xaf/0x360
+>> [ 3029.668761]  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
+>> [ 3029.668774]  __alloc_pages_noprof+0x321/0x350
+>> [ 3029.668782]  __dma_direct_alloc_pages.isra.0+0x14a/0x290
+>> [ 3029.668790]  dma_direct_alloc+0x70/0x270
+>> [ 3029.668796]  mhi_alloc_bhie_table+0xe8/0x190 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+>> [ 3029.668814]  mhi_fw_load_handler+0x1bc/0x310 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+>> [ 3029.668830]  mhi_pm_st_worker+0x5c8/0xaa0 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+>> [ 3029.668844]  ? srso_return_thunk+0x5/0x5f
+>> [ 3029.668853]  process_one_work+0x17e/0x330
+>> [ 3029.668861]  worker_thread+0x2ce/0x3f0
+>> [ 3029.668868]  ? __pfx_worker_thread+0x10/0x10
+>> [ 3029.668873]  kthread+0xd2/0x100
+>> [ 3029.668879]  ? __pfx_kthread+0x10/0x10
+>> [ 3029.668885]  ret_from_fork+0x34/0x50
+>> [ 3029.668892]  ? __pfx_kthread+0x10/0x10
+>> [ 3029.668898]  ret_from_fork_asm+0x1a/0x30
+>> [ 3029.668910]  </TASK>
+>>
+>> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>> Changes sice v1:
+>> - Don't free bhie tables during suspend/hibernation only
+>> - Handle fbc_image changed size correctly
+>> - Remove fbc_image getting set to NULL in *free_bhie_table()
+> 
+> What commit id does this fix?
+I think, these errors are happening because of the fragmentation. So
+this patch is doing an improvement. Its hard to call it a fix for
+something already added.
 
-What about just making this its own commit, give you the chance to
-write down that your making that function safe to be called multiple
-times ?
+The following patch had added fbc_image allocation:
+cd457afb1667
+bus: mhi: core: Add support for downloading firmware over BHIe
 
-Nicolas
+The following commit had added rddm allocation:
+3215d8e0691b
+bus: mhi: core: Set BHI/BHIe offsets on power up preparation
 
->=20
-> Frank
->=20
-> > +
-> > +	/* free descriptor for encoder configuration phase / decoder DHT */
-> > +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> > +			=C2=A0 jpeg->slot_data.cfg_desc,
-> > +			=C2=A0 jpeg->slot_data.cfg_desc_handle);
-> > +	jpeg->slot_data.cfg_desc_handle =3D 0;
-> > +	jpeg->slot_data.cfg_desc =3D NULL;
->=20
-> The same here.
->=20
-> > +
-> > +	/* free configuration stream */
-> > +	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> > +			=C2=A0 jpeg->slot_data.cfg_stream_vaddr,
-> > +			=C2=A0 jpeg->slot_data.cfg_stream_handle);
-> > +	jpeg->slot_data.cfg_stream_vaddr =3D NULL;
-> > +	jpeg->slot_data.cfg_stream_handle =3D 0;
->=20
-> The same here.
->=20
-> > +
-> > +	jpeg->slot_data.used =3D false;
-> > +}
-> > +
-> > =C2=A0static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
-> > =C2=A0{
-> > =C2=A0	struct mxc_jpeg_desc *desc;
-> > @@ -798,26 +824,6 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jp=
-eg_dev *jpeg)
-> > =C2=A0	return false;
-> > =C2=A0}
-> >=20
-> > -static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> > -{
-> > -	/* free descriptor for decoding/encoding phase */
-> > -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> > -			=C2=A0 jpeg->slot_data.desc,
-> > -			=C2=A0 jpeg->slot_data.desc_handle);
-> > -
-> > -	/* free descriptor for encoder configuration phase / decoder DHT */
-> > -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> > -			=C2=A0 jpeg->slot_data.cfg_desc,
-> > -			=C2=A0 jpeg->slot_data.cfg_desc_handle);
-> > -
-> > -	/* free configuration stream */
-> > -	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> > -			=C2=A0 jpeg->slot_data.cfg_stream_vaddr,
-> > -			=C2=A0 jpeg->slot_data.cfg_stream_handle);
-> > -
-> > -	jpeg->slot_data.used =3D false;
-> > -}
-> > -
-> > =C2=A0static void mxc_jpeg_check_and_set_last_buffer(struct mxc_jpeg_ct=
-x *ctx,
-> > =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vb2_v4l2_buffer =
-*src_buf,
-> > =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vb2_v4l2_buffer =
-*dst_buf)
-> > --
-> > 2.43.0-rc1
-> >=20
+Even if I want to add a fixes-by tag, it would be difficult to decide
+which commit to chose. Maybe we divide the patch into 2 in these
+scenarios or just select the earlier commit in Fixes tag. Please suggest
+what is best way?
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+
+-- 
+Regards,
+Usama
