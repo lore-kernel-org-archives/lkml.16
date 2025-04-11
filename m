@@ -1,203 +1,281 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7476F23AE62;
-	Fri, 11 Apr 2025 17:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515CD23F418
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744393444; cv=none; b=lb6y9DhyaSL3rtX/hcP5oAWDwq/coltVIzr4sc/sShgcELIlA/f09pofyORxnU15ombimWOHbjrLjh1UNezW9DJgl/9n0cXkOndIZz56OpUjbQsknjepecT9SYPLjrv/Lmwn3iBhabLRFD4uC0JBfUQJoGS5kh1Tt4LtMFkcev8=
+	t=1744393522; cv=none; b=WX8Tev2ymjD5chzMDjiL2vl3TsiKAWrGddAlae2ZDFOAow4fFNnIbXR6rHwCh9Uyfq7zinz8pxg78D4n+Sn9lUmQgswLKN5aabjgx6NcL+Saw+Ng+6ospiM5z6d+8X6gFLQ3gi5GcHotH32hCw2p6dXiME804DOj5J0opr3zq9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744393444; c=relaxed/simple;
-	bh=xAo68r/zLZKopFFxEIk6BtCwwpIOjTADTc6B2aF6X4k=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=nVtC2H+12uGU8o51uD2t/S6+qppzDKuqw5mY8zZYEHBhFPe+7MxydTyzegrwPKwbAw+SQQRsimkCcBlkdq7ZJ1MiZAZ63d6lQ34YBKRd89xd7J+yhkxl15qsYnvedT2Fbdua43q5JKw74Il/aZA2HvMYpjn+kcgTap9hjt+f20E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=U8qBk3Vx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OV+kP/rp; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1744393522; c=relaxed/simple;
+	bh=KiEVXA/Q0poANwYyZ4gqi2WQuP89+Iijb6G3+Hig41o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EjNKOQGIAA0+gvKQPVFhf9yoyXlTL+4D8f48Wyg8qHRRRw8D4SqI+fiafXl8S7iPI8aX92GuWUvr6SHOBLdMVfN5QKyHf7ASHU4pQxAwr7qBVef5IRBv9TUt4HKCTBoBYiHIbc3XIHLGMVgeMoIYD30oDtPijnoa6rLrxhIOK/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GrShjECg; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="U8qBk3Vx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OV+kP/rp"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 32114114015E;
-	Fri, 11 Apr 2025 13:44:00 -0400 (EDT)
-Received: from phl-frontend-01 ([10.202.2.160])
-  by phl-compute-01.internal (MEProxy); Fri, 11 Apr 2025 13:44:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1744393440; x=1744479840; bh=prpraNBeUM3zXDzIoi1D0Ms8tSWXePNg
-	ZwUoM8XhD2I=; b=U8qBk3Vx8Y0mRmVqcLqPk6RJ+A2yQz3LmRPOQo0cJuf6sKjP
-	lEvqglguqa5UjiNgTDj4Yv9jgJUFbFiLXUJthtv35N3YODm7mqQDXZcgRZ1O8KG9
-	MNxUMtcQvmKdSk+kJsVq12Gsaq1YRdRZS28VOanzXOwtgVkCJWoWP83p+vBgJ+CN
-	kYzk6CB19Y8BJ+25OUqN93/+X2wG7JxSl1c4MTtuWsJX+RpQo1xE4bc3tdovR+1g
-	AyxivLeZGYYEdfD9DeSQ0qkU0M5cpJ3IH/uUP2IKmh+G4aTZB1kCbhoZi5W9mhI0
-	mH0MHUxoVUkSgl24x4K5XCe7K66gy5PHFWpMIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744393440; x=
-	1744479840; bh=prpraNBeUM3zXDzIoi1D0Ms8tSWXePNgZwUoM8XhD2I=; b=O
-	V+kP/rpUX0J+XZIxN3j2ZT8zZFMOfDC8ub7QpuKTXDXVKp7upbpKNJkrA97mwWCX
-	ob96/7+gwlp0JQLLLM8QPEc48BCQb0aUt2csUVmblfJ/Ok6is4SzsfCnDkGx2dTA
-	3KtzyPjIeooNX5ZIg9NtQOVAXkE0Pv08oj6zf6EMlulmTHAvCGxUWlynvZn0hz/B
-	nVFbaRQxPSf/eopKJWqYYrTJNuK80cSAoRXtCY0iTiTTcyL4nq0jdFBFx8DJYb9L
-	oq3+xO53zQiCl1+fijyctrkqUZqrTdB9ZsHOi0lOFv1VJQ7sVZXL1lALqFlpGfZh
-	ZqGhKeWUwkDSjBFzkf3Ig==
-X-ME-Sender: <xms:31T5Z2EmFc02pCLo63WO68g04-EKY__5AjrEWo1y-K8hoSGbVbqUfQ>
-    <xme:31T5Z3WZ3hl0btOWQQt42mTiyLhDkJhNhLbeMF9LoirxZ_vP3jj7HN_EoQ6NMq0ce
-    GMhOUWaxvUUPy9qHtM>
-X-ME-Received: <xmr:31T5ZwLN4uadnQ124gI9UAbeV7FDGxMTdBv5aDpoW1VZYbW7VjyyZDlJBTRR7xQCUVuv_EczTvLDCkW0SfGQwry9WHS627mNXXGJ-XWbEuZKjb-UIA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvgeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkgggtsehttdertddttddvnecu
-    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
-    htqeenucggtffrrghtthgvrhhnpeeigfeiteevgefgtdehhfegvedvvdfhtedugeettdek
-    veegteeifefgveeigeetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhitghosehflhhu
-    gihnihgtrdhnvghtpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehnphhithhrvgessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepjhhi
-    rhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
-    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrvhgvsehmihgvlhhk
-    vgdrtggtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:31T5ZwGCfBEmUmB0hVMHBcCdtfU3TL7UD5XfqzQ5Y-YOaOjL-7IMnA>
-    <xmx:31T5Z8UEAEK4gg0jXB6gCZcdqlrxOxEUuGojwgeVJx20p3gq3JMlDQ>
-    <xmx:31T5ZzOizdrtch5CmSMF3R1yLq38sqgKvTrR1OB8zfaR7NotEXmdfg>
-    <xmx:31T5Zz1z6RxrmU6m5S13qBtXoh3tOmEG8YqfwBAEs5zGFR2Mg-BqwA>
-    <xmx:4FT5Z50ntE4Td1IkSAmuHOROfjoViyiOD5xf0rTDjuMqGABhZVqRaLV1>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 11 Apr 2025 13:43:59 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id A675F10DDA13;
-	Fri, 11 Apr 2025 13:43:58 -0400 (EDT)
-Date: Fri, 11 Apr 2025 13:43:58 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Jiri Slaby <jirislaby@kernel.org>, Dave Mielke <Dave@mielke.cc>, 
-    Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: [PATCH] vt: fix comment vs definition mismatch
-Message-ID: <o4974349-pp4p-4374-80q9-2oppqqr94r60@syhkavp.arg>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrShjECg"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-47666573242so33341cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744393518; x=1744998318; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CmYXhvJwA000VWMeCK8milYpnMkrsLEvAm6JDEvQW/0=;
+        b=GrShjECgFvYgSe4LQQOO0KZq2Pmp7ub6T7JU+Gr2qVLRCiRIK7qjQMtXerW3Gij0qe
+         9fy12GcnCPn11tle6luuN/Js3+e+wURUTece8x3uwgtWtfc6THyYDxReldH9Egu5eHXb
+         Frv0KX7nexT+BuA83z94cwSpqdtn2W9FF4kXq9+2pG1XQgU+J3XAGfCeQazChq4RxKNn
+         imJDa4xjd9zipLl8RuFvPGuAPysg1hB/xv8p38AEfqndUxFxGN4JmpCHFwXkDC1AVImX
+         rNzeFwFv8itqCTjOPSZEpraWb4SEqYbOvvEiARFaOJHX43+hHSqA2amxiwU58N1+0uQ+
+         g8Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744393518; x=1744998318;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CmYXhvJwA000VWMeCK8milYpnMkrsLEvAm6JDEvQW/0=;
+        b=XNjEc1v64VweiRgpzm/0HE9h2t082yv0SRWnU0jAclPAKUkWuQ/KSZP48YD3KejG9o
+         q8gnUJa9s8+4BiUQ0uxbV21FywjG5CCE5QXIW/3+mfbrN5L6jQwElrBrAt4msA2g2paQ
+         OHOgGGU3ybpmQ5Ktu/iQM8DV+iL23z2br77Xi6J0Hks5rivTWRenfmiDliJ8OROjL6X+
+         6OuuV6n3Wtq58lzF0YAHRwGcQorjwP8ipQka7mDMT4yOPw7lpYYe6Tijdbr6wdn2EQ3I
+         Dg9fq8eNp+IL65yYH48mgoTD8WV2DYyNJXYS1T2zMJ3g4Kuxwz5wHCOcVTzuI9NMmQN+
+         ebqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJkQqlyfvSkmQOpJgdH5sdHDAdjsi+1NzW9bAX2zG4KBXaHOis+h8EkgVAdjUraOXzBAWcFRTXs29JWi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDo8QMEGcGvEUNMAQQpGwQaxNGl5ImqT4QOdtiPawe92jmnqD9
+	MYoQPGNjJNnOJWxIrHUGXklE0T9U8YtY3XTsjqBS23amnW81aX9Z+sGB5IusPtqIo2Uc8sx0H1p
+	RuSsyUHBKKYePI4jGZfh6SGDjbSy8kQ5+P/O6
+X-Gm-Gg: ASbGncuZhHREYUuFWuMZpyf3xbthv2XJOJDWuMU5qajjbbW1Gl75EQfaJldmWInxxZF
+	p2gTgzX48Gl9WdDSvPuW0SN9ybRtYZ65va02VRC22NdS5XLDtfHkfdHvk4myqbQrfqoc6f4P3Gf
+	zHpXdjvQhRX/3OV48GxVFO
+X-Google-Smtp-Source: AGHT+IHpwrjXSN6F4QCOmiuy6BbuSaN1+LsfqI5XkD54bWWbea8IxYWQLbQiHd58FbUQro6BdgwbXf2cDgtUZk2rlbQ=
+X-Received: by 2002:a05:622a:19a3:b0:477:635f:5947 with SMTP id
+ d75a77b69052e-4798152c235mr109641cf.12.1744393517762; Fri, 11 Apr 2025
+ 10:45:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250411155737.1360746-1-surenb@google.com> <c88ec69c-87ee-4865-8b2a-87f32f46b0bc@suse.cz>
+ <CAJuCfpE6_Hb40kyM7E4ESw8-_ptm3SARuL0q_YBB49cqkVbPig@mail.gmail.com>
+In-Reply-To: <CAJuCfpE6_Hb40kyM7E4ESw8-_ptm3SARuL0q_YBB49cqkVbPig@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 11 Apr 2025 10:45:06 -0700
+X-Gm-Features: ATxdqUHCT-k-GR4pvwi0nv1jejzjDGqDtAGhqf1BigdhISanxeHgLCIg8Cp8WgY
+Message-ID: <CAJuCfpGrJNiDWxsD=53ZOzWKHAh=xw2pGidg6oAgwj8mETGPQQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] slab: ensure slab->obj_exts is clear in a newly
+ allocated slab page
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, 
+	roman.gushchin@linux.dev, cl@linux.com, rientjes@google.com, 
+	harry.yoo@oracle.com, souravpanda@google.com, pasha.tatashin@soleen.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Nicolas Pitre <npitre@baylibre.com>
+On Fri, Apr 11, 2025 at 9:59=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Fri, Apr 11, 2025 at 9:27=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> =
+wrote:
+> >
+> > On 4/11/25 17:57, Suren Baghdasaryan wrote:
+> > > ktest recently reported crashes while running several buffered io tes=
+ts
+> > > with __alloc_tagging_slab_alloc_hook() at the top of the crash call s=
+tack.
+> > > The signature indicates an invalid address dereference with low bits =
+of
+> > > slab->obj_exts being set. The bits were outside of the range used by
+> > > page_memcg_data_flags and objext_flags and hence were not masked out
+> > > by slab_obj_exts() when obtaining the pointer stored in slab->obj_ext=
+s.
+> > > The typical crash log looks like this:
+> > >
+> > > 00510 Unable to handle kernel NULL pointer dereference at virtual add=
+ress 0000000000000010
+> > > 00510 Mem abort info:
+> > > 00510   ESR =3D 0x0000000096000045
+> > > 00510   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> > > 00510   SET =3D 0, FnV =3D 0
+> > > 00510   EA =3D 0, S1PTW =3D 0
+> > > 00510   FSC =3D 0x05: level 1 translation fault
+> > > 00510 Data abort info:
+> > > 00510   ISV =3D 0, ISS =3D 0x00000045, ISS2 =3D 0x00000000
+> > > 00510   CM =3D 0, WnR =3D 1, TnD =3D 0, TagAccess =3D 0
+> > > 00510   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> > > 00510 user pgtable: 4k pages, 39-bit VAs, pgdp=3D0000000104175000
+> > > 00510 [0000000000000010] pgd=3D0000000000000000, p4d=3D00000000000000=
+00, pud=3D0000000000000000
+> > > 00510 Internal error: Oops: 0000000096000045 [#1]  SMP
+> > > 00510 Modules linked in:
+> > > 00510 CPU: 10 UID: 0 PID: 7692 Comm: cat Not tainted 6.15.0-rc1-ktest=
+-g189e17946605 #19327 NONE
+> > > 00510 Hardware name: linux,dummy-virt (DT)
+> > > 00510 pstate: 20001005 (nzCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=3D-=
+-)
+> > > 00510 pc : __alloc_tagging_slab_alloc_hook+0xe0/0x190
+> > > 00510 lr : __kmalloc_noprof+0x150/0x310
+> > > 00510 sp : ffffff80c87df6c0
+> > > 00510 x29: ffffff80c87df6c0 x28: 000000000013d1ff x27: 000000000013d2=
+00
+> > > 00510 x26: ffffff80c87df9e0 x25: 0000000000000000 x24: 00000000000000=
+01
+> > > 00510 x23: ffffffc08041953c x22: 000000000000004c x21: ffffff80c00021=
+80
+> > > 00510 x20: fffffffec3120840 x19: ffffff80c4821000 x18: 00000000000000=
+00
+> > > 00510 x17: fffffffec3d02f00 x16: fffffffec3d02e00 x15: fffffffec3d007=
+00
+> > > 00510 x14: fffffffec3d00600 x13: 0000000000000200 x12: 00000000000000=
+06
+> > > 00510 x11: ffffffc080bb86c0 x10: 0000000000000000 x9 : ffffffc080201e=
+58
+> > > 00510 x8 : ffffff80c4821060 x7 : 0000000000000000 x6 : 00000000555555=
+56
+> > > 00510 x5 : 0000000000000001 x4 : 0000000000000010 x3 : 00000000000000=
+60
+> > > 00510 x2 : 0000000000000000 x1 : ffffffc080f50cf8 x0 : ffffff80d801d0=
+00
+> > > 00510 Call trace:
+> > > 00510  __alloc_tagging_slab_alloc_hook+0xe0/0x190 (P)
+> > > 00510  __kmalloc_noprof+0x150/0x310
+> > > 00510  __bch2_folio_create+0x5c/0xf8
+> > > 00510  bch2_folio_create+0x2c/0x40
+> > > 00510  bch2_readahead+0xc0/0x460
+> > > 00510  read_pages+0x7c/0x230
+> > > 00510  page_cache_ra_order+0x244/0x3a8
+> > > 00510  page_cache_async_ra+0x124/0x170
+> > > 00510  filemap_readahead.isra.0+0x58/0xa0
+> > > 00510  filemap_get_pages+0x454/0x7b0
+> > > 00510  filemap_read+0xdc/0x418
+> > > 00510  bch2_read_iter+0x100/0x1b0
+> > > 00510  vfs_read+0x214/0x300
+> > > 00510  ksys_read+0x6c/0x108
+> > > 00510  __arm64_sys_read+0x20/0x30
+> > > 00510  invoke_syscall.constprop.0+0x54/0xe8
+> > > 00510  do_el0_svc+0x44/0xc8
+> > > 00510  el0_svc+0x18/0x58
+> > > 00510  el0t_64_sync_handler+0x104/0x130
+> > > 00510  el0t_64_sync+0x154/0x158
+> > > 00510 Code: d5384100 f9401c01 b9401aa3 b40002e1 (f8227881)
+> > > 00510 ---[ end trace 0000000000000000 ]---
+> > > 00510 Kernel panic - not syncing: Oops: Fatal exception
+> > > 00510 SMP: stopping secondary CPUs
+> > > 00510 Kernel Offset: disabled
+> > > 00510 CPU features: 0x0000,000000e0,00000410,8240500b
+> > > 00510 Memory Limit: none
+> > >
+> > > Investigation indicates that these bits are already set when we alloc=
+ate
+> > > slab page and are not zeroed out after allocation. We are not yet sur=
+e
+> > > why these crashes start happening only recently but regardless of the
+> > > reason, not initializing a field that gets used later is wrong. Fix i=
+t
+> > > by initializing slab->obj_exts during slab page allocation.
+> >
+> > slab->obj_exts overlays page->memcg_data and the checks on page alloc a=
+nd
+> > page free should catch any non-zero values, i.e. page_expected_state()
+> > page_bad_reason() so if anyone is e.g. UAF-writing there or leaving gar=
+bage
+> > there while freeing the page it's a bug.
+> >
+> > Perhaps CONFIG_MEMCG is disabled in the ktests and thus the checks are =
+not
+> > happening? We could extend them for CONFIG_SLAB_OBJ_EXT checking
+> > _unused_slab_obj_exts perhaps. But it would be a short lived change, se=
+e below.
+>
+> Correct, CONFIG_MEMCG was disabled during these tests. We added
+> BUG_ON() in the slab allocation path to trigger on these low bits and
+> it did trigger but the same assertion in the freeing path did not
+> catch anything. We suspected 4996fc547f5b ("mm: let _folio_nr_pages
+> overlay memcg_data in first tail page") to cause this but Kent's
+> bisection did not confirm that.
+>
+> >
+> > > Fixes: 21c690a349ba ("mm: introduce slabobj_ext to support slab objec=
+t extensions")
+> > > Reported-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > > Tested-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > > Acked-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > > Cc: <stable@vger.kernel.org>
+> >
+> > We'll need this anyway for the not so far future when struct slab is
+> > separated from struct page so it's fine but it would still be great to =
+find
+> > the underlying buggy code which this is going to hide.
+>
+> Yeah, we will try to find the culprit. For now to prevent others from
+> stepping on this mine I would like to get this in. Thanks!
 
-Fixes for:
+Kent asked me to forward this (his email is misbehaving for some reason):
 
-  ucs_is_zero_width()
-  ucs_is_double_width()
-  ucs_recompose()
+Yes, ktest doesn't flip on CONFIG_MEMCG.
 
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504111036.YH1iEqBR-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202504111359.urXWyzvQ-lkp@intel.com/
----
+Those checks you're talking about are also behind CONFIG_DEBUG_VM,
+which isn't normally on. I did do some runs with it on and it didn't
+fire - only additional asserts Suren and I added - so something's
+missing.
 
-On Fri, 11 Apr 2025, Greg Kroah-Hartman wrote:
+In the meantime, this needs to go in quickly as a hotfix because it's
+a 6.15-rc1 regression, and I've been getting distros to enable memory
+allocation profiling and I'd be shocked if it doesn't cause memcg
+crashes as well.
 
-> Wow, very nice work, thanks for doing all of this.  I'll go queue it up
-> now, the kernel test robot warnings for comments can be fixed up later
-> if you want to.
 
-Oops. Here it is.
 
-diff --git a/drivers/tty/vt/gen_ucs_recompose.py b/drivers/tty/vt/gen_ucs_recompose.py
-index 64418803e4..dc176d32e2 100755
---- a/drivers/tty/vt/gen_ucs_recompose.py
-+++ b/drivers/tty/vt/gen_ucs_recompose.py
-@@ -289,8 +289,8 @@ static int recomposition_compare(const void *key, const void *element)
- /**
-  * Attempt to recompose two Unicode characters into a single character.
-  *
-- * @param previous: Previous Unicode code point (UCS-4)
-- * @param current: Current Unicode code point (UCS-4)
-+ * @param base: Base Unicode code point (UCS-4)
-+ * @param combining: Combining mark Unicode code point (UCS-4)
-  * Return: Recomposed Unicode code point, or 0 if no recomposition is possible
-  */
- uint32_t ucs_recompose(uint32_t base, uint32_t combining)
-@@ -301,7 +301,6 @@ uint32_t ucs_recompose(uint32_t base, uint32_t combining)
- 		return 0;
- 
- 	struct compare_key key = {{ base, combining }};
--
- 	struct recomposition *result =
- 		__inline_bsearch(&key, recomposition_table,
- 				 ARRAY_SIZE(recomposition_table),
-diff --git a/drivers/tty/vt/gen_ucs_width.py b/drivers/tty/vt/gen_ucs_width.py
-index c6cbc93e83..e65f43e208 100755
---- a/drivers/tty/vt/gen_ucs_width.py
-+++ b/drivers/tty/vt/gen_ucs_width.py
-@@ -292,7 +292,7 @@ static bool is_in_interval32(uint32_t cp, const struct interval32 *intervals, si
- /**
-  * Determine if a Unicode code point is zero-width.
-  *
-- * @param ucs: Unicode code point (UCS-4)
-+ * @param cp: Unicode code point (UCS-4)
-  * Return: true if the character is zero-width, false otherwise
-  */
- bool ucs_is_zero_width(uint32_t cp)
-@@ -305,7 +305,7 @@ bool ucs_is_zero_width(uint32_t cp)
- /**
-  * Determine if a Unicode code point is double-width.
-  *
-- * @param ucs: Unicode code point (UCS-4)
-+ * @param cp: Unicode code point (UCS-4)
-  * Return: true if the character is double-width, false otherwise
-  */
- bool ucs_is_double_width(uint32_t cp)
-diff --git a/drivers/tty/vt/ucs_recompose.c b/drivers/tty/vt/ucs_recompose.c
-index 5c30c989de..52cde1517f 100644
---- a/drivers/tty/vt/ucs_recompose.c
-+++ b/drivers/tty/vt/ucs_recompose.c
-@@ -147,8 +147,8 @@ static int recomposition_compare(const void *key, const void *element)
- /**
-  * Attempt to recompose two Unicode characters into a single character.
-  *
-- * @param previous: Previous Unicode code point (UCS-4)
-- * @param current: Current Unicode code point (UCS-4)
-+ * @param base: Base Unicode code point (UCS-4)
-+ * @param combining: Combining mark Unicode code point (UCS-4)
-  * Return: Recomposed Unicode code point, or 0 if no recomposition is possible
-  */
- uint32_t ucs_recompose(uint32_t base, uint32_t combining)
-@@ -159,7 +159,6 @@ uint32_t ucs_recompose(uint32_t base, uint32_t combining)
- 		return 0;
- 
- 	struct compare_key key = { base, combining };
--
- 	struct recomposition *result =
- 		__inline_bsearch(&key, recomposition_table,
- 				 ARRAY_SIZE(recomposition_table),
-diff --git a/drivers/tty/vt/ucs_width.c b/drivers/tty/vt/ucs_width.c
-index 060aa8ae7f..4d5a0021e3 100644
---- a/drivers/tty/vt/ucs_width.c
-+++ b/drivers/tty/vt/ucs_width.c
-@@ -512,7 +512,7 @@ static bool is_in_interval32(uint32_t cp, const struct interval32 *intervals, si
- /**
-  * Determine if a Unicode code point is zero-width.
-  *
-- * @param ucs: Unicode code point (UCS-4)
-+ * @param cp: Unicode code point (UCS-4)
-  * Return: true if the character is zero-width, false otherwise
-  */
- bool ucs_is_zero_width(uint32_t cp)
-@@ -525,7 +525,7 @@ bool ucs_is_zero_width(uint32_t cp)
- /**
-  * Determine if a Unicode code point is double-width.
-  *
-- * @param ucs: Unicode code point (UCS-4)
-+ * @param cp: Unicode code point (UCS-4)
-  * Return: true if the character is double-width, false otherwise
-  */
- bool ucs_is_double_width(uint32_t cp)
+
+>
+> >
+> > > ---
+> > >  mm/slub.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/mm/slub.c b/mm/slub.c
+> > > index b46f87662e71..dc9e729e1d26 100644
+> > > --- a/mm/slub.c
+> > > +++ b/mm/slub.c
+> > > @@ -1973,6 +1973,11 @@ static inline void handle_failed_objexts_alloc=
+(unsigned long obj_exts,
+> > >  #define OBJCGS_CLEAR_MASK    (__GFP_DMA | __GFP_RECLAIMABLE | \
+> > >                               __GFP_ACCOUNT | __GFP_NOFAIL)
+> > >
+> > > +static inline void init_slab_obj_exts(struct slab *slab)
+> > > +{
+> > > +     slab->obj_exts =3D 0;
+> > > +}
+> > > +
+> > >  int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+> > >                       gfp_t gfp, bool new_slab)
+> > >  {
+> > > @@ -2058,6 +2063,10 @@ static inline bool need_slab_obj_ext(void)
+> > >
+> > >  #else /* CONFIG_SLAB_OBJ_EXT */
+> > >
+> > > +static inline void init_slab_obj_exts(struct slab *slab)
+> > > +{
+> > > +}
+> > > +
+> > >  static int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache =
+*s,
+> > >                              gfp_t gfp, bool new_slab)
+> > >  {
+> > > @@ -2637,6 +2646,7 @@ static struct slab *allocate_slab(struct kmem_c=
+ache *s, gfp_t flags, int node)
+> > >       slab->objects =3D oo_objects(oo);
+> > >       slab->inuse =3D 0;
+> > >       slab->frozen =3D 0;
+> > > +     init_slab_obj_exts(slab);
+> > >
+> > >       account_slab(slab, oo_order(oo), s, flags);
+> > >
+> > >
+> > > base-commit: c496b37f9061db039b413c03ccd33506175fe6ec
+> >
