@@ -1,77 +1,31 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0864B221276
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E758D27BF82;
+	Fri, 11 Apr 2025 11:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744370586; cv=none; b=hkd6YpeEpPbjQ4mbvOo306e/gHWBKFRMXj8KJufx7sE+7IURVZLvekF/k5asLbeSrOlALMjAtXod9PpL+KDlB1MnmqkZjwUpQSPvasdWl4lz9oxBdpdccInX9cwzxfco7hVgOrIJaia8Jcp1tNwLKgWXyyO/elY40FdJeGr5uSI=
+	t=1744370588; cv=none; b=NISdDc6Omjmgem7C69e9RxmnYmlUwWCPIyumGFIpR3ofgYJelsjOdPBeQ8mkrVMX/TNED5HP4W8aYQRwFHReux2CpYPNXGWthED3igyVL+00niXTfXt+514XYUfbC2TRwrhYxvEqVyZJuvKlIY3qCy3R34I0qyk3FuaZR1oDw/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744370586; c=relaxed/simple;
-	bh=4g9wUdzBEHF2DXwrsn4sDVm7Nmec/oEeQKsxWFnBuaA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RMeXR1KivF6NvnDz/GjZ3fXTVo9Q0n32FO+nUClW7nVBu7W7cZIL7wP/W9DCxjtyCw8/InmulVJWcf0jhbGmJyKN+rusShq0Q1erdI8nbgTQVhig6h3LZwiACXi/HuRGTuAGKPXUG87Pua7gjL0G9/66mnDkNsnPts6oZ5H+YEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sAq3qu2z; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sAq3qu2z"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ede096d73so13661465e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744370583; x=1744975383; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zoVQYZpiH0Di4cmCzPcvMx2OkQBw+j3GHZ8ITdSC16E=;
-        b=sAq3qu2z2r2PcecK8p0+fozqQ4w5sStTU/fldeF7eriJn7G9OcQblQ9LB+saawL4yL
-         bGGvQuFaiqf3pZipvtsdzJmRhQAoyePlygCCpmUI2qVv+WYDAIbXCK8/dqF7eGSaPpTc
-         U6RW0OSUJkEWHGWsBeXJaBOyrUEX7pbbaITtK+mUBAH5TecaKsGXgu7HvLkLbg4St5Sk
-         w3qEA/JPADNqWr3afd9C8YfwNpVz1rkplvettLyfLupeuVSTtfa7z6BPHORhzBmMGvjT
-         Sk0lcHD/C01PSdWI+txt9W7IMSRoiiNajAL+VYRD0ziZqr5eAEzEnUJdoBmQUemR9zGZ
-         mpWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744370583; x=1744975383;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zoVQYZpiH0Di4cmCzPcvMx2OkQBw+j3GHZ8ITdSC16E=;
-        b=a0/jW01QzLRO4sg+cFJfJmHcRYDLoeSYfkFEwPrO4nKcRoJS5gVGqYC4VXYigVhlmb
-         I3F+2OK52qpz8sj1HO+DG0T+G7XOFTDQR+qKaaYvVjvhDlQJAyEvZOYjpG77eJRSOgTn
-         fhUEjHkuHqtQpD9yz1EvAtwtZ5vmNN/8zqRw23J25WLVNEGXsiV8XejwV5SiRTYvSusA
-         G8J+xnA356whiXoV6drx6yBMQXHtrzfRdZ9v40TlgEa2iyD3X/67tEqA6y4GTS1KJfhy
-         b6BEcIBagubqlhqszGeWrp4aSxypw2v5zwqdPC4twvPHPKpwom8mVdba5agjcBSY0XrP
-         gQQQ==
-X-Gm-Message-State: AOJu0Yzhg4xYwRhn/PO+6yGZHGQHYfIGjrItsJzfvC9OU5WvUK4g8Kri
-	WIkjIG4szYEuJSu7cMe2RhmqQz9RXbQszrg/Ba9MDmttg8XN5Aob9+hIVD2XsGt5L+oWVrA8mE1
-	TCsw=
-X-Gm-Gg: ASbGncu4sbEvkvqy+WCaWi4NvgHIN2XkTe/v+W7w/UWHoX52Ed1YDompVCCZG+rqBNX
-	9Tt+lLEynQwu9FQpVUcb4bIepjgj2X3vHBpUoAKOR8D6HwjRevPobG2N78zmsCwmkSyFSCc0vbV
-	eowQCwH/jXYsMnc3sF1XpVF0tpUUC2IRuLcvD5NZvHOZNCj45eVPMfYrq7FRkp/C2LZxfpaHjtm
-	vXlysEL4Cg4xqQbW+L2CX5opDRRTh10PfTw6ZsygZSxKYFUGrjVu+BxP122Tlz2rvGg7Nf3+h80
-	2jDHCzJzWg1i8rdFSFj4OOmUkYju0Cs520v65i2gD6ROeyGXM3U49VI3NadGEPqgZg==
-X-Google-Smtp-Source: AGHT+IEyXfnt+nOd5Mq9WQW9OpzzkaH9z/w8Ll8JeLH+8FIwjVtVOut2RQKLAFQT1ODgvHnfZK8zUw==
-X-Received: by 2002:a05:600c:4695:b0:43d:2313:7b4a with SMTP id 5b1f17b1804b1-43f3a926d29mr19300015e9.3.1744370583245;
-        Fri, 11 Apr 2025 04:23:03 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc8esm85171445e9.30.2025.04.11.04.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 04:23:01 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	srini@kernel.org,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RESEND PATCH v3 02/13] dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
-Date: Fri, 11 Apr 2025 12:22:40 +0100
-Message-Id: <20250411112251.68002-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250411112251.68002-1-srinivas.kandagatla@linaro.org>
-References: <20250411112251.68002-1-srinivas.kandagatla@linaro.org>
+	s=arc-20240116; t=1744370588; c=relaxed/simple;
+	bh=JPqWn5zSZ2P34Z5dMgc400dC1XwDpykcXnA7Qi26IZA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tJ+bGrVcW/geo7qrozwZ05S9rZP6jJPc+xckmnElDPl+bRWU2Mvw3fpyfW2ipxzlyVjXv6n0MTBDVtIGt1iS2v7RshUasdmbwH8ZIjEKoEGiL6NszrNHM9/qUuEvPBB22QjJA+1c/X8KsbQAck5fSQMdbt5jVVTZfCyKYBludjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 002BF106F;
+	Fri, 11 Apr 2025 04:23:06 -0700 (PDT)
+Received: from usa.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 619213F694;
+	Fri, 11 Apr 2025 04:23:05 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH] i2c: xgene-slimpro: Simplify PCC shared memory region handling
+Date: Fri, 11 Apr 2025 12:23:03 +0100
+Message-Id: <20250411112303.1149086-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,43 +34,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko@sntech.de>
+The PCC driver now handles mapping and unmapping of shared memory
+areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+this xgene-slimpro I2C driver did handling of those mappings like several
+other PCC mailbox client drivers.
 
-The clocks property correctly declares minItems and maxItems for its
-variants, but clock-names does not. Both properties are always used
-together, so should declare the same limits.
+There were redundant operations, leading to unnecessary code. Maintaining
+the consistency across these driver was harder due to scattered handling
+of shmem.
 
-Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Just use the mapped shmem and remove all redundant operations from this
+driver.
+
+Cc: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-xgene-slimpro.c | 39 +++-----------------------
+ 1 file changed, 4 insertions(+), 35 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
-index a44d44b32809..3201ff8f9334 100644
---- a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
-@@ -62,6 +62,8 @@ allOf:
-       properties:
-         clocks:
-           maxItems: 3
-+        clock-names:
-+          maxItems: 3
-         resets:
-           maxItems: 1
-         reset-names:
-@@ -78,6 +80,8 @@ allOf:
-       properties:
-         clocks:
-           minItems: 4
-+        clock-names:
-+          minItems: 4
-         resets:
-           minItems: 3
-         reset-names:
+Hi,
+
+This is just resend of the same patch that was part of a series [1].
+Only core PCC mailbox changes were merged during v6.15 merge window.
+So dropping all the maintainer(Andi) acks and reposting it so that it can
+be picked up for v6.16 via maintainers tree.
+
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/all/20250313-pcc_fixes_updates-v3-10-019a4aa74d0f@arm.com/
+
+diff --git a/drivers/i2c/busses/i2c-xgene-slimpro.c b/drivers/i2c/busses/i2c-xgene-slimpro.c
+index 663fe5604dd6..a0880f4a056d 100644
+--- a/drivers/i2c/busses/i2c-xgene-slimpro.c
++++ b/drivers/i2c/busses/i2c-xgene-slimpro.c
+@@ -101,8 +101,6 @@ struct slimpro_i2c_dev {
+ 	struct completion rd_complete;
+ 	u8 dma_buffer[I2C_SMBUS_BLOCK_MAX + 1]; /* dma_buffer[0] is used for length */
+ 	u32 *resp_msg;
+-	phys_addr_t comm_base_addr;
+-	void *pcc_comm_addr;
+ };
+ 
+ #define to_slimpro_i2c_dev(cl)	\
+@@ -148,7 +146,8 @@ static void slimpro_i2c_rx_cb(struct mbox_client *cl, void *mssg)
+ static void slimpro_i2c_pcc_rx_cb(struct mbox_client *cl, void *msg)
+ {
+ 	struct slimpro_i2c_dev *ctx = to_slimpro_i2c_dev(cl);
+-	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
++	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
++							ctx->pcc_chan->shmem;
+ 
+ 	/* Check if platform sends interrupt */
+ 	if (!xgene_word_tst_and_clr(&generic_comm_base->status,
+@@ -169,7 +168,8 @@ static void slimpro_i2c_pcc_rx_cb(struct mbox_client *cl, void *msg)
+ 
+ static void slimpro_i2c_pcc_tx_prepare(struct slimpro_i2c_dev *ctx, u32 *msg)
+ {
+-	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
++	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
++							ctx->pcc_chan->shmem;
+ 	u32 *ptr = (void *)(generic_comm_base + 1);
+ 	u16 status;
+ 	int i;
+@@ -464,15 +464,12 @@ static int xgene_slimpro_i2c_probe(struct platform_device *pdev)
+ 	} else {
+ 		struct pcc_mbox_chan *pcc_chan;
+ 		const struct acpi_device_id *acpi_id;
+-		int version = XGENE_SLIMPRO_I2C_V1;
+ 
+ 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
+ 					    &pdev->dev);
+ 		if (!acpi_id)
+ 			return -EINVAL;
+ 
+-		version = (int)acpi_id->driver_data;
+-
+ 		if (device_property_read_u32(&pdev->dev, "pcc-channel",
+ 					     &ctx->mbox_idx))
+ 			ctx->mbox_idx = MAILBOX_I2C_INDEX;
+@@ -494,34 +491,6 @@ static int xgene_slimpro_i2c_probe(struct platform_device *pdev)
+ 			goto mbox_err;
+ 		}
+ 
+-		/*
+-		 * This is the shared communication region
+-		 * for the OS and Platform to communicate over.
+-		 */
+-		ctx->comm_base_addr = pcc_chan->shmem_base_addr;
+-		if (ctx->comm_base_addr) {
+-			if (version == XGENE_SLIMPRO_I2C_V2)
+-				ctx->pcc_comm_addr = memremap(
+-							ctx->comm_base_addr,
+-							pcc_chan->shmem_size,
+-							MEMREMAP_WT);
+-			else
+-				ctx->pcc_comm_addr = memremap(
+-							ctx->comm_base_addr,
+-							pcc_chan->shmem_size,
+-							MEMREMAP_WB);
+-		} else {
+-			dev_err(&pdev->dev, "Failed to get PCC comm region\n");
+-			rc = -ENOENT;
+-			goto mbox_err;
+-		}
+-
+-		if (!ctx->pcc_comm_addr) {
+-			dev_err(&pdev->dev,
+-				"Failed to ioremap PCC comm region\n");
+-			rc = -ENOMEM;
+-			goto mbox_err;
+-		}
+ 	}
+ 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+ 	if (rc)
 -- 
-2.25.1
+2.34.1
 
