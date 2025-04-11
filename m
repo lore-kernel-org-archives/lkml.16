@@ -1,66 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E931AA786;
-	Fri, 11 Apr 2025 13:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F351AA786;
+	Fri, 11 Apr 2025 13:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378936; cv=none; b=Z5Z4kwOrgLW3thXOmlCGoVnE/fJJLS7CRI1ypDsDWaUvxW5jQUOsccT3GnSRCG5jck3lpROH1cPI92tjJMk0RbVmxZ/ODo1g2fMx3reuE4YjtFtVeUYtxjRugnACCQkw5b0zlO83+hXj++Q/aMThUERud4M5jhkZkqIdPoF6jQ8=
+	t=1744378946; cv=none; b=j4g7SH+UdEI13XOrJ6raW5fl2mTDNjvNuLyLy3QyX4Jt14GTSF6mPKVQqGGdkQDm9IXYfqYp3L+KvaRmmpyxZ5L+ji10ZhbERoMzuSV13o1nQDl6Gkz9v9NkbR2sSZYOMj1Ul9nDukc3gU3XuBVqSRZI7/tMO9kR3ulk041UJrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378936; c=relaxed/simple;
-	bh=nS4mtmxGRp+CcFT9tVDGPOWxYtnM+243zUP7ZIU9t4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WqUKmTSAZYUMKHrLCygYwIEmA9PImJNvhvWi66/B9Re7J5c+SBfbt+gbsC35soJxXe2uQMAhdXbUrJCbmfCVCMv1v3DKcOIpKXL6gkLFL6q1B/wjMeiBfLLjqW34kYD06/aooLTTQoSrL/5SEJhaIJujlLdpgT3yeyJJ12SAgL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wveHEQwU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744378946; c=relaxed/simple;
+	bh=znPDB0MoSmT8PCpb3xg8cBUu9Za8ut3SUaA/1vEtbRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FX+tIsUzRPxhj2AoU//UNyZqeb3RErtFNlBdiL1s/cWIIcbNWoMKs7HkZIcu00EMC3RHP8T4Iopbe3dvnzCDhnzYJkL83paJQ0GUvXfXWZqosxQi0JcMhZl3YsrGSreU4FeuRjK/WBlOmgvdjg8NwDg8qJer5wMJAedx0pbZjCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wIVUIrAC; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wveHEQwU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A547C4CEE2;
-	Fri, 11 Apr 2025 13:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744378935;
-	bh=nS4mtmxGRp+CcFT9tVDGPOWxYtnM+243zUP7ZIU9t4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wveHEQwU8QrxS6q3qjGn/QYQwFp5Wu9bwvhXBzF5ePMzmcNztJHnud0AdX+yOVylA
-	 YOyQBQ2tHfE8TjwG7Z8IGtk1XrzHRw8sgDKX205WpOQVcsaAwlNiWTZVHubUn1k+99
-	 GrJBgVvG4AdvJ+p86Lx61F/sN+3BAoPBSpnoLy/4=
-Date: Fri, 11 Apr 2025 15:42:12 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: samsung,exynos-dwc3: add
- exynos2200 compatible
-Message-ID: <2025041157-stilt-sculptor-c978@gregkh>
-References: <20250321144804.1435502-1-ivo.ivanov.ivanov1@gmail.com>
- <20250321144804.1435502-2-ivo.ivanov.ivanov1@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wIVUIrAC"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDg8aD2137750
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 08:42:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744378928;
+	bh=v4UJPNnOWudFJocURSS5csRTh7we/bdm3q/LWnIuJSU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=wIVUIrACHs8GQ8ru01wDzPMjGBKWgr/XbgniA/LgxGKt9bW6bBICgE9F3Emah8+Ts
+	 0Ytj1Wvyhn7Gscpc3ShFHFxQ7uMVe7KLC0vy2DsP69U32x2hPh3WcXHCgfmAVwQcEE
+	 CeoGtWJTRXJlzboIbewbyHISvvPL7AyiPufy5q0U=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDg8J8026772
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 08:42:08 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 08:42:08 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 08:42:08 -0500
+Received: from [10.249.136.157] ([10.249.136.157])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDg2Nx119834;
+	Fri, 11 Apr 2025 08:42:03 -0500
+Message-ID: <a05e2a39-b000-4c9c-9c74-49a9941b4801@ti.com>
+Date: Fri, 11 Apr 2025 19:12:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321144804.1435502-2-ivo.ivanov.ivanov1@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] arm64: dts: ti: k3-am62x: Rename I2C switch to I2C
+ mux in OV5640 overlay
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <stable@vger.kernel.org>
+References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+ <20250409134128.2098195-8-y-abhilashchandra@ti.com>
+Content-Language: en-US
+From: "Francis, Neha" <n-francis@ti.com>
+In-Reply-To: <20250409134128.2098195-8-y-abhilashchandra@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Mar 21, 2025 at 04:48:02PM +0200, Ivaylo Ivanov wrote:
-> The Exynos2200 SoC has a DWC3 compatible USB controller and can reuse
-> the existing Exynos glue. Update the dt schema to include the
-> samsung,exynos2200-dwusb3 compatible for it.
+On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
+> The OV5640 device tree overlay incorrectly defined an I2C switch instead
+> of an I2C mux. According to the DT bindings, the correct terminology and
+> node definition should use "i2c-mux" instead of "i2c-switch". Hence,
+> update the same to avoid dtbs_check warnings.
 > 
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Fixes: 635ed9715194 ("arm64: dts: ti: k3-am62x: Add overlays for OV5640")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
 > ---
->  .../bindings/usb/samsung,exynos-dwc3.yaml          | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso      | 2 +-
+>  arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
+> index ccc7f5e43184..7fc7c95f5cd5 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
+> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
+> @@ -22,7 +22,7 @@ &main_i2c2 {
+>  	#size-cells = <0>;
+>  	status = "okay";
+>  
+> -	i2c-switch@71 {
+> +	i2c-mux@71 {
+>  		compatible = "nxp,pca9543";
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
+> index 4eaf9d757dd0..b6bfdfbbdd98 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
+> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
+> @@ -22,7 +22,7 @@ &main_i2c2 {
+>  	#size-cells = <0>;
+>  	status = "okay";
+>  
+> -	i2c-switch@71 {
+> +	i2c-mux@71 {
+>  		compatible = "nxp,pca9543";
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
 
-This doesn't apply to my tree, can you rebase it and resend the series?
+Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
 
-thanks,
+-- 
+Thanking You
+Neha Malcom Francis
 
-greg k-h
