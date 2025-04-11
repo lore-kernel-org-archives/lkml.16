@@ -1,43 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EF01D9A5F;
-	Fri, 11 Apr 2025 18:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9592F20F08E;
+	Fri, 11 Apr 2025 18:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394517; cv=none; b=tv5JahRtEY2ECgsvy/WyFMEvMzUcNqA55qkN6+uD1KOHL7EuSgTMPiTHzYL5Oc1zQcmMT62J3M0MVShWjPDUHCk7OW8HpOI9fSE/2Yqvj73upxdq8gHbfY9gIYBektPpkCdkZOH99Ii0bGhFv295vMOsFRmJ7P7hYsJ6MO+AdOo=
+	t=1744394595; cv=none; b=bOSRdyMQkV8Assg9dULzi8KglOa/hpkFRymu9IP8Gjomnm3DjYUt8QgCvszItR0sdW2blbiaUgQ7l8pqa5BeOG8p/8e7fT8IzEoGM83605EHaxffIcxc/kFcGvD6v7fjDqOG1e5NbB14Le/luHh/Bybpo5Z9ffwt0fRHkUdtOlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394517; c=relaxed/simple;
-	bh=jPqSQEgdetj1cQhBqh5DPo/z29J5ovjpZyUv7yi8J7w=;
+	s=arc-20240116; t=1744394595; c=relaxed/simple;
+	bh=WkEFiBHfIO5jmz+oePTSYJtLhr8/7pRTP8FdSbo0DRw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NtlcFMEC7M6w2izLibVOGm2AEGzbzeIzFz+jkiqF0+Vrl69ZOYpzpOyRcoIoe1TSMySXWguEeCujIX+1WZh/vphxwjW+oQutotUQlt+zI/wlvHaN6m2QZ+Dj1qElsVBjO3lmp0cfdLsl6ItHQar6ZQyOrbj83IbjW7M9is6pg6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpQ2vSQu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRO0+i2Udc/T3bNRgwnpL+wm6ZXB94uvv1kX/GtOJ0J7eIjkHB2wSQgOqGyl1ruJ27gSbN6MBJrcKKV2vp5D2pPBQQ3IXkvr+3u+hKprT/GdHSB0ifWG98y/7RV8e5hn68Bi8fQfzyHV9rV4LbEVcXR1yzJ3FQu3XlE/azNgW1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBErLamH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpQ2vSQu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA48EC4CEE2;
-	Fri, 11 Apr 2025 18:01:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBErLamH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08ECC4CEE2;
+	Fri, 11 Apr 2025 18:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744394517;
-	bh=jPqSQEgdetj1cQhBqh5DPo/z29J5ovjpZyUv7yi8J7w=;
+	s=k20201202; t=1744394594;
+	bh=WkEFiBHfIO5jmz+oePTSYJtLhr8/7pRTP8FdSbo0DRw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZpQ2vSQuBBjrX+xwNs0LTLsSaiExNoc5yDBAksFFdEyIC4ijhyVQK/OE7LygcCHlN
-	 +b+rwzLjYU3ad2sDQPpGsly9EwYCXr5Z5ODKxUzfjljakpt34OtycgQ/KK2EmOZpr9
-	 3wjfN1k7sESNJ38iMavxoA8w3yE78R9VJRAZ3UAMn4GhNfF3g/1/5P12NwgKSKEmLS
-	 EDh+8su4tjEDSU5WniO5xb+t+M9xiV9Ths07KG2aJJkPV52gAIz1kZhcKfA+fTsh7X
-	 G6Ys4Mzo1xTrI3t9KagX/v4jdx5vhJqcEhNsGXQjX61Oio3gwOqkOxv1/EgtdnwOXL
-	 VkwxAwiE/iaiQ==
-Date: Fri, 11 Apr 2025 21:01:50 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Chengchang Tang <tangchengchang@huawei.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Winston Wen <wentao@uniontech.com>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 5/7] RDMA/hns: initialize db in update_srq_db()
-Message-ID: <20250411180150.GY199604@unreal>
-References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
- <20250411105459.90782-1-chenlinxuan@uniontech.com>
- <FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com>
+	b=fBErLamHQUxnHJPSUBr1MbBfvq4joYezZ4Tv91nkmPSkeyfyRQabkQ0PC2YFRAi+f
+	 dRTuo3Zfws9w6Grxq98FAwT0GZBAs/9oujAIvnov/AorEZ0V9i4yhY+L8p3IEzOZ2+
+	 2wUIVpf5FJ+79CaXE/CCgitlyarSvoRPGFq6MLZr2aAbNemQAOC4ggi5LKMCY5y0W7
+	 b2Jwh/779qAluQjcDTKei3/0FykUwpefLmabh2MaPWUKjM87tUweCehu3EJ+poRZFm
+	 T3b0IMSMNeUJouZGOTCUBh3zxeK91npz1yKSO5yTxfwbxvc32Dna3YY8yOVUsIzjhm
+	 3Dt28LH9EAk9Q==
+Date: Fri, 11 Apr 2025 20:03:04 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V9 09/17] rust: cpu: Add from_cpu()
+Message-ID: <Z_lZWPr1vBCrYbkA@cassiopeiae>
+References: <cover.1744366571.git.viresh.kumar@linaro.org>
+ <475bc73d8d11290446a4135af76aea123c6d80ee.1744366571.git.viresh.kumar@linaro.org>
+ <Z_lAyGy1o80MPVOC@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,54 +66,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com>
+In-Reply-To: <Z_lAyGy1o80MPVOC@yury>
 
-On Fri, Apr 11, 2025 at 06:54:53PM +0800, Chen Linxuan wrote:
-> On x86_64 with gcc version 13.3.0, I compile
-> drivers/infiniband/hw/hns/hns_roce_hw_v2.c with:
-> 
->   make defconfig
->   ./scripts/kconfig/merge_config.sh .config <(
->     echo CONFIG_COMPILE_TEST=y
->     echo CONFIG_HNS3=m
->     echo CONFIG_INFINIBAND=m
->     echo CONFIG_INFINIBAND_HNS_HIP08=m
->   )
->   make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once" \
->     drivers/infiniband/hw/hns/hns_roce_hw_v2.o
-> 
-> Then I get a compile error:
-> 
->     CALL    scripts/checksyscalls.sh
->     DESCEND objtool
->     INSTALL libsubcmd_headers
->     CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
->   In file included from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:47:
->   drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'update_srq_db':
->   drivers/infiniband/hw/hns/hns_roce_common.h:74:17: error: 'db' is used uninitialized [-Werror=uninitialized]
->      74 |                 *((__le32 *)_ptr + (field_h) / 32) &=                          \
->         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   drivers/infiniband/hw/hns/hns_roce_common.h:90:17: note: in expansion of macro '_hr_reg_clear'
->      90 |                 _hr_reg_clear(ptr, field_type, field_h, field_l);              \
->         |                 ^~~~~~~~~~~~~
->   drivers/infiniband/hw/hns/hns_roce_common.h:95:39: note: in expansion of macro '_hr_reg_write'
->      95 | #define hr_reg_write(ptr, field, val) _hr_reg_write(ptr, field, val)
->         |                                       ^~~~~~~~~~~~~
->   drivers/infiniband/hw/hns/hns_roce_hw_v2.c:948:9: note: in expansion of macro 'hr_reg_write'
->     948 |         hr_reg_write(&db, DB_TAG, srq->srqn);
->         |         ^~~~~~~~~~~~
->   drivers/infiniband/hw/hns/hns_roce_hw_v2.c:946:31: note: 'db' declared here
->     946 |         struct hns_roce_v2_db db;
->         |                               ^~
->   cc1: all warnings being treated as errors
-> 
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> Co-Developed-by: Winston Wen <wentao@uniontech.com>
-> Signed-off-by: Winston Wen <wentao@uniontech.com>
-> ---
->  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Apr 11, 2025 at 12:18:26PM -0400, Yury Norov wrote:
+> On Fri, Apr 11, 2025 at 04:25:08PM +0530, Viresh Kumar wrote:
+> > +/// Creates a new instance of CPU's device.
+> > +///
+> > +/// # Safety
+> > +///
+> > +/// Reference counting is not implemented for the CPU device in the C code. When a CPU is
+> > +/// hot-unplugged, the corresponding CPU device is unregistered, but its associated memory
+> > +/// is not freed.
+> > +///
+> > +/// Callers must ensure that the CPU device is not used after it has been unregistered.
+> > +/// This can be achieved, for example, by registering a CPU hotplug notifier and removing
+> > +/// any references to the CPU device within the notifier's callback.
+> > +pub unsafe fn from_cpu(cpu: u32) -> Result<&'static Device> {
+> > +    // SAFETY: The pointer returned by `get_cpu_device()`, if not `NULL`, is a valid pointer to
+> > +    // a `struct device` and is never freed by the C code.
+> > +    let ptr = unsafe { bindings::get_cpu_device(cpu) };
 
-Applied to rdma-next.
+You don't need to justify the return value here, you need to justify why cpu is
+a valid value to call get_cpu_device() with.
 
-Thanks
+> > +    if ptr.is_null() {
+> > +        return Err(ENODEV);
+> > +    }
+> > +
+> > +    // SAFETY: The pointer returned by `get_cpu_device()`, if not `NULL`, is a valid pointer to
+> > +    // a `struct device` and is never freed by the C code.
+
+Here, the comment is good.
+
+> If you think that writing the same thing twice would help in SAFETY
+> department, I'd recommend you to write it for a couple more times.
+
+Fixing the above, should also fix the duplication. :)
+
+> > +    Ok(unsafe { Device::as_ref(ptr) })
