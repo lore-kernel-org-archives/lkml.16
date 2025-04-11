@@ -1,102 +1,89 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8079367
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4374367;
+	Fri, 11 Apr 2025 06:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744352497; cv=none; b=FP0EvY99Ia+uxOFD8OBFf5XdklmHo24Wxlmx4Ct1CBBsrhDHl8FgML0CevsGgvb4sD2mux7v8h/Qwfc+ZqwTjXZ7CeCxAezfoTiBtgLQH2uJZAoJEMkmHajmpYslKm4fzpRnbPVxan1mhmqMTH8olz0+up9WJEenywPk78hCF6Y=
+	t=1744352502; cv=none; b=MKgy148NSA92I/OYynSQoe9Pvaa3vB0D7bjzAz6jklmqIBR0yAOBOmXg4ALiVnCCDPqul2bx4Puq8YpxbLAwA0QLP8zoqT6KKSQOveXOcyicPkxp3jsmo5yCxVFa9iD64dsZSVWBk0aoi+XozSEKGpWbowH8w0AWoF/6cB7VpkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744352497; c=relaxed/simple;
-	bh=kcIP+POmxmkSEg5c9FMWXe/3dEsvXgJ4/4YSNQkpI1Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ncWTybCt2X8emgd9xqkIm3c3Cr0D5e+P61XdiOLaqURMnEnHjdP7ec05AlwLh4WWURyOsC8KVqGdkIrinssG3XgtUnM0pvMK5/McBwMkSHooNL7lPopilpZKpAzadvmSYdGYOgjsLULAY4SX131w4BoTRczcJbBT1kzExSH3KZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 261264435A;
-	Fri, 11 Apr 2025 06:21:26 +0000 (UTC)
-Message-ID: <23693e7f-4fff-40f3-a437-e06d827278a5@ghiti.fr>
-Date: Fri, 11 Apr 2025 08:21:25 +0200
+	s=arc-20240116; t=1744352502; c=relaxed/simple;
+	bh=uwwzJRyfNXL+Pb3Ntu55xpbTfqnsLWcsMS2/4C8sR9A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=apr0rPXHWjrtklFO9rIkzNaFoq/2l7cMrjY2BxN36PmB546G0o6QBEQspMcbdWUaGGvjH8c9HG+lYkD7n82XBOPyVyvv2IbbnmkmuUhi1izRYo9PyGFDiDuUSol6ZUts9lddQt5dFcUN7Yz+ToJQRR0akBds/uv4kxlU63GRLyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKsMFCn2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKsMFCn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18731C4CEE5;
+	Fri, 11 Apr 2025 06:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744352501;
+	bh=uwwzJRyfNXL+Pb3Ntu55xpbTfqnsLWcsMS2/4C8sR9A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=rKsMFCn2k5vXBWmjWgqIe7kPyUtQb8IywjE2Ac9CTEnF9C55TJ+sPU8XRJon6hLG3
+	 9/nAVaOkfLqn+1MResUe3oxi+rGAlnIsgMNCVLbcOFqa/KDvLwdFKsRGe4JKEGMJQn
+	 uHS2n9pVMPy2mtFS74ASGiEUZz2I6W+sxOwx3ja/RAscwlN/1i4Pd4Cg7xn7+2+pPE
+	 IPYbbvHRNlrgmMy9X8HMdyrRAnHIOYdCra/4VAAJk+B8gkvNsGTDoFsjtgIy948qxw
+	 QjmolFIm2yd1DwY0kFvu81U99Ss8VhmgwASVorhr8TXTyysPoEHvWkiVxhCBMdLo2b
+	 XlZkw1rdBff1w==
+From: Mark Brown <broonie@kernel.org>
+To: gregkh@linuxfoundation.org, srinivas.kandagatla@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ alsa-devel@alsa-project.org, srini@kernel.org
+In-Reply-To: <20250410103713.24875-1-srinivas.kandagatla@linaro.org>
+References: <20250410103713.24875-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 0/2] MAINTAINERS: update my email address
+Message-Id: <174435249981.1315708.17163326951823552256.b4-ty@kernel.org>
+Date: Fri, 11 Apr 2025 07:21:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] riscv: KGDB: Do not inline arch_kgdb_breakpoint()
-Content-Language: en-US
-To: WangYuli <wangyuli@uniontech.com>, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: chenhuacai@kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, vincent.chen@sifive.com,
- palmerdabbelt@google.com, samuel.holland@sifive.com, zhanjun@uniontech.com,
- niecheng1@uniontech.com, guanwentao@uniontech.com,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <C5DCACA951B6211D+20250408095454.67390-1-wangyuli@uniontech.com>
- <ccc97669-a4dc-459f-a26f-1fdad8b4a334@ghiti.fr>
- <3A22DFCBC7B91F71+320f58c6-0fc6-4dc4-9fb0-ab0d55be697a@uniontech.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <3A22DFCBC7B91F71+320f58c6-0fc6-4dc4-9fb0-ab0d55be697a@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddutdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedugedprhgtphhtthhopeifrghnghihuhhlihesuhhnihhonhhtvggthhdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrihhstghvs
- ehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhinhgtvghnthdrtghhvghnsehsihhfihhvvgdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+X-Mailer: b4 0.15-dev-c25d1
 
-Hi WangYuli,
+On Thu, 10 Apr 2025 11:37:11 +0100, srinivas.kandagatla@linaro.org wrote:
+> Update .mailmap and MAINTAINERS to point to the @kernel.org instead of
+> the @linaro.org. Linaro address will stop working in few days.
+> 
+> Mark or Greg, could you please pick these two patches?
+> 
+> Srinivas Kandagatla (2):
+>   MAINTAINERS: use kernel.org alias
+>   mailmap: Add entry for Srinivas Kandagatla
+> 
+> [...]
 
-On 10/04/2025 16:28, WangYuli wrote:
-> Hi Alex
->
-> On 2025/4/10 21:42, Alexandre Ghiti wrote:
->> Hi WangYuli,
->>
->>
->> You forgot to replace kgdb_breakinst into kgdb_compiled_break.
->
-> OK, I'll fix it.
->
-> Thanks,
->
->>
->> You are fixing 2 things here, you need to split this patch into 2. 
-> OK,
->> And as noted by Palmer, we actually don't need norvc here, so you can 
->> remove it instead.
->
-> I have some questions regarding this.
->
-> If .option norvc is unnecessary, what is the significance of .option 
-> push/.option pop?
->
-> Should they also be removed as well?
+Applied to
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Yes, you can remove them.
+Thanks!
 
+[1/2] MAINTAINERS: use kernel.org alias
+      commit: 7f33f247138554b84729688169dfbe87724b70ef
+[2/2] mailmap: Add entry for Srinivas Kandagatla
+      commit: 807c1c83152138e2fc22101a57b9346159ad4f4c
 
->
-> However, will this still function properly when the RISC-V C extension 
-> is active?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-.option norvc is used to prevent the assembler from using compressed 
-instructions, but it's generally used when we need to ensure the size of 
-the instructions that are used, which is not the case here as noted by 
-Palmer since we only care about the address. So yes it will work fine 
-with C enabled :)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->
->
-> Thanks,
->
-
-Thanks for the changes!
-
-Alex
+Thanks,
+Mark
 
