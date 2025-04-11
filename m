@@ -1,142 +1,140 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E4E27BF8D
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9F61853
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744341282; cv=none; b=j9UwpdvtRsyM2miHCmrdjz6vbmwfT2rzd9PHHhDLXIHCXhYBotkmVjYxd2W6HagX+3lrfCHkQCDxD0QwOp2J0IL8gVhSDGPKif5gCJh/Qg9YqHaNZYKbd7c8THTukQjPe/qB7LvOO25n8LTx9G6fEK02Uv77Rpn0+8hP79+U47E=
+	t=1744341405; cv=none; b=GAsygNPn9UdRI7bjgSIgT5ZH94W9WF+ZhL19aON0e+nhAULPqfOOrsBJ0y9t3MG8hoiOwA7fHSbe3jO4MQc2CN2NsqYxU7ZwvGmo0XIeby+ToGFkkgp6q/Px34UOV+FQJW3lmcoEE8desCGOiCNElWpZa3qcyIIowm+4kXO1pd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744341282; c=relaxed/simple;
-	bh=tMBW6SsrRp4eqZIhRhJwVyfm4buVLJZl0knatb+Bg8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IG22SjvLK/hhWM04oqesmWM6bgmU4DYr7JAx9oL9fczGAyFiylKIJ5JZNraXiRuqm9Rb1dVsZC/Fo31u30F9UabOZL6M7RGo88IhL34yM1GkDlSxFg0hbuwzEK2FEnZ5kmf6fuKH5qVJII8z+YUsVYUw6eMgupxNX81ri1Xps1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nPIcN93G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wQ+Qexkp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nPIcN93G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wQ+Qexkp; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744341405; c=relaxed/simple;
+	bh=e9qMv9zY/h1QpCv8dWENdjZJXSTuXa/fHxLOmVou1PA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TpUhieqnK+Z/dOaL4bPAwdX8reMMGTKBV/THufFtU6hq/2OVkBdQJ2sSfMt48BWkywCqTw3/NOfzP1N7a5ER1ExLoUde4279UTK44CIRD7FjaFNEOl30fk8fdTGbva12+fG4TAN+lk3hSKsDnS3kh0/R5KoHjqdfUp0I7+cBrT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gdcA4tjC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nPIcN93G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wQ+Qexkp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nPIcN93G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wQ+Qexkp"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DBD7821163;
-	Fri, 11 Apr 2025 03:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744341277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OdfG6AiAbx+J2/sOs1IgaMLUTVNE3PJ0+dUGIA+UEE=;
-	b=nPIcN93GPscI5eEY+8zCM0GPpOtSaw8mJUVyuWKDGEdWEJZcU330LQ5TMO1UB+r/Wc94uk
-	J3U8Xa5XALjoYL4MzhjVDKC+Ajw/Qau/wQ9PtkMggNneZWEx23Ql/45KIQ3iemfmNzNodl
-	LCUzJAYm/EuMDEmnHlWdOJWotoQeMjU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744341277;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OdfG6AiAbx+J2/sOs1IgaMLUTVNE3PJ0+dUGIA+UEE=;
-	b=wQ+QexkpFwwFVX279DS7buUg2NDPDMyA2v2xTP/ZJhQlk687t+gEyxlfQtG7lv7xz26q/7
-	ZZFKfdyS2z0GvyAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744341277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OdfG6AiAbx+J2/sOs1IgaMLUTVNE3PJ0+dUGIA+UEE=;
-	b=nPIcN93GPscI5eEY+8zCM0GPpOtSaw8mJUVyuWKDGEdWEJZcU330LQ5TMO1UB+r/Wc94uk
-	J3U8Xa5XALjoYL4MzhjVDKC+Ajw/Qau/wQ9PtkMggNneZWEx23Ql/45KIQ3iemfmNzNodl
-	LCUzJAYm/EuMDEmnHlWdOJWotoQeMjU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744341277;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OdfG6AiAbx+J2/sOs1IgaMLUTVNE3PJ0+dUGIA+UEE=;
-	b=wQ+QexkpFwwFVX279DS7buUg2NDPDMyA2v2xTP/ZJhQlk687t+gEyxlfQtG7lv7xz26q/7
-	ZZFKfdyS2z0GvyAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4DAE713886;
-	Fri, 11 Apr 2025 03:14:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zaM6EB2J+GeuRAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 11 Apr 2025 03:14:37 +0000
-Date: Fri, 11 Apr 2025 05:14:31 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, david@redhat.com,
-	hannes@cmpxchg.org, 21cnbao@gmail.com, ryan.roberts@arm.com,
-	ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: huge_memory: add folio_mark_accessed() when zapping
- file THP
-Message-ID: <Z_iJF2ehg9d-azoq@localhost.localdomain>
-References: <fc117f60d7b686f87067f36a0ef7cdbc3a78109c.1744190345.git.baolin.wang@linux.alibaba.com>
- <Z_eFPetk00AaFXem@localhost.localdomain>
- <23fdc11d-e983-4627-89a8-79e9ecf9a45a@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gdcA4tjC"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AG7jOx028877
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:16:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RfPoX/kxo2nQm9hEorj+Uzv9NtujZvxu2BRrTUCBL80=; b=gdcA4tjCdQYomEl5
+	7X6aZbCdPVOpZ6kL3WqKipRj7BRDT3i9AJ+a39RJV/krONThCS8uEEcRipD6ICu1
+	rzjWNKRXwwvBzEiyOv/yRjA9+hO/ON12Pv1yMOT+VoRbSwjWrl+pf33SCf2cabwE
+	GCUalEB4RE1RrHBp7P5QvEOP4wOwHuqVARrIcgoWeqfJIPmAwy9EW0unv8X1G6ES
+	kCi8OhYLXuKUEr8K8CpzLDflBPR/5ZFeBUfHym8Qi5ukgfvQZ5RgjIADxBfWb2A1
+	yMirRCWpMiBHqqCSKe6uo8TnQKzO3GUb7WDGXmy1uOmyAxg2VWRyapct2IZavniS
+	ljUT6g==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbus12n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:16:43 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2241e7e3addso13761795ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:16:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744341402; x=1744946202;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RfPoX/kxo2nQm9hEorj+Uzv9NtujZvxu2BRrTUCBL80=;
+        b=MbOgYJVTYop3+S93XTtrk6xbRfeTjM5CtDOp+kg513hl9EYTgMS9Ya9Qj0HKm3a7H6
+         GfKuQte+JyHLQhcZdxOuBrOh5MtvPeDoW/au16xzgGDJkARRminAwMgg2zuTki/VMP+/
+         MiTTikB9kVGfEpf9MZ3n+DM32vak2SXZbllz15DuaaJyE7uv6ilspyZE6K2cRtsRohlN
+         9YLp9naAAejryDL77YCP/54jOVsVSL+XVGQTVCOGk5DQ3GFaVtvpyNE7jY2K20dChvT1
+         6oTqt9/dfx2XLeaFiZJMC7Q7URtaEBB+P8LyWKNpEb/Ph8LGRMpNbzNywosUWE7rzdAa
+         RuIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmnW76pB8QjTBB9eu7ZNW/CH5NbM9m527k8dv12ekoANZVvLfSag3xB2pYQWLzedvQEUKp8U0ZkWwQuxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvMdgGVOeEYLD09W0qulldr9Xb0xXY682pPZV0l4WlIEqiRGCA
+	6Q2a76ASC/c+rKWHIUNWax+HpIP/59FiFEOYzewL+cAtqiu4G6f/nnweESrn3YBuIcFbw1OrZtQ
+	M0isLHeC3U8bzjfuruEDqBQumB4tMhSj+ZB6MQWEOQt9x3U+xLF8oKJUbZuMTYIE=
+X-Gm-Gg: ASbGncvTPepLwva2k2U6ngE9AaGGLKAnzv8E0Rdp4fZZ0zhjcsq2Lz1FuKwTWbFOmrG
+	bkkXY0HyFGlaCab/gQJFKDT5OI9EP4+hDHxKq+NljriAIDHi5C6jgxrwGQzhK5ZbmKwLi1W/zYR
+	6tK6VWjIMNl/Wk/Ctjg/pRs8EfBKWjegx0XTSmmEKh+eTAW/ILmpL16HwdpjBUJidlvxpeet57p
+	qgQRLN5Ub/6lzzNV5smytAcDsoB+a8+Zlxs/UrQbVOcAxeo3VWTlH0+kYkGwRg5PWoej5cgagJv
+	lXzIovxM3Mm4FSbDG3zrDtCsOEdYlON1nz6rOpUCxgVWvj8k4w==
+X-Received: by 2002:a17:902:cccd:b0:224:910:23f6 with SMTP id d9443c01a7336-22bea4fcc8dmr19562085ad.45.1744341402274;
+        Thu, 10 Apr 2025 20:16:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGgsmv7ffD0Y3g1ZhudIgNEOfDzZl64JTVEmAr+V0XzueISHA+3ZzevJJ64w+uAsDERig8oAw==
+X-Received: by 2002:a17:902:cccd:b0:224:910:23f6 with SMTP id d9443c01a7336-22bea4fcc8dmr19561775ad.45.1744341401880;
+        Thu, 10 Apr 2025 20:16:41 -0700 (PDT)
+Received: from [192.168.29.88] ([49.43.250.37])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62b70sm38537125ad.39.2025.04.10.20.16.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 20:16:41 -0700 (PDT)
+Message-ID: <d4fc1ee2-bba0-4a85-bd66-b46be5f6e34b@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 08:46:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23fdc11d-e983-4627-89a8-79e9ecf9a45a@linux.alibaba.com>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,infradead.org,redhat.com,cmpxchg.org,gmail.com,arm.com,nvidia.com,kvack.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH ath-next 0/2] wifi: ath12k: handle scan vdev consistently
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: ath12k@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250411-fix_scan_vdev_handling-v1-0-07d8b4a5d19d@oss.qualcomm.com>
+Content-Language: en-US
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+In-Reply-To: <20250411-fix_scan_vdev_handling-v1-0-07d8b4a5d19d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: ZMjDRFmMJGB7LTVF2cUEn11zwbNdP8gD
+X-Proofpoint-ORIG-GUID: ZMjDRFmMJGB7LTVF2cUEn11zwbNdP8gD
+X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f8899b cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=cXzaif0YSwZ7kBs4STVCvg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=7GAvi05Al6q7sVWQShMA:9 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=879 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504110023
 
-On Fri, Apr 11, 2025 at 09:07:16AM +0800, Baolin Wang wrote:
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index b3ade7ac5bbf..93abd1fcc4fb 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2263,6 +2263,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct
-> vm_area_struct *vma,
->                         add_mm_counter(tlb->mm, mm_counter_file(folio),
->                                        -HPAGE_PMD_NR);
+On 4/11/2025 8:34 AM, Aditya Kumar Singh wrote:
+> This series of patches addresses the handling of scan links in the ath12k
+> driver to improve consistency and functionality. The changes ensure that
+> link ID 15 is correctly used for scan operations across both ML and non-ML
+> interfaces. Additionally, the patches prevent scan failures by fetching
+> link_conf only when the link ID is valid and setting appropriate default
+> values for scan vdevs.
 > 
-> +                       /*
-> +                        * Use flush_needed to indicate whether the PMD
-> entry is present,
-> +                        * instead of checking pmd_present() again.
-> +                        */
->                         if (flush_needed && pmd_young(orig_pmd) &&
->                             likely(vma_has_recency(vma)))
->                                 folio_mark_accessed(folio);
-Yes, thanks, looks good to me, and I see that Andrew has already taken
-it.
+> Currently, no issues have been observed; these changes are intended as a
+> cleanup and to ensure proper handling. For split-mac these changes are
+> pre-req change.
+> 
+> ---
+> Aditya Kumar Singh (2):
+>        wifi: ath12k: handle scan link during vdev create
+>        wifi: ath12k: Use scan link ID 15 for all scan operations
+> 
+>   drivers/net/wireless/ath/ath12k/mac.c | 55 ++++++++++++++++-------------------
+>   1 file changed, 25 insertions(+), 30 deletions(-)
+> ---
+> base-commit: 1a7000fb8348e04ab486513d6ebd4b6074a94be2
+> change-id: 20250402-fix_scan_vdev_handling-ef5be452b949
+> 
 
+
+For some reason, b4 (or get_maintainer.pl script) did not include the 
+linux-wireless list. I will send v2 manually CCing that list as well.
+
+
+./scripts/get_maintainer.pl -f drivers/net/wireless/ath/ath12k/
+Jeff Johnson <jjohnson@kernel.org> (maintainer:QUALCOMM ATH12K WIRELESS 
+DRIVER)
+ath12k@lists.infradead.org (open list:QUALCOMM ATH12K WIRELESS DRIVER)
+linux-kernel@vger.kernel.org (open list)
+QUALCOMM ATH12K WIRELESS DRIVER status: Supported
+
+
+Please drop this series.
 
 -- 
-Oscar Salvador
-SUSE Labs
+Aditya
