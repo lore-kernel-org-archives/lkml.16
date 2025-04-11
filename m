@@ -1,118 +1,116 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F351AA786;
-	Fri, 11 Apr 2025 13:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461A13E898;
+	Fri, 11 Apr 2025 13:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378946; cv=none; b=j4g7SH+UdEI13XOrJ6raW5fl2mTDNjvNuLyLy3QyX4Jt14GTSF6mPKVQqGGdkQDm9IXYfqYp3L+KvaRmmpyxZ5L+ji10ZhbERoMzuSV13o1nQDl6Gkz9v9NkbR2sSZYOMj1Ul9nDukc3gU3XuBVqSRZI7/tMO9kR3ulk041UJrM=
+	t=1744379012; cv=none; b=N0z5RB5pP1pxMGh6ZY7PshWNByzPtYLhMHlrN+BLuMPogvOZn5cv+rq28MXssxOcPMu7Ut6lqfnnfWHfZVihtxwc4GZpV6rczywAnHdH9px10oKq0EiIGrye8e777BR7nWy8v+yDL7VeKtLzuVHZKtVoopKxZGkcRWoUqMm2oRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378946; c=relaxed/simple;
-	bh=znPDB0MoSmT8PCpb3xg8cBUu9Za8ut3SUaA/1vEtbRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FX+tIsUzRPxhj2AoU//UNyZqeb3RErtFNlBdiL1s/cWIIcbNWoMKs7HkZIcu00EMC3RHP8T4Iopbe3dvnzCDhnzYJkL83paJQ0GUvXfXWZqosxQi0JcMhZl3YsrGSreU4FeuRjK/WBlOmgvdjg8NwDg8qJer5wMJAedx0pbZjCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wIVUIrAC; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744379012; c=relaxed/simple;
+	bh=tliAMtv1OcJaSk4zt2mFjXPHpuo4+e2d80RH30k39qg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9BMWAiVSINdGsFMg0i0jZSRbwJQ+P4iJXYcMtALcWOgp9rD/mXwWOJfF0rrbh5xXhz4UfxaqTHFCg66zRxgUxY9fhoM9XBRtXo3Ff+SjrNCgAZqjYQoqno+7wuRhHX/xMxqdUUz0YnWdlZvLW3gtozupv+bCwUswM9SBIvOhZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYtYR9HT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wIVUIrAC"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDg8aD2137750
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 08:42:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744378928;
-	bh=v4UJPNnOWudFJocURSS5csRTh7we/bdm3q/LWnIuJSU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=wIVUIrACHs8GQ8ru01wDzPMjGBKWgr/XbgniA/LgxGKt9bW6bBICgE9F3Emah8+Ts
-	 0Ytj1Wvyhn7Gscpc3ShFHFxQ7uMVe7KLC0vy2DsP69U32x2hPh3WcXHCgfmAVwQcEE
-	 CeoGtWJTRXJlzboIbewbyHISvvPL7AyiPufy5q0U=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDg8J8026772
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 08:42:08 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 08:42:08 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 08:42:08 -0500
-Received: from [10.249.136.157] ([10.249.136.157])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDg2Nx119834;
-	Fri, 11 Apr 2025 08:42:03 -0500
-Message-ID: <a05e2a39-b000-4c9c-9c74-49a9941b4801@ti.com>
-Date: Fri, 11 Apr 2025 19:12:02 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYtYR9HT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A24C4CEE7;
+	Fri, 11 Apr 2025 13:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744379011;
+	bh=tliAMtv1OcJaSk4zt2mFjXPHpuo4+e2d80RH30k39qg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kYtYR9HTZBwMP5Oi7bPretfsvPfOvYCRBS72D97j7i3aPPNTx2mrMavXTUE6McB9f
+	 eTbX6bKtprpTBwHE2o48DSGO3p5BNHOT+nxdbcl0Gq6RpscUvQrNXjeLq4pZV15Afx
+	 Ntbw5YpLpXkixY2/VcHFc1SpYlgJHv9tGOVUeceRLfMjUPmbLjGftwcOXvB1ErfW1k
+	 z+rdIwx6u/uhB7vbmz8CcpHuPlSmtfoANznSJIhe/6W4TJ/goaw/USm8ZNj5qdPXgS
+	 ozeIXMulaLNv2bYN3z3FZkW/VtEbFHxfl/4UuxBFw8Y7oE/dRrYMe50F5OZeTH9Rqh
+	 3DtQX7+3B2iKA==
+Date: Fri, 11 Apr 2025 08:43:30 -0500
+From: Rob Herring <robh@kernel.org>
+To: iuncuim <iuncuim@gmail.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: thermal: sun8i: Add A523 THS0/1
+ controllers
+Message-ID: <20250411134330.GA3054295-robh@kernel.org>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
+ <20250411003827.782544-7-iuncuim@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] arm64: dts: ti: k3-am62x: Rename I2C switch to I2C
- mux in OV5640 overlay
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <stable@vger.kernel.org>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
- <20250409134128.2098195-8-y-abhilashchandra@ti.com>
-Content-Language: en-US
-From: "Francis, Neha" <n-francis@ti.com>
-In-Reply-To: <20250409134128.2098195-8-y-abhilashchandra@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411003827.782544-7-iuncuim@gmail.com>
 
-On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
-> The OV5640 device tree overlay incorrectly defined an I2C switch instead
-> of an I2C mux. According to the DT bindings, the correct terminology and
-> node definition should use "i2c-mux" instead of "i2c-switch". Hence,
-> update the same to avoid dtbs_check warnings.
+On Fri, Apr 11, 2025 at 08:38:26AM +0800, iuncuim wrote:
+> From: Mikhail Kalashnikov <iuncuim@gmail.com>
 > 
-> Fixes: 635ed9715194 ("arm64: dts: ti: k3-am62x: Add overlays for OV5640")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> Add dt-bindings description of the thermal sensors in the A523 processor.
+
+That's obvious from the diff. What's not is how is the h/w different 
+from prior versions? For example, why is there another clock?
+
+> 
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
 > ---
->  arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso      | 2 +-
->  arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-> index ccc7f5e43184..7fc7c95f5cd5 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-> @@ -22,7 +22,7 @@ &main_i2c2 {
->  	#size-cells = <0>;
->  	status = "okay";
+> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> index 3e61689f6..70ac395ef 100644
+> --- a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> @@ -24,17 +24,21 @@ properties:
+>        - allwinner,sun50i-h5-ths
+>        - allwinner,sun50i-h6-ths
+>        - allwinner,sun50i-h616-ths
+> +      - allwinner,sun55i-a523-ths0
+> +      - allwinner,sun55i-a523-ths1
 >  
-> -	i2c-switch@71 {
-> +	i2c-mux@71 {
->  		compatible = "nxp,pca9543";
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-> index 4eaf9d757dd0..b6bfdfbbdd98 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-> @@ -22,7 +22,7 @@ &main_i2c2 {
->  	#size-cells = <0>;
->  	status = "okay";
+>    clocks:
+>      minItems: 1
+>      items:
+>        - description: Bus Clock
+> +      - description: GPADC Clock
+>        - description: Module Clock
 >  
-> -	i2c-switch@71 {
-> +	i2c-mux@71 {
->  		compatible = "nxp,pca9543";
->  		#address-cells = <1>;
->  		#size-cells = <0>;
+>    clock-names:
+>      minItems: 1
+>      items:
+>        - const: bus
+> +      - const: gpadc
 
-Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
+You cannot add new entries in the middle. They must go on the end and 
+you then need to restrict the existing users to 2 clocks. And for the 
+new users, how many clocks are required? 1, 2, or 3?
 
--- 
-Thanking You
-Neha Malcom Francis
-
+>        - const: mod
+>  
+>    reg:
+> @@ -107,6 +111,7 @@ allOf:
+>              enum:
+>                - allwinner,sun8i-h3-ths
+>                - allwinner,sun20i-d1-ths
+> +              - allwinner,sun55i-a523-ths0
+>  
+>      then:
+>        properties:
+> -- 
+> 2.49.0
+> 
