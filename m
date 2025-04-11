@@ -1,143 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6091126AD9;
-	Fri, 11 Apr 2025 16:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7F426AD9
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389716; cv=none; b=FrJ+MVvb0x1Lc4i1vnJuHMROHCKAuadHeq9TsG6bhSRR/SRREq9OcjDf2upTOL6vSaTnVMcZADp7Vi+ss4nJhr3tOs6xZXNk02pzhuAbsgApjJ9AwnN0HzbTvOT4vB3RTdPe9aFoN1WlV7pSYwuuBryxXZk17Wo7P3dRD0am7Pk=
+	t=1744389765; cv=none; b=QP2mShqCR+U/lnlgNvtGG3xRppFJPC80iqrnkWdIUXP9Sx7r9dVrDAfiArisq7IZA4la7rC2j/BQ/Ta5Iz1Al1vPqJB9y3y/+T/zfC/nBzZwr+n7Q4Qh0rD3SJfBiaPMqxwo492J6oYYrJ09x1dwqnKAtn5wl6shQhskHJjSRTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389716; c=relaxed/simple;
-	bh=xaMRMlTtmiorF03h9x3YHc65UTX8uhiWTBu1Taoe374=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I7J67tYJon1swAovYaHUl0Qi03/YPKf3IxdUXjXWwDmZKgKJ6dBg3cuGVGrKSy034DrC66X+nxLe49i5GRKp1dSaMPvtrlAFl0yN03HqxWIF/iNBQx2mt3YJBz69ENOFelz804SIbfr9s+vU0rgpIsKtCoyqQn2h893LCPkQs4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLD1WqX4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLD1WqX4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7C8C4CEE2;
-	Fri, 11 Apr 2025 16:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744389715;
-	bh=xaMRMlTtmiorF03h9x3YHc65UTX8uhiWTBu1Taoe374=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eLD1WqX4ab75yFVpKv2FcEREcmt3iBpBkjUewnQOhwK42G0X+kiji/eBqs9qiRi7j
-	 o03/KZkAUfRuE304X3JnxetAeh0OQZUyjRNk4mSUUiOfP/Z3Q3KQUj9Ri3ajE0uDNn
-	 hJ5JenE5lQRYfEBW46qj62xFigF/1zHNL2hlkZ4T8/yueY4xjpYxWhSCeBmH7Nb6LR
-	 4dC5kNYN5XxikiDvg6TAq4LbdI0e33Qbyo69gVgB5bae/mhXTNiodpL09wLb7q69ij
-	 ZbbpuUt9ul4VDTNWHsRubVO6exM/HpJ4Bvafe+JXbIijkbBcEJ0/cg9/WD+qSEgyQ7
-	 5N0AYmKgUwfwQ==
-Date: Fri, 11 Apr 2025 17:41:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
-Subject: Re: [PATCH v5 01/14] dt-bindings: trigger-source: add generic GPIO
- trigger source
-Message-ID: <20250411-lavender-font-8166f4e8d2f4@spud>
-References: <cover.1744325346.git.Jonathan.Santos@analog.com>
- <414f5b60b81f87f99b4e18b9a55eb51f29d2225a.1744325346.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1744389765; c=relaxed/simple;
+	bh=goEjl77RfinlOmxikVVtQ3hH9c5z1LujLMVpoNl4hMg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UzaGw7OLPP5eampFes1aREO3ND5jCz8NYSHZLiCLfhsfQETn3D5U1Ni7l73mYqrzFI/JmEDFFpC1j1oPHPlMAaygQ5kyyomTEZ1yU5Qgd21Yl5K3Ofb6Db+UcVI14d/ic4UQis8tV4wh76tGj+YoHKDfpUV/EDKv814o5ZublV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F17C106F;
+	Fri, 11 Apr 2025 09:42:42 -0700 (PDT)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 376853F694;
+	Fri, 11 Apr 2025 09:42:39 -0700 (PDT)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	fenghuay@nvidia.com
+Subject: [PATCH v8 00/21] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
+Date: Fri, 11 Apr 2025 16:42:08 +0000
+Message-Id: <20250411164229.23413-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RrRdRgf73VRrx37C"
-Content-Disposition: inline
-In-Reply-To: <414f5b60b81f87f99b4e18b9a55eb51f29d2225a.1744325346.git.Jonathan.Santos@analog.com>
+Content-Transfer-Encoding: 8bit
 
+Changes since v7:
+ * Switched to Tony's alternative for having a structure behind struct
+   mon_data.
 
---RrRdRgf73VRrx37C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes otherwise noted on each patch.
 
-On Fri, Apr 11, 2025 at 12:56:04PM -0300, Jonathan Santos wrote:
-> Inspired by pwn-trigger, create a new binding for using a GPIO
-> pin as a trigger source.
->=20
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
-> v5 Changes:
-> * New patch in v5.
-> ---
->  .../bindings/trigger-source/gpio-trigger.yaml | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio=
--trigger.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/trigger-source/gpio-trigge=
-r.yaml b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
-> new file mode 100644
-> index 000000000000..d77d62050179
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/trigger-source/gpio-trigger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic trigger source using GPIO
-> +
+N.B, the disk in my machine recently died - so I've re-done the feedback
+changes multiple times. Appologies if I missed something on the second pass!
+---
+Patch 1 has been posted as a fix that should get picked up independently.
 
-> +description: Remaps a GPIO pin as a trigger source.
+Patches X-Y should be squashed together when merged - they are posted like
+this to allow folk to re-generate patch N, then review the differences on
+top. Not squashing them together would expose a ftrace build warning
+during bisect. (but who does that!)
+That would look like this:
+git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v8_final
 
-Just a minor comment about the description, "remaps" is a very software
-term, I think you can just say "A GPIO used as a trigger source" and be
-fine.
+This series is based on rc1, and can be retrieved from:
+git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v8
 
-> +
-> +maintainers:
-> +  - Jonathan Santos <Jonathan.Santos@analog.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-trigger
-> +
-> +  '#trigger-source-cells':
-> +    const: 0
-> +
-> +  gpios:
-> +    maxItems: 1
-> +    description: GPIO to be used as a trigger source.
-> +
-> +required:
-> +  - compatible
-> +  - '#trigger-source-cells'
-> +  - gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    trigger {
-> +        compatible =3D "gpio-trigger";
-> +        #trigger-source-cells =3D <0>;
-> +        gpios =3D <&gpio1 15 GPIO_ACTIVE_HIGH>;
-> +    };
-> --=20
-> 2.34.1
->=20
+This series renames functions and moves code around. With the
+exception of invalid configurations for the configurable-events, there should
+be no changes in behaviour caused by this series. It is now possible for
+throttle_mode to report 'undefined', but no known platform will do this.
 
---RrRdRgf73VRrx37C
-Content-Type: application/pgp-signature; name="signature.asc"
+The driving pattern is to make things like struct rdtgroup private to resctrl.
+Features like pseudo-lock aren't going to work on arm64, the ability to disable
+it at compile time is added.
 
------BEGIN PGP SIGNATURE-----
+After this, I can start posting the MPAM driver to make use of resctrl on arm64.
+(What's MPAM? See the cover letter of the first series. [1])
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/lGTQAKCRB4tDGHoIJi
-0rd1AP0YWT3Dz4Wu/ePsOSEYDNa2yoK+llqWzkmYZ27BHEltrAD8CRGqWdZOLeIb
-6kL9ErCkDa6D0rfL4a6sbVKO/l1Ikwo=
-=aQYv
------END PGP SIGNATURE-----
+As ever - bugs welcome,
+Thanks,
 
---RrRdRgf73VRrx37C--
+James
+
+[v7] https://lore.kernel.org/all/20250228195913.24895-1-james.morse@arm.com/
+[v6] https://lore.kernel.org/lkml/20250207181823.6378-1-james.morse@arm.com/
+[v5] https://lore.kernel.org/r/20241004180347.19985-1-james.morse@arm.com
+[v4] https://lore.kernel.org/all/20240802172853.22529-1-james.morse@arm.com/
+[v3] https://lore.kernel.org/r/20240614150033.10454-1-james.morse@arm.com
+[v2] https://lore.kernel.org/r/20240426150537.8094-1-Dave.Martin@arm.com
+[v1] https://lore.kernel.org/r/20240321165106.31602-1-james.morse@arm.com
+[1] https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
+
+Amit Singh Tomar (1):
+  x86/resctrl: Remove the limit on the number of CLOSID
+
+Dave Martin (3):
+  x86/resctrl: Squelch whitespace anomalies in resctrl core code
+  x86/resctrl: Prefer alloc(sizeof(*foo)) idiom in rdt_init_fs_context()
+  x86/resctrl: Relax some asm #includes
+
+James Morse (17):
+  x86/resctrl: Fix rdtgroup_mkdir()'s unlocked use of kernfs_node::name
+  x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+  x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
+  x86/resctrl: Drop __init/__exit on assorted symbols
+  x86/resctrl: Move is_mba_sc() out of core.c
+  x86/resctrl: Add end-marker to the resctrl_event_id enum
+  x86/resctrl: Expand the width of dom_id by replacing mon_data_bits
+  x86/resctrl: Remove a newline to avoid confusing the code move script
+  x86/resctrl: Split trace.h
+  fs/resctrl: Add boiler plate for external resctrl code
+  x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
+  x86/resctrl: Always initialise rid field in rdt_resources_all[]
+  x86,fs/resctrl: Move the resctrl filesystem code to live in
+    /fs/resctrl
+  x86,fs/resctrl: Remove duplicated trace header files
+  fs/resctrl: Remove unnecessary includes
+  fs/resctrl: Change internal.h's header guard macros
+  x86,fs/resctrl: Move resctrl.rst to live under
+    Documentation/filesystems
+
+ Documentation/arch/x86/index.rst              |    1 -
+ Documentation/filesystems/index.rst           |    1 +
+ .../{arch/x86 => filesystems}/resctrl.rst     |    0
+ MAINTAINERS                                   |    3 +-
+ arch/Kconfig                                  |    8 +
+ arch/x86/Kconfig                              |   11 +-
+ arch/x86/include/asm/resctrl.h                |    7 +-
+ arch/x86/kernel/cpu/resctrl/Makefile          |    3 +
+ arch/x86/kernel/cpu/resctrl/core.c            |   31 +-
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  635 ---
+ arch/x86/kernel/cpu/resctrl/internal.h        |  397 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c         |  909 +---
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     | 1092 +---
+ .../resctrl/{trace.h => pseudo_lock_trace.h}  |   26 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 4426 +----------------
+ arch/x86/kernel/process_32.c                  |    2 +-
+ arch/x86/kernel/process_64.c                  |    2 +-
+ fs/Kconfig                                    |    1 +
+ fs/Makefile                                   |    1 +
+ fs/resctrl/Kconfig                            |   39 +
+ fs/resctrl/Makefile                           |    6 +
+ fs/resctrl/ctrlmondata.c                      |  660 +++
+ fs/resctrl/internal.h                         |  440 ++
+ fs/resctrl/monitor.c                          |  929 ++++
+ fs/resctrl/monitor_trace.h                    |   33 +
+ fs/resctrl/pseudo_lock.c                      | 1105 ++++
+ fs/resctrl/rdtgroup.c                         | 4311 ++++++++++++++++
+ include/linux/resctrl.h                       |   10 +-
+ include/linux/resctrl_types.h                 |    5 +
+ 29 files changed, 7731 insertions(+), 7363 deletions(-)
+ rename Documentation/{arch/x86 => filesystems}/resctrl.rst (100%)
+ rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
+ create mode 100644 fs/resctrl/Kconfig
+ create mode 100644 fs/resctrl/Makefile
+ create mode 100644 fs/resctrl/ctrlmondata.c
+ create mode 100644 fs/resctrl/internal.h
+ create mode 100644 fs/resctrl/monitor.c
+ create mode 100644 fs/resctrl/monitor_trace.h
+ create mode 100644 fs/resctrl/pseudo_lock.c
+ create mode 100644 fs/resctrl/rdtgroup.c
+
+-- 
+2.20.1
+
