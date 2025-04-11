@@ -1,110 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02D928D857
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64CE20DD47;
+	Fri, 11 Apr 2025 09:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744363304; cv=none; b=kY/ELPvtCJUXyT4YYOLAy3nyQorQ6E4oA0z7EYozqzynKVdenPrIibbZkoMal4gcf/p8RvafF7S2t7jO1iZsYGDIfbb6p6D/u07pbHZ3UldbJUIS7KaSKK+lJNpZzZ6J35+I8AbW7PeFySxX06EzINenX6n8b4DU6PU0+Fwggf0=
+	t=1744363305; cv=none; b=XqPEBPYvCG29DGFw51vPKzqx8UzG4hXmQs692/qnWDc9Xc5BSrOXKNwMhr/g/fpUnC8omx9UKhZrXnZtDdtYmetBObbQ012NKAMzYxjO00tWCIn6XG+aU8/kT6GwxBuGAwBPstZ8QnwARq/08WFNFBLDkdVD+0urcCldV/U2TME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744363304; c=relaxed/simple;
-	bh=TU38Yz0wslbhAhgiT67MgDKR2lBijTLSXefhthfuYAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h7supgekAzAYTm8b5TRg+0a+CKgliI0G/3o4+Fub6i15pIbcgkKwwcUCMxboXn3zamFkISgF0ZRxH170YniX9Vo6mEKBT6faAMrIxaJF6QnKmORBmwGxnFRSmqe5bA/Ae6yBYZejK5AGzCW4EP+FA92UeuGnQvvraMSOnVz9H+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjXHwmnM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744363305; c=relaxed/simple;
+	bh=n80qSdW8hTLLcGl32QhQXaDVoMDW28TbTsrNFVne5NI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oXiLpiO6TtCoJwlU9aXvQBlx9Y+m9iaxkHusFdeLxSjYyETauFizR/sfbtGcAXafwmr/E+2mcnCcg+9xKwAe3Z11SZvDgpw4CsDSVfgfD+U6x00PPvsjjVqAhdH4ap8nEUjaSJhOy0DALzf0snodbQgvVWJjFJze+v5875awPLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PNQE3AxW; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjXHwmnM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A46C4CEE2;
-	Fri, 11 Apr 2025 09:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744363304;
-	bh=TU38Yz0wslbhAhgiT67MgDKR2lBijTLSXefhthfuYAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SjXHwmnMOpa/T9EDIGZIX3IDPYF02ahzYO+YFFts9WBT9LzVU+sYE7lMFunEOQ6jC
-	 i3wle5PIGi0XEF7KoFSrobsHG4iLPceRLhg3C6GU3Ry3UNp7hkKNQcQYQ/s4/NLn+3
-	 Q0EFYQ0FW4/p5igzjZmcqVsIOYDmArkMmLPPFLrgyi5FToLl/MbdIPVJjn76QEOMPC
-	 i53dzsttNM1if0JeK0UXoTKlynDInlA6vtJAPClKBzRETPL9clMN33KrpH1gQo6+bh
-	 5/FPJTOH4S0Pe27UzE9YpsNYeyXYnrbnG+Ca6jrZMF65hsEqwfCPUL/tiO65R1C7rW
-	 ATb6+H13FBf2A==
-Date: Fri, 11 Apr 2025 11:21:30 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Subject: Re: [RFC PATCH v4 00/18] pkeys-based page table hardening
-Message-ID: <Z_jfGlOEb4Bjl3vO@gmail.com>
-References: <20250411091631.954228-1-kevin.brodsky@arm.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PNQE3AxW"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9LZXQ1534406
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 04:21:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744363295;
+	bh=1Wu8WdXy6XC8FsshlNNPex7drpLCmQqBKgIq5OVRccc=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=PNQE3AxWNu10DHVRfn6XEj3ib/qoUB2tEyVtDAjSO043WWshf1OoNjmkqYW70OzmI
+	 EYzPTesedz0ZKpkLiYCiVkzvipKkP/24a1QYY8Q+u716OxFsceyCH4gCxaIBS4qxx6
+	 Uf3v317TTnaGhDSU6KleM7YJJ6fLKpE1qbHl/HkU=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9LZ2o016030
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 04:21:35 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 04:21:34 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 04:21:34 -0500
+Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B9LX2I053286;
+	Fri, 11 Apr 2025 04:21:34 -0500
+From: T Pratham <t-pratham@ti.com>
+To: T Pratham <t-pratham@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Kamlesh Gurudasani <kamlesh@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>, <linux-crypto@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: crypto: Add binding for TI DTHE V2
+Date: Fri, 11 Apr 2025 14:43:21 +0530
+Message-ID: <20250411091321.2925308-2-t-pratham@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250411091321.2925308-1-t-pratham@ti.com>
+References: <20250411091321.2925308-1-t-pratham@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411091631.954228-1-kevin.brodsky@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Add DT binding for Texas Instruments DTHE V2 crypto accelerator.
 
-* Kevin Brodsky <kevin.brodsky@arm.com> wrote:
+DTHE V2 is introduced as a part of TI AM62L SoC and can currently be
+only found in it.
 
-> Performance
-> ===========
-> 
-> Caveat: these numbers should be seen as a lower bound for the overhead
-> of a real POE-based protection. The hardware checks added by POE are
-> however not expected to incur significant extra overhead.
-> 
-> +-------------------+----------------------------------+------------------+---------------+
-> | Benchmark         | Result Class                     | Without batching | With batching |
-> +===================+==================================+==================+===============+
-> | mmtests/kernbench | elsp-64                          |            0.20% |         0.20% |
-> |                   | syst-64                          |            1.62% |         0.63% |
-> |                   | user-64                          |           -0.04% |         0.05% |
-> +-------------------+----------------------------------+------------------+---------------+
-> | micromm/fork      | fork: p:1                        |      (R) 225.56% |        -0.07% |
-> |                   | fork: p:512                      |      (R) 254.32% |         0.73% |
-> +-------------------+----------------------------------+------------------+---------------+
-> | micromm/munmap    | munmap: p:1                      |       (R) 24.49% |         4.29% |
-> |                   | munmap: p:512                    |      (R) 161.47% |     (R) 6.06% |
-> +-------------------+----------------------------------+------------------+---------------+
-> | micromm/vmalloc   | fix_size_alloc_test: p:1, h:0    |       (R) 14.80% |    (R) 11.85% |
-> |                   | fix_size_alloc_test: p:4, h:0    |       (R) 38.42% |    (R) 10.47% |
-> |                   | fix_size_alloc_test: p:16, h:0   |       (R) 64.74% |     (R) 6.41% |
-> |                   | fix_size_alloc_test: p:64, h:0   |       (R) 79.98% |     (R) 3.24% |
-> |                   | fix_size_alloc_test: p:256, h:0  |       (R) 85.46% |     (R) 2.77% |
-> |                   | fix_size_alloc_test: p:16, h:1   |       (R) 47.89% |         3.10% |
-> |                   | fix_size_alloc_test: p:64, h:1   |       (R) 62.43% |         3.36% |
-> |                   | fix_size_alloc_test: p:256, h:1  |       (R) 64.30% |     (R) 2.68% |
-> |                   | random_size_alloc_test: p:1, h:0 |       (R) 74.94% |     (R) 3.13% |
-> |                   | vm_map_ram_test: p:1, h:0        |       (R) 30.53% |    (R) 26.20% |
-> +-------------------+----------------------------------+------------------+---------------+
+Signed-off-by: T Pratham <t-pratham@ti.com>
+---
+ .../devicetree/bindings/crypto/ti,dthev2.yaml | 50 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
 
-So I had to look 3 times to figure out what the numbers mean: they are 
-the extra overhead from this hardening feature, measured in system time 
-percentage, right?
+diff --git a/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml b/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
+new file mode 100644
+index 000000000000..7d55f1bff822
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/crypto/ti,dthev2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: K3 SoC DTHE V2 crypto module
++
++maintainers:
++  - T Pratham <t-pratham@ti.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,am62l-dthev2
++
++  reg:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: AES Engine RX DMA Channel
++      - description: AES Engine TX DMA Channel
++      - description: SHA Engine TX DMA Channel
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx1
++      - const: tx2
++
++required:
++  - compatible
++  - reg
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    crypto@40800000 {
++      compatible = "ti,am62l-dthev2";
++      reg = <0x00 0x40800000 0x00 0x10000>;
++
++      dmas = <&main_bcdma 0 0 0x4700 0>,
++             <&main_bcdma 0 0 0xc701 0>,
++             <&main_bcdma 0 0 0xc700 0>;
++      dma-names = "rx", "tx1", "tx2";
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bfcdf2bced61..90b640385b88 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24174,6 +24174,12 @@ S:	Odd Fixes
+ F:	drivers/clk/ti/
+ F:	include/linux/clk/ti.h
+ 
++TI DATA TRANSFORM AND HASHING ENGINE (DTHE) V2 CRYPTO ACCELERATOR DRIVER
++M:	T Pratham <t-pratham@ti.com>
++L:	linux-crypto@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
++
+ TI DAVINCI MACHINE SUPPORT
+ M:	Bartosz Golaszewski <brgl@bgdev.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+2.34.1
 
-So "4.29%" means there's a 4.29% slowdown on that particular workload 
-when the feature is enabled. Maybe add an explanation to the next iteration? :-)
-
-Thanks,
-
-	Ingo
