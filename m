@@ -1,496 +1,220 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EFD21579C;
-	Fri, 11 Apr 2025 15:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383912; cv=pass; b=itqBCazC5KyqwhWByFif4Izz2FpMJGzpGuPFFwndpL+OqguCiXg6QsODDZOCOGaE03lfg6mRAl63q/7w798Ex5ZXf9XNcVw9ap98nJEcd/B1GUh/aeiGoF0OKyG6LZ8r4p+r/Bvd4sgbEwzcV05uHDiGan0r9wgRIYOzXrEScRQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383912; c=relaxed/simple;
-	bh=PG3rrJ213Gv+x0mb1E+KmvJDF5acGNccEGCKE1nB7uE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mw81M3rfhCZsXSmP+DhaqHvAXqwIi9UbMYHUaR4fpoMRZmvdODFbLeuQ21W4fUf2tyy3BNmmP8wXka3B+GF6pUCpgQjcNAoT2EDqp8nQXVPz4KPE0KJhzKgdFBw38upZWuShmzG7IK8QN6VGELQpAeF9gh8l6zoA7hwgmhkHn7A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=gwlG5kNf; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DEA1F418D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744384027; cv=none; b=uOA1uybH9OCXf3Za0GsBb4MQjO1BBYD1bwqki1UghZX2bGqqQ5HWciNQQktKBZUPYIXGHLUsKG9YU5qqVx0bmeuPtjham0Cq5m4nNA5ZXRSV6erGPgv7h4LVwsXhXASn5JV5BKHt6vN8/ljQNCF4Yc3STMePqTiLBjUW/pup840=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744384027; c=relaxed/simple;
+	bh=qTlFl5dPv4jGbSPyV2TlGNiuW/1R9GKcrM0RSvIrFfY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Q75B8ypSP5hpN8Ksb05MpGLosiTMZmq/ZjogT/NdlEjYzEn+/8i0twfLGyJJnG5OjepZXIu7cYRhekZPnpU53yY+JxK/F3kejPs2bMoFYBgmKOh57UGgzurfspS8Oj41z8sNjLQ5j/hJxqwat9HPzgEN9BFADVLDdR1zh2gXdS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wh7rt2Yt; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="gwlG5kNf"
-ARC-Seal: i=1; a=rsa-sha256; t=1744383876; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=C77XKLve7iRp6LUfM67Q1HbuqtrtAll8pUUGnQtARW+S3wMmPKy7tjh7wRQ9nTpShtu/RtizJ+g62J22U52of7wQMG5s4iGCbnXlFRqarrgEgbaBgk9umfVPY+tfezze/op4gMqlrm5ZXdifwKfNxP3KPbBBz6xOtOlGCMLp0zY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744383876; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dw6uxyl8/ZYA7Eb3LOUrrX5kDic5CW16wNwuZr+FoEs=; 
-	b=O5at40rGRL1ifbgzXDwc3Wi6YbT/KHgwQ+VeIYXYSlg0P8R/MEUzTyQGdR/dUSOKOowS7iycJ4q8K454FPXpPzwNpfPu6OVjVcExHSPlzCs1YOAEyqSL13BJxYt1DHqcglMi5WkZGD7f6hCx8KpwR1AXQLLknfLJjKtzOFmt+rc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744383876;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=dw6uxyl8/ZYA7Eb3LOUrrX5kDic5CW16wNwuZr+FoEs=;
-	b=gwlG5kNfzs1R1S44dFSavDY+xRohffBeoCFR6KPi8UzMmQDNvrbFbfKs8M5nNZHH
-	xB8fyb5gRB29nNu3ivq29PozQkkVOZPgkwq1wWVaeL6No3pQuEu6g8Ef6VzlahEL0cU
-	JeaFcKeYb5GMEWG3w+29VFmM+QSiNQ3LXvPpJt6s=
-Received: by mx.zohomail.com with SMTPS id 1744383874187417.45087826331087;
-	Fri, 11 Apr 2025 08:04:34 -0700 (PDT)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: "To : Boris Brezillon" <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: kernel@collabora.com,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org
-Subject: [PATCH v7 4/4] drm/panthor: show device-wide list of DRM GEM objects over DebugFS
-Date: Fri, 11 Apr 2025 16:03:52 +0100
-Message-ID: <20250411150357.3308921-5-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
-References: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wh7rt2Yt"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so13557275e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744384023; x=1744988823; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zT9HK7f4zut0JMwgxK/+pZ5AGVyQQmaHlu9Z+2ZcOlE=;
+        b=wh7rt2YtETyLkD+C1RtgRGzMh47RQstmYlf3WV18hi1I+U4+Re/2MCJUrZQXHxJhBp
+         zpnLm2cEqNZdzMTGV+GKeYHB1SDLqfUG2e8Q5c75fOqwy7Q1YIohs4pSFL/YYXoD9Dba
+         LMj9j4ZJsKpY74ne0MiijWvaRBpaaIXih10Toq0T5m6pqKfB+67qTq/SfUny64gLpK/B
+         /efyJM/KSStlsYa/xtT8sDrK5y6cugTSBKQ/q0atbS51NndyDItvS5aJBYWWgq16h5pf
+         YKuZMgDu4S/41BFaSqm+1ImCa11wy2WVw1K8vqC7MiTrE3Iy1di8uQi92zteJyg/oJh7
+         cBxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744384023; x=1744988823;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zT9HK7f4zut0JMwgxK/+pZ5AGVyQQmaHlu9Z+2ZcOlE=;
+        b=a1gF19cJiPbB1HuDtov4ymXtaOfhIjCQMcvuv8Va35zGBgorn9Q2PIgdz/qHpxQgHu
+         U7Rm4mQ9KeAES8HTZcmXeUMAUobrSecblnyHFe4eMD6lBId+EuZCattQ5qCebn/bmCg9
+         ECuws7cmupmFJgbuTakJNspivNmBKqka4ZwXBBpzNJ01mT8hLGLuI1ojouatNMHiJh18
+         CFUUKXI20DVTjninTdGoNNjSbnGApEiBJiE5Pe0zaLvzkJ7PAoU5FIy8SUxhiLEeNgAg
+         bxuzNoT/vvnz2MnBKuH2frucXtUQefEewDp/ize+PZijaojr+uHClKOZqOpoMgUd56Tj
+         LLvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWamWuNLmpo9YnUIXReWGY3rU1xASekTir+3hg70c+5BGe8TURdQp+VumatfElHT16i9JNLsq7Kb1daLSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytMEb4wESOPWLiJbuAZBPzJwuv9JD6lk/0LFlRNUq6YvUFHYet
+	9SrX8kHezCw+wIUE5DzdmOWhkWyw0QudcZDTBkHTFjiMFY6KQQ0s7W0odBT0okrJLwpHd9u/EGB
+	K+W8p2vin9w==
+X-Google-Smtp-Source: AGHT+IHO4xZ09nGgDUkGFuaki3SkgqbYyALc8qGc3LePIPFrD28NPTB6CI/SE4o7MkIyp0jXLwML7Vw5WAvp8g==
+X-Received: from wmbbh10.prod.google.com ([2002:a05:600c:3d0a:b0:43b:c7e5:66e0])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b9d:b0:43d:934:ea97 with SMTP id 5b1f17b1804b1-43f3a9af8c5mr31645595e9.27.1744384023753;
+ Fri, 11 Apr 2025 08:07:03 -0700 (PDT)
+Date: Fri, 11 Apr 2025 15:07:01 +0000
+In-Reply-To: <20250411134550.GB366747@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250407180154.63348-1-hannes@cmpxchg.org> <20250407180154.63348-2-hannes@cmpxchg.org>
+ <D930DO9PAJR8.SOYZSGRG5Y2O@google.com> <20250411134550.GB366747@cmpxchg.org>
+X-Mailer: aerc 0.20.0
+Message-ID: <D93WJ0HYKRGL.1NWTMXWJBWE80@google.com>
+Subject: Re: [PATCH 2/2] mm: page_alloc: tighten up find_suitable_fallback()
+From: Brendan Jackman <jackmanb@google.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mel Gorman <mgorman@techsingularity.net>, Carlos Song <carlos.song@nxp.com>, <linux-mm@kvack.org>, 
+	<linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add a device DebugFS file that displays a complete list of all the DRM
-GEM objects that are exposed to UM through a DRM handle.
+On Fri Apr 11, 2025 at 1:45 PM UTC, Johannes Weiner wrote:
+>> -		if (find_suitable_fallback(area, order, migratetype, true) >= 0)
+>> +		if (should_try_claim_block(order, migratetype) &&
+>> +		    find_fallback_migratetype(area, order, migratetype) >= 0)
+>
+> So I agree with pushing the test into the callers. However, I think
+> the name "should_try_claim_block()" is not great for this. It makes
+> sense in the alloc/fallback path, but compaction here doesn't claim
+> anything. It just wants to know if this order + migratetype is
+> eligible under block claiming rules.
+>
+> IMO this would be more readable with the old terminology:
+>
+> 		if (can_claim_block(order, migratetype) &&
+> 		    find_fallback_migratetype(area, order, migratetype) >= 0)
 
-Since leaking object identifiers that might belong to a different NS is
-inadmissible, this functionality is only made available in debug builds
-with DEBUGFS support enabled.
+Sure, that makes sense, here's a modified version of the patch:
 
-File format is that of a table, with each entry displaying a variety of
-fields with information about each GEM object.
-
-Each GEM object entry in the file displays the following information
-fields: Client PID, BO's global name, reference count, BO virtual size,
-BO resize size, VM address in its DRM-managed range, BO label and a GEM
-state flags.
-
-There's also a usage flags field for the type of BO, which tells us
-whether it's a kernel BO and/or mapped onto the FW's address space.
-
-Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
- drivers/gpu/drm/panthor/panthor_device.c |   5 +
- drivers/gpu/drm/panthor/panthor_device.h |  11 ++
- drivers/gpu/drm/panthor/panthor_drv.c    |  26 ++++
- drivers/gpu/drm/panthor/panthor_gem.c    | 182 +++++++++++++++++++++++
- drivers/gpu/drm/panthor/panthor_gem.h    |  59 ++++++++
- 5 files changed, 283 insertions(+)
 
-diff --git a/drivers/gpu/drm/panthor/panthor_device.c b/drivers/gpu/drm/panthor/panthor_device.c
-index a9da1d1eeb70..b776e1a2e4f3 100644
---- a/drivers/gpu/drm/panthor/panthor_device.c
-+++ b/drivers/gpu/drm/panthor/panthor_device.c
-@@ -184,6 +184,11 @@ int panthor_device_init(struct panthor_device *ptdev)
- 	if (ret)
- 		return ret;
- 
-+#ifdef CONFIG_DEBUG_FS
-+	drmm_mutex_init(&ptdev->base, &ptdev->gems.lock);
-+	INIT_LIST_HEAD(&ptdev->gems.node);
-+#endif
-+
- 	atomic_set(&ptdev->pm.state, PANTHOR_DEVICE_PM_STATE_SUSPENDED);
- 	p = alloc_page(GFP_KERNEL | __GFP_ZERO);
- 	if (!p)
-diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/panthor/panthor_device.h
-index da6574021664..86206a961b38 100644
---- a/drivers/gpu/drm/panthor/panthor_device.h
-+++ b/drivers/gpu/drm/panthor/panthor_device.h
-@@ -205,6 +205,17 @@ struct panthor_device {
- 
- 	/** @fast_rate: Maximum device clock frequency. Set by DVFS */
- 	unsigned long fast_rate;
-+
-+#ifdef CONFIG_DEBUG_FS
-+	/** @gems: Device-wide list of GEM objects owned by at least one file. */
-+	struct {
-+		/** @gems.lock: Protects the device-wide list of GEM objects. */
-+		struct mutex lock;
-+
-+		/** @node: Used to keep track of all the device's DRM objects */
-+		struct list_head node;
-+	} gems;
-+#endif
- };
- 
- struct panthor_gpu_usage {
-diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
-index 983b24f1236c..4d3f2eb29a47 100644
---- a/drivers/gpu/drm/panthor/panthor_drv.c
-+++ b/drivers/gpu/drm/panthor/panthor_drv.c
-@@ -1535,9 +1535,35 @@ static const struct file_operations panthor_drm_driver_fops = {
- };
- 
- #ifdef CONFIG_DEBUG_FS
-+static int panthor_gems_show(struct seq_file *m, void *data)
-+{
-+	struct drm_info_node *node = m->private;
-+	struct drm_device *dev = node->minor->dev;
-+	struct panthor_device *ptdev = container_of(dev, struct panthor_device, base);
-+
-+	panthor_gem_debugfs_print_bos(ptdev, m);
-+
-+	return 0;
-+}
-+
-+
-+static struct drm_info_list panthor_debugfs_list[] = {
-+	{"gems", panthor_gems_show, 0, NULL},
-+};
-+
-+static int panthor_gems_debugfs_init(struct drm_minor *minor)
-+{
-+	drm_debugfs_create_files(panthor_debugfs_list,
-+				 ARRAY_SIZE(panthor_debugfs_list),
-+				 minor->debugfs_root, minor);
-+
-+	return 0;
-+}
-+
- static void panthor_debugfs_init(struct drm_minor *minor)
- {
- 	panthor_mmu_debugfs_init(minor);
-+	panthor_gems_debugfs_init(minor);
- }
+From 85be0fca4627c5b832a3382c92b6310609e14ca4 Mon Sep 17 00:00:00 2001
+From: Brendan Jackman <jackmanb@google.com>
+Date: Thu, 10 Apr 2025 13:22:58 +0000
+Subject: [PATCH] mm: page_alloc: Split up find_suitable_fallback()
+
+Now that it's been simplified, it's clear that the bool arg isn't
+needed, callers can just use should_try_claim_block(). Once that logic
+is stripped out, the function becomes very obvious and can get a more
+straightforward name and comment.
+
+Since should_try_claim_block() is now exported to compaction.c, give it
+a name that makes more sense outside the context of allocation -
+should_claim_block() seems confusing in code that has no interest in
+actually claiming a block.
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+ mm/compaction.c |  3 ++-
+ mm/internal.h   |  5 +++--
+ mm/page_alloc.c | 33 +++++++++++++--------------------
+ 3 files changed, 18 insertions(+), 23 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 39a4d178dff3c..0528996c40507 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2363,7 +2363,8 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+ 		 * Job done if allocation would steal freepages from
+ 		 * other migratetype buddy lists.
+ 		 */
+-		if (find_suitable_fallback(area, order, migratetype, true) >= 0)
++		if (can_claim_block(order, migratetype) &&
++		    find_fallback_migratetype(area, order, migratetype) >= 0)
+ 			/*
+ 			 * Movable pages are OK in any pageblock. If we are
+ 			 * stealing for a non-movable allocation, make sure
+diff --git a/mm/internal.h b/mm/internal.h
+index 4e0ea83aaf1c8..5450ea7f5b1ec 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -914,8 +914,9 @@ static inline void init_cma_pageblock(struct page *page)
  #endif
  
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-index 3c5fc854356e..fab7a11ab71f 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.c
-+++ b/drivers/gpu/drm/panthor/panthor_gem.c
-@@ -11,14 +11,51 @@
- #include <drm/panthor_drm.h>
  
- #include "panthor_device.h"
-+#include "panthor_fw.h"
- #include "panthor_gem.h"
- #include "panthor_mmu.h"
+-int find_suitable_fallback(struct free_area *area, unsigned int order,
+-			   int migratetype, bool claimable);
++int find_fallback_migratetype(struct free_area *area, unsigned int order,
++			      int migratetype);
++bool can_claim_block(unsigned int order, int start_mt);
  
-+#ifdef CONFIG_DEBUG_FS
-+static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
-+				       struct panthor_gem_object *bo)
-+{
-+	INIT_LIST_HEAD(&bo->debugfs.node);
-+
-+	bo->debugfs.creator.tgid = current->group_leader->pid;
-+	get_task_comm(bo->debugfs.creator.process_name, current->group_leader);
-+
-+	mutex_lock(&ptdev->gems.lock);
-+	list_add_tail(&bo->debugfs.node, &ptdev->gems.node);
-+	mutex_unlock(&ptdev->gems.lock);
-+}
-+
-+static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
-+{
-+	struct panthor_device *ptdev = container_of(bo->base.base.dev,
-+						    struct panthor_device, base);
-+
-+	if (list_empty(&bo->debugfs.node))
-+		return;
-+
-+	mutex_lock(&ptdev->gems.lock);
-+	list_del_init(&bo->debugfs.node);
-+	mutex_unlock(&ptdev->gems.lock);
-+}
-+
-+#else
-+static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
-+				       struct panthor_gem_object *bo)
-+{}
-+static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
-+#endif
-+
- static void panthor_gem_free_object(struct drm_gem_object *obj)
+ static inline bool free_area_empty(struct free_area *area, int migratetype)
  {
- 	struct panthor_gem_object *bo = to_panthor_bo(obj);
- 	struct drm_gem_object *vm_root_gem = bo->exclusive_vm_root_gem;
- 
-+	panthor_gem_debugfs_bo_rm(bo);
-+
- 	/*
- 	 * Label might have been allocated with kstrdup_const(),
- 	 * we need to take that into account when freeing the memory
-@@ -87,6 +124,7 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
- 	struct drm_gem_shmem_object *obj;
- 	struct panthor_kernel_bo *kbo;
- 	struct panthor_gem_object *bo;
-+	u32 debug_flags = PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL;
- 	int ret;
- 
- 	if (drm_WARN_ON(&ptdev->base, !vm))
-@@ -106,7 +144,11 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
- 	kbo->obj = &obj->base;
- 	bo->flags = bo_flags;
- 
-+	if (vm == panthor_fw_vm(ptdev))
-+		debug_flags |= PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED;
-+
- 	panthor_gem_kernel_bo_set_label(kbo, name);
-+	panthor_gem_debugfs_set_usage_flags(to_panthor_bo(kbo->obj), debug_flags);
- 
- 	/* The system and GPU MMU page size might differ, which becomes a
- 	 * problem for FW sections that need to be mapped at explicit address
-@@ -209,6 +251,8 @@ struct drm_gem_object *panthor_gem_create_object(struct drm_device *ddev, size_t
- 	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
- 	mutex_init(&obj->label.lock);
- 
-+	panthor_gem_debugfs_bo_add(ptdev, obj);
-+
- 	return &obj->base.base;
- }
- 
-@@ -257,6 +301,12 @@ panthor_gem_create_with_handle(struct drm_file *file,
- 	/* drop reference from allocate - handle holds it now. */
- 	drm_gem_object_put(&shmem->base);
- 
-+	/*
-+	 * No explicit flags are needed in the call below, since the
-+	 * function internally sets the INITIALIZED bit for us.
-+	 */
-+	panthor_gem_debugfs_set_usage_flags(bo, 0);
-+
- 	return ret;
- }
- 
-@@ -288,3 +338,135 @@ panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label)
- 
- 	panthor_gem_bo_set_label(bo->obj, str);
- }
-+
-+#ifdef CONFIG_DEBUG_FS
-+static void
-+panthor_gem_debugfs_format_flags(char flags_str[], int flags_len,
-+				 const char * const names[], u32 name_count,
-+				 u32 flags)
-+{
-+	bool first = true;
-+	int offset = 0;
-+
-+#define ACC_FLAGS(...) \
-+	({ \
-+		offset += snprintf(flags_str + offset, flags_len - offset, ##__VA_ARGS__); \
-+		if (offset == flags_len) \
-+			return; \
-+	})
-+
-+	ACC_FLAGS("%c", '(');
-+
-+	if (!flags)
-+		ACC_FLAGS("%s", "none");
-+
-+	while (flags) {
-+		u32 bit = fls(flags) - 1;
-+		u32 idx = bit + 1;
-+
-+		if (!first)
-+			ACC_FLAGS("%s", ",");
-+
-+		if (idx < name_count && names[idx])
-+			ACC_FLAGS("%s", names[idx]);
-+
-+		first = false;
-+		flags &= ~BIT(bit);
-+	}
-+
-+	ACC_FLAGS("%c", ')');
-+
-+#undef ACC_FLAGS
-+}
-+
-+struct gem_size_totals {
-+	size_t size;
-+	size_t resident;
-+	size_t reclaimable;
-+};
-+
-+static void panthor_gem_debugfs_bo_print(struct panthor_gem_object *bo,
-+					 struct seq_file *m,
-+					 struct gem_size_totals *totals)
-+{
-+	unsigned int refcount = kref_read(&bo->base.base.refcount);
-+	char creator_info[32] = {};
-+	size_t resident_size;
-+	char gem_state_str[64] = {};
-+	char gem_usage_str[64] = {};
-+	u32 gem_usage_flags = bo->debugfs.flags & (u32)~PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-+	u32 gem_state_flags = 0;
-+
-+	static const char * const gem_state_flags_names[] = {
-+		[PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED] = "imported",
-+		[PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED] = "exported",
-+	};
-+
-+	static const char * const gem_usage_flags_names[] = {
-+		[PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL] = "kernel",
-+		[PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED] = "fw-mapped",
-+	};
-+
-+	/* Skip BOs being destroyed. */
-+	if (!refcount)
-+		return;
-+
-+	resident_size = bo->base.pages != NULL ? bo->base.base.size : 0;
-+
-+	snprintf(creator_info, sizeof(creator_info),
-+		 "%s/%d", bo->debugfs.creator.process_name, bo->debugfs.creator.tgid);
-+	seq_printf(m, "%-32s%-16d%-16d%-16zd%-16zd%-16lx",
-+		   creator_info,
-+		   bo->base.base.name,
-+		   refcount,
-+		   bo->base.base.size,
-+		   resident_size,
-+		   drm_vma_node_start(&bo->base.base.vma_node));
-+
-+	if (bo->base.base.import_attach != NULL)
-+		gem_state_flags |= PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED;
-+	if (bo->base.base.dma_buf != NULL)
-+		gem_state_flags |= PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED;
-+
-+	panthor_gem_debugfs_format_flags(gem_state_str, sizeof(gem_state_str),
-+					 gem_state_flags_names, ARRAY_SIZE(gem_state_flags_names),
-+					 gem_state_flags);
-+	panthor_gem_debugfs_format_flags(gem_usage_str, sizeof(gem_usage_str),
-+					 gem_usage_flags_names, ARRAY_SIZE(gem_usage_flags_names),
-+					 gem_usage_flags);
-+
-+	seq_printf(m, "%-64s%-64s", gem_state_str, gem_usage_str);
-+
-+	scoped_guard(mutex, &bo->label.lock) {
-+		seq_printf(m, "%s", bo->label.str ? : "");
-+	}
-+
-+	seq_puts(m, "\n");
-+
-+	totals->size += bo->base.base.size;
-+	totals->resident += resident_size;
-+	if (bo->base.madv > 0)
-+		totals->reclaimable += resident_size;
-+}
-+
-+void panthor_gem_debugfs_print_bos(struct panthor_device *ptdev,
-+				   struct seq_file *m)
-+{
-+	struct gem_size_totals totals = {0};
-+	struct panthor_gem_object *bo;
-+
-+	seq_puts(m, "created-by                      global-name     refcount        size            resident-size   file-offset     state                                                           usage                                                           label\n");
-+	seq_puts(m, "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-+
-+	scoped_guard(mutex, &ptdev->gems.lock) {
-+		list_for_each_entry(bo, &ptdev->gems.node, debugfs.node) {
-+			if (bo->debugfs.flags & PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED)
-+				panthor_gem_debugfs_bo_print(bo, m, &totals);
-+		}
-+	}
-+
-+	seq_puts(m, "=====================================================================================================================================================================================================================================================\n");
-+	seq_printf(m, "Total size: %zd, Total resident: %zd, Total reclaimable: %zd\n",
-+		   totals.size, totals.resident, totals.reclaimable);
-+}
-+#endif
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-index 62aea06dbc6d..03aec800cac5 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.h
-+++ b/drivers/gpu/drm/panthor/panthor_gem.h
-@@ -15,6 +15,48 @@ struct panthor_vm;
- 
- #define PANTHOR_BO_LABEL_MAXLEN	PAGE_SIZE
- 
-+enum panthor_debugfs_gem_state_flags {
-+	/** @PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED: GEM BO is PRIME imported. */
-+	PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED = BIT(0),
-+
-+	/** @PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED: GEM BO is PRIME exported. */
-+	PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED = BIT(1),
-+};
-+
-+enum panthor_debugfs_gem_usage_flags {
-+	/** @PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL: BO is for kernel use only. */
-+	PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL = BIT(0),
-+
-+	/** @PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED: BO is mapped on the FW VM. */
-+	PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED = BIT(1),
-+
-+	/** @PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED: BO is ready for DebugFS display. */
-+	PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED = BIT(31),
-+};
-+
-+/**
-+ * struct panthor_gem_debugfs - GEM object's DebugFS list information
-+ */
-+struct panthor_gem_debugfs {
-+	/**
-+	 * @node: Node used to insert the object in the device-wide list of
-+	 * GEM objects, to display information about it through a DebugFS file.
-+	 */
-+	struct list_head node;
-+
-+	/** @creator: Information about the UM process which created the GEM. */
-+	struct {
-+		/** @creator.process_name: Group leader name in owning thread's process */
-+		char process_name[TASK_COMM_LEN];
-+
-+		/** @creator.tgid: PID of the thread's group leader within its process */
-+		pid_t tgid;
-+	} creator;
-+
-+	/** @flags: Combination of panthor_debugfs_gem_usage_flags flags */
-+	u32 flags;
-+};
-+
- /**
-  * struct panthor_gem_object - Driver specific GEM object.
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0a1f28bf5255c..c27a106ec5985 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2034,7 +2034,7 @@ static inline bool boost_watermark(struct zone *zone)
+  * try to claim an entire block to satisfy further allocations, instead of
+  * polluting multiple pageblocks?
   */
-@@ -62,6 +104,10 @@ struct panthor_gem_object {
- 		/** @lock.str: Protects access to the @label.str field. */
- 		struct mutex lock;
- 	} label;
-+
-+#ifdef CONFIG_DEBUG_FS
-+	struct panthor_gem_debugfs debugfs;
-+#endif
- };
+-static bool should_try_claim_block(unsigned int order, int start_mt)
++bool can_claim_block(unsigned int order, int start_mt)
+ {
+ 	/*
+ 	 * Leaving this order check is intended, although there is
+@@ -2076,20 +2076,12 @@ static bool should_try_claim_block(unsigned int order, int start_mt)
+ 	return false;
+ }
  
- /**
-@@ -157,4 +203,17 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
+-/*
+- * Check whether there is a suitable fallback freepage with requested order.
+- * If claimable is true, this function returns fallback_mt only if
+- * we would do this whole-block claiming. This would help to reduce
+- * fragmentation due to mixed migratetype pages in one pageblock.
+- */
+-int find_suitable_fallback(struct free_area *area, unsigned int order,
+-			   int migratetype, bool claimable)
++/* Find a fallback migratetype with at least one page of the given order. */
++int find_fallback_migratetype(struct free_area *area, unsigned int order,
++			      int migratetype)
+ {
+ 	int i;
  
- void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
+-	if (claimable && !should_try_claim_block(order, migratetype))
+-		return -2;
+-
+ 	if (area->nr_free == 0)
+ 		return -1;
  
-+#ifdef CONFIG_DEBUG_FS
-+void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
-+				   struct seq_file *m);
-+static inline void
-+panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
-+{
-+	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-+}
+@@ -2209,18 +2201,19 @@ __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
+ 	 */
+ 	for (current_order = MAX_PAGE_ORDER; current_order >= min_order;
+ 				--current_order) {
 +
-+#else
-+void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
-+#endif
++		/* Advanced into orders too low to claim, abort */
++		if (!can_claim_block(order, start_migratetype))
++			break;
 +
- #endif /* __PANTHOR_GEM_H__ */
+ 		area = &(zone->free_area[current_order]);
+-		fallback_mt = find_suitable_fallback(area, current_order,
+-						     start_migratetype, true);
++		fallback_mt = find_fallback_migratetype(area, current_order,
++							start_migratetype);
+ 
+ 		/* No block in that order */
+ 		if (fallback_mt == -1)
+ 			continue;
+ 
+-		/* Advanced into orders too low to claim, abort */
+-		if (fallback_mt == -2)
+-			break;
+-
+ 		page = get_page_from_free_area(area, fallback_mt);
+ 		page = try_to_claim_block(zone, page, current_order, order,
+ 					  start_migratetype, fallback_mt,
+@@ -2249,8 +2242,8 @@ __rmqueue_steal(struct zone *zone, int order, int start_migratetype)
+ 
+ 	for (current_order = order; current_order < NR_PAGE_ORDERS; current_order++) {
+ 		area = &(zone->free_area[current_order]);
+-		fallback_mt = find_suitable_fallback(area, current_order,
+-						     start_migratetype, false);
++		fallback_mt = find_fallback_migratetype(area, current_order,
++							start_migratetype);
+ 		if (fallback_mt == -1)
+ 			continue;
+ 
 -- 
-2.48.1
+2.49.0.604.gff1f9ca942-goog
 
