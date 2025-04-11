@@ -1,50 +1,80 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613D821CC70;
-	Fri, 11 Apr 2025 16:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC99F1A9B32
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744390172; cv=none; b=M2JH57yVvCvlGnZQ7428rbKSRejUM0o6zMI1pWYCn1PWmbjWkSfr0I/l+/511EOpXsxmfp/9ES+mo2DtRMrLnYw0XyTOObRtzri4ImER3MfUtRWCKa93wHX1RDHKs4X8H3Tr/KsXYw9dkXVOzbwN1Y20UQcY9VfUh8+NpbTBvIk=
+	t=1744390324; cv=none; b=PGY7zF1ljOwzUIQBgKhHAAV5ODFDj8m93KOXZ1EsX7VRszPv3Vj744pVl6jDJlH7reingZik7NzvM38EGeZ4Rg38ps2Yn5ljb+r2/TLcNwGsUSZ2kzdNzTZyo2d0WOS+qwx9t/62CyUVaOeWyvTHGw+M1XIMrbWRCj3ZKT05As4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744390172; c=relaxed/simple;
-	bh=NOz5cjJCaRanStDhmScZA/AcmQvGag2EVhEaEG1KVEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=j7b+fZ0Ok60NOmmil7aFZ+L28nQ8Pp8jPBqJqFwFFw6+0BTElcNCTGbdGE1AVz81iC2U3e/hhIhKSyHV2+k8ob790vaPvMRjjc07Vx4tN/OkRR9PmJGEbxTZoa1qSF+/I4E0CQoHDA2qn91fHqYSdkZxRaCT51JgEpVIrLHE7wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wd+J+Mbc; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744390324; c=relaxed/simple;
+	bh=GzDoZV5DAe+2cewuVnSyfybg8VmBmwqXZru7qi/VSr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P/qMLe2p/2GLy83xiMAn0mnh0l0sKudU6tjvl0h92wNUJTW0Nxxgkgn9fffYUjlC4FGetpf5XgjTgjcJyqmMDvrN1rSq9Rycdg52t3nlkw2bhxlBQfZN0ymkpENRXHDnI6L/PtF0vKWHZLAc48tgCQBz9KSixMBHB3yVfOnn2+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ToXoF9uA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ofZSV5fw; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=w75t9Xnx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9efgZ9wb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wd+J+Mbc"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BEC02E001077;
-	Fri, 11 Apr 2025 17:58:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Vt0ruUB9NLi+cVvpgT4lg66aGgsUlr+R02KjxPZ63f8=; b=wd+J+MbcF4I0xzOr
-	ERcxLZxKiXZfUsGjwxokGRW5dr8qWikM6kFDAw4S23Trlce+vzq3oD4effpDmVmq
-	0CseWKZqNzALYidgcdOPj0BuFeaGlev8MNiZQgtezW0iukhWJrIqeoKHzwkLESQ3
-	vMVCqMoibCEQVFX/JURBye5UX4ltQrEQPaDyn98R6EpQ1ZUdefxQ7ihuNEfqD7R5
-	hGwbqxFBamlN1ezvNJAfIchiGQVh2wMJ11dcH+uTEhENoG5f2pmGM0sFzZ2k+eKH
-	6exOdlrqwBU7mShUDou9sSj7d7T9a+gT5bR/lMzHaGfbNncRzm+8DRjBGufEIaGW
-	GJhnuQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw8pxcs3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 17:58:21 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BF8F64002D;
-	Fri, 11 Apr 2025 17:56:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6E1059A3EBA;
-	Fri, 11 Apr 2025 17:55:30 +0200 (CEST)
-Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
- 2025 17:55:29 +0200
-Message-ID: <6bae3c34-47a6-466a-bd57-25fa0cea63e9@foss.st.com>
-Date: Fri, 11 Apr 2025 17:55:21 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ToXoF9uA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ofZSV5fw";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="w75t9Xnx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9efgZ9wb"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AAA351F458;
+	Fri, 11 Apr 2025 16:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744390320; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q80RCPjkG4IQCtL1wTZMFaoC3BKbl1/pCtwR2CS8Bsk=;
+	b=ToXoF9uAN+Aw+zXkXUEmfCHOYPuQFYujVacIH4tXwIZhYS9QZqLk+tx2pQunB3aLZERDPi
+	NRfglWmw+pkOLTbDBEkH6+eGvy9ou3GcS3ks+FpRf3ugHiKLzCX2J8SEAtDYBIsypzGPdg
+	jFsrLFvFViI2W08oupzwSoBne1tnzBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744390320;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q80RCPjkG4IQCtL1wTZMFaoC3BKbl1/pCtwR2CS8Bsk=;
+	b=ofZSV5fwQjA7rHq6pt1N/6ut8ycK59gvqnw7CcH12lJOnt4rLtw7Ekb+Mg7xTUw3t3ceg9
+	9HADu4FYydqpguCg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744390319; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q80RCPjkG4IQCtL1wTZMFaoC3BKbl1/pCtwR2CS8Bsk=;
+	b=w75t9XnxBk5u/cYcN25zOkGuFNX836/i5UuBzGjAFywxEL3maEt3XR0UmkJolh9YYoDRLE
+	IOG4IasXzfipQ+kMNV32mbHDIOIwSwcrxAREWQyTJ0uySObr8KrvtpVe6dia5SWo1XU0WA
+	89hzIPocQ4H69d7HQBirwlfqcFprWe4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744390319;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q80RCPjkG4IQCtL1wTZMFaoC3BKbl1/pCtwR2CS8Bsk=;
+	b=9efgZ9wbQcU6K7O79i3uN4Xl9oDTE0zFxZRlVSzE54aRmkQ+vZCvYO3/Z7fzrlGyMbIe4h
+	A8XvjnWl3IS9nDCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 95EE7136A4;
+	Fri, 11 Apr 2025 16:51:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id u6bwI69I+We0NgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 11 Apr 2025 16:51:59 +0000
+Message-ID: <efa6eb69-cff3-421d-94c7-e37a9a1e26f8@suse.cz>
+Date: Fri, 11 Apr 2025 18:51:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,434 +82,156 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/9 RESEND] PCI: stm32: Add PCIe Endpoint support for
- STM32MP25
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
-        <cassel@kernel.org>, <quic_schintav@quicinc.com>,
-        <fabrice.gasnier@foss.st.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250325065935.908886-1-christian.bruel@foss.st.com>
- <20250325065935.908886-5-christian.bruel@foss.st.com>
- <dirqsnrzjoiht7vvzzwh73gf3zuwyco6lc46k6s6pkifde2uzw@icmtn7x53swc>
-From: Christian Bruel <christian.bruel@foss.st.com>
+Subject: Re: [PATCH 5/5] mm: page_alloc: defrag_mode kswapd/kcompactd
+ watermarks
 Content-Language: en-US
-In-Reply-To: <dirqsnrzjoiht7vvzzwh73gf3zuwyco6lc46k6s6pkifde2uzw@icmtn7x53swc>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250313210647.1314586-1-hannes@cmpxchg.org>
+ <20250313210647.1314586-6-hannes@cmpxchg.org>
+ <46f1b2ab-2903-4cde-9e68-e334a0d0df22@suse.cz>
+ <20250411153906.GC366747@cmpxchg.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250411153906.GC366747@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_06,2025-04-10_01,2024-11-22_01
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-
-
-On 4/9/25 10:03, Manivannan Sadhasivam wrote:
-> On Tue, Mar 25, 2025 at 07:59:30AM +0100, Christian Bruel wrote:
->> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
->> controller based on the DesignWare PCIe core in endpoint mode.
->>
->> Uses the common reference clock provided by the host.
->>
->> The PCIe core_clk receives the pipe0_clk from the ComboPHY as input,
->> and the ComboPHY PLL must be locked for pipe0_clk to be ready.
->> Consequently, PCIe core registers cannot be accessed until the ComboPHY is
->> fully initialised and refclk is enabled and ready.
->>
->> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
->> ---
->>   drivers/pci/controller/dwc/Kconfig         |  12 +
->>   drivers/pci/controller/dwc/Makefile        |   1 +
->>   drivers/pci/controller/dwc/pcie-stm32-ep.c | 420 +++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-stm32.h    |   1 +
->>   4 files changed, 434 insertions(+)
->>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index 0c18879b604c..4a3eb838557c 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -401,6 +401,18 @@ config PCIE_STM32
->>   	  This driver can also be built as a module. If so, the module
->>   	  will be called pcie-stm32.
->>   
->> +config PCIE_STM32_EP
->> +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
->> +	depends on ARCH_STM32 || COMPILE_TEST
->> +	depends on PCI_ENDPOINT
->> +	select PCIE_DW_EP
->> +	help
->> +	  Enables endpoint support for DesignWare core based PCIe controller
->> +	  found in STM32MP25 SoC.
->> +
->> +	  This driver can also be built as a module. If so, the module
->> +	  will be called pcie-stm32-ep.
->> +
->>   config PCI_DRA7XX
->>   	tristate
->>   
->> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
->> index 576d99cb3bc5..caebd98f6dd3 100644
->> --- a/drivers/pci/controller/dwc/Makefile
->> +++ b/drivers/pci/controller/dwc/Makefile
->> @@ -29,6 +29,7 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->>   obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
->>   obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
->>   obj-$(CONFIG_PCIE_STM32) += pcie-stm32.o
->> +obj-$(CONFIG_PCIE_STM32_EP) += pcie-stm32-ep.o
->>   
->>   # The following drivers are for devices that use the generic ACPI
->>   # pci_root.c driver but don't support standard ECAM config access.
->> diff --git a/drivers/pci/controller/dwc/pcie-stm32-ep.c b/drivers/pci/controller/dwc/pcie-stm32-ep.c
->> new file mode 100644
->> index 000000000000..a8e9c5a9b127
->> --- /dev/null
->> +++ b/drivers/pci/controller/dwc/pcie-stm32-ep.c
->> @@ -0,0 +1,420 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * STMicroelectronics STM32MP25 PCIe endpoint driver.
->> + *
->> + * Copyright (C) 2025 STMicroelectronics
->> + * Author: Christian Bruel <christian.bruel@foss.st.com>
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset.h>
->> +#include "pcie-designware.h"
->> +#include "pcie-stm32.h"
->> +
->> +enum stm32_pcie_ep_link_status {
->> +	STM32_PCIE_EP_LINK_DISABLED,
->> +	STM32_PCIE_EP_LINK_ENABLED,
->> +};
->> +
->> +struct stm32_pcie {
->> +	struct dw_pcie pci;
->> +	struct regmap *regmap;
->> +	struct reset_control *rst;
->> +	struct phy *phy;
->> +	struct clk *clk;
->> +	struct gpio_desc *perst_gpio;
->> +	enum stm32_pcie_ep_link_status link_status;
->> +	unsigned int perst_irq;
->> +};
->> +
->> +static void stm32_pcie_ep_init(struct dw_pcie_ep *ep)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->> +	enum pci_barno bar;
->> +
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
->> +		dw_pcie_ep_reset_bar(pci, bar);
->> +}
->> +
->> +static int stm32_pcie_enable_link(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +
->> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
->> +			   STM32MP25_PCIECR_LTSSM_EN,
->> +			   STM32MP25_PCIECR_LTSSM_EN);
->> +
->> +	return dw_pcie_wait_for_link(pci);
->> +}
->> +
->> +static void stm32_pcie_disable_link(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +
->> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR, STM32MP25_PCIECR_LTSSM_EN, 0);
->> +}
->> +
->> +static int stm32_pcie_start_link(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +	struct dw_pcie_ep *ep = &pci->ep;
->> +	int ret;
->> +
->> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
->> +		dev_dbg(pci->dev, "Link is already enabled\n");
->> +		return 0;
->> +	}
->> +
->> +	ret = stm32_pcie_enable_link(pci);
->> +	if (ret) {
->> +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	dw_pcie_ep_linkup(ep);
->> +
+On 4/11/25 17:39, Johannes Weiner wrote:
+> On Fri, Apr 11, 2025 at 10:19:58AM +0200, Vlastimil Babka wrote:
+>> On 3/13/25 22:05, Johannes Weiner wrote:
+>> > The previous patch added pageblock_order reclaim to kswapd/kcompactd,
+>> > which helps, but produces only one block at a time. Allocation stalls
+>> > and THP failure rates are still higher than they could be.
+>> > 
+>> > To adequately reflect ALLOC_NOFRAGMENT demand for pageblocks, change
+>> > the watermarking for kswapd & kcompactd: instead of targeting the high
+>> > watermark in order-0 pages and checking for one suitable block, simply
+>> > require that the high watermark is entirely met in pageblocks.
+>> 
+>> Hrm.
 > 
-> This callback should only be used when the epc_features::linkup_notifier flag is
-> set. That only applies to platforms supporting LINK_UP interrupt. In this case,
-> once the start_link() callback returns, it is assumed that the link is active.
-> So no need to call dw_pcie_ep_linkup().
-
-OK thank you
-
+> Hrm!
 > 
->> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
->> +
->> +	enable_irq(stm32_pcie->perst_irq);
->> +
->> +	return 0;
->> +}
->> +
->> +static void stm32_pcie_stop_link(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +
->> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
->> +		dev_dbg(pci->dev, "Link is already disabled\n");
->> +		return;
->> +	}
->> +
->> +	disable_irq(stm32_pcie->perst_irq);
->> +
->> +	stm32_pcie_disable_link(pci);
->> +
->> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
->> +}
->> +
->> +static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
->> +				unsigned int type, u16 interrupt_num)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->> +
->> +	switch (type) {
->> +	case PCI_IRQ_INTX:
->> +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
->> +	case PCI_IRQ_MSI:
->> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->> +	default:
->> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static const struct pci_epc_features stm32_pcie_epc_features = {
->> +	.msi_capable = true,
->> +	.align = SZ_64K,
->> +};
->> +
->> +static const struct pci_epc_features*
->> +stm32_pcie_get_features(struct dw_pcie_ep *ep)
->> +{
->> +	return &stm32_pcie_epc_features;
->> +}
->> +
->> +static const struct dw_pcie_ep_ops stm32_pcie_ep_ops = {
->> +	.init = stm32_pcie_ep_init,
->> +	.raise_irq = stm32_pcie_raise_irq,
->> +	.get_features = stm32_pcie_get_features,
->> +};
->> +
->> +static const struct dw_pcie_ops dw_pcie_ops = {
->> +	.start_link = stm32_pcie_start_link,
->> +	.stop_link = stm32_pcie_stop_link,
->> +};
->> +
->> +static int stm32_pcie_enable_resources(struct stm32_pcie *stm32_pcie)
->> +{
->> +	int ret;
->> +
->> +	ret = phy_init(stm32_pcie->phy);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = clk_prepare_enable(stm32_pcie->clk);
->> +	if (ret)
->> +		phy_exit(stm32_pcie->phy);
->> +
->> +	return ret;
->> +}
->> +
->> +static void stm32_pcie_disable_resources(struct stm32_pcie *stm32_pcie)
->> +{
->> +	clk_disable_unprepare(stm32_pcie->clk);
->> +
->> +	phy_exit(stm32_pcie->phy);
->> +}
->> +
->> +static void stm32_pcie_perst_assert(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +	struct device *dev = pci->dev;
->> +
->> +	dev_dbg(dev, "PERST asserted by host. Shutting down the PCIe link\n");
->> +
->> +	/*
->> +	 * Do not try to release resources if the PERST# is
->> +	 * asserted before the link is started.
+>> > @@ -2329,6 +2329,22 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+>> >  	if (!pageblock_aligned(cc->migrate_pfn))
+>> >  		return COMPACT_CONTINUE;
+>> >  
+>> > +	/*
+>> > +	 * When defrag_mode is enabled, make kcompactd target
+>> > +	 * watermarks in whole pageblocks. Because they can be stolen
+>> > +	 * without polluting, no further fallback checks are needed.
+>> > +	 */
+>> > +	if (defrag_mode && !cc->direct_compaction) {
+>> > +		if (__zone_watermark_ok(cc->zone, cc->order,
+>> > +					high_wmark_pages(cc->zone),
+>> > +					cc->highest_zoneidx, cc->alloc_flags,
+>> > +					zone_page_state(cc->zone,
+>> > +							NR_FREE_PAGES_BLOCKS)))
+>> > +			return COMPACT_SUCCESS;
+>> > +
+>> > +		return COMPACT_CONTINUE;
+>> > +	}
+>> 
+>> Wonder if this ever succeds in practice. Is high_wmark_pages() even aligned
+>> to pageblock size? If not, and it's X pageblocks and a half, we will rarely
+>> have NR_FREE_PAGES_BLOCKS cover all of that? Also concurrent allocations can
+>> put us below high wmark quickly and then we never satisfy this?
 > 
-> Make use of 80 columns.
-> 
->> +	 */
->> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
->> +		dev_dbg(pci->dev, "Link is already disabled\n");
->> +		return;
->> +	}
->> +
->> +	stm32_pcie_disable_link(pci);
->> +
->> +	stm32_pcie_disable_resources(stm32_pcie);
->> +
->> +	pm_runtime_put_sync(dev);
->> +
->> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
->> +}
->> +
->> +static void stm32_pcie_perst_deassert(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +	struct device *dev = pci->dev;
->> +	struct dw_pcie_ep *ep = &pci->ep;
->> +	int ret;
->> +
->> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
->> +		dev_dbg(pci->dev, "Link is already enabled\n");
->> +		return;
->> +	}
->> +
->> +	dev_dbg(dev, "PERST de-asserted by host. Starting link training\n");
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
->> +		return;
->> +	}
->> +
->> +	ret = stm32_pcie_enable_resources(stm32_pcie);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
->> +		goto err_pm_put_sync;
->> +	}
->> +
->> +	ret = dw_pcie_ep_init_registers(ep);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to complete initialization: %d\n", ret);
->> +		goto err_disable_resources;
->> +	}
->> +
->> +	pci_epc_init_notify(ep->epc);
->> +
->> +	ret = stm32_pcie_enable_link(pci);
->> +	if (ret) {
->> +		dev_err(dev, "PCIe Cannot establish link: %d\n", ret);
->> +		goto err_deinit_notify;
->> +	}
-> 
-> Link is supposed to be enabled only by the start_link() callback.
+> The high watermark is not aligned, but why does it have to be? It's a
+> binary condition: met or not met. Compaction continues until it's met.
 
-OK. and then I need to remove the IRQ_NOAUTOEN for perst_irq, which make 
-the link_status unnecessary and results in simplifications. thank you
+What I mean is, kswapd will reclaim until the high watermark, which would be
+32.7 blocks, wake up kcompactd [*] but that can only create up to 32 blocks
+of NR_FREE_PAGES_BLOCKS so it has already lost at that point? (unless
+there's concurrent freeing pushing it above the high wmark)
 
+> NR_FREE_PAGES_BLOCKS moves in pageblock_nr_pages steps. This means
+> it'll really work until align_up(highmark, pageblock_nr_pages), as
+> that's when NR_FREE_PAGES_BLOCKS snaps above the (unaligned) mark. But
+> that seems reasonable, no?
+
+How can it snap if it doesn't have enough free pages? Unlike kswapd,
+kcompactd doesn't create them, only defragments.
+
+> The allocator side is using low/min, so we have the conventional
+> hysteresis between consumer and producer.
+
+Sure but we cap kswapd at high wmark and the hunk quoted above also uses
+high wmark so there's no hysteresis happening between kswapd and kcompactd?
+
+> For illustration, on my 2G test box, the watermarks in DMA32 look like
+> this:
 > 
->> +
->> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
->> +
->> +	return;
->> +
->> +err_deinit_notify:
->> +	pci_epc_deinit_notify(ep->epc);
->> +
->> +err_disable_resources:
->> +	stm32_pcie_disable_resources(stm32_pcie);
->> +
->> +err_pm_put_sync:
->> +	pm_runtime_put_sync(dev);
->> +}
->> +
->> +static irqreturn_t stm32_pcie_ep_perst_irq_thread(int irq, void *data)
->> +{
->> +	struct stm32_pcie *stm32_pcie = data;
->> +	struct dw_pcie *pci = &stm32_pcie->pci;
->> +	u32 perst;
->> +
->> +	perst = gpiod_get_value(stm32_pcie->perst_gpio);
->> +	if (perst)
->> +		stm32_pcie_perst_assert(pci);
->> +	else
->> +		stm32_pcie_perst_deassert(pci);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
->> +			     struct platform_device *pdev)
->> +{
->> +	struct dw_pcie_ep *ep = &stm32_pcie->pci.ep;
->> +	struct device *dev = &pdev->dev;
->> +	int ret;
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
->> +				 STM32MP25_PCIECR_TYPE_MASK,
->> +				 STM32MP25_PCIECR_EP);
->> +	if (ret) {
->> +		goto err_pm_put_sync;
->> +		return ret;
->> +	}
->> +
->> +	reset_control_assert(stm32_pcie->rst);
->> +	reset_control_deassert(stm32_pcie->rst);
->> +
->> +	ep->ops = &stm32_pcie_ep_ops;
->> +
->> +	ret = dw_pcie_ep_init(ep);
->> +	if (ret) {
->> +		dev_err(dev, "failed to initialize ep: %d\n", ret);
->> +		goto err_pm_put_sync;
->> +	}
->> +
->> +	ret = stm32_pcie_enable_resources(stm32_pcie);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable resources: %d\n", ret);
->> +		goto err_ep_deinit;
->> +	}
->> +
->> +	ret = dw_pcie_ep_init_registers(ep);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
->> +		goto err_disable_resources;
->> +	}
->> +
->> +	pci_epc_init_notify(ep->epc);
->> +
+>   pages free     212057
+>         boost    0
+>         min      11164		(21.8 blocks)
+>         low      13955		(27.3 blocks)
+>         high     16746		(32.7 blocks)
+>         promo    19537
+>         spanned  456704
+>         present  455680
+>         managed  431617		(843.1 blocks)
 > 
-> You are calling dw_pcie_ep_init_registers() and  pci_epc_init_notify() from 2
-> places. I think the one in stm32_pcie_perst_deassert() should be dropped since
-> the DBI registers are available at this point itself.
-
-The DBI registers need to be rewritten as a results of phy_init() 
-resetting the PCIe core on RCC phy_reset :
-RCC phy_reset is connected to power_up_rst_n, causing the PCIe logic to 
-be reset when it should not be for a warm reset.
-I will document this bug in this part of the code.
-
-Christian
-
-
+> So there are several blocks between the kblahds wakeup and sleep. The
+> first allocation to cut into a whole free block will decrease
+> NR_FREE_PAGES_BLOCK by a whole block. But subsequent allocs that fill
+> the remaining space won't change that counter. So the distance between
+> the watermarks didn't fundamentally change (modulo block rounding).
 > 
-> - Mani
+>> Doesn't then happen that with defrag_mode, in practice kcompactd basically
+>> always runs until scanners met?
 > 
+> Tracing kcompactd calls to compaction_finished() with defrag_mode:
+> 
+> @[COMPACT_CONTINUE]: 6955
+> @[COMPACT_COMPLETE]: 19
+> @[COMPACT_PARTIAL_SKIPPED]: 1
+> @[COMPACT_SUCCESS]: 17
+> @wakeuprequests: 3
+
+OK that doesn't look that bad.
+
+> Of course, similar to kswapd, it might not reach the watermarks and
+> keep running if there is a continuous stream of allocations consuming
+> the blocks it's making. Hence the ratio between wakeups & continues.
+> 
+> But when demand stops, it'll balance the high mark and quit.
+
+Again, since kcompactd can only defragment free space and not create it, it
+may be trying in vain?
+
+[*] now when checking the code between kswapd and kcompactd handover, I
+think I found a another problem?
+
+we have:
+kswapd_try_to_sleep()
+  prepare_kswapd_sleep() - needs to succeed for wakeup_kcompactd()
+   pgdat_balanced() - needs to be true for prepare_kswapd_sleep() to be true
+    - with defrag_mode we want high watermark of NR_FREE_PAGES_BLOCKS, but
+      we were only reclaiming until now and didn't wake up kcompactd and
+      this actually prevents the wake up?
+
