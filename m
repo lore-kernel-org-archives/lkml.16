@@ -1,75 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mr85p00im-hyfv06011401.me.com (mr85p00im-hyfv06011401.me.com [17.58.23.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CBA136A;
-	Fri, 11 Apr 2025 14:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D861F1507
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744382837; cv=none; b=MwIQW1VjeC2Jdl7FWDEng2eIn0gyCAfMqbzDZ8/OLdo1vRoyi4m4olk2OPOpr1k4M58wGvCJdDm93t2N3iUa+7Q40S+e3KMyuvGbq32xflO5WDcOP7eTmXYlcRaysIaXZimux0LaVEkvloTAveNvyN3BQuh7uypm2OdsD2jBFWU=
+	t=1744382929; cv=none; b=JzvgDCECsh/00ot+jnjzCRzNB+3Uxqk1KVQto3Ly0CUZut80gcXFY0ySmPqR3kU4v1tgf6iue+4XKG3aEmTUBsv0c8POVV8ED9mLbXBcd7R2A8+o0nB+lckkDrz+wjFQkwUWQhwYFWYMFDzi+fBwFQW+skY9I8Fghjx58GBg8yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744382837; c=relaxed/simple;
-	bh=bdmi96KJtXzBzzp/XRee5Nf9BbtE748KyLnsywYANZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gW0kD09j9RJuGUHFhZBxZZa/g0OEKMawp5+EP/jnR6CVsRB9RW5oz/9ri2t497/EVkLvFFYyabvYYKKW904gglpU6D+5Xs1keM5D4SBxN1AIQI5NVtdmizV8pln7YFyfnPxaVYVLgP6kWil83Ji1+ZT5dMMQyVI4vUNErOreUBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiqecLlY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744382929; c=relaxed/simple;
+	bh=zzHzazriqKgtPFPYlBvq0tf2k7riQfwZaS1uIVL5icg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jgCh10sgTwiWL6OyBKCHh5iYZYtO+ZGOl8LQ+N4Cyp6IyLBc2DzFfUKjUDOWEcJT9NjuYBVMmfAnH5YOkDQknD41jU5x7XsSjVLT5oy4mjoT9Y+URh4tOc3mPJSYwJgBUtvd7PDCZBNkd7K5Rz96kLxkumnfdXnUM0iNaEZ8DDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=lkAjPoUz; arc=none smtp.client-ip=17.58.23.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiqecLlY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D3EC4CEE2;
-	Fri, 11 Apr 2025 14:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744382837;
-	bh=bdmi96KJtXzBzzp/XRee5Nf9BbtE748KyLnsywYANZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CiqecLlYzxIgZEc8oW6GoafOIT18aPWu+pqWnagxmv9+EAOVfpwdG5ftgUQA2VKcm
-	 BwfKAJKFbp8+6WguPaFzQ5lDvs7gVDqfR/ehsS0T+S7W8nLJcVrABXseciK4r77fNj
-	 777ftyM24e/s/UUd93hERrOv65501Hd+tA7ebyAlfoPJyn+Wd56P/6yAYP17+1i6oR
-	 tahcog69OuTAxC3YiHJxX/28oJguSxM4V7/FRvsmqIYaNJJLAUbfhguP4BmRTn+6G6
-	 jRaa1s/KE3UtScrZx3A3sUDlXNOPm8Tpi7dZcoEr7nCwL43AEaGhQSNmv9zeEEKEx1
-	 UIRuh4F+kFiZA==
-Date: Fri, 11 Apr 2025 09:47:15 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, upstream@airoha.com,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [net-next PATCH v2 14/14] of: property: Add device link support
- for PCS
-Message-ID: <174438283512.3232416.2867703266953952359.robh@kernel.org>
-References: <20250407231746.2316518-1-sean.anderson@linux.dev>
- <20250407232249.2317158-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="lkAjPoUz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=18Is6h9HNJ9vmFioSxZvkOl0vsi2ABC8O9wcMCqnzQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=lkAjPoUzgQr9wvQag4l4gxVD04EhP6VwNQ1dYYnTr2+KCcT5GhLKWORezGAiX980w
+	 89LfHN8yN3XWLNd60SO64C1UJYu24EeCJfx2UeJVq65eyExGS7ozY8cb6OjJTc4edZ
+	 eIgAB2jJDBUDqjLFz7Hh9pI4Z34+D1GLGtWQ201MPYGW5vCsAj/N1evqIpyyV/xVlr
+	 +bnlFyDJyVbLblcAydhdn/NXZ3mpyspIXWlHYdUviAX/8WsBwStAOxI0j6LM3kJulS
+	 sqIn8xwyZwJewv6GOAdwGwdRPQ0BzT43iplKlQboGJQpK9Aboa1HLkx1nhUoEjQJ1x
+	 Xr9tn6VRUnUOQ==
+Received: from mr85p00im-hyfv06011401.me.com (mr85p00im-hyfv06011401.me.com [17.58.23.191])
+	by mr85p00im-hyfv06011401.me.com (Postfix) with ESMTPS id 5EE83357B09F;
+	Fri, 11 Apr 2025 14:48:46 +0000 (UTC)
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-hyfv06011401.me.com (Postfix) with ESMTPSA id 1D6D5357AC5B;
+	Fri, 11 Apr 2025 14:48:43 +0000 (UTC)
+Message-ID: <1d59d38a-5674-4591-a866-27dfbc410b93@icloud.com>
+Date: Fri, 11 Apr 2025 22:48:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407232249.2317158-1-sean.anderson@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] fs/fs_parse: Fix 3 issues for
+ validate_constant_table()
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com>
+ <20250410-fix_fs-v1-3-7c14ccc8ebaa@quicinc.com>
+ <20250411-beteuern-fusionieren-2a3d24f055d0@brauner>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250411-beteuern-fusionieren-2a3d24f055d0@brauner>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: P68mtjX63jAgQ060WWDBHM9gJhRLriVm
+X-Proofpoint-ORIG-GUID: P68mtjX63jAgQ060WWDBHM9gJhRLriVm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2504110093
+
+On 2025/4/11 22:37, Christian Brauner wrote:
+>> - Potential NULL pointer dereference.
+> I really dislike "potential NULL deref" without an explanation. Please
+> explain how this supposed NULL deref can happen.
+> 
+
+okay.
+
+>> Fixes: 31d921c7fb96 ("vfs: Add configuration parser helpers")
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>> ---
+>>  fs/fs_parser.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+>> index e635a81e17d965df78ffef27f6885cd70996c6dd..ef7876340a917876bc40df9cdde9232204125a75 100644
+>> --- a/fs/fs_parser.c
+>> +++ b/fs/fs_parser.c
+>> @@ -399,6 +399,9 @@ bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
+>>  	}
+>>  
+>>  	for (i = 0; i < tbl_size; i++) {
+>> +		if (!tbl[i].name && (i + 1 == tbl_size))
+>> +			break;
+>> +
+>>  		if (!tbl[i].name) {
+>>  			pr_err("VALIDATE C-TBL[%zu]: Null\n", i);
+>>  			good = false;
+>> @@ -411,13 +414,13 @@ bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
+>>  				good = false;
+>>  			}
+>>  			if (c > 0) {
+>> -				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>=%s\n",
+>> +				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>%s\n",
+>>  				       i, tbl[i-1].name, tbl[i].name);
+>>  				good = false;
+>>  			}
+>>  		}
+>>  
+>> -		if (tbl[i].value != special &&
+>> +		if (tbl[i].name && tbl[i].value != special &&
+>>  		    (tbl[i].value < low || tbl[i].value > high)) {
+>>  			pr_err("VALIDATE C-TBL[%zu]: %s->%d const out of range (%d-%d)\n",
+>>  			       i, tbl[i].name, tbl[i].value, low, high);
+
+for good constant table which ends with empty entry. for original logic,
+when loop reach the last empty entry.  above pr_err() may access NULL
+pointer tbl[i].name.
 
 
-On Mon, 07 Apr 2025 19:22:49 -0400, Sean Anderson wrote:
-> This adds device link support for PCS devices, providing
-> better probe ordering.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
-> Changes in v2:
-> - Reorder pcs_handle to come before suffix props
-> 
->  drivers/of/property.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+i find out this validate_constant_table() also has no callers.
+fix it or remove it ?
 
