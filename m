@@ -1,259 +1,868 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from server4.hayhost.am (server4.hayhost.am [2.56.206.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963220E700;
-	Sat, 12 Apr 2025 19:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744485416; cv=fail; b=NQk0SbEtvhIaokmzRJ/iIuVoMTJZJDUK58syGof7o5Jxo79Mtg5z+1wIzs7vcoYyQ+LNCEXgnBzb9j+xOqWEk5FPZgNvvumapnQ+EUgQ/ySZnINrf1DQfCPlusp3JZll8sJVOFumFfsj9ckQX8INUUfOZ+zlI20JRtLKOl2l4pc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744485416; c=relaxed/simple;
-	bh=G/Rx2OjhAflYlCs3AsFSnJLodsfHQG1t/IHa0V6SGhg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BVnJEs7syikz6lojO+QyAy9eR4e4xmwvsalsN9/rcBpY/ga5yc1mpmuJmC3cE9CU8yDE39IZuGNgPTogJipVxFTQZqHlbX8zgqzntgEv3NY706lBePLTQWKSNZqpi/KoZ0EM8XCBDAB/1IDhn/gAdOmbxA5+ejbnob4wnIX7WJQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KfbrJbYT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=KZOsiOii; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995E326AE4
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 19:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.56.206.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744485920; cv=none; b=tBjL+wxlzGYdcA0FMVPfxlz0gLpASb4IfK5KFoB4w+JBF9IULMZ/xOMsr8lV8VLtsGL0OPea4aeVYV52NCuZHGK9NOuWReZa296Fb0BhJIMgznVGns9getpWtyg9S5u/e8U1iCEl0jVk8LVCyc5pKzPf7mIQ9klV5MeG7G4rKWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744485920; c=relaxed/simple;
+	bh=WwmiLg+iGrqfi4wxGyuOwTftGgkDG3J7DRaP34n6c2E=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=OH6Ih6O7TKQTeW+uDMnNt0yVhDJ1GqiwnRcIwJm07K0HnCqAMG09Y0SVXfApACtbXHk6uMicX5UxIr9/DS54/Hy5t7g995P9jkUBHzUz1SJhxlwSyyDiKjnaQJv6FeJaDxQsPF1wGpirS1nveT8nZWoL/C3fGrR5r/czRk75S+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am; spf=pass smtp.mailfrom=beldev.am; dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b=R1oJw+nQ; arc=none smtp.client-ip=2.56.206.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beldev.am
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KfbrJbYT";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="KZOsiOii"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CIX9c4015322;
-	Sat, 12 Apr 2025 19:16:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=; b=
-	KfbrJbYT7AD2PWbY5BInLfIRA9x6LeNdq30TmVlJKaRuA7tMtGpteTNk8u376zLL
-	NdBpf6LoFhrKSZsk8wTn94qZF1C2CaA2V4qbNC49SY6AhEQXAGVs9tFO47z5Uo+f
-	u8APinVGCjJRIM7BW2XQPWW5EVlakbGBplPJowXer2atUdn1gNbokUr4YIPI6f7V
-	GSKSLj7igk6WdXwUlBZ9upvXzp7+AUB+Gp3ngI3CMbhpRsHiUmUm2gFbA8wynaCE
-	V+MamSzH+G2BfvlIpIPeCDnkzMdX6OwMCDTX/GSuDIYQdY2KZgsICr0q2i92/JJM
-	c7oLchSwGDyvt354XdRJbg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45ywhg80px-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 19:16:10 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53CG4F5s020067;
-	Sat, 12 Apr 2025 19:16:09 GMT
-Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013074.outbound.protection.outlook.com [40.93.1.74])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45yem6he1t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 19:16:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i3S6M5CRL/ceFLlB/WTwCj5LYyt/n792wHW4efXQI6V5YsSi2cvo5WFK2Fz4rbRvKNl++XYF9yYSd8T7FddZIu65WYmfodQ/1IOEBACKu1QQYSTcWqY6qnv5wVbRFKlsxaRqgJhjO/w0EKB+viZ4HLYNUiTKJwtjeG15sA5RtGPl9+zfOJR6qMXKRicB+h8Ju3MHKGoJ7qgZPUTprG6iparaKVZS+YRdvtEYPRnKnV5RekkCqd54tC6RR5YaEm2uSk2Q1jiPeIG5HSPHAF+rbK9qemdEPhyQvaX4xqQQ7rNtp6PDfkwg/h+xFxfd+fK4iXWR1X04XALP1qABd6HfkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=;
- b=p9HmaBgUHy/FVznpX05vXuBack1aMZwG8p5Esr2cI/wjCoskjXlcTkh7WoL4XFBb0/FG9fpgRxq+Gq3xVJwKSivyfOR0IuofdW2PY1Yq3boAq/Zn96GGjpdJ0xOw7XYyV45Vxyq9BovgQNe60kyow+vgcVd4K7gt9RVxk8NJ53z3po2dFgON1AsE7hQ4zzgZY6IgPK++OToMlSi5sERwZ2DpiW2U+MSSbKyN+he9O7XjMbNycrMa4USh0YpMzcuqKMt7lLBiOo7vAyZ0m/pW5e9Jl9Ej1YcZSOJuy9LJWBy2fQ12md0LDc/UzGdXBuBA5tktVG3i5xhqfw4CwgVoUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=;
- b=KZOsiOiiytdUer102aPM2o1o/EdAZtUxSmBbFADe38g6p280ZzBgQSahZxDgovZaD8nWRgBwqWDfFdriPJNuGJa41u8hVAKUGwdSezR6yxlU/4tMNqm9VqHMiRX//LlOYpoQsIMxpOB3S5Magl+0zzx0FaRKNAX2ScpQhzI2IPA=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by DM4PR10MB6253.namprd10.prod.outlook.com (2603:10b6:8:b7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.29; Sat, 12 Apr
- 2025 19:16:05 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.8632.030; Sat, 12 Apr 2025
- 19:16:05 +0000
-Message-ID: <40d90268-272c-45b1-add5-220e9e162101@oracle.com>
-Date: Sun, 13 Apr 2025 00:45:52 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 16/19] tpm, tpm_tis: Allow locality to be set to a
- different value
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-References: <20250410204149.2576104-1-ross.philipson@oracle.com>
- <20250410204149.2576104-17-ross.philipson@oracle.com>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <20250410204149.2576104-17-ross.philipson@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0015.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::15) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+	dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b="R1oJw+nQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=beldev.am;
+	s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=LpHFoMetpdb/6iKGcltYh3h5FH8mtmHNQU97K7fBWLE=; b=R1oJw+nQqrl8H543arisTqn777
+	NCeYJubIK5VhDLd6vn6h26dbPj594I1ojPKudtqYHnuBwFejlU9PjK0E5gFajhDNBmtu6yXRTG97J
+	wmDV/vu/lz8vLOZMn78jeEarLBxDJve3IhjJ3Q+Ts/N+eGN/JigblbrQoaB1djnYIluaLCNrWVjpq
+	BDqQrTYRoH5GH155nhXFBah5RCAOzAjxxPiIacJogrrWdRMkorms1f9xSu33lUgwOf158Mhk9Clw/
+	cQzJEjzlpQuz7riAu9w3hdObPv5Ymmqbb9O/n6pxZ9Bmj4Vw+YHhq5VMR+rn5tXEWBcX+TNS9tfZu
+	IEEvycbQ==;
+Received: from [::1] (port=46660 helo=server4.hayhost.am)
+	by server4.hayhost.am with esmtpa (Exim 4.98.1)
+	(envelope-from <igor.b@beldev.am>)
+	id 1u3gTf-00000000FOT-0RDU;
+	Sat, 12 Apr 2025 23:25:19 +0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|DM4PR10MB6253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 384b53b7-6238-42db-6835-08dd79f67892
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkRVU1ZFK3g4U05lSGIyWWF5a1hUSHhETXBncjJ0cFljYkJRMW5zZWZyVXJr?=
- =?utf-8?B?ZW5VRWNWSU5xbEdWN2gyRjBCQXZkdDg1aHBWUHhadEFBSEZzSUFLUDNydkll?=
- =?utf-8?B?WWd3RjFuT1l5Y3dFRVFnYys3NEgxRkMzdktOZ20wL1JCTnlNT1d3bXI2eFZY?=
- =?utf-8?B?VWlVelZucmVaM1BtaGtWNkgyRUYyUU9uZ1hXWU02cmxWVnA2YWN1N3p4NThX?=
- =?utf-8?B?Kzc3UzdkdmRwZVVsc0hyaEVEOGMwazExaE1IUndwMmZwNkhsK0gvaGdWbG1R?=
- =?utf-8?B?THpyM1ZNeFBSQ0gwTEtaYzIxd1BRM1BJekxVUW1nOWx5K3kweXlGS2JjTVM3?=
- =?utf-8?B?aEpRVGxwaTBkMTJTQndOZ2pnWDMzdS9aQ1k3Vjc4UVg4RmpDa1lCLzNBMkt5?=
- =?utf-8?B?T3BZeGRSUnhFNWo4eTRKdkd0djVIR0cwaDF4cWRvVzg1cTBzS2N4cHozZ05m?=
- =?utf-8?B?em9Ga01yR2gwT2tlMlM1NTBkTjZWdGhpeGc1WjdublV4TThac0JRNHBFS0c4?=
- =?utf-8?B?V0tmZVRYdGtoMjlDQm05QTcxVnk2a2ZjM1Fqd3ErendRVW1RQnNVYlhaeHh6?=
- =?utf-8?B?K2JaaUdrU2lFNTRzYzBWY3l5WFZoVDhqMDl4dUVxcjdya1dIUjIzeFk5cTE3?=
- =?utf-8?B?SlBMOXFCQ09taEwybVRSQ3owUXZNUWg1KytuSXkvZTVEN25ZT2tYT3E3QWtS?=
- =?utf-8?B?UGkwcHB5ejhDSUl1UXU4c1dVdTVsU2ErOXpMdy9nY1lpYk1iei84dUREamYy?=
- =?utf-8?B?ZndoeWhOVE5FMmJ3OTh1THdMb3VEVDZQM3JKeHlWV1JuTzZWMW5USWxucmo2?=
- =?utf-8?B?LzhIZkNpcnhNK0ViTTRKRHlRK2V0aDZWcXdIWU5lY0h1cW1XaG5KZFZZeEU4?=
- =?utf-8?B?Q1VlWHFRME9CVlB3M3lpN3hsY1lyK0s1QkJ4WnM4RVRNMkNhTGlwSHBERTNZ?=
- =?utf-8?B?and4bEI1bzBFUFBmbVhGMnZJWTVSSW9PSFhVc2pnRlpNSERYR1d5dlVhYVR4?=
- =?utf-8?B?VUx3T0MyeW9zMW02RnpPR2MzbkFVZkt4RVplL01lTGFrTndabEpXV1RidXo2?=
- =?utf-8?B?ZmptTDk0ZS9iMmdFbXlyWDFqMGNWd21wQWxyL0FTWmg5M0RLUThVWEgrL05B?=
- =?utf-8?B?Mmx0eWxuTGpRMWI0Q1ZYZnBORGVJaDdHMHgvU0l5ZHUwQlN3V1VZckhnSkZv?=
- =?utf-8?B?dnduUU94bFNpTStYNVg4SFFvcDlXb0dBMk82dmhVZzl6Y0tRR1RQUHVJWklo?=
- =?utf-8?B?aWVtYjZvcHVuSmZoUStWbThOTjdUNFBHaUNGaU9zTVFqaHVSYVNNZnJ3K1VB?=
- =?utf-8?B?YWd2bTlYZUpYWmNSQzZpdmhMamRFQThzK05hb0lrWUFoam9DdElSclloMTdM?=
- =?utf-8?B?UlkxdEFsNm16T2VncXBLTDhPNzFNMThOVmFsUDEwYXU1Z0R6WDlNcE9nRTdq?=
- =?utf-8?B?aXlTc3E1V0dtdER0OUREaDVHdDlQbHplT0JnVloxcDJGeUtFdlFHWEJwdlps?=
- =?utf-8?B?a1dmZ0phTzFEUVUwTldkWVVyMCtXLzZWREVsQmVxSllKaDJnajRhVGpiWFlO?=
- =?utf-8?B?OVNhQ2l4clJUL0hxbmNMYjN4NzRmUFNhbVA2aTJCd2phZ09ZU2pxcCtpZHN5?=
- =?utf-8?B?WUZuZjV1Q0NocTllbDBFbHgvMGlVekJEeTYyR1lGOXJTLzh5SE1HclB6TEdX?=
- =?utf-8?B?Y3NOVHlGVk9zWGZ3MW1vdzNMcThpSEZ1NDNldTBYejdGaFNhdm51YjF4S1lT?=
- =?utf-8?B?WW5hUjJiamEya0JnU2R3TU5jbVpGbVBQNWV0cDlndUhQUVZONElrRHE4OUt4?=
- =?utf-8?B?blRlTHZQWnFDbC84Q3ZUQTM2MFdsR0R3UzhpNmlYWjVtYkJtdXJYODgyUVBJ?=
- =?utf-8?B?bU9XN3pxVC9CN0Zub2Q3M2lET0QyVURnWm85dVRpV3hiZ0xETmtFeUx1OGNh?=
- =?utf-8?Q?GI2qTy9QFtg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UzFUTTNqMDhkSEkreUREcEVmZnFCUnVFQ1VNaGxnZkNpZGpaQ1kyNE5NNTUw?=
- =?utf-8?B?TDcrSkkxcUxqMFlZRlhneFgxVGZqM0F2Rk9NaURKcndBTVRNbXFFQWxUdGg0?=
- =?utf-8?B?cU5hYmVQMHI2UDllYytSTTF5anVBVnB2SVQ5cEx0WXl0QVhPTFN1LzFlVmRh?=
- =?utf-8?B?U0ZZc1RZTVFOKzBFdmpET25tMXFKMy9Va3JGalVyMlhXSnFQMFRnUzE3OCtm?=
- =?utf-8?B?YkZlbWZjYldzc3ZUVzJvSUhJMDMzMGRXUnJRVWM3Q2JuSjlVNUFZTjg5ZGNk?=
- =?utf-8?B?aDBXeWZSSjcxVkNaL2hIdXl6UVNCTmMxNFdRVmhmekdwOFk4VWRIZmpVNzNB?=
- =?utf-8?B?RzRsTFdMQzUyRHlUMTM0UjBxd2Q5Y3hkSS8rMGRTZW55SHNKVG1BRXB5WFNW?=
- =?utf-8?B?N2YxKy9MRjZMZjNBcWlkb2RPODFuM21HZE9EcVZQYUxqa1dBWXQ3YWwvTXRQ?=
- =?utf-8?B?YmE5RzF0R3VJMmhOWDdRZ3BDakwzNTRBWElXSExuYmdPMDhVUVdBakpsTmh5?=
- =?utf-8?B?Ynhad1I2R0xRRExLU2V1WEh3SE55akdBaFZFMmVLMkp4SFR4U0tPNmE4OGlz?=
- =?utf-8?B?OEQzOC8yUDJNZWNuWEs1ck1lOXRWYWxxNDdmeHRqUXFqWHBPbmZmTkxtZ1Jq?=
- =?utf-8?B?aGFsdnVmT0J2UlNZV3ovRWdMWnNKYUExbDRIdkZyVDFNMS91STZkZjE0MFlt?=
- =?utf-8?B?NHdkNGdKemNaeUNZNzhkdm5LSkNSQjVOSy9lSStYMTl6T2N6VjYvSWZ3N1hE?=
- =?utf-8?B?c0N0ZHBQSVUvdDNZNVdrYks0ZnRwKzY1TWdMNENlNzA3dHZmRG9ENzhhZGs0?=
- =?utf-8?B?SUNQOE9HdmdMNFhrdndNTERmRDNISE14Mm5iY2diL0hQZmMyOTVrTnNNSUc5?=
- =?utf-8?B?M2xsTFhXZS9wSldpYlh0SjlCb1JJbWJvUVdiQ2d6STZjZDdPaTBmMHNleG52?=
- =?utf-8?B?czd5dzVWRzlNLzVacC9ZZzVjZklBb3IwaWNYcnFNUHdXMjI2cHEyMFJkUmoy?=
- =?utf-8?B?ajNVcXFwMFJQaWRUOVAzdlFMU1dTS1hIUE5mWVU1NTFqOG5rVHlxaEFYZW84?=
- =?utf-8?B?NHRsY1JTU0tweGtVblN3a1o1UW50WHFmd2RCamRWMnBtdHBqQ1FSb0xvUW8w?=
- =?utf-8?B?V2lmaExTTmgyaG51SEluS2xuODlLbGYvSHprSktGSDg5TWR1SE9Ecy9nUFMr?=
- =?utf-8?B?T0ZSUFVHc1dmbEtjMURiSkl1ZnZYUjJBMmd2T0dDbittbFc0dkRiRGNYYXhX?=
- =?utf-8?B?Q0RwYXFsZVR6S1haZDVPZlh2K0tuK0JKcWFtdzBVbmlIVFp5Ly8xNEZ4cGtP?=
- =?utf-8?B?enNmQms2MG9Sc1NoYWtITjJKa3AwbU1WWmNzVU44MHJKUTk2TjJrYWFXMnZH?=
- =?utf-8?B?ZmFleTU0eW54aHJsNWpCejFoUjNOYklLUXIyTzcrNERlc28yR1Q4K1BrWkV2?=
- =?utf-8?B?QzZ2NWRSbkJkMWtOS09ZV0dVaHVIZVNlVVhZN0tHRmZkRFhVZEsvTVZXaHNY?=
- =?utf-8?B?dUdvWGVKMWxXSWQwUUNySWRqZ2ljcG9UUmZ3dnpwSmsrbTVJZjR6R05aQXFR?=
- =?utf-8?B?dTZSVmU5RGFHTTFYbVNiV0I3dUxLeDB0OG1EcWF1ZjZHVDJaQlpSell2M1dW?=
- =?utf-8?B?MlB3OWZVWGF6aE9iMlNVejh2U3BJRWNRcGNEcFVyS3loWFdPSDZvSTZhVmNr?=
- =?utf-8?B?aDhGZlhuS3hTcjJUcjJ6K2d0Rk9VamJZd25zc3M5NGkweThwa3RjSVpXUUdu?=
- =?utf-8?B?dVpQNUplb2JibkRrNUZXOE5GYzJ4cHpRb24zSUozMlpqemVDUnJxQ1VMVEJT?=
- =?utf-8?B?OEVWWU5XekxPc1BDaHlLVXQ2Mlg5bDFCaUhvV3BtSU1PL0pHbm9rbHNBNTBO?=
- =?utf-8?B?SEVYUEJ1RjQxSzBYdXppeEd0Nzg3NnUwSEVUOXErSTZvSXRqZFVnOE1vZDd6?=
- =?utf-8?B?YlN0c3FZa0ZLTmF4QTZOK3lBM3dEK3BodDV2TTJZdEJEVkhHMy9tSWg4MG9X?=
- =?utf-8?B?VTYrMnVWS3ZqSlQ4VXlFdUhFTWtvNUZuOTZoTGJVK3I5YS9HZjJvM2hmUmhI?=
- =?utf-8?B?SGd3bzZwdmlWS1JManRMam10bWNmYXFnM0VRbE1Jb2lzOUkraTUyRjY4bkFK?=
- =?utf-8?B?aXMzaFJ1U05PN1IwMGUyWXkwK1loSUpUOW9pb1FVOThzQklKaHVIUmRKMzZv?=
- =?utf-8?B?dEE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	1GwaBSCuibwXUOysUGbXk9uim/amsUNTt976B4P1R2Z+YBHZaf/RZzTWc5kz5IDOrH3RnOsSJxVD9GFZN4RqKYYcAH47YX5XBxi6jVug6pBqdDbM+VMrpDh7zai1qf/mu1tEBlrg2WMxGVygGhDzviqgu6AgKUkJg8vH8zUpadsCkHIkE0K5RPFc6XddyfAON1P8N65hwIkR40tETLvtoQ116BNp6e0Cw6MEmzrcWJCSv7VXvMW82892AEwNTE/HXQmXJrhXVh4+8zyDtZMt58BfXtUnyuU56wMaCL5GnZSbpFZPt8/gWZqKCjYwqmNpcUAyKK6hhxGv10PrksBcJnRwlZIudjj9whLDvddjrH7Z+oAyEcMS3NxQmLJ8k7rv96rmTEnSYicc0VUc+hSIm2Y1zqKk3bCBU4rIIGHsXOkxH4uYfIN5FMmNUrKZqDSf6OTdOEBrpRZrm6oCvXNNFIuFj/ScUnHNx+XB4XVOmF9IMVzYWlAO+r+Arr6nSuLnIjOaYvP3TmMJeEQ2/KkomyzA/mJVJWG45AjFnEA7DWKt8NsJDRC/z1Uc5p6sLU3d8cU4MIvVatdxjJT4RgaegB9XwutJmZf+8TN81A4FZF0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 384b53b7-6238-42db-6835-08dd79f67892
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 19:16:05.1711
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yj/AEc3MhRZGqFhMAvAW32x5Oo0HODlOOK5FUEXL+yl2quONAH0PLBFu1wT5yrKTOMYF3WvYm1gbd+0h97bF9ZpUIGEoS1OKl8tYqwzlLhw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6253
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_09,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504120148
-X-Proofpoint-GUID: RBumteSSxMD2r_fUf2ULNvRjf36AKoUI
-X-Proofpoint-ORIG-GUID: RBumteSSxMD2r_fUf2ULNvRjf36AKoUI
+Date: Sat, 12 Apr 2025 23:25:16 +0400
+From: Igor Belousov <igor.b@beldev.am>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v4] mm: add zblock allocator
+In-Reply-To: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
+References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
+User-Agent: Roundcube Webmail/1.6.9
+Message-ID: <7185823ee82bb476cf86ea82a6f70a85@beldev.am>
+X-Sender: igor.b@beldev.am
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server4.hayhost.am
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - beldev.am
+X-Get-Message-Sender-Via: server4.hayhost.am: authenticated_id: igor.b@beldev.am
+X-Authenticated-Sender: server4.hayhost.am: igor.b@beldev.am
 
-
-
-On 11-04-2025 02:11, Ross Philipson wrote:
-> DRTM needs to be able to set the locality used by kernel. Provide
-> a one-shot function tpm_chip_set_locality() for the purpose.
+2025-04-12 19:42 skrev Vitaly Wool:
+> zblock is a special purpose allocator for storing compressed pages.
+> It stores integer number of same size objects per its block. These
+> blocks consist of several physical pages (2**n, i. e. 1/2/4/8).
 > 
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> With zblock, it is possible to densely arrange objects of various sizes
+> resulting in low internal fragmentation. Also this allocator tries to
+> fill incomplete blocks instead of adding new ones, in many cases
+> providing a compression ratio comparable to zmalloc's.
+> 
+> zblock is also in most cases superior to zsmalloc with regard to
+> average performance and worst execution times, thus allowing for better
+> response time and real-time characteristics of the whole system.
+> 
+> High memory and page migration are currently not supported by zblock.
+> 
+> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+> Signed-off-by: Igor Belousov <igor.b@beldev.am>
+
+Tested-by: Igor Belousov <igor.b@beldev.am>
+
 > ---
->   drivers/char/tpm/tpm-chip.c     | 33 ++++++++++++++++++++++++++++++++-
->   drivers/char/tpm/tpm_tis_core.c |  2 ++
->   include/linux/tpm.h             |  4 ++++
->   3 files changed, 38 insertions(+), 1 deletion(-)
+> v3: 
+> https://patchwork.kernel.org/project/linux-mm/patch/20250408125211.1611879-1-vitaly.wool@konsulko.se/
+> Changes since v3:
+> - rebased and tested against the latest -mm tree
+> - the block descriptors table was updated for better compression ratio
+> - fixed the bug with wrong SLOT_BITS value
+> - slot search moved to find_and_claim_block()
 > 
-> +/**
-> + * tpm_chip_set_locality() - Set the TPM locality kernel uses
-> + * @chip:	&tpm_chip instance
-> + * @locality:   new locality
-> + *
-> + * This a one-shot function. Returns zero or POSIX error on failure.
-> + */
-> +int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality)
-> +{
-> +	int ret;
+> Test results (zstd compressor, 8 core Ryzen 9 VM, make bzImage):
+> - zblock:
+>     real	6m52.621s
+>     user	33m41.771s
+>     sys 	6m28.825s
+>     Zswap:            162328 kB
+>     Zswapped:         754468 kB
+>     zswpin 93851
+>     zswpout 542481
+>     zswpwb 935
+> - zsmalloc:
+>     real	7m4.355s
+>     user	34m37.538s
+>     sys 	6m22.086s
+>     zswpin 101243
+>     zswpout 448217
+>     zswpwb 640
+>     Zswap:            175704 kB
+>     Zswapped:         778692 kB
+> 
+>  Documentation/mm/zblock.rst |  24 ++
+>  MAINTAINERS                 |   7 +
+>  mm/Kconfig                  |  12 +
+>  mm/Makefile                 |   1 +
+>  mm/zblock.c                 | 443 ++++++++++++++++++++++++++++++++++++
+>  mm/zblock.h                 | 176 ++++++++++++++
+>  6 files changed, 663 insertions(+)
+>  create mode 100644 Documentation/mm/zblock.rst
+>  create mode 100644 mm/zblock.c
+>  create mode 100644 mm/zblock.h
+> 
+> diff --git a/Documentation/mm/zblock.rst b/Documentation/mm/zblock.rst
+> new file mode 100644
+> index 000000000000..9751434d0b76
+> --- /dev/null
+> +++ b/Documentation/mm/zblock.rst
+> @@ -0,0 +1,24 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +	if (locality < 0 || locality >= TPM_MAX_LOCALITY)
+> +======
+> +zblock
+> +======
+> +
+> +zblock is a special purpose allocator for storing compressed pages.
+> +It stores integer number of compressed objects per its block. These
+> +blocks consist of several physical pages (2**n, i. e. 1/2/4/8).
+> +
+> +With zblock, it is possible to densely arrange objects of various 
+> sizes
+> +resulting in low internal fragmentation. Also this allocator tries to
+> +fill incomplete blocks instead of adding new ones,  in many cases
+> +providing a compression ratio substantially higher than z3fold and 
+> zbud
+> +(though lower than zmalloc's).
+> +
+> +zblock does not require MMU to operate and also is superior to 
+> zsmalloc
+> +with regard to average performance and worst execution times, thus
+> +allowing for better response time and real-time characteristics of the
+> +whole system.
+> +
+> +E. g. on a series of stress-ng tests run on a Raspberry Pi 5, we get
+> +5-10% higher value for bogo ops/s in zblock/zsmalloc comparison.
+> +
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96b827049501..46465c986005 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -26640,6 +26640,13 @@ 
+> F:	Documentation/networking/device_drivers/hamradio/z8530drv.rst
+>  F:	drivers/net/hamradio/*scc.c
+>  F:	drivers/net/hamradio/z8530.h
+> 
+> +ZBLOCK COMPRESSED SLAB MEMORY ALLOCATOR
+> +M:	Vitaly Wool <vitaly.wool@konsulko.se>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +F:	Documentation/mm/zblock.rst
+> +F:	mm/zblock.[ch]
+> +
+>  ZD1211RW WIRELESS DRIVER
+>  L:	linux-wireless@vger.kernel.org
+>  S:	Orphan
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index e113f713b493..5aa1479151ec 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -152,6 +152,18 @@ config ZSWAP_ZPOOL_DEFAULT
+>         default "zsmalloc" if ZSWAP_ZPOOL_DEFAULT_ZSMALLOC
+>         default ""
+> 
+> +config ZBLOCK
+> +	tristate "Fast compression allocator with high density"
+> +	depends on ZPOOL
+> +	help
+> +	  A special purpose allocator for storing compressed pages.
+> +	  It stores integer number of same size compressed objects per
+> +	  its block. These blocks consist of several physical pages
+> +	  (2**n, i. e. 1/2/4/8).
+> +
+> +	  With zblock, it is possible to densely arrange objects of
+> +	  various sizes resulting in low internal fragmentation.
+> +
+>  config ZSMALLOC
+>  	tristate
+>  	prompt "N:1 compression allocator (zsmalloc)" if (ZSWAP || ZRAM)
+> diff --git a/mm/Makefile b/mm/Makefile
+> index e7f6bbf8ae5f..9d7e5b5bb694 100644
+> --- a/mm/Makefile
+> +++ b/mm/Makefile
+> @@ -116,6 +116,7 @@ obj-$(CONFIG_DEBUG_VM_PGTABLE) += 
+> debug_vm_pgtable.o
+>  obj-$(CONFIG_PAGE_OWNER) += page_owner.o
+>  obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
+>  obj-$(CONFIG_ZPOOL)	+= zpool.o
+> +obj-$(CONFIG_ZBLOCK)	+= zblock.o
+>  obj-$(CONFIG_ZSMALLOC)	+= zsmalloc.o
+>  obj-$(CONFIG_GENERIC_EARLY_IOREMAP) += early_ioremap.o
+>  obj-$(CONFIG_CMA)	+= cma.o
+> diff --git a/mm/zblock.c b/mm/zblock.c
+> new file mode 100644
+> index 000000000000..ecc7aeb611af
+> --- /dev/null
+> +++ b/mm/zblock.c
+> @@ -0,0 +1,443 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * zblock.c
+> + *
+> + * Author: Vitaly Wool <vitaly.wool@konsulko.se>
+> + * Based on the work from Ananda Badmaev <a.badmaev@clicknet.pro>
+> + * Copyright (C) 2022-2025, Konsulko AB.
+> + *
+> + * Zblock is a small object allocator with the intention to serve as a
+> + * zpool backend. It operates on page blocks which consist of number
+> + * of physical pages being a power of 2 and store integer number of
+> + * compressed pages per block which results in determinism and 
+> simplicity.
+> + *
+> + * zblock doesn't export any API and is meant to be used via zpool 
+> API.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/atomic.h>
+> +#include <linux/list.h>
+> +#include <linux/mm.h>
+> +#include <linux/module.h>
+> +#include <linux/preempt.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/zpool.h>
+> +#include "zblock.h"
+> +
+> +static struct rb_root block_desc_tree = RB_ROOT;
+> +
+> +/* Encode handle of a particular slot in the pool using metadata */
+> +static inline unsigned long metadata_to_handle(struct zblock_block 
+> *block,
+> +				unsigned int block_type, unsigned int slot)
+> +{
+> +	return (unsigned long)(block) | (block_type << SLOT_BITS) | slot;
+> +}
+> +
+> +/* Return block, block type and slot in the pool corresponding to 
+> handle */
+> +static inline struct zblock_block *handle_to_metadata(unsigned long 
+> handle,
+> +				unsigned int *block_type, unsigned int *slot)
+> +{
+> +	*block_type = (handle & (PAGE_SIZE - 1)) >> SLOT_BITS;
+> +	*slot = handle & SLOT_MASK;
+> +	return (struct zblock_block *)(handle & PAGE_MASK);
+> +}
+> +
+> +/*
+> + * Find a block with at least one free slot and claim it.
+> + * We make sure that the first block, if exists, will always work.
+> + */
+> +static inline struct zblock_block *find_and_claim_block(struct 
+> block_list *b,
+> +		int block_type, unsigned long *handle)
+> +{
+> +	struct list_head *l = &b->active_list;
+> +	unsigned int slot;
+> +
+> +	if (!list_empty(l)) {
+> +		struct zblock_block *z = list_first_entry(l, typeof(*z), link);
+> +
+> +		if (--z->free_slots == 0)
+> +			list_move(&z->link, &b->full_list);
+> +		/*
+> +		 * There is a slot in the block and we just made sure it would
+> +		 * remain.
+> +		 * Find that slot and set the busy bit.
+> +		 */
+> +		for (slot = find_first_zero_bit(z->slot_info,
+> +					block_desc[block_type].slots_per_block);
+> +		     slot < block_desc[block_type].slots_per_block;
+> +		     slot = find_next_zero_bit(z->slot_info,
+> +					block_desc[block_type].slots_per_block,
+> +					slot)) {
+> +			if (!test_and_set_bit(slot, z->slot_info))
+> +				break;
+> +			barrier();
+> +		}
+> +
+> +		WARN_ON(slot >= block_desc[block_type].slots_per_block);
+> +		*handle = metadata_to_handle(z, block_type, slot);
+> +		return z;
+> +	}
+> +	return NULL;
+> +}
+> +
+> +/*
+> + * allocate new block and add it to corresponding block list
+> + */
+> +static struct zblock_block *alloc_block(struct zblock_pool *pool,
+> +					int block_type, gfp_t gfp,
+> +					unsigned long *handle)
+> +{
+> +	struct zblock_block *block;
+> +	struct block_list *block_list;
+> +
+> +	block = (void *)__get_free_pages(gfp, block_desc[block_type].order);
+> +	if (!block)
+> +		return NULL;
+> +
+> +	block_list = &pool->block_lists[block_type];
+> +
+> +	/* init block data  */
+> +	block->free_slots = block_desc[block_type].slots_per_block - 1;
+> +	memset(&block->slot_info, 0, sizeof(block->slot_info));
+> +	set_bit(0, block->slot_info);
+> +	*handle = metadata_to_handle(block, block_type, 0);
+> +
+> +	spin_lock(&block_list->lock);
+> +	list_add(&block->link, &block_list->active_list);
+> +	block_list->block_count++;
+> +	spin_unlock(&block_list->lock);
+> +	return block;
+> +}
+> +
+> +/*****************
+> + * API Functions
+> + *****************/
+> +/**
+> + * zblock_create_pool() - create a new zblock pool
+> + * @gfp:	gfp flags when allocating the zblock pool structure
+> + * @ops:	user-defined operations for the zblock pool
+> + *
+> + * Return: pointer to the new zblock pool or NULL if the metadata 
+> allocation
+> + * failed.
+> + */
+> +static struct zblock_pool *zblock_create_pool(gfp_t gfp)
+> +{
+> +	struct zblock_pool *pool;
+> +	struct block_list *block_list;
+> +	int i;
+> +
+> +	pool = kmalloc(sizeof(struct zblock_pool), gfp);
+> +	if (!pool)
+> +		return NULL;
+> +
+> +	/* init each block list */
+> +	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
+> +		block_list = &pool->block_lists[i];
+> +		spin_lock_init(&block_list->lock);
+> +		INIT_LIST_HEAD(&block_list->full_list);
+> +		INIT_LIST_HEAD(&block_list->active_list);
+> +		block_list->block_count = 0;
+> +	}
+> +	return pool;
+> +}
+> +
+> +/**
+> + * zblock_destroy_pool() - destroys an existing zblock pool
+> + * @pool:	the zblock pool to be destroyed
+> + *
+> + */
+> +static void zblock_destroy_pool(struct zblock_pool *pool)
+> +{
+> +	kfree(pool);
+> +}
+> +
+> +
+> +/**
+> + * zblock_alloc() - allocates a slot of appropriate size
+> + * @pool:	zblock pool from which to allocate
+> + * @size:	size in bytes of the desired allocation
+> + * @gfp:	gfp flags used if the pool needs to grow
+> + * @handle:	handle of the new allocation
+> + *
+> + * Return: 0 if success and handle is set, otherwise -EINVAL if the 
+> size or
+> + * gfp arguments are invalid or -ENOMEM if the pool was unable to 
+> allocate
+> + * a new slot.
+> + */
+> +static int zblock_alloc(struct zblock_pool *pool, size_t size, gfp_t 
+> gfp,
+> +			unsigned long *handle)
+> +{
+> +	int block_type = -1;
+> +	struct zblock_block *block;
+> +	struct block_list *block_list;
+> +
+> +	if (!size)
 > +		return -EINVAL;
 > +
-> +	ret = tpm_try_get_ops(chip);
+> +	if (size > PAGE_SIZE)
+> +		return -ENOSPC;
+> +
+> +	/* find basic block type with suitable slot size */
+> +	if (size < block_desc[0].slot_size)
+> +		block_type = 0;
+> +	else {
+> +		struct block_desc_node *block_node;
+> +		struct rb_node *node = block_desc_tree.rb_node;
+> +
+> +		while (node) {
+> +			block_node = container_of(node, typeof(*block_node), node);
+> +			if (size < block_node->this_slot_size)
+> +				node = node->rb_left;
+> +			else if (size >= block_node->next_slot_size)
+> +				node = node->rb_right;
+> +			else {
+> +				block_type = block_node->block_idx + 1;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +	if (WARN_ON(block_type < 0))
+> +		return -EINVAL;
+> +	if (block_type >= ARRAY_SIZE(block_desc))
+> +		return -ENOSPC;
+> +
+> +	block_list = &pool->block_lists[block_type];
+> +
+> +	spin_lock(&block_list->lock);
+> +	block = find_and_claim_block(block_list, block_type, handle);
+> +	spin_unlock(&block_list->lock);
+> +	if (block)
+> +		return 0;
+> +
+> +	/* not found block with free slots try to allocate new empty block */
+> +	block = alloc_block(pool, block_type, gfp & ~(__GFP_MOVABLE | 
+> __GFP_HIGHMEM), handle);
+> +	return block ? 0 : -ENOMEM;
+> +}
+> +
+> +/**
+> + * zblock_free() - frees the allocation associated with the given 
+> handle
+> + * @pool:	pool in which the allocation resided
+> + * @handle:	handle associated with the allocation returned by 
+> zblock_alloc()
+> + *
+> + */
+> +static void zblock_free(struct zblock_pool *pool, unsigned long 
+> handle)
+> +{
+> +	unsigned int slot, block_type;
+> +	struct zblock_block *block;
+> +	struct block_list *block_list;
+> +
+> +	block = handle_to_metadata(handle, &block_type, &slot);
+> +	block_list = &pool->block_lists[block_type];
+> +
+> +	spin_lock(&block_list->lock);
+> +	/* if all slots in block are empty delete whole block */
+> +	if (++block->free_slots == block_desc[block_type].slots_per_block) {
+> +		block_list->block_count--;
+> +		list_del(&block->link);
+> +		spin_unlock(&block_list->lock);
+> +		free_pages((unsigned long)block, block_desc[block_type].order);
+> +		return;
+> +	} else if (block->free_slots == 1)
+> +		list_move_tail(&block->link, &block_list->active_list);
+> +	clear_bit(slot, block->slot_info);
+> +	spin_unlock(&block_list->lock);
+> +}
+> +
+> +/**
+> + * zblock_map() - maps the allocation associated with the given handle
+> + * @pool:	pool in which the allocation resides
+> + * @handle:	handle associated with the allocation to be mapped
+> + *
+> + *
+> + * Returns: a pointer to the mapped allocation
+> + */
+> +static void *zblock_map(struct zblock_pool *pool, unsigned long 
+> handle)
+> +{
+> +	unsigned int block_type, slot;
+> +	struct zblock_block *block;
+> +	unsigned long offs;
+> +	void *p;
+> +
+> +	block = handle_to_metadata(handle, &block_type, &slot);
+> +	offs = ZBLOCK_HEADER_SIZE + slot * block_desc[block_type].slot_size;
+> +	p = (void *)block + offs;
+> +	return p;
+> +}
+> +
+> +/**
+> + * zblock_unmap() - unmaps the allocation associated with the given 
+> handle
+> + * @pool:	pool in which the allocation resides
+> + * @handle:	handle associated with the allocation to be unmapped
+> + */
+> +static void zblock_unmap(struct zblock_pool *pool, unsigned long 
+> handle)
+> +{
+> +}
+> +
+> +/**
+> + * zblock_write() - write to the memory area defined by handle
+> + * @pool:	pool in which the allocation resides
+> + * @handle:	handle associated with the allocation
+> + * @handle_mem: pointer to source memory block
+> + * @mem_len:	length of the memory block to write
+> + */
+> +static void zblock_write(struct zblock_pool *pool, unsigned long 
+> handle,
+> +			 void *handle_mem, size_t mem_len)
+> +{
+> +	unsigned int block_type, slot;
+> +	struct zblock_block *block;
+> +	unsigned long offs;
+> +	void *p;
+> +
+> +	block = handle_to_metadata(handle, &block_type, &slot);
+> +	offs = ZBLOCK_HEADER_SIZE + slot * block_desc[block_type].slot_size;
+> +	p = (void *)block + offs;
+> +	memcpy(p, handle_mem, mem_len);
+> +}
+> +
+> +/**
+> + * zblock_get_total_pages() - gets the zblock pool size in pages
+> + * @pool:	pool being queried
+> + *
+> + * Returns: size in bytes of the given pool.
+> + */
+> +static u64 zblock_get_total_pages(struct zblock_pool *pool)
+> +{
+> +	u64 total_size;
+> +	int i;
+> +
+> +	total_size = 0;
+> +	for (i = 0; i < ARRAY_SIZE(block_desc); i++)
+> +		total_size += pool->block_lists[i].block_count << 
+> block_desc[i].order;
+> +
+> +	return total_size;
+> +}
+> +
+> +/*****************
+> + * zpool
+> + ****************/
+> +
+> +static void *zblock_zpool_create(const char *name, gfp_t gfp)
+> +{
+> +	return zblock_create_pool(gfp);
+> +}
+> +
+> +static void zblock_zpool_destroy(void *pool)
+> +{
+> +	zblock_destroy_pool(pool);
+> +}
+> +
+> +static int zblock_zpool_malloc(void *pool, size_t size, gfp_t gfp,
+> +			unsigned long *handle)
+> +{
+> +	return zblock_alloc(pool, size, gfp, handle);
+> +}
+> +
+> +static void zblock_zpool_free(void *pool, unsigned long handle)
+> +{
+> +	zblock_free(pool, handle);
+> +}
+> +
+> +static void *zblock_zpool_read_begin(void *pool, unsigned long handle,
+> +				void *local_copy)
+> +{
+> +	return zblock_map(pool, handle);
+> +}
+> +
+> +static void zblock_zpool_obj_write(void *pool, unsigned long handle,
+> +				void *handle_mem, size_t mem_len)
+> +{
+> +	zblock_write(pool, handle, handle_mem, mem_len);
+> +}
+> +
+> +static void zblock_zpool_read_end(void *pool, unsigned long handle,
+> +				void *handle_mem)
+> +{
+> +	zblock_unmap(pool, handle);
+> +}
+> +
+> +static u64 zblock_zpool_total_pages(void *pool)
+> +{
+> +	return zblock_get_total_pages(pool);
+> +}
+> +
+> +static struct zpool_driver zblock_zpool_driver = {
+> +	.type =			"zblock",
+> +	.owner =		THIS_MODULE,
+> +	.create =		zblock_zpool_create,
+> +	.destroy =		zblock_zpool_destroy,
+> +	.malloc =		zblock_zpool_malloc,
+> +	.free =			zblock_zpool_free,
+> +	.obj_read_begin =	zblock_zpool_read_begin,
+> +	.obj_read_end =		zblock_zpool_read_end,
+> +	.obj_write =		zblock_zpool_obj_write,
+> +	.total_pages =		zblock_zpool_total_pages,
+> +};
+> +
+> +MODULE_ALIAS("zpool-zblock");
+> +
+> +static void delete_rbtree(void)
+> +{
+> +	while (!RB_EMPTY_ROOT(&block_desc_tree))
+> +		rb_erase(block_desc_tree.rb_node, &block_desc_tree);
+> +}
+> +
+> +static int __init create_rbtree(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
+> +		struct block_desc_node *block_node = kmalloc(sizeof(*block_node),
+> +							GFP_KERNEL);
+> +		struct rb_node **new = &block_desc_tree.rb_node, *parent = NULL;
+> +
+> +		if (!block_node) {
+> +			delete_rbtree();
+> +			return -ENOMEM;
+> +		}
+> +		if (i > 0 && block_desc[i].slot_size <= block_desc[i-1].slot_size) {
+> +			pr_err("%s: block descriptors not in ascending order\n",
+> +				__func__);
+> +			delete_rbtree();
+> +			return -EINVAL;
+> +		}
+> +		block_node->this_slot_size = block_desc[i].slot_size;
+> +		block_node->block_idx = i;
+> +		if (i == ARRAY_SIZE(block_desc) - 1)
+> +			block_node->next_slot_size = PAGE_SIZE;
+> +		else
+> +			block_node->next_slot_size = block_desc[i+1].slot_size;
+> +		while (*new) {
+> +			parent = *new;
+> +			/* the array is sorted so we will always go to the right */
+> +			new = &((*new)->rb_right);
+> +		}
+> +		rb_link_node(&block_node->node, parent, new);
+> +		rb_insert_color(&block_node->node, &block_desc_tree);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int __init init_zblock(void)
+> +{
+> +	int ret = create_rbtree();
+> +
 > +	if (ret)
 > +		return ret;
 > +
-> +	if (!(chip->flags & TPM_CHIP_FLAG_SET_LOCALITY_ENABLED)) {
-> +		tpm_put_ops(chip);
-> +		return -EINVAL;
-> +	}
-> +
-> +	chip->kernel_locality = locality;
-> +	chip->flags &= ~TPM_CHIP_FLAG_SET_LOCALITY_ENABLED;
-> +	tpm_put_ops(chip);
+> +	zpool_register_driver(&zblock_zpool_driver);
 > +	return 0;
-
-a '\n' before return is customary
-
 > +}
-> +EXPORT_SYMBOL_GPL(tpm_chip_set_locality);
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-
-
-Thanks,
-Alok
+> +
+> +static void __exit exit_zblock(void)
+> +{
+> +	zpool_unregister_driver(&zblock_zpool_driver);
+> +	delete_rbtree();
+> +}
+> +
+> +module_init(init_zblock);
+> +module_exit(exit_zblock);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Vitaly Wool <vitaly.wool@konsulko.se>");
+> +MODULE_DESCRIPTION("Block allocator for compressed pages");
+> diff --git a/mm/zblock.h b/mm/zblock.h
+> new file mode 100644
+> index 000000000000..fd72961c077a
+> --- /dev/null
+> +++ b/mm/zblock.h
+> @@ -0,0 +1,176 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Author: Vitaly Wool <vitaly.wool@konsulko.com>
+> + * Copyright (C) 2025, Konsulko AB.
+> + */
+> +#ifndef __ZBLOCK_H__
+> +#define __ZBLOCK_H__
+> +
+> +#include <linux/mm.h>
+> +#include <linux/rbtree.h>
+> +#include <linux/types.h>
+> +
+> +#define SLOT_FREE 0
+> +#define BIT_SLOT_OCCUPIED 0
+> +#define BIT_SLOT_MAPPED 1
+> +
+> +#if PAGE_SIZE == 0x1000
+> +/* max 128 slots per block, max table size 32 */
+> +#define SLOT_BITS 7
+> +#elif PAGE_SIZE == 0x4000
+> +/* max 256 slots per block, max table size 64 */
+> +#define SLOT_BITS 8
+> +#else
+> +#error Unsupported PAGE_SIZE
+> +#endif
+> +
+> +#define MAX_SLOTS (1 << SLOT_BITS)
+> +#define SLOT_MASK ((0x1UL << SLOT_BITS) - 1)
+> +
+> +#define ZBLOCK_HEADER_SIZE	round_up(sizeof(struct zblock_block), 
+> sizeof(long))
+> +#define BLOCK_DATA_SIZE(order) ((PAGE_SIZE << order) - 
+> ZBLOCK_HEADER_SIZE)
+> +#define SLOT_SIZE(nslots, order) (round_down((BLOCK_DATA_SIZE(order) / 
+> nslots), sizeof(long)))
+> +
+> +/**
+> + * struct zblock_block - block metadata
+> + * Block consists of several (1/2/4/8) pages and contains fixed
+> + * integer number of slots for allocating compressed pages.
+> + *
+> + * free_slots:	number of free slots in the block
+> + * slot_info:	contains data about free/occupied slots
+> + */
+> +struct zblock_block {
+> +	struct list_head link;
+> +	DECLARE_BITMAP(slot_info, 1 << SLOT_BITS);
+> +	u32 free_slots;
+> +};
+> +
+> +/**
+> + * struct block_desc - general metadata for block lists
+> + * Each block list stores only blocks of corresponding type which 
+> means
+> + * that all blocks in it have the same number and size of slots.
+> + * All slots are aligned to size of long.
+> + *
+> + * slot_size:		size of slot for this list
+> + * slots_per_block:	number of slots per block for this list
+> + * order:		order for __get_free_pages
+> + */
+> +struct block_desc {
+> +	unsigned int slot_size;
+> +	unsigned short slots_per_block;
+> +	unsigned short order;
+> +};
+> +
+> +struct block_desc_node {
+> +	struct rb_node node;
+> +	unsigned int this_slot_size;
+> +	unsigned int next_slot_size;
+> +	unsigned int block_idx;
+> +};
+> +
+> +static const struct block_desc block_desc[] = {
+> +#if PAGE_SIZE == 0x1000
+> +	{ SLOT_SIZE(63, 0), 63, 0 },
+> +	{ SLOT_SIZE(32, 0), 32, 0 },
+> +	{ SLOT_SIZE(21, 0), 21, 0 },
+> +	{ SLOT_SIZE(15, 0), 15, 0 },
+> +	{ SLOT_SIZE(12, 0), 12, 0 },
+> +	{ SLOT_SIZE(10, 0), 10, 0 },
+> +	{ SLOT_SIZE(9, 0), 9, 0 },
+> +	{ SLOT_SIZE(8, 0), 8, 0 },
+> +	{ SLOT_SIZE(29, 2), 29, 2 },
+> +	{ SLOT_SIZE(13, 1), 13, 1 },
+> +	{ SLOT_SIZE(6, 0), 6, 0 },
+> +	{ SLOT_SIZE(11, 1), 11, 1 },
+> +	{ SLOT_SIZE(5, 0), 5, 0 },
+> +	{ SLOT_SIZE(9, 1), 9, 1 },
+> +	{ SLOT_SIZE(8, 1), 8, 1 },
+> +	{ SLOT_SIZE(29, 3), 29, 3 },
+> +	{ SLOT_SIZE(13, 2), 13, 2 },
+> +	{ SLOT_SIZE(12, 2), 12, 2 },
+> +	{ SLOT_SIZE(11, 2), 11, 2 },
+> +	{ SLOT_SIZE(10, 2), 10, 2 },
+> +	{ SLOT_SIZE(9, 2), 9, 2 },
+> +	{ SLOT_SIZE(17, 3), 17, 3 },
+> +	{ SLOT_SIZE(8, 2), 8, 2 },
+> +	{ SLOT_SIZE(15, 3), 15, 3 },
+> +	{ SLOT_SIZE(14, 3), 14, 3 },
+> +	{ SLOT_SIZE(13, 3), 13, 3 },
+> +	{ SLOT_SIZE(6, 2), 6, 2 },
+> +	{ SLOT_SIZE(11, 3), 11, 3 },
+> +	{ SLOT_SIZE(10, 3), 10, 3 },
+> +	{ SLOT_SIZE(9, 3), 9, 3 },
+> +	{ SLOT_SIZE(4, 2), 4, 2 },
+> +#elif PAGE_SIZE == 0x4000
+> +	{ SLOT_SIZE(255, 0), 255, 0 },
+> +	{ SLOT_SIZE(185, 0), 185, 0 },
+> +	{ SLOT_SIZE(145, 0), 145, 0 },
+> +	{ SLOT_SIZE(113, 0), 113, 0 },
+> +	{ SLOT_SIZE(92, 0), 92, 0 },
+> +	{ SLOT_SIZE(75, 0), 75, 0 },
+> +	{ SLOT_SIZE(60, 0), 60, 0 },
+> +	{ SLOT_SIZE(51, 0), 51, 0 },
+> +	{ SLOT_SIZE(43, 0), 43, 0 },
+> +	{ SLOT_SIZE(37, 0), 37, 0 },
+> +	{ SLOT_SIZE(32, 0), 32, 0 },
+> +	{ SLOT_SIZE(27, 0), 27, 0 },
+> +	{ SLOT_SIZE(23, 0), 23, 0 },
+> +	{ SLOT_SIZE(19, 0), 19, 0 },
+> +	{ SLOT_SIZE(17, 0), 17, 0 },
+> +	{ SLOT_SIZE(15, 0), 15, 0 },
+> +	{ SLOT_SIZE(13, 0), 13, 0 },
+> +	{ SLOT_SIZE(11, 0), 11, 0 },
+> +	{ SLOT_SIZE(10, 0), 10, 0 },
+> +	{ SLOT_SIZE(9, 0), 9, 0 },
+> +	{ SLOT_SIZE(8, 0), 8, 0 },
+> +	{ SLOT_SIZE(15, 1), 15, 1 },
+> +	{ SLOT_SIZE(14, 1), 14, 1 },
+> +	{ SLOT_SIZE(13, 1), 13, 1 },
+> +	{ SLOT_SIZE(12, 1), 12, 1 },
+> +	{ SLOT_SIZE(11, 1), 11, 1 },
+> +	{ SLOT_SIZE(10, 1), 10, 1 },
+> +	{ SLOT_SIZE(9, 1), 9, 1 },
+> +	{ SLOT_SIZE(8, 1), 8, 1 },
+> +	{ SLOT_SIZE(15, 2), 15, 2 },
+> +	{ SLOT_SIZE(14, 2), 14, 2 },
+> +	{ SLOT_SIZE(13, 2), 13, 2 },
+> +	{ SLOT_SIZE(12, 2), 12, 2 },
+> +	{ SLOT_SIZE(11, 2), 11, 2 },
+> +	{ SLOT_SIZE(10, 2), 10, 2 },
+> +	{ SLOT_SIZE(9, 2), 9, 2 },
+> +	{ SLOT_SIZE(8, 2), 8, 2 },
+> +	{ SLOT_SIZE(7, 2), 7, 2 },
+> +	{ SLOT_SIZE(6, 2), 6, 2 },
+> +	{ SLOT_SIZE(5, 2), 5, 2 },
+> +#endif /* PAGE_SIZE */
+> +};
+> +
+> +/**
+> + * struct block_list - stores metadata of particular list
+> + * lock:		protects the list of blocks
+> + * active_list:		linked list of active (non-full) blocks
+> + * full_list:		linked list of full blocks
+> + * block_count:		total number of blocks in the list
+> + */
+> +struct block_list {
+> +	spinlock_t lock;
+> +	struct list_head active_list;
+> +	struct list_head full_list;
+> +	unsigned long block_count;
+> +};
+> +
+> +/**
+> + * struct zblock_pool - stores metadata for each zblock pool
+> + * @block_lists:	array of block lists
+> + * @zpool:		zpool driver
+> + *
+> + * This structure is allocated at pool creation time and maintains 
+> metadata
+> + * for a particular zblock pool.
+> + */
+> +struct zblock_pool {
+> +	struct block_list block_lists[ARRAY_SIZE(block_desc)];
+> +	struct zpool *zpool;
+> +};
+> +
+> +
+> +#endif
