@@ -1,117 +1,105 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126321FDD;
-	Sat, 12 Apr 2025 14:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845AE19CD0E
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744468106; cv=none; b=Ed7NX+zCrMiiqQYolZMi/IWiam57gKd4GHTebqOYE++OfxNKAcmJST4ikeSFk4B1iO6Fo6HZCOxLxREE62JP0u1eRYBD51O+ozohs3aMnyHKcEfP6kVbYk77VtE9KlNXlebjU/9JEgbYSabLuC89Kw1MIcnssvuoFPHN9xZLoIA=
+	t=1744468127; cv=none; b=rXgWDYzgMyhlU8dnnGbhiY3lkMa+PE7Xu3V5n2NJLez5mQb7Wd+pD+uC/qyT/DIE/IItVNQaZy1yxON1/04UJSyVUwBQ5XDOaPUW2woCL95q2LfKXo+lB5DjyMO3s77hyeOritDisSnwgpLZ9d9yQ3aAufYuZYDsOqtwbFwh1uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744468106; c=relaxed/simple;
-	bh=vmztPP/1esSKAxnm4b2Tct+Q32/hBncSnITegjELKWw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=gdMnFIeR0GwNK07SEEOpdxYS6ilzvQ32J2sskdq6vC32zQAl9/T6cA+VQuZq41D/zGNIy8JLFyqtB2UIckRXHgig/cK5UbuVeKxOuuY0lE4mLkmHoE96GfoM0xpIlqpRL/5NQqci6grAzhSLaYvQKDEVOwbmhT8V4gtP4WzlF/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=upkh0UPb; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744468127; c=relaxed/simple;
+	bh=Q4Xi4+EuBWmatlDXOmN20GwswDKxKmLUhLfT7gpY0hM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RtbDZXOMnSdLER97DGPfoDCjMlIl00BmImZi4rVtN/+ZM5ZtnF8EWAbqoFpf+1a2IsQjikcLUEdCWdJ3Pn/6NsRB7kTD6nq+Xf+VmuVL74y8W//Txx2EhK3Y6QkRaOpZZX+NK9q3Fw1I1bGWWD86wwX2wLzaxZzJeY3AeLpjg4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=djrcA9oJ; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="upkh0UPb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744468082; x=1745072882; i=markus.elfring@web.de;
-	bh=VRUC+sJ4zHMKef2PUfwVU1bMhUaNY0Sm7Aw7nUjDO4c=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=upkh0UPbfrat9YCJythFOFa5KMZv7fAk1x/Cwsz6sMfJfX6zrd+vL/97Y3L1mEP+
-	 v/xwwrnx7fcPnH3JWpIQ+TU1y+ue6CwMDCgHSG9ZsYGKoo2fru8YQEjURydAL5kE8
-	 l+sHovTBZzGwWKVF1/W/sNIp2bcg7h9hV8kfmPM9rR1uYSeN4RiTJYmgGgdGISgNo
-	 FpoYMxuyKfwu/CB3/RBud8IL4/nN9dWryN1tMSaSkqQpGcTVe4CkhsiWe4S61GoVL
-	 O06R1uFHjZ5dz1I7fyyCs32/hqKkVIaLAe/1FZ2/UOOuAmGkpP20s6TUWxHdMBBfE
-	 LKYmHY/LT8WghfifMw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.84]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MhWkh-1tPrQv1dX1-00oxB6; Sat, 12
- Apr 2025 16:28:02 +0200
-Message-ID: <d4ec6adf-02db-4937-a483-5655f70aa205@web.de>
-Date: Sat, 12 Apr 2025 16:27:59 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djrcA9oJ"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso32576495e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744468124; x=1745072924; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Yug8Lg77jkFOaaSI2hhnGA0YoGthbaYjMrZs5RGYQTk=;
+        b=djrcA9oJvz9bClgvpxto1kzf6YLvfDHxBu2JwvylLQVg4ANvAt26mricfETIIaDmBc
+         Smz0anvwR1+2bRG97KkarvBg+1zlnV2IPSGx7Os558R/ua5sy18E2T+wxQn+HL477iB5
+         TqME0tIqJDrq3jSj5LhgK80IM8tCpN0Lgv4efP6FzGRL3WbXsHP+eHgUUt+BnD5MWPOl
+         eEcGflERTq2eKTfzd7uMPdexc8Rj86nL4FRXQjorjvoOopSLLHRxWbQ1ERla2zD4rmCM
+         TdYhLL8cN2ZbqfBLfOiPyFIcD97tByoiU7YH18gVlbht42FvCDkvospAU/SzojiCDu1g
+         3LQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744468124; x=1745072924;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yug8Lg77jkFOaaSI2hhnGA0YoGthbaYjMrZs5RGYQTk=;
+        b=t80aZ+iZnjXDZmN08Sy/tGD02WTE6gX0xPBS6ooYHUMwiX6/okCT/aLP0bZHWj9MBU
+         n1xqx2ZB/vqRzrs+RSQ7T62XAIAC56SKuYOL5u8A8yfdYoa9dzQ4Xy7FlozrsCCo/+oc
+         BwStenDVMGL2gYHp/wp3O1kEHrtSTLi/c/GuamxQ/vSk1+gLeCJHHxAPnT3LGIddHWDX
+         YIQpfjLfKA2nYM5MnUMuKOTBr7wPi1J8Q9tF3lJTIqBZ1LkPfKpu/uqsM7W+13vtbWct
+         fHj0V6KNLXvP0fWFGWID7HAJ5uP7EUfSBBg8pTWOxPe37LxxnRqxDR8zaZkyj64jZquY
+         aAgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHulh/ToFnS4J2Tps5HY8llUt1mIAbYJ8MWr5v0fzj5Il+lyn/1Mnincj2YY6gAbyjJuO+SWepNpSAdJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw54K50mukEWs6FmVxVvv7/VZ7RxNzoUCkrtYjRa5nn6gygR0Sd
+	s5eKEgpdLJoVeEqM816uAErF8Msu0uVczy/926xnZpjFTIMHmoVXj1OFcsUT91U=
+X-Gm-Gg: ASbGnct4lJ+Xa1aFdn5FmJKLrKK+TNpjULPqT4atAoM1WCnPAYP/bSFH4tiom92FHi8
+	SYzRrRlnHbuQbnj9xgUkrbLU5bJ9OsdVfwt0tk0JEco3c4Wq7GKj2POh1HA38JINfvaKPvT3t8/
+	y5jG6i2UECBEX4J7LctCuyWnYNRUJ83QaCqTjvVJ4cgFcVxl4pX3zmM0t8rbLkbNmd3HfI7Dfil
+	kTHcRNr37TAPwiUqlxPwjBBREb2+LXCsCCXGPybWRjL2iSCO8jDIJY4twSq+QwcmTjtvKT4JU7b
+	Po5py7GQ0Yr0HFYtMx2V3jvMC/uxNMunWcJ1Qpdi9PwxQOFIhU2OBSsp
+X-Google-Smtp-Source: AGHT+IH34D5glm0+0TkKdRd2QqYl+pfjKMVxmTngaZruRkPsk03mWnWy81pDX8UHh5AZeQmoxzxDVQ==
+X-Received: by 2002:a05:6000:2507:b0:390:e311:a8c7 with SMTP id ffacd0b85a97d-39ea51ecbecmr5651152f8f.5.1744468123668;
+        Sat, 12 Apr 2025 07:28:43 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae96c074sm5086157f8f.28.2025.04.12.07.28.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 07:28:43 -0700 (PDT)
+Date: Sat, 12 Apr 2025 17:28:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Yadav, Arvind" <arvyadav@amd.com>
+Cc: Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Arvind Yadav <Arvind.Yadav@amd.com>,
+	Shashank Sharma <shashank.sharma@amd.com>,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] drm/amdgpu: Fix double free in
+ amdgpu_userq_fence_driver_alloc()
+Message-ID: <344bcc64-bf13-4726-8530-48eca7d643d1@stanley.mountain>
+References: <5ff4d367-b5bd-40ae-9529-56d08ea6c1d0@stanley.mountain>
+ <92b7d28e-6103-4c76-17dd-6ae94552a043@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Alexandre Courbot <gnurou@gmail.com>, linux-media@vger.kernel.org,
- virtualization@lists.linux.dev
-Cc: Alexandre Courbot <acourbot@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Albert Esteve <aesteve@redhat.com>,
- Alistair Delva <adelva@google.com>, Changyeon Jo <changyeon@google.com>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Gurchetan Singh <gurchetansingh@google.com>,
- Hans Verkuil <hverkuil@xs4all.nl>, Jason Wang <jasowang@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Nb1C9m69vNmoctkPjPGPYvOhYSts2Z4HKu1+JCjHY4/iIAngSYC
- 6yng0eTPDoyT+fjf7svFuLr3o5sII/WapBQbvjRGfxaiieowQNKWjcHtXDkg04CHyC5hfDV
- Jarf3atIHTM8Ql9DwnlLuqf2hd/L1LCXpmMUJNW+93rYiLr7eSyFqW51SqWgJMp6U/yDJsv
- zPyO1hSo2/Rqr6s2txBEA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jhk7V8fLhek=;O6ZwHegHmu5XDjfj6VbWSlNksmX
- v47WOSaJoN06jXTpshw6ZpXy9z1xpSuSEx44NJEFlOSNG9GmgXA1yDp8wmsptL6PDRY9pKX83
- S4BWAs6cEUwEQksgJhfn70eo3AuKihLjTqIOH3LoDp1psvqSU0Y9U9Umd6KQxRWB97ef5hGXz
- Xk4jjBBHvW/OU2kGG8yJFu7FYYXoIHhdlhpUkEA6Zy9mbQ0zeXF0HLs4DVhx1zT8DR7yRLSwn
- Il4GeZChw/nSumvMCm0jnWgBokmVS6bQEPPL62MltNm1fhNfZTncvwKIMcZfsFin3rLsWo9kL
- fNJ0kmZmqwdHvx2Olt1Rfif1laSnuA8FSLU/+X7y6uqAIZHE1cx6T4nug1vhPUkYmuG2wmsD0
- 3x1+VsbuyGYxZkw54ZHMF3PBsJAfXAw21fn+fJ2CaRcec3+LrTN/NPPFuPhpYExwiYqYEaKye
- 3/M/CudK07uu5hjWY/lxfG/nnaIVME4ByVeLdr1dh18Fuc9tdRlXA4HjB/xC2pUh1awqB7BHf
- Te6Ub3We8iIK4sTagDtUXzG6PzKdM9OEf1W+27WudCQR68OWp/f4zgw6w0qUSBbhHnW53eHLU
- Bqlf8f55lRIlNfRl0jlN159dZpv8p7QSYvv0LHZdpotJFYRashSUErPP48zqK4Mzww4iLMvs1
- TsyrTpi29a+AIlC9m89gLwLeejDZWXkxJVHcoWYdBzBIeUyVcTfZlFy4JKNta7+6Y2ErCER48
- uMh1bHk+2rJzKWO5Z91zpAWwpsX84wBedrcxBx+52eH88w6Q8SVo7tLe4Skom83WguWvYTuIP
- dKRsy/44MlbX36UhBUvm0PN9fjN2fNkXYVw1BQsazr88fsC8x4WpijpBntDDRtnY/ZKYbhPy2
- V1YTyb6E+dXk2rpNirpesmfvQxjeYTp4OptDxw+4sYEdnWOPNJ5g0jlGNF84d552OB/IfcD75
- c2EmLb+CUbfBB/9rTczeJXvt8GLqOn0UCocdhwH46SLo1+hAIKfdCUIanwNU/xK+O0evp4ZoC
- phA443/9sYSf4k3FYDSLVAtTbUCt//51C1Vv/N9AoOEzS7B0MtI8KBic/NIuqpJpMALfBnNuo
- FNxw/4jr+DaLM5yxKLYfPodmkpqKt6SSZSRw+AiMtViJjxbPidK+iMWxg6XE0SeDbp0YadJR/
- Yd0ZK1QzBOGV0NUzalRuuAHys/QqO2L9tDUBkax/Z5qT68HgfCvWQ4ZqgZrSAyyW1pXLDBTU6
- TlLwc/UM24ZL4N+ULodlXJ/AszWI/hKt2eMg2BRJCf+X0qMahnp1DOdiUB5UVsbwGVsLxv1aU
- +rXRWP7zCbhtTedFC5ZSUtPBg8FGAJrVxlGaeTRaFOz1B58CiY8vTzkQJGqc16gMfWEnG+0y4
- 5sBFvUTXKdA/T57uuppGBOY9RF/OS7v7qQqOOTKVz9n2nYgRwPzxOqG4Gsdf4+Vi+3ErtG4GA
- wxvMdSL8W7YYxaqiNYAghWcJAqYdNd6e7hyM6DJSx0M/ZMjcUsixYXjEkv4HOyCoGQ8mr4g==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <92b7d28e-6103-4c76-17dd-6ae94552a043@amd.com>
 
-=E2=80=A6
-> +++ b/drivers/media/virtio/virtio_media_driver.c
-> @@ -0,0 +1,959 @@
-=E2=80=A6
-> +static struct virtio_media_session *
-> +virtio_media_session_alloc(struct virtio_media *vv, u32 id,
-> +			   bool nonblocking_dequeue)
-> +{
-=E2=80=A6
-> +	init_waitqueue_head(&session->dqbuf_wait);
-> +
-> +	mutex_lock(&vv->sessions_lock);
-> +	list_add_tail(&session->list, &vv->sessions);
-> +	mutex_unlock(&vv->sessions_lock);
-> +
-> +	return session;
-=E2=80=A6
+On Thu, Apr 10, 2025 at 10:29:31PM +0530, Yadav, Arvind wrote:
+> Please change this also instead of 'goto free_fence_drv' just return err.
+> 
+>         fence_drv = kzalloc(sizeof(*fence_drv), GFP_KERNEL);
+>         if (!fence_drv) {
+>                 DRM_ERROR("Failed to allocate memory for fence driver\n");
+>                 r = -ENOMEM;
+>                 goto free_fence_drv; // this should be replace by return.
+>         }
+> 
+> ~arvind
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(mutex)(&vv->sessions_lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/mutex.h#L2=
-01
+I noticed that when I was writing my patch as well.  I'm always in favor
+of direct returns, but it makes the patch confusing to add this unrelated
+cleanup...  I'll send it as a separate patch.
 
-Regards,
-Markus
+regards,
+dan carpenter
+
