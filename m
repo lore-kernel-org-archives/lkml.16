@@ -1,139 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD312AF04
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 23:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B742119E83C;
+	Sat, 12 Apr 2025 23:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744499960; cv=none; b=dZnceCMt5HOwGXQnjQQuqU9KRSFDdRfSUrCuBul8DR1iRwq+AqtUiatgYStx1wF8n93qxntuGZSjw0kyP2g99Cr2s4yq7TrBnNTlL+Iqh+OBaD6TrhvS50DNTk/vQ4CHLUOV0+FZHbYT7JZyxiuXDW/j2wmHZcVgo2rl9QC/lSA=
+	t=1744500539; cv=none; b=QtG3Vv91h1TEFidKsEZ8Q2pTeKKnZ5YNFLDOe1HAb70gd13D1REQl6dTMDmA12WjZOGRmCahwnHa8kIHLgfUZYdulBjiuflRFI3K0zyHjTc0423PPycW1xF7ZY7+fxB+bN0uxNWfYhgxnbmkrAsu3EKDIQXusUuZpCTUT8D/uKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744499960; c=relaxed/simple;
-	bh=kFAP0nfFG3At58SehEWpuPAFPxXZyU/xyDOYPZcyDa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GYwoewod4um9+gI0aZbamsWZv9D/Y9PMTZ4TGkOtWlmDJc5ZOT930MxlvfuZpsQHreN0JwosGlla/T9mKptFpwRTHS+EXQZh7gl/2r4R9HTV2e9eVGBXNA2H+pOzqU+dVM8AKlGCcEqsI2LmgC2SarWjGR5zUmr+6qOfgm5xxfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=keFYH8Ie; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744500539; c=relaxed/simple;
+	bh=gQMrL4+swJuQvx5mpzAd7Rauv7uGkymlaI2Gdq19Beg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hRJPpXEMVJjAINSJOsrSct9eI5QDMB9+oqgl+A4VPJrGW8/zQQ/Y4I1beCrKe2eV5T7rGySVigM+QTnuf1/VtDI3GRK0GvuPfjZIbCY5RwJHaXQ+gSTjPt3JVwfB1nLxNUj4Le4s/a4JpnqmeV78rg4lcc5Lze6fq3ZLvGkCxuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=g0tvWINM; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="keFYH8Ie"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744499958; x=1776035958;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=kFAP0nfFG3At58SehEWpuPAFPxXZyU/xyDOYPZcyDa8=;
-  b=keFYH8Ie3gECnlbS1Iid5/t7AQe2KdlKJWycwT5lmTu82Twf3GBVUwjh
-   qAXqXw4TD2gfYRXtOne2U1R+N3eFGNwbHoK0r+y4lxEs3KzbisarRzbVg
-   nEGHRxJhRXFcB+3tPRSliwInEaDqXqdJptUim0j+DavE77LFBa3cLhQ/K
-   dlhDnXnkoXpigqThwrcE28WAxglh+MpVNd2zTMlgMoQCBgKRg5q3pufqa
-   Dp19lWUsSgAuBd8XoxmbrGA+6h5zt8Xfj8KNOhBrnQ07QpcvFvyxnQyld
-   DPDQ7a3u0QSF7noV8xEy9VWORktu1BEQK1Dr2Z9jsFE75Y5VqS4Yv8uzr
-   Q==;
-X-CSE-ConnectionGUID: TlSZxbbdTzGz7MNx0hCVxg==
-X-CSE-MsgGUID: OZp7ZiTvSJ+1TgdcOLRknw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46146936"
-X-IronPort-AV: E=Sophos;i="6.15,209,1739865600"; 
-   d="scan'208";a="46146936"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 16:19:17 -0700
-X-CSE-ConnectionGUID: HzFnhblXRkO3uwImk3sKhQ==
-X-CSE-MsgGUID: Aat8rs6oQ5C8wuvAEv/N6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,209,1739865600"; 
-   d="scan'208";a="130051135"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 12 Apr 2025 16:19:14 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u3k80-000CDO-0S;
-	Sat, 12 Apr 2025 23:19:12 +0000
-Date: Sun, 13 Apr 2025 07:18:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: arch/riscv/lib/strncmp.S:11: Error: unrecognized opcode
- `__alternative_cfg("nop", "j strncmp_zbb",0,30,'
-Message-ID: <202504130710.3IKz6Ibs-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="g0tvWINM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744500537; x=1776036537;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=fLsPIBKLCkZ+nG1Keg61Tbv/X4V+aLxUpZHUG+AmbOo=;
+  b=g0tvWINMiXh6uwLdtAHoiEdpryNaYe0+0VxU5FKzo3OaJg7MUJyIMclO
+   P4I3EL3IxfdnkPOlqez5x+uZ/YsnjeW7D66bsna1xqxVKl9mr0w7OtP8j
+   TtCcbPwAEXnO7+QuJu6pTLhix4ZEiI9a9UX2cbwId/VOqRPNXa8RWW3EH
+   w=;
+X-IronPort-AV: E=Sophos;i="6.15,209,1739836800"; 
+   d="scan'208";a="186895245"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 23:28:55 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:23025]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
+ id e1f47f7b-e72f-4af3-bd5c-2e670cfbc360; Sat, 12 Apr 2025 23:28:54 +0000 (UTC)
+X-Farcaster-Flow-ID: e1f47f7b-e72f-4af3-bd5c-2e670cfbc360
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sat, 12 Apr 2025 23:28:54 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sat, 12 Apr 2025 23:28:52 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <qasdev00@gmail.com>
+CC: <jlayton@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>
+Subject: Re: [PATCH] net: use %ld format specifier for PTR_ERR in pr_warn
+Date: Sat, 12 Apr 2025 16:28:38 -0700
+Message-ID: <20250412232839.66642-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250412225528.12667-1-qasdev00@gmail.com>
+References: <20250412225528.12667-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b676ac484f847bbe5c7d29603f41475b64fefe55
-commit: 9343aaba1f256ff42730db5a61efc32a86149776 RISC-V: separate Zbb optimisations requiring and not requiring toolchain support
-date:   4 weeks ago
-config: riscv-randconfig-001-20250413 (https://download.01.org/0day-ci/archive/20250413/202504130710.3IKz6Ibs-lkp@intel.com/config)
-compiler: riscv32-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250413/202504130710.3IKz6Ibs-lkp@intel.com/reproduce)
+From: Qasim Ijaz <qasdev00@gmail.com>
+Date: Sat, 12 Apr 2025 23:55:28 +0100
+> PTR_ERR yields type long, so use %ld format specifier in pr_warn.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504130710.3IKz6Ibs-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/riscv/lib/strncmp.S: Assembler messages:
->> arch/riscv/lib/strncmp.S:11: Error: unrecognized opcode `__alternative_cfg("nop", "j strncmp_zbb",0,30,'
->> arch/riscv/lib/strncmp.S:12: Error: junk at end of line, first unrecognized character is `0'
---
-   arch/riscv/lib/strlen.S: Assembler messages:
->> arch/riscv/lib/strlen.S:11: Error: unrecognized opcode `__alternative_cfg("nop", "j strlen_zbb",0,30,'
->> arch/riscv/lib/strlen.S:12: Error: junk at end of line, first unrecognized character is `0'
---
-   arch/riscv/lib/strcmp.S: Assembler messages:
->> arch/riscv/lib/strcmp.S:11: Error: unrecognized opcode `__alternative_cfg("nop", "j strcmp_zbb",0,30,'
->> arch/riscv/lib/strcmp.S:12: Error: junk at end of line, first unrecognized character is `0'
+errno fits in the range of int, so no need to use %ld.
 
 
-vim +11 arch/riscv/lib/strncmp.S
+> 
+> Fixes: 193510c95215 ("net: add debugfs files for showing netns refcount tracking info")
 
-    10	
-  > 11		__ALTERNATIVE_CFG("nop", "j strncmp_zbb", 0, RISCV_ISA_EXT_ZBB,
-  > 12			IS_ENABLED(CONFIG_RISCV_ISA_ZBB) && IS_ENABLED(CONFIG_TOOLCHAIN_HAS_ZBB))
-    13	
-    14		/*
-    15		 * Returns
-    16		 *   a0 - comparison result, value like strncmp
-    17		 *
-    18		 * Parameters
-    19		 *   a0 - string1
-    20		 *   a1 - string2
-    21		 *   a2 - number of characters to compare
-    22		 *
-    23		 * Clobbers
-    24		 *   t0, t1, t2
-    25		 */
-    26		li	t2, 0
-    27	1:
-    28		beq	a2, t2, 2f
-    29		lbu	t0, 0(a0)
-    30		lbu	t1, 0(a1)
-    31		addi	a0, a0, 1
-    32		addi	a1, a1, 1
-    33		bne	t0, t1, 3f
-    34		addi	t2, t2, 1
-    35		bnez	t0, 1b
-    36	2:
-    37		li	a0, 0
-    38		ret
-    39	3:
-    40		/*
-    41		 * strncmp only needs to return (< 0, 0, > 0) values
-    42		 * not necessarily -1, 0, +1
-    43		 */
-    44		sub	a0, t0, t1
-    45		ret
-    46	
+The series is not yet applied.  It's not necessary this time, but
+in such a case, please reply to the original patch thread.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Also, please make sure your patch can be applied cleanly on the latest
+remote net-next.git and the Fixes tag points to an existing commit.
+
+
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com> 
+> ---
+>  net/core/net_namespace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> index f47b9f10af24..a419a3aa57a6 100644
+> --- a/net/core/net_namespace.c
+> +++ b/net/core/net_namespace.c
+> @@ -1652,7 +1652,7 @@ static int __init ns_debug_init(void)
+>  	if (ref_tracker_debug_dir) {
+>  		ns_ref_tracker_dir = debugfs_create_dir("net_ns", ref_tracker_debug_dir);
+>  		if (IS_ERR(ns_ref_tracker_dir)) {
+> -			pr_warn("net: unable to create ref_tracker/net_ns directory: %d\n",
+> +			pr_warn("net: unable to create ref_tracker/net_ns directory: %ld\n",
+>  				PTR_ERR(ns_ref_tracker_dir));
+>  			goto out;
+>  		}
+> -- 
+> 2.39.5
