@@ -1,57 +1,45 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B742119E83C;
-	Sat, 12 Apr 2025 23:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9345417A586;
+	Sat, 12 Apr 2025 23:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744500539; cv=none; b=QtG3Vv91h1TEFidKsEZ8Q2pTeKKnZ5YNFLDOe1HAb70gd13D1REQl6dTMDmA12WjZOGRmCahwnHa8kIHLgfUZYdulBjiuflRFI3K0zyHjTc0423PPycW1xF7ZY7+fxB+bN0uxNWfYhgxnbmkrAsu3EKDIQXusUuZpCTUT8D/uKw=
+	t=1744500785; cv=none; b=ecVOX5fPSVfebKMHYoTZ37y6aIopojJZfVhM4mgDhHiPUtN9bk9PgAs+40cgmXfzAsg2raSDpN4Va0l+TqqEz5/Pjh3HQRUIWhv8K3CzuKyavUWxYqc/+79BVvE2wmzWbwGCkaFZirOPH4AM8BNWWWjzJ65l2q+WU0OR/7fgkwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744500539; c=relaxed/simple;
-	bh=gQMrL4+swJuQvx5mpzAd7Rauv7uGkymlaI2Gdq19Beg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hRJPpXEMVJjAINSJOsrSct9eI5QDMB9+oqgl+A4VPJrGW8/zQQ/Y4I1beCrKe2eV5T7rGySVigM+QTnuf1/VtDI3GRK0GvuPfjZIbCY5RwJHaXQ+gSTjPt3JVwfB1nLxNUj4Le4s/a4JpnqmeV78rg4lcc5Lze6fq3ZLvGkCxuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=g0tvWINM; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744500785; c=relaxed/simple;
+	bh=ZPH/e/v6NifavB3+ggOqjwMMFpXaeZxe2UFED02ot1A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bVu80jviBncbNf6shDXwfDa/2bg6gICRjYvq/vmv7y45m74pGJS/oTGoq6XjZhaQw+RwLqyC+q0ggabIC6qrMFr/TeMSBRWVz/Pgz+bpmi74tM7yDMI3q1mqSnGFo/CfWxwkwryKA2OmSkCY2x6d3hx8wluHZlgTajZvZGBQDow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=i/7kPVAx; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="g0tvWINM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744500537; x=1776036537;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fLsPIBKLCkZ+nG1Keg61Tbv/X4V+aLxUpZHUG+AmbOo=;
-  b=g0tvWINMiXh6uwLdtAHoiEdpryNaYe0+0VxU5FKzo3OaJg7MUJyIMclO
-   P4I3EL3IxfdnkPOlqez5x+uZ/YsnjeW7D66bsna1xqxVKl9mr0w7OtP8j
-   TtCcbPwAEXnO7+QuJu6pTLhix4ZEiI9a9UX2cbwId/VOqRPNXa8RWW3EH
-   w=;
-X-IronPort-AV: E=Sophos;i="6.15,209,1739836800"; 
-   d="scan'208";a="186895245"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 23:28:55 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:23025]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
- id e1f47f7b-e72f-4af3-bd5c-2e670cfbc360; Sat, 12 Apr 2025 23:28:54 +0000 (UTC)
-X-Farcaster-Flow-ID: e1f47f7b-e72f-4af3-bd5c-2e670cfbc360
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sat, 12 Apr 2025 23:28:54 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.45) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sat, 12 Apr 2025 23:28:52 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <qasdev00@gmail.com>
-CC: <jlayton@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-Subject: Re: [PATCH] net: use %ld format specifier for PTR_ERR in pr_warn
-Date: Sat, 12 Apr 2025 16:28:38 -0700
-Message-ID: <20250412232839.66642-1-kuniyu@amazon.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="i/7kPVAx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=lSowut/bbGT9X2CX8uCJCqJot1poQOhEcYPmM/0qq+s=; b=i/7kPVAxJJA+HC9V
+	708bSBXwlhqSIiwiV/fV4uCY0XL3wHgoRIZqOQpJ/dWR/Cg2SRPvOU7G0CDhcoaMp7YSJH0NYbUf/
+	IkuZif9HEDXxQLW7LFFaDFZxyk44MAOi89BIYV0avrW14GWtkOc3/p9/m7VMZnnCoW23KpCvZb6D9
+	uG/JSiMGF0I0vGwxCdqmQEAqUsyi99++hipF6eYF/TM3ebAmcQr6nzXqTpZc65pNDUtlNN9/IufpF
+	yutUFBTf5I18t5zAZr7K67IFBqrp6SPVr2QgFnqTd7BwKxSeNMRQ/tAWQr5DwzSI+PQWUHBrCGZR0
+	RSgr6DeLH9hvvCJ+iA==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u3kL8-00Atqa-1v;
+	Sat, 12 Apr 2025 23:32:46 +0000
+From: linux@treblig.org
+To: ardb@kernel.org,
+	haren@us.ibm.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] crypto: deadcode structs from 'comp' removal
+Date: Sun, 13 Apr 2025 00:32:41 +0100
+Message-ID: <20250412233241.1167401-1-linux@treblig.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250412225528.12667-1-qasdev00@gmail.com>
-References: <20250412225528.12667-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,44 +47,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Qasim Ijaz <qasdev00@gmail.com>
-Date: Sat, 12 Apr 2025 23:55:28 +0100
-> PTR_ERR yields type long, so use %ld format specifier in pr_warn.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-errno fits in the range of int, so no need to use %ld.
+Ard's recent series of patches removing 'comp' implementations
+left behind a bunch of trivial structs, remove them.
 
+These are:
+  crypto842_ctx - commit 2d985ff0072f ("crypto: 842 - drop obsolete 'comp'
+implementation")
+  lz4_ctx       - commit 33335afe33c9 ("crypto: lz4 - drop obsolete 'comp'
+implementation")
+  lz4hc_ctx     - commit dbae96559eef ("crypto: lz4hc - drop obsolete
+'comp' implementation")
+  lzo_ctx       - commit a3e43a25bad0 ("crypto: lzo - drop obsolete
+'comp' implementation")
+  lzorle_ctx    - commit d32da55c5b0c ("crypto: lzo-rle - drop obsolete
+'comp' implementation")
 
-> 
-> Fixes: 193510c95215 ("net: add debugfs files for showing netns refcount tracking info")
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ crypto/842.c     | 4 ----
+ crypto/lz4.c     | 4 ----
+ crypto/lz4hc.c   | 4 ----
+ crypto/lzo-rle.c | 4 ----
+ crypto/lzo.c     | 4 ----
+ 5 files changed, 20 deletions(-)
 
-The series is not yet applied.  It's not necessary this time, but
-in such a case, please reply to the original patch thread.
+diff --git a/crypto/842.c b/crypto/842.c
+index 5fb37a925989..881945d44328 100644
+--- a/crypto/842.c
++++ b/crypto/842.c
+@@ -23,10 +23,6 @@
+ #include <linux/module.h>
+ #include <linux/sw842.h>
+ 
+-struct crypto842_ctx {
+-	void *wmem;	/* working memory for compress */
+-};
+-
+ static void *crypto842_alloc_ctx(void)
+ {
+ 	void *ctx;
+diff --git a/crypto/lz4.c b/crypto/lz4.c
+index 82588607fb2e..9661ed01692f 100644
+--- a/crypto/lz4.c
++++ b/crypto/lz4.c
+@@ -12,10 +12,6 @@
+ #include <linux/lz4.h>
+ #include <crypto/internal/scompress.h>
+ 
+-struct lz4_ctx {
+-	void *lz4_comp_mem;
+-};
+-
+ static void *lz4_alloc_ctx(void)
+ {
+ 	void *ctx;
+diff --git a/crypto/lz4hc.c b/crypto/lz4hc.c
+index 997e76c0183a..a637fddc1ccd 100644
+--- a/crypto/lz4hc.c
++++ b/crypto/lz4hc.c
+@@ -10,10 +10,6 @@
+ #include <linux/vmalloc.h>
+ #include <linux/lz4.h>
+ 
+-struct lz4hc_ctx {
+-	void *lz4hc_comp_mem;
+-};
+-
+ static void *lz4hc_alloc_ctx(void)
+ {
+ 	void *ctx;
+diff --git a/crypto/lzo-rle.c b/crypto/lzo-rle.c
+index b1350ae278b8..e7efcf107179 100644
+--- a/crypto/lzo-rle.c
++++ b/crypto/lzo-rle.c
+@@ -9,10 +9,6 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ 
+-struct lzorle_ctx {
+-	void *lzorle_comp_mem;
+-};
+-
+ static void *lzorle_alloc_ctx(void)
+ {
+ 	void *ctx;
+diff --git a/crypto/lzo.c b/crypto/lzo.c
+index dfe5a07ca35f..f1b36a1ca6f6 100644
+--- a/crypto/lzo.c
++++ b/crypto/lzo.c
+@@ -9,10 +9,6 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ 
+-struct lzo_ctx {
+-	void *lzo_comp_mem;
+-};
+-
+ static void *lzo_alloc_ctx(void)
+ {
+ 	void *ctx;
+-- 
+2.49.0
 
-Also, please make sure your patch can be applied cleanly on the latest
-remote net-next.git and the Fixes tag points to an existing commit.
-
-
-> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com> 
-> ---
->  net/core/net_namespace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> index f47b9f10af24..a419a3aa57a6 100644
-> --- a/net/core/net_namespace.c
-> +++ b/net/core/net_namespace.c
-> @@ -1652,7 +1652,7 @@ static int __init ns_debug_init(void)
->  	if (ref_tracker_debug_dir) {
->  		ns_ref_tracker_dir = debugfs_create_dir("net_ns", ref_tracker_debug_dir);
->  		if (IS_ERR(ns_ref_tracker_dir)) {
-> -			pr_warn("net: unable to create ref_tracker/net_ns directory: %d\n",
-> +			pr_warn("net: unable to create ref_tracker/net_ns directory: %ld\n",
->  				PTR_ERR(ns_ref_tracker_dir));
->  			goto out;
->  		}
-> -- 
-> 2.39.5
