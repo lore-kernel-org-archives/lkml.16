@@ -1,116 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDBA1662E7;
-	Sat, 12 Apr 2025 17:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6711662E7;
+	Sat, 12 Apr 2025 17:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744477481; cv=none; b=H/G0pkTmvvUfMoEreAboTDCiY34MKFMdLCQSoChSEmIVwI4n1w/bFxRRLddiPguSB/LRYDk1H5lf3GOJov8GZuSGisg1gL1vw/lUGFq+2QpDOKHIEGQpx7+R2YkNYtPl8OmlmKcvtwQUXLc8IesMfaGkl9J+u3tuTgqrnM2QHVc=
+	t=1744477599; cv=none; b=fXJqCwv0ecrKKgQ94FiczfrW4SusdAg65kta+VZs732xLmris9K6ZkRFyXjHIuUP5Y2tFG3Y3dRKOPivoEJhFciLZPzDR7BukA6krATuArCQw7qFUQtcoMBAD4p3Y9pVEa7vGYdGW+zQPAB52iKXUg3bgwPRwd4vLJS9jiZU9zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744477481; c=relaxed/simple;
-	bh=9Hh3y1adPkFB/uc/FlYasejGcYGxbWwcKdlxTL4OqIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WIVaBncpEf/QozMHo0QKVgTJCYp7oauaEO4VVPx79hf8VwUbB0Tkm6vAdF1Lted4s/OPTSRNlMR66BfGFkL/2MqMFcw8Kph5D0m7Q9CSN7HbKcC9AULUCYEyPzIQnHOAmTKC10FSV0z9O3lb1jrphw/YfnqHGuoiCDRHj0msadg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSCqJOD0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744477599; c=relaxed/simple;
+	bh=4M7MIAR8fg1JNtgZTxQ7Z8KhaeG1APh1tXeqKA3NEvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uf5q10AvocRGeHTVBClPKkMEs3YkO2+l4ub9juedjIinTfM5iUwfQuYqjkp9z+vSTZtWJ629RtirdB+X18pI2/zWa/yRyqpJJTDjcMOJ9HSivk8ALpSZS+F243XI6XtaCRE+v3503YTdSmUsRHVJuXC0BYUCMK9y7nkl+gtEYv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZ1mI9Ha; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSCqJOD0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745D6C4CEE3;
-	Sat, 12 Apr 2025 17:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744477480;
-	bh=9Hh3y1adPkFB/uc/FlYasejGcYGxbWwcKdlxTL4OqIs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uSCqJOD0q7qxBhWbnZqOqowbX2wFxyckklTAjY+NzSz/14k7zP2UKKOken3E/2IQP
-	 KAkUFVuOAb+eTF32Q0hwI2TTw/yxge8vkmdOhOc7KxN6goY071Ka/QLEoZW8Me1emr
-	 QQPMtAdMBoxTBUr/4jT/dbTkP2kVc+fudwt14O7/3OcYJx54mmmhZ3gGN6gnc+6Gef
-	 NjGegD2/FYs2u0xDa0/ALm4tkDwDfDDDiS/RFxW0nuxZlVnZec6uBrkLziFI4MfhMz
-	 ddhAQCx7AHSTwPKPAgXl7QrBa0gYiOK2K8acVRghE45ZN92+c9Tw1y42sz+W5w2udD
-	 qe3a2oRZ33HVA==
-Date: Sat, 12 Apr 2025 18:04:34 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/13] iio: adc: adi-axi-adc: add sync status
-Message-ID: <20250412180434.34f1426b@jic23-huawei>
-In-Reply-To: <20250411123627.6114-11-antoniu.miclaus@analog.com>
-References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
-	<20250411123627.6114-11-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZ1mI9Ha"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7399838db7fso2950675b3a.0;
+        Sat, 12 Apr 2025 10:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744477597; x=1745082397; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wDfkpLrFjXgARz5gUMVb0iGct0QwoJRyYU1szy4WksY=;
+        b=BZ1mI9HaBvy7eXW4HMqINjpYT3MFBi2tFpDMTPlV/W4sbszc22kv6FbQ+9iR4hC6ES
+         nmeDw/k6uyFhtuwxg9tpKtb/yllCLsQ0LWApqOJzJ4BM/7FXEyAsF0Pbxka5UiiCDAbw
+         m9LcNsop70/tJS6xqf6kx3wm6VdaWhmjBkvZdJtWh1NNXCDlq3w+kFW259frrWOeDmZx
+         S7KowkvZ5Th1OEY6LmJ9uOM5HA3eR1Jr92vKKT/r8xDSBuqP193JSTWk+7oc6Ck61NR2
+         9mp2lVGuUe3Td3jY/ZQaa+ER+8vxOd9zDX+kEOKrTW9Y7CsHNq69AJ9e39DDR4PaNHAM
+         JVqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744477597; x=1745082397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wDfkpLrFjXgARz5gUMVb0iGct0QwoJRyYU1szy4WksY=;
+        b=MqvRoRX+G4IGXcv12IE/ouTq9fiSCVj35RFV3oREF0stUAWzo+lbWW/NRlCxys37v0
+         8Ff+lLteCdRT7cc4gpDrVGOnQJOZAn5BXGa0NoTjgRsi/aZQDc6FzpogOMIPIQAY9PTH
+         JLd8PdLib/PY17OSTID0Cai3QTYHEey6FueQkJzCGW42wKSqOOMU7aZckzButvyWqDto
+         L1za+fxAG6+AJiQ8Vd/QYQ5wDj9ANd0Gsrv0jATMkOebJd7gWb8S/xTgO7JQReraCtSk
+         7D5pfYncUtdhJSPGOl3T3MmUIT+xmTeOuyXzfuzRCfDnlDeNUwLQBjRnjFBBb9PxG4oE
+         LRig==
+X-Forwarded-Encrypted: i=1; AJvYcCV9SnigoVP8zjrVuH6ZB4mStsRc98YvaRn6s1hs0C1u/0JuSMPjh6MgCx7/YVn0GVzeeTCfbt7q4gaDQiLGCAJm@vger.kernel.org, AJvYcCX53eDACOKGz3si63FMsrk8wSeDc5YdJ9p+z+/kj8LAUpIyBIE8+QPXQzvtu6GKPshKaqmM0D1cwVVooXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO68iRPphGUa28CSuUmiNpZUeb9AMEiAbHPqbU3qj5VwPfjz3D
+	Cmbgj3ezDQxqkK1VnkCArtHvKcxHhNRY8yMyTndniT/2HWOFeb9f
+X-Gm-Gg: ASbGncuyXLKDzvbKhvzzPcdjnnF1xBemcab/6/HiXUa5QyrjalYuP+1FxiJbKwhEE+X
+	CDj3Y7AsSn7SX9PSJD4t6OxnMCZiFy25MnBNxN/BqGMid5p7EnO0wPkIRMajpEZAiKPzEuLoyZq
+	KBiFZkvd8oA8phSmdsbrZyqxVMXvRKfrsGdSjcvS/QDsTGAb8i+qTmd4/FjfHeFxnb5kszVbsCj
+	0SwUxWVB3FQIyCKTyCH9ri8Ct5Wb43Xz7PrEfEtozkDePzkrPH2Vxaf8+XbQuPS8VROIrkuou17
+	DfDkufKOOc+8oGKHTqxK4XjBUp75eU5OqpLpNSFDnBpv
+X-Google-Smtp-Source: AGHT+IFmHTbrhMwLyhHd3P9FPqMobUomm6+KomqsrHzvH8JYKaw49WhnpAdB1C+A99DlziEO5YWqng==
+X-Received: by 2002:a05:6a20:9f45:b0:1f3:26ae:7792 with SMTP id adf61e73a8af0-201795ec5cbmr8837115637.18.1744477596779;
+        Sat, 12 Apr 2025 10:06:36 -0700 (PDT)
+Received: from ubuntu2404.. ([125.121.98.110])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c20f3sm3610710b3a.39.2025.04.12.10.06.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 10:06:36 -0700 (PDT)
+From: KaFai Wan <mannkafai@gmail.com>
+X-Google-Original-From: KaFai Wan <kafai.wan@hotmail.com>
+To: martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mykolal@fb.com,
+	shuah@kernel.org,
+	memxor@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kafai.wan@hotmail.com,
+	leon.hwang@linux.dev
+Subject: [PATCH bpf-next 0/2] bpf: Allow access to const void pointer arguments in tracing programs
+Date: Sun, 13 Apr 2025 01:06:24 +0800
+Message-ID: <20250412170626.3638516-1-kafai.wan@hotmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 11 Apr 2025 15:36:24 +0300
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+hi, 
+Tracing programs can access arguments via BTF [1]. Currently we allow 
+tracing programs to access pointers to string (char pointer), 
+void pointers, pointers to structs, and int pointers [2].
 
-> Add support for checking the ADC sync status.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
-> no changes in v2.
->  drivers/iio/adc/adi-axi-adc.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-> index 017685854895..0d12c0121bbc 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -56,6 +56,9 @@
->  #define   AXI_AD408X_CNTRL_3_SELF_SYNC_EN_MSK	BIT(1)
->  #define   AXI_AD408X_CNTRL_3_FILTER_EN_MSK	BIT(0)
->  
-> +#define ADI_AXI_ADC_REG_SYNC_STATUS		0x0068
-> +#define   ADI_AXI_ADC_SYNC			BIT(0)
-> +
->  #define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
->  #define   ADI_AXI_ADC_DRP_LOCKED		BIT(17)
->  
-> @@ -453,6 +456,21 @@ static int axi_adc_ad408x_self_sync_disable(struct iio_backend *back)
->  				 AXI_AD408X_CNTRL_3_SELF_SYNC_EN_MSK);
->  }
->  
-> +static int axi_adc_sync_status_get(struct iio_backend *back, bool *sync_en)
-> +{
-> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = regmap_read(st->regmap, ADI_AXI_ADC_REG_SYNC_STATUS, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*sync_en = (bool)FIELD_GET(ADI_AXI_ADC_SYNC, val);
+If we try to access argument which is pointer to const void like 2nd 
+argument in kfree, it's an UNKNOWN type, verifier will fail to load. 
+typedef void (*btf_trace_kfree)(void *, long unsigned int, const void *);
 
-Trivial but implicit casting from a bool to an int is fine.  I.e. drop
-the (bool) as it doesn't add anything.
+[1] https://lore.kernel.org/bpf/20191016032505.2089704-7-ast@kernel.org/
+[2] https://lore.kernel.org/bpf/20211208193245.172141-1-jolsa@kernel.org/
+---
+KaFai Wan (2):
+  bpf: Allow access to const void pointer arguments in tracing programs
+  selftests/bpf: Add test to access const void pointer argument in
+    tracing program
 
-> +
-> +	return 0;
-> +}
-> +
->  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
->  						 struct iio_dev *indio_dev)
->  {
-> @@ -600,6 +618,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
->  	.test_pattern_set = axi_adc_test_pattern_set,
->  	.chan_status = axi_adc_chan_status,
->  	.interface_type_get = axi_adc_interface_type_get,
-> +	.sync_status_get = axi_adc_sync_status_get,
->  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
->  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
->  };
-> @@ -647,6 +666,7 @@ static const struct iio_backend_ops adi_ad408x_ops = {
->  	.data_alignment_disable = axi_adc_ad408x_bitslip_disable,
->  	.self_sync_enable = axi_adc_ad408x_self_sync_enable,
->  	.self_sync_disable = axi_adc_ad408x_self_sync_disable,
-> +	.sync_status_get = axi_adc_sync_status_get,
->  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
->  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
->  };
+ kernel/bpf/btf.c                                       | 10 +++++++++-
+ .../selftests/bpf/progs/verifier_btf_ctx_access.c      |  9 +++++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
 
