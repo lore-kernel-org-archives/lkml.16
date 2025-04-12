@@ -1,294 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282601C3C08;
-	Sat, 12 Apr 2025 18:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA5B1C3C08;
+	Sat, 12 Apr 2025 18:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744482278; cv=none; b=rq4Jf8Q8o8dMfBSO76uEJ+MUS703rODEskqk1E8dC98YYF+XeejgMbd1wfjbLYJw4OusOgdcmh0x5ypLimtVIo4F1JoCcdhMnVCr0xWJNH3FTZQvTNBG+p4zsfHIadZbt18obk6wdDySAnE/++Ex7phWZCvkUqRQLLv7fhvD1Mw=
+	t=1744482451; cv=none; b=ttYjOZX0WwLGNTHADUWNUEgWtWBKNNBFJtVS9N+4COknvqz4jQksXpknlIWxT1mfjPyl5pkAWC7ZAOiyBJHIXY86wl4RnTGpCMu/fDN/mHmbn6NFQ2OIvHTB7vvLu/KN3S/4zTjeo/tqyBsTQhOLmIDI5rITy0D0y5H/5sjpaRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744482278; c=relaxed/simple;
-	bh=ChJ9V0Jc/+b3HPY0a+HA52laHzIuwkZ7RdLSpf1yLcE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E+gNul5t0u5ZDds12e8ntG6S2Y578IvxIGNWTP7Uk/rBDB4Ml1KO/hdv2ZIa78gMknoD9l7gaYCC9fDYQj0LcmiIVg3h6jkxdBIO1iUqxmNRczgIX7RYo6KRHf8HdwuwlId6GAAsS/vTibR4CwqsfecvQC6uxYKya0KC0q55Nf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4W8VFri; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744482451; c=relaxed/simple;
+	bh=Tskq+K7zK+lTQikjqFG5d9o/wEzX5mULVhPt4y3t5o4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E+XwjJvEel4ihzNwjYcj4Ee/VT5Si0uIk8gAo2JNfCKh6ku6cALVfcVK2uwCUU4gaB1emk+ug9QL8uOuSz4oFClYEnnfuMV16LdOf1eBex+QE5nkY0GB6DqkJLijD4BauOZb+5Cy0FAkBgeNPoxpKdFwan3CsHlGCaiOfjMj8nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MpV+TzIy; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4W8VFri"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0409CC4CEE3;
-	Sat, 12 Apr 2025 18:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744482277;
-	bh=ChJ9V0Jc/+b3HPY0a+HA52laHzIuwkZ7RdLSpf1yLcE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h4W8VFritsK1NPGVLVvivYuuLrGOKNRwcpW0lvUtj+SimKmUJj8ejIBGHZsYo/rc9
-	 PCBpUv0bV+4xEr5+XRDWzUHv/YLJD9Qx0atgQe4eNud+e/6M4h8YgD2wFr9zp9KEgE
-	 G6SBq/mgRpeJjgPZ42Fzi261s4uAC6z+D8M1jA1lOaxpUhRmYWf6xyyA6e7yas1gXu
-	 e5oHzsrIw3JDNV8ODROCmRDNCaywiGhrbtvM89dv5WGILBh55zqtsgI+15AF7SbGD0
-	 GqTcORsS/oQJouiK9Ny+od7BLIH+aLh0seFCy66fDkiJOct7/Yam+rFpGxWGguskh8
-	 IHdew1XrSxL6Q==
-Date: Sat, 12 Apr 2025 19:24:28 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Remi Buisson via B4 Relay <devnull+remi.buisson.tdk.com@kernel.org>
-Cc: remi.buisson@tdk.com, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 7/8] dt-bindings: iio: imu: Add inv_icm45600
- documentation
-Message-ID: <20250412192428.1938b08c@jic23-huawei>
-In-Reply-To: <20250411-add_newport_driver-v1-7-15082160b019@tdk.com>
-References: <20250411-add_newport_driver-v1-0-15082160b019@tdk.com>
-	<20250411-add_newport_driver-v1-7-15082160b019@tdk.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpV+TzIy"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so5098136a12.0;
+        Sat, 12 Apr 2025 11:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744482447; x=1745087247; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8OuVdSBAYNzkN5ACXz9m/9B8zVMUdQvEL0boKkmXDBY=;
+        b=MpV+TzIyZpERNGMUGTUQ4J9Ax4OdZ9vO8JbZOquGqqRdQbe5pGR1Jx88YZ9ip8HGjl
+         5m0f7LQaJgxC/N6mR2qCdDmoo13SyT0a0FyDB9Pz1qV2LIx38UDPqUGbvL9ml74W5jZ2
+         YQAvKmKJDcCr/rMrbhSC1dNw/bRM9uYVi2wCMdWuMSJQcrDUYJGb9esJC+FL4kbtvrdm
+         KYP3YadCwsCpaTMb6tqWUBwy6nZGQKq6HLDpGCRKQxgwunrV0sVQUgzD+dyR5dnII6o7
+         vOy7b89Y7cEtzP11IMdZiCfhfLOKup4bRHySh4DQFrzeEqFTTqer2XTNP2lBAH33yMPO
+         qTjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744482447; x=1745087247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8OuVdSBAYNzkN5ACXz9m/9B8zVMUdQvEL0boKkmXDBY=;
+        b=NEvmjhU4jR6PjTTKYc0KhslvIxTEtkyqt7DlL7xdZzCmDDF66lavIwJpD6UmHTOky4
+         G3gr1W5pSWX2Qbje4AdiRgx6Gfyw57ao7RuY9S/W7myBe042VBr1Je9NoxQgEEY3wV1R
+         ax9R2MS7Os212O3eixKMdebctXqWX9Blo/7p2gyJEFZxwZN4ktUaZYR+Gaog/+T5MZ/r
+         TUBWyAS3E6UZHMXIAoeTseo72u5u3uWkDLFaDl086t1wkfIAlz5yZyUnCfuugPDBVDpR
+         A/hDmZHOnxxk1a5/ZnPdHPoqMAa3B3eU1oD5BHI91CpB9zOrvwUG22ezsofCmgwZpBno
+         m/XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUY4UFULxN1s+418yEIrcfaLVB0cr/TqBxuegbWUDNVeOkZwBi4iYKIMfb4j4/bO+xQPir0F5+tRpNx@vger.kernel.org, AJvYcCV36sa2zaqEVviHPtX3AJkITAPHPV0t8I+3XM9YvkdpRfVmR2ryu18fyRHbdDiHXEtlBx11k0/NlP3a@vger.kernel.org, AJvYcCW6gfGQSehCmvSH9ieJloTB33T4UJ/XMWi0hNOuqgIgzD0WpdCHNar/3/4WexXU2kPapxN4UzZV/zqO7pdN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmw/9F7vV9DoQ1XlAGjzYYHz+TXgVB5BTTtvQ2tTBafRX/NrcT
+	I8YwoX/wxTZ/G/ljJYDBPBRqdH5k2ZDH19VAQwryrETvY5hI8GZc379Xd6oSrglkFuefJEUB03c
+	C2b4mUgxAGhol59JM+mDAo4gUVWc=
+X-Gm-Gg: ASbGncujVr0cKbWZA1OCTep6GTifjHrm8Sd1jopJ8NiZpkCFCkOlgfDAywsEH3KoIR+
+	WtYTr/e8vrY1HjHKqztgMRK9jd9J8dLdx6Ab3HiWjjSqxnhuZdePBU0sqBYMs/sZWIllhuzQExy
+	XzKSp2SaQiF0t1eLjg9ylHQA==
+X-Google-Smtp-Source: AGHT+IHc4ZV1P7ynTyHLm1QGXBaMol+cFbhDf48jO9NGzxQ0vHQZWQY38cjCVetpAQ5WQtemrSIMzO+he4Al3LbIyjY=
+X-Received: by 2002:a17:907:3d4d:b0:ac7:391b:e688 with SMTP id
+ a640c23a62f3a-acad36d913fmr686501666b.58.1744482447405; Sat, 12 Apr 2025
+ 11:27:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1744200264.git.marcelo.schmitt@analog.com>
+ <5f79007f0b9f9f67360d04fb904b6a59111a4ebe.1744200264.git.marcelo.schmitt@analog.com>
+ <9c115086bd574b6c778a093143ebf54e14d7202b.camel@gmail.com>
+ <Z_k3e1DfxmcJgQeu@debian-BULLSEYE-live-builder-AMD64> <20250412171920.531993c1@jic23-huawei>
+In-Reply-To: <20250412171920.531993c1@jic23-huawei>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 12 Apr 2025 21:26:50 +0300
+X-Gm-Features: ATxdqUHaXOzoFAHryghLc_0-mJRqsg5cMpy8W5CVqSA_SjwIDSriuNUCGSYS18c
+Message-ID: <CAHp75VdN4xhhq7KbEXW25cFxKfQTe=Z87=yobtg1f-w-Mz0psw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/7] iio: adc: Add basic support for AD4170
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>, 
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 11 Apr 2025 13:28:39 +0000
-Remi Buisson via B4 Relay <devnull+remi.buisson.tdk.com@kernel.org> wrote:
+On Sat, Apr 12, 2025 at 7:19=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+> On Fri, 11 Apr 2025 12:38:35 -0300
+> Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-> From: Remi Buisson <remi.buisson@tdk.com>
-> 
-> Document the ICM-456xxx devices devicetree bindings.
-> Describe custom sysfs API for controlling the power modes.
-> 
-> Signed-off-by: Remi Buisson <remi.buisson@tdk.com>
-> ---
->  .../ABI/testing/sysfs-bus-iio-inv_icm45600         |  37 ++++++
->  .../bindings/iio/imu/invensense,icm45600.yaml      | 136 +++++++++++++++++++++
->  2 files changed, 173 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-inv_icm45600 b/Documentation/ABI/testing/sysfs-bus-iio-inv_icm45600
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..8d2d9b68ad9e35fe0d6c157e984afc327eab92ec
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-inv_icm45600
-> @@ -0,0 +1,37 @@
+> A general efficiency comment.  If you agree with a comment, no
+> need to reply.  Better to crop that bit of the thread out and
+> reply only to those parts where there is more to add.
 
-As has been noted, wrong place. This goes in the patch with the relevant ABI
-being added to the driver.
+> Cuts down on what reviewers need to read!  We assume anything
+> you don't comment on is something you are happy with changing as
+> suggested!
 
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_accel_power_mode
-> +KernelVersion:	6.16
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Accelerometer power mode. Setting this attribute will set the
-> +		requested power mode to use if the ODR support it. If ODR
-> +		support only 1 mode, power mode will be enforced.
-If the mode id enforced, then the ODR will change?  I hope not. ODR should dominate here
-though note you should match ABI terms anyway so sampling_frequency.
++ 1000!
 
-Also as noted, these already exist in some form in the main docs. Add entries
-there.
-
-> +		Reading this attribute will return the current accelerometer
-> +		power mode if the sensor is on, or the requested value if the
-> +		sensor is off. The value between real and requested value can
-> +		be different for ODR supporting only 1 mode.
-
-I'd just fail the set. If the ODR is changed in a fashion that requires this
-to change, just do it and have this attribute return the new value. All ABI
-is allowed when necessary to have side effects on other IIO ABI elements.
-We try to keep that as intuitive as possible, but sometimes the hardware
-puts very complex requirements on us.
-
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_accel_power_mode_available
-> +KernelVersion:	6.16
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		List of available accelerometer power modes that can be set in
-> +		in_accel_power_mode attribute.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_power_mode
-> +KernelVersion:	6.16
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Gyroscope power mode. Setting this attribute will set the
-> +		requested power mode to use if the ODR support it. If ODR
-> +		support only 1 mode, power mode will be enforced.
-> +		Reading this attribute will return the current gyroscope
-> +		power mode if the sensor is on, or the requested value if the
-> +		sensor is off. The value between real and requested value can
-> +		be different for ODR supporting only 1 mode.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_power_mode_available
-> +KernelVersion:	6.16
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		List of available gyroscope power modes that can be set in
-> +		in_anglvel_power_mode attribute.
+> I normally only point this out to people who are sending a lot
+> of code as it's just not worth it for one time contributors.
+> So bad luck you get me being fussier ;)
 
 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm45600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm45600.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..51455f0b5cb90abdd823f154e45891ad364296e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm45600.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/invensense,icm45600.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: InvenSense ICM-456xx Inertial Measurement Unit
-I'd go with Invensense ICM-45600 and similar Inertial Measurement Units.
-
-We have been bitten too many times in the past by wild cards and manufacturers
-who love to put something in a numbering scheme for marketing reasons (or just
-because they feel like it) rather than because they are in any way related
-at the hardware level.
-
-> +
-> +maintainers:
-> +  - Remi Buisson <remi.buisson@tdk.com>
-> +
-> +description: |
-> +  6-axis MotionTracking device that combines a 3-axis gyroscope and a 3-axis
-> +  accelerometer.
-> +
-> +  It has a configurable host interface that supports I3C, I2C and SPI serial
-> +  communication, features up to 8kB FIFO and 2 programmable interrupts with
-> +  ultra-low-power wake-on-motion support to minimize system power consumption.
-> +
-> +  Other industry-leading features include InvenSense on-chip APEX Motion
-> +  Processing engine for gesture recognition, activity classification, and
-> +  pedometer, along with programmable digital filters, and an embedded
-> +  temperature sensor.
-> +
-> +  https://invensense.tdk.com/wp-content/uploads/documentation/DS-000576_ICM-45605.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - invensense,icm45605
-
-Alpha numeric order for these.
-
-> +      - invensense,icm45686
-> +      - invensense,icm45688p
-> +      - invensense,icm45608
-> +      - invensense,icm45634
-> +      - invensense,icm45689
-> +      - invensense,icm45606
-> +      - invensense,icm45687
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      enum:
-> +        - INT1
-> +        - INT2
-> +    description: Choose chip interrupt pin to be used as interrupt input.
-> +
-> +  drive-open-drain:
-> +    type: boolean
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-For really 'standard' supplies like these it is also acceptable to just
-do
-    vdd-supply: true
-    vddio-supply: true
-
-When description adds little there is no need to give one.
-
-> +
-> +  vddio-supply:
-> +    description: Regulator that provides power to the bus
-> +
-I think you need
-    mount-matrix: true
-as well.
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +unevaluatedProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icm45605@68 {
-> +            compatible = "invensense,icm45605";
-> +            reg = <0x68>;
-> +            interrupt-parent = <&gpio2>;
-> +            interrupt-names = "INT1";
-> +            interrupts = <7 IRQ_TYPE_EDGE_RAISING>;
-> +            vdd-supply = <&vdd>;
-> +            vddio-supply = <&vddio>;
-> +            mount-matrix = "1", "0", "0",
-> +                           "0", "1", "0",
-> +                           "0", "0", "1";
-> +        };
-> +    };
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icm45605@0 {
-> +            compatible = "invensense,icm45605";
-> +            reg = <0>;
-> +            spi-max-frequency = <24000000>;
-> +            interrupt-parent = <&gpio1>;
-> +            interrupt-names = "INT1";
-> +            interrupts = <6 IRQ_TYPE_EDGE_RAISING>;
-> +            vdd-supply = <&vdd>;
-> +            vddio-supply = <&vddio>;
-> +            mount-matrix = "1", "0", "0",
-> +                           "0", "1", "0",
-> +                           "0", "0", "1";
-> +        };
-> +    };
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i3c {
-> +        #address-cells = <3>;
-> +        #size-cells = <0>;
-> +
-> +        icm45600@68,46A00000011 {
-> +            compatible = "invensense,icm45600";
-> +            reg = <0x68 0x46A 0x84>;
-> +            interrupt-parent = <&gpio1>;
-> +            interrupt-names = "INT1";
-> +            interrupts = <5 IRQ_TYPE_EDGE_RISING>;
-> +            vdd-supply = <&vdd>;
-> +            vddio-supply = <&vddio>;
-> +            mount-matrix = "1", "0", "0",
-> +                           "0", "1", "0",
-> +                           "0", "0", "1";
-> +        };
-> +    };
-> 
-
+--=20
+With Best Regards,
+Andy Shevchenko
