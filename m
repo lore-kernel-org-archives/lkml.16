@@ -1,122 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3C3D53C
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517A5610B;
+	Sat, 12 Apr 2025 00:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744417639; cv=none; b=Pb+9Fyxta/QUT271cwAoRFQs3BYPXRvqKcrKMT9cvXxUq7CMYyO41NG85+23QFQ6uf9oWFLGmstEmznHdBf4t5t8eGXAS31StH5MZCc0K1me9rcKTQM54fWbP1oKGRCVTfU0PSqc0HBEnrp57UxQkYrEcLApdX5W24dC6Kb2Cz8=
+	t=1744417827; cv=none; b=nkuGBc0yjiCmUVaBZjhKoqaiyE+Ee+CWJCdpBr5cAcbGjQUK7FWZLXsOb6o5fLUU2K9iT9wmYTpK4WBnIaxtojsmee9Y/nF0HEeeuoqZrtcxBEkLisFpVAsLzUq0NVxS6juLrnzG7VZycX/mMlDyxW8wtAqu5rRkTjfC4aMCN7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744417639; c=relaxed/simple;
-	bh=mbrNuOcxatOeQm/8IvyJAHLa9B8ylm9/Z1cMEu1tjKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ASAkS7hXf/KCd4XAy08+QgEB6SVJvurw+MXi5vDtgQf5IJK7PFv9VXSGHAYSdeRoCDk92J0pP7QCDTN1soGXgPqh4Xq/+C/uJu3U02QidLXD/6Gb3hAu1zV5gEw7/1wzplJSLZjv+yNuEd4Hje68dPE3jMAboU1t8yzBLcL9bD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Op39ZTeW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744417827; c=relaxed/simple;
+	bh=/T7qziyieFTegoHq1quoWb4FCMn7r7gq2B6DB98pUrY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rGNpMRH39mqR6g9VT2C6AhkowK/CWLTiwF2twfWg2Imjfnq3wfiYTPcxgTSfhYRDhnaJtfR1aTOJcvb7RxZxgM2II7gkKYbO3h7so8j4PfP5KxbUAkS2hDLWPJsbDOonjd2bXqJnv9pATaTvNRsktFjsrQvxJvwaGRQS225b59A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NHo1/BEx; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Op39ZTeW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744417635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xak2iqKVntiO7WTDrCa3ZaOdZVGURMb1d8EHFqm35Hw=;
-	b=Op39ZTeWHYoAOUHVyectn7LwGHUTkXcS7f3/d5OQmN4AxtgCHw/l7PyNLhhqDr+/FS9J58
-	iI1mEsMoMowYKhEPQeFQtrtWmBBy25xtEoUKwGeqxJxx+/DzY1OLwtsGJVKiF249sAwZet
-	H+NPbUQA8NPqghsE9FYdlqTisF3IhPg=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-564-uhRPIy70P4qYjMVmIOy8_w-1; Fri,
- 11 Apr 2025 20:27:11 -0400
-X-MC-Unique: uhRPIy70P4qYjMVmIOy8_w-1
-X-Mimecast-MFC-AGG-ID: uhRPIy70P4qYjMVmIOy8_w_1744417630
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BA2A11956048;
-	Sat, 12 Apr 2025 00:27:10 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.19])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 064561801A69;
-	Sat, 12 Apr 2025 00:27:06 +0000 (UTC)
-Date: Sat, 12 Apr 2025 08:27:01 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: skip blk_mq_tag_to_rq() bounds check
-Message-ID: <Z_mzVa5Ny1Go1PHk@fedora>
-References: <20250409024955.3626275-1-csander@purestorage.com>
- <Z_jLNGzRJAQBN8Nx@fedora>
- <CADUfDZp=CDAh-2gNB9_LQ4cdhFm--apgRB94cuzqjV4O93hUeQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHo1/BEx"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abf3d64849dso479192666b.3;
+        Fri, 11 Apr 2025 17:30:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744417823; x=1745022623; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PY0NYpmztQQnq3XrvsDCNu1j/I4xBInhxN+nOQvSP1o=;
+        b=NHo1/BExUQmJnLhtXEwkwRMvGpf2Kq2Kj1NLYkqZe1nA+oUsmOaTqjvYvFnjb/vNqn
+         yxYeS8fi2lzGMXWY8YaXOGHdZrNB24bscCz6Z5cb3mNH85IG1vSvkjnXh8wB8MLrymF4
+         zo8i7XH66EHlSPK7uDFvTShC7+yvckGxMEpLCgWHqhex025GZFPg+h0tL6xRScdQBd5Z
+         FU4vpKU46Z9NQ7Q3TGpHmvVRn4aT1hLmTh7eLDuZzz6/aCFF6itopC4MSsscSeuKFeMS
+         +eSbo9T6F8EwIN29uRbEv+lpvZ4t1KPa/ptgnMfNH35E9/X+ZmPNjmII87RMdiYjG6s3
+         9QpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744417823; x=1745022623;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PY0NYpmztQQnq3XrvsDCNu1j/I4xBInhxN+nOQvSP1o=;
+        b=YGdfRIGt/a6a+IChPg4mJbfQbaDFaDI2nwq9drwifD6FJUgE54SGrDvwPiPwi/NfmT
+         NCoexJdvDyT4tT6j8E5bxw6JHUFhJNiU1GSn9cvksfUispycGDph0kIfxRCz0ASj9yEs
+         RD14TwzPp+MJ9c4UOlf75hA2YN9uLA83fFeBnTyt+KzYFdz1Fs9R6A7qjj5lduJj3xwg
+         4njjCSQ+T7kxxCUbxRG3fzWmdKWHtwvk7J/kMc2bA9m1VCWFCrJlw75+UoVHyaWssTb4
+         cm/TfY5lkZYn50QMtxwWBzUV3Hru6xcMVgS3l+jtBgPR3l/XMz0fINg3rZFDKIptHaQb
+         gzBw==
+X-Forwarded-Encrypted: i=1; AJvYcCU67ESVGGgMYGLBnzubZISNlY6SjV+dfZ03bbQzdj3bSW1BIHe83hC0tz/CBRHkXhWCnsKNa+Ma+UQs1hLLaxKpkkqQsN1i@vger.kernel.org, AJvYcCUynb5Ifm7kCrcRTsuAO0m6b2nsL79u/F1ZYl1J/L7lRYtG3Kya/tALv/YoLp+FUp0HyTbm7m+ntXve@vger.kernel.org, AJvYcCV21jJ8AxKOzlhQI5OMdBqeOikL2w8EAVA+Si8fA+/pzva4dFNxzWLy0kddOBGt3eQaVxc=@vger.kernel.org, AJvYcCWJiwDS7lXUxYSWgeYc0VXX8xkaKoSAEtOBzkKCzJ0WeZ0ClmdefMszvoE64nEYPzPDoxE0QxbCdy8bxdmx@vger.kernel.org, AJvYcCWMViXHnJ8PQ7uDmluflP4Gp1HslinGkk/0zq6VUyikOdBjo+81iZos3JaGLs5i/+xGj4jbAhFuszlyedSM@vger.kernel.org, AJvYcCWpD3+O/1Ufl98wu3+PpkcGIUOd8YyNkPq5pMwMmMhIU4cEHttkjDH7EVPT8PnikxALlK0/XG/zQbKZPJjI@vger.kernel.org, AJvYcCXJquaZZMYI+urA1Sg95bThPVLKW0zwZnRDKOynanmRTsj27WqdBh+UEtMj1zNKl9PHI4DNWxgl9Jo=@vger.kernel.org, AJvYcCXUkXdU6I5pGNV0jS6PS34ga6iOqEOpZu3FDLXJsDgIiSSYmp1W3t6I0MJXYUQ7RYoQsb7UmF/NNByQA+Ph2oVv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwooWGgajd6fr3ihL9k/B4eQtzy/z12k45FJgGqY8PueMtn6J3b
+	QYyEUrkSSsIG/uaue+yDxTDxOYedcljYUw96IWfHVF/QMLcmzPZGc3B+5jOvlP2JWvYgKLDta62
+	ZaQWLSIuU3urC5ksdVAw6LAFNd7A=
+X-Gm-Gg: ASbGnctRZXin4sihvSNiJhbsqQqwvWBFWv+PzmLd9BsuVDpkagauX8ZpwUDpMFhVD+6
+	/xuEx7Kq8hg+OyaGVHh8sea+LT2HYGFwcZSR35YX7BD53m4DqPcxS5XgJkjMifZ4K+o+HF3riYi
+	ED5Uu2NAMRwmzc00EgOuyqsIEG8VHvl1dd
+X-Google-Smtp-Source: AGHT+IHV6V1Nd199fyktCVt8NkaX19y3fkdxuYg3faWj9lISfY7XX+/TP8euSAUokRbzoCnATi1D27aZXunIc9oKc/4=
+X-Received: by 2002:a17:907:a05:b0:ac6:b811:e65b with SMTP id
+ a640c23a62f3a-acad34fca94mr400892066b.36.1744417823251; Fri, 11 Apr 2025
+ 17:30:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADUfDZp=CDAh-2gNB9_LQ4cdhFm--apgRB94cuzqjV4O93hUeQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+In-Reply-To: <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+From: Matteo Croce <technoboy85@gmail.com>
+Date: Sat, 12 Apr 2025 02:29:47 +0200
+X-Gm-Features: ATxdqUFPaRCdqR9YUd32953YWnbRjZkMYnjK4v1HZns0nPmHonjmjDP4iQ6M380
+Message-ID: <CAFnufp1erGboUtRaqLoKC48c+9jmqzEfFW8W46xt77JMC0PFpQ@mail.gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet <corbet@lwn.net>, 
+	David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
+	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 11, 2025 at 12:51:10PM -0700, Caleb Sander Mateos wrote:
-> On Fri, Apr 11, 2025 at 12:56 AM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > On Tue, Apr 08, 2025 at 08:49:54PM -0600, Caleb Sander Mateos wrote:
-> > > The ublk driver calls blk_mq_tag_to_rq() in several places.
-> > > blk_mq_tag_to_rq() tolerates an invalid tag for the tagset, checking it
-> > > against the number of tags and returning NULL if it is out of bounds.
-> > > But all the calls from the ublk driver have already verified the tag
-> > > against the ublk queue's queue depth. In ublk_commit_completion(),
-> > > ublk_handle_need_get_data(), and case UBLK_IO_COMMIT_AND_FETCH_REQ, the
-> > > tag has already been checked in __ublk_ch_uring_cmd(). In
-> > > ublk_abort_queue(), the loop bounds the tag by the queue depth. In
-> > > __ublk_check_and_get_req(), the tag has already been checked in
-> > > __ublk_ch_uring_cmd(), in the case of ublk_register_io_buf(), or in
-> > > ublk_check_and_get_req().
-> > >
-> > > So just index the tagset's rqs array directly in the ublk driver.
-> > > Convert the tags to unsigned, as blk_mq_tag_to_rq() does.
-> >
-> > If blk_mq_tag_to_rq() turns out to be not efficient enough, we can kill it
-> > in fast path by storing it in ublk_io and sharing space with 'struct io_uring_cmd *',
-> > since the two's lifetime isn't overlapped basically.
-> 
-> I agree it would be nice to just store a pointer from in struct
-> ublk_io to its current struct request. I guess we would set it in
-> ubq_complete_io_cmd() and clear it in ublk_commit_completion()
-> (matching when UBLK_IO_FLAG_OWNED_BY_SRV is set), as well as in
-> ublk_timeout() for UBLK_F_UNPRIVILEGED_DEV?
-> 
-> I'm not sure it is possible to overlap the fields, though. When using
-> UBLK_U_IO_NEED_GET_DATA, the cmd field is overwritten with the a
-> pointer to the UBLK_U_IO_NEED_GET_DATA command, but the req would need
+Il giorno sab 12 apr 2025 alle ore 02:19 Alexei Starovoitov
+<alexei.starovoitov@gmail.com> ha scritto:
 
-Both UBLK_U_IO_NEED_GET_DATA & UBLK_IO_COMMIT_AND_FETCH_REQ share same
-usage on uring_cmd/request actually. 
+Similar to what I proposed here?
 
-Especially for UBLK_U_IO_NEED_GET_DATA, the uring cmd pointer needn't to be
-stored in ublk_io.  Or just keep to use blk_mq_tag_to_rq() simply for it
-only.
+https://lore.kernel.org/bpf/20211203191844.69709-2-mcroce@linux.microsoft.com/
 
-> to be recorded earlier upon completion of the
-> UBLK_U_IO_(COMMIT_AND_)FETCH_REQ command.
+> The verification of module signatures is a job of the module loading process.
+> The same thing should be done by the bpf system.
+> The signature needs to be passed into sys_bpf syscall
+> as a part of BPF_PROG_LOAD command.
 
-Each one can be moved in local variable first, then store it.
+ static int bpf_prog_load(union bpf_attr *attr, bpfptr_t uattr)
+ {
+@@ -2302,6 +2306,43 @@ static int bpf_prog_load(union bpf_attr *attr,
+bpfptr_t uattr)
 
-If we do this way, helper can be added for set/get cmd/req from ublk_io,
-then the implementation can be reliable & readable.
+> It probably should be two new fields in union bpf_attr
+> (signature and length),
 
-> Would you be okay with 2 separate fields?
+@@ -1346,6 +1346,8 @@ union bpf_attr {
+  __aligned_u64 fd_array; /* array of FDs */
+  __aligned_u64 core_relos;
+  __u32 core_relo_rec_size; /* sizeof(struct bpf_core_relo) */
++ __aligned_u64 signature; /* instruction's signature */
++ __u32 sig_len; /* signature size */
 
-Yeah, I think it is fine to do it first.
+> and the whole thing should be processed as part of the loading
+> with human readable error reported back through the verifier log
+> in case of signature mismatch, etc.
 
++ if (err) {
++ pr_warn("Invalid BPF signature for '%s': %pe\n",
++ prog->aux->name, ERR_PTR(err));
++ goto free_prog_sec;
++ }
 
-Thanks,
-Ming
+It's been four years since my submission and the discussion was
+lengthy, what was the problem with the proposed signature in bpf_attr?
 
+Regards,
+-- 
+Matteo Croce
+
+perl -e 'for($t=0;;$t++){print chr($t*($t>>8|$t>>13)&255)}' |aplay
