@@ -1,158 +1,103 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0DA9142E86;
-	Sat, 12 Apr 2025 13:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCCF1EB3E;
+	Sat, 12 Apr 2025 14:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744466297; cv=none; b=uxtpnsz0+5+8dekw2y4gv6B3Pwslsplz8f/yIWuzsHc26V5EQhgMS9S4NLj8VYM/o+wr0rBjUzl50hc8fd1XTPqBHPPimsmwYUV1LnIigLCLtqsa+j4yk4KrPQ2cmEmwPSW1zarDP1EhlwBh1mOqfBp07OEDNKxonyEn12KA8x8=
+	t=1744466764; cv=none; b=VYEbhsCNZyN9NewUR00vO7VBeNWeEd6LjbMmpZdsS/p0oGddJUhOHXg55Jvx91VbfHgdrd32oT4QwT88iWe5IuLVGUo5p7XeBex6+iCKMluiUp2WepiSzvFWVZrrPIwqocfBZVBQp8jP1eFoyFhiRVfY9r6qYVwuS+2PGkcsZts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744466297; c=relaxed/simple;
-	bh=ClLf6pd9bTzI1Zy4+TxzeK0uSIR+DiZghc9j4o2x+1o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hpb2x9cTH1yObEWkY3L70xyAqfXUz3H1Wgx5Y5lwW/0JtPztVCKdoNZzNReAxJWq0cnTlwKFBYKRP+OFVvQbraTbaG6h7b0hPQa9Hapsx5OW4mpFwENKvbkAVkluAylAnrgWtIgLbKoCW9XWjaSJwIFAB3wzw0iDDTDqJfv9kW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ctRJGxUn; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744466764; c=relaxed/simple;
+	bh=D4vtNM/AeJV6M1nJxyoGkOmqX6HuRM/R+DRn1WQhXck=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iCVHgyArjd08C1eoz0G9ymSQ4p+0XOYDFJNPkHDyX6HHmtWxITb/AK/ndN9A2M6wH+F4dV3vcRD5/KaCct6oU8h1j1Wg6wLrmTbMy2b7InF+0HN+jEZ0lLslwppNXJEKpZNRpqkkvAVrqAGdARzsyUCDxaBjJSvYlZAzpN7NrN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q066v9Oj; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ctRJGxUn"
-Received: from narnia (unknown [167.220.2.28])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 25D6621165B8;
-	Sat, 12 Apr 2025 06:58:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 25D6621165B8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744466289;
-	bh=zu0xtIux+vB60++y6tlbnAcAeCnE8i9Dvqd2crr17VQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ctRJGxUnarL1x3rwLFV8mBmNc3kTQ8bmhzgl86pwB64rU7x4F0uR0RbSDZRhN8fWK
-	 6NogRPkUANeXVftTcHYLC9sqh+m90vMBzrg0ZVAZkdyJn9b+Qn84ZMDf/eNxvrDQZW
-	 KQKb2GNF3XL4OSER5Fbnwana9xHXUnJlDRHrDfW4=
-From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
- <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
- =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
- Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Jan Stancek <jstancek@redhat.com>, Neal Gompa
- <neal@gompa.dev>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, keyrings@vger.kernel.org, Linux
- Crypto Mailing List <linux-crypto@vger.kernel.org>, LSM List
- <linux-security-module@vger.kernel.org>, Linux Kbuild mailing list
- <linux-kbuild@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
- <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, Matteo Croce
- <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, Cong Wang
- <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-In-Reply-To: <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
- <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
- <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
-Date: Sat, 12 Apr 2025 06:57:58 -0700
-Message-ID: <87semdjxcp.fsf@microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q066v9Oj"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff73032ac0so367746a91.3;
+        Sat, 12 Apr 2025 07:06:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744466762; x=1745071562; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jpe5BZI98ovtJR4rpCzzkwuonA+MqIXKFFvSG9YBc6s=;
+        b=Q066v9Oj2pGXdqhMtah51LBLFDKejxPVElG+paHf7Z/4l2mZeZE+HDuNLsBPmjg9y6
+         nTSZQ9PhxMWSYfr7KuFdSLpUfdDlkM+rJ1JaJ+2hnq2KEWxl3Pf22OSK+6sOI8VkDDjh
+         0hicEHBiT72B6NXcbAHX70AZX/40NojsZMh+0HJqNzDjEg+xwxPikHgNyTx1zMrgL9jd
+         HNNpF/gWWH7sw3FdavG5/vPeJTdRh++5Jbvl6aT8qqkp+Jh9fMlug7mciRzSBbhBiXNL
+         5+WNXAGaJYQbl7B4Gqp9uACUAz7JbAJTobb+Mb1soJTBPL5qJDoiuKo7UE8RHEFIcdfZ
+         Af9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744466762; x=1745071562;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jpe5BZI98ovtJR4rpCzzkwuonA+MqIXKFFvSG9YBc6s=;
+        b=DWCVQJrz98P2aVie7vtkqknwOh4+VqTGZhUr0EqOII4I1l0DwM+CfRM2WGZALozL14
+         MNpdKXKYQZ0enJ49NbEEMSnXJMQazg5gtTViidryxrFP0ZMkSiMCXFaKQx7TzteObys3
+         Zyj15AxEbslBg5oBEf66VRRqR6WddpIgx0f2cXX9ZmiYTr1/vSoHv6/owsIvM+JChRAI
+         2+LswnV35lWY2Dk9BizuVtHH97nV0ZGAF0hXv/D1hJ3hMKiecq3zQXbIeAT4+asAR3mc
+         aL6aRrXGyz3MILiUbo8+6z2/YHUyAdfKepKpoZx2QK+ostiNNOLaQv0RcTOvpgXv3v43
+         Bt/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW4Weu15MrscJ98z51hzN9hmTwGnCocnTIal4xXZ+pZv+PkB6dFaoiuvtqL6tkQef/nh48+kW24vxD6G5zQeKM=@vger.kernel.org, AJvYcCXNczyvuqgQHE2SOvoIuXcA1uh2q/ZeTO+ABQm8gCcabrWNwB0cdMKLbTcxNBSoAWFerqdYWkIRzNf5ZOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhYCp3sN0ueSLAYCG0aSP4dBkt8ylChc4nJ040m8vfj9ISWWOf
+	hppTNttl4aWTOAparA988X0FK97hwPq86xemFwxyuERoyzdjXxO+pnmcT5RbB2i0D04y8urECCQ
+	65mOBOWChrorV3Zm6r7VLKsWzbUM=
+X-Gm-Gg: ASbGnct+dhSXMZa/Z4l3NxHBZ1nyBcomNggYNLFOwKs9a3REsqRk0rq+O8xtTgB36uM
+	8hF8Wi3DWDkTT6MPCZ5fDZHOVSuiv4yImivIuU4AH4rDXN6ZrHcOIHM/FuQ6x5KwP3gW3sA/gfo
+	fHJttEvGObnUZf9XFc5KZoryG/oMKDE8Vp
+X-Google-Smtp-Source: AGHT+IEJwJkloTfnCLOMHYt4Q7+NPP4HVIwunx3KXcCNPxs0UYSvR0TYil4LI6tfaXqEKUKHS62BUgCAQLjwExOa5ec=
+X-Received: by 2002:a17:90b:33c5:b0:305:5f31:6c63 with SMTP id
+ 98e67ed59e1d1-308237c9f1bmr3594590a91.6.1744466762136; Sat, 12 Apr 2025
+ 07:06:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
+ <CANiq72=BoURMmkwqBzZ9Bzf5oXkZbUia-gZKJcNmVt7Qg8bKzg@mail.gmail.com> <Z_peBtLuLhEDHqga@pollux>
+In-Reply-To: <Z_peBtLuLhEDHqga@pollux>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 12 Apr 2025 16:05:50 +0200
+X-Gm-Features: ATxdqUG1Xx5WEm8-r3L7KoiOZGOoscCY1Hj0R9_I141AIMVcLI9vyEdLWS9jPaw
+Message-ID: <CANiq72nf7m-_5FWdC1ktFcdPDo7BmFfgJXJEFfArgV7Bonu-tw@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction `FwFunc`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Christian Schrefl <chrisi.schrefl@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-TAlexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-
-> On Fri, Apr 4, 2025 at 2:56=E2=80=AFPM Blaise Boscaccy
-> <bboscaccy@linux.microsoft.com> wrote:
->> +
->> +static int hornet_find_maps(struct bpf_prog *prog, struct hornet_maps *=
-maps)
->> +{
->> +       struct bpf_insn *insn =3D prog->insnsi;
->> +       int insn_cnt =3D prog->len;
->> +       int i;
->> +       int err;
->> +
->> +       for (i =3D 0; i < insn_cnt; i++, insn++) {
->> +               if (insn[0].code =3D=3D (BPF_LD | BPF_IMM | BPF_DW)) {
->> +                       switch (insn[0].src_reg) {
->> +                       case BPF_PSEUDO_MAP_IDX_VALUE:
->> +                       case BPF_PSEUDO_MAP_IDX:
->> +                               err =3D add_used_map(maps, insn[0].imm);
->> +                               if (err < 0)
->> +                                       return err;
->> +                               break;
->> +                       default:
->> +                               break;
->> +                       }
->> +               }
->> +       }
+On Sat, Apr 12, 2025 at 2:35=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
-> ...
+> Typically, firmware patches go through driver-core, but if you like I'm f=
+ine
+> with you taking it through the Rust tree.
 >
->> +               if (!map->frozen) {
->> +                       attr.map_fd =3D fd;
->> +                       err =3D kern_sys_bpf(BPF_MAP_FREEZE, &attr, size=
-of(attr));
->
-> Sorry for the delay. Still swamped after conferences and the merge window.
->
+>         Acked-by: Danilo Krummrich <dakr@kernel.org>
 
-No worries.
+Happy either way! If someone else takes it:
 
-> Above are serious layering violations.
-> LSMs should not be looking that deep into bpf instructions.
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-These aren't BPF internals; this is data passed in from
-userspace. Inspecting userspace function inputs is definitely within the
-purview of an LSM.
+> Just note that before v6.13, core::ffi is required, since kernel::ffi doe=
+s not
+> exist. The firmware abstractions were introduced with v6.11.
 
-Lskel signature verification doesn't actually need a full disassembly,
-but it does need all the maps used by the lskel. Due to API design
-choices, this unfortunately requires disassembling the program to see
-which array indexes are being used.
+It exists nowadays in 6.12.y (I backported it with the big `alloc`
+backport series).
 
-> Calling into sys_bpf from LSM is plain nack.
->
-
-kern_sys_bpf is an EXPORT_SYMBOL, which means that it should be callable
-from a module. Lskels without frozen maps are vulnerable to a TOCTOU
-attack from a sufficiently privileged user. Lskels currently pass
-unfrozen maps into the kernel, and there is nothing stopping someone
-from modifying them between BPF_PROG_LOAD and BPF_PROG_RUN.
-
-> The verification of module signatures is a job of the module loading proc=
-ess.
-> The same thing should be done by the bpf system.
-> The signature needs to be passed into sys_bpf syscall
-> as a part of BPF_PROG_LOAD command.
-> It probably should be two new fields in union bpf_attr
-> (signature and length),
-> and the whole thing should be processed as part of the loading
-> with human readable error reported back through the verifier log
-> in case of signature mismatch, etc.
->
-
-I don't necessarily disagree, but my main concern with this is that
-previous code signing patchsets seem to get gaslit or have the goalposts
-moved until they die or are abandoned.
-
-Are you saying that at this point, you would be amenable to an in-tree
-set of patches that enforce signature verification of lskels during
-BPF_PROG_LOAD that live in syscall.c, without adding extra non-code
-signing requirements like attachment point verification, completely
-eBPF-based solutions, or rich eBPF-based program run-time policy
-enforcement?
-
-Our entire use case for this is simply "we've signed all code running in
-ring 0," nothing more. I'm concerned that code signing may be blocked
-forever while eBPF attempts to reinvent its own runtime policy framework
-that has absolutely nothing to do with proving code provenance.
-
-> What LSM can do in addition is to say that if the signature is not
-> specified in the prog_load command then deny such request outright.
-> bpf syscall itself will deny program loading if signature is incorrect.
+Cheers,
+Miguel
