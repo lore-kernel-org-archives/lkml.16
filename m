@@ -1,118 +1,110 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1EA15CD78;
-	Sat, 12 Apr 2025 03:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14091155743;
+	Sat, 12 Apr 2025 03:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744429982; cv=none; b=a8AlXMQKYFFtRAiBIfkgun/pr0SZGCqHOj+45mHRMa4yBgHmFB6pMpFiTG58mBA+1IQFIIe0O6ej64/9A/QH1ajh/YiqjtXua0SsyS69rekrwIx/01fgTLH2PcwOLjx8aojoAmktrnFYr9WvoDv2eMHj8tHlWZcIQ30j1LQIvmQ=
+	t=1744430009; cv=none; b=mO6nvgdFAJHrEPIq4em9ttuESgugxdVyfEVeSZuSTw66fqbQeyMb6YoTMIx1/SryqdfPrt1IWOHcvTfQ7nPmCO1qD5i1yEFZSXy+QaruCnQnn84y63Czgo95smiXLfd1K+YMjQYjzslqXjGGBFp6/ff6FLqHyJphTBKayS9ug2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744429982; c=relaxed/simple;
-	bh=r4/JMs6C2Dvw1bW8VHdZlPi+YkDCZTs1eOaXxjGw/oM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2vDr3xPSBuO2kFHgZWy06EAOlxUngqcQJxQRfPw4T0x/ZxNW9yzPC55MtAr5U4VOZqEg8Y+jR/R+PgTP2FrS5lpY5uyb9QVso899Latx9/CG4hDLOYjQv2qaiDVvxLkxV/7nBoufzu5tYPWb/C+f2Gu+SQVGlPLBIzADZaSDBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 35C8D2C4C0D2;
-	Sat, 12 Apr 2025 05:52:25 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 031171E092; Sat, 12 Apr 2025 05:52:56 +0200 (CEST)
-Date: Sat, 12 Apr 2025 05:52:56 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-	amitk@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 7/9] PCI: PCI: Add pcie_link_is_active() to determine
- if the PCIe link is active
-Message-ID: <Z_njmA49Gda-m0aH@wunner.de>
-References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
- <20250412-qps615_v4_1-v5-7-5b6a06132fec@oss.qualcomm.com>
+	s=arc-20240116; t=1744430009; c=relaxed/simple;
+	bh=wTzkihgJDk+PfgalYMEfICtXY4uHOcjzu9cQSMU9SvY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gkNw0E3XED1Mi/DPRHX1fh3qtAA4cz5Eo4GS7IxOETFFlK0YG3iCU2BXNQmorlQFVriYpVkd3f9hjYef71QrBwmKqza1+62oEGJ3ITLcuUaE5f3JL1xihMB6i+3C2VqeKe0DV7WLykx+csoL4IEhc1XNosf21A+qUEby8OpNCNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N3g/8nXc; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3g/8nXc"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so3256190b3a.0;
+        Fri, 11 Apr 2025 20:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744430007; x=1745034807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9cCaU/9pItXeyQyKncm+hw9C0oW5ARKbMzPEkSk/lu0=;
+        b=N3g/8nXcC63yd8R5bLzSfi6P/qDJfvtchPmhEGa6m15WKADcOposL3Z99bRBJ2vBiF
+         lrg12fzCaKK66NRYx0tE1oY1dUHNI84pkrFX5p96zIT5/3CSh8ak2DJZ+8FfPTv+qLsS
+         K7U+Xo6BWrybAsxz53/Gq68B3c9OxrJl9TZ7tExrZqAcg7fJFoKlxa4x7Vr8Gmh1p+1Z
+         BCtP7e7Kx9AaXiNHKGAXkY/1/m4WDpX452Nemtzk0IWv/TmNOKWDGavgrypEqAPN8iGS
+         TAX61GFd7tRETWaxVrOlDYFIcge5rYyX1fJp8PeMT5nJ1iTFbmudHxOprwzqk071ehvb
+         g3ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744430007; x=1745034807;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9cCaU/9pItXeyQyKncm+hw9C0oW5ARKbMzPEkSk/lu0=;
+        b=YgUzaXW5t7s/QhxVjFOPdE8j8he2qk3jHoV2qluthLHJbWiuuYBOxmqj3PWVTPrf+j
+         0Y5VarOf5CCYUnuYunrCsfT5NEmqETPP+A+k/rF0AgHVwaHL9oMqtnklk62ocWepNcNf
+         hOJBbDeB0fUVV4aixWjIdjd5YdKJpDvYjdrj4tXWCROdsc8ASKHMYn6pk6D2Bq/OLygt
+         XxbIyGepcT/g6PSsb4qANhr92UIkBzJRpYLextbBi3BNzLDCXHJngCoKRWOkwueatatD
+         zt9BQvGz+UDnsAmbntzTO64Kaw80wqDSsR+7NevuSGcrptlH2sMNMPzgeJHgRzstB3y8
+         wlZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX89rz8A/Ol/tGUkZH2Z4kZWKjmad945Wy+MY5sJS9Do/ada9I4o8SIFzFCNr+shl/bD6IGW1kYB3lRjyE@vger.kernel.org, AJvYcCVdakyic5D4CmefWgPkyEcrr8syUjkI63JcQ8gMBkOMyUg/8UzodL131rZhw6UzsrXBUHW6/vdkWx0=@vger.kernel.org, AJvYcCWRBaenYOI18hidoEoRL1if2leb1lxCcSDr2I++kUMsoey8ahspiyzkXpUdQZY0ljQAXo3dsKWDbAhF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw16QyxhN+rB81xfH3MDDp+FSmiVlDb6EG7/5iTwUdgHieI473F
+	JeIwLaVAfMhTak0WRGOX553pwXOYHl8Oj7dhXBX+l1Y31s41iCco
+X-Gm-Gg: ASbGncuvgplU+8bdasapTVoE3xtZKXXvraWc0ZI+q9AEAlWhYkrnB0D76JZiBk/SGIZ
+	MjaynB/P1DvuF1Elc55wUhtnXP4z0BG1FoxGABME0rU9pO/ePxPS+7YXCErOqV60Rirk7v99/+g
+	5PrHJagQe4RH3ayPnFCjv/RBsWXd2h6aw8AcjhdEtrvIIjNnoHj6UeNgS7FBGiS40C1L/FZ8PUJ
+	k+o3x7PgrZFegLn4FdEVx8X+yHBD2TAfROTN+cURjTQYhr6uxbhGxt9c4u/+IprD20w9X+KxNyh
+	12NsFugVqOIXGM1XBqmOktlzhZ/Z3jI9oEsxNZKKETI5
+X-Google-Smtp-Source: AGHT+IEIMF5fg8Rc1Bjc1V7Y1P75rom0e3KD+7LFsWsIXn/FP8KnbU+SQpMciMlE4vYfRTYAuGDRbQ==
+X-Received: by 2002:a05:6a20:6f08:b0:1f3:1e5c:c655 with SMTP id adf61e73a8af0-201795227d9mr7520801637.6.1744430007203;
+        Fri, 11 Apr 2025 20:53:27 -0700 (PDT)
+Received: from [192.168.101.248] ([212.192.12.80])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198c00sm2594765b3a.10.2025.04.11.20.53.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 20:53:26 -0700 (PDT)
+Message-ID: <5084c2dc-d268-4268-a827-2ae445782a4e@gmail.com>
+Date: Sat, 12 Apr 2025 03:53:08 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412-qps615_v4_1-v5-7-5b6a06132fec@oss.qualcomm.com>
-
-On Sat, Apr 12, 2025 at 07:19:56AM +0530, Krishna Chaitanya Chundru wrote:
-> Introduce a common API to check if the PCIe link is active, replacing
-> duplicate code in multiple locations.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-
-One heads-up and one nit:
-
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -584,7 +557,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
->  	 * Synthesize it to ensure that it is acted on.
->  	 */
->  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
-> -	if (!pciehp_check_link_active(ctrl))
-> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
->  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
->  	up_read(&ctrl->reset_lock);
->  }
-
-Heads-up:  There's a trivial merge conflict here with what's queued on
-pci.git/hotplug.  No need for you to respin because I expect this will be
-merged through a different topic branch anyway, but Bjorn and the other
-maintainers will see the merge conflict when generating the next branch.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] Add support for A523 Thermal system
+From: Mikhail Kalashnikov <iuncuim@gmail.com>
+To: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li
+ <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Andre Przywara <andre.przywara@arm.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250411003827.782544-1-iuncuim@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1945,6 +1945,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
->  			    pci_select_bars(pdev, IORESOURCE_MEM));
->  }
->  
-> +bool pcie_link_is_active(struct pci_dev *dev);
->  #else /* CONFIG_PCI is not enabled */
->  
->  static inline void pci_set_flags(int flags) { }
-> @@ -2093,6 +2094,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
->  {
->  	return -ENOSPC;
->  }
-> +
-> +static inline bool pcie_link_is_active(struct pci_dev *dev)
-> +{ return false; }
->  #endif /* CONFIG_PCI */
+On 4/11/25 03:38, Mikhail Kalashnikov wrote:
+> This patch series adds temperature sensor support for the Allwinner A523
+> family of processors (same die with H728/A527/T527)
 
-Nit:  Seems like this would still fit within 80 chars:
+Based on 6.15-rc1 with dts patches from
 
-static inline bool pcie_link_is_active(struct pci_dev *dev) { return false; }
+https://lore.kernel.org/linux-sunxi/20250307005712.16828-1-andre.przywara@arm.com/T/#t
 
-That said, all existing callers of this function as well as the new one
-introduced by this series are only compiled in the CONFIG_PCI=y case,
-so I'm not sure the inline stub is necessary at all?
-
-Thanks,
-
-Lukas
+> Mikhail Kalashnikov (6):
+>    thermal/drivers/sun8i: add gpadc clock
+>    thermal/drivers/sun8i: replace devm_reset_control_get to shared
+>    thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
+>    arm64: dts: allwinner: A523: Add SID controller node
+>    arm64: dts: allwinner: A523: Add thermal sensors and zones
+>    dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
+>
+>   .../thermal/allwinner,sun8i-a83t-ths.yaml     |   5 +
+>   .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 145 +++++++++++++++++
+>   drivers/thermal/sun8i_thermal.c               | 154 +++++++++++++++++-
+>   3 files changed, 300 insertions(+), 4 deletions(-)
+>
