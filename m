@@ -1,140 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAD02040A8;
-	Sat, 12 Apr 2025 17:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81D81F03FE
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 17:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744477767; cv=none; b=Xj2bPrtRO4nfayeTVDfh0uNhoa2RK4zOwpt8/dhFpmqR4BSBS0pKi1b772ofXjImduhmitcC6MNkRVZftlcj/81YAiaGAeDcriSwXOwe9vJqIj8TZLePUtbIvA8NewAiX6z6K/6OMHUyXwnv/tqbp/PGKKumEfNaU9HR0NeiKLk=
+	t=1744477827; cv=none; b=hXlGKXEyyD2q7Z9D4o6xdrg+xxbJVPl5Y3dQpA2uFlf3vbrgsE1+hdMSIJXyffuXP2jE6AhLLXHFgQDlD4mAuPeDeyt6Fbdv9fy1aaxjXWfJxtNKenOq3jtwWfxfE+lZunG0/63vtsnwRgelaFyqplRidwt7OuGepm4kX3u6B8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744477767; c=relaxed/simple;
-	bh=3ld2o6Mj/F94jH7yDDeMdOra5lZxxX/tPTJX7Yh+cYE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=p0Ta4r4AFtCEI9JEnQ7HfzG2+DDUGUfvuyQX+ary5uT5lwc8YJmBIM44XlQSofGFxAlSjFMSuZZwEeyojq+RnUi7F5JTAIUYsT2MjjNRSQymxvYY86CT2XI5YBsDCvGhmEk6J4K2By2EhL86OpKTfE14s1OKZ7tyRkTdaNSVfXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWRVIa6s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744477827; c=relaxed/simple;
+	bh=qu1jYqemipsgVrkeM5Kv7xBfdBLk6/OQaJqZ6aUbcQg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=LFgObGUjzCK5mOjwx5I1d9s3hbNp7Eft4oCTNvNQn4zA9UFHFd11FMW6okwZrMQufskb+3U6uWZesKRmJ9YKpzS5yfq5UuFOwqJdMoYgZYHIuMUYbTfeqq2lnbd/mENzSpYA52N0rkD9dPBjQZRbY7hwx0Uswe2q4lVB/TjY4cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiIR8Qq2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWRVIa6s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08093C4CEE5;
-	Sat, 12 Apr 2025 17:09:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiIR8Qq2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A40DC4CEE3;
+	Sat, 12 Apr 2025 17:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744477767;
-	bh=3ld2o6Mj/F94jH7yDDeMdOra5lZxxX/tPTJX7Yh+cYE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=IWRVIa6sQUgho1AjQlyyF1dR2vufCEmTq5gfMz6DO89U8OuHsnIbwwUFu1fxxmr6+
-	 BLz2rnOjdLDRYzOxg7nfywH0THh5hUeHHf1E/ZwEUFt/2pgaUo/c2Ng5kYhiKKNXFJ
-	 Al+SEkYxWCrzi7MUCzebwi0KcDKaAUClL3IZEI34S7THE1Cx7GAUT8OtdTKm4x4xmu
-	 wf/ddAueD5ctLxkxcb7AnVLoDyZbdiaU5BnTBRt2sGw+maqs/GpQOPjbsBw9I6gBpZ
-	 q29EMBZGXGGSU4CbJYJ+x5ELE8ADYaX37sNResOcYTYCLnhx4IbIUclRItuVsF4wNR
-	 x8LOU/42YAXxA==
-Date: Sat, 12 Apr 2025 12:09:26 -0500
+	s=k20201202; t=1744477827;
+	bh=qu1jYqemipsgVrkeM5Kv7xBfdBLk6/OQaJqZ6aUbcQg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LiIR8Qq2Enl14WL2Qd0xLUiqDSgvDoqaw/OJR/S+w6rEnPggdDZU62dKHM9OjkeFI
+	 +c+tiayjgrQ9BJgBSCICMsJOzk7RroN/w/3Ab9JHpf4UNhMv4FwmtVnhEXi+1SG9Eg
+	 sAigrS3NvyhHTq8HyNL+drkS/aIPX68P7VTiUyQsSIZDzJCR4ww8+/aU/2Bltw07j3
+	 WR7A/E7+3jJCSR1+Xr6HAjYhOeFcZs6/lt570A0AeIGZtT5Rjokt3vJdrS7Qpr3xRw
+	 2ECGFfQ60A9zFkPhg+M1nGb/Bs3UTDt/JHXVmfH0CGMrDwPEiYsfhzDpXaBybi0R8n
+	 VQWVv2e7r6OIw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C20380CED9;
+	Sat, 12 Apr 2025 17:11:06 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Maxime Ripard <mripard@kernel.org>, Crystal Wood <oss@buserror.net>, 
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Conor Dooley <conor+dt@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, Frank Li <Frank.Li@nxp.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-mtd@lists.infradead.org, 
- Naveen N Rao <naveen@kernel.org>, devicetree@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, Richard Weinberger <richard@nod.at>, 
- Nicholas Piggin <npiggin@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, David Airlie <airlied@gmail.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>
-To: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-In-Reply-To: <20250412-ppcyaml-elbc-v5-4-03f0e577139f@posteo.net>
-References: <20250412-ppcyaml-elbc-v5-0-03f0e577139f@posteo.net>
- <20250412-ppcyaml-elbc-v5-4-03f0e577139f@posteo.net>
-Message-Id: <174447776475.1354537.103427368501741372.robh@kernel.org>
-Subject: Re: [PATCH v5 4/4] dt-bindings: memory-controllers: Convert
- fsl,elbc to YAML
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity check on
+ sbi->total_valid_block_count
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <174447786527.711489.2899173657997269764.git-patchwork-notify@kernel.org>
+Date: Sat, 12 Apr 2025 17:11:05 +0000
+References: <20250408122208.2297777-1-chao@kernel.org>
+In-Reply-To: <20250408122208.2297777-1-chao@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, syzbot+8b376a77b2f364097fbe@syzkaller.appspotmail.com,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
 
+Hello:
 
-On Sat, 12 Apr 2025 15:16:05 +0200, J. Neuschäfer wrote:
-> Convert the Freescale localbus controller bindings from text form to
-> YAML. Compared to the .txt version, the YAML binding contains a new
-> usage example with FCM NAND flash, and a full list of compatible strings
-> based on current usage in arch/powerpc/boot/dts/.
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
+
+On Tue,  8 Apr 2025 20:22:08 +0800 you wrote:
+> syzbot reported a f2fs bug as below:
 > 
-> Note that the both the compatible strings and the unit address format
-> are kept as-is, for compatibility with existing kernels and device
-> trees, as well as unit address readability. This results in dts
-> validation warnings:
+> ------------[ cut here ]------------
+> kernel BUG at fs/f2fs/f2fs.h:2521!
+> RIP: 0010:dec_valid_block_count+0x3b2/0x3c0 fs/f2fs/f2fs.h:2521
+> Call Trace:
+>  f2fs_truncate_data_blocks_range+0xc8c/0x11a0 fs/f2fs/file.c:695
+>  truncate_dnode+0x417/0x740 fs/f2fs/node.c:973
+>  truncate_nodes+0x3ec/0xf50 fs/f2fs/node.c:1014
+>  f2fs_truncate_inode_blocks+0x8e3/0x1370 fs/f2fs/node.c:1197
+>  f2fs_do_truncate_blocks+0x840/0x12b0 fs/f2fs/file.c:810
+>  f2fs_truncate_blocks+0x10d/0x300 fs/f2fs/file.c:838
+>  f2fs_truncate+0x417/0x720 fs/f2fs/file.c:888
+>  f2fs_setattr+0xc4f/0x12f0 fs/f2fs/file.c:1112
+>  notify_change+0xbca/0xe90 fs/attr.c:552
+>  do_truncate+0x222/0x310 fs/open.c:65
+>  handle_truncate fs/namei.c:3466 [inline]
+>  do_open fs/namei.c:3849 [inline]
+>  path_openat+0x2e4f/0x35d0 fs/namei.c:4004
+>  do_filp_open+0x284/0x4e0 fs/namei.c:4031
+>  do_sys_openat2+0x12b/0x1d0 fs/open.c:1429
+>  do_sys_open fs/open.c:1444 [inline]
+>  __do_sys_creat fs/open.c:1522 [inline]
+>  __se_sys_creat fs/open.c:1516 [inline]
+>  __x64_sys_creat+0x124/0x170 fs/open.c:1516
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
 > 
->   Warning (simple_bus_reg): /example-0/localbus@f0010100/board-control@1,0:
->   simple-bus unit address format error, expected "100000000"
-> 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
-> 
-> V5:
-> - fix reference to fsl/lbc.txt in
->   Documentation/devicetree/bindings/display/ssd1289fb.txt
-> 
-> V4:
-> - no changes
-> 
-> V3:
-> - move this patch after the GPCM/FCM patches to dtschema/dtc warnings
->   due to missing bindings for fsl,elbc-gpcm-uio and fsl,elbc-fcm-nand
-> - add "simple-bus" again, for compatibility with existing DTs/drivers
->   based on discussion with Crystal Wood and Rob Herring
-> - fix fsl,pq2-localbus compatible properties based on mgcoge.dts / ep8248e.dts
->   (was missing "simple-bus")
-> - add board-control (bcsr) example again, now using the compatible
->   string listed in Documentation/devicetree/bindings/board/fsl,bcsr.yaml
-> - remove interrupt-parent property from example
-> - rework the commit message
-> 
-> V2:
-> - fix order of properties in examples, according to dts coding style
-> - move to Documentation/devicetree/bindings/memory-controllers
-> - clarify the commit message a tiny bit
-> - remove unnecessary multiline markers (|)
-> - define address format in patternProperties
-> - trim subject line (remove "binding")
-> - remove use of "simple-bus", because it's technically incorrect
-> ---
->  .../devicetree/bindings/display/ssd1289fb.txt      |   2 +-
->  .../bindings/memory-controllers/fsl,elbc.yaml      | 158 +++++++++++++++++++++
->  .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
->  3 files changed, 159 insertions(+), 44 deletions(-)
-> 
+> [...]
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Here is the summary with links:
+  - [f2fs-dev] f2fs: fix to do sanity check on sbi->total_valid_block_count
+    https://git.kernel.org/jaegeuk/f2fs/c/05872a167c2c
 
-yamllint warnings/errors:
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:29.23-34.15: Warning (simple_bus_reg): /example-0/localbus@f0010100/flash@0,0: simple-bus unit address format error, expected "0"
-Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:36.31-39.15: Warning (simple_bus_reg): /example-0/localbus@f0010100/board-control@1,0: simple-bus unit address format error, expected "100000000"
-Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:41.31-46.15: Warning (simple_bus_reg): /example-0/localbus@f0010100/simple-periph@2,0: simple-bus unit address format error, expected "200000000"
-Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:82.23-89.15: Warning (simple_bus_reg): /example-1/localbus@e0005000/flash@0,0: simple-bus unit address format error, expected "0"
-Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:91.22-97.15: Warning (simple_bus_reg): /example-1/localbus@e0005000/nand@1,0: simple-bus unit address format error, expected "100000000"
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250412-ppcyaml-elbc-v5-4-03f0e577139f@posteo.net
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
