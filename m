@@ -1,63 +1,84 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D404319CC24;
-	Sat, 12 Apr 2025 14:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27937149E13;
+	Sat, 12 Apr 2025 14:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744467699; cv=none; b=o6Wbt2GrDxF1fmNPp1XpNGRhbYOMZcysL1qHIVmlXR5XPL5KGimWU/ulsxpRaInRfM1qF2aaoIP/aU7bW/6Uqg4JwiSA97uSHJCJGJ03KqAwG+W5kJ/+9lzUgyiUatsT+QzMmtLQo+ejDHyj+I892LwTbRcFJ+2qv//ggqoaOHU=
+	t=1744467742; cv=none; b=cLxDX/HewxgWm1WHS6odIdQ6YCZJ6N3N1flb0L9F5v4BMSg82Mbftg7PIDr7nbYuxwJXEh6nvuoadLtv76xPiQ/nk7uMafQTxp2esDI1/8EIVGNkJeGpjuI/TrK7BX98Oy04/K/IvzphLwyLS6BdChYBVlBOW/ua9YNFziQ67Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744467699; c=relaxed/simple;
-	bh=l373vlT6AMSMRn8u5U5+ng6JketZRF6vF9pVWEl5U5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rp9g6dX7ZtmJ0Q139oHpXnxuS2vo45ywKowlr5Qu8QsvVQbtFiIEQBdWWHNTPg2gnkfuE6yy/M7CtHxKvp377oomE19f5J7VDQvnSyvyzvaIQaJGbOd8ry1D84QKqgzWT1a8ZSUvLZynpT5DzQ1+sQp58hY3Fi+ZFECmq6sJAi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 53CELT12035924;
-	Sat, 12 Apr 2025 23:21:29 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 53CELSZJ035919
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 12 Apr 2025 23:21:28 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <c9014d1e-c569-4a7a-aa68-d7c32e51d436@I-love.SAKURA.ne.jp>
-Date: Sat, 12 Apr 2025 23:21:25 +0900
+	s=arc-20240116; t=1744467742; c=relaxed/simple;
+	bh=FkrHuh+xF02Q321Wyf0onYgcYoDnpGW3VH9K1TsqZug=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D3vyHlEwcWgIHqiwQ2YL33Y6BoNuzvfsdwnfyjJG0UR5Je4bjHnaDCqJjkDsKaa+1qM3lxQrqdJXIL2yKY6YMyCy+nnBFP8FuYOw8qeOOMhKto8gpj9jSzk5Y/L9iUlfta9/6h7WkKrFI2yE83CX/dEJ3lYV8BWFGhDHgrhpwGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5258C4CEE3;
+	Sat, 12 Apr 2025 14:22:19 +0000 (UTC)
+Date: Sat, 12 Apr 2025 10:22:18 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Arnd Bergmann <arnd@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+ Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Sergio
+ =?UTF-8?B?R29uesOhbGV6?= Collado <sergio.collado@gmail.com>, David Gow
+ <davidgow@google.com>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas.schier@linux.dev>, Mostafa Saleh <smostafa@google.com>,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
+Message-ID: <20250412102218.560196c0@batman.local.home>
+In-Reply-To: <20250411105849.GA5600@noisy.programming.kicks-ass.net>
+References: <20250328112156.2614513-1-arnd@kernel.org>
+	<ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
+	<20250411065054.GM9833@noisy.programming.kicks-ass.net>
+	<0073e739-e3aa-4743-ad2d-29d7c969f454@app.fastmail.com>
+	<20250411105849.GA5600@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Fix false warning in inode_to_wb
-To: Andreas Gruenbacher <agruenba@redhat.com>, cgroups@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>, Rafael Aquini <aquini@redhat.com>,
-        gfs2@lists.linux.dev, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250411173848.3755912-1-agruenba@redhat.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20250411173848.3755912-1-agruenba@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Virus-Status: clean
-X-Anti-Virus-Server: fsav202.rs.sakura.ne.jp
 
-Please add
+On Fri, 11 Apr 2025 12:58:49 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-  Reported-by: syzbot+e14d6cd6ec241f507ba7@syzkaller.appspotmail.com
-  Closes: https://syzkaller.appspot.com/bug?extid=e14d6cd6ec241f507ba7
+> > This one is 534 characters long:
+> > _GLOBAL__sub_I_65535_1_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n  
+> 
+> I've not seen those before; google seems to suggest this is part of
+> static initializers.
 
-to both patches.
+I just hit this on my allyesconfig build:
 
-Also,
+  NM      .tmp_vmlinux1.syms
+  KSYMS   .tmp_vmlinux1.kallsyms.S
+Symbol __cfi_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
+Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
+  AS      .tmp_vmlinux1.kallsyms.o
+  LD      .tmp_vmlinux2
+ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
+ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
+ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
+make[3]: *** [/work/build/trace/nobackup/linux-test.git/scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
+make[2]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:1239: vmlinux] Error 2
+make[1]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:248: __sub-make] Error 2
+make[1]: Leaving directory '/work/build/nobackup/tracetest'
+make: *** [Makefile:248: __sub-make] Error 2
 
-  -static inline struct bdi_writeback *inode_to_wb(const struct inode *inode)
-  +static inline struct bdi_writeback *inode_to_wb(struct inode *inode)
+I grepped for that symbol and it lives in: lib/tests/longest_symbol_kunit.o
 
-change is not needed.
+Even after removing that test, my allyesconfig still fails to build with:
 
+ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
+ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
+ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
+
+I guess I'll just have to remove allyesconfig from my test suite. I
+still do allmodconfig which appears to still work. At least that will
+shorten my test suite time as allyesconfig takes around a half hour to
+complete.
+
+-- Steve
