@@ -1,183 +1,390 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2066.outbound.protection.outlook.com [40.107.223.66])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182871885A1
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 05:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744434745; cv=fail; b=JCz1aTvgbqHtcKmR4H85r6TSuMNS4DkFLd4xdAj3+B+iicMl0+U2gsxYfmpkWw3xVrB5Oue1J7/y4bLLbqij3ngJNoucM8TL3tSDrMuhKZ8xBKDGTeuxq3CLLVw8JdBoqL07ciBat5YKkcLM+tzrVWT+k52gEHkw0bUYff6VJ+0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744434745; c=relaxed/simple;
-	bh=lp7a3pH7bKUPyXsphfgML3/Hl3zMn5c7hAcJSsRq6QM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kXjoukVSHOWeAjHP+d3Em8jMDdeyg5MmaV9IwqEXc8Yg/M5wywlIf28yg8pGwCDsHuAx5qZKTAiljiNBby4jJWDoa4slakiw3Ral/D2AdlnF5HKRKFu1z1z6gzStluVfoPVa4777oirxaYDG6i8arkZ+lRe9KJDfMLB7MCU39HI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zLE/eK/M; arc=fail smtp.client-ip=40.107.223.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2882F2367DC;
+	Sat, 12 Apr 2025 05:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744435020; cv=none; b=XOl5XmN+86sNQKfRxjz8ARa1BMnQiS08MYejyYeBMZFU0Yd8qgwsCuhrwwy0MUeiCu4Gz4mCd0SJ+8AUqDzdGuQFWZlzchwPhqESbMjOd49a/6bf9SGkyyltmsfBuTzksz0fLCo9gioolKN9mig5dXOAWniO6Cuxq/p5FxsS5Nc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744435020; c=relaxed/simple;
+	bh=9dpEZzEgXH+HzKlb6IgDyiCxBE7y5i4CpEE+zsCt+5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBGcZDM++I+3uHa6cAkJtwKfW8Sg2qE5BPnk5MNUBnVFgkINp5d1Kk++B16CUmp/lNFDWDzyG5iIWMFL+UhCFcdPL7WoNNiFWgMA7TlaTUQwN9zgowkJwgDEMvie/hGM5XZXV+CjLZ7C8VRyf2MsZh8a1aFvQVVfdkjlk15GZ68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Vol2qJXL; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zLE/eK/M"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ScvaHPVEudxlVE6d/UWV+bDGI0ok7ACtpiBX21XbUqfnl+LAo1kq4I1Mi+bbmCv6O0yM2qJSkoDjm1Oz/AAup+OVav8ZeWtFY7lAySaEK2LFlvMxQSkoOUR7qaHp9dOmLFZz3+2ReWE0mRyIrW9h/V/gTZCnsefgp3f9iojBoYqhCFSeWd7K1PVWp1TuG9qhPExTD9zTYvpxyqz9kFiuECymHVE0VvWAbpEA9zqbxii6dkxPeoMdii3fLWaUKX/1NXxZGAfpzBqB4ujOlNy1NRR35i2gal99xUt6bENgw0YBgV4kNsD2+DvsiLsQUIjnCgpUOoW4bUnrxGM5fGK5eQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F+kQxLmNJQcMEtPrwrYSstlpzsmDTmxzA+Y61Cc3KMc=;
- b=B/MhO7CjjDnx0KAzzkSxd3+MLdIQlW0d+elF9SSB7r/0CZc4CAixrjvDP18D2Jndu4oYgjJlP36Olbb9159XffwxrXFMo3YW9CIsOa96Xe+IuO7Z6irho3vr4J+jrhy70pNLdwHQELriYteIw9LlSCddxQeIyOcmDOY6ltBFHOyU3fVZnUS2SOP57YoLM++bQq842Jws+2aQiEdijkOnCS0bdmsJvak8j/T3H8OddIckPu+RjaaSGtLH4/+isXdFMrXUHZP6oTLPWwen4ouEdzxFJNtXasbDGoIEB0VJWUGhun+8wDgI3mFz9RZAx9xv6AowPLcRyHOU47WuLQegSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F+kQxLmNJQcMEtPrwrYSstlpzsmDTmxzA+Y61Cc3KMc=;
- b=zLE/eK/Me8bZFyeYd6ApjV8WMa8SOPehw2u7ZP12rfC5XCVrRKLxee5YR8894zaGzxH6z3YddrGetfvt2EpAI3BaKa71dyzpLof8sccF/KRlEwo8WlCZhbMUxwmx37hIbNAGDI53PFty8p3wm3PQKlmQ12SFrBSGYs9fZcaRg9w=
-Received: from SA0PR11CA0096.namprd11.prod.outlook.com (2603:10b6:806:d1::11)
- by MW5PR12MB5598.namprd12.prod.outlook.com (2603:10b6:303:193::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.45; Sat, 12 Apr
- 2025 05:12:18 +0000
-Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
- (2603:10b6:806:d1:cafe::d8) by SA0PR11CA0096.outlook.office365.com
- (2603:10b6:806:d1::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Sat,
- 12 Apr 2025 05:12:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Sat, 12 Apr 2025 05:12:17 +0000
-Received: from [10.252.90.31] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 12 Apr
- 2025 00:12:13 -0500
-Message-ID: <77f5e50c-ba52-42de-8668-e15660ba9eb3@amd.com>
-Date: Sat, 12 Apr 2025 10:42:04 +0530
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Vol2qJXL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=+XrbTBSjc+qDmni/xUAFp1chmC0E1MEZh2B8l5vX10I=; b=Vol2qJXLHx9NGbOAFlG2tjw5to
+	TRrXTjEWxGEQGv5Ezu1bdqFdMi3YMQHDbDUU+fgbHEguySrNTJBBwRibEqsPO5xvosnCYoWvg9wBt
+	jB4zr8R2MM0baVMWA3M2vmaw5ndnXpGFCVi3MCpYiXsqpSpQOfz0B3zTJGRPwOV6GpDcvLrGlxV1G
+	3+v+EIWr4ZZVmr3jomUo0WDQf09daawFgl26/D/iWa7TJ1PGUnYqCjeg7Ee31uYczZPqoxbUudPut
+	4V57VnuYyV1j8DZrgACHxem/gqPpZSnEys9W21MOUgp/P3mjeS32mLXLssg8l9e+Y12TDaPdxg/j6
+	+ieZ0rSQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u3TER-00F2kj-2J;
+	Sat, 12 Apr 2025 13:16:44 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 12 Apr 2025 13:16:43 +0800
+Date: Sat, 12 Apr 2025 13:16:43 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+	Pankaj Gupta <pankaj.gupta@nxp.com>,
+	Gaurav Jain <gaurav.jain@nxp.com>, linux-crypto@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-kernel@vger.kernel.org,
+	Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
+Subject: [PATCH] crypto: api - Add support for duplicating algorithms before
+ registration
+Message-ID: <Z_n3O_IZhbgQE02q@gondor.apana.org.au>
+References: <17f9af67-de10-4b96-99ef-3c5cd78124c0@linux.dev>
+ <Z_SxYFdyBJTYe_7G@gondor.apana.org.au>
+ <e3dd2f83-8451-47b0-a774-a697b861ceb3@linux.dev>
+ <Z_XiPLmSVs8PGTZD@gondor.apana.org.au>
+ <Z_XpfyPaoZ6Y8u6z@gondor.apana.org.au>
+ <cf7e20a2-dc30-4940-9abe-bbf5ea1ac413@linux.dev>
+ <Z_hyG816TRNGoSaP@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] sched/isolation: Introduce isolated task work
-To: Oleg Nesterov <oleg@redhat.com>, Frederic Weisbecker <frederic@kernel.org>
-CC: LKML <linux-kernel@vger.kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, Marcelo Tosatti
-	<mtosatti@redhat.com>, Michal Hocko <mhocko@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Valentin
- Schneider <vschneid@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
-	<linux-mm@kvack.org>
-References: <20250410152327.24504-1-frederic@kernel.org>
- <20250410152327.24504-6-frederic@kernel.org>
- <20250411102555.GA5322@redhat.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250411102555.GA5322@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|MW5PR12MB5598:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb0e2777-abd3-4e18-c109-08dd79809867
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V1JZcURXUUJMZGU2MGM4OGhmWE5vV3hOTXdRMHNTMnJjd0pLYzBGNWV1MGQr?=
- =?utf-8?B?bXFkZ0x0NDRrb09DNkdvNHFPcm1kSERGZ3lTSEpkaFMvQzEyUGVzUTBqNDlI?=
- =?utf-8?B?eDUwSEVobUVRb0h0VnRNS2xWRjlHWkhqU2JEblpBaXlsSVh2TmZWRDBNa2lO?=
- =?utf-8?B?NXFXMHp2bFJuUk9qZ3V0ZWhxN0syOHRIQjdMOVlyNjgrYkNVeDdNTVZXMVpO?=
- =?utf-8?B?UDFRUytuU1hNS3drZ3ROdmRYOG5MZGs2cFRNK1J0L2k4eWVuMlBPbjhFdll1?=
- =?utf-8?B?MHdWWlkxSnBJT0czZ3QrRHd5SDVnV2tRM0U2Z0MvUDVMeXdzZHpqbmJHWWRv?=
- =?utf-8?B?VUlTQkY3ak05eDhBMzB1czNqekVZb2cyZi9UWW13aUR2c09tamE3WVp5VU8v?=
- =?utf-8?B?eHVUQjNHZXZCQjEyblZFaGJydk1EcVNYV2cwVzB6MFQ5MDdJbFhXTWk2VW5F?=
- =?utf-8?B?S0svQ24xK3RoQ0ErTGxnN1N2a2Zkd3ZtbzBhdFA5SmtJVVhJd3JIWC9kMEVF?=
- =?utf-8?B?SmxVbWt1cTZiWk5odHlEWlJZRXM0dGVVSnljK1pQQm5BM2FqQ1RZR2JXUGdY?=
- =?utf-8?B?VnJ3OEIvZXQ2UXB6SXVBbG43NHBQK25PN2NiM0syOHdocURRQmhzMWo3S29R?=
- =?utf-8?B?Q1N4RW44Um5lOHdvRUVXSlduUFFCTDV5ZW1VQzJobjdoNFlwd2QyQUtxbHBw?=
- =?utf-8?B?bnkvdE9BU2VFR0RmMjA3QnVUaFFveTBSVVVDVStuRHBZVElrZS9hV2RYSGhK?=
- =?utf-8?B?SWFPWnhEOVhsRWFKSTdLSG9yTjg4REpJWUJTMXVINXZneW5sa2QxM0NEaCs1?=
- =?utf-8?B?UHpYT1R0ay9jSUc1NW5ORmJjYkFHSFQ5Uzg5L003OHVNSTV3SktCRWcvYkpn?=
- =?utf-8?B?eEJxR1ROdWFMR05Bb1c1ekkxdzVZOWZXWDJ0WFoyWm9xV0xoTW84VmtITWZp?=
- =?utf-8?B?eVZCK2hqV2JySWdwaktXTjFLNjRIMUZnMXM3ZzFFSk5QZFQ4bUdKTWJTVkxM?=
- =?utf-8?B?TVFaaGcvcnBUTnJWbmlQbVFyR1p1KzMwSC82TDBxYkV0MFJJNWg1NElDM3R2?=
- =?utf-8?B?RFdWY3FWWExueVhCeURrTjlDRkl3aGhSL05DclR3R0hKNzdzN3c2ODZBU2R2?=
- =?utf-8?B?RklmT0RSVVJOQXgrWS95NDNJWjAwZ0wyWnFISVBRb2x0R1dBOEh2OTFXeHlj?=
- =?utf-8?B?NzRmbFpPKzdQZFJ0SGYvaWx0Y2s2T2RCY1R0UUplQUt0NTVIczg2dzBPMGNK?=
- =?utf-8?B?ZW50cy9PSGFqWDF0YUEvYm5DckxySExtc2JUMjFMdW0vbXNvZUxsLzZBUWd0?=
- =?utf-8?B?R2c1M00wRkRKWW9LY3F2K3VVRHZGZ2FFUmpMRnNXSGMyeVJkdUVZcll2ZkJC?=
- =?utf-8?B?VzlWdW1rWEc3VWZNWGVvMU0zNlBteEZVRjZLc25KanBpb0YrRWtTWTViTkda?=
- =?utf-8?B?MWhvNEVJYjdJcHZ2bEt6VnpnQmpHQTdJemhXYjFFa2hISnZSb1dUNW12cGYw?=
- =?utf-8?B?RmxkNWR6VnZTYW1VR20yZDBjYzIyRGxKZllkNEp3L3NOMmc1SmI4enFCVHht?=
- =?utf-8?B?aldBY2E4azNPUlZnenlzUHBubkFvOWMzUUxsZDhHWGZ0WmxENEY4aW0vR1BE?=
- =?utf-8?B?VGNpVnJkTE1RNnhBT3RCZ3NvNDFOd2ZOVVlkNk80Nk45bWh4NjV1aHJpMWtY?=
- =?utf-8?B?RTdOdzhBZDVyY0laaW1tNldxeEFncnlZZmVpN1ZNTmxDR0dsanlDa1Mrb1NS?=
- =?utf-8?B?VTFuMzl6MW9TK0piWk5wNXd2VmtPeDZvbHp0YlRZY2hZUDVaa1BDdE9hVWN4?=
- =?utf-8?B?dktYSFZXOTJacWl3SGFrWHkvNHNsQmovNkdXcVhaaFhMd0NLdFJtTHVJMXU5?=
- =?utf-8?B?dGRuRWRCMER1SGVoREFUQytNMi9zZGxjUEVLbm5sVm1QUisvVkphbzJtWHBU?=
- =?utf-8?B?RVFFRmx0b3pzUUlmUnNYK0lyMWdGV3o5TnhtekFHUFlzUHhaSUJ0TWdmV2NT?=
- =?utf-8?B?SUs4dlFoYldGZ1ZWdUVLZklLMXJxemZMNWNCRHkwb0RWTjFwVUFCeGcycUFu?=
- =?utf-8?Q?8/b7+t?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 05:12:17.5408
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb0e2777-abd3-4e18-c109-08dd79809867
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015C6.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5598
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_hyG816TRNGoSaP@gondor.apana.org.au>
 
-On 4/11/2025 3:55 PM, Oleg Nesterov wrote:
+On Fri, Apr 11, 2025 at 09:36:27AM +0800, Herbert Xu wrote:
 > 
->> +	local_irq_save(flags);
->> +	if (task_work_queued(&current->nohz_full_work)) {
->> +		ret = 0;
->> +		goto out;
->> +	}
->> +
->> +	ret = task_work_add(current, &current->nohz_full_work, TWA_RESUME);
->> +out:
->> +	local_irq_restore(flags);
->> +	return ret;
-> 
-> Hmm, why not
-> 
-> 	local_irq_save(flags);
-> 	if (task_work_queued(...))
-> 		ret = 0;
-> 	else
-> 		ret = task_work_add(...);
-> 
-> ?
+> The patch goes on top of cryptodev.  But it won't do anything
+> without a corresponding patch to caam that moves the algorithm
+> data structures into dynamically allocated memory, and adds a
+> cra_destroy hook to free that memory.
 
-Or use guard() sand save on flags and ret:
+Here's a patch on top that allows drivers to do this easily.
+Unfortunately it still won't help caam because it embeds the
+algorithm in a bigger structure, so the duplication needs to
+be done by hand.
 
-	guard(irqsave)();
+---8<---
+If the bit CRYPTO_ALG_DUP_FIRST is set, an algorithm will be
+duplicated by kmemdup before registration.  This is inteded for
+hardware-based algorithms that may be unplugged at will.
 
-	if (task_work_queued(...))
-		return 0;
+Do not use this if the algorithm data structure is embedded in a
+bigger data structure.  Perform the duplication in the driver
+instead.
 
-	return task_work_add(...);
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ crypto/acompress.c     |  1 +
+ crypto/aead.c          |  1 +
+ crypto/ahash.c         |  1 +
+ crypto/akcipher.c      |  1 +
+ crypto/algapi.c        | 41 ++++++++++++++++++++++++++++-------------
+ crypto/api.c           |  9 +++++++++
+ crypto/internal.h      |  5 ++++-
+ crypto/kpp.c           |  1 +
+ crypto/lskcipher.c     |  1 +
+ crypto/rng.c           |  1 +
+ crypto/scompress.c     |  1 +
+ crypto/shash.c         |  1 +
+ crypto/sig.c           |  1 +
+ crypto/skcipher.c      |  1 +
+ include/linux/crypto.h |  9 +++++++++
+ 15 files changed, 61 insertions(+), 14 deletions(-)
+
+diff --git a/crypto/acompress.c b/crypto/acompress.c
+index 5d0b8b8b84f6..4763524732ba 100644
+--- a/crypto/acompress.c
++++ b/crypto/acompress.c
+@@ -152,6 +152,7 @@ static const struct crypto_type crypto_acomp_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_ACOMPRESS_MASK,
+ 	.type = CRYPTO_ALG_TYPE_ACOMPRESS,
+ 	.tfmsize = offsetof(struct crypto_acomp, base),
++	.algsize = offsetof(struct acomp_alg, base),
+ };
+ 
+ struct crypto_acomp *crypto_alloc_acomp(const char *alg_name, u32 type,
+diff --git a/crypto/aead.c b/crypto/aead.c
+index 12f5b42171af..5d14b775036e 100644
+--- a/crypto/aead.c
++++ b/crypto/aead.c
+@@ -186,6 +186,7 @@ static const struct crypto_type crypto_aead_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_AEAD,
+ 	.tfmsize = offsetof(struct crypto_aead, base),
++	.algsize = offsetof(struct aead_alg, base),
+ };
+ 
+ int crypto_grab_aead(struct crypto_aead_spawn *spawn,
+diff --git a/crypto/ahash.c b/crypto/ahash.c
+index 2d9eec2b2b1c..7ed88f8bedeb 100644
+--- a/crypto/ahash.c
++++ b/crypto/ahash.c
+@@ -897,6 +897,7 @@ static const struct crypto_type crypto_ahash_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_AHASH_MASK,
+ 	.type = CRYPTO_ALG_TYPE_AHASH,
+ 	.tfmsize = offsetof(struct crypto_ahash, base),
++	.algsize = offsetof(struct ahash_alg, halg.base),
+ };
+ 
+ int crypto_grab_ahash(struct crypto_ahash_spawn *spawn,
+diff --git a/crypto/akcipher.c b/crypto/akcipher.c
+index 72c82d9aa077..a36f50c83827 100644
+--- a/crypto/akcipher.c
++++ b/crypto/akcipher.c
+@@ -97,6 +97,7 @@ static const struct crypto_type crypto_akcipher_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_AHASH_MASK,
+ 	.type = CRYPTO_ALG_TYPE_AKCIPHER,
+ 	.tfmsize = offsetof(struct crypto_akcipher, base),
++	.algsize = offsetof(struct akcipher_alg, base),
+ };
+ 
+ int crypto_grab_akcipher(struct crypto_akcipher_spawn *spawn,
+diff --git a/crypto/algapi.c b/crypto/algapi.c
+index f368c0dc0d6d..532d3efc3c7d 100644
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -66,13 +66,7 @@ static int crypto_check_alg(struct crypto_alg *alg)
+ 
+ static void crypto_free_instance(struct crypto_instance *inst)
+ {
+-	struct crypto_alg *alg = &inst->alg;
+-	const struct crypto_type *type;
+-
+-	type = alg->cra_type;
+-	if (type->destroy)
+-		type->destroy(alg);
+-	type->free(inst);
++	inst->alg.cra_type->free(inst);
+ }
+ 
+ static void crypto_destroy_instance_workfn(struct work_struct *w)
+@@ -424,6 +418,15 @@ void crypto_remove_final(struct list_head *list)
+ }
+ EXPORT_SYMBOL_GPL(crypto_remove_final);
+ 
++static void crypto_free_alg(struct crypto_alg *alg)
++{
++	unsigned int algsize = alg->cra_type->algsize;
++	u8 *p = (u8 *)alg - algsize;
++
++	crypto_destroy_alg(alg);
++	kfree(p);
++}
++
+ int crypto_register_alg(struct crypto_alg *alg)
+ {
+ 	struct crypto_larval *larval;
+@@ -436,6 +439,19 @@ int crypto_register_alg(struct crypto_alg *alg)
+ 	if (err)
+ 		return err;
+ 
++	if (alg->cra_flags & CRYPTO_ALG_DUP_FIRST &&
++	    !WARN_ON_ONCE(alg->cra_destroy)) {
++		unsigned int algsize = alg->cra_type->algsize;
++		u8 *p = (u8 *)alg - algsize;
++
++		p = kmemdup(p, algsize + sizeof(*alg), GFP_KERNEL);
++		if (!p)
++			return -ENOMEM;
++
++		alg = (void *)(p + algsize);
++		alg->cra_destroy = crypto_free_alg;
++	}
++
+ 	down_write(&crypto_alg_sem);
+ 	larval = __crypto_register_alg(alg, &algs_to_put);
+ 	if (!IS_ERR_OR_NULL(larval)) {
+@@ -444,8 +460,10 @@ int crypto_register_alg(struct crypto_alg *alg)
+ 	}
+ 	up_write(&crypto_alg_sem);
+ 
+-	if (IS_ERR(larval))
++	if (IS_ERR(larval)) {
++		crypto_alg_put(alg);
+ 		return PTR_ERR(larval);
++	}
+ 
+ 	if (test_started)
+ 		crypto_schedule_test(larval);
+@@ -481,12 +499,9 @@ void crypto_unregister_alg(struct crypto_alg *alg)
+ 	if (WARN(ret, "Algorithm %s is not registered", alg->cra_driver_name))
+ 		return;
+ 
+-	if (alg->cra_destroy)
+-		crypto_alg_put(alg);
+-	else if (!WARN_ON(refcount_read(&alg->cra_refcnt) != 1) &&
+-		 alg->cra_type && alg->cra_type->destroy)
+-		alg->cra_type->destroy(alg);
++	WARN_ON(!alg->cra_destroy && refcount_read(&alg->cra_refcnt) != 1);
+ 
++	list_add(&alg->cra_list, &list);
+ 	crypto_remove_final(&list);
+ }
+ EXPORT_SYMBOL_GPL(crypto_unregister_alg);
+diff --git a/crypto/api.c b/crypto/api.c
+index 2880aa04bb99..e427cc5662b5 100644
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -703,5 +703,14 @@ void crypto_req_done(void *data, int err)
+ }
+ EXPORT_SYMBOL_GPL(crypto_req_done);
+ 
++void crypto_destroy_alg(struct crypto_alg *alg)
++{
++	if (alg->cra_type && alg->cra_type->destroy)
++		alg->cra_type->destroy(alg);
++	if (alg->cra_destroy)
++		alg->cra_destroy(alg);
++}
++EXPORT_SYMBOL_GPL(crypto_destroy_alg);
++
+ MODULE_DESCRIPTION("Cryptographic core API");
+ MODULE_LICENSE("GPL");
+diff --git a/crypto/internal.h b/crypto/internal.h
+index 2edefb546ad4..2ed79bf208ca 100644
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -46,6 +46,7 @@ struct crypto_type {
+ 	unsigned int maskclear;
+ 	unsigned int maskset;
+ 	unsigned int tfmsize;
++	unsigned int algsize;
+ };
+ 
+ enum {
+@@ -162,10 +163,12 @@ static inline struct crypto_alg *crypto_alg_get(struct crypto_alg *alg)
+ 	return alg;
+ }
+ 
++void crypto_destroy_alg(struct crypto_alg *alg);
++
+ static inline void crypto_alg_put(struct crypto_alg *alg)
+ {
+ 	if (refcount_dec_and_test(&alg->cra_refcnt))
+-		alg->cra_destroy(alg);
++		crypto_destroy_alg(alg);
+ }
+ 
+ static inline int crypto_tmpl_get(struct crypto_template *tmpl)
+diff --git a/crypto/kpp.c b/crypto/kpp.c
+index ecc63a1a948d..2e0cefe7a25f 100644
+--- a/crypto/kpp.c
++++ b/crypto/kpp.c
+@@ -80,6 +80,7 @@ static const struct crypto_type crypto_kpp_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_KPP,
+ 	.tfmsize = offsetof(struct crypto_kpp, base),
++	.algsize = offsetof(struct kpp_alg, base),
+ };
+ 
+ struct crypto_kpp *crypto_alloc_kpp(const char *alg_name, u32 type, u32 mask)
+diff --git a/crypto/lskcipher.c b/crypto/lskcipher.c
+index cdb4897c63e6..c2e2c38b5aa8 100644
+--- a/crypto/lskcipher.c
++++ b/crypto/lskcipher.c
+@@ -294,6 +294,7 @@ static const struct crypto_type crypto_lskcipher_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_LSKCIPHER,
+ 	.tfmsize = offsetof(struct crypto_lskcipher, base),
++	.algsize = offsetof(struct lskcipher_alg, co.base),
+ };
+ 
+ static void crypto_lskcipher_exit_tfm_sg(struct crypto_tfm *tfm)
+diff --git a/crypto/rng.c b/crypto/rng.c
+index 9d8804e46422..b8ae6ebc091d 100644
+--- a/crypto/rng.c
++++ b/crypto/rng.c
+@@ -98,6 +98,7 @@ static const struct crypto_type crypto_rng_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_RNG,
+ 	.tfmsize = offsetof(struct crypto_rng, base),
++	.algsize = offsetof(struct rng_alg, base),
+ };
+ 
+ struct crypto_rng *crypto_alloc_rng(const char *alg_name, u32 type, u32 mask)
+diff --git a/crypto/scompress.c b/crypto/scompress.c
+index 4a2b3933aa95..19f1312d7dd7 100644
+--- a/crypto/scompress.c
++++ b/crypto/scompress.c
+@@ -367,6 +367,7 @@ static const struct crypto_type crypto_scomp_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_SCOMPRESS,
+ 	.tfmsize = offsetof(struct crypto_scomp, base),
++	.algsize = offsetof(struct scomp_alg, base),
+ };
+ 
+ static void scomp_prepare_alg(struct scomp_alg *alg)
+diff --git a/crypto/shash.c b/crypto/shash.c
+index 301ab42bf849..a2a7d6609172 100644
+--- a/crypto/shash.c
++++ b/crypto/shash.c
+@@ -227,6 +227,7 @@ const struct crypto_type crypto_shash_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_SHASH,
+ 	.tfmsize = offsetof(struct crypto_shash, base),
++	.algsize = offsetof(struct shash_alg, base),
+ };
+ 
+ int crypto_grab_shash(struct crypto_shash_spawn *spawn,
+diff --git a/crypto/sig.c b/crypto/sig.c
+index dfc7cae90802..f2df943b96e1 100644
+--- a/crypto/sig.c
++++ b/crypto/sig.c
+@@ -74,6 +74,7 @@ static const struct crypto_type crypto_sig_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_MASK,
+ 	.type = CRYPTO_ALG_TYPE_SIG,
+ 	.tfmsize = offsetof(struct crypto_sig, base),
++	.algsize = offsetof(struct sig_alg, base),
+ };
+ 
+ struct crypto_sig *crypto_alloc_sig(const char *alg_name, u32 type, u32 mask)
+diff --git a/crypto/skcipher.c b/crypto/skcipher.c
+index 132075a905d9..319215cfded5 100644
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -620,6 +620,7 @@ static const struct crypto_type crypto_skcipher_type = {
+ 	.maskset = CRYPTO_ALG_TYPE_SKCIPHER_MASK,
+ 	.type = CRYPTO_ALG_TYPE_SKCIPHER,
+ 	.tfmsize = offsetof(struct crypto_skcipher, base),
++	.algsize = offsetof(struct skcipher_alg, base),
+ };
+ 
+ int crypto_grab_skcipher(struct crypto_skcipher_spawn *spawn,
+diff --git a/include/linux/crypto.h b/include/linux/crypto.h
+index 1e3809d28abd..f87f124ddc18 100644
+--- a/include/linux/crypto.h
++++ b/include/linux/crypto.h
+@@ -50,6 +50,15 @@
+  */
+ #define CRYPTO_ALG_NEED_FALLBACK	0x00000100
+ 
++/*
++ * Set if the algorithm data structure should be duplicated into
++ * kmalloc memory before registration.  This is useful for hardware
++ * that can be disconnected at will.  Do not use this if the data
++ * structure is embedded into a bigger one.  Duplicate the overall
++ * data structure in the driver in that case.
++ */
++#define CRYPTO_ALG_DUP_FIRST		0x00000200
++
+ /*
+  * Set if the algorithm has passed automated run-time testing.  Note that
+  * if there is no run-time testing for a given algorithm it is considered
+-- 
+2.39.5
 
 -- 
-Thanks and Regards,
-Prateek
-
-> 
-> Oleg.
-> 
-> 
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
