@@ -1,123 +1,120 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta22.hihonor.com (mta22.hihonor.com [81.70.192.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4731AAC9;
-	Sat, 12 Apr 2025 08:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D4D1AAC9
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 08:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744446883; cv=none; b=rIE5/CpYSCxdYVY6gcIFRn2FjZeuhkDhjR+lAjvsx4rqpfNGzcnY9zMEOD6bM+cYPiToVGHrA7jBFbw2+qmN+uPW4BWeFPLlyzS+9f2DAl32aUGsxw6tRKTxL5PoSArPmPkTF5s30C5/eRd+gzxApFakTF/9UNSZUbFgPwH75d0=
+	t=1744446900; cv=none; b=TmvhjhAFuCiylcseAHtYNSWoa8V/KxkjRnnUpx0QW75ZSYzfZ9UJkE5PJ0zte+oLZdnLVd/VhDahbYKdw20pHPJ6ZTntDpqZMsnHwdmWtCHGdhreIzLw8K3YJV1ONp00oMzbbgTBnHDyCAq2snSWDTaddICizK0Le0RYYzRD80o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744446883; c=relaxed/simple;
-	bh=uY1OzpWq1YuTlBMN+P0DZuRjCGRt3R3FZeEoAtM9qDo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uNq6izgA5E+gN8vWcrK8/S7j7AzTkqhfssvteiLRIwq8T7KWGLU6xXNgPBwSCcqdaxIy5hOPBtgStnHamEmBwonhKY1BjXlOvID04nT/NgIQBy6sr89wReHxUoTNKH24bdQwy9Gnj6HKCZ2UVHuhPoTZ+rWfT9C26JQmfLgZCkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=N6kCjtyW; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="N6kCjtyW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1744446873; bh=uY1OzpWq1YuTlBMN+P0DZuRjCGRt3R3FZeEoAtM9qDo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=N6kCjtyW+zT3K6fq+BuZYYFMZXt6w1xHyupWm5kjViEZK+ojhu4Q5QRGZjjU8mo2Y
-	 1cjsfC9ARNpXFpbdzP57sDq+V42GI5q1AV+ksHAEf648LqleWKBUwl/ysm5VLP1DuC
-	 gQ2RrnLIUJ+LvY4lEkkTYAHUad8XdXa2iejhOFMs=
-Message-ID: <cc84ef26-6c33-42d0-a11f-4d6b31d8beee@lucaweiss.eu>
-Date: Sat, 12 Apr 2025 10:34:33 +0200
+	s=arc-20240116; t=1744446900; c=relaxed/simple;
+	bh=dvvVTcBGAdInku0GwbxhuyHBEJr8h6WnyLG05xZ9I9M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lanaFZ+tN5EcVAWbjyvqMBcz73rXLxkdcrklgCvz8/fHSjU4NlSsA+sqxkCeaSUYxCzxl0pumTcxJ7+ePMVcietUU24bna0TSeMKawnqfmoxjwalR8BjRWTiKKpQMd2kzhArKnlgBafutXBVq4eoJqs7x5Boz10Wt49+psmi30w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w003.hihonor.com (unknown [10.68.17.88])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4ZZRft3ZXpzYlQ6q;
+	Sat, 12 Apr 2025 16:34:14 +0800 (CST)
+Received: from a001.hihonor.com (10.68.28.182) by w003.hihonor.com
+ (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 12 Apr
+ 2025 16:34:49 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a001.hihonor.com
+ (10.68.28.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 12 Apr
+ 2025 16:34:49 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Sat, 12 Apr 2025 16:34:49 +0800
+From: gaoxu <gaoxu2@honor.com>
+To: Barry Song <21cnbao@gmail.com>, Mike Rapoport <rppt@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>, "surenb@google.com"
+	<surenb@google.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yipengxiang
+	<yipengxiang@honor.com>
+Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIG1tOiBzaW1wbGlmeSB6b25lX2lkeCgp?=
+Thread-Topic: [PATCH] mm: simplify zone_idx()
+Thread-Index: AduqEEHvK6kd7fhKS8Kk+tRXk/ygUf//psiAgAB6Y4D//Ve/sA==
+Date: Sat, 12 Apr 2025 08:34:49 +0000
+Message-ID: <bdf6988006d546d498ccb2b7c14c6fe0@honor.com>
+References: <2d42decac5194c2c8d897b0424f0dcf3@honor.com>
+ <Z_fYsyEA9hSEOoxp@kernel.org>
+ <CAGsJ_4wACEvWe-Fcx9fShkF8okEVb3srGDVCn0v0QjALq7nneg@mail.gmail.com>
+In-Reply-To: <CAGsJ_4wACEvWe-Fcx9fShkF8okEVb3srGDVCn0v0QjALq7nneg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] arm64: dts: qcom: msm8953: Add uart_5
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Felix Kaechele <felix@kaechele.ca>
-References: <20250406-msm8953-uart_5-v1-1-7e4841674137@lucaweiss.eu>
- <e87220f1-bf8e-4014-834f-ae99c0b032ca@oss.qualcomm.com>
-Content-Language: en-US
-From: Luca Weiss <luca@lucaweiss.eu>
-In-Reply-To: <e87220f1-bf8e-4014-834f-ae99c0b032ca@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 4/10/25 6:45 PM, Konrad Dybcio wrote:
-> On 4/6/25 3:52 PM, Luca Weiss wrote:
->> From: Felix Kaechele <felix@kaechele.ca>
->>
->> Add the node and pinctrl for uart_5 found on the MSM8953 SoC.
->>
->> Signed-off-by: Felix Kaechele <felix@kaechele.ca>
->> [luca: Prepare patch for upstream submission]
->> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
->> ---
->>   arch/arm64/boot/dts/qcom/msm8953.dtsi | 32 ++++++++++++++++++++++++++++++++
->>   1 file changed, 32 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/msm8953.dtsi b/arch/arm64/boot/dts/qcom/msm8953.dtsi
->> index af4c341e2533ef2cca593e0dc97003334d3fd6b7..3d6ab83cbce4696a8eb54b16fdb429e191f44637 100644
->> --- a/arch/arm64/boot/dts/qcom/msm8953.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/msm8953.dtsi
->> @@ -767,6 +767,20 @@ spi_6_sleep: spi-6-sleep-state {
->>   				bias-disable;
->>   			};
->>   
->> +			uart_5_default: uart-5-default-state {
->> +				pins = "gpio16", "gpio17", "gpio18", "gpio19";
->> +				function = "blsp_uart5";
->> +				drive-strength = <16>;
-> 
-> This guy's strongly biased! But it looks like that's on purpose for
-> these older SoCs..
-> 
->> +				bias-disable;
->> +			};
->> +
->> +			uart_5_sleep: uart-5-sleep-state {
->> +				pins = "gpio16", "gpio17", "gpio18", "gpio19";
->> +				function = "gpio";
->> +				drive-strength = <2>;
->> +				bias-disable;
->> +			};
->> +
->>   			wcnss_pin_a: wcnss-active-state {
->>   
->>   				wcss-wlan2-pins {
->> @@ -1592,6 +1606,24 @@ blsp2_dma: dma-controller@7ac4000 {
->>   			qcom,controlled-remotely;
->>   		};
->>   
->> +		uart_5: serial@7aef000 {
->> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
->> +			reg = <0x07aef000 0x200>;
->> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&gcc GCC_BLSP2_UART1_APPS_CLK>,
->> +				 <&gcc GCC_BLSP2_AHB_CLK>;
->> +			clock-names = "core",
->> +				      "iface";
->> +			dmas = <&blsp2_dma 0>, <&blsp2_dma 1>;
->> +			dma-names = "tx", "rx";
-> 
-> Matches what the computer says
-> 
-> It's more usual to send these together with a user, but I don't mind
-
-This seems to be used with the out-of-tree dts
-apq8053-lenovo-cd-18781y.dts
-
-I'm just sometimes trying to reduce the out-of-tree diff of the
-msm8953-mailine tree on GitHub
-
-Regards
-Luca
-
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> Konrad
-
+PiANCj4gT24gRnJpLCBBcHIgMTEsIDIwMjUgYXQgMjo0MuKAr0FNIE1pa2UgUmFwb3BvcnQgPHJw
+cHRAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBIaSwNCj4gPg0KPiA+IE9uIFRodSwgQXBy
+IDEwLCAyMDI1IGF0IDEyOjAzOjAwUE0gKzAwMDAsIGdhb3h1IHdyb3RlOg0KPiA+ID4gc3RvcmUg
+em9uZV9pZHggZGlyZWN0bHkgaW4gc3RydWN0IHpvbmUgdG8gc2ltcGxpZnkgYW5kIG9wdGltaXpl
+IHpvbmVfaWR4KCkNCj4gPg0KPiA+IERvIHlvdSBzZWUgYW4gYWN0dWFsIHNwZWVkIHVwIHNvbWV3
+aGVyZT8NCkFsbW9zdCBuZWdsaWdpYmxlLiBteSBzaW1wbGUgY29kZSB0ZXN0cyBzaG93ZWQgdGhl
+IHBhdGNoIHByb3ZpZGVzIGFuIGF2ZXJhZ2UgaW1wcm92ZW1lbnQgb2YgfjAuMDIlLg0KVGh1cywg
+aW4gdGhlIEFuZHJvaWQgMTUtNi42IGtlcm5lbCwgSSBjb25maWRlbnRseSByZXRhaW5lZCB0aGUg
+b3JpZ2luYWwgem9uZV9pZHggZnVuY3Rpb24uDQooaHR0cHM6Ly9hbmRyb2lkLXJldmlldy5nb29n
+bGVzb3VyY2UuY29tL2Mva2VybmVsL2NvbW1vbi8rLzM1NzgzMjIvMi9tbS9wYWdlX2FsbG9jLmMj
+NzcwKQ0KDQpUaGlzIHBhdGNoIG9ubHkgZWxpbWluYXRlcyAyLTMgYXNzZW1ibHkgaW5zdHJ1Y3Rp
+b25zLCBtYWtpbmcgaXQgY2hhbGxlbmdpbmcgdG8NCm9ic2VydmUgbWVhc3VyYWJsZSBwZXJmb3Jt
+YW5jZSBiZW5lZml0cy4NCkhvd2V2ZXIsIHNpbmNlIHRoZSB6b25lIHN0cnVjdCBpbmNsdWRlcyBD
+QUNIRUxJTkVfUEFERElORyAocmVzZXJ2aW5nIHVudXNlZCBzcGFjZSksDQphZGRpbmcgYSBuZXcg
+bWVtYmVyIHZhcmlhYmxlIGRvZXMgbm90IGFsdGVyIHRoZSBzaXplIG9mIHpvbmUuIFRoaXMgbWFr
+ZXMgdGhlIHBhdGNoDQplZmZlY3RpdmVseSB6ZXJvLWNvc3Qgd2hpbGUgYWNoaWV2aW5nIGEgY2xl
+YW5lciBpbXBsZW1lbnRhdGlvbiBvZiB6b25lX2lkeC4NCj4gDQo+ICsxLiBDdXJpb3VzIGlmIHRo
+ZXJlJ3MgZGF0YSBpbmRpY2F0aW5nIHpvbmVfaWR4IGlzIGEgaG90IHBhdGguDQpUaGVyZSBhcmUg
+c2V2ZXJhbCBmdW5jdGlvbnMgaW4gdGhlIG1lbW9yeSBtYW5hZ2VtZW50IGNvZGUgdGhhdCBhcmUg
+ZnJlcXVlbnRseQ0KZXhlY3V0ZWQgYW5kIHdpbGwgY2FsbCB6b25lX2lkeDoNCnJtcXVldWUoKS0+
+d2FrZXVwX2tzd2FwZCgpLT56b25lX2lkeCgpDQphbGxvY19wYWdlc19idWxrX25vcHJvZigpLT5f
+X2NvdW50X3ppZF92bV9ldmVudHMoKS0+em9uZV9pZHgoKQ0KDQpUaGUgcGF0Y2ggKGh0dHBzOi8v
+bG9yZS5rZXJuZWwub3JnL2FsbC8yMDI0MDIyOTE4MzQzNi40MTEwODQ1LTIteXV6aGFvQGdvb2ds
+ZS5jb20vKQ0Kd2lsbCBhZGQgbmV3IGhvdHNwb3QgcGF0aHMsIHdpdGggdGhlIGRldGFpbHMgYXMg
+Zm9sbG93czoNCl9fem9uZV93YXRlcm1hcmtfb2soKS0+em9uZV9pc19zdWl0YWJsZSgpLT56b25l
+X2lkeCgpDQp6b25lX3dhdGVybWFya19mYXN0KCktPnpvbmVfaXNfc3VpdGFibGUoKS0+em9uZV9p
+ZHgoKQ0KZ2V0X3BhZ2VfZnJvbV9mcmVlbGlzdCgpLT56b25lX2lzX3N1aXRhYmxlKCktPnpvbmVf
+aWR4KCkNCl9fZnJlZV9vbmVfcGFnZSgpLT56b25lX21heF9vcmRlcigpLT56b25lX2lkeCgpDQoN
+CkFsdGhvdWdoIFRoZSBwYXRjaCAoaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjQwMjI5
+MTgzNDM2LjQxMTA4NDUtMi15dXpoYW9AZ29vZ2xlLmNvbS8pDQpoYXMgbm90IHlldCBtZXJnZWQg
+aW50byB0aGUgTGludXggbWFpbmxpbmU7IGl0IGlzIGFscmVhZHkgaW5jbHVkZWQgaW4gQW5kcm9p
+ZCAxNS02LjYuDQo+IA0KDQo+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IGdhbyB4dSA8Z2FveHUy
+QGhvbm9yLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGluY2x1ZGUvbGludXgvbW16b25lLmggfCAz
+ICsrLQ0KPiA+ID4gIG1tL21tX2luaXQuYyAgICAgICAgICAgfCAxICsNCj4gPiA+ICAyIGZpbGVz
+IGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4NCj4gPiA+IGRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21tem9uZS5oIGIvaW5jbHVkZS9saW51eC9tbXpvbmUu
+aA0KPiA+ID4gaW5kZXggNGM5NWZjYzllLi43YjE0ZjU3N2QgMTAwNjQ0DQo+ID4gPiAtLS0gYS9p
+bmNsdWRlL2xpbnV4L21tem9uZS5oDQo+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4L21tem9uZS5o
+DQo+ID4gPiBAQCAtOTQxLDYgKzk0MSw3IEBAIHN0cnVjdCB6b25lIHsNCj4gPiA+ICAjZW5kaWYN
+Cj4gPiA+DQo+ID4gPiAgICAgICBjb25zdCBjaGFyICAgICAgICAgICAgICAqbmFtZTsNCj4gPiA+
+ICsgICAgIGVudW0gem9uZV90eXBlICB6b25lX2lkeDsNCj4gPiA+DQo+ID4gPiAgI2lmZGVmIENP
+TkZJR19NRU1PUllfSVNPTEFUSU9ODQo+ID4gPiAgICAgICAvKg0KPiA+ID4gQEAgLTE1MzYsNyAr
+MTUzNyw3IEBAIHN0YXRpYyBpbmxpbmUgaW50IGxvY2FsX21lbW9yeV9ub2RlKGludCBub2RlX2lk
+KQ0KPiB7IHJldHVybiBub2RlX2lkOyB9Ow0KPiA+ID4gIC8qDQo+ID4gPiAgICogem9uZV9pZHgo
+KSByZXR1cm5zIDAgZm9yIHRoZSBaT05FX0RNQSB6b25lLCAxIGZvciB0aGUgWk9ORV9OT1JNQUwN
+Cj4gem9uZSwgZXRjLg0KPiA+ID4gICAqLw0KPiA+ID4gLSNkZWZpbmUgem9uZV9pZHgoem9uZSkg
+ICAgICAgICAgICAgICAoKHpvbmUpIC0NCj4gKHpvbmUpLT56b25lX3BnZGF0LT5ub2RlX3pvbmVz
+KQ0KPiA+ID4gKyNkZWZpbmUgem9uZV9pZHgoem9uZSkgICAgICAgICAgICAgICAoKHpvbmUpLT56
+b25lX2lkeCkNCj4gPiA+DQo+ID4gPiAgI2lmZGVmIENPTkZJR19aT05FX0RFVklDRQ0KPiA+ID4g
+IHN0YXRpYyBpbmxpbmUgYm9vbCB6b25lX2lzX3pvbmVfZGV2aWNlKHN0cnVjdCB6b25lICp6b25l
+KQ0KPiA+ID4gZGlmZiAtLWdpdCBhL21tL21tX2luaXQuYyBiL21tL21tX2luaXQuYw0KPiA+ID4g
+aW5kZXggOTY1OTY4OWI4Li5hN2Y3MjY0ZjEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9tbS9tbV9pbml0
+LmMNCj4gPiA+ICsrKyBiL21tL21tX2luaXQuYw0KPiA+ID4gQEAgLTE0MjUsNiArMTQyNSw3IEBA
+IHN0YXRpYyB2b2lkIF9fbWVtaW5pdCB6b25lX2luaXRfaW50ZXJuYWxzKHN0cnVjdA0KPiB6b25l
+ICp6b25lLCBlbnVtIHpvbmVfdHlwZSBpZHgsDQo+ID4gPiAgICAgICBhdG9taWNfbG9uZ19zZXQo
+JnpvbmUtPm1hbmFnZWRfcGFnZXMsIHJlbWFpbmluZ19wYWdlcyk7DQo+ID4gPiAgICAgICB6b25l
+X3NldF9uaWQoem9uZSwgbmlkKTsNCj4gPiA+ICAgICAgIHpvbmUtPm5hbWUgPSB6b25lX25hbWVz
+W2lkeF07DQo+ID4gPiArICAgICB6b25lLT56b25lX2lkeCA9IGlkeDsNCj4gPiA+ICAgICAgIHpv
+bmUtPnpvbmVfcGdkYXQgPSBOT0RFX0RBVEEobmlkKTsNCj4gPiA+ICAgICAgIHNwaW5fbG9ja19p
+bml0KCZ6b25lLT5sb2NrKTsNCj4gPiA+ICAgICAgIHpvbmVfc2VxbG9ja19pbml0KHpvbmUpOw0K
+PiA+ID4gLS0NCj4gPiA+IDIuMTcuMQ0KPiA+DQo+ID4gLS0NCj4gPiBTaW5jZXJlbHkgeW91cnMs
+DQo+ID4gTWlrZS4NCj4gDQo+IFRoYW5rcw0KPiBCYXJyeQ0K
