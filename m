@@ -1,145 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252961AB530;
-	Sat, 12 Apr 2025 10:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD9213AD1C
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 10:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744452845; cv=none; b=djDcmOwRaCkwPBmNosP2IAg5l35uZwjYqK6r+BavRzLNBVbvvV1CLdm/SHgVv4zMzo6t3SDCWsQM7MRmQfK1t3z32pdsVxw8pD+/T4A8pBcSrTm44z3mpnQuMZigF79s0H6dzMvMUaW/vXso36uruZOmoyiZVl8tLA4omG4FUHk=
+	t=1744452901; cv=none; b=O6X7gRnBrBKbIKBXzpNFaPL9XQEVsrzPe8cOYD761Su2qCWvgpCY3okTIArj5mqgFrnksSsRxGEBCk8vIM3stAkvNO3i+qZXeSO12CzxftBl9VjO5GC5NxN0BvXyM3UccOga5pi/eXPVm2GHY342TjRSgmahSstqthpPLJx/PGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744452845; c=relaxed/simple;
-	bh=PfOWBL9SUv5rp8uxcRyYN7tqsxQ0x2O7UBGDKnS1QMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gI5r4kxsVHqjXB4t3rraLl2P5TQbw40XPqSdibXtigeamUm3LksInl+46aUkwhhS+/DfP5HCGCL9eIREtDiuhTRI2xmgdz990BUZH0ai4yljbsVURQJaHgmEQXkrnYYsUUvhEQAqUiOYDk8KTA/FkthPOc+g+X4hPmy7h6vR1Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEuOHqFf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744452901; c=relaxed/simple;
+	bh=OUaqaenZQK40EKCZ5x5D+sjoF6j3O559xsJm3HomQC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cZEClb5cbPx9EaHWgPts8HvdKh91dLRsKWwD080Njou3Fkmviv+68RPqIFyMNHNnzLnrciKyFAfYKVKgYFWVlnJXwVUjNC2DX25lAZ6KYNj1hmoLJlDxweZHXr7xdNfizGv7txBoOK6kvNfWZZtWLXcFKF6YpI/IC6lz+QnTyTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DcuUp8d5; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEuOHqFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBE0C4CEE3;
-	Sat, 12 Apr 2025 10:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744452844;
-	bh=PfOWBL9SUv5rp8uxcRyYN7tqsxQ0x2O7UBGDKnS1QMA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mEuOHqFf+L1eoYLxuii82uzmk6rl7DDaiALBysTE57yaG6DAjLCYPEm+ihNBn4Oor
-	 Ls8e1cYJoLEfUB2XFwdQoOAdKiMLbGaaHLGgMWpWNOo/RkQTDSN6M5tE8y/riEGOSU
-	 f+QWByNaYvN7iLmi6kz05Pp1OYHtvXnmYmFS2BVDQ3RTHjmUNFmL8grvrdcVDc8kB1
-	 xDgQfbP0BJw5ma3FB6I7AypVDQAdreuezdSjQyeRryu6b3HJq9yedJwPO2SZ9QKv6z
-	 XXbf0bVsplPaYU3F/ugwbclQQZyLxFOF/bPOGYByedqY9OWLaY9Kt6O5V1azeCwk8l
-	 +IFpVgCaDEOZg==
-Message-ID: <48a63395-e9d1-4825-bc3a-7a043ce006bc@kernel.org>
-Date: Sat, 12 Apr 2025 12:13:58 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DcuUp8d5"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso29165595e9.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 03:14:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744452898; x=1745057698; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ADz2UHdhn6VlUtCxoXIDmk2qzKdPwe5zasSgeJVB5z4=;
+        b=DcuUp8d5N7CwSxEYROiNlwQ4bGCKhy18TJO5ecjLFPm8kfMb0HqKcZZpRrbEl1xeZT
+         KpYoRrIXuTaGuIfPXcJb5A0fx1LVGR1pqYS/ebIDDgiACeP/wiKj3LBeJS9gkO5Bo/jh
+         oOs9RVJC05ioaz2lhWGEIpATl0uLX592H/z1NBx+12YnWpmDjeBcOP6SEQgmkG/ditVS
+         lOxRMYJ6BO3R1iBtuoNs8q1NehD6C85f4Cf87yL0BQyg3XKw5DDDFXozcmFHW39VAXXw
+         RaYEzYEgYBVdec1Dqa5MOa9AA+MviyXLqTL3LjmsiX0TLbTIYKkr5axKO87Qw19Csps9
+         sJLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744452898; x=1745057698;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ADz2UHdhn6VlUtCxoXIDmk2qzKdPwe5zasSgeJVB5z4=;
+        b=DHiSmxBgJa8V7A0DJobdUbhIhP7hgz6nJsMpjt076lW5bQH/l6Wc7Xi4Uh7ZUh/8Gd
+         N9bersm1zdXAhLZVzz7MdhFS7aS8H7PmJXEVMTH8uO38JAukDEMiHLSQ4ETFx3iLIUM0
+         AW9bwQpQgLk4uLh31nUyAwtTD3P9mzQrsN5B9HPl3LXZ/FK6Yu7wsZIDY6jiCuRSe18F
+         bVpNAyh4P+KDz7R/zaYr9Q2ELSgawJleyZ2tCQS0Wx3pswcAgzFb5AnazrjFoW7BiRWq
+         4gEsUoimGEt0cSSw/7ZM7QguXI1fr0a/s3AD+2xfXC3qsm6nOeW666ZNaQdei7DNvFiR
+         vWgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVc2D80O5aKRdw/6rfTfdr4V3JSI8x3KcAJmBJDIG7XwES7uuX2U2ZM8kTrXnfpGb89ykQNlH2ZESeIhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg8h/fVMXflRV2bh65VL7qAmjt2EC4eiqww713aWXDvvjFTdBC
+	GuKh/2WLCnmeXUn/sucI0ht7YfrLVx/YH59rhWcGSL50KBhrUmkeGIRDL/RPHMM=
+X-Gm-Gg: ASbGnctg74e2eUZqOaKYzxGv8N1pT304dCs0LZ0fl9hLg1inpGnCj6oc1oACf+SB5qg
+	2bHPZEqzY7qYKmNyJLwyxz3WjOh+8Y14FuSm9vwtBig7JcCYzG8HibmaLyhnmLSGQex13tV7nDT
+	zCXEIGGlknPsCvDU4HVcZJrdCEDRTiWmp4LCDSRT10YDdYuKsGAvEsqeC8Pn9IuHyvPfaD9OjTb
+	c5E3zuscXq2w17Rt8gGPW9xhWgy3dvthBfzddTTE1JBexshbJp5o5uxWA6jgjsbOAvf9asAp9bE
+	QENimVovB4IxtPhibT++Dqk8gtqdt9bq6kTJ/r4NX0EfsFOROUDu1WvK
+X-Google-Smtp-Source: AGHT+IHxVaO0Q6A5zfZJplMfUr/1H1I3HvmVPXjbMZB/QaHYgFmax6t6yrpQoZxMY7sOOsN7U44WiQ==
+X-Received: by 2002:a05:600c:3b0d:b0:43c:ec28:d31b with SMTP id 5b1f17b1804b1-43f3a93d1d8mr64377345e9.10.1744452897722;
+        Sat, 12 Apr 2025 03:14:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae964048sm4713549f8f.2.2025.04.12.03.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 03:14:57 -0700 (PDT)
+Date: Sat, 12 Apr 2025 13:14:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] gpio: aggregator: Fix Smatch warnings
+Message-ID: <cover.1744452787.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/12] dt-bindings: mediatek: Add mediatek,
- mt8196-jpgenc compatible
-To: =?UTF-8?B?S3lyaWUgV3UgKOWQtOaZlyk=?= <Kyrie.Wu@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kyrie.wu@mediatek.corp-partner.google.com"
- <kyrie.wu@mediatek.corp-partner.google.com>,
- "mchehab@kernel.org" <mchehab@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-References: <20250410063006.5313-1-kyrie.wu@mediatek.com>
- <20250410063006.5313-3-kyrie.wu@mediatek.com>
- <20250410-new-zippy-elephant-54bbcb@shite>
- <82eec9802028d0e44530b4c7ddcaa5362f2434b9.camel@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <82eec9802028d0e44530b4c7ddcaa5362f2434b9.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/04/2025 04:48, Kyrie Wu (吴晗) wrote:
-> On Thu, 2025-04-10 at 08:40 +0200, Krzysztof Kozlowski wrote:
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> On Thu, Apr 10, 2025 at 02:29:55PM GMT, kyrie.wu wrote:
->>> Add mediatek,mt8196-jpgenc compatible to binding document.
->>>
->>> Signed-off-by: kyrie.wu <kyrie.wu@mediatek.com>
->>
->> Same comments.
->>
->> Also: missing media prefix in subject.
->>
->> Please use subject prefixes matching the subsystem. You can get them
->> for
->> example with 'git log --oneline -- DIRECTORY_OR_FILE' on the
->> directory
->> your patch is touching. For bindings, the preferred subjects are
->> explained here:
->>
-> https://urldefense.com/v3/__https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html*i-for-patch-submitters__;Iw!!CTRNKA9wMg0ARbw!lYnGLcOBQIh9yQUyMcteKxvcKQv2_eSc4udxkDDWXikTyN8VcXyYDgGuK-8UZWxKE5Pmg3D5lvplcw$
->>
->> Best regards,
->> Krzysztof
->>
-> Dear Krzysztof,
-> 
-> Thanks for your comment. I will change subject in the next version 
-> like following:
-> 
-> dt-bindings: media: mediatek,jpeg: xxx
-Did you even read the link I provided? How can I be more specific?
+Fix some static checker warnings from Smatch:
+https://github.com/error27/smatch
 
-Best regards,
-Krzysztof
+Dan Carpenter (5):
+  gpio: aggregator: fix "_sysfs" prefix check in
+    gpio_aggregator_make_group()
+  gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
+  gpio: aggregator: Return an error if there are no GPIOs in
+    gpio_aggregator_parse()
+  gpio: aggregator: Fix error code in gpio_aggregator_activate()
+  gpio: aggregator: Fix leak in gpio_aggregator_parse()
+
+ drivers/gpio/gpio-aggregator.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+-- 
+2.47.2
+
