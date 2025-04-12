@@ -1,129 +1,224 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A3018A6AB;
-	Sat, 12 Apr 2025 10:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D2194A65;
+	Sat, 12 Apr 2025 10:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744454709; cv=none; b=RZ7737N12qElNe0e7u2A2BQUqAcJBg8rl+S6paenwi/Y0E2vHI33DkSHcz89+JdP4um8hzyo56zelIiZGsqDmWLmt+FzQabrLR5W8M03i1ClwwcxI60Vd5Hc/BFrcfzLHFJ6+aGMdBF01t3bRwrT+xYXLCinPxtr8MwVb4mYLKM=
+	t=1744455244; cv=none; b=GReEx/SrysBfjQjl5DyK0+Yw8ZkVtRwgKZM0wSyqOYiVeIAyIR7jELssjusxS9YaeXi2utMa5z87r5imdZS3AgMBTQcaj3C0lbYYk3mgw8zKOy7jx4aA/o114buZuZA6RhSKCRYNrbraAZ/qXPOP3XWcEC2igHeQn7rCcETHZBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744454709; c=relaxed/simple;
-	bh=FrZpGgFmCBdS3NdARYiimpGnDi2QEYs8YJOvqKwY1tU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Dh9Vgouvh4K146cSQRgcu7XTDyI8arjVpr6R5diZ5TjSlElw/FNbM0VrJJzASk6BLaCqpqRpRlQmueUbPicXgatH6iKYjvzQLkHMf/Zb4fQlQ8AIr0rsjT5oc/gC1aBNZzS8Hq0vDD3t1yFZjCiNLKgwg0+1eCZ60BhtzvbLKmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=McFtSU2O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PLMIUvIr; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744455244; c=relaxed/simple;
+	bh=I0q5hlyfi0DSBsZsUO4t2QmA7tXZThTrX+ardg7gVTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YVfG4nNoiqcUK06IIrm45aqV8snmD/KI8g/YWU4IGGnH4wjdc9LT/hsqJCJc66nPaX32paXbWmTtsmEHHZb9V2LdnrH/wRtZpacGazXTQJQ1jh1TgshWH/5Dp3v7I/x/TRKxytUW5EM6LD/xoVBKzuzsM0lV0cWOWihYZmq+WX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3DHAZiY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="McFtSU2O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PLMIUvIr"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 15C3525401C4;
-	Sat, 12 Apr 2025 06:45:06 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Sat, 12 Apr 2025 06:45:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744454705;
-	 x=1744541105; bh=kmyaGiukhBQ84frNIkSXQYkdJMrCRvN9saF+IdoGolw=; b=
-	McFtSU2O/RqT/UjvqSkjQJDtCPRSD1SZoySx2Z/1dkwKTHSa/8qDdiyLRYwKVe8X
-	LltppI835pFAs3Ep2YU4TgrpVfYcaKVG2DllSQFSa5jnuhDFeYCATwgXQurjKjPO
-	XlH09a7JGANj0FRamRxpj28hJJo4EGNHNCW2pwKIguZQS+5SpgG0/b+aTb/7AJJ9
-	ZiCzKOogOw5/C/rt9xFh0/ZEMAMziyYwa5yopDEWfzfSxfYSyPu9Aj+pht7QLPUM
-	v3k8/LXov2dFpQcYWhPn481E155Jw2MUwUHAA+1VZMKVKmf3dOsw3tbpI0gmZXyp
-	y/fDQsa0lRrpl9XLoru2Ew==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744454705; x=
-	1744541105; bh=kmyaGiukhBQ84frNIkSXQYkdJMrCRvN9saF+IdoGolw=; b=P
-	LMIUvIrQ7acjRyUNm4LblRDYmNP5hN6KoibRG/HW1c6J+OYeWBv6cmzO7nqzmLix
-	nrXaFWnifZym/vBtgNSJGa4x5YwEOENKtOvCPBX6T8lqQJvh3YDopFKNnuXg2rcG
-	We8s3/sFeArS1/2/NyRypI/4yW1XGExViDUQDXiDiL842amMw0cQ0jEqeZleLstg
-	/kZOkr5pUm6Q5ywQks1ShwNLM6KeeiwapyhXQ6DxqdgWNEDtbU0mzdTEEM4StIWq
-	KpGp9tiUhiY6gLAMGMl2ThAZNVXWgGo+4E1Nl1OjkHHfN9sTkezlNJIT+WyayY0Z
-	f6dFUiLB+nrxQgLagBiYQ==
-X-ME-Sender: <xms:MET6Z_diDxBf45Q4FT9Yc-FfdoDWLNKg87fTBYq_dVknQ10oYgSaeg>
-    <xme:MET6Z1MpIV8PW5hw8sZilbHr9PPOZ6Or80WBYu4mU9vRYj6X3dYM9VIOSgi12YcDT
-    4gUT3b5osphWq_zaXQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudegheefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    udejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopegtihhmihhnrghghhhisehgnhhuuggurdgtohhmpdhrtghpthhtohep
-    shgvrghnjhgtsehgohhoghhlvgdrtghomhdprhgtphhtthhopeifihhllhihsehinhhfrh
-    gruggvrggurdhorhhgpdhrtghpthhtohepuggrvhgvrdhhrghnshgvnhesihhnthgvlhdr
-    tghomhdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
-    hrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrphhptheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:MET6Z4iCI1Z1UjtxHKIclRx7AcbRXECDfBWxH5tTFHqr27KgKHikWg>
-    <xmx:MET6Zw8wqB7vGkncjjXjDNU3ee2ushCEl3nMTnD9r4gtNE3D2zM_xA>
-    <xmx:MET6Z7u04bQLDsNMyvj8owoi66BMJSGFy_sG8x4iZO28WLzUG3jCoQ>
-    <xmx:MET6Z_GRxBPFmPnQey9UJy2lxW5nNOxPpOX_m_7pB5-HF7jAB6VQ5Q>
-    <xmx:MUT6Z486sWR7ZefEk3LvUKJJ273YHrbFdOVmFnXmykwn8hRFL41LNb-f>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7DFE32220073; Sat, 12 Apr 2025 06:45:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3DHAZiY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAAD2C4CEE3;
+	Sat, 12 Apr 2025 10:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744455244;
+	bh=I0q5hlyfi0DSBsZsUO4t2QmA7tXZThTrX+ardg7gVTQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L3DHAZiY2tTG8iowbIP1s5Yxhy1ks/Xx1iRMVmRr/mGfrH2N35pLGZuwcO/z7WybU
+	 YHLaXoRg/F8KcMlqJmC3zzKTRgEYZWCjGxhwckyo84lPNXMF+kDNh8XvHABYaf1KBl
+	 q70OoGK5WCqsRXoF/anElOaO6pJBoQTE4PfRU76Ik+HQCe6yDxWL3LYtcpl5KpTsML
+	 ubPSg0NYLZrpES4/TxZqJ8KvctTGX7JXt4ZHbqdDgNaW5R+6Dv1UhjU2l1plcbvWEv
+	 sYuPEss/1TSMK0acXetAo97LVX7hn29swhC75mH6EqhRpYVJfC7Qpqr3sobOYFoFA4
+	 AQo1IX1O0sVqA==
+Date: Sat, 12 Apr 2025 11:53:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
+ <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Laxman Dewangan
+ <ldewangan@nvidia.com>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] thermal: thermal-generic-adc: add temperature
+ sensor channel
+Message-ID: <20250412115354.0b266fae@jic23-huawei>
+In-Reply-To: <CAPVz0n0NA+=+4da8izPvTn3XacdJndyxrvyMY-QvHdie206wVg@mail.gmail.com>
+References: <20250310075638.6979-1-clamor95@gmail.com>
+	<20250310075638.6979-3-clamor95@gmail.com>
+	<CAPVz0n0NA+=+4da8izPvTn3XacdJndyxrvyMY-QvHdie206wVg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Teb9e062682a72887
-Date: Sat, 12 Apr 2025 12:44:44 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Mike Rapoport" <rppt@kernel.org>, "Dave Hansen" <dave.hansen@intel.com>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, linux-kernel@vger.kernel.org,
- x86@kernel.org, "Thomas Gleixner" <tglx@linutronix.de>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Andy Shevchenko" <andy@kernel.org>, "Matthew Wilcox" <willy@infradead.org>,
- "Sean Christopherson" <seanjc@google.com>,
- "Davide Ciminaghi" <ciminaghi@gnudd.com>,
- "Paolo Bonzini" <pbonzini@redhat.com>, kvm@vger.kernel.org
-Message-Id: <4a75978a-2368-4aab-bed6-ce44b6d3c323@app.fastmail.com>
-In-Reply-To: <Z_o7B_vDPRL03iSN@kernel.org>
-References: <20241204103042.1904639-1-arnd@kernel.org>
- <20241204103042.1904639-6-arnd@kernel.org>
- <08b63835-121d-4adc-8f03-e68f0b0cabdf@intel.com>
- <Z_o7B_vDPRL03iSN@kernel.org>
-Subject: Re: [PATCH 05/11] x86: remove HIGHMEM64G support
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 12, 2025, at 12:05, Mike Rapoport wrote:
-> On Fri, Apr 11, 2025 at 04:44:13PM -0700, Dave Hansen wrote:
->> Has anyone run into any problems on 6.15-rc1 with this stuff?
->> 
->> 0xf75fe000 is the mem_map[] entry for the first page >4GB. It obviously
->> wasn't allocated, thus the oops. Looks like the memblock for the >4GB
->> memory didn't get removed although the pgdats seem correct.
->
-> That's apparently because of 6faea3422e3b ("arch, mm: streamline HIGHMEM
-> freeing"). 
-> Freeing of high memory was clamped to the end of ZONE_HIGHMEM which is 4G
-> and after 6faea3422e3b there's no more clamping, so memblock_free_all()
-> tries to free memory >4G as well.
+On Sat, 5 Apr 2025 18:23:25 +0300
+Svyatoslav Ryhel <clamor95@gmail.com> wrote:
 
-Ah, I should have waited with my bisection, you found it first...
+> =D0=BF=D0=BD, 10 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 09:57 Sv=
+yatoslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
+> >
+> > To avoid duplicating sensor functionality and conversion tables, this
+> > design allows converting an ADC IIO channel's output directly into a
+> > temperature IIO channel. This is particularly useful for devices where
+> > hwmon isn't suitable or where temperature data must be accessible throu=
+gh
+> > IIO.
+> >
+> > One such device is, for example, the MAX17040 fuel gauge.
+> >
+> > The temperature data, while technically a product of conversion and thus
+> > categorized as IIO_CHAN_INFO_PROCESSED, maintains its unscaled state
+> > (milli-degree). To account for this, IIO_CHAN_INFO_RAW is used along wi=
+th
+> > IIO_CHAN_INFO_SCALE to provide different degrees of accuracy.
 
->> I'll dig into it some more. Just wanted to make sure there wasn't a fix
->> out there already.
->
-> This should fix it.
+You've lost me in this description.  The base units of an IIO temperature c=
+hannel
+are milli-degrees so if the scaling is already right for that you would
+be fine using a IIO_CHAN_INFO_PROCESSED channel.
 
-Confirmed on 6.15-rc1.
+A few other minor things inline.
 
-     Arnd
+> >
+> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> > ---
+> >  drivers/thermal/thermal-generic-adc.c | 62 ++++++++++++++++++++++++++-
+> >  1 file changed, 61 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/th=
+ermal-generic-adc.c
+> > index ee3d0aa31406..7dcc2e1168a4 100644
+> > --- a/drivers/thermal/thermal-generic-adc.c
+> > +++ b/drivers/thermal/thermal-generic-adc.c
+> > @@ -7,6 +7,7 @@
+> >   * Author: Laxman Dewangan <ldewangan@nvidia.com>
+> >   */
+> >  #include <linux/iio/consumer.h>
+> > +#include <linux/iio/iio.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> >  #include <linux/platform_device.h>
+> > @@ -73,6 +74,65 @@ static const struct thermal_zone_device_ops gadc_the=
+rmal_ops =3D {
+> >         .get_temp =3D gadc_thermal_get_temp,
+> >  };
+> >
+> > +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D {
+Even though there is only one. If it is an array use channels.
+
+or stop it being an array and just take a pointer to a single channel
+instance.
+
+> > +       {
+> > +               .type =3D IIO_TEMP,
+> > +               .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> > +                                     BIT(IIO_CHAN_INFO_SCALE),
+> > +       }
+> > +};
+> > +
+> > +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
+> > +                                struct iio_chan_spec const *chan,
+> > +                                int *val, int *val2, long mask)
+> > +{
+> > +       struct gadc_thermal_info *gtinfo =3D iio_priv(indio_dev);
+> > +       int ret;
+> > +
+> > +       switch (mask) {
+> > +       case IIO_CHAN_INFO_RAW:
+> > +               ret =3D gadc_thermal_get_temp(gtinfo->tz_dev, val);
+> > +               if (ret)
+> > +                       return ret;
+> > +
+> > +               return IIO_VAL_INT;
+> > +
+> > +       case IIO_CHAN_INFO_SCALE:
+> > +               /* scale to a degree centigrade */
+
+As above.  See Documentation/ABI/testing/sysfs-bus-iio
+entries from temperature. Scaling of a temperature channel is milli-degrees
+
+This is a bit of a historical artefact. Way back at the start of IIO
+when we had relatively few channel types, where possible I matched the
+scaling to hwmon.  With hindsight that made things a bit inconsistent
+but we are stuck with it as ABI :(
+
+Jonathan
+
+> > +               *val =3D 1;
+> > +               *val2 =3D 1000;
+> > +               return IIO_VAL_FRACTIONAL;
+> > +
+> > +       default:
+> > +               return -EINVAL;
+> > +       }
+> > +}
+> > +
+> > +static const struct iio_info gadc_thermal_iio_info =3D {
+> > +       .read_raw =3D gadc_thermal_read_raw,
+> > +};
+> > +
+> > +static int gadc_iio_register(struct device *dev, struct gadc_thermal_i=
+nfo *gti)
+> > +{
+> > +       struct gadc_thermal_info *gtinfo;
+> > +       struct iio_dev *indio_dev;
+> > +
+> > +       indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct gadc_the=
+rmal_info));
+> > +       if (!indio_dev)
+> > +               return -ENOMEM;
+> > +
+> > +       gtinfo =3D iio_priv(indio_dev);
+> > +       memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
+
+sizeof(*gtinfo) probably slightly better.
+
+> > +
+> > +       indio_dev->name =3D dev_name(dev);
+
+What does this end up as?  The convention in IIO is to name after
+a part number.  If you have duplicates this isn't how you tell them
+apart.  So I'd kind of expect thermal-generic-temp or
+something like that.
+
+> > +       indio_dev->info =3D &gadc_thermal_iio_info;
+> > +       indio_dev->modes =3D INDIO_DIRECT_MODE;
+> > +       indio_dev->channels =3D gadc_thermal_iio_channel;
+As above, I'd stop that being an array and use
+	indio_dev->channels =3D &gadc_thermal_iio_chanel;
+	indio_dev->channels =3D 1;
+
+Unless you think maybe we will get more channels in future, in which case
+just rename it channels (which happens to have one element this time)
+
+> > +       indio_dev->num_channels =3D ARRAY_SIZE(gadc_thermal_iio_channel=
+);
+> > +
+> > +       return devm_iio_device_register(dev, indio_dev);
+> > +}
+> > +
+> >  static int gadc_thermal_read_linear_lookup_table(struct device *dev,
+> >                                                  struct gadc_thermal_in=
+fo *gti)
+> >  {
+> > @@ -153,7 +213,7 @@ static int gadc_thermal_probe(struct platform_devic=
+e *pdev)
+> >
+> >         devm_thermal_add_hwmon_sysfs(dev, gti->tz_dev);
+> >
+> > -       return 0;
+> > +       return gadc_iio_register(&pdev->dev, gti);
+> >  }
+> >
+> >  static const struct of_device_id of_adc_thermal_match[] =3D {
+> > --
+> > 2.43.0
+> > =20
+>=20
+> Added Jonathan Cameron and linux-iio@vger.kernel.org to list.
+>=20
+> Jonathan, this is newer version of the thermal-generic-adc you have
+> reviewed recently with channels adjusted like proposed in v3.
+
