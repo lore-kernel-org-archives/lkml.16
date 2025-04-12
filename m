@@ -1,76 +1,71 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2658F14AD20;
-	Sat, 12 Apr 2025 18:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFBC1F8BD6
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744482657; cv=none; b=pMoQhL/LP0+iTqHb8Y2y2vCUdY94TPtkab176sXggHPmabiovYc45+oivCVwyECFP9rGN3nA0KbAzy6JpxzErIo+B97d6x1k+SLIMtXSECHH9OUmbze5cl0mUSOGglMI/ytxwiOjRgwXbvj/y9ZMPNAYjs1a+2712UYVS+i1T4E=
+	t=1744482670; cv=none; b=AgbU9lJSlCaxhr3Ph00jOhs3AYqQh6+75xKnmqnxkI2V5DgZU0H+i2LjhkwJWVSLdAHYk3b1/gwi+dujAX/ONep8OH3achAxkWUWKEcyU6v0mBk3blSWzR1tOWB5o+Wc9TRvax6worGz00SKJzsBjgEE+ulO1Jdljlxz2WkQMvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744482657; c=relaxed/simple;
-	bh=RW0z1C49PCxVJBw7xcIdXUKGnyC3SVpPoZLg2Z1sipQ=;
+	s=arc-20240116; t=1744482670; c=relaxed/simple;
+	bh=UXWTbPpVMi3wyEEzFn8t+68PK89c4a+mJ8HY7oopugg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNHkBnwk6TptsgVWwQorQRQyMGPK0hhQ6yOd4CpNM4mp5Zq6CiK7map7YtVfJmPBytXKpoy4ST7ALdWYkX8L5K4H/n0pELX7BfzEdMy4+AFOtAchGf11Xy9NIjiTNNDUl8q6k4AUjHB5BP1jD8TdVciN+ruIWlVUAlQiRqLfk5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cwfd9vXs; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xrq8Y7s9xH6ZsbloWNvYNg15rx0ZXhqO9ogKJuq/1w+P61miqwYGFqaEtq+xPwIgXWMsRa0z6h0lSfEg9RstMBRgO/T11FL0HaoDo/QnCfuQduOqagKmhbtcQ55wPLozikE+65g1Wp4IoBOopSI86PffYSvDa7Yyy5K+2kLU1pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VPnnyI7Z; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwfd9vXs"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so24076665e9.1;
-        Sat, 12 Apr 2025 11:30:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VPnnyI7Z"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so26007765e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744482652; x=1745087452; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744482666; x=1745087466; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9I1yayD3cf1v7RYAxVVYTY6w58aLvRc+jXpIiCDAY18=;
-        b=cwfd9vXszu/PfoXbxXLmHPRgJ5b+ZcztuQJqtq3cBTtcHpcsDnLuWVlaMQlD+rDQ/P
-         e829a/768+uG+K7G4cvltDS2+LN631RC/kqwp60UNYarLatbH1pdDqje2diYcyejpVxQ
-         woFlHg6YcC95gbpQluy8nTYv8620X4n0ckp7aJmbzFW/hJfK9zRKTD+LsSHY4sRuEzal
-         oQXmXrPkE8V/+2zz1uSMGGjggCgbd1A83Ji0bqP50cl8RsYHgXIeV7KvEAsuEY64EySE
-         tQXEnmmmiPjFZaibfcdmZ8Z9wgcNASuA9wWwgtleUdLmAVeUmdMqksdg73FrYEWjFcbn
-         3CSg==
+        bh=3CyrR9KNkaoIb+djhhX7+16j+DQ68McNR1nNH1QOCtU=;
+        b=VPnnyI7Zyl95p1eP3iF0Rjo7IgOUK/ixCTmtTrln3TQLOQX+lTXVj6OWA5jY61Hgtx
+         mVJ6YLixpcayFjWddRu9kNNyQkUiSac0r6nWck054BLWZusYkyuNBCTEgpDbVPlheIXT
+         CYHvFjp9jQ7J4au5tDMVReIlQ3e0L8nk0DraehaQPa9RvpkMSLm0AP08PbmHcvDJKuxp
+         XCFuHz1CIngXkL8XBIsGEHaaWfXKtk6/oEFnva5MlRCABxmu8SHTnKJZzV0W7du/HS9p
+         DpmXm4TaUEfa538XDTn8aUNbLxn0VAGzco5iM+Hbs0Asmwkhd/i0P3guwKCLb8AlMK/J
+         vDuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744482652; x=1745087452;
+        d=1e100.net; s=20230601; t=1744482666; x=1745087466;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9I1yayD3cf1v7RYAxVVYTY6w58aLvRc+jXpIiCDAY18=;
-        b=MurJ8ws2GCTkZFZn8nbPx4rfqe321rhHb+EyYAtn/jmCGmpmOeU8jstHMSF/FPC63Q
-         qg8VP8phf33yQfCW/iJMxGig4Z6Gywx2UySTmGixPfl791YKuAXTve7fLMj1AbgvnifW
-         ZIJAu2IwC8L4bQtILsbuEI8V/wPcc++XT/e1rAXYJvwNke0WGw+3SheqtPzTxgKLEphe
-         fwPqdyJH5DaK9BhZKMsTfnps4mBHzYmzbP+rN/3eJwdyIt0rkXZxMts7IOxRbxGxmvnY
-         N9SuRAb4Le7DHnpjQInH9msROJVbZDNeIclCoOwdC4DW2AixaEJj+/6+z41TOpFC57RQ
-         L6Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKEB5Jw2qdootgfMTh2yEPtrYkFUP7JA1CZs78Q6XhQxq4gyzAKt0vz2DNT9QPQBzs5jNDguArcSzYQRA=@vger.kernel.org, AJvYcCXHT0nGfJIEKC6rzOPSdTCz2oJ9cWf4LUl1bqNSnrTDFLpl+pXBgZj4CZApiF90Ndj5XWJdClEI@vger.kernel.org, AJvYcCXdr5GnjHq2kDQVUa5t4RKZ3XLzmYZnh03LRAW1mWVQAjdxDRy+N74Tzb68GigD5Ks1AWIlx6Ur6lCL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWpzTUi3vGjyphmfSQC3+DcRBI6cUKdkrMVZHwIjuniS1xxMg4
-	gevIk/OO52jVAxQyiUx1MkG7ncd1U4ViHb33Nts7m6JVZtgL9rOR
-X-Gm-Gg: ASbGncuBzpgk8v91SDFzLNDSN6GDHfI94/GIGbsTEXIeF3jUKiCwpvqgO+PFhOA/drk
-	Be8SZzyWgme6ol4vKY/la9+Im3YQ5Ak3CTWGcKNub3PxbAZe5QwSvusl32DxOrvDXVZC5G8bNrF
-	zoiooib6w/ft8i3SYTQ8jN4qgH+As3Lt4XSx/SWqWgXWK8x8zJpZcqV0ElnbnOjKZPc2Nq+aQA4
-	83e1oZBS0INmrpW4OVHwE5YYX6maESuIouQOC1fHikBPP7an37IlVxdb/rYQCMNHMd0D6bDXsAW
-	DeYfCMmxyYfUaofGfACUxW+rcrjJ8M+toHiKbRBtp8YA
-X-Google-Smtp-Source: AGHT+IGnll0hR3wPHlESkLrYLAgonyfJaX6StTTM1pbJ2ipqv900Tg6e/VoeEcs2wFQpnA/CzW2vSg==
-X-Received: by 2002:a05:600c:1550:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-43f3a95b76bmr59786675e9.15.1744482652068;
-        Sat, 12 Apr 2025 11:30:52 -0700 (PDT)
-Received: from qasdev.system ([2a02:c7c:6696:8300:f069:f1cb:5bbc:db26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm5699769f8f.82.2025.04.12.11.30.51
+        bh=3CyrR9KNkaoIb+djhhX7+16j+DQ68McNR1nNH1QOCtU=;
+        b=Plfj+CgzOvQFRgmg341EbdPl4N6PqDuLzK7PIdX254sP+oy/J5hVMAnyQmKgY8LoWu
+         5WHJ3GK9QTcrLkS8wYNGANHo97qQ45I7/mGbsz3N7ODYG4bwD1BgwWcWK2ZNDEJxrGtF
+         POo+3CEIn14e9vRoWM7wzO46d38vvme6D23RD60MCVABCTO2hYw0Pgfx4OfBIERi27QJ
+         w1Jpmc1XzxSaKO61Z6TA2tOgqTLJX7D1zl6AOyKmlmqRPDfRkHJLF829hu4FPO5/AOBa
+         ZNA7FBkSIDLwACGyyrdqllJuVfPEOtOLuRBsIpw435Mj6m++G1vZXOv4f2iY98DDSsPP
+         m9pA==
+X-Forwarded-Encrypted: i=1; AJvYcCWerLqvhw/zq2IuHeXeIiAb+WvwDLlSEW5IJZr0dLWGx/HhJ74UOFw3P5IZZSK++yDGeod09EZ6wpVIfYo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysbU1NbR2rodFednn4WsElpUYZQhpLlSzDDDgnkA9Al1iI7L/c
+	mSjNT22MJuCzkIIV1mzFiFhZwrCQkPrxGpTygP+KMkqWdEeRfpLvxzvm3CTVOBI=
+X-Gm-Gg: ASbGnct9vrf7hyMd/H/EWCjtJVtP0fymN+EhL7mIyZDVTYt+OPJPpXBUJAiQephlY+H
+	pcQXEZRnheeqVZqgGNE+AUisoNkIfv5sC5g5Ai9qLYXoWmVovT3EW0l2IIspAepGMudUGDCn1nU
+	yWGg65umdyROfvaA0918d9SLeqT/MotibkBfCIg5NPsVgvhOy/1Eta+lZcLCrxc+AqrdZje3l9x
+	U4+hRnRrtNTMYyRQjWUN1LJ2+1352lMxxrmhE29J7mBwjGRfN5F7JKh0bxQo7vFisJdLf/lh4mK
+	nBQ+XEAhX16YbzwRPEP7SMPf53tkILsOxiJFCYUZQg1toQ==
+X-Google-Smtp-Source: AGHT+IHARGq36rcwuoUqKZ76aegRkcgHirTp4EATHkOfGBZZRYyZYhGL+bYneAm7wceJLq4bHfWKmA==
+X-Received: by 2002:a05:600c:a53:b0:43d:fa58:81d4 with SMTP id 5b1f17b1804b1-43f3a9afbbdmr59892105e9.33.1744482666250;
+        Sat, 12 Apr 2025 11:31:06 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae96407esm5776966f8f.17.2025.04.12.11.31.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 11:30:51 -0700 (PDT)
-Date: Sat, 12 Apr 2025 19:30:36 +0100
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jakub Kicinski <kuba@kernel.org>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	horms@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-Subject: Re: [PATCH 1/4] net: fix uninitialised access in mii_nway_restart()
-Message-ID: <Z_qxTN9_xJuEd2op@qasdev.system>
-References: <20250319112156.48312-1-qasdev00@gmail.com>
- <20250319112156.48312-2-qasdev00@gmail.com>
- <20250325063307.15336182@kernel.org>
- <Z_hC-9C7Bc2lPrig@qasdev.system>
- <c8ebd8a1-cfdd-4a27-8cb6-114ea60ba294@lunn.ch>
+        Sat, 12 Apr 2025 11:31:05 -0700 (PDT)
+Date: Sat, 12 Apr 2025 21:30:59 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, rafael@kernel.org,
+	viresh.kumar@linaro.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: scmi: Fix possible null pointer dereference
+Message-ID: <0081fcd8-da99-47b2-b136-3ea04232046a@stanley.mountain>
+References: <20250412180831.3252963-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,50 +74,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c8ebd8a1-cfdd-4a27-8cb6-114ea60ba294@lunn.ch>
+In-Reply-To: <20250412180831.3252963-1-chenyuan0y@gmail.com>
 
-On Fri, Apr 11, 2025 at 03:12:06AM +0200, Andrew Lunn wrote:
-> On Thu, Apr 10, 2025 at 11:15:23PM +0100, Qasim Ijaz wrote:
-> > On Tue, Mar 25, 2025 at 06:33:07AM -0700, Jakub Kicinski wrote:
-> > > On Wed, 19 Mar 2025 11:21:53 +0000 Qasim Ijaz wrote:
-> > > > --- a/drivers/net/mii.c
-> > > > +++ b/drivers/net/mii.c
-> > > > @@ -464,6 +464,8 @@ int mii_nway_restart (struct mii_if_info *mii)
-> > > >  
-> > > >  	/* if autoneg is off, it's an error */
-> > > >  	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
-> > > > +	if (bmcr < 0)
-> > > > +		return bmcr;
-> > > >  
-> > > >  	if (bmcr & BMCR_ANENABLE) {
-> > > >  		bmcr |= BMCR_ANRESTART;
-> > > 
-> > > We error check just one mdio_read() but there's a whole bunch of them
-> > > in this file. What's the expected behavior then? Are all of them buggy?
-> > >
-> >  
-> > Hi Jakub
-> >     
-> > Apologies for my delayed response, I had another look at this and I
-> > think my patch may be off a bit. You are correct that there are multiple
-> > mdio_read() calls and looking at the mii.c file we can see that calls to
-> > functions like mdio_read (and a lot of others) dont check return values.
-> >   
-> > So in light of this I think a better patch would be to not edit the 
-> > mii.c file at all and just make ch9200_mdio_read return 0 on     
-> > error.
+On Sat, Apr 12, 2025 at 01:08:31PM -0500, Chenyuan Yang wrote:
+> Check if policy is NULL before dereferencing it.
 > 
-> Do you actually have one of these devices? If you do have, an even
-> better change would be to throwaway the mii code and swap to phylib
-> and an MDIO bus. You can probably follow smsc95xx.c.
+> This is similar to the commit cf7de25878a1
+> ("cppc_cpufreq: Fix possible null pointer dereference").
 > 
+> This is found by our static analysis tool KNighter.
+> 
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 99d6bdf33877 ("cpufreq: add support for CPU DVFS based on SCMI message protocol")
 
-Hi Andrew,
+Henry Martin already fixed this in commit 484d3f15cc6c ("cpufreq: scmi:
+Fix null-ptr-deref in scmi_cpufreq_get_rate()").
 
-Thanks for the suggestion. I don't have one of these devices at the moment.
-If in the future if I do I will definitely explore the suggestion more.
+regards,
+dan carpenter
 
-Regards,
-Qasim
-
-> 	Andrew
