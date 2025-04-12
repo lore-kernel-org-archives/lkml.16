@@ -1,105 +1,77 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB56418E3F;
-	Sat, 12 Apr 2025 15:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9A018E3F
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 15:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744470951; cv=none; b=EcPvU+FlGKHdIrkoHBREgCAoHg4OGKE8WhBazSbtavyX6s+1s1zK0SsB3PcfVwfCGSYQqbGysPY7DI3N39x5E5jH0V0C1QD0DNXdrvLfss/rLCODpJdXjiFM/VWKY+a9s6Gyla6QJQW7SfUCXTBP8oI7jbJU2x8TV6d2Mab0+G4=
+	t=1744471025; cv=none; b=iMByJlVVJupsz53S0Vc3kjFxEEpN1wHldkTuBQshThfFoFEOX5Q1gMjWnlOWw9/AMrgwUUPqjaZcYIyaGSXy++/g2HN0LvERbvjDs+3foMiQhb8zuawhOIdk29q4qSvlaybAJ4+FPc5RArl48xhT6yUu3z9gz3CVhNtKOGallz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744470951; c=relaxed/simple;
-	bh=LtA0bMsVg4AadDskLy8Bh+pEvXyenrQ1HCoq+a9HjaA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=IelPphf4kYUN90ZHwmOpQlDMEPx/33olv9NQ+GsDHQc42sUHMMC5zjxppvUIHBHSlKC3Vk8l3OiamQ2cLkIAPMsPftz7Zyoi1pHBMjaTCSa/Rz4ci20mx/eXjUF8YQwGaAzdodO2AYlxv25uCT1sRNGSe57cfKsGoEDNxTHNvyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=oWt6ksbS; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="oWt6ksbS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744470939; x=1745075739; i=markus.elfring@web.de;
-	bh=LtA0bMsVg4AadDskLy8Bh+pEvXyenrQ1HCoq+a9HjaA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=oWt6ksbSwxW0+l2C1LfYCgl5tH4YMme5uKJw7oXrzSeHpD6+XEY+trr7PJLZzzcy
-	 /Hv+W4Oy1Lr+kHt7N4M1/mX9kfUh3056JNs+XcteE1lG9Wn4UBgx+fbeQjQ38l8Mc
-	 1lq82lNEjRQMzZQcXO5tTR6Oxd+C+cM0VFdPoUaJCb89gvW03mRpMcOWf5j+jt1BC
-	 TMDdLQOUqOvOIy1Kdv3Ohdr5H8jnXxITENxT6kmgvDRg3oCx0PK6kKkW8c/1RdbfF
-	 RycFNcBr4i/WKDjeojWKv70Ebx4pzveKCduzqsLovo9Wc3WdlGYjkEFr3Fn1kPxJ1
-	 Rga1GfrGlxuqIAGvbg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.84]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MMpCS-1tnCBz00cG-00UQMs; Sat, 12
- Apr 2025 17:15:39 +0200
-Message-ID: <23cfd97e-b520-4e9c-a193-e0fdc885e299@web.de>
-Date: Sat, 12 Apr 2025 17:15:33 +0200
+	s=arc-20240116; t=1744471025; c=relaxed/simple;
+	bh=xFhFns5/OpONhDD/wdpC6H0rPMauAfL8K34lB0J+0Rw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=cAdkg7gD3owtzB204XZ7R+PFySgdgtxOUTOefbQD9FldddsrFIh7OYroBHVm6bck9IS6GRBOzcn0vbL9rdkIGFJ1mtsqLTQSImoGXcawIfElL1pjts1qeF1m2UhlP0iiRc6Q1cwux8P30CDs55RTLtLs7c3bBgOFDx+gey7Gr40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d586b968cfso22283615ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 08:17:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744471023; x=1745075823;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LkcIB33QyUmP9a2poFNREDfTihC4P2a6WpKzZvlmcUA=;
+        b=RRSWJOzxxRF0Rs/o3wqNAoAbVV44NSBJj4rmuuneEw5lPMyjsEIGpce9LUJdf6s9de
+         HJUnRGYalAPW8ZgzZ2qdhLVX7kV2kEDUj1Qbo4AeMg0B92r8q8RgA21krZS/9hwFgUyt
+         DIGNDBBiDf1wwdJSs+q/iIQA3pN+DDJvmtjvGPke9ue33/cB+s+kYlOwBlSLX+zLiNtD
+         lRJmsAio1VJeVMsOyROF5LrtxO055RzgUEEfjvKvEuq6Fxm4XOB0pzc9zY7nHYBDdG3t
+         Oo5Wuj+4yUCZpl//RymSvfhyNuR37IfIuI+U7YskTBQDyHDNbcao4BgmwMn0iR7RIVMN
+         Pghw==
+X-Forwarded-Encrypted: i=1; AJvYcCVB0NDZZaw72e7ukWOfyO/BZFrPPcBN3KCoYywsGm/+yZwvHVHWzsM4xF71e8M9ZRfDk6D9kVk1lvgkIr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy7e4GeAasTISpPdICdBkGeCCtiP+KgHN/A+tG6kd6f6bTGTkc
+	/6Ba4aYPKENl/Ew+rcQ1h6xU9WKlt6aAq+Uw5eYFtjTjIVTGr+Z8/5fwnb21/5PV5jLFHqaC/y+
+	b3y/yM6nhLlTdvVd+tICRwgoRnOyGQqVbw73qy27nLRO5N1x5H4A+A+A=
+X-Google-Smtp-Source: AGHT+IGoqKXx7MWN7WmGkbPYwYBHTjry4VYi0/IS9ZlyPB9zXqR3G082tcbd8/gFBqeUWkvYH1FTLTy44kwi1t7oWawtuaVuYZjF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Chenyuan Yang <chenyuan0y@gmail.com>, linux-media@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Charles Han
- <hanchunchao@inspur.com>, Hans Verkuil <hverkuil@xs4all.nl>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Ming Qian <ming.qian@nxp.com>,
- Nicolas Dufresne <nicolas@ndufresne.ca>, Shijie Qin <shijie.qin@nxp.com>,
- Zhou Peng <eagle.zhou@nxp.com>
-References: <20250411184356.2910366-1-chenyuan0y@gmail.com>
-Subject: Re: [PATCH] media: amphion: fix potential NULL deref in
- vpu_core_parse_dt()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250411184356.2910366-1-chenyuan0y@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:CPX6tqFlh5SR7jhux8oADeMPQ9qVglGWQ5nBFmx/2BGGLgjii9q
- YvebY0roEV+R+K4qj5uV8XvRW84zXWKrdKrnJpdT6nacBu88X1Od60SbqVq2KequUEcB64l
- KENkY7KFzGBIBgRcEXIVLHGxRMKdKebKbL4NgA9fgvBVpNyvfRlNlTSOh1KJNaVUznIehOQ
- +AMcSmKD2iXlJjcmteokw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lr7OIQ+UF0A=;7f6W17tcpf0Ra/A8AFLVPaoRJaA
- l/mOB0zDZnMYcVjOgwLo4Nps9eI+AStBOdJC7YRhS3Wlaf30Bi3hRvmq5u0ZdAt5GWW95D4tw
- tycEVWdStyBCYf7gdrcJ9Nk3PysfeDYPEoa6hOuDSK1LdUcAUvPDmHhNNYCcx6pKv8Cl+Rz3V
- 29uGx0SZVmPVi4XQw/7rG1gtrMhnPX65buLpjE2KBVWZLvPJt7gnLNDrKq4Yb6yLcWNv+XGK/
- GR7YRgPWCv4aDCfVxstjCnDjaFVOjC5/KsqpRH+wBCidW+juH/xUObKkhO9Ou4VKZnA/wOACd
- krPMsEJZuqyBKgXqfQBi2UzLnUHs2axBjvBI7oowFIpusNRplKn0mjL4n+O6XVR/O29LFwEDj
- V7JjKs8RBawZHJ9sLu1eNs8iPWf0BQasfpq6fEny+0uu1zhi9dCaUibe9V0Heb2Mc7l4u8yMl
- 46N2aIY2ZXf2E8rkDsLqm/tF3pZ7lzlC1Vi+3uR4wRvaS+XsecKAz2ejnuu1TXJotb1/Ta9Ra
- I12P4Y8nE7jkatMf0teLKQSM2vW3GiXM+A/BjbvFWliAw+LOMyuN9JDFpN5WHY1oOZN8zus+k
- ANPIsAXTNdrNbX5bWe0BqQobeig22aVrNnPDgn+F+7Dn5EuzYWu27SEfQznuGZXDTJjragY13
- ZRxbu4YPXYAQXRO/4sGgTMCZSL5YCauW6xSI53at2e+dI8Ji0LqeGGofh3k3Yk3o5ZxerMI3y
- CcIKgBk0qAtmnJFWJHXKakIjJ6KEPaANpk6++gvrnFxvnv94aMH5VOOUTAOpAqF8M/axiMZE5
- 9GXr5vWS8M1ZxFzcSqwZXhbdt30Y0CvDHecFFH2kYLJJ1L+0Pk/ClY90GZQOARYaL+YEpUBIj
- VzWG1lbwRMz3ZIz9lHgbUyYWf83YN63ywaNsykVzGmxixeu1KvmuTxqwnw01svvDFJiKyd1Km
- hLz2SLL1Q/Issr9+bxpj2qTCsm/9QI0yBLad0ULhaFu4hVScLIzEPnUYHSUMOq6YZuSZkERG1
- KtxYLwd0imQniZ52+6rRWY9X7blvmQDAGLl10cs/vKbSzlbYzq7dunwQzNq69U4xCulQsT+C+
- jFaR4Xaqempm7dHkkeDewAuhd+vGXxRSv48WWl8Oz0VKYk/pghTxjXQeL+ETvQjiYe0YO40gI
- qwgir5yavr58YIIuAyDk58ZWRx/iMaUn7uP0USKUAbQRG9CtyjbiYiu1e9yLjhczLHi66F2LM
- WQhjhMlm6dE3QPTRjc64KJWuGCwOh1hnJWaHoAoCdGtFFbIcy3QWSeDWn/FvP8635Us4NsUi5
- URh/mwGNPjUaxJo/lJs54Vzp9p2m4AltbkONvXICF9OY9mzT+wVafDDgFHtwAQTQhSXXOIIxh
- 4tfGX3WSeILqyF5k/Pr9/cQYSupBFSP7vkvruoJX9NWOr5n1SGgOU3lWWwOuKhSW5gaMPACJT
- QuWRQwp4a5CTNuOj5ysby804jxrD6IwtuWM3o8ZVws8pRKcJF
+X-Received: by 2002:a05:6e02:378f:b0:3cf:c9ad:46a1 with SMTP id
+ e9e14a558f8ab-3d7ec21c324mr61704795ab.13.1744471022837; Sat, 12 Apr 2025
+ 08:17:02 -0700 (PDT)
+Date: Sat, 12 Apr 2025 08:17:02 -0700
+In-Reply-To: <67fa0c0c.050a0220.379d84.0007.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fa83ee.050a0220.379d84.000f.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_fs_initialize
+From: syzbot <syzbot+d10151bf01574a09a915@syzkaller.appspotmail.com>
+To: edumazet@google.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mmpgouride@gmail.com, sven@narfation.org, sw@simonwunderlich.de, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-> The result of memremap() may be NULL on failure, leading to a null
-> dereference in the subsequent memset(). Add explicit checks after
-> each memremap() call: if the firmware region fails to map, return
-> immediately; if the RPC region fails, unmap the firmware window before
-> returning.
+syzbot has bisected this issue to:
 
-* Do you propose to complete the error handling?
+commit 00b35530811f2aa3d7ceec2dbada80861c7632a8
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu Feb 6 14:04:22 2025 +0000
 
-* Can any other summary phrase variant become more desirable accordingly?
+    batman-adv: adopt netdev_hold() / netdev_put()
 
-* Please avoid duplicate source code (also for corresponding exception handling).
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12c41f4c580000
+start commit:   29e7bf01ed80 Add linux-next specific files for 20250410
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=11c41f4c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c41f4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a554d15459e77547
+dashboard link: https://syzkaller.appspot.com/bug?extid=d10151bf01574a09a915
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14634398580000
 
+Reported-by: syzbot+d10151bf01574a09a915@syzkaller.appspotmail.com
+Fixes: 00b35530811f ("batman-adv: adopt netdev_hold() / netdev_put()")
 
-See also:
-[PATCH] media: amphion: fix potential NULL deref in vpu_core_parse_dt
-https://lore.kernel.org/all/20250407084829.5755-1-hanchunchao@inspur.com/
-
-Regards,
-Markus
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
