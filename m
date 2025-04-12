@@ -1,120 +1,120 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B381A2387
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 22:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B29151991;
+	Sat, 12 Apr 2025 22:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744495855; cv=none; b=BkTDTAq/BD1BmirqL2DTjyIbLhqMX0RpyDA2+JrRRB/tbhsnMBBM3dmX34wmZ9ZKlhjDwVF/VJFhKiUzkFHn6H5F/1jg9IH5WfWhk50hRQ3TuwVv7MrL+XOUabQGOGE2RysPJSDRayfYSfHOy4hKWBuB3ENdO8n3yxftuZ7syys=
+	t=1744496342; cv=none; b=beDuckDDhP2OPjzXGeLx1tz/7Cl+FCobof2BVmwXbIc+PhUDLoWsr0HZ2IstpjqkqjG5Xz+iIxvvsnaCeyBCni0VK7pwzLuNrqxKKKA+TVlkQER03KcIrMW8/kIEkYa0ypnHF+SRS7ZFqolLkTgUO9vltaGTXfRFLwGtFTKVdNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744495855; c=relaxed/simple;
-	bh=GTGPLo+XaT7zNOr/l3V+8Y/k+hzhuICEIRbpVyc6TmQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p1Lpwb+gi0XXrDoJ9ThMdvl4uLOpwQbiGdBdThXKZrTXVVt9xTlyB9CiRsBPbdOtM0ZagbXtdIqPzzX4DHyYTTWaq5XTYr0yMqWIqiMo18x1gLfeWNGDdUl3YgrSD+l48MgccHQovbkZey8WWCyc4Ax+vZK4or3zMPTnjXdCjPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fKwhiYVu; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744496342; c=relaxed/simple;
+	bh=uRhpV3OE9uIKRjCN8KwA0z6HP1xwtPJs4K0j6afjfM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k13cH/vEy+s43dx7iVUIIZQckn+JFC7CG4I55zu02UljHsE0M/61PciOK4W30yg80rSQYTHOUW5iBui99t64dGQrXtc9GZa3MeGpH/8Jkf2eA7My/8X4zevS9qaP4ymbu4Z1OcX1BtQPS5qZZ1gp85B9VCXA4N9y2+9Zx34cI/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R2JwXa6v; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fKwhiYVu"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-73bb647eb23so2817517b3a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 15:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744495849; x=1745100649; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9aHcCryjZ51sPp9epA2rO67Bwv4kAWiYpXBGmYoC5II=;
-        b=fKwhiYVuRXYJNtHgNyF6tBcLOjRbCExKdB9AdJhQ6oTEB+GfUPnrbl4hy7DdQ2TKRd
-         fIYLSBLGO602IYkRDyYDRCiw346a9PQpt9KS3QU9CGke9bLvoJU8N0GQru1KpjyEOYkj
-         uFqa65e71H/SXaiCDuwwi/MiKaf4/Ie5f4xI0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744495849; x=1745100649;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9aHcCryjZ51sPp9epA2rO67Bwv4kAWiYpXBGmYoC5II=;
-        b=GJRMY1k3MULgOgauIUGm/KpR7fslH68yN7kHx9Qq5Op+maqBzxJ8gAIzb9F4poORDw
-         vu7f7xeIaTJBMGYCv1DAVH2IcS4VBLHaVbGfDJUUZ1FssKsVGvafNaF/Amr1R6E+SjQB
-         yaSur+/CXUT971j1e/tnVQx6eyRE1XUPLkCOrew//OC5z8aXoDilQJDvkS7oJN+WICwN
-         wrLARoR0WLLiIf/t3Dc5dUN4R/zuvnv6/W30ti21Ofsq5Rq4T/P8i8+LD1RogEr75YTn
-         NWELUGNuZNcX8/wrlJ4/WNFZLhkTiwEa5rhz2a8vICXbEM6mOXtAXTKcPRNvDEguJO01
-         D0bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtrYX98lWeSezxI8GCfOnarXtAmsRxmXKoTLbOohQiKRjyKKFzNERTGvx4KMhmP0wp6XaEix0nXH7Mydo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTZSpSv2aqXeCNRNjm5zKSpbwTxa/5XV4jRgN1TvH19ZJ9Cu+2
-	J1cQhl1rqTV5vf4tJXoopaWMkzx+pIiyv6JXgRsODrSfI3+r0yQZmxN/woy3nIFhQNewKC1cTvE
-	=
-X-Gm-Gg: ASbGncudRuBxqklJv/g52J2mPwoonnrKo+/KbSei0FE8n0UXuxDA0W028VN7mKHWsRI
-	4u46BOJHCT5TM1FaEbkn1kgAKgl6A5nZDQvGIFRB0SI9088Kh2BEgHJOUtxA+52pBmPgmB3OJxH
-	E4ziGkNl3HgqdwmPRmR67BJvvYWRDQRk6V1sRbu1Qq7+2L8ZqQ2mNwKY1UEhu8n3AI6bpwrkySI
-	j44WSCdHmklp8LMM9nRKN2GQ++JhkfypggkE3Z0k9sa/vRZu9E5wRemlhcID2Qer6aFBpGwZyUX
-	yHcozdFs4oJYNkx0/98ahuZ8px8Y9rCmeRokp0TMjqnexm4a36V85qnighuj/6A0DywbLXxWy8S
-	lXz01
-X-Google-Smtp-Source: AGHT+IFsRPMgo5UfinLcmZyco38C3i89avmNI74//SJt7oHCOWqaNoEwz2ksfoCJoS7h5a0viQsyRg==
-X-Received: by 2002:a05:6a00:1907:b0:736:3c2f:acdd with SMTP id d2e1a72fcca58-73bd1200471mr8689570b3a.14.1744495849084;
-        Sat, 12 Apr 2025 15:10:49 -0700 (PDT)
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com. [209.85.216.53])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21949dasm3907140b3a.35.2025.04.12.15.10.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Apr 2025 15:10:47 -0700 (PDT)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30828fc17adso1453664a91.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 15:10:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWDaQEf8mXQBLqb/NetGArp8PThwHLpkiMslFH7yIjtr+HMLOTxIaTSoj0Lv/fGB7shtLp/0YGBrr0Ynrk=@vger.kernel.org
-X-Received: by 2002:a17:90a:d647:b0:2ee:b6c5:1def with SMTP id
- 98e67ed59e1d1-3082363359cmr10624682a91.8.1744495846538; Sat, 12 Apr 2025
- 15:10:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R2JwXa6v"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CF8kLx023387;
+	Sat, 12 Apr 2025 22:18:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=EdpbFwCNmQDH6XmT/
+	HxpnLTDzMdhlQ817LeBL2lp0bs=; b=R2JwXa6vBc/kX+ao49T40oKBHq/8Ja1SL
+	WcyoqyMZ/g8XHQRV+yumbGYe7iTJXpAOVX2GfCk4CgUBtm+Vru/XRwUH8a9BfCE0
+	T5jOkb+j0+MXpEVnA/FoBM261HuayTUHMQ1949mDZU2vWFF8m3Gb/dygGxrW4pPg
+	EejM5eYneHo9l6T7c3X9buwdnFxesAblz+KNs7ndJ5wM10OALA4zWAIGeSfGAtCp
+	uggEpuNfIBAYHxkw6h4S2LDoPKUgoafoSFUxaVGoBVqd6fV909gwXqd0jXK9ZevO
+	6BK/y/zejeblNIB/aqfUR2rXWLWtSOISyHH3TKYysn4L18VRphInw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ypmpa9fp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 12 Apr 2025 22:18:55 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53CJgXp3002564;
+	Sat, 12 Apr 2025 22:18:54 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ygs7bc19-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 12 Apr 2025 22:18:54 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53CMIo7151184004
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 12 Apr 2025 22:18:50 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CB3E020067;
+	Sat, 12 Apr 2025 22:18:50 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4411B20065;
+	Sat, 12 Apr 2025 22:18:50 +0000 (GMT)
+Received: from heavy.ibmuc.com (unknown [9.179.5.213])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 12 Apr 2025 22:18:50 +0000 (GMT)
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v2 1/2] ftrace: Fix type of ftrace_graph_ent_entry.depth
+Date: Sun, 13 Apr 2025 00:10:43 +0200
+Message-ID: <20250412221847.17310-2-iii@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250412221847.17310-1-iii@linux.ibm.com>
+References: <20250412221847.17310-1-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412043006.188641-1-tejasvipin76@gmail.com>
-In-Reply-To: <20250412043006.188641-1-tejasvipin76@gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Sat, 12 Apr 2025 15:10:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UrZ-t8MkH0nY+koBt8NJ3Xh-LAH_ZPirWuCroGQEFNYQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG8oTzU1ud8WY8gkS8QtqDCzk5Os5fWsO0Vr20AO8sNQuStYia_euLNSzs
-Message-ID: <CAD=FV=UrZ-t8MkH0nY+koBt8NJ3Xh-LAH_ZPirWuCroGQEFNYQ@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi
- wrapped functions
-To: Tejas Vipin <tejasvipin76@gmail.com>
-Cc: neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, asrivats@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: fBMZsFH_NTg87zf53SJ2J-l9xH-xxCox
+X-Proofpoint-GUID: fBMZsFH_NTg87zf53SJ2J-l9xH-xxCox
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-12_10,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504120170
 
-Hi,
+ftrace_graph_ent.depth is int, but ftrace_graph_ent_entry.depth is
+unsigned long. This confuses trace-cmd on 64-bit big-endian systems and
+makes it print a huge amount of spaces. Fix this by using unsigned int,
+which has a matching size, instead.
 
-On Fri, Apr 11, 2025 at 9:30=E2=80=AFPM Tejas Vipin <tejasvipin76@gmail.com=
-> wrote:
->
-> Changes the boe-bf060y8m-aj0 panel to use multi style functions for
-> improved error handling. Additionally the MIPI_DSI_MODE_LPM flag is set
-> after the off commands are run in boe_bf060y8m_aj0_off regardless of any
-> failures, and regulators are disabled if the boe_bf060y8m_aj0_on call in
-> boe_bf060y8m_aj0_prepare fails.
->
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
-> ---
-> Changes in v3:
->     - Disable regulators in boe_bf060y8m_aj0_prepare if
->       boe_bf060y8m_aj0_on fails.
-> Changes in v2:
->     - Always set MIPI_DSI_MODE_LPM in boe_bf060y8m_aj0_off
->
-> Link to v2: https://lore.kernel.org/all/20250331061838.167781-1-tejasvipi=
-n76@gmail.com/
-> Link to v1: https://lore.kernel.org/all/20250330151304.128417-1-tejasvipi=
-n76@gmail.com/
-> ---
->  .../gpu/drm/panel/panel-boe-bf060y8m-aj0.c    | 109 +++++++-----------
->  1 file changed, 41 insertions(+), 68 deletions(-)
+Fixes: ff5c9c576e75 ("ftrace: Add support for function argument to graph tracer")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
+ kernel/trace/trace_entries.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-As far as I can tell, your v2 and v3 are totally identical. Either I
-messed up, or maybe you forgot to commit your changes?
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index ee40d4e6ad1c..4ef4df6623a8 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -80,11 +80,11 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+ 		__field_packed(	unsigned long,	graph_ent,	func		)
+-		__field_packed(	unsigned long,	graph_ent,	depth		)
++		__field_packed(	unsigned int,	graph_ent,	depth		)
+ 		__dynamic_array(unsigned long,	args				)
+ 	),
+ 
+-	F_printk("--> %ps (%lu)", (void *)__entry->func, __entry->depth)
++	F_printk("--> %ps (%u)", (void *)__entry->func, __entry->depth)
+ );
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+-- 
+2.49.0
 
--Doug
