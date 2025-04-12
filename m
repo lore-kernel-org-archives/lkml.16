@@ -1,189 +1,266 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2042.outbound.protection.outlook.com [40.107.94.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9E4CA4E
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744417473; cv=fail; b=KHLxSGA0OLgV3sneXr0N9d8WcRi57cCYXnPieaEQgYJZZOS/a1pJgX1EaS9g++sAaEt0jEHv34tJdzWFzuVj4YtmS5xHiV/7Nw7SxbQXX3uuUDY4e1m7Nv+5EbnATAPHRPcvsrm5BFRzZRwHIDVZ8fopISpKV2g7u2HvB0l0GoU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744417473; c=relaxed/simple;
-	bh=8Lt+sW4Qc/qOm7OlKmZquSSUV4NTI04SmEQ2vvp1SHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dMdpgf+aqIy8HElNpcdCmbg4HNKufVQxEBPvVA5hCiRLi1Kzx38x5KuWhfc5oPr/mjMC0cPKMzfUiAEh26VmK1/UWCSR/F9fBRSjjALd04M4NpU6TqjWdOcwTEjojrIiNQeLMV6ry01AghPVYnnHrtWLB1AwfVoolM8UAMFA7gg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hVKWG5j4; arc=fail smtp.client-ip=40.107.94.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E477BA53;
+	Sat, 12 Apr 2025 00:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744417566; cv=none; b=oUSBuwwmmfxMcPrYBVxgXDlBkFQkheQ4A1F7OWh0OWr5rSC5YrJuCtahuweGuEEspPsdbeG6r+yiFSKAc/znpYFNcO4Esmvqd3zy9rBKK0Wvkr9aghMO9xYruiELFIWC9JUheSMjPKJLHqujcBO4yo8dzU96+Nh5wSA60YmTNx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744417566; c=relaxed/simple;
+	bh=PM+FXBeTiSrq40QjWHzwr/A/N/KtBXnSLnr4+GjbAQE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Khk7bllOkr2YXT75gWPpW7qcRERI9mZxnahamMNP88+1n4gDYG6z5yCMBsXypmDcU8+6+YIsK8BcCd5pGX5izctPsS60R/ezBPYM0xfhD1nL12s7fMV4feM9LoptMepACUq7cRGSqEkX7J2QiyvVY/BwpKNe+/W4vcAxK0dvo/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q8nuYI3q; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hVKWG5j4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eA8g2dcN3j0DlhCush5S0LvVHKWRRrVI0P6zEOwOoudyCPYxPLT05b9JfQo2tEr3ZhsFr8OFGdH4VRh19JQnELtEvyENJg/L7kzmo7tEZZhrK6khfXRo4sqC85DBVoWh9BeVV57578rvc4o7lsN0tQ/VO0NdsMpQ9OYVZBAotsUI+A9/kt/7nda8O4hGZkrPPeezMV//FGc/uFURm27Se9SSNAnxQP5kx4qjzRnzHejs55owL00yX0ENazPKYjuh1ZhH72bcoMWoLVp4NbQMswitXLpYu1VLCjF4It3QkTtVgncSwVvslsO4ABjm2eKExS1dApvLYyNN2S/CdXnutA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4CHuPHuO//10YS2UyTO7rYwaW+rQXd+Fu4OQIR5jkj8=;
- b=wEljSRd1CLqyVPNIv9wLkH6Q5+YtsVCxAiqZ5wgZmwJjOxpj8maQprEvhbBBNknkh+RIyUhfuJxYHx+rwqIeNueAcQtpblsfghW9DltABmgOJ1F46dHH1Pg96jMzVcJ9/P1QpR/VeITam11LqbJz2Vo/9F3OA02Da1DOFpx2262/WDwLUMCPLgxi4vygEqs1smZN1SKBjasykH+3MIPt5jHCzJMqvTwL1zACNjTqrEIxX+0DGDizwpMcNWpYsR2p4g8iq25Cni3ylbRsPLRV4e5fFZp6B8Ck9eNp78KfAGcNrvfJfcHlpOAfOomlhb58BJ19pYhZ8z/PjVdPv4IVwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4CHuPHuO//10YS2UyTO7rYwaW+rQXd+Fu4OQIR5jkj8=;
- b=hVKWG5j4/xk0pBuofAb1MRjkg+baWCciRQUWMu4kYnLDsCIb7h+468v2gffpduoI/YaMNxsKf9mghnrqJI+Z5Cl5uCJ8ktlJtXoVNBum93hzo3B11YAAzivRAJJU6tGNJV3/93U3TuMbh7jX9Io56FaPOCbcjQmVyHPj0ZD7ixkg+WKyt/4FbcbBDgsqRbM19F9ZpSUclFkqMkfMsk5kKJXTrb4V8aRJAn5ObKfqD1EQ3aR4wBFmijtExjNP9bTlu8f2+wXPN8HcryQ5ToRrD0Inn7A8HJDm1J2dL2RzqdAIyMXlhgN3g1jTHKFtjYUMzrCxyolo9PtgOnap42H8hQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8SPRMB0035.namprd12.prod.outlook.com (2603:10b6:510:231::6)
- by CY8PR12MB7659.namprd12.prod.outlook.com (2603:10b6:930:9f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Sat, 12 Apr
- 2025 00:24:27 +0000
-Received: from PH8SPRMB0035.namprd12.prod.outlook.com
- ([fe80::232b:2a40:c4e0:b4f0]) by PH8SPRMB0035.namprd12.prod.outlook.com
- ([fe80::232b:2a40:c4e0:b4f0%3]) with mapi id 15.20.8606.033; Sat, 12 Apr 2025
- 00:24:27 +0000
-From: Balbir Singh <balbirs@nvidia.com>
-To: iommu@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8nuYI3q"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224191d92e4so26280515ad.3;
+        Fri, 11 Apr 2025 17:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744417563; x=1745022363; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPh3Lw9dyl7oBJ7A7OStIjrcHnhiJHHTBrQQ+YXhdeo=;
+        b=Q8nuYI3qCY4L5OpsXxECsKDthPe2NgVrj8wSY3FlyNvjhPb1EmHtofpr7C2h/gjCI3
+         9tVvQW4Ek/tm1rgSE2Vlpj8eXnKxRwcM0Ofxk1vyi8wQmNT5jLM8UHpQLOPgQcn5CRNX
+         pgcTf6UzTSiqh/pTxJOH8kxTVyKEyDteqma9UrA/sNRYUPuq1It75WIewvO0PL6PkugC
+         wec5F4HqUDR0T2qZ7WGm/uQ50wXepucMpVccYyowhUk72FvJvRGNnP1H2JAoG/5Z/8na
+         9GdaODf1zEGmqt4o2wmBnlT0POciA6DN4BgX4rn6JmGEa5wyipK5fwu2VCB2j3KKuv5s
+         JTrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744417563; x=1745022363;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WPh3Lw9dyl7oBJ7A7OStIjrcHnhiJHHTBrQQ+YXhdeo=;
+        b=j/tJ2fo60PJ6Gignnu/TgdEHkyJBNwdxKqz0u93CxBKoSwdBhGY7KNe1vvj5Wv34mV
+         nhEkKjuPKp8G2WwfwNikoPfxn/f/oVGCGsobL52pXLR+qPcQLTsFWAOxmC9XBLNJFDrP
+         C8+mPOrkC4HYnMuaLdrlX+oDUDn89tV8AQ0b8eQCIFJtiNyAqyupeV2PC6VezWN+Rtpk
+         bEau81EkI4J9fvo7dJR7ePQbOzTNYk6GfTC6uPvP8IN/whSznygcrgb1MW6Pincdpxdm
+         MkXP2Xrx4/oKPUKzoVkbip73oQ4GozXydgmBQ/mbkZC6A+otXVld9q63GUryOcpllp7Y
+         Qddg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJbT5NG1Iyz4AWJXw1iU1YHMzGglnG9Eyw30I9r/WG6xoPWThyJGX73yhqZqiLDmC5WsN+cxEb22AHoZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyghw4CPO9QVTFmVqWwym+StHOcltrW/d8Y7ItPODUU+b5cOEfc
+	MjDt8O9/JIRb+Yg0tcgHmaMh6P6u4MMvVybcqdUjV435KHLl66OG
+X-Gm-Gg: ASbGnctAxVXHlQZHN239jErWzwS3NpeGAUxN5lud0ZndlrpJa4/WyMaRIS0fs9UINYB
+	lC0Gw0LNqgbAzIy9M4nHJ7N8qBHIO3RlkqYSKDLeGHZYAvl6zNe5Euz1LOy+kYLKJK5jFn16Tgz
+	Iswl8vIzXD53rMYw5LaLhCJ6EVR/a23dquyyw57BjwCd1j5vVEFMG88BO2uw5EbuD1w6nSbhGdD
+	EedVhe5dW5n7rrBcpv0ucGN1rjBiIwZsSPKIc19nRWa3jpaIYRJsMyfHme7ATe2xWzFK6cBH7hm
+	BbRCAN+ahr2Omhq6MxfX56HTR0+GGLyWrXGEA3MXKQ8o3EhebBNVnSAkljrwcax8D7iN+OTIPUh
+	FvJzz6OfepET44m4xxzhjZW5HNQIRh9XQ6H60tQ==
+X-Google-Smtp-Source: AGHT+IHNMCmo/zYLdO9QUIUBBdZzNR4oWzDbUlcg7z8C3X1JbFehjejVr9yom0CX0KeOdepN99ml8g==
+X-Received: by 2002:a17:903:2f8e:b0:224:160d:3f5b with SMTP id d9443c01a7336-22bea502b47mr58301375ad.49.1744417563376;
+        Fri, 11 Apr 2025 17:26:03 -0700 (PDT)
+Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cc9202sm56878125ad.211.2025.04.11.17.25.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 17:26:03 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com
 Cc: linux-kernel@vger.kernel.org,
-	Balbir Singh <balbirs@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: [PATCH] iommu/arm-smmu-v3: Fix pgsize_bit for sva domains
-Date: Sat, 12 Apr 2025 10:23:54 +1000
-Message-ID: <20250412002354.3071449-1-balbirs@nvidia.com>
-X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR08CA0029.namprd08.prod.outlook.com
- (2603:10b6:a03:100::42) To PH8SPRMB0035.namprd12.prod.outlook.com
- (2603:10b6:510:231::6)
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH v3] serial: sifive: Switch to nbcon console
+Date: Sat, 12 Apr 2025 09:25:44 +0900
+Message-Id: <20250412002544.185038-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8SPRMB0035:EE_|CY8PR12MB7659:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2891e7f-9a73-4748-49ec-08dd795861fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KEQUe4uhbX8woK5KE8VZY+8v8qPa2zcstplnxH4KLBEnn5+OKYxJT6BlRy8A?=
- =?us-ascii?Q?lcyFS3DydE/4SE1125v06BNl+I7R+eUPIwoyaAo+sF3RoI+ins+FWeA/T7I0?=
- =?us-ascii?Q?PQuvVwJEzpoJoqmCvUrvnZZX7gflVZcOYr9g3PogP1kVdwXlexGtcsqNkOup?=
- =?us-ascii?Q?hNKAUXl2BRlyyp/0dR2BvhvVL8P/Fd5NISOKJy4Fx0+eN7mkzAMUaSfqO0F5?=
- =?us-ascii?Q?4cdyDy3KT8F9UYQKrudEYXGRyhAcnkXc0YiZQRGEnOvPbfqaTzXdpy8zDfmF?=
- =?us-ascii?Q?VG5IKC5m1dcXv1zfJu3qX/+PlFjCbTP/Zk1RK4RQvhok54uWOl8lu2bbjV73?=
- =?us-ascii?Q?HvB3LVii/XET8Nv5sCXhuRO4HN6UH1DN+XQfABlFBvp9LNehqmQDhtuLXPpF?=
- =?us-ascii?Q?OqaUv1p51OQeWLyTWonq9uGIq8U4BMhjCJxGgSPfmBh1T92J+am9GfR1aGH7?=
- =?us-ascii?Q?3s0C9vZGe9m/pXOKIfP3twISt/ue9+otTvio81UY4iL0sUchz1vTdwTYwpbB?=
- =?us-ascii?Q?mF/mwqJdHozbp9dDU3/Bkk1yXC954adWnRcJSAjum/8tOmeA6CVT2bmZ1iG/?=
- =?us-ascii?Q?2Sz9D1ZsBVo/qjMOwIIs+ghyRSSe9Ep6y/6+P3CVqvOZ4HTvR0giDj187Pyk?=
- =?us-ascii?Q?5zBUZ47svHZB4Jql5IscPal1fh0GR/D8sy0sVvQ/KddStz9Y7PMCMg0hFdsl?=
- =?us-ascii?Q?oA9ocaeZNvk0NHfaAjlc1zy2vh5VSdmG/cSU8x7lvQNnHUgWJfJPPUw4WAtI?=
- =?us-ascii?Q?Djjz5S+1Sl1f9wwAZLEg/d/OYkrfca4eceYzRAd649fZdTzLCIjzYdiD/l6l?=
- =?us-ascii?Q?TBq1NxF/pG6cHR/gsg1zjIx2iOtUk3swOeydNksmpqBajF9MshIDlZ0qj65K?=
- =?us-ascii?Q?1V7vKx/UW/C7A/4MvjhfSbeOuoXndvAV2anc8dTSf1dJ/oZkRS0sh57zZAyG?=
- =?us-ascii?Q?RNryKetdWMPbKfCTbMSOLE0z2hALhtRj2HhiZphHSVJlooyyHjB5c1oZCKbG?=
- =?us-ascii?Q?f4hixKN/am+sghyjjmG+ooLy9Cf/5FMDR6ZvEReVD/0Hium++mLoYcCiA/ff?=
- =?us-ascii?Q?cbxc8E//u2Q1zXn0eif5NTf1/bEnDPpKbofcySE0Pon30NySFs5x1CxjJUfU?=
- =?us-ascii?Q?HBZ+usoTl/ZPcvQx+yKH58PIrbAo60hg/zx2C7HvbN1Ih3//XuqLTxRu5CHF?=
- =?us-ascii?Q?nmA6RkotEAksVaQLwwILMMrGHDwpti9Qf+H66gCjq7XmANEaWcmedIN+8eCp?=
- =?us-ascii?Q?5/c5PaHp5Wk6cNZRQ6Dg/IVd3SXGVZdQWyTD/hgHRtO8u3QlTZ/8HyLM/z8Z?=
- =?us-ascii?Q?yy1sTgffgy97buMARdhs+phfcRmi41FJv47tcSy0Dwytm3E1A0ar8tm13tvk?=
- =?us-ascii?Q?FvQbAUuMtmqv8/+SvDnUttoLTuLqJoTN1yyVtHnmH/IyXMj4HqfBPfutPfMG?=
- =?us-ascii?Q?Cy/2S4fq9jc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8SPRMB0035.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3Fi2EgZGPKfjEHRXexYAuuT01IMBuorL7gs1dvl2sOVTAThO7qoC9gtz979w?=
- =?us-ascii?Q?aESXTDyznYZXLsUdF1HGbU4AqzGfDehLlbEZDypNUI9BCZqRcfFgBMq8cdBf?=
- =?us-ascii?Q?jhUw3WOyKT2YzpnB6iye7c3QC2o5jq9ypPI0T9OvC5TFx61R2F1sdoQRXmB5?=
- =?us-ascii?Q?5uBmsQDB1ZVWbIu6iAIkzy4ow56Vi3smT3SxByT6Q3kYq8yLHXB2/AF5307H?=
- =?us-ascii?Q?5UNobZGIH7TNszNHHejcFhl4mzjWObcyPTAtE+hR2vU/4hhrv9NJHzKrMWif?=
- =?us-ascii?Q?v2CraZUuw4q1tXGVj31zvgrHyGh4yvE6NmkSZYOmetdPjD43ApIFn11IYoKP?=
- =?us-ascii?Q?cnQC4cHH7SbQ44NyN+l/OJvpStFP/0N3+A3HzShM/zvT+CIe9dQJU7fIuHYk?=
- =?us-ascii?Q?p1lfOvhL9dTmXeNu6Vz/3LoFaYI+kYzKa0JxE0SpCErsT7eFEvyb5gTaGkGP?=
- =?us-ascii?Q?pejJQZ1NwLbzh2VxfRlWcA4LgfSFplinLzdbZDkER1JCMzRH/ZU3WOPvslAd?=
- =?us-ascii?Q?X49DuoGFa35Gl8WLs9YnfMeTUPXgfktNIoTfY10/kSF4RZ8PikCTnDnth5//?=
- =?us-ascii?Q?Xotjkjx3OHgi5l8ra3n4tzu14fJ7ycoVyZPqz1DUSKhJauDv6dujVfLqYS7f?=
- =?us-ascii?Q?B5/NGV+S1Bjl5H/FesAl4JqS6/XfkNjqNbRrrdX4vZ4qTZRfIM+nSvuYvZBv?=
- =?us-ascii?Q?upT+2FoUboZ/es9V+Tsxheqv0keHmXcQDyniLgtInuZRlhK/y3PQLMnLsjva?=
- =?us-ascii?Q?pdBGV/jmD7LpADBxvieLKHn9DVuFbrfhtKLdbyNw00+PuAChWBCmEbX95hzg?=
- =?us-ascii?Q?PNJ+H6eyp7YfBobCwnte6j0MSkwJ8GSq5i8ud8ANiWKBxu5q4YnmrmCN8C/L?=
- =?us-ascii?Q?FlrbOo4Mbe0AquZCwg55EwOB2s95vlxZAjUnl+PFSjMabnZcB+kfZAR0dKRN?=
- =?us-ascii?Q?Byn7vHebR0sGmtARusHTb9ZuDdGzR19b1qZGblbqYFdbtpVVj9QjUurPEH0+?=
- =?us-ascii?Q?YbQRvHdI1x0+EJ6cFmT9w8iLvz4IyZ6Pe2b0E8spCxyGRTUoJnh/WVYiUvtR?=
- =?us-ascii?Q?jr/YlfbrMj1od30zndnWmFOdQpOEbXvOKeEZ3el8iZ+6E2iCF6V2KmFT1J8q?=
- =?us-ascii?Q?DY+aKZxMhCurTec5AEwe0YmIc7Qkpjrx5cYoXdOVTgk1uH22DL84de4eLexC?=
- =?us-ascii?Q?gcfXTNqOTigWbp5IndLl37G30cVptpmaj/kXzlWSj6s9RtpPXZl82n5LBurF?=
- =?us-ascii?Q?8hpmSkmSR0S9c2zvDHHTBRv/CfBXNqjxchEoOhn71sMKDlJIMYZtY1mNFSoj?=
- =?us-ascii?Q?tMmmZutUVxD5cfP0ArSRYtmmkHqmEPX2SG1R+q5aXVSdRtA2yTJcdNOkFHmA?=
- =?us-ascii?Q?SLPjZKRYfVSbMeU/8GCLF04FyTC6ARPTd5Ag2BrL1o3P7d7aJkapFnm7yQZb?=
- =?us-ascii?Q?z2/IyorahdQb/79ykLOhjTx7OXT0oZBCApzghlgz0VhnRI0DJPVa0luIsMUf?=
- =?us-ascii?Q?s54GZ8Tb5iATbFtE5CN3PG7AhKhuw9Y6p/ZVuj2I6fKg3PSWFJk5mjE5vbDf?=
- =?us-ascii?Q?kxasBfuh9vtfjInvT5uH7d0PeStLzcY9uf07ZT/6?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2891e7f-9a73-4748-49ec-08dd795861fd
-X-MS-Exchange-CrossTenant-AuthSource: PH8SPRMB0035.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 00:24:26.8329
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sqNiXpx+vjypTxZkSt50+mRNBUTm77Ao5hwQ+MWHGmdSBm4KUR0PlhPWa0ukutQvl6uyGrbShgJjgFD28qdb1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7659
+Content-Transfer-Encoding: 8bit
 
-UBSan caught a bug with IOMMU SVA domains, where the reported exponent
-value in __arm_smmu_tlb_inv_range() was >= 64.
-__arm_smmu_tlb_inv_range() uses the domain's pgsize_bitmap to compute
-the number of pages to invalidate and the invalidation range. Currently
-arm_smmu_sva_domain_alloc() does not setup the iommu domain's
-pgsize_bitmap. This leads to __ffs() on the value returning 64 and that
-leads to undefined behaviour w.r.t. shift operations
+Add the necessary callbacks(write_atomic, write_thread, device_lock
+and device_unlock) and CON_NBCON flag to switch the sifive console
+driver to perform as nbcon console.
 
-Fix this by initializing the iommu_domain's pgsize_bitmap to PAGE_SIZE.
-Effectively the code needs to use the smallest page size for
-invalidation
+Both ->write_atomic() and ->write_thread() will check for console
+ownership whenever they are accessing registers.
 
-Fixes: eb6c97647be2 ("iommu/arm-smmu-v3: Avoid constructing invalid range commands")
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Balbir Singh <balbirs@nvidia.com>
+The ->device_lock()/unlock() will provide the additional serilization
+necessary for ->write_thread() which is called from dedicated printing
+thread.
 
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+---
+
+Changes since v1:
+https://lore.kernel.org/all/20250405043833.397020-1-ryotkkr98@gmail.com/
+
+- It was sent as part of series but resent as a single patch.
+
+Changes since v2:
+https://lore.kernel.org/linux-serial/20250405145915.493173-1-ryotkkr98@gmail.com/
+
+- Add description for @console_line_ended.
+- Add Reviewed-by by Petr. Thanks Petr for the review!
 
 ---
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/tty/serial/sifive.c | 88 +++++++++++++++++++++++++++++++------
+ 1 file changed, 75 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-index 9ba596430e7c..980cc6b33c43 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-@@ -411,6 +411,12 @@ struct iommu_domain *arm_smmu_sva_domain_alloc(struct device *dev,
- 		return ERR_CAST(smmu_domain);
- 	smmu_domain->domain.type = IOMMU_DOMAIN_SVA;
- 	smmu_domain->domain.ops = &arm_smmu_sva_domain_ops;
-+
-+	/*
-+	 * Choose page_size as the leaf page size for invalidation when
-+	 * ARM_SMMU_FEAT_RANGE_INV is present
-+	 */
-+	smmu_domain->domain.pgsize_bitmap = PAGE_SIZE;
- 	smmu_domain->smmu = smmu;
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 054a8e630..110d67613 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -141,6 +141,7 @@
+  * @baud_rate: UART serial line rate (e.g., 115200 baud)
+  * @clk: reference to this device's clock
+  * @clk_notifier: clock rate change notifier for upstream clock changes
++ * @console_line_ended: indicate that the console line is fully written
+  *
+  * Configuration data specific to this SiFive UART.
+  */
+@@ -151,6 +152,7 @@ struct sifive_serial_port {
+ 	unsigned long		baud_rate;
+ 	struct clk		*clk;
+ 	struct notifier_block	clk_notifier;
++	bool			console_line_ended;
+ };
  
- 	ret = xa_alloc(&arm_smmu_asid_xa, &asid, smmu_domain,
+ /*
+@@ -785,33 +787,88 @@ static void sifive_serial_console_putchar(struct uart_port *port, unsigned char
+ 
+ 	__ssp_wait_for_xmitr(ssp);
+ 	__ssp_transmit_char(ssp, ch);
++
++	ssp->console_line_ended = (ch == '\n');
++}
++
++static void sifive_serial_device_lock(struct console *co, unsigned long *flags)
++{
++	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
++
++	__uart_port_lock_irqsave(up, flags);
++}
++
++static void sifive_serial_device_unlock(struct console *co, unsigned long flags)
++{
++	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
++
++	__uart_port_unlock_irqrestore(up, flags);
+ }
+ 
+-static void sifive_serial_console_write(struct console *co, const char *s,
+-					unsigned int count)
++static void sifive_serial_console_write_atomic(struct console *co,
++					       struct nbcon_write_context *wctxt)
+ {
+ 	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
+-	unsigned long flags;
++	struct uart_port *port = &ssp->port;
+ 	unsigned int ier;
+-	int locked = 1;
+ 
+ 	if (!ssp)
+ 		return;
+ 
+-	if (oops_in_progress)
+-		locked = uart_port_trylock_irqsave(&ssp->port, &flags);
+-	else
+-		uart_port_lock_irqsave(&ssp->port, &flags);
++	if (!nbcon_enter_unsafe(wctxt))
++		return;
+ 
+ 	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
+ 	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
+ 
+-	uart_console_write(&ssp->port, s, count, sifive_serial_console_putchar);
++	if (!ssp->console_line_ended)
++		uart_console_write(port, "\n", 1, sifive_serial_console_putchar);
++	uart_console_write(port, wctxt->outbuf, wctxt->len,
++			   sifive_serial_console_putchar);
+ 
+ 	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
+ 
+-	if (locked)
+-		uart_port_unlock_irqrestore(&ssp->port, flags);
++	nbcon_exit_unsafe(wctxt);
++}
++
++static void sifive_serial_console_write_thread(struct console *co,
++					       struct nbcon_write_context *wctxt)
++{
++	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
++	struct uart_port *port = &ssp->port;
++	unsigned int ier;
++
++	if (!ssp)
++		return;
++
++	if (!nbcon_enter_unsafe(wctxt))
++		return;
++
++	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
++	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
++
++	if (nbcon_exit_unsafe(wctxt)) {
++		int len = READ_ONCE(wctxt->len);
++		int i;
++
++		for (i = 0; i < len; i++) {
++			if (!nbcon_enter_unsafe(wctxt))
++				break;
++
++			uart_console_write(port, wctxt->outbuf + i, 1,
++					   sifive_serial_console_putchar);
++
++			if (!nbcon_exit_unsafe(wctxt))
++				break;
++		}
++	}
++
++	while (!nbcon_enter_unsafe(wctxt))
++		nbcon_reacquire_nobuf(wctxt);
++
++	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
++
++	nbcon_exit_unsafe(wctxt);
+ }
+ 
+ static int sifive_serial_console_setup(struct console *co, char *options)
+@@ -829,6 +886,8 @@ static int sifive_serial_console_setup(struct console *co, char *options)
+ 	if (!ssp)
+ 		return -ENODEV;
+ 
++	ssp->console_line_ended = true;
++
+ 	if (options)
+ 		uart_parse_options(options, &baud, &parity, &bits, &flow);
+ 
+@@ -839,10 +898,13 @@ static struct uart_driver sifive_serial_uart_driver;
+ 
+ static struct console sifive_serial_console = {
+ 	.name		= SIFIVE_TTY_PREFIX,
+-	.write		= sifive_serial_console_write,
++	.write_atomic	= sifive_serial_console_write_atomic,
++	.write_thread	= sifive_serial_console_write_thread,
++	.device_lock	= sifive_serial_device_lock,
++	.device_unlock	= sifive_serial_device_unlock,
+ 	.device		= uart_console_device,
+ 	.setup		= sifive_serial_console_setup,
+-	.flags		= CON_PRINTBUFFER,
++	.flags		= CON_PRINTBUFFER | CON_NBCON,
+ 	.index		= -1,
+ 	.data		= &sifive_serial_uart_driver,
+ };
 -- 
-2.49.0
+2.34.1
 
