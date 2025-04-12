@@ -1,228 +1,132 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B87FD;
-	Sat, 12 Apr 2025 11:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0D2367CE
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744458492; cv=none; b=IUHxaHDAQ4Gq5V1H8fPLyDBXwkgNJo+Iorarco98h8ofmux/PH9zYKEAc+SUBXchZ3EhKFBd3bxYGZQmLXNZybIm6jme8SIcqMXXnpGQWqXO12tPaQYvCV1owdGhEjeDkTrsNsvrpV/yQF3BcW5Kh2d7Aj5/0ofFLeYnT2gWUFo=
+	t=1744458658; cv=none; b=eWAS4V8gYwe9KJxqu0tIvo2B0jJ75flqHHaawv9HPwHicA8JLtbaWwGyQUXnZgQDNl5P2EFg8AoFvKXfRo81XcaDOdZ9rL3i9lcuVUvcMlU9HtDB+z5MX2/RpqHdKDzKEcZHNglw6kAo0/A/qlRxIBI/cN8iINgGszf4xpY4OR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744458492; c=relaxed/simple;
-	bh=OJgHRXwM7hiYQ4eSnI2MPkpqA+d62q5RHWnPsL3f9Ns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lAn3eGezWv7JtYGRAvcg4oyex36m2iOWD0ovTJ4gWRC08XVPfir71EVILNhQSOrLj1Krihyq7udFt9IDcGUrEa7PDX+ltdceYPLjJLCCnmnvK8zasfHlInRXMy+T5btkIo7skytCN5crnf50d4k9CQDv7blHRXZqoRwAH/zQu6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUKS6y0X; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1744458658; c=relaxed/simple;
+	bh=GtkRchdcipwdR7lHoIg4gccPvr9DSE4vhVqfJWFvlUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D8X0NDuO7hPtieM+cIIFfZMnq0nFkGr3WAW4AEl2op+3OUwbdpZWeq8qj8OGGXD5iNIhEENR2TdcrYALYExtbh/JCPqwNXYmOpUwJhWqZIIcv+E4WYjgLW1LWSVD0TC7Jvg1fwvdak1+sBPeKA5a7T1G48uam33w1eecogx/GNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WEosta50; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUKS6y0X"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso1532191f8f.2;
-        Sat, 12 Apr 2025 04:48:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEosta50"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso2832053b3a.2
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744458489; x=1745063289; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+FV7qp4hCrHbBuroVIp784j2SvE9rcCe3b2QofSy8A=;
-        b=FUKS6y0X/BUvb948Fnm26rZsRBRd0NMbG4QRwAiHWBF8uZIugWUgUICAoZMk7KYej3
-         7oc93mmlKbHgR/D0Kk5ZUdi2br402owYA4T+SESHPm6hdvhBLV95qrHQ9E1LWR41a7i0
-         h/cHnoQK3usK8WRAVohq6Dp0HT2wmVEoeuMi8Dl9fMWMBeMR8bKFba2/gz/+YBt74Kd7
-         tXaQtzQfoTePuVYcPuQ9YYwFnIIE45o59QeAUWzFlULy9z/sW1NCtD2PDhBmf4p8E3kS
-         2J/PQ3bumjtbkSErIfvhe3gVxPy0JY3xgxsE5+XGUqAmJUbkcpjcdQ7srkFPpvvn+YSS
-         YXxQ==
+        d=gmail.com; s=20230601; t=1744458657; x=1745063457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8sLeXNB6Otg/NUBFA38Mx7FYYC291DUHLBQY9/Y0+3s=;
+        b=WEosta50eoAdy9d5m2J+UkWN9WFgZlFlsRyfnNv4U4smQpk2u/e5OmCV7L+EIUjXyf
+         6+Q4MwbUonrdjnKGqeQH/MsEqaxJ9bM5xzmUEt+R+hGIYqOBmS8Z3djgmPzxZa4TEfcs
+         3QMxaXnEYBUcrPy7JSKT1D/NF7H6flnQD+l8CJx8Ew/ToFXO7l2C066N2RVIQ3d4eiGO
+         2j2/maubVKLwnZPdiK7ANvONoEU3AcXwPgnX+lulHABlnsjczIwG6kOAsfdVF5Ueel0u
+         0HQCx+wr/1BJQDh4zi03bWmReoEywzGEBoTy76JU+YAUAvzs2nJKGthNeEuwMDf8/YPU
+         P57Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744458489; x=1745063289;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W+FV7qp4hCrHbBuroVIp784j2SvE9rcCe3b2QofSy8A=;
-        b=t9NtVfafCgBVE7zoGRQtWqQwi5h517JZ61YgcvtOmUp1CTNTucTxGu+oIVF+UXgc07
-         H+IHw8h0XQ0U/VUIc9y6lwC9t0qYwNhXxrbfB1FpACFEDPLcYTeAtijmfSMCzyyq+etJ
-         YjXWp6z0dZr1jLJsrMUoH9p2e1bCnYXD15q86/wuSVw0j8kZc20wjATTBFuV2geUUJfX
-         HyFkdGn2jxmaYIoamYkDVBsrDxInVdt6ILU0LsPiCKVHZ1NdNF5z2Sjry0gJztBH+m2T
-         OxzfPnuM2zG6ysBXmtlEYtTDCY1lf3nkF7+eW9tSHiNp3bEkHYwM5cDz1hL+DZhxS04g
-         a0Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUI7btpDTc+JRpeHfBtQt1haX2lheE++Yxv+aJ4aFYFu4JYkQWySlVWXnffP+S3KKagoENmfp8UoKD4nic5KQ==@vger.kernel.org, AJvYcCVowhyFAMGP3Fs1gwMdu4JdZfHEpgcIwRoERgCYAfRGi1LCXL2PL+uh0M+f/wpteQfSB7hFKoor10wj@vger.kernel.org, AJvYcCXpifYBixzoUy6VnK6+lhsJHOTBtq4kToHSh182ySHtaxAfQ347SU/XDrCVaIFVvpJ5dHBvZY5qB7MH3ABx@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtFejFUQ7qIf3GZleUWvAeimUHrxLCSF8klNNKxHXzT9O78M32
-	aXqlFWGVr3IBGMhnILevC4meLzWMy+pVeDP9ZNcP5FSetscMNFa7Dq51jrSDSGq9EeI//pZek74
-	dBJmlwmKgPZIW9yB/5gyUbr+eGw==
-X-Gm-Gg: ASbGnctst13Pvak4+iicyfpSrb1hO877lqTsKX9zhmbWmb3JQEexUqXyZtnwukJM5lp
-	+zcvvuH1VGIMyhpUIrW46lGVR5naZMX26Q42szqKAw0D+lsOmiJFj//K5x2ATFQ1Nm1JctcWi91
-	NokaZcaIta0YYI8n3Bp2kJas33uiy747aP
-X-Google-Smtp-Source: AGHT+IHnQJnAJOQEMSSd/1luuQplj28d/GY8zfQPFU3tXpIWNxgzN+/gz90t45KAP2cvy+Q6w5uF6ZrP1RQlzanoit0=
-X-Received: by 2002:a05:6000:2906:b0:399:71d4:a9 with SMTP id
- ffacd0b85a97d-39eaaed5709mr4945107f8f.52.1744458488551; Sat, 12 Apr 2025
- 04:48:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744458657; x=1745063457;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8sLeXNB6Otg/NUBFA38Mx7FYYC291DUHLBQY9/Y0+3s=;
+        b=Et3wWElg9OBeSI2CMpZA4Z8skiE5II3nLRDRbOOvP71TKc+TO/tUq7lMEht6tpvLWo
+         febRaJI5v+xJd+FEzo+0eTNXf/0cWPoKRfF0uYy5RNGlRc0n3Xi2gREbn5ASLEy+5VBc
+         UU56CI6VokY70AsPGEjH8EbPDNEG2Ss77KZPB/d6IkBvUfTIBqyTWeHI3qrjyQXjKmZH
+         7QCcuMNZpseF0AxlVAxXnc1KqHJQ5RT/5XSlMjYIHT3N3nRmGS23wuO95dqd6S7kxeDZ
+         7fbLSvuTD9Z25KOWtLeqwIxTnrqk8Lqlg1D36+c/VY1G+y63QtD8qI474x0LX44KXC24
+         qliQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkq9Hwwvt1djxnwOvTn5cyaDBeP88UeFnMkM+xOCxOX6eP17RZuOfNng9UILQsoYHelsahRzLCPg/eyHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbIlwn0SsjKuPwGud5nUfycXyAHRb3wxsL+qoOWdU4pu+GlQDA
+	EtVLTKEDwiklT/W+pVzuCu7dyc2mZRbVQTl7BB9oFM7FHu6YJBMV
+X-Gm-Gg: ASbGncuxE/CR4eif4FX2j82BNBGsNfFPMss9RCT1h5UtTPBL7i34pXdgkasARMxWvsm
+	rxWjWj3OgARFcW9HJuDDQkBiISt5PfBYLSKnByMT9RtMySpS4QvsmgW8YgFOzT9o3219bEjkIpq
+	AgxzbCL6Ef4V8pYlreEjPSdGEdR1NVWu73Y6InWBQ2q4EDJJUZpQ415hK2LblrEhPGaXA3Q3Zpw
+	PZ3iqbwcvmF25vheGsQ8zF8dyMrevHYFJyHwqSqFVlk7/pc6EqZBh8htsbdw+4z2aydtPe4iS7W
+	tU26hWNhgzfvhPLDyfkN/R6+sQP2/vkfOsG2YEksLzLnK7ctvVw=
+X-Google-Smtp-Source: AGHT+IFW83cYpjRH6czDRz/9DZ5rD2c+/DMMMIYCyVvhlVy+JJz6zznKKwCXVGZJ/Gy14VnH5ViLoQ==
+X-Received: by 2002:a05:6a00:b89:b0:736:34a2:8a20 with SMTP id d2e1a72fcca58-73bd12c9e39mr8149056b3a.21.1744458656334;
+        Sat, 12 Apr 2025 04:50:56 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f8276sm3339552b3a.100.2025.04.12.04.50.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 04:50:55 -0700 (PDT)
+From: alexjlzheng@gmail.com
+X-Google-Original-From: alexjlzheng@tencent.com
+To: gregkh@linuxfoundation.org
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	linux-kernel@vger.kernel.org,
+	tj@kernel.org
+Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to per-fs lock
+Date: Sat, 12 Apr 2025 19:50:54 +0800
+Message-ID: <20250412115054.25580-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <2025041256-sanction-sandal-7f51@gregkh>
+References: <2025041256-sanction-sandal-7f51@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
- <20250402084646.10098-4-alex.vinarskis@gmail.com> <2b9128be-1989-4511-995c-103c8ba71af7@oss.qualcomm.com>
-In-Reply-To: <2b9128be-1989-4511-995c-103c8ba71af7@oss.qualcomm.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Sat, 12 Apr 2025 13:47:57 +0200
-X-Gm-Features: ATxdqUEMqtWny3JCTyw-ZcclkJ_xcogEzUXpOJFPwPlDnSQgDmpwIqvKRTeN8kI
-Message-ID: <CAMcHhXrBw6a7gSndG2F-JNgnNsYrDN3nTJjM+NjuT=s9FFWZkw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: Add support for X1-based Asus
- Zenbook A14
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	maud_spierings@hotmail.com, dmitry.baryshkov@oss.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 12 Apr 2025 at 01:36, Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 4/2/25 10:44 AM, Aleksandrs Vinarskis wrote:
-> > Initial support for Asus Zenbook A14. Particular moddel exists
-> > in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
-> >
-> > Mostly similar to other X1-based laptops. Notable differences are:
-> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
-> >   and Qualcomm FastConnect 7800 on UX3407RA
-> > * USB Type-C retimers are Parade PS8833, appear to behave identical
-> >   to Parade PS8830
-> > * gpio90 is TZ protected
-> >
-> > Working:
-> > * Keyboard
-> > * Touchpad
-> > * NVME
-> > * Lid switch
-> > * Camera LED
-> > * eDP (FHD OLED, SDC420D) with brightness control
-> > * Bluetooth, WiFi (WCN6855)
-> > * USB Type-A port
-> > * USB Type-C ports in USB2/USB3/DP (both orientations)
-> > * aDSP/cDPS firmware loading, battery info
-> > * Sleep/suspend, nothing visibly broken on resume
-> >
-> > Out of scope of this series:
-> > * Audio (Speakers/microphones/headphone jack)
-> > * Camera (OmniVision OV02C10)
-> > * HDMI (Parade PS185HDM)
-> > * EC
-> >
-> > Add dtsi and create two configurations for UX3407QA, UX3407RA.
-> > Tested on UX3407QA with X1-26-100.
-> >
-> > Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+On Sat, 12 Apr 2025 08:12:22 +0200, gregkh@linuxfoundation.org wrote:
+> On Sat, Apr 13, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > 
+> > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
+> > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
+> > 
+> > This patch switches the global kernfs_idr_lock to per-fs lock, which
+> > put the spinlock into kernfs_root.
+> > 
+> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
 > > ---
->
-> [...]
->
-> > +     /* Left-side display-adjacent port, PS8833 */
-> > +     typec-mux@8 {
-> > +             compatible = "parade,ps8830";
->
-> What Krzysztof referred to with fallback compatible is this:
->
-> diff --git a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
-> index 935d57f5d26f..aeb33667818e 100644
-> --- a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
-> +++ b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
-> @@ -11,8 +11,11 @@ maintainers:
->
->  properties:
->    compatible:
-> -    enum:
-> -      - parade,ps8830
-> +    oneOf:
-> +      - items:
-> +          - const: parade,ps8833
-> +          - const: parade,ps8830
-> +      - const: parade,ps8830
->
->
-> so that in case there are any sw changes down the line, people with older
-> DT receive the fixes, as if "parade,ps8833" is attributed to a driver, it
-> will match (due to being the primary entry) and if it's not (like today),
-> it will fall back to matching the next compatible (and the driver currently
-> looks for just that)
->
+> >  fs/kernfs/dir.c             | 14 +++++++-------
+> >  fs/kernfs/kernfs-internal.h |  1 +
+> >  2 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> What kind of testing / benchmark did you do for this series that shows
+> that this works, AND that this actually is measureable?  What workload
+> are you doing that causes these changes to be needed?
 
-Hi,
+Thank you for your reply. :)
 
-Thanks, was not aware of that, found it in the examples now, will update.
-As Krzysztof suggested to drop the patch adding compatible from
-driver's code, If I understand correctly I also need the following dts
-change, could you please confirm:
+We are trying to implement a kernfs-based filesystem that will have
+multiple instances running at the same time, i.e., multiple kernfs_roots.
 
-```
-compatible = "parade,ps8833", "parade,ps8830";
-```
+While investigating the kernfs implementation, we found some global locks
+that would cause noticeable lock contention when there are many filesystem
+instances.
 
-> [...]
->
-> > +     eusb6_repeater: redriver@4f {
-> > +             compatible = "nxp,ptn3222";
-> > +             reg = <0x4f>;
-> > +             #phy-cells = <0>;
-> > +
-> > +             vdd3v3-supply = <&vreg_l13b_3p0>;
-> > +             vdd1v8-supply = <&vreg_l4b_1p8>;
-> > +
-> > +             reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
-> > +
-> > +             pinctrl-0 = <&eusb6_reset_n>;
-> > +             pinctrl-names = "default";
-> > +     };
-> > +
-> > +     /* EC */
->
-> It's customary to leave the i2c address to make it slightly easier for
-> the next tinkerer ;)
+Fortunately, we found that some optimizations have been made in [1], which
+moved kernfs_rwsem into kernfs_root. But there are still some global locks
+left.
 
-I am unsure about the address. There are multiple addresses showing up
-when discovering the bus, 0x1d, 0x5b, 0x61, 0x6a. Did a quick SMBUS
-analysis, they all have non-zero registers responding... My best guess
-right now is its 0x5b, as messing with it enabled backlight and broke
-the keyboard. Will add that one.
+We think it is also necessary to switch the remaining global locks to
+per-fs. Moreover, we strongly agree with Tejun Heo's point in [1]:
 
->
-> [...]
->
-> > +&uart14 {
-> > +     status = "okay";
-> > +
-> > +     bluetooth {
-> > +             compatible = "qcom,wcn7850-bt";
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&bt_en_default>;
-> > +             enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-> > +             max-speed = <3000000>;
->
-> You'll need to provide some supplies, coming out of a pwrseq device, see
-> e.g. the QCP
->
+  "... this is the right thing to do even if there is no concrete
+   performance argument (not saying there isn't). It's just weird to
+   entangle these completely unrelated users in a single rwsem."
 
-I assume you are referring to change like this [1]. There were some
-discussions on whether the supplies are modelled correctly as it seems
-to be different when using m.2 card, so as I was not sure about this
-platform I did not add it. At least in the variant that I have, the
-wcn6855 is soldered onboard, so I would assume so is the wcn7850
-variant.
-It seems that the two use quite different supplies - are the platform
-dependent, or only wlan card dependent? Ie. Can I just copy pwrseq for
-wcn6855 from a different platform?
-
-For  wcn7850's pwrseq, I can add similarly to other platforms, but
-cannot verify it. Should I still add it in this case?
-
-A bit unrelated question: in the meantime I managed to bring-up the
-sound on Zenbook as well. Would it be more correct to wait for this
-series to land, and then send it separately, or is it okay to add it
-in directly on re-spin?
+We think kernfs will be widely used to build other filesystems, so we
+strongly recommend switching global locks to per-fs.
 
 Thank you,
-Alex
+Jinliang Zheng :)
 
-https://lore.kernel.org/all/20250331204610.526672-2-alex.vinarskis@gmail.com/
+[1] https://lore.kernel.org/all/YZbbxK1F7jY%2FRBFF@slm.duckdns.org/
 
-> Konrad
+> 
+> thanks,
+> 
+> greg k-h
