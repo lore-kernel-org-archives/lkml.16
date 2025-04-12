@@ -1,116 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FD028FF;
-	Sat, 12 Apr 2025 10:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E22192D97;
+	Sat, 12 Apr 2025 10:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744454030; cv=none; b=mjWtnICr60MxjWPg450OTySDJ7/TOe1lU3Oqfhc5weBcbAAmxlKFGOv5ei7WzTHgxVGHqFa33wktOC8JjRZ52vH0uEfFJJnrB50P6wqqf57LuX/G7aZh5GnRBjKrmy8gPxQwKvbyV/doRnE/O8Vfhn5emG53unKoMb9s9j31Pbw=
+	t=1744454126; cv=none; b=Ab4SJGVEMNy5pem5gXkXeIp5hiiJaZt7KmdS9M1y9lBUzHKS8Jiq2FvLbs0332A/BXCs5CaWgjU8LG08t9MwSpBwPWw7jCiRKz34HKZyKcdXD21qjC0R6b3+N3aJ/WzXaIJf1uFf/W2r8QilQG+9+VD7/DC2MwGSvVCCFJGkzhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744454030; c=relaxed/simple;
-	bh=+PhhzIK1QIE56uYa9MoSKWYNCOfwLRwgWFjqY9gwMn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=biKoalNiVUhUD5xPiHdBVZCfX7pe/dUJe86qm/36qMhIYG3/wOMEh7E+9wfuVEOT9fvgkYwd7kGhwZJa6la6iEIRVWKowaRL/3cMqvuMEQoK9qVTeo8iWcJl/iOaaaCYiuhCudniAqIqSljcRuzUECvnNhv6b+CmrRvjfbqKZuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lt3/M182; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744454126; c=relaxed/simple;
+	bh=4sW5JMTRSsvTEk9VaH8EMr1GBuNX2t5YMXRxgO9abPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L+5S7lyfT+6c4+5T5+r15TgI1bVJjC8jOPu0S3K994t5On+3B60IUlH28UazoQxzO3PLPdiA7FUoCGq6H9E/hRuF0yZRtNvOgE5qWaRWTNiKD7/qg01RFRzTxtrsgvM+28BeEwPafp1Wwg1+Wc0e7prqmSZTM4yDyvpLCMEkD3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U+Ssw3q6; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lt3/M182"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DDBC4CEE3;
-	Sat, 12 Apr 2025 10:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744454029;
-	bh=+PhhzIK1QIE56uYa9MoSKWYNCOfwLRwgWFjqY9gwMn8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lt3/M182/kPikzhJcBSQvkO9CbtuYFLw0jTODGMciwawPRMS+eVgGyamEK8EMeaGl
-	 abeaulEqpLNpKLsw8CvwwBYVM2VPbGkCPVVBN7ZvBHl0bCOoFXcDEIdI9LXNvr8bJF
-	 4JfNnTdDmnMk6vT8Y4ekjUBJDxfrFNw0oXtH4LunRwuKdee1D4+h3JRWcga/pz7fFs
-	 2uAvU1CtmXDyxD3JOPfN1jMrzB2Efb++OyOgwWCVSQRw8KqVf6eVYpJ4LlgL76Di+S
-	 XIVLqcu/fwthCYUqkelYqe7Umo6zM+Iwsqhi1bODyuOqoIwpxj0D0mah6FD+Do8EFY
-	 DZm49XVDpdZng==
-Date: Sat, 12 Apr 2025 11:33:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, gregkh@linuxfoundation.org,
- Michael.Hennerich@analog.com, lars@metafoo.de, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v5] iio: frequency: ad9832: Use FIELD_PREP macro to set
- bit fields
-Message-ID: <20250412113340.6934a8e0@jic23-huawei>
-In-Reply-To: <CAGd6pzP470VDxGoP4e_2hVXsKrJhnhbv-WgFzCq7tMX9RjOLwg@mail.gmail.com>
-References: <20250330135402.105418-1-simeddon@gmail.com>
-	<20250330152044.18cf81f6@jic23-huawei>
-	<CAGd6pzP470VDxGoP4e_2hVXsKrJhnhbv-WgFzCq7tMX9RjOLwg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U+Ssw3q6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1744454118;
+	bh=npFXiCkNqEjUskLtqtkmIK6sPrbA/QX7VYsHwEruji4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U+Ssw3q69qTi+x+JuV6tJIRrl3E43naIYieCYP9BEGyxgxHCSg0G7etHFzSlvlW8Y
+	 4UczdfemEg3LL5wvjuF4QRXDpvK27IBCOzXW3LnrD/Gi5GbC1gboSiYbk8wagxd+Dd
+	 MqGXAWeFa7M8daRaM0QLhQbc0Rp7lm9mz7YvRKQ4=
+Received: from stargazer.. (unknown [IPv6:240e:43d:108:7db5:ca6e:8ff:fed5:b0dd])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 9FEC665F59;
+	Sat, 12 Apr 2025 06:35:10 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] cpufreq: intel_pstate: Use raw_smp_processor_id() in hwp_get_cpu_scaling()
+Date: Sat, 12 Apr 2025 18:34:34 +0800
+Message-ID: <20250412103434.5321-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 9 Apr 2025 01:25:52 +0530
-Siddharth Menon <simeddon@gmail.com> wrote:
+Use raw_smp_processor_id() instead of plain smp_processor_id() in
+hwp_get_cpu_scaling(), otherwise we get some errors on a Lenovo Thinkpad
+T14P Gen 2:
 
-> On Sun, 30 Mar 2025 at 19:50, Jonathan Cameron <jic23@kernel.org> wrote:
-> > > +     for (int i =3D 0; i < ARRAY_SIZE(regval_bytes); i++) {
-> > > +             freq_cmd =3D (i % 2 =3D=3D 0) ? AD9832_CMD_FRE8BITSW : =
-AD9832_CMD_FRE16BITSW;
-> > > +
-> > > +             st->freq_data[i] =3D cpu_to_be16(FIELD_PREP(AD9832_CMD_=
-MSK, freq_cmd) |
-> > > +                     FIELD_PREP(AD9832_ADD_MSK, addr - i) |
-> > > +                     FIELD_PREP(AD9832_DAT_MSK, regval_bytes[i])); =
-=20
-> > Looking at the data layout here, this seems like an interesting dance t=
-o fill two unrelated
-> > u8 values - it's not a be16 at all.
-> >
-> > I'd be tempted to split the freq_data into u8s and then you will just h=
-ave
-> >                 st->freq_data[i][0] =3D FIELD_PREP(AD9832_CMD_MSK, freq=
-_cmd) |
-> >                                       FIELD_PREP(AD9832_ADD_SMK, addr -=
- i);
-> > //with masks adjusted appropriately.
-> >                 st->freq_data[i][1] =3D regval_bytes[i];
-> > =20
->=20
-> Hello Jonathan,
->=20
-> I briefly went through the datasheet for the device.
-> From what I understand, the device is expecting 16 bit write operations w=
-here:
-> - First 4 bits: Operation type (frequency/phase)
-> - Next 4 bits: Destination register address
-> - Last 8 bits: Data
-> so these fields would need to be combined into a single 16-bit value rega=
-rdless.
+    BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1
+    caller is hwp_get_cpu_scaling+0x7f/0xc0
 
-Hmm. That is really a documentation thing rather than anything real.
-If they had been documented it as a control value of 8 bits and a data valu=
-e of 8
-bits then it would naturally map to an array.
+Fixes: b52aaeeadfac ("cpufreq: intel_pstate: Avoid SMP calls to get cpu-type")
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ drivers/cpufreq/intel_pstate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->=20
-> As I am unable to procure a testing unit at this time, I=E2=80=99m hesita=
-nt to make
-> changes that could unintentionally break the existing driver.
-Sure.  It is always a bit of a risk assessment for changes like this.
-I'm less nervous about breaking staging drivers than others, but we should
-still do our best to not do so.  Probably not worth spinning up some emulat=
-ion
-for this change!
-
->=20
-> Would it be acceptable to limit the scope of this patch to introducing
-> bitfield macros and addressing the remaining feedback?
-Sure.  We can perhaps revisit this suggestion in a future series.
-
-Jonathan
-
->=20
-> Regards,
-> Siddharth Menon
->=20
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 4aad79d26c64..bfc20b978240 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2209,7 +2209,7 @@ static int knl_get_turbo_pstate(int cpu)
+ static int hwp_get_cpu_scaling(int cpu)
+ {
+ 	if (hybrid_scaling_factor) {
+-		struct cpuinfo_x86 *c = &cpu_data(smp_processor_id());
++		struct cpuinfo_x86 *c = &cpu_data(raw_smp_processor_id());
+ 		u8 cpu_type = c->topo.intel_type;
+ 
+ 		/*
+-- 
+2.49.0
 
