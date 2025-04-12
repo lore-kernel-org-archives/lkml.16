@@ -1,195 +1,126 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2109.outbound.protection.partner.outlook.cn [139.219.17.109])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E99D192D77;
-	Sat, 12 Apr 2025 10:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.109
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744452605; cv=fail; b=K8zKG0Rv6yXAWErZed/rq/AMn9GobeB+Wm6KLyMxRtIrrri9fpC41OS5NYrwY1NoVptP+/wGnwj3SPCh0U3na/lQMUEsnf60uGTxw5A3pa3usO6cVVzqgKly7ciT9hDFtvIzyERs3z/gaO8YJ3uF8GxjZnSrLHvNzh126E9ipl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744452605; c=relaxed/simple;
-	bh=D6i+4xtnjenbRjnKP4FmC6fVdWuWUYhm49OxVzeXpFU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ElLAMsoURFiVXFjW7k/M8mpzL8Cj07XodBJMI3H+z3FrKKmNEr4ZUXKSkGuqbCV1m/lLz097wt8ITAtkWA3wjy+lterfOaLZ44aB6z8NhbgNKRxr8UymuzWeQDqMl6C2bhanIKAEIjSkK43wEAq3GqrsA7znxKbFlmBr6Mm00jw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Es4e4vkLbuJbwIuLWjTP3IsV8kYjt+zemc2gruRS1lyA7TdLrllCPmDRvu9q4WELEi9CphqgUVFPDVaYnv0tQXOggILAp0SUnEfsHOxPORBz0sIui+fJYsdMTSu/j7WHjCeJQ0P2ji1NZ4APbwJpvqled8nPNQQnh+BMIKXYDvhNI5/T6b7L72zi2pHBpCU608AzSIn/FQM8/9zFXUVd49IQEZNgJUTTzPbIK/oniSMprqscjcwoqGrwaTg8OVByQ+4Fq8jwwZib36TwVl7GFrwkxiUl3T8genD4I9Z9OJ/zJ09TI1XdGQVEsxoDiMjBdNaFHbl+NqsMLicUl8VHyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1ECiAeMW5bTAj+W1eCok0ft9wopZlzd8vRBtmP3mO9Y=;
- b=glgQ8S9sii9IGuEtdwsTXiJ7fyBC3szv2GrwNG5GaaQVHMPNKCwzsmapXjjfikiDVenJckVPWwkZL4gQO9VsFxoe41kfNQAwBlcg3RdC1wQ8aIZzjnaH6rrsO5aYu6zBiMtBchfmPoAosNOtzERvI4u+EwiqIVEIN/lNB3Ze0m0Cz+lPumF7tv1Bu8+p0Di10BQqTZy4AgCFHT9MjhxNKB5lFVMCXSIZiWguFyHkbD11HlfWa+6XahhaDQ6S1RWSSW8Y3dhXOiJxE0xlZRe11YpF2GZ4LnbTrRWbPJFv8cufJxtFUkh1d3zlm4B2/8e/F6lX87oVtXGbkIo402MYMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::7) by NTZPR01MB0953.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:a::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.30; Sat, 12 Apr
- 2025 09:34:29 +0000
-Received: from NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- ([fe80::e1c4:5bb3:adc:97f5]) by NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- ([fe80::e1c4:5bb3:adc:97f5%5]) with mapi id 15.20.8632.030; Sat, 12 Apr 2025
- 09:34:28 +0000
-From: ende.tan@starfivetech.com
-To: linux-i2c@vger.kernel.org
-Cc: jarkko.nikula@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	jsd@semihalf.com,
-	andi.shyti@kernel.org,
-	linux-kernel@vger.kernel.org,
-	leyfoon.tan@starfivetech.com,
-	endeneer@gmail.com,
-	Tan En De <ende.tan@starfivetech.com>
-Subject: [v2,1/1] i2c: designware: Add SMBus Quick Command support
-Date: Sat, 12 Apr 2025 17:34:14 +0800
-Message-Id: <20250412093414.39351-1-ende.tan@starfivetech.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SH0PR01CA0010.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:5::22) To NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0B4192D77;
+	Sat, 12 Apr 2025 10:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744452683; cv=none; b=Ierr5H0hCBIDkaeE++t7DAb4dJt26gK4pp4X2aMN4Jv3TTKpamSLEM4mx4JSLTNZe0ai4KuMuzq2jOR1c7t88K3BGE/hLSLq6oa0qZSG7qkKMJ9X7kg4RNXHwQFdVAOUqUjMqKCbVseNdDEX+IypGHATsZ2iXFZWD4uYdswpEW4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744452683; c=relaxed/simple;
+	bh=RNflmceC0PXkskPu8wmVlsRy34v1ud7Y93OVVupX/Vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vv/UjSv4r/BKryBMPH1k73kmIM0kon+nFlWpaj+g503Xwhs7MmZuz5vcNsnC5PjFftYYMr5ZMNR63vFqdwbnP5KrpkCbl7ACrIRBF44A31cm0UEQD3qmX2mrxh/SrlPNeloclhe89XtPpzedYJ/22uVV85Vk9e6yr3B+qr82hGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S91cKhCF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S91cKhCF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983D2C4CEE3;
+	Sat, 12 Apr 2025 10:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744452682;
+	bh=RNflmceC0PXkskPu8wmVlsRy34v1ud7Y93OVVupX/Vk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=S91cKhCF3WenA0c8+gv8j+s5O7CFNwdzbVaieyIuBXfkFVs15UH8oDyCMJFYqdT9L
+	 8oScioMe+9JLVQZiJlK/ozFTcAdKelwxHWSuJR0U/x33nx4CkNTvK2FD7n+DQrUzA0
+	 9SOGGDAoZltouDjaYL3CEVjeDMFaFaPbV1+DO/+iyfSQPSp3MXpfV3L30aBIpNdlN1
+	 JyAvFIed7WpLqMiNvuSwa0VwbD9zC+eRZfVp1+GZzYTgiuAySdV7Cd9qb28eZQZcuA
+	 YSfnC50bsyJ/XS3idOTPeeezyQX5LNaQ2N6uK8NtJjy/yBOWAXOQ706oTUMGzmbTOy
+	 qKAPG+iVTaKnA==
+Message-ID: <a52969f2-8ea2-41e5-b4c8-8a03220cbf51@kernel.org>
+Date: Sat, 12 Apr 2025 12:11:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NTZPR01MB1018:EE_|NTZPR01MB0953:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21e0fd3b-c8d7-46f1-f43f-08dd79a5385c
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|366016|41320700013|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	4M5YLy9dzCZ6xzG1yVa7mCCqYng3LFesF5l7iM9GC9Q5BQPCdQsSq3Ebq9OGyisFr9rEXW1LbNHn7aCdSZmsjLWP+9hNtbiXxGcLRhIh+l+H5cSQ7eYLqFrqfDlo+X5BX/dLr+Jwc+ChN9sDqY6A1OmqReQJf2X1b1Xb7q3sdKoYJUdqk+HHSWknmH3Gj7KhkC6cY4d7T2rt/5/4Vbgc0ybKICF9okGx4uCyW5fGomr2ymAO6gcPBRBeqsxMvI9Mv1UkhKcoYRNatObuXb3DmveUIGtT1nBcFnvcdan8uL0GHOPU+FJsdJEF4+ZD3xce21K8jIZ4ZEj/Li74BmzOrTMb4HAfU1z77vQ08I/R680g/xqQYnUQqkgYpvVcHTWL+aoo5+Efz/Uwf4v4zEsOv1YeFn803EpHzZvwnEg/puzlE3s/YZyiTMfTy+wcssW1MO3wJZKhMC2ZTqLG6kxkRBQYsjE9xdK9l12IgY3K+olVEXAaO4154VwTqxU8+DagN7OqRePIyf3Oexn1ZMh22mmpEG1o6E1vmVEHo3HsuIkCL/ppckmkC2E36N6nqwG8aTLrtb9wEdH5oslNtCfjFA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(366016)(41320700013)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BkefV/37hUkZIynwqpn3Q+bfzbJazifU0U04sraN6hkdQEzFtUtuhHqWRBOd?=
- =?us-ascii?Q?rFSO117wwQ76w7mckA9mhX9LHG9NHkG1JUL8V9B56kHf8rTQ24cAt8r2MvPs?=
- =?us-ascii?Q?Q8kigPIlXcZDTa2yJVu46C5ad9kF98vE52ED/A82Y24V5ZX0a5nIMWqOmA3b?=
- =?us-ascii?Q?sOQ8evzCT7qT4ILDBwWQ3o7mM5ZTprGHFgUJJr1KUgpjoGr4q5szpOYvaUEG?=
- =?us-ascii?Q?aFl7DwNHks3icl+8Tu5UVYUKYFBBaahRpOFvFEkySlKvSEzJ4gy6ulI4R8up?=
- =?us-ascii?Q?8Cb7FlZ1Cc4bBUZYXVZCI47eR/v/h1WCbwsdIlCLxMMAyhfIqmXAl95QrXb+?=
- =?us-ascii?Q?xaEZ3Af5c8ojDflrwyLBxjONsMnLCfXE/kq4msYLYY5cEbj5ci8Q2BaC+R7A?=
- =?us-ascii?Q?Dc9a1sdDnAKBZlLGdOBT4BKiex7CffPDDGO4KFP631QFsczrsAKWewrpSpm5?=
- =?us-ascii?Q?bw9saviLwIG+e0R7F9fXbtTwavQjkT+sGHFdQVUz5cjhx6pLcGexAkF9yYqc?=
- =?us-ascii?Q?7eemk2YeZuMnrw+R8OcHGUQkIbq7hXtzR+cPWZS3Y2qDNwz3jAmXRu9HESbA?=
- =?us-ascii?Q?Zo4dNgkv+yrf9x1c/FdeFpI0t8+VqOdcUGYGo6tMaTnyAlcDYtUtvNJ+MB+R?=
- =?us-ascii?Q?nzJEsLqeBr38mxnTbCs41dLCK5XrIx5gB4mVUMoxadp+CQ8mJmd/5uB2GWbu?=
- =?us-ascii?Q?TfkHfRSaytEOydOguFxdg5xIUR2lDjy9Cu5hnmsENCbnAnk2CcpX4Bgry5e1?=
- =?us-ascii?Q?sTm+dZxOw4e3Z017EODVz30wB5gbEXPA07GvBLPR7FHGwfuDAPYX/BiBuEBl?=
- =?us-ascii?Q?QHTJyUMSUuYuRu32gX0S0Q0Jvo/Br6cQuBQUi871govoopeXvOayTu1NJyt4?=
- =?us-ascii?Q?nqVEFIQorcLJFPLwBEfXKyKE2PUwb7nNOu7zguXweEDTufW/OagjZ6f+S72H?=
- =?us-ascii?Q?9C/w7aEUdjJsJaP8gOTnoBy9fDmANKp9fJrWBWtE+Ptf7GJMikslt5ZBA/lw?=
- =?us-ascii?Q?OKSgDtSyG/f8uPYPMKfMODRPHiCg2A/JS3JxHaSTpOcANhksdoyKme7Kc2AC?=
- =?us-ascii?Q?jYsw3Osm1fPHhBhnjLeLjZw5F6wFFl06Ee9CltfYG3Rx3fi10N2iL6Dfdsc0?=
- =?us-ascii?Q?NmlVepK7gDg4W9/sZMe+/iqcQxXq0DArlwRIJz8y7z4WXHWBKgP67jC2MFPf?=
- =?us-ascii?Q?v4dierbQfBUzXn8bkFw7oNR0bJBOW489L+bQhnx9tXbkztOxRyPlISNlf1fM?=
- =?us-ascii?Q?hoNBN91WtvQtzqudqNuHo9X6s31YEN5MdlE4rQaOrDsWZega5jMiYvxD9JFf?=
- =?us-ascii?Q?0fZTBiGtRsiPF02OI4pl3BvGwoSHSdN+DwM3/tMpOoNFayMmNpZk37+yn/aU?=
- =?us-ascii?Q?O9ix9LbEpTrkgF7CfzOWoEzZzuZnLGwRY98ea3ppjVS+33s1uF2mj8mwwcXG?=
- =?us-ascii?Q?UkDxd7yU8bO3bQe4R4hytxStsYKNeMgatCwX/nib6kD0OcRbLTJF0Dz5yxqG?=
- =?us-ascii?Q?Jb19MCZUP5135d9u9u2kCckpVEzKoIZKVtsuJGSpu7QUWkFRmfO1wOFVBGrZ?=
- =?us-ascii?Q?3Nizaqg4DmE5LJLUgCv4aA4/5hs6H3x7TxBkLCeSwTrifOqFJdvWLvZs3k2X?=
- =?us-ascii?Q?Ew=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21e0fd3b-c8d7-46f1-f43f-08dd79a5385c
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 09:34:28.6764
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1EPcXVwG0/DMV2OR0tadPjbd/8xeqbs0GgvCjfIrLUq/W7mc4/RvBpwUZj45niZLxmW3Ue0qCCX67RJAy5aNQURW4f9V1raLmWGGdWHGCsw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB0953
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
+To: Faraz Ata <faraz.ata@samsung.com>, alim.akhtar@samsung.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rosa.pila@samsung.com, dev.tailor@samsung.com, suyash.bitti@samsung.com
+References: <CGME20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80@epcas5p3.samsung.com>
+ <20250318075635.3372599-1-faraz.ata@samsung.com>
+ <befe7d30-1727-4540-9072-f21ef96ea504@kernel.org>
+ <03e501dbaab0$65bb47a0$3131d6e0$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <03e501dbaab0$65bb47a0$3131d6e0$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Tan En De <ende.tan@starfivetech.com>
+On 11/04/2025 09:07, Faraz Ata wrote:
+> Hello Krzysztof
+> 
+>> Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
+>>
+>> On 18/03/2025 08:56, Faraz Ata wrote:
+>>> +
+>>> +		usi_17: usi@10d800c0 {
+>>
+>> Messed order. Keep nodes sorted by unit address (see DTS coding style).
+>>
+>>
+> Thanks for your review
+> Based on the DTS coding style, it is acceptable to group nodes
+> of the same type together, even if it breaks the unit address ordering.
 
-Add support for SMBus Quick Read and Quick Write commands.
+That's accepted alternative because some subsystems do that way. I don't
+think we ever applied such rule to Samsung? Do you have any prior
+reference about this? I accepted mess in the past, but that does not
+mean that mess is the rule.
 
-Signed-off-by: Tan En De <ende.tan@starfivetech.com>
----
-v1 -> v2: Removed redundant check of tx_limit and rx_limit
----
- drivers/i2c/busses/i2c-designware-core.h   |  4 ++++
- drivers/i2c/busses/i2c-designware-master.c | 18 +++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+> https://docs.kernel.org/6.12/devicetree/bindings/dts-coding-style.html
+> Please let me know your opinion on this.
+> Do you mean I should move all the USI_ node after pwm node?
 
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index 347843b4f5dd..91f17181ece1 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -40,6 +40,8 @@
- 
- #define DW_IC_DATA_CMD_DAT			GENMASK(7, 0)
- #define DW_IC_DATA_CMD_FIRST_DATA_BYTE		BIT(11)
-+#define DW_IC_DATA_CMD_STOP			BIT(9)
-+#define DW_IC_DATA_CMD_CMD			BIT(8)
- 
- /*
-  * Registers offset
-@@ -123,7 +125,9 @@
- 
- #define DW_IC_ERR_TX_ABRT			0x1
- 
-+#define DW_IC_TAR_SMBUS_QUICK_CMD		BIT(16)
- #define DW_IC_TAR_10BITADDR_MASTER		BIT(12)
-+#define DW_IC_TAR_SPECIAL			BIT(11)
- 
- #define DW_IC_COMP_PARAM_1_SPEED_MODE_HIGH	(BIT(2) | BIT(3))
- #define DW_IC_COMP_PARAM_1_SPEED_MODE_MASK	GENMASK(3, 2)
-diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
-index c5394229b77f..a67add117e44 100644
---- a/drivers/i2c/busses/i2c-designware-master.c
-+++ b/drivers/i2c/busses/i2c-designware-master.c
-@@ -268,6 +268,10 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
- 	regmap_update_bits(dev->map, DW_IC_CON, DW_IC_CON_10BITADDR_MASTER,
- 			   ic_con);
- 
-+	/* i2c-core-smbus.c: Only I2C_SMBUS_QUICK has msg[0].len = 0 */
-+	if (dev->msgs[0].len == 0)
-+		ic_tar |= DW_IC_TAR_SMBUS_QUICK_CMD | DW_IC_TAR_SPECIAL;
-+
- 	/*
- 	 * Set the slave (target) address and enable 10-bit addressing mode
- 	 * if applicable.
-@@ -474,6 +478,16 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
- 		regmap_read(dev->map, DW_IC_RXFLR, &flr);
- 		rx_limit = dev->rx_fifo_depth - flr;
- 
-+		/* i2c-core-smbus.c: Only I2C_SMBUS_QUICK has msg[0].len = 0 */
-+		if (buf_len == 0) {
-+			regmap_write(
-+				dev->map, DW_IC_DATA_CMD,
-+				*buf | DW_IC_DATA_CMD_STOP |
-+				((msgs[dev->msg_write_idx].flags & I2C_M_RD) ?
-+				DW_IC_DATA_CMD_CMD : 0)
-+			);
-+		}
-+
- 		while (buf_len > 0 && tx_limit > 0 && rx_limit > 0) {
- 			u32 cmd = 0;
- 
-@@ -919,7 +933,9 @@ void i2c_dw_configure_master(struct dw_i2c_dev *dev)
- {
- 	struct i2c_timings *t = &dev->timings;
- 
--	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
-+	dev->functionality = I2C_FUNC_10BIT_ADDR |
-+			     I2C_FUNC_SMBUS_QUICK |
-+			     DW_IC_DEFAULT_FUNCTIONALITY;
- 
- 	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
- 			  DW_IC_CON_RESTART_EN;
--- 
-2.34.1
+Please it according to sorting by unit address.
 
+
+Best regards,
+Krzysztof
