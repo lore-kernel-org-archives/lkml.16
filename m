@@ -1,180 +1,127 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D46F2367BC
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 08:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF413E898;
+	Sat, 12 Apr 2025 09:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744448344; cv=none; b=rdk++huKGvxCtFq6e8Briegrmd62XMfZHyBXVff/p71tqKqnc/AFVxUOjKNYKg+qnUSd/+7PskhjZ0OePG8DDgAKSh10i5CocEbLoCYPxuz+tkH8U2U1Y9B5kJ75YN3qDWv9omChZ49rrdkoJwUyIVz00m5Ss+SnblrmvyEWyLM=
+	t=1744448475; cv=none; b=PfQs/s9J9yvKhSwKAD4IsnQQw0tv+RgG644q1gHFix6gHaF1nnDDRey0Dqidb6id07E8wVcJ2Tqc6KD/RrQ/S1eAlrizIhUBhoePD/lPXtgPEwmWzjVLaFV+2DnHHeJ+R8b8h7uVuVxdvzcBSl95oGTK/UOpnYK3Mgo3D1437oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744448344; c=relaxed/simple;
-	bh=xMz+K0j5jPENUhgbcvG74Rje4/SdNoCjVn7RdOJT3cQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pAa2Kc6064yIwWbvioPhooq3+ticsVx0aU+nzcdOUBCQeA17t+mLfelbBTSyvKE4wtyyF8A+Dc1kO5m1uWEAeYRZdRlBMAYdZhmZdc62hrAJfxB5PlbTXx16C10aCKgg/ad8HLM5iCxkd3gZB0PPhid5709BaMxMOyjvQZ4zUiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6b+Fyfg; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6b+Fyfg"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225df540edcso39248905ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:59:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744448342; x=1745053142; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rYfYOXgEMh5O4Q2aA7Im1EXD1nxKMabdz4qOFBh1C0U=;
-        b=T6b+Fyfg0xcyU/lAA7bRz2DGn0yzGJhJM7dinKHypXonH9IKeNLZz7gcOxlv3Jk3rf
-         /xoTIgZ6xjbYCe8+DXbmozzSLanK7ctitc0rwFMDw8/RwyBdqZMnVufuTBgfmd4XSg38
-         RSU+WVSOhaaquMZNgvA7JZba/yElqame1ZNcZwo12xA7hWU1+CpuyNj8gxnwG6WkXbz1
-         bzQI+a5u1G+BolHf6GJAnP+SeSVIw/dbvyrEBIH1g+hkDJywfTEfIOm7zvAJns0n2mIY
-         ODjZlqmTFR6hHcgykcQGaSVjHV6zz9JGaveoCXLNEDshWX+qK5PmyDaT/149Fn1O0Am3
-         JJ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744448342; x=1745053142;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rYfYOXgEMh5O4Q2aA7Im1EXD1nxKMabdz4qOFBh1C0U=;
-        b=o8cSHmANm9pMilagMz2BAb4Z1JGbOhEpAR2GEVHGUo0n2a+ia34T152VsmYJKQwboP
-         t5Eqt1FMO40aU23/xJvr9Tuxkfg/0/j/aC2tKh99zXrX6H5t6WoiVpvz3FeiEixrQ38w
-         bNznD6Tukl/MTeeu5x/MOWQSKuAMdt/vcZ1F+DAdxOgefHz8Dokz2fPxwk8jSk0Sqma+
-         OcqVm8hojOq/0TVC1S7IqpXPg9t9OAkROe4w9U7tIWX8SBxTS/EsoriR/NlkhqbJtjhH
-         tWi23FhWi36JYPSgMgIx7qQgKjXkGRexBpTw+SOuAiK7eFaEjFIdfClJrGLg6CDUInVh
-         8+tQ==
-X-Gm-Message-State: AOJu0YzhwpDqCiDfb2JOvxaB7urNE402i56Fsikt87AVJ+CH+BT5y63Y
-	SkvDMZO+ZgNR65+CafRLzizX/UTAbhQLRvHNv2bK5G0cWbxWejt3
-X-Gm-Gg: ASbGnctfNRMNMEUbYs9LjHS/DgVEbTtFlBgLWRL8fNVuJkmXMa0T3SrVv5AbrdzM26e
-	p1CtSTXe5xDKTZD2ebxpzdF5QAA8mVezN5lqjvU1OtbUO6r9jTLSRynB1woDD8w/zyroqN/EJn7
-	QqJvZGDGN6dcb/QtTlfCEvQ0CBjBfwFMl7OHdbaocXozdiji3SFjAQNbeI6/2u6cuYS2eX42qNI
-	yOlkphoaNjSyoyjJQmnSL8ofocHfGqFF1HSR0B+WG2blq2H8ugUwHvtoHqlNn6JJMVPuEv5rWww
-	NzqWogQnwlgDntQNLfOBhOSzPhkdzVx7/unvJu8zG1cTEq3tfqwAsyX2
-X-Google-Smtp-Source: AGHT+IEkJ36Jz8n9hG3SinEp7XwOwkMmD9nPB2lCOsXijxusIByHPImYx/umctXng2q1f4Wv7nFt7w==
-X-Received: by 2002:a17:903:19c3:b0:215:6c5f:d142 with SMTP id d9443c01a7336-22bea0a9bb2mr82218175ad.20.1744448341500;
-        Sat, 12 Apr 2025 01:59:01 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.93.49.111])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb5047sm63202675ad.170.2025.04.12.01.58.57
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 12 Apr 2025 01:59:00 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@redhat.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH] mm: don't promote exclusive file folios of dying processes
-Date: Sat, 12 Apr 2025 20:58:52 +1200
-Message-Id: <20250412085852.48524-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1744448475; c=relaxed/simple;
+	bh=ei+dZM8tndbz+6mZ+f0R0iePe87jLJXnq/aEdUvIuGw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YwwxEuKfboUpxZeawJFkYle3HUhRtCKXgnJU0EviZVPQrLkmtQSNEhjt8vMqYSr0np3u+2TaoM1h9UIvA1yklHYVeZRj739Mhq8/d9f52Dfq7wuDOmUr1xP7QRApBer6ZQ5IZgCocANlNozVVE/pWW2WVuFN9qcj+boX5hdVtQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZZSFQ44mBz4f3lVs;
+	Sat, 12 Apr 2025 17:00:42 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A510A1A058E;
+	Sat, 12 Apr 2025 17:01:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl+3K_pnr0MAJQ--.64008S4;
+	Sat, 12 Apr 2025 17:01:07 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr group
+Date: Sat, 12 Apr 2025 09:14:23 +0000
+Message-Id: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXOl+3K_pnr0MAJQ--.64008S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw4rCw4rZF4DGFykWr1DGFg_yoW8ZrWxp3
+	yfJFsxKF4Ygwn5u34fJFn2qF4Yvryvq3Z5G347K345X3WkZr9FgFWxKa45ur95CryIkFy5
+	Xw1jvr4UCF9rZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRiSdgUUUUU=
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-From: Barry Song <v-songbaohua@oppo.com>
+The following perf command can trigger a warning on
+intel_pmu_lbr_counters_reorder.
 
-Promoting exclusive file folios of a dying process is unnecessary and
-harmful. For example, while Firefox is killed and LibreOffice is
-launched, activating Firefox's young file-backed folios makes it
-harder to reclaim memory that LibreOffice doesn't use at all.
+ # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
 
-An exiting process is unlikely to be restarted right away—it's
-either terminated by the user or killed by the OOM handler.
+The reason is that a lbr event are placed in non lbr group. And the
+previous implememtation cannot force the leader to be a lbr event in this
+case. And is_branch_counters_group will check if the group_leader supports
+BRANCH_COUNTERS. So if a software event becomes a group_leader, which
+hw.flags is -1, this check will alway pass.
 
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Zi Yan <ziy@nvidia.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+To fix this problem, using has_branch_stack to judge if leader is lbr
+event.
+
+Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 ---
- mm/huge_memory.c |  4 ++--
- mm/internal.h    | 19 +++++++++++++++++++
- mm/memory.c      |  9 ++++++++-
- 3 files changed, 29 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index e97a97586478..05b83d2fcbb6 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2264,8 +2264,8 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 			 * Use flush_needed to indicate whether the PMD entry
- 			 * is present, instead of checking pmd_present() again.
- 			 */
--			if (flush_needed && pmd_young(orig_pmd) &&
--			    likely(vma_has_recency(vma)))
-+			if (!exclusive_folio_of_dying_process(folio, vma) && flush_needed &&
-+			    pmd_young(orig_pmd) && likely(vma_has_recency(vma)))
- 				folio_mark_accessed(folio);
- 		}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 09d2d66c9f21..c6b394019e54 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 			event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+ 	}
  
-diff --git a/mm/internal.h b/mm/internal.h
-index 4e0ea83aaf1c..666de96a293d 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -11,6 +11,7 @@
- #include <linux/khugepaged.h>
- #include <linux/mm.h>
- #include <linux/mm_inline.h>
-+#include <linux/oom.h>
- #include <linux/pagemap.h>
- #include <linux/pagewalk.h>
- #include <linux/rmap.h>
-@@ -130,6 +131,24 @@ static inline int folio_nr_pages_mapped(const struct folio *folio)
- 	return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED;
- }
++	/*
++	 * Force the leader to be a LBR event. So LBRs can be reset
++	 * with the leader event. See intel_pmu_lbr_del() for details.
++	 */
++	if (has_branch_stack(event) && !has_branch_stack(event->group_leader))
++		return -EINVAL;
++
+ 	if (branch_sample_counters(event)) {
+ 		struct perf_event *leader, *sibling;
+ 		int num = 0;
+@@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+ 			    PERF_SAMPLE_BRANCH_COUNTERS)))
+ 			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+-
+-		/*
+-		 * Force the leader to be a LBR event. So LBRs can be reset
+-		 * with the leader event. See intel_pmu_lbr_del() for details.
+-		 */
+-		if (!intel_pmu_needs_branch_stack(leader))
+-			return -EINVAL;
+ 	}
  
-+/*
-+ * Return true if a folio is exclusive and belongs to an exiting or
-+ * oom-reaped process; otherwise, return false.
-+ */
-+static inline bool exclusive_folio_of_dying_process(struct folio *folio,
-+		struct vm_area_struct *vma)
-+{
-+	if (folio_maybe_mapped_shared(folio))
-+		return false;
-+
-+	if (!atomic_read(&vma->vm_mm->mm_users))
-+		return true;
-+	if (check_stable_address_space(vma->vm_mm))
-+		return true;
-+
-+	return false;
-+}
-+
- /*
-  * Retrieve the first entry of a folio based on a provided entry within the
-  * folio. We cannot rely on folio->swap as there is no guarantee that it has
-diff --git a/mm/memory.c b/mm/memory.c
-index b9e8443aaa86..cab69275e473 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1515,7 +1515,14 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
- 				*force_flush = true;
- 			}
- 		}
--		if (pte_young(ptent) && likely(vma_has_recency(vma)))
-+
-+		/*
-+		 * Skip marking exclusive file folios as accessed for processes that are
-+		 * exiting or have been reaped due to OOM. This prevents unnecessary
-+		 * promotion of folios that won't benefit the new process being launched.
-+		 */
-+		if (!exclusive_folio_of_dying_process(folio, vma) && pte_young(ptent) &&
-+				likely(vma_has_recency(vma)))
- 			folio_mark_accessed(folio);
- 		rss[mm_counter(folio)] -= nr;
- 	} else {
+ 	if (intel_pmu_needs_branch_stack(event)) {
 -- 
-2.39.3 (Apple Git-146)
+2.34.1
 
