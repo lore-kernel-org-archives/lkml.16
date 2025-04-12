@@ -1,276 +1,148 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC95155743
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 13:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EC8142E83;
+	Sat, 12 Apr 2025 13:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744465381; cv=none; b=sEPXSEkGs/mE5r44rB7rVOIoTK5gw1NcTkhn3mtCftifELdEKowJEZos/d1SbIqhoa1wGGgQf7sO3rZIcoronKoa8HB3JhHr80ybZTdvVwYomB2YrNcqzv3Gp307j1H4gskejgNhpTGIXDC+tD9dCU8gYBeXX0Je4Hy3wdNED+4=
+	t=1744465817; cv=none; b=po1CPv/jInVOYqF8vPHNuGUuEzAfEQR2SSk1BZa+K/72nDNGabE0ddH4vtMZltm0CPFUvlGtn0MPZqs1LASQVmteeOIJBWiFnX7GijpgT++rfVwuwGz1/gJqwM+ZJSG87ABa4FIe6ZaKe0T7ni7rbdFpqqJfceMoN5GUQ+23v0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744465381; c=relaxed/simple;
-	bh=ci1UI0K8vQvMeDw2JhjC7yr+FfjiXL5HO3d2eJ4CIXs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=pvxt6O4DTjkc1jympQaAysOoLBsc7ClhDqTF26K275n3v1p3q7Xh2h/lzejseYH+MJrfZoZ/sNb+JiCkcitsrtSE4fxUm2ZX3pW6MiKyKLihXFvZ2Btg/M5+zi9VkntZmxGPHNsADhLLNtbFXL55JOFUTW9IN0jBpRFQWvL/Jqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d43d333855so23851035ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:42:59 -0700 (PDT)
+	s=arc-20240116; t=1744465817; c=relaxed/simple;
+	bh=9HVAaKeQsXM5ZKip4Wyw4Xr3Rq1kzLUbh5jUuY5fHjg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IHMjg/u+Y5s6xX3gTsR2+4apdl3L9/WB1Hthax7MKLryzsNOVcKRrNgn4coQ8cDjRVYoO/tVEsSQkRLpxkMxMyhV7qgT2g+sfq1w2NRbL8pB7P8Sb4VU1vjrhWGr9V+w4B1HZti+p0s+CpW/yQvKEqrPwAzD4WSdTYAM0YCy7zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j1JNT2kz; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1JNT2kz"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e6405e4ab4dso3667157276.0;
+        Sat, 12 Apr 2025 06:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744465815; x=1745070615; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9HVAaKeQsXM5ZKip4Wyw4Xr3Rq1kzLUbh5jUuY5fHjg=;
+        b=j1JNT2kzfjWBsCl78Eke8f+ozwl/bJq1L8us/SuCy+P/TgWGC7gJ3U38Pefyp6dw46
+         ns9Ze5wth7a1Yh7fBFikGexWzwU2BBpxPZn37OcUdFNOoSgdLtZIGYcxd0sGGXw1aB0z
+         +YEEXJUSsPlK6GFBCR+alynRU8BdANwEFGVhJTg7aIeZvCt0HhrVOjAx6rQAvRGcoONJ
+         l2Yz1uKMxHwp6l3RStJF410Ae5iezTQSjfY5PDvilaFJA5WdmD0r1bNuMZOnPMssL9bB
+         VeDBIHaNQCKD+HKO4tA+VuwxGmwjsijy/sbGa0iHUv90meoOq1CbNaX6HsZ9hYJI6Fnp
+         aHbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744465379; x=1745070179;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dgrj22FMucO6JEKzfQPOXOiUPjRrG05W8vEI0nrv7/4=;
-        b=bksSrAYgir/InE7tfbv0at3gEiUSrYs9jM/XbmizrB7n/rQjH2IQ7ek8/ykgdrSOBS
-         hAXD4LU3X9ttWTN8jlvbe4OtgeOKxL6wP/roTiHqJSnwiJnB22D4T4rDqNpTP1UuQfHc
-         N1dpZHvcejaJrhFE7OKQgDbZkEDjljUwJoAEsK0xGEND1OLXkfMg3uFtgh61TQ6Mi9Oe
-         RyTRJeFR/AK0ed7hsKdbCABZ/6aoI5CllV9zkm3ZLpR6BGNPyid8qw8tbdyKaEHNdxyU
-         jnGseB/A1AcAaNgFj5R204lOeb2VhIHwhHLs2xd9Yjf3Jl1C8bcDj3yJ7sHxI9ZzOdp1
-         NqjA==
-X-Gm-Message-State: AOJu0Yx1S66FgGsRNkdNaoOwq37gnQEQmiVsKn3EcfDU3THVGN61cafd
-	UMyhBMy7R/uBVNOeVP9oq9WXu8DMJd1KT3CHNyhMW3OS7cQ1I8WdRunhs+FTgQJYbydTjpaXE1W
-	7QYbwuty9zBC93NuocuiPc+h7BmgQKtl6GA71LJPEHXycTPjr4/fokBY=
-X-Google-Smtp-Source: AGHT+IG24htJ4blzBQVwrqoDpClFPDhO2LcrsyJQ2+B7wkqPeMsanlCKawzM6vNRpdA8t7p3xBHlrKArAJAh4PLXB9D2S6i+nUQY
+        d=1e100.net; s=20230601; t=1744465815; x=1745070615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9HVAaKeQsXM5ZKip4Wyw4Xr3Rq1kzLUbh5jUuY5fHjg=;
+        b=urBjkaCqLd5XX9kIJo4cBup3YoWlh1BMCCQMr83PaBzgRFRwWRl9iP5CIZBBYgW9Nq
+         d9W+qYgBwN+e1HJnpFpn2fBqBSk/e7mppTGc/Tyy2BjkZ7CU11lPnVYX9siDyJ+CMIHf
+         whGn6PkbdpohkCCgPQuv6oDHyc/Fv2dfPNe3s7oCnSa4hqi7rug1dTGFGs7BeX1nBG3t
+         KOqkKCeMOvB4pSVjf7xuFvZz/VzyWqtemxqMX2HaV1EMcV3zB+JCAcnL0zqqWhNSua5x
+         eVxN4S8MD0xDJ5fUslt58ulaoPuky9CkWts0MblW75vxgDdRKth8tIfQmcF4ZdMHoI40
+         js3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWPvUoK520DQKrs6Wx84LOv12wvjlypmBkldM0gRdVExzLzg4qXFR9khkZDt0P1Judij4O25vTJ5DMZqg=@vger.kernel.org, AJvYcCXD0Poxe7lOofGcViZTbSCaND71zJ1bujlHtlZQncwCNYvX+JHTOX1zDUCwPeoxiLGH3fVOcDQf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY598D+dL63xrt0lgpMNyuUu/bsU1nfXDXX+/apF+uDN4RuZWy
+	8DVVEY+pay2PVkCR3EECxIrccwxqQiP/dqbzaklcaSPPJizL2oDG/i6Hp2gGiJRrXItdaHOLv6p
+	2ciodFCO+IxUGp5ZjOyxxXgQGUdA=
+X-Gm-Gg: ASbGncvPK4YS0TOBoeLUPDtumZHnlfvvlxicCMPDZZ8iarY7RhjjZdG45M4xnXvnLa3
+	KnI9QlZBOo97TRqr+zatf/s5Ux1Ix4rkD3TeyX7glEiE5DiSsb0yZEnz34VUJ/sV4+WPSzE4vR+
+	KFdmxv61tLOhXmvLDKE3PkzBKTwzo5YjO40Dyz+BjmgudQMpLhiHbtDrg=
+X-Google-Smtp-Source: AGHT+IGlVaCnBfQC6aLBOtn8bfByNyXTwCZBMS+MjyA3ylshqjYzEuowrHjxS7RvT4Ak34ee74hLRjR5mgNoo12z6Dk=
+X-Received: by 2002:a05:6902:2610:b0:e64:cd91:9c6b with SMTP id
+ 3f1490d57ef6-e704df2291amr9533794276.2.1744465814617; Sat, 12 Apr 2025
+ 06:50:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c245:0:b0:3d0:235b:4810 with SMTP id
- e9e14a558f8ab-3d7ec1d9acdmr63167865ab.2.1744465378969; Sat, 12 Apr 2025
- 06:42:58 -0700 (PDT)
-Date: Sat, 12 Apr 2025 06:42:58 -0700
-In-Reply-To: <00000000000023a79f05f5c4ac51@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fa6de2.050a0220.379d84.000c.GAE@google.com>
-Subject: Re: [syzbot] Re: WARNING in __folio_mark_dirty (2)
-From: syzbot <syzbot+e14d6cd6ec241f507ba7@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
+References: <20250412122428.108029-1-jonas.gorski@gmail.com> <20250412133422.xtkd3pxoc7nwprrb@skbuf>
+In-Reply-To: <20250412133422.xtkd3pxoc7nwprrb@skbuf>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Sat, 12 Apr 2025 15:50:00 +0200
+X-Gm-Features: ATxdqUFoNO90KQDhVHiGWcqBH9cRmiqh3zj4d_mFx7nVU1ZdayZ8Gf2QBeKdaOk
+Message-ID: <CAOiHx=mYJm_mrwrDCuQ4ZEviPKLgWDqNcaSXPzaXHeGYWBJCaA@mail.gmail.com>
+Subject: Re: [PATCH RFC net 0/2] net: dsa: fix handling brentry vlans with flags
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>, Ido Schimmel <idosch@nvidia.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <vladimir.oltean@nxp.com>, bridge@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+On Sat, Apr 12, 2025 at 3:34=E2=80=AFPM Vladimir Oltean <olteanv@gmail.com>=
+ wrote:
+>
+> On Sat, Apr 12, 2025 at 02:24:26PM +0200, Jonas Gorski wrote:
+> > While trying to figure out the hardware behavior of a DSA supported
+> > switch chip and printing various internal vlan state changes, I noticed
+> > that some flows never triggered adding the cpu port to vlans, preventin=
+g
+> > it from receiving any of the VLANs traffic.
+> >
+> > E.g. the following sequence would cause the cpu port not being member o=
+f
+> > the vlan, despite the bridge vlan output looking correct:
+> >
+> > $ ip link add swbridge type bridge vlan_filtering 1 vlan_default_pvid 1
+> > $ ip link set lan1 master swbridge
+>
+> At this step, dsa_port_bridge_join() -> switchdev_bridge_port_offload()
+> -> ... -> br_switchdev_port_offload() -> nbp_switchdev_sync_objs() ->
+> br_switchdev_vlan_replay() -> br_switchdev_vlan_replay_group(br_vlan_grou=
+p(br))
+> -> br_switchdev_vlan_replay_one() should have notified DSA, with changed=
+=3Dfalse.
+> It should be processed by dsa_user_host_vlan_add() -> dsa_port_host_vlan_=
+add().
+>
+> You make it sound like that doesn't happen.
 
-***
+Yes, because I messed up writing down what I did. That should have
+been vlan_default_pvid 0 so there are no VLANs configured by default.
+>
+> I notice you didn't mention which "DSA supported chip" you are using.
+> By any chance, does its driver set ds->configure_vlan_while_not_filtering=
+ =3D false?
+> That would be my prime suspect, making dsa_port_skip_vlan_configuration()=
+ ignore
+> the code path above, because the bridge port is not yet VLAN filtering.
+> It becomes VLAN filtering only a bit later in dsa_port_bridge_join(),
+> with the dsa_port_switchdev_sync_attrs() -> dsa_port_vlan_filtering(br_vl=
+an_enabled(br))
+> call.
+>
+> If that is the case, the only thing that is slightly confusing to me is
+> why you haven't seen the "skipping configuration of VLAN" extack message.
+> But anyway, if the theory above is true, you should instead be looking
+> at adding proper VLAN support to said driver, and drop this set instead,
+> because VLAN replay isn't working properly.
 
-Subject: Re: WARNING in __folio_mark_dirty (2)
-Author: penguin-kernel@i-love.sakura.ne.jp
+It's b53, and on first glance it does not set it. But as I just
+noticed, I messed up the example.
 
-Patch from Andreas Gruenbacher <agruenba@redhat.com> and Jan Kara <jack@suse.cz>
+So adding the lan1 vid is supposed to be the very first vlan that is config=
+ured.
 
-#syz test
+>
+> > $ bridge vlan add dev lan1 vid 1 pvid untagged
+> > $ bridge vlan add dev swbridge vid 1 pvid untagged self
+> >
+> > Adding more printk debugging, I traced it br_vlan_add_existing() settin=
+g
+> > changed to true (since the vlan "gained" the pvid untagged flags), and
+> > then the dsa code ignoring the vlan notification, since it is a vlan fo=
+r
+> > the cpu port that is updated.
+>
+> Yes, this part and everything that follows should be correct.
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index d7220a6fe8f5..ba25b884169e 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -1166,7 +1166,6 @@ int gfs2_glock_get(struct gfs2_sbd *sdp, u64 number,
- 		   const struct gfs2_glock_operations *glops, int create,
- 		   struct gfs2_glock **glp)
- {
--	struct super_block *s = sdp->sd_vfs;
- 	struct lm_lockname name = { .ln_number = number,
- 				    .ln_type = glops->go_type,
- 				    .ln_sbd = sdp };
-@@ -1229,7 +1228,7 @@ int gfs2_glock_get(struct gfs2_sbd *sdp, u64 number,
- 	mapping = gfs2_glock2aspace(gl);
- 	if (mapping) {
-                 mapping->a_ops = &gfs2_meta_aops;
--		mapping->host = s->s_bdev->bd_mapping->host;
-+		mapping->host = sdp->sd_inode;
- 		mapping->flags = 0;
- 		mapping_set_gfp_mask(mapping, GFP_NOFS);
- 		mapping->i_private_data = NULL;
-diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
-index eb4714f299ef..116efe335c32 100644
---- a/fs/gfs2/glops.c
-+++ b/fs/gfs2/glops.c
-@@ -168,7 +168,7 @@ void gfs2_ail_flush(struct gfs2_glock *gl, bool fsync)
- static int gfs2_rgrp_metasync(struct gfs2_glock *gl)
- {
- 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
--	struct address_space *metamapping = &sdp->sd_aspace;
-+	struct address_space *metamapping = gfs2_aspace(sdp);
- 	struct gfs2_rgrpd *rgd = gfs2_glock2rgrp(gl);
- 	const unsigned bsize = sdp->sd_sb.sb_bsize;
- 	loff_t start = (rgd->rd_addr * bsize) & PAGE_MASK;
-@@ -225,7 +225,7 @@ static int rgrp_go_sync(struct gfs2_glock *gl)
- static void rgrp_go_inval(struct gfs2_glock *gl, int flags)
- {
- 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
--	struct address_space *mapping = &sdp->sd_aspace;
-+	struct address_space *mapping = gfs2_aspace(sdp);
- 	struct gfs2_rgrpd *rgd = gfs2_glock2rgrp(gl);
- 	const unsigned bsize = sdp->sd_sb.sb_bsize;
- 	loff_t start, end;
-diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
-index 74abbd4970f8..0a41c4e76b32 100644
---- a/fs/gfs2/incore.h
-+++ b/fs/gfs2/incore.h
-@@ -795,7 +795,7 @@ struct gfs2_sbd {
- 
- 	/* Log stuff */
- 
--	struct address_space sd_aspace;
-+	struct inode *sd_inode;
- 
- 	spinlock_t sd_log_lock;
- 
-@@ -851,6 +851,13 @@ struct gfs2_sbd {
- 	unsigned long sd_glock_dqs_held;
- };
- 
-+#define GFS2_BAD_INO 1
-+
-+static inline struct address_space *gfs2_aspace(struct gfs2_sbd *sdp)
-+{
-+	return sdp->sd_inode->i_mapping;
-+}
-+
- static inline void gfs2_glstats_inc(struct gfs2_glock *gl, int which)
- {
- 	gl->gl_stats.stats[which]++;
-diff --git a/fs/gfs2/meta_io.c b/fs/gfs2/meta_io.c
-index 198cc7056637..9dc8885c95d0 100644
---- a/fs/gfs2/meta_io.c
-+++ b/fs/gfs2/meta_io.c
-@@ -132,7 +132,7 @@ struct buffer_head *gfs2_getbuf(struct gfs2_glock *gl, u64 blkno, int create)
- 	unsigned int bufnum;
- 
- 	if (mapping == NULL)
--		mapping = &sdp->sd_aspace;
-+		mapping = gfs2_aspace(sdp);
- 
- 	shift = PAGE_SHIFT - sdp->sd_sb.sb_bsize_shift;
- 	index = blkno >> shift;             /* convert block to page */
-diff --git a/fs/gfs2/meta_io.h b/fs/gfs2/meta_io.h
-index 831d988c2ceb..b7c8a6684d02 100644
---- a/fs/gfs2/meta_io.h
-+++ b/fs/gfs2/meta_io.h
-@@ -44,9 +44,7 @@ static inline struct gfs2_sbd *gfs2_mapping2sbd(struct address_space *mapping)
- 		struct gfs2_glock_aspace *gla =
- 			container_of(mapping, struct gfs2_glock_aspace, mapping);
- 		return gla->glock.gl_name.ln_sbd;
--	} else if (mapping->a_ops == &gfs2_rgrp_aops)
--		return container_of(mapping, struct gfs2_sbd, sd_aspace);
--	else
-+	} else
- 		return inode->i_sb->s_fs_info;
- }
- 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index e83d293c3614..dbd6f76bfa2b 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -72,7 +72,6 @@ void free_sbd(struct gfs2_sbd *sdp)
- static struct gfs2_sbd *init_sbd(struct super_block *sb)
- {
- 	struct gfs2_sbd *sdp;
--	struct address_space *mapping;
- 
- 	sdp = kzalloc(sizeof(struct gfs2_sbd), GFP_KERNEL);
- 	if (!sdp)
-@@ -109,16 +108,6 @@ static struct gfs2_sbd *init_sbd(struct super_block *sb)
- 
- 	INIT_LIST_HEAD(&sdp->sd_sc_inodes_list);
- 
--	mapping = &sdp->sd_aspace;
--
--	address_space_init_once(mapping);
--	mapping->a_ops = &gfs2_rgrp_aops;
--	mapping->host = sb->s_bdev->bd_mapping->host;
--	mapping->flags = 0;
--	mapping_set_gfp_mask(mapping, GFP_NOFS);
--	mapping->i_private_data = NULL;
--	mapping->writeback_index = 0;
--
- 	spin_lock_init(&sdp->sd_log_lock);
- 	atomic_set(&sdp->sd_log_pinned, 0);
- 	INIT_LIST_HEAD(&sdp->sd_log_revokes);
-@@ -1135,6 +1124,7 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- 	int silent = fc->sb_flags & SB_SILENT;
- 	struct gfs2_sbd *sdp;
- 	struct gfs2_holder mount_gh;
-+	struct address_space *mapping;
- 	int error;
- 
- 	sdp = init_sbd(sb);
-@@ -1156,6 +1146,19 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_flags |= SB_NOSEC;
- 	sb->s_magic = GFS2_MAGIC;
- 	sb->s_op = &gfs2_super_ops;
-+
-+	/* Set up an address space for metadata writes */
-+	sdp->sd_inode = new_inode(sb);
-+	error = -ENOMEM;
-+	if (!sdp->sd_inode)
-+		goto fail_free;
-+	sdp->sd_inode->i_ino = GFS2_BAD_INO;
-+	sdp->sd_inode->i_size = OFFSET_MAX;
-+
-+	mapping = gfs2_aspace(sdp);
-+	mapping->a_ops = &gfs2_rgrp_aops;
-+	mapping_set_gfp_mask(mapping, GFP_NOFS);
-+
- 	sb->s_d_op = &gfs2_dops;
- 	sb->s_export_op = &gfs2_export_ops;
- 	sb->s_qcop = &gfs2_quotactl_ops;
-@@ -1183,7 +1186,7 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	error = init_names(sdp, silent);
- 	if (error)
--		goto fail_free;
-+		goto fail_iput;
- 
- 	snprintf(sdp->sd_fsname, sizeof(sdp->sd_fsname), "%s", sdp->sd_table_name);
- 
-@@ -1192,7 +1195,7 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- 			WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_FREEZABLE, 0,
- 			sdp->sd_fsname);
- 	if (!sdp->sd_glock_wq)
--		goto fail_free;
-+		goto fail_iput;
- 
- 	sdp->sd_delete_wq = alloc_workqueue("gfs2-delete/%s",
- 			WQ_MEM_RECLAIM | WQ_FREEZABLE, 0, sdp->sd_fsname);
-@@ -1309,6 +1312,8 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- fail_glock_wq:
- 	if (sdp->sd_glock_wq)
- 		destroy_workqueue(sdp->sd_glock_wq);
-+fail_iput:
-+	iput(sdp->sd_inode);
- fail_free:
- 	free_sbd(sdp);
- 	sb->s_fs_info = NULL;
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index 44e5658b896c..4529b7dda8ca 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -648,7 +648,7 @@ static void gfs2_put_super(struct super_block *sb)
- 	gfs2_jindex_free(sdp);
- 	/*  Take apart glock structures and buffer lists  */
- 	gfs2_gl_hash_clear(sdp);
--	truncate_inode_pages_final(&sdp->sd_aspace);
-+	iput(sdp->sd_inode);
- 	gfs2_delete_debugfs_file(sdp);
- 
- 	gfs2_sys_fs_del(sdp);
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 8e7af9a03b41..b503a9a4fa65 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -245,10 +245,11 @@ wb_get_create_current(struct backing_dev_info *bdi, gfp_t gfp)
-  * holding either @inode->i_lock, the i_pages lock, or the
-  * associated wb's list_lock.
-  */
--static inline struct bdi_writeback *inode_to_wb(const struct inode *inode)
-+static inline struct bdi_writeback *inode_to_wb(struct inode *inode)
- {
- #ifdef CONFIG_LOCKDEP
- 	WARN_ON_ONCE(debug_locks &&
-+		     (inode->i_sb->s_iflags & SB_I_CGROUPWB) &&
- 		     (!lockdep_is_held(&inode->i_lock) &&
- 		      !lockdep_is_held(&inode->i_mapping->i_pages.xa_lock) &&
- 		      !lockdep_is_held(&inode->i_wb->list_lock)));
+Sorry for the mistake. I did it correctly while testing though!
+
+Best regards,
+Jonas
