@@ -1,86 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE592158524;
-	Sat, 12 Apr 2025 15:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0285718E3F
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 15:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744472873; cv=none; b=Y/+xxTrdwEQ8n5Tu4LFDzttYWHjQH91M8n3H7ngDhXMpHeZ2wvqJ/h9g5KAfhrMlbOTMMeMozMNKpLk8bfmlSa/h9/34pjjwLsr7ojqEi7R8RmkVsOUns+5uA6Rqfo/p6KL8iRaiF2EDz+FrqB4kHiMBE0Wv+YFTJ7uaMixu6/A=
+	t=1744472895; cv=none; b=mflpBn5s3PvkSDU2f1S9Fs9rAAaPa6TxwoWH4CQ0AUMRnVvrJ8pZA5bOJG27nIrD/1bwg4I2iIL+Yh5nyPYCrwSmR30iG53wb+SevjFg88MtwQiQ0UWEy5U4WPnWTbY3YezJYRpgdYxJsB+ieZiwtNCxa9lJAuUIW/IzZjQqMAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744472873; c=relaxed/simple;
-	bh=po23pYpQTayZdLg8UwY/ZoXRXdbpaMQghpHL0aeA+tE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=io6VP1Drm8b8r4YrjZYw6XoaILAtIfE9qAiDy+naMBempS1aJ6OfEHEwXMb0oTG3qC1tpX7w3VGuboHu4xgbfqwsdJPixYor8X60uKUTN1rs+2qZGS+3E1hfGkRTl2ZkWmD9G56yECNT3FWu8sN4BztN5fJp/TiqHyOBSptaMUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXWjKcXg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744472895; c=relaxed/simple;
+	bh=npOifUoSFsZcZbBoUi8xFTy1MgrjKQm9iM4m0A1xJaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RHTzsR/cSHgusMRTWabZlM4ZdXsHnFO5abSQo4j4p5mUY2vRebyPK7q60e9s6KQ7itgDBBeontNZ/Pxq8wylP8R329zbVkwOmRi00yMHGMrw9odbVtyIFDSC6zpnkgys0fVOCx0wILxfsm7H/JYV+dSjYlS1pPgt7TEMCxdA5VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e6ESQZ0A; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXWjKcXg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E25C4CEE3;
-	Sat, 12 Apr 2025 15:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744472873;
-	bh=po23pYpQTayZdLg8UwY/ZoXRXdbpaMQghpHL0aeA+tE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iXWjKcXgLXMNwbXpNJhlkAwQne92G/JMueDHcaTLKXPj0U98d52liE+KTtskVyGtF
-	 7XnKnYo/Su0Dqx5PouRPdbfCc1lpxP4YzIt3OIioK2iwL7GUEZADSUYppS3/0AuvlE
-	 fwruCONTbpZJlYCXq06taCLX5R1DZ2LwGB6ppLMjo4ygaj+Oq+ntEZ/gGBbSyVfA2t
-	 jSvYzM50YS8r5nPv+9JlCuUWPabzJofSZaO7LICsKi234yX3FHw2H6jSz0ltEYlTgl
-	 5a1547R2f0AvmvQI33w+FtYaiSfOSv8xuC2ipFz34H5EH6UpLVfgf02mpNFU82NYaB
-	 ha45Y+ijyl22w==
-From: SeongJae Park <sj@kernel.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] MAINTAINERS: Add mmap trace events to MEMORY MAPPING
-Date: Sat, 12 Apr 2025 08:47:51 -0700
-Message-Id: <20250412154751.60224-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <mcz3dhxkjpgp2qv72dx2lttwnzdvujvnosdx5a7lkjpuj3r4iu@jevlyctotoay>
-References: 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e6ESQZ0A"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0unE7GRZ19cbVRqz2ttCoLdcRw5QhIWcr0VhRWnwLaY=; b=e6ESQZ0ArdMhnRJvh+3TBV+Wsh
+	qcseKum9XlYkff8RtIOexL52JVPbwRNryRUhUaPfSdjrNNzsZuHk2haBHRkofHACp12D9EZa7X0Jc
+	JboNzTKoeClhTufMtBcot1Vb1IVsNVKbHZUMhee1w97BruFow9fkuUIPL5dtH2/jVXvhCcX8RDwvU
+	3OY+H5qq8eMHg2RpYqkTNy9Cch8HV9EmhIlt+kZPa8xGW6wZ6aPvYgsrhUCcBRiMnrXYEVkma7n6w
+	5htg2LON9C+o1/z1bR5WxfYsQmZTPQ0DRp6aXn99tJ4TR+Zy9lUUV2Cmg4WGj/BxznxKgpf5FxNTd
+	6qERCNYA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u3d5U-00000005mEx-1VUn;
+	Sat, 12 Apr 2025 15:48:08 +0000
+Date: Sat, 12 Apr 2025 16:48:08 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying
+ processes
+Message-ID: <Z_qLOHxcfVmiXYp4@casper.infradead.org>
+References: <20250412085852.48524-1-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412085852.48524-1-21cnbao@gmail.com>
 
-On Sat, 12 Apr 2025 09:17:21 -0400 "Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
+On Sat, Apr 12, 2025 at 08:58:52PM +1200, Barry Song wrote:
+> +		/*
+> +		 * Skip marking exclusive file folios as accessed for processes that are
+> +		 * exiting or have been reaped due to OOM. This prevents unnecessary
+> +		 * promotion of folios that won't benefit the new process being launched.
+> +		 */
 
-> * SeongJae Park <sj@kernel.org> [250411 13:47]:
-[...]
-> > > @@ -15571,6 +15571,7 @@ L:	linux-mm@kvack.org
-> > >  S:	Maintained
-> > >  W:	http://www.linux-mm.org
-> > >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> > > +F:	include/trace/events/mmap.h
-> > 
-> > Should mmap_lock.h also be added here?
-> 
-> Oh, well..
-> 
-> mmap_lock.h (include/trace/events/mmap_lock.h) has to do with
-> mm/mmap_lock.c, which also isn't listed here.  Both exist for tracing as
-> well.
-> 
-> There is also include/linux/mmap_lock.h, which is the locking itself.
-> The mmap lock is used more broadly than just these files: mm/pagewalk.c
-> and mm/ksm.c, for instance.
-> 
-> So I guess that's a more difficult decision.
+Please wrap at 80 columns.
 
-Makes perfect sense.  Thank you for kindly clarifying this.
-
-
-Thanks,
-SJ
-
-[...]
+One easy way to achieve this is to pipe it through 'fmt -p \*'
