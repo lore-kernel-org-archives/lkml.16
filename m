@@ -1,206 +1,236 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-67.smtpout.orange.fr [193.252.22.67])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D896633F6
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C927FD
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744441367; cv=none; b=Piq9kcKDfHovgOgOugfVEF3FxbFPS4EcnPQXXk3VdRhRhoqAsu3nx1BCXqp3drLMws34VbIuyDaCeiQC3Iw5nA+/R3QqhDCMZ0b2ZW1DDAZesl8dmh4IgsjPziL2E/OAF3HKPj0zeQeYlzijuc1GJGZPEsxFmCrbHhVxRJhlgZc=
+	t=1744441762; cv=none; b=jefz7dhRmYAVTMGQ3NDqRwxbZ+ha1bWQzM5dRa9xqGrxN6v0hvCaTb6KLzZygqx1OlgsQon7I5HAcMA9Hw2rIrEnVFsCpSGnPZtuMXWo1B0f0K/rG+ZTl3wtv/8CiGQJkIifkVHBdRokfS39fM98f8St9CzeXzIkY7Mc+A1YPcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744441367; c=relaxed/simple;
-	bh=WZpIIcw7FJKA9/qhWhmIcl1Lc29UmXwhDfqtpw+CI8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hKBYQH+n1osTjeTw4qLZ3XzKhaMYvkOCwQ6dH/KI/+cRL5l79GPjM1J0Wsrc83ESNQ8JtTuv2AxyHKnTHYM/NdzmXK2ArVdSB34nnFsum7ZCFuPrg3rYfm+64upv3bMvFiaDyLAVCys2v2ZA2bp2kR5HPl//GzLAbkBVTLVGzFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0PCeqk0O; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744441762; c=relaxed/simple;
+	bh=ObI/eBXSwueiLbh/W262pQOsW5q9GzUhDYiqINvHFH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=izi/W5GvOWE7qT93Up4rC9I4ExRDY6osFeDCFr3XAR7Hd8FNwNm4FBaewebpzLN+eKlUtMiLf88EHzGF+a6ks2A31iz2DKVzJK1OxXZ+ewk8ckBIuxpZnxoznEPsy497WsqAtz+jsibSASH6UWVmCeH79crHH0a9cFqLpdiCWG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr; spf=pass smtp.mailfrom=orange.fr; dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b=pTCrFZNz; arc=none smtp.client-ip=193.252.22.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orange.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0PCeqk0O"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so30392526d6.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744441365; x=1745046165; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WZpIIcw7FJKA9/qhWhmIcl1Lc29UmXwhDfqtpw+CI8c=;
-        b=0PCeqk0OsJTn8HUuLGZiE3Lp3J/65uRkW3ZtNRh+p7Bmoi1oX1xr8IXNnQojhEqHwv
-         4W1PLBDiAJ92kmSNWl4sDwk9b8C9buh3SS+Ty2IFBcW0VwC7Gnf/m10S9Ns+QdpueN3N
-         nF5frJlrN+dIIxxz3X5PNFrK2Rc5whEW0IUFGlxahxVGCz0uG6q/KvnGZY2nNjHuzFNR
-         SpmoDaGgw5sP6Qt5DoA0HeUL2n16Dc1SRbjYQ5wt+qvr/K7+Z5gb+YKgM9wlRo7xFNpq
-         8BC6oXt1hpRA2ztH4ODs6Ee0RPeRiHq0oK1djKiqrcWpxLLLDLcMX/+mPmVS3p4I+Vk7
-         ecSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744441365; x=1745046165;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WZpIIcw7FJKA9/qhWhmIcl1Lc29UmXwhDfqtpw+CI8c=;
-        b=B30IPd0fkStSzFVDf2QLE25Qo1MBVwJHSpck1i5+9DdUX+g2F5XQup/ziMJ6I1XJRY
-         GE8Q1nj4Z4zqDDmbeytJI4cb89gGWLgG+7Q+2o/LSpvGBwwQe86dgXy3E82T1kxa0AVo
-         AksX1c6Ug0TepShmcyXrUD7sPgnfUzyDcEJrqEfqdyeDg9OAb0zKPJC1a9XhdzMUSTSG
-         RVE2qMYvwutm9JlONqgsvhaYINvlwo5tDd6xym+BCVwA87iv6gZswhKu0JHR0RF7S4J6
-         6U6Lex/lkdhHBFDCxB3wCrRSPMGXdiovRWyTCd9ua2bMX9uT6Ff5XVMoWaPXd98N5LGr
-         in2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXYK5nNin1I1kkXNCxIBQfACtrUAU7IlaB/rp/kz27XSwJJLSwXF2WV+s8lAkFf1zw/hR7NkS+jLx04VkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2N5BWaksN2/AS60HL9CbRX1g5Upt69vnypfd14bxGQp9xFRiQ
-	Wh0UV0lHOlAtwB4NuoGPxAyvXIy73Us/Rr5DsUlYazuHBZRthrnxBhc75PsNiKzAq4ti/B1gy4P
-	HObsY6XWDPD07ahWoxvmiSudSwpDIO2SrZasJ
-X-Gm-Gg: ASbGncuB8IMrQqUkfTKzcQSB+mDw2A1TLP5EcE6tMK78RPprrsOYXi/NpgxSAXbWfk4
-	VKk1NdtXNbNAgq5tCYI0ktPCb30aXWL7VPv7pGzREIsyCFPD7eQqIZtpUOLL6HM/4IRAii/tQUZ
-	7U4EzGQkEgWjvsgIGLYUmU9rI=
-X-Google-Smtp-Source: AGHT+IERjybqa0es5YjPRGdICW/Pso3YiKzz+uVIHzrorRvl8QOF3slBR8x4HY0cVxU95oKPIlQYOWa+IVGn+SYzYnw=
-X-Received: by 2002:ad4:5dc8:0:b0:6e1:a4ed:4b0c with SMTP id
- 6a1803df08f44-6f23f1398a4mr71520346d6.26.1744441364412; Sat, 12 Apr 2025
- 00:02:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b="pTCrFZNz"
+Received: from cyber-villager.csun.edu ([130.166.192.226])
+	by smtp.orange.fr with ESMTPA
+	id 3Uy7uq3PTX7PJ3UyBuK7yP; Sat, 12 Apr 2025 09:08:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
+	s=t20230301; t=1744441686;
+	bh=RdrGqUxYKIUxWcSWCmpIVhg02jT+Jr6I9gU2Sw+YTQQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=pTCrFZNzdtVCa+fssemeB7n3RXcpYzabWHbCCZ6JiKkSnfpZERmK+i+ewxRc6l1Li
+	 E1LmB7ER1BCuaOG2XS4RniSK5GiW6TLyJNq1WK22sSOD6UanmwjqGtCL7NBvJHV781
+	 +HqN8x1P5+loRH+QMLNzKtJsiaJTnUH3Lig4McPKjAh74Hh705Faty7QZdh1kpX2Mo
+	 fMVytaAfzpLqqjPe6xOrqpbMcSONAfLOu/tI8KZ5rwZlbcRUNFawaOBmyHlVXjmOda
+	 FVYvwPJQU3DMkqo2mZzx/uEi9oJ88W8LIz1qWYjFJgvJrBt1CH0+mUcbeGXtE2/5L4
+	 69Ahz092Y/lsg==
+X-ME-Helo: cyber-villager.csun.edu
+X-ME-Auth: cGF1bC5yZXRvdXJuZUBvcmFuZ2UuZnI=
+X-ME-Date: Sat, 12 Apr 2025 09:08:06 +0200
+X-ME-IP: 130.166.192.226
+From: =?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>
+To: gregkh@linuxfoundation.org,
+	dpenkler@gmail.com,
+	dan.carpenter@linaro.org
+Cc: =?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 13/16] staging: gpib: ni_usb: fixes multiline comments style
+Date: Sat, 12 Apr 2025 00:07:54 -0700
+Message-ID: <4b2762d349e06db8f541a86ca0ec429bc1351097.1744438358.git.paul.retourne@orange.fr>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1744438358.git.paul.retourne@orange.fr>
+References: <cover.1744438358.git.paul.retourne@orange.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-kunit-sh-v1-1-f5432a54cf2f@linutronix.de>
-In-Reply-To: <20250407-kunit-sh-v1-1-f5432a54cf2f@linutronix.de>
-From: David Gow <davidgow@google.com>
-Date: Sat, 12 Apr 2025 15:02:32 +0800
-X-Gm-Features: ATxdqUHP8PRRqM300UjAXttidNleMHYPkg-pDXx_1FH1OWfmLuqIKMrJBLpr4_Q
-Message-ID: <CABVgOS=1g+nzQ-vDqJHHo-AM2A4nmF46eGXNPWRN+zt8jMS0OA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] kunit: qemu_configs: SH: Respect kunit cmdline
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000e5695a06328f676f"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---000000000000e5695a06328f676f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fixes the style of multiline comments to comply with the linux kernel
+coding style.
 
-On Mon, 7 Apr 2025 at 16:58, Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> The default SH kunit configuration sets CONFIG_CMDLINE_OVERWRITE which
-> completely disregards the cmdline passed from the bootloader/QEMU in favo=
-r
-> of the builtin CONFIG_CMDLINE.
-> However the kunit tool needs to pass arguments to the in-kernel kunit cor=
-e,
-> for filters and other runtime parameters.
->
-> Enable CONFIG_CMDLINE_EXTEND instead, so kunit arguments are respected.
->
-> Fixes: 8110a3cab05e ("kunit: tool: Add support for SH under QEMU")
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
+Signed-off-by: Paul Retourné <paul.retourne@orange.fr>
+---
+ drivers/staging/gpib/ni_usb/ni_usb_gpib.c | 40 +++++++++++++++--------
+ drivers/staging/gpib/ni_usb/ni_usb_gpib.h | 32 +++++++++++-------
+ 2 files changed, 47 insertions(+), 25 deletions(-)
 
-Huh, that's odd.
+diff --git a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
+index 9f1b9927f025..62735a0cb4ec 100644
+--- a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
++++ b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
+@@ -74,7 +74,8 @@ static unsigned short ni_usb_timeout_code(unsigned int usec)
+ 		return 0xff;
+ 	else if	 (usec <= 300000000)
+ 		return 0x01;
+-	/* NI driver actually uses 0xff for timeout T1000s, which is a bug in their code.
++	/*
++	 * NI driver actually uses 0xff for timeout T1000s, which is a bug in their code.
+ 	 * I've verified on a usb-b that a code of 0x2 is correct for a 1000 sec timeout
+ 	 */
+ 	else if (usec <= 1000000000)
+@@ -232,7 +233,8 @@ static int ni_usb_nonblocking_receive_bulk_msg(struct ni_usb_priv *ni_priv,
+ 	mutex_unlock(&ni_priv->bulk_transfer_lock);
+ 	if (interruptible) {
+ 		if (wait_for_completion_interruptible(&context->complete)) {
+-			/* If we got interrupted by a signal while
++			/*
++			 * If we got interrupted by a signal while
+ 			 * waiting for the usb gpib to respond, we
+ 			 * should send a stop command so it will
+ 			 * finish up with whatever it was doing and
+@@ -240,8 +242,9 @@ static int ni_usb_nonblocking_receive_bulk_msg(struct ni_usb_priv *ni_priv,
+ 			 */
+ 			ni_usb_stop(ni_priv);
+ 			retval = -ERESTARTSYS;
+-			/* now do an uninterruptible wait, it shouldn't take long
+-			 *	for the board to respond now.
++			/*
++			 * now do an uninterruptible wait, it shouldn't take long
++			 * for the board to respond now.
+ 			 */
+ 			wait_for_completion(&context->complete);
+ 		}
+@@ -684,7 +687,8 @@ static int ni_usb_read(struct gpib_board *board, uint8_t *buffer, size_t length,
+ 		retval = 0;
+ 		break;
+ 	case NIUSB_ABORTED_ERROR:
+-		/* this is expected if ni_usb_receive_bulk_msg got
++		/*
++		 * this is expected if ni_usb_receive_bulk_msg got
+ 		 * interrupted by a signal and returned -ERESTARTSYS
+ 		 */
+ 		break;
+@@ -794,7 +798,8 @@ static int ni_usb_write(struct gpib_board *board, uint8_t *buffer, size_t length
+ 		retval = 0;
+ 		break;
+ 	case NIUSB_ABORTED_ERROR:
+-		/* this is expected if ni_usb_receive_bulk_msg got
++		/*
++		 * this is expected if ni_usb_receive_bulk_msg got
+ 		 * interrupted by a signal and returned -ERESTARTSYS
+ 		 */
+ 		break;
+@@ -893,7 +898,8 @@ static int ni_usb_command_chunk(struct gpib_board *board, uint8_t *buffer, size_
+ 	case NIUSB_NO_ERROR:
+ 		break;
+ 	case NIUSB_ABORTED_ERROR:
+-		/* this is expected if ni_usb_receive_bulk_msg got
++		/*
++		 * this is expected if ni_usb_receive_bulk_msg got
+ 		 * interrupted by a signal and returned -ERESTARTSYS
+ 		 */
+ 		break;
+@@ -1192,8 +1198,9 @@ static int ni_usb_enable_eos(struct gpib_board *board, uint8_t eos_byte, int com
+ static void ni_usb_disable_eos(struct gpib_board *board)
+ {
+ 	struct ni_usb_priv *ni_priv = board->private_data;
+-	/* adapter gets unhappy if you don't zero all the bits
+-	 *	for the eos mode and eos char (returns error 4 on reads).
++	/*
++	 * adapter gets unhappy if you don't zero all the bits
++	 * for the eos mode and eos char (returns error 4 on reads).
+ 	 */
+ 	ni_priv->eos_mode = 0;
+ 	ni_priv->eos_char = 0;
+@@ -2045,8 +2052,10 @@ static int ni_usb_hs_wait_for_ready(struct ni_usb_priv *ni_priv)
+ 			unexpected = 1;
+ 		}
+ 		++j;
+-		// MC usb-488 (and sometimes NI-USB-HS?) sends 0x8 here; MC usb-488A sends 0x7 here
+-		// NI-USB-HS+ sends 0x0
++		/*
++		 * MC usb-488 (and sometimes NI-USB-HS?) sends 0x8 here; MC usb-488A sends 0x7 here
++		 * NI-USB-HS+ sends 0x0
++		 */
+ 		if (buffer[j] != 0x1 && buffer[j] != 0x8 && buffer[j] != 0x7 && buffer[j] != 0x0) {
+ 			// [3]
+ 			dev_err(&usb_dev->dev, "unexpected data: buffer[%i]=0x%x, expected 0x0, 0x1, 0x7 or 0x8\n",
+@@ -2127,7 +2136,8 @@ static int ni_usb_hs_wait_for_ready(struct ni_usb_priv *ni_priv)
+ 	return retval;
+ }
+ 
+-/* This does some extra init for HS+ models, as observed on Windows.  One of the
++/*
++ * This does some extra init for HS+ models, as observed on Windows.  One of the
+  * control requests causes the LED to stop blinking.
+  * I'm not sure what the other 2 requests do.  None of these requests are actually required
+  * for the adapter to work, maybe they do some init for the analyzer interface
+@@ -2343,8 +2353,10 @@ static void ni_usb_detach(struct gpib_board *board)
+ 	struct ni_usb_priv *ni_priv;
+ 
+ 	mutex_lock(&ni_usb_hotplug_lock);
+-// under windows, software unplug does chip_reset nec7210 aux command,
+-// then writes 0x0 to address 0x10 of device 3
++	/*
++	 * under windows, software unplug does chip_reset nec7210 aux command,
++	 * then writes 0x0 to address 0x10 of device 3
++	 */
+ 	ni_priv = board->private_data;
+ 	if (ni_priv) {
+ 		if (ni_priv->bus_interface) {
+diff --git a/drivers/staging/gpib/ni_usb/ni_usb_gpib.h b/drivers/staging/gpib/ni_usb/ni_usb_gpib.h
+index 4b297db09a9b..b011e131201c 100644
+--- a/drivers/staging/gpib/ni_usb/ni_usb_gpib.h
++++ b/drivers/staging/gpib/ni_usb/ni_usb_gpib.h
+@@ -113,27 +113,37 @@ enum ni_usb_bulk_ids {
+ 
+ enum ni_usb_error_codes {
+ 	NIUSB_NO_ERROR = 0,
+-	/* NIUSB_ABORTED_ERROR occurs when I/O is interrupted early by
+-	 *	doing a NI_USB_STOP_REQUEST on the control endpoint.
++	/*
++	 * NIUSB_ABORTED_ERROR occurs when I/O is interrupted early by
++	 * doing a NI_USB_STOP_REQUEST on the control endpoint.
+ 	 */
+ 	NIUSB_ABORTED_ERROR = 1,
+-	// NIUSB_READ_ATN_ERROR occurs when you do a board read while
+-	// ATN is set
++	/*
++	 * NIUSB_READ_ATN_ERROR occurs when you do a board read while
++	 * ATN is set
++	 */
+ 	NIUSB_ATN_STATE_ERROR = 2,
+-	// NIUSB_ADDRESSING_ERROR occurs when you do a board
+-	// read/write as CIC but are not in LACS/TACS
++	/*
++	 * NIUSB_ADDRESSING_ERROR occurs when you do a board
++	 * read/write as CIC but are not in LACS/TACS
++	 */
+ 	NIUSB_ADDRESSING_ERROR = 3,
+-	/* NIUSB_EOSMODE_ERROR occurs on reads if any eos mode or char
++	/*
++	 * NIUSB_EOSMODE_ERROR occurs on reads if any eos mode or char
+ 	 * bits are set when REOS is not set.
+ 	 * Have also seen error 4 if you try to send more than 16
+ 	 * command bytes at once on a usb-b.
+ 	 */
+ 	NIUSB_EOSMODE_ERROR = 4,
+-	// NIUSB_NO_BUS_ERROR occurs when you try to write a command
+-	// byte but there are no devices connected to the gpib bus
++	/*
++	 * NIUSB_NO_BUS_ERROR occurs when you try to write a command
++	 * byte but there are no devices connected to the gpib bus
++	 */
+ 	NIUSB_NO_BUS_ERROR = 5,
+-	// NIUSB_NO_LISTENER_ERROR occurs when you do a board write as
+-	// CIC with no listener
++	/*
++	 * NIUSB_NO_LISTENER_ERROR occurs when you do a board write as
++	 * CIC with no listener
++	 */
+ 	NIUSB_NO_LISTENER_ERROR = 8,
+ 	// get NIUSB_TIMEOUT_ERROR on board read/write timeout
+ 	NIUSB_TIMEOUT_ERROR = 10,
+-- 
+2.49.0
 
-Anyway, this makes sense as a fix: even if sh eventually decides to do
-the sane thing and make this default.
-
-Reviewed-by: David Gow <davidgow@google.com>
-
-Cheers,
--- David
-
---000000000000e5695a06328f676f
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg3Y6LQ+g8avz8/e9nZj1/4t/IQ+ZL
-3vqGhT2P2x36OyUwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NDEyMDcwMjQ1WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAKRJBefwgx3lnpPEPtEgkj6jPdCAcOCqHZSslpS2dohMyV94EZvnbJ/vttWp6dv2D
-8pTC6FfQmA/Pqr0CugalXiRDFyPKq7l9bwX179vZZ/EEDOamzR76eha2vT4edfc+qa87ZeODHdzB
-fNVxahLrLCqDP19xSbIs5feV2G42PTdNU3VPAdSBk5B/jSw509+ao+C5hW8MHTO59z00fYCSQ+2w
-NKk74n85TdWF9g+durV2FSi6miKWFLHmIb0ArZzh95RTDiQ9IR7r7h4rMijy8oWoHKhO5b/2h8NT
-dD+PbbRryI9hSzK5++pOvNjd6FRx64+EuP88X1YnX1O6whIDig==
---000000000000e5695a06328f676f--
