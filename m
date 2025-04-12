@@ -1,56 +1,56 @@
 Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6FE193436;
-	Sat, 12 Apr 2025 07:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3388519AD86;
+	Sat, 12 Apr 2025 07:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744443928; cv=none; b=gB2zENkiWEOGJEeOOv0zPYG7BfV3ux+0G231zWU8vmvePf39h7nTfLRHN+CIIMkgIiXDBz8ohO5I5JCGN9fe26/GUQ9ffA/NBmrHbpkmJzG10B5Jgu9XoqD5XeBQXKN/GcyfVHfScGNHpNPT2dCNNB12imvYML6v6xSQHl+zbP8=
+	t=1744443934; cv=none; b=j45BekqFvFOWG7TTZ0qFSrOO4YQ5meeevAros8NfCJjX5fVbloRmCXbLUj3QYylI4x5wjOVIk4+PKxQlcsQqdT5co1Q09nuvUPYD89mAyKuGYQvaplC285lx4XU9lpA8i8jUtTG+RcaDohLB4EyQJfNdlTDZnui0CzHFg/bN/C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744443928; c=relaxed/simple;
-	bh=UUekQ+hmbRafXezwQfvGqgkW4SxSALiwI+khIEoSHBQ=;
+	s=arc-20240116; t=1744443934; c=relaxed/simple;
+	bh=aq36glBXKWJ4CyEzsiQJFbDCCtINN6dMSzr4bZ7fo84=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pZuYvK5JfwakbrxrFwWafb3b4Rsky4V5Dipo6y89Zam840jLS6E8YvrWFssPwTIDl8XRb+46U5q6ZD8myaGbxEb/I/WGYL8BFRx3E479WWxXlXNpfxfncBBFIz69SExYOwV06nYEz5miFEPtJE1sjzACPENp/6IYB/fIL7fA1YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=UBuBJv/Y; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=tLAMbZZs; arc=none smtp.client-ip=155.254.16.17
+	 MIME-Version; b=rCh2H85ZO/Y7xOpc/7WJrSnC8P9oz+pZZgTONHojcMRKIWUm5G0AeNefplO4LX1sFo8Mvjv1VDypWn/mZLZS60I9iRMtAMcx0dnX97HNfKjhZwKaAsh/BWn63jtJxDlXFnbTIGkbnTyfX5O33PmyRapgH92OLdeI2xExe64vOEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=jStz93cd; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=iE5k6MIH; arc=none smtp.client-ip=155.254.16.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="UBuBJv/Y";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="tLAMbZZs"
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="jStz93cd";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="iE5k6MIH"
 Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id CC29D12FB435;
-	Sat, 12 Apr 2025 00:45:26 -0700 (PDT)
+	by bayard.4d2.org (Postfix) with ESMTP id 88B8A12FB432;
+	Sat, 12 Apr 2025 00:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744443926; bh=UUekQ+hmbRafXezwQfvGqgkW4SxSALiwI+khIEoSHBQ=;
+	t=1744443932; bh=aq36glBXKWJ4CyEzsiQJFbDCCtINN6dMSzr4bZ7fo84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UBuBJv/Y7zQB6ME7Kyk3ApFqLiaN0e3fGwYFx1a26/4GrylSIs8xp6FFuIERB4wqR
-	 316pXYNKT6tyZsCOm+FpGQUUWDz3ynIqbB53C5ls9wxO+qQEQZ24Yt+rCtaT7E+P05
-	 3DJCn1lhzQpuXePwuBLK0w4lMsPH1rIaeu/J5fNcdC3s7vNajpyYqpu3EXit+7QUWZ
-	 jVM5nFQpDpB3ux+lgCEviOCjs/kmFk9SER2aFVv1Bb1wsJQi3JAH0WTDLt2Bh6nvVZ
-	 KNPDb8tDP5+BiU2AhXs1Zjhhr72OOBlyL8vispJnA3XRadkiL5X3XVa/1+XxSlmiAe
-	 J7hghSNcN6+XA==
+	b=jStz93cd09nE8F8fuJSKE6RIyBQg3hrCisO4exQjxE6PRzGvYRWc3idYEo3SsY3a1
+	 hE+3Tkv60KVxqL2KdnT9bj2CT3xjbveBukXcwPMsSQy69Bf831vbLdzJCVaIK5sOax
+	 GUqJ4Hw3SQEopfT/7YOkQj3IfXNNIh3VjTzHIlmFtQAfU7q7JpZTxjnUZPClJ7ZIDR
+	 8lJf4f1D7KBVwWNQfKveeyhSFkuV7q5ah5X1YT9FV4EVZpQ/PqsHb/byjpjyhAEh7m
+	 Q9tCQBT5qllzEzN53h8O72bJsWVBIz74jfJIWoYPs566SiYR2TyKFpm6LeaUGT4Ggu
+	 zAcsjvI1K6VcQ==
 X-Virus-Scanned: amavisd-new at 4d2.org
 Authentication-Results: bayard.4d2.org (amavisd-new); dkim=pass (2048-bit key)
  header.d=4d2.org
 Received: from bayard.4d2.org ([127.0.0.1])
  by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id hOov7k0QC9bK; Sat, 12 Apr 2025 00:45:25 -0700 (PDT)
+ with ESMTP id WVUxCBhjmhLL; Sat, 12 Apr 2025 00:45:31 -0700 (PDT)
 Received: from localhost.localdomain (unknown [183.217.81.239])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id 1C1A512FB432;
-	Sat, 12 Apr 2025 00:45:19 -0700 (PDT)
+	by bayard.4d2.org (Postfix) with ESMTPSA id 276E912FB41C;
+	Sat, 12 Apr 2025 00:45:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744443925; bh=UUekQ+hmbRafXezwQfvGqgkW4SxSALiwI+khIEoSHBQ=;
+	t=1744443931; bh=aq36glBXKWJ4CyEzsiQJFbDCCtINN6dMSzr4bZ7fo84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tLAMbZZsnAbIaxY+pqyiJCLhbjcy7xNmvv8mO1ykfbT6f4tT234X1uZ9sjAW3Gx9n
-	 B09aP3Haljoj0+Xnd4nxHcBXGNtTnq8/HJJSd/hyr6Evk2vieFilkLRoT2s5N+BxOz
-	 m8cAi1bc4tLgiNDlLlwaFIs2syPolyXYYdaCgJ9on85PsyzwFMFuEdxN3mU7mBjQOX
-	 qjNAfJmr6CPuTeumfNoRfG9b7CkHJMYbYTqO1NC/67pn7zOY8Zo8VNMkYx2qGzpUOx
-	 p2zo7DXFXkqpijYdu1H+sbRiID8EWsuBJ7rIhn+J/UtyvcrQZP5AupaAGeIWUw1SkU
-	 9sTr1MtigVcbw==
+	b=iE5k6MIHr12bpehFyid4SkLPW+y6Rp5xYeHkjPUeuyLr8zv9Aw6sPzftUKj6EUnci
+	 Iq8fvuMFPUTtsYiEabpXUGwVUOI/B2WFWvEzV3+0SMhB6lKWV2B/BdBtUoRcqiEbsZ
+	 oHqINh1DXJCNehbV/oNf0R0TDWZ6TpWbrc8P0f8D1WrMT/oNtWj5/Mb504yCf2nmFb
+	 A3cxiWxR885auDTIMUoCBUrJE6KqMmB2cjF/QL5cN+2YpbAehFBjJhffQU49+vTj+w
+	 Oj5r91CyNH9xBXKxaAua1zCteTFdQdk+59gCh8oW3oRHICN5VuiqKdoZHoGHfnkSKg
+	 lO0DTJxznTpiQ==
 From: Haylen Chu <heylenay@4d2.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -72,11 +72,10 @@ Cc: linux-riscv@lists.infradead.org,
 	Chen Wang <unicornxdotw@foxmail.com>,
 	Jisheng Zhang <jszhang@kernel.org>,
 	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	Haylen Chu <heylenay@4d2.org>,
-	Alex Elder <elder@riscstar.com>
-Subject: [PATCH v7 5/6] riscv: dts: spacemit: Add clock tree for SpacemiT K1
-Date: Sat, 12 Apr 2025 07:44:23 +0000
-Message-ID: <20250412074423.38517-7-heylenay@4d2.org>
+	Haylen Chu <heylenay@4d2.org>
+Subject: [PATCH v7 6/6] riscv: defconfig: spacemit: enable clock controller driver for SpacemiT K1
+Date: Sat, 12 Apr 2025 07:44:24 +0000
+Message-ID: <20250412074423.38517-8-heylenay@4d2.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250412074423.38517-2-heylenay@4d2.org>
 References: <20250412074423.38517-2-heylenay@4d2.org>
@@ -88,122 +87,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the PLL and system controllers that're capable of generating
-clock signals in the devicetree.
+Clock controller unit, or CCU, generates various clocks frequency for
+peripherals integrated in SpacemiT K1 SoC and is essential for normal
+operation. Let's enable it as built-in driver in defconfig.
 
 Signed-off-by: Haylen Chu <heylenay@4d2.org>
-Reviewed-by: Alex Elder <elder@riscstar.com>
 ---
- arch/riscv/boot/dts/spacemit/k1.dtsi | 75 ++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ arch/riscv/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index c670ebf8fa12..584f0dbc60f5 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -3,6 +3,8 @@
-  * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-  */
- 
-+#include <dt-bindings/clock/spacemit,k1-syscon.h>
-+
- /dts-v1/;
- / {
- 	#address-cells = <2>;
-@@ -306,6 +308,36 @@ cluster1_l2_cache: l2-cache1 {
- 		};
- 	};
- 
-+	clocks {
-+		vctcxo_1m: clock-1m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <1000000>;
-+			clock-output-names = "vctcxo_1m";
-+			#clock-cells = <0>;
-+		};
-+
-+		vctcxo_24m: clock-24m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			clock-output-names = "vctcxo_24m";
-+			#clock-cells = <0>;
-+		};
-+
-+		vctcxo_3m: clock-3m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <3000000>;
-+			clock-output-names = "vctcxo_3m";
-+			#clock-cells = <0>;
-+		};
-+
-+		osc_32k: clock-32k {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+			clock-output-names = "osc_32k";
-+			#clock-cells = <0>;
-+		};
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&plic>;
-@@ -314,6 +346,17 @@ soc {
- 		dma-noncoherent;
- 		ranges;
- 
-+		syscon_apbc: system-control@d4015000 {
-+			compatible = "spacemit,k1-syscon-apbc";
-+			reg = <0x0 0xd4015000 0x0 0x1000>;
-+			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
-+				 <&vctcxo_24m>;
-+			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
-+				      "vctcxo_24m";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
- 		uart0: serial@d4017000 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017000 0x0 0x100>;
-@@ -409,6 +452,38 @@ pinctrl: pinctrl@d401e000 {
- 			reg = <0x0 0xd401e000 0x0 0x400>;
- 		};
- 
-+		syscon_mpmu: system-controller@d4050000 {
-+			compatible = "spacemit,k1-syscon-mpmu";
-+			reg = <0x0 0xd4050000 0x0 0x209c>;
-+			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
-+				 <&vctcxo_24m>;
-+			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
-+				      "vctcxo_24m";
-+			#clock-cells = <1>;
-+			#power-domain-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		pll: system-control@d4090000 {
-+			compatible = "spacemit,k1-pll";
-+			reg = <0x0 0xd4090000 0x0 0x1000>;
-+			clocks = <&vctcxo_24m>;
-+			spacemit,mpmu = <&syscon_mpmu>;
-+			#clock-cells = <1>;
-+		};
-+
-+		syscon_apmu: system-control@d4282800 {
-+			compatible = "spacemit,k1-syscon-apmu";
-+			reg = <0x0 0xd4282800 0x0 0x400>;
-+			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
-+				 <&vctcxo_24m>;
-+			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
-+				      "vctcxo_24m";
-+			#clock-cells = <1>;
-+			#power-domain-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
- 		plic: interrupt-controller@e0000000 {
- 			compatible = "spacemit,k1-plic", "sifive,plic-1.0.0";
- 			reg = <0x0 0xe0000000 0x0 0x4000000>;
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 3c8e16d71e17..4888529df1d8 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -250,6 +250,8 @@ CONFIG_CLK_SOPHGO_CV1800=y
+ CONFIG_CLK_SOPHGO_SG2042_PLL=y
+ CONFIG_CLK_SOPHGO_SG2042_CLKGEN=y
+ CONFIG_CLK_SOPHGO_SG2042_RPGATE=y
++CONFIG_SPACEMIT_CCU=y
++CONFIG_SPACEMIT_K1_CCU=y
+ CONFIG_SUN8I_DE2_CCU=m
+ CONFIG_SUN50I_IOMMU=y
+ CONFIG_RPMSG_CHAR=y
 -- 
 2.49.0
 
