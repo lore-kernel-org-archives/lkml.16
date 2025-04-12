@@ -1,199 +1,221 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6352A846F;
-	Sat, 12 Apr 2025 01:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744420697; cv=fail; b=pjvdLhe4bj4VaTioVNLa4WpkYu3gXsUwfnL5uhDNKArtmznwjVw1/XonuH7Pw4zHqfFlTUXoHcg532KOdhT0r7T9BWpALx2IqinqibHguIKnZmBb/FlWPeyQOkdfiIJutB0MO+mJJxyiHdxTKFb7gPs0K/lB4xk//7G0QuQ2bU0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744420697; c=relaxed/simple;
-	bh=0HSA/Wqo0IE5s9RJQSOXNw5qv+3WVUPr/2LGrbgNl44=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=TFKX5WQljZ97g9tvE1aTSaaU7ji4o5GlCDwvZkJ+Eqvl40XHv1ebZRvltgnMr5DwnYSURdB9fiBra/BnNLre0GryhwPL45Wd/YPkUHpovnQUFQBFQ2CxOm8ihMS1tDbD5RnP1DUnS9UxbZNLvV+qZMkrpwjiZcoOBXJRXydrZQg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=n62rH6Db; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FKSCNkFC; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471E817BB6;
+	Sat, 12 Apr 2025 01:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744420847; cv=none; b=T5cHXYMM9kaOKXUB7uh/0TiTSL+GRIGW4NS+E1L7RnmY/uN/oAPNmQ/EzX0DV52kHMKW4+NDXiuaCSRKK8NOcUbNX3qTqaoYYkX4JItyVna0UKRNgUkLKw7bkis9VLG6DMHYtMQV2au/MxdrKEwHLDxWkGv+PmXbFoTcVcYVYD4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744420847; c=relaxed/simple;
+	bh=CoQliKqWOHFzGKP4DchqFP7OVdp1mTfrv/cHHzKnePg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kvN1MdAemvzSjLYU25NtlJE2fECHFIW7KlRmGqc7mKmSKp01Fcv3K0b9ROz7t02Ww1JFhTb8vFkc3NgM2y0/S65wuM5OgIZkGJ69NrhaacinBvnVhloZAk/P5eoL3ufEDtgwpuzoiMHmmlHSKsbQmHAG+UKAgQZA1tel1YB1s4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ene4xxBX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n62rH6Db";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FKSCNkFC"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BLHhhO030641;
-	Sat, 12 Apr 2025 01:18:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=7ypKL8MWJJg1c1u2sx
-	JtTKmCRgyYCaXesG6R7+drnqk=; b=n62rH6DbMbn5Rs9Db3efgfKwMTVgnDY4Ds
-	wp2jDd0l+SSfS9fbrqbJ5+VKfIG4tAJIBuVMv4g0M2AhqZhDICzIIHhC8qLz9Q5u
-	jsiUmbAC09EtkgyMB/u/XGTu/JZK/rcdxoH9DQ8U9jjtINOIxKEjRZ07IjUxUa6q
-	qcJjr/rzH0L1B6tUG3QYBpLITi4t+fEDAz0P0j/uZfuTd9Roy0zbjgbMwgA5roJP
-	DgC+nlRz77Ke2Hq867jiHq2BCI9kx+62njH2cYPWl0qGStKyhg2vJqPfTXhoVhDZ
-	DyaISn6QbW+6Lq2yt7kA9emw07TWIIWDdQPzFg7bAjVwgSEnamIg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45y9fe0k0s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 01:18:07 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53C0O2RS016340;
-	Sat, 12 Apr 2025 01:18:06 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2040.outbound.protection.outlook.com [104.47.70.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyebj3f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 01:18:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WRd9M2aYwNCBmWd32xc25ILGr5/oZ1X4Ip9cXgvq+xwnwUaxlRxDaNygu4xrZKMvNwp00eL9XvdcOdQ3L7yrN2yYrJtafb/uiO7NBovgmRL6RViT1mPwCZzz7BFOLFAg0tMcr3J93E2gGL3laL9i/aqtV72q2jWGxAO3Np1x8US9VSSLpVB44u3C/N9UqquZPQNqUt+PBKej+WvP80zR1eQlzIpkFbj5L0g7fwMFvcjEtDlIB2+LEzHqLQxpHYPlFuNW6srVqNR1+Cu3dfA0+MR0z0c0FQgfi09mkhvPQyqStucEysCD0ZYTkxEyH6eTmxmbrRn2njQxXHH7b9fD5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ypKL8MWJJg1c1u2sxJtTKmCRgyYCaXesG6R7+drnqk=;
- b=KSDFmCUuDdltbHT9PDrpnMJ9ySe202P0FCC+Ora8RKDNVADau0bltsjIjsS5JNcdXNOdHukvnmqw6KJcMC8n0o/4aUN9/3IfBw65vhgDT3kpyRxrt3qNGhw4UNh4/Mz1rGE96XGQDkepgLoTafkIg74+TtBMkMod26gyf1AVsilvM2RgGamfoQM1VB3/NrtjcdVZusw7RW1KZdCcqvl4w3kP14e57ZCiDMLOPBRf742daBdCoxt9EypFLDMcEGFKKm/eAQygxFudZm2ziC+OSUde9fPOG02Ts3tnvI8sL1y/bMZ74MFM7aaVtSD8ywsGQoVz9ghYSrnLSfwGQbryrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ypKL8MWJJg1c1u2sxJtTKmCRgyYCaXesG6R7+drnqk=;
- b=FKSCNkFCR/JwCG0BD0ffct1X9V5o80QrIWCU3sN0DR2hFcJy0TzMVvNFnWx5Pq+5NowEu0DLOXZ47WXeBibWZXVXiu5s//Sdfz/EChMYp2Vz8LejOkl0m/Wa320UDgermrwKBaeS/u8UkHMz5IPD0y+uZfeDG6JwySZd3OrGzcY=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by LV3PR10MB8129.namprd10.prod.outlook.com (2603:10b6:408:285::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Sat, 12 Apr
- 2025 01:17:59 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%3]) with mapi id 15.20.8632.025; Sat, 12 Apr 2025
- 01:17:59 +0000
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        Bartosz
- Golaszewski <brgl@bgdev.pl>,
-        Gaurav Kashyap <quic_gaurkash@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Dmitry Baryshkov
- <dmitry.baryshkov@oss.qualcomm.com>,
-        Jens Axboe <axboe@kernel.dk>, Konrad Dybcio <konradybcio@kernel.org>,
-        Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v13 0/3] Support for wrapped inline encryption keys on
- Qualcomm SoCs
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <20250404231533.174419-1-ebiggers@kernel.org> (Eric Biggers's
-	message of "Fri, 4 Apr 2025 16:15:29 -0700")
-Organization: Oracle Corporation
-Message-ID: <yq1ecxyjhzd.fsf@ca-mkp.ca.oracle.com>
-References: <20250404231533.174419-1-ebiggers@kernel.org>
-Date: Fri, 11 Apr 2025 21:17:57 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0405.namprd03.prod.outlook.com
- (2603:10b6:408:111::20) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ene4xxBX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EADC4CEE2;
+	Sat, 12 Apr 2025 01:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744420846;
+	bh=CoQliKqWOHFzGKP4DchqFP7OVdp1mTfrv/cHHzKnePg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ene4xxBXkuYwEtUfKCDeZCNQW9Xqn8hwwVQ4k/lsQOd3e7aMDfsfd0on6GZcyYpzQ
+	 b7+Uwtjlo3+dsguHMuOf17/c/C1rTQGgOS2ZnvEwAUr8lT1vwNNTCr4jzPHyqZGX8U
+	 X/tjMvTlvx8F/O9euitLcAg/olViXuQwC9WWzrRz19n+zhVFp32HDaUQdNi8RRJ+UN
+	 x4rh4i2BuWNa0P7WglvTJ3kSK/beT0TyjIMQk6/svtSgvkIu67PYoVR4cvEYTWcKba
+	 OVswweFe4z7/gWfyTv2rven6NbFwiX7YTB/7AUWfcxP+3R9SSR31KaLfzDv0C5tceC
+	 c8ghQbKeC2yGA==
+Date: Fri, 11 Apr 2025 18:20:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, Leon
+ Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Bryan
+ Whitehead <bryan.whitehead@microchip.com>, UNGLinuxDriver@microchip.com,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Paul Barker
+ <paul.barker.ct@bp.renesas.com>, Niklas =?UTF-8?B?U8O2ZGVybHVuZA==?=
+ <niklas.soderlund@ragnatech.se>, Richard Cochran
+ <richardcochran@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Russell
+ King <linux@armlinux.org.uk>, Andrei Botila <andrei.botila@oss.nxp.com>,
+ Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH net-next 1/2] net: ptp: introduce .supported_extts_flags
+ to ptp_clock_info
+Message-ID: <20250411182044.0ee40963@kernel.org>
+In-Reply-To: <20250408-jk-supported-perout-flags-v1-1-d2f8e3df64f3@intel.com>
+References: <20250408-jk-supported-perout-flags-v1-0-d2f8e3df64f3@intel.com>
+	<20250408-jk-supported-perout-flags-v1-1-d2f8e3df64f3@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|LV3PR10MB8129:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15fb5815-3bf3-437e-af9d-08dd795fdcc4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qARDgTBEDD93aQNViyOg2eeuccsvDVxlqOF8Z0LC22RvyiE+iE8WGZnmfnAZ?=
- =?us-ascii?Q?KdPNb4bREItCUekh85uXTW3BR1BCrUMyGrjDjEqqR/xD/218iRPWagoa09j0?=
- =?us-ascii?Q?VyhOJRy19O10kBAaLbpVAH+TI18O9ALP3Zjaau5a5EA865EChUOqJgy+qIKj?=
- =?us-ascii?Q?W+tINLcVLKBopi8iuMCr2ZlCObj+WfSp0YBrK4/hEnWzd4+XEs2+RqaC+2q+?=
- =?us-ascii?Q?Xx/4ojh8WDJohI4/IYhHTefxy3QvY+qoy8Owvz3RhI1RhkQ7khIVueEeAjwV?=
- =?us-ascii?Q?mceujqI6s/YkekQ9Ik8nzNdn2gZU2NkfIB+n1Q1R9tNGElarFRfSmHnltlSs?=
- =?us-ascii?Q?/VKDzJiW7CgKtWnffCpIumzku4977Q6jRCzHxzVmPosn4LBsmIraDglBZW5t?=
- =?us-ascii?Q?ZQZ1oPZL0I3IBMamnRZX9Eb0LKsRNMtOI5NMw8KsvNWsylz/ESX7Z9HSarpi?=
- =?us-ascii?Q?CCmwEL9ukZEaFl2Ul1YAGcMECzWe42K2ywWHyIGiTI1p2wWoZEXj2n0Itn8a?=
- =?us-ascii?Q?TJSWBR1+GVEDDwIp7Oo4mF/Dlu5pEFCdNSghJQunB/vpHC2lUF5EXRtCA+cY?=
- =?us-ascii?Q?EDqRGbp+4hbu+Q9kEivuYfZ0IBflWlEbsG2jI8xEHHvGNEIpiXTHlq7yVvKz?=
- =?us-ascii?Q?oIVA9SpyatbjqKEtXByZtk/Q4kQTMqyHyVAZgwMCfoK8Y4nDfiizPOSj2k+A?=
- =?us-ascii?Q?hIQbjTEn1T9aCJdpoRFI1/4OdpxSjTzqu4gtuhkrY8NMATinEUK+aT/YpaLc?=
- =?us-ascii?Q?wMc4PZOqZp9qTgFjhKHZFPvyD0eVjOUZv5vodXFaWScGXF6nBCv+HaoJ1NhI?=
- =?us-ascii?Q?KCjLkgByiUKHfe48qxszH8fhR0lhwl+twcr+I+91/JQcyCqqCENiNxYyIYic?=
- =?us-ascii?Q?FGTV6zT9Cip17bDxQfE1aVHc/lcRivE4gGnlPv5HxMXyNuH5xYtcNp0cshzk?=
- =?us-ascii?Q?iN4zsG7L99mQ1ENVbiIM4LRiG2zxL5na6oxzekwbucaiaFMgJojvzbWvWuxh?=
- =?us-ascii?Q?PaxoVNjfS6Xf0bw+XM+BQ/NVl78Rv036XZNTutFRd/Z1SnOtOMT88z3x+Dmv?=
- =?us-ascii?Q?7LdIN/sflH3uCgFD27+U9yalQFAWXzVHHOf/60oNs+TGVoXMxxGFt60mxQvA?=
- =?us-ascii?Q?WWdt44HA3vPMOXrFAwhYxpTaK7nUP5TPS1dFD/X3kZXhNjiNt0tjdRZvbeWv?=
- =?us-ascii?Q?gvSHlTIeKRfM+9lwbz9AN9VCfIJYnExDRviom8/uy+3W8s9+PmcNmzU38mjm?=
- =?us-ascii?Q?kXO8qyRaT8tTiOSVpn9NWLWueK8eps2dXnLNddRWs+/vi8iYPzbrC1wftio5?=
- =?us-ascii?Q?cSsbL2wZUQrMeK/lvp9yM0TLtxzq17YIB9VTtBIgwprloQXRc3mMFY8uxEi2?=
- =?us-ascii?Q?OhTAS4ZgUDU85LXnyijq6Se4bP9WRhr+AN5khbX9w6Slr2GuetwFRPOerA81?=
- =?us-ascii?Q?RHz8O1W/1a8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?us5+Heh6YArXO/X9t2Pb5d3sd64wVWh0qYQVmNDy6t56HnrOu46xTlNue6fc?=
- =?us-ascii?Q?fsSoAQKva6U4w5FNWnoElUT7Znp2s3cXzkqWq0dVCXCocY3obLZvS0/HIRlO?=
- =?us-ascii?Q?QxN+BG1XbUUumSijryHGG5le1eAWCHHv62PjPKdCU5Ln7XMD7B0bEPkAulAW?=
- =?us-ascii?Q?YeSZrW2MbIcl0yKKeLUDUJ0ZGoZ4VORff1RM9p+EgRp09LdW/NXtaaqNkYVW?=
- =?us-ascii?Q?iOZtFdC/BAMm1bSyooyxMQ7STiOolhQTPEeSxprAX3qIUyvH40dyqygEGrTU?=
- =?us-ascii?Q?3ekZJZufGY3HCnnvqFGwbK5N7CMRjyuufEv+uiwRavAWzYvHavrGCPjVhg/o?=
- =?us-ascii?Q?Bu1uy3oplJdVekHiuO9RWMQZvcDBJsCN4yjMaUzGxwyxCr7ILCJo7Bp2Dx+f?=
- =?us-ascii?Q?aWIMToqrDYy3sbJAccveasXoyq13RTr0zeLS1xe7uyCOlif+00z+OEVvArRk?=
- =?us-ascii?Q?vFYCNt9KwZwjnTH3lkwNfdYtrslDt0jgIMwbcXffZcWVePs3ih/TtNxDnP2h?=
- =?us-ascii?Q?Q2NpodH6IGApYdGOZTUwaFAUZJkeOd9mzgDI7Guz/e+YPNPFSSTAVhOzh+5m?=
- =?us-ascii?Q?e2bLc0/kE5kTQxo6scdO8iYcNymCIK8u8qMmkxYEoI8aYnD6axSlOmyUZl0B?=
- =?us-ascii?Q?eJhtmyO0+zv4TAsFNnnEn02KNTbuOpo9rtMpEJMyflRKV9NBV/xFIbGBjUfM?=
- =?us-ascii?Q?N7BMKENsIyUbqLkUTc1WWOxNO6L0NH9ER4sldZ4cc3N4s/83gHOanBUl0ad0?=
- =?us-ascii?Q?ajO5awUoHjNQee8Ft5SiMQLJKRbVlSu/PyNiOiO3j1JGNyiD4WQCPIbbDtBX?=
- =?us-ascii?Q?KfWMfPu+PWqjQvm4oj3uLRtO9yQeIWYKGGZpGQ1+krOnWSFRVtitwjtBD9Fz?=
- =?us-ascii?Q?dAvbJNOqJpFnp/CSX6YXpsuGGojSK3u1+4+TJafdIpOqTEYczotZ8JSUDrbg?=
- =?us-ascii?Q?Z+iyR6UhublZvqkrdWS7JSQ6j/iVxgIJm3qFkQCop3hY+rWQFoOfm3luw9DI?=
- =?us-ascii?Q?dGPmbHhKnblCpNgVH2JM4KBvUJrZDIAaoiOYjrk/k7yY1wVGGYGjx6rV/6iN?=
- =?us-ascii?Q?qRF76/Yunn7WqNIR5lZt84CAUz1tGkPLbwbXEJNDCDBxhCKRO6ZKqanGMw0C?=
- =?us-ascii?Q?hRU4vzWgetyk8mx7SwoxUNoieaZo9Yh3fxR4iRdgE7Rs0PSk8jNCsIbUhE/B?=
- =?us-ascii?Q?k6kZ0hPzGntprsQBFulGewpd/refkidzc+DtGYMRkjFTMTowPyzQ7YZ/2F4S?=
- =?us-ascii?Q?ickUHrrPbfSkq8E3cPEnX1vVKC2ac6w4WZEh1LXpf+zvFOOAEpJWhz6a0KoQ?=
- =?us-ascii?Q?LDpuGO1JV3Id/Gyleg+PlWyGZ2gmuWX7CLt3LO9Zg4BskCdGBrdzDCWIC9g1?=
- =?us-ascii?Q?UGbt93ihCQu35olllRznBOvsnlY2ILWB7gpoavn57ZVH6tzZuW73W1FZd1XE?=
- =?us-ascii?Q?tQRswVGICw4zXuNU7Sk1lmUqXtU1MCWEW7tIkpS2FRrN0Iw3jSIOzXOguC8v?=
- =?us-ascii?Q?9nEO5/1BTa/lzl0kFkQJZSWq8fq7g/LIS1aFtpZvZS1KGWx14TNVh2IjP4p/?=
- =?us-ascii?Q?+dFJVcykYFqPyjtkQwMd0PXUayEGke/q19AFIRdrDcNvjeOpqcRQP9aUSQ6X?=
- =?us-ascii?Q?Qg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	fbE2otAt3z888MsfL/GO0Xlq4Vne1+2nXJLxHL6rOJ3ddv/jct1RSNmsC8i/ja1ouRz/+L/bqpJMbzrGyDwEizmOfRFviwlIYRfbxHtD4LwZHMzw8Q7W5JoNflbcODPdw6dPTPyWMJWRvRnfwmfvjp8LzsklQ8U6qpDKhIHlY/m3gzLnpHyy7igXQ8r6NLQvvAUwREtMZRW6XEP87kRywBHyGbt0cFuASfGj8Bc85uolfmdKi3NsrnhUcKKP4v6GVcebuDLxl5SaD9qgCn0DXcFfi992oxFak66Al7SuESzFmsNWyDF9bFc9stQKspiKwlaNzqPT5NJa5PpLXum1ddiD0uqTX+tngVVFJA5Rn+7XPrfQde3/U0BIIP5dyQK6aLpbVAAcDymeqMtNl0MyVrohFgxr/2WxQSz6zcuUwwR33NsPSAdMWu4bJX3UApIn+sXoGRUA3VODKVhohq377Y08iqbGBJPrc+lQtzyrTyAgCc0q0V5e7qR35rgq5Z1U6ozUNMB4cgAobzLfw0pcSKqWoWdVfv/LJ6A98lsJx02wu+6uuH65cDv5QxREMDDGR8UKBYq2VpXLgwOdWvGbHQsV2GDy0HX8AeGpjMy8lbY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15fb5815-3bf3-437e-af9d-08dd795fdcc4
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 01:17:59.1030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Aen7IaHEi38MRNShKiDilsfi6/7L41oZQnIcXO44qoLD3fyC2GA8cyyyruq1SEIxo+QDCIdKk24QSYaDzovoUncsZVDR1ixrrXrG7gXCj2U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8129
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
- bulkscore=0 adultscore=0 malwarescore=0 phishscore=0 mlxlogscore=938
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504120007
-X-Proofpoint-GUID: zXu-sQSIpSjEsMWhkUharuunhWPlTYt-
-X-Proofpoint-ORIG-GUID: zXu-sQSIpSjEsMWhkUharuunhWPlTYt-
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Sorry for the late nit but the conversion is pretty inconsistent..
 
-Eric,
+On Tue, 08 Apr 2025 13:55:14 -0700 Jacob Keller wrote:
+> diff --git a/drivers/net/dsa/mv88e6xxx/ptp.c b/drivers/net/dsa/mv88e6xxx/ptp.c
+> index aed4a4b07f34b1643a8bf51c2501d1f61ef0cf0b..4c037d4853fdbb86b5082437efe2ae7308559d66 100644
+> --- a/drivers/net/dsa/mv88e6xxx/ptp.c
+> +++ b/drivers/net/dsa/mv88e6xxx/ptp.c
+> @@ -332,13 +332,6 @@ static int mv88e6352_ptp_enable_extts(struct mv88e6xxx_chip *chip,
+>  	int pin;
+>  	int err;
+>  
+> -	/* Reject requests with unsupported flags */
+> -	if (rq->extts.flags & ~(PTP_ENABLE_FEATURE |
+> -				PTP_RISING_EDGE |
+> -				PTP_FALLING_EDGE |
+> -				PTP_STRICT_FLAGS))
+> -		return -EOPNOTSUPP;
+> -
+>  	/* Reject requests to enable time stamping on both edges. */
+>  	if ((rq->extts.flags & PTP_STRICT_FLAGS) &&
+>  	    (rq->extts.flags & PTP_ENABLE_FEATURE) &&
+> @@ -566,6 +559,11 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
+>  	chip->ptp_clock_info.verify	= ptp_ops->ptp_verify;
+>  	chip->ptp_clock_info.do_aux_work = mv88e6xxx_hwtstamp_work;
+>  
+> +	chip->ptp_clock_info.supported_extts_flags = PTP_ENABLE_FEATURE |
+> +						     PTP_RISING_EDGE |
+> +						     PTP_FALLING_EDGE |
+> +						     PTP_STRICT_FLAGS;
 
-> Add support for hardware-wrapped inline encryption keys to the
-> Qualcomm ICE (Inline Crypto Engine) and UFS (Universal Flash Storage)
-> drivers.
->
-> I'd like these patches to be taken through the scsi tree for 6.16.
+Sometimes you leave all the flags be..
 
-Applied to 6.16/scsi-staging, thanks!
+>  	if (ptp_ops->set_ptp_cpu_port) {
+>  		struct dsa_port *dp;
+>  		int upstream = 0;
+> diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.c b/drivers/net/dsa/sja1105/sja1105_ptp.c
+> index 08b45fdd1d2482b0f1f922aae4ff18db8e279f09..a7e9f9ab7a19a8413f2f450c3b4b3f636a177c67 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_ptp.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_ptp.c
+> @@ -820,13 +820,6 @@ static int sja1105_extts_enable(struct sja1105_private *priv,
+>  	if (extts->index != 0)
+>  		return -EOPNOTSUPP;
+>  
+> -	/* Reject requests with unsupported flags */
+> -	if (extts->flags & ~(PTP_ENABLE_FEATURE |
+> -			     PTP_RISING_EDGE |
+> -			     PTP_FALLING_EDGE |
+> -			     PTP_STRICT_FLAGS))
+> -		return -EOPNOTSUPP;
+> -
+>  	/* We can only enable time stamping on both edges, sadly. */
+>  	if ((extts->flags & PTP_STRICT_FLAGS) &&
+>  	    (extts->flags & PTP_ENABLE_FEATURE) &&
+> @@ -912,6 +905,9 @@ int sja1105_ptp_clock_register(struct dsa_switch *ds)
+>  		.n_pins		= 1,
+>  		.n_ext_ts	= 1,
+>  		.n_per_out	= 1,
+> +		.supported_extts_flags = PTP_ENABLE_FEATURE |
+> +					 PTP_EXTTS_EDGES |
+> +					 PTP_STRICT_FLAGS,
 
+..sometimes you combine FALLNIG|RISING -> EDGES ..
+
+>  	};
+>  
+>  	/* Only used on SJA1105 */
+> diff --git a/drivers/net/ethernet/intel/ice/ice_ptp.c b/drivers/net/ethernet/intel/ice/ice_ptp.c
+> index 1fd1ae03eb90960d1e3e20acb0638baecaa995f5..96f68c356fe81b6954653f8903faf433ef6018f5 100644
+> --- a/drivers/net/ethernet/intel/ice/ice_ptp.c
+> +++ b/drivers/net/ethernet/intel/ice/ice_ptp.c
+> @@ -1624,14 +1624,6 @@ static int ice_ptp_cfg_extts(struct ice_pf *pf, struct ptp_extts_request *rq,
+>  	int pin_desc_idx;
+>  	u8 tmr_idx;
+>  
+> -	/* Reject requests with unsupported flags */
+> -
+> -	if (rq->flags & ~(PTP_ENABLE_FEATURE |
+> -			  PTP_RISING_EDGE |
+> -			  PTP_FALLING_EDGE |
+> -			  PTP_STRICT_FLAGS))
+> -		return -EOPNOTSUPP;
+> -
+>  	tmr_idx = hw->func_caps.ts_func_info.tmr_index_owned;
+>  	chan = rq->index;
+>  
+> @@ -2737,6 +2729,10 @@ static void ice_ptp_set_caps(struct ice_pf *pf)
+>  	info->enable = ice_ptp_gpio_enable;
+>  	info->verify = ice_verify_pin;
+>  
+> +	info->supported_extts_flags = PTP_RISING_EDGE |
+> +				      PTP_FALLING_EDGE |
+> +				      PTP_STRICT_FLAGS;
+
+sometimes you drop ENABLE
+
+> +
+>  	switch (pf->hw.mac_type) {
+>  	case ICE_MAC_E810:
+>  		ice_ptp_set_funcs_e810(pf);
+> diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
+> index f323e1c1989f1bfbbf1f04043c2c0f14ae8c716f..7dd5bf02ca32506666ce422ae3da23e66b0adfca 100644
+> --- a/drivers/net/ethernet/intel/igb/igb_ptp.c
+> +++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
+> @@ -502,13 +502,6 @@ static int igb_ptp_feature_enable_82580(struct ptp_clock_info *ptp,
+>  
+>  	switch (rq->type) {
+>  	case PTP_CLK_REQ_EXTTS:
+> -		/* Reject requests with unsupported flags */
+> -		if (rq->extts.flags & ~(PTP_ENABLE_FEATURE |
+> -					PTP_RISING_EDGE |
+> -					PTP_FALLING_EDGE |
+> -					PTP_STRICT_FLAGS))
+> -			return -EOPNOTSUPP;
+> -
+>  		/* Both the rising and falling edge are timestamped */
+>  		if (rq->extts.flags & PTP_STRICT_FLAGS &&
+>  		    (rq->extts.flags & PTP_ENABLE_FEATURE) &&
+> @@ -658,13 +651,6 @@ static int igb_ptp_feature_enable_i210(struct ptp_clock_info *ptp,
+>  
+>  	switch (rq->type) {
+>  	case PTP_CLK_REQ_EXTTS:
+> -		/* Reject requests with unsupported flags */
+> -		if (rq->extts.flags & ~(PTP_ENABLE_FEATURE |
+> -					PTP_RISING_EDGE |
+> -					PTP_FALLING_EDGE |
+> -					PTP_STRICT_FLAGS))
+> -			return -EOPNOTSUPP;
+> -
+>  		/* Reject requests failing to enable both edges. */
+>  		if ((rq->extts.flags & PTP_STRICT_FLAGS) &&
+>  		    (rq->extts.flags & PTP_ENABLE_FEATURE) &&
+> @@ -1356,6 +1342,10 @@ void igb_ptp_init(struct igb_adapter *adapter)
+>  		adapter->ptp_caps.n_per_out = IGB_N_PEROUT;
+>  		adapter->ptp_caps.n_pins = IGB_N_SDP;
+>  		adapter->ptp_caps.pps = 0;
+> +		adapter->ptp_caps.supported_extts_flags = PTP_ENABLE_FEATURE |
+> +							  PTP_RISING_EDGE |
+> +							  PTP_FALLING_EDGE |
+> +							  PTP_STRICT_FLAGS;
+>  		adapter->ptp_caps.pin_config = adapter->sdp_config;
+>  		adapter->ptp_caps.adjfine = igb_ptp_adjfine_82580;
+>  		adapter->ptp_caps.adjtime = igb_ptp_adjtime_82576;
+> @@ -1378,6 +1368,8 @@ void igb_ptp_init(struct igb_adapter *adapter)
+>  		adapter->ptp_caps.n_ext_ts = IGB_N_EXTTS;
+>  		adapter->ptp_caps.n_per_out = IGB_N_PEROUT;
+>  		adapter->ptp_caps.n_pins = IGB_N_SDP;
+> +		adapter->ptp_caps.supported_extts_flags = PTP_EXTTS_EDGES |
+> +							  PTP_STRICT_FLAGS;
+
+sometimes you both drop the enabled and combine the edges 
+
+>  		adapter->ptp_caps.pps = 1;
+>  		adapter->ptp_caps.pin_config = adapter->sdp_config;
+>  		adapter->ptp_caps.adjfine = igb_ptp_adjfine_82580;
+
+No preference which version you pick but shouldn't we go with one?
+Or is this on purpose to show we have no preference?
 -- 
-Martin K. Petersen
+pw-bot: cr
