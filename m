@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC191170A23;
-	Sat, 12 Apr 2025 21:03:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40FF21D58F
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 21:03:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744491822; cv=none; b=eA88iBO00hCMQ+kS9oT4AdWjkXIWVuP0kZsFPFPt5idpLZkxDED1LHNo6MwE3kDdWkrK7VcwPixmbVNC8uJysCsXzqC2TC2U3+pdX4f1ikZo4Z3cLswQCICQyMk23VTCbLiFvYu2H24vAofwMhU/2Mzz+f1V+LkTa0MOFXwffYw=
+	t=1744491823; cv=none; b=sC0WUgSaMKfidxQOytG0qNpXTbEJJPvka3Uy2j8XX5ycrTCf8brdFBADELuwWucIBjNKkYjZ3cYAttG/8uqrsbMbGt9upNJMH4+YFzvSXkBtRNbff4C2YFYZxeQlPoisx2Rv32l4DSpqmh84UcFMJPJsDA9+Jf8YhswwmB1TgN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744491822; c=relaxed/simple;
-	bh=/dxTjvf1nwp47obOQpKc/nAnFrDcdVF8sqdQbGww0ns=;
+	s=arc-20240116; t=1744491823; c=relaxed/simple;
+	bh=Ck57P88/cufB2DmsK9iWuM8HKUfwVvvEim98nv6CAqk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=htWavPlSPQ9otk1b9eoBnNrkl5v8m/5hq2hBo29xCBNtrjZmsP3/a0EQQ1zopRyrb6aWsMFvaFwltPVubsiLNRlIvbMDmolbrzcnEA1dkin8RgZLvwyR1Ry8f8YRt2Nox8p/yTXwlXosXlmPEFO1b8LxGagZS8exIoIPj89ejU0=
+	 Content-Type; b=B+//k5AcNbYaWMA4CvNdFKGmbJmpc1KR5gkWnd38ZqJSsrYgLn8WMdpSEBYcneomCoHRWfTcmDq4FsOfrqKqCbMBQfrvcm/WGDI8+/rgWJEVPlQeyHJuLPE1fIjYbIXjcmOds/MuQSb+cxX06N1pE4PRA8VtGS97e7oUyig2240=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF1AC4CEEC;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A151C4CEE5;
 	Sat, 12 Apr 2025 21:03:42 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u3i2I-0000000AEDs-2aS5;
+	id 1u3i2I-0000000AEDO-1r4L;
 	Sat, 12 Apr 2025 17:05:10 -0400
-Message-ID: <20250412210510.464408595@goodmis.org>
+Message-ID: <20250412210510.290174642@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 12 Apr 2025 17:04:48 -0400
+Date: Sat, 12 Apr 2025 17:04:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
- Tom Zanussi <zanussi@kernel.org>,
- Douglas Raillard <douglas.raillard@arm.com>
-Subject: [for-linus][PATCH 2/7] tracing: Do not add length to print format in synthetic events
+ Guenter Roeck <linux@roeck-us.net>
+Subject: [for-linus][PATCH 1/7] tracing: Hide get_vm_area() from MMUless builds
 References: <20250412210446.338481957@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,54 +40,50 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The following causes a vsnprintf fault:
+The function get_vm_area() is not defined for non-MMU builds and causes a
+build error if it is used. Hide the map_pages() function around a:
 
-  # echo 's:wake_lat char[] wakee; u64 delta;' >> /sys/kernel/tracing/dynamic_events
-  # echo 'hist:keys=pid:ts=common_timestamp.usecs if !(common_flags & 0x18)' > /sys/kernel/tracing/events/sched/sched_waking/trigger
-  # echo 'hist:keys=next_pid:delta=common_timestamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,next_comm,$delta)' > /sys/kernel/tracing/events/sched/sched_switch/trigger
+ #ifdef CONFIG_MMU
 
-Because the synthetic event's "wakee" field is created as a dynamic string
-(even though the string copied is not). The print format to print the
-dynamic string changed from "%*s" to "%s" because another location
-(__set_synth_event_print_fmt()) exported this to user space, and user
-space did not need that. But it is still used in print_synth_event(), and
-the output looks like:
+to keep it from being compiled when CONFIG_MMU is not set.
 
-          <idle>-0       [001] d..5.   193.428167: wake_lat: wakee=(efault)sshd-sessiondelta=155
-    sshd-session-879     [001] d..5.   193.811080: wake_lat: wakee=(efault)kworker/u34:5delta=58
-          <idle>-0       [002] d..5.   193.811198: wake_lat: wakee=(efault)bashdelta=91
-            bash-880     [002] d..5.   193.811371: wake_lat: wakee=(efault)kworker/u35:2delta=21
-          <idle>-0       [001] d..5.   193.811516: wake_lat: wakee=(efault)sshd-sessiondelta=129
-    sshd-session-879     [001] d..5.   193.967576: wake_lat: wakee=(efault)kworker/u34:5delta=50
-
-The length isn't needed as the string is always nul terminated. Just print
-the string and not add the length (which was hard coded to the max string
-length anyway).
-
-Cc: stable@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: Douglas Raillard <douglas.raillard@arm.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Link: https://lore.kernel.org/20250407154139.69955768@gandalf.local.home
-Fixes: 4d38328eb442d ("tracing: Fix synth event printk format for str fields");
+Link: https://lore.kernel.org/20250407120111.2ccc9319@gandalf.local.home
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/all/4f8ece8b-8862-4f7c-8ede-febd28f8a9fe@roeck-us.net/
+Fixes: 394f3f02de531 ("tracing: Use vmap_page_range() to map memmap ring buffer")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_synth.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/trace.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 969f48742d72..33cfbd4ed76d 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -370,7 +370,6 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 				union trace_synth_field *data = &entry->fields[n_u64];
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b581e388a9d9..8ddf6b17215c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9806,6 +9806,7 @@ static int instance_mkdir(const char *name)
+ 	return ret;
+ }
  
- 				trace_seq_printf(s, print_fmt, se->fields[i]->name,
--						 STR_VAR_LEN_MAX,
- 						 (char *)entry + data->as_dynamic.offset,
- 						 i == se->n_fields - 1 ? "" : " ");
- 				n_u64++;
++#ifdef CONFIG_MMU
+ static u64 map_pages(unsigned long start, unsigned long size)
+ {
+ 	unsigned long vmap_start, vmap_end;
+@@ -9828,6 +9829,12 @@ static u64 map_pages(unsigned long start, unsigned long size)
+ 
+ 	return (u64)vmap_start;
+ }
++#else
++static inline u64 map_pages(unsigned long start, unsigned long size)
++{
++	return 0;
++}
++#endif
+ 
+ /**
+  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
 -- 
 2.47.2
 
