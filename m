@@ -1,99 +1,129 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3266319E7ED;
-	Sat, 12 Apr 2025 10:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A3018A6AB;
+	Sat, 12 Apr 2025 10:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744454460; cv=none; b=OaMpWRksVZni4C08kUuNDc+MiCL4hcyPX/EvbS+BlnX6ahOCvY+hrL8EQzSfVrlA/KHTn5Hu2YXCGhnKEmVtmvQFUkwUxlmFojHKLUHj5/j/WSWNWCIAUaFFkIogA65Eqtq5fm1cv6TpH7AxtP+KMaktfBkaD4iK+8TcD/zN1V8=
+	t=1744454709; cv=none; b=RZ7737N12qElNe0e7u2A2BQUqAcJBg8rl+S6paenwi/Y0E2vHI33DkSHcz89+JdP4um8hzyo56zelIiZGsqDmWLmt+FzQabrLR5W8M03i1ClwwcxI60Vd5Hc/BFrcfzLHFJ6+aGMdBF01t3bRwrT+xYXLCinPxtr8MwVb4mYLKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744454460; c=relaxed/simple;
-	bh=1JyIRWLYbbGPyvyz+jktTJKne0DLaNrSnI6GUVG/O/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=seK6AhBK3x/rzgjIrmLMU+tbyZ6S6WNRjOxg4pKaG7FZtQAb5nOsSB6g8a9AdR6CZ8/Fhhta1jCXkkAs190gWLhWsJgKHM+cEGUqjAUG/LEPD3ZVsEIVrVyZ/nWS9MBz4jc1FBTMlOAm5SPY8Iyq1LRAeDQtPAr3IDx2Ay5eCgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so30344385e9.2;
-        Sat, 12 Apr 2025 03:40:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744454456; x=1745059256;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sPpGEdLLDLP9afcNxJK057G2Q4dt6mDwWuMuvaUGFQI=;
-        b=fgSUoBaFV/ei5P45d5H2Hm7In6bNyiSwBiikKuekPFHUoUOYgB/WGvarZw+ap993Os
-         gPYEu91cwgR9znL98n1Bfh5jm9Kk+jDcgZXHc+y+6TNZm7M9+bqNvwOx/wW5HwHHinBB
-         /rOqn28zrDdM8ki9UMGhg8v6BeU4E9HaxQf6RbeK8gELtgHuuKCG8gmJXt5i/onLkEIJ
-         C+dwV518aOxZo1oosT5FXycfIx6zRoUCR37D8ZwunWytUABCmd1tNBMGIPvFT0s+/A0W
-         KCZ8MkhVuyQ4lqeVQo4wq3OQ9907gIrn3MHhGPk5ZnaXg0D8KEc0r6yN9Or2KoPmQ3tC
-         cxCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUK9fcWs7ofbYUxa26x5K2IMaZtLPKxd6CCplvqtRzMazX3u44iNnv8MECLBIJlC7s+CPJn01cf/8l4r1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGptqHcKJkwVLrs4MY2j1EK0Sv2SHu2TW+2E9XMFF3xF3aQ0PR
-	iVP+loY/siQrAuMdgOQ9nbis0EaltocP3VdaUGAyivlwu9FuAIXdiZmkA+uO
-X-Gm-Gg: ASbGncuC3VEo9w25eTPKLJ6TGkLjJQSZpXf00GreucbpHYPSh+kz8xz18xD0thLXXMt
-	qYQSzrTtSYcKKiEzxpip1udipv09/kKSoPioqd6J914g+mqc0dvy/Z++He63ZHTNCR0sS2QJB++
-	mXlqqvHfVu3HxHBv+TEfD/ozqFTM9syZDyq/FMI7CHwbB6JtuN/56I14chRXGPgiO/onfzmPKOV
-	vBF6oPc+R94adeWsAjPgCKHqxJGSfAKngtpvxAnGsLe5LlVkbo+UM8kDpgInxNLxc91eag59Tvr
-	U9aQBYApTTcrfEJgaGnyZCDL8Um6AyPIWjz/L8mQ3cIHy4kpVVciQB+Tn51s7w2iS53k8kkY/GT
-	dtXc=
-X-Google-Smtp-Source: AGHT+IGzLyaTB1RvYYX77BpfekTlQrZrf+ZGoA0FeukFOp/MLONdezaHDAiIfqlDbTgoFbCOAgtV8w==
-X-Received: by 2002:a05:600c:b8f:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-43f3a93f343mr53814905e9.9.1744454456112;
-        Sat, 12 Apr 2025 03:40:56 -0700 (PDT)
-Received: from im-t490s.redhat.com (ip-86-49-44-151.bb.vodafone.cz. [86.49.44.151])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f206332d9sm113611045e9.13.2025.04.12.03.40.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 03:40:55 -0700 (PDT)
-From: Ilya Maximets <i.maximets@ovn.org>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	dev@openvswitch.org,
-	linux-kernel@vger.kernel.org,
-	Eelco Chaudron <echaudro@redhat.com>,
-	Aaron Conole <aconole@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	syzbot+b07a9da40df1576b8048@syzkaller.appspotmail.com
-Subject: [PATCH net] net: openvswitch: fix nested key length validation in the set() action
-Date: Sat, 12 Apr 2025 12:40:18 +0200
-Message-ID: <20250412104052.2073688-1-i.maximets@ovn.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744454709; c=relaxed/simple;
+	bh=FrZpGgFmCBdS3NdARYiimpGnDi2QEYs8YJOvqKwY1tU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Dh9Vgouvh4K146cSQRgcu7XTDyI8arjVpr6R5diZ5TjSlElw/FNbM0VrJJzASk6BLaCqpqRpRlQmueUbPicXgatH6iKYjvzQLkHMf/Zb4fQlQ8AIr0rsjT5oc/gC1aBNZzS8Hq0vDD3t1yFZjCiNLKgwg0+1eCZ60BhtzvbLKmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=McFtSU2O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PLMIUvIr; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="McFtSU2O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PLMIUvIr"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 15C3525401C4;
+	Sat, 12 Apr 2025 06:45:06 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Sat, 12 Apr 2025 06:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744454705;
+	 x=1744541105; bh=kmyaGiukhBQ84frNIkSXQYkdJMrCRvN9saF+IdoGolw=; b=
+	McFtSU2O/RqT/UjvqSkjQJDtCPRSD1SZoySx2Z/1dkwKTHSa/8qDdiyLRYwKVe8X
+	LltppI835pFAs3Ep2YU4TgrpVfYcaKVG2DllSQFSa5jnuhDFeYCATwgXQurjKjPO
+	XlH09a7JGANj0FRamRxpj28hJJo4EGNHNCW2pwKIguZQS+5SpgG0/b+aTb/7AJJ9
+	ZiCzKOogOw5/C/rt9xFh0/ZEMAMziyYwa5yopDEWfzfSxfYSyPu9Aj+pht7QLPUM
+	v3k8/LXov2dFpQcYWhPn481E155Jw2MUwUHAA+1VZMKVKmf3dOsw3tbpI0gmZXyp
+	y/fDQsa0lRrpl9XLoru2Ew==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744454705; x=
+	1744541105; bh=kmyaGiukhBQ84frNIkSXQYkdJMrCRvN9saF+IdoGolw=; b=P
+	LMIUvIrQ7acjRyUNm4LblRDYmNP5hN6KoibRG/HW1c6J+OYeWBv6cmzO7nqzmLix
+	nrXaFWnifZym/vBtgNSJGa4x5YwEOENKtOvCPBX6T8lqQJvh3YDopFKNnuXg2rcG
+	We8s3/sFeArS1/2/NyRypI/4yW1XGExViDUQDXiDiL842amMw0cQ0jEqeZleLstg
+	/kZOkr5pUm6Q5ywQks1ShwNLM6KeeiwapyhXQ6DxqdgWNEDtbU0mzdTEEM4StIWq
+	KpGp9tiUhiY6gLAMGMl2ThAZNVXWgGo+4E1Nl1OjkHHfN9sTkezlNJIT+WyayY0Z
+	f6dFUiLB+nrxQgLagBiYQ==
+X-ME-Sender: <xms:MET6Z_diDxBf45Q4FT9Yc-FfdoDWLNKg87fTBYq_dVknQ10oYgSaeg>
+    <xme:MET6Z1MpIV8PW5hw8sZilbHr9PPOZ6Or80WBYu4mU9vRYj6X3dYM9VIOSgi12YcDT
+    4gUT3b5osphWq_zaXQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudegheefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    udejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+    dprhgtphhtthhopegtihhmihhnrghghhhisehgnhhuuggurdgtohhmpdhrtghpthhtohep
+    shgvrghnjhgtsehgohhoghhlvgdrtghomhdprhgtphhtthhopeifihhllhihsehinhhfrh
+    gruggvrggurdhorhhgpdhrtghpthhtohepuggrvhgvrdhhrghnshgvnhesihhnthgvlhdr
+    tghomhdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
+    hrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrphhptheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:MET6Z4iCI1Z1UjtxHKIclRx7AcbRXECDfBWxH5tTFHqr27KgKHikWg>
+    <xmx:MET6Zw8wqB7vGkncjjXjDNU3ee2ushCEl3nMTnD9r4gtNE3D2zM_xA>
+    <xmx:MET6Z7u04bQLDsNMyvj8owoi66BMJSGFy_sG8x4iZO28WLzUG3jCoQ>
+    <xmx:MET6Z_GRxBPFmPnQey9UJy2lxW5nNOxPpOX_m_7pB5-HF7jAB6VQ5Q>
+    <xmx:MUT6Z486sWR7ZefEk3LvUKJJ273YHrbFdOVmFnXmykwn8hRFL41LNb-f>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7DFE32220073; Sat, 12 Apr 2025 06:45:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Teb9e062682a72887
+Date: Sat, 12 Apr 2025 12:44:44 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mike Rapoport" <rppt@kernel.org>, "Dave Hansen" <dave.hansen@intel.com>
+Cc: "Arnd Bergmann" <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Andy Shevchenko" <andy@kernel.org>, "Matthew Wilcox" <willy@infradead.org>,
+ "Sean Christopherson" <seanjc@google.com>,
+ "Davide Ciminaghi" <ciminaghi@gnudd.com>,
+ "Paolo Bonzini" <pbonzini@redhat.com>, kvm@vger.kernel.org
+Message-Id: <4a75978a-2368-4aab-bed6-ce44b6d3c323@app.fastmail.com>
+In-Reply-To: <Z_o7B_vDPRL03iSN@kernel.org>
+References: <20241204103042.1904639-1-arnd@kernel.org>
+ <20241204103042.1904639-6-arnd@kernel.org>
+ <08b63835-121d-4adc-8f03-e68f0b0cabdf@intel.com>
+ <Z_o7B_vDPRL03iSN@kernel.org>
+Subject: Re: [PATCH 05/11] x86: remove HIGHMEM64G support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-It's not safe to access nla_len(ovs_key) if the data is smaller than
-the netlink header.  Check that the attribute is OK first.
+On Sat, Apr 12, 2025, at 12:05, Mike Rapoport wrote:
+> On Fri, Apr 11, 2025 at 04:44:13PM -0700, Dave Hansen wrote:
+>> Has anyone run into any problems on 6.15-rc1 with this stuff?
+>> 
+>> 0xf75fe000 is the mem_map[] entry for the first page >4GB. It obviously
+>> wasn't allocated, thus the oops. Looks like the memblock for the >4GB
+>> memory didn't get removed although the pgdats seem correct.
+>
+> That's apparently because of 6faea3422e3b ("arch, mm: streamline HIGHMEM
+> freeing"). 
+> Freeing of high memory was clamped to the end of ZONE_HIGHMEM which is 4G
+> and after 6faea3422e3b there's no more clamping, so memblock_free_all()
+> tries to free memory >4G as well.
 
-Fixes: ccb1352e76cf ("net: Add Open vSwitch kernel components.")
-Reported-by: syzbot+b07a9da40df1576b8048@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=b07a9da40df1576b8048
-Tested-by: syzbot+b07a9da40df1576b8048@syzkaller.appspotmail.com
-Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
----
- net/openvswitch/flow_netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Ah, I should have waited with my bisection, you found it first...
 
-diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-index 95e0dd14dc1a..518be23e48ea 100644
---- a/net/openvswitch/flow_netlink.c
-+++ b/net/openvswitch/flow_netlink.c
-@@ -2876,7 +2876,8 @@ static int validate_set(const struct nlattr *a,
- 	size_t key_len;
- 
- 	/* There can be only one key in a action */
--	if (nla_total_size(nla_len(ovs_key)) != nla_len(a))
-+	if (!nla_ok(ovs_key, nla_len(a)) ||
-+	    nla_total_size(nla_len(ovs_key)) != nla_len(a))
- 		return -EINVAL;
- 
- 	key_len = nla_len(ovs_key);
--- 
-2.49.0
+>> I'll dig into it some more. Just wanted to make sure there wasn't a fix
+>> out there already.
+>
+> This should fix it.
 
+Confirmed on 6.15-rc1.
+
+     Arnd
