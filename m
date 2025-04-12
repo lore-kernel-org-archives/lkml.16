@@ -1,60 +1,89 @@
-Received: from baidu.com (mx24.baidu.com [111.206.215.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72473198857;
-	Sat, 12 Apr 2025 13:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5842D1C863B;
+	Sat, 12 Apr 2025 13:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744462824; cv=none; b=gquAYuaBugGJGFOtFgmTaN4Yex+lr3Gc1frWE8Zx2nMZZ/KmAnogTCWHgTC+0XdyIp58HF3uaXCZNg0ePIHXgJDLFB/JFb5+aRUlc31WP5csgMHiJIm5SMTLG3y5R2SjEwiOJDU+0NoqmX3yz3GXjoYw7slQkWJ3v4HlqkQzaBg=
+	t=1744462855; cv=none; b=FoRBTY9lX7XEdAOnk8fdFgBDBQLQBHaBA2J6SUsbZ8zsfax2PGM3g9IcGcIl6hqIrNPh3XaJJoj5oz/uS6VcsXcBAlSrJ41C6jngaMlDZbrR+Uha3v7v8UckwjfQ/4/QVhEcbF8jzjpYWzNqkJYkCCezdpMWu3uXJq04a9i1dPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744462824; c=relaxed/simple;
-	bh=78FY3uUEgQHjA/hkOpaHAclYMcpdZ7Ospdeu+GSuThw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q1QP4s6nA4tn9lmvaZkCKxjsMwldjZz2jlMaZBKHEnl4WM8JBaC8uc1w9E9nWPVBElhFB/ptrAQEAzYtju5JgDzHyFemKVjNFN4elab6ZCDZECqlj9oY2p8sm0vKJdtCjLDeU1mZKXb4ApIVV8iHzs1FnDU1UleSjN50dQZ2bME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: "Li,Rongqing" <lirongqing@baidu.com>
-To: Christian Brauner <brauner@kernel.org>
-CC: "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "jack@suse.cz"
-	<jack@suse.cz>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBmczogTWFrZSBm?=
- =?utf-8?Q?ile-nr_output_the_total_allocated_file_handles?=
-Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gZnM6IE1ha2UgZmlsZS1uciBv?=
- =?utf-8?Q?utput_the_total_allocated_file_handles?=
-Thread-Index: AQHbqgqx8U1ad3cqaEyfyidqvoy/O7Od/lcAgAIBVBA=
-Date: Sat, 12 Apr 2025 12:59:53 +0000
-Message-ID: <6a0a7570ff6c4994aee74b9bef6799eb@baidu.com>
-References: <20250410112117.2851-1-lirongqing@baidu.com>
- <20250411-gejagt-gelistet-88c56be455d1@brauner>
-In-Reply-To: <20250411-gejagt-gelistet-88c56be455d1@brauner>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1744462855; c=relaxed/simple;
+	bh=XaCjGjuuKGemFcDirTV9nohPdOduesquW/qdw6eHyaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jy3yagvkILVgaU3cWguBUq0SuP+c2fQpNL50C9YX+Z6VgJRAUCZ2SsAGQQKBu857sIf48wSGLofvKzJ2RtapZj70C+UtqG6Qpqqz3QN82wtjSZwgS4WhtkIco+tlZ4HjihHXdj+K3kwI7FIamILyhleMkoJ0xwgYeNA3zvztgFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAKosJcs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAKosJcs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A53C4CEE3;
+	Sat, 12 Apr 2025 13:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744462854;
+	bh=XaCjGjuuKGemFcDirTV9nohPdOduesquW/qdw6eHyaY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HAKosJcspkbNU8RQvlJ0UNRkZbPj0t7PgeCWtdpIJiuTVQ6g3Wik+sMFJJ8Mhrzgy
+	 i2jJabIshykW9qMHNLNVeArkVRXYRle1U2s23YWtSzSCY8/YTQTgjy9ZYnG2YAfLeV
+	 labS+pjfLp/L55HUjTq+kkn8ESg+aueBNRAEuUWr9lPD1ik91E7dTERTx2HAbaztNn
+	 MEeA02j/VnuOzv7fN6Vdp9uUhnqxp68ZUjHcZCbfrO8xOVNXoh7YNYZ5/QkI9nKvOH
+	 PPtP7zYgaTl+GTb8QkJcOmTh4uajGCXM6iFHqOWt/soYA4JtsRIXDQtCmF9WrCGC+9
+	 RWEagkT5rrlcA==
+Date: Sat, 12 Apr 2025 14:00:46 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Angelo Dureghello <adureghello@baylibre.com>, Nuno Sa
+ <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/2] iio: dac: adi-axi-dac: fix bus read
+Message-ID: <20250412140046.164bb4bc@jic23-huawei>
+In-Reply-To: <Z_alFXGBhFxk-h0e@smile.fi.intel.com>
+References: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
+	<20250409-ad3552r-fix-bus-read-v2-1-34d3b21e8ca0@baylibre.com>
+	<Z_alFXGBhFxk-h0e@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 172.31.51.53
-X-FE-Last-Public-Client-IP: 100.100.100.38
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-IA0KPiBPbiBUaHUsIEFwciAxMCwgMjAyNSBhdCAwNzoyMToxN1BNICswODAwLCBsaXJvbmdxaW5n
-IHdyb3RlOg0KPiA+IEZyb206IExpIFJvbmdRaW5nIDxsaXJvbmdxaW5nQGJhaWR1LmNvbT4NCj4g
-Pg0KPiA+IE1ha2UgZmlsZS1uciBvdXRwdXQgdGhlIHRvdGFsIGFsbG9jYXRlZCBmaWxlIGhhbmRs
-ZXMsIG5vdCBwZXItY3B1DQo+ID4gY2FjaGUgbnVtYmVyLCBpdCdzIG1vcmUgcHJlY2lzZSwgYW5k
-IG5vdCBpbiBob3QgcGF0aA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgUm9uZ1FpbmcgPGxp
-cm9uZ3FpbmdAYmFpZHUuY29tPg0KPiA+IC0tLQ0KPiANCj4gVGhhdCBtZWFucyBncmFiYmluZyBh
-IGxvY2sgc3VkZGVubHkuIElzIHRoZXJlIGFuIGFjdHVhbCB1c2UtY2FzZSBiZWhpbmQgdGhpcz8N
-Cg0Kd2FudCB0byBtb25pdG9yIGl0IHRvIGZpbmQgdGhlIGxlYWtpbmcgb2YgdGhlIGFsbG9jYXRl
-ZCBmaWxlIGhhbmRsZXIgYnkgc29tZSBhcHBsaWNhdGlvbnMsIGJ1dCBmaW5kIGl0IGlzIGluYWNj
-dXJhdGUNCg0KU28gSSB0aGluayB0aGlzIGlzIG5vdCBhIGhvdCBwYXRoLCAgcGVyY3B1X2NvdW50
-ZXJfc3VtX3Bvc2l0aXZlIG1heSBiZSBhYmxlIHRvIGJlIHVzZWQNCg0KVGhhbmsNCi1MaQ0KDQoN
-Cg==
+On Wed, 9 Apr 2025 19:49:25 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
+
+> On Wed, Apr 09, 2025 at 11:16:54AM +0200, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Fix bus read function.
+> > 
+> > Testing the driver, on a random basis, wrong reads was detected, mainly
+> > by a wrong DAC chip ID read at first boot.
+> > Before reading the expected value from the AXI regmap, need always to
+> > wait for busy flag to be cleared.  
+> 
+> ...
+> 
+> > +	ret = regmap_read_poll_timeout(st->regmap,
+> > +				AXI_DAC_UI_STATUS_REG, ival,
+> > +				FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, ival) == 0,
+> > +				10, 100 * KILO);  
+> 
+> It's timeout, we have special constants for that, I believe you wanted to have
+> USEC_PER_MSEC here.
+
+This is an odd corner case.  If we had a define for that 100 along the lines
+of X_TIMEOUT_MSEC then I'd agree that using USEC_PER_MSEC makes complete sense.
+All we have is a bare number which has no defined units.  I'd just go with 100000 and
+not use the units.h defines at all.  They make sense when lots of zeros are involved
+or for standard conversions, but to me not worth it here.
+
+Jonathan
+
+> 
+> > +	if (ret)
+> > +		return ret;  
+> 
+
