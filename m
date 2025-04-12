@@ -1,74 +1,214 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585D21392
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C992144DD
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744483805; cv=none; b=MDZmBTtHLa/hvbsR980WNWvxMi4Y1GNB+UfzTyzEUYWAI/xcuX8tESsQ5QHvoEAugBep/NWSJi8IGYCY1YW6aDHWBDW4FBWv7yFfuC4IVyzUNnxEx4HBc0BTvzBmTGLbOng6K6BR8W0a3ge/E00PNtlWFnyA+jRjeLNpTj5GGWM=
+	t=1744483997; cv=none; b=g7RJTPs9rLzeWQEg7Cj/wXaGdazcxCX0DNJqBrO2A5UhqX2AUYrU/REtgXse6uI+zU6eGjXataNMbINqUxboxWV54LosPHOJBJsONwJirk7Uu7HMIohQj3hx+01aVQGfi1t1smuCChA6+wxu3P8UZu6edpFp3yPxUeLqIsdRbc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744483805; c=relaxed/simple;
-	bh=nhafsCYMLV/1L5uDLM7a0dpPB51CKZggrbh++DTqtmw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=q24t5ZXoez7IChqgyxeXCnqeDj7hmI8eLwTtZ4tHBX65ZqSmlPlLKPgxTZkJGGc8CDzBxrO/VQcoD2K6yJv5p0ffTAW5D9CTgcVNzauwkn9LobYyNSuBcFQah8jYMKZd2M3e06oSRco6dEk/DQrVoQ11OA6o6SfrCk3V4sxOjKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d43d3338d7so24137685ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:50:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744483803; x=1745088603;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C7VjZvJbW2uAftgn5cbXxBtcR3vdwZk8hVAwdnASbOI=;
-        b=u5XA+cR5Xq8F+M1+omb1Kek1ptD583ZDEObTF5DeEqGzUS8efzveIbMgQ8YIYZAaTY
-         s8dW20WpIpjNexr4jHV9YUNf56Oby59QKFM+HnmFdu19VSBJJpdhELL0xZh+bFELD1ca
-         GH5JGemvEDZM4TqhVLMPjJm4JbwOPYuqVPwpHTNHL7GpeUJ7v+cbxt+oiQPSoRiMao29
-         4bDvOxOIrN/d+fCpB2QK/8CPs7Llvr9YLvtuy7xk8rAO2BS9Mqy725/fVI06wpKVRoyf
-         i1zsHJVqIKKtEdot0HwSDH9cSv5wvD0KayMxXE1NPbWSePBXi6k/mpTxl+du3OdOWTFp
-         NCbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1y/vYP+WDOoXQXab2Y28pTE63nadljJM3qTKlLzHOY0CpckF2NhR0v/68lHnZ+fDDY654oooBShp2/Hk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvGxE2yHRCND2b5vbHZ+jcqV+XKpSCbYi9/45C1RQAEtMDMJ06
-	XX1JFELEpbkzBkC6LoZFEtZaJzYr3f3/sK/IhGaSsmRwNlEkZ+0QCV4KPCKQVdNKM8SGulwWYQR
-	eHk0YtyA3iYAmvnsZhDZAiUBrgqKKajXMwIgawAdZzNYzXY60ZWrA0mM=
-X-Google-Smtp-Source: AGHT+IHrjKuFivMeX27xQMCIkAmOxVp9quQsUMQ6AVml7KFrAtT60UhEUyEVbHBisBJnZ5bL3nE9sW0P0iKRLhKrZNbJOPQAWJYD
+	s=arc-20240116; t=1744483997; c=relaxed/simple;
+	bh=goPVb5BCE+crd0NK6y26sFzlS2zUcuxq5lv9NzI6Ufo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSlCXUCK0KvPqj1f6iB1vRMNf6Yj9461lgLNX5S6+XH5ZhmQJwoXEduYWCD4d2GVfTbTBXIfm4fcOlKhgSmWMmdhezUJctRN9r2j42yPvSpAi2Um0f3AVs9XkzAa8FcEk7LKs6EuDCQXThXuSY+6PjZ0j7gJ+TnIXuSNVsYEJdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=oYikrqxR; arc=none smtp.client-ip=212.77.101.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="oYikrqxR"
+Received: (wp-smtpd smtp.wp.pl 35038 invoked from network); 12 Apr 2025 20:53:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1744483984; bh=Dp6oLScgnb/dCOq/mF3bQK0cZiW8Aj30L/mlH51rgq0=;
+          h=From:To:Cc:Subject;
+          b=oYikrqxRbn1HLnc1I9aR9i3nc5/5TInL42TtAUTlYssuZODVin3stUfpXcVExfNWL
+           ufR2uqaY0z6ZFE9mTvoETDnjz3jOb5N4DcbQUxarLk187+OR8H+xgGEsKwr++yrRbO
+           +a9hR+hSBknX2FgS0+8Z6tK1j2br+eQP5zpE+zZTaEz8xHEDsGWW5D0uQ9ZIVzd4Hu
+           xYzWnk16zlhu07Q5gzVuRlr0auTWQ6hOs94zUZCBFvV8/UEbaC83SKPdxQF0qm1phG
+           sabMt+ZWX+NhgeCzpYEDABoTKumia9gokdjfC4z22B1cgpU5TthFRQPJ9mJb+0c3h6
+           n/B6gTovHYnMg==
+Received: from 89-64-9-62.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.9.62])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <aitsygunka@yandex.ru>; 12 Apr 2025 20:53:03 +0200
+Date: Sat, 12 Apr 2025 20:53:03 +0200
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Andrey Tsygunka <aitsygunka@yandex.ru>
+Cc: Matthieu CASTET <castet.matthieu@free.fr>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] usb: ueagle-atm: wait for a firmware upload to
+ complete
+Message-ID: <20250412185303.GA43859@wp.pl>
+References: <20250410093146.3776801-1-aitsygunka@yandex.ru>
+ <20250410093146.3776801-2-aitsygunka@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fe5:b0:3d5:deaf:b443 with SMTP id
- e9e14a558f8ab-3d7ec1cb3fcmr75275005ab.3.1744483803376; Sat, 12 Apr 2025
- 11:50:03 -0700 (PDT)
-Date: Sat, 12 Apr 2025 11:50:03 -0700
-In-Reply-To: <20250412181140.245367-1-gshahrouzi@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fab5db.050a0220.379d84.0015.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_dev_free
-From: syzbot <syzbot+aec9606169fbc3a12ca6@syzkaller.appspotmail.com>
-To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410093146.3776801-2-aitsygunka@yandex.ru>
+X-WP-MailID: c93ac509e5ff1cbd4568114573df5e7a
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [AWNk]                               
 
-Hello,
+On Thu, Apr 10, 2025 at 12:31:46PM +0300, Andrey Tsygunka wrote:
+> Syzkaller reported:
+> 
+> sysfs group 'power' not found for kobject 'ueagle-atm!adi930.fw'
+> WARNING: CPU: 1 PID: 6804 at fs/sysfs/group.c:278 sysfs_remove_group+0x120/0x170 fs/sysfs/group.c:278
+> Modules linked in:
+> CPU: 1 PID: 6804 Comm: kworker/1:5 Not tainted 6.1.128 #1
+> Hardware name: linux,dummy-virt (DT)
+> Workqueue: events request_firmware_work_func
+> Call trace:
+>  sysfs_remove_group+0x120/0x170 fs/sysfs/group.c:278
+>  dpm_sysfs_remove+0x9c/0xc0 drivers/base/power/sysfs.c:837
+>  device_del+0x1e0/0xb30 drivers/base/core.c:3861
+>  fw_load_sysfs_fallback drivers/base/firmware_loader/fallback.c:120 [inline]
+>  fw_load_from_user_helper drivers/base/firmware_loader/fallback.c:158 [inline]
+>  firmware_fallback_sysfs+0x880/0xa30 drivers/base/firmware_loader/fallback.c:234
+>  _request_firmware+0xcc0/0x1030 drivers/base/firmware_loader/main.c:884
+>  request_firmware_work_func+0xf0/0x240 drivers/base/firmware_loader/main.c:1135
+>  process_one_work+0x878/0x1770 kernel/workqueue.c:2292
+>  worker_thread+0x48c/0xe40 kernel/workqueue.c:2439
+>  kthread+0x274/0x2e0 kernel/kthread.c:376
+>  ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:864
+> 
+> When calling the usb-device probe() method, request_firmware_nowait()
+> is called, an async task is created that creates a child device
+> to load the firmware and waits (fw_sysfs_wait_timeout()) for the
+> firmware to be ready. If an async disconnect event occurs for
+> usb-device while waiting, we may get a WARN() when calling
+> firmware_fallback_sysfs() about "no sysfs group 'power' found
+> for kobject" because it was removed by usb_disconnect().
+> 
+> To avoid this, add a routine to wait for the firmware loading process
+> to complete to prevent premature device disconnection.
+> 
+> Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Andrey Tsygunka <aitsygunka@yandex.ru>
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Hi, thanks for the patch, but I do not see benefit of fix ex-WARN and
+now pr_debug(). Only downside of adding extra 40 lines of code.
 
-failed to apply patch:
-checking file fs/bcachefs/super.c
-Hunk #1 FAILED at 1757.
-1 out of 1 hunk FAILED
+Nacked-by: Stanislaw Gruszka <stf_xl@wp.pl>
 
-
-
-Tested on:
-
-commit:         5fc31936 Merge tag 'net-6.14-rc8' of git://git.kernel...
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bae073f4634b7fd
-dashboard link: https://syzkaller.appspot.com/bug?extid=aec9606169fbc3a12ca6
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12f21f4c580000
-
+>  drivers/usb/atm/ueagle-atm.c | 40 +++++++++++++++++++++++++++++++-----
+>  1 file changed, 35 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/usb/atm/ueagle-atm.c b/drivers/usb/atm/ueagle-atm.c
+> index cd0f7b4bd82a..eaa5ad316d89 100644
+> --- a/drivers/usb/atm/ueagle-atm.c
+> +++ b/drivers/usb/atm/ueagle-atm.c
+> @@ -570,6 +570,12 @@ MODULE_PARM_DESC(annex,
+>  #define LOAD_INTERNAL     0xA0
+>  #define F8051_USBCS       0x7f92
+>  
+> +struct uea_interface_data {
+> +	struct completion fw_upload_complete;
+> +	struct usb_device *usb;
+> +	struct usb_interface *intf;
+> +};
+> +
+>  /*
+>   * uea_send_modem_cmd - Send a command for pre-firmware devices.
+>   */
+> @@ -599,7 +605,8 @@ static int uea_send_modem_cmd(struct usb_device *usb,
+>  static void uea_upload_pre_firmware(const struct firmware *fw_entry,
+>  								void *context)
+>  {
+> -	struct usb_device *usb = context;
+> +	struct uea_interface_data *uea_intf_data = context;
+> +	struct usb_device *usb = uea_intf_data->usb;
+>  	const u8 *pfw;
+>  	u8 value;
+>  	u32 crc = 0;
+> @@ -669,15 +676,17 @@ static void uea_upload_pre_firmware(const struct firmware *fw_entry,
+>  	uea_err(usb, "firmware is corrupted\n");
+>  err:
+>  	release_firmware(fw_entry);
+> +	complete(&uea_intf_data->fw_upload_complete);
+>  	uea_leaves(usb);
+>  }
+>  
+>  /*
+>   * uea_load_firmware - Load usb firmware for pre-firmware devices.
+>   */
+> -static int uea_load_firmware(struct usb_device *usb, unsigned int ver)
+> +static int uea_load_firmware(struct uea_interface_data *uea_intf_data, unsigned int ver)
+>  {
+>  	int ret;
+> +	struct usb_device *usb = uea_intf_data->usb;
+>  	char *fw_name = EAGLE_FIRMWARE;
+>  
+>  	uea_enters(usb);
+> @@ -702,7 +711,7 @@ static int uea_load_firmware(struct usb_device *usb, unsigned int ver)
+>  	}
+>  
+>  	ret = request_firmware_nowait(THIS_MODULE, 1, fw_name, &usb->dev,
+> -					GFP_KERNEL, usb,
+> +					GFP_KERNEL, uea_intf_data,
+>  					uea_upload_pre_firmware);
+>  	if (ret)
+>  		uea_err(usb, "firmware %s is not available\n", fw_name);
+> @@ -2586,6 +2595,7 @@ static struct usbatm_driver uea_usbatm_driver = {
+>  static int uea_probe(struct usb_interface *intf, const struct usb_device_id *id)
+>  {
+>  	struct usb_device *usb = interface_to_usbdev(intf);
+> +	struct uea_interface_data *uea_intf_data;
+>  	int ret;
+>  
+>  	uea_enters(usb);
+> @@ -2597,8 +2607,23 @@ static int uea_probe(struct usb_interface *intf, const struct usb_device_id *id)
+>  
+>  	usb_reset_device(usb);
+>  
+> -	if (UEA_IS_PREFIRM(id))
+> -		return uea_load_firmware(usb, UEA_CHIP_VERSION(id));
+> +	if (UEA_IS_PREFIRM(id)) {
+> +		uea_intf_data = devm_kzalloc(&usb->dev, sizeof(*uea_intf_data), GFP_KERNEL);
+> +		if (!uea_intf_data)
+> +			return -ENOMEM;
+> +
+> +		init_completion(&uea_intf_data->fw_upload_complete);
+> +		uea_intf_data->usb = usb;
+> +		uea_intf_data->intf = intf;
+> +
+> +		usb_set_intfdata(intf, uea_intf_data);
+> +
+> +		ret = uea_load_firmware(uea_intf_data, UEA_CHIP_VERSION(id));
+> +		if (ret)
+> +			complete(&uea_intf_data->fw_upload_complete);
+> +
+> +		return ret;
+> +	}
+>  
+>  	ret = usbatm_usb_probe(intf, id, &uea_usbatm_driver);
+>  	if (ret == 0) {
+> @@ -2618,6 +2643,7 @@ static int uea_probe(struct usb_interface *intf, const struct usb_device_id *id)
+>  static void uea_disconnect(struct usb_interface *intf)
+>  {
+>  	struct usb_device *usb = interface_to_usbdev(intf);
+> +	struct uea_interface_data *uea_intf_data;
+>  	int ifnum = intf->altsetting->desc.bInterfaceNumber;
+>  	uea_enters(usb);
+>  
+> @@ -2629,6 +2655,10 @@ static void uea_disconnect(struct usb_interface *intf)
+>  		usbatm_usb_disconnect(intf);
+>  		mutex_unlock(&uea_mutex);
+>  		uea_info(usb, "ADSL device removed\n");
+> +	} else {
+> +		uea_intf_data = usb_get_intfdata(intf);
+> +		uea_info(usb, "wait for completion uploading firmware\n");
+> +		wait_for_completion(&uea_intf_data->fw_upload_complete);
+>  	}
+>  
+>  	uea_leaves(usb);
+> -- 
+> 2.25.1
+> 
