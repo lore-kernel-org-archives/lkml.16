@@ -1,268 +1,140 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B87938DE1;
-	Sat, 12 Apr 2025 11:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223D32B9BF;
+	Sat, 12 Apr 2025 11:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744455981; cv=none; b=lP0+SlQbF7EaKBpQ5lizYjhICBuWct1rE22g8B0NGIhAP0IWxEdNDPw9qY4qahVwIuLnFCh/aQqKht5ccaAJMRtaC4nYXgnHmw6ZcfOZFGgYAXmCyy9Wtra+I7AX8argMWfwTgDm8Nt4ZiT3E02lHED2YDz0UQtHPTEqGZTxTBI=
+	t=1744456187; cv=none; b=pIkflx/Yx4v+2vVoRjNhmN1IKVomiruRsw4Wms3QqQ17BwQe4hQy9aOXYSq/UzUtPzY++SlG6cYUukMm2c7IGO1hiO1H/p2CxNFscmQG9Ow7k7GfUduMiQ8RsMI+KKW8WUZrlu/zfbGhwZzby1Bdixsg1RyHlNvKUC/HmFqSVfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744455981; c=relaxed/simple;
-	bh=Xwx2n1w11EeGH25kbdk3hQrYNioLty2KWpYPiiPJeg8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SZ9oMfy/6sIOvc5pSUEIamLnSpCuevib8HUrbZAtWfd7aSIQVzlMzl+YvtysGR+vy6pmfZubsyVlJ4wN5f0EpzJtlmu3VvRXpgcGs4wajnOh7ynJvx6rTcDCKrE7pHU2uLgUXZlL9v99x3jzCFefNkguvQTi1yPUA5/wbw0ZF84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0M4aMFR; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1744456187; c=relaxed/simple;
+	bh=rWUN8Z1mCOTMaKbl6yIJVQWE6ZQaqOIt7ChjcxohXEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=toDtE016sQ8pNHmfpxgIqeOj+anzwtd9I5st89BVKtpLHcw84k6ZsSthmv9+fvK1NHKRnL2re1TZW8HpAdlyEN7SYGa76I2UTD7NpBKxAoelO1qKw3Xu2YYAiuCtsl1B+5SiA6s7hbUD7tm8rFWNZFhq//648EG+DXyJIIXz3oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZjtZk5Ln; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0M4aMFR"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c2688619bso1785202f8f.1;
-        Sat, 12 Apr 2025 04:06:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjtZk5Ln"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c30d9085aso1662590f8f.1;
+        Sat, 12 Apr 2025 04:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744455977; x=1745060777; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uEQKH0bkHPyosdE+9+BuKjjvelVzT/W2rCC4QTg9N0w=;
-        b=h0M4aMFR23zaWvoTgnNS8AK2eOhsG4uVkIowXysmeJ2HnLAd1ASY6ygTk2K1qY/mCO
-         Qz3NrMj2ytBmtVXRHumCRjIx3Yv2iirbo9S3PD69d9AuxhlfWmKN1XRt0w6DFqmvPVg5
-         PLgnVfMfTyz/WarB1vz15NHIgioCx/6/FczP3yPM0SNrRqWHe/MXoF1ipZKAzmhv+eHZ
-         sBZCmTEeD1ISBbfqL3xinws8jmLEJTsKEu4ThLQW2nED07Ypknoq3YbHZbp+fuoamUQU
-         NifkHr6QPH9o+wedhjdpwBP5Ju58ahqTgQAUmgrG+mDok7kwgdOVHxkv/sisI6Isgxia
-         E/Rg==
+        d=gmail.com; s=20230601; t=1744456184; x=1745060984; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfzidggO6FjeXS6iUbqAF7FeSHPmBoKvbbkf/LSnXH8=;
+        b=ZjtZk5LnQ6dLipQrds2KoyM/2yt8rBrkOyzjTyBY2M3GKvLhE3tMFP5Eoz0pKElWDU
+         ZGrjPq1RZ6dsLwyBJghUm3rD2UTcQgmNn/mcYqvse3vAm0XRXGKvkBilFzCzHz5CHkXu
+         ooUAkW9nmnA+m287tWvtTu9chwaC/J99lVfOsSSP7CsRO+Dh0L9Ul1mccYLKGP83hNBW
+         qJGXcmqNM/PL5nTXLxSVTHaQGNraBZjwgWgwUY23Em2fn8EU8YXLgTG9wYbFUVF4+c4y
+         pXal1bf2FjUUGoE68a/NrDDCQ/X/we00LNM3FrIVRGwkkdg/x6I0U45yNhpNEX6bm42h
+         f37A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744455977; x=1745060777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uEQKH0bkHPyosdE+9+BuKjjvelVzT/W2rCC4QTg9N0w=;
-        b=uVHNkypLy2k8ZsAtr4Jib1xRPuQhoGm/zUXbzfUJxOfUpEPDle0KMkQkj6BXpBtfdX
-         yK24lZ57FV5xZ/9qp3v69zWRPny5fBonCQ1a970E/Vj/mxyE1UrAJPgEmSiSxO3WOL/E
-         ktXbPNh93PMLuYz4z9v6s1wu4NGUXjsPg4ySzd5VFKosohmvUhf0p5LAZlL6qsRPfrVA
-         ZdaJuoSp1J5qqn+xfEnCU/ZeBnjQUFr6A8Ey2YtTzXvZHpw1RaSx/z7utLz0NfWNSfND
-         +ZgnsR5VKZ7RxRDnd5Np83D3L+w0vjLqcMKPhxOPKd907k5xFjzlXZ7E6rWm2pXrdqrf
-         2IOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlxpSCUjZgCjpxf+OgYoEp38vMMfF9dW2LIi/0dElRE9X59NIR9ndgrUyhrzZe+3zGJ4cgxXE6BU+m@vger.kernel.org, AJvYcCW10fXH/LIqbtIT7jtYf7ui51Rx9FDjq7kplXgKz3dAOiUbX72665QrurO8ZR9BjNVGgkhWIiNOf6UH@vger.kernel.org, AJvYcCW2cQZug74WXGed5nq/dYFJh+7GmdvPjc2iaovPd6/EbkPFMzb4J9Ymgw9rXPtSqbYUkB8//pkbYEA=@vger.kernel.org, AJvYcCXPAP0COjhhLlGvyxl/0JtP5EXvJ7p7JXeW+oQAZFdLWh25DhXt55s1ObyMzuC2QIy71Rus3dhg1s22vj2i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxuk3i8lgPv5VwgzK9aj1mV8tdSUbPAaEVuY+apiFFBytQ+H6ie
-	oYMauWVK9eJ8wZohWlmecyhamW4+n+j7/LjNhTnD1SST2FLIKi4VNDqOUk9sgGBdErYQRKxk5tV
-	swgg0mGWeU1kkH/Rt5h9IHXIe410=
-X-Gm-Gg: ASbGncso1aq+5YIRfvFKkGKwA1YDvHibwqIjiFOhVugZ4llzruaai1CT3V4R1bXeJTy
-	wouHOiWNcexz6gOyjC31ViHjLn4O/ZwpoqxuG6KT/3+vbyiw69barFJYVlRtM2v9A2wyuy3npvM
-	8RSm/0WmvMEso8+oyLlhJPYrM=
-X-Google-Smtp-Source: AGHT+IFmZ9oSGKG8dQnChiY0Qy83xIScN31TSX/I698NuGB8xKYytYAsdO+ebPVVg4Dtrnt5oRYr3cSReLYxizZaxOU=
-X-Received: by 2002:a05:6000:184e:b0:39c:cc7:3c5f with SMTP id
- ffacd0b85a97d-39eaaecdacemr5299545f8f.45.1744455977263; Sat, 12 Apr 2025
- 04:06:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744456184; x=1745060984;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BfzidggO6FjeXS6iUbqAF7FeSHPmBoKvbbkf/LSnXH8=;
+        b=ufEbL6CTBZCJKEy3x7AaQzwhsn3kycpuNINbCMhJ/yvA+W/XnhRN4c3qqBc7cVJ75P
+         jyYOCXoAG3C0QanJCK3yd8W28Qk8N1/B/JRbNQkQieZHoNx4/+18Du52VyQs8i0Jbj+H
+         2RiDZ2UZxwDEJThFMeqftZIlpeV5ca0LNbHl+LRkr4rObHSY+tGwaY+cmhtp/E7JULya
+         +sjA0N6aHR5SuxiS0W9mnRezXz55mUa9Bg6Hi3i6rqpmkryJG2Ko+r5dCW5HUojob9DL
+         ZRbuwF75Aj/6O8Q4vQvA6d6QDFnyxXoAra04H7Feam7o72zByHRiyfr1l+EfcE7/42WB
+         vJuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxx12TR8Rpgb0cwrr3AnVOLJ7wp1K5bG/6bFKGVxPjKW//Zp5xrLrlDN/1SX+q4LxIZqnLL5rU1NvDaAnb@vger.kernel.org, AJvYcCWhAgSogvbpgGncL+wSwCpnOheEbpmpBiKziYc+diYSl+IWyM8yDkHC3gjqYngSE7X09M68IqDM9i4sYMV7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjOTwPK7CB+0Nwd1zLDiB8SlijmsbCa8wv6MRDckdt5xLF86sK
+	F0dGERMBkVPG2WQCnbaDC7ofmQbcULSkUlQHe9wO9RRpyEZai7yP
+X-Gm-Gg: ASbGncvaaoQgzhnCBxq0FWRYxRRbDm8d51qD6b2+P3fBgY75K0E0AEB53EBn6Vm2VVR
+	9v891/+5JQZas2er1l/Y3CMKC0sFescX9RQh0ykkyUCdNrHTL0YYlDzj4JhBIVvas/WyQ6VkeEu
+	b15MmROTXpbyD/3HrQPl+f8arr1HHBqomGAvt+2MJ3+FCybcnFfMZeS+GGQLlG292J7L7ciVuW4
+	nHVhmOMdmqXkhLSZL1kc1FDojxJJE41IBeS3SyS1Vqv63+n0e2WPFychnGWvPbczFq0SbUsfZOo
+	RR79OsGTebWyDbOKdLJgtbzKhriDIF+qsGB5QG0xfXkmL/dyjrk1ZGBd
+X-Google-Smtp-Source: AGHT+IHzzBIrGdFrekn7hA9hmhYH+A3II1dtwo24jWsVLSLa1RdXcGYElBEIOmB08tXnbioaF6bSvQ==
+X-Received: by 2002:a5d:59ae:0:b0:391:2f15:c1f4 with SMTP id ffacd0b85a97d-39eaaecbe1fmr4718324f8f.55.1744456184042;
+        Sat, 12 Apr 2025 04:09:44 -0700 (PDT)
+Received: from f.. (cst-prg-90-20.cust.vodafone.cz. [46.135.90.20])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207aeaccsm113509275e9.33.2025.04.12.04.09.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 04:09:43 -0700 (PDT)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org
+Cc: viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH] fs: improve codegen in link_path_walk()
+Date: Sat, 12 Apr 2025 13:09:35 +0200
+Message-ID: <20250412110935.2267703-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310075638.6979-1-clamor95@gmail.com> <20250310075638.6979-3-clamor95@gmail.com>
- <CAPVz0n0NA+=+4da8izPvTn3XacdJndyxrvyMY-QvHdie206wVg@mail.gmail.com> <20250412115354.0b266fae@jic23-huawei>
-In-Reply-To: <20250412115354.0b266fae@jic23-huawei>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Sat, 12 Apr 2025 14:06:06 +0300
-X-Gm-Features: ATxdqUGxoEk1uo883jpX_CkWOlni3XNy2ZUsgKoxuixGs8lUae_HVUKcGAp1E10
-Message-ID: <CAPVz0n0eqLEjVgMX=4A8jZZ++Ffb_vfCRdqYdizDmuLbXjVb1w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] thermal: thermal-generic-adc: add temperature
- sensor channel
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Laxman Dewangan <ldewangan@nvidia.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-=D1=81=D0=B1, 12 =D0=BA=D0=B2=D1=96=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 13:5=
-4 Jonathan Cameron <jic23@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Sat, 5 Apr 2025 18:23:25 +0300
-> Svyatoslav Ryhel <clamor95@gmail.com> wrote:
->
-> > =D0=BF=D0=BD, 10 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 09:57 =
-Svyatoslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
-> > >
-> > > To avoid duplicating sensor functionality and conversion tables, this
-> > > design allows converting an ADC IIO channel's output directly into a
-> > > temperature IIO channel. This is particularly useful for devices wher=
-e
-> > > hwmon isn't suitable or where temperature data must be accessible thr=
-ough
-> > > IIO.
-> > >
-> > > One such device is, for example, the MAX17040 fuel gauge.
-> > >
-> > > The temperature data, while technically a product of conversion and t=
-hus
-> > > categorized as IIO_CHAN_INFO_PROCESSED, maintains its unscaled state
-> > > (milli-degree). To account for this, IIO_CHAN_INFO_RAW is used along =
-with
-> > > IIO_CHAN_INFO_SCALE to provide different degrees of accuracy.
->
-> You've lost me in this description.  The base units of an IIO temperature=
- channel
-> are milli-degrees so if the scaling is already right for that you would
-> be fine using a IIO_CHAN_INFO_PROCESSED channel.
->
-> A few other minor things inline.
->
-> > >
-> > > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > > ---
-> > >  drivers/thermal/thermal-generic-adc.c | 62 +++++++++++++++++++++++++=
-+-
-> > >  1 file changed, 61 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/=
-thermal-generic-adc.c
-> > > index ee3d0aa31406..7dcc2e1168a4 100644
-> > > --- a/drivers/thermal/thermal-generic-adc.c
-> > > +++ b/drivers/thermal/thermal-generic-adc.c
-> > > @@ -7,6 +7,7 @@
-> > >   * Author: Laxman Dewangan <ldewangan@nvidia.com>
-> > >   */
-> > >  #include <linux/iio/consumer.h>
-> > > +#include <linux/iio/iio.h>
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/platform_device.h>
-> > > @@ -73,6 +74,65 @@ static const struct thermal_zone_device_ops gadc_t=
-hermal_ops =3D {
-> > >         .get_temp =3D gadc_thermal_get_temp,
-> > >  };
-> > >
-> > > +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D {
-> Even though there is only one. If it is an array use channels.
->
-> or stop it being an array and just take a pointer to a single channel
-> instance.
->
+Looking at the asm produced by gcc 13.3 for x86-64:
+1. may_lookup() usage was not optimized for succeeding, despite the
+   routine being inlined and rightfully starting with likely(!err)
+2. the compiler assumed the path will have an indefinite amount of
+   slashes to skip, after which the result will be an empty name
 
-There should not be more channels, but tbh, you never know, I will
-rename to channels.
+As such:
+1. predict may_lookup() succeeding
+2. check for one slash, no explicit predicts. do roll forward with
+   skipping more slashes while predicting there is only one
+3. predict the path to find was not a mere slash
 
-> > > +       {
-> > > +               .type =3D IIO_TEMP,
-> > > +               .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
-> > > +                                     BIT(IIO_CHAN_INFO_SCALE),
-> > > +       }
-> > > +};
-> > > +
-> > > +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
-> > > +                                struct iio_chan_spec const *chan,
-> > > +                                int *val, int *val2, long mask)
-> > > +{
-> > > +       struct gadc_thermal_info *gtinfo =3D iio_priv(indio_dev);
-> > > +       int ret;
-> > > +
-> > > +       switch (mask) {
-> > > +       case IIO_CHAN_INFO_RAW:
-> > > +               ret =3D gadc_thermal_get_temp(gtinfo->tz_dev, val);
-> > > +               if (ret)
-> > > +                       return ret;
-> > > +
-> > > +               return IIO_VAL_INT;
-> > > +
-> > > +       case IIO_CHAN_INFO_SCALE:
-> > > +               /* scale to a degree centigrade */
->
-> As above.  See Documentation/ABI/testing/sysfs-bus-iio
-> entries from temperature. Scaling of a temperature channel is milli-degre=
-es
->
-> This is a bit of a historical artefact. Way back at the start of IIO
-> when we had relatively few channel types, where possible I matched the
-> scaling to hwmon.  With hindsight that made things a bit inconsistent
-> but we are stuck with it as ABI :(
->
+This also has a side effect of shrinking the file:
+add/remove: 1/1 grow/shrink: 0/3 up/down: 934/-1012 (-78)
+Function                                     old     new   delta
+link_path_walk                                 -     934    +934
+path_parentat                                138     112     -26
+path_openat                                 4864    4823     -41
+path_lookupat                                418     374     -44
+link_path_walk.part.constprop                901       -    -901
+Total: Before=46639, After=46561, chg -0.17%
 
-RAW channel is in milli-degrees, or this is not enough? I don't get
-your point here tbh. What is wrong? Battery driver requires
-temperature in degree centigrade hence it is scaled to it.
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
 
-> Jonathan
->
-> > > +               *val =3D 1;
-> > > +               *val2 =3D 1000;
-> > > +               return IIO_VAL_FRACTIONAL;
-> > > +
-> > > +       default:
-> > > +               return -EINVAL;
-> > > +       }
-> > > +}
-> > > +
-> > > +static const struct iio_info gadc_thermal_iio_info =3D {
-> > > +       .read_raw =3D gadc_thermal_read_raw,
-> > > +};
-> > > +
-> > > +static int gadc_iio_register(struct device *dev, struct gadc_thermal=
-_info *gti)
-> > > +{
-> > > +       struct gadc_thermal_info *gtinfo;
-> > > +       struct iio_dev *indio_dev;
-> > > +
-> > > +       indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct gadc_t=
-hermal_info));
-> > > +       if (!indio_dev)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       gtinfo =3D iio_priv(indio_dev);
-> > > +       memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
->
-> sizeof(*gtinfo) probably slightly better.
->
-> > > +
-> > > +       indio_dev->name =3D dev_name(dev);
->
-> What does this end up as?  The convention in IIO is to name after
-> a part number.  If you have duplicates this isn't how you tell them
-> apart.  So I'd kind of expect thermal-generic-temp or
-> something like that.
->
+I'm looking at skipping perm checks with an "everybody can MAY_EXEC and
+there are no acls" bit for opflags. This crapper is a side effect of
+straighetning out the code before I get there.
 
-it is "generic-adc-thermal" with this name, it is not present anywhere in I=
-IO.
+ fs/namei.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-> > > +       indio_dev->info =3D &gadc_thermal_iio_info;
-> > > +       indio_dev->modes =3D INDIO_DIRECT_MODE;
-> > > +       indio_dev->channels =3D gadc_thermal_iio_channel;
-> As above, I'd stop that being an array and use
->         indio_dev->channels =3D &gadc_thermal_iio_chanel;
->         indio_dev->channels =3D 1;
->
-> Unless you think maybe we will get more channels in future, in which case
-> just rename it channels (which happens to have one element this time)
->
-> > > +       indio_dev->num_channels =3D ARRAY_SIZE(gadc_thermal_iio_chann=
-el);
-> > > +
-> > > +       return devm_iio_device_register(dev, indio_dev);
-> > > +}
-> > > +
-> > >  static int gadc_thermal_read_linear_lookup_table(struct device *dev,
-> > >                                                  struct gadc_thermal_=
-info *gti)
-> > >  {
-> > > @@ -153,7 +213,7 @@ static int gadc_thermal_probe(struct platform_dev=
-ice *pdev)
-> > >
-> > >         devm_thermal_add_hwmon_sysfs(dev, gti->tz_dev);
-> > >
-> > > -       return 0;
-> > > +       return gadc_iio_register(&pdev->dev, gti);
-> > >  }
-> > >
-> > >  static const struct of_device_id of_adc_thermal_match[] =3D {
-> > > --
-> > > 2.43.0
-> > >
-> >
-> > Added Jonathan Cameron and linux-iio@vger.kernel.org to list.
-> >
-> > Jonathan, this is newer version of the thermal-generic-adc you have
-> > reviewed recently with channels adjusted like proposed in v3.
->
+diff --git a/fs/namei.c b/fs/namei.c
+index 360a86ca1f02..40a636bbfa0c 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2424,9 +2424,12 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 	nd->flags |= LOOKUP_PARENT;
+ 	if (IS_ERR(name))
+ 		return PTR_ERR(name);
+-	while (*name=='/')
+-		name++;
+-	if (!*name) {
++	if (*name == '/') {
++		do {
++			name++;
++		} while (unlikely(*name == '/'));
++	}
++	if (unlikely(!*name)) {
+ 		nd->dir_mode = 0; // short-circuit the 'hardening' idiocy
+ 		return 0;
+ 	}
+@@ -2439,7 +2442,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 
+ 		idmap = mnt_idmap(nd->path.mnt);
+ 		err = may_lookup(idmap, nd);
+-		if (err)
++		if (unlikely(err))
+ 			return err;
+ 
+ 		nd->last.name = name;
+-- 
+2.43.0
+
