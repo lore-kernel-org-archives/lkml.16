@@ -1,99 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA6D5339D;
-	Sat, 12 Apr 2025 10:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A378C5339D;
+	Sat, 12 Apr 2025 10:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744453740; cv=none; b=StfrH4jlN8dcSNcI3jxaxjuABTXpvIpGML6sZ0XJ8IhmLfgPWoOQx8qxsQG+wzTtdxOVJFclHiq+Wky7shhLqK8qq9xxyDpVuoex5YSv817wVoRjZM3seTJTxCuRWI4qKSyfKHXkrhHH94UVgoxm1ocUJef9IcdAOpZX2LJZcQg=
+	t=1744453788; cv=none; b=JU1Bw/P9AbdXZs4CkR4ot8e3uaqqLIedcbtqXGx9B+OM/OXqZKDDzWKAz1MeLLWFsTKK5S9Ods2m5spMMUm3GxsznM7YAOWTRWtgS3BPGzDOFmFJta9WadhROuOo4EdlcKHWfUmLPprxy1tglQO24Nco7FeLaWoxSrdn3IsoPSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744453740; c=relaxed/simple;
-	bh=rTZue6TIWXirhiH6eYRqm8lVBetcgKb0L2l3SJ0K36Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EFOUyEskjN95HJ63rDkMEwmxztX+VTk5Vwx6cZx9hlfaOEqogeSXD6LbFyQb0GF0hpVi4qAzHttRGy9mHTQSHI7nxCGJyceUYykg1OhrKB3R+5OLMSPucKij8yLcYDGR0HptCrd3Un8BFJVddlvoZcMoOTZfENU5b5c5RSEn0YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5s9VgC0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744453788; c=relaxed/simple;
+	bh=lO8C/lxiz/hcIzhlxucykGknudyPv0eRAuZaDHXQXj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VQHYgYWqeKqR5nUd5bc7o72SS9X12p4fv08yKs1bR7p79/2SKQw9xO+EwRm0k7CbbC3ZwagKERJevKFpvgoflTroYEUe7ysWIQzJPFo6FWAUtzZCvTiK9pf23gSfWeBTOF4pf/JeQxidAn+nsq/KARrfcIjmnUPunlw/oyTTq+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TljbZ9Em; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5s9VgC0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD7B1C4CEE3;
-	Sat, 12 Apr 2025 10:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744453740;
-	bh=rTZue6TIWXirhiH6eYRqm8lVBetcgKb0L2l3SJ0K36Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=n5s9VgC0vKBUxU8c4kQLOuBDb/fKbCyDB7xZ6x8aZsoQpgEyOXUx/L2hyinnhiTx7
-	 95y2pCneoLIL5YXTsCfgoIHU2+aso84xHbXy6rD3zLfAF8gKWZc18xT4E5PFcYqShy
-	 7pt6BTGNhoXDDo+mk3PxlD5q+SO2UYu+ltj5WX985GuLh/7iRW3exHPt8J1v03YtbX
-	 ca5zZ4pGAm4HoEfNAdndS7a5lmtrpFBIIXseieCoGGtgZQlu3njvzKnUFVD3Ibo3ZU
-	 FrH8TLrdUq5XLI5XRJluuv7mT1KnLYI4sKpeVprrhb0dDfNviuAlUH7A6Bpc7FYXCm
-	 FVGGvb629Q4gQ==
-Date: Sat, 12 Apr 2025 11:28:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lars@metafoo.de,
- Michael.Hennerich@analog.com, corbet@lwn.net
-Subject: Re: [PATCH v4 1/4] iio: adc: ad4000: Add support for SPI offload
-Message-ID: <20250412112852.19eacac3@jic23-huawei>
-In-Reply-To: <Z_fe69bn90oVjPNk@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1743110188.git.marcelo.schmitt@analog.com>
-	<386ce043a0e3fc9e8ff71f17aef8de128ce5869e.1743110188.git.marcelo.schmitt@analog.com>
-	<97d0cc16-cdd4-449c-87f5-f62e0515de97@baylibre.com>
-	<Z_fe69bn90oVjPNk@debian-BULLSEYE-live-builder-AMD64>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TljbZ9Em"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CAEarI008932;
+	Sat, 12 Apr 2025 10:29:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=bCv+LXjgnzxEsdWKBfq+4uHrOKdDTePNNUTUf0872es=; b=
+	TljbZ9EmHKq2Lft2h2GU+5y78NqD98LaubCXNFUUFHPkON5e+EIPn6dwD1R1uomY
+	wz6j8nNSQ2BS4H0NjQ4uX/+wijQw/BWkOIwf2LQ7TRhCfK6Y9Q4LRtf/ONw8GVN7
+	w11Gzbr3PRkzFy2AEiYzNNt5JLMaMAVzWE75z/TY95ea+Y9DqmcJryBfFtHfeMbF
+	1r+l1wcBTWzz1mAFf40KLrJXCbuaGEYIqw8iz38kIBPSVRK7cne2jU1a3ftgwxEu
+	/6VXGEHZPOZ3d4LzlmBEHY7N0UojiX6cjTtcryluBHklYUq7tD5QO9nOJ0kVXzG3
+	ksoDUgBHC3/XFghApoZnKA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45yp74r08w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 12 Apr 2025 10:29:28 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53C71GSY032217;
+	Sat, 12 Apr 2025 10:29:28 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45yem69s1a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 12 Apr 2025 10:29:28 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53CATROe038043;
+	Sat, 12 Apr 2025 10:29:27 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 45yem69s0s-2;
+	Sat, 12 Apr 2025 10:29:27 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Manish Pandey <quic_mapa@quicinc.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com,
+        quic_rampraka@quicinc.com, quic_cang@quicinc.com,
+        quic_nguyenb@quicinc.com
+Subject: Re: [PATCH V3 0/2] scsi: ufs: Implement Quirks for Samsung UFS Devices
+Date: Sat, 12 Apr 2025 06:28:54 -0400
+Message-ID: <174445370242.1751018.13232235248067319659.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250411121630.21330-1-quic_mapa@quicinc.com>
+References: <20250411121630.21330-1-quic_mapa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-12_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
+ mlxlogscore=783 phishscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504120077
+X-Proofpoint-GUID: SQKq961hfoZzr6zAt_JTXQEpnrt91EjM
+X-Proofpoint-ORIG-GUID: SQKq961hfoZzr6zAt_JTXQEpnrt91EjM
 
-On Thu, 10 Apr 2025 12:08:27 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+On Fri, 11 Apr 2025 17:46:28 +0530, Manish Pandey wrote:
 
-> On 04/09, David Lechner wrote:
-> > On 3/27/25 4:24 PM, Marcelo Schmitt wrote:  
-> > > FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
-> > > The PWM IP is used to trigger SPI-Engine offload modules that in turn set
-> > > SPI-Engine to execute transfers to poll data from the ADC. That allows data
-> > > to be read at the maximum sample rates. Also, it is possible to set a
-> > > specific sample rate by setting the proper PWM duty cycle and related state
-> > > parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
-> > > trigger) is used in combination with SPI-Engine.
-> > > 
-> > > Add support for SPI offload.
-> > > 
-> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > > ---  
-> > 
-> > I think I spotted a bug. With that fixed...
-> > 
-> > Reviewed-by: David Lechner <dlechner@baylibre.com>
-> >   
-> > > @@ -690,6 +942,15 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
-> > >  
-> > >  	xfers[1].rx_buf = &st->scan.data;
-> > >  	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);  
-> > 
-> > Now this needs to be:
-> > 
-> > 	xfer->len = chan->scan_type.realbits > 16 ? 4 : 2;
-> > 
-> > Otherwise when there is SPI offload, this could read 2 words because
-> > storagebits is always == 32.  
+> Introduce quirks for Samsung UFS devices to modify the PA TX HSG1 sync
+> length and TX_HS_EQUALIZER settings on the Qualcomm UFS Host controller.
 > 
-> I've just tested both versions with ADAQ4003 and with AD7687.
-> There's no practical difference between the suggestion and what already is in
-> IIO testing. I don't mind sending a patch with the change, but don't think it
-> fixes anything.
-If it is an unnecessary over read in some cases, probably sensible to either
-reduce the length or add a comment on why we don't care.
-
-Jonathan
-
+> Additionally, Samsung UFS devices require extra time in hibern8 mode
+> before exiting, beyond the standard handshaking phase between the host
+> and device. Introduce a quirk to increase the PA_HIBERN8TIME parameter
+> by 100 µs to ensure a proper hibernation process.
 > 
-> Thanks,
-> Marcelo
+> [...]
 
+Applied to 6.15/scsi-fixes, thanks!
+
+[1/2] ufs: qcom: Add quirks for Samsung UFS devices
+      https://git.kernel.org/mkp/scsi/c/f8cba9a700cf
+[2/2] scsi: ufs: introduce quirk to extend PA_HIBERN8TIME for UFS devices
+      https://git.kernel.org/mkp/scsi/c/569330a34a31
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
