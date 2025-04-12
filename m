@@ -1,182 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF5F18DB1E
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5C31714A1;
+	Sat, 12 Apr 2025 11:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744457048; cv=none; b=abrKLze2vWVSWPBjPEpLOX/OCfBknKkmHKkA8xXHkgEEa8Cc0w3eEpT5y3E5oMZUBZGg05Ha71rP2mX/hr2gb1gOXFxUyM/uoFQ7VJnC3Tc+WBYsgxqyMtWGrUGvDM1usfnom7A7Ff0p2X+YlJOkuT94NA5spIEdMzPpL1d9B3c=
+	t=1744457102; cv=none; b=KrJYx7nPEIMDmA3HrMm7SywBfm0EPlLFhCDzvuPHy7mqb/LmU1Sd4hxLmkZ901yZ0KoomathivfQ99YbA0cEC4zATvc38Y5AwmtwPZ9wZyEoWYymuD9pYmpDHwwmwmMog3/Zkk7jqUxNL2MrkbLzup8BvM5O1n202K6KHQDhWyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744457048; c=relaxed/simple;
-	bh=53NKjumHgsLqyMy58ePGVe/UjMn/kzPjvjDjTUvU7s8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=VipbRuJT7/CH9P0AQvXiei19bZkqTYlgyKJLmhvY/oBDrRX4b7Uj4eMY/FLn3LG8uJQlZUYKo0x1Di8L1shIqXBPqQymQ3eEzxVcaLkYAZxhBjakDwuX7iIc7Boa1Xneyd7I6nMDFULG/+dmZrmlecgl4BHtho3UWFZysShgkGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LJ6k5+3y; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744457102; c=relaxed/simple;
+	bh=ZaM2TeSFoCPZVM18egIjPf1OdX0rAkfIaNxZwU2/GeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A0OR8E8UjcGg6emzw0fqpZZmtPJxa3lnKa5RyXUVvkRGHhKD1nexVMy3l3ZI+t8YCoGQ614S0bBF+GnB/xyJxUmo+j/mkBzJ7K6ov6afyLqq46ITI1sKkj6MgbzBNUZK8VSu99MNeBnHhA1x06TDE/XOsycqLLwRO32UJmvHd4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DhTpejpO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LJ6k5+3y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744457046; x=1775993046;
-  h=date:from:to:cc:subject:message-id;
-  bh=53NKjumHgsLqyMy58ePGVe/UjMn/kzPjvjDjTUvU7s8=;
-  b=LJ6k5+3ylLZPAOXKDorlXtpG+NOxJro+wtVbcv+SukAaSViqxJNsH8lr
-   bQ0UWfV9MH9HQ3RPAj9JPk2gUSQVmtfBc3gL31uVLK2b7wKZtDotah3m1
-   IshcClsivNg0mYZeKdMS9RqTgVjnoIsLkvTuiGS5J22/lZYBe6eeHaFak
-   IJdg/QiUF+y2iFDjdPuleo7pIQFDa4s+7DpIeBQ8omaIRY5yhRFWQevPg
-   7+dtEYAaGy62ttkJLPBpvhp1TrFwEuz55D0dla6+Iw4S9jXu0K5H4lrab
-   SEoDo+8PhDKXP/skMm+98m6H2gLcCuKQrvSUxPWn3qljgopwjgY39JUQ3
-   Q==;
-X-CSE-ConnectionGUID: a++XeBz3RaS9CGyJ0ww0BQ==
-X-CSE-MsgGUID: ZzR4fv9xS8yw9HkF1Ipp5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="46132858"
-X-IronPort-AV: E=Sophos;i="6.15,208,1739865600"; 
-   d="scan'208";a="46132858"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 04:24:06 -0700
-X-CSE-ConnectionGUID: fObNHezZTae8ZyuGA9gamg==
-X-CSE-MsgGUID: MJkiu/K3SAKJnc23okijTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,208,1739865600"; 
-   d="scan'208";a="134571524"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 12 Apr 2025 04:24:05 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u3Yxu-000Bky-24;
-	Sat, 12 Apr 2025 11:24:02 +0000
-Date: Sat, 12 Apr 2025 19:23:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/sev] BUILD SUCCESS
- e396dd85172c6098e3b70b17e91424edc7bb2d8f
-Message-ID: <202504121946.rU4CIS2s-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DhTpejpO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626C9C4CEE7;
+	Sat, 12 Apr 2025 11:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744457101;
+	bh=ZaM2TeSFoCPZVM18egIjPf1OdX0rAkfIaNxZwU2/GeM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DhTpejpOjYCA7bDwnTxCXM0OtaqKz3LDQtoR3YiokaReXDRODFD5qBWiuDP2Jj3GO
+	 Yj11rhfq0yoq0Et8ZG77OwViFoU6RJVtJblyNp8Iw3KtiG4zQ4WNwMdsSSrKlKTRyw
+	 qt8QvRi4y+4wSt9l8wvdhBzrD1bPL/omUoa07IBOniBZpljsi2DoCEwsbEs7itd8El
+	 PN1LGaDyT3PUASRSOgkpAkUUBi2tNPyW4O4818sSLPUc0ALkXl0fzPn1XfN5+Od8Z6
+	 Fosw7zhw9Qbz+qFW1jV1e75s0tTh6/OyAhRCJwQI/x0yv80u6KE2JZrbsq6YKhqamv
+	 B/rZN+E/ztAvA==
+Date: Sat, 12 Apr 2025 12:24:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Lorenzo Bianconi
+ <lorenzo@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/3] iio: Fix wakeup source leaks on device unbind
+Message-ID: <20250412122454.2a34182b@jic23-huawei>
+In-Reply-To: <20250406-b4-device-wakeup-leak-iio-v1-0-2d7d322a4a93@linaro.org>
+References: <20250406-b4-device-wakeup-leak-iio-v1-0-2d7d322a4a93@linaro.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/sev
-branch HEAD: e396dd85172c6098e3b70b17e91424edc7bb2d8f  x86/sev: Register tpm-svsm platform device
+On Sun, 06 Apr 2025 22:01:41 +0200
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-elapsed time: 1446m
+> Device can be unbound, so driver must also release memory for the wakeup
+> source.
+Applied to the fixes-togreg branch of iio.git.
 
-configs tested: 105
-configs skipped: 2
+I haven't marked them for stable as seems the resource leak is fairly
+harmless.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Jonathan
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250411    gcc-14.2.0
-arc                   randconfig-002-20250411    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250411    clang-21
-arm                   randconfig-002-20250411    clang-21
-arm                   randconfig-003-20250411    gcc-6.5.0
-arm                   randconfig-004-20250411    gcc-6.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250411    gcc-9.5.0
-arm64                 randconfig-002-20250411    gcc-9.5.0
-arm64                 randconfig-003-20250411    clang-21
-arm64                 randconfig-004-20250411    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250411    gcc-14.2.0
-csky                  randconfig-002-20250411    gcc-9.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250411    clang-21
-hexagon               randconfig-002-20250411    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250411    gcc-12
-i386        buildonly-randconfig-002-20250411    gcc-12
-i386        buildonly-randconfig-003-20250411    gcc-12
-i386        buildonly-randconfig-004-20250411    clang-20
-i386        buildonly-randconfig-005-20250411    gcc-11
-i386        buildonly-randconfig-006-20250411    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250411    gcc-14.2.0
-loongarch             randconfig-002-20250411    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250411    gcc-9.3.0
-nios2                 randconfig-002-20250411    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250411    gcc-14.2.0
-parisc                randconfig-002-20250411    gcc-8.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc               randconfig-001-20250411    gcc-9.3.0
-powerpc               randconfig-002-20250411    clang-21
-powerpc               randconfig-003-20250411    clang-21
-powerpc64             randconfig-001-20250411    gcc-5.5.0
-powerpc64             randconfig-002-20250411    gcc-5.5.0
-powerpc64             randconfig-003-20250411    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250412    clang-20
-riscv                 randconfig-002-20250412    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250412    clang-18
-s390                  randconfig-002-20250412    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250412    gcc-14.2.0
-sh                    randconfig-002-20250412    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250412    gcc-10.3.0
-sparc                 randconfig-002-20250412    gcc-13.3.0
-sparc64               randconfig-001-20250412    gcc-13.3.0
-sparc64               randconfig-002-20250412    gcc-5.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250412    gcc-12
-um                    randconfig-002-20250412    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250411    gcc-11
-x86_64      buildonly-randconfig-002-20250411    gcc-11
-x86_64      buildonly-randconfig-003-20250411    clang-20
-x86_64      buildonly-randconfig-004-20250411    gcc-12
-x86_64      buildonly-randconfig-005-20250411    clang-20
-x86_64      buildonly-randconfig-006-20250411    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250412    gcc-14.2.0
-xtensa                randconfig-002-20250412    gcc-13.3.0
+> 
+> Best regards,
+> Krzysztof
+> 
+> ---
+> Krzysztof Kozlowski (3):
+>       iio: accel: fxls8962af: Fix wakeup source leaks on device unbind
+>       iio: adc: qcom-spmi-iadc: Fix wakeup source leaks on device unbind
+>       iio: imu: st_lsm6dsx: Fix wakeup source leaks on device unbind
+> 
+>  drivers/iio/accel/fxls8962af-core.c          | 7 +++++--
+>  drivers/iio/adc/qcom-spmi-iadc.c             | 4 +++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 7 +++++--
+>  3 files changed, 13 insertions(+), 5 deletions(-)
+> ---
+> base-commit: a4cda136f021ad44b8b52286aafd613030a6db5f
+> change-id: 20250406-b4-device-wakeup-leak-iio-4457b99b6a91
+> 
+> Best regards,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
