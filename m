@@ -1,229 +1,133 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690C1E87B;
-	Sat, 12 Apr 2025 00:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C682EAE5;
+	Sat, 12 Apr 2025 00:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744419261; cv=none; b=H+Wrj5SWZxvRTSdTMNdzRNrx5RhSgfCmVsaKLd2uRwlh2qGSFUChGZzWM3pXoA4XoQUpIbr1q0hSHS6Gv5xntZ8ewHyPrEF/nd+Fb8qGmbosswnEM7x1tBTaFCbR0T8sRS0Ic2bFsWG7+qjvrRAFIfcXpDmVJK+Do/yKEC/yfwI=
+	t=1744419484; cv=none; b=sL1/3Oi2J1uq7HdilwQ/koC3ojKxg/S4Z4dwhTLD2yTYCala8NkGWece1hCiLGjcR8yvJwrdcq+fSaDcwnVAUMHy59fQ1YMB9FWg6rksT4+kZ9vogs+OrYbeLZEkcAYD/Y3Vj7ne5dLkVTaeTUdX10AUtM3NwfsunPn+PGHFVWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744419261; c=relaxed/simple;
-	bh=s45L0YnkJ1vkVqnb9gTLWF3wJTlILXq+4YLkXE61rqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZgU7IrghjkklhHr+TDdXLlGrfPpFRhRCpsNKgmlRGO4jPT42gwjhz/5zfRc8f45XUuJ0nUolDiSadFC+sJCaSFHhLmrN0vg5rXBQIs8nNIZXYbLSW84eTEBVzCaORhv/RnAxUSgerh05YgbJepwkrgTHEsSOe3OX1TvFFGiKzzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kxUKhr59; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1744419484; c=relaxed/simple;
+	bh=4tcELd13teizB6G1R71cLt4/wC29H1yVOSMkrjYkSLc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bYNw1U8kj8dNyUTgxhquEPXc2W2F1n+802wPznNH+JYFhijcXiMd0OEOL7xgeiUlf4EQCo7i4QvvHJIfbevENcLG8V2ND+htGauKzDkjC/ppZX95oUoXoGbu/U/EiRiiel/lRaIiq0+cadZ85NscbRCOCNdpsTJH8qaCPig+Uu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m9V++UnV; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxUKhr59"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73972a54919so2388306b3a.3;
-        Fri, 11 Apr 2025 17:54:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9V++UnV"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ede096d73so19134595e9.2;
+        Fri, 11 Apr 2025 17:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744419259; x=1745024059; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t0Jdvg9bhsj2TlLlgKK4kFPCwh8w3DW34G5/8k1fXRo=;
-        b=kxUKhr59waGTJcy2sZxukp7UYRK5TcXPjZ+fgS+00cwAy5kF4q2Cmv5tFvJ/IE1Hys
-         qF1td4PBt9YL5sgTunJ3C2U0+shMoCUIY9kWskFx28cK7UmX6Kf5PBgVsIKgFQpxUBDb
-         TJgeziItaN6Ce8LCRNFxG2h9lDBtT7Ap87kYgdPFFRm5EXX+H8uhNtOWzmQRErTUOQcf
-         2z9iKboptvLjOfay6lYqJGnw4yhUSJRHODYIot2w/p8KH8G0S9oIN/8CJ36oA9akExvf
-         p2nlVfRE5LPv6ft3BGibMC1RdEIexk0RuP0kmsIwFP5AfdUX2NomGP4AWh8vGKeGkBgt
-         G8Ag==
+        d=gmail.com; s=20230601; t=1744419481; x=1745024281; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=offdqmvkFJfHM6QzgUBHAoAKLM8GIhKmAd/u+Vakz+Y=;
+        b=m9V++UnV0d6exalspwmeSGn5rI9W8UEfGp1XhionmNfBGrjidxb6pp/QiE0M7CVTNV
+         lsWrKcFrnmXz9qPIeQ7w5jRRjhY4o/Jgk4Qm5y3MgBj1z1D7GPAqPgtgUH3bW5AmHo70
+         YzANO94R7/MjuzKGOIlh6YBm+3Y+7ff4XgEvwa60mFey1wlaT0HDCFxm69cCu4+YT84+
+         Lrln4u6/0Ps2ZydTUYMhspjJUHKOs4Jm3wMuMoeA/P8e/r3ETL8XnNsEPDy/vcQn1j3W
+         DXcz/qwW4+1S5XxeYrA875tPCUnQp/LWcZCFvHa0hWRmWaPZP7fJq6PpylZqoPXgXoy5
+         CH1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744419259; x=1745024059;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t0Jdvg9bhsj2TlLlgKK4kFPCwh8w3DW34G5/8k1fXRo=;
-        b=k/BqXyvpD+Rodd79rrU+6Uo7AtZUxnV1azprAIMXUtEnH6sYh+lt89a1777ey6yj0w
-         cK7n6mX21CONMjeUQUv7dTY0GmlF7TJDOB56wPaORAbrE9I0nPJFh4MsTJev9Vk20P3D
-         l4/iDyVMEPQnkJpO3oa09U8fs+ARX/MHA0oZbaMJtbKZ7lIHDGs8XVu9CtutoB+LexTn
-         xCqtoQo1KNUnX7SPlAu5zYCTxOpZ5v9DVHGaUxN4NE8gJaa6UjSY8mAP6n2Auk+YqtgN
-         l3RnqUg6KIyIPtUeY5/EF4R+iaRURHDG04TrP7A/ry1tWvWsJw4esGblBvfla9KCTwOT
-         i65Q==
-X-Gm-Message-State: AOJu0Yz6JOjC7R9/wtszk1keew0lCTuBSsd6HU1Qz8P0iLK42Wws/g96
-	OOmlu+DX3UPXQbKwe9+UxRC38Y2TX0k0I8e9xrDCdHkTtDE3p26ACmXEIVKp
-X-Gm-Gg: ASbGncssGr7zkBnMfTrgvHt++60tsRhtxP3ygHvb115L2BZdXeVkC+HA2vvxLRQn39A
-	a5NdHO+foB4VysGm0n9bgpTzeyCKOG7rn2tNg9R1PEoi1VTsKcwuu+4FkkhrMOQ44pXoOEtsBhS
-	FhB/sqtOXafqCyOCd1Vr7YTE+IzZBbCZRUDfNGpSj81Dr++j8zCM9fh1GjxvTaWzWrNTxOmy6Or
-	0ZIswDprbosBn3d5IZKeLviZxSCzUwIehII0ur8pfBONuK0Erd0w3U/0otQ5g9zjzg507w/wIJl
-	dFWyWZ3l4JLOLrPhFPi5FZZSO4eZeGkZv51QQyI6iWlXA5dDFH3Wc3pcFYBkCevQht3qWa/npKQ
-	2gjIU9xiOh3a+HHhEustehLN0Ze3s
-X-Google-Smtp-Source: AGHT+IHe4ii2FtLn/r3QCdx0kXlhM2Ev3zMXUE8KcvJ3Z+FhF6+t+o0tbI8w0udyq3tq6NDzKeu+8g==
-X-Received: by 2002:a05:6a00:1481:b0:736:6279:ca25 with SMTP id d2e1a72fcca58-73bd12a8333mr6935579b3a.24.1744419259191;
-        Fri, 11 Apr 2025 17:54:19 -0700 (PDT)
-Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230dd17sm2303274b3a.129.2025.04.11.17.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 17:54:18 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	geert@linux-m68k.org,
-	logang@deltatee.com,
-	sbates@raithlin.com,
-	dakr@kernel.org,
-	dinguyen@kernel.org,
-	miguel.ojeda.sandonis@gmail.com,
-	arnd@arndb.de
-Subject: [PATCH v2] rust: helpers: Remove volatile qualifier from io helpers
-Date: Sat, 12 Apr 2025 09:53:41 +0900
-Message-ID: <20250412005341.157150-1-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1744419481; x=1745024281;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=offdqmvkFJfHM6QzgUBHAoAKLM8GIhKmAd/u+Vakz+Y=;
+        b=lTNV+4Rr6u7YUg+ii4ydaI7RxVcUTznH6SDmjQhvuyTc4uznh7oLdCgIUoBCCKpSb/
+         LXDTyxNUkYtfUlaqijhDJVZ4679q6fYDKnojU1jDuLXKem7zjZvD5T9SA++acrX3ZCvN
+         TiRnFde9j7Gisw73n4u0IlTUqu/9gDapF81QJ8GKYnDwPFRXeZ0Ayat3btUvSZ53iVah
+         3MLmVHMTSRcRnvKZr4gl8QoF1YuH7cOArPqAbxW1skm+SO8mw2snQpSe6vx1gzkcNMLd
+         ijsuudnf6SzlUJAxY8tkJ7+nuDcN75aY7OpEzTw4wuSl0CNhW9LprODaMwrcWQ8+TOUh
+         tIoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUA4L7zbTHDGLrjVhRzC5yj4erAViHkdUYGBMxUpBkaXRJMzvjoa3wuc3VzxzYRN3Uiw4dQESYxxN6Kbr78@vger.kernel.org, AJvYcCUc6kInfCX8yn70o3/Dc0E0pWC2lvyVafxNtXT9WLtxD3ihwm23/0UVOnXA6U1vOTz2zTMAZlPpJNiuhN6eKr3k@vger.kernel.org, AJvYcCV9MbHEFIiDQVzmRlWQcyDwijGUOgylxE3xYSDetq6GOTVCZXiv+UjtVrDTg62YzX4p/SgPVb7DYCjMOsLh@vger.kernel.org, AJvYcCVWIasjuPwrLhBbUOIZ91IKv7tCEX9lQsU2FZHJNdYUqA6PYNzhP9EWetfl1Y6B3uiecIZKwfLWYg+v@vger.kernel.org, AJvYcCWOoOV/Yg0LbIrMJG1ydhG0W8TyfzVbasjwnqIPgJHfVdWyN+vmJjGSbFPmUegq2nkEzGY=@vger.kernel.org, AJvYcCWYBfTRRch/Tg4g/NCbeXuWSl2b323EB/4p6e3Vc+jAWZ9cOhwbr+o+QuQPTUN7qgkf8sjJ9ggRnc3ZfQX9k9qPiPl79aUj@vger.kernel.org, AJvYcCWgw5vmFxvn1vbU2TdOyZsKaAD7+cqxM4NrYZzOoSQzwD76uFFBU+CuaBhs7jEF/YGAxbx/GdYnu0u9mbvs@vger.kernel.org, AJvYcCWqlcEQ9SXEZy7jhExldk8IhbCqPowRlusV83CXHSL6qhLvQ7M8N/Sy4FbBS7ODoEBGLap+i7STFDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxasBTqZkfY1sUkh2kDwpO9ml+qd6bPIxV7g1YdSJS0dlVThufn
+	fHTeBwaHo724BmtRR1AFId+SrrJ8G4SrB93IfJ1Cf5uTqIXlPJ+1sElDq0Ze8N0hVissoVz0zcp
+	/bInix5oBmzNi6gMCh0tNsY4/EsA=
+X-Gm-Gg: ASbGncvg73XTxjwF+cdDhMu34DLv5geKAa/q7x0RQqwQd0TZW917QXsDNIeYKU7ZX1W
+	WHndklICfkmpOV4pcEPUZoPV9lkS/Kiy3fHRIiZCUjWhTa4UJw92xn5WtMozd9mHseqPuhJeRQJ
+	D06SZx2zC9ycT41gX8uY8D29XoWBUwxLiDEnSbXJ9/cKnDqct/
+X-Google-Smtp-Source: AGHT+IEFrfwIhf1dnPGv0cjHH5i2aO5ebUNrMZZQ/ewydMhNLm+WsR+aOi4a8v0IlIUg+wUzUz/zyHgd2Dl4JnAcXUM=
+X-Received: by 2002:a05:600c:5494:b0:43c:f050:fed3 with SMTP id
+ 5b1f17b1804b1-43f3a93d850mr43211925e9.11.1744419481051; Fri, 11 Apr 2025
+ 17:58:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <CAFnufp1erGboUtRaqLoKC48c+9jmqzEfFW8W46xt77JMC0PFpQ@mail.gmail.com>
+In-Reply-To: <CAFnufp1erGboUtRaqLoKC48c+9jmqzEfFW8W46xt77JMC0PFpQ@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 11 Apr 2025 17:57:49 -0700
+X-Gm-Features: ATxdqUE8eJ3t2XNtv61JfqDn3ir3RXF5bRaDRxRoOmmkz_xcdixjr5poHk-cOzk
+Message-ID: <CAADnVQJ5VaXVN=L+0ygEWJkMtPZnqAVEoeFiLBvikntX0zD49w@mail.gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+To: Matteo Croce <technoboy85@gmail.com>
+Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet <corbet@lwn.net>, 
+	David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
+	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove the `volatile` qualifier used with __iomem in helper functions
-in io.c. These helper functions are just wrappers around the
-corresponding accessors so they are unnecessary.
+On Fri, Apr 11, 2025 at 5:30=E2=80=AFPM Matteo Croce <technoboy85@gmail.com=
+> wrote:
+>
+> Il giorno sab 12 apr 2025 alle ore 02:19 Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> ha scritto:
+>
+> Similar to what I proposed here?
+>
+> https://lore.kernel.org/bpf/20211203191844.69709-2-mcroce@linux.microsoft=
+.com/
+...
+> @@ -1346,6 +1346,8 @@ union bpf_attr {
+>   __aligned_u64 fd_array; /* array of FDs */
+>   __aligned_u64 core_relos;
+>   __u32 core_relo_rec_size; /* sizeof(struct bpf_core_relo) */
+> + __aligned_u64 signature; /* instruction's signature */
+> + __u32 sig_len; /* signature size */
 
-This fixes the following UML build error with CONFIG_RUST enabled:
+Well, yeah, two fields are obvious.
+But not like that link from 2021.
+KP proposed them a year later in 2022 on top of lskel
+which was much closer to be acceptable.
+We need to think it through and complete the work,
+since there are various ways to do it.
+For example, lskel has a map and a prog.
+A signature in a prog may cover both, but
+not necessary it's a good design.
+A signature for the map plus a signature for the prog
+that is tied to a map might be a better option.
+At map creation time the contents can be checked,
+the map is frozen, and then the verifier can proceed
+with prog's signature checking.
+lskel doesn't support all the bpf feature yet, so we need
+to make sure that the signature verification process
+is extensible when lskel gains new features.
 
-In file included from /home/fujita/git/linux-rust/rust/helpers/helpers.c:19:
-/home/fujita/git/linux-rust/rust/helpers/io.c:12:10: error: passing 'volatile void *' to parameter of type 'void *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-   12 |         iounmap(addr);
-      |                 ^~~~
-/home/fujita/git/linux-rust/arch/um/include/asm/io.h:19:42: note: passing argument to parameter 'addr' here
-   19 | static inline void iounmap(void __iomem *addr)
-      |                                          ^
-1 error generated.
-
-Fixes: ce30d94e6855 ("rust: add `io::{Io, IoRaw}` base types")
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
-v2:
-- remove all the volatile in io helpers instead of aligning UML's iounmap() with other
-v1: https://lore.kernel.org/lkml/20250409061129.136788-1-fujita.tomonori@gmail.com/
----
- rust/helpers/io.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/rust/helpers/io.c b/rust/helpers/io.c
-index 4c2401ccd720..15ea187c5466 100644
---- a/rust/helpers/io.c
-+++ b/rust/helpers/io.c
-@@ -7,94 +7,94 @@ void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
- 	return ioremap(offset, size);
- }
- 
--void rust_helper_iounmap(volatile void __iomem *addr)
-+void rust_helper_iounmap(void __iomem *addr)
- {
- 	iounmap(addr);
- }
- 
--u8 rust_helper_readb(const volatile void __iomem *addr)
-+u8 rust_helper_readb(const void __iomem *addr)
- {
- 	return readb(addr);
- }
- 
--u16 rust_helper_readw(const volatile void __iomem *addr)
-+u16 rust_helper_readw(const void __iomem *addr)
- {
- 	return readw(addr);
- }
- 
--u32 rust_helper_readl(const volatile void __iomem *addr)
-+u32 rust_helper_readl(const void __iomem *addr)
- {
- 	return readl(addr);
- }
- 
- #ifdef CONFIG_64BIT
--u64 rust_helper_readq(const volatile void __iomem *addr)
-+u64 rust_helper_readq(const void __iomem *addr)
- {
- 	return readq(addr);
- }
- #endif
- 
--void rust_helper_writeb(u8 value, volatile void __iomem *addr)
-+void rust_helper_writeb(u8 value, void __iomem *addr)
- {
- 	writeb(value, addr);
- }
- 
--void rust_helper_writew(u16 value, volatile void __iomem *addr)
-+void rust_helper_writew(u16 value, void __iomem *addr)
- {
- 	writew(value, addr);
- }
- 
--void rust_helper_writel(u32 value, volatile void __iomem *addr)
-+void rust_helper_writel(u32 value, void __iomem *addr)
- {
- 	writel(value, addr);
- }
- 
- #ifdef CONFIG_64BIT
--void rust_helper_writeq(u64 value, volatile void __iomem *addr)
-+void rust_helper_writeq(u64 value, void __iomem *addr)
- {
- 	writeq(value, addr);
- }
- #endif
- 
--u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
-+u8 rust_helper_readb_relaxed(const void __iomem *addr)
- {
- 	return readb_relaxed(addr);
- }
- 
--u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
-+u16 rust_helper_readw_relaxed(const void __iomem *addr)
- {
- 	return readw_relaxed(addr);
- }
- 
--u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
-+u32 rust_helper_readl_relaxed(const void __iomem *addr)
- {
- 	return readl_relaxed(addr);
- }
- 
- #ifdef CONFIG_64BIT
--u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
-+u64 rust_helper_readq_relaxed(const void __iomem *addr)
- {
- 	return readq_relaxed(addr);
- }
- #endif
- 
--void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
-+void rust_helper_writeb_relaxed(u8 value, void __iomem *addr)
- {
- 	writeb_relaxed(value, addr);
- }
- 
--void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
-+void rust_helper_writew_relaxed(u16 value, void __iomem *addr)
- {
- 	writew_relaxed(value, addr);
- }
- 
--void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
-+void rust_helper_writel_relaxed(u32 value, void __iomem *addr)
- {
- 	writel_relaxed(value, addr);
- }
- 
- #ifdef CONFIG_64BIT
--void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
-+void rust_helper_writeq_relaxed(u64 value, void __iomem *addr)
- {
- 	writeq_relaxed(value, addr);
- }
-
-base-commit: c59026c0570a2a97ce2e7d5ae5e9c48fc841542b
--- 
-2.43.0
-
+Attaching was also brought up at lsfmm.
+Without checking the attach point the whole thing is quite
+questionable from security pov.
