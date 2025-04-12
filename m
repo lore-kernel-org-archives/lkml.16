@@ -1,109 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257E6BFCE;
-	Sat, 12 Apr 2025 17:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3EA1885A1;
+	Sat, 12 Apr 2025 17:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744479882; cv=none; b=eKwgTOBamTPfay7Mm59JDPg0XWn2tJ/ph3VWbJqbLIuyjJsDfmA2EE97JnCavm4hij3HYQ90MjnHDllFRVnwsjuRopaQdsAHfFuQZRnrDK0LJok4PHusvKYV1/wvIqvK8dWoyvAnd8tA5tB72dnljrJn2/0zRSNbgRdrwgIJeoY=
+	t=1744480265; cv=none; b=rIKb2qJZ8YIbYXuwka2+U9FG994USMkYsk7NISzXXCdjhYviviqFghZUjJDPcx5mVhd9HFK+tympNJcQQPEq/Jio2lAa9O23ptPAaDJ3WCpivVXOz0u27qLs03zUrWxVx7FtRm/07IRBDfTFSkMN8btZqAIXSoAh/rT70ildLU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744479882; c=relaxed/simple;
-	bh=+97YbZag3EjvYCU3VxRZgKfybyukADSNBGMn9Y/e/68=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YTJvBeKnj1TV9CUoKyLivthR7oQ/wjZiVA29wUEZIO5dfBNZb3Ey0idY2JXAMdkAVZ+tNlX+Yizgo4VMncKN9v12CU2Hp+R697Ro7hf5tseI4oGlD25oDQv5LDWZRU6HRrdOFtRN0p+naFbMzUeiI7d333rM8W1v0nnPzhyP6fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhEevoeY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744480265; c=relaxed/simple;
+	bh=TagZ0zYvwJ13raGmBK79thcRSiS9AqEKrO4KwU9hXwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=luM6Pi/xLqiwJFY1xfDGe19YjwJxgz1Q7sO9Cg4wPxZtN5b93+xiFn2GY1umVI2bUVqR9/tFmBDTvTIKT6jburMA/Pxdhp1afGKQ2BRB6pMcfbQV8D7kgrcqtbzMtoAWprhHqcVIyQ3H9mia+Bb/irtYWg7gO8yYuUEmlZ7UQF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTqhljt3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhEevoeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B372C4CEE3;
-	Sat, 12 Apr 2025 17:44:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTqhljt3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E8CEC4CEE3;
+	Sat, 12 Apr 2025 17:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744479880;
-	bh=+97YbZag3EjvYCU3VxRZgKfybyukADSNBGMn9Y/e/68=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MhEevoeYQDUmweha7t8vIzMbxTlsGaztIEh+dOf4bLghh6+AkRqDOd9rA4FE3Qj6R
-	 lHk+mwd41FgCgdEgxskxnNc0yDoAx484VfJUwH0FUYJBMxTrC/hO5Hoq8fcr7ihPMN
-	 VVVEBeBPbvC6riE55QTsKM2hL2K+7KneG1eyNIfWmIepSGJ8hM0FhR4HOVzvSL0x3U
-	 zqLwG/0ct0LPTL4zID2dISJHncfyCo4NcEodVHywuALbPqQuUJsrQyK7GgeDJwXSGp
-	 MXK+JiXbuRXDm/H6HJr7PkQm4QY1TTpGa29k3UlXotFu5rdkWHgbkJqj8JD2t9jXKr
-	 UJ8XQMLN4Q/Dg==
-Date: Sat, 12 Apr 2025 18:44:33 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Kim Seer Paller <kimseer.paller@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, David
- Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <noname.nuno@gmail.com>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Message-ID: <20250412184433.58f0a9d5@jic23-huawei>
-In-Reply-To: <20250412-togreg-v4-3-cb9e5309b99d@analog.com>
-References: <20250412-togreg-v4-0-cb9e5309b99d@analog.com>
-	<20250412-togreg-v4-3-cb9e5309b99d@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1744480264;
+	bh=TagZ0zYvwJ13raGmBK79thcRSiS9AqEKrO4KwU9hXwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iTqhljt3uPGXOeeokGvoiePR+ULT/F/3X/m+FFA8bnGCvHHgn1lA86i5BCPVlTue9
+	 Lg8uCC4kUbFvrXYIyu+4OVIeTLuR58HAIuTLiLcr39nOf8n8/SmfLUi2y6ZowcVpUI
+	 MC45dp6RnmgWOe36zHHuNMUhhpftX+9ShMiOJKEYOirhtwQm3i8AJ/0c8UuG9zVRPQ
+	 +Gxz6jQka4/gc4k+c17o2pILuWGPlyIvlqFvUVO61/wbGE4Dr8bqMGk42DVUr/Txe3
+	 CnFR5sXe+eG9zSNkjbun7sQ2JGWSbNSJ51i9Sb13getv+rIldGbjcJQBklc5Nfq+Vg
+	 mRsKOkC/lr8BQ==
+Date: Sat, 12 Apr 2025 12:51:03 -0500
+From: Rob Herring <robh@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com, linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: phy: rockchip,inno-usb2phy: add port
+ property
+Message-ID: <20250412175103.GA1366427-robh@kernel.org>
+References: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
+ <20250407-rk3576-sige5-usb-v1-1-67eec166f82f@collabora.com>
+ <20250410211123.GA1071510-robh@kernel.org>
+ <6743970.MhkbZ0Pkbq@workhorse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6743970.MhkbZ0Pkbq@workhorse>
 
-On Sat, 12 Apr 2025 13:57:32 +0800
-Kim Seer Paller <kimseer.paller@analog.com> wrote:
+On Fri, Apr 11, 2025 at 04:31:38PM +0200, Nicolas Frattaroli wrote:
+> On Thursday, 10 April 2025 23:11:23 Central European Summer Time Rob Herring wrote:
+> > On Mon, Apr 07, 2025 at 08:09:14PM +0200, Nicolas Frattaroli wrote:
+> > > USB connectors like to have OF graph connections to high-speed related
+> > > nodes to do various things. In the case of the RK3576, we can make use
+> > > of a port in the usb2 PHY to detect whether the OTG controller is
+> > > connected to a type C port and apply some special behaviour accordingly.
+> > > 
+> > > The usefulness of having different bits of a fully functioning USB stack
+> > > point to each other is more general though, and not constrained to
+> > > RK3576 at all, even for this use-case.
+> > > 
+> > > Add a port property to the binding.
+> > > 
+> > > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+> > > index 6a7ef556414cebad63c10de754778f84fd4486ee..3a662bfc353250a8ad9386ebb5575d1e84c1b5ba 100644
+> > > --- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+> > > +++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+> > > @@ -78,6 +78,11 @@ properties:
+> > >        When set the driver will request its phandle as one companion-grf
+> > >        for some special SoCs (e.g rv1108).
+> > >  
+> > > +  port:
+> > > +    $ref: /schemas/graph.yaml#/properties/port
+> > > +    description:
+> > > +      A port node to link the PHY to a USB connector's "high-speed" port.
+> > 
+> > I don't think this is correct. The HS port of the connector goes to the 
+> > controller. The controller has the link to the phy.
+> > 
+> > If the PHY is also what handles USB-C muxing or orientation switching, 
+> > then it might have ports, but then it needs input and output ports.
+> > 
+> > Rob
+> > 
+> 
+> Hi Rob,
+> 
+> thank you for the quick response.
+> 
+> I've feared this would be the case, but chose to go ahead with this solution
+> anyway because I'm not super stoked about the alternatives I can think of. The
+> problem is that I need to go from the USB PHY node to the USB connector somehow,
+> but there's no way I can see to get from the PHY node to the USB2 controller
+> it's connected to, unless I'm missing something obvious.
+> 
+> So I see two alternatives:
+> 1. Extend the usb connector binding to add additional ports for PHYs that handle
+>    vbus detection or something, then extend either the inno2 binding or a more
+>    general usb PHY binding to add that port definition.
+> 2. Revert to what the downstream vendor kernel does and simply add a boolean
+>    flag property to the inno usb2phy binding that tells it whether it's
+>    connected to a USB-C port and should therefore expect vbusdet to remain high.
+> 
+> Let me know if there's any better alternatives I missed. If there's some OF
+> driver function to enumerate all controllers a PHY is referenced by, then that
+> would probably work as well, allowing me to just point the HS port to the
+> controller instead as intended.
 
-> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
-> low-power, 16-bit, buffered voltage output DACs with software-
-> programmable gain controls, providing full-scale output spans of 2.5V or
-> 5V for reference voltages of 2.5V. These devices operate from a single
-> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
-> variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disabl=
-ed
-> by default.
->=20
-> Support for monitoring internal die temperature, output voltages, and
-> current of a selected channel via the MUXOUT pin using an external ADC
-> is currently not implemented.
->=20
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-Hi,
+The building blocks are there. You can iterate over nodes with 'phys' 
+with for_each_node_with_property(), then on each entry in 'phys' check 
+if it matches your node. Then you need to iterate over the ports to 
+check for connection to usb-c-connector. 
+of_graph_get_remote_port_parent() will help you there. Not terribly 
+efficient, but you're only doing it once.
 
-One really small comment from me.  Otherwise this just needs
-to sit on list for a little while to give other reviewers time.
-If nothing else comes up I may just tweak the thing below (or leave
-it alone!)
+Another option is extend phy modes to distinguish USB-C or not. Then you 
+can set the mode either with the 'phy-mode' property or in phy cells. 
+Though if you have to add a cell, that's an ABI change (not sure if the 
+existing kernel would accept another cell).
 
-Thanks,
+I rather see the kernel use the information that's already there rather 
+than have 2 sources of information.
 
-Jonathan
-
-> diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ffa04f678b86d8da6f5e47c35=
-c265b6648121843
-> --- /dev/null
-> +++ b/drivers/iio/dac/ad3530r.c
-> @@ -0,0 +1,506 @@
-
-...
-
-> +static int ad3530r_probe(struct spi_device *spi)
-> +{
-
-...
-
-> +	vref =3D devm_regulator_get_enable_read_voltage(dev, "ref");
-> +	if (vref < 0 && vref !=3D -ENODEV)
-> +		return vref;
-> +
-> +	has_external_vref =3D vref !=3D -ENODEV;
-> +
-> +	if (!st->chip_info->internal_ref_support && !has_external_vref)
-> +		return vref;
-If doing a v5 I'd go with
-		return -ENODEV;
-rather than having people scratch their heads to figure out what is in vref.
-
-> +
+Rob
