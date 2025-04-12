@@ -1,103 +1,99 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D9D1EA91;
-	Sat, 12 Apr 2025 12:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0C41E480;
+	Sat, 12 Apr 2025 12:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744461934; cv=none; b=X+6zFXP48fFle/DZKo1UInCgw6xNh6Ldl+//wLybez9t8Nkw2BkF7xDVeLvvOKUF0e4/OSdvoOuwwW5eAuj3xdslMrXow568nEQ76eFMCGxyWM93U2XEhs3b/pVv2E7ElgeRT3YjC/wZgXGkAYgDSeTmPOz1F4aAfzz1y/crg/Y=
+	t=1744461946; cv=none; b=gNFs1MnpFDf6UOn4XVTG5lB7tK8sbaogHs5ttzSAMpXlcetH9u74xAHP9rB301XbUKM/zSyuiJkgejML+2x8x+1zw4pXwvJ4EeFUIJlTPiR8qQtBeaURZsUXRb/lf8jlKPPI5mgFWwI+xPgOGF9sEvs9jbzVKTTD4UucUt6vdRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744461934; c=relaxed/simple;
-	bh=BlqjmiCO5gHfE6pk+/2AbOLM/Pn18+xedndRW8/FHps=;
+	s=arc-20240116; t=1744461946; c=relaxed/simple;
+	bh=oeL5Iwjg1FiygjSXNRjRQhDXKj7+TEJLBW+oZacpWUg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sbo5pzNCsk5Y1l+1FaeEipceb1Wrh6uGZ/WVjSwz/+OFYAkoY47aeHYDMB9UwhpAZMF/6UKfdc+mfEqpV20Y3oiNYUR0nbPu6CJAC1bih8Xb7P619jVCna/wNlcENKZd6reqqv4n77JfykwPmAPNOtmtNQZdBIPwf8K0fTxJNd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/mpMaOo; arc=none smtp.client-ip=209.85.218.47
+	 To:Cc:Content-Type; b=YoiCq1AT/Mt9xOf9svEojV3YhqMZG6+ckWJ+8qO3bPvVk3PnOvlzYUz+0x+/Hh9AfgZIxj+UOztlHalYPkmqiuCUx2wEbPqgHceaftzo6ihY/I9QvyfY6jOCR1d5JbmZFEsw9MjEDqtk+jbGeLUj2aREPahEswDrErIGv2uqUKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMNrTsbc; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/mpMaOo"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so490271366b.0;
-        Sat, 12 Apr 2025 05:45:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMNrTsbc"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39727fe912cso1329579f8f.3;
+        Sat, 12 Apr 2025 05:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744461931; x=1745066731; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6CSIu8JpD+88b1gGZOa4ZQUcLcr8nrVGNpfocXHyTMo=;
-        b=F/mpMaOo+RCC8WVQuwSHQTmOSqFHHjmjPz/qgBMmUjashF5wlUiD6wyk8q3KYXhF/t
-         kKw7sTDwHZb3Fnlmep0368F8/V33ap2ia2vLWGLcsntCpYr4kAxUKUSuGsqt/sXm98pA
-         766rrEtlrAmaiGJhOdZ0DzTlxsIwS7pU2Od0e/ei6drJNwhceyunPKdIRhiC9zfH5Qax
-         ljB0X8cOwz+eSDEwA3tMXeoB9ak/bSD2yVU64WxAC3H9tPth5ofS2Ie2AHwIqaWwHzFl
-         ltVZlh+E/mkehP070k26hAiuBgRPY3EYGhhOkfzO5C8t3j7UCtEbib/cp4Bj7Gh08JKN
-         8SYw==
+        d=gmail.com; s=20230601; t=1744461943; x=1745066743; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oeL5Iwjg1FiygjSXNRjRQhDXKj7+TEJLBW+oZacpWUg=;
+        b=SMNrTsbc07W57FhSzwsXojeEogxfU5JaWIg39zo77beyA90zGg2OzJ1ZdPv4sbi2AX
+         Zm0xl3qJhuoZs9zPT/ObZ0wcDH2Wjb2fXZpze0DEc2lHddnC4rqwG7L8hCh9xzf/dx0E
+         yF9SO59uEZCSXozOMr93cgjdJUyvlpXAlJXRrtd/qi8HPFlVLozvvjPaCCXAPWb9h14z
+         5qQBnRdiBN1n9bIGv0X+FLzAPc/HBTNViarPdNzuVQPNHrjViT2MRK3nxg63ICw6X51s
+         QFcwOK/ZUSdFv0bE99PuCaaIVsIZtRj4mEDasIWRpAyvFc7HQouCnydKNOPKjJMiPeDV
+         s6Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744461931; x=1745066731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6CSIu8JpD+88b1gGZOa4ZQUcLcr8nrVGNpfocXHyTMo=;
-        b=QLLuSildGFJAYVdbUlNaDZb4YSK235Y74UFWvWyIR5XHnyKsyzXZGrINtPf9fDxA5u
-         V2Xb1dymZ2jSnx9yiTeknHMsWCR04Ub4OuSVtwJiObzT84XBpymXI/O6WZai5x3iTBKH
-         nk2XMO7+YOB19KS4DRPo4cR/ow8ciVigY3JhNZ7y+86G8rjjFXFKxvN/LSRw02xzU6lK
-         F2ZiWMEzKGrqiUEBJI0gkFnB+FB1fQkLWiZvpOsriKx/XHa9v58ZICXIK7kZDssf9Ych
-         5hypgstbc/Sa9UyWC1wGn64TJ1dtx0jAnXWNZQjHLGkIPC+fJXldTm9bHC6dJiHJ25JA
-         Uoyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvWQH1Jq/J0F2fnkSKTn8/Bng3ad4RMknh6/5WXt/SAw5fJV26Ukkpj2T4FIj0xmRPWXMIcVXEtpKX@vger.kernel.org, AJvYcCWL4Lqesacs+rRw7B3yBPM7YRaQZdENAdczO1srfqjrLUh8ivwc85NHmDw4wRVSjVdoxxRccn4PKna0drJq@vger.kernel.org, AJvYcCXuRWM2JSpYzs4GjQ3rNG1pHpzwb633KQrw9luQHCdfUPzg3fcf43QS2gQbQpxqsu0t01x99Yj10Ftmr2bh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlWjrmT44FceK/mmyYiBmb5GAOOysHGwZixnaDPta1a4GyJIPR
-	2q+q83Cz51ljVp/bSbKUhoyCloMCGrUCz9cAW+gJkhWf0zibIuFpaqDwd59K3GmfwN9I+wNkub9
-	aJwksFl5oHApqv7CnVa+gIzpyfs8=
-X-Gm-Gg: ASbGncvgyL02NjWnAUVs2mLs6U5DUKCAbwwEC84whgNQOLSHMSDu9Y8tPxvfYmX5L2q
-	7KOCeUWgllasupACj9g1vIPaxgAqC2+Q/L7f6ICr/dXNAHN7pw6eSAHrTxa4iaNas4A5SuT6pT4
-	e63MVrt4bDMcklORDFPUE+bQ==
-X-Google-Smtp-Source: AGHT+IGfC+z/RHEDg/9TFMKy1xjqNYqDOuAW2IXR4RFyolm1ffVLC2JPi9pavWhIuEFFaxynDwZ5//r4gGu6ZPYkfY0=
-X-Received: by 2002:a17:906:6cb:b0:aca:d861:877b with SMTP id
- a640c23a62f3a-acad8618795mr365643966b.49.1744461930521; Sat, 12 Apr 2025
- 05:45:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744461943; x=1745066743;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oeL5Iwjg1FiygjSXNRjRQhDXKj7+TEJLBW+oZacpWUg=;
+        b=fj6p9nJyik+GK/kX8ipEsq/HLSGdnglQ8434IYVtX4AF4kxUOOxHhPwsZgWcEIDgZd
+         8vLhkbmS9FOQXCUwfKxnxblXMH9UMV9QV2F8tEDXCiGuN/h2h0k10ZaPqHlmKWl3oobZ
+         y/umgXizjh8NEuT9D3pGJvCNV9sN4kl5rUZZeoI/QZ3pVkG6xzoJ/hgj8KN8I/P4QPgR
+         Varsilpho56WAENorw8jXqklQRm073j89Qz0t+JXlIUsWek+ESqT/KfRtmV3pIOeT3iI
+         T65ZPtqwxXlBHqho7iZWVu5JkzVbwe5/mhfU93EMeedAZ3GGnB+rMBj5YR2FRkCcEg9R
+         q39Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQnMkuKbU6HNlZZ1dej9E1rbn+4X9TOR1h9O5/RfhLlLinSWlYQ2w/PdwbNDEf8sMT4e6AlbfxInif@vger.kernel.org, AJvYcCUXNw7B3oqVQc179N8LSJexVsVHv64YQ56xS7wN6v1ceSHrW0yvbmjFB8MRTIGiUX5VA9vsxJmVHo5TQb9mJA==@vger.kernel.org, AJvYcCVSB2XDVAmPc/DnxtmwcFmrFK3bStfFPN66moU0kCfHWf3Xyv2lR0kSq2vZjdlB3KeVW6TFIJYsTR+tWf45@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMS8Kp+DzhyrU0uXdUKkwDNqx9PHYkfAxYnMGhyKqe83sw9zPD
+	vYQ0Y+8u+ccgozPlK7hjoTwYuARWagVcFWLy+pQ8ygnzMlC7jm31VVaCGFBzrecq5K7Uk0hfxox
+	pHlaX5LBNzwG73iDjgcemT5QiyAHeNlo=
+X-Gm-Gg: ASbGncsb88ciKoU3Upk4oTLlgVmztJ6oi3HBKEeZTIrFYgkER/8clJhxQasdXvFw9x5
+	kY5M8r7R9RBx8JzfLH2d1HY+fUXD+un69tFOdR/FI0MQUJ7ZORPc3PFnuq+uv27x6+q9ODrs1Zl
+	pTCRFDQaKawEdKD8WSd544JA==
+X-Google-Smtp-Source: AGHT+IGWVy3poODVCuN/fPbaGQe4qrbxQ1yxGohGIKT4NlBYIG0iGseWDaLQAMOYBw+2yHzIGa3exQkaSivFefxGhhk=
+X-Received: by 2002:a05:6000:18a5:b0:39a:ca0c:fc90 with SMTP id
+ ffacd0b85a97d-39ea51f5089mr5267735f8f.14.1744461942417; Sat, 12 Apr 2025
+ 05:45:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411203828.1491595-1-elder@riscstar.com> <20250411203828.1491595-4-elder@riscstar.com>
- <20250411220425-GYA22939@gentoo>
-In-Reply-To: <20250411220425-GYA22939@gentoo>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 12 Apr 2025 15:44:54 +0300
-X-Gm-Features: ATxdqUGjS7K471piTwxJCgQ1FPFGZOtwP3hjSsRZXjBRtkjA83KwOfmLPX4aRGY
-Message-ID: <CAHp75Vcmhp4rOSETAvM1u0UV5ejxbSniuwocMBmUd0DrO1Jp=g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] serial: 8250_of: manage bus clock in suspend/resume
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Alex Elder <elder@riscstar.com>, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	benjamin.larsson@genexis.eu, bastien.curutchet@bootlin.com, 
-	andriy.shevchenko@linux.intel.com, u.kleine-koenig@baylibre.com, 
-	lkundrak@v3.sk, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, 
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250411155852.4238-1-alex.vinarskis@gmail.com> <e19eddd1-0911-42c6-85e7-a9fbbeea778d@oss.qualcomm.com>
+In-Reply-To: <e19eddd1-0911-42c6-85e7-a9fbbeea778d@oss.qualcomm.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Sat, 12 Apr 2025 14:45:31 +0200
+X-Gm-Features: ATxdqUFuRFVL9o9T0VFgihmm5dR0ORm5NUo3sL5KU7Yg_d1o1LTQYAKedbwxLSc
+Message-ID: <CAMcHhXp5A2v2cuWt2pZ-6qeN+D2qZvV-4XCN8s3OonZqD6e4XQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x:
+ enable MICs LDO
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 12, 2025 at 1:04=E2=80=AFAM Yixun Lan <dlan@gentoo.org> wrote:
+You are right, this is probably too 'dirty' fix.
+I did some more digging, and found the root cause of the problem -
+MICs were not configured in audio routings, even though vreg was
+already binded to lpass_macro. Will send v2.
+
+Thanks,
+Alex
+
+
+On Fri, 11 Apr 2025 at 21:25, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
 >
-> hi Alex,
->
-> Glad to see first 2 patches already accepted
-> This version is better than v3, thanks
-
-Exactly! I'm not sure this series can be applied due to that. You need
-to rebase on top of tty-next.
-
-> On 15:38 Fri 11 Apr     , Alex Elder wrote:
-> > Save the bus clock pointer in the of_serial_info structure, and use
-> > that to disable the bus clock on suspend and re-enable it on resume.
+> On 4/11/25 5:54 PM, Aleksandrs Vinarskis wrote:
+> > Particular device comes without headset combo jack, hence does not
+> > feature wcd codec IC. In such cases, DMICs are powered from vreg_l1b.
+> > Set regulator as always-on to enable microphones.
 > >
-> > Signed-off-by: Alex Elder <elder@riscstar.com>
-> Reviewed-by: Yixun Lan <dlan@gentoo.org>
-
-Code wise this one is what I have expected, thanks!
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+> > Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> > ---
+>
+> Can we bind it to the soundcard or something, so that we're not leaking
+> power?
+>
+> Konrad
