@@ -1,165 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta22.hihonor.com (mta22.hihonor.com [81.70.192.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD971DDAB;
-	Sat, 12 Apr 2025 10:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3914A1519A6
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 10:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744452368; cv=none; b=L+h4AVKhDco0XrRZxCQEk6gfV+VOq5CRy0m6j3Xkopn1lfS7vBbz3iFZ3BOahLafAm3PzXaFZaATXplUoZi+cHuki+G90JxNVMJgU+N2CiCVt8Fhh63qafDbAiIJBLk6qQP/ugDvUi388ma0NpJj7DbceTqGoRO4gygTx0KbjVc=
+	t=1744452408; cv=none; b=Et3rGIQCoGh4MYi7XI7wK8EhG3e5KGJKlKscuwSXva1hak9VitXTKeWVLQqINebRKVc3YcgDNsLcDrGjaRL6KxRkXylQVJUYSASx7ZjjcXdzBhcwdRHBewm84gL9/C4fM/ROhh2dmYtZgpQqeRLBFguNRToYtKh1ePyBvLxdzo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744452368; c=relaxed/simple;
-	bh=byn6WhbuFoDaP2oLGt/+qjLTmY6pSiADFCTzFQL0COw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qOPISUgFWcHEtMDstVqdw4KMOSjO5MQp7LZbTo1FEfsFsyS0IV4n+9/w/LbYOqQ0UD+O+ciRCD6LI7nJN2PewoHTCihbODaBd1ifx16gpS0Pu1mP+boW9f+6/wo+QwGjksnb27infJRa9soFSPXPZg12qHA4Wvzaal0xwsCOPEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3KzdjyF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3KzdjyF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008B8C4CEE3;
-	Sat, 12 Apr 2025 10:06:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744452368;
-	bh=byn6WhbuFoDaP2oLGt/+qjLTmY6pSiADFCTzFQL0COw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T3KzdjyFVGv0bCND99+HcoMmhojVQqELvkByMlM2nnsjpoOO5N7hrC8thOO15ihpS
-	 GDrPHglrxRPd4LGG+43nd4rxnwp7YzQWUqAVaFv/MaQkMqyRFJtAsmIxlp+Sb7YKT6
-	 1NRfYFrHyDWJ231iF4z8THYLSHKJjiBLySHoqZbtRPG6mCuUEUoErCHF86VoieSLho
-	 pzNFuC7qzYloq2bLIM+q9ZoUfSf9TJwoNkPVcXxNdpU91+8KOnCT+dQSbsm3QJXiyX
-	 d0KZSXz20Qi2TfjOBam8gNtee8uGpwasn92US5H/WE3JvSxylSvwxN/WkbcrzeYGUE
-	 y5QnSoB81TAiA==
-Date: Sat, 12 Apr 2025 13:05:59 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Davide Ciminaghi <ciminaghi@gnudd.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH 05/11] x86: remove HIGHMEM64G support
-Message-ID: <Z_o7B_vDPRL03iSN@kernel.org>
-References: <20241204103042.1904639-1-arnd@kernel.org>
- <20241204103042.1904639-6-arnd@kernel.org>
- <08b63835-121d-4adc-8f03-e68f0b0cabdf@intel.com>
+	s=arc-20240116; t=1744452408; c=relaxed/simple;
+	bh=VqCijgG6F7PWHaaGl7Lfb4uWrNYfi7/QHdLJEbWBBJI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fNkMlCk8Hua8K9Rpg/gG+zhvRiF0soHTWBhrtau8i4DHTz7xvOUNucc406BEDTsgUo7TFxxrFaJEqZJ2iNjRDWe+Q8kyLrlt+IpV9MT+IWKgHjOyxqiudJJzjkADO7F5IIvYjmwITniXsNbhjldDKe2MOaP08Fy24YfuQ1DBV1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w012.hihonor.com (unknown [10.68.27.189])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4ZZThw2hYlzYl82l;
+	Sat, 12 Apr 2025 18:06:08 +0800 (CST)
+Received: from a008.hihonor.com (10.68.30.56) by w012.hihonor.com
+ (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 12 Apr
+ 2025 18:06:43 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a008.hihonor.com
+ (10.68.30.56) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 12 Apr
+ 2025 18:06:43 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Sat, 12 Apr 2025 18:06:43 +0800
+From: gaoxu <gaoxu2@honor.com>
+To: Barry Song <21cnbao@gmail.com>
+CC: Mike Rapoport <rppt@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, "surenb@google.com" <surenb@google.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, yipengxiang <yipengxiang@honor.com>
+Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIG1tOiBzaW1wbGlmeSB6b25lX2lkeCgp?=
+Thread-Topic: [PATCH] mm: simplify zone_idx()
+Thread-Index: AduqEEHvK6kd7fhKS8Kk+tRXk/ygUf//psiAgAB6Y4D//Ve/sIAE9zeA//9wInA=
+Date: Sat, 12 Apr 2025 10:06:43 +0000
+Message-ID: <c915776e308f49e7867ecb50afa44d36@honor.com>
+References: <2d42decac5194c2c8d897b0424f0dcf3@honor.com>
+ <Z_fYsyEA9hSEOoxp@kernel.org>
+ <CAGsJ_4wACEvWe-Fcx9fShkF8okEVb3srGDVCn0v0QjALq7nneg@mail.gmail.com>
+ <bdf6988006d546d498ccb2b7c14c6fe0@honor.com>
+ <CAGsJ_4xDc_5q8dBYVq-Ga0iKJD9pTQdYSHrKw8R=1RHNb4+r7Q@mail.gmail.com>
+In-Reply-To: <CAGsJ_4xDc_5q8dBYVq-Ga0iKJD9pTQdYSHrKw8R=1RHNb4+r7Q@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08b63835-121d-4adc-8f03-e68f0b0cabdf@intel.com>
 
-On Fri, Apr 11, 2025 at 04:44:13PM -0700, Dave Hansen wrote:
-> Has anyone run into any problems on 6.15-rc1 with this stuff?
-> 
-> 0xf75fe000 is the mem_map[] entry for the first page >4GB. It obviously
-> wasn't allocated, thus the oops. Looks like the memblock for the >4GB
-> memory didn't get removed although the pgdats seem correct.
-
-That's apparently because of 6faea3422e3b ("arch, mm: streamline HIGHMEM
-freeing"). 
-Freeing of high memory was clamped to the end of ZONE_HIGHMEM which is 4G
-and after 6faea3422e3b there's no more clamping, so memblock_free_all()
-tries to free memory >4G as well.
- 
-> I'll dig into it some more. Just wanted to make sure there wasn't a fix
-> out there already.
-
-This should fix it.
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 57120f0749cc..4b24c0ccade4 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1300,6 +1300,8 @@ void __init e820__memblock_setup(void)
- 		memblock_add(entry->addr, entry->size);
- 	}
- 
-+	memblock_remove(PFN_PHYS(max_pfn), -1);
-+
- 	/* Throw away partial pages: */
- 	memblock_trim_memory(PAGE_SIZE);
- 
-> The way I'm triggering this is booting qemu with a 32-bit PAE kernel,
-> and "-m 4096" (or more).
-> 
-> > [    0.003806] Warning: only 4GB will be used. Support for for CONFIG_HIGHMEM64G was removed!
-> ...
-> > [    0.561310] BUG: unable to handle page fault for address: f75fe000
-> > [    0.562226] #PF: supervisor write access in kernel mode
-> > [    0.562947] #PF: error_code(0x0002) - not-present page
-> > [    0.563653] *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000 
-> > [    0.564728] Oops: Oops: 0002 [#1] SMP NOPTI
-> > [    0.565315] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef) 
-> > [    0.567428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> > [    0.568777] EIP: __free_pages_core+0x3c/0x74
-> > [    0.569378] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
-> > [    0.571943] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
-> > [    0.572806] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
-> > [    0.573776] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
-> > [    0.574606] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
-> > [    0.575464] Call Trace:
-> > [    0.575816]  memblock_free_pages+0x11/0x2c
-> > [    0.576392]  memblock_free_all+0x2ce/0x3a0
-> > [    0.576955]  mm_core_init+0xf5/0x320
-> > [    0.577423]  start_kernel+0x296/0x79c
-> > [    0.577950]  ? set_init_arg+0x70/0x70
-> > [    0.578478]  ? load_ucode_bsp+0x13c/0x1a8
-> > [    0.579059]  i386_start_kernel+0xad/0xb0
-> > [    0.579614]  startup_32_smp+0x151/0x154
-> > [    0.580100] Modules linked in:
-> > [    0.580358] CR2: 00000000f75fe000
-> > [    0.580630] ---[ end trace 0000000000000000 ]---
-> > [    0.581111] EIP: __free_pages_core+0x3c/0x74
-> > [    0.581455] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
-> > [    0.584767] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
-> > [    0.585651] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
-> > [    0.586530] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
-> > [    0.587480] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
-> > [    0.588344] Kernel panic - not syncing: Attempted to kill the idle task!
-> > [    0.589435] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
-> 
-> > [    0.561310] BUG: unable to handle page fault for address: f75fe000
-> > [    0.562226] #PF: supervisor write access in kernel mode
-> > [    0.562947] #PF: error_code(0x0002) - not-present page
-> > [    0.563653] *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000 
-> > [    0.564728] Oops: Oops: 0002 [#1] SMP NOPTI
-> > [    0.565315] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef) 
-> > [    0.567428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> > [    0.568777] EIP: __free_pages_core+0x3c/0x74
-> > [    0.569378] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
-> > [    0.571943] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
-> > [    0.572806] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
-> > [    0.573776] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
-> > [    0.574606] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
-> > [    0.575464] Call Trace:
-> > [    0.575816]  memblock_free_pages+0x11/0x2c
-> > [    0.576392]  memblock_free_all+0x2ce/0x3a0
-> > [    0.576955]  mm_core_init+0xf5/0x320
-> > [    0.577423]  start_kernel+0x296/0x79c
-> > [    0.577950]  ? set_init_arg+0x70/0x70
-> > [    0.578478]  ? load_ucode_bsp+0x13c/0x1a8
-> > [    0.579059]  i386_start_kernel+0xad/0xb0
-> > [    0.579614]  startup_32_smp+0x151/0x154
-> > [    0.580100] Modules linked in:
-> > [    0.580358] CR2: 00000000f75fe000
-> > [    0.580630] ---[ end trace 0000000000000000 ]---
-> > [    0.581111] EIP: __free_pages_core+0x3c/0x74
-> > [    0.581455] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
-> > [    0.584767] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
-> > [    0.585651] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
-> > [    0.586530] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
-> > [    0.587480] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
-> > [    0.588344] Kernel panic - not syncing: Attempted to kill the idle task!
-> > [    0.589435] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
-
--- 
-Sincerely yours,
-Mike.
+PiANCj4gT24gU2F0LCBBcHIgMTIsIDIwMjUgYXQgODozNOKAr1BNIGdhb3h1IDxnYW94dTJAaG9u
+b3IuY29tPiB3cm90ZToNCj4gPg0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgQXByIDExLCAyMDI1IGF0
+IDI6NDLigK9BTSBNaWtlIFJhcG9wb3J0IDxycHB0QGtlcm5lbC5vcmc+IHdyb3RlOg0KPiA+ID4g
+Pg0KPiA+ID4gPiBIaSwNCj4gPiA+ID4NCj4gPiA+ID4gT24gVGh1LCBBcHIgMTAsIDIwMjUgYXQg
+MTI6MDM6MDBQTSArMDAwMCwgZ2FveHUgd3JvdGU6DQo+ID4gPiA+ID4gc3RvcmUgem9uZV9pZHgg
+ZGlyZWN0bHkgaW4gc3RydWN0IHpvbmUgdG8gc2ltcGxpZnkgYW5kIG9wdGltaXplDQo+ID4gPiA+
+ID4gem9uZV9pZHgoKQ0KPiA+ID4gPg0KPiA+ID4gPiBEbyB5b3Ugc2VlIGFuIGFjdHVhbCBzcGVl
+ZCB1cCBzb21ld2hlcmU/DQo+ID4gQWxtb3N0IG5lZ2xpZ2libGUuIG15IHNpbXBsZSBjb2RlIHRl
+c3RzIHNob3dlZCB0aGUgcGF0Y2ggcHJvdmlkZXMgYW4gYXZlcmFnZQ0KPiBpbXByb3ZlbWVudCBv
+ZiB+MC4wMiUuDQo+ID4gVGh1cywgaW4gdGhlIEFuZHJvaWQgMTUtNi42IGtlcm5lbCwgSSBjb25m
+aWRlbnRseSByZXRhaW5lZCB0aGUgb3JpZ2luYWwgem9uZV9pZHgNCj4gZnVuY3Rpb24uDQo+ID4g
+KGh0dHBzOi8vYW5kcm9pZC1yZXZpZXcuZ29vZ2xlc291cmNlLmNvbS9jL2tlcm5lbC9jb21tb24v
+Ky8zNTc4MzIyLzIvbQ0KPiA+IG0vcGFnZV9hbGxvYy5jIzc3MCkNCj4gPg0KPiA+IFRoaXMgcGF0
+Y2ggb25seSBlbGltaW5hdGVzIDItMyBhc3NlbWJseSBpbnN0cnVjdGlvbnMsIG1ha2luZyBpdA0K
+PiA+IGNoYWxsZW5naW5nIHRvIG9ic2VydmUgbWVhc3VyYWJsZSBwZXJmb3JtYW5jZSBiZW5lZml0
+cy4NCj4gPiBIb3dldmVyLCBzaW5jZSB0aGUgem9uZSBzdHJ1Y3QgaW5jbHVkZXMgQ0FDSEVMSU5F
+X1BBRERJTkcgKHJlc2VydmluZw0KPiA+IHVudXNlZCBzcGFjZSksIGFkZGluZyBhIG5ldyBtZW1i
+ZXIgdmFyaWFibGUgZG9lcyBub3QgYWx0ZXIgdGhlIHNpemUgb2YNCj4gPiB6b25lLiBUaGlzIG1h
+a2VzIHRoZSBwYXRjaCBlZmZlY3RpdmVseSB6ZXJvLWNvc3Qgd2hpbGUgYWNoaWV2aW5nIGEgY2xl
+YW5lcg0KPiBpbXBsZW1lbnRhdGlvbiBvZiB6b25lX2lkeC4NCj4gDQo+IFRoZSBzdHJ1Y3Qgem9u
+ZSBjb250YWlucyBtYW55IENPTkZJR18gb3B0aW9ucyB0byBpbmNsdWRlIG9yIGV4Y2x1ZGUgY2Vy
+dGFpbg0KPiBmaWVsZHMuDQo+IElmIHdlJ3JlIGNvbmZpZGVudCB0aGF0IG91ciBuZXcgem9uZV9p
+ZHggZG9lc24ndCBpbmNyZWFzZSBjYWNoZWxpbmUgdXNhZ2UgZm9yIGFsbA0KPiB0aG9zZSBjYXNl
+cywgdGhpcyBzZWVtcyBsaWtlIGEgd29ydGh3aGlsZSBjbGVhbnVwLiBIYXZlIHlvdSBjaGVja2Vk
+IHRoZQ0KPiBudW1iZXJzPw0KDQpUaGUgem9uZSBpbmZvIG9idGFpbmVkIHRocm91Z2ggVDMyIGlu
+IHRoZSBBbmRyb2lkIDE1LTYuNiBzeXN0ZW0oYXJtNjQpOg0KKHN0cnVjdCB6b25lKSBzdHJ1Y3Qg
+KDE2NjQgYnl0ZXMsDQogICAgICAgICAgICAgICAgWzBdIHVuc2lnbmVkIGxvbmcgWzRdIF93YXRl
+cm1hcmssDQogICAgICAgICAgICAgICAgWzMyXSB1bnNpZ25lZCBsb25nIHdhdGVybWFya19ib29z
+dCwNCiAgICAgICAgICAgICAgICBbNDBdIHVuc2lnbmVkIGxvbmcgbnJfcmVzZXJ2ZWRfaGlnaGF0
+b21pYywNCiAgICAgICAgICAgICAgICBbNDhdIGxvbmcgWzVdIGxvd21lbV9yZXNlcnZlLA0KICAg
+ICAgICAgICAgICAgIFs4OF0gc3RydWN0IHBnbGlzdF9kYXRhICogem9uZV9wZ2RhdCwNCiAgICAg
+ICAgICAgICAgICBbOTZdIHN0cnVjdCBwZXJfY3B1X3BhZ2VzICogcGVyX2NwdV9wYWdlc2V0LA0K
+ICAgICAgICAgICAgICAgIFsxMDRdIHN0cnVjdCBwZXJfY3B1X3pvbmVzdGF0ICogcGVyX2NwdV96
+b25lc3RhdHMsDQogICAgICAgICAgICAgICAgWzExMl0gaW50IHBhZ2VzZXRfaGlnaCwNCiAgICAg
+ICAgICAgICAgICBbMTE2XSBpbnQgcGFnZXNldF9iYXRjaCwNCiAgICAgICAgICAgICAgICBbMTIw
+XSB1bnNpZ25lZCBsb25nIHpvbmVfc3RhcnRfcGZuLA0KICAgICAgICAgICAgICAgIFsxMjhdIGF0
+b21pY19sb25nX3QgbWFuYWdlZF9wYWdlcywNCiAgICAgICAgICAgICAgICBbMTM2XSB1bnNpZ25l
+ZCBsb25nIHNwYW5uZWRfcGFnZXMsDQogICAgICAgICAgICAgICAgWzE0NF0gdW5zaWduZWQgbG9u
+ZyBwcmVzZW50X3BhZ2VzLA0KICAgICAgICAgICAgICAgIFsxNTJdIHVuc2lnbmVkIGxvbmcgcHJl
+c2VudF9lYXJseV9wYWdlcywNCiAgICAgICAgICAgICAgICBbMTYwXSB1bnNpZ25lZCBsb25nIGNt
+YV9wYWdlcywNCiAgICAgICAgICAgICAgICBbMTY4XSBjb25zdCBjaGFyICogbmFtZSwNCiAgICAg
+ICAgICAgICAgICBbMTc2XSB1bnNpZ25lZCBsb25nIG5yX2lzb2xhdGVfcGFnZWJsb2NrLA0KICAg
+ICAgICAgICAgICAgIFsxODRdIHNlcWxvY2tfdCBzcGFuX3NlcWxvY2ssDQogICAgICAgICAgICAg
+ICAgWzE5Ml0gaW50IG9yZGVyLA0KICAgICAgICAgICAgICAgIFsxOTZdIGludCBpbml0aWFsaXpl
+ZCwNCiAgICAgICAgICAgICAgICBbMjU2XSBzdHJ1Y3QgY2FjaGVsaW5lX3BhZGRpbmcgX3BhZDFf
+LA0KICAgICAgICAgICAgICAgIFsyNTZdIHN0cnVjdCBmcmVlX2FyZWEgWzExXSBmcmVlX2FyZWEs
+DQogICAgICAgICAgICAgICAgWzE0MDBdIHVuc2lnbmVkIGxvbmcgZmxhZ3MsDQogICAgICAgICAg
+ICAgICAgWzE0MDhdIHNwaW5sb2NrX3QgbG9jaywNCiAgICAgICAgICAgICAgICBbMTQ3Ml0gc3Ry
+dWN0IGNhY2hlbGluZV9wYWRkaW5nIF9wYWQyXywNCiAgICAgICAgICAgICAgICBbMTQ3Ml0gdW5z
+aWduZWQgbG9uZyBwZXJjcHVfZHJpZnRfbWFyaywNCiAgICAgICAgICAgICAgICBbMTQ4MF0gdW5z
+aWduZWQgbG9uZyBjb21wYWN0X2NhY2hlZF9mcmVlX3BmbiwNCiAgICAgICAgICAgICAgICBbMTQ4
+OF0gdW5zaWduZWQgbG9uZyBbMl0gY29tcGFjdF9jYWNoZWRfbWlncmF0ZV9wZm4sDQogICAgICAg
+ICAgICAgICAgWzE1MDRdIHVuc2lnbmVkIGxvbmcgY29tcGFjdF9pbml0X21pZ3JhdGVfcGZuLA0K
+ICAgICAgICAgICAgICAgIFsxNTEyXSB1bnNpZ25lZCBsb25nIGNvbXBhY3RfaW5pdF9mcmVlX3Bm
+biwNCiAgICAgICAgICAgICAgICBbMTUyMF0gdW5zaWduZWQgaW50IGNvbXBhY3RfY29uc2lkZXJl
+ZCwNCiAgICAgICAgICAgICAgICBbMTUyNF0gdW5zaWduZWQgaW50IGNvbXBhY3RfZGVmZXJfc2hp
+ZnQsDQogICAgICAgICAgICAgICAgWzE1MjhdIGludCBjb21wYWN0X29yZGVyX2ZhaWxlZCwNCiAg
+ICAgICAgICAgICAgICBbMTUzMl0gYm9vbCBjb21wYWN0X2Jsb2Nrc2tpcF9mbHVzaCwNCiAgICAg
+ICAgICAgICAgICBbMTUzM10gYm9vbCBjb250aWd1b3VzLA0KICAgICAgICAgICAgICAgIFsxNTM2
+XSBzdHJ1Y3QgY2FjaGVsaW5lX3BhZGRpbmcgX3BhZDNfLA0KICAgICAgICAgICAgICAgIFsxNTM2
+XSBhdG9taWNfbG9uZ190IFsxMV0gdm1fc3RhdCwNCiAgICAgICAgICAgICAgICBbMTYyNF0gYXRv
+bWljX2xvbmdfdCBbMF0gdm1fbnVtYV9ldmVudCkNCg0KMSkgSXQgY2FuIGJlIG9ic2VydmVkIHRo
+YXQgdGhlcmUgYXJlIDU2QiBvZiBmcmVlIHNwYWNlIGluIENBQ0hFTElORV9QQURESU5HKHBhZDEp
+77ybDQoyKSBCZWZvcmUgdGhlIHZhcmlhYmxlcyBpbiBDQUNIRUxJTkVfUEFERElORyhwYWQxKSwg
+dGhlcmUgYXJlIHR3byBDT05GSUdzIHRoYXQgYXJlIG5vdCBlbmFibGVkIGluIEFuZHJvaWQgMTUt
+Ni42Og0KCSNpZmRlZiBDT05GSUdfTlVNQQ0KCQlpbnQgbm9kZTsNCgkjZW5kaWYNCg0KCSNpZm5k
+ZWYgQ09ORklHX1NQQVJTRU1FTQ0KCQl1bnNpZ25lZCBsb25nICpwYWdlYmxvY2tfZmxhZ3M7DQoJ
+I2VuZGlmIC8qIENPTkZJR19TUEFSU0VNRU0gKi8NCglUaGVzZSB0d28gQ09ORklHcyBvY2N1cHkg
+MTZCLg0KMykgQ29tcGFyZWQgdG8gdGhlIGxhdGVzdCBMaW51eCBjb2RlLCB0d28gbmV3IHZhcmlh
+YmxlcywgdW5zaWduZWQgbG9uZyBucl9mcmVlX2hpZ2hhdG9taWMgYW5kIGludCBwYWdlc2V0X2hp
+Z2hfbWF4LCBvY2N1cHkgYW4gYWRkaXRpb25hbCAxNkI7DQpCYXNlZCBvbiB0aGUgYWJvdmUgYW5h
+bHlzaXMsIHRoZXJlIGFyZSBzdGlsbCAyNEIgb2YgZnJlZSBzcGFjZSBiZWZvcmUgQ0FDSEVMSU5F
+X1BBRERJTkcocGFkMSkuDQooSWYgSSBtaXN1bmRlcnN0YW5kLCBwbGVhc2UgcG9pbnQgaXQgb3V0
+IGluIGEgdGltZWx5IG1hbm5lci4gVGhhbmsgeW91ISkNCg0KSXQgd291bGQgYmUgbW9yZSBhcHBy
+b3ByaWF0ZSB0byBwbGFjZSB0aGUgbmV3bHkgYWRkZWQgdmFyaWFibGUgem9uZV9pZHggYmVmb3Jl
+IGluaXRpYWxpemVkLg0KPiANCj4gPiA+DQo+ID4gPiArMS4gQ3VyaW91cyBpZiB0aGVyZSdzIGRh
+dGEgaW5kaWNhdGluZyB6b25lX2lkeCBpcyBhIGhvdCBwYXRoLg0KPiA+IFRoZXJlIGFyZSBzZXZl
+cmFsIGZ1bmN0aW9ucyBpbiB0aGUgbWVtb3J5IG1hbmFnZW1lbnQgY29kZSB0aGF0IGFyZQ0KPiA+
+IGZyZXF1ZW50bHkgZXhlY3V0ZWQgYW5kIHdpbGwgY2FsbCB6b25lX2lkeDoNCj4gPiBybXF1ZXVl
+KCktPndha2V1cF9rc3dhcGQoKS0+em9uZV9pZHgoKQ0KPiA+IGFsbG9jX3BhZ2VzX2J1bGtfbm9w
+cm9mKCktPl9fY291bnRfemlkX3ZtX2V2ZW50cygpLT56b25lX2lkeCgpDQo+ID4NCj4gPiBUaGUg
+cGF0Y2gNCj4gPiAoaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjQwMjI5MTgzNDM2LjQx
+MTA4NDUtMi15dXpoYW9AZ29vZ2xlLmNvDQo+ID4gbS8pIHdpbGwgYWRkIG5ldyBob3RzcG90IHBh
+dGhzLCB3aXRoIHRoZSBkZXRhaWxzIGFzIGZvbGxvd3M6DQo+ID4gX196b25lX3dhdGVybWFya19v
+aygpLT56b25lX2lzX3N1aXRhYmxlKCktPnpvbmVfaWR4KCkNCj4gPiB6b25lX3dhdGVybWFya19m
+YXN0KCktPnpvbmVfaXNfc3VpdGFibGUoKS0+em9uZV9pZHgoKQ0KPiA+IGdldF9wYWdlX2Zyb21f
+ZnJlZWxpc3QoKS0+em9uZV9pc19zdWl0YWJsZSgpLT56b25lX2lkeCgpDQo+ID4gX19mcmVlX29u
+ZV9wYWdlKCktPnpvbmVfbWF4X29yZGVyKCktPnpvbmVfaWR4KCkNCj4gPg0KPiA+IEFsdGhvdWdo
+IFRoZSBwYXRjaA0KPiA+IChodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNDAyMjkxODM0
+MzYuNDExMDg0NS0yLXl1emhhb0Bnb29nbGUuY28NCj4gPiBtLykgaGFzIG5vdCB5ZXQgbWVyZ2Vk
+IGludG8gdGhlIExpbnV4IG1haW5saW5lOyBpdCBpcyBhbHJlYWR5IGluY2x1ZGVkDQo+ID4gaW4g
+QW5kcm9pZCAxNS02LjYuDQo+ID4gPg0KPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gU2lnbmVkLW9m
+Zi1ieTogZ2FvIHh1IDxnYW94dTJAaG9ub3IuY29tPg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+
+ICBpbmNsdWRlL2xpbnV4L21tem9uZS5oIHwgMyArKy0NCj4gPiA+ID4gPiAgbW0vbW1faW5pdC5j
+ICAgICAgICAgICB8IDEgKw0KPiA+ID4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2lu
+Y2x1ZGUvbGludXgvbW16b25lLmggYi9pbmNsdWRlL2xpbnV4L21tem9uZS5oDQo+ID4gPiA+ID4g
+aW5kZXggNGM5NWZjYzllLi43YjE0ZjU3N2QgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvaW5jbHVk
+ZS9saW51eC9tbXpvbmUuaA0KPiA+ID4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbW16b25lLmgN
+Cj4gPiA+ID4gPiBAQCAtOTQxLDYgKzk0MSw3IEBAIHN0cnVjdCB6b25lIHsgICNlbmRpZg0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gICAgICAgY29uc3QgY2hhciAgICAgICAgICAgICAgKm5hbWU7DQo+
+ID4gPiA+ID4gKyAgICAgZW51bSB6b25lX3R5cGUgIHpvbmVfaWR4Ow0KPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gICNpZmRlZiBDT05GSUdfTUVNT1JZX0lTT0xBVElPTg0KPiA+ID4gPiA+ICAgICAgIC8q
+DQo+ID4gPiA+ID4gQEAgLTE1MzYsNyArMTUzNyw3IEBAIHN0YXRpYyBpbmxpbmUgaW50IGxvY2Fs
+X21lbW9yeV9ub2RlKGludA0KPiA+ID4gPiA+IG5vZGVfaWQpDQo+ID4gPiB7IHJldHVybiBub2Rl
+X2lkOyB9Ow0KPiA+ID4gPiA+ICAvKg0KPiA+ID4gPiA+ICAgKiB6b25lX2lkeCgpIHJldHVybnMg
+MCBmb3IgdGhlIFpPTkVfRE1BIHpvbmUsIDEgZm9yIHRoZQ0KPiA+ID4gPiA+IFpPTkVfTk9STUFM
+DQo+ID4gPiB6b25lLCBldGMuDQo+ID4gPiA+ID4gICAqLw0KPiA+ID4gPiA+IC0jZGVmaW5lIHpv
+bmVfaWR4KHpvbmUpICAgICAgICAgICAgICAgKCh6b25lKSAtDQo+ID4gPiAoem9uZSktPnpvbmVf
+cGdkYXQtPm5vZGVfem9uZXMpDQo+ID4gPiA+ID4gKyNkZWZpbmUgem9uZV9pZHgoem9uZSkgICAg
+ICAgICAgICAgICAoKHpvbmUpLT56b25lX2lkeCkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICAjaWZk
+ZWYgQ09ORklHX1pPTkVfREVWSUNFDQo+ID4gPiA+ID4gIHN0YXRpYyBpbmxpbmUgYm9vbCB6b25l
+X2lzX3pvbmVfZGV2aWNlKHN0cnVjdCB6b25lICp6b25lKSBkaWZmDQo+ID4gPiA+ID4gLS1naXQg
+YS9tbS9tbV9pbml0LmMgYi9tbS9tbV9pbml0LmMgaW5kZXggOTY1OTY4OWI4Li5hN2Y3MjY0ZjEN
+Cj4gPiA+ID4gPiAxMDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9tbS9tbV9pbml0LmMNCj4gPiA+ID4g
+PiArKysgYi9tbS9tbV9pbml0LmMNCj4gPiA+ID4gPiBAQCAtMTQyNSw2ICsxNDI1LDcgQEAgc3Rh
+dGljIHZvaWQgX19tZW1pbml0DQo+ID4gPiA+ID4gem9uZV9pbml0X2ludGVybmFscyhzdHJ1Y3QN
+Cj4gPiA+IHpvbmUgKnpvbmUsIGVudW0gem9uZV90eXBlIGlkeCwNCj4gPiA+ID4gPiAgICAgICBh
+dG9taWNfbG9uZ19zZXQoJnpvbmUtPm1hbmFnZWRfcGFnZXMsIHJlbWFpbmluZ19wYWdlcyk7DQo+
+ID4gPiA+ID4gICAgICAgem9uZV9zZXRfbmlkKHpvbmUsIG5pZCk7DQo+ID4gPiA+ID4gICAgICAg
+em9uZS0+bmFtZSA9IHpvbmVfbmFtZXNbaWR4XTsNCj4gPiA+ID4gPiArICAgICB6b25lLT56b25l
+X2lkeCA9IGlkeDsNCj4gPiA+ID4gPiAgICAgICB6b25lLT56b25lX3BnZGF0ID0gTk9ERV9EQVRB
+KG5pZCk7DQo+ID4gPiA+ID4gICAgICAgc3Bpbl9sb2NrX2luaXQoJnpvbmUtPmxvY2spOw0KPiA+
+ID4gPiA+ICAgICAgIHpvbmVfc2VxbG9ja19pbml0KHpvbmUpOw0KPiA+ID4gPiA+IC0tDQo+ID4g
+PiA+ID4gMi4xNy4xDQo+ID4gPiA+DQo+ID4gPiA+IC0tDQo+ID4gPiA+IFNpbmNlcmVseSB5b3Vy
+cywNCj4gPiA+ID4gTWlrZS4NCj4gPiA+DQo+IA0KPiBUaGFua3MNCj4gQmFycnkNCg==
