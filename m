@@ -1,115 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8DD80B;
-	Sat, 12 Apr 2025 13:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F56190057;
+	Sat, 12 Apr 2025 13:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744463089; cv=none; b=AyHVEBlem9a8yBcGrw41PRcJ0HZChqbaQxectMO4SeTtxiDP6DJM2KUU0YXV9B9j7ghb9R2ddMx3etGhUTqQUfFVpPvaFPwoVJRS5Yk6DwwUw2B4JG7lqmRLvIjqkfG4I63q3DfUzxb6CClQIDHC69GFF2JbE35l1v36ruxKduc=
+	t=1744463357; cv=none; b=caYF5W/br/xF1tBboVbtIgjaEGt8enM6l40CgChUm+0ltmCrx/ZrCS5hrhGbH7xCcjkTjpQ/rGhN6wkC1H3c3VEoNFx54pCKG7QrjsZx53pLQMk8FL/uC1bfnBJKiK8+3+eI8Xi5n0TlRtNwssUFjE3L7DQo0n/Npv038Bdq1Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744463089; c=relaxed/simple;
-	bh=T+kgOlCvxoAnQ1MopdtoUTigE/tI5eb4m3xUku3rKik=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jsBwJgaqPzClZEKCxCKhkrRkB2spN8XA0SkDewIpwu9aml1zZYsLsTJEwRzA/aLVEwNmBUmxL5/b8ujzfeOwQnQ/5U6jnlZ7TvyE1QFMJwAVtcu4cKdACnlvNgbRADcuTUvX01NwJbFu25TOpxqvcbuSlhRH1YjGf+qCYgtWZ10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb40OONT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744463357; c=relaxed/simple;
+	bh=b44HDDmAcQ+0IK3uLPD0Phdq7KVtbF1DvQjpZuCuDx8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=oMaF+bnUwDDE8/uJPIulNAcMfosEcb88bFYiZSpIJwbu6z+XbZLoX3atZXkHS2jJurUJwteqwwAiFGlZbS0ppTD37o7mwpd0eucEFkKfLBV2KNOAqqiUIctadgVBUVhdyrATDJsa/umVoIMmXJbOrxrWpGf6ghXD2QuEYax5jMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S47UC5Ur; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb40OONT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8EF01C4CEE3;
-	Sat, 12 Apr 2025 13:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744463088;
-	bh=T+kgOlCvxoAnQ1MopdtoUTigE/tI5eb4m3xUku3rKik=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Zb40OONTlEn+HE8ksmqmUXGZioqIoeUTL1YQssByv1CvHjxAQ1biFCSdWJaSPOO7o
-	 PuR6OIjAyKmMubByyvuF+qkPQ06m7CZF/zwvEFj/lHapaR6X/m4KmciwLvQ8+1iWnI
-	 RnNwv7PYEHAgEqhByoga7WhUZnNeT2R6ElVwrXtqlW3TJ75an4pBxZjc63zIwdazki
-	 gLZdc66+WAxf/+sZBZmBd3fUP0Y4MKgU7sv+FoasWBf3meAltZ/M/QXdBcTWkrdT6K
-	 frFU37C4E0Mq8EA8F8f6rl36Cl/jMSBGQaM79u69T1RuleVrE0T9QY1sSPXurdzO2Q
-	 aYC+EPBKeD9+Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AD4C369AE;
-	Sat, 12 Apr 2025 13:04:48 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Sat, 12 Apr 2025 15:04:32 +0200
-Subject: [PATCH v2] dt-bindings: leds: Allow differently named multicolor
- leds
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S47UC5Ur"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736b350a22cso2473693b3a.1;
+        Sat, 12 Apr 2025 06:09:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744463355; x=1745068155; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LeE90RsIqmek8a5r9ooo/JwJr81IVEM/R4FGmrxaySU=;
+        b=S47UC5UrTsnos0t2e8u8IcOajBKExlr9jk4TZ/Lun+C04Y1jGnCtWbUwM6E22XiwCz
+         /CEVIYS49sKed7xW1ojEngKCSwzkDWByeuJqm/1jQjlbsdPT14ZEFCWRBGYTm4KSkP0F
+         dM+4Ah8O9Zz0QpO4uxKpSlXyReUREMb4XBIS9MdrJSLgecE5Pf8yVNX4CDypgEONQ2vD
+         A2/It06EyoVmXKo3N1EtU8fus9aqBbVt+KdHxDjIqLsTpR4Z2UDpCHzJJchxGYtHwJyC
+         bT4cankdiSsjTU8p0MZBalr7UNtt9SVyAthBzpks4UQ4lnaXAKud/e9bzeRflNRaTVcv
+         UIuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744463355; x=1745068155;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LeE90RsIqmek8a5r9ooo/JwJr81IVEM/R4FGmrxaySU=;
+        b=jKbpI7qcqL1V6wY4uyRqiqrbThSy1sG81Qcm3i7BtHNqsE2WEVRvhNHpexK1dwo7SF
+         dWgE2g4qhHw1qNYWHlTrODCLV8Vy6Ytx8cdk3Btvtjma61YwAmzg6W+37EWkIAoY2JQ2
+         XFqkAaXNu0eWbG/WEh8NHMninVOgquv/llx1yXcirZwCdEyQfXkZtI1TUgLVs+iqDIVP
+         4kB3HDWn07qCezoTRaUYkcr5x6SI9Ae+JPqO20iPPLhsM5MHJa2B+5D2wIebw/q2TE3F
+         VBzmxsDQaXA1P4YjrLONtj8edwlnsdqfq8nFc6MQRQ1xoTcXFsNK9oK7dvUADQAQ41j9
+         pBgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQSPCfHZZBkpH0cOjiE0YnlSkflm6cpGqRxQJ8hNGONxYfCkPtB959l0AHR9r+xbs4BvU/MVw/@vger.kernel.org, AJvYcCWpr6DfUVbhW5la0Ep6EDs/mZYMoqMasVC9zce2FGrBOgttdBmV12RitGFIyRD7jf2gg/QS1mhKzqHEqH8e@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmQq7tE/qz/q3tQ9iQ40J3SDTc572VM/dALwJECjSopnbufw7b
+	0IWsnGB5L2wj125biHtRqIMG+R2hftiziZA/BZV7d7jaCqwWRpho
+X-Gm-Gg: ASbGncv/PINDIx+AqsgpQ7IrRXhQ4iocxDZFCPHVYCbYG1qf7ldU4mnx2aCvW07NHTF
+	OfOLzYgNEKFTvc80aVWMJp9mYIX6m46IhGYGHP/aB8npPDu8Im5Q6LcbVMDqLjfgvntbhbJagFg
+	U0JmiJnepOiwL+tXGXNZ9C2+9T2Pel4VG4n2QoqFKIjDRxdur16rEq70GzvVrxfC3KM7SBxazfa
+	M7uJEg5G15qKC7xqCXGz/njeRuIXlxDH8CbFjyIbA2ICEGdhPMrx5SRacRvf9R/rY6Emsk8WAt3
+	4sp69UfXJSOQsyQco9uihh8e8AyIoXpWGA==
+X-Google-Smtp-Source: AGHT+IHBsDfcdsOcd7CplkH7Dbko5DJ3EkuJ4/wwFpSfM2dGkBYge17HnJ1c3n3cLTh4KEO6EZWJ8Q==
+X-Received: by 2002:a05:6a00:240d:b0:736:ab1d:83c4 with SMTP id d2e1a72fcca58-73bd0ea5de9mr7961287b3a.0.1744463354484;
+        Sat, 12 Apr 2025 06:09:14 -0700 (PDT)
+Received: from dw-tp ([49.205.218.89])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c670esm3446935b3a.69.2025.04.12.06.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 06:09:13 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Gregory Price <gourry@gourry.net>, Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com, akpm@linux-foundation.org, mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev, donettom@linux.ibm.com, Huang Ying <ying.huang@linux.alibaba.com>, Keith Busch <kbusch@meta.com>, Feng Tang <feng.tang@intel.com>, Neha Gholkar <nehagholkar@meta.com>
+Subject: Re: [RFC PATCH v4 0/6] Promotion of Unmapped Page Cache Folios.
+In-Reply-To: <Z_m3VKO2EPd09j4T@gourry-fedora-PF4VCD3F>
+Date: Sat, 12 Apr 2025 17:22:24 +0530
+Message-ID: <87jz7p1ts7.fsf@gmail.com>
+References: <20250411221111.493193-1-gourry@gourry.net> <Z_mqfpfs--Ak8giA@casper.infradead.org> <Z_mvUzIWvCOLoTmX@gourry-fedora-PF4VCD3F> <Z_m1bNEuhcVkwEE2@casper.infradead.org> <Z_m3VKO2EPd09j4T@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250412-multi-led-v2-1-56af86908744@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAN9k+mcC/23MQQrDIBCF4auEWdeiA1LsqvcoWUSdNAOpBrXSE
- rx7bdZd/o/Ht0OmxJThOuyQqHLmGHrgaQC3TOFBgn1vQIlaojTi+VoLi5W8MMYoQqktzR76f0s
- 08/uw7mPvhXOJ6XPQVf3Wf0pVQgk9kXXOevT2cttiLhTPgQqMrbUvPNjQD6MAAAA=
-X-Change-ID: 20250209-multi-led-9991e205befd
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
- Pavel Machek <pavel@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744463086; l=1614;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=a7MVW7lJ84PcK32/7G3ucUp7YIndCA/M048QSEAkvoA=;
- b=zq7jcq7nd/DWtjq3QNRNbNkPq+8Cpldi//o2EfFdnuzk/jWfS9b4gQM91iSibxLnntRxLBri0
- gY+s92S2WluAzm0JVz3NuHogrRGZqWd9Kp5xv99Pby9mXchLd65lnPw
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+Gregory Price <gourry@gourry.net> writes:
 
-In some cases, for example when using multiple instances of
-leds-group-multicolor, a board may have multiple multi-leds which can't
-be distinguished by unit address. In such cases it should be possible to
-name them differently, for example multi-led-a and multi-led-b. This
-patch adds another node name pattern to leds-class-multicolor.yaml to
-allow such names.
+> On Sat, Apr 12, 2025 at 01:35:56AM +0100, Matthew Wilcox wrote:
+>> On Fri, Apr 11, 2025 at 08:09:55PM -0400, Gregory Price wrote:
+>> > On Sat, Apr 12, 2025 at 12:49:18AM +0100, Matthew Wilcox wrote:
+>> > > On Fri, Apr 11, 2025 at 06:11:05PM -0400, Gregory Price wrote:
+>> > > > Unmapped page cache pages can be demoted to low-tier memory, but
+>> > > 
+>> > > No.  Page cache should never be demoted to low-tier memory.
+>> > > NACK this patchset.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
----
-V2:
-- Add Krzysztof's review tag
-- mention leds-group-multicolor in the commit message
-- rebase on 6.15-rc1
+Hi Matthew, 
 
-Link to v1: https://lore.kernel.org/r/20250209-multi-led-v1-1-5aebccbd2db7@posteo.net
----
- Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Could you please give some context around why shouldn't page cache be
+considered as a demotion target if demotion is enabled? Shouldn't
+demoting page cache pages to a lower tier (when we have enough space in
+lower tier) can be a better alternative then discarding these pages and
+later doing I/Os to read them back again?
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-index bb40bb9e036ee00e06d21e2321ecd5a7d471c408..c22af25b6430be71300c0e37f696cd61112ea190 100644
---- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-@@ -21,7 +21,9 @@ description: |
- 
- properties:
-   $nodename:
--    pattern: "^multi-led(@[0-9a-f])?$"
-+    oneOf:
-+      - pattern: "^multi-led(@[0-9a-f])?$"
-+      - pattern: "^multi-led-.*$"
- 
-   color:
-     description: |
+>> > 
+>> > This wasn't a statement of approval page cache being on lower tiers,
+>> > it's a statement of fact.  Enabling demotion causes this issue.
+>> 
+>> Then that's the bug that needs to be fixed.  Not adding 200+ lines
+>> of code to recover from a situation that should never happen.
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250209-multi-led-9991e205befd
+/me goes and checks when the demotion feature was added... 
 
-Best regards,
--- 
-J. Neuschäfer <j.ne@posteo.net>
+Ok, so I believe this was added here [1]
+"[PATCH -V10 4/9] mm/migrate: demote pages during reclaim". 
+[1]: https://lore.kernel.org/all/20210715055145.195411-5-ying.huang@intel.com/T/#u
+
+I think systems with persistent memory acting as DRAM nodes, could choose
+to demote page cache pages too, to lower tier instead of simply
+discarding them and later doing I/O to read them back from disk. 
+
+e.g. when one has a smaller size DRAM as faster tier and larger size
+PMEM as slower tier. During memory pressure on faster tier, demoting
+page cache pages to slower tier can be helpful to avoid doing I/O later
+to read them back in, isn't it?
+
+>
+> Well, I have a use case that make valuable use of putting the page cache
+> on a farther node rather than pushing it out to disk.  But this
+> discussion aside, I think we could simply make this a separate mode of
+> demotion_enabled
+>
+> /* Only demote anonymous memory */
+> echo 2 > /sys/kernel/mm/numa/demotion_enabled
+>
+
+If we are going down this road... then should we consider what other
+choices users may need for their usecases? e.g.
+
+0: Demotion disabled
+1: Demotion enabled for both anon and file pages
+Till here the support is already present.
+
+2: Demotion enabled only for anon pages
+3: Demotion enabled only for file pages
+
+Should this be further classified for dirty v/s clean page cache
+pages too?
+
+> Assuming we can recognize anon from just struct folio
+
+I am not 100% sure of this, so others should correct. Should this
+simply be, folio_is_file_lru() to differentiate page cache pages?
+
+Although this still might give us anon pages which have the
+PG_swapbacked dropped as a result of MADV_FREE. Note sure if that need
+any special care though?
 
 
+-ritesh
