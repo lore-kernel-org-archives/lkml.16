@@ -1,110 +1,127 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14091155743;
-	Sat, 12 Apr 2025 03:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D8117C77
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744430009; cv=none; b=mO6nvgdFAJHrEPIq4em9ttuESgugxdVyfEVeSZuSTw66fqbQeyMb6YoTMIx1/SryqdfPrt1IWOHcvTfQ7nPmCO1qD5i1yEFZSXy+QaruCnQnn84y63Czgo95smiXLfd1K+YMjQYjzslqXjGGBFp6/ff6FLqHyJphTBKayS9ug2M=
+	t=1744430471; cv=none; b=fU+gqcBiI1Dr1qGWt/3rkKkc6wBDebdywC1g0jlKAU2vcoLVku+mNCEjk8HQgw02vJXs1XL4wUhjpgr5d8SkLDhwoPc+U4Knj8MQ/edddtQ9T1ybqclMTLO/JSMwAdugwOMK8VtbVT3l3EP/F83z7amS8schy79OqyVziMsXG9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744430009; c=relaxed/simple;
-	bh=wTzkihgJDk+PfgalYMEfICtXY4uHOcjzu9cQSMU9SvY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gkNw0E3XED1Mi/DPRHX1fh3qtAA4cz5Eo4GS7IxOETFFlK0YG3iCU2BXNQmorlQFVriYpVkd3f9hjYef71QrBwmKqza1+62oEGJ3ITLcuUaE5f3JL1xihMB6i+3C2VqeKe0DV7WLykx+csoL4IEhc1XNosf21A+qUEby8OpNCNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N3g/8nXc; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744430471; c=relaxed/simple;
+	bh=/oaDy5SzWfzyFBs8bTU2LHsjy16/G0IhlbubH2Ym338=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p/HCvKovKsXaHBZAL6+JRPpyoPe4DyUapE5+sanuKghgWBin05tvIM4D5esSlEuKPVlg1vZ2AoRwGOJpr2niEtUKkRY3Hb2LJUNJH52b7NxLUCN2NLhrOjNm3+cU3P7WGPWihhWBcLX2i+Vzt0nUzQwLzDr7pldMEHxCTsxf908=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=VXSWyCys; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3g/8nXc"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so3256190b3a.0;
-        Fri, 11 Apr 2025 20:53:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="VXSWyCys"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso4157159a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744430007; x=1745034807; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9cCaU/9pItXeyQyKncm+hw9C0oW5ARKbMzPEkSk/lu0=;
-        b=N3g/8nXcC63yd8R5bLzSfi6P/qDJfvtchPmhEGa6m15WKADcOposL3Z99bRBJ2vBiF
-         lrg12fzCaKK66NRYx0tE1oY1dUHNI84pkrFX5p96zIT5/3CSh8ak2DJZ+8FfPTv+qLsS
-         K7U+Xo6BWrybAsxz53/Gq68B3c9OxrJl9TZ7tExrZqAcg7fJFoKlxa4x7Vr8Gmh1p+1Z
-         BCtP7e7Kx9AaXiNHKGAXkY/1/m4WDpX452Nemtzk0IWv/TmNOKWDGavgrypEqAPN8iGS
-         TAX61GFd7tRETWaxVrOlDYFIcge5rYyX1fJp8PeMT5nJ1iTFbmudHxOprwzqk071ehvb
-         g3ig==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744430466; x=1745035266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/CRPWfzlQeNRznSdwAcCFwL0YU/Q8vcd3a6wdTbE3VY=;
+        b=VXSWyCys6KU+a6U5T4TSlQD19NnPRyi3Pm00IJ+KrfOFilFkzY2VwO5JK7kXaAG28G
+         CmbfF4f22ZuhCkmMhOuUjyWjDsR8PGtdLdCGiQqMhj8Sxun+NEqTOmkVxqDEdidhFWqm
+         1CSPxamDgZqwKwvFocUb6yxciBqvMlaUQEs/O8Bh8UB+mFAgr3kxWp3CRSSXeHD88wMf
+         Og8DrtqyQvtUp2ITx9K92fbm9ooqYKB/eZCvWhPohCqdS3fbEe6wffQ4XNz84jsln1ik
+         qGD6fRqnjP9ctZxh6DojlsSYx9Sxfrhj5awvMfXj204kHrL6h4TbEtTzG4xKOiBILJyx
+         elqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744430007; x=1745034807;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9cCaU/9pItXeyQyKncm+hw9C0oW5ARKbMzPEkSk/lu0=;
-        b=YgUzaXW5t7s/QhxVjFOPdE8j8he2qk3jHoV2qluthLHJbWiuuYBOxmqj3PWVTPrf+j
-         0Y5VarOf5CCYUnuYunrCsfT5NEmqETPP+A+k/rF0AgHVwaHL9oMqtnklk62ocWepNcNf
-         hOJBbDeB0fUVV4aixWjIdjd5YdKJpDvYjdrj4tXWCROdsc8ASKHMYn6pk6D2Bq/OLygt
-         XxbIyGepcT/g6PSsb4qANhr92UIkBzJRpYLextbBi3BNzLDCXHJngCoKRWOkwueatatD
-         zt9BQvGz+UDnsAmbntzTO64Kaw80wqDSsR+7NevuSGcrptlH2sMNMPzgeJHgRzstB3y8
-         wlZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVX89rz8A/Ol/tGUkZH2Z4kZWKjmad945Wy+MY5sJS9Do/ada9I4o8SIFzFCNr+shl/bD6IGW1kYB3lRjyE@vger.kernel.org, AJvYcCVdakyic5D4CmefWgPkyEcrr8syUjkI63JcQ8gMBkOMyUg/8UzodL131rZhw6UzsrXBUHW6/vdkWx0=@vger.kernel.org, AJvYcCWRBaenYOI18hidoEoRL1if2leb1lxCcSDr2I++kUMsoey8ahspiyzkXpUdQZY0ljQAXo3dsKWDbAhF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw16QyxhN+rB81xfH3MDDp+FSmiVlDb6EG7/5iTwUdgHieI473F
-	JeIwLaVAfMhTak0WRGOX553pwXOYHl8Oj7dhXBX+l1Y31s41iCco
-X-Gm-Gg: ASbGncuvgplU+8bdasapTVoE3xtZKXXvraWc0ZI+q9AEAlWhYkrnB0D76JZiBk/SGIZ
-	MjaynB/P1DvuF1Elc55wUhtnXP4z0BG1FoxGABME0rU9pO/ePxPS+7YXCErOqV60Rirk7v99/+g
-	5PrHJagQe4RH3ayPnFCjv/RBsWXd2h6aw8AcjhdEtrvIIjNnoHj6UeNgS7FBGiS40C1L/FZ8PUJ
-	k+o3x7PgrZFegLn4FdEVx8X+yHBD2TAfROTN+cURjTQYhr6uxbhGxt9c4u/+IprD20w9X+KxNyh
-	12NsFugVqOIXGM1XBqmOktlzhZ/Z3jI9oEsxNZKKETI5
-X-Google-Smtp-Source: AGHT+IEIMF5fg8Rc1Bjc1V7Y1P75rom0e3KD+7LFsWsIXn/FP8KnbU+SQpMciMlE4vYfRTYAuGDRbQ==
-X-Received: by 2002:a05:6a20:6f08:b0:1f3:1e5c:c655 with SMTP id adf61e73a8af0-201795227d9mr7520801637.6.1744430007203;
-        Fri, 11 Apr 2025 20:53:27 -0700 (PDT)
-Received: from [192.168.101.248] ([212.192.12.80])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198c00sm2594765b3a.10.2025.04.11.20.53.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 20:53:26 -0700 (PDT)
-Message-ID: <5084c2dc-d268-4268-a827-2ae445782a4e@gmail.com>
-Date: Sat, 12 Apr 2025 03:53:08 +0300
+        d=1e100.net; s=20230601; t=1744430466; x=1745035266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/CRPWfzlQeNRznSdwAcCFwL0YU/Q8vcd3a6wdTbE3VY=;
+        b=vri6ELrg8d8+JQ0aiMgRcbVCQ3PVwFSXop7u6mTr0IkWbLGJKH8PVMgRR1ZDwJlmix
+         J0sfow6V7sR3aHEOAql/I/A4H9LFcFx5UMeN7KgaMPxi4YXei+/1H0VcNhnE+fNZ5I5l
+         H+pjcsybn6vQKmvIVqTdgtFxsV5WpFyytutpdRUULAzMOsBdw6wgEkiZqQMmmKTekSoX
+         IfEX4IGYeppK2YybgOJHdL/dEl90QiYYI9JUuTVEs4FTM3Rw4MTEJQnGwNSeAYHvtgPQ
+         kA2OLItZe6ZiSjnji/LM1bEHUo+vkjkAtadqsteajgoQxSornJUhouJj7z+pI0v0dEXk
+         4qEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVA9aDbevIWWOhMR8b/hYn3EgAN5QBd5T5j3EPanjyrdDEPBF2UASUCjAV+TybjL0VCRKptbkdgamcw1eU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykAn1npcPSjb5AehbFtmJxLcEEz35q4YBEoHMRzbs6EHOHZeon
+	pzXDiY3SLgOz2QEGMJp+HMTYSGob/V0KBCamh81rj3fccv9JIOju6PVdKAXSN0QmIr6In6lrPCT
+	507zepfdp2vGjsnXgZdvS8pTHd7cLvjIV+AeoHQ==
+X-Gm-Gg: ASbGncvt6/vRLz3hGy2iqo3Fzxyskm80eYSeGX3CHOEwMH90z5jrT26J+QO0Z/+tCjV
+	gheooJ3bDhI2V7kc5i8BIJQZm6SC/r9WTO/ztfg6CckDkjWea4hTkDVdy7I1kqAL0EN4gFXpREW
+	YZiNNg5jj45JIb+2hwcVZLIBaHNw==
+X-Google-Smtp-Source: AGHT+IENp9Rsn1tl1gtpbQVTMzSC6/93PX9bXuEoDkAlRHWwSvf7X/I+LUs0PiXsS9JvQ3CIAnw0CeEUzESATSMDzW8=
+X-Received: by 2002:a17:907:c22:b0:ac1:e881:8997 with SMTP id
+ a640c23a62f3a-acad3445eb0mr424260766b.3.1744430465564; Fri, 11 Apr 2025
+ 21:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] Add support for A523 Thermal system
-From: Mikhail Kalashnikov <iuncuim@gmail.com>
-To: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li
- <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Andre Przywara <andre.przywara@arm.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-References: <20250411003827.782544-1-iuncuim@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250411003827.782544-1-iuncuim@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-4-guodong@riscstar.com> <20250411-spoiler-dispatch-8f709700a996@spud>
+In-Reply-To: <20250411-spoiler-dispatch-8f709700a996@spud>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Sat, 12 Apr 2025 12:00:53 +0800
+X-Gm-Features: ATxdqUGgkB-PsMfv6YqmcddOd__4CXMlcvN5r0cbFMC6NhGoCTmz_wliYFT0jOQ
+Message-ID: <CAH1PCMZcevte5kJ9PUO3cvoaFwdido=WboNcLV9dTk9SJuLGBQ@mail.gmail.com>
+Subject: Re: [PATCH 3/9] dt-bindings: pwm: marvell,pxa: add support to
+ spacemit K1
+To: Conor Dooley <conor@kernel.org>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, dlan@gentoo.org, p.zabel@pengutronix.de, 
+	drew@pdp7.com, inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, 
+	tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com, 
+	duje.mihanovic@skole.hr, elder@riscstar.com, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 4/11/25 03:38, Mikhail Kalashnikov wrote:
-> This patch series adds temperature sensor support for the Allwinner A523
-> family of processors (same die with H728/A527/T527)
-
-Based on 6.15-rc1 with dts patches from
-
-https://lore.kernel.org/linux-sunxi/20250307005712.16828-1-andre.przywara@arm.com/T/#t
-
-> Mikhail Kalashnikov (6):
->    thermal/drivers/sun8i: add gpadc clock
->    thermal/drivers/sun8i: replace devm_reset_control_get to shared
->    thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
->    arm64: dts: allwinner: A523: Add SID controller node
->    arm64: dts: allwinner: A523: Add thermal sensors and zones
->    dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
+On Sat, Apr 12, 2025 at 12:43=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
+ote:
 >
->   .../thermal/allwinner,sun8i-a83t-ths.yaml     |   5 +
->   .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 145 +++++++++++++++++
->   drivers/thermal/sun8i_thermal.c               | 154 +++++++++++++++++-
->   3 files changed, 300 insertions(+), 4 deletions(-)
+> On Fri, Apr 11, 2025 at 09:14:17PM +0800, Guodong Xu wrote:
+> > Add "spacemit,k1-pwm" as a compatible string to support the PWM
+> > controller on the SpacemiT K1 platform.
+> >
+> > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml=
+ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > index 9640d4b627c2..1e3cabf6a89a 100644
+> > --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > @@ -19,6 +19,7 @@ properties:
+> >        - marvell,pxa270-pwm
+> >        - marvell,pxa168-pwm
+> >        - marvell,pxa910-pwm
+> > +      - spacemit,k1-pwm
 >
+> The driver doesn't appear to handle this differently to existing
+> compatibles, why is a fallback not used?
+>
+
+The only difference in the SpacemiT K1 PWM controller is the addition of
+a resets line. This property is not used by any existing PXA-based platform=
+s.
+
+Since resets is defined as optional, I agree that continuing to use
+the existing marvell,pxa... compatible string is reasonable.
+
+I'll update the next version accordingly and include an explanation of this
+decision in the commit message.
+
+-Guodong
+
+> >
+> >    reg:
+> >      # Length should be 0x10
+> > --
+> > 2.43.0
+> >
