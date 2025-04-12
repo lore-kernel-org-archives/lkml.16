@@ -1,82 +1,117 @@
-Received: from mail.envs.net (mail.envs.net [5.199.136.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DA41EBFFF
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.199.136.28
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CBE2367BC;
+	Sat, 12 Apr 2025 14:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744467016; cv=none; b=dbXcn74ZmuKatyCTJ6AC0d7vhOJouRk53KuF3+r0zW/CFlq+qEUP/mdyPpXDan/tz3hZJPwC7Do8d42/TQPFS0lcm/DjVPYRIUQKvGj8kZegOmp+7Habivz3unGTerKSC/SP6LwKmQ9u3iU/QkJ00CrzxrCzISj1PY9T7fpAFuo=
+	t=1744467074; cv=none; b=W7BH6fFZOgcfNbI1ndf/3zugZ6EhMUopAgK/C2X1aSFcFm0E2nAhzAJOiyviArFV+FoQsAwvSIJzDXMEaV+Hf5j4m06fmXLGi+oE0d3VtFzi7nB0o8zKvqLlzsdhiZgWvRIDcsgLw9qCoOPNgA8PmOHFJQeIKI41XdcL8JE9wqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744467016; c=relaxed/simple;
-	bh=Vo3fvAJBDbt6frnEaE1CoPThEN6dui6NgLCTBCNM064=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VPt0QzHmhNjSIsdN6zMtorJ+S5VkxPVZUv6Wq2gwMZ1FMPwk51xPmWy/eR7kuTUFIARBIS8e+2IKdVmdY24H6ubwJPxUfGLSNeKyW8KxM3XBOc9KZD4qxSfxbFsRc6tRSbIPgKPPC9QyEvDzHhB7YcKRcCPGlaQsvy1+wdEztjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=ngpbSQsc; arc=none smtp.client-ip=5.199.136.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
+	s=arc-20240116; t=1744467074; c=relaxed/simple;
+	bh=6UupgWJqX74K4rb42t9zk7pR4gsrJNFwzwL4a7gqYCw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QuxKJC1Xd2yQsgMJrPOGmEo9tG5LWJvaXQiBz0b04jfWf0tyf6x7Y+LPP37ST3J3BCD9f4IlrPUll69/aBq7MkLvk+l66OCoLF7p2Cf1kggENjqnYyjafcl3Cm/QyxNruWpyIcRpfU+BD0vrko2iw4+IEJX/1cEOCGspRZZPnmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RRMoS31T; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="ngpbSQsc"
-Received: from localhost (mail.envs.net [127.0.0.1])
-	by mail.envs.net (Postfix) with ESMTP id B1B1038A4037;
-	Sat, 12 Apr 2025 14:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
-	t=1744467002; bh=2eYcc9iagiRSkffTNOH2pp6v9FqlkPr6nivkhdioa8E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ngpbSQscUUi91IuhWlnnrkToYEqDFqGEK3cC1dhn/1ZZq6IfKjkQcAcndeCtXwN3v
-	 WwxXdIlTAs18Mda0LSwMnxI7/PZTjl1KMgmImuBl8+vtlE1JltpTZKYZWKj2x9MNGV
-	 jQo0YM34r6ETZxO5WrM28nFzup+A7DsRCCLmdESNJhyFrOKgciFemaeWZQkIZSiOWw
-	 RwtfEZPe3h9GgKN+K452F1hHLpG8a7aorRGdJF62DLBClRTsDVW9eGIeJWbRyY6G60
-	 Dlin4elW4G9wAVzvfRXJmosdSOrh6K7gTwuqf6FgTlfUFnUpjtAGqMH5uG4+9OZZGO
-	 9ISfwH0dgsQArxV0vx3qXVAai+G56EUFoYGeDpCAr+8n/hoJGveNvRmhM0VoEBQnT4
-	 bgTO1ImoR4XudIUXEXN9QqdBSV9tlMmOBg1P9X+sE72NQllRIuppqaFifE9DOF8+Oj
-	 pVd28tDsT5+oP/sFxBrfG/2rAio24vsS3dQBa7dODf1T7v2Q19DZKk/BXJ0AduuCLZ
-	 8qyg/G9GDiqR1MamHKuHjq6v8McRqGIF/mHBg3V7UgRyR/M7LxkrBQ40bcv95WD2Nx
-	 N+wG35rJ9qy66o3lYCKON2ZfIDnchyv4EbkKJnpU/2H3rBTpK6dZ8rt5HIs2rnQAA+
-	 85ThQcXmdokAR9gEGWl/v0gw=
-X-Virus-Scanned: Debian amavisd-new at mail.envs.net
-Received: from mail.envs.net ([127.0.0.1])
-	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id h359pY2B7BK0; Sat, 12 Apr 2025 14:10:00 +0000 (UTC)
-Received: from xtexx.eu.org (unknown [223.73.102.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.envs.net (Postfix) with ESMTPSA;
-	Sat, 12 Apr 2025 14:09:59 +0000 (UTC)
-From: Bingwu Zhang <xtex@envs.net>
-To: Gao Xiang <xiang@kernel.org>
-Cc: Bingwu Zhang <xtex@aosc.io>,
-	linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] erofs-utils: add contrib/stress to .gitignore
-Date: Sat, 12 Apr 2025 22:09:38 +0800
-Message-ID: <20250412140940.88303-1-xtex@envs.net>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RRMoS31T"
+Received: from narnia (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7A2A321165B8;
+	Sat, 12 Apr 2025 07:11:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A2A321165B8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744467072;
+	bh=pTnd2Oc8i8/ma8A52qza9zwPziCRMHwOGThxeMcufiE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=RRMoS31T422OQGTx+ALxBabnWUobD2SGOF9kKhtax/Q9kNBsnMTF30iIo6s62oUcd
+	 9hayyqT4XBOzTiMuXmDqpBpb3kjYL34C0pagTkdwl+BsCNobtK8HIYmwSTpnWM72sc
+	 7MbXa9/e4EXJcrbLuqpTIOI03a2CVhMn3o5hgH1k=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Matteo Croce
+ <technoboy85@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+ <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
+ =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
+ Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>, Jan Stancek <jstancek@redhat.com>, Neal Gompa
+ <neal@gompa.dev>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, keyrings@vger.kernel.org, Linux
+ Crypto Mailing List <linux-crypto@vger.kernel.org>, LSM List
+ <linux-security-module@vger.kernel.org>, Linux Kbuild mailing list
+ <linux-kbuild@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
+ <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+ clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, Matteo Croce
+ <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, Cong Wang
+ <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+In-Reply-To: <CAADnVQJ5VaXVN=L+0ygEWJkMtPZnqAVEoeFiLBvikntX0zD49w@mail.gmail.com>
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
+ <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <CAFnufp1erGboUtRaqLoKC48c+9jmqzEfFW8W46xt77JMC0PFpQ@mail.gmail.com>
+ <CAADnVQJ5VaXVN=L+0ygEWJkMtPZnqAVEoeFiLBvikntX0zD49w@mail.gmail.com>
+Date: Sat, 12 Apr 2025 07:11:01 -0700
+Message-ID: <87plhhjwqy.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bingwu Zhang <xtex@aosc.io>
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-Signed-off-by: Bingwu Zhang <xtex@aosc.io>
----
- .gitignore | 1 +
- 1 file changed, 1 insertion(+)
+> On Fri, Apr 11, 2025 at 5:30=E2=80=AFPM Matteo Croce <technoboy85@gmail.c=
+om> wrote:
+>>
+>> Il giorno sab 12 apr 2025 alle ore 02:19 Alexei Starovoitov
+>> <alexei.starovoitov@gmail.com> ha scritto:
+>>
+>> Similar to what I proposed here?
+>>
+>> https://lore.kernel.org/bpf/20211203191844.69709-2-mcroce@linux.microsof=
+t.com/
+> ...
+>> @@ -1346,6 +1346,8 @@ union bpf_attr {
+>>   __aligned_u64 fd_array; /* array of FDs */
+>>   __aligned_u64 core_relos;
+>>   __u32 core_relo_rec_size; /* sizeof(struct bpf_core_relo) */
+>> + __aligned_u64 signature; /* instruction's signature */
+>> + __u32 sig_len; /* signature size */
+>
+> Well, yeah, two fields are obvious.
+> But not like that link from 2021.
+> KP proposed them a year later in 2022 on top of lskel
+> which was much closer to be acceptable.
+> We need to think it through and complete the work,
+> since there are various ways to do it.
+> For example, lskel has a map and a prog.
+> A signature in a prog may cover both, but
+> not necessary it's a good design.
+> A signature for the map plus a signature for the prog
+> that is tied to a map might be a better option.
+> At map creation time the contents can be checked,
+> the map is frozen, and then the verifier can proceed
+> with prog's signature checking.
+> lskel doesn't support all the bpf feature yet, so we need
+> to make sure that the signature verification process
+> is extensible when lskel gains new features.
+>
+> Attaching was also brought up at lsfmm.
+> Without checking the attach point the whole thing is quite
+> questionable from security pov.
 
-diff --git a/.gitignore b/.gitignore
-index 33e5d30a9cdf..348896103d66 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -31,3 +31,4 @@ stamp-h1
- /fuse/erofsfuse
- /dump/dump.erofs
- /fsck/fsck.erofs
-+/contrib/stress
+That statement is quite questionable. Yes, IIRC you brought that up. And
+again, runtime policy enforcement has nothing to do with proving code
+provenance. They are completely independent concerns.
 
-base-commit: 3689cbc2349bff05807d2f939146e92eb1bfaea1
--- 
-2.49.0
-
+That would be akin to saying that having locks on a door is questionable
+without having surveillance cameras installed.
