@@ -1,128 +1,100 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2426120468C
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793EB20CCE5
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744480949; cv=none; b=i3Z2qL4y8jU7L+5V1thAJLbQeGcMG/m3kE6CMAieEITbOqtaJ1DjKbnKqA7p8W4Xpmg/CSdsL2/06WKExY2ODmg1UspnIqYCDhy51RdzzuVRHbMKWKldQYVRmqOSLIzmcH49KU0T8yM//IVnzWCHf6g8ke90e9zVFLRWoy4RCOk=
+	t=1744480962; cv=none; b=NhOPyAkJtc5kv29x3gmLQ2jho0bqxn34nBWTMwrEXMOWfjGsoNxCTNPbgeT36QdrxcVvtomKi4hQo4PVg3EctlpaOBY8m7tRzTTs4TEsijuMzid1gzTEge2nRVpShfhfPyKOoEG3LupO9rUBcP6H6HPd3vwQfnf+1ruRSGM9UHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744480949; c=relaxed/simple;
-	bh=51Ad6r55zIAG2EioKgN8jkjfbb/A9nkqo41EgfyFvYg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=EfF7ccXFsjvnPjFR2EmL2L0YjVFr03zOtqNXBTmcGSupeUimSlXJ2c+iAoZ9QRdEF1GVV7NoGRxKiS5o9mFYkhjtRHg7zewd4f9i3fGBeFIpN90ymbrkmVSP8ru9ZIs0gGD9TGHprBSl21W6Sl5Nyf8XRcaJL2+Ajqrksuw9+nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+	s=arc-20240116; t=1744480962; c=relaxed/simple;
+	bh=PPOXLjQCWquAW3bizjj1wGNfi+TdiH1y5Y3HEYPZ0/s=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=lBS5qSIdrvS7sNyP9UDI11cAUuq0gnbuUsksodVujfhVdzRUCE9NjYLPkY4pJ0f/LLM/UzsA8epjp5Tn4T+N93l7FLPjogbxGlzO4DIyUVVhU6cdw1pH507mUwvp47qAaiIJ/1bblJYPyu9rlYD6QhPZo86pmKj3/6E41xRkU/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d585d76b79so24642095ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:02:27 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b4ee2e69bso330919439f.2
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:02:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744480947; x=1745085747;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fe+O5X3r6SXWE9Xvanh9Ftrt+hAejIQy/QtT92rJ4wU=;
-        b=bb3BGBLrifzFYgwvV8qVmg9fY06IxOsX/0RkP6VToWr8ltKVy+IB3KQBMdiH1Aj87q
-         Q+3r2fYv0C+TfcRiocdyrXQF8fPVVXxX2fYfXhOqtxMENVdyAr+IWObcS4XBJ7hkJtUb
-         +aEcAYqht1fDKrNe20cnMFUQl4k4ZPBPQUGI0Fy1Ha42FTvHDcVrtfr6xfnS40pc9nVS
-         XZVhDpO2qfjNDqm6XxcROuO7tl81FCgk9Zt2LV9BDG4yH6jx6G+y8sK+2Hew7fiREjRj
-         WkGzBe5Cm3+RxgugLfQ/jFqma5Uxn+KB3xMXei5ttcYhYvpjqK9v2Dr6DjOb5hAsXqaB
-         plXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWV4sXgJjOtUY7fqNU+OHfyjooyA6xt17qqZJdF2yxYN4LHx1IN2VVGMxMcsCFYJYPM8oV26ZIx1yIM9ww=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywuin3uig41rpkVeC6jGgW+MV7VkgLfux6/M799HswqtbyMUx4E
-	dyOH9BWdir0XbwKC0zWr/evynn2hwhhqoZDapYWseIzQMOOuFpw1XsRoTavHTxDEGVBJ3yuKWbt
-	VFgkrAsiRE7LCUW6mas9sWx7wAGpJtOYJrqw2Vy3L8WlHhGEDMuVKvgU=
-X-Google-Smtp-Source: AGHT+IFN36koIlXi41ZK1slAgvmoyJYabtpGq7hCsPVV1D36KAqcUx8gvKbjCcIBOlwz9AqxDs5S+Hu2wd34/QEqct/YNVF3Xtsl
+        d=1e100.net; s=20230601; t=1744480959; x=1745085759;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gsleT2zNmBeqBCr8bxis8VYVJxFTReJnxrmAeezeuFo=;
+        b=FBkYHBq4EJ4BVovLQL00GBFbOo5ho9fBVlp/TRzUbwyhlu5eXH9HoGMwVpC4x8Qh8v
+         cuoSoo9FlRLcIvY6rQ8LjDHPTcBQEZJmo/kxYX+BBLuRsN5R9v7RgF7HO+rRbZuSalWU
+         yhCFdmp9KnMoeB7UMZzHatQEjCM8cx7U5FQcSub5MGlLAcXgXICB96IqXEJpezbmy2eL
+         34uS90yAc3c2BMlB4FCU7ms24obneESBd0su2JW4lsjOCxBvLwNOfzku/xTr527kx3OW
+         7vDZwOncFBo5xQgl81MSXUVsh+8g+EvVnxNNaTuFpw/PA5zRN2UFHtnChvW5ETVVaoAg
+         SKgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHhrD+XqzI/1gbUDB6bcJqvaG9ue2LkF71S8faFjPIE7GFIXWwMiWXPMHNutLV7x58m85uK0+Sb3/bX+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbdR3Jb4E28949ce3SY0WXKDHqTPXuq05oQ1ASH4Bw5Ydi8jnW
+	VuS2+uQtwmxdY+I2sYmJB1RsgM8iJWtQDkdnsD62RovyVXGCl7/+dFv7ATKg5ueurC/Zn/7cBex
+	zO+mJF03WSTOxu/38YKjMSPVdcsNnmioIOH5vvxSAQAWDd4C0ysPyrxk=
+X-Google-Smtp-Source: AGHT+IFfS/TNHNec1ihJ//vaAsHdsYhSOFDBsQsii+O+8SZEx91ZWjzdorTlLt+WUxzankzLpp7EfsJBi/jupoJyt3z24R7YvWhH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1582:b0:3d4:414c:6073 with SMTP id
- e9e14a558f8ab-3d7ec1fd045mr77368445ab.8.1744480947121; Sat, 12 Apr 2025
- 11:02:27 -0700 (PDT)
-Date: Sat, 12 Apr 2025 11:02:27 -0700
+X-Received: by 2002:a05:6e02:2603:b0:3d4:4134:5213 with SMTP id
+ e9e14a558f8ab-3d7ec226052mr65930625ab.11.1744480959192; Sat, 12 Apr 2025
+ 11:02:39 -0700 (PDT)
+Date: Sat, 12 Apr 2025 11:02:39 -0700
+In-Reply-To: <20250412180235.244744-1-gshahrouzi@gmail.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67faaab3.050a0220.379d84.0011.GAE@google.com>
-Subject: [syzbot] [wireless?] WARNING in drv_set_tsf
-From: syzbot <syzbot+a90b13f34919c4086030@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+Message-ID: <67faaabf.050a0220.379d84.0012.GAE@google.com>
+Subject: Re: #syz test: bcache: Fix device removal failure when filesystem is read-only
+From: syzbot <syzbot+aec9606169fbc3a12ca6@syzkaller.appspotmail.com>
+To: gshahrouzi@gmail.com
+Cc: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+> Try to remove device but fails
+> Reinitialize reference counting for write operations for device
+> Shut down the filesystem
+> Make the filesystem read only
+> 	Read-write bit is not set so it skips trying to make the filesystem read=
+-only, implying that the filesystem is already in read-only mode.
+> Encounter error because write operations are still assigned to a device
+> When the filesystem is starting up, it tries setting it to set the filesy=
+stem to read-only but it=E2=80=99s already set.
+> When failing to remove a device, it tries giving back write permissions t=
+o a device when the filesystem is read-only (not sure if this is nonsensica=
+l or not).
+> Since a device has write permissions, it tries to remove them but fails b=
+ecause the filesystem is in read-only mode.
+> So the fix here is to prevent it from giving the device write permissions=
+ if the filesystem is in read-only mode.
+>
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  fs/bcachefs/super.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+> index b79e80a435e09..788e870bfef6a 100644
+> --- a/fs/bcachefs/super.c
+> +++ b/fs/bcachefs/super.c
+> @@ -1757,7 +1757,8 @@ int bch2_dev_remove(struct bch_fs *c, struct bch_de=
+v *ca, int flags)
+>  	up_write(&c->state_lock);
+>  	return 0;
+>  err:
+> -	if (ca->mi.state =3D=3D BCH_MEMBER_STATE_rw &&
+> +	if (test_bit(BCH_FS_rw, &c->flags) &&
+> +	    ca->mi.state =3D=3D BCH_MEMBER_STATE_rw &&
+>  	    !percpu_ref_is_zero(&ca->io_ref[READ]))
+>  		__bch2_dev_read_write(c, ca);
+>  	up_write(&c->state_lock);
+> --=20
+> 2.43.0
+>
 
-syzbot found the following issue on:
+want either no args or 2 args (repo, branch), got 9
 
-HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=161cb74c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d444e5269179368a
-dashboard link: https://syzkaller.appspot.com/bug?extid=a90b13f34919c4086030
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8909dc8a51ee/disk-0af2f6be.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e216afa338a8/vmlinux-0af2f6be.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4d21115804e3/bzImage-0af2f6be.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a90b13f34919c4086030@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-wlan0: Failed check-sdata-in-driver check, flags: 0x0
-WARNING: CPU: 1 PID: 83 at net/mac80211/driver-ops.c:272 drv_set_tsf+0x2c1/0x590 net/mac80211/driver-ops.c:272
-Modules linked in:
-CPU: 1 UID: 0 PID: 83 Comm: kworker/u8:5 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: events_unbound cfg80211_wiphy_work
-RIP: 0010:drv_set_tsf+0x2c1/0x590 net/mac80211/driver-ops.c:272
-Code: 0f 84 7c 02 00 00 e8 3e c3 dc f6 49 81 c5 20 01 00 00 e8 32 c3 dc f6 44 89 fa 4c 89 ee 48 c7 c7 a0 4c e4 8c e8 10 55 9c f6 90 <0f> 0b 90 90 e8 16 c3 dc f6 4c 89 f2 48 b8 00 00 00 00 00 fc ff df
-RSP: 0018:ffffc9000156fb10 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff888028bfcd80 RCX: ffffffff817ad098
-RDX: ffff88801d788000 RSI: ffffffff817ad0a5 RDI: 0000000000000001
-RBP: ffff88807a980e40 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000001
-R13: ffff888028bfc120 R14: ffff888028bfd728 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888124ab9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b30e0cff8 CR3: 0000000063c06000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ieee80211_if_parse_tsf+0x2c8/0x560 net/mac80211/debugfs_netdev.c:701
- wiphy_locked_debugfs_write_work+0xe3/0x1c0 net/wireless/debugfs.c:215
- cfg80211_wiphy_work+0x3dc/0x550 net/wireless/core.c:435
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
