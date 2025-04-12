@@ -1,155 +1,123 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09309149C6F;
-	Sat, 12 Apr 2025 08:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4731AAC9;
+	Sat, 12 Apr 2025 08:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744446012; cv=none; b=mWG4siTxR6Guc9jSlbvTH4Qpll04r9AmowPp0AoshyEPZTOSnGI5zOe07Kf3QKbwGaG6UXxPl6nA4jMVvSt3CJn917tklrssVsXFUs5rkdyH7pI+Cp6NN8A2lWdv/WEuggsailR0/Q+CN47clFmKgonrYCNbhMN2H9dVFoXmmNk=
+	t=1744446883; cv=none; b=rIE5/CpYSCxdYVY6gcIFRn2FjZeuhkDhjR+lAjvsx4rqpfNGzcnY9zMEOD6bM+cYPiToVGHrA7jBFbw2+qmN+uPW4BWeFPLlyzS+9f2DAl32aUGsxw6tRKTxL5PoSArPmPkTF5s30C5/eRd+gzxApFakTF/9UNSZUbFgPwH75d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744446012; c=relaxed/simple;
-	bh=YJl1vmNcOg5yJUxYSZGlUL6mZOR5RN1bTpxwoe/64Gk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iVkeSWH+qiqLjB505xY8VVkPwkTylVRmhMChJkeOORykoA6tapCiOXLAgAOi7xaanT3djVSxgNRfkqa8XOzVYdSlfb5Iu/V8CpCAJ5qXEcFF5FMZH8sNa75lzesyAPA0wLt6rGJfKycm8OUTzS209BfwyrwspXZ9KzCbNfZXrHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMenkaeY; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744446883; c=relaxed/simple;
+	bh=uY1OzpWq1YuTlBMN+P0DZuRjCGRt3R3FZeEoAtM9qDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uNq6izgA5E+gN8vWcrK8/S7j7AzTkqhfssvteiLRIwq8T7KWGLU6xXNgPBwSCcqdaxIy5hOPBtgStnHamEmBwonhKY1BjXlOvID04nT/NgIQBy6sr89wReHxUoTNKH24bdQwy9Gnj6HKCZ2UVHuhPoTZ+rWfT9C26JQmfLgZCkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=N6kCjtyW; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMenkaeY"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30db3f3c907so27058231fa.1;
-        Sat, 12 Apr 2025 01:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744446009; x=1745050809; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zyb5LfzkpC3XYd7aBaGCQkZkuFMnU/qCwTe20qzfgnE=;
-        b=IMenkaeY1Qk3yl79JVF/+c9w4IZ0d4TGnhT03FbPiOVdWXSfC7zmSbPVSDVhkqzRxR
-         ftytmjgV22B5jqWyutoCHSJ2Ea4o7j6IbyTTuXXKjXY2bWnvYZequof+KNe4BtAAXDd9
-         BZ+btBYSsu+PYHKah7l5TSe9MdpjdXSD9R4wCyIxyJSOaGJ+HcrOf/F32Z4jTjzxImIN
-         llVAAoSGgLRh4iOC9I8RKmnCF6EFIp3U8/m0182T3gYx737Z226rmhJ/71i0UEC/PA1s
-         pDUYxCS9Cwr3BQAyKooRg5S5g3o0lg8hPxngTyxJrCJGWIivRa9wFWK4vNxZa3cxCxSb
-         Hu9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744446009; x=1745050809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zyb5LfzkpC3XYd7aBaGCQkZkuFMnU/qCwTe20qzfgnE=;
-        b=IPhJzGPKh/J+kht2lO7FzqGzs1AkGn+Fc6splosxq7fyyaZtaL+8jbUOftJRkmuVzV
-         /qaeMw8dYaOD/TMdPNbaJ7J2XwQ6wSpa7SZ8yaEeShwVv89pmLlzEaYvHw/S4IE3hQyK
-         nO0hHXRm/53/n7kI0UNWDwQ8t57/EqREIyxULWtWNVAPjlUO2NyfElfPEXi8PR9u5J+V
-         AyGiFTKnq3r7EjVd7KVSW1LYyN3sjaWO+1DZtZ65DTUABQKWVlJpJOAiVgp+f6UmMEMl
-         WftvlTkKayjO3Q4v0VfMk/iz/dfCpLZVCXDLPFu7DoD8iwwt18h4fgIcNDy86ZrABXKm
-         1Xvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuUDvNSC3AtlNijb+HKugcPvT3Q8uXkJ0sq4vjbmTQsXyp2s6VB56HI67G814saQfFriBHp3Xcic+uKn+a69AZFg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+bhuwBi8iLf94wHhDi3WG2+mAxJT5T0PL83GRZOGh41Sivt6g
-	zEAwGj9JXr8bq+J6tk98idRUvfPI013xHLfcQhEbY7Kz/lDoQj5rBtsCyWIV1GVvSBtfgy4ytN5
-	T6OtcMgvqtrp5/9iCmEZWlE2WUd4=
-X-Gm-Gg: ASbGncuD76TLu3S8sB1GFOMw8Z19RNl10AyJj+3OLudTxV6AyG/6fpV7BpumDgT3gtw
-	xlRECrMTOOQG8xJe+1LCRTV8j0/+HgAFKhaACrIufe7bQdnE2w7ONaYLZ1kgTmgcBZqJ0b+jV6x
-	JivHnRsuvGgXyH/APdXCOzQw==
-X-Google-Smtp-Source: AGHT+IGv329rmoSFOEcnZHBQ0ZkLOLRDex1cOLnJw9/15kT85PKbL/rTSCsGEwkXzcOmqT9iBH062y4YHAYPTG2sNBU=
-X-Received: by 2002:a05:651c:312b:b0:30b:be23:3ad with SMTP id
- 38308e7fff4ca-310499f5e0dmr18331121fa.10.1744446008670; Sat, 12 Apr 2025
- 01:20:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="N6kCjtyW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1744446873; bh=uY1OzpWq1YuTlBMN+P0DZuRjCGRt3R3FZeEoAtM9qDo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=N6kCjtyW+zT3K6fq+BuZYYFMZXt6w1xHyupWm5kjViEZK+ojhu4Q5QRGZjjU8mo2Y
+	 1cjsfC9ARNpXFpbdzP57sDq+V42GI5q1AV+ksHAEf648LqleWKBUwl/ysm5VLP1DuC
+	 gQ2RrnLIUJ+LvY4lEkkTYAHUad8XdXa2iejhOFMs=
+Message-ID: <cc84ef26-6c33-42d0-a11f-4d6b31d8beee@lucaweiss.eu>
+Date: Sat, 12 Apr 2025 10:34:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
- <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local>
-In-Reply-To: <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sat, 12 Apr 2025 10:20:01 +0200
-X-Gm-Features: ATxdqUEmUI3lM4jZ_-9-cnYNle7oLX-ZDutoV8y_D-AHQEEs92FH4Qe33hP-8ss
-Message-ID: <CAFULd4bWM3X9_8iHmbiRst=nxBmLD7FU=xyJ1D2xKq0hi57+0Q@mail.gmail.com>
-Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
- __typeof_unqual__() when __GENKSYMS__ is defined
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	linux-tip-commits@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] arm64: dts: qcom: msm8953: Add uart_5
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Felix Kaechele <felix@kaechele.ca>
+References: <20250406-msm8953-uart_5-v1-1-7e4841674137@lucaweiss.eu>
+ <e87220f1-bf8e-4014-834f-ae99c0b032ca@oss.qualcomm.com>
+Content-Language: en-US
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <e87220f1-bf8e-4014-834f-ae99c0b032ca@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 11:07=E2=80=AFPM Borislav Petkov <bp@alien8.de> wro=
-te:
->
-> On Thu, Apr 10, 2025 at 10:58:46AM -0000, tip-bot2 for Uros Bizjak wrote:
-> > The following commit has been merged into the core/urgent branch of tip=
-:
-> >
-> > Commit-ID:     e696e5a114b59035f5a889d5484fedec4f40c1f3
-> > Gitweb:        https://git.kernel.org/tip/e696e5a114b59035f5a889d5484fe=
-dec4f40c1f3
-> > Author:        Uros Bizjak <ubizjak@gmail.com>
-> > AuthorDate:    Fri, 04 Apr 2025 12:24:37 +02:00
-> > Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-> > CommitterDate: Thu, 10 Apr 2025 12:44:27 +02:00
-> >
-> > compiler.h: Avoid the usage of __typeof_unqual__() when __GENKSYMS__ is=
- defined
-> >
-> > Current version of genksyms doesn't know anything about __typeof_unqual=
-__()
-> > operator.  Avoid the usage of __typeof_unqual__() with genksyms to prev=
-ent
-> > errors when symbols are versioned.
-> >
-> > There were no problems with gendwarfksyms.
-> >
-> > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
-> > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1c0=
-35@molgen.mpg.de/
-> > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-> > Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> > Link: https://lore.kernel.org/r/20250404102535.705090-1-ubizjak@gmail.c=
-om
-> > ---
-> >  include/linux/compiler.h | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> > index 27725f1..98057f9 100644
-> > --- a/include/linux/compiler.h
-> > +++ b/include/linux/compiler.h
-> > @@ -229,10 +229,10 @@ void ftrace_likely_update(struct ftrace_likely_da=
-ta *f, int val,
-> >  /*
-> >   * Use __typeof_unqual__() when available.
-> >   *
-> > - * XXX: Remove test for __CHECKER__ once
-> > - * sparse learns about __typeof_unqual__().
-> > + * XXX: Remove test for __GENKSYMS__ once "genksyms" handles
-> > + * __typeof_unqual__(), and test for __CHECKER__ once "sparse" handles=
- it.
-> >   */
-> > -#if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
-> > +#if CC_HAS_TYPEOF_UNQUAL && !defined(__GENKSYMS__) && !defined(__CHECK=
-ER__)
-> >  # define USE_TYPEOF_UNQUAL 1
-> >  #endif
->
-> So mingo is right - this is not really a fix but a brown-paper bag of
-> sorts.
->
-> The right thing to do here is to unpatch the __typeof_unqual__ stuff
-> until all the fallout from it - genksyms and whatever else - has been
-> fixed properly.
->
-> So to avoid too much churn I's suggest something like this (totally untes=
-ted
-> ofc) until all has been fixed.
+On 4/10/25 6:45 PM, Konrad Dybcio wrote:
+> On 4/6/25 3:52 PM, Luca Weiss wrote:
+>> From: Felix Kaechele <felix@kaechele.ca>
+>>
+>> Add the node and pinctrl for uart_5 found on the MSM8953 SoC.
+>>
+>> Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+>> [luca: Prepare patch for upstream submission]
+>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>> ---
+>>   arch/arm64/boot/dts/qcom/msm8953.dtsi | 32 ++++++++++++++++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8953.dtsi b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+>> index af4c341e2533ef2cca593e0dc97003334d3fd6b7..3d6ab83cbce4696a8eb54b16fdb429e191f44637 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8953.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+>> @@ -767,6 +767,20 @@ spi_6_sleep: spi-6-sleep-state {
+>>   				bias-disable;
+>>   			};
+>>   
+>> +			uart_5_default: uart-5-default-state {
+>> +				pins = "gpio16", "gpio17", "gpio18", "gpio19";
+>> +				function = "blsp_uart5";
+>> +				drive-strength = <16>;
+> 
+> This guy's strongly biased! But it looks like that's on purpose for
+> these older SoCs..
+> 
+>> +				bias-disable;
+>> +			};
+>> +
+>> +			uart_5_sleep: uart-5-sleep-state {
+>> +				pins = "gpio16", "gpio17", "gpio18", "gpio19";
+>> +				function = "gpio";
+>> +				drive-strength = <2>;
+>> +				bias-disable;
+>> +			};
+>> +
+>>   			wcnss_pin_a: wcnss-active-state {
+>>   
+>>   				wcss-wlan2-pins {
+>> @@ -1592,6 +1606,24 @@ blsp2_dma: dma-controller@7ac4000 {
+>>   			qcom,controlled-remotely;
+>>   		};
+>>   
+>> +		uart_5: serial@7aef000 {
+>> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>> +			reg = <0x07aef000 0x200>;
+>> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP2_UART1_APPS_CLK>,
+>> +				 <&gcc GCC_BLSP2_AHB_CLK>;
+>> +			clock-names = "core",
+>> +				      "iface";
+>> +			dmas = <&blsp2_dma 0>, <&blsp2_dma 1>;
+>> +			dma-names = "tx", "rx";
+> 
+> Matches what the computer says
+> 
+> It's more usual to send these together with a user, but I don't mind
 
-FYI, the sparse patch is at [1], but the talk about the abandoned
-project suggests that __typeof_unqual__ and dependent percpu checks
-will remain disabled for some time.
+This seems to be used with the out-of-tree dts
+apq8053-lenovo-cd-18781y.dts
 
-[1] https://lore.kernel.org/linux-sparse/5b8d0dee-8fb6-45af-ba6c-7f74aff9a4=
-b8@stanley.mountain/
+I'm just sometimes trying to reduce the out-of-tree diff of the
+msm8953-mailine tree on GitHub
 
-Uros.
+Regards
+Luca
+
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Konrad
+
