@@ -1,80 +1,49 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175097603F
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15172367DB;
+	Sat, 12 Apr 2025 14:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744469123; cv=none; b=HUEOy3Yaau9seWdyvj8hTTR3gjMxNgNFhGst8kZcsHH93rsa2+b7a6KixVStjYS3yaPf6v36nzSPwQQXvLKCzElufoIXEiUub5KnmkJHw8hxnk7bemhi/9MeShI0OQkxW4kBxGHsFqOTFufJSHnX2bYKSgQHlXsRy/pEAdHSm7I=
+	t=1744469592; cv=none; b=T6NbRc2PZ0pf7Kdw5NfmFkxq3Udg/N++MK8ZXE53F984q+FcXQUdbMEAZO+vxGNKJWRzefkJd+9q5KTEHQN5qAMBX3m5ReODzIwbxh07QBfgTwzHfa5MnI1YE92mC57xO0YUpId6zMBctxp0RaCTCHqVKtX8hMIqhoDPStPO5i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744469123; c=relaxed/simple;
-	bh=RN/j9DFZ+CO45Wo3mYYbAVag+7CjqaLHD8x49oYQI/w=;
+	s=arc-20240116; t=1744469592; c=relaxed/simple;
+	bh=KJvcw7s62BQZZ771kg+Ctzm2F1K76QG8aFGD8mzaXcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMIN2OuqIjSiJarXjSN1wdNhqGmwVJGehun7Smma8/Cr9K6FUs8WdNbU8LM4JdC/vz1FilBebRLP8+maRiMdh+5BDuH1oOI4LhE5gY5fXz4QWlyBzKREthhTqdgYGHTDxoV/q93KDdN8T8+6tNeRCvNlYVWitHCuDbRRyVyPrYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kLJ3zGUa; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bOOrLg9RlwZcbbfu4TX47Og++AmmRPeTj2Jb06m5+PgLH7jSqhuXgXVAVnElKgL4dDI43jizIRgbleW0vW26h2jwMPOuL6SLDicMF8hU0PlgYI3OYtxD9f3DNRc7QAZFCLrOxbG7HTyIYBd6vnGXDEHdyb/Ieuzl96teHJhQGlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXGVIS0a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kLJ3zGUa"
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 76312403E7
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1744469113;
-	bh=dMnte3bUYKtheIFCBih/uasbJjspqVJC5iPHCAuYEFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=kLJ3zGUav6Xz0PqrKaUWjBgVsbTgHFLFk4DMc8F5F5pnKLabnBfX5SPk4co+jPLLU
-	 b84LoM3Jg4y/yoshn/DktMZ/OP364jv+D5a3O1BBLV2ZKaLMUtmSqGjYAbwJavyXCN
-	 1dZrPVKBpmWBuG+EKt2r3X3iqlUYIuiqyUKm6eOv75JIUGsib4+1EL5nxz2p6ow7Kg
-	 ZJVuhTXhIyyfIkja7+cs5WPJeolo+w2nKQALMg0VU7G5f6z9zIiu/+w0eNJ8RYJ09I
-	 rnYQlKeLlEKlUicYw1QKl5huuNvjImYK1M28RyNto4v5+X+v+4pvS3MZJLGtweuMId
-	 KlFqEzesTouhw==
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7375e2642b4so2140286b3a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:45:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744469111; x=1745073911;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dMnte3bUYKtheIFCBih/uasbJjspqVJC5iPHCAuYEFo=;
-        b=V6yt6xG+kujG8TFsVS+STjCh0DdLym6cu4NcJ9IBx64Sop7gAczqXxZolowrbkualR
-         rAdyrJziK2fOVUH5Uhh7wgg4AnEsd41G4a1XCh9MMMJxoHw9jxFk/aBTNsIMXmfnKTsA
-         YQUFJfWrl+MfEbOfUNzuCTx54GHBF+qKilK5xaPK9aqw3l6Okd8Z/CYxckavftN4iS3H
-         dvAUxzQ2cwzuA9U7qLzer1zUgHamvIX1YSByvEUNzDXMAxywL+87iqDwc1xINImf0bSp
-         IwQUT9/VlhR+zzGj6YjXwRF0FjJqSy+U6Xrh09z8JXKZflsNt9tBEPVagnL8Mw1fGQUh
-         oIHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDp7j7lZyq+sRnX2Ef68rAwJcywGkryHdn08GnhR+Xxut0ACR9EJqZk+aRnC345J3cz3oiEbHHseugGoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo5zQxHfAHfMT/dNAkF+15k7T/uuA0EXalVqtPaDtsiuAdACvM
-	vCcrOF3BA7sdh1fLUQ847Z7SNmGM/JSJBZx8fyo8lRNj7k0kYAf30p2/6kb4evDkXeXVQpUZpEA
-	HxtqgsJCDWZTG4WGg6NyZ+txfRzmoXeGDsJhJAgWb/daEbOlVHOmYVeTpWOVQpMl+t1oh6C0gbt
-	Wczg==
-X-Gm-Gg: ASbGncuo8ey0BySTugdVpbqCzNYmbL50LpMpdCbZScI0YBt8auHU/LjfL71KHnztzRs
-	24ZT2Rh7hPshM/u3CFNfomCCsQPyQB61Q+eIXq4p2SmRvhxIdkDFso3e66XdtNrqrEVv6D3zguK
-	uNE2VrDIDWj3C95Ip2//sgabzJ03mg2fmEByrqWgOnkcz7+90tWvMEwpnqzm9RZtPcWiFLniaTa
-	FLfGnrEMEO/3HveVYFzYBq2cv2FtBfof2EgI4n8kT/5zSzgRN+CwajmzJJVKEgnSdMuFCxoZ5Wt
-	oU+QIDnMVEWt
-X-Received: by 2002:a05:6a00:240d:b0:736:ab1d:83c4 with SMTP id d2e1a72fcca58-73bd0ea5de9mr8269684b3a.0.1744469110624;
-        Sat, 12 Apr 2025 07:45:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGgs/5961Tp4ODI1uCtwmazIOwGScEXQjNWVM6D4BLHjUvb+kl0xxTjoourf6aP5pGbA4cGOA==
-X-Received: by 2002:a05:6a00:240d:b0:736:ab1d:83c4 with SMTP id d2e1a72fcca58-73bd0ea5de9mr8269656b3a.0.1744469110103;
-        Sat, 12 Apr 2025 07:45:10 -0700 (PDT)
-Received: from localhost ([240f:74:7be:1:3a1:1528:8601:c20c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c3870sm3432688b3a.48.2025.04.12.07.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 07:45:09 -0700 (PDT)
-Date: Sat, 12 Apr 2025 23:45:08 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] gpio: aggregator: Fix Smatch warnings
-Message-ID: <52ap2hc6ii7hlk2zixxf455nens3rxtwvrrwhlv4ii5avpgmcq@lbrdov3ygay3>
-References: <cover.1744452787.git.dan.carpenter@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXGVIS0a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6EF5C4CEE3;
+	Sat, 12 Apr 2025 14:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744469591;
+	bh=KJvcw7s62BQZZ771kg+Ctzm2F1K76QG8aFGD8mzaXcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oXGVIS0anaXjEGffYf8Pc+BRPOqx0HrI9xpsQ8+d1a+3o094GYoZ/zFyCU0M5RbJm
+	 hyIhlmeqjJbZCQ+T7R5A8oxz8Up62wEUM8NA96ovxhH7pTG435xNmQbiHOE6mKgO3A
+	 QlEdT3YCVPawU9zbwhmHWB7lxX56aRAPmVBlrFhtpVcHsDd58pInOSrvgx2SSbioc9
+	 nDm0Y5k10E74GhIL60Zk7Ekq3MpVv84p9xDM4CGIhweUYE/GPOY86L21ECNZt3O5Df
+	 K49hBW0ey/FVV6/3KNMhlEYzQn8RzLNEsj72mL6IAbyFvrPYK0nxDgSzugsQaQoZ3Q
+	 nywZdWdrUtTsA==
+Date: Sat, 12 Apr 2025 16:53:06 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction
+ `FwFunc`
+Message-ID: <Z_p-UoycGk3BceXm@pollux>
+References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,37 +52,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1744452787.git.dan.carpenter@linaro.org>
+In-Reply-To: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
 
-On Sat, Apr 12, 2025 at 01:14:53PM GMT, Dan Carpenter wrote:
-> Fix some static checker warnings from Smatch:
-> https://github.com/error27/smatch
+On Sat, Apr 12, 2025 at 12:29:48PM +0200, Christian Schrefl wrote:
+> The `FwFunc` struct contains an function with a char pointer argument,
+> for which a `*const u8` pointer was used. This is not really the
+> "propper" type for this, so use a `*const kernel::ffi::c_char` pointer
+> instad.
 > 
-> Dan Carpenter (5):
->   gpio: aggregator: fix "_sysfs" prefix check in
->     gpio_aggregator_make_group()
->   gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
->   gpio: aggregator: Return an error if there are no GPIOs in
->     gpio_aggregator_parse()
->   gpio: aggregator: Fix error code in gpio_aggregator_activate()
->   gpio: aggregator: Fix leak in gpio_aggregator_parse()
+> This has no real functionality changes, since `kernel::ffi::c_char` is
+> a type alias to `u8` anyways.
 > 
->  drivers/gpio/gpio-aggregator.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+> This used to cause problems on 6.13 when building for 32 bit arm (with
+> my patches), since rust mapped c_char to i8 instead.
 
-Thank you very much for spotting these issues. I doubt myself for having
-overlooked these.. And I had actually forgotten to run Smatch (it's really
-amazing tool). I also tested the patched module by running kselftest
-(gpio-aggregator.sh), with the addition of a new test case for the issue
-that your first patch uncovered. I'll submit a patch to add it to selftest
-later.
+Now that I read this again:
 
-Acked-by: Koichiro Den <koichiro.den@canonical.com>
+Isn't it the other way around? For arm32 c_char was mapped to u8, but FwFunc
+expected i8 (since that's what c_char was mapped to for all other architectures
+that are supported in v6.13).
 
-Thanks,
-Koichiro Den
-
-> 
-> -- 
-> 2.47.2
-> 
+Can you please clarify this in the commit message?
