@@ -1,74 +1,74 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C6F14C5B0
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF46131E2D
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744422646; cv=none; b=RurasMUh/wTlcP1+Vroipc7bSDBq15sQTpKz7oIWSmOGhRdnZOQM4vWs1bChzbDABgLA54rgRGjs0uSl2mkfn72j6PcbcahlZE6iV9DMcFsZ7sjV2spBdVytOWjT5+BHQHSCcNQhRL3lzm705fp9SZU/x/Yp9DuCCR/lM5GXIwg=
+	t=1744422651; cv=none; b=CYmBri7cmChhsAQvpr255vF25O6uhh2i+TLS4hDL9fA646okyGwcD0W2E1PXLJdgs3EVnWywm0VUnqorJTacQK/BcebZdQo1cZm/ykuIilQ5NYmvjyuk4M6mGqNYF8yHXRh7dYtSm0Irn88nM2Xb2mF6T6RUB2uP3gucQvmdB68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744422646; c=relaxed/simple;
-	bh=kCAWt0BML5WV1SVIGZYgFbzaKmu2Qzj+fUlzFOOF8M8=;
+	s=arc-20240116; t=1744422651; c=relaxed/simple;
+	bh=qa2fHYZnesCAui3XINcjkvPJz2DvBVRgbP18f/Va4Zk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WN1DNcJSfuP6ZzmCjUE7LNYj9uaAjms/q1moMD1Z+YosPUPQqVPqaJa6qJh0EhvYa0tvnLDU3lXaBVV7UiDyVEuylq0rDYmKuQPMha2XjZDIjOVx+zSr8zLxgHGRJWXNvZv6htg6ISz+qMQzlzpZtLXmeBxX9Vb4GwiJiBMOUlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FZkk7pN9; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=RrPDthLcZSw0QYhT9UQHdH8fsFaAPq7m/20XaTSuRciXMbzLkezhae6igQc6/gIO9ER6N8H6tlGrT3wolNTmDTjjAuQGXunQrwhUmXDww7YNWakEFqp4lWNvgpXFoO33CTgqvwAKkIdHRP4ji6TZBMwO4fErn8DL20gbvOWIpHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hKSMDR/j; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FZkk7pN9"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BFefJN019634
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:50:43 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hKSMDR/j"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BG28sc031991
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:50:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	glgoRiyhxfL/Te3esQieLchBRxrL4qfaUkWRNwVRA10=; b=FZkk7pN93BW3EIgm
-	37mg24I3RKY/aSvBEwzSAbbx96OPgJ0dlbM9faIbLKwdlqr39KXpWp34tdtl0S/q
-	iQjArEGH65vZ5J7W1x0HBiNCO9C0nt/ARa+WfJDgdmN/hMB/2S46oniDyKoPupBB
-	vc52mSQt4SHfLcipXPF3OPZ4FWVXkQ5mpZ005ceuGRo9diOcYm4a8MpHsaY+3eio
-	HTnfixA7Vxlpvo5mY5iT4D3BJZa7ipZNQGopAkCVxV+WrSt3P+hTMh5+d/jRWEao
-	1OLmSi6wKNpVxZkljnlXm7t9CLmcp5qpopFpzjQoNBCDL9oRTRte/sTR2Vdr88X/
-	qwq+kw==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrv6rx-1
+	NJRLMhm/fdnX3kykc4RU85KtWG/m4mG8gJyCB+VYr+A=; b=hKSMDR/jVZwpgReX
+	/h4uOooHzy5NAZIN4YhavqYzKyTnqQ+PG9WEJ06awKZuWK1mRXTTtyCCKhlgmdEn
+	44PbnftUE2koOkZ3AQUvMLVm1z/UZ7wMMSE+0Ek7ITbbys30nFWHd7lMLe7oM2bc
+	kHzDXZ9I9n9JapbTKSPVqK6u5IurHs713D+kkKEiXOtIw+hOLq1OTjvOzD5tW4El
+	uzofJD2EylQSVRrBBEt+RqvbBJddzLKTAB96+cYE+YVfdOhmLxSI+mtiGdoLywIb
+	R2x0J8mb+p4gWGP3J2EiuDoOEAHFRrUL1geEdXvpMR9Y8n3f4six/b3y30ljHoo3
+	ze2QZA==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpmm0hy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:50:43 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-73917303082so1690288b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:50:43 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:50:49 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-73691c75863so2978301b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:50:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744422642; x=1745027442;
+        d=1e100.net; s=20230601; t=1744422648; x=1745027448;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=glgoRiyhxfL/Te3esQieLchBRxrL4qfaUkWRNwVRA10=;
-        b=hLMmmMBtnHVjTBuRbQqTITMX8w6kG32Mq+rcXvKq9Pz72Fh8witQijC/tGUh7/4oKS
-         6HQpVt73Azcojc6498rLxyqVY9cRT/wBuinQLRbwHDmsEq0hdWz0p0rptb/jO+wj2iGt
-         LmtTOB8UATQSuKEuEUb9+h5JPBZTQY0W7FELe8mgcus+e4tlTYcsLSXjJnpsLsB6XvFC
-         4eKgOUXMtrjxGAG6/MKqPOvenp3nyBNLcqzwV5PGw7gLCjLPe7pnXQSVUSDGYRLa5h9q
-         LkxqWUI+AWv3ycqp5iAokOwUJno94xEalK1Pb/JJeeGbbI84ewd+PJSubU6lFf1cR2+7
-         E25g==
-X-Forwarded-Encrypted: i=1; AJvYcCUDM1tm0Uzk9Khm+Wn+cNquzlvKGuUJgtLjASlFYXLGvGUJ8/n8jOqVJ2b/vnvqvdFzY0uzqjcXVhOSErU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8gAQB6aCP5yuHC/0nCH5tT2yCs8te4i7A/b/OMtpuK4X1XATK
-	MWEJ7KHmOBJKr+lwQQG+1CpBq53gNEyiP5yk2ShrBRiDilwesdrGtow1KTsV6Pa3Jl2Oiqyq7hG
-	ic39DTFJ43ygIs8Pb9k0108pfWe9QHM2W8bj7tRBF5zhxWpJwabSi6n+MjDBYcGo=
-X-Gm-Gg: ASbGncuddnHy472zWdawMS9tiZFzKFzEI+J9/A+G0cppEY+DOFvo/COARsxdfsKDIZ7
-	nJmknPlqZ7QTEzr2monEiXYbP18m2nDNT+eBQCBKh3aYltoJOnwQLs7gI2UNASjZ97yz6R2G8Ph
-	Q6pxQx8RPnk6rpbBQLIz6+henAjjUwmtYK4P/XEsQokiSZsjseqnomWdeDNRF0oVoJEUkTshKT3
-	j9uBPIgunctyCH4g6WQlmoXncGh60SK8Dlu2fyJKpARUXyGUXMytiToHuhIjWbJqnw/5STKngB2
-	zN3E3r68h4QlHji9xyJGsQbB0hCFiiLrIrLfBndzhkxShb0=
-X-Received: by 2002:a05:6a20:d48c:b0:1f3:397d:86f1 with SMTP id adf61e73a8af0-201797a30bbmr7051263637.16.1744422642228;
-        Fri, 11 Apr 2025 18:50:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzJLmehtyGqwCwy4UtxG9p6ZLMjrO+dqexw4oYkH8h2BtyHuukt/AlHGG0NKBbbxBgfg3hTQ==
-X-Received: by 2002:a05:6a20:d48c:b0:1f3:397d:86f1 with SMTP id adf61e73a8af0-201797a30bbmr7051219637.16.1744422641747;
-        Fri, 11 Apr 2025 18:50:41 -0700 (PDT)
+        bh=NJRLMhm/fdnX3kykc4RU85KtWG/m4mG8gJyCB+VYr+A=;
+        b=J+PUwbPjJCez7/5UQ+poLKFdsshqb0DS450nnKz/KcHQQpePB1FLm6d+cmrv2Z6/n9
+         Q5vzfGpN8HYlKLlkxCjltDRlk+W9soTrAtIptoyqyl57EyIy9netXbwuroGAvNe4Iq8H
+         kGfjHa4ofFFggiPScepk+zfyNlB9EGFEHl1L/49GLoFkcYnlZX4mkRYEToJJE62rd4o4
+         reWV4af6WjMrupVGr7KKZAv1FBTKZtCDv3mBPW7mExBMaYmQ/o26f9SW4/mycbYkzW6Z
+         YiS9/YedIHkoOe0WHahPuVUKPk8woFxJtwFR5sFpDJGNIP1oLNUOjG/1GOcnO6Q2ybK1
+         LMqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUP0luujM+kgCi4bckQq/17MgamYULaE8f+Fzck18HmoBWSGH3/uAymDnRL5CHWcdzzh1T+/9MEbT9dFiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRw9D1jMR6QBMh3RMJty82kEKoeVOIEBxCuKTQznhOSfuFPLEX
+	c4ePUg1NyNwdteBODRNMEbjEIy6QbijPmuRFGHxMldefp//q4KanCcVPa3tAHYxgzuVDKmiDUjs
+	s4ypXTiCW9bZvd54OfnyxW5FN2a8ader1hdG7GT0fXA12hFd/uI7VgyN61oX8cYA=
+X-Gm-Gg: ASbGnctgoIdWpeZB2//N2D9x4HDzi3Eyn54Gnz+77RPq0tifpboPRqGhOltziH86UEs
+	kvLKCu6pf5D97fdRZ8etJH8X9/zKzbOOnk33aNFWHZa/GgEkiPtv1M5glnu4XsDegcE8ycX+WPH
+	T3ELB9NsAqqgGIfDlLGHqd4GYw0KfP7qMRBhwMuCMtkzv9NFA6Yg56cs48aq8FtXzTXG4akRCqs
+	UYucS6bLqzb0j5UBqcjt3AdjhU/vwE+nDHuA58rz4A4qryrddZ40sLDwfkD/kAil43puxKwuY4m
+	mTcceqf+P+/VIlinTti/8RwOCNj9C48GHcZdkiB+E/7aVxw=
+X-Received: by 2002:a05:6a20:244c:b0:1f5:8655:3287 with SMTP id adf61e73a8af0-2017999700bmr7758401637.40.1744422648122;
+        Fri, 11 Apr 2025 18:50:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqIidenWwBo5ifmdW9Dnc2XoM1wM7wagR0rEJ4R9Ggv4H1iuLINVAiCN3icYk7kDfKB9kxPA==
+X-Received: by 2002:a05:6a20:244c:b0:1f5:8655:3287 with SMTP id adf61e73a8af0-2017999700bmr7758356637.40.1744422647664;
+        Fri, 11 Apr 2025 18:50:47 -0700 (PDT)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a3221832sm5516825a12.70.2025.04.11.18.50.35
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a3221832sm5516825a12.70.2025.04.11.18.50.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 18:50:40 -0700 (PDT)
+        Fri, 11 Apr 2025 18:50:47 -0700 (PDT)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Sat, 12 Apr 2025 07:19:54 +0530
-Subject: [PATCH v5 5/9] PCI: dwc: Implement .start_link(), .stop_link()
- hooks
+Date: Sat, 12 Apr 2025 07:19:55 +0530
+Subject: [PATCH v5 6/9] PCI: qcom: Add support for host_stop_link() &
+ host_start_link()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250412-qps615_v4_1-v5-5-5b6a06132fec@oss.qualcomm.com>
+Message-Id: <20250412-qps615_v4_1-v5-6-5b6a06132fec@oss.qualcomm.com>
 References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
 In-Reply-To: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
@@ -98,67 +98,110 @@ Cc: quic_vbadigan@quicnic.com, amitk@kernel.org, linux-pci@vger.kernel.org,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
         Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744422605; l=1453;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744422605; l=2832;
  i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=kCAWt0BML5WV1SVIGZYgFbzaKmu2Qzj+fUlzFOOF8M8=;
- b=/+uFXCTf1bqF5t6g/+9yhijvRHjpSMx1KHn4h1Hyg+gKRxf6WiynmaXFgOw4lt68wVeracKnT
- F8+++3bUJvKCoASKv6Opu7cM/nrJ4KF+DzDmGGCMBoj2NCcgWjcWd4G
+ bh=qa2fHYZnesCAui3XINcjkvPJz2DvBVRgbP18f/Va4Zk=;
+ b=3e2iwoROGAqjYHvRyc7vAQT087G+WiXCaP0XMUBQQJpHOkE2dMQVICDsBzXvly17NY9rP07Y7
+ u4h75QW+AzyDf2qxepI6PT6vBseh/fhbRk0U8fF9E3ziUyIkr4dem7O
 X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-ORIG-GUID: zPjZAWJsrrpV2vSZ5gC-xrO7enaFXE1A
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f9c6f3 cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=4bBsNf6MAaYI6lVPmewA:9 a=QEXdDO2ut3YA:10
- a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-GUID: zPjZAWJsrrpV2vSZ5gC-xrO7enaFXE1A
+X-Proofpoint-GUID: mpLgjIRiCUp9-_ZSF3NMWrWJ4OS1j9Yh
+X-Proofpoint-ORIG-GUID: mpLgjIRiCUp9-_ZSF3NMWrWJ4OS1j9Yh
+X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f9c6f9 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=dstPO7x8LWyc_yWpthkA:9 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-12_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=828 bulkscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504120012
 
-Implement stop_link() and  start_link() function op for dwc drivers.
+Add support for host_stop_link() and host_start_link() for switches like
+TC956x, which require configuration before the PCIe link is established.
+
+Assert PERST# and disable LTSSM bit to prevent the PCIe controller from
+participating in link training during host_stop_link(). De-assert PERST#
+and enable LTSSM bit during host_start_link().
+
+Introduce ltssm_disable function op to stop link training.
+For the switches like TC956x, which needs to configure it before
+the PCIe link is established.
 
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 35 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index ecc33f6789e32cd022a5e5fb487bdec5d7759880..0af734f269a342127132540514b68a8487c5b867 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -720,10 +720,28 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
- }
- EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
- 
-+static int dw_pcie_op_start_link(struct pci_bus *bus)
-+{
-+	struct dw_pcie_rp *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	return dw_pcie_host_start_link(pci);
-+}
-+
-+static void dw_pcie_op_stop_link(struct pci_bus *bus)
-+{
-+	struct dw_pcie_rp *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	dw_pcie_host_stop_link(pci);
-+}
-+
- static struct pci_ops dw_pcie_ops = {
- 	.map_bus = dw_pcie_own_conf_map_bus,
- 	.read = pci_generic_config_read,
- 	.write = pci_generic_config_write,
-+	.start_link = dw_pcie_op_start_link,
-+	.stop_link = dw_pcie_op_stop_link,
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index dc98ae63362db0422384b1879a2b9a7dc564d091..2715838b1036d68a10f6bbf282fde505802227f7 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -247,6 +247,7 @@ struct qcom_pcie_ops {
+ 	void (*host_post_init)(struct qcom_pcie *pcie);
+ 	void (*deinit)(struct qcom_pcie *pcie);
+ 	void (*ltssm_enable)(struct qcom_pcie *pcie);
++	void (*ltssm_disable)(struct qcom_pcie *pcie);
+ 	int (*config_sid)(struct qcom_pcie *pcie);
  };
  
- static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+@@ -618,6 +619,37 @@ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+ 	return 0;
+ }
+ 
++static int qcom_pcie_host_start_link(struct dw_pcie *pci)
++{
++	struct qcom_pcie *pcie = to_qcom_pcie(pci);
++
++	qcom_ep_reset_deassert(pcie);
++
++	if (pcie->cfg->ops->ltssm_enable)
++		pcie->cfg->ops->ltssm_enable(pcie);
++
++	return 0;
++}
++
++static void qcom_pcie_host_stop_link(struct dw_pcie *pci)
++{
++	struct qcom_pcie *pcie = to_qcom_pcie(pci);
++
++	qcom_ep_reset_assert(pcie);
++
++	if (pcie->cfg->ops->ltssm_disable)
++		pcie->cfg->ops->ltssm_disable(pcie);
++}
++
++static void qcom_pcie_2_3_2_ltssm_disable(struct qcom_pcie *pcie)
++{
++	u32 val;
++
++	val = readl(pcie->parf + PARF_LTSSM);
++	val &= ~LTSSM_EN;
++	writel(val, pcie->parf + PARF_LTSSM);
++}
++
+ static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+ {
+ 	u32 val;
+@@ -1362,6 +1394,7 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+ 	.host_post_init = qcom_pcie_host_post_init_2_7_0,
+ 	.deinit = qcom_pcie_deinit_2_7_0,
+ 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
++	.ltssm_disable = qcom_pcie_2_3_2_ltssm_disable,
+ 	.config_sid = qcom_pcie_config_sid_1_9_0,
+ };
+ 
+@@ -1429,6 +1462,8 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = qcom_pcie_link_up,
+ 	.start_link = qcom_pcie_start_link,
++	.host_start_link = qcom_pcie_host_start_link,
++	.host_stop_link = qcom_pcie_host_stop_link,
+ };
+ 
+ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
 
 -- 
 2.34.1
