@@ -1,197 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6736018DF89
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 08:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC20DDAB;
+	Sat, 12 Apr 2025 08:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744447914; cv=none; b=qgfpANv/GV73qpcc+ZfGc3I5x0g+wEljM0f+NG0MYp8AU8DlbyZ0etpTIQp4BSshoDs0PLS79/baY6LK3gwt/Rgcl2p8tDHBScOk/Jvgxc1YLdu6GfHW+WRL3lIA9OxqadMC8R8jwavJ5Is4X2MU4yGrbA2a6qV+NoHBn66rwbo=
+	t=1744448111; cv=none; b=L9LdSz/zfaUnhk/M/peOnXzDEJdHpaau+kEpma49rVlDmDfY9+SlHc658zoIjeIvnzraAvhNleoLlUolNYct2GtQ18GN9kDcshsC+t2Fy3BvN8Avrspr88oEDYEU0VY/vOX0X35RVOesu4x/wwXKKx3rNoXqUF76GCCZEOeI8uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744447914; c=relaxed/simple;
-	bh=2eeQMeyVtMG4Jm9R6iPKMyk9NtJjQ8ukGumkh/jpLnw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=qeFkDl08MxgCPBsIPbN7DgkKACAfc++OyuqzBbt6yDL/O3u5m6k3uvepPRQSWLDGpYaDQEQuYYTV7rPVMxntHKOBAtnXg9cTA4TCoIpfO56VgqfaGWqgnT6Aq4vst1znkAQpR1bWFyEBc7z6M3m8QACsapD9pzz/biFDiS5WOvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbDFxiQl; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744448111; c=relaxed/simple;
+	bh=x+okFSocuEcsftPwwGN0qvjDwDxvA6N9/ElnIA7nEP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNg2aF6IqOOS+cwofOXKvY6r3E/gUXxqoqGUg3pgVUqmcnig2XBVMaDek8vc8NRUsaMt5Fy6lm3KG84JPjHQBGhLE3e7DKbC40yQh20KbrjmJhyq3ASRaSXGUMpFQ2IFOk9WB3fSkEPAc7RA55rtIFkLBkpZDDvHu12Snktez4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LywybWXZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbDFxiQl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744447911; x=1775983911;
-  h=date:from:to:cc:subject:message-id;
-  bh=2eeQMeyVtMG4Jm9R6iPKMyk9NtJjQ8ukGumkh/jpLnw=;
-  b=gbDFxiQlNGj1BTHjZEiU/e1kisbcd9dmx0AE+Owns05pmFEk6LRv2QC5
-   NkPGthYhfH/1LwJLE8t4q9VJBotfoMWkfwOmttxREwymIyGUy37coor83
-   Qaep/oUAz6p6GggUrVnZz3lMkxmIp2CyruEEHk/+ibnBo4npef7DgN0oR
-   M62opwYnQJyY0WqPYElekw4L/VQXSEfbQN+Wx9BXh8qx9WIhdBO4sPXCl
-   ZTqihoHNT5m3/vXTDcTdtPdkC2Zuqt6zXsiZn5S1n3a8OM3kIlJ/9MI4n
-   uHBrp9VgwslBBQsgtf8y8lLwTioH1Neji+9MHzN16ueDpU2u3NbjBCFhr
-   A==;
-X-CSE-ConnectionGUID: /wFi71gBRnqdTg/bTERxTg==
-X-CSE-MsgGUID: jYr1dCazSoKBaMghCB0qgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="45698889"
-X-IronPort-AV: E=Sophos;i="6.15,207,1739865600"; 
-   d="scan'208";a="45698889"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 01:51:50 -0700
-X-CSE-ConnectionGUID: uO3PcpcGRZuGCAc669qPsQ==
-X-CSE-MsgGUID: 6puVBft+SaSUKhwEi+JkYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,207,1739865600"; 
-   d="scan'208";a="129156281"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 12 Apr 2025 01:51:50 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u3WaZ-000Bfe-2I;
-	Sat, 12 Apr 2025 08:51:47 +0000
-Date: Sat, 12 Apr 2025 16:51:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250404] BUILD SUCCESS
- 5cf93e6214cb5c0c0820c35ea35463f6dcdbd6d6
-Message-ID: <202504121625.Vqzrl0Xw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LywybWXZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1555EC4CEE3;
+	Sat, 12 Apr 2025 08:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744448110;
+	bh=x+okFSocuEcsftPwwGN0qvjDwDxvA6N9/ElnIA7nEP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LywybWXZLylHKzUqYF01W3h8N5jmcf6IdGDfzOf1tQ28wxGOVI9DLyjf59ZAuLwaN
+	 j7EEqzSUeULWfKhC667GxHSZuETgo2NPOl0I//dXnapixqDJzvLpmLGnoARXUI0dQZ
+	 2Yeok9lu8NzbXZJDkRSQRwaB8aM+2ikdsLAoopYulWMT4tLaOSQW7kZIU6K+1M1LG2
+	 PtMrCbzzaZJGpnbAAKDxOHCIf1Od2kHRwEeoMuNRxEz5VIh5iGBW3l2a8KWoG+1JQd
+	 AvDOLTEVsOCasb9iLYsVfRszeVtd+YowiFHy1x+kMGpk5Kvt9SjfR6h6tN4kBeIT/Q
+	 olGoktz/ZlBfA==
+Date: Sat, 12 Apr 2025 10:55:06 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org
+Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
+ __typeof_unqual__() when __GENKSYMS__ is defined
+Message-ID: <Z_oqalk92C4G6Rqt@gmail.com>
+References: <20250404102535.705090-1-ubizjak@gmail.com>
+ <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
+ <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250404
-branch HEAD: 5cf93e6214cb5c0c0820c35ea35463f6dcdbd6d6  wifi: iwlwifi: mvm: d3: Avoid -Wflex-array-member-not-at-end warnings
 
-elapsed time: 1446m
+* Borislav Petkov <bp@alien8.de> wrote:
 
-configs tested: 120
-configs skipped: 2
+> On Thu, Apr 10, 2025 at 10:58:46AM -0000, tip-bot2 for Uros Bizjak wrote:
+> > The following commit has been merged into the core/urgent branch of tip:
+> > 
+> > Commit-ID:     e696e5a114b59035f5a889d5484fedec4f40c1f3
+> > Gitweb:        https://git.kernel.org/tip/e696e5a114b59035f5a889d5484fedec4f40c1f3
+> > Author:        Uros Bizjak <ubizjak@gmail.com>
+> > AuthorDate:    Fri, 04 Apr 2025 12:24:37 +02:00
+> > Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+> > CommitterDate: Thu, 10 Apr 2025 12:44:27 +02:00
+> > 
+> > compiler.h: Avoid the usage of __typeof_unqual__() when __GENKSYMS__ is defined
+> > 
+> > Current version of genksyms doesn't know anything about __typeof_unqual__()
+> > operator.  Avoid the usage of __typeof_unqual__() with genksyms to prevent
+> > errors when symbols are versioned.
+> > 
+> > There were no problems with gendwarfksyms.
+> > 
+> > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+> > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de/
+> > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+> > Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > Link: https://lore.kernel.org/r/20250404102535.705090-1-ubizjak@gmail.com
+> > ---
+> >  include/linux/compiler.h | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> > index 27725f1..98057f9 100644
+> > --- a/include/linux/compiler.h
+> > +++ b/include/linux/compiler.h
+> > @@ -229,10 +229,10 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+> >  /*
+> >   * Use __typeof_unqual__() when available.
+> >   *
+> > - * XXX: Remove test for __CHECKER__ once
+> > - * sparse learns about __typeof_unqual__().
+> > + * XXX: Remove test for __GENKSYMS__ once "genksyms" handles
+> > + * __typeof_unqual__(), and test for __CHECKER__ once "sparse" handles it.
+> >   */
+> > -#if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
+> > +#if CC_HAS_TYPEOF_UNQUAL && !defined(__GENKSYMS__) && !defined(__CHECKER__)
+> >  # define USE_TYPEOF_UNQUAL 1
+> >  #endif
+> 
+> So mingo is right - this is not really a fix but a brown-paper bag of
+> sorts.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yeah, agreed, I've removed this workaround from tip:core/urgent for the 
+time being - it's not like genksyms is some magic external entity we 
+have to work around, it's an in-kernel tool that can be fixed/enhanced 
+in scripts/genksyms/.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                      axs103_smp_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250411    gcc-14.2.0
-arc                   randconfig-002-20250411    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                      jornada720_defconfig    clang-21
-arm                        multi_v5_defconfig    gcc-14.2.0
-arm                           omap1_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250411    clang-21
-arm                   randconfig-002-20250411    clang-21
-arm                   randconfig-003-20250411    gcc-6.5.0
-arm                   randconfig-004-20250411    gcc-6.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250411    gcc-9.5.0
-arm64                 randconfig-002-20250411    gcc-9.5.0
-arm64                 randconfig-003-20250411    clang-21
-arm64                 randconfig-004-20250411    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250411    gcc-14.2.0
-csky                  randconfig-002-20250411    gcc-9.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250411    clang-21
-hexagon               randconfig-002-20250411    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250411    gcc-12
-i386        buildonly-randconfig-002-20250411    gcc-12
-i386        buildonly-randconfig-003-20250411    gcc-12
-i386        buildonly-randconfig-004-20250411    clang-20
-i386        buildonly-randconfig-005-20250411    gcc-11
-i386        buildonly-randconfig-006-20250411    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250411    gcc-14.2.0
-loongarch             randconfig-002-20250411    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       bvme6000_defconfig    gcc-14.2.0
-m68k                        m5307c3_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                     loongson1b_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250411    gcc-9.3.0
-nios2                 randconfig-002-20250411    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250411    gcc-14.2.0
-parisc                randconfig-002-20250411    gcc-8.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                       eiger_defconfig    clang-21
-powerpc                        icon_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250411    gcc-9.3.0
-powerpc               randconfig-002-20250411    clang-21
-powerpc               randconfig-003-20250411    clang-21
-powerpc64             randconfig-001-20250411    gcc-5.5.0
-powerpc64             randconfig-002-20250411    gcc-5.5.0
-powerpc64             randconfig-003-20250411    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv             nommu_k210_sdcard_defconfig    gcc-14.2.0
-riscv                 randconfig-001-20250412    clang-20
-riscv                 randconfig-002-20250412    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250412    clang-18
-s390                  randconfig-002-20250412    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250412    gcc-14.2.0
-sh                    randconfig-002-20250412    gcc-14.2.0
-sh                           se7619_defconfig    gcc-14.2.0
-sh                           se7721_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250412    gcc-10.3.0
-sparc                 randconfig-002-20250412    gcc-13.3.0
-sparc64               randconfig-001-20250412    gcc-13.3.0
-sparc64               randconfig-002-20250412    gcc-5.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250412    gcc-12
-um                    randconfig-002-20250412    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250411    gcc-11
-x86_64      buildonly-randconfig-002-20250411    gcc-11
-x86_64      buildonly-randconfig-003-20250411    clang-20
-x86_64      buildonly-randconfig-004-20250411    gcc-12
-x86_64      buildonly-randconfig-005-20250411    clang-20
-x86_64      buildonly-randconfig-006-20250411    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                generic_kc705_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250412    gcc-14.2.0
-xtensa                randconfig-002-20250412    gcc-13.3.0
+Maybe akpm can merge this or some other fix and sort it out? AFAICS the 
+bug came in via the -mm tree in January, via:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  ac053946f5c4 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+
+Thanks,
+
+	Ingo
