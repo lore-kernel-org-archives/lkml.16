@@ -1,72 +1,89 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC6620551C
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F61220CCFB
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744483448; cv=none; b=puQd+LSvC5U7WtYzbOtwV8RWI97nsQJnLtgrcNhuyqU/beXmeYqYfpsvygWYgJcSBieixy68SM5v85aXrGdI0b/E/j/g69PFCYKh0xuGiAmbQf6VmY1tLW7c2ppw3AFoT74jWm0mKSXN7/WW4B0da6HFBAcBwVynXDZOu/OL390=
+	t=1744483470; cv=none; b=hD/wu1IyUZ9v+3FJa5bWN/2Ay+gWnGZ3z5KKGCwFBAOhr6pj6qE8CueA7PcRsde8NQsXraiqpqM7b6NgTmdi6BD6wEH4Np+GQSMhxg+hfdTxtWUhlocJQEBqIM5zL7PaN1sDefSyVm89WLohWUfcm8QkJ1m+vOOr9YKOC5QB8DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744483448; c=relaxed/simple;
-	bh=M4TVG+cr7w6itbVX/VasFxw6mQz6iBCSPwN0WzDXX1c=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=KR/78P5zsc2xmHpAgFLDoiVOrZVcDLQiO7w/4S2LOMWZ70tsuANko+nCkjhBKjksAuW1MDZAtnJLNREi+3WlUA6+UjLN2RosY40Z46rh8awkd/ooI92Ki799+M5QVosSe2BwWQPDmFy5kVrMF1EnIFgilsLhngL506RqlzgfzWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d443811f04so29796735ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:44:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744483445; x=1745088245;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NG9peu6HwKo34I02zxIKwFOahGQ9v++pujGy3qN4qQo=;
-        b=hR7VKfKelLoqgrj78Iq9c1PKUVvMAGjF75/0/VI/Z9MO69RDRLD6MyHiQi4ijxO0qC
-         52JHhqXAUdNXh2A+IFdNdG398uJRSVSA09HSHLCzB09DprvbwLMDX8HQoIOZX6eRGp4Q
-         qq2AeqspUl9/C8RJbKFECYnXgR+EDAFjT2umvx/SGSAIRdRFNHBI0nQF2qfgIjsyLOm/
-         hAPmGkOrsOv9HdcFrA1fv666i+v/dlRtzqlY7VGhhUZi6KhGNTaPI1UFUauWjjRCdr35
-         WNCNKjJqAaZW9KRzq4dsyZ8Hi5h3RZcvcnuNhpDAmQuj+nEp4Aody49k+a13ULfaMY/T
-         z99w==
-X-Forwarded-Encrypted: i=1; AJvYcCXDemyQFgaYAxYCxIzgqBE5heGcQ+vPGiVHklC3p+JThqi25TvzK8Eg1eZr4i0Cz4iuU9thktXVDal3/Bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWvsZlZRVSs71NbS/w2RnlX5JYPV3DRtMEJsVQilR+OWY/uzHp
-	mqKb+2/Z61nndCUqfflDKKx8K1OJUEXLHMgcUUV5oUykGrlIzXwUneRy/KkeVO65B2ICAXVdUhF
-	sMfu0ToACVH9XbaY5S3xo3GcwWbseqYiSHWMJ0/DM38LIEovalLIAW6M=
-X-Google-Smtp-Source: AGHT+IEBfMu7i1NkoGaxaswm0EfxG2jJyXEVf/9B7SskKgSRaHzga8YsAYffvVbqJU3HUa4u++I38JS/FEfhCcIrGH2KB9lwCdkv
+	s=arc-20240116; t=1744483470; c=relaxed/simple;
+	bh=l6Nsox/7jySqMpZrky/EGyuojDtoPc6Au//m2bM8/iY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9a575oVHwDToU96zQvvN57EpfwH3iIhr0Xc6ItCFwVyaU4uKtjOOxrQhA4XAabNrnvsYl/XbIjYKD15BHxt7i9Gl2eMOLdmmJBgWneGHXfX/QzBlryPOexoDsou29WpxlUB9pAwyZuXG8fivFJcn1c7iT9QolZlMKcvzwqLJlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWRaAWte; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWRaAWte"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1075BC4CEE3;
+	Sat, 12 Apr 2025 18:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744483469;
+	bh=l6Nsox/7jySqMpZrky/EGyuojDtoPc6Au//m2bM8/iY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kWRaAWteJRc67GLgilEsnMOC/0fnAF7AQwH9RX7wkPHIiyLqcmgT9G6UiUB75UevM
+	 9BBcRpPfYBLnv+ky4F9qg0rpb9+muP35IZj8r26mb2KicIVqinNEDZF4rn7m5KjQzC
+	 fLPgWz/G0eFZF8Y8UuixOyv2wuCJb2thtPtcApMehfcQNTg3MBfBiuIfz5vC6bhLpk
+	 411zjR8kVfBqucPW1Z1NiRNIVKPz537CI7T8qX6Emr6rjO2FdKUTTMQAvQo9qbp7d7
+	 c0sJN8+ZO56JZm8l3BSF2xtCKmQ2k7bY1dcfFgq6gdHUiwxiCjELNr3YnephC8pkvA
+	 DLPP6wvK6jGUg==
+Date: Sat, 12 Apr 2025 20:44:25 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: exporting a device type
+Message-ID: <Z_q0iRXjPbdQvHMu@cassiopeiae>
+References: <CAHp75VdssCM74oji59QjPMEzrVuBzPOAMadA=Ds_52hOZGJ2mw@mail.gmail.com>
+ <Z_mIrjA5k2CABoG_@pollux.localdomain>
+ <CAHp75Vff+at=Ty0GD1PpROPJqHEAB+g94pv-CLbeT2aTN46uJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:198d:b0:3d2:bac3:b45f with SMTP id
- e9e14a558f8ab-3d7ec1dc7e0mr71422785ab.4.1744483444774; Sat, 12 Apr 2025
- 11:44:04 -0700 (PDT)
-Date: Sat, 12 Apr 2025 11:44:04 -0700
-In-Reply-To: <20250412180428.244928-1-gshahrouzi@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fab474.050a0220.379d84.0014.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_dev_free
-From: syzbot <syzbot+aec9606169fbc3a12ca6@syzkaller.appspotmail.com>
-To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vff+at=Ty0GD1PpROPJqHEAB+g94pv-CLbeT2aTN46uJw@mail.gmail.com>
 
-Hello,
+On Sat, Apr 12, 2025 at 08:56:39PM +0300, Andy Shevchenko wrote:
+> On Sat, Apr 12, 2025 at 12:25 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > On Fri, Apr 11, 2025 at 10:39:38PM +0300, Andy Shevchenko wrote:
+> > > I have an issue with this change
+> > >
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/commit/?h=for-driver-core&id=e86cc69186051d7312711565803de586efd9b2cf
+> > >
+> > > (I think you haven't yet sent it for review, so this is just
+> > > preliminary look at)
+> > >
+> > > The idea of exporting bus type will open a non-reversible box of
+> > > changes when people will start abusing it. Instead just provide an API
+> > > dev_is_auxiliary() as it's done in other subsystems (yes, I know that
+> > > some of them are still exporting the type, but it's most likely due to
+> > > historical reasons of not thinking through it at that time).
+> >
+> > Yeah, most busses export it and provide a dev_is_*() macro, which we can't use
+> > in Rust. That's why for PCI and platform I started using the bus type directly,
+> > see e.g. [1].
+> 
+> I know. When I tried to do the same for PNP devices, Greg and others
+> were objecting to this. An auxiliary bus is a new thing and I don't
+> believe that Greg or any other kernel developer who is generally in
+> favour of Rust development will accept this particular change.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Greg and me are aligned on this in the context of having Rust implement TryFrom
+for device "upcasts" [1]. However, I decided to drop it for the auxiliary bus
+for now, since I think there won't be an immediate use-case for the auxiliary
+bus.
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+> > However, I already considered changing it up by just creating Rust helper
+> > functions for the dev_is_*() macros and provide a dev_is_auxiliary() API
+> > instead. This also simplifies things a bit and gets me rid of the
+> > Device::bus_type_raw() helper.
+> 
+> This would be wonderful!
 
+For PCI and platform I already switched to helper functions for the dev_is_*()
+macros. For auxiliary, as mentioned above, I will drop it for now.
 
-Tested on:
-
-commit:         ecd5d67a Merge tag 'pwm/for-6.15-rc2-fixes' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12e4ca3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb8650d88e9fb80f
-dashboard link: https://syzkaller.appspot.com/bug?extid=aec9606169fbc3a12ca6
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11245c04580000
-
+[1] https://lore.kernel.org/lkml/2025032455-elk-whoops-3439@gregkh/
