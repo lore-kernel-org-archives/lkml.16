@@ -1,78 +1,76 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C0E77104;
-	Sat, 12 Apr 2025 16:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621C1192D66;
+	Sat, 12 Apr 2025 16:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744473924; cv=none; b=TnXcTMLXQxLgpGxMFkni6hoU/u6y14OKyS3xh6XTtRFRNpaJJpUr+mp6KZcKLDYuDdw9o0XnqRS9tNnngmooaJH22/CMhqx1GMLwZm+3SsVEB6+gw7b1mU44iluYMj4RZm6nXIssJlybHR6xNuheB4uErMfcAHpFJZl1dyxgV+A=
+	t=1744473998; cv=none; b=Inyp1b4ztL8wbaxP4Ez40QHGVvfBqD0yt70g7fRgAvC7Io9Jmivz3Y/uq024z4P9G7AkGg7q/gCGu+YA3ozCwgqs+wLUTgVTBQAPSmRTK6lZuQbwK5mKrIN1mpBTKT0SUKOC9aHOnpytqEv0R4S8ZK+oBPHMza76eDAtsnlGRfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744473924; c=relaxed/simple;
-	bh=pmfOx0ByssuAb79V71tEtlJ1QVhMnmrwa7zyOqEos0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bo1Abi1JY5zKrGg//96MIHIh1Z9Q8JqWF3YcY/JaHfWwY/OcOjeSNS7pErRS7eM+atLrLwBRrY7/7CIR9F8cn08sQf2VkkfIHJL1lVm1xdYL8nFRu6ua4X3c2rXHxRxW+V8FfaMkT72i5vIV4ioETHKZ1iTSJDIPcr+Dym2l/KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CbmG+V4k; arc=none smtp.client-ip=209.85.160.179
+	s=arc-20240116; t=1744473998; c=relaxed/simple;
+	bh=5pjImVyaUSqRmZRdn2LiZv08c/e1+C24mgMzF4falaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bmnrXZ3JGqKLsa8VLYuyuiQZmjjMAovFGuMQ16duoQQ830xnAXb0L1db44M+QirluC+OTmJdbcSgbJfzosVevOWDZkYL75M1jlUgP5oAuap4rkk11BK9GfNvaaosIr4kSXL7hEk9f1dMI/ifkMaGWYQLXYGFX18aIU44Y2X+1Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DxupO1j4; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbmG+V4k"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47680c117fdso5669381cf.2;
-        Sat, 12 Apr 2025 09:05:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxupO1j4"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22401f4d35aso34401465ad.2;
+        Sat, 12 Apr 2025 09:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744473921; x=1745078721; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744473996; x=1745078796; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=18rNRUozuuywP1tNu8idsUvf4lnx4Kb0IvyRGbZ6T3M=;
-        b=CbmG+V4ky2rD/qydcEVbrhIZ5weCgHwhSxK8/Unkk8QR0KXElzWmAnMlgbh7AGEb6t
-         FsK3lJNyaxPyiV8ltTBtQfTL0/Zijsv5sff9QQ/GucpPJl54S5GTDzGMg3RlP6vNma3h
-         hpEtKXnj4DEmG/vUYz8IpJuVM+Mj+EzQ9jxh1RpXRHwtzPpnqCsXtcJn4RS1fyP50zp+
-         sO8zsrgqvU2lk6HWAkSjP9l8aSqY8TW2zE6ER4qZW4AWZLLpFch/hctpl6hIdhDybAaD
-         GlQnPJNwbnRfANdglh/Nb47BhxpaiTfycf59EgGOwFWMbom2kGDjGbtWgEG/aQtl5bqV
-         4I5Q==
+        bh=ewF251k2sP2DDRu+cfWYtdHJ78ZbeiTilTLAfoCOfS8=;
+        b=DxupO1j4p0Sklig3um10ntfhWdj130wOa6kPkuJgQMQjGxct9EkSxr8Lz6ERSBa3pu
+         Z4gmJRs+PdBDgLp16A9O3/m4T5A03fPCi3KMLYDwVnqUvxcTn1UKvsBN6rlq30Xq0qtT
+         JVl3Fqx1LfLPKq3L4DNPoRYPxAblyBs4nE/JZG2iSx4eQXDTO/mGSFlsS1nNcerSeICG
+         s6f8JllzFut0Db4H0kGUssXqXHwv7ird9k4ObKcauqymlKOnql4oq+o/4nT8CBR4qkXh
+         lVsxlF76ZkO5AwLbhmDQ8rg+MNbD4+Wr98d3T6LdgoxeTf5iwiVaYVgUPvYQeXQXXAnm
+         U3EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744473921; x=1745078721;
+        d=1e100.net; s=20230601; t=1744473996; x=1745078796;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=18rNRUozuuywP1tNu8idsUvf4lnx4Kb0IvyRGbZ6T3M=;
-        b=MIj5LicnAz/rQ77HRZYO0E0NtlwGUcL4orFed7oyJzofReGJ1/RVLHnosriDJSVCGf
-         wpLf7UBUnVt5Vbw1+3NsQtM8gPPrhYO5QQEzqa7ppSUFUplbi1RJV2tTTxYHvm/OGrd5
-         7iNwIe6Ls8WPdkEWN/YW2QbP/62ozPMF4x3lazQcTHCWX6fXkirlSu3piMEoXZV5EuTz
-         DfWnQGbtziToS3G8E939YaKYwG3G0EYL4uLFWeSj69U37b+kkOv0jX5h3SgqILuezqdi
-         chUrGv/pMbJt0chWLeJmL45Bb/4KOfRRvLy2t8Z/3ufjgzuws8wNtku4nzYYTpdyIncR
-         6e0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVPcfXzgtZVhkyVuqprwj5BXEP1Gzc4Bmz7A+a9eg1ayKXqRFeoyp2iyT71mJPajxI1r5ENoH8XqtLAkHg=@vger.kernel.org, AJvYcCXkcFVj9InF0VyKXFwWpzG5h5bN2v3l/sqfX0aNV+y/dgUIXV/AFUwbvd07USgpC5yy/BG45C8vll0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyipUl8KEpRsHGbNLEfGZIpAKuJPOyAyGJEYNADfmW2J6hhgDeE
-	ccLxt5sLNeaIIhEBmep+dcmU469Rsj/El8LmXhX05VV6wS4Ox7+enjCO
-X-Gm-Gg: ASbGnctzbHd0rGTfkYpW0OVyyrDn3+mHOOB8jBfb65DaPHM5M3otGczpauUcf005Stj
-	mfSKFvYsL2TZdH5L75UixGwlO2v8kz2gQe/HniMlE42N172lxgZEVl55j2YykFuNKDgrOmP0r8a
-	lyRkdLIet0OKQEz+MLZM8EXVPcwD9+YsNpptmbzqUsEDxttZC0/lv8y9YIOxUaoLg9XPHvxgYYw
-	40bCwrLEuXkSWVo0VZnxUR6Q22TbFvQQlo9HHA9hqdzq8XsTfn/MbkdZGGeQ6kVvtRjPcp2BPAF
-	LNSmlLEApaMmPSOG7fV4Oj5UJb1qJ+uGkXYOdA==
-X-Google-Smtp-Source: AGHT+IFiHWb94k652mgAZ/ZDuGpTVK6w5j1J2J86j0VwdFWpYKq46BdH1rfkKZVmctjSl9dXg/cPAw==
-X-Received: by 2002:a05:6214:e4a:b0:6ed:2289:6623 with SMTP id 6a1803df08f44-6f23f191ce8mr39928946d6.10.1744473921131;
-        Sat, 12 Apr 2025 09:05:21 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea07f3esm51541616d6.76.2025.04.12.09.05.20
+        bh=ewF251k2sP2DDRu+cfWYtdHJ78ZbeiTilTLAfoCOfS8=;
+        b=B/PAg9vbNJDtb6O+RazFFDjEjhZ/xihtoqYA9b/eqw1wNp+qoXJSLI56QB1oHNA7X1
+         I3HO7zGEe2BmPmVWv3UJsvi195jEHHH+CXtsqC5RvyeKSrojl8N8/uoeuamQ7LDcRs5N
+         DuqWmRrSvcn7Uq6do5qgOTN3SOABgOD84WiazZSiDXRHl2Eq+9efeOe9up5IaO/wvY37
+         lPNpCL8383WffhT6wNmEC2Snl7txBIqvrXVhh0Pw56ktgNmJQ4AcS+ASc6CbS41tkRjX
+         ieRY5XpUMq/Gmp3cGgTqOXSQFwEAGgOjPrjuxp+EV1/JkMKyMOSyFSAydu3S2Wj3Er5S
+         aWJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVg2HSaC8cLmN+LhSl/drRSka94aOsy+ZfP7zbdofKnA5WIe5QwnsFh4CQedt1coOsvRhqTn2wmQcPqD2o=@vger.kernel.org, AJvYcCVx+tuNyH+opSiZqFBDRJ6WuEFIlo5cyrkCxFhKHlrOwlr4zkvfvldhS/FetiOkEfOX5lpOpXBK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4XKLOa/HKQm+gt/hdfpHXBIqShY6IvkqLcd8qJabE+kL/wQks
+	rw3sf6DQ/vlpNv7WtABahQxyChtlA641goD5APocFRJ0+s5lIqR5oAEkcGwL
+X-Gm-Gg: ASbGnct5PcQzE/9pzjVjjamX1T+g+kVKQMBzTsDweYwil8zmKUpATo7ylGmVZs+LRjP
+	xJNvdBaqtEsbDWfxiqYpx6HliWmZ9vhKgBLo8dRu9nyvxB+5eh9TcfdsnypP8Vq90F198IfuXwa
+	61O7AuD7hg0iYLZGWPtNX8Ax5N6KytQJT4wZWbN5uo9l6FeUYZll5zCLq0xCmvsP04EWfbBMdul
+	YpkMBcTO/sTWSZOdPkYCzL3EUP0oiA1VcY2zxF2h+/rB+EWLm8WnfsuNNVSg9MRBJIUU0UeTIrE
+	P/6UMSqW+6CWONf4gaeFjLENtOQbDlalLYLoDIlr8/PjoVCSuQeZFtMrpsld9Bg=
+X-Google-Smtp-Source: AGHT+IGXh4kfZjPxYfbZ3hjPWbProLo0Qzsresv2r7n6gjlLxMEEblQMxjL50En14mw8sraWfIkB4A==
+X-Received: by 2002:a17:902:f60b:b0:223:3ef1:a30a with SMTP id d9443c01a7336-22bea4fee8fmr90347365ad.45.1744473996419;
+        Sat, 12 Apr 2025 09:06:36 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:5c08:585d:6eb6:f5fb:b572:c7c7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a322114fsm6558498a12.73.2025.04.12.09.06.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 09:05:20 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: sven@svenpeter.dev,
-	j@jannau.net,
-	alyssa@rosenzweig.io,
-	neal@gompa.dev,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	marcan@marcan.st,
-	maz@kernel.org
-Cc: asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org,
+        Sat, 12 Apr 2025 09:06:35 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	skhan@linuxfoundation.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] cpufreq: apple-soc: Fix possible null pointer dereference
-Date: Sat, 12 Apr 2025 11:05:18 -0500
-Message-Id: <20250412160518.1824538-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel-mentees@lists.linux.dev
+Cc: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH net-next] net: ipconfig: replace strncpy with strscpy
+Date: Sat, 12 Apr 2025 21:36:23 +0530
+Message-ID: <20250412160623.9625-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,39 +79,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Check if policy is NULL before dereferencing it.
+Replace the deprecated strncpy() with strscpy() as the destination
+buffer is NUL-terminated and does not require any
+trailing NUL-padding.
 
-This is similar to the commit cf7de25878a1
-("cppc_cpufreq: Fix possible null pointer dereference").
-
-This is found by our static analysis tool KNighter.
-
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-Fixes: 6286bbb40576 ("cpufreq: apple-soc: Add new driver to control Apple SoC CPU P-states")
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
 ---
- drivers/cpufreq/apple-soc-cpufreq.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/ipv4/ipconfig.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/apple-soc-cpufreq.c b/drivers/cpufreq/apple-soc-cpufreq.c
-index 4994c86feb57..3de9bb2b0f22 100644
---- a/drivers/cpufreq/apple-soc-cpufreq.c
-+++ b/drivers/cpufreq/apple-soc-cpufreq.c
-@@ -135,10 +135,14 @@ static const struct of_device_id apple_soc_cpufreq_of_match[] __maybe_unused = {
- static unsigned int apple_soc_cpufreq_get_rate(unsigned int cpu)
- {
- 	struct cpufreq_policy *policy = cpufreq_cpu_get_raw(cpu);
--	struct apple_cpu_priv *priv = policy->driver_data;
-+	struct apple_cpu_priv *priv;
- 	struct cpufreq_frequency_table *p;
- 	unsigned int pstate;
- 
-+	if (!policy)
-+		return 0;
-+	priv = policy->driver_data;
-+
- 	if (priv->info->cur_pstate_mask) {
- 		u32 reg = readl_relaxed(priv->reg_base + APPLE_DVFS_STATUS);
- 
+diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+index c56b6fe6f0d7..eb9b32214e60 100644
+--- a/net/ipv4/ipconfig.c
++++ b/net/ipv4/ipconfig.c
+@@ -1690,7 +1690,7 @@ static int __init ic_proto_name(char *name)
+ 			*v = 0;
+ 			if (kstrtou8(client_id, 0, dhcp_client_identifier))
+ 				pr_debug("DHCP: Invalid client identifier type\n");
+-			strncpy(dhcp_client_identifier + 1, v + 1, 251);
++			strscpy(dhcp_client_identifier + 1, v + 1, 251);
+ 			*v = ',';
+ 		}
+ 		return 1;
 -- 
-2.34.1
+2.49.0
 
