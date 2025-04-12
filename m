@@ -1,126 +1,131 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAF41E2852;
-	Sat, 12 Apr 2025 13:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19B31A83F2
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 13:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744464870; cv=none; b=CkYpKG25Gk/0EUZa3BmuR9DCe8P8mP+y2o4EvlLcKgl/FkaLfQpTrX7jwqyXqPTesXOFfr4FjAs/RQUd1j5GV3391txUgNGaVzQWuce3IEXR8Ltj6nN73wBBb4RK76zW9LTN/aDVXQwmXJoORvn/z5JqBm1GgaqxJ3d1UZ59Dog=
+	t=1744465315; cv=none; b=Ol+U12PRzXmEqM0Xm6USeLOuEUczEETraa2U8AoYkMbyw4xWlraTb2DtZRBuRIMo9DO2dW585q2LNdd4GONUqTqhVm7ebSu/lpepTOiz289jOVfMXtjidgp9xVj9V8HP6DtKMHCawcnA8LWnEG1bBy3VhIcgFLhgIJHfQDJLWGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744464870; c=relaxed/simple;
-	bh=NO3DxyBYoznn4Joy7NjNSpMDaDjRCQbpBwtMJpvWSGI=;
+	s=arc-20240116; t=1744465315; c=relaxed/simple;
+	bh=N8HcNW9CyPWC3bVBg970kSePn67+9k+JEyZ2haoX0WA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ToP0GtQjMtB1nnGuxYmnYrLhSNCjB76yNq4lLAisJY1r81LE+azUkhqWoHxkmex8fCgOKvQMxE92eXImtIDNXRIrdLOjNQavT1364/Fuw1G5TNt6RRCzKT8hk1RVUrHhpmZ7zu3AcuP1bQyIdPKpCQkYHRaaE0BKt5my16SVQqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R14Mxm9f; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R14Mxm9f"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c2688e2bbso280687f8f.1;
-        Sat, 12 Apr 2025 06:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744464867; x=1745069667; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WfJoT6PRSs94k/+btljFzIPdD4QWmfmkTqVitM7k/U4=;
-        b=R14Mxm9fTuR2WMSYuG5b8qqwxD1uSEY8PpPkodcKr1qcRUBLfe4NEZPeRkBpTZFczd
-         O9HR2Z397vVyIvOmSYCI6QfcGnydtxRS3FG/hGhHZ1kpHdJzap0xyn4yTGS9T3LCNR6C
-         stPiLr8C6Pb7zb9dlHJlirJARGw4EuDK/K8sj2yy65i0Hm2HSSlTQP0/VU1ou//MZq6b
-         jVCBZ4QBvO57thirvLMSFq1MiawtAW0lxO5sg9kXS4PQP5q0N7JYIMoVkDmwc7wh18pz
-         kDfzX0gCTVnDycg3pH+2UZrLYmAIEneIL6y2wS+HRtyyTf2uagC4jkVu8H/CXGQyA7tu
-         +vYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744464867; x=1745069667;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WfJoT6PRSs94k/+btljFzIPdD4QWmfmkTqVitM7k/U4=;
-        b=EvAYqTMskceUo/ulpZUzizx6EyQxJLwj4XV6mfaligoYAEEeBU0+NetTSbWn1GeUXd
-         1J+hrhlaYufBIIyTp/VdXFIf0nZo/rEqqelVtrHFq6caesZajrgDXFs2B0+Qw/oMPFvf
-         nXxvvGpSNFMb+6+urHBn+iSvkzN7QUb09Ojz7CDm76SoxZqNJJUDMmm3JXOlAs02BQmz
-         jNsyTO+UdI0fNcFG+DOgIU8Wq7da3rQ07M+PQiv1bKCxeM3Gu+midvxc8jtD0fH9eahk
-         loCe+Xlb7n7kFwf2jVAF738ZDfGFWZggnvfqd6wZnUmOtA9yK2H/Sjhpwo2T9drkvuMw
-         0XKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPuoEkKUdawhPvoOENEt0Vs61VInK8hd34MJ/rCwqsUtVoH82c6dFxZNCOCcHTGBLN9SMLb5gyDjbAbA4=@vger.kernel.org, AJvYcCXrI67sErk0sA2meGMs8Cnl6RlbLTCyAYdbYZ09xDBtzmgSK+SLSPk+frI3uLTBD3kkqROWUK5n@vger.kernel.org
-X-Gm-Message-State: AOJu0YxquSZTSAjW7BbiWReIyZjSmQzi/IrCfO3mSiRwgOpK73z7O26O
-	/XsZIcm3ihMsUvgVARzVFza55hNyfZ+1kG0UvW6Q7gWxH2hOeBBP
-X-Gm-Gg: ASbGncuVnXug+UTz5H5Mvfso9eIa6itS9jIe6KJ5Tbgc0oxh6DBBfW7BIGfo1pVQx5K
-	jKw6wyABXLQe5fVdClkbDyuHqI+pkCzLFmOuD0BTJ5mAAsDAzvmHlaoe5574BFJMpXqnm4i4WC3
-	C41DQDLLAy8jxeFHQwgoP8BT4ZOLRqcSUEF3eHVN2e1qG9ULblrE4dKuaRTH1v94L/D/+2V4ILt
-	lImiz83dI3lpylMMGQwGdPg3k+9k/LnSsdI0SD+DP9KAOI7EHDHQDRWY9qz1GtrgsyRU4AlzXi8
-	4JLtJrc2xnTYe3d1haSkNk6r9nIU
-X-Google-Smtp-Source: AGHT+IFbgobwEpxneS25gPpj0QOmulKDiFpAZ+O7Q8yZ2Fwz44EBlrgCDGaOiI2rP+iH4TAaMMJGlw==
-X-Received: by 2002:a05:6000:1867:b0:386:3a50:8c52 with SMTP id ffacd0b85a97d-39ea521d69amr1869543f8f.7.1744464866659;
-        Sat, 12 Apr 2025 06:34:26 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fca5sm123160565e9.32.2025.04.12.06.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 06:34:25 -0700 (PDT)
-Date: Sat, 12 Apr 2025 16:34:22 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: Nikolay Aleksandrov <razor@blackwall.org>,
-	Ido Schimmel <idosch@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>, bridge@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net 0/2] net: dsa: fix handling brentry vlans with
- flags
-Message-ID: <20250412133422.xtkd3pxoc7nwprrb@skbuf>
-References: <20250412122428.108029-1-jonas.gorski@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=de/LlgoYpGlouOrLxxHqsbTO4S5Ek00yBAkch3IJAUukFnyO24Ai03Uwu8KXn6AGvouyTUOJCpXdOaD/mEaL/QbCeJT+SwmJQsGU+ADUgk+uPCkXRlJBBBZ/WokXzCsAifb1VhrLlk/y88UoxfLHBTUejki7W5TO/n0Gq5nkx90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u3b6o-0001Jb-4t; Sat, 12 Apr 2025 15:41:22 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u3b6k-004b7M-3B;
+	Sat, 12 Apr 2025 15:41:19 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 7F9563F66F8;
+	Sat, 12 Apr 2025 13:41:18 +0000 (UTC)
+Date: Sat, 12 Apr 2025 15:41:17 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Primoz Fiser <primoz.fiser@norik.com>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, upstream@lists.phytec.de, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 10/13] arm64: dts: freescale: imx93-phyboard-segin: Add
+ CAN support
+Message-ID: <20250412-tentacled-rugged-bee-fd7e9c-mkl@pengutronix.de>
+References: <20250410090251.1103979-1-primoz.fiser@norik.com>
+ <20250410090251.1103979-11-primoz.fiser@norik.com>
+ <Z/fifUQ4M2doQbHx@lizhi-Precision-Tower-5810>
+ <ef74e49d-c413-4719-a174-42df91384469@norik.com>
+ <Z/knehHQeTTUXgr3@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gxqnwwxty7chqrbx"
 Content-Disposition: inline
-In-Reply-To: <20250412122428.108029-1-jonas.gorski@gmail.com>
+In-Reply-To: <Z/knehHQeTTUXgr3@lizhi-Precision-Tower-5810>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sat, Apr 12, 2025 at 02:24:26PM +0200, Jonas Gorski wrote:
-> While trying to figure out the hardware behavior of a DSA supported
-> switch chip and printing various internal vlan state changes, I noticed
-> that some flows never triggered adding the cpu port to vlans, preventing
-> it from receiving any of the VLANs traffic.
-> 
-> E.g. the following sequence would cause the cpu port not being member of
-> the vlan, despite the bridge vlan output looking correct:
-> 
-> $ ip link add swbridge type bridge vlan_filtering 1 vlan_default_pvid 1
-> $ ip link set lan1 master swbridge
 
-At this step, dsa_port_bridge_join() -> switchdev_bridge_port_offload()
--> ... -> br_switchdev_port_offload() -> nbp_switchdev_sync_objs() ->
-br_switchdev_vlan_replay() -> br_switchdev_vlan_replay_group(br_vlan_group(br))
--> br_switchdev_vlan_replay_one() should have notified DSA, with changed=false.
-It should be processed by dsa_user_host_vlan_add() -> dsa_port_host_vlan_add().
+--gxqnwwxty7chqrbx
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 10/13] arm64: dts: freescale: imx93-phyboard-segin: Add
+ CAN support
+MIME-Version: 1.0
 
-You make it sound like that doesn't happen.
+On 11.04.2025 10:30:18, Frank Li wrote:
+> On Fri, Apr 11, 2025 at 10:08:21AM +0200, Primoz Fiser wrote:
+> > Hi Frank,
+> >
+> > On 10. 04. 25 17:23, Frank Li wrote:
+> > > On Thu, Apr 10, 2025 at 11:02:48AM +0200, Primoz Fiser wrote:
+> > >> Add support for CAN networking on phyBOARD-Segin-i.MX93 via the flex=
+can1
+> > >> interface. The CAN1_EN regulator enables the SN65HVD234 CAN transcei=
+ver
+> > >> chip.
+> > >
+> > > Can you use drivers/phy/phy-can-transceiver.c to enable CAN phy inste=
+ad
+> > > of use hacked regulator-flexcan1-en.
+> >
+> > Sorry can't do.
+> >
+> > This doesn't align with other i.MX PHYTEC products using flexcan such as
+> > imx8mp-phyboard-pollux-rdk.dts.
+> >
+> > Even the i.MX93 EVK uses the same mechanism.
+>=20
+> I think previous method is NOT good enough. Suggest involve CAN and PHY
+> maintainer to discuss these.
 
-I notice you didn't mention which "DSA supported chip" you are using.
-By any chance, does its driver set ds->configure_vlan_while_not_filtering = false?
-That would be my prime suspect, making dsa_port_skip_vlan_configuration() ignore
-the code path above, because the bridge port is not yet VLAN filtering.
-It becomes VLAN filtering only a bit later in dsa_port_bridge_join(),
-with the dsa_port_switchdev_sync_attrs() -> dsa_port_vlan_filtering(br_vlan_enabled(br))
-call.
+Since d80bfde3c57a ("can: flexcan: add transceiver capabilities"), which
+git mainline with v6.15-rc1 there is proper PHY support in the flexcan
+driver. So from my point of view, there's no need to stick to regulator
+hack.
 
-If that is the case, the only thing that is slightly confusing to me is
-why you haven't seen the "skipping configuration of VLAN" extack message.
-But anyway, if the theory above is true, you should instead be looking
-at adding proper VLAN support to said driver, and drop this set instead,
-because VLAN replay isn't working properly.
+regards,
+Marc
 
-> $ bridge vlan add dev lan1 vid 1 pvid untagged
-> $ bridge vlan add dev swbridge vid 1 pvid untagged self
-> 
-> Adding more printk debugging, I traced it br_vlan_add_existing() setting
-> changed to true (since the vlan "gained" the pvid untagged flags), and
-> then the dsa code ignoring the vlan notification, since it is a vlan for
-> the cpu port that is updated.
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-Yes, this part and everything that follows should be correct.
+--gxqnwwxty7chqrbx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf6bXoACgkQDHRl3/mQ
+kZwtKQf/UtcudIKJDifikEV0AghboYKzi7fNrlv6P2KToZkTzAEVzcIRd+nmtol3
+I1/xj7uJeFMIXZcjIFT/jvdLx7xot2SkQS0p1y3C96NMbeh6aAj9rtA0VYFN7y0C
+PIQXb1K5YC4a4bZjcJO+JaJ2yE3PlZbwOKLP668zJyc+QCrg0bkLVsoYR4/x6liQ
+nKQ2+qV40GzfUf00Z6qX4fCjZbRo7g49HWktiizh4pkbryBu7A1+f2Nrl3AN2ZCM
+C7wafDh0zsN0DedbscwTJTVR1tQ1yP3YDwmQ2bYw2qs4wXqfnGTawgu7G38C4JO9
+UM3PFskg4VWWndjcTNIKkc6L6VryyA==
+=mCyB
+-----END PGP SIGNATURE-----
+
+--gxqnwwxty7chqrbx--
