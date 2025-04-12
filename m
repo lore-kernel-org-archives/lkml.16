@@ -1,80 +1,85 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84C3189BB1
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:24:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE76D18CC08
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744431856; cv=none; b=uvmtoiZCGktwhr8WwsgCJfd8UqKvgkTp1Biqa5QVuSb6vpeDrvE9t4EMSJRrzG6l5/7RKGVMlQEvMf4c9vnUKVWCeqps0KA9Om+dWRwJcgI+xPn3W65SAPamDJQxmOn9qGJ4WiShmUOoXprStYVRU7tPrsNeSXh513i/2Hy3g8s=
+	t=1744431857; cv=none; b=C9mzYaSi8Pj6HKC1bPUXJsKQQsM/jR+1l1gHyvBsKp2C9MJBoayl43ceX6ffW5xbFM85iV0PzePrQO5E10vnoRPLMHPXntZAA8vGuFu4aKKggsXKisOqFwPVo12RS7Y/AoYt4Ev54xLk9sQWmt22EH4j7yDnoI7jECg8u6MBX20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744431856; c=relaxed/simple;
-	bh=UfvioNw0X3KhatSQbiLFUIbJbxDKj3VfU7aNwjPTyVU=;
+	s=arc-20240116; t=1744431857; c=relaxed/simple;
+	bh=Yj6vLAghIl9hgFKLcSqkN5ChCX2Rcmh+ckIl0ZLDWj0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bUhfZCANI43plwbWXVV2CIiEcf7wIf3q6gKhsE1YkvbE4j6+wCC78LupQlTc6gro2rstNUCoxS8osoX9LKTzUhvqfsiUzmbewFB8VTtLoVwGUgCuyeDswBCU/SjJn7/B5/WplUMFgWytMD/VeOK/L0+8Jwzg0B4FXYvT2c7iwf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kkXT1hMk; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=XKcI/WjeikpVF8xmW1SyxA4vbE3s1tz13Qcz5jVnLlOQnrWVpRsNehFLKQIuWWbyrjRDyYewEsLGN+yaWxH5a01hORiWF/DoWQu05ZFE/BS6/814Zt7CMM/Dv562Yiqur0U+ipC4+n1K+cTu6WkAhwkgi6yBhGXis84bKd1kM+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MgCxZjSM; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kkXT1hMk"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53C3jo9Z008861
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:24:14 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MgCxZjSM"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53C3jrPk008011
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:24:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PMnq/8PkZJ1y+QIAP+XjCJdI4Ir09ftkPYUCiLBTyf0=; b=kkXT1hMk9qa1gQ5j
-	LpyFgiEPPR3fXLDa5DcSQCeO9ydP2TVpThFJ/LUQwlcZYp2VR7fMp+RMHkK3QxRX
-	1kMxOe/OZG7A4MaevVxmLJ0DS2tqhXSdePrWTcU9AMC4HL/1/3jaJWZiRdSmEpKM
-	OtTreRThr4UAQihyDFyWmm/XOwo75OXP6S2fCVDYghS3Ua42256nyEADz8w/VNHR
-	BIsmE23koRh4tpck9f3AFVPQjJlAi+MbVDt7pCRTd5zrKAuzIk0kqoCQBc69SHfq
-	HDnqYj+vaHC8omIhQAAAq9nzg2nMU3mN5zYo7I9fYVK3qXVDQelpcOOIvvF4QTy1
-	qstTHA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpmm6dn-1
+	Y6c+VvP2BLTiwbJsNHMC/15PFH6qteRzoX5JMy9RgRs=; b=MgCxZjSMPZWyGEUa
+	iQZhwJx3i736vBATTTWnSetpe9NCFPZy5N7N7onaSof1Ixe8ejb0mRuJrXj5D3Z0
+	G/24FoC0sjMTpiz5/1mA6Q3ie5HSzbiwoD+kliJpL4FzcPK2fy1V880pFbUhVl0v
+	dfO/SCQ/xh5+9JFMFHGMo9T5kb0XsTb2wo5ojo4EN9SSXWHnK0Gs4H5747NjLV4t
+	hrwzfr/yphVU4XCdf1+Vrdw/SaO76jl0+P76Oy1nG6z9hFsTinILbpMJ0mraSShu
+	6AimK4zuUtxPTm4NNmk8vPdFPVCatPUqKFaPZI25J14cYvNgQFKq7ST/2qQ/PxYV
+	D3/XkQ==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4v84vq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:24:13 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2240a96112fso37046775ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:24:13 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:24:15 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff68033070so2333754a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:24:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744431853; x=1745036653;
+        d=1e100.net; s=20230601; t=1744431854; x=1745036654;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PMnq/8PkZJ1y+QIAP+XjCJdI4Ir09ftkPYUCiLBTyf0=;
-        b=iMRYi6GSC1UT81Mnhxpt5PhwjVbHFwPZ7+/av56/NQVGUKNSUkfky5PeEkatNA3cjn
-         UbN9kdnC3Onyemg+mPzVO0fBE4HQVFAXYmxgSKi1pOuq2LOn42KkFO5fZtEv4tPwkcOy
-         HLgj6rSWULVbfWS9O9RHOvZChBKx1Evb+JHwqP9Wo79eTmjF6AQxGI1XvsTpJM954cI7
-         p8HqbvO9obh4k3TgtVOsMS2b3IOB/Fj1Jw816eCccj9+WAMOMeWaoHA3oGWh9qDra90C
-         4xm3/y7Lg6wX0gmypVfrKKaYqWbNOteE1nwXtxfoRwQ2SFLTH1GOG2gDwMF6D/w68Wul
-         8sjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqSl80WYweqH5N3idLa6R6zJHEeikcDrlWY4Ec7KreK4q0/RcjBj4penNsslx7Rs2vlIGsCCQqfjp4XC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycwuUKKGwllIeaPzK++TnpjBIJEm2J12Uk1HffapB/tUIRUGvj
-	TpzHgIN3rvpfXX6RFFbHolHMifxaO4Vf8S+AURiq/6ok2gqQl0MNvpOMBVcTTsKNxx2wlf9h+m7
-	Rue56QXv+DkgTrHzA41zKMLCuT5HCTCdSdS4PdLvjRvLRuHTgOwZDN1gDbcZs4yA=
-X-Gm-Gg: ASbGncvdJNrpyUMKSOzbNDsbjUmfBJzKCzV74euGYGfRAOLjYdjrk8eIPANuTpdBCgT
-	addyK5UDiRgcMBPUcuisPUFq0r3HYt1pQ7Xj64QM+ahbxZnE2PSgdNWKESMZQPa9RPTKpCaQTNi
-	LzAxkLUrVwhjB34uzuUa+wHt+9Be3jtwwS8JmcAEnSfPxH4ahfqDyqCSuX2RISLnLBARlsYPZtn
-	tq1mJBjo3i9pvu6eF/oYMU80p8eahZGNFJuMcSRtiRmzk5YSSZ8OJwPSCMLEbz7bZ97oCz+c78O
-	LQ5Ma6KblAudqtHiI3tT0sqYB2FKnH+++yZ6zUh+yUecTY3d
-X-Received: by 2002:a17:903:25c4:b0:224:1acc:14db with SMTP id d9443c01a7336-22bea4c68a5mr60057605ad.29.1744431852868;
-        Fri, 11 Apr 2025 21:24:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHp3MeDia7eAVUoOuls5eWRymp6ibxhPX7+qdvuGmoD0CWN0GFpaNKGP+44iTG5egAsheFsyA==
-X-Received: by 2002:a17:903:25c4:b0:224:1acc:14db with SMTP id d9443c01a7336-22bea4c68a5mr60057405ad.29.1744431852531;
-        Fri, 11 Apr 2025 21:24:12 -0700 (PDT)
+        bh=Y6c+VvP2BLTiwbJsNHMC/15PFH6qteRzoX5JMy9RgRs=;
+        b=T+7YR+GqSREsEvsgtSfelhrMwjnxLIq4wNvOfxKHlm0PLCuxWFh8RzVTEiK/4vJCHh
+         iMj+HlrzTbvGcB40ZX6epYMaaOsGPT0ktZc6AOv97rhOphgJ9VMpvKS3rit0TAkn07Ji
+         Gx9Dd5ZwzFJ5RzzXh0FA6f9x7RdSLJqeKl7eFnQbCJDqp1SgmoQcowWOYpRUHtEl8ko/
+         EITVEBW89xUXcXB84ujXTy55ixlPjGM8yl4a6r+GKa9qzK6I7xua+flcZiq6d8sQpTOR
+         FOrChX6/csVa0dD+Ntz4+Ak+x4C64J4Zfd4YVhB2uWSogRbfLaw1OLYBbbEcuemkq1Eq
+         vQlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPDnO+MGg503qvQIfFlO2RsCvTmUaP+/qH2hPSR4VFyT1HgmT65Egi715b/0FSLLPyms/i4aurDw5Gu9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG0+MnKkZO5/W/7fj/AMtohWNa+abI9Mv0tTPL7ERXncJNbAxt
+	NzSnJfxKHgstNRoMmmTDZs6/z/HPxWyiEgFiOewZdh+KDzSza8Fxjp/Ahkig+g4NkJSNFpuvi94
+	3lQDutlbUOZi2HMFNwFAiPnDygRrECuWsN5aL4liT9p0p96Svun7Rp5lU+WZxUCE=
+X-Gm-Gg: ASbGncvozDhnxo/Fu68W7wFO9GouCmENgxXgmFn0jdb//wl1VgMC49MtyTh6jVlLEpI
+	3fO6lD/IgxGetLaGtE1Rpljnhhsc0edYQk7YSsPnhMUYh9CrEjYTu0sVmPH0qod/n3jt+sDuQyp
+	+2WaxivvId1SBGNmsXJRhLerCa86Rlvn+7d8QBxWeunk22eeH7rnCnFmFF4+F3OmU9qKdqOuHge
+	xPiRvUKF60T+36cbtsT/GEF/oUSkod9s7/fzrj7HRKXrmbFZk9DklnCgt/bONu5viF+LW2EH8Nv
+	UCdX+9Eb3xyGv8xXvEuSNXIxvvgOneOyOgTxSX1jbGNzRsBV
+X-Received: by 2002:a17:90b:2752:b0:2ff:5e4e:861 with SMTP id 98e67ed59e1d1-308237b52c1mr7682570a91.24.1744431854208;
+        Fri, 11 Apr 2025 21:24:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG3bEjufM8uvzXi2R+XKSYAounBYRf966QbZ07aJvDs1jVqVY+2eE0x4NE/tknOoj+yN8R4Qw==
+X-Received: by 2002:a17:90b:2752:b0:2ff:5e4e:861 with SMTP id 98e67ed59e1d1-308237b52c1mr7682536a91.24.1744431853719;
+        Fri, 11 Apr 2025 21:24:13 -0700 (PDT)
 Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e643sm6829912a91.12.2025.04.11.21.24.11
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e643sm6829912a91.12.2025.04.11.21.24.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 21:24:12 -0700 (PDT)
+        Fri, 11 Apr 2025 21:24:13 -0700 (PDT)
 From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: Jeff Johnson <jjohnson@kernel.org>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20250408190211.2505737-2-robh@kernel.org>
-References: <20250408190211.2505737-2-robh@kernel.org>
-Subject: Re: [PATCH] wifi: ath11k: Use of_property_present() to test
- property presence
-Message-Id: <174443185191.2972989.5552642055295334224.b4-ty@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 21:24:11 -0700
+To: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Jeff Johnson <jjohnson@kernel.org>,
+        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
+        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
+        Balamurugan S <quic_bselvara@quicinc.com>,
+        P Praneesh <quic_ppranees@quicinc.com>, linux-wireless@vger.kernel.org,
+        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+In-Reply-To: <937abc74-9648-4c05-a2c3-8db408b3ed9e@stanley.mountain>
+References: <937abc74-9648-4c05-a2c3-8db408b3ed9e@stanley.mountain>
+Subject: Re: [PATCH next] wifi: ath12k: Fix a couple NULL vs IS_ERR() bugs
+Message-Id: <174443185268.2972989.9053090958982417610.b4-ty@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 21:24:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,33 +89,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.0
-X-Proofpoint-GUID: Wp5Ue1h_UeHhJGXS0xcxJ1huKdTbob4d
-X-Proofpoint-ORIG-GUID: Wp5Ue1h_UeHhJGXS0xcxJ1huKdTbob4d
-X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f9eaed cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=WD2RVSGR4ZOmZR8fVjQA:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-ORIG-GUID: 68qGBlGGyKw93-zRhimh4uS-Tk0llgmF
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67f9eaef cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=0MIO4mkLTHUyxov_fOkA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
+ a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-GUID: 68qGBlGGyKw93-zRhimh4uS-Tk0llgmF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-12_01,2025-04-10_01,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=553 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=764 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504120029
 
 
-On Tue, 08 Apr 2025 14:02:11 -0500, Rob Herring (Arm) wrote:
-> The use of of_property_read_u32() isn't really correct as
-> "memory-region" contains phandles (though those happen to be u32s. As
-> it is just testing for property presence, use of_property_present()
-> instead.
+On Thu, 10 Apr 2025 19:26:16 +0300, Dan Carpenter wrote:
+> The devm_memremap() function returns error pointers on error and the
+> ioremap() function returns NULL on error.  The error checking here got
+> those flipped around.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] wifi: ath11k: Use of_property_present() to test property presence
-      commit: d118047f82408201eb433a7ff7d505e72515d7e0
+[1/1] wifi: ath12k: Fix a couple NULL vs IS_ERR() bugs
+      commit: 4703416d0fb993f7505025667f868f6981a5f7ab
 
 Best regards,
 -- 
