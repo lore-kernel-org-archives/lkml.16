@@ -1,834 +1,202 @@
-Received: from mailrelay4-3.pub.mailoutpod3-cph3.one.com (mailrelay4-3.pub.mailoutpod3-cph3.one.com [46.30.212.3])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021087.outbound.protection.outlook.com [52.101.129.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE37D155743
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 15:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744472552; cv=none; b=b8GQ1NX0lXMxHP55hzpw6Zi4OerBP7tELQ+EaR5raI7SciDia58XucQO5UjaHsI0TPYX6IGZ44WII+dPw1Os4NGjhE+kCARdAHvQJB5TDDNTwWqlTQNilzgiWu05fNnO6JFBu2I5JaTen64xPq2VSNeJ+2ahQhRQC2mVdQe0WcM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744472552; c=relaxed/simple;
-	bh=TziPECbIXuL9i0hJ579ZePJUMLO6W09VzAYCLiKhfeo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mgSjoFUgZvY4ZXh7lkuZJ4uMjrXtxDOk/df/qdVbGBfppUWKsYSwRFGCy70ET3gloJX7vH0QByQlwjCqbNmm3MK/G9HKIw1TzEMQffpbc/afgL8jkRkyf9y/VyhH4bDlb6sXiCuWHqubadMEQ+bFcu9W6v3j6KtPAZXL5jJv9s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=zqgXxnf4; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=c1aTo1vZ; arc=none smtp.client-ip=46.30.212.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="zqgXxnf4";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="c1aTo1vZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744472536; x=1745077336;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=xywFrTpW61Uv3yma+ohqArrwVAd3t+gB42Yp/15Ti4w=;
-	b=zqgXxnf4Odl7/DVrWZdN/b957N25AYMNYj57vDw9Y1JbCHHEZLtpKJfMDsQSXHfhJoVwgn+0kNeTp
-	 wsiVzwR/jtrxG3lKb/fOjm1l8SAwKmBpJx3sj0ppagbELa7+HPAIs21LeE86a+3U7DO6fji4xZa2hj
-	 yc6LTsmf/RRQK4ayeLuJ2oUSmwb7L3TDdbtalVxJYCjQhPYavHuGZ3ct7TLVyZDjhlOqx3bqXwO8Hy
-	 ZcgltcxSR/c8j13o41SOVL5nOYn+nki3apKRcEbkHvCV8t9x9brneuzbBZx9ykZKBtFGinA7chGOEx
-	 AaG9pTGKodcPw874xXaU07y+Vlb8dKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744472536; x=1745077336;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=xywFrTpW61Uv3yma+ohqArrwVAd3t+gB42Yp/15Ti4w=;
-	b=c1aTo1vZsGjC5XuwIDcUI9FhVEYW8RPBlFCjqE2hYpyMEoNqr01rnBvNsC6lhcZR+X1a3HTtZDZf7
-	 8IT5l2ADw==
-X-HalOne-ID: b411de58-17b4-11f0-9c42-29b2d794c87d
-Received: from slottsdator.home (host-90-233-218-222.mobileonline.telia.com [90.233.218.222])
-	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id b411de58-17b4-11f0-9c42-29b2d794c87d;
-	Sat, 12 Apr 2025 15:42:15 +0000 (UTC)
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Vitaly Wool <vitaly.wool@konsulko.se>,
-	Igor Belousov <igor.b@beldev.am>
-Subject: [PATCH v4] mm: add zblock allocator
-Date: Sat, 12 Apr 2025 17:42:07 +0200
-Message-Id: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001BC148850;
+	Sat, 12 Apr 2025 15:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744472716; cv=fail; b=ASlJJqi0H3bYnbDlC4JDRNMN9UCLmGWujr4hA+aFsaIJuBPMCeMpXZKoqFcfI12Spz0dSevB5p6EyqGCKs3/+y3f6/eDyK9XI+JPh9zHQ88STs/9NDEnWOyTihkIBxptmeKldKz0c3+mbDdhXL5pFiUTZ7TY0U+yaI8l6BWpqPQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744472716; c=relaxed/simple;
+	bh=TPjWYsfIDpWD0e+oCxZeJDK6nV1vCreXAhyCPbKyhRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BDshe2pHVkdZSLC74tJSf/RtxfCGJ83p3aD8pNrPTE5qJHfiEQfgd6Nbal+NHgeObRAqBGkrM0+6ve8Jk0Byhw8As3UDnbq7nT/KiMFf98hgfmmoERuVhsg5pj4McmuDzSkBtiNgo8bM6MCye6X1ir+92oQjZLtdCqFCrXI0KAc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cWtc/wp6Et8BWZL6z8bQntqqAaUlsbM7wp1A+joPOxwhqbYVCpAnK4i/86OQYQHcOcRg1zXKaS2rk1LRSuL7+fYAhHouDIYEUfXBc3z2i5wrsZfn5SfEyGPPZu7gG274znYuwMvKajNcQ00V5+0af9abF8mHVTSRqSQZDtzWtYcYuqtspQhEVvvmheiJd6E2eOf3d2qIIOoieyG+sV+GT70cLZNjbYon4GJMglLVR4PBEopOru+PdVYkFc1GExcmdNc9JctBB+Qjn6iP/W6ILU3FZs2RkvXJRvTge24f5FrFsdDt6aUiO0Rw7axeg/pV/DIE1Pyoo0K+K274qcgkHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5dJCEVo0NXck24uC1OiyQt3boqhHxdvHlYNHyrV5wOc=;
+ b=imWACdEsGdOWxsUOrZNNifw9MuNX70YV3NXvPXKnHw2eXLuT7hVPzspxCm8jujePzbiwzhXpTJNr+oSFXjaGejn5WaQ14UshDWDo1lB5iCcDzzArnz5MJJBB24WnfcRvConIXw+LvwYlS1yrK4Z76OZUaRlp6QkifnW3t7q/Y/SgP6xO+/oUWMy+RSOXVKMcoo5DrExVYCcQOfo7nrDSwkGNdYkJEBF+15b7Nxs5bEyxzpDUk/vyRRUYfRMJWAqGdwrBkAoyTGAGvxwuh+wmeac70icHE36itlEYYpBF1Lb2gHTC3nZ64H4JGtGt9Ptg8Wtg5cdt+2/yS8na21Ar4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SG3P274CA0002.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::14) by
+ SEYPR06MB6983.apcprd06.prod.outlook.com (2603:1096:101:1e3::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.27; Sat, 12 Apr 2025 15:45:09 +0000
+Received: from SG1PEPF000082E4.apcprd02.prod.outlook.com
+ (2603:1096:4:be:cafe::97) by SG3P274CA0002.outlook.office365.com
+ (2603:1096:4:be::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Sat,
+ 12 Apr 2025 15:45:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E4.mail.protection.outlook.com (10.167.240.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Sat, 12 Apr 2025 15:45:06 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 0EDC841604EB;
+	Sat, 12 Apr 2025 23:45:06 +0800 (CST)
+Message-ID: <07457d00-82bb-4096-ba07-6cc7b7d118e3@cixtech.com>
+Date: Sat, 12 Apr 2025 23:45:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP
+ controller
+To: Rob Herring <robh@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Manikandan K Pillai <mpillai@cadence.com>
+References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
+ <20250411103656.2740517-6-hans.zhang@cixtech.com>
+ <20250411202420.GA3793660-robh@kernel.org>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <20250411202420.GA3793660-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E4:EE_|SEYPR06MB6983:EE_
+X-MS-Office365-Filtering-Correlation-Id: e4f75adc-9d98-48d8-2d3c-08dd79d90005
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RDZxRjl4eFFZbVQxOFprY0RCeENIWWxOUWJrUTNSUGk4bmVzaWt3bmo2RGpv?=
+ =?utf-8?B?YjVZSWQyN2tXSTJVS0dRU0U5aFA5V3R6WHNZUkcyalBHbWhhRTYrbGNBYkw5?=
+ =?utf-8?B?cTFaaU13cnEwbURLRXNad0l3aDV5VnV6cjlmNzN2YStwdFY4OHJkL1c4Smg5?=
+ =?utf-8?B?Nk9NRElhNUUyaEo1U2k0YWVYUWZKcG83MkJSSVNKTEUzOFc4N0w1NC9lUm1j?=
+ =?utf-8?B?L3gwa3VUVC9xOURzWjdkUFRMSVVJQWNIcHZhWlU0ZXZLUitTTllRVzhLZlVy?=
+ =?utf-8?B?KzJHclVIa0V0Ry9Rcmk0R2owYkRqNkNTQi9WTUtCTlJDdTJ0ZnMzbGVnaWVt?=
+ =?utf-8?B?dnNoS1pKZ2sybitGeGNDcDJEeXZBQ05ZbUI4eUZ3N1VBTVlGd2k4dmhYd1Vr?=
+ =?utf-8?B?Y2t5RHd1Q1JxS1Btb0I0RDJ3YXd2ZHFFV3N1MXZFS3o0bEtPMllZbmh3OWpN?=
+ =?utf-8?B?MVBpK1lEOG5rcTVCa2s4U2pDRWphTHJMVGNnMEViUitWdGljbnQrWkVJS2pq?=
+ =?utf-8?B?VjhtUU9xdWJpUWY3ckxGQTZTazVlMCt4SEVicjRRRFpLUFY3M1BIOXVDSjZk?=
+ =?utf-8?B?WkZGaWYrdWFha3p0TDk3WnNzUFZpZ2U1MHZDbmZZUUdvT3g0RVpnRGpwR1ha?=
+ =?utf-8?B?MlRLMFkvNjVoRHdzWHowUlEzdWh6cUp5ZHgzYytIT2VmVXBYWWhqVEVpNFcv?=
+ =?utf-8?B?YVRFZjJybUwvTklFc0NYVHVtRGF4OUI2bkpSeHRaVlJFRHlyWm5Zb3drRWpq?=
+ =?utf-8?B?aUFIVjBRbjBxK3FKMWRpSWdVOWhlWHBCQnFyd3lSbXRrbm5GN2t5K2trRjZh?=
+ =?utf-8?B?anlFNW5yNzZxUFJTZjhsaGMzb3lTWFlVbklLQmRGTTRYRlNGTXMvT1lCcEg4?=
+ =?utf-8?B?VDN1SUFieGFieUllT3dEMFM0ZG13Y09ib3NKa2hmL20wUUcvNFlCZEVqNGFy?=
+ =?utf-8?B?eVNUVXpWL1U5QTBPRTZKVVBHOVUwRTVJTStBV2p0RFBXc09EYzlIREgzZWlP?=
+ =?utf-8?B?WTV5d2I4MkFRKzZBd0FBeHZFUlEyWjA3UGlTUDU5em9PNURoT3MxNFJDWHhk?=
+ =?utf-8?B?RmxpUDBYL2ZrV2R1bHJFVThNTldUbmI5ek9sVkZpaXpnZ0F2SzhackcydFh3?=
+ =?utf-8?B?Vm90QmVBK0VUVGRqS1dYUnVkbGlqVW5wM3pWVkI4TnhueTlib01HVXNGSWU4?=
+ =?utf-8?B?Q1FocWNUYUJXeHJmWHUxY09BZjl4ZzRTWWtOSzlBdHhXc3pRdVgrMWU3NTdN?=
+ =?utf-8?B?U04zOTdQcHAwYzQyU3BJZERpRGd4WU5WblB1cUJJWG1RS212WmdLM2dUaCto?=
+ =?utf-8?B?TUtLdDFHS2tOSWQ2dG11U2ZUYm1wYlVQRGR6dENJMENEemcyUWdWaDYrRnFH?=
+ =?utf-8?B?NXZiSzZ1ZzBNdk5qc0pyNm1DbmxzU3RwdmNQK2IzL1NBQVNlNDVhMUVvN0gx?=
+ =?utf-8?B?TzNBM1k5WGFsanBCVmVlZ3ZHV1ZmVkJqdS9yMzVHWG5wZzRBK080T04vWGVJ?=
+ =?utf-8?B?UHpEeDJob0Zub1RjeVp3cUNLNUxpZ2R5aEZBOEpwc3MwQ1dvaE84c2F1QTVR?=
+ =?utf-8?B?M3RvYkxQUlNMZlpqVlUrU1VYVzBJQXBkZzJzWDE0dVR6YUlRdGUxQ2lEWml0?=
+ =?utf-8?B?eEZLb0ZCU0QzMXFkdnhWS2JaNEtCOE1BL0loTmZTN1p3eU5CV2czakFrRUdC?=
+ =?utf-8?B?azJNUlZxK0twbklVTkVXUVN0YWtqb29TU2hTSFQrdldKREVFbWFHTEFVK3kr?=
+ =?utf-8?B?U01SdmhTWE8rNFVsZjRNcktrb09Yek0rYmNiYzNnemJhazI2bktBVjV3T2xJ?=
+ =?utf-8?B?cElUM0lQMXIvMGtKeWJ5VTlNUzFJWE5OOEg2bStyYTFtdVc4UEpsRHdPM0tr?=
+ =?utf-8?B?SE9VSTNmcEJPOTl4WG1qMkZZQzlFZnRWb1NqMHJMaWJEY3FGaGNXbUhua1lv?=
+ =?utf-8?B?UFRLd0lUY3YzaFhkaUxHeTVaUHZYdGdxVVVxNVExRWdBcUxqVVhtYVRzeGd4?=
+ =?utf-8?B?Q0d5TU15N3dQczRPRGY0NitRYjQ0ZEVUQzVCTlhnSitiYURJaEQ4TDhJVUFv?=
+ =?utf-8?Q?0i33EQ?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 15:45:06.9963
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4f75adc-9d98-48d8-2d3c-08dd79d90005
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E4.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6983
 
-zblock is a special purpose allocator for storing compressed pages.
-It stores integer number of same size objects per its block. These
-blocks consist of several physical pages (2**n, i. e. 1/2/4/8).
 
-With zblock, it is possible to densely arrange objects of various sizes
-resulting in low internal fragmentation. Also this allocator tries to
-fill incomplete blocks instead of adding new ones, in many cases
-providing a compression ratio comparable to zmalloc's.
 
-zblock is also in most cases superior to zsmalloc with regard to
-average performance and worst execution times, thus allowing for better
-response time and real-time characteristics of the whole system.
+On 2025/4/12 04:24, Rob Herring wrote:
+>> +void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn,
+>> +                                int where)
+>> +{
+>> +     struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+>> +     struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+>> +     struct cdns_pcie *pcie = &rc->pcie;
+>> +     unsigned int busn = bus->number;
+>> +     u32 addr0, desc0, desc1, ctrl0;
+>> +     u32 regval;
+>> +
+>> +     if (pci_is_root_bus(bus)) {
+>> +             /*
+>> +              * Only the root port (devfn == 0) is connected to this bus.
+>> +              * All other PCI devices are behind some bridge hence on another
+>> +              * bus.
+>> +              */
+>> +             if (devfn)
+>> +                     return NULL;
+>> +
+>> +             return pcie->reg_base + (where & 0xfff);
+>> +     }
+>> +
+>> +     /*
+>> +      * Clear AXI link-down status
+>> +      */
+> 
+> That is an odd thing to do in map_bus. Also, it is completely racy
+> because...
+> 
+>> +     regval = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN);
+>> +     cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN,
+>> +                          (regval & GENMASK(0, 0)));
+>> +
+> 
+> What if the link goes down again here.
+> 
 
-High memory and page migration are currently not supported by zblock.
+Hi Rob,
 
-Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
-Signed-off-by: Igor Belousov <igor.b@beldev.am>
----
-v3: https://patchwork.kernel.org/project/linux-mm/patch/20250408125211.1611879-1-vitaly.wool@konsulko.se/
-Changes since v3:
-- rebased and tested against the latest -mm tree
-- the block descriptors table was updated for better compression ratio
-- fixed the bug with wrong SLOT_BITS value
-- slot search moved to find_and_claim_block()
+Thanks your for reply. Compared to Synopsys PCIe IP, Cadence PCIe IP has 
+one more register - CDNS_PCIE_HPA_AT_LINKDOWN.  When the PCIe link 
+appears link down, the register -CDNS_PCIE_HPA_AT_LINKDOWN bit0 is set 
+to 1.  Then, ECAM cannot access config space. You need to clear 
+CDNS_PCIE_HPA_AT_LINKDOWN bit0 to continue the access.
 
-Test results (zstd compressor, 8 core Ryzen 9 VM, make bzImage):
-- zblock:
-    real	6m52.621s
-    user	33m41.771s
-    sys 	6m28.825s
-    Zswap:            162328 kB
-    Zswapped:         754468 kB
-    zswpin 93851
-    zswpout 542481
-    zswpwb 935
-- zsmalloc:
-    real	7m4.355s
-    user	34m37.538s
-    sys 	6m22.086s
-    zswpin 101243
-    zswpout 448217
-    zswpwb 640
-    Zswap:            175704 kB
-    Zswapped:         778692 kB
+In my opinion, this is where Cadence PCIe IP doesn't make sense.  As 
+Cadence users, we had no choice, and the chip had already been posted to 
+silicon.
 
- Documentation/mm/zblock.rst |  24 ++
- MAINTAINERS                 |   7 +
- mm/Kconfig                  |  12 +
- mm/Makefile                 |   1 +
- mm/zblock.c                 | 443 ++++++++++++++++++++++++++++++++++++
- mm/zblock.h                 | 176 ++++++++++++++
- 6 files changed, 663 insertions(+)
- create mode 100644 Documentation/mm/zblock.rst
- create mode 100644 mm/zblock.c
- create mode 100644 mm/zblock.h
+Therefore, when we design the second-generation SOC, we will design an 
+SPI interrupt. When link down occurs, an SPI interrupt is generated. We 
+set CDNS_PCIE_HPA_AT_LINKDOWN bit0 to 0 in the interrupt function.
 
-diff --git a/Documentation/mm/zblock.rst b/Documentation/mm/zblock.rst
-new file mode 100644
-index 000000000000..9751434d0b76
---- /dev/null
-+++ b/Documentation/mm/zblock.rst
-@@ -0,0 +1,24 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======
-+zblock
-+======
-+
-+zblock is a special purpose allocator for storing compressed pages.
-+It stores integer number of compressed objects per its block. These
-+blocks consist of several physical pages (2**n, i. e. 1/2/4/8).
-+
-+With zblock, it is possible to densely arrange objects of various sizes
-+resulting in low internal fragmentation. Also this allocator tries to
-+fill incomplete blocks instead of adding new ones,  in many cases
-+providing a compression ratio substantially higher than z3fold and zbud
-+(though lower than zmalloc's).
-+
-+zblock does not require MMU to operate and also is superior to zsmalloc
-+with regard to average performance and worst execution times, thus
-+allowing for better response time and real-time characteristics of the
-+whole system.
-+
-+E. g. on a series of stress-ng tests run on a Raspberry Pi 5, we get
-+5-10% higher value for bogo ops/s in zblock/zsmalloc comparison.
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..46465c986005 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26640,6 +26640,13 @@ F:	Documentation/networking/device_drivers/hamradio/z8530drv.rst
- F:	drivers/net/hamradio/*scc.c
- F:	drivers/net/hamradio/z8530.h
- 
-+ZBLOCK COMPRESSED SLAB MEMORY ALLOCATOR
-+M:	Vitaly Wool <vitaly.wool@konsulko.se>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/mm/zblock.rst
-+F:	mm/zblock.[ch]
-+
- ZD1211RW WIRELESS DRIVER
- L:	linux-wireless@vger.kernel.org
- S:	Orphan
-diff --git a/mm/Kconfig b/mm/Kconfig
-index e113f713b493..5aa1479151ec 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -152,6 +152,18 @@ config ZSWAP_ZPOOL_DEFAULT
-        default "zsmalloc" if ZSWAP_ZPOOL_DEFAULT_ZSMALLOC
-        default ""
- 
-+config ZBLOCK
-+	tristate "Fast compression allocator with high density"
-+	depends on ZPOOL
-+	help
-+	  A special purpose allocator for storing compressed pages.
-+	  It stores integer number of same size compressed objects per
-+	  its block. These blocks consist of several physical pages
-+	  (2**n, i. e. 1/2/4/8).
-+
-+	  With zblock, it is possible to densely arrange objects of
-+	  various sizes resulting in low internal fragmentation.
-+
- config ZSMALLOC
- 	tristate
- 	prompt "N:1 compression allocator (zsmalloc)" if (ZSWAP || ZRAM)
-diff --git a/mm/Makefile b/mm/Makefile
-index e7f6bbf8ae5f..9d7e5b5bb694 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -116,6 +116,7 @@ obj-$(CONFIG_DEBUG_VM_PGTABLE) += debug_vm_pgtable.o
- obj-$(CONFIG_PAGE_OWNER) += page_owner.o
- obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
- obj-$(CONFIG_ZPOOL)	+= zpool.o
-+obj-$(CONFIG_ZBLOCK)	+= zblock.o
- obj-$(CONFIG_ZSMALLOC)	+= zsmalloc.o
- obj-$(CONFIG_GENERIC_EARLY_IOREMAP) += early_ioremap.o
- obj-$(CONFIG_CMA)	+= cma.o
-diff --git a/mm/zblock.c b/mm/zblock.c
-new file mode 100644
-index 000000000000..ecc7aeb611af
---- /dev/null
-+++ b/mm/zblock.c
-@@ -0,0 +1,443 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * zblock.c
-+ *
-+ * Author: Vitaly Wool <vitaly.wool@konsulko.se>
-+ * Based on the work from Ananda Badmaev <a.badmaev@clicknet.pro>
-+ * Copyright (C) 2022-2025, Konsulko AB.
-+ *
-+ * Zblock is a small object allocator with the intention to serve as a
-+ * zpool backend. It operates on page blocks which consist of number
-+ * of physical pages being a power of 2 and store integer number of
-+ * compressed pages per block which results in determinism and simplicity.
-+ *
-+ * zblock doesn't export any API and is meant to be used via zpool API.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/atomic.h>
-+#include <linux/list.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/preempt.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/zpool.h>
-+#include "zblock.h"
-+
-+static struct rb_root block_desc_tree = RB_ROOT;
-+
-+/* Encode handle of a particular slot in the pool using metadata */
-+static inline unsigned long metadata_to_handle(struct zblock_block *block,
-+				unsigned int block_type, unsigned int slot)
-+{
-+	return (unsigned long)(block) | (block_type << SLOT_BITS) | slot;
-+}
-+
-+/* Return block, block type and slot in the pool corresponding to handle */
-+static inline struct zblock_block *handle_to_metadata(unsigned long handle,
-+				unsigned int *block_type, unsigned int *slot)
-+{
-+	*block_type = (handle & (PAGE_SIZE - 1)) >> SLOT_BITS;
-+	*slot = handle & SLOT_MASK;
-+	return (struct zblock_block *)(handle & PAGE_MASK);
-+}
-+
-+/*
-+ * Find a block with at least one free slot and claim it.
-+ * We make sure that the first block, if exists, will always work.
-+ */
-+static inline struct zblock_block *find_and_claim_block(struct block_list *b,
-+		int block_type, unsigned long *handle)
-+{
-+	struct list_head *l = &b->active_list;
-+	unsigned int slot;
-+
-+	if (!list_empty(l)) {
-+		struct zblock_block *z = list_first_entry(l, typeof(*z), link);
-+
-+		if (--z->free_slots == 0)
-+			list_move(&z->link, &b->full_list);
-+		/*
-+		 * There is a slot in the block and we just made sure it would
-+		 * remain.
-+		 * Find that slot and set the busy bit.
-+		 */
-+		for (slot = find_first_zero_bit(z->slot_info,
-+					block_desc[block_type].slots_per_block);
-+		     slot < block_desc[block_type].slots_per_block;
-+		     slot = find_next_zero_bit(z->slot_info,
-+					block_desc[block_type].slots_per_block,
-+					slot)) {
-+			if (!test_and_set_bit(slot, z->slot_info))
-+				break;
-+			barrier();
-+		}
-+
-+		WARN_ON(slot >= block_desc[block_type].slots_per_block);
-+		*handle = metadata_to_handle(z, block_type, slot);
-+		return z;
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * allocate new block and add it to corresponding block list
-+ */
-+static struct zblock_block *alloc_block(struct zblock_pool *pool,
-+					int block_type, gfp_t gfp,
-+					unsigned long *handle)
-+{
-+	struct zblock_block *block;
-+	struct block_list *block_list;
-+
-+	block = (void *)__get_free_pages(gfp, block_desc[block_type].order);
-+	if (!block)
-+		return NULL;
-+
-+	block_list = &pool->block_lists[block_type];
-+
-+	/* init block data  */
-+	block->free_slots = block_desc[block_type].slots_per_block - 1;
-+	memset(&block->slot_info, 0, sizeof(block->slot_info));
-+	set_bit(0, block->slot_info);
-+	*handle = metadata_to_handle(block, block_type, 0);
-+
-+	spin_lock(&block_list->lock);
-+	list_add(&block->link, &block_list->active_list);
-+	block_list->block_count++;
-+	spin_unlock(&block_list->lock);
-+	return block;
-+}
-+
-+/*****************
-+ * API Functions
-+ *****************/
-+/**
-+ * zblock_create_pool() - create a new zblock pool
-+ * @gfp:	gfp flags when allocating the zblock pool structure
-+ * @ops:	user-defined operations for the zblock pool
-+ *
-+ * Return: pointer to the new zblock pool or NULL if the metadata allocation
-+ * failed.
-+ */
-+static struct zblock_pool *zblock_create_pool(gfp_t gfp)
-+{
-+	struct zblock_pool *pool;
-+	struct block_list *block_list;
-+	int i;
-+
-+	pool = kmalloc(sizeof(struct zblock_pool), gfp);
-+	if (!pool)
-+		return NULL;
-+
-+	/* init each block list */
-+	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
-+		block_list = &pool->block_lists[i];
-+		spin_lock_init(&block_list->lock);
-+		INIT_LIST_HEAD(&block_list->full_list);
-+		INIT_LIST_HEAD(&block_list->active_list);
-+		block_list->block_count = 0;
-+	}
-+	return pool;
-+}
-+
-+/**
-+ * zblock_destroy_pool() - destroys an existing zblock pool
-+ * @pool:	the zblock pool to be destroyed
-+ *
-+ */
-+static void zblock_destroy_pool(struct zblock_pool *pool)
-+{
-+	kfree(pool);
-+}
-+
-+
-+/**
-+ * zblock_alloc() - allocates a slot of appropriate size
-+ * @pool:	zblock pool from which to allocate
-+ * @size:	size in bytes of the desired allocation
-+ * @gfp:	gfp flags used if the pool needs to grow
-+ * @handle:	handle of the new allocation
-+ *
-+ * Return: 0 if success and handle is set, otherwise -EINVAL if the size or
-+ * gfp arguments are invalid or -ENOMEM if the pool was unable to allocate
-+ * a new slot.
-+ */
-+static int zblock_alloc(struct zblock_pool *pool, size_t size, gfp_t gfp,
-+			unsigned long *handle)
-+{
-+	int block_type = -1;
-+	struct zblock_block *block;
-+	struct block_list *block_list;
-+
-+	if (!size)
-+		return -EINVAL;
-+
-+	if (size > PAGE_SIZE)
-+		return -ENOSPC;
-+
-+	/* find basic block type with suitable slot size */
-+	if (size < block_desc[0].slot_size)
-+		block_type = 0;
-+	else {
-+		struct block_desc_node *block_node;
-+		struct rb_node *node = block_desc_tree.rb_node;
-+
-+		while (node) {
-+			block_node = container_of(node, typeof(*block_node), node);
-+			if (size < block_node->this_slot_size)
-+				node = node->rb_left;
-+			else if (size >= block_node->next_slot_size)
-+				node = node->rb_right;
-+			else {
-+				block_type = block_node->block_idx + 1;
-+				break;
-+			}
-+		}
-+	}
-+	if (WARN_ON(block_type < 0))
-+		return -EINVAL;
-+	if (block_type >= ARRAY_SIZE(block_desc))
-+		return -ENOSPC;
-+
-+	block_list = &pool->block_lists[block_type];
-+
-+	spin_lock(&block_list->lock);
-+	block = find_and_claim_block(block_list, block_type, handle);
-+	spin_unlock(&block_list->lock);
-+	if (block)
-+		return 0;
-+
-+	/* not found block with free slots try to allocate new empty block */
-+	block = alloc_block(pool, block_type, gfp & ~(__GFP_MOVABLE | __GFP_HIGHMEM), handle);
-+	return block ? 0 : -ENOMEM;
-+}
-+
-+/**
-+ * zblock_free() - frees the allocation associated with the given handle
-+ * @pool:	pool in which the allocation resided
-+ * @handle:	handle associated with the allocation returned by zblock_alloc()
-+ *
-+ */
-+static void zblock_free(struct zblock_pool *pool, unsigned long handle)
-+{
-+	unsigned int slot, block_type;
-+	struct zblock_block *block;
-+	struct block_list *block_list;
-+
-+	block = handle_to_metadata(handle, &block_type, &slot);
-+	block_list = &pool->block_lists[block_type];
-+
-+	spin_lock(&block_list->lock);
-+	/* if all slots in block are empty delete whole block */
-+	if (++block->free_slots == block_desc[block_type].slots_per_block) {
-+		block_list->block_count--;
-+		list_del(&block->link);
-+		spin_unlock(&block_list->lock);
-+		free_pages((unsigned long)block, block_desc[block_type].order);
-+		return;
-+	} else if (block->free_slots == 1)
-+		list_move_tail(&block->link, &block_list->active_list);
-+	clear_bit(slot, block->slot_info);
-+	spin_unlock(&block_list->lock);
-+}
-+
-+/**
-+ * zblock_map() - maps the allocation associated with the given handle
-+ * @pool:	pool in which the allocation resides
-+ * @handle:	handle associated with the allocation to be mapped
-+ *
-+ *
-+ * Returns: a pointer to the mapped allocation
-+ */
-+static void *zblock_map(struct zblock_pool *pool, unsigned long handle)
-+{
-+	unsigned int block_type, slot;
-+	struct zblock_block *block;
-+	unsigned long offs;
-+	void *p;
-+
-+	block = handle_to_metadata(handle, &block_type, &slot);
-+	offs = ZBLOCK_HEADER_SIZE + slot * block_desc[block_type].slot_size;
-+	p = (void *)block + offs;
-+	return p;
-+}
-+
-+/**
-+ * zblock_unmap() - unmaps the allocation associated with the given handle
-+ * @pool:	pool in which the allocation resides
-+ * @handle:	handle associated with the allocation to be unmapped
-+ */
-+static void zblock_unmap(struct zblock_pool *pool, unsigned long handle)
-+{
-+}
-+
-+/**
-+ * zblock_write() - write to the memory area defined by handle
-+ * @pool:	pool in which the allocation resides
-+ * @handle:	handle associated with the allocation
-+ * @handle_mem: pointer to source memory block
-+ * @mem_len:	length of the memory block to write
-+ */
-+static void zblock_write(struct zblock_pool *pool, unsigned long handle,
-+			 void *handle_mem, size_t mem_len)
-+{
-+	unsigned int block_type, slot;
-+	struct zblock_block *block;
-+	unsigned long offs;
-+	void *p;
-+
-+	block = handle_to_metadata(handle, &block_type, &slot);
-+	offs = ZBLOCK_HEADER_SIZE + slot * block_desc[block_type].slot_size;
-+	p = (void *)block + offs;
-+	memcpy(p, handle_mem, mem_len);
-+}
-+
-+/**
-+ * zblock_get_total_pages() - gets the zblock pool size in pages
-+ * @pool:	pool being queried
-+ *
-+ * Returns: size in bytes of the given pool.
-+ */
-+static u64 zblock_get_total_pages(struct zblock_pool *pool)
-+{
-+	u64 total_size;
-+	int i;
-+
-+	total_size = 0;
-+	for (i = 0; i < ARRAY_SIZE(block_desc); i++)
-+		total_size += pool->block_lists[i].block_count << block_desc[i].order;
-+
-+	return total_size;
-+}
-+
-+/*****************
-+ * zpool
-+ ****************/
-+
-+static void *zblock_zpool_create(const char *name, gfp_t gfp)
-+{
-+	return zblock_create_pool(gfp);
-+}
-+
-+static void zblock_zpool_destroy(void *pool)
-+{
-+	zblock_destroy_pool(pool);
-+}
-+
-+static int zblock_zpool_malloc(void *pool, size_t size, gfp_t gfp,
-+			unsigned long *handle)
-+{
-+	return zblock_alloc(pool, size, gfp, handle);
-+}
-+
-+static void zblock_zpool_free(void *pool, unsigned long handle)
-+{
-+	zblock_free(pool, handle);
-+}
-+
-+static void *zblock_zpool_read_begin(void *pool, unsigned long handle,
-+				void *local_copy)
-+{
-+	return zblock_map(pool, handle);
-+}
-+
-+static void zblock_zpool_obj_write(void *pool, unsigned long handle,
-+				void *handle_mem, size_t mem_len)
-+{
-+	zblock_write(pool, handle, handle_mem, mem_len);
-+}
-+
-+static void zblock_zpool_read_end(void *pool, unsigned long handle,
-+				void *handle_mem)
-+{
-+	zblock_unmap(pool, handle);
-+}
-+
-+static u64 zblock_zpool_total_pages(void *pool)
-+{
-+	return zblock_get_total_pages(pool);
-+}
-+
-+static struct zpool_driver zblock_zpool_driver = {
-+	.type =			"zblock",
-+	.owner =		THIS_MODULE,
-+	.create =		zblock_zpool_create,
-+	.destroy =		zblock_zpool_destroy,
-+	.malloc =		zblock_zpool_malloc,
-+	.free =			zblock_zpool_free,
-+	.obj_read_begin =	zblock_zpool_read_begin,
-+	.obj_read_end =		zblock_zpool_read_end,
-+	.obj_write =		zblock_zpool_obj_write,
-+	.total_pages =		zblock_zpool_total_pages,
-+};
-+
-+MODULE_ALIAS("zpool-zblock");
-+
-+static void delete_rbtree(void)
-+{
-+	while (!RB_EMPTY_ROOT(&block_desc_tree))
-+		rb_erase(block_desc_tree.rb_node, &block_desc_tree);
-+}
-+
-+static int __init create_rbtree(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
-+		struct block_desc_node *block_node = kmalloc(sizeof(*block_node),
-+							GFP_KERNEL);
-+		struct rb_node **new = &block_desc_tree.rb_node, *parent = NULL;
-+
-+		if (!block_node) {
-+			delete_rbtree();
-+			return -ENOMEM;
-+		}
-+		if (i > 0 && block_desc[i].slot_size <= block_desc[i-1].slot_size) {
-+			pr_err("%s: block descriptors not in ascending order\n",
-+				__func__);
-+			delete_rbtree();
-+			return -EINVAL;
-+		}
-+		block_node->this_slot_size = block_desc[i].slot_size;
-+		block_node->block_idx = i;
-+		if (i == ARRAY_SIZE(block_desc) - 1)
-+			block_node->next_slot_size = PAGE_SIZE;
-+		else
-+			block_node->next_slot_size = block_desc[i+1].slot_size;
-+		while (*new) {
-+			parent = *new;
-+			/* the array is sorted so we will always go to the right */
-+			new = &((*new)->rb_right);
-+		}
-+		rb_link_node(&block_node->node, parent, new);
-+		rb_insert_color(&block_node->node, &block_desc_tree);
-+	}
-+	return 0;
-+}
-+
-+static int __init init_zblock(void)
-+{
-+	int ret = create_rbtree();
-+
-+	if (ret)
-+		return ret;
-+
-+	zpool_register_driver(&zblock_zpool_driver);
-+	return 0;
-+}
-+
-+static void __exit exit_zblock(void)
-+{
-+	zpool_unregister_driver(&zblock_zpool_driver);
-+	delete_rbtree();
-+}
-+
-+module_init(init_zblock);
-+module_exit(exit_zblock);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Vitaly Wool <vitaly.wool@konsulko.se>");
-+MODULE_DESCRIPTION("Block allocator for compressed pages");
-diff --git a/mm/zblock.h b/mm/zblock.h
-new file mode 100644
-index 000000000000..fd72961c077a
---- /dev/null
-+++ b/mm/zblock.h
-@@ -0,0 +1,176 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Author: Vitaly Wool <vitaly.wool@konsulko.com>
-+ * Copyright (C) 2025, Konsulko AB.
-+ */
-+#ifndef __ZBLOCK_H__
-+#define __ZBLOCK_H__
-+
-+#include <linux/mm.h>
-+#include <linux/rbtree.h>
-+#include <linux/types.h>
-+
-+#define SLOT_FREE 0
-+#define BIT_SLOT_OCCUPIED 0
-+#define BIT_SLOT_MAPPED 1
-+
-+#if PAGE_SIZE == 0x1000
-+/* max 128 slots per block, max table size 32 */
-+#define SLOT_BITS 7
-+#elif PAGE_SIZE == 0x4000
-+/* max 256 slots per block, max table size 64 */
-+#define SLOT_BITS 8
-+#else
-+#error Unsupported PAGE_SIZE
-+#endif
-+
-+#define MAX_SLOTS (1 << SLOT_BITS)
-+#define SLOT_MASK ((0x1UL << SLOT_BITS) - 1)
-+
-+#define ZBLOCK_HEADER_SIZE	round_up(sizeof(struct zblock_block), sizeof(long))
-+#define BLOCK_DATA_SIZE(order) ((PAGE_SIZE << order) - ZBLOCK_HEADER_SIZE)
-+#define SLOT_SIZE(nslots, order) (round_down((BLOCK_DATA_SIZE(order) / nslots), sizeof(long)))
-+
-+/**
-+ * struct zblock_block - block metadata
-+ * Block consists of several (1/2/4/8) pages and contains fixed
-+ * integer number of slots for allocating compressed pages.
-+ *
-+ * free_slots:	number of free slots in the block
-+ * slot_info:	contains data about free/occupied slots
-+ */
-+struct zblock_block {
-+	struct list_head link;
-+	DECLARE_BITMAP(slot_info, 1 << SLOT_BITS);
-+	u32 free_slots;
-+};
-+
-+/**
-+ * struct block_desc - general metadata for block lists
-+ * Each block list stores only blocks of corresponding type which means
-+ * that all blocks in it have the same number and size of slots.
-+ * All slots are aligned to size of long.
-+ *
-+ * slot_size:		size of slot for this list
-+ * slots_per_block:	number of slots per block for this list
-+ * order:		order for __get_free_pages
-+ */
-+struct block_desc {
-+	unsigned int slot_size;
-+	unsigned short slots_per_block;
-+	unsigned short order;
-+};
-+
-+struct block_desc_node {
-+	struct rb_node node;
-+	unsigned int this_slot_size;
-+	unsigned int next_slot_size;
-+	unsigned int block_idx;
-+};
-+
-+static const struct block_desc block_desc[] = {
-+#if PAGE_SIZE == 0x1000
-+	{ SLOT_SIZE(63, 0), 63, 0 },
-+	{ SLOT_SIZE(32, 0), 32, 0 },
-+	{ SLOT_SIZE(21, 0), 21, 0 },
-+	{ SLOT_SIZE(15, 0), 15, 0 },
-+	{ SLOT_SIZE(12, 0), 12, 0 },
-+	{ SLOT_SIZE(10, 0), 10, 0 },
-+	{ SLOT_SIZE(9, 0), 9, 0 },
-+	{ SLOT_SIZE(8, 0), 8, 0 },
-+	{ SLOT_SIZE(29, 2), 29, 2 },
-+	{ SLOT_SIZE(13, 1), 13, 1 },
-+	{ SLOT_SIZE(6, 0), 6, 0 },
-+	{ SLOT_SIZE(11, 1), 11, 1 },
-+	{ SLOT_SIZE(5, 0), 5, 0 },
-+	{ SLOT_SIZE(9, 1), 9, 1 },
-+	{ SLOT_SIZE(8, 1), 8, 1 },
-+	{ SLOT_SIZE(29, 3), 29, 3 },
-+	{ SLOT_SIZE(13, 2), 13, 2 },
-+	{ SLOT_SIZE(12, 2), 12, 2 },
-+	{ SLOT_SIZE(11, 2), 11, 2 },
-+	{ SLOT_SIZE(10, 2), 10, 2 },
-+	{ SLOT_SIZE(9, 2), 9, 2 },
-+	{ SLOT_SIZE(17, 3), 17, 3 },
-+	{ SLOT_SIZE(8, 2), 8, 2 },
-+	{ SLOT_SIZE(15, 3), 15, 3 },
-+	{ SLOT_SIZE(14, 3), 14, 3 },
-+	{ SLOT_SIZE(13, 3), 13, 3 },
-+	{ SLOT_SIZE(6, 2), 6, 2 },
-+	{ SLOT_SIZE(11, 3), 11, 3 },
-+	{ SLOT_SIZE(10, 3), 10, 3 },
-+	{ SLOT_SIZE(9, 3), 9, 3 },
-+	{ SLOT_SIZE(4, 2), 4, 2 },
-+#elif PAGE_SIZE == 0x4000
-+	{ SLOT_SIZE(255, 0), 255, 0 },
-+	{ SLOT_SIZE(185, 0), 185, 0 },
-+	{ SLOT_SIZE(145, 0), 145, 0 },
-+	{ SLOT_SIZE(113, 0), 113, 0 },
-+	{ SLOT_SIZE(92, 0), 92, 0 },
-+	{ SLOT_SIZE(75, 0), 75, 0 },
-+	{ SLOT_SIZE(60, 0), 60, 0 },
-+	{ SLOT_SIZE(51, 0), 51, 0 },
-+	{ SLOT_SIZE(43, 0), 43, 0 },
-+	{ SLOT_SIZE(37, 0), 37, 0 },
-+	{ SLOT_SIZE(32, 0), 32, 0 },
-+	{ SLOT_SIZE(27, 0), 27, 0 },
-+	{ SLOT_SIZE(23, 0), 23, 0 },
-+	{ SLOT_SIZE(19, 0), 19, 0 },
-+	{ SLOT_SIZE(17, 0), 17, 0 },
-+	{ SLOT_SIZE(15, 0), 15, 0 },
-+	{ SLOT_SIZE(13, 0), 13, 0 },
-+	{ SLOT_SIZE(11, 0), 11, 0 },
-+	{ SLOT_SIZE(10, 0), 10, 0 },
-+	{ SLOT_SIZE(9, 0), 9, 0 },
-+	{ SLOT_SIZE(8, 0), 8, 0 },
-+	{ SLOT_SIZE(15, 1), 15, 1 },
-+	{ SLOT_SIZE(14, 1), 14, 1 },
-+	{ SLOT_SIZE(13, 1), 13, 1 },
-+	{ SLOT_SIZE(12, 1), 12, 1 },
-+	{ SLOT_SIZE(11, 1), 11, 1 },
-+	{ SLOT_SIZE(10, 1), 10, 1 },
-+	{ SLOT_SIZE(9, 1), 9, 1 },
-+	{ SLOT_SIZE(8, 1), 8, 1 },
-+	{ SLOT_SIZE(15, 2), 15, 2 },
-+	{ SLOT_SIZE(14, 2), 14, 2 },
-+	{ SLOT_SIZE(13, 2), 13, 2 },
-+	{ SLOT_SIZE(12, 2), 12, 2 },
-+	{ SLOT_SIZE(11, 2), 11, 2 },
-+	{ SLOT_SIZE(10, 2), 10, 2 },
-+	{ SLOT_SIZE(9, 2), 9, 2 },
-+	{ SLOT_SIZE(8, 2), 8, 2 },
-+	{ SLOT_SIZE(7, 2), 7, 2 },
-+	{ SLOT_SIZE(6, 2), 6, 2 },
-+	{ SLOT_SIZE(5, 2), 5, 2 },
-+#endif /* PAGE_SIZE */
-+};
-+
-+/**
-+ * struct block_list - stores metadata of particular list
-+ * lock:		protects the list of blocks
-+ * active_list:		linked list of active (non-full) blocks
-+ * full_list:		linked list of full blocks
-+ * block_count:		total number of blocks in the list
-+ */
-+struct block_list {
-+	spinlock_t lock;
-+	struct list_head active_list;
-+	struct list_head full_list;
-+	unsigned long block_count;
-+};
-+
-+/**
-+ * struct zblock_pool - stores metadata for each zblock pool
-+ * @block_lists:	array of block lists
-+ * @zpool:		zpool driver
-+ *
-+ * This structure is allocated at pool creation time and maintains metadata
-+ * for a particular zblock pool.
-+ */
-+struct zblock_pool {
-+	struct block_list block_lists[ARRAY_SIZE(block_desc)];
-+	struct zpool *zpool;
-+};
-+
-+
-+#endif
--- 
-2.49.0
+If there are other reasons, please Manikandan add.
 
+
+
+In addition, by the way, ECAM is not accessible when the link is down. 
+For example, if the RP is set to hot reset, the hot reset cannot be 
+unreset. In this case, you need to use the APB to unreset. We mentioned 
+an RTL bug to Cadence that we currently can't fix with our first or 
+second generation chips. Cadence has not released RTL patch to us so far.
+
+This software workaround approach will also later appear in the Cixtech 
+PCIe controller series patch.
+
+
+Best regards,
+Hans
