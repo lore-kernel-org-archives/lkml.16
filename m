@@ -1,108 +1,76 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5D21F0E27
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 20:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC93D21D5A7;
+	Sat, 12 Apr 2025 20:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744488258; cv=none; b=NIHYqyn7zZ1JX5tA39k69tjgg3spAuQkn5wdUW8NZ0XooM1NWi6a9IwoA5MKblO5mTnlM5YiJnkKBvXcY5/H1LBI+HDE88uxuh36Mlta0F5MX3fHl1XG6NXJN+lYJqfPfJJPJ5jYdzYK9yhM9R32VlkpvmR0KnU/mkjKtW/Vaac=
+	t=1744488492; cv=none; b=caqHY1TmIMKA6e415VIgiiWtk9mNtvHyRkLZUn4dOmE62oRW1vvySpH+P3jMXiUJbaIV2CjIKwu0EUREt1G2C08nWzYZDUwNRATb8DN0AuZFWE7M2TG9nBgJCRxv5fPEuDCMSMIKC/kpmhtmGO3iAM3c5RSxSeGKztQRyLaa2rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744488258; c=relaxed/simple;
-	bh=OWz+aH8klM7UAUDqCrig0TrpdlpaKluF92h4yFy36e0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MPAZjQlDgR1asFG9JQGkTd/hKZrkzzoFUbHUK1Psy93KmeO3+8/fEhG3oNaeT1E66EC9kbw27ELQ7oJFzCszLFlya4Ca2bxf0yrr0VmnYzUGyBkUlMX1rYZJe/nujitqCJ0DYBkB5Z9/dlN+2IFz+eRWHKysudoWMqBYGFnDX24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=qBUP54D1; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1744488492; c=relaxed/simple;
+	bh=tmM0jIVG3GiuwYBuCj+AmNra5FiBb0wjSj9Ha0EfT2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f8TZ2qofTQ9TJ+JZ3XJiHrGoNNdf11UgG+4HuL+Lcu48I98JyRUQnbjuy5rro+znDLrsKGgI9qDCu+LwNMKsAgaqFIDvmOnypJZFjGGfoXHp55av53yBx+ix1i+n9DBtqNWH1gIdp9jHYnmBxjH93ZDO/Mx4pSYE1KtazEe1Phk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJ1u0zkh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="qBUP54D1"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 5FD3C240101
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 22:04:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1744488247; bh=OWz+aH8klM7UAUDqCrig0TrpdlpaKluF92h4yFy36e0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
-	b=qBUP54D1qfZK36cVrlBNLbh+2nWmTYGzAHoHC6ZY6GWoKhKPGd8HKFzJzPIII/zCH
-	 k/mChuHKA3RULPoEFta5AU4k7GEFZZ9PjZ83k2Xltzh+6QBjojznW7D1n68vfpyh3l
-	 XboYnqpxWXONicWcJNfKZin1hk23v3i2Iy6qtP9zVyHiK16Lf5QQtXz4kFmnNv9448
-	 Ojg6mS68MC0CEUd5ALuYwBo2IhEP5anCgOcFDne8MrSLnN95VqnKU2LbD6uR3qeqVr
-	 CHP45rP7hVl7AMoUB/ceSEN3W3ne+BQAFRjqEFzOK4I2Si5IXc97kdBhYKOt4RPjmy
-	 KDYAtCWMsbiDw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZZkyt5C2fz9rxD;
-	Sat, 12 Apr 2025 22:04:06 +0200 (CEST)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-Date: Sat, 12 Apr 2025 20:03:57 +0000
-Subject: [PATCH] xfs: Verify DA node btree hash order
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJ1u0zkh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ACDBC4CEE3;
+	Sat, 12 Apr 2025 20:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744488492;
+	bh=tmM0jIVG3GiuwYBuCj+AmNra5FiBb0wjSj9Ha0EfT2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MJ1u0zkh5E2v/2Xu5zjuTrlQnAziiyOt9i23xpQAFTzEPc6Q3WZNIhuff+m0yH6Cu
+	 jEgHZomoOr2ioAUQI1vP3P75TPtK6T5nk5Fwiwm8Rlkds619qrdjx0Upy13Iid3Pg2
+	 jfLXdHjUP5sL8m/thQxmnNqEvGd4TxlcHkJ4Ndvhpm312azRdI4uN0iTh9rRFPuim5
+	 b0HOLwu89P0XObVB2SAInXPMWcwkK+/uGz1Cps+OuYIeBezcb9z60A2t2QC+nVBtvk
+	 wkaWQizNosXWdm0n2WzG9zE6MbZ5D3XEO9CPYvUQVpwRXwqKJJ5gt4FnjAcCVZnrPo
+	 AWT+eJUDqQY2w==
+Date: Sat, 12 Apr 2025 22:08:07 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-efi@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH v4 08/11] x86/sev: Split off startup code from core code
+Message-ID: <Z_rIJx_b70rzzERV@gmail.com>
+References: <20250410134117.3713574-13-ardb+git@google.com>
+ <20250410134117.3713574-21-ardb+git@google.com>
+ <Z_pbLAw56NIFo7yK@gmail.com>
+ <Z_q1RthXIbSXY2Eq@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
-X-B4-Tracking: v=1; b=H4sIACzH+mcC/x3MQQqAIBBA0avErBtIK7KuEi3MphwCCwdCCO+et
- HyL/18QikwCU/VCpIeFr1Cg6gqct+Eg5K0YdKP7plMa0y7orXh0ntyJKw3tOBijrHZQojvSzuk
- fzkvOH9Oj675gAAAA
-X-Change-ID: 20250412-xfs-hash-check-be7397881a2c
-To: Carlos Maiolino <cem@kernel.org>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744488245; l=1647;
- i=charmitro@posteo.net; s=20250412; h=from:subject:message-id;
- bh=OWz+aH8klM7UAUDqCrig0TrpdlpaKluF92h4yFy36e0=;
- b=cBb1AvyINpf0A7xXg40VYb23V3WAlVb58xBF+YF0p1wdN/XbaBYsfWOBuJiqJ+50gJ5FNrq2x
- 7zUbNnQUGglCMnAH/M8PBrVL/THQNmIfrUGixlkhnGZhyeetiof8sQE
-X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
- pk=Dwccy7f4QM74qKQFgkWc/EpYGEDY0qvP4cycC87VXeQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_q1RthXIbSXY2Eq@gmail.com>
 
-The xfs_da3_node_verify() function checks the integrity of directory
-and attribute B-tree node blocks. However, it was missing a check to
-ensure that the hash values of the btree entries within the node are
-strictly increasing, as required by the B-tree structure.
 
-Add a loop to iterate through the btree entries and verify that each
-entry's hash value is greater than the previous one. If an
-out-of-order hash value is detected, return failure to indicate
-corruption.
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-This addresses the "XXX: hash order check?" comment and improves
-corruption detection for DA node blocks.
+> Ignore that, I have now read the cover letter too, with the patch 
+> dependency mentioned there - as kindly pointed out by Ard in a 
+> private mail. :-)
 
-Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
----
- fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+But there are other problems during the allmodconfig final link:
 
-diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
---- a/fs/xfs/libxfs/xfs_da_btree.c
-+++ b/fs/xfs/libxfs/xfs_da_btree.c
-@@ -247,7 +247,16 @@ xfs_da3_node_verify(
- 	    ichdr.count > mp->m_attr_geo->node_ents)
- 		return __this_address;
- 
--	/* XXX: hash order check? */
-+	/* Check hash order */
-+	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
-+
-+	for (int i = 1; i < ichdr.count; i++) {
-+		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
-+
-+		if (curr_hash <= prev_hash)
-+			return __this_address;
-+		prev_hash = curr_hash;
-+	}
- 
- 	return NULL;
- }
+  vmlinux.o: warning: objtool: __sev_es_nmi_complete+0x5a: call to __asan_memset() leaves .noinstr.text section
+  ld: error: unplaced orphan section `.data.rel.local' from `vmlinux.o'
+  make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
 
----
-base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
-change-id: 20250412-xfs-hash-check-be7397881a2c
+The objtool warning is caused by:
 
-Best regards,
--- 
-Charalampos Mitrodimas <charmitro@posteo.net>
+  x86/sev: Split off startup code from core code
 
+Tte link failure by:
+
+  x86/boot: Move SEV startup code into startup/
+
+Thanks,
+
+	Ingo
