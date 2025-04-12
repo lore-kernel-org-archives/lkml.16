@@ -1,185 +1,267 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0589CA2D
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21CA1802B
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744416072; cv=none; b=UxfqatRQmgNfRMwn4itbZPudhqujj+uvd50SXJHPsn6P49M7aCosX8FmFANA85CKpAWd8rKTg8dGc2+tIguXaN0y7HHdzjH/Xq6iOolzX/fGmIaNsz9+QeFvNr9D/o70lYdhICpywrwDQExZwTr92UJ1UeNKlet9ynqQrZ7UIaU=
+	t=1744416123; cv=none; b=JZbkW4vukaNQucOcn+UAjk8Is2FDn7uf+eA9iStoA+PqlR4wqMH1ibEzMeEhVXf16IKxiO8xxBT6qUe7RV9JP+yFV87QnHFxxv1OYg8K0AkmAjlGIpnjtEy1d7hQPNhArGezWg/tA3KmaSrdw4axNJGzMIYI/3KdGMKhcb9i2nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744416072; c=relaxed/simple;
-	bh=jyqTWUU1TH6b8PMq+NuToIyu7fg0lTu8CwccxlzN3sA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=p+LzOkqt664ja41lBRxF5PMdynQjKtIU77vgdeERzDDijBU4lBNdqtZVK5D8KilibF5T0Qn/iEJ4WjPR8yrj20ndYe4uuvRLikyxCBprvlTKrzuAeGc31rGanyBZPuuovF++XBCaQFeQ5KxM9GsARxr9IHea6/vz8w5LAFhYdpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bE396ZZs; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744416123; c=relaxed/simple;
+	bh=rd1AJdhV7/Ur2BWv3yCleLXzp7+iOroG7wXSw3KkLq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ckAT6CdlZj2zvX4nDT4NejZhRlTO4e4Oe3YkTqvIIw1ZJP9Zut5fpAFiQNzoAQWc2bdWwqPIUkOSEfLHa25betEiCEWcCVfAQr+oYoFx+ahNKaLWoQBcbPAoWhwwIFAg3sxlf/RdhH0AZnmj8AjteXsbTD/P7XvWDW8xg0xlYTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KLDgyOxk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bE396ZZs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744416070; x=1775952070;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=jyqTWUU1TH6b8PMq+NuToIyu7fg0lTu8CwccxlzN3sA=;
-  b=bE396ZZsw/VOl0ZGNQ5FPaeVQrrA90fumMhC223N4pbKb2ezAU2mGfrB
-   v+WsfO8CzNdvnfecuOc5bi2O+4S+ydBwrnfJlg3NSSzG0YMI6jWD5H8NM
-   F93pJp7PgxphHrRnOxad7WjXmzVBzdyg6OPXAD9CumsbHDjl7DM6uzpPV
-   FFHuMJpROhfT2iVi78XqsVTWzQs1rX0BOB/YrB6hB32X4Iqk/lcQ1iNxi
-   YzrYKEpZaABuRuD0MkCr+/UAKrg5pfQ5vklzqc7CtXI7E4XCiE07iAUuE
-   XOljAxSfzim4yHQlzZZc9dK2x7Hq+UJgi3gEwGPmdIMd40D2t4QW0kVNO
-   g==;
-X-CSE-ConnectionGUID: gvmAcW75S+qjwnSZtUk96w==
-X-CSE-MsgGUID: TEN8ElK8QdugkrWllYagPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="45113772"
-X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
-   d="scan'208";a="45113772"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 17:01:09 -0700
-X-CSE-ConnectionGUID: hMMOyzqnQ+Wpz+n97uVoQg==
-X-CSE-MsgGUID: 03GVsDJZT1uQkP0sy7TNnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
-   d="scan'208";a="129666550"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 11 Apr 2025 17:01:07 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u3OIz-000BS2-2k;
-	Sat, 12 Apr 2025 00:01:05 +0000
-Date: Sat, 12 Apr 2025 08:00:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	Divya Koppera <divya.koppera@microchip.com>
-Subject: ERROR: modpost: "__cmpdi2" [drivers/net/phy/micrel.ko] undefined!
-Message-ID: <202504120719.zaLAOE8H-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KLDgyOxk"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BG0t4t016413
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:01:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/ugy8iP5VEi052uxx31ODrIS2gIFDMfijamYy3hRyAg=; b=KLDgyOxkhpOxNmGs
+	UfHW9eGkJFf0YiX6WQO85qJtGGWW665RmT6OO+BkgibZVZ1uZRRTl2JXCkTo43bj
+	MxmVqgqWkVMeZuHk5nkLWI4BGKtqVy2I/FDVzAZGLyoZummPUqyC7t+n4Z1IAMue
+	s1x/HjG80qynrvxQpV/xk2pYS/xIni/dW15Vl2BvB9Wywkcoa452VQ0ysBY0HJ6y
+	lSn3akZYXlKOwUC8xLvJXXJYDOVohC9pgPTxQL+qp3ik90qQ7lPH2BRFzhMstBuy
+	B8+7+CZ+wAN9mbGLKL8d3AEwlnnWOtbCAkBjT7BDxL63dtCqcxvl6tG+tYkuO5Oc
+	ZR1i0w==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1uq69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:01:59 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c552802e9fso59912185a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:01:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744416118; x=1745020918;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ugy8iP5VEi052uxx31ODrIS2gIFDMfijamYy3hRyAg=;
+        b=HqXsDCZ5MbNZ/baOVKIqpLBcxhVh/4EfeyGwMcFcnO+r3H2h3XE/gQG6hoRMJx73wE
+         D4Br0f0pzX857mRc/im+1UFlnqB0jErOyHFAUlrET/n2koH4zfu3y3dctU+L+MTkfdeF
+         yN0aennHhS37lA6VZ7AOEcjMojXr+WhW2mcBNA7H4eNvmiMxR7uOAzNAtsFVExYkJjXN
+         zh+sTIOMpS61RWaDZXB4/pWHw5EKOh4olyZYoB7hjG0ckMxKkiBztkg0njKwB2V4tyJr
+         8ctTZYP0XdvyQPfrOrlQIGGEWoQPUHtt2vJkVyYptyLSTrdReB0uQngbDdUx4RCjqGcS
+         YgxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbMhKnFupjXAKVSiBu5q4pZiMurXMQRx32F9n+GUQ0C0HArlQ+5lbgn4IFjgV7OzK0mphwhwc0cvYZCTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSmZqpU6TY2EXbFL6sro0cv4i4yOlIhAgOKkdmzLyTze5nJGy+
+	vJb6VjJT8iiUW3fp2fUdSPWjZWDDAIY8bgwtBQQyuSyocLF04U0aV0ZvumzV19RSw5hGwtU/v2+
+	gbLpfM3qd9gcI9DwGxvn4hLJ+VXLFCPwvSV40zV2o1k7sucUwDCg23qUoip8jp8c=
+X-Gm-Gg: ASbGncsHjFXR4vUuQzbSLvj8IAFNPFxguFf+K0tVEb1IETs5u68e8CYI6oIv3MENpn6
+	eQT2nl4KIn7H4kE94H0ZXMI2RwYmpnrQwWb1AUii31ufmXOB5P6z4YxX5k2cSj1coJkwYRowS98
+	gk6QqFvNR1DJfq8awNQtZ7l3IvGgiG6BTIEMWKMC95w6V5hR0uq3FtfecQkWa9oJFSxVhGzLf3a
+	xjMKPNSUXybPSj8Z/j6hFMtkyFiuIC6fVfM9M60uBG6urVDa3iB+88Umilfj9wXDRcdHsaA6U/1
+	hA/vXJ+gXla1UrWO2IfY8IS4e6CN5NxDuWkb7iajyMjmOUbe7DEX/2cyv1HyAYmHhg==
+X-Received: by 2002:a05:620a:430c:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7c7af12697emr246262885a.9.1744416118406;
+        Fri, 11 Apr 2025 17:01:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQ1mMpJHH4b8C8m5swdNvznZRTvMXw/RD0bWNjiHoi2ylhg4o1veW/1BRleH+rNHcCHjE8fA==
+X-Received: by 2002:a05:620a:430c:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7c7af12697emr246261185a.9.1744416117874;
+        Fri, 11 Apr 2025 17:01:57 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f068968sm1560677a12.35.2025.04.11.17.01.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 17:01:57 -0700 (PDT)
+Message-ID: <dc535643-235d-46e9-b241-7d7b0e75e6ac@oss.qualcomm.com>
+Date: Sat, 12 Apr 2025 02:01:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: iCz5n9jXQ9NFsKq1tJjwOZroiv_qzGPE
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f9ad77 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=COk6AnOGAAAA:8 a=JpUTTvQeKOGwk5RR6f4A:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=a-qgeE7W1pNrGK8U0ZQC:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: iCz5n9jXQ9NFsKq1tJjwOZroiv_qzGPE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_09,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=761 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110158
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   e618ee89561b6b0fdc69f79e6fd0c33375d3e6b4
-commit: 9e63941b8976c45f1ce42b5e0e45070ee24b22eb net: phy: micrel: lan8814: Add support for PTP_PF_PEROUT
-date:   1 year ago
-config: nios2-randconfig-r111-20250412 (https://download.01.org/0day-ci/archive/20250412/202504120719.zaLAOE8H-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 7.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250412/202504120719.zaLAOE8H-lkp@intel.com/reproduce)
+On 2/6/25 2:43 PM, Pratyush Brahma wrote:
+> Add the PCIe SMMU node to enable address translations
+> for pcie.
+> 
+> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 75 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..fe88244771583de9fed7b7e88c69a14872d4ffc8 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> @@ -3199,6 +3199,81 @@ apps_smmu: iommu@15000000 {
+>  				     <GIC_SPI 895 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  
+> +		pcie_smmu: iommu@15200000 {
+> +			compatible = "qcom,qcs8300-smmu-500", "qcom,smmu-500", "arm,mmu-500";
+> +			reg = <0x0 0x15200000 0x0 0x80000>;
+> +			#iommu-cells = <2>;
+> +			#global-interrupts = <2>;
+> +			dma-coherent;
+> +
+> +			interrupts = <GIC_SPI 920 IRQ_TYPE_LEVEL_HIGH>,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504120719.zaLAOE8H-lkp@intel.com/
+This IRQ is not routed
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+> +				     <GIC_SPI 921 IRQ_TYPE_LEVEL_HIGH>,
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu0.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu_adl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-ipu_conn.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-mfgcfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8183-venc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-cam.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-topckgen.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-peri_ao.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-infra_ao.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-adsp_audio26m.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-cam.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-imp_iic_wrap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vdec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-venc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vpp0.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vpp1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/suniv-f1c100s-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun20i-d1-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun50i-h6-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun50i-h616-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun6i-rtc-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun8i-r-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/ixp4xx/ixp4xx-qmgr.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/ixp4xx/ixp4xx-npe.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/virtio/virtio_dma_buf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/rt4831-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/owl-uart.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sil-sii8620.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-slimbus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/block/null_blk/null_blk.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/rt4831.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/firewire-uapi-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/vivaldi-fmap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/rtc-goldfish.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-qup.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/watchdog/twl4030_wdt.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/watchdog/menz69_wdt.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/flash/leds-rt4505.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/crypto/xilinx/zynqmp-aes-gcm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-aureal.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cherry.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cypress.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-dr.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-emsff.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-elecom.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ezkey.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-vivaldi-common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-google-stadiaff.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gyration.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ite.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kensington.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kye.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lcpower.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-magicmouse.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-maltron.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-mf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-microsoft.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ortek.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-pl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-petalynx.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-primax.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-razer.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-saitek.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sjoy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sunplus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gaff.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-topseed.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-twinhan.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-xinmo.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zpff.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zydacron.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-viewsonic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_performance.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_brcm_nvram.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_u-boot-env.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/maps/map_funcs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/hisi-spmi-controller.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/spmi-pmic-arb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/core/snd-pcm-dmaengine.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/core/sound_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/pci/hda/snd-hda-cirrus-scodec-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-sigmadsp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-wm-adsp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/fsl/imx-pcm-dma.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/mxs/snd-soc-mxs-pcm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/qcom/snd-soc-qcom-common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/xilinx/snd-soc-xlnx-i2s.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/xilinx/snd-soc-xlnx-formatter-pcm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/ac97_bus.o
->> ERROR: modpost: "__cmpdi2" [drivers/net/phy/micrel.ko] undefined!
+We want 922 here instead and this is the only global interrupt we care about
+(set #global-interrupts to 1)
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +				     <GIC_SPI 925 IRQ_TYPE_LEVEL_HIGH>,
+
+This is a PMU irq which is apparently left unsupported on DT systems..
+
+https://lore.kernel.org/all/b51de3ac-5dbe-a1f1-1897-febb52f3cb34@arm.com/
+
+please remove
+
+> +				     <GIC_SPI 926 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 927 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 928 IRQ_TYPE_LEVEL_HIGH>,
+
++929> +				     <GIC_SPI 950 IRQ_TYPE_LEVEL_HIGH>,
+
+-950> +				     <GIC_SPI 951 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 952 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 953 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 954 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 955 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 956 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 957 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 958 IRQ_TYPE_LEVEL_HIGH>,
+
++959
+
+> +				     <GIC_SPI 885 IRQ_TYPE_LEVEL_HIGH>,
+
+-885
+
+> +				     <GIC_SPI 886 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 887 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 888 IRQ_TYPE_LEVEL_HIGH>,
+
++889
+
+> +				     <GIC_SPI 820 IRQ_TYPE_LEVEL_HIGH>,
+
+-820
++821
+
+> +				     <GIC_SPI 822 IRQ_TYPE_LEVEL_HIGH>,
+
+-822
++823
+
+> +				     <GIC_SPI 823 IRQ_TYPE_LEVEL_HIGH>,
+
+-823
++824
+
+> +				     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 452 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 840 IRQ_TYPE_LEVEL_HIGH>,
+
+-840
+
+> +				     <GIC_SPI 841 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 842 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 843 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 844 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 845 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 847 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 848 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 849 IRQ_TYPE_LEVEL_HIGH>,
+
++850
+
+> +				     <GIC_SPI 802 IRQ_TYPE_LEVEL_HIGH>,
+
+-802
+
+> +				     <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 804 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 805 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 806 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 807 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 808 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 809 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 810 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 811 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 812 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 813 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 814 IRQ_TYPE_LEVEL_HIGH>,
+
++815
+
+> +				     <GIC_SPI 836 IRQ_TYPE_LEVEL_HIGH>,
+
+-836
+
+> +				     <GIC_SPI 837 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 838 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 839 IRQ_TYPE_LEVEL_HIGH>,
+
++840
+
+> +				     <GIC_SPI 854 IRQ_TYPE_LEVEL_HIGH>,
+
+-854
+
+> +				     <GIC_SPI 855 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 856 IRQ_TYPE_LEVEL_HIGH>,
+
++857
+
+> +				     <GIC_SPI 790 IRQ_TYPE_LEVEL_HIGH>,
+
+-790
+
+> +				     <GIC_SPI 791 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 792 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 793 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 794 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 795 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 796 IRQ_TYPE_LEVEL_HIGH>,
+
++797
+
+> +				     <GIC_SPI 639 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
+
+-79
+
+> +				     <GIC_SPI 640 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+
+Konrad
