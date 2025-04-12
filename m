@@ -1,140 +1,189 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223D32B9BF;
-	Sat, 12 Apr 2025 11:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3335F19F42C;
+	Sat, 12 Apr 2025 11:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744456187; cv=none; b=pIkflx/Yx4v+2vVoRjNhmN1IKVomiruRsw4Wms3QqQ17BwQe4hQy9aOXYSq/UzUtPzY++SlG6cYUukMm2c7IGO1hiO1H/p2CxNFscmQG9Ow7k7GfUduMiQ8RsMI+KKW8WUZrlu/zfbGhwZzby1Bdixsg1RyHlNvKUC/HmFqSVfc=
+	t=1744456897; cv=none; b=SbjdBOxKCHtbgjQGZvqoGVngLQyyMZ2DnTE4lxDTMP7RxiJ2sbChARrqFwa0vmFS3tKlOSZgeVKUMbepoQq8ZaUXG7nTvNr5B7DINxRR4kkJ3PJ4kfhJ9vhEBaHe1IdZnaH2CJEPSRCkLKPRCcGj2284O5XMAsyuXy5spIFTa60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744456187; c=relaxed/simple;
-	bh=rWUN8Z1mCOTMaKbl6yIJVQWE6ZQaqOIt7ChjcxohXEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=toDtE016sQ8pNHmfpxgIqeOj+anzwtd9I5st89BVKtpLHcw84k6ZsSthmv9+fvK1NHKRnL2re1TZW8HpAdlyEN7SYGa76I2UTD7NpBKxAoelO1qKw3Xu2YYAiuCtsl1B+5SiA6s7hbUD7tm8rFWNZFhq//648EG+DXyJIIXz3oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZjtZk5Ln; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744456897; c=relaxed/simple;
+	bh=YfOlKE6PAfGsLaLJzFsbc4yvi3sBWRZ8irx5t8xPNqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FZmwwwDCtwNviyZlFtvJnQB7H/OL+xbGBO65b4tXLX6rGCug4jKdLQtBNb341maYfgyboymTp5cQV3UpMu7H6wDvlKR3Jb9DPad6/lm4kd1XZAaj5aqtQfzpC78a6TfeOx9a53jRQU3x3oQoRWFgh9yTeE5ot+ktbQxjUd8ldvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oM6fDVwJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjtZk5Ln"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c30d9085aso1662590f8f.1;
-        Sat, 12 Apr 2025 04:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744456184; x=1745060984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfzidggO6FjeXS6iUbqAF7FeSHPmBoKvbbkf/LSnXH8=;
-        b=ZjtZk5LnQ6dLipQrds2KoyM/2yt8rBrkOyzjTyBY2M3GKvLhE3tMFP5Eoz0pKElWDU
-         ZGrjPq1RZ6dsLwyBJghUm3rD2UTcQgmNn/mcYqvse3vAm0XRXGKvkBilFzCzHz5CHkXu
-         ooUAkW9nmnA+m287tWvtTu9chwaC/J99lVfOsSSP7CsRO+Dh0L9Ul1mccYLKGP83hNBW
-         qJGXcmqNM/PL5nTXLxSVTHaQGNraBZjwgWgwUY23Em2fn8EU8YXLgTG9wYbFUVF4+c4y
-         pXal1bf2FjUUGoE68a/NrDDCQ/X/we00LNM3FrIVRGwkkdg/x6I0U45yNhpNEX6bm42h
-         f37A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744456184; x=1745060984;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BfzidggO6FjeXS6iUbqAF7FeSHPmBoKvbbkf/LSnXH8=;
-        b=ufEbL6CTBZCJKEy3x7AaQzwhsn3kycpuNINbCMhJ/yvA+W/XnhRN4c3qqBc7cVJ75P
-         jyYOCXoAG3C0QanJCK3yd8W28Qk8N1/B/JRbNQkQieZHoNx4/+18Du52VyQs8i0Jbj+H
-         2RiDZ2UZxwDEJThFMeqftZIlpeV5ca0LNbHl+LRkr4rObHSY+tGwaY+cmhtp/E7JULya
-         +sjA0N6aHR5SuxiS0W9mnRezXz55mUa9Bg6Hi3i6rqpmkryJG2Ko+r5dCW5HUojob9DL
-         ZRbuwF75Aj/6O8Q4vQvA6d6QDFnyxXoAra04H7Feam7o72zByHRiyfr1l+EfcE7/42WB
-         vJuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxx12TR8Rpgb0cwrr3AnVOLJ7wp1K5bG/6bFKGVxPjKW//Zp5xrLrlDN/1SX+q4LxIZqnLL5rU1NvDaAnb@vger.kernel.org, AJvYcCWhAgSogvbpgGncL+wSwCpnOheEbpmpBiKziYc+diYSl+IWyM8yDkHC3gjqYngSE7X09M68IqDM9i4sYMV7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjOTwPK7CB+0Nwd1zLDiB8SlijmsbCa8wv6MRDckdt5xLF86sK
-	F0dGERMBkVPG2WQCnbaDC7ofmQbcULSkUlQHe9wO9RRpyEZai7yP
-X-Gm-Gg: ASbGncvaaoQgzhnCBxq0FWRYxRRbDm8d51qD6b2+P3fBgY75K0E0AEB53EBn6Vm2VVR
-	9v891/+5JQZas2er1l/Y3CMKC0sFescX9RQh0ykkyUCdNrHTL0YYlDzj4JhBIVvas/WyQ6VkeEu
-	b15MmROTXpbyD/3HrQPl+f8arr1HHBqomGAvt+2MJ3+FCybcnFfMZeS+GGQLlG292J7L7ciVuW4
-	nHVhmOMdmqXkhLSZL1kc1FDojxJJE41IBeS3SyS1Vqv63+n0e2WPFychnGWvPbczFq0SbUsfZOo
-	RR79OsGTebWyDbOKdLJgtbzKhriDIF+qsGB5QG0xfXkmL/dyjrk1ZGBd
-X-Google-Smtp-Source: AGHT+IHzzBIrGdFrekn7hA9hmhYH+A3II1dtwo24jWsVLSLa1RdXcGYElBEIOmB08tXnbioaF6bSvQ==
-X-Received: by 2002:a5d:59ae:0:b0:391:2f15:c1f4 with SMTP id ffacd0b85a97d-39eaaecbe1fmr4718324f8f.55.1744456184042;
-        Sat, 12 Apr 2025 04:09:44 -0700 (PDT)
-Received: from f.. (cst-prg-90-20.cust.vodafone.cz. [46.135.90.20])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207aeaccsm113509275e9.33.2025.04.12.04.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 04:09:43 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH] fs: improve codegen in link_path_walk()
-Date: Sat, 12 Apr 2025 13:09:35 +0200
-Message-ID: <20250412110935.2267703-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oM6fDVwJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B17BC4CEE3;
+	Sat, 12 Apr 2025 11:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744456896;
+	bh=YfOlKE6PAfGsLaLJzFsbc4yvi3sBWRZ8irx5t8xPNqU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oM6fDVwJXVvIiSz6YzL+sqXFarnOxeDB/V9gDHvtXh2pStzqt+qSSOGhrDe39m8r1
+	 QN91NiF9YguPYt8vikQ7haD+S/t7MWG8OSROc3VqFDJ8/RHspiNsz/6yO6f9uw79xz
+	 zi9OMDnNtNWFSNV2kaA4DE6PDZZ68BsPFDfybAdzE3TnSCS1DCu21C0wipU67YV8RK
+	 udS9kl08sM77TgcPIccOuGUAKdHa90+KqG4bkTnqxCJRoW1ibn5RTeA5dQmDzTiHcR
+	 Uswr9VCQZq0sUezMCh+qEXR8Ub3VMNCtso88fnhRg9Rsu8jH9CUy6Qt73d0HZSWr8g
+	 pqztiNKbrLUPQ==
+Date: Sat, 12 Apr 2025 12:21:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Yassine Oudjana <y.oudjana@protonmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, Sean Nyekjaer
+ <sean@geanix.com>, Javier Carrasco <javier.carrasco.cruz@gmail.com>, Matti
+ Vaittinen <mazziesaccount@gmail.com>, Antoniu Miclaus
+ <antoniu.miclaus@analog.com>, Ramona Gradinariu
+ <ramona.gradinariu@analog.com>, "Yo-Jung (Leo) Lin" <0xff07@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?=
+ <barnabas.czeman@mainlining.org>, Danila Tikhonov <danila@jiaxyga.com>,
+ Antoni Pokusinski <apokusinski01@gmail.com>, Vasileios Amoiridis
+ <vassilisamir@gmail.com>, Petar Stoykov <pd.pstoykov@gmail.com>, shuaijie
+ wang <wangshuaijie@awinic.com>, Yasin Lee <yasin.lee.x@gmail.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Pawan Gupta
+ <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Yassine Oudjana <yassine.oudjana@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: Add Qualcomm Sensor Manager drivers
+Message-ID: <20250412122122.43d1b2a7@jic23-huawei>
+In-Reply-To: <fc9af95b-abbf-454c-97e1-b884baa5317c@protonmail.com>
+References: <20250406140706.812425-1-y.oudjana@protonmail.com>
+	<20250406140706.812425-4-y.oudjana@protonmail.com>
+	<20250406172904.1521881e@jic23-huawei>
+	<fc9af95b-abbf-454c-97e1-b884baa5317c@protonmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Looking at the asm produced by gcc 13.3 for x86-64:
-1. may_lookup() usage was not optimized for succeeding, despite the
-   routine being inlined and rightfully starting with likely(!err)
-2. the compiler assumed the path will have an indefinite amount of
-   slashes to skip, after which the result will be an empty name
+> >> +
+> >> +static void qcom_smgr_accel_remove(struct platform_device *pdev)  
+> > 
+> > I'm surprised to see a platform device here - will read on but I
+> > doubt that is the way to go.  Maybe an auxbus or similar or
+> > just squashing this all down to be registered directly by
+> > the parent driver.  
+> I got the idea from cros_ec_sensors which also deals with a similar 
+> sensor hub paradigm.
 
-As such:
-1. predict may_lookup() succeeding
-2. check for one slash, no explicit predicts. do roll forward with
-   skipping more slashes while predicting there is only one
-3. predict the path to find was not a mere slash
+Generally the use of platform drivers for subfunctions of something
+is now not considered the way to go.  Here there seems to be little
+point in spinning out another layer of devices.
+> >   
+> >> +static void qcom_smgr_buffering_report_handler(struct qmi_handle *hdl,
+> >> +					       struct sockaddr_qrtr *sq,
+> >> +					       struct qmi_txn *txn,
+> >> +					       const void *data)
+> >> +{
+> >> +	struct qcom_smgr *smgr =
+> >> +		container_of(hdl, struct qcom_smgr, sns_smgr_hdl);
+> >> +	struct sns_smgr_buffering_report_ind *ind =
+> >> +		(struct sns_smgr_buffering_report_ind *)data;  
+> > 
+> > Casting away a const isn't a good sign. Why do you need to do that?
+> > 	const struct sns_smg_buffer_repor_ind *ind = data;
+> > should be fine I think.  
+> 
+> The casted struct was previously not const so I was only casting from 
+> void *. I made it const lately but didn't notice this cast. Will change it.
 
-This also has a side effect of shrinking the file:
-add/remove: 1/1 grow/shrink: 0/3 up/down: 934/-1012 (-78)
-Function                                     old     new   delta
-link_path_walk                                 -     934    +934
-path_parentat                                138     112     -26
-path_openat                                 4864    4823     -41
-path_lookupat                                418     374     -44
-link_path_walk.part.constprop                901       -    -901
-Total: Before=46639, After=46561, chg -0.17%
+Ok. But never a reason to cast from a void *.  The C spec says that
+happens implicitly just fine.
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
+> >> +	ret = qcom_smgr_request_all_sensor_info(smgr, &smgr->sensors);
+> >> +	if (ret < 0) {
+> >> +		dev_err(smgr->dev, "Failed to get available sensors: %pe\n",
+> >> +			ERR_PTR(ret));
+> >> +		return ret;
+> >> +	}
+> >> +	smgr->sensor_count = ret;
+> >> +
+> >> +	/* Get primary and secondary sensors from each sensor ID */
+> >> +	for (i = 0; i < smgr->sensor_count; i++) {
+> >> +		ret = qcom_smgr_request_single_sensor_info(smgr,
+> >> +							   &smgr->sensors[i]);
+> >> +		if (ret < 0) {
+> >> +			dev_err(smgr->dev,
+> >> +				"Failed to get sensors from ID 0x%02x: %pe\n",
+> >> +				smgr->sensors[i].id, ERR_PTR(ret));
+> >> +			return ret;
+> >> +		}
+> >> +
+> >> +		for (j = 0; j < smgr->sensors[i].data_type_count; j++) {
+> >> +			/* Default to maximum sample rate */
+> >> +			smgr->sensors[i].data_types->cur_sample_rate =
+> >> +				smgr->sensors[i].data_types->max_sample_rate;
+> >> +
+> >> +			dev_dbg(smgr->dev, "0x%02x,%d: %s %s\n",
+> >> +				smgr->sensors[i].id, j,
+> >> +				smgr->sensors[i].data_types[j].vendor,
+> >> +				smgr->sensors[i].data_types[j].name);
+> >> +		}
+> >> +
+> >> +		qcom_smgr_register_sensor(smgr, &smgr->sensors[i]);  
+> > Above I suggest that maybe you should just skip the platform devices and register
+> > directly with IIO as you find the sensors. So have the struct iio_dev->device
+> > parent directly off this one.  
+> 
+> As I said previously I followed the model used in cros_ec_sensors, and 
+> it made sense to me since I always see platform devices used to 
+> represent firmware-backed devices like this.
 
-I'm looking at skipping perm checks with an "everybody can MAY_EXEC and
-there are no acls" bit for opflags. This crapper is a side effect of
-straighetning out the code before I get there.
+In this case you end up with
 
- fs/namei.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+parent device
+    |
+    |____________________
+    |         |          |
+ChildA     ChildB       ChildC  (all platform devices)
+    |         |          |
+IIODevA    IIODevB      IIODEVC
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 360a86ca1f02..40a636bbfa0c 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2424,9 +2424,12 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 	nd->flags |= LOOKUP_PARENT;
- 	if (IS_ERR(name))
- 		return PTR_ERR(name);
--	while (*name=='/')
--		name++;
--	if (!*name) {
-+	if (*name == '/') {
-+		do {
-+			name++;
-+		} while (unlikely(*name == '/'));
-+	}
-+	if (unlikely(!*name)) {
- 		nd->dir_mode = 0; // short-circuit the 'hardening' idiocy
- 		return 0;
- 	}
-@@ -2439,7 +2442,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 
- 		idmap = mnt_idmap(nd->path.mnt);
- 		err = may_lookup(idmap, nd);
--		if (err)
-+		if (unlikely(err))
- 			return err;
- 
- 		nd->last.name = name;
--- 
-2.43.0
+Today we'd probably do those child devices using auxiliary devices but
+aside from that, the only reason to do this is you want to have separate
+drivers for each child.
+
+You can just do
+
+parent device
+   |
+   |_______________________
+   |         |             |
+IIODevA    IIODevB       IIODevC
+
+for the case where there no separate child drivers.
+
+That is the parent driver can just instantiate the IIO Bus Devices
+directly (it's kind of a Class really but a bus for historical reasons).
+Various IMUs do this when they have separately controlled sampling frequencies
+for different types of sensor or even separate fifos. (They are really
+sensor hubs, just connected of SPI or similar).
+
+So it's up to you whether you want the separate per channel type devices and
+to handle the potential races around those going away.
+qcom_smgr_buffering_report_handler() for instance needs a lock to
+stop the child driver being unbound between the checks on iio_dev and the
+use of it. With one driver that complexity doesn't occur.
+See for example drivers/iio/st_lsm6dsx/ that does it this way.
+
+Also possible would be a single IIO device with multiple buffers.
+We only have a few of those though so you might run into missing bits of ABI
+taking that path.
+
+Jonathan
+
 
