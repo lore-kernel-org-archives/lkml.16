@@ -1,117 +1,77 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CBE2367BC;
-	Sat, 12 Apr 2025 14:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EB4142E83
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744467074; cv=none; b=W7BH6fFZOgcfNbI1ndf/3zugZ6EhMUopAgK/C2X1aSFcFm0E2nAhzAJOiyviArFV+FoQsAwvSIJzDXMEaV+Hf5j4m06fmXLGi+oE0d3VtFzi7nB0o8zKvqLlzsdhiZgWvRIDcsgLw9qCoOPNgA8PmOHFJQeIKI41XdcL8JE9wqI=
+	t=1744467126; cv=none; b=aQmujqkjeICYzbNoVIX2/kWAwUfFahXa7pL6ArYW64ySPs3K7+3GIMmjCLs8oJcOz2bkJ950aNqXjbJS25Vol5IfiSJeLqXQXehB/rVYCjKQ3/7L4CptDNyd3rsrB2UTFHdG37FGQ3J+Wcyb9hdGdrTS82eHK6kL40R1GkFPdzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744467074; c=relaxed/simple;
-	bh=6UupgWJqX74K4rb42t9zk7pR4gsrJNFwzwL4a7gqYCw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QuxKJC1Xd2yQsgMJrPOGmEo9tG5LWJvaXQiBz0b04jfWf0tyf6x7Y+LPP37ST3J3BCD9f4IlrPUll69/aBq7MkLvk+l66OCoLF7p2Cf1kggENjqnYyjafcl3Cm/QyxNruWpyIcRpfU+BD0vrko2iw4+IEJX/1cEOCGspRZZPnmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RRMoS31T; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RRMoS31T"
-Received: from narnia (unknown [167.220.2.28])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7A2A321165B8;
-	Sat, 12 Apr 2025 07:11:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A2A321165B8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744467072;
-	bh=pTnd2Oc8i8/ma8A52qza9zwPziCRMHwOGThxeMcufiE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=RRMoS31T422OQGTx+ALxBabnWUobD2SGOF9kKhtax/Q9kNBsnMTF30iIo6s62oUcd
-	 9hayyqT4XBOzTiMuXmDqpBpb3kjYL34C0pagTkdwl+BsCNobtK8HIYmwSTpnWM72sc
-	 7MbXa9/e4EXJcrbLuqpTIOI03a2CVhMn3o5hgH1k=
-From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Matteo Croce
- <technoboy85@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
- <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
- =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
- Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Jan Stancek <jstancek@redhat.com>, Neal Gompa
- <neal@gompa.dev>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, keyrings@vger.kernel.org, Linux
- Crypto Mailing List <linux-crypto@vger.kernel.org>, LSM List
- <linux-security-module@vger.kernel.org>, Linux Kbuild mailing list
- <linux-kbuild@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
- <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, Matteo Croce
- <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, Cong Wang
- <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-In-Reply-To: <CAADnVQJ5VaXVN=L+0ygEWJkMtPZnqAVEoeFiLBvikntX0zD49w@mail.gmail.com>
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
- <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
- <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
- <CAFnufp1erGboUtRaqLoKC48c+9jmqzEfFW8W46xt77JMC0PFpQ@mail.gmail.com>
- <CAADnVQJ5VaXVN=L+0ygEWJkMtPZnqAVEoeFiLBvikntX0zD49w@mail.gmail.com>
-Date: Sat, 12 Apr 2025 07:11:01 -0700
-Message-ID: <87plhhjwqy.fsf@microsoft.com>
+	s=arc-20240116; t=1744467126; c=relaxed/simple;
+	bh=SW9baJwU90rv2J08hxwWTXYAPDJHnlNUogyQNt3kCn0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jTR58mHC+gvTXDPhQif1D9uH8E8LbgXCEIhCpNpiRIsRdCQbQnmBklAEGx9MEZSHwZb7efticedrv4joHULS4rF3IWCyPw1H1EWrRqJne3nvLRJq/mouws+f+xaqAAqS45DaNyDEsCAXzJm7IZI8ds30Z8InVDwByGEUTofmRB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d586b968cfso21523005ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:12:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744467124; x=1745071924;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vVtPfFRZtMU+7c6m3Lu81ACxShZ6xV2tolYQ458rPJE=;
+        b=cHccgwfm+lON4QJ+2PZOKSjEhAxJ54q3n04FZV+yGN01u86Cp5OTV7yB+SD7xuKkh3
+         b62HDWTYWO21yAYMsuipSdniDD2VAmv43dNvF7O95L5K4GJyvk85aBSPudPFYixfWsdh
+         OR8YsUvMrrQJ6r0/hserZooAnxaoGEQrmyEJoeCKPOqtmL6Mg4x8WRYRi+oFReEpT+o2
+         syFha50ltjDqcChXq3LS5L2wbx68f2ZbTuYXPtsj5dfzXnt13915bx2rJ5MI9L2InKpP
+         inQOvE3/mFvMY4fKOPrL8V6BuJVecYfk+85dYCIaTSt8y7w72kRQZwSPBfDZYAV8AVLR
+         fvZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0sWCdUyTxCm/fG85EDUrKVtzrZubM9IygCv+M2jpb3qeH4hBvActsN5HWxI39PKw9os8gaCQZxRon/vE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywub3H8D1NHhmecxms7Q2xV7Ozx1ctgBXKuRp+mFF+fvr/YP6S9
+	3xAmPIgV3qVA4FN3Djagdvn66oaQDrXopQ88yR2m5D5g+pU8+477UfozLSSfbqRwf83nziT3V60
+	kEXws/vcYd3ucQ+xIJlxONAzQUEG2+zP3qpw1xxjHB8W+O9c6n68Z+2w=
+X-Google-Smtp-Source: AGHT+IG7VQEkjMn9Fh81REVLoIjtUnO2qusesDv6QWiP6EtGelZywJ0/A6uJ9MaxHB1wgUUFcIRhP/tzWHTQpVud7sauboNK6hLB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:338f:b0:3d4:3fbf:966e with SMTP id
+ e9e14a558f8ab-3d7ec265c39mr67322365ab.14.1744467123757; Sat, 12 Apr 2025
+ 07:12:03 -0700 (PDT)
+Date: Sat, 12 Apr 2025 07:12:03 -0700
+In-Reply-To: <6702c4bb.050a0220.49194.04d9.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fa74b3.050a0220.379d84.000e.GAE@google.com>
+Subject: Re: [syzbot] [ext4?] KASAN: use-after-free Read in
+ __ext4_check_dir_entry (3)
+From: syzbot <syzbot+09921540dd04aba82a35@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, jack@suse.cz, libaokun1@huawei.com, 
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu, yi.zhang@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+syzbot suspects this issue was fixed by commit:
 
-> On Fri, Apr 11, 2025 at 5:30=E2=80=AFPM Matteo Croce <technoboy85@gmail.c=
-om> wrote:
->>
->> Il giorno sab 12 apr 2025 alle ore 02:19 Alexei Starovoitov
->> <alexei.starovoitov@gmail.com> ha scritto:
->>
->> Similar to what I proposed here?
->>
->> https://lore.kernel.org/bpf/20211203191844.69709-2-mcroce@linux.microsof=
-t.com/
-> ...
->> @@ -1346,6 +1346,8 @@ union bpf_attr {
->>   __aligned_u64 fd_array; /* array of FDs */
->>   __aligned_u64 core_relos;
->>   __u32 core_relo_rec_size; /* sizeof(struct bpf_core_relo) */
->> + __aligned_u64 signature; /* instruction's signature */
->> + __u32 sig_len; /* signature size */
->
-> Well, yeah, two fields are obvious.
-> But not like that link from 2021.
-> KP proposed them a year later in 2022 on top of lskel
-> which was much closer to be acceptable.
-> We need to think it through and complete the work,
-> since there are various ways to do it.
-> For example, lskel has a map and a prog.
-> A signature in a prog may cover both, but
-> not necessary it's a good design.
-> A signature for the map plus a signature for the prog
-> that is tied to a map might be a better option.
-> At map creation time the contents can be checked,
-> the map is frozen, and then the verifier can proceed
-> with prog's signature checking.
-> lskel doesn't support all the bpf feature yet, so we need
-> to make sure that the signature verification process
-> is extensible when lskel gains new features.
->
-> Attaching was also brought up at lsfmm.
-> Without checking the attach point the whole thing is quite
-> questionable from security pov.
+commit 26343ca0df715097065b02a6cddb4a029d5b9327
+Author: Baokun Li <libaokun1@huawei.com>
+Date:   Wed Jan 22 11:05:27 2025 +0000
 
-That statement is quite questionable. Yes, IIRC you brought that up. And
-again, runtime policy enforcement has nothing to do with proving code
-provenance. They are completely independent concerns.
+    ext4: reject the 'data_err=abort' option in nojournal mode
 
-That would be akin to saying that having locks on a door is questionable
-without having surveillance cameras installed.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15734870580000
+start commit:   e32cde8d2bd7 Merge tag 'sched_ext-for-6.12-rc1-fixes-1' of..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1f009dd80b3799c2
+dashboard link: https://syzkaller.appspot.com/bug?extid=09921540dd04aba82a35
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=102f23d0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1082e580580000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: ext4: reject the 'data_err=abort' option in nojournal mode
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
