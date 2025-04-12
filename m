@@ -1,113 +1,269 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A8F78F45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389D419CD1E
 	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744467560; cv=none; b=jKdfUvyNZqwqcdlMItqe4W/Bxluq58HEmM4ht7+xnJn/hQ3chZOhmJdFmDsgIVruIXTaURP5rZFYyW3lOiPI5f8tcyqkJ4EwUhKTiB+YDP29YHgg8bokcKF5RKXAuRVkD51r4Aua/M+C0IxKB7fCnRWmvrJ+Kx19t3QDwsHAblw=
+	t=1744467563; cv=none; b=ViueGA1E04UEqHgw4Z0Yr5wvScPpputYbwKshzSECkM+uStVkSfYYCMFHqZOhk4eGnt22XpU1BSW1bRCq6Cv8donBQIlWLkFr9UW9yIWMrBjDeangcG9NKSqZuzxTywATzjhYiRbb3Lp9acXC8GqPI+XgPzFilvwPWjfpmC7jOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744467560; c=relaxed/simple;
-	bh=yz6epcKAphDwC4sqY+d8Vu+1Rl6M0axJyNhIkKMyQ70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nCbYfpIcYpxi51p1cttihcs24NG2T7tToaJ+iv6Tz9F1oYnYHKxC3RwSW59fttICsMOGmdLMsDRUAt0hMjmcLi42noLaJ+Zf8DAjyUdIIQfWsiZDBO0ch7S4VxrbvNEWKLhLZ/WE/Ti3VBuAkqcjZLEnCNhGrAugI5VXvHMaVPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IFOxd/Y3; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744467563; c=relaxed/simple;
+	bh=+dDevdafqQ32QcXMdXXjtMEflCBC+WxeuY0QrOwC+mI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
+	 Content-Type:References; b=garaBs3gqGsMwcy+dFCsFfX5sJo3F4/NKVx6JPqBhcsx38J4TPE2if4VnpnT1it8ikuk4FYYZ2Mz2dXnQUq9Pv1fwWU3lTNJyCQV/oUd9UooQOWH221iAhpMno5iIyT8Rp3ck9U4lI9/uGoqKbFoJgZZ9eVet7eIX1bI1yNxjJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BG9fppbe; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IFOxd/Y3"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so2417766f8f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744467557; x=1745072357; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JHBL7CYWwnBjd3jrunm4nVzAhAz8iBRNbPGJWtoj108=;
-        b=IFOxd/Y351UG41jeBThkv0ejYLHqu3/05GsrDElkmDnyDB8heGhazJoyZX+r80Njnp
-         XqEiJIA1K6aNHQpjTmwAXdHvmOXF1YW2mlsv1s2wS2mpzWIFagsjA2k4bQ40bEAFBWug
-         mLwB8W6CuraHcxsVvC0c/4bRYCWfzWqlGu3SDib4ebEpNm6j30OouW4ymMNWog2qEWcU
-         of+tP4pXq5R+WpvoJMjuVjRC/zHJcreEcmAtLnkD3PkOFvLlxB2Eex1aSjKknOlVpHwD
-         meh2GFdFpzoFeBfGpC9DvqV4el3tuMQwW5HltQZOTnV0TVkQCOxnCnDjf6KZ8Qe54gxy
-         mstQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744467557; x=1745072357;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JHBL7CYWwnBjd3jrunm4nVzAhAz8iBRNbPGJWtoj108=;
-        b=WTfclEiGRwEZRPFmIetL78Kyf/yE+H+u70xX6vS7XZTkeWwEN6uayBtv5F6fAZH0Lt
-         U86yct1JLCclZmlmophyXZWBp6zW+mUJfjBRhgffl3pLwbdvmuIK4y/mY896WoZ7D44V
-         5R4WnxAJCeNH3aU+eb8GTaSQZnLesZRkk6Lo3jPGQdZw4WcfIc0y7/WnpzDhhzJajCBa
-         NfKVFwB0+JfBLhp7bq92zZBPsFo+zwHyMRG2IWHZ4rtY3YKbmtE5aRprpAmWa3IDsJ3h
-         Za1hasLidWzClh+CxjyH12wlPrfetHR/HYCUu3spmpHgkJsFI57rDRntE804irlbCEcR
-         XmCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhQCmQ6NNIEd9FuILRyfhgDAr+FTlZTio7CnMJGjhhtl/8Vnx1i8Vu3W0QJ+xRxFbeZKrZ//akuQjmN04=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLb41KR0U2cxu+gG7olxXe/5qP5kiFdrOkXGVnPj6MwED+YC4b
-	9asAUFFtW4y8xuYE4C1tQnatJAnuAW5TQKqPz624R9UKP850Vk/jdZd9R+6bs9o=
-X-Gm-Gg: ASbGncsRxdjcf9BMl2A5/w/REiqRzwR/BNeQSVj/mBZMhWIXc4R9me+uDbrK3gMQXc+
-	+kO6E4AYqCU/L8I2zIzKZqOY/tyBaOkqrZCyoi1QS8ECJNJjFenriWghy6XaIQidd3HBlagoU+t
-	AjZqeYWCllOgjP1D2mSdlGZ7jQf4u9f6yUb6UdEuDnq3HSJMM73is0yWidtvxs2Nx0tkWrI8Zs1
-	PIBnsi3uQSW5r7urBQWvas1ZSFeSZfO27HPl765XHx1qSpqwnhSvuSGrDjHEa21bqqMPp5bdV0A
-	osYMHFyO5s9AJoDXxVj6YQc142l976i+kyaJ3c0s0CM2PA==
-X-Google-Smtp-Source: AGHT+IEaXX2OSI4xMiPL2LlRp9XzH1rVJcRvtRXaUMBzdzy+GqUqBfNUNEsYMNnIK3gvqLJKjB6vpg==
-X-Received: by 2002:a5d:5f96:0:b0:391:ba6:c069 with SMTP id ffacd0b85a97d-39eaaebeb38mr5812638f8f.44.1744467556566;
-        Sat, 12 Apr 2025 07:19:16 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae97b249sm5222195f8f.58.2025.04.12.07.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 07:19:16 -0700 (PDT)
-Date: Sat, 12 Apr 2025 17:19:12 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>,
-	outreachy@lists.linux.dev, julia.lawall@inria.fr,
-	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
-	andy@kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
-Message-ID: <209e5330-a4d4-4ecc-8d56-199f4a190c3c@stanley.mountain>
-References: <Z/bA4tMF5uKLe55p@ubuntu>
- <CAHp75Vd0PUFv_tigmKp7MEiOOuHpFhB_i8u42jZdQ1jajjq0rw@mail.gmail.com>
- <b4904b21-0a41-43f6-b386-dea4e27c7a27@stanley.mountain>
- <CAHp75VehJd4FUXBJSJh35a6KF3Qr2eBG6PiNogZ1m9SzBph0Ow@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BG9fppbe"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250412141059euoutp0160b5097646975e7d24aa1c16d6baab8c~1l4xJGKDz1795517955euoutp01V
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 14:10:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250412141059euoutp0160b5097646975e7d24aa1c16d6baab8c~1l4xJGKDz1795517955euoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744467059;
+	bh=9KezgrRa6es4JcT+4kYWjYIOmYWn6gXe5sAC1YUkZfQ=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=BG9fppbeW6mo00qlehL6bcEBGNzTtD/T1cZSQxlKbg2olY1BeI15/P2lpzCA7PrWB
+	 OFBKgqRoBpF39sfg76E/pEG2R+l19kFWcObH0Xxw36dBcca37D6Qne1q9b/0uRr9q2
+	 HeBslFWGRNc//tqf7oOlshLZ3GOhRe0vY/4t5J5g=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250412141058eucas1p2feb9017db063748a836b1b083466e283~1l4wj1SjW1499714997eucas1p2E;
+	Sat, 12 Apr 2025 14:10:58 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 31.56.20821.2747AF76; Sat, 12
+	Apr 2025 15:10:58 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250412141058eucas1p101684164d8de27c655010ebe4c8b6e75~1l4v6nCSI1684516845eucas1p1E;
+	Sat, 12 Apr 2025 14:10:58 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250412141058eusmtrp24d1f9ca0d33b3ddc116860cdbfcf3b91~1l4v520Ue2732027320eusmtrp2M;
+	Sat, 12 Apr 2025 14:10:58 +0000 (GMT)
+X-AuditID: cbfec7f2-b09c370000005155-50-67fa7472805b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 69.96.19920.1747AF76; Sat, 12
+	Apr 2025 15:10:58 +0100 (BST)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250412141057eusmtip11e596436a0d1a77b336532b5b575c4b5~1l4vId8VH0825008250eusmtip1t;
+	Sat, 12 Apr 2025 14:10:57 +0000 (GMT)
+Message-ID: <3ccbf872-355c-4fec-ab9a-6f2f396625d7@samsung.com>
+Date: Sat, 12 Apr 2025 16:10:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: thead,th1520: Add clocks
+ and resets
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Frank Binns
+	<frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org, wefu@redhat.com,
+	p.zabel@pengutronix.de, m.szyprowski@samsung.com,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-pm@vger.kernel.org, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>
+Content-Language: en-US
+In-Reply-To: <9bc1ebee-7a41-4465-8015-c156fb6b74cf@samsung.com>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VehJd4FUXBJSJh35a6KF3Qr2eBG6PiNogZ1m9SzBph0Ow@mail.gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7djP87pFJb/SDVaf0bFYs/cck8X8I+dY
+	Le5d2sJkse7pBXaLF3sbWSxezrrHZnF51xw2i8+9Rxgttn1uYbNYe+Quu8WSHbsYLe7eO8Fi
+	8X/PDnaLf9c2slgcXxtu0bJ/CouDgEfPzjOMHptWdbJ53Lm2h81j85J6j5a1x5g8+v8aeLzf
+	d5XNo2/LKkaPz5vkAjijuGxSUnMyy1KL9O0SuDL2vmxmL/ijW/H84mKmBsb3Kl2MnBwSAiYS
+	v979Z+pi5OIQEljBKNH0+RUzhPOFUWL9/hmMEM5nRom2vhcsXYwcYC3zziRCxJczSsyduBCq
+	4y2jxPee5Wwgc3kF7CSO77gNZrMIqEosmrifGSIuKHFy5hMWEFtUQF7i/q0Z7CC2sECExI7P
+	l8BsNgEjiQfL57OCLBMRKJNonZoAEmYWeMAksXSWPIQtLnHryXwmEJtTwF5iZ89fNoi4vETz
+	1tlg90gI7OaUWLbhByPEny4ST1sus0LYwhKvjm9hh7BlJP7vhBgkIZAv8WDrJ2YIuwZo6HEo
+	21rizrlfbCD3MAtoSqzfpQ8RdpTofL2JFRImfBI33gpCnMAnMWnbdGaIMK9ER5sQRLWaxNSe
+	Xril51ZsY5rAqDQLKUxmIXlsFpJnZiHsXcDIsopRPLW0ODc9tdgwL7Vcrzgxt7g0L10vOT93
+	EyMw9Z3+d/zTDsa5rz7qHWJk4mA8xCjBwawkwsvl/CtdiDclsbIqtSg/vqg0J7X4EKM0B4uS
+	OO+i/a3pQgLpiSWp2ampBalFMFkmDk6pBqaZLvbRvIflrB6VKLdqFHZNWFh++VvWxot+JSoV
+	P7TmBk4zyLdW92z44JK97pSm87fbbU5mKn0bNRcwtPxft/Jp4IUNTHzeR924HZhZZzvzv7j3
+	eUlUN58h3zuOnDn/5zQ75F814dyZsG1p0VrFY/cDyi0vbcxaOq96afgfji2TJ6vP172Tf/WV
+	e93O33LzIvbbJh9lX2LulfiO//fNJdccJLe0qv3KkTj3aZ1RxtIPUybmZky9I3xwYy2j8S/9
+	S5596hZ+NjWp1zO9v1kHxc3zX65SG9bC0bb09iJnY6fW9r8FnKor87UmR/b5C4datHjva/dd
+	NFHgoN2WT+5Pptye0fBtiuHjzsUcyo4nFiixFGckGmoxFxUnAgAIg/OD7AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsVy+t/xu7pFJb/SDa6tYbRYs/cck8X8I+dY
+	Le5d2sJkse7pBXaLF3sbWSxezrrHZnF51xw2i8+9Rxgttn1uYbNYe+Quu8WSHbsYLe7eO8Fi
+	8X/PDnaLf9c2slgcXxtu0bJ/CouDgEfPzjOMHptWdbJ53Lm2h81j85J6j5a1x5g8+v8aeLzf
+	d5XNo2/LKkaPz5vkAjij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxS
+	UnMyy1KL9O0S9DL2vmxmL/ijW/H84mKmBsb3Kl2MHBwSAiYS884kdjFycQgJLGWU2L10HXsX
+	IydQXEbiWvdLFghbWOLPtS42iKLXjBIrfuwHK+IVsJM4vuM2G4jNIqAqsWjifmaIuKDEyZlP
+	wJpFBeQl7t+aAVYvLBAhsePzJTCbTcBI4sHy+awgtohAmcT1V0cZQRYwCzxgkvj6bR3UtoPM
+	Eud27wKbyiwgLnHryXwmEJtTwF5iZ89fNpAXmAXUJdbPE4IokZdo3jqbeQKj0Cwkd8xC0j0L
+	oWMWko4FjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAuN927Gfm3cwznv1Ue8QIxMH4yFG
+	CQ5mJRFeLudf6UK8KYmVValF+fFFpTmpxYcYTYFhMZFZSjQ5H5hw8kriDc0MTA1NzCwNTC3N
+	jJXEed0un08TEkhPLEnNTk0tSC2C6WPi4JRqYPLZw/88YN0yJd7fUyX1ItWuv56VZCwkddBp
+	1rd25gSR4mKTXpFE/RfCCqvPWX2Ineyqk8Um4OLMMjldxjnMqkzFZ1tx6ptZ3t+ktpnqdjor
+	zrKKbVhwJO5EzNsfiXezd/CuaJlb7G1zpYQlLOOHTNLK6HX1WW8n5Sx3+vkh69fqU/+ORc4+
+	zs99I+nK3bOqSSty5sZ92OW+Zu3FXSb+TdJbJy26HCJ3+5O29c8FCt5vGXN3163V03Z+43Cg
+	/U6cB0tB1Ya+nffDpGedn3FeTL62yOPzqwl+mx9yswX8Dsu7O+POS4eVGh+Ed/7vVus4y59U
+	5PXA56pVyw32q+3r1tqJb2sIVf3Qe+xUZ7nDdyWW4oxEQy3mouJEAHrSHgeAAwAA
+X-CMS-MailID: 20250412141058eucas1p101684164d8de27c655010ebe4c8b6e75
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf
+References: <CGME20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf@eucas1p2.samsung.com>
+	<20250409093025.2917087-1-m.wilczynski@samsung.com>
+	<20250409093025.2917087-2-m.wilczynski@samsung.com>
+	<CAPDyKFpoSwKAmiWyvNt1fVyu6=NU1oVOmQLVuzX_bG=-5KrM2Q@mail.gmail.com>
+	<75f97336-6cb5-47fc-ac88-5fe7842e2838@samsung.com>
+	<CAPDyKFq=BF5f2i_Sr1cmVqtVAMgr=0FqsksL7RHZLKn++y0uwg@mail.gmail.com>
+	<9bc1ebee-7a41-4465-8015-c156fb6b74cf@samsung.com>
 
-On Fri, Apr 11, 2025 at 03:47:40PM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 11, 2025 at 1:37 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> > On Thu, Apr 10, 2025 at 08:43:53PM +0300, Andy Shevchenko wrote:
-> > >
-> > > > $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
-> > > > $ cmp rtw_xmit_before.o rtw_xmit_after.o
-> > >
-> > > cmp is good but not good enough in general. Here it shows the 1:1
-> > > binary, but in some cases code can be the same, while binaries are
-> > > different. To make sure the code is the same use the bloat-o-meter
-> > > tool instead.
-> >
-> > I don't understand what you're saying at all.  cmp shows that the compiler
-> > was automaticall tanslating the "& 0xfff" into "% 04096u" so the resulting
-> > object files are exactly the same.
+
+
+On 4/12/25 09:53, Michal Wilczynski wrote:
 > 
-> There is a possibility that the compiler changes the code to the
-> equivalent and cmp will break, bloat-o-meter will check at least what
-> happened to the size of the *code*. object file is not only a code. It
-> may also contain debug symbols and other stuff which may break cmp,
-> while the code can be *the same*.
+> 
+> On 4/10/25 14:34, Ulf Hansson wrote:
+>> On Thu, 10 Apr 2025 at 12:42, Michal Wilczynski
+>> <m.wilczynski@samsung.com> wrote:
+>>>
+>>>
+>>>
+>>> On 4/9/25 12:41, Ulf Hansson wrote:
+>>>> On Wed, 9 Apr 2025 at 11:30, Michal Wilczynski <m.wilczynski@samsung.com> wrote:
+>>>>>
+>>>>> Prepare for handling GPU clock and reset sequencing through a generic
+>>>>> power domain by adding clock and reset properties to the TH1520 AON
+>>>>> firmware bindings.
+>>>>>
+>>>>> The T-HEAD TH1520 GPU requires coordinated management of two clocks
+>>>>> (core and sys) and two resets (GPU and GPU CLKGEN). Due to SoC-specific
+>>>>> requirements, the CLKGEN reset must be carefully managed alongside clock
+>>>>> enables to ensure proper GPU operation, as discussed on the mailing list
+>>>>> [1].
+>>>>>
+>>>>> Since the coordination is now handled through a power domain, only the
+>>>>> programmable clocks (core and sys) are exposed. The GPU MEM clock is
+>>>>> ignored, as it is not controllable on the TH1520 SoC.
+>>>>>
+>>>>> This approach follows upstream maintainers' recommendations [1] to
+>>>>> avoid SoC-specific details leaking into the GPU driver or clock/reset
+>>>>> frameworks directly.
+>>>>>
+>>>>> [1] - https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel.org/
+>>>>>
+>>>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>>>> ---
+>>>>>  .../bindings/firmware/thead,th1520-aon.yaml   | 28 +++++++++++++++++++
+>>>>>  1 file changed, 28 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+>>>>> index bbc183200400..8075874bcd6b 100644
+>>>>> --- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+>>>>> @@ -25,6 +25,16 @@ properties:
+>>>>>    compatible:
+>>>>>      const: thead,th1520-aon
+>>>>>
+>>>>> +  clocks:
+>>>>> +    items:
+>>>>> +      - description: GPU core clock
+>>>>> +      - description: GPU sys clock
+>>>>> +
+>>>>> +  clock-names:
+>>>>> +    items:
+>>>>> +      - const: gpu-core
+>>>>> +      - const: gpu-sys
+>>>>
+>>>> These clocks don't look like they belong to the power-domain node, but
+>>>> rather the GPU's node.
+>>>>
+>>>> Or is this in fact the correct description of the HW?
+>>>
+>>> Hi,
+>>> Thank you for your input. Based on my understanding of Stephen
+>>> presentation the power-domain layer could act as a middleware layer
+>>> (like ACPI) that could own resources. That being said it was also stated
+>>> that the proposed approach should work with already existing device
+>>> trees, which implies that the DT should remain as is.
+>>>
+>>> So I could get the resources using attach_dev and detach_dev, but there
+>>> are two problems with that:
+>>>
+>>> 1) The GPU driver will try to manage clocks/reset on it's own using those functions
+>>>    if I provide non-stub working clocks and reset:
+>>> static const struct dev_pm_ops pvr_pm_ops = {
+>>>         RUNTIME_PM_OPS(pvr_power_device_suspend, pvr_power_device_resume,
+>>>                        pvr_power_device_idle)
+>>> };
+>>>
+>>> So obviously I should invent a way to tell the drm/imagination driver to
+>>> NOT manage. One obvious way to do this is to introduce new flag to genpd.flags
+>>> called let's say GENPD_FLAG_EXCLUSIVE_CONTROL, which would tell the consumer
+>>> driver that the power management is being done only done from the PM
+>>> middleware driver.
+>>
+>> Something along those lines. Although, I think the below twist to the
+>> approach would be better.
+>>
+>> Some flag (maybe just a bool) should be set dynamically when the
+>> ->attach_dev() callback is invoked and it should be a per device flag,
+>> not a per genpd flag. In this way, the genpd provider driver can make
+>> runtime decisions, perhaps even based on some DT compatible string for
+>> the device being attached to it, whether it should manage PM resources
+>> or not.
+>>
+>> Additionally, we need a new genpd helper function that allows the
+>> consumer driver to check if the PM resources are managed from the PM
+>> domain level (genpd) or not.
+>>
+>> If it sounds complicated, just let me know I can try to help put the
+>> pieces together.
+> 
+> Thanks, this sounds doable
+> 
+>>
+>>>
+>>> 2) The GPU node doesn't want to own the gpu-clkgen reset. In fact nobody
+>>>    seems to want to own it, even though theoretically it should be owned by
+>>>    the clk_vo as this would describe the hardware best (it's resetting the
+>>>    GPU clocks). But then it would be trickier to get it from the PM driver,
+>>>    making the code more complex and harder to understand. Nonetheless I
+>>>    think it would work.
+>>
+>> I guess it doesn't really matter to me. Perhaps model it as a reset
+>> and make the GPU be the consumer of it?
+> 
+> GPU driver maintainers already stated that they only want to consume a
+> single reset line, that would be 'gpu' [1]. The 'gpu-clkgen' is an orphan in
+> this situation, or a part of a SoC specific-glue code, so theoretically
+> since the PM driver in our case is also a SoC glue driver we could leave
+> the 'gpu-clkgen' in PM DT node.
 
-So far as I can see bloat-o-meter is only looking at the size.  I
-deliberately introduced a bug to see if bloat-o-meter said anything but
-it said the size was the same.
+Frank, Matt
+Just to make sure, I would like to ask what you think about this ? Would
+you be open to have an extra reset that would be managed from the
+generic PM driver in your GPU DT node ?
 
-regards,
-dan carpenter
+Regards,
+Michał
 
+> 
+> [1] - https://lore.kernel.org/all/816db99d-7088-4c1a-af03-b9a825ac09dc@imgtec.com/
+>>
+>>>
+>>> If this sounds good to you I will work on the code.
+>>
+>> Sure, let's give this a try - I am here to help review and guide the best I can.
+> 
+> Thank you very much for your support, it’s invaluable!
+> 
+>>
+>> [...]
+>>
+>> Kind regards
+>> Uffe
+>>
