@@ -1,104 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2AB19F41C;
-	Sat, 12 Apr 2025 12:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D32B1E480
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 12:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744462209; cv=none; b=HnXxA2OVNi2Wt6Vb8X0nWTR3R7bK063CmnqZhoSyZDxhde2DmauBmiO5iuXczQ3RFOcXnD7UJThYhR8iirvfvV/eHoCYsZtOfHX6OB+YJfXI8gTOphM1t8ukCSf1G/OJIZETi2bb9Jn8JY9i5LfjdkmLMSk6q3EVB9YPx4yF/t4=
+	t=1744462313; cv=none; b=H0cP+8hXJks+P2E1HBSwq4l4F+8zKVauDCW4jR68KJxLeb7q1zX0C6bpT5JUuC/3r/IoBbIXwZ1tiwlu6jKqYyoLAwSuh6CGWi5tNQptP7cKECJ8VFdllm8SPff9PqeWXNbQFpM7XFaZmJQmtc0vXa0QYEjs27Ub59RKrv4F1Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744462209; c=relaxed/simple;
-	bh=M92R1sA/oaQWHhu9rd2suZHFanauK8ygZLX96I1zQRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PlabFmQ121IaVj1Q7OcRFyuezHJxW7OVxbxy8tCED6UVNh0NllUpMymTVnsUngZ+dm+9JlNLKHmtCagUZxiffT+6OytoZNckAQ6MXVEdXoWpB+XqJO75e4c6IMhybq8biG9LoP1s4/1C6xPNhBbpmU3xc4FsjiOGn9b09URJ+kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIT1qZ1T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744462313; c=relaxed/simple;
+	bh=nO9SaDtIYOeapvJB1AF0x9P8bXuIjOq7OEELF9LMA94=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=KLUzV27KVbcJsKPY9I5lc6N1fxyKX9eVi+9nmEs1+MR0MYPmKpR7zCHG6drfV2Njnr/Qw55bikFYQtdqTktXGSzkB5fpWkW5D6B7HwQVv7B7YJUWRIA97p+nQc/CUdtkIE2Sw4Ecjp2LnqqBgKdi9NC5Stwli4zTZaTwOgvK+y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K9+RBKyu; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIT1qZ1T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96209C4CEE3;
-	Sat, 12 Apr 2025 12:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744462208;
-	bh=M92R1sA/oaQWHhu9rd2suZHFanauK8ygZLX96I1zQRc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PIT1qZ1TjFW+TkZPQAfbPOFCRytrnJWL7NTue0aJuoS0nTm7fhpZIqg/syJrPgzDe
-	 arnYhlGoq3gBLLPnqCtc0YY9nlwnmFL7kJvkW8x/sZfMfXducQ9GJf62i2gaUi7FW0
-	 5EWYJekcvdHEe4I6zDHgUOI2rNWieQhYyqNhuclIHDSmb75+hdenGaYfWSHUq7Akj2
-	 vABlVfrfgPfaqT4F0r6kkFC4Z5A6hm/P/hNmAMJrVOTD9NVY12FUS0qNcGghEt6p2s
-	 oLLWo6qMBo00wRKY75jqDwfKysVguTFIAfeeiYQFWOX6A9I3Y1lAD6NLb1SU5RQhks
-	 yBCZWZPBVyrZw==
-Date: Sat, 12 Apr 2025 13:50:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jean-Baptiste Maneyrol via B4 Relay
- <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Cc: jean-baptiste.maneyrol@tdk.com, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] iio: imu: inv_icm42600: switch to use generic
- name irq get
-Message-ID: <20250412135001.7a8489e6@jic23-huawei>
-In-Reply-To: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
-References: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9+RBKyu"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2c663a3daso541855266b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 05:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744462310; x=1745067110; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nO9SaDtIYOeapvJB1AF0x9P8bXuIjOq7OEELF9LMA94=;
+        b=K9+RBKyu6wDaHGbzvDA9o1qhVfzBu4pQJD3L5lB5d2jfvDRfb0QejDXzGf604mWYP3
+         l6AqOjMXHcxFaoEZRbN19NSjWeuajG1qJhDUJiqUxYbvfbhV6eSOifFPn1TGik1CPtLn
+         RWtmFiTTMatnOI64jyzZvCyVH8+5qoO36OUYRGDaXurhTEm7jI5Dq/OHhT4qay8mxXRN
+         uTWx9BGSl8tnZh46yEhjnyL21TkY6QgCvubB07vP9wMIfJzy9vAyzDjcNnnCgGDd4byG
+         Pl+UpQGfFNAKYTDfyp/9EJrKnggu8Umgcsjq/kA8dvpCDbzXnal8hA7yPI+pS1DOYzcJ
+         muiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744462310; x=1745067110;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nO9SaDtIYOeapvJB1AF0x9P8bXuIjOq7OEELF9LMA94=;
+        b=I5+rnNOM426wiRdOgKfyDMLdqC7U0Jbz2F7JpiiGEPk1VpkqiApELT6mH37PH40SvP
+         dpdN7fTV7rJho5qx5CgR6ynAfimKWDXq7XGt17KlPP6ug8Vbzw/Qet+pdgBPt72SyA/0
+         AoE8i3m5EDSBVX4ITcIebl3LFEfuE38EQ9woOtolDHyBGkF8uRRyCBEzNA9krRMd1bRA
+         334akgFBZ/jHQwUN1PLakmusUSnuwgtvEDhNn2vgeOUStZHk4e04k9whHEIUOkTC0Ttd
+         Fjhl0lN0nQCoS3EPr2YPlTfI6Go6F96o6/Rq/PFDtQWSbyXll8+9TjwIcAmuDRHJaNrv
+         Gp6Q==
+X-Gm-Message-State: AOJu0YzalcL2IAQzq/1edQ8du32n6TRJuZP19RRWcM70ldzojRzT50Zg
+	KGJky7MR5MxAVkqDIMHgVGQQjMcfIvhsrhBDK9c4TvW1Tfxdhw+F4YEO1WmpC6vANCHkWN3J2J2
+	38KaBVqEmtdOO7An59mIUXbBT4dBr4KXu
+X-Gm-Gg: ASbGncsjmf/tfBuJD8LjLxLfkGQdR3simxnX1Y4RueCYHpW/O3USqbFSWYS8izWkTYo
+	z+kOWwHtrQhJAjRVJ0xEAyUYrS3ufahtMqiiMTEF7sF1i7RV0l5tkQliBJcBB7zYReAIjXcDfQa
+	vXxCf9MBKsfw5XbP1hmYM+ipy98ZiAgw6xd65CEzFURmPqmiIj8VLh6w==
+X-Google-Smtp-Source: AGHT+IFkmml0RgnZ6qbUYjx5+3xPICuf/uDDYROHCigwJcEUKPiaEG99dw6WKJfPo3ttPScxV7qnMqDxn15p2wbOZnw=
+X-Received: by 2002:a17:907:96a0:b0:ac7:c734:ba7b with SMTP id
+ a640c23a62f3a-acad36a5289mr570164166b.44.1744462309808; Sat, 12 Apr 2025
+ 05:51:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: daikichi hanayama <daikichi.hanayama001@gmail.com>
+Date: Sat, 12 Apr 2025 21:51:38 +0900
+X-Gm-Features: ATxdqUEA8caHKylm1mu6Y-h8n-2uY5KlY9mt7e2t5CFu5SrfCPugV0J1X7Va2XQ
+Message-ID: <CAFg0RQknZxrkpf5BKgJ7mgzX6s5R7KKARRYk-uTiY5UOSo_1=Q@mail.gmail.com>
+Subject: PROBLEM: Kernel 6.15-rc and Apple Magic Keyboard with Numeric Keypad
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 10 Apr 2025 17:39:39 +0200
-Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org> wrote:
-
-> The purpose of this series is to switch to fwnode_irq_get_by_name()
-> in the core module instead of using irq from the bus parsing.
-> 
-> Add in dt binding interrupt naming and up to 2 interrupts support.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Applied to the togreg branch of iio.git. Initially pushing that out as
-testing for 0-day to poke at it.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v4:
-> - Change dt-binding commit message to be more explicit about interrupt
->   support.
-> - Simplify fwnode usage, NULL checking is already done automatically.
-> - Link to v3: https://lore.kernel.org/r/20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com
-> 
-> Changes in v3:
-> - Update dt-binding to report support of the 2 interrupts and delete
->   remark about driver feature support.
-> - Link to v2: https://lore.kernel.org/r/20250407-iio-imu-inv-icm42600-rework-interrupt-using-names-v2-0-c278acf587b2@tdk.com
-> 
-> Changes in v2:
-> - Add INT2 in interrupt-names enum and fix enum
-> - Add fallback to first interrupt if naming is not here to ensure
->   backward compatibility
-> - Link to v1: https://lore.kernel.org/r/20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com
-> 
-> ---
-> Jean-Baptiste Maneyrol (2):
->       dt-bindings: iio: imu: icm42600: add interrupt naming support
->       iio: imu: inv_icm42600: switch to use generic name irq get
-> 
->  .../devicetree/bindings/iio/imu/invensense,icm42600.yaml   | 13 ++++++++++++-
->  drivers/iio/imu/inv_icm42600/inv_icm42600.h                |  2 +-
->  drivers/iio/imu/inv_icm42600/inv_icm42600_core.c           | 14 ++++++++++++--
->  drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c            |  2 +-
->  drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c            |  2 +-
->  5 files changed, 27 insertions(+), 6 deletions(-)
-> ---
-> base-commit: 1c2409fe38d5c19015d69851d15ba543d1911932
-> change-id: 20250325-iio-imu-inv-icm42600-rework-interrupt-using-names-b397ced72835
-> 
-> Best regards,
-
+Hello.
+I am using an Apple iMac 18,3 with a Magic Keyboard with Numeric
+Keypad connected via bluetooth on Archlinux/EndeavourOS/Fedora rawhide
+using systemd-boot and kernel 6.15-rc.
+I can start up the system and enter text without any problems, but if
+I choose to restart or shut down the system, it freezes when I shut it
+down.
+When I connected the Magic Keyboard via USB, reboot/shutdown worked normally.
+Please,please check this problem.
+Thanks.
