@@ -1,357 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazolkn19011033.outbound.protection.outlook.com [52.103.43.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5C01EB180;
-	Sat, 12 Apr 2025 13:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744463776; cv=none; b=e+AN9TPD6pMHryxCtKOkJK+/g6R/Apc3O/XxhX0mGGWJ/vFtF/NuMpB8fA7vi1ddCGkaLtaREVFEhOZiSwUZjd5b1YybWzsmRYgy6BoG2dPZ3MqXmRjMNDu2EASfeYT9SGBwnwn5aTHdAW0fD5QV/QvSLvXyHjpIeJdCh57nZZo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744463776; c=relaxed/simple;
-	bh=MURwsuyoUYpu+J9Sp8ByVAlVg6BvIk5LgpENmqd0/OM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X/MASMgrb6aW5n0/Sj9A48Haow6+MLXif7P2RikzV7cO/YBpnG9U7VgwpXDQ0/rt4SOng+VhTbNwJz6575F3LlVGDI7YXZhgdnAKzU2Q8ZE7PmC1sQcoFEqbWdjKMzSTKZSTnHFY4lWoxVCAxCftD8obubhAX4i4KGpqrayFVKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=As+PVqeA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065672B9BF;
+	Sat, 12 Apr 2025 13:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744463798; cv=fail; b=F/SNrFFggByO0ZCpVqCOA+bwIuLtWWoD4FT9IRaOTIrdmVT1aZleqXW/9fVyLp7K+2k3GLnRusRRwVbOerMF796KlPMXRbDo5rfgDhROgLBl/Fq7pdao0R3l4Dwl/TDZfXIS9h208IonNdWebx4lV5g9AArGDCy+5ug9D65eG9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744463798; c=relaxed/simple;
+	bh=CpS9ArjXOOzxqn3KEHg0E6ZhxaB2nyswywN9V9eU9G0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=iXIdjM/UNWuAM10ef+Bnl/EmZ6CweGlneatoJPGah2qdlwNuwC2DRLklDDl7ypxHa+hFz9fJU2xx62ogSFd+9ualSYD4vNq1Oml894wpP5q4fOBSt3MRCqlhJcKBBIYrvAiFsbpCJgmKHLh6+PpyFgRBhZON9mw1Xv+dfQ4AdSI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=B1AnGHPH; arc=fail smtp.client-ip=52.103.43.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="As+PVqeA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B0B24C4CEF5;
-	Sat, 12 Apr 2025 13:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744463775;
-	bh=MURwsuyoUYpu+J9Sp8ByVAlVg6BvIk5LgpENmqd0/OM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=As+PVqeAMhwZROsaGQzza0reSyqZkcAMRRB93psPnUaj/4BUQSJj+y7ZI5z/oe3KS
-	 wtuGblLFel5cKvgceFyGXwEvlYOm7D2tbTxvWB8+8IjI9FjyGfNb922g/0iiRe+G5O
-	 Lv9aejNuZ2zVRVl4pHHZiN0FLcGO2a3Ps7ekptd8sXVN5hFx5wYEPkuP4MlBYw+Jf4
-	 vCO6SzMpHO3MQaJ2ETI7pnrA9zZBwg5eWduErBH7IN6m5iNGmFkw7OEYQtqGTAq0V3
-	 sx7FATJ4VNEdZeYe2dpfxH42xfr7syvGuOMbsUv6D8EvJFWrTblyZQ1Uh4u3CejlRj
-	 8uzt0dFePVTDg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7F2C369B5;
-	Sat, 12 Apr 2025 13:16:15 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Sat, 12 Apr 2025 15:16:05 +0200
-Subject: [PATCH v5 4/4] dt-bindings: memory-controllers: Convert fsl,elbc
- to YAML
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="B1AnGHPH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CP86p0HAxHZJAj+1fNm6hU1CxVWDZ9G4hJhiOLk1yHv1bq+K2bkxEyFLbzWvt9MoRIhLi15MWWdojVPpN+Fn5ndIWYYe5VNqkhdUXzlRTkNA415G+zLqaeour991K4fvYa5wYhzkGkPMGBf4gFsHdq5Hxwa3rq2ATsOAqdWFhjPVBtG/9kVgTuUqAOcyYwWOEMH6KW25z2o9n6pMHtcQkifMAT+ErNdTjYlYy7dorsWSVyRlFDDvyIdJnAJBXZr0+PRyHXWulfWX/ZJk9W8DmkdfWj9a79+Cqk5eJX8NgQ3wBEyHMWvCrk5dU0U09WS4PrTHaiQpmlaae98eeKw8tA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dpSyx1UQVXHnC6eOsnSOskF2c5N3/h82Uodua0YGWnc=;
+ b=efT6P3EYGL6DRxundmffK8EJSGAltAaTjetBzcpkTadTVz4R2RWbqXM9ee4XiVnqMWx1U1ZmUVVfo16D0sYgRmpLG/ql6xBcEqP/31mZDY1TV3t7YND2H2yehBNvAibNYXJqxRXpyeoLHnILSFuJgRru2FJAV8mckiMiwRD8a92eqzcY/XHdREU8TXJLQ2lNVBzexljzZNYL3PsshE805pYBAL/PEtrIEewSRM01JRmC4CrugO4gcqttpiPBonltxHbFh0SACxWMPfmB7JzysXdv9swUJ+o5ePQ/72zK1apH+NfU4yQhfuL7Jiap7sjyN3zbCyUFJ57BqXVf6YcjUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dpSyx1UQVXHnC6eOsnSOskF2c5N3/h82Uodua0YGWnc=;
+ b=B1AnGHPHSM2aeLIIM2ovH2D1IxlJ7BCQ0mxrVP4SEXocrEnrK+bYj7a3dmkIdpbFphCYJhCXAQRwBA8DmUVjcrLbi2GHFHk/n3bTRkqFQTCCuL98RNdpUameos7QSAn0svtzeqrsVPUuirkCNuQCkzqRGtxiyL8rPIST9SaEZ3X4GaBrwhup0Ao3VHdJTbJ/5DW7eMTj08bXN9w47fL/2X+qgobg219gMOOokyGAleJUE2dCRPVtbE0dkmStG3sN6vqrywusNnxSoJI+OwkDNVhgx0QwNu5LVnXeLQJ9CWIXUL4g9GkJRF6yoOEB60KRicM43rvNN3gX3AWWtQF7MQ==
+Received: from TYCPR01MB8437.jpnprd01.prod.outlook.com (2603:1096:400:156::5)
+ by OS7PR01MB11855.jpnprd01.prod.outlook.com (2603:1096:604:244::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.36; Sat, 12 Apr
+ 2025 13:16:29 +0000
+Received: from TYCPR01MB8437.jpnprd01.prod.outlook.com
+ ([fe80::83e7:751f:f3af:768f]) by TYCPR01MB8437.jpnprd01.prod.outlook.com
+ ([fe80::83e7:751f:f3af:768f%3]) with mapi id 15.20.8606.033; Sat, 12 Apr 2025
+ 13:16:29 +0000
+From: Shengyu Qu <wiagn233@outlook.com>
+To: razor@blackwall.org,
+	idosch@nvidia.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	bridge@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shengyu Qu <wiagn233@outlook.com>,
+	Felix Fietkau <nbd@nbd.name>
+Subject: [PATCH net-next v2] net: bridge: locally receive all multicast packets if IFF_ALLMULTI is set
+Date: Sat, 12 Apr 2025 21:16:13 +0800
+Message-ID:
+ <TYCPR01MB84378490F19C7BE975037B1698B12@TYCPR01MB8437.jpnprd01.prod.outlook.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0187.apcprd04.prod.outlook.com
+ (2603:1096:4:14::25) To TYCPR01MB8437.jpnprd01.prod.outlook.com
+ (2603:1096:400:156::5)
+X-Microsoft-Original-Message-ID: <20250412131614.56407-1-wiagn233@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250412-ppcyaml-elbc-v5-4-03f0e577139f@posteo.net>
-References: <20250412-ppcyaml-elbc-v5-0-03f0e577139f@posteo.net>
-In-Reply-To: <20250412-ppcyaml-elbc-v5-0-03f0e577139f@posteo.net>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Crystal Wood <oss@buserror.net>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744463772; l=9297;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=x6nGrqs6VM0yQmH2zllPJ1GAbrECSG8dXA1TtNTrcHY=;
- b=hg2aoNhvqxqi85PQ7vbKOSMOmWuEXgqqh4fFGs8hhOXrhXoDbt6Csr5dSX+Zs2hLa8V47Ay0I
- VJ+I4HyK743AfAUhbCVkzJLtohurN87EUq5CBCguVXr3f7k6b10zfIu
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB8437:EE_|OS7PR01MB11855:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6758a2b6-c424-4ef2-6d46-08dd79c43c41
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799006|5062599005|5072599009|461199028|8060799006|19110799003|7092599003|3412199025|440099028|26104999006|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jnoXuvOKK99YcYJo7CtCGsF/os/FBXEsoCjpfPmlwkdE+gcA0BkJPnfEcScU?=
+ =?us-ascii?Q?pQTirL5C2Rb/JrHufeHdMCyJU7U/V3NavEwLJcLT2wkz8bjqauo+Fuz0DSvp?=
+ =?us-ascii?Q?i9HQIv8oYnHQ9sIw1RgWGOgfYeks6f6UUe7Pjj3yoInkgC0QbwSdea/ZFrPI?=
+ =?us-ascii?Q?wwaQI8G2zlz1FXSbaHH2U+kBt5in+Son7JvGrdgwbQNtMuT98KWL9BMmIxZ4?=
+ =?us-ascii?Q?Bh4iJyoBXEi623mgRptdCkd0oZzh9cPRjTAjELpFCKU9bGHqliOilkiAlW41?=
+ =?us-ascii?Q?59/geH3rHpC9/ZmaO4oDz0FM+baoqguTe3S+ZUud/SIxhF4VragHwexJ9ETB?=
+ =?us-ascii?Q?71kaoLdX8yFdiWorAk47m2FkMGrpSxTzs5EYikah/n3/PYQxQ1vm5a2tIVVT?=
+ =?us-ascii?Q?9VSJYGXaMIiNE+CfJegsw3sVWp5eZJia88cErevhPV6G+hTZFGs4eQcdTTG2?=
+ =?us-ascii?Q?m1FYYiG5bSpYX1Y6GnhJVcONOSS7Eh76TsWWYtuKiPvD4cT3+I7wwG6MOU4V?=
+ =?us-ascii?Q?SKsgVkbTHsGInpKD86dJoyy4ZzbBBZESyJK4yuvCYyvX8lCbUD1OQOqYy/yI?=
+ =?us-ascii?Q?uhLFvbzkkNFe8taqG92s0jJ6sEvquUFrXq8uCdDxEeruf9HwZqg5uKx08YQa?=
+ =?us-ascii?Q?TJwJbHUTa5SS0t3XIMGXpLSzxCaCtz/aPPGaFkK9WJGKqSXN2AAeBbaabJmD?=
+ =?us-ascii?Q?k2uzaUKhestGbibM8B83ni/7psNBK6SvHJTWPi+f3LmVEEgMjpQL3SivB7hD?=
+ =?us-ascii?Q?mxQB8RTMyMMgPyepE9cmGreWKPoB4ugvVDhrIggrY5fdw43BcBIoynY2vldi?=
+ =?us-ascii?Q?yP1VY9JyS7ltRMilqTBzJwk8nPg+g3pO1Q6mou+2lmCvnRFLu1XJe8WmuMYZ?=
+ =?us-ascii?Q?o7zB7CBAN/HYq1O9vYYk+40jVU3FPSjaNeRFxMXd3UO54NFjeI02N36BcdDN?=
+ =?us-ascii?Q?mMF5Ghfj6pJU9Gb1zFm+J7/kJHmVj7CSIskGRdsAtOsMhsWut+6Kdc/brWAV?=
+ =?us-ascii?Q?ExUofyuSP5FaOxRntVzADWSDG2yzFv19cbAdzQKJfRX+DaY/gxnNE3Nmd5va?=
+ =?us-ascii?Q?1PpjSKCFlP0D5MUSTrMhBoIkxEWb5GR5utsp/sTXFQPabeYfFPcCmW+wIR72?=
+ =?us-ascii?Q?lLcxuE+rTO9ZC9pjwaNCJGYLZjR2YXbGQrVCW2qkJG3R82aWCLKRY+VMyazI?=
+ =?us-ascii?Q?NZ4OUIcsJN5XuKIiLH3tzsid3XCJnOfWEJB5wg=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tEyM8yNxM8lINdwKT4FUo7W4y3zOC3BzadLjJIX64RwcJV9leaNd9Z3/N5TJ?=
+ =?us-ascii?Q?XGbX/g/iIjST8Lc9RTnFX7+3U09BqD/uLaKy+CaVTZkw67/0zuXDodH6r95J?=
+ =?us-ascii?Q?IoInfC4jHebbXEHbIxwIASZ+BTAWLvjJ5UMH17Q0UudmL0ZiXq00mibuiTHl?=
+ =?us-ascii?Q?2jFwKlQHRIvwDVcvKeLW5c64+vPxap69AB/AMUg0nrdweIZg5NjH/W9Hzx+p?=
+ =?us-ascii?Q?mYHV32dhwFk0vPhNPdccs3IJxSe5nDCD+KH0VZNfsfw7uYSmvJVzu+vsPst/?=
+ =?us-ascii?Q?+Dlmfk2/WhE3OJrIH/3TcNyIlkCDSUgt9Rfw35BV6DJdl5Rp179mdNxaO0jg?=
+ =?us-ascii?Q?qHCrih2uSfORZVtiFFwrrd+Cdl4jliYHFNBrMfTh1BGsvw3+0fUk6lMCY+L1?=
+ =?us-ascii?Q?mvRoWhH/jOLN13eN/cl/Id+oPqhgOMJQcc7WYfFnuj8LibS/CuMjeMS88dBE?=
+ =?us-ascii?Q?Yj5j8HM5rN0LTvKzQM4vRk3jLwZLWv0Zocu9BzHzZeTqROiav6qzudAFR3/2?=
+ =?us-ascii?Q?C9a2icvELu6HESx81/UGYNz8QYFCILET8eLG3KDTfBaGNPnghXXInkKxIiRu?=
+ =?us-ascii?Q?aEEkFIeHsg/hAH1LuuuCpUYjQF0IHCNbL3GMC1qidQpdwSM6BMD5XGyx0AAB?=
+ =?us-ascii?Q?bGdMO8ehb+GOkUhViDPE48Ng63SUFmAuCeSQnyE+17Jw6vZhjrc+Reiv718C?=
+ =?us-ascii?Q?+IY4cdZI2mvSEGVWxjDDL/Cqzk+QRFolsbthuSbdITCWC6LM20ydsv7F1fCl?=
+ =?us-ascii?Q?hUTtGU3Hl1xMwL++bo2Y/cp1DAUBxiKpnAsOAyukWw1aVsYGywisY4z9f/yl?=
+ =?us-ascii?Q?h50vHrD0Psqcz5lwjCmvrXiEmul3pEsp56msHBqscuBB4nxRvNN006AE9QsB?=
+ =?us-ascii?Q?sYTImV0rzvRiOTi4upDs/3I9jvC1M6HMSJxwZew5Fi1pAzd8K9vO/IOkCAeQ?=
+ =?us-ascii?Q?W6i55+RMqXY89uv2lOafsFYORYKjzoTQ4s+kUY95MTMi+aKiTMfkdf2ix7TU?=
+ =?us-ascii?Q?4n2JOTpkU3Ib0Q8rzIRnQp5IV80So2bhj3IZamANJqyCDnVCU97tYBX3kd/2?=
+ =?us-ascii?Q?xxOW4KX7G2zRNMc6uIieVtuue8+kMCegO0GG6t9Ot73EDwaTshxx/RJXV1FA?=
+ =?us-ascii?Q?UI6WCwXbQXBlUd/S/xkIOEbip9eXC5sYUpODJhIN7RbFahFVVr0u8pMuM5ut?=
+ =?us-ascii?Q?ADkGFu0zyASW7NK8zwTzEMr7ohqGKS6ZS9ys+XyNTLEYuUeO3vdKawVxh84N?=
+ =?us-ascii?Q?wVRXxYain/1ct0ErhEI1EUqQ0R91U3zOMQMWkKVCmDM+Ke3WQbfv6HBToqZp?=
+ =?us-ascii?Q?dqA=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6758a2b6-c424-4ef2-6d46-08dd79c43c41
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB8437.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 13:16:29.0218
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB11855
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+If multicast snooping is enabled, multicast packets may not always end up
+on the local bridge interface, if the host is not a member of the multicast
+group. Similar to how IFF_PROMISC allows all packets to be received
+locally, let IFF_ALLMULTI allow all multicast packets to be received.
 
-Convert the Freescale localbus controller bindings from text form to
-YAML. Compared to the .txt version, the YAML binding contains a new
-usage example with FCM NAND flash, and a full list of compatible strings
-based on current usage in arch/powerpc/boot/dts/.
-
-Note that the both the compatible strings and the unit address format
-are kept as-is, for compatibility with existing kernels and device
-trees, as well as unit address readability. This results in dts
-validation warnings:
-
-  Warning (simple_bus_reg): /example-0/localbus@f0010100/board-control@1,0:
-  simple-bus unit address format error, expected "100000000"
-
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
 ---
+Since Felix didn't send v2 for this patch, I decided to do it by myself.
 
-V5:
-- fix reference to fsl/lbc.txt in
-  Documentation/devicetree/bindings/display/ssd1289fb.txt
-
-V4:
-- no changes
-
-V3:
-- move this patch after the GPCM/FCM patches to dtschema/dtc warnings
-  due to missing bindings for fsl,elbc-gpcm-uio and fsl,elbc-fcm-nand
-- add "simple-bus" again, for compatibility with existing DTs/drivers
-  based on discussion with Crystal Wood and Rob Herring
-- fix fsl,pq2-localbus compatible properties based on mgcoge.dts / ep8248e.dts
-  (was missing "simple-bus")
-- add board-control (bcsr) example again, now using the compatible
-  string listed in Documentation/devicetree/bindings/board/fsl,bcsr.yaml
-- remove interrupt-parent property from example
-- rework the commit message
-
-V2:
-- fix order of properties in examples, according to dts coding style
-- move to Documentation/devicetree/bindings/memory-controllers
-- clarify the commit message a tiny bit
-- remove unnecessary multiline markers (|)
-- define address format in patternProperties
-- trim subject line (remove "binding")
-- remove use of "simple-bus", because it's technically incorrect
+Changes since v1:
+ - Move to net-next
+ - Changed code according to Nikolay's advice
 ---
- .../devicetree/bindings/display/ssd1289fb.txt      |   2 +-
- .../bindings/memory-controllers/fsl,elbc.yaml      | 158 +++++++++++++++++++++
- .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
- 3 files changed, 159 insertions(+), 44 deletions(-)
+ net/bridge/br_input.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/ssd1289fb.txt b/Documentation/devicetree/bindings/display/ssd1289fb.txt
-index 4fcd5e68cb6e005927f87c0c36d843de640de525..8cb59359352c6834aff73771ba2e12d0e4563ded 100644
---- a/Documentation/devicetree/bindings/display/ssd1289fb.txt
-+++ b/Documentation/devicetree/bindings/display/ssd1289fb.txt
-@@ -4,7 +4,7 @@ Required properties:
-   - compatible: Should be "solomon,ssd1289fb". The only supported bus for
-     now is lbc.
-   - reg: Should contain address of the controller on the LBC bus. The detail
--    was described in Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
-+    was described in Documentation/devicetree/bindings/memory-controllers/fsl,elbc.yaml
- 
- Examples:
- display@2,0 {
-diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl,elbc.yaml b/Documentation/devicetree/bindings/memory-controllers/fsl,elbc.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..620d7e7c62df35c754a01498391d35ede03cdf87
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/fsl,elbc.yaml
-@@ -0,0 +1,158 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memory-controllers/fsl,elbc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Enhanced Local Bus Controller
-+
-+maintainers:
-+  - J. Neuschäfer <j.ne@posteo.net>
-+
-+properties:
-+  $nodename:
-+    pattern: "^localbus@[0-9a-f]+$"
-+
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,mpc8313-elbc
-+              - fsl,mpc8315-elbc
-+              - fsl,mpc8377-elbc
-+              - fsl,mpc8378-elbc
-+              - fsl,mpc8379-elbc
-+              - fsl,mpc8536-elbc
-+              - fsl,mpc8569-elbc
-+              - fsl,mpc8572-elbc
-+              - fsl,p1020-elbc
-+              - fsl,p1021-elbc
-+              - fsl,p1023-elbc
-+              - fsl,p2020-elbc
-+              - fsl,p2041-elbc
-+              - fsl,p3041-elbc
-+              - fsl,p4080-elbc
-+              - fsl,p5020-elbc
-+              - fsl,p5040-elbc
-+          - const: fsl,elbc
-+          - const: simple-bus
-+
-+      - items:
-+          - enum:
-+              - fsl,mpc8247-localbus
-+              - fsl,mpc8248-localbus
-+              - fsl,mpc8272-localbus
-+          - const: fsl,pq2-localbus
-+          - const: simple-bus
-+
-+      - items:
-+          - enum:
-+              - fsl,mpc8247-localbus
-+              - fsl,mpc8248-localbus
-+              - fsl,mpc8360-localbus
-+          - const: fsl,pq2pro-localbus
-+          - const: simple-bus
-+
-+      - items:
-+          - enum:
-+              - fsl,mpc8540-localbus
-+              - fsl,mpc8544-lbc
-+              - fsl,mpc8544-localbus
-+              - fsl,mpc8548-lbc
-+              - fsl,mpc8548-localbus
-+              - fsl,mpc8560-localbus
-+              - fsl,mpc8568-localbus
-+          - const: fsl,pq3-localbus
-+          - const: simple-bus
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    enum: [2, 3]
-+    description:
-+      The first cell is the chipselect number, and the remaining cells are the
-+      offset into the chipselect.
-+
-+  "#size-cells":
-+    enum: [1, 2]
-+    description:
-+      Either one or two, depending on how large each chipselect can be.
-+
-+  ranges:
-+    description:
-+      Each range corresponds to a single chipselect, and covers the entire
-+      access window as configured.
-+
-+patternProperties:
-+  # format: name@chipselect,address
-+  "^.*@[0-9a-f]+,[0-9a-f]+$":
-+    type: object
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    localbus@f0010100 {
-+        compatible = "fsl,mpc8272-localbus",
-+                     "fsl,pq2-localbus",
-+                     "simple-bus";
-+        reg = <0xf0010100 0x40>;
-+        ranges = <0x0 0x0 0xfe000000 0x02000000
-+                  0x1 0x0 0xf4500000 0x00008000
-+                  0x2 0x0 0xfd810000 0x00010000>;
-+        #address-cells = <2>;
-+        #size-cells = <1>;
-+
-+        flash@0,0 {
-+            compatible = "jedec-flash";
-+            reg = <0x0 0x0 0x2000000>;
-+            bank-width = <4>;
-+            device-width = <1>;
-+        };
-+
-+        board-control@1,0 {
-+            reg = <0x1 0x0 0x20>;
-+            compatible = "fsl,mpc8360mds-bcsr";
-+        };
-+
-+        simple-periph@2,0 {
-+            compatible = "fsl,elbc-gpcm-uio";
-+            reg = <0x2 0x0 0x10000>;
-+            elbc-gpcm-br = <0xfd810800>;
-+            elbc-gpcm-or = <0xffff09f7>;
-+        };
-+    };
-+
-+  - |
-+    localbus@e0005000 {
-+        compatible = "fsl,mpc8315-elbc", "fsl,elbc", "simple-bus";
-+        reg = <0xe0005000 0x1000>;
-+        ranges = <0x0 0x0 0xfe000000 0x00800000
-+                  0x1 0x0 0xe0600000 0x00002000
-+                  0x2 0x0 0xf0000000 0x00020000
-+                  0x3 0x0 0xfa000000 0x00008000>;
-+        #address-cells = <2>;
-+        #size-cells = <1>;
-+        interrupts = <77 0x8>;
-+
-+        flash@0,0 {
-+            compatible = "cfi-flash";
-+            reg = <0x0 0x0 0x800000>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            bank-width = <2>;
-+            device-width = <1>;
-+        };
-+
-+        nand@1,0 {
-+            compatible = "fsl,mpc8315-fcm-nand",
-+                         "fsl,elbc-fcm-nand";
-+            reg = <0x1 0x0 0x2000>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt b/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
-deleted file mode 100644
-index 1c80fcedebb52049721fbd61c4dd4c57133bd47c..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--* Chipselect/Local Bus
--
--Properties:
--- name : Should be localbus
--- #address-cells : Should be either two or three.  The first cell is the
--                   chipselect number, and the remaining cells are the
--                   offset into the chipselect.
--- #size-cells : Either one or two, depending on how large each chipselect
--                can be.
--- ranges : Each range corresponds to a single chipselect, and cover
--           the entire access window as configured.
--
--Example:
--	localbus@f0010100 {
--		compatible = "fsl,mpc8272-localbus",
--			   "fsl,pq2-localbus";
--		#address-cells = <2>;
--		#size-cells = <1>;
--		reg = <0xf0010100 0x40>;
--
--		ranges = <0x0 0x0 0xfe000000 0x02000000
--			  0x1 0x0 0xf4500000 0x00008000
--			  0x2 0x0 0xfd810000 0x00010000>;
--
--		flash@0,0 {
--			compatible = "jedec-flash";
--			reg = <0x0 0x0 0x2000000>;
--			bank-width = <4>;
--			device-width = <1>;
--		};
--
--		board-control@1,0 {
--			reg = <0x1 0x0 0x20>;
--			compatible = "fsl,mpc8272ads-bcsr";
--		};
--
--		simple-periph@2,0 {
--			compatible = "fsl,elbc-gpcm-uio";
--			reg = <0x2 0x0 0x10000>;
--			elbc-gpcm-br = <0xfd810800>;
--			elbc-gpcm-or = <0xffff09f7>;
--		};
--	};
-
+diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
+index 232133a0fd21..aefcc3614373 100644
+--- a/net/bridge/br_input.c
++++ b/net/bridge/br_input.c
+@@ -189,7 +189,8 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+ 		if ((mdst || BR_INPUT_SKB_CB_MROUTERS_ONLY(skb)) &&
+ 		    br_multicast_querier_exists(brmctx, eth_hdr(skb), mdst)) {
+ 			if ((mdst && mdst->host_joined) ||
+-			    br_multicast_is_router(brmctx, skb)) {
++			    br_multicast_is_router(brmctx, skb) ||
++				(br->dev->flags & IFF_ALLMULTI)) {
+ 				local_rcv = true;
+ 				DEV_STATS_INC(br->dev, multicast);
+ 			}
 -- 
-2.48.0.rc1.219.gb6b6757d772
-
+2.43.0
 
