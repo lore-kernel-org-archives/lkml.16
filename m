@@ -1,267 +1,196 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21CA1802B
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D060163;
+	Sat, 12 Apr 2025 00:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744416123; cv=none; b=JZbkW4vukaNQucOcn+UAjk8Is2FDn7uf+eA9iStoA+PqlR4wqMH1ibEzMeEhVXf16IKxiO8xxBT6qUe7RV9JP+yFV87QnHFxxv1OYg8K0AkmAjlGIpnjtEy1d7hQPNhArGezWg/tA3KmaSrdw4axNJGzMIYI/3KdGMKhcb9i2nA=
+	t=1744416362; cv=none; b=Eoz5mT0j5901GB/Uqa5RpC0/dsBEJI5agsqSU+xPKW56QsImdEpPzxNKzo4JwAAfginQlPFS4BGfYSzDcvPdcrR8vSbosZhlIvLOKgz+hNKCyQveVZexBJfqCEkPC4AsfGrJ6zfSpS8y+Jtllna8IYmRCdqzSuunTqoccIwLITQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744416123; c=relaxed/simple;
-	bh=rd1AJdhV7/Ur2BWv3yCleLXzp7+iOroG7wXSw3KkLq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ckAT6CdlZj2zvX4nDT4NejZhRlTO4e4Oe3YkTqvIIw1ZJP9Zut5fpAFiQNzoAQWc2bdWwqPIUkOSEfLHa25betEiCEWcCVfAQr+oYoFx+ahNKaLWoQBcbPAoWhwwIFAg3sxlf/RdhH0AZnmj8AjteXsbTD/P7XvWDW8xg0xlYTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KLDgyOxk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744416362; c=relaxed/simple;
+	bh=YVCFUks66+ZwAwguLIz5pSSCpJSGHaqsSBxu9Du3S88=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p9BPW95IFHyHDNI1gTSbqHc+FITOxzPHIFqITkQnv15at0/aGYiPsXsvAgfCCeQY52WoEcWoxMGPmGqZTaBYfVwEgPjTax0sIvrsqWJ8rxvN5GMLPV3PhnMmj7WlZJZyaDZGkE269C1SGekJ8ifz8guUJV0zadwj78GPhdzfTmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oeo/aP9p; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KLDgyOxk"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BG0t4t016413
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:01:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/ugy8iP5VEi052uxx31ODrIS2gIFDMfijamYy3hRyAg=; b=KLDgyOxkhpOxNmGs
-	UfHW9eGkJFf0YiX6WQO85qJtGGWW665RmT6OO+BkgibZVZ1uZRRTl2JXCkTo43bj
-	MxmVqgqWkVMeZuHk5nkLWI4BGKtqVy2I/FDVzAZGLyoZummPUqyC7t+n4Z1IAMue
-	s1x/HjG80qynrvxQpV/xk2pYS/xIni/dW15Vl2BvB9Wywkcoa452VQ0ysBY0HJ6y
-	lSn3akZYXlKOwUC8xLvJXXJYDOVohC9pgPTxQL+qp3ik90qQ7lPH2BRFzhMstBuy
-	B8+7+CZ+wAN9mbGLKL8d3AEwlnnWOtbCAkBjT7BDxL63dtCqcxvl6tG+tYkuO5Oc
-	ZR1i0w==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1uq69-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:01:59 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c552802e9fso59912185a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:01:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oeo/aP9p"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b0322b6f974so1848140a12.1;
+        Fri, 11 Apr 2025 17:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744416360; x=1745021160; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1yGHPZt7BVOstn5lsXeEMe3lmFH9Rd9JNPYieYc3UE=;
+        b=Oeo/aP9pOxs4A7c6+znI0DRmgI8+lerDYxH4bJpNUilVNltXIWiCbnRtohqrhHH8nH
+         oVOjyvqnSBxJYTkbCFheVcFVY2Lfm8As6X2x6KjyBAAnh3raPhHorxJVRzMCNiSoxvsR
+         4UPqWOFc0+Pk50fpuiSZAGXf7oqphEr3Lw4GY8lgsqVh2HMk41V/nVXWUDz0DC1RPpYi
+         Mjp9kYd8l6GsuVi0MlNMaU7uvGk1Tq+KynMTLQKqqNYMwoV3zVmstiTt7hE0B5NPkC5b
+         5FMndnTjKB5wR9bcW9oXg61hjimalonr7gQlrlWXLCTxCFhwCankbLoxfj+e6lGkDEJa
+         w2AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744416118; x=1745020918;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ugy8iP5VEi052uxx31ODrIS2gIFDMfijamYy3hRyAg=;
-        b=HqXsDCZ5MbNZ/baOVKIqpLBcxhVh/4EfeyGwMcFcnO+r3H2h3XE/gQG6hoRMJx73wE
-         D4Br0f0pzX857mRc/im+1UFlnqB0jErOyHFAUlrET/n2koH4zfu3y3dctU+L+MTkfdeF
-         yN0aennHhS37lA6VZ7AOEcjMojXr+WhW2mcBNA7H4eNvmiMxR7uOAzNAtsFVExYkJjXN
-         zh+sTIOMpS61RWaDZXB4/pWHw5EKOh4olyZYoB7hjG0ckMxKkiBztkg0njKwB2V4tyJr
-         8ctTZYP0XdvyQPfrOrlQIGGEWoQPUHtt2vJkVyYptyLSTrdReB0uQngbDdUx4RCjqGcS
-         YgxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbMhKnFupjXAKVSiBu5q4pZiMurXMQRx32F9n+GUQ0C0HArlQ+5lbgn4IFjgV7OzK0mphwhwc0cvYZCTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSmZqpU6TY2EXbFL6sro0cv4i4yOlIhAgOKkdmzLyTze5nJGy+
-	vJb6VjJT8iiUW3fp2fUdSPWjZWDDAIY8bgwtBQQyuSyocLF04U0aV0ZvumzV19RSw5hGwtU/v2+
-	gbLpfM3qd9gcI9DwGxvn4hLJ+VXLFCPwvSV40zV2o1k7sucUwDCg23qUoip8jp8c=
-X-Gm-Gg: ASbGncsHjFXR4vUuQzbSLvj8IAFNPFxguFf+K0tVEb1IETs5u68e8CYI6oIv3MENpn6
-	eQT2nl4KIn7H4kE94H0ZXMI2RwYmpnrQwWb1AUii31ufmXOB5P6z4YxX5k2cSj1coJkwYRowS98
-	gk6QqFvNR1DJfq8awNQtZ7l3IvGgiG6BTIEMWKMC95w6V5hR0uq3FtfecQkWa9oJFSxVhGzLf3a
-	xjMKPNSUXybPSj8Z/j6hFMtkyFiuIC6fVfM9M60uBG6urVDa3iB+88Umilfj9wXDRcdHsaA6U/1
-	hA/vXJ+gXla1UrWO2IfY8IS4e6CN5NxDuWkb7iajyMjmOUbe7DEX/2cyv1HyAYmHhg==
-X-Received: by 2002:a05:620a:430c:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7c7af12697emr246262885a.9.1744416118406;
-        Fri, 11 Apr 2025 17:01:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQ1mMpJHH4b8C8m5swdNvznZRTvMXw/RD0bWNjiHoi2ylhg4o1veW/1BRleH+rNHcCHjE8fA==
-X-Received: by 2002:a05:620a:430c:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7c7af12697emr246261185a.9.1744416117874;
-        Fri, 11 Apr 2025 17:01:57 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f068968sm1560677a12.35.2025.04.11.17.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 17:01:57 -0700 (PDT)
-Message-ID: <dc535643-235d-46e9-b241-7d7b0e75e6ac@oss.qualcomm.com>
-Date: Sat, 12 Apr 2025 02:01:54 +0200
+        d=1e100.net; s=20230601; t=1744416360; x=1745021160;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n1yGHPZt7BVOstn5lsXeEMe3lmFH9Rd9JNPYieYc3UE=;
+        b=XAabKvS5kxxVi14GE5FDsgXycQgTd9Ft0d8+XS2lBNlnTOT8oMYfMcoExQjrcMxJfN
+         jGzDP8FZHZ9EEXnJpXl1xphfLCyPmZ1jbRVI7NJVnBbl5+270OLgkvqf5zj4K9e5xBDt
+         XFH5HrY7en1Hjl40M9PsN3LlM96ba3fKBk0EvXpw9xRI77aUub+bLNaSr0rHC29UlAZC
+         lqBPjm7weF5hGZOzY+1xoHfjcdX3HoMkNK2xjUnuxKasaZyrQHLi5qjuRScepg5H0KYB
+         amfWmIb8ma1jr2CX+azY+9S4aXsOHMtMXnLJX+OqD0EdNk+ToVp1f7qmIn83JN2iZ8TE
+         8A7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXLwpZ7lLD+uTkdD2t0qrTMv6EZ29Oc4nITkK6lQx3cf+SbTUdONhiV4H74nAJTvK9nKiT8Ub3x9Dqi7M0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxdhMfSJkksoLF7BhuruJtu/r6r/aLWUQCoeeXS0GASKGv/bs+
+	AtcLkVa+yyHah9Cj7FkUKS0V2unuXebQ4gTwl6Eto9RPZB8NauJsYDMo90o+
+X-Gm-Gg: ASbGncvc1SvXsto1udelOfxII8HdYhJo3YKZgKO0eRPe+8fIH3F6u94KUSE1ISspwMm
+	L9UXvJsHCpfEca3tlGsGZdeQ1Z7G8GyktySbwYn7dTYWr9D+sCdGi7wLNgeD6H8c05fZO8ZxiAd
+	dGjqpVo5i4cMUX1XwgxlFSwe/B+Nm14Dq86RYIoy1FNrmeGSE9FHVwgn0YvjI8kBlX8379IZrpR
+	S35fxv3nNLD6q0bSfWY4/WmUGAhalaqPN64dOz1h27DCeAGp0ARz+WMUtTh+mW5AaSfSgtX0jZ8
+	AhhavMyTJQytLDX1wCGecV8RWuKF/mVceCuc85rGHCpzA3U8lv3H6xABM1hNp45srHCN07FHc2L
+	JMT0OUYmwu0uffEYPdUAKxI1p1O7J
+X-Google-Smtp-Source: AGHT+IF4FSkvtK71eFQmWd7r5EM5benxiZt/VKA2BS8m6LYGVADpnhU5GciqTL2F9Zkajo2ZhVgPPQ==
+X-Received: by 2002:a17:90a:dfc6:b0:2ee:f550:3848 with SMTP id 98e67ed59e1d1-30823660367mr6594140a91.5.1744416360076;
+        Fri, 11 Apr 2025 17:06:00 -0700 (PDT)
+Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f826sm6384002a91.29.2025.04.11.17.05.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 17:05:59 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: abdiel.janulgue@gmail.com,
+	dakr@kernel.org,
+	daniel.almeida@collabora.com,
+	robin.murphy@arm.com,
+	a.hindborg@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] rust: helpers: Add dma_alloc_attrs() and dma_free_attrs()
+Date: Sat, 12 Apr 2025 09:05:06 +0900
+Message-ID: <20250412000507.157000-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
-To: Pratyush Brahma <quic_pbrahma@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: iCz5n9jXQ9NFsKq1tJjwOZroiv_qzGPE
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f9ad77 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=COk6AnOGAAAA:8 a=JpUTTvQeKOGwk5RR6f4A:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=a-qgeE7W1pNrGK8U0ZQC:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: iCz5n9jXQ9NFsKq1tJjwOZroiv_qzGPE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_09,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=761 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110158
+Content-Transfer-Encoding: 8bit
 
-On 2/6/25 2:43 PM, Pratyush Brahma wrote:
-> Add the PCIe SMMU node to enable address translations
-> for pcie.
-> 
-> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 75 +++++++++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..fe88244771583de9fed7b7e88c69a14872d4ffc8 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> @@ -3199,6 +3199,81 @@ apps_smmu: iommu@15000000 {
->  				     <GIC_SPI 895 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		pcie_smmu: iommu@15200000 {
-> +			compatible = "qcom,qcs8300-smmu-500", "qcom,smmu-500", "arm,mmu-500";
-> +			reg = <0x0 0x15200000 0x0 0x80000>;
-> +			#iommu-cells = <2>;
-> +			#global-interrupts = <2>;
-> +			dma-coherent;
-> +
-> +			interrupts = <GIC_SPI 920 IRQ_TYPE_LEVEL_HIGH>,
+Add dma_alloc_attrs() and dma_free_attrs() helpers to fix a build
+error when CONFIG_HAS_DMA is not enabled.
 
-This IRQ is not routed
+Note that when CONFIG_HAS_DMA is enabled, dma_alloc_attrs() and
+dma_free_attrs() are included in both bindings_generated.rs and
+bindings_helpers_generated.rs. The former takes precedence so behavior
+remains unchanged in that case.
 
-> +				     <GIC_SPI 921 IRQ_TYPE_LEVEL_HIGH>,
+This fixes the following build error on UML:
 
-We want 922 here instead and this is the only global interrupt we care about
-(set #global-interrupts to 1)
+error[E0425]: cannot find function `dma_alloc_attrs` in crate `bindings`
+     --> rust/kernel/dma.rs:171:23
+      |
+171   |               bindings::dma_alloc_attrs(
+      |                         ^^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_alloc_pages`
+      |
+     ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44568:5
+      |
+44568 | /     pub fn dma_alloc_pages(
+44569 | |         dev: *mut device,
+44570 | |         size: usize,
+44571 | |         dma_handle: *mut dma_addr_t,
+44572 | |         dir: dma_data_direction,
+44573 | |         gfp: gfp_t,
+44574 | |     ) -> *mut page;
+      | |___________________- similarly named function `dma_alloc_pages` defined here
 
-> +				     <GIC_SPI 925 IRQ_TYPE_LEVEL_HIGH>,
+error[E0425]: cannot find function `dma_free_attrs` in crate `bindings`
+     --> rust/kernel/dma.rs:293:23
+      |
+293   |               bindings::dma_free_attrs(
+      |                         ^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_free_pages`
+      |
+     ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44577:5
+      |
+44577 | /     pub fn dma_free_pages(
+44578 | |         dev: *mut device,
+44579 | |         size: usize,
+44580 | |         page: *mut page,
+44581 | |         dma_handle: dma_addr_t,
+44582 | |         dir: dma_data_direction,
+44583 | |     );
+      | |______- similarly named function `dma_free_pages` defined here
 
-This is a PMU irq which is apparently left unsupported on DT systems..
+Fixes: ad2907b4e308 ("rust: add dma coherent allocator abstraction")
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+v3:
+- add rust/helpers/dma.c to the Rust DMA entry in MAINTAINERS file
+v2: https://lore.kernel.org/lkml/20250410234332.153242-1-fujita.tomonori@gmail.com/
+- add helpers for dma_(alloc|free)_attrs() instead of conditionally compile
+v1: https://lore.kernel.org/lkml/20250409055501.136672-1-fujita.tomonori@gmail.com/
+---
+ MAINTAINERS            |  1 +
+ rust/helpers/dma.c     | 16 ++++++++++++++++
+ rust/helpers/helpers.c |  1 +
+ 3 files changed, 18 insertions(+)
+ create mode 100644 rust/helpers/dma.c
 
-https://lore.kernel.org/all/b51de3ac-5dbe-a1f1-1897-febb52f3cb34@arm.com/
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b827049501..bec614ef35d9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7020,6 +7020,7 @@ L:	rust-for-linux@vger.kernel.org
+ S:	Supported
+ W:	https://rust-for-linux.com
+ T:	git https://github.com/Rust-for-Linux/linux.git alloc-next
++F:	rust/helpers/dma.c
+ F:	rust/kernel/dma.rs
+ F:	samples/rust/rust_dma.rs
+ 
+diff --git a/rust/helpers/dma.c b/rust/helpers/dma.c
+new file mode 100644
+index 000000000000..df8b8a77355a
+--- /dev/null
++++ b/rust/helpers/dma.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/dma-mapping.h>
++
++void *rust_helper_dma_alloc_attrs(struct device *dev, size_t size,
++				  dma_addr_t *dma_handle, gfp_t flag,
++				  unsigned long attrs)
++{
++	return dma_alloc_attrs(dev, size, dma_handle, flag, attrs);
++}
++
++void rust_helper_dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
++				dma_addr_t dma_handle, unsigned long attrs)
++{
++	dma_free_attrs(dev, size, cpu_addr, dma_handle, attrs);
++}
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index e1c21eba9b15..1e7c84df7252 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -14,6 +14,7 @@
+ #include "cpumask.c"
+ #include "cred.c"
+ #include "device.c"
++#include "dma.c"
+ #include "err.c"
+ #include "fs.c"
+ #include "io.c"
 
-please remove
+base-commit: c59026c0570a2a97ce2e7d5ae5e9c48fc841542b
+-- 
+2.43.0
 
-> +				     <GIC_SPI 926 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 927 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 928 IRQ_TYPE_LEVEL_HIGH>,
-
-+929> +				     <GIC_SPI 950 IRQ_TYPE_LEVEL_HIGH>,
-
--950> +				     <GIC_SPI 951 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 952 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 953 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 954 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 955 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 956 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 957 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 958 IRQ_TYPE_LEVEL_HIGH>,
-
-+959
-
-> +				     <GIC_SPI 885 IRQ_TYPE_LEVEL_HIGH>,
-
--885
-
-> +				     <GIC_SPI 886 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 887 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 888 IRQ_TYPE_LEVEL_HIGH>,
-
-+889
-
-> +				     <GIC_SPI 820 IRQ_TYPE_LEVEL_HIGH>,
-
--820
-+821
-
-> +				     <GIC_SPI 822 IRQ_TYPE_LEVEL_HIGH>,
-
--822
-+823
-
-> +				     <GIC_SPI 823 IRQ_TYPE_LEVEL_HIGH>,
-
--823
-+824
-
-> +				     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 452 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 840 IRQ_TYPE_LEVEL_HIGH>,
-
--840
-
-> +				     <GIC_SPI 841 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 842 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 843 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 844 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 845 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 847 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 848 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 849 IRQ_TYPE_LEVEL_HIGH>,
-
-+850
-
-> +				     <GIC_SPI 802 IRQ_TYPE_LEVEL_HIGH>,
-
--802
-
-> +				     <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 804 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 805 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 806 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 807 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 808 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 809 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 810 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 811 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 812 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 813 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 814 IRQ_TYPE_LEVEL_HIGH>,
-
-+815
-
-> +				     <GIC_SPI 836 IRQ_TYPE_LEVEL_HIGH>,
-
--836
-
-> +				     <GIC_SPI 837 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 838 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 839 IRQ_TYPE_LEVEL_HIGH>,
-
-+840
-
-> +				     <GIC_SPI 854 IRQ_TYPE_LEVEL_HIGH>,
-
--854
-
-> +				     <GIC_SPI 855 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 856 IRQ_TYPE_LEVEL_HIGH>,
-
-+857
-
-> +				     <GIC_SPI 790 IRQ_TYPE_LEVEL_HIGH>,
-
--790
-
-> +				     <GIC_SPI 791 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 792 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 793 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 794 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 795 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 796 IRQ_TYPE_LEVEL_HIGH>,
-
-+797
-
-> +				     <GIC_SPI 639 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-
--79
-
-> +				     <GIC_SPI 640 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-
-Konrad
