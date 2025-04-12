@@ -1,34 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619F22253F6
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 21:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83374227B8E;
+	Sat, 12 Apr 2025 21:03:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744491823; cv=none; b=L00/BNTc8ufD5CuUNU/6gNdcO18NVQEjENMw7g+Bshz5OkyPvXJazJu73vuCNItfVJRNns3eFpWM/1ZZN7K8aZpE2hsY1AborbEsAaxAdbvgrDAoGQdP/VciDBVeAYKfMdqceTOmLCoqmhCZ9REnIgB0gB4KP1pL1Y9Bz7wWiv0=
+	t=1744491823; cv=none; b=jB+gDBDK8JwiVDZUdY9AJ+AlRL6xLKRqmuwB4wjVTM4TX7HpOFj26AH9LJgqs72kqejobiFD+H+EQ7abPoE1i3aG7s9+V1mEADOZWGCEpX8fC//ao1MaJt6J4g/6wkb0PM6YywoZ7V9iRVWr3Khxi0vm0tOSCQpUeWilBIU+Yzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744491823; c=relaxed/simple;
-	bh=vlcadWhN1kpMYnw+3E7ZcAlZv9dphSozdaw8cKl3E4M=;
+	bh=z8sTYKbHMCcEu+d5dLCKvRyatcQgaCISPyMbtmKmOSg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VagA78VL9wn7Bf5ZiIlkp5WcxFjL8ay9XGQb8POQVkSjjbCGsKsygvwa/oMLDrKd8Cbs+gAerLD020/uJAv4FexHoSl1sdJZYxRGNX7dB+833ANnqc9me6YsQ+DgiB2ztKWcwwZYEwhJJOOcYmRWeLEMYOJg3GlDxJt+mjETBTk=
+	 Content-Type; b=cUi5qP1PWBq01LttU9PPNx3d7pjK2cThpSBxPn1OFGKBgORUPLf8kAIG+N4lP2HtzJNI/rId8M5xX62Ekg0QMHv/upp3T70QAXJZKHQBXZZQzSiyC2WMuyXxhrR0i+b6U665LMc58BLjiDA46C9Jb5JNh1TDW+QRIij3OlX8avc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEDEC4CEE3;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F91CC4CEEE;
 	Sat, 12 Apr 2025 21:03:43 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u3i2J-0000000AEFq-1FNU;
+	id 1u3i2J-0000000AEGK-1y8E;
 	Sat, 12 Apr 2025 17:05:11 -0400
-Message-ID: <20250412210511.150486416@goodmis.org>
+Message-ID: <20250412210511.320072168@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 12 Apr 2025 17:04:52 -0400
+Date: Sat, 12 Apr 2025 17:04:53 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Mark Brown <broonie@kernel.org>
-Subject: [for-linus][PATCH 6/7] ftrace: Do not have print_graph_retval() add a newline
+ stable@vger.kernel.org,
+ Gabriele Monaco <gmonaco@redhat.com>,
+ Nam Cao <namcao@linutronix.de>
+Subject: [for-linus][PATCH 7/7] rv: Fix out-of-bound memory access in rv_is_container_monitor()
 References: <20250412210446.338481957@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,90 +40,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Steven Rostedt <rostedt@goodmis.org>
+From: Nam Cao <namcao@linutronix.de>
 
-The retval and retaddr options for function_graph tracer will add a
-comment at the end of a function for both leaf and non leaf functions that
-looks like:
+When rv_is_container_monitor() is called on the last monitor in
+rv_monitors_list, KASAN yells:
 
-               __wake_up_common(); /* ret=0x1 */
+  BUG: KASAN: global-out-of-bounds in rv_is_container_monitor+0x101/0x110
+  Read of size 8 at addr ffffffff97c7c798 by task setup/221
 
-               } /* pick_next_task_fair ret=0x0 */
+  The buggy address belongs to the variable:
+   rv_monitors_list+0x18/0x40
 
-The function print_graph_retval() adds a newline after the "*/". But if
-that's not called, the caller function needs to make sure there's a
-newline added.
+This is due to list_next_entry() is called on the last entry in the list.
+It wraps around to the first list_head, and the first list_head is not
+embedded in struct rv_monitor_def.
 
-This is confusing and when the function parameters code was added, it
-added a newline even when calling print_graph_retval() as the fact that
-the print_graph_retval() function prints a newline isn't obvious.
+Fix it by checking if the monitor is last in the list.
 
-This caused an extra newline to be printed and that made it fail the
-selftests when the retval option was set, as the selftests were not
-expecting blank lines being injected into the trace.
-
-Instead of having print_graph_retval() print a newline, just have the
-caller always print the newline regardless if it calls print_graph_retval()
-or not. This not only fixes this bug, but it also simplifies the code.
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250411133015.015ca393@gandalf.local.home
-Reported-by: Mark Brown <broonie@kernel.org>
-Tested-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
-Fixes: ff5c9c576e754 ("ftrace: Add support for function argument to graph tracer")
+Cc: stable@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Fixes: cb85c660fcd4 ("rv: Add option for nested monitors and include sched")
+Link: https://lore.kernel.org/e85b5eeb7228bfc23b8d7d4ab5411472c54ae91b.1744355018.git.namcao@linutronix.de
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_functions_graph.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ kernel/trace/rv/rv.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 2f077d4158e5..0c357a89c58e 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -880,8 +880,6 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 968c5c3b0246..e4077500a91d 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -225,7 +225,12 @@ bool rv_is_nested_monitor(struct rv_monitor_def *mdef)
+  */
+ bool rv_is_container_monitor(struct rv_monitor_def *mdef)
+ {
+-	struct rv_monitor_def *next = list_next_entry(mdef, list);
++	struct rv_monitor_def *next;
++
++	if (list_is_last(&mdef->list, &rv_monitors_list))
++		return false;
++
++	next = list_next_entry(mdef, list);
  
- 		if (print_retval || print_retaddr)
- 			trace_seq_puts(s, " /*");
--		else
--			trace_seq_putc(s, '\n');
- 	} else {
- 		print_retaddr = false;
- 		trace_seq_printf(s, "} /* %ps", func);
-@@ -899,7 +897,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 	}
- 
- 	if (!entry || print_retval || print_retaddr)
--		trace_seq_puts(s, " */\n");
-+		trace_seq_puts(s, " */");
+ 	return next->parent == mdef->monitor || !mdef->monitor->enable;
  }
- 
- #else
-@@ -975,7 +973,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 		} else
- 			trace_seq_puts(s, "();");
- 	}
--	trace_seq_printf(s, "\n");
-+	trace_seq_putc(s, '\n');
- 
- 	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
- 			cpu, iter->ent->pid, flags);
-@@ -1313,10 +1311,11 @@ print_graph_return(struct ftrace_graph_ret_entry *retentry, struct trace_seq *s,
- 		 * that if the funcgraph-tail option is enabled.
- 		 */
- 		if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
--			trace_seq_puts(s, "}\n");
-+			trace_seq_puts(s, "}");
- 		else
--			trace_seq_printf(s, "} /* %ps */\n", (void *)func);
-+			trace_seq_printf(s, "} /* %ps */", (void *)func);
- 	}
-+	trace_seq_putc(s, '\n');
- 
- 	/* Overrun */
- 	if (flags & TRACE_GRAPH_PRINT_OVERRUN)
 -- 
 2.47.2
 
