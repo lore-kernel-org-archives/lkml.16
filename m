@@ -1,119 +1,134 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB599190468;
-	Sat, 12 Apr 2025 13:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2669C190468
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 13:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744464020; cv=none; b=FsmxgytMByZ+XbATtxl2Y28yr0SPVRbW7BihjiwfHrnePXwOLHN1CEdOLtwxvEJRDFVgqaeUFlmVmmL2Z+qRY+oNYBnxNfnk0GXNaLP0Qr+DS4+ZyiM42tYwq4VcuESSda8X+MJydBqv/BN5h6KjfNuxbKLDs/o+MSR+IZy2Lbw=
+	t=1744464066; cv=none; b=RYB+CspZd6OTJuJZaGL5OUgaZ0XDTQdR6UKND4i5yJ1050HBP0GoOytvbje5+/hVDgqyjmVB8yrudA5UCzjj8I97PpFi6nN/ivTc+VCEQkMg8GaIaC+Tq99iUBFZQosH7EagQL9L+xI3bR2+DkM5g2Fg/b9/GyvvibAtTbxIiDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744464020; c=relaxed/simple;
-	bh=dx4pXrCL6WF6xs1Z7rH/KV9GDs6+4aaLKxuLLw63nDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8hCXcEMWA60aL4q7JKNN2MZ4lKJzXlXA/U7VyqG5vpGuVXPLoSyasrl4UZnOfuw64szo56rEQOJhR2vFrkSqkPmx1wvRv2/mAsjpCcd91JE/KtYiPfPyHEcrae0Fh2IUwIKUBTWY2ReIlq91sRU79XmYrtxJ+OEH5Z/ZrhteOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8/R0PRc; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744464066; c=relaxed/simple;
+	bh=3TPNIoSPNI0MehJrLCyOai0X0fQvy/BYAPhC/wsGsaE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AEDXEOVhn68DAgsNuRrEfBNSdAAOB7t4/7G0IeMptRfgjvBvVARtsgVMC5k5IfX/8qWlNXdmtUecpJcTQIxv0mPJfD01YPzyY/jFe/W2pfJUpHjc/qh0S9dCysgADHELkpCMpowbyYCEYCSbFiCXrRlkTyk3N9aoSCeKqOt4hUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AM3L9UW8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8/R0PRc"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22409077c06so40198605ad.1;
-        Sat, 12 Apr 2025 06:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744464018; x=1745068818; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uP33+7PRmS4oJ2D1UnGQ8VItHy/+Gg/hnjlqLaempys=;
-        b=H8/R0PRc/oYbvE+dwN+UZJ8++QVKkjWDCNGP4bBS/UctSZ4Z+HjH0aB7U3YRlZi21H
-         TmaBa/QACdcLY9m/r9I8nkDYekis8V1eM9xceuBPL2VFS0UAg4BlaprBCiT6J1FvycpM
-         V58ETjZUS3ZHcmLPc1LbYsbyFP4aiwy1XRb9tfW0d9Cor89NilyGgEyqH17BMUsYvUyo
-         EkHE8pLgfwDwHvGTHXVKDBQNf0SRcb/CpuA7kb9ZW85UD9vTRFLxEyC/PW0t0VCfMsfH
-         l6XKEjHSQrj67HbYDbZpC3w+Ih5kCDhuZYiKz/igjJEkV4+tdX3ov6o+xpbOuzqJjyOG
-         Fr2Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AM3L9UW8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744464061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cK1rC0XjXhIHTt9tiNECT2Vn+CAc7jag5l0SYJ2eGBk=;
+	b=AM3L9UW8KG/7w8YCBqfRh0JxPLxR4ymDjXC/IqqF65qK9rjnlKrhG3PZ433CA0XxoeVp2C
+	RQIdYyhh1D59ZX0LljwslEYD1lDVmEmsWTAojLv7L3L6hK3P9KOFs9mSaT710h3a60YpUb
+	BTxbw6CPKQ8dLyN4aNqs+HtxivtoaTQ=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-128-Yg8kqh2vPSuWE6k0M6syqw-1; Sat, 12 Apr 2025 09:21:00 -0400
+X-MC-Unique: Yg8kqh2vPSuWE6k0M6syqw-1
+X-Mimecast-MFC-AGG-ID: Yg8kqh2vPSuWE6k0M6syqw_1744464060
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22410053005so46148215ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:21:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744464018; x=1745068818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uP33+7PRmS4oJ2D1UnGQ8VItHy/+Gg/hnjlqLaempys=;
-        b=gkpQ67JRfcvXipwYny5CJ3rlI3CJnHLwqo5EWU19tUYxvusCF9hOeVPYiihOBgPb6x
-         GMyemYMHjH0Ie5VgYBTdAm68KuA7V8TyxTgM0uyHNT1noLbiFuarHnSe4AKJjAxW1nkx
-         8ZLwpDwoa47XFsHwgertlCL9tjq+mgsJa17guHiTifqq/QRvyprKM0B7HaLPWqc8cx7t
-         sd6jdr/gVHUxv4QWxfYXMFAo0pCR8X82V2J20beLWOjZsnR1I1xJO9xnE/PD1t2lTS0A
-         V4gyjBbPpjBFiqTA8tvjojASdPAQc2a77avYBW7dfLtygPRTgx31hhFYSnBkF/6WJbXe
-         SrsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPuEJyKLG9FOu5kHaAmjs0QSosYmrzvOjbBqLtIprEoo/n0gNBITDICEj0TKsNENRkjL2wWYxomeDj@vger.kernel.org, AJvYcCXSA6Tbm5EVPvCxGUra9Dd3lBsZ2WHzicFQE+MUhwAmnoydgwWpHmSsJg4cuOI1rJyIkhU9qxdnnxdRyOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2Rz/TFT2YOmJ60wXDyvA+VOy8AHT5VOJ8PSsQAojrMhXyjCGr
-	x4ag26RNs+WcvoTtyDWjU/PIX18J3eGhjGLz2fSdQoI1SnV33Y2zJ1pGibXI
-X-Gm-Gg: ASbGncvLLnjY2ma8zhq8xc5agpG+Gb3f5Lpdk/3QEzFFt/CdUPFPsso+kXo3ctfkuLn
-	h+5//wm20W39xJYcQFWZ4SwfQ/tw8gQ1uDwEdky2iJ+cWywhIfrDwHcjBtLYyWqMjq5lq2tmifT
-	dJPXjt4cuRO6qMkL3d15oDg1PHSawt/v2XQ8XN9daEhAVSm3pidX/Aj5axJk+2Mj41QKGZrEHRG
-	xHibe2HF6Zv6tQ6ko16qtVXkS7OmKDZs0MtnhYdvAaDeQaHNIoGYVBUKJ/MYoYYRGLkVRxV+jyQ
-	XwgdaUPAJqEYeQ2WtqoSHD9hl1qPUi6493tcmFZO
-X-Google-Smtp-Source: AGHT+IEW/j+fkahXhVyvC5rfpcwM14BS/S5BDIbhgvg54bjaxj1uJKaNvJsGnehpHAEtLGKffdPYKA==
-X-Received: by 2002:a17:903:1c3:b0:223:5ace:eccf with SMTP id d9443c01a7336-22bea4bd7cemr81796825ad.25.1744464018010;
-        Sat, 12 Apr 2025 06:20:18 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c3:a964:39d6:b67a:f7ea:283c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c993a7sm67203975ad.146.2025.04.12.06.20.14
+        d=1e100.net; s=20230601; t=1744464059; x=1745068859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cK1rC0XjXhIHTt9tiNECT2Vn+CAc7jag5l0SYJ2eGBk=;
+        b=Qc9aOiX+75Wug4e4CuEh79XOZxSrnY1Fu7G1lziFkdXUq7NquccQeicdhaxOxtsZ4d
+         QnwlUxQEtNNv/AEPHguHrnfgq14iIYW6ZxLsE0lAlwqUasWy7pVm5YvuPsaB28b52O4G
+         26wO4s8BglNE8UJEIhhiqzjl/vbVKEGwM2fiR6tfMDfbfYrbi0BSOgw5vDbjyadkJ3kK
+         xntc/xzJXJgW8iWbVkOmH5ibcWDYawNOIAZ6lseEevAbp+sRp+I+vd6n8B3zdbZC+n0v
+         77pAXrzJOrzrPFLX6CjnUGcriqZLchBSSnvS1ShWgMevUao9emDHcwVJ3RazSRlmHRHy
+         uu0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXZJkADvbRLxFMTQh69TXocrfyY8NyP+CQ1TuZwJs+P/CKwkz9LfHr+FRBYStEJKujrVxVJmgcr0q1B9bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4BfJ6zCfNV4xCiKRSEkkM6Xo//exSzLzWcOZmC7LxeSOcoG5G
+	dVYri47peXnV4+fNRM9F/A+W6Hk4+NWxTRf9SOfvKiRiXIzGIITvjGzOAjqdhuRF6T56PzslsRG
+	P4Ui3qb/FezrsRfl0UXbvpNQfBhUmk9MZ52FCMH1AI/ewvzsjx7slUL3aq+Rr1A==
+X-Gm-Gg: ASbGncsOpBBH9+d5sW4NM9PoOOyUYnyb4olxArsm+R0Y7CNWrk36DoUsndyzbXIrPXO
+	BnnbP6cifwsdHzo1XKW/m+MXNKqj/6rVZTcrlhimf43/DFhrwkVWb6Pw4CitLtDIqobMjlNbhj9
+	TPqBRAnwUtscPsF/F7O8rgjMeL7AuE1Fh17yZGAXhpYCgWQJYrAmcqYn720PU/cVRIVspqQBHxx
+	d1UqOQTva14BKI3Em0vYU4pCgMX759qBLFjpZcXcueSxJus6WTQ51tJJD4dArT38X2+haDVv7G6
+	IXdOgzJfhp8V
+X-Received: by 2002:a17:902:eb8a:b0:21f:6bda:e492 with SMTP id d9443c01a7336-22bea4f1acamr104191815ad.35.1744464059530;
+        Sat, 12 Apr 2025 06:20:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEThxesy3Exij/NdLn+H03RMD7vSClcGR8SiZ0slO7o59/AF4Noe0XODfKIUFyC5GjjM9GJKw==
+X-Received: by 2002:a17:902:eb8a:b0:21f:6bda:e492 with SMTP id d9443c01a7336-22bea4f1acamr104191255ad.35.1744464059038;
+        Sat, 12 Apr 2025 06:20:59 -0700 (PDT)
+Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0818248sm6466199a12.9.2025.04.12.06.20.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 06:20:17 -0700 (PDT)
-Date: Sat, 12 Apr 2025 10:20:12 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Judith Mendez <jm@ti.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Josua Mayer <josua@solid-run.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Moteen Shah <m-shah@ti.com>,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
-Message-ID: <20250412132012.xpjywokcpztb4jg4@hiago-nb>
-References: <20250407222702.2199047-1-jm@ti.com>
- <20250411130354.dc3sv3e7ruekkhkp@hiago-nb>
- <d8e45e50-f0eb-41d0-9c50-56147eaf262a@ti.com>
- <20250411194813.c4ft2uxgdiuza5cm@hiago-nb>
- <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
+        Sat, 12 Apr 2025 06:20:58 -0700 (PDT)
+From: Ryosuke Yasuoka <ryasuoka@redhat.com>
+To: airlied@redhat.com,
+	kraxel@redhat.com,
+	dmitry.osipenko@collabora.com,
+	gurchetansingh@chromium.org,
+	olvaffe@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	simona@ffwll.ch,
+	jfalempe@redhat.com
+Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/virtio: Support drm_panic with non-vmapped shmem BO
+Date: Sat, 12 Apr 2025 22:20:11 +0900
+Message-ID: <20250412132012.291837-1-ryasuoka@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Judith,
+Pass array of pages of the scanout buffer [1] to shmem BO, allowing
+drm_panic to work even if the BO is not vmapped.
 
-On Fri, Apr 11, 2025 at 04:55:39PM -0500, Judith Mendez wrote:
-> Actually this was one of the previous implementations, I should have that
-> original patch somewhere. My understanding was that we do not like adding
-> new DT properties if we can find a way to apply the quirk in the driver.
+[1] https://lore.kernel.org/all/20250407140138.162383-3-jfalempe@redhat.com/
 
-Got it, makes sense. This will work fine with eMMC, but for the SD card
-I am not seeing other option. Maybe we could use both implementations?
+Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_plane.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index 4e1156a2f1b8..db8ee66e76d8 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -888,7 +888,7 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index a6f5a78f436a..2ff57d559c86 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -500,11 +500,19 @@ static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
+ 
+ 	bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+ 
+-	/* Only support mapped shmem bo */
+-	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo->base.vaddr)
++	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
+ 		return -ENODEV;
+ 
+-	iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
++	if (bo->base.vaddr)
++		iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
++	else {
++		struct drm_gem_shmem_object *shmem = &bo->base;
++
++		if (!shmem->pages)
++			return -ENODEV;
++		/* map scanout buffer later */
++		sb->pages = shmem->pages;
++	}
+ 
+ 	sb->format = plane->state->fb->format;
+ 	sb->height = plane->state->fb->height;
 
-        /* Suppress V1P8_SIGNAL_ENA for eMMC */
-        device_property_read_u32(dev, "bus-width", &bus_width);
--       if (bus_width == BUS_WIDTH_8)
-+       if (bus_width == BUS_WIDTH_8 || device_property_read_bool(dev, "ti,suppress-v1p8-ena"))
-                sdhci_am654->quirks |= SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA;
+base-commit: e7bb7d44c3b97aea1f0e354c6499900154ac67f2
+-- 
+2.49.0
 
-So the driver applies the quirk for eMMC and we set the DT property for
-SD card. Not sure which one is the best, but maybe it is another option.
-Let's see what Adrian also thinks about that.
-
-> 
-> If this implementation flies with the maintainers, then we can go back to DT
-> property implementation.
-> 
-> Adrian, is this fine with you?
-> 
-> ~ Judith
-
-Cheers,
-Hiago.
