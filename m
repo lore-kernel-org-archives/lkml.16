@@ -1,126 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0B4192D77;
-	Sat, 12 Apr 2025 10:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300FC1AB530
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 10:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744452683; cv=none; b=Ierr5H0hCBIDkaeE++t7DAb4dJt26gK4pp4X2aMN4Jv3TTKpamSLEM4mx4JSLTNZe0ai4KuMuzq2jOR1c7t88K3BGE/hLSLq6oa0qZSG7qkKMJ9X7kg4RNXHwQFdVAOUqUjMqKCbVseNdDEX+IypGHATsZ2iXFZWD4uYdswpEW4=
+	t=1744452748; cv=none; b=eLo+Zch8cI9XgTxdS+1cu5EG478GiZRpnq92I0UyBrSh1JHBSzHvbjk5RVjPZXJbfhXaYCFjaqJZFRp/YNI6OFomgm0gidCp/rN9c0qqcFFXW1xvc9qG0ZL+Qd+6JLoFDGzaaHiL5ScjdBs4om6SR9unztiKKmYRqglbwqU3/FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744452683; c=relaxed/simple;
-	bh=RNflmceC0PXkskPu8wmVlsRy34v1ud7Y93OVVupX/Vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vv/UjSv4r/BKryBMPH1k73kmIM0kon+nFlWpaj+g503Xwhs7MmZuz5vcNsnC5PjFftYYMr5ZMNR63vFqdwbnP5KrpkCbl7ACrIRBF44A31cm0UEQD3qmX2mrxh/SrlPNeloclhe89XtPpzedYJ/22uVV85Vk9e6yr3B+qr82hGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S91cKhCF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S91cKhCF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983D2C4CEE3;
-	Sat, 12 Apr 2025 10:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744452682;
-	bh=RNflmceC0PXkskPu8wmVlsRy34v1ud7Y93OVVupX/Vk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S91cKhCF3WenA0c8+gv8j+s5O7CFNwdzbVaieyIuBXfkFVs15UH8oDyCMJFYqdT9L
-	 8oScioMe+9JLVQZiJlK/ozFTcAdKelwxHWSuJR0U/x33nx4CkNTvK2FD7n+DQrUzA0
-	 9SOGGDAoZltouDjaYL3CEVjeDMFaFaPbV1+DO/+iyfSQPSp3MXpfV3L30aBIpNdlN1
-	 JyAvFIed7WpLqMiNvuSwa0VwbD9zC+eRZfVp1+GZzYTgiuAySdV7Cd9qb28eZQZcuA
-	 YSfnC50bsyJ/XS3idOTPeeezyQX5LNaQ2N6uK8NtJjy/yBOWAXOQ706oTUMGzmbTOy
-	 qKAPG+iVTaKnA==
-Message-ID: <a52969f2-8ea2-41e5-b4c8-8a03220cbf51@kernel.org>
-Date: Sat, 12 Apr 2025 12:11:17 +0200
+	s=arc-20240116; t=1744452748; c=relaxed/simple;
+	bh=MhUEV/KLzQ00UWqF1T/ULd9J3ItGJyzd46fl6I3Qj44=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lyPBEdo5CC6W6vXdQL0xm88HckF7u0QO3oGWHB4W6eC9LVV7pvKVaCsSBE6q/6im6cYy0mzNM8EYXxjGVv1WTxiwoBiZ5b7/mm+24X6Dv8SKV3lERfglGMZ3bZmLM8P6aHkU6n8TD+OuxTBWf+FJsRSHBWxjx59xLgAVHZ+Q1h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d5b3819ff9so26768065ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 03:12:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744452746; x=1745057546;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yYa9pe9sUSOHSN28lPFUiX8ar13op2aDSplKzMBOR2k=;
+        b=SNlzKh3aMe5hJJX5cLvqLE19tkFFwd+LKiw78vfjw91HaqSNb6GK2TXzLPkQKhQf+Q
+         59LUkSSDltjPkQB/nHas71nHPYOHeJtjD2sq05uxN2oIRmX3Wn7E8ps+4X0FQkBQxRMi
+         GEEImG6lnVP+Y/u/Np5msr0UXnpC5N+9wJpwUm+K9AgY6Otkifw8iTSs7mVBctgZQ+ey
+         y4NGSPJDggEy6XuSbFp7/3y/O1ecbyBEAurT80+x3PU6e3EQklTPJEes13R6wOmJNE0y
+         LpSND6aIufJ+MKIZ/dPkV1pp2bZR1S49n21woG57zuqsRxFrhMtiC2bvqX1+Z/AgY1CT
+         N4Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQdUeDEZHwwCPj1zrrb6Ub9shtXLp/UMRA8GyAkzkKqN1fYjJif+UD1rzl+GlwUrFMCAXiG17iSpSoHjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4lsquGE8oPaY2CxrlM+gTUpjXh3zceWGV8yxHwOMZJ60DWpwE
+	LtttTsyKzJOiPUYGHobYdNjeeGaWp50+NFycmi0BAcX4AFY8sXWrKK9crYQPTqXOxyrDFntt8/Y
+	pAUtkUZFekZJ3rWsc2h/1QCXkI9bZ42FG90uuu/Jqrwz9AGaPJzo/2qE=
+X-Google-Smtp-Source: AGHT+IEixtoBkzGmC63GhfcIw3kuB/LY1ED06eWgkgSMBP7PQ3yNJEeYGx2JmoZVUImCJtx1rBHQ1cqcS6VL0+5wtl4v6Fit3jds
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
-To: Faraz Ata <faraz.ata@samsung.com>, alim.akhtar@samsung.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- rosa.pila@samsung.com, dev.tailor@samsung.com, suyash.bitti@samsung.com
-References: <CGME20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80@epcas5p3.samsung.com>
- <20250318075635.3372599-1-faraz.ata@samsung.com>
- <befe7d30-1727-4540-9072-f21ef96ea504@kernel.org>
- <03e501dbaab0$65bb47a0$3131d6e0$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <03e501dbaab0$65bb47a0$3131d6e0$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3e03:b0:3cf:c9b9:3eb with SMTP id
+ e9e14a558f8ab-3d7ec0e1659mr51769765ab.0.1744452746165; Sat, 12 Apr 2025
+ 03:12:26 -0700 (PDT)
+Date: Sat, 12 Apr 2025 03:12:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fa3c8a.050a0220.379d84.0009.GAE@google.com>
+Subject: [syzbot] [wireless?] WARNING in __ieee80211_start_scan
+From: syzbot <syzbot+33a62232cb175e2e2fa4@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/04/2025 09:07, Faraz Ata wrote:
-> Hello Krzysztof
-> 
->> Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
->>
->> On 18/03/2025 08:56, Faraz Ata wrote:
->>> +
->>> +		usi_17: usi@10d800c0 {
->>
->> Messed order. Keep nodes sorted by unit address (see DTS coding style).
->>
->>
-> Thanks for your review
-> Based on the DTS coding style, it is acceptable to group nodes
-> of the same type together, even if it breaks the unit address ordering.
+Hello,
 
-That's accepted alternative because some subsystems do that way. I don't
-think we ever applied such rule to Samsung? Do you have any prior
-reference about this? I accepted mess in the past, but that does not
-mean that mess is the rule.
+syzbot found the following issue on:
 
-> https://docs.kernel.org/6.12/devicetree/bindings/dts-coding-style.html
-> Please let me know your opinion on this.
-> Do you mean I should move all the USI_ node after pwm node?
+HEAD commit:    69ae94725f4f tipc: fix memory leak in tipc_link_xmit
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=100d8070580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+dashboard link: https://syzkaller.appspot.com/bug?extid=33a62232cb175e2e2fa4
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Please it according to sorting by unit address.
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/18aabd5abc54/disk-69ae9472.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/cb0ce52c96b6/vmlinux-69ae9472.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6e54e711975b/bzImage-69ae9472.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+33a62232cb175e2e2fa4@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 20781 at net/mac80211/scan.c:848 __ieee80211_start_scan+0x13f7/0x1ee0 net/mac80211/scan.c:848
+Modules linked in:
+CPU: 0 UID: 0 PID: 20781 Comm: syz.6.5078 Not tainted 6.14.0-syzkaller-13311-g69ae94725f4f #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:__ieee80211_start_scan+0x13f7/0x1ee0 net/mac80211/scan.c:848
+Code: eb 0b e8 cc 61 2b f6 41 be 08 00 00 00 41 83 fe 09 0f 84 63 06 00 00 e8 b7 61 2b f6 45 31 e4 e9 51 f2 ff ff e8 aa 61 2b f6 90 <0f> 0b 90 e9 0b fd ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c ab f9
+RSP: 0018:ffffc9000390f540 EFLAGS: 00010283
+RAX: ffffffff8b97f596 RBX: ffff8880786c4d80 RCX: 0000000000080000
+RDX: ffffc9001dba7000 RSI: 000000000000065a RDI: 000000000000065b
+RBP: ffffc9000390f788 R08: ffffffff8b98511e R09: 1ffff1100c07a1d3
+R10: dffffc0000000000 R11: ffffed100c07a1d4 R12: ffff8880603d2978
+R13: dffffc0000000000 R14: ffff8880603d2978 R15: ffffffff9368a020
+FS:  00007f4f747176c0(0000) GS:ffff888124f96000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c2834dd CR3: 000000004b8ec000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rdev_scan+0x155/0x300 net/wireless/rdev-ops.h:467
+ cfg80211_conn_scan+0xa5b/0xdc0 net/wireless/sme.c:135
+ cfg80211_sme_connect net/wireless/sme.c:630 [inline]
+ cfg80211_connect+0x1790/0x20e0 net/wireless/sme.c:1525
+ cfg80211_mgd_wext_connect+0x470/0x5d0 net/wireless/wext-sme.c:57
+ cfg80211_wext_siwessid+0xc0/0x130 net/wireless/wext-compat.c:1412
+ ioctl_standard_iw_point+0x675/0xd30 net/wireless/wext-core.c:865
+ ioctl_standard_call+0xbd/0x190 net/wireless/wext-core.c:1050
+ wireless_process_ioctl net/wireless/wext-core.c:-1 [inline]
+ wext_ioctl_dispatch+0xe4/0x410 net/wireless/wext-core.c:1014
+ wext_handle_ioctl+0x15a/0x260 net/wireless/wext-core.c:1075
+ sock_ioctl+0x181/0x900 net/socket.c:1243
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4f7398d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4f74717038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f4f73ba5fa0 RCX: 00007f4f7398d169
+RDX: 0000200000000040 RSI: 0000000000008b1a RDI: 0000000000000005
+RBP: 00007f4f73a0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f4f73ba5fa0 R15: 00007ffc1d008b88
+ </TASK>
 
 
-Best regards,
-Krzysztof
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
