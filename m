@@ -1,83 +1,88 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D392B9BF;
-	Sat, 12 Apr 2025 12:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E49131E2D;
+	Sat, 12 Apr 2025 12:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744461110; cv=none; b=VF0RHakPb2YuEObGLsXr8gvqosNd5UwsZLFPGTgwLmFV+3/v3+HNQA8SakgCf/J5El1F8Rk7O+nLLi0ckL2J7+ZF+8yvT6CNKaWj1LCbW54OuJIePtQaOYevX9N5NfVjfpzYJliHEyDqjV5gpVVhiphFg5DLwR5aqUssjGTpTRo=
+	t=1744461324; cv=none; b=iM696v0rRBQeWQIWBP95ZTgyyMybM0Qf1VeVI+AUaG/xAeGh02vf6sg2EOxzlHaZM0IM2JNAwyAu70EJw8tGs3HxaRHXtAKed0NOVJf08Qzi5lGZq4LTCXxdY4DZ70U73Fuu/LozDwUuC1DAObp9wmXunx6xXI1y8I9qn6d8Ezg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744461110; c=relaxed/simple;
-	bh=rZX4Zyea+eXzbeGCKFEyhYta6VERcVd68EFnZb63dtY=;
+	s=arc-20240116; t=1744461324; c=relaxed/simple;
+	bh=Tt3sPHDb7Mz8Pgfddn8V6TjJknog1t8vZ46VSqeHu1U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxGmrBs62Whhk1STBpjNzItl4elyJ7Dvifl+hN8sELARqvf2Ngda5mKzGEPtIgQnWZTGprZMDf/paE2hYU08vX0v/pfVvvMow0uYZQth/vGmuxbm8IVlLtieqisLB5veEKdHAj6C9mcBxrgTx3dmAMi12XRZIRQkbeY2OTVDjTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q1v1H7Bn; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/ByWPN8FFUppjYe8wXzyL9qZDA1hvl0BDRgdQlbA4Tvwdqf53FMl8LfRn0/t+yvrVbSXyb5/akNhTEL48VsGxCcnvvxNUF+/aQuJk+YdBBzMm6vAad/pQCeFdv1G1mkOvccXjcMaRuZhZPdbYQQ1sO0dJgJ20CmeqLUvotLd7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0AEpG85; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q1v1H7Bn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+FJkGd6MMxFZ51i06o0egOdee2ExwCA0tOOyUJfnegs=; b=Q1v1H7BnjFO20yUDi0ZVq0gvch
-	9jsg5eXjMWIXp9JREWcY1qDdFE4KBH1nyK2m+OfKTDkg7hUn/Ppq+sc2IETT6d8YOVox5Ov9jqB0j
-	xE8k0Rsh2mwQCfH1+AkjvI6NtWl//IC9ZGXcbUVGLbRb4LkRSBazAZ5XyRB+aJz/s1K6lJzzSZBZP
-	H4/gKRn16ADp83e/H6ZAfHqfSlCOjslgqE1VHAfdybmhbUNMQzs9q9L801iFPI9R6pSV1YUIXk6QE
-	fM7OsgiupoJlKUw8+AImpHftCg86ck8uTn5bEnjp1VfPJiweZlJLCdcnGJFU21LocTxROhIXzDA+a
-	pV28mlxg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u3a1G-00000005btr-3Zh6;
-	Sat, 12 Apr 2025 12:31:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A115730057A; Sat, 12 Apr 2025 14:31:34 +0200 (CEST)
-Date: Sat, 12 Apr 2025 14:31:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: =?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>,
-	Kees Cook <kees@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0AEpG85"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BA9C4CEE3;
+	Sat, 12 Apr 2025 12:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744461324;
+	bh=Tt3sPHDb7Mz8Pgfddn8V6TjJknog1t8vZ46VSqeHu1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K0AEpG85GVVGo1N4QVb1XFJ12Tohnt5oe43WGIAv2ngC8cq9mtdCp1pniys5O40Ug
+	 b2vDjUPy+Lw9n8H7HN++whIfCZus+wPSC6RzpFzPvGf6SqS9q6f8QIqlR7gqt8WCEt
+	 aBEx8sOKhrdHz85Q+81vlhItrCm77qLWb4Mi03QWzCUBnW7ZWooX3YNCe0gNEYwpKZ
+	 +Uq31a49dJ6KXEl5JTqTXFKZlxdd75QO/CHE07pGhyV3ozzepKtiePf5OlZZBdO/4U
+	 nLwn+d2mxbfaFpwdZfNgsrLLjUfA1z9zLj47Xyb0cbb2H6bZvDchDCx3A2n4dLA5XC
+	 xyY2jVDJ8tH3g==
+Date: Sat, 12 Apr 2025 14:35:18 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Christian Schrefl <chrisi.schrefl@gmail.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
 	Miguel Ojeda <ojeda@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] objtool: Detect __nocfi calls
-Message-ID: <20250412123134.GA21670@noisy.programming.kicks-ass.net>
-References: <20250410115420.366349-1-panikiel@google.com>
- <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net>
- <CAM5zL5okN67bsTs6ZodcJd45zQ_BP+ruUwOkPMY97Snma0ugzQ@mail.gmail.com>
- <20250410132522.GD9833@noisy.programming.kicks-ass.net>
- <20250410154556.GB9003@noisy.programming.kicks-ass.net>
- <20250410194334.GA3248459@google.com>
- <20250411064449.GK9833@noisy.programming.kicks-ass.net>
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction
+ `FwFunc`
+Message-ID: <Z_peBtLuLhEDHqga@pollux>
+References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
+ <CANiq72=BoURMmkwqBzZ9Bzf5oXkZbUia-gZKJcNmVt7Qg8bKzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250411064449.GK9833@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=BoURMmkwqBzZ9Bzf5oXkZbUia-gZKJcNmVt7Qg8bKzg@mail.gmail.com>
 
-On Fri, Apr 11, 2025 at 08:44:49AM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 10, 2025 at 07:43:34PM +0000, Sami Tolvanen wrote:
+On Sat, Apr 12, 2025 at 01:59:48PM +0200, Miguel Ojeda wrote:
+> On Sat, Apr 12, 2025 at 12:30 PM Christian Schrefl
+> <chrisi.schrefl@gmail.com> wrote:
+> >
+> > "propper" type for this, so use a `*const kernel::ffi::c_char` pointer
+> > instad.
 > 
-> > But an allmodconfig build reveals a few more warnings:
+> A couple typos -- I usually suggest using e.g. `scripts/checkpatch.pl
+> --codespell`.
 > 
-> Sigh, let me go look at all that and address Josh's feedback.
+> > This should probably be backported to stable, for people/distros
+> > using Arm 32 patches on stable.
+> 
+> Up to the stable team -- I will add Cc: stable when I pick it up since
+> it shouldn't hurt, but it does not change anything there for the
+> supported arches, so they may or may not want to pick it.
 
-Latest sits here:
+Typically, firmware patches go through driver-core, but if you like I'm fine
+with you taking it through the Rust tree.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/core
+	Acked-by: Danilo Krummrich <dakr@kernel.org>
 
-I'll have the robots chew on it over the weekend and then post on
-Monday.
+I don't think backporting it hurts, but it's also not really necessary. Like
+Miguel says, up to the stable team.
+
+Just note that before v6.13, core::ffi is required, since kernel::ffi does not
+exist. The firmware abstractions were introduced with v6.11.
+
+- Danilo
