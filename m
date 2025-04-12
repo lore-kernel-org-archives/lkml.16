@@ -1,196 +1,182 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2069.outbound.protection.outlook.com [40.107.237.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D060163;
-	Sat, 12 Apr 2025 00:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744416362; cv=none; b=Eoz5mT0j5901GB/Uqa5RpC0/dsBEJI5agsqSU+xPKW56QsImdEpPzxNKzo4JwAAfginQlPFS4BGfYSzDcvPdcrR8vSbosZhlIvLOKgz+hNKCyQveVZexBJfqCEkPC4AsfGrJ6zfSpS8y+Jtllna8IYmRCdqzSuunTqoccIwLITQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744416362; c=relaxed/simple;
-	bh=YVCFUks66+ZwAwguLIz5pSSCpJSGHaqsSBxu9Du3S88=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p9BPW95IFHyHDNI1gTSbqHc+FITOxzPHIFqITkQnv15at0/aGYiPsXsvAgfCCeQY52WoEcWoxMGPmGqZTaBYfVwEgPjTax0sIvrsqWJ8rxvN5GMLPV3PhnMmj7WlZJZyaDZGkE269C1SGekJ8ifz8guUJV0zadwj78GPhdzfTmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oeo/aP9p; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656F51FC3
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 00:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744416438; cv=fail; b=AjSJCPCu/VwDqIINEYZd60WzIyy43sYXEVnQpUWoueJwDWVpbcpllgxRnUJnUulSUsrvQNXZNw8EQauStY7TA30HKm3QbpaiRM1yOytCUqy2lJrwxGidQN9sZh/OZxoUjzuJzXi/1eCF9vnbfnySya2wSb3EHe1fXG9rGUHVfps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744416438; c=relaxed/simple;
+	bh=oUtT0YV56UwBzKkkDdSjo4wQLAxspa3xWUXHLmIwtKg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5ifEv47tGTMKvZxnIStcwh4FPp/s/HSsGiABbot5KDDze8TNAE7mnEGrC4BAQA6gKDnqYwnHTxKWi+YCjoWemn4G1dq6w9teQx7nGZ2Nc1dbPpDicH5YDT8Pl7onL6/aSuABE0dQWTpIHRSNE90bJEjAfJDOSn75uU22ooz5NQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=IC13N/l6; arc=fail smtp.client-ip=40.107.237.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oeo/aP9p"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b0322b6f974so1848140a12.1;
-        Fri, 11 Apr 2025 17:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744416360; x=1745021160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1yGHPZt7BVOstn5lsXeEMe3lmFH9Rd9JNPYieYc3UE=;
-        b=Oeo/aP9pOxs4A7c6+znI0DRmgI8+lerDYxH4bJpNUilVNltXIWiCbnRtohqrhHH8nH
-         oVOjyvqnSBxJYTkbCFheVcFVY2Lfm8As6X2x6KjyBAAnh3raPhHorxJVRzMCNiSoxvsR
-         4UPqWOFc0+Pk50fpuiSZAGXf7oqphEr3Lw4GY8lgsqVh2HMk41V/nVXWUDz0DC1RPpYi
-         Mjp9kYd8l6GsuVi0MlNMaU7uvGk1Tq+KynMTLQKqqNYMwoV3zVmstiTt7hE0B5NPkC5b
-         5FMndnTjKB5wR9bcW9oXg61hjimalonr7gQlrlWXLCTxCFhwCankbLoxfj+e6lGkDEJa
-         w2AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744416360; x=1745021160;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n1yGHPZt7BVOstn5lsXeEMe3lmFH9Rd9JNPYieYc3UE=;
-        b=XAabKvS5kxxVi14GE5FDsgXycQgTd9Ft0d8+XS2lBNlnTOT8oMYfMcoExQjrcMxJfN
-         jGzDP8FZHZ9EEXnJpXl1xphfLCyPmZ1jbRVI7NJVnBbl5+270OLgkvqf5zj4K9e5xBDt
-         XFH5HrY7en1Hjl40M9PsN3LlM96ba3fKBk0EvXpw9xRI77aUub+bLNaSr0rHC29UlAZC
-         lqBPjm7weF5hGZOzY+1xoHfjcdX3HoMkNK2xjUnuxKasaZyrQHLi5qjuRScepg5H0KYB
-         amfWmIb8ma1jr2CX+azY+9S4aXsOHMtMXnLJX+OqD0EdNk+ToVp1f7qmIn83JN2iZ8TE
-         8A7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXLwpZ7lLD+uTkdD2t0qrTMv6EZ29Oc4nITkK6lQx3cf+SbTUdONhiV4H74nAJTvK9nKiT8Ub3x9Dqi7M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxdhMfSJkksoLF7BhuruJtu/r6r/aLWUQCoeeXS0GASKGv/bs+
-	AtcLkVa+yyHah9Cj7FkUKS0V2unuXebQ4gTwl6Eto9RPZB8NauJsYDMo90o+
-X-Gm-Gg: ASbGncvc1SvXsto1udelOfxII8HdYhJo3YKZgKO0eRPe+8fIH3F6u94KUSE1ISspwMm
-	L9UXvJsHCpfEca3tlGsGZdeQ1Z7G8GyktySbwYn7dTYWr9D+sCdGi7wLNgeD6H8c05fZO8ZxiAd
-	dGjqpVo5i4cMUX1XwgxlFSwe/B+Nm14Dq86RYIoy1FNrmeGSE9FHVwgn0YvjI8kBlX8379IZrpR
-	S35fxv3nNLD6q0bSfWY4/WmUGAhalaqPN64dOz1h27DCeAGp0ARz+WMUtTh+mW5AaSfSgtX0jZ8
-	AhhavMyTJQytLDX1wCGecV8RWuKF/mVceCuc85rGHCpzA3U8lv3H6xABM1hNp45srHCN07FHc2L
-	JMT0OUYmwu0uffEYPdUAKxI1p1O7J
-X-Google-Smtp-Source: AGHT+IF4FSkvtK71eFQmWd7r5EM5benxiZt/VKA2BS8m6LYGVADpnhU5GciqTL2F9Zkajo2ZhVgPPQ==
-X-Received: by 2002:a17:90a:dfc6:b0:2ee:f550:3848 with SMTP id 98e67ed59e1d1-30823660367mr6594140a91.5.1744416360076;
-        Fri, 11 Apr 2025 17:06:00 -0700 (PDT)
-Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f826sm6384002a91.29.2025.04.11.17.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 17:05:59 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: abdiel.janulgue@gmail.com,
-	dakr@kernel.org,
-	daniel.almeida@collabora.com,
-	robin.murphy@arm.com,
-	a.hindborg@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] rust: helpers: Add dma_alloc_attrs() and dma_free_attrs()
-Date: Sat, 12 Apr 2025 09:05:06 +0900
-Message-ID: <20250412000507.157000-1-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="IC13N/l6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jhRp85pOW1Blo6wfFT7kwBME/sCAdhrsaOd1P6Ek1ES5jDdh2DDPLLQ2uelQxSnBn5Xw5oc0KynbIbpUir/EtoOVk9GlINqA3USaxkDc5apnSUbikVfpWZuwTx/aJoqnoskBacCKeZU3k0LM9edyA6Facc1HILDMOQXVrUt5+tP0jwa10/Qig4NWCA/YZ6wqARQ39OvyarwHAKYxKEL3MDwWhsyf85ulQE1aPJ63tvpxgSukbTgPA7wiI86uXGvObzKF4mIphiGHChwIHzmm3OJS+Pv9w3OBofAZXckL6DSGhY2PWT79EyK1rbxpNtAoZ5fRXwPbO83nGSjT6Zontw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IWyxd8gfpz0AV9PMS9YG/QYmu3jTOva7itur88xgFZc=;
+ b=gVi8wsXPmmtcFChBr0sd7E+E4xzKYOaOTeMRV3LfNZZVEyOMijAtkk2CEH4WZ73pLhIwFOo5R6gPXTNARu2rqGI4mElHg36rmHAe+qSNt8VLHvOCxTVnIiFMa8jCzJg7FFpTYILfyYLJPUnLKH2gi49d7Zyoix0Vop/bQdshDO+vWIk5RxVGrqlmptJjiz2yExKixGB9sCcMZZOL89Rd2zmpUMa5jzeQMC4sgVT1LjvSOiazRNjpSB/FhAyFWYY0WU5P0k56a59+W5wmsrJNgOLGODvFHLP4eg5MgNrXR24BnrQpXjgcwaQ2TZtVe3Mrv+q6xy2RL1AVa/xm91k4Ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IWyxd8gfpz0AV9PMS9YG/QYmu3jTOva7itur88xgFZc=;
+ b=IC13N/l6+ej3fxWwrHKSTkgKZood8L4SFTfkn4YTMJlJMR7nKJIzQwiLfzaOT1ezAis64NHmnvhBJoOF6IU+cJXDiRGZWHjcPdSxB5DSM3iVr3WR+EhfJ+MV/CBQwD+sL583mru79nPas8JgWwXNsHA9m1Dx/i8Xw+RdZFlWtlvB9DvRyYH1UD7tOXHidV0Fgur2Kii8FnZlrKB3tGMVommIf3MB4H1MWBV52+DfT2twHHpHR/EDY+8qn077DxMpqYZI6V98qPNWn8MgMkYu8HqGwFk2smwhTuB8rCguXoA76Rf5W2gtDunX1ZUijxQSfVW8C/b4+xHu00WLVdzwdw==
+Received: from BY1P220CA0003.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::10)
+ by SJ2PR12MB9192.namprd12.prod.outlook.com (2603:10b6:a03:55d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Sat, 12 Apr
+ 2025 00:07:13 +0000
+Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
+ (2603:10b6:a03:59d:cafe::2c) by BY1P220CA0003.outlook.office365.com
+ (2603:10b6:a03:59d::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.30 via Frontend Transport; Sat,
+ 12 Apr 2025 00:07:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Sat, 12 Apr 2025 00:07:12 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 11 Apr
+ 2025 17:07:03 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 11 Apr
+ 2025 17:07:03 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 11 Apr 2025 17:07:02 -0700
+Date: Fri, 11 Apr 2025 17:07:00 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Robin Murphy <robin.murphy@arm.com>, <will@kernel.org>, <joro@8bytes.org>,
+	<jsnitsel@redhat.com>, <praan@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/arm-smmu-v3: Allow stream table to have nodes with
+ the same ID
+Message-ID: <Z/mupP6m0gRbeYtg@Asurada-Nvidia>
+References: <20250411044706.356395-1-nicolinc@nvidia.com>
+ <5c8d16f9-246e-45d0-aaac-45b7712cefb5@arm.com>
+ <Z/mm2EQAQtOqpVCy@Asurada-Nvidia>
+ <20250411234419.GC252886@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250411234419.GC252886@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|SJ2PR12MB9192:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1545979-8db3-43f0-0c5a-08dd7955f9c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/6aggSSesGO1KQ2hUABeppOJ80BBr8H+pwxqQQIhQPKR1Bwx8J1j5to9+jvX?=
+ =?us-ascii?Q?NlGwYnvBir+hm1JevJI8saFZCmjJs/BrCXk7WRbSpCiq5ldZvHi2MAjJAhWC?=
+ =?us-ascii?Q?CklzHq1y4RprDpPp5kIQsvetuPK0qQdMSpny6h0rylpE9GPwaeeYDCwKhizY?=
+ =?us-ascii?Q?G2M1I7fmyXf5sjemfOJrIfuNKRyO+h6mlJriyZlVw8RnE8n65drlwewJhkhJ?=
+ =?us-ascii?Q?uC59jNxq1YjWm090iq1TdRcloojzpBLGlVNiP1Zon5fXa1hjmnXEZzTrtmM0?=
+ =?us-ascii?Q?n7s5cYYfBf5+wja6Mcwu3QluNbgopuf7luur81EvSDLWIxw9szAqnC0loa29?=
+ =?us-ascii?Q?i1puBpGnSSIfof/mi5DFPBCZAd52BXZ82qqy7cbdEY33dfUB842NIvrrf/zo?=
+ =?us-ascii?Q?InRz34KVhjPPRposJIVa31tWQ+umOsD1dfAJFWC9FAmxuwFgHbFdtiU01gVH?=
+ =?us-ascii?Q?OLT2FZJS9b9KLtY3DxRjs5NYvLRcM8BvVF1BoM/lfbJlpssZyGeKLcPEYSjs?=
+ =?us-ascii?Q?/FzXVi6xM54gQKgMI3hh7JGaYBYta4END2gW0f6A08JTkj5WTxtaFiDNx4jM?=
+ =?us-ascii?Q?oYnzbst/8ds9cs0k9y4xVQHiodb7c9JKRNTSDjpa5qnl2aZMaWl3azFASyrO?=
+ =?us-ascii?Q?dyqY64zCa+1DiUDFrIIWBoQU+maCh8Ptp3o7bNapEvbfsDSdOQdwQVCgO54d?=
+ =?us-ascii?Q?SKCxo03moP0NUg6XKwbRsPgBZ/b2lMOsC0f8iObbwcus2/jx5zAjVmo8REaY?=
+ =?us-ascii?Q?oGn0Alrz/pdgqHqlOxlhfKuaN4hwgaa72P4r4+Yfp4rWFjox764t7lLrEv/G?=
+ =?us-ascii?Q?5MQKX/We5ts+seMuKKUhcFic/YsuCRba8nuUgMuuritwVmy2kwLzhojD4yg8?=
+ =?us-ascii?Q?WLb9j4LGIFTS9HyC12ZRJIUHlFwkAQApJIDjC95nw2EQ2oCfU/FTi6KEdLmh?=
+ =?us-ascii?Q?8XU0PEBosMHCo4mGXM9G06pgFA5hslGaz2QHT6CkzWaocgFcktdjGet40YHL?=
+ =?us-ascii?Q?Li5Txbxv7bNRvFMBMtBAxBMhxBhmbmfU62RYOzI8i2WYuDeIcOl7eGsBQlo4?=
+ =?us-ascii?Q?EC8LnpP3p0NPuhYKeLI6EqZwfMMN7Zuv8/ODTAF6zQF9jL0QrDvUvQoFbOwn?=
+ =?us-ascii?Q?1wqHhclB4C+uTXq9EcwC1k1YQRhaQS1l3BC2mGMv/wjL4VrTc6pPHPQWLsM7?=
+ =?us-ascii?Q?uLW+2WzwTQZ9cNac2gbwp4IFbdH0b6ZpP0gUcIRqWiE2Vqm1QK1rcjvIpAq1?=
+ =?us-ascii?Q?o2opNOmY6OPfL54hVcd8YmzW6N8JkN1ghXxbP08H9TEFYSuvJrs7Ney1knaT?=
+ =?us-ascii?Q?l+XuEzarDsbo9YXWOkv8o5UUrml8LjEjq4b9wf+Bvw7ugGaz2QeZPlzrefoU?=
+ =?us-ascii?Q?zwIJ6Ext0lizvJT5O5+sQ/U8cq+jZtdm6kPj/jX19eSxqfStgGC5raS3Ypah?=
+ =?us-ascii?Q?PuPk0WsxpMHbv3J7D5effPHR5/0VvTu0uby1ddjTBwyTWGPmQ/KpCgZViwq0?=
+ =?us-ascii?Q?Ja3Of/APJXJ+ydlqMi0bhVVYfL29LWsSGg/y?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 00:07:12.4406
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1545979-8db3-43f0-0c5a-08dd7955f9c3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C8.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9192
 
-Add dma_alloc_attrs() and dma_free_attrs() helpers to fix a build
-error when CONFIG_HAS_DMA is not enabled.
+On Fri, Apr 11, 2025 at 08:44:19PM -0300, Jason Gunthorpe wrote:
+> On Fri, Apr 11, 2025 at 04:33:44PM -0700, Nicolin Chen wrote:
+> 
+> > > The bridge *does* claim its own RID, and per the aliasing rules the
+> > > devices behind it claim both their own RID and the alias to function
+> > > 00.0 on the bridge's secondary bus, like so in action:
+> > 
+> > Yea, I just found out that the bridge does have a different SID.
+> > It was actually the VGA controller itself having two fwspec->ids
+> > populated by the IORT code. Then, the SMMU driver allocated two
+> > separate streams with the same set of device pointer and SID:
+> >   pci 0008:06:00.0: arm_smmu_insert_master: fwspec index=0, sid=0x10600
+> >   pci 0008:06:00.0: Adding to iommu group 21
+> >   pci 0008:07:00.0: arm_smmu_insert_master: fwspec index=0, sid=0x10700
+> >   pci 0008:07:00.0: arm_smmu_insert_master: fwspec index=1, sid=0x10700
+> >   pci 0008:07:00.0: Adding to iommu group 21
+> > 
+> > Perhaps the duplicated fwspec->id should be avoided in the IORT
+> > code at the first place v.s. bypassing the fwspec->ids[1]?
+> 
+> It is a much easier fix if all you have to do is ignore hits in the RB
+> tree that match to the same master, just don't fail on duplicates and
+> don't add the duplicate rb node at all?
+>
+> Seem strange though. Where did the duplicate come from?
 
-Note that when CONFIG_HAS_DMA is enabled, dma_alloc_attrs() and
-dma_free_attrs() are included in both bindings_generated.rs and
-bindings_helpers_generated.rs. The former takes precedence so behavior
-remains unchanged in that case.
+iort_iommu_configure_id
+ |=> pci_for_each_dma_alias
+      |=> iort_pci_iommu_init
+      |    |=> iort_iommu_xlate
+      |         |=> acpi_iommu_fwspec_init
+      |              |=> iommu_fwspec_add_id(sid=0x10700) //index=0
+      |=> iort_pci_iommu_init
+           |=> iort_iommu_xlate
+                |=> acpi_iommu_fwspec_init
+                     |=> iommu_fwspec_add_id(sid=0x10700) //index=1
 
-This fixes the following build error on UML:
+We could add a piece of code in iommu_fwspec_add_ids() rejecting
+a duplicated ID, which would be smaller than we do in SMMU driver
+that requires a device_group change too?
 
-error[E0425]: cannot find function `dma_alloc_attrs` in crate `bindings`
-     --> rust/kernel/dma.rs:171:23
-      |
-171   |               bindings::dma_alloc_attrs(
-      |                         ^^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_alloc_pages`
-      |
-     ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44568:5
-      |
-44568 | /     pub fn dma_alloc_pages(
-44569 | |         dev: *mut device,
-44570 | |         size: usize,
-44571 | |         dma_handle: *mut dma_addr_t,
-44572 | |         dir: dma_data_direction,
-44573 | |         gfp: gfp_t,
-44574 | |     ) -> *mut page;
-      | |___________________- similarly named function `dma_alloc_pages` defined here
-
-error[E0425]: cannot find function `dma_free_attrs` in crate `bindings`
-     --> rust/kernel/dma.rs:293:23
-      |
-293   |               bindings::dma_free_attrs(
-      |                         ^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_free_pages`
-      |
-     ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44577:5
-      |
-44577 | /     pub fn dma_free_pages(
-44578 | |         dev: *mut device,
-44579 | |         size: usize,
-44580 | |         page: *mut page,
-44581 | |         dma_handle: dma_addr_t,
-44582 | |         dir: dma_data_direction,
-44583 | |     );
-      | |______- similarly named function `dma_free_pages` defined here
-
-Fixes: ad2907b4e308 ("rust: add dma coherent allocator abstraction")
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
-v3:
-- add rust/helpers/dma.c to the Rust DMA entry in MAINTAINERS file
-v2: https://lore.kernel.org/lkml/20250410234332.153242-1-fujita.tomonori@gmail.com/
-- add helpers for dma_(alloc|free)_attrs() instead of conditionally compile
-v1: https://lore.kernel.org/lkml/20250409055501.136672-1-fujita.tomonori@gmail.com/
----
- MAINTAINERS            |  1 +
- rust/helpers/dma.c     | 16 ++++++++++++++++
- rust/helpers/helpers.c |  1 +
- 3 files changed, 18 insertions(+)
- create mode 100644 rust/helpers/dma.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..bec614ef35d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7020,6 +7020,7 @@ L:	rust-for-linux@vger.kernel.org
- S:	Supported
- W:	https://rust-for-linux.com
- T:	git https://github.com/Rust-for-Linux/linux.git alloc-next
-+F:	rust/helpers/dma.c
- F:	rust/kernel/dma.rs
- F:	samples/rust/rust_dma.rs
- 
-diff --git a/rust/helpers/dma.c b/rust/helpers/dma.c
-new file mode 100644
-index 000000000000..df8b8a77355a
---- /dev/null
-+++ b/rust/helpers/dma.c
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/dma-mapping.h>
-+
-+void *rust_helper_dma_alloc_attrs(struct device *dev, size_t size,
-+				  dma_addr_t *dma_handle, gfp_t flag,
-+				  unsigned long attrs)
-+{
-+	return dma_alloc_attrs(dev, size, dma_handle, flag, attrs);
-+}
-+
-+void rust_helper_dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
-+				dma_addr_t dma_handle, unsigned long attrs)
-+{
-+	dma_free_attrs(dev, size, cpu_addr, dma_handle, attrs);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index e1c21eba9b15..1e7c84df7252 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -14,6 +14,7 @@
- #include "cpumask.c"
- #include "cred.c"
- #include "device.c"
-+#include "dma.c"
- #include "err.c"
- #include "fs.c"
- #include "io.c"
-
-base-commit: c59026c0570a2a97ce2e7d5ae5e9c48fc841542b
--- 
-2.43.0
-
+Thanks
+Nicolin
