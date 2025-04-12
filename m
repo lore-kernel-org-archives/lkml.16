@@ -1,133 +1,118 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F018208AD;
-	Sat, 12 Apr 2025 03:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1EA15CD78;
+	Sat, 12 Apr 2025 03:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744429840; cv=none; b=seoR2CTeg2ItlIsBpB4bdriHLd7qURtvrNrBqAcDp4TBHpttsme7Nbqx6WWBkG9N8E4bbkgKT0zQLqQIDNAqthns+AJSE12ylAjjdYKRE6tPqbqKQqvpIt2irosdPxuGv24EJ282RSsnGUox2PQJvScHJmjsigKnXQEOkw07wK0=
+	t=1744429982; cv=none; b=a8AlXMQKYFFtRAiBIfkgun/pr0SZGCqHOj+45mHRMa4yBgHmFB6pMpFiTG58mBA+1IQFIIe0O6ej64/9A/QH1ajh/YiqjtXua0SsyS69rekrwIx/01fgTLH2PcwOLjx8aojoAmktrnFYr9WvoDv2eMHj8tHlWZcIQ30j1LQIvmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744429840; c=relaxed/simple;
-	bh=LxzxpLuFqzA20rKYrlVYVZ1GYPBQpHk0m8ab776NZFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pxkXR4JWPQ+yPkv+bmq0vEVbZQx+doy91EOZEcJ9dw6E/Gx71zoQ+sxTqvcnG9N/2dQXAxD90n+24wiQGXTYZ/CVhiZZqh2WIPmAL3kXkvjBY7R6jWPIeIDoVdXnKcO/LaoDSO+i1F+6z/1HKPaBNdsABgd/A3esTdJigEDoWPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYHifKYE; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYHifKYE"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736ee709c11so2176468b3a.1;
-        Fri, 11 Apr 2025 20:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744429838; x=1745034638; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uxgICOMpj0NVx3WYcPGVSamgvQ2YeH2wLMAPVBj+n7M=;
-        b=NYHifKYE3iUFeYsFfvnvhGPikuX5ZE88vGSrJQfNtz7WEEE631Wy/hoBqktvTZx2Hv
-         M9GileS+C+d6oCCYsKuLbKSg3afIQsyGDE965/ARTezueY6E4VXgG3qEKNXSxsUZ7aMZ
-         rmtJhhL37XUlSGEq7ieOCxGAJuyL3wtsn7L+LKPINLerm99ryCyn7aCWgmc3PNPUJjbf
-         Mi7xFSDW/lc5G2Gc8qjLm24QwTaBqh80yi5X7avR6XszQcnkd/aYKUttIuXhRBNaRWey
-         WY7ye22ftVi7R2tlcJxtPYEOeMYhfHyUrlkdz2bv941qugoCfbn+va++EbsUT6ScKeC8
-         dzig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744429838; x=1745034638;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxgICOMpj0NVx3WYcPGVSamgvQ2YeH2wLMAPVBj+n7M=;
-        b=J7Bsc+bdCyWFu7CXG/BeGITlC7ga4Rs0aE9/QHQjHBK6Oh6jLtsWHminVwRCuL+s/f
-         7Rw07zlrSoUrqHaf8WZOXMbrgV8R3EoBUkV6N01hcON+dgGhRu0jouJkht30/JWF4gmv
-         FPeKvgdAZmbsDPs2dN8drtQgg5FDahDpWWixiFh/LbxpsrFpdUvCUf6eRfAv9e2wFyPd
-         8CUmYQdKbYZmmACfok5USit9uOz/IgmH+Lf0Qg5Rk1mE40FJ1ZCdU/wMeDYapPIVIsFG
-         QwYagUV+3IDPud+7a622zhzeyfA+OjoiLDbB+MBok3WkFoQOEoWhKkW9YeX7VSwmO+Xt
-         fqFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyh/dloFc2ETIIJ6T5m8OSk+q8ci2risnHOcTt2TA2sMJLwyWWmS+Oha5QyjPLROo+lWt/sTHhH6xp9v+J@vger.kernel.org, AJvYcCWD8U+ERe+4Jf8q+xW2J8dvwXpuEWSnmn6t2WHkW7MlJ+YeVxdzO8Qb5/Ihh1A8Z9OwGn4p4Tv/NdZx@vger.kernel.org, AJvYcCX8jVzq2oc0HBgBKJG1ObP0Yu1FRP9DI1ITdxVrB6BefJVfjmWigpZc2OKSCtZEWlY/zP2fawlII2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAxRpHi5XGSKRXRtBQTfcKsMj82/iEQ8vQJ32c8c0Ns7m/ptZC
-	IFgaTczXduAwHSgQobcXok0kfgXD10nlGEtx30NopqEVbTD512bEyCVdI5DyCTGqMQ==
-X-Gm-Gg: ASbGncvyfp3hKhGfSLBRHpexQQ/sdjmgrF8VgTTCo3PROGaEWgmiyRxKZNjwUaM5eCq
-	f0A67GFNOphr/zpX2gc8Toy70xnw5B+1tmZbCnX1tpESQV1Tni4ZChx5ac5RcY4+NSPKm/xDHn/
-	JLZmbP15bVO0roiDGzD42Fkba5KeGVD2UGnpxQx0nymt0KVek/VQuWfTISqeSxU988HVXMC0lfy
-	W1aJhCZFjAYAj3TCqi5reEI+ABVOufTPsZfKJr+7ifa6Yg91OPoSNSayh+JBmfoKiuRS+UnudxG
-	SeAghdBISuzttUgVACxg
-X-Google-Smtp-Source: AGHT+IHEPw9l2lckImW21hc5WfLjuKibfw20oGZVWj/fM/Sh5wIaMnFrYyjNGc7ye9/ekqZxC0bumQ==
-X-Received: by 2002:a05:6a21:3a4a:b0:1f3:194b:30ae with SMTP id adf61e73a8af0-20179780638mr6529548637.1.1744429837641;
-        Fri, 11 Apr 2025 20:50:37 -0700 (PDT)
-Received: from [192.168.101.248] ([2605:e440:15::152])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c210esm2476926b3a.41.2025.04.11.20.50.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 20:50:37 -0700 (PDT)
-Message-ID: <dc4cc121-9e75-45af-98c1-5a4c0802e2ca@gmail.com>
-Date: Sat, 12 Apr 2025 03:50:17 +0300
+	s=arc-20240116; t=1744429982; c=relaxed/simple;
+	bh=r4/JMs6C2Dvw1bW8VHdZlPi+YkDCZTs1eOaXxjGw/oM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2vDr3xPSBuO2kFHgZWy06EAOlxUngqcQJxQRfPw4T0x/ZxNW9yzPC55MtAr5U4VOZqEg8Y+jR/R+PgTP2FrS5lpY5uyb9QVso899Latx9/CG4hDLOYjQv2qaiDVvxLkxV/7nBoufzu5tYPWb/C+f2Gu+SQVGlPLBIzADZaSDBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 35C8D2C4C0D2;
+	Sat, 12 Apr 2025 05:52:25 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 031171E092; Sat, 12 Apr 2025 05:52:56 +0200 (CEST)
+Date: Sat, 12 Apr 2025 05:52:56 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
+	amitk@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 7/9] PCI: PCI: Add pcie_link_is_active() to determine
+ if the PCIe link is active
+Message-ID: <Z_njmA49Gda-m0aH@wunner.de>
+References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
+ <20250412-qps615_v4_1-v5-7-5b6a06132fec@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] dt-bindings: thermal: sun8i: Add A523 THS0/1
- controllers
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
- linux-arm-kernel@lists.infradead.org,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
- Andre Przywara <andre.przywara@arm.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Yangtao Li <tiny.windzz@gmail.com>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Conor Dooley <conor+dt@kernel.org>,
- Vasily Khoruzhick <anarsoul@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org,
- Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20250411003827.782544-1-iuncuim@gmail.com>
- <20250411003827.782544-7-iuncuim@gmail.com>
- <174433447237.1635065.9681378963946489764.robh@kernel.org>
-Content-Language: en-US
-From: Mikhail Kalashnikov <iuncuim@gmail.com>
-In-Reply-To: <174433447237.1635065.9681378963946489764.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412-qps615_v4_1-v5-7-5b6a06132fec@oss.qualcomm.com>
 
-On 4/11/25 04:21, Rob Herring (Arm) wrote:
-> On Fri, 11 Apr 2025 08:38:26 +0800, iuncuim wrote:
->> From: Mikhail Kalashnikov <iuncuim@gmail.com>
->>
->> Add dt-bindings description of the thermal sensors in the A523 processor.
->>
->> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
->> ---
->>   .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml           | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.example.dtb: thermal-sensor@1c25000 (allwinner,sun8i-h3-ths): clock-names:1: 'gpadc' was expected
-> 	from schema $id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-Thanks for the reply, I didn't know about this tool, I will use it in v2.
->
-> doc reference errors (make refcheckdocs):
->
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250411003827.782544-7-iuncuim@gmail.com
->
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-Yes, I forgot to point out that the patches are based on 6.15-rc1 using dts
-patches from that series that didn't make it into the latest rc:
-https://lore.kernel.org/linux-sunxi/20250307005712.16828-1-andre.przywara@arm.com/T/#t
-I'll add that information to the cover letter.
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
->
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
->
+On Sat, Apr 12, 2025 at 07:19:56AM +0530, Krishna Chaitanya Chundru wrote:
+> Introduce a common API to check if the PCIe link is active, replacing
+> duplicate code in multiple locations.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+
+One heads-up and one nit:
+
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -584,7 +557,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
+>  	 * Synthesize it to ensure that it is acted on.
+>  	 */
+>  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+> -	if (!pciehp_check_link_active(ctrl))
+> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
+>  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+>  	up_read(&ctrl->reset_lock);
+>  }
+
+Heads-up:  There's a trivial merge conflict here with what's queued on
+pci.git/hotplug.  No need for you to respin because I expect this will be
+merged through a different topic branch anyway, but Bjorn and the other
+maintainers will see the merge conflict when generating the next branch.
+
+
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1945,6 +1945,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
+>  			    pci_select_bars(pdev, IORESOURCE_MEM));
+>  }
+>  
+> +bool pcie_link_is_active(struct pci_dev *dev);
+>  #else /* CONFIG_PCI is not enabled */
+>  
+>  static inline void pci_set_flags(int flags) { }
+> @@ -2093,6 +2094,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  {
+>  	return -ENOSPC;
+>  }
+> +
+> +static inline bool pcie_link_is_active(struct pci_dev *dev)
+> +{ return false; }
+>  #endif /* CONFIG_PCI */
+
+Nit:  Seems like this would still fit within 80 chars:
+
+static inline bool pcie_link_is_active(struct pci_dev *dev) { return false; }
+
+That said, all existing callers of this function as well as the new one
+introduced by this series are only compiled in the CONFIG_PCI=y case,
+so I'm not sure the inline stub is necessary at all?
+
+Thanks,
+
+Lukas
