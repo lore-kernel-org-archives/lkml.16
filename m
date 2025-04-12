@@ -1,191 +1,136 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF754F81
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 09:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923AA33F6;
+	Sat, 12 Apr 2025 09:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744449320; cv=none; b=nvDxuZX+whydDaSpTSkffmr/d3iSyhDXMPXNmfei2TZD9mNxDHl41e7Z89DWdbgAAY/czHWljfS3f9aTXBmIO03491ENyILt8fZjR7pGTAj/zWC5md10emYbkQGddABHx6M3q0Ts69EsJcGrFlYbgbXUUdCXhT9LGAP1VYM+4Ew=
+	t=1744449790; cv=none; b=cch1jz5km5oIv5h4HdhM67/+RP1dUi84za7mVR8p61YEL2/1k6G1Em7cFuhOCJ/GM4fFXRgisGWC/dvO+AHA2KWbxg9z1+Iiy/sdUUP4avjahrv4yHdM0VIrOMSNLTpde0MBdgarJjUjVhk0Yqdqx/YM61GtHgg7chQ4QPgl0D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744449320; c=relaxed/simple;
-	bh=ofhA1sVhNkZBmeSVit0ptFCY906BqKaILguQvfyVaRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s9BYcZsa3KOfAI17p+IE6VU+S8Gvk/A0AHTvt5JOGOlG5Eh3kdqiwqojyvfcDEIBEsMAzutEDoxtdCfyAX3kDB1TQkpM5GIT2ofOYeMUCwCWj0aXv4FPT0Gm8Eos0CgugLh4QfXvX59fQs33ffkYsNljmmtu+lw3wiH3rhilgPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nn9MxXm1; arc=none smtp.client-ip=209.85.222.41
+	s=arc-20240116; t=1744449790; c=relaxed/simple;
+	bh=PyHtxqdvzJpDkiGKGKlbzxVr6AnLaJq1JdOhGC2eDGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NxzCLDJTgt/B/So/Vj7RcrvCBCijzWUjQmI0o/AVXtMfaneBXK+bp0FbUu7UPP6dNOsSXYe++hWWyrxEC8d2XWbuNXiW14LLHWyH3Rp/sg5SsdxmTKurA4gT/Q2bqPcMmD3nsz/GJJ+1UWs3LXxUPeBIiZ3wFY+FFBwgAlIOpk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VGo/G8Ik; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nn9MxXm1"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso1097797241.2
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 02:15:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGo/G8Ik"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso28108155e9.1;
+        Sat, 12 Apr 2025 02:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744449317; x=1745054117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744449787; x=1745054587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MbIUHCmcAX0DkYjFh/o6M5S/0HjNuCssHAp5/9byzKQ=;
-        b=Nn9MxXm1Qkn55hVQGeEKO7BgJzElxjWB/L/H1U0qyeQoRhMZNHOZBZQiJ2kmwoyTgo
-         iO2fZJG6un71g1cZXv9f3XSr45GHOy/PRHtQKOrv2LPwLI7aMKCjwKMTBUa9NiLRPEEH
-         7r5VMNVD/yqyF0rV5hRsSr6ptyTeBWB6eioE2G+jfMFdruzGi+QlH5MlzZrHghri7GrP
-         kLFWPvqchHD4X3RzSurgjf1Xgb2eQqh41d50KIlzN5sl+2n9bSuulSEz+etlG4hUMIi4
-         b/9ZdYU2d58gAdE4FKGE+vPAaxes86AAOpB91PKPrI5TUczAW87wregv+74xwoVE18A4
-         cbnw==
+        bh=vP8+nS29EeEt4QYMObmQEzs8JougkVOmBsA4oHck4vI=;
+        b=VGo/G8IkHRVNRqcDqtjJnIH2zBxwUEtPtz9/wenB+Gs89/zRdCGNY7U8UXJn9Pyh1R
+         JCb+maQKXVF1H/79giNmQokIWwm9LRz2Ui8deTWP95tH7UcpmB7ojnEa/+4V818sX73a
+         y/1ZLpq7WeRub7f6l+pCE0s3xH8CKDEy0c5T5B9QGa2YPylRfwZgzkwymtfGuQFkLxHQ
+         lngKOrWSNy+j2/di+w13j+eKt8igWjcmFSvSW0UJ6qRqbmxXwKFGYaOKLD7Qd6sl0Jyy
+         1zqaNKnYUVOovmOfMuiBGFwwziUcFs4aK3NJIU2EaQy6YKnT+AUsVxTJnslitby4BUZt
+         2vFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744449317; x=1745054117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744449787; x=1745054587;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MbIUHCmcAX0DkYjFh/o6M5S/0HjNuCssHAp5/9byzKQ=;
-        b=p5Rv92t95iXE5nOWQGsYEB2DpvD5va3/Dvx/FaKlnKPT7MSnOgtBKJ/V7qZvrUnjAn
-         Nf9UJ+V0a4R34eMyYMdrqft0se12dOt2ABjuBLsljE32L5jFvYRON1KTMdeX7LOU7cKM
-         EPnq57OWBaf9vsijy+O1isrgUcLf+xh4L0y+dxXdjmwsyvV2xs6Nj8g1MXRwx9t3ilV8
-         YVnoUXlF3lKK78S3ZQCWLwrHFG6CKmBMpY5SVex/VADt9IbCauqoL1+B0HbpbZKLNbRb
-         Ijtqsn8nX57ZnzKjlxlPvIQcQxGQ6yYZUyHnhXfkxrYNW1Nnp+H5v0ZkTT7CjXIjyMvc
-         9+GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/GgqQXQ5vpxxERdjKzJuI4UZwtYpgaDO1uwjxD2wmsTzqJOKJ6RJhg7B00bK++KxJo3tPcszK+n5Hsa8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAv3dQuGSJjD3nA7n+OF1RoeS0qajV9Svg6u+0IF732R4n84pX
-	1KEjWydwhm5FIX8BVjZ5lSjLhNKzxalNm+jF5wKuKPMKda4rzWKDD8wyC4I9A61HoSReyLMIO1Y
-	5AsqDXDCmaH+R0IU5ZhAeTD9LHCz/tQGyrV4=
-X-Gm-Gg: ASbGncvl6WMR5ByAdu0ZhOWBkNizU5y+m1dihE2gtml28IB4NbuG2nQmsNJ/VQyI+XF
-	M3o35KcV7n8P1hXj95TSarlLpV3/Pr1CSkI36eOT1/UBWdJ4kgC+pSpxABp9zrpC7a6KWm33Rx3
-	gvgpnDktKoEu8TLC2+qLHNBA==
-X-Google-Smtp-Source: AGHT+IEBQGFsZi7n8KNE2IfV+nuOxMHsAwhATBG8kEn0jBgAbA7ZVcCE2F06V2SZhSD8AWnbzwk/8bz8M/Moca6BKyo=
-X-Received: by 2002:a05:6102:5046:b0:4c1:9439:f70 with SMTP id
- ada2fe7eead31-4c9e4ee6672mr3764722137.6.1744449316860; Sat, 12 Apr 2025
- 02:15:16 -0700 (PDT)
+        bh=vP8+nS29EeEt4QYMObmQEzs8JougkVOmBsA4oHck4vI=;
+        b=o7XmZX/elIe9S37cjTf+kT4FbB2ZqBVA70qqNttbFYws/yOuu0inD9sHthedKAJ+6n
+         eD8jF8uzYsjizoGEXoG2IXyHIVUhfJPgbbStJhIDgClNoti5BW6QPLWgjvbJN4JBXxxn
+         xFNBTgvwY3POaQDvXi6gAUgmBzAVUR2mte1VJYrvugPi9T/CXX15a5XO6sY3NDkWqfEJ
+         sPum6z4XGgsspDgpNkes7PeJhgYeY3ASupQpDR+k7SNKK8MKx5zw3PwbPE8XZmmxq4pM
+         VkFXLoaRiWH51VEd6+fdad2TVZz4uRr5UUKhipDD713We2+sjC7hBhhRgMcJ8b/dOhFu
+         G/Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCXP/XwYMM9xUdjEgTDrDju1QRD3AvthwtdUPB/MtFWPtSCSSA4XBdK9RrLMD5G68H85CdLHVuyW@vger.kernel.org, AJvYcCXrnMU5qjeIVaZvUz389cOr4ZUUULStBASBhnmU2NavRolL4KEDZCpBJcHHnbI46/4T5j5DalvV7RtLYRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJR5ow4/dGoGuFV/UxqEd1Q5JIIEzxzMnktyyE8ElhACwb4rHf
+	hxmnwDZA0LKhFQrvHshG+IvSK0BWGxIVX5LrDzdCgDj4f2H5zqkU
+X-Gm-Gg: ASbGncvG9i80GR5XYhtnV8PyBwGOP6jlo5UCA2k40R8g1VYkb6XVbakHPAdAk6QQdVu
+	JaWQeRhqfsAgmx4PB4lQYqgPgb39d0HyRPOu71LJ7OFgNa/R35rcXgIpvbzQhKtT1Rr9fL4Yzzf
+	PhW+zFo7a/oUYCVeo2XmQZaBx63bsJ4Dl+RWvgCSCT72nxMjXV9u8B/Zqqrc7h2j5b2QmDvn1dp
+	xbWq34CQakcwekpIQyXx08BMJfjdpbbMBHbE0WrbQ0/Pyy4XeKrwY82IacXWRBEEQB6C3VvDaJX
+	jGOOYhpdsrWLJfrfDnpm1hnJzbbHL5H+Z88XXCb0K7ro0NVtekK2erelS5lV3rc9c/tPcwIGbGD
+	b4X4=
+X-Google-Smtp-Source: AGHT+IEdvyQBBmM+g9GNjxWlarB7rYN6lH8hVFAsGG/oIntQEo2K2905CeEol3l2b14ckD4up/jsKw==
+X-Received: by 2002:a05:600c:1d93:b0:43c:e8a5:87a with SMTP id 5b1f17b1804b1-43f3a95bcfbmr61779245e9.16.1744449786503;
+        Sat, 12 Apr 2025 02:23:06 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c7a68sm108921695e9.19.2025.04.12.02.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 02:23:05 -0700 (PDT)
+Date: Sat, 12 Apr 2025 10:23:04 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Paul Fertser <fercerpav@gmail.com>
+Cc: kalavakunta.hari.prasad@gmail.com, sam@mendozajonas.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, npeacock@meta.com, akozlov@meta.com,
+ hkalavakunta@meta.com
+Subject: Re: [PATCH net-next v2] net: ncsi: Fix GCPS 64-bit member variables
+Message-ID: <20250412102304.3f74738c@pumpkin>
+In-Reply-To: <Z/eiki2mlBiAeBrc@home.paul.comp>
+References: <20250410012309.1343-1-kalavakunta.hari.prasad@gmail.com>
+	<Z/eiki2mlBiAeBrc@home.paul.comp>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2d42decac5194c2c8d897b0424f0dcf3@honor.com> <Z_fYsyEA9hSEOoxp@kernel.org>
- <CAGsJ_4wACEvWe-Fcx9fShkF8okEVb3srGDVCn0v0QjALq7nneg@mail.gmail.com> <bdf6988006d546d498ccb2b7c14c6fe0@honor.com>
-In-Reply-To: <bdf6988006d546d498ccb2b7c14c6fe0@honor.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sat, 12 Apr 2025 21:15:05 +1200
-X-Gm-Features: ATxdqUFW6diTcCQvnjYzGU35F1q8ZAKLmhonTwYVQRoLOohz_odZsQebh12L9R4
-Message-ID: <CAGsJ_4xDc_5q8dBYVq-Ga0iKJD9pTQdYSHrKw8R=1RHNb4+r7Q@mail.gmail.com>
-Subject: Re: [PATCH] mm: simplify zone_idx()
-To: gaoxu <gaoxu2@honor.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"surenb@google.com" <surenb@google.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yipengxiang <yipengxiang@honor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 12, 2025 at 8:34=E2=80=AFPM gaoxu <gaoxu2@honor.com> wrote:
->
-> >
-> > On Fri, Apr 11, 2025 at 2:42=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
- wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Apr 10, 2025 at 12:03:00PM +0000, gaoxu wrote:
-> > > > store zone_idx directly in struct zone to simplify and optimize zon=
-e_idx()
-> > >
-> > > Do you see an actual speed up somewhere?
-> Almost negligible. my simple code tests showed the patch provides an aver=
-age improvement of ~0.02%.
-> Thus, in the Android 15-6.6 kernel, I confidently retained the original z=
-one_idx function.
-> (https://android-review.googlesource.com/c/kernel/common/+/3578322/2/mm/p=
-age_alloc.c#770)
->
-> This patch only eliminates 2-3 assembly instructions, making it challengi=
-ng to
-> observe measurable performance benefits.
-> However, since the zone struct includes CACHELINE_PADDING (reserving unus=
-ed space),
-> adding a new member variable does not alter the size of zone. This makes =
-the patch
-> effectively zero-cost while achieving a cleaner implementation of zone_id=
-x.
+On Thu, 10 Apr 2025 13:50:58 +0300
+Paul Fertser <fercerpav@gmail.com> wrote:
 
-The struct zone contains many CONFIG_ options to include or exclude
-certain fields.
-If we're confident that our new zone_idx doesn't increase cacheline
-usage for all those
-cases, this seems like a worthwhile cleanup. Have you checked the numbers?
+> Hello Hari,
+> 
+> Thank you for the patch, it looks really clean. However I have one
+> more question now.
+> 
+> On Wed, Apr 09, 2025 at 06:23:08PM -0700, kalavakunta.hari.prasad@gmail.com wrote:
+> > @@ -290,11 +289,11 @@ struct ncsi_rsp_gcps_pkt {
+> >  	__be32                  tx_1023_frames; /* Tx 512-1023 bytes frames   */
+> >  	__be32                  tx_1522_frames; /* Tx 1024-1522 bytes frames  */
+> >  	__be32                  tx_9022_frames; /* Tx 1523-9022 bytes frames  */
+> > -	__be32                  rx_valid_bytes; /* Rx valid bytes             */
+> > +	__be64                  rx_valid_bytes; /* Rx valid bytes             */
+> >  	__be32                  rx_runt_pkts;   /* Rx error runt packets      */
+> >  	__be32                  rx_jabber_pkts; /* Rx error jabber packets    */
+> >  	__be32                  checksum;       /* Checksum                   */
+> > -};
+> > +}  __packed __aligned(4);  
+> 
+> This made me check the Specification and indeed somehow it happened
+> that they have forgotten to ensure natural alignment for 64-bit fields
+> (at least they cared enough to do it for 32-bit values). [0] is the
+> relevant read.
+> 
+> > +	ncs->hnc_cnt            = be64_to_cpu(rsp->cnt);  
 
-> >
-> > +1. Curious if there's data indicating zone_idx is a hot path.
-> There are several functions in the memory management code that are freque=
-ntly
-> executed and will call zone_idx:
-> rmqueue()->wakeup_kswapd()->zone_idx()
-> alloc_pages_bulk_noprof()->__count_zid_vm_events()->zone_idx()
->
-> The patch (https://lore.kernel.org/all/20240229183436.4110845-2-yuzhao@go=
-ogle.com/)
-> will add new hotspot paths, with the details as follows:
-> __zone_watermark_ok()->zone_is_suitable()->zone_idx()
-> zone_watermark_fast()->zone_is_suitable()->zone_idx()
-> get_page_from_freelist()->zone_is_suitable()->zone_idx()
-> __free_one_page()->zone_max_order()->zone_idx()
->
-> Although The patch (https://lore.kernel.org/all/20240229183436.4110845-2-=
-yuzhao@google.com/)
-> has not yet merged into the Linux mainline; it is already included in And=
-roid 15-6.6.
-> >
->
-> > >
-> > > > Signed-off-by: gao xu <gaoxu2@honor.com>
-> > > > ---
-> > > >  include/linux/mmzone.h | 3 ++-
-> > > >  mm/mm_init.c           | 1 +
-> > > >  2 files changed, 3 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> > > > index 4c95fcc9e..7b14f577d 100644
-> > > > --- a/include/linux/mmzone.h
-> > > > +++ b/include/linux/mmzone.h
-> > > > @@ -941,6 +941,7 @@ struct zone {
-> > > >  #endif
-> > > >
-> > > >       const char              *name;
-> > > > +     enum zone_type  zone_idx;
-> > > >
-> > > >  #ifdef CONFIG_MEMORY_ISOLATION
-> > > >       /*
-> > > > @@ -1536,7 +1537,7 @@ static inline int local_memory_node(int node_=
-id)
-> > { return node_id; };
-> > > >  /*
-> > > >   * zone_idx() returns 0 for the ZONE_DMA zone, 1 for the ZONE_NORM=
-AL
-> > zone, etc.
-> > > >   */
-> > > > -#define zone_idx(zone)               ((zone) -
-> > (zone)->zone_pgdat->node_zones)
-> > > > +#define zone_idx(zone)               ((zone)->zone_idx)
-> > > >
-> > > >  #ifdef CONFIG_ZONE_DEVICE
-> > > >  static inline bool zone_is_zone_device(struct zone *zone)
-> > > > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > > > index 9659689b8..a7f7264f1 100644
-> > > > --- a/mm/mm_init.c
-> > > > +++ b/mm/mm_init.c
-> > > > @@ -1425,6 +1425,7 @@ static void __meminit zone_init_internals(str=
-uct
-> > zone *zone, enum zone_type idx,
-> > > >       atomic_long_set(&zone->managed_pages, remaining_pages);
-> > > >       zone_set_nid(zone, nid);
-> > > >       zone->name =3D zone_names[idx];
-> > > > +     zone->zone_idx =3D idx;
-> > > >       zone->zone_pgdat =3D NODE_DATA(nid);
-> > > >       spin_lock_init(&zone->lock);
-> > > >       zone_seqlock_init(zone);
-> > > > --
-> > > > 2.17.1
-> > >
-> > > --
-> > > Sincerely yours,
-> > > Mike.
-> >
+Doesn't look related to the structure above.
 
-Thanks
-Barry
+> 
+> This means that while it works fine on common BMCs now (since they run
+> in 32-bit mode) the access will be trappped as unaligned on 64-bit
+> Arms which one day will be common (Aspeed AST2700, Nuvoton NPCM8XX).
+> 
+> So I guess you should be doing `be64_to_cpup(&rsp->cnt)` there.
+
+That is is the one that fails - the compiler is likely to warn about
+taking the address of a member of a packed structure.
+
+If the compiler knows the value might be misaligned (eg if the structure
+is __packed) then it will do multiple reads and shifts.
+
+IIRC it is enough to mark the member rx_valid_bytes __packed.
+That removes the padding before it and the compiler will then assume
+it is 4-byte aligned.
+
+	David
+
+> 
+> [0] https://www.catb.org/esr/structure-packing/
+> 
+
