@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550E0224B15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619F22253F6
 	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 21:03:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744491823; cv=none; b=Hyeqm507rUsmgBT7J6E7IdCT3DaOTAlDHelkq+8KYGiPDbWtLk51PRrfzghqSfr5cmleHJGUAMawe2OLBMVwZUC6YPMMlGx7awz2Hy9GxBaJHyPZfBz9LCfuWRjZxAIIzc+SHx38Kl/h9HpM5AJJb0jDlBLJZij2uw9jmhdIDHA=
+	t=1744491823; cv=none; b=L00/BNTc8ufD5CuUNU/6gNdcO18NVQEjENMw7g+Bshz5OkyPvXJazJu73vuCNItfVJRNns3eFpWM/1ZZN7K8aZpE2hsY1AborbEsAaxAdbvgrDAoGQdP/VciDBVeAYKfMdqceTOmLCoqmhCZ9REnIgB0gB4KP1pL1Y9Bz7wWiv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744491823; c=relaxed/simple;
-	bh=Ml/bTbNtyyxIDpxkxfJcPetzMR28RnViCGd9T4KpVf8=;
+	bh=vlcadWhN1kpMYnw+3E7ZcAlZv9dphSozdaw8cKl3E4M=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uAb+h4BbEZ1Cqd616nI9LPrJ7siryh+hEfRWK/tlooGCpUIbxcZJIbfAxN4ntnA407tBuCzPQEMUwh6pQ4c8Txkqt8YbcS1bi+tqaAUs3ebXIHMt79dqTekT0hBGW3+ytjDshB8AMzvbRuR97xjRi1rQKTL0Hz0T1bxvfIyIioo=
+	 Content-Type; b=VagA78VL9wn7Bf5ZiIlkp5WcxFjL8ay9XGQb8POQVkSjjbCGsKsygvwa/oMLDrKd8Cbs+gAerLD020/uJAv4FexHoSl1sdJZYxRGNX7dB+833ANnqc9me6YsQ+DgiB2ztKWcwwZYEwhJJOOcYmRWeLEMYOJg3GlDxJt+mjETBTk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33BDBC4CEED;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEDEC4CEE3;
 	Sat, 12 Apr 2025 21:03:43 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u3i2J-0000000AEFL-0XUe;
+	id 1u3i2J-0000000AEFq-1FNU;
 	Sat, 12 Apr 2025 17:05:11 -0400
-Message-ID: <20250412210510.980606091@goodmis.org>
+Message-ID: <20250412210511.150486416@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 12 Apr 2025 17:04:51 -0400
+Date: Sat, 12 Apr 2025 17:04:52 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Andy Chiu <andybnac@gmail.com>
-Subject: [for-linus][PATCH 5/7] tracing/selftest: Add test to better test subops filtering of
- function graph
+ Mark Brown <broonie@kernel.org>
+Subject: [for-linus][PATCH 6/7] ftrace: Do not have print_graph_retval() add a newline
 References: <20250412210446.338481957@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,211 +40,88 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-A bug was discovered that showed the accounting of the subops of the
-ftrace_ops filtering was incorrect. Add a new test to better test the
-filtering.
+The retval and retaddr options for function_graph tracer will add a
+comment at the end of a function for both leaf and non leaf functions that
+looks like:
 
-This test creates two instances, where it will add various filters to both
-the set_ftrace_filter and the set_ftrace_notrace files and enable
-function_graph. Then it looks into the enabled_functions file to make sure
-that the filters are behaving correctly.
+               __wake_up_common(); /* ret=0x1 */
+
+               } /* pick_next_task_fair ret=0x0 */
+
+The function print_graph_retval() adds a newline after the "*/". But if
+that's not called, the caller function needs to make sure there's a
+newline added.
+
+This is confusing and when the function parameters code was added, it
+added a newline even when calling print_graph_retval() as the fact that
+the print_graph_retval() function prints a newline isn't obvious.
+
+This caused an extra newline to be printed and that made it fail the
+selftests when the retval option was set, as the selftests were not
+expecting blank lines being injected into the trace.
+
+Instead of having print_graph_retval() print a newline, just have the
+caller always print the newline regardless if it calls print_graph_retval()
+or not. This not only fixes this bug, but it also simplifies the code.
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Andy Chiu <andybnac@gmail.com>
-Link: https://lore.kernel.org/20250409152720.380778379@goodmis.org
+Link: https://lore.kernel.org/20250411133015.015ca393@gandalf.local.home
+Reported-by: Mark Brown <broonie@kernel.org>
+Tested-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
+Fixes: ff5c9c576e754 ("ftrace: Add support for function argument to graph tracer")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- .../test.d/ftrace/fgraph-multi-filter.tc      | 177 ++++++++++++++++++
- 1 file changed, 177 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc
+ kernel/trace/trace_functions_graph.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc
-new file mode 100644
-index 000000000000..b6d6a312ead5
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc
-@@ -0,0 +1,177 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: ftrace - function graph filters
-+# requires: set_ftrace_filter function_graph:tracer
-+
-+# Make sure that function graph filtering works
-+
-+INSTANCE1="instances/test1_$$"
-+INSTANCE2="instances/test2_$$"
-+
-+WD=`pwd`
-+
-+do_reset() {
-+    cd $WD
-+    if [ -d $INSTANCE1 ]; then
-+	echo nop > $INSTANCE1/current_tracer
-+	rmdir $INSTANCE1
-+    fi
-+    if [ -d $INSTANCE2 ]; then
-+	echo nop > $INSTANCE2/current_tracer
-+	rmdir $INSTANCE2
-+    fi
-+}
-+
-+mkdir $INSTANCE1
-+if ! grep -q function_graph $INSTANCE1/available_tracers; then
-+    echo "function_graph not allowed with instances"
-+    rmdir $INSTANCE1
-+    exit_unsupported
-+fi
-+
-+mkdir $INSTANCE2
-+
-+fail() { # msg
-+    do_reset
-+    echo $1
-+    exit_fail
-+}
-+
-+disable_tracing
-+clear_trace
-+
-+function_count() {
-+    search=$1
-+    vsearch=$2
-+
-+    if [ -z "$search" ]; then
-+	cat enabled_functions | wc -l
-+    elif [ -z "$vsearch" ]; then
-+	grep $search enabled_functions | wc -l
-+    else
-+	grep $search enabled_functions | grep $vsearch| wc -l
-+    fi
-+}
-+
-+set_fgraph() {
-+    instance=$1
-+    filter="$2"
-+    notrace="$3"
-+
-+    echo "$filter" > $instance/set_ftrace_filter
-+    echo "$notrace" > $instance/set_ftrace_notrace
-+    echo function_graph > $instance/current_tracer
-+}
-+
-+check_functions() {
-+    orig_cnt=$1
-+    test=$2
-+
-+    cnt=`function_count $test`
-+    if [ $cnt -gt $orig_cnt ]; then
-+	fail
-+    fi
-+}
-+
-+check_cnt() {
-+    orig_cnt=$1
-+    search=$2
-+    vsearch=$3
-+
-+    cnt=`function_count $search $vsearch`
-+    if [ $cnt -gt $orig_cnt ]; then
-+	fail
-+    fi
-+}
-+
-+reset_graph() {
-+    instance=$1
-+    echo nop > $instance/current_tracer
-+}
-+
-+# get any functions that were enabled before the test
-+total_cnt=`function_count`
-+sched_cnt=`function_count sched`
-+lock_cnt=`function_count lock`
-+time_cnt=`function_count time`
-+clock_cnt=`function_count clock`
-+locks_clock_cnt=`function_count locks clock`
-+clock_locks_cnt=`function_count clock locks`
-+
-+# Trace functions with "sched" but not "time"
-+set_fgraph $INSTANCE1 '*sched*' '*time*'
-+
-+# Make sure "time" isn't listed
-+check_functions $time_cnt 'time'
-+instance1_cnt=`function_count`
-+
-+# Trace functions with "lock" but not "clock"
-+set_fgraph $INSTANCE2 '*lock*' '*clock*'
-+instance1_2_cnt=`function_count`
-+
-+# Turn off the first instance
-+reset_graph $INSTANCE1
-+
-+# The second instance doesn't trace "clock" functions
-+check_functions $clock_cnt 'clock'
-+instance2_cnt=`function_count`
-+
-+# Start from a clean slate
-+reset_graph $INSTANCE2
-+check_functions $total_cnt
-+
-+# Trace functions with "lock" but not "clock"
-+set_fgraph $INSTANCE2 '*lock*' '*clock*'
-+
-+# This should match the last time instance 2 was by itself
-+cnt=`function_count`
-+if [ $instance2_cnt -ne $cnt ]; then
-+    fail
-+fi
-+
-+# And it should not be tracing "clock" functions
-+check_functions $clock_cnt 'clock'
-+
-+# Trace functions with "sched" but not "time"
-+set_fgraph $INSTANCE1 '*sched*' '*time*'
-+
-+# This should match the last time both instances were enabled
-+cnt=`function_count`
-+if [ $instance1_2_cnt -ne $cnt ]; then
-+    fail
-+fi
-+
-+# Turn off the second instance
-+reset_graph $INSTANCE2
-+
-+# This should match the last time instance 1 was by itself
-+cnt=`function_count`
-+if [ $instance1_cnt -ne $cnt ]; then
-+    fail
-+fi
-+
-+# And it should not be tracing "time" functions
-+check_functions $time_cnt 'time'
-+
-+# Start from a clean slate
-+reset_graph $INSTANCE1
-+check_functions $total_cnt
-+
-+# Enable all functions but those that have "locks"
-+set_fgraph $INSTANCE1 '' '*locks*'
-+
-+# Enable all functions but those that have "clock"
-+set_fgraph $INSTANCE2 '' '*clock*'
-+
-+# If a function has "locks" it should not have "clock"
-+check_cnt $locks_clock_cnt locks clock
-+
-+# If a function has "clock" it should not have "locks"
-+check_cnt $clock_locks_cnt clock locks
-+
-+reset_graph $INSTANCE1
-+reset_graph $INSTANCE2
-+
-+do_reset
-+
-+exit 0
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 2f077d4158e5..0c357a89c58e 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -880,8 +880,6 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
+ 
+ 		if (print_retval || print_retaddr)
+ 			trace_seq_puts(s, " /*");
+-		else
+-			trace_seq_putc(s, '\n');
+ 	} else {
+ 		print_retaddr = false;
+ 		trace_seq_printf(s, "} /* %ps", func);
+@@ -899,7 +897,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
+ 	}
+ 
+ 	if (!entry || print_retval || print_retaddr)
+-		trace_seq_puts(s, " */\n");
++		trace_seq_puts(s, " */");
+ }
+ 
+ #else
+@@ -975,7 +973,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+ 		} else
+ 			trace_seq_puts(s, "();");
+ 	}
+-	trace_seq_printf(s, "\n");
++	trace_seq_putc(s, '\n');
+ 
+ 	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
+ 			cpu, iter->ent->pid, flags);
+@@ -1313,10 +1311,11 @@ print_graph_return(struct ftrace_graph_ret_entry *retentry, struct trace_seq *s,
+ 		 * that if the funcgraph-tail option is enabled.
+ 		 */
+ 		if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
+-			trace_seq_puts(s, "}\n");
++			trace_seq_puts(s, "}");
+ 		else
+-			trace_seq_printf(s, "} /* %ps */\n", (void *)func);
++			trace_seq_printf(s, "} /* %ps */", (void *)func);
+ 	}
++	trace_seq_putc(s, '\n');
+ 
+ 	/* Overrun */
+ 	if (flags & TRACE_GRAPH_PRINT_OVERRUN)
 -- 
 2.47.2
 
