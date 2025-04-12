@@ -1,110 +1,108 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E77B1C862E;
-	Sat, 12 Apr 2025 19:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5D21F0E27
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 20:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744487955; cv=none; b=XvORZUjDIahvtnzn6S3XhDDoKgctIke+ksEV9VqnweLkkp/YR1rkW81ZlV69dKf1nDfEAOrP0brJl5OnGziB4vJ/oi2eq5W73KPMpDNRpQ9S9Q9S3Xp8CMpP7PDrA/u5K5+wRkqFzPHJUZVHhxOUSnpmMgGxvm/w+FXbsKEaGJI=
+	t=1744488258; cv=none; b=NIHYqyn7zZ1JX5tA39k69tjgg3spAuQkn5wdUW8NZ0XooM1NWi6a9IwoA5MKblO5mTnlM5YiJnkKBvXcY5/H1LBI+HDE88uxuh36Mlta0F5MX3fHl1XG6NXJN+lYJqfPfJJPJ5jYdzYK9yhM9R32VlkpvmR0KnU/mkjKtW/Vaac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744487955; c=relaxed/simple;
-	bh=2OjB1QhTLKklmbQVSbsphQt72iZ7X8Hyz8dWd8pfqvg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E53C3QVygerT+Gt0pV3/Et/EMrlW/CNNZsUrFVr7QsByLScTio9BtQBAcnTS6pSb8gqVutgNQdtrhS3rtiEY2xRT2eghMxsWhGKL7bahCZUTPHJ6DW4iOaDIII0d3dCKhQvieoysFV0pWwR6rtl7+6MhMpkNyIYhjI8mWmG3PQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLiguAgB; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744488258; c=relaxed/simple;
+	bh=OWz+aH8klM7UAUDqCrig0TrpdlpaKluF92h4yFy36e0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MPAZjQlDgR1asFG9JQGkTd/hKZrkzzoFUbHUK1Psy93KmeO3+8/fEhG3oNaeT1E66EC9kbw27ELQ7oJFzCszLFlya4Ca2bxf0yrr0VmnYzUGyBkUlMX1rYZJe/nujitqCJ0DYBkB5Z9/dlN+2IFz+eRWHKysudoWMqBYGFnDX24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=qBUP54D1; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLiguAgB"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8ff1b051dso5262436d6.1;
-        Sat, 12 Apr 2025 12:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744487952; x=1745092752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zVbi2TXkSg4KXX8medQfMaOeKCJREtWfx9H5qztrBxM=;
-        b=MLiguAgBWZVuX1hVxStUTTl23qh5khNMSEjt+b3qU9fCnFdsV4/xQ/uAV2bYOqLW/d
-         P5TjIVyi4oFXpqTKTMaNBjSJEA278U4akBd4Dx0GB5aakhsZNpM9q8kcBVfY1TPN/Utj
-         dnMIB8yl3B47sLiQnwE9gxz8s2gF6C0JtNpcuFViLIwLsK5/lto5umu84WqRAMG+UHaM
-         JogPi1GCfhMMqgC2qtrjmoL2wE8qHR1Lh54NRYqKeSY9QwQmnbJ4veECd4ThHeUd72YC
-         eppfNrZITi8zrldNwrhEUD/56WuB5fpaa8PXOsEw6Lk580CG36UyMbVn/HtoEiXcIP3K
-         hdpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744487952; x=1745092752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zVbi2TXkSg4KXX8medQfMaOeKCJREtWfx9H5qztrBxM=;
-        b=hTYfNaJOQmAUbhwVIFghdUG9MNiM8L6KoErRPv5wVXAP4/557tEJon+LetUTxCvBw6
-         yx7nDX3ZUFMRoZEiwnDnaiTt3V7359NRBhoIEyB8Y9lZX0WwB/EnxgkilQyWVDvKtr/Z
-         WhqqHCrUnt5tzm7V/f4CUA5R6hVdxaDZ8bIpl0NZBK8c5NLS91eijOeV5ZWpAyhix3RZ
-         Cpdgu7yEKAMHiqJg7jeuHFtQJ/ePLheg7VzksAERhuKAiQ0Y30jZjxuCj0maiyhJWvPJ
-         HwRpaGh+Rm6c0JrGwlTWEZxpWnaw3i8/MVlFGgsxC+YIgpH7E73xfnZh+AQCiy5BYL4K
-         eyMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpUWWES/4AeeBDaKRQ+v+5nS9YFt8NvJ09kxHPI27wnHrhmFVCz2AiiBmb4iVh34IcrGUmAncjd9NPhcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXCBK91zaYhzwCYTIMABcohLBilnu9LjkIBbNMFyIBvZ32sMe9
-	+fUA1TYJ96Zr8RyfGGcXLI/wl2+GkmTz7IbqYpg9U3zPqinVGAZpZXMP0C8=
-X-Gm-Gg: ASbGnctJ6qZAn3YTe1nHU2n2adKe0hZw92dghXSoxceBe/2gp52GUTUhoRAFFWC3xO3
-	AIbqGeXcevB03nW/EAoLUf9YDcZ7OHoD11JhAnNwd8C0eOoW1clrE778I6oaQxTq6izbJ9vnCG0
-	xfFXQdoNbvobEI+fNuaMFsskBIjSf7tePdGdgXEV/wq64pD8Ng07Fql9iUGjiBxGQSq4t/OoMqH
-	8SyFq+A4YHpjjb96YfCYnyARJHllQL5x9g1tOrXpDDwgyC4g9QAjfu6jVr/zzjE6WZyeGDADVSe
-	cfaioq3zFwWXgmkxt2+TPSTqqsFWZIrD9jNNkA==
-X-Google-Smtp-Source: AGHT+IHOb1sEOftq5ghYu8md170FhVPT25M7x4K+yhMg+C67EgyS5u0Mu32YcIcVtklarGAqfD82qQ==
-X-Received: by 2002:a05:620a:4306:b0:7c3:d798:e8ae with SMTP id af79cd13be357-7c7b189ed07mr334969285a.2.1744487952199;
-        Sat, 12 Apr 2025 12:59:12 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8969428sm447768285a.61.2025.04.12.12.59.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 12:59:11 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: alim.akhtar@samsung.com,
-	avri.altman@wdc.com,
-	bvanassche@acm.org,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	peter.wang@mediatek.com,
-	manivannan.sadhasivam@linaro.org,
-	stanley.chu@mediatek.com,
-	quic_cang@quicinc.com,
-	quic_nguyenb@quicinc.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] scsi: ufs: core: Add NULL check in ufshcd_mcq_compl_pending_transfer()
-Date: Sat, 12 Apr 2025 14:59:09 -0500
-Message-Id: <20250412195909.315418-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="qBUP54D1"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 5FD3C240101
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 22:04:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744488247; bh=OWz+aH8klM7UAUDqCrig0TrpdlpaKluF92h4yFy36e0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
+	b=qBUP54D1qfZK36cVrlBNLbh+2nWmTYGzAHoHC6ZY6GWoKhKPGd8HKFzJzPIII/zCH
+	 k/mChuHKA3RULPoEFta5AU4k7GEFZZ9PjZ83k2Xltzh+6QBjojznW7D1n68vfpyh3l
+	 XboYnqpxWXONicWcJNfKZin1hk23v3i2Iy6qtP9zVyHiK16Lf5QQtXz4kFmnNv9448
+	 Ojg6mS68MC0CEUd5ALuYwBo2IhEP5anCgOcFDne8MrSLnN95VqnKU2LbD6uR3qeqVr
+	 CHP45rP7hVl7AMoUB/ceSEN3W3ne+BQAFRjqEFzOK4I2Si5IXc97kdBhYKOt4RPjmy
+	 KDYAtCWMsbiDw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZZkyt5C2fz9rxD;
+	Sat, 12 Apr 2025 22:04:06 +0200 (CEST)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+Date: Sat, 12 Apr 2025 20:03:57 +0000
+Subject: [PATCH] xfs: Verify DA node btree hash order
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
+X-B4-Tracking: v=1; b=H4sIACzH+mcC/x3MQQqAIBBA0avErBtIK7KuEi3MphwCCwdCCO+et
+ HyL/18QikwCU/VCpIeFr1Cg6gqct+Eg5K0YdKP7plMa0y7orXh0ntyJKw3tOBijrHZQojvSzuk
+ fzkvOH9Oj675gAAAA
+X-Change-ID: 20250412-xfs-hash-check-be7397881a2c
+To: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744488245; l=1647;
+ i=charmitro@posteo.net; s=20250412; h=from:subject:message-id;
+ bh=OWz+aH8klM7UAUDqCrig0TrpdlpaKluF92h4yFy36e0=;
+ b=cBb1AvyINpf0A7xXg40VYb23V3WAlVb58xBF+YF0p1wdN/XbaBYsfWOBuJiqJ+50gJ5FNrq2x
+ 7zUbNnQUGglCMnAH/M8PBrVL/THQNmIfrUGixlkhnGZhyeetiof8sQE
+X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
+ pk=Dwccy7f4QM74qKQFgkWc/EpYGEDY0qvP4cycC87VXeQ=
 
-Add a NULL check for the returned hwq pointer by ufshcd_mcq_req_to_hwq().
+The xfs_da3_node_verify() function checks the integrity of directory
+and attribute B-tree node blocks. However, it was missing a check to
+ensure that the hash values of the btree entries within the node are
+strictly increasing, as required by the B-tree structure.
 
-This is similar to the fix in commit 74736103fb41
-("scsi: ufs: core: Fix ufshcd_abort_one racing issue").
+Add a loop to iterate through the btree entries and verify that each
+entry's hash value is greater than the previous one. If an
+out-of-order hash value is detected, return failure to indicate
+corruption.
 
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-Fixes: ab248643d3d6 ("scsi: ufs: core: Add error handling for MCQ mode")
+This addresses the "XXX: hash order check?" comment and improves
+corruption detection for DA node blocks.
+
+Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
 ---
- drivers/ufs/core/ufshcd.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 0534390c2a35..fd39e10c2043 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -5692,6 +5692,8 @@ static void ufshcd_mcq_compl_pending_transfer(struct ufs_hba *hba,
- 			continue;
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -247,7 +247,16 @@ xfs_da3_node_verify(
+ 	    ichdr.count > mp->m_attr_geo->node_ents)
+ 		return __this_address;
  
- 		hwq = ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
-+		if (!hwq)
-+			continue;
+-	/* XXX: hash order check? */
++	/* Check hash order */
++	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
++
++	for (int i = 1; i < ichdr.count; i++) {
++		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
++
++		if (curr_hash <= prev_hash)
++			return __this_address;
++		prev_hash = curr_hash;
++	}
  
- 		if (force_compl) {
- 			ufshcd_mcq_compl_all_cqes_lock(hba, hwq);
+ 	return NULL;
+ }
+
+---
+base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
+change-id: 20250412-xfs-hash-check-be7397881a2c
+
+Best regards,
 -- 
-2.34.1
+Charalampos Mitrodimas <charmitro@posteo.net>
 
