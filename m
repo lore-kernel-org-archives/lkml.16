@@ -1,199 +1,119 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2107.outbound.protection.outlook.com [40.107.215.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1040C1AF4D5;
-	Sat, 12 Apr 2025 16:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744473773; cv=fail; b=MNH0opYxzTjW6Ueyrvj7RGS5PaRigRUNcoL+YS6wLGFD3a849NtRGf2ecABUsTSBFJJUT5Q1g9qg7Lfblf4xkpUwN6XGAsFwgshTEHFH3YfQDH716+ED1nTrrG1tLxlOZGA9IpKhBY+xy9K420JdSMNJIGgiaN/zg6Dy7ZWpYNg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744473773; c=relaxed/simple;
-	bh=i6vdrfWmmDgQpk35E+zggObarLAfouvqabAFg+MaXk4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ELXoOCEGOahgecGlWw0JyKsE1OVpfNHrMk2NeFfWqyZeaUxSC9+eu1+WM8zOVU3yu6uM+cZU3bmC31+1C0+pK0Qym2shscg0Ts2IrxkCZ6Ovb+xZFCbfkZ8p4qXvWmzmXfbush1wePu5Sky4q/De1mWA7sI3BwltuenipbSeE7Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.215.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WhfsNgqnc8pVtR5RksmDW650Ye47LzHRtKvbsnm+mU2S5cstiXES/XfL5UPxgl/d0RpIJJRZ+2f5nB1/LZZaRlFKkKeJ/Dpw+oLFToFFeArbTDDjvAOM3VuDo+iZccha57R0vUtx0M+C7iBq0l6UaBa69gmtPCrSIa+08Sk/K2cGCU3yI9UPDZ4nT4oTOWSkxHtmovObSazdFfHjx1BePldw8n/GNPMCn4UrkwyKCHQg2PSgsP2yIpyQOPjOZzQ5a3uQsh5p8R8kkRoE7Sdv3Hz9dPRWcdLNtnNhN32guUg1DW3jLOiIk6uolI46i1tDycMHPPNvok3mAyyRa4ehlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vjcLWuEEFZ8x73venkAxYeuLchSROMehltySMaO+nqU=;
- b=URGnG/juM6Qu++1sqMZSxwWUW4r4KaILTFuUhdRFqZfS02Y+wL6TGiAi+D5YDZfqttl5UPz17RdPL37eT6uM9PPn4eLK47dk0kSyg8whHOQ/jpUlaa9By9msEOPXKMkg1l7HuGblx/3oljBWvrudY1GYOQZFdjPn9s2Yx5GUIRPSW/nanvGCwFfsgsW3+nvqTVQtUzBqTjOvmd3vFKo9f5cQXFnqEvUcyH5C4XviWbkVyPVgDWeiNuaJEesJjdahlmPxHhDC+CljSjucKjF6K0Hg10KutcxEvbSdHqghcYxK8JwsXXkvENI9L82Dqn9hzkzpPRIyRwR8Ho8sYl/Sog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR01CA0168.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::24) by JH0PR06MB6850.apcprd06.prod.outlook.com
- (2603:1096:990:4d::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Sat, 12 Apr
- 2025 16:02:45 +0000
-Received: from HK3PEPF0000021A.apcprd03.prod.outlook.com
- (2603:1096:4:28:cafe::6c) by SG2PR01CA0168.outlook.office365.com
- (2603:1096:4:28::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.29 via Frontend Transport; Sat,
- 12 Apr 2025 16:02:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- HK3PEPF0000021A.mail.protection.outlook.com (10.167.8.36) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Sat, 12 Apr 2025 16:02:44 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 3BDAF41604EB;
-	Sun, 13 Apr 2025 00:02:43 +0800 (CST)
-Message-ID: <94d08e9b-9718-4ee2-be9f-469177f7e4db@cixtech.com>
-Date: Sun, 13 Apr 2025 00:02:39 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C0E77104;
+	Sat, 12 Apr 2025 16:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744473924; cv=none; b=TnXcTMLXQxLgpGxMFkni6hoU/u6y14OKyS3xh6XTtRFRNpaJJpUr+mp6KZcKLDYuDdw9o0XnqRS9tNnngmooaJH22/CMhqx1GMLwZm+3SsVEB6+gw7b1mU44iluYMj4RZm6nXIssJlybHR6xNuheB4uErMfcAHpFJZl1dyxgV+A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744473924; c=relaxed/simple;
+	bh=pmfOx0ByssuAb79V71tEtlJ1QVhMnmrwa7zyOqEos0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bo1Abi1JY5zKrGg//96MIHIh1Z9Q8JqWF3YcY/JaHfWwY/OcOjeSNS7pErRS7eM+atLrLwBRrY7/7CIR9F8cn08sQf2VkkfIHJL1lVm1xdYL8nFRu6ua4X3c2rXHxRxW+V8FfaMkT72i5vIV4ioETHKZ1iTSJDIPcr+Dym2l/KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CbmG+V4k; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbmG+V4k"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47680c117fdso5669381cf.2;
+        Sat, 12 Apr 2025 09:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744473921; x=1745078721; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=18rNRUozuuywP1tNu8idsUvf4lnx4Kb0IvyRGbZ6T3M=;
+        b=CbmG+V4ky2rD/qydcEVbrhIZ5weCgHwhSxK8/Unkk8QR0KXElzWmAnMlgbh7AGEb6t
+         FsK3lJNyaxPyiV8ltTBtQfTL0/Zijsv5sff9QQ/GucpPJl54S5GTDzGMg3RlP6vNma3h
+         hpEtKXnj4DEmG/vUYz8IpJuVM+Mj+EzQ9jxh1RpXRHwtzPpnqCsXtcJn4RS1fyP50zp+
+         sO8zsrgqvU2lk6HWAkSjP9l8aSqY8TW2zE6ER4qZW4AWZLLpFch/hctpl6hIdhDybAaD
+         GlQnPJNwbnRfANdglh/Nb47BhxpaiTfycf59EgGOwFWMbom2kGDjGbtWgEG/aQtl5bqV
+         4I5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744473921; x=1745078721;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=18rNRUozuuywP1tNu8idsUvf4lnx4Kb0IvyRGbZ6T3M=;
+        b=MIj5LicnAz/rQ77HRZYO0E0NtlwGUcL4orFed7oyJzofReGJ1/RVLHnosriDJSVCGf
+         wpLf7UBUnVt5Vbw1+3NsQtM8gPPrhYO5QQEzqa7ppSUFUplbi1RJV2tTTxYHvm/OGrd5
+         7iNwIe6Ls8WPdkEWN/YW2QbP/62ozPMF4x3lazQcTHCWX6fXkirlSu3piMEoXZV5EuTz
+         DfWnQGbtziToS3G8E939YaKYwG3G0EYL4uLFWeSj69U37b+kkOv0jX5h3SgqILuezqdi
+         chUrGv/pMbJt0chWLeJmL45Bb/4KOfRRvLy2t8Z/3ufjgzuws8wNtku4nzYYTpdyIncR
+         6e0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVPcfXzgtZVhkyVuqprwj5BXEP1Gzc4Bmz7A+a9eg1ayKXqRFeoyp2iyT71mJPajxI1r5ENoH8XqtLAkHg=@vger.kernel.org, AJvYcCXkcFVj9InF0VyKXFwWpzG5h5bN2v3l/sqfX0aNV+y/dgUIXV/AFUwbvd07USgpC5yy/BG45C8vll0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyipUl8KEpRsHGbNLEfGZIpAKuJPOyAyGJEYNADfmW2J6hhgDeE
+	ccLxt5sLNeaIIhEBmep+dcmU469Rsj/El8LmXhX05VV6wS4Ox7+enjCO
+X-Gm-Gg: ASbGnctzbHd0rGTfkYpW0OVyyrDn3+mHOOB8jBfb65DaPHM5M3otGczpauUcf005Stj
+	mfSKFvYsL2TZdH5L75UixGwlO2v8kz2gQe/HniMlE42N172lxgZEVl55j2YykFuNKDgrOmP0r8a
+	lyRkdLIet0OKQEz+MLZM8EXVPcwD9+YsNpptmbzqUsEDxttZC0/lv8y9YIOxUaoLg9XPHvxgYYw
+	40bCwrLEuXkSWVo0VZnxUR6Q22TbFvQQlo9HHA9hqdzq8XsTfn/MbkdZGGeQ6kVvtRjPcp2BPAF
+	LNSmlLEApaMmPSOG7fV4Oj5UJb1qJ+uGkXYOdA==
+X-Google-Smtp-Source: AGHT+IFiHWb94k652mgAZ/ZDuGpTVK6w5j1J2J86j0VwdFWpYKq46BdH1rfkKZVmctjSl9dXg/cPAw==
+X-Received: by 2002:a05:6214:e4a:b0:6ed:2289:6623 with SMTP id 6a1803df08f44-6f23f191ce8mr39928946d6.10.1744473921131;
+        Sat, 12 Apr 2025 09:05:21 -0700 (PDT)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea07f3esm51541616d6.76.2025.04.12.09.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 09:05:20 -0700 (PDT)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: sven@svenpeter.dev,
+	j@jannau.net,
+	alyssa@rosenzweig.io,
+	neal@gompa.dev,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org,
+	marcan@marcan.st,
+	maz@kernel.org
+Cc: asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] cpufreq: apple-soc: Fix possible null pointer dereference
+Date: Sat, 12 Apr 2025 11:05:18 -0500
+Message-Id: <20250412160518.1824538-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP
- controller
-From: Hans Zhang <hans.zhang@cixtech.com>
-To: Rob Herring <robh@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Manikandan K Pillai <mpillai@cadence.com>
-References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
- <20250411103656.2740517-6-hans.zhang@cixtech.com>
- <20250411202420.GA3793660-robh@kernel.org>
- <07457d00-82bb-4096-ba07-6cc7b7d118e3@cixtech.com>
-Content-Language: en-US
-In-Reply-To: <07457d00-82bb-4096-ba07-6cc7b7d118e3@cixtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021A:EE_|JH0PR06MB6850:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5ae1a2b-3469-448c-7716-08dd79db7649
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RWJReHg0L1lPVS9QcmZMRG1Gb0ZFY3dLck9uVE0vS255a0lPUkNNc0p0SXhW?=
- =?utf-8?B?K0lQN2czajY0Y3VxbmMvTUllbGJULzQrQUlqMzRqVkJnblNpYjl3QWFSSTAy?=
- =?utf-8?B?SThMRmJhRHF0UUZ1OEJMWS8vNWR6endDdTNZbGNEbll3dUpieVBEaWJLV1FE?=
- =?utf-8?B?b2plOUpYK0lyVlNUT3ZuaEQvOUJWTFBpdFVoYVlXMlc0anNtUWErWjhucXFw?=
- =?utf-8?B?QzJ5MURBcFlVUjhQbGZOc0E5aHpEbzk3K1NjcWYwdVZab2cvTHFiZEdzSUo0?=
- =?utf-8?B?MTA5ZXJnc3lVMEtpVmFjRUx6bWdRYTAxR2tFTHZGRm5wNUNNTEx0dzcycDBX?=
- =?utf-8?B?UEltWThRVFE5dG84cDdDVjRONktLMGd6R3JKb1BseUlTalhZVzhaRVdibTRt?=
- =?utf-8?B?R2NEZHU5S3ZscU5VNzNBSktib21MN2R6RWZmQ2FMZnFPZ291UjZKNXVSTStT?=
- =?utf-8?B?Z3BNZmhIWTZMSmpEUytneGcyUTNrSUdPTFJiS1p6V0xHOWN6UnF3TTVBclox?=
- =?utf-8?B?cUQ1UjdnU0pRMXE0Q0trR2FOV3BGTUZUa3p3LytMLy9lbldvd0ExSkNlb3VL?=
- =?utf-8?B?N3pZZUpsQ1oxTjFCRC9ESkNweFFPakJMWEFOTHoydmFMd1lqclBCUFVFSVVi?=
- =?utf-8?B?R0dXNzVOVTFHMDBORFE2QWErbVBCTWRCYitHckJBbldjS0VERXZxZ05lVGFx?=
- =?utf-8?B?UVh5V0JiNTFEVUJvanRVM0VZd1NXOGN4TDJtczdMVnRBK1FldCtMVnptNmk3?=
- =?utf-8?B?L2NaL0lDTWxlbnJVMElUbDMwRWRQQTN2Ny9FN1JIYnVuVDVJVlJJOGlIYTc3?=
- =?utf-8?B?aWRmMW1leWNyaG0zZUd2Z2ZJMWorK3hyZjFTMmZGcDJ1NTVZT2t6eVhQbUFy?=
- =?utf-8?B?QUV5RHpCSVJxOW41aXBaWkh0M2RzZUFCTTdkUTUzZjdxVHFic3YxT1dab2JG?=
- =?utf-8?B?U2djWnpsZDI5RHJqVi9KTUhkZTZZT1ZlYXNYTDF5a0IxYmVtTzZ5WFhVb2ZI?=
- =?utf-8?B?WFJxMTIrVEV5bDVZZzhLdjhsQTkvU0JzTERXQ3k0eGh4Y3AzaVFCWmp4TTB2?=
- =?utf-8?B?RXB5WlpJNTRkUVJUcTlCVU01a2d5NktrTzg2YUR4bVEvVUFFVjdhTzE2d3JK?=
- =?utf-8?B?ck5ZQ0wvd2ZxbkFmYkFjYmV2SHE1QWlpNGtpSVJQbWtMM1ZZWXRiUXNtRnRG?=
- =?utf-8?B?eDJGNndpNWJ6RmF4dmYwV1FaMlJYU0ZNRm5BRm9YUkVvUi9NeGFXb0gyeUxO?=
- =?utf-8?B?Y0x5emY4VjcwNUxCSFdpZldLcFR5dTF2dks4cjhjNE41QVFoOHdUWmJBS0Ns?=
- =?utf-8?B?T01LcjhNK1cvS082TFB2VC8vS09qNHFLUWM4RHhqRk5OOG0zMWtpTXp3SUlp?=
- =?utf-8?B?M2cwWGdiTnRhNG5KRmVLK3ZXUmVzZ1dHZWRTWDkySE8yVlNLbFJPcnNDZTBy?=
- =?utf-8?B?WkdSSTNaR1Z0SWJWd1hhaHpKbUhsSWFnMlFaNklBb3BabTZiOFJUUjVGV25p?=
- =?utf-8?B?SUJXZFc2Y0EwZEZabkRDckZCYlptME9HQ0FRUU1wQVhYd091Y1dmYkswVThy?=
- =?utf-8?B?ZlZRQUV1Ukh4LzFvVmhQV201RWNwZDFsOHVWYlBzVnNqbTV2TUNGS21KSzNW?=
- =?utf-8?B?cFk2Z2MrbUJjZ0JwbnBQdUorUlBVejhndEdJS2NmRGpEd1hpbTkzU3d2Z2FB?=
- =?utf-8?B?VEl5R0t3R2x3S0hlQThGUnVUUDI0SmNybEIrdWI2R2VPWDRWbE9SWmg2NDY5?=
- =?utf-8?B?QngycS9jaytSQmlrNmdrS1lYcWd4d3hUcWwyK0VIYTVvZnRhV3hmTXhrL2Zy?=
- =?utf-8?B?MWtSaEFiY0tCcmpQY1dKSUcrK2d3VTE0QTRQbGtqOWNwMXhJbU1TNEtVN1ZK?=
- =?utf-8?B?ald1bVpCV3ZBME5sc0pLYnMyZmo3bmVmdCtiWkRlaEpDUitvZmVQQzBsZWVL?=
- =?utf-8?B?L2RwZ2YxaEtWanBGd0lRWVlQeEhuUEVuWWI2Nkd0SVd0aHRJdms0V2NVTFdr?=
- =?utf-8?B?RFdQRU1qSGh3eFJlczBJQXVIMUJlYWhkanNtVHZGeVdOSWxKMFRnaTlobUdp?=
- =?utf-8?Q?AWA33P?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 16:02:44.3303
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5ae1a2b-3469-448c-7716-08dd79db7649
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: HK3PEPF0000021A.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6850
 
+Check if policy is NULL before dereferencing it.
 
+This is similar to the commit cf7de25878a1
+("cppc_cpufreq: Fix possible null pointer dereference").
 
-On 2025/4/12 23:45, Hans Zhang wrote:
->>> +     /*
->>> +      * Clear AXI link-down status
->>> +      */
->>
->> That is an odd thing to do in map_bus. Also, it is completely racy
->> because...
->>
->>> +     regval = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE, 
->>> CDNS_PCIE_HPA_AT_LINKDOWN);
->>> +     cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE, 
->>> CDNS_PCIE_HPA_AT_LINKDOWN,
->>> +                          (regval & GENMASK(0, 0)));
->>> +
->>
->> What if the link goes down again here.
->>
-> 
-> Hi Rob,
-> 
-> Thanks your for reply. Compared to Synopsys PCIe IP, Cadence PCIe IP has 
-> one more register - CDNS_PCIE_HPA_AT_LINKDOWN.  When the PCIe link 
-> appears link down, the register -CDNS_PCIE_HPA_AT_LINKDOWN bit0 is set 
-> to 1.  Then, ECAM cannot access config space. You need to clear 
-> CDNS_PCIE_HPA_AT_LINKDOWN bit0 to continue the access.
-> 
-> In my opinion, this is where Cadence PCIe IP doesn't make sense.  As 
-> Cadence users, we had no choice, and the chip had already been posted to 
-> silicon.
+This is found by our static analysis tool KNighter.
 
-Supplement: Prior to this series of patches, in the current linux master 
-branch, Cadence first generation PCIe IP has the following code:
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Fixes: 6286bbb40576 ("cpufreq: apple-soc: Add new driver to control Apple SoC CPU P-states")
+---
+ drivers/cpufreq/apple-soc-cpufreq.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-			       int where)
-{
-	......
-	/* Clear AXI link-down status */
-	cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
-	......
-}
+diff --git a/drivers/cpufreq/apple-soc-cpufreq.c b/drivers/cpufreq/apple-soc-cpufreq.c
+index 4994c86feb57..3de9bb2b0f22 100644
+--- a/drivers/cpufreq/apple-soc-cpufreq.c
++++ b/drivers/cpufreq/apple-soc-cpufreq.c
+@@ -135,10 +135,14 @@ static const struct of_device_id apple_soc_cpufreq_of_match[] __maybe_unused = {
+ static unsigned int apple_soc_cpufreq_get_rate(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get_raw(cpu);
+-	struct apple_cpu_priv *priv = policy->driver_data;
++	struct apple_cpu_priv *priv;
+ 	struct cpufreq_frequency_table *p;
+ 	unsigned int pstate;
+ 
++	if (!policy)
++		return 0;
++	priv = policy->driver_data;
++
+ 	if (priv->info->cur_pstate_mask) {
+ 		u32 reg = readl_relaxed(priv->reg_base + APPLE_DVFS_STATUS);
+ 
+-- 
+2.34.1
 
-It seems that all Cadence PCIe IPs have this problem.
-
-> 
-> Therefore, when we design the second-generation SOC, we will design an 
-> SPI interrupt. When link down occurs, an SPI interrupt is generated. We 
-> set CDNS_PCIE_HPA_AT_LINKDOWN bit0 to 0 in the interrupt function.
-> 
-> If there are other reasons, please Manikandan add.
-> 
-> 
-> 
-> In addition, by the way, ECAM is not accessible when the link is down. 
-> For example, if the RP is set to hot reset, the hot reset cannot be 
-> unreset. In this case, you need to use the APB to unreset. We mentioned 
-> an RTL bug to Cadence that we currently can't fix with our first or 
-> second generation chips. Cadence has not released RTL patch to us so far.
-> 
-> This software workaround approach will also later appear in the Cixtech 
-> PCIe controller series patch.
-> 
-> 
-> Best regards,
-> Hans
