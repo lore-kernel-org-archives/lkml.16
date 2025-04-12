@@ -1,108 +1,126 @@
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A174F1E2852;
-	Sat, 12 Apr 2025 13:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAF41E2852;
+	Sat, 12 Apr 2025 13:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744464840; cv=none; b=uCGmLi5NDfpgWa23wffcl/j3inSjFrmSjJ4568iSF3Fm6l1ICumP4ggbog8Qs1mjNffNDUrNc2XQ6eYjFB2zCuzALfgMGnj9YDusCsCtP0WJnUNZAgsA6gi3PykV4S0Q9vKJ4l+fPdtXwAXRB6NvPkLP2mEd9xYAbF3Evp0HH8U=
+	t=1744464870; cv=none; b=CkYpKG25Gk/0EUZa3BmuR9DCe8P8mP+y2o4EvlLcKgl/FkaLfQpTrX7jwqyXqPTesXOFfr4FjAs/RQUd1j5GV3391txUgNGaVzQWuce3IEXR8Ltj6nN73wBBb4RK76zW9LTN/aDVXQwmXJoORvn/z5JqBm1GgaqxJ3d1UZ59Dog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744464840; c=relaxed/simple;
-	bh=h0IwcTng9sclCvcywK+wNMxJpwXXKHjRD7dMWtaA31g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Od+2Vp4Z0XB6UE/zXFBWJ0uUSBN2Nu63Hf4AiadG5nvd/JbcKvr86VsT4TUyp+sXDWPufgqdi+m7IG6oSzDPnWPjXQ6QFjwHG3F1W2bKWUIlxCE56evUHZsWjuO7SgknO3bQHuPWHbnrylsK51QnqYnK6eYK+0OK3mThoXXash8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QYfqEYQy; arc=none smtp.client-ip=209.85.210.194
+	s=arc-20240116; t=1744464870; c=relaxed/simple;
+	bh=NO3DxyBYoznn4Joy7NjNSpMDaDjRCQbpBwtMJpvWSGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ToP0GtQjMtB1nnGuxYmnYrLhSNCjB76yNq4lLAisJY1r81LE+azUkhqWoHxkmex8fCgOKvQMxE92eXImtIDNXRIrdLOjNQavT1364/Fuw1G5TNt6RRCzKT8hk1RVUrHhpmZ7zu3AcuP1bQyIdPKpCQkYHRaaE0BKt5my16SVQqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R14Mxm9f; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYfqEYQy"
-Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-739be717eddso2227652b3a.2;
-        Sat, 12 Apr 2025 06:33:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R14Mxm9f"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c2688e2bbso280687f8f.1;
+        Sat, 12 Apr 2025 06:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744464838; x=1745069638; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PikjTMv10qhp5875nc5HxqEEn+j7NbvWOkALbBYBqJI=;
-        b=QYfqEYQyo5hUPP/RgpLOPp9eKP7NJhbKV1G32UdtK+m+yopsLEtYr23EeabVkFj4EX
-         Lv/1byYFwhMuTNTEOPu3tyswWqmHAzYs2YA6HOIliICEqraeRmiWU1moIZA0rAsh3t3C
-         FKwp1T855vGVhcdlrKkq72N+saRCV8ZQ9UPT2+TpXmRJkZt+T1WCb2BsEJ/h2ZzGCMNJ
-         atctHHFXNQg/O2hryL9GcpSgJIFWITFTbni+qElHzuZPwTVta8vUfOFH8W0ChIPxLs0B
-         hhgwVh8rtTd4pbGY/r0oICz+4qQFQGPnVnrcqVTY0icWzO2/Vm3pKiRqGAbHch8gVMC6
-         7j7g==
+        d=gmail.com; s=20230601; t=1744464867; x=1745069667; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WfJoT6PRSs94k/+btljFzIPdD4QWmfmkTqVitM7k/U4=;
+        b=R14Mxm9fTuR2WMSYuG5b8qqwxD1uSEY8PpPkodcKr1qcRUBLfe4NEZPeRkBpTZFczd
+         O9HR2Z397vVyIvOmSYCI6QfcGnydtxRS3FG/hGhHZ1kpHdJzap0xyn4yTGS9T3LCNR6C
+         stPiLr8C6Pb7zb9dlHJlirJARGw4EuDK/K8sj2yy65i0Hm2HSSlTQP0/VU1ou//MZq6b
+         jVCBZ4QBvO57thirvLMSFq1MiawtAW0lxO5sg9kXS4PQP5q0N7JYIMoVkDmwc7wh18pz
+         kDfzX0gCTVnDycg3pH+2UZrLYmAIEneIL6y2wS+HRtyyTf2uagC4jkVu8H/CXGQyA7tu
+         +vYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744464838; x=1745069638;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PikjTMv10qhp5875nc5HxqEEn+j7NbvWOkALbBYBqJI=;
-        b=DKryjsO3fLByaYBtaNjyNMO7Fp6TObuqFGbnqxCG7PeR2AZearedoyMqIAcFPcHhgy
-         2lR8hgptXEWbrPUo/uDwcXvwBhFOpS9Wo/TZ05tWRpt8G2IWfPyDv/EFIhI0JhiX4GTM
-         XZNhKl5lk5Rh2XlU1eQxbHRhFVmokZV5l9+bQA08sj1ZiGAXV2sLxsMymyKiR9RErUa8
-         IklSwp6M7O87+pGLEysBZkqpI6KofcIDS+W5O6OSg5Bh7kVb48oM1+KYQUh6stn88lxw
-         2hvu0S7GtntNzrlwAr6v8w2zgahpZE/JhUI+p9+yOA2yUSiTGmraKTEZiWHNtjb3lux5
-         I1hA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOWLD+zvDVfrltagng8uoIhPZ2y4ELewc2/0GO8VGLEhW8B0SF6oAzqkjZWv51rcnI3Pmdcut6s8j+juw8@vger.kernel.org, AJvYcCVQFy70YID1YKKP5LSWZHv6JEwqltcCihqfMl4Q10mWsemEclZCvT0hXIrvGZxmnhXwrkM=@vger.kernel.org, AJvYcCWM7fzNuyIl3T3IKJCWcsMdnI+QgX7l7EYyVhhr9Bsk/zIpT+9TxSPT6On2Lf3/82J4G5me7jedHCpNNfrV9mlNPDOo@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfAkIUYHLjZy8V7iokJYU1t8psMBMIXSfUzhRi+AD+myRKJzFf
-	F1u/oIEHiTw6X5RzNbKggdmoLOCIIXgIfKe5KTmixvvLqOWpcAjs
-X-Gm-Gg: ASbGncu7sAH0itwVtkLM1M0ZZQGSkzX8G6ak9QBbKfDilXbQtQCPcqnlH6JWxO8+3x9
-	mU9TUZZcLiSKVBzD44L32EvMLsYFFGzA9Ch95L+9iSgNstcYwodoBKRfZtAnMfyqcNXthqE62WR
-	1LqnbLfMkaqECFXtlevWkKbR+O1tugMNyyzBgdAm0SGDGdQlCyU18kL2F5faYuSAQ/stIugOB9X
-	DZSIazeXc2j8TMacZQs6Q8wLdaZajAQS08DYdF1yAh+mbNdpfuwRRC+pS2+DIyp3zSxnql0btrS
-	IRC5mgyF0Fy2s5TKJVYzrEMDd38bcaizVm4IxHDGQD1NBCGnnh/tr5hjxw==
-X-Google-Smtp-Source: AGHT+IGYYIUq1yejVEDqyycBAs4SDGA//9qNS7UbRYVxxKNawUS4ATaqgEWFUwX7Xip1qOlbiA/U3Q==
-X-Received: by 2002:a05:6300:210b:b0:1f5:7873:3041 with SMTP id adf61e73a8af0-201797a39aemr8992770637.18.1744464837671;
-        Sat, 12 Apr 2025 06:33:57 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a12c8ac4sm6473395a12.46.2025.04.12.06.33.54
+        d=1e100.net; s=20230601; t=1744464867; x=1745069667;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WfJoT6PRSs94k/+btljFzIPdD4QWmfmkTqVitM7k/U4=;
+        b=EvAYqTMskceUo/ulpZUzizx6EyQxJLwj4XV6mfaligoYAEEeBU0+NetTSbWn1GeUXd
+         1J+hrhlaYufBIIyTp/VdXFIf0nZo/rEqqelVtrHFq6caesZajrgDXFs2B0+Qw/oMPFvf
+         nXxvvGpSNFMb+6+urHBn+iSvkzN7QUb09Ojz7CDm76SoxZqNJJUDMmm3JXOlAs02BQmz
+         jNsyTO+UdI0fNcFG+DOgIU8Wq7da3rQ07M+PQiv1bKCxeM3Gu+midvxc8jtD0fH9eahk
+         loCe+Xlb7n7kFwf2jVAF738ZDfGFWZggnvfqd6wZnUmOtA9yK2H/Sjhpwo2T9drkvuMw
+         0XKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPuoEkKUdawhPvoOENEt0Vs61VInK8hd34MJ/rCwqsUtVoH82c6dFxZNCOCcHTGBLN9SMLb5gyDjbAbA4=@vger.kernel.org, AJvYcCXrI67sErk0sA2meGMs8Cnl6RlbLTCyAYdbYZ09xDBtzmgSK+SLSPk+frI3uLTBD3kkqROWUK5n@vger.kernel.org
+X-Gm-Message-State: AOJu0YxquSZTSAjW7BbiWReIyZjSmQzi/IrCfO3mSiRwgOpK73z7O26O
+	/XsZIcm3ihMsUvgVARzVFza55hNyfZ+1kG0UvW6Q7gWxH2hOeBBP
+X-Gm-Gg: ASbGncuVnXug+UTz5H5Mvfso9eIa6itS9jIe6KJ5Tbgc0oxh6DBBfW7BIGfo1pVQx5K
+	jKw6wyABXLQe5fVdClkbDyuHqI+pkCzLFmOuD0BTJ5mAAsDAzvmHlaoe5574BFJMpXqnm4i4WC3
+	C41DQDLLAy8jxeFHQwgoP8BT4ZOLRqcSUEF3eHVN2e1qG9ULblrE4dKuaRTH1v94L/D/+2V4ILt
+	lImiz83dI3lpylMMGQwGdPg3k+9k/LnSsdI0SD+DP9KAOI7EHDHQDRWY9qz1GtrgsyRU4AlzXi8
+	4JLtJrc2xnTYe3d1haSkNk6r9nIU
+X-Google-Smtp-Source: AGHT+IFbgobwEpxneS25gPpj0QOmulKDiFpAZ+O7Q8yZ2Fwz44EBlrgCDGaOiI2rP+iH4TAaMMJGlw==
+X-Received: by 2002:a05:6000:1867:b0:386:3a50:8c52 with SMTP id ffacd0b85a97d-39ea521d69amr1869543f8f.7.1744464866659;
+        Sat, 12 Apr 2025 06:34:26 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fca5sm123160565e9.32.2025.04.12.06.34.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 06:33:57 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>
-Subject: [PATCH bpf] ftrace: fix incorrect hash size in register_ftrace_direct()
-Date: Sat, 12 Apr 2025 21:33:48 +0800
-Message-Id: <20250412133348.92718-1-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.39.5
+        Sat, 12 Apr 2025 06:34:25 -0700 (PDT)
+Date: Sat, 12 Apr 2025 16:34:22 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, bridge@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net 0/2] net: dsa: fix handling brentry vlans with
+ flags
+Message-ID: <20250412133422.xtkd3pxoc7nwprrb@skbuf>
+References: <20250412122428.108029-1-jonas.gorski@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412122428.108029-1-jonas.gorski@gmail.com>
 
-The max ftrace hash bits is made fls(32) in register_ftrace_direct(),
-which seems illogical, and it seems to be a spelling mistake.
+On Sat, Apr 12, 2025 at 02:24:26PM +0200, Jonas Gorski wrote:
+> While trying to figure out the hardware behavior of a DSA supported
+> switch chip and printing various internal vlan state changes, I noticed
+> that some flows never triggered adding the cpu port to vlans, preventing
+> it from receiving any of the VLANs traffic.
+> 
+> E.g. the following sequence would cause the cpu port not being member of
+> the vlan, despite the bridge vlan output looking correct:
+> 
+> $ ip link add swbridge type bridge vlan_filtering 1 vlan_default_pvid 1
+> $ ip link set lan1 master swbridge
 
-Just fix it.
+At this step, dsa_port_bridge_join() -> switchdev_bridge_port_offload()
+-> ... -> br_switchdev_port_offload() -> nbp_switchdev_sync_objs() ->
+br_switchdev_vlan_replay() -> br_switchdev_vlan_replay_group(br_vlan_group(br))
+-> br_switchdev_vlan_replay_one() should have notified DSA, with changed=false.
+It should be processed by dsa_user_host_vlan_add() -> dsa_port_host_vlan_add().
 
-(Do I misunderstand something?)
+You make it sound like that doesn't happen.
 
-Fixes: d05cb470663a ("ftrace: Fix modification of direct_function hash while in use")
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- kernel/trace/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I notice you didn't mention which "DSA supported chip" you are using.
+By any chance, does its driver set ds->configure_vlan_while_not_filtering = false?
+That would be my prime suspect, making dsa_port_skip_vlan_configuration() ignore
+the code path above, because the bridge port is not yet VLAN filtering.
+It becomes VLAN filtering only a bit later in dsa_port_bridge_join(),
+with the dsa_port_switchdev_sync_attrs() -> dsa_port_vlan_filtering(br_vlan_enabled(br))
+call.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1a48aedb5255..7697605a41e6 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5914,7 +5914,7 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 
- 	/* Make a copy hash to place the new and the old entries in */
- 	size = hash->count + direct_functions->count;
--	if (size > 32)
-+	if (size < 32)
- 		size = 32;
- 	new_hash = alloc_ftrace_hash(fls(size));
- 	if (!new_hash)
--- 
-2.39.5
+If that is the case, the only thing that is slightly confusing to me is
+why you haven't seen the "skipping configuration of VLAN" extack message.
+But anyway, if the theory above is true, you should instead be looking
+at adding proper VLAN support to said driver, and drop this set instead,
+because VLAN replay isn't working properly.
 
+> $ bridge vlan add dev lan1 vid 1 pvid untagged
+> $ bridge vlan add dev swbridge vid 1 pvid untagged self
+> 
+> Adding more printk debugging, I traced it br_vlan_add_existing() setting
+> changed to true (since the vlan "gained" the pvid untagged flags), and
+> then the dsa code ignoring the vlan notification, since it is a vlan for
+> the cpu port that is updated.
+
+Yes, this part and everything that follows should be correct.
