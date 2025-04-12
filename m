@@ -1,82 +1,110 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847CF2907;
-	Sat, 12 Apr 2025 19:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830B2201035;
+	Sat, 12 Apr 2025 19:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744485086; cv=none; b=cn8il/jRvQM1df6RDv1SXGWjymicqxDKzHZ48CTHsbbLdoZDuemb/ENuI6tDbeAcK+GrdqKD4ljp4tYpZry2u0bQ/XaDnC5U5B+p/hCc59K7NfUED0jCL0YfrFuEhSWD4zaoDAkZf2lZD/dTYuzkzzUAujkLV6UWGS1v+rx7QYk=
+	t=1744485245; cv=none; b=M1TxlZG3WEMzHPH9mtnKY6Cj8L3c8Axm1pli+dMhpk0Wu96+fBxgIrNy13jQYlO1e4oF5kPC9hD82K0I+80GsjdvKBhwlTNTptTcatxg457OHrrNWSDwDGy4Lb3QMQpr50KzPaJ1zlM3VMAx2OeWQYevIZ8TLQaKHiiDlfcyYKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744485086; c=relaxed/simple;
-	bh=nMJQoTM1O4Fh7TpT9eRfIIK6vCKrB7f9exl3szLZnjc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qGJEzTpDfaGoV/VVazsahr/AX2LbgRfE4qhIe2brxm7QDXR8HWzwKrxXG6Wp6KZkzAjx6gryadAnw0/IsIe0HF3vZwj2WC/lveqDFY5peqokntYwwnVMSX6y7hChd5tOwDYosH0jG1vU8HYAhyFfg2AgFpLbSeaBmYqwgOrtpiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=M7SBw35F; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744485245; c=relaxed/simple;
+	bh=phbbwr4PicjD/f6kmtd1pzGQUUlvydQ8+1fjj6lloC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hxQokBQ3AzaBtQlTVrXajAfKJU0iVHDWeq9p9HeKzLCzLAuXmgAKkP8iLORc2fD9ZADandAqwo7ve+vfJZs7lpt3KQ39HESv/yo6LXFbL31CVVzSn5XyMsE4/6Diah/YvbYf1kg8dtTNoofF34QnfgzWBvYmYmBngXy2zDgk4U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HONt0O0r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="M7SBw35F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744485085; x=1776021085;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GvDCmGotCUn8aBjIPBYmqzHfJ0S2PVl/zo27M4FAgUE=;
-  b=M7SBw35FwwG79tmQa4tunWeMqne21opySBGJeTwvtHzCHWYSgJ1rA9BC
-   Mm6di3iYUsbsnBVLiCMi3nrLrsYYYXO8A+XO2TonTtVGRAf8uxBF1vpPc
-   AMAXF2zcmOSXqJAA5kidVk7VD8j/y1VIvTbnmXkcmr4otQLRI/za0edkY
-   A=;
-X-IronPort-AV: E=Sophos;i="6.15,208,1739836800"; 
-   d="scan'208";a="482573478"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 19:11:21 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:4269]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.25.120:2525] with esmtp (Farcaster)
- id 113971dd-8f91-4e5b-aeb4-c1d0a0fac33f; Sat, 12 Apr 2025 19:11:20 +0000 (UTC)
-X-Farcaster-Flow-ID: 113971dd-8f91-4e5b-aeb4-c1d0a0fac33f
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sat, 12 Apr 2025 19:11:19 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.45) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sat, 12 Apr 2025 19:11:16 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <smfrench@gmail.com>
-CC: <bharathsm@microsoft.com>, <ematsumiya@suse.de>, <kuni1840@gmail.com>,
-	<kuniyu@amazon.com>, <linux-cifs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
-	<pc@manguebit.com>, <samba-technical@lists.samba.org>,
-	<sprasad@microsoft.com>, <tom@talpey.com>, <wangzhaolong1@huawei.com>
-Subject: Re: [PATCH 0/2] cifs: Revert bogus fix for CVE-2024-54680 and its followup commit.
-Date: Sat, 12 Apr 2025 12:10:35 -0700
-Message-ID: <20250412191108.15393-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <CAH2r5msMZ9j2Uugjex8DzT+uQWsoj5Q0NECMgx3wJFpCEaeo8w@mail.gmail.com>
-References: <CAH2r5msMZ9j2Uugjex8DzT+uQWsoj5Q0NECMgx3wJFpCEaeo8w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HONt0O0r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B7CC4CEE3;
+	Sat, 12 Apr 2025 19:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744485244;
+	bh=phbbwr4PicjD/f6kmtd1pzGQUUlvydQ8+1fjj6lloC8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HONt0O0rczcb66w61a4NnSZl/0mCxFwqlv1UbmHmyKGx1WWChZSSnxKLLksU2tEF9
+	 i+zMIYKeOwRouaZT04hV0NNmnoCHNKSSbrKGPMWWMxcDa0ohda7/vqUj5QWVMmf2b5
+	 xzoOi0tUvtlJTB228RoTWLx1kAr1zenB6gFdSU5zGbjRBfoqJf5VDkXcgN8UTNlaLj
+	 wjZJ8zz6gDca1mKGwfahBZGbbqk3AKDx8Mh5zHR/bXK+CtMn7A+p3nbDdoVH9Y5Ha3
+	 ME25VGPBJmkQkWFMHpx5AV40E61fJLvwJK/dFEzd3ziJrjGCWoBxd5TvWJfaBQCnhC
+	 fXv5UYTTupc2Q==
+Date: Sat, 12 Apr 2025 20:13:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Remi Buisson via B4 Relay <devnull+remi.buisson.tdk.com@kernel.org>
+Cc: remi.buisson@tdk.com, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/8] iio: imu: inv_icm45600: add buffer support in iio
+ devices
+Message-ID: <20250412201354.45eb4dd2@jic23-huawei>
+In-Reply-To: <20250411-add_newport_driver-v1-5-15082160b019@tdk.com>
+References: <20250411-add_newport_driver-v1-0-15082160b019@tdk.com>
+	<20250411-add_newport_driver-v1-5-15082160b019@tdk.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 11 Apr 2025 13:28:37 +0000
+Remi Buisson via B4 Relay <devnull+remi.buisson.tdk.com@kernel.org> wrote:
 
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 12 Apr 2025 12:28:46 -0500
-> I have tentatively merged the two revert patches into cifs-2.6.git
-> for-next but still hoping for any review comments for those more
-> expert in the network lockdep code.
+> From: Remi Buisson <remi.buisson@tdk.com>
 > 
-> Let me know when the fix to core/sock.c is upstream
+> Add all FIFO parsing and reading functions. Add accel and gyro
+> kfifo buffer and FIFO data parsing. Use device interrupt for
+> reading data FIFO and launching accel and gyro parsing.
+> 
+> Support hwfifo watermark by multiplexing gyro and accel settings.
+> Support hwfifo flush.
+> 
+> Signed-off-by: Remi Buisson <remi.buisson@tdk.com>
+I'm out of time and energy today. So just one trivial thing inline.
+I'll look more closely at v2 after the patches have been reorganized
+to build up features as you go.
 
-Thanks, Steve.
+Thanks,
 
-It was pulled by Linus.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0bb2f7a1ad1f11d861f58e5ee5051c8974ff9569
-https://lore.kernel.org/netdev/174430107749.3733248.15022802028936610477.pr-tracker-bot@kernel.org/
+Jonathan
+
+> +
+> +/**
+> + * inv_icm45600_buffer_update_watermark - update watermark FIFO threshold
+> + * @st:	driver internal state
+> + *
+> + * Returns 0 on success, a negative error code otherwise.
+> + *
+> + * FIFO watermark threshold is computed based on the required watermark values
+> + * set for gyro and accel sensors. Since watermark is all about acceptable data
+> + * latency, use the smallest setting between the 2. It means choosing the
+> + * smallest latency but this is not as simple as choosing the smallest watermark
+> + * value. Latency depends on watermark and ODR. It requires several steps:
+> + * 1) compute gyro and accel latencies and choose the smallest value.
+> + * 2) adapt the chosen latency so that it is a multiple of both gyro and accel
+> + *    ones. Otherwise it is possible that you don't meet a requirement. (for
+> + *    example with gyro @100Hz wm 4 and accel @100Hz with wm 6, choosing the
+> + *    value of 4 will not meet accel latency requirement because 6 is not a
+> + *    multiple of 4. You need to use the value 2.)
+> + * 3) Since all periods are multiple of each others, watermark is computed by
+> + *    dividing this computed latency by the smallest period, which corresponds
+> + *    to the FIFO frequency.
+> + */
+> +int inv_icm45600_buffer_update_watermark(struct inv_icm45600_state *st)
+> +{
+
+> +	raw_wm = INV_ICM45600_FIFO_WATERMARK_VAL(watermark);
+> +	memcpy(st->buffer, &raw_wm, sizeof(raw_wm));
+> +	ret = regmap_bulk_write(st->map, INV_ICM45600_REG_FIFO_WATERMARK,
+> +				st->buffer, sizeof(raw_wm));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+trivial but return regmap_bulk_write()
+
+> +}
+
