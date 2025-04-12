@@ -1,132 +1,100 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0D2367CE
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F31C84B9;
+	Sat, 12 Apr 2025 12:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744458658; cv=none; b=eWAS4V8gYwe9KJxqu0tIvo2B0jJ75flqHHaawv9HPwHicA8JLtbaWwGyQUXnZgQDNl5P2EFg8AoFvKXfRo81XcaDOdZ9rL3i9lcuVUvcMlU9HtDB+z5MX2/RpqHdKDzKEcZHNglw6kAo0/A/qlRxIBI/cN8iINgGszf4xpY4OR4=
+	t=1744459202; cv=none; b=LogGluwwN3fTX+V413rDqLS1A4sBMaawPR06Qlv/lVNusWPqgrCzIEF+veoL+4cDzpPSCFwm/BP8aB4mD8jWy26r1cOh74cpnt8FnxNz68trf4tOSPOZCriHNw6ocKn0qF68MaQtM9Zak24GJ4XZBmsi+JAFLt7yE04lJRwyg7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744458658; c=relaxed/simple;
-	bh=GtkRchdcipwdR7lHoIg4gccPvr9DSE4vhVqfJWFvlUA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D8X0NDuO7hPtieM+cIIFfZMnq0nFkGr3WAW4AEl2op+3OUwbdpZWeq8qj8OGGXD5iNIhEENR2TdcrYALYExtbh/JCPqwNXYmOpUwJhWqZIIcv+E4WYjgLW1LWSVD0TC7Jvg1fwvdak1+sBPeKA5a7T1G48uam33w1eecogx/GNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WEosta50; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1744459202; c=relaxed/simple;
+	bh=pMuXdAkU6Kp3lKGe6c2gEDSZVlu1N0bgRawGH3cghYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RCqTX6uJ55byVN10mQpOAhfVUMZKauxqGAEF8YlXBU/5ezBw8ZoEA2Uq3da1OWnVZGvoitI6lnmjAzmOnEAtj9JCNPSBz508PeSM91+R7rBToCbNl1FalmyPWWSq4cVWCVcA8JwP83y5yqM+LAg+/213tAYd9trkyzOykVxN2Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lWxbGhzY; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEosta50"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso2832053b3a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:50:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWxbGhzY"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7390294782bso467067b3a.0;
+        Sat, 12 Apr 2025 05:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744458657; x=1745063457; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744459200; x=1745064000; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8sLeXNB6Otg/NUBFA38Mx7FYYC291DUHLBQY9/Y0+3s=;
-        b=WEosta50eoAdy9d5m2J+UkWN9WFgZlFlsRyfnNv4U4smQpk2u/e5OmCV7L+EIUjXyf
-         6+Q4MwbUonrdjnKGqeQH/MsEqaxJ9bM5xzmUEt+R+hGIYqOBmS8Z3djgmPzxZa4TEfcs
-         3QMxaXnEYBUcrPy7JSKT1D/NF7H6flnQD+l8CJx8Ew/ToFXO7l2C066N2RVIQ3d4eiGO
-         2j2/maubVKLwnZPdiK7ANvONoEU3AcXwPgnX+lulHABlnsjczIwG6kOAsfdVF5Ueel0u
-         0HQCx+wr/1BJQDh4zi03bWmReoEywzGEBoTy76JU+YAUAvzs2nJKGthNeEuwMDf8/YPU
-         P57Q==
+        bh=pMuXdAkU6Kp3lKGe6c2gEDSZVlu1N0bgRawGH3cghYQ=;
+        b=lWxbGhzYh8HlGOk/koauS7gXHm42OFyGxz4HDTy0h4+kJi68KQEPs6Sq5kXXkuFilb
+         hpCFoW1jmJ6np2sc0fnDCqiif4EPyYQm3kCXwyUrWPFyPNQ3ljHNnThx/9lNPG5WtNny
+         sTGJZAdg9lvg8YIjGJeFTAhGiCJa+zMbszvGtQMQND79t1bYtD3IcvTltzH9tvP9EJx/
+         QXO24RehdEm+4+dKc3SCb/N01UOcfvT4vIBd4P12bSyevp6IVMG/D178F95A1u6Tcs+1
+         lRhYhHSwwohcF2Diumty8nLUo8I/DGzVkyK2C4GKi7lJDyOSF7oleHEY5M5vhEEyydGD
+         ET9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744458657; x=1745063457;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744459200; x=1745064000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8sLeXNB6Otg/NUBFA38Mx7FYYC291DUHLBQY9/Y0+3s=;
-        b=Et3wWElg9OBeSI2CMpZA4Z8skiE5II3nLRDRbOOvP71TKc+TO/tUq7lMEht6tpvLWo
-         febRaJI5v+xJd+FEzo+0eTNXf/0cWPoKRfF0uYy5RNGlRc0n3Xi2gREbn5ASLEy+5VBc
-         UU56CI6VokY70AsPGEjH8EbPDNEG2Ss77KZPB/d6IkBvUfTIBqyTWeHI3qrjyQXjKmZH
-         7QCcuMNZpseF0AxlVAxXnc1KqHJQ5RT/5XSlMjYIHT3N3nRmGS23wuO95dqd6S7kxeDZ
-         7fbLSvuTD9Z25KOWtLeqwIxTnrqk8Lqlg1D36+c/VY1G+y63QtD8qI474x0LX44KXC24
-         qliQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkq9Hwwvt1djxnwOvTn5cyaDBeP88UeFnMkM+xOCxOX6eP17RZuOfNng9UILQsoYHelsahRzLCPg/eyHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbIlwn0SsjKuPwGud5nUfycXyAHRb3wxsL+qoOWdU4pu+GlQDA
-	EtVLTKEDwiklT/W+pVzuCu7dyc2mZRbVQTl7BB9oFM7FHu6YJBMV
-X-Gm-Gg: ASbGncuxE/CR4eif4FX2j82BNBGsNfFPMss9RCT1h5UtTPBL7i34pXdgkasARMxWvsm
-	rxWjWj3OgARFcW9HJuDDQkBiISt5PfBYLSKnByMT9RtMySpS4QvsmgW8YgFOzT9o3219bEjkIpq
-	AgxzbCL6Ef4V8pYlreEjPSdGEdR1NVWu73Y6InWBQ2q4EDJJUZpQ415hK2LblrEhPGaXA3Q3Zpw
-	PZ3iqbwcvmF25vheGsQ8zF8dyMrevHYFJyHwqSqFVlk7/pc6EqZBh8htsbdw+4z2aydtPe4iS7W
-	tU26hWNhgzfvhPLDyfkN/R6+sQP2/vkfOsG2YEksLzLnK7ctvVw=
-X-Google-Smtp-Source: AGHT+IFW83cYpjRH6czDRz/9DZ5rD2c+/DMMMIYCyVvhlVy+JJz6zznKKwCXVGZJ/Gy14VnH5ViLoQ==
-X-Received: by 2002:a05:6a00:b89:b0:736:34a2:8a20 with SMTP id d2e1a72fcca58-73bd12c9e39mr8149056b3a.21.1744458656334;
-        Sat, 12 Apr 2025 04:50:56 -0700 (PDT)
-Received: from VM-16-38-fedora.. ([43.135.149.86])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f8276sm3339552b3a.100.2025.04.12.04.50.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 04:50:55 -0700 (PDT)
-From: alexjlzheng@gmail.com
-X-Google-Original-From: alexjlzheng@tencent.com
-To: gregkh@linuxfoundation.org
-Cc: alexjlzheng@gmail.com,
-	alexjlzheng@tencent.com,
-	linux-kernel@vger.kernel.org,
-	tj@kernel.org
-Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to per-fs lock
-Date: Sat, 12 Apr 2025 19:50:54 +0800
-Message-ID: <20250412115054.25580-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2025041256-sanction-sandal-7f51@gregkh>
-References: <2025041256-sanction-sandal-7f51@gregkh>
+        bh=pMuXdAkU6Kp3lKGe6c2gEDSZVlu1N0bgRawGH3cghYQ=;
+        b=xIZ434oWWivx+jwyHOLMQln+Iv2sMxu5sdSnfKPcwHOV+Yvu5xOX7IfLzVFCpuwUAn
+         gr21/vPsA0m/J68yRpSKujS6PfDs6D1uYDdKNvZPZ7wDRnG/R/yGy8h6KNX4K7KbA6ht
+         9y5iykNx4djSbSeFFvV15KHIDZJzwyra7TnCqJnxWP0w3eSIpgAXIvNTD7XpHeVIde23
+         LlSw5hZigI6vmkkT2gf1UlxicYuIlEodJYQ4xPDeSi39G+2f6nlT76XMn9sjxt8XXBe2
+         HKID9luZ8OqnvQ9WWBWGetnd2wz6gzwyCCoSKu6iN3qTkv173BeB0u7pYD5d0J9Hcxbf
+         +KLA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3rqZOFfcvIk5D0A+5XNjBr/Y/fQBDBwaHEMV14BcCBGW6IE5pKH98nPWnpjVfX7HqS6cH7eYKsowGQd0XmQo=@vger.kernel.org, AJvYcCWJmqBumB1H+XF2KEeuq8TxUZb1+e6JdzOTb4mGSZ27QDH/EQETuGQvJS8+BsBk10gQavlHO/gLT7n6skI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwbH6F6cYYDr2fzypyWdS3QVA+yEbHGepHwiYy5FapV48Y9kYu
+	Wtgs6kWxnnmL6aUGC5KlGHSim8WTwJsmEI5F1YKwF7tDdzVEtql7mMTwUOHw8JOeXB2UHACsdbc
+	HdK59Cxx/YKV0Cl4/X/GFBt2BUOo=
+X-Gm-Gg: ASbGncsIKwCYUdh3XMs8VTDdKUFA3G1Byjcu4uO4Ualsi9miqBhhGaRZ+wx+7UIHWPi
+	VyqUUOlhIaEjuookZhfYIUDZHlI6RNGzgiIPpcsBKouWW0svfDdH0XcA702zfQuOCVoWFqJoAyY
+	ITYs6rGNSBXSgkz5PjKOXA6Q==
+X-Google-Smtp-Source: AGHT+IHZx70CQkZBtr/cfgllY1HN69gNd5XcltMc9hXoimdXsDzofuZVqU2l1IcVRiKYkWR8ex0aBAEU+nCCZB83FFQ=
+X-Received: by 2002:a17:90b:4ac9:b0:305:5f2c:c580 with SMTP id
+ 98e67ed59e1d1-308272536dcmr2924889a91.2.1744459200365; Sat, 12 Apr 2025
+ 05:00:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
+In-Reply-To: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 12 Apr 2025 13:59:48 +0200
+X-Gm-Features: ATxdqUFfLtsDR_KVnMsg3CwfY1QHdnTv_pgFnr8_5TZSfo39KzUqT-nyZpyckY8
+Message-ID: <CANiq72=BoURMmkwqBzZ9Bzf5oXkZbUia-gZKJcNmVt7Qg8bKzg@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction `FwFunc`
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 12 Apr 2025 08:12:22 +0200, gregkh@linuxfoundation.org wrote:
-> On Sat, Apr 13, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
-> > From: Jinliang Zheng <alexjlzheng@tencent.com>
-> > 
-> > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
-> > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
-> > 
-> > This patch switches the global kernfs_idr_lock to per-fs lock, which
-> > put the spinlock into kernfs_root.
-> > 
-> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> > ---
-> >  fs/kernfs/dir.c             | 14 +++++++-------
-> >  fs/kernfs/kernfs-internal.h |  1 +
-> >  2 files changed, 8 insertions(+), 7 deletions(-)
-> 
-> What kind of testing / benchmark did you do for this series that shows
-> that this works, AND that this actually is measureable?  What workload
-> are you doing that causes these changes to be needed?
+On Sat, Apr 12, 2025 at 12:30=E2=80=AFPM Christian Schrefl
+<chrisi.schrefl@gmail.com> wrote:
+>
+> "propper" type for this, so use a `*const kernel::ffi::c_char` pointer
+> instad.
 
-Thank you for your reply. :)
+A couple typos -- I usually suggest using e.g. `scripts/checkpatch.pl
+--codespell`.
 
-We are trying to implement a kernfs-based filesystem that will have
-multiple instances running at the same time, i.e., multiple kernfs_roots.
+> This should probably be backported to stable, for people/distros
+> using Arm 32 patches on stable.
 
-While investigating the kernfs implementation, we found some global locks
-that would cause noticeable lock contention when there are many filesystem
-instances.
+Up to the stable team -- I will add Cc: stable when I pick it up since
+it shouldn't hurt, but it does not change anything there for the
+supported arches, so they may or may not want to pick it.
 
-Fortunately, we found that some optimizations have been made in [1], which
-moved kernfs_rwsem into kernfs_root. But there are still some global locks
-left.
+Thanks!
 
-We think it is also necessary to switch the remaining global locks to
-per-fs. Moreover, we strongly agree with Tejun Heo's point in [1]:
-
-  "... this is the right thing to do even if there is no concrete
-   performance argument (not saying there isn't). It's just weird to
-   entangle these completely unrelated users in a single rwsem."
-
-We think kernfs will be widely used to build other filesystems, so we
-strongly recommend switching global locks to per-fs.
-
-Thank you,
-Jinliang Zheng :)
-
-[1] https://lore.kernel.org/all/YZbbxK1F7jY%2FRBFF@slm.duckdns.org/
-
-> 
-> thanks,
-> 
-> greg k-h
+Cheers,
+Miguel
