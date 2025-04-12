@@ -1,37 +1,37 @@
-Received: from out.smtpout.orange.fr (out-15.smtpout.orange.fr [193.252.22.15])
+Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
 	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC223645
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AD4645
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744440520; cv=none; b=I7BUc3pJ4Rm4I2CfYVpIoTEdANQ/PNGt2/ENz2n4d8p2fy2UO9L8aUeei9FpMoMONMgJYqL6cR/vHgfoSCptn+L4hjBBt8rV+/GG0trJlsOSa+kmIcvwGaCbdiz94ZfLyBz0kn3Njp0TaKQjfnVD5OH+KhfSApZGANQTjPNfaKY=
+	t=1744440534; cv=none; b=CS0Dl4pdZLxhRxr6xV+sEYUFRisSUqEJqfGX82MZNdXQ/rs+SBmQYciUMjO1mJWGHF6cJyORrVxw3+o2CChIBKyqhm4xdvD9Mh2lSFYwjHDBdnvr1drfUG8solg9gzgvJaxlBud1DHhJrvS5Fza3z+emKX3OjkYnYKtIMMK4L/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744440520; c=relaxed/simple;
-	bh=O1JgI00a/efCbNOGQpa+5xqZJHTLJe8jQNXtRk7lwXo=;
+	s=arc-20240116; t=1744440534; c=relaxed/simple;
+	bh=gb7TDOVl4T+tIy5B2G5Rh/o7V863Z+YPDNbeqDA7o78=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VlTO8ep8eCWgSDH9eqJITsqj+jZprhqZDtzgp/Vm0uel4zUlYCnx22/O4kWnnQMDuhb/4s3jrmjW1TBcFki1WEzDgtFVDjdZlExCyyegJLbXIns2vWphLpj5Cu9I8ZSuCDIJX1WVnm0SNH6+oiCp7I5cpTY21jN1I5qyIn+jXoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr; spf=pass smtp.mailfrom=orange.fr; dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b=EmdFd7Qi; arc=none smtp.client-ip=193.252.22.15
+	 MIME-Version:Content-Type; b=tLte/NUkUH165bKlDqk3ROZNl62iJJve63geVBxHktjKCH+w9EZpBbfrb87/xU2idfa/U38f/CdDgkT7IQ2xitVXwMCkMMidgtefEJs7mllzFMkL8u+Wp33WhZBZRYjNFfEoSg/0Kov0aaR2nWFus8QSi3OTyw2ZOj3yCkSMDWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr; spf=pass smtp.mailfrom=orange.fr; dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b=Xm4esHUX; arc=none smtp.client-ip=193.252.22.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orange.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b="EmdFd7Qi"
+	dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b="Xm4esHUX"
 Received: from cyber-villager.csun.edu ([130.166.192.226])
 	by smtp.orange.fr with ESMTPA
-	id 3UeAuNICOB75R3UeEuB4Ro; Sat, 12 Apr 2025 08:47:28 +0200
+	id 3Uf9uoeYetvMG3UfDuGx5K; Sat, 12 Apr 2025 08:48:29 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
-	s=t20230301; t=1744440448;
-	bh=AphogcM6Nx5fUPKv40KkaG6PJmjwevwNNLjesePnqVI=;
+	s=t20230301; t=1744440510;
+	bh=QlZRUZx+8kKhk8v1urqpIN1u6ZO6v4bCEcVF3PP/e4Y=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=EmdFd7QieXenGN/JHWEMeAwpU4Kk+Wj8TnNUFXZh1nsDQbsVGx5ZA14YBL3lnx/VB
-	 k/9MJUG5gAidN97wVRa8TM+ankn1mtOkv9EIkL7u2hl/lN0hnOQkAB1PuUVY/YfOL7
-	 F1YKyoiNww57+7VbQqw7iE+O+KmUdZDyiR/+bl224hg+YHfLn/mwDhSauIhYvD+ulG
-	 hYiKcz/4o4xgRn3tXKYy2CPC4or0EWnq+ckT8aHN9BQjQY12rb2V4z4joCDFMZzUKi
-	 CQ5Bb43dZtuIfXE++Xs1KLW6Aw+ORXGD2hjaMdUZ5uGKeifvkNj79fy3/CCwD2aN0C
-	 cQzAl/mFd9FeQ==
+	b=Xm4esHUXJzQZBiIwEe12plDBsiFY95mCGzZFZ1r1fgoG6pApS2Pht7hvZh6/ziP0T
+	 Xnb3ttZoUPPcxcLSDmZhoSI6NsQ0r1TpjcG1KLdLA3QxXLvoBO15zvGs8FGWw1BjyL
+	 RQoF82QU4WqXpEveYdjdSw2JO+wIsJBEMjStX/26bbgT9Vl92gR3SMTFscDD0vhIp6
+	 RZhVLZVGhrqHp5txtSiydJmccjbEMp8kiq+mT75NKw2Ov7vA0tcRoTlQjgwHtX4kiG
+	 uWt16S/rCgIrOlKPEBpGzwHgpH1ooD1TgfHqACGvo5LW39gCCLZVaUbwSynTV1ImWK
+	 /NIMZR28q3TKw==
 X-ME-Helo: cyber-villager.csun.edu
 X-ME-Auth: cGF1bC5yZXRvdXJuZUBvcmFuZ2UuZnI=
-X-ME-Date: Sat, 12 Apr 2025 08:47:28 +0200
+X-ME-Date: Sat, 12 Apr 2025 08:48:29 +0200
 X-ME-IP: 130.166.192.226
 From: =?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>
 To: gregkh@linuxfoundation.org,
@@ -40,9 +40,9 @@ To: gregkh@linuxfoundation.org,
 Cc: =?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 10/16] staging: gpib: ines: fixes multiline comments style
-Date: Fri, 11 Apr 2025 23:47:18 -0700
-Message-ID: <69a082f18148881a673e1d57b4a9d83767d87a2a.1744438358.git.paul.retourne@orange.fr>
+Subject: [PATCH 11/16] staging: gpib: lpvo_usb_gpib: fixes multiline comments style
+Date: Fri, 11 Apr 2025 23:48:35 -0700
+Message-ID: <7699226216a99b8bf053c4d6017941ebc87cb8e2.1744438358.git.paul.retourne@orange.fr>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744438358.git.paul.retourne@orange.fr>
 References: <cover.1744438358.git.paul.retourne@orange.fr>
@@ -60,156 +60,334 @@ coding style.
 
 Signed-off-by: Paul Retourné <paul.retourne@orange.fr>
 ---
- drivers/staging/gpib/ines/ines_gpib.c | 86 ++++++++++++++-------------
- 1 file changed, 44 insertions(+), 42 deletions(-)
+ .../gpib/lpvo_usb_gpib/lpvo_usb_gpib.c        | 123 +++++++++---------
+ 1 file changed, 64 insertions(+), 59 deletions(-)
 
-diff --git a/drivers/staging/gpib/ines/ines_gpib.c b/drivers/staging/gpib/ines/ines_gpib.c
-index d93eb05dab90..f143fe8011bd 100644
---- a/drivers/staging/gpib/ines/ines_gpib.c
-+++ b/drivers/staging/gpib/ines/ines_gpib.c
-@@ -990,12 +990,13 @@ static struct pci_driver ines_pci_driver = {
- 
- static const int ines_pcmcia_iosize = 0x20;
- 
--/*    The event() function is this driver's Card Services event handler.
-- *    It will be called by Card Services when an appropriate card status
-- *    event is received.  The config() and release() entry points are
-- *    used to configure or release a socket, in response to card insertion
-- *    and ejection events.  They are invoked from the gpib event
-- *    handler.
-+/*
-+ * The event() function is this driver's Card Services event handler.
-+ * It will be called by Card Services when an appropriate card status
-+ * event is received.  The config() and release() entry points are
-+ * used to configure or release a socket, in response to card insertion
-+ * and ejection events.  They are invoked from the gpib event
-+ * handler.
-  */
- 
- static int ines_gpib_config(struct pcmcia_device  *link);
-@@ -1007,31 +1008,31 @@ static irqreturn_t ines_pcmcia_interrupt(int irq, void *arg);
- static int ines_common_pcmcia_attach(struct gpib_board *board);
- /*
-  * A linked list of "instances" of the gpib device.  Each actual
-- *  PCMCIA card corresponds to one device instance, and is described
-- *  by one dev_link_t structure (defined in ds.h).
-+ * PCMCIA card corresponds to one device instance, and is described
-+ * by one dev_link_t structure (defined in ds.h).
-  *
-- *  You may not want to use a linked list for this -- for example, the
-- *  memory card driver uses an array of dev_link_t pointers, where minor
-- *  device numbers are used to derive the corresponding array index.
-+ * You may not want to use a linked list for this -- for example, the
-+ * memory card driver uses an array of dev_link_t pointers, where minor
-+ * device numbers are used to derive the corresponding array index.
-  */
- 
- static struct pcmcia_device *curr_dev;
+diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+index faf96e9cc4a1..f7dd7e8b0764 100644
+--- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
++++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+@@ -36,16 +36,16 @@ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("GPIB driver for LPVO usb devices");
  
  /*
-- *   A dev_link_t structure has fields for most things that are needed
-- *  to keep track of a socket, but there will usually be some device
-- *  specific information that also needs to be kept track of.  The
-- *  'priv' pointer in a dev_link_t structure can be used to point to
-- *  a device-specific private data structure, like this.
-+ * A dev_link_t structure has fields for most things that are needed
-+ * to keep track of a socket, but there will usually be some device
-+ * specific information that also needs to be kept track of.  The
-+ * 'priv' pointer in a dev_link_t structure can be used to point to
-+ * a device-specific private data structure, like this.
+- *  Table of devices that work with this driver.
++ * Table of devices that work with this driver.
   *
-- *  A driver needs to provide a dev_node_t structure for each device
-- *  on a card.	In some cases, there is only one device per card (for
-- *  example, ethernet cards, modems).  In other cases, there may be
-- *  many actual or logical devices (SCSI adapters, memory cards with
-- *  multiple partitions).  The dev_node_t structures need to be kept
-- *  in a linked list starting at the 'dev' field of a dev_link_t
-- *  structure.	We allocate them in the card's private data structure,
-- *  because they generally can't be allocated dynamically.
-+ * A driver needs to provide a dev_node_t structure for each device
-+ * on a card.	In some cases, there is only one device per card (for
-+ * example, ethernet cards, modems).  In other cases, there may be
-+ * many actual or logical devices (SCSI adapters, memory cards with
-+ * multiple partitions).  The dev_node_t structures need to be kept
-+ * in a linked list starting at the 'dev' field of a dev_link_t
-+ * structure.	We allocate them in the card's private data structure,
-+ * because they generally can't be allocated dynamically.
+- *  Currently, only one device is known to be used in the
+- *  lpvo_usb_gpib adapter (FTDI 0403:6001).
+- *  If your adapter uses a different chip, insert a line
+- *  in the following table with proper <Vendor-id>, <Product-id>.
++ * Currently, only one device is known to be used in the
++ * lpvo_usb_gpib adapter (FTDI 0403:6001).
++ * If your adapter uses a different chip, insert a line
++ * in the following table with proper <Vendor-id>, <Product-id>.
+  *
+- *  To have your chip automatically handled by the driver,
+- *  update files "/usr/local/etc/modprobe.d/lpvo_usb_gpib.conf"
+- *  and /usr/local/etc/udev/rules.d/99-lpvo_usb_gpib.rules.
++ * To have your chip automatically handled by the driver,
++ * update files "/usr/local/etc/modprobe.d/lpvo_usb_gpib.conf"
++ * and /usr/local/etc/udev/rules.d/99-lpvo_usb_gpib.rules.
+  *
   */
  
- struct local_info {
-@@ -1042,13 +1043,13 @@ struct local_info {
+@@ -56,18 +56,18 @@ static const struct usb_device_id skel_table[] = {
+ MODULE_DEVICE_TABLE(usb, skel_table);
+ 
+ /*
+- *    ***  Diagnostics and Debug  ***
+- *  To enable the diagnostic and debug messages either compile with DEBUG set
+- *  or control via the dynamic debug mechanisms.
+- *  The module parameter "debug" controls the sending of debug messages to
+- *  syslog. By default it is set to 0
+- *    debug = 0: only attach/detach messages are sent
+- *	      1: every action is logged
+- *	      2: extended logging; each single exchanged byte is documented
+- *		 (about twice the log volume of [1])
+- *    To switch debug level:
+- *	      At module loading:  modprobe lpvo_usb_gpib debug={0,1,2}
+- *	      On the fly: echo {0,1,2} > /sys/modules/lpvo_usb_gpib/parameters/debug
++ *   ***  Diagnostics and Debug  ***
++ * To enable the diagnostic and debug messages either compile with DEBUG set
++ * or control via the dynamic debug mechanisms.
++ * The module parameter "debug" controls the sending of debug messages to
++ * syslog. By default it is set to 0
++ * debug = 0: only attach/detach messages are sent
++ *         1: every action is logged
++ *         2: extended logging; each single exchanged byte is documented
++ *	(about twice the log volume of [1])
++ * To switch debug level:
++ *         At module loading:  modprobe lpvo_usb_gpib debug={0,1,2}
++ *         On the fly: echo {0,1,2} > /sys/modules/lpvo_usb_gpib/parameters/debug
+  */
+ 
+ static int debug;
+@@ -169,10 +169,10 @@ static void show_status(struct gpib_board *board)
+ }
+ 
+ /*
+- *  GLOBAL VARIABLES: required for
+- *  pairing among gpib minor and usb minor.
+- *  MAX_DEV is the max number of usb-gpib adapters; free
+- *  to change as you like, but no more than 32
++ * GLOBAL VARIABLES: required for
++ * pairing among gpib minor and usb minor.
++ * MAX_DEV is the max number of usb-gpib adapters; free
++ * to change as you like, but no more than 32
+  */
+ 
+ #define MAX_DEV 8
+@@ -182,7 +182,7 @@ static int assigned_usb_minors;		   /* mask of filled slots */
+ static struct mutex minors_lock;     /* operations on usb_minors are to be protected */
+ 
+ /*
+- *  usb-skeleton prototypes
++ * usb-skeleton prototypes
+  */
+ 
+ struct usb_skel;
+@@ -192,7 +192,7 @@ static int skel_do_open(struct gpib_board *, int);
+ static int skel_do_release(struct gpib_board *);
+ 
+ /*
+- *   usec_diff : take difference in MICROsec between two 'timespec'
++ *  usec_diff : take difference in MICROsec between two 'timespec'
+  *		 (unix time in sec and NANOsec)
+  */
+ 
+@@ -203,7 +203,7 @@ static inline int usec_diff(struct timespec64 *a, struct timespec64 *b)
+ }
+ 
+ /*
+- *   ***  these routines are specific to the usb-gpib adapter  ***
++ *  ***  these routines are specific to the usb-gpib adapter  ***
+  */
+ 
+ /**
+@@ -262,13 +262,11 @@ static int send_command(struct gpib_board *board, char *msg, int leng)
+ }
+ 
+ /*
+- *
+  * set_control_line() - Set the value of a single gpib control line
+  *
+  * @board:    the gpib_board_struct data area for this gpib interface
+  * @line:     line mask
+  * @value:    line new value (0/1)
+- *
+  */
+ 
+ static int set_control_line(struct gpib_board *board, int line, int value)
+@@ -368,7 +366,7 @@ static void set_timeout(struct gpib_board *board)
+ }
+ 
+ /*
+- *    now the standard interface functions - attach and detach
++ * now the standard interface functions - attach and detach
+  */
+ 
+ /**
+@@ -464,7 +462,8 @@ static int usb_gpib_attach(struct gpib_board *board, const gpib_board_config_t *
+ 	if (retval != ACK)
+ 		return -EIO;
+ 
+-	/* We must setup debug mode because we need the extended instruction
++	/*
++	 * We must setup debug mode because we need the extended instruction
+ 	 * set to cope with the Core (gpib_common) point of view
+ 	 */
+ 
+@@ -473,7 +472,8 @@ static int usb_gpib_attach(struct gpib_board *board, const gpib_board_config_t *
+ 	if (retval != ACK)
+ 		return -EIO;
+ 
+-	/* We must keep REN off after an IFC because so it is
++	/*
++	 * We must keep REN off after an IFC because so it is
+ 	 * assumed by the Core
+ 	 */
+ 
+@@ -654,7 +654,8 @@ static int usb_gpib_line_status(const struct gpib_board *board)
+ 
+ 	DIA_LOG(1, "%s\n", "request");
+ 
+-	/* if we are on the wait queue (board->wait), do not hurry
++	/*
++	 * if we are on the wait queue (board->wait), do not hurry
+ 	 * reading status line; instead, pause a little
+ 	 */
+ 
+@@ -707,7 +708,8 @@ static int usb_gpib_line_status(const struct gpib_board *board)
+ 
+ static int usb_gpib_parallel_poll(struct gpib_board *board, uint8_t *result)
+ {
+-	/* request parallel poll asserting ATN | EOI;
++	/*
++	 * request parallel poll asserting ATN | EOI;
+ 	 * we suppose ATN already asserted
+ 	 */
+ 
+@@ -1083,13 +1085,13 @@ static gpib_interface_t usb_gpib_interface = {
  };
  
  /*
-- *   gpib_attach() creates an "instance" of the driver, allocating
-- *   local data structures for one device.  The device is registered
-- *   with Card Services.
-+ * gpib_attach() creates an "instance" of the driver, allocating
-+ * local data structures for one device.  The device is registered
-+ * with Card Services.
+- *   usb_gpib_init_module(), usb_gpib_exit_module()
++ * usb_gpib_init_module(), usb_gpib_exit_module()
   *
-- *   The dev_link structure is initialized, but we don't actually
-- *   configure the card at this point -- we wait until we receive a
-- *   card insertion event.
-+ * The dev_link structure is initialized, but we don't actually
-+ * configure the card at this point -- we wait until we receive a
-+ * card insertion event.
+- *   This functions are called every time a new device is detected
+- *   and registered or is removed and unregistered.
+- *   We must take note of created and destroyed usb minors to be used
+- *   when usb_gpib_attach() and usb_gpib_detach() will be called on
+- *   request by gpib_config.
++ * This functions are called every time a new device is detected
++ * and registered or is removed and unregistered.
++ * We must take note of created and destroyed usb minors to be used
++ * when usb_gpib_attach() and usb_gpib_detach() will be called on
++ * request by gpib_config.
   */
- static int ines_gpib_probe(struct pcmcia_device *link)
- {
-@@ -1079,10 +1080,10 @@ static int ines_gpib_probe(struct pcmcia_device *link)
+ 
+ static int usb_gpib_init_module(struct usb_interface *interface)
+@@ -1107,8 +1109,9 @@ static int usb_gpib_init_module(struct usb_interface *interface)
+ 			goto exit;
+ 		}
+ 	} else {
+-		/* check if minor is already registered - maybe useless, but if
+-		 *  it happens the code is inconsistent somewhere
++		/*
++		 * check if minor is already registered - maybe useless, but if
++		 * it happens the code is inconsistent somewhere
+ 		 */
+ 
+ 		for (j = 0 ; j < MAX_DEV ; j++) {
+@@ -1162,12 +1165,11 @@ static void usb_gpib_exit_module(int minor)
  }
  
  /*
-- *   This deletes a driver "instance".	The device is de-registered
-- *   with Card Services.  If it has been released, all local data
-- *   structures are freed.  Otherwise, the structures will be freed
-- *   when the device is released.
-+ * This deletes a driver "instance".	The device is de-registered
-+ * with Card Services.  If it has been released, all local data
-+ * structures are freed.  Otherwise, the structures will be freed
-+ * when the device is released.
+- *     Default latency time (16 msec) is too long.
+- *     We must use 1 msec (best); anyhow, no more than 5 msec.
+- *
+- *     Defines and function taken and modified from the kernel tree
+- *     (see ftdi_sio.h and ftdi_sio.c).
++ * Default latency time (16 msec) is too long.
++ * We must use 1 msec (best); anyhow, no more than 5 msec.
+  *
++ * Defines and function taken and modified from the kernel tree
++ * (see ftdi_sio.h and ftdi_sio.c).
   */
- static void ines_gpib_remove(struct pcmcia_device *link)
- {
-@@ -1103,9 +1104,9 @@ static int ines_gpib_config_iteration(struct pcmcia_device *link, void *priv_dat
+ 
+ #define FTDI_SIO_SET_LATENCY_TIMER	9 /* Set the latency timer */
+@@ -1235,7 +1237,8 @@ static int write_latency_timer(struct usb_device *udev)
+ /*   private defines   */
+ 
+ #define MAX_TRANSFER		    (PAGE_SIZE - 512)
+-/* MAX_TRANSFER is chosen so that the VM is not stressed by
++/*
++ * MAX_TRANSFER is chosen so that the VM is not stressed by
+  * allocations > PAGE_SIZE and the number of packets in a page
+  * is an integer 512 is the largest possible packet on EHCI
+  */
+@@ -1280,7 +1283,7 @@ static void skel_delete(struct kref *kref)
  }
  
  /*
-- *   gpib_config() is scheduled to run after a CARD_INSERTION event
-- *   is received, to configure the PCMCIA socket, and to make the
-- *   device available to the system.
-+ * gpib_config() is scheduled to run after a CARD_INSERTION event
-+ * is received, to configure the PCMCIA socket, and to make the
-+ * device available to the system.
+- *   skel_do_open() - to be called by usb_gpib_attach
++ * skel_do_open() - to be called by usb_gpib_attach
   */
- static int ines_gpib_config(struct pcmcia_device *link)
- {
-@@ -1125,8 +1126,9 @@ static int ines_gpib_config(struct pcmcia_device *link)
- 	dev_dbg(&link->dev, "ines_cs: manufacturer: 0x%x card: 0x%x\n",
- 		link->manf_id, link->card_id);
  
--	/*  for the ines card we have to setup the configuration registers in
--	 *	attribute memory here
-+	/*
-+	 * for the ines card we have to setup the configuration registers in
-+	 * attribute memory here
- 	 */
- 	link->resource[2]->flags |= WIN_MEMORY_TYPE_AM | WIN_DATA_WIDTH_8 | WIN_ENABLE;
- 	link->resource[2]->end = 0x1000;
-@@ -1159,9 +1161,9 @@ static int ines_gpib_config(struct pcmcia_device *link)
- } /* gpib_config */
+ static int skel_do_open(struct gpib_board *board, int subminor)
+@@ -1317,7 +1320,7 @@ static int skel_do_open(struct gpib_board *board, int subminor)
+ }
  
  /*
-- *   After a card is removed, gpib_release() will unregister the net
-- *   device, and release the PCMCIA configuration.  If the device is
-- *   still open, this will be postponed until it is closed.
-+ * After a card is removed, gpib_release() will unregister the net
-+ * device, and release the PCMCIA configuration.  If the device is
-+ * still open, this will be postponed until it is closed.
+- *   skel_do_release() - to be called by usb_gpib_detach
++ * skel_do_release() - to be called by usb_gpib_detach
   */
  
- static void ines_gpib_release(struct pcmcia_device *link)
+ static int skel_do_release(struct gpib_board *board)
+@@ -1340,7 +1343,7 @@ static int skel_do_release(struct gpib_board *board)
+ }
+ 
+ /*
+- *   read functions
++ * read functions
+  */
+ 
+ static void skel_read_bulk_callback(struct urb *urb)
+@@ -1405,7 +1408,7 @@ static int skel_do_read_io(struct usb_skel *dev, size_t count)
+ }
+ 
+ /*
+- *   skel_do_read() - read operations from lpvo_usb_gpib
++ * skel_do_read() - read operations from lpvo_usb_gpib
+  */
+ 
+ static ssize_t skel_do_read(struct usb_skel *dev, char *buffer, size_t count)
+@@ -1482,7 +1485,8 @@ static ssize_t skel_do_read(struct usb_skel *dev, char *buffer, size_t count)
+ 			 * all data has been used
+ 			 * actual IO needs to be done
+ 			 */
+-			/* it seems that requests for less than dev->bulk_in_size
++			/*
++			 * it seems that requests for less than dev->bulk_in_size
+ 			 *  are not accepted
+ 			 */
+ 			rv = skel_do_read_io(dev, dev->bulk_in_size);
+@@ -1496,7 +1500,8 @@ static ssize_t skel_do_read(struct usb_skel *dev, char *buffer, size_t count)
+ 		 * data is available - chunk tells us how much shall be copied
+ 		 */
+ 
+-		/* Condition dev->bulk_in_copied > 0 maybe will never happen. In case,
++		/*
++		 * Condition dev->bulk_in_copied > 0 maybe will never happen. In case,
+ 		 * signal the event and copy using the original procedure, i.e., copy
+ 		 * first two bytes also
+ 		 */
+@@ -1551,7 +1556,7 @@ static ssize_t skel_do_read(struct usb_skel *dev, char *buffer, size_t count)
+ }
+ 
+ /*
+- *   write functions
++ * write functions
+  */
+ 
+ static void skel_write_bulk_callback(struct urb *urb)
+@@ -1581,7 +1586,7 @@ static void skel_write_bulk_callback(struct urb *urb)
+ }
+ 
+ /*
+- *   skel_do_write() - write operations from lpvo_usb_gpib
++ * skel_do_write() - write operations from lpvo_usb_gpib
+  */
+ 
+ static ssize_t skel_do_write(struct usb_skel *dev, const char *buffer, size_t count)
+@@ -1686,7 +1691,7 @@ static ssize_t skel_do_write(struct usb_skel *dev, const char *buffer, size_t co
+ }
+ 
+ /*
+- *   services for the user space devices
++ * services for the user space devices
+  */
+ 
+ #if USER_DEVICE	 /* conditional compilation of user space device */
+@@ -1771,7 +1776,7 @@ static int skel_release(struct inode *inode, struct file *file)
+ }
+ 
+ /*
+- *  user space access to read function
++ * user space access to read function
+  */
+ 
+ static ssize_t skel_read(struct file *file, char __user *buffer, size_t count,
+@@ -1800,7 +1805,7 @@ static ssize_t skel_read(struct file *file, char __user *buffer, size_t count,
+ }
+ 
+ /*
+- *  user space access to write function
++ * user space access to write function
+  */
+ 
+ static ssize_t skel_write(struct file *file, const char __user *user_buffer,
 -- 
 2.49.0
 
