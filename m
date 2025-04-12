@@ -1,107 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E576078F24;
-	Sat, 12 Apr 2025 00:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690C1E87B;
+	Sat, 12 Apr 2025 00:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744418856; cv=none; b=OWo8tgeJ80L3tmje7EtpRW16PhJGrb+9GlN5R0xd3fAdhjg1uJv1H/HwP4EGrMGubCkh8KWk29YNT5mKV5Raw/2RCM1SAUlSwTsano3thvvOoi7izxtsVs+EOV/psnxZJaLGKlUeDJ+My/gGm3cR6k1tGAAmvMsi8wC9YlkB1oI=
+	t=1744419261; cv=none; b=H+Wrj5SWZxvRTSdTMNdzRNrx5RhSgfCmVsaKLd2uRwlh2qGSFUChGZzWM3pXoA4XoQUpIbr1q0hSHS6Gv5xntZ8ewHyPrEF/nd+Fb8qGmbosswnEM7x1tBTaFCbR0T8sRS0Ic2bFsWG7+qjvrRAFIfcXpDmVJK+Do/yKEC/yfwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744418856; c=relaxed/simple;
-	bh=rlH3+hFUHiUrNulW5hKgAfhzSfSTh0htqokszVXTTio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QWdIrJDiXKfHHDHV6ncUOiJUgV9K5WnLBN9VRQQo9fwSKsIDOuxTq+jr7voemgB4VDfM3q+ev1B+4gJNIEmwo0u3J6NCX+0vzZnNjxmmYBkirIsxT0WWueDIdNvLEe83/ew0Ggstix+se2FgKI7sLnxbG3iJZe4tWNi6QZZkLyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADJQyR64; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744419261; c=relaxed/simple;
+	bh=s45L0YnkJ1vkVqnb9gTLWF3wJTlILXq+4YLkXE61rqs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZgU7IrghjkklhHr+TDdXLlGrfPpFRhRCpsNKgmlRGO4jPT42gwjhz/5zfRc8f45XUuJ0nUolDiSadFC+sJCaSFHhLmrN0vg5rXBQIs8nNIZXYbLSW84eTEBVzCaORhv/RnAxUSgerh05YgbJepwkrgTHEsSOe3OX1TvFFGiKzzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kxUKhr59; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADJQyR64"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA0BC4CEE2;
-	Sat, 12 Apr 2025 00:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744418855;
-	bh=rlH3+hFUHiUrNulW5hKgAfhzSfSTh0htqokszVXTTio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ADJQyR64fh8FtvR81MAqmmbo57Q8MKKNJu0IVgl8PPuK8ThK74npi8ZbWxPiiqX3x
-	 eUCifYfDTQ3HZIXXYX78/LnrAD8DaHTUsg8Kd5trUG0Wzdmnf1ykTZhn8UkehdgLn/
-	 jR1tnhQQEmF0LJZMPnt5E1vrmm9yJ9NP57nxJ536AfGjT7eizETcXtxh5C3xT43lFN
-	 9GW86K8Ht23n+1IoeL3yK9DdfhYAfx0s811cZ6cWZ0u7Bd8BfFqnum+nJZ6L2lM3F/
-	 5vuN3JgHy/jY5HQi6JjezxyE2t2yPbhp67TUnasCgKn+lAWTCDZiCYlFElsBrtASYU
-	 8Nt0+yyoa6ryA==
-Date: Sat, 12 Apr 2025 03:47:31 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Winston Wen <wentao@uniontech.com>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 6/7] tpm: add __always_inline for tpm_is_hwrng_enabled
-Message-ID: <Z_m4I3iaHj453ZM0@kernel.org>
-References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
- <20250411105459.90782-1-chenlinxuan@uniontech.com>
- <D513EE4F40467A51+20250411105459.90782-6-chenlinxuan@uniontech.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxUKhr59"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73972a54919so2388306b3a.3;
+        Fri, 11 Apr 2025 17:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744419259; x=1745024059; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t0Jdvg9bhsj2TlLlgKK4kFPCwh8w3DW34G5/8k1fXRo=;
+        b=kxUKhr59waGTJcy2sZxukp7UYRK5TcXPjZ+fgS+00cwAy5kF4q2Cmv5tFvJ/IE1Hys
+         qF1td4PBt9YL5sgTunJ3C2U0+shMoCUIY9kWskFx28cK7UmX6Kf5PBgVsIKgFQpxUBDb
+         TJgeziItaN6Ce8LCRNFxG2h9lDBtT7Ap87kYgdPFFRm5EXX+H8uhNtOWzmQRErTUOQcf
+         2z9iKboptvLjOfay6lYqJGnw4yhUSJRHODYIot2w/p8KH8G0S9oIN/8CJ36oA9akExvf
+         p2nlVfRE5LPv6ft3BGibMC1RdEIexk0RuP0kmsIwFP5AfdUX2NomGP4AWh8vGKeGkBgt
+         G8Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744419259; x=1745024059;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t0Jdvg9bhsj2TlLlgKK4kFPCwh8w3DW34G5/8k1fXRo=;
+        b=k/BqXyvpD+Rodd79rrU+6Uo7AtZUxnV1azprAIMXUtEnH6sYh+lt89a1777ey6yj0w
+         cK7n6mX21CONMjeUQUv7dTY0GmlF7TJDOB56wPaORAbrE9I0nPJFh4MsTJev9Vk20P3D
+         l4/iDyVMEPQnkJpO3oa09U8fs+ARX/MHA0oZbaMJtbKZ7lIHDGs8XVu9CtutoB+LexTn
+         xCqtoQo1KNUnX7SPlAu5zYCTxOpZ5v9DVHGaUxN4NE8gJaa6UjSY8mAP6n2Auk+YqtgN
+         l3RnqUg6KIyIPtUeY5/EF4R+iaRURHDG04TrP7A/ry1tWvWsJw4esGblBvfla9KCTwOT
+         i65Q==
+X-Gm-Message-State: AOJu0Yz6JOjC7R9/wtszk1keew0lCTuBSsd6HU1Qz8P0iLK42Wws/g96
+	OOmlu+DX3UPXQbKwe9+UxRC38Y2TX0k0I8e9xrDCdHkTtDE3p26ACmXEIVKp
+X-Gm-Gg: ASbGncssGr7zkBnMfTrgvHt++60tsRhtxP3ygHvb115L2BZdXeVkC+HA2vvxLRQn39A
+	a5NdHO+foB4VysGm0n9bgpTzeyCKOG7rn2tNg9R1PEoi1VTsKcwuu+4FkkhrMOQ44pXoOEtsBhS
+	FhB/sqtOXafqCyOCd1Vr7YTE+IzZBbCZRUDfNGpSj81Dr++j8zCM9fh1GjxvTaWzWrNTxOmy6Or
+	0ZIswDprbosBn3d5IZKeLviZxSCzUwIehII0ur8pfBONuK0Erd0w3U/0otQ5g9zjzg507w/wIJl
+	dFWyWZ3l4JLOLrPhFPi5FZZSO4eZeGkZv51QQyI6iWlXA5dDFH3Wc3pcFYBkCevQht3qWa/npKQ
+	2gjIU9xiOh3a+HHhEustehLN0Ze3s
+X-Google-Smtp-Source: AGHT+IHe4ii2FtLn/r3QCdx0kXlhM2Ev3zMXUE8KcvJ3Z+FhF6+t+o0tbI8w0udyq3tq6NDzKeu+8g==
+X-Received: by 2002:a05:6a00:1481:b0:736:6279:ca25 with SMTP id d2e1a72fcca58-73bd12a8333mr6935579b3a.24.1744419259191;
+        Fri, 11 Apr 2025 17:54:19 -0700 (PDT)
+Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230dd17sm2303274b3a.129.2025.04.11.17.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 17:54:18 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	geert@linux-m68k.org,
+	logang@deltatee.com,
+	sbates@raithlin.com,
+	dakr@kernel.org,
+	dinguyen@kernel.org,
+	miguel.ojeda.sandonis@gmail.com,
+	arnd@arndb.de
+Subject: [PATCH v2] rust: helpers: Remove volatile qualifier from io helpers
+Date: Sat, 12 Apr 2025 09:53:41 +0900
+Message-ID: <20250412005341.157150-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D513EE4F40467A51+20250411105459.90782-6-chenlinxuan@uniontech.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 11, 2025 at 06:54:54PM +0800, Chen Linxuan wrote:
-> From: Winston Wen <wentao@uniontech.com>
-> 
-> On x86_64 with gcc version 13.3.0, I compile kernel with:
+Remove the `volatile` qualifier used with __iomem in helper functions
+in io.c. These helper functions are just wrappers around the
+corresponding accessors so they are unnecessary.
 
-Use passive:
+This fixes the following UML build error with CONFIG_RUST enabled:
 
-"Presume that kernel is compiled for x86_64 with gcc version 13.3.0:"
+In file included from /home/fujita/git/linux-rust/rust/helpers/helpers.c:19:
+/home/fujita/git/linux-rust/rust/helpers/io.c:12:10: error: passing 'volatile void *' to parameter of type 'void *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+   12 |         iounmap(addr);
+      |                 ^~~~
+/home/fujita/git/linux-rust/arch/um/include/asm/io.h:19:42: note: passing argument to parameter 'addr' here
+   19 | static inline void iounmap(void __iomem *addr)
+      |                                          ^
+1 error generated.
 
-> 
->   make defconfig
->   ./scripts/kconfig/merge_config.sh .config <(
->     echo CONFIG_TCG_TPM=y
->     echo CONFIG_HW_RANDOM=m
->   )
->   make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once"
-> 
-> Then I get a link error:
+Fixes: ce30d94e6855 ("rust: add `io::{Io, IoRaw}` base types")
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+v2:
+- remove all the volatile in io helpers instead of aligning UML's iounmap() with other
+v1: https://lore.kernel.org/lkml/20250409061129.136788-1-fujita.tomonori@gmail.com/
+---
+ rust/helpers/io.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-"This results a link error:"
+diff --git a/rust/helpers/io.c b/rust/helpers/io.c
+index 4c2401ccd720..15ea187c5466 100644
+--- a/rust/helpers/io.c
++++ b/rust/helpers/io.c
+@@ -7,94 +7,94 @@ void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
+ 	return ioremap(offset, size);
+ }
+ 
+-void rust_helper_iounmap(volatile void __iomem *addr)
++void rust_helper_iounmap(void __iomem *addr)
+ {
+ 	iounmap(addr);
+ }
+ 
+-u8 rust_helper_readb(const volatile void __iomem *addr)
++u8 rust_helper_readb(const void __iomem *addr)
+ {
+ 	return readb(addr);
+ }
+ 
+-u16 rust_helper_readw(const volatile void __iomem *addr)
++u16 rust_helper_readw(const void __iomem *addr)
+ {
+ 	return readw(addr);
+ }
+ 
+-u32 rust_helper_readl(const volatile void __iomem *addr)
++u32 rust_helper_readl(const void __iomem *addr)
+ {
+ 	return readl(addr);
+ }
+ 
+ #ifdef CONFIG_64BIT
+-u64 rust_helper_readq(const volatile void __iomem *addr)
++u64 rust_helper_readq(const void __iomem *addr)
+ {
+ 	return readq(addr);
+ }
+ #endif
+ 
+-void rust_helper_writeb(u8 value, volatile void __iomem *addr)
++void rust_helper_writeb(u8 value, void __iomem *addr)
+ {
+ 	writeb(value, addr);
+ }
+ 
+-void rust_helper_writew(u16 value, volatile void __iomem *addr)
++void rust_helper_writew(u16 value, void __iomem *addr)
+ {
+ 	writew(value, addr);
+ }
+ 
+-void rust_helper_writel(u32 value, volatile void __iomem *addr)
++void rust_helper_writel(u32 value, void __iomem *addr)
+ {
+ 	writel(value, addr);
+ }
+ 
+ #ifdef CONFIG_64BIT
+-void rust_helper_writeq(u64 value, volatile void __iomem *addr)
++void rust_helper_writeq(u64 value, void __iomem *addr)
+ {
+ 	writeq(value, addr);
+ }
+ #endif
+ 
+-u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
++u8 rust_helper_readb_relaxed(const void __iomem *addr)
+ {
+ 	return readb_relaxed(addr);
+ }
+ 
+-u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
++u16 rust_helper_readw_relaxed(const void __iomem *addr)
+ {
+ 	return readw_relaxed(addr);
+ }
+ 
+-u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
++u32 rust_helper_readl_relaxed(const void __iomem *addr)
+ {
+ 	return readl_relaxed(addr);
+ }
+ 
+ #ifdef CONFIG_64BIT
+-u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
++u64 rust_helper_readq_relaxed(const void __iomem *addr)
+ {
+ 	return readq_relaxed(addr);
+ }
+ #endif
+ 
+-void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
++void rust_helper_writeb_relaxed(u8 value, void __iomem *addr)
+ {
+ 	writeb_relaxed(value, addr);
+ }
+ 
+-void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
++void rust_helper_writew_relaxed(u16 value, void __iomem *addr)
+ {
+ 	writew_relaxed(value, addr);
+ }
+ 
+-void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
++void rust_helper_writel_relaxed(u32 value, void __iomem *addr)
+ {
+ 	writel_relaxed(value, addr);
+ }
+ 
+ #ifdef CONFIG_64BIT
+-void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
++void rust_helper_writeq_relaxed(u64 value, void __iomem *addr)
+ {
+ 	writeq_relaxed(value, addr);
+ }
 
-> 
->   ld: vmlinux.o: in function `tpm_add_hwrng':
->   tpm-chip.c:(.text+0x6c5924): undefined reference to `hwrng_register'
->   ld: vmlinux.o: in function `tpm_chip_unregister':
->   (.text+0x6c5bc9): undefined reference to `hwrng_unregister'
->   ld: vmlinux.o: in function `tpm_chip_register':
->   (.text+0x6c5c9b): undefined reference to `hwrng_unregister'
+base-commit: c59026c0570a2a97ce2e7d5ae5e9c48fc841542b
+-- 
+2.43.0
 
-The resolution is lacking i.e., why adding __always_inline addresses
-the linking problem.
-
-> 
-> Signed-off-by: Winston Wen <wentao@uniontech.com>
-> Co-Developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> ---
->  drivers/char/tpm/tpm-chip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index e25daf2396d3..48cc74d84247 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -534,7 +534,7 @@ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->  	return tpm_get_random(chip, data, max);
->  }
->  
-> -static bool tpm_is_hwrng_enabled(struct tpm_chip *chip)
-> +static __always_inline bool tpm_is_hwrng_enabled(struct tpm_chip *chip)
->  {
->  	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM))
->  		return false;
-> -- 
-> 2.48.1
-> 
-
-BR, Jarkko
