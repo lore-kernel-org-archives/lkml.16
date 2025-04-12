@@ -1,814 +1,198 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2048.outbound.protection.outlook.com [40.107.92.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F83515CD46
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744422681; cv=none; b=vBgjnrY9vTFvNKA8d6X7ko6srQVW2X3YALFIopOYCPOrrq+F9ET8EFCpmGGKxUuSxkxFrrr0WlJsx+9fyxUUGsInl4HGYpUT6yyxAWQrWopPsZhT1x/BmzUp8JjEayoZTni+yKO4hRiGeZ7baY2Oh8U3cpPX+iwM0QO5EsVCoxo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744422681; c=relaxed/simple;
-	bh=AHnAnv0hg4Erke1AjlQieGWuP7RwmRdYJCbcq42AsTI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k1mY73speTnsnYqNTuaq7ytQIxqT08hGHFSJy1drU6eYl5ikWVKK9vMC91FATQtXmgDmkN2NfLsF66vr3gIMNgZZ77TeLVj6KCE4GtfIP0LuM+kdW9xhQtPwUevP5UI3SxTZRdXnLSVozO6oKu934xi1U5a1n9Q8euRkR5hYJDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=F2BGDaDK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F45917BA1;
+	Sat, 12 Apr 2025 01:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744422743; cv=fail; b=ME7zsRIlHht8AYj/w0WIJmkUAbEufTUCrZhYylRAj/lUvHkBOQEOpa5aKrw3gT25W4RAUn+WyR3QbY+uccwiC9EHBBdXH8gColOgiVYJlqKqUWH4D1SK4roTIZi8+eXn3TEU7Xm+2JBKQyOa2+Th3PvbAzXA/kfjQEKAbVpgeyI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744422743; c=relaxed/simple;
+	bh=1vN5P3V/P65D6InnETE3TVU5id6nVEJZYdCha/ytWzE=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=UQEp8yxxARjTXTaQCZnZI4OaF0LAw6kUy5tE2fF3o9vsokyStU8JHE7oKmQyG8Oq4ihgsymf0vLoHuyMKargFRp+WwwkP+YOh69cPYjsEdbjpR5WgTQSffaWvbxgzOJZ3JSMAoCfrfDkPkTccnKx6WTkiPYnycnIVepJna40a8Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MaU3nMTp; arc=fail smtp.client-ip=40.107.92.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="F2BGDaDK"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53C1pI1U013462
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:51:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BDgdCUfJ30v/LQQdRBvV+1BqjJEa4v/FgnratUOXX1g=; b=F2BGDaDKy0lY7G/k
-	d5wfiYPXtkyXE3jxJXc9/TZxSNIE59k0LMxnexxUgpi1/67zEPOtftTZf5grueNK
-	9zkd+zM66D7Q4usdB95iCKQnkTLKKssBmrHDxfjxNR/Ew/Mf0vuYuIUxtLCriqwL
-	LVbQkFSfhjBzZ8FyoqZRfSxdH4PpBC57Okuq1it+YDRlaoCItbyMhXvwH3A1dCTz
-	mi5Ra5cNBQ6zUHIyjy2YbbUu9Y8ktNRuem2u6VLZq1QEY7R/Ept5mXw8qDFYreex
-	DN3SkndLXbe9rKQv4dAYmjdH1jyNFhJbeCbayKjDZ5nQnyskVuTNZjyhzSOWV4xN
-	E+A0lg==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgv7a6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:51:17 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-af8d8e0689eso2720673a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:51:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744422661; x=1745027461;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BDgdCUfJ30v/LQQdRBvV+1BqjJEa4v/FgnratUOXX1g=;
-        b=EVTyjpv5aK0U39LykjT/hjvRazftqhETSIst8Jxhv1aNTBGeUeokUXtSZ/W6SwRA3m
-         7rViDCunO9UAUFImBwmoXQZnHKB9Sa5aqFdWr22gTj9yODm1/WTsmVfeKBh59evr3Si+
-         tjH1aTFB0upsZNaG2m1LNQXpOpiaBPT4d8Ci8GE3rDdg0Ut3hf4IUtZ/hKE2uU8gyXwT
-         yt0Dn/Uw1h65sdG32EKyxsbqSchvdZu0CqaGpY/g1s6E1vIigpzKQe2ZCO7+mIbmMtZv
-         gYQrCaOagOBbSyzanCbndmFh9RH1lWmyUf3JmYi51srYsz3ZgglAJqGO/o45xzKdN5cV
-         dByQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDnUffRXhODnK0U4sK/sphrEnYJJUq8dBtqPgPSA1gSlNnom9VAeRv7F95ijk/36SOUx7109TI+wa55iM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1ZA43eLzWAKbcTxEZIvv1PaV9sgJWFJxhtzrLFzVRZeOloORt
-	Tz+SvYbAU9mjWYmIdwWYglXEnchbp1E1Bdr9U6bZToVn3SPj2MZ3HidwRprZ3IvYLVBNC4Ri+V2
-	EzHSgxZMoXHMIjVfMW6OTDFk4nRiLjCwvh9yx8Zjq59gvmAqtE0ljhqC8hHg1rQM=
-X-Gm-Gg: ASbGncsn0TrmQokxt6nT3z/iHuAnNr6oHtCX2lXYQCom9Qwn0qS9Mbs6ipLElQ/JNKg
-	bzpJrZtRFCVlKkSRZs0oLSBNzvSdRzXLmvzOHbAPH8j7lNLZrtXNPXaNlUjIXoaiH4JioX6C02w
-	hg5rzkBt/ReVTrrKBfclDCaMi1g1jaYRdBbyf3T5G2ahoYjOHeCgTWnjMN+nHDcnkk5ftjxvOdK
-	rJMgxSXVr24oS5sNJ8bZxtO/hVcvxqU7SyPXjQapwrtB+GopN0ypRsNsF36AnnEn2yertitNgfq
-	RL9FMV+mog8ZAkEOtkjFWuHU84X/iE0PmxSenL2WYDjOBJY=
-X-Received: by 2002:a05:6a20:2d13:b0:1f5:837b:186a with SMTP id adf61e73a8af0-2017978c69dmr7353199637.6.1744422660623;
-        Fri, 11 Apr 2025 18:51:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECa6V68bxepSL/YtsQ8tnlpk2Tftkz3AapXMGylh8u6+B8rvO4K1XcU5WrFNfidMTks3kkLg==
-X-Received: by 2002:a05:6a20:2d13:b0:1f5:837b:186a with SMTP id adf61e73a8af0-2017978c69dmr7353146637.6.1744422659928;
-        Fri, 11 Apr 2025 18:50:59 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a3221832sm5516825a12.70.2025.04.11.18.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 18:50:59 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Sat, 12 Apr 2025 07:19:57 +0530
-Subject: [PATCH v5 8/9] PCI: pwrctrl: Add power control driver for tc9563
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MaU3nMTp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qgUVCpxqfwiGgzGBZMCLChyoYO4oh85D1jcHBqexr9wF3lGzPR7vi/w6PAvo88tyk6yUZgPrN1eO5IyIsk98+zJOCcmsntP+bVpWF0TqYYSk2lYGE5ASb5iWYvdnCqmU3fqXPAGp5ixAbP5fdNZFoAHjvBvm/miCd+4rK50l6ssJ00TcBhIQ12N5T4mLb2d1Unhu0vszghwdckCkIf8GolQDBK2HcJ9TUyhdJmS3uHm34+SJu0fty2q6tgxk6G7ecrB27gmbgSvwDEuWmUlXPBZSLl5LJmKDxe2w1QrNXOS8rHbUdjLOJGg7ZAI9jIusQudUhPdkDZE+bY+QZpr3Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1vN5P3V/P65D6InnETE3TVU5id6nVEJZYdCha/ytWzE=;
+ b=NhVlZccZV2/btTSZiYEIA9PIMxt6/fhcb3yaafqURWH6xQ/qGWhiRheNZSkyUsUgTqqrIjbOWFDq9FXgHxhlSTMP4iZ6UIMcBn76G4utgwjUZiNjl1+jF7NL21XWAWQfjZTpFRQfUYSR014z1rq8Vrs8KW9EPkl6LGZOK/iIHBfgm/+RhPPBmyDOVHnPqR1xQhZNCqmroRg/ha2XBXqtBC9wRsRG+o9U2JW66PtrBZoSLDgs4hrzDtKeKcPef96mlXCNUumSU5swRh1bg/hw1TZNAuXT3GQ6JXSrPfAodDwTxTXl2UwNpIj/Q7ljN/Fz+DThnxKatEr3p3fWfcECbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1vN5P3V/P65D6InnETE3TVU5id6nVEJZYdCha/ytWzE=;
+ b=MaU3nMTpypCl3Ykvxuzew4W6hBjBGE6mqps23E4KbvO+TfroHjDk21MwlMoyCn9Tt0D/hCh8o4bIbTmhOAL2XQd/yo+SeSfK0GY2lLoupo3oxHm2x6Zsei8kFFyv7Fg4xM2DApzMKnWla8HJyIdb6gH3jx/xhxvC1Jcy/57vgrXe3LfZqAADEUKmaiYvOsT5+H3GfOwcWlFjP0yvEqOfea/u+QTYAUjhcX9NqyAgkyFDeZF84qmJuPVakTaCJwgdHS4pDKrEq0+PctaH1uoazrl78tGaDaiW5IwKFR+FBqdL8AE5gSZiwxWlVbntzyjUkjscUSDEn6ACEK4IMfrYVA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SJ2PR12MB8980.namprd12.prod.outlook.com (2603:10b6:a03:542::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Sat, 12 Apr
+ 2025 01:52:13 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8632.025; Sat, 12 Apr 2025
+ 01:52:13 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 12 Apr 2025 10:52:08 +0900
+Message-Id: <D94A8YFTQQ7Z.3RSIVKEESEDZD@nvidia.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rust: alloc: allow coercion from `Box<T>` to
+ `Box<dyn U>` if T implements U
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250411-box_trait_objs-v2-1-c5f31b8db847@nvidia.com>
+ <Z_kUyx8ytlac1d__@cassiopeiae> <D93UDYZH7A8F.1FG8EIW013NKJ@nvidia.com>
+ <Z_kltpjo9bn4ah-l@cassiopeiae>
+In-Reply-To: <Z_kltpjo9bn4ah-l@cassiopeiae>
+X-ClientProxiedBy: TYAPR01CA0016.jpnprd01.prod.outlook.com (2603:1096:404::28)
+ To CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250412-qps615_v4_1-v5-8-5b6a06132fec@oss.qualcomm.com>
-References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
-In-Reply-To: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: quic_vbadigan@quicnic.com, amitk@kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744422605; l=19950;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=AHnAnv0hg4Erke1AjlQieGWuP7RwmRdYJCbcq42AsTI=;
- b=HvmSq/JOmGQT2U6Vd6x+94qVD1OMa0a7l5+uNsqfWaAXHlz0yP65xolJIoBwh6aRhcvWzXQM3
- 42/EFS610O8A83uvmRrVUsRFKcweH9otUt5EmzjLFx/7o8iCI0UT9qL
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f9c715 cx=c_pps a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=KRRJuCyi5i-mN1d0-v8A:9 a=QEXdDO2ut3YA:10 a=RVmHIydaz68A:10 a=_Vgx9l1VpLgwpw_dHYaR:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 6kT4StttXceosd2qmgVf1CBng7cCxj_v
-X-Proofpoint-GUID: 6kT4StttXceosd2qmgVf1CBng7cCxj_v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504120012
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SJ2PR12MB8980:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7546a211-beda-46ea-b875-08dd7964a515
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|10070799003|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SlVTWlVLSm9VMlRicFYzWlVwV3lwaTkybitYYXpXRmJLbklQZWhsSnpkb1dF?=
+ =?utf-8?B?SUpTaEdwMGNDZVV5MFcrMDY0cnNIZnRqaXowSFdjSmdFZjJNQjM2SVBVdjlH?=
+ =?utf-8?B?VTBjNXpBQ0dMQkVYYURhZlYveWtFMGRGeXVJeVpXTGhaSWMwOXNtemkzcHBE?=
+ =?utf-8?B?V1FFalk4MFBZempwb05mYXRSOGtYYnd3ejhjdmJ6WWlBZXRlM09kTGJNOUhB?=
+ =?utf-8?B?OFg5NjRJWkpRcWtFcmJTWlZSdHN4SWJxNW9ERzJvdC9uZHEyVy9NQ2tnY3BG?=
+ =?utf-8?B?NlZXbnMwMUwvZ29OU1ZqNVNMSU9CTmlFVlhRK25NanBaNUJROXRYN0l1dHNX?=
+ =?utf-8?B?NGIzMUZjV0N1Z0MvVXFpNG9raDhrL0NMMWZPcE8wNmxDcUtRVzl0Y0h5S0wv?=
+ =?utf-8?B?RHJ0VmY1bzYwRnpwR0ZLYmRycElVK21McjM1bWl5WEhZR0JyeFpUZVN3dmlp?=
+ =?utf-8?B?RmpseWg1anlCUzA0VzRHajNuZ3ROREZWY0VhY3ZrY2VBZ0ZMMTdkemdTMXVL?=
+ =?utf-8?B?eUVwR3p5REJwZFJVRitweFlEWVZuUXBOcU5XN2xDNEJ0WXd5eDI5OFhNSTJ4?=
+ =?utf-8?B?REZHMjhFKzJsQ0tBNWtLNTRuOGRkTzRGNTFQdCtjT1NJT3RydmxNZENaOGY1?=
+ =?utf-8?B?UlYxUWJrVFp6cllxZFhzeWFTcndHT28wZTRxbVlUalpHV2RDbDdSdXpqUmE0?=
+ =?utf-8?B?ZzR6N2d2TklQYlVGRXlqOEIwTXpjUlp0d1pqeEM4SjdlTmJOVzlWbnRQQWRM?=
+ =?utf-8?B?elcwcGRTMFNZSFhTZlppakhqWGFWVCtmT1czS2JFZmJJRmwzVUtyTU96bzlF?=
+ =?utf-8?B?eGZyWDJWQVhVZVg1Vmh2VGc2K3NEL2hzVFV3Q1o5SUhlSHMraWdwMVpTMHRY?=
+ =?utf-8?B?cmJPdGpIUi9xR3Z0TUY4aGtYNWdTR0FZSGdMeW5VRlBmZlc1UnV4UXJ1bTV6?=
+ =?utf-8?B?Si9yNWZNV3p4bURUQlVWb1NmNXdtRnBWdms1WDVZNFE2NHF4OXNzWUkrTXBv?=
+ =?utf-8?B?S0pVTXFQcU9JbGJiWlhBMUlreVpTdjdKVTJVdFJvUmo5S3QxWnFHeExtbnNE?=
+ =?utf-8?B?Mjg1TXlQdUhXZ0U2dGhhSENvMHJoQi9WY0Y0SjdtQlBSYXdiL1ZjaHJacVpw?=
+ =?utf-8?B?bXBnUXByV0lBeWZuREFKeDV2M2crKzJYSkRyc2JkREVla3o0RjhxNk55S2dO?=
+ =?utf-8?B?cTE0Q1NBMGxIODgwM0psL3IzNklHY3pkZ1NiTG00SnJhalpzc0NaRFREd2hJ?=
+ =?utf-8?B?SVZVSVNMcjdEVmJSVnF1bUl4WktjV29lUzJEOWZwVE1ESUtkbjlvSUhGQ09F?=
+ =?utf-8?B?Y2pKZEdjSzdiVmN1dTV5UEJsWGJIekl1dTVMYkZrMkNDa2RVODkxZ2ozcXcv?=
+ =?utf-8?B?YmZFQUJyYkhwNGErMjJCbmVJZXdTWXJhL1ZxdnRybVlCRkhUODQ4S1lRNlhB?=
+ =?utf-8?B?UTlQeGtRZTA2SDV1a29DdldiTzl1L25jRzlFdUMxQ0hlRUNpVGNTb0JOWTdL?=
+ =?utf-8?B?SGF0d3E0elJ6bEc4bjRnMktKcDRST1RKYkR2ZTBCK0NEaWtrRm1SeFU4QSto?=
+ =?utf-8?B?cUtjWmozcld6RVdLd1FVUkxZaVliTmRaczl2czNUQk92Vk56aE9sY2xRUHpm?=
+ =?utf-8?B?UkpVUUVEMTVIMDZBVjFQUzVIUzdVaVVRT1R1OW02U1lyNTV5bFVGcUtFa1Jv?=
+ =?utf-8?B?UjNCQUpDbjF0UGFMNWVkaXhEcENDLzJza09BQ0FFeFpISUY3Um15R3VoaUxN?=
+ =?utf-8?B?VEVhMGd3L1ZWUDdKdjRKYU5QY0xRSnZFSmJCdTV0U0Y0NDcva0w5b3d5aHM5?=
+ =?utf-8?B?eEdGa3g1SXpuUVVZckZucjBDRFFRN251ejA2VC93WkFDL3o2NmVqL2hGZ2hu?=
+ =?utf-8?B?TlJwMUo2WWRJeWF4TnNUMjFJVmg0ZE5ONWlhVVM4Z1B3R3o3Vmt5eUFyVW9V?=
+ =?utf-8?Q?hFsFLTEtEJI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(10070799003)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q2E3ZVZldWsrdVRMVVA1c0I1S0h5aHNDckcyZ2JyY1VJdUV0L01CbFdFSjZW?=
+ =?utf-8?B?MjRoUUhxMG9XMkdGdFpFNEk4cUU4ZHZJaEZGbTFHcWZCVUc0bWt2WlhUamRv?=
+ =?utf-8?B?bGVLTXZ1d2RTN1dOZ3ZMNzc5TW4reVF1b081RjVXc3dlSXM0K21ZOUJFNEpZ?=
+ =?utf-8?B?MytjMTlEMGNpRFoydjgvaE9neXhGYXVYRUtvTTdBeWE0ZWVNZjNDclNWdGhJ?=
+ =?utf-8?B?aDBIU29xQys3VjVYM25kc2cvQ3p1OVNpWGM3UHhUWW8yc2N1SktpakVKQ1Zr?=
+ =?utf-8?B?TkxaaXkxaEVtb0FrdkRDbDZrU1RRdXNCVlhMbFN3aUpJSEpuMzV3MjJXSmxr?=
+ =?utf-8?B?bWFTaG5ib3pEOGQ3SDhpV3hDS3VPM1FzaWFsT09JVUp0cnFvRmxOa1orSFcw?=
+ =?utf-8?B?ZG5Tc2VEczY2YTgxSThvWDJzeG1iZU0rTWR5Z05URFZMTWMyMVJkUzFWdFk2?=
+ =?utf-8?B?dDRWZWhjMm9TaXNSNEZhbFRxZzB5WXhUbmdrWGZHSStZOFRGZThyVzYzWVZ4?=
+ =?utf-8?B?d2JLWVlKU1p3bnlkZEk1bkIxekxCV2tqRm1Db3YvNXJvUFVaclZlcUJXbFRv?=
+ =?utf-8?B?NERKYWdmZnlJaDd2TkhMd2pnTm9DQ1Qxc1FaRHYyS01xQ0cxU3RIeENHckgy?=
+ =?utf-8?B?K1owSGczakd5a0dJb0FkVFUzRDVnUEpucE5iT2hpS1dPN0drWUZabEZOSDRz?=
+ =?utf-8?B?Yllsc3d4eS9CWnZJd3Z6SWJrWW1NajVDN2lzQlo2OXBMRTIwSG1lNHJZK21a?=
+ =?utf-8?B?d2VsRS9wbkk1bm1LZlNuZmxuYU5UclBlWlFrRUwxTDJkeVNtWjdOQkpvTWNs?=
+ =?utf-8?B?WU82T0FLRGtYdi93OVR4SFM5aGNjWkUraVJ0dW9IcEpSaWpWV0UzcUVmN0d2?=
+ =?utf-8?B?QmRHOGhZM3VxOVZXWGs3Y0lRSWZCSFZ5WC9HMVJ4cFMzelVScG5PQmdFNjhD?=
+ =?utf-8?B?K2xYS0JmNGpoWmVZbkFOSmhqWXdSSDNldTVMOGx0R2JqT1kxclMwdzRBSGpL?=
+ =?utf-8?B?MEFkajRHTTF2SjNEd2tlS3NUTVlEVlN1YU5kandBY1B2cmFFRkpVUmJsWWow?=
+ =?utf-8?B?YnVyZ1N2UjB2WityME1POVlmV3VaVW55R283UmZaejdHZEZ1SDZseTdqZ0xY?=
+ =?utf-8?B?ZE9sTG1ZY2VPMFJjZmsxdUdjKzNGN2lTQVZoMWtrMHZ3NTZIYi9Fd25Gc2Jp?=
+ =?utf-8?B?ay8yMENINE94TFRGUmREUkhEY1prVzZmbVdnLy9mMjJYVEppYWE5VkU4eHFp?=
+ =?utf-8?B?VCs4QWJkeDhZdVJ2UVhRK2VJOWJ6Rmh5SWNwL2gwTkkxU256UXpodmh0Rzho?=
+ =?utf-8?B?L3pOV0hlTTdCanRoNzBEc0cwNktuVzVIa2FHYnduUHEvT3lLRXFjYUIrS3Nh?=
+ =?utf-8?B?REFXcVdRVTJCTnpGVnV5WmZ0eDVrWURKdTgramFCSGpKSW1Td2x0ZEpwNnhF?=
+ =?utf-8?B?NHdpK2pRcTBWMlhVTFo3R1R4eUFXaUZyN21UTGprMjdHQXFvVDFubUlVOWwv?=
+ =?utf-8?B?bTlXTGdPSFRjakYyVTlrQUpjVjhsNkZrdnJiejRoajJQd1hmVzBZajkzcGFl?=
+ =?utf-8?B?UnMyd3I2Y1BNbUZqK1FpbVZXZDJWRTBSY3JJTTNmVmgrTnAxQ2Y5UHlpa3ZK?=
+ =?utf-8?B?YnBBOVVQZzRENCtvUlJoZ1ZhNWtSQTR3N0doeDJjL2ZmcCtFMTMvWXdkZ21q?=
+ =?utf-8?B?QUJmenhpd0lLTGxLT0xGNy9ibnAvNlJLOUFOMDA4QlNjaWhhV0wxQ2M2WStR?=
+ =?utf-8?B?VFN0VEtzQ2M1TVU5MVRlT0xLaUYxOENTQWk3b1Q1UU5HSWZiY1BOeHh2UWNt?=
+ =?utf-8?B?WU5rbC9xUVJHcmFiVlRYUXZ3MTg2azRZMkZDMUdiek9JWkFYdGFPTllZUEV2?=
+ =?utf-8?B?WXdMdDZ4cngxdVZqVm5mODJlS1MwelZOSDJNWnBHeFZiRENjbW9tdFdFWU5t?=
+ =?utf-8?B?QUhSeDFQVEtLTldyZHRicEpUOE1EZzR4VlFvTTNYNkt6amY5RDIrckpyWlAy?=
+ =?utf-8?B?OXR4N0JmeDJORXZydS9vNkF1cUorSUozRjQxdEZwRkJnYnBGSm1tSm1wZnNj?=
+ =?utf-8?B?Q05HSHFoM3JaRnhlV3hnQ3ZUWHB3ZEw5UmNHelliN2x3NXNHK1pWNzhJNVdH?=
+ =?utf-8?B?RlpVNWJ3b3ZpYUg0Y0QwWDN6WkdQZGtxaXlFYTVsclFueHRnNVVlaTN3VTdL?=
+ =?utf-8?Q?mwjwmbVpGv8VlvflUoCggzawGChFUJvRCStLbl2nR3Nc?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7546a211-beda-46ea-b875-08dd7964a515
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 01:52:13.1337
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4nrFKVjrE/pCUcc6zwqwN+9fY15rfzvfcZWF6T7cBPUJwRXSP1oaiethL9Yd1ljee7zuJbm/aViQ+HQQ4f3Sjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8980
 
-TC9563 is a PCIe switch which has one upstream and three downstream
-ports. To one of the downstream ports ethernet MAC is connected as endpoint
-device. Other two downstream ports are supposed to connect to external
-device. One Host can connect to TC9563 by upstream port. TC9563 switch
-needs to be configured after powering on and before PCIe link was up.
+On Fri Apr 11, 2025 at 11:22 PM JST, Danilo Krummrich wrote:
+> On Fri, Apr 11, 2025 at 10:26:23PM +0900, Alexandre Courbot wrote:
+>> On Fri Apr 11, 2025 at 10:10 PM JST, Danilo Krummrich wrote:
+>> > On Fri, Apr 11, 2025 at 09:07:26PM +0900, Alexandre Courbot wrote:
+>> >> This enables the creation of trait objects backed by a Box, similarly=
+ to
+>> >> what can be done with the standard library.
+>> >>=20
+>> >> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+>> >> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>> >
+>> > I assume you have a specific use-case in nova-core for this? For this =
+cycle, can
+>> > you get away without having this in nova-core?
+>>=20
+>> That's correct, and our next nova-core iteration will likely depend on
+>> this to provide some basic HAL. If this cannot make it for this cycle, I
+>> guess I can always use Arc temporarily.
+>
+> I'd prefer to take this through the alloc tree (for this cycle), but this=
+ also
+> means you can't use it until the next cycle in nova. I assume that's just=
+ a
+> minor inconvinience?
 
-The PCIe controller driver already enables link training at the host side
-even before this driver probe happens, due to this when driver enables
-power to the switch it participates in the link training and PCIe link
-may come up before configuring the switch through i2c. Once the link is
-up the configuration done through i2c will not have any affect.To prevent
-the host from participating in link training, disable link training on the
-host side to ensure the link does not come up before the switch is
-configured via I2C.
+Yes, taking it through the alloc tree is fine, I will just work things
+around (or delay the Falcon HAL, it's not like nova-core is going to be
+anything useful in 6.16 anyway ^_^;) for the next cycle.
 
-Based up on dt property and type of the port, tc9563 is configured
-through i2c.
-
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pci/pwrctrl/Kconfig              |  10 +
- drivers/pci/pwrctrl/Makefile             |   2 +
- drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c | 628 +++++++++++++++++++++++++++++++
- 3 files changed, 640 insertions(+)
-
-diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
-index 990cab67d41332a8508d4150825c621eb86322c5..d14ef2b0ffd84f9a8c4266fdd57a27f7f3611ca4 100644
---- a/drivers/pci/pwrctrl/Kconfig
-+++ b/drivers/pci/pwrctrl/Kconfig
-@@ -21,3 +21,13 @@ config PCI_PWRCTL_SLOT
- 	  This is a generic driver that controls the power state of different
- 	  PCI slots. The voltage regulators powering the rails of the PCI slots
- 	  are expected to be defined in the devicetree node of the PCI bridge.
-+
-+config PCI_PWRCTRL_TC9563
-+	tristate "PCI Power Control driver for TC9563 PCIe switch"
-+	select PCI_PWRCTL
-+	help
-+	  Say Y here to enable the PCI Power Control driver of TC9563 PCIe
-+	  switch.
-+
-+	  This driver enables power and configures the TC9563 PCIe switch
-+	  through i2c.
-diff --git a/drivers/pci/pwrctrl/Makefile b/drivers/pci/pwrctrl/Makefile
-index ddfb12c5aadf684cf675585b1078ecb7c24649cc..5d0163c75878d5bf702bc6c892fa31bfea5a95e3 100644
---- a/drivers/pci/pwrctrl/Makefile
-+++ b/drivers/pci/pwrctrl/Makefile
-@@ -7,3 +7,5 @@ obj-$(CONFIG_PCI_PWRCTL_PWRSEQ)		+= pci-pwrctrl-pwrseq.o
- 
- obj-$(CONFIG_PCI_PWRCTL_SLOT)		+= pci-pwrctl-slot.o
- pci-pwrctl-slot-y			:= slot.o
-+
-+obj-$(CONFIG_PCI_PWRCTRL_TC9563)	+= pci-pwrctrl-tc9563.o
-diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c b/drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..547c764a6f405a676216309ef6ebcaffbbc3f1d6
---- /dev/null
-+++ b/drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c
-@@ -0,0 +1,628 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/pci.h>
-+#include <linux/pci-pwrctrl.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+#include <linux/unaligned.h>
-+
-+#include "../pci.h"
-+
-+#define TC9563_GPIO_CONFIG		0x801208
-+#define TC9563_RESET_GPIO		0x801210
-+
-+#define TC9563_BUS_CONTROL		0x801014
-+
-+#define TC9563_PORT_L0S_DELAY		0x82496c
-+#define TC9563_PORT_L1_DELAY		0x824970
-+
-+#define TC9563_EMBEDDED_ETH_DELAY	0x8200d8
-+#define TC9563_ETH_L1_DELAY_MASK	GENMASK(27, 18)
-+#define TC9563_ETH_L1_DELAY_VALUE(x)	FIELD_PREP(TC9563_ETH_L1_DELAY_MASK, x)
-+#define TC9563_ETH_L0S_DELAY_MASK	GENMASK(17, 13)
-+#define TC9563_ETH_L0S_DELAY_VALUE(x)	FIELD_PREP(TC9563_ETH_L0S_DELAY_MASK, x)
-+
-+#define TC9563_NFTS_2_5_GT		0x824978
-+#define TC9563_NFTS_5_GT		0x82497c
-+
-+#define TC9563_PORT_LANE_ACCESS_ENABLE	0x828000
-+
-+#define TC9563_PHY_RATE_CHANGE_OVERRIDE	0x828040
-+#define TC9563_PHY_RATE_CHANGE		0x828050
-+
-+#define TC9563_TX_MARGIN		0x828234
-+
-+#define TC9563_DFE_ENABLE		0x828a04
-+#define TC9563_DFE_EQ0_MODE		0x828a08
-+#define TC9563_DFE_EQ1_MODE		0x828a0c
-+#define TC9563_DFE_EQ2_MODE		0x828a14
-+#define TC9563_DFE_PD_MASK		0x828254
-+
-+#define TC9563_PORT_SELECT		0x82c02c
-+#define TC9563_PORT_ACCESS_ENABLE	0x82c030
-+
-+#define TC9563_POWER_CONTROL		0x82b09c
-+#define TC9563_POWER_CONTROL_OVREN	0x82b2c8
-+
-+#define TC9563_GPIO_MASK		0xfffffff3
-+
-+#define TC9563_TX_MARGIN_MIN_VAL	400000
-+
-+struct tc9563_pwrctrl_reg_setting {
-+	unsigned int offset;
-+	unsigned int val;
-+};
-+
-+enum tc9563_pwrctrl_ports {
-+	TC9563_USP,
-+	TC9563_DSP1,
-+	TC9563_DSP2,
-+	TC9563_DSP3,
-+	TC9563_ETHERNET,
-+	TC9563_MAX
-+};
-+
-+struct tc9563_pwrctrl_cfg {
-+	u32 l0s_delay;
-+	u32 l1_delay;
-+	u32 tx_amp;
-+	u8 nfts[2]; /* GEN1 & GEN2 */
-+	bool disable_dfe;
-+	bool disable_port;
-+};
-+
-+#define TC9563_PWRCTL_MAX_SUPPLY	6
-+
-+struct tc9563_pwrctrl_ctx {
-+	struct regulator_bulk_data supplies[TC9563_PWRCTL_MAX_SUPPLY];
-+	struct tc9563_pwrctrl_cfg cfg[TC9563_MAX];
-+	struct gpio_desc *reset_gpio;
-+	struct i2c_adapter *adapter;
-+	struct i2c_client *client;
-+	struct pci_pwrctrl pwrctrl;
-+};
-+
-+/*
-+ * downstream port power off sequence, hardcoding the address
-+ * as we don't know register names for these register offsets.
-+ */
-+static const struct tc9563_pwrctrl_reg_setting common_pwroff_seq[] = {
-+	{0x82900c, 0x1},
-+	{0x829010, 0x1},
-+	{0x829018, 0x0},
-+	{0x829020, 0x1},
-+	{0x82902c, 0x1},
-+	{0x829030, 0x1},
-+	{0x82903c, 0x1},
-+	{0x829058, 0x0},
-+	{0x82905c, 0x1},
-+	{0x829060, 0x1},
-+	{0x8290cc, 0x1},
-+	{0x8290d0, 0x1},
-+	{0x8290d8, 0x1},
-+	{0x8290e0, 0x1},
-+	{0x8290e8, 0x1},
-+	{0x8290ec, 0x1},
-+	{0x8290f4, 0x1},
-+	{0x82910c, 0x1},
-+	{0x829110, 0x1},
-+	{0x829114, 0x1},
-+};
-+
-+static const struct tc9563_pwrctrl_reg_setting dsp1_pwroff_seq[] = {
-+	{TC9563_PORT_ACCESS_ENABLE, 0x2},
-+	{TC9563_PORT_LANE_ACCESS_ENABLE, 0x3},
-+	{TC9563_POWER_CONTROL, 0x014f4804},
-+	{TC9563_POWER_CONTROL_OVREN, 0x1},
-+	{TC9563_PORT_ACCESS_ENABLE, 0x4},
-+};
-+
-+static const struct tc9563_pwrctrl_reg_setting dsp2_pwroff_seq[] = {
-+	{TC9563_PORT_ACCESS_ENABLE, 0x8},
-+	{TC9563_PORT_LANE_ACCESS_ENABLE, 0x1},
-+	{TC9563_POWER_CONTROL, 0x014f4804},
-+	{TC9563_POWER_CONTROL_OVREN, 0x1},
-+	{TC9563_PORT_ACCESS_ENABLE, 0x8},
-+};
-+
-+/*
-+ * Since all transfers are initiated by the probe, no locks are necessary,
-+ * as there are no concurrent calls.
-+ */
-+static int tc9563_pwrctrl_i2c_write(struct i2c_client *client,
-+				    u32 reg_addr, u32 reg_val)
-+{
-+	struct i2c_msg msg;
-+	u8 msg_buf[7];
-+	int ret;
-+
-+	msg.addr = client->addr;
-+	msg.len = 7;
-+	msg.flags = 0;
-+
-+	/* Big Endian for reg addr */
-+	put_unaligned_be24(reg_addr, &msg_buf[0]);
-+
-+	/* Little Endian for reg val */
-+	put_unaligned_le32(reg_val, &msg_buf[3]);
-+
-+	msg.buf = msg_buf;
-+	ret = i2c_transfer(client->adapter, &msg, 1);
-+	return ret == 1 ? 0 : ret;
-+}
-+
-+static int tc9563_pwrctrl_i2c_read(struct i2c_client *client,
-+				   u32 reg_addr, u32 *reg_val)
-+{
-+	struct i2c_msg msg[2];
-+	u8 wr_data[3];
-+	u32 rd_data;
-+	int ret;
-+
-+	msg[0].addr = client->addr;
-+	msg[0].len = 3;
-+	msg[0].flags = 0;
-+
-+	/* Big Endian for reg addr */
-+	put_unaligned_be24(reg_addr, &wr_data[0]);
-+
-+	msg[0].buf = wr_data;
-+
-+	msg[1].addr = client->addr;
-+	msg[1].len = 4;
-+	msg[1].flags = I2C_M_RD;
-+
-+	msg[1].buf = (u8 *)&rd_data;
-+
-+	ret = i2c_transfer(client->adapter, &msg[0], 2);
-+	if (ret == 2) {
-+		*reg_val = get_unaligned_le32(&rd_data);
-+		return 0;
-+	}
-+
-+	/* If only one message successfully completed, return -EIO */
-+	return ret == 1 ? -EIO : ret;
-+}
-+
-+static int tc9563_pwrctrl_i2c_bulk_write(struct i2c_client *client,
-+					 const struct tc9563_pwrctrl_reg_setting *seq, int len)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < len; i++) {
-+		ret = tc9563_pwrctrl_i2c_write(client, seq[i].offset, seq[i].val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tc9563_pwrctrl_disable_port(struct tc9563_pwrctrl_ctx *ctx,
-+				       enum tc9563_pwrctrl_ports port)
-+{
-+	struct tc9563_pwrctrl_cfg *cfg  = &ctx->cfg[port];
-+	const struct tc9563_pwrctrl_reg_setting *seq;
-+	int ret, len;
-+
-+	if (!cfg->disable_port)
-+		return 0;
-+
-+	if (port == TC9563_DSP1) {
-+		seq = dsp1_pwroff_seq;
-+		len = ARRAY_SIZE(dsp1_pwroff_seq);
-+	} else {
-+		seq = dsp2_pwroff_seq;
-+		len = ARRAY_SIZE(dsp2_pwroff_seq);
-+	}
-+
-+	ret = tc9563_pwrctrl_i2c_bulk_write(ctx->client, seq, len);
-+	if (ret)
-+		return ret;
-+
-+	return tc9563_pwrctrl_i2c_bulk_write(ctx->client,
-+					    common_pwroff_seq, ARRAY_SIZE(common_pwroff_seq));
-+}
-+
-+static int tc9563_pwrctrl_set_l0s_l1_entry_delay(struct tc9563_pwrctrl_ctx *ctx,
-+						 enum tc9563_pwrctrl_ports port, bool is_l1, u32 ns)
-+{
-+	u32 rd_val, units;
-+	int ret;
-+
-+	if (ns < 256)
-+		return 0;
-+
-+	/* convert to units of 256ns */
-+	units = ns / 256;
-+
-+	if (port == TC9563_ETHERNET) {
-+		ret = tc9563_pwrctrl_i2c_read(ctx->client, TC9563_EMBEDDED_ETH_DELAY, &rd_val);
-+		if (ret)
-+			return ret;
-+
-+		if (is_l1)
-+			rd_val = u32_replace_bits(rd_val, units, TC9563_ETH_L1_DELAY_MASK);
-+		else
-+			rd_val = u32_replace_bits(rd_val, units, TC9563_ETH_L0S_DELAY_MASK);
-+
-+		return tc9563_pwrctrl_i2c_write(ctx->client, TC9563_EMBEDDED_ETH_DELAY, rd_val);
-+	}
-+
-+	ret = tc9563_pwrctrl_i2c_write(ctx->client, TC9563_PORT_SELECT, BIT(port));
-+	if (ret)
-+		return ret;
-+
-+	return tc9563_pwrctrl_i2c_write(ctx->client,
-+				       is_l1 ? TC9563_PORT_L1_DELAY : TC9563_PORT_L0S_DELAY, units);
-+}
-+
-+static int tc9563_pwrctrl_set_tx_amplitude(struct tc9563_pwrctrl_ctx *ctx,
-+					   enum tc9563_pwrctrl_ports port, u32 amp)
-+{
-+	int port_access;
-+
-+	if (amp < TC9563_TX_MARGIN_MIN_VAL)
-+		return 0;
-+
-+	/* txmargin = (Amp(uV) - 400000) / 3125 */
-+	amp = (amp - TC9563_TX_MARGIN_MIN_VAL) / 3125;
-+
-+	switch (port) {
-+	case TC9563_USP:
-+		port_access = 0x1;
-+		break;
-+	case TC9563_DSP1:
-+		port_access = 0x2;
-+		break;
-+	case TC9563_DSP2:
-+		port_access = 0x8;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	struct tc9563_pwrctrl_reg_setting tx_amp_seq[] = {
-+		{TC9563_PORT_ACCESS_ENABLE, port_access},
-+		{TC9563_PORT_LANE_ACCESS_ENABLE, 0x3},
-+		{TC9563_TX_MARGIN, amp},
-+	};
-+
-+	return tc9563_pwrctrl_i2c_bulk_write(ctx->client, tx_amp_seq, ARRAY_SIZE(tx_amp_seq));
-+}
-+
-+static int tc9563_pwrctrl_disable_dfe(struct tc9563_pwrctrl_ctx *ctx,
-+				      enum tc9563_pwrctrl_ports port)
-+{
-+	struct tc9563_pwrctrl_cfg *cfg  = &ctx->cfg[port];
-+	int port_access, lane_access = 0x3;
-+	u32 phy_rate = 0x21;
-+
-+	if (!cfg->disable_dfe)
-+		return 0;
-+
-+	switch (port) {
-+	case TC9563_USP:
-+		phy_rate = 0x1;
-+		port_access = 0x1;
-+		break;
-+	case TC9563_DSP1:
-+		port_access = 0x2;
-+		break;
-+	case TC9563_DSP2:
-+		port_access = 0x8;
-+		lane_access = 0x1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	struct tc9563_pwrctrl_reg_setting disable_dfe_seq[] = {
-+		{TC9563_PORT_ACCESS_ENABLE, port_access},
-+		{TC9563_PORT_LANE_ACCESS_ENABLE, lane_access},
-+		{TC9563_DFE_ENABLE, 0x0},
-+		{TC9563_DFE_EQ0_MODE, 0x411},
-+		{TC9563_DFE_EQ1_MODE, 0x11},
-+		{TC9563_DFE_EQ2_MODE, 0x11},
-+		{TC9563_DFE_PD_MASK, 0x7},
-+		{TC9563_PHY_RATE_CHANGE_OVERRIDE, 0x10},
-+		{TC9563_PHY_RATE_CHANGE, phy_rate},
-+		{TC9563_PHY_RATE_CHANGE, 0x0},
-+		{TC9563_PHY_RATE_CHANGE_OVERRIDE, 0x0},
-+	};
-+
-+	return tc9563_pwrctrl_i2c_bulk_write(ctx->client,
-+					    disable_dfe_seq, ARRAY_SIZE(disable_dfe_seq));
-+}
-+
-+static int tc9563_pwrctrl_set_nfts(struct tc9563_pwrctrl_ctx *ctx,
-+				   enum tc9563_pwrctrl_ports port, u8 *nfts)
-+{
-+	struct tc9563_pwrctrl_reg_setting nfts_seq[] = {
-+		{TC9563_NFTS_2_5_GT, nfts[0]},
-+		{TC9563_NFTS_5_GT, nfts[1]},
-+	};
-+	int ret;
-+
-+	if (!nfts[0])
-+		return 0;
-+
-+	ret =  tc9563_pwrctrl_i2c_write(ctx->client, TC9563_PORT_SELECT, BIT(port));
-+	if (ret)
-+		return ret;
-+
-+	return tc9563_pwrctrl_i2c_bulk_write(ctx->client, nfts_seq, ARRAY_SIZE(nfts_seq));
-+}
-+
-+static int tc9563_pwrctrl_assert_deassert_reset(struct tc9563_pwrctrl_ctx *ctx, bool deassert)
-+{
-+	int ret, val;
-+
-+	ret = tc9563_pwrctrl_i2c_write(ctx->client, TC9563_GPIO_CONFIG, TC9563_GPIO_MASK);
-+	if (ret)
-+		return ret;
-+
-+	val = deassert ? 0xc : 0;
-+
-+	return tc9563_pwrctrl_i2c_write(ctx->client, TC9563_RESET_GPIO, val);
-+}
-+
-+static int tc9563_pwrctrl_parse_device_dt(struct tc9563_pwrctrl_ctx *ctx, struct device_node *node,
-+					  enum tc9563_pwrctrl_ports port)
-+{
-+	struct tc9563_pwrctrl_cfg *cfg;
-+	int ret;
-+
-+	cfg = &ctx->cfg[port];
-+
-+	/* Disable port if the status of the port is disabled. */
-+	if (!of_device_is_available(node)) {
-+		cfg->disable_port = true;
-+		return 0;
-+	};
-+
-+	ret = of_property_read_u32(node, "aspm-l0s-entry-delay-ns", &cfg->l0s_delay);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	ret = of_property_read_u32(node, "aspm-l1-entry-delay-ns", &cfg->l1_delay);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	ret = of_property_read_u32(node, "qcom,tx-amplitude-microvolt", &cfg->tx_amp);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	ret = of_property_read_u8_array(node, "nfts", cfg->nfts, 2);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	cfg->disable_dfe = of_property_read_bool(node, "qcom,no-dfe-support");
-+
-+	return 0;
-+}
-+
-+static void tc9563_pwrctrl_power_off(struct tc9563_pwrctrl_ctx *ctx)
-+{
-+	gpiod_set_value(ctx->reset_gpio, 1);
-+
-+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+}
-+
-+static int tc9563_pwrctrl_bring_up(struct tc9563_pwrctrl_ctx *ctx)
-+{
-+	struct tc9563_pwrctrl_cfg *cfg;
-+	int ret, i;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0)
-+		return dev_err_probe(ctx->pwrctrl.dev, ret, "cannot enable regulators\n");
-+
-+	gpiod_set_value(ctx->reset_gpio, 0);
-+
-+	 /* wait for the internal osc frequency to stablise */
-+	usleep_range(10000, 10500);
-+
-+	ret = tc9563_pwrctrl_assert_deassert_reset(ctx, false);
-+	if (ret)
-+		goto power_off;
-+
-+	for (i = 0; i < TC9563_MAX; i++) {
-+		cfg = &ctx->cfg[i];
-+		ret = tc9563_pwrctrl_disable_port(ctx, i);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Disabling port failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc9563_pwrctrl_set_l0s_l1_entry_delay(ctx, i, false, cfg->l0s_delay);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting L0s entry delay failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc9563_pwrctrl_set_l0s_l1_entry_delay(ctx, i, true, cfg->l1_delay);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting L1 entry delay failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc9563_pwrctrl_set_tx_amplitude(ctx, i, cfg->tx_amp);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting Tx amplitube failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc9563_pwrctrl_set_nfts(ctx, i, cfg->nfts);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting nfts failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc9563_pwrctrl_disable_dfe(ctx, i);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Disabling DFE failed\n");
-+			goto power_off;
-+		}
-+	}
-+
-+	ret = tc9563_pwrctrl_assert_deassert_reset(ctx, true);
-+	if (!ret)
-+		return 0;
-+
-+power_off:
-+	tc9563_pwrctrl_power_off(ctx);
-+	return ret;
-+}
-+
-+static int tc9563_pwrctrl_probe(struct platform_device *pdev)
-+{
-+	struct pci_host_bridge *bridge = to_pci_host_bridge(pdev->dev.parent);
-+	struct pci_dev *pci_dev = to_pci_dev(pdev->dev.parent);
-+	struct pci_bus *bus = bridge->bus;
-+	struct device *dev = &pdev->dev;
-+	enum tc9563_pwrctrl_ports port;
-+	struct tc9563_pwrctrl_ctx *ctx;
-+	struct device_node *i2c_node;
-+	int ret, addr;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32_index(pdev->dev.of_node, "i2c-parent", 1, &addr);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read i2c-parent property\n");
-+
-+	i2c_node = of_parse_phandle(dev->of_node, "i2c-parent", 0);
-+	ctx->adapter = of_find_i2c_adapter_by_node(i2c_node);
-+	of_node_put(i2c_node);
-+	if (!ctx->adapter)
-+		return dev_err_probe(dev, -EPROBE_DEFER, "Failed to find I2C adapter\n");
-+
-+	ctx->client = i2c_new_dummy_device(ctx->adapter, addr);
-+	if (IS_ERR(ctx->client)) {
-+		dev_err(dev, "Failed to create I2C client\n");
-+		i2c_put_adapter(ctx->adapter);
-+		return PTR_ERR(ctx->client);
-+	}
-+
-+	ctx->supplies[0].supply = "vddc";
-+	ctx->supplies[1].supply = "vdd18";
-+	ctx->supplies[2].supply = "vdd09";
-+	ctx->supplies[3].supply = "vddio1";
-+	ctx->supplies[4].supply = "vddio2";
-+	ctx->supplies[5].supply = "vddio18";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret) {
-+		dev_err_probe(dev, ret,
-+			      "failed to get supply regulator\n");
-+		goto remove_i2c;
-+	}
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		ret = dev_err_probe(dev, PTR_ERR(ctx->reset_gpio), "failed to get reset GPIO\n");
-+		goto remove_i2c;
-+	}
-+
-+	pci_pwrctrl_init(&ctx->pwrctrl, dev);
-+
-+	port = TC9563_USP;
-+	ret = tc9563_pwrctrl_parse_device_dt(ctx, pdev->dev.of_node, port);
-+	if (ret) {
-+		dev_err(dev, "failed to parse device tree properties: %d\n", ret);
-+		goto remove_i2c;
-+	}
-+
-+	/*
-+	 * Downstream ports are always children of the upstream port.
-+	 * The first node represents DSP1, the second node represents DSP2, and so on.
-+	 */
-+	for_each_child_of_node_scoped(pdev->dev.of_node, child) {
-+		ret = tc9563_pwrctrl_parse_device_dt(ctx, child, port++);
-+		if (ret)
-+			break;
-+		/* Embedded ethernet device are under DSP3 */
-+		if (port == TC9563_DSP3)
-+			for_each_child_of_node_scoped(child, child1) {
-+				ret = tc9563_pwrctrl_parse_device_dt(ctx, child1, port++);
-+				if (ret)
-+					break;
-+			}
-+	}
-+	if (ret) {
-+		dev_err(dev, "failed to parse device tree properties: %d\n", ret);
-+		goto remove_i2c;
-+	}
-+
-+	if (!pcie_link_is_active(pci_dev) && bridge->ops->stop_link)
-+		bridge->ops->stop_link(bus);
-+
-+	ret = tc9563_pwrctrl_bring_up(ctx);
-+	if (ret)
-+		goto remove_i2c;
-+
-+	if (!pcie_link_is_active(pci_dev) && bridge->ops->start_link) {
-+		ret = bridge->ops->start_link(bus);
-+		if (ret)
-+			goto power_off;
-+	}
-+
-+	ret = devm_pci_pwrctrl_device_set_ready(dev, &ctx->pwrctrl);
-+	if (ret)
-+		goto power_off;
-+
-+	platform_set_drvdata(pdev, ctx);
-+
-+	return 0;
-+
-+power_off:
-+	tc9563_pwrctrl_power_off(ctx);
-+remove_i2c:
-+	i2c_unregister_device(ctx->client);
-+	i2c_put_adapter(ctx->adapter);
-+	return ret;
-+}
-+
-+static void tc9563_pwrctrl_remove(struct platform_device *pdev)
-+{
-+	struct tc9563_pwrctrl_ctx *ctx = platform_get_drvdata(pdev);
-+
-+	tc9563_pwrctrl_power_off(ctx);
-+	i2c_unregister_device(ctx->client);
-+	i2c_put_adapter(ctx->adapter);
-+}
-+
-+static const struct of_device_id tc9563_pwrctrl_of_match[] = {
-+	{ .compatible = "pci1179,0623"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, tc9563_pwrctrl_of_match);
-+
-+static struct platform_driver tc9563_pwrctrl_driver = {
-+	.driver = {
-+		.name = "pwrctrl-tc9563",
-+		.of_match_table = tc9563_pwrctrl_of_match,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.probe = tc9563_pwrctrl_probe,
-+	.remove = tc9563_pwrctrl_remove,
-+};
-+module_platform_driver(tc9563_pwrctrl_driver);
-+
-+MODULE_AUTHOR("Krishna chaitanya chundru <quic_krichai@quicinc.com>");
-+MODULE_DESCRIPTION("TC956x power control driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.34.1
+Thanks!
+Alex.
 
