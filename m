@@ -1,97 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81D81F03FE
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 17:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA541EBA07;
+	Sat, 12 Apr 2025 17:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744477827; cv=none; b=hXlGKXEyyD2q7Z9D4o6xdrg+xxbJVPl5Y3dQpA2uFlf3vbrgsE1+hdMSIJXyffuXP2jE6AhLLXHFgQDlD4mAuPeDeyt6Fbdv9fy1aaxjXWfJxtNKenOq3jtwWfxfE+lZunG0/63vtsnwRgelaFyqplRidwt7OuGepm4kX3u6B8U=
+	t=1744477958; cv=none; b=HEyhWmwFHiptze7c0PlhkTF2SU8kkWldLqs5kO6mZxOTG1OPO/Sc4gU75fYByGl50FXZPPSKsDNeQeIGV1Hdq8PWrmKWFiFpo4XisGkzg7JMDmUFQ+wY4ZgabGv1EiW9FGXaXQdUOSrw9Z/JIHjpZzRKUA51bDdSKwB2B90Ucgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744477827; c=relaxed/simple;
-	bh=qu1jYqemipsgVrkeM5Kv7xBfdBLk6/OQaJqZ6aUbcQg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LFgObGUjzCK5mOjwx5I1d9s3hbNp7Eft4oCTNvNQn4zA9UFHFd11FMW6okwZrMQufskb+3U6uWZesKRmJ9YKpzS5yfq5UuFOwqJdMoYgZYHIuMUYbTfeqq2lnbd/mENzSpYA52N0rkD9dPBjQZRbY7hwx0Uswe2q4lVB/TjY4cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiIR8Qq2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744477958; c=relaxed/simple;
+	bh=YrGktRLoxIndoQ5EBLFpMKbRXSGz9qVyqaiXPao7YVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LgVH5i6e/uo2A9vgcDvYj6sFJCuSUSqrQFttc9TghfKCU+afN/ZNWhnEMMYxSKcMEjvwxXMejrLVIF8OaRleDChVObBxQ8ZW//yyh2j4dPuo9LoNJMWRoZ69BXueUNZ6kXRBRwzAM782ObhYkCtt/zvf55SLdC3NKZDwGzMkpJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsPugt83; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiIR8Qq2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A40DC4CEE3;
-	Sat, 12 Apr 2025 17:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsPugt83"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4905BC4AF09;
+	Sat, 12 Apr 2025 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744477827;
-	bh=qu1jYqemipsgVrkeM5Kv7xBfdBLk6/OQaJqZ6aUbcQg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LiIR8Qq2Enl14WL2Qd0xLUiqDSgvDoqaw/OJR/S+w6rEnPggdDZU62dKHM9OjkeFI
-	 +c+tiayjgrQ9BJgBSCICMsJOzk7RroN/w/3Ab9JHpf4UNhMv4FwmtVnhEXi+1SG9Eg
-	 sAigrS3NvyhHTq8HyNL+drkS/aIPX68P7VTiUyQsSIZDzJCR4ww8+/aU/2Bltw07j3
-	 WR7A/E7+3jJCSR1+Xr6HAjYhOeFcZs6/lt570A0AeIGZtT5Rjokt3vJdrS7Qpr3xRw
-	 2ECGFfQ60A9zFkPhg+M1nGb/Bs3UTDt/JHXVmfH0CGMrDwPEiYsfhzDpXaBybi0R8n
-	 VQWVv2e7r6OIw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C20380CED9;
-	Sat, 12 Apr 2025 17:11:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1744477958;
+	bh=YrGktRLoxIndoQ5EBLFpMKbRXSGz9qVyqaiXPao7YVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MsPugt837K7SR+Kmb7nLMSoSYl6/So02pte6V304TcyW1xAuhnNcNaYRL9HGPoak1
+	 PCKB/f+GsN/wg9bsNj/Z4tQsluN5J8qjn5mmn31ApvcgcLIGLTR6jEA12ap9MdEUYE
+	 vEMJdIjesHxZA6GyaDsmfNO3xNvQB6W/q1pIUiHa0ghWXw0hwIc0hXD+4uvZRAY992
+	 wkNVehePtbC8zMHnl1ktcg4pca96tNj07ngiCcI3WHnt3CooYQBAhyLqg1oHe06Na4
+	 P+FixSYdlyxK5S/YeMl4jka7ZEFiL8bKX8r1lSBuo/e9DHW242c65sHOzHtlUmAHHH
+	 +TlkMl0PZFdlg==
+Date: Sat, 12 Apr 2025 12:12:37 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2] dt-bindings: leds: Allow differently named multicolor
+ leds
+Message-ID: <20250412171237.GA1347507-robh@kernel.org>
+References: <20250412-multi-led-v2-1-56af86908744@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity check on
- sbi->total_valid_block_count
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <174447786527.711489.2899173657997269764.git-patchwork-notify@kernel.org>
-Date: Sat, 12 Apr 2025 17:11:05 +0000
-References: <20250408122208.2297777-1-chao@kernel.org>
-In-Reply-To: <20250408122208.2297777-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, syzbot+8b376a77b2f364097fbe@syzkaller.appspotmail.com,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+In-Reply-To: <20250412-multi-led-v2-1-56af86908744@posteo.net>
 
-Hello:
+On Sat, Apr 12, 2025 at 03:04:32PM +0200, J. Neuschäfer wrote:
+> In some cases, for example when using multiple instances of
+> leds-group-multicolor, a board may have multiple multi-leds which can't
+> be distinguished by unit address. In such cases it should be possible to
+> name them differently, for example multi-led-a and multi-led-b. This
+> patch adds another node name pattern to leds-class-multicolor.yaml to
+> allow such names.
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+Really, multi-led-0, multi-led-1, etc. would be preferred like we have 
+in other places.
 
-On Tue,  8 Apr 2025 20:22:08 +0800 you wrote:
-> syzbot reported a f2fs bug as below:
 > 
-> ------------[ cut here ]------------
-> kernel BUG at fs/f2fs/f2fs.h:2521!
-> RIP: 0010:dec_valid_block_count+0x3b2/0x3c0 fs/f2fs/f2fs.h:2521
-> Call Trace:
->  f2fs_truncate_data_blocks_range+0xc8c/0x11a0 fs/f2fs/file.c:695
->  truncate_dnode+0x417/0x740 fs/f2fs/node.c:973
->  truncate_nodes+0x3ec/0xf50 fs/f2fs/node.c:1014
->  f2fs_truncate_inode_blocks+0x8e3/0x1370 fs/f2fs/node.c:1197
->  f2fs_do_truncate_blocks+0x840/0x12b0 fs/f2fs/file.c:810
->  f2fs_truncate_blocks+0x10d/0x300 fs/f2fs/file.c:838
->  f2fs_truncate+0x417/0x720 fs/f2fs/file.c:888
->  f2fs_setattr+0xc4f/0x12f0 fs/f2fs/file.c:1112
->  notify_change+0xbca/0xe90 fs/attr.c:552
->  do_truncate+0x222/0x310 fs/open.c:65
->  handle_truncate fs/namei.c:3466 [inline]
->  do_open fs/namei.c:3849 [inline]
->  path_openat+0x2e4f/0x35d0 fs/namei.c:4004
->  do_filp_open+0x284/0x4e0 fs/namei.c:4031
->  do_sys_openat2+0x12b/0x1d0 fs/open.c:1429
->  do_sys_open fs/open.c:1444 [inline]
->  __do_sys_creat fs/open.c:1522 [inline]
->  __se_sys_creat fs/open.c:1516 [inline]
->  __x64_sys_creat+0x124/0x170 fs/open.c:1516
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
+> V2:
+> - Add Krzysztof's review tag
+> - mention leds-group-multicolor in the commit message
+> - rebase on 6.15-rc1
 > 
-> [...]
+> Link to v1: https://lore.kernel.org/r/20250209-multi-led-v1-1-5aebccbd2db7@posteo.net
+> ---
+>  Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> index bb40bb9e036ee00e06d21e2321ecd5a7d471c408..c22af25b6430be71300c0e37f696cd61112ea190 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> @@ -21,7 +21,9 @@ description: |
+>  
+>  properties:
+>    $nodename:
+> -    pattern: "^multi-led(@[0-9a-f])?$"
+> +    oneOf:
+> +      - pattern: "^multi-led(@[0-9a-f])?$"
+> +      - pattern: "^multi-led-.*$"
 
-Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to do sanity check on sbi->total_valid_block_count
-    https://git.kernel.org/jaegeuk/f2fs/c/05872a167c2c
+Combine these:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+'^multi-led(-.+|@[0-9a-f])?$'
 
+oneOf is best avoided because the error messages aren't so great.
 
+>  
+>    color:
+>      description: |
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250209-multi-led-9991e205befd
+> 
+> Best regards,
+> -- 
+> J. Neuschäfer <j.ne@posteo.net>
+> 
