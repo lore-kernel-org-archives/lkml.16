@@ -1,142 +1,209 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2118.outbound.protection.partner.outlook.cn [139.219.17.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27C231A89;
-	Sat, 12 Apr 2025 04:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.118
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744430994; cv=fail; b=K9giMl+bG2NPcDVYxeTH27zUPgN3iQ/+OzjZtCzw+1b5ui7E2M5pDPUOGIh1bG9BQ0SvF/1XE1PHdUaaxHBNjyMURilcLasc8i4N98tlqq3+I8CClODXyCIWGCvuTMYaUmt8Bfxm9cnsbvh/rXnN7jqnzLAwm/KITtVW1KSq9ms=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744430994; c=relaxed/simple;
-	bh=WPvU+3oSdomrfY2Bx87+c8paCg4jvkPMmrQesPrTXxM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=AGZ++CHFRXOSykh+F8o3LDMIbsnLKVoEA7dvehQUTKIoG0mbLWA0nLliQM7pyXh0Wj/URxR2WQaFESk+oiKAkfDEEnQ55OnPO30l7EApU98fUxO82lBd8VMh9Z/TzpiEoQ/ae69qepj40C6zepPYe48+pQCWeljU32coPMjxM+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T1IWRV/ONwbuaM1TWZ/7ZbuFuyBso/JmcQX/hyDpvjjWKu0rzvjLLuDdHL9lbbdGpb3n13O88WFW0ucIvHcFKQvox1YqDTRbvoPF6ev/2Mbqn1Vtk3ogutZ1t7BDH4N5V5/yEM/w8WYc6hjlfa+ZDoRcklLFhQ9rM44mYY4aUJFmatBRpt9lcnoboRiByajXUh6IGsrtQ0uHNBmENtdfabkB8qTNmONz2DUATYix0/g+c0FdVmdfSOO3VlLm2UdQGACyZypOnyFI8BdzVZmFeWkyWzzH5qv3BZNkjdhJ0Z4iCsM17kku2fgYidL74gyL+MAmIHM1Hq8n21zlMGP7Bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7An5XqsvMWQ5Z7RtPeoET4czl/0Z69rdjoekG0DPtJk=;
- b=ax1OxkSHINQHEldavjX1L3OvY2LfTVDwrW58MmqZqRe7fN/VnC5vDtq8NJYyffbIFo4vTaD7PaLtnplH6LTtDgf1NWzKsOxw7aeedWgqfn/LPaXmGtf5b/lMAD6jbj3ebH6mX5B83I1hNs3B8iCx33nLieYwLvi5rjOohAanbscVhV2vBuNStiEnNcLwclOlemvQHYFJFJihTgpeJc++Jrbhl+d5OoBHcwkt8TOglDW9OyRQmR/WqXzn9JDAFGgkrWReeT6PsgU7CuoQEEL+SxZlHtE4JlhiX6JPAHAaUJJXjwUnXN5LE5FJPmhLsiVkzv4dO2uGcnrvGbBkGfhfRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::7) by NTZPR01MB1129.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:a::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.29; Sat, 12 Apr
- 2025 02:34:00 +0000
-Received: from NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- ([fe80::e1c4:5bb3:adc:97f5]) by NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- ([fe80::e1c4:5bb3:adc:97f5%5]) with mapi id 15.20.8632.025; Sat, 12 Apr 2025
- 02:34:00 +0000
-From: ende.tan@starfivetech.com
-To: linux-i2c@vger.kernel.org
-Cc: jarkko.nikula@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	jsd@semihalf.com,
-	andi.shyti@kernel.org,
-	linux-kernel@vger.kernel.org,
-	leyfoon.tan@starfivetech.com,
-	endeneer@gmail.com,
-	Tan En De <ende.tan@starfivetech.com>
-Subject: [1/1] i2c: designware: Ensure runtime suspend is invoked during rapid slave unregistration and registration
-Date: Sat, 12 Apr 2025 10:33:03 +0800
-Message-Id: <20250412023303.378600-1-ende.tan@starfivetech.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::15) To NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9629115C140
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 04:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744431769; cv=none; b=iGPRyiobnmlM42m5+WIivi4F9u4Yol0GXF/dnj04VceZQKYVdknnrrUNJNgPl2/usDqqecJT1P1qsgmIl1rette2UddiXlTFx9iJFIBeitggfXrULx/ojOVrLQu4RTeJL5J46TXsGlScoB76EewMwcX5Xw/W73v/uplKutHJjhY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744431769; c=relaxed/simple;
+	bh=eFZr/xD+uASkqlJan4EtT2GwlyKWYQWYuWBhnlw8OLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VVzuEqj2BmpHBdZfFhjPTv3fUqoPQZE+DKedJugYRAMENLrVsd3y/1r0uBMooYCdXBRkZNkWuOn/KSSlJOPpDpBAFub7umXrEUr+WyfgB3yd5/kJNvZKnNKlSKIO82TnkKFGLeWZco6grsSSqA5RgR/PWapAma5MW0cBQXvn2X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=KkujE1Av; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="KkujE1Av"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac29af3382dso446990166b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744431765; x=1745036565; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=05C5L0Gpse8OxdiRbCXeFoAP6LtcohYGcNTzACQG79I=;
+        b=KkujE1Av4N1U/wpjTkvmNERAdlFlDCQXfCVVOGo4X5WsMQm7DjoaaKF2RezOQv1v+/
+         BinKYxksnzi5haNc1LuioOq2RoK0O+LFbipOtnMPCZCcgQk5KJHT32u/wPq+dzwcfIZK
+         +uis9F2l53KDbeX+MuYlxuPU8xcs44JYtO7sQPYh4PSr6AsEq5drvQIj5aZJwaRMlNLC
+         mVYs2ozakWG7aDlOX3gASNRXwKOQ3n6rmiSkngigpCVq0gMkBMOwd64DLTgPcIAeZ577
+         H47deTbpaxd0Hhqn03VwRhTQ2jjaCoDGy99O4qQfTV70Dhq0/gvYzIGIh1FoWC6tzMpb
+         whPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744431765; x=1745036565;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=05C5L0Gpse8OxdiRbCXeFoAP6LtcohYGcNTzACQG79I=;
+        b=Hp6JGaptc2LEp6LmNxU1HK4LnNApGssM469kxNYN4TwHNi+qORQKL/y3eagVIWqvQC
+         DGFyJy6vGJx1p9arMJ7tg2oZY/WPXub3KVc5usDf+ltbjGP5PEjdWxXsQEMihCehRG10
+         AUGOOCoTs7f+H+98LH43qVjeoDiYdFV8bQDsmK9VdTaunEwXGVRrfJckeUs4golC3pE9
+         QrEj8c+epN7LO1L4YD9HqB+0+BZCNaLhlXopBB/SOPm8yh5AdhxXdRRA2B8Z8yOq/hav
+         HUpIxS81+Px+oMrztzbM327thTtp9u30+rBrtNyyoHUuQRW9cSmiZc6lNmjaIq7b4tT2
+         5GBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeuBglZAp6f5Q0QLKOkytEB+JDRE06cVR1A9pxBSXDtXE/Ymrn4zKRkZdqDgph3sbYrP6aNZm+PSu4TiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxYnBBikwQm1k9SRe6gPOVRRLdJYPThQhEXnMinrfEkQl5kakj
+	vWgZVtC1BjgFwzIQaAEu3yQ+vuR6eENtbvI25ggKiaBXYhFRBEPhtmkcHeDcYxJ1Ei2aAkmIDEP
+	wTpNNp/ntPOoH6NvDlZXcvv6JedaF9ipMs2FB4A==
+X-Gm-Gg: ASbGncvp1Kndcrpu7ZzflVnhWG8wrYnAkKx0uKucdKqdTZD5Ugp46kkHd2BlRjDoNhe
+	T34JDK7JJP6G/LXaTyExe6P45MEny/NQKqbctKPffpcJjukUP8vNfxJ5PbPEQnXSCiEBJVkY6L0
+	WJKnm3u7qku4qCwEww4dE1LfS37w==
+X-Google-Smtp-Source: AGHT+IGYuiszYCi7qWo9y4ZA32qHFUN/1bWbzAZvEtCTohy4G3Cy1q93jH/uejMtJJyZEjD+1PtKWMiMNzmzfMkJcy4=
+X-Received: by 2002:a17:907:7fa5:b0:ac7:b48f:4cd6 with SMTP id
+ a640c23a62f3a-acad34ba069mr421800166b.24.1744431764635; Fri, 11 Apr 2025
+ 21:22:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NTZPR01MB1018:EE_|NTZPR01MB1129:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf868552-4fd0-4953-1964-08dd796a7b63
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|1800799024|41320700013|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	12j9vEaI+5rMlfj8hHYI3CYk8o5C+1638LZ4TBM4aExYf/NBaHACLq5fPIFFFd+8GYzdCc88wYlH1q3wI50hYFgOkL2KVir1HCCExdIz+WNFcAO/b7z1af3hSqxNgyTJGpzzZ1a/1VgUNNjtrmbddPCtueTt1rg7S7nKE5AFvAlnX8Ny79gH0zGFVk/W7V/rzBLW1G0nyMqYXx8mSKcgNrK/OLbEJZmLd68A7Hsy6lePrFOxZMLPRcmDM8EjqvMS7uY6d9geCyWqvMRwfFyGBangiBt395aJPLyalY6SsD85ShLK2XAkHA7KTd9xiZCNvyU0S0arFsatvMMWspHU87ONFbTGHWWh78IrJfSq9+b4t3NMRUp3IBkjqZCkpnn4ODEXNKeAHYsW019LXosyxHZgabf1R5xyDHXMtmv9sbq5JLOmZ1yVjcpHeHGUYIVxoq+iympqMaDLPWIDv+yE5sGzZ0fhxconRmvqLwLxZhBDm3V7HGcQ6FpTvRnIn+ZI9+xVbYcgkK6NUbqJdXd8C8NiWrJ9ew+kdCo+z4ESOQvNlqCsacnflOzrRZyjJWw7cqi4f2AS2J2J0liGGMmh8fOR2svkOfMBDWJ357cPuWM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(41320700013)(366016)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uZvYcl+GIo2Ya8A44C3RjtqhllKndjW3F7wX4lb6Z0CSLzUqat9/Mu9rDhe/?=
- =?us-ascii?Q?mM00luRHrwknOiwiMOp+FbGxENwUWfueNEte9rZ4NjSxNSGsS1lg2Ibt3JTH?=
- =?us-ascii?Q?8zqk23UvtbkzB1jZ3N3L0YWfbcbImNX8EUEtHdyfQ7pSCw+qqdlfZTrtjyCS?=
- =?us-ascii?Q?yLEW2xnB47wNM1tKX7F/rJWpNwONAD2HmqD7lEm5Al5HoNT0kSCMh6SAumU1?=
- =?us-ascii?Q?xZFtyQzuXvA0KvDcHIo9S1N+8tJnY8VMm5FR9CLFlhZBoticHw+lBPd8LLuu?=
- =?us-ascii?Q?jng4TS7vHgcpDg1ffZDWHgV795r8cZLbF6y8L6IrUWJROVs8P9znD+Y5fQee?=
- =?us-ascii?Q?/lXiF7pw2H6mxSlirb+QhwA9rUv3/ky6i6NauqyhmjdokkppmKPFUAId5m5w?=
- =?us-ascii?Q?LncHh3YZQaMN/tvv6JL0/X0DvGRF65mmk4hfN0sstdgwsKAetKXMb/PcKoO5?=
- =?us-ascii?Q?OUcshHiPjLNv2/KWT3V9TkCNUPraSr4KcFJNb7WqCP+JEUoPQ37blBT8wUpl?=
- =?us-ascii?Q?axU3lxMwZUQV+6hOHN0UWYQ75gW5OMG5e8i/QipQ4h88hZHUmXqPrE4gGK7q?=
- =?us-ascii?Q?MfDsgG4GD0f5zxEBny/tiO6IV8ik1QnYYJSBVNMy06FkXpFKNs+ztn4dSVv8?=
- =?us-ascii?Q?LkaGhAQkZQQuMMuaSqfvBxDQ+E5OT/z3gC2nCmi2aAWHfF3vrj6QQa1M/n7E?=
- =?us-ascii?Q?+5T9Elp/Vt2E6iXsaF84iF8Ah1zYRZ8tWrLXEHcfWbq6Du/dOMZKf73bq9Zp?=
- =?us-ascii?Q?oDtCrJpanv6JOK9lnnQlqb9oVx/AUTj0Aaiq6L3OkD5tmxSHEUvG6h0FmZS4?=
- =?us-ascii?Q?rhj7cKVNaQKuo2WA5AouN4+qzLcvjX6gFyrMel6XSDlr+Ef0Y0C20kNMKlwO?=
- =?us-ascii?Q?N5XjvRRWIE5n4H71JalFpwDJWoSxglfFKiIy4r6rKo+OuD4kBbL4lJHCI92d?=
- =?us-ascii?Q?gj5YixReS9UnYd9+Zlzvw74ujar+m5H4qHy5+QCQYGF3MCapdexWsufStksG?=
- =?us-ascii?Q?yfPUwQ+utkjPyXQd+JSwRFYntHJEr0Miy5H19UMq5L4KKvcvxrhso9Umxzoc?=
- =?us-ascii?Q?bXHhzhYjGcgmKCIJ8Zmmi1ApUQAAsjdDmgtwyBs+hZDO8P86wSlcWAA4//xM?=
- =?us-ascii?Q?WExYrzqzipHek6AeEMPecckSlqd0JI1aTcicLqOlXrG5/uBT25A9NtrsBMng?=
- =?us-ascii?Q?QeYsVdY2XzUEl7eeqwSLISuVvZLjlm7FIgc8AG4TslXLKjnl+ZqbiXa3FH/u?=
- =?us-ascii?Q?7FXyokxi2Hkr/2rtgrv1NJTqK8c0Bl9bY3CJUBrM5wwKCi1Js1T/s/GunzyB?=
- =?us-ascii?Q?e0VsrmccNE4G5zYPtaojy5GdjlcVOJeTPsI34e0BRJdaUOulsVcNuVtd9EW9?=
- =?us-ascii?Q?19+vRBov8LFTpe0/OfFEN+FvUHLsY4YhOWytU4FHSwSKsRZQonOlrKjZSL6I?=
- =?us-ascii?Q?aBfm9gdLjVqyjKnfcKF0dqXCCam0xGuJc3Lff8pmK7p53Ga7fKM+9+3s6+Eh?=
- =?us-ascii?Q?EBtvTLUL4FH330yCeMYE14e+z+vs1mYORql2IKEKYH7yvWp3ClzOtohsJifP?=
- =?us-ascii?Q?opwmCmZ0++7CSblYmJ2ic6Gup1wGZpoXGa7cYmBQfSmt1+1ddOgo4pYSDWYl?=
- =?us-ascii?Q?6g=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf868552-4fd0-4953-1964-08dd796a7b63
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 02:34:00.2936
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cCvd52ha2h2bAYzpnLckkXn8Qc8oTUU1ENkw6A7XkLJETeQalLo6KGQe3uMFVcYsDrUOdr5NnY46ROlCnArddwqB8wpS07bp9ZKfHZqvJjc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1129
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-8-guodong@riscstar.com> <20250411140510-GYA22364@gentoo>
+ <d2c26d3e-787a-490e-9134-8ffe2f6b8333@riscstar.com> <j35vjluiykbu2gxg5zkoxm67muj5y66zn6tjwhdbnolkyeilh7@cubjbzouewiy>
+In-Reply-To: <j35vjluiykbu2gxg5zkoxm67muj5y66zn6tjwhdbnolkyeilh7@cubjbzouewiy>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Sat, 12 Apr 2025 12:22:32 +0800
+X-Gm-Features: ATxdqUFBjSG4mlbdp7nE8mXBUsIc0jQlH-3ugDyge5bg-US1BCesmG_1FB96s9Q
+Message-ID: <CAH1PCMa6BihBDubJNL2W-kfzUdwwKgiKgW=iz5JsroWQVyhg+g@mail.gmail.com>
+Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support for BPI-F3
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Alex Elder <elder@riscstar.com>, Yixun Lan <dlan@gentoo.org>, ukleinek@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, geert+renesas@glider.be, 
+	heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tan En De <ende.tan@starfivetech.com>
+On Sat, Apr 12, 2025 at 7:28=E2=80=AFAM Inochi Amaoto <inochiama@gmail.com>=
+ wrote:
+>
+> On Fri, Apr 11, 2025 at 09:23:29AM -0500, Alex Elder wrote:
+> > On 4/11/25 9:05 AM, Yixun Lan wrote:
+> > >
+> > > On 21:14 Fri 11 Apr     , Guodong Xu wrote:
+> > > > Add a PWM-based backlight node for the Banana Pi BPI-F3 board,
+> > > > using PWM14. The backlight is defined as a 'pwm-backlight' device w=
+ith
+> > > > brightness levels and a default brightness setting. PWM14 is assign=
+ed
+> > > > a period length of 2000 nanoseconds.
+> > > >
+> > > > This configuration was used to verify PWM driver changes, with PWM1=
+4
+> > > > tested and its waveform confirmed as correct.
+> > > >
+> > > > The node status is set to "disabled", and should be enabled when th=
+e
+> > > > display driver is ready.
+> > > >
+> > > .. see comments below
+> > > > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > > > ---
+> > > >   .../boot/dts/spacemit/k1-bananapi-f3.dts      | 32 ++++++++++++++=
++++++
+> > > >   1 file changed, 32 insertions(+)
+> > > >
+> > > > diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch=
+/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > > > index 816ef1bc358e..d04b57ddeb46 100644
+> > > > --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > > > +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > > > @@ -28,6 +28,32 @@ led1 {
+> > > >                           default-state =3D "on";
+> > > >                   };
+> > > >           };
+> > > > +
+> > > > + pwm_bl: lcd_backlight {
+> > > > +         compatible =3D "pwm-backlight";
+> > > > +
+> > > > +         pwms =3D <&pwm14 2000>;
+> > > > +         brightness-levels =3D <
+> > > > +                 0   40  40  40  40  40  40  40  40  40  40  40  4=
+0  40  40  40
+> > > > +                 40  40  40  40  40  40  40  40  40  40  40  40  4=
+0  40  40  40
+> > > > +                 40  40  40  40  40  40  40  40  40  41  42  43  4=
+4  45  46  47
+> > > > +                 48  49  50  51  52  53  54  55  56  57  58  59  6=
+0  61  62  63
+> > > > +                 64  65  66  67  68  69  70  71  72  73  74  75  7=
+6  77  78  79
+> > > > +                 80  81  82  83  84  85  86  87  88  89  90  91  9=
+2  93  94  95
+> > > > +                 96  97  98  99  100 101 102 103 104 105 106 107 1=
+08 109 110 111
+> > > > +                 112 113 114 115 116 117 118 119 120 121 122 123 1=
+24 125 126 127
+> > > > +                 128 129 130 131 132 133 134 135 136 137 138 139 1=
+40 141 142 143
+> > > > +                 144 145 146 147 148 149 150 151 152 153 154 155 1=
+56 157 158 159
+> > > > +                 160 161 162 163 164 165 166 167 168 169 170 171 1=
+72 173 174 175
+> > > > +                 176 177 178 179 180 181 182 183 184 185 186 187 1=
+88 189 190 191
+> > > > +                 192 193 194 195 196 197 198 199 200 201 202 203 2=
+04 205 206 207
+> > > > +                 208 209 210 211 212 213 214 215 216 217 218 219 2=
+20 221 222 223
+> > > > +                 224 225 226 227 228 229 230 231 232 233 234 235 2=
+36 237 238 239
+> > > > +                 240 241 242 243 244 245 246 247 248 249 250 251 2=
+52 253 254 255
+> > > > +         >;
+> > > > +         default-brightness-level =3D <100>;
+> > > > +         status =3D "disabled";
+> > > I'm confused, has DT in board file with disabled status doesn't make =
+sense?
+> > > it doesn't really useful for placeholder, even worse that functionali=
+ty may not
+> > > verified, so I'd suggest sending along with display driver while at i=
+t..
+> >
+> > I think I suggested he include this.  Guodong tested PWM using
+> > a backlight on a display connected to a Banana Pi PBI-F3 board.
+> > The above numbers come directly from the downstream code, which
+> > uses this PWM consistently as a display back light.
+> >
+> > But you're right, the exact set of numbers to use is dependent
+> > on the display used, so it's better to add them when the display
+> > gets integrated.
+> >
+> > The pwm14 node could update still be added here, but that too
+> > might as well wait until there's something to use it.  So I
+> > think this patch can just be dropped.
+> >
+>
 
-Replaced pm_runtime_put() with pm_runtime_put_sync_suspend() to ensure
-the runtime suspend is invoked immediately when unregistering a slave.
-This prevents a race condition where suspend was skipped when
-unregistering and registering slave in quick succession.
+I checked the existing boards based on SpacemiT K1 Soc, all of them are
+following the same pinmux design of using pwm14 (and pinctrl group 1,
+ie. pwm14_1_cfg) as the display backlight control.
 
-Signed-off-by: Tan En De <ende.tan@starfivetech.com>
----
- drivers/i2c/busses/i2c-designware-slave.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's why the code relating to pwm14, in my opinion, could be useful to
+others.
 
-diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
-index 5cd4a5f7a472..b936a240db0a 100644
---- a/drivers/i2c/busses/i2c-designware-slave.c
-+++ b/drivers/i2c/busses/i2c-designware-slave.c
-@@ -96,7 +96,7 @@ static int i2c_dw_unreg_slave(struct i2c_client *slave)
- 	i2c_dw_disable(dev);
- 	synchronize_irq(dev->irq);
- 	dev->slave = NULL;
--	pm_runtime_put(dev->dev);
-+	pm_runtime_put_sync_suspend(dev->dev);
- 
- 	return 0;
- }
--- 
-2.34.1
+> If this patch will be applied as it is after applying the display
+> driver. I recommend to preserve this patch, but move out of this
+> series and resend it as RFC. If this is only for test purpose, it
+> is better to move this into the cover letter and address it is for
+> testing.
+>
 
+Yes, it's for test purpose. So, let me move the code snippet into the
+cover letter in my next version.
+
+-Guodong
+
+> In most case, patches with some unmeet dependency should follow
+> maintainer's request, or has specific purposes. It also needed to
+> be marked as RFC.
+>
+> Regards,
+> Inochi
+>
