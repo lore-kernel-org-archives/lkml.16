@@ -1,43 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753641C3C08;
-	Sat, 12 Apr 2025 18:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2658F14AD20;
+	Sat, 12 Apr 2025 18:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744482459; cv=none; b=fNEX2h49bjSSceONFmlViFb0iX+wmPFBhdoEKheENgQ2mWt08NP6ualc0hE/W3OiykEOWbEQ3bZ0XkSRSjjfrKZfF+da34RvTYTA7MFe2urVmLnrnEr5yvRrpStdihtHDDXdYEZIvVzD1gK2kynEtLDqAg4F68fTldFQDSMBu+k=
+	t=1744482657; cv=none; b=pMoQhL/LP0+iTqHb8Y2y2vCUdY94TPtkab176sXggHPmabiovYc45+oivCVwyECFP9rGN3nA0KbAzy6JpxzErIo+B97d6x1k+SLIMtXSECHH9OUmbze5cl0mUSOGglMI/ytxwiOjRgwXbvj/y9ZMPNAYjs1a+2712UYVS+i1T4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744482459; c=relaxed/simple;
-	bh=5jrniUTmToNcT6JYZS1XF5QtKtluIwGUs3hnv44XPvY=;
+	s=arc-20240116; t=1744482657; c=relaxed/simple;
+	bh=RW0z1C49PCxVJBw7xcIdXUKGnyC3SVpPoZLg2Z1sipQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7yxJOpyV5wMdeguWjDHEvl7mupT/iGEhvtz3PfLSInD763IvC3uVXoJzjsuXijrfULTPgBHorZ5HfI5bAjdm4lGtqYyNOR8KYLjt/Wt0bjUG/mtoXN3mMaZkzFDHYCoH02BS/rubX6BW58l02l1Wog7Xf1+RNkKM1szKH6Ae3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaDTUKSR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dNHkBnwk6TptsgVWwQorQRQyMGPK0hhQ6yOd4CpNM4mp5Zq6CiK7map7YtVfJmPBytXKpoy4ST7ALdWYkX8L5K4H/n0pELX7BfzEdMy4+AFOtAchGf11Xy9NIjiTNNDUl8q6k4AUjHB5BP1jD8TdVciN+ruIWlVUAlQiRqLfk5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cwfd9vXs; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaDTUKSR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD05C4CEE3;
-	Sat, 12 Apr 2025 18:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744482458;
-	bh=5jrniUTmToNcT6JYZS1XF5QtKtluIwGUs3hnv44XPvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TaDTUKSRACe488kdE+7xZwixRfG6BNyTWwTGWMOcvOHy/C/21FsAKHRHY0mL8rnAc
-	 DjkTG+MgoTRtGul7YElGwKc2Mrd4pkxv0Ecgsgc4x+OOo27Qj5W5yQd7wspvUzGUI3
-	 sk//jx1faHzWqhn+ONT8inmPPMXvPIrLBzFvjAlX1Y1UXWUnULQ3BiBQ3BP+xO3Br5
-	 79WW4A5hivdxH+WNW+OxhFiDPn8OuKNOHypUgQarvvtvdZNkAB/xialBmbf1lceRwt
-	 7Dkm/SP+/8zRf9QYgx+GztyVVMNzBPpx/148Xz+yru7AVL2iqyDWJgjAtkVEfYSrYh
-	 6B6EWuQ6IQ0+g==
-Date: Sat, 12 Apr 2025 13:27:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: spacemit: add clock support for K1 SoC
-Message-ID: <20250412182737.GA1425287-robh@kernel.org>
-References: <20250412-02-k1-pinctrl-clk-v1-0-e39734419a2d@gentoo.org>
- <20250412-02-k1-pinctrl-clk-v1-2-e39734419a2d@gentoo.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwfd9vXs"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so24076665e9.1;
+        Sat, 12 Apr 2025 11:30:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744482652; x=1745087452; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9I1yayD3cf1v7RYAxVVYTY6w58aLvRc+jXpIiCDAY18=;
+        b=cwfd9vXszu/PfoXbxXLmHPRgJ5b+ZcztuQJqtq3cBTtcHpcsDnLuWVlaMQlD+rDQ/P
+         e829a/768+uG+K7G4cvltDS2+LN631RC/kqwp60UNYarLatbH1pdDqje2diYcyejpVxQ
+         woFlHg6YcC95gbpQluy8nTYv8620X4n0ckp7aJmbzFW/hJfK9zRKTD+LsSHY4sRuEzal
+         oQXmXrPkE8V/+2zz1uSMGGjggCgbd1A83Ji0bqP50cl8RsYHgXIeV7KvEAsuEY64EySE
+         tQXEnmmmiPjFZaibfcdmZ8Z9wgcNASuA9wWwgtleUdLmAVeUmdMqksdg73FrYEWjFcbn
+         3CSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744482652; x=1745087452;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9I1yayD3cf1v7RYAxVVYTY6w58aLvRc+jXpIiCDAY18=;
+        b=MurJ8ws2GCTkZFZn8nbPx4rfqe321rhHb+EyYAtn/jmCGmpmOeU8jstHMSF/FPC63Q
+         qg8VP8phf33yQfCW/iJMxGig4Z6Gywx2UySTmGixPfl791YKuAXTve7fLMj1AbgvnifW
+         ZIJAu2IwC8L4bQtILsbuEI8V/wPcc++XT/e1rAXYJvwNke0WGw+3SheqtPzTxgKLEphe
+         fwPqdyJH5DaK9BhZKMsTfnps4mBHzYmzbP+rN/3eJwdyIt0rkXZxMts7IOxRbxGxmvnY
+         N9SuRAb4Le7DHnpjQInH9msROJVbZDNeIclCoOwdC4DW2AixaEJj+/6+z41TOpFC57RQ
+         L6Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKEB5Jw2qdootgfMTh2yEPtrYkFUP7JA1CZs78Q6XhQxq4gyzAKt0vz2DNT9QPQBzs5jNDguArcSzYQRA=@vger.kernel.org, AJvYcCXHT0nGfJIEKC6rzOPSdTCz2oJ9cWf4LUl1bqNSnrTDFLpl+pXBgZj4CZApiF90Ndj5XWJdClEI@vger.kernel.org, AJvYcCXdr5GnjHq2kDQVUa5t4RKZ3XLzmYZnh03LRAW1mWVQAjdxDRy+N74Tzb68GigD5Ks1AWIlx6Ur6lCL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWpzTUi3vGjyphmfSQC3+DcRBI6cUKdkrMVZHwIjuniS1xxMg4
+	gevIk/OO52jVAxQyiUx1MkG7ncd1U4ViHb33Nts7m6JVZtgL9rOR
+X-Gm-Gg: ASbGncuBzpgk8v91SDFzLNDSN6GDHfI94/GIGbsTEXIeF3jUKiCwpvqgO+PFhOA/drk
+	Be8SZzyWgme6ol4vKY/la9+Im3YQ5Ak3CTWGcKNub3PxbAZe5QwSvusl32DxOrvDXVZC5G8bNrF
+	zoiooib6w/ft8i3SYTQ8jN4qgH+As3Lt4XSx/SWqWgXWK8x8zJpZcqV0ElnbnOjKZPc2Nq+aQA4
+	83e1oZBS0INmrpW4OVHwE5YYX6maESuIouQOC1fHikBPP7an37IlVxdb/rYQCMNHMd0D6bDXsAW
+	DeYfCMmxyYfUaofGfACUxW+rcrjJ8M+toHiKbRBtp8YA
+X-Google-Smtp-Source: AGHT+IGnll0hR3wPHlESkLrYLAgonyfJaX6StTTM1pbJ2ipqv900Tg6e/VoeEcs2wFQpnA/CzW2vSg==
+X-Received: by 2002:a05:600c:1550:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-43f3a95b76bmr59786675e9.15.1744482652068;
+        Sat, 12 Apr 2025 11:30:52 -0700 (PDT)
+Received: from qasdev.system ([2a02:c7c:6696:8300:f069:f1cb:5bbc:db26])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm5699769f8f.82.2025.04.12.11.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 11:30:51 -0700 (PDT)
+Date: Sat, 12 Apr 2025 19:30:36 +0100
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Jakub Kicinski <kuba@kernel.org>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	horms@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+Subject: Re: [PATCH 1/4] net: fix uninitialised access in mii_nway_restart()
+Message-ID: <Z_qxTN9_xJuEd2op@qasdev.system>
+References: <20250319112156.48312-1-qasdev00@gmail.com>
+ <20250319112156.48312-2-qasdev00@gmail.com>
+ <20250325063307.15336182@kernel.org>
+ <Z_hC-9C7Bc2lPrig@qasdev.system>
+ <c8ebd8a1-cfdd-4a27-8cb6-114ea60ba294@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,52 +79,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412-02-k1-pinctrl-clk-v1-2-e39734419a2d@gentoo.org>
+In-Reply-To: <c8ebd8a1-cfdd-4a27-8cb6-114ea60ba294@lunn.ch>
 
-On Sat, Apr 12, 2025 at 02:58:11PM +0800, Yixun Lan wrote:
-> For SpacemiT K1 SoC's pinctrl, explicitly acquiring clocks in
-> the driver instead of relying on bootloader or default hardware
-> settings to enable it.
+On Fri, Apr 11, 2025 at 03:12:06AM +0200, Andrew Lunn wrote:
+> On Thu, Apr 10, 2025 at 11:15:23PM +0100, Qasim Ijaz wrote:
+> > On Tue, Mar 25, 2025 at 06:33:07AM -0700, Jakub Kicinski wrote:
+> > > On Wed, 19 Mar 2025 11:21:53 +0000 Qasim Ijaz wrote:
+> > > > --- a/drivers/net/mii.c
+> > > > +++ b/drivers/net/mii.c
+> > > > @@ -464,6 +464,8 @@ int mii_nway_restart (struct mii_if_info *mii)
+> > > >  
+> > > >  	/* if autoneg is off, it's an error */
+> > > >  	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
+> > > > +	if (bmcr < 0)
+> > > > +		return bmcr;
+> > > >  
+> > > >  	if (bmcr & BMCR_ANENABLE) {
+> > > >  		bmcr |= BMCR_ANRESTART;
+> > > 
+> > > We error check just one mdio_read() but there's a whole bunch of them
+> > > in this file. What's the expected behavior then? Are all of them buggy?
+> > >
+> >  
+> > Hi Jakub
+> >     
+> > Apologies for my delayed response, I had another look at this and I
+> > think my patch may be off a bit. You are correct that there are multiple
+> > mdio_read() calls and looking at the mii.c file we can see that calls to
+> > functions like mdio_read (and a lot of others) dont check return values.
+> >   
+> > So in light of this I think a better patch would be to not edit the 
+> > mii.c file at all and just make ch9200_mdio_read return 0 on     
+> > error.
 > 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  drivers/pinctrl/spacemit/pinctrl-k1.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> Do you actually have one of these devices? If you do have, an even
+> better change would be to throwaway the mii code and swap to phylib
+> and an MDIO bus. You can probably follow smsc95xx.c.
 > 
-> diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-> index 67e867b04a02ea1887d93aedfdea5bda037f88b1..3805fb09c1bc3b8cf2ccfc22dd25367292b397b9 100644
-> --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
-> +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
-> @@ -2,6 +2,7 @@
->  /* Copyright (c) 2024 Yixun Lan <dlan@gentoo.org> */
->  
->  #include <linux/bits.h>
-> +#include <linux/clk.h>
->  #include <linux/cleanup.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> @@ -721,6 +722,7 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct spacemit_pinctrl *pctrl;
-> +	struct clk *func_clk, *bus_clk;
->  	const struct spacemit_pinctrl_data *pctrl_data;
->  	int ret;
->  
-> @@ -739,6 +741,14 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
->  	if (IS_ERR(pctrl->regs))
->  		return PTR_ERR(pctrl->regs);
->  
-> +	func_clk = devm_clk_get_optional_enabled(dev, "func");
-> +	if (IS_ERR(func_clk))
-> +		return dev_err_probe(dev, PTR_ERR(func_clk), "failed to get func clock\n");
-> +
-> +	bus_clk = devm_clk_get_optional_enabled(dev, "bus");
-> +	if (IS_ERR(bus_clk))
-> +		return dev_err_probe(dev, PTR_ERR(bus_clk), "failed to get bus clock\n");
 
-Do you really need these to be optional? Yes, it maintains 
-compatibility, but if this platform isn't stable, then do you really 
-need that?
+Hi Andrew,
 
-Rob
+Thanks for the suggestion. I don't have one of these devices at the moment.
+If in the future if I do I will definitely explore the suggestion more.
+
+Regards,
+Qasim
+
+> 	Andrew
