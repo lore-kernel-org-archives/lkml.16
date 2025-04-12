@@ -1,126 +1,69 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9BB221290;
-	Sat, 12 Apr 2025 20:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890E9219A7E;
+	Sat, 12 Apr 2025 20:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744490004; cv=none; b=WzLemww/mCvipuFIl9CIFLrulyF5MXaXmXHeOehhvmQIXu7zmsqu75NOVwJKwyE6GACySJAOnjQTLpvpRpaMKpO46yLk5de3H5LPQdw4b/14JznFobLx+MNUQUQdg/anN1dqUs81uHwuxTqP1E68H5HiMWFlyNlacG/0frlvgro=
+	t=1744490023; cv=none; b=ivRIHXClhY2ihO121iFi6jAYRRaUd7lLIhpVl+ehqwTSDybNwi398S6bS3jM3q0dM3LlTMQmmARS3/pUXOAx4eNNv5ct445uVA968ZyUrZdYxca1RhryxNhM/ektsABlLy5OB3LmqjXIqyOsirZvCpcftmvH2ATEOIvpi1oqoU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744490004; c=relaxed/simple;
-	bh=7dCg5tzUQj/4mVhPpQnuYyPbXZOifNhDVZSE5I8JtdE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qdQCLbgW8YVOrmuB8UQkQhXGveRVCguoF1XJ7hILGlM5Qmt+ZmCEgvoC6ORS9Vzyh/Fc1M3vzkWmC3k90FmVesSR8NoxQNpQKG4WohXyHHYQL8Q6VXkeel/rDXxFgB2y15fdeh8f4jO+i0k4Qr3S4JlbmGR/AP8gg57yRjYBoRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VExILugT; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744490023; c=relaxed/simple;
+	bh=6XimQTtJs6xbHmZKKURhprxY8wMeuMAlIIac2zANoRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EvzUboOQAj1yJW3mo4kxtzF3/NMATsUQGpIRkDUy6+jCo91XcS7ntcVrOlo1DCRjc+UjEqdwNDR73ezEf4qs2Z6lerU8/XM6TBG4CmW4tu8A4w5NYzBpBWr7GRUbUJypUeuhFtQBM52w9v9D2MPdwDuz6iBB7H4i3HPxQMWaTdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzI6W2Gx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VExILugT"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-391342fc0b5so2337739f8f.3;
-        Sat, 12 Apr 2025 13:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744490001; x=1745094801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5KGnOL6zOW5X0ya7fBxl7f8BKxT9nw74oMzFAvnhYmo=;
-        b=VExILugTM++2fkAoATkCPpuf9mHUXweBZ+2B7v1+Ln7oLd8acviCbUh/qXSZdzKg3K
-         CTBoE4wvE9/oeJ0vvpaFhSP38fcXzLeWWAcm5FIViMvUB9tc+w4izawnCzZHzOJKBybU
-         zDBoB4Hl297tPqwNcqPE4lgQKP7cdcFQvi5itBwoLmtXNJ8ETOOr0qy+CKP8gqM0LbgX
-         Wu0clb6uQbS5kIF209DYOd7IsuxiNNRoH813b0A5VuC5+cehCpDSNkRBEV3zfPJjHqMZ
-         C+AriOP0yz18v5NUScZzYwWQq2Zlt78CJDGnQ+SHDO44quaoyPcaPKuKOWug/cIDiknV
-         lThw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744490001; x=1745094801;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5KGnOL6zOW5X0ya7fBxl7f8BKxT9nw74oMzFAvnhYmo=;
-        b=dt//n9j/CoJLOKCebpTXgMgFOsw3PLgDIHg++BjIlHNW5swbsNLaTCWI0mimlUbEnf
-         m1jPBlkgB+DTnlh2UfIXBCia7rW76riT1ve5rBLYBZ0T2PojfPBpMJCCfVJwGhgVuJR9
-         TeR473mE8PMaqqGA7zYACSkkNQ4wXAnoCwR5DVm0ovgE2r2vHsIVvQ2vIC6iDAEvGKsj
-         lSHAiHf99MQL7NT7MkgEmoe9i7DuiuNv6GRhXTmdVTsCFQ/59nHT88zz56EPDg5xZZSn
-         WA19fPRy8RIOyNrOpbOQSIPidQwDNqPwZ7CQkS8AQRNYdc1Sp7UtBzQ8Klje57S1kofY
-         j9oA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCro2+GiWDxuPClRWS+zM8+6wnNtLR3tBLluCHsABexKpW6heWvFW9I9dgFteXE9rKQM+/fiJt+nNj@vger.kernel.org, AJvYcCWGs9/5Ub5ume43TtZm2l/F11jc27Y0hXfdiN9Fr3JWT6974F42k5QcK83zw2RyGM/fLPwdtihV4HMDtEqk@vger.kernel.org, AJvYcCWw8sYG+383h/YpW7BPRSz3Gzm3YZh4JkrvOF60r1BpQSrECIVlxdEqPkktln9t0ukfCd49cabXxY3B@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoZGGT9Zr6I2EvBAPjQQT3VKrj5gx/l3vsFAll60dIGnMGFSFq
-	2rIItu+OJABfaCvjfkOlk77xtA+VL+NBJQg5kfy9r9WkqYnsXgtY4GYuig==
-X-Gm-Gg: ASbGncu06QYmf8E8DalRKdmaVcSgVsEkzyKciF/HGGc9o/f/ttu/SYsW+F10gsm7kx0
-	KzQ2VcGqtyPQ6wFHDe0OMKk3CA0vBpRdL4N3ErVI7O+MOQkmDHZdl/FqHfIqclqxQ9aqnxcqdvT
-	qEY4hct6wWuMm6kB2dIJrEFHJf4S7hng04bJT25DXn3N4X3DxaS+Pk2lVfJS9RSFbMMNt3TwTCZ
-	uhpM7xare8tJqLi1Q099kJt3LwkOP3K2bAUgUeff8TTfGscWkQn81WlPp/WYydp6MmVpc92+LFM
-	Xzxv5W06HK7u/Cf4CsPmuQ8Kru60im70SqUlC+297Mo8mto2/lEtvEaPv5A6xBPRmj66PYK3MOO
-	euKsjRsAeK4C23sjY
-X-Google-Smtp-Source: AGHT+IG5LOI1pesFPQmRAVlPiYfeXozU198XAF8Q6TGdiddjdZMVjob+wqLzV6mTW9QqbhDA2VY/iA==
-X-Received: by 2002:a5d:5f53:0:b0:390:e7c1:59c4 with SMTP id ffacd0b85a97d-39ea5206aeemr5751863f8f.13.1744490001327;
-        Sat, 12 Apr 2025 13:33:21 -0700 (PDT)
-Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cb29sm5941896f8f.76.2025.04.12.13.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 13:33:20 -0700 (PDT)
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Rob Herring <robh@kernel.org>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: linux-samsung-soc@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] usb: dwc3: exynos: add support for Exynos2200 variant
-Date: Sat, 12 Apr 2025 23:33:13 +0300
-Message-ID: <20250412203313.738429-3-ivo.ivanov.ivanov1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250412203313.738429-1-ivo.ivanov.ivanov1@gmail.com>
-References: <20250412203313.738429-1-ivo.ivanov.ivanov1@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzI6W2Gx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1DEC4AF09;
+	Sat, 12 Apr 2025 20:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744490023;
+	bh=6XimQTtJs6xbHmZKKURhprxY8wMeuMAlIIac2zANoRE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qzI6W2GxFZe7Y7Bt2nchUdrOxAfVlH9fo5iXBlzQU4KPF7Ti4sDvqtyLJmUdZ2KnU
+	 E/IHfP9VcjYY4BRRwbA7FPLIP0lkZhTC87mIaaunCt2MCObOjZDrhlg2Q/Sg7VBrqQ
+	 hn0vOOWCIUKvAW7lfFllZMmH65yN5yTHRh50gr0fBulaZoLWiODFbg2yKi5e3zocWT
+	 wVfLZslyrr4E7cA7ly4ZiRUfqYBasR58LdGEBmP/2DuCP9jdFqpbXjSQw/Cy/21cCX
+	 ouLVQNlslkRPXlwO/SySPi3r7NoD0TTmY0m5uf6Ho4fU3eSfVk3oSDBXqXm/Bbp5u/
+	 UV31uyGke6XBA==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso29139471fa.2;
+        Sat, 12 Apr 2025 13:33:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVVZgtLAmo1Okb1qN8MZ6hXBUldgfQ/yWJvJSGL17foQpbjINE4iMXx/HnTloKPsdXGMk4TT7xifkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY2CxV73gofvaNV/Ih7lryMSPFqSSWCUkFoJigGQhMSJohfqpE
+	fKvAPD6FkAd3gWv6Fv6atHAmPTKLykjfh1EN+ToMJz926sbIhz3CkbqYOnCjb5QCW6vusFHVkZX
+	yCjXRfmvYRSF7t338+KOX4jw9S88=
+X-Google-Smtp-Source: AGHT+IHmpDAy73HDhi7dwNSeIsexjnMTgwa7h8CPnbLTpXGzUbdsBvIZissssAOqOJt4oyJW5vCI2+X2aAoq++Y4Rk4=
+X-Received: by 2002:a05:651c:3228:b0:30b:d40c:7eb4 with SMTP id
+ 38308e7fff4ca-310499d6114mr21750281fa.7.1744490021355; Sat, 12 Apr 2025
+ 13:33:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250410132850.3708703-2-ardb+git@google.com> <174448976513.31282.4012948519562214371.tip-bot2@tip-bot2>
+In-Reply-To: <174448976513.31282.4012948519562214371.tip-bot2@tip-bot2>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 12 Apr 2025 22:33:30 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFEXZ8cGMwz6N_ToYp0Wf5Vr9UBFRueWx_MtrwbDLq+LQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFuMP_zc7wHR3uTK_L5UdyRgbyFnE-6Jht5tyB4KrRQZUih96htAF2TRyA
+Message-ID: <CAMj1kXFEXZ8cGMwz6N_ToYp0Wf5Vr9UBFRueWx_MtrwbDLq+LQ@mail.gmail.com>
+Subject: Re: [tip: x86/boot] x86/boot/sev: Avoid shared GHCB page for early
+ memory acceptance
+To: linux-kernel@vger.kernel.org
+Cc: linux-tip-commits@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Ingo Molnar <mingo@kernel.org>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Kevin Loughlin <kevinloughlin@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-efi@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add Exynos2200 compatible string and associated driver data. This SoC
-requires a Link interface AXI clock.
+On Sat, 12 Apr 2025 at 22:29, tip-bot2 for Ard Biesheuvel
+<tip-bot2@linutronix.de> wrote:
+>
+> The following commit has been merged into the x86/boot branch of tip:
+>
 
-Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
----
- drivers/usb/dwc3/dwc3-exynos.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index de686b9e6..20abc6a4e 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -145,6 +145,12 @@ static void dwc3_exynos_remove(struct platform_device *pdev)
- 	regulator_disable(exynos->vdd10);
- }
- 
-+static const struct dwc3_exynos_driverdata exynos2200_drvdata = {
-+	.clk_names = { "link_aclk" },
-+	.num_clks = 1,
-+	.suspend_clk_idx = -1,
-+};
-+
- static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
- 	.clk_names = { "usbdrd30" },
- 	.num_clks = 1,
-@@ -183,6 +189,9 @@ static const struct dwc3_exynos_driverdata gs101_drvdata = {
- 
- static const struct of_device_id exynos_dwc3_match[] = {
- 	{
-+		.compatible = "samsung,exynos2200-dwusb3",
-+		.data = &exynos2200_drvdata,
-+	}, {
- 		.compatible = "samsung,exynos5250-dwusb3",
- 		.data = &exynos5250_drvdata,
- 	}, {
--- 
-2.43.0
-
+This may be slightly premature. I took some of Tom's code, hence the
+co-developed-by, but the should really confirm that what I did is
+correct before we queue this up.
