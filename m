@@ -1,101 +1,110 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981411392;
-	Sat, 12 Apr 2025 18:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491821392;
+	Sat, 12 Apr 2025 18:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744482744; cv=none; b=SOG7nEe573HTkfB2RrcbycWhmm/MLaIHS25/QnJbfOXNOTHu7J3Dye3gEMEh4tgzgnXb1fgyA0AlNvhhvNwwBk2Gwqmoy8r4Dnw6EeKTkfA15Fvyvs9RagwLwUnoV5vrT3WPyCHWfI8gVHtfEkweV/2Xkk+7Z5UQMRFxD1fY9Rg=
+	t=1744482812; cv=none; b=dxQgqOcTPxUFA/qPDgeIISPAqAaWVZSh516yw3/WNNNwEF9Rt+DDcTWrAFt8xzXh+EPIKqRgUetupnUCFIVfjx8zjIyMUncXzPIZho/Uy8gx2FSek4h58iuTsIEjGcvtsL/grG/2VHJchemYtPUoyrmJH6ViHztQbQlFcP4a92E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744482744; c=relaxed/simple;
-	bh=T3Qc1STNEB1yk7+zuWvJIvGi5r/g6z5PQsnptk7pOCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LrqWB/LHduouMf9kpVQIfypv1070k64v6SWV0oj9Y3mvu8Y1z3OA5cpl2MTVHE+QkuTEho+6neelcY9YOTp2ShUR8dH2iS0Qohx55W3wvM4OR/zbNzxPQAw5PTb4beEy3YNuJk07toptP8WU8bM43oJ3ih83TiYubG7f5E/Kmsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fr2Uy2ZY; arc=none smtp.client-ip=209.85.221.177
+	s=arc-20240116; t=1744482812; c=relaxed/simple;
+	bh=xb//l84OJHLSYzy/HLq0aIAbpNr7GXlOxuv33T7qDIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fMFLI2MctObvfsH3oeLWQaLKbfMfz9KRrrjXfpX9Go6oBTrEgIFOobRhLEe/MNzltnTc/KqJZ1w+jHamMOcPfdigM0uzUsYngxKMUC5j7z9Exjza/Mms9Z8RBcD6OMH2D5etvOMx5dFU9oiO8w7ui5yXozl3NLp5dtzl0nE6w2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GCc0Ts9+; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fr2Uy2ZY"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5240d07fee1so81793e0c.1;
-        Sat, 12 Apr 2025 11:32:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCc0Ts9+"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c553948ab4so24932485a.2;
+        Sat, 12 Apr 2025 11:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744482741; x=1745087541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T3Qc1STNEB1yk7+zuWvJIvGi5r/g6z5PQsnptk7pOCk=;
-        b=fr2Uy2ZY67DAzF3w4HYhxB62WBAwxBjsj4perDH3i432rJQaxgpUhGjKsFsZGkEzwY
-         vOKyR/lUdyMUAO7ZZy7Lj+GbhNMLnsfX1wqMyD1d1hoQ/P8b64k3DfbL8SrhJGPaIm+X
-         MSiKmAHngT41blDQ1hdI+/lR1bOQFcL8lQC/6cuFavKcNqP6wbJNcGBOi4Nfcy1ckjKf
-         7fCUxQw3abvS4IAx0ZS67nv4QbHlX5s0lVpnFRhW06OZFRQsuVvMycAD5/zbRjOl9LZJ
-         ASa4e67KZiLik8Q3qWVlPPd+hA+dIeTu0ztGZ3yMDYfyqmvhpe6deTl9QPYiiYWjSLIT
-         VA+w==
+        d=gmail.com; s=20230601; t=1744482810; x=1745087610; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iOe+2E1QLPcYCD67YCrKIDFqiQ5cbueVE7XFqwDxXd0=;
+        b=GCc0Ts9+Uf/5DI43MxPat/2KIWJj46XNLi3eMMsxzas+FWLKar6Tdvb9sS560FwboF
+         6jsZ6hTs9Qea3sdjXDWek8MmsR5zs1fIx2lGgrxExPccFL+VMcYAobYXvho+/frIvdej
+         H3Y3VSh1xhQJL06Jmwf0wtv2e5SJl8jSfcnrmmgsWVKX+40OGo9dv/I6pFs9/j/2B8CQ
+         44mUCUyLX3/10prdM9Njf29vkny3gNhybDPIgBR/kXyRSjqSYI8oGQbw2+kaRf1ZLyyR
+         FNreSbe0KNHqWl6qmQzSnwVDSeXbtOa5kN838no3ULpOmlCXDXhIHbjaPUGAsdDC9oDG
+         XkCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744482741; x=1745087541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T3Qc1STNEB1yk7+zuWvJIvGi5r/g6z5PQsnptk7pOCk=;
-        b=SrBG6EVI6Fx+N6ZGQxxz0Ncsj2yULWLip+ezBlfr9w5TxlmO/mdCoAA1r0qaKMvKhs
-         1NjEuFDoKRdmGtklJI3Vj3gLmjvcYuKJAB5J29+zOrgjF9rbRk3b0JJA3lTzOXmQurxT
-         iDCuYvdnPpEffIFIz8O2hRJNCWGW8bnvpacFT6HyoX0q1J2qwKCXbqDlcvGBPv2U1g/s
-         fCbT7EmNpbFCly6e3LFky1t0SOXeHF5yaRi6IfgRr8v4fEGyNB8VQL5fqHSsh05SBAel
-         VNYctn0+nWC+oQxw4LWyLDfxOdLQXh/433Q7effK83GloJzmHU/7b94vT7puEqCGce6+
-         T83g==
-X-Forwarded-Encrypted: i=1; AJvYcCVZpS70X7klWE2JWbHKu2n5NYmmxGjvvAR2QPwDekZYd99G5HnP3O1rOmvimoWoi1ElrIPPMgw6zrA=@vger.kernel.org, AJvYcCXFJrdubRAOjkAv0Zb49MZ35dJjv1dGvQRN274BNhIasblB6zOw0mGpWVJAGQD3p4wVgV10WoI98Q==@vger.kernel.org, AJvYcCXMZ2MXm0zBAk0HvsyPHcWbRCpfaBgOwNY15SbLexDOGHnOjel26Pj0Q0LPQ/SW8dJibGt2kxXio7AcZx1H@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbKQoXdSF1/jCa7XQJL65FqSHtUwTSbEaPEUe+7fqTV70grgtL
-	Ipf894J5P4+eyo2fnAvCAJi1VRrULJ69CiP67asXbSamLnt/JbCRFjRFLa2bDzh10v9J8oWuJUj
-	bAHPaGHepq7CfK9N25vDN1GXbSw==
-X-Gm-Gg: ASbGncsXU390jboR007/yWXUmABxuWfw7CHF91/IQ2pAiQ04h1tMmOXxAs71BOqXqu4
-	bvH7wKhhcYwS+2UilMVFgWzPBK0I4gdViKNbkZpaJRQyq+vQXNeb91G8I46xp8RD742vM+Tireb
-	aZgmwvwL3tr92AzDnevxAzKvA=
-X-Google-Smtp-Source: AGHT+IFCaLFGAxkVT2lKsAkCtftPnKhBh6OillpidkjEeNtDizhqaCJZ4mRNIO8IrtKoYG9vlpMmuPDQ1K3J4xbTIcg=
-X-Received: by 2002:a05:6102:15a3:b0:4c4:e3d2:25c2 with SMTP id
- ada2fe7eead31-4c9e7836f75mr1550793137.6.1744482741062; Sat, 12 Apr 2025
- 11:32:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744482810; x=1745087610;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iOe+2E1QLPcYCD67YCrKIDFqiQ5cbueVE7XFqwDxXd0=;
+        b=dEn87yd4Mkf8y19BwBCzbNlnS1qUJ1edksCluQthChqxeX+Gb9zqMVjsTq8o66W/9A
+         jfHiWpdFG4YnIFiLxFqUXpW3feTCyBM5bSPDVNqcq3Ld7049doUcrOuVQcV6YCzEuDHs
+         0dt09joQJy3eHCqYGIPyMjr0H7PXp9pJPys9FnJULOyZHoXzRLSATb3zalYzvjkPjUSM
+         uKLpk1kUYA1KvfQ2YCo7MeXw7Adf7IcYnaaJFKaxdubRR0gl924+Fx1XDmOftUZnV0Ly
+         FubjQzvIWK3AvID1fI67fUbPTlGmUl2Sdf8XI8abazFAE0NlXbIw7gq3hr5KbQ5k5Qip
+         JXlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwBss0bkiQjQ43gwvJAJj0LQkUSXk5BZQLfYJuwutcFWUqdOjR+4vPEI1l9bdv8fSPVWtxZ0G4k2dqUJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8Wes5feerjNNBqQltfdOs4phGE3aBRD7A0qreUrkQirF91q0e
+	+57aWW0vk8fjUXYDOy4HaEXzKwNqg1W0tOSFOEeNMFn/K/Nz2ks=
+X-Gm-Gg: ASbGncshnOO2v5py5K20278peJYbIblONCNVeTT6DmpX41ystgyg23vtkSkj/JPS1eq
+	ca8uxMk2Luo5nwyAgpqweT0eO44iF1zt2V54LWlTVeFr5g1FMzD8j3KxHUXXGTSfT7/YqbluSIQ
+	pxXxymoESwoi4d+/3qPr4x0zB3O5v5i5GtK4Xc4Hv4p8+ukAXfP6zWdBHwY6m4K/jG4n6DY9elb
+	McLGJ//MMFskCDEwoTjonjYPinXgVkVonkfPw5Nm+mtZZ9cJ0xDRfAun/XvQt2Lr6A+C3HcmoRj
+	eBCKq9B0Zmda2W7Oh3g1e0fdYXbrKfQag7YyYQ==
+X-Google-Smtp-Source: AGHT+IHQ1+zwUyKk2IKbG0nEF7wWlrdrJDYmToU0h136mmDeu4b6sPcAeNjNH+8tsg9wxyRU73k0Ag==
+X-Received: by 2002:a05:620a:319e:b0:7c3:cf04:112b with SMTP id af79cd13be357-7c7b1ae7de9mr318376385a.10.1744482810000;
+        Sat, 12 Apr 2025 11:33:30 -0700 (PDT)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0dc9fsm435941285a.96.2025.04.12.11.33.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 11:33:29 -0700 (PDT)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: sgoutham@marvell.com,
+	gakula@marvell.com,
+	sbhatta@marvell.com,
+	hkelam@marvell.com,
+	bbhushan2@marvell.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] octeontx2-pf: handle otx2_mbox_get_rsp errors
+Date: Sat, 12 Apr 2025 13:33:27 -0500
+Message-Id: <20250412183327.3550970-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412180831.3252963-1-chenyuan0y@gmail.com> <0081fcd8-da99-47b2-b136-3ea04232046a@stanley.mountain>
-In-Reply-To: <0081fcd8-da99-47b2-b136-3ea04232046a@stanley.mountain>
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-Date: Sat, 12 Apr 2025 13:32:10 -0500
-X-Gm-Features: ATxdqUFVNadBq9M9pZcwFONeYCEW6qDbC52ykl-YedCykxT8ppzW_PXwHA1Fxys
-Message-ID: <CALGdzurRtHLOokUH7GOhmkDkzBioDFt1iJ19eSbrjyeWW7p4KA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: scmi: Fix possible null pointer dereference
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, rafael@kernel.org, 
-	viresh.kumar@linaro.org, arm-scmi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 12, 2025 at 1:31=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> On Sat, Apr 12, 2025 at 01:08:31PM -0500, Chenyuan Yang wrote:
-> > Check if policy is NULL before dereferencing it.
-> >
-> > This is similar to the commit cf7de25878a1
-> > ("cppc_cpufreq: Fix possible null pointer dereference").
-> >
-> > This is found by our static analysis tool KNighter.
-> >
-> > Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> > Fixes: 99d6bdf33877 ("cpufreq: add support for CPU DVFS based on SCMI m=
-essage protocol")
->
-> Henry Martin already fixed this in commit 484d3f15cc6c ("cpufreq: scmi:
-> Fix null-ptr-deref in scmi_cpufreq_get_rate()").
+Adding error pointer check after calling otx2_mbox_get_rsp().
 
-Thanks so much for pointing this out!
-It is good to hear that there is already a fix.
+This is similar to the commit bd3110bc102a
+("octeontx2-pf: handle otx2_mbox_get_rsp errors in otx2_flows.c").
 
-> regards,
-> dan carpenter
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Fixes: 6c40ca957fe5 ("octeontx2-pf: Adds TC offload support")
+---
+ drivers/net/ethernet/marvell/octeontx2/nic/rep.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
--Chenyuan
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+index 04e08e06f30f..7153a71dfc86 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+@@ -67,6 +67,8 @@ static int rvu_rep_mcam_flow_init(struct rep_dev *rep)
+ 
+ 		rsp = (struct npc_mcam_alloc_entry_rsp *)otx2_mbox_get_rsp
+ 			(&priv->mbox.mbox, 0, &req->hdr);
++		if (IS_ERR(rsp))
++			goto exit;
+ 
+ 		for (ent = 0; ent < rsp->count; ent++)
+ 			rep->flow_cfg->flow_ent[ent + allocated] = rsp->entry_list[ent];
+-- 
+2.34.1
+
