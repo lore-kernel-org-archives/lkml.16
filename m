@@ -1,116 +1,106 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00B0230BE8;
-	Sat, 12 Apr 2025 22:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775C6188A0C;
+	Sat, 12 Apr 2025 22:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744496346; cv=none; b=aTYnVC2Ahyh3RYZ3/wL2OvAPLRLaabqIp9WYaInROwRa6qh/LGDH2vvVW5cyA6R1ijNgrcTyP+2dPXgMdmmnYSRUG9afIBT8JJshHp3XeCt89KrcCwNGOrX/ZzKHRWMdq//UAd6pqURI23BUptzHs30B+t++9U/sSXE3mLQCzL4=
+	t=1744497028; cv=none; b=n2HTTT1wVnfvimmMHni7M1ooIyantzXygRA2pFXzsBVr09pvYDMBDmq8cmtGPA4bczyWPCPAYE9aFPooLdre/bHyrKBJT6Q086ysQGXAGdpY1T0vBqsYw1hLRJ3TWEkWvgkjVWmbbp9ousiYJ4T+xA6JZQNUxxO9lIIt4eb9AO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744496346; c=relaxed/simple;
-	bh=kuDzUPnqWpY0LD79GLgwgUxFC5auipRyUTvXSYUi+Ro=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QVC3auRTyM+j4EkRBGhFDQCKJg9dlGp7po+StH4ZzP+v3becnB+vxj5yOjBwizoul3Mu5i8zN1NLVlgocOZFtlzNhgKbPyfhN9rsWqMeXVG5o9kKEL9bM/y1EMeUvwWiZsbT6cQ8ZGKxRuHTy9EXhjR8EW8J7JnEC65EvJaZDQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XzIN2DJL; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744497028; c=relaxed/simple;
+	bh=fgM9g8YgFdwLq5azORwymy8IjXW2p4LaTGSja8GFWBk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=U4OwVYpyXKQVTBvo4ZnlCMM4WI2EhxcI7WOeGWGY+xSLX9Qx5u1nodb1GjRgI7Eez5NJ6gxUllVsToGDwoHGjpR9GvHLxJuGwibh9WnBcUXDKy+0uaLSiBhxXVaEQrZOonAeCjBMc29pfpX9LxDeiclb5VfEn+oPpi41Gf1/E+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MgRnyNbZ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XzIN2DJL"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CL33nO018067;
-	Sat, 12 Apr 2025 22:18:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=d0l23QETrR86BKTGbFZIBjSDN/xiASYRlseP/4Z2R
-	Xo=; b=XzIN2DJLe4OZ0qNNLRZct1hgIJO8l1XPeDUFmXm+3D+V2zkXcTuceguep
-	GUyE5WH1lrRA1y6muLuIKlQCtehzUTtHsXHXwgu3JPMINefEtvQy+SpHEcHnPGc1
-	w85iFJ32kgissl9xGRLkFQ0bkrDevm51Uz4GUeE8VDI3mDA2nlgOMT13LpsWc9MD
-	toViVae+fRHyE4YV8KbzLcRQV327m1qrPoxclAHUtPS/MuMjS+xTeSlbAuL0D933
-	M0RDE1fkf+sFM7zRDyZZJBJ2V3rON1dH70RT48HilNNAdudyosvVxB2JRywwnHWY
-	tyuyDJcpvp08vzwRJGddMvOUgbTRg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45yyrfgbv8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 12 Apr 2025 22:18:54 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53CJkYx5002378;
-	Sat, 12 Apr 2025 22:18:53 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ygs7bc18-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 12 Apr 2025 22:18:53 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53CMInWv35521206
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 22:18:49 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A8CA620065;
-	Sat, 12 Apr 2025 22:18:49 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 221BF20069;
-	Sat, 12 Apr 2025 22:18:49 +0000 (GMT)
-Received: from heavy.ibmuc.com (unknown [9.179.5.213])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 12 Apr 2025 22:18:49 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v2 0/2] ftrace: Expose call graph depth as unsigned int
-Date: Sun, 13 Apr 2025 00:10:42 +0200
-Message-ID: <20250412221847.17310-1-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MgRnyNbZ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D8C5740E0246;
+	Sat, 12 Apr 2025 22:30:15 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id lFCTngavlAfn; Sat, 12 Apr 2025 22:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744497011; bh=79WROknjgzL/p85Gq/nIuNnilYKiczPAyh8PISeeOnk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=MgRnyNbZaP73CeNWPdjmsI6bzHZj85bt418JwJSLVe4kyqeAK4yTQ+uG5XmHeMxwW
+	 UGg+/7INMZjvuH6FQMS4NbFYCgdppnud+soaJjN0EdPFBMxm52asidyTBseAC65VW8
+	 IDear1ebrdhv00FcUmbdUXvNSfIa8zbyOqn0OTLkmvVIzggni7AO8HZjTkFR9wcqxE
+	 ApIOs8L0MmezOCHcl4y3yBKyMiwWyD2BNuFTtHtz+scF5NdzH2eXd7GuTyEFbwIG57
+	 wXQviOk0GqUg6RZGMOM1lcuvkbA3LG56WizorNv4hSmdZM/E9hEDdK2FFRELVjKy1a
+	 cDMgjf9coaMNYDwBazh2KvPs9S3jKkEOMTe59JQdOLzOlDBfrzrOXownKRDgQljSwz
+	 uJSV7Vz55sd8zjyqlSpBLa/3r94rH/EdOxuTEDxP6gZR0WBOPxrPi21I44R/fh9ONZ
+	 nUDThDY67PF8VAQLKqjmJdslgr2zTwuuWloZJdJa1LXMWkQnqUTOnoqKqkNZIgG0Lg
+	 +9vEalBiY3EiYusx61ziY1lMtshS2XJftmD4VsDKvF0nDt1gtzY/7S/SUCq4vWoL2p
+	 a10+eU3zQOqJ2vantx7BGqx1BC15nRQtSU3NIUztydieegXMJ2gAd24neuWegtXaSY
+	 cOnITsUdo4Oq4yi+uy3ddkvs=
+Received: from [127.0.0.1] (ip-109-091-218-137.um37.pools.vodafone-ip.de [109.91.218.137])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4BB4F40E023A;
+	Sat, 12 Apr 2025 22:29:52 +0000 (UTC)
+Date: Sun, 13 Apr 2025 00:29:49 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ingo Molnar <mingo@kernel.org>, Mario Limonciello <superm1@kernel.org>
+CC: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_2/4=5D_i2c=3A_piix4=3A_Move_SB800=5F?=
+ =?US-ASCII?Q?PIIX4=5FFCH=5FPM=5FADDR_definition_to_amd=5Fnode=2Eh?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Z_rJ37er9Dc25ne-@gmail.com>
+References: <20250410200202.2974062-1-superm1@kernel.org> <20250410200202.2974062-3-superm1@kernel.org> <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local> <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org> <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local> <Z_rCuLD56IZ4hsNw@gmail.com> <5509f044-912b-4d10-bdeb-95ec52002b06@kernel.org> <Z_rJ37er9Dc25ne-@gmail.com>
+Message-ID: <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FM2qqSMySAtrzL5J-7TMtZvbtZAcDFsG
-X-Proofpoint-GUID: FM2qqSMySAtrzL5J-7TMtZvbtZAcDFsG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_10,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- adultscore=0 phishscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=973 spamscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504120170
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-v1: https://lore.kernel.org/lkml/20250411172207.61332-1-iii@linux.ibm.com/
-v1 -> v2: Use unsigned int instead of int.
-          Add a follow-up patch that changes depth to unsigned int in
-          all events.
+On April 12, 2025 10:15:27 PM GMT+02:00, Ingo Molnar <mingo@kernel=2Eorg> w=
+rote:
+>
+>* Mario Limonciello <superm1@kernel=2Eorg> wrote:
+>
+>> SB800 is pre-Zen stuff=2E  It's "before my time" - I guess that's the=
+=20
+>> precursor to FCH being in the SoC but has the same functionality=2E
+>>=20
+>> So I'm thinking <asm/amd_fch=2Eh>=2E
+>
+>I went by the SB800_PIIX4_FCH_PM_ADDR name, which is a misnomer these=20
+>days?
+>
+>But yeah, <asm/amd_fch=2Eh> sounds good to me too=2E Boris?
 
-Hi,
+I was aiming more for a header which contains non-CPU defines  - i=2Ee=2E,=
+ platform=2E But the FCH is only one part of that platform=2E But let's sta=
+rt with amd/fch=2Eh - "amd/" subpath element would allow us to trivially pu=
+t other headers there too - and see where it gets us=2E We can (and will) a=
+lways refactor later if needed=2E=2E=2E
 
-This series changes the type of depth in all call graph events to
-unsigned int.
+Thx=2E
 
-Patch 1 fixes a size mismatch issue in ftrace_graph_ent_entry, which
-causes trace-cmd on 64-bit big-endian systems to output a lot of bogus
-spaces, rendering it unusable.
-
-Patch 2 changes type of depth in all other events to unsigned int in
-order to better reflect its semantics: it can only be negative
-internally, but recorded values are always non-negative.
-
-Best regards,
-Ilya
-
-Ilya Leoshkevich (2):
-  ftrace: Fix type of ftrace_graph_ent_entry.depth
-  ftrace: Expose call graph depth as unsigned int
-
- kernel/trace/trace_entries.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
--- 
-2.49.0
-
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
