@@ -1,60 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B035B219A80;
-	Sat, 12 Apr 2025 19:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BC926AE4;
+	Sat, 12 Apr 2025 19:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744487103; cv=none; b=Bdqu65YO9qmV8uUKEn8uVSd/JZaftZLwHOiceDM26lGelipnN90P3nRCr6WB6uHzVF0yEMrMS5KS+aE/3y29uy118WTWdmdNgiumNtw+zxBEId1qsQG0vcObslBvViMLqau0QxgwiApmE6jEDJqme1VZoD4EmiFCVPgzL0rXNJc=
+	t=1744487293; cv=none; b=TPKz7KiIqNj9xPjuf0YiFL74MBe9vskl4rf3lTmVic41K9MEHU7mtTjFKhiXf6q9nxoqxRj7cZ9xSPMEGKJ9qqQa7MMPRTWKgZq7izfBEt4UNomSyWGOXOBQOAtOV+ycdxA3QCoKaLczwkfLqqlDmCdc/NUSBtx4cXwaaqUJl/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744487103; c=relaxed/simple;
-	bh=kzSNmSKS9hY5c47HY+wXva7VoPSYzrY/19XJ4KoEFKQ=;
+	s=arc-20240116; t=1744487293; c=relaxed/simple;
+	bh=tidewq6Pm9Tm8u2xZt8A3sCPNevnitgMH0YXOfmz+Rc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CGdOPyaUDfN/UbIUwoNWIoyiD3ovmi/e11Ax/HT5RRNBB64Xf973UkV1YLbTy/gMkEogtC2iUGy5KniuIVY2cg/MpuLp/kMoza8D00gi4DF2WmLdHNWq2tq74rxpk2QlXgC9eZyXSZ/8YMzw/3cvOfafq0N/zy4mmgW7fYx6X/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzuHVdrl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NzfEHI0HXdm0PMEMuZ67xX38lXnRy79d5q8/WnXwZrEdywc0+EL203pBkwt3yTpe5rrcmN3TadTuUZfSJsOEMTEZDUS3AFpnzVfdVhtVmtVW3lnGX2WhgGe/GkztxZx2hao4oK5tsFcw11njo7Pt8D0ryoH8ib/b5kRAo9frKEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1GpG0Zg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzuHVdrl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30A27C4CEE3;
-	Sat, 12 Apr 2025 19:44:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1GpG0Zg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C12FC4CEE3;
+	Sat, 12 Apr 2025 19:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744487103;
-	bh=kzSNmSKS9hY5c47HY+wXva7VoPSYzrY/19XJ4KoEFKQ=;
+	s=k20201202; t=1744487293;
+	bh=tidewq6Pm9Tm8u2xZt8A3sCPNevnitgMH0YXOfmz+Rc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lzuHVdrls0xTg+r1JSH990eoUnF3q16yRYwgF92HWtKRFIxN+JgbmbbZLpaEG+CR+
-	 hKXS/UXg0N0n+/xET/GvjuRfRJGCtBtqF96kSIXmgL9NnzPMWAHyC7x6txUoCmW3rd
-	 xngJDT/1hwBgzlDZAvHE+fy0x+rcimEsJQfm1OI45rw33uectul4cGEpQArE5zwjiz
-	 c9ATmj7VGZIeFWSyRSqlPFB4C4qTzj3be2Lh957o9jCjPrH3fVGEqWSiaAvPMzsSr0
-	 6+hgyydHtGemhDu6yVkDSbaJmQ9jIaFCdPjByigwodCfQU3GUpfHJiXk2TXYJWpCXB
-	 JiA9V2L/DMYWQ==
-Date: Sat, 12 Apr 2025 21:44:56 +0200
+	b=c1GpG0Zg9V+Y4P+40FpJSt176TFdO7YjmltC/KE8CeoAUUgQE7ZJG+83m2bAfHSX3
+	 hjxOYWh8TQ/vYlJkPEtW2iQfIm1Z+3TqQ2SZ4sLofGhVGCFyNYoLU5h4+8sNHc9GbU
+	 cNT8GanKEgaOz1wb5Bhbu3KT+H0i8Q6JWXQ7URE6RLUoSddcoGL94TlA32uYpFsqYE
+	 dBBSF6QlJ8dCk0b2c0OTCmsSKd+Pz+gLCcxl7G9ILiN6KgVcMMqSf9CVig+4OlkZ9u
+	 0MYKTWPRCjXq7Sss5628hIqC3GoxbhguC2ApdLKi5TBd3CHdjtdRuYzUF5Zy0ZhdpH
+	 IiPBU4Pl/zWUQ==
+Date: Sat, 12 Apr 2025 21:48:06 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, Arnd Bergmann <arnd@kernel.org>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
- definition to amd_node.h
-Message-ID: <Z_rCuLD56IZ4hsNw@gmail.com>
-References: <20250410200202.2974062-1-superm1@kernel.org>
- <20250410200202.2974062-3-superm1@kernel.org>
- <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
- <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
- <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Davide Ciminaghi <ciminaghi@gnudd.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH 05/11] x86: remove HIGHMEM64G support
+Message-ID: <Z_rDdnlSs0rts3b9@gmail.com>
+References: <20241204103042.1904639-1-arnd@kernel.org>
+ <20241204103042.1904639-6-arnd@kernel.org>
+ <08b63835-121d-4adc-8f03-e68f0b0cabdf@intel.com>
+ <Z_o7B_vDPRL03iSN@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,40 +55,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
+In-Reply-To: <Z_o7B_vDPRL03iSN@kernel.org>
 
 
-* Borislav Petkov <bp@alien8.de> wrote:
+* Mike Rapoport <rppt@kernel.org> wrote:
 
-> On Fri, Apr 11, 2025 at 07:09:56AM -0500, Mario Limonciello wrote:
-> > I was aiming for a header that we would conceivably use in all these places
-> > anyway.
+> On Fri, Apr 11, 2025 at 04:44:13PM -0700, Dave Hansen wrote:
+> > Has anyone run into any problems on 6.15-rc1 with this stuff?
 > > 
-> > Can you suggest a more fitting existing header?  A new one felt too heavy
-> > for a single register define.
+> > 0xf75fe000 is the mem_map[] entry for the first page >4GB. It obviously
+> > wasn't allocated, thus the oops. Looks like the memblock for the >4GB
+> > memory didn't get removed although the pgdats seem correct.
 > 
-> No, the logic is: put it in the *right* header. Not in the "whatever-works"
-> header.
-
-Yeah, it's the Linux kernel equivalent of: 'if you touch it, you own it',
-a.k.a. 'no good deed goes unpunished'. ;-)
-
-> So you can easily add a
+> That's apparently because of 6faea3422e3b ("arch, mm: streamline HIGHMEM
+> freeing"). 
+> Freeing of high memory was clamped to the end of ZONE_HIGHMEM which is 4G
+> and after 6faea3422e3b there's no more clamping, so memblock_free_all()
+> tries to free memory >4G as well.
+>  
+> > I'll dig into it some more. Just wanted to make sure there wasn't a fix
+> > out there already.
 > 
-> arch/x86/include/asm/platform.h
+> This should fix it.
 > 
-> header which contains exactly platform stuff. And FCH sounds like a platform
-> thing to me. Or at least southbridge or whatever that thing is called now. It
-> certainly ain't part of the CPU so platform should be more fitting.
-> 
-> Unless someone has a better idea...
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 57120f0749cc..4b24c0ccade4 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -1300,6 +1300,8 @@ void __init e820__memblock_setup(void)
+>  		memblock_add(entry->addr, entry->size);
+>  	}
+>  
+> +	memblock_remove(PFN_PHYS(max_pfn), -1);
+> +
+>  	/* Throw away partial pages: */
+>  	memblock_trim_memory(PAGE_SIZE);
 
-Yeah, so I think we can create a brand new <asm/amd_sb.h> header or so, 
-because it's an AMD SB800 southbridge chipset register? We already have 
-<asm/amd_nb.h>.
-
-'platform' might be a bit too generic and fungible I think: often the 
-northbridge and the CPU is considered part of a 'platform' too.
+Mind sending a full patch with changelog, SOB, Ard's Tested-by, Dave's 
+Reported-by, etc.?
 
 Thanks,
 
