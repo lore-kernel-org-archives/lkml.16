@@ -1,115 +1,109 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F8B188713
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 17:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257E6BFCE;
+	Sat, 12 Apr 2025 17:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744479379; cv=none; b=WnQClEBTmoYLVWug/+t8+aG6vNH6BE9jeoLzMpIye5Uf1fhIuIrOg/s4bQtFxm0tGBsovt2vmfDpWHaUgud8gLnKW8w6Z+x/ghhXtlXjH+1tZGr5106EZDiPaxxUwzGjQPymbolHsy9UXSPTsSeHYb9UEPHrMFeskFjsbLJCJgs=
+	t=1744479882; cv=none; b=eKwgTOBamTPfay7Mm59JDPg0XWn2tJ/ph3VWbJqbLIuyjJsDfmA2EE97JnCavm4hij3HYQ90MjnHDllFRVnwsjuRopaQdsAHfFuQZRnrDK0LJok4PHusvKYV1/wvIqvK8dWoyvAnd8tA5tB72dnljrJn2/0zRSNbgRdrwgIJeoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744479379; c=relaxed/simple;
-	bh=VdpEtQHS4RANXbcAki1/hEz3qxnYZZMo5L/fS3da740=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f/jqKjxaoPdZmxWgeKiX8my3lV/FG3Bknqj3Qxegb19OeaMeg7LIKic5W8EJaPZeRM0K928i5YbD8mjiNE9WtIUiiX1aiAhGp6c9FgrNQcTrylTxzEguLeQGBcxKjxQfcn9JLSedRjddfizbYDMU/jbk48SQre1shtz4k9uuit4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HWaPvp3u; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744479882; c=relaxed/simple;
+	bh=+97YbZag3EjvYCU3VxRZgKfybyukADSNBGMn9Y/e/68=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YTJvBeKnj1TV9CUoKyLivthR7oQ/wjZiVA29wUEZIO5dfBNZb3Ey0idY2JXAMdkAVZ+tNlX+Yizgo4VMncKN9v12CU2Hp+R697Ro7hf5tseI4oGlD25oDQv5LDWZRU6HRrdOFtRN0p+naFbMzUeiI7d333rM8W1v0nnPzhyP6fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhEevoeY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HWaPvp3u"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so1712948f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 10:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744479376; x=1745084176; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X7dkdux/S+32xfZZQlqaPzDOWY9Jh7gDAqzffHnwOYA=;
-        b=HWaPvp3usLsy4E2er44BtZihCnG8It1Bcfh13iyIVdShwbwj0rhra8yF3ZfXqYd+eG
-         tUHF9np9HUzA1FZoji0JsgdVmVqn5H+UiUz0liraoly9TQ40FNSKArLzK3ermZnJuu5f
-         MGCACA5wGQmzWWOxCUb+JI6wUHn6dxBRl5VPHqDmfeztwPV2k6XtMjT/1Y8ZlyQDmSFn
-         ByCCvlcfO8OBfZWGWYng+jHPJLpCJpXNTe2/ZSGbuuMFi4RV4dBBPSmwEdKKREH1/U4T
-         PpFNyWhZlMgAUmuxXTxnfW2ExvQXiaRf03qvebUfAwI+XsBz5j36paN4Y+BkFxIpb1WJ
-         +0rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744479376; x=1745084176;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X7dkdux/S+32xfZZQlqaPzDOWY9Jh7gDAqzffHnwOYA=;
-        b=D2CcjHE26Job/CAsXlfZKZpHgCejXZ6kCyZV35CTf6EWUfStE+Gc+x+sFQjGOU9xzZ
-         66KJKqhRhyYGPJuKw9uLJg+s6DfCtfHxfWZJlab37UTmXDLg1jGB1H7DJgfaOy51nCkB
-         U2+7SSzTGNWqqLhZLBJ/UfyuMz0D7fcH32DiWXVcWZaEZQ+I3mSLFRnjL9RNyzm1ajb7
-         ziC4MxXZ/kXA6KccSlhiKmpK6q5MxoEywiy7P4JJDWD1YZwNwKN634JstReJWgnH0iAh
-         ZTcHdhGiSHm6m50eNA5Bv4gHe39KcLtkoOVapRFPinnHy4rCFn5NdqYl2XbDsdk/lTrt
-         3DFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqvLT14dqZ7nnl8w9F6+nZRnlIzt04ZF6IuxBltLOWrf1wpjW0TXmwpdxYTZeuVcGmece/r2zj2njSF00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaXgyBwsAURBO5nMa8UAeXOoZnHbJWmxbUoZsZ2zr8OaLey6Mb
-	zTVW48+nSP8ab2txx7iXswMo5jQWPBItXNRJNcq42Oo1oXANJ718uQQyvLeDtJ8=
-X-Gm-Gg: ASbGncve2QozI+zZZSBf8sGk1bO6Cs/vhox9EucLnEOYH1niLlw3ZfOJwboXCa64Wrw
-	ckgTMFs+WwSoDUkyATYdY301wwcpIlU9ecd7zNcQLSEDb6iTt+1cQGPL9fni5/N5i6JEZ6rMb07
-	jOdk1AtGFnvWw9Gywnor//iowtyFGVgKKz2XzCwWT2s7DxtIn+DBhCh8nf5VvdMQNt1PNazDuCv
-	ebYUrlUglJbl5bvyOakKs9Dd5YHXgAYgNJetsTad86OpRn8J0l7GsD8dy5ROylCm+ZOjZHWaGvS
-	D4UdqTeWHyi+wktBt2BMd6CZ1O8coDFl2L6HOPY+cpj8ZA==
-X-Google-Smtp-Source: AGHT+IFUwejHUevcPeJvr4IraPW9g0C7hsZdWHMbJKLSZE5OrOow4mt8Oerm5HFlqnfXpeaKs6Touw==
-X-Received: by 2002:a05:6000:248a:b0:391:22e2:cd21 with SMTP id ffacd0b85a97d-39eaaebc6femr5723855f8f.36.1744479376207;
-        Sat, 12 Apr 2025 10:36:16 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eaf445515sm5508587f8f.89.2025.04.12.10.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 10:36:15 -0700 (PDT)
-Date: Sat, 12 Apr 2025 20:36:09 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Erick Karanja <karanja99erick@gmail.com>
-Cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
-	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] staging: rtl8723bs: Initialize variables at
- declaration in odm_HWConfig.c
-Message-ID: <04e0e0c1-5d21-4910-8063-c1ef67bc1eac@stanley.mountain>
-References: <cover.1744285781.git.karanja99erick@gmail.com>
- <f8fd7b9ec1a1fc1a65be5e7735b37c42032e9715.1744285781.git.karanja99erick@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhEevoeY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B372C4CEE3;
+	Sat, 12 Apr 2025 17:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744479880;
+	bh=+97YbZag3EjvYCU3VxRZgKfybyukADSNBGMn9Y/e/68=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MhEevoeYQDUmweha7t8vIzMbxTlsGaztIEh+dOf4bLghh6+AkRqDOd9rA4FE3Qj6R
+	 lHk+mwd41FgCgdEgxskxnNc0yDoAx484VfJUwH0FUYJBMxTrC/hO5Hoq8fcr7ihPMN
+	 VVVEBeBPbvC6riE55QTsKM2hL2K+7KneG1eyNIfWmIepSGJ8hM0FhR4HOVzvSL0x3U
+	 zqLwG/0ct0LPTL4zID2dISJHncfyCo4NcEodVHywuALbPqQuUJsrQyK7GgeDJwXSGp
+	 MXK+JiXbuRXDm/H6HJr7PkQm4QY1TTpGa29k3UlXotFu5rdkWHgbkJqj8JD2t9jXKr
+	 UJ8XQMLN4Q/Dg==
+Date: Sat, 12 Apr 2025 18:44:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Kim Seer Paller <kimseer.paller@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, David
+ Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <noname.nuno@gmail.com>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+Message-ID: <20250412184433.58f0a9d5@jic23-huawei>
+In-Reply-To: <20250412-togreg-v4-3-cb9e5309b99d@analog.com>
+References: <20250412-togreg-v4-0-cb9e5309b99d@analog.com>
+	<20250412-togreg-v4-3-cb9e5309b99d@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8fd7b9ec1a1fc1a65be5e7735b37c42032e9715.1744285781.git.karanja99erick@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 04:06:07PM +0300, Erick Karanja wrote:
-> Make the code more concise and readable by integrating the initialization
-> directly into the variable declaration in cases where the initialization
-> is simple and doesn't depend on other variables or complex expressions.
-> 
-> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/hal/odm_HWConfig.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/odm_HWConfig.c b/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
-> index 994b8c578e7a..85cda5c3a5b5 100644
-> --- a/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
-> +++ b/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
-> @@ -52,9 +52,8 @@ static u8 odm_evm_db_to_percentage(s8 value)
->  	/*  */
->  	/*  -33dB~0dB to 0%~99% */
->  	/*  */
-> -	s8 ret_val;
-> +	s8 ret_val = value;
->  
-> -	ret_val = value;
->  	ret_val /= 2;
+On Sat, 12 Apr 2025 13:57:32 +0800
+Kim Seer Paller <kimseer.paller@analog.com> wrote:
 
-Better to write this one as:
+> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls, providing full-scale output spans of 2.5V or
+> 5V for reference voltages of 2.5V. These devices operate from a single
+> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disabl=
+ed
+> by default.
+>=20
+> Support for monitoring internal die temperature, output voltages, and
+> current of a selected channel via the MUXOUT pin using an external ADC
+> is currently not implemented.
+>=20
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+Hi,
 
-	s8 ret_val = value / 2;
+One really small comment from me.  Otherwise this just needs
+to sit on list for a little while to give other reviewers time.
+If nothing else comes up I may just tweak the thing below (or leave
+it alone!)
 
-regards,
-dan carpenter
+Thanks,
 
->  
->  	if (ret_val >= 0)
-> -- 
-> 2.43.0
-> 
+Jonathan
+
+> diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..ffa04f678b86d8da6f5e47c35=
+c265b6648121843
+> --- /dev/null
+> +++ b/drivers/iio/dac/ad3530r.c
+> @@ -0,0 +1,506 @@
+
+...
+
+> +static int ad3530r_probe(struct spi_device *spi)
+> +{
+
+...
+
+> +	vref =3D devm_regulator_get_enable_read_voltage(dev, "ref");
+> +	if (vref < 0 && vref !=3D -ENODEV)
+> +		return vref;
+> +
+> +	has_external_vref =3D vref !=3D -ENODEV;
+> +
+> +	if (!st->chip_info->internal_ref_support && !has_external_vref)
+> +		return vref;
+If doing a v5 I'd go with
+		return -ENODEV;
+rather than having people scratch their heads to figure out what is in vref.
+
+> +
