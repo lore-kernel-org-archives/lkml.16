@@ -1,96 +1,217 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518271E480;
-	Sat, 12 Apr 2025 12:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F3E18A6A6;
+	Sat, 12 Apr 2025 12:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744462575; cv=none; b=sGY8DxVfGYYPGV8dKhr8nkAGPXAWDVDJVZFm2zoQesfVXjIRiGsE2Hzq5pJTgZ209yaCgl1c4BLD/hOmH2k2Ugpn5wb722R8P10Q5yEB+t1Toy7V1oHmTUONxXD3a0XmkQBMH+3FIRPHgiVrYaWWhTealSh3afTlXDsBLOrRP68=
+	t=1744462589; cv=none; b=hXM5InyaTB/555i+zsJuYc192ukwtszxKBIDDVLtyXBqOvK64IEizjjwCGgXGJwkDceJz+U3JHYFCPUdAKSxCaMDyisbRSshqgw/hq9+z9OJFvXDhyvldAjMtL2Lm+QMN0olBxLGri9UTdriH63W+wbuiYDdvYOLtk6pRTAFrXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744462575; c=relaxed/simple;
-	bh=e6ALmVXs3dRCfZTxJlIzbzoJqYppBA9zA8EGod9SB0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y6bI4q8+3M/5Ng6YNylPizxmvS4keUydCzuzPhlVjPzA0/E2xB8BXUEsUyZxa80wthf1MlygZLf0ZOwYR+oDFtde75YVZ71931P0uaMROYcEbQprG6YBvwDEKdPImu2jG2PxNTnIBf28Vm6ep8QWNeval6+kcxfdVGZuh+p8GeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2Myt1k5; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744462589; c=relaxed/simple;
+	bh=SHnwNWu7xt8fZuwaZKfVYCSk1BP9AwdiVTAa2k1Ud58=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZC4pyhXSY8YBrNLKxVAnwjoTXT07cwxWLEI84baIxZAUFVu3APCrqwOyT+zu2DrcnbrvjpNaVAEFOGXVHHbGR3O/UGonHReHBwuP1efmiKvemJv/vRlrhmShr76fTj3qZXnkT/HTx2IXseVzhPVOn2adqhkTdQuS3Sd3N9S5PJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7S/0h80; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2Myt1k5"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso6938691a12.0;
-        Sat, 12 Apr 2025 05:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744462572; x=1745067372; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e6ALmVXs3dRCfZTxJlIzbzoJqYppBA9zA8EGod9SB0Y=;
-        b=N2Myt1k54ijhni9JmPbXitpA/RKgVsOmInydH4Q35S+l2+6wNfY0aQT90BxrZnNDDQ
-         0QdMUBcOvfiytip0IT62JiY+o2+d5Hi8xs2oFGLjVL0eas44XnC1oDN4Sng4v+K/S52z
-         MLx9Gobo6IFBxaiLjZ9beyQKYZET6FJTfk1h9H/XNLE+Qp4Wg79Vb6O5VbFfQZzyYiMl
-         5OK332+P0GFNNElmrmsbkkTESvNQaKA0nFedPNYcPugrl+rAFTNehIJl8S5DKN20/Ta7
-         Dk9S8uDGndKnSroimnZlJ/6XKeXfSSt1yxsLhxGgzYeM1ZumL7mut9G1YaUNwEjajK/C
-         LzYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744462572; x=1745067372;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e6ALmVXs3dRCfZTxJlIzbzoJqYppBA9zA8EGod9SB0Y=;
-        b=CTcA9eE+9ROFKazKIRm8Ehv2Y922q7Iq94Q27gZaqzcev1JZcuzY8mS8DmQYU+wFd2
-         BHEEIiwFmVenJNCJdQFCAWuFazgnS9bOnxL18w8d8x0STanzKq6nHl6JDQY26Jah00Ex
-         pDyvWeFbecIVjl/vmzrJnhQyTQNMJg7gatyRdfQs7u8Kg/WjqjjXADFl1XzKKtDjpERg
-         r2wewDfehYGTVnzl2az0LLxyHC/sZmId/uUIEhBXjkh4Jw9YhvLuAN5/NaAxDuCKQQwG
-         2ExiBYQJ7JcUx6k8SP1Q/Otpxc1W3Bm1K/zqJbYR3jTWPvqFzPItn8hcGF3UUD3Q8vRZ
-         m0IA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAJ/KYDl2OlmWOFNpa5D9I4oPQmWpyeEGEuGbMPCrJChBEOaraYYyHJTNl/OlaGbT3LVwBTkpuR4I=@vger.kernel.org, AJvYcCWekUBYq3iAp+wSzoE+S61XljD0ZUdorpMzIiDM/6aGukrpt42cYNgP6GY8L3Nbi9midqTCbBZQ7rzMX/iX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIeNIg08RYvgcmBeXgJaRxdjpY4nt9O1fxUEQJMePdUQ2vNtr0
-	YVDQapD4i+5nGREvDGZxenzM8pIYSCCGNNsg+aNS8Kxteow13LxbXKEDTxFgNNNC//nnrG/XQUP
-	dBNERTb89LWZ0ZQGq4cXoySZqUGY=
-X-Gm-Gg: ASbGncvcTXCKr2iFOLJJe+xyYEIUXwyAkbC8roPaPh7WqzI1HpEpRfsbAGmgpCbIBeM
-	AcRzARbPJamFkeMAPaRzD/XE/rysK78bjS/r390Lc00C+ZorCR3rZ84V1xSwl/NLH5zggdAJUPb
-	ZlKlq+oI7PErXRNRAupUiZlQ==
-X-Google-Smtp-Source: AGHT+IFMV3c/itAhZMzgVcBzOSMPT/Nx2JEUkLQ0az6enKAPX6J5POv79lL3g6YHPYu4rFFIUoJtFa1vTLscwjb9pBc=
-X-Received: by 2002:a17:907:9281:b0:ac1:791c:153a with SMTP id
- a640c23a62f3a-acad193e9d3mr499437166b.27.1744462572253; Sat, 12 Apr 2025
- 05:56:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7S/0h80"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E6A66C4CEE3;
+	Sat, 12 Apr 2025 12:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744462588;
+	bh=SHnwNWu7xt8fZuwaZKfVYCSk1BP9AwdiVTAa2k1Ud58=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=R7S/0h80VKGMnhyRPw1Ey4P1fHvAbJhh7FEUlbHfLkwh0FHqI7il55aM3KPClXWz+
+	 g0bH3kHuSkORqJGHZMkiw4JOI2wt4JwgYtLL/KP5TBM+alClgpEeC0Xx4jtrpSGHx0
+	 W1aXb3YSgLcaDYkO/c00o5746pmtnlHveCgCi8aPQbSMAnGZFGFPXR+NrT4zBN911h
+	 fLYlXDBItpwYJCuZ5vGwoYTPzTwpSH4HvFBK6Ui2ApX7Q0L80kQwn62ac0NJMNWQ8n
+	 s9c9VmQe2u/esUDT7kssFc3DaZ/d4bqu66mlJoob6Ti66DtlO+G+FGkn7J1EkhEm87
+	 c10Fsf/iIiAIw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB20C369A1;
+	Sat, 12 Apr 2025 12:56:28 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Date: Sat, 12 Apr 2025 14:56:20 +0200
+Subject: [PATCH v2] dt-bindings: timer: Convert fsl,gtm to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-iio-sentinel-normalization-v1-1-d293de3e3d93@baylibre.com>
-In-Reply-To: <20250411-iio-sentinel-normalization-v1-1-d293de3e3d93@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 12 Apr 2025 15:55:35 +0300
-X-Gm-Features: ATxdqUF3o76DXfTWlQBqRAnEllXdv-mSiXdscMBSIoE5Jyr5rlKb-JPEcZ2kvSc
-Message-ID: <CAHp75VcdpPC2faWNMupXL-RaEM3QsSYEyfSC+A7KEsmD24U=+Q@mail.gmail.com>
-Subject: Re: [PATCH] iio: normalize array sentinel style
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250412-gtm-yaml-v2-1-e4d2292ffefc@posteo.net>
+X-B4-Tracking: v=1; b=H4sIAPNi+mcC/0XMQQrDIBCF4auEWXeKGiXYVe8RsjB1mghNDCrSE
+ Lx7bSh0+T8e3wGRgqMIt+aAQNlF59ca4tLAYzbrROhsbRBMKCY4wyktuJvlhaPkRstOWTa2UO9
+ boKd7n1Q/1J5dTD7sp5z5d/0hQv2RzJGjJWVNJ7SWLbtvPiby15USDKWUD0ThHumhAAAA
+X-Change-ID: 20250210-gtm-yaml-b41a9475d0b3
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744462587; l=4462;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=9whPopX6S651IhYCNC5/C4r5vNx8pM5oAbuAUI21Hkk=;
+ b=RekIsWZBByF0qTa57/6Jump/9caAL+Qr6JFsGCnxao65Vijt3l3H+yW7HThnUe8W0rWzlQ3Ub
+ mYZxuxI9qp8DGEiGZMz8XcbJlIFzAocgFhcZFsjDZFM1Qa19pNASMBM
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-On Fri, Apr 11, 2025 at 11:50=E2=80=AFPM David Lechner <dlechner@baylibre.c=
-om> wrote:
->
-> Use `\t(\{ ?\},|\{\}|\{\s*/\*.*\*/\s*\},?)$` regex to find and replace
-> the array sentinel in all IIO drivers to the same style.
->
-> For some time, we've been trying to consistently use `{ }` (no trailing
-> comma, no comment, one space between braces) for array sentinels in the
-> IIO subsystem. Still nearly 50% of existing code uses a different style.
-> To save reviewers from having to request this trivial change as
-> frequently, let's normalize the style in all existing IIO drivers.
-> At least when code is copy/pasted to new drivers, the style will be
-> consistent.
+From: "J. Neuschäfer" <j.ne@posteo.net>
 
-With or without iiner space, but same style. What is important is that
-you removed the trailing commas.
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Convert fsl,gtm.txt to YAML so that device trees using a Freescale
+General-purpose Timers Module can be properly validated.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+---
+Changes in v2:
+- Add Rob Herring's review tag
+- Rebase on v6.15-rc1
+- Link to v1: https://lore.kernel.org/r/20250225-gtm-yaml-v1-1-de5da7299430@posteo.net
+---
+ .../devicetree/bindings/timer/fsl,gtm.txt          | 30 --------
+ .../devicetree/bindings/timer/fsl,gtm.yaml         | 83 ++++++++++++++++++++++
+ 2 files changed, 83 insertions(+), 30 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.txt b/Documentation/devicetree/bindings/timer/fsl,gtm.txt
+deleted file mode 100644
+index fc1c571f74123d2293bf5c3af3197000d46a07ee..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/timer/fsl,gtm.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-* Freescale General-purpose Timers Module
+-
+-Required properties:
+-  - compatible : should be
+-    "fsl,<chip>-gtm", "fsl,gtm" for SOC GTMs
+-    "fsl,<chip>-qe-gtm", "fsl,qe-gtm", "fsl,gtm" for QE GTMs
+-    "fsl,<chip>-cpm2-gtm", "fsl,cpm2-gtm", "fsl,gtm" for CPM2 GTMs
+-  - reg : should contain gtm registers location and length (0x40).
+-  - interrupts : should contain four interrupts.
+-  - clock-frequency : specifies the frequency driving the timer.
+-
+-Example:
+-
+-timer@500 {
+-	compatible = "fsl,mpc8360-gtm", "fsl,gtm";
+-	reg = <0x500 0x40>;
+-	interrupts = <90 8 78 8 84 8 72 8>;
+-	interrupt-parent = <&ipic>;
+-	/* filled by u-boot */
+-	clock-frequency = <0>;
+-};
+-
+-timer@440 {
+-	compatible = "fsl,mpc8360-qe-gtm", "fsl,qe-gtm", "fsl,gtm";
+-	reg = <0x440 0x40>;
+-	interrupts = <12 13 14 15>;
+-	interrupt-parent = <&qeic>;
+-	/* filled by u-boot */
+-	clock-frequency = <0>;
+-};
+diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.yaml b/Documentation/devicetree/bindings/timer/fsl,gtm.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..1f35f1ee0be2a947ad241f4ba0be391e7e0d0882
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/fsl,gtm.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/fsl,gtm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale General-purpose Timers Module
++
++maintainers:
++  - J. Neuschäfer <j.ne@posteo.net>
++
++properties:
++  compatible:
++    oneOf:
++      # for SoC GTMs
++      - items:
++          - enum:
++              - fsl,mpc8308-gtm
++              - fsl,mpc8313-gtm
++              - fsl,mpc8315-gtm
++              - fsl,mpc8360-gtm
++          - const: fsl,gtm
++
++      # for QE GTMs
++      - items:
++          - enum:
++              - fsl,mpc8360-qe-gtm
++              - fsl,mpc8569-qe-gtm
++          - const: fsl,qe-gtm
++          - const: fsl,gtm
++
++      # for CPM2 GTMs (no known examples)
++      - items:
++          # - enum:
++          #     - fsl,<chip>-cpm2-gtm
++          - const: fsl,cpm2-gtm
++          - const: fsl,gtm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: Interrupt for timer 1 (e.g. GTM1 or GTM5)
++      - description: Interrupt for timer 2 (e.g. GTM2 or GTM6)
++      - description: Interrupt for timer 3 (e.g. GTM3 or GTM7)
++      - description: Interrupt for timer 4 (e.g. GTM4 or GTM8)
++
++  clock-frequency: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-frequency
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    timer@500 {
++        compatible = "fsl,mpc8360-gtm", "fsl,gtm";
++        reg = <0x500 0x40>;
++        interrupts = <90 IRQ_TYPE_LEVEL_LOW>,
++                     <78 IRQ_TYPE_LEVEL_LOW>,
++                     <84 IRQ_TYPE_LEVEL_LOW>,
++                     <72 IRQ_TYPE_LEVEL_LOW>;
++        /* filled by u-boot */
++        clock-frequency = <0>;
++    };
++
++  - |
++    timer@440 {
++        compatible = "fsl,mpc8360-qe-gtm", "fsl,qe-gtm", "fsl,gtm";
++        reg = <0x440 0x40>;
++        interrupts = <12>, <13>, <14>, <15>;
++        /* filled by u-boot */
++        clock-frequency = <0>;
++    };
++
++...
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250210-gtm-yaml-b41a9475d0b3
+
+Best regards,
+-- 
+J. Neuschäfer <j.ne@posteo.net>
+
+
