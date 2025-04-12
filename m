@@ -1,89 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA55333F6
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 07:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B237F189F3F;
+	Sat, 12 Apr 2025 07:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744442927; cv=none; b=DbbzXJoYFfLSr11jaOte3lGLo5it87LH3ZAkbu1rX8kWqrU5XaA7MeT4VQCBVymBDuQeJx2yE0HAwLH/j2FmkSid2CAKpKs4iGpQmPqmunBcsSrMSgddtYtWy3g6l/dITQk7bAm0mMfN6dFD1Qvaepy6V+nCL+sN1TumpUKP7kE=
+	t=1744443534; cv=none; b=Dq3s0ZOxdFqAnlY9wL1TfbXO5cTDIroXZLAWY7VtduarV3r9r2UHyoV8wfLzNBUK4K1H4cwPjvgRu69keXdReW3VUh1Eg1CQ2WEJD8ughFXkLKU8txnF/l/TSCb2ZMfWPxcGF3fyX6o82H6HUUjBR/sW+4oNDCiLSE7iNzC3gHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744442927; c=relaxed/simple;
-	bh=SPqo/maVqrv3EOqPrlfjZlnRQMzbkmVrEpK1AqiJJqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Bwg3EQpuIJxq3nayQFGo8qZe/C3qkr1qPAsD5LFxrPbJ0hNdCKjfLY/SEzDzMzBdxU+kYkq6BDE2a/cWQ3X8b5/QSG3VtQJIh/KO4zLUq6hnX+WB18Hwums2IgKAZc87J9GmWHG+dNu45fuRqXhQGjpdTDEYnxSFSC1VeaOHzGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdYIm31P; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdYIm31P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744442925; x=1775978925;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=SPqo/maVqrv3EOqPrlfjZlnRQMzbkmVrEpK1AqiJJqg=;
-  b=FdYIm31Px1IaftIYZXvEoxOlejWH0KgTT/t3hDMGIuSbA3KndAiqfFMa
-   F9o48yPtVHBOW3GOsVVvp6fg5/d3ug6p5g8EzynZHRnvz0h28F0ExBdV7
-   +0p2mODbPp6D5g6MKc8fd16JUQug4BUHuDQSpBNGdLex6alBpCo5BXU+k
-   n/N5NAWCKuXHfbpbqvnbISmolhYT0zTeRH1OIenu2ZQub3BHGQTzMwaKd
-   SRgvYccoG6swk+Vo8jIScR0SfdKwl+8gtnIa3HSbDgny3vq0NTvvB9VLu
-   VbIjTnpxWZHzndTeHbfAzAILNZooxJizy1ymBJQW9hubIHLluJWf9xE8W
-   w==;
-X-CSE-ConnectionGUID: sQDJfhlsSh2Ol1gLGPJbjg==
-X-CSE-MsgGUID: bHjRZIrWTaGM/ZijaXGQlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="46119897"
-X-IronPort-AV: E=Sophos;i="6.15,207,1739865600"; 
-   d="scan'208";a="46119897"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2025 00:28:44 -0700
-X-CSE-ConnectionGUID: EKB1H0y1Q0u0VFfyTiux7Q==
-X-CSE-MsgGUID: 4xqNpjx8Rqaly0ZdrcQgTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,207,1739865600"; 
-   d="scan'208";a="129944063"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 12 Apr 2025 00:28:43 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u3VI9-000Bdo-0J;
-	Sat, 12 Apr 2025 07:28:41 +0000
-Date: Sat, 12 Apr 2025 15:28:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shanker Donthineni <sdonthineni@nvidia.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>, Vikram Sethi <vsethi@nvidia.com>
-Subject: kismet: WARNING: unmet direct dependencies detected for
- HAVE_ARM_SMCCC_DISCOVERY when selected by ARM_GIC_V3
-Message-ID: <202504121542.POjGXRh2-lkp@intel.com>
+	s=arc-20240116; t=1744443534; c=relaxed/simple;
+	bh=9pBDPuJef6LzInqFdJRfx1sNwkWKEaOr7fq9l/fN9JM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tf5JYfemWTYx5VwxfryYuP1cg1ZR75LR+vSKfiaNfdqqHWjR7jiID3pRPSwZDzvOWy88JuMV6Jx5P1rPehFwjGtHYGYR83M3ym/3YvPgWfuUjL5uqt3aYmrZPWvzWZOBAk0lPDKvB2C2TSghp/8XTfp/3ZHwdjv7zpRRDmAOxv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZZQQZ0N27z4f3jtK;
+	Sat, 12 Apr 2025 15:38:30 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3448D1A0AD9;
+	Sat, 12 Apr 2025 15:38:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2CFGPpnI5n6JA--.63008S5;
+	Sat, 12 Apr 2025 15:38:48 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	xni@redhat.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 1/4] block: export part_in_flight()
+Date: Sat, 12 Apr 2025 15:31:59 +0800
+Message-Id: <20250412073202.3085138-2-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnC2CFGPpnI5n6JA--.63008S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4xKw4kWw43ur48ur4Uurg_yoW8AFy7pF
+	1DGas0yFWqgryruFy7tw4xZ3WrXa1jkw1fA343AryF9FZFqrsavF92kr4ayrWSvrZ7ZFWU
+	ua43JFZ7Cr1jy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmj14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7VUbn2-7UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3bde70a2c82712f05c7220b8b94fc2cbdf7fbfe0
-commit: 35727af2b15d98a2dd2811d631d3a3886111312e irqchip/gicv3: Workaround for NVIDIA erratum T241-FABRIC-4
-date:   2 years ago
-config: arm-kismet-CONFIG_HAVE_ARM_SMCCC_DISCOVERY-CONFIG_ARM_GIC_V3-0-0 (https://download.01.org/0day-ci/archive/20250412/202504121542.POjGXRh2-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250412/202504121542.POjGXRh2-lkp@intel.com/reproduce)
+From: Yu Kuai <yukuai3@huawei.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504121542.POjGXRh2-lkp@intel.com/
+This helper will be used in mdraid in later patches, check if there
+are normal IO inflight while generating background sync IO, to fix a
+problem in mdraid that foreground IO can be starved by background sync
+IO.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for HAVE_ARM_SMCCC_DISCOVERY when selected by ARM_GIC_V3
-   WARNING: unmet direct dependencies detected for HAVE_ARM_SMCCC_DISCOVERY
-     Depends on [n]: ARM_PSCI_FW [=n]
-     Selected by [y]:
-     - ARM_GIC_V3 [=y]
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ block/blk.h               | 1 -
+ block/genhd.c             | 1 +
+ include/linux/part_stat.h | 1 +
+ 3 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/block/blk.h b/block/blk.h
+index 006e3be433d2..f476f233f195 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -418,7 +418,6 @@ void blk_apply_bdi_limits(struct backing_dev_info *bdi,
+ int blk_dev_init(void);
+ 
+ void update_io_ticks(struct block_device *part, unsigned long now, bool end);
+-unsigned int part_in_flight(struct block_device *part);
+ 
+ static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+ {
+diff --git a/block/genhd.c b/block/genhd.c
+index c2bd86cd09de..5b408d9b5a9d 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -139,6 +139,7 @@ unsigned int part_in_flight(struct block_device *part)
+ 
+ 	return inflight;
+ }
++EXPORT_SYMBOL_GPL(part_in_flight);
+ 
+ static void part_in_flight_rw(struct block_device *part,
+ 		unsigned int inflight[2])
+diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
+index c5e9cac0575e..79ed730a8d50 100644
+--- a/include/linux/part_stat.h
++++ b/include/linux/part_stat.h
+@@ -79,4 +79,5 @@ static inline void part_stat_set_all(struct block_device *part, int value)
+ #define part_stat_local_read_cpu(part, field, cpu)			\
+ 	local_read(&(part_stat_get_cpu(part, field, cpu)))
+ 
++unsigned int part_in_flight(struct block_device *part);
+ #endif /* _LINUX_PART_STAT_H */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
