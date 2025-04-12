@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E392367A0
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 08:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326DFDDAB;
+	Sat, 12 Apr 2025 08:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744447389; cv=none; b=kqZIVxqVr59W/3fYEpu4o+PPuoyl2AkggT6biPLE8KvGZqf1DZgQxDF93U1JoiJEf+NGypxPm8Xd72mE7ubO0wSFvDykFak+Uxo/2rdP1qEfo5krKDFLMqQ1ugCFAC3JdkcoRmuYwUUJ1gg8oAOzvhz9NxXB0HCj01R7cbFagoI=
+	t=1744447715; cv=none; b=exft89HUeL25hKpIrJS3odPkoMCCKUoxt5n4ctjmNIRgE50i94pZYYel3UKDHvEN4RndyZEy2SjNe5a8dhPhYM4SE7dNty4RfjfftriNP23SoG2mo85d68oyb0pgtEXabvvYFGhPlnGEGYeYihGhKUq5KngQGn0JL9mg7ks3I6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744447389; c=relaxed/simple;
-	bh=BgO8QIkJHresdI/GBMQsdjSdGosWWI6DhBZsh5lefoI=;
+	s=arc-20240116; t=1744447715; c=relaxed/simple;
+	bh=P8agLbyOVO9R4ksorEp2VdapP/p5K5Aa1B1D+nHspq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m8pEwDACZx2XdqQwHj3lsepLl4lNMvOrZnW8VyL+9VyymFnoAF7KuwL9JvvLC9PtySy091Q4WrM7xW2M3RmQIXtg9v23YXXBQjoXIID+ocENkPtN7USPrt87oV0TBs/K8UrxWVtb5MtCpIKfdAHfxZmHSz2UT78qKHnxZoAD+bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQettfnt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=M2ZyGpgMUB1ure2cRLzYJrrBC+mC+YWtZ7zai6bJCLgQXOIH5PV8qKaGh2xOUFSERAQlGjW+wDY6jeD9UAFa/Vv1KIP1BzpmLiZlQM9PlRiopnyCWG9UbfmmqRaT88gNiChlYHyu9hVNzW4Z2keKtXgO7YOBK3fh5362URthBXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i14Kc2mJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQettfnt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C764C4CEE5;
-	Sat, 12 Apr 2025 08:43:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i14Kc2mJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80081C4CEE3;
+	Sat, 12 Apr 2025 08:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744447388;
-	bh=BgO8QIkJHresdI/GBMQsdjSdGosWWI6DhBZsh5lefoI=;
+	s=k20201202; t=1744447714;
+	bh=P8agLbyOVO9R4ksorEp2VdapP/p5K5Aa1B1D+nHspq8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QQettfntwH/1cNZUlbFb7thkfzHeiEzEcrcr4kn0HzYQ6R9s+QJ7wrHhlxZ11TEx6
-	 fagznv36Z9GEa59pBQngROCZLyxXZyemjdNzGIDNs9hRJ8gH+6sqQ4pNai79FY82Oe
-	 iYbrBJLfWey8IrRQFKfF6uNYeGkMlqBBFicbLtjIXJJTiMt/mqhrr43ubNNa04N/1Q
-	 HtAPyzL0WNJdHAQ1KUsvDGNxKn6yExkNWowLYL1JTrWsmpht8nDmZ6Rkcu/Qg9L9Ba
-	 uAPdLjexD7eEGBEsDdaF3oV2ayR+A2aENmnOchaooM7y2YopIMNjwHGyswreO/a+tQ
-	 36UjIQ6suDHDg==
-Date: Sat, 12 Apr 2025 10:43:03 +0200
+	b=i14Kc2mJg0baH2J7LARXNVJZNAJuBVYHVCst3UVhE/LHyHgst65AAsRppVMlrqdRk
+	 0tmdrPFP/2ed+pi9rawaoesrAcslG4FjJXPNoyjYEojiZ/tiDKsZ3/UreEcwfjTsQJ
+	 zW/s8IZzcjVihgWcnODU10EeLnopUR61uXSfaPMMj3iP1zoMhuUurawS06m/lqwGIf
+	 Um+oB9q2Sz7SvDRKL8oag6leDg4HT6mSJoQcCyf8a+AF5ZE86wsQ0ydcZe+tkROGz6
+	 f3T/yf0eo++zzcrANhJEtKz5Ol9qvQ/dq4PQ1+OBO7j7JgEHYQm5NoHNR7+OcI0Z2Q
+	 G9r3k5PXAJ3Yg==
+Date: Sat, 12 Apr 2025 10:48:29 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com
-Subject: Re: [PATCH RFC v2a 5/9] x86/cpufeatures: Add X86_FEATURE_APX
-Message-ID: <Z_onl1QbH9L1-8dq@gmail.com>
-References: <20250320234301.8342-6-chang.seok.bae@intel.com>
- <20250411161250.14662-1-chang.seok.bae@intel.com>
- <d076ee8c-0c22-4e99-964c-5ea254f5be14@intel.com>
- <7b91d929-fe97-44c6-aa94-05417bce1014@intel.com>
- <009062d3-d4db-443f-8337-ae4223efffa1@intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Ian Campbell <ijc@hellion.org.uk>,
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: [tip: x86/build] x86/boot: Drop CRC-32 checksum and the build
+ tool that generates it
+Message-ID: <Z_oo3eBywzj6s8Eg@gmail.com>
+References: <20250307164801.885261-2-ardb+git@google.com>
+ <174138907883.14745.965399833848496586.tip-bot2@tip-bot2>
+ <364ad671-5e5c-47c1-af22-34a7c481f8e3@intel.com>
+ <2fddc2e9-8c97-48de-bcc3-29645d58f0f1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,25 +48,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <009062d3-d4db-443f-8337-ae4223efffa1@intel.com>
+In-Reply-To: <2fddc2e9-8c97-48de-bcc3-29645d58f0f1@intel.com>
 
 
-* Sohil Mehta <sohil.mehta@intel.com> wrote:
+* Dave Hansen <dave.hansen@intel.com> wrote:
 
-> On 4/11/2025 11:23 AM, Chang S. Bae wrote:
+> On 4/11/25 12:33, Dave Hansen wrote:
+> ...
+> > The only weird thing I'm doing is booting the kernel with qemu's -kernel
+> > argument.
 > 
-> > I've attached the patch revision.
-> > 
+> I lied. I'm doing other weird things. I have a local script named
+> "truncate" that's not the same thing as /usr/bin/truncate. Guess what
+> this patch started doing:
 > 
-> LGTM,
+> >  quiet_cmd_image = BUILD   $@
+> > -silent_redirect_image = >/dev/null
+> > -cmd_image = $(obj)/tools/build $(obj)/setup.bin $(obj)/vmlinux.bin \
+> > -			       $(obj)/zoffset.h $@ $($(quiet)redirect_image)
+> > +      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
 > 
-> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+> 				 ^ right there
 
-Chang, mind sending a series of the latest version of all the pending 
-APX patches you have at the moment (and any other pending FPU patches 
-you may have), with Reviewed-by tags rolled in, etc., on top of:
+Oh that sucks ...
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/fpu
+> I'm an idiot. That was a poorly named script and it cost me a kernel
+> bisect and poking at the patch for an hour. <sigh>
+> 
+> Sorry for the noise.
+
+I feel your pain, I too once overlaid a well-known utility with my own 
+script in ~/bin/. After that incident I started adding the .sh postfix 
+to my own scripts, that way there's a much lower chance of namespace 
+collisions.
 
 Thanks,
 
