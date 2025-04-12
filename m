@@ -1,67 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507ED14AD20;
-	Sat, 12 Apr 2025 18:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C2218DB20;
+	Sat, 12 Apr 2025 18:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744483617; cv=none; b=Kr6H3NETIjmQa0re/0lUnahVH8N+1B955ou+tTR+sLQe9JzAWmCEwBy2vpAMxBN2BQ5adQ/LBnu2o9SY8pUqCiQFkcknAKlHP6H4w3HHMjLV9hyfhiqVMoKJPfLjNvh17Vg5YnTfvM6XvxHeopZveuUfVA6yj4z/y+J8CKeGq2w=
+	t=1744483617; cv=none; b=BqOFK4IUzdAuOKCE49tyIW6ZpO5gkep/p2smS8PrOzG+fk0y+XvK9kij0GQjH6cr/NaUIErwAWlKivY3XxVew3ZyJnjOjhTzBtbhD+ZVrCG6yub2m8A06OA9SONxw3Ir0qa2ljweCWTeL0t/Dz+AYrot8jcL4TvjWOWYPv+PnF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744483617; c=relaxed/simple;
-	bh=fZhn0UiKEmEbt/kipTaDRSv45kfKJsjh6AKCX6p4fEc=;
+	bh=/P5a6PBRz7Mtjyw10t/a3Dfk4nGJnzKHMUkcABvy8Eg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ftkcr9TaBTrm1ZJ7S4lZ8/pyfwlGZqoqjXEnpIczh8Km/0eHI17pRdRjanO7L9McQpugpcQasSYVyv5yQLBbaJpwK1B8ei2owou2ueQJYjhfl5BhpuDSzqO9RJdRgRlencvMLcSS1oNT1OWBXw0SGctUXAzS67NJv32tG4MI7es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZbkWd9sk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZMeSx4iB; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=dGT6DUkeOyPJYvWygG5MhHqk6ZlB7Dc5sJgZveDdPVaSdcmLB25pwSHIv/3Mg3zP9ZhIP0jaYDscO9MWS2BzAkvrmnB43K4uu+R+FJ3Tq3yvyAwxZenByL3iAaHNaalridGJinD7G7fSD6Vi4qpHWtKXXY1ZAySZy1zoer7bpng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NVmKkdaK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QdF2uUYU; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZbkWd9sk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZMeSx4iB"
-Date: Sat, 12 Apr 2025 18:46:43 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NVmKkdaK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QdF2uUYU"
+Date: Sat, 12 Apr 2025 18:46:49 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744483609;
+	s=2020; t=1744483610;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7/hZ92GekqnqM4Hegl9q85TcmQCDuuVZfnUARvqVX2A=;
-	b=ZbkWd9sktR20Nl3lNfNmAwtniOwdkk/I5BHezasRYao/VsMn/IqDc/2+u3n8yNVnEhB57x
-	nIDOvxuYW7ROkEDy3oSTnqWU7E1Qn1S2gmuqhYOQRSjVsIhW5VEVn6VJKRKSZxSI+7Pwf6
-	cR76n7Iqh0M+Iv2YXG0k3S548ytWGqbGfo1WXmAvaBu2FFYENSAM2EQNRh5hnoziktXVtR
-	aZp0Vu3lpw68RjksHEEpTlsQxTBX7hk/xs5QIUFXttxgVqal1mrW100KlSwxzzSRXbvafQ
-	og1iJCBLMt4N6pEofMvs5X4euKYtx+ttSDTERe5uvZhTX2/+7HCvbv2NfpW3Qg==
+	bh=habJwXdCOn+ND+XX9fYkE1e5Sx1xRtmbMxj0Z5kWxXo=;
+	b=NVmKkdaK4lB6NV2SPvFnBPMbfOx/iurivN+53kBokgy3247+3gjpX7hQQacxUfDVDG2nE/
+	fQBJaSBKh5rmmIYFu4LV7mwFhUg//QQeXTlxgvWuDTzzWLbRQZUJqqUiJqcTVDN2uAkDiu
+	3R4Awtdyg/kDUyXIvDQMkthW2AkTbm2lv38ASv9yPfGtH4c77pbeCBfdsJ2wae0IkOsUov
+	XxpPtzSPRl+VDMNqk5sGfLjaCTN5GxfOsxcCqu/BlTL272nQc8fKupa6E2t8NWcjFFocZZ
+	JgLqnBhmZftrc34CXubOTaXtTurtJceaWTyelSlzA/CNOj1HrWM242ZCQ+9YbA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744483609;
+	s=2020e; t=1744483610;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7/hZ92GekqnqM4Hegl9q85TcmQCDuuVZfnUARvqVX2A=;
-	b=ZMeSx4iBfWWHC7e3GjbWfGgetLPPHmv+HcWmbj5Cg8Hsyz9e/ZF0jMRPSqPjIe2XPVx/2c
-	t0jLCusVJlHQs4CQ==
+	bh=habJwXdCOn+ND+XX9fYkE1e5Sx1xRtmbMxj0Z5kWxXo=;
+	b=QdF2uUYUs00rXg/gY074lMjnECR+ezD9pj40RUIlT3vlp7MQq0mfu+iTxznFdLr1zjzwdT
+	EVfVAlGnIw15YLBw==
 From: "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/mm: Opt-in to IRQs-off activate_mm()
+Subject: [tip: x86/alternatives] x86/mm: Allow temporary MMs when IRQs are on
 Cc: Andy Lutomirski <luto@kernel.org>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
  "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250402094540.3586683-8-mingo@kernel.org>
-References: <20250402094540.3586683-8-mingo@kernel.org>
+ Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250402094540.3586683-6-mingo@kernel.org>
+References: <20250402094540.3586683-6-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174448360413.31282.11770365769162014117.tip-bot2@tip-bot2>
+Message-ID: <174448360994.31282.6401289207692327621.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,20 +71,20 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     af8967158f9ad759a93e8e7a933c10e7cbb01ba2
-Gitweb:        https://git.kernel.org/tip/af8967158f9ad759a93e8e7a933c10e7cbb01ba2
+Commit-ID:     58f8ffa917669a0c8c027e24d5349f0b488f8181
+Gitweb:        https://git.kernel.org/tip/58f8ffa917669a0c8c027e24d5349f0b488f8181
 Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Wed, 02 Apr 2025 11:45:40 +02:00
+AuthorDate:    Wed, 02 Apr 2025 11:45:38 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 12 Apr 2025 10:06:08 +02:00
+CommitterDate: Sat, 12 Apr 2025 10:06:00 +02:00
 
-x86/mm: Opt-in to IRQs-off activate_mm()
+x86/mm: Allow temporary MMs when IRQs are on
 
-We gain nothing by having the core code enable IRQs right before calling
-activate_mm() only for us to turn them right back off again in switch_mm().
+EFI runtime services should use temporary MMs, but EFI runtime services
+want IRQs on.  Preemption must still be disabled in a temporary MM context.
 
-This will save a few cycles, so execve() should be blazingly fast with this
-patch applied!
+At some point, the entirely temporary MM mechanism should be moved out of
+arch code.
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -93,34 +93,52 @@ Cc: Rik van Riel <riel@surriel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250402094540.3586683-8-mingo@kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/r/20250402094540.3586683-6-mingo@kernel.org
 ---
- arch/x86/Kconfig                   | 1 +
- arch/x86/include/asm/mmu_context.h | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4b9f378..aeac63b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -153,6 +153,7 @@ config X86
- 	select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
- 	select ARCH_WANTS_THP_SWAP		if X86_64
- 	select ARCH_HAS_PARANOID_L1D_FLUSH
-+	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
- 	select BUILDTIME_TABLE_SORT
- 	select CLKEVT_I8253
- 	select CLOCKSOURCE_WATCHDOG
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 988c117..c511f85 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -190,7 +190,7 @@ extern void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
- #define activate_mm(prev, next)			\
- do {						\
- 	paravirt_enter_mmap(next);		\
--	switch_mm((prev), (next), NULL);	\
-+	switch_mm_irqs_off((prev), (next), NULL);	\
- } while (0);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 38fdcf8..c9b87e5 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -977,18 +977,23 @@ void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+  * that override the kernel memory protections (e.g., W^X), without exposing the
+  * temporary page-table mappings that are required for these write operations to
+  * other CPUs. Using a temporary mm also allows to avoid TLB shootdowns when the
+- * mapping is torn down.
++ * mapping is torn down.  Temporary mms can also be used for EFI runtime service
++ * calls or similar functionality.
+  *
+- * Context: The temporary mm needs to be used exclusively by a single core. To
+- *          harden security IRQs must be disabled while the temporary mm is
+- *          loaded, thereby preventing interrupt handler bugs from overriding
+- *          the kernel memory protection.
++ * It is illegal to schedule while using a temporary mm -- the context switch
++ * code is unaware of the temporary mm and does not know how to context switch.
++ * Use a real (non-temporary) mm in a kernel thread if you need to sleep.
++ *
++ * Note: For sensitive memory writes, the temporary mm needs to be used
++ *       exclusively by a single core, and IRQs should be disabled while the
++ *       temporary mm is loaded, thereby preventing interrupt handler bugs from
++ *       overriding the kernel memory protection.
+  */
+ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ {
+ 	struct mm_struct *prev_mm;
  
- #ifdef CONFIG_X86_32
+-	lockdep_assert_irqs_disabled();
++	lockdep_assert_preemption_disabled();
+ 
+ 	/*
+ 	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
+@@ -1020,7 +1025,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ 
+ void unuse_temporary_mm(struct mm_struct *prev_mm)
+ {
+-	lockdep_assert_irqs_disabled();
++	lockdep_assert_preemption_disabled();
+ 
+ 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
+ 	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
