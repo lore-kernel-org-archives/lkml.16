@@ -1,467 +1,199 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32ED22AF04
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 01:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744420228; cv=none; b=ZAnJHVpenSJz/ac7Utb+UvLDpbfNel47XdRAWJmtWdVvQHD1dRWlcZtxdJ9ar16o2yZWq9AZsNm+ugpCdFRKkQjELI/X+z9kH51Q1G25BsMC+pi8BRwaPHsU2Wy8UMbFADdP8ieMbu+1zimlH83NzVrOwa3M+ynd6nJjs0yF1/g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744420228; c=relaxed/simple;
-	bh=CLWex6gdQgCeQ+j1Ylxw5hYzn0j5IyoX3BXUq3gS9XE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U2FG8pL+cWxi9zv95sJF3IZOxVpGf32r9Oq04eX70x1eaBv1kHcTKJ+R12qylihrENX1559iMgRbIrgI1FHs0aWks/DO8LcucSpGdMbmT4EuTqYtuTKZ1wGzAIxjzO9b4Mj4p1DdJF6EJEEhdlwJ8FMmiY0Xm2Q0gHtpLCVs4p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4LQsC2wO; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6352A846F;
+	Sat, 12 Apr 2025 01:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744420697; cv=fail; b=pjvdLhe4bj4VaTioVNLa4WpkYu3gXsUwfnL5uhDNKArtmznwjVw1/XonuH7Pw4zHqfFlTUXoHcg532KOdhT0r7T9BWpALx2IqinqibHguIKnZmBb/FlWPeyQOkdfiIJutB0MO+mJJxyiHdxTKFb7gPs0K/lB4xk//7G0QuQ2bU0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744420697; c=relaxed/simple;
+	bh=0HSA/Wqo0IE5s9RJQSOXNw5qv+3WVUPr/2LGrbgNl44=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=TFKX5WQljZ97g9tvE1aTSaaU7ji4o5GlCDwvZkJ+Eqvl40XHv1ebZRvltgnMr5DwnYSURdB9fiBra/BnNLre0GryhwPL45Wd/YPkUHpovnQUFQBFQ2CxOm8ihMS1tDbD5RnP1DUnS9UxbZNLvV+qZMkrpwjiZcoOBXJRXydrZQg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=n62rH6Db; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FKSCNkFC; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4LQsC2wO"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso1836109b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:10:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n62rH6Db";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FKSCNkFC"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BLHhhO030641;
+	Sat, 12 Apr 2025 01:18:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=7ypKL8MWJJg1c1u2sx
+	JtTKmCRgyYCaXesG6R7+drnqk=; b=n62rH6DbMbn5Rs9Db3efgfKwMTVgnDY4Ds
+	wp2jDd0l+SSfS9fbrqbJ5+VKfIG4tAJIBuVMv4g0M2AhqZhDICzIIHhC8qLz9Q5u
+	jsiUmbAC09EtkgyMB/u/XGTu/JZK/rcdxoH9DQ8U9jjtINOIxKEjRZ07IjUxUa6q
+	qcJjr/rzH0L1B6tUG3QYBpLITi4t+fEDAz0P0j/uZfuTd9Roy0zbjgbMwgA5roJP
+	DgC+nlRz77Ke2Hq867jiHq2BCI9kx+62njH2cYPWl0qGStKyhg2vJqPfTXhoVhDZ
+	DyaISn6QbW+6Lq2yt7kA9emw07TWIIWDdQPzFg7bAjVwgSEnamIg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45y9fe0k0s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 12 Apr 2025 01:18:07 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53C0O2RS016340;
+	Sat, 12 Apr 2025 01:18:06 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2040.outbound.protection.outlook.com [104.47.70.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyebj3f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 12 Apr 2025 01:18:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WRd9M2aYwNCBmWd32xc25ILGr5/oZ1X4Ip9cXgvq+xwnwUaxlRxDaNygu4xrZKMvNwp00eL9XvdcOdQ3L7yrN2yYrJtafb/uiO7NBovgmRL6RViT1mPwCZzz7BFOLFAg0tMcr3J93E2gGL3laL9i/aqtV72q2jWGxAO3Np1x8US9VSSLpVB44u3C/N9UqquZPQNqUt+PBKej+WvP80zR1eQlzIpkFbj5L0g7fwMFvcjEtDlIB2+LEzHqLQxpHYPlFuNW6srVqNR1+Cu3dfA0+MR0z0c0FQgfi09mkhvPQyqStucEysCD0ZYTkxEyH6eTmxmbrRn2njQxXHH7b9fD5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7ypKL8MWJJg1c1u2sxJtTKmCRgyYCaXesG6R7+drnqk=;
+ b=KSDFmCUuDdltbHT9PDrpnMJ9ySe202P0FCC+Ora8RKDNVADau0bltsjIjsS5JNcdXNOdHukvnmqw6KJcMC8n0o/4aUN9/3IfBw65vhgDT3kpyRxrt3qNGhw4UNh4/Mz1rGE96XGQDkepgLoTafkIg74+TtBMkMod26gyf1AVsilvM2RgGamfoQM1VB3/NrtjcdVZusw7RW1KZdCcqvl4w3kP14e57ZCiDMLOPBRf742daBdCoxt9EypFLDMcEGFKKm/eAQygxFudZm2ziC+OSUde9fPOG02Ts3tnvI8sL1y/bMZ74MFM7aaVtSD8ywsGQoVz9ghYSrnLSfwGQbryrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744420225; x=1745025025; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UPE/w7OMV+R/BpERehO0lW1KzawWpcv3Vb+OACxnfog=;
-        b=4LQsC2wO14y7Bf3/7k10jDCvWN6yfo+i7WjI4SzM2LB80SHKwPUhfsPpg5UVXdJbur
-         bXK84iOZp1bJE4jXeyQNGFrteSYnprNqWPpe/HZ+0JUtrP92Q3sCYb6QpZ0CGCxnFPPw
-         McAIGpQA5NIS/6o0xb8Rm1fuBlf4bajIvBVluwejQnCurQQf03BKmpXxQGS+Vy2xR52E
-         BP5W2dZuX+nYYPkiMWFByENc2pRVTkzyscx8yWgd7uapnk0MvqkPypRfDlo8tgojRQrN
-         QPT51ouJjPFbbLvrrTmp2SJMVxr4NifJ4To9TfVixF5ervCuf7a7IJHDOWY2zZad5mWd
-         rs5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744420225; x=1745025025;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UPE/w7OMV+R/BpERehO0lW1KzawWpcv3Vb+OACxnfog=;
-        b=SUKbaucg2z4XV67qzjeMzF9VJctP9vgkjA8OZ//flbrgln8b0+wesLYkap8WcoPsyy
-         PN1e1JYNfjB3xl0JTrirKws1Eenuq7yLo7lhFuzWpHhlbwjgXwaJ7VNyoqtUQvKjAxhN
-         RiQcdf8ySuBTnBmkVgpoCDGOaau6g2CX5heohSOtOL4/FzRRzxc0r81+Jvp572winF07
-         Z/mxiM+BNZRA0I9VoHIqtiM9rneFu7aj7qrlYXJZMEl106tTeZ4xrjfLgJhf03i2K9el
-         B13n0VSEGpKCG9N7NxmFhWAy+1eU4Df2pY5MknsRJ3QidfkzCsjMedAbNCKOJAR9X9zw
-         qrzg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/7E+3azL8yOr2rODpp0vOKfERhxHOMGsK5GYtNESXpaCuVcu4Vj9/C348l9A+yv5TiYWyPXn55C1TyH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWDOgtvvx81CusTCEDEcwUX6VGNyIsISMs6ZucRs0vfz9C35By
-	vMpnfVdvN7+RLtsSRR+yCdYbxh3mVMaO/+5Yi9mIN0miusrMBwn0ufyZXkr5am9ArAvV9mTGSVI
-	MqRcC47elybYjtsTgNg+e0A==
-X-Google-Smtp-Source: AGHT+IGCCoJ+p4ug1h6JLtcNhK91NiKYTxwJFv7sDgsGsshWBvKN29loXFFysazsL5Y0Mr82eB8IfOe4BG34Ie+snA==
-X-Received: from pfgt19.prod.google.com ([2002:a05:6a00:1393:b0:739:56be:f58c])
- (user=dylanbhatch job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:9f8f:b0:1f5:6c94:2cc1 with SMTP id adf61e73a8af0-201797b7eeemr6841826637.21.1744420225268;
- Fri, 11 Apr 2025 18:10:25 -0700 (PDT)
-Date: Sat, 12 Apr 2025 01:09:39 +0000
-In-Reply-To: <20250412010940.1686376-1-dylanbhatch@google.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7ypKL8MWJJg1c1u2sxJtTKmCRgyYCaXesG6R7+drnqk=;
+ b=FKSCNkFCR/JwCG0BD0ffct1X9V5o80QrIWCU3sN0DR2hFcJy0TzMVvNFnWx5Pq+5NowEu0DLOXZ47WXeBibWZXVXiu5s//Sdfz/EChMYp2Vz8LejOkl0m/Wa320UDgermrwKBaeS/u8UkHMz5IPD0y+uZfeDG6JwySZd3OrGzcY=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by LV3PR10MB8129.namprd10.prod.outlook.com (2603:10b6:408:285::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Sat, 12 Apr
+ 2025 01:17:59 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%3]) with mapi id 15.20.8632.025; Sat, 12 Apr 2025
+ 01:17:59 +0000
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        Bartosz
+ Golaszewski <brgl@bgdev.pl>,
+        Gaurav Kashyap <quic_gaurkash@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>,
+        Jens Axboe <axboe@kernel.dk>, Konrad Dybcio <konradybcio@kernel.org>,
+        Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v13 0/3] Support for wrapped inline encryption keys on
+ Qualcomm SoCs
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250404231533.174419-1-ebiggers@kernel.org> (Eric Biggers's
+	message of "Fri, 4 Apr 2025 16:15:29 -0700")
+Organization: Oracle Corporation
+Message-ID: <yq1ecxyjhzd.fsf@ca-mkp.ca.oracle.com>
+References: <20250404231533.174419-1-ebiggers@kernel.org>
+Date: Fri, 11 Apr 2025 21:17:57 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0405.namprd03.prod.outlook.com
+ (2603:10b6:408:111::20) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250412010940.1686376-1-dylanbhatch@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250412010940.1686376-3-dylanbhatch@google.com>
-Subject: [PATCH v2 2/2] arm64/module: Use text-poke API for late relocations.
-From: Dylan Hatch <dylanbhatch@google.com>
-To: Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, 
-	"=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?=" <philmd@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Song Liu <song@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Dylan Hatch <dylanbhatch@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|LV3PR10MB8129:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15fb5815-3bf3-437e-af9d-08dd795fdcc4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qARDgTBEDD93aQNViyOg2eeuccsvDVxlqOF8Z0LC22RvyiE+iE8WGZnmfnAZ?=
+ =?us-ascii?Q?KdPNb4bREItCUekh85uXTW3BR1BCrUMyGrjDjEqqR/xD/218iRPWagoa09j0?=
+ =?us-ascii?Q?VyhOJRy19O10kBAaLbpVAH+TI18O9ALP3Zjaau5a5EA865EChUOqJgy+qIKj?=
+ =?us-ascii?Q?W+tINLcVLKBopi8iuMCr2ZlCObj+WfSp0YBrK4/hEnWzd4+XEs2+RqaC+2q+?=
+ =?us-ascii?Q?Xx/4ojh8WDJohI4/IYhHTefxy3QvY+qoy8Owvz3RhI1RhkQ7khIVueEeAjwV?=
+ =?us-ascii?Q?mceujqI6s/YkekQ9Ik8nzNdn2gZU2NkfIB+n1Q1R9tNGElarFRfSmHnltlSs?=
+ =?us-ascii?Q?/VKDzJiW7CgKtWnffCpIumzku4977Q6jRCzHxzVmPosn4LBsmIraDglBZW5t?=
+ =?us-ascii?Q?ZQZ1oPZL0I3IBMamnRZX9Eb0LKsRNMtOI5NMw8KsvNWsylz/ESX7Z9HSarpi?=
+ =?us-ascii?Q?CCmwEL9ukZEaFl2Ul1YAGcMECzWe42K2ywWHyIGiTI1p2wWoZEXj2n0Itn8a?=
+ =?us-ascii?Q?TJSWBR1+GVEDDwIp7Oo4mF/Dlu5pEFCdNSghJQunB/vpHC2lUF5EXRtCA+cY?=
+ =?us-ascii?Q?EDqRGbp+4hbu+Q9kEivuYfZ0IBflWlEbsG2jI8xEHHvGNEIpiXTHlq7yVvKz?=
+ =?us-ascii?Q?oIVA9SpyatbjqKEtXByZtk/Q4kQTMqyHyVAZgwMCfoK8Y4nDfiizPOSj2k+A?=
+ =?us-ascii?Q?hIQbjTEn1T9aCJdpoRFI1/4OdpxSjTzqu4gtuhkrY8NMATinEUK+aT/YpaLc?=
+ =?us-ascii?Q?wMc4PZOqZp9qTgFjhKHZFPvyD0eVjOUZv5vodXFaWScGXF6nBCv+HaoJ1NhI?=
+ =?us-ascii?Q?KCjLkgByiUKHfe48qxszH8fhR0lhwl+twcr+I+91/JQcyCqqCENiNxYyIYic?=
+ =?us-ascii?Q?FGTV6zT9Cip17bDxQfE1aVHc/lcRivE4gGnlPv5HxMXyNuH5xYtcNp0cshzk?=
+ =?us-ascii?Q?iN4zsG7L99mQ1ENVbiIM4LRiG2zxL5na6oxzekwbucaiaFMgJojvzbWvWuxh?=
+ =?us-ascii?Q?PaxoVNjfS6Xf0bw+XM+BQ/NVl78Rv036XZNTutFRd/Z1SnOtOMT88z3x+Dmv?=
+ =?us-ascii?Q?7LdIN/sflH3uCgFD27+U9yalQFAWXzVHHOf/60oNs+TGVoXMxxGFt60mxQvA?=
+ =?us-ascii?Q?WWdt44HA3vPMOXrFAwhYxpTaK7nUP5TPS1dFD/X3kZXhNjiNt0tjdRZvbeWv?=
+ =?us-ascii?Q?gvSHlTIeKRfM+9lwbz9AN9VCfIJYnExDRviom8/uy+3W8s9+PmcNmzU38mjm?=
+ =?us-ascii?Q?kXO8qyRaT8tTiOSVpn9NWLWueK8eps2dXnLNddRWs+/vi8iYPzbrC1wftio5?=
+ =?us-ascii?Q?cSsbL2wZUQrMeK/lvp9yM0TLtxzq17YIB9VTtBIgwprloQXRc3mMFY8uxEi2?=
+ =?us-ascii?Q?OhTAS4ZgUDU85LXnyijq6Se4bP9WRhr+AN5khbX9w6Slr2GuetwFRPOerA81?=
+ =?us-ascii?Q?RHz8O1W/1a8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?us5+Heh6YArXO/X9t2Pb5d3sd64wVWh0qYQVmNDy6t56HnrOu46xTlNue6fc?=
+ =?us-ascii?Q?fsSoAQKva6U4w5FNWnoElUT7Znp2s3cXzkqWq0dVCXCocY3obLZvS0/HIRlO?=
+ =?us-ascii?Q?QxN+BG1XbUUumSijryHGG5le1eAWCHHv62PjPKdCU5Ln7XMD7B0bEPkAulAW?=
+ =?us-ascii?Q?YeSZrW2MbIcl0yKKeLUDUJ0ZGoZ4VORff1RM9p+EgRp09LdW/NXtaaqNkYVW?=
+ =?us-ascii?Q?iOZtFdC/BAMm1bSyooyxMQ7STiOolhQTPEeSxprAX3qIUyvH40dyqygEGrTU?=
+ =?us-ascii?Q?3ekZJZufGY3HCnnvqFGwbK5N7CMRjyuufEv+uiwRavAWzYvHavrGCPjVhg/o?=
+ =?us-ascii?Q?Bu1uy3oplJdVekHiuO9RWMQZvcDBJsCN4yjMaUzGxwyxCr7ILCJo7Bp2Dx+f?=
+ =?us-ascii?Q?aWIMToqrDYy3sbJAccveasXoyq13RTr0zeLS1xe7uyCOlif+00z+OEVvArRk?=
+ =?us-ascii?Q?vFYCNt9KwZwjnTH3lkwNfdYtrslDt0jgIMwbcXffZcWVePs3ih/TtNxDnP2h?=
+ =?us-ascii?Q?Q2NpodH6IGApYdGOZTUwaFAUZJkeOd9mzgDI7Guz/e+YPNPFSSTAVhOzh+5m?=
+ =?us-ascii?Q?e2bLc0/kE5kTQxo6scdO8iYcNymCIK8u8qMmkxYEoI8aYnD6axSlOmyUZl0B?=
+ =?us-ascii?Q?eJhtmyO0+zv4TAsFNnnEn02KNTbuOpo9rtMpEJMyflRKV9NBV/xFIbGBjUfM?=
+ =?us-ascii?Q?N7BMKENsIyUbqLkUTc1WWOxNO6L0NH9ER4sldZ4cc3N4s/83gHOanBUl0ad0?=
+ =?us-ascii?Q?ajO5awUoHjNQee8Ft5SiMQLJKRbVlSu/PyNiOiO3j1JGNyiD4WQCPIbbDtBX?=
+ =?us-ascii?Q?KfWMfPu+PWqjQvm4oj3uLRtO9yQeIWYKGGZpGQ1+krOnWSFRVtitwjtBD9Fz?=
+ =?us-ascii?Q?dAvbJNOqJpFnp/CSX6YXpsuGGojSK3u1+4+TJafdIpOqTEYczotZ8JSUDrbg?=
+ =?us-ascii?Q?Z+iyR6UhublZvqkrdWS7JSQ6j/iVxgIJm3qFkQCop3hY+rWQFoOfm3luw9DI?=
+ =?us-ascii?Q?dGPmbHhKnblCpNgVH2JM4KBvUJrZDIAaoiOYjrk/k7yY1wVGGYGjx6rV/6iN?=
+ =?us-ascii?Q?qRF76/Yunn7WqNIR5lZt84CAUz1tGkPLbwbXEJNDCDBxhCKRO6ZKqanGMw0C?=
+ =?us-ascii?Q?hRU4vzWgetyk8mx7SwoxUNoieaZo9Yh3fxR4iRdgE7Rs0PSk8jNCsIbUhE/B?=
+ =?us-ascii?Q?k6kZ0hPzGntprsQBFulGewpd/refkidzc+DtGYMRkjFTMTowPyzQ7YZ/2F4S?=
+ =?us-ascii?Q?ickUHrrPbfSkq8E3cPEnX1vVKC2ac6w4WZEh1LXpf+zvFOOAEpJWhz6a0KoQ?=
+ =?us-ascii?Q?LDpuGO1JV3Id/Gyleg+PlWyGZ2gmuWX7CLt3LO9Zg4BskCdGBrdzDCWIC9g1?=
+ =?us-ascii?Q?UGbt93ihCQu35olllRznBOvsnlY2ILWB7gpoavn57ZVH6tzZuW73W1FZd1XE?=
+ =?us-ascii?Q?tQRswVGICw4zXuNU7Sk1lmUqXtU1MCWEW7tIkpS2FRrN0Iw3jSIOzXOguC8v?=
+ =?us-ascii?Q?9nEO5/1BTa/lzl0kFkQJZSWq8fq7g/LIS1aFtpZvZS1KGWx14TNVh2IjP4p/?=
+ =?us-ascii?Q?+dFJVcykYFqPyjtkQwMd0PXUayEGke/q19AFIRdrDcNvjeOpqcRQP9aUSQ6X?=
+ =?us-ascii?Q?Qg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	fbE2otAt3z888MsfL/GO0Xlq4Vne1+2nXJLxHL6rOJ3ddv/jct1RSNmsC8i/ja1ouRz/+L/bqpJMbzrGyDwEizmOfRFviwlIYRfbxHtD4LwZHMzw8Q7W5JoNflbcODPdw6dPTPyWMJWRvRnfwmfvjp8LzsklQ8U6qpDKhIHlY/m3gzLnpHyy7igXQ8r6NLQvvAUwREtMZRW6XEP87kRywBHyGbt0cFuASfGj8Bc85uolfmdKi3NsrnhUcKKP4v6GVcebuDLxl5SaD9qgCn0DXcFfi992oxFak66Al7SuESzFmsNWyDF9bFc9stQKspiKwlaNzqPT5NJa5PpLXum1ddiD0uqTX+tngVVFJA5Rn+7XPrfQde3/U0BIIP5dyQK6aLpbVAAcDymeqMtNl0MyVrohFgxr/2WxQSz6zcuUwwR33NsPSAdMWu4bJX3UApIn+sXoGRUA3VODKVhohq377Y08iqbGBJPrc+lQtzyrTyAgCc0q0V5e7qR35rgq5Z1U6ozUNMB4cgAobzLfw0pcSKqWoWdVfv/LJ6A98lsJx02wu+6uuH65cDv5QxREMDDGR8UKBYq2VpXLgwOdWvGbHQsV2GDy0HX8AeGpjMy8lbY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15fb5815-3bf3-437e-af9d-08dd795fdcc4
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 01:17:59.1030
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Aen7IaHEi38MRNShKiDilsfi6/7L41oZQnIcXO44qoLD3fyC2GA8cyyyruq1SEIxo+QDCIdKk24QSYaDzovoUncsZVDR1ixrrXrG7gXCj2U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8129
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-12_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 phishscore=0 mlxlogscore=938
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504120007
+X-Proofpoint-GUID: zXu-sQSIpSjEsMWhkUharuunhWPlTYt-
+X-Proofpoint-ORIG-GUID: zXu-sQSIpSjEsMWhkUharuunhWPlTYt-
 
-To enable late module patching, livepatch modules need to be able to
-apply some of their relocations well after being loaded. In this
-scenario, use the text-poking API to allow this, even with
-STRICT_MODULE_RWX.
 
-This patch is largely based off commit 88fc078a7a8f6 ("x86/module: Use
-text_poke() for late relocations").
+Eric,
 
-Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
----
- arch/arm64/kernel/module.c | 129 ++++++++++++++++++++++++-------------
- 1 file changed, 83 insertions(+), 46 deletions(-)
+> Add support for hardware-wrapped inline encryption keys to the
+> Qualcomm ICE (Inline Crypto Engine) and UFS (Universal Flash Storage)
+> drivers.
+>
+> I'd like these patches to be taken through the scsi tree for 6.16.
 
-diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-index 06bb680bfe975..0703502d9dc37 100644
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -18,11 +18,13 @@
- #include <linux/moduleloader.h>
- #include <linux/random.h>
- #include <linux/scs.h>
-+#include <linux/memory.h>
- 
- #include <asm/alternative.h>
- #include <asm/insn.h>
- #include <asm/scs.h>
- #include <asm/sections.h>
-+#include <asm/text-patching.h>
- 
- enum aarch64_reloc_op {
- 	RELOC_OP_NONE,
-@@ -48,7 +50,8 @@ static u64 do_reloc(enum aarch64_reloc_op reloc_op, __le32 *place, u64 val)
- 	return 0;
- }
- 
--static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
-+static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len,
-+		      void *(*write)(void *dest, const void *src, size_t len))
- {
- 	s64 sval = do_reloc(op, place, val);
- 
-@@ -66,7 +69,7 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
- 
- 	switch (len) {
- 	case 16:
--		*(s16 *)place = sval;
-+		write(place, &sval, sizeof(s16));
- 		switch (op) {
- 		case RELOC_OP_ABS:
- 			if (sval < 0 || sval > U16_MAX)
-@@ -82,7 +85,7 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
- 		}
- 		break;
- 	case 32:
--		*(s32 *)place = sval;
-+		write(place, &sval, sizeof(s32));
- 		switch (op) {
- 		case RELOC_OP_ABS:
- 			if (sval < 0 || sval > U32_MAX)
-@@ -98,7 +101,7 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
- 		}
- 		break;
- 	case 64:
--		*(s64 *)place = sval;
-+		write(place, &sval, sizeof(s64));
- 		break;
- 	default:
- 		pr_err("Invalid length (%d) for data relocation\n", len);
-@@ -113,11 +116,13 @@ enum aarch64_insn_movw_imm_type {
- };
- 
- static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
--			   int lsb, enum aarch64_insn_movw_imm_type imm_type)
-+			   int lsb, enum aarch64_insn_movw_imm_type imm_type,
-+			   void *(*write)(void *dest, const void *src, size_t len))
- {
- 	u64 imm;
- 	s64 sval;
- 	u32 insn = le32_to_cpu(*place);
-+	__le32 le_insn;
- 
- 	sval = do_reloc(op, place, val);
- 	imm = sval >> lsb;
-@@ -145,7 +150,8 @@ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
- 
- 	/* Update the instruction with the new encoding. */
- 	insn = aarch64_insn_encode_immediate(AARCH64_INSN_IMM_16, insn, imm);
--	*place = cpu_to_le32(insn);
-+	le_insn = cpu_to_le32(insn);
-+	write(place, &le_insn, sizeof(le_insn));
- 
- 	if (imm > U16_MAX)
- 		return -ERANGE;
-@@ -154,11 +160,13 @@ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
- }
- 
- static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
--			  int lsb, int len, enum aarch64_insn_imm_type imm_type)
-+			  int lsb, int len, enum aarch64_insn_imm_type imm_type,
-+			  void *(*write)(void *dest, const void *src, size_t len))
- {
- 	u64 imm, imm_mask;
- 	s64 sval;
- 	u32 insn = le32_to_cpu(*place);
-+	__le32 le_insn;
- 
- 	/* Calculate the relocation value. */
- 	sval = do_reloc(op, place, val);
-@@ -170,7 +178,8 @@ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
- 
- 	/* Update the instruction's immediate field. */
- 	insn = aarch64_insn_encode_immediate(imm_type, insn, imm);
--	*place = cpu_to_le32(insn);
-+	le_insn = cpu_to_le32(insn);
-+	write(place, &le_insn, sizeof(le_insn));
- 
- 	/*
- 	 * Extract the upper value bits (including the sign bit) and
-@@ -189,17 +198,19 @@ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
- }
- 
- static int reloc_insn_adrp(struct module *mod, Elf64_Shdr *sechdrs,
--			   __le32 *place, u64 val)
-+			   __le32 *place, u64 val,
-+			   void *(*write)(void *dest, const void *src, size_t len))
- {
- 	u32 insn;
-+	__le32 le_insn;
- 
- 	if (!is_forbidden_offset_for_adrp(place))
- 		return reloc_insn_imm(RELOC_OP_PAGE, place, val, 12, 21,
--				      AARCH64_INSN_IMM_ADR);
-+				      AARCH64_INSN_IMM_ADR, write);
- 
- 	/* patch ADRP to ADR if it is in range */
- 	if (!reloc_insn_imm(RELOC_OP_PREL, place, val & ~0xfff, 0, 21,
--			    AARCH64_INSN_IMM_ADR)) {
-+			    AARCH64_INSN_IMM_ADR, write)) {
- 		insn = le32_to_cpu(*place);
- 		insn &= ~BIT(31);
- 	} else {
-@@ -211,15 +222,17 @@ static int reloc_insn_adrp(struct module *mod, Elf64_Shdr *sechdrs,
- 						   AARCH64_INSN_BRANCH_NOLINK);
- 	}
- 
--	*place = cpu_to_le32(insn);
-+	le_insn = cpu_to_le32(insn);
-+	write(place, &le_insn, sizeof(le_insn));
- 	return 0;
- }
- 
--int apply_relocate_add(Elf64_Shdr *sechdrs,
-+static int __apply_relocate_add(Elf64_Shdr *sechdrs,
- 		       const char *strtab,
- 		       unsigned int symindex,
- 		       unsigned int relsec,
--		       struct module *me)
-+		       struct module *me,
-+		       void *(*write)(void *dest, const void *src, size_t len))
- {
- 	unsigned int i;
- 	int ovf;
-@@ -255,23 +268,23 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		/* Data relocations. */
- 		case R_AARCH64_ABS64:
- 			overflow_check = false;
--			ovf = reloc_data(RELOC_OP_ABS, loc, val, 64);
-+			ovf = reloc_data(RELOC_OP_ABS, loc, val, 64, write);
- 			break;
- 		case R_AARCH64_ABS32:
--			ovf = reloc_data(RELOC_OP_ABS, loc, val, 32);
-+			ovf = reloc_data(RELOC_OP_ABS, loc, val, 32, write);
- 			break;
- 		case R_AARCH64_ABS16:
--			ovf = reloc_data(RELOC_OP_ABS, loc, val, 16);
-+			ovf = reloc_data(RELOC_OP_ABS, loc, val, 16, write);
- 			break;
- 		case R_AARCH64_PREL64:
- 			overflow_check = false;
--			ovf = reloc_data(RELOC_OP_PREL, loc, val, 64);
-+			ovf = reloc_data(RELOC_OP_PREL, loc, val, 64, write);
- 			break;
- 		case R_AARCH64_PREL32:
--			ovf = reloc_data(RELOC_OP_PREL, loc, val, 32);
-+			ovf = reloc_data(RELOC_OP_PREL, loc, val, 32, write);
- 			break;
- 		case R_AARCH64_PREL16:
--			ovf = reloc_data(RELOC_OP_PREL, loc, val, 16);
-+			ovf = reloc_data(RELOC_OP_PREL, loc, val, 16, write);
- 			break;
- 
- 		/* MOVW instruction relocations. */
-@@ -280,88 +293,88 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 			fallthrough;
- 		case R_AARCH64_MOVW_UABS_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G1_NC:
- 			overflow_check = false;
- 			fallthrough;
- 		case R_AARCH64_MOVW_UABS_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G2_NC:
- 			overflow_check = false;
- 			fallthrough;
- 		case R_AARCH64_MOVW_UABS_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G3:
- 			/* We're using the top bits so we can't overflow. */
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 48,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_SABS_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 		case R_AARCH64_MOVW_SABS_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 		case R_AARCH64_MOVW_SABS_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G0_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G1_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G2_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G3:
- 			/* We're using the top bits so we can't overflow. */
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 48,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, write);
- 			break;
- 
- 		/* Immediate instruction relocations. */
- 		case R_AARCH64_LD_PREL_LO19:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 19,
--					     AARCH64_INSN_IMM_19);
-+					     AARCH64_INSN_IMM_19, write);
- 			break;
- 		case R_AARCH64_ADR_PREL_LO21:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 0, 21,
--					     AARCH64_INSN_IMM_ADR);
-+					     AARCH64_INSN_IMM_ADR, write);
- 			break;
- 		case R_AARCH64_ADR_PREL_PG_HI21_NC:
- 			overflow_check = false;
- 			fallthrough;
- 		case R_AARCH64_ADR_PREL_PG_HI21:
--			ovf = reloc_insn_adrp(me, sechdrs, loc, val);
-+			ovf = reloc_insn_adrp(me, sechdrs, loc, val, write);
- 			if (ovf && ovf != -ERANGE)
- 				return ovf;
- 			break;
-@@ -369,46 +382,46 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		case R_AARCH64_LDST8_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 0, 12,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, write);
- 			break;
- 		case R_AARCH64_LDST16_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 1, 11,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, write);
- 			break;
- 		case R_AARCH64_LDST32_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 2, 10,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, write);
- 			break;
- 		case R_AARCH64_LDST64_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 3, 9,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, write);
- 			break;
- 		case R_AARCH64_LDST128_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 4, 8,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, write);
- 			break;
- 		case R_AARCH64_TSTBR14:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 14,
--					     AARCH64_INSN_IMM_14);
-+					     AARCH64_INSN_IMM_14, write);
- 			break;
- 		case R_AARCH64_CONDBR19:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 19,
--					     AARCH64_INSN_IMM_19);
-+					     AARCH64_INSN_IMM_19, write);
- 			break;
- 		case R_AARCH64_JUMP26:
- 		case R_AARCH64_CALL26:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 26,
--					     AARCH64_INSN_IMM_26);
-+					     AARCH64_INSN_IMM_26, write);
- 			if (ovf == -ERANGE) {
- 				val = module_emit_plt_entry(me, sechdrs, loc, &rel[i], sym);
- 				if (!val)
- 					return -ENOEXEC;
- 				ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2,
--						     26, AARCH64_INSN_IMM_26);
-+						     26, AARCH64_INSN_IMM_26, write);
- 			}
- 			break;
- 
-@@ -431,6 +444,30 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 	return -ENOEXEC;
- }
- 
-+int apply_relocate_add(Elf64_Shdr *sechdrs,
-+		       const char *strtab,
-+		       unsigned int symindex,
-+		       unsigned int relsec,
-+		       struct module *me)
-+{
-+	int ret;
-+	bool early = me->state == MODULE_STATE_UNFORMED;
-+	void *(*write)(void *, const void *, size_t) = memcpy;
-+
-+	if (!early) {
-+		write = text_poke;
-+		mutex_lock(&text_mutex);
-+	}
-+
-+	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-+				   write);
-+
-+	if (!early)
-+		mutex_unlock(&text_mutex);
-+
-+	return ret;
-+}
-+
- static inline void __init_plt(struct plt_entry *plt, unsigned long addr)
- {
- 	*plt = get_plt_entry(addr, plt);
+Applied to 6.16/scsi-staging, thanks!
+
 -- 
-2.49.0.604.gff1f9ca942-goog
-
+Martin K. Petersen
