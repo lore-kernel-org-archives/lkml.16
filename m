@@ -1,154 +1,72 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9345417A586;
-	Sat, 12 Apr 2025 23:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C991818A6DF
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 23:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744500785; cv=none; b=ecVOX5fPSVfebKMHYoTZ37y6aIopojJZfVhM4mgDhHiPUtN9bk9PgAs+40cgmXfzAsg2raSDpN4Va0l+TqqEz5/Pjh3HQRUIWhv8K3CzuKyavUWxYqc/+79BVvE2wmzWbwGCkaFZirOPH4AM8BNWWWjzJ65l2q+WU0OR/7fgkwc=
+	t=1744501760; cv=none; b=UO702QtvDJnPHofrbPKPGEx9zbiNCwgQGZm7TuAhi3pNyONpJCdx/HZejrVH5Ox3kK839YjEGpISMzFDLlBe+zrOf3X0zGwQLeCIzCVIE25c+YDLnMsCdo3mYp0qe2BAQmpCEAzQcF01ywAEw+eDRz3awGd62u8+K9iIQCNViiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744500785; c=relaxed/simple;
-	bh=ZPH/e/v6NifavB3+ggOqjwMMFpXaeZxe2UFED02ot1A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bVu80jviBncbNf6shDXwfDa/2bg6gICRjYvq/vmv7y45m74pGJS/oTGoq6XjZhaQw+RwLqyC+q0ggabIC6qrMFr/TeMSBRWVz/Pgz+bpmi74tM7yDMI3q1mqSnGFo/CfWxwkwryKA2OmSkCY2x6d3hx8wluHZlgTajZvZGBQDow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=i/7kPVAx; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1744501760; c=relaxed/simple;
+	bh=uX2BY3FrOB9e87FFO8t8hGGHygSRrfFaU1rwCItA4Aw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=USY3xJatm6es+wczE125bLq538NWNIsKbmC4hCZA3nwVtjTBuDLSkBV9sdGX0kROfrrmEImQaKRCdZQ6uSSiYPerBZoMSGZklFmtTb+EziLv46yrVzKp7wW7PrqbXKRv6PssGdV46IuLRJyYpEfPSGm9HzwN8YPKoMgXloPiE6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Kkl4aEzx; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="i/7kPVAx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=lSowut/bbGT9X2CX8uCJCqJot1poQOhEcYPmM/0qq+s=; b=i/7kPVAxJJA+HC9V
-	708bSBXwlhqSIiwiV/fV4uCY0XL3wHgoRIZqOQpJ/dWR/Cg2SRPvOU7G0CDhcoaMp7YSJH0NYbUf/
-	IkuZif9HEDXxQLW7LFFaDFZxyk44MAOi89BIYV0avrW14GWtkOc3/p9/m7VMZnnCoW23KpCvZb6D9
-	uG/JSiMGF0I0vGwxCdqmQEAqUsyi99++hipF6eYF/TM3ebAmcQr6nzXqTpZc65pNDUtlNN9/IufpF
-	yutUFBTf5I18t5zAZr7K67IFBqrp6SPVr2QgFnqTd7BwKxSeNMRQ/tAWQr5DwzSI+PQWUHBrCGZR0
-	RSgr6DeLH9hvvCJ+iA==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u3kL8-00Atqa-1v;
-	Sat, 12 Apr 2025 23:32:46 +0000
-From: linux@treblig.org
-To: ardb@kernel.org,
-	haren@us.ibm.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] crypto: deadcode structs from 'comp' removal
-Date: Sun, 13 Apr 2025 00:32:41 +0100
-Message-ID: <20250412233241.1167401-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Kkl4aEzx"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744501749; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=KgSkZ2xZt9soRwSwJHmQBs+HS1ERTglPiadRqBx/qIo=;
+	b=Kkl4aEzx/H+h0dmQJU6EkCAF+MMrE4dDInb0SH3/mKvkJSFX43F0c9Sh1vmw4/RD9UIeC5JayZzVvMmfoJoeCsQtNYmSqc0wodr/SZPZGbqGf26p1O1zpDGbujaWqma298Xa2uGnUmhV9blq7/HBcpwO3P2NSFkdNrWvdCSZjJY=
+Received: from 30.212.138.182(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0WWZSJr3_1744501747 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 13 Apr 2025 07:49:08 +0800
+Message-ID: <b37df1b1-38ed-4f2b-bf62-eee9dab64835@linux.alibaba.com>
+Date: Sun, 13 Apr 2025 07:49:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ocfs2: Simplify return statement in
+ ocfs2_filecheck_attr_store()
+To: Thorsten Blum <thorsten.blum@linux.dev>, Mark Fasheh <mark@fasheh.com>,
+ Joel Becker <jlbec@evilplan.org>, akpm <akpm@linux-foundation.org>
+Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250408103408.804253-1-thorsten.blum@linux.dev>
+From: Joseph Qi <joseph.qi@linux.alibaba.com>
+In-Reply-To: <20250408103408.804253-1-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Ard's recent series of patches removing 'comp' implementations
-left behind a bunch of trivial structs, remove them.
 
-These are:
-  crypto842_ctx - commit 2d985ff0072f ("crypto: 842 - drop obsolete 'comp'
-implementation")
-  lz4_ctx       - commit 33335afe33c9 ("crypto: lz4 - drop obsolete 'comp'
-implementation")
-  lz4hc_ctx     - commit dbae96559eef ("crypto: lz4hc - drop obsolete
-'comp' implementation")
-  lzo_ctx       - commit a3e43a25bad0 ("crypto: lzo - drop obsolete
-'comp' implementation")
-  lzorle_ctx    - commit d32da55c5b0c ("crypto: lzo-rle - drop obsolete
-'comp' implementation")
+On 2025/4/8 18:34, Thorsten Blum wrote:
+> Don't negate 'ret' and simplify the return statement.
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- crypto/842.c     | 4 ----
- crypto/lz4.c     | 4 ----
- crypto/lz4hc.c   | 4 ----
- crypto/lzo-rle.c | 4 ----
- crypto/lzo.c     | 4 ----
- 5 files changed, 20 deletions(-)
-
-diff --git a/crypto/842.c b/crypto/842.c
-index 5fb37a925989..881945d44328 100644
---- a/crypto/842.c
-+++ b/crypto/842.c
-@@ -23,10 +23,6 @@
- #include <linux/module.h>
- #include <linux/sw842.h>
- 
--struct crypto842_ctx {
--	void *wmem;	/* working memory for compress */
--};
--
- static void *crypto842_alloc_ctx(void)
- {
- 	void *ctx;
-diff --git a/crypto/lz4.c b/crypto/lz4.c
-index 82588607fb2e..9661ed01692f 100644
---- a/crypto/lz4.c
-+++ b/crypto/lz4.c
-@@ -12,10 +12,6 @@
- #include <linux/lz4.h>
- #include <crypto/internal/scompress.h>
- 
--struct lz4_ctx {
--	void *lz4_comp_mem;
--};
--
- static void *lz4_alloc_ctx(void)
- {
- 	void *ctx;
-diff --git a/crypto/lz4hc.c b/crypto/lz4hc.c
-index 997e76c0183a..a637fddc1ccd 100644
---- a/crypto/lz4hc.c
-+++ b/crypto/lz4hc.c
-@@ -10,10 +10,6 @@
- #include <linux/vmalloc.h>
- #include <linux/lz4.h>
- 
--struct lz4hc_ctx {
--	void *lz4hc_comp_mem;
--};
--
- static void *lz4hc_alloc_ctx(void)
- {
- 	void *ctx;
-diff --git a/crypto/lzo-rle.c b/crypto/lzo-rle.c
-index b1350ae278b8..e7efcf107179 100644
---- a/crypto/lzo-rle.c
-+++ b/crypto/lzo-rle.c
-@@ -9,10 +9,6 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- 
--struct lzorle_ctx {
--	void *lzorle_comp_mem;
--};
--
- static void *lzorle_alloc_ctx(void)
- {
- 	void *ctx;
-diff --git a/crypto/lzo.c b/crypto/lzo.c
-index dfe5a07ca35f..f1b36a1ca6f6 100644
---- a/crypto/lzo.c
-+++ b/crypto/lzo.c
-@@ -9,10 +9,6 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- 
--struct lzo_ctx {
--	void *lzo_comp_mem;
--};
--
- static void *lzo_alloc_ctx(void)
- {
- 	void *ctx;
--- 
-2.49.0
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> ---
+>  fs/ocfs2/filecheck.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ocfs2/filecheck.c b/fs/ocfs2/filecheck.c
+> index 1ad7106741f8..3ad7baf67658 100644
+> --- a/fs/ocfs2/filecheck.c
+> +++ b/fs/ocfs2/filecheck.c
+> @@ -505,5 +505,5 @@ static ssize_t ocfs2_filecheck_attr_store(struct kobject *kobj,
+>  		ocfs2_filecheck_handle_entry(ent, entry);
+>  
+>  exit:
+> -	return (!ret ? count : ret);
+> +	return ret ?: count;
+>  }
 
