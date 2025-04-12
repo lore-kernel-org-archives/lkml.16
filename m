@@ -1,395 +1,301 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C062818C93C;
-	Sat, 12 Apr 2025 17:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DAC518C035;
+	Sat, 12 Apr 2025 17:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744478349; cv=none; b=sYNIKwJpp0LNqbqnthPl0pXgtWywrR4FS0jTurO2x/GgiqbTbJ120OTQE8I2VazipACm/gZfwe8o/MQgICrxjfsiuoHZ/jJ7U/nUfDoUWmKgj5lHGl0uBmjZ4CKMwflo9fJkoKlmWln5p/CE2GFjaclg//OS05ELKGYMs/PwFpI=
+	t=1744478821; cv=none; b=Gag2LDgJ1Fk8sGJWKYxyhHLxaFbay49ET5vAH5H3M4/jHEURum65bQ3POEKkH+tSLGv3KCNyB1TO+TnHr/U2RkY0hc+TVj8Bu9upakVhHsqTI2OPrgo6MiobXr3JRp5WCtARyVFSnbRnvE+Y4FKXyyNXAmv0Rp9m1Xy9Ab6vpHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744478349; c=relaxed/simple;
-	bh=CC1mCMcELtJG4r7ykvk965wJP0bgpiZTexGFMbIEiH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VMf7/ID8f7A8ZT7h9teVjlNeJbYxmFv90sFog0BqecoBo1LSJZo797E/lSloz+UxJu8UkOlzmXyDrnkzzzXxHUBfHJ5X3YWnUs+f3OEE6nsNrOx0f1Pv72SAlIpN6SNKKp/WlAELQXLcBJntTpbctXzWVi2Hnn7lL78u17wdneA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjwDMYZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744478821; c=relaxed/simple;
+	bh=rntbUba3VSODfucFgd/aEty8d+8oEPtjZTsGP/8gO8w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TGVUJQ/ng3HxkHPCpBF42cl2fH4TEWKBXA+1YqdGt9XE10ZhdXnVlGZYqivdI9arbGpYxzcMYx0c4UhE6pGBDDtdxELzMjyH4f7p6OVo86R4SexHXx4ZLucTB2JIad9Zwoi/UT/RcjLv34tyRHt5v5h3BxGLLoTmmYKaPrSPZJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=a+PylrlD; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjwDMYZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C1FC4CEE5;
-	Sat, 12 Apr 2025 17:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744478349;
-	bh=CC1mCMcELtJG4r7ykvk965wJP0bgpiZTexGFMbIEiH8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PjwDMYZAI1WyoT6qMu/K8jAbxypWhFvnVMYgOVyIjMDBOxdbFzcpPfSfQFtUtc8RE
-	 dbFyt2WltGFtc/P62YRERuHq8RU2kyW5DrMVSibnpDzZ19SNZVkZu4WUYhF1lcr4TZ
-	 u2vUSQX8HQLvZRglx4xrPGIKaKck+66A/inRaTqeZZ2cjjDO5EMLHX2z6Ilv/tqZhX
-	 3IMEPaZ0XmHcrbsRCxNdfRte4c43ZHUlCKHa/wX5pdxVLJzop6Ev79sWUPFPbseLZl
-	 G+iSXE/R5wBdZSlvr8C1u+SfZulB4h4ZQAdZvScrWIIom93ReBruzX4ShNBwmGF9Vl
-	 x5Yo/Os/ASryQ==
-Date: Sat, 12 Apr 2025 18:19:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 13/13] iio: adc: ad4080: add driver support
-Message-ID: <20250412181902.16492ffb@jic23-huawei>
-In-Reply-To: <20250411123627.6114-14-antoniu.miclaus@analog.com>
-References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
-	<20250411123627.6114-14-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a+PylrlD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=1PbZA
+	dHOMzXKSunlx61DMfXhxLlD4hJummMQ3WG5sXA=; b=a+PylrlDlO9dEhz+GuMCL
+	wnBQ7vYSnHXrWd8vWjxGcY4YEECLei4Hk/3mtNUYcPcNKxezr7UbtCY27RYcYX/S
+	x0zw66jLd9FhxH4ojuc12T9lzg0jF/+NLHUlN1Tlg28hoN1ta0Ebpdx5KLXXdAOy
+	WqMVcd1udekvE6x9DkfIcQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wB3Vfg0ovpnzpIFGA--.26751S4;
+	Sun, 13 Apr 2025 01:26:13 +0800 (CST)
+From: lvxiafei <xiafei_xupt@163.com>
+To: xiafei_xupt@163.com
+Cc: coreteam@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kadlec@netfilter.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvxiafei@sensetime.com,
+	netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	pabeni@redhat.com,
+	pablo@netfilter.org
+Subject: [PATCH V5] netfilter: netns nf_conntrack: per-netns net.netfilter.nf_conntrack_max sysctl
+Date: Sun, 13 Apr 2025 01:26:10 +0800
+Message-Id: <20250412172610.37844-1-xiafei_xupt@163.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250407095052.49526-1-xiafei_xupt@163.com>
+References: <20250407095052.49526-1-xiafei_xupt@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB3Vfg0ovpnzpIFGA--.26751S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3tFy5ZryUWry5AFy7GF43GFg_yoWDXw15pF
+	1ft347Jw17Jr4Yya1j93yDAFsxG393Ca4a9rn8CFyrCwsI9r15CF4rKFyxJF98JrykAFy3
+	ZF4jvr1UAan5taDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRdsqAUUUUU=
+X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/xtbBMRQtU2f6mL7IKwAAsD
 
-On Fri, 11 Apr 2025 15:36:27 +0300
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+From: lvxiafei <lvxiafei@sensetime.com>
 
-> Add support for AD4080 high-speed, low noise, low distortion,
-> 20-bit, Easy Drive, successive approximation register (SAR)
-> analog-to-digital converter (ADC).
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-I'll leave the backend stuff to Nuno who has a better feel than
-me for what fits in that interface.  So this is just a review
-of the rest of this driver.
+Support net.netfilter.nf_conntrack_max settings per
+netns, net.netfilter.nf_conntrack_max is used to more
+flexibly limit the ct_count in different netns. The
+default value belongs to the init_net limit.
 
-Various minor comments inline
+After net.netfilter.nf_conntrack_max is set in different
+netns, it is not allowed to be greater than the init_net
+limit when working.
 
-Thanks,
+Signed-off-by: lvxiafei <lvxiafei@sensetime.com>
+---
+ .../networking/nf_conntrack-sysctl.rst        | 29 +++++++++++++++----
+ include/net/netfilter/nf_conntrack.h          |  8 ++++-
+ include/net/netns/conntrack.h                 |  1 +
+ net/netfilter/nf_conntrack_core.c             | 19 ++++++------
+ net/netfilter/nf_conntrack_netlink.c          |  2 +-
+ net/netfilter/nf_conntrack_standalone.c       |  7 +++--
+ 6 files changed, 46 insertions(+), 20 deletions(-)
 
-Jonathan
-
-> diff --git a/drivers/iio/adc/ad4080.c b/drivers/iio/adc/ad4080.c
-> new file mode 100644
-> index 000000000000..3a0b1ad13765
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad4080.c
-
-> +/* AD4080_REG_GPIO_CONFIG_B Bit Definition */
-> +#define AD4080_GPIO_1_SEL			GENMASK(7, 4)
-> +#define AD4080_GPIO_0_SEL			GENMASK(3, 0)
-> +
-> +/* AD4080_REG_FIFO_CONFIG Bit Definition */
-> +#define AD4080_FIFO_MODE_MSK			GENMASK(1, 0)
-> +
-> +/* AD4080_REG_FILTER_CONFIG Bit Definition */
-Better to name the defines to make that association explicit.
-#define AD4080_FILTER_CONFIG_SINC_DEC_RATE_MSK etc
-
-> +#define AD4080_SINC_DEC_RATE_MSK		GENMASK(6, 3)
-> +#define AD4080_FILTER_SEL_MSK			GENMASK(1, 0)
-> +
-> +/* Miscellaneous Definitions */
-> +#define AD4080_SW_RESET				(BIT(7) | BIT(0))
-> +#define AD4080_SPI_READ				BIT(7)
-> +#define BYTE_ADDR_H				GENMASK(15, 8)
-> +#define BYTE_ADDR_L				GENMASK(7, 0)
-Definitely not on those two!
-
-If you are going this you are probably reading into the wrong data type.
-
-> +static const unsigned int ad4080_scale_table[][2] = {
-> +	{6000, 0},
-	{ 6000, 0 },
-> +};
-> +
-> +static const char *const ad4080_filter_type_iio_enum[] = {
-> +	[FILTER_DISABLE]   = "disabled",
-> +	[SINC_1]           = "sinc1",
-> +	[SINC_5]           = "sinc5",
-> +	[SINC_5_COMP]      = "sinc5_plus_compensation",
-> +};
-> +
-> +static const int ad4080_dec_rate_iio_enum[] = {
-> +	2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
-Convention is keep a trailing comma except when we have
-an explicit terminating entry (NULL etc)
-
-> +
-> +static int ad4080_set_dec_rate(struct iio_dev *dev,
-> +			       const struct iio_chan_spec *chan,
-> +			       unsigned int mode)
-> +{
-> +	struct ad4080_state *st = iio_priv(dev);
-> +	int ret;
-> +	unsigned int data;
-> +	unsigned int reg_val;
-> +
-> +	if (st->filter_type >= SINC_5 && mode >= 512)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&st->lock);
-> +	ret = regmap_read(st->regmap, AD4080_REG_FILTER_CONFIG, &reg_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data = ((ilog2(mode) - 1) << 3) | (reg_val & AD4080_FILTER_SEL_MSK);
-
-As below. Odd to keep stuff with explicit mask like this rather than more
-normal masking out what we are placing. &= ~SINC_RET_DATA_MSK; etc
+diff --git a/Documentation/networking/nf_conntrack-sysctl.rst b/Documentation/networking/nf_conntrack-sysctl.rst
+index 238b66d0e059..6e7f17f5959a 100644
+--- a/Documentation/networking/nf_conntrack-sysctl.rst
++++ b/Documentation/networking/nf_conntrack-sysctl.rst
+@@ -93,12 +93,29 @@ nf_conntrack_log_invalid - INTEGER
+ 	Log invalid packets of a type specified by value.
  
-
-> +	ret = regmap_write(st->regmap, AD4080_REG_FILTER_CONFIG, data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->dec_rate = mode;
-> +
-> +	return ret;
-> +}
-
-> +static int ad4080_lvds_sync_write(struct ad4080_state *st)
-> +{
-> +	unsigned int timeout = 100;
-> +	bool sync_en;
-> +	int ret;
-> +
-> +	guard(mutex)(&st->lock);
-> +	if (st->num_lanes == 1)
-> +		ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +				   AD4080_RESERVED_CONFIG_A_MSK |
-> +				   AD4080_INTF_CHK_EN_MSK);
-> +	else
-> +		ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +				   AD4080_RESERVED_CONFIG_A_MSK |
-> +				   AD4080_INTF_CHK_EN_MSK |
-> +				   AD4080_SPI_LVDS_LANES_MSK);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = iio_backend_data_alignment_enable(st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	do {
-> +		ret = iio_backend_sync_status_get(st->back, &sync_en);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (!sync_en)
-> +			dev_dbg(&st->spi->dev, "Not Locked: Running Bit Slip\n");
-
-Maybe sleep a bit before trying again?  Tight loops are very dependent on the
-host CPU which is probably not what you want here.
-
-> +	} while (--timeout && !sync_en);
-> +
-> +	if (timeout) {
-> +		dev_info(&st->spi->dev, "Success: Pattern correct and Locked!\n");
-> +		if (st->num_lanes == 1)
-> +			return regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +					    AD4080_RESERVED_CONFIG_A_MSK);
-> +		else
-> +			return regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +					    AD4080_RESERVED_CONFIG_A_MSK |
-> +					    AD4080_SPI_LVDS_LANES_MSK);
-> +	} else {
-> +		dev_info(&st->spi->dev, "LVDS Sync Timeout.\n");
-> +		if (st->num_lanes == 1) {
-> +			ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +					   AD4080_RESERVED_CONFIG_A_MSK);
-> +			if (ret)
-> +				return ret;
-> +		} else {
-> +			ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +					   AD4080_RESERVED_CONFIG_A_MSK |
-> +					   AD4080_SPI_LVDS_LANES_MSK);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		return -ETIMEDOUT;
-> +	}
-> +}
-
-> +
-> +static int ad4080_set_filter_type(struct iio_dev *dev,
-> +				  const struct iio_chan_spec *chan,
-> +				  unsigned int mode)
-> +{
-> +	struct ad4080_state *st = iio_priv(dev);
-> +	int ret;
-> +	unsigned int data;
-> +	unsigned int reg_val;
-> +
-> +	if (mode >= SINC_5 && st->dec_rate >= 512)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&st->lock);
-> +	if (mode)
-> +		ret = iio_backend_filter_enable(st->back);
-> +	else
-> +		ret = iio_backend_filter_disable(st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->filter_en = mode;
-> +
-> +	ret = regmap_read(st->regmap, AD4080_REG_FILTER_CONFIG, &reg_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data = (reg_val & AD4080_SINC_DEC_RATE_MSK) |
-> +	       (mode & AD4080_FILTER_SEL_MSK);
-
-FIELD_PREP() for the second part.
-The first is hanging on to one field.  Maybe just pull that out with
-a FIELD_GET() and write it back again with FIELD_PREP?
-Will be more code, but a little less subtle to read!
-
-
-> +
-> +	ret = regmap_write(st->regmap, AD4080_REG_FILTER_CONFIG, data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->filter_type = mode;
-> +
-> +	return ret;
-> +}
-
-> +static struct iio_chan_spec_ext_info ad4080_ext_info[] = {
-> +	IIO_ENUM("filter_type",
-> +		 IIO_SHARED_BY_ALL,
-> +		 &ad4080_filter_type_enum),
-very short line wrap - aim for nearer 80 chars.
-
-> +	IIO_ENUM_AVAILABLE("filter_type",
-> +			   IIO_SHARED_BY_ALL,
-> +			   &ad4080_filter_type_enum),
-> +	{}
-Trivial preference for 
-	{ }
-
-> +};
-> +
-> +#define AD4080_CHAN(_chan, _si, _bits, _sign, _shift)		\
-> +	{ .type = IIO_VOLTAGE,	
-Odd indent. Better perhaps as simpler
-	{ \
-		.indexed = 1, 
-etc.					\
-> +	  .indexed = 1,							\
-> +	  .channel = _chan,						\
-> +	  .info_mask_separate = BIT(IIO_CHAN_INFO_SCALE),		\
-> +	  .info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |	\
-> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),			\
-> +	  .info_mask_shared_by_all_available =				\
-> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),			\
-> +	  .ext_info = ad4080_ext_info,					\
-> +	  .scan_index = _si,						\
-> +	  .scan_type = {						\
-> +			.sign = _sign,					\
-Current indent makes this look really wierd!
-
-> +			.realbits = _bits,				\
-> +			.storagebits = 32,				\
-> +			.shift = _shift,				\
-> +	  },								\
-> +	}
-> +
-> +static const struct iio_chan_spec ad4080_channels[] = {
-> +	AD4080_CHAN(0, 0, 20, 's', 0)
-Don't bother with the macro as it doesn't add anything. Just put that
-stuff all here. That will let you skip setting obvious defaults to 0
-like the shift.
-
-> +};
-> +
-> +static const struct ad4080_chip_info ad4080_chip_info = {
-> +	.name = "AD4080",
-> +	.product_id = AD4080_CHIP_ID,
-> +	.scale_table = ad4080_scale_table,
-> +	.num_scales = ARRAY_SIZE(ad4080_scale_table),
-> +	.num_channels = 1,
-> +	.channels = ad4080_channels,
-> +};
-> +
-> +static int ad4080_setup(struct iio_dev *indio_dev)
-> +{
-
-> +	if (id != AD4080_CHIP_ID)
-> +		return dev_err_probe(&st->spi->dev, -EINVAL,
-> +				     "Unrecognized CHIP_ID 0x%X\n", id);
-A mismatch on ID should not be treated as an error. That breaks the
-use of fallback dt compatibles.  So convention on these is a dev_info()
-and carry on anyway.  We've left breadcrumbs if things don't work but
-not our role to make sure it is definitely the right hardware in the
-firmware description.
-
-> +
-> +	ret = regmap_set_bits(st->regmap, AD4080_REG_GPIO_CONFIG_A,
-> +			      AD4080_GPO_1_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4080_REG_GPIO_CONFIG_B,
-> +			   FIELD_PREP(AD4080_GPIO_1_SEL, 3));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = iio_backend_num_lanes_set(st->back, st->num_lanes);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = iio_backend_self_sync_enable(st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (st->lvds_cnv_en) {
-I'd flip this unless you expect to shortly add more optional stuff after this
-code
-
-	if (!st->lvds_cnv_en)
-		return 0;
-
-	..
-
-> +		if (st->num_lanes) {
-> +			ret = regmap_update_bits(st->regmap,
-> +						 AD4080_REG_ADC_DATA_INTF_CONFIG_B,
-> +						 AD4080_LVDS_CNV_CLK_CNT_MSK,
-> +						 FIELD_PREP(AD4080_LVDS_CNV_CLK_CNT_MSK, 7));
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = regmap_set_bits(st->regmap,
-> +				      AD4080_REG_ADC_DATA_INTF_CONFIG_B,
-> +				      AD4080_LVDS_CNV_EN_MSK);
-> +		if (ret)
-> +			return ret;
-> +
-> +		return ad4080_lvds_sync_write(st);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ad4080_properties_parse(struct ad4080_state *st)
-> +{
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	st->lvds_cnv_en = device_property_read_bool(&st->spi->dev,
-> +						    "adi,lvds-cnv-enable");
-> +
-> +	st->num_lanes = 1;
-> +	ret = device_property_read_u32(&st->spi->dev, "adi,num_lanes", &val);
-> +	if (!ret)
-> +		st->num_lanes = val;
-Usual trick on these places were we have a default is to pick types correctly 
-and do.
-
-	st->num_lanes = 1;
-	device_property_read_u32(&st->spi->dev, "adi,num_lanes", &st->num_lanes);
-
-That is, rely on the call being side effect free on error.
+ nf_conntrack_max - INTEGER
+-        Maximum number of allowed connection tracking entries. This value is set
+-        to nf_conntrack_buckets by default.
+-        Note that connection tracking entries are added to the table twice -- once
+-        for the original direction and once for the reply direction (i.e., with
+-        the reversed address). This means that with default settings a maxed-out
+-        table will have a average hash chain length of 2, not 1.
++    - 0 - disabled (unlimited)
++    - not 0 - enabled
++
++    Maximum number of allowed connection tracking entries per netns. This value
++    is set to nf_conntrack_buckets by default.
++
++    Note that connection tracking entries are added to the table twice -- once
++    for the original direction and once for the reply direction (i.e., with
++    the reversed address). This means that with default settings a maxed-out
++    table will have a average hash chain length of 2, not 1.
++
++    The limit of other netns cannot be greater than init_net netns.
++    +----------------+-------------+----------------+
++    | init_net netns | other netns | limit behavior |
++    +----------------+-------------+----------------+
++    | 0              | 0           | unlimited      |
++    +----------------+-------------+----------------+
++    | 0              | not 0       | other          |
++    +----------------+-------------+----------------+
++    | not 0          | 0           | init_net       |
++    +----------------+-------------+----------------+
++    | not 0          | not 0       | min            |
++    +----------------+-------------+----------------+
  
-> +}
+ nf_conntrack_tcp_be_liberal - BOOLEAN
+ 	- 0 - disabled (default)
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 3f02a45773e8..062e67b9a5d7 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -320,7 +320,6 @@ int nf_conntrack_hash_resize(unsigned int hashsize);
+ extern struct hlist_nulls_head *nf_conntrack_hash;
+ extern unsigned int nf_conntrack_htable_size;
+ extern seqcount_spinlock_t nf_conntrack_generation;
+-extern unsigned int nf_conntrack_max;
+ 
+ /* must be called with rcu read lock held */
+ static inline void
+@@ -360,6 +359,13 @@ static inline struct nf_conntrack_net *nf_ct_pernet(const struct net *net)
+ 	return net_generic(net, nf_conntrack_net_id);
+ }
+ 
++static inline unsigned int nf_conntrack_max(const struct net *net)
++{
++	return likely(init_net.ct.sysctl_max && net->ct.sysctl_max) ?
++	    min(init_net.ct.sysctl_max, net->ct.sysctl_max) :
++	    max(init_net.ct.sysctl_max, net->ct.sysctl_max);
++}
++
+ int nf_ct_skb_network_trim(struct sk_buff *skb, int family);
+ int nf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
+ 			   u16 zone, u8 family, u8 *proto, u16 *mru);
+diff --git a/include/net/netns/conntrack.h b/include/net/netns/conntrack.h
+index bae914815aa3..d3fcd0b92b2d 100644
+--- a/include/net/netns/conntrack.h
++++ b/include/net/netns/conntrack.h
+@@ -102,6 +102,7 @@ struct netns_ct {
+ 	u8			sysctl_acct;
+ 	u8			sysctl_tstamp;
+ 	u8			sysctl_checksum;
++	unsigned int		sysctl_max;
+ 
+ 	struct ip_conntrack_stat __percpu *stat;
+ 	struct nf_ct_event_notifier __rcu *nf_conntrack_event_cb;
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 7f8b245e287a..a738564923ec 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -202,8 +202,6 @@ static void nf_conntrack_all_unlock(void)
+ unsigned int nf_conntrack_htable_size __read_mostly;
+ EXPORT_SYMBOL_GPL(nf_conntrack_htable_size);
+ 
+-unsigned int nf_conntrack_max __read_mostly;
+-EXPORT_SYMBOL_GPL(nf_conntrack_max);
+ seqcount_spinlock_t nf_conntrack_generation __read_mostly;
+ static siphash_aligned_key_t nf_conntrack_hash_rnd;
+ 
+@@ -1498,7 +1496,7 @@ static bool gc_worker_can_early_drop(const struct nf_conn *ct)
+ 
+ static void gc_worker(struct work_struct *work)
+ {
+-	unsigned int i, hashsz, nf_conntrack_max95 = 0;
++	unsigned int i, hashsz;
+ 	u32 end_time, start_time = nfct_time_stamp;
+ 	struct conntrack_gc_work *gc_work;
+ 	unsigned int expired_count = 0;
+@@ -1509,8 +1507,6 @@ static void gc_worker(struct work_struct *work)
+ 	gc_work = container_of(work, struct conntrack_gc_work, dwork.work);
+ 
+ 	i = gc_work->next_bucket;
+-	if (gc_work->early_drop)
+-		nf_conntrack_max95 = nf_conntrack_max / 100u * 95u;
+ 
+ 	if (i == 0) {
+ 		gc_work->avg_timeout = GC_SCAN_INTERVAL_INIT;
+@@ -1538,6 +1534,7 @@ static void gc_worker(struct work_struct *work)
+ 		}
+ 
+ 		hlist_nulls_for_each_entry_rcu(h, n, &ct_hash[i], hnnode) {
++			unsigned int nf_conntrack_max95 = 0;
+ 			struct nf_conntrack_net *cnet;
+ 			struct net *net;
+ 			long expires;
+@@ -1567,11 +1564,14 @@ static void gc_worker(struct work_struct *work)
+ 			expires = clamp(nf_ct_expires(tmp), GC_SCAN_INTERVAL_MIN, GC_SCAN_INTERVAL_CLAMP);
+ 			expires = (expires - (long)next_run) / ++count;
+ 			next_run += expires;
++			net = nf_ct_net(tmp);
++
++			if (gc_work->early_drop)
++				nf_conntrack_max95 = nf_conntrack_max(net) / 100u * 95u;
+ 
+ 			if (nf_conntrack_max95 == 0 || gc_worker_skip_ct(tmp))
+ 				continue;
+ 
+-			net = nf_ct_net(tmp);
+ 			cnet = nf_ct_pernet(net);
+ 			if (atomic_read(&cnet->count) < nf_conntrack_max95)
+ 				continue;
+@@ -1648,13 +1648,14 @@ __nf_conntrack_alloc(struct net *net,
+ 		     gfp_t gfp, u32 hash)
+ {
+ 	struct nf_conntrack_net *cnet = nf_ct_pernet(net);
+-	unsigned int ct_count;
++	unsigned int ct_max, ct_count;
+ 	struct nf_conn *ct;
+ 
+ 	/* We don't want any race condition at early drop stage */
+ 	ct_count = atomic_inc_return(&cnet->count);
++	ct_max = nf_conntrack_max(net);
+ 
+-	if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) {
++	if (ct_max && unlikely(ct_count > ct_max)) {
+ 		if (!early_drop(net, hash)) {
+ 			if (!conntrack_gc_work.early_drop)
+ 				conntrack_gc_work.early_drop = true;
+@@ -2650,7 +2651,7 @@ int nf_conntrack_init_start(void)
+ 	if (!nf_conntrack_hash)
+ 		return -ENOMEM;
+ 
+-	nf_conntrack_max = max_factor * nf_conntrack_htable_size;
++	init_net.ct.sysctl_max = max_factor * nf_conntrack_htable_size;
+ 
+ 	nf_conntrack_cachep = kmem_cache_create("nf_conntrack",
+ 						sizeof(struct nf_conn),
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 2cc0fde23344..73e6bb1e939b 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -2608,7 +2608,7 @@ ctnetlink_stat_ct_fill_info(struct sk_buff *skb, u32 portid, u32 seq, u32 type,
+ 	if (nla_put_be32(skb, CTA_STATS_GLOBAL_ENTRIES, htonl(nr_conntracks)))
+ 		goto nla_put_failure;
+ 
+-	if (nla_put_be32(skb, CTA_STATS_GLOBAL_MAX_ENTRIES, htonl(nf_conntrack_max)))
++	if (nla_put_be32(skb, CTA_STATS_GLOBAL_MAX_ENTRIES, htonl(nf_conntrack_max(net))))
+ 		goto nla_put_failure;
+ 
+ 	nlmsg_end(skb, nlh);
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 2f666751c7e7..5db6df0e4eb3 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -615,7 +615,7 @@ enum nf_ct_sysctl_index {
+ static struct ctl_table nf_ct_sysctl_table[] = {
+ 	[NF_SYSCTL_CT_MAX] = {
+ 		.procname	= "nf_conntrack_max",
+-		.data		= &nf_conntrack_max,
++		.data		= &init_net.ct.sysctl_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_minmax,
+@@ -948,7 +948,7 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ static struct ctl_table nf_ct_netfilter_table[] = {
+ 	{
+ 		.procname	= "nf_conntrack_max",
+-		.data		= &nf_conntrack_max,
++		.data		= &init_net.ct.sysctl_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_minmax,
+@@ -1063,6 +1063,7 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+ 
+ 	table[NF_SYSCTL_CT_COUNT].data = &cnet->count;
+ 	table[NF_SYSCTL_CT_CHECKSUM].data = &net->ct.sysctl_checksum;
++	table[NF_SYSCTL_CT_MAX].data = &net->ct.sysctl_max;
+ 	table[NF_SYSCTL_CT_LOG_INVALID].data = &net->ct.sysctl_log_invalid;
+ 	table[NF_SYSCTL_CT_ACCT].data = &net->ct.sysctl_acct;
+ #ifdef CONFIG_NF_CONNTRACK_EVENTS
+@@ -1087,7 +1088,6 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+ 
+ 	/* Don't allow non-init_net ns to alter global sysctls */
+ 	if (!net_eq(&init_net, net)) {
+-		table[NF_SYSCTL_CT_MAX].mode = 0444;
+ 		table[NF_SYSCTL_CT_EXPECT_MAX].mode = 0444;
+ 		table[NF_SYSCTL_CT_BUCKETS].mode = 0444;
+ 	}
+@@ -1139,6 +1139,7 @@ static int nf_conntrack_pernet_init(struct net *net)
+ 	int ret;
+ 
+ 	net->ct.sysctl_checksum = 1;
++	net->ct.sysctl_max = init_net.ct.sysctl_max;
+ 
+ 	ret = nf_conntrack_standalone_init_sysctl(net);
+ 	if (ret < 0)
+-- 
+2.40.1
 
