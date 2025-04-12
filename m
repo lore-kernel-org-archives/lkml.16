@@ -1,88 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2EB21ADC6;
-	Sat, 12 Apr 2025 18:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585D21392
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744483659; cv=none; b=RrD45yadNXF51EaFsz3F20C96lCZymLWNHp1kCAs5o1yViTlTa6Qizct7D1RyhQ9cKNwJdLhkoPivHf4/A+E3L5YBS2RFvzC4V7YDUzsUOgY5npVwNYQxJKp4G58w1PmMeSZLKcyDCTcVybQh/zs+TkwXngQOdMJCNpm0b6h2wI=
+	t=1744483805; cv=none; b=MDZmBTtHLa/hvbsR980WNWvxMi4Y1GNB+UfzTyzEUYWAI/xcuX8tESsQ5QHvoEAugBep/NWSJi8IGYCY1YW6aDHWBDW4FBWv7yFfuC4IVyzUNnxEx4HBc0BTvzBmTGLbOng6K6BR8W0a3ge/E00PNtlWFnyA+jRjeLNpTj5GGWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744483659; c=relaxed/simple;
-	bh=C2c3sZO5Ej6/VKECo+uPasXgdXU3ZH2FHWbAOki1+Is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dOrxe96ZxWKkTfyRT/r1xiRtWWYRwV8ZeNa8hiqbGNNDigegJyXkVmyC+pvb/eOh2EiOvlGAka3iDH/sceUUFZO3LocSvMwit/eXxuuzSILqu+dJSOK6pXvXei8m2hGJIjMvVt2W0ovkZEVPOoBAfXWLBeD3NzqUsN5wLL+zJHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBIK/gpH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBIK/gpH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 333E1C4CEE3;
-	Sat, 12 Apr 2025 18:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744483659;
-	bh=C2c3sZO5Ej6/VKECo+uPasXgdXU3ZH2FHWbAOki1+Is=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jBIK/gpHvJVUvZAYxvVpLyo2ZnBzj4qMX9Jaeeagjqpeo/8S0AHqFPUZESTryp57t
-	 8GhjoKrHHuu+dVpiNVc78VSbyHvsFP+WDBuTT5wpKZERRVMz6rwdUB7gcEc6HVddqm
-	 l2i29qwuvKwM4Rc/gpG0XyL4JCUkgY0t4sq1jQrCkGhuFzcUPfGgDcCpYFfo9SEUu1
-	 sRt0GMpHbWTfwPz/JW61MPA85gHshH2I/8g45OM1NafxtZSncdaKgWKkGN7OXZI27K
-	 4khOUp2E2MWuXhy9GS1LXPFqdq04xA/cXBJZ/u1QXb1C2Wze2RYMRanme/aUOQHTON
-	 LZrcxEqvVeghQ==
-Date: Sat, 12 Apr 2025 20:47:34 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v4 08/11] x86/sev: Split off startup code from core code
-Message-ID: <Z_q1RthXIbSXY2Eq@gmail.com>
-References: <20250410134117.3713574-13-ardb+git@google.com>
- <20250410134117.3713574-21-ardb+git@google.com>
- <Z_pbLAw56NIFo7yK@gmail.com>
+	s=arc-20240116; t=1744483805; c=relaxed/simple;
+	bh=nhafsCYMLV/1L5uDLM7a0dpPB51CKZggrbh++DTqtmw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=q24t5ZXoez7IChqgyxeXCnqeDj7hmI8eLwTtZ4tHBX65ZqSmlPlLKPgxTZkJGGc8CDzBxrO/VQcoD2K6yJv5p0ffTAW5D9CTgcVNzauwkn9LobYyNSuBcFQah8jYMKZd2M3e06oSRco6dEk/DQrVoQ11OA6o6SfrCk3V4sxOjKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d43d3338d7so24137685ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:50:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744483803; x=1745088603;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C7VjZvJbW2uAftgn5cbXxBtcR3vdwZk8hVAwdnASbOI=;
+        b=u5XA+cR5Xq8F+M1+omb1Kek1ptD583ZDEObTF5DeEqGzUS8efzveIbMgQ8YIYZAaTY
+         s8dW20WpIpjNexr4jHV9YUNf56Oby59QKFM+HnmFdu19VSBJJpdhELL0xZh+bFELD1ca
+         GH5JGemvEDZM4TqhVLMPjJm4JbwOPYuqVPwpHTNHL7GpeUJ7v+cbxt+oiQPSoRiMao29
+         4bDvOxOIrN/d+fCpB2QK/8CPs7Llvr9YLvtuy7xk8rAO2BS9Mqy725/fVI06wpKVRoyf
+         i1zsHJVqIKKtEdot0HwSDH9cSv5wvD0KayMxXE1NPbWSePBXi6k/mpTxl+du3OdOWTFp
+         NCbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1y/vYP+WDOoXQXab2Y28pTE63nadljJM3qTKlLzHOY0CpckF2NhR0v/68lHnZ+fDDY654oooBShp2/Hk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvGxE2yHRCND2b5vbHZ+jcqV+XKpSCbYi9/45C1RQAEtMDMJ06
+	XX1JFELEpbkzBkC6LoZFEtZaJzYr3f3/sK/IhGaSsmRwNlEkZ+0QCV4KPCKQVdNKM8SGulwWYQR
+	eHk0YtyA3iYAmvnsZhDZAiUBrgqKKajXMwIgawAdZzNYzXY60ZWrA0mM=
+X-Google-Smtp-Source: AGHT+IHrjKuFivMeX27xQMCIkAmOxVp9quQsUMQ6AVml7KFrAtT60UhEUyEVbHBisBJnZ5bL3nE9sW0P0iKRLhKrZNbJOPQAWJYD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_pbLAw56NIFo7yK@gmail.com>
+X-Received: by 2002:a05:6e02:1fe5:b0:3d5:deaf:b443 with SMTP id
+ e9e14a558f8ab-3d7ec1cb3fcmr75275005ab.3.1744483803376; Sat, 12 Apr 2025
+ 11:50:03 -0700 (PDT)
+Date: Sat, 12 Apr 2025 11:50:03 -0700
+In-Reply-To: <20250412181140.245367-1-gshahrouzi@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fab5db.050a0220.379d84.0015.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_dev_free
+From: syzbot <syzbot+aec9606169fbc3a12ca6@syzkaller.appspotmail.com>
+To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot tried to test the proposed patch but the build/boot failed:
+
+failed to apply patch:
+checking file fs/bcachefs/super.c
+Hunk #1 FAILED at 1757.
+1 out of 1 hunk FAILED
 
 
-* Ingo Molnar <mingo@kernel.org> wrote:
 
-> 
-> * Ard Biesheuvel <ardb+git@google.com> wrote:
-> 
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> > 
-> > Disentangle the SEV core code and the SEV code that is called during
-> > early boot. The latter piece will be moved into startup/ in a subsequent
-> > patch.
-> > 
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/boot/compressed/sev.c |    2 +
-> >  arch/x86/coco/sev/Makefile     |   12 +-
-> >  arch/x86/coco/sev/core.c       | 1574 ++++----------------
-> >  arch/x86/coco/sev/shared.c     |  281 ----
-> >  arch/x86/coco/sev/startup.c    | 1395 +++++++++++++++++
-> >  5 files changed, 1658 insertions(+), 1606 deletions(-)
-> 
-> x86-64 allmodconfig build failure:
-> 
-> arch/x86/boot/compressed/sev.c:263:13: error: implicit declaration of function ‘vmgexit_psc’ [-Wimplicit-function-declaration]
-> |             ^~~~~~~~~~~
-> arch/x86/boot/compressed/sev.c:266:9: error: implicit declaration of function ‘pvalidate_pages’; did you mean ‘pvalidate_4k_page’? [-Wimplicit-function-declaration]
-> |         ^~~~~~~~~~~~~~~
-> |         pvalidate_4k_page
+Tested on:
 
-Ignore that, I have now read the cover letter too, with the patch 
-dependency mentioned there - as kindly pointed out by Ard in a private 
-mail. :-)
+commit:         5fc31936 Merge tag 'net-6.14-rc8' of git://git.kernel...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bae073f4634b7fd
+dashboard link: https://syzkaller.appspot.com/bug?extid=aec9606169fbc3a12ca6
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12f21f4c580000
 
-Thanks,
-
-	Ingo
