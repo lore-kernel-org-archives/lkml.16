@@ -1,140 +1,123 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA70F4315F
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 18:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2474315F;
+	Sat, 12 Apr 2025 18:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744483585; cv=none; b=k4udNkV7VSCl6sySB7VxW5AHM/YZ+0JipQUklDoI+CWJ4zgVmyj+cliZzOgEhPM0lWucR2bhRz7xtFLdbduA83VaXM5zXhFPxi7eJJ74dhudM/xQWzMAj41yQBeI1MqPHxjUe4YEYqyhyGQzdNe9nGKT/i7YvdOzCEp2aWY/CLk=
+	t=1744483616; cv=none; b=AwK6aQeOL5xIsduRBGvcV98dXp5/IozfO6eLrmbq2qGR0xKzx2db/FdTGZeEE3yxz+4PvmN26ZI1rtSJU4uAMHToZ06Ck6gW5OtdW0QzYKaa2S4WJFQMtz2cQnXAGG8X5kj3GA/dPsLTp/wxOWUIrp/O4m4n4BSPrkeW6OkRkfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744483585; c=relaxed/simple;
-	bh=PZ6XtsB2IIx9AuTDdACoZ42EyCPrWsWT81ePmFEkeUI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BuxjYtc28OW9esQiMXWMNXj+GwCA7ddOOfYU2YufQV4zByMCfUaSEi/QBIycOZRhrDTXsEHQXGiXgHMF2xZj3HiUp1XyMlGp0kNcBX3DKpWzR1iiavhdXsCUJ1/GZ4aoXOGfTxoZh/GjTBQcTG4nsUlVevoI57s82Gs/jz0qwFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d458e61faaso30751545ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 11:46:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744483583; x=1745088383;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8EYawUqUPJUUXDdCuKwIAwUSr7/5CkWMi7P8VIfyhQA=;
-        b=mn5V+KAYXVQs+vZ4GEJm2UAjAKEv4soDBB6BckymPWvoFIzLrUrPDb4FSxt+f6YfS5
-         dRNOgsgd3GTcMZMSlMYaZqj8CP81NnJTlZGZkC62S7dvn47h+DJT7JhycM5egyyK7Dde
-         UqdMBF03icRUiHQybLayDXjaCvsX2d7q74S2rrXXZlx3s89W0HHS2hcqhQzA2wnXu43b
-         hv6Z2dYyxD9Iei5sRuD1lLOIjCJwF0CWl/JVXTj8bM9C+U7ITzE+Fub/XFnyWZXGRTKe
-         vnToWyhqnNfS6reWrAEEG83xYbFVlmhz38W/5azlGUiJCoMOkJG+BDPPo8xs2GZN92Xe
-         BKfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzHG/ha4PovgethphUAwbUZEBBHBWITrzr9O5UuRIyNe/JJ+aJcOwkDZg9kcip2XQZJH4dRw81hCNLQNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOTU1QbpZJdHYTYv3LuZeBlE0SUbjefs32n/FWBKNSqG4id3SE
-	qC65pkc22zWOQxiRjHQWni8QpdQEOzO3R+aep0N+mK9CrBXK5NyFDTPPLPNWgtJ3N9MlOD6iALJ
-	We1Da9oomXnssREfdQm2lTAMJ53w39HKTy6w1sD9aImoiJsPgAhoKVZ8=
-X-Google-Smtp-Source: AGHT+IGj2kWjTA9dT5MRnTtQizBJQUcBlnOuNIjkETdqfNUs0tZVkkgK84qLomZ16SUmc7uNe3Z+Smr3moDA/AP4b71M8bzAXpxf
+	s=arc-20240116; t=1744483616; c=relaxed/simple;
+	bh=xX8iGqPmSZ1nVvd9asXm8OsG20SJvWswfpZ8UiclRfI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=M6Vwu5HdlI/mkkfjkpDPfrXYzar3jB4RjXd0KV9Ck/mMeg0QaG6YihufrI13MFYxCyK01XiJdUesi1ngpcD+T1exEE/bFl4RJc7MZjKSLo1amJhVR4BOln4bY1PLvFsjozadfUMlPCmDW3XfCr/VjrHdbJCRYmdTUbDoDjXs3iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1yk9apcJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e33R+CVU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1yk9apcJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e33R+CVU"
+Date: Sat, 12 Apr 2025 18:46:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744483609;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EUOr1HeuQGxYTfgvwdl1TNfChlQBzYYTSD6XlwYS51s=;
+	b=1yk9apcJ7mtHzr7n12o6TTHctpIyJWueupY2NiA0pSgUq3l4VjO0YOw/XBMQJj5aCzVpX6
+	dov6q5lcZ+w8FzZwPhnOI+EfJwBPQemLIjS9DTDClnF9tNi5gLzeELfb31gFnk5z/kuYhz
+	3IkxwuUAmHzbwF9L/xUCeKxlDfQKTucBVcwv4q+NlAlNCGcdq7fAPV+xW6D9anawYWkA2U
+	Eph26KoeuL+mrTdHsEMMOUGGzFm4B1vz7p81tZngWbKkqSXagXA95bf5EMYGtrnYAan3jb
+	0LWpqB18cnyG3rln17XZlGq+rXIuUdiRVecEkj8Z3DtDj1MUK7qRUDyoBbweDw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744483609;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EUOr1HeuQGxYTfgvwdl1TNfChlQBzYYTSD6XlwYS51s=;
+	b=e33R+CVUbWAcUgl+XF2RwiD4KkNy1cNAmjzSWLX3yAkSrKphDjlwAzPeBKuqgdG2UZztmv
+	7jrYVe09U+Xwe7Dw==
+From: "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/alternatives] x86/efi: Make efi_enter/leave_mm() use the
+ use_/unuse_temporary_mm() machinery
+Cc: Andy Lutomirski <luto@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250402094540.3586683-7-mingo@kernel.org>
+References: <20250402094540.3586683-7-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1708:b0:3d3:fa69:6755 with SMTP id
- e9e14a558f8ab-3d7ebf5fa25mr63683985ab.5.1744483582800; Sat, 12 Apr 2025
- 11:46:22 -0700 (PDT)
-Date: Sat, 12 Apr 2025 11:46:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fab4fe.050a0220.2c5fcf.0011.GAE@google.com>
-Subject: [syzbot] [mm?] WARNING in do_wp_page
-From: syzbot <syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174448360887.31282.4227052210506129936.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+The following commit has been merged into the x86/alternatives branch of tip:
 
-syzbot found the following issue on:
+Commit-ID:     e7021e2fe0b4335523d3f6e2221000bdfc633b62
+Gitweb:        https://git.kernel.org/tip/e7021e2fe0b4335523d3f6e2221000bdfc633b62
+Author:        Andy Lutomirski <luto@kernel.org>
+AuthorDate:    Wed, 02 Apr 2025 11:45:39 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 12 Apr 2025 10:06:04 +02:00
 
-HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1766323f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f175b153b655dbb3
-dashboard link: https://syzkaller.appspot.com/bug?extid=5e8feb543ca8e12e0ede
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+x86/efi: Make efi_enter/leave_mm() use the use_/unuse_temporary_mm() machinery
 
-Unfortunately, I don't have any reproducer for this issue yet.
+This should be considerably more robust.  It's also necessary for optimized
+for_each_possible_lazymm_cpu() on x86 -- without this patch, EFI calls in
+lazy context would remove the lazy mm from mm_cpumask().
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f1d71d1bf77d/disk-0af2f6be.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7f1638f065da/vmlinux-0af2f6be.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9b3e49834705/bzImage-0af2f6be.xz
+[ mingo: Merged it on top of x86/alternatives ]
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7165 at mm/memory.c:3738 __wp_can_reuse_large_anon_folio mm/memory.c:3738 [inline]
-WARNING: CPU: 0 PID: 7165 at mm/memory.c:3738 wp_can_reuse_anon_folio mm/memory.c:3788 [inline]
-WARNING: CPU: 0 PID: 7165 at mm/memory.c:3738 do_wp_page+0x4c62/0x59f0 mm/memory.c:3918
-Modules linked in:
-CPU: 0 UID: 0 PID: 7165 Comm: syz.3.280 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:__wp_can_reuse_large_anon_folio mm/memory.c:3738 [inline]
-RIP: 0010:wp_can_reuse_anon_folio mm/memory.c:3788 [inline]
-RIP: 0010:do_wp_page+0x4c62/0x59f0 mm/memory.c:3918
-Code: 48 89 ef e8 50 c3 ea ff e9 62 b8 ff ff e8 c6 e0 b4 ff 48 c7 c6 20 43 9b 8b 4c 89 e7 e8 f7 a0 fc ff 90 0f 0b e8 af e0 b4 ff 90 <0f> 0b 90 e9 df ed ff ff e8 a1 e0 b4 ff 48 c7 c6 60 46 9b 8b 48 89
-RSP: 0018:ffffc900039f77e0 EFLAGS: 00010287
-RAX: 0000000000041ec0 RBX: ffffc900039f7a00 RCX: ffffc9000d0c6000
-RDX: 0000000000080000 RSI: ffffffff82065c61 RDI: 0000000000000005
-RBP: ffffea0001320000 R08: 0000000000000005 R09: 00000000ffffffff
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888012935dc0
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007f57215806c0(0000) GS:ffff8881249b9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000020000001e000 CR3: 000000006cd88000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- handle_pte_fault mm/memory.c:6013 [inline]
- __handle_mm_fault+0x1ada/0x2a40 mm/memory.c:6140
- handle_mm_fault+0x3fe/0xad0 mm/memory.c:6309
- faultin_page mm/gup.c:1193 [inline]
- __get_user_pages+0x771/0x36f0 mm/gup.c:1491
- populate_vma_page_range+0x278/0x3a0 mm/gup.c:1929
- __mm_populate+0x1d8/0x380 mm/gup.c:2032
- do_mlock+0x448/0x810 mm/mlock.c:655
- __do_sys_mlock mm/mlock.c:663 [inline]
- __se_sys_mlock mm/mlock.c:661 [inline]
- __x64_sys_mlock+0x59/0x80 mm/mlock.c:661
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f572078d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f5721580038 EFLAGS: 00000246 ORIG_RAX: 0000000000000095
-RAX: ffffffffffffffda RBX: 00007f57209a5fa0 RCX: 00007f572078d169
-RDX: 0000000000000000 RSI: 0000000000800000 RDI: 0000200000000000
-RBP: 00007f572080e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f57209a5fa0 R15: 00007fffd504a2f8
- </TASK>
-
-
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250402094540.3586683-7-mingo@kernel.org
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/x86/platform/efi/efi_64.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index ac57259..a5d3496 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -434,15 +434,12 @@ void __init efi_dump_pagetable(void)
+  */
+ static void efi_enter_mm(void)
+ {
+-	efi_prev_mm = current->active_mm;
+-	current->active_mm = &efi_mm;
+-	switch_mm(efi_prev_mm, &efi_mm, NULL);
++	efi_prev_mm = use_temporary_mm(&efi_mm);
+ }
+ 
+ static void efi_leave_mm(void)
+ {
+-	current->active_mm = efi_prev_mm;
+-	switch_mm(&efi_mm, efi_prev_mm, NULL);
++	unuse_temporary_mm(efi_prev_mm);
+ }
+ 
+ void arch_efi_call_virt_setup(void)
