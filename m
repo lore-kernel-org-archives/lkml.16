@@ -1,123 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B201DB13A;
-	Sat, 12 Apr 2025 11:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B87FD;
+	Sat, 12 Apr 2025 11:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744458158; cv=none; b=C1eEX4RxPjbEdmgZiwLUrhRLW5+6rWYCHroIgNGF/0CV6fmaOKIS116ViQozVRpa/+Tb0+N3uJj0bN2tMBSu+C1ff8lV5AqIU81LUiYivvzNFFm406JuFz6ITGikSmKP+gbdgPWFYdnY9LbEENz8Jd/qJ/JuVZB60SrflJLih6E=
+	t=1744458492; cv=none; b=IUHxaHDAQ4Gq5V1H8fPLyDBXwkgNJo+Iorarco98h8ofmux/PH9zYKEAc+SUBXchZ3EhKFBd3bxYGZQmLXNZybIm6jme8SIcqMXXnpGQWqXO12tPaQYvCV1owdGhEjeDkTrsNsvrpV/yQF3BcW5Kh2d7Aj5/0ofFLeYnT2gWUFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744458158; c=relaxed/simple;
-	bh=HS9BffI3qqC4JoBQVgCoiOiCi+evWrXoorn+7+Ndd2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d2Mso09sCBcGyvpb53TmH7ImL+HNKT5dVH7gOwAckLtzoiFGHBRER5QBSfm4wAqZhm3DwL6JUsl12W34XbeTQU/qJqo35cqSLVzHqqf0Kl09XGpiwyrc21vTyuc+ys1kEZ6a4mhsMDiomXUMwLl8fAfpjUet9P9ZPF2E3qmvHSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm5JAmTT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744458492; c=relaxed/simple;
+	bh=OJgHRXwM7hiYQ4eSnI2MPkpqA+d62q5RHWnPsL3f9Ns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lAn3eGezWv7JtYGRAvcg4oyex36m2iOWD0ovTJ4gWRC08XVPfir71EVILNhQSOrLj1Krihyq7udFt9IDcGUrEa7PDX+ltdceYPLjJLCCnmnvK8zasfHlInRXMy+T5btkIo7skytCN5crnf50d4k9CQDv7blHRXZqoRwAH/zQu6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUKS6y0X; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm5JAmTT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0949CC4CEE3;
-	Sat, 12 Apr 2025 11:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744458157;
-	bh=HS9BffI3qqC4JoBQVgCoiOiCi+evWrXoorn+7+Ndd2I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Hm5JAmTThx7NtaYDGMtFzaXfNnyC7j3SGhOYl/eJvfwXZSAuo1n0ZuO1C3rExj+JW
-	 3lTuVYExTRXMbPJQXUIg9Rilw9wc4RWJ8cslwhTQX5QhyZEB+ePzcnjaBFPP/tpMgl
-	 Xst8XdyWHsh8NOs28TUFcO8RQREbIynfyL2hzd/qukNaBiFK7J2HXGeg+4e2aciXmY
-	 Rj/x4pyTFyYUzqw6EZctwnHuHhbVzDZgdDDQfU+nd9i77M1GwL2931sj65z4nEW1et
-	 YXP3EdSL1gRucZrkrmvwIkg/8WgJK/0wKb520LASVs3Ma92tvNrFQQYXztppaiR51R
-	 7wva6g+9NhbuA==
-Date: Sat, 12 Apr 2025 12:42:29 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 8/8] iio: ti-adc128s052: Drop variable vref
-Message-ID: <20250412124229.7917e2df@jic23-huawei>
-In-Reply-To: <78d17b05-3f0d-4903-afe3-8051d4bd051d@baylibre.com>
-References: <cover.1744022065.git.mazziesaccount@gmail.com>
-	<db5cb2e1543e03d5a9953faa3934d66f4621cd12.1744022065.git.mazziesaccount@gmail.com>
-	<78d17b05-3f0d-4903-afe3-8051d4bd051d@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUKS6y0X"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso1532191f8f.2;
+        Sat, 12 Apr 2025 04:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744458489; x=1745063289; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=W+FV7qp4hCrHbBuroVIp784j2SvE9rcCe3b2QofSy8A=;
+        b=FUKS6y0X/BUvb948Fnm26rZsRBRd0NMbG4QRwAiHWBF8uZIugWUgUICAoZMk7KYej3
+         7oc93mmlKbHgR/D0Kk5ZUdi2br402owYA4T+SESHPm6hdvhBLV95qrHQ9E1LWR41a7i0
+         h/cHnoQK3usK8WRAVohq6Dp0HT2wmVEoeuMi8Dl9fMWMBeMR8bKFba2/gz/+YBt74Kd7
+         tXaQtzQfoTePuVYcPuQ9YYwFnIIE45o59QeAUWzFlULy9z/sW1NCtD2PDhBmf4p8E3kS
+         2J/PQ3bumjtbkSErIfvhe3gVxPy0JY3xgxsE5+XGUqAmJUbkcpjcdQ7srkFPpvvn+YSS
+         YXxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744458489; x=1745063289;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W+FV7qp4hCrHbBuroVIp784j2SvE9rcCe3b2QofSy8A=;
+        b=t9NtVfafCgBVE7zoGRQtWqQwi5h517JZ61YgcvtOmUp1CTNTucTxGu+oIVF+UXgc07
+         H+IHw8h0XQ0U/VUIc9y6lwC9t0qYwNhXxrbfB1FpACFEDPLcYTeAtijmfSMCzyyq+etJ
+         YjXWp6z0dZr1jLJsrMUoH9p2e1bCnYXD15q86/wuSVw0j8kZc20wjATTBFuV2geUUJfX
+         HyFkdGn2jxmaYIoamYkDVBsrDxInVdt6ILU0LsPiCKVHZ1NdNF5z2Sjry0gJztBH+m2T
+         OxzfPnuM2zG6ysBXmtlEYtTDCY1lf3nkF7+eW9tSHiNp3bEkHYwM5cDz1hL+DZhxS04g
+         a0Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUI7btpDTc+JRpeHfBtQt1haX2lheE++Yxv+aJ4aFYFu4JYkQWySlVWXnffP+S3KKagoENmfp8UoKD4nic5KQ==@vger.kernel.org, AJvYcCVowhyFAMGP3Fs1gwMdu4JdZfHEpgcIwRoERgCYAfRGi1LCXL2PL+uh0M+f/wpteQfSB7hFKoor10wj@vger.kernel.org, AJvYcCXpifYBixzoUy6VnK6+lhsJHOTBtq4kToHSh182ySHtaxAfQ347SU/XDrCVaIFVvpJ5dHBvZY5qB7MH3ABx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtFejFUQ7qIf3GZleUWvAeimUHrxLCSF8klNNKxHXzT9O78M32
+	aXqlFWGVr3IBGMhnILevC4meLzWMy+pVeDP9ZNcP5FSetscMNFa7Dq51jrSDSGq9EeI//pZek74
+	dBJmlwmKgPZIW9yB/5gyUbr+eGw==
+X-Gm-Gg: ASbGnctst13Pvak4+iicyfpSrb1hO877lqTsKX9zhmbWmb3JQEexUqXyZtnwukJM5lp
+	+zcvvuH1VGIMyhpUIrW46lGVR5naZMX26Q42szqKAw0D+lsOmiJFj//K5x2ATFQ1Nm1JctcWi91
+	NokaZcaIta0YYI8n3Bp2kJas33uiy747aP
+X-Google-Smtp-Source: AGHT+IHnQJnAJOQEMSSd/1luuQplj28d/GY8zfQPFU3tXpIWNxgzN+/gz90t45KAP2cvy+Q6w5uF6ZrP1RQlzanoit0=
+X-Received: by 2002:a05:6000:2906:b0:399:71d4:a9 with SMTP id
+ ffacd0b85a97d-39eaaed5709mr4945107f8f.52.1744458488551; Sat, 12 Apr 2025
+ 04:48:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
+ <20250402084646.10098-4-alex.vinarskis@gmail.com> <2b9128be-1989-4511-995c-103c8ba71af7@oss.qualcomm.com>
+In-Reply-To: <2b9128be-1989-4511-995c-103c8ba71af7@oss.qualcomm.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Sat, 12 Apr 2025 13:47:57 +0200
+X-Gm-Features: ATxdqUEMqtWny3JCTyw-ZcclkJ_xcogEzUXpOJFPwPlDnSQgDmpwIqvKRTeN8kI
+Message-ID: <CAMcHhXrBw6a7gSndG2F-JNgnNsYrDN3nTJjM+NjuT=s9FFWZkw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	maud_spierings@hotmail.com, dmitry.baryshkov@oss.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 11 Apr 2025 08:34:42 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Sat, 12 Apr 2025 at 01:36, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 4/2/25 10:44 AM, Aleksandrs Vinarskis wrote:
+> > Initial support for Asus Zenbook A14. Particular moddel exists
+> > in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+> >
+> > Mostly similar to other X1-based laptops. Notable differences are:
+> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+> >   and Qualcomm FastConnect 7800 on UX3407RA
+> > * USB Type-C retimers are Parade PS8833, appear to behave identical
+> >   to Parade PS8830
+> > * gpio90 is TZ protected
+> >
+> > Working:
+> > * Keyboard
+> > * Touchpad
+> > * NVME
+> > * Lid switch
+> > * Camera LED
+> > * eDP (FHD OLED, SDC420D) with brightness control
+> > * Bluetooth, WiFi (WCN6855)
+> > * USB Type-A port
+> > * USB Type-C ports in USB2/USB3/DP (both orientations)
+> > * aDSP/cDPS firmware loading, battery info
+> > * Sleep/suspend, nothing visibly broken on resume
+> >
+> > Out of scope of this series:
+> > * Audio (Speakers/microphones/headphone jack)
+> > * Camera (OmniVision OV02C10)
+> > * HDMI (Parade PS185HDM)
+> > * EC
+> >
+> > Add dtsi and create two configurations for UX3407QA, UX3407RA.
+> > Tested on UX3407QA with X1-26-100.
+> >
+> > Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> > ---
+>
+> [...]
+>
+> > +     /* Left-side display-adjacent port, PS8833 */
+> > +     typec-mux@8 {
+> > +             compatible = "parade,ps8830";
+>
+> What Krzysztof referred to with fallback compatible is this:
+>
+> diff --git a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
+> index 935d57f5d26f..aeb33667818e 100644
+> --- a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
+> +++ b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
+> @@ -11,8 +11,11 @@ maintainers:
+>
+>  properties:
+>    compatible:
+> -    enum:
+> -      - parade,ps8830
+> +    oneOf:
+> +      - items:
+> +          - const: parade,ps8833
+> +          - const: parade,ps8830
+> +      - const: parade,ps8830
+>
+>
+> so that in case there are any sw changes down the line, people with older
+> DT receive the fixes, as if "parade,ps8833" is attributed to a driver, it
+> will match (due to being the primary entry) and if it's not (like today),
+> it will fall back to matching the next compatible (and the driver currently
+> looks for just that)
+>
 
-> On 4/7/25 6:37 AM, Matti Vaittinen wrote:
-> > According to Jonathan, variable reference voltages are very rare. It is
-> > unlikely it is needed, and supporting it makes the code a bit more
-> > complex.
-> > 
-> > Simplify the driver and drop the variable vref support.
-> > 
-> > Suggested-by: Jonathan Cameron <jic23@kernel.org>
-> > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> > 
-> > ---  
-> 
-> ...
-> 
-> >  static int adc128_probe(struct spi_device *spi)
-> >  {
-> >  	const struct adc128_configuration *config;
-> > @@ -183,17 +173,12 @@ static int adc128_probe(struct spi_device *spi)
-> >  	indio_dev->channels = config->channels;
-> >  	indio_dev->num_channels = config->num_channels;
-> >  
-> > -	adc->reg = devm_regulator_get(&spi->dev, config->refname);
-> > -	if (IS_ERR(adc->reg))
-> > -		return PTR_ERR(adc->reg);
-> > +	adc->vref_mv = devm_regulator_get_enable_read_voltage(&spi->dev,
-> > +							   config->refname);
-> > +	if (adc->vref_mv < 0)
-> > +		return adc->vref_mv;
-> >  
-> > -	ret = regulator_enable(adc->reg);
-> > -	if (ret < 0)
-> > -		return ret;
-> > -	ret = devm_add_action_or_reset(&spi->dev, adc128_disable_regulator,
-> > -				       adc->reg);
-> > -	if (ret)
-> > -		return ret;
-> > +	adc->vref_mv /= 1000;  
-> 
-> In other drivers, we've been doing:
-> 
-> ret = devm_regulator_get_enable_read_voltage(...);
-> if (ret < 0)
-> 	return dev_err_probe(dev, ret, "failed to read '%s' voltage, ...);
-> 
-> adc->vref_mv = ret / 1000;
-> 
-> It can be easy to make a typo or forget to specify the voltage when creating
-> a .dts, so I think the error message is helpful to catch that.
-> 
-> And we use ret to avoid having adc->vref_mv temporarily holding a
-> value with the wrong units (and can make it have an unsigned type).
+Hi,
 
-Good idea. 
-Applied patches 1-7. I did tweak this one as well but then couldn't make
-up my mind on whether to change the type of vref_mv so I'll avoid making
-a decision and will leave patch 8 for a v4 from Matti :)
+Thanks, was not aware of that, found it in the examples now, will update.
+As Krzysztof suggested to drop the patch adding compatible from
+driver's code, If I understand correctly I also need the following dts
+change, could you please confirm:
 
-Jonathan
+```
+compatible = "parade,ps8833", "parade,ps8830";
+```
 
+> [...]
+>
+> > +     eusb6_repeater: redriver@4f {
+> > +             compatible = "nxp,ptn3222";
+> > +             reg = <0x4f>;
+> > +             #phy-cells = <0>;
+> > +
+> > +             vdd3v3-supply = <&vreg_l13b_3p0>;
+> > +             vdd1v8-supply = <&vreg_l4b_1p8>;
+> > +
+> > +             reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
+> > +
+> > +             pinctrl-0 = <&eusb6_reset_n>;
+> > +             pinctrl-names = "default";
+> > +     };
+> > +
+> > +     /* EC */
+>
+> It's customary to leave the i2c address to make it slightly easier for
+> the next tinkerer ;)
 
+I am unsure about the address. There are multiple addresses showing up
+when discovering the bus, 0x1d, 0x5b, 0x61, 0x6a. Did a quick SMBUS
+analysis, they all have non-zero registers responding... My best guess
+right now is its 0x5b, as messing with it enabled backlight and broke
+the keyboard. Will add that one.
 
-> 
-> >  
-> >  	if (config->num_other_regulators) {
-> >  		ret = devm_regulator_bulk_get_enable(&spi->dev,  
-> 
+>
+> [...]
+>
+> > +&uart14 {
+> > +     status = "okay";
+> > +
+> > +     bluetooth {
+> > +             compatible = "qcom,wcn7850-bt";
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&bt_en_default>;
+> > +             enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
+> > +             max-speed = <3000000>;
+>
+> You'll need to provide some supplies, coming out of a pwrseq device, see
+> e.g. the QCP
+>
 
+I assume you are referring to change like this [1]. There were some
+discussions on whether the supplies are modelled correctly as it seems
+to be different when using m.2 card, so as I was not sure about this
+platform I did not add it. At least in the variant that I have, the
+wcn6855 is soldered onboard, so I would assume so is the wcn7850
+variant.
+It seems that the two use quite different supplies - are the platform
+dependent, or only wlan card dependent? Ie. Can I just copy pwrseq for
+wcn6855 from a different platform?
+
+For  wcn7850's pwrseq, I can add similarly to other platforms, but
+cannot verify it. Should I still add it in this case?
+
+A bit unrelated question: in the meantime I managed to bring-up the
+sound on Zenbook as well. Would it be more correct to wait for this
+series to land, and then send it separately, or is it okay to add it
+in directly on re-spin?
+
+Thank you,
+Alex
+
+https://lore.kernel.org/all/20250331204610.526672-2-alex.vinarskis@gmail.com/
+
+> Konrad
