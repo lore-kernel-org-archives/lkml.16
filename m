@@ -1,113 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49CA18FDB2;
-	Sat, 12 Apr 2025 19:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E77B1C862E;
+	Sat, 12 Apr 2025 19:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744487472; cv=none; b=pKDKJVfa/3haKoFB0YZcUsq+hDH0Tnt5LW1NmSJ+UOBSe8lzpHxHD3Ltw+FzF7MkF3ZKd30yQvag9dVmze/dbtPtczdS6Q6lk7EgJ5rl6ShkF5WxNMsoI+xLp5EvrvNmfeYTemfFMT3mF1zH/ShpKcH22WI3KXR7qNYo9G+McBI=
+	t=1744487955; cv=none; b=XvORZUjDIahvtnzn6S3XhDDoKgctIke+ksEV9VqnweLkkp/YR1rkW81ZlV69dKf1nDfEAOrP0brJl5OnGziB4vJ/oi2eq5W73KPMpDNRpQ9S9Q9S3Xp8CMpP7PDrA/u5K5+wRkqFzPHJUZVHhxOUSnpmMgGxvm/w+FXbsKEaGJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744487472; c=relaxed/simple;
-	bh=bo+MmRbeatX1J6EUnNoSjjAUPvlicSbpXWCZNAAKCPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AnF1zl+qeXtnHNUvpqoyvNk94nLtO3eyp2/PJ5bekB/kcc+LhhGHCL/F/RhR0r+K2Ry3jh27ptflyyUOqecc89WUKV4NvVDLeBM8k8zInxyv673k7aGujIfweY0ftLn9xSioj15yTqSFsvbSSzCY7aNUjaewE/JLfnOM7l5YIrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBmsSMZ1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744487955; c=relaxed/simple;
+	bh=2OjB1QhTLKklmbQVSbsphQt72iZ7X8Hyz8dWd8pfqvg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E53C3QVygerT+Gt0pV3/Et/EMrlW/CNNZsUrFVr7QsByLScTio9BtQBAcnTS6pSb8gqVutgNQdtrhS3rtiEY2xRT2eghMxsWhGKL7bahCZUTPHJ6DW4iOaDIII0d3dCKhQvieoysFV0pWwR6rtl7+6MhMpkNyIYhjI8mWmG3PQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLiguAgB; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBmsSMZ1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D92C4CEE3;
-	Sat, 12 Apr 2025 19:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744487472;
-	bh=bo+MmRbeatX1J6EUnNoSjjAUPvlicSbpXWCZNAAKCPw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eBmsSMZ1ok1I5SUdFg7o5XvAFVATPkdfEe3zmg6iUtHOV2/7tqqxpHEzA8YxMxjmn
-	 ZwenFlImLb/JvZc4M67TMl598vtCmzLkOr66rQi0Jd4o2HlGG5VPF/KslaYkKfGoox
-	 0aCHJtHkCY8ddm7n8pIgEugx1K6VIRxu+/bc26caGCGCKNSD2vNPC/mBc5URtkmBHJ
-	 Z6egN91Et/MFEKBRrA1DNVmA87oDypB+ElLbZo11zCf5kTv/9nuDZFwYoDt48yuM2/
-	 gMwkyAxjiIKMpPkMmosmUBFmVvi1zaoRYTzCBOZ53+9pAENJOhJMLDJ+OHKnAXUu6M
-	 O/TvqjKK8TMwg==
-Message-ID: <5509f044-912b-4d10-bdeb-95ec52002b06@kernel.org>
-Date: Sat, 12 Apr 2025 14:51:09 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLiguAgB"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8ff1b051dso5262436d6.1;
+        Sat, 12 Apr 2025 12:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744487952; x=1745092752; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zVbi2TXkSg4KXX8medQfMaOeKCJREtWfx9H5qztrBxM=;
+        b=MLiguAgBWZVuX1hVxStUTTl23qh5khNMSEjt+b3qU9fCnFdsV4/xQ/uAV2bYOqLW/d
+         P5TjIVyi4oFXpqTKTMaNBjSJEA278U4akBd4Dx0GB5aakhsZNpM9q8kcBVfY1TPN/Utj
+         dnMIB8yl3B47sLiQnwE9gxz8s2gF6C0JtNpcuFViLIwLsK5/lto5umu84WqRAMG+UHaM
+         JogPi1GCfhMMqgC2qtrjmoL2wE8qHR1Lh54NRYqKeSY9QwQmnbJ4veECd4ThHeUd72YC
+         eppfNrZITi8zrldNwrhEUD/56WuB5fpaa8PXOsEw6Lk580CG36UyMbVn/HtoEiXcIP3K
+         hdpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744487952; x=1745092752;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zVbi2TXkSg4KXX8medQfMaOeKCJREtWfx9H5qztrBxM=;
+        b=hTYfNaJOQmAUbhwVIFghdUG9MNiM8L6KoErRPv5wVXAP4/557tEJon+LetUTxCvBw6
+         yx7nDX3ZUFMRoZEiwnDnaiTt3V7359NRBhoIEyB8Y9lZX0WwB/EnxgkilQyWVDvKtr/Z
+         WhqqHCrUnt5tzm7V/f4CUA5R6hVdxaDZ8bIpl0NZBK8c5NLS91eijOeV5ZWpAyhix3RZ
+         Cpdgu7yEKAMHiqJg7jeuHFtQJ/ePLheg7VzksAERhuKAiQ0Y30jZjxuCj0maiyhJWvPJ
+         HwRpaGh+Rm6c0JrGwlTWEZxpWnaw3i8/MVlFGgsxC+YIgpH7E73xfnZh+AQCiy5BYL4K
+         eyMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpUWWES/4AeeBDaKRQ+v+5nS9YFt8NvJ09kxHPI27wnHrhmFVCz2AiiBmb4iVh34IcrGUmAncjd9NPhcg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXCBK91zaYhzwCYTIMABcohLBilnu9LjkIBbNMFyIBvZ32sMe9
+	+fUA1TYJ96Zr8RyfGGcXLI/wl2+GkmTz7IbqYpg9U3zPqinVGAZpZXMP0C8=
+X-Gm-Gg: ASbGnctJ6qZAn3YTe1nHU2n2adKe0hZw92dghXSoxceBe/2gp52GUTUhoRAFFWC3xO3
+	AIbqGeXcevB03nW/EAoLUf9YDcZ7OHoD11JhAnNwd8C0eOoW1clrE778I6oaQxTq6izbJ9vnCG0
+	xfFXQdoNbvobEI+fNuaMFsskBIjSf7tePdGdgXEV/wq64pD8Ng07Fql9iUGjiBxGQSq4t/OoMqH
+	8SyFq+A4YHpjjb96YfCYnyARJHllQL5x9g1tOrXpDDwgyC4g9QAjfu6jVr/zzjE6WZyeGDADVSe
+	cfaioq3zFwWXgmkxt2+TPSTqqsFWZIrD9jNNkA==
+X-Google-Smtp-Source: AGHT+IHOb1sEOftq5ghYu8md170FhVPT25M7x4K+yhMg+C67EgyS5u0Mu32YcIcVtklarGAqfD82qQ==
+X-Received: by 2002:a05:620a:4306:b0:7c3:d798:e8ae with SMTP id af79cd13be357-7c7b189ed07mr334969285a.2.1744487952199;
+        Sat, 12 Apr 2025 12:59:12 -0700 (PDT)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8969428sm447768285a.61.2025.04.12.12.59.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 12:59:11 -0700 (PDT)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: alim.akhtar@samsung.com,
+	avri.altman@wdc.com,
+	bvanassche@acm.org,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	peter.wang@mediatek.com,
+	manivannan.sadhasivam@linaro.org,
+	stanley.chu@mediatek.com,
+	quic_cang@quicinc.com,
+	quic_nguyenb@quicinc.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] scsi: ufs: core: Add NULL check in ufshcd_mcq_compl_pending_transfer()
+Date: Sat, 12 Apr 2025 14:59:09 -0500
+Message-Id: <20250412195909.315418-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
- definition to amd_node.h
-To: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-References: <20250410200202.2974062-1-superm1@kernel.org>
- <20250410200202.2974062-3-superm1@kernel.org>
- <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
- <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
- <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
- <Z_rCuLD56IZ4hsNw@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <Z_rCuLD56IZ4hsNw@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add a NULL check for the returned hwq pointer by ufshcd_mcq_req_to_hwq().
 
+This is similar to the fix in commit 74736103fb41
+("scsi: ufs: core: Fix ufshcd_abort_one racing issue").
 
-On 4/12/25 14:44, Ingo Molnar wrote:
-> 
-> * Borislav Petkov <bp@alien8.de> wrote:
-> 
->> On Fri, Apr 11, 2025 at 07:09:56AM -0500, Mario Limonciello wrote:
->>> I was aiming for a header that we would conceivably use in all these places
->>> anyway.
->>>
->>> Can you suggest a more fitting existing header?  A new one felt too heavy
->>> for a single register define.
->>
->> No, the logic is: put it in the *right* header. Not in the "whatever-works"
->> header.
-> 
-> Yeah, it's the Linux kernel equivalent of: 'if you touch it, you own it',
-> a.k.a. 'no good deed goes unpunished'. ;-)
-> 
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Fixes: ab248643d3d6 ("scsi: ufs: core: Add error handling for MCQ mode")
+---
+ drivers/ufs/core/ufshcd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Ya.
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 0534390c2a35..fd39e10c2043 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -5692,6 +5692,8 @@ static void ufshcd_mcq_compl_pending_transfer(struct ufs_hba *hba,
+ 			continue;
+ 
+ 		hwq = ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
++		if (!hwq)
++			continue;
+ 
+ 		if (force_compl) {
+ 			ufshcd_mcq_compl_all_cqes_lock(hba, hwq);
+-- 
+2.34.1
 
->> So you can easily add a
->>
->> arch/x86/include/asm/platform.h
->>
->> header which contains exactly platform stuff. And FCH sounds like a platform
->> thing to me. Or at least southbridge or whatever that thing is called now. It
->> certainly ain't part of the CPU so platform should be more fitting.
->>
->> Unless someone has a better idea...
-> 
-> Yeah, so I think we can create a brand new <asm/amd_sb.h> header or so,
-> because it's an AMD SB800 southbridge chipset register? We already have
-> <asm/amd_nb.h>.
-> 
-> 'platform' might be a bit too generic and fungible I think: often the
-> northbridge and the CPU is considered part of a 'platform' too.
-> 
-> Thanks,
-> 
-> 	Ingo
-
-SB800 is pre-Zen stuff.  It's "before my time" - I guess that's the 
-precursor to FCH being in the SoC but has the same functionality.
-
-So I'm thinking <asm/amd_fch.h>.
