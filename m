@@ -1,146 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55021C5D56;
-	Sat, 12 Apr 2025 13:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B25B666;
+	Sat, 12 Apr 2025 13:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744463582; cv=none; b=omAiQVaOiKKjp3VN2b0JLETKKfDW58KVa1172eXROOkK1TaZYUFwx4tT2dPJmNS/wiiouThm7JKdWAjbPQKZyzexYkjRN3/kTowHLXiYXDPALy8+vejho/EVO/x9OxgBxajqu0QkG9f3dV1e680FrzYalJ5UOOSbH+EGx1JSBMU=
+	t=1744463775; cv=none; b=BZ/sQ7OR9vl4n8sAdWWxMAAuf4QW89qBK7VQl7AEIxlflETATsSsvZ++B4OJhT2Bf4Low2r80U3jkJuEME+i9qQnjOKwLvLBM3m264CTKmQQ7VmlhCIAuGWxAA0OEAqj+YFfCLf2/fYjGxO3rR7z4uzIQpotM7ZuRI77ySzctuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744463582; c=relaxed/simple;
-	bh=Gf57asGbiKQzqvnsdSvqw49qqbbDDX3v6+TdwuELv3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AxQJlW/1I7bqSlWjC+f12tD2dUGN3x7fx/+2HUgkm3oQFHnb0142itibSBXqLhfOrcFgwkPsmFmMufjyzeH9Sy3Gacp/DOfR1zI6+ENzYujDVdCIroztA2jUUEabd1bfVUwCHHXz2qmF5nGOYYhtXkmwg+GxFl4B/iy6hzd6k9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=triqdc+h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744463775; c=relaxed/simple;
+	bh=ooT2t/4HDi3rmfv8HHUPwediCnOQ2VSqg+dxjAIoQhg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=klsGRn7yAuLSkTnFOazR86OCJYQxZCLNjvbIwelstTqlvFIU+/WNUsq853dbhiEVQF7I3fKTOEnx7mKh2bGFeKuNFNNIT9FbZQ+SnpulC/HSBbg45Lzxpc2U5XjP6zosPWgnvDYE6FnH0jvf61+dIv9Em/MZGuM1nVuPJz9Gxos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6KoERnm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="triqdc+h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 452FCC4CEE3;
-	Sat, 12 Apr 2025 13:12:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6KoERnm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 688AFC4CEE3;
+	Sat, 12 Apr 2025 13:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744463582;
-	bh=Gf57asGbiKQzqvnsdSvqw49qqbbDDX3v6+TdwuELv3A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=triqdc+hGyW+tlH1Knfp2wE4QYnFHceymdGOQ5HWu53Z1IHJhptKD0SJMTR2dowH8
-	 hjnSajZEUwIAh77wp3mduW3bs6D6WrbjYHDYb5MHwfNP3burUQXrHC62tqKf34679b
-	 sMayNfEo5wCXTNIdxWBloBWZBvgH+tPXHIdgspnfEGwLO9Zp+beyOG+dBONRGNFk+9
-	 t3O+JgB6eqwtO4uhxQ7z3g0Fe/0RZmZ3eDhHGlfle8p36+tzCompuDSpmUnTP9VYVJ
-	 vRVudBJTcnn5uJZ4rGiJS0XPio2kbb82iEDTygf89/A3in3vAbGeayjBLtwq3OOvWM
-	 s8rE9XEDOaaUA==
-Date: Sat, 12 Apr 2025 14:12:53 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Sukrut Bellary <sbellary@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Angelo Compagnucci <angelo.compagnucci@gmail.com>,
- Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution
- devices support
-Message-ID: <20250412141253.6d57032e@jic23-huawei>
-In-Reply-To: <20250408132120.836461-3-sbellary@baylibre.com>
-References: <20250408132120.836461-1-sbellary@baylibre.com>
-	<20250408132120.836461-3-sbellary@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1744463775;
+	bh=ooT2t/4HDi3rmfv8HHUPwediCnOQ2VSqg+dxjAIoQhg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=m6KoERnmQRTnT6xlveWbaJaIFNSpG0ku5DPDSID2PVeZQCApVmd4dufC4AZvzwZBo
+	 rm7OAjgXJZuWM77c2WfCRSXP4727I7Iy477WxRh9FY+cu7N5k6Y3B5HwAoISbl6LX1
+	 zoscBCeZqdKTMgh5q6cUfwRr/60r5giKZgfB3RTzx1yyZ+T0I24cEaJ18B//+1ElKa
+	 xcqXodYXSJ1kUbD8CtLUhRNYMJHEZIL13mfMuLzaQi24P8L5tOdlVY3bp35EdLFNOM
+	 4QkcpE7t+2te6tzl1YgFF1vEN93eopLuoqtUO1xKNFsRvPqROOzb/kh6seMIYnPSRd
+	 jlRg4YgLHfjHQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D569C369AE;
+	Sat, 12 Apr 2025 13:16:15 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Subject: [PATCH v5 0/4] Freescale Enhanced Local Bus Controller (eLBC)
+ binding YAML conversion
+Date: Sat, 12 Apr 2025 15:16:01 +0200
+Message-Id: <20250412-ppcyaml-elbc-v5-0-03f0e577139f@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJJn+mcC/12M0QqDIBhGXyX+6zlMc+Wu9h5jF5p/S2gpGrKI3
+ n0WjNEuz/dxzgIRg8UI12KBgMlG68YM4lRA26vxicSazMAoE5QxSrxvZ/UaCA66JVo3QlZlp/M
+ JWfEBO/vec/dH5t7GyYV5rye+rd/Q5RhKnFCiJEVTl0Y1vLl5Fyd05xEn2Eqp+tm85H92lW0hJ
+ OU1Y0aiOtjrun4A3zenyecAAAA=
+X-Change-ID: 20250220-ppcyaml-elbc-bb85941fb250
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Crystal Wood <oss@buserror.net>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744463772; l=2344;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=ooT2t/4HDi3rmfv8HHUPwediCnOQ2VSqg+dxjAIoQhg=;
+ b=l8PaOuZLZFLI6LwsdeDccOzUR5+w3wL0myBNaBkGAkjCETbCBt7yiXeoObNwacrPSy2z+vcwW
+ DeL3eMq8UnHAa+kP3OoEG0MKsMRHNlchAXiL/mnJA48QconA9bwH2yb
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-On Tue,  8 Apr 2025 06:21:20 -0700
-Sukrut Bellary <sbellary@baylibre.com> wrote:
+This series converts the fsl,elbc binding to YAML and adds new bindings
+for related devices (particular kinds of chip on the eLBC).
 
-> The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> interface. The device family responds with 12-bit data, of which the LSB
-> bits are transmitted by the lower resolution devices as 0.
-> The unavailable bits are 0 in LSB.
-> Shift is calculated per resolution and used in scaling and
-> raw data read.
-> 
-> Lets reuse the driver to support the family of devices with name
-> ADC<bb><c>S<sss>, where
-> * bb is the resolution in number of bits (8, 10, 12)
-> * c is the number of channels (1, 2, 4, 8)
-> * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> and 101 for 1 MSPS)
-> 
-> Complete datasheets are available at TI's website here:
-> https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> 
-> Tested only with ti-adc102s051 on BegalePlay SBC.
-> https://www.beagleboard.org/boards/beagleplay
-> 
-> Co-developed-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> ---
-> Changes in v3: 
->         - used be16_to_cpu() for the endian conversion.
->         - used config index enum while setting up the adc128_config[]
-> 
-> - Link to v2: 
->         https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
-> 
-> Changes in v2:
->         - Arranged of_device_id and spi_device_id in numeric order.
->         - Used enum to index into adc128_config.
->         - Reorder adc128_config in alphabetical.
->         - Include channel resolution information.
->         - Shift is calculated per resolution and used in scaling and 
->         raw data read.
-> 
-> - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
-> ---
->  drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
->  1 file changed, 112 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index a456ea78462f..d4b76fd85abd 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -7,6 +7,22 @@
->   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
->   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
->   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
-> + *
-> + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> + * interface. This driver supports the whole family of devices with a name
-> + * ADC<bb><c>S<sss>, where
-> + * bb is the resolution in number of bits (8, 10, 12)
-> + * c is the number of channels (1, 2, 4, 8)
-> + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> + * and 101 for 1 MSPS)
-> + *
-> + * Complete datasheets are available at TI's website here:
-> + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> + *
-> + * 8, 10, and 12 bits converters send 12-bit data with
-> + * unavailable bits set to 0 in LSB.
-> + * Shift is calculated per resolution and used in scaling and
-> + * raw data read.
->   */
->  
->  #include <linux/err.h>
-> @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
->  	if (ret < 0)
->  		return ret;
->  
-> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
-> +	return be16_to_cpu(*((__be16 *)adc->buffer));
+For readability, the existing unit address syntax of <cs>,<offset>
+(e.g. nand@1,0) is kept. This results in a few dtc validation warnings,
+when combined with other choices in this patchset:
 
-I think we now have a convenient adc->buffer16 (probably introduced in Matti's
-series.  Sorry I missed the overlap of the two series until now. These part numbers
-are too long and confusing to stick in my head!
+- For compatibility with existing kernels which don't explicitly probe
+  under an eLBC controller, the "simple-bus" compatible string is kept
+  on eLBC controller nodes. The validation logic requires a linear unit
+  address, though (e.g. @100000000 instead of @1,0)
 
-Matti took on maintaining that driver because he wanted to see any changes
-that might affect the Rohm part it now supports.  If anyone wants to volunteer
-from the TI side of things that would be ideal - just send a patch adding to
-the new MAINTAINERS entry.
+The patches in this series were previously part of the following series,
+which turned out to be too large and unwieldy:
+[PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT bindings
+https://lore.kernel.org/lkml/20250207-ppcyaml-v2-0-8137b0c42526@posteo.net/
 
-Jonathan
+Changelogs are present in the individual patches.
+
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+---
+Changes in v5:
+- Rebase on v6.15-rc1
+- Add Rob Herring's reviewed-by tags to patches 1,3
+- Fix documentation reference in Documentation/devicetree/bindings/display/ssd1289fb.txt
+- Link to v4: https://lore.kernel.org/r/20250313-ppcyaml-elbc-v4-0-55903722d9ea@posteo.net
+
+Changes in v4:
+- Reintroduce patch "dt-bindings: mtd: raw-nand-chip: Relax node name pattern"
+- Link to v3: https://lore.kernel.org/r/20250226-ppcyaml-elbc-v3-0-a90ed71da838@posteo.net
+
+---
+J. Neuschäfer (4):
+      dt-bindings: mtd: raw-nand-chip: Relax node name pattern
+      dt-bindings: memory-controllers: Add fsl,elbc-gpcm-uio
+      dt-bindings: nand: Add fsl,elbc-fcm-nand
+      dt-bindings: memory-controllers: Convert fsl,elbc to YAML
+
+ .../devicetree/bindings/display/ssd1289fb.txt      |   2 +-
+ .../memory-controllers/fsl,elbc-gpcm-uio.yaml      |  59 ++++++++
+ .../bindings/memory-controllers/fsl,elbc.yaml      | 158 +++++++++++++++++++++
+ .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml |  68 +++++++++
+ .../devicetree/bindings/mtd/raw-nand-chip.yaml     |   2 +-
+ .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
+ 6 files changed, 287 insertions(+), 45 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250220-ppcyaml-elbc-bb85941fb250
+
+Best regards,
+-- 
+J. Neuschäfer <j.ne@posteo.net>
 
 
->  }
