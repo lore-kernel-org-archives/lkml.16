@@ -1,84 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27937149E13;
-	Sat, 12 Apr 2025 14:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126321FDD;
+	Sat, 12 Apr 2025 14:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744467742; cv=none; b=cLxDX/HewxgWm1WHS6odIdQ6YCZJ6N3N1flb0L9F5v4BMSg82Mbftg7PIDr7nbYuxwJXEh6nvuoadLtv76xPiQ/nk7uMafQTxp2esDI1/8EIVGNkJeGpjuI/TrK7BX98Oy04/K/IvzphLwyLS6BdChYBVlBOW/ua9YNFziQ67Qw=
+	t=1744468106; cv=none; b=Ed7NX+zCrMiiqQYolZMi/IWiam57gKd4GHTebqOYE++OfxNKAcmJST4ikeSFk4B1iO6Fo6HZCOxLxREE62JP0u1eRYBD51O+ozohs3aMnyHKcEfP6kVbYk77VtE9KlNXlebjU/9JEgbYSabLuC89Kw1MIcnssvuoFPHN9xZLoIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744467742; c=relaxed/simple;
-	bh=FkrHuh+xF02Q321Wyf0onYgcYoDnpGW3VH9K1TsqZug=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D3vyHlEwcWgIHqiwQ2YL33Y6BoNuzvfsdwnfyjJG0UR5Je4bjHnaDCqJjkDsKaa+1qM3lxQrqdJXIL2yKY6YMyCy+nnBFP8FuYOw8qeOOMhKto8gpj9jSzk5Y/L9iUlfta9/6h7WkKrFI2yE83CX/dEJ3lYV8BWFGhDHgrhpwGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5258C4CEE3;
-	Sat, 12 Apr 2025 14:22:19 +0000 (UTC)
-Date: Sat, 12 Apr 2025 10:22:18 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Arnd Bergmann <arnd@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
- Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Sergio
- =?UTF-8?B?R29uesOhbGV6?= Collado <sergio.collado@gmail.com>, David Gow
- <davidgow@google.com>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas.schier@linux.dev>, Mostafa Saleh <smostafa@google.com>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
-Message-ID: <20250412102218.560196c0@batman.local.home>
-In-Reply-To: <20250411105849.GA5600@noisy.programming.kicks-ass.net>
-References: <20250328112156.2614513-1-arnd@kernel.org>
-	<ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
-	<20250411065054.GM9833@noisy.programming.kicks-ass.net>
-	<0073e739-e3aa-4743-ad2d-29d7c969f454@app.fastmail.com>
-	<20250411105849.GA5600@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744468106; c=relaxed/simple;
+	bh=vmztPP/1esSKAxnm4b2Tct+Q32/hBncSnITegjELKWw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=gdMnFIeR0GwNK07SEEOpdxYS6ilzvQ32J2sskdq6vC32zQAl9/T6cA+VQuZq41D/zGNIy8JLFyqtB2UIckRXHgig/cK5UbuVeKxOuuY0lE4mLkmHoE96GfoM0xpIlqpRL/5NQqci6grAzhSLaYvQKDEVOwbmhT8V4gtP4WzlF/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=upkh0UPb; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="upkh0UPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744468082; x=1745072882; i=markus.elfring@web.de;
+	bh=VRUC+sJ4zHMKef2PUfwVU1bMhUaNY0Sm7Aw7nUjDO4c=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=upkh0UPbfrat9YCJythFOFa5KMZv7fAk1x/Cwsz6sMfJfX6zrd+vL/97Y3L1mEP+
+	 v/xwwrnx7fcPnH3JWpIQ+TU1y+ue6CwMDCgHSG9ZsYGKoo2fru8YQEjURydAL5kE8
+	 l+sHovTBZzGwWKVF1/W/sNIp2bcg7h9hV8kfmPM9rR1uYSeN4RiTJYmgGgdGISgNo
+	 FpoYMxuyKfwu/CB3/RBud8IL4/nN9dWryN1tMSaSkqQpGcTVe4CkhsiWe4S61GoVL
+	 O06R1uFHjZ5dz1I7fyyCs32/hqKkVIaLAe/1FZ2/UOOuAmGkpP20s6TUWxHdMBBfE
+	 LKYmHY/LT8WghfifMw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.84]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MhWkh-1tPrQv1dX1-00oxB6; Sat, 12
+ Apr 2025 16:28:02 +0200
+Message-ID: <d4ec6adf-02db-4937-a483-5655f70aa205@web.de>
+Date: Sat, 12 Apr 2025 16:27:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+To: Alexandre Courbot <gnurou@gmail.com>, linux-media@vger.kernel.org,
+ virtualization@lists.linux.dev
+Cc: Alexandre Courbot <acourbot@google.com>,
+ LKML <linux-kernel@vger.kernel.org>, Albert Esteve <aesteve@redhat.com>,
+ Alistair Delva <adelva@google.com>, Changyeon Jo <changyeon@google.com>,
+ Daniel Almeida <daniel.almeida@collabora.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Gurchetan Singh <gurchetansingh@google.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Jason Wang <jasowang@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
+Subject: Re: [PATCH v3] media: add virtio-media driver
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Nb1C9m69vNmoctkPjPGPYvOhYSts2Z4HKu1+JCjHY4/iIAngSYC
+ 6yng0eTPDoyT+fjf7svFuLr3o5sII/WapBQbvjRGfxaiieowQNKWjcHtXDkg04CHyC5hfDV
+ Jarf3atIHTM8Ql9DwnlLuqf2hd/L1LCXpmMUJNW+93rYiLr7eSyFqW51SqWgJMp6U/yDJsv
+ zPyO1hSo2/Rqr6s2txBEA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:jhk7V8fLhek=;O6ZwHegHmu5XDjfj6VbWSlNksmX
+ v47WOSaJoN06jXTpshw6ZpXy9z1xpSuSEx44NJEFlOSNG9GmgXA1yDp8wmsptL6PDRY9pKX83
+ S4BWAs6cEUwEQksgJhfn70eo3AuKihLjTqIOH3LoDp1psvqSU0Y9U9Umd6KQxRWB97ef5hGXz
+ Xk4jjBBHvW/OU2kGG8yJFu7FYYXoIHhdlhpUkEA6Zy9mbQ0zeXF0HLs4DVhx1zT8DR7yRLSwn
+ Il4GeZChw/nSumvMCm0jnWgBokmVS6bQEPPL62MltNm1fhNfZTncvwKIMcZfsFin3rLsWo9kL
+ fNJ0kmZmqwdHvx2Olt1Rfif1laSnuA8FSLU/+X7y6uqAIZHE1cx6T4nug1vhPUkYmuG2wmsD0
+ 3x1+VsbuyGYxZkw54ZHMF3PBsJAfXAw21fn+fJ2CaRcec3+LrTN/NPPFuPhpYExwiYqYEaKye
+ 3/M/CudK07uu5hjWY/lxfG/nnaIVME4ByVeLdr1dh18Fuc9tdRlXA4HjB/xC2pUh1awqB7BHf
+ Te6Ub3We8iIK4sTagDtUXzG6PzKdM9OEf1W+27WudCQR68OWp/f4zgw6w0qUSBbhHnW53eHLU
+ Bqlf8f55lRIlNfRl0jlN159dZpv8p7QSYvv0LHZdpotJFYRashSUErPP48zqK4Mzww4iLMvs1
+ TsyrTpi29a+AIlC9m89gLwLeejDZWXkxJVHcoWYdBzBIeUyVcTfZlFy4JKNta7+6Y2ErCER48
+ uMh1bHk+2rJzKWO5Z91zpAWwpsX84wBedrcxBx+52eH88w6Q8SVo7tLe4Skom83WguWvYTuIP
+ dKRsy/44MlbX36UhBUvm0PN9fjN2fNkXYVw1BQsazr88fsC8x4WpijpBntDDRtnY/ZKYbhPy2
+ V1YTyb6E+dXk2rpNirpesmfvQxjeYTp4OptDxw+4sYEdnWOPNJ5g0jlGNF84d552OB/IfcD75
+ c2EmLb+CUbfBB/9rTczeJXvt8GLqOn0UCocdhwH46SLo1+hAIKfdCUIanwNU/xK+O0evp4ZoC
+ phA443/9sYSf4k3FYDSLVAtTbUCt//51C1Vv/N9AoOEzS7B0MtI8KBic/NIuqpJpMALfBnNuo
+ FNxw/4jr+DaLM5yxKLYfPodmkpqKt6SSZSRw+AiMtViJjxbPidK+iMWxg6XE0SeDbp0YadJR/
+ Yd0ZK1QzBOGV0NUzalRuuAHys/QqO2L9tDUBkax/Z5qT68HgfCvWQ4ZqgZrSAyyW1pXLDBTU6
+ TlLwc/UM24ZL4N+ULodlXJ/AszWI/hKt2eMg2BRJCf+X0qMahnp1DOdiUB5UVsbwGVsLxv1aU
+ +rXRWP7zCbhtTedFC5ZSUtPBg8FGAJrVxlGaeTRaFOz1B58CiY8vTzkQJGqc16gMfWEnG+0y4
+ 5sBFvUTXKdA/T57uuppGBOY9RF/OS7v7qQqOOTKVz9n2nYgRwPzxOqG4Gsdf4+Vi+3ErtG4GA
+ wxvMdSL8W7YYxaqiNYAghWcJAqYdNd6e7hyM6DJSx0M/ZMjcUsixYXjEkv4HOyCoGQ8mr4g==
 
-On Fri, 11 Apr 2025 12:58:49 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+=E2=80=A6
+> +++ b/drivers/media/virtio/virtio_media_driver.c
+> @@ -0,0 +1,959 @@
+=E2=80=A6
+> +static struct virtio_media_session *
+> +virtio_media_session_alloc(struct virtio_media *vv, u32 id,
+> +			   bool nonblocking_dequeue)
+> +{
+=E2=80=A6
+> +	init_waitqueue_head(&session->dqbuf_wait);
+> +
+> +	mutex_lock(&vv->sessions_lock);
+> +	list_add_tail(&session->list, &vv->sessions);
+> +	mutex_unlock(&vv->sessions_lock);
+> +
+> +	return session;
+=E2=80=A6
 
-> > This one is 534 characters long:
-> > _GLOBAL__sub_I_65535_1_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n  
-> 
-> I've not seen those before; google seems to suggest this is part of
-> static initializers.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(mutex)(&vv->sessions_lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/mutex.h#L2=
+01
 
-I just hit this on my allyesconfig build:
-
-  NM      .tmp_vmlinux1.syms
-  KSYMS   .tmp_vmlinux1.kallsyms.S
-Symbol __cfi_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
-Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
-  AS      .tmp_vmlinux1.kallsyms.o
-  LD      .tmp_vmlinux2
-ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
-ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
-ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
-make[3]: *** [/work/build/trace/nobackup/linux-test.git/scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
-make[2]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:1239: vmlinux] Error 2
-make[1]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:248: __sub-make] Error 2
-make[1]: Leaving directory '/work/build/nobackup/tracetest'
-make: *** [Makefile:248: __sub-make] Error 2
-
-I grepped for that symbol and it lives in: lib/tests/longest_symbol_kunit.o
-
-Even after removing that test, my allyesconfig still fails to build with:
-
-ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
-ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
-ld.lld: error: kernel image bigger than KERNEL_IMAGE_SIZE
-
-I guess I'll just have to remove allyesconfig from my test suite. I
-still do allmodconfig which appears to still work. At least that will
-shorten my test suite time as allyesconfig takes around a half hour to
-complete.
-
--- Steve
+Regards,
+Markus
