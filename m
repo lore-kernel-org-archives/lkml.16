@@ -1,159 +1,337 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from out.smtpout.orange.fr (outm-50.smtpout.orange.fr [193.252.22.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA091862
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F2C1862
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744440334; cv=none; b=S1rrUrvY/ndLW1h3CAblOeB0Go8G3jcN7lX1NZ6PxEkvyWHDG7RMEoON40Gg6J7BmZcpGOtT1Ge9a18xULWBtrkC+3UK5T9xPTW8O8dyTGiSavqYYXlYZYdbuWxP7qDdl2VAUWc+LEO5I53xEh0NyPqjf9ip6krsoiNo8JnclLw=
+	t=1744440410; cv=none; b=KabWGX2HCQPnFCkPkM0v93saLk28hjus0AiElLp/0zfH32ze33MDyVsyPdkiejML/DpTfFKJQ3RsR2uPf9o3cXHjZHspqlyRF3g0WWjphr6loADNNtK4zIkcWcN8xT8VK58/Yja1R4GePPqyCbqYmMA4dfj45a0+vLP/yUuJ8sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744440334; c=relaxed/simple;
-	bh=H9kLDsJmpzpnfYIQanCORfrJ0FSG23RcROmNIXHKYKA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jAju3/lYFtoMQtXcan/+F3VvqRqpT+w0ndcS30NjYhANkucYTpkdf+uyyFZzmJt356UdB82YCw5s/AjklGaEZJEaBf1KHuv1aeHpvPyv4WAMRYilMrHZlbSwnkOg6GYklVHuuJbv143kE/x4onbtj+ahso5+MjxsCbe4kwovLas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d7f24a7582so13018535ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:45:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744440332; x=1745045132;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gh2HAU3Z8eygYtu2Or+U/7qjXGiVyrdhRpBi6ban/60=;
-        b=ddnSSdioJWHVxN3O65IEw9x/yFAhhIp90K+Rrd5Q7hq5k190qKnncrye3NdVhWs2Ql
-         XSX/ecgjGdk7rooYt5HSYJqLDf2MvvZ3fSjDNjRoY3Vg5/fygIVUDqHj7v+nzRrKO/3d
-         BGIFGZtbeXIJm5Wq4kYYb7kdkFWiUXZYGfIbxsC4GjnjvWy8QXzBK3duK97MGF9lv6MO
-         Fm9VVHeGJ/G34n2tY1u1WaedDosu+V6faQV7fcsnoUYa27f/jwMTSy3F/MNGRBp9R6EJ
-         J45H450cvQdEyqiE20dASyG2VoatrKPTzgxGRmnKfuxWJVRk/9X14G8YAxaMoDEZIo4L
-         Gndg==
-X-Forwarded-Encrypted: i=1; AJvYcCW81NbxMdpoaxJOfzB9vv3MLPo4bFE5Oxv6TjHylVKO4gZmS9dMF43mGmBerqInPpm0x3n8tmXuojgVWhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztTwQuh6H8xXmECKaB2QqO0siy6vjcHx6DuiI3aE8XyxJc4bz3
-	rGfEs/no1iAfkgFZZVmcALz237rn7+U6FVkIHWM7982UPvRcsj+cWqSDPfLH58DGwqWf4a4v9By
-	81rXXxRQciIK/mlfUSvExfB6oycfmj6kNdtgp/Lsd9ehv3AFfmMtYD4M=
-X-Google-Smtp-Source: AGHT+IEZPmBsjfhzs+4NXAG57JJ1JWZEcwYwZLZGJietlhCZv+AJ7VrY1mZXyiH+oLPwLoXkAbye48HU8SvseC2WxtlYwPHB9Vrm
+	s=arc-20240116; t=1744440410; c=relaxed/simple;
+	bh=qOIvLc6Jo3QX+enzkD1QoTBG99HrID9MKHAd92DD4lU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hwc36WDgrBJSqStaafg0VeEMLhr2UChfHja0evDB+U3+/zSe9gwic8nVo7+Fqq28K8uOZAy7Kq7lML7z0VH6DhNxfAEVkalAa8VOtv6+g2gTneCd2kpK0Pu/qzrQXymuEtZmV9zfYO0xFWYH9PProz4rNAxkgX0qWfpZ/rzyqq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr; spf=pass smtp.mailfrom=orange.fr; dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b=sd3uzJuu; arc=none smtp.client-ip=193.252.22.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orange.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b="sd3uzJuu"
+Received: from cyber-villager.csun.edu ([130.166.192.226])
+	by smtp.orange.fr with ESMTPA
+	id 3UcNul94nQxp63UcRuFtC3; Sat, 12 Apr 2025 08:45:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
+	s=t20230301; t=1744440338;
+	bh=kl5hACu3fbUlT4qqCG0brbsgDnD7DKEFvoE5aGuYHiI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=sd3uzJuuO5OgQSyOjtya1viOYcaF8mkKpl2SrZeL5LohadEf+wFkzPDiLeuJT6XM/
+	 moftKAW8Ej2NlrwL00YZBzD8pZSuQdscbhe/JjSxuj/rp4cSZdT13tDlzvsbvr7/AO
+	 XgCqVdY+QsD6LVCeCmkTbkw1WQDDVmsY9NqupRfkRmeq1FQwM0o5CD5ZsLosCQuz1b
+	 R+PWdCUZ6W72nZ1UN2yY11vk4u7xtK7ph6ILZd87MYe13hONuNfxMfPW3CY6NJEr3Q
+	 /JfuQWzwAAhU2otBPCdelOf1YNy8zlOKBWbIutm4Xp9JEFbUYIEVJbscl7ULNULaOT
+	 tWI5XPAPTStiA==
+X-ME-Helo: cyber-villager.csun.edu
+X-ME-Auth: cGF1bC5yZXRvdXJuZUBvcmFuZ2UuZnI=
+X-ME-Date: Sat, 12 Apr 2025 08:45:38 +0200
+X-ME-IP: 130.166.192.226
+From: =?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>
+To: gregkh@linuxfoundation.org,
+	dpenkler@gmail.com,
+	dan.carpenter@linaro.org
+Cc: =?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 09/16] staging: gpib: include: fixes multiline comments style
+Date: Fri, 11 Apr 2025 23:45:22 -0700
+Message-ID: <740f5ae0cf149ce9729c9d8288ac4fa20ec4ebb3.1744438358.git.paul.retourne@orange.fr>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1744438358.git.paul.retourne@orange.fr>
+References: <cover.1744438358.git.paul.retourne@orange.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2165:b0:3d3:d823:5402 with SMTP id
- e9e14a558f8ab-3d7ec1f3e77mr64474345ab.7.1744440332144; Fri, 11 Apr 2025
- 23:45:32 -0700 (PDT)
-Date: Fri, 11 Apr 2025 23:45:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fa0c0c.050a0220.379d84.0007.GAE@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_fs_initialize
-From: syzbot <syzbot+d10151bf01574a09a915@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Fixes the style of multiline comments to comply with the linux kernel
+coding style.
 
-syzbot found the following issue on:
-
-HEAD commit:    29e7bf01ed80 Add linux-next specific files for 20250410
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1515f74c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a554d15459e77547
-dashboard link: https://syzkaller.appspot.com/bug?extid=d10151bf01574a09a915
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14634398580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/bb76302efd6b/disk-29e7bf01.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7da3c6b9e532/vmlinux-29e7bf01.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4909c61270ed/bzImage-29e7bf01.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/d99f7622732d/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d10151bf01574a09a915@syzkaller.appspotmail.com
-
-0 pages HighMem/MovableOnly
-428629 pages reserved
-0 pages cma reserved
-bcachefs (loop0): error reallocating journal fifo (32768 open entries)
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/journal.h:442!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 1 UID: 0 PID: 6987 Comm: syz.0.185 Not tainted 6.15.0-rc1-next-20250410-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:bch2_journal_set_replay_done fs/bcachefs/journal.h:442 [inline]
-RIP: 0010:bch2_fs_initialize+0x15f9/0x1620 fs/bcachefs/recovery.c:1130
-Code: ff e8 eb a8 a8 07 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 04 fe ff ff 4c 89 f7 e8 32 7d a3 fd e9 f7 fd ff ff e8 08 51 39 fd 90 <0f> 0b e8 00 51 39 fd e8 7b 6f a3 fd 4c 89 ff 8b 74 24 38 e8 bf 3f
-RSP: 0018:ffffc90003c67420 EFLAGS: 00010293
-RAX: ffffffff848a29d8 RBX: 0000000000000000 RCX: ffff88802c799e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90003c67920 R08: ffffffff848a1dfe R09: 1ffff11009c792c0
-R10: dffffc0000000000 R11: ffffed1009c792c1 R12: ffff88804e380000
-R13: ffff88804e380820 R14: ffff88804e3c9600 R15: ffff88804e3c95c0
-FS:  00007fa3bfd836c0(0000) GS:ffff888125080000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c00009bfc0 CR3: 000000003475c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_fs_start+0x301/0x620 fs/bcachefs/super.c:1100
- bch2_fs_get_tree+0x1138/0x18e0 fs/bcachefs/fs.c:2253
- vfs_get_tree+0x90/0x2b0 fs/super.c:1809
- do_new_mount+0x2cf/0xb70 fs/namespace.c:3879
- do_mount fs/namespace.c:4219 [inline]
- __do_sys_mount fs/namespace.c:4430 [inline]
- __se_sys_mount+0x38c/0x400 fs/namespace.c:4407
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa3bef8e90a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fa3bfd82e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fa3bfd82ef0 RCX: 00007fa3bef8e90a
-RDX: 00002000000000c0 RSI: 0000200000000180 RDI: 00007fa3bfd82eb0
-RBP: 00002000000000c0 R08: 00007fa3bfd82ef0 R09: 0000000000000080
-R10: 0000000000000080 R11: 0000000000000246 R12: 0000200000000180
-R13: 00007fa3bfd82eb0 R14: 0000000000005a18 R15: 0000200000000440
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_journal_set_replay_done fs/bcachefs/journal.h:442 [inline]
-RIP: 0010:bch2_fs_initialize+0x15f9/0x1620 fs/bcachefs/recovery.c:1130
-Code: ff e8 eb a8 a8 07 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 04 fe ff ff 4c 89 f7 e8 32 7d a3 fd e9 f7 fd ff ff e8 08 51 39 fd 90 <0f> 0b e8 00 51 39 fd e8 7b 6f a3 fd 4c 89 ff 8b 74 24 38 e8 bf 3f
-RSP: 0018:ffffc90003c67420 EFLAGS: 00010293
-RAX: ffffffff848a29d8 RBX: 0000000000000000 RCX: ffff88802c799e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90003c67920 R08: ffffffff848a1dfe R09: 1ffff11009c792c0
-R10: dffffc0000000000 R11: ffffed1009c792c1 R12: ffff88804e380000
-R13: ffff88804e380820 R14: ffff88804e3c9600 R15: ffff88804e3c95c0
-FS:  00007fa3bfd836c0(0000) GS:ffff888125080000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c00009bfc0 CR3: 000000003475c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Paul Retourné <paul.retourne@orange.fr>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/staging/gpib/include/gpib_types.h     | 81 ++++++++++++-------
+ .../staging/gpib/include/nec7210_registers.h  |  3 +-
+ drivers/staging/gpib/include/tms9914.h        |  6 +-
+ 3 files changed, 60 insertions(+), 30 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/staging/gpib/include/gpib_types.h b/drivers/staging/gpib/include/gpib_types.h
+index 2d9b9be683f8..8cea658078e2 100644
+--- a/drivers/staging/gpib/include/gpib_types.h
++++ b/drivers/staging/gpib/include/gpib_types.h
+@@ -8,7 +8,8 @@
+ #define _GPIB_TYPES_H
+ 
+ #ifdef __KERNEL__
+-/* gpib_interface_t defines the interface
++/*
++ * gpib_interface_t defines the interface
+  * between the board-specific details dealt with in the drivers
+  * and generic interface provided by gpib-common.
+  * This really should be in a different header file.
+@@ -37,11 +38,13 @@ typedef struct {
+ 	unsigned int ibirq;
+ 	/* dma channel to use for non-pnp cards (set by core, driver should make local copy) */
+ 	unsigned int ibdma;
+-	/* pci bus of card, useful for distinguishing multiple identical pci cards
++	/*
++	 * pci bus of card, useful for distinguishing multiple identical pci cards
+ 	 * (negative means don't care)
+ 	 */
+ 	int pci_bus;
+-	/* pci slot of card, useful for distinguishing multiple identical pci cards
++	/*
++	 * pci slot of card, useful for distinguishing multiple identical pci cards
+ 	 * (negative means don't care)
+ 	 */
+ 	int pci_slot;
+@@ -58,7 +61,8 @@ struct gpib_interface_struct {
+ 	int (*attach)(struct gpib_board *board, const gpib_board_config_t *config);
+ 	/* detach() shuts down board and frees resources */
+ 	void (*detach)(struct gpib_board *board);
+-	/* read() should read at most 'length' bytes from the bus into
++	/*
++	 * read() should read at most 'length' bytes from the bus into
+ 	 * 'buffer'.  It should return when it fills the buffer or
+ 	 * encounters an END (EOI and or EOS if appropriate).  It should set 'end'
+ 	 * to be nonzero if the read was terminated by an END, otherwise 'end'
+@@ -70,39 +74,46 @@ struct gpib_interface_struct {
+ 	 */
+ 	int (*read)(struct gpib_board *board, uint8_t *buffer, size_t length, int *end,
+ 		    size_t *bytes_read);
+-	/* write() should write 'length' bytes from buffer to the bus.
++	/*
++	 * write() should write 'length' bytes from buffer to the bus.
+ 	 * If the boolean value send_eoi is nonzero, then EOI should
+ 	 * be sent along with the last byte.  Returns number of bytes
+ 	 * written or negative value on error.
+ 	 */
+ 	int (*write)(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
+ 		     size_t *bytes_written);
+-	/* command() writes the command bytes in 'buffer' to the bus
++	/*
++	 * command() writes the command bytes in 'buffer' to the bus
+ 	 * Returns zero on success or negative value on error.
+ 	 */
+ 	int (*command)(struct gpib_board *board, uint8_t *buffer, size_t length,
+ 		       size_t *bytes_written);
+-	/* Take control (assert ATN).  If 'asyncronous' is nonzero, take
++	/*
++	 * Take control (assert ATN).  If 'asyncronous' is nonzero, take
+ 	 * control asyncronously (assert ATN immediately without waiting
+ 	 * for other processes to complete first).  Should not return
+ 	 * until board becomes controller in charge.  Returns zero no success,
+ 	 * nonzero on error.
+ 	 */
+ 	int (*take_control)(struct gpib_board *board, int asyncronous);
+-	/* De-assert ATN.  Returns zero on success, nonzer on error.
++	/*
++	 * De-assert ATN.  Returns zero on success, nonzer on error.
+ 	 */
+ 	int (*go_to_standby)(struct gpib_board *board);
+ 	/* request/release control of the IFC and REN lines (system controller) */
+ 	void (*request_system_control)(struct gpib_board *board, int request_control);
+-	/* Asserts or de-asserts 'interface clear' (IFC) depending on
++	/*
++	 * Asserts or de-asserts 'interface clear' (IFC) depending on
+ 	 * boolean value of 'assert'
+ 	 */
+ 	void (*interface_clear)(struct gpib_board *board, int assert);
+-	/* Sends remote enable command if 'enable' is nonzero, disables remote mode
++	/*
++	 * Sends remote enable command if 'enable' is nonzero, disables remote mode
+ 	 * if 'enable' is zero
+ 	 */
+ 	void (*remote_enable)(struct gpib_board *board, int enable);
+-	/* enable END for reads, when byte 'eos' is received.  If
++	/*
++	 * enable END for reads, when byte 'eos' is received.  If
+ 	 * 'compare_8_bits' is nonzero, then all 8 bits are compared
+ 	 * with the eos bytes.	Otherwise only the 7 least significant
+ 	 * bits are compared.
+@@ -118,26 +129,31 @@ struct gpib_interface_struct {
+ 	void (*parallel_poll_response)(struct gpib_board *board, int ist);
+ 	/* select local parallel poll configuration mode PP2 versus remote PP1 */
+ 	void (*local_parallel_poll_mode)(struct gpib_board *board, int local);
+-	/* Returns current status of the bus lines.  Should be set to
++	/*
++	 * Returns current status of the bus lines.  Should be set to
+ 	 * NULL if your board does not have the ability to query the
+ 	 * state of the bus lines.
+ 	 */
+ 	int (*line_status)(const struct gpib_board *board);
+-	/* updates and returns the board's current status.
++	/*
++	 * updates and returns the board's current status.
+ 	 * The meaning of the bits are specified in gpib_user.h
+ 	 * in the IBSTA section.  The driver does not need to
+ 	 * worry about setting the CMPL, END, TIMO, or ERR bits.
+ 	 */
+ 	unsigned int (*update_status)(struct gpib_board *board, unsigned int clear_mask);
+-	/* Sets primary address 0-30 for gpib interface card.
++	/*
++	 * Sets primary address 0-30 for gpib interface card.
+ 	 */
+ 	int (*primary_address)(struct gpib_board *board, unsigned int address);
+-	/* Sets and enables, or disables secondary address 0-30
++	/*
++	 * Sets and enables, or disables secondary address 0-30
+ 	 * for gpib interface card.
+ 	 */
+ 	int (*secondary_address)(struct gpib_board *board, unsigned int address,
+ 				 int enable);
+-	/* Sets the byte the board should send in response to a serial poll.
++	/*
++	 * Sets the byte the board should send in response to a serial poll.
+ 	 * This function should also start or stop requests for service via
+ 	 * IEEE 488.2 reqt/reqf, based on MSS (bit 6 of the status_byte).
+ 	 * If the more flexible serial_poll_response2 is implemented by the
+@@ -150,7 +166,8 @@ struct gpib_interface_struct {
+ 	 * STB, reqt, and reqf".
+ 	 */
+ 	void (*serial_poll_response)(struct gpib_board *board, uint8_t status_byte);
+-	/* Sets the byte the board should send in response to a serial poll.
++	/*
++	 * Sets the byte the board should send in response to a serial poll.
+ 	 * This function should also request service via IEEE 488.2 reqt/reqf
+ 	 * based on MSS (bit 6 of the status_byte) and new_reason_for_service.
+ 	 * reqt should be set true if new_reason_for_service is true,
+@@ -166,7 +183,8 @@ struct gpib_interface_struct {
+ 	 */
+ 	void (*serial_poll_response2)(struct gpib_board *board, uint8_t status_byte,
+ 				      int new_reason_for_service);
+-	/* returns the byte the board will send in response to a serial poll.
++	/*
++	 * returns the byte the board will send in response to a serial poll.
+ 	 */
+ 	uint8_t (*serial_poll_status)(struct gpib_board *board);
+ 	/* adjust T1 delay */
+@@ -216,14 +234,16 @@ typedef struct gpib_interface_list_struct {
+ 	struct module *module;
+ } gpib_interface_list_t;
+ 
+-/* One struct gpib_board is allocated for each physical board in the computer.
++/*
++ * One struct gpib_board is allocated for each physical board in the computer.
+  * It provides storage for variables local to each board, and interface
+  * functions for performing operations on the board
+  */
+ struct gpib_board {
+ 	/* functions used by this board */
+ 	gpib_interface_t *interface;
+-	/* Pointer to module whose use count we should increment when
++	/*
++	 * Pointer to module whose use count we should increment when
+ 	 * interface is in use
+ 	 */
+ 	struct module *provider_module;
+@@ -231,20 +251,24 @@ struct gpib_board {
+ 	u8 *buffer;
+ 	/* length of buffer */
+ 	unsigned int buffer_length;
+-	/* Used to hold the board's current status (see update_status() above)
++	/*
++	 * Used to hold the board's current status (see update_status() above)
+ 	 */
+ 	unsigned long status;
+-	/* Driver should only sleep on this wait queue.	 It is special in that the
++	/*
++	 * Driver should only sleep on this wait queue.	 It is special in that the
+ 	 * core will wake this queue and set the TIMO bit in 'status' when the
+ 	 * watchdog timer times out.
+ 	 */
+ 	wait_queue_head_t wait;
+-	/* Lock that only allows one process to access this board at a time.
++	/*
++	 * Lock that only allows one process to access this board at a time.
+ 	 * Has to be first in any locking order, since it can be locked over
+ 	 * multiple ioctls.
+ 	 */
+ 	struct mutex user_mutex;
+-	/* Mutex which compensates for removal of "big kernel lock" from kernel.
++	/*
++	 * Mutex which compensates for removal of "big kernel lock" from kernel.
+ 	 * Should not be held for extended waits.
+ 	 */
+ 	struct mutex big_gpib_mutex;
+@@ -259,7 +283,8 @@ struct gpib_board {
+ 	struct device *dev;
+ 	/* gpib_common device gpibN */
+ 	struct device *gpib_dev;
+-	/* 'private_data' can be used as seen fit by the driver to
++	/*
++	 * 'private_data' can be used as seen fit by the driver to
+ 	 * store additional variables for this board
+ 	 */
+ 	void *private_data;
+@@ -296,7 +321,8 @@ struct gpib_board {
+ 	unsigned master : 1;
+ 	/* individual status bit */
+ 	unsigned ist : 1;
+-	/* one means local parallel poll mode ieee 488.1 PP2 (or no parallel poll PP0),
++	/*
++	 * one means local parallel poll mode ieee 488.1 PP2 (or no parallel poll PP0),
+ 	 * zero means remote parallel poll configuration mode ieee 488.1 PP1
+ 	 */
+ 	unsigned local_ppoll_mode : 1;
+@@ -308,7 +334,8 @@ typedef struct {
+ 	short event_type;
+ } gpib_event_t;
+ 
+-/* Each board has a list of gpib_status_queue_t to keep track of all open devices
++/*
++ * Each board has a list of gpib_status_queue_t to keep track of all open devices
+  * on the bus, so we know what address to poll when we get a service request
+  */
+ typedef struct {
+diff --git a/drivers/staging/gpib/include/nec7210_registers.h b/drivers/staging/gpib/include/nec7210_registers.h
+index 888803dd97f9..97c53ac8e805 100644
+--- a/drivers/staging/gpib/include/nec7210_registers.h
++++ b/drivers/staging/gpib/include/nec7210_registers.h
+@@ -17,7 +17,8 @@ enum nec7210_chipset {
+ 	TNT5004,	// NI (minor differences to TNT4882)
+ };
+ 
+-/* nec7210 register numbers (might need to be multiplied by
++/*
++ * nec7210 register numbers (might need to be multiplied by
+  * a board-dependent offset to get actually io address offset)
+  */
+ // write registers
+diff --git a/drivers/staging/gpib/include/tms9914.h b/drivers/staging/gpib/include/tms9914.h
+index 424c95ad85c6..11909c3e6bbf 100644
+--- a/drivers/staging/gpib/include/tms9914.h
++++ b/drivers/staging/gpib/include/tms9914.h
+@@ -86,7 +86,8 @@ int tms9914_write(struct gpib_board *board, struct tms9914_priv *priv, uint8_t *
+ int tms9914_command(struct gpib_board *board, struct tms9914_priv *priv, uint8_t *buffer,
+ 		    size_t length, size_t *bytes_written);
+ int tms9914_take_control(struct gpib_board *board, struct tms9914_priv *priv, int syncronous);
+-/* alternate version of tms9914_take_control which works around buggy tcs
++/*
++ * alternate version of tms9914_take_control which works around buggy tcs
+  * implementation.
+  */
+ int tms9914_take_control_workaround(struct gpib_board *board, struct tms9914_priv *priv,
+@@ -139,7 +140,8 @@ enum {
+ 	ms9914_num_registers = 8,
+ };
+ 
+-/* tms9914 register numbers (might need to be multiplied by
++/*
++ * tms9914 register numbers (might need to be multiplied by
+  * a board-dependent offset to get actually io address offset)
+  */
+ // write registers
+-- 
+2.49.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
