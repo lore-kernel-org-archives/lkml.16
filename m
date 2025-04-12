@@ -1,109 +1,66 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB756A2D;
-	Sat, 12 Apr 2025 06:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1A017BB6
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 06:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744438221; cv=none; b=bWiHGVtYFRX/05pU56MBF9EPNHA+YWWhu142u1uvKCHkGRjJYYM+IelDiWd2BrpuIS9F/Z4zCikMlcqBMn3nqyzHEL94KW0za3giSUlt8fkUSI/Vrpuzw6eQ2+jUESwnOe6xb5uw8tQqQQpXRbfuOkGkL0gAVigeZe3sUAfdJJY=
+	t=1744438347; cv=none; b=p9Pl454YUzO2jLTY4vPNAmv7VnVc9xRHCJfrrSxKhtCuw+6ZWuiGFVj0128fayBMm6t7WVx7AIffZgR+g5OFV6d6oaEwW5JmLHA0IUuoANOtCjts8i9hTeGHK7vvfU3svoFXbn9vcIsnfn0FR9FyVL+4hrlF4Kr+hoViR7rYYS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744438221; c=relaxed/simple;
-	bh=+L41gmr9GY2a0j2/3zIF0m6qP0TqES8j7naIIvECLPA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pUjwjJgsuNTPTm0XOC7pewkO10Cd7t4T2MV8U92E6X30XTgWrHSlGg6rt9DzS1lmeXxWc8pzx/ktBnjVQPLM6T1vJ/nBGOcE8FA0r35cKwgk/BY1BO+Y8Otvu9nI0MAUoMOuylDhyfGdxw8HUqiU8JcBbPqaHlGjJ8wFx66TFvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUJf6KBp; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744438347; c=relaxed/simple;
+	bh=h8oTTN2YriP6MbhNfhyn96MBZFeleI8dCrvM8e/1T5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRH8kBJT0LHGX4FcLN8oQIJ6+K55A2Z2Xs31ZER2T6xXV5LXZq9ZHymbTG5HjTmUCuGyGuE+UIELlZuR8MnsyjZxQiXjtqGR2u/hGdQ+dd5HQ/70L33DZj3LN5auhsBmQfDxHoHOf/h+1tUfAMS/zQH0VKxmPhuXzpLs+Fcq21Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=h0c7bbNF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUJf6KBp"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7359aca7ef2so3949018b3a.2;
-        Fri, 11 Apr 2025 23:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744438219; x=1745043019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PVNWMzhUv1sB3IFRx/3hnoeslHEIVBXstwaTsoFrumY=;
-        b=LUJf6KBpdhemC+8kErztCd5ouZYBAziH9H7XJL4cKC5HwQjlesIyy7fip6XTIzJNij
-         ReVmlSvO4okWqvdyZWZUBAI2q9wVQ/Z32MM6B7J/31gBiVC6Qw3OXsK7Nea3tidT6Hku
-         maBlNxH2qwOG5uVNxmto2NlzpK/z+pkL+KjFfCYRzQ2eiyZC+98RyZP0+7MijbiHGFCj
-         mzYYBVgVTfRP1r/2PN8DInlAoRGB+jVv6DuRahP9ZWeZDhqsMwjEgTfLKqDZ5hWEtdgq
-         xZtXkpyAOoprVjNjc/YWhQHXzKIw8ANp8VLbzRYF6v5hnn1oyEQevGlab0jUVMMR+0zV
-         KjDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744438219; x=1745043019;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PVNWMzhUv1sB3IFRx/3hnoeslHEIVBXstwaTsoFrumY=;
-        b=Mn+P6p2Qiga6BVxZYHcOkXuVN86/5XyVHGpmOaPA7DI7lj4mtAF+5g8WVGSHTBJhO9
-         tbqcVu/wVP3c1zanDZpia4/b5+q8E/KtXWtWuWjnM0QsXMha3I1KbkKuyBureZcSWx5n
-         CASw85tvhc6ss3O1NoVf1LC9Tmdje9WXnpxe/CF1RuCxjAv189hHGlR7hFXzeyrphgBd
-         z6usO47WUCLa8MXdlN+Udjv2Qc5X8JJ+1y78afmC2kLYEHQaQ+IJeA5GCFBZnlNWApOx
-         AZMZXhjcLI5Xsbc6XxVU+urC7ozu3/hv/lL56/8Sddo5TzYebROoMss+X0+cVuQL9Tai
-         cKLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCarJ2Tp0O+LQ/AsmtPGl5MjMlJQm0VYX/F/2In4/QveG6CRyNQY8ypTrvWtwt/AdP1sucQgxaMAWGcBg=@vger.kernel.org, AJvYcCXuJqplO32DOFA8S0eSmrA9HmtlhSDpQeKe/0BYU6dk5b/BQRMWaCSUs6/RYJ1FdfkNAkhtcxKRC2oD@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk3gaO1bMYYBa2m97jBW30+j66GOKGujY3uCw6tdbPUSu/zlhe
-	59sgvPdVtI5LmX1MFsc4xHOBkZbCxS+I3G9iCRYtmjtgBSUcuHZa
-X-Gm-Gg: ASbGncsJCb+wtpy8Dfb61OjpK79H0LXOMI9NU05ihDKwWuo4W+nU6O7hLwObgwGa61d
-	rbFTbaQ1Jl2CxtBp6s5RP0k9dJZHN63WJVvOaUCncThtpNJVI1SFRFqfxo7r3Z+5AH1fDF64nCn
-	0at0ZKocprxl7ur/E1wSmIDFo/NPzI7lwC1JutTFis8gI1axy8yX+Mst/VXFx79PTdNRNIuhM2X
-	meYDXJyQcX4Ufty9Bf1hVChyTEdbrbunCdedJn5Z7kZvO4z1wNQOkLH7jcIdXH7t1X+RXSBaKkt
-	pF0RSAYA3JCxve6WagAlG8WDZP76Tnf8Yyx8xcNVcskcIsg=
-X-Google-Smtp-Source: AGHT+IHa+43R3N2ccAE/i6roRMPDUETNPoym+O1GXJ+ITgbljmlrpQ+kfO/8ZRwBz24S/E5i4rLF8A==
-X-Received: by 2002:a05:6a00:8d4:b0:736:73ad:365b with SMTP id d2e1a72fcca58-73bd12121b5mr6828784b3a.14.1744438218909;
-        Fri, 11 Apr 2025 23:10:18 -0700 (PDT)
-Received: from fedora.. ([159.196.5.243])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2335534sm2694240b3a.168.2025.04.11.23.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 23:10:18 -0700 (PDT)
-From: Wilfred Mallawa <wilfred.opensource@gmail.com>
-To: bhelgaas@google.com,
-	mika.westerberg@linux.intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	lukas@wunner.de
-Cc: alistair.francis@wdc.com,
-	wilfred.mallawa@wdc.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dlemoal@kernel.org,
-	cassel@kernel.org
-Subject: [PATCH] PCI: fix the printed delay amount in info print
-Date: Sat, 12 Apr 2025 16:09:35 +1000
-Message-ID: <20250412060934.41074-2-wilfred.opensource@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="h0c7bbNF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F39C4CEE3;
+	Sat, 12 Apr 2025 06:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744438346;
+	bh=h8oTTN2YriP6MbhNfhyn96MBZFeleI8dCrvM8e/1T5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h0c7bbNF3CgUIG2LSKma7pKYL6ii8zHiFS3dG16GiFdmEYVYn/YhI7yqx2D32NNuM
+	 FIHdGy/LBgnMKjYGSJOROvo4NPiEtxslF3LskZAZkqvdN29VBXCYLDvVAu0zSZRvkR
+	 EEiG56zvZd+DfzAqiXuGaZSnjomUI6yBd5zO6EZg=
+Date: Sat, 12 Apr 2025 08:12:22 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: alexjlzheng@gmail.com
+Cc: tj@kernel.org, alexjlzheng@tencent.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to
+ per-fs lock
+Message-ID: <2025041256-sanction-sandal-7f51@gregkh>
+References: <20250411183109.6334-1-alexjlzheng@tencent.com>
+ <20250411183109.6334-2-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411183109.6334-2-alexjlzheng@tencent.com>
 
-From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+On Sat, Apr 12, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
+> From: Jinliang Zheng <alexjlzheng@tencent.com>
+> 
+> The kernfs implementation has big lock granularity(kernfs_idr_lock) so
+> every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
+> 
+> This patch switches the global kernfs_idr_lock to per-fs lock, which
+> put the spinlock into kernfs_root.
+> 
+> Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> ---
+>  fs/kernfs/dir.c             | 14 +++++++-------
+>  fs/kernfs/kernfs-internal.h |  1 +
+>  2 files changed, 8 insertions(+), 7 deletions(-)
 
-Print the delay amount that pcie_wait_for_link_delay() is invoked with
-instead of the hardcoded 1000ms value in the debug info print.
+What kind of testing / benchmark did you do for this series that shows
+that this works, AND that this actually is measureable?  What workload
+are you doing that causes these changes to be needed?
 
-Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait
-time for slow links")
+thanks,
 
-Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
----
- drivers/pci/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..8139b70cafa9 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		delay);
- 	if (!pcie_wait_for_link_delay(dev, true, delay)) {
- 		/* Did not train, no need to wait any further */
--		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-+		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
- 		return -ENOTTY;
- 	}
- 
--- 
-2.49.0
-
+greg k-h
