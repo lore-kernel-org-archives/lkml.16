@@ -1,109 +1,96 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C235170A23;
-	Sat, 12 Apr 2025 21:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC191170A23;
+	Sat, 12 Apr 2025 21:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744491681; cv=none; b=W4N+BS2GL1PS32eCiyWYHry6vdBrZWyPnYpHluGytTUx4uNJVPTUaQbFTSbWte90DBk60qwfaunFTL+lM8fgc3mkuEbX4Fte04xYxo63Wn41qDHP255Jo2v2zKyjEoCFw0j54s/3kb2P0sz7WVi+IRLpZbYr0UWac5BnpXlj2Vw=
+	t=1744491822; cv=none; b=eA88iBO00hCMQ+kS9oT4AdWjkXIWVuP0kZsFPFPt5idpLZkxDED1LHNo6MwE3kDdWkrK7VcwPixmbVNC8uJysCsXzqC2TC2U3+pdX4f1ikZo4Z3cLswQCICQyMk23VTCbLiFvYu2H24vAofwMhU/2Mzz+f1V+LkTa0MOFXwffYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744491681; c=relaxed/simple;
-	bh=d1galf7rq47D2V+U+ZwTUxOcqWMuUopO+i2tZEem29U=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=smCuqepbyZ9hmBpNguyZmRSurDVyk+dNY5kPlYRRkz5kkW7O3p07+Tzxv272iWwd1GUFX0LfQcRFYaVH8JzmAGvXgDKTSlMvBWSzShie+UD5ZCmc0VhgN7Skc11H0i08Q7h0XamGNVB3SDxw4u3AoRs6Qd7S66ZqpTVIK7EukfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PFamEBUy; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PFamEBUy"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CAfZlG012330;
-	Sat, 12 Apr 2025 21:01:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/NX5mR
-	K47P4P75OQ87H50QkPcpvtLBppnFCwMfUk9RU=; b=PFamEBUyFdhFaoeDICx/+Y
-	zfThffxzbE71885Rfp7V/56uMaxKbnsBv6lAKjEFOrlLF7AN/cv2LbkjdNyu1tEv
-	ohBrr2DEVvkMJpGvguU27KFkJbrGh7bUQ+TU+jTayR2TtatvLQqkvZPHJs5qJoij
-	URStdflWl93zelTsoZtI5jb1j3NtYklCMRXoZY5WNMrfQIF19kvU+xHOkMPCbxZW
-	D84cogS/k64SrjBzrcx0wnI5XCDdw9BCylX0fzagovSVPuIvPsx2utyQG17rD1L1
-	BNNZAhpNp5Xz1R0l/QngkjAIqMXC5i8AiBEgN/zkEZuwT3xu7oFpdOQiOfId6T2g
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ypmp9vgh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 12 Apr 2025 21:01:08 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53CJrjh2022682;
-	Sat, 12 Apr 2025 21:01:08 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ygu4u08s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 12 Apr 2025 21:01:08 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53CL14cq12124698
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 21:01:04 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B91D058053;
-	Sat, 12 Apr 2025 21:01:06 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0424558043;
-	Sat, 12 Apr 2025 21:01:06 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 12 Apr 2025 21:01:05 +0000 (GMT)
+	s=arc-20240116; t=1744491822; c=relaxed/simple;
+	bh=/dxTjvf1nwp47obOQpKc/nAnFrDcdVF8sqdQbGww0ns=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=htWavPlSPQ9otk1b9eoBnNrkl5v8m/5hq2hBo29xCBNtrjZmsP3/a0EQQ1zopRyrb6aWsMFvaFwltPVubsiLNRlIvbMDmolbrzcnEA1dkin8RgZLvwyR1Ry8f8YRt2Nox8p/yTXwlXosXlmPEFO1b8LxGagZS8exIoIPj89ejU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF1AC4CEEC;
+	Sat, 12 Apr 2025 21:03:42 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1u3i2I-0000000AEDs-2aS5;
+	Sat, 12 Apr 2025 17:05:10 -0400
+Message-ID: <20250412210510.464408595@goodmis.org>
+User-Agent: quilt/0.68
+Date: Sat, 12 Apr 2025 17:04:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org,
+ Tom Zanussi <zanussi@kernel.org>,
+ Douglas Raillard <douglas.raillard@arm.com>
+Subject: [for-linus][PATCH 2/7] tracing: Do not add length to print format in synthetic events
+References: <20250412210446.338481957@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 12 Apr 2025 23:01:05 +0200
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH] ftrace: Fix type of ftrace_graph_ent_entry.depth
-In-Reply-To: <20250412120712.67fc45d9@batman.local.home>
-References: <20250411172207.61332-1-iii@linux.ibm.com>
- <20250412120712.67fc45d9@batman.local.home>
-Message-ID: <6bbd72b60478d363d03c268ce8095f8a@linux.ibm.com>
-X-Sender: iii@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: GhDraqYsm8_2RHLEYPasQeD9LutLceP0
-X-Proofpoint-GUID: GhDraqYsm8_2RHLEYPasQeD9LutLceP0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_09,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=539 impostorscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504120162
+Content-Type: text/plain; charset=UTF-8
 
-On 2025-04-12 18:07, Steven Rostedt wrote:
-> On Fri, 11 Apr 2025 19:21:41 +0200
-> Ilya Leoshkevich <iii@linux.ibm.com> wrote:
-> 
->> 
->> -	F_printk("--> %ps (%lu)", (void *)__entry->func, __entry->depth)
->> +	F_printk("--> %ps (%d)", (void *)__entry->func, __entry->depth)
-> 
-> depth should never be negative. Why did you use "%d" and not "%u" ?
-> 
-> -- Steve
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I used int, because it's int in ftrace_graph_ent and all other events.
-If you think it's a good idea, I can change them all to unsigned int in 
-a follow-up patch.
+The following causes a vsnprintf fault:
+
+  # echo 's:wake_lat char[] wakee; u64 delta;' >> /sys/kernel/tracing/dynamic_events
+  # echo 'hist:keys=pid:ts=common_timestamp.usecs if !(common_flags & 0x18)' > /sys/kernel/tracing/events/sched/sched_waking/trigger
+  # echo 'hist:keys=next_pid:delta=common_timestamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,next_comm,$delta)' > /sys/kernel/tracing/events/sched/sched_switch/trigger
+
+Because the synthetic event's "wakee" field is created as a dynamic string
+(even though the string copied is not). The print format to print the
+dynamic string changed from "%*s" to "%s" because another location
+(__set_synth_event_print_fmt()) exported this to user space, and user
+space did not need that. But it is still used in print_synth_event(), and
+the output looks like:
+
+          <idle>-0       [001] d..5.   193.428167: wake_lat: wakee=(efault)sshd-sessiondelta=155
+    sshd-session-879     [001] d..5.   193.811080: wake_lat: wakee=(efault)kworker/u34:5delta=58
+          <idle>-0       [002] d..5.   193.811198: wake_lat: wakee=(efault)bashdelta=91
+            bash-880     [002] d..5.   193.811371: wake_lat: wakee=(efault)kworker/u35:2delta=21
+          <idle>-0       [001] d..5.   193.811516: wake_lat: wakee=(efault)sshd-sessiondelta=129
+    sshd-session-879     [001] d..5.   193.967576: wake_lat: wakee=(efault)kworker/u34:5delta=50
+
+The length isn't needed as the string is always nul terminated. Just print
+the string and not add the length (which was hard coded to the max string
+length anyway).
+
+Cc: stable@vger.kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: Douglas Raillard <douglas.raillard@arm.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Link: https://lore.kernel.org/20250407154139.69955768@gandalf.local.home
+Fixes: 4d38328eb442d ("tracing: Fix synth event printk format for str fields");
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_synth.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 969f48742d72..33cfbd4ed76d 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -370,7 +370,6 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+ 				union trace_synth_field *data = &entry->fields[n_u64];
+ 
+ 				trace_seq_printf(s, print_fmt, se->fields[i]->name,
+-						 STR_VAR_LEN_MAX,
+ 						 (char *)entry + data->as_dynamic.offset,
+ 						 i == se->n_fields - 1 ? "" : " ");
+ 				n_u64++;
+-- 
+2.47.2
+
+
