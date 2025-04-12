@@ -1,109 +1,104 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9681E480;
-	Sat, 12 Apr 2025 12:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2AB19F41C;
+	Sat, 12 Apr 2025 12:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744462203; cv=none; b=ZOQVTb6WG7+oUdRvsmWZ6GtLn+BaEVPMX3xcpI5RXIdM1rbVty8MpBntwugsSBDbUxYKfYj8eyHOEnNOELTF74xtFQi1r8Z/vkmLjYLU7HUkrWreV2OL/Mq8UJpqlkY63JaW59jXC433L0VJfoV9aZhSkQ66tuwjVA4R6+kDgeE=
+	t=1744462209; cv=none; b=HnXxA2OVNi2Wt6Vb8X0nWTR3R7bK063CmnqZhoSyZDxhde2DmauBmiO5iuXczQ3RFOcXnD7UJThYhR8iirvfvV/eHoCYsZtOfHX6OB+YJfXI8gTOphM1t8ukCSf1G/OJIZETi2bb9Jn8JY9i5LfjdkmLMSk6q3EVB9YPx4yF/t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744462203; c=relaxed/simple;
-	bh=7bjpdH7rRZHgzELQSMBk5HfdDd70gzmO4TpFtk1I7UM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sYDHcYH1CHuZ2cR6xvIs1miRequCdrCiHSn2Yi9IkC3VkI9P/rQ4J/eb4HqPS9Js7k2OrBa6zOK+Vp4eLHQEz7MD8s18doKdKcJmVISO37Aq7GTpVrnBiQFHaCq4a0llP9FsdnyAU1nHa+uDBeSJ73fotPCmfkA3Hd/y2Xgxfuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VqLDNIBI; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744462209; c=relaxed/simple;
+	bh=M92R1sA/oaQWHhu9rd2suZHFanauK8ygZLX96I1zQRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PlabFmQ121IaVj1Q7OcRFyuezHJxW7OVxbxy8tCED6UVNh0NllUpMymTVnsUngZ+dm+9JlNLKHmtCagUZxiffT+6OytoZNckAQ6MXVEdXoWpB+XqJO75e4c6IMhybq8biG9LoP1s4/1C6xPNhBbpmU3xc4FsjiOGn9b09URJ+kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIT1qZ1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqLDNIBI"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so2485338f8f.2;
-        Sat, 12 Apr 2025 05:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744462200; x=1745067000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3DNgScngiE3j5YjAAv9PlSz+Fs3uBzdN/tFwz7cjBLI=;
-        b=VqLDNIBIB7V5p3klpLnJKVIkkoOW7zQ53v5m+L/lgbuKWkaiQ6vKPWenFsX8rPaLYV
-         KLkB9e/lqkfVb1rCqzMvEX31srsXMaJ+NI0K3RwSoCm1TQPxLv6wzGb3LOPOsn0mpnEa
-         Am3/VkuaSuVAWDFm/Vd2VLT3UY1SGIxa2RalxHieE958H4EvsSynVAHx8u0vMh8Rs48j
-         qNIy4iouMTlByWHh3B5NsfamNddGnkMK1xldhDORm7BK8j/QvFZOJISDR6ZwroySe0xA
-         PeqLPmgDURRZEtHPi2mSDjYlOAjFktZelYv0KB8aa2xAMgoPycDyuzHK0BhfZFDXxFGM
-         k1EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744462200; x=1745067000;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3DNgScngiE3j5YjAAv9PlSz+Fs3uBzdN/tFwz7cjBLI=;
-        b=Sn4zB84epTKMi60A08232QExzbgfSaHgpdWniUyQbMZzOSKOnLE+yw9OhLg9aUxjbO
-         F0f8tz8/zC4Q7HSoyubJbcGJt1QKKM9f/O+BNB95QOurVqvZoA5W58JJmKeGYK0i1D3P
-         zAI8XnX/ktBnwsJMRTl2tfXovvOi+fkbAoGpg26MDnrHbxkbs3fjTVJId2h1DEo24BRH
-         WfDSVPGjsTnZ48YX0h/VVN5CcWH968OnojSFx076tRixtQW50DToJ5xo+lpxcVAB8gYQ
-         iKhplCgwEyvuv96G9N6F0jIftEolZ9NggK0xnL8wncFRfASp6KOnL7TPvA5zRGt61zH9
-         tHdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUskNl1G1tspm05uE1SvBwvaXJTcslxiLN2LEXWx6qJaMmR8PXiWObumUmzrkYkdfsHy6y5gsSS87/i2puSA==@vger.kernel.org, AJvYcCW3N0d8HavErTfIjEgmJYCSNUOY8cmpvLQ8ZDWDgKh4c5Rrdt0pSdSsWvGCbcj32uRHIJ9mQ8wrWbzy@vger.kernel.org, AJvYcCWDlbL786FnEXJo9YdyJxErcvmZgQ4m33aqy7zncDqmKchXz8Mu5jqZk7QXv/Sx2bBJqWxj7snFe0qOBsZ9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjSXDXcJdXZRJmSBaPGl/xBNDQ6oY8c23AVN4F+x8gigP6dARp
-	OPmQKOk79zkDbO/QX2M5JRQ15cKW7aYAPiOr7ctcpUJjwaDos5A=
-X-Gm-Gg: ASbGncuLwrWPMwLHsvgk/2jSPqyl+rBOAD8woOD7HwCK1YM5jwnHmsA0gDYU/TH2pUt
-	0id+ctnvzSCUTBrDePQKJd+Q48i8yWNFlXCihDZO8rzhZ1/+B2n6QE++/FHdna4JSh6ftPat8bv
-	KYKLNdeJVzz60fFV0VOAjGW0PHPlG3JJBdHXnsSDPSoigKpZQUCn3IagBNuKtxGDgnwvCxdjefE
-	MW5V8NHR2ZKmGINM4+slJkSBauSWTtLbc/F8gsosQdgDFzciN2EasqPVkEoTJ+NVGNlB7tzEn2k
-	LU4iAXDLcRorAes9RG7rXG8gng3XK+NCR7lLrGjvjrnRTQ==
-X-Google-Smtp-Source: AGHT+IFAdrdGPeAzQJeSH+UxxCOHuga17CXmikrVeO77hb0Q3HJP80OLUOk6t9Zn+55t/Z/nliA/nQ==
-X-Received: by 2002:a05:6000:1843:b0:391:3d12:9afa with SMTP id ffacd0b85a97d-39ea5201eddmr5420849f8f.21.1744462199881;
-        Sat, 12 Apr 2025 05:49:59 -0700 (PDT)
-Received: from alex-x1.lan ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338d802sm121609705e9.1.2025.04.12.05.49.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 05:49:59 -0700 (PDT)
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Subject: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: enable MICs LDO
-Date: Sat, 12 Apr 2025 14:49:18 +0200
-Message-ID: <20250412124956.20562-1-alex.vinarskis@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIT1qZ1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96209C4CEE3;
+	Sat, 12 Apr 2025 12:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744462208;
+	bh=M92R1sA/oaQWHhu9rd2suZHFanauK8ygZLX96I1zQRc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PIT1qZ1TjFW+TkZPQAfbPOFCRytrnJWL7NTue0aJuoS0nTm7fhpZIqg/syJrPgzDe
+	 arnYhlGoq3gBLLPnqCtc0YY9nlwnmFL7kJvkW8x/sZfMfXducQ9GJf62i2gaUi7FW0
+	 5EWYJekcvdHEe4I6zDHgUOI2rNWieQhYyqNhuclIHDSmb75+hdenGaYfWSHUq7Akj2
+	 vABlVfrfgPfaqT4F0r6kkFC4Z5A6hm/P/hNmAMJrVOTD9NVY12FUS0qNcGghEt6p2s
+	 oLLWo6qMBo00wRKY75jqDwfKysVguTFIAfeeiYQFWOX6A9I3Y1lAD6NLb1SU5RQhks
+	 yBCZWZPBVyrZw==
+Date: Sat, 12 Apr 2025 13:50:01 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jean-Baptiste Maneyrol via B4 Relay
+ <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
+Cc: jean-baptiste.maneyrol@tdk.com, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] iio: imu: inv_icm42600: switch to use generic
+ name irq get
+Message-ID: <20250412135001.7a8489e6@jic23-huawei>
+In-Reply-To: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+References: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Particular device comes without headset combo jack, hence does not
-feature wcd codec IC. In such cases, DMICs are powered from vreg_l1b.
-Describe all 4 microphones in the audio routing. vdd-micb is defined
-for lpass-macro already.
+On Thu, 10 Apr 2025 17:39:39 +0200
+Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org> wrote:
 
-Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
----
- arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> The purpose of this series is to switch to fwnode_irq_get_by_name()
+> in the core module instead of using irq from the bus parsing.
+> 
+> Add in dt binding interrupt naming and up to 2 interrupts support.
+> 
+> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+Applied to the togreg branch of iio.git. Initially pushing that out as
+testing for 0-day to poke at it.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-index 4a35846b5947..68745a4f4766 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-@@ -152,7 +152,11 @@ sound {
- 		audio-routing = "WooferLeft IN", "WSA WSA_SPK1 OUT",
- 				"TweeterLeft IN", "WSA WSA_SPK2 OUT",
- 				"WooferRight IN", "WSA2 WSA_SPK2 OUT",
--				"TweeterRight IN", "WSA2 WSA_SPK2 OUT";
-+				"TweeterRight IN", "WSA2 WSA_SPK2 OUT",
-+				"VA DMIC0", "vdd-micb",
-+				"VA DMIC1", "vdd-micb",
-+				"VA DMIC2", "vdd-micb",
-+				"VA DMIC3", "vdd-micb";
- 
- 		wsa-dai-link {
- 			link-name = "WSA Playback";
--- 
-2.45.2
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v4:
+> - Change dt-binding commit message to be more explicit about interrupt
+>   support.
+> - Simplify fwnode usage, NULL checking is already done automatically.
+> - Link to v3: https://lore.kernel.org/r/20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com
+> 
+> Changes in v3:
+> - Update dt-binding to report support of the 2 interrupts and delete
+>   remark about driver feature support.
+> - Link to v2: https://lore.kernel.org/r/20250407-iio-imu-inv-icm42600-rework-interrupt-using-names-v2-0-c278acf587b2@tdk.com
+> 
+> Changes in v2:
+> - Add INT2 in interrupt-names enum and fix enum
+> - Add fallback to first interrupt if naming is not here to ensure
+>   backward compatibility
+> - Link to v1: https://lore.kernel.org/r/20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com
+> 
+> ---
+> Jean-Baptiste Maneyrol (2):
+>       dt-bindings: iio: imu: icm42600: add interrupt naming support
+>       iio: imu: inv_icm42600: switch to use generic name irq get
+> 
+>  .../devicetree/bindings/iio/imu/invensense,icm42600.yaml   | 13 ++++++++++++-
+>  drivers/iio/imu/inv_icm42600/inv_icm42600.h                |  2 +-
+>  drivers/iio/imu/inv_icm42600/inv_icm42600_core.c           | 14 ++++++++++++--
+>  drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c            |  2 +-
+>  drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c            |  2 +-
+>  5 files changed, 27 insertions(+), 6 deletions(-)
+> ---
+> base-commit: 1c2409fe38d5c19015d69851d15ba543d1911932
+> change-id: 20250325-iio-imu-inv-icm42600-rework-interrupt-using-names-b397ced72835
+> 
+> Best regards,
 
