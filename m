@@ -1,97 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5666B205502
-	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 16:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1088134BD
+	for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 16:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744475975; cv=none; b=nQU9blSDxxmvhmjE5Vls2cIr7Zu7RPUTZeHZE/edL5BAaJtGGIWPnP0u+emX5NIr5knn+oFfriYY4muKlOK/wbxlUHN1EvFGTKAtPtdBgFkFaDApi8tWKhKhG9WYGBpaQFwh0ehk62UW2Fww8130oPmuCTRNQZg6fQeo+F0uE/A=
+	t=1744476210; cv=none; b=T8FJZEGmH4YzDpAbb2iFNImKlk89cEoQFseSu7ayVgvN186Tp5YijE/4G41veUwpzaSfoXOai3ir/BzL8BnLQtvEpo8sLBFZO6tXanmgkiG36bODQGmj3pMACrYHT2x0mjqBBIc6wESu/Biup2iUZix4LMUawyd0uY10MwBN3fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744475975; c=relaxed/simple;
-	bh=KrifTKNbtTOpZjVsriJwHelBy/tOyNLz7rJCylrYNzo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fI0PlX832pLP8El0j4BzuzIQgkiNrjU1z0in0HXpafvhIV/p0/e6LiLL2sPpbdKOh7kShdi7ae6c5hqC5Pz4trT2P7gIBKglbpdZ9a59Oh99XMP7cXZWOplQ1P+XYWn/JZZ3ouZTL3/Rj+M2Jq3Xf8Dnfhcwjjg9Qy+j+HdH0sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eCe1Y3uC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744476210; c=relaxed/simple;
+	bh=QyGAX3gvnNPkHq56Ks2u/KuVyL37Hy9JBP+koRLpqqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D+c+mzOUKrghrV8o4aXedJNzOhEHf1z3rCbN6ALs6A73pZj35gWwjd29nPWa5Mc553V5S9NT+1NuDJIiWhNP/hfgjn+rCFPngw7tQAOBXBa7wT7w0EfZN8r1EabrwzrqS7V0PF80uIqXQgb5RUvSaM65u0HKzwjGwMvUi8Ud5f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k3gH4QIn; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCe1Y3uC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744475971;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=as4CGAakZQuKhDm6Y+wA6IfY1weX2O0DARSrhX57YeI=;
-	b=eCe1Y3uCpAvnNPbV7Xo3QFf1yCKfr7qprEK5H0bC1qJ6oLthOdj71Cyf9aGyyuApws8kl1
-	7MZq4PCLJBi/q0D3kGtbiLyS1JLrtUqv6U+z6J7B7wu0nYTX9SdQZ815PsRrgdLC2ZslDb
-	4LzjyizqiLetUSQzSieMy8RQm2NLrJI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-xbQKs-d4M3a2WxYTFrA6YA-1; Sat,
- 12 Apr 2025 12:39:28 -0400
-X-MC-Unique: xbQKs-d4M3a2WxYTFrA6YA-1
-X-Mimecast-MFC-AGG-ID: xbQKs-d4M3a2WxYTFrA6YA_1744475966
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7D6A3180049D;
-	Sat, 12 Apr 2025 16:39:26 +0000 (UTC)
-Received: from pasta.fast.eng.rdu2.dc.redhat.com (unknown [10.45.224.37])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 69ACE180174E;
-	Sat, 12 Apr 2025 16:39:23 +0000 (UTC)
-From: Andreas Gruenbacher <agruenba@redhat.com>
-To: cgroups@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	Rafael Aquini <aquini@redhat.com>,
-	gfs2@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH v3 2/2] writeback: Fix false warning in inode_to_wb()
-Date: Sat, 12 Apr 2025 18:39:12 +0200
-Message-ID: <20250412163914.3773459-3-agruenba@redhat.com>
-In-Reply-To: <20250412163914.3773459-1-agruenba@redhat.com>
-References: <20250412163914.3773459-1-agruenba@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k3gH4QIn"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0618746bso22738395e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 09:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744476207; x=1745081007; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tgJ7FmlMySY/gakk4Le0yZ8LtG7TbtIjOQVOYVhLjjQ=;
+        b=k3gH4QInP1HlFuzVkqJzqutWowx+ZtBlr2tNI6M+dzNC2ShjGDw3u0ycvQ+VChMQML
+         QsfrC0GihqABN79/2UGefnqlFq60pFFxAPE6ZCK0IBc1cOOYyJpFEpyuWQgNX5GjCyt3
+         DWEsBD5jpYE6zPNriGc83VwXQg65zdTkzpBYpAX3QM5up47ynfGmL/GYQy4A/miwKJvB
+         kqK4FzeV7JRp690dfD0t2EYXLRKtTLQ06A/Gan6vqC48d6CTzfIqUbkdTC5MKId8t5X7
+         cO5jrcq2gZhaJk5neKzuNGzMkph3BCCzSmxBVgGMPCuMDpGl83hLKcOCNW6vNEN37tMI
+         hWbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744476207; x=1745081007;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tgJ7FmlMySY/gakk4Le0yZ8LtG7TbtIjOQVOYVhLjjQ=;
+        b=R0kOtMRCbwfP1+RWSreC6Dg6m4SO41uXqDpPaQzq0JVmOhrIfg6c2NpZ3HuJ1icqVZ
+         3k4awp6HKsrxRVK1O2Iy9qdOAk7KZauDWFZDW6JqPbNrFXofJDY3rvwafreab9SF9d3y
+         cDxLFGXY+HxkiAE/VI7GH6CnPiAkkyitB80kDv8jBPoJG6UOMK5Up141XNVC4cF1eE/M
+         KEeliNKhJSCMCNFaRm26pr883MFAGq2AbYZLRPcl3x2bdqDFEyVlK98T+xpDJ4jUfMnS
+         VcI61/GaXukUNXKdf4adyX5xJQ+Fe189yM+PM8PrnTfT1ugENQ0DdJPeYwKjTq7cIAVN
+         74kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGhz0dh0LyoCQiWKFTi/57ZVKcCTEyx++Bl4vUDmWL5L9TC6UOSVxI0C6uktNgKa46I23+KyMUKdWk9iE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybAZyMGIXc7t8NC9pZk5CpnxUSN2/dbkQ/CQLLMsH5WjG/g3Gu
+	3Y45MjosfT0eoGO+Q6tL1JY6S+196D3B/nTXsJ16BQimEu3k3a2b92FKTwj73JI=
+X-Gm-Gg: ASbGncsH69HNZqzNyStKUSRzCUVx55258R/f9ktsVeEhGDqOFC1xeKngz+yn4kULaNQ
+	KIb/wfW7X/GPunGXZA3znKj2UbD3fKQU0zurjBkF+OKsSOCgsFNb5q7pbqfAbzF4aUtS0ho9Nr1
+	1p2mSiU9cziJY3C6UmIjvUWrZ3TXLOJw+R44OLeYOkApqr7ak9hm2IAsJnUD7rIihx8YnhQcz2m
+	/qtzEujS0Z4M2DH0GaVx/lgtBBsApxBvD1CPMKrY3cwwOXqjpmQls2KHxb7zGNeXoG25bdKnRWH
+	Obe0ziDSWIOUP91zkNdbl6HywM4uhPm3vwaavUqv0U4NyElXS2/LPy4X
+X-Google-Smtp-Source: AGHT+IGdnRf+gEkkeW8b9r86hiA8RBuVbjG/9HFncHylTiqjI9Go6YaMUkdgogkwYq1c+nx6je/y+A==
+X-Received: by 2002:a05:6000:40cb:b0:397:3900:ef80 with SMTP id ffacd0b85a97d-39ea520081cmr5520055f8f.22.1744476207180;
+        Sat, 12 Apr 2025 09:43:27 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae977a7fsm5467993f8f.45.2025.04.12.09.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 09:43:26 -0700 (PDT)
+Date: Sat, 12 Apr 2025 19:43:19 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] gpio: aggregator: Fix Smatch warnings
+Message-ID: <7bed7798-1671-4926-8d97-2e9ce34a683d@stanley.mountain>
+References: <cover.1744452787.git.dan.carpenter@linaro.org>
+ <52ap2hc6ii7hlk2zixxf455nens3rxtwvrrwhlv4ii5avpgmcq@lbrdov3ygay3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52ap2hc6ii7hlk2zixxf455nens3rxtwvrrwhlv4ii5avpgmcq@lbrdov3ygay3>
 
-From: Jan Kara <jack@suse.cz>
+On Sat, Apr 12, 2025 at 11:45:08PM +0900, Koichiro Den wrote:
+> On Sat, Apr 12, 2025 at 01:14:53PM GMT, Dan Carpenter wrote:
+> > Fix some static checker warnings from Smatch:
+> > https://github.com/error27/smatch
+> > 
+> > Dan Carpenter (5):
+> >   gpio: aggregator: fix "_sysfs" prefix check in
+> >     gpio_aggregator_make_group()
+> >   gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
+> >   gpio: aggregator: Return an error if there are no GPIOs in
+> >     gpio_aggregator_parse()
+> >   gpio: aggregator: Fix error code in gpio_aggregator_activate()
+> >   gpio: aggregator: Fix leak in gpio_aggregator_parse()
+> > 
+> >  drivers/gpio/gpio-aggregator.c | 21 ++++++++++++---------
+> >  1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> Thank you very much for spotting these issues. I doubt myself for having
+> overlooked these.
 
-inode_to_wb() is used also for filesystems that don't support cgroup
-writeback. For these filesystems inode->i_wb is stable during the
-lifetime of the inode (it points to bdi->wb) and there's no need to hold
-locks protecting the inode->i_wb dereference. Improve the warning in
-inode_to_wb() to not trigger for these filesystems.
+Heh.  Don't beat yourself up.  Humans can never compete with a computer
+at being nit-picky.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
----
- include/linux/backing-dev.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 8e7af9a03b41..e721148c95d0 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -249,6 +249,7 @@ static inline struct bdi_writeback *inode_to_wb(const struct inode *inode)
- {
- #ifdef CONFIG_LOCKDEP
- 	WARN_ON_ONCE(debug_locks &&
-+		     (inode->i_sb->s_iflags & SB_I_CGROUPWB) &&
- 		     (!lockdep_is_held(&inode->i_lock) &&
- 		      !lockdep_is_held(&inode->i_mapping->i_pages.xa_lock) &&
- 		      !lockdep_is_held(&inode->i_wb->list_lock)));
--- 
-2.48.1
+regards,
+dan carpenter
 
