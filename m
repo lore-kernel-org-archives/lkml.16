@@ -1,67 +1,85 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCCB17578
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 22:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6F518B47C;
+	Sun, 13 Apr 2025 22:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744582250; cv=none; b=hENU0ds8s0J+xSpmqtpFmIEPYAQZO3yg5EbxZYLAItRxXR/JTpc61X7jRZnq1fAA5WMjAymQxA2apdJvZ8TDGwFsWdckiFy5WgVhNN2jLRdI3YAWSoYV+z3arFUgk1Uuu3FGkcFyV8x1yqzQnrDARzou7tVjwG5yFiDHK2OBnvI=
+	t=1744582370; cv=none; b=eqgN0oW2VLZchl8yH0Rxe5YG2Rh5pfiYCzJNhVMWXKcqoFluV1wuvw0j7AjI4ooWrB0ZeQE0pjHKXjSQfUJtvMsVtRdnCeAi4xZZpVhJrJNhgg65bNliNXDwO+GQXcu3tay5r5Uc7MmtwyuQvrcJ4uebHZ4Rvoxu6dgIdav8758=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744582250; c=relaxed/simple;
-	bh=y4Y8GWJgjyJdzkPCuDCjUrgQR4XgPreS0qim9Maq/K8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PQ+a3J+58btdKjdvWgHtpqXhQkAigpXsy14Hl21tfHS3RIY/6CujMtRBHuVkHxGLmCHojzy16gNuUjhdRednRIbEGDnz2cBvadqQFHrCHzN1zm5qiBSa0Mkq1rnss3GY4Cg8Pa1E0Jw0XG3Sg+SRp2d4H11bk6DHWJQj76QXOQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39d83782ef6so2971979f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 15:10:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744582247; x=1745187047;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4Y8GWJgjyJdzkPCuDCjUrgQR4XgPreS0qim9Maq/K8=;
-        b=nzfJWFrwfFww0l69rw5e/D7guMw2cLeEKQpFcnGatLDYYgCa/Fd5bNOwAgTw1VY75d
-         d1n2qJkgooGDr0LEmzm4fGbNm62hRAk5aACw1OGQwpPzQXGnXjIpqlT5cydMa25afT7k
-         jpoRnajaGpsrz8oGtsJymmQLRgT1c2xIv4DxncUBQEoYgw65Uy11Ui2P+0aAiXUerkRO
-         AnPxyg2DAetx4vywh7Y5q7Fi/inOkaTa0HaJrxx+c8jhTIKbSQzksH88Nv6v1wBPMzPD
-         NVObDcr5lMSkDQvkdtTpsMKVN3ZrEGLx6OsdUj1xxrSeXa3NMd8QXoLFA6m3LB9qUNgX
-         I/+g==
-X-Gm-Message-State: AOJu0YwZakhy0LU3p281euwQT9EtXnZVfRRZAkXOhW8iQQHDlSjrRIXm
-	9A0y3WGnpeKWuKTyWpst1G/oEw1mvUEc2oW2IAjaZ469jOfCStDR
-X-Gm-Gg: ASbGnculXGnQmKCUAXpv4Fpb/co9rJHhZF0vo/tGsMR4YG8U49aq8xT0szPaPbI1aQz
-	Ta4tKbkbsCTbpf2/zz6M7sPTtZtQo9pP+++CqRmpml84eaN4hRLjXXbEFwOjKHWitAFlMc4tLLY
-	c6JQ8sQeR3k0D6R5eZfJbguWm/W10eDlWcqsrZFp8nyDlgKwInlCOK5+vJIOppGThLcRw5DOc3j
-	v8I8Tw4fs8h34OtJ4sBXEwTRllAkbzLVRj0gY0Yii/hKfvUABxU9YQr9d96THLimimFQAUhMT7s
-	vIbA5xTGADCIaie7Qn4R7nHWe521ejIITSFJUsOKlJCPyx60zjyahowNe+hJjCkoBxCcjsW8
-X-Google-Smtp-Source: AGHT+IH24PRq6NUwCfTeQZTPsdEVr3P0sCKTm0cIW/re21anWuBU5oMiFZBDgbTEzwBNltlxgjlcIQ==
-X-Received: by 2002:a5d:59ad:0:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39e6e45d55dmr7125805f8f.3.1744582246382;
-        Sun, 13 Apr 2025 15:10:46 -0700 (PDT)
-Received: from [10.10.9.121] (u-1j-178-175-199.4bone.mynet.it. [178.175.199.47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44572csm9324344f8f.90.2025.04.13.15.10.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 15:10:46 -0700 (PDT)
-Message-ID: <f2596e53-d8c4-4e18-8632-baefc17eb7c5@grimberg.me>
-Date: Mon, 14 Apr 2025 01:10:45 +0300
+	s=arc-20240116; t=1744582370; c=relaxed/simple;
+	bh=j7o4TmN6qMjf7TFwhhk0Y8oqqNUQI2mLCa//MN18WCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jt9eNMcgXTjUQG4CytrpNqv19mBrPCFa6VpGmX8Eu42CC1UlQmTgjQBVyxmw2tuQzVdFnbZHR3yB2t3aINczV4pqqWjb+pgqUzTUV1qaZlHBLAj3yKmZRCsRFZaeQNMAAtN4VMv9CowyEI9U92/HIVPznofBi4ouLGzcX+W1P8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C820B169E;
+	Sun, 13 Apr 2025 15:12:44 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0F7D3F59E;
+	Sun, 13 Apr 2025 15:12:42 -0700 (PDT)
+Date: Sun, 13 Apr 2025 23:11:45 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Mikhail Kalashnikov <iuncuim@gmail.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li
+ <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, "Rafael J
+ . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Subject: Re: [PATCH 0/6] Add support for A523 Thermal system
+Message-ID: <20250413231128.75983a60@minigeek.lan>
+In-Reply-To: <5084c2dc-d268-4268-a827-2ae445782a4e@gmail.com>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
+	<5084c2dc-d268-4268-a827-2ae445782a4e@gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvmet-tcp: switch to using the crc32c library
-To: Eric Biggers <ebiggers@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250226062841.60688-1-ebiggers@kernel.org>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250226062841.60688-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Again,
+On Sat, 12 Apr 2025 03:53:08 +0300
+Mikhail Kalashnikov <iuncuim@gmail.com> wrote:
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Hi,
+
+> On 4/11/25 03:38, Mikhail Kalashnikov wrote:
+> > This patch series adds temperature sensor support for the Allwinner A523
+> > family of processors (same die with H728/A527/T527)  
+> 
+> Based on 6.15-rc1 with dts patches from
+> 
+> https://lore.kernel.org/linux-sunxi/20250307005712.16828-1-andre.przywara@arm.com/T/#t
+
+Chen-Yu merged those patches already, to the sunxi repo on kernel.org,
+under the dt-for-6.16 branch, so you can reference that instead, and
+also base any new patches on that.
+
+Cheers,
+Andre
+
+> 
+> > Mikhail Kalashnikov (6):
+> >    thermal/drivers/sun8i: add gpadc clock
+> >    thermal/drivers/sun8i: replace devm_reset_control_get to shared
+> >    thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
+> >    arm64: dts: allwinner: A523: Add SID controller node
+> >    arm64: dts: allwinner: A523: Add thermal sensors and zones
+> >    dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
+> >
+> >   .../thermal/allwinner,sun8i-a83t-ths.yaml     |   5 +
+> >   .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 145 +++++++++++++++++
+> >   drivers/thermal/sun8i_thermal.c               | 154 +++++++++++++++++-
+> >   3 files changed, 300 insertions(+), 4 deletions(-)
+> >  
+> 
+
