@@ -1,62 +1,62 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC51A314E;
-	Sun, 13 Apr 2025 11:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB001A8F79;
+	Sun, 13 Apr 2025 11:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744542660; cv=none; b=E+wmGaMQfPbvzusS4IbbbBXSsQJBktVM0pjdiLlrStStatLmeV2JtVVdGiiPGgAS2ES3MHP7dgFKIhJnUpNeqsS7FuTi6NCKElnS/phN01ArAST7iino0zYEnqkP3JR+a0p4XLDLCCq8V1kZbrI+lOVpzzMZWLTt5dRN7QPMrXc=
+	t=1744542663; cv=none; b=QoGzdurtNjLKhkFkZvVoWhgv+euh4Q0tkAWiG2Fo/2Znl4TY0R2avwrxqvcHlmcKegMSaxqYi6FAzHu1ZINtdxhjh4zMVkMZBVaJwSWG9zQLGfD46UryUCxk5OJAHRb5UHdgzDoFPWBsBlVvRLgUZYsCGAiuVq9V4XyrIpbZlPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744542660; c=relaxed/simple;
-	bh=X2a0y9/B0jI4AAJ86ta/g8LdLh80roBapHte9WAl4b4=;
+	s=arc-20240116; t=1744542663; c=relaxed/simple;
+	bh=BBXGgxmEIZfQk26iEKset/TH1HIPQXdklPwmouELyIY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aZyHiitB3XpVrGkF6ZygvlxC4JujJFAAkWVMDEJQmUDsqSsMgerfdi2K0jG34OPBQp1hm1hZMXnHxk4RWpmZTgpB8YuObxFnIdMjPF+isMvZ6rKCndL3aaCD636k1KaAOgijuAOPJFrFft5hxPLWnzEyFYhVETImKOygAKsSoKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8VY0B2E; arc=none smtp.client-ip=209.85.218.42
+	 MIME-Version; b=alsuBhL+PwzCcdAZvWzYWdomlr+Qqn6Rc1Dxdo/x9qbk9ZPA0CiEi4R5BqBADuXL/oYFW3wRvqBLg2Wmg1ayrE4mc9REKkBZU8OjzoqzX+xHx/vPIQvtYHggxQxpVvh4sESrlpdTSOzw4PraN9qQlIaUTfd0f2vs9X1Hq0N94MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BRnWJBq7; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8VY0B2E"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abbb12bea54so679360666b.0;
-        Sun, 13 Apr 2025 04:10:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRnWJBq7"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e66407963fso6241720a12.2;
+        Sun, 13 Apr 2025 04:11:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744542657; x=1745147457; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744542659; x=1745147459; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=48v5ru+il/PLdzW8wzxpo+r32d4X4MBM1FD42Cv+dFI=;
-        b=K8VY0B2Enb74fpaLOPLx5Jwi8qb36TwKukasfQWY0vIDFzjDn0mUCAkbA613hzZI3P
-         4OJJOvsPefUsS3cHioUhSj5g96KpG+SIWLfEK3K5WnDjQJ1W1cQzXUS5iyyK57blNBgc
-         8QQCQsTfnaXz0ujoej4MUrrNOQ5EOY1Q3BzOc0UHIAo++1TsoJtgkAOUD1QwkZ2fBq8k
-         zdvoPjfoubu33DYS5vEvJoCoFMY1RRXsXlF1N6LrTDEkRaWvrvX/IGrVU6w+yMYgfaVY
-         u7yHRQka2auo8QfyFBygeoW4Mh2rWk7QfyXaVW9CDOjLCGfJ+uGpBsbogGxkMR1OYeNl
-         ry9Q==
+        bh=taQydatFRUUIgWEIrpl5CYVqIF0OiF14uRuCSzbkAJY=;
+        b=BRnWJBq76rOAMrhFjdZXErt7zPEcH0cSmgfmZuOBqX1aLUuKigm9ZXlUGPGcUxJq2Y
+         bdW6fnhtbM4UPOBwTSJeqsB3Ibmet8sU631/BPlPOyl149mRMkjq/ZfQbXeCYJkFNhxy
+         XGYWhoZZo6ifM38TD8CSEot1yzhjrJ4mlxMxvwE8zRQTxMXt2t/714ZmjJU15ckN88yR
+         +tKua44Vsz2R6rK9HNzonTujKkOVw+5+VxSX1/02oxMTkE1itM0t0IjKCnKQTeoe4eio
+         +fROy3cqh1VE3Kq+SssD15Y+nJKVhCBe75CnsjefJxrSqCYCm2ZawQ8S87KTzYlllb/x
+         TbeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744542657; x=1745147457;
+        d=1e100.net; s=20230601; t=1744542659; x=1745147459;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=48v5ru+il/PLdzW8wzxpo+r32d4X4MBM1FD42Cv+dFI=;
-        b=J66Ehsp20S8YIFLHkSzBna/syvfFDRncNVivuX+/mcjpibPNDI1x6fBF3V9US1MLDi
-         j07t+ivonJkiaHSZfA+X6pDn+BEjogtQNUEfbWceAoJZwxkWhKpZLo/RHKtYDRxGZppN
-         wqop1C4Bbrlbd8kpkJxOzhm0Od0mrLV9u3Rqgqv8kqdlBiG4zPo9FRvvPp1yik/AIVEC
-         G0V+ApuZQ8J3mWlVEH8lx71I8ou7T9zhSn/w29/ffKt8N9smljX4/DIQKCF7Qp/XQ95L
-         kzTZ4wzao/3oks1WuDj5jSYR/Agw/Phx7oN/IRDPETlIwsKJ+/FxNv8YQiZIedgpUCyl
-         yzGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVV1hMD154nkmD4G3peLU/M7tDmPtl77w/3ivlw4g+ZuyA7TRVinLFmcqLkgrSoYpFLDSKOu39BpKkZVi8=@vger.kernel.org, AJvYcCWDAxY7cdEGnUmzJQCIbloKKwPo2fUyx9IwYDR9jQ7RfypRSPooT30/AnfT3a081AleQDrAb9NKQQdq@vger.kernel.org, AJvYcCWILP1bsTWwKLEdq3i665QX44VAAYrLa1CXUnO/1pt8lY7gxHzIBJNCyW/4l1RFCYYYgqIz79r+DMM83AVo@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt5oVBaZWQbtC+GaIQG7y3RzAccf7Ry4d8EIptWBEa59kIAxwx
-	3Wchg8EoqvYjNks0FDftVfmk6opVKep0WrS4Jhf0HA4Y/6w1bktL
-X-Gm-Gg: ASbGncuRgg2+r/ovuldkaDqHugxymPB3NoQOykAvH3+xXPMgtEteo7fW3XNFStptArs
-	usuMyJ8J0+ZvvhOCNtdNKUlo8kNFUP4QjQr+NsgllHg98dgZoqyVTGpHb7Pvbj/KxshUuJoScGs
-	jGLsAjm213gzaFDWsNxLlAtUD11uce8j0RzFlSe+Vm9zdlLPcGvyN6FYerTjmMJNL17YC+rJ6gw
-	ZvoBVA0GBmaisGIwZJhYA8OZedtstOOuUfydu0zkLop13FpH9mpHZlm+6sLZsl/n/fU8o9ln3Uo
-	q4DT0VYZLlO2gbWFJzPnc6tMJR88E3n2mG6+NT1KIp4=
-X-Google-Smtp-Source: AGHT+IGl4lvsO+0vvy3R3ukgxLsi6KJBwXpEwGD/F7kFuojFxQOCh0eb7pjPt43Tyv3JQ8xDXn9YlA==
-X-Received: by 2002:a17:907:94cc:b0:ac3:8899:d2a6 with SMTP id a640c23a62f3a-acad3456f74mr717634366b.12.1744542656388;
-        Sun, 13 Apr 2025 04:10:56 -0700 (PDT)
+        bh=taQydatFRUUIgWEIrpl5CYVqIF0OiF14uRuCSzbkAJY=;
+        b=MgyM03BgYfKUsxbgqAoN1BR7vPBlXnWiLJDv0BgdYixDpVdU2xwBxzaG429LQcJEVP
+         MC4u0YcmIcqiUuXf9J8BE+7PMDKLkwsuwOt0wdxwi0bYNfHd1/OI/SLnZw5FFAwYzWT2
+         dHkcpMZpjPRnuUN7cl63kW514iuCtkD9ujHF8tf75lXc8Rbbm4EyuFbN5+OVYB6N7Z/h
+         psxshC4FQ8BuvEv4giUW37rZJMF9R6jomlo0aVj7RM8SjanVDRT5VgGkk7CyPIBFJWaC
+         N2dnuD2cxEp/8A06CFrh4lX+5Ms0JBQ4T5YtsPwuVigtfZW1xvlLbPcd8izYMEwsG3sF
+         j6qA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7rypBzMiLQnYEx8m/0qcwCXIZ70YReMCHKMaQd9/SIHS3WnRefS2q7plCb6dt1YZq/xRLWNMs6lUv@vger.kernel.org, AJvYcCV3ZtJLHt+FyS11WoxjuxWjTgN8g7m4dL2E+XG602mInuuGAbRhUnw0ZMFRWY2RgMhY1W5/x89kMF3Oc1I=@vger.kernel.org, AJvYcCVv01JPftyvdn5x9d+f21nnlhxgWEy/wc93jlLW4tqF3Cx3k+ROVWAIdEiWv1P9AQiFeceCJ6solDUNl6xq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7X7NXAq+zqkzpVkTjIJ1ndIKlkj4uuvngHCg/84qEpYnGqCfD
+	SP7gjHIvtoMw2twnepLhJrF/yB5OFNaqCQ3E3kesiBpKDp0NaOcm
+X-Gm-Gg: ASbGncv6aZgbGk3wzXzHhKNiJgRYlvmJ6R0xyzs2Jdsh/oJ748gwUoR+qcSENofHYoA
+	Q4bzME7KgLUNJBsiOqXrsrunip+JQKWUGU/kH0MK0p3iLIu1xyua04nihetwHXwS4ECN4YgmkN9
+	2DLIUCKevfJllPZj+nC5dgS2KQNIU/IwwmumyIMHHldkVB63RZbjIbDi6KuZREjXB/M0IOoZPVe
+	cyhUpvekIdZPqSJIHX+pGUfEEmGmrgnUJ8WXW8cXFLCri6uBKXks1g5SBFaPrVN6eqjLT6WSKu2
+	EyFaqqHGhbHv12/Zg5QV0h2BCmVngPIo
+X-Google-Smtp-Source: AGHT+IGPC9f/KWk0lWHsX3nZmihYw21EjWEm1OZsXaWLqJQRQ5y0yZvbB3JEz1t9QR2eEzbb/Zp6ew==
+X-Received: by 2002:a17:906:c14e:b0:ac3:c56c:26ca with SMTP id a640c23a62f3a-acad3446a15mr776027366b.8.1744542659317;
+        Sun, 13 Apr 2025 04:10:59 -0700 (PDT)
 Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be98d4sm728571266b.59.2025.04.13.04.10.55
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be98d4sm728571266b.59.2025.04.13.04.10.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 04:10:56 -0700 (PDT)
+        Sun, 13 Apr 2025 04:10:59 -0700 (PDT)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -74,9 +74,9 @@ Cc: linux-pm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-tegra@vger.kernel.org
-Subject: [PATCH v2 2/4] dt-bindings: power: supply: Document Pegatron Chagall fuel gauge
-Date: Sun, 13 Apr 2025 14:10:31 +0300
-Message-ID: <20250413111033.11408-3-clamor95@gmail.com>
+Subject: [PATCH v2 4/4] ARM: tegra: chagall: Add embedded controller node
+Date: Sun, 13 Apr 2025 14:10:33 +0300
+Message-ID: <20250413111033.11408-5-clamor95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250413111033.11408-1-clamor95@gmail.com>
 References: <20250413111033.11408-1-clamor95@gmail.com>
@@ -88,69 +88,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add binding for Pegatron Chagall tablets battery monitor.
+Add embedded controller node to Pegatron Chagall device-tree.
 
 Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 ---
- .../power/supply/pegatron,chagall-ec.yaml     | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/pegatron,chagall-ec.yaml
+ .../boot/dts/nvidia/tegra30-pegatron-chagall.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/pegatron,chagall-ec.yaml b/Documentation/devicetree/bindings/power/supply/pegatron,chagall-ec.yaml
-new file mode 100644
-index 000000000000..defb0861e268
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/pegatron,chagall-ec.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/supply/pegatron,chagall-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/nvidia/tegra30-pegatron-chagall.dts b/arch/arm/boot/dts/nvidia/tegra30-pegatron-chagall.dts
+index 4012f9c799a8..b7d0ebb766a6 100644
+--- a/arch/arm/boot/dts/nvidia/tegra30-pegatron-chagall.dts
++++ b/arch/arm/boot/dts/nvidia/tegra30-pegatron-chagall.dts
+@@ -1155,6 +1155,14 @@ lcd_ddc: i2c@7000c000 {
+ 		status = "okay";
+ 		clock-frequency = <400000>;
+ 
++		embedded-controller@10 {
++			compatible = "pegatron,chagall-ec";
++			reg = <0x10>;
 +
-+title: Pegatron Chagall EC
++			monitored-battery = <&battery>;
++			power-supplies = <&mains>;
++		};
 +
-+maintainers:
-+  - Svyatoslav Ryhel <clamor95@gmail.com>
+ 		/* Wolfson Microelectronics WM8903 audio codec */
+ 		wm8903: audio-codec@1a {
+ 			compatible = "wlf,wm8903";
+@@ -2596,6 +2604,14 @@ backlight: backlight {
+ 		default-brightness-level = <15>;
+ 	};
+ 
++	battery: battery-cell {
++		compatible = "simple-battery";
++		device-chemistry = "lithium-ion-polymer";
++		charge-full-design-microamp-hours = <3050000>;
++		energy-full-design-microwatt-hours = <23000000>;
++		operating-range-celsius = <0 45>;
++	};
 +
-+description:
-+  Pegatron Chagall EC is based on an 8-bit programmable microcontroller from
-+  Infineon/Cypress Semiconductor, it communicates over I2C and is used in the
-+  Pegatron Chagall tablet for fuel gauge and battery control functions.
-+
-+$ref: /schemas/power/supply/power-supply.yaml
-+
-+properties:
-+  compatible:
-+    const: pegatron,chagall-ec
-+
-+  reg:
-+    maxItems: 1
-+
-+  monitored-battery: true
-+  power-supplies: true
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        embedded-controller@10 {
-+            compatible = "pegatron,chagall-ec";
-+            reg = <0x10>;
-+
-+            monitored-battery = <&battery>;
-+            power-supplies = <&mains>;
-+        };
-+    };
-+...
+ 	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
+ 	clk32k_in: clock-32k {
+ 		compatible = "fixed-clock";
 -- 
 2.43.0
 
