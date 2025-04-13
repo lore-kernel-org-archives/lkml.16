@@ -1,254 +1,161 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0B81F2BA1;
-	Sun, 13 Apr 2025 21:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368B1BE4A;
+	Sun, 13 Apr 2025 21:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744578647; cv=none; b=XN6hgl7OBBLKaxfeKdJTdNjq1soHef5WEe49ssMKz2/5mRcs6gHML52tNWyfZP+0YtEd2fm0F9TtQDa8TDoMRO4S/9kf0ZJZlSaNDFU7ZBwa+xb3uxmbi7sIVXjXtkxkwf0cy7ASxqOzIkRUOHI/vKv7eyMRYEY9YY0oF1DD/9E=
+	t=1744579111; cv=none; b=u3f1dHlNNShP0W3FMaK7N5RD+ope0c2dyVJwvq97V7CxXRs+TcONeFwRXrG5XfZJFGF6USIJWjERQ+OuoRDOlDnBm7wzWPsAYklOdb0fkncpIb19QzqKqE9fHB8svmIcZio8rIFz9xl8Ln7uSleCIMoHI3VALWjCp+LTafjBX34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744578647; c=relaxed/simple;
-	bh=jDSWSnjx3ALxAD3xBZHKCgbB2WWyM9Jk7NMmASTtENo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2pzYXLgxc8ihXSlFmabv28N6+h92Ie+BQ2MTV9YBxBJ+3z+8EqXoOQIWi/XxWBv0Bxg1VG6SAUnMbBRXctvj0HtKiGwuyHudSaEuA8EhqTM8owl/cHvSAkVVk440e2EmKfzN6AdTsnuCJ2LPWaOKDb8QL4BlzESCl0y6S+EebQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=icK/XaF2; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1744579111; c=relaxed/simple;
+	bh=raQGkqFfWPQ4kSfWKJwuKeKf0iWVueQrNN5LvU93UqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YGps/Qmy9570kxRHJer8Q9ayZ+epoRxOs0veQCxQvfewFnQ6qgpCEynMc0aJ8szx9vhyWlPusnHP/wCNH2Ff/Eaaxw/CjNxD0crir0Lzv7DvaNcNdQi5JyCTl8P9OeFoZ9ubTG18MPL15Qgxvdv8/Roayxq3ifOay8WmrV77xW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDOxkV1Z; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icK/XaF2"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac289147833so738938466b.2;
-        Sun, 13 Apr 2025 14:10:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDOxkV1Z"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso30525141fa.3;
+        Sun, 13 Apr 2025 14:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744578643; x=1745183443; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l1WGBlHWjazqP3jbWLExnKtOaCdZWRyF6rr+r0o9NNs=;
-        b=icK/XaF2L6DbJ7Bb3zwal2+m5lGV8LhhGDy4rmSLGeu+5JF3va1/wxJ60DyMLDsp2W
-         LXgm29I6UCvkf4QO6WhdqAMftHMWn4wSzy6TZpKIhSNWeox/Bdx+DA9GNwtvowIhlhuf
-         6WoVoopgqqNueya+3NuLV/z+ctELTUPAHa8Owf/3DMHtVwVADP6pNqh+lSzorONP1d9F
-         9cyaK3C4ZuF9k8m2P7P87Y2dEGWTjDp8eLykmakpgRW5/UBrDALenvJ/nRpWbq5YxsSg
-         bmmQ5VIOocPRJfT8NcvQcMmmgX8bEBEdx6YGvQt41fSsnAavBf/cms4LtbSVu2jYXVT9
-         OosA==
+        d=gmail.com; s=20230601; t=1744579107; x=1745183907; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MgZ+4FRd5P6W+WacLuyzZV0367MZvU93+wQZazxw0/Q=;
+        b=cDOxkV1ZjTHqrMHZh7cRa5Oghjpd8OnYNDJVKEoOSxv3AgXlXw+hB4lAWFvnYEMlcy
+         Bz0h/yjs6Wz9bnUPZMSwMe+zfvtmJraF1ElIumoQ51/Pk3FXNT8YxgLUmTDfww0YY+XI
+         +43MUR6GKPrPmaajYRwwn0yPL9RqN6jSTkp8Zpc35/BqcdJJtk5UDBdqU/Xh6wmwnvEx
+         zC0dOpsTHNHM8EvilTbkrEtWmIbXYNNS/HDHYbqhILpteC8d4KOX+h08E5PcP6GoVtZG
+         mqcIFbLmWHtbOC1S8iF7qW0/8WYpQvVAW4cVHMDmzgfgCxe8EgObTHF9gDHjTm7fJRd9
+         lF1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744578643; x=1745183443;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1WGBlHWjazqP3jbWLExnKtOaCdZWRyF6rr+r0o9NNs=;
-        b=FP2cVm9ptaQRQ7MVCIL9dtN97S9iTB6Bwn2kMv8qN0NU45Mwb0gQtPRiyZY/4YIjG2
-         PSTYeSj5lpmdugZ+Sy9A6qxpJBnAiPuQmNuwdfi3a8y2kwVyCcBDGw7GaiF/ZGOFSTEa
-         atZS29JXM5SExl9j+Ohn0am+d1CZffP6KHIrNx/dxKFrdqM1SZQGWXtyICcCDlMMC9kG
-         Xcr/vCHijwUMWzV6Z9vQV3oHyuE8x+E4f1rVyfvhlrK3qpVdh2q1jAey0tCHRXq0Oh2r
-         W7Ag+WZ3tS9xV+O3a6sP/PAxVKNYwV4AfZR2Ecn8DuY9E7+74JP8jnygMMexjXEfOxtP
-         aMNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+FqPSQ+CwNNGHhK2h5vcw5vOzmc36XABAyyl70i8kR4KX7c8UzhWtQqARmoSdfmXTpB8G9TOh1jw=@vger.kernel.org, AJvYcCUISiZdy24yXv+RE1u3g896YgIBG2p4I+jwwwqyRNY1ULNJqt3CZXK0y6CZ6B/sH7sH8kTuOUpyTt28A+a2@vger.kernel.org, AJvYcCWuEbc03JC78z2tR0xLvBG/TWjUOlu/+5eTKMZiXCUipS8KZbt/vIbJ5UMyyCR0JeNQMeMOdFy/mVNqd3YgDdo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2ApIDbTigif2nXN7jjGJeRiod8A5le03aajfVax6hoHnGQ/8T
-	+s7hSam8NhQy9By7pGdRR7NE/aBJj079EO8XzkWTtL0e+/f3VQEaV2jA+dI/
-X-Gm-Gg: ASbGncszSOmXVffm1OwnQ9LUmhL1k/B8OaSbsMne80SuU4+f5SmHWp72TuIY43mU5QV
-	wq+URQxZlu9+bh0MbfydZ07gtdtxdjgVYqGmBnJ0v3pSMzFX7bhf+9RPhXh9V2L5O1VND+gkix0
-	KOgIvWjH+i+mSoCSiR0YIAiSu7oKXrJeVk3pEnt8qG+KjZjsFdRoR1LfO/13umioBN4ByIqvv2M
-	pWpI1zLOqc6yVWZhmJLPUbzcTNNf+mYg/uXHQJCEafBLRk+DnJW1xkqTWs0/eyFggM42K4pt0ez
-	6rlkktKTmCTrmBJfyLYIv+3jiOLXnGdEUp2NBNCteLZST+zGbKaTfQ==
-X-Google-Smtp-Source: AGHT+IHERt8l6p5mjOOazl62Cb2bwcwzax2tmer6+wi2AUBjvbcbumYa40ODMo+swIjwf+dyHbUsAg==
-X-Received: by 2002:a17:906:f5a9:b0:aca:a1d7:a830 with SMTP id a640c23a62f3a-acad349a005mr966701466b.13.1744578643064;
-        Sun, 13 Apr 2025 14:10:43 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb41besm789238466b.118.2025.04.13.14.10.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 14:10:42 -0700 (PDT)
-Message-ID: <b13d37bd-ec68-4713-94e5-e9ed4d6a6354@gmail.com>
-Date: Sun, 13 Apr 2025 23:10:41 +0200
+        d=1e100.net; s=20230601; t=1744579107; x=1745183907;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MgZ+4FRd5P6W+WacLuyzZV0367MZvU93+wQZazxw0/Q=;
+        b=jRQ77OASKPHWxTqQuC/tEyhNbpgbprit5xhy66+AuPjY6so9OrfnJfKyJse0wNCBTU
+         gNuzWU4kUtP8Y21KY4UsTPdkX+ld+kkaU3yXaR+zo+6GbvwfD6THg/tHP4cFmB3Ju6e6
+         /HIqUSCJdTQtwJ8eN52ezg5Wg/VgT/GsM3juK2lLtqJ0W7RWAesAZOZ30qyK8NnrMB+j
+         0fAKZlPy9tXw0Zh94yw3nJOzgcy0mfklzjRjCATEV1lmidEJ1ZfPqTPxrwaD5IiwODus
+         jr85n5OtebOZ1D6DNZpJXvzbjuRtwWNKDMWA0q4Day2ANLleHOVNZOE1PPT9uiULoFMv
+         QkyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSY8tcZjbwzgaVvxup9c3FGqF/lzHQ9E/4mQ3xysecXQkDDwJKRBXjzE0RhJaqg4xaQJccvwmEa6xk8h5i@vger.kernel.org, AJvYcCUjJ50tDrGgvo/p3K0wPvTbmRuQN9pHRN1lhom+dmu+Icw5eke1iEG+M+qkE5cnWn4PcaTDDQ+J/6h4P9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCbRJWXF0Cadx9+/uJocip7KKF2aeXnOtkjvktcK47fSh3I2qG
+	fd2WxRUkKGj9vs06PI/EItAMEvdb0WNs98ABoyhJrpUoy2Oyzen3/OLLJyX+VR/dgMzT9jo4uv/
+	T5T2c3k7Axd8zzKtU6YxVcK3VtFZEVHkE
+X-Gm-Gg: ASbGncsvbznpX6SJ1R3DRiwUOV8eq/Tr8nYw/HTJmRRGp7E4M88JkekUj3b32cx3eNc
+	wKHYWQ+2kvpwNP5lnO7GR3sg9iwP5d97SC/QNmIwBHbmBw9ybckSj6k7UHrM8B6lrZfJHrZJC3T
+	L9YmcKeFht418NSnWsC1ixlw==
+X-Google-Smtp-Source: AGHT+IF10YZnchUlIP26SKwB8CehSle22uFVFJaHwkd6TUJ2UcE2Juerg7vSKhcdnW3cHzTRlfD7h9LDkVwkopV8S1U=
+X-Received: by 2002:a2e:bc26:0:b0:30b:b8e6:86d7 with SMTP id
+ 38308e7fff4ca-310499faea9mr33585201fa.22.1744579106899; Sun, 13 Apr 2025
+ 14:18:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>, Rudraksha Gupta <guptarud@gmail.com>,
- Ard Biesheuvel <ardb@kernel.org>, Geert Stappers <stappers@stappers.nl>,
- Andrew Lunn <andrew@lunn.ch>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
- Sven Van Asbroeck <thesven73@gmail.com>, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250123-rfl-arm32-v3-1-8f13623d42c5@gmail.com>
- <CACRpkdYF0sVB2-qgy=GzETSR3+2sagVQPGdunDQDJrn8KqJorA@mail.gmail.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <CACRpkdYF0sVB2-qgy=GzETSR3+2sagVQPGdunDQDJrn8KqJorA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
+ <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
+ <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
+ <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com>
+ <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com> <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com>
+In-Reply-To: <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 13 Apr 2025 23:18:14 +0200
+X-Gm-Features: ATxdqUFANOECibD458_-q2ib3f5_UXQAlv1-slcKpRR0AWa0U1mdz51SUEM0d30
+Message-ID: <CAFULd4aLMF_2AbUAvpYw+o1qo6U-Ya_+Ewy-wW17g-r-MBF9_g@mail.gmail.com>
+Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
+ __GENKSYMS__ is defined
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Sami Tolvanen <samitolvanen@google.com>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: multipart/mixed; boundary="000000000000f32d450632af7932"
 
-On 21.03.25 8:24 AM, Linus Walleij wrote:
-> Hi Christian,
-> 
-> thanks for your patch!
-> 
-> Sorry for being late to the show. I missed this very nice patch
-> that was actually on my personal TODO but I have to much
-> to do and also I'm not smart with Rust, but I'm a big supporter.
-> 
-> On Thu, Jan 23, 2025 at 11:40 PM Christian Schrefl
-> <chrisi.schrefl@gmail.com> wrote:
-> 
->> +       select HAVE_RUST if CPU_LITTLE_ENDIAN && CPU_32v7
-> 
-> Nothing in the patch series really explains this restriction, so it
-> should be in the commit message. Arnd mentions some atomics
-> etc, but we really need to know exactly why this is in the patch.
-> 
-> I'm a bit surprised by this since the rustc LLVM backend nowadays
-> support all old ARM ISAs. I would have expected:
-> 
-> select HAVE_RUST if AEABI
-> 
-> Ideally this should work on any ARM core, but it's fair to require
-> EABI.
-> 
-> The big reason: I think we want to be able to use Rust in kernel
-> core components sooner than ARMv5 goes away from the kernel.
-> 
-> If testing is the only issue, I can provide testing on ARMv4, v5,
-> ARMv5 BE etc, just tell me how to test. (But I guess it's more than
-> that...)
+--000000000000f32d450632af7932
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I've done a quick test on armv5 with the `armv5te-none-eabi` rust 
-target and it needs some atomics (`AtomicU64` type and for 
-`AtomicBool` the `compare_exchange` and `compare_exchange` 
-functions) to build:
+On Sun, Apr 6, 2025 at 5:36=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wrot=
+e:
 
-```
-  RUSTC L rust/kernel.o
-error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
-  --> rust/kernel/block/mq/operations.rs:15:33
-   |
-15 | use core::{marker::PhantomData, sync::atomic::AtomicU64, sync::atomic::Ordering};
-   |                                 ^^^^^^^^^^^^^^---------
-   |                                 |             |
-   |                                 |             help: a similar name exists in the module: `AtomicU8`
-   |                                 no `AtomicU64` in `sync::atomic`
+> > You are still seeing the warnings because __typeof_unqual__
+> > is not only the issue.
+> >
+> > Hint:
+> >
+> > $ make -s KCFLAGS=3D-D__GENKSYMS__  arch/x86/kernel/setup_percpu.i
+> > $ grep  'this_cpu_off;'  arch/x86/kernel/setup_percpu.i
+>
+> I see.
+>
+> With my workaround, this_cpu_off is declared as:
+>
+> extern __attribute__((section(".data..percpu" "..hot.."
+> "this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
+>
+> while without workaround, the same variable is declared as:
+>
+> extern __seg_gs __attribute__((section(".data..percpu" "..hot.."
+> "this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
+>
+> It looks that genksyms should be extended to handle (or ignore)
+> __seg_gs/__seg_fs named address prefix. Somewhat surprising, because
+> genksyms can process:
+>
+> extern __attribute__((section(".data..percpu" "..hot.."
+> "const_current_task"))) __typeof__(struct task_struct * const
+> __seg_gs) const_current_task
+>
+> without problems.
+>
+> I'm sorry, but I'm not able to extend genksyms with a new keyword by myse=
+lf...
 
-error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
-  --> rust/kernel/block/mq/request.rs:16:20
-   |
-16 |     sync::atomic::{AtomicU64, Ordering},
-   |                    ^^^^^^^^^
-   |                    |
-   |                    no `AtomicU64` in `sync::atomic`
-   |                    help: a similar name exists in the module: `AtomicU8`
+The following patch that handles typeof_unqual() as typeof(), and in
+addition ignores __seg_gs similar to how other type qualifiers are
+ignored, avoids genksyms errors.
 
-error[E0599]: no method named `compare_exchange` found for struct `AtomicBool` in the current scope
-   --> rust/kernel/list/arc.rs:518:14
-    |
-517 | /         self.inner
-518 | |             .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
-    | |             -^^^^^^^^^^^^^^^^ method not found in `AtomicBool`
-    | |_____________|
-    |
+Uros.
 
-error[E0599]: no method named `swap` found for struct `AtomicBool` in the current scope
-   --> rust/kernel/revocable.rs:130:30
-    |
-130 |         if self.is_available.swap(false, Ordering::Relaxed) {
-    |                              ^^^^ method not found in `AtomicBool`
+--000000000000f32d450632af7932
+Content-Type: text/plain; charset="US-ASCII"; name="p.diff.txt"
+Content-Disposition: attachment; filename="p.diff.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m9g5btlj0>
+X-Attachment-Id: f_m9g5btlj0
 
-error: aborting due to 4 previous errors
-
-Some errors have detailed explanations: E0432, E0599.
-For more information about an error, try `rustc --explain E0432`.
-```
-
-When gating all the modules that need these linking fails because
-of missing __eabi__* intrinsics:
-
-```
-ld.lld: error: undefined symbol: __aeabi_memcpy
->>> referenced by kernel.2bb770ae1dba3d33-cgu.0
->>>               rust/kernel.o:(<kernel::str::RawFormatter as core::fmt::Write>::write_char) in archive vmlinux.a
->>> referenced by kernel.2bb770ae1dba3d33-cgu.0
->>>               rust/kernel.o:(<kernel::str::Formatter as core::fmt::Write>::write_char) in archive vmlinux.a
->>> referenced by kernel.2bb770ae1dba3d33-cgu.0
->>>               rust/kernel.o:(<kernel::page::Page>::read_raw) in archive vmlinux.a
->>> referenced 29 more times
-
-ld.lld: error: undefined symbol: __aeabi_memclr8
->>> referenced by bindings.4cab29b7397d35cb-cgu.0
->>>               rust/bindings.o:(<bindings::bindings_raw::module as core::default::Default>::default) in archive vmlinux.a
->>> referenced by uapi.fe46408b8870a0f6-cgu.0
->>>               rust/uapi.o:(<uapi::module as core::default::Default>::default) in archive vmlinux.a
->>> referenced by uapi.fe46408b8870a0f6-cgu.0
->>>               rust/uapi.o:(<uapi::thread_info as core::default::Default>::default) in archive vmlinux.a
->>> referenced 86 more times
-
-ld.lld: error: undefined symbol: __aeabi_memclr4
->>> referenced by bindings.4cab29b7397d35cb-cgu.0
->>>               rust/bindings.o:(<bindings::bindings_raw::fp_hard_struct as core::default::Default>::default) in archive vmlinux.a
->>> referenced by bindings.4cab29b7397d35cb-cgu.0
->>>               rust/bindings.o:(<bindings::bindings_raw::iwmmxt_struct as core::default::Default>::default) in archive vmlinux.a
->>> referenced by uapi.fe46408b8870a0f6-cgu.0
->>>               rust/uapi.o:(<uapi::fp_soft_struct as core::default::Default>::default) in archive vmlinux.a
->>> referenced 95 more times
-
-ld.lld: error: undefined symbol: __aeabi_memset
->>> referenced by core.64aa0a46a0f8f964-cgu.0
->>>               rust/core.o:(<core::num::fmt::Part>::write) in archive vmlinux.a
->>> referenced by core.64aa0a46a0f8f964-cgu.0
->>>               rust/core.o:(core::fmt::num::fmt_u128) in archive vmlinux.a
-
-ld.lld: error: undefined symbol: __aeabi_memcpy4
->>> referenced by kernel.2bb770ae1dba3d33-cgu.0
->>>               rust/kernel.o:(<kernel::of::DeviceId>::new) in archive vmlinux.a
->>> referenced by core.64aa0a46a0f8f964-cgu.0
->>>               rust/core.o:(<core::char::ToLowercase as core::fmt::Display>::fmt) in archive vmlinux.a
-
-ld.lld: error: undefined symbol: __aeabi_memclr
->>> referenced by kernel.2bb770ae1dba3d33-cgu.0
->>>               rust/kernel.o:(<kernel::page::Page>::fill_zero_raw) in archive vmlinux.a
->>> referenced by uapi.fe46408b8870a0f6-cgu.0
->>>               rust/uapi.o:(<uapi::__kernel_sockaddr_storage__bindgen_ty_1__bindgen_ty_1 as core::default::Default>::default) in archive vmlinux.a
->>> referenced by uapi.fe46408b8870a0f6-cgu.0
->>>               rust/uapi.o:(<uapi::sockaddr__bindgen_ty_1 as core::default::Default>::default) in archive vmlinux.a
->>> referenced 16 more times
-
-ld.lld: error: undefined symbol: __aeabi_memset4
->>> referenced by core.64aa0a46a0f8f964-cgu.0
->>>               rust/core.o:(core::fmt::num::fmt_u128) in archive vmlinux.a
-make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
-make[1]: *** [/home/chrisi/Documents/code/rust-arm32/Makefile:1242: vmlinux] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
-```
-
-With define_panicking_intrinsics! for these an empty sample works
-(not yet tested as module), but even printing a non formatted
-string (with `pr_info!("Hi rust\n");`) fails because rust tries
-to use __adddf3:
-
-``
-Hardware name: ARM-Versatile (Device Tree Support)
-PC is at __rust__adddf3+0x0/0x4
-LR is at _RNvXsg_NtCs3KHxpmQFgFb_6kernel3strNtB5_12RawFormatterNtNtCs8DPF7ip8WBQ_4core3fmt5Write9write_str+0x34/0x40
-pc : [<c028950c>]    lr : [<c028b5ec>]    psr: 20000193
-sp : c8811a78  ip : c8811ae8  fp : c058e44e
-r10: 00000000  r9 : c058e450  r8 : c07ac118
-r7 : 00000000  r6 : 00000000  r5 : c07ac120  r4 : c8811adc
-r3 : c07ac120  r2 : 00000008  r1 : c0667f60  r0 : c07ac118
-Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment none
-```
-
-I'm not sure how to proceed from here and I most likely won't
-find time to continue working on this anytime soon.
-
-My very hacky changes are available on Github at:
-https://github.com/onestacked/linux/commit/edddb388267ab1afe5255bea4d84f96cbdb37978
-
-Cheers,
-Christian
+ZGlmZiAtLWdpdCBhL3NjcmlwdHMvZ2Vua3N5bXMva2V5d29yZHMuYyBiL3NjcmlwdHMvZ2Vua3N5
+bXMva2V5d29yZHMuYwppbmRleCBiODVlMDk3OWEwMGMuLmVlMTQ5OWQyNzA2MSAxMDA2NDQKLS0t
+IGEvc2NyaXB0cy9nZW5rc3ltcy9rZXl3b3Jkcy5jCisrKyBiL3NjcmlwdHMvZ2Vua3N5bXMva2V5
+d29yZHMuYwpAQCAtMTcsNiArMTcsOCBAQCBzdGF0aWMgc3RydWN0IHJlc3dvcmQgewogCXsgIl9f
+c2lnbmVkX18iLCBTSUdORURfS0VZVyB9LAogCXsgIl9fdHlwZW9mIiwgVFlQRU9GX0tFWVcgfSwK
+IAl7ICJfX3R5cGVvZl9fIiwgVFlQRU9GX0tFWVcgfSwKKwl7ICJfX3R5cGVvZl91bnF1YWwiLCBU
+WVBFT0ZfS0VZVyB9LAorCXsgIl9fdHlwZW9mX3VucXVhbF9fIiwgVFlQRU9GX0tFWVcgfSwKIAl7
+ICJfX3ZvbGF0aWxlIiwgVk9MQVRJTEVfS0VZVyB9LAogCXsgIl9fdm9sYXRpbGVfXyIsIFZPTEFU
+SUxFX0tFWVcgfSwKIAl7ICJfX2J1aWx0aW5fdmFfbGlzdCIsIFZBX0xJU1RfS0VZVyB9LApAQCAt
+NDAsNiArNDIsMTAgQEAgc3RhdGljIHN0cnVjdCByZXN3b3JkIHsKIAkvLyBLQU8uIH0sCiAJLy8g
+eyAiYXR0cmlidXRlIiwgQVRUUklCVVRFX0tFWVcgfSwKIAorCS8vIFg4NiBuYW1lZCBhZGRyZXNz
+IHNwYWNlIHF1YWxpZmllcnMKKwl7ICJfX3NlZ19ncyIsIFg4Nl9TRUdfS0VZVyB9LAorCXsgIl9f
+c2VnX2ZzIiwgWDg2X1NFR19LRVlXIH0sCisKIAl7ICJhdXRvIiwgQVVUT19LRVlXIH0sCiAJeyAi
+Y2hhciIsIENIQVJfS0VZVyB9LAogCXsgImNvbnN0IiwgQ09OU1RfS0VZVyB9LApAQCAtNTcsNiAr
+NjMsNyBAQCBzdGF0aWMgc3RydWN0IHJlc3dvcmQgewogCXsgInN0cnVjdCIsIFNUUlVDVF9LRVlX
+IH0sCiAJeyAidHlwZWRlZiIsIFRZUEVERUZfS0VZVyB9LAogCXsgInR5cGVvZiIsIFRZUEVPRl9L
+RVlXIH0sCisJeyAidHlwZW9mX3VucXVhbCIsIFRZUEVPRl9LRVlXIH0sCiAJeyAidW5pb24iLCBV
+TklPTl9LRVlXIH0sCiAJeyAidW5zaWduZWQiLCBVTlNJR05FRF9LRVlXIH0sCiAJeyAidm9pZCIs
+IFZPSURfS0VZVyB9LApkaWZmIC0tZ2l0IGEvc2NyaXB0cy9nZW5rc3ltcy9wYXJzZS55IGIvc2Ny
+aXB0cy9nZW5rc3ltcy9wYXJzZS55CmluZGV4IGVlNjAwYTgwNGZhMS4uZWZkY2YwN2M0ZWI2IDEw
+MDY0NAotLS0gYS9zY3JpcHRzL2dlbmtzeW1zL3BhcnNlLnkKKysrIGIvc2NyaXB0cy9nZW5rc3lt
+cy9wYXJzZS55CkBAIC05MSw2ICs5MSw4IEBAIHN0YXRpYyB2b2lkIHJlY29yZF9jb21wb3VuZChz
+dHJ1Y3Qgc3RyaW5nX2xpc3QgKiprZXl3LAogJXRva2VuIFRZUEVPRl9LRVlXCiAldG9rZW4gVkFf
+TElTVF9LRVlXCiAKKyV0b2tlbiBYODZfU0VHX0tFWVcKKwogJXRva2VuIEVYUE9SVF9TWU1CT0xf
+S0VZVwogCiAldG9rZW4gQVNNX1BIUkFTRQpAQCAtMjkyLDcgKzI5NCw4IEBAIHR5cGVfcXVhbGlm
+aWVyX3NlcToKIAk7CiAKIHR5cGVfcXVhbGlmaWVyOgotCUNPTlNUX0tFWVcgfCBWT0xBVElMRV9L
+RVlXCisJWDg2X1NFR19LRVlXCisJfCBDT05TVF9LRVlXIHwgVk9MQVRJTEVfS0VZVwogCXwgUkVT
+VFJJQ1RfS0VZVwogCQl7IC8qIHJlc3RyaWN0IGhhcyBubyBlZmZlY3QgaW4gcHJvdG90eXBlcyBz
+byBpZ25vcmUgaXQgKi8KIAkJICByZW1vdmVfbm9kZSgkMSk7Cg==
+--000000000000f32d450632af7932--
