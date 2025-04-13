@@ -1,111 +1,89 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D2E39FCE;
-	Sun, 13 Apr 2025 19:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6954C6BFCE;
+	Sun, 13 Apr 2025 19:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744572499; cv=none; b=Y6r1Kx8ZWaIPxun8WGHkzIrMNg4hyzFPZ+4WXVE6FZ0oZmion8rAAAxBU1npUiSzy1L5dvh1M824SlSLaoKMjOsKGwP75VYVtSIWWMuJQYIXEiH2DvR7ft/5XMSSNa1JVqcPLfY5u4u48kmiK+eWm7YqhgvSfOJfjAWhBgAY94M=
+	t=1744572606; cv=none; b=UmPTxU9VJYDBDawJHhR5ATXWKxlLYt+OvgiLwSburLgnfugKGxmtZT/pPQil3bazLnkMTJ5aXBmroGfBXXQWTkOxz1tU7VXrrOmJAJn78uuONeeNFajiu4X7VlkXKStbb71spxGa4AsBr2C+rhNKb5Eppp6uGbjVzJ/AlsJag8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744572499; c=relaxed/simple;
-	bh=7ofykAOqGSRqH4kNnIiNVbQCglWqmrnR4sc5rARRk1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZmboDTnKx9hRp3wJvDbLqib13x9P2h+tH9Lhxu2XXxkWODaB+418h1dMrrbs0HsBa9fMEJ2bXslVX5hryIYSrBaepmpNIv2LROX7WI5UAqMRrAZDOJgviAOlphOTdnPY1WYEjONGxSG0L8Hsq67dOg8T1a4Ny8isqMsCRvm/myc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dEHbO5df; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744572606; c=relaxed/simple;
+	bh=Q9hjF78YBfIyaPMAAV+P9SR2EaJNjK9taOBU/PZb7bA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3RJMlZj1/G42bmHj1WRji+UvQDz0TYg0TrAB02NUfO9oEZ+xqXSO9dlo72gbhO8JuRHezUGAQ8gRojLg9q0fkWgD0xORTPaz8nHUKLDgQXVcB+okEbTccRSDb8+ib7CQLa/zrUyBikPZxiXxt3nPwWKJflhRHXtOTBJLQhrkK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=XgkyhXzY; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEHbO5df"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso7626541fa.0;
-        Sun, 13 Apr 2025 12:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744572495; x=1745177295; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ofykAOqGSRqH4kNnIiNVbQCglWqmrnR4sc5rARRk1s=;
-        b=dEHbO5dfoSwQgAmt82RXN0afQiXiwf6bd40dTmacowQidS9PW51ZaO/qmEl1Gk6snq
-         oa+oH/5Lli9v0wQ7qEsMrocVH4B9dCpIuOgfMJIGo1NG00fv2jm2irTJ+YHynX4LMKj/
-         L0i4MbN+bs1LtnqYkR8V5eAE7bTx/nrKw12Nrg6zp1dAdQUlIt2+ConPD3MtSnoBbHAF
-         hFo5YVGIVAOw10s9kJaBuw6tDBeSaHqnjFREsVNsxFEFtmQwjJUR0C9SP27aGf+Xmxky
-         QgRKELwPVTT/j5eiEGwMrbsYXDGTTF3JQRHtiZNwsGxaOuMYw7UxZ295562mm54kN2ex
-         1Ybg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744572495; x=1745177295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ofykAOqGSRqH4kNnIiNVbQCglWqmrnR4sc5rARRk1s=;
-        b=ngc6Bq7LU6X8WZoTFvjxwHD0opRbNY9UmK4ro+F2Ml4NSRzdarOtr0dEYwb5y89nUb
-         SPXw7oA/C72PkMnuZkJbQ+GS3L7WlOUvLCF1AV8k+sgpjjqf84/MrOF2ZQUFTE/f3hbj
-         8PsLUdfcreB4c3ZhrjADbJky3J5/6PcWCBOPk+WaEMmuvxpyUgpRgoheAzHNA1hTIsjK
-         tBFlCMar5B+0+PQqQGQC8vVoRbJIfwpdcXoSazo3NNq0ZYZ4WDVaWBK0jay57wSG/dnT
-         DbSBF2HAPrz0lcwCf/dS8sVDoAN22KaL45mnu3y7cbL0lFzLdMitalsl5SfOQQcyFASp
-         50rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaKKTpyveBxlpztCyYdYWIJhdi7lZSD98KK9smf8xbWVbCinmi4b9qVFH9hAwxbmDm9a5IxuDbw00wrWHn+2ZcsK4=@vger.kernel.org, AJvYcCXCxCdj2/ITQ095hqfYSk8LeYFK1GfId4zhKpel3aZz2+HekzQhTza6xRPO4RiFGCeLlkJPUWpifwtz/sI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyROeUc9RWLDY/coI25W+E/uZOnWWzBB3t+sgd+WOswtrds40GX
-	3U8OyhY0dHev7Vhxx167T7XLFUKzOGvlESuscy6PO3RYzDmDM6r1tClGqu8X08iCHt+ZWkLE0M8
-	NK/zfUmbpkZYG6Cxc0yEqbOKAZNI=
-X-Gm-Gg: ASbGnctufhSHSGDnP02BiPAm+JUKoYddiYUNwXmDaMRGOzubS4YAmDPrYCTGNWmpvb6
-	PJkvaUAOLfcGaaUD2s8seKaPXtDdunsov8raxLBbctEBIvFWvSHy8Sb6xirvDZ5A/A1WfvZ/v6z
-	CxoJaHOiPJEM7E+YpyAz3erA==
-X-Google-Smtp-Source: AGHT+IGddTLuKOZhWx0PtOGeAp++RXlS+0WoN4i9L7nMyvBxOinFQjeB8iUnC3IxpX7CDsvskKgQTNlh293ER0aWVcQ=
-X-Received: by 2002:a2e:bd0a:0:b0:30d:b8a5:9b8d with SMTP id
- 38308e7fff4ca-310499dff19mr29927831fa.16.1744572494983; Sun, 13 Apr 2025
- 12:28:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="XgkyhXzY"
+Received: from localhost (unknown [10.10.165.22])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 050BC448786F;
+	Sun, 13 Apr 2025 19:29:57 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 050BC448786F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1744572598;
+	bh=oSDku4H8iTUPS58k8kaH8zVIp74ty/b9S7j0T7cs/Hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XgkyhXzYtPBlZpnDrRYOkXhN9+jgx3oJXvW4SZ7C4ph17B6HSElNHi3rdlKS9U0RL
+	 D3CZAA6X4bjtqoVPenOm6ar1PBqi7Z4+iMRii0KH/O/sj/RhOnd64btvjuPC5N5k7g
+	 7fdrQ8DKD5K6XxLz0yVKUEulmzS6vLlQzp33Q578=
+Date: Sun, 13 Apr 2025 22:29:57 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Mikhail Lobanov <m.lobanov@rosa.ru>
+Cc: Sean Christopherson <seanjc@google.com>, x86@kernel.org, 
+	lvc-project@linuxtesting.org, kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] KVM: SVM: forcibly leave SMM mode on vCPU reset
+Message-ID: <xo6u5domb5y73v3nov5zbhrw26xvotpc64qjn6gv6zfqgew5sk@ado7wo4qo5yl>
+References: <20250413115729.64712-1-m.lobanov@rosa.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
- <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local> <Z_oqalk92C4G6Rqt@gmail.com>
- <CAFULd4bTd6GMftLBX7Nu0xftini00o4v7=1XfuoDC8ydUr9Ueg@mail.gmail.com>
- <Z_t7_brzSoboOsen@gmail.com> <CAFULd4ZBbAG4ndn+rzjjqF+pmtGa3UbyDOWfEXww0XhExJByVA@mail.gmail.com>
- <Z_wI0uNoG2G2TQMC@gmail.com> <CAFULd4b2afcu5PnxhqwwepwWMSA7mvYNyPnMtkCjjT84VG8VXA@mail.gmail.com>
- <Z_wOYOrVJJkUUUF9@gmail.com>
-In-Reply-To: <Z_wOYOrVJJkUUUF9@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 13 Apr 2025 21:28:03 +0200
-X-Gm-Features: ATxdqUFV5mm-CzIYsB0nDnzVNhCXrfvZzdg8F8ygjd0krCHhMKYqdCf4S8XzdK8
-Message-ID: <CAFULd4ZRTfZggPp395Y-ZJ6DkHFdorvjX-MiFHxR40UGU+3rSQ@mail.gmail.com>
-Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
- __typeof_unqual__() when __GENKSYMS__ is defined
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-tip-commits@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250413115729.64712-1-m.lobanov@rosa.ru>
 
-On Sun, Apr 13, 2025 at 9:20=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrot=
-e:
->
->
-> * Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> > > > If this commit is removed, [...]
-> > >
-> > > I did not remove commit ac053946f5c4, it's already upstream. Nor
-> > > did I advocate for it to be reverted - I'd like it to be fixed. So
-> > > you are barking up the wrong tree.
-> >
-> > If the intention is to pass my proposed workaround via Andrew's tree,
-> > then I'm happy to bark up the wrong tree, but from the referred
-> > message trail, I didn't get the clear decision about the patch, and
-> > neither am sure which patch "brown paper bag bug" refers to.
->
-> It's up to akpm (he merged your original patch that regressed), but I
-> think scripts/genksyms/ should be fixed instead of worked around -
-> which is why I zapped the workaround.
+On Sun, 13. Apr 14:57, Mikhail Lobanov wrote:
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index d5d0c5c3300b..34a002a87c28 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -2231,6 +2231,8 @@ static int shutdown_interception(struct kvm_vcpu *vcpu)
+>  	 */
+>  	if (!sev_es_guest(vcpu->kvm)) {
+>  		clear_page(svm->vmcb);
+> +		if (is_smm(vcpu))
+> +			kvm_smm_changed(vcpu, false);
+>  		kvm_vcpu_reset(vcpu, true);
+>  	}
 
-As said earlier, I have tried to fix genksyms, but the simple fix was
-not enough. The correct fix would be somehow more involved, and I have
-zero experience in genksyms source. I'm afraid I don't know this
-source well enough to offer a fix in the foreseeable future, so I
-resorted to the workaround (which at the end of the day is as
-effective as the real fix).
+This won't compile without CONFIG_KVM_SMM=y being set.
 
-Regards,
-Uros.
+arch/x86/kvm/svm/svm.c: In function ‘shutdown_interception’:
+arch/x86/kvm/svm/svm.c:2235:25: error: implicit declaration of function ‘kvm_smm_changed’ [-Wimplicit-function-declaration]
+ 2235 |                         kvm_smm_changed(vcpu, false);
+      |                         ^~~~~~~~~~~~~~~
+
+
+
+allmodconfig build which, on the other hand, does have
+
+  CONFIG_KVM_AMD=m
+  CONFIG_KVM_SMM=y
+
+also fails with the patch at the current mainline tip.
+
+ERROR: modpost: "kvm_smm_changed" [arch/x86/kvm/kvm-amd.ko] undefined!
+make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+make[1]: *** [/home/kc/ISP/Kernel/linux-stable-allmod/Makefile:1959: modpost] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+
+Looks like the fix in its current form requires some ifdef'erry and
+EXPORT_SYMBOL***, too?
