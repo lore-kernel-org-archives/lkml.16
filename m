@@ -1,156 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88A118E3F;
-	Sun, 13 Apr 2025 10:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746B23D984;
+	Sun, 13 Apr 2025 11:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744541991; cv=none; b=PzM+MpRUs0bUZBbkQD4FDn2vOHvsI552Vf1KOSz3Vj1722wSex+8PT9pkPGjC9z3uVE7sNERu1/xnCbZJ3hmXVx3v1Q6rmOw73T3lF60DPTZsnj/kJVYcj7ZQnlRc3N2j59Fszz4SVxe1fr7Qqwhx1hU5FCrh1lNXAEOEKqNQK4=
+	t=1744542347; cv=none; b=JQonkhpAN5cmW90RQMxpLSVfqhG80X3vB7rrEqT4i+1yLvl/A6BSDHPbnlJH31qe8CHM9d9h1chn05vlnldakFaMlzkfL5IZ0AKsK51DSV+0WcCVb2Bl3lYAYG0U59AfjnvlsXCq9LhBa3YlDwKNQe6CTtTVPtTdRa1gQ4UrcbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744541991; c=relaxed/simple;
-	bh=GJ5d8E/A4Dn0tz6AOhtMSgISSqjLGiutsjzodGBnEJI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D22Azs+mmv4VaT56SiWKqfHmJcIcWmvbi3szApri+M/eroYX+ewghh0ok+0kZ9B+hFmsH/McADBOdiJyo3lAcJohoV/1mUaIKUfSqY4ClU+l2zcIX6CXYKQ4hc2OEA4hD7UqJW4HOyFRrBk0bz09U3Zqps4TKZaf+MIvM45YIg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJ80hxkP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744542347; c=relaxed/simple;
+	bh=EV9bLyLiQgj0zexCh0MFMFqodFrGWYJwodYnlnMhZLs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GKlGsKkwQnUuKWMWXP/PStLd0RrabJ4fyAhFD0wgoFLZgzE8norfH7czdNSogkORsLd7c/lx1w4ZaXwAdSewhX5wPHd3kRZFFU4n/5+sq0tY+tzm6jx9Y/rk4Eu99QbkJXHgFGluSNyCBKGMcvYp3D4WV8lsPhJtLQ6uGPIFChU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YsyT8YFx; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJ80hxkP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55DBC4CEDD;
-	Sun, 13 Apr 2025 10:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744541991;
-	bh=GJ5d8E/A4Dn0tz6AOhtMSgISSqjLGiutsjzodGBnEJI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hJ80hxkPx0nP8Lb+IAD/cBr1E4OzP0LCh5aqPHY+uN60L+CkHEofhK+JQ/9Me0QNg
-	 zhOEj87o6iDnts1HDIxKx1fkE9nxcNX1pT1B9RPF3+6SoohxCD8a23aVVOi9xpzJD4
-	 OQZ+O1Y2e/Xf3OKMgF97Jryx0gDKSVetZWLWzK9SL7ib/y6Cp163mNfs+UaK63FHTF
-	 vCN0JB2+5IgDzJkMQkt6l+2Fkd+c8y+OnaYoEv7GzQ+kffBzMc2VA50yU5JcncSpJy
-	 dCjdvMEQMesn/mOakgLOwxjui3lW3rSjVnFGgUbXzYNDqlstPTCG48qClp7fq1bO14
-	 QZuERiBfcYtbA==
-Message-ID: <3fb6238636b4e20172a357a043001426e7fa34c2.camel@kernel.org>
-Subject: Re: [PATCH] net: use %ld format specifier for PTR_ERR in pr_warn
-From: Jeff Layton <jlayton@kernel.org>
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 13 Apr 2025 06:59:49 -0400
-In-Reply-To: <20250412225528.12667-1-qasdev00@gmail.com>
-References: <20250412225528.12667-1-qasdev00@gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsyT8YFx"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so30371241fa.2;
+        Sun, 13 Apr 2025 04:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744542341; x=1745147141; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xkvNYBoz6k2ClpzWrXDmwkMOqKn26OBPjmJazQv/740=;
+        b=YsyT8YFx2arzi69xg3UhB9TFuUHQkwjHtSNYGjNhsGimSN/aNjmd8ZgLOA6i3sZz0q
+         Gwc9o09ctjByVWS76rYKPcuunQJL+pi7+EqLAyKdrWBzh/CibvGlgJdVbIeNnEYMBN5Z
+         0fYCrKMpJt0AqFcDh6HhxP5K/34VNoQUAStMFR+Y72+SlniJ2y3NLm3/qrXMJ8wtt4vP
+         GN+e6ebzWnHXyF5JoIuD43M59VSW/N4lWWJPe9BixvDrCUZcxhjkl3T/NjEynqwmS5wD
+         GImn67N2Ue8AATpFQUDpq1plBkAU0UkYICr9bGp/kVbLlGQDND/Qlpoq1ct/RWZviQNe
+         Lv2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744542341; x=1745147141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xkvNYBoz6k2ClpzWrXDmwkMOqKn26OBPjmJazQv/740=;
+        b=EaDskyMaONe0Ez3iaYt/qVgt268J3eVMCMHIhurPxtFc+dsiycOD//C1TtqkGxSkKr
+         XeF/EZCCyAqCVcdcfQc4cya/e9hMQHlSVsiBddEns7q8inzAcoehxSXJ8HNFUgJMoQDE
+         vN8gXmF9b/kVvnMCJz1zgXQ6+wOBesFTtHOjBNEd90jmcCNb14p3n5PE711sK0FFL2L3
+         kmstZ6vmM+bsMn3UOl5DigKaExWJFLI3zZbDgiXIMqRfzo8PV2jvAZo0ujGKruAjUFEG
+         dpHV9yBQ++dWsGGxdPsXUeCvW//kib8Fy62sN4xbifFRiZSxOJ7aFUuhb2AtZWTIGKmw
+         Kz2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUIki6Uxz0ZFUzfD1rFI3d30xu7n5074iJ1SJE9eXWIfNNl1SNP/n8KUluPH2wZ3HFYTj2l7dgELNEKxkPDqGHKvwQ=@vger.kernel.org, AJvYcCVJ9vZwZAJqod387fdoMYCvVP/MhliCZPb/J9ILylvDgIdoJB0LATYM7f6FWhEZSR3zmOzJvsq8xHFIAUo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoRQDmFHM5j+YpmjfP7uYqhfMnGIlfGvJoiRBRxKDSv++PntRF
+	LbsFcwjCjqoWpyp+gdOsO9p9355WacdCmvtl2k2kIQrqOyL501tH7CKObu75Vmvc//dMbIY0Eyf
+	OnaU9eWapzpkC8U/1VNAmnM17a34=
+X-Gm-Gg: ASbGncvNVhXpwVi3BWxtLRFEKMtfGczrNNY3wPqa9ac4khKwE1Ub+5MlTwWqKShAiVB
+	g6GK/G+KZEZWuyF3WL1q0U5OxGNg5SXNIsR1p2SXj7F5OANI97+xi0qTtNnBDlbNuprvSo5vWVA
+	w6p/81ZhRbCG2aZ7WFJJmIEA==
+X-Google-Smtp-Source: AGHT+IE+3xZedj/wAdEhMdffMJOiAt1C8sFv/sZjpWcXyGPZaEtX1HJiJGzPumy5i74aYPSbEbYeiSEBJlak0KH3eL0=
+X-Received: by 2002:a2e:bccc:0:b0:2ff:56a6:2992 with SMTP id
+ 38308e7fff4ca-31049aae557mr28609261fa.37.1744542341186; Sun, 13 Apr 2025
+ 04:05:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
+ <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local> <Z_oqalk92C4G6Rqt@gmail.com>
+ <CAFULd4bTd6GMftLBX7Nu0xftini00o4v7=1XfuoDC8ydUr9Ueg@mail.gmail.com> <Z_t7_brzSoboOsen@gmail.com>
+In-Reply-To: <Z_t7_brzSoboOsen@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 13 Apr 2025 13:05:35 +0200
+X-Gm-Features: ATxdqUGWXrSVpNoq4j9UTjdP7mOIN50cyDABESN7VeGqLifRCKOOVVt6I2mcImQ
+Message-ID: <CAFULd4ZBbAG4ndn+rzjjqF+pmtGa3UbyDOWfEXww0XhExJByVA@mail.gmail.com>
+Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
+ __typeof_unqual__() when __GENKSYMS__ is defined
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-tip-commits@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-04-12 at 23:55 +0100, Qasim Ijaz wrote:
-> PTR_ERR yields type long, so use %ld format specifier in pr_warn.
->=20
-> Fixes: 193510c95215 ("net: add debugfs files for showing netns refcount t=
-racking info")
-> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>=20
-> ---
->  net/core/net_namespace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> index f47b9f10af24..a419a3aa57a6 100644
-> --- a/net/core/net_namespace.c
-> +++ b/net/core/net_namespace.c
-> @@ -1652,7 +1652,7 @@ static int __init ns_debug_init(void)
->  	if (ref_tracker_debug_dir) {
->  		ns_ref_tracker_dir =3D debugfs_create_dir("net_ns", ref_tracker_debug_=
-dir);
->  		if (IS_ERR(ns_ref_tracker_dir)) {
-> -			pr_warn("net: unable to create ref_tracker/net_ns directory: %d\n",
-> +			pr_warn("net: unable to create ref_tracker/net_ns directory: %ld\n",
->  				PTR_ERR(ns_ref_tracker_dir));
->  			goto out;
->  		}
+On Sun, Apr 13, 2025 at 10:55=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > > Yeah, agreed, I've removed this workaround from tip:core/urgent for
+> > > the time being - it's not like genksyms is some magic external
+> > > entity we have to work around, it's an in-kernel tool that can be
+> > > fixed/enhanced in scripts/genksyms/.
+> >
+> > Please note that you will disable a check that is finally able to
+> > fail the build for a whole class of very subtle percpu bugs.
+>
+> I simply zapped a commit that was applied two days ago and asked akpm
+> to resolve a regression that was introduced upstream via his tree
+> through this commit, in this merge window:
+>
+>   ac053946f5c4 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+>
+> What 'disabled checks' are you talking about?
 
-Thanks, that will silence a potential compiler warning. This is not
-merged yet, but I'll make sure to incorporate this change in the next
-version.
+Percpu checks require TYPEOF_UNQUAL() macro, so removing
+USE_TYPEOF_UNQUAL definition will skip the definition of __percpu_qual
+in arch/x86/include/asm/percpu.h (please  see
+6a367577153acd9b432a5340fb10891eeb7e10f1), and consequently __percpu
+macro won't be defined with __seg_gs (please see
+6cea5ae714ba47ea4807d15903baca9857a450e6).
 
-FWIW, I'm planning to put together a v3 that will require less
-involvement with net/ code, so most of these bits will probably get
-deleted anyway.
+If this commit is removed, then the compiler will fallback to old
+declarations of percpu variables and won't perform percpu checks
+anymore. This new functionality is implemented in such a way that can
+be fully disabled in a couple of places, and not declaring
+USE_TYPEOF_UNQUAL is one of them.
 
-Cheers!
---=20
-Jeff Layton <jlayton@kernel.org>
+OTOH, my patch avoids __typeof_unqual__() only when generating
+preprocessed source for genksyms. genksyms uses this preprocessed
+source to generate CRC32 from keywords that declare variables and it
+is perfectly OK to use "old" definitions, without __typeof_unqual__
+and __seg_gs keywords; there is no loss of functionality. __GENKSYMS__
+condition can be removed once genksyms recognizes __typeof_unqual__
+(and __seg_gs).
+
+Everything else besides "sparse", which already uses the same
+fallback, handles __typeof_unqual__() perfectly well. This includes
+GNUC >=3D 14 and clang >=3D 19.
+
+Thanks,
+Uros.
