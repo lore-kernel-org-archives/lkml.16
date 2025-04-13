@@ -1,85 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6F518B47C;
-	Sun, 13 Apr 2025 22:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481D2A927;
+	Sun, 13 Apr 2025 22:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744582370; cv=none; b=eqgN0oW2VLZchl8yH0Rxe5YG2Rh5pfiYCzJNhVMWXKcqoFluV1wuvw0j7AjI4ooWrB0ZeQE0pjHKXjSQfUJtvMsVtRdnCeAi4xZZpVhJrJNhgg65bNliNXDwO+GQXcu3tay5r5Uc7MmtwyuQvrcJ4uebHZ4Rvoxu6dgIdav8758=
+	t=1744582534; cv=none; b=JeLFzo9e5Eu383eiH3Eoer30pxX6oXRAs0kkBZoRg9JgnPYOd+VXZ/vBRn28m1+z8deZoS4wtzaCcPN6xSe+GDYoJFIyYAoe/cmF4I4BU3H4TFIqQ+bBn6MQK1nIacODW1lENpe1jW/EBURWjsskFG0M1DBxnIaAKDKlSNLN4BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744582370; c=relaxed/simple;
-	bh=j7o4TmN6qMjf7TFwhhk0Y8oqqNUQI2mLCa//MN18WCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jt9eNMcgXTjUQG4CytrpNqv19mBrPCFa6VpGmX8Eu42CC1UlQmTgjQBVyxmw2tuQzVdFnbZHR3yB2t3aINczV4pqqWjb+pgqUzTUV1qaZlHBLAj3yKmZRCsRFZaeQNMAAtN4VMv9CowyEI9U92/HIVPznofBi4ouLGzcX+W1P8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C820B169E;
-	Sun, 13 Apr 2025 15:12:44 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0F7D3F59E;
-	Sun, 13 Apr 2025 15:12:42 -0700 (PDT)
-Date: Sun, 13 Apr 2025 23:11:45 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Mikhail Kalashnikov <iuncuim@gmail.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li
- <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, "Rafael J
- . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Subject: Re: [PATCH 0/6] Add support for A523 Thermal system
-Message-ID: <20250413231128.75983a60@minigeek.lan>
-In-Reply-To: <5084c2dc-d268-4268-a827-2ae445782a4e@gmail.com>
-References: <20250411003827.782544-1-iuncuim@gmail.com>
-	<5084c2dc-d268-4268-a827-2ae445782a4e@gmail.com>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1744582534; c=relaxed/simple;
+	bh=JoJ6FwrMtTQecT32IcduAeWImMav6us8t8dtC+zaacA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pp27Jq1FGFKrIxcWV5dvVDX1qXsaON81V8HQtq/MW34xYeR2lrAmRZ5uBampWisgLaYXG8e3Ak9yMYBohs2JE/gcd7JFRlDsOZBTfcOvaaOJ+qJqZuvEJj6yEWZgg9aUnjEZz908vlZdc90sPrRB/YIqBrTe9wzYV0dU9eGifOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqZUGnUt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqZUGnUt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F55C4CEDD;
+	Sun, 13 Apr 2025 22:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744582533;
+	bh=JoJ6FwrMtTQecT32IcduAeWImMav6us8t8dtC+zaacA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jqZUGnUtyqI+w2LEhI8JPXPaCRsjcIjrdDEnr8Ce4Y0mDp3/4WB7vxmVHsEn83DRT
+	 Gp1pB8XvG1nTGz9Py3aAijt0BEAe1Dw22pyTORAIp0sdhSHwGDd0kNqvUe4vmqNAb/
+	 MmaJBoDMq55LWDButr3Dx2h6dtVHo8d9YZ8+rHI4XYloqSWPnZibpeAk1eC7QnYYro
+	 tJ/Ir6GUtq0xGK6e9Qlw93jo0PFFawSiD6xiGQIeaTAX3zdUfqXR6cloIFnmh9RdMV
+	 ZTgs29kjrhfucHQI1D5v0jQ5dmUIoyqupCub4f2P1vzhj72jYfPIS79pUDvlogt1ui
+	 b79PGBS6da25g==
+Date: Mon, 14 Apr 2025 00:15:28 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: vz@mleia.com, wsa@kernel.org, manabian@gmail.com, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: lpc2k: Add check for clk_enable()
+Message-ID: <l4e6yznusqnkc4czvwywcrxbqxqjld32udulb23rcempj7f6dc@grj6y5hbv7y4>
+References: <20250412193713.105838-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412193713.105838-1-chenyuan0y@gmail.com>
 
-On Sat, 12 Apr 2025 03:53:08 +0300
-Mikhail Kalashnikov <iuncuim@gmail.com> wrote:
+Hi Chenyuan,
 
-Hi,
-
-> On 4/11/25 03:38, Mikhail Kalashnikov wrote:
-> > This patch series adds temperature sensor support for the Allwinner A523
-> > family of processors (same die with H728/A527/T527)  
+On Sat, Apr 12, 2025 at 02:37:13PM -0500, Chenyuan Yang wrote:
+> Add check for the return value of clk_enable() to catch
+> the potential error.
 > 
-> Based on 6.15-rc1 with dts patches from
+> This is similar to the commit 8332e6670997
+> ("spi: zynq-qspi: Add check for clk_enable()").
 > 
-> https://lore.kernel.org/linux-sunxi/20250307005712.16828-1-andre.przywara@arm.com/T/#t
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 3f9c37a0c9a5 ("i2c: lpc2k: add driver")
 
-Chen-Yu merged those patches already, to the sunxi repo on kernel.org,
-under the dt-for-6.16 branch, so you can reference that instead, and
-also base any new patches on that.
+I removed the Fixes tag, I think it's a bit of an overkill.
 
-Cheers,
-Andre
+Merged into i2c/i2c-host.
 
-> 
-> > Mikhail Kalashnikov (6):
-> >    thermal/drivers/sun8i: add gpadc clock
-> >    thermal/drivers/sun8i: replace devm_reset_control_get to shared
-> >    thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
-> >    arm64: dts: allwinner: A523: Add SID controller node
-> >    arm64: dts: allwinner: A523: Add thermal sensors and zones
-> >    dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
-> >
-> >   .../thermal/allwinner,sun8i-a83t-ths.yaml     |   5 +
-> >   .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 145 +++++++++++++++++
-> >   drivers/thermal/sun8i_thermal.c               | 154 +++++++++++++++++-
-> >   3 files changed, 300 insertions(+), 4 deletions(-)
-> >  
-> 
-
+Thanks,
+Andi
