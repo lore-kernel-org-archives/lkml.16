@@ -1,216 +1,173 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5651993BD;
-	Sun, 13 Apr 2025 19:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0032E1993BD;
+	Sun, 13 Apr 2025 19:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744572428; cv=none; b=iDPZzLTk7Qd2bPkhTWd06GXL9qm/rFvMgcR3KrD5vPKD9FhthA5+5AJD0ISxHRskAEs5pxv4Pbris4K7MjZEmh9TU0Psy3Q8ckl20EoSoDjp5OPBuR+7zihLU3oiSFiBb8t8des4/9eImq1UTe5tfjpQS9l3JQ9Bom7gp70Itns=
+	t=1744572452; cv=none; b=kJeepB01bP3mWBRNn8gRqu3wj0wZ7+XI3BSm4M3+kSvY8HVzsiwcXaJ/FfbrJ9YQMkdtp2pg2+6GhLY4fQbVjr8daED+QrjOWCXANP6wtDMFHPBophVQY4knIm23UP+EeuhdYrryls6CJfqKGz4x49zp39woURYNMf6d1L/y5wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744572428; c=relaxed/simple;
-	bh=QkCkuKFT6wZHH592ZB2ggniEln82VIfqvoPJBbkXvsw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K3xT5nv07I697AWsC0gDIQk8syDHtbXKb1lxJFJmlGAFe7scHeVy7EJizpEavNb2Dlji9fnI+2vc6UGjyEGl8y9iHBIM51X5xNm5ypNCq7UbGBYUBSwpL3wKzgh57fQ3ai1OHo86qyjZKvgPkzIiIdeAkZqIaRDnHQWwrvY7HWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMY6pZ3q; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744572452; c=relaxed/simple;
+	bh=zbe78LzyQnr54VkPXOkJAiqjPOtZuTJgjJ34BXUcNSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M4+cQdTFsHQZKDnUukPG0ujzhBbphckEnqim2qPBE+zy/kFzom38iaPDIyZa7wj/ZiumENIt17mXBQbTCKXmYg6T+AjEKQHhCfu+ByE62J78qoAZ+NMD1qaVd23rxHhp0tFmOgG80uDNqXP7ygveknS5GOPEfiMU6GG4uC1j+zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFfS402t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMY6pZ3q"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2963dc379so594796566b.2;
-        Sun, 13 Apr 2025 12:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744572425; x=1745177225; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NjpcKZWpASgE46JrEqXPnEh3oUn+ZfJ5tsNx6ErOfYw=;
-        b=CMY6pZ3qBav+IMhS/xVeU6IieEcQNBq5IeTbZPBTKdxe2tNAhJigmAUYETOVGtXkyp
-         xQBn8GPWXLqI/xlFTUEObP4IQyC6BWtSwrDKhnNx25LPgGX1FFA5y8ftJLlHZXLD/Drn
-         yUl6Ylb1998GvS7J/OzCkopYixfYYULM3JAnn8xzJaap8wQ8Aq6IKDrYsXZatBCjjRTN
-         lGrlLrWOoeWz2xlwG2vxLSm6whzPuw86DXfwKuM/rBvIUeMwsja/mJD6EHh+fV0h5DAX
-         NNcxMdNlQBhmhsWHUo9olZvxSs/KP0B4zcskmLty7JJ968o1R9sfFBCSglA5+KtrXQPr
-         pq1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744572425; x=1745177225;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NjpcKZWpASgE46JrEqXPnEh3oUn+ZfJ5tsNx6ErOfYw=;
-        b=mIOxbUmTs5gTgGkV86p7XRMSS2qr5XjdkUm0kPq9out8Q+6SFdz3b1eVgtoaI2NMPF
-         5nq8jFg+bufLqmyrTOCozF7xl0M1DfVl9CY7NL7yjlxlLM6313pXlEdN4QwTCPpUyCPn
-         feSsXWdWl+VFu9uN2ENkH0SfvJkBKI3xzcmZA+Uij3NDAyr4a8sB+qVvEt7lB7Bp+p+y
-         99JQrJ35WT+4vMn3C4XXNxZGqmj9FkYt/xnDqHQ3M1H9oH/Lw0vcQ/KVgSQSyL3jcyAd
-         +5k5axVy0WR15oAGk1SFmvzbiPxsdIijEiQk8+9G87DeZDGb4V/NVRn0c09R/253c0oB
-         1qwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ9XKiKcEp+KNs4O7yku+YTeN7CCC7NWGETIg8PVmf0Erw+V832Tdpui89Ji43xbmR7HlgJrmhUaVPCGax4w==@vger.kernel.org, AJvYcCW2rRE1XDjNZuy4KF75BeZ7aGsQuhAg/FsCBaT4KecMz69C/O+HE0BeIAohR0Tt0jQ7pKIHPw1S@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu/p8H2yY4YzCD8U+wW8XeWSDCSjBtnwZU2o254eat9LTuw+Ch
-	SRyvL62OZckQEsKZQDJJaU+UDwVvHj0ZA6+3fuXb6KvEIEodA2kE
-X-Gm-Gg: ASbGncuP8aNuC8R8r5CvdbChHB0d2qPE8kg8KwJ0hgLfCNIwqdK32VrB+8NLZV7RCdy
-	/Kxm+E8dnBbc3HBFMq/ufmrrbNolu8WKlnclj2YyMwQ4zKmrIICDsD2cQRZHqDfK6Y4xsZQaVsq
-	Bgd3+7oyaSbeWavL7eJh/zG+214Sxrqo7ieQbgJBB11sc8P6N4mONFvmXDOhErNmgbEmo8XlYyX
-	sYF+7+C1xYX5Rr4F/tr4Cn6eAZtS1S7q+gNRym4ocgSsp6dDJtBeeO6HEb4XPW1wmqqbeXUA40j
-	QP3Jr9q9LJppppQRXP488uBQ0eiFzArt9F/tM6o=
-X-Google-Smtp-Source: AGHT+IF7TqwmNFBxoP1uwqhPRKHQxWwZot1FSfd89dNpEdwbpMrqjQX9ievtOkmZkx8tbScP44J/ug==
-X-Received: by 2002:a17:907:9624:b0:ac2:9841:3085 with SMTP id a640c23a62f3a-acad34ca0e5mr824898566b.30.1744572424459;
-        Sun, 13 Apr 2025 12:27:04 -0700 (PDT)
-Received: from [10.0.1.56] ([2001:871:22a:99c5::1ad1])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acad99c4456sm394686366b.110.2025.04.13.12.27.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 12:27:04 -0700 (PDT)
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-Date: Sun, 13 Apr 2025 21:26:56 +0200
-Subject: [PATCH v3] rust: Use `ffi::c_char` type in firmware abstraction
- `FwFunc`
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFfS402t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C66D1C4CEDD;
+	Sun, 13 Apr 2025 19:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744572451;
+	bh=zbe78LzyQnr54VkPXOkJAiqjPOtZuTJgjJ34BXUcNSE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pFfS402t1IVMRZbh2DiMXdX54pl79RMP8TBpoqKxdZSaP05aEZusH1B/HLJJw1syF
+	 f1Ey5IG0w1LF2NYyKDxisSTpjbpcYL2LUGkWg8hiYWPYf17XT7lwp4DP/j0WJcuOsS
+	 uspjpcc+iBb5EIK2du0EaF9DkNFbHw6zLlWKe10EwzDKFd9RPY0GNQteKFtRCUQP/U
+	 JUCbVwfEijpNh0SdXKFdwpBLc3BRTtZERgD6W9YQYV1sZMRu7N8ZWSSf1auQAxYSrz
+	 MAqKJOI00WekF5RgKDLOrs+Pexuchfx7Sa7oJWaE8AmsMnuhohVwMN+BDtiDEABNp1
+	 SZTrAGzZPH8MQ==
+Message-ID: <1b5835f4-cc09-4cdd-ab75-6159793c242f@kernel.org>
+Date: Sun, 13 Apr 2025 14:27:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd_node.h
+To: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+References: <20250410200202.2974062-1-superm1@kernel.org>
+ <20250410200202.2974062-3-superm1@kernel.org>
+ <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
+ <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
+ <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
+ <Z_rCuLD56IZ4hsNw@gmail.com>
+ <5509f044-912b-4d10-bdeb-95ec52002b06@kernel.org>
+ <Z_rJ37er9Dc25ne-@gmail.com> <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
+ <Z_ttp0ZNHEpNhh_9@gmail.com> <Z_t5YADNi0vpPqGO@gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <Z_t5YADNi0vpPqGO@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250413-rust_arm_fix_fw_abstaction-v3-1-8dd7c0bbcd47@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAP8P/GcC/33N0Q6CIBSA4VdpXEcDFIWueo/WHMFB2VIbENWc7
- x66Lrzy8j875zsTCuAdBHQ+TMhDcsGNQ47ieEC6U0ML2JnciBHGSUkE9q8QG+X7xrpPY9+Nuoe
- odMxnuNSFEtLUHJhEGXh6yEsrfr3l7lyIo/+uvxJdpn+W0j02UUwxURK4FCWnurq0vXKPkx57t
- LCJbSm2S7FMCaissUQWpqZbap7nH7+FC7APAQAA
-X-Change-ID: 20250408-rust_arm_fix_fw_abstaction-4c3a89d75e29
-To: Luis Chamberlain <mcgrof@kernel.org>, 
- Russ Weight <russ.weight@linux.dev>, Danilo Krummrich <dakr@kernel.org>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- stable@vger.kernel.org, Christian Schrefl <chrisi.schrefl@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744572423; l=4718;
- i=chrisi.schrefl@gmail.com; s=20250119; h=from:subject:message-id;
- bh=QkCkuKFT6wZHH592ZB2ggniEln82VIfqvoPJBbkXvsw=;
- b=cGG6PnEoXUDm7qAkWhgmOrbJjFUCLr2mDR20W8glZz5+PtFQdnyH28x9uga5aDx2tyY0oVptq
- Z94QMjRkZ7xAswoVD+JOOWzD1U174qEciLBzYCRroOL6fFfMbpTH9sA
-X-Developer-Key: i=chrisi.schrefl@gmail.com; a=ed25519;
- pk=EIyitYCrzxWlybrqoGqiL2jyvO7Vp9X40n0dQ6HE4oU=
 
-The `FwFunc` struct contains an function with a char pointer argument,
-for which a `*const u8` pointer was used. This is not really the
-"proper" type for this, so use a `*const kernel::ffi::c_char` pointer
-instead.
 
-This has no real functionality changes, since now `kernel::ffi::c_char`
-(which bindgen uses for `char`) is now a type alias to `u8` anyways,
-but before commit 1bae8729e50a ("rust: map `long` to `isize` and `char`
-to `u8`") the concrete type of `kernel::ffi::c_char` depended on the
-architecture (However all supported architectures at the time mapped to
-`i8`).
 
-This caused problems on the v6.13 tag when building for 32 bit arm (with
-my patches), since back then `*const i8` was used in the function
-argument and the function that bindgen generated used
-`*const core::ffi::c_char` which Rust mapped to `*const u8` on 32 bit
-arm. The stable v6.13.y branch does not have this issue since commit
-1bae8729e50a ("rust: map `long` to `isize` and `char` to `u8`") was
-backported.
+On 4/13/25 03:44, Ingo Molnar wrote:
+> 
+> * Ingo Molnar <mingo@kernel.org> wrote:
+> 
+>>
+>> * Borislav Petkov <bp@alien8.de> wrote:
+>>
+>>> I was aiming more for a header which contains non-CPU defines -
+>>> i.e., platform. But the FCH is only one part of that platform. But
+>>> let's start with amd/fch.h - "amd/" subpath element would allow us
+>>> to trivially put other headers there too - and see where it gets
+>>> us. We can (and will) always refactor later if needed...
+>>
+>> Yeah, agreed on opening the <asm/amd/> namespace for this.
+> 
+> Here's a tree that establishes <asm/amd/> and moves existing headers
+> there:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/platform
+> 
+> Mario, could you base your series on top of this tree?
+> 
 
-This caused the following build error:
-```
-error[E0308]: mismatched types
-  --> rust/kernel/firmware.rs:20:4
-   |
-20 |         Self(bindings::request_firmware)
-   |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found fn item
-   |         |
-   |         arguments to this function are incorrect
-   |
-   = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
-                 found fn item `unsafe extern "C" fn(_, *const u8, _) -> _ {request_firmware}`
-note: tuple struct defined here
-  --> rust/kernel/firmware.rs:14:8
-   |
-14 | struct FwFunc(
-   |        ^^^^^^
+Sure.
 
-error[E0308]: mismatched types
-  --> rust/kernel/firmware.rs:24:14
-   |
-24 |         Self(bindings::firmware_request_nowarn)
-   |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found fn item
-   |         |
-   |         arguments to this function are incorrect
-   |
-   = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
-                 found fn item `unsafe extern "C" fn(_, *const u8, _) -> _ {firmware_request_nowarn}`
-note: tuple struct defined here
-  --> rust/kernel/firmware.rs:14:8
-   |
-14 | struct FwFunc(
-   |        ^^^^^^
+One problem that I notice though is that by using <asm/amd/fch.h> that 
+drivers/i2c/busses/i2c-piix4.c has some compile failures on non-x86.
 
-error[E0308]: mismatched types
-  --> rust/kernel/firmware.rs:64:45
-   |
-64 |         let ret = unsafe { func.0(pfw as _, name.as_char_ptr(), dev.as_raw()) };
-   |                            ------           ^^^^^^^^^^^^^^^^^^ expected `*const i8`, found `*const u8`
-   |                            |
-   |                            arguments to this function are incorrect
-   |
-   = note: expected raw pointer `*const i8`
-              found raw pointer `*const u8`
+This is the same problem that lkp robot raised for v3 when it was on 
+<asm/amd_node.h>:
 
-error: aborting due to 3 previous errors
-```
+https://lore.kernel.org/linux-doc/20250410200202.2974062-1-superm1@kernel.org/T/#mc33abfcdc434c85fbc94d03498759db631efcf53
 
-Fixes: de6582833db0 ("rust: add firmware abstractions")
-Cc: stable@vger.kernel.org
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Acked-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
----
-Changes in v3:
-- Clarify build issues with v6.13 in commit message.
-- Link to v2: https://lore.kernel.org/r/20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com
+What's the preferred way to handle it?
 
-Changes in v2:
-- Use `kernel::ffi::c_char` instead of `core::ffi::c_char`. (Danilo & Benno)
-- Reword the commit message.
-- Link to v1: https://lore.kernel.org/r/20250411-rust_arm_fix_fw_abstaction-v1-1-0a9e598451c6@gmail.com
----
- rust/kernel/firmware.rs | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+The three ways that immediately jump out to me:
 
-diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-index f04b058b09b2d2397e26344d0e055b3aa5061432..2494c96e105f3a28af74548d63a44464ba50eae3 100644
---- a/rust/kernel/firmware.rs
-+++ b/rust/kernel/firmware.rs
-@@ -4,7 +4,7 @@
- //!
- //! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h)
- 
--use crate::{bindings, device::Device, error::Error, error::Result, str::CStr};
-+use crate::{bindings, device::Device, error::Error, error::Result, ffi, str::CStr};
- use core::ptr::NonNull;
- 
- /// # Invariants
-@@ -12,7 +12,11 @@
- /// One of the following: `bindings::request_firmware`, `bindings::firmware_request_nowarn`,
- /// `bindings::firmware_request_platform`, `bindings::request_firmware_direct`.
- struct FwFunc(
--    unsafe extern "C" fn(*mut *const bindings::firmware, *const u8, *mut bindings::device) -> i32,
-+    unsafe extern "C" fn(
-+        *mut *const bindings::firmware,
-+        *const ffi::c_char,
-+        *mut bindings::device,
-+    ) -> i32,
- );
- 
- impl FwFunc {
+1) Add '#if CONFIG_X86' around all related code.
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250408-rust_arm_fix_fw_abstaction-4c3a89d75e29
+2) Move applicable code to drivers/i2c/busses/i2c-amd-fch.c (similar to 
+how we have i2c-amd-asf-plat.c) but modify drivers/i2c/busses/Makefile 
+to only compile it for x86.
 
-Best regards,
--- 
-Christian Schrefl <chrisi.schrefl@gmail.com>
+3) Idea two but also add a new Kconfig for CONFIG_I2C_AMD_FCH that 
+depends on CONFIG_X86.
+
+I am /leaning/ on the refactor with idea 3.
+
+> Thanks,
+> 
+> 	Ingo
+> 
+> ===============>
+> Ingo Molnar (6):
+>    x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>
+>    x86/platform/amd: Add standard header guards to <asm/amd/ibs.h>
+>    x86/platform/amd: Move the <asm/amd_nb.h> header to <asm/amd/nb.h>
+>    x86/platform/amd: Move the <asm/amd_hsmp.h> header to <asm/amd/hsmp.h>
+>    x86/platform/amd: Clean up the <asm/amd/hsmp.h> header guards a bit
+>    x86/platform/amd: Move the <asm/amd_node.h> header to <asm/amd/node.h>
+> 
+>   Documentation/userspace-api/ioctl/ioctl-number.rst | 2 +-
+>   MAINTAINERS                                        | 6 +++---
+>   arch/x86/events/amd/ibs.c                          | 2 +-
+>   arch/x86/include/asm/{amd_hsmp.h => amd/hsmp.h}    | 4 ++--
+>   arch/x86/include/asm/{amd-ibs.h => amd/ibs.h}      | 5 +++++
+>   arch/x86/include/asm/{amd_nb.h => amd/nb.h}        | 2 +-
+>   arch/x86/include/asm/{amd_node.h => amd/node.h}    | 0
+>   arch/x86/kernel/amd_gart_64.c                      | 2 +-
+>   arch/x86/kernel/amd_nb.c                           | 2 +-
+>   arch/x86/kernel/amd_node.c                         | 2 +-
+>   arch/x86/kernel/aperture_64.c                      | 2 +-
+>   arch/x86/kernel/cpu/cacheinfo.c                    | 2 +-
+>   arch/x86/kernel/cpu/mce/inject.c                   | 2 +-
+>   arch/x86/mm/amdtopology.c                          | 2 +-
+>   arch/x86/mm/numa.c                                 | 2 +-
+>   arch/x86/pci/amd_bus.c                             | 2 +-
+>   arch/x86/pci/fixup.c                               | 2 +-
+>   drivers/char/agp/amd64-agp.c                       | 2 +-
+>   drivers/edac/amd64_edac.c                          | 4 ++--
+>   drivers/hwmon/k10temp.c                            | 2 +-
+>   drivers/platform/x86/amd/hsmp/acpi.c               | 4 ++--
+>   drivers/platform/x86/amd/hsmp/hsmp.c               | 2 +-
+>   drivers/platform/x86/amd/hsmp/plat.c               | 4 ++--
+>   drivers/platform/x86/amd/pmc/mp1_stb.c             | 2 +-
+>   drivers/platform/x86/amd/pmc/pmc.c                 | 2 +-
+>   drivers/platform/x86/amd/pmf/core.c                | 2 +-
+>   drivers/pnp/quirks.c                               | 2 +-
+>   drivers/ras/amd/atl/internal.h                     | 4 ++--
+>   sound/soc/amd/acp/acp-rembrandt.c                  | 2 +-
+>   sound/soc/amd/acp/acp63.c                          | 2 +-
+>   sound/soc/amd/acp/acp70.c                          | 2 +-
+>   sound/soc/sof/amd/acp.c                            | 2 +-
+>   tools/perf/check-headers.sh                        | 2 +-
+>   tools/perf/util/amd-sample-raw.c                   | 2 +-
+>   34 files changed, 44 insertions(+), 39 deletions(-)
+>   rename arch/x86/include/asm/{amd_hsmp.h => amd/hsmp.h} (91%)
+>   rename arch/x86/include/asm/{amd-ibs.h => amd/ibs.h} (98%)
+>   rename arch/x86/include/asm/{amd_nb.h => amd/nb.h} (98%)
+>   rename arch/x86/include/asm/{amd_node.h => amd/node.h} (100%)
+> 
 
