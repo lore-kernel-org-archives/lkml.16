@@ -1,99 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E95AD51;
-	Sun, 13 Apr 2025 07:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A564A18;
+	Sun, 13 Apr 2025 08:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744530862; cv=none; b=Sbza91Im2DvrmMmBWmdudUcml3dOSvPdXC2Hb8LqLROb3M9UrzKw1r7X3khOr5yvy9zABVKSt3mKLMYJi1lXCA/JJ4K1QFHlainZgqoD2iTTygYnNvGN4YrTpKjtzO2MvUdiwTlC4G15I+F6s1f1gUIlzDsAAZ+3V1Qpfju1vS4=
+	t=1744531334; cv=none; b=GTS/DrBOLHi90/bXF0MU0Dg7yT/QDdDH2HWXHm3WTUJc+YvNGvFrdu2GB40xl28bFW0N7Um+DDfSUHZG2U7uKMhvpUwfdNPdmkh810QZNWQX7pizKaPZsHFn7BxyeDppc75i5SUcyjWjKewfORvhXZrUOFtEm/vyWW2Hmm4vWDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744530862; c=relaxed/simple;
-	bh=HaMA3Kl+meGFuUQOS/ZfEYd8wtkz83n+WzSGOOL5TFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OybxDci3mHWTgR1+OZnCt+7Vby6idbTHOxaom/Ut1c5oNZNNKWVAJd4EBcsiLASPLJu+wIpLRDKICHJy849NdRgivRA+t6dGW5FHbclkFvcl/e619ALtDkPhamLUg9lQXXRXi6DTT0tvc5uV2i3D2cX7DhKY8qfgJL6UKWUNx64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AinuOW0E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744531334; c=relaxed/simple;
+	bh=7LSnlRHg5ilP9y2wAV0fO+ZSSRH03VV0jIQxfm2QR+4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=o50xXhtIBxbMwyIK1HjWMMPnoIPn4sNPotn8FzoMmYbMTGuPrPfknsmHiaRl7Jilkp3Jph+PGQw+hS7+DKvw9vNZK/eb4O384Lwsy39oAaH1jNEhK1gCuKZvyHZWJwAQGONjZAMigg1m+tFU1u0WqkYXm27+A6640JQqbFAbMbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Uo351E8i; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oKmUkAn6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AinuOW0E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB1DC4CEDD;
-	Sun, 13 Apr 2025 07:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744530862;
-	bh=HaMA3Kl+meGFuUQOS/ZfEYd8wtkz83n+WzSGOOL5TFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AinuOW0EIqPjYFPMwEsVSBNrmH7DDwhnxqqRjuIb45I0zKaxjlTNknmDUXsbY4NST
-	 hCjNSXnnCvPMFTYrcDJEjxSa7Qx+5P8mx0c6zVBlwKDsdBhOP2+r8cUZ4eftWXC+Yh
-	 Kb3ecfFoirp9ZjMSkB62uAb27onn9Mg0/hwMTtvQkR68gKAELQ7C/1MURxG8CukIL3
-	 MK1lpwC40ehUTsoZYRnV8To6TYopbh8L/1Od7XeubxWr9MhprsS1zqDXLhY3GxzlRM
-	 tFtLuKNu/gtVDVkKtPpR1Sgy0owxRmXumFb1o1gvWq5ljYOtPtI5bbQm0MoxAR/4nv
-	 7N+9aosY45TpA==
-Date: Sun, 13 Apr 2025 09:54:15 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
- definition to amd_node.h
-Message-ID: <Z_ttp0ZNHEpNhh_9@gmail.com>
-References: <20250410200202.2974062-1-superm1@kernel.org>
- <20250410200202.2974062-3-superm1@kernel.org>
- <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
- <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
- <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
- <Z_rCuLD56IZ4hsNw@gmail.com>
- <5509f044-912b-4d10-bdeb-95ec52002b06@kernel.org>
- <Z_rJ37er9Dc25ne-@gmail.com>
- <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uo351E8i";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oKmUkAn6"
+Date: Sun, 13 Apr 2025 08:01:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744531330;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eI8ndGTtErzBmqW0KvWPNzrVknbj7V9KlNoGoRqbe+s=;
+	b=Uo351E8iWOSvnqBp8y4vQSpx1nU9EhCmdCi/XoCgIdV+zBU+GkJkrelB5PNymjmBglE1OB
+	fZMe/PoiMzlP89gZHDOAxEikg6MkcGEUormDUi9gk44rDmGRr/RIg+0GQ/pOfKyLVWruoL
+	7BxnA40pC8z3JlHeAPoloNZWGB2b+Oe8dUsMwn+KSrgeH0UdN2nWJAD0id5+SFOt7qBvSS
+	JdK/VRDAptoenxwHTX8A1ZP6albfoUJqqSNPpwbAxfjwFcKB722n6M/7C0FxdTY4MX/T9a
+	qH1muu1LOxPbbNVPESRbfza8MTVb1eZ4FewCI3vr8eQLNrmLWCiY6CkD1iJdSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744531330;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eI8ndGTtErzBmqW0KvWPNzrVknbj7V9KlNoGoRqbe+s=;
+	b=oKmUkAn62wiy18oJjzZSJsGiSTI+AgZwyaMuXv7GjDruD+5b69NIKy2LDIbP7qB4w2YEaV
+	HbVl+VtdDaz2ZCBQ==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/asm] x86/percpu: Refer __percpu_prefix to __force_percpu_prefix
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250411093130.81389-1-ubizjak@gmail.com>
+References: <20250411093130.81389-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
+Message-ID: <174453131877.31282.11281370109325866576.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/asm branch of tip:
 
-* Borislav Petkov <bp@alien8.de> wrote:
+Commit-ID:     d51faee4bd63b3b02fa6f56210ec0d84c5ccb680
+Gitweb:        https://git.kernel.org/tip/d51faee4bd63b3b02fa6f56210ec0d84c5ccb680
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Fri, 11 Apr 2025 11:31:17 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 13 Apr 2025 09:48:24 +02:00
 
-> On April 12, 2025 10:15:27 PM GMT+02:00, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >* Mario Limonciello <superm1@kernel.org> wrote:
-> >
-> >> SB800 is pre-Zen stuff.  It's "before my time" - I guess that's the 
-> >> precursor to FCH being in the SoC but has the same functionality.
-> >> 
-> >> So I'm thinking <asm/amd_fch.h>.
-> >
-> >I went by the SB800_PIIX4_FCH_PM_ADDR name, which is a misnomer these 
-> >days?
-> >
-> >But yeah, <asm/amd_fch.h> sounds good to me too. Boris?
-> 
-> I was aiming more for a header which contains non-CPU defines - i.e., 
-> platform. But the FCH is only one part of that platform. But let's 
-> start with amd/fch.h - "amd/" subpath element would allow us to 
-> trivially put other headers there too - and see where it gets us. We 
-> can (and will) always refactor later if needed...
+x86/percpu: Refer __percpu_prefix to __force_percpu_prefix
 
-Yeah, agreed on opening the <asm/amd/> namespace for this.
+Refer __percpu_prefix to __force_percpu_prefix to avoid duplicate
+definition. While there, slightly reorder definitions to a more
+logical sequence, remove unneeded double quotes and move misplaced
+comment to the right place.
 
-Thanks,
+No functional changes intended.
 
-	Ingo
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Link: https://lore.kernel.org/r/20250411093130.81389-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/percpu.h | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 5fe314a..b0d03b6 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -29,6 +29,8 @@
+ 
+ #ifdef CONFIG_SMP
+ 
++#define __force_percpu_prefix	"%%"__stringify(__percpu_seg)":"
++
+ #ifdef CONFIG_CC_HAS_NAMED_AS
+ 
+ #ifdef __CHECKER__
+@@ -36,23 +38,23 @@
+ # define __seg_fs		__attribute__((address_space(__seg_fs)))
+ #endif
+ 
++#define __percpu_prefix
+ #define __percpu_seg_override	CONCATENATE(__seg_, __percpu_seg)
+-#define __percpu_prefix		""
+ 
+ #else /* !CONFIG_CC_HAS_NAMED_AS: */
+ 
++#define __percpu_prefix		__force_percpu_prefix
+ #define __percpu_seg_override
+-#define __percpu_prefix		"%%"__stringify(__percpu_seg)":"
+ 
+ #endif /* CONFIG_CC_HAS_NAMED_AS */
+ 
+-#define __force_percpu_prefix	"%%"__stringify(__percpu_seg)":"
+-#define __my_cpu_offset		this_cpu_read(this_cpu_off)
+-
+ /*
+  * Compared to the generic __my_cpu_offset version, the following
+  * saves one instruction and avoids clobbering a temp register.
+- *
++ */
++#define __my_cpu_offset		this_cpu_read(this_cpu_off)
++
++/*
+  * arch_raw_cpu_ptr should not be used in 32-bit VDSO for a 64-bit
+  * kernel, because games are played with CONFIG_X86_64 there and
+  * sizeof(this_cpu_off) becames 4.
+@@ -77,9 +79,9 @@
+ 
+ #else /* !CONFIG_SMP: */
+ 
++#define __force_percpu_prefix
++#define __percpu_prefix
+ #define __percpu_seg_override
+-#define __percpu_prefix		""
+-#define __force_percpu_prefix	""
+ 
+ #define PER_CPU_VAR(var)	(var)__percpu_rel
+ 
+@@ -97,8 +99,8 @@
+ # define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+ #endif
+ 
+-#define __percpu_arg(x)		__percpu_prefix "%" #x
+ #define __force_percpu_arg(x)	__force_percpu_prefix "%" #x
++#define __percpu_arg(x)		__percpu_prefix "%" #x
+ 
+ /*
+  * For arch-specific code, we can use direct single-insn ops (they
