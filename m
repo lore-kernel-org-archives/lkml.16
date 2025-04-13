@@ -1,153 +1,101 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A5E1AF0B5;
-	Sun, 13 Apr 2025 10:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A7C194AC7;
+	Sun, 13 Apr 2025 10:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744541056; cv=none; b=qO1A9PV8GVM4+14TEE82oJ6DWnJsURisiomJELL9fgr2IQukGmU5A8Q3pPKfWNVd08FbY61gRKHAUbIL/fp5gakYuyLPUpLe/Kxs9FtRjjcpIn5W2kPdsWVSbOg+d+MzQ8r4vXL5053MTak3IVzKfO0qMOyUQLqcPjfeuKOfmHU=
+	t=1744541080; cv=none; b=UpQeCu1kZXSKF0cX3Ur0S1WmskVd9AUyTGSKfm3AoKGASFpWGPBnPyc6ts0biRPeEhlydBNXwJ4OW/paiBDOaXMZvXds0e6iNefupU6Oqv+lzt7F86szCRM+U65q3OcTw/E5RW7pxUUuH9ZKiHd2OOmqWO3Spt11/hZ3LeNFgNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744541056; c=relaxed/simple;
-	bh=JD2Vcha6ElX+5r3tPICprQGEcLCZ3uM4HJkKZyfdIl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HCRB9VeJUzv37zsZbPwudEWOcWBR/1KRTf3Vf9AtfDd21fJbmX8VB05D/tbHV/e8cduSJQzxf5GRLCyFOOIEtdsiw1EKYM/m5ybjPX11vZqXhXtkcWgkp2KYkI9YzMcnFLUo5CPRW0JXyF8frozhCXh8e2w8LBrFWyskvyaQxi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OCgAbWfW; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744541080; c=relaxed/simple;
+	bh=b6dUActv/Ds9GlhYnYoOangXitEGt+tdrDfo1xWrlPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IrvNm4R348lD5DJFPfbaNuv7XlCLH3S6iAQjznTMPB3v6v2xoNkZfZdsYk7uczjSUglbM5hUiHijnbL8XEBpM+MbjiEGiEla66QmJ1lluU6XHK0DDT8K9sClPdZ3nSvw0kHIwtqUdfvR8Ot9Jla0oNrdXXm6QNMMgFApflQVieA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTry4dHB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCgAbWfW"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2264aefc45dso49455195ad.0;
-        Sun, 13 Apr 2025 03:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744541054; x=1745145854; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZdoJvmpW6qddfbJB5WSgVAlVfvRBkfyp+bE+C2KQ9c0=;
-        b=OCgAbWfW2nFoyC6v2xKjEKNGbQmAhdEx58/EpS3BNWVu+UfPVeOICaOESAWoA/gmEi
-         cuj2hFa1EM7P7lHjrJC/yOaAPPVyk1YUHD4eX19z7AXzvfm/MJtjhFfENkDSD0Fu85Dn
-         iRIQQGZWW8osze0Hm0hfcds78YJ8oiK2U8qQV6wcc6tbw93CkEMjpmeL08ypv3heQKq4
-         PNGleKlQuUro6KCeZuUHrcy7wZwc+kkmULomOSbqebsKtRev2N3P68/xmZwIXdgXdnOY
-         5Ihal1oQTd1HGkmITBFzbqS4P8nTh146oyozIpx9sDQqdf3QvF+gdRKhFd+M/Llxj2gt
-         vlMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744541054; x=1745145854;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZdoJvmpW6qddfbJB5WSgVAlVfvRBkfyp+bE+C2KQ9c0=;
-        b=UvecQDdjclnAsvHNjj3tWHyKau9WqIArqZcGiwpcuTyr2L4asN1Mt1qRCA7uiiSwDj
-         Drf6h0iNgVNFlFDjG21PEPGfJhXdCi9ctM/QChPzkuvHbrg8sjWcF85gggh7NXy5lfAN
-         eh4hrM8duAbSl+smkspokVr+dIkb0J87aHxUJY+1K9A+IoqpWCEjmCFdlwmnh88wk1Q1
-         Vpp12rvOuXx6dpnmoa3FUaXdBtLWqv41YqNXUcmOrdxlxUK8vtCc2Jeep8LTXxIIFC7K
-         9fjxCtHv0of6fKeOGl+4Ba4C2Rq534hcT0O0lMmQBLTeuSiiQ0BA0+jO1VGXc21toZ0a
-         42KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWwQkE5VULQbPTifN7rD1kylkTtisJ6IgYgiD7dW3QeGVUMkKTyDz3HO52yvMgO+FScHqApmaCYNuD7N4=@vger.kernel.org, AJvYcCVleSyJOBIBgWIXP8YnMdRadl8u+mrCGPuV6n3lZ2yztZf3+AYBKwvhsrxq8JCrf0RUEF7L6G8J@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOYhyn2QPrpxCG1yKj6uwBMdnomtpiq6g1/zHvskPMOcv40cxm
-	QhUSlgM3Mq3TUyGLr/ZZ0LrkPZ64xoMiP+s2V7QqJqGTlU09lM0Fk5Awuzf4
-X-Gm-Gg: ASbGncuYf5Mv471rtOR5u3zxItnOg/8iULlt7ZSHgdxXs397ok0HfyarIV+HcieJoCi
-	1GEEpLR4HvLRub7HTaFqVOJ48EV2MfcdBdYAdXhrvCmEcObWvlmQuZWdQ7sM0iatJBMQRME0Rlz
-	m2dA2EKPwEMjIY5o0wESKQaZHb52lvOac81u23SRFivaIfxmvPf89Zv+Fyf6Ub4Q/BKsNd1lhM0
-	Fndb6T1wYFMnSsXN8bnG7absx5vsEx+c4AUJ2RWulmtWIOm0/ywH5WUSuRQXL8KpTyzwNFn+ipd
-	NztkzdGGfzccE4riuE3vs2q8PbHJgrtjifYfLaFTYAYK+qcpN/HcJLIhcO9artZqtTMV3rEOtPd
-	c68QyzVe50XEcaTwRlTLeROr3Eerb
-X-Google-Smtp-Source: AGHT+IFA/SwdxFVR9lqyRwioQ6mLAepuc6c36TjHQ1kU80v2qwDra/68I4JucotYa72SVT3yX3pXvA==
-X-Received: by 2002:a17:903:41c3:b0:223:5a6e:b16 with SMTP id d9443c01a7336-22bea49542dmr131704475ad.5.1744541053570;
-        Sun, 13 Apr 2025 03:44:13 -0700 (PDT)
-Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8af56sm80160885ad.66.2025.04.13.03.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 03:44:13 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTry4dHB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5751C4CEDD;
+	Sun, 13 Apr 2025 10:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744541079;
+	bh=b6dUActv/Ds9GlhYnYoOangXitEGt+tdrDfo1xWrlPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rTry4dHBtM3F9aJFhH9iI335BlFKgDciIpSgdr8dYvnovfOnOoDq2grExTEXUh2l/
+	 uZ6Yimxjk4Wc8RDNEq0xd+Tlh4F0IDVyD+OTu+OssP7nZWtGGLGVNfRFcbmacHtXqf
+	 Totaocy8jNWXSzDPDfanwd5HNjvDJQwo8l/mFpcO+j2aixeoiQBHpkYovBULZZrjOV
+	 B1r7FB1ymJmI3IInJWxgYhd77SuQ2pI+IJdZsoyitSodYIBMF6mZuYdHliTnzW9UA2
+	 Qo5G+PgUVbZBpCHvUVIZYowYHMVAvr0H7v4XzkAtqsmRRrLoNZCoBsDnEvaavNF+0g
+	 vn3a209eXHWbg==
+Date: Sun, 13 Apr 2025 12:44:34 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	tmgross@umich.edu,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	anna-maria@linutronix.de,
-	frederic@kernel.org,
-	tglx@linutronix.de,
-	arnd@arndb.de,
-	jstultz@google.com,
-	sboyd@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	tgunders@redhat.com,
-	me@kloenk.dev,
-	david.laight.linux@gmail.com
-Subject: [PATCH v13 5/5] MAINTAINERS: rust: Add a new section for all of the time stuff
-Date: Sun, 13 Apr 2025 19:43:10 +0900
-Message-ID: <20250413104310.162045-6-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250413104310.162045-1-fujita.tomonori@gmail.com>
-References: <20250413104310.162045-1-fujita.tomonori@gmail.com>
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction
+ `FwFunc`
+Message-ID: <Z_uVklEntNZF7ONX@pollux>
+References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
+ <Z_p-UoycGk3BceXm@pollux>
+ <c04d3ec9-46f8-4ccd-b0ed-52a1adea11b7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c04d3ec9-46f8-4ccd-b0ed-52a1adea11b7@gmail.com>
 
-Add a new section for all of the time stuff to MAINTAINERS file, with
-the existing hrtimer entry fold.
+On Sun, Apr 13, 2025 at 10:55:35AM +0200, Christian Schrefl wrote:
+> On 12.04.25 4:53 PM, Danilo Krummrich wrote:
+> > On Sat, Apr 12, 2025 at 12:29:48PM +0200, Christian Schrefl wrote:
+> >> The `FwFunc` struct contains an function with a char pointer argument,
+> >> for which a `*const u8` pointer was used. This is not really the
+> >> "propper" type for this, so use a `*const kernel::ffi::c_char` pointer
+> >> instad.
+> >>
+> >> This has no real functionality changes, since `kernel::ffi::c_char` is
+> >> a type alias to `u8` anyways.
+> >>
+> >> This used to cause problems on 6.13 when building for 32 bit arm (with
+> >> my patches), since rust mapped c_char to i8 instead.
+> > 
+> > Now that I read this again:
+> > 
+> > Isn't it the other way around? For arm32 c_char was mapped to u8, but FwFunc
+> > expected i8 (since that's what c_char was mapped to for all other architectures
+> > that are supported in v6.13).
+> > 
+> > Can you please clarify this in the commit message?
+> 
+> Ah sorry I got confused because by the change in 1bae8729e50a ("rust: 
+> map `long` to `isize` and `char` to `u8`").
+> 
+> How about changing that section to:
+> ....
+> This has no real functionality changes, since now `kernel::ffi::c_char` 
+> is now a type alias to `u8` anyways, but before commit 1bae8729e50a ("rust: 
+> map `long` to `isize` and `char` to `u8`") the concrete type of 
+> `core::ffi::c_char` depended on the architecture (However all 
+> supported architectures at the time mapped to `i8`).
+> 
+> This causes problems on v6.13 when building for 32 bit arm (with my 
+> patches), since back then `*const u8` was used in the function argument 
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- MAINTAINERS | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+I'd put slightly more emphasis on the fact that there's no problem in v6.13
+without addition your additional patches to introduce 32 bit arm support.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..104cec84146f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10583,20 +10583,23 @@ F:	kernel/time/timer_list.c
- F:	kernel/time/timer_migration.*
- F:	tools/testing/selftests/timers/
- 
--HIGH-RESOLUTION TIMERS [RUST]
-+DELAY, SLEEP, TIMEKEEPING, TIMERS [RUST]
- M:	Andreas Hindborg <a.hindborg@kernel.org>
- R:	Boqun Feng <boqun.feng@gmail.com>
-+R:	FUJITA Tomonori <fujita.tomonori@gmail.com>
- R:	Frederic Weisbecker <frederic@kernel.org>
- R:	Lyude Paul <lyude@redhat.com>
- R:	Thomas Gleixner <tglx@linutronix.de>
- R:	Anna-Maria Behnsen <anna-maria@linutronix.de>
-+R:	John Stultz <jstultz@google.com>
-+R:	Stephen Boyd <sboyd@kernel.org>
- L:	rust-for-linux@vger.kernel.org
- S:	Supported
- W:	https://rust-for-linux.com
- B:	https://github.com/Rust-for-Linux/linux/issues
--T:	git https://github.com/Rust-for-Linux/linux.git hrtimer-next
--F:	rust/kernel/time/hrtimer.rs
--F:	rust/kernel/time/hrtimer/
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-timekeeping-next
-+F:	rust/kernel/time.rs
-+F:	rust/kernel/time/
- 
- HIGH-SPEED SCC DRIVER FOR AX.25
- L:	linux-hams@vger.kernel.org
--- 
-2.43.0
+Otherwise, sounds good!
 
+Thanks,
+Danilo
