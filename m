@@ -1,219 +1,581 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892247BAEC
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 16:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744562423; cv=none; b=sGU3tkTfgA1lzgflOJSnqvrbduIA6E+uX0kkV0VgTE9WU3CpcMUHtCaz8K4+g+n57h8d69IA+71w0LgF4em9DLdHYJNzJ4VWhTHS3Q5g2wqRnl2h1HTtFIrlL/1XNCaYVsDB+gEjYXT7HUjKikRAcaTngdp0ZbwxVgALylMGMUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744562423; c=relaxed/simple;
-	bh=E7+DTveDnwAaLf2gMuESECstezhnaC5SJfhIEooe1s4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=JZK2IivZEmDDOaUwZ9uFomHv40JYUvMAO7jIHNg0xD9T/ZaResuvMqY4UsB9JYs8xu4yu1g+s73jRFtQcUBpfxEWbtYoo3yFt28F8UZDyBzEDJn7muUFXsOs0GaFXPYlRK6ek1Yliw29OX844SulfdVrm7d7Cc2teORFDFsP4OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d5b38276deso66457455ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 09:40:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744562420; x=1745167220;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/x8W6uyCjr609dIyAeTe5EUoui/tDcs3rPqO/qsDFk=;
-        b=SHQgW5nntU0Cz8mXUbxMhLUOfywuSXZg/5BbUZr7iLa64yzgTMGFfZPuk6P1//wEE2
-         VP2K+usOMEWbA7hUTJEhoIWlsR+qC8WUuRJuq7aWf/UclmKV5od/ZxXiSMkq9WgpM5bk
-         o8VZ47KdTtvKy2tSDlEJvb6i1h5uTgR6BKOHBrqCYkQhW+r5MMUwo6QruFjadTnplHyn
-         qgSSvg7I52jhdKzrbJaIZBdWiXdg58lXT1JBoDuA9bLZGUZaFVrdWZJkqWz+c+WNx75o
-         7hk3gZqjUxxY7h9a0M2/qH1Cp+HhR96lbwsMipi4f1kWD/dIblsF8C24HYt8FAU5T7u2
-         0e0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVYc5xQqUb5a29ONdLZn0V7FpQdA24DLkM9YJ8w98q4FhBgZQsCqFL0Uu4tZYOcOkuhoPIQahG/BD5KQ2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrJwWHjEqksnR1AtvjErfyHEPkt2m8uJtYRL8w840Sqpsx0XjO
-	Stl+hnoZhMoAun9h7Xc32aOpPO2rlkeMUl/EB4zidr43V3VekAs+Z95DecLjll89RmX8go7BA0v
-	JcPxMmfgZuA23DfY10YHRO8Hli+291inLH6u4gKt8hv7UAJQrQy8i5lg=
-X-Google-Smtp-Source: AGHT+IHjWf+vfXIjtErqDPCa9AVcoflzGfe0KyicvqD/F9Jqv9kF/smRdEwjcCNL+ZjK8fG2+Rf4+kQ2lMhLEyCXApJYm3DMeNS5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37F51993B7;
+	Sun, 13 Apr 2025 16:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744563086; cv=fail; b=SZwRnHdC22oyA3qNaAsdVjfY7JewqFsyTxcGPiLD4RtkJwfK0u4G/y7D0pIQaDQR8G7KvmBDwgVKJybv6ekMiPeexO2eksEd0l8udk+pxY0U4NgtVU8qNvZQIEgvJGOhvRL3+W6gyPLOKaTsmP9iU8WSKG32uNnrPPzhwnaPmvA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744563086; c=relaxed/simple;
+	bh=Pg7eb3+efOvGSA0pIByTr/lJH37Z+s7faxI8KGx2Kro=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BdVSquraxwXn335gly7ISxTspE+JhzAXZ+yH5SNHP5TQOo76fVAZrC9cLH0OOLDB+P5wlpDbQProbRytxUr3V1QUYyI/8OEdBkwiAqMKZDEZ0Xd2TJGmqgqzd6WDK4laaqEcAUMEVq+VGzlXZN4Cz0ltsHCyXRtAy7p/q7L2Kdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=A9cDzpkT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=exyQ7Ye5; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A9cDzpkT";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="exyQ7Ye5"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DGmSFX020276;
+	Sun, 13 Apr 2025 16:51:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=hcceCU1iimdgNTu3ki2AckQFSF3M0sCVKxaemJH0CgM=; b=
+	A9cDzpkTPEYVHHGNfbfljOcJFVGDO3tl2hvsddy7kWXJy3BEuiDfd49eSeI5bWUx
+	vTKKGYX1LIMIJXazL0z9dkGbNzaA/ROj+CiszSKqVbJi0ChZ4le+UYHgsJ8EYI5N
+	//95x0PLYkLfBdDiCu11+fPwFPy6gE1tQ7hK5O+hE1/3YQcNkTGqGvQWKL2RvWWo
+	YfKPfnggwZMyILABE3h8wmgWsf7PPS2n57iV1BMAcmJ8+qp7drGFdke9GVpLBAbH
+	k7lOJasumANGWq7Ig9X4wEfcIvLL63MBhvaDkjbCzR/mAEX83nq3cONQUtVObOA3
+	hkbpg/mlPjml7env4sex/Q==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 460h3a803h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 13 Apr 2025 16:51:01 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53DCVlK2039168;
+	Sun, 13 Apr 2025 16:51:01 GMT
+Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazlp17012010.outbound.protection.outlook.com [40.93.14.10])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4nv8ae-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 13 Apr 2025 16:51:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rbSp9RWoCytX523waMVG/e/y42fe4Gq3Aq7ahXnNwSf6x+vAZgc5UAT3Rey5qzng3Uo1dfOE2WSmqkzn/zfPybU3DHDJSP5lYBoeUVa50AsouHqYgmM1+/3XJ/sWTVC0/wwLBdSQvgyre/7KeybRx53YYvdidJBNsvKl26J7J9t+2P3+O+0ReRUDrj9Y9mYzYBhZYJnADU7ACY6qsyA8/gEO5t0aufRYcUkBJYxoTkpcYFFnA8gjVkGnCQ3ZQQjdo6wUYRjw1SAC3CH2VrZxgF3MHgjYzRW8pqpp5V2oRGNNTG0mOXS7DeOZbz97eF9kAm9i4VHu6t54xCtJ01Suiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hcceCU1iimdgNTu3ki2AckQFSF3M0sCVKxaemJH0CgM=;
+ b=Ips9+vZlnhMlHHgaRSHKpvv93TYHQk7WNkC1ansQE5c7fKs6zonnosAUphMPmzR0FGSw3mPp6wCGur1DSNjb46d2WIN4quG5LzoDPoqItqvIFUDybVsurDEh1qyNrTCqJ5AQAHLAAfEzqhY9x/1/alXivvJCCQ3m2amssaR3deN19zo8JTNHKB3V6ShBTFghn2OJ1klgsmnZ6WibEA+nnS0hAljA6hPBBDYrj3/0H6pUbOGrAnaGe0aBURHRm1UsMvQu5onRbQnGQWfA/ETWw7cu3RyITGg7BC0hL6d2YDKI4qkhqPoqb7Ij5Dx7K9eHGtjg64T6nnnBenx/8eTdZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hcceCU1iimdgNTu3ki2AckQFSF3M0sCVKxaemJH0CgM=;
+ b=exyQ7Ye5loSy+i6DS4sBWWNpiZ3aUQh+IEq6K+e90Ci4JCYCKMRZbymhxP4rNXhQy4odluHAfJCxsLk7QXMXRu3UfbkAvHXz54+9FGwubyqDfx/++y4kcKlF/wo9Zf1ObWmfv/9HkY92+0RlENrtLLmjBq8hj7zd/RU3czWUHTU=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by BN0PR10MB5016.namprd10.prod.outlook.com (2603:10b6:408:12e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Sun, 13 Apr
+ 2025 16:50:58 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.8632.030; Sun, 13 Apr 2025
+ 16:50:58 +0000
+Message-ID: <d25f220b-880d-4d26-9025-44ba80622459@oracle.com>
+Date: Sun, 13 Apr 2025 22:20:50 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/4] drm: panel: Add support for Renesas R69328 based
+ MIPI DSI panel
+To: Svyatoslav Ryhel <clamor95@gmail.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250413112401.12543-1-clamor95@gmail.com>
+ <20250413112401.12543-5-clamor95@gmail.com>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <20250413112401.12543-5-clamor95@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR01CA0016.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::20) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:148d:b0:3d4:700f:67e7 with SMTP id
- e9e14a558f8ab-3d7ec26b6f6mr85313255ab.17.1744562420552; Sun, 13 Apr 2025
- 09:40:20 -0700 (PDT)
-Date: Sun, 13 Apr 2025 09:40:20 -0700
-In-Reply-To: <67c1652c.050a0220.1baf.000d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fbe8f4.050a0220.378c5e.000a.GAE@google.com>
-Subject: Re: [syzbot] [sound?] [mm?] kernel BUG in filemap_fault
-From: syzbot <syzbot+f37372d86207b3bb2941@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-sound@vger.kernel.org, perex@perex.cz, 
-	syzkaller-bugs@googlegroups.com, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"
-
-syzbot has found a reproducer for the following issue on:
-
-HEAD commit:    7cdabafc0012 Merge tag 'trace-v6.15-rc1' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16632a3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb8650d88e9fb80f
-dashboard link: https://syzkaller.appspot.com/bug?extid=f37372d86207b3bb2941
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17eddc04580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11632a3f980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ddfdb666520c/disk-7cdabafc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/496b316616fe/vmlinux-7cdabafc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6865907c6452/bzImage-7cdabafc.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f37372d86207b3bb2941@syzkaller.appspotmail.com
-
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- free_unref_folios+0xdfd/0x17e0 mm/page_alloc.c:2737
- folios_put_refs+0x70a/0x800 mm/swap.c:992
- folio_batch_release include/linux/pagevec.h:101 [inline]
- truncate_inode_pages_range+0x462/0x10e0 mm/truncate.c:379
- truncate_bdev_range+0xcb/0x100 block/bdev.c:125
- blkdev_fallocate+0x264/0x490 block/fops.c:857
- vfs_fallocate+0x627/0x7a0 fs/open.c:338
- madvise_remove mm/madvise.c:1034 [inline]
- madvise_vma_behavior mm/madvise.c:1263 [inline]
- madvise_walk_vmas mm/madvise.c:1530 [inline]
- madvise_do_behavior+0x1eda/0x4640 mm/madvise.c:1695
- do_madvise mm/madvise.c:1782 [inline]
- __do_sys_madvise mm/madvise.c:1790 [inline]
- __se_sys_madvise mm/madvise.c:1788 [inline]
- __x64_sys_madvise+0x185/0x220 mm/madvise.c:1788
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-------------[ cut here ]------------
-kernel BUG at mm/filemap.c:3432!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 5843 Comm: syz-executor394 Not tainted 6.15.0-rc1-syzkaller-00325-g7cdabafc0012 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:filemap_fault+0x1360/0x13d0 mm/filemap.c:3432
-Code: c4 ff 48 8b 3c 24 48 c7 c6 80 11 54 8c e8 e8 f9 0e 00 90 0f 0b e8 50 e9 c4 ff 48 89 df 48 c7 c6 00 0b 54 8c e8 d1 f9 0e 00 90 <0f> 0b e8 39 e9 c4 ff 48 8b 3c 24 48 c7 c6 80 11 54 8c e8 b9 f9 0e
-RSP: 0018:ffffc90003fbf120 EFLAGS: 00010246
-RAX: 63245e9776778400 RBX: ffffea0000d4b380 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8e4eaa0b RDI: ffffffff8ca0e120
-RBP: ffffc90003fbf258 R08: ffffffff8236b186 R09: fffffbfff1d7a970
-R10: dffffc0000000000 R11: fffffbfff1d7a970 R12: ffff888023ab1f78
-R13: 1ffffd40001a9671 R14: dffffc0000000000 R15: ffffea0000d4b388
-FS:  00007f116eb456c0(0000) GS:ffff888124fc9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000001ea5 CR3: 000000003361e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __do_fault+0x135/0x390 mm/memory.c:5098
- do_read_fault mm/memory.c:5518 [inline]
- do_fault mm/memory.c:5652 [inline]
- do_pte_missing mm/memory.c:4160 [inline]
- handle_pte_fault+0x3f0c/0x61c0 mm/memory.c:5997
- __handle_mm_fault mm/memory.c:6140 [inline]
- handle_mm_fault+0x1030/0x1aa0 mm/memory.c:6309
- do_user_addr_fault arch/x86/mm/fault.c:1388 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x2bb/0x920 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0010:rep_movs_alternative+0xf/0x90 arch/x86/lib/copy_user_64.S:46
-Code: c4 10 c3 cc cc cc cc 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 48 83 f9 40 73 44 83 f9 08 73 25 85 c9 74 0f <8a> 06 88 07 48 ff c7 48 ff c6 48 ff c9 75 f1 c3 cc cc cc cc 66 2e
-RSP: 0018:ffffc90003fbf930 EFLAGS: 00050202
-RAX: 00007ffffffff001 RBX: 0000200000001ea5 RCX: 0000000000000001
-RDX: 0000000000000001 RSI: 0000200000001ea5 RDI: ffff88807f7eebe5
-RBP: 0000000000000001 R08: ffff88807f7eebe5 R09: 1ffff1100fefdd7c
-R10: dffffc0000000000 R11: ffffed100fefdd7d R12: ffff88807f7eebe5
-R13: 1ffff11004c93307 R14: ffff88807f7eebe5 R15: 0000000000000001
- copy_user_generic arch/x86/include/asm/uaccess_64.h:126 [inline]
- raw_copy_from_user arch/x86/include/asm/uaccess_64.h:141 [inline]
- _inline_copy_from_user include/linux/uaccess.h:178 [inline]
- _copy_from_user+0x7b/0xb0 lib/usercopy.c:18
- copy_from_user include/linux/uaccess.h:212 [inline]
- snd_rawmidi_kernel_write1+0x390/0x620 sound/core/rawmidi.c:1560
- snd_rawmidi_write+0x5f2/0xc00 sound/core/rawmidi.c:1629
- do_loop_readv_writev fs/read_write.c:848 [inline]
- vfs_writev+0x5ba/0xbc0 fs/read_write.c:1057
- do_writev+0x1b8/0x360 fs/read_write.c:1101
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f116eb8f9b9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f116eb45218 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 00007f116ec17328 RCX: 00007f116eb8f9b9
-RDX: 0000000000000002 RSI: 0000200000000840 RDI: 0000000000000005
-RBP: 00007f116ec17320 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f116ebe435c
-R13: 0000200000000080 R14: 0000200000000000 R15: 6c756e2f7665642f
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:filemap_fault+0x1360/0x13d0 mm/filemap.c:3432
-Code: c4 ff 48 8b 3c 24 48 c7 c6 80 11 54 8c e8 e8 f9 0e 00 90 0f 0b e8 50 e9 c4 ff 48 89 df 48 c7 c6 00 0b 54 8c e8 d1 f9 0e 00 90 <0f> 0b e8 39 e9 c4 ff 48 8b 3c 24 48 c7 c6 80 11 54 8c e8 b9 f9 0e
-RSP: 0018:ffffc90003fbf120 EFLAGS: 00010246
-RAX: 63245e9776778400 RBX: ffffea0000d4b380 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8e4eaa0b RDI: ffffffff8ca0e120
-RBP: ffffc90003fbf258 R08: ffffffff8236b186 R09: fffffbfff1d7a970
-R10: dffffc0000000000 R11: fffffbfff1d7a970 R12: ffff888023ab1f78
-R13: 1ffffd40001a9671 R14: dffffc0000000000 R15: ffffea0000d4b388
-FS:  00007f116eb456c0(0000) GS:ffff888124fc9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000001ea5 CR3: 000000003361e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 1 bytes skipped:
-   0:	10 c3                	adc    %al,%bl
-   2:	cc                   	int3
-   3:	cc                   	int3
-   4:	cc                   	int3
-   5:	cc                   	int3
-   6:	0f 1f 40 00          	nopl   0x0(%rax)
-   a:	90                   	nop
-   b:	90                   	nop
-   c:	90                   	nop
-   d:	90                   	nop
-   e:	90                   	nop
-   f:	90                   	nop
-  10:	90                   	nop
-  11:	90                   	nop
-  12:	90                   	nop
-  13:	90                   	nop
-  14:	90                   	nop
-  15:	90                   	nop
-  16:	90                   	nop
-  17:	90                   	nop
-  18:	90                   	nop
-  19:	90                   	nop
-  1a:	48 83 f9 40          	cmp    $0x40,%rcx
-  1e:	73 44                	jae    0x64
-  20:	83 f9 08             	cmp    $0x8,%ecx
-  23:	73 25                	jae    0x4a
-  25:	85 c9                	test   %ecx,%ecx
-  27:	74 0f                	je     0x38
-* 29:	8a 06                	mov    (%rsi),%al <-- trapping instruction
-  2b:	88 07                	mov    %al,(%rdi)
-  2d:	48 ff c7             	inc    %rdi
-  30:	48 ff c6             	inc    %rsi
-  33:	48 ff c9             	dec    %rcx
-  36:	75 f1                	jne    0x29
-  38:	c3                   	ret
-  39:	cc                   	int3
-  3a:	cc                   	int3
-  3b:	cc                   	int3
-  3c:	cc                   	int3
-  3d:	66                   	data16
-  3e:	2e                   	cs
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|BN0PR10MB5016:EE_
+X-MS-Office365-Filtering-Correlation-Id: 236ebe74-0d65-48d7-f24f-08dd7aab5d4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZnlUN1poZVo1TWhScktMTXdBRk9oYzdvYlVJbjgzbGVRRCtuOTVYbm45YTBk?=
+ =?utf-8?B?WDdHcHl1TTZIR1RkOXI0QW9KMUlYM1NoSktOeFgrZi9ILzF4ZnVod3pTa29W?=
+ =?utf-8?B?SXE0OEVyNW1vdThHMXo1MnRkYVdWN1grUDY1eFpCditSYVBPMytNelFhSktP?=
+ =?utf-8?B?VWVkMVVvNXU0Q3NXV1dSTFZQd0NneTEwYkNBbnlIZ3Z6T1o5WGdZTXRJWnlz?=
+ =?utf-8?B?VVZ2VnA3MEJkdUxySzF0QXNDQUluRDJ2STMzSi9XYmM0cTRYK1JhVlI1eU9O?=
+ =?utf-8?B?K21ycjN5VGZnL0FLV1VZaUY2QXAyb2xNekM4RXN3Y2RJM0FlOXFPRjJIdzFt?=
+ =?utf-8?B?UnVGbStPRGxxQ1JlbFNOOHRyMURxRVhCYXZ0bEVVR2kzdjNma3ppaDdBb1FR?=
+ =?utf-8?B?MGs2RFl3SE9HZXlEcUV1OXZ3TTdBNzNIOURkMWtvYVFpVFJRaFVxR1ZOY1VJ?=
+ =?utf-8?B?SmVQRmlHRHhkSmtvRHFJWTBoWDJ6N3JUcVpQQkphSVNoY0hld2ZLOVUxenpw?=
+ =?utf-8?B?VzF3M25nbkt0eEFROXFqcU5PWDMwZFdnbTh2NUFhcnpodGVlT3FaRGYyNGhP?=
+ =?utf-8?B?TDFpMjdBR3ZPUkt4YTZVeElnTmdydzBXaGtZdmErSmtvRFRNNVk3eXVlaGlz?=
+ =?utf-8?B?c1Q0VUVTUGpOR1pKNmpGSDY4WmJWK3RaZVlka2lsaElpTW5pYWZadFh6bmpO?=
+ =?utf-8?B?Yk5zZGx1aS90TmtFZy90anNvdURsUlNxYkpWc0J4ekZMdHJEQ3IrMHFSK3hV?=
+ =?utf-8?B?TkI3MUg4WWROeVlWTDRSMHF0OGp0bXc4SUtwUmsyc2k5MjRDVFQ3Vis1YXRF?=
+ =?utf-8?B?R2xOa2hleHlrcjZ5Z1ZrbHhyZGxmZ2R5emtzUE1zZnc2bkRxdlEyNStBYVk4?=
+ =?utf-8?B?T3AzRkpBV0Z6QWZZQy95NDVaUi9rc1FyMjYrQlk5L045RWVMZG9KQktacWZ0?=
+ =?utf-8?B?dCtJRm4rTmhPSzZxMGlRQWN3UERFTlFNM3ZuNWt0WFNsaSs2OUxhWCszSTJT?=
+ =?utf-8?B?S0pFRHhmR3A0VllZYWNqZ2trSGl4QWlyTWF2N0dkNzJ2b3lRRGdsUXhncDZs?=
+ =?utf-8?B?cWc4eVRlbEJlaUw5UEh5cHBsU2ZkNkl0eXFueFAyQWsyZzZpRVJwSWhiL09v?=
+ =?utf-8?B?cmRXR3F1Sm81RCtGRFZRRHFjK0ZmdmVEeVlGQ21LVmI2cDRWS1QxbkhwL3Zk?=
+ =?utf-8?B?MlEvYXFYcEYzSTQzN2laUWFYNmY4MUllcm4zSFREZFZIVTZmR3BZTUtZYnk5?=
+ =?utf-8?B?TUpiK1YyeHRCYnhyVWprMzVqMVlUZXhoSS9PLzZYVUw4c09NQnVWTkl3VmN5?=
+ =?utf-8?B?TnhibFRwZTB2VUQ4eEdHanZXL2NCYzhIY3piakJDbkQrYmkxRU9oTHo3SElm?=
+ =?utf-8?B?TVczTW9WeGRRRUZGMmRUbTgwc0Yzd2U2c1Q5bXhDSEFIQ29oSk5MU3NsVDhM?=
+ =?utf-8?B?Q1dVUXI1YWdJUnVLT2FLZTRYb1NkUFJSTmlXMEYxRHlhQlMxVTZ3QTZTMHlD?=
+ =?utf-8?B?aTN4ZjBXVENpKzhVRVNkbjcxbmhnVm1GQWxkS2pzdUkxR25TWTA0ZXpQb2x4?=
+ =?utf-8?B?bXlWVmFNVkM3SXN6NG4xVFAzR24yU0RxdC9oV3NkK2k1VjZTNEZNTUNWeEFS?=
+ =?utf-8?B?Yng2T2prQUNuUWUrOW05ak1TNlJpM0lBNDZTR211dVFQSFNudUd0ZStMYWJK?=
+ =?utf-8?B?d1o2UEVpR0s1T1ZmOFhCajJBam1Gb01XTHhzd3VOSnNUSE5vR1QvV00wNUd5?=
+ =?utf-8?B?c3lmdHRIUzFpZjVOdG5PQXh0QVp2QzNOQmJnNkxSQXQ1TzhJVmxGSlVXTWQ4?=
+ =?utf-8?B?S2QrY0FXK3ViQURVY1IxQWRQYStwaUdGVEk1dUx4bitjNTQydTdmanVjQ0lQ?=
+ =?utf-8?B?b0E4NE9jOVgyMDA3WEtjOTgwb0d2bXZuOGRvcVJDYW81UmJOZkJtdW51bjYy?=
+ =?utf-8?B?QlAxL1E0SzhmNEhoeXRXdHl3NG5QVTNmZzQxRzhQNmtMeWxuN2VPcU5mZnNC?=
+ =?utf-8?B?aGhFQVRKazFBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cTh6NHBBdlpvODF2Qkd1bE9KbUZWU21sY3NoRW9xUEtta3B5V1V5S2VmRW5y?=
+ =?utf-8?B?MXY5L0pBY1M3cFdZN3A1TVk3dnBPVDBhcG8yRFlLZ2R2Y3RsNlFOekxjaEx0?=
+ =?utf-8?B?SDN0MkVNRmtZTGN4NXByWTZNdStEdGJxaUl2bURZazdxZGJZT21Ha1l0NGtr?=
+ =?utf-8?B?SGplRmp5S0h2WUVJcWRnSUhaWXhUYzNOSFNrRTVCQ1BuQ1FCM0JON1NYQWY1?=
+ =?utf-8?B?eXphbllnazl2cTh4TlRoZXNMbGdRcUVycEsrZHA2cm9NUFBWS3dONVREMHlP?=
+ =?utf-8?B?d3hGNitHdjdFSE1xMzdSeUh5Mm01aEZFTEozSExlNHB0b0U5YmRsNkZiUkxI?=
+ =?utf-8?B?MXJzcjFXWDc2cytvTXBMT3djMWkzMXlHNHZMSExwRjhYd3hDQ0pkVmxoR1E2?=
+ =?utf-8?B?Rm9jQmtnU0ZvczRyb0FuK1JYUVI1NkpEL3JjSmNKcFdQMmFKRzBwdXVIRHF5?=
+ =?utf-8?B?MW9RMkFBbUlFYVpiQlc1WTE5ZXRWZE5oakFtUkNhK294Mm9pSFBubmdZL2NN?=
+ =?utf-8?B?T1FXT212bDJORFNZc3l6SmN0K2VEQmNHamM1aUxvQU9ZUElKRWtncWFzajBu?=
+ =?utf-8?B?K1NUMkFxajBSdTJWblUwTW1JN2M3ODN1MFpaMnE3RWFGZzlZUjRyZ0JwOTVS?=
+ =?utf-8?B?RmFpSnBabXZEdUMxaHNSY2VvYmZVUVN4eElRakNQSXBTMGthZmVJTkphUmxn?=
+ =?utf-8?B?TmVRcCtkUnNVbVZ6UVR1Y0RCM01JZW0xdW5VWVc5ZFYzc3ptYTBKNCt6dUh3?=
+ =?utf-8?B?NEc2QTgxc3hMbG9QWXRQNUtHL0YxbEQyUUlqaGt0Z3JhS3pHMlZsOVdjeWRC?=
+ =?utf-8?B?OUxER0FBSFZaMk8vWGF5YlBNYWFJS2NDeWNaQitZSEIvSkdubW9ZbjRORUFq?=
+ =?utf-8?B?REtTQjNoTU5CU2FzNXUvWHFPeGM5QXBWOWFyaVEySHZYdDV3N3N3ZFZOZFhU?=
+ =?utf-8?B?NHI4RmRiL3E1NTdzeTB3QytIaTNPU29xQjcrUVZ4Q1JQS3NXbFltNGtUUkJr?=
+ =?utf-8?B?QldMY08vUnl1UGRsZElxQWRJQisyR1VHZ0sraVFwYTJxemUwSjNRM2phQXhN?=
+ =?utf-8?B?alVnQ2x1NEdXVUg2Z1JEbFY2MjZWbE8xb0dWN2swY3NRK29ZeFpZVzlTQ1FR?=
+ =?utf-8?B?aGZPM08yVHJybm56dTI5Y0MwVlAvQzFQa21iMTNhWHBOMUhnMWVMMmw5RkZG?=
+ =?utf-8?B?dTNKSjl0U21FV0VkRTRUSlA5NkZ0OFM1UUJ3TncrbEJrT2d3S0Z5enFRY1Rm?=
+ =?utf-8?B?RGpIdFlFTGhzQnBuZ1VRdzFzMERjcmJNdERLU0JFMjY0Y0FQR2pzdlBWVnUv?=
+ =?utf-8?B?bUdIaS90cFJQUFowN3VCdnNoYWJjenk0cDliZ01ES0VhOEdKcGh4bjJQYkU5?=
+ =?utf-8?B?azJZZVFvMVFJMFBZNCt3M2J4VVcxZUovb3JXQjFUSENWNWVaMklhS005Tktp?=
+ =?utf-8?B?K20vSk9vclJNMlZhMktKMm5Lay9TWnRaNTN6bEhHUm9SSXc2SlNidnA0ZDZh?=
+ =?utf-8?B?ZDNXVXJlZll2LzNvYnptVmZDem9KeHowMHV5cGF0clFKY1FLS1J4Sk1zc2x4?=
+ =?utf-8?B?K2RkNnBWbk1NQngrM2p4ei9HMGk1a09ZYlVJNXhLbWVabkxVMXl4eDRtZ0Rh?=
+ =?utf-8?B?NUplNG0xU3U4anJibDZzR2NsQW1WSHlGUTh0djBsK2EyV2YzTXFtNE15WjN5?=
+ =?utf-8?B?eDYvdCtpK0Q2OUJ4RmgzQUhldkUxZi9QaktnM0MxcWx1S0ZYUFh3K2xlMDNR?=
+ =?utf-8?B?VEU3QXdQaU82QUZoL0ZQVFQ5MjNVbjBJVmVRQ0F1R1pYYTl3SlVwWWxZT2hK?=
+ =?utf-8?B?Sk9WUjdZZU5meC9UVDJhUjBoUnkvSndGcGRySWdTeGdJcVJlQ3hwOU9Zci9u?=
+ =?utf-8?B?NGs3VFdoemRMaW8rME03eDRycy9ZUkRCa0Fkb0g5SGFoQmRyTmR2SW5KdGkz?=
+ =?utf-8?B?RkNIWHF4SGgrcWtaNEJYc3h4akcweVN3cFptTFpDdEJYNE1tSDdXWEVRRFY5?=
+ =?utf-8?B?aytBenR4QU0rc3JKSGxzZ0VZRVR0QlR2VXMxdlhjRG8zS21ad2Q0dmc5eGNH?=
+ =?utf-8?B?RVJTeEl4TTB2WEZCR1FnRWFzdFFrWXViQ0JDQXZqTmNOZzRqcVg2eFc5NFlt?=
+ =?utf-8?B?TG4wK2tOTVFiaGtvcmY5WnlDTkFuRkpZdllPOE9iN1RXNy9BN05hUnBRUGJx?=
+ =?utf-8?B?VkE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	GllgRrsj0OQmfGgcl/4hIBQZxe44k6IkQs5aX+2VFopbBoGzLCS/ziKdsRZhWk7N3NW2nfaJzvUA3s2iwlcj37mjB2eZMHIblXOoD8ZYt+Siu5BXd1xIa7S79UlLkgW4b1yZvPrw/irO6qJXP9huGlmaDx5ZG5QSRioM0uuvFR24dOmyEBJ4fUt1EO+C8zgRmxJeOq3H0ac2DMowecLdUo5hYbC27r9cb0Vjd+FzKCHxqQVS/7dRi0LCX1h+W6MprRSdKtOWgXSTZMXbEHSKSvLyVliNooZljxFVAdtRGBYoAaTyrKemumZG914bmp6DvcuRtgx73kaBagxZ2qb+Rqa2vvLy0XQhgHHw0Qvywp242ecfxw4c45Y+s86u0VgsDv41a1JiipMevBaj79Ksk7Og3IHq/D1/AQ+lOM/w4RP7wX6XR9nr19wZAOdcwltoKrSj5qTUWcL7Ke4XbKo4oo7uY5e0jUv/r707B36WbHAhEzb1mg35zpL1WalKMASsE4ZP9KQuTWYUYpshJTTDuX5yrT3gemDD2WfgP5K4SfNNOzxVBXB6kPnlyCeEjqf2ErLcqQQurl/ii3GrBWGkA2xCCBlx69evoUjNhSOrY6E=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 236ebe74-0d65-48d7-f24f-08dd7aab5d4c
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2025 16:50:58.3131
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2cnp6z93FQDrWoHedH0ND5wIP2XIPhQ0MAB5gh/mrwn/HU1VgpGotsEkg2Jbp/X7QM+HcUSpZ5Wi6x96p7VTsqf74N1CgVowxJURFQE3/rw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5016
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-13_08,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504130129
+X-Proofpoint-GUID: MQijhhg4ex_E5rPywVSAG6RCbQG33Blk
+X-Proofpoint-ORIG-GUID: MQijhhg4ex_E5rPywVSAG6RCbQG33Blk
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+
+On 13-04-2025 16:54, Svyatoslav Ryhel wrote:
+> From: Maxim Schwalm <maxim.schwalm@gmail.com>
+> 
+> Driver adds support for panels with Renesas R69328 IC
+> 
+> Currently supported compatible is:
+> - jdi,dx12d100vm0eaa
+> 
+> Co-developed-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
+> ---
+>   drivers/gpu/drm/panel/Kconfig                |  13 +
+>   drivers/gpu/drm/panel/Makefile               |   1 +
+>   drivers/gpu/drm/panel/panel-renesas-r69328.c | 282 +++++++++++++++++++
+>   3 files changed, 296 insertions(+)
+>   create mode 100644 drivers/gpu/drm/panel/panel-renesas-r69328.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index e8723f42cafb..86c66f818a11 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -618,6 +618,19 @@ config DRM_PANEL_RENESAS_R61307
+>   	  This panel controller can be found in LG Optimus Vu P895 smartphone
+>   	  in combination with LCD panel.
+>   
+> +config DRM_PANEL_RENESAS_R69328
+> +	tristate "Renesas R69328 720x1280 DSI video mode panel"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to enable support for JDI dx12d100vm0eaa
+> +	  IPS-LCD module with Renesas R69328 IC. The panel has a 720x1280
+> +	  resolution and uses 24 bit RGB per pixel.
+> +
+> +	  This panel controller can be found in LG Optimus 4X P895 smartphone
+> +	  in combination with LCD panel.
+> +
+>   config DRM_PANEL_RONBO_RB070D30
+>   	tristate "Ronbo Electronics RB070D30 panel"
+>   	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 61d8853df1a7..37e4e13165a9 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -62,6 +62,7 @@ obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
+>   obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM692E5) += panel-raydium-rm692e5.o
+>   obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM69380) += panel-raydium-rm69380.o
+>   obj-$(CONFIG_DRM_PANEL_RENESAS_R61307) += panel-renesas-r61307.o
+> +obj-$(CONFIG_DRM_PANEL_RENESAS_R69328) += panel-renesas-r69328.o
+>   obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
+>   obj-$(CONFIG_DRM_PANEL_SAMSUNG_AMS581VF01) += panel-samsung-ams581vf01.o
+>   obj-$(CONFIG_DRM_PANEL_SAMSUNG_AMS639RQ08) += panel-samsung-ams639rq08.o
+> diff --git a/drivers/gpu/drm/panel/panel-renesas-r69328.c b/drivers/gpu/drm/panel/panel-renesas-r69328.c
+> new file mode 100644
+> index 000000000000..207067b29473
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-renesas-r69328.c
+> @@ -0,0 +1,282 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+add Blank line
+
+> +#include <linux/array_size.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +
+> +#define R69328_MACP		0xb0 /* Manufacturer Access CMD Protect */
+> +#define   R69328_MACP_ON	0x03
+> +#define   R69328_MACP_OFF	0x04
+
+remove extra ' ' after #define
+
+> +
+> +#define R69328_GAMMA_SET_A	0xc8 /* Gamma Setting A */
+> +#define R69328_GAMMA_SET_B	0xc9 /* Gamma Setting B */
+> +#define R69328_GAMMA_SET_C	0xca /* Gamma Setting C */
+> +
+> +#define R69328_POWER_SET	0xd1
+> +
+> +struct renesas_r69328 {
+> +	struct drm_panel panel;
+> +	struct mipi_dsi_device *dsi;
+> +
+> +	struct regulator *vdd_supply;
+> +	struct regulator *vddio_supply;
+> +	struct gpio_desc *reset_gpio;
+> +
+> +	bool prepared;
+> +};
+> +
+> +static inline struct renesas_r69328 *to_renesas_r69328(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct renesas_r69328, panel);
+> +}
+> +
+> +static void renesas_r69328_reset(struct renesas_r69328 *priv)
+> +{
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 1);
+> +	usleep_range(10000, 11000);
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 0);
+> +	usleep_range(2000, 3000);
+> +}
+> +
+> +static int renesas_r69328_prepare(struct drm_panel *panel)
+> +{
+> +	struct renesas_r69328 *priv = to_renesas_r69328(panel);
+> +	struct device *dev = &priv->dsi->dev;
+> +	int ret;
+> +
+> +	if (priv->prepared)
+> +		return 0;
+> +
+> +	ret = regulator_enable(priv->vdd_supply);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable vdd power supply\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(10000, 11000);
+> +
+> +	ret = regulator_enable(priv->vddio_supply);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable vddio power supply\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(10000, 11000);
+> +
+> +	renesas_r69328_reset(priv);
+> +
+> +	priv->prepared = true;
+
+a '\n' before return
+
+> +	return 0;
+> +}
+> +
+> +static int renesas_r69328_enable(struct drm_panel *panel)
+> +{
+> +	struct renesas_r69328 *priv = to_renesas_r69328(panel);
+> +	struct mipi_dsi_multi_context ctx = { .dsi = priv->dsi };
+> +
+> +	/* Set address mode */
+> +	mipi_dsi_dcs_write_seq_multi(&ctx, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
+> +	mipi_dsi_dcs_set_pixel_format_multi(&ctx, MIPI_DCS_PIXEL_FMT_24BIT << 4);
+> +	mipi_dsi_dcs_exit_sleep_mode_multi(&ctx);
+> +
+> +	mipi_dsi_msleep(&ctx, 100);
+> +
+> +	/* MACP Off */
+> +	mipi_dsi_generic_write_seq_multi(&ctx, R69328_MACP, R69328_MACP_OFF);
+> +
+> +	mipi_dsi_generic_write_seq_multi(&ctx, R69328_POWER_SET, 0x14, 0x1d,
+> +					 0x21, 0x67, 0x11, 0x9a);
+> +
+> +	mipi_dsi_generic_write_seq_multi(&ctx, R69328_GAMMA_SET_A, 0x00, 0x1a,
+> +					 0x20, 0x28, 0x25, 0x24, 0x26, 0x15, 0x13,
+> +					 0x11, 0x18, 0x1e, 0x1c, 0x00, 0x00, 0x1a,
+> +					 0x20, 0x28, 0x25, 0x24, 0x26, 0x15, 0x13,
+> +					 0x11, 0x18, 0x1e, 0x1c, 0x00);
+> +
+> +	mipi_dsi_generic_write_seq_multi(&ctx, R69328_GAMMA_SET_B, 0x00, 0x1a,
+> +					 0x20, 0x28, 0x25, 0x24, 0x26, 0x15, 0x13,
+> +					 0x11, 0x18, 0x1e, 0x1c, 0x00, 0x00, 0x1a,
+> +					 0x20, 0x28, 0x25, 0x24, 0x26, 0x15, 0x13,
+> +					 0x11, 0x18, 0x1e, 0x1c, 0x00);
+> +
+> +	mipi_dsi_generic_write_seq_multi(&ctx, R69328_GAMMA_SET_C, 0x00, 0x1a,
+> +					 0x20, 0x28, 0x25, 0x24, 0x26, 0x15, 0x13,
+> +					 0x11, 0x18, 0x1e, 0x1c, 0x00, 0x00, 0x1a,
+> +					 0x20, 0x28, 0x25, 0x24, 0x26, 0x15, 0x13,
+> +					 0x11, 0x18, 0x1e, 0x1c, 0x00);
+> +
+> +	/* MACP On */
+> +	mipi_dsi_generic_write_seq_multi(&ctx, R69328_MACP, R69328_MACP_ON);
+> +
+> +	mipi_dsi_dcs_set_display_on_multi(&ctx);
+> +	mipi_dsi_msleep(&ctx, 50);
+> +
+> +	return 0;
+> +}
+> +
+> +static int renesas_r69328_disable(struct drm_panel *panel)
+> +{
+> +	struct renesas_r69328 *priv = to_renesas_r69328(panel);
+> +	struct mipi_dsi_multi_context ctx = { .dsi = priv->dsi };
+> +
+> +	mipi_dsi_dcs_set_display_off_multi(&ctx);
+> +	mipi_dsi_msleep(&ctx, 60);
+> +	mipi_dsi_dcs_enter_sleep_mode_multi(&ctx);
+> +
+> +	return 0;
+> +}
+> +
+> +static int renesas_r69328_unprepare(struct drm_panel *panel)
+> +{
+> +	struct renesas_r69328 *priv = to_renesas_r69328(panel);
+> +
+> +	if (!priv->prepared)
+> +		return 0;
+> +
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 1);
+> +
+> +	usleep_range(5000, 6000);
+> +
+> +	regulator_disable(priv->vddio_supply);
+> +	regulator_disable(priv->vdd_supply);
+> +
+> +	priv->prepared = false;
+
+a '\n' before return
+
+> +	return 0;
+> +}
+> +
+> +static const struct drm_display_mode renesas_r69328_mode = {
+> +	.clock = (720 + 92 + 62 + 4) * (1280 + 6 + 3 + 1) * 60 / 1000,
+> +	.hdisplay = 720,
+> +	.hsync_start = 720 + 92,
+> +	.hsync_end = 720 + 92 + 62,
+> +	.htotal = 720 + 92 + 62 + 4,
+> +	.vdisplay = 1280,
+> +	.vsync_start = 1280 + 6,
+> +	.vsync_end = 1280 + 6 + 3,
+> +	.vtotal = 1280 + 6 + 3 + 1,
+> +	.width_mm = 59,
+> +	.height_mm = 105,
+> +};
+> +
+> +static int renesas_r69328_get_modes(struct drm_panel *panel,
+> +				    struct drm_connector *connector)
+> +{
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_duplicate(connector->dev, &renesas_r69328_mode);
+> +	if (!mode)
+> +		return -ENOMEM;
+> +
+> +	drm_mode_set_name(mode);
+> +
+> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +	connector->display_info.width_mm = mode->width_mm;
+> +	connector->display_info.height_mm = mode->height_mm;
+> +	drm_mode_probed_add(connector, mode);
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs renesas_r69328_panel_funcs = {
+> +	.prepare = renesas_r69328_prepare,
+> +	.enable = renesas_r69328_enable,
+> +	.disable = renesas_r69328_disable,
+> +	.unprepare = renesas_r69328_unprepare,
+> +	.get_modes = renesas_r69328_get_modes,
+> +};
+> +
+> +static int renesas_r69328_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct renesas_r69328 *priv;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->vdd_supply = devm_regulator_get(dev, "vdd");
+> +	if (IS_ERR(priv->vdd_supply))
+> +		return dev_err_probe(dev, PTR_ERR(priv->vdd_supply),
+> +				     "Failed to get vdd-supply\n");
+> +
+> +	priv->vddio_supply = devm_regulator_get(dev, "vddio");
+> +	if (IS_ERR(priv->vddio_supply))
+> +		return dev_err_probe(dev, PTR_ERR(priv->vddio_supply),
+> +				     "Failed to get vddio-supply\n");
+> +
+> +	priv->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> +						   GPIOD_OUT_LOW);
+> +	if (IS_ERR(priv->reset_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(priv->reset_gpio),
+> +				     "Failed to get reset-gpios\n");
+> +
+> +	priv->dsi = dsi;
+> +	mipi_dsi_set_drvdata(dsi, priv);
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+> +			  MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM;
+> +
+> +	drm_panel_init(&priv->panel, dev, &renesas_r69328_panel_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +
+> +	ret = drm_panel_of_backlight(&priv->panel);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get backlight\n");
+
+
+drm_panel_of_backlight, 0 on success, or a negative error code on failure so
+	if( ret > 0)
+
+> +
+> +	drm_panel_add(&priv->panel);
+> +
+> +	ret = mipi_dsi_attach(dsi);
+
+if ( ret > 0) it return negative error code
+
+> +	if (ret) {
+> +		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
+> +		drm_panel_remove(&priv->panel);
+> +		return ret;
+
+use return dev_err_probe
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void renesas_r69328_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct renesas_r69328 *priv = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = mipi_dsi_detach(dsi);
+
+if ( ret > 0) it return negative error code
+
+> +	if (ret)
+> +		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
+> +
+> +	drm_panel_remove(&priv->panel);
+> +}
+> +
+> +static const struct of_device_id renesas_r69328_of_match[] = {
+> +	{ .compatible = "jdi,dx12d100vm0eaa" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, renesas_r69328_of_match);
+> +
+> +static struct mipi_dsi_driver renesas_r69328_driver = {
+> +	.probe = renesas_r69328_probe,
+> +	.remove = renesas_r69328_remove,
+> +	.driver = {
+> +		.name = "panel-renesas-r69328",
+> +		.of_match_table = renesas_r69328_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(renesas_r69328_driver);
+> +
+> +MODULE_AUTHOR("Maxim Schwalm <maxim.schwalm@gmail.com>");
+> +MODULE_AUTHOR("Svyatoslav Ryhel <clamor95@gmail.com>");
+> +MODULE_DESCRIPTION("Renesas R69328-based panel driver");
+> +MODULE_LICENSE("GPL");
+
+
+Thanks
+Alok
