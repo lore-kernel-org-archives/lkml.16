@@ -1,72 +1,94 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C8D2AF0A
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 06:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D86C196;
+	Sun, 13 Apr 2025 06:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744524665; cv=none; b=LlIR9Ia0zlYqpcS8PdiPh9cfuLp/lQtxpGeW9ucijN/1DhuM6QD63aX/ecF1jAhObr5FO+mAF8d9dl4Qc3F1UD7p7cqQ91z+mHmSUyJ3tN0Dxakz/iLOhopLZL/TFcH1L4bMZIZ9hvg+RuFV1S0y+aFmtsfAqj+ZQiZqBM7jTPQ=
+	t=1744525029; cv=none; b=GxnW7niT8uBnEc+JC65IW4bByrkPwHbzZmQHQebGilGwygrXxfdM/1fHSZ+U8d72VJFMfyj4RMPHfGdLWGdOCjkUlEQQZOhjDTcS7kK/lSjqBt9dx3RUeuDafp1nXVCRCXMOU/7giLHF0jptBKYRlW5HBJcj5aJMWwkz+Hebm6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744524665; c=relaxed/simple;
-	bh=3CW885UrRd49s3Mtq+okgODZNGiYOaSazUc1GCL3ieM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=b+f+98HkntNR/62h6agy+ax4SZm2BfouUTITN7QhyYfrxSdqyBmbaITgKQqp+v2ipwF31haf0qRH0n9+hrOqyl/GXsD3QyzLSRrJ4gZSe8eoVoHGNI4VqBUf5uTUQ7Mqmxl2ra7NCq2ctsMndFz/Mj+r3t3PGGrb0BMuAuMAwt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85db4460f5dso658605639f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 23:11:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744524663; x=1745129463;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aVy2idkT0bZknLmtVdrbypfj+CYUjMRtrGeuucY6nE=;
-        b=etcJNR5vjcjXAIVjLneIk2y7JX6FVsAI3cZgof/whHXeKcUil/DziMp1M0tdwEShpI
-         AXSqNAyR5Se81gTSCD08wmwoHaxLobY5aLqxRM+bNl8K1ymlP2AU9vRYJz8YXYZE08Pa
-         B1jFF8N/5lmi7xv4rdTFkg5pcom8qq/fY0h9TJxo929zJSANiHtygRBbZ9YNdwuzk2o2
-         GovUhe6DOy5dKbPtrrSUSH72bJ9ybeYTP7IjNTCS+37Bm7ntjN03fcMXey+3AHabTH9Z
-         PZivfIT1LGlVDPWrFeoaqkUaDxda+yBGLyJSU3gAiO4VQf5ZOA4Oiz2/2F8OSDocNx21
-         0FPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmKACZ7OPZG4oUmSUJHnxUrZYIArYdzOX7n5JOQBVuSrzYR/9KHAgoBTWb9Y2QsVrz+8T7Ftz/A3e2EFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1KZ1W1XFuRmWIRMVXurN/ZLFe2/HCFrIoz92xbTKjZ6SX23Gw
-	bpqp0rN11aiuEXKm/hAo0Q9yVSjEYZVIXcKsmViyxkrwH5+zPf9qzLxs51qzBzPBLjB7Fv9vyxm
-	Uiu+JpW8RegrnrrAEFys1Nw2rWWpdZDowEPyOnbhuoct2KLdKVpBGJXM=
-X-Google-Smtp-Source: AGHT+IG1o7HlFmWphpHCwr3oRFAl77MDJGYFVgaO3p8/7SzsKBM8sV0bNdSO9Yc1QR3mAYF6gO+y4g0MI+SbkW1GgFjAU9h3PPWY
+	s=arc-20240116; t=1744525029; c=relaxed/simple;
+	bh=tfgZ0BsmebPGyP+hnJzfD3u1IrF86k7T+2KsIICZjiE=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=st0td+TEBe1Qgx6Cf/ve5NO59UCyvCwuL+/Iq7gB6Et7kKpFAg5oHwhP2od295UnLX2C+uM8jHfKoYlcycXjh2QWfE/FFpUrAOSJu0uVNqxJ0wpULIu2OOEIfK5HXSMns9plfJDS1C8qUg4ekAdc5qC2WdglB57b6fK7NflS/pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=xWPsdl8R; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="xWPsdl8R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744524712; bh=MatRmkigavgeDx2al6JKbHirPWoFnOIOxPf5mkGIqKc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=xWPsdl8RhpXZ0QdDQgvtnhMfxdPKzIhHmd8N2ZOiHdKH29A3e7Ec5tLIwrvZKhEeg
+	 XZxb3dq5PoF4BHzs5jLRvC5CpG/wtENjjBMpSqEIHo8lLKFZUGtLc/Wm6udqDf5bCA
+	 hX8ch/PjGPQoRo8sQ88i4IJx20Xp49mH2JRlRKb0=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id 2F200E04; Sun, 13 Apr 2025 14:11:50 +0800
+X-QQ-mid: xmsmtpt1744524710tucimj4y1
+Message-ID: <tencent_096EDEEED78C81A7D006E812E4C66E898A06@qq.com>
+X-QQ-XMAILINFO: MQ+wLuVvI2LQuG9ID9fs3lgwFJlpAkloCusXfj6XywK/krceRr5aj+De4T9e43
+	 QHZRIACoGhjmZIbvPEDxbIfzMVUEZIdUKar0Yrx5k0Bt6IHWDlRGzh7Wse1Wu+6/3BWZ5ZXQ5Cnb
+	 I/SUKeYdvvOE0LP5opEN55NNGWQql8a/3hCYu9MxDUQl+avI2/0p4M8vO2Np1H8kuOFT271h0wkY
+	 c+ovYYJgiDsH3j2sd8nKygznDP8jYkWGSsfAdhYdKCO4OoFFyD0PXRrwGl4HruQ5/qE+JEFMPYxE
+	 2YnxpcdV8pSXrRzZAroGZAnWMVSeBsh7sA3kDgnkeuUwFJt8AywijdTO+Qf3q2KRdWmFWij1JN9S
+	 7hszCzWELcwQDyKdSrBdBNFjEroWxXG2HlO7b3zIh783CGHM8AVz4HcQ2ppV9t+Ch8ANKy8itf9x
+	 YzPNiSsa8mU0XgQ6SHK/dqnqZUmp00eIwBlmCE0L4Knf5mNYfMCZS17WbFny8IfddfZ+cBTN3eZ5
+	 LGVipkVp+SH2juz8BR/Uhz1EK4zQmbSY16Vx7kZbVyl2UkctqymNm0/MENol07AMxoEvOpWl9SJt
+	 K1cWAwl2hGKMA4goGet0q58zcUB7Y+a2auB7RP3MaLefk3AlrHHujNxEkgr1lWLIwE3Q6Fu+RS+k
+	 wKfPMVBxVwQy/OImMnMZBpkP2kSsYYzd37AlBaC60jD1NMjqqHI0GYbZCbqG/leZdYYTWAo4SziH
+	 MKRvwUKrIWn1k1fNV8LgOelxflJO6PEU95hyuzpMdQVyLXhRLuNknAbJiLhxsmKE0il7Z1L61Qup
+	 IndwKxEUi/yKiqo+uDf3MKgKeMFzNS4JbDlipFsG6jUVHlqSg5RUMDGIzUOBCu8XtT/QcFxj8J2c
+	 PtFvCrJyX1Q85cfaICn57RkU1cnvVuVLx/i6wuyUue+oNXPv55agU=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com
+Cc: johannes@sipsolutions.net,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] wifi: mac80211_hwsim: Prevent tsf from setting if beacon is disabled
+Date: Sun, 13 Apr 2025 14:11:50 +0800
+X-OQ-MSGID: <20250413061149.184475-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <67fac9a6.050a0220.379d84.0016.GAE@google.com>
+References: <67fac9a6.050a0220.379d84.0016.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:338f:b0:3d4:3fbf:966e with SMTP id
- e9e14a558f8ab-3d7ec265c39mr83529845ab.14.1744524662660; Sat, 12 Apr 2025
- 23:11:02 -0700 (PDT)
-Date: Sat, 12 Apr 2025 23:11:02 -0700
-In-Reply-To: <tencent_A80EBA44BB6A33409E3D1B2E4B181B772508@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fb5576.050a0220.2c5fcf.001c.GAE@google.com>
-Subject: Re: [syzbot] [afs?] BUG: unable to handle kernel paging request in afs_put_vlserverlist
-From: syzbot <syzbot+5c042fbab0b292c98fc6@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Setting tsf is meaningless if beacon is disabled, so check that beacon
+is enabled before setting tsf.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Reported-by: syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=064815c6cd721082a52a
+Tested-by: syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ drivers/net/wireless/virtual/mac80211_hwsim.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-
-
-Tested on:
-
-commit:         7cdabafc Merge tag 'trace-v6.15-rc1' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13009f4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7a4e108575159039
-dashboard link: https://syzkaller.appspot.com/bug?extid=5c042fbab0b292c98fc6
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10549870580000
+diff --git a/drivers/net/wireless/virtual/mac80211_hwsim.c b/drivers/net/wireless/virtual/mac80211_hwsim.c
+index cf3e976471c6..cd9e89aebb83 100644
+--- a/drivers/net/wireless/virtual/mac80211_hwsim.c
++++ b/drivers/net/wireless/virtual/mac80211_hwsim.c
+@@ -1226,6 +1226,11 @@ static void mac80211_hwsim_set_tsf(struct ieee80211_hw *hw,
+ {
+ 	struct mac80211_hwsim_data *data = hw->priv;
+ 	u64 now = mac80211_hwsim_get_tsf(hw, vif);
++	struct ieee80211_bss_conf *conf = link_conf_dereference_protected(vif,
++			data->link_data[0].link_id);
++
++	if (conf && !conf->enable_beacon)
++		return;
+ 	/* MLD not supported here */
+ 	u32 bcn_int = data->link_data[0].beacon_int;
+ 	u64 delta = abs(tsf - now);
+-- 
+2.43.0
 
