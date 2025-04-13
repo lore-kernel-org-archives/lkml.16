@@ -1,37 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C09AD51
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 07:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E95AD51;
+	Sun, 13 Apr 2025 07:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744530786; cv=none; b=dcnfWC5VXUXmPy189gfGdyAFkooQRfT6mRbVesKSrXm5z2oc83pVpDUKP9huCcDs84Z+ZzKf1psFcQhrZOBNmQWVCAke8SxWsXk8qvFXFAu8Oeak2a8ouJaWthuB+FrO+w0QlwahqpMr7WE4pcvN/62I1Sw4LYZTtDosehkzfiI=
+	t=1744530862; cv=none; b=Sbza91Im2DvrmMmBWmdudUcml3dOSvPdXC2Hb8LqLROb3M9UrzKw1r7X3khOr5yvy9zABVKSt3mKLMYJi1lXCA/JJ4K1QFHlainZgqoD2iTTygYnNvGN4YrTpKjtzO2MvUdiwTlC4G15I+F6s1f1gUIlzDsAAZ+3V1Qpfju1vS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744530786; c=relaxed/simple;
-	bh=VUdOv3+gXY2GDY+TYOAelI+pkWR1Ygxbq42Ra+fmtvo=;
+	s=arc-20240116; t=1744530862; c=relaxed/simple;
+	bh=HaMA3Kl+meGFuUQOS/ZfEYd8wtkz83n+WzSGOOL5TFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbxCDcXZoRI7PMDzMs+Au6A684UJSFN+nmHNprsF9uFEK/ykpsYKhcTp8giRjGmMl5Vz4FoPbVs4CX01w9hlPs0YdzYVtsjEEWb0tfmcDGTu2JFCNoXo6WiBA2LvVIYJi2bUtx925A26RIIlXqy+peiaHPgmZzGOgAnhfojWLp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eWXBFlV6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OybxDci3mHWTgR1+OZnCt+7Vby6idbTHOxaom/Ut1c5oNZNNKWVAJd4EBcsiLASPLJu+wIpLRDKICHJy849NdRgivRA+t6dGW5FHbclkFvcl/e619ALtDkPhamLUg9lQXXRXi6DTT0tvc5uV2i3D2cX7DhKY8qfgJL6UKWUNx64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AinuOW0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eWXBFlV6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A99C4CEDD;
-	Sun, 13 Apr 2025 07:53:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744530785;
-	bh=VUdOv3+gXY2GDY+TYOAelI+pkWR1Ygxbq42Ra+fmtvo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AinuOW0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB1DC4CEDD;
+	Sun, 13 Apr 2025 07:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744530862;
+	bh=HaMA3Kl+meGFuUQOS/ZfEYd8wtkz83n+WzSGOOL5TFo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eWXBFlV6196S1oj6jXuE1jC20F3IZ7LoMG/8mQCzlBpd+9une96JYxAa9/YCoYIKO
-	 rOvMO8Ew1XP/WeZL1we3omq91bMEA+XmLkK2r/z7mpGL2xx8wdFgbKhYtfS2qHnx2G
-	 g243xSHSzfxnIz+a3mZcQDUd1lUmTzWJrdKW2wlc=
-Date: Sun, 13 Apr 2025 09:51:29 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: alexjlzheng@gmail.com
-Cc: alexjlzheng@tencent.com, linux-kernel@vger.kernel.org, tj@kernel.org
-Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to
- per-fs lock
-Message-ID: <2025041318-unnatural-caucasian-48d2@gregkh>
-References: <2025041256-sanction-sandal-7f51@gregkh>
- <20250412115054.25580-1-alexjlzheng@tencent.com>
+	b=AinuOW0EIqPjYFPMwEsVSBNrmH7DDwhnxqqRjuIb45I0zKaxjlTNknmDUXsbY4NST
+	 hCjNSXnnCvPMFTYrcDJEjxSa7Qx+5P8mx0c6zVBlwKDsdBhOP2+r8cUZ4eftWXC+Yh
+	 Kb3ecfFoirp9ZjMSkB62uAb27onn9Mg0/hwMTtvQkR68gKAELQ7C/1MURxG8CukIL3
+	 MK1lpwC40ehUTsoZYRnV8To6TYopbh8L/1Od7XeubxWr9MhprsS1zqDXLhY3GxzlRM
+	 tFtLuKNu/gtVDVkKtPpR1Sgy0owxRmXumFb1o1gvWq5ljYOtPtI5bbQm0MoxAR/4nv
+	 7N+9aosY45TpA==
+Date: Sun, 13 Apr 2025 09:54:15 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd_node.h
+Message-ID: <Z_ttp0ZNHEpNhh_9@gmail.com>
+References: <20250410200202.2974062-1-superm1@kernel.org>
+ <20250410200202.2974062-3-superm1@kernel.org>
+ <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
+ <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
+ <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
+ <Z_rCuLD56IZ4hsNw@gmail.com>
+ <5509f044-912b-4d10-bdeb-95ec52002b06@kernel.org>
+ <Z_rJ37er9Dc25ne-@gmail.com>
+ <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,57 +67,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412115054.25580-1-alexjlzheng@tencent.com>
+In-Reply-To: <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
 
-On Sat, Apr 12, 2025 at 07:50:54PM +0800, alexjlzheng@gmail.com wrote:
-> On Sat, 12 Apr 2025 08:12:22 +0200, gregkh@linuxfoundation.org wrote:
-> > On Sat, Apr 13, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
-> > > From: Jinliang Zheng <alexjlzheng@tencent.com>
-> > > 
-> > > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
-> > > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
-> > > 
-> > > This patch switches the global kernfs_idr_lock to per-fs lock, which
-> > > put the spinlock into kernfs_root.
-> > > 
-> > > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> > > ---
-> > >  fs/kernfs/dir.c             | 14 +++++++-------
-> > >  fs/kernfs/kernfs-internal.h |  1 +
-> > >  2 files changed, 8 insertions(+), 7 deletions(-)
-> > 
-> > What kind of testing / benchmark did you do for this series that shows
-> > that this works, AND that this actually is measureable?  What workload
-> > are you doing that causes these changes to be needed?
-> 
-> Thank you for your reply. :)
-> 
-> We are trying to implement a kernfs-based filesystem that will have
-> multiple instances running at the same time, i.e., multiple kernfs_roots.
 
-I don't think that kernfs is meant for that very well, what is that
-filesystem going to be for?
+* Borislav Petkov <bp@alien8.de> wrote:
 
-> While investigating the kernfs implementation, we found some global locks
-> that would cause noticeable lock contention when there are many filesystem
-> instances.
+> On April 12, 2025 10:15:27 PM GMT+02:00, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >* Mario Limonciello <superm1@kernel.org> wrote:
+> >
+> >> SB800 is pre-Zen stuff.  It's "before my time" - I guess that's the 
+> >> precursor to FCH being in the SoC but has the same functionality.
+> >> 
+> >> So I'm thinking <asm/amd_fch.h>.
+> >
+> >I went by the SB800_PIIX4_FCH_PM_ADDR name, which is a misnomer these 
+> >days?
+> >
+> >But yeah, <asm/amd_fch.h> sounds good to me too. Boris?
 > 
-> Fortunately, we found that some optimizations have been made in [1], which
-> moved kernfs_rwsem into kernfs_root. But there are still some global locks
-> left.
-> 
-> We think it is also necessary to switch the remaining global locks to
-> per-fs. Moreover, we strongly agree with Tejun Heo's point in [1]:
-> 
->   "... this is the right thing to do even if there is no concrete
->    performance argument (not saying there isn't). It's just weird to
->    entangle these completely unrelated users in a single rwsem."
-> 
-> We think kernfs will be widely used to build other filesystems, so we
-> strongly recommend switching global locks to per-fs.
+> I was aiming more for a header which contains non-CPU defines - i.e., 
+> platform. But the FCH is only one part of that platform. But let's 
+> start with amd/fch.h - "amd/" subpath element would allow us to 
+> trivially put other headers there too - and see where it gets us. We 
+> can (and will) always refactor later if needed...
 
-I don't strongly object, but I would like to see some real-world numbers first.
+Yeah, agreed on opening the <asm/amd/> namespace for this.
 
-thanks,
+Thanks,
 
-greg k-h
+	Ingo
