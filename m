@@ -1,110 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3725674E;
-	Sun, 13 Apr 2025 23:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887D5185955
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 23:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744585582; cv=none; b=VCvgQdma3UJTZOZmXNbz+/ZmWFfff+0uvHCSTmt9BN+pWxg6gAudk9j2M3mRKb7DVRY+PXyROuB2oqvM//Uy04/O71iJT3KOulYk03jmfOPgHRvs8D/X6GYD7q8GZDVGU5NF1Dc28CxSrBwlR9HYT4mC9b7HJKrVM3D42gL9SPM=
+	t=1744586451; cv=none; b=lAU0hHH1NGGokQNpAlISPc6RS72ZdVMxWCCX16yWtpy/43B0OJHE+xLD23gBxLi3+03dzCCCcex9o8qrzwpaEPi2IQNvdQracPw7AAl14X80Nm7mMs33fWCb3Q7XtwZ3Dr5k27+r4PPNgp/PkCm/CB1B5k8Bn6UBVu/A/7u4nQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744585582; c=relaxed/simple;
-	bh=pBqnKenA44Ex98GT2/2aiRAZUxsM0POq4lWjhVKj3Hw=;
+	s=arc-20240116; t=1744586451; c=relaxed/simple;
+	bh=YonfdUK3i2uYh6N9ENHRqISEUEW1DmFbEDSVGXt2v4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AFtlKkm39TrvNMCHbhflsvMTmUT28TfJlHhUfDfFNNRifjwIXHyoKwVltYC6g9LkHL3GGQ1ow7NkbuuTimL07HZaWcD68t/UdcwdPGQtHVfI7WVciWIyipcIFpy2Xh+lHNbXBjNEmFa9MUMsTaHqyunz1Cg34ZuZwQu2DmlrfHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ic7ONa6t; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=i0yP6/2IQf1uohudkxrAfddgsv3GER/LRTZdwcRaEubV+Gjrvtn5J1gsDGvQD/YeYguwm5PYM1XkFymwIWhXSOVY/Xvhc0uIRqgsAJVOU9Mme2bYiHB05QVwZ6xiDOepczYhI350+i3hFsPieTqTMdwIitOQGtshm19TUeidNFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sW85wA4L; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ic7ONa6t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97DB0C4CEDD;
-	Sun, 13 Apr 2025 23:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744585581;
-	bh=pBqnKenA44Ex98GT2/2aiRAZUxsM0POq4lWjhVKj3Hw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ic7ONa6tP4j0nT8/gdLyKgfwEPXuItsccXSDD3UbZ/X2/HjYpQi+qOjIip1MN595P
-	 tQRr+Od7JzuaM+Ko3vdO71mZcAfUepMh5cV8WGTZhvSZC8D4Qtw+mQXJavZyOFSlsW
-	 uwOGmI0bqj+H2o24rB77iUsezq9uMnD86ML5cyRzZdynH8oegeMBYxsllX1vvvWshE
-	 glLrtIFwzPu0JKo3/8Djz34Uu1q8NvmzaXWNlUcfVi4/CVXvsFxWfMK+1nqAO+7Qq5
-	 RVvpGxUNk5v9VedIo/98U0yDzRfni7InfwzsyMUrsVlbAvc/73jhkCdYweR35QPVIA
-	 PXFSJ8CXgB1+w==
-Date: Mon, 14 Apr 2025 01:06:17 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: mohammed.0.elbadry@gmail.com
-Cc: Tali Perry <tali.perry1@gmail.com>, 
-	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
-	Benjamin Fair <benjaminfair@google.com>, openbmc@lists.ozlabs.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] i2c: npcm: Add clock toggle recovery
-Message-ID: <4wbq7yepeqg6lhu34giqlz7fwamtuv4o5r5slm6ggj5ut7omvd@archqknzat3u>
-References: <20250327193816.670658-1-mohammed.0.elbadry@gmail.com>
- <20250328193252.1570811-1-mohammed.0.elbadry@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sW85wA4L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=R26bN0qNw7kenH3Kz+A/StBpUHxCh3qUso9yG2t8eI4=; b=sW85wA4Lki2RraiLg26J2UY8a4
+	VRJC7lFxmdj+JP1J5F8E/yQ/K8/T5XGPhhVu7EnwYGeJCRqaTTF+ySuWESCNqnwNdVRXvOyqORlzu
+	MSWHMW7U8fhL6QktXC9BDlYS4Ow61uQe/cCzIlaPny1IlT6w610K0Cs2oPLyCS4MX4Ph7e06chYG3
+	XcLQ7m+jwNvAKgq+0f0SsQ56xv3O77u5ELVczs1mqOVv1QvRewlTPYx6cvOidMP3psOKoR5MTGJwG
+	WDkFoWC96gQkD2nCivJFouZ4c8iuj/Wun3eAgjVjbsFZzl45W3l8jO2WCFOovPwPT71Ff9eqrTW75
+	j7gx75ZQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u46d2-00000007Nln-2DQd;
+	Sun, 13 Apr 2025 23:20:44 +0000
+Date: Mon, 14 Apr 2025 00:20:44 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Barry Song <21cnbao@gmail.com>
+Cc: gaoxu <gaoxu2@honor.com>, Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"surenb@google.com" <surenb@google.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	yipengxiang <yipengxiang@honor.com>
+Subject: Re: [PATCH] mm: simplify zone_idx()
+Message-ID: <Z_xGzAx13diuCdvv@casper.infradead.org>
+References: <2d42decac5194c2c8d897b0424f0dcf3@honor.com>
+ <Z_fYsyEA9hSEOoxp@kernel.org>
+ <CAGsJ_4wACEvWe-Fcx9fShkF8okEVb3srGDVCn0v0QjALq7nneg@mail.gmail.com>
+ <bdf6988006d546d498ccb2b7c14c6fe0@honor.com>
+ <CAGsJ_4xDc_5q8dBYVq-Ga0iKJD9pTQdYSHrKw8R=1RHNb4+r7Q@mail.gmail.com>
+ <c915776e308f49e7867ecb50afa44d36@honor.com>
+ <CAGsJ_4x+5Pm6r655k+H9A67-d9AchD9qgsEKgU5oY6N1=JbTRA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250328193252.1570811-1-mohammed.0.elbadry@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGsJ_4x+5Pm6r655k+H9A67-d9AchD9qgsEKgU5oY6N1=JbTRA@mail.gmail.com>
 
-Hi Mohammed,
+On Mon, Apr 14, 2025 at 09:57:26AM +1200, Barry Song wrote:
+> On Sat, Apr 12, 2025 at 10:06 PM gaoxu <gaoxu2@honor.com> wrote:
+> > The zone info obtained through T32 in the Android 15-6.6 system(arm64):
+> > (struct zone) struct (1664 bytes,
+>
+> I don't have a strong opinion on whether we need `zone_idx`—I'm okay
+> with having it or not. If you'd like to add it, feel free to send out
+> a v2 noting that it doesn't increase the struct size. If no one
+> objects, it might be a nice cleanup.
 
-On Fri, Mar 28, 2025 at 07:32:50PM +0000, mohammed.0.elbadry@gmail.com wrote:
-> From: Tali Perry <tali.perry1@gmail.com>
-> 
-> During init of the bus, the module checks that the bus is idle.
-> If one of the lines are stuck try to recover them first before failing.
-> Sometimes SDA and SCL are low if improper reset occurs (e.g., reboot).
-> 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> Signed-off-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
-> ---
-
-we are missing the changelog here. You are at v4 and I need to
-see the changes between the versions. For now it's OK, please,
-next time don't forget to add the changelog.
-
-One more thing, no need to send patches as --in-reply-to your
-previous patch.
-
->  drivers/i2c/busses/i2c-npcm7xx.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-> index 2fe68615942e..caf9aa1e6319 100644
-> --- a/drivers/i2c/busses/i2c-npcm7xx.c
-> +++ b/drivers/i2c/busses/i2c-npcm7xx.c
-> @@ -1967,10 +1967,14 @@ static int npcm_i2c_init_module(struct npcm_i2c *bus, enum i2c_mode mode,
->  
->  	/* Check HW is OK: SDA and SCL should be high at this point. */
->  	if ((npcm_i2c_get_SDA(&bus->adap) == 0) || (npcm_i2c_get_SCL(&bus->adap) == 0)) {
-> -		dev_err(bus->dev, "I2C%d init fail: lines are low\n", bus->num);
-> -		dev_err(bus->dev, "SDA=%d SCL=%d\n", npcm_i2c_get_SDA(&bus->adap),
-> -			npcm_i2c_get_SCL(&bus->adap));
-> -		return -ENXIO;
-> +		dev_warn(bus->dev, " I2C%d SDA=%d SCL=%d, attempting to recover\n", bus->num,
-
-the space at the beginning of the line should be removed. I will
-take care of it if you won't be asked to send a new version.
-
-> +				 npcm_i2c_get_SDA(&bus->adap), npcm_i2c_get_SCL(&bus->adap));
-> +		if (npcm_i2c_recovery_tgclk(&bus->adap)) {
-> +			dev_err(bus->dev, "I2C%d init fail: SDA=%d SCL=%d\n",
-> +				bus->num, npcm_i2c_get_SDA(&bus->adap),
-> +				npcm_i2c_get_SCL(&bus->adap));
-> +			return -ENXIO;
-
-why don't we return the error coming from
-npcm_i2c_recovery_tgclk() instead of forcing it to ENXIO?
-
-Thanks,
-Andi
-
-> +		}
->  	}
->  
->  	npcm_i2c_int_enable(bus, true);
-> -- 
-> 2.49.0.472.ge94155a9ec-goog
-> 
+Plus it's already 1664 bytes!  And we have, what, 4 zones per NUMA node?
+Growing it doesn't feel like a big deal.  Although "saves two assembly
+instructions" is also not exactly a big win.  If it saved a cacheline
+reference, that might be more interesting, but it seems like it's more
+likely to introduce a cacheline reference than save one.  Maybe just
+not worth doing?
