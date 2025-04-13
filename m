@@ -1,43 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E761DDC12
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 17:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B351DE3C3
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 17:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744563828; cv=none; b=T9VrrKaqki754vPIQcQ81LJaavw4JS02H0zW4h7C3Qye4ylhRD+MHTmhF4VpO8WYGBlvMUph8guUeok/OyILL2eaqvxWf53krnDCWri/b22HUSZs2ubXnGhmoin/zF0SEfqGptLCS1+ub2hQzOBUhaq0mG/b0zroOs3DQoAnL3A=
+	t=1744563865; cv=none; b=JhM6PS5xMsetjS97qT3ViOQbmWerM/K+8O5hv8JcAd+8idi9urKW3cL6yd+eVjA/4tkG0aCTwHPDhQlUgF7hX+oONyl5RHjukbBz4uLVNn0OTWVc2L9VNyZT0N9Z4+HluwaWgcaiBl6sHbPsb82UIx3NZz2s9qoX8qW5VzS70nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744563828; c=relaxed/simple;
-	bh=UCLYzL47JucMsbR6qTqiu+oRe6Ro+ITu9qTxJb4BOyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=e86DLqVVKrXnDrxwYLXNkDPfKtoaqfYmeRw/I7q2bjFRuHRlHNW9JtP0o8uZ3udeAZv3x6pBLWIm8Bh1Hav9XffeO0S5CsytxZSQtWVkkImbm75I+eL6QORAEWuR41tqpFg5HNd08FPPCjgQJy8mxSan5gHbOwLepmp4P9NjcK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4kRDybo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744563865; c=relaxed/simple;
+	bh=yPwDn54Vac1JGWRY146dwgLEgVTLswU9aEd6LJpURUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dU1R8IzsKlc0cQn0znQwsdnp7q8EncKr4TImY/x8K1ts+u5SVRoiwz6r4DgjkE/VWtw1bjvYv2rbpHgVACcFEjaKUxY/gCUFk4uOAu31bzefEbAkwP/aeuLf6TB/pj3iDpkBlSHVk0+V8DT/620W3H/K7C8jznGqUZpQb6C2jO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=caYBOeaA; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4kRDybo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEA5C4CEDD;
-	Sun, 13 Apr 2025 17:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744563828;
-	bh=UCLYzL47JucMsbR6qTqiu+oRe6Ro+ITu9qTxJb4BOyY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=J4kRDybo8oc+xF6r7cdvQt4PEcsHWIhJl9MowvOjAfZ2+gIvfCWyooEmO29ty9pQY
-	 NSvtyHQwDtmcOhLfEGTnkpBSil/dQE1eFvJUImFrKMEVFgEy5LsOryquh6bNxnLmQU
-	 SBD/B3sf4hiJbNAo0KJEJBrZndcWe8t8MjpM05XrgSCjiCCHwW9hjfkgsjqr7L74lb
-	 9grqED8p1tVdR8As6wMx8KPQ/SRUCtyYuF8KYNQsgRE+xkpSdEjjdaXKUP5/NS1ZAa
-	 MNOW25IENgkHyP4a/fR1HoRjHr/tkHvUM+UCqZyueO8bqg1hbfNJkK3GIGSE1bzlA7
-	 k8DAYpTVzlj8A==
-Date: Mon, 14 Apr 2025 01:03:42 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Sheng Yong <shengyong1@xiaomi.com>, Bo Liu <liubo03@inspur.com>,
-	Chao Yu <chao@kernel.org>
-Subject: [GIT PULL] erofs fixes for 6.15-rc2
-Message-ID: <Z/vubg+MYaiszHm2@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Sheng Yong <shengyong1@xiaomi.com>, Bo Liu <liubo03@inspur.com>,
-	Chao Yu <chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="caYBOeaA"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso3342493b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744563863; x=1745168663; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=a+u4SfCebi7qvppMaSoUa39+r8AbRqCDUq1wg5V2v3Q=;
+        b=caYBOeaAV9f6eRwnKS1B/QM7guISX5BcuLQjOJnU3knJ4bfZPeH/nKTPBflc7vZbhL
+         6LYrC37YWMKQFie8TOa8Jc2hSb1Y+mWD/Vhq8lQRBaUEoGGHrIAVziP89IKBk3bPFiWt
+         vWMvooj6H9h6TfKnk3xQNo7plMckQE66w/6+bmhIMBV/MXsvT1kXQqJAF4lx9cUlefnT
+         sShWZ71f4tAmKy8kBGE8F8xpHejWNMC6v94MQ2EjeJzCnWpHH6ZAVMVRec3mY+rvMTX+
+         0GR+A50uixsmVE6f+Q6gQiAbiVhASWtmQiJP1ydf0rlYtxDL2/+2Kf5IXZaOqPfQaKCk
+         M8LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744563863; x=1745168663;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a+u4SfCebi7qvppMaSoUa39+r8AbRqCDUq1wg5V2v3Q=;
+        b=Dbo59SUVc6HrxSLnVCK/pswDl/zfvXuszEyEKJR7TVj3x9dy/o31Nwrspzy5q1oWKJ
+         2/o6mnTVusUldJxj5c0H+F8Vt0nc4N5s7dzP5Ezvcm56ZQrbINEzTuXoNdiprHS5eqkO
+         84auicRc+YCCaVxMEVotO49G+otexp5arSJDT868/As9FaBjLaVxLcp996VQspt2Fdxq
+         qqeJm9LEcYPF5EldEVBV9F/5SpfdYzEYKjkNgAixXO97UrjhFP8mTYqk5fhCmY/AaGLt
+         qzGG57HsIhkb8j/A0qeVai7G3fZEdLJyTnIDZWdQx0h2fUTdhk+mcdxGT66331oT1Q5E
+         7Bgg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ceTmTux6knLo26iHGPkjbcNX2kzXigOrBSOYXohWnP69aLgrOdMCQfI+tUDgtLdxEq2kevLuWj6AGhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAT4uaTiX7xnCzfRh4AnZDYB+KyNYAkQDNosc9n9SX6UaiWdiC
+	nyizxGlYH1VeD2rfA6648o/vMnjf5rPPMhKO/1FCSRL4eO5CjgvfGpUAlX3R5A==
+X-Gm-Gg: ASbGncsf4vIF52U+SRnmCIv0qM++TrO/wPrk1xAe+Hi6AXHMUOskTHFUUfN42D8sJcu
+	KfItXNWqpRcBg2qUykwv+uG+OuWEdzzalgAd+gdP+2n3CB5bQINWKUjCpN+RhEmweyDxU6jPevB
+	n5hIwbv5QeAGLJvqnxNAFBfoGpHzL1Bou3bdA8Os5W5f1aGZEkMeFuV802wqS0BU9Vk3xBPDRKE
+	kgbC7cyCOrFO8QsRhQThjUonCo7rawug27gJkh7u3uRFHqPHu6J5xlNtk3jB42Os9uRwIdYCn64
+	QA8ND10p/97srtMZRY1JcJ+H/cs7EWt6mFjbeOF6uYPvlCt+Ce1p
+X-Google-Smtp-Source: AGHT+IFjyC9Nav51W8D+xJs56DEyrXe47gAj9cOlUzK/cynD/DwixHK7w/Y7LX+u7QpqEKkPzlHNBw==
+X-Received: by 2002:a05:6a21:c8c:b0:1fd:f8dc:83f6 with SMTP id adf61e73a8af0-2017999735fmr16680739637.40.1744563863083;
+        Sun, 13 Apr 2025 10:04:23 -0700 (PDT)
+Received: from thinkpad ([120.60.137.231])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2199535sm5339872b3a.14.2025.04.13.10.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 10:04:22 -0700 (PDT)
+Date: Sun, 13 Apr 2025 22:34:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, Hector Martin <marcan@marcan.st>, 
+	Sven Peter <sven@svenpeter.dev>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Mark Kettenis <mark.kettenis@xs4all.nl>
+Subject: Re: [PATCH v3 04/13] PCI: ecam: Allow cfg->priv to be pre-populated
+ from the root port device
+Message-ID: <5nwjlpnpwh4yto6wi4nxcwumpd7iilpq4mblpfqsvdxg2bfdsy@md6ok4btonxz>
+References: <20250401091713.2765724-1-maz@kernel.org>
+ <20250401091713.2765724-5-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,53 +80,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250401091713.2765724-5-maz@kernel.org>
 
-Hi Linus,
+On Tue, Apr 01, 2025 at 10:17:04AM +0100, Marc Zyngier wrote:
+> In order to decouple ecam config space creation from probing via
+> pci_host_common_probe(), allow the private pointer to be populated
+> via the device drvdata pointer.
+> 
+> Crucially, this is set before calling ops->init(), allowing that
+> particular callback to have access to probe data.
+> 
+> This should have no impact on existing code which ignores the
+> current value of cfg->priv.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Tested-by: Janne Grunau <j@jannau.net>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Could you consider those fixes for 6.15-rc2?
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Just a few miscellaneous fixes as shown below..  All commits have been
-in -next for a while and no potential merge conflicts is observed.
+- Mani
 
-Thanks,
-Gao Xiang
+> ---
+>  drivers/pci/ecam.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+> index 260b7de2dbd57..2c5e6446e00ee 100644
+> --- a/drivers/pci/ecam.c
+> +++ b/drivers/pci/ecam.c
+> @@ -84,6 +84,8 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
+>  			goto err_exit_iomap;
+>  	}
+>  
+> +	cfg->priv = dev_get_drvdata(dev);
+> +
+>  	if (ops->init) {
+>  		err = ops->init(cfg);
+>  		if (err)
+> -- 
+> 2.39.2
+> 
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.15-rc2-fixes
-
-for you to fetch changes up to f5ffef9881a76764477978c39f1ad0136a4adcab:
-
-  erofs: remove duplicate code (2025-04-10 14:24:05 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Properly handle errors when file-backed I/O fails.
-
- - Fix compilation issues on ARM platform (arm-linux-gnueabi);
-
- - Fix parsing of encoded extents;
-
- - Minor cleanup.
-
-----------------------------------------------------------------
-Bo Liu (1):
-      erofs: remove duplicate code
-
-Gao Xiang (2):
-      erofs: add __packed annotation to union(__le16..)
-      erofs: fix encoded extents handling
-
-Sheng Yong (1):
-      erofs: set error to bio if file-backed IO fails
-
- fs/erofs/erofs_fs.h | 8 ++++----
- fs/erofs/fileio.c   | 2 ++
- fs/erofs/zdata.c    | 1 -
- fs/erofs/zmap.c     | 5 +++--
- 4 files changed, 9 insertions(+), 7 deletions(-)
+-- 
+மணிவண்ணன் சதாசிவம்
