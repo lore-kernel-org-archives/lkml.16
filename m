@@ -1,230 +1,162 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E436229D19;
-	Sun, 13 Apr 2025 19:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4680413B797;
+	Sun, 13 Apr 2025 19:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744571570; cv=none; b=kGPZJtB3QyLZCO0zNt2p6WSwlF9ORyKJY+28OoGxlmfcW+fqZe/cqvuE6wDa4gDsxTnyFQ0Axxp8VTYQajkuoK2ToB6SHXHqBEeVnQlUY8nx4kFAd2qXB6/QEvZ2VB7lsWKmj4pyqtly0RMJfwLOBpVxvJE58w8YsdRosLIoHMo=
+	t=1744571707; cv=none; b=ru/zU4/GZXK0HKA5JAFgDP4M8KouOQaM3McY8h8Bf86eyK1L4saX88CINrNCFl+LL+Ap29Pp5l3OBpW0E6pHSiEaDGHI9Tw+yFMGxbc6VqOk76UuNB88OWJn+yEC1wV8/Br2QidYO+/Jb4g41Ks+kW+a8lPvNyBdtfovw8veATA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744571570; c=relaxed/simple;
-	bh=QMkSUO+xFyLpesHo/rtDCMPD8DylSwKw+UPXoZij6YM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tM6I5OpcN+Nkh7C4BcuOh7HUAkLaZCUMeeYzczqal8bWa97M/lzMCCjzX/fhcctfPSkZirkWxo8xpzKmZlbWdGT8TB91Ut8F5NPQ18ye2Y6Wd5JOr8D4eyv5PcnS8b6voYw3J4EP+ijeL2ER/Tl8UcD2PcV/jpklJgd7YJRcBXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E/u5tsrt; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744571707; c=relaxed/simple;
+	bh=KjjMpi6J03nK1WjILmY3OQ3wjSjjqoByRSWubExX/UI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jL2QdkaYsXu0FjGAyu9/9XmFOM+l+4AxEhCgeFSgJ4mFGQOxnOwUvvHSB+HFnzLesAB7dFu8wFBxRkWIJJj9LcplNiEVOFTYdk2slujEcbMDaJ7VmAqpzyJFuYnN++dniO8f3plvpDxJ88PSn9kqf+A7JGJyl+kS+aOtRMczPzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IjU4m2lg; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E/u5tsrt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3D72043A48;
-	Sun, 13 Apr 2025 19:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744571559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hafZ4yNk+voYEIZB0KH9G7yt0rov6Uv3t+PFXc6R67A=;
-	b=E/u5tsrtbYq0/wHfJFKoVcTknvpyjW+5rim5HsBr3w5Uu8LrSaSst88EucyLy55Hj28K+N
-	zEaws1pn4RErRTq+dr273sjuf6xtQtaPEPoUg+aFmZFaM8Sx2RaE5c+R8ZhI63A5aWurDG
-	ZGUjVAj5J2JXdp6r/OsghFBzWviK82ASNLXKFM2/2PCgPMjMXvjk1yF9DO92FdAILyLUfe
-	3RKo0MIAn5lDGy8rqZsbFxzhiLZBKrYXS2D2x6RrTi2rzLc+kF1KxAtbsQnubEvFREoQ+m
-	JAgiuAg0/g7HzAubOFLaCx8jZ7Ui47rxVSwgcUlLYTlBERcS9Rsw7FE/9JlhCA==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Sun, 13 Apr 2025 21:12:32 +0200
-Subject: [PATCH] MIPS: SMP: Implement parallel CPU bring up for EyeQ
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjU4m2lg"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30beedb99c9so32376351fa.3;
+        Sun, 13 Apr 2025 12:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744571703; x=1745176503; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vmKq3xpHPXNUFt7rqGHQXR/B6BEh35GMMQihkbDJYrs=;
+        b=IjU4m2lgZzPUkaARgINHHSZVGGJY/KKI3KylCNq1msFrLHvfSnjI0vgJmD3ACZP/md
+         FRsb7U0KU5Bx0J06m8MNtO5VcOlQsrMrPgE8SJ0UmrpB/C5BJLRukxnHvXGMVxKeRs21
+         V966oh9+DJj6sE1cA4uuXvVWA22IO8J8jme8gn6BM/l1kFyGY0eVBJwEw7Ll4pT+8c2W
+         a3aMFdo+KUMyhor8+04KZv4Z3NC2ASmaDuTTfRmHEjYAhQLXMTOcgkYutK/OsNnUH7YN
+         MxWiethzsJLLfbWR50WIX++q1P7nQPSyxehiTmLZPwTDy8d1OHjkjUJO15cBR+ecoSka
+         d/XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744571703; x=1745176503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vmKq3xpHPXNUFt7rqGHQXR/B6BEh35GMMQihkbDJYrs=;
+        b=llwmskZoKRIT/HBNsLvQjIL61TxSZ9d/v1kKN+TvL5EV9mBRGuB1mRO7Z/OP2m+HVQ
+         bqxtKyCd9kjxYQn4nFtpng1WD6/BMEdRLkGCyVtxQ22o611SvBf/kxKfxOwBVghGWawm
+         XNoqYFqVGzxP6OGg44RWxE6k3Xm68b2z+CD3IuczkndoYJWj9yEsThKcsXjMFvPhl5cb
+         t5ZUupGZ8LKW/HXeAcR5NFfCIv2IezDmrJ7iRU2dVTgkieJZdVUD2e1qHqXrOlqMT5e0
+         pbtRouwP408NQWpnBMDhZqC/m7k70HeM4tP/79ize38zcV5VpLN59xrYltTJ6H6VErzE
+         mR0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWPh6URVZ5R4t4RkADVCDbZIl+zkZZAXT0i+XULEouJBKgASctT0GC6lunyXB9b3s6n9UecCc5rkGycO5I=@vger.kernel.org, AJvYcCWpeuDy398bjyqTPwb+mEAbRcAZJB+MHdqFeEE7Cs3eYvGPhYqE67gzAkM4+UpcZRpvvK5ivLqjkQujBzMv8k8WvSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/7odFLmIsATU1oISaf5pjrqlf+uqr+pKljOyW5pWQd9TCwmGl
+	KekZrYAqXRfhJl+WPPyfBnuuLCRJxIaq8kXqUY8mvYau5C1fnrtH2oGVTVYwUlidS4FTUX7QVpe
+	nqvobFQ9c4SEzHVgJVPKvzi6w2Ck=
+X-Gm-Gg: ASbGnctUYFip93FD0TIedMS2EHqLBdbyliKXBhz48CbInB4OAMYQH3bYtBlUDdzYVPC
+	uf7+O7UJRQhEL3LwK8H9c4AVh0PRhfJKam9AWsvjuXV4CoXS2wUP1aHg8lX4Nw967al3k5/xrza
+	2inhvHWZwr51xhnyXfYWZkCw==
+X-Google-Smtp-Source: AGHT+IFr3TeqkzVWuRiZtu9xjYpcTJEdaa+lZx+GFRfKPeYh40Cp+avV8LYZthRUallYwiIjIVVj9HC6L9IQ1mSDdV8=
+X-Received: by 2002:a05:651c:1545:b0:30b:c3ce:ea1f with SMTP id
+ 38308e7fff4ca-310499fbc07mr25452381fa.15.1744571703056; Sun, 13 Apr 2025
+ 12:15:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAJ8M/GcC/x3MQQqEMAxA0atI1gZsVZx6FXERNWqg1JKiCOLdp
- 7h8i/8fSKzCCfriAeVLkhwhw5QFzDuFjVGWbLCVbavGGIyk5D17nOOJk0rYzojdzzlHztYtE+Q
- 0Kq9yf9thfN8/lclC8WYAAAA=
-X-Change-ID: 20250411-parallel-cpu-bringup-78999a9235ea
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudekgeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthekredtredtjeenucfhrhhomhepifhrvghgohhrhicuvefngffogffpvfcuoehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvheehjeevleeggfelfffgjedugfduleduuedthfelieduveffgeeuleekffduhfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmeefuggtmegvvgektdemhedvvdehmedvgeejgeemiegrugdtmegtugeiugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemfegutgemvggvkedtmeehvddvheemvdegjeegmeeirggutdemtgguiegupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvr
- hhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhlrgguihhmihhrrdhkohhnughrrghtihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: gregory.clement@bootlin.com
+References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
+ <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local> <Z_oqalk92C4G6Rqt@gmail.com>
+ <CAFULd4bTd6GMftLBX7Nu0xftini00o4v7=1XfuoDC8ydUr9Ueg@mail.gmail.com>
+ <Z_t7_brzSoboOsen@gmail.com> <CAFULd4ZBbAG4ndn+rzjjqF+pmtGa3UbyDOWfEXww0XhExJByVA@mail.gmail.com>
+ <Z_wI0uNoG2G2TQMC@gmail.com>
+In-Reply-To: <Z_wI0uNoG2G2TQMC@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 13 Apr 2025 21:14:51 +0200
+X-Gm-Features: ATxdqUH6GkkG2QNWIiBcMACJGEzQp-J92_Zv1yKOb6xNPUgXURNSmQpqDR3N3WY
+Message-ID: <CAFULd4b2afcu5PnxhqwwepwWMSA7mvYNyPnMtkCjjT84VG8VXA@mail.gmail.com>
+Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
+ __typeof_unqual__() when __GENKSYMS__ is defined
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-tip-commits@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Added support for starting CPUs in parallel on EyeQ to speed up boot time.
+On Sun, Apr 13, 2025 at 8:56=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrot=
+e:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > On Sun, Apr 13, 2025 at 10:55=E2=80=AFAM Ingo Molnar <mingo@kernel.org>=
+ wrote:
+> > >
+> > >
+> > > * Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >
+> > > > > Yeah, agreed, I've removed this workaround from tip:core/urgent f=
+or
+> > > > > the time being - it's not like genksyms is some magic external
+> > > > > entity we have to work around, it's an in-kernel tool that can be
+> > > > > fixed/enhanced in scripts/genksyms/.
+> > > >
+> > > > Please note that you will disable a check that is finally able to
+> > > > fail the build for a whole class of very subtle percpu bugs.
+> > >
+> > > I simply zapped a commit that was applied two days ago and asked akpm
+> > > to resolve a regression that was introduced upstream via his tree
+> > > through this commit, in this merge window:
+> > >
+> > >   ac053946f5c4 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+> > >
+> > > What 'disabled checks' are you talking about?
+> >
+> > Percpu checks require TYPEOF_UNQUAL() macro, so removing
+> > USE_TYPEOF_UNQUAL definition
+>
+> I did nothing to remove the USE_TYPEOF_UNQUAL definition, did I?
 
-On EyeQ5, booting 8 CPUs is now ~90ms faster.
-On EyeQ6, booting 32 CPUs is now ~650ms faster.
+So ... let's slow the ball down a bit. The patch I'm worried about is [1]:
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
-Hello,
+-#if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
+-# define USE_TYPEOF_UNQUAL 1
+-#endif
++#undef USE_TYPEOF_UNQUAL
 
-This patch allows CPUs to start in parallel. It has been tested on
-EyeQ5 and EyeQ6, which are both MIPS64 and use the I6500 design. These
-systems use CPS to support SMP.
+[1] https://lore.kernel.org/lkml/20250411210815.GAZ_mEv8riLWzvERYY@renoirsk=
+y.local/
 
-As noted in the commit log, on EyeQ6, booting 32 CPUs is now ~650ms
-faster.
+and in [2] my proposed patch is commented as:
 
-Currently, this support is only for EyeQ SoC. However, it should also
-work for other CPUs using CPS. I am less sure about MT ASE support,
-but this patch can be a good starting point. If anyone wants to add
-support for other systems, I can share some ideas, especially for the
-MIPS_GENERIC setup that needs to handle both types of SMP setups.
+--q--
+> So mingo is right - this is not really a fix but a brown-paper bag of
+> sorts.
 
-Gregory
----
- arch/mips/Kconfig                |  2 ++
- arch/mips/include/asm/topology.h |  3 +++
- arch/mips/kernel/smp-cps.c       |  2 ++
- arch/mips/kernel/smp.c           | 18 ++++++++++++++++++
- 4 files changed, 25 insertions(+)
+Yeah, agreed, I've removed this workaround from tip:core/urgent for the
+time being - it's not like genksyms is some magic external entity we
+have to work around, it's an in-kernel tool that can be fixed/enhanced
+in scripts/genksyms/.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index fc0772c1bad4ab736d440a18b972faf66a610783..e0e6ce2592b4168facf337b60fd889d76e81a407 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -617,6 +617,7 @@ config EYEQ
- 	select USB_UHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
- 	select USB_UHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
- 	select USE_OF
-+	select HOTPLUG_PARALLEL if SMP
- 	help
- 	  Select this to build a kernel supporting EyeQ SoC from Mobileye.
- 
-@@ -2287,6 +2288,7 @@ config MIPS_CPS
- 	select MIPS_CM
- 	select MIPS_CPS_PM if HOTPLUG_CPU
- 	select SMP
-+	select HOTPLUG_SMT if HOTPLUG_PARALLEL
- 	select HOTPLUG_CORE_SYNC_DEAD if HOTPLUG_CPU
- 	select SYNC_R4K if (CEVT_R4K || CSRC_R4K)
- 	select SYS_SUPPORTS_HOTPLUG_CPU
-diff --git a/arch/mips/include/asm/topology.h b/arch/mips/include/asm/topology.h
-index 0673d2d0f2e6dd02ed14d650e5af7b8a3c162b6f..5158c802eb6574d292f6ad2512cc7772fece4aae 100644
---- a/arch/mips/include/asm/topology.h
-+++ b/arch/mips/include/asm/topology.h
-@@ -16,6 +16,9 @@
- #define topology_core_id(cpu)			(cpu_core(&cpu_data[cpu]))
- #define topology_core_cpumask(cpu)		(&cpu_core_map[cpu])
- #define topology_sibling_cpumask(cpu)		(&cpu_sibling_map[cpu])
-+
-+extern struct cpumask __cpu_primary_thread_mask;
-+#define cpu_primary_thread_mask ((const struct cpumask *)&__cpu_primary_thread_mask)
- #endif
- 
- #endif /* __ASM_TOPOLOGY_H */
-diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
-index e85bd087467e8caf0640ad247ee5f8eb65107591..02bbd7ecd1b9557003186b9d3d98ae17eac5eb9f 100644
---- a/arch/mips/kernel/smp-cps.c
-+++ b/arch/mips/kernel/smp-cps.c
-@@ -236,6 +236,7 @@ static void __init cps_smp_setup(void)
- 			/* Use the number of VPEs in cluster 0 core 0 for smp_num_siblings */
- 			if (!cl && !c)
- 				smp_num_siblings = core_vpes;
-+			cpumask_set_cpu(nvpes, &__cpu_primary_thread_mask);
- 
- 			for (v = 0; v < min_t(int, core_vpes, NR_CPUS - nvpes); v++) {
- 				cpu_set_cluster(&cpu_data[nvpes + v], cl);
-@@ -364,6 +365,7 @@ static void __init cps_prepare_cpus(unsigned int max_cpus)
- 	cl = cpu_cluster(&current_cpu_data);
- 	c = cpu_core(&current_cpu_data);
- 	cluster_bootcfg = &mips_cps_cluster_bootcfg[cl];
-+	cpu_smt_set_num_threads(core_vpes, core_vpes);
- 	core_bootcfg = &cluster_bootcfg->core_config[c];
- 	bitmap_set(cluster_bootcfg->core_power, cpu_core(&current_cpu_data), 1);
- 	atomic_set(&core_bootcfg->vpe_mask, 1 << cpu_vpe_id(&current_cpu_data));
-diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
-index 39e193cad2b9e4f877e920b71bbbb210e52607d0..1726744f2b2ec10a44420a7b9b9cd04f06c4d2f6 100644
---- a/arch/mips/kernel/smp.c
-+++ b/arch/mips/kernel/smp.c
-@@ -56,8 +56,10 @@ EXPORT_SYMBOL(cpu_sibling_map);
- cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
- EXPORT_SYMBOL(cpu_core_map);
- 
-+#ifndef CONFIG_HOTPLUG_PARALLEL
- static DECLARE_COMPLETION(cpu_starting);
- static DECLARE_COMPLETION(cpu_running);
-+#endif
- 
- /*
-  * A logical cpu mask containing only one VPE per core to
-@@ -74,6 +76,8 @@ static cpumask_t cpu_core_setup_map;
- 
- cpumask_t cpu_coherent_mask;
- 
-+struct cpumask __cpu_primary_thread_mask __read_mostly;
-+
- unsigned int smp_max_threads __initdata = UINT_MAX;
- 
- static int __init early_nosmt(char *s)
-@@ -374,10 +378,15 @@ asmlinkage void start_secondary(void)
- 	set_cpu_core_map(cpu);
- 
- 	cpumask_set_cpu(cpu, &cpu_coherent_mask);
-+#ifdef CONFIG_HOTPLUG_PARALLEL
-+	cpuhp_ap_sync_alive();
-+#endif
- 	notify_cpu_starting(cpu);
- 
-+#ifndef CONFIG_HOTPLUG_PARALLEL
- 	/* Notify boot CPU that we're starting & ready to sync counters */
- 	complete(&cpu_starting);
-+#endif
- 
- 	synchronise_count_slave(cpu);
- 
-@@ -386,11 +395,13 @@ asmlinkage void start_secondary(void)
- 
- 	calculate_cpu_foreign_map();
- 
-+#ifndef CONFIG_HOTPLUG_PARALLEL
- 	/*
- 	 * Notify boot CPU that we're up & online and it can safely return
- 	 * from __cpu_up
- 	 */
- 	complete(&cpu_running);
-+#endif
- 
- 	/*
- 	 * irq will be enabled in ->smp_finish(), enabling it too early
-@@ -447,6 +458,12 @@ void __init smp_prepare_boot_cpu(void)
- 	set_cpu_online(0, true);
- }
- 
-+#ifdef CONFIG_HOTPLUG_PARALLEL
-+int arch_cpuhp_kick_ap_alive(unsigned int cpu, struct task_struct *tidle)
-+{
-+	return mp_ops->boot_secondary(cpu, tidle);
-+}
-+#else
- int __cpu_up(unsigned int cpu, struct task_struct *tidle)
- {
- 	int err;
-@@ -466,6 +483,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
- 	wait_for_completion(&cpu_running);
- 	return 0;
- }
-+#endif
- 
- #ifdef CONFIG_PROFILING
- /* Not really SMP stuff ... */
+Maybe akpm can merge this or some other fix and sort it out? AFAICS the
+bug came in via the -mm tree in January, via:
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250411-parallel-cpu-bringup-78999a9235ea
+  ac053946f5c4 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+--/q--
 
-Best regards,
--- 
-Grégory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+[2] https://lore.kernel.org/lkml/Z_oqalk92C4G6Rqt@gmail.com/
 
+> > [...] will skip the definition of __percpu_qual in
+> > arch/x86/include/asm/percpu.h (please see
+> > 6a367577153acd9b432a5340fb10891eeb7e10f1), and consequently __percpu
+> > macro won't be defined with __seg_gs (please see
+> > 6cea5ae714ba47ea4807d15903baca9857a450e6).
+> >
+> > If this commit is removed, [...]
+>
+> I did not remove commit ac053946f5c4, it's already upstream. Nor did I
+> advocate for it to be reverted - I'd like it to be fixed. So you are
+> barking up the wrong tree.
+
+If the intention is to pass my proposed workaround via Andrew's tree,
+then I'm happy to bark up the wrong tree, but from the referred
+message trail, I didn't get the clear decision about the patch, and
+neither am sure which patch "brown paper bag bug" refers to.
+
+Thanks,
+Uros.
