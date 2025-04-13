@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AB317A31F
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0C417F4F6
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744577117; cv=none; b=Ay19edX/FdZKmSq9PwC9lgpZNGEoIAQxzc+Cd/UIMkls7S4QxWWcw4q4CjCepT3t7i2sb6dWy5rQi6TYxEL2nBq62ODl7GHfSOSGsjmI3gxWvbIPBAPOBX11Xnw625SGhHYEt0rONsdfIVJal+PMjQsHVS8DpFBy3kwTuAE8MLY=
+	t=1744577263; cv=none; b=sr3Od/xFDpZpNVWMs/kJamuAfuCyvgxrGMVyqu3TMU6iK1c/IpAbLuXeOJB4gxXQtWdUvm40Q+dpdkTUfVhW40Ofuwj84uae89lbGgIuG+Lu0tqp/kXtxjflPL0T6J9Eq2LldkXQYm14C/aQiXLgAzRIbAk9RnRSQ0BJPmzuBQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744577117; c=relaxed/simple;
-	bh=MbRVMly7VZroUGLq80A7GAV+iUnHGZ07wC/r5o0jyZc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=qfRDf30SlqJ0HnZUslioll11ydF9A8x7Z4gnDl3SYsod3dFRCsn/kWPQmUXKuKGVGZC/yEZAC+wjUXBFYJaEETvvqGrlr/JIUQ5TCiuGhAGQL+iAdbK0dbJIli7RQjJ1a4SbIy4WAwgfTyGHl+vokQ8T/UDX0tE07Y4mCC+/zDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Do5j1I6E; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1744577263; c=relaxed/simple;
+	bh=ZxV6Pi+8PX4pByzAeUnAfXWcsp2CrPxMI9Dv0pPw+H0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CmqjUHMuyk3TEXFQ75Gkhd2dTV+vjg687jskG1VYDIXYAnR6GdMkRhRmFWs7uhSF0ZWfvrCZVvhry8ThHk2+zpWP/us6VSfviRujRQbmSAY5FtWbbnHBntjQ7pLY1gGr5K8irwBQCSymV39ytc696mlt9y4cN92GU4rqsmDkfYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I+xFroax; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Do5j1I6E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I+xFroax"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744577113;
+	s=mimecast20190719; t=1744577260;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nQw8tmrkvQV+tRrqZxDwr12UYoDpHlF6zPIcm6MU1ws=;
-	b=Do5j1I6EIIwad3GyF5ij0E5rAyyPFfBrqyItpJUYuIaodCmPPi4bho+3zrd6HPUROxTzwr
-	ngzpRlrkGwesIvk8gPlAajKXDQtmMU/AegeXF9uG5O8CJU37VxdIvWQnIfokrsHrWUbw81
-	/VL1TUwHn2/qTDnHdihMXANMerFBGMg=
+	bh=VOfRuIaDPcToTYPIFD6cRpVgwBt7bf1MLvia3F0MIks=;
+	b=I+xFroaxl0BW8Dcu6F0QQIDz+6XA9HXWZf4eTwELAaV3nf16L9jayLF1YSU9UJOD6djp04
+	Ad/7tL4DhLrVrI/aB0GwfVaLF2Q5seeUUqXJuI7lZUrKcplzGdeGiyNLXJQkRKaKxL8qHe
+	I76u+/SPhvGQAoWNQlKSBkMg4NzVWos=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-349-DRv4tgdeNlG7nP7BSy2uKg-1; Sun, 13 Apr 2025 16:45:12 -0400
-X-MC-Unique: DRv4tgdeNlG7nP7BSy2uKg-1
-X-Mimecast-MFC-AGG-ID: DRv4tgdeNlG7nP7BSy2uKg_1744577111
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so18400825e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:45:12 -0700 (PDT)
+ us-mta-625-fdsufVInPLiYEeYwFZxBQg-1; Sun, 13 Apr 2025 16:47:39 -0400
+X-MC-Unique: fdsufVInPLiYEeYwFZxBQg-1
+X-Mimecast-MFC-AGG-ID: fdsufVInPLiYEeYwFZxBQg_1744577258
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf446681cso23842795e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:47:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744577111; x=1745181911;
+        d=1e100.net; s=20230601; t=1744577258; x=1745182058;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:from:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nQw8tmrkvQV+tRrqZxDwr12UYoDpHlF6zPIcm6MU1ws=;
-        b=oDnDTPA4xeeUQ+y31517H+j32sx2h3cAy4jURmhI4CgfD7/bp8nAV7GE+RmgfeCoa3
-         U8FmejtVL8dvn+CcuH7I27X8lNp9aSYuYTyuhD5zlzQwQEYT6GGipStpJ9woQYNBzWN4
-         PxPIt1rKlOG36peyZOJcTYTCsjPyitjaUUFaEX8mTYUs2I/72RTSfiV7eHDzLOTkjQFn
-         bYBrAOnuiVEfTEKwOx4FXIblotLwfh06gpheqgTzt+584RUg6R+8BqUBcbz+4By5f1D3
-         PsvD6223S1JCUyiUEONlA9DjRJb5nb5/TXRhD6QM7rPUXDvSsnIri/jvpDQdV4PwZOjh
-         MJzg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/pG9dDvHn7+u+Kyob8q4dzC9ygx0llbwz8PVgP0RfAZhs+0axkYqV5iNcdn/7scYoLequyVaTrvHdkGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjPTJee6tXAZHihMnyJrigpKs/CIHJZNmnUJO0UTE0ItARJQVr
-	8aKkLIlzy6awRNCaiPHpErrohUFAV/USGpJ3Xo1INyniuZibcvskbcphM0gbRY2BpsRcTU2DcOi
-	v3w3doyABT0XO4gifcB86Ac1rLHrnESLdYhzNHtkmR/KwrKZY6wYIsDnB1TwbqQ==
-X-Gm-Gg: ASbGncsVbRDbecwswYKqE/PQ5otxLHzzPPhHC/tBgFj+CFHYi62k3EXeCM9ei2xbje6
-	9tn1/YT5VqIXBbkLCc5SiU6M8qh0droFdzQKrdJq7d5YfrdKXqRJj3450Q/Jer/njUI3hdmErgT
-	CjeeRdsGAahy135SwNs22lpIABR/EF9PRpPKTO9lQI3WPbi6dA8PGWulXODDGnK3kU5tKUVyxFE
-	RWeXWc3v2X5YXidU15jeiKlmrvKyyVLnHq9s68H7pazaCQ9YRZYXFeiVJLJG03mTaf/fKkpMUIe
-	JH2HyOkaiBrFrCRKa3H2wsUYZ0Gww74+EMFLmRQIpYIVvo0QHpe146nCrUnc5BTbIV4Pq8kED2G
-	2Vr4eTWLlZZLBTMLDYQabV/u2RMWb1F6d7rS2/uY=
-X-Received: by 2002:a05:6000:178e:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39ea5215dc6mr8086418f8f.34.1744577111254;
-        Sun, 13 Apr 2025 13:45:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkWUh4pH6gB8nlCnwzlv7RNl231YcGSQR+UEIH7NnX5G3uYWa0SGRz/5+xRmf3fGLTp4uTUA==
-X-Received: by 2002:a05:6000:178e:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39ea5215dc6mr8086409f8f.34.1744577110748;
-        Sun, 13 Apr 2025 13:45:10 -0700 (PDT)
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VOfRuIaDPcToTYPIFD6cRpVgwBt7bf1MLvia3F0MIks=;
+        b=FAZrWc4XukPdguK6vpEkNxn1aN/t4tZoZ7gjEoomOkq1x3h8ZctIVO9th3DPDILXy5
+         dyTNoh1awGQMcL4iFsWE3ts3TErFXtR1uBh6NcXnb2tK0VzdBd+uum9y22fASA3JTD89
+         NktpEIc1sbKYK+n06n19+CVQnHa3AhntW55Ed/pWa9eVjTCDwNgGYZ0dMCWSJ7m03nT6
+         qvMB+5tVo7LukTaebnxeEfcVqETNzBhbsPNSCTFE8gw6VddPMzPqrIj5tApSn/iIVxIo
+         2IYkrrbxgRLlZO1Nhb/D9otQy2/kcmygN+DRyTZTb5OC5ZPB7PiDxmWuzbFwE8Vcr2LP
+         2o2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVmeYyc2Z7R62PtIB04CouWbjTYbf4zwXRzInWB80XyFnpNkEti4R9xt9xVasi+VrWfw1fmRAaf0iabIAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiNQYK3Wi1JPSPYxdIeUIZgn7h8M/q+bY7E2X0xd7+JEjWjF3v
+	tEwSF4gBD8uLntsfmusHZxeuQUB/ULDJhnHdGDgWB245UE/QcyBYnASIhcrCM8Ulo2r2rEmi5tK
+	8wL0Mxno5qGpJTCi3tH79iWAVGtiIW3oBTYADj3Z/mL2LoeN3RL3mVmjtAUQFOw==
+X-Gm-Gg: ASbGnctgXeqwA5y4LhpNMDC5qcYneMauaPSaA+Q0aSZktsCwG/4Q5SlLkjit7qFXfci
+	JnWs/LNc+AG8vDhyrOoo6SUdQJNXNNcCfmtqIuy22uuWEkXaMjw8IOCkUP8+rLaoXtSHTxKm6vW
+	wbTY5NxEjlPntsnoYCJbZGYbBG1cY/nDNp8h3B3YN8Tkmij73TIU52CXVmsjEtiqx4swZLqFamA
+	XNhFf+ZKiP7OUm4HTjjvFDdydiU2cipWqQPDQIB4S3gnvsCzXSCTgGPDzknMT3HMgbcgT9FAiL0
+	7pJnmJoCIcVawF05v6nhQOrUzSzBZrnlotHZl63QwOLo7BnhW7xPpMt8tZiQLH661hO2yRX/7bM
+	VuI8xZsqxrozyu7oEyle1wy+vuSx2jjVLZW6UVz4=
+X-Received: by 2002:a05:600c:8705:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-43f3a93d9e7mr93090445e9.12.1744577258226;
+        Sun, 13 Apr 2025 13:47:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGUB9HuoNa5GmFmM0l6VovzSE10DUf4UeGf5tL5bDm4iJzT24xJhxauX7inDKIy1x+D7R1BVQ==
+X-Received: by 2002:a05:600c:8705:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-43f3a93d9e7mr93090345e9.12.1744577257865;
+        Sun, 13 Apr 2025 13:47:37 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445454sm8823782f8f.83.2025.04.13.13.45.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae964002sm8764656f8f.8.2025.04.13.13.47.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 13:45:10 -0700 (PDT)
-Message-ID: <c283ef8d-0816-4e49-849c-296bc32195cf@redhat.com>
-Date: Sun, 13 Apr 2025 22:45:09 +0200
+        Sun, 13 Apr 2025 13:47:36 -0700 (PDT)
+Message-ID: <8a270b04-5ad6-41dc-9d97-b228a3f50a60@redhat.com>
+Date: Sun, 13 Apr 2025 22:47:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,13 +75,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] WARNING in do_wp_page
+Subject: Re: [PATCH] mm: add nr_free_highatomic in show_free_areas
+To: gaoxu <gaoxu2@honor.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>,
+ Yu Zhao <yuzhao@google.com>, Barry Song <21cnbao@gmail.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ yipengxiang <yipengxiang@honor.com>
+References: <d92eeff74f7a4578a14ac777cfe3603a@honor.com>
 From: David Hildenbrand <david@redhat.com>
-To: syzbot <syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- syzkaller-bugs@googlegroups.com
-References: <67fab4fe.050a0220.2c5fcf.0011.GAE@google.com>
- <ec2c31e4-f7f2-4ec0-bbfe-e6d6e080429f@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -128,82 +130,19 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <ec2c31e4-f7f2-4ec0-bbfe-e6d6e080429f@redhat.com>
+In-Reply-To: <d92eeff74f7a4578a14ac777cfe3603a@honor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 13.04.25 22:20, David Hildenbrand wrote:
-> On 12.04.25 20:46, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
-> 
-> Related to my recent changes
-> 
->>
->> HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=1766323f980000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=f175b153b655dbb3
-> 
-> CONFIG_ARCH_WANTS_THP_SWAP=y
-> CONFIG_MM_ID=y
-> CONFIG_TRANSPARENT_HUGEPAGE=y
-> # CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS is not set
-> CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
-> # CONFIG_TRANSPARENT_HUGEPAGE_NEVER is not set
-> CONFIG_THP_SWAP=y
-> CONFIG_READ_ONLY_THP_FOR_FS=y
-> # CONFIG_NO_PAGE_MAPCOUNT is not set
-> CONFIG_PAGE_MAPCOUNT=y
-> 
->> dashboard link: https://syzkaller.appspot.com/bug?extid=5e8feb543ca8e12e0ede
->> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
->>
->> Unfortunately, I don't have any reproducer for this issue yet.
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/f1d71d1bf77d/disk-0af2f6be.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/7f1638f065da/vmlinux-0af2f6be.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/9b3e49834705/bzImage-0af2f6be.xz
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com
->>
->> ------------[ cut here ]------------
->> WARNING: CPU: 0 PID: 7165 at mm/memory.c:3738 __wp_can_reuse_large_anon_folio mm/memory.c:3738 [inline]
-> 
-> VM_WARN_ON_ONCE(folio_entire_mapcount(folio));
-> 
-> Which is rather unexpected. I know we had a scenario (remapping a THP?)
-> where we would have a PMD mapping and a PTE mapping of an exclusive anon
-> folio for a very short time. But, IIRC locking should make sure that
-> that cannot be observed by some other page table walker.
+On 12.04.25 11:27, gaoxu wrote:
+> The commit c928807f6f6b6("mm/page_alloc: keep track of free highatomic")
+> adds a new variable nr_free_highatomic, which is useful for analyzing low
+> mem issues. add nr_free_highatomic in show_free_areas.
 > 
 
-Ah, it likely is a (harless) race, when process A and process B 
-cow-share a PMD THP, and process A write-faults on a PTE mapping of the 
-THP while process B concurrently unmaps the PMD mapping of the THP.
+Sounds helpful
 
-In __folio_remove_rmap(), for RMAP_LEVEL_PMD in case of 
-CONFIG_PAGE_MAPCOUNT=y, we'll do
-
-	folio_dec_large_mapcount(folio, vma);
-	last = atomic_add_negative(-1, &folio->_entire_mapcount);
-
-So after decrementing the large mapcount, the folio will be indicated as 
-"exclusive" to process A.
-
-Process B, still has to decrement the entire mapcount, but process A 
-might already run into the entire_mapcount sanity check.
-
-
-In do_wp_page(), we'd later fail the "folio_large_mapcount(folio) != 
-folio_ref_count(folio)" test until process B is completely done with 
-unmapping the folio.
-
-Maybe we should just move these sanity checks after the refcount check, 
-or reverse the mapcount decrement order. I'll think about that.
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
