@@ -1,99 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA23D2AD3E;
-	Sun, 13 Apr 2025 10:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F62AD3E
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744540723; cv=none; b=GYarJH2zqD4c4hT+s/1FVxT2BvkRM2Amp8RbgqWz75gPAINpxwCt7BU0DZl9VoWbHSXfun6kzqrwdIjHZN9XocCLQuAMUotNXq6JOqaDYPu7XL27JnBIBkOv3YWFgwvceigHJ2mgDmRXr9ByisBWbbpuOZk23VqOz3oBifOviyg=
+	t=1744540908; cv=none; b=ZKhLfSRxV2KxAIDBj69e8Kv63whgG7ddYpUb6yXneGI2H2+nkU8l2Gu0IqEIOzWb6rO8tIZeJKFS1qfBFrJ7D6iRX6mm2SMDrRcgUW1DPBYripKVe6UHcdrVZNwwhbSe2xpIft3vJOZMj9bcxCfL0+1QHm09IKaTM0LGa6QS2Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744540723; c=relaxed/simple;
-	bh=HuSkE+YwTBmOVWhLSQyibRgYafQP6jEjTol0LiCwSPo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6KHNLUvzxsLkxXIXihiv6W+tyjAvO9spzL0QvXaZbqXhz2+WZAS5sxk5VOf1tgQGy+hb+xTZAvx5PGtkUbOBgXhLbDYlvGo0jLIPW3Q7FvQdepOKScJvHE7l0dUlG8RvCq6OJkbNcVVLcSJJunWwUCYbUhfFk6hjcs2X6WZJ1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSGejbrp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744540908; c=relaxed/simple;
+	bh=BOW3297Y41WyxN9o70I4jCToDIFMCjKP42skFXi6u/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G6d3MTrfMsD4E0d4l4nBG8JmYyxi7JAAHTrR0qGq2Ql1/yOf580M3FZaDqnOx2d5qrekI6QA6rt/HZMSTyA4t3bd6uDy7fuLth57D79bSyW9B3PIkrH/z64njPlEyRpAx3SKZ3PgMBkCG4brxbrFzBZA20OPZCTEZt+Gj4eVgYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dEnaLEKw; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSGejbrp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30357C4CEDD;
-	Sun, 13 Apr 2025 10:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744540723;
-	bh=HuSkE+YwTBmOVWhLSQyibRgYafQP6jEjTol0LiCwSPo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GSGejbrpB2Vrh45GmzvClJUMlHo5vypTzNzn0+YAHDC4Hz/MqNNO+T2+iQhADP4eH
-	 T0VyBZc7vmr8CvPkJUdkK5SqBxHh+dIbya1rEWY+7O3J8l/aAX9DHPOWBfH1YdpMXK
-	 ID1R7dmMELZxeKBOYWHWoO5wRfjkcB0r/rqB/ratP8Tvz04VSog8AzV6T6qagE6tgp
-	 Nz/twqg1DGThfHqpBhkrzLb5f3GC/BlJGz4qj2J0I5Nv7Z8Q0Da91O/jeNtM958DXf
-	 M43iHQaAYPuTfxZ77Q0vwee75GXGOj2L/jwLxlXRiPU6HKjXFmx6oLh7CFk43/P3HY
-	 pWR/Rylnu105w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u3ujY-004wP5-VE;
-	Sun, 13 Apr 2025 11:38:41 +0100
-Date: Sun, 13 Apr 2025 11:38:40 +0100
-Message-ID: <86a58kl51r.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Tyler Hicks (Microsoft)" <code@tyhicks.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
-In-Reply-To: <20250411200207.GAZ_l1P91QuMi_wecf@renoirsky.local>
-References: <1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com>
-	<1744241785-20256-3-git-send-email-vijayb@linux.microsoft.com>
-	<319b7c65-3e2f-456b-a845-45f7a57ba2c5@kernel.org>
-	<86o6x4lcf9.wl-maz@kernel.org>
-	<Z/fV+SP0z+slV9/1@redbud>
-	<86frigkmtd.wl-maz@kernel.org>
-	<20250411200207.GAZ_l1P91QuMi_wecf@renoirsky.local>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dEnaLEKw"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744540903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=V5sLZBXFz6J0J+lLlK+U1RjUTi5QPbTvi0740hkhwlw=;
+	b=dEnaLEKw7bwScZNE7Vbbe6kNtooCh1O84DTQAOyJSt2KwWkSvx6lF+qYQgLF0YJHIn4bhH
+	FHnAYkjfMA1LWLTrj2EdUrBWqsi/XIPJ6OtNE76+LKjzLs2xXmuTnix4sGIS5nl3/GqUJg
+	6zoOnRukC0h6xKQKominrjBCKS3t6RE=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86/intel/bts: Replace offsetof() with struct_size()
+Date: Sun, 13 Apr 2025 12:41:09 +0200
+Message-ID: <20250413104108.49142-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: bp@alien8.de, code@tyhicks.com, krzk@kernel.org, vijayb@linux.microsoft.com, tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org, rric@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, s.hauer@pengutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 11 Apr 2025 21:02:07 +0100,
-Borislav Petkov <bp@alien8.de> wrote:
-> 
-> On Thu, Apr 10, 2025 at 05:23:26PM +0100, Marc Zyngier wrote:
-> > We have some other EDAC implementation for arm64 CPUs (XGene,
-> > ThunderX), and they are all perfectly useless (I have them in my
-> > collection of horrors).
-> 
-> Oh oh, can I remove, can I remove?
-> 
-> My trigger finger is itching to kill some more useless code...
+Use struct_size() to calculate the number of bytes to allocate for a new
+bts_buffer. Compared to offsetof(), struct_size() provides additional
+compile-time checks (e.g., __must_be_array()).
 
-The drivers do report ECC errors being corrected, which indicates that
-the HW itself is doing its job. Yes, I buy cheap memory from eBay.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/x86/events/intel/bts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do we need actual drivers to output crap on the console? Probably not,
-but I'm the wrong person to ask -- I only keep these machines alive to
-remind me how things can go horribly wrong.
-
-I don't think there is any harm in keeping this crap around. It
-compiles, and if it breaks, I'll fix it. I'm not convinced we need any
-more of it though, specially for CPUs that are over a decade old.
-
-	M.
-
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index da03f53bfa18..16bc89c8023b 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -101,7 +101,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 	if (overwrite && nr_buf > 1)
+ 		return NULL;
+ 
+-	bb = kzalloc_node(offsetof(struct bts_buffer, buf[nr_buf]), GFP_KERNEL, node);
++	bb = kzalloc_node(struct_size(bb, buf, nr_buf), GFP_KERNEL, node);
+ 	if (!bb)
+ 		return NULL;
+ 
 -- 
-Without deviation from the norm, progress is not possible.
+2.49.0
+
