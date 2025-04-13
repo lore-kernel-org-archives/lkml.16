@@ -1,165 +1,152 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38C11F1931
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 17:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7231625776;
+	Sun, 13 Apr 2025 17:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744565052; cv=none; b=EODlg9L572H0JdxgSnRtpEp20F/Gb5mnW5vot1KIMAu11ArN0HfjaRIUn+rPB3FvdaRwcxG1gIgRCdCD53XlApPstcWZvZal865VJqbjxwnePW463R9Wx8tUV2THLaKIeCmwpcxxIwB9ejiMPcB4B3WvX3GJ/HmtZYZpuPY3qAE=
+	t=1744565060; cv=none; b=nvIuY2vRLtR/KTvoCJhDvIRu07hTKP/kLJB4GTJoiHXzXtvU0qTM0s2DxDNimBbVfrQyPymXct66FNpDBZpmV0jxxc0jiV9BUfA/iCoAMm/AnjF15pU47x09yRVqhy7Xax0q4/08kucX4WPNTwOWfc5TLxDYB25i/j7ySAE7bSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744565052; c=relaxed/simple;
-	bh=6mpwTBXDtKtOWzvRXUOm2Kslk7WOSmE7W5jFMnQJFso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHm2LipHc52fYzFQoNNAfDZnjsAUZuiW4u7mO3NqWVc4kxByCx8s3whFuJB9YDC96YN1U/CN5L11D/wpRPks4lDmedHulZLUbkOOf+C3csUrSN1VdWA3bo/USCrAAD77Vg/CXolC/Xa9jHCguIr70HpKHdEz1H/LfnhYcWgg11I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DWyeEVwh; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744565060; c=relaxed/simple;
+	bh=B0lZVmtJX6R2pQDZ1FDI1ncIUlIzvBvjZUMD1zliFR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cn9VCOL44UWuTz41OtdQWkmDFNwiIAr0USddxE/mTKKXuGGhHxWu3piLSQ376fBql3hNKquyoUrzGfGmHVXvHCYV5uNFX52OglpbMf4GVoykZWBVCC6ht/fhtPGzG5KEq9E7MYdRwT3Gqo0bdf80UmVLeIvLqXElDtmzu8GDXTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kjj2tDfc; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWyeEVwh"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736c3e7b390so2922948b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:24:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kjj2tDfc"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af93cd64ef3so2449875a12.2;
+        Sun, 13 Apr 2025 10:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744565050; x=1745169850; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=C1v1jpUQBgB0UDZI3nApqVs2lUM02dJl8JbpTG+9uNg=;
-        b=DWyeEVwhXGixlZfohvXxpJH9YX5JBwKXatRdbiVfqM61PAruxpMqt5mZpS+t/ErMQe
-         MHNv/74h5zxKe8A4IuWszt+N0NlqSAhxAtCNAmIA8bQ6yNC5hINts9ErDLeaKhZ/ztOl
-         iIF/eoC76K0/9A0rGHDclUefaKrK4jrrvHPLuJdB9VWHtjEOja75LCQcQyXsRTSyQ5dn
-         U0mpAl0rDajo254vc8IfcChJkDQ44ZrR6xW0lcl9RlwBh+0UW+0ptqJItzkOJBGz0etE
-         v5vebRFknE+Hf1FE6iDOHTtXzvvjENywawo1hQM/91duFjlvsLjB8Dyyqde0GEaCDr4U
-         Dccg==
+        d=gmail.com; s=20230601; t=1744565058; x=1745169858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GQzOnhmj39ccEfRo0gYtUZqATjFu0/HR0pPxsBGgL7I=;
+        b=Kjj2tDfcZb6pHXGvrxfhRluDGOInodqHjRg8xTJU361YQsS4slosSnTe9is5VQnTri
+         eAEbV5BaMPQ7kpg03Us/m1c3JpN7vLv38ScdEJxjv0kgzXSx1SIyVX50ZQAe7Z5Dn75Z
+         fhbg53yqMGByV/0f21cZnKj+baojHdIS1VvDOdyxjM5ifpffuMeyVXT13DadpFy0hf3B
+         XkmDZbOiLxx7ads89jBqSL2tNIjyznoB5lM//rkHxgcyHvgAk+Sxv4m+CCKVax0gKNqr
+         XvzMwh5Ay84XtyN6XcNF2el9HTIRyei14EDO2Bep537bs/aTkbWbKnoaO7KAX/7DVheW
+         q27Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744565050; x=1745169850;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C1v1jpUQBgB0UDZI3nApqVs2lUM02dJl8JbpTG+9uNg=;
-        b=nJeO3csmm1AOyNVn1lyPM+sivsyUORAdXtEwdZbNpV8S78K5O85fLTMQqD9MonUUqr
-         /Tf6o3QrkDz9tNiSqRx97Uk6rKUiGjmS8aIdHVxaDvZ5HUm4Sp4FTth6MrCTbhF0WAM1
-         T/aGXNlMlFgfH3J9GkrH9bwa3ufGsEZjzFo9/NwSuEgQXPsLo4PZkittc5vPLpPjXecd
-         lr5dwGhgaylvknJBv4jxPeYYS5fD6YxlwTnV40isNeMLtyATDvETPrN9fWfwqvKLE5EM
-         Ew1kK/eDJb9UjoyCgDG6F2x42KWy46KBWm/WfhmqWobBQN4PLgXwje1g6unjk8FzS38R
-         /CYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPd9Kq/Hzv+B7n16C0lJDLhplwsGTBKJjNPhZMLR2f3jU37KQVb98/Z03KywrTM809NJkyQM+eIL0V7RQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcAKIZWeIgqQ5cHlxJFHBBDIhUKgT3U0+4wmIgEmLxYZPnmPwZ
-	2mbEZVw09U6PSpP8Cpv/IxHshoUzGAWQnrcWrwrt3AVrd/m8Xe2gJpICb5CHuw==
-X-Gm-Gg: ASbGncvASSLH6vRJ9jTYFwHAzcgiLv5j9Je6SuYHAwlaIx9vzkfj9EF8fb28bJ7qVrU
-	UUi9h7VdHgXnnlGxLsT8qKICoPqG79dgM7seFYnDgF0VNalnZNVZHm9BySpmzzRYGvSId7TVoQH
-	pKiZ2ozEiF+Y6en6MUAvMWauK9mQFPYwgoAStIBC56nJlS1cyOU9FAXB8KEIJhAhmfyFxQT96fc
-	qtV7XJad2zhFCf/ds0MZAHgyva3QrOUrC0mKYkrockPhji3WtJWZVlevJj4nrFJr7FJhuiZmrW0
-	Q1J3kPMe3x5QaqcVpzyHu9wzo+6yPx/JsbNWnZQaH0OsNAE3cfE/
-X-Google-Smtp-Source: AGHT+IFM+YdieMiL9r0SStfI5t0k0rConT5oK7CRUa4UafAiZdqdwpgSv57rF8TAB6+nr1CsWpsXWQ==
-X-Received: by 2002:a05:6a00:2e27:b0:736:53c5:33ba with SMTP id d2e1a72fcca58-73bd12657e3mr11703409b3a.16.1744565049844;
-        Sun, 13 Apr 2025 10:24:09 -0700 (PDT)
-Received: from thinkpad ([120.60.137.231])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2328435sm5153419b3a.157.2025.04.13.10.24.05
+        d=1e100.net; s=20230601; t=1744565059; x=1745169859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GQzOnhmj39ccEfRo0gYtUZqATjFu0/HR0pPxsBGgL7I=;
+        b=r96y5bO48S/IqZGbN/xHYiOZskLylP+bhETbXMUsqAHOzjZkuk0RASUpSVhRFISVb0
+         1e+maM0IDdlaotkK2p76hFdGFxoJFXfF85Dk+WwH3GSfXs61MBlZC3LzdMK9sbZSXvYg
+         YAdttKtjxP82daog3qMd58LQU1grw461St0gJgTLRtU+lxOSM3hbh2NLggYn+yNAWh/p
+         zHIDkS7XxWSXFAc/C0X0M69evyRFYjrNzqyxflpFWT2ZEA+GnWeXxHOHxtiybYiL5uDc
+         UE1y7nTxWtrpMx8Y3qZA0B4wg+iqJEtoZRyCzjI7ymegNwmmv/lh7n0jIgo/c/de0MAN
+         OTxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUorRlOY1j4ToEA5SKdQH5s4RU1dKWqPRMEiza6TmhIPI6ZtHYGX6dJo48n6J8BriVSYN0ufQBL4KFBt+ga@vger.kernel.org, AJvYcCUpgYAYvguYiJ4iSXMtihiV4Ej28QBUBAwRtLM8/o+6bTtAAIL7rLvW0CLhau0FPtoD/Qmw3Vzg0d0sPabu@vger.kernel.org, AJvYcCWyYAvZUvmkkNi4Ufsb1wfM9Oy53uW2E9rZG79WuRQgzuWl1HQYRmpC09j6kGCla3AoR7VPmyrJ4ThQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhD2eoN79+UiPlZ7v5uQIUuLk4UhORtz3d0sLUAkBQjb4cfwuk
+	wL6cibTaaTJO/bgeb3/EtPpMTT4C7DXJD5SxVIIhWRrc6mqKa5rRQL9hI+IOW0hmqw==
+X-Gm-Gg: ASbGncuzt8t1rIUjCE/KNNMzKieodwk1jJOwjXOoiuFCbCWhxgj9WKSatbzolLVcx5z
+	ZaY4YyIRXj1VyZLFLsgoQ9IRbhsj1WyG4upnYPwZmtjWQWI3vzSPzUgWfiuahPMardHmfaDIEzY
+	oO+Akjjtj4pCutKMy29Q6299JK/r0f+L36oTECQtxM+CrfqvlkYoQI8wgALnkmjXTXjvT/6d7ej
+	Ylsja8yicaqGJde8WhAn8NKaB4yvTV9bpNpdgUDWiU3BN7fO5UncVnKw8me82XpiWItKg54Uznc
+	Ia0lJ2HSSypiPxwfkbtOvfa+S/AT1myY1z3si+0=
+X-Google-Smtp-Source: AGHT+IH5/9WyTYEfEuGmbLjgtRz8cZ6K/96p4jvqiT7FjoLDWP7BHZ0rL749oiPM5uogUB12gFX56A==
+X-Received: by 2002:a17:90b:17ce:b0:2fe:a336:fe63 with SMTP id 98e67ed59e1d1-308237a833emr15798291a91.24.1744565058526;
+        Sun, 13 Apr 2025 10:24:18 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd04e9a8sm9739654a91.0.2025.04.13.10.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 10:24:09 -0700 (PDT)
-Date: Sun, 13 Apr 2025 22:54:03 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, Hector Martin <marcan@marcan.st>, 
-	Sven Peter <sven@svenpeter.dev>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 13/13] PCI: apple: Add T602x PCIe support
-Message-ID: <3mwdadqtt7733nq2okj47a5rsztgxuip3ukfsy44l7hhh2z7o5@njrv5c5l5fh7>
-References: <20250401091713.2765724-1-maz@kernel.org>
- <20250401091713.2765724-14-maz@kernel.org>
+        Sun, 13 Apr 2025 10:24:17 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Pengyu Luo <mitltlatltl@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: qcom: rpmh: make clkaN optional
+Date: Mon, 14 Apr 2025 01:22:04 +0800
+Message-ID: <20250413172205.175789-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250401091713.2765724-14-maz@kernel.org>
 
-On Tue, Apr 01, 2025 at 10:17:13AM +0100, Marc Zyngier wrote:
-> From: Hector Martin <marcan@marcan.st>
-> 
-> This version of the hardware moved around a bunch of registers, so we
-> avoid the old compatible for these and introduce register offset
-> structures to handle the differences.
-> 
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Tested-by: Janne Grunau <j@jannau.net>
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+On SM8650, clkaN are missing in cmd-db for some specific devices. This
+caused a boot failure. Printing log during initramfs phase, I found
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+[    0.053281] clk-rpmh 17a00000.rsc:clock-controller: missing RPMh resource address for clka1
 
-- Mani
+Adding the optional property to avoid probing failure which causes
+countless deferred probe. In the downstream tree,similar workarounds
+are introduced for SM7635, SM8550, SM8635, SM8650, SM8750.
 
-> ---
->  drivers/pci/controller/pcie-apple.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 847cba753d28d..5b85d9497070c 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -124,6 +124,13 @@
->  #define   PORT_TUNSTAT_PERST_ACK_PEND	BIT(1)
->  #define PORT_PREFMEM_ENABLE		0x00994
->  
-> +/* T602x (M2-pro and co) */
-> +#define PORT_T602X_MSIADDR	0x016c
-> +#define PORT_T602X_MSIADDR_HI	0x0170
-> +#define PORT_T602X_PERST	0x082c
-> +#define PORT_T602X_RID2SID	0x3000
-> +#define PORT_T602X_MSIMAP	0x3800
-> +
->  #define PORT_MSIMAP_ENABLE	BIT(31)
->  #define PORT_MSIMAP_TARGET	GENMASK(7, 0)
->  
-> @@ -158,6 +165,18 @@ static const struct hw_info t8103_hw = {
->  	.max_rid2sid		= 64,
->  };
->  
-> +static const struct hw_info t602x_hw = {
-> +	.phy_lane_ctl		= 0,
-> +	.port_msiaddr		= PORT_T602X_MSIADDR,
-> +	.port_msiaddr_hi	= PORT_T602X_MSIADDR_HI,
-> +	.port_refclk		= 0,
-> +	.port_perst		= PORT_T602X_PERST,
-> +	.port_rid2sid		= PORT_T602X_RID2SID,
-> +	.port_msimap		= PORT_T602X_MSIMAP,
-> +	/* 16 on t602x, guess for autodetect on future HW */
-> +	.max_rid2sid		= 512,
-> +};
-> +
->  struct apple_pcie {
->  	struct mutex		lock;
->  	struct device		*dev;
-> @@ -425,6 +444,7 @@ static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
->  	/* Disable all interrupts */
->  	writel_relaxed(~0, port->base + PORT_INTMSK);
->  	writel_relaxed(~0, port->base + PORT_INTSTAT);
-> +	writel_relaxed(~0, port->base + PORT_LINKCMDSTS);
->  
->  	irq_set_chained_handler_and_data(irq, apple_port_irq_handler, port);
->  
-> @@ -865,6 +885,7 @@ static int apple_pcie_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id apple_pcie_of_match[] = {
-> +	{ .compatible = "apple,t6020-pcie",	.data = &t602x_hw },
->  	{ .compatible = "apple,pcie",		.data = &t8103_hw },
->  	{ }
->  };
-> -- 
-> 2.39.2
-> 
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+Changes in v2:
+- using capital letters, sm[0-9]+ => SM[0-9]+, rpmh => RPMh (Dmitry)
+- correct typo, alform => plaform (Dmitry)
+- remove tested-by tag from myself (Dmitry)
+- line break to keep 80 characters per line (Dmitry)
+- Link to v1: https://lore.kernel.org/all/20250404072003.515796-1-mitltlatltl@gmail.com
+---
+ drivers/clk/qcom/clk-rpmh.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index c7675930f..0aea8e1b7 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -66,6 +66,8 @@ struct clk_rpmh {
+ struct clk_rpmh_desc {
+ 	struct clk_hw **clks;
+ 	size_t num_clks;
++	/* RPMh clock clkaN are optional for this platform */
++	bool clka_optional;
+ };
+ 
+ static DEFINE_MUTEX(rpmh_clk_lock);
+@@ -648,6 +650,7 @@ static struct clk_hw *sm8550_rpmh_clocks[] = {
+ static const struct clk_rpmh_desc clk_rpmh_sm8550 = {
+ 	.clks = sm8550_rpmh_clocks,
+ 	.num_clks = ARRAY_SIZE(sm8550_rpmh_clocks),
++	.clka_optional = true,
+ };
+ 
+ static struct clk_hw *sm8650_rpmh_clocks[] = {
+@@ -679,6 +682,7 @@ static struct clk_hw *sm8650_rpmh_clocks[] = {
+ static const struct clk_rpmh_desc clk_rpmh_sm8650 = {
+ 	.clks = sm8650_rpmh_clocks,
+ 	.num_clks = ARRAY_SIZE(sm8650_rpmh_clocks),
++	.clka_optional = true,
+ };
+ 
+ static struct clk_hw *sc7280_rpmh_clocks[] = {
+@@ -847,6 +851,7 @@ static struct clk_hw *sm8750_rpmh_clocks[] = {
+ static const struct clk_rpmh_desc clk_rpmh_sm8750 = {
+ 	.clks = sm8750_rpmh_clocks,
+ 	.num_clks = ARRAY_SIZE(sm8750_rpmh_clocks),
++	.clka_optional = true,
+ };
+ 
+ static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
+@@ -890,6 +895,13 @@ static int clk_rpmh_probe(struct platform_device *pdev)
+ 		rpmh_clk = to_clk_rpmh(hw_clks[i]);
+ 		res_addr = cmd_db_read_addr(rpmh_clk->res_name);
+ 		if (!res_addr) {
++			hw_clks[i] = NULL;
++
++			if (desc->clka_optional &&
++			    !strncmp(rpmh_clk->res_name, "clka",
++				     sizeof("clka") - 1))
++				continue;
++
+ 			dev_err(&pdev->dev, "missing RPMh resource address for %s\n",
+ 				rpmh_clk->res_name);
+ 			return -ENODEV;
 -- 
-மணிவண்ணன் சதாசிவம்
+2.49.0
+
