@@ -1,108 +1,238 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CC7AD51;
-	Sun, 13 Apr 2025 08:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2054A18;
+	Sun, 13 Apr 2025 08:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744532445; cv=none; b=TT9IQhwG/Bpw4w4lI1mFE3LsjPfwySQCy9mHhu/HAX/KHVm86emz5NbbzEwamq/EABiCCLG6+dIfJVWB9tp61IpawGWfnunXsbe4GslsCwMLjC164xFAiKSA5uH7kdldE6ZPz4dO9trYBUND/bWXSlNOJvtjISrQBbwBcBM0Wic=
+	t=1744532838; cv=none; b=CvTAW5EQL2XqKk7yCqGECbbeF85FPrUxTJstRPGBKWAeETCiOyNGSttP0LrhGTWYRihLtelz9u+JRPlGaZKlqnnWemh/gUqJdjf3v2qg4jB7QtmtI3TqE6HdUifTHL4qUN5L4j9feFcwU4ophton3VX+AZpbrctmv+bnrFBCweY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744532445; c=relaxed/simple;
-	bh=DcWshjfTC1lMC6YXHeeUL4bjuPWPxBzwpr8Rq5Zmfnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bcjQdvYc23kNnmOczl/QVTQhHLt7uqJiZCWeE4WrqcYSo0SsG5yImThplvBK7HX2QkRp8bEWVQRaSJ7XkKZbrQA8S03F0ckF8vQlJ/TAYmIsomkfLLWkW1Pgsgl+7tuMBO8QK1k21xRELrraJegfHHI43LMymVUHyOtv7oRHK8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=exzryWU/; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744532838; c=relaxed/simple;
+	bh=0v3Jq+/wGcI13DKH1vnMiRY+delUiPLDIImtK4f9tLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uElvrDMzX33o/zZNG9RGdMb2XloEHj2Y6dpZyI/I/5iQaqnBNlWr5fd67mrCgmqQLNTYJFADmoNtNTyDJyGf8gOB9P2nWSfe85yvyWH+Tr1LdbYsWVwyAPDkSgaaXhRrPwcXMQwDy0b9DgBSFIbq7YqXEzjTklQM5gj+4bxD8XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZwY6yS2e; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="exzryWU/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744532439; x=1745137239; i=markus.elfring@web.de;
-	bh=DcWshjfTC1lMC6YXHeeUL4bjuPWPxBzwpr8Rq5Zmfnw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=exzryWU/R0uk0fdqTP5OPLHzIJm4fdYAX0IolxCopzBwWYsoo+5Pnz8Z07oaUtlO
-	 ZJOMwHt+XJzDA9rUjSkKjdWp1TBEEEjiEowI6o4EyVwQ1PDtuBXNzZ0MhhgCothyh
-	 HGKRBTPDSfiFfUR9lz6ZZxoSasgRd8V7ZCg1YT7xPabWYQL9YmHt69s4enkwUROtS
-	 G9VH4cYchnpEYydNLz5jwMCBeDgGbtb6EuC7Wki1sBL3FtjO1UxaCfmYKh+gtpL8j
-	 FX/jverm+icguogZ+pAqDu8HbICHVonIi4ox9qgbzWioLxgLQVKlQf9dtfaIILEhJ
-	 QgC1KztyMwYYC31jlg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.67]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MPrPT-1tgxyG33UR-00SVpJ; Sun, 13
- Apr 2025 10:20:39 +0200
-Message-ID: <18573488-ca37-48b8-adae-1728712aec0e@web.de>
-Date: Sun, 13 Apr 2025 10:20:27 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwY6yS2e"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso27341181fa.3;
+        Sun, 13 Apr 2025 01:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744532835; x=1745137635; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=buOxrvabxsXlCms6m8Mzv8UYzhuS/9ep95QMGH+5VUE=;
+        b=ZwY6yS2e+XDIedJeXcWIYpyk5LMaJpMsbuA0f689beWWDM3O/9DDe0BbXbZ0A0epkt
+         Rr5YJPCGCk9t40QR7W4kLZko0j4lK+TFW3NBUpb8CodXNIVYZU8B/ro7V3ZOMfAdCfts
+         TNaoBHuGo5+ZFmeGewm9Mq47iKpWloF8NvPA4ZKTpRdRoj8yDnWnSgc+m6OELkQAEzLQ
+         ABPhLWu3IY2TI+KADvGb/mna2GrxHiaGOZmdSC8GvWo/RSH58cBkqIfhYP/u91AfLaMG
+         57eW9ehYW3y4UZhlaBxKRnHiVdP1y9HssZbA/zegiUKTg/mQRo1jMHC5gfHh2anHGt8r
+         Dyxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744532835; x=1745137635;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=buOxrvabxsXlCms6m8Mzv8UYzhuS/9ep95QMGH+5VUE=;
+        b=D1M87SzhPmLvhbjmmJkCKg6ox73Z+ukYdjX47WqH94WOmz589ZsDofq0nzpg6eu2J4
+         1ws/qE6gxABPR1whasNFCLwT2lDxRrV/kO9jN84m9DyJ9l4eAvYuwnHJ9d6rHNH/uP3X
+         0ngDlwGg4Yg57zoNA5Z8zsRm/XUhD+V9wVKhePHwTK9yhZlk8dp3ez/5ba7x70FK8jLN
+         Aq5ME3mKBazTiVhFLXujUzR1JvhGkctcBv+kTaHYXYD0XNIc9KzrA/izu+OoqMDrGJOW
+         JcscNQgrRsc+/bMsyiVVVQFh0C85nLdUrCKniH+JcUd4DvbW5eLKHx8jbppru3x3Xj0M
+         Zfdw==
+X-Forwarded-Encrypted: i=1; AJvYcCU986JZ9AmVTQiBKetgRQ2yEisOF2ElXP57a7MwGPR0zErcKeGDQJ2lzgMc/QHOjPUuRMzAotsdX6pmEo87efDKLG8=@vger.kernel.org, AJvYcCVbaEHpfwXWNeu5dzhaf5V6NHO9NwFPcceJNvFhh8ahVictWjdm66gG2UTqTLL+HBjfYQ5KIB2WaeoZvR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTm8cYBTQ+TXYEX0zCz4Oo0X42sgEVkU/kFzbyPxpz9vkuUWaV
+	i6uJ2mliA7Fgl0jryjmE3QV8p3w8s0L4C1/AZ1UwtMJpC+w1wKJV1jF2Sm6X/0MKuWLNV8EK7Cd
+	D8YJFd60ZRDY17tIopio1epC5Ox4=
+X-Gm-Gg: ASbGnct0yJoUohOtnTnr2cxE+ozZW2z53txIG/en2SWIn1plINtEo5Bb32gS/LqyjLX
+	5k4Xt7Uwak6S/KZJMfAT/4uKAU7rpgYZqjWl6pmIjiV6uTkoVEZDFMPVnUcsyyyxNzPyvjQ4lMb
+	+kEQFkziRnEnqwlLbq+CfDbg==
+X-Google-Smtp-Source: AGHT+IFIhUpqlQ4ZwlqnhYNhTmxWUbsBLJXkWnvqOdSvKRQQFCLncgsOYq7XCitPfC7NrirYmVY6rvOpDXzamOY47X8=
+X-Received: by 2002:a05:651c:3225:b0:309:17:750d with SMTP id
+ 38308e7fff4ca-31049a932admr28784291fa.27.1744532834427; Sun, 13 Apr 2025
+ 01:27:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: crypto: sun8i-ce-hash - Refine exception handling in
- sun8i_ce_hash_run()
-To: Julian Calaby <julian.calaby@gmail.com>,
- Andre Przywara <andre.przywara@arm.com>,
- Ovidiu Panait <ovidiu.panait.oss@gmail.com>, linux-sunxi@lists.linux.dev,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>,
- "David S. Miller" <davem@davemloft.net>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, LKML <linux-kernel@vger.kernel.org>,
- Julia Lawall <julia.lawall@inria.fr>
-References: <3727de04-7993-4b81-80c0-adb40b847307@web.de>
- <20250409133610.59d42bec@donnerap.manchester.arm.com>
- <e10ecbe1-d8c3-444d-92cb-647a1c54675f@web.de>
- <CAGRGNgUV6Dq6ZR9bcgomzj1PMQj4vLq9qJCy0dxVd0vQoPWYXA@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CAGRGNgUV6Dq6ZR9bcgomzj1PMQj4vLq9qJCy0dxVd0vQoPWYXA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:oVb/K4rokwXrOqYsrdIDmqG4XKpI3nnVM8seiRqbzdcw0cNOV+a
- tYO6eLyzCj6OLXXbZMczd3yXVNlYRA6sf6kr5LSDhn3BPJbQiAD2KlXT78QnSyXWnKwwYeU
- gSQ5jAeoUy3PMT/+dp7P3eR+URUZfBNidvEQAQo0PQHhv1Lje+ktvIdd+qFJogodywkwrkA
- 8u1H/eG5FM+Yk1KnkhQzA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DWeY799sZOI=;JbD2Tgww7jyD7iXyT4Kkb+3BuGr
- Os8Bfuzy0I/sbD/raQrPtbMnrxgEsx0ZtqHe7sdNeeEVxxiI4gWeJJMXvE/Zpn2Hw3KjXRACa
- YyIad+snIp9m4yq66JLptCd4Hapi/K0vJcrHIEmYaZHpMDq1kYfGy6vDHtfPqJomNvyZ4H1Ky
- 8NCb+nklxF62ydIvesPtZR7wsdsIUcaKJcwUHikcXC4RCR7qmN9Pf2mbBGy/mjvsX/A0t6FCz
- mTlDHeoFonNKEH4BMFkNtB7lY/kpt21dglyRP/8c5onwQv/dx0o/ge4f3JG9Tzay04BQfHA7V
- FVS5pnvdbBGFRW7sx2IADGOdzL6Bzvoc4NSRaWYJSfLbNJcFNV3OqJOHRKV7N9Wt7SnP7KN2p
- 3elYK+78v1KjT0474hKuX9iec2S6AILBYtBj6ZWo9uUpAJtYm7fbGqwN/ORc2KAUm/Hb3YbYN
- E9E29MI2sqS/daBcubIyEWyeN+AmZQ4AGgCvSq4/M3TuCmzYkvUCqI4oWnKdxvf8cyH/R4bpc
- xrqRthH9RPVJtIsCdG2aR5hvnC9UfVexc50tl/azRzGJOjcX6PkFMHkZWL6NyHp6dreMHoXpv
- iRVLPDHHpQ2cFce9o5lZ+8eNn1sX2RqS91khwtOEC9pmcoVpEQZeu9jIAK9/qvCqR+0kBkV+d
- rAbqXkiwmuvejYV5Zyp99IHa743UVWwLLcbvo15soJddp5CveU74m8caymlB7jK2ECyqHR46d
- ogcB6efDvvUN32HzjeIrIzvV5RNJ5tu6JsJHJISrNcf3KskYqrYwEnyPtHLFYaHnn0ljCw3kT
- KpT/w8QCYyV2o5PjLQx2NFKvJxaGIxM9Yi/yK7JI+UMkCeLxuGn0DfPzdnnBMaWuXBasyIJCo
- oEVBeGxWj3PXExnJsESjt1tlXh5uIvAbxjuJBoTdZIwod7nwTcw9w4Y5JU29AAjSQ/BbAxShT
- FuK2YyYCDkBu7xi+5C6iI2V+o0CpGLuT8MyHkRkgZ9Jq7BMWroUCSra3f/4jg5kVCXxvEGHyd
- sT5jvKLRyn5z9PaS73Q9I+TCQWuKvoHtMZ0dWzll0YVbM3hS0hrDc81ir0Eigt//neSSmwkx7
- MnZSJ14QReP/QfxJAQjvuNR09i63GFYi9cvNgtZKgCkkapts4srR/6yezSZJoiWvrSzIgW69P
- F3DyRXSu6nL47uI+muhUy7oPhhjv+TtlMzrT472hIDbAYQcgS74r3dJRowDN3ekiCt+AB7ais
- lrJQA6OzBUB3hnsw+x9m7hKACHpINg9d2KUiC+ETJ9k9o7DBSbD6a5WOfi7L4/jHEO5vuI9Uj
- 77DIvPwnPMkEdGpkryg/JohEQIZvJ2b9tqmEEYK1xtYSX7Qbu5Fccgb1GpKrnTiCzZx54WBnZ
- kuNGrvpifM3pm2yGcxe5m5BY0FdBsd/vPHhI0RZSw7MprH640e0W0shALykpy+wV9TOaBO0GI
- vO3b+TUAEEmOut5RW8UJOiz+TnklbF17EUGmZo/qR7RJBrux0
+References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
+ <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local> <Z_oqalk92C4G6Rqt@gmail.com>
+In-Reply-To: <Z_oqalk92C4G6Rqt@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 13 Apr 2025 10:27:07 +0200
+X-Gm-Features: ATxdqUEgbd74PN99mAMNm4GPSlQwD9WhGUmTSngiIYkBKayMsAXTVSfI3YxZ0XU
+Message-ID: <CAFULd4bTd6GMftLBX7Nu0xftini00o4v7=1XfuoDC8ydUr9Ueg@mail.gmail.com>
+Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
+ __typeof_unqual__() when __GENKSYMS__ is defined
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I note that you said you did this using the Coccinelle software. Is
-> the semantic patch something you're trying to get upstream at part of
-> coccicheck?
+On Sat, Apr 12, 2025 at 10:55=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Borislav Petkov <bp@alien8.de> wrote:
+>
+> > On Thu, Apr 10, 2025 at 10:58:46AM -0000, tip-bot2 for Uros Bizjak wrot=
+e:
+> > > The following commit has been merged into the core/urgent branch of t=
+ip:
+> > >
+> > > Commit-ID:     e696e5a114b59035f5a889d5484fedec4f40c1f3
+> > > Gitweb:        https://git.kernel.org/tip/e696e5a114b59035f5a889d5484=
+fedec4f40c1f3
+> > > Author:        Uros Bizjak <ubizjak@gmail.com>
+> > > AuthorDate:    Fri, 04 Apr 2025 12:24:37 +02:00
+> > > Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+> > > CommitterDate: Thu, 10 Apr 2025 12:44:27 +02:00
+> > >
+> > > compiler.h: Avoid the usage of __typeof_unqual__() when __GENKSYMS__ =
+is defined
+> > >
+> > > Current version of genksyms doesn't know anything about __typeof_unqu=
+al__()
+> > > operator.  Avoid the usage of __typeof_unqual__() with genksyms to pr=
+event
+> > > errors when symbols are versioned.
+> > >
+> > > There were no problems with gendwarfksyms.
+> > >
+> > > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+> > > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1=
+c035@molgen.mpg.de/
+> > > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > > Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+> > > Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > > Link: https://lore.kernel.org/r/20250404102535.705090-1-ubizjak@gmail=
+.com
+> > > ---
+> > >  include/linux/compiler.h | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> > > index 27725f1..98057f9 100644
+> > > --- a/include/linux/compiler.h
+> > > +++ b/include/linux/compiler.h
+> > > @@ -229,10 +229,10 @@ void ftrace_likely_update(struct ftrace_likely_=
+data *f, int val,
+> > >  /*
+> > >   * Use __typeof_unqual__() when available.
+> > >   *
+> > > - * XXX: Remove test for __CHECKER__ once
+> > > - * sparse learns about __typeof_unqual__().
+> > > + * XXX: Remove test for __GENKSYMS__ once "genksyms" handles
+> > > + * __typeof_unqual__(), and test for __CHECKER__ once "sparse" handl=
+es it.
+> > >   */
+> > > -#if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
+> > > +#if CC_HAS_TYPEOF_UNQUAL && !defined(__GENKSYMS__) && !defined(__CHE=
+CKER__)
+> > >  # define USE_TYPEOF_UNQUAL 1
+> > >  #endif
+> >
+> > So mingo is right - this is not really a fix but a brown-paper bag of
+> > sorts.
+>
+> Yeah, agreed, I've removed this workaround from tip:core/urgent for the
+> time being - it's not like genksyms is some magic external entity we
+> have to work around, it's an in-kernel tool that can be fixed/enhanced
+> in scripts/genksyms/.
 
-Not yet.
+Please note that you will disable a check that is finally able to fail
+the build for a whole class of very subtle percpu bugs. This
+functionality was discussed and specifically requested at [1] and [2]
+by Thomas [CC'd]:
 
-It might become more interesting to achieve wider applications of similar
-source code analyses and transformations.
+--q--
+Coming back to __percpu. As I mentioned in the original thread it's a sad
+state of affairs that the only way to detect the __percpu fails is sparse
+or some other static checker:
 
-Several SmPL script variants were published which are also still waiting
-on constructive review for coccicheck extensions.
+      https://lore.kernel.org/all/87bk7vuldh.ffs@tglx
 
-Regards,
-Markus
+But that's a different problem to solve and does not invalidate the fixes
+which come with this series in any way.
+
+If the compiler people would have provided a way to utilize the anyway
+non-standard name space support in a useful way, I could have spared the
+time to bang my head agaist the wall simply because this would have failed
+to build in the first place long ago. That just makes me sad.
+
+After wading through this, I really ask the 0-day people to push hard on
+any sparse fallout which involves __percpu. The resulting failures can be
+truly subtle and not necessarily fatal right away.
+--/q--
+
+and
+
+--q--
+I did not follow the __set_gs work closely, so I don't know whether Uros
+ever tried to actually mark the per CPU variable __set_gs right away,
+which would obviously catch the above 'foo' nonsense.
+
+I think this should just work, but that would obviously require to do
+the type cast magic at the EXPORT_SYMBOL side and in some other places.
+--/q--
+
+[1] https://lore.kernel.org/lkml/20240303235029.555787150@linutronix.de/
+[2] https://lore.kernel.org/lkml/87edcruvja.ffs@tglx/
+
+My proposed "workaround" patch (quoted above) will fallback to
+generate a preprocessed source that both, sparse and genksyms
+understand *without any loss of functionality*. This exact source is
+what these tools currently process, and as shown in the message trail,
+the proposed patch fully restores the existing functionality.
+Effectively, genksyms would generate the same CRC if it would match
+typeof_unqual keyword with typeof and ignore __seg_gs keyword.
+
+The effectiveness of the check can be seen in the pull request for MM
+updates [3]:
+
+--q--
+- The 6 patch series "Enable strict percpu address space checks" from
+  Uros Bizjak uses x86 named address space qualifiers to provide
+  compile-time checking of percpu area accesses.
+
+  This has caused a small amount of fallout - two or three issues were
+  reported.  In all cases the calling[sic] code was founf[sic] to be incorr=
+ect.
+--/q--
+
+[3] https://lore.kernel.org/lkml/20250330165732.f4c1493615375623f67e38eb@li=
+nux-foundation.org/
+
+The patch that disables the above checks trades enablement of this new
+functionality for the request that genksyms (and sparse?) fully
+support the new keyword first. A workaround was promptly developed
+that allows the external tools to work without any loss of
+functionality, and allows these tools to be independently improved at
+any later time. Please also note that genksyms is already partially
+obsoleted by and substituted in allyesconfig by gendwarfksyms, this
+was the reason the issue was found only at rc1 time.
+
+Also, I don't think that the issue falls into the "brown-paper bag"
+bug category at all. The unfixed source results in a minor loss of
+functionality (percpu symbols are not versioned), was detected at rc1
+and promptly fixed (worked around). The issue can't be detected by any
+standardized approach (allyesconfig compile), and for the core change
+of this magnitude, some fall-out is to be expected during integration
+(rc1) time. FYI - more than 30 patches were needed to fix percpu
+issues in the kernel source (many of these issues were not found by
+sparse) before checks were enabled and the enablement was already
+postponed for one release to fix an issue, triggered by some extremely
+dubious usage by external tools (rust).
+
+Based on the above facts, I'd like to ask maintainers to reconsider
+their decision.
+
+Uros.
