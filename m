@@ -1,73 +1,55 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward203a.mail.yandex.net (forward203a.mail.yandex.net [178.154.239.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA4E1AB6D4;
-	Sun, 13 Apr 2025 12:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD341188CB1;
+	Sun, 13 Apr 2025 12:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744545850; cv=none; b=J2LsFVCZ8O+GgE5CYMTYEdSTC225D4YYKNxqpT5KzbeBxrUbmt199yvr+LGBng2uBt9YAugl8xMEvzVXAv9aAx8Ku8BBDJ9Vc4BttrWzHU5t3yb0UFEyXHkrdrOEb8OD+WGS9c7OtE+VaAkjUN5KBZKzIVzq7Eesf2n4C+CfCYw=
+	t=1744545970; cv=none; b=PDevbUT6Wepfo5Dz6lb9zhg354ztn6LxlWrbXCKrQ/z1ylQPvKC/+GTiTu8qAtttTLIStDgzOy/Kh+dSpOvjvIvnpERf3dJS5c47vfvUZ4aZqIo1Q6mxdZjJHjWncYnknWhVzOy2iXH1pnwNt7JVE5O2WoRlWnMLw+2kjoVOuZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744545850; c=relaxed/simple;
-	bh=fpZdPZZm+2ktYrurYWmcig3+Cd/pQF+gLXoKrv0KSYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=puA3o9SLaZx+nu47+F/2UMMpknV0Ahhj2kjeZv+UWQxXGFL96tA8YoPyTkc/mgtVLT2iIC8/rLZSrM4k0ddUeKZ6lL2MujXf4e33gyYgIAUBpF6odeUi5o6GUBxm35Erwk6vaqeEjgO+Umjl50hkYDnOmV+4bnMr1Z6x2hc+DJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1fJZRuF; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744545970; c=relaxed/simple;
+	bh=u8PsHxYe+9KzQH5gysD3d12LwzebU7kL6mpp/V6CGG0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R9B221al9q95RUGfMRwR/Cva/UtOY55NPnY+lsOph3sPvv0QSVnrsQBsaqAXYkF6fkj/ehPepKNrmXPuxQf8a4MKWUO+KEE2EGZx8oreKigQB2Z/gecRrBrX77yt+JAsxAGZa7Qwm0TU5dd9P3agx81ljLxAQeTETGmA1xunzxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=JMxs2YZz; arc=none smtp.client-ip=178.154.239.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1fJZRuF"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b03bc416962so2365516a12.0;
-        Sun, 13 Apr 2025 05:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744545848; x=1745150648; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsmAlfCRzyGmechmgg5qWPZv83qkNivGO06jWmaWuoE=;
-        b=E1fJZRuFZQh5PFs3KZjXANQDCE85QAmhC1oz2KcpNrNDgejvGTsFPz5aDfoESj08/O
-         B+8LqWIbq2fdTtVJpgcVYp47XKFmKNccrUcg4Aa0ooyYLhDoCGr8ZA/WFTqkO2Uo7dQS
-         4UMHoEUe0iF2kzmVaL4W4EaDOo0C0GfVZSLxuhMp1OtLXlIqITZ3X1bhIfZGE/oHaXm2
-         MNSM4aV5ASM36PpbZ2IFSYt/LHK1ixOKsQ2UhRsi+rIZImPm17pcaW2sDAvpfhG/gDz2
-         KJslXsr9DMlCCzITlQ3zDd3mWXWD07fHtnfZfvF39qlWcbF3HX6e7AVjpEMlSpK5x6jy
-         A1nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744545848; x=1745150648;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NsmAlfCRzyGmechmgg5qWPZv83qkNivGO06jWmaWuoE=;
-        b=QGS/MnOCiqcJFou5ZUL+xG3MyPQYcatc/u/pWv+fUeBD7eBiZfeeEou12Dh7FptIvm
-         +36A5e32R4F8e3w1Twq3Ah96aQ87r5fzoSoSY0YUYmuNsPhJfXx5PEEqB4rzmWnEYpi1
-         wSAdAOfxdUb1nku9YgyG0zAuTxyyTzRyqzXtux0u3K2Rgu/vf7GQ1rVl1wBGnIDGfHzs
-         tcDFKUQyGoT0UzMUjCP5dne/Ub5nKtRVLNjQYPiXtL24U+V4rgvKQ2hxk1HpW7pcv4JJ
-         i84qKyMawsbR7vCregcq6TzfT++7gHfrqRoedrYSo2z0Bt8bYkpOo/c0GNQnLbYh6SPP
-         kN8Q==
-X-Gm-Message-State: AOJu0Yw26UzBG1kYZx6zLSYGkQlrY5PgVjp6WbG0AW8oyiE4us3khfyv
-	LmlYYxscegcYnpMwNJeOsFh6CWU+eeZIEsAub/TDjTdB97aDdjB3fNjG3WK7WJ6iNQ==
-X-Gm-Gg: ASbGncvh/Qp0XCrZ+5aZvThmnLEXfZ0onN+Ao6mPLMk6tR6L9f2v2o7h2hdPob/YHw1
-	iN2sez1ZCe0jw9tEQPWLVgDcP9n8rKI+w/2FfxF2xk4IfBXNRKQYF+wRSw62z77jvYzQW63kZ0a
-	PLQGi9+MMWttE5nVJ4RsD4A9ATBSpG4U+lhrXCNKvC0/W6G8pTil+VHrOaR6AVCtB5Z3Vk+qHDQ
-	JCCCpvocuatAYl49S3+7ijU8GUddGwHTgy6TG35MFIa1aN4AD/SwLcWEVOEu6qYsWXpPgq0ufpr
-	dBo+JGJ/+3ot1R1S4mEO4aBg/5b2tTxgTsdXQA==
-X-Google-Smtp-Source: AGHT+IFs4PjDO6xQlge22RyfBv9IzqRee4AkDklXKjBk6GKqNxaRSJVuGRq/PZ4DBbS9afT5sx/H8w==
-X-Received: by 2002:a17:90b:264b:b0:2ff:7331:18bc with SMTP id 98e67ed59e1d1-308237a838fmr12125835a91.26.1744545847551;
-        Sun, 13 Apr 2025 05:04:07 -0700 (PDT)
-Received: from fedora.. ([2405:201:f022:f80b:bc98:df72:df5a:60fa])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df0823aasm9162239a91.20.2025.04.13.05.04.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 05:04:07 -0700 (PDT)
-From: Siddharth Menon <simeddon@gmail.com>
-To: linux-iio@vger.kernel.org,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	marcelo.schmitt1@gmail.com,
-	Siddharth Menon <simeddon@gmail.com>
-Subject: [PATCH v6] iio: frequency: ad9832: Use FIELD_PREP macro to set bit fields
-Date: Sun, 13 Apr 2025 17:28:13 +0530
-Message-ID: <20250413120354.19163-1-simeddon@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="JMxs2YZz"
+Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d100])
+	by forward203a.mail.yandex.net (Yandex) with ESMTPS id 05CA9633FB;
+	Sun, 13 Apr 2025 14:58:02 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1d:5b1c:0:640:ee42:0])
+	by forward100a.mail.yandex.net (Yandex) with ESMTPS id 9B35246CD6;
+	Sun, 13 Apr 2025 14:57:53 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ovD0tuQLiqM0-ZoqV47jK;
+	Sun, 13 Apr 2025 14:57:52 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
+	t=1744545472; bh=smL9B/mF681y0YybnUJX7iCKktwM5bsed7obNcAJQGg=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=JMxs2YZz/9wfsNp9/jxHMikrH0gZx2sbSYeNIGryALsD04r6e3204apT4298+8nEJ
+	 e711a5WRG517HW5Ailr7GyDZVzPEbxm53kP4OzZeCjak3JJtKzWdyyVvDXtA+SAOEo
+	 4HTqVBfxdsjPDTKtdytoSwHWj8G4gjUHW5r71iEA=
+Authentication-Results: mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
+From: Mikhail Lobanov <m.lobanov@rosa.ru>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mikhail Lobanov <m.lobanov@rosa.ru>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] KVM: SVM: forcibly leave SMM mode on vCPU reset
+Date: Sun, 13 Apr 2025 14:57:27 +0300
+Message-ID: <20250413115729.64712-1-m.lobanov@rosa.ru>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,216 +58,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use bitfield and bitmask macros to clearly specify AD9832 SPI
-command fields to make register write code more readable.
+Previously, commit ed129ec9057f ("KVM: x86: forcibly leave nested mode
+on vCPU reset") addressed an issue where a triple fault occurring in
+nested mode could lead to use-after-free scenarios. However, the commit
+did not handle the analogous situation for System Management Mode (SMM).
 
-Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+This omission results in triggering a WARN when a vCPU reset occurs
+while still in SMM mode, due to the check in kvm_vcpu_reset(). This
+situation was reprodused using Syzkaller by:
+1) Creating a KVM VM and vCPU
+2) Sending a KVM_SMI ioctl to explicitly enter SMM
+3) Executing invalid instructions causing consecutive exceptions and
+eventually a triple fault
+
+The issue manifests as follows:
+
+WARNING: CPU: 0 PID: 25506 at arch/x86/kvm/x86.c:12112
+kvm_vcpu_reset+0x1d2/0x1530 arch/x86/kvm/x86.c:12112
+Modules linked in:
+CPU: 0 PID: 25506 Comm: syz-executor.0 Not tainted
+6.1.130-syzkaller-00157-g164fe5dde9b6 #0
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+RIP: 0010:kvm_vcpu_reset+0x1d2/0x1530 arch/x86/kvm/x86.c:12112
+Call Trace:
+ <TASK>
+ shutdown_interception+0x66/0xb0 arch/x86/kvm/svm/svm.c:2136
+ svm_invoke_exit_handler+0x110/0x530 arch/x86/kvm/svm/svm.c:3395
+ svm_handle_exit+0x424/0x920 arch/x86/kvm/svm/svm.c:3457
+ vcpu_enter_guest arch/x86/kvm/x86.c:10959 [inline]
+ vcpu_run+0x2c43/0x5a90 arch/x86/kvm/x86.c:11062
+ kvm_arch_vcpu_ioctl_run+0x50f/0x1cf0 arch/x86/kvm/x86.c:11283
+ kvm_vcpu_ioctl+0x570/0xf00 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4122
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:870 [inline]
+ __se_sys_ioctl fs/ioctl.c:856 [inline]
+ __x64_sys_ioctl+0x19a/0x210 fs/ioctl.c:856
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x35/0x80 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+
+Architecturally, hardware CPUs exit SMM upon receiving a triple
+fault as part of a hardware reset. To reflect this behavior and
+avoid triggering the WARN, this patch explicitly calls
+kvm_smm_changed(vcpu, false) in the SVM-specific shutdown_interception()
+handler prior to resetting the vCPU.
+
+The initial version of this patch attempted to address the issue by calling
+kvm_smm_changed() inside kvm_vcpu_reset(). However, this approach was not
+architecturally accurate, as INIT is blocked during SMM and SMM should not
+be exited implicitly during a generic vCPU reset. This version moves the
+fix into shutdown_interception() for SVM, where the triple fault is
+actually handled, and where exiting SMM explicitly is appropriate.
+
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+
+Fixes: ed129ec9057f ("KVM: x86: forcibly leave nested mode on vCPU reset")
+Cc: stable@vger.kernel.org
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Mikhail Lobanov <m.lobanov@rosa.ru>
 ---
- The error path for AD9832_FREQ_SYM was not removed as initially
- suggested by Marcelo, since he changed his mind, considering it
- would not follow the proposed ABI
- v1->v2:
- - remove CMD_SHIFT and ADD_SHIFT
- - use GENMASK
- - store regval in an array and iterate through it
- v2->v3:
- - add missing header
- - refactor code in the previously introduced loops
- v3->v4:
- - update commit message with a better one
- - convert AD9832_PHASE and RES_MASK to masks
- - cleanup a few if else blocks
- v4->v5
- - remove unnecessary inversion (val ? 0 : 1) used
-   with AD9832_PHASE_MASK introduced in v4
- - use ARRAY_SIZE instead of fixed integers
- - use reverse xmas tree order
- - align mask macros
- v5->v6
- - rearranged includes to be alphabetical
- - remove unused RES_MASK
- - corrected logical errors pointed out by Marcelo
- drivers/staging/iio/frequency/ad9832.c | 82 ++++++++++++++------------
- 1 file changed, 43 insertions(+), 39 deletions(-)
+v2: Move SMM exit from kvm_vcpu_reset() to SVM's shutdown_interception(), 
+per suggestion from Sean Christopherson <seanjc@google.com>.
 
-diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-index 140ee4f9c137..7893bf9f5264 100644
---- a/drivers/staging/iio/frequency/ad9832.c
-+++ b/drivers/staging/iio/frequency/ad9832.c
-@@ -7,6 +7,8 @@
+ arch/x86/kvm/svm/svm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index d5d0c5c3300b..34a002a87c28 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -2231,6 +2231,8 @@ static int shutdown_interception(struct kvm_vcpu *vcpu)
+ 	 */
+ 	if (!sev_es_guest(vcpu->kvm)) {
+ 		clear_page(svm->vmcb);
++		if (is_smm(vcpu))
++			kvm_smm_changed(vcpu, false);
+ 		kvm_vcpu_reset(vcpu, true);
+ 	}
  
- #include <asm/div64.h>
- 
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -16,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- #include <linux/sysfs.h>
-+#include <linux/unaligned.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -59,17 +62,17 @@
- #define AD9832_CMD_SLEEPRESCLR	0xC
- 
- #define AD9832_FREQ		BIT(11)
--#define AD9832_PHASE(x)		(((x) & 3) << 9)
-+#define AD9832_PHASE_MASK	GENMASK(10, 9)
- #define AD9832_SYNC		BIT(13)
- #define AD9832_SELSRC		BIT(12)
- #define AD9832_SLEEP		BIT(13)
- #define AD9832_RESET		BIT(12)
- #define AD9832_CLR		BIT(11)
--#define CMD_SHIFT		12
--#define ADD_SHIFT		8
- #define AD9832_FREQ_BITS	32
- #define AD9832_PHASE_BITS	12
--#define RES_MASK(bits)		((1 << (bits)) - 1)
-+#define AD9832_CMD_MSK		GENMASK(15, 12)
-+#define AD9832_ADD_MSK		GENMASK(11, 8)
-+#define AD9832_DAT_MSK		GENMASK(7, 0)
- 
- /**
-  * struct ad9832_state - driver instance specific data
-@@ -131,6 +134,8 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- {
- 	unsigned long clk_freq;
- 	unsigned long regval;
-+	u8 regval_bytes[4];
-+	u16 freq_cmd;
- 
- 	clk_freq = clk_get_rate(st->mclk);
- 
-@@ -138,19 +143,15 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- 		return -EINVAL;
- 
- 	regval = ad9832_calc_freqreg(clk_freq, fout);
-+	put_unaligned_be32(regval, regval_bytes);
- 
--	st->freq_data[0] = cpu_to_be16((AD9832_CMD_FRE8BITSW << CMD_SHIFT) |
--					(addr << ADD_SHIFT) |
--					((regval >> 24) & 0xFF));
--	st->freq_data[1] = cpu_to_be16((AD9832_CMD_FRE16BITSW << CMD_SHIFT) |
--					((addr - 1) << ADD_SHIFT) |
--					((regval >> 16) & 0xFF));
--	st->freq_data[2] = cpu_to_be16((AD9832_CMD_FRE8BITSW << CMD_SHIFT) |
--					((addr - 2) << ADD_SHIFT) |
--					((regval >> 8) & 0xFF));
--	st->freq_data[3] = cpu_to_be16((AD9832_CMD_FRE16BITSW << CMD_SHIFT) |
--					((addr - 3) << ADD_SHIFT) |
--					((regval >> 0) & 0xFF));
-+	for (int i = 0; i < ARRAY_SIZE(regval_bytes); i++) {
-+		freq_cmd = (i % 2 == 0) ? AD9832_CMD_FRE8BITSW : AD9832_CMD_FRE16BITSW;
-+
-+		st->freq_data[i] = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, freq_cmd) |
-+			FIELD_PREP(AD9832_ADD_MSK, addr - i) |
-+			FIELD_PREP(AD9832_DAT_MSK, regval_bytes[i]));
-+	}
- 
- 	return spi_sync(st->spi, &st->freq_msg);
- }
-@@ -158,15 +159,21 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- static int ad9832_write_phase(struct ad9832_state *st,
- 			      unsigned long addr, unsigned long phase)
- {
-+	u8 phase_bytes[2];
-+	u16 phase_cmd;
-+
- 	if (phase >= BIT(AD9832_PHASE_BITS))
- 		return -EINVAL;
- 
--	st->phase_data[0] = cpu_to_be16((AD9832_CMD_PHA8BITSW << CMD_SHIFT) |
--					(addr << ADD_SHIFT) |
--					((phase >> 8) & 0xFF));
--	st->phase_data[1] = cpu_to_be16((AD9832_CMD_PHA16BITSW << CMD_SHIFT) |
--					((addr - 1) << ADD_SHIFT) |
--					(phase & 0xFF));
-+	put_unaligned_be16(phase, phase_bytes);
-+
-+	for (int i = 0; i < ARRAY_SIZE(phase_bytes); i++) {
-+		phase_cmd = (i % 2 == 0) ? AD9832_CMD_PHA8BITSW : AD9832_CMD_PHA16BITSW;
-+
-+		st->phase_data[i] = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, phase_cmd) |
-+			FIELD_PREP(AD9832_ADD_MSK, addr - i) |
-+			FIELD_PREP(AD9832_DAT_MSK, phase_bytes[i]));
-+	}
- 
- 	return spi_sync(st->spi, &st->phase_msg);
- }
-@@ -197,24 +204,22 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 		ret = ad9832_write_phase(st, this_attr->address, val);
- 		break;
- 	case AD9832_PINCTRL_EN:
--		if (val)
--			st->ctrl_ss &= ~AD9832_SELSRC;
--		else
--			st->ctrl_ss |= AD9832_SELSRC;
--		st->data = cpu_to_be16((AD9832_CMD_SYNCSELSRC << CMD_SHIFT) |
-+		st->ctrl_ss &= ~AD9832_SELSRC;
-+		st->ctrl_ss |= FIELD_PREP(AD9832_SELSRC, val ? 0 : 1);
-+
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
- 					st->ctrl_ss);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
- 	case AD9832_FREQ_SYM:
--		if (val == 1) {
--			st->ctrl_fp |= AD9832_FREQ;
--		} else if (val == 0) {
-+		if (val == 1 || val == 0) {
- 			st->ctrl_fp &= ~AD9832_FREQ;
-+			st->ctrl_fp |= FIELD_PREP(AD9832_FREQ, val ? 1 : 0);
- 		} else {
- 			ret = -EINVAL;
- 			break;
- 		}
--		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
- 					st->ctrl_fp);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
-@@ -224,21 +229,20 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 			break;
- 		}
- 
--		st->ctrl_fp &= ~AD9832_PHASE(3);
--		st->ctrl_fp |= AD9832_PHASE(val);
-+		st->ctrl_fp &= ~AD9832_PHASE_MASK;
-+		st->ctrl_fp |= FIELD_PREP(AD9832_PHASE_MASK, val);
- 
--		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
- 					st->ctrl_fp);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
- 	case AD9832_OUTPUT_EN:
- 		if (val)
--			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
--					AD9832_CLR);
-+			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP | AD9832_CLR);
- 		else
--			st->ctrl_src |= AD9832_RESET;
-+			st->ctrl_src |= FIELD_PREP(AD9832_RESET, 1);
- 
--		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
- 					st->ctrl_src);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
-@@ -396,7 +400,7 @@ static int ad9832_probe(struct spi_device *spi)
- 	spi_message_add_tail(&st->phase_xfer[1], &st->phase_msg);
- 
- 	st->ctrl_src = AD9832_SLEEP | AD9832_RESET | AD9832_CLR;
--	st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-+	st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
- 					st->ctrl_src);
- 	ret = spi_sync(st->spi, &st->msg);
- 	if (ret) {
 -- 
-2.49.0
+2.47.2
 
