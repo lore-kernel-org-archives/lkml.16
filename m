@@ -1,161 +1,177 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471C5AD51;
-	Sun, 13 Apr 2025 09:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A567178372;
+	Sun, 13 Apr 2025 09:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744536213; cv=none; b=GlvI7JKdb15aoAQ3AC8/ygIKQo8yze1YM40dRgB+c5gJ0MWzMtY+BpwYiu88S86ouTQ5JZLLxZYlAsRmkIcAAwmAWbX10/0AItc2JEM1CtwecmpjBI5ojY78pUUTJlZmgebvg5maChnN9yCfl1BiUAFg00fBCCouT8fiLEJ5/rE=
+	t=1744536326; cv=none; b=JF8KKVvbVDpLbtZqa+e4W84AY9geGyezM9Q2dyH62lbrycQRxLy7iRskXQjjWKqJJSxTbL8af3UJbgjq06uc/paY3ftSmbymJLnpyAPOC2advx+Eff2Hkw1CIn4EAX0BOam9G5L+DASXnUHbYOukAo3tS7wWV62swgTGuTfxXFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744536213; c=relaxed/simple;
-	bh=yf676E/gQZ3toPal9eBfEKUBovP3MaSTUqSQmtVon30=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GRrfeYIVA//VA5TwdX7UMC/buqPVkv/EgIesvRHeCCV2bnp0KL9HSi91P53MbjQ4ux7vVICcIkkcj0cfaN3We8NWCBlk8Dlkl6Q2CquP7WS0xpPrpcBgI8NmI5qW9fNvLtmDlVAkeQsCt2oEUgYVE8jJkFxhJv8DwsklIhBBM70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3TkzMdtu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zg7jf2gk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744536326; c=relaxed/simple;
+	bh=XW0UTv9CvXun7cSv8wxoN8fYT/wluyfThYmnYWG9Fzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=If0VAW7lyx/O/uW+IValKswzsKeIlnY1Gow0JfeDoI4+nW4zJcZoX47L5mKEXRUcpU2ULL05S51kDuyXtRRD/LpR5EgWYJiMy6i/XBSIPzyhN3Hb2WFTdWfqFuiIzX7VS5PN4+idk2IjGEJrVV4fQktGO5AVcZtX8KRJS5PhAew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQbTWk8W; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3TkzMdtu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zg7jf2gk"
-Date: Sun, 13 Apr 2025 09:23:24 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744536209;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ucnrpy2NvzE8s629t63JajaFbp5wyeNnqldVUdd1vzg=;
-	b=3TkzMdtuD97PL8jAK+5YHdpwQM883nL8ZTMJK4cQLz833JpNOk7+gyzUCGidHPeaMhClEN
-	ZbuECKMUCFEN2tpucR6LpBHMtGXJiliBVNaoRVCKrPtE7O+T1HHkaMZi+MZfoYL0KEsPmb
-	KfmYMs2PsbRk19eHZcnoXXUbfamiviNbmY2CcR/Ex2mmD6QzmocR+KJuvPSztja0iO1vpN
-	U/35rD2mM3nQmskr7PiAS3NWr/Wj7CkwCjTV+0XDxYt52C5+qlwNOcAXwfxN39np567tS5
-	EoXANhKZ+ZILmmIADtAtv9/ojv0Mn/Y1sBPDNz4lOzHiMfowZ4rx9T86QvGOSA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744536209;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ucnrpy2NvzE8s629t63JajaFbp5wyeNnqldVUdd1vzg=;
-	b=zg7jf2gkbUWm6Ffn91qiqqw9fp+6/GPHXahLHDCOmoaIWRR2qA0TyAA95D2Syh9iT1zumE
-	zV9vdNB3+6TkXaBQ==
-From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/e820: Discard high memory that can't be
- addressed by 32-bit systems
-Cc: Dave Hansen <dave.hansen@intel.com>, Arnd Bergmann <arnd@kernel.org>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Davide Ciminaghi <ciminaghi@gnudd.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250413080858.743221-1-rppt@kernel.org>
-References: <20250413080858.743221-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQbTWk8W"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so2514001276.2;
+        Sun, 13 Apr 2025 02:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744536324; x=1745141124; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XW0UTv9CvXun7cSv8wxoN8fYT/wluyfThYmnYWG9Fzw=;
+        b=QQbTWk8W1RJJ1RYIo6C8jydjO3JCU6EgvOYjHN/fF2Xd1hNSfxq58GYAe3KslBAlhC
+         gNvnI4O+atyFMXxs6RCBs/CzOKBlQv4fd226Y7mf4uElHzvsJF3tCRNgUcpT8VG4C6mt
+         achU/Ol53ABl0AJEqZRa3KuiyHks1kDlE9nyuWUR0AwyFuWXE1ojbk00BNKd9dJblzDI
+         3sM3cIgoDu8ka6mkOpW4EfLiUuUyChU1HNKj7XbbR4SOpRgbZJUTkRozmRk+clzIZ0k0
+         rDbEYx90YYaa/mWRmoyLm2gbl02bRRhAoq/Q01BTLGxRBsYRu9gYXfzUPlMA5PgKNRCc
+         HBvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744536324; x=1745141124;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XW0UTv9CvXun7cSv8wxoN8fYT/wluyfThYmnYWG9Fzw=;
+        b=RVRqkWXOCJnIdZ7wy9XY/YsJ/Zhb7KZfLfCp6oRVqMX9AciJf5pv0Wv78ktVLTACjU
+         ufGOCfB4T4Apb0oMSDI5HWllV5rDImbiWI8ge5schEUiy2Mni03S7+enqwRM2nzunoV/
+         ZkcKf0pQcMPHmdZR3AWtj+/uwLA6alTIw3mgJwblLgm+dQFZeP6nh0UUucwkC82Aouxi
+         kTL83vhX55u40tWNtamgR5R4RZXz+7ZpEZmad4sw+bLq8CUsMX2OL2OcgczxvKTZgjkz
+         cuhPA2fMPdaPM2d9CHMj32412xWosvaQjeRn8jVKs/WClCHNIAnXC1CzKW2yWC2YoRws
+         rWWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWy6ptPtGqegS9fwqTPWpC47CegPJoak47aeXDQq8Ro2Lq2IGLhmoTMDnwDoPP6zGYRbpEVWzj9@vger.kernel.org, AJvYcCX3nBLIBXMaWLQ4+oIraNhqBlRg6cFbTLw6ErQBVQpwC10cZze3blwSaOmr0vEOxVL6jV8a22YBWSYIaPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcsPGBADMoV2QMPvqlil028F8OuvZcHuXqaL3CJmj1OsQBZuod
+	8avY5yAWjkB9QFL+eI5RPlVmpO1LoYAAK6hvr19t8sRou7cw5raYU/f/M6CN21VA+WKYeye/fJq
+	WXCkvejmvnalH9lhwQuTCQXO+FDw=
+X-Gm-Gg: ASbGncupdpAApaylRGYykYvgOfi9b1h5/fXPJyYC1P5X9xbh4UC9vsptbSlnrhHG+Rk
+	Hc7MINJzuhHKGoLb2R+jhSRECd0839sV2QHeCcZyKc88oDU+hMX+rdB+Io/G7WJR2ufzllnrhmH
+	xql8g3eo4fRgNcYZQ8QI4w
+X-Google-Smtp-Source: AGHT+IEUPr9fpjvjQQp/TLLIU5fDq/TyhcM1PNpw1aLvcN/dix4gtOImMC2y/7/MMDqAAoqeFqHr4d14FnKJbb84sRw=
+X-Received: by 2002:a05:6902:218b:b0:e6d:f8d3:5ee6 with SMTP id
+ 3f1490d57ef6-e704dfad75bmr13813435276.41.1744536323820; Sun, 13 Apr 2025
+ 02:25:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250412122428.108029-1-jonas.gorski@gmail.com>
+ <20250412133422.xtkd3pxoc7nwprrb@skbuf> <CAOiHx=mYJm_mrwrDCuQ4ZEviPKLgWDqNcaSXPzaXHeGYWBJCaA@mail.gmail.com>
+In-Reply-To: <CAOiHx=mYJm_mrwrDCuQ4ZEviPKLgWDqNcaSXPzaXHeGYWBJCaA@mail.gmail.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Sun, 13 Apr 2025 11:25:12 +0200
+X-Gm-Features: ATxdqUGr1sHPIJAJqS4j0fS7KvaiCs3iVse3NbRGaHjOGUrakBsCO4TJU4Jf4Wc
+Message-ID: <CAOiHx=mchprjNi8qQKsYzf18rE0NZxt-SjBRs9xnJEppcXUe7Q@mail.gmail.com>
+Subject: Re: [PATCH RFC net 0/2] net: dsa: fix handling brentry vlans with flags
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>, Ido Schimmel <idosch@nvidia.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <vladimir.oltean@nxp.com>, bridge@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Sat, Apr 12, 2025 at 3:50=E2=80=AFPM Jonas Gorski <jonas.gorski@gmail.co=
+m> wrote:
+>
+> On Sat, Apr 12, 2025 at 3:34=E2=80=AFPM Vladimir Oltean <olteanv@gmail.co=
+m> wrote:
+> >
+> > On Sat, Apr 12, 2025 at 02:24:26PM +0200, Jonas Gorski wrote:
+> > > While trying to figure out the hardware behavior of a DSA supported
+> > > switch chip and printing various internal vlan state changes, I notic=
+ed
+> > > that some flows never triggered adding the cpu port to vlans, prevent=
+ing
+> > > it from receiving any of the VLANs traffic.
+> > >
+> > > E.g. the following sequence would cause the cpu port not being member=
+ of
+> > > the vlan, despite the bridge vlan output looking correct:
+> > >
+> > > $ ip link add swbridge type bridge vlan_filtering 1 vlan_default_pvid=
+ 1
+> > > $ ip link set lan1 master swbridge
+> >
+> > At this step, dsa_port_bridge_join() -> switchdev_bridge_port_offload()
+> > -> ... -> br_switchdev_port_offload() -> nbp_switchdev_sync_objs() ->
+> > br_switchdev_vlan_replay() -> br_switchdev_vlan_replay_group(br_vlan_gr=
+oup(br))
+> > -> br_switchdev_vlan_replay_one() should have notified DSA, with change=
+d=3Dfalse.
+> > It should be processed by dsa_user_host_vlan_add() -> dsa_port_host_vla=
+n_add().
+> >
+> > You make it sound like that doesn't happen.
+>
+> Yes, because I messed up writing down what I did. That should have
+> been vlan_default_pvid 0 so there are no VLANs configured by default.
+> >
+> > I notice you didn't mention which "DSA supported chip" you are using.
+> > By any chance, does its driver set ds->configure_vlan_while_not_filteri=
+ng =3D false?
+> > That would be my prime suspect, making dsa_port_skip_vlan_configuration=
+() ignore
+> > the code path above, because the bridge port is not yet VLAN filtering.
+> > It becomes VLAN filtering only a bit later in dsa_port_bridge_join(),
+> > with the dsa_port_switchdev_sync_attrs() -> dsa_port_vlan_filtering(br_=
+vlan_enabled(br))
+> > call.
+> >
+> > If that is the case, the only thing that is slightly confusing to me is
+> > why you haven't seen the "skipping configuration of VLAN" extack messag=
+e.
+> > But anyway, if the theory above is true, you should instead be looking
+> > at adding proper VLAN support to said driver, and drop this set instead=
+,
+> > because VLAN replay isn't working properly.
+>
+> It's b53, and on first glance it does not set it. But as I just
+> noticed, I messed up the example.
 
-Commit-ID:     3f0036c0b5f850d1200dbfa7365ed24197a0f157
-Gitweb:        https://git.kernel.org/tip/3f0036c0b5f850d1200dbfa7365ed24197a0f157
-Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
-AuthorDate:    Sun, 13 Apr 2025 11:08:58 +03:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 13 Apr 2025 11:09:39 +02:00
+So I had the chance to properly check and b53 does not unset it, so it
+should be true.
 
-x86/e820: Discard high memory that can't be addressed by 32-bit systems
+> So adding the lan1 vid is supposed to be the very first vlan that is conf=
+igured.
+>
+> >
+> > > $ bridge vlan add dev lan1 vid 1 pvid untagged
+> > > $ bridge vlan add dev swbridge vid 1 pvid untagged self
+> > >
+> > > Adding more printk debugging, I traced it br_vlan_add_existing() sett=
+ing
+> > > changed to true (since the vlan "gained" the pvid untagged flags), an=
+d
+> > > then the dsa code ignoring the vlan notification, since it is a vlan =
+for
+> > > the cpu port that is updated.
+> >
+> > Yes, this part and everything that follows should be correct.
 
-Dave Hansen reports the following crash on a 32-bit system with
-CONFIG_HIGHMEM=y and CONFIG_X86_PAE=y:
+So as an addendum that I probably should have included in the cover
+letter and commit message:
 
-  > 0xf75fe000 is the mem_map[] entry for the first page >4GB. It
-  > obviously wasn't allocated, thus the oops.
+Starting with no vlans configured on the bridge:
 
-  BUG: unable to handle page fault for address: f75fe000
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000
-  Oops: Oops: 0002 [#1] SMP NOPTI
-  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef)
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-  EIP: __free_pages_core+0x3c/0x74
-  ...
-  Call Trace:
-   memblock_free_pages+0x11/0x2c
-   memblock_free_all+0x2ce/0x3a0
-   mm_core_init+0xf5/0x320
-   start_kernel+0x296/0x79c
-   i386_start_kernel+0xad/0xb0
-   startup_32_smp+0x151/0x154
+$ bridge vlan add dev lan1 vid 1 pvid untagged
+$ bridge vlan add dev swbridge vid 1 pvid untagged self
 
-The mem_map[] is allocated up to the end of ZONE_HIGHMEM which is defined
-by max_pfn.
+does not work, but
 
-The bug was introduced by this recent commit:
+$ bridge vlan add dev lan1 vid 1 pvid untagged
+$ bridge vlan add dev swbridge vid 1 self
 
-  6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
+does properly trigger a configuration of the vlan on the cpu port.
 
-Previously, freeing of high memory was also clamped to the end of
-ZONE_HIGHMEM but after this change, memblock_free_all() tries to
-free memory above the of ZONE_HIGHMEM as well and that causes
-access to mem_map[] entries beyond the end of the memory map.
+And the difference is that in the former, would_change =3D>
+vlan->changed is true (due to "pvid untagged"), and in the latter it
+is not.
 
-To fix this, discard the memory after max_pfn from memblock on
-32-bit systems so that core MM would be aware only of actually
-usable memory.
-
-Fixes: 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
-Reported-by: Dave Hansen <dave.hansen@intel.com>
-Tested-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davide Ciminaghi <ciminaghi@gnudd.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org
-Link: https://lore.kernel.org/r/20250413080858.743221-1-rppt@kernel.org
----
- arch/x86/kernel/e820.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 9d8dd8d..9920122 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1299,6 +1299,14 @@ void __init e820__memblock_setup(void)
- 		memblock_add(entry->addr, entry->size);
- 	}
- 
-+	/*
-+	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
-+	 * to even less without it.
-+	 * Discard memory after max_pfn - the actual limit detected at runtime.
-+	 */
-+	if (IS_ENABLED(CONFIG_X86_32))
-+		memblock_remove(PFN_PHYS(max_pfn), -1);
-+
- 	/* Throw away partial pages: */
- 	memblock_trim_memory(PAGE_SIZE);
- 
+Best regards,
+Jonas
