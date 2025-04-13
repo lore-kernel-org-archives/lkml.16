@@ -1,142 +1,161 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BEFAD51
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 09:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471C5AD51;
+	Sun, 13 Apr 2025 09:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744536071; cv=none; b=E2vzRRIS2s9g5zJo6XpMkpAczBnmXzoFqEVka90+BJ9eYjJP3nySo2ZGybsDHDHz5LBAzXOL8MggTeyG3xMwzfynmmrBGPc+iihYi3hxP2CFaZZtiYAO6bKI3RlWBXtVqKwO64F/HvBClDvygfh/OWe8qip12yt4p23UGWys2+c=
+	t=1744536213; cv=none; b=GlvI7JKdb15aoAQ3AC8/ygIKQo8yze1YM40dRgB+c5gJ0MWzMtY+BpwYiu88S86ouTQ5JZLLxZYlAsRmkIcAAwmAWbX10/0AItc2JEM1CtwecmpjBI5ojY78pUUTJlZmgebvg5maChnN9yCfl1BiUAFg00fBCCouT8fiLEJ5/rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744536071; c=relaxed/simple;
-	bh=5x+MkrmRRu6zOGXI7SShCtjrYDlS9NVzUsB9GHStHRY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=DTwGJOCuu5jrheooqA3oCNcUZ/v+4ZHsJ2b9FeM5V5HK3TfLxqoCxi6JenAdzRmS/XvPyIjv49dSzchHB8GgzT+rbDkKY0fUbXUT4Af+RddhEEwZZJmiQ6tSxQsx8t1+YaWDUbg0qJeNhWuYiQmqWuVucxU8PD5MmkCJdgTNsNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CS6YVo21; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744536213; c=relaxed/simple;
+	bh=yf676E/gQZ3toPal9eBfEKUBovP3MaSTUqSQmtVon30=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=GRrfeYIVA//VA5TwdX7UMC/buqPVkv/EgIesvRHeCCV2bnp0KL9HSi91P53MbjQ4ux7vVICcIkkcj0cfaN3We8NWCBlk8Dlkl6Q2CquP7WS0xpPrpcBgI8NmI5qW9fNvLtmDlVAkeQsCt2oEUgYVE8jJkFxhJv8DwsklIhBBM70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3TkzMdtu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zg7jf2gk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CS6YVo21"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 777A640E01FF;
-	Sun, 13 Apr 2025 09:21:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id GEQqxRuvBsdT; Sun, 13 Apr 2025 09:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744536059; bh=q/78SM1Gv24o6hPeZvfPDHJxDcGqzrvRW77yoVOo2dk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=CS6YVo21Z7Oa5f7lc5BlphiesMIbZ7iC3NIyKs9xS/nikRZRH3aswuCX7LgaxwfVI
-	 vRRYs5n+eOEi8uM1mbzMkGa6SkOjuVePQEMptx25/cAXFQLprk4Sirxfxjhchgc6Sd
-	 bSO00lODsuLSCo5UXgWlaFSsck9ae3yVOrVPzO3f6IJe9gy9XHByhXM5m1d/miwixZ
-	 Tma6EZSq9tPXzGy9FMKbWbwBIRWiyM4FvoOBwIHYa0i3+ha49ISrBSGmZ3KEsx7NDF
-	 T+wU0T4MTR6jTdBzD15/sOktVtJ73h5vFhtpGi3MatfAsO6k+QbVt+sSj3/h2dKMdT
-	 cgIIMCVnxj1WLkZgCY4Jc0T/TgyMJhdeSzc/Nr75+dhIhXlY/SG+N8AV+g9fT9j6J5
-	 zW8hcC//x37BEb5pdiiRSbFKtuI6arYR2t6GxGngAxRvdepq9s2Ce1SwlVEyhbmHk2
-	 xjcWdp8RaWPNkAYR5d90/7nXEimOlE1nX9CuiK6382z8eCguXPW/LVcrXNsi97pZw7
-	 bseQlnQ1nb8YGvz4oDR7IgtBeLKfGE5Qr/V520kn4Go5FvTR8xYNqlcyDVklrZmRti
-	 ER5GQ2Gk3ZNqaK/xVtg7lWZRJTTh8sQ8ak3QtOilU1wgOwPUEuKOLpcm3ywIT3WW2s
-	 ittI2oVQtq5Xi9E0seFyEqUY=
-Received: from [127.0.0.1] (ip-109-091-218-137.um37.pools.vodafone-ip.de [109.91.218.137])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 312D840E0214;
-	Sun, 13 Apr 2025 09:20:52 +0000 (UTC)
-Date: Sun, 13 Apr 2025 11:20:49 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-CC: Mario Limonciello <superm1@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3TkzMdtu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zg7jf2gk"
+Date: Sun, 13 Apr 2025 09:23:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744536209;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ucnrpy2NvzE8s629t63JajaFbp5wyeNnqldVUdd1vzg=;
+	b=3TkzMdtuD97PL8jAK+5YHdpwQM883nL8ZTMJK4cQLz833JpNOk7+gyzUCGidHPeaMhClEN
+	ZbuECKMUCFEN2tpucR6LpBHMtGXJiliBVNaoRVCKrPtE7O+T1HHkaMZi+MZfoYL0KEsPmb
+	KfmYMs2PsbRk19eHZcnoXXUbfamiviNbmY2CcR/Ex2mmD6QzmocR+KJuvPSztja0iO1vpN
+	U/35rD2mM3nQmskr7PiAS3NWr/Wj7CkwCjTV+0XDxYt52C5+qlwNOcAXwfxN39np567tS5
+	EoXANhKZ+ZILmmIADtAtv9/ojv0Mn/Y1sBPDNz4lOzHiMfowZ4rx9T86QvGOSA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744536209;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ucnrpy2NvzE8s629t63JajaFbp5wyeNnqldVUdd1vzg=;
+	b=zg7jf2gkbUWm6Ffn91qiqqw9fp+6/GPHXahLHDCOmoaIWRR2qA0TyAA95D2Syh9iT1zumE
+	zV9vdNB3+6TkXaBQ==
+From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/e820: Discard high memory that can't be
+ addressed by 32-bit systems
+Cc: Dave Hansen <dave.hansen@intel.com>, Arnd Bergmann <arnd@kernel.org>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Davide Ciminaghi <ciminaghi@gnudd.com>, "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/6=5D_x86/platform=3A_Move_A?=
- =?US-ASCII?Q?MD_specific_headers_to_=3Casm/amd/*=2Eh=3E?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250413084144.3746608-1-mingo@kernel.org>
-References: <20250413084144.3746608-1-mingo@kernel.org>
-Message-ID: <D80EADFE-7336-4007-9E7D-7E2F22F0BF6C@alien8.de>
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250413080858.743221-1-rppt@kernel.org>
+References: <20250413080858.743221-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On April 13, 2025 10:41:38 AM GMT+02:00, Ingo Molnar <mingo@kernel=2Eorg> w=
-rote:
->Also clean up some details while at it=2E
->
->The Git tree of these patches can also be found at:
->
->  git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mingo/tip=2Egit WIP=
-=2Ex86/platform
->
->Thanks,
->
->	Ingo
->
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>
->Ingo Molnar (6):
->  x86/platform/amd: Move the <asm/amd-ibs=2Eh> header to <asm/amd/ibs=2Eh=
->
->  x86/platform/amd: Add standard header guards to <asm/amd/ibs=2Eh>
->  x86/platform/amd: Move the <asm/amd_nb=2Eh> header to <asm/amd/nb=2Eh>
->  x86/platform/amd: Move the <asm/amd_hsmp=2Eh> header to <asm/amd/hsmp=
-=2Eh>
->  x86/platform/amd: Clean up the <asm/amd/hsmp=2Eh> header guards a bit
->  x86/platform/amd: Move the <asm/amd_node=2Eh> header to <asm/amd/node=
-=2Eh>
->
-> Documentation/userspace-api/ioctl/ioctl-number=2Erst | 2 +-
-> MAINTAINERS                                        | 6 +++---
-> arch/x86/events/amd/ibs=2Ec                          | 2 +-
-> arch/x86/include/asm/{amd_hsmp=2Eh =3D> amd/hsmp=2Eh}    | 4 ++--
-> arch/x86/include/asm/{amd-ibs=2Eh =3D> amd/ibs=2Eh}      | 5 +++++
-> arch/x86/include/asm/{amd_nb=2Eh =3D> amd/nb=2Eh}        | 2 +-
-> arch/x86/include/asm/{amd_node=2Eh =3D> amd/node=2Eh}    | 0
-> arch/x86/kernel/amd_gart_64=2Ec                      | 2 +-
-> arch/x86/kernel/amd_nb=2Ec                           | 2 +-
-> arch/x86/kernel/amd_node=2Ec                         | 2 +-
-> arch/x86/kernel/aperture_64=2Ec                      | 2 +-
-> arch/x86/kernel/cpu/cacheinfo=2Ec                    | 2 +-
-> arch/x86/kernel/cpu/mce/inject=2Ec                   | 2 +-
-> arch/x86/mm/amdtopology=2Ec                          | 2 +-
-> arch/x86/mm/numa=2Ec                                 | 2 +-
-> arch/x86/pci/amd_bus=2Ec                             | 2 +-
-> arch/x86/pci/fixup=2Ec                               | 2 +-
-> drivers/char/agp/amd64-agp=2Ec                       | 2 +-
-> drivers/edac/amd64_edac=2Ec                          | 4 ++--
-> drivers/hwmon/k10temp=2Ec                            | 2 +-
-> drivers/platform/x86/amd/hsmp/acpi=2Ec               | 4 ++--
-> drivers/platform/x86/amd/hsmp/hsmp=2Ec               | 2 +-
-> drivers/platform/x86/amd/hsmp/plat=2Ec               | 4 ++--
-> drivers/platform/x86/amd/pmc/mp1_stb=2Ec             | 2 +-
-> drivers/platform/x86/amd/pmc/pmc=2Ec                 | 2 +-
-> drivers/platform/x86/amd/pmf/core=2Ec                | 2 +-
-> drivers/pnp/quirks=2Ec                               | 2 +-
-> drivers/ras/amd/atl/internal=2Eh                     | 4 ++--
-> sound/soc/amd/acp/acp-rembrandt=2Ec                  | 2 +-
-> sound/soc/amd/acp/acp63=2Ec                          | 2 +-
-> sound/soc/amd/acp/acp70=2Ec                          | 2 +-
-> sound/soc/sof/amd/acp=2Ec                            | 2 +-
-> tools/perf/check-headers=2Esh                        | 2 +-
-> tools/perf/util/amd-sample-raw=2Ec                   | 2 +-
-> 34 files changed, 44 insertions(+), 39 deletions(-)
-> rename arch/x86/include/asm/{amd_hsmp=2Eh =3D> amd/hsmp=2Eh} (91%)
-> rename arch/x86/include/asm/{amd-ibs=2Eh =3D> amd/ibs=2Eh} (98%)
-> rename arch/x86/include/asm/{amd_nb=2Eh =3D> amd/nb=2Eh} (98%)
-> rename arch/x86/include/asm/{amd_node=2Eh =3D> amd/node=2Eh} (100%)
+The following commit has been merged into the x86/urgent branch of tip:
 
+Commit-ID:     3f0036c0b5f850d1200dbfa7365ed24197a0f157
+Gitweb:        https://git.kernel.org/tip/3f0036c0b5f850d1200dbfa7365ed24197a0f157
+Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
+AuthorDate:    Sun, 13 Apr 2025 11:08:58 +03:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 13 Apr 2025 11:09:39 +02:00
 
-Cool, /me like=2E
+x86/e820: Discard high memory that can't be addressed by 32-bit systems
 
-Thx=2E
+Dave Hansen reports the following crash on a 32-bit system with
+CONFIG_HIGHMEM=y and CONFIG_X86_PAE=y:
 
+  > 0xf75fe000 is the mem_map[] entry for the first page >4GB. It
+  > obviously wasn't allocated, thus the oops.
 
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+  BUG: unable to handle page fault for address: f75fe000
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0002) - not-present page
+  *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000
+  Oops: Oops: 0002 [#1] SMP NOPTI
+  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef)
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+  EIP: __free_pages_core+0x3c/0x74
+  ...
+  Call Trace:
+   memblock_free_pages+0x11/0x2c
+   memblock_free_all+0x2ce/0x3a0
+   mm_core_init+0xf5/0x320
+   start_kernel+0x296/0x79c
+   i386_start_kernel+0xad/0xb0
+   startup_32_smp+0x151/0x154
+
+The mem_map[] is allocated up to the end of ZONE_HIGHMEM which is defined
+by max_pfn.
+
+The bug was introduced by this recent commit:
+
+  6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
+
+Previously, freeing of high memory was also clamped to the end of
+ZONE_HIGHMEM but after this change, memblock_free_all() tries to
+free memory above the of ZONE_HIGHMEM as well and that causes
+access to mem_map[] entries beyond the end of the memory map.
+
+To fix this, discard the memory after max_pfn from memblock on
+32-bit systems so that core MM would be aware only of actually
+usable memory.
+
+Fixes: 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
+Reported-by: Dave Hansen <dave.hansen@intel.com>
+Tested-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Davide Ciminaghi <ciminaghi@gnudd.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org
+Link: https://lore.kernel.org/r/20250413080858.743221-1-rppt@kernel.org
+---
+ arch/x86/kernel/e820.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 9d8dd8d..9920122 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1299,6 +1299,14 @@ void __init e820__memblock_setup(void)
+ 		memblock_add(entry->addr, entry->size);
+ 	}
+ 
++	/*
++	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
++	 * to even less without it.
++	 * Discard memory after max_pfn - the actual limit detected at runtime.
++	 */
++	if (IS_ENABLED(CONFIG_X86_32))
++		memblock_remove(PFN_PHYS(max_pfn), -1);
++
+ 	/* Throw away partial pages: */
+ 	memblock_trim_memory(PAGE_SIZE);
+ 
