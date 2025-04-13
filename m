@@ -1,90 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE69F17F4F6
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B3618A6AB;
+	Sun, 13 Apr 2025 20:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744577340; cv=none; b=h9vNZm/FSkyMeBtwKn/stkMZ+yDfT70kTP/7r8zPaBRQXp41Rp0iowrBiTTUs2uM/7eJ3qxIg7kmwKSwmCoo17wPlJUjr6S3Mx+72PP0xLWclW7QM296YACBjpMf9EyXnIm9EIietvS4n2DHP+39L7UhPIBmkfw8hFMzdCAqxqQ=
+	t=1744577584; cv=none; b=Uip6OwUEisM9cr/GsvOV9mQjVsdNMY5InxDN6AqfUamlrgxfg30ZVVbGzTrvpzk613XucJhLTok14e/aAXYC1yWtAz3hM+CZTCGazQKtJg65CXfguY/qnSkn4Kgd10EKa1c4CcKT+Qpw2/Kx/h1oj7a+u3aOC2dH7I5xwzXXbWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744577340; c=relaxed/simple;
-	bh=GwsfUzYaLCBUf7vIoP/MMIApw3ANVBJmta5sveYTZlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HB+OmtMqKkyZJkePumDnbzIbOkiW2pI+e0x3Hl16JJ/wwl89H+uZQSplnrB/zDYXhzIOTjezBpbQPyT/0Pog90qTNqO1+EnkMBiybYWakkPRZDTMUlHM+Sxf6WVj2Cgw9QZ/sX+p0WUzNltUL1MBpEc08olr7SpSRO+lE5vXkB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eW5cku7s; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744577584; c=relaxed/simple;
+	bh=Emir0TLGas17ay/4YrDiRDgoUVWIQQDelZyNShEdSzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J9LdPZ8DXWFxwhBZVVbcJHugc9oZJbx2jqFs5PBUN8b5jmnpTRh7MkQQxZEZgjYXkOxnp+feTjeCPafn5/2fPTucAKmloqVgwD9f4IXVoWZAGhLqj33Dgfz/Ai92FSF5DzfrjQjz0lXNcJ78sRJ63+PqyJiZ5M+zEbDT/fzgaic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+TdmyxX; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eW5cku7s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744577339; x=1776113339;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=GwsfUzYaLCBUf7vIoP/MMIApw3ANVBJmta5sveYTZlI=;
-  b=eW5cku7sbVzN2qmgNFxTY8n9HyyPGg/HSNr4CXBqnSIxBzyaawWUKxLJ
-   mbforidr/0MuMEZUl6OlHipdNmx5KPhw6ujr4xpJ0SjDY2XJaZuOhakp+
-   BQ8CsQBQTjeV7liZ35zazisSm35E97jwnBOeFnhgrmG26fSgk0td+nLdo
-   +ibqDyhJxVXnV5Dvk3EIaKRT2cWb4/3kHx0vF54EvwVmwLkxQa8cAP2F/
-   xoLyb/vRm6Di2iLwNIzsgaqQENwBKosflAZQNFGUl7SQqU41T5mFKv3o/
-   WFWAiOz6If+Hn2OINLyEIBWYSOuRoMva6TxBej2FVMujQd0AOXaRtJdCE
-   A==;
-X-CSE-ConnectionGUID: HyerOWrKS/S8A0mC/RsSKw==
-X-CSE-MsgGUID: eakjWEjaTRijqo5784YGJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="48744949"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="48744949"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 13:48:58 -0700
-X-CSE-ConnectionGUID: KKLRlElkRL2WttmST/vvIg==
-X-CSE-MsgGUID: Hk8vAQpxTSOQ/C5KxLt96Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129616917"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 13 Apr 2025 13:48:57 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u44G6-000CtW-16;
-	Sun, 13 Apr 2025 20:48:54 +0000
-Date: Mon, 14 Apr 2025 04:48:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: <stdin>:4:15: error: use of undeclared identifier 'csum_partial'
-Message-ID: <202504140435.2OoLcwfS-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+TdmyxX"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-308218fed40so533295a91.0;
+        Sun, 13 Apr 2025 13:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744577582; x=1745182382; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Emir0TLGas17ay/4YrDiRDgoUVWIQQDelZyNShEdSzk=;
+        b=Q+TdmyxX/uaAdU4l5TXfIoYHerUa0Quilt8rs46ikd/PKuYd7n71mfWqc1T6X3p0JR
+         yjBOH7t4xo1eyw6SooMO7yu7NJ5pXV9g3cSNPHBKVm7/A5UJFUy9yZrS9l0mwgoFyWg5
+         x12+6RgfCPey50xp7MTY+bsio0WxvGUWUaY9GW/7WCovFYUSSyZJF2oom3/lJuTiQ6uf
+         eyB7vkumNC3zzHO240OQ2cFctcwGuXRxSrCqnF4Kqbv1TSv63LFVxynugeQiONNQ2a8K
+         VW4+39vtvF3TUcv+hpFZznqYuWdgeVhX5qraKhxZ5orXKNJIb/3lWkaYWPtWtTpkguzM
+         pPNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744577582; x=1745182382;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Emir0TLGas17ay/4YrDiRDgoUVWIQQDelZyNShEdSzk=;
+        b=BWvIcd7prAC7jsuPK6ItJVlporq1jjXzaMK2n4+nYnSDMBkzgwac68Rw+9ygJe/wXj
+         mj8xCKKjuRe1eGOS0xafIaVrAPKDaRdeXa6Mji5LQKMc7uArvBDaLc0K8K99xMqCVAL3
+         2i7GLEwN/n4qWXyePd/GS+r6gEBuyHb9tnLskZh1GhPy4PvsG7W/uoDxroRc5rmR4Z77
+         bj5rFUFARYSUos+UesJqjS5mde6+RAXiqMJZZQlyfR5LpuZflAtubUaFFXDnGXrgiaX2
+         TRlAX7jpDe8HCZ1yILsWSeFZ4ke+bWTI4FtF1LIXXf4dw0tpbE/OGuTpFUfSNlzRNX+c
+         anlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxER3QrxyMol66G3o0WLF4m6My0W99KASR/JI2F/aBKCjLyB2M/vcBZaCuqVzHzYt++3Mf5fbDzbzAdQQ/JH0=@vger.kernel.org, AJvYcCWssL9jAYufzeDFmNJZMUCXvmjHVEnQFcYcCgI1fERHnHuGWJN6H0aRIAfJIAqr+7Uyk6tEEtZ1a0s=@vger.kernel.org, AJvYcCXT8aGqA69hTgkvl/J6PIqvO534dJ8uZHwjVLVJeoJts/WB9NFKobYBADwpfo3cs5VT1vcGKCiYkbqu47qX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq/P+p8kl5cpthaK2w7iTwyTRUBZECMZYafUuAztYO4aKNiOfx
+	he3sal5vQf4rw7xviivHGsoYDteV8If0BagojASMSJAJuLTgEM2UdSY7BO6ZW28OQoqFB2DyTmS
+	Tx0hG5+Uk04NS11XULvnxiyP5aBA=
+X-Gm-Gg: ASbGnct+Po0cpU8vPlXmh30ev5oMSIowz7qPcTucZc0PGepgGP9ifbxev84OMG+zJZ0
+	9+qpGRKhzNNlsWKuwFgRdD0CX4WG5Sa5ZiTt0Q4I3DMlOvjF3iRTFwfs3wdImwGvc1mkCbp40q1
+	1E2S4n/ZlV0FOGaIu23lIqBQ==
+X-Google-Smtp-Source: AGHT+IH2Hs5OUU46xFChLlQo87dvV2NQLl26XhaQHWAVdVPutf/WF7UlNeDH8J2nd9JAugeCjkSHrKGEGitOY5w4iIs=
+X-Received: by 2002:a17:90b:4d04:b0:305:5f20:b28c with SMTP id
+ 98e67ed59e1d1-308237c95b7mr5487431a91.5.1744577582062; Sun, 13 Apr 2025
+ 13:53:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
+ <20250206-printing_fix-v3-6-a85273b501ae@invicto.ai> <CANiq72neqbD=zJ3jAizwMewxx4s2YhAvh6M-Y4sNfq9+ca3P2A@mail.gmail.com>
+In-Reply-To: <CANiq72neqbD=zJ3jAizwMewxx4s2YhAvh6M-Y4sNfq9+ca3P2A@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 13 Apr 2025 22:52:48 +0200
+X-Gm-Features: ATxdqUHDyU7OcivKGtJLfrr2nPLY7T30R-1hEV4g7U8vnsGDS61pvzuPuLqmP_0
+Message-ID: <CANiq72=CTWYzs=n_x1XSjjpoSdCu4E-+JpdLk2XWFWAbVaoR6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] rust: samples: add missing newline to pr_info!
+ calls in rust_print_main
+To: Alban Kurti <kurti@invicto.ai>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Jonathan Corbet <corbet@lwn.net>, David Gow <davidgow@google.com>, 
+	Dirk Behme <dirk.behme@de.bosch.com>, Asahi Lina <lina@asahilina.net>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Wedson Almeida Filho <walmeida@microsoft.com>, 
+	"Andreas Hindborg (Samsung)" <nmi@metaspace.dk>, Tejun Heo <tj@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+	Fox Chen <foxhlchen@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8ffd015db85fea3e15a77027fda6c02ced4d2444
-commit: 9c3681f9b9fd12cdbc4a542df599f1837512f3d5 kbuild: Add gendwarfksyms as an alternative to genksyms
-date:   3 months ago
-config: um-randconfig-r073-20250414 (https://download.01.org/0day-ci/archive/20250414/202504140435.2OoLcwfS-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504140435.2OoLcwfS-lkp@intel.com/reproduce)
+On Thu, Mar 6, 2025 at 12:55=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> Thanks Alban for making the effort of splitting the patch into several
+> and finding the right commits to tag.
+>
+> I will take the first 5 patches already, but I think this last one in
+> particular will need to be split, because one Fixes tag points to some
+> LTSs and the other is very recent, so it wouldn't be backported.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504140435.2OoLcwfS-lkp@intel.com/
+Ping about this -- thanks!
 
-All errors (new ones prefixed by >>):
-
->> <stdin>:4:15: error: use of undeclared identifier 'csum_partial'
-       4 | EXPORT_SYMBOL(csum_partial);
-         |               ^
->> <stdin>:5:15: error: use of undeclared identifier 'csum_partial_copy_generic'
-       5 | EXPORT_SYMBOL(csum_partial_copy_generic);
-         |               ^
-   2 errors generated.
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Miguel
