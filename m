@@ -1,146 +1,112 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2DC1DDC18
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 15:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC961CB9E2;
+	Sun, 13 Apr 2025 15:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744558215; cv=none; b=qdDWPVoc/7nuHaH8A/5vOrxcTWGxq+UAWnqrgubay1QtTn21rKEbrqg7mgSit1iEDtY49BinX9aRKI2Zr4nyF09opgSjaUZyrHsv+VB4GjWtwg2g0SMO7Uf8n8gm6b0tVIqTobXLhPrqGiLjwkGvTlTL1DHjE0Pqgbno+SvF368=
+	t=1744558361; cv=none; b=HQgcpjJHopAz5LVtx+XHqiowZ6VmZb5rxc+EeLS5MGDF83Ka9z0cxEhOl8Vs2t4tEj/oaLSVptElWzZP4OQEiiRl9nIltNlnEtCcEz5nP+2dYb3GC9IgIlaxfl5Y8GjS0Ztb2y6EN/On7kmtSXRb4lvMlUjn0+2VsxZhBOYvgYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744558215; c=relaxed/simple;
-	bh=O26QBjaeH/GBehwhCpe0jia62s2T5H1sKW+zOlJypxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eB5whIU9I0OgwnCp/cGcSF5tZXSZCkxIgIhbVXfCncT18bbBLLKyxXqvmLUqWAiaebz96t2O822Q4ov1L6tdf1+XmNAkEO/vNTkI0TPmzuUxwUVAiPjGF8tgB5hz30nPGWuzOdw7JdIMudTE+YuFwE8e194QNz0gc3O0SLKJsZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ynvxjdVb; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744558361; c=relaxed/simple;
+	bh=HtmR/lKykKWsOTtMXCv6zAKyqnSRVLNlW1wNC1UaxTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QeNZM9T4VI0ALuhFJBPEf+SicQCOJYtRbwfgUc6ph82qjiAz+JVCz8wpt+YG7hT/tIZb1SkdvzOb4jhROU39dJI4ukpR0+veUY/t6tMT/dSowqrlFgVABTr8NFYgiZ13OU7H+lKv/+dcBofe3nCdgf0gO1WlfJknUSEqWduKshA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ERhJpZRM; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynvxjdVb"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so161116b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 08:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERhJpZRM"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so18508555e9.2;
+        Sun, 13 Apr 2025 08:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744558213; x=1745163013; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6YhpCUvtZQDpUlxDrFB7Y09wNEJFGtbdxnkmsZK4E90=;
-        b=ynvxjdVbh5MiGblmAX+b5DJRB1ynwVswH4sE4mGfhJvnxYlx5xk1f1A3zmLplD7dgr
-         buT7ztebvmK7Y2DoBRxyOaRfrrOXGghZACFSc0CmxsG7l2Pxkj8YeJYi5NwxnyYaQXaT
-         BogT1alXGouVpaXUUOENJTRtTDy2d6LjUqEBG+GlIdMr8ZJLvKXQC/rXrJOUoSEMh3fp
-         BETh6zyz8/eIiIxAx/UdBsVMTLJezct7Yt362XVQw7IWTIEhB4Rf5Lxkw096B6Q5xAWL
-         eIZofxqIh43QpUu4QA1EfxG22rY1kE0yf5YgmZLZbPl1TNl1xXJhRpUt51wxCOFfN1ON
-         DxjQ==
+        d=gmail.com; s=20230601; t=1744558358; x=1745163158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=91mBxrs0CGUf6WofddkA9rLXhRpxDxi7ytvC8f64wcE=;
+        b=ERhJpZRM1BbqdIhOPNpYvOTKtOEmL1CKLb3VhnQhfAzf/tEitrm0ZNqOuvpYobAj3R
+         xGdAObaj8rQMhMAedQtX5qxLF7BXYupKgZe6tZqGnZC59a2HIHBiCCPjKOPnLxUVkQTL
+         WGKw1swRF6/dXdepsYAwIGArIxJqAuKNAyQW78V6hXlQzOtu9xGIoiDvIerJ7BizKngu
+         oHTWmf7aqC2d2SQ6SBgXXEIotMFBKMNU7za8CxFTAtm5ydA5oiDUeOk/AX5BukF2Hw9s
+         xMlSalXH0AauplW47RzWia4y4/cXkSx/DPhFl+RqZy0ELSp9nh4H4wXkD1EhkVYDV2S9
+         3aGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744558213; x=1745163013;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1744558358; x=1745163158;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6YhpCUvtZQDpUlxDrFB7Y09wNEJFGtbdxnkmsZK4E90=;
-        b=OKXFQvIjcrdRNlXHsczCbedJaNlqsacKLsYsgRRmhjWdZxGgevApCgPt56qUWJVg7n
-         WjS0YzhNALXv7UcHt7YDGC+Wr5IA1jjIL2zE0VBZ6CuU2+QwvLNJl/kK8b7ONEm0SgV6
-         ceJECu01cpRHGQ3BI+XIb6znmDIdcjWNxbBqCnPCcqGH8po3Dq3YLIIjLDJCsmALaPyC
-         /YKVK61dvse2aR+Xki5iENT7GOnsfndDE3uptX3kKyarP/elPeiZeduVwCBSW/1tl1NG
-         bdLq7clFDeQQ6N3J4ULT7Ky9Wg26AdhlLIFvmUyY3TA5eRXBcJagpfSQs5Us3m6UoJYi
-         VWWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDKTX+CP/pyzgU0u5aomXdm4kkSn4OwdrNugvtJtlCsaa1vXQR3Phq8bHshVl6Nishz7AtI8VBdIThTc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQuWlcbljf8VeK2RxQ3MTrazvXwWhjO2o8i5l8kS1ajm8rBLR5
-	twOdTNMqZCjD0aNBkl7VYckiB+QMf4fLuFr2IHq32p/Cl730cwxFJvHInymwWg==
-X-Gm-Gg: ASbGncsnCO6+8M6wyUoRBWy+kDDRyBDNUkk8XhoZpYFhAXivKpd3tEc1tlLkjXIVRqs
-	jxTkJ4LGt/4yIY7pOpWvXB9Tl6S7V96xeVEd7jR5G7hjouZ6gjHjZZYNfjyvXRtDJQiaqnq6k0J
-	PP9dIzMV3EF086drKQyXeLqYxqDvv/PeRZJFpE8DVUa0LSM5XuPaK1Xu5G01CZuHr964sy4rKai
-	Eos1WpFLRkJTYpZR7UiPhStapc6Qk+6ktvLD3MLfgtJA4ILICHG5Rdk9ZdkYcpSMe+BmSDUF5V7
-	oV9/Ex98RZ/20eTmfKSm0T45LLaNfHJXUbR02JrdRBZE8wF06QMy
-X-Google-Smtp-Source: AGHT+IE0jyYBaLWROxwZRfj9Ap/rRwqRq+YqVPUJFP4QfIr9YmzNv06dYU+2Uj5cgUZODs640X4qrw==
-X-Received: by 2002:a05:6a00:240b:b0:736:a694:1a0c with SMTP id d2e1a72fcca58-73bd12bef8dmr12879327b3a.21.1744558212599;
-        Sun, 13 Apr 2025 08:30:12 -0700 (PDT)
-Received: from thinkpad ([120.60.137.231])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd219bf3dsm5245218b3a.16.2025.04.13.08.30.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 08:30:12 -0700 (PDT)
-Date: Sun, 13 Apr 2025 21:00:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit
- L23 ready
-Message-ID: <xajelvlhvoxyt53qdx7dmi4wgp5yvc2hpk5bqbftwklp4ecrhj@gtv3mhb2pyvi>
-References: <20250408025930.1863551-1-hongxing.zhu@nxp.com>
- <20250408025930.1863551-5-hongxing.zhu@nxp.com>
+        bh=91mBxrs0CGUf6WofddkA9rLXhRpxDxi7ytvC8f64wcE=;
+        b=w25qK4r0nZMy/ppWh1ixNYorMQxU8qCAkowaxtRBomQXRTIk4iBoNeVLiuqKn3SM1u
+         vuEJwkHLyjzrs362aYaZqTQ0WJFMSMGHeRo2vEKuAmO4fXYHjARx1GtR+zM6gewVspic
+         gnsokA/gJKVJ7o8PkJteaOzeczaT9ZfNfn9NuI7jXsntg9LvYkaw2XndAhkEKc5uCbpE
+         mjgK5vswZl4ffvnPsmJChAd0mVq8NVlfIazeHjXYhHgHgCQe8RGTOPxgRqMgcLIhB/qY
+         Kf1tGzdpVqeQE/4FOwccQs4S/g2uycmSqYhsu4L/Rn1ojZNWJXLHZi9qC3ZA4/S9BZEg
+         jENw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGflOigP5/SWRmjo5cRI1b6TT2NPeKCmfqbTZj0kQ21hp5A1EznVrNaAE19090fxHxW9o/3Ecg2mzIc94=@vger.kernel.org, AJvYcCWs5ht3XVe0WQ0bjA+2CdETdunrVvCje/Hf82Y0oAUu0Av0ebnJ7NkoLwlBz2MLF+eC1JaIrcPFVxs7UZ4NBLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgyK26xkaePYpdfF1/McBpx6InZDZ5/QUgmzA8TD3+jmy/DaiO
+	wwlJStsNKmBkxpZS+BWHtC4b8NKTMUfUHIxODuDkk/7v3CEaBXSh
+X-Gm-Gg: ASbGnctACIx/l+1YXA29BqPGHSIPfZkFh97VZp+86TKRFO1VUtgKR80/gsnDv6XLtBy
+	W+W0pGXrgcUXnQiY1CE8Cz4T6qv2ENsiy7FayTl/aik82IaXDfxKoT6pTHWVMMMpwH8s/VKMMRa
+	geLFnJMV7IQgfzOhbkJY4g3xjtu4zXt3afE0QsUSm1JH8oe6TN7qQ6hFI92kccGk/HWAl1O3s08
+	kBpaAyVDsfyHchRbNafVQVt3fd8B3pKvzkfooaDJMS2LLGMcjWXTJ++W574kcGjxJ5uWLG8vl3B
+	3nOYTtzVR7jfSlRrrkiLQzPyOU8dGPOU3C4iNXTmVxaCganu3vIwLg==
+X-Google-Smtp-Source: AGHT+IGjmZonw83uMcspRDX2CSxAewJN4SU0cJz8iy8l1PD8PMh1b+rPWpvsexY5XRqJMPn6NFuDZw==
+X-Received: by 2002:a05:600c:1c03:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-43f3a928905mr85013165e9.2.1744558358001;
+        Sun, 13 Apr 2025 08:32:38 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a273fsm146120735e9.9.2025.04.13.08.32.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Apr 2025 08:32:37 -0700 (PDT)
+Message-ID: <8de46681-18b9-4ab2-a8c4-df6315c2125e@gmail.com>
+Date: Sun, 13 Apr 2025 17:32:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction
+ `FwFunc`
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Russ Weight <russ.weight@linux.dev>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
+ <Z_p-UoycGk3BceXm@pollux> <c04d3ec9-46f8-4ccd-b0ed-52a1adea11b7@gmail.com>
+ <CANiq72mpKQM8v1=qhACWGYo1c0jtOymnACDxXiRgjEs2-+X2=g@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <CANiq72mpKQM8v1=qhACWGYo1c0jtOymnACDxXiRgjEs2-+X2=g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250408025930.1863551-5-hongxing.zhu@nxp.com>
 
-On Tue, Apr 08, 2025 at 10:59:27AM +0800, Richard Zhu wrote:
-> ERR051624: The Controller Without Vaux Cannot Exit L23 Ready Through Beacon
-> or PERST# De-assertion
+On 13.04.25 5:07 PM, Miguel Ojeda wrote:
+> On Sun, Apr 13, 2025 at 10:55 AM Christian Schrefl
+> <chrisi.schrefl@gmail.com> wrote:
+>>
+>> This causes problems on v6.13 when building for 32 bit arm (with my
+>> patches), since back then `*const u8` was used in the function argument
 > 
-> When the auxiliary power is not available, the controller cannot exit from
-> L23 Ready with beacon or PERST# de-assertion when main power is not
-> removed.
+> In v6.13, the function argument used `i8` -- if it were `u8`, you
+> wouldn't have had an issue, no?
 > 
-> Workaround: Set SS_RW_REG_1[SYS_AUX_PWR_DET] to 1.
+Ah right that`s a typo. Should have said `i8`.
+
 > 
+> Nowadays, in 6.13.y, everything is `u8`, so you shouldn't have a build
+> error with your patches.
+I'll mention it explicitly that its not a problem in stable 6.13, only
+in the v6.13 tag.
 
-Please do not post next version without concluding the review comments. It just
-wastes reviewers time and is not a good practice.
+Sorry for the confusion, Thunderbird showed this as a response to the
+original patch mail, so I thought you were referring to that.
 
-You haven't resolved my comments on v3. So I'm not going to review this one.
-
-- Mani
-
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 7c60b712480a..016b86add959 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -48,6 +48,8 @@
->  #define IMX95_PCIE_SS_RW_REG_0			0xf0
->  #define IMX95_PCIE_REF_CLKEN			BIT(23)
->  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> +#define IMX95_PCIE_SS_RW_REG_1			0xf4
-> +#define IMX95_PCIE_SYS_AUX_PWR_DET		BIT(31)
->  
->  #define IMX95_PE0_GEN_CTRL_1			0x1050
->  #define IMX95_PCIE_DEVICE_TYPE			GENMASK(3, 0)
-> @@ -227,6 +229,19 @@ static unsigned int imx_pcie_grp_offset(const struct imx_pcie *imx_pcie)
->  
->  static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
->  {
-> +	/*
-> +	 * ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
-> +	 * Through Beacon or PERST# De-assertion
-> +	 *
-> +	 * When the auxiliary power is not available, the controller
-> +	 * cannot exit from L23 Ready with beacon or PERST# de-assertion
-> +	 * when main power is not removed.
-> +	 *
-> +	 * Workaround: Set SS_RW_REG_1[SYS_AUX_PWR_DET] to 1.
-> +	 */
-> +	regmap_set_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_SS_RW_REG_1,
-> +			IMX95_PCIE_SYS_AUX_PWR_DET);
-> +
->  	regmap_update_bits(imx_pcie->iomuxc_gpr,
->  			IMX95_PCIE_SS_RW_REG_0,
->  			IMX95_PCIE_PHY_CR_PARA_SEL,
-> -- 
-> 2.37.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Cheers
+Christian
