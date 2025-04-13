@@ -1,142 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E0A178372;
-	Sun, 13 Apr 2025 19:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B1B1F3BA4;
+	Sun, 13 Apr 2025 19:35:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744572741; cv=none; b=Mqyg91/ltGkAlgB/Bspv0bJHjHvjoyeeZvtI5lnNzpkIcxjWPy+ebyIQL0xf+gcEH1rRnYcnd/dw8SWu7SM9gqFHozf/WVqcqPFFE+ZqFQi2cB92TkwQZ4vWM1Gadn6Wl7w6xY8+V3/twF3Bi5xSN8LNQBqwFmn4X+Tf4UolxLE=
+	t=1744572936; cv=none; b=iC3cUp3NjN/J/8jNBOhwLvIwIOyFnoXRmBLGh/yrQd8FUdyfBuEoQZiBRRbJPAmxZrrQgCeJRe5Oi7C4LbqQurrObTQ7IwJgWdZAjBiWweMpmR3AWxt4LR+exR93lqomhk32JyXweP0wC+zhlPyu6898SGyI9E+dD4KR140QIKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744572741; c=relaxed/simple;
-	bh=aoJ41MTK7om0A4vaNXUhyT4kK5YDNIZ0M5saG+CPtok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDvpkexbTng7NZKTNZXrL0KEQT7+c3tRf+86c+tWCdjMCIqqudn18A1vIadTZ7v6YM4p4BcPwuApBQKwuVRsGrNNOuDK1KZV0hEXLTOfJEYqMfQK0kuWq8D1YSgUAfgiT2dP5dwab4avgIXT3YbdNUXpsBLf8sr/J5G0eUXPKBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rPqrtt2O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744572936; c=relaxed/simple;
+	bh=XEKLLzDUwO73lm036APy9wcjIJRYWRNLNEiLDKpC+yo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=guzqNlvvQuG/CkKz69vMcdtBOtHoZnuifrWmdX86fgdqMGLDX86SsbKkgHncyiDfk+cRzVRtRqQT5kdCQayD41G1cmtZkFyIcNMxAcpRey33Eo5CexaJPjmVclpne8YluD7VXnNxKbDUcqmxKjZxkhiKl4KfJtFSFRIxLNuTaQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCpA2QXZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rPqrtt2O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04407C4CEDD;
-	Sun, 13 Apr 2025 19:32:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCpA2QXZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A8C1C4CEED;
+	Sun, 13 Apr 2025 19:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744572740;
-	bh=aoJ41MTK7om0A4vaNXUhyT4kK5YDNIZ0M5saG+CPtok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rPqrtt2OcgL4B22YjLq+3AuJXoQfDMElXqqc3JFIJIC5qZtqHlPpuUK+Srn+zf1a+
-	 xOqELQOApmJtN51s9TM6tYOCSKVRbgwCAqUORNCq4mNTvYdfiG93ju40NKevuMtUwc
-	 WQy/ZiRSRvSrEC3EQ2XjvKxdoF/lD3Ljdatrdqpof9DbBWuqhf82Dqu06WkHxJuP8q
-	 KXfHv9TbnTAwe4fvxauOlQ6Nv61VyscpDGDV2CIr++AC4eqFRvOK9TLQBK7Qowtl15
-	 60pvV/gi+cAL0znPCATnXbkqyyujvT8hKbEH2CHGYsbkmXD4MW8a5rdpMf6er8vbbh
-	 SoDhzFRjjVw2Q==
-Date: Sun, 13 Apr 2025 21:32:13 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
- definition to amd_node.h
-Message-ID: <Z_wRPb5H5hi6jmxN@gmail.com>
-References: <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
- <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
- <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
- <Z_rCuLD56IZ4hsNw@gmail.com>
- <5509f044-912b-4d10-bdeb-95ec52002b06@kernel.org>
- <Z_rJ37er9Dc25ne-@gmail.com>
- <BE7BBBD7-BDFF-452E-8FAA-669970950B27@alien8.de>
- <Z_ttp0ZNHEpNhh_9@gmail.com>
- <Z_t5YADNi0vpPqGO@gmail.com>
- <1b5835f4-cc09-4cdd-ab75-6159793c242f@kernel.org>
+	s=k20201202; t=1744572936;
+	bh=XEKLLzDUwO73lm036APy9wcjIJRYWRNLNEiLDKpC+yo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=qCpA2QXZbHCWZRyTD3ah96MTimue1GT/Xv3+KyCZce4SizZtFFr41+2tx05l4xcZl
+	 HJwfTctGaxRyKBzkYx+FkxtZ4285bw7OgBPJVKOvN+xr97557RHGb18S3CN7N0TIYY
+	 hZlg0SxB1GbD8kpkC+jpaVGf502zK29i+KVqG7ioDwy6I227J/o5EfBrpY/JblzbhE
+	 HVwZzh00yzkdhJh2jtkXxAC2fQ+SJcdXr4X00pZ4R7f32mob0icLO536ZHpnU2zAOZ
+	 AHLprhg7klmtnShS390F3JZzMMitDVFvGEFECMEvKDaWbdYH1UHbJD6ooJiso4eb7o
+	 M6I+kxlOApKug==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1CCC369AE;
+	Sun, 13 Apr 2025 19:35:34 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Sun, 13 Apr 2025 14:35:34 -0500
+Subject: [PATCH v4 3/4] arm64: tegra: Add CEC controller on Tegra210
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b5835f4-cc09-4cdd-ab75-6159793c242f@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250413-tegra-cec-v4-3-b6337b66ccad@gmail.com>
+References: <20250413-tegra-cec-v4-0-b6337b66ccad@gmail.com>
+In-Reply-To: <20250413-tegra-cec-v4-0-b6337b66ccad@gmail.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744572933; l=999;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=bblG65p7/xkPR55OcOIBpt0KSwsSdM49hsWkcsMIg5A=;
+ b=A6bvMHGlLxAUDaKkccfI3+OvthSdTrPDoTTWMHmjESNU2kkiaHIBC/72AY0a3eqYeBgNRFki3
+ oyC1mejNcEaCpSzecujSE7oNawIMoW4ymxmKi7vZasR03u2cTuth7+5
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
+From: Aaron Kling <webgeek1234@gmail.com>
 
-* Mario Limonciello <superm1@kernel.org> wrote:
+The CEC controller found on Tegra210 can be used to control consumer
+devices using the HDMI CEC pin.
 
-> 
-> 
-> On 4/13/25 03:44, Ingo Molnar wrote:
-> > 
-> > * Ingo Molnar <mingo@kernel.org> wrote:
-> > 
-> > > 
-> > > * Borislav Petkov <bp@alien8.de> wrote:
-> > > 
-> > > > I was aiming more for a header which contains non-CPU defines -
-> > > > i.e., platform. But the FCH is only one part of that platform. But
-> > > > let's start with amd/fch.h - "amd/" subpath element would allow us
-> > > > to trivially put other headers there too - and see where it gets
-> > > > us. We can (and will) always refactor later if needed...
-> > > 
-> > > Yeah, agreed on opening the <asm/amd/> namespace for this.
-> > 
-> > Here's a tree that establishes <asm/amd/> and moves existing headers
-> > there:
-> > 
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/platform
-> > 
-> > Mario, could you base your series on top of this tree?
-> > 
-> 
-> Sure.
-> 
-> One problem that I notice though is that by using <asm/amd/fch.h> that
-> drivers/i2c/busses/i2c-piix4.c has some compile failures on non-x86.
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Hm, should these I2C drivers even be built on non-x86 systems?
-
-> 1) Add '#if CONFIG_X86' around all related code.
-> 
-> 2) Move applicable code to drivers/i2c/busses/i2c-amd-fch.c (similar to how
-> we have i2c-amd-asf-plat.c) but modify drivers/i2c/busses/Makefile to only
-> compile it for x86.
-> 
-> 3) Idea two but also add a new Kconfig for CONFIG_I2C_AMD_FCH that depends
-> on CONFIG_X86.
-> 
-> I am /leaning/ on the refactor with idea 3.
-
-I'd go for something like the patch below. There's X86 dependencies for 
-other I2C drivers as well, so it's not unprecedented.
-
-Thanks,
-
-	Ingo
-
-==============>
- drivers/i2c/busses/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 83c88c79afe2..bbbd6240fa6e 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -200,7 +200,7 @@ config I2C_ISMT
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index b6c84d195c0ef9ae90721fada09ffd46a9c11fa3..402b0ede1472af625d9d9e811f5af306d436cc98 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -959,6 +959,15 @@ fuse@7000f800 {
+ 		reset-names = "fuse";
+ 	};
  
- config I2C_PIIX4
- 	tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
--	depends on PCI && HAS_IOPORT
-+	depends on PCI && HAS_IOPORT && X86
- 	select I2C_SMBUS
- 	help
- 	  If you say yes to this option, support will be included for the Intel
++	cec@70015000 {
++		compatible = "nvidia,tegra210-cec";
++		reg = <0x0 0x070015000 0x0 0x1000>;
++		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA210_CLK_CEC>;
++		clock-names = "cec";
++		status = "disabled";
++	};
++
+ 	mc: memory-controller@70019000 {
+ 		compatible = "nvidia,tegra210-mc";
+ 		reg = <0x0 0x70019000 0x0 0x1000>;
+
+-- 
+2.48.1
+
 
