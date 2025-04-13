@@ -1,93 +1,109 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690811E51D
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 11:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC0193402
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 11:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744543889; cv=none; b=YkNF5VAWFc2FalfUeQf9aji1t3z0SBb2mnSxK1YksQz8HoVv1fTu8NmtyTsBUDChyv/U8Q4a1bhXHk0eCo7NCnbLVLl0JTPtT1D/qETtDBWE1utXaZyNlYDB3xkw7ihzHDxJxX+cBJm0n5JTqv9+iNhtlaj/vfpzYhOWHG7GXL4=
+	t=1744544247; cv=none; b=H6pA7tiajmTRQE+DbFCqXDkWBr/xPCj85ebQJwPGXd0wJiPqgpvQdM/+nujWoa7gfkFC146TkTnKCP1iY4urt1AXD6qliOXMMF0AiBRRJWH0dWZMqQ1P9J/e1EVfJ+BYb9i2YE2OBjCmwnWa+3K7n0hiLdy6kGP4thNm/WK/k8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744543889; c=relaxed/simple;
-	bh=auR39PKZsDD23ZH2H52Z/46JtKY9fsDExy+bRSnmg3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQ0a7Hnzs6mXiWx+hGq5MW2iDzVbNkj5ZqLrp+s7Eiwix/wE5+0k9XJqr2Cfvmpwdd67u1ibTYA/vJxVqfXJTbXJiJ+hk6TeFZqGN1NcVDEQxBoD6DtxVsGm8dbbjm/K/3PmUmJs+y+1zgyUrY2P0g8wZhmZNZrpcH+UMEFvug4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=BGhT3Y2j; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1744544247; c=relaxed/simple;
+	bh=uR9BO48fn9wwixojAfz4H5Z6KbqgCsgKLx3T1aE6KF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=he/Vvue/UA6oMnnp41xXU+4MXZEL6YNRvhDIjMhvEm88QGHprxiAvxpeplL8SZFLBIkQbabwDVSkCVpzojy5zrMKFon1uDXXTrKZ/EL5buN/erxevJNUsd07atZ0Tt+NYrd8O5mVY7cSjXnl9xgQ5m+7czLepqcfq/TWdGnDy8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=ha97VOjR; arc=none smtp.client-ip=212.77.101.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="BGhT3Y2j"
-Received: from localhost (unknown [10.10.165.18])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 0BC784487873;
-	Sun, 13 Apr 2025 11:31:17 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 0BC784487873
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1744543877;
-	bh=RoiB+6K4balMwOqjDxvX20TNHB/AXBNeQ7kZn+PUhFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BGhT3Y2jA6UXr23ZvjvPSC3lQHFla1z13HdxeE12BwQW7gHpRBlU2RYKL1X8CTEvs
-	 VAehhf7gDVJR699V+u55SA7u6KGM6NgAL6g2RDpcfXJuMGBddA3SrIMLpsZPCgi0k6
-	 brurd1tyjLnTPWRxThtAuBSWEzbFxg0SB0lbeE3w=
-Date: Sun, 13 Apr 2025 14:31:16 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Denis Arefev <arefev@swemel.ru>, Alex Deucher <alexander.deucher@amd.com>, 
-	Simona Vetter <simona@ffwll.ch>, lvc-project@linuxtesting.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>
-Subject: Re: [lvc-project] [PATCH] drm/amdgpu: check a user-provided number
- of BOs in list
-Message-ID: <fgd6hrllcwj2guhr4mwzfblhausluczprlbjqhsqiqeshoq2g2@jgi4rgufn6wx>
-References: <e6ccef21-3ca5-4b5a-b18a-3ba45859569c@amd.com>
- <bmdour3gw4tuwqgvvw764p4ot3nnltqm4e7n3edlbtpfazvp5c@cqe5dwgc66uy>
- <f8810b13-01d1-4615-b6e2-2e791c48b466@amd.com>
- <qc72y52kt7vuwox4lhk42zligy5bslttselfoexse42mywtpps@ebqijs2tap2t>
- <edc08eb4-63dd-402c-82df-af6898d499a9@amd.com>
- <pmby7iowvxuomsbuxebttosz245j7ngw5enbl72dq675nrgvve@ugkvzeihbtut>
- <CAHk-=whLixL8-iYt1qH0-YvEnVsYtryZaN5Da0qoBBhKsBnumw@mail.gmail.com>
- <437e12e2-ac0d-4a97-bd55-39ee03979526@amd.com>
- <CAHk-=wjLQzkTTDwJ+ZdVdgNKMg958petkdsu-+m7s9UL6PVCRg@mail.gmail.com>
- <b7286f30-15ac-4803-b204-0fe6f2423f73@amd.com>
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="ha97VOjR"
+Received: (wp-smtpd smtp.wp.pl 12767 invoked from network); 13 Apr 2025 13:37:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1744544242; bh=o/eQAucZuZseFJJR/uB56HK/m9TTLIl+jqZ6TJBXMEA=;
+          h=From:To:Cc:Subject;
+          b=ha97VOjR/rRws8tmUU6bE6FWXnEV0r1tGHG5DzRthblEfNQuQmFxsWwK88xV4xiS4
+           Knznvzfw3V21AwIfMeYon6owRIUEheDqmEwiRM+PMpZdpEH9PvbvSxqyZEhvXU39hF
+           IgEKtt/3FJmQzmOY8vnpKXVK2HKkOSbCdAKVAIVnuvTvoyXDHgW7NW6tqEKD1Zkh43
+           vlj/HXvosZfRF5+WwybKHhW4Q8k/2K6I/f+kFOSFwEFWw/ThBuaJgPLNixZ9Sg2xse
+           14igFBeorlNa+uzbDiPINVutXnfa4d8tpPwONcHasCBJN/PmjE2I+YIujztxzvjIpr
+           Nqy3S9ixQndOQ==
+Received: from 83.24.142.208.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.24.142.208])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <johannes@sipsolutions.net>; 13 Apr 2025 13:37:22 +0200
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: johannes@sipsolutions.net,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH iw] util: rename hz to Hz
+Date: Sun, 13 Apr 2025 13:36:53 +0200
+Message-Id: <20250413113653.29050-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b7286f30-15ac-4803-b204-0fe6f2423f73@amd.com>
+X-WP-DKIM-Status: good (id: wp.pl)                                                      
+X-WP-MailID: d35eba65a50ed6ca4d4936ebbc53e0b1
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [MUP0]                               
 
-On Thu, 10. Apr 11:07, Christian König wrote:
-> Am 09.04.25 um 19:27 schrieb Linus Torvalds:
-> > The VM layer allows larger allocations. But the "this is a simple
-> > allocation, choose kmalloc or vmalloc automatically based on size"
-> > helper says "you are being simple, I'm going to check your arguments
-> > are actually sane".
-> >
-> > So the drm code can easily have a function that validates the input
-> > for your specific cases, and then you (a) don't need the helper
-> > function that does the overflow protection and (b) don't want it.
-> >
-> > But it should actually validate arguments for real sanity at that
-> > point. Not just open-code kvmalloc() without the sanity check.
-> 
-> Yeah, exactly that has been proposed by driver maintainers before and we just rejected it on the subsystem maintainers level.
-> 
-> For this particular use case here I will propose some hopefully high enough hard coded limit, but I can't guarantee that this will work for all use cases.
+In most places, the Hz unit is used. This commit changes
+hz to Hz in other places.
 
-FWIW, the current code anyway has this limit being some sort of 4Gb, not
-more.
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ util.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-The resulting calculation of `bytes` wraps at 32 bits albeit itself being
-of type *unsigned long*.
-
-	/* copy the handle array from userspace to a kernel buffer */
-	r = -EFAULT;
-	if (likely(info_size == in->bo_info_size)) {
-		unsigned long bytes = in->bo_number *
-			in->bo_info_size;
-
-		if (copy_from_user(info, uptr, bytes))
-			goto error_free;
+diff --git a/util.c b/util.c
+index dc84886..cc48571 100644
+--- a/util.c
++++ b/util.c
+@@ -1192,11 +1192,11 @@ void print_vht_info(__u32 capa, const __u8 *mcs)
+ 		case 2: printf("160 MHz, 80+80 MHz\n"); break;
+ 		}
+ 	} else {
+-		print_nss_ratio("20Mhz", false, nss_tbl->bw_20);
+-		print_nss_ratio("40Mhz", false, nss_tbl->bw_40);
+-		print_nss_ratio("80Mhz", false, nss_tbl->bw_80);
+-		print_nss_ratio("160Mhz", false, nss_tbl->bw_160);
+-		print_nss_ratio("80+80Mhz", false, nss_tbl->bw_80_80);
++		print_nss_ratio("20MHz", false, nss_tbl->bw_20);
++		print_nss_ratio("40MHz", false, nss_tbl->bw_40);
++		print_nss_ratio("80MHz", false, nss_tbl->bw_80);
++		print_nss_ratio("160MHz", false, nss_tbl->bw_160);
++		print_nss_ratio("80+80MHz", false, nss_tbl->bw_80_80);
+ 		printf("\n");
+ 	}
+ 
+@@ -1351,11 +1351,11 @@ static void __print_he_capa(const __u16 *mac_cap,
+ 	PRINT_HE_PHY_CAP(2, 7, "SU Beamformer");
+ 	PRINT_HE_PHY_CAP(2, 8, "SU Beamformee");
+ 	PRINT_HE_PHY_CAP(2, 9, "MU Beamformer");
+-	PRINT_HE_PHY_CAP_MASK(2, 10, 0x7, "Beamformee STS <= 80Mhz");
+-	PRINT_HE_PHY_CAP_MASK(2, 13, 0x7, "Beamformee STS > 80Mhz");
++	PRINT_HE_PHY_CAP_MASK(2, 10, 0x7, "Beamformee STS <= 80MHz");
++	PRINT_HE_PHY_CAP_MASK(2, 13, 0x7, "Beamformee STS > 80MHz");
+ 
+-	PRINT_HE_PHY_CAP_MASK(3, 0, 0x7, "Sounding Dimensions <= 80Mhz");
+-	PRINT_HE_PHY_CAP_MASK(3, 3, 0x7, "Sounding Dimensions > 80Mhz");
++	PRINT_HE_PHY_CAP_MASK(3, 0, 0x7, "Sounding Dimensions <= 80MHz");
++	PRINT_HE_PHY_CAP_MASK(3, 3, 0x7, "Sounding Dimensions > 80MHz");
+ 	PRINT_HE_PHY_CAP(3, 6, "Ng = 16 SU Feedback");
+ 	PRINT_HE_PHY_CAP(3, 7, "Ng = 16 MU Feedback");
+ 	PRINT_HE_PHY_CAP(3, 8, "Codebook Size SU Feedback");
+@@ -1828,7 +1828,7 @@ void print_he_operation(const uint8_t *ie, int len)
+ 		} else {
+ 			const uint8_t control = ie[offset + 1];
+ 
+-			printf("\t\t6 Ghz Operation Information: 0x");
++			printf("\t\t6 GHz Operation Information: 0x");
+ 			for (uint8_t i = 0; i < 5; i++)
+ 				printf("%02x", ie[offset + i]);
+ 
+-- 
+2.39.5
 
