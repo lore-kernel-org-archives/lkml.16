@@ -1,56 +1,56 @@
 Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA1440C03
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 05:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9551494A8
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 05:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744522846; cv=none; b=hOQof2BkOSRm7xHgQ8aUYd8gUHro90QhZ7fh/hpanTZtEK+jFY6xLBktQrr2ylxecMO9omBFkogzRYsPBetlSN5B9Fwo+mNeKAOd6DE49BzOGpuwOSTU5FRL0W90nbrZEORaeMCbEokZemF+hmPnwVpSVOcD3lC/V8EhzhZsmjQ=
+	t=1744522887; cv=none; b=QpUBevrczqCvKSJiEvViPF2IIQgRglaarrhwalRjRlOyYnG5hlB5MPzJImVR6gfMiqYFF8ZnqvWooJy5hTth4ytyNWAjgvTHeqJLr+sbVq4Y7Fyzu7Mte85yZm0TWTjF1MolTeg/0Gf0SmE0Oef16dyOq+TENGX7plkBUIQOtN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744522846; c=relaxed/simple;
-	bh=MoHqSEX9KbE2gr4kwe8g0PDlvNTnhOr5Bnd6byr4SmU=;
+	s=arc-20240116; t=1744522887; c=relaxed/simple;
+	bh=KNFuWARQCr02Ie4DHc2A0sCAPiSD72nZSsjtpgwyhgQ=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=nbdeMTDUJzvGIXmt1PdP26zpAcJGgOG7hdcxnZ2/tySR3XUWBQ0aE4J6cwCKn+YgPgaRsb2/f71tJsMJQvQxYrKYxjVA9wG8IuzM3rMa6IcbFNkq5YXDYPe51M6u8Ys4+HlX0Dmqj0cL2Uhm3SXX6LRs5F35ViIqnpG527u7EsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ifpDRSc7; arc=none smtp.client-ip=203.205.221.209
+	 MIME-Version; b=LzqwXtx5MpN8BGQiAnotFX9gq6AOObAhw6PVDMT6lk7S9kGapIOlI90YJ0K36y+Q2v+63KTaHaNOlgHQhosfUQ2zWDb0rxOCflEgojcrEioZIES+m4OE/Y0TXfcfVCsfsNdJr8abnbYaCMThVnkfVzXS2M+bGOW9zOLJJmB+R90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cSc3PP40; arc=none smtp.client-ip=203.205.221.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ifpDRSc7"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cSc3PP40"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744522531; bh=cuxBj7CFLgwD/Ypbw6yXmZ0mtlhmHQNemsUzZaAlH/c=;
+	t=1744522881; bh=Ix70RlTZArVn4D3n7Wq3lhRc0QoaN1a+PzFO+JqgFs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ifpDRSc77EicgcskpJPRyto9+aYDwe2kUzZmbjXtceqHPFxLNJ+tN8Pdw9jQt8S9f
-	 MGMprN+I5zJJ8tM33UX2d+BvqCa6cYTE+kbY53V1lyt2HZM12gI4DydHjT8QVrNL8C
-	 qnsqlO4eK601PzyCwZp4iz0Eh+xwEBZ7tQKKa2M0=
+	b=cSc3PP40Vmh8YBSOSvDyhG5yPidc2Uv58+tDf+y8l/Cc9HuxDecICC3hCZ22+l6n8
+	 r08ToBfeMKV3eyeEZC6Sbeth+9lBKOR08wOQpKdBJIG4IQlJsHAdzolT50sB4kk0Jr
+	 plZypWM8KXLZVWeT/POtTSnEYiL+wMxAuirjs2vQ=
 Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 8DD2BA09; Sun, 13 Apr 2025 13:35:29 +0800
-X-QQ-mid: xmsmtpt1744522529t7qv9cixs
-Message-ID: <tencent_36256BBAA7BB3833A69E7E1B514B2B1BA308@qq.com>
-X-QQ-XMAILINFO: NG8iSz18srmO9NXb2+71gSqq14lPm8X/7g6lOHhDk/CdPE6FZL9jBJ3mHLF5/Z
-	 jKtdFe3jkjptRxKzvdyXqI9sW1nsWP69nhymIXmH1Ka+D21RB84eLvGfg79/L8vfRspZos2QaWTt
-	 PxL1DLRP7CwdP5kqyZjsXM8yNK7SNt4FjvFj9+2KlTnfLoQCXCpizJfRGVGq4Xc7tBI3lD0qCpJD
-	 6QZJDopRjrKTtYLM+x4WArQ4+WeGIJFRnXru87PrISnVryIKs9KQ6KD8slyFrJAQ8O1TXQMZ4H08
-	 fGzXDmUHEARqZZPiV9+M4RTCZrGI56gZPTQpgm7hVNQ4QQzYCPdpuTJ+tCph+Y85Cr3u7/O7UhDo
-	 Jf9VxHdG3J2F0xk23m2+a9Y8hwybqwPaD/K8U6i74pu/u21D0/uP7EL9syaW7S4BMUW+cripj0Pg
-	 aeXAdcvABrwEw2fx5ElQkabXS2dTJ9z1akZlV2NYWHuXG+F/uKhb2QlwyCzdQQQW31fjB0vVT60A
-	 PKRjXSNwXZifmP3Twm0AB51YKCxLAht3EryMtyQqUfTOOpXQQIo+tiG12au30k0OZhv+2QwIXyKX
-	 BhFN7+JaQSlLjDRTlKP1YkF7MhS3pTWpg6ddWSsXnqqYkE84jD8A8JWVuhkdDm6qPusCNYyaimZn
-	 iNUCWqsvTIkLk79BTr1ZUCoVIfMQT+Lw6oTjuCzeu1xfzbH6FDQpnshHybjNu3f4AayalDfuBe40
-	 0gKm4808lFTA23VZ0v81kESj6Nss7yiDGCSlzIk5pJqeM7e4Q/p4FMUiOhbaLOC0Y5UxhbLnJUi9
-	 WthmTYQkWTNxMMxCwo8a5rlf1gs2EFSlCmvLzzUE8l/SEsLTdZO69WAu37UghrbhvZi/8A+bNIwp
-	 4GWKqVnrCjoJROhB7JLWMrXlWl8dJyog==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
+	id A5381833; Sun, 13 Apr 2025 13:41:19 +0800
+X-QQ-mid: xmsmtpt1744522879tijsmnsuz
+Message-ID: <tencent_A80EBA44BB6A33409E3D1B2E4B181B772508@qq.com>
+X-QQ-XMAILINFO: NDgMZBR9sMmaMhdzEeLiWJO3VFHw+5Vey21/WLkYgVosXZXKAC7AHDNZTN1BdH
+	 imobEr5nLXWpVmV5+R4J1MVkgmGwiHAyUQQpiL265y4YrFcf//gu83JFKliyapJs9D6arAfhmu2z
+	 XtN6CQTYb3SKmhUTofe0DDDzjBULoHDM3kORa0sA0nIrOdFOH7Npb7JiC4SvSCVd/69cblUMJmS6
+	 Gq2tviemYVcfKc4q04TTpwfUrxCo+3aJWvGtIYBhVu+HOnylt74XGeSXHqGl1Isz5oqPIXhAooPb
+	 GRGr2B2mODbHn6Cj4lcX+u2f0jA8UPib/+5MZV6r7OGkbVcXhhTq3kpWBCuPZ3eXgagbYXuGmLXY
+	 GyckY1L2ct9sKOPlp6/PQK0Aa57iuJcBV6VqYyFMfaRjJY6IsEVn+MSB/3MAlfzWFqc2dejvnGuY
+	 g78fO+sFaiV9cazc+bAcYhNtp0dR9zxw6yL0gex45daVL+mBjFlMW7ebChxGlhT3KDqOB3YO7MzI
+	 W7N+En7MB7ntMoZRl+J1KGz8a9V+8nZK5q7TX+N9T4WM2GWP7oDEly71uV/4wM/4gA5/haL84f8V
+	 9i42BfTCGTDq7dAYe3v0mNAE8xC08/tfIrDQtGBh0K5vm6MmyjnSpOrDOM2tvyYJu0eJnDfY1ymc
+	 fFOffx7h6CmArEPcksZ9RST6UmQMKat6ma2pGGi4ONk9+i6UaCVOiKyxxIJuTNNsj2Tpw7eHc6ob
+	 gG0h+RdQ7eHxlPRvy8JHr/fb9vfRsTfbP1k6ZinaV9P9ZF/NaT9JFogSrtnyL/8Ix9og/9ROyFwj
+	 UZ2P85ycrSLf4vI4zdjTwU1Iloz82NxGBiNiYAGL8LvLk4do41ywhqmw4s/n6+CaxNBsfYBd/2ye
+	 gTLrk/b4FrD3nsMMmt59gXhkbUYB0oYPEtNqFJM6gcfA8CyX/+cGk=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
 From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com
+To: syzbot+5c042fbab0b292c98fc6@syzkaller.appspotmail.com
 Cc: linux-kernel@vger.kernel.org,
 	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] divide error in mac80211_hwsim_set_tsf
-Date: Sun, 13 Apr 2025 13:35:29 +0800
-X-OQ-MSGID: <20250413053528.147113-2-eadavis@qq.com>
+Subject: Re: [syzbot] [afs?] BUG: unable to handle kernel paging request in afs_put_vlserverlist
+Date: Sun, 13 Apr 2025 13:41:20 +0800
+X-OQ-MSGID: <20250413054119.154915-2-eadavis@qq.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67fac9a6.050a0220.379d84.0016.GAE@google.com>
-References: <67fac9a6.050a0220.379d84.0016.GAE@google.com>
+In-Reply-To: <67fb3265.050a0220.2c5fcf.001a.GAE@google.com>
+References: <67fb3265.050a0220.2c5fcf.001a.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,20 +61,16 @@ Content-Transfer-Encoding: 8bit
 
 #syz test
 
-diff --git a/drivers/net/wireless/virtual/mac80211_hwsim.c b/drivers/net/wireless/virtual/mac80211_hwsim.c
-index cf3e976471c6..cd9e89aebb83 100644
---- a/drivers/net/wireless/virtual/mac80211_hwsim.c
-+++ b/drivers/net/wireless/virtual/mac80211_hwsim.c
-@@ -1226,6 +1226,11 @@ static void mac80211_hwsim_set_tsf(struct ieee80211_hw *hw,
- {
- 	struct mac80211_hwsim_data *data = hw->priv;
- 	u64 now = mac80211_hwsim_get_tsf(hw, vif);
-+	struct ieee80211_bss_conf *conf = link_conf_dereference_protected(vif,
-+			data->link_data[0].link_id);
-+
-+	if (conf && !conf->enable_beacon)
-+		return;
- 	/* MLD not supported here */
- 	u32 bcn_int = data->link_data[0].beacon_int;
- 	u64 delta = abs(tsf - now);
+diff --git a/fs/afs/cell.c b/fs/afs/cell.c
+index 0168bbf53fe0..f31359922e98 100644
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -177,6 +177,7 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
+ 					      VL_SERVICE, AFS_VL_PORT);
+ 		if (IS_ERR(vllist)) {
+ 			ret = PTR_ERR(vllist);
++			vllist = NULL;
+ 			goto parse_failed;
+ 		}
+ 
 
