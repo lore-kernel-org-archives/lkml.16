@@ -1,33 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6530E7F9;
-	Sun, 13 Apr 2025 05:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D366383A5;
+	Sun, 13 Apr 2025 05:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744521428; cv=none; b=VUkrGlh9GAGkrnTUuOAr2JcO7s79667JMzDAx90t2O+ojlk5ypJ0zJMlfCyd4oSASicfm07FMXVfgScPamssQuZ10Sr/8QHPb6oZ+L1IMB0vA+8EM2OXRI4ramfStJzC2WS1SrdqC1JhOWWs6PTstU0YCdcjkZfL3N36n36caJo=
+	t=1744521872; cv=none; b=oXy5jyigts2H0EbidUW1xEbvFlyrU9pgRhBVPX96gmItJYHdtz0Z/6yrVds0Zr4nIUu7rL5XV8bmITgyIhOtIcgJPtj0NTAtvA7e9Dj2Y7Ox86kEl5iea7p/igkFWwwa1estnzud01sq7s/kNHJAnnoWkROeslw02ExhrdgfnXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744521428; c=relaxed/simple;
-	bh=6WxhdAa4Khq/pSDhvYx8X8rPtS6/4ePYLlsJwwNawMY=;
+	s=arc-20240116; t=1744521872; c=relaxed/simple;
+	bh=qZhI4IXGj1ogzGsDmvbazAqTwkKx0Yng6YYZBfWidbY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uxjK8Uk7hACL0dJ8463iNIQW5+/9hfTGOE7oz1SCFDC1TBkgFw/1QXag2J8abgG6a3AGAaPqHhrBJmzOaSZcRuAQxZ/Y6lwiGGecJl0F/JVAz34mP/1Ous2tSMynHULf4GQcgAiLSdM2dCBTWBq+3HUi1ms6d90Mk+mJ5/WB1MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWin0gDl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AoAaDiT6eO954aZy0EFuVjqq5iiyp7n06s5bbaZ6GCTBT23jwt8MmVWO/aFrgNm0EmbEXCll1VIVJT1DJVfnEcgIhfm6nx6Yp2pdkLHh8jEZB0etajg3nroCumXywEpgVqobWOdydJ0I26e5sx5khn0IBxOyLrWAe9V5d5fubM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SX73jVdk; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWin0gDl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69163C4CEDD;
-	Sun, 13 Apr 2025 05:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744521427;
-	bh=6WxhdAa4Khq/pSDhvYx8X8rPtS6/4ePYLlsJwwNawMY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GWin0gDlSipVQxpj/xtX5CCYDqrSdKu2FNnuHgZ63ECmzF3odgUHVYcGnzrDyuWZg
-	 dr8Ml8EE/QfLk53OvPLSERLbrbsGpatFcUeoZD/S+Pqctg5mLgOknzHUt9z6V3mTXT
-	 AyRCBwzpbkoBpp2WGprmXy8kylDGIIw+J1Dz0moGD4u+ct4ImS5D52+y0AlOipg4IH
-	 WjxVvHJOV+cKE9jk4KJalvu3mlL5CGu74ARM2qexq978ErwDB4kG7QoaWZ3k7IlTsw
-	 tDQsfYaGETuQZnupaR8xKTRb90OBM7wWx4SYvfKJE+jhOOwTL9j9JgwDRkuJd9RVrU
-	 OTBfdjBZ7Jpig==
-Message-ID: <f56d8794-07a1-4040-8743-0599fb488dba@kernel.org>
-Date: Sun, 13 Apr 2025 14:17:05 +0900
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SX73jVdk"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53D4hQsm007253;
+	Sun, 13 Apr 2025 05:24:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=IqmDGU
+	YrifZwhEU6eK/b+avFqWBbgtTr3cfUl9X8Mh0=; b=SX73jVdkHZ7OOzEAc8mwsa
+	P/H6HCHoYeOt2X5ofAgSm+9VL9JJIyZ7ipy5SUEIHNCaHalA8TXVcCQfzF8sLg8V
+	vN87IBvbrjduWW+EHl5HfJZjAZGuuKreeYQfYLCrWTrzrOHsuSJkIdgulMdbOmI3
+	V2u0/y3pRHlj9vegU1lOsqpDTezLh7JSz38lMbnf1ogFSETG2ggrK31C0EWDosRm
+	cqcIlYXmzX68Ta1srNOGqkwnjj4IInLYKabdfuMjXM0cFcGJqfT93fz+dNScRXhA
+	wwamDFAoXu1MqVZ9Ux0vR6deJptkC7gWUCShJHPzzNfVtX2XiMfpwGzsYALYDSdQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46024x95h0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 13 Apr 2025 05:24:04 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53D5O3Sf017611;
+	Sun, 13 Apr 2025 05:24:03 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46024x95gx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 13 Apr 2025 05:24:03 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53D2gRPk010435;
+	Sun, 13 Apr 2025 05:24:02 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qjrdb3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 13 Apr 2025 05:24:02 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53D5O1jN30868176
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 13 Apr 2025 05:24:01 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8AFF558052;
+	Sun, 13 Apr 2025 05:24:01 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3DA155805D;
+	Sun, 13 Apr 2025 05:23:55 +0000 (GMT)
+Received: from [9.124.209.25] (unknown [9.124.209.25])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 13 Apr 2025 05:23:54 +0000 (GMT)
+Message-ID: <f4131737-fe1b-46a9-acde-73d1e29cda98@linux.ibm.com>
+Date: Sun, 13 Apr 2025 10:53:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,55 +69,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: fix the printed delay amount in info print
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>, bhelgaas@google.com,
- mika.westerberg@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- lukas@wunner.de
-Cc: alistair.francis@wdc.com, wilfred.mallawa@wdc.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, cassel@kernel.org
-References: <20250412060934.41074-2-wilfred.opensource@gmail.com>
+Subject: Re: [RFC PATCH v4 0/6] Promotion of Unmapped Page Cache Folios.
+To: Matthew Wilcox <willy@infradead.org>, Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@meta.com, akpm@linux-foundation.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, hannes@cmpxchg.org, mhocko@kernel.org,
+        roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+        Huang Ying <ying.huang@linux.alibaba.com>,
+        Keith Busch <kbusch@meta.com>, Feng Tang <feng.tang@intel.com>,
+        Neha Gholkar <nehagholkar@meta.com>
+References: <20250411221111.493193-1-gourry@gourry.net>
+ <Z_mqfpfs--Ak8giA@casper.infradead.org>
 Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20250412060934.41074-2-wilfred.opensource@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <Z_mqfpfs--Ak8giA@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On 4/12/25 15:09, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> 
-> Print the delay amount that pcie_wait_for_link_delay() is invoked with
-> instead of the hardcoded 1000ms value in the debug info print.
-> 
-> Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait
-> time for slow links")
-> 
-
-Please remove the blank line here and do not wrap the Fixes tag line.
-With that fixed, looks OK to me. So feel free to add:
-
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..8139b70cafa9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		delay);
->  	if (!pcie_wait_for_link_delay(dev, true, delay)) {
->  		/* Did not train, no need to wait any further */
-> -		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> +		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
->  		return -ENOTTY;
->  	}
->  
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 6dsAiMeB33E3lh-bj9ZwhYx2gUIGJIgE
+X-Proofpoint-GUID: GELQ2W6CYobMvDj3cE-s1NHetRq3AAmh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-13_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ spamscore=0 impostorscore=0 mlxlogscore=688 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504130036
 
 
--- 
-Damien Le Moal
-Western Digital Research
+On 4/12/25 5:19 AM, Matthew Wilcox wrote:
+> On Fri, Apr 11, 2025 at 06:11:05PM -0400, Gregory Price wrote:
+>> Unmapped page cache pages can be demoted to low-tier memory, but
+> No.  Page cache should never be demoted to low-tier memory.
+> NACK this patchset.
+
+Hi Mathew,
+
+I have one doubt. Under memory pressure, page cache allocations can
+fall back to lower-tier memory, right? So later, if those page cache pages
+become hot, shouldn't we promote them?
+
+Thanks
+Donet
+
