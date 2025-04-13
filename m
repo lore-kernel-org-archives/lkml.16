@@ -1,63 +1,63 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1AD1EA7D9
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 17:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA2E1EF097
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 17:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744564570; cv=none; b=M9dKpzXDRjegpJEZmAY3dQCaWAow/ZGjLamfZHEr85TRBHpphqD5HIn+D5/9HntFRh8UYg3iwR2ALorb7hbMecmLU6V5TavQJeRRB+NZWbFzjQY9lyHJEnlDfeIxDeJ69Lr/1luAlH8Qynf1SNrjpq1mD+W65xAXBpFk//EgfNk=
+	t=1744564633; cv=none; b=n/4vjXg1xjpA90v4CkJDFXOkFaH0aoPPNL1srdj1AF9hjFmHRD+RNep32KuSJHrnt/5kbBjSEKHnXWC+YKVfa0A43DYTbHEG5Pd7sUIsW2FCWcS7GUk9KM0zbAqs7Eh+LVxyJoY6aTY7JzLwOlIPw5l/zR+y6W+0ihkBk6epc2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744564570; c=relaxed/simple;
-	bh=ld04x8HZmKs9LHeWQuSl48zpWswhRqtdxOsfETxkkJk=;
+	s=arc-20240116; t=1744564633; c=relaxed/simple;
+	bh=yzmYr4JLOS40LoDlK4MgPp+nJ9KhGdxaumE41jBjK4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NY+8l6zQoKj3ZL8SvcBfZ2TfNvRlY14FH8ExEK251zIoqytktksOHPCf5wj8+WLf9AduHeumKvfJ8m5ihLt12vy3I55qzes3hoxsfSgAFonPPUnbA5Hv11mQVP+BYWoe8RiKhovqGTGoWT64kQKM3xOOYxtwGYadKi1Lo65aSM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VuTgkzrT; arc=none smtp.client-ip=209.85.215.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=dVrdMGv2DoYjoZSlICF6KDf6cSymt9HLU0rhQZFXbXd2OJI2VRzy4PsfQFD8khTfepqasrzMw5szoHokU2XxQ6vjKoiRi+j/PpVbg/nb+CK215k94NtzI67gHrSM3wdsYjOr56JubbfALXv2mSTalANehUzh0we9sNuKa8iy9pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OaqUHXp0; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VuTgkzrT"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-879d2e419b9so2916957a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:16:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OaqUHXp0"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22435603572so32602085ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744564568; x=1745169368; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744564631; x=1745169431; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=F4okzS3ojN6lnY5RLqGdFM+gAcZSW3E4D3okjWrQCtE=;
-        b=VuTgkzrTH9XZ/vidwlXG9wmCLBF5qHWudcZ5O5OUSgfnYOrLQT/Ddp7MO1lPCgshIO
-         bBaJG/W0TSwTSBXuQiawCbItFEgw4hegra/SV+W+rtz7o63IIVb0lKTKi4zjtjPfgwMc
-         IGBhvbPjjNqgopzhb/FLDC/avFJNd7PJZ2GDFe8TyIUdAEhbdPpRggHyox3ibsfx5Na8
-         58WdoU2Wb2KrOMSAE68R4xLDHjkp9bPr5nNvbEc/l/vkW7c4IyNKr6EKoHMp/2ug0NNk
-         OBpQRH8+oGel42IHuE3QwGAbwmh3E50Q5ZALtPQArYeHDW+WH8MTTCVpf/HrgTZZ9/jG
-         t24Q==
+        bh=fvXB1Wjux2MAoUVYX6W6dWHZg8CiYEv8//Po5T1hVMY=;
+        b=OaqUHXp0MKXECUMrJIJCDFeAzQMhGK0fYAM/othAcpZ6CfzTueYmYlI+ad5Yo0zGA9
+         IpdAwyhxmGkVB79Erb/aT0/sIx7lYF0zNTQ3HGMtVfU4Vv9B9V4c9Dm+sC4SlxKasTGf
+         yz5m96M6lvoTfRSnYKNU9aeUM0TiybxFFwqK65YdeGaV0oQhfnXFagqCDA/VCo/kfhrH
+         fQ1HNy2DRXjfrwxI+a8xJhq+xGwStUKNTjutusruUH2orXjjqS9yucbzNkAPwzqdepWu
+         HVQyNRYfl5SUrBFMIMD2k0D18j8+cCCltShrmfKymhzXQvQt6hvgosQPrPS1SJgI9SFK
+         PDHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744564568; x=1745169368;
+        d=1e100.net; s=20230601; t=1744564631; x=1745169431;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4okzS3ojN6lnY5RLqGdFM+gAcZSW3E4D3okjWrQCtE=;
-        b=fWKO//raAtxVsytZMIZEN4VTs/RMcJBkeb0CkGYOKTWP+8MQhaxHZpTMdszzqu2lcb
-         Q8oqq7KvlExjNrbsNc9dzLPqJ00kSbYsBoKT51KWp5Omv0j4d0vmq5fFz25WenO3ch8G
-         EBKgM+90iMIO46AWr4PrHkfktFILDEevxp7+QRMebP9glE5f0TUVlCDcyrKFSVnvhwPJ
-         weBiMGxFVSmK+fNsZkNNEF7RNjU0hLGsHFudywSqnoXjx+m9HRJ/LUGf+M1bLQrcg2rh
-         qkkykS4WJ042/O6b7XDq72YTQa6GiJ5Q/ipj9aOJXT/zgc01/Ati508h6CKH69OHuQ6u
-         oA9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUz6qf8XBv35Ob/NvDiTQWk4X6GMci+CIAhu3JSzYlDInehk+2GiwsyfZIhLsiGy6d2uh+f9TQbE5uuFJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd0anqh4j+p7W0zpCmXem+Cg2f083Y+DpUZBT/tjTnPzkLAXpp
-	dvvbfCWy8o2VRD9wu5D6L3CNWB1vMXXxu6u2orjeGvbcSIQIIqLkzZVAfRUR9Q==
-X-Gm-Gg: ASbGncuNBhpLqbpzCyj7fDqRX95bjWquoNMk57CtOUYqEntpZqIXR6J60w+qsrRGSPI
-	rTNUCAb/CTht6IwnFjDUBOKngNhP/a9EZfslLONo7VChLhW5IhoHeRNi5cv8cuahfOGTNqLGk4/
-	HFl2KZNKKpc4lwJF0ErQFEo7dpYwRF/QD52Mx8WXCdgPA+iW8w5erz+cd7iRinQIFgG/jpjhJUy
-	U+1l5pxF/29Cg4T3zekC1/FhHgHqSnfhix/DRdRu5YpFy8dyG4AggEra5/tfcw9sGUuOglTFLsp
-	BcppBfmVOka2a+tuF+kkkg3BDj/yvNy4Zx6kl1vW0NAnxl5uH/dTanwxcb5EpkI=
-X-Google-Smtp-Source: AGHT+IF3vhmu+FLpO8zsp8cPRlhnO7CmvXQvRW7kWOQy1JPST9WHz5upmUYj9aLgD93hoRV5zqzCaQ==
-X-Received: by 2002:a17:90b:2b44:b0:2ff:6e72:b8e2 with SMTP id 98e67ed59e1d1-308237f2b39mr14281049a91.31.1744564567714;
-        Sun, 13 Apr 2025 10:16:07 -0700 (PDT)
+        bh=fvXB1Wjux2MAoUVYX6W6dWHZg8CiYEv8//Po5T1hVMY=;
+        b=wZHHqMg137nfbDGwc1o6QkDT94aC6b1D9sSqVEg/iKfzwkm3FeDPjf839tsK5sDeEH
+         3V5uHI7AFt9kT72XpcNO/Krs8AfQhWsybD/CuPvlhUMVlOMbnVD/QXB8L+dIdtFqfwuw
+         HSnS9yHvHLEhyfp4DvmuMWg52pnDjKI6UGY6n1wlNF3+Hg1DYU3PtMwy21J4C7tmTXfc
+         cpYIRnHOvjonskoBMkFOgvuO90yCNIJhSs/s7aJcmgB7Ws4bXI/jG6MlmGr7sT/gMqbn
+         wZ6F1zhN0Lsz1c4PCtrog04TNBsLOAHaewomLIrk7Wvgw98jdW5jwNvmNnRdSJ0EF0uU
+         5O6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVv274lGk3xjH6rmHcHjCrwq1Ej7ec/KQYn0YRQP+SbLczwYtKQNSO/FHVE6af03A/Zoh6lfQtjSLKBSd4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkU2UJvkJivsqO/8rBPkqAmRtAVnnNlub3OzrtL1uH5f4gpL3Y
+	LBKZLTQS41NsVUXbl2UUe/dECbKRHaMShKGX+31UNc0n60QerB9sbsXc0xhjZQ==
+X-Gm-Gg: ASbGncuHhLtG7acRRJxU0C5oAMunVolMivd80KRhDcHTAvU2/i+BTY1l/WxXCdTqytG
+	vtC98011fBoOQIej2yjSIOY8FoFLmYlEZ5OkPVYK4EZ7buZR9uGfKsMFB3pqt1wZKRFOsmoCrWM
+	T3aQjehQ4G74r0XhN5bzpNVYO3eooMv7p8hYGCXdkD8LFQFDIACAqPJO/UOPddG2brEFeF3yQuJ
+	JRRVNLhWfjntbBXcgB/OBQJY7H1JrYRVJ/I5ZYVvnxkzrncjIfm9SuqRvD2fJ9PXHftmqpQTUvk
+	xTWpqjvzvyAUNX1Ew0Rq0vC0TG6Uf3nti3M31J92oPjr/HuI4cnF
+X-Google-Smtp-Source: AGHT+IEtOLc2J65A5BztfZy5lJCUWgfZuua8Ed0F/wWmVQ49XJn2NKHTr6y3ixbdHzeiNIvZR7HI/w==
+X-Received: by 2002:a17:902:e5c9:b0:21f:1549:a563 with SMTP id d9443c01a7336-22bea4954bfmr127432855ad.2.1744564630883;
+        Sun, 13 Apr 2025 10:17:10 -0700 (PDT)
 Received: from thinkpad ([120.60.137.231])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd18580esm9724031a91.46.2025.04.13.10.16.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c97228sm84677405ad.128.2025.04.13.10.17.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 10:16:07 -0700 (PDT)
-Date: Sun, 13 Apr 2025 22:46:01 +0530
+        Sun, 13 Apr 2025 10:17:10 -0700 (PDT)
+Date: Sun, 13 Apr 2025 22:47:03 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Marc Zyngier <maz@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
@@ -67,11 +67,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
 	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 09/13] PCI: apple: Move port PHY registers to their
- own reg items
-Message-ID: <fvjlxc2gwhhs2sv5mbag7m43s5cbmuyygjvlynpkq2jd43bqlm@pcgwo3usbdyf>
+Subject: Re: [PATCH v3 10/13] PCI: apple: Drop poll for
+ CORE_RC_PHYIF_STAT_REFCLK
+Message-ID: <rzrouiqucgtdpapcqwf6pbdrbsrxeii6khx3h2q26etu3772tb@qxxdjuv5uias>
 References: <20250401091713.2765724-1-maz@kernel.org>
- <20250401091713.2765724-10-maz@kernel.org>
+ <20250401091713.2765724-11-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,26 +81,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250401091713.2765724-10-maz@kernel.org>
+In-Reply-To: <20250401091713.2765724-11-maz@kernel.org>
 
-On Tue, Apr 01, 2025 at 10:17:09AM +0100, Marc Zyngier wrote:
+On Tue, Apr 01, 2025 at 10:17:10AM +0100, Marc Zyngier wrote:
 > From: Hector Martin <marcan@marcan.st>
 > 
-> T602x PCIe cores move these registers around. Instead of hardcoding in
-> another offset, let's move them into their own reg entries. This matches
-> what Apple does on macOS device trees too.
+> This is checking a core refclk in per-port setup which doesn't make a
+> lot of sense, and the bootloader needs to have gone through this anyway.
 > 
-> Maintains backwards compatibility with old DTs by using the old offsets.
-> 
-> Note that we open code devm_platform_ioremap_resource_byname() to avoid
-> error messages on older platforms with missing resources in the pcie
-> node. ("pcie-apple 590000000.pcie: invalid resource (null)" on probe)
+> It doesn't work on T602x, so just drop it across the board.
 > 
 > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 > Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 > Tested-by: Janne Grunau <j@jannau.net>
-> Co-developed-by: Janne Grunau <j@jannau.net>
-> Signed-off-by: Janne Grunau <j@jannau.net>
 > Signed-off-by: Hector Martin <marcan@marcan.st>
 > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 > Signed-off-by: Marc Zyngier <maz@kernel.org>
@@ -110,117 +103,26 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  drivers/pci/controller/pcie-apple.c | 55 +++++++++++++++++++----------
->  1 file changed, 37 insertions(+), 18 deletions(-)
+>  drivers/pci/controller/pcie-apple.c | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 23d9f62bd2ad4..94c49611b74df 100644
+> index 94c49611b74df..c00ec0781fabc 100644
 > --- a/drivers/pci/controller/pcie-apple.c
 > +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -39,14 +39,18 @@
->  #define   CORE_RC_STAT_READY		BIT(0)
->  #define CORE_FABRIC_STAT		0x04000
->  #define   CORE_FABRIC_STAT_MASK		0x001F001F
-> -#define CORE_LANE_CFG(port)		(0x84000 + 0x4000 * (port))
-> -#define   CORE_LANE_CFG_REFCLK0REQ	BIT(0)
-> -#define   CORE_LANE_CFG_REFCLK1REQ	BIT(1)
-> -#define   CORE_LANE_CFG_REFCLK0ACK	BIT(2)
-> -#define   CORE_LANE_CFG_REFCLK1ACK	BIT(3)
-> -#define   CORE_LANE_CFG_REFCLKEN	(BIT(9) | BIT(10))
-> -#define CORE_LANE_CTL(port)		(0x84004 + 0x4000 * (port))
-> -#define   CORE_LANE_CTL_CFGACC		BIT(15)
-> +
-> +#define CORE_PHY_DEFAULT_BASE(port)	(0x84000 + 0x4000 * (port))
-> +
-> +#define PHY_LANE_CFG			0x00000
-> +#define   PHY_LANE_CFG_REFCLK0REQ	BIT(0)
-> +#define   PHY_LANE_CFG_REFCLK1REQ	BIT(1)
-> +#define   PHY_LANE_CFG_REFCLK0ACK	BIT(2)
-> +#define   PHY_LANE_CFG_REFCLK1ACK	BIT(3)
-> +#define   PHY_LANE_CFG_REFCLKEN		(BIT(9) | BIT(10))
-> +#define   PHY_LANE_CFG_REFCLKCGEN	(BIT(30) | BIT(31))
-> +#define PHY_LANE_CTL			0x00004
-> +#define   PHY_LANE_CTL_CFGACC		BIT(15)
+> @@ -475,12 +475,6 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+>  	u32 stat;
+>  	int res;
 >  
->  #define PORT_LTSSMCTL			0x00080
->  #define   PORT_LTSSMCTL_START		BIT(0)
-> @@ -146,6 +150,7 @@ struct apple_pcie_port {
->  	struct apple_pcie	*pcie;
->  	struct device_node	*np;
->  	void __iomem		*base;
-> +	void __iomem		*phy;
->  	struct irq_domain	*domain;
->  	struct list_head	entry;
->  	unsigned long		*sid_map;
-> @@ -476,26 +481,26 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
->  	if (res < 0)
->  		return res;
+> -	res = readl_relaxed_poll_timeout(pcie->base + CORE_RC_PHYIF_STAT, stat,
+> -					 stat & CORE_RC_PHYIF_STAT_REFCLK,
+> -					 100, 50000);
+> -	if (res < 0)
+> -		return res;
+> -
+>  	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
+>  	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
 >  
-> -	rmw_set(CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
-> -	rmw_set(CORE_LANE_CFG_REFCLK0REQ, pcie->base + CORE_LANE_CFG(port->idx));
-> +	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
-> +	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
->  
-> -	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
-> -					 stat, stat & CORE_LANE_CFG_REFCLK0ACK,
-> +	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
-> +					 stat, stat & PHY_LANE_CFG_REFCLK0ACK,
->  					 100, 50000);
->  	if (res < 0)
->  		return res;
->  
-> -	rmw_set(CORE_LANE_CFG_REFCLK1REQ, pcie->base + CORE_LANE_CFG(port->idx));
-> -	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
-> -					 stat, stat & CORE_LANE_CFG_REFCLK1ACK,
-> +	rmw_set(PHY_LANE_CFG_REFCLK1REQ, port->phy + PHY_LANE_CFG);
-> +	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
-> +					 stat, stat & PHY_LANE_CFG_REFCLK1ACK,
->  					 100, 50000);
->  
->  	if (res < 0)
->  		return res;
->  
-> -	rmw_clear(CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
-> +	rmw_clear(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
->  
-> -	rmw_set(CORE_LANE_CFG_REFCLKEN, pcie->base + CORE_LANE_CFG(port->idx));
-> +	rmw_set(PHY_LANE_CFG_REFCLKEN, port->phy + PHY_LANE_CFG);
->  	rmw_set(PORT_REFCLK_EN, port->base + PORT_REFCLK);
->  
->  	return 0;
-> @@ -515,6 +520,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->  	struct platform_device *platform = to_platform_device(pcie->dev);
->  	struct apple_pcie_port *port;
->  	struct gpio_desc *reset;
-> +	struct resource *res;
-> +	char name[16];
->  	u32 stat, idx;
->  	int ret, i;
->  
-> @@ -542,10 +549,22 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->  
->  	raw_spin_lock_init(&port->lock);
->  
-> -	port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
-> +	snprintf(name, sizeof(name), "port%d", port->idx);
-> +	res = platform_get_resource_byname(platform, IORESOURCE_MEM, name);
-> +	if (!res)
-> +		res = platform_get_resource(platform, IORESOURCE_MEM, port->idx + 2);
-> +
-> +	port->base = devm_ioremap_resource(&platform->dev, res);
->  	if (IS_ERR(port->base))
->  		return PTR_ERR(port->base);
->  
-> +	snprintf(name, sizeof(name), "phy%d", port->idx);
-> +	res = platform_get_resource_byname(platform, IORESOURCE_MEM, name);
-> +	if (res)
-> +		port->phy = devm_ioremap_resource(&platform->dev, res);
-> +	else
-> +		port->phy = pcie->base + CORE_PHY_DEFAULT_BASE(port->idx);
-> +
->  	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
->  
->  	/* Assert PERST# before setting up the clock */
 > -- 
 > 2.39.2
 > 
