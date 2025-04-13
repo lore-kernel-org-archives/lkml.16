@@ -1,214 +1,91 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38111CDFAC
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 14:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2466C19DF4F;
+	Sun, 13 Apr 2025 14:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744553598; cv=none; b=psxOdnh6ADUGeo570bjfcYeNW7CUMzXqdeD/QH5oO+z4kJG5BcZvHbeWlPb5mbkov+JQP5WakWbpNUS7zZJMtwpRMuHIKqIJBk7E/slY0+jsDVRgeeEEd07V734SWPxRfgNtoQE2MtQ6I5/pWJB1USJ2yWh46QmKS5QgunTzPGc=
+	t=1744553612; cv=none; b=J8wceMMXnH9O0LtPCwPERN0vZLEyNGUILovISjGiPlo1SGRd0N/W+W1H2tf3h5jGCZnZNzMxnEvg0f9lAhy6GIsaPP0KZnBde0U/y4/bHDkIe9/v1G6cd4z/Mj6RE+z8IFsTuBWv77bNbCx5dTgXN6DkEBjvCvYg+GVDXb0P0pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744553598; c=relaxed/simple;
-	bh=MTMySu9l51fD2dVWjJvZtk9X2dn/X/Lj8ZL927kSy8A=;
+	s=arc-20240116; t=1744553612; c=relaxed/simple;
+	bh=pdInqqokyxmOxQcOwY5kAGOwm2riSgazc6au3Z35qKM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4cQSAArE+3DsoFDOU6JgdbYSk6cMmI+8/Fy3j3e8SM5ZPIDM1uXf/aDRv8bT02iOZo2OpzvpwhAPL9fXhmHlaGKBEIuKWJm6UFYblKZ4YFtlnhDRSfW05Usru2TfcIs0pjn7JAAJ/5BuyZ69ewurTyuXsRtIxAxmY/D/h8LtcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v2DhXvoo; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3Du5QitbknWLHCfPolFGk2hEqCMSwj4kkuP4MjFLsX5mN7dAxBuFcRtZmbNjzfYK3XAcbVLLCXz7N8dDG2z83GAwJIBpsGPIDSUTxB6P3OtnwGewweB61OGR1PqgykGJWUxN+LRejzwRlG++MHlkmYvodorZSDSEi0hQat7HfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=SdAc5/uV; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v2DhXvoo"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-739525d4e12so3051062b3a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 07:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744553594; x=1745158394; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MDGkU74MBhCdgJJMoNaDSjeUhoyAzk0gL7nqKzTZvSA=;
-        b=v2DhXvooC0z7Ir5vHkjNGKIxyclQ9T4G4R172mNvayB6/lcS0UHTylVJ287LpTKHfL
-         S6eEj8m7GwjI8fDkAQ+/QdqNslXTk/RQG/7ASRL8+XCgoE6K/lF1NmxLf4ONuxGRt2Ss
-         7l2YkPZemij9tdnXKjNvdoGhwiQH/cV2y4AFlCGQXMfKCH8hy4IJpFwC4JNnxdWTRmIx
-         AJqlLL3j9wclLo7ToAmrNv+X9X9x8QMChVAu4P5K8X3CA2T6KCVjP0Rzwj7wpQ7DHEpT
-         QxWaqGhhmcN1k8fnGxsTo7DYOhPJ5RrpOpRUJtZeAUrHms+C1LcciIpwRI3o98ZjGTMY
-         Ziog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744553594; x=1745158394;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MDGkU74MBhCdgJJMoNaDSjeUhoyAzk0gL7nqKzTZvSA=;
-        b=YiERg3myZKRrHkAjcaYQZoyY6ghXR1zApHYOMU5mkMx7Z/ah4xSsg2QoDPgdSTo0vm
-         MfC1osakUdLxqFBlNlr2+sCHFA+TN+om3kjQyxcCJojz28aPQFCb9QkDkTyTRROry/t7
-         qMOK7SADKdb7//W5zjTcugKkq35Ol2kwEQz03XaZSrEYtshsPU2W4lPapA7LmyP+dDiz
-         goIi+AgI83COejEcfKA2AiVmjS3FlJAxIQprrSIBhtMQULPQUera2A4z2J76k/9G+9QD
-         DDinFZlvKv6Jk+B8emWZge+cCR99LDcl64oQDYqGWtDD9X5zRlHbWRhYHpMrlieb+r09
-         SgWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWc1fjDzez+DITEkZS5sl3qe1WfG1cUPJBCHWQHN3N2nu9i+oLcikSyKKh2SSrgeePLuMeUQrozLvkuyzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMTsvB7MPtUYwYXekUVMfUiOFEXZaem5eEUNIoyPwIEklLZRSU
-	SNdqIoPhWLj1lvA10Wtee4tbFvZtS0URAbLpoP9BTXq42qlZKLO8oO6C7yVpCQ==
-X-Gm-Gg: ASbGncuoYO+0OjfILRYihcpir9n17TeNG9ZmksHlkefsSBpN3ak0kkotwYDYDmzUoLb
-	0hnlzhpKQmjPg/HafbYTCPbGDv0Fxob2VseVv7J67BZJUokxa0va8MsvPcUV1qCwNXr9mfLlQ3o
-	eoqNmCQ7WoMKQXNTfGu86Ffn94t1SOK4TNOROdqoZApVd9APSjr6GYnLNXo3iFa5QObgt3AbOIH
-	Dj8CjouKlJCnagsKNWMP4xcg6LChui6SDzlLvKjF4vfyFS/efCwwJi9ymH2DWNsI6VA/93P/2Cd
-	o1FBfFMP7tb1KHKBpQzPbWHYMsxZLSpMM1qIDSPIfn9vLFZVyN2p
-X-Google-Smtp-Source: AGHT+IG3KsEC7opdxKauuCqzbkQebp3bxI0hJGkx4B9uTAWlK9jJFs28Sw9U9lh+D1sRPZ4sMA2Hkw==
-X-Received: by 2002:a05:6a00:4644:b0:736:9e40:13b1 with SMTP id d2e1a72fcca58-73bd12b1315mr12154297b3a.23.1744553593852;
-        Sun, 13 Apr 2025 07:13:13 -0700 (PDT)
-Received: from thinkpad ([120.60.137.231])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c33bfsm4979324b3a.42.2025.04.13.07.13.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 07:13:12 -0700 (PDT)
-Date: Sun, 13 Apr 2025 19:43:05 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org, 18255117159@163.com, 
-	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com, 
-	thomas.richard@bootlin.com, bwawrzyn@cisco.com, linux-pci@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, srk@ti.com
-Subject: Re: [PATCH v2 4/4] PCI: j721e: Add support to build as a loadable
- module
-Message-ID: <6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp>
-References: <20250330083914.529222-1-s-vadapalli@ti.com>
- <20250330083914.529222-5-s-vadapalli@ti.com>
- <zsxnx7biwogov5dw5yiafkgk6tsrtspac75bjbrca5uevweaim@ly67hwfyk7qh>
- <20250409064227.ctzznnb2shaygxhm@uda0492258>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SdAc5/uV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=vODfS2IlHZl889HtjZC2zqZuZ5W8sZRgBhq8v9nP4Vs=; b=SdAc5/uVYBQHPFCOaeaK0VRtJ3
+	b9KeF0/yo8LzPpzasc5CVwha/oiN/JPrvfYR1Fwnuvt5bfpDF2ZMGcAuVqYCgDq5O0ZD1yA3BId2n
+	KHBgfZL05Kls66erLakoXS0c6UAgN2RWnVNmUUwbBvH605f7DQ5iOCdbaD+uf3kAlHx7BJxql/opa
+	PHUrcLUYWrAWMkaeHCUMdtoKM7IWZTEaedu7WYarR4cRZ3rx5C75Lu+f697gsqzVisuGxmR4RzYR2
+	6CbjDUaoaJNaNJSzRu6efZ3eFHaDKYPFSLQrLRV8uJIQyie65iaIT65ObkuCjp3Nx0j+zNTcx/Qi3
+	aKd2tUgA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51232)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u3y5H-0005Nc-1l;
+	Sun, 13 Apr 2025 15:13:19 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u3y5F-0006ji-0b;
+	Sun, 13 Apr 2025 15:13:17 +0100
+Date: Sun, 13 Apr 2025 15:13:17 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: hhtracer@gmail.com
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, huhai <huhai@kylinos.cn>
+Subject: Re: [PATCH v2] net: phy: Fix return value when !CONFIG_PHYLIB
+Message-ID: <Z_vGfedEZGnkM6H0@shell.armlinux.org.uk>
+References: <20250413133709.5784-1-huhai@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409064227.ctzznnb2shaygxhm@uda0492258>
+In-Reply-To: <20250413133709.5784-1-huhai@kylinos.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Apr 09, 2025 at 12:12:27PM +0530, Siddharth Vadapalli wrote:
-> On Wed, Apr 09, 2025 at 12:06:35PM +0530, Manivannan Sadhasivam wrote:
+On Sun, Apr 13, 2025 at 09:37:09PM +0800, hhtracer@gmail.com wrote:
+> Many call sites of get_phy_device() and fwnode_get_phy_node(), such as
+> sfp_sm_probe_phy(), phylink_fwnode_phy_connect(), etc., rely on IS_ERR()
+> to check for errors in the returned pointer.
 > 
-> Hello Mani,
+> Furthermore, the implementations of get_phy_device() and
+> fwnode_get_phy_node() themselves use ERR_PTR() to return error codes.
 > 
-> > On Sun, Mar 30, 2025 at 02:09:14PM +0530, Siddharth Vadapalli wrote:
-> > > The 'pci-j721e.c' driver is the application/glue/wrapper driver for the
-> > > Cadence PCIe Controllers on TI SoCs. Implement support for building it as a
-> > > loadable module.
-> > > 
-> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > ---
-> > > 
-> > > v1:
-> > > https://lore.kernel.org/r/20250307103128.3287497-5-s-vadapalli@ti.com/
-> > > Changes since v1:
-> > > - Based on feedback from Thomas at:
-> > >   https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
-> > >   the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
-> > >   dropped.
-> > > 
-> > > Regards,
-> > > Siddharth.
-> > > 
-> > >  drivers/pci/controller/cadence/Kconfig     |  6 ++--
-> > >  drivers/pci/controller/cadence/pci-j721e.c | 33 +++++++++++++++++++++-
-> > >  2 files changed, 35 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> > > index 82b58096eea0..72d7d264d6c3 100644
-> > > --- a/drivers/pci/controller/cadence/Kconfig
-> > > +++ b/drivers/pci/controller/cadence/Kconfig
-> > > @@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
-> > >  	  different vendors SoCs.
-> > >  
-> > >  config PCI_J721E
-> > > -	bool
-> > > +	tristate
-> > >  
-> > >  config PCI_J721E_HOST
-> > > -	bool "TI J721E PCIe controller (host mode)"
-> > > +	tristate "TI J721E PCIe controller (host mode)"
-> > >  	depends on ARCH_K3 || COMPILE_TEST
-> > >  	depends on OF
-> > >  	select PCIE_CADENCE_HOST
-> > > @@ -57,7 +57,7 @@ config PCI_J721E_HOST
-> > >  	  core.
-> > >  
-> > >  config PCI_J721E_EP
-> > > -	bool "TI J721E PCIe controller (endpoint mode)"
-> > > +	tristate "TI J721E PCIe controller (endpoint mode)"
-> > >  	depends on ARCH_K3 || COMPILE_TEST
-> > >  	depends on OF
-> > >  	depends on PCI_ENDPOINT
-> > > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > > index ef1cfdae33bb..8bffcd31729c 100644
-> > > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > > +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/irqchip/chained_irq.h>
-> > >  #include <linux/irqdomain.h>
-> > >  #include <linux/mfd/syscon.h>
-> > > +#include <linux/module.h>
-> > >  #include <linux/of.h>
-> > >  #include <linux/pci.h>
-> > >  #include <linux/platform_device.h>
-> > > @@ -27,6 +28,7 @@
-> > >  #define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-> > >  
-> > >  #define ENABLE_REG_SYS_2	0x108
-> > > +#define ENABLE_CLR_REG_SYS_2	0x308
-> > >  #define STATUS_REG_SYS_2	0x508
-> > >  #define STATUS_CLR_REG_SYS_2	0x708
-> > >  #define LINK_DOWN		BIT(1)
-> > > @@ -116,6 +118,15 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
-> > >  	return IRQ_HANDLED;
-> > >  }
-> > >  
-> > > +static void j721e_pcie_disable_link_irq(struct j721e_pcie *pcie)
-> > > +{
-> > > +	u32 reg;
-> > > +
-> > > +	reg = j721e_pcie_intd_readl(pcie, ENABLE_CLR_REG_SYS_2);
-> > > +	reg |= pcie->linkdown_irq_regfield;
-> > > +	j721e_pcie_intd_writel(pcie, ENABLE_CLR_REG_SYS_2, reg);
-> > > +}
-> > > +
-> > >  static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
-> > >  {
-> > >  	u32 reg;
-> > > @@ -633,9 +644,25 @@ static void j721e_pcie_remove(struct platform_device *pdev)
-> > >  	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
-> > >  	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-> > >  	struct device *dev = &pdev->dev;
-> > > +	struct cdns_pcie_ep *ep;
-> > > +	struct cdns_pcie_rc *rc;
-> > > +
-> > > +	if (pcie->mode == PCI_MODE_RC) {
-> > > +		rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
-> > > +		cdns_pcie_host_disable(rc);
-> > > +	} else {
-> > > +		ep = container_of(cdns_pcie, struct cdns_pcie_ep, pcie);
-> > > +		cdns_pcie_ep_disable(ep);
-> > > +	}
-> > > +
-> > > +	if (pcie->reset_gpio) {
-> > > +		msleep(PCIE_T_PVPERL_MS);
-> > 
-> > There is no point in adding a delay before PERST# assertion.
+> Therefore, when CONFIG_PHYLIB is disabled, returning NULL is incorrect,
+> as this would bypass IS_ERR() checks and may lead to NULL pointer
+> dereference.
 > 
-> True :)
-> 
-> > 
-> > > +		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> > 
-> > This is not PERST# assert, isn't it? Typo?
-> 
-> It is PERST# assert.
+> Returning ERR_PTR(-ENXIO) is the correct and consistent way to indicate
+> that PHY support is not available, and it avoids such issues.
 
-Since the reset-gpios polarity is defined as GPIO_ACTIVE_HIGH in DT (which is
-wrong unless you have an external component that changes polarity), for PERST#
-assert, you need to set 0. If you set 1, then PERST# will be signalled as
-deassert.
+I wonder whether it's crossed one's mind that returning NULL may be
+intentional to avoid erroring out at the callsites, and returning
+an error may cause runtime failures.
 
-- Mani
+You need to do way more investigation before posting a patch like this:
+
+- Analyse each call site.
+- Determine whether that call site can exist if PHYLIB is not built.
+- Determine whether returning an error in that case instead of NULL
+  may be detrimental, or at the very least list the call sites that
+  would be affected by the change.
+
+Thanks.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
