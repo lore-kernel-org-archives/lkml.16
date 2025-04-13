@@ -1,159 +1,228 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A564A18;
-	Sun, 13 Apr 2025 08:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7F21FDD;
+	Sun, 13 Apr 2025 08:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744531334; cv=none; b=GTS/DrBOLHi90/bXF0MU0Dg7yT/QDdDH2HWXHm3WTUJc+YvNGvFrdu2GB40xl28bFW0N7Um+DDfSUHZG2U7uKMhvpUwfdNPdmkh810QZNWQX7pizKaPZsHFn7BxyeDppc75i5SUcyjWjKewfORvhXZrUOFtEm/vyWW2Hmm4vWDA=
+	t=1744531700; cv=none; b=lawb5zZ7Dyg7I+WnMp6jXANVgGlXDNz3L7FZZR2CC7vwjM65DsalCBcWg9QxdlcheKhexaf1ApaY0SHnyKo71CBaMv893uwpoRGBMhnjXB3HxHWTjACGCOGOHY1SDx8PZN7Dh1joyOfhp1/1VOExpm180mF3S5Dzf8qjSFbOIzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744531334; c=relaxed/simple;
-	bh=7LSnlRHg5ilP9y2wAV0fO+ZSSRH03VV0jIQxfm2QR+4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=o50xXhtIBxbMwyIK1HjWMMPnoIPn4sNPotn8FzoMmYbMTGuPrPfknsmHiaRl7Jilkp3Jph+PGQw+hS7+DKvw9vNZK/eb4O384Lwsy39oAaH1jNEhK1gCuKZvyHZWJwAQGONjZAMigg1m+tFU1u0WqkYXm27+A6640JQqbFAbMbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Uo351E8i; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oKmUkAn6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744531700; c=relaxed/simple;
+	bh=n0fKbLmb0yFlmzjcfYMiXH73JZk0R38Lw/U7p4Qj3ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pC/d3v3za3vCVjzxKmocD2KRW4jfNl3fCBJRVbvimjbP/J+pe6GXclj0cBDEjBW4rvsbgemSwMuJkx/l3tk9bM7m6RaGVhL6OeNl/0YYLBM9az75JOdiBkqGmGxplUDAIiNS7/4dJ048F/5BYOS3hTijFHWKIv1Ue5KSpqMnpjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRFAKNpF; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uo351E8i";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oKmUkAn6"
-Date: Sun, 13 Apr 2025 08:01:57 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744531330;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eI8ndGTtErzBmqW0KvWPNzrVknbj7V9KlNoGoRqbe+s=;
-	b=Uo351E8iWOSvnqBp8y4vQSpx1nU9EhCmdCi/XoCgIdV+zBU+GkJkrelB5PNymjmBglE1OB
-	fZMe/PoiMzlP89gZHDOAxEikg6MkcGEUormDUi9gk44rDmGRr/RIg+0GQ/pOfKyLVWruoL
-	7BxnA40pC8z3JlHeAPoloNZWGB2b+Oe8dUsMwn+KSrgeH0UdN2nWJAD0id5+SFOt7qBvSS
-	JdK/VRDAptoenxwHTX8A1ZP6albfoUJqqSNPpwbAxfjwFcKB722n6M/7C0FxdTY4MX/T9a
-	qH1muu1LOxPbbNVPESRbfza8MTVb1eZ4FewCI3vr8eQLNrmLWCiY6CkD1iJdSQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744531330;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eI8ndGTtErzBmqW0KvWPNzrVknbj7V9KlNoGoRqbe+s=;
-	b=oKmUkAn62wiy18oJjzZSJsGiSTI+AgZwyaMuXv7GjDruD+5b69NIKy2LDIbP7qB4w2YEaV
-	HbVl+VtdDaz2ZCBQ==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/asm] x86/percpu: Refer __percpu_prefix to __force_percpu_prefix
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250411093130.81389-1-ubizjak@gmail.com>
-References: <20250411093130.81389-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRFAKNpF"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30c461a45f8so29048871fa.1;
+        Sun, 13 Apr 2025 01:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744531696; x=1745136496; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UZx4tBRB7RjQJIC+jIgsWE9+Y5vQNcKxI0YR/5t7Kng=;
+        b=NRFAKNpFfqbnMj+Yx0OmpN4O07YJ/RW+/YFCqX+fzdobvuRqN7nGJQXSy2CHt3aX39
+         fCREs17L3F6+j6VKOWbJ/+fU/bb42ExjQHeXu48WdWNyFKlSyYjXlYTVWzVF29PHf7pQ
+         P9lVyyTtYACgDlEhPXvxFZUajDgeeykjSIpJW6NWRUAY/lYSFvWNvk6qeL9Ej6Y6/sEM
+         +OE4JMZzmV7f9VeGJYBJi9BNaRXiDcOECtbbYMDfRY733qhp4cDODhBlolHGvJgWDS+k
+         OOUiomHfBUmcZZhD4j+AKHg+TUbLxfSLxmkA4CcbEHHqviROHq7J6BVUAYpLSX6LntIX
+         iSVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744531696; x=1745136496;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UZx4tBRB7RjQJIC+jIgsWE9+Y5vQNcKxI0YR/5t7Kng=;
+        b=Jjw75b0ec2xgZ3Qrqu8LZ+xm1M6hLz2GOnJdLNUKpYKus0NrrIdJVGIGWcSEiMvyf0
+         +3armB2R/BekGU4G2ilQrJJTlGjtU0RBcfpJPi+0qaterCl9mtpiLWRHb1+guW9EZEsB
+         kOMvxi8N71Srd/ob6iqFDlyDNaApSq7O+d/UYNd0VqdEeYULZz2wUOk6/nGgxPvHw/MH
+         P/ApfNQ9zOKjVwn2m9afFsXkYh7PK2DqYxCrHwWhhTrAVclAnJ6B1wte8i5s5thHRtkA
+         HbIEG+NGEOSb7R5cJauUUDFF6vAoewceccv0a6gzHa8ELQPv9hq/eLzMwn8VD7xWtg5J
+         NKzw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8mLYXqDa6GtueEjxr1YnG1dmqgFYx55hLfc7wlXO05rJPXhXT8NHInqO8xEYJd08SYTXUd+Ai+kXlhg==@vger.kernel.org, AJvYcCVUAhlt0NL62znDBadEBF4TzWchFXQd7vjiLcE9xTZEjIMvnjqyqwFydxd3buc59q6EKk+MgFw2ujLBzQ+s@vger.kernel.org, AJvYcCXeRj8Gf7w0qAkiMzihKjZXxCt7rPRYw4M94ixGlNzs/mOXGP0oR1FxXSmzw4vADOb2QxggmJfu2LRFyqSG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs00vbz+2SRG2TdSzgGGEcUDwO5OoXIxmTR6UIbQPQhjt32MRp
+	Dyce8gnFDIkQYqXjyGkiGzCvudyFoe+HAcCJmbxk54sFawtuKWFq
+X-Gm-Gg: ASbGncsrR2H+yfRrF69f5WMeHEo0XCSenQ8VSx1S2F9VnNARdB1LqrK/4D6Gw9cMUoM
+	RCQBooj9wMQ8Eua11Zx6ZCNTKgxp6g1VuUNC10Juf3meXOYy7xrLcUeci2GO9o0cTGtHFBRXGgC
+	0mnJzaxb7tHNuAwitJIC/rDeMSP2Nv05PLXy+lSdwUxG+1RR3LXYm1rP/l578vph5gcfF0TRMJY
+	J70Ieq5EIEBEXGNifPyVPh7nVomVTHq9O3+TfWOBsAV/a/ckphXYfa88ZgNULJqNS9Iv+hTDwct
+	ct681/HlTACnafMoqC78i5WRYkYGCysDHqxBsbW9AaI+FznjXdeZAy/HiiICtjjI6z7Pf7QEgLJ
+	6KhVTjFABSSpUMHUkV/6NXA==
+X-Google-Smtp-Source: AGHT+IHLySiEuQ9f9xiJNnAKuGIL+MuoL8PLZIgKiNWCMXZd7EUKa6NxuUaReqWnH6rjU09IXQ7x4A==
+X-Received: by 2002:a2e:b8d4:0:b0:30c:1d:b147 with SMTP id 38308e7fff4ca-31049a1a89dmr28458071fa.19.1744531696163;
+        Sun, 13 Apr 2025 01:08:16 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465f84e5sm12800391fa.105.2025.04.13.01.08.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Apr 2025 01:08:15 -0700 (PDT)
+Message-ID: <944dab74-f431-41e1-b4d7-fddf25ffa147@gmail.com>
+Date: Sun, 13 Apr 2025 11:08:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174453131877.31282.11281370109325866576.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] gpio: Hide valid_mask from direct assignments
+To: Doug Anderson <dianders@chromium.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+References: <cover.1741180097.git.mazziesaccount@gmail.com>
+ <4547ca90d910d60cab3d56d864d59ddde47a5e93.1741180097.git.mazziesaccount@gmail.com>
+ <CAD=FV=Vg8_ZOLgLoC4WhFPzhVsxXFC19NrF38W6cW_W_3nFjbw@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CAD=FV=Vg8_ZOLgLoC4WhFPzhVsxXFC19NrF38W6cW_W_3nFjbw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/asm branch of tip:
+Hi Doug,
 
-Commit-ID:     d51faee4bd63b3b02fa6f56210ec0d84c5ccb680
-Gitweb:        https://git.kernel.org/tip/d51faee4bd63b3b02fa6f56210ec0d84c5ccb680
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Fri, 11 Apr 2025 11:31:17 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 13 Apr 2025 09:48:24 +02:00
+On 13/04/2025 02:00, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, Mar 5, 2025 at 5:23 AM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+>>
+>> The valid_mask member of the struct gpio_chip is unconditionally written
+>> by the GPIO core at driver registration. Current documentation does not
+>> mention this but just says the valid_mask is used if it's not NULL. This
+>> lured me to try populating it directly in the GPIO driver probe instead
+>> of using the init_valid_mask() callback. It took some retries with
+>> different bitmaps and eventually a bit of code-reading to understand why
+>> the valid_mask was not obeyed. I could've avoided this trial and error if
+>> the valid_mask was hidden in the struct gpio_device instead of being a
+>> visible member of the struct gpio_chip.
+>>
+>> Help the next developer who decides to directly populate the valid_mask
+>> in struct gpio_chip by hiding the valid_mask in struct gpio_device and
+>> keep it internal to the GPIO core.
+>>
+>> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>> Revision history:
+>> v2 => v3:
+>>   - Rebase to gpio/for-next
+>> v1 => v2:
+>>   - Hide the valid_mask instead of documenting it as internal to GPIO
+>>     core as suggested by Linus W.
+>> https://lore.kernel.org/all/Z71qphikHPGB0Yuv@mva-rohm/
+>> ---
+>>   drivers/gpio/gpiolib.c      | 16 ++++++++--------
+>>   drivers/gpio/gpiolib.h      |  3 +++
+>>   include/linux/gpio/driver.h |  8 --------
+>>   3 files changed, 11 insertions(+), 16 deletions(-)
+> 
+> FWIW, I've found that this patch is crashing me at bootup on my
+> sc7180-trogdor board. The problem is pretty obvious in gdb.
+> "gc->gpiodev" is NULL in gpiochip_line_is_valid().
 
-x86/percpu: Refer __percpu_prefix to __force_percpu_prefix
+Thanks for debugging this! I find this odd. It seems to me the 
+pinctrl-msm.c is calling the gpiochip_add_data() for the chip, in the 
+msm_gpio_init() - which is called from the msm_pinctrl_probe().
 
-Refer __percpu_prefix to __force_percpu_prefix to avoid duplicate
-definition. While there, slightly reorder definitions to a more
-logical sequence, remove unneeded double quotes and move misplaced
-comment to the right place.
+The gpiochip_add_data() should go to the gpiochip_add_data_with_key() - 
+where the gpiodev should be allocated and set.
 
-No functional changes intended.
+I don't spot any successful code path where the gpiodev was not allocated.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Link: https://lore.kernel.org/r/20250411093130.81389-1-ubizjak@gmail.com
----
- arch/x86/include/asm/percpu.h | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+> 
+> 0xffff80008066c760 in gpiochip_line_is_valid (gc=0xffff000083223890,
+> offset=offset@entry=66) at drivers/gpio/gpiolib.c:746
+> 746             if (likely(!gc->gpiodev->valid_mask))
+> (gdb) bt
+> #0  0xffff80008066c760 in gpiochip_line_is_valid
+> (gc=0xffff000083223890, offset=offset@entry=66) at
+> drivers/gpio/gpiolib.c:746
+> #1  0xffff800080666338 in msm_pinmux_request (pctldev=<optimized out>,
 
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 5fe314a..b0d03b6 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -29,6 +29,8 @@
- 
- #ifdef CONFIG_SMP
- 
-+#define __force_percpu_prefix	"%%"__stringify(__percpu_seg)":"
+Ah, but now I see the call comes from the pinmux. Looking at the 
+msm_pinctrl_probe() - the pincontroller is registered before the gpio. 
+Maybe, with unlucky timing, the request happens right after registering 
+the pinctrl - but before registering the gpios.
+
+This, I think, can be a bug even before this change (because the 
+valid_mask is not initialized prior the gpio registration) - but this 
+change now made it obvious.
+
+I see the probe is actually an exported function, and there are mentions 
+about ACPI support etc. I don't really know if there are valid cases 
+where the pincontroller should be usable without the gpiochip. If this 
+is the case, the unconditional call to the gpiochip_line_is_valid() from 
+the msm_pinmux_request() smells wrong.
+
+I am not sure about the right fix. One could try:
+
+@@ -1568,6 +1568,10 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+         if (pctrl->irq < 0)
+                 return pctrl->irq;
+
++       ret = msm_gpio_init(pctrl);
++       if (ret)
++               return ret;
 +
- #ifdef CONFIG_CC_HAS_NAMED_AS
- 
- #ifdef __CHECKER__
-@@ -36,23 +38,23 @@
- # define __seg_fs		__attribute__((address_space(__seg_fs)))
- #endif
- 
-+#define __percpu_prefix
- #define __percpu_seg_override	CONCATENATE(__seg_, __percpu_seg)
--#define __percpu_prefix		""
- 
- #else /* !CONFIG_CC_HAS_NAMED_AS: */
- 
-+#define __percpu_prefix		__force_percpu_prefix
- #define __percpu_seg_override
--#define __percpu_prefix		"%%"__stringify(__percpu_seg)":"
- 
- #endif /* CONFIG_CC_HAS_NAMED_AS */
- 
--#define __force_percpu_prefix	"%%"__stringify(__percpu_seg)":"
--#define __my_cpu_offset		this_cpu_read(this_cpu_off)
+         pctrl->desc.owner = THIS_MODULE;
+         pctrl->desc.pctlops = &msm_pinctrl_ops;
+         pctrl->desc.pmxops = &msm_pinmux_ops;
+@@ -1582,10 +1586,6 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+                 return PTR_ERR(pctrl->pctrl);
+         }
+
+-       ret = msm_gpio_init(pctrl);
+-       if (ret)
+-               return ret;
 -
- /*
-  * Compared to the generic __my_cpu_offset version, the following
-  * saves one instruction and avoids clobbering a temp register.
-- *
-+ */
-+#define __my_cpu_offset		this_cpu_read(this_cpu_off)
-+
-+/*
-  * arch_raw_cpu_ptr should not be used in 32-bit VDSO for a 64-bit
-  * kernel, because games are played with CONFIG_X86_64 there and
-  * sizeof(this_cpu_off) becames 4.
-@@ -77,9 +79,9 @@
- 
- #else /* !CONFIG_SMP: */
- 
-+#define __force_percpu_prefix
-+#define __percpu_prefix
- #define __percpu_seg_override
--#define __percpu_prefix		""
--#define __force_percpu_prefix	""
- 
- #define PER_CPU_VAR(var)	(var)__percpu_rel
- 
-@@ -97,8 +99,8 @@
- # define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
- #endif
- 
--#define __percpu_arg(x)		__percpu_prefix "%" #x
- #define __force_percpu_arg(x)	__force_percpu_prefix "%" #x
-+#define __percpu_arg(x)		__percpu_prefix "%" #x
- 
- /*
-  * For arch-specific code, we can use direct single-insn ops (they
+         platform_set_drvdata(pdev, pctrl);
+
+         dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n")
+
+but I am not at all this is the fix we're looking after. I wonder if 
+Krzysztof has any suggestions? (Seeing he has been authoring some 
+changes here :] )
+
+Yours,
+	-- Matti
+
+
+> offset=66) at drivers/pinctrl/qcom/pinctrl-msm.c:152
+> #2  0xffff800080662314 in pin_request (pctldev=0xffff000082686ac0,
+> pin=66, owner=0xffff000082c02790 "3500000.pinctrl", gpio_range=0x0)
+>      at drivers/pinctrl/pinmux.c:176
+> #3  0xffff800080662900 in pinmux_enable_setting
+> (setting=0xffff000082684b40) at drivers/pinctrl/pinmux.c:445
+> #4  0xffff80008065fd54 in pinctrl_commit_state (p=0xffff000083a07520,
+> state=0xffff000082684a40) at drivers/pinctrl/core.c:1300
+> #5  0xffff8000806605bc in pinctrl_select_state (p=0xffff000083223890,
+> p@entry=0xffff000082686ac0, state=0x42) at drivers/pinctrl/core.c:1381
+> #6  pinctrl_claim_hogs (pctldev=0xffff000082686ac0) at
+> drivers/pinctrl/core.c:2136
+> #7  pinctrl_enable (pctldev=0xffff000082686ac0) at drivers/pinctrl/core.c:2156
+> #8  0xffff800080660814 in pinctrl_register
+> (pctldesc=0xffff000083223a90, dev=0xffff000081406410,
+> driver_data=0xffff000083223880) at drivers/pinctrl/core.c:2193
+> #9  0xffff800080660df4 in devm_pinctrl_register
+> (dev=0xffff000081406410, pctldesc=0xffff000083223a90,
+> driver_data=0xffff000083223880) at drivers/pinctrl/core.c:2313
+> #10 0xffff8000806657b4 in msm_pinctrl_probe (pdev=0xffff000081406400,
+> soc_data=<optimized out>) at drivers/pinctrl/qcom/pinctrl-msm.c:1579
+> #11 0xffff80008066afcc in sc7180_pinctrl_probe
+> (pdev=0xffff000083223890) at
+> drivers/pinctrl/qcom/pinctrl-sc7180.c:1147
+> #12 0xffff80008089583c in platform_probe (_dev=0xffff000081406410) at
+> drivers/base/platform.c:1404
+> 
+> (gdb) print gc->gpiodev
+> $1 = (struct gpio_device *) 0x0
+> 
+> -Doug
+
