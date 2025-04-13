@@ -1,94 +1,128 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844FE1E7C10;
-	Sun, 13 Apr 2025 17:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C4CEC4;
+	Sun, 13 Apr 2025 18:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744566222; cv=none; b=sy7/wzHu6Aoghp4pYwGVnNPq61vIWScnVKQwjpeXfQkS6NdvxJ/lWirK5IBAmHN24oyjRCrBrgSX3dokzQsAWtDu02rfkEgXCqiSWk9tt0U4BnL9iHQgmFgfJPlM/aqk7B/qWtPTH/SdlS+egPoU9K+YKSUWaGSUiukq8JN5DWI=
+	t=1744567370; cv=none; b=a/Tsm1Ml4ui+X+AOMblsHnH+gqrFoeVGViw1TJn5iRh6/EfhCuPV1AhFkmhUBtV6bCHMaEUpJHOuFeODySA00PQmaPShDuXCbu8dNslBQMuP5GSV2hn2f2rXRJtn1yL1AqRsZOfQjOY0XwvxVn/NcHuB0Y0prbTLyS5dikw/wr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744566222; c=relaxed/simple;
-	bh=8HBuH+FZfQ0GDiaUaZy+fQQtepBsVB5ioX972Ybr5Rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/DOKQH7CKEBDIeynFqEzN8ZFnqQcwqyj3aES5xfX6vUZE1bOyNEKeAwnIVDo2o2eJknRUK6gEkjlTTRGacSqixB2XgsEQ2PXvhjt7Wcx4DJ2d9Ns73LmR/q088cH3msVozwOXdktI0V99JRVs9iqmGo8s02v2j43WOslnbNpv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dYxYyxCT; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1744567370; c=relaxed/simple;
+	bh=qo9Xk4ysQBUC66seaPO18axTR54cTNx3OAqCD0UiS3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sxn8ajujjGOAU/Mbjl5SxAMW2uwJvod54H5DhinaPpZFUe34Ir7TcI94kF0fzNaiIlNqM/VgKPIvrfSbNmT8MUnC0kOCIReQsBF6kLM2x64Xtv7mpLFq5vChCqGtwqMXajKSAJrxznaGdNHgzw5Z3gT/UK/7OwaJ6J9ig1JUE4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WFgUwgAc; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYxYyxCT"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso3375676b3a.2;
-        Sun, 13 Apr 2025 10:43:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFgUwgAc"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso37797995e9.1;
+        Sun, 13 Apr 2025 11:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744566220; x=1745171020; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=75igoPrprdjp4EmNwfQjVuaGw65H5Ht3+2Y4xn8eP9c=;
-        b=dYxYyxCT0Uze3o746X5b9zerVxTL09vcXGjMcsDrAPyaxYvqf4/YXGOtXPuhYr6sd/
-         r5Ii+mv5W7h8xj+shQ1id1RoluyFlIdxH0zTC1QJsBYjlC5sgt8SDKGTyhXrlEh/zHIK
-         /FOSzZsBsga+ylGKoa9Yo058FOV3nkDw3lenqDecGqdW/e5xyhhIQWwshdHVuwCXXm9j
-         ANj4/0Gf+pJ4FS4LZ4Xza2wwwa1cw+9dKTxrvPHmUYeRKa29bsslZpd5Nc9UDzUwhVzk
-         rOflLYMpB6OtfgFkp+HXzgJQX1ECgcATJJFqA3snMguQNwraEgbU/gCbZGt5z1XijL7R
-         axDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744566220; x=1745171020;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744567367; x=1745172167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=75igoPrprdjp4EmNwfQjVuaGw65H5Ht3+2Y4xn8eP9c=;
-        b=wocZ3GIyJteZviv54V0OxZoTIgfxVBqYLnRA0jbZ6Wye5u3Z+Mb6Lh3cEnmsWGDNg3
-         WJoPl+5TQX0cwW/fznxcWYVY6cXQi+pFIllcHgpZSfhLCjb93ML/poAmJdSnB/7RLjiJ
-         wITgJgIdZc2V3/K6xi75c5cyPxeRsorRFuOH/u121jLVyzw+Fk7vnzuwPJU/geVTMY5q
-         +JhRfiufKApWqYz4yDsTcakcxLqRFAv6owUv1SIwLMTe5eETy8fF33tEd83SgISlNMzp
-         qG0YIdnluYP1Qz1tIUbqWtsPVIhgDH4yP+Mt8ZIb//U2rkoUWj6CMBujrIa4pBDDLKXO
-         NNSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEVrjvpoRCy1j7Vd7uIktpxAuLGVopit3GaWEVh25Dld/xEV5VIAFWV5/VE0hooGxCAYHwCc28QcTqcLY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwheKKeVJwCBx1/B43vzoctQlNJ/Qj43jMRrdPzhpefsL8qyfOd
-	9YmWv+NqMqii1am53iANfaIgNt4tcSVy7M9SsBMdnSLVnMnUa4C+
-X-Gm-Gg: ASbGncsOs7HzVjHSgtpyUHHNynQtW0GERWvvH8S9t4HZuh3MiSURgmnkCBIopZweSbS
-	alTrY62pzyIFyeMp+EAtmFEHjpn9ZaU0mg/+zt2VKHlVNKj9U0qJBuRCi5hf74EEfZiX9igXy5A
-	+8orPyxDBSZ688WuFpx7+p5WuLCXx7VRelv8h6DCrcRpB8XOUfrBzhDoIOt3fF1tC0P0On4nEak
-	XfH4rtAq16nxzyvH9aDmzBZMdkcssBq0392bzO8m48db9M0rAISwxV4JycvpaRpl+a2mdjK3Q8G
-	lrpQarUgdvJvvRfX27a6JQhSBzODgrxY8eiCT8USqWJDDQfj
-X-Google-Smtp-Source: AGHT+IFRCq7w/UKkvuBmcREfCnZ2HoWtJ8ccIbPQ448PYdZpq5CvKWZ4MF8IyfGGUJr4FDOpapIFAw==
-X-Received: by 2002:a05:6a00:3905:b0:736:5725:59b9 with SMTP id d2e1a72fcca58-73bd11a8499mr11089061b3a.2.1744566219547;
-        Sun, 13 Apr 2025 10:43:39 -0700 (PDT)
-Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd23332d2sm5184931b3a.159.2025.04.13.10.43.38
+        bh=erGj3PFoA4vOPhXfNNzZpH7MlehLUD6YVpNUM/wB/mM=;
+        b=WFgUwgAca/u+iVeFuYO7KwbeEpUQTyztKQsFrXIJHUYINA9DYpv+ef6gZ9IyElF/dB
+         IWPd46BmHYBQacF2sX+/h28zCMY/uAGM9c78rDIbE8WeAm6/6r3h6j16dGhmGpL08I78
+         MYCtpcubAVHavnE641AdIGgmAB7lw0oFwSgDaXtrfiY+/yIXFvX1eB0yVeivVsDzW7D+
+         tjpj1l6Za3sF2dh7n3UhKO/HBFVcum/dN6w6SOa21BRzQlPSXpYeRDPd32xrzvw5Tikp
+         QKQ1Iv3gkIihRSqVSa6yBOqAlDA2f1mtYUyZovKZNpjqNaJQ4PI4cbBWtre0QlVZvk6j
+         SQoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744567367; x=1745172167;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=erGj3PFoA4vOPhXfNNzZpH7MlehLUD6YVpNUM/wB/mM=;
+        b=eKfLAhRqgjGrEwToHRpx+pw98yebO8XPkKHvDSdOQqD8niJAYUKSmW2iF9v2PVFAxx
+         YpSOW3MjC5XxBTX/0WK71CCaq9qCYPa9hCAeMAqbC/8Lj/IjHnGVkiEp7E8EpXsSbqdo
+         fsj/N+30fyAy1NtLEAyvOjucvxXbOFIUeM5JChcsdsSMtdE4vr+/9vbgjHlX7gQTpZCJ
+         T3HvxvXCj/51t7/PUkB5hYt+0RAeHPw9egb4azh7wzla4DgxO8J5PfhjfhtB0QYIkwAb
+         AtJvhmF6biPKGRUh8YfY1J82R4SoRLChuCALA3vHxw1Af/yHqZFbSGdDsY9DVuFQJDZL
+         Xhtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhp/8OOJXAOHN1MAEQ/jzEoJdQdrqvoW5u+0WNxPnGZqtEbJQiHdROmjqSQbpAytDezo1bTkSR++aqn/g=@vger.kernel.org, AJvYcCUqC4tLTcgxWFwvzC9MIeqy2pm+4KXsapA67o++eoDPDgYx8hV0yN+OjTl5h3TFnGCSLwCvF+Wt+Dfo3A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzecBdx6dTcy7VY4Cs84kP42Sor2kWreW6iupqvBlyr+dl+h/Wm
+	3pBRf8FRD57+eOTTLx85X3QMcjVCkoaatEA0puwvE12YTFzZlZZs
+X-Gm-Gg: ASbGncvw7szJSOwK2ZYyu3eQL8U03pjanv0BeOCOsnMa5I/om6O/a6rF0ZNC4BR1AP3
+	uqctNDhtUBHnJx+/K66LROLgZNzgIL7jIH4trbo+kh7J4InBvTRr3CjLt51KCS9t0yxzXDZZtsB
+	nTsgO7pRdTdC2h9KD7SWmNf86T826Wpy3GO5KhD4gHr9ZFaHWuQ9YAHxLVnGCCnlmYTUAnXA83W
+	zdvnM8l0AeP9ZnIrDS36v12P+pT3OmHmG1uN+H7EZAnGZGjfwKndR1wJ6b59U8Rn/OFfy8aKEsY
+	wMIQLxmGfqSfmmDYfMKCUZ0eSgfph/t+tGoRiJpMTXOxHfQO8XCRF9giY2e6dYEKM7T4isDi0gL
+	uBQk=
+X-Google-Smtp-Source: AGHT+IEUqvKPr3XsDz0Qe9lrQLQYb4cT2YFIpXkECUZXBJi0GDieo+9ZayZyWIEdWvstS2ydWn8eBg==
+X-Received: by 2002:a05:6000:2907:b0:391:38a5:efa with SMTP id ffacd0b85a97d-39ea5201ea1mr8077035f8f.23.1744567366341;
+        Sun, 13 Apr 2025 11:02:46 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572c43sm155115235e9.25.2025.04.13.11.02.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 10:43:38 -0700 (PDT)
-Date: Sun, 13 Apr 2025 14:44:48 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, jic23@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH v6] iio: frequency: ad9832: Use FIELD_PREP macro to set
- bit fields
-Message-ID: <Z_v4EIIy67FfSDWp@debian-BULLSEYE-live-builder-AMD64>
-References: <20250413120354.19163-1-simeddon@gmail.com>
+        Sun, 13 Apr 2025 11:02:45 -0700 (PDT)
+Date: Sun, 13 Apr 2025 19:02:38 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: James Smart <james.smart@broadcom.com>, Dick Kennedy
+ <dick.kennedy@broadcom.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lpfc: use memcpy for bios version
+Message-ID: <20250413190238.2cb8ec64@pumpkin>
+In-Reply-To: <20250409-fix-lpfc-bios-str-v1-1-05dac9e51e13@kernel.org>
+References: <20250409-fix-lpfc-bios-str-v1-1-05dac9e51e13@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413120354.19163-1-simeddon@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 04/13, Siddharth Menon wrote:
-> Use bitfield and bitmask macros to clearly specify AD9832 SPI
-> command fields to make register write code more readable.
+On Wed, 09 Apr 2025 13:34:22 +0200
+Daniel Wagner <wagi@kernel.org> wrote:
+
+> The strlcat with FORTIFY support is triggering a panic because it thinks
+> the target buffer will overflow although the correct target buffer
+> size is passed in.
 > 
-> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> Anyway, instead memset with 0 followed by a strlcat, just use memcpy and
+> ensure that the resulting buffer is NULL terminated.
+> 
+> BIOSVersion is only used for the lpfc_printf_log which expects a
+> properly terminated string.
+> 
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
 > ---
->  The error path for AD9832_FREQ_SYM was not removed as initially
->  suggested by Marcelo, since he changed his mind, considering it
->  would not follow the proposed ABI
+>  drivers/scsi/lpfc/lpfc_sli.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+> index 6574f9e744766d49e245bd648667cc3ffc45289e..a335d34070d3c5fa4778bb1cb0eef797c7194f3b 100644
+> --- a/drivers/scsi/lpfc/lpfc_sli.c
+> +++ b/drivers/scsi/lpfc/lpfc_sli.c
+> @@ -6003,9 +6003,9 @@ lpfc_sli4_get_ctl_attr(struct lpfc_hba *phba)
+>  	phba->sli4_hba.flash_id = bf_get(lpfc_cntl_attr_flash_id, cntl_attr);
+>  	phba->sli4_hba.asic_rev = bf_get(lpfc_cntl_attr_asic_rev, cntl_attr);
+>  
+> -	memset(phba->BIOSVersion, 0, sizeof(phba->BIOSVersion));
+> -	strlcat(phba->BIOSVersion, (char *)cntl_attr->bios_ver_str,
+> +	memcpy(phba->BIOSVersion, cntl_attr->bios_ver_str,
+>  		sizeof(phba->BIOSVersion));
+> +	phba->BIOSVersion[sizeof(phba->BIOSVersion) - 1] = '\0';
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Isn't that just strscpy() ?
 
-Regards,
-Marcelo
+	David
+
+>  
+>  	lpfc_printf_log(phba, KERN_INFO, LOG_SLI,
+>  			"3086 lnk_type:%d, lnk_numb:%d, bios_ver:%s, "
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250409-fix-lpfc-bios-str-330f6a9d892f
+> 
+> Best regards,
+
