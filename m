@@ -1,101 +1,219 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D2211185;
-	Sun, 13 Apr 2025 09:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744537714; cv=none; b=E876SypP9h5IlxYqu4ksAIOl1LTSFbFX51o51+E1pFZaCdy9dg9PPykB3vMn4/9kFnDP0Xa3vu7kyje3bRIQ+cPmyI5xEmuPrpD/XTPvAPIjGuwEbPid91qdnJjSHzLVLNVV6eC5mCV0skHlS75uKUhf155VbE4WHe3bIxZN0Xo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744537714; c=relaxed/simple;
-	bh=evbW1UMZTXtgrSS6WaivWbsQAAqfuSpZTorFCUwUM4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FM25fFcj+WAEZ9hZD8TQ56gEEjq/cDkGYgzH8mS5htBPPDNOCcQRCExHsDpIYg9IuxjkZE4vq0NcsPaeXtEx8BZQW/1aJYKOCjntUxg8s8xkajjz17687PpSau7wlSFxNjsUwRZqPdpy2fNdHdIC0FkAoXtnxl9EjMJ+ly9zg3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AsiBlB4Z; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04911A927;
+	Sun, 13 Apr 2025 09:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744537818; cv=pass; b=EjDgXwXxDOOParWt0sK0ehn/2MZ01VCRQ+EyLWhPOIWyhPVXMNitSER9hwjaZLvYtr88Wv5bpqHYT1w8iCNH8DzuDEJICp58pDAr7IvErpQ0qDD+P2zqb9E6TUED7Wt3pIYqVVjuE4Yn3VLvMpDMJoFaJ3ZHR/INkM2eSx4v6DE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744537818; c=relaxed/simple;
+	bh=kiaPdcZIaFmz86b20HLXekIG3ETiUjCIkSRj0UBr8j4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iK6V7T4xKd8wSnpOe1YK0TvEJrTrYU0PwYGSQsG8K06zo3Kw2ii/BkAxjpqvhxowx1rFaop3fhlqxKdXWOo2fP45l42SbKuX8fsu7hn5yQVrToNxrlPtj/v6HZfHuTZkBWOs6uUSUtN7fy6NshHO4tMIrTGFryePw++ZveUADBc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=TUcqzPtc; arc=pass smtp.client-ip=185.185.170.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AsiBlB4Z"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53D9mAQ51793023
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 13 Apr 2025 04:48:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744537690;
-	bh=XcFXvWp+8y1C0Jh84T5AKaDALbMP9vd9zmnZkTJ7y5E=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=AsiBlB4ZoYWF2U9lu/WtajZBi4vcmvTuTg3KXFIBfQbYIjhLsVM/4meBLfZ9ANsDq
-	 afsDbMX92q1joGAbQ1HnhEc+8yXPA5/AQDqCgp7WzHrXScj1AERxNBVgOqPZ9p1WQ9
-	 qI6TZUaq/nytY8qtJ0BvTNpmspLyWVd15Z4rYByE=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53D9mA6r076798
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 13 Apr 2025 04:48:10 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 13
- Apr 2025 04:48:09 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 13 Apr 2025 04:48:09 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53D9m5pE090639;
-	Sun, 13 Apr 2025 04:48:06 -0500
-Message-ID: <8c2aeee1-585f-495b-87a5-93b003709afd@ti.com>
-Date: Sun, 13 Apr 2025 15:18:04 +0530
+	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="TUcqzPtc"
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4Zb5Hs2gYrz49Pyv;
+	Sun, 13 Apr 2025 12:50:01 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
+	t=1744537803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2BQGV2KYv+aKhHgtS/6teQ8FYrfge2xbaHRLBUN2W+U=;
+	b=TUcqzPtckMjPhNZbXGwHc6ciTa06AFP08cYyywm0X0hcyTUGJTkBZ8KLHx885xSIcoPNqN
+	45gnDBNqu4tDD5oDdUaQMo7EPasKTK3kgfnQxQKF4hUeJRYgP3qp3Vl9uS+foBUKuwz52D
+	S8NgVi0RV8oSrNxoI8Dl2UFmRYTuNauh3KrMRow/35QEUzs8oj59LkmHSliryICsha7Thf
+	ui1NfwxfKv0AzMho3GvlULGX5xRXDKVfM+AACvkvyXIrkZ/qsDLm5EYCp7tH7ZAG5ItYgM
+	5LPYGu63gy0477V7XQ7BgxCX4YEsx0habknDuv4q8XA8pK/DbUwwcSzPrpPzHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=lahtoruutu; t=1744537803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2BQGV2KYv+aKhHgtS/6teQ8FYrfge2xbaHRLBUN2W+U=;
+	b=gWohZq68wor8SVJOhwlq12RGqg+b0iPVIa0sUx7TWIFaxUC4v/XuR148PBaERFDL+psvRf
+	R1ebs/r+j+PzAXd31Mbk3mRpsQblVVULXLO43Xvf9Php9UXG+25D1M+SAmygfC8puJdOTX
+	Qzko8PF4Pc6R+1izOcwdyKdgFxOfF+G747sL/tiL1vH2MP/8D5CLAgFftx+2PKLHJj22lH
+	kWPOUHjfxEri0jtZuCO8/75wdHxq4Jc/MpU+rXkJh+fXbIyXfTTG3gKNDAMVzc2B7RoY7D
+	QrTHKWmRZvwXUPybI5JFdn285k/soL2jng1C1imRPNotuzHIQ4PBf8agfkoWAg==
+ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1744537803; a=rsa-sha256;
+	cv=none;
+	b=BlI69a+FFfREcxp6xgn95zX8ACf630wy7aI04BXjWr9Z4sbvk9cKLga9AtIOZSosGW5slB
+	qoTk3FY7NU1J5RdhfMJbzwz+PQs5DgxhQ6FlbdA7HIS5vrU9CvoUgZtT08e4hghdSGPhjo
+	R4VieI7BUwjnxu4tUbwP0qzDfsmKK4EsGaVn0hqKihQ8bAVAjF18s3mYn5bsYx3ngho1a5
+	CurfExlr6d17ZLBF8oD8ovqzuZKlfhadr8KfRaC1dlJYF3YL1Xmo5DU3QD4wWiyfIsi7mq
+	Xu0IHoJsiEX7k47gMvs8kMdUh42+p5dFOABEI3opwgNp1EIQmG3LTmpaFsPr5g==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id AD353634C93;
+	Sun, 13 Apr 2025 12:50:00 +0300 (EEST)
+Date: Sun, 13 Apr 2025 09:50:00 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for
+ v4l2_fwnode_device_parse
+Message-ID: <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
+References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
+ <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] J722S: DT Node cleanup for serdes0 and serdes1
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <u-kumar1@ti.com>
-References: <20250412052712.927626-1-s-vadapalli@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250412052712.927626-1-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org>
 
-Thanks Siddharth
+Hi Ricardo,
 
-On 4/12/2025 10:57 AM, Siddharth Vadapalli wrote:
-> Hello,
->
-> This series is based on the following series:
-> https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> Based on the discussion in the above series which disabled 'serdes_wiz0'
-> and 'serdes_wiz1' nodes in the SoC file and enabled them in the board
-> file, Udit pointed out that it wasn't necessary to disable 'serdes0' and
-> 'serdes1' in the SoC file anymore, since that is not a working
-> configuration - serdes_wizX enabled and serdesX disabled doesn't work.
->
-> Hence, this series aims to cleanup the serdesX nodes after the changes
-> made by the above series.
->
-> Regards,
-> Siddharth.
->
-> Siddharth Vadapalli (2):
->    arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
->    arm64: dts: ti: k3-j722s-evm: drop redundant status within
->      serdes0/serdes1
+Thanks for the patch.
 
-For series
+On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
+> This patch modifies v4l2_fwnode_device_parse() to support ACPI devices.
+> 
+> We initially add support only for orientation via the ACPI _PLD method.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++++++++++----
+>  1 file changed, 52 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1c96f2a5ede3fa9d64dab3 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -15,6 +15,7 @@
+>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+>   */
+>  #include <linux/acpi.h>
+> +#include <acpi/acpi_bus.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
+> @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwnode_handle *fwnode,
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
+>  
+> -int v4l2_fwnode_device_parse(struct device *dev,
+> -			     struct v4l2_fwnode_device_properties *props)
+> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
+> +					 struct v4l2_fwnode_device_properties *props)
+> +{
+> +	struct acpi_pld_info *pld;
+> +	int ret = 0;
+> +
+> +	if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld)) {
+> +		dev_dbg(dev, "acpi _PLD call failed\n");
+> +		return 0;
+> +	}
 
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+You could have software nodes in an ACPI system as well as DT-aligned
+properties. They're not the primary means to convey this information still.
 
+How about returning e.g. -ENODATA here if _PLD doesn't exist for the device
+and then proceeding to parse properties as in DT?
 
->   arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 2 --
->   arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ----
->   2 files changed, 6 deletions(-)
->
+> +
+> +	switch (pld->panel) {
+> +	case ACPI_PLD_PANEL_FRONT:
+> +		props->orientation = V4L2_FWNODE_ORIENTATION_FRONT;
+> +		break;
+> +	case ACPI_PLD_PANEL_BACK:
+> +		props->orientation = V4L2_FWNODE_ORIENTATION_BACK;
+> +		break;
+> +	case ACPI_PLD_PANEL_TOP:
+> +	case ACPI_PLD_PANEL_LEFT:
+> +	case ACPI_PLD_PANEL_RIGHT:
+> +	case ACPI_PLD_PANEL_UNKNOWN:
+> +		props->orientation = V4L2_FWNODE_ORIENTATION_EXTERNAL;
+> +		break;
+
+How about the rotation in _PLD?
+
+> +	default:
+> +		dev_dbg(dev, "Unknown _PLD panel val %d\n", pld->panel);
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	ACPI_FREE(pld);
+> +	return ret;
+> +}
+> +
+> +static int v4l2_fwnode_device_parse_dt(struct device *dev,
+> +				       struct v4l2_fwnode_device_properties *props)
+>  {
+>  	struct fwnode_handle *fwnode = dev_fwnode(dev);
+>  	u32 val;
+>  	int ret;
+>  
+> -	memset(props, 0, sizeof(*props));
+> -
+> -	props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
+>  	ret = fwnode_property_read_u32(fwnode, "orientation", &val);
+>  	if (!ret) {
+>  		switch (val) {
+> @@ -833,7 +865,6 @@ int v4l2_fwnode_device_parse(struct device *dev,
+>  		dev_dbg(dev, "device orientation: %u\n", val);
+>  	}
+>  
+> -	props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
+>  	ret = fwnode_property_read_u32(fwnode, "rotation", &val);
+>  	if (!ret) {
+>  		if (val >= 360) {
+> @@ -847,6 +878,21 @@ int v4l2_fwnode_device_parse(struct device *dev,
+>  
+>  	return 0;
+>  }
+> +
+> +int v4l2_fwnode_device_parse(struct device *dev,
+> +			     struct v4l2_fwnode_device_properties *props)
+> +{
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> +
+> +	memset(props, 0, sizeof(*props));
+> +
+> +	props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
+> +	props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
+> +
+> +	if (is_acpi_device_node(fwnode))
+> +		return v4l2_fwnode_device_parse_acpi(dev, props);
+> +	return v4l2_fwnode_device_parse_dt(dev, props);
+> +}
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_device_parse);
+>  
+>  /*
+> 
+
+-- 
+Kind regards,
+
+Sakari Ailus
