@@ -1,44 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4461946AA;
-	Sun, 13 Apr 2025 04:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41283145B25;
+	Sun, 13 Apr 2025 04:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744520145; cv=none; b=lY3dP33zWyCmFsUDDL/BqHyCKiXM+jg7foTu//2rScFWUo3kqowJiuwlRbTAXkK2GMWtW+8OMINDISEF46NVG2ulJ5FkDtGsvh26UfAcu3SQpcWc0kPEvUgaCVbLU8LV4SeP/QhXsZCDAcTiO44+NyKbhLlttmd7ecloG0k2AF4=
+	t=1744520257; cv=none; b=WaGxnxCnVCmAWhw+btaeDowKMRnI0DDMGR2nsNTTXJW/wQb9uPhzA9EtsH+U0nkhtGy2tmE//PeLFvDVGaPsrdlMsoP75HYNqZukde//T8w5T3edsv1bLs3n1iUbRO6H7NF5ptmyw9lDFD/xnelJTZURAzAODTLYCb+FwCKT4bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744520145; c=relaxed/simple;
-	bh=2gVkbo9MzVz9VvdMrst8TjWJgNjWQ5w/TelaNMUEtGU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BNaD/sNHm27WxwtnQpo1/qTpO0iaeK0pAZpe5oPIxFiHsqAImPpT6tUssaEeUBu/Nqj862bEGBCZRJvvOAPNTBAUyTY8lkrUm04uy6as5WyHQXZoqf6YEMGna+m7ftSRbOamlvc8T1QQff2rW3XdVR+0kasEOmT1lPEL2J0q52E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQ3TQJtk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744520257; c=relaxed/simple;
+	bh=V+OdSpChXxFdeuDfkZFCWnwFgJIm7CgcfzpC8IzAVwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=knAAgTx0XUC68CklQw9hKMxVLTyJ1Z38D6L3t8w89BRWC9MXtyGu9m/mCb01lXT8irS/CenHfGc0EcYXge8WLHJbqRBtaCBH2Uiu4QyCyLoBe9uChhyaidTDbDFzslBt8LWjwnqc2b8AyUY7k+ve7GpBubdmJor4N6PlbG62hV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=glh+/bGK; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQ3TQJtk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8414CC4CEEC;
-	Sun, 13 Apr 2025 04:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744520144;
-	bh=2gVkbo9MzVz9VvdMrst8TjWJgNjWQ5w/TelaNMUEtGU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dQ3TQJtkQRNwLXjjSV+ZirK4F2x5Ki3Bhv5FTKS0TwurPeEsyoDqm/+11jsc6KW/a
-	 sS/UqHVfUu/IOzxUpNwkD1ovfmDwFhEzVnWxOWHFD05K5ZscmwjZU2oMjAfRLzRawn
-	 30yLpt4R8qhT7ec13PW04vyT4DaMPls82NRUZ1euqmDGxs8CSb9p5bWhuXdCviGCUc
-	 1zRw8fPcXC/Zdg2Lmqm7zA1a+dhQrtO9RiXimZ4QHwMHLCsaPR3Bnik+Zq35FnHVcq
-	 lQ9gEU05caDHcf1lX0cxLWbGZOh7IM7YG2I8Vl/U07faajdBK8X4wf5HybE8IpkIAd
-	 uhuSffzv6mTwg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	x86@kernel.org
-Subject: [PATCH 9/9] crypto: poly1305 - remove rset and sset fields of poly1305_desc_ctx
-Date: Sat, 12 Apr 2025 21:54:21 -0700
-Message-ID: <20250413045421.55100-10-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250413045421.55100-1-ebiggers@kernel.org>
-References: <20250413045421.55100-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glh+/bGK"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so2944853b3a.0;
+        Sat, 12 Apr 2025 21:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744520255; x=1745125055; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7qDXC5q4ASpK/ILgh5KtIP/kBQ8UqX67C9eLZIduHV4=;
+        b=glh+/bGKKBjjPPpqTsI8jbVnksM09m96eCs+TaR9UO5l3zf9O7Nfx1eDmXl5k8t3sO
+         db9eqNla9k2FQcHbd+shDJ3EJASX3dV33QYC/6gSX2otCXutxff1tM0++T2cwPg4VXae
+         zok0Q5BarZrFuEPHtpg+B/t22zcpExxTA5PZ2xIPCgPWjiISPSSSZAJ4+ItGQTzbSfq2
+         52gjd2mUISfKJf6MZPjGwFmAxQ1m3gQRaDGsm+GvBdqxhkp7MfZ1wXFxb/PAmGkNB1Z2
+         FLRef2ZeEBvKGWLGtvRCVCfX07Zo6rlF2JHZrNTJ1NPsN7WtYw0sfNKO/t9lJovRWfOX
+         KA+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744520255; x=1745125055;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7qDXC5q4ASpK/ILgh5KtIP/kBQ8UqX67C9eLZIduHV4=;
+        b=eWsEYWgcDyYRZuVLp6AUGTJIVHKtfyUVKeCr8Jj4pw/eVE5CNlXDIn7xTFyLvNqfuQ
+         VZJ/jl5K35qbc2b08l0QlfPHdAw+GcxmkXyune161FhAgnYjp3p/caBi2hqcSpktUdjo
+         5fHABiz0Bsp9OSBMYZvfpGh3F8YqO7frZiPP+QJM2Ehf+v0rZ5BRcRe7zZwOmk3ECQ6y
+         va5jgGCracN4yfQdUoNT2CX/kvWSVJHcW9rpDLUCbwmlS0GIDMD5GrnuaeWg3r0EA35H
+         7dcQih9CHO+5Bgj8xdw95IIl/cadBBm36VF8f8D5UqC40QhjC7D8E9Q2TYe6fZgbfXbG
+         N3Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2qU0tjMq3WXg8KZSJkUJnMsICWoFP/E9fp3sJDf+StfW4QPXqZLyGlL7G89AFx8jPP8Kf5KqpDrbKHgjF@vger.kernel.org, AJvYcCXMRnQKfIGIenJXTsYVAEnXt4r8tD4yQHvVGmnsNNypsAEtKYs9kdFSog7YZCZ7UyDOaos+mX+x4HmU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOPieQwPf1HMKC3yozxG33SUNx4x1xz/sxg1t0PvX/FCE8DUAp
+	FGbV9UJkptoG+dfBvtyyJrGMWhEDEULu4M/rxD2ZZbvgdxciBRpz
+X-Gm-Gg: ASbGncvAijt3jqlXlE5Hf/X53f6xxdM2LmudEUoyOJ3zXBdsfKdL9RXr7Gypitdruc8
+	rgyPBC03chSJju9aBU9waIbxgWoo+khJRB36VfNJ2ZikbwllaDdScohK0gcXGaOYdYVlTHTzF6L
+	MmMS39qpxMqO9FI8NxL5xHsn3xZJvysowXe8p2zn0d7jSTRPLkKG34DNWt6h/Uq2+ZMPgDmFK5p
+	LA63cuiGhUo6C1KovVHR23uYdyFgccnbJjz16/wqwPJAsruH4F8U6GUTr8ANnk5NH7UOMM7AEOe
+	CqtWtUrim8hud/MuLjLL8BIJXA7yL/Vtn/fsZ8p/nzlU8QPaS+kEsCBV/CE=
+X-Google-Smtp-Source: AGHT+IEC6KkIXJw/IeQCpPR3Yo19Wxe/bJ42Xl6Fl2ZoGtxsioyf3pkIYy/+4uaSBqS1TLeXOVkr7Q==
+X-Received: by 2002:a05:6a00:22cd:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-73bd119ea62mr10936177b3a.5.1744520255132;
+        Sat, 12 Apr 2025 21:57:35 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c408:a0b5:6154:df3d:5cdc:6ad])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230e305sm4451350b3a.140.2025.04.12.21.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 21:57:34 -0700 (PDT)
+From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: kevinpaul468@gmail.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH] ext4: filesystems without casefold feature cannot be mounted 
+Date: Sun, 13 Apr 2025 10:27:18 +0530
+Message-Id: <20250413045718.150126-1-kevinpaul468@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,52 +74,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+commit 985b67cd8639 ("ext4: filesystems without casefold feature cannot be
+mounted with siphash") upstream
 
-These fields are no longer needed, so remove them.
+CONFLICT: A condition above this was wrapped in #ifdef making git not
+able to merge them: Merge conflict
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+When mounting the ext4 filesystem, if the default hash version is set to
+DX_HASH_SIPHASH but the casefold feature is not set, exit the mounting.
+
+compile tested
+Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
 ---
- include/crypto/poly1305.h | 4 ----
- lib/crypto/poly1305.c     | 2 --
- 2 files changed, 6 deletions(-)
+ fs/ext4/super.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/crypto/poly1305.h b/include/crypto/poly1305.h
-index 91444965772a..6e21ec2d1dc2 100644
---- a/include/crypto/poly1305.h
-+++ b/include/crypto/poly1305.h
-@@ -41,14 +41,10 @@ struct poly1305_state {
- struct poly1305_desc_ctx {
- 	/* partial buffer */
- 	u8 buf[POLY1305_BLOCK_SIZE];
- 	/* bytes used in partial buffer */
- 	unsigned int buflen;
--	/* how many keys have been set in r[] */
--	unsigned short rset;
--	/* whether s[] has been set */
--	bool sset;
- 	/* finalize key */
- 	u32 s[4];
- 	/* accumulator */
- 	struct poly1305_state h;
- 	/* key */
-diff --git a/lib/crypto/poly1305.c b/lib/crypto/poly1305.c
-index 6e80214ebad8..b633b043f0f6 100644
---- a/lib/crypto/poly1305.c
-+++ b/lib/crypto/poly1305.c
-@@ -20,12 +20,10 @@ void poly1305_init_generic(struct poly1305_desc_ctx *desc,
- 	desc->s[1] = get_unaligned_le32(key + 20);
- 	desc->s[2] = get_unaligned_le32(key + 24);
- 	desc->s[3] = get_unaligned_le32(key + 28);
- 	poly1305_core_init(&desc->h);
- 	desc->buflen = 0;
--	desc->sset = true;
--	desc->rset = 2;
- }
- EXPORT_SYMBOL_GPL(poly1305_init_generic);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 541cfd118fbc..9bf073bec190 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3192,6 +3192,15 @@ int ext4_feature_set_ok(struct super_block *sb, int readonly)
+ 	}
+ #endif
  
- void poly1305_update_generic(struct poly1305_desc_ctx *desc, const u8 *src,
- 			     unsigned int nbytes)
++	if (EXT4_SB(sb)->s_es->s_def_hash_version == DX_HASH_SIPHASH &&
++			!ext4_has_feature_casefold(sb)) {
++		ext4_msg(sb, KERN_ERR,
++				"Filesystem without casefold feature cannot be "
++				"mounted with siphash");
++		return 0;
++	}
++
++
+ 	if (readonly)
+ 		return 1;
+ 
 -- 
-2.49.0
+2.39.5
 
