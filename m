@@ -1,91 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C904B1EEA39;
-	Sun, 13 Apr 2025 20:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0451DBB2E
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744574421; cv=none; b=gGsdImHwFSBWuC7bz0nNJx2ihrTtF0q7kLaess+IYJhH48pnDiZEYWfXadiNNhceZ8f1m2dn4oEdISLgRv260MpIR1WuR90bd/A4MRjdG1FIPmD52/SXBfENUrS/1GX1uHHnqJhEhwqS9EBvNNHyw3t8qi63vmyP9MR0kJkdv8w=
+	t=1744574423; cv=none; b=Eely07KeQf1XqmygVORM/p8kmiB49DrRZaQnQDn4QM/gm3VQGkmMaiUdXEFmSrhGKE/uk33Jme9zLwe1f5AqhsvlN6cv25U86E5LWwl+slUnVZgCfiUeuRZvQ8BezKWg752yrDAsFwRG1b27U32AWxJHn6auTgUVrgP2ajaj4Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744574421; c=relaxed/simple;
-	bh=+Fq0MhmsH1itLSjdDC0e0AQDvHDYfYtdZa0fZk4m4G8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UIBc5r6tPvPY245XbyXxfUnG3+AFRh1cUZuSuLexWmrLhX0pEuj9eVBjPl1/g/SJKMpaVUWHnXBxkKpE5xu/h80ZQzuMwCBrvBDRPS6I2OjYjCaqeJAWWtXCPD9/8N/HCGydSYYZHcHBIeq9j1qPZ6VpPplt3vq5JCZhPcy2u9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7etbMb4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744574423; c=relaxed/simple;
+	bh=TtZ14UJApXMRPvr4GnfMfduGzgNBfwCVMzqr/TJZeSY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qpxxmTI2zFQCVtKDoYhMf2LDf6xDyjnf6gHf4w1AtU3xZwis6EogXeeXMog/XHk9sXdMeevDZhh47t42pEJnNMiAIiq9BkOdARlKLLK4NW+K/gVx/Dqn6Sqb4lGQWF7fpEmYVHpHRnLPQiYjpYP9V5lSGYmdl7tZBHowQKu5de8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UFdTl2AN; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7etbMb4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18373C4CEE7;
-	Sun, 13 Apr 2025 20:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744574421;
-	bh=+Fq0MhmsH1itLSjdDC0e0AQDvHDYfYtdZa0fZk4m4G8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I7etbMb4XdA3KK4rodjXK+gs7WJKkTNURpYg1Dm3lmMi0djrpCanbW0EMa1nU7NgG
-	 2m9IMgPYgfqHVSx3hNRxMTiGSv596a7uN8rGHOVN4C2Y6+5refmXtRlnnNYx1t68WI
-	 ThOA3/zPpfS2ql5xJy7ecnRSV9lHnVMRbDbJW7qX/GlkALVy1Xyl8JfuN9V1NAZ7Fp
-	 VFjpzfocCRa1cc4gVTkn9hclofT6PEcML1iQJb1X4y4mGvpGdXlGssK20oAL4hI2py
-	 vFuYL+IiJOje9CSjjDInkdrDbO15+Giymo5Njey3/KkhpB48k0zKHvb2tTdb+uodP4
-	 0+q2UgFBlyqSg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u43V4-0051hr-Fo;
-	Sun, 13 Apr 2025 21:00:18 +0100
-Date: Sun, 13 Apr 2025 21:00:23 +0100
-Message-ID: <87v7r7ygq0.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org,	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,	linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev,	Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Janne
- Grunau <j@jannau.net>,	Hector Martin <marcan@marcan.st>,	Sven Peter
- <sven@svenpeter.dev>,	Bjorn Helgaas <bhelgaas@google.com>,	Lorenzo
- Pieralisi <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kw@linux.com>,	Rob Herring <robh@kernel.org>,	Krzysztof Kozlowski
- <krzk+dt@kernel.org>,	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 01/13] PCI: apple: Set only available ports up
-In-Reply-To: <k3wj3wkk3cymyacboalkhe2fa7jvkpuehq4knpsouoyhvoavpl@bafg4oakp4lr>
-References: <20250401091713.2765724-1-maz@kernel.org>
-	<20250401091713.2765724-2-maz@kernel.org>
-	<k3wj3wkk3cymyacboalkhe2fa7jvkpuehq4knpsouoyhvoavpl@bafg4oakp4lr>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UFdTl2AN"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so39289525e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744574419; x=1745179219; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Yy/848/baLEzkw8qa5zoxS7nq5QkNFAJau0dpZhAiE=;
+        b=UFdTl2ANrR3WHnhTzgrvrQP/XrROa44vFvQAii72eGJvLaf4Py6LCKuc4iniE9dMta
+         GZisRtevt5Uwlze3PhXz0YFKKE8nbVL3IX82/Jd51x1uPrLtB9E/+mzzwzV89LQtmNYo
+         y8wEVo7P4fH2FQCMPFEVI/NuM8F3CnM5F2hr11UeIbqjJJ2wKwYrwB1a5ckhg0DwuHWl
+         AQKZ0DYdfxZrtIin+xVAMtQXf6mWEaPwe3nQVARf5iTZ1HB/44GcX5B4brdDJHSi451D
+         9HaKOkmSOMgzRw1xHB+RNBlMNDIWpEAOx8YA2qyS+jXeSS2fv5J8pdy4c4IuX3lr/HCk
+         fv+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744574419; x=1745179219;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Yy/848/baLEzkw8qa5zoxS7nq5QkNFAJau0dpZhAiE=;
+        b=RyLewKnp52nxGwnEx+6rlQNWnQZa1Asveh6qMldbvK/xfOvPbB6nisRuzKvctLV29S
+         n0ftzXeprEcO12UxKtQ4gmDNGjIYH/6lpX1L7PSCDQ/W/dmgt9voBlt4PHZDYNuRwhGF
+         7by7TMepnqXXPiXSi1SRMB/DzgDNVJUd8tKfUOWz3TUxJggYIYlPo3PXVjxf7ITuGpM8
+         aKhU9eVRYvmT7XjE42emU0/yKSTz8olC04PZZU0jlunMbedOm9cX/p2zQnOIKe9FiKcx
+         XSjbvats7LHZGKF8tz+yOhN/2CD3yPXsOzc/C6JAkrwooHyML+UoluUgySN/dGgQ4Qz/
+         ceXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWUB0ts2KgF2nRGklk1cO6tJHA0AW3SoJcYIaL9iFNWkWCgdSi9WpFE423ue7iPisCXn8/jBGxIV9EfVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy1N83/mdPE2qqO3ikqX1vsLAJVDJrWckdBjiqA8q511w5cwee
+	hXgfP6YspQHt61nfqAutgPrFTj2k379xRI5z/iwHw6MPp8j/fj0s6YNSJkrI63w=
+X-Gm-Gg: ASbGnct9LSouU4vxAlj1Q+hC2WOS2LCRBHrVTj7l7Z1PaVjN42C02cFt8U9iP+NaJYt
+	XQJ+iLIrOf8xIbWHQux9r1wtrqeYsm9Nd4cUeTitvw0YTmE1dAnxw2QrP48e49eQOtUmDTiqr5z
+	+ykklWEpHyJ5gL8YJ+g/96sQS1kZKd/NEOhRY4drWTCP2W9MqkDYGMXPRWc/i6JW3M+MYol6Idr
+	92FuKHuULjElR/6v2134m6Duvl5r45mOzyhZ2bkB/tjyz4smO18LUILjQgqUryIhnkIY/qaOAcp
+	djLTjGx1OEbNZOrVHe7JvcUTw2xReeNKqeNg
+X-Google-Smtp-Source: AGHT+IHkeeRojU6nphRcBzcpFgA1HGJWrqUBo0zw7NF6Zq4RRkjDJ2KrUAA7MSqPk38slZirAV8Kmg==
+X-Received: by 2002:a05:600c:3c82:b0:43c:ebc4:36a5 with SMTP id 5b1f17b1804b1-43f3a933b99mr83516875e9.7.1744574418483;
+        Sun, 13 Apr 2025 13:00:18 -0700 (PDT)
+Received: from brgl-pocket.. ([2a01:e0a:81f:5e10:e852:1f2c:a4b2:8e89])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce0asm8810540f8f.70.2025.04.13.13.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 13:00:17 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linus.walleij@linaro.org,
+	theo.lebrun@bootlin.com,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
+Date: Sun, 13 Apr 2025 22:00:13 +0200
+Message-ID: <174457440296.11196.17152391053685137943.b4-ty@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250412193153.49138-1-chenyuan0y@gmail.com>
+References: <20250412193153.49138-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, krzk+dt@kernel.org, mark.kettenis@xs4all.nl
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, 13 Apr 2025 17:57:35 +0100,
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+
+On Sat, 12 Apr 2025 14:31:53 -0500, Chenyuan Yang wrote:
+> Add check for the return value of clk_enable() to catch
+> the potential error.
 > 
-> On Tue, Apr 01, 2025 at 10:17:01AM +0100, Marc Zyngier wrote:
-> > From: Janne Grunau <j@jannau.net>
-> > 
-> > Iterating over disabled ports results in of_irq_parse_raw() parsing
-> > the wrong "interrupt-map" entries, as it takes the status of the node
+> This is similar to the commit 8332e6670997
+> ("spi: zynq-qspi: Add check for clk_enable()").
 > 
-> 'as it doesn't take account'?
 > 
-> > into account.
+> [...]
 
-No, I really mean it in the positive form. of_irq_parse_raw() checks
-of_device_is_available(), and gets really confused if walking from a
-disabled port. You end up with the interrupt for the next *available*
-port, and everything goes pear shaped from then onwards.
+Applied, thanks!
 
-So IMO "as it takes into account" describes pretty accurately the
-situation.
+[1/1] gpio: nomadik: Add check for clk_enable()
+      https://git.kernel.org/brgl/linux/c/4521e0884c261fd286c02da942e9e8596bf2e7cf
 
-	M.
-
+Best regards,
 -- 
-Jazz isn't dead. It just smells funny.
+Bartosz Golaszewski <brgl@bgdev.pl>
