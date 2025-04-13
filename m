@@ -1,98 +1,146 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0A31B87F2;
-	Sun, 13 Apr 2025 15:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2DC1DDC18
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 15:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744557742; cv=none; b=E/ko89owpmwTPrYwcB+oLlLyGi63ncb8CO6JnES4u+ngievztKjeCogVEQKLFAYn9yy4E8DOXwsH7/SXMz6ly5PJ4wiOsRqKyQK5VORP0QrYts8S8Bgvjej1TWA5FCHWAv3EByPQjDorekExtlqrAeTUz35mJY6nlEfBilCIKqE=
+	t=1744558215; cv=none; b=qdDWPVoc/7nuHaH8A/5vOrxcTWGxq+UAWnqrgubay1QtTn21rKEbrqg7mgSit1iEDtY49BinX9aRKI2Zr4nyF09opgSjaUZyrHsv+VB4GjWtwg2g0SMO7Uf8n8gm6b0tVIqTobXLhPrqGiLjwkGvTlTL1DHjE0Pqgbno+SvF368=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744557742; c=relaxed/simple;
-	bh=p29f/d2ZwO1V6CtmbkFXj4jH6WQCqOk0DFQqugs2SBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gWEwKIc9d22Yr1EKgS68xhh6dEdf+i3ZSuBLlmpt5+fg6FV08ES5PF1vNVXOx+rMm8otvVj84EYigsbcftFXoUVOaSv+iu0jSfqTp3g2B6VPF0vmaEYyM2fboavqBl7OOxE6gDEG9d4MR6fHEXTO3+WnllvF4gmwAqxdTC+4JeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NrFLSlvq; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744558215; c=relaxed/simple;
+	bh=O26QBjaeH/GBehwhCpe0jia62s2T5H1sKW+zOlJypxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eB5whIU9I0OgwnCp/cGcSF5tZXSZCkxIgIhbVXfCncT18bbBLLKyxXqvmLUqWAiaebz96t2O822Q4ov1L6tdf1+XmNAkEO/vNTkI0TPmzuUxwUVAiPjGF8tgB5hz30nPGWuzOdw7JdIMudTE+YuFwE8e194QNz0gc3O0SLKJsZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ynvxjdVb; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NrFLSlvq"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-301a6347494so677805a91.3;
-        Sun, 13 Apr 2025 08:22:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynvxjdVb"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so161116b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 08:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744557739; x=1745162539; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=61dKwWrOnrryuz6mIEKH1vAWluHJxwfCHHzktKnA8PM=;
-        b=NrFLSlvq8Dr0xf67OMXW+uZ1aD0Ni6wgrw9gI4nFdAp3GEhAr2Tx13AoTfkos6a6V0
-         YCdJWwWPoqReAAZXQo1BJJ3KHMuXfeMh9GI4BxLUj3D1BogySXYZHAzuiH7zpJWonqO9
-         QrqCJfgM3aV3yrTpnGh4EbGz4FNDOIh8sqhTYzWGOqShSzHofDwfnh5fHegwgeoZkXF8
-         oWuiOVAANXyoHLahv9ZO/bAZQpnA6b1nwAXnY6SoUXDi0T3dnA7mEKQL5gvNMi3cbJHs
-         Knz0iIzYdrr22TEWUd3SNUnAKstE4kNhGqh+rmm3EIsWDhkIbAXqYbGgeEIErUx7DhIA
-         iinw==
+        d=linaro.org; s=google; t=1744558213; x=1745163013; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6YhpCUvtZQDpUlxDrFB7Y09wNEJFGtbdxnkmsZK4E90=;
+        b=ynvxjdVbh5MiGblmAX+b5DJRB1ynwVswH4sE4mGfhJvnxYlx5xk1f1A3zmLplD7dgr
+         buT7ztebvmK7Y2DoBRxyOaRfrrOXGghZACFSc0CmxsG7l2Pxkj8YeJYi5NwxnyYaQXaT
+         BogT1alXGouVpaXUUOENJTRtTDy2d6LjUqEBG+GlIdMr8ZJLvKXQC/rXrJOUoSEMh3fp
+         BETh6zyz8/eIiIxAx/UdBsVMTLJezct7Yt362XVQw7IWTIEhB4Rf5Lxkw096B6Q5xAWL
+         eIZofxqIh43QpUu4QA1EfxG22rY1kE0yf5YgmZLZbPl1TNl1xXJhRpUt51wxCOFfN1ON
+         DxjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744557739; x=1745162539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=61dKwWrOnrryuz6mIEKH1vAWluHJxwfCHHzktKnA8PM=;
-        b=JAU46HOJeAGRf00tr3QGfi0a10SXTkFyp67dnCXV6ZPcTnOV9082dEpyey6RFIHl61
-         gKYbSMLNDwyRKAgmoVzGaH+rmYfzXGMVdV41FhWKrcE4ODloowXV9YcmD2mQ8DZLvgKq
-         xbmnBmS2HfiRTsiR2mMzrX+CrwKH1VDTaSDoc1lUMi8WQYMMPDgdcKauU9NXZXjLrE5I
-         iHqdyLlc8zdS0Uz6luyRVdh543REL3AI6/ZCc7wqMolQBsCJ8UtlxlXRlxE7i4crCg+K
-         5XpwT6Y4wOZmWpz2OAxQQCwbiFD6SFkhmw177pkKuSFjllMJG4MmKgyBRDyzTmAnslgj
-         Prng==
-X-Forwarded-Encrypted: i=1; AJvYcCWV+ThQYkmVKuvdP47GoquYDEpTs02MCRZ2HQ/CEGtU8HQrd5GQVOLZnf4fECs3lgdi1XUfnm1NcpdDXqy/WNo=@vger.kernel.org, AJvYcCXvH9/iVN8fqpL09gvyQPPD7xnHEhD8bWbAH2fz4QF5zgozweqPQ6ja8NoStgc9gOz0QBAHEsDPuL3HbBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPRv7JxbFmJRb9wKncgFPbNbOzuPMsCKOp8bAtMk4cylL6Ypyy
-	gdngLkj7e11tndncvjrGRVMRZU22QjFvADpC/Rnmyk41Jv39pswMawB0JTdye1X1OyjM3hiLFQB
-	emUq6E+iMgvMQ2LKVEEPzzOGn+Cw=
-X-Gm-Gg: ASbGncvPFo78XwmAubw+908RzR71jco62vKa66tC2OsniAh/z4koXyhYXUdMOfpL/nr
-	35912XjYwx+9TbaZxWdj1WDu7yFru7sC+Khvv05x2s8udPRUz9wyRsWSRsdrOQviO+x/qrof3My
-	g0g8BfPcpGSa19MprGtpuIdA==
-X-Google-Smtp-Source: AGHT+IHvzVfyuJfuNJxwTCOWEJZtAsGw3V7viQldcIWk0IRZ5zIy7kiE413OLyZMzHBPCjTGWDYkgkeruUcjV2gv6lM=
-X-Received: by 2002:a17:90b:33c3:b0:304:eacf:8bba with SMTP id
- 98e67ed59e1d1-30823775bfbmr5210335a91.4.1744557739557; Sun, 13 Apr 2025
- 08:22:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744558213; x=1745163013;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6YhpCUvtZQDpUlxDrFB7Y09wNEJFGtbdxnkmsZK4E90=;
+        b=OKXFQvIjcrdRNlXHsczCbedJaNlqsacKLsYsgRRmhjWdZxGgevApCgPt56qUWJVg7n
+         WjS0YzhNALXv7UcHt7YDGC+Wr5IA1jjIL2zE0VBZ6CuU2+QwvLNJl/kK8b7ONEm0SgV6
+         ceJECu01cpRHGQ3BI+XIb6znmDIdcjWNxbBqCnPCcqGH8po3Dq3YLIIjLDJCsmALaPyC
+         /YKVK61dvse2aR+Xki5iENT7GOnsfndDE3uptX3kKyarP/elPeiZeduVwCBSW/1tl1NG
+         bdLq7clFDeQQ6N3J4ULT7Ky9Wg26AdhlLIFvmUyY3TA5eRXBcJagpfSQs5Us3m6UoJYi
+         VWWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDKTX+CP/pyzgU0u5aomXdm4kkSn4OwdrNugvtJtlCsaa1vXQR3Phq8bHshVl6Nishz7AtI8VBdIThTc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQuWlcbljf8VeK2RxQ3MTrazvXwWhjO2o8i5l8kS1ajm8rBLR5
+	twOdTNMqZCjD0aNBkl7VYckiB+QMf4fLuFr2IHq32p/Cl730cwxFJvHInymwWg==
+X-Gm-Gg: ASbGncsnCO6+8M6wyUoRBWy+kDDRyBDNUkk8XhoZpYFhAXivKpd3tEc1tlLkjXIVRqs
+	jxTkJ4LGt/4yIY7pOpWvXB9Tl6S7V96xeVEd7jR5G7hjouZ6gjHjZZYNfjyvXRtDJQiaqnq6k0J
+	PP9dIzMV3EF086drKQyXeLqYxqDvv/PeRZJFpE8DVUa0LSM5XuPaK1Xu5G01CZuHr964sy4rKai
+	Eos1WpFLRkJTYpZR7UiPhStapc6Qk+6ktvLD3MLfgtJA4ILICHG5Rdk9ZdkYcpSMe+BmSDUF5V7
+	oV9/Ex98RZ/20eTmfKSm0T45LLaNfHJXUbR02JrdRBZE8wF06QMy
+X-Google-Smtp-Source: AGHT+IE0jyYBaLWROxwZRfj9Ap/rRwqRq+YqVPUJFP4QfIr9YmzNv06dYU+2Uj5cgUZODs640X4qrw==
+X-Received: by 2002:a05:6a00:240b:b0:736:a694:1a0c with SMTP id d2e1a72fcca58-73bd12bef8dmr12879327b3a.21.1744558212599;
+        Sun, 13 Apr 2025 08:30:12 -0700 (PDT)
+Received: from thinkpad ([120.60.137.231])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd219bf3dsm5245218b3a.16.2025.04.13.08.30.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 08:30:12 -0700 (PDT)
+Date: Sun, 13 Apr 2025 21:00:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit
+ L23 ready
+Message-ID: <xajelvlhvoxyt53qdx7dmi4wgp5yvc2hpk5bqbftwklp4ecrhj@gtv3mhb2pyvi>
+References: <20250408025930.1863551-1-hongxing.zhu@nxp.com>
+ <20250408025930.1863551-5-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com>
- <Z_p-UoycGk3BceXm@pollux> <c04d3ec9-46f8-4ccd-b0ed-52a1adea11b7@gmail.com>
- <CANiq72mpKQM8v1=qhACWGYo1c0jtOymnACDxXiRgjEs2-+X2=g@mail.gmail.com> <d4147269-6a7f-4fb7-9199-54f53be61139@gmail.com>
-In-Reply-To: <d4147269-6a7f-4fb7-9199-54f53be61139@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 13 Apr 2025 17:22:06 +0200
-X-Gm-Features: ATxdqUHNZ_9tuDNS1wlzYN05khNIGHxxHrij-7T24dLZlKtixuvPQCy3z1-AOMk
-Message-ID: <CANiq72np_UkQS_Lv9O7CJAuLvJ2jdzEy+M1A+AeHFJpmjAq7gw@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: Use `ffi::c_char` type in firmware abstraction `FwFunc`
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250408025930.1863551-5-hongxing.zhu@nxp.com>
 
-On Sun, Apr 13, 2025 at 5:12=E2=80=AFPM Christian Schrefl
-<chrisi.schrefl@gmail.com> wrote:
->
-> Yes I've sent a new version of this section in the thread with Danilo.
->
-> I'll send it out as V3 soon.
+On Tue, Apr 08, 2025 at 10:59:27AM +0800, Richard Zhu wrote:
+> ERR051624: The Controller Without Vaux Cannot Exit L23 Ready Through Beacon
+> or PERST# De-assertion
+> 
+> When the auxiliary power is not available, the controller cannot exit from
+> L23 Ready with beacon or PERST# de-assertion when main power is not
+> removed.
+> 
+> Workaround: Set SS_RW_REG_1[SYS_AUX_PWR_DET] to 1.
+> 
 
-Hmm... the version I quoted is the new one, no?
+Please do not post next version without concluding the review comments. It just
+wastes reviewers time and is not a good practice.
 
-    https://lore.kernel.org/rust-for-linux/c04d3ec9-46f8-4ccd-b0ed-52a1adea=
-11b7@gmail.com/
+You haven't resolved my comments on v3. So I'm not going to review this one.
 
-Or do you mean some other thread?
+- Mani
 
-Cheers,
-Miguel
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 7c60b712480a..016b86add959 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -48,6 +48,8 @@
+>  #define IMX95_PCIE_SS_RW_REG_0			0xf0
+>  #define IMX95_PCIE_REF_CLKEN			BIT(23)
+>  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
+> +#define IMX95_PCIE_SS_RW_REG_1			0xf4
+> +#define IMX95_PCIE_SYS_AUX_PWR_DET		BIT(31)
+>  
+>  #define IMX95_PE0_GEN_CTRL_1			0x1050
+>  #define IMX95_PCIE_DEVICE_TYPE			GENMASK(3, 0)
+> @@ -227,6 +229,19 @@ static unsigned int imx_pcie_grp_offset(const struct imx_pcie *imx_pcie)
+>  
+>  static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
+>  {
+> +	/*
+> +	 * ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
+> +	 * Through Beacon or PERST# De-assertion
+> +	 *
+> +	 * When the auxiliary power is not available, the controller
+> +	 * cannot exit from L23 Ready with beacon or PERST# de-assertion
+> +	 * when main power is not removed.
+> +	 *
+> +	 * Workaround: Set SS_RW_REG_1[SYS_AUX_PWR_DET] to 1.
+> +	 */
+> +	regmap_set_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_SS_RW_REG_1,
+> +			IMX95_PCIE_SYS_AUX_PWR_DET);
+> +
+>  	regmap_update_bits(imx_pcie->iomuxc_gpr,
+>  			IMX95_PCIE_SS_RW_REG_0,
+>  			IMX95_PCIE_PHY_CR_PARA_SEL,
+> -- 
+> 2.37.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
