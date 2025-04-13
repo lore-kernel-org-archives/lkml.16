@@ -1,111 +1,76 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C74F1A314F
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 12:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B0918E3F;
+	Sun, 13 Apr 2025 12:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744548187; cv=none; b=gU1vHkq8yChPgVZEvdQ7f4e8NZSVp29uAbuYU5fW6AWt/HrcDm2CPetx6wLwbx6bq8wmKnBYg9P5OJgzgO3T2M/t3Ha1OBjHvqbUhcPgqdBvWBYQg48BAc0Z8pX2ilu/Od8xjqVYmh4guNMK410qpgBBwV3SnYyFMov1NVfvNJE=
+	t=1744548524; cv=none; b=C2KuQOk9hHxjgbNQlzLe/UIlOQYdBPpIaFgK2hHeQqRjCfvji+/NuPFrKV6OWmKN3XtL6NEWxKxX3lkfxx3yEFGP1aMrWYTMbayPOTVtqmndRh5C7cNBJtx2+fBYxlBRYlaVQ4IdL3HuBTrXV3r3C/X3E40y9QDfUKOYFUVeMOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744548187; c=relaxed/simple;
-	bh=YBVrP0ioAfqFi7HGGInQPXg0PMtVOG28MGA1HhQi8zU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=bfYIWG64NxUiSUDSATqHNDF7dTz0YTfV0qD3/mj85/qVkFD3BzVhknnWy5FOAYIMU8454h1wyzJZtKJHnYKeagPTP+t+d/cGh7/wUHj/uVyw2ejdT4w1FN00eOndhvx9SVzXCwHYj53thJ6A3sDrFpxiEAV9Oh3I1AuxRbb/8T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cpL7bDRa; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744548524; c=relaxed/simple;
+	bh=inTSUzpY4HkgLJjo5Y9sPgarm2uGUrVEaFbir5x5xiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJiYPBKoejavyRJoY1e0pFvb0ewNYJ8e4Wdpc5DN1pyikxfTVD85EckkHW858Fvqi3L61zQeut66/++rCdkZIzK/xnVHaURaWvGXRb5HBdTIUlYXhAdYt1pEksyae7QQsqg7MB6YyIdXytg/pa4v3IkHKBs7SW1MvOAoh5Z25mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SGufiG16; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cpL7bDRa"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744548181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+g3tIT1J01F3PNxqjXfPswRzwcT32eu6uks0bITlMTA=;
-	b=cpL7bDRajhjTosoM/A/fZJh05HWg4SwWQJXrUDdpyQJcFJsGx6U0DrUQz/CglF16Z2pEIy
-	OcnHAUecAcd1vH7w5NRQW9GqqXSPOGhidBrIJwF/WuxptPTZGtPC6xTvqnOCXvNRQrYh64
-	y7k/djtKeN+CJbTOXaMomUe0ajizRGY=
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SGufiG16"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BYd9ghzIbvgBQxn74x2yQL2hqEOdpaPt3okp+tYy+YI=; b=SGufiG16PzYig2XsU0/e5Eg5VY
+	Nrz1kUIZf1J4TK69G0cSJe88bZuAFUerzAYATIWklMfuyBy4evF9LW3qlxdb+o+zZCdfFGVTeniUK
+	hl0Hi7DdUVsKYEAcu/47Gf1HK+3N4KGc5bvAmePpdih0gKpX9X4LwBR3g3vMsr//bmQUZVWp4g1pz
+	GVWbgGoEAhrwg4HJCxlh+1lCzdaKxnHWVgkEdrDimsA9bryaMCCLZMixbN0PZeJ9YZo2gClBAUMAr
+	6xyHlkg+FWPhMKZ2mMr6rYCTze1Bijcfaf+c/87MnHxgKTJZbXC9SKGCNHaahwveAINGGXaUYaGcP
+	dSH+632Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u3wl8-00000006o5h-3PQP;
+	Sun, 13 Apr 2025 12:48:26 +0000
+Date: Sun, 13 Apr 2025 13:48:26 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, akpm@linux-foundation.org, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, mhocko@kernel.org,
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	Huang Ying <ying.huang@linux.alibaba.com>,
+	Keith Busch <kbusch@meta.com>, Feng Tang <feng.tang@intel.com>,
+	Neha Gholkar <nehagholkar@meta.com>
+Subject: Re: [RFC PATCH v4 0/6] Promotion of Unmapped Page Cache Folios.
+Message-ID: <Z_uymiNhC6doPD23@casper.infradead.org>
+References: <20250411221111.493193-1-gourry@gourry.net>
+ <Z_mqfpfs--Ak8giA@casper.infradead.org>
+ <f4131737-fe1b-46a9-acde-73d1e29cda98@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [RESEND PATCH] mux: Convert mux_control_ops to a flex array
- member in mux_chip
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <202504071119.DB9497A510@keescook>
-Date: Sun, 13 Apr 2025 14:42:49 +0200
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <kees@kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A6D52C12-29BF-4A51-B677-584EFC4F3823@linux.dev>
-References: <20250302230220.245739-3-thorsten.blum@linux.dev>
- <202503031040.223DEF2781@keescook>
- <785391F0-C381-47FE-89E7-6265F7761208@linux.dev>
- <202504071119.DB9497A510@keescook>
-To: Peter Rosin <peda@axentia.se>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4131737-fe1b-46a9-acde-73d1e29cda98@linux.ibm.com>
 
-Hi Peter,
+On Sun, Apr 13, 2025 at 10:53:48AM +0530, Donet Tom wrote:
+> 
+> On 4/12/25 5:19 AM, Matthew Wilcox wrote:
+> > On Fri, Apr 11, 2025 at 06:11:05PM -0400, Gregory Price wrote:
+> > > Unmapped page cache pages can be demoted to low-tier memory, but
+> > No.  Page cache should never be demoted to low-tier memory.
+> > NACK this patchset.
+> 
+> Hi Mathew,
+> 
+> I have one doubt. Under memory pressure, page cache allocations can
+> fall back to lower-tier memory, right? So later, if those page cache pages
+> become hot, shouldn't we promote them?
 
-On 7. Apr 2025, at 20:20, Kees Cook wrote:
-> On Fri, Mar 07, 2025 at 12:32:07PM +0100, Thorsten Blum wrote:
->> On 3. Mar 2025, at 19:44, Kees Cook wrote:
->>> On Mon, Mar 03, 2025 at 12:02:22AM +0100, Thorsten Blum wrote:
->>>> Convert mux_control_ops to a flexible array member at the end of =
-the
->>>> mux_chip struct and add the __counted_by() compiler attribute to
->>>> improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
->>>> CONFIG_FORTIFY_SOURCE.
->>>>=20
->>>> Use struct_size() to calculate the number of bytes to allocate for =
-a new
->>>> mux chip and to remove the following Coccinelle/coccicheck warning:
->>>>=20
->>>> WARNING: Use struct_size
->>>>=20
->>>> Use size_add() to safely add any extra bytes.
->>>>=20
->>>> Compile-tested only.
->>>=20
->>> I believe this will fail at runtime. Note that sizeof_priv follows =
-the
->>> allocation, so at the very least, you'd need to update:
->>>=20
->>> static inline void *mux_chip_priv(struct mux_chip *mux_chip)
->>> {
->>>       return &mux_chip->mux[mux_chip->controllers];
->>> }
->>>=20
->>> to not use the mux array itself as a location reference because it =
-will
->>> be seen as out of bounds.
->>>=20
->>> To deal with this, the location will need to be calculated using
->>> mux_chip as the base, not mux_chip->mux as the base. For example, =
-see
->>> commit 838ae9f45c4e ("nouveau/gsp: Avoid addressing beyond end of =
-rpc->entries")
->>=20
->> Since this should work and is well-defined C code according to =
-[1][2],
->> could you give this patch another look or should I still change it =
-and
->> submit a v2?
->=20
-> I think C is wrong here, but it seems it will continue to accidentally
-> work. I personally would like a v3 that fixes this, but I leave it to
-> Peter who is the MUX maintainer...
-
-What's your take on this?
-
-Thanks,
-Thorsten
-
+That shouldn't happen either.  CXL should never be added to the page
+allocator.  You guys are creating a lot of problems for yourselves,
+and I've been clear that I want no part of this.
+> 
