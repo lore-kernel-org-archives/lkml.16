@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F161C84AF
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED8C17A305
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744574584; cv=none; b=psdS6znGEGk0BO2XFYVIZs55OkQWXCD3tAodvsup6OXINK36L++DK0W6I5zbRVD0b3dQxI8Av0n8LCMS0Uj8TSrOI03aYmLAjOpORFR3IGf183EFlRPxW4/I40NrRnmORL/LggPoG3TX5q9R7uM5/YA5F/woxXuKUme+qvEI1t4=
+	t=1744574753; cv=none; b=IqpxvPS9v8pN2hfiGLvyFtYkxoBiDG+alrxVDrcpkHm71iMW5x6RgOffKs01tvJcumZPBi8ZIS2U2JIAAy4D4ImniHFoGNZhARGIN+Ob041RYIj/DdPjamOLT17HbqX4zbg35QPkuElqS3Bbh8PxqHbqCZGMwpAyeWuDSuL3Ghw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744574584; c=relaxed/simple;
-	bh=BE0F+hAroARe2YCQ0nxcShVfOvHvh2ZRFotUZ3IFQ6Y=;
+	s=arc-20240116; t=1744574753; c=relaxed/simple;
+	bh=2mdYX/2GVIgDd+Po4gWQNViRS76n/C4qNnW05RfESvg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k9Mxvh+yjVneM9I3q8RVr94sEtsiNOjOe/GNAgSVItfZP4G2f+UMXDLpz9mrZyidWCL1MaSa/pDFOJHLljFqnqJk71+PpEvRvSrUCKttcaShwwVzLP2cxHuX6mkNMupjf+Ef+xFuK493OVigOzTEcgOXgB80h2uEFjln2p88ip0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VX/00LAU; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=NIcT8Z8h0wWOAgpdmRUT9Fk2+HSmWpVv+A2Rkqbj0G4VSFSX5DFDh17HTlNbSGgYLTl2I61dYfZA5S6le4YoSO8pTPtdVHlNiTkxBmtf4ipQjibF4fSDZeuFsKorQmibkUR8p/ylMi2wFVhTEnjS5AjevhEmgfmkMPieAE7QfcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BWCV7/gf; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VX/00LAU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BWCV7/gf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744574580;
+	s=mimecast20190719; t=1744574750;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=63ad4fTCOD0p5TrFn4wdTZ3MlAv2F5Vw3+XL7aN8auY=;
-	b=VX/00LAUQfE2ePetZWpL5X7XnPFrV0Zb3j4zjrlZU85wh93lKxpJ63UqN4GIbtSd8E1nHf
-	9r2xpTI9SI5MqgBhc6RHCGV75iNak+pwrYubLJwlSMsW8MbEba+taxK61fX1jWQzvwSgnS
-	S7APugcLr2uQkrmuwAo87Lsj+ewIELQ=
+	bh=26kQaqxmClrkmqimyK/pAn0V/eLIFLyRyoGwKGCOpj0=;
+	b=BWCV7/gf+01ePG9hHR7OXIm556zanibNap8ulCE7FVqofE+TmqYPshdEVPuIeTvdI5xYAM
+	X47IIZUF+xw7kT5NM5/Irh5+ZDId/LirE64Nb9xv7qEq+L4agH2LI1xjCoJqbMNeI6fJW5
+	EGasV2mnKY7sTJgleFZms9E+2Q4eSV8=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-4g1TCVIJNw-rPflNHSXuKA-1; Sun, 13 Apr 2025 16:02:58 -0400
-X-MC-Unique: 4g1TCVIJNw-rPflNHSXuKA-1
-X-Mimecast-MFC-AGG-ID: 4g1TCVIJNw-rPflNHSXuKA_1744574578
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d733063cdso30089365e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:02:58 -0700 (PDT)
+ us-mta-14-QUlKDJXlNzmbmeUpe3X_8A-1; Sun, 13 Apr 2025 16:05:48 -0400
+X-MC-Unique: QUlKDJXlNzmbmeUpe3X_8A-1
+X-Mimecast-MFC-AGG-ID: QUlKDJXlNzmbmeUpe3X_8A_1744574747
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so30998155e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:05:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744574578; x=1745179378;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=63ad4fTCOD0p5TrFn4wdTZ3MlAv2F5Vw3+XL7aN8auY=;
-        b=L2bwLOhn5PNVRFNzatGj4inJdkiuEoL4ocrwTA6FL4p6vM26uU7nnizgIoT3KLek+S
-         ojH02nnmqVQzTdWboiebd4fDYvhgtlFOe+NX2bvoYWqwXjZLqqg6wXsVjrGDQTe93M3m
-         S4SQvTVt/Vyy2F4BSkerz/trHaEcdJe/6QqG7ZXr69U8FVE4dYo1zcwx7MvMmcdc+tfy
-         gtK7sjY5HBwUvK+jvTinNZzra1IGqsMPgc4jeLV02k0I09QiDsfwQSsk4Jk0GspugH+J
-         4tGpWZKSJNFuZzmB+UGqjo24CI80z9JahQbHwv2dkc7mSck1zNfDQd6IuScujt3GvuCG
-         K3Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVI2DVtWhV+wEIKUT3bdFm71gQbdOrXRT1NHeE2gIO3nFhLTBhOqNnheA9v4Zz82GzZHwjCqym0eeaIlfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLohKVllcGoWd+CawJtkS5I+o4QcEmwQtuk5Lq06ZL40lcloXq
-	mR+2oxufbgakR0riAcCL8T6y9axw5zTsUvG5YHZlKL91oGAmmhC+2BDIb423Oiwm2NiUNzTjzz/
-	gA9GDxfX5EDRSt+zZIOUzMlpqGf3wRgmdv+zadX56dtyxmqDQ0xmHQ1WN331D4Q==
-X-Gm-Gg: ASbGncspzHzGjo9RvVG9D2Dkr/GftwU+naQG7EAbkfwvfVI3MMectLiRzHaSIblaTW9
-	6aUfBXi3Q70GuTLI96tI7na0Tury5W13lGViQuvbZ6ZSpijQrFx/0Icbj8WDNjNRl31X31udK05
-	5dvnOx8bEjOAHBZUvV3qJT8hgQJTIPXgWSlGT7AKFyCPQweAlO7w/cmK7dJPkzofNkAMQPr8wCH
-	/RozfOsoA91m99LkQPybLZ4h4wAldG4QRmis7d3xMB4K1CwAq4cKYQZZSLs7ucMZHfgOscJtpPc
-	Q2tYZCKYLK260N5KgX0BqRcl0SE0fyOMYoAUimV8yfSn8omZ80nXsxBhk8MQB7j/Z/Aw7lxseQ6
-	G4OS6XJh+r2FQnfYyNOD9l6/wiV/LfzABnO+7ll8=
-X-Received: by 2002:a05:6000:18a2:b0:39c:1258:7e18 with SMTP id ffacd0b85a97d-39eaaec7d0amr7425612f8f.57.1744574577631;
-        Sun, 13 Apr 2025 13:02:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFC6elm7Oi5iDPiKnsLQ1d73dgjttu042978TXC+X8rsZnB7bNdTTMjBo07JiI9gRom78QS4g==
-X-Received: by 2002:a05:6000:18a2:b0:39c:1258:7e18 with SMTP id ffacd0b85a97d-39eaaec7d0amr7425603f8f.57.1744574577225;
-        Sun, 13 Apr 2025 13:02:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744574747; x=1745179547;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=26kQaqxmClrkmqimyK/pAn0V/eLIFLyRyoGwKGCOpj0=;
+        b=dKCAGlAWyvVVQ+GsHJuZBtILBdul6n6+IhLEPN/JWGDA8sDAfNeOaAuPztm8Q4UXpm
+         maY0Tzs3FJy/b02Gwykjs3o1ms2xsEgT+6hlguDBL6a0fs7KJT0bIuC9HDGXNuhV2IQL
+         qACMHL1RsaoTz7sELLF6qYRXCqd32Pj0Sgg6wh97tFMyRpCJDYOejPn+RdG7q2iwDeN2
+         xaN1TezL74Rm1/hHwxmD+vSOiNa5zt7ek7N8tbkGCD8+69owouiNiHrAyQ7aV92hSbrv
+         Hiamg7nnJfsEFz6MxVjGamJS2sVip9T+nnf5EDhdBUVM+hAemXtr/PLzPr55EXuH62/H
+         0MXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtTl4ks0Ds0nTZ3KIGhB9f2idrjvE35wAgHhZMK7tR+mPnCGoS+Fj2vQVDtODOEoIy5PZOzMr5wr+9VJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJQYg+F8BT1mxFc7J00PtA9KVwBeYGnpIssjUmC7QaknS2G2A7
+	zJf+ap6ypwvaXkSaETIHpB6QXgLn9f3l+g3BvB/Dq1w8Zp7/xtrgXFKqC8fCwEwYdqfsPWg/sE7
+	bZn8choCK2BwzHnA0HtvGX1Az3i77WlnUZnie/urH0XXVDdYnQH/7jlpE4wd08A==
+X-Gm-Gg: ASbGncvYI3Tagl5BiZQBVd5Ew+D/4c+7dNHch911+n9iPIk3nvytjAt2JWx9jtEEpxw
+	lCKbl9aP2Z+h4HRVbpxuIUEKWSsYbOFpVREMeuhYiQu+5vkIWzlVHTJTedwfcvz6kEsS2caXR3Z
+	Pf/obsdRdr3wfLjlclo3JI9FtRiYbpDsRbNzdzY775jRzr7Pc+65Eel0YpNTRQ5reaM1Wyoxh4V
+	RGBHr+mp4rVemfqXQXupH9lAGT9Ps21MEipOm4RCvDVEOCKGVugaic52P/4mxvY6mdD1dbXn+5D
+	fjOop67ardJDSY/o6gcJy8ldZbl+r3P2032vIIwGZPkBajswKQMEHPFmXFWhxUfxGOMemgVTm2t
+	MdBXFuiJlLZmPl3/z8gN4h/KiDbWyX08FtfX4hM0=
+X-Received: by 2002:a5d:5989:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39eaaec7870mr8568035f8f.43.1744574747470;
+        Sun, 13 Apr 2025 13:05:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEj0NxM0N0abRhomL8K4YcFkTrVF5uys1Aj1DUWE1g435wGfrkYysdjnFb/nCc5L8Ln6JHViw==
+X-Received: by 2002:a5d:5989:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39eaaec7870mr8568027f8f.43.1744574747090;
+        Sun, 13 Apr 2025 13:05:47 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c684sm8891758f8f.33.2025.04.13.13.02.56
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338dc13sm159877575e9.3.2025.04.13.13.05.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 13:02:56 -0700 (PDT)
-Message-ID: <b5d0d34d-8aed-48a3-a484-8a60481860cb@redhat.com>
-Date: Sun, 13 Apr 2025 22:02:55 +0200
+        Sun, 13 Apr 2025 13:05:46 -0700 (PDT)
+Message-ID: <c7aee943-2802-4a41-8e3e-e80f45e80dec@redhat.com>
+Date: Sun, 13 Apr 2025 22:05:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,18 +75,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] mm/gup: clean up codes in fault_in_xxx() functions
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, osalvador@suse.de,
- yanjun.zhu@linux.dev, linux-kernel@vger.kernel.org
-References: <20250410035717.473207-1-bhe@redhat.com>
- <20250410035717.473207-5-bhe@redhat.com>
- <f03f7e13-3d37-4d4a-87a6-61731744f476@redhat.com>
- <Z/j5y6frIT2jIsv7@MiWiFi-R3L-srv>
- <332ce477-59f6-47f9-9687-10b642b86230@redhat.com>
- <Z/sOUfK0VoiC7d+w@MiWiFi-R3L-srv>
-Content-Language: en-US
+Subject: Re: [PATCH v2] mm: Introduce free_folio_and_swap_cache() to replace
+ free_page_and_swap_cache()
+To: nifan.cxl@gmail.com, willy@infradead.org
+Cc: mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
+ akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, aneesh.kumar@kernel.org, hca@linux.ibm.com,
+ gor@linux.ibm.com, linux-s390@vger.kernel.org, ziy@nvidia.com,
+ Fan Ni <fan.ni@samsung.com>, "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+References: <20250413042316.533763-1-nifan.cxl@gmail.com>
 From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
  dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
@@ -132,68 +131,29 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <Z/sOUfK0VoiC7d+w@MiWiFi-R3L-srv>
+In-Reply-To: <20250413042316.533763-1-nifan.cxl@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 13.04.25 03:07, Baoquan He wrote:
-> On 04/11/25 at 01:41pm, David Hildenbrand wrote:
->> On 11.04.25 13:15, Baoquan He wrote:
->>> On 04/11/25 at 10:54am, David Hildenbrand wrote:
->>>> On 10.04.25 05:57, Baoquan He wrote:
->>>>> The code style in fault_in_readable() and fault_in_writable() is a
->>>>> little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
->>>>> and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
->>>>> in fault_in_safe_writeable(), local variable 'start' is used as loop
->>>>> cursor. This may mislead people when reading code or making change in
->>>>> these codes.
->>>>>
->>>>> Here define explicit loop cursor and use for loop to simplify codes in
->>>>> these three functions. These cleanup can make them be consistent in
->>>>> code style and improve readability.
->>>>>
->>>>> Signed-off-by: Baoquan He <bhe@redhat.com>
->>>>> ---
->>>>>     mm/gup.c | 65 +++++++++++++++++++++++---------------------------------
->>>>>     1 file changed, 26 insertions(+), 39 deletions(-)
->>>>>
->>>>> diff --git a/mm/gup.c b/mm/gup.c
->>>>> index 77a5bc622567..a76bd7e90a71 100644
->>>>> --- a/mm/gup.c
->>>>> +++ b/mm/gup.c
->>>>> @@ -2113,28 +2113,24 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
->>>>>      */
->>>>>     size_t fault_in_writeable(char __user *uaddr, size_t size)
->>>>>     {
->>>>> -	char __user *start = uaddr, *end;
->>>>> +	const unsigned long start = (unsigned long)uaddr;
->>>>> +	const unsigned long end = start + size;
->>>>> +	unsigned long cur = start;
->>>>
->>>> I would initialize cur in the for loop header, makes the loop easier to
->>>> read.
->>>
->>> Both is fine to me. It's to satisfy checkpatch.sh which complains about
->>> exceeding 80 char in the line.
->>
->> Did checkpatch.sh actually complain? You might be happy to learn that the
->> new limit is 100. :)
+On 13.04.25 06:22, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> That's great to know. I never noticed this and always wrap via vim's
-> indication.
+> The function free_page_and_swap_cache() takes a struct page pointer as
+> input parameter, but it will immediately convert it to folio and all
+> operations following within use folio instead of page.  It makes more
+> sense to pass in folio directly.
+> 
+> Introduce free_folio_and_swap_cache(), which takes folio as input to
+> replace free_page_and_swap_cache().  And apply it to all occurrences
+> where free_page_and_swap_cache() was used.
 
-Note that coding style says:
+Patch title should better be
 
-"
-The preferred limit on the length of a single line is 80 columns.
+"mm: convert free_page_and_swap_cache() to free_folio_and_swap_cache()"
 
-Statements longer than 80 columns should be broken into sensible chunks,
-unless exceeding 80 columns significantly increases readability and does
-not hide information.
-"
+and similarly adjust the patch description. Thanks!
 
-So 80 is still recommended, but there is nothing wrong about exceeding 
-80 if there is good reason.
+Acked-by: David Hildenbrand <david@redhat.com>
 
 
 -- 
