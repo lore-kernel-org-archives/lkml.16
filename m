@@ -1,67 +1,67 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751A118D65E;
-	Sun, 13 Apr 2025 22:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEE41991D2;
+	Sun, 13 Apr 2025 22:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744584721; cv=fail; b=ds+MwctXvErX665gpXmORTBrYHydjLTl/PxoaRLUL2YZeqJge2tWmkD6CdytJgNPZ9C7MbIVL/k9dSDlqZ1eWSXmwtFd0jCPr+Jx+hnB6SLbl1nlbbI2hxlcvXvsR+6D1+8xStTZXeV1haMaxnxi7oYAd7saNZ6I9AyiMLIRAf4=
+	t=1744584723; cv=fail; b=RtAIyx0cHX0Ot3BkG70MpN5yF2DRu4hWidN0w/0I4I7Io9NhQBxMsnqGANDz2IUYhpuZtBGBUUsN7xxVlqrJkfDBDO4g6dnE3ZvkTuWr4LoBwroQNWtdhHU9thKO+eBmJk4XV5m3sX/8QSu85/6UoK8kcx2Q0S2buicE/0R9k+0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744584721; c=relaxed/simple;
-	bh=yKu5GzCSwhClZskfPSul/l1KNzhV4Imp85VjVWq1kVA=;
+	s=arc-20240116; t=1744584723; c=relaxed/simple;
+	bh=QWIUOdTsybkdMzgUkQnUMwA8ER+kALdCrOEkHqc97M0=;
 	h=From:Date:Subject:Content-Type:Message-ID:References:In-Reply-To:
-	 To:CC:MIME-Version; b=G8oYgOaeE8Vpw3uwV5xJy0Yv5xy1GpE7Xkb5HSNz0+GbvfnTt2RgzOP21NIQNJb94FYeOjQMjD7kIAKFSfir9YBRYOvJI6eLDBmxnShdqTbJNaibe+pshEDHpyT2+T8rVvd9HhaF1LITOmR+DR625+sSWBFnB0ss02p12Hacn6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U0ADUzrF; arc=fail smtp.client-ip=192.198.163.18
+	 To:CC:MIME-Version; b=dJMXQw5xgQrSK6WcipGyqTmlAB1e14/ucGI0Jtfz8lCl1qvfeUI5uXKt6m4vmW1S5Ok9wzQKETDB16td0LSNoAs3zd9fbneV9V1+dTbkuS5L1ofai3JuBjCmGXxxIVA+ep8lTMhYUA/gZlBgasn1YGqbiZT0ftdqeMiwK7RqnzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LbP5P/kj; arc=fail smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U0ADUzrF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LbP5P/kj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744584720; x=1776120720;
+  t=1744584722; x=1776120722;
   h=from:date:subject:content-transfer-encoding:message-id:
    references:in-reply-to:to:cc:mime-version;
-  bh=yKu5GzCSwhClZskfPSul/l1KNzhV4Imp85VjVWq1kVA=;
-  b=U0ADUzrFS6ljStSHzzHtt4NPQwvKbqrGR5/EOaS8WjmQp8dsMfhYbpA8
-   eKStF8B4wZQuF+Uh6uRReX8R9dUD3MaUp06IBpFw23IDB2Io4iL5gTJOR
-   vyiJh+wvkuPgRkiciohDRgs78W5+zblCYk0vIhmQ+A01rIIp8FiHYFtNE
-   gf7P0uJfpbYzt6bkq562dmq1a7ZjhEnNxHDc0zTDMlJiPo26MFlGzJHZO
-   75wUzcs8PT4UReU5v/tP3Dwlf52COh0ObzMZWtD+UOdHikec+X3Bl8j9W
-   RTnnyHN29jIH/Z3oJko2CtoAm/0L3tQgW8UtP4j2MZ5TsaW1vK85Pvw8M
+  bh=QWIUOdTsybkdMzgUkQnUMwA8ER+kALdCrOEkHqc97M0=;
+  b=LbP5P/kjHpQSj30Nb1GvV4GvPWF/CO4bLY1dH2ZDa03IGRjHbESqUzm5
+   ndsy2FGQ4SdmsY03viRfgRZnMXh5atJoCWxmfkGbR95aPL2AyoHVuFLe8
+   Dwrxi77VCgTThGvBLmGCxTh2PEPM30y5MG1vYebk3btdzj1IJV6gxbh67
+   PP2u8jptMWKkS+/EX7dyMmmt+DtYV2JJ2P0ktf4I2kUQtQr/MyPNgXsiR
+   n1fDs0hLX5k4lBWV/iGBjVnIKCC9MMVtfqpg92A4egXNuUrLUzpGRENOk
+   lmUnBx1wVbvdY0J/vzg+solvdha/pyy2w1nM9oEUM4trn7vAZgc9zV/ed
    A==;
-X-CSE-ConnectionGUID: kl6z1Pi3Rtu1sFKv8MwTIQ==
-X-CSE-MsgGUID: rLv1KI3vSQKCxOLmZGWZ/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45280882"
+X-CSE-ConnectionGUID: jO4R3WpHTA6yaml0vr3MRQ==
+X-CSE-MsgGUID: fCOZ42ifSW+EQKfrIU/+yg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45280895"
 X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="45280882"
+   d="scan'208";a="45280895"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 15:51:59 -0700
-X-CSE-ConnectionGUID: N4SWL+r6QBiYshQ4t4sEgA==
-X-CSE-MsgGUID: inuCNsY4SvaZ4XrBUEuOMg==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 15:52:00 -0700
+X-CSE-ConnectionGUID: xV8WZal4TcSenoAGXnnouA==
+X-CSE-MsgGUID: jwunai7NSvWhWqVLmlkJkA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129657424"
+   d="scan'208";a="129657436"
 Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 15:51:58 -0700
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 15:52:00 -0700
 Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
  ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Sun, 13 Apr 2025 15:51:58 -0700
+ 15.2.1544.14; Sun, 13 Apr 2025 15:51:59 -0700
 Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
  ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Sun, 13 Apr 2025 15:51:57 -0700
+ 15.2.1544.14 via Frontend Transport; Sun, 13 Apr 2025 15:51:59 -0700
 Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
  by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Sun, 13 Apr 2025 15:51:57 -0700
+ 15.1.2507.44; Sun, 13 Apr 2025 15:51:59 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=khs8704fxCoppVAEvlPzgBiMVxbxiTioxn5zLThlzDm+MSLTb1qftLut4Tk6kUGPhvyzKXjrT+NLNd8ZNtbo4QQVYEwpSACqMydCBdfU99lNYxSCn/WtwqwdETH/cZAkrWn6VikzeThsm7qYHAn2nFuOryVa15lAVTiXlVXM6/7sVgiMxYR61srmcVCOMk7gvkle8lWaV6iAoI/Db9V4t23EogJaBK1R+0Ur9h7RW2PpxVgpZf6mmoC6E0QQEu4OY6zeCCJ4r6pBBrkBJDY66bP1qu7Ocsmu+YinpiPgCZzQg2EdacE20+KBSOpGgJx0EtcFyjKoAYPQiZElSTpJQg==
+ b=ULAItf1T2IQmu6+PeAAh3UhxpOXxsZdw2axXLN0AqE+s8w8s6pIKbKLr59xtfcqV/xM4eA2mnsUaws1+wUHUlnZf+GWj4pLwpx9sgRghqFvf7w6haRSsZHgNxcfMt5q8yYNh/IqWuj2TLqUBH8ZsDcLwtR0Ozn3c4NEVmZaFdJMjSYSIbU4qX9/CPwRtVVTiI0IsUSm1tUXXztwFS1WjJo0yeqJfPar3UpSXk8tzqgGPVm/lYRc2Uwfyr4p0qeWKHNy3nll2Bodq6NXsbKfrK+EqyEouLJYZPckgC9fOI3Sqb9RMJXvXtQRN4tSay9myNvByrDZbCZBFQjUcfhYo9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QkoHo8DOZ66Z7EiSbnZBmZz8Tw+rUGijfRBcpfBpfYU=;
- b=iM/nXwdp649Tev/uEMXzMA1tnIEOkAeRNiOuvoqeKNK+03o+SR207AfdQ6p9kKcseJnYZKXeQrQOJuVS2aDTquUUlmderPcXk8upQKWI9Gp5oh4xgckFeiDw9KHjOrxchOj6bFwWil7Zx7YN+inQ1UdxIOsDhv5MY9PsG0oEI5KqsU0XHWtFI1MX0eTgQS/KgYwZv+fRlLLLymx2ROlRBE+dwPKSIXTki8Akjs4nsxW6rb2ox7p/ABQcqqqecoF0PlwArbOQoweHigHKtJAt59obg+IfXGjNFFv4z0UtsJ+rJeAnh9PQYIHduZ3pJpCw/P7dIAnjxnlddha1bssA7g==
+ bh=XRCSEVRqzMVLB9sUkTAqkxwHRS2MdCyEZXOrYPgN78Q=;
+ b=xetbZdd/lvK62NBnL0hkUa4YP5Wc/4KUUJ2QFfuUY/ggDWIZOJmxDSx0SWnTmMNsYMB2u8X0VcyU5/QMZudp5hLYlIVJ8R4mmbl4IPWWbUsq1T5RmMAk7nvF+Cc73KQnm85VG/tDMupSdngjhrXqOjlZEGTxFIJzb7fnO2Ov4aLJr55xO4pGBZqjLP5g9Jzm+tHI47yMVEwQp8z82YrO/4KCQz1TSu6BKxVtX03+d4SDTzkDnH7KrM8XyxR0mJyPPz2UQ4EEjnIi1eKPmdlfDunpETQOV+rXkeyRyHPuEpQsR3UXBSfMSSdV+YZCN9HWYzG/o9+8FoaiVJqSaT+wkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -71,18 +71,18 @@ Received: from MW4PR11MB6739.namprd11.prod.outlook.com (2603:10b6:303:20b::19)
  by DM4PR11MB6042.namprd11.prod.outlook.com (2603:10b6:8:61::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Sun, 13 Apr
- 2025 22:51:45 +0000
+ 2025 22:51:48 +0000
 Received: from MW4PR11MB6739.namprd11.prod.outlook.com
  ([fe80::a7ad:a6e8:fced:3f24]) by MW4PR11MB6739.namprd11.prod.outlook.com
  ([fe80::a7ad:a6e8:fced:3f24%4]) with mapi id 15.20.8606.033; Sun, 13 Apr 2025
- 22:51:45 +0000
+ 22:51:48 +0000
 From: Ira Weiny <ira.weiny@intel.com>
-Date: Sun, 13 Apr 2025 17:52:10 -0500
-Subject: [PATCH v9 02/19] cxl/mem: Read dynamic capacity configuration from
- the device
+Date: Sun, 13 Apr 2025 17:52:12 -0500
+Subject: [PATCH v9 04/19] cxl/core: Enforce partition order/simplify
+ partition calls
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
+Message-ID: <20250413-dcd-type2-upstream-v9-4-1d4911a0b365@intel.com>
 References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
 In-Reply-To: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
@@ -93,11 +93,11 @@ CC: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
 	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
 	<linux-kernel@vger.kernel.org>
 X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744584735; l=12514;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744584735; l=6891;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=yKu5GzCSwhClZskfPSul/l1KNzhV4Imp85VjVWq1kVA=;
- b=bN1/2MH5VstkPjHZQa4RmCVO2wG0EP+Ci0FetDpq9W9nIkT5q8Ja/2+TnNzC5vVldDEtCfEqr
- XNP4trGWR3FBHv9R4V5auPkBSOwcxjZlGX9mAqPB3JEccOcGuNqXI/8
+ bh=QWIUOdTsybkdMzgUkQnUMwA8ER+kALdCrOEkHqc97M0=;
+ b=3xtF7gtSQBOSRiRuM4Pmou0rdAEf9ybrI8OOhE/D44AoGI4QrLYY9hv+/tlyPnGPaZITIvnzy
+ zsQIqH6chMFDryjPBTBQ3WeHnzsUBEQiETeCCbhnYaVncOZgFSxDbQd
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 X-ClientProxiedBy: MW4PR03CA0227.namprd03.prod.outlook.com
@@ -111,470 +111,285 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: MW4PR11MB6739:EE_|DM4PR11MB6042:EE_
-X-MS-Office365-Filtering-Correlation-Id: a10f9a32-c0d7-46cf-3d7f-08dd7addc41e
+X-MS-Office365-Filtering-Correlation-Id: cde2e068-9156-4a3a-6ff7-08dd7addc611
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?b3VkS2N6cUg0NUdpNFZGeGhIYXJ2eHhwOHVWWU52NGQ2MUk3UHorcmVIWVpy?=
- =?utf-8?B?d2puUGtPUFdqcnozS1V1K1M0NWtqd1lrWVg5VWk4YTlUdS9uc2RYa3MrTytH?=
- =?utf-8?B?VHRDalBBeStyaGx6TldDcnJVUVA3Z1VLdGl1SXBzOC94aDlPbEx6ZVlEejZn?=
- =?utf-8?B?eUxXU0oxWWFyMnVHQ01ldHg0UlRJZ1JLeDNTSEVBcHQ3U0V6cjFwVjdOWEhZ?=
- =?utf-8?B?TVlHcWtoNWN6b1YyR0ZrM1hIZDFrVEJFcGlKUEJTZU1oUGM3WVQzRldLU1Bl?=
- =?utf-8?B?T3BDQTdIL1d2QmFZa0YzbE1WdW8zeHEwRVIxL3RYVmV5K1VmT3cyeURidTUw?=
- =?utf-8?B?TE95N1AvVXhRWXZIVEM5WmVMVC9RbW1OM05WWmI1d001MUMzWkdZU0JyTmE3?=
- =?utf-8?B?cHJpNXNBREVxUXBEc05vUjNOeWtDUk5ic09jZFh0aWdKZDl4RTNNMnRIMHRi?=
- =?utf-8?B?SHBUUlZMd0ttajNhS01KcjJWNDdVS0U3WElQNW84QnVJbCtsekZtZzZxbVN3?=
- =?utf-8?B?UVpxZWhnVE5FdStTcmh0N3I4bmxvSUMyb1VLTzlMcVBlSElTbENuUEYyRVN6?=
- =?utf-8?B?cE1VRXVDbGFpVm9yZzBWZng5NzJPQmh0YlorNjlZd1RjZzJLVTg2VTJESTgz?=
- =?utf-8?B?RU5RMEFvQktzQWNCT3lDOTdOcEh5WW9HVlZ1bDlYQlMzalRRYTBqNkpEWkxB?=
- =?utf-8?B?OHBjU0RQOUpFVEtGSm0zenZlT2xTTGtVT0ZqNXRPR2FneWVRaHhYOHRCL2Fj?=
- =?utf-8?B?WDJKTWU2REJzY1BUZEQ0bzl2aHluNzZmbUNQSTBESi85ekEzY3BhWTBIWk82?=
- =?utf-8?B?U2wzVGN4MVRZQk1JdVJkdFBsZ1kxeFBFdDZmaGg2U0o4Q3JtQnY0SHJzOTln?=
- =?utf-8?B?RytSWnVSTGsya29BbFF2WFBVVnFhcDNONE1Nd1N1Z2hUT0IydHBEdWNyZTBF?=
- =?utf-8?B?OUtiK2djaXhCSTFoYmxVc1ZpWkZoOUlYVzhUK1BqOEgxVXY3cnBVZkhmaVFH?=
- =?utf-8?B?Smh1OG9mZzk5TUU5L2hOUDZPck0wNHBra1R4V2cxelNtVWVlY0ZvRnJ5Wmtj?=
- =?utf-8?B?Qi96eUlaNkhxZkNJQU5kT0hxV2dOM0c3N0gyOHdhWm9OeWphKzJGcXBqL01D?=
- =?utf-8?B?UVFuR1lzZThzbmFWTUl6ZFc0djE1OW9ESWhnWDNNOTg5QXgyNU9LUGk0SjZ5?=
- =?utf-8?B?SVVmR09rcUVhMHlXanZZRGFJQzVpTVlnYkZ5ek5aVjVEUlNsSHc0NXdaaHY2?=
- =?utf-8?B?K1ljVW9hSFFGeVNMUGVwYWlCcXRlV1hBMHZBNWtTR3hoZzhmYmx1SE5ySGU0?=
- =?utf-8?B?NTlDQzZVSERWYU5PamZIK2FaM0Zlc285TUs1M0dUUzVLZElZem5TVERqcmNv?=
- =?utf-8?B?ZU9vUW8rR1FMUmo0RFVlOFZKSzNDcTdGWUsyOW1JMHY1bmg4NnEwZ3Z4VUNE?=
- =?utf-8?B?MUpmT2t0MWU2Wm4xdytxVWdGK3dzRGk5akhnZG5Kc2Erd1p6MDlQWTJWSVlU?=
- =?utf-8?B?UjlsZHc2MFNwVmZjSFlNaWJtaGFtdG9CbnBpNVZ2UlBkTU8wT0lRVlIyTktk?=
- =?utf-8?B?ZDRvem5aVWZHN3N3N2ZGVzRVeWRpOWMyM3FKRDk0RlkxYVdoeVlVM2lvSDNw?=
- =?utf-8?B?eW5zY2I2T0o2QjFyZ1R5T2FLYXc4UXFWWi9xSDhlbnR3dlVtcDYrZTNzZ05R?=
- =?utf-8?B?NnY1dXdrUkl1SDZNYkVzVCtoOERwaVQxbWJmVWFMY01qdHE0VDNXM0dIZE9T?=
- =?utf-8?B?R0N6TTFYWlkyMmxZWnR4aXV3UXRvTmptK1VGbUtJR3FZYjRhYmYxODhjYit0?=
- =?utf-8?B?ZjZpVlpsU2Vzd1ZWUCs4Q1FTY0dpQ3B3Mk1KdVY4R0xtclZOZFBWY1Z3TjJt?=
- =?utf-8?B?UDhTYWt3YkxnYzJUNXVJQmY4NXYzZ0kxOW5VaVZRNVFUdExvZkNKVHJacXpZ?=
- =?utf-8?Q?kgUwHC8vnto=3D?=
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Z3RsbGg4TERVNFh3QlNQYWdJMUFpa2w4WXdrM0RiQXhyVm5EWTNmMklBMmJF?=
+ =?utf-8?B?UThLVmJKL1c4RTZUMUJYL2FiSk01TFFSZUMwQThjMkJRL2tKVmhYTnJyaEFR?=
+ =?utf-8?B?VC8vbGRtelhyRW5ZT0VZVkpiNGprM2IyVk8rNW5qRDFXY2gzS2hUYmJPYnM1?=
+ =?utf-8?B?Vy9iYnV6NGlyVkQ5b2tFSEZOTHI2V3BPZ3gwcjV1ejl1OXppOWpMNkhvZjZC?=
+ =?utf-8?B?Q3NrVllaeXlmUS9qc05WYzVOYWpTUGRFbjlkZmtBUFZQRTlBUVMrVWF3Wndl?=
+ =?utf-8?B?MHJNbms5b1R0YmJVeERMM3FSdkNhdzFCZE9kRGNzNDY3MVRsNzliUitibDZ1?=
+ =?utf-8?B?aERqNUd1NzhiT3FDai9zWFBMaTFoSzZ4V1pKM1NFaGpTMjk0ZEtSeExXR1Yr?=
+ =?utf-8?B?cTAyU01kZ1ZuS2R4emFNdURpNHllc0NocXZwRlFtN1lIa1ZhRlBaeTFXMWVF?=
+ =?utf-8?B?SnlBZGY1eVc4T3YxWmwwSjFJUDFSSDBMU2tXL2J4M0pGQVo2d3p2d2xIMFow?=
+ =?utf-8?B?RURsbDZ1aDNHKzZ6SGx5SFB5a2tQSnZLam90a2tSZFkzVkxYdXpDZkFBRVMx?=
+ =?utf-8?B?SUxNT1hlOTBxZ25sVy93Ky9BQjdlRWdzWU1MSEZ2V1o3TFozZjhIMWRNeVdZ?=
+ =?utf-8?B?Wjl6akFHOUJGY0paSU5GekN0YzNGNUJZa3FpY3h3Q1IvMDlsaVF2TUVsZy83?=
+ =?utf-8?B?WVFQdG80Ky9YY0JGbnVjVHpkc1d3WDUxQlNDc0hmcVEraGpraUwyN0VWSFkr?=
+ =?utf-8?B?TlczR3VOOEU4ZTkxZitmWEhVZmJRc3VFU3JvdEwvNC8zeEhRL0J4Zjg3dnMy?=
+ =?utf-8?B?QUtOaFB3Si96ZHF1cC9pZ3E3ejJrUk5uSUNZY1lQNi84bldRTGlKTlBIN3Jr?=
+ =?utf-8?B?czVXWFJSZVJYRG51R0toVnlEdjluakVyZWJZM2p0MXNCOFpnRFd3MXJWUHdB?=
+ =?utf-8?B?NW9ZVUJycWxpc3prNUtpVzJ0ekJ4SEVhV05SUVRtdGVsS2Fnd3RpZ211TU94?=
+ =?utf-8?B?YktDanFvRlNQZW90QUZiV0VJeDdFTFdoSDRyaE1tZnprK1lUaVhQOFpDaDc0?=
+ =?utf-8?B?eCtLaGg4czVBQzgzL3hOTmp5WERVeDRrWWpLVGNnT3pvdGlsWDdiUjYrbnBV?=
+ =?utf-8?B?bGlPTldIK2pQeEFCYnpVSTl0VFVuSmhIeklOdDVPbXRaVitqNFBaNzQxMlRE?=
+ =?utf-8?B?SktkUlNvZm5CNlJqc1VVL1ZXNHJmbnYyOThTanJ5RHNHY0dLSnFLenJOTE1Z?=
+ =?utf-8?B?dGVRdTIvNjNSZkVkd2gyR0lJRDh0ZnZZMUZ6b2dlL0w4aE9XMUJtK1NxbVlZ?=
+ =?utf-8?B?ZGFIeE5XNXdhNmxjUkxnZlBacTJxcjJvQzBVc0hTYWZwbndzRkxtNWM0MHkr?=
+ =?utf-8?B?d1drOWdHSUs4Qnc5UGM2WVVjbEZsa2tKdURybjFVZUd0Y09meEdxZElRb0tq?=
+ =?utf-8?B?OWFVUE1YU05rOWE4bW1QWGlDOTBiS2pYM1ZyODVuZitiSER2N3dKNUw4eThL?=
+ =?utf-8?B?cnNSODRUQkMzLzdra0VyY25QZlhWK2xrZHVFOHQvcjhldzBRMW9MVUxnYlRF?=
+ =?utf-8?B?ci9JeDVHUXQ3T2Jva1JlYUpCbnFhQVJsS0RTdDhjVm9nQnViY3BQUlJaMWxa?=
+ =?utf-8?B?eCtwallnUmpBNlNwWjdHQTJaSHJCV2dJNHR3ZytTcDIyVzduUmlKZ1BPZENz?=
+ =?utf-8?B?dVQydWNHaWtZWHA3U0Nzdlc2MStXVXBMVlVWUTJtWCs1SmNsVklDSlA1WXJE?=
+ =?utf-8?B?TEsyVEtjNnBIcG0vYysyWFZORXNLZzNRMnY3NDZ0Wlc2TmJnUVFEMzZOWVhH?=
+ =?utf-8?B?SFZXeE5RdVBBRGtZQkFIdU9OaHNtL2hqVUh0UFhmWGRmQjJCTkxzTWRIUEo5?=
+ =?utf-8?B?WXp1em5OTGRTd1p5K29CdmhmK25HV2tJN2c4d21kSG92b2hXQW5QZDlzTlkr?=
+ =?utf-8?Q?JEPU82XVzzU=3D?=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB6739.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U2pXQUd3M3ZqRVA1cWoxdnI0M2VCY0luaDlFMU5BaGg4Wmdhc0RQbE5YM244?=
- =?utf-8?B?aFBTbE54OXlhZk5ZSGsyUkY1RlNpc0tNYnBqUzNIbXVvZUN5ZXBRUzIySk1M?=
- =?utf-8?B?VlFJWjBBczZDWmE4TjlReTlpQlBOMUJCMU5YZ0wybFpUVHlXOEJ1TzRjOXl0?=
- =?utf-8?B?OXc4RWpvRUxiWVYrZi9QS0w1WVVxejBkanc2aTFRQWpHQlNiN3hUWFFEb0Nn?=
- =?utf-8?B?SEFlcVFpNHI1aUN4RFFYa3FMeDJtQUU2T2Y1RWQvMDVmOWR5VXp3VndiYzZ4?=
- =?utf-8?B?alZMeUUyNTVWUG1qS3FxUkFqMUNhMWltbVEybjJEVUJGOGJJRXM0T2t1MTJo?=
- =?utf-8?B?STdqUWJlNlkvdUZ0am1xcG9rcFFGeWpFVHI3RUY0cFRWVlpVVG1XY2hHSGU1?=
- =?utf-8?B?cVNYVGVhQnpic3FsSVE1VnBSMmlab1RYd0FRWEgydi96Y00vMFlVSmRNZTYw?=
- =?utf-8?B?UzZlOURzd0J5Qy9QWC9va1NtTXdCNVRsb0xFWFlEdjAwTG1RRGRDc2RDbFYw?=
- =?utf-8?B?RFJXVjNWNXJXb2VOM2R6TitzTlNFeDVlem1vamlHWnZVMzlOK3JkMWlxQWMz?=
- =?utf-8?B?bDk0QXZ0bTdMZlVaVzBwTVNaV3Nna2hIL2hhbHREYzI1ZUhFRlQwemY5TDJa?=
- =?utf-8?B?OGMrTVo5VXZraW5OREl5SmJoRU5KeFFoRjRlQTJtOEYxSDltMlZPcnJPYTJh?=
- =?utf-8?B?SG4zSXBQaVNRRjJNOWdaY1kyUHNwUUdpemJsWjVrd1FENlNnWE9qQmlnSHE5?=
- =?utf-8?B?dnJFZXJaaXpVVWdYNjlSUmlPNi9sV1dFSGFkZnViZlJ5THh5ZXl0aU8vZk53?=
- =?utf-8?B?bjNtb1JHRGY4WXppeFhMam1vUGtBZGZlK2xnUk03V05FaVRxeERXY2NIQmlM?=
- =?utf-8?B?dFdOWFZiMjZFZkpWQkM0OXhBZzBESkxwbnoybndXVmRaTUFWVkt1S0xORXM5?=
- =?utf-8?B?c0ZzTEMrZVp1Z0xkUHZXNnhUTVVGUjVEeFR3TVpxNlljZzJYbTg2aDFHZ1J6?=
- =?utf-8?B?bEpycCs2V25Ocno2MndpNVM1dFNaVVlzb3JhcTR4SkNkc1FGbFJYVG9iYWQz?=
- =?utf-8?B?N3hGOGxBYU5GV0VZYnJBTHVLQnNGWUVZSTdPd0F6aTFkbUQzeFkxRUlycGs4?=
- =?utf-8?B?eUwzMzhoY1lmZkxEcVEwSElRTElkUisyQm5KUW9pNW5DZ2VlVWZWZTB6U0cr?=
- =?utf-8?B?SlRVOXl4SFluSlBMTmZ2L1JHQ2F6TE54UlVLMzlXaGoyV3BTTkN6MXVPbSs0?=
- =?utf-8?B?NDFscjduUWRJeDcwUDBrVGUrTzFGQzRrczN4QjQ2NU1PNjFBWXFlZS9POEZs?=
- =?utf-8?B?OWVCZi94Wk04UWtOeHFWZks1V1RMNGp1OWNDUHhub3NHUzFaWFZObnVBZjFp?=
- =?utf-8?B?bHZMZlI3VFUxaUhqbmF1NHVsNnhhYnVOMHluaEwvem9yai9tTFN0eVBmUFN1?=
- =?utf-8?B?TWRuZjY5VkEyYnJ0U09nZjJGRnNyK3ZMUHRwUGtjSVhSYzlRbFFxUzl2TFNy?=
- =?utf-8?B?YjlGdENFM0xnK3kwRlV0eGpvUkZjYmtNdDZKUEkveEFMU2VPcjV0WFF1bUdI?=
- =?utf-8?B?ck5hbEZDU202ZFo2cjZDa0tsV2J5VDN6cStQZXNwYWl6blMxb3d5U0JGdDVr?=
- =?utf-8?B?OWNVczliMytVKzdFcERFSllmUnE2VHRKTGNPZ1A2ZnBxUmRNcEVSNUdKN3Rx?=
- =?utf-8?B?MHdtcXMrMk1aVzI0TTliRTFIK1EreWlIUzJNNDFSZVFqTVZySnJBYUpSTHg3?=
- =?utf-8?B?aWYxNFJ2c2R4ZXIra0JVWC9CNWt4WmFsamRCVjhmbUdkazdzeHlHVGZuMFhN?=
- =?utf-8?B?cU9YUm4rb0ZYUEp3THJKZ0NXSE5ibXFmZ25zbHJVb0tCbW9hMEp1cjhPZmNC?=
- =?utf-8?B?YTZ1blNxYXFnSWdSVVRTenh5ZWdGaDBINHNwMFZnL1pMNDEyUk1zMXVQODEx?=
- =?utf-8?B?MHdEUnRaTVZaRC9nZk1UTXdoclBYWXc0K1ZRRUJRWUhEVjErN0poU2hveCsx?=
- =?utf-8?B?Qzg1QVFXZ2tWVWpNWjl3VGpVWm9Hbzc0TW9jNE9oMk9aMlQ4WUlWRUFHUzJV?=
- =?utf-8?B?S3dtZXdJdFAwMjNybmhLczUxTGxOOHZ0dmtFdkl3ZEs1MnRkaWx1OVJVaEtK?=
- =?utf-8?Q?FYVw7/t+V3mP1NwwRqHp48llZ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a10f9a32-c0d7-46cf-3d7f-08dd7addc41e
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NzB4VHVkQUFmVmVzTEJTQS9HTjNaRmZqVkN1MWE3Nnlia3JOTzY1Ykh4QW9k?=
+ =?utf-8?B?ejlGa05BaDFQaU5zYlEySmhvejFPaXQ4YUVaWnRXRWc0R2JIWVVCN0ptTXlk?=
+ =?utf-8?B?SjlRSWE2UVBoLzFXL2EzMHpxUE9HRnpiZmgyY09BK25sLzZxWXZib2xrc21C?=
+ =?utf-8?B?c3REL2Jrd3lrd1V4OW5qNFpMRVpDcUVWcG04blBQTmc5MWxKck5QTlJzSWtj?=
+ =?utf-8?B?TkUyTGpVZHVteVlxRXhaZHpGOUh3UE9ybno4RFhUMlFwMTdvUEtwRUFlMStD?=
+ =?utf-8?B?aXdxK1dzNHFvMFoyUkRMemFBWXFJakQ5WFA3dGlFdHF5OXR6SVprTjJCNk9K?=
+ =?utf-8?B?dGgycGhuQ3NBdS8vM2xhb0NrVUhWWU9rS2U5eWhpSUpWcERHT0tuT29jOG9n?=
+ =?utf-8?B?Y0dha05yNzBGOWFHTWpYUG5Rb2ZFTEV2amxOa2poNWdqcmI0VHpMYURLNDNC?=
+ =?utf-8?B?QzRoa1dlSDZWcTBhOXFUL1EzUnBxZmo1cFVzQzkxRkJMRDB5RzMwZjN5SnFK?=
+ =?utf-8?B?UUVTRWg1dEZjOU81Ui9zeGlSem9yVURQbkl3K0N0UG15Y0lCVjdsb0lYSXdL?=
+ =?utf-8?B?Z3NHZ3J0NlgzYVhTWHFiSDhhc2ZpWEp5RUVXR09paEgxVlJrUFIvU0RLekh6?=
+ =?utf-8?B?VFp3T0hhV1hsbHdZRzkzeFQ1c0wrdEpKeENaMldEQUh6RG5pUnhxSzdlMTJG?=
+ =?utf-8?B?Ui9OcXpYaUZNeWNtUzlxQUR0T0FQTXN2K1Y1U1k0Ynd1QXNCcUwwYmlTQ3d4?=
+ =?utf-8?B?dmdqOTJ0VTRxMnpWaFVrd0pFSkhrZmhSQjFxdTQyeVJlQkdHdlJwcTRpRGpq?=
+ =?utf-8?B?Y2JQWnNaems0S2E0WXFUcWNaSHJDV3RYQzJ2aERqTm5lM1VLbU9JSSsxbGdV?=
+ =?utf-8?B?OWhPOU4yKzJQUFFvNitJSDEyZWlaM0VLM0VGZ3Q2cjZJdDVaUkJKYkFKdmZj?=
+ =?utf-8?B?MmFXMG1ONmx6akd0NUpoMW8zMUVuTHhvTmltdm9wdEovRy9rMGk5V1JoRVhH?=
+ =?utf-8?B?WW9JNXF0MEZPTzg0UVBYdjgyRjVSYm5qVGNhQm1MNmttU3NwOG9aek9Xd3h1?=
+ =?utf-8?B?UFBCeVVtd1JmSGtwazFTNHB2czJQTVpsZ0o4KytCUlRuY0MxQVpVQ29oaDZV?=
+ =?utf-8?B?QUR4YUZoc2dqMXFoKzBGUUlPdDJ0elNMd2RBOFI3Vkl5L0NMM3JtUFk3NXhu?=
+ =?utf-8?B?VnlxajFqT21iN25XQmxLbE1mNHRwZzAwdkJialdSVEZFZkVoTDc0K05hUlZF?=
+ =?utf-8?B?VWZncjJla0NrNHlSM1lvMVphZGhuN1ZXVVRmSlJsdzB4U0IzbzlqWjIyT2sr?=
+ =?utf-8?B?eWRBTS8vT2M0VVJQejlkRXc3RlUrNXBXNDZ4VFN4bXNlV0lXOFhMd2MrU3ph?=
+ =?utf-8?B?bW5leXdkRW5NdWNLNnNhaExXeHpjUDVyYTBFNFFFb3pGeXhMcitMLzB1akhB?=
+ =?utf-8?B?Q0xUUmU4YzlqRHMxb1h3eUxNOGhSUzArdkRIc1pxWEZkUk0wVnlnaGxQRWdn?=
+ =?utf-8?B?enZzejQyM2t4V2phV2ZyRnluNFk4QVBsVFFpUDUyQURSeEQ4aFdIak9rN3h2?=
+ =?utf-8?B?WWl4a0V5TkRaT2g0ZFEyb2xjYWV1RllrMkVBSWxENVg3TThoNHo4dGx1Nzk1?=
+ =?utf-8?B?TFdOaGZYa29WcmVnSk5zVkExcVBXUytVVFY2RXFTVnl1VWt0QXMyYS95YVNC?=
+ =?utf-8?B?c1kwcVJGVzV1T01rU3VramxUcUVJNTdScENiSjI5bWt5cWc5eUlzY2JNWUpa?=
+ =?utf-8?B?ZGlKWUxmdE0yVlhLZEp3ZnpuN1NOcWRaVmJxVDJ5SU5RRE5lNnYrTDU5NXFO?=
+ =?utf-8?B?UnpGWjJ1V3NiYm5lV2tzejMwbDlXV1Zpa0N3U1dReC9nNU9YMEVKVDNDTSth?=
+ =?utf-8?B?RkhBUG9Uc2tFc29taDJONytTc1ppUUVuNHcvYWQ2Mk1XZjNtcWNpM3dYT3BV?=
+ =?utf-8?B?NktkTitYMXA4czhUSHl5M25hYjhOWTZ1SWxjdno0TXY0eUVYK1FydFZyV0FW?=
+ =?utf-8?B?M0tNcFJhSTlhNWRQb2p5c2ppdUI4N2VJWThUcGhqVnRPT3dkZ1RPbEdQcVRG?=
+ =?utf-8?B?eThXWEliVWdLUitTczJtZU1MMWNKWk9IL3pCbVlsaGMzM09uUkpNQlpXaFh4?=
+ =?utf-8?Q?hFi9ygGlUxA0tWh7gUm4RHoHB?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cde2e068-9156-4a3a-6ff7-08dd7addc611
 X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB6739.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2025 22:51:45.5504
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2025 22:51:48.8167
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C4NCX1kzs+mwobyjZI19BQIhbLzxVpPV55BVg8UeiW1OK5bzASyyrDaEpFXh09tpObOy4Fx3vP8DFJKjHfNf/A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: pOB0zDvmq8rRIT6CZVl4SsF+r8siwZkL4OwBQhdjgKKpHL3OtGMSizu7+ivivNqP9CCq7t0WBHOw3PgYjNJG1A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6042
 X-OriginatorOrg: intel.com
 
-Devices which optionally support Dynamic Capacity (DC) are configured
-via mailbox commands.  CXL 3.2 section 9.13.3 requires the host to issue
-the Get DC Configuration command in order to properly configure DCDs.
-Without the Get DC Configuration command DCD can't be supported.
+Device partitions have an implied order which is made more complex by
+the addition of a dynamic partition.
 
-Implement the DC mailbox commands as specified in CXL 3.2 section
-8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
-information.  Disable DCD if an invalid configuration is found.
-
-Linux has no support for more than one dynamic capacity partition.  Read
-and validate all the partitions but configure only the first partition
-as 'dynamic ram A'.  Additional partitions can be added in the future if
-such a device ever materializes.  Additionally is it anticipated that no
-skips will be present from the end of the pmem partition.  Check for an
-disallow this configuration as well.
-
-Linux has no use for the trailing fields of the Get Dynamic Capacity
-Configuration Output Payload (Total number of supported extents, number
-of available extents, total number of supported tags, and number of
-available tags).  Avoid defining those fields to use the more useful
-dynamic C array.
-
-Based on an original patch by Navneet Singh.
+Remove the ram special case information calls in favor of generic calls
+with a check ahead of time to ensure the preservation of the implied
+partition order.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
 ---
-Changes:
-[iweiny: rebase]
-[iweiny: Update spec references to 3.2]
-[djbw: Limit to 1 partition]
-[djbw: Avoid inter-partition skipping]
-[djbw: s/region/partition/]
-[djbw: remove cxl_dc_region[partition]_info->name]
-[iweiny: adjust to lack of dcd_cmds in mds]
-[iweiny: remove extra 'region' from names]
-[iweiny: remove unused CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG]
----
- drivers/cxl/core/hdm.c  |   2 +
- drivers/cxl/core/mbox.c | 179 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |   1 +
- drivers/cxl/cxlmem.h    |  54 ++++++++++++++-
- drivers/cxl/pci.c       |   3 +
- 5 files changed, 238 insertions(+), 1 deletion(-)
+ drivers/cxl/core/hdm.c    | 11 ++++++++++-
+ drivers/cxl/core/memdev.c | 32 +++++++++-----------------------
+ drivers/cxl/cxl.h         |  1 +
+ drivers/cxl/cxlmem.h      |  9 +++------
+ drivers/cxl/mem.c         |  2 +-
+ 5 files changed, 24 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 70cae4ebf8a4..c5f8a17d00f1 100644
+index c5f8a17d00f1..92e1a24e2109 100644
 --- a/drivers/cxl/core/hdm.c
 +++ b/drivers/cxl/core/hdm.c
-@@ -459,6 +459,8 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
- 		return "ram";
- 	case CXL_PARTMODE_PMEM:
- 		return "pmem";
-+	case CXL_PARTMODE_DYNAMIC_RAM_A:
-+		return "dynamic_ram_a";
- 	default:
- 		return "";
- 	};
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 58d378400a4b..866a423d6125 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1313,6 +1313,153 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	return -EBUSY;
+@@ -470,6 +470,7 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
+ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+ {
+ 	struct device *dev = cxlds->dev;
++	int i;
+ 
+ 	guard(rwsem_write)(&cxl_dpa_rwsem);
+ 
+@@ -482,9 +483,17 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+ 		return 0;
+ 	}
+ 
++	/* Verify partitions are in expected order. */
++	for (i = 1; i < info->nr_partitions; i++) {
++		if (cxlds->part[i].mode < cxlds->part[i-1].mode) {
++			dev_err(dev, "Partition order mismatch\n");
++			return 0;
++		}
++	}
++
+ 	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
+ 
+-	for (int i = 0; i < info->nr_partitions; i++) {
++	for (i = 0; i < info->nr_partitions; i++) {
+ 		const struct cxl_dpa_part_info *part = &info->part[i];
+ 		int rc;
+ 
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index a16a5886d40a..9d6f8800e37a 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -75,20 +75,12 @@ static ssize_t label_storage_size_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(label_storage_size);
+ 
+-static resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
+-{
+-	/* Static RAM is only expected at partition 0. */
+-	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
+-		return 0;
+-	return resource_size(&cxlds->part[0].res);
+-}
+-
+ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	unsigned long long len = cxl_ram_size(cxlds);
++	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_RAM);
+ 
+ 	return sysfs_emit(buf, "%#llx\n", len);
+ }
+@@ -101,7 +93,7 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	unsigned long long len = cxl_pmem_size(cxlds);
++	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_PMEM);
+ 
+ 	return sysfs_emit(buf, "%#llx\n", len);
+ }
+@@ -407,10 +399,11 @@ static struct attribute *cxl_memdev_attributes[] = {
+ 	NULL,
+ };
+ 
+-static struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
++static struct cxl_dpa_perf *part_perf(struct cxl_dev_state *cxlds,
++				      enum cxl_partition_mode mode)
+ {
+ 	for (int i = 0; i < cxlds->nr_partitions; i++)
+-		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
++		if (cxlds->part[i].mode == mode)
+ 			return &cxlds->part[i].perf;
+ 	return NULL;
+ }
+@@ -421,7 +414,7 @@ static ssize_t pmem_qos_class_show(struct device *dev,
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	return sysfs_emit(buf, "%d\n", to_pmem_perf(cxlds)->qos_class);
++	return sysfs_emit(buf, "%d\n", part_perf(cxlds, CXL_PARTMODE_PMEM)->qos_class);
  }
  
-+static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_array,
-+			u8 index, struct cxl_dc_partition *dev_part)
-+{
-+	size_t blk_size, len;
-+
-+	part_array[index].start = le64_to_cpu(dev_part->base);
-+	part_array[index].size = le64_to_cpu(dev_part->decode_length);
-+	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
-+	len = le64_to_cpu(dev_part->length);
-+	blk_size = le64_to_cpu(dev_part->block_size);
-+
-+	/* Check partitions are in increasing DPA order */
-+	if (index > 0) {
-+		struct cxl_dc_partition_info *prev_part = &part_array[index - 1];
-+
-+		if ((prev_part->start + prev_part->size) >
-+		     part_array[index].start) {
-+			dev_err(dev,
-+				"DPA ordering violation for DC partition %d and %d\n",
-+				index - 1, index);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (!IS_ALIGNED(part_array[index].start, SZ_256M) ||
-+	    !IS_ALIGNED(part_array[index].start, blk_size)) {
-+		dev_err(dev, "DC partition %d invalid start %zu blk size %zu\n",
-+			index, part_array[index].start, blk_size);
-+		return -EINVAL;
-+	}
-+
-+	if (part_array[index].size == 0 || len == 0 ||
-+	    part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
-+		dev_err(dev, "DC partition %d invalid length; size %zu len %zu blk size %zu\n",
-+			index, part_array[index].size, len, blk_size);
-+		return -EINVAL;
-+	}
-+
-+	if (blk_size == 0 || blk_size % CXL_DCD_BLOCK_LINE_SIZE ||
-+	    !is_power_of_2(blk_size)) {
-+		dev_err(dev, "DC partition %d invalid block size; %zu\n",
-+			index, blk_size);
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(dev, "DC partition %d start %zu start %zu size %zu\n",
-+		index, part_array[index].start, part_array[index].size,
-+		blk_size);
-+
-+	return 0;
-+}
-+
-+/* Returns the number of partitions in dc_resp or -ERRNO */
-+static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
-+			     struct cxl_mbox_get_dc_config_out *dc_resp,
-+			     size_t dc_resp_size)
-+{
-+	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
-+		.partition_count = CXL_MAX_DC_PARTITIONS,
-+		.start_partition_index = start_partition,
-+	};
-+	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
-+		.payload_in = &get_dc,
-+		.size_in = sizeof(get_dc),
-+		.size_out = dc_resp_size,
-+		.payload_out = dc_resp,
-+		.min_out = 1,
-+	};
-+	int rc;
-+
-+	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
-+	if (rc < 0)
-+		return rc;
-+
-+	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
-+		dc_resp->partitions_returned, dc_resp->avail_partition_count);
-+	return dc_resp->partitions_returned;
-+}
-+
-+/**
-+ * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
-+ *                         device.
-+ * @mbox: Mailbox to query
-+ * @dc_info: The dynamic partition information to return
-+ *
-+ * Read Dynamic Capacity information from the device and return the partition
-+ * information.
-+ *
-+ * Return: 0 if identify was executed successfully, -ERRNO on error.
-+ *         on error only dynamic_bytes is left unchanged.
-+ */
-+int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-+			struct cxl_dc_partition_info *dc_info)
-+{
-+	struct cxl_dc_partition_info partitions[CXL_MAX_DC_PARTITIONS];
-+	size_t dc_resp_size = mbox->payload_size;
-+	struct device *dev = mbox->host;
-+	u8 start_partition;
-+	u8 num_partitions;
-+
-+	struct cxl_mbox_get_dc_config_out *dc_resp __free(kfree) =
-+					kvmalloc(dc_resp_size, GFP_KERNEL);
-+	if (!dc_resp)
-+		return -ENOMEM;
-+
-+	/* Read and check all partition information for validity and potential
-+	 * debugging; see debug output in cxl_dc_check() */
-+	start_partition = 0;
-+	do {
-+		int rc, i, j;
-+
-+		rc = cxl_get_dc_config(mbox, start_partition, dc_resp, dc_resp_size);
-+		if (rc < 0) {
-+			dev_err(dev, "Failed to get DC config: %d\n", rc);
-+			return rc;
-+		}
-+
-+		num_partitions += rc;
-+
-+		if (num_partitions < 1 || num_partitions > CXL_MAX_DC_PARTITIONS) {
-+			dev_err(dev, "Invalid num of dynamic capacity partitions %d\n",
-+				num_partitions);
-+			return -EINVAL;
-+		}
-+
-+		for (i = start_partition, j = 0; i < num_partitions; i++, j++) {
-+			rc = cxl_dc_check(dev, partitions, i,
-+					  &dc_resp->partition[j]);
-+			if (rc)
-+				return rc;
-+		}
-+
-+		start_partition = num_partitions;
-+
-+	} while (num_partitions < dc_resp->avail_partition_count);
-+
-+	/* Return 1st partition */
-+	dc_info->start = partitions[0].start;
-+	dc_info->size = partitions[0].size;
-+	dev_dbg(dev, "Returning partition 0 %zu size %zu\n",
-+		dc_info->start, dc_info->size);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
-+
- static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
- {
- 	int i = info->nr_partitions;
-@@ -1383,6 +1530,38 @@ int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_get_dirty_count, "CXL");
+ static struct device_attribute dev_attr_pmem_qos_class =
+@@ -433,20 +426,13 @@ static struct attribute *cxl_memdev_pmem_attributes[] = {
+ 	NULL,
+ };
  
-+void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-+{
-+	struct cxl_dc_partition_info dc_info = { 0 };
-+	struct device *dev = mds->cxlds.dev;
-+	size_t skip;
-+	int rc;
-+
-+	rc = cxl_dev_dc_identify(&mds->cxlds.cxl_mbox, &dc_info);
-+	if (rc) {
-+		dev_warn(dev,
-+			 "Failed to read Dynamic Capacity config: %d\n", rc);
-+		cxl_disable_dcd(mds);
-+		return;
-+	}
-+
-+	/* Skips between pmem and the dynamic partition are not supported */
-+	skip = dc_info.start - info->size;
-+	if (skip) {
-+		dev_warn(dev,
-+			 "Dynamic Capacity skip from pmem not supported: %zu\n",
-+			 skip);
-+		cxl_disable_dcd(mds);
-+		return;
-+	}
-+
-+	info->size += dc_info.size;
-+	dev_dbg(dev, "Adding dynamic ram partition A; %zu size %zu\n",
-+		dc_info.start, dc_info.size);
-+	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_A);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
-+
- int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+-static struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
+-{
+-	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
+-		return NULL;
+-	return &cxlds->part[0].perf;
+-}
+-
+ static ssize_t ram_qos_class_show(struct device *dev,
+ 				  struct device_attribute *attr, char *buf)
  {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	return sysfs_emit(buf, "%d\n", to_ram_perf(cxlds)->qos_class);
++	return sysfs_emit(buf, "%d\n", part_perf(cxlds, CXL_PARTMODE_RAM)->qos_class);
+ }
+ 
+ static struct device_attribute dev_attr_ram_qos_class =
+@@ -482,7 +468,7 @@ static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
+ {
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+-	struct cxl_dpa_perf *perf = to_ram_perf(cxlmd->cxlds);
++	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_RAM);
+ 
+ 	if (a == &dev_attr_ram_qos_class.attr &&
+ 	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
+@@ -501,7 +487,7 @@ static umode_t cxl_pmem_visible(struct kobject *kobj, struct attribute *a, int n
+ {
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+-	struct cxl_dpa_perf *perf = to_pmem_perf(cxlmd->cxlds);
++	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_PMEM);
+ 
+ 	if (a == &dev_attr_pmem_qos_class.attr &&
+ 	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index be8a7dc77719..a9d42210e8a3 100644
+index a9d42210e8a3..4bb0ff4d8f5f 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -485,6 +485,7 @@ struct cxl_region_params {
+@@ -482,6 +482,7 @@ struct cxl_region_params {
+ 	resource_size_t cache_size;
+ };
+ 
++/* Modes should be in the implied DPA order */
  enum cxl_partition_mode {
  	CXL_PARTMODE_RAM,
  	CXL_PARTMODE_PMEM,
-+	CXL_PARTMODE_DYNAMIC_RAM_A,
- };
- 
- /*
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 394a776954f4..057933128d2c 100644
+index 96d8edaa5003..a74ac2d70d8d 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -97,7 +97,7 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			 resource_size_t base, resource_size_t len,
- 			 resource_size_t skipped);
- 
--#define CXL_NR_PARTITIONS_MAX 2
-+#define CXL_NR_PARTITIONS_MAX 3
- 
- struct cxl_dpa_info {
- 	u64 size;
-@@ -380,6 +380,7 @@ enum cxl_devtype {
- 	CXL_DEVTYPE_CLASSMEM,
+@@ -453,14 +453,11 @@ struct cxl_dev_state {
+ #endif
  };
  
-+#define CXL_MAX_DC_PARTITIONS 8
- /**
-  * struct cxl_dpa_perf - DPA performance property entry
-  * @dpa_range: range for DPA address
-@@ -722,6 +723,31 @@ struct cxl_mbox_set_shutdown_state_in {
- 	u8 state;
- } __packed;
+-static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
++static inline resource_size_t cxl_part_size(struct cxl_dev_state *cxlds,
++					    enum cxl_partition_mode mode)
+ {
+-	/*
+-	 * Static PMEM may be at partition index 0 when there is no static RAM
+-	 * capacity.
+-	 */
+ 	for (int i = 0; i < cxlds->nr_partitions; i++)
+-		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
++		if (cxlds->part[i].mode == mode)
+ 			return resource_size(&cxlds->part[i].res);
+ 	return 0;
+ }
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 9675243bd05b..b58b915708f9 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -152,7 +152,7 @@ static int cxl_mem_probe(struct device *dev)
+ 		return -ENXIO;
+ 	}
  
-+/* See CXL 3.2 Table 8-178 get dynamic capacity config Input Payload */
-+struct cxl_mbox_get_dc_config_in {
-+	u8 partition_count;
-+	u8 start_partition_index;
-+} __packed;
-+
-+/* See CXL 3.2 Table 8-179 get dynamic capacity config Output Payload */
-+struct cxl_mbox_get_dc_config_out {
-+	u8 avail_partition_count;
-+	u8 partitions_returned;
-+	u8 rsvd[6];
-+	/* See CXL 3.2 Table 8-180 */
-+	struct cxl_dc_partition {
-+		__le64 base;
-+		__le64 decode_length;
-+		__le64 length;
-+		__le64 block_size;
-+		__le32 dsmad_handle;
-+		u8 flags;
-+		u8 rsvd[3];
-+	} __packed partition[] __counted_by(partitions_returned);
-+	/* Trailing fields unused */
-+} __packed;
-+#define CXL_DCD_BLOCK_LINE_SIZE 0x40
-+
- /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
- struct cxl_mbox_set_timestamp_in {
- 	__le64 timestamp;
-@@ -845,9 +871,24 @@ enum {
- int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
- 			  struct cxl_mbox_cmd *cmd);
- int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-+
-+struct cxl_mem_dev_info {
-+	u64 total_bytes;
-+	u64 volatile_bytes;
-+	u64 persistent_bytes;
-+};
-+
-+struct cxl_dc_partition_info {
-+	size_t start;
-+	size_t size;
-+};
-+
-+int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-+			struct cxl_dc_partition_info *dc_info);
- int cxl_await_media_ready(struct cxl_dev_state *cxlds);
- int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
- int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
-+void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
- struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
- void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
- 				unsigned long *cmds);
-@@ -860,6 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 			    const uuid_t *uuid, union cxl_event *evt);
- int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
- int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
-+
-+static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
-+{
-+	return mds->dcd_supported;
-+}
-+
-+static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
-+{
-+	mds->dcd_supported = false;
-+}
-+
- int cxl_set_timestamp(struct cxl_memdev_state *mds);
- int cxl_poison_state_init(struct cxl_memdev_state *mds);
- int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 7b14a154463c..bc40cf6e2fe9 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -998,6 +998,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	if (cxl_dcd_supported(mds))
-+		cxl_configure_dcd(mds, &range_info);
-+
- 	rc = cxl_dpa_setup(cxlds, &range_info);
- 	if (rc)
- 		return rc;
+-	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
++	if (cxl_part_size(cxlds, CXL_PARTMODE_PMEM) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+ 		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
+ 		if (rc) {
+ 			if (rc == -ENODEV)
 
 -- 
 2.49.0
