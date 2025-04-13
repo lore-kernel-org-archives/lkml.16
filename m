@@ -1,210 +1,216 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6660A17A58F;
-	Sun, 13 Apr 2025 19:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5651993BD;
+	Sun, 13 Apr 2025 19:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744572417; cv=none; b=Xe44YRbFbfegRTptMMokYn1N2LNYd7GUUGsptaMhbRmRfoXXc2mz4e3quXfaDVRfB33ZtOYn8TuaPuwJi5ZA46b5pCTKbTH9Sihai8FAUvWZkaT8RnxnMYluSZEmZfJ7N6xSbBBPd7OjMeUn2SYSVZKKmRWZerOGUA9kzTUpiIo=
+	t=1744572428; cv=none; b=iDPZzLTk7Qd2bPkhTWd06GXL9qm/rFvMgcR3KrD5vPKD9FhthA5+5AJD0ISxHRskAEs5pxv4Pbris4K7MjZEmh9TU0Psy3Q8ckl20EoSoDjp5OPBuR+7zihLU3oiSFiBb8t8des4/9eImq1UTe5tfjpQS9l3JQ9Bom7gp70Itns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744572417; c=relaxed/simple;
-	bh=Jiyd4ShW6SqiulXF1Noull9T0S6CvDvb34nRkv3K7mg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=V4iP5vVkJ9V4gL2Mp7nOcaxc7cB+VRWNZ8DRgcOI+ve+oQ6U3VM8LRm9UpDrGKnEnWEQckfLD+EOEY11amEsP0Sfew/Ju6MnJsjg9iwUMWRlRj92Q5BAb1wa9nKkyog5mmsAQOojjYh5d+HjrWITKlt6OthobvPl8qI4B815v+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nqr/UgRl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UB9HhCaV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744572428; c=relaxed/simple;
+	bh=QkCkuKFT6wZHH592ZB2ggniEln82VIfqvoPJBbkXvsw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K3xT5nv07I697AWsC0gDIQk8syDHtbXKb1lxJFJmlGAFe7scHeVy7EJizpEavNb2Dlji9fnI+2vc6UGjyEGl8y9iHBIM51X5xNm5ypNCq7UbGBYUBSwpL3wKzgh57fQ3ai1OHo86qyjZKvgPkzIiIdeAkZqIaRDnHQWwrvY7HWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMY6pZ3q; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nqr/UgRl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UB9HhCaV"
-Date: Sun, 13 Apr 2025 19:26:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744572413;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DRj5D5zcVv4GOpBa53Cg5MizdWuEX81U0FzbddHfElU=;
-	b=Nqr/UgRlXWpD2J6BZZCjKVB4k8eMAwIlk+ktTjCLLf7ZfO1knlxf6z9EiKXwRTFUEt5TLS
-	MqJP4aEWvKMyW1YSfV1QT5roRTNBPJX2pD53lmmP34FOejka+5UUu/rbA6qx1oKSkiHNsm
-	XFwN9MvGe7o2Sp3zepBTqOPezGxLJ55NaPauMjASIWLdJRFD3E0FaMr+q2zteSErD3ZH+y
-	hyn61tF8LQNf84o4NQHYLeUvgWgPaKgQU/P01kiMVVP4MoqTgEWOjMpEPXpYN1nPdNmXr/
-	hDs8Im4b4rtgD3OMvm6h2W6OgmT/JfMd3PC8DBTjbYOE/lP5/SVxJjIOLV2UgA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744572413;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DRj5D5zcVv4GOpBa53Cg5MizdWuEX81U0FzbddHfElU=;
-	b=UB9HhCaVYgknFDUi0oqwdDF7cRujL+UBmDea3DH7ml0pYK0IeHQVn+NvJbJAucQ6CCSj6M
-	0jAP179fMwieVFDg==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/uaccess: Use asm_inline() instead of asm() in
- __untagged_addr()
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@redhat.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250407072129.33440-1-ubizjak@gmail.com>
-References: <20250407072129.33440-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMY6pZ3q"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2963dc379so594796566b.2;
+        Sun, 13 Apr 2025 12:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744572425; x=1745177225; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NjpcKZWpASgE46JrEqXPnEh3oUn+ZfJ5tsNx6ErOfYw=;
+        b=CMY6pZ3qBav+IMhS/xVeU6IieEcQNBq5IeTbZPBTKdxe2tNAhJigmAUYETOVGtXkyp
+         xQBn8GPWXLqI/xlFTUEObP4IQyC6BWtSwrDKhnNx25LPgGX1FFA5y8ftJLlHZXLD/Drn
+         yUl6Ylb1998GvS7J/OzCkopYixfYYULM3JAnn8xzJaap8wQ8Aq6IKDrYsXZatBCjjRTN
+         lGrlLrWOoeWz2xlwG2vxLSm6whzPuw86DXfwKuM/rBvIUeMwsja/mJD6EHh+fV0h5DAX
+         NNcxMdNlQBhmhsWHUo9olZvxSs/KP0B4zcskmLty7JJ968o1R9sfFBCSglA5+KtrXQPr
+         pq1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744572425; x=1745177225;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NjpcKZWpASgE46JrEqXPnEh3oUn+ZfJ5tsNx6ErOfYw=;
+        b=mIOxbUmTs5gTgGkV86p7XRMSS2qr5XjdkUm0kPq9out8Q+6SFdz3b1eVgtoaI2NMPF
+         5nq8jFg+bufLqmyrTOCozF7xl0M1DfVl9CY7NL7yjlxlLM6313pXlEdN4QwTCPpUyCPn
+         feSsXWdWl+VFu9uN2ENkH0SfvJkBKI3xzcmZA+Uij3NDAyr4a8sB+qVvEt7lB7Bp+p+y
+         99JQrJ35WT+4vMn3C4XXNxZGqmj9FkYt/xnDqHQ3M1H9oH/Lw0vcQ/KVgSQSyL3jcyAd
+         +5k5axVy0WR15oAGk1SFmvzbiPxsdIijEiQk8+9G87DeZDGb4V/NVRn0c09R/253c0oB
+         1qwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ9XKiKcEp+KNs4O7yku+YTeN7CCC7NWGETIg8PVmf0Erw+V832Tdpui89Ji43xbmR7HlgJrmhUaVPCGax4w==@vger.kernel.org, AJvYcCW2rRE1XDjNZuy4KF75BeZ7aGsQuhAg/FsCBaT4KecMz69C/O+HE0BeIAohR0Tt0jQ7pKIHPw1S@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu/p8H2yY4YzCD8U+wW8XeWSDCSjBtnwZU2o254eat9LTuw+Ch
+	SRyvL62OZckQEsKZQDJJaU+UDwVvHj0ZA6+3fuXb6KvEIEodA2kE
+X-Gm-Gg: ASbGncuP8aNuC8R8r5CvdbChHB0d2qPE8kg8KwJ0hgLfCNIwqdK32VrB+8NLZV7RCdy
+	/Kxm+E8dnBbc3HBFMq/ufmrrbNolu8WKlnclj2YyMwQ4zKmrIICDsD2cQRZHqDfK6Y4xsZQaVsq
+	Bgd3+7oyaSbeWavL7eJh/zG+214Sxrqo7ieQbgJBB11sc8P6N4mONFvmXDOhErNmgbEmo8XlYyX
+	sYF+7+C1xYX5Rr4F/tr4Cn6eAZtS1S7q+gNRym4ocgSsp6dDJtBeeO6HEb4XPW1wmqqbeXUA40j
+	QP3Jr9q9LJppppQRXP488uBQ0eiFzArt9F/tM6o=
+X-Google-Smtp-Source: AGHT+IF7TqwmNFBxoP1uwqhPRKHQxWwZot1FSfd89dNpEdwbpMrqjQX9ievtOkmZkx8tbScP44J/ug==
+X-Received: by 2002:a17:907:9624:b0:ac2:9841:3085 with SMTP id a640c23a62f3a-acad34ca0e5mr824898566b.30.1744572424459;
+        Sun, 13 Apr 2025 12:27:04 -0700 (PDT)
+Received: from [10.0.1.56] ([2001:871:22a:99c5::1ad1])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acad99c4456sm394686366b.110.2025.04.13.12.27.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 12:27:04 -0700 (PDT)
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+Date: Sun, 13 Apr 2025 21:26:56 +0200
+Subject: [PATCH v3] rust: Use `ffi::c_char` type in firmware abstraction
+ `FwFunc`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174457240687.31282.7688867461399769674.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250413-rust_arm_fix_fw_abstaction-v3-1-8dd7c0bbcd47@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAP8P/GcC/33N0Q6CIBSA4VdpXEcDFIWueo/WHMFB2VIbENWc7
+ x66Lrzy8j875zsTCuAdBHQ+TMhDcsGNQ47ieEC6U0ML2JnciBHGSUkE9q8QG+X7xrpPY9+Nuoe
+ odMxnuNSFEtLUHJhEGXh6yEsrfr3l7lyIo/+uvxJdpn+W0j02UUwxURK4FCWnurq0vXKPkx57t
+ LCJbSm2S7FMCaissUQWpqZbap7nH7+FC7APAQAA
+X-Change-ID: 20250408-rust_arm_fix_fw_abstaction-4c3a89d75e29
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+ Russ Weight <russ.weight@linux.dev>, Danilo Krummrich <dakr@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ stable@vger.kernel.org, Christian Schrefl <chrisi.schrefl@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744572423; l=4718;
+ i=chrisi.schrefl@gmail.com; s=20250119; h=from:subject:message-id;
+ bh=QkCkuKFT6wZHH592ZB2ggniEln82VIfqvoPJBbkXvsw=;
+ b=cGG6PnEoXUDm7qAkWhgmOrbJjFUCLr2mDR20W8glZz5+PtFQdnyH28x9uga5aDx2tyY0oVptq
+ Z94QMjRkZ7xAswoVD+JOOWzD1U174qEciLBzYCRroOL6fFfMbpTH9sA
+X-Developer-Key: i=chrisi.schrefl@gmail.com; a=ed25519;
+ pk=EIyitYCrzxWlybrqoGqiL2jyvO7Vp9X40n0dQ6HE4oU=
 
-The following commit has been merged into the x86/asm branch of tip:
+The `FwFunc` struct contains an function with a char pointer argument,
+for which a `*const u8` pointer was used. This is not really the
+"proper" type for this, so use a `*const kernel::ffi::c_char` pointer
+instead.
 
-Commit-ID:     4850074ff06fce894a9946c5d3ab8ea13fa33e43
-Gitweb:        https://git.kernel.org/tip/4850074ff06fce894a9946c5d3ab8ea13fa33e43
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Mon, 07 Apr 2025 09:21:04 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 13 Apr 2025 21:12:04 +02:00
+This has no real functionality changes, since now `kernel::ffi::c_char`
+(which bindgen uses for `char`) is now a type alias to `u8` anyways,
+but before commit 1bae8729e50a ("rust: map `long` to `isize` and `char`
+to `u8`") the concrete type of `kernel::ffi::c_char` depended on the
+architecture (However all supported architectures at the time mapped to
+`i8`).
 
-x86/uaccess: Use asm_inline() instead of asm() in __untagged_addr()
+This caused problems on the v6.13 tag when building for 32 bit arm (with
+my patches), since back then `*const i8` was used in the function
+argument and the function that bindgen generated used
+`*const core::ffi::c_char` which Rust mapped to `*const u8` on 32 bit
+arm. The stable v6.13.y branch does not have this issue since commit
+1bae8729e50a ("rust: map `long` to `isize` and `char` to `u8`") was
+backported.
 
-Use asm_inline() to instruct the compiler that the size of asm()
-is the minimum size of one instruction, ignoring how many instructions
-the compiler thinks it is. ALTERNATIVE macro that expands to several
-pseudo directives causes instruction length estimate to count
-more than 20 instructions.
+This caused the following build error:
+```
+error[E0308]: mismatched types
+  --> rust/kernel/firmware.rs:20:4
+   |
+20 |         Self(bindings::request_firmware)
+   |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found fn item
+   |         |
+   |         arguments to this function are incorrect
+   |
+   = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
+                 found fn item `unsafe extern "C" fn(_, *const u8, _) -> _ {request_firmware}`
+note: tuple struct defined here
+  --> rust/kernel/firmware.rs:14:8
+   |
+14 | struct FwFunc(
+   |        ^^^^^^
 
-bloat-o-meter reports minimal code size increase
-(x86_64 defconfig with CONFIG_ADDRESS_MASKING, gcc-14.2.1):
+error[E0308]: mismatched types
+  --> rust/kernel/firmware.rs:24:14
+   |
+24 |         Self(bindings::firmware_request_nowarn)
+   |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found fn item
+   |         |
+   |         arguments to this function are incorrect
+   |
+   = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
+                 found fn item `unsafe extern "C" fn(_, *const u8, _) -> _ {firmware_request_nowarn}`
+note: tuple struct defined here
+  --> rust/kernel/firmware.rs:14:8
+   |
+14 | struct FwFunc(
+   |        ^^^^^^
 
-  add/remove: 2/2 grow/shrink: 5/1 up/down: 2365/-1995 (370)
+error[E0308]: mismatched types
+  --> rust/kernel/firmware.rs:64:45
+   |
+64 |         let ret = unsafe { func.0(pfw as _, name.as_char_ptr(), dev.as_raw()) };
+   |                            ------           ^^^^^^^^^^^^^^^^^^ expected `*const i8`, found `*const u8`
+   |                            |
+   |                            arguments to this function are incorrect
+   |
+   = note: expected raw pointer `*const i8`
+              found raw pointer `*const u8`
 
-	Function                          old     new   delta
-	-----------------------------------------------------
-	do_get_mempolicy                    -    1449   +1449
-	copy_nodes_to_user                  -     226    +226
-	__x64_sys_get_mempolicy            35     213    +178
-	syscall_user_dispatch_set_config  157     332    +175
-	__ia32_sys_get_mempolicy           31     206    +175
-	set_syscall_user_dispatch          29     181    +152
-	__do_sys_mremap                  2073    2083     +10
-	sp_insert                         133     117     -16
-	task_set_syscall_user_dispatch    172       -    -172
-	kernel_get_mempolicy             1807       -   -1807
+error: aborting due to 3 previous errors
+```
 
-  Total: Before=21423151, After=21423521, chg +0.00%
-
-The code size increase is due to the compiler inlining
-more functions that inline untagged_addr(), e.g:
-
-task_set_syscall_user_dispatch() is now fully inlined in
-set_syscall_user_dispatch():
-
-	000000000010b7e0 <set_syscall_user_dispatch>:
-	  10b7e0:	f3 0f 1e fa          	endbr64
-	  10b7e4:	49 89 c8             	mov    %rcx,%r8
-	  10b7e7:	48 89 d1             	mov    %rdx,%rcx
-	  10b7ea:	48 89 f2             	mov    %rsi,%rdx
-	  10b7ed:	48 89 fe             	mov    %rdi,%rsi
-	  10b7f0:	65 48 8b 3d 00 00 00 	mov    %gs:0x0(%rip),%rdi
-	  10b7f7:	00
-	  10b7f8:	e9 03 fe ff ff       	jmp    10b600 <task_set_syscall_user_dispatch>
-
-that after inlining becomes:
-
-	000000000010b730 <set_syscall_user_dispatch>:
-	  10b730:	f3 0f 1e fa          	endbr64
-	  10b734:	65 48 8b 05 00 00 00 	mov    %gs:0x0(%rip),%rax
-	  10b73b:	00
-	  10b73c:	48 85 ff             	test   %rdi,%rdi
-	  10b73f:	74 54                	je     10b795 <set_syscall_user_dispatch+0x65>
-	  10b741:	48 83 ff 01          	cmp    $0x1,%rdi
-	  10b745:	74 06                	je     10b74d <set_syscall_user_dispatch+0x1d>
-	  10b747:	b8 ea ff ff ff       	mov    $0xffffffea,%eax
-	  10b74c:	c3                   	ret
-	  10b74d:	48 85 f6             	test   %rsi,%rsi
-	  10b750:	75 7b                	jne    10b7cd <set_syscall_user_dispatch+0x9d>
-	  10b752:	48 85 c9             	test   %rcx,%rcx
-	  10b755:	74 1a                	je     10b771 <set_syscall_user_dispatch+0x41>
-	  10b757:	48 89 cf             	mov    %rcx,%rdi
-	  10b75a:	49 b8 ef cd ab 89 67 	movabs $0x123456789abcdef,%r8
-	  10b761:	45 23 01
-	  10b764:	90                   	nop
-	  10b765:	90                   	nop
-	  10b766:	90                   	nop
-	  10b767:	90                   	nop
-	  10b768:	90                   	nop
-	  10b769:	90                   	nop
-	  10b76a:	90                   	nop
-	  10b76b:	90                   	nop
-	  10b76c:	49 39 f8             	cmp    %rdi,%r8
-	  10b76f:	72 6e                	jb     10b7df <set_syscall_user_dispatch+0xaf>
-	  10b771:	48 89 88 48 08 00 00 	mov    %rcx,0x848(%rax)
-	  10b778:	48 89 b0 50 08 00 00 	mov    %rsi,0x850(%rax)
-	  10b77f:	48 89 90 58 08 00 00 	mov    %rdx,0x858(%rax)
-	  10b786:	c6 80 60 08 00 00 00 	movb   $0x0,0x860(%rax)
-	  10b78d:	f0 80 48 08 20       	lock orb $0x20,0x8(%rax)
-	  10b792:	31 c0                	xor    %eax,%eax
-	  10b794:	c3                   	ret
-	  10b795:	48 09 d1             	or     %rdx,%rcx
-	  10b798:	48 09 f1             	or     %rsi,%rcx
-	  10b79b:	75 aa                	jne    10b747 <set_syscall_user_dispatch+0x17>
-	  10b79d:	48 c7 80 48 08 00 00 	movq   $0x0,0x848(%rax)
-	  10b7a4:	00 00 00 00
-	  10b7a8:	48 c7 80 50 08 00 00 	movq   $0x0,0x850(%rax)
-	  10b7af:	00 00 00 00
-	  10b7b3:	48 c7 80 58 08 00 00 	movq   $0x0,0x858(%rax)
-	  10b7ba:	00 00 00 00
-	  10b7be:	c6 80 60 08 00 00 00 	movb   $0x0,0x860(%rax)
-	  10b7c5:	f0 80 60 08 df       	lock andb $0xdf,0x8(%rax)
-	  10b7ca:	31 c0                	xor    %eax,%eax
-	  10b7cc:	c3                   	ret
-	  10b7cd:	48 8d 3c 16          	lea    (%rsi,%rdx,1),%rdi
-	  10b7d1:	48 39 fe             	cmp    %rdi,%rsi
-	  10b7d4:	0f 82 78 ff ff ff    	jb     10b752 <set_syscall_user_dispatch+0x22>
-	  10b7da:	e9 68 ff ff ff       	jmp    10b747 <set_syscall_user_dispatch+0x17>
-	  10b7df:	b8 f2 ff ff ff       	mov    $0xfffffff2,%eax
-	  10b7e4:	c3                   	ret
-
-Please note a series of NOPs that get replaced with an alternative:
-
-	    11f0:	65 48 23 05 00 00 00 	and    %gs:0x0(%rip),%rax
-	    11f7:	00
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250407072129.33440-1-ubizjak@gmail.com
+Fixes: de6582833db0 ("rust: add firmware abstractions")
+Cc: stable@vger.kernel.org
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Acked-by: Danilo Krummrich <dakr@kernel.org>
+Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 ---
- arch/x86/include/asm/uaccess_64.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes in v3:
+- Clarify build issues with v6.13 in commit message.
+- Link to v2: https://lore.kernel.org/r/20250412-rust_arm_fix_fw_abstaction-v2-1-8e6fdf093d71@gmail.com
 
-diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-index 4c13883..c8a5ae3 100644
---- a/arch/x86/include/asm/uaccess_64.h
-+++ b/arch/x86/include/asm/uaccess_64.h
-@@ -26,8 +26,8 @@ extern unsigned long USER_PTR_MAX;
-  */
- static inline unsigned long __untagged_addr(unsigned long addr)
- {
--	asm (ALTERNATIVE("",
--			 "and " __percpu_arg([mask]) ", %[addr]", X86_FEATURE_LAM)
-+	asm_inline (ALTERNATIVE("", "and " __percpu_arg([mask]) ", %[addr]",
-+				X86_FEATURE_LAM)
- 	     : [addr] "+r" (addr)
- 	     : [mask] "m" (__my_cpu_var(tlbstate_untag_mask)));
+Changes in v2:
+- Use `kernel::ffi::c_char` instead of `core::ffi::c_char`. (Danilo & Benno)
+- Reword the commit message.
+- Link to v1: https://lore.kernel.org/r/20250411-rust_arm_fix_fw_abstaction-v1-1-0a9e598451c6@gmail.com
+---
+ rust/kernel/firmware.rs | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+index f04b058b09b2d2397e26344d0e055b3aa5061432..2494c96e105f3a28af74548d63a44464ba50eae3 100644
+--- a/rust/kernel/firmware.rs
++++ b/rust/kernel/firmware.rs
+@@ -4,7 +4,7 @@
+ //!
+ //! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h)
  
+-use crate::{bindings, device::Device, error::Error, error::Result, str::CStr};
++use crate::{bindings, device::Device, error::Error, error::Result, ffi, str::CStr};
+ use core::ptr::NonNull;
+ 
+ /// # Invariants
+@@ -12,7 +12,11 @@
+ /// One of the following: `bindings::request_firmware`, `bindings::firmware_request_nowarn`,
+ /// `bindings::firmware_request_platform`, `bindings::request_firmware_direct`.
+ struct FwFunc(
+-    unsafe extern "C" fn(*mut *const bindings::firmware, *const u8, *mut bindings::device) -> i32,
++    unsafe extern "C" fn(
++        *mut *const bindings::firmware,
++        *const ffi::c_char,
++        *mut bindings::device,
++    ) -> i32,
+ );
+ 
+ impl FwFunc {
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250408-rust_arm_fix_fw_abstaction-4c3a89d75e29
+
+Best regards,
+-- 
+Christian Schrefl <chrisi.schrefl@gmail.com>
+
