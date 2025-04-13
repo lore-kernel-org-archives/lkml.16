@@ -1,141 +1,180 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743F31DA31F;
-	Sun, 13 Apr 2025 18:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC67915350B
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 18:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744567707; cv=none; b=hYZQ5Bax52NqoX4JN9tXGFy09JdsIWcPaeVmj9RRKXPRATIatRocSbmX6ZQd0k0A9EAVv7mDni2B7ctC/CDQRS2HAQpzpejt+TyqrHYSKjbj9dpybhrpOCY6wzECY8+IxZYd71g/f6dFO+wp0mDyyWegFF+AroBlwGLL6GIFSGg=
+	t=1744568419; cv=none; b=HH9XMaDR5UayWRZXAjNDd8pUym4RQqsqvGREMX3zJTA1kZ5dNe7O3MDZLrcSGeJGI3e0BClt2/V1nA219qtdqbyqxIm0OsXVr62MOU3wVoEbrBq0Q9Mh2xlg6ZG7iH6Izs20lYCCMZuXUWDWrULKFBbD4Hv15YA/W/sZPB3tteU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744567707; c=relaxed/simple;
-	bh=98LFtn1tseprsMwLIYxoIRt09wt+dQXWBQe3wx8f7Us=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cT02VX8fyrlKfVBh08Fw69RY2EhLMZS8dihleWg5yXZue+NYH/HahxQ5EmPfcar3n8wfiypbdh+uS68PR3ieeU+zpaXqk7UREtZg7VS7w9RnhCEApF6UV6QPkz7flb9ZpiUHwJSZ4mXgbsWvesQZAdF3ymhMrKYxulrzXDiCfR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eJQRgx9m; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1744568419; c=relaxed/simple;
+	bh=xiJ61fCg/aZD/PagRJs0Ufd+RmjDHT06V5Dj6WoXdfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fXxykbSTUsAsKDVBpWqMQMRGTBpB8HTa6yAUE6wa6dMn3Q0/TaasJCP2tC4+pcYaAcpiCRH5zoIJAo3R89+k0q15Q24hbk1rU7q155qYwoSquQmg0hnA3JI2SbQrbJCEgZKY6HIwRTAssHZzhobk5+JWJudZT2PTXP8icTnKYHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HOp+YZnN; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJQRgx9m"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736bfa487c3so3071744b3a.1;
-        Sun, 13 Apr 2025 11:08:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOp+YZnN"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so39936855e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 11:20:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744567705; x=1745172505; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8msCUUJodnedscKDvA6MjGmFcc4O0OyJw8Mm90R/Hx8=;
-        b=eJQRgx9mMXbP2RCMV38AItYmeE9NBtkVu1dBcTAG8sEeSgfzmugpTdcyc/cZ4G36Ax
-         qAJkwqbJtDxIx1sLnR5yR11B6KLlX8cVbWLJWe/cnU7VOpFO6J25fQ+keAdlyqcBiKqL
-         1cW0cVMJjbUmGMJNC7tQ6tgdPXHxwy9s70ujatdqtwVCIXcHOybZvvVGsNHhuEjbl9V6
-         fUT40QHm/zq5OeYgSv+W49wBm4A53rATEH/x4eyzVYHBzkSX3NLPRtnjaYz0eptU1m5T
-         hysADZNetcRVlOT/UlIobxzWBGdu6+//RfShtqWfoFHG1xyxA8jGeULe53o+tE7YZRzN
-         U6zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744567705; x=1745172505;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744568414; x=1745173214; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8msCUUJodnedscKDvA6MjGmFcc4O0OyJw8Mm90R/Hx8=;
-        b=Bl257Z22OYEHjgPsgcNVivv9G76suLmpAVSbT/6ttITX1xqY9JqwEukM5Yxjhr57b3
-         pn3Jq9FFykJqlSU8DXVT4GgbAzxxaTRwUsbWItrn1BOsuD9vKG2FKbcQN/GKYTOEd88v
-         fN4J4rUTHZ/Qsctj4TpUFsJ/bORmikV6NW+zWH/uck2wl14zEmSlzHFNeJ1N3tGIciQj
-         9A4MGPLv82+hU/3y5fkboaXckSgPaNS/+7sr1JNsjGJ4B/LuZidSbdt3NmjG2pb1zRlv
-         htZ6g4GdURK8YM6IWHY/h6oPKOaZyptjaGwW1imO78uzQ6sjDmxv6T0LTU58yExC6vMF
-         a2WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRP2JXT798Nl3WllfsAYak2VHkQoo5HQcgMskwXpmFKCVKgoUaGt4Xvr6oWraImou5grEg917OIgO0KpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXcC27f1V4xJ0S0J8ya7EJ3X5NClg7Vp0LD17zpu/fpNFMfHU4
-	p7uV0Um+N0D1HYqD2qFcwx1MkNxCXWziikYRD8PgyiHigHo4Bupq
-X-Gm-Gg: ASbGncvq3wZQCOEfmhTFYiRuf9fSaWJuPliCUavLfeOypuzoy34wrb4kuaNGmzCh3N2
-	6L4ZkDojZR3mVTjp1mxvX3VvDtwDJt/JnO/3sGpIciQbnvjLO7bA2l3cXcy/G2UuxQ4fFTBwPmX
-	Lx5OxRFP9Q5D3KAcJAxGU+PfqweGWNKQIPTb8mpF75OJil0MMvw3APBIOO749dsbseOyGnoNKQ6
-	uS1ooSwncDTO3q2Sbv297Z2NyFZedyCZx7+lc298lH8OBxzEWPZicJabVkQOOZpARuucEob84NX
-	RD0ieUL/W9CGwHvJbBj3bwFrkjDXVtCsy+RZnFyIZWbN9gNl
-X-Google-Smtp-Source: AGHT+IHHpazn8+vcBt0d5bUXCBCSA4Ri6OBXDZzp8cb/V4X1zMybbDxXn303XM70OY2H7CFwrfd8+Q==
-X-Received: by 2002:a05:6a00:22ca:b0:736:a682:deb8 with SMTP id d2e1a72fcca58-73bd11ded49mr15615790b3a.8.1744567704616;
-        Sun, 13 Apr 2025 11:08:24 -0700 (PDT)
-Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd21c4e51sm5397399b3a.55.2025.04.13.11.08.23
+        bh=I968Y00v+Pv88CqZXLOugidZjBHNZA1vqpBxecrL3MY=;
+        b=HOp+YZnNdoTAeoxbA0nF1ZY5pVo33X1wRpmv32NkDUhwfdSdYrsmFlvPIl12VN5JF2
+         IxM/iegQxkfFvOJNnibBml8aybIZ/bUxxqpQcSmHWRkwqU87P059h2cahUChf2gQ+J40
+         BTmgR4hSCJ8bY7dnIGMQRWUs3ajrSHE1mORzhq+pbeeIsst+xwKjxxClg4Ne5TIUEJHN
+         5J6YAVNwgjIXRouoVun3c0DeeRBRu7oy2TL1spvSgSjdoXtCTPv27Y0ycMcY0O4GZ0EI
+         cI0yVuC22d3bY5GcdqNbOMPaJIXwgf/KBntKwyqiFLHk5y136AJFTAudKdtweipeQCVE
+         ez8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744568414; x=1745173214;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I968Y00v+Pv88CqZXLOugidZjBHNZA1vqpBxecrL3MY=;
+        b=k8EvcirUsFsVs18vZySGzF6kc4GYsL0Wlfo7FVgkEIe11cRwe8iNsyHczlB+52CQnO
+         bO5YX/vLnF2cEbIuJacuFlBxEGEjgVGGE1GjQ52E3XSTk1uO52eLRVtNHyr3n5nYrtyN
+         ANCYWrg/ZHwOJkORZLALLLeQMalqS+nOpCwTD9GTAFMup3LWYMtyb0Kd6rC5h7ZHEkAI
+         KsKZKRbCuDNmUGH5zUkxSgI8/zzsLgjoFq8PYp2l9C/ATz8RW2NL6xzrBFeIcqNpAoWV
+         1HSiKSHfjxpCcXb+k/GoJehyewNXc0I/drqUHJo4GKbs5+ffEDH1FmNz6+BQy7y5DkNO
+         aehw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMcgd7EMP5HRtax3CZ99LLoumMrZ4tTF2s6OGcUgrwtfdCyKr7hPZzQDFv0s8VPVK02u86/2B7YSngKHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTvp0GTtC4M8/D0BBae2brRvihbM3biA1XC410arj7YoV1p1SD
+	cHg696IKS3UFaA0/zrni6BdMaiuGyZXgaAqUyzsnZEU6P7eXtqCY
+X-Gm-Gg: ASbGncv+8tTBquA9Yvw0fTFrgUZpgarOBvuU6T0a1OMdMwoY245O5P9wIshnBabKjUB
+	CM7tI186f01/yh0k85W1kQi0qmpeYdrV67sIa0IPQqOEPZBM+gDXua9DLaaKlNKvvK4cFDgs02Y
+	nJR7LPCvfNrjvXT55BvUO9hPtiCriZQ0fkXDSX980K/892Zhwn0J8arrdxQ4/ieBthQpQBkK2dj
+	1r6Y+zbbw4VihZrjbbcbLpJEQtJ6uRsmub255StZDobPQL1F/uxuIrzkdveF36yRU/9qsWZ2cfk
+	86hCfjEEgrhKlXvVJPghJ8A5a0tPyv/E+TbEU9yWSrRNaedlbEEgp06jGuA4SLM1by2wOV8EtIr
+	9MVQ=
+X-Google-Smtp-Source: AGHT+IEWz6pte51MIpBXsWv9iox7I4wYNAzE9JPDgQyelfI9wQosQkbyTXzMObDkrp+gzk3riTf7OA==
+X-Received: by 2002:a05:600c:8411:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43f3a95b61dmr95910925e9.15.1744568413613;
+        Sun, 13 Apr 2025 11:20:13 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44579bsm8469296f8f.87.2025.04.13.11.20.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 11:08:23 -0700 (PDT)
-Date: Sun, 13 Apr 2025 15:09:33 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, jic23@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH v6] iio: frequency: ad9832: Use FIELD_PREP macro to set
- bit fields
-Message-ID: <Z_v93dtgks2CquIn@debian-BULLSEYE-live-builder-AMD64>
-References: <20250413120354.19163-1-simeddon@gmail.com>
+        Sun, 13 Apr 2025 11:20:13 -0700 (PDT)
+Date: Sun, 13 Apr 2025 19:20:11 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, mingo@redhat.com,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+Message-ID: <20250413192011.3e083d33@pumpkin>
+In-Reply-To: <CAGudoHFvPqE=Sby-ttn1ar8b+abj15X2jX3FvgY3ca_TRqoc-Q@mail.gmail.com>
+References: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw>
+	<CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com>
+	<CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
+	<CAGudoHFvPqE=Sby-ttn1ar8b+abj15X2jX3FvgY3ca_TRqoc-Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413120354.19163-1-simeddon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Siddharth,
+On Sun, 13 Apr 2025 12:27:08 +0200
+Mateusz Guzik <mjguzik@gmail.com> wrote:
 
-Your patch looks good to me and I keep the review tag offered on the other email.
-One small thing I noticed right before closing the driver. See comments below.
+> On Wed, Apr 2, 2025 at 6:27=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> =
+wrote:
+> >
+> > On Wed, Apr 2, 2025 at 6:22=E2=80=AFPM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote: =20
+> > >
+> > > On Wed, 2 Apr 2025 at 06:42, Mateusz Guzik <mjguzik@gmail.com> wrote:=
+ =20
+> > > >
+> > > >
+> > > > +ifdef CONFIG_CC_IS_GCC
+> > > > +#
+> > > > +# Inline memcpy and memset handling policy for gcc.
+> > > > +#
+> > > > +# For ops of sizes known at compilation time it quickly resorts to=
+ issuing rep
+> > > > +# movsq and stosq. On most uarchs rep-prefixed ops have a signific=
+ant startup
+> > > > +# latency and it is faster to issue regular stores (even if in loo=
+ps) to handle
+> > > > +# small buffers.
+> > > > +#
+> > > > +# This of course comes at an expense in terms of i-cache footprint=
+. bloat-o-meter
+> > > > +# reported 0.23% increase for enabling these.
+> > > > +#
+> > > > +# We inline up to 256 bytes, which in the best case issues few mov=
+s, in the
+> > > > +# worst case creates a 4 * 8 store loop.
+> > > > +#
+> > > > +# The upper limit was chosen semi-arbitrarily -- uarchs wildly dif=
+fer between a
+> > > > +# threshold past which a rep-prefixed op becomes faster, 256 being=
+ the lowest
+> > > > +# common denominator. Someone(tm) should revisit this from time to=
+ time.
+> > > > +#
+> > > > +KBUILD_CFLAGS +=3D -mmemcpy-strategy=3Dunrolled_loop:256:noalign,l=
+ibcall:-1:noalign
+> > > > +KBUILD_CFLAGS +=3D -mmemset-strategy=3Dunrolled_loop:256:noalign,l=
+ibcall:-1:noalign
+> > > > +endif =20
+> > >
+> > > Please make this a gcc bug-report instead - I really don't want to
+> > > have random compiler-specific tuning options in the kernel.
+> > >
+> > > Because that whole memcpy-strategy thing is something that gets tuned
+> > > by a lot of other compiler options (ie -march and different versions).
+> > > =20
+> >
+> > Ok. =20
+>=20
+> So I reported this upstream:
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119596
+>=20
+> And found some other problems in the meantime:
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119703
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119704
+>=20
+> Looks like this particular bit was persisting for quite some time now.
+>=20
+> I also confirmed there is a benefit on AMD CPUs.
 
-On 04/13, Siddharth Menon wrote:
-> Use bitfield and bitmask macros to clearly specify AD9832 SPI
-> command fields to make register write code more readable.
-> 
-> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
-> ---
+Is that a benefit of doing 'rep movsb' or a benefit of not doing it?
+
+It also depends very much of the actual cpu.
+I think zen5 are faster (at running 'rep movsb') than earlier ones.
+But someone needs to run the same test on a range of cpu.
+
+I've found a 'cunning plan' to actually measure instruction clock times.
+While 'mfence' will wait for all the instructions to complete, it is
+horribly expensive.
+The trick is to use data dependencies and the 'pmc' cycle counter.
+So something like:
+volatile int always_zero;
 ...
-> +
-> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
->  					st->ctrl_ss);
-I think st->ctrl_ss alignment with the preceding parenthesis could also have
-been adjusted since the patch is updating the very same assignment.
-		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
-						  st->ctrl_ss);
-There are some other places where similar change could be done but these are
-probably not a reason for a v7.
+	int zero =3D always_zero;
+	start =3D rdpmc(reg_no);
+	updated =3D do_rep_movsb(dst, src, count + (start & zero));
+	end =3D rdpmc(reg_no + (updated & zero);
+	elapsed =3D end - start;
+So the cpu has to execute the rdpmc() either side of the code
+being tested.
+For 'rep_movsb' it might be reasonable to use the updated address (or count=
+),
+but you could read back the last memory location to get a true execution ti=
+me.
 
->  		ret = spi_sync(st->spi, &st->msg);
->  		break;
-...
-> -		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
-> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
->  					st->ctrl_fp);
-This one would have become 
-		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
-						  st->ctrl_fp);
+I've not tried to time memcpy() loops that way, but of arithmetic you
+can measure the data dependency of the clock could for divide.
 
->  		ret = spi_sync(st->spi, &st->msg);
->  		break;
-...
-> -		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
-> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
->  					st->ctrl_fp);
-Same here
->  		ret = spi_sync(st->spi, &st->msg);
->  		break;
-...
->  
-> -		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
->  					st->ctrl_src);
-ditto
+	David
 
->  		ret = spi_sync(st->spi, &st->msg);
->  		break;
-> @@ -396,7 +400,7 @@ static int ad9832_probe(struct spi_device *spi)
->  	spi_message_add_tail(&st->phase_xfer[1], &st->phase_msg);
->  
->  	st->ctrl_src = AD9832_SLEEP | AD9832_RESET | AD9832_CLR;
-> -	st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-> +	st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
->  					st->ctrl_src);
-ditto
 
-Regards,
-Marcelo
