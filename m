@@ -1,94 +1,90 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171697DA8C
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 04:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426E7383A5;
+	Sun, 13 Apr 2025 04:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744519534; cv=none; b=jcYhYz2M7FfUpxFEIjDPc5ZHF2FWrNMxbyQ0u6bP/9M+4bP2vYo+uwTQ4TG6WJVblQWO9n5XKvq0+50nuPaSdTuktvcj1GRcb68WlUTJB+DI+6GAOgZ6b8c06y0aVzSX8oJuAgyt40nPsM7QpGQn54zw7YLIoK2FJiYj7sD+cEI=
+	t=1744520140; cv=none; b=TKsUEs/iOLgpWLahcTYGmR4hcMZEkue5gaKvCVZaXKs7sMT50ta4UYfmk7dGnTWK1qZx35DcXxA3qTty/HuwnxTdzE3EzR+ddj53nPZydIpdgjkDIP3v6rNwGm90lHcVqSmOLDN0IgKYOL87VSntKg4ySkfVefZqhMopeNNEIr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744519534; c=relaxed/simple;
-	bh=lw5JRYrm01bZN/WGAo/rBu1PEwwZZg9mW50bAbmZG80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMqXh2KdyXqKHnjnuvfjy5npbgoFDZGn2flI11Yxe03ErGdq6DO8fUqudqoqetv+5VMazTFF3JdVelBA4tT0RDU0eLJ+jR3hptSqNuLmPxp482hNJtI6tDpPpZOT1tOpI1Cq3eFtXgvnmzBswJH6Ae5QfMJyI9kzSUZhaLfc9GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=fC+4GPOv; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1744520140; c=relaxed/simple;
+	bh=KIyhx1f4Q7uvfnMxlwu8uJX8GawuhnAXHEOquMlum8c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iFdm1y95IKnjwIMMsafBjAQPO3jAbEP0z86rOdGBUkn7vdO0D6SHL4bKzmjBWlfCtfmI224B4i+0CFBstNnvGozywYTeBWxONp9a/MQhK//pjhfaKe6fJMDtWfDyD/Kiay/PskBygQvT3+fIvvLBuR5926ia8BdnfrOgvgCT+uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yc/ME7eQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="fC+4GPOv"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47662449055so16940091cf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 21:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744519530; x=1745124330; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C8uy9RLe6EmydLFrJvcYXD6QVbwFOjWHkxU1MVvas60=;
-        b=fC+4GPOvc0TNKLU91fWR/oAlTiylmF4DyYC53+lIYOC6Y0xvVIBvO02dkR2jij+s1B
-         I86Js7c0H6Y9s9FzB7hhlHOFIr1dXJJoM4tif9nl8sRTYKyAMBkvZmNVEO2ESzrDxx/R
-         t/lqo4EgthYnAR2u55xs2dAlC/nkhB99RIbiTx8E+cniMjUIIwUF9m1NZCc+R+XP9BKP
-         BC+lzfjkMsMUBajCdXAJX0cCcNNuhZRKLMxFjTkMu9WefGmG8/vXEEFu01RG9izJ/mt3
-         9mR3NwmLlhLnKGDP9WZB4kYTH6SznSr5paRD+SdvCCfh9pO6zEQ50IIeuJUzF2MZkTYY
-         Y3BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744519530; x=1745124330;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C8uy9RLe6EmydLFrJvcYXD6QVbwFOjWHkxU1MVvas60=;
-        b=NJfDaCG6kdjuE4fvP36suJL4+3jusBEKnuDQmmfzpB44pheplBu4eSQWWBc532fOsS
-         3utk3jCjRWmJuB2Z7qPkZUkgYjoHvpMYrlr330Upt+wJTrFIMZicabv5W7HFkC+DcLF/
-         OFm2FDyx4ytaH3THkFI/r6tS2xk6NoeeQJOi3LT89E0STh7x3GGUgO5OHkfoAsP7zz0Z
-         LtWr8AjnozjkkkV6ZeSwh1/DAfu9zXaihdIKlgsiHFDnF0xzkwBa93RiUZy+mLmg6vkf
-         R+OdkIcGWC0+SyhmtFj02+3pI8CbshVbaFCTPF2fjkm7JPWIrJG33YmwMnBpTxqQ4zf/
-         779Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZJazDq4Jq0c675jMZ2vmsdCAqxES5p6uT8dabIGKpjTofdzLeA0W/ATC3W3pnxQA3PWC9EpaCZrBqZMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXX0E74gElCs3qnhgK9V9vsViH/0k1io0Pe51pN8Z0g8uqP5RX
-	dT9JCvS3O46fnkJL0h9ngZbLwjddoxhgnrb6nQlZRPc+Oyr9YiExvHqTsLZ+K0A=
-X-Gm-Gg: ASbGncv7qbQEu4tG8Xl3N8s9y2cbyV5ii3iVScjti6OP8RGFtTZsi+ycMF860DE5JPg
-	ZYBVafIafH+oGLHJxnnhTqM1YpyBt2/7gdZCqzA+G9GfohnrMmcLOHPcp8SVQILGV8S9ODQyvQo
-	SiF1wIcoHeB/ysGGEELYjLpO/QuydVRTU9z2S95qd16qXEqvb7i7xQpK1mvBAffirgEHrb3qX86
-	d98OfZiFLtbEyyXKvZXCwO5pqndFU9oEAzCoBCLEB+L+R1FpvjYHhSeuVa+5/yMICGTjD62hxDm
-	92Pn45+G2lxNmtIXEHlI0nNiU4pNVXmxCl19eeQ=
-X-Google-Smtp-Source: AGHT+IHkFwzdLW17zoH0eIq/02TMpxPx02NyI7kV8LC8mAi0cTvY6AEe68rUu7uwJoEMv6jrZvCPzw==
-X-Received: by 2002:a05:6214:500d:b0:6e2:43d1:5fd0 with SMTP id 6a1803df08f44-6f23f11d25fmr122831646d6.31.1744519529530;
-        Sat, 12 Apr 2025 21:45:29 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0de95fd3dsm60193846d6.14.2025.04.12.21.45.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 21:45:28 -0700 (PDT)
-Date: Sun, 13 Apr 2025 00:45:27 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	Suren Baghdasaryan <surenb@google.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>
-Subject: Re: [PATCH 2/2] MAINTAINERS: add MM subsection for the page allocator
-Message-ID: <20250413044527.GG366747@cmpxchg.org>
-References: <20250410090021.72296-3-vbabka@suse.cz>
- <20250410090021.72296-4-vbabka@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yc/ME7eQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35EB2C4CEDD;
+	Sun, 13 Apr 2025 04:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744520139;
+	bh=KIyhx1f4Q7uvfnMxlwu8uJX8GawuhnAXHEOquMlum8c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Yc/ME7eQGv8kGFM/ofAJq9o/X0+8PKRBpM3Wp5A+5TdNIaSiKI9px1zivC+4ScNOE
+	 edV34Vx6yTLrfmA6YUyw5zdvhZoT23tXp10pvsPW7szRHx12TRNTLtMyrg/X+YqTQp
+	 jPiyzNsejFq70gbzcjMylWY8tJzHDhjL2q/fGBAsYQXAqZ2lgNWp+Z5QIIiFeUDz9X
+	 CnonudAtwDp1I5jboQgmoWL3IVF/z/968+wE/w6DgOrbLOQRwJzSSFg5+BjyipQWSY
+	 Ur5ba8acNYG7o1Ehc6NJ+tF4e1U7N1lHgTSXt2pPaKe9V+6IC59DbmTmOx1mKwPWgl
+	 jY4IW/oULs7Zw==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	x86@kernel.org
+Subject: [PATCH 0/9] Remove per-architecture poly1305 shash glue code
+Date: Sat, 12 Apr 2025 21:54:12 -0700
+Message-ID: <20250413045421.55100-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410090021.72296-4-vbabka@suse.cz>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 10, 2025 at 11:00:23AM +0200, Vlastimil Babka wrote:
-> Add a subsection for the page allocator, including compaction as it's
-> crucial for high-order allocations and works together with the
-> anti-fragmentation features. Add reviewers (including myself) who
-> voluteered.
-> 
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Brendan Jackman <jackmanb@google.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+This series removes the per-architecture poly1305 shash glue code and
+re-implements the poly1305 shashes on top of the Poly1305 library
+functions.  This ends up being much simpler, and it is how it should
+have been done originally.  This follows similar changes to crc32,
+crc32c, and chacha20.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+This series also makes the Poly1305 library be optimized on PowerPC.
+Previously the PowerPC-optimized Poly1305 code only supported shash.
+
+Eric Biggers (9):
+  crypto: powerpc/poly1305 - implement library instead of shash
+  crypto: poly1305 - centralize the shash wrappers for arch code
+  crypto: arm/poly1305 - remove redundant shash algorithm
+  crypto: arm64/poly1305 - remove redundant shash algorithm
+  crypto: mips/poly1305 - drop redundant dependency on CONFIG_MIPS
+  crypto: mips/poly1305 - remove redundant shash algorithm
+  crypto: x86/poly1305 - remove redundant shash algorithm
+  crypto: x86/poly1305 - don't select CRYPTO_LIB_POLY1305_GENERIC
+  crypto: poly1305 - remove rset and sset fields of poly1305_desc_ctx
+
+ arch/arm/crypto/Kconfig                 |   6 -
+ arch/arm/crypto/poly1305-glue.c         | 170 ++----------------------
+ arch/arm64/crypto/Kconfig               |   6 -
+ arch/arm64/crypto/poly1305-glue.c       | 143 ++------------------
+ arch/mips/crypto/Kconfig                |   6 -
+ arch/mips/crypto/poly1305-glue.c        | 120 +----------------
+ arch/powerpc/crypto/Kconfig             |  11 +-
+ arch/powerpc/crypto/poly1305-p10-glue.c | 134 ++++++-------------
+ arch/x86/crypto/Kconfig                 |   8 --
+ arch/x86/crypto/poly1305_glue.c         |  99 ++------------
+ crypto/Makefile                         |   3 +-
+ crypto/poly1305.c                       | 153 +++++++++++++++++++++
+ crypto/poly1305_generic.c               | 149 ---------------------
+ include/crypto/poly1305.h               |  13 +-
+ lib/crypto/poly1305.c                   |   2 -
+ 15 files changed, 242 insertions(+), 781 deletions(-)
+ create mode 100644 crypto/poly1305.c
+ delete mode 100644 crypto/poly1305_generic.c
+
+
+base-commit: 3be3f70ee95da03a87d94c4a714ee679a5c7b34d
+-- 
+2.49.0
+
