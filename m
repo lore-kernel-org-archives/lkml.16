@@ -1,321 +1,141 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E48EC4
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 18:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743F31DA31F;
+	Sun, 13 Apr 2025 18:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744567404; cv=none; b=oWjkO/TMei5MmAU1+wZRoLhCp8hrT3lIzIDAorqbmEDKARiwltcLZlgGJartCyuuPprCcMG2gMrLpMjR54yxaNexPzqV6A1607R5L4S1s1bnqAJ+cOF6S4OHTAczfUEsuOO3jUpIbpofSQ9I/NcNvcD5EspK+EMbyNos+1LxWnc=
+	t=1744567707; cv=none; b=hYZQ5Bax52NqoX4JN9tXGFy09JdsIWcPaeVmj9RRKXPRATIatRocSbmX6ZQd0k0A9EAVv7mDni2B7ctC/CDQRS2HAQpzpejt+TyqrHYSKjbj9dpybhrpOCY6wzECY8+IxZYd71g/f6dFO+wp0mDyyWegFF+AroBlwGLL6GIFSGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744567404; c=relaxed/simple;
-	bh=OfSDk6mWhpD6+qUrcH8Xoao0Y8AIl+PC4epIFhuss5I=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dpAGH0cnN6K73E38GWtk6WeYn2Ih4cDIE51452GZ+c12Eisxvu1DwMNqIrwBgkO0E+iMYzaUebRD/1QQlK1a3hkb/1Ifs8xOiAAL/UHv8VLufUP8OxM9z2hp1CqO5UZ9Pd5V7aFyRVcy7mzbFctRdOgfLqMI4qe5w08yW3ArKi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5d6c997d2so35911375ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 11:03:22 -0700 (PDT)
+	s=arc-20240116; t=1744567707; c=relaxed/simple;
+	bh=98LFtn1tseprsMwLIYxoIRt09wt+dQXWBQe3wx8f7Us=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cT02VX8fyrlKfVBh08Fw69RY2EhLMZS8dihleWg5yXZue+NYH/HahxQ5EmPfcar3n8wfiypbdh+uS68PR3ieeU+zpaXqk7UREtZg7VS7w9RnhCEApF6UV6QPkz7flb9ZpiUHwJSZ4mXgbsWvesQZAdF3ymhMrKYxulrzXDiCfR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eJQRgx9m; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJQRgx9m"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736bfa487c3so3071744b3a.1;
+        Sun, 13 Apr 2025 11:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744567705; x=1745172505; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8msCUUJodnedscKDvA6MjGmFcc4O0OyJw8Mm90R/Hx8=;
+        b=eJQRgx9mMXbP2RCMV38AItYmeE9NBtkVu1dBcTAG8sEeSgfzmugpTdcyc/cZ4G36Ax
+         qAJkwqbJtDxIx1sLnR5yR11B6KLlX8cVbWLJWe/cnU7VOpFO6J25fQ+keAdlyqcBiKqL
+         1cW0cVMJjbUmGMJNC7tQ6tgdPXHxwy9s70ujatdqtwVCIXcHOybZvvVGsNHhuEjbl9V6
+         fUT40QHm/zq5OeYgSv+W49wBm4A53rATEH/x4eyzVYHBzkSX3NLPRtnjaYz0eptU1m5T
+         hysADZNetcRVlOT/UlIobxzWBGdu6+//RfShtqWfoFHG1xyxA8jGeULe53o+tE7YZRzN
+         U6zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744567401; x=1745172201;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UMGJ5i2NVxg0JeP0YSRdcHnoLonwkfP9vdvDNLn4THM=;
-        b=gRdu0SwPVQzLoeC/ce7oCKL/zA/RIdBkkuA9dOdvBRJwSkx2IWwIFX98+r49+AfXEK
-         7+nvxiBBF0i2n33Oa4Owzt4o2SinCwzRJoLbjExDzKaHcyr0gbFC4S7LECUkbUxzbFqG
-         asW0Iw21yzkc3g8Mrn0ir/YAcO2g5w0J57qpp1vRRIaeXFF7i/khpOLr5VO/5lY4Om6O
-         jf+dc8NtlmZfP5cEgdqxMgpdZUzrRnQGW2C0fcJNTM+J2/Y6PwC00WaOIFMtrXzt3NIf
-         m5wPxu2cOyek0plJQ3x2qhlt8TGqiTGzIBCVM9U7WVi5+RMkk+sPKVfbKpf+30bK4ahv
-         mwDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq1TxD7rJxPVLvikenrIU5CklKn6Lkc23V3UGRAkMP/sWe8QMQo95jF49Pc1IMIE9tdOS5UJlNRiNDaOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7Ouo7fC+ui4D/t8s4raXwFeeD0VxIHptcAZy53a5Klf5l0FH6
-	MOuRDMltB4boaVn532G5MJdQMhoK80VX9x7+hUG3DLN3QjCeDqsRhHur6XyV8UEt7+DQAFWUFE9
-	x0/d1DkAWFdL4ofw/zM6/2T+lhfOxjDeJwvEFJgtNFwlJS6yxBbOy/uE=
-X-Google-Smtp-Source: AGHT+IGqTty64ciSbgiZYwPKFc47h/nfQff6sQt809FnQA3MCrhG5Vv4t9nh6URRm2Smrb1cZvsEFwMqKcbSsJaiErlQfObhG7kS
+        d=1e100.net; s=20230601; t=1744567705; x=1745172505;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8msCUUJodnedscKDvA6MjGmFcc4O0OyJw8Mm90R/Hx8=;
+        b=Bl257Z22OYEHjgPsgcNVivv9G76suLmpAVSbT/6ttITX1xqY9JqwEukM5Yxjhr57b3
+         pn3Jq9FFykJqlSU8DXVT4GgbAzxxaTRwUsbWItrn1BOsuD9vKG2FKbcQN/GKYTOEd88v
+         fN4J4rUTHZ/Qsctj4TpUFsJ/bORmikV6NW+zWH/uck2wl14zEmSlzHFNeJ1N3tGIciQj
+         9A4MGPLv82+hU/3y5fkboaXckSgPaNS/+7sr1JNsjGJ4B/LuZidSbdt3NmjG2pb1zRlv
+         htZ6g4GdURK8YM6IWHY/h6oPKOaZyptjaGwW1imO78uzQ6sjDmxv6T0LTU58yExC6vMF
+         a2WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRP2JXT798Nl3WllfsAYak2VHkQoo5HQcgMskwXpmFKCVKgoUaGt4Xvr6oWraImou5grEg917OIgO0KpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXcC27f1V4xJ0S0J8ya7EJ3X5NClg7Vp0LD17zpu/fpNFMfHU4
+	p7uV0Um+N0D1HYqD2qFcwx1MkNxCXWziikYRD8PgyiHigHo4Bupq
+X-Gm-Gg: ASbGncvq3wZQCOEfmhTFYiRuf9fSaWJuPliCUavLfeOypuzoy34wrb4kuaNGmzCh3N2
+	6L4ZkDojZR3mVTjp1mxvX3VvDtwDJt/JnO/3sGpIciQbnvjLO7bA2l3cXcy/G2UuxQ4fFTBwPmX
+	Lx5OxRFP9Q5D3KAcJAxGU+PfqweGWNKQIPTb8mpF75OJil0MMvw3APBIOO749dsbseOyGnoNKQ6
+	uS1ooSwncDTO3q2Sbv297Z2NyFZedyCZx7+lc298lH8OBxzEWPZicJabVkQOOZpARuucEob84NX
+	RD0ieUL/W9CGwHvJbBj3bwFrkjDXVtCsy+RZnFyIZWbN9gNl
+X-Google-Smtp-Source: AGHT+IHHpazn8+vcBt0d5bUXCBCSA4Ri6OBXDZzp8cb/V4X1zMybbDxXn303XM70OY2H7CFwrfd8+Q==
+X-Received: by 2002:a05:6a00:22ca:b0:736:a682:deb8 with SMTP id d2e1a72fcca58-73bd11ded49mr15615790b3a.8.1744567704616;
+        Sun, 13 Apr 2025 11:08:24 -0700 (PDT)
+Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd21c4e51sm5397399b3a.55.2025.04.13.11.08.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 11:08:23 -0700 (PDT)
+Date: Sun, 13 Apr 2025 15:09:33 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Siddharth Menon <simeddon@gmail.com>
+Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, jic23@kernel.org,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: Re: [PATCH v6] iio: frequency: ad9832: Use FIELD_PREP macro to set
+ bit fields
+Message-ID: <Z_v93dtgks2CquIn@debian-BULLSEYE-live-builder-AMD64>
+References: <20250413120354.19163-1-simeddon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b07:b0:3d1:a34b:4d01 with SMTP id
- e9e14a558f8ab-3d7ec202344mr100008435ab.8.1744567401349; Sun, 13 Apr 2025
- 11:03:21 -0700 (PDT)
-Date: Sun, 13 Apr 2025 11:03:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fbfc69.050a0220.2970f9.0330.GAE@google.com>
-Subject: [syzbot] [kernfs?] possible deadlock in kernfs_fop_readdir
-From: syzbot <syzbot+8fd10d8928ed1f715290@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250413120354.19163-1-simeddon@gmail.com>
 
-Hello,
+Hi Siddharth,
 
-syzbot found the following issue on:
+Your patch looks good to me and I keep the review tag offered on the other email.
+One small thing I noticed right before closing the driver. See comments below.
 
-HEAD commit:    a24588245776 Merge tag 'linux_kselftest-kunit-6.15-rc2' of..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1133d7e4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb8650d88e9fb80f
-dashboard link: https://syzkaller.appspot.com/bug?extid=8fd10d8928ed1f715290
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+On 04/13, Siddharth Menon wrote:
+> Use bitfield and bitmask macros to clearly specify AD9832 SPI
+> command fields to make register write code more readable.
+> 
+> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> ---
+...
+> +
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
+>  					st->ctrl_ss);
+I think st->ctrl_ss alignment with the preceding parenthesis could also have
+been adjusted since the patch is updating the very same assignment.
+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
+						  st->ctrl_ss);
+There are some other places where similar change could be done but these are
+probably not a reason for a v7.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+...
+> -		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
+>  					st->ctrl_fp);
+This one would have become 
+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
+						  st->ctrl_fp);
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0069877a1c74/disk-a2458824.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fac7768b7055/vmlinux-a2458824.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c2a8b46a4db5/bzImage-a2458824.xz
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+...
+> -		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
+>  					st->ctrl_fp);
+Same here
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+...
+>  
+> -		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
+>  					st->ctrl_src);
+ditto
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8fd10d8928ed1f715290@syzkaller.appspotmail.com
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+> @@ -396,7 +400,7 @@ static int ad9832_probe(struct spi_device *spi)
+>  	spi_message_add_tail(&st->phase_xfer[1], &st->phase_msg);
+>  
+>  	st->ctrl_src = AD9832_SLEEP | AD9832_RESET | AD9832_CLR;
+> -	st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
+> +	st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
+>  					st->ctrl_src);
+ditto
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc1-syzkaller-00060-ga24588245776 #0 Not tainted
-------------------------------------------------------
-syz.1.191/7483 is trying to acquire lock:
-ffff88806a269fe0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
-
-but task is already holding lock:
-ffff88801bef5148 (&root->kernfs_rwsem){++++}-{4:4}, at: kernfs_fop_readdir+0x274/0x870 fs/kernfs/dir.c:1890
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #5 (&root->kernfs_rwsem){++++}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       down_write+0x9c/0x220 kernel/locking/rwsem.c:1577
-       kernfs_add_one+0x41/0x530 fs/kernfs/dir.c:791
-       kernfs_create_dir_ns+0xd9/0x120 fs/kernfs/dir.c:1091
-       sysfs_create_dir_ns+0x1a2/0x3f0 fs/sysfs/dir.c:59
-       create_dir lib/kobject.c:73 [inline]
-       kobject_add_internal+0x435/0x8d0 lib/kobject.c:240
-       kobject_add_varg lib/kobject.c:374 [inline]
-       kobject_init_and_add+0x126/0x190 lib/kobject.c:457
-       btrfs_sysfs_add_qgroups+0x117/0x2f0 fs/btrfs/sysfs.c:2616
-       btrfs_quota_enable+0x287/0x21a0 fs/btrfs/qgroup.c:1030
-       btrfs_ioctl_quota_ctl+0x144/0x1c0 fs/btrfs/ioctl.c:3676
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #4 (&fs_info->qgroup_ioctl_lock){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       btrfs_quota_enable+0x2cb/0x21a0 fs/btrfs/qgroup.c:1059
-       btrfs_ioctl_quota_ctl+0x144/0x1c0 fs/btrfs/ioctl.c:3676
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #3 (btrfs_trans_num_extwriters){++++}-{0:0}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       join_transaction+0x1aa/0xe60 fs/btrfs/transaction.c:321
-       start_transaction+0x770/0x16b0 fs/btrfs/transaction.c:705
-       btrfs_rebuild_free_space_tree+0xb4/0x500 fs/btrfs/free-space-tree.c:1317
-       btrfs_start_pre_rw_mount+0xef1/0x1310 fs/btrfs/disk-io.c:3074
-       open_ctree+0x246c/0x2990 fs/btrfs/disk-io.c:3614
-       btrfs_fill_super fs/btrfs/super.c:972 [inline]
-       btrfs_get_tree_super fs/btrfs/super.c:1898 [inline]
-       btrfs_get_tree+0x131c/0x19e0 fs/btrfs/super.c:2093
-       vfs_get_tree+0x90/0x2b0 fs/super.c:1759
-       fc_mount+0x1b/0xb0 fs/namespace.c:1293
-       btrfs_get_tree_subvol fs/btrfs/super.c:2051 [inline]
-       btrfs_get_tree+0x68a/0x19e0 fs/btrfs/super.c:2094
-       vfs_get_tree+0x90/0x2b0 fs/super.c:1759
-       do_new_mount+0x2cf/0xb70 fs/namespace.c:3879
-       do_mount fs/namespace.c:4219 [inline]
-       __do_sys_mount fs/namespace.c:4430 [inline]
-       __se_sys_mount+0x38c/0x400 fs/namespace.c:4407
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (btrfs_trans_num_writers){++++}-{0:0}:
-       reacquire_held_locks+0x12a/0x1e0 kernel/locking/lockdep.c:5383
-       __lock_release kernel/locking/lockdep.c:5572 [inline]
-       lock_release+0x27a/0x3e0 kernel/locking/lockdep.c:5887
-       percpu_up_read include/linux/percpu-rwsem.h:100 [inline]
-       __sb_end_write include/linux/fs.h:1778 [inline]
-       sb_end_intwrite+0x26/0x1c0 include/linux/fs.h:1895
-       __btrfs_end_transaction+0x251/0x630 fs/btrfs/transaction.c:1075
-       btrfs_dirty_inode+0x151/0x1a0 fs/btrfs/inode.c:6140
-       inode_update_time fs/inode.c:2076 [inline]
-       __file_update_time fs/inode.c:2305 [inline]
-       file_update_time+0x314/0x450 fs/inode.c:2335
-       btrfs_page_mkwrite+0x666/0x16e0 fs/btrfs/file.c:1814
-       do_page_mkwrite+0x159/0x340 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault+0x10c6/0x61c0 mm/memory.c:5997
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x1030/0x1aa0 mm/memory.c:6309
-       do_user_addr_fault arch/x86/mm/fault.c:1388 [inline]
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x2bb/0x920 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #1 (sb_pagefaults#3){.+.+}-{0:0}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_pagefault include/linux/fs.h:1948 [inline]
-       btrfs_page_mkwrite+0x3ea/0x16e0 fs/btrfs/file.c:1798
-       do_page_mkwrite+0x159/0x340 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault+0x10c6/0x61c0 mm/memory.c:5997
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x1030/0x1aa0 mm/memory.c:6309
-       do_user_addr_fault arch/x86/mm/fault.c:1388 [inline]
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x2bb/0x920 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #0 (&mm->mmap_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       down_read_killable+0xcb/0xcb0 kernel/locking/rwsem.c:1547
-       mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
-       get_mmap_lock_carefully mm/memory.c:6355 [inline]
-       lock_mm_and_find_vma+0x29c/0x2f0 mm/memory.c:6406
-       do_user_addr_fault arch/x86/mm/fault.c:1360 [inline]
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x1c1/0x920 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-       filldir64+0x2bb/0x690 fs/readdir.c:-1
-       dir_emit include/linux/fs.h:3861 [inline]
-       kernfs_fop_readdir+0x545/0x870 fs/kernfs/dir.c:1907
-       iterate_dir+0x5a9/0x760 fs/readdir.c:108
-       __do_sys_getdents64 fs/readdir.c:403 [inline]
-       __se_sys_getdents64+0x1e4/0x4c0 fs/readdir.c:389
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &mm->mmap_lock --> &fs_info->qgroup_ioctl_lock --> &root->kernfs_rwsem
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(&root->kernfs_rwsem);
-                               lock(&fs_info->qgroup_ioctl_lock);
-                               lock(&root->kernfs_rwsem);
-  rlock(&mm->mmap_lock);
-
- *** DEADLOCK ***
-
-3 locks held by syz.1.191/7483:
- #0: ffff88804c9ff7b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x310 fs/file.c:1213
- #1: ffff888050392988 (&type->i_mutex_dir_key#6){++++}-{4:4}, at: iterate_dir+0x4a6/0x760 fs/readdir.c:101
- #2: ffff88801bef5148 (&root->kernfs_rwsem){++++}-{4:4}, at: kernfs_fop_readdir+0x274/0x870 fs/kernfs/dir.c:1890
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 7483 Comm: syz.1.191 Not tainted 6.15.0-rc1-syzkaller-00060-ga24588245776 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
- check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
- __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- down_read_killable+0xcb/0xcb0 kernel/locking/rwsem.c:1547
- mmap_read_lock_killable+0x1d/0x70 include/linux/mmap_lock.h:193
- get_mmap_lock_carefully mm/memory.c:6355 [inline]
- lock_mm_and_find_vma+0x29c/0x2f0 mm/memory.c:6406
- do_user_addr_fault arch/x86/mm/fault.c:1360 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x1c1/0x920 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0010:filldir64+0x2bb/0x690 fs/readdir.c:374
-Code: e8 48 8b 44 24 58 49 89 46 08 48 8b 4c 24 18 48 8b 44 24 50 48 89 01 48 8b 44 24 20 8b 54 24 34 66 89 41 10 88 51 12 4d 63 f7 <42> c6 44 31 13 00 48 8d 69 13 bf 07 00 00 00 44 89 fe e8 6e b4 80
-RSP: 0018:ffffc90004bafc38 EFLAGS: 00050283
-RAX: 0000000000000030 RBX: 0000200000003008 RCX: 0000200000002fd8
-RDX: 0000000000000008 RSI: 0000200000002fb8 RDI: 0000200000003008
-RBP: 00007ffffffff000 R08: ffffffff8242a42a R09: 1ffff1100b26cb40
-R10: dffffc0000000000 R11: ffffed100b26cb41 R12: ffff88802912bac0
-R13: ffffc90004bafe50 R14: 0000000000000016 R15: 0000000000000016
- dir_emit include/linux/fs.h:3861 [inline]
- kernfs_fop_readdir+0x545/0x870 fs/kernfs/dir.c:1907
- iterate_dir+0x5a9/0x760 fs/readdir.c:108
- __do_sys_getdents64 fs/readdir.c:403 [inline]
- __se_sys_getdents64+0x1e4/0x4c0 fs/readdir.c:389
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f63a2d8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f63a3b38038 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
-RAX: ffffffffffffffda RBX: 00007f63a2fa6080 RCX: 00007f63a2d8d169
-RDX: 0000000000001002 RSI: 0000200000002f40 RDI: 0000000000000004
-RBP: 00007f63a2e0e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f63a2fa6080 R15: 00007fff8a00fe88
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	e8 48 8b 44 24       	call   0x24448b4d
-   5:	58                   	pop    %rax
-   6:	49 89 46 08          	mov    %rax,0x8(%r14)
-   a:	48 8b 4c 24 18       	mov    0x18(%rsp),%rcx
-   f:	48 8b 44 24 50       	mov    0x50(%rsp),%rax
-  14:	48 89 01             	mov    %rax,(%rcx)
-  17:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
-  1c:	8b 54 24 34          	mov    0x34(%rsp),%edx
-  20:	66 89 41 10          	mov    %ax,0x10(%rcx)
-  24:	88 51 12             	mov    %dl,0x12(%rcx)
-  27:	4d 63 f7             	movslq %r15d,%r14
-* 2a:	42 c6 44 31 13 00    	movb   $0x0,0x13(%rcx,%r14,1) <-- trapping instruction
-  30:	48 8d 69 13          	lea    0x13(%rcx),%rbp
-  34:	bf 07 00 00 00       	mov    $0x7,%edi
-  39:	44 89 fe             	mov    %r15d,%esi
-  3c:	e8                   	.byte 0xe8
-  3d:	6e                   	outsb  %ds:(%rsi),(%dx)
-  3e:	b4 80                	mov    $0x80,%ah
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Regards,
+Marcelo
