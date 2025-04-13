@@ -1,195 +1,164 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339FA1F30BB
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 18:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B1C1F3B8C;
+	Sun, 13 Apr 2025 18:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744570700; cv=none; b=n4Ucyjjn19L+GdIFsW0C9l0+CnEEyAdyVkzRAq/5lYz9Lf9uG9aiujrJ0Zcvx8NPFwHwB1MiMgHnmTVtFNtKQ0/hRNtzCp9XOnZTimMZqXFsY+cpOOnnH30f9ZK7JO5EnQN3D9WU9jxAQOo8QZhUAarGn1Wojvyysh3KZCtgEsY=
+	t=1744570767; cv=none; b=N0CjbUgilBeKTJCngaEJKGeo/VxKK14iVzkMqPWsjNeiQ+NYUFuOqTG0lTjguMeqL79jorZ0oKJHWfGgv5oTXOG03IEbCYjeTh2GRM+y1mpWEGKRGT1DJ+lHbqXcsq5qgzl6hTjiTyWcPEELy4CbXMyagBBoKMK2EDXgaxovEiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744570700; c=relaxed/simple;
-	bh=J5sz41YjSH7pnZKXch903HESt3zkaVc79lPb9gIm5cA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gqPTENd13QAdhLgVvb0ASBGcGK7fY4pyjIufHnrENFosvzxyvHd8VSqlpuk357Q4k6bbObwwG1Wg+GcTuaLKTX4eUH6Yxg6uUZqd1jeqdlM6XavXYtyE4VFbejycz6aMj1nk/S/9l2S2ojq9bhWtfUmkeXHppwPeZY1hXNwUXx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFUZTSc8; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744570767; c=relaxed/simple;
+	bh=1ZsSYHzcT6LpZjAKJqJ4rjXJkEP7wCJp41hedkkblMI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iwjwCy4PbUQ7dhzppLMumz3TFOubeqyXJzx32NByXDl7NsYhBQCCXJbx48gAujWMnknyqM0wmGWf7TWKqc4addVXRF6NKE+hWaknxYmZj4DQTAHvjP7BPPprLNRy0kRkTgmBBw9lXlV4PxvyViX/geruBHzNm48aw/1lTnWqY7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=KpCn4gPH; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFUZTSc8"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso694459266b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 11:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744570696; x=1745175496; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TMOzEUbxURYcvhcIN7s4npIflGfs1vs1f9p5XwExJN0=;
-        b=eFUZTSc8pLBjeeeuczpXcIMtbbZo+r03Z3Qh1DTUwMiF7uUBU/GaGtgW+0zTAyuJiW
-         tzaWgAjzoAiLuzhUz8j/xxPLMbRS2nMH9zvY0ExSn1OPglxh4sTXao41G3eOd8TfSlyX
-         xUAPnQBRxkryulrECG//xet1xGiWuC9Bz8cQaq2nkiseNb4iK1oH/HzWdUsdKv1UAeVt
-         beTrob2x1BCDDaDG/XT6zpZlRHasUsSeY6Da7pasWd4lQCefAN6zqlv8sk+mir5xLvIg
-         E/ouSz5k9B+3O+yC6ApOapWLPtDA3v/qil0L35QZWB1CT67oZ6Jm+iDlrFji3RkJFxA1
-         hIVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744570696; x=1745175496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TMOzEUbxURYcvhcIN7s4npIflGfs1vs1f9p5XwExJN0=;
-        b=fmfqRAdElkFz073WTHb+IYzDBJBSaCmD1v0SU0T6aZqLGscxuPbENZelZ2fnsfTDsC
-         38oklR1l4bzXtXKwCga7+fP3suEgI1zqHP0xhEynKlB0Tt9WPxFwZ3NaETo+uL5/t/ZI
-         lJOZ1tW5tWazA5W28QvnyOne+V7RDiw2d7f1h23PQtx31DVE+4y22wHoSIOuxkRFpVxi
-         qEifAwjKHRZUxUb8DtKmqGXtcWGLLQSaC+rvEEI13fYZjy319o+MupL2x2Sz8Mu2pmNC
-         wxnLMpHYLOhs61kiMBZl32NPCWCpQl3O4BsW+7r9Fr+X6xNwWFKcfQjggCIl4dSOyXP4
-         EAFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUS5leTL16LPkJ/0nipKlLG5+kkqk7CCl1SjG+VzSG2YjhK7gcJetQyZkHb2uKmb4MXe9llZc6GTB9HNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/WxvXHHLV/NcZbm3Xir8C4+LXDAvloFurl1Ha5sGUjPHxI2T7
-	zrTxiD+5WOQXRtmjc3iM+LmbsKUjnxEith0OHu0h4KmodZ4IlKSnEOmJr5yDCNbiaWDo4UZMXzF
-	KH86zY4BzXT7etUsHxz+Yx9mLjtnlZA==
-X-Gm-Gg: ASbGncuC+PqnJo8LP881MuDot/0PRq42gBVwFICnBPj8oJ5mLKfxDswhdyo0ff9jYYQ
-	e0cnHcL7o/zW59SMgNVCr7Nj7+A4xA4XRviep/2/UQqMh3bwsrmP1VNNMj+/4OpQlTUaL5Tw/uq
-	UFTq3+vwej7NypNzD7FRGB
-X-Google-Smtp-Source: AGHT+IEox/J4tgLU3ACFHadtQXIqWTu1fgXqaADj+nKrnzW8gFtrW79ndSFoUXxrJu485mWfFtS/B+5kpO/3dCgEmoA=
-X-Received: by 2002:a17:907:7e9a:b0:ac2:9ac:a062 with SMTP id
- a640c23a62f3a-acad34a1c3emr749288566b.23.1744570696027; Sun, 13 Apr 2025
- 11:58:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="KpCn4gPH"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 0AF0825FA0;
+	Sun, 13 Apr 2025 20:59:16 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 6_DBFs_r6gXb; Sun, 13 Apr 2025 20:59:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1744570754; bh=1ZsSYHzcT6LpZjAKJqJ4rjXJkEP7wCJp41hedkkblMI=;
+	h=From:Subject:Date:To:Cc;
+	b=KpCn4gPHsCchiqQk/3yRBlkLzeUJqEZBzL4B+xOXXMRjaWzilMly5BaMQXUxNWjel
+	 ZSR9FskLUPOOrNNUgAd6J8DuPCiAFXjPVvzTUQ+kcUg72s3YYAoekruPZVxJDBx6L+
+	 MEAPFXUqC8J3R0BTkmy1oQTlUGge4I2JUVP7V2popOGPMwIhb7I6e2gjpK7CQFOywV
+	 MIMDG01dTZzxWkv8NUkl4mnX9lLk6p3WJX9skYzHeJTTzCSYaexbUAtg7SdDaVlQFO
+	 CiDfmK4q8X3nCnf/2ibx0gkpnCfrhTQeR0cvxsckBCYrh5IXRlzctArYjKqET1EWSu
+	 yyI8f5dMKfzjg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
+ three devices
+Date: Mon, 14 Apr 2025 00:28:41 +0530
+Message-Id: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw>
- <CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com>
- <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
- <CAGudoHFvPqE=Sby-ttn1ar8b+abj15X2jX3FvgY3ca_TRqoc-Q@mail.gmail.com> <20250413192011.3e083d33@pumpkin>
-In-Reply-To: <20250413192011.3e083d33@pumpkin>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Sun, 13 Apr 2025 20:58:04 +0200
-X-Gm-Features: ATxdqUHjQwc88Hbskk45pLbgKQLuy3qVZ5jDrKwK94eKZzim_lBMoqMSENgnQKw
-Message-ID: <CAGudoHEm76QGqit76QAx00Pp=19iXbMCiYJeUsftP41bvZV1Rw@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, mingo@redhat.com, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGEJ/GcC/2XPzWoDIRSG4VsJrmtRjz9jVr2P0oWOx8TNWDRIQ
+ ph7rxMoGZnlJzwvxyepWBJWcj49ScGWaspLH/rjROarWy5IU+ibCCYUE4xTvD+WXM1kGGXSqsm
+ g9CZE0sFvwZjur9j3T9/XVG+5PF7txrfX/wzsM41TRoXXIUqjHUT2FVItOd8+c7mQLdTEHssBi
+ 46VBg5cK4xsPmLYYW4HDB0jTDJ6zdnswhHLN4bx901uZ1uhFJhovXBHrN5Y8hGrjrUHbh2CnkG
+ PeF3XP19kOXOaAQAA
+X-Change-ID: 20250201-exynos7870-049587e4b7df
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744570750; l=4855;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=1ZsSYHzcT6LpZjAKJqJ4rjXJkEP7wCJp41hedkkblMI=;
+ b=oapeo+zXnxGmk2NN4/B/fUuPs05vEG1EbDs2EYFZItA5aLFXiQg4/5DKtaV9qSxlx+e5hxr1r
+ JAUzfOTDf8LA2sFKF/dkYghRUBqXx/ekNM9UvGSJBwmDXYuAzMj+PJZ
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Sun, Apr 13, 2025 at 8:20=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Sun, 13 Apr 2025 12:27:08 +0200
-> Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> > On Wed, Apr 2, 2025 at 6:27=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com=
-> wrote:
-> > >
-> > > On Wed, Apr 2, 2025 at 6:22=E2=80=AFPM Linus Torvalds
-> > > <torvalds@linux-foundation.org> wrote:
-> > > >
-> > > > On Wed, 2 Apr 2025 at 06:42, Mateusz Guzik <mjguzik@gmail.com> wrot=
-e:
-> > > > >
-> > > > >
-> > > > > +ifdef CONFIG_CC_IS_GCC
-> > > > > +#
-> > > > > +# Inline memcpy and memset handling policy for gcc.
-> > > > > +#
-> > > > > +# For ops of sizes known at compilation time it quickly resorts =
-to issuing rep
-> > > > > +# movsq and stosq. On most uarchs rep-prefixed ops have a signif=
-icant startup
-> > > > > +# latency and it is faster to issue regular stores (even if in l=
-oops) to handle
-> > > > > +# small buffers.
-> > > > > +#
-> > > > > +# This of course comes at an expense in terms of i-cache footpri=
-nt. bloat-o-meter
-> > > > > +# reported 0.23% increase for enabling these.
-> > > > > +#
-> > > > > +# We inline up to 256 bytes, which in the best case issues few m=
-ovs, in the
-> > > > > +# worst case creates a 4 * 8 store loop.
-> > > > > +#
-> > > > > +# The upper limit was chosen semi-arbitrarily -- uarchs wildly d=
-iffer between a
-> > > > > +# threshold past which a rep-prefixed op becomes faster, 256 bei=
-ng the lowest
-> > > > > +# common denominator. Someone(tm) should revisit this from time =
-to time.
-> > > > > +#
-> > > > > +KBUILD_CFLAGS +=3D -mmemcpy-strategy=3Dunrolled_loop:256:noalign=
-,libcall:-1:noalign
-> > > > > +KBUILD_CFLAGS +=3D -mmemset-strategy=3Dunrolled_loop:256:noalign=
-,libcall:-1:noalign
-> > > > > +endif
-> > > >
-> > > > Please make this a gcc bug-report instead - I really don't want to
-> > > > have random compiler-specific tuning options in the kernel.
-> > > >
-> > > > Because that whole memcpy-strategy thing is something that gets tun=
-ed
-> > > > by a lot of other compiler options (ie -march and different version=
-s).
-> > > >
-> > >
-> > > Ok.
-> >
-> > So I reported this upstream:
-> > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119596
-> >
-> > And found some other problems in the meantime:
-> > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119703
-> > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119704
-> >
-> > Looks like this particular bit was persisting for quite some time now.
-> >
-> > I also confirmed there is a benefit on AMD CPUs.
->
-> Is that a benefit of doing 'rep movsb' or a benefit of not doing it?
->
+Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+announced in 2016. The chipset was found in several popular mid-range to
+low-end Samsung phones, released within 2016 to 2019.
 
-It is a benefit to issue regular stores instead of rep movsq, at least
-up to the range I tested.
+This patch series aims to add support for Exynos 7870, starting with the
+most basic yet essential components such as CPU, GPU, clock controllers,
+PMIC, pin controllers, etc.
 
-I make no claim this is the fastest thing out there for any uarch,
-merely that regular stores beat what gcc is emitting now.
+Moreover, the series also adds support for three Exynos 7870 devices via
+devicetree. The devices are:
+ * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
+ * Samsung Galaxy J6		- released 2018, codename j6lte
+ * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
 
-> It also depends very much of the actual cpu.
-> I think zen5 are faster (at running 'rep movsb') than earlier ones.
-> But someone needs to run the same test on a range of cpu.
->
-> I've found a 'cunning plan' to actually measure instruction clock times.
-> While 'mfence' will wait for all the instructions to complete, it is
-> horribly expensive.
-> The trick is to use data dependencies and the 'pmc' cycle counter.
-> So something like:
-> volatile int always_zero;
-> ...
->         int zero =3D always_zero;
->         start =3D rdpmc(reg_no);
->         updated =3D do_rep_movsb(dst, src, count + (start & zero));
->         end =3D rdpmc(reg_no + (updated & zero);
->         elapsed =3D end - start;
-> So the cpu has to execute the rdpmc() either side of the code
-> being tested.
-> For 'rep_movsb' it might be reasonable to use the updated address (or cou=
-nt),
-> but you could read back the last memory location to get a true execution =
-time.
->
-> I've not tried to time memcpy() loops that way, but of arithmetic you
-> can measure the data dependency of the clock could for divide.
->
+Additional features implemented in this series include:
+ * I2C	- touchscreen, IIO sensors, etc.
+ * UART	- bluetooth and serial debugging
+ * MMC	- eMMC, Wi-Fi SDIO, SDCard
+ * USB	- micro-USB 2.0 interface
 
-I'm rather wary of ubenches of the sort as they detach the actual op
-from its natural environment (if you will).
+Build dependencies are in these sub-series:
+ * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
 
-The good news is that the page fault ubench I added has a specific
-memcpy as one of the bottlenecks (in sync_regs()). Improvements one
-way or the other for that size can be measured without any
-disturbances like the above.
+Other related sub-series:
+ * gpu			A https://lore.kernel.org/all/20250318-exynos7870-gpu-v1-1-084863f28b5c@disroot.org/
+ * i2c	      		A https://lore.kernel.org/all/20250204-exynos7870-i2c-v1-0-63d67871ab7e@disroot.org/
+ * mmc			A https://lore.kernel.org/all/20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org/
+ * pinctrl	  	A https://lore.kernel.org/all/20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org/
+ * pmic-regulators	A https://lore.kernel.org/all/20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org/
+ * uart			A https://lore.kernel.org/all/20250318-exynos7870-uart-v2-1-b9dcf145ae87@disroot.org/
+ * usb			A https://lore.kernel.org/all/20250301-exynos7870-usb-v3-0-f01697165d19@disroot.org/
+ * usbphy		A https://lore.kernel.org/all/20250410-exynos7870-usbphy-v2-0-2eb005987455@disroot.org/
+(Legend: [R]eviewed, [A]pplied)
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Changes in v6:
+- Append the following trailers:
+  [v5 1/5] dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+    Acked-by: Rob Herring (Arm) <robh@kernel.org>
+- Link to v5: https://lore.kernel.org/r/20250411-exynos7870-v5-0-6b319ae36c36@disroot.org
+
+Changes in v5:
+- Drop the exynos7870-bootmode patchset for now.
+- Add card-detect-delay and cd-broken properties in sd-mmc nodes.
+- Drop the following applied patches:
+  [v4 1/7] dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+  [v4 3/7] soc: samsung: exynos-chipid: add support for exynos7870
+- Link to v4: https://lore.kernel.org/r/20250301-exynos7870-v4-0-2925537f9b2a@disroot.org
+
+Changes in v4:
+- Drop merged [PATCH v3 1/7].
+- Explicitly mention sub-series having build dependencies.
+- Include the following patch from the pmu-clocks series:
+  - dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+- Adjust clock header file name to match changes in pmu-clocks.
+- Change regulator node names to match changes in pmic-regulators.
+- Remove non-removable flag for the SDCard's mmc node.
+- Link to v3: https://lore.kernel.org/r/20250219-exynos7870-v3-0-e384fb610cad@disroot.org
+
+Changes in v3:
+- Added patches from https://lore.kernel.org/all/20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org/
+- Fix devicetree formatting according to the devicetree style guide.
+- Take over ownership of patches by the co-author, upon their request.
+- Link to v2: https://lore.kernel.org/r/20250204-exynos7870-v2-0-56313165ef0c@disroot.org
+
+Changes in v2:
+- Redo a few commit descriptions.
+- Split patchsets into multiple sub-series, subsystem-wise.
+- Link to v1: https://lore.kernel.org/r/20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org
+
+---
+Kaustabh Chakraborty (5):
+      dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+      arm64: dts: exynos: add initial devicetree support for exynos7870
+      arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
+      arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
+      arm64: dts: exynos: add initial support for Samsung Galaxy J6
+
+ .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
+ arch/arm64/boot/dts/exynos/Makefile                |    3 +
+ .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  630 ++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  618 ++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  666 +++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1022 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  713 ++++++++++++++
+ 7 files changed, 3660 insertions(+)
+---
+base-commit: 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18
+change-id: 20250201-exynos7870-049587e4b7df
+
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
