@@ -1,63 +1,63 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E55215990C
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 07:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC1318A95A
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 07:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744529572; cv=none; b=tKhEvsjbA2OhCfPaR7NT9GJ8KTvI1tOwi/M6IKbBjlo1fL0u+KJLgrdG4hcALfA09OrG9haInAS+Ttkbfe3UcglF3piyu8C1hLuKWPjJRYGLk2KtzU6cXHTHkkBixObrTVo1xZZigwWMLmBGaatb7wq+v/NOdN2I7GZwSwFJXOs=
+	t=1744529574; cv=none; b=cGwSrBCuyUu06JV1ce7Wqa3HAoYIyevUU9X81blxoe8eyk1SyctjZDIoEAI58mIlEaGc2h3vqh2aEIe+yePdOFxyfv4N0L7Y4aWYATldsh/9X4H2Kq08blzoX9JG4Rwc2ziuesbOWCCDXE6TT/VENtzn2EE8pl/23o4UoQyLOQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744529572; c=relaxed/simple;
-	bh=fehAY3yC24ro6+vZ6beyRqMUmWTlnkKTJtJoxqInxag=;
+	s=arc-20240116; t=1744529574; c=relaxed/simple;
+	bh=Hj77r4cZerWuVUCWJBhvlhNrpoiETEOAraEvo2HS0KA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LzDuLVmVzBTRkK0DWw/nikeMbgK4+H5qGwiX6szQVNTA1V2f30U9RXiYlPkdB2ucRTu6SZLWilpUwcm0b5C7Yq4yofvmMYwrzdT2aAEdSEzpiNCmkLqG3/whLTX+EvOArlxWaeHvxrvxTxE96tEgpp7pQJrnLeyV4BDe6yxl+2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctmz3hHo; arc=none smtp.client-ip=209.85.160.195
+	 MIME-Version; b=oqc8jAZjVRk4EF20IfxDBgwvs6KMsA9eJT31H4cjynYM15cCXVu6xf639FCrMUNE5Nt/Hl2bgetqOJeRvoztHmvQUaHKIugN8UJutMUz0sqK04/YU6JGbla1Uvo9gf0gxiCI0sSbQFgttlW8R1CqNsHksMx1GCXsNf9VN/7u+Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UAuDhEdQ; arc=none smtp.client-ip=209.85.160.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctmz3hHo"
-Received: by mail-qt1-f195.google.com with SMTP id d75a77b69052e-4766631a6a4so30162901cf.2
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 00:32:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAuDhEdQ"
+Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-476964b2c1dso59384741cf.3
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 00:32:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744529568; x=1745134368; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744529572; x=1745134372; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cjFyocYzTktppiP9pnTPpA+jTKDR4/yXZeC89Tb5gFw=;
-        b=ctmz3hHoiD9pV8S0X50h5GwemuZ6LGaO7FM4XkI9uLwKI0Ne7RKsGA1uIxkALDQx9L
-         9tDGicNGe5gsD52dXXvphOFV1CnG3oI2QwQE9OvQDXhzXQK+f7atVBWC2rq4MOmhqbE4
-         XowZ/2KaMynuRLJ6IXkE25Hv/UfNEGS0XcyN3w1Kuhsly0hvemor0ruIPJUwdZOWTOVI
-         KZ6zaD586C/Ww7gq70NwRv93rMq2D9mMuaMOtE5T5gLWKtB2Zp8TGrOJRwun0aqqdsiQ
-         J13ca6efW1V4zNceu8nRPEmI/4vjCqKSeGsHoHXIKq2VlCtrejKKDis2GoYZKqVmR2hN
-         sA1A==
+        bh=3uby1Q+b765/55h4CWBlJtND/wv5GPZpZ5T+Fpb9xa8=;
+        b=UAuDhEdQCMaLguj2iiWWmhUli5PPjUyS53XBN/UG37PVpvARAGD8UjbuOk5pF1c9jR
+         5mmEj04bvESeVPG4Ms5iJSsmGakMurtpu3bJjNyonisUmr09rMnypHjV+In+yYIeUjaI
+         xbSqzbyNpiteCN7CHgQ9CwtzeGigdjpviw6W6vZmAKzp1otkOFtbmHTf4No3KOqaSpsd
+         qNLiP+bFS2Lhn/2G+HxT72URBt2n0WzOst7LWZgl6XGPvML+RQkNkBFKHb7wCUIdrQZO
+         /lPIS6HDpudZY+gjWCGLqIzk3/KJRfc4psfbnOURtmSzt1lNBHWEMM8WU3IEhBzj5Q95
+         Pf+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744529568; x=1745134368;
+        d=1e100.net; s=20230601; t=1744529572; x=1745134372;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cjFyocYzTktppiP9pnTPpA+jTKDR4/yXZeC89Tb5gFw=;
-        b=plu8ZKLK+1dg83f8nmxp6A+ark5jS7W31TknaA527LFx8BF/Om2R3ANuL29oNh1661
-         T7Z180xiCgsXWHnVW4qCbqMNE64VZPm/ELd8F7VR7N5lxH6d+ciZIywChXYNelBXz9+d
-         UIauaNxwIz6QUFgPYU3GRLhfmJVAacV2zVxnRFh0sQZA8nchQQQtmVG3/ZtWBmgTWWYY
-         fypZez5ZXDXDxjhN1qSdZl1iMBLTfdPBoo6pcDGJGziKJUL2hVL0rJ+KKk2AWUtrEoyL
-         SOFxKwUmL2MRewHyw/g+rMuFVjJr4LOxt7A5NnzTaklgl+1jAlPUAu8YnrTOctcNaCmo
-         ebrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCcjEbsei2aXsrpDIEIqytPycXAr9Gajtz4GhE5pXgaeNNePzjbrqyzsCNbnzcIdXZwf9Nut5s8xHRAeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVPoBq9PeGMhJgYhSZcRypikjZyf0/ya0mpGSfNbt52M0OH7Sl
-	R8oIfoGgt3gmr2EOAJ+1moM2EjuLNPNzRsIfiGBSxDW7TJcoWwnTO/Eq9tKmS5964g==
-X-Gm-Gg: ASbGncunm3vt4QKYjmKA8Uv6xl1Xyngjgk+Cb8fKeoyTYIMcW1TFGk4Sp4o4HhavLq2
-	F3c9qgYrEI4CfBe/eh5SJEiJia06yqvgbU/QkYSxroLVt05dBxs2iW4nVqJzpAzsSei+rnGGxDB
-	nbYcptbC4Cy1wDzKWjZwO+X1j32EvjBCVz/uayELMX5iJdWCy71rTZ1+YLCyO/V5YgDuHWraMF/
-	mcLMnU5Gdn+IILF/neRS6lXPr70Vd4ArzDrKzsdplPCNete8QWyzcd3JMPK/t+yA9/wE2tDhBsR
-	hyrsy9kT/sGPy6JJfTPBoZcsDDFGAlhxiKr8ZXnSPDGtYqki19pVZL8bJEbma5VRADjwgAbSEv2
-	HeUne5ns41O98wkydZQ==
-X-Google-Smtp-Source: AGHT+IGpMWIVWiaLD+lZUi3FoY3HlefhbjuHhYs+GY72x7GKKVsUGlazfJiv8se0ZguiIp9mskaJEg==
-X-Received: by 2002:a05:622a:592:b0:474:fab0:6564 with SMTP id d75a77b69052e-479775d5f9bmr121885351cf.37.1744529568160;
-        Sun, 13 Apr 2025 00:32:48 -0700 (PDT)
+        bh=3uby1Q+b765/55h4CWBlJtND/wv5GPZpZ5T+Fpb9xa8=;
+        b=GheWCUJIr/7lC1PAQ0mqqIb1NIFPaaZEBMn7hzLxU7G2uRnu+EyYKvRRVrhlGzM/fz
+         UZwaU/MENyDFQn9v3UqG/GaNuxUiFVuej4kkboDFTwjuH1DvYtFkR1lONVqKnzJjcxEz
+         2wjVsoOt7lYYhgEf30jaegDXKsEyXDainjKKlTx6N+SZzDrCnroG5yw0f9bMjefc6Za3
+         nMvQIA3xPEAvWLbn+/4aWvMLffe7R4ym2TBjW9Nji8wO1zhE2cDh3QmQDLWpe9MLcYun
+         NbnLWLV6bkpys98mNtPasXe6rVOFcTRsa+fyBiuLDrG13CpvHOuhCLQ0TV2uKcCPEtCg
+         ViZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNVS4UZiahIF9vulZvi/VW9FirDOYY8C5N3AY213sjxL1k7qrdbmEQFaxPgucG39iI1s1HlWb5reMFs/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw58J7j8Lqy82fpxFQ81/DiSTp+6OWfMYpSfAy9w25sNtGc4Zuo
+	cY7JhVzcnAClrxG91+fOnFbCSXKqPK6HLcyPW9ONQj2Xi7B+udb5
+X-Gm-Gg: ASbGncu/+OzyuYV3kY+c6N27suC6kQpB9UGnghQGMVNpLvuHCGZB7QlooSXXWrmDkmT
+	rjEk9Ji81oWjBJqPlQAZA6sn/179o/J05l12YMPpcFXmiCEmKsUhkk1YjqBTRcZV9jqz+be9CoL
+	9WnH3AnhepU3fXWkFn0J9HvlqL8dCvB8M01zZbX/Enq7oiLJuM+tK2t5qyb2/r1gTq7Ovlj8n9z
+	IxGg9SREQywNGgrl8oPfk3GNce4RiGYXHTIfgPLArknPH4fcbfQ2iPdosoX6cm472PYAgWZS4PB
+	7VYdJXoeUK6FiuNpxOLLWx93sXBiS6T/U+ytU9LoPaaYqinx5Hp5DdmooXYl98taUqzmeu3TU7f
+	9+8x7OcBzlxp4Nt62LA==
+X-Google-Smtp-Source: AGHT+IHRArwDsyiOHSw0uFQ2zMdIEQRmtTDX1Ac43R0yu6Md3oC0QegCdhqwo2sEf+nt/jF/DRPgjA==
+X-Received: by 2002:ac8:7dcc:0:b0:479:1a10:8958 with SMTP id d75a77b69052e-4797750fb92mr128705241cf.1.1744529571657;
+        Sun, 13 Apr 2025 00:32:51 -0700 (PDT)
 Received: from UbuntuDev.. (syn-074-067-077-020.res.spectrum.com. [74.67.77.20])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb0b58csm52142401cf.2.2025.04.13.00.32.47
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb0b58csm52142401cf.2.2025.04.13.00.32.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 00:32:47 -0700 (PDT)
+        Sun, 13 Apr 2025 00:32:51 -0700 (PDT)
 From: Ganesh Kumar Pittala <ganeshkpittala@gmail.com>
 To: johan@kernel.org,
 	elder@kernel.org,
@@ -71,9 +71,9 @@ Cc: greybus-dev@lists.linaro.org,
 	rmfrfs@gmail.com,
 	pure.logic@nexus-software.ie,
 	ganeshkpittala@gmail.com
-Subject: [PATCH v2 2/4] staging: greybus: replace sprintf with sysfs_emit in sysfs show functions
-Date: Sun, 13 Apr 2025 07:32:18 +0000
-Message-ID: <20250413073220.15931-3-ganeshkpittala@gmail.com>
+Subject: [PATCH v2 3/4] staging: greybus: refactor gb_loopback_fn into smaller helper functions
+Date: Sun, 13 Apr 2025 07:32:19 +0000
+Message-ID: <20250413073220.15931-4-ganeshkpittala@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250413073220.15931-1-ganeshkpittala@gmail.com>
 References: <20250413073220.15931-1-ganeshkpittala@gmail.com>
@@ -85,284 +85,214 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch replaces deprecated uses of sprintf() with the safer
-sysfs_emit() helper in multiple sysfs show functions across the
-Greybus staging drivers.
+This patch refactors the gb_loopback_fn() function in loopback.c by
+splitting large blocks of logic into well-named static helpers to
+improve clarity, readability, and maintainability.
 
-The sysfs_emit() API is designed specifically for sysfs usage and
-ensures proper formatting, length checks, and termination, aligning
-with current kernel best practices.
+The control flow remains unchanged. No functional modifications
+are introduced.
 
-Affected files:
-  - audio_manager_module.c
-  - loopback.c (sysfs-related only)
-  - arche-platform.c
-  - arche-apb-ctrl.c
-  - light.c
-  - gbphy.c
+This aligns with kernel coding style guidelines for long functions
+and helps future contributors understand and modify loopback behavior
+more easily.
 
 Signed-off-by: Ganesh Kumar Pittala <ganeshkpittala@gmail.com>
 ---
- drivers/staging/greybus/arche-apb-ctrl.c       | 11 ++++++-----
- drivers/staging/greybus/arche-platform.c       | 11 ++++++-----
- drivers/staging/greybus/audio_manager_module.c | 13 +++++++------
- drivers/staging/greybus/gbphy.c                |  3 ++-
- drivers/staging/greybus/light.c                |  5 +++--
- drivers/staging/greybus/loopback.c             | 15 ++++++++-------
- 6 files changed, 32 insertions(+), 26 deletions(-)
+ drivers/staging/greybus/loopback.c | 152 ++++++++++++++++-------------
+ 1 file changed, 82 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/staging/greybus/arche-apb-ctrl.c b/drivers/staging/greybus/arche-apb-ctrl.c
-index 90ab32638d3f..9862188e8367 100644
---- a/drivers/staging/greybus/arche-apb-ctrl.c
-+++ b/drivers/staging/greybus/arche-apb-ctrl.c
-@@ -17,6 +17,7 @@
- #include <linux/pm.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
-+#include <linux/sysfs.h>
- #include "arche_platform.h"
- 
- static void apb_bootret_deassert(struct device *dev);
-@@ -299,16 +300,16 @@ static ssize_t state_show(struct device *dev,
- 
- 	switch (apb->state) {
- 	case ARCHE_PLATFORM_STATE_OFF:
--		return sprintf(buf, "off%s\n",
-+		return sysfs_emit(buf, "off%s\n",
- 				apb->init_disabled ? ",disabled" : "");
- 	case ARCHE_PLATFORM_STATE_ACTIVE:
--		return sprintf(buf, "active\n");
-+		return sysfs_emit(buf, "active\n");
- 	case ARCHE_PLATFORM_STATE_STANDBY:
--		return sprintf(buf, "standby\n");
-+		return sysfs_emit(buf, "standby\n");
- 	case ARCHE_PLATFORM_STATE_FW_FLASHING:
--		return sprintf(buf, "fw_flashing\n");
-+		return sysfs_emit(buf, "fw_flashing\n");
- 	default:
--		return sprintf(buf, "unknown state\n");
-+		return sysfs_emit(buf, "unknown state\n");
- 	}
- }
- 
-diff --git a/drivers/staging/greybus/arche-platform.c b/drivers/staging/greybus/arche-platform.c
-index d48464390f58..2e706c1169d5 100644
---- a/drivers/staging/greybus/arche-platform.c
-+++ b/drivers/staging/greybus/arche-platform.c
-@@ -21,6 +21,7 @@
- #include <linux/time.h>
- #include <linux/greybus.h>
- #include <linux/of.h>
-+#include <linux/sysfs.h>
- #include "arche_platform.h"
- 
- #if IS_ENABLED(CONFIG_USB_HSIC_USB3613)
-@@ -374,15 +375,15 @@ static ssize_t state_show(struct device *dev,
- 
- 	switch (arche_pdata->state) {
- 	case ARCHE_PLATFORM_STATE_OFF:
--		return sprintf(buf, "off\n");
-+		return sysfs_emit(buf, "off\n");
- 	case ARCHE_PLATFORM_STATE_ACTIVE:
--		return sprintf(buf, "active\n");
-+		return sysfs_emit(buf, "active\n");
- 	case ARCHE_PLATFORM_STATE_STANDBY:
--		return sprintf(buf, "standby\n");
-+		return sysfs_emit(buf, "standby\n");
- 	case ARCHE_PLATFORM_STATE_FW_FLASHING:
--		return sprintf(buf, "fw_flashing\n");
-+		return sysfs_emit(buf, "fw_flashing\n");
- 	default:
--		return sprintf(buf, "unknown state\n");
-+		return sysfs_emit(buf, "unknown state\n");
- 	}
- }
- 
-diff --git a/drivers/staging/greybus/audio_manager_module.c b/drivers/staging/greybus/audio_manager_module.c
-index 4a4dfb42f50f..781144be4eec 100644
---- a/drivers/staging/greybus/audio_manager_module.c
-+++ b/drivers/staging/greybus/audio_manager_module.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- 
- #include "audio_manager.h"
- #include "audio_manager_private.h"
-@@ -76,7 +77,7 @@ static void gb_audio_module_release(struct kobject *kobj)
- static ssize_t gb_audio_module_name_show(struct gb_audio_manager_module *module,
- 					 struct gb_audio_manager_module_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%s", module->desc.name);
-+	return sysfs_emit(buf, "%s\n", module->desc.name);
- }
- 
- static struct gb_audio_manager_module_attribute gb_audio_module_name_attribute =
-@@ -85,7 +86,7 @@ static struct gb_audio_manager_module_attribute gb_audio_module_name_attribute =
- static ssize_t gb_audio_module_vid_show(struct gb_audio_manager_module *module,
- 					struct gb_audio_manager_module_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%d", module->desc.vid);
-+	return sysfs_emit(buf, "%d\n", module->desc.vid);
- }
- 
- static struct gb_audio_manager_module_attribute gb_audio_module_vid_attribute =
-@@ -94,7 +95,7 @@ static struct gb_audio_manager_module_attribute gb_audio_module_vid_attribute =
- static ssize_t gb_audio_module_pid_show(struct gb_audio_manager_module *module,
- 					struct gb_audio_manager_module_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%d", module->desc.pid);
-+	return sysfs_emit(buf, "%d\n", module->desc.pid);
- }
- 
- static struct gb_audio_manager_module_attribute gb_audio_module_pid_attribute =
-@@ -104,7 +105,7 @@ static ssize_t gb_audio_module_intf_id_show(struct gb_audio_manager_module *modu
- 					    struct gb_audio_manager_module_attribute *attr,
- 					    char *buf)
- {
--	return sprintf(buf, "%d", module->desc.intf_id);
-+	return sysfs_emit(buf, "%d\n", module->desc.intf_id);
- }
- 
- static struct gb_audio_manager_module_attribute
-@@ -115,7 +116,7 @@ static ssize_t gb_audio_module_ip_devices_show(struct gb_audio_manager_module *m
- 					       struct gb_audio_manager_module_attribute *attr,
- 					       char *buf)
- {
--	return sprintf(buf, "0x%X", module->desc.ip_devices);
-+	return sysfs_emit(buf, "0x%X\n", module->desc.ip_devices);
- }
- 
- static struct gb_audio_manager_module_attribute
-@@ -126,7 +127,7 @@ static ssize_t gb_audio_module_op_devices_show(struct gb_audio_manager_module *m
- 					       struct gb_audio_manager_module_attribute *attr,
- 					       char *buf)
- {
--	return sprintf(buf, "0x%X", module->desc.op_devices);
-+	return sysfs_emit(buf, "0x%X\n", module->desc.op_devices);
- }
- 
- static struct gb_audio_manager_module_attribute
-diff --git a/drivers/staging/greybus/gbphy.c b/drivers/staging/greybus/gbphy.c
-index 6adcad286633..72d72aa7cb0f 100644
---- a/drivers/staging/greybus/gbphy.c
-+++ b/drivers/staging/greybus/gbphy.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- #include <linux/greybus.h>
-+#include <linux/sysfs.h>
- 
- #include "gbphy.h"
- 
-@@ -31,7 +32,7 @@ static ssize_t protocol_id_show(struct device *dev,
- {
- 	struct gbphy_device *gbphy_dev = to_gbphy_dev(dev);
- 
--	return sprintf(buf, "0x%02x\n", gbphy_dev->cport_desc->protocol_id);
-+	return sysfs_emit(buf, "0x%02x\n", gbphy_dev->cport_desc->protocol_id);
- }
- static DEVICE_ATTR_RO(protocol_id);
- 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index e509fdc715db..db0e98faec08 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/greybus.h>
-+#include <linux/sysfs.h>
- #include <media/v4l2-flash-led-class.h>
- 
- #define NAMES_MAX	32
-@@ -173,7 +174,7 @@ static ssize_t fade_##__dir##_show(struct device *dev,			\
- 	struct led_classdev *cdev = dev_get_drvdata(dev);		\
- 	struct gb_channel *channel = get_channel_from_cdev(cdev);	\
- 									\
--	return sprintf(buf, "%u\n", channel->fade_##__dir);		\
-+	return sysfs_emit(buf, "%u\n", channel->fade_##__dir);		\
- }									\
- 									\
- static ssize_t fade_##__dir##_store(struct device *dev,			\
-@@ -220,7 +221,7 @@ static ssize_t color_show(struct device *dev, struct device_attribute *attr,
- 	struct led_classdev *cdev = dev_get_drvdata(dev);
- 	struct gb_channel *channel = get_channel_from_cdev(cdev);
- 
--	return sprintf(buf, "0x%08x\n", channel->color);
-+	return sysfs_emit(buf, "0x%08x\n", channel->color);
- }
- 
- static ssize_t color_store(struct device *dev, struct device_attribute *attr,
 diff --git a/drivers/staging/greybus/loopback.c b/drivers/staging/greybus/loopback.c
-index 1f19323b0e1a..c194afea941a 100644
+index c194afea941a..1e3644ede1b6 100644
 --- a/drivers/staging/greybus/loopback.c
 +++ b/drivers/staging/greybus/loopback.c
-@@ -26,6 +26,7 @@
- #include <linux/atomic.h>
- #include <linux/pm_runtime.h>
- #include <linux/greybus.h>
-+#include <linux/sysfs.h>
- #include <asm/div64.h>
+@@ -832,105 +832,117 @@ static void gb_loopback_async_wait_to_send(struct gb_loopback *gb)
+ 				  kthread_should_stop());
+ }
  
- #define NSEC_PER_DAY 86400000000000ULL
-@@ -125,7 +126,7 @@ static ssize_t field##_show(struct device *dev,			\
- 			    char *buf)					\
- {									\
- 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
--	return sprintf(buf, "%u\n", gb->field);			\
-+	return sysfs_emit(buf, "%u\n", gb->field);			\
- }									\
- static DEVICE_ATTR_RO(field)
+-static int gb_loopback_fn(void *data)
++static bool gb_loopback_should_stop(struct gb_loopback *gb,
++				    struct gb_bundle *bundle)
++{
++	if (!gb->type) {
++		gb_pm_runtime_put_autosuspend(bundle);
++		wait_event_interruptible(gb->wq,
++					 gb->type || kthread_should_stop());
++		if (kthread_should_stop())
++			return true;
++		gb_pm_runtime_get_sync(bundle);
++	}
++	return kthread_should_stop();
++}
++
++static void gb_loopback_handle_completion(struct gb_loopback *gb,
++					  struct gb_bundle *bundle)
++{
++	gb_loopback_async_wait_all(gb);
++
++	mutex_lock(&gb->mutex);
++	if (gb->iteration_count == gb->iteration_max) {
++		gb->type = 0;
++		gb->send_count = 0;
++		sysfs_notify(&gb->dev->kobj, NULL, "iteration_count");
++		dev_dbg(&bundle->dev, "load test complete\n");
++	} else {
++		dev_dbg(&bundle->dev, "continuing on with new test set\n");
++	}
++	mutex_unlock(&gb->mutex);
++}
++
++static void gb_loopback_dispatch_operation(struct gb_loopback *gb, int type,
++					   u32 size)
+ {
+ 	int error = 0;
+-	int us_wait = 0;
+-	int type;
+-	int ret;
+-	u32 size;
  
-@@ -137,8 +138,8 @@ static ssize_t name##_##field##_show(struct device *dev,	\
- 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
- 	/* Report 0 for min and max if no transfer succeeded */		\
- 	if (!gb->requests_completed)					\
--		return sprintf(buf, "0\n");				\
--	return sprintf(buf, "%" #type "\n", gb->name.field);		\
-+		return sysfs_emit(buf, "0\n");				\
-+	return sysfs_emit(buf, "%" #type "\n", gb->name.field);		\
- }									\
- static DEVICE_ATTR_RO(name##_##field)
++	if (gb->async) {
++		if (type == GB_LOOPBACK_TYPE_PING)
++			error = gb_loopback_async_ping(gb);
++		else if (type == GB_LOOPBACK_TYPE_TRANSFER)
++			error = gb_loopback_async_transfer(gb, size);
++		else if (type == GB_LOOPBACK_TYPE_SINK)
++			error = gb_loopback_async_sink(gb, size);
++
++		if (error) {
++			gb->error++;
++			gb->iteration_count++;
++		}
++	} else {
++		if (type == GB_LOOPBACK_TYPE_PING)
++			error = gb_loopback_sync_ping(gb);
++		else if (type == GB_LOOPBACK_TYPE_TRANSFER)
++			error = gb_loopback_sync_transfer(gb, size);
++		else if (type == GB_LOOPBACK_TYPE_SINK)
++			error = gb_loopback_sync_sink(gb, size);
++
++		if (error)
++			gb->error++;
++		gb->iteration_count++;
++		gb_loopback_calculate_stats(gb, !!error);
++	}
++}
++
++static void gb_loopback_delay_if_needed(int us_wait)
++{
++	if (us_wait) {
++		if (us_wait < 20000)
++			usleep_range(us_wait, us_wait + 100);
++		else
++			msleep(us_wait / 1000);
++	}
++}
++
++static int gb_loopback_fn(void *data)
++{
++	int us_wait = 0, type;
++	u32 size;
+ 	struct gb_loopback *gb = data;
+ 	struct gb_bundle *bundle = gb->connection->bundle;
  
-@@ -158,7 +159,7 @@ static ssize_t name##_avg_show(struct device *dev,		\
- 	rem = do_div(avg, count);					\
- 	rem *= 1000000;							\
- 	do_div(rem, count);						\
--	return sprintf(buf, "%llu.%06u\n", avg, (u32)rem);		\
-+	return sysfs_emit(buf, "%llu.%06u\n", avg, (u32)rem);		\
- }									\
- static DEVICE_ATTR_RO(name##_avg)
+-	ret = gb_pm_runtime_get_sync(bundle);
+-	if (ret)
+-		return ret;
++	if (gb_pm_runtime_get_sync(bundle))
++		return -EIO;
  
-@@ -173,7 +174,7 @@ static ssize_t field##_show(struct device *dev,				\
- 			    char *buf)					\
- {									\
- 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
--	return sprintf(buf, "%" #type "\n", gb->field);			\
-+	return sysfs_emit(buf, "%" #type "\n", gb->field);			\
- }									\
- static ssize_t field##_store(struct device *dev,			\
- 			    struct device_attribute *attr,		\
-@@ -199,7 +200,7 @@ static ssize_t field##_show(struct device *dev,		\
- 			    char *buf)					\
- {									\
- 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
--	return sprintf(buf, "%u\n", gb->field);				\
-+	return sysfs_emit(buf, "%u\n", gb->field);				\
- }									\
- static DEVICE_ATTR_RO(field)
+ 	while (1) {
+-		if (!gb->type) {
+-			gb_pm_runtime_put_autosuspend(bundle);
+-			wait_event_interruptible(gb->wq, gb->type ||
+-						 kthread_should_stop());
+-			ret = gb_pm_runtime_get_sync(bundle);
+-			if (ret)
+-				return ret;
+-		}
+-
+-		if (kthread_should_stop())
++		if (gb_loopback_should_stop(gb, bundle))
+ 			break;
  
-@@ -209,7 +210,7 @@ static ssize_t field##_show(struct device *dev,				\
- 			    char *buf)					\
- {									\
- 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
--	return sprintf(buf, "%" #type "\n", gb->field);			\
-+	return sysfs_emit(buf, "%" #type "\n", gb->field);			\
- }									\
- static ssize_t field##_store(struct device *dev,			\
- 			    struct device_attribute *attr,		\
+-		/* Limit the maximum number of in-flight async operations */
+ 		gb_loopback_async_wait_to_send(gb);
+ 		if (kthread_should_stop())
+ 			break;
+ 
+ 		mutex_lock(&gb->mutex);
+ 
+-		/* Optionally terminate */
+ 		if (gb->send_count == gb->iteration_max) {
+ 			mutex_unlock(&gb->mutex);
+-
+-			/* Wait for synchronous and asynchronous completion */
+-			gb_loopback_async_wait_all(gb);
+-
+-			/* Mark complete unless user-space has poked us */
+-			mutex_lock(&gb->mutex);
+-			if (gb->iteration_count == gb->iteration_max) {
+-				gb->type = 0;
+-				gb->send_count = 0;
+-				sysfs_notify(&gb->dev->kobj,  NULL,
+-					     "iteration_count");
+-				dev_dbg(&bundle->dev, "load test complete\n");
+-			} else {
+-				dev_dbg(&bundle->dev,
+-					"continuing on with new test set\n");
+-			}
+-			mutex_unlock(&gb->mutex);
++			gb_loopback_handle_completion(gb, bundle);
+ 			continue;
+ 		}
++
+ 		size = gb->size;
+ 		us_wait = gb->us_wait;
+ 		type = gb->type;
+ 		if (ktime_to_ns(gb->ts) == 0)
+ 			gb->ts = ktime_get();
+ 
+-		/* Else operations to perform */
+-		if (gb->async) {
+-			if (type == GB_LOOPBACK_TYPE_PING)
+-				error = gb_loopback_async_ping(gb);
+-			else if (type == GB_LOOPBACK_TYPE_TRANSFER)
+-				error = gb_loopback_async_transfer(gb, size);
+-			else if (type == GB_LOOPBACK_TYPE_SINK)
+-				error = gb_loopback_async_sink(gb, size);
+-
+-			if (error) {
+-				gb->error++;
+-				gb->iteration_count++;
+-			}
+-		} else {
+-			/* We are effectively single threaded here */
+-			if (type == GB_LOOPBACK_TYPE_PING)
+-				error = gb_loopback_sync_ping(gb);
+-			else if (type == GB_LOOPBACK_TYPE_TRANSFER)
+-				error = gb_loopback_sync_transfer(gb, size);
+-			else if (type == GB_LOOPBACK_TYPE_SINK)
+-				error = gb_loopback_sync_sink(gb, size);
+-
+-			if (error)
+-				gb->error++;
+-			gb->iteration_count++;
+-			gb_loopback_calculate_stats(gb, !!error);
+-		}
++		gb_loopback_dispatch_operation(gb, type, size);
++
+ 		gb->send_count++;
+ 		mutex_unlock(&gb->mutex);
+ 
+-		if (us_wait) {
+-			if (us_wait < 20000)
+-				usleep_range(us_wait, us_wait + 100);
+-			else
+-				msleep(us_wait / 1000);
+-		}
++		gb_loopback_delay_if_needed(us_wait);
+ 	}
+ 
+ 	gb_pm_runtime_put_autosuspend(bundle);
 -- 
 2.43.0
 
