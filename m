@@ -1,81 +1,111 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6DB1990AF
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 12:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C74F1A314F
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 12:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744547869; cv=none; b=UpzJY/6zhtm89KqwCsss5dllyyLYp2rwtjQmWYiyI6eJtewITKE3JKQ6JX1IOns/TcqThvry4DfJLA+2a9dZAHKIs9nEdQHnhVOBEqpamp7rLLBcl6LtgHnGe1tM8X6vy/QVQhraJfK9RljcTbcheIl6cXATh8wmWSD35YcZdf4=
+	t=1744548187; cv=none; b=gU1vHkq8yChPgVZEvdQ7f4e8NZSVp29uAbuYU5fW6AWt/HrcDm2CPetx6wLwbx6bq8wmKnBYg9P5OJgzgO3T2M/t3Ha1OBjHvqbUhcPgqdBvWBYQg48BAc0Z8pX2ilu/Od8xjqVYmh4guNMK410qpgBBwV3SnYyFMov1NVfvNJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744547869; c=relaxed/simple;
-	bh=H/Zwrzyw0D8VXwhrddeUW3ZXA2N5G0mJ/+sbNP1LMnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qyX/o0nG1tPU3yZbLo/Kq77NJaBuB8UzAGzXBQxVXKqDuXgHuPMPLfG/higM6JF/lPw2tLlO3SH+tyRcUupTI1SJcscAjGBG1Uhp6/s3UB9DMfn0IcB0l71S+s+9wdiHxu6jqlasjCCXvgRo/CyCMhrVuHTUr+G/WfRBHvF843w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-82-137.bstnma.fios.verizon.net [173.48.82.137])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 53DCbb2Z008458
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 13 Apr 2025 08:37:38 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 5205B2E00E9; Sun, 13 Apr 2025 08:37:37 -0400 (EDT)
-Date: Sun, 13 Apr 2025 08:37:37 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] ext4 bug fixes for v6.15-rc2
-Message-ID: <20250413123737.GA1116899@mit.edu>
+	s=arc-20240116; t=1744548187; c=relaxed/simple;
+	bh=YBVrP0ioAfqFi7HGGInQPXg0PMtVOG28MGA1HhQi8zU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=bfYIWG64NxUiSUDSATqHNDF7dTz0YTfV0qD3/mj85/qVkFD3BzVhknnWy5FOAYIMU8454h1wyzJZtKJHnYKeagPTP+t+d/cGh7/wUHj/uVyw2ejdT4w1FN00eOndhvx9SVzXCwHYj53thJ6A3sDrFpxiEAV9Oh3I1AuxRbb/8T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cpL7bDRa; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cpL7bDRa"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744548181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+g3tIT1J01F3PNxqjXfPswRzwcT32eu6uks0bITlMTA=;
+	b=cpL7bDRajhjTosoM/A/fZJh05HWg4SwWQJXrUDdpyQJcFJsGx6U0DrUQz/CglF16Z2pEIy
+	OcnHAUecAcd1vH7w5NRQW9GqqXSPOGhidBrIJwF/WuxptPTZGtPC6xTvqnOCXvNRQrYh64
+	y7k/djtKeN+CJbTOXaMomUe0ajizRGY=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [RESEND PATCH] mux: Convert mux_control_ops to a flex array
+ member in mux_chip
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <202504071119.DB9497A510@keescook>
+Date: Sun, 13 Apr 2025 14:42:49 +0200
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A6D52C12-29BF-4A51-B677-584EFC4F3823@linux.dev>
+References: <20250302230220.245739-3-thorsten.blum@linux.dev>
+ <202503031040.223DEF2781@keescook>
+ <785391F0-C381-47FE-89E7-6265F7761208@linux.dev>
+ <202504071119.DB9497A510@keescook>
+To: Peter Rosin <peda@axentia.se>
+X-Migadu-Flow: FLOW_OUT
 
-The following changes since commit d5e206778e96e8667d3bde695ad372c296dc9353:
+Hi Peter,
 
-  ext4: fix OOB read when checking dotdot dir (2025-03-21 01:33:11 -0400)
+On 7. Apr 2025, at 20:20, Kees Cook wrote:
+> On Fri, Mar 07, 2025 at 12:32:07PM +0100, Thorsten Blum wrote:
+>> On 3. Mar 2025, at 19:44, Kees Cook wrote:
+>>> On Mon, Mar 03, 2025 at 12:02:22AM +0100, Thorsten Blum wrote:
+>>>> Convert mux_control_ops to a flexible array member at the end of =
+the
+>>>> mux_chip struct and add the __counted_by() compiler attribute to
+>>>> improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>>>> CONFIG_FORTIFY_SOURCE.
+>>>>=20
+>>>> Use struct_size() to calculate the number of bytes to allocate for =
+a new
+>>>> mux chip and to remove the following Coccinelle/coccicheck warning:
+>>>>=20
+>>>> WARNING: Use struct_size
+>>>>=20
+>>>> Use size_add() to safely add any extra bytes.
+>>>>=20
+>>>> Compile-tested only.
+>>>=20
+>>> I believe this will fail at runtime. Note that sizeof_priv follows =
+the
+>>> allocation, so at the very least, you'd need to update:
+>>>=20
+>>> static inline void *mux_chip_priv(struct mux_chip *mux_chip)
+>>> {
+>>>       return &mux_chip->mux[mux_chip->controllers];
+>>> }
+>>>=20
+>>> to not use the mux array itself as a location reference because it =
+will
+>>> be seen as out of bounds.
+>>>=20
+>>> To deal with this, the location will need to be calculated using
+>>> mux_chip as the base, not mux_chip->mux as the base. For example, =
+see
+>>> commit 838ae9f45c4e ("nouveau/gsp: Avoid addressing beyond end of =
+rpc->entries")
+>>=20
+>> Since this should work and is well-defined C code according to =
+[1][2],
+>> could you give this patch another look or should I still change it =
+and
+>> submit a v2?
+>=20
+> I think C is wrong here, but it seems it will continue to accidentally
+> work. I personally would like a v3 that fixes this, but I leave it to
+> Peter who is the MUX maintainer...
 
-are available in the Git repository at:
+What's your take on this?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus-6.15-rc2
+Thanks,
+Thorsten
 
-for you to fetch changes up to 94824ac9a8aaf2fb3c54b4bdde842db80ffa555d:
-
-  ext4: fix off-by-one error in do_split (2025-04-12 22:07:36 -0400)
-
-----------------------------------------------------------------
-A few more miscellaneous ext4 bug fixes and cleanups including some
-syzbot failures and fixing a stale file handing refeencing an inode
-previously used as a regular file, but which has been deleted and
-reused as an ea_inode would result in ext4 erroneously consider this a
-case of fs corrupotion.
-
-----------------------------------------------------------------
-Artem Sadovnikov (1):
-      ext4: fix off-by-one error in do_split
-
-Gustavo A. R. Silva (1):
-      ext4: avoid -Wflex-array-member-not-at-end warning
-
-Jann Horn (1):
-      ext4: don't treat fhandle lookup of ea_inode as FS corruption
-
-Ojaswin Mujoo (1):
-      ext4: make block validity check resistent to sb bh corruption
-
-Tom Vierjahn (1):
-      Documentation: ext4: Add fields to ext4_super_block documentation
-
- Documentation/filesystems/ext4/super.rst | 20 ++++++++++++-----
- fs/ext4/block_validity.c                 |  5 ++---
- fs/ext4/inode.c                          | 75 +++++++++++++++++++++++++++++++++++++++++++-------------------
- fs/ext4/mballoc.c                        | 18 +++++++--------
- fs/ext4/namei.c                          |  2 +-
- 5 files changed, 77 insertions(+), 43 deletions(-)
