@@ -1,249 +1,310 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DD717583;
-	Sun, 13 Apr 2025 09:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744537324; cv=fail; b=IJ5vFyZsI901p9EMtQCrjIqW9V6mmHpljoQcNgh22vlLhxb4bEBM1fLOfcATpUjt6r+uKrjF/mK8K4M05XbK7zYGKTsHk2UcnGq67gJck81XmnZu6KPVtkno9YFYpPfce+nrVphw00Wo9clNx5ISJXm/a7ZoLtnolhvoa+3L+rM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744537324; c=relaxed/simple;
-	bh=pa6uTVQjDkB0rgGbRMydWawUvEWo+qT5f6GBwiLnBgE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=e7w+pl/V8zb7UiO0z0cKfwQhl8QT8Tgt7Lv3wXnFMIF6/++o2YnTRbNfQ+NceEF1x+hJy92yqKNzpm7oe2UPdgac6VuM2Wi3Cx7EJKOUa+0z6bv1cVlEMAx7MBrixJKUGMnLzzJ4Edm1vvn+5U+Gm9Rf74FgYy3mFaa8HOcZ4jY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=V+xH5TcP; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=FkiuFj2i; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B6517B505;
+	Sun, 13 Apr 2025 09:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744537347; cv=none; b=FyLYPlQploRqdGOetaDCxAcvdKE6jbPA8SWHmClCeurnKoc2t6j7GIIu/HxtFumv+hLNh95ES1euiA99TR+BT67glHuApGffQN5hlzKR7t1xcLlC+BlJfuXjpBZGuGDmOkUD/rC3cmysudxTrEL1WJ1qg6emWGD0qOj11omXau0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744537347; c=relaxed/simple;
+	bh=aiFgaKkQ7d7rDisr7NBqzs8rMB5K3Ef46CwT6pChnjI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hq/+12QopEWTbFqwEcmOioKw/aBFw0W74dgEr3NbrcWGb5D+0UEwpRs3mx2hzRXOiHsZV1N37LppTSuB7jWmxk4tUNv7Ffk+MRPmmy5CEb3Lvpm3EwZKZt9sAZ/S8+8FcM+gLQAUnjbSiYxsixzrWAx93exRjaNA3Pam73jF67I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mmgu+Ch5; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V+xH5TcP";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="FkiuFj2i"
-X-UUID: 84ebd8c0184b11f0aae1fd9735fae912-20250413
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=pa6uTVQjDkB0rgGbRMydWawUvEWo+qT5f6GBwiLnBgE=;
-	b=V+xH5TcPLwQEj+s+BoZifCPVj3KdS7SLRNOOM5YPsoYjma2Z7V6ywiQDgmKipaBGFQWw1g0f3mabJEAgN/TXS/Zdm3f5awmDlcYSEJEaUzE9Qx5yAVMcGPdMroEFEwlWLyONuESaODmS0DaYI7IpaEt8tvaE8m00GdQdkknxNUo=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:566440c7-e6fa-447f-a4ab-9cd56d8a00dd,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:f42f82c7-16da-468a-87f7-8ca8d6b3b9f7,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
-	nt:0|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 84ebd8c0184b11f0aae1fd9735fae912-20250413
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
-	(envelope-from <kyrie.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 47758429; Sun, 13 Apr 2025 17:41:48 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Sun, 13 Apr 2025 17:41:46 +0800
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Sun, 13 Apr 2025 17:41:46 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WiM8cvJ10TojToWagH0e2bj1XoGdEYaG1e9rQIxm1qnOEZdBPX+clivgbZYS0gYjbQw2Y1ZoR7rVsRs/hqs7PhNbFarUOHSG6ed/FlOp+wnZGtVBn4U+a9Qx3QdialR0uYalLZ5FkoGZdTBjG2GIJgEGTDM9k0dUjqsUNLY/DVk1CDN0vJBpDP6VJef8erZSgYtufGedE1fJuQcIDejNAfx2cjM0t+Quj599VSyXWJc/SKkjPai8acNurVa7RDInBqyTSMI1wHeKYxX8CoTrXIQ4+hW3QPyd8T49D7awfUi/KRif0ZtcPnVBxR3q+wHvDEcG+Wv/wJA6wI7pkDbH0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pa6uTVQjDkB0rgGbRMydWawUvEWo+qT5f6GBwiLnBgE=;
- b=k7U2WWmcypynF2UBIPpV+CjS5UtagF45v4V9cljQ5GQTeb+0KMXcTz9CCzoT6iMhurNOmVyXf31aBWyLmGvbLVtsppQYKK8TdYVG5IuBp65UsOdNq/dNLozoR8rjp53ZA2ORUvVuqXnzGEfCjDpmdgiV25P9AJnz/Bi4xATS2lNICmLhJswOFYhVkRDCmj9mo28WaBGqc12iyhJZ3D630pmV0YE69o5xy6fchEzFum7R3vRIxlWL/P1VVRMrfhrdiDZJX2hA5h/J6BlanUShsI3MQr4x2EFASn3s9YCe4UoL9ShyHWWfuEIOUt/c8XBHvwWQXRPADBe/qMVaMTz6FA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmgu+Ch5"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c266c1389so2247739f8f.1;
+        Sun, 13 Apr 2025 02:42:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pa6uTVQjDkB0rgGbRMydWawUvEWo+qT5f6GBwiLnBgE=;
- b=FkiuFj2iqzB68XfqcEXvfKZtRyWBjXeANh73n332GDbF8sDnba7+aRA30/g3qIlMbgp2z5UDkLN9tMOql4xe5bfGQDHI3a/bqj4tE9uUWlYi/dmiGBF+aTYt/2OidT3zh0yMt3umKeYVCmMrHefv+WDkl8wQUHOorKhQ8HyhmXg=
-Received: from PUZPR03MB6186.apcprd03.prod.outlook.com (2603:1096:301:b9::5)
- by TYZPR03MB6847.apcprd03.prod.outlook.com (2603:1096:400:25b::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Sun, 13 Apr
- 2025 09:41:44 +0000
-Received: from PUZPR03MB6186.apcprd03.prod.outlook.com
- ([fe80::7b22:91f6:b76e:161c]) by PUZPR03MB6186.apcprd03.prod.outlook.com
- ([fe80::7b22:91f6:b76e:161c%5]) with mapi id 15.20.8632.030; Sun, 13 Apr 2025
- 09:41:43 +0000
-From: =?utf-8?B?S3lyaWUgV3UgKOWQtOaZlyk=?= <Kyrie.Wu@mediatek.com>
-To: "krzk@kernel.org" <krzk@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"kyrie.wu@mediatek.corp-partner.google.com"
-	<kyrie.wu@mediatek.corp-partner.google.com>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "hverkuil-cisco@xs4all.nl"
-	<hverkuil-cisco@xs4all.nl>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2 01/12] dt-bindings: mediatek: Add mediatek,
- mt8196-jpgdec compatible
-Thread-Topic: [PATCH v2 01/12] dt-bindings: mediatek: Add mediatek,
- mt8196-jpgdec compatible
-Thread-Index: AQHbqeIJBn3odSshKUa7Or3JaQpeN7OccvgAgAFTaoCAAgzsgIABiXEA
-Date: Sun, 13 Apr 2025 09:41:43 +0000
-Message-ID: <2ea42d0d732bbf84da0216c851c2aa21964a9c22.camel@mediatek.com>
-References: <20250410063006.5313-1-kyrie.wu@mediatek.com>
-	 <20250410063006.5313-2-kyrie.wu@mediatek.com>
-	 <20250410-wandering-righteous-hound-ac5edd@shite>
-	 <b4745bd99e28cf90581320f8ddb591f76b1c91b9.camel@mediatek.com>
-	 <9714498c-6d89-4e1c-87dc-1b6779e913e1@kernel.org>
-In-Reply-To: <9714498c-6d89-4e1c-87dc-1b6779e913e1@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PUZPR03MB6186:EE_|TYZPR03MB6847:EE_
-x-ms-office365-filtering-correlation-id: f32dd79a-20b6-45ca-b2c2-08dd7a6f666f
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?RTBraGhzV0kwZ1plOFpzU3VicmRSTTlRY0wxREZzaUNaRGp4S3VGdE04Q05k?=
- =?utf-8?B?RzVMRm5GUUxVdG1oeE9raGRIL2tuRjZOenE4bTJscHEyclA3NU9JTllZSWRy?=
- =?utf-8?B?TEdMc3NXNE1pTk1zbWxhdC9YMXhBbU9oZ1hGaEhDOG1oZFRMOVczbXdBeDJa?=
- =?utf-8?B?L1RqLzh0N1B0N25TbVdwUmlKTHp4KzRIRzZZOVVhVnMyeCtlT05FdnNqWlZk?=
- =?utf-8?B?V2FBRG5tcHU2R1c4WVZ1aFFiOVFMZUU0dEJqYlVyYTJReHh1MlRtckZ5Situ?=
- =?utf-8?B?QjZIWFgwN1lnTzFYaGVaYjAyRm03aDlFcTZSMFhGTE9Oam1PYXMwSmMyYVBQ?=
- =?utf-8?B?L3dNUFdxK2pIa2dxL3c3ck93Qk9DT3E5ODVOcmZnOTdOejhPRnp0M2d1cTFk?=
- =?utf-8?B?QTd1aVF3ampDY21GNzVyM3J5MlRZaXArZDlxb1BKRkpJdU9Gczd3MDhuazQ5?=
- =?utf-8?B?eFpYa2xuQTVHNXEwR2VYd2I5SkdINm1zNFdwaU1aRkVSVzBPWXlUK2ROVDdT?=
- =?utf-8?B?U3gvZlVaSkVLaE1oM05ZeE9BMlIwUjB1QTJGMGlHWXZuKytoYjRnanRkNHYv?=
- =?utf-8?B?QUU3dTFuakhrVlJ6NHNNejNPVFdsNEZiQVhCRFNBWGhvQ3c3YlpwdlE1djJj?=
- =?utf-8?B?eTNvVE9EQ3kweUVmbDlhV2ljUWJPc2JML29NOU9SUWhsRzdrR050aHpmK0hM?=
- =?utf-8?B?c0hWV1h4clFIYnJPbUc2bUdqMTFvc3RDL284NGJqaVNrL2lpU1IybjdVNWZK?=
- =?utf-8?B?bVIxT1lUQytDTHhvTEtoVGJ2ODlITVh2Mmd6N3dHdENIdERIYm56aGxsTkFM?=
- =?utf-8?B?UEMzQytGTS9qdDJEOFFCcFF2RlVLZm9rVlFJYUo3SlpoT1NGY0d4TzRUSkhD?=
- =?utf-8?B?bk1MSUlHZ2lZYkc0UDZzeUdnQ2kvd1lVS3JUTytFbmN2RnVOLzFDbEV6SW1I?=
- =?utf-8?B?aXlTd2lOUUxleTYybUk5VFZaclRFZjdUalBRS29JNlZGK2lqRW5CdWNHYmVO?=
- =?utf-8?B?Q0dpcENyT0s5VVd2RVdnNE93VGhUZ1RzK1ovN1pHdDc2cjNmZ3Ayd1E4ZEF5?=
- =?utf-8?B?QytNcldzQllUZW5LdjJydjBycy9vUDJUYitaWHFqRVdnSElzUDVDR2pUUmRR?=
- =?utf-8?B?U0MrVGltWFQwYmhUQUt3WGZpbGEwenZDTTlhUE96Wko2S2RFa21mTHRkYUFY?=
- =?utf-8?B?QXJ6aE55bnNDZElqcmlTK3V6NXdlT2tGYTViMW05dlhRS0VabTh4NU9JOVZ5?=
- =?utf-8?B?QS9qQk1KMlc3MmNFdWQ4NmlzMlZ3T3FUK1lZbmo1L0VEYVkvR29rMzBGbUJS?=
- =?utf-8?B?RERoZkRwejN3bkVQQ3lWQUE3T3RGZUFTSjE0Vjg1YWt3Z0wyVmhtaW5hTS9n?=
- =?utf-8?B?ZzhpcytOYUFuZnhxQXArcDJkajFHRXcxRnRQT25CUWJFdnRUUjhUbkYzZ091?=
- =?utf-8?B?S3dZYkEzNFdvbHRiY0lzNlUxZXhpYWJpQURPenhWOUdpOEFVRVlmRnNZcnR4?=
- =?utf-8?B?VXN4cTArSnFEYmpNSVkxcTIwVWtNbVRsMHltZmx6TklDUlJtSmpzclVoM0gv?=
- =?utf-8?B?MHc4RmVhbTJGL3lkY2k0Vm9MNDIvRlBZMFZJbVdjbXc2djRvaVlXU2xFa1cw?=
- =?utf-8?B?OUhOaFRpQ3dITUN4WWloWlhhQjRTVXYwcUo0NEJXa1FUeVI4Wk9kVDZtVzVO?=
- =?utf-8?B?blE3Uk1oQlJUOWdxM2pjZzVMamF3UU1nSFV5TGNibHJLK0FWbDNlUGlsRVI0?=
- =?utf-8?B?aHNFOURhMGNDbVlkVXhpbEdkK2JqMEk0azZDQWZhNDF3MExyT0daRCtHTWlU?=
- =?utf-8?B?REw2bzhXQ0l1VmJjeEErUUhWMmZoTFBEdkMvdmFabFdKSUNDWks2L2g0UUZj?=
- =?utf-8?B?MDFUM2d2QkxpMGdRdGtkeW9EWHBVbFBtS3cyU2wxMDI1dW9ieEIwYXpNWHlT?=
- =?utf-8?B?MERodTJnanQzL29OTlhNdTJWZ1Y1eEpPWmxpZ2JrSWtubnBKZ3BYMkpnVUZi?=
- =?utf-8?B?dWZmUGJxKzZRPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR03MB6186.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RDBPODRvUTltcG9mVmJoRjJ6WG10Rjl0Z1cwSGlTS01KKzFDdkhaNERQR3VB?=
- =?utf-8?B?RXVad1pVd2drWkM4d0dERHBYVWZzWjZvcGdyT3B3MVdCb1Y1SmRlazdVbTFH?=
- =?utf-8?B?eFJKUkR3L3BKY2wzM09hZmcwWjNrUjl3RVFldElyVVNhTVNISTR2K3dzeHVp?=
- =?utf-8?B?L2g2Q05tZlFOWGJPUjBTbHB4MFV2dkxjN3RhR21QN3FvNDBRVUpmQitrVVZn?=
- =?utf-8?B?M0JqTEV3RVp5UkFaV3NaR29kZUhXbDRLWmQ1TGVMbXVFQjNTSkViblZ3L3Ba?=
- =?utf-8?B?QVI3QmU2S2VNb3k4cUpsbFNSazc3MXUwMGtITnBUN1NEYmFCOWdWMVFTNzgv?=
- =?utf-8?B?RHFvRHpqc2JIaTdTbkdSNG9wc2E5TS9TM2U3eVBHcDl2SEh6bnZvRmNBbXRz?=
- =?utf-8?B?aTZib1RqUHFwOWxtUS9vM3NmUUMyeXhkRVRSSGllaXIwV3R2bFNGSTJIcCtU?=
- =?utf-8?B?T0xWWjNBQUY1Sjk2a1NBQit5N1cxaVhUVTVCZGNHUEYvZThoL0RCZEdEUG44?=
- =?utf-8?B?MlZSSjE3TWNtbkZ4bmZXcWJIS1RYdTFxMHVCUldIZGJhSk1ocDFzUlZuTWVQ?=
- =?utf-8?B?a3BYamtLTnBzR05OeExJc3h1bTRyZ1FOWlFCd1BwK1FLU1JwZUE0SHZkSmRs?=
- =?utf-8?B?YWM5QldBV3U4d3poTWc2alZaUFJZMXhiRmpqVGNpa1Y1QmptOE9MYzllSHRF?=
- =?utf-8?B?ZUprZy9rQXBiZDhKWERndTV3T3h5QXdsUHc1NzRCaXArZFVVcnFhZW1hOWd1?=
- =?utf-8?B?QmtoQ3l6ZlNGN0RTaW12c2R2bHB4N2I3QitRZEVhQzZ4VWduUzBqbFZIVGVU?=
- =?utf-8?B?V0dJTVFtam9rZG1uVE5sVTUxdzJSV05URUdmWEpEbUsyUHlRdi9sWFQ0bHM0?=
- =?utf-8?B?RDVlRUF0QUIzamlJYmp1WkVBOGozYzc4Sm1hRkoraHVoRTQ3MTdyTWdpYk15?=
- =?utf-8?B?cHNFaTJGLzhMWFpvd0xvSGE3L3FoRVlsY1ZyZlp0WTJDVEU1L0tJSXp6eE1o?=
- =?utf-8?B?U3ZRb3hXdVYvWkJIOEIwTXc5ZXkzZENrbVB3N0VuLzZvT1E2S1JpR2QxZ1VV?=
- =?utf-8?B?eVJobEtQVSsyYVlxTkllL2F6MXZDa1FGM2xXVElJRDJkaytGUTBDYjdSRzdI?=
- =?utf-8?B?c1RzaGR3ZnE5UDM5S3VrL1pKSUhqSm5Ga0gxRUJpMXdReHFrUks5VURBZ3Jv?=
- =?utf-8?B?WnM0RkpvV0JLcUhJcHRGWHJycFpFNFFHdk55Uno1aDNVWEZDenl1SU52aFpl?=
- =?utf-8?B?YUFYaXNLVHlIazNSd0Z4VDJZUnZraTd3Ni94SFVUODQ4ZnZ4MXY5N0xuZ2hP?=
- =?utf-8?B?OE5PVTVpVGJmNEhsSE5LbXdsRm1GRy95UUk3TVBVMEhQVi9RY1g5U2xXSzVa?=
- =?utf-8?B?VUxjS0F6MGczNno3SWhCTDh5RE9OZjFhRkJvMFZUVGVRREhWNmZ6eVIzOERR?=
- =?utf-8?B?VHRlbnk1bEJaVDd1L1VOczZBRGFNQU9ZOS9PUWw0MXRML291bHB4dFljbGwz?=
- =?utf-8?B?WkVXcE9JenJnMDRiNGpJai9wZHRraTF6QXkyckpuSzdCditqanlONlh5ckho?=
- =?utf-8?B?aFdLWTkvaFp2VmJwQVpEeWxOVFBVZnZpaWpEUGV6NnEzMEZkeEc1cUx3SDZr?=
- =?utf-8?B?KzlseGx5TUg2dURPdjlpL0o4WVhKb2NUTEE5Wk5weEtjRzM0clY3VXBkSVBM?=
- =?utf-8?B?cDJKV1M3TFEyVWJjMVpQVjB0aDUvek1tM3lNS0pCaFAxQXpPL0hYcndmSmVx?=
- =?utf-8?B?ZHZxcVpmY2lsOGZhdkZJZzBQRlF4MGpjOTJ5bFl2bXFWK3N6QVFsZDN0SkZ1?=
- =?utf-8?B?UUUyRVFnellwdUFEOEhMZ3BCbzNOOE1HQk80NHRIUUUvU0x0eGpwZCtob1la?=
- =?utf-8?B?MEZRM0ZmRUxzYkI3UW1rZjIxdWlwTjlENUl6VW4vWG5tNUkySjM2Z3pYcVI5?=
- =?utf-8?B?UTlXVVZqNHNLaVNmNmd3Nk1WVm9CUkFvN3pQLzRGVUQrN2o1MzRrMTFrN2Y2?=
- =?utf-8?B?TWdpMFo5azBOTWdPRXd5ekZHUmRwckJPTnY2SkhNS3VHOWI1cHpQSUJ4K3Vs?=
- =?utf-8?B?N2N2cmNQUnNUYmlOWEhveWpGODFnZ05KZ21wZlJjMGNLeWlqbkhZdUpDUHdr?=
- =?utf-8?Q?6r40nPvYnYnVrpwuNd2GTsK7V?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD051D945A0F9948952995997135ECF8@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1744537344; x=1745142144; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n64Y28j5ioEXxqy3qDOgxoNsAXMuye9f85AGvrRQrp0=;
+        b=mmgu+Ch52mRPRKzmN8f4bOmxHLNgN1ymfRgtWZG2HI9i/WFl3xfj7zbCp3Bjwl85Yd
+         6iKN5arRF9qnhyjqZ0JiGszohA49XG0rSSxofMxcPB6534pRAIswJyqHlU02BMiO7UCS
+         9+92CR6feEKvtxST8YUnHVcJhphTOk+2bxLv5/gi0PUIZshtpAGns1jGhsdFnfoO1BoL
+         1P8GwaqMSCM4rndZD3qpsgnHzLT0yovQbIXdcJNQPW/ByClyVZpl8hFhcto1Dcada38w
+         0Rkw40+SG532nQJf8KEnRMQvvgzInOj/2NZ7BHy0KaNyml4hBJMiL8oD4LbGXV8iiX3E
+         fjiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744537344; x=1745142144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n64Y28j5ioEXxqy3qDOgxoNsAXMuye9f85AGvrRQrp0=;
+        b=rFlekeDtoF+WLN+6iu1zGvO33C1kce44ZjN9niwRwlbEwv6Pllk8sTusCIhvJVMARE
+         eDfcaolXzrsnsu14KdGiHwK2IAyHEGQNECzP/FDuK5QBhf5TzrTf4JMNK8cCEO3dgE5u
+         VF+3ljIrw1/5GB2iBnuvW/qmzgSxzR5qEWDar4mkO9MiSWSXkUcqGMHoWbT2Fw5CJS8t
+         BbFytI8nHTxpnp1DRJVl/JdcTSvm3m+foWWtpaeMagk6J+/bPyL+Mc9dKXXvg2Rbuvhn
+         8PHg5CQTksEC/Oj8xLP9nDe9AqgbDYtR7fRdFE8FBLhLMh8OUUP8er2gQ+ocg4joYVYq
+         Bj9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbVhDkq9l+iUcXv3+d+taALazhkU97n7C8Of9gyRa0tiqlC7VixcQzW3/nSVBWntyJHIDl8ND0DotjePV7@vger.kernel.org, AJvYcCViOM9KKq9wLn5KpMzeL+fV/MJZP0WsyvE/x7JyeqGnLuJgVq3/uMxxUE6U5IPWwhX7auv57a87UHLu@vger.kernel.org, AJvYcCWCodJTJcEY4KPGROwS+j9fP3GilLjNrCIFfutWYQ0cXen7Az8gbP7oGdTZxtSDpCSMzqYx00TG3efG@vger.kernel.org, AJvYcCXIQT1ewtrzDqjE5NeXJKBopIb4J5DSJcjSYeNktnLxR78Awep65zDl0l34eEiHZAYH7PWy8wYSf9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcVgPRlpUnaLxuVXmaIAw+q+22/3B4TZ614tLaOohGoHnxOOD5
+	WN3FWtKoHe5nWSImuKNvyAG7I67vZAk1oOVxRfBGJcqdkIEY83uU4xKtLz12MGzqCToCsZoDzRM
+	3wl13da2D7LOMkhJpDmprkRBzyrM=
+X-Gm-Gg: ASbGncv2Ttu8nTX8KhYOpTT65NUxPjGNtYQF7de96ZoCmcrrM5ITa/9Jg+9Mn7aDCj6
+	BzKFW7M8Qn9xmAN2B+qZtj7wYblDeLegeeRpwJhR2i4/mSbEWwio8caySBoRZKZmTBM0tvm9JHA
+	XfpqYOt0uui+NTlkF5/7vAwS7E4czRUodueQ==
+X-Google-Smtp-Source: AGHT+IEGH7olQcjvLrYzDZgoAmEhCmF8rkWhW2psIV1CTby+PwnSvoGyFwWT1vIPyBwyldspOZw6NCpar6dgo85QFRU=
+X-Received: by 2002:a05:6000:18a2:b0:38f:503a:d93f with SMTP id
+ ffacd0b85a97d-39eaaec7db5mr7316066f8f.40.1744537343735; Sun, 13 Apr 2025
+ 02:42:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PUZPR03MB6186.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f32dd79a-20b6-45ca-b2c2-08dd7a6f666f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2025 09:41:43.4804
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rrYOPw6hcoidtoq5vQMJ3uLaDI2MItArorUJ37FRqO1P27KB+8bOBTNE/nyJmsu7DbTc6pmHtPQXolC5obosow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB6847
+References: <20250310075638.6979-1-clamor95@gmail.com> <20250310075638.6979-3-clamor95@gmail.com>
+ <CAPVz0n0NA+=+4da8izPvTn3XacdJndyxrvyMY-QvHdie206wVg@mail.gmail.com>
+ <20250412115354.0b266fae@jic23-huawei> <CAPVz0n0eqLEjVgMX=4A8jZZ++Ffb_vfCRdqYdizDmuLbXjVb1w@mail.gmail.com>
+ <20250413102822.0cca4941@jic23-huawei>
+In-Reply-To: <20250413102822.0cca4941@jic23-huawei>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Sun, 13 Apr 2025 12:42:12 +0300
+X-Gm-Features: ATxdqUF0gtMc65tYDzP9TnqmoSTC7QCPFeL4mZbuAWoZWQrt0PKrPahnb4EKjq8
+Message-ID: <CAPVz0n16TbodhuTcqUufCk6=178ZTcc=2SLUjYHe5YsSJvettQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] thermal: thermal-generic-adc: add temperature
+ sensor channel
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Laxman Dewangan <ldewangan@nvidia.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gU2F0LCAyMDI1LTA0LTEyIGF0IDEyOjEzICswMjAwLCBLcnp5c3p0b2YgS296bG93c2tpIHdy
-b3RlOg0KPiBFeHRlcm5hbCBlbWFpbCA6IFBsZWFzZSBkbyBub3QgY2xpY2sgbGlua3Mgb3Igb3Bl
-biBhdHRhY2htZW50cyB1bnRpbA0KPiB5b3UgaGF2ZSB2ZXJpZmllZCB0aGUgc2VuZGVyIG9yIHRo
-ZSBjb250ZW50Lg0KPiANCj4gDQo+IE9uIDExLzA0LzIwMjUgMDQ6NTQsIEt5cmllIFd1ICjlkLTm
-mZcpIHdyb3RlOg0KPiA+IE9uIFRodSwgMjAyNS0wNC0xMCBhdCAwODozOSArMDIwMCwgS3J6eXN6
-dG9mIEtvemxvd3NraSB3cm90ZToNCj4gPiA+IEV4dGVybmFsIGVtYWlsIDogUGxlYXNlIGRvIG5v
-dCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzDQo+ID4gPiB1bnRpbA0KPiA+ID4geW91
-IGhhdmUgdmVyaWZpZWQgdGhlIHNlbmRlciBvciB0aGUgY29udGVudC4NCj4gPiA+IA0KPiA+ID4g
-DQo+ID4gPiBPbiBUaHUsIEFwciAxMCwgMjAyNSBhdCAwMjoyOTo1NFBNIEdNVCwga3lyaWUud3Ug
-d3JvdGU6DQo+ID4gPiA+IEFkZCBtZWRpYXRlayxtdDgxOTYtanBnZGVjIGNvbXBhdGlibGUgdG8g
-YmluZGluZyBkb2N1bWVudC4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IGt5cmll
-Lnd1IDxreXJpZS53dUBtZWRpYXRlay5jb20+DQo+ID4gPiANCj4gPiA+IFVzdWFsIG1lZGlhdGVr
-IGNvbW1lbnQgLSBsb29rcyBsaWtlIGNvcHkgcGFzdGUgb2YgdXNlcm5hbWUuDQo+ID4gPiBQbGVh
-c2UNCj4gPiA+IHJlYWNoDQo+ID4gPiB0byB5b3VyIGNvbGxlYWd1ZXMgaG93IHRvIGZpeCBpdC4N
-Cj4gPiANCj4gPiBEZWFyIEtyenlzenRvZiwNCj4gPiANCj4gPiBEbyBJIG5lZWQgdG8gY2hhbmdl
-IHRoZSB1c2VybmFtZSBsaWtlIHRoYXQ6IEt5cmllIFd1IDwNCj4gPiBreXJpZS53dUBtZWRpYXRl
-ay5jb20+Pw0KPiANCj4gQW5kIHdoYXQgZGlkIHlvdXIgY29sbGVhZ3VlcyBzYXk/IFBsZWFzZSB1
-c2UgTWVkaWF0ZWsgcmVzb3VyY2VzIHByaW9yDQo+IGFza2luZyBjb21tdW5pdHkgZm9yIHJldmll
-dy4NCg0KRGVhciBLcnp5c3p0b2YsDQoNClRoZSBhYm92ZSB1c2VybmFtZSBpcyBzdWdnZXN0ZWQg
-YnkgbXkgY29sbGVhZ3Vlcy4gSSBxdWVyaWVkIHdpdGggeW91IHRvDQphdm9pZCBtYWRlIHRoaXMg
-bWlzdGFrZSBhZ2Fpbi4NCg0KVGhhbmtzLg0KPiANCj4gPiANCj4gPiBUaGFua3MuDQo+ID4gPiAN
-Cj4gPiA+ID4gLS0tDQo+ID4gPiA+ICAuLi4vYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWssbXQ4MTk1
-LWpwZWdkZWMueWFtbCAgICAgICAgICAgfCA4DQo+ID4gPiA+ICsrKysrKy0tDQo+ID4gPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiAN
-Cj4gPiA+ID4gZGlmZiAtLWdpdA0KPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9tZWRpYXRlayxtdDgxOTUtDQo+ID4gPiA+IGpwZWdkZWMueWFtbA0KPiA+
-ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9tZWRpYXRlayxt
-dDgxOTUtDQo+ID4gPiA+IGpwZWdkZWMueWFtbA0KPiA+ID4gPiBpbmRleCBlNTQ0OGM2MGUzZWIu
-LjI4YTlhOWJmZGJmOCAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLG10ODE5NS0NCj4gPiA+ID4ganBlZ2RlYy55YW1s
-DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9t
-ZWRpYXRlayxtdDgxOTUtDQo+ID4gPiA+IGpwZWdkZWMueWFtbA0KPiA+ID4gPiBAQCAtMTQsNyAr
-MTQsOSBAQCBkZXNjcmlwdGlvbjoNCj4gPiA+ID4gDQo+ID4gPiA+ICBwcm9wZXJ0aWVzOg0KPiA+
-ID4gPiAgICBjb21wYXRpYmxlOg0KPiA+ID4gPiAtICAgIGNvbnN0OiBtZWRpYXRlayxtdDgxOTUt
-anBnZGVjDQo+ID4gPiA+ICsgICAgZW51bToNCj4gPiA+ID4gKyAgICAgIC0gbWVkaWF0ZWssbXQ4
-MTk1LWpwZ2RlYw0KPiA+ID4gPiArICAgICAgLSBtZWRpYXRlayxtdDgxOTYtanBnZGVjDQo+ID4g
-PiANCj4gPiA+IEFuZCBkZXZpY2VzIGFyZSBub3QgY29tcGF0aWJsZT8NCj4gPiANCj4gPiBTb3Jy
-eSwgSSBkb24ndCB1bmRlcnN0YW5kIHRoZSBxdWVzdGlvbiBleGFjdGx5LiBEbyB5b3UgbWVhbiB1
-c2luZw0KPiA+IHRoZQ0KPiA+IGNvbXBhdGlibGUgc3RyaW5nIG9mIE1UODE5NSBmb3IgYm90aCBN
-VDgxOTUgYW5kIE1UODE5Nj8NCj4gDQo+IE5vLCBleHByZXNzaW5nIGNvbXBhdGliaWxpdHkgd2l0
-aCBmYWxsYmFja3Mgb3IgZXhwbGFpbmluZyBpbiBjb21taXQNCj4gbXNnDQo+IHRoZSBoYXJkd2Fy
-ZSwgZS5nLiB3aHkgdGhlc2UgYXJlIG5vdCBjb21wYXRpYmxlLg0KDQpUaGFua3MuDQpJIHdpbGwg
-Zml4IHRoZSBjb21taXQgbWVzc2FnZS4gVGhlcmUgYXJlIHNldmVyYWwgZGlmZmVyZWFuY2VzIGJl
-dHdlZW4NCnRoZSB0d28gY2hpcHMuIGUuZy4gODE5NSB1c2VzIGlvbW11IGJ1dCBzbW11IGlzIHVz
-ZWQgaW4gODE5Ni4gQW5kIDgxOTYNCndpbGwgc3VwcG9ydCBkeW5hbWljIHZvbHRhZ2UgYW5kIGZy
-ZXF1ZW5jeSBzY2FsZS4NCj4gDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0KDQoN
-ClJlZ2FyZHMsDQpLeXJpZS4NCg==
+=D0=BD=D0=B4, 13 =D0=BA=D0=B2=D1=96=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 12:2=
+8 Jonathan Cameron <jic23@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> On Sat, 12 Apr 2025 14:06:06 +0300
+> Svyatoslav Ryhel <clamor95@gmail.com> wrote:
+>
+> > =D1=81=D0=B1, 12 =D0=BA=D0=B2=D1=96=D1=82. 2025=E2=80=AF=D1=80. =D0=BE =
+13:54 Jonathan Cameron <jic23@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+> > >
+> > > On Sat, 5 Apr 2025 18:23:25 +0300
+> > > Svyatoslav Ryhel <clamor95@gmail.com> wrote:
+> > >
+> > > > =D0=BF=D0=BD, 10 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 09=
+:57 Svyatoslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
+> > > > >
+> > > > > To avoid duplicating sensor functionality and conversion tables, =
+this
+> > > > > design allows converting an ADC IIO channel's output directly int=
+o a
+> > > > > temperature IIO channel. This is particularly useful for devices =
+where
+> > > > > hwmon isn't suitable or where temperature data must be accessible=
+ through
+> > > > > IIO.
+> > > > >
+> > > > > One such device is, for example, the MAX17040 fuel gauge.
+> > > > >
+> > > > > The temperature data, while technically a product of conversion a=
+nd thus
+> > > > > categorized as IIO_CHAN_INFO_PROCESSED, maintains its unscaled st=
+ate
+> > > > > (milli-degree). To account for this, IIO_CHAN_INFO_RAW is used al=
+ong with
+> > > > > IIO_CHAN_INFO_SCALE to provide different degrees of accuracy.
+> > >
+> > > You've lost me in this description.  The base units of an IIO tempera=
+ture channel
+> > > are milli-degrees so if the scaling is already right for that you wou=
+ld
+> > > be fine using a IIO_CHAN_INFO_PROCESSED channel.
+> > >
+> > > A few other minor things inline.
+> > >
+> > > > >
+> > > > > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> > > > > ---
+> > > > >  drivers/thermal/thermal-generic-adc.c | 62 +++++++++++++++++++++=
++++++-
+> > > > >  1 file changed, 61 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/ther=
+mal/thermal-generic-adc.c
+> > > > > index ee3d0aa31406..7dcc2e1168a4 100644
+> > > > > --- a/drivers/thermal/thermal-generic-adc.c
+> > > > > +++ b/drivers/thermal/thermal-generic-adc.c
+> > > > > @@ -7,6 +7,7 @@
+> > > > >   * Author: Laxman Dewangan <ldewangan@nvidia.com>
+> > > > >   */
+> > > > >  #include <linux/iio/consumer.h>
+> > > > > +#include <linux/iio/iio.h>
+> > > > >  #include <linux/kernel.h>
+> > > > >  #include <linux/module.h>
+> > > > >  #include <linux/platform_device.h>
+> > > > > @@ -73,6 +74,65 @@ static const struct thermal_zone_device_ops ga=
+dc_thermal_ops =3D {
+> > > > >         .get_temp =3D gadc_thermal_get_temp,
+> > > > >  };
+> > > > >
+> > > > > +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D=
+ {
+> > > Even though there is only one. If it is an array use channels.
+> > >
+> > > or stop it being an array and just take a pointer to a single channel
+> > > instance.
+> > >
+> >
+> > There should not be more channels, but tbh, you never know, I will
+> > rename to channels.
+> >
+> > > > > +       {
+> > > > > +               .type =3D IIO_TEMP,
+> > > > > +               .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> > > > > +                                     BIT(IIO_CHAN_INFO_SCALE),
+> > > > > +       }
+> > > > > +};
+> > > > > +
+> > > > > +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
+> > > > > +                                struct iio_chan_spec const *chan=
+,
+> > > > > +                                int *val, int *val2, long mask)
+> > > > > +{
+> > > > > +       struct gadc_thermal_info *gtinfo =3D iio_priv(indio_dev);
+> > > > > +       int ret;
+> > > > > +
+> > > > > +       switch (mask) {
+> > > > > +       case IIO_CHAN_INFO_RAW:
+> > > > > +               ret =3D gadc_thermal_get_temp(gtinfo->tz_dev, val=
+);
+> > > > > +               if (ret)
+> > > > > +                       return ret;
+> > > > > +
+> > > > > +               return IIO_VAL_INT;
+> > > > > +
+> > > > > +       case IIO_CHAN_INFO_SCALE:
+> > > > > +               /* scale to a degree centigrade */
+> > >
+> > > As above.  See Documentation/ABI/testing/sysfs-bus-iio
+> > > entries from temperature. Scaling of a temperature channel is milli-d=
+egrees
+> > >
+> > > This is a bit of a historical artefact. Way back at the start of IIO
+> > > when we had relatively few channel types, where possible I matched th=
+e
+> > > scaling to hwmon.  With hindsight that made things a bit inconsistent
+> > > but we are stuck with it as ABI :(
+> > >
+> >
+> > RAW channel is in milli-degrees, or this is not enough? I don't get
+> > your point here tbh. What is wrong? Battery driver requires
+> > temperature in degree centigrade hence it is scaled to it.
+>
+> If the battery driver is assuming the temperature from a query to an IIO
+> provide (to get the processed value) is in degrees centigrade then that
+> is a bug that needs fixing and it probably implies a scaling problem
+> in some other driver given I assume someone is using that driver!
+>
+> The scale here should be 1.  Simplest being to just make a processed
+> channel and not provide scale at all.
+>
+> We never explicitly document the internal ABI but the use of
+> scale and raw must match the userspace ABI which is documented
+> in Documentation/ABI/testing/sysfs-bus-iio
+>
+> Jonathan
+>
+
+Acknowledged. I will return back to processed and send a fix regards
+the battery.
+
+>
+> >
+> > > Jonathan
+> > >
+> > > > > +               *val =3D 1;
+> > > > > +               *val2 =3D 1000;
+> > > > > +               return IIO_VAL_FRACTIONAL;
+> > > > > +
+> > > > > +       default:
+> > > > > +               return -EINVAL;
+> > > > > +       }
+> > > > > +}
+> > > > > +
+> > > > > +static const struct iio_info gadc_thermal_iio_info =3D {
+> > > > > +       .read_raw =3D gadc_thermal_read_raw,
+> > > > > +};
+> > > > > +
+> > > > > +static int gadc_iio_register(struct device *dev, struct gadc_the=
+rmal_info *gti)
+> > > > > +{
+> > > > > +       struct gadc_thermal_info *gtinfo;
+> > > > > +       struct iio_dev *indio_dev;
+> > > > > +
+> > > > > +       indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct ga=
+dc_thermal_info));
+> > > > > +       if (!indio_dev)
+> > > > > +               return -ENOMEM;
+> > > > > +
+> > > > > +       gtinfo =3D iio_priv(indio_dev);
+> > > > > +       memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
+> > >
+> > > sizeof(*gtinfo) probably slightly better.
+> > >
+> > > > > +
+> > > > > +       indio_dev->name =3D dev_name(dev);
+> > >
+> > > What does this end up as?  The convention in IIO is to name after
+> > > a part number.  If you have duplicates this isn't how you tell them
+> > > apart.  So I'd kind of expect thermal-generic-temp or
+> > > something like that.
+> > >
+> >
+> > it is "generic-adc-thermal" with this name, it is not present anywhere =
+in IIO.
+> >
+
+Then this is acceptable?
+
+> > > > > +       indio_dev->info =3D &gadc_thermal_iio_info;
+> > > > > +       indio_dev->modes =3D INDIO_DIRECT_MODE;
+> > > > > +       indio_dev->channels =3D gadc_thermal_iio_channel;
+> > > As above, I'd stop that being an array and use
+> > >         indio_dev->channels =3D &gadc_thermal_iio_chanel;
+> > >         indio_dev->channels =3D 1;
+> > >
+> > > Unless you think maybe we will get more channels in future, in which =
+case
+> > > just rename it channels (which happens to have one element this time)
+> > >
+> > > > > +       indio_dev->num_channels =3D ARRAY_SIZE(gadc_thermal_iio_c=
+hannel);
+> > > > > +
+> > > > > +       return devm_iio_device_register(dev, indio_dev);
+> > > > > +}
+> > > > > +
+> > > > >  static int gadc_thermal_read_linear_lookup_table(struct device *=
+dev,
+> > > > >                                                  struct gadc_ther=
+mal_info *gti)
+> > > > >  {
+> > > > > @@ -153,7 +213,7 @@ static int gadc_thermal_probe(struct platform=
+_device *pdev)
+> > > > >
+> > > > >         devm_thermal_add_hwmon_sysfs(dev, gti->tz_dev);
+> > > > >
+> > > > > -       return 0;
+> > > > > +       return gadc_iio_register(&pdev->dev, gti);
+> > > > >  }
+> > > > >
+> > > > >  static const struct of_device_id of_adc_thermal_match[] =3D {
+> > > > > --
+> > > > > 2.43.0
+> > > > >
+> > > >
+> > > > Added Jonathan Cameron and linux-iio@vger.kernel.org to list.
+> > > >
+> > > > Jonathan, this is newer version of the thermal-generic-adc you have
+> > > > reviewed recently with channels adjusted like proposed in v3.
+> > >
+>
