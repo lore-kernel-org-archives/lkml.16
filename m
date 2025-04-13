@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED8C17A305
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9911D78F4C
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744574753; cv=none; b=IqpxvPS9v8pN2hfiGLvyFtYkxoBiDG+alrxVDrcpkHm71iMW5x6RgOffKs01tvJcumZPBi8ZIS2U2JIAAy4D4ImniHFoGNZhARGIN+Ob041RYIj/DdPjamOLT17HbqX4zbg35QPkuElqS3Bbh8PxqHbqCZGMwpAyeWuDSuL3Ghw=
+	t=1744574976; cv=none; b=KNeWNbA6KYgwuz8cHgqtGFugoiGbXw98axXk3zjis7S0cH6KDnIchW0PTGbPAXdFOkZVNteJolGRtF2NSWrHpeX6rZOaeHP9LZa3vr8F0//3u3XJ6OF4YktwVWoxIy62G5tDHnDL7dEInx2PWpS/IIQ/CGvNTZFLDi/d6rV/12U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744574753; c=relaxed/simple;
-	bh=2mdYX/2GVIgDd+Po4gWQNViRS76n/C4qNnW05RfESvg=;
+	s=arc-20240116; t=1744574976; c=relaxed/simple;
+	bh=XpCVrQ3b8tX99TR9K8zuVxctWa/+aOTJuTrdy/x32Cg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NIcT8Z8h0wWOAgpdmRUT9Fk2+HSmWpVv+A2Rkqbj0G4VSFSX5DFDh17HTlNbSGgYLTl2I61dYfZA5S6le4YoSO8pTPtdVHlNiTkxBmtf4ipQjibF4fSDZeuFsKorQmibkUR8p/ylMi2wFVhTEnjS5AjevhEmgfmkMPieAE7QfcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BWCV7/gf; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=Nw96t7pXXItIg5vXsD8qNaNLW7UhDts28lCsN/l2gEjV4qPNziZvyXye6fmHi/iQjB0YZmL+pUFy1Dhs89YdmBzOKcTzpnj4rJ5IwF3XfJh3AFl3CnY0+McmDoWOyQ6hAAUPqF75LzIIGz3shoTGJp6sAhiLQ+AKm/NH8Y+w0cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rqv7WeFv; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BWCV7/gf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rqv7WeFv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744574750;
+	s=mimecast20190719; t=1744574973;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=26kQaqxmClrkmqimyK/pAn0V/eLIFLyRyoGwKGCOpj0=;
-	b=BWCV7/gf+01ePG9hHR7OXIm556zanibNap8ulCE7FVqofE+TmqYPshdEVPuIeTvdI5xYAM
-	X47IIZUF+xw7kT5NM5/Irh5+ZDId/LirE64Nb9xv7qEq+L4agH2LI1xjCoJqbMNeI6fJW5
-	EGasV2mnKY7sTJgleFZms9E+2Q4eSV8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=31dW4hhoE6rQzohYOFQKu+yIo7zhpk3yfsTJqJ61yIk=;
+	b=Rqv7WeFvwXVGFWncyARoUoAIhv7ECi6NVGzOV7WvSSEo7hseOuJ0BkDmJlUcQzQDL7k9mg
+	e2KDl8FroRQtVd2oJc+Ap34Wm3MMyoIF1fKJBFIP/tFgT9iv3SwaTBinjCZUh4skWjNQrZ
+	CvbXocch2g2RprSV1Gmz0amTHIuiCXE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-14-QUlKDJXlNzmbmeUpe3X_8A-1; Sun, 13 Apr 2025 16:05:48 -0400
-X-MC-Unique: QUlKDJXlNzmbmeUpe3X_8A-1
-X-Mimecast-MFC-AGG-ID: QUlKDJXlNzmbmeUpe3X_8A_1744574747
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so30998155e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:05:48 -0700 (PDT)
+ us-mta-692-lSxXGT1ZNWycPk-2BC9_XQ-1; Sun, 13 Apr 2025 16:09:31 -0400
+X-MC-Unique: lSxXGT1ZNWycPk-2BC9_XQ-1
+X-Mimecast-MFC-AGG-ID: lSxXGT1ZNWycPk-2BC9_XQ_1744574971
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3913aea90b4so1441719f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:09:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744574747; x=1745179547;
+        d=1e100.net; s=20230601; t=1744574970; x=1745179770;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=26kQaqxmClrkmqimyK/pAn0V/eLIFLyRyoGwKGCOpj0=;
-        b=dKCAGlAWyvVVQ+GsHJuZBtILBdul6n6+IhLEPN/JWGDA8sDAfNeOaAuPztm8Q4UXpm
-         maY0Tzs3FJy/b02Gwykjs3o1ms2xsEgT+6hlguDBL6a0fs7KJT0bIuC9HDGXNuhV2IQL
-         qACMHL1RsaoTz7sELLF6qYRXCqd32Pj0Sgg6wh97tFMyRpCJDYOejPn+RdG7q2iwDeN2
-         xaN1TezL74Rm1/hHwxmD+vSOiNa5zt7ek7N8tbkGCD8+69owouiNiHrAyQ7aV92hSbrv
-         Hiamg7nnJfsEFz6MxVjGamJS2sVip9T+nnf5EDhdBUVM+hAemXtr/PLzPr55EXuH62/H
-         0MXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtTl4ks0Ds0nTZ3KIGhB9f2idrjvE35wAgHhZMK7tR+mPnCGoS+Fj2vQVDtODOEoIy5PZOzMr5wr+9VJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJQYg+F8BT1mxFc7J00PtA9KVwBeYGnpIssjUmC7QaknS2G2A7
-	zJf+ap6ypwvaXkSaETIHpB6QXgLn9f3l+g3BvB/Dq1w8Zp7/xtrgXFKqC8fCwEwYdqfsPWg/sE7
-	bZn8choCK2BwzHnA0HtvGX1Az3i77WlnUZnie/urH0XXVDdYnQH/7jlpE4wd08A==
-X-Gm-Gg: ASbGncvYI3Tagl5BiZQBVd5Ew+D/4c+7dNHch911+n9iPIk3nvytjAt2JWx9jtEEpxw
-	lCKbl9aP2Z+h4HRVbpxuIUEKWSsYbOFpVREMeuhYiQu+5vkIWzlVHTJTedwfcvz6kEsS2caXR3Z
-	Pf/obsdRdr3wfLjlclo3JI9FtRiYbpDsRbNzdzY775jRzr7Pc+65Eel0YpNTRQ5reaM1Wyoxh4V
-	RGBHr+mp4rVemfqXQXupH9lAGT9Ps21MEipOm4RCvDVEOCKGVugaic52P/4mxvY6mdD1dbXn+5D
-	fjOop67ardJDSY/o6gcJy8ldZbl+r3P2032vIIwGZPkBajswKQMEHPFmXFWhxUfxGOMemgVTm2t
-	MdBXFuiJlLZmPl3/z8gN4h/KiDbWyX08FtfX4hM0=
-X-Received: by 2002:a5d:5989:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39eaaec7870mr8568035f8f.43.1744574747470;
-        Sun, 13 Apr 2025 13:05:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEj0NxM0N0abRhomL8K4YcFkTrVF5uys1Aj1DUWE1g435wGfrkYysdjnFb/nCc5L8Ln6JHViw==
-X-Received: by 2002:a5d:5989:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39eaaec7870mr8568027f8f.43.1744574747090;
-        Sun, 13 Apr 2025 13:05:47 -0700 (PDT)
+        bh=31dW4hhoE6rQzohYOFQKu+yIo7zhpk3yfsTJqJ61yIk=;
+        b=b5K3JIaEB9rZThLZVULaJU543UZok2gy/g5PxzMpMR8ohUK0gMG6bCtS0xJitP7Zdi
+         CuPjWRQsgoHzc6UEAujSD8A6RktmteckNV9pEo/rKzKDLzgKIzK4S3W9pnNogp5xNPWu
+         Lufu+n9ISO1z2WLC2WyyzPZpzLVICiZ/n5sxZLgse+f189x67K6HgF1OVLTV9uC69qoB
+         NxoVoRLRbfoIlxbGg9t1lbfia8cvMEI8ewyfsIj7Qh2jY/PmyqU/jhaewRWr/YzzoYwL
+         XoxVNTzf0fGwcTLzumCOneRKPaPoYej/+s705iWIIM6ASo2nINeHVjWB0bOk0Lcfp0o8
+         I4Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCWxBlL9N9rZjrI8ugyPfBWhU3EDbTynqs/1BzI40Ndt844X1SSpj3tfzUUZmwQvtckR5phtBJBf6DgKIXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIJ+tMSs0aDakIlm/lwZ8AYn6LXusEZhYPIHZtvTvpLJ+Esz0l
+	uy1zH7ItrN+Oqh+lhusHDNunaAjKZMXrWHKBSEF9QnC1MrF87gtCgN549lqRIkOp2a6dM19BH8P
+	QR/K2sP8RUY/Lo+pWe64BsJsE4v8lUCpKUxj77ardVfcGi/TcaWuQXDLby1XPWw==
+X-Gm-Gg: ASbGncv/9fLSCf777sy0e0cYolgVrqwtwLCz9iRY+RZHlzFoQnTWnyVFaPy07hueYxJ
+	3PUyhGULG+o7wHMZh2O6qdlRPICMmQUBYllTyyf42lDfIYiVqEpKlbtU4B6cJx4m8Oh5pPzTGoe
+	iBtNK/oIDgXmsaLc2kV8qeptbBA0gLkgDJRLirZzCkSlK5Rio3qh2Onbl87K4G4hixM7AYmR6KI
+	y/gKCetRG/RI8gKHO7GmgBskKEhLNyyxagMSE01/0vvfEx7picBwbTEJ/LZ1AhB5jKNcr6EcI9K
+	gJSwa1A0KRUlTsvX+WcudCuk9At6xxGtuuFnch5ZQmZnNw0N6MPDe2ZJkfW5bsocR1st6Wr63jj
+	OxgY/V0LFmNRkRxez1aG8CrZfBpjfnghbMDjC7/w=
+X-Received: by 2002:a05:6000:22c1:b0:391:3d97:bd33 with SMTP id ffacd0b85a97d-39ea51f506emr7749397f8f.13.1744574970647;
+        Sun, 13 Apr 2025 13:09:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHf5y8Urm27uqHtUYFYgEjadABoT249/CjidrtT4w8oUCDaLSsP7Fzxka+tkR6nzr7xf5LIIg==
+X-Received: by 2002:a05:6000:22c1:b0:391:3d97:bd33 with SMTP id ffacd0b85a97d-39ea51f506emr7749387f8f.13.1744574970198;
+        Sun, 13 Apr 2025 13:09:30 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338dc13sm159877575e9.3.2025.04.13.13.05.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cc72sm9013629f8f.67.2025.04.13.13.09.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 13:05:46 -0700 (PDT)
-Message-ID: <c7aee943-2802-4a41-8e3e-e80f45e80dec@redhat.com>
-Date: Sun, 13 Apr 2025 22:05:45 +0200
+        Sun, 13 Apr 2025 13:09:29 -0700 (PDT)
+Message-ID: <35a93c36-6e97-4b33-aae5-efd1c907518a@redhat.com>
+Date: Sun, 13 Apr 2025 22:09:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,15 +75,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: Introduce free_folio_and_swap_cache() to replace
- free_page_and_swap_cache()
-To: nifan.cxl@gmail.com, willy@infradead.org
-Cc: mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
- akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- will@kernel.org, aneesh.kumar@kernel.org, hca@linux.ibm.com,
- gor@linux.ibm.com, linux-s390@vger.kernel.org, ziy@nvidia.com,
- Fan Ni <fan.ni@samsung.com>, "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-References: <20250413042316.533763-1-nifan.cxl@gmail.com>
+Subject: Re: [PATCH v5 4/4] mm/gup: clean up codes in fault_in_xxx() functions
+To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, osalvador@suse.de, yanjun.zhu@linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250410035717.473207-1-bhe@redhat.com>
+ <20250410035717.473207-5-bhe@redhat.com> <Z/sbv3EmLXWgEE7+@MiWiFi-R3L-srv>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -131,30 +128,32 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250413042316.533763-1-nifan.cxl@gmail.com>
+In-Reply-To: <Z/sbv3EmLXWgEE7+@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 13.04.25 06:22, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
+On 13.04.25 04:04, Baoquan He wrote:
+> The code style in fault_in_readable() and fault_in_writable() is a
+> little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
+> and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
+> in fault_in_safe_writeable(), local variable 'start' is used as loop
+> cursor. This may mislead people when reading code or making change in
+> these codes.
 > 
-> The function free_page_and_swap_cache() takes a struct page pointer as
-> input parameter, but it will immediately convert it to folio and all
-> operations following within use folio instead of page.  It makes more
-> sense to pass in folio directly.
+> Here define explicit loop cursor and use for loop to simplify codes in
+> these three functions. These cleanup can make them be consistent in
+> code style and improve readability.
 > 
-> Introduce free_folio_and_swap_cache(), which takes folio as input to
-> replace free_page_and_swap_cache().  And apply it to all occurrences
-> where free_page_and_swap_cache() was used.
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
 
-Patch title should better be
+Hopefully we don't introduce anything unexpected ... do we have some 
+unit test that could make use feel better, especially regarding end < start?
 
-"mm: convert free_page_and_swap_cache() to free_folio_and_swap_cache()"
-
-and similarly adjust the patch description. Thanks!
+If not, could we add one based on some feature that ends up calling at 
+least one of these functions?
 
 Acked-by: David Hildenbrand <david@redhat.com>
-
 
 -- 
 Cheers,
