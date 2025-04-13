@@ -1,92 +1,103 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D65847B;
-	Sun, 13 Apr 2025 14:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342972D052
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 15:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744556066; cv=none; b=rOMe7tXtujAsCSexF5WsfQj4/FUQ6WxxsSh7S+AfNKbkNeIUc+KsafmV38dIZmoQAt8WSJjJQ/XQJSp8fZQ6NC8YjHL0DBADFEGftT8nPr8Y7oWZevOuCtDpk7eFWFOYcMs2X0WOXFjHXMh6gV32QJ0aoRJk6NJBVz61NhyaD94=
+	t=1744556756; cv=none; b=i36/s9VPgarG2ew6W0MPGSEOTjkgZ0Tvzqbvm+d63S7KvxC9YOfdBDyFVBhHbex2T7DpQEeAPXrrqdDzN4VPgKWlsH8g9PNk91oIVq38CvtHXb4j4SAig2FTwLJHTJfhjY6esNnoSAM+zqTL36sGkzxXD7/QdcoZe7afvsVhglU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744556066; c=relaxed/simple;
-	bh=dvelPXkUdIwCAdAldSQ4W7PyCYIe7eFMCwQTwWTrGcA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e0q87zgm97D48RZ0/jLx9DUoSlnqgr+cP4sIx0D661ZCuOMPA9zouCQDmmu/PIkOPnR0RsBkyn5QRww50wdeK33xDnjaYMgD6xzkRUrKsepfAsFuSedRPA9b5WUNs1GFpiVI/s4WoacZ8a/V6BFJfHEzafEUrLvyYLMCl17Twfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kN+WVC48; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744556756; c=relaxed/simple;
+	bh=wh+2AVUkXsj1x0AjpoRQ/T9Fm+RZCQ1mI0V9pIyWM30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXfb+sjTMGWFXwP0ZNRjbjF4B/hn7ZL3Az0PaUaYmKqhXEZomo2PuQi50X+xbfISfsUillAXoJje9KUwoQ7WFKX+6eiUrrTJ/8qqbmIwZQg9IV+TaWyNVkb61K3/Tzs/RHZR+RZvgRUx27FLm1S3gi8JQP/C1XCwUVl0s2xzNhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V8uDCgty; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oY0wF5gd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kN+WVC48"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so5699804a12.1;
-        Sun, 13 Apr 2025 07:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744556063; x=1745160863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dvelPXkUdIwCAdAldSQ4W7PyCYIe7eFMCwQTwWTrGcA=;
-        b=kN+WVC48S4I4jG3t8eO90+QdtaQ4fN0jkGRaytHPmb/5CEb2UF0UzIOtGm3CiynZhg
-         ImfOpePGsaHN6tbAQrrC0JrvJgYMrdKkv7JBQnOmWoPGNu/t23BGJ3JVQIlzssScdt//
-         vzSnfGMe5DYT3zeZ1WDJO5uDn2e0Q/P4Y3aOI0oZRKJha3X6rfANGHs6yon8rK1uitxT
-         SkaUGwNQrecEsUkk1v34PRFJxKsNbfIaOJwPdWwh+kMmazZ0O7AziEvMpJbSJFKymGPf
-         YhdE00FfjxEgeAzL4s0VHn9yqXJWVS07WxO9GfwAQfII9tTkF/sEUvq8Gs8CBOgMTq/l
-         KGnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744556063; x=1745160863;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dvelPXkUdIwCAdAldSQ4W7PyCYIe7eFMCwQTwWTrGcA=;
-        b=cgOVSI+wcGGfWkgNMqCuvQbc4cqtJ4s1YoMZUifcPTY+H62/jIFWTeXlUmcybPQ6YK
-         yoWNnGWtNJDi2Y1KjfTcD988TegSlemvCJqigdqIs0zrUeBujlwo8k8dTBmFzfMZUv52
-         7wJocw2zRsW+7u0FP5VTug6kZKkXijIs0lktMRmqdkO5N91o/Cf0TeZH08sgr31pbvw0
-         mYRrYq+WDZzVcP+c7ar+xZdRVea69xJMXdJyZDUYgMfNDiM40vn+N1Q4jc2lM7rRLtA/
-         0TiUo8ett7oF2tCoZrsinDP/018llnhJfUYmT/gYGoM0UxPPKi9ipJaFt6ZpJCEs2qmx
-         7rog==
-X-Forwarded-Encrypted: i=1; AJvYcCV587bk+b0+XlRHlV0w7pP2cVAbSoaQwGPTp2hvlKvm+UXdPuvNoXh1/vuCJq4A094dxlTbNcKk6MMN@vger.kernel.org, AJvYcCXY5MwcAEqA4EiJGpCTPvzteb4K7kMJ4WUrjiYiKptQXga0sMvAdN+GcFx9LSllF8pN/MQn0qQbW57KIkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjMrlv2Sq7gCAGdROYIuS99+lUqr9L48kQYFnBHui87kzqTQU4
-	CGjEyhFR7mTJlqDQ8wprmf+Zlw+P6p3ziC8EcefNlLJC7yYDW7UA
-X-Gm-Gg: ASbGnct2kkOmkYXwWYMP74x3w0de1MChdDpdpLLd3C+b+snB9sKSavmGxW1l+qhUng2
-	pjPIXMuAbzUMgzJV/uyDdBn5c047644hiK5icTTOLDDlcq633MS+WgXn41nIHclQSFXc9bJpg8W
-	alJJPjOq9JJn7elg4F9YLbm+vC/r1Oav8pGjsc87XmNo6o/uErbI3C0ehVJ/d8L0T7jPjJMI2pm
-	4x3rsQB5e9uViOYFtxJXMFtv8Jgko7zrv1EW48qOK34ayn8yfR1jXGsJUBnJx3sE2ImOXHiEx56
-	qCS/7CKiFThiPlZlw42NnORZwrtTdvRXgIEBkTOe0w7md5/iRuBKSq2lijU=
-X-Google-Smtp-Source: AGHT+IFgqGhavNUgVnAURGWH2ePtNWVyQ3zUa0nRZiYGvzy8qKrKzUY1RZR3SZ91BcXNuvYs1xz9TQ==
-X-Received: by 2002:a17:907:1c07:b0:ac3:3f11:b49d with SMTP id a640c23a62f3a-acad31f535amr897088366b.0.1744556062628;
-        Sun, 13 Apr 2025 07:54:22 -0700 (PDT)
-Received: from jernej-laptop.localnet ([80.90.89.143])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1999d96sm741027466b.0.2025.04.13.07.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 07:54:22 -0700 (PDT)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Samuel Holland <samuel@sholland.org>, Mans Rullgard <mans@mansr.com>
-Cc: Pan Nan <pannan@allwinnertech.com>, Maxime Ripard <mripard@kernel.org>,
- linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: sun4i: add support for GPIO chip select lines
-Date: Sun, 13 Apr 2025 16:54:18 +0200
-Message-ID: <12643311.O9o76ZdvQC@jernej-laptop>
-In-Reply-To: <20250410115303.5150-1-mans@mansr.com>
-References: <20250410115303.5150-1-mans@mansr.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V8uDCgty";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oY0wF5gd"
+Date: Sun, 13 Apr 2025 17:05:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744556746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jv50ZCVz1GnW72SCCXXhpMw7sdaqRH3PIBwsNn5sMQ4=;
+	b=V8uDCgty1q9ap2LN46+1Umc72knzzRD0JP4mhEZczaRXXBdoHwtn5cAeYKr5zTp1icDlQV
+	t1/KegE4mGDg3LkNwHJ+lXPpCD8zkxDPK0cPerLh/TvmYWL8lCndvYUPbVYcO0irz76KVp
+	KwL+BvvJYw7RIUwp1m4SLTHKSLR3G7/PxnL+GspcSQeZ0gWiKGU1qTkJSuB9jQavmZkwa4
+	ChSeb4/lNvzJyrjV16AwHe22uf4ZzSq528wieslGk6lZuVikGxrULUYoSxYuZvoPyf4Ih1
+	yz0dpvrGKCumQaZCvEcFcNyYwDvNf3r4opZe9vOoC5v9dlQo7aMw+S8IHHVrFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744556746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jv50ZCVz1GnW72SCCXXhpMw7sdaqRH3PIBwsNn5sMQ4=;
+	b=oY0wF5gdE1JMtd59uTpXNB2Pm1FshTBDRla4ZOpXHwd2qeYQtTMJfrxur1+xuJrB99HEGK
+	XEaQhDuRL5+wBtBg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Subject: Re: [RFC PATCH 6/9] sched: Treat try_to_block_task with pending
+ signal as wakeup
+Message-ID: <20250413150540.3ZW7XJVs@linutronix.de>
+References: <20250404084512.98552-11-gmonaco@redhat.com>
+ <20250404084512.98552-17-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404084512.98552-17-gmonaco@redhat.com>
 
-Dne =C4=8Detrtek, 10. april 2025 ob 13:53:03 Srednjeevropski poletni =C4=8D=
-as je Mans Rullgard napisal(a):
-> Set use_gpio_descriptors to true so that GPIOs can be used for chip
-> select in accordance with the DT binding.
->=20
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
+On Fri, Apr 04, 2025 at 10:45:19AM +0200, Gabriele Monaco wrote:
+> If a task sets itself to interruptible and schedules, the __schedule
+> function checks whether there's a pending signal and, if that's the
+> case, updates the state of the task to runnable instead of dequeuing.
+> By looking at the tracepoints, we see the task enters the scheduler
+> while sleepable but exits as runnable. From a modelling perspective,
+> this is equivalent to a wakeup and the tracepoints should reflect that.
+> 
+> Add the waking/wakeup tracepoints in the try_to_block_task function and
+> set the prev_state used by the sched_switch tracepoint to TASK_RUNNING
+> if the task had a pending signal and was not blocked.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  kernel/sched/core.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index f2f79236d5811..48cb32abce01a 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6584,7 +6584,12 @@ static bool try_to_block_task(struct rq *rq, struct task_struct *p,
+>  	int flags = DEQUEUE_NOCLOCK;
+>  
+>  	if (signal_pending_state(task_state, p)) {
+> -		WRITE_ONCE(p->__state, TASK_RUNNING);
+> +		/*
+> +		 * From a modelling perspective, this is equivalent to a wakeup
+> +		 * before dequeuing the task: trace accordingly.
+> +		 */
+> +		trace_sched_waking(p);
+> +		ttwu_do_wakeup(p);
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+I don't think we should put trace_sched_waking() here. trace_sched_waking()
+"is guaranteed to be called from the waking context", and this is not the
+waking context.
+
+There is already a trace_sched_waking() in signal_wake_up_state(). This is
+duplicating that, in the wrong context.
+
+ttwu_do_wakeup() alone should be sufficient?
 
 Best regards,
-Jernej
-
-
+Nam
