@@ -1,101 +1,71 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8001F3FEB
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4E91F3B87;
+	Sun, 13 Apr 2025 20:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744574424; cv=none; b=P4vf03q4FU7HMMESR8+qZMwH+L6zZL4WaOi2pbrYhw9KBib5AkYZorfFn2CauVEebVaTMSgTiHlY5ufXQNJVvjDXImF2LRGdB86TCCKEnj1nWRj0TWX8TdlZUSiHU+1R+thHMhkimfXcIupZ38QciaCe0XvP6yjLcSr12AbA+WI=
+	t=1744574468; cv=none; b=Lx5RV588OgAT2IJGwcZKSwtQV7OOmhcKuMvGSC2lsWRgYUx16sXGISVCoJvoK4L4TIHQVMLHwA65LLiQXo496zMl8WYMzbHw6LFY0MMKoHw21/ZhbqrADdVDpYFfD+bWrbs/Ode1lotEnQ5Of3G932XIE9Dh5heloKfqA01AoEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744574424; c=relaxed/simple;
-	bh=QJ2echnBKmP1Tc0MPNN5Qs/cA6RJIbwCOvfk2b6xdjY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iBm/my9OvmjTo8uWynID2KQ56cRE53XoGMXSzjJDcQjnkpnBYbvGbAYNjZlEJtKhlpiy/XBksSU6k20Bxj7uc0cPqonb/5x5pCbtaT6Y3+b/lOpweFRbHroSbUrEaqHUTLK88LM6xrV6pIo+AvAP8t6xd/N2E4Eb5L7t76Mu2wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rkTQcgXG; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744574468; c=relaxed/simple;
+	bh=mBFfUee3RE/ORcogTSmYi0S8W7Std6PnRpce5lpwtgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEHkgFomfH+yseMAyghs9Hk2CBcu+OlDKRRqN/rgKzRoPXfexxrv9+zBzythhipF2WzYcxcm19lUYkVvQwLt6Mjf38jtyCmGuvK8pvs8IKuHvTIJZJ8ny29xKcPQONUFD5NylFsbLEx6qXU0v5tXMrZQMr0pDZMzNSOIu5aqoXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJSjaxJM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rkTQcgXG"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c266c1389so2442072f8f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 13:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744574420; x=1745179220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BRXcjlCuBBWXh12lLPtZTq+NKWPipRgLKhuCTXh5/1M=;
-        b=rkTQcgXG8jjTiFwH+FSfUA0XIp5wl2xUDG7/bMz2DCsRDGEv6PQjD9nNOss4a4xwC1
-         tVhi8tPQgu4QdpvtW8piDZkYtpR8GZO3l+EQ0FEx2h2Ygu3ieYtSF97vtw+d4f5ZQ1hw
-         ZTSl+Sg/O+7xqz6FbvlLvH+Rpxk01WDg/jkWkg8OsqEz4EjTdxXB68hkk8f5WZWEXhl0
-         KUO8nv/R/WloqdHK/6wDXPHzZ+Zo0+4Kl7g1FBPc+m8IEBeumI4Nq9l/Wkb6Do0WmMdX
-         0GkjmojXWLCkMZLZ4wgTdlc9J6+xZwvV651WFX3U1qJ6o1XPSNgUmpv0CjwgR02jdwJU
-         I7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744574420; x=1745179220;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BRXcjlCuBBWXh12lLPtZTq+NKWPipRgLKhuCTXh5/1M=;
-        b=uyWGSj0pFEntBIcbQHCEOsez11UBRz2sd34TtbxgaLWo1VixpUwl4QYGUxEzTj/yTE
-         0xZ+xKcKbrrslB8flYbV/Pc8icjYmJlY1S8afI2unUjwxm7KIq2/xmQnxvnLP4N4gBzA
-         CoUewjRrPWcTmJs6z7yB7sjq6xUCUwqkzvXCD1JTemSb0aR4p/Iz5xda51k8AEO3S4wg
-         B8nqqQBebVIhPyM5bTFQJumnS40PjEeL3Tz4Jf2gkZZsSNE51YVEgDhBm24hGcEoa1ki
-         RkQOX7tv4LGFb6+h6l4I85EdiO+MSHo+sQKoG9RF7eE+3iVHx9UChgHer32sEdcNwLOQ
-         LCOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMoZJGp79tA9RcwyWxr4+Q0I7NqhlynwCFDEAndgf3DOiT+R3Tz2RqWMoNXoATaLXTMPjyYzwkEVGPX6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS2F5paGwFPCz4QC9pWsQKh0wfaVTvvQqznJGQV/L7fAAttBhc
-	e8fFH0VXfG8m5su5BOupj5APPhmYkQ0mEuevzYDU3c6kVVXp6IuQUDi08IgwDUI=
-X-Gm-Gg: ASbGncsyIVXfD8LGRqFefKh7nKE/xf5x759vAbGKGHz46M0OTR0ZjCFRNwR2wxnBNao
-	Z+qApHFXnQlQdfaZ6jpcNLH4iCIAVEwGbPMh3DKVpnGN+OleUxkvVbB/GVXEzXJ7FinbctRQndB
-	lSdKKZKcHwnuJ42nfs6F6rccAEWGrtM5ITEbKiCmXveNY8KGuM5WUZd+r7NjfcahQykCcmW/woa
-	9iFRibPaQt1+rC6jQwvqHxSgoSFq2UrnGmHr4cKZJgJdWes7F0MwfRq7qAWwV6vuvh9Krt/rrMc
-	tmFMj8SethQSRnq4O8va2pbHXQ+7CiKBjarC
-X-Google-Smtp-Source: AGHT+IG6aXB8MfFdxS06qXTQl7E0SZ9Bu9T+Rnn8pWyPvB1ogSH7Ry2LHZj1Y9t+Z1BdYzRzo+8lFw==
-X-Received: by 2002:a5d:6da8:0:b0:39c:1424:3246 with SMTP id ffacd0b85a97d-39ea51d3527mr7164305f8f.2.1744574420199;
-        Sun, 13 Apr 2025 13:00:20 -0700 (PDT)
-Received: from brgl-pocket.. ([2a01:e0a:81f:5e10:e852:1f2c:a4b2:8e89])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce0asm8810540f8f.70.2025.04.13.13.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 13:00:19 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] gpiolib: Allow to use setters with return value for output-only gpios
-Date: Sun, 13 Apr 2025 22:00:14 +0200
-Message-ID: <174457440298.11196.9277089690698361995.b4-ty@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250411-mdb-gpiolib-setters-fix-v2-1-9611280d8822@bootlin.com>
-References: <20250411-mdb-gpiolib-setters-fix-v2-1-9611280d8822@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJSjaxJM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C246C4CEDD;
+	Sun, 13 Apr 2025 20:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744574468;
+	bh=mBFfUee3RE/ORcogTSmYi0S8W7Std6PnRpce5lpwtgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nJSjaxJM4QqCUxleHQ5qGPjrnyRDnJ9NOWy1OiDGoaBA7PUry14TZHm7qm7nvc1XG
+	 IOXC8rrPvrbh+Y7COhTRoNdD12cAXduQqoDY1hNHtXP+uVM0KTscPJaQXjpM7CK0EM
+	 dlQ7SZWfXhQFln9VYaEXQrXoiO8IJJYW2afClJUPBAdg4UkppTntLNX9ctUJsD39IZ
+	 Xx/g7SUBdIaww/K07eV2qMkenTjVYWiuuKURsUIl/Mp87iJtfcmZ5E4pyDGh1nDPH2
+	 3o49EY6Cf3v6SSJLM+afWRNfzDgOc/4d5Gkak7+0454of6DVNIwyqXHXiFOBjqqPAa
+	 PPwCPVgelqrQg==
+Date: Sun, 13 Apr 2025 22:01:03 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Doug Anderson <dianders@chromium.org>, 
+	Vincent Palatin <vpalatin@chromium.org>, Simon Glass <sjg@chromium.org>, Lee Jones <lee@kernel.org>, 
+	Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kernel-dev@igalia.com
+Subject: Re: [PATCH] i2c: cros-ec-tunnel: defer probe if parent EC is not
+ present
+Message-ID: <yh2uau644cq22qw5wnj7cypg6wf5aoef7a7z7smbvkva56jtle@dxzs6etk7cb6>
+References: <20250407-null-ec-parent-v1-1-f7dda62d3110@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-null-ec-parent-v1-1-f7dda62d3110@igalia.com>
 
+Hi,
 
-On Fri, 11 Apr 2025 16:52:09 +0200, Mathieu Dubois-Briand wrote:
-> The gpiod_direction_output_raw_commit() function checks if any setter
-> callback is present before doing anything. As the new GPIO setters with
-> return values were introduced, make this check also succeed if one is
-> present.
+On Mon, Apr 07, 2025 at 05:33:34PM -0300, Thadeu Lima de Souza Cascardo wrote:
+> When i2c-cros-ec-tunnel and the EC driver are built-in, the EC parent
+> device will not be found, leading to NULL pointer dereference.
 > 
+> That can also be reproduced by unbinding the controller driver and then
+> loading i2c-cros-ec-tunnel module (or binding the device).
+
+...
+
+> Returning -EPROBE_DEFER will allow the device to be bound once the
+> controller is bound, in the case of built-in drivers.
 > 
+> Fixes: 9d230c9e4f4e ("i2c: ChromeOS EC tunnel driver")
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
 
-Applied, thanks!
+merged in i2c/i2c-host-fixes.
 
-[1/1] gpiolib: Allow to use setters with return value for output-only gpios
-      https://git.kernel.org/brgl/linux/c/93eb2c1249eadce4bbc1914092f34f5988be13af
-
-Best regards,
--- 
-Bartosz Golaszewski <brgl@bgdev.pl>
+Thanks,
+Andi
