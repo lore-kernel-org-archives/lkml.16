@@ -1,94 +1,67 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85F22AF10;
-	Sun, 13 Apr 2025 22:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584A82AF10
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 22:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744583640; cv=none; b=M000Afmg3mIQL7PhOERqhaY+zr7J9DRKKu2HMQetjDrvkwVlehyeRuuQZBULPbCUsX3DIv29g9uYMblwYpIdoJGv2Klgtb59osgRXCSsRTRwqsGgpKy0pQrhR8lmjQzGVJfcChta5+ipOVsKlOs5LbUr9zszqymrmquADFFMSZY=
+	t=1744583738; cv=none; b=ARbbNJbgculCz1oT4YSEfTjO27dfPcnjd8Vmk9e1HGPih2jEMqI+XvKFAF9LipbEEBCffrJ5uh4HuZjYHNS0YSPidzTgQQTDoKh/vvsX+HAnjy+YwbHNJXe9yxD3qZGPPuce7i8PBHBYioA1fUBM0ccQDwzSFuz3IPj/6ZTZWAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744583640; c=relaxed/simple;
-	bh=cnHyfKYqJCNmgcbwfrkajpEYCSOI0t1APQwP1Qu4nSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lTqw/F5eWBKiPq6Y26ewlCxpbGjrI6OryORXCz+aW1AGA5NLCdZDOuDF9MSfoe49UCvdmt3eL96+elF+R1p/UTV3CAyHc9/o1PJpB17Cv1fOD2uiwziTL6nruQTyGU2dRTwEHVeke3bam3DHxF2G8dYsj9HAFNSYWSTReC+hWM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WQtk3ADk; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WQtk3ADk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744583636;
-	bh=1JPryc/McusmY4Havf/t/FrVk+y5maazOnvcO0QCuTc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=WQtk3ADkQXYnAGLapjU+tRYCsDhuPZbUdNC9bDW9ZB7YpZv0xWaiJqZPfZZQFOfF1
-	 6ACBSW/B0lVSFpoWAIUt96G4/shLqw2P88rrMfEMh/3ovqDVrf+yYkJUwbO59qrbRy
-	 IVIDoAHu6+jwG0UD4Ua0BtwyTMyHOoDU7ASKZ+Yyrfk90B3esS10FhYrrGvZMcrAn/
-	 UjEiXaGYoUq/tD0lcpdNetMYkCizGR8t+klQ7VI+UmOlk1puHwKBo2cGx4rKm8s6tj
-	 sU19xBIkl1gDD99inylhUHRwjreugWRhd2TSaO1R62ABZrYvZL3DBnGdIGIyQPbL5o
-	 5ps6WVjNgjETA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbQFH2HN3z4wcj;
-	Mon, 14 Apr 2025 08:33:55 +1000 (AEST)
-Date: Mon, 14 Apr 2025 08:33:54 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Daniil Tatianin <d-tatianin@yandex-team.ru>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the pm tree
-Message-ID: <20250414083354.38f6911e@canb.auug.org.au>
+	s=arc-20240116; t=1744583738; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dqFI8CfJUDbGQkaYpGnqD/ix/xwo0GMXiF16TUJG9EcOap5q7xU4DUbMAkGZ5iarRvpBAC2+grYpiFGV0M1G9PEYDwDgUq/HD2pNQxd+IfVgy/Ey/FfnhwJh5sJ6LpJCHbxzngKgc8ki1LS+ipywJNcohXZ7iIJo2lwV2i98sSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac289147833so745873866b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 15:35:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744583734; x=1745188534;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=leChM06yVaoeXF0PJjvk39JyTh5sdS5fvL7KfujdwXj4Xn61RKzI/Ph/I/Px1RY958
+         w5oRVg50BQLLh7seKLlGLwoTI4tFoVS0zQGeIdTzzLGBS06wnJyxMnz3WI5Cvy0AEZdJ
+         8r4gdpX8utBk46juen9UQXGYeWv9usczbQChycGy6gPeCjUAbqfCwL4bfrYIgmSERAo1
+         DFyaXfgRxNJWreOK95PAo9RkM9swAbOf/tAd4sZitPn5uA28JwfOxzumD/V9yFA+VXpe
+         ExtmBBwak98g5RvU3ienCmqMtWS8i5YWwLmVj1FhBdVjKfDbiy7Pxxl+RF25zNnlG9pW
+         PXxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUd81lKadVip0sm9zeemf3OtTHVLYue8ToQOOClPylil0IZkcIeH3Ls6F/K8Eb6V8tgghWh1fpUyvW+7yQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJIgrVYm+HTYPuPvQo7DMFcr9KG0HiiWp6MiygDoaXx0oyb6uU
+	g7lkvPoqSS2JAcycZ2KowSj9lv+PmxxU7yf5aqTN9JmYhO+Cexmv
+X-Gm-Gg: ASbGncsICnn0xtPDYYjfYc1hz0Pbl9GP8DwArYj4/98z2SuCwy69n48TuFTRt4YpqYj
+	w656VmOAJcoL08292Vi3n4L6TtV2oKLREh3zdkHWoi7ja1FFLEvbbVHGJ3zxAQInSgY5v2NS4N9
+	S88N+7mJ0ek+q3jNZpexHsJI2aBxqmBkNy2ow0d72f3G0apegcVye4n63CjpN52cFTbSYSU3bGb
+	L9/OVlS+bn73oyHpOr/jjbvrxXbJ5eFf0DfBL+Rpzzj6SOFfpBIv2xRkw3kHFhFRJTcOrZpqKU/
+	eLN/358HP7qp8aYKLRtttMqdEGcV77WXprxuBmjIhKgmceUEqiXaIV/OcI1r/4qosUjN051A
+X-Google-Smtp-Source: AGHT+IGoVVpTI4/XlK1SFFy8xTEt/qKGCnntZqcX+NDUOQpOgvv7L/T65tp94jg9yFaZ1tfX/Ym1cw==
+X-Received: by 2002:a17:907:3f19:b0:ac4:76e:cdc1 with SMTP id a640c23a62f3a-acad349eb53mr765160566b.21.1744583734452;
+        Sun, 13 Apr 2025 15:35:34 -0700 (PDT)
+Received: from [10.10.9.121] (u-1j-178-175-199.4bone.mynet.it. [178.175.199.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be9c0dsm809066366b.61.2025.04.13.15.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Apr 2025 15:35:34 -0700 (PDT)
+Message-ID: <98d8909b-9890-4152-98a7-5ea553cb2bb4@grimberg.me>
+Date: Mon, 14 Apr 2025 01:35:33 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bZxb3Xh040g5ST2gjIfylvm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme: multipath: fix return value of nvme_available_path
+To: Uday Shankar <ushankar@purestorage.com>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Hannes Reinecke <hare@kernel.org>
+References: <20250404-nvme_type-v1-1-920053372832@purestorage.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20250404-nvme_type-v1-1-920053372832@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/bZxb3Xh040g5ST2gjIfylvm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-In commit
-
-  0f8af0356a45 ("ACPICA: exserial: don't forget to handle FFixedHW opregion=
-s for reading")
-
-Fixes tag
-
-  Fixes: ee64b827a9a ("ACPICA: Add support for FFH Opregion special context=
- data")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    This can be fixed for the future by setting core.abbrev to 12 (or
-    more) or (for git v2.11 or later) just making sure it is not set
-    (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bZxb3Xh040g5ST2gjIfylvm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8O9IACgkQAVBC80lX
-0Gwbuwf/cFVULn46o/gFDSxs4ZlU5XgLPDicMrF4V0iD8cge15/Bjw+7/ZYp/pWB
-HUfXEVxn5uXWFKrzPU8fwaOw+MTnVNDr7kyTDYk05TDxhS+raCt05DqnXGC2y/JR
-z0jewe2j+jkpojUt4AoU9RrSzu9vV32dnMVlG3+W7OGzNdMAVvbiBMXW2D2rZuoJ
-1SNjELf9RAoUE5qtyyFvYvYlQiiZWDP8Vqt4ftu7ruev9HDpd24m0RMRFRAYrf6P
-kTrHRTP/Z21DyG7NF9+oRVw8pKIKm2em2qISQp6Mwx+CQMLFQp3HBBXmGkc6RzEF
-lVDCdtn7/IFUm8hPugvpNiiaK1PFKg==
-=B97L
------END PGP SIGNATURE-----
-
---Sig_/bZxb3Xh040g5ST2gjIfylvm--
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
