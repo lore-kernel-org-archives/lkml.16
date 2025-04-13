@@ -1,63 +1,63 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC1318A95A
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 07:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB74A18C930
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 07:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744529574; cv=none; b=cGwSrBCuyUu06JV1ce7Wqa3HAoYIyevUU9X81blxoe8eyk1SyctjZDIoEAI58mIlEaGc2h3vqh2aEIe+yePdOFxyfv4N0L7Y4aWYATldsh/9X4H2Kq08blzoX9JG4Rwc2ziuesbOWCCDXE6TT/VENtzn2EE8pl/23o4UoQyLOQs=
+	t=1744529577; cv=none; b=kVpyQoomJ7gnAA7Z8c3bh1D+5nAQmMXG0zQHzbi/eQ9MI3quXlOEQ/PwtJH9Kd/+jS9WD+DQKA0xkRifUHWtVcWPJwPL0z/tQMy4q6cguggOs7+gJMB3wN4gGfkm1z0/7ueRju2pJ51Ht63Inl9meUzji36qk9qjud5g4odS8F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744529574; c=relaxed/simple;
-	bh=Hj77r4cZerWuVUCWJBhvlhNrpoiETEOAraEvo2HS0KA=;
+	s=arc-20240116; t=1744529577; c=relaxed/simple;
+	bh=pUIA/RXhgilbz1ISOoGK6YAU8jlldGmdEkdoGdAehQI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oqc8jAZjVRk4EF20IfxDBgwvs6KMsA9eJT31H4cjynYM15cCXVu6xf639FCrMUNE5Nt/Hl2bgetqOJeRvoztHmvQUaHKIugN8UJutMUz0sqK04/YU6JGbla1Uvo9gf0gxiCI0sSbQFgttlW8R1CqNsHksMx1GCXsNf9VN/7u+Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UAuDhEdQ; arc=none smtp.client-ip=209.85.160.193
+	 MIME-Version; b=P6mtLPhRdVuiWZ9nq7s+2Ar3py7KaiV34iBwFLcQSABiNUAWVfspJwVk+GEGacOTIxG1P2EcUXn4hmYLpKyMg+qyjp6qRgCilCTtQoaAfjX75N7mBT3TRHHGtH/qIqE79jMoWrDw8H3rHeacKk65RyNz3uGRYO+s2CQIEmXqAfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L5+TquSM; arc=none smtp.client-ip=209.85.222.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAuDhEdQ"
-Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-476964b2c1dso59384741cf.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 00:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5+TquSM"
+Received: by mail-qk1-f193.google.com with SMTP id af79cd13be357-7c54f67db99so433389485a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 00:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744529572; x=1745134372; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744529575; x=1745134375; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3uby1Q+b765/55h4CWBlJtND/wv5GPZpZ5T+Fpb9xa8=;
-        b=UAuDhEdQCMaLguj2iiWWmhUli5PPjUyS53XBN/UG37PVpvARAGD8UjbuOk5pF1c9jR
-         5mmEj04bvESeVPG4Ms5iJSsmGakMurtpu3bJjNyonisUmr09rMnypHjV+In+yYIeUjaI
-         xbSqzbyNpiteCN7CHgQ9CwtzeGigdjpviw6W6vZmAKzp1otkOFtbmHTf4No3KOqaSpsd
-         qNLiP+bFS2Lhn/2G+HxT72URBt2n0WzOst7LWZgl6XGPvML+RQkNkBFKHb7wCUIdrQZO
-         /lPIS6HDpudZY+gjWCGLqIzk3/KJRfc4psfbnOURtmSzt1lNBHWEMM8WU3IEhBzj5Q95
-         Pf+A==
+        bh=cfqOPU3wDyCgu3vC/mniafYNGRL//NvF+7lZ1K70QeA=;
+        b=L5+TquSME+YxMzVuvyyWhW4X0qmMNU0/1y7dmMu/xE7hGjKlklNbsS0P8xPngpC9nS
+         WnHmA2JJnBC46cwzM6DygJmZEdPwBDEq9OjGEA157WK/uUfbUIHfv/OqBL1zi6av4VRE
+         WHM0t6eGsAEk/yRf0zTMMjGZelklvH3ESSd0fdU2U2l7FUzad9ZQ673Rw+L8IX8vbkxd
+         dSfDpD6Ww2n7anZzt/lz92ZKou0HJMahvVYzEGMo8gg4bd/zNe44cK0djskTgnQqWJ0h
+         ELluqyQ6igzEQcwxHRnOYtB6ZihcZYSTCGphS309RM7NhvNavw1lqvtRW0AkQPJbgRn7
+         gKcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744529572; x=1745134372;
+        d=1e100.net; s=20230601; t=1744529575; x=1745134375;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3uby1Q+b765/55h4CWBlJtND/wv5GPZpZ5T+Fpb9xa8=;
-        b=GheWCUJIr/7lC1PAQ0mqqIb1NIFPaaZEBMn7hzLxU7G2uRnu+EyYKvRRVrhlGzM/fz
-         UZwaU/MENyDFQn9v3UqG/GaNuxUiFVuej4kkboDFTwjuH1DvYtFkR1lONVqKnzJjcxEz
-         2wjVsoOt7lYYhgEf30jaegDXKsEyXDainjKKlTx6N+SZzDrCnroG5yw0f9bMjefc6Za3
-         nMvQIA3xPEAvWLbn+/4aWvMLffe7R4ym2TBjW9Nji8wO1zhE2cDh3QmQDLWpe9MLcYun
-         NbnLWLV6bkpys98mNtPasXe6rVOFcTRsa+fyBiuLDrG13CpvHOuhCLQ0TV2uKcCPEtCg
-         ViZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNVS4UZiahIF9vulZvi/VW9FirDOYY8C5N3AY213sjxL1k7qrdbmEQFaxPgucG39iI1s1HlWb5reMFs/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw58J7j8Lqy82fpxFQ81/DiSTp+6OWfMYpSfAy9w25sNtGc4Zuo
-	cY7JhVzcnAClrxG91+fOnFbCSXKqPK6HLcyPW9ONQj2Xi7B+udb5
-X-Gm-Gg: ASbGncu/+OzyuYV3kY+c6N27suC6kQpB9UGnghQGMVNpLvuHCGZB7QlooSXXWrmDkmT
-	rjEk9Ji81oWjBJqPlQAZA6sn/179o/J05l12YMPpcFXmiCEmKsUhkk1YjqBTRcZV9jqz+be9CoL
-	9WnH3AnhepU3fXWkFn0J9HvlqL8dCvB8M01zZbX/Enq7oiLJuM+tK2t5qyb2/r1gTq7Ovlj8n9z
-	IxGg9SREQywNGgrl8oPfk3GNce4RiGYXHTIfgPLArknPH4fcbfQ2iPdosoX6cm472PYAgWZS4PB
-	7VYdJXoeUK6FiuNpxOLLWx93sXBiS6T/U+ytU9LoPaaYqinx5Hp5DdmooXYl98taUqzmeu3TU7f
-	9+8x7OcBzlxp4Nt62LA==
-X-Google-Smtp-Source: AGHT+IHRArwDsyiOHSw0uFQ2zMdIEQRmtTDX1Ac43R0yu6Md3oC0QegCdhqwo2sEf+nt/jF/DRPgjA==
-X-Received: by 2002:ac8:7dcc:0:b0:479:1a10:8958 with SMTP id d75a77b69052e-4797750fb92mr128705241cf.1.1744529571657;
-        Sun, 13 Apr 2025 00:32:51 -0700 (PDT)
+        bh=cfqOPU3wDyCgu3vC/mniafYNGRL//NvF+7lZ1K70QeA=;
+        b=ies2bMAnoTzp+vgN+dhUgVvVdwsfu+ebVKBSQNSsg/KEszEtZIRgfXuY4uL38AHfbO
+         HDBeP9sAAYXHxeuqLO5/wEM3rdUQErccLTg4hMpy/NVYN+ZgK4Qf//i7TQwE7cUJ1J4P
+         2T8nN/oR8pTB4TB1stEHGqOWGSD+8nDp9K5uSXbwcq+vO67I/oceXJ/MjTgpiXKRcvl8
+         h29+CuQE6Ky6+Fo8XfcW5osbiLsUts0sfnVQ+2zaXSslXOq8/P1l5RnkaPz05GI3j1N6
+         GQHO+qhPM2hsu3KNNHOYJ0vUJsm9PRan9r0VNB+dW0ZUt016NClnGD7gWWU4GYcS7CJu
+         2OXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWjAjPiCQV7y53ZL+gdg4FxdUlTS2wK8uP10vOkdLhEPYvClsG37eOELQkiQFyVjvbI5VwwMA9E4BldMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCs/dylVkpEjcIOxo7g35D2ZMM9ds8uDA9VvgiZZDud+ZpeMVg
+	+S/3JaT0O6c57JTgLuSPmlRbX1cry7RU3Nfs8/H4L+EmsSpop93Z
+X-Gm-Gg: ASbGnctXAjtzcep1tkWMr8W3f1bcwzQ/Ievh5fQRpc+tB4LGZuWagBJnyhLnsr8p3FU
+	E8rayfQ0f5yr7KcHbf0pHDmCzwrwWKEIBEn20ClOpBd0CZS2IRb5wy4tKy61kJmL2r3C3fjMGFn
+	exh1tHNsdwGhEVQU/vTw8MALDVU5wcb8hLKjlEyel5b3fD7zXr1YHXMrtyqJlMRVHw/VgOd4zjB
+	Y9qplyY0Co92dOF0d9HScJsQ1aJLVnJDYMwI2Hi0pBv5JHeXOWGOSVd75CPzinE3XpG+fYoR68o
+	3En507mH14MKrmWkPy1GQhaU6V1AIL3msvMi9x2BSdm0mk/FgdNM7qty0PGyGCuigzMsYsTExek
+	gHVO0camDi6DEVH8Y0w==
+X-Google-Smtp-Source: AGHT+IHh7do8k/l7nY7jzUed4eBmOzqjrZqSgir0AaDpT5VzCL16gYZxnsXjqi/syQ2mjP7YJ3yIqQ==
+X-Received: by 2002:a05:620a:4515:b0:7c5:6b46:e1ee with SMTP id af79cd13be357-7c7a764cb6bmr1771180085a.4.1744529574458;
+        Sun, 13 Apr 2025 00:32:54 -0700 (PDT)
 Received: from UbuntuDev.. (syn-074-067-077-020.res.spectrum.com. [74.67.77.20])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb0b58csm52142401cf.2.2025.04.13.00.32.50
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb0b58csm52142401cf.2.2025.04.13.00.32.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 00:32:51 -0700 (PDT)
+        Sun, 13 Apr 2025 00:32:54 -0700 (PDT)
 From: Ganesh Kumar Pittala <ganeshkpittala@gmail.com>
 To: johan@kernel.org,
 	elder@kernel.org,
@@ -71,9 +71,9 @@ Cc: greybus-dev@lists.linaro.org,
 	rmfrfs@gmail.com,
 	pure.logic@nexus-software.ie,
 	ganeshkpittala@gmail.com
-Subject: [PATCH v2 3/4] staging: greybus: refactor gb_loopback_fn into smaller helper functions
-Date: Sun, 13 Apr 2025 07:32:19 +0000
-Message-ID: <20250413073220.15931-4-ganeshkpittala@gmail.com>
+Subject: [PATCH v2 4/4] staging: greybus: split gb_audio_gb_get_topology into helper functions
+Date: Sun, 13 Apr 2025 07:32:20 +0000
+Message-ID: <20250413073220.15931-5-ganeshkpittala@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250413073220.15931-1-ganeshkpittala@gmail.com>
 References: <20250413073220.15931-1-ganeshkpittala@gmail.com>
@@ -85,214 +85,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch refactors the gb_loopback_fn() function in loopback.c by
-splitting large blocks of logic into well-named static helpers to
-improve clarity, readability, and maintainability.
+This patch addresses the TODO in gb_audio_gb_get_topology() by
+splitting its logic into two smaller internal helper functions:
+  - gb_audio_get_topology_size()
+  - gb_audio_read_topology()
 
-The control flow remains unchanged. No functional modifications
-are introduced.
-
-This aligns with kernel coding style guidelines for long functions
-and helps future contributors understand and modify loopback behavior
-more easily.
+This improves modularity and readability while preserving the
+original behavior and interface.
 
 Signed-off-by: Ganesh Kumar Pittala <ganeshkpittala@gmail.com>
 ---
- drivers/staging/greybus/loopback.c | 152 ++++++++++++++++-------------
- 1 file changed, 82 insertions(+), 70 deletions(-)
+ drivers/staging/greybus/audio_gb.c | 36 +++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/greybus/loopback.c b/drivers/staging/greybus/loopback.c
-index c194afea941a..1e3644ede1b6 100644
---- a/drivers/staging/greybus/loopback.c
-+++ b/drivers/staging/greybus/loopback.c
-@@ -832,105 +832,117 @@ static void gb_loopback_async_wait_to_send(struct gb_loopback *gb)
- 				  kthread_should_stop());
- }
+diff --git a/drivers/staging/greybus/audio_gb.c b/drivers/staging/greybus/audio_gb.c
+index 9d8994fdb41a..92cfd1a6fc10 100644
+--- a/drivers/staging/greybus/audio_gb.c
++++ b/drivers/staging/greybus/audio_gb.c
+@@ -8,21 +8,28 @@
+ #include <linux/greybus.h>
+ #include "audio_codec.h"
  
--static int gb_loopback_fn(void *data)
-+static bool gb_loopback_should_stop(struct gb_loopback *gb,
-+				    struct gb_bundle *bundle)
-+{
-+	if (!gb->type) {
-+		gb_pm_runtime_put_autosuspend(bundle);
-+		wait_event_interruptible(gb->wq,
-+					 gb->type || kthread_should_stop());
-+		if (kthread_should_stop())
-+			return true;
-+		gb_pm_runtime_get_sync(bundle);
-+	}
-+	return kthread_should_stop();
-+}
-+
-+static void gb_loopback_handle_completion(struct gb_loopback *gb,
-+					  struct gb_bundle *bundle)
-+{
-+	gb_loopback_async_wait_all(gb);
-+
-+	mutex_lock(&gb->mutex);
-+	if (gb->iteration_count == gb->iteration_max) {
-+		gb->type = 0;
-+		gb->send_count = 0;
-+		sysfs_notify(&gb->dev->kobj, NULL, "iteration_count");
-+		dev_dbg(&bundle->dev, "load test complete\n");
-+	} else {
-+		dev_dbg(&bundle->dev, "continuing on with new test set\n");
-+	}
-+	mutex_unlock(&gb->mutex);
-+}
-+
-+static void gb_loopback_dispatch_operation(struct gb_loopback *gb, int type,
-+					   u32 size)
+-/* TODO: Split into separate calls */
+-int gb_audio_gb_get_topology(struct gb_connection *connection,
+-			     struct gb_audio_topology **topology)
++static int gb_audio_gb_get_topology_size(struct gb_connection *connection,
++					 u16 *size)
  {
- 	int error = 0;
--	int us_wait = 0;
--	int type;
--	int ret;
--	u32 size;
+-	struct gb_audio_get_topology_size_response size_resp;
+-	struct gb_audio_topology *topo;
+-	u16 size;
++	struct gb_audio_get_topology_size_response resp;
+ 	int ret;
  
-+	if (gb->async) {
-+		if (type == GB_LOOPBACK_TYPE_PING)
-+			error = gb_loopback_async_ping(gb);
-+		else if (type == GB_LOOPBACK_TYPE_TRANSFER)
-+			error = gb_loopback_async_transfer(gb, size);
-+		else if (type == GB_LOOPBACK_TYPE_SINK)
-+			error = gb_loopback_async_sink(gb, size);
-+
-+		if (error) {
-+			gb->error++;
-+			gb->iteration_count++;
-+		}
-+	} else {
-+		if (type == GB_LOOPBACK_TYPE_PING)
-+			error = gb_loopback_sync_ping(gb);
-+		else if (type == GB_LOOPBACK_TYPE_TRANSFER)
-+			error = gb_loopback_sync_transfer(gb, size);
-+		else if (type == GB_LOOPBACK_TYPE_SINK)
-+			error = gb_loopback_sync_sink(gb, size);
-+
-+		if (error)
-+			gb->error++;
-+		gb->iteration_count++;
-+		gb_loopback_calculate_stats(gb, !!error);
-+	}
+ 	ret = gb_operation_sync(connection, GB_AUDIO_TYPE_GET_TOPOLOGY_SIZE,
+-				NULL, 0, &size_resp, sizeof(size_resp));
++				NULL, 0, &resp, sizeof(resp));
+ 	if (ret)
+ 		return ret;
+ 
+-	size = le16_to_cpu(size_resp.size);
++	*size = le16_to_cpu(resp.size);
++	return 0;
 +}
 +
-+static void gb_loopback_delay_if_needed(int us_wait)
++static int gb_audio_gb_read_topology(struct gb_connection *connection,
++				     struct gb_audio_topology **topology,
++				     u16 size)
 +{
-+	if (us_wait) {
-+		if (us_wait < 20000)
-+			usleep_range(us_wait, us_wait + 100);
-+		else
-+			msleep(us_wait / 1000);
-+	}
++	struct gb_audio_topology *topo;
++	int ret;
++
+ 	if (size < sizeof(*topo))
+ 		return -ENODATA;
+ 
+@@ -41,6 +48,19 @@ int gb_audio_gb_get_topology(struct gb_connection *connection,
+ 
+ 	return 0;
+ }
++
++int gb_audio_gb_get_topology(struct gb_connection *connection,
++			     struct gb_audio_topology **topology)
++{
++	u16 size;
++	int ret;
++
++	ret = gb_audio_gb_get_topology_size(connection, &size);
++	if (ret)
++		return ret;
++
++	return gb_audio_gb_read_topology(connection, topology, size);
 +}
-+
-+static int gb_loopback_fn(void *data)
-+{
-+	int us_wait = 0, type;
-+	u32 size;
- 	struct gb_loopback *gb = data;
- 	struct gb_bundle *bundle = gb->connection->bundle;
+ EXPORT_SYMBOL_GPL(gb_audio_gb_get_topology);
  
--	ret = gb_pm_runtime_get_sync(bundle);
--	if (ret)
--		return ret;
-+	if (gb_pm_runtime_get_sync(bundle))
-+		return -EIO;
- 
- 	while (1) {
--		if (!gb->type) {
--			gb_pm_runtime_put_autosuspend(bundle);
--			wait_event_interruptible(gb->wq, gb->type ||
--						 kthread_should_stop());
--			ret = gb_pm_runtime_get_sync(bundle);
--			if (ret)
--				return ret;
--		}
--
--		if (kthread_should_stop())
-+		if (gb_loopback_should_stop(gb, bundle))
- 			break;
- 
--		/* Limit the maximum number of in-flight async operations */
- 		gb_loopback_async_wait_to_send(gb);
- 		if (kthread_should_stop())
- 			break;
- 
- 		mutex_lock(&gb->mutex);
- 
--		/* Optionally terminate */
- 		if (gb->send_count == gb->iteration_max) {
- 			mutex_unlock(&gb->mutex);
--
--			/* Wait for synchronous and asynchronous completion */
--			gb_loopback_async_wait_all(gb);
--
--			/* Mark complete unless user-space has poked us */
--			mutex_lock(&gb->mutex);
--			if (gb->iteration_count == gb->iteration_max) {
--				gb->type = 0;
--				gb->send_count = 0;
--				sysfs_notify(&gb->dev->kobj,  NULL,
--					     "iteration_count");
--				dev_dbg(&bundle->dev, "load test complete\n");
--			} else {
--				dev_dbg(&bundle->dev,
--					"continuing on with new test set\n");
--			}
--			mutex_unlock(&gb->mutex);
-+			gb_loopback_handle_completion(gb, bundle);
- 			continue;
- 		}
-+
- 		size = gb->size;
- 		us_wait = gb->us_wait;
- 		type = gb->type;
- 		if (ktime_to_ns(gb->ts) == 0)
- 			gb->ts = ktime_get();
- 
--		/* Else operations to perform */
--		if (gb->async) {
--			if (type == GB_LOOPBACK_TYPE_PING)
--				error = gb_loopback_async_ping(gb);
--			else if (type == GB_LOOPBACK_TYPE_TRANSFER)
--				error = gb_loopback_async_transfer(gb, size);
--			else if (type == GB_LOOPBACK_TYPE_SINK)
--				error = gb_loopback_async_sink(gb, size);
--
--			if (error) {
--				gb->error++;
--				gb->iteration_count++;
--			}
--		} else {
--			/* We are effectively single threaded here */
--			if (type == GB_LOOPBACK_TYPE_PING)
--				error = gb_loopback_sync_ping(gb);
--			else if (type == GB_LOOPBACK_TYPE_TRANSFER)
--				error = gb_loopback_sync_transfer(gb, size);
--			else if (type == GB_LOOPBACK_TYPE_SINK)
--				error = gb_loopback_sync_sink(gb, size);
--
--			if (error)
--				gb->error++;
--			gb->iteration_count++;
--			gb_loopback_calculate_stats(gb, !!error);
--		}
-+		gb_loopback_dispatch_operation(gb, type, size);
-+
- 		gb->send_count++;
- 		mutex_unlock(&gb->mutex);
- 
--		if (us_wait) {
--			if (us_wait < 20000)
--				usleep_range(us_wait, us_wait + 100);
--			else
--				msleep(us_wait / 1000);
--		}
-+		gb_loopback_delay_if_needed(us_wait);
- 	}
- 
- 	gb_pm_runtime_put_autosuspend(bundle);
+ int gb_audio_gb_get_control(struct gb_connection *connection,
 -- 
 2.43.0
 
