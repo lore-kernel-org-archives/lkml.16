@@ -1,76 +1,72 @@
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9551494A8
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 05:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B93537E9
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 05:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744522887; cv=none; b=QpUBevrczqCvKSJiEvViPF2IIQgRglaarrhwalRjRlOyYnG5hlB5MPzJImVR6gfMiqYFF8ZnqvWooJy5hTth4ytyNWAjgvTHeqJLr+sbVq4Y7Fyzu7Mte85yZm0TWTjF1MolTeg/0Gf0SmE0Oef16dyOq+TENGX7plkBUIQOtN0=
+	t=1744523646; cv=none; b=CKi3cA8aAdO2EzarWaEm4GJ1qr1KKTQKBQxnCQwLX4PlMxn6MRDltub2ynWZgqMthIIJ8aM84wHjyY3NZzn8gIn/NLMM9Ru0AhxgJ2So5nVXDu8JVBLt7KrHhcpPlezPFwk3SvtoL0VLS7CsxWingQC97oABMOWCdVd1BAXnCLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744522887; c=relaxed/simple;
-	bh=KNFuWARQCr02Ie4DHc2A0sCAPiSD72nZSsjtpgwyhgQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=LzqwXtx5MpN8BGQiAnotFX9gq6AOObAhw6PVDMT6lk7S9kGapIOlI90YJ0K36y+Q2v+63KTaHaNOlgHQhosfUQ2zWDb0rxOCflEgojcrEioZIES+m4OE/Y0TXfcfVCsfsNdJr8abnbYaCMThVnkfVzXS2M+bGOW9zOLJJmB+R90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cSc3PP40; arc=none smtp.client-ip=203.205.221.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cSc3PP40"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744522881; bh=Ix70RlTZArVn4D3n7Wq3lhRc0QoaN1a+PzFO+JqgFs0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cSc3PP40Vmh8YBSOSvDyhG5yPidc2Uv58+tDf+y8l/Cc9HuxDecICC3hCZ22+l6n8
-	 r08ToBfeMKV3eyeEZC6Sbeth+9lBKOR08wOQpKdBJIG4IQlJsHAdzolT50sB4kk0Jr
-	 plZypWM8KXLZVWeT/POtTSnEYiL+wMxAuirjs2vQ=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id A5381833; Sun, 13 Apr 2025 13:41:19 +0800
-X-QQ-mid: xmsmtpt1744522879tijsmnsuz
-Message-ID: <tencent_A80EBA44BB6A33409E3D1B2E4B181B772508@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmaMhdzEeLiWJO3VFHw+5Vey21/WLkYgVosXZXKAC7AHDNZTN1BdH
-	 imobEr5nLXWpVmV5+R4J1MVkgmGwiHAyUQQpiL265y4YrFcf//gu83JFKliyapJs9D6arAfhmu2z
-	 XtN6CQTYb3SKmhUTofe0DDDzjBULoHDM3kORa0sA0nIrOdFOH7Npb7JiC4SvSCVd/69cblUMJmS6
-	 Gq2tviemYVcfKc4q04TTpwfUrxCo+3aJWvGtIYBhVu+HOnylt74XGeSXHqGl1Isz5oqPIXhAooPb
-	 GRGr2B2mODbHn6Cj4lcX+u2f0jA8UPib/+5MZV6r7OGkbVcXhhTq3kpWBCuPZ3eXgagbYXuGmLXY
-	 GyckY1L2ct9sKOPlp6/PQK0Aa57iuJcBV6VqYyFMfaRjJY6IsEVn+MSB/3MAlfzWFqc2dejvnGuY
-	 g78fO+sFaiV9cazc+bAcYhNtp0dR9zxw6yL0gex45daVL+mBjFlMW7ebChxGlhT3KDqOB3YO7MzI
-	 W7N+En7MB7ntMoZRl+J1KGz8a9V+8nZK5q7TX+N9T4WM2GWP7oDEly71uV/4wM/4gA5/haL84f8V
-	 9i42BfTCGTDq7dAYe3v0mNAE8xC08/tfIrDQtGBh0K5vm6MmyjnSpOrDOM2tvyYJu0eJnDfY1ymc
-	 fFOffx7h6CmArEPcksZ9RST6UmQMKat6ma2pGGi4ONk9+i6UaCVOiKyxxIJuTNNsj2Tpw7eHc6ob
-	 gG0h+RdQ7eHxlPRvy8JHr/fb9vfRsTfbP1k6ZinaV9P9ZF/NaT9JFogSrtnyL/8Ix9og/9ROyFwj
-	 UZ2P85ycrSLf4vI4zdjTwU1Iloz82NxGBiNiYAGL8LvLk4do41ywhqmw4s/n6+CaxNBsfYBd/2ye
-	 gTLrk/b4FrD3nsMMmt59gXhkbUYB0oYPEtNqFJM6gcfA8CyX/+cGk=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+5c042fbab0b292c98fc6@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [afs?] BUG: unable to handle kernel paging request in afs_put_vlserverlist
-Date: Sun, 13 Apr 2025 13:41:20 +0800
-X-OQ-MSGID: <20250413054119.154915-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67fb3265.050a0220.2c5fcf.001a.GAE@google.com>
-References: <67fb3265.050a0220.2c5fcf.001a.GAE@google.com>
+	s=arc-20240116; t=1744523646; c=relaxed/simple;
+	bh=Fs2v0bPPVoO64CH9hUvX8/nnTsemWrb+5K6WXdw0N6w=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=CVt2/Bzc/U0BbNyT0r/ARClQPF6p7pDBP4hK3KnuM6ilN4RYK1Nmgp1ndeFfdp8uoOw/8fx6Ql3gLxxSwiedYwdMF/kjonuon7o2RabppViSn6s+w/pu3YWezomtR3eJDPq2CpuVD3AuClvP4TPE4buCmPmBBGEc08zL02FbX4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d43c0dbe6aso65075885ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 22:54:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744523644; x=1745128444;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VTYAcllAejaW2w7q0lbWtTOt/qwZab5rMXPa8uy7hgc=;
+        b=Ht8bBm+iKm0UqeNn9sVjKlN40wLT7mSV0l43T+2advT2wnRIp3nul6H+JE/FYLnsYv
+         CseNJ/jePe6MvH9Zk8LHy9uGtPSCcmMzQwDRKi5jGnYClrGEdgBHkOLNWpiksU3Il/c5
+         3VC1x33rjpm7WAm9TyrMkB3hBZPTPSZIZn6NEsmGJDfqF71OaUcS8Yg0tS9YrJRIoNuX
+         LZxyTualL0Rf3WQE19HEGlFrtwFaSe2tq0rzHhs7pIFxBYdtqZhmoHSrPiWX5vAzt29M
+         VstoIpzR3ULG5co8Xs6Rkp3xCEYvgcv0ze9pT7gG4lETbOxMTLBoxxn4/9chQZNpiB5B
+         WubA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzDEFKiAkyufy9l5v2Vw3EtydhurykgFpusyS3m6H4/SsV7bKLYQYHhiUnkUKywE98s2Weu9LDU/AdK3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvLwm8kjr0z3T42wopvxWDTdSVpOAxXxzObnF2yX7PKkWPbJnN
+	pd6mcji/GWEeuR5be0HYQUkXasNte6bW5epZOGT5LKvnBYWStR+oqu7SOLY2w8YizmyaBwNLElT
+	qG3m2dYFns6UyoRb2aTOQgW3DSpnw4hAsMvPz2gowze1VNgBozPp/+lo=
+X-Google-Smtp-Source: AGHT+IEVh3heqF4tsZziqYAhLOwoqi10DU+m9TBkzy40VXstYGb2+JrgUrTZAxKy+DY5D6NuCCY4aRHkrR+85s/xxOKzoX6M4yqJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:741:b0:3d3:d00c:3602 with SMTP id
+ e9e14a558f8ab-3d7ec20458cmr87000015ab.10.1744523643763; Sat, 12 Apr 2025
+ 22:54:03 -0700 (PDT)
+Date: Sat, 12 Apr 2025 22:54:03 -0700
+In-Reply-To: <tencent_36256BBAA7BB3833A69E7E1B514B2B1BA308@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fb517b.050a0220.2c5fcf.001b.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] divide error in mac80211_hwsim_set_tsf
+From: syzbot <syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-#syz test
+Hello,
 
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index 0168bbf53fe0..f31359922e98 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -177,6 +177,7 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
- 					      VL_SERVICE, AFS_VL_PORT);
- 		if (IS_ERR(vllist)) {
- 			ret = PTR_ERR(vllist);
-+			vllist = NULL;
- 			goto parse_failed;
- 		}
- 
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
+
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+
+
+Tested on:
+
+commit:         7cdabafc Merge tag 'trace-v6.15-rc1' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11f3d398580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7a4e108575159039
+dashboard link: https://syzkaller.appspot.com/bug?extid=064815c6cd721082a52a
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15e49870580000
 
