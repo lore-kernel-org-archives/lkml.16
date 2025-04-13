@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DE417A2F6;
-	Sun, 13 Apr 2025 04:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53612187872;
+	Sun, 13 Apr 2025 04:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744520142; cv=none; b=XXeZaKq2ntjFXSNrOTAqmP0Kbd0zvzPP3Sb92A06HmIwC0YkTrQD46xFsJ0vbr64qA/olDeFD5WI5yL8/BrTKFZ/pVqpQTY1xKjZdg5AIZUYj+5rPSE5qyM1/QHqIJ56/X8CL651XfpgR12xXc7A8lIFMU49tGcOfTwvif42Pfs=
+	t=1744520143; cv=none; b=psnjISoQevl83ucjrO2jDqEUbzOGc5qYN1sdoTIOHuetD8Bjacxj6krfO0JS9ZUZOgua9QhZ2bIE8CtBx1WZKoIdxwFKPJFhluq3Q2HJw4TY9ebFzOGmd8p4va+Y6JUy8bm+A/AJltFwZsPTkhRlJIwKl6kbsKdhstV1hjLfOk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744520142; c=relaxed/simple;
-	bh=9FIfB3SWlQ3XpNk3Dx8kombdj2eN1jWYviON2vPLySA=;
+	s=arc-20240116; t=1744520143; c=relaxed/simple;
+	bh=Uv2ivhKGeSVnJttJbFk66Y1ps6xLRxh4yCdmxnmogHY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qXPOWKcf1WirskzDtvn76RmCKu0epQIclvuSnAT1iGVhy+VYhY72297wWFxK5uQh0k8O/oTTHYfn4lXipqcHASd/s1S81QmYdBgfwOGGxqy4DxU1zK12gDHGLYgnzpiaxaHSZuK71+pJo7WEwWdIQNy/+TIaZvOsC0qCJbjK0go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qurcntK5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JyCy6wIqt5yySsI0cAGJLEeOyh4ItJ3ij12tw0z9wJcPARXz4wqTIPkXxs/Iyk+iU+bg2G5AQajLRFwVePWwEq/sAj3yG4Cw5X8qcWMQUbKpotETOJoQa1KDFDKLkNpkEIpLyz/YIIn6Zk/UBuWfY2j4LfSsQUvjO/vTdX1CvSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KY5b4L7n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qurcntK5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6BB1C4CEEF;
-	Sun, 13 Apr 2025 04:55:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KY5b4L7n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7ACC4CEEB;
+	Sun, 13 Apr 2025 04:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744520142;
-	bh=9FIfB3SWlQ3XpNk3Dx8kombdj2eN1jWYviON2vPLySA=;
+	s=k20201202; t=1744520143;
+	bh=Uv2ivhKGeSVnJttJbFk66Y1ps6xLRxh4yCdmxnmogHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qurcntK5oD7ir9QIYy87uFOTG7DZ5ai9xFFMpiTEhR/j4EdtY12M1OVTdVtw/NJsu
-	 rsi1wNoL03woAdSu5nYj1OYQmu0DYRKWlULNk+FTWgaf2Zblpp5kLX7C7phu3fINkJ
-	 FaacxnBSITxJUiMkcoVJmZVe9NRVMocxReuTm9Pemzo9v6gGJxHgF6uHuS4P1oa0cy
-	 e52Y1ytSrBM2Ff5pvBoMUuPsuevuOXObpmTux9yE2jVJ0ejIcew5LdtJJw2W2JfmFM
-	 qFMw+xdBSJRuCKY61p/OVXS05LkzuFyjgccxIl3qFqMfmh5X9gWRb5IiP+vnLiXMN2
-	 d51Zcu6bAdL7w==
+	b=KY5b4L7n1HqepIWAPKLs1qrotLq2c54a5O7KU0785rvEUYPKN6iDwBm2H9Smjz+s6
+	 Yp9mmMGANuGpo/CTioxu8qeRKTEeTTXAwR1vcwSjvNdNPyCLvrNgbFhEyEhWF7NOkE
+	 96qdSnf50bYKRMWykgRovqVBmMjPND0lspd9/w1Bni+H1UCw/RhJwnvbeZFsQ02x0F
+	 k3OIIZ9PGOglVBsOXXM8G3qUCsQ+w3yAwd0V9G0+7/9IuxjMHA698IpLzGy6QH7MGw
+	 Ju8HUR/Ph7QsHlMeyL/wpDb+EivNONqlMHtGfyoc0HwNf2SxWk0SP4w3IA54l0olOs
+	 LfGZUrCVQQ0pg==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-mips@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org,
 	x86@kernel.org
-Subject: [PATCH 4/9] crypto: arm64/poly1305 - remove redundant shash algorithm
-Date: Sat, 12 Apr 2025 21:54:16 -0700
-Message-ID: <20250413045421.55100-5-ebiggers@kernel.org>
+Subject: [PATCH 6/9] crypto: mips/poly1305 - remove redundant shash algorithm
+Date: Sat, 12 Apr 2025 21:54:18 -0700
+Message-ID: <20250413045421.55100-7-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250413045421.55100-1-ebiggers@kernel.org>
 References: <20250413045421.55100-1-ebiggers@kernel.org>
@@ -57,66 +57,63 @@ library functions there.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/arm64/crypto/Kconfig         |   6 --
- arch/arm64/crypto/poly1305-glue.c | 140 ++----------------------------
- 2 files changed, 6 insertions(+), 140 deletions(-)
+ arch/mips/crypto/Kconfig         |   5 --
+ arch/mips/crypto/poly1305-glue.c | 120 +------------------------------
+ 2 files changed, 2 insertions(+), 123 deletions(-)
 
-diff --git a/arch/arm64/crypto/Kconfig b/arch/arm64/crypto/Kconfig
-index ce655da0fbee..c47a7649a241 100644
---- a/arch/arm64/crypto/Kconfig
-+++ b/arch/arm64/crypto/Kconfig
-@@ -26,18 +26,12 @@ config CRYPTO_NHPOLY1305_NEON
- 	  - NEON (Advanced SIMD) extensions
+diff --git a/arch/mips/crypto/Kconfig b/arch/mips/crypto/Kconfig
+index 9892391f74ac..8283664a1f24 100644
+--- a/arch/mips/crypto/Kconfig
++++ b/arch/mips/crypto/Kconfig
+@@ -2,17 +2,12 @@
  
- config CRYPTO_POLY1305_NEON
+ menu "Accelerated Cryptographic Algorithms for CPU (mips)"
+ 
+ config CRYPTO_POLY1305_MIPS
  	tristate
- 	depends on KERNEL_MODE_NEON
 -	select CRYPTO_HASH
  	select CRYPTO_ARCH_HAVE_LIB_POLY1305
  	default CRYPTO_LIB_POLY1305_INTERNAL
 -	help
 -	  Poly1305 authenticator algorithm (RFC7539)
 -
--	  Architecture: arm64 using:
--	  - NEON (Advanced SIMD) extensions
+-	  Architecture: mips
  
- config CRYPTO_SHA1_ARM64_CE
- 	tristate "Hash functions: SHA-1 (ARMv8 Crypto Extensions)"
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_HASH
-diff --git a/arch/arm64/crypto/poly1305-glue.c b/arch/arm64/crypto/poly1305-glue.c
-index 89415731d9be..cb152ceac14a 100644
---- a/arch/arm64/crypto/poly1305-glue.c
-+++ b/arch/arm64/crypto/poly1305-glue.c
-@@ -6,19 +6,16 @@
+ config CRYPTO_MD5_OCTEON
+ 	tristate "Digests: MD5 (OCTEON)"
+ 	depends on CPU_CAVIUM_OCTEON
+ 	select CRYPTO_MD5
+diff --git a/arch/mips/crypto/poly1305-glue.c b/arch/mips/crypto/poly1305-glue.c
+index 9eee71dc0b99..576e7a58e0b1 100644
+--- a/arch/mips/crypto/poly1305-glue.c
++++ b/arch/mips/crypto/poly1305-glue.c
+@@ -3,17 +3,14 @@
+  * OpenSSL/Cryptogams accelerated Poly1305 transform for MIPS
+  *
+  * Copyright (C) 2019 Linaro Ltd. <ard.biesheuvel@linaro.org>
   */
  
- #include <asm/hwcap.h>
- #include <asm/neon.h>
- #include <asm/simd.h>
 -#include <linux/unaligned.h>
 -#include <crypto/algapi.h>
 -#include <crypto/internal/hash.h>
 -#include <crypto/internal/poly1305.h>
 +#include <crypto/poly1305.h>
- #include <crypto/internal/simd.h>
  #include <linux/cpufeature.h>
 -#include <linux/crypto.h>
- #include <linux/jump_label.h>
  #include <linux/module.h>
 +#include <linux/unaligned.h>
  
- asmlinkage void poly1305_init_arm64(void *state, const u8 *key);
- asmlinkage void poly1305_blocks(void *state, const u8 *src, u32 len, u32 hibit);
- asmlinkage void poly1305_blocks_neon(void *state, const u8 *src, u32 len, u32 hibit);
- asmlinkage void poly1305_emit(void *state, u8 *digest, const u32 *nonce);
-@@ -34,96 +31,10 @@ void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KE
+ asmlinkage void poly1305_init_mips(void *state, const u8 *key);
+ asmlinkage void poly1305_blocks_mips(void *state, const u8 *src, u32 len, u32 hibit);
+ asmlinkage void poly1305_emit_mips(void *state, u8 *digest, const u32 *nonce);
+ 
+@@ -26,81 +23,10 @@ void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KE
  	dctx->s[3] = get_unaligned_le32(key + 28);
  	dctx->buflen = 0;
  }
  EXPORT_SYMBOL(poly1305_init_arch);
  
--static int neon_poly1305_init(struct shash_desc *desc)
+-static int mips_poly1305_init(struct shash_desc *desc)
 -{
 -	struct poly1305_desc_ctx *dctx = shash_desc_ctx(desc);
 -
@@ -127,12 +124,12 @@ index 89415731d9be..cb152ceac14a 100644
 -	return 0;
 -}
 -
--static void neon_poly1305_blocks(struct poly1305_desc_ctx *dctx, const u8 *src,
--				 u32 len, u32 hibit, bool do_neon)
+-static void mips_poly1305_blocks(struct poly1305_desc_ctx *dctx, const u8 *src,
+-				 u32 len, u32 hibit)
 -{
 -	if (unlikely(!dctx->sset)) {
 -		if (!dctx->rset) {
--			poly1305_init_arm64(&dctx->h, src);
+-			poly1305_init_mips(&dctx->h, src);
 -			src += POLY1305_BLOCK_SIZE;
 -			len -= POLY1305_BLOCK_SIZE;
 -			dctx->rset = 1;
@@ -152,15 +149,14 @@ index 89415731d9be..cb152ceac14a 100644
 -
 -	len &= ~(POLY1305_BLOCK_SIZE - 1);
 -
--	if (static_branch_likely(&have_neon) && likely(do_neon))
--		poly1305_blocks_neon(&dctx->h, src, len, hibit);
--	else
--		poly1305_blocks(&dctx->h, src, len, hibit);
+-	poly1305_blocks_mips(&dctx->h, src, len, hibit);
 -}
 -
--static void neon_poly1305_do_update(struct poly1305_desc_ctx *dctx,
--				    const u8 *src, u32 len, bool do_neon)
+-static int mips_poly1305_update(struct shash_desc *desc, const u8 *src,
+-				unsigned int len)
 -{
+-	struct poly1305_desc_ctx *dctx = shash_desc_ctx(desc);
+-
 -	if (unlikely(dctx->buflen)) {
 -		u32 bytes = min(len, POLY1305_BLOCK_SIZE - dctx->buflen);
 -
@@ -170,14 +166,13 @@ index 89415731d9be..cb152ceac14a 100644
 -		dctx->buflen += bytes;
 -
 -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
--			neon_poly1305_blocks(dctx, dctx->buf,
--					     POLY1305_BLOCK_SIZE, 1, false);
+-			mips_poly1305_blocks(dctx, dctx->buf, POLY1305_BLOCK_SIZE, 1);
 -			dctx->buflen = 0;
 -		}
 -	}
 -
 -	if (likely(len >= POLY1305_BLOCK_SIZE)) {
--		neon_poly1305_blocks(dctx, src, len, 1, do_neon);
+-		mips_poly1305_blocks(dctx, src, len, 1);
 -		src += round_down(len, POLY1305_BLOCK_SIZE);
 -		len %= POLY1305_BLOCK_SIZE;
 -	}
@@ -186,19 +181,6 @@ index 89415731d9be..cb152ceac14a 100644
 -		dctx->buflen = len;
 -		memcpy(dctx->buf, src, len);
 -	}
--}
--
--static int neon_poly1305_update(struct shash_desc *desc,
--				const u8 *src, unsigned int srclen)
--{
--	bool do_neon = crypto_simd_usable() && srclen > 128;
--	struct poly1305_desc_ctx *dctx = shash_desc_ctx(desc);
--
--	if (static_branch_likely(&have_neon) && do_neon)
--		kernel_neon_begin();
--	neon_poly1305_do_update(dctx, src, srclen, do_neon);
--	if (static_branch_likely(&have_neon) && do_neon)
--		kernel_neon_end();
 -	return 0;
 -}
 -
@@ -207,13 +189,13 @@ index 89415731d9be..cb152ceac14a 100644
  {
  	if (unlikely(dctx->buflen)) {
  		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
-@@ -179,61 +90,22 @@ void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
- 	poly1305_emit(&dctx->h, dst, dctx->s);
- 	memzero_explicit(dctx, sizeof(*dctx));
+@@ -144,55 +70,13 @@ void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
+ 	poly1305_emit_mips(&dctx->h, dst, dctx->s);
+ 	*dctx = (struct poly1305_desc_ctx){};
  }
  EXPORT_SYMBOL(poly1305_final_arch);
  
--static int neon_poly1305_final(struct shash_desc *desc, u8 *dst)
+-static int mips_poly1305_final(struct shash_desc *desc, u8 *dst)
 -{
 -	struct poly1305_desc_ctx *dctx = shash_desc_ctx(desc);
 -
@@ -224,15 +206,15 @@ index 89415731d9be..cb152ceac14a 100644
 -	return 0;
 -}
 -
--static struct shash_alg neon_poly1305_alg = {
--	.init			= neon_poly1305_init,
--	.update			= neon_poly1305_update,
--	.final			= neon_poly1305_final,
+-static struct shash_alg mips_poly1305_alg = {
+-	.init			= mips_poly1305_init,
+-	.update			= mips_poly1305_update,
+-	.final			= mips_poly1305_final,
 -	.digestsize		= POLY1305_DIGEST_SIZE,
 -	.descsize		= sizeof(struct poly1305_desc_ctx),
 -
 -	.base.cra_name		= "poly1305",
--	.base.cra_driver_name	= "poly1305-neon",
+-	.base.cra_driver_name	= "poly1305-mips-old",
 -	.base.cra_priority	= 200,
 -	.base.cra_blocksize	= POLY1305_BLOCK_SIZE,
 -	.base.cra_module	= THIS_MODULE,
@@ -240,39 +222,29 @@ index 89415731d9be..cb152ceac14a 100644
 -
  bool poly1305_is_arch_optimized(void)
  {
- 	/* We always can use at least the ARM64 scalar implementation. */
  	return true;
  }
  EXPORT_SYMBOL(poly1305_is_arch_optimized);
  
- static int __init neon_poly1305_mod_init(void)
- {
--	if (!cpu_have_named_feature(ASIMD))
--		return 0;
--
--	static_branch_enable(&have_neon);
--
+-static int __init mips_poly1305_mod_init(void)
+-{
 -	return IS_REACHABLE(CONFIG_CRYPTO_HASH) ?
--		crypto_register_shash(&neon_poly1305_alg) : 0;
+-		crypto_register_shash(&mips_poly1305_alg) : 0;
 -}
 -
--static void __exit neon_poly1305_mod_exit(void)
+-static void __exit mips_poly1305_mod_exit(void)
 -{
--	if (IS_REACHABLE(CONFIG_CRYPTO_HASH) && cpu_have_named_feature(ASIMD))
--		crypto_unregister_shash(&neon_poly1305_alg);
-+	if (cpu_have_named_feature(ASIMD))
-+		static_branch_enable(&have_neon);
-+	return 0;
- }
+-	if (IS_REACHABLE(CONFIG_CRYPTO_HASH))
+-		crypto_unregister_shash(&mips_poly1305_alg);
+-}
 -
- arch_initcall(neon_poly1305_mod_init);
--module_exit(neon_poly1305_mod_exit);
- 
--MODULE_DESCRIPTION("Poly1305 transform using NEON instructions");
-+MODULE_DESCRIPTION("Poly1305 authenticator (ARM64 optimized)");
+-arch_initcall(mips_poly1305_mod_init);
+-module_exit(mips_poly1305_mod_exit);
+-
+ MODULE_DESCRIPTION("Poly1305 transform (MIPS accelerated");
  MODULE_LICENSE("GPL v2");
 -MODULE_ALIAS_CRYPTO("poly1305");
--MODULE_ALIAS_CRYPTO("poly1305-neon");
+-MODULE_ALIAS_CRYPTO("poly1305-mips");
 -- 
 2.49.0
 
