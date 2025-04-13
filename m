@@ -1,238 +1,211 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56970522F;
-	Sun, 13 Apr 2025 08:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E07154BFE
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 08:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744534297; cv=none; b=pwm8JXdq9SZsSQT4F7S2dRUSMYv1We8IJCFTud+luczbqf2Qq4cBvz3dLhiyeBpvgeL58KcCDR8TU8gd0+14aHhy0gadm9ufOK0jbZlWkVuEzUzATtzFPmbQa0in8bzNQl24KDJvB42At7VwXwvWNQH/VJ0ZZ8iBCXDCwscMNyg=
+	t=1744534378; cv=none; b=Hd1Z/yEMxrHcVLsWpubZCFpQgjwKzZK6BlDoLXYaC5HMi1rOAX2+OZwBBRzn3JRJ6Usw4wkXh2PUK7RQoQG47MzS+83L/6Lo0m65BnD6L5OlVgx9cCgLXr+Wn0rmXXTV7CFS+XYaQI2NQAlmF2zTiK9CbtcWEmEoRy4flgYkcks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744534297; c=relaxed/simple;
-	bh=pRoX/q/2coolHB4VZB3apk1N36kf7Ussilqd2NFA/EY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=j4a+BaTI5WJNNn82xRtnninFhpMqbZrtEsP25NIIvNnUWTAAYDtfYYt4Ju3q8nDw83DxfW8Qw6Xtyj6HsK5PYr1k+8Q0SoXA3fdQCgqw+fczF6o3dSRYEaoOsb7qrtCMEOwfxkyCg/Rxwp03HeY9HHf6CVV0ofbMW/4TSQc7LHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kFCE3lUP; arc=none smtp.client-ip=209.85.167.48
+	s=arc-20240116; t=1744534378; c=relaxed/simple;
+	bh=MNROw/OxRn6cxiGmLQxl1apUV74kFu6SfnaGAZsy1P8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK6xGVCphNkbBmJmdYDKZ/7stlY9YP6eOMugiDOWLuP8DJmckHBUtOI/aANz6vVVRJcM34buQ3AYfyouTCc63T6Srla8fCwDzMU2x5YNODQXmYDHu59rFU0qJwyK8CInlGle9QxFppUg67DV/x/A3gsULIkTk/+8/Yo42v9DJR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aA2q9cIH; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFCE3lUP"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-549946c5346so3899920e87.2;
-        Sun, 13 Apr 2025 01:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aA2q9cIH"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39149bccb69so3190540f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 01:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744534293; x=1745139093; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+        d=gmail.com; s=20230601; t=1744534374; x=1745139174; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=USePj4B7uL7LPaJT6+OAA1zkCrFisy790/xbpttRgmk=;
-        b=kFCE3lUP8h9/2ay4CKW/AYfds9HTbZymufnUc2yUECm5RUc5pTDlkMNrd3MywwSpVR
-         FtHP89ZgFKRKNMYWcB8mtbRMeIlBGBWFqCc7SrH32jfClEl/l1fhvffDjbaBdELFDHlu
-         wgJgJZQW2Efy+TFin0ck2iClCHpg3VzpbWPVMYAYIjSm97wujNWed+0sUeWoCc2y67D8
-         Pxj+ehmZADdzlaWJ+wH7v/qOER31vdKwATuUNcRUtDWFlQsCQoSB3ZLrt7P6gJLF6OKg
-         EHtFEwBdkVQ7mM8eJMHCqKY2c6koHCLNswoLzoSn34ukBaU5oQV3FJd9aHh92pINNWwg
-         6UaQ==
+        bh=ZqFi7DTiIUrbGcISmc0jdmcPJMujJXlDGLlNJu8BBzQ=;
+        b=aA2q9cIHqD4RdDNhbOWMH1oN3B5E+Rw6b1NSSpLfZikuPmf1YHvvh9UaawPTAki9Gc
+         5oTEyBF8ySLx+ji7LfgDmVoxhsPQ8kT+Ie4CIXop+aALcBqFqnTsagfKYB62wpPXRaPb
+         ldAqNP2O9+uo4FidwoAjwQcxwOhyFNW73Iso5hvwjWJXnwaAFFHeA4NZkd7d/iiDGRqD
+         TcL+v2f9LNKLybC2pKUq1phk3lWkmgcWibNZrLvdfrqSkQ43cUMuzfoBJJH4sSvbRifP
+         TdAUmhAQlSeLUSOxZy2Ee13SO/WzFD9nNGXJkxieaZQ6EKrkeQ/SZkLzqTvzyHV0SpCM
+         7sHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744534293; x=1745139093;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1744534374; x=1745139174;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=USePj4B7uL7LPaJT6+OAA1zkCrFisy790/xbpttRgmk=;
-        b=de09mRmBIkbcN0dXsRng0RFGGu9/SCh5aY5HInOzb/FN+4Zq8/Ehjl5xXaiW1unEtL
-         sc8ZqcvstqVRNlu+/Bxnu3Y6ebAimHxobVcLAdvG8iUoG3sc+JQWYVfuIBhIcTZCAbY9
-         Lu04ND3uQW4TxM6w9nZkLcFf/s3MWuVYriBabJWkPfFOMZ9RJRLAGsHQP717aPiWbmdn
-         lgZ9mUqhSUc3QR1UYvc9AgC1wzRpVKOBlnCgptuG6Y4E2BMTKTZJXtb9Yn4O9IKA2PA3
-         8MlTzcvy3l1/XQoAAn50I5+ku8o57SWt5kti66RUpy18ldnkqaAnj4nCMUzaO5zFopQ7
-         zXRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwEBql3t5of6l1gUVlqMnTiDh1eBn2N99L1ZmhYfadgsRFGxFOS248wq/WtzHcCyI5rhlm2eZsA0pD8K53@vger.kernel.org, AJvYcCVbrnbtQ4T462mJzjLXXcHhsKMUIg6KMKivkQXMlggb/e10RZA5om1nNxbsTfwD+gcXsp+8Y6Olf77mRg==@vger.kernel.org, AJvYcCWg9JRslTHkf5IZ4+b5mx8i3k89q/5SmYdsFuqgWXPAxYWCQXdZk7SwZB//ycnhd8Ffd0fDDgI/LK2wq+4g@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhqgbx32ulD7KHeSz6xEMdpPC9fYzGGYm2z+01CSM/Yvyc67z4
-	Pi1cex2AfYO6NGp34gnhRfWa3LI4tHgm5ElA47IkzhGruD/VWBb26Y0rXg==
-X-Gm-Gg: ASbGncsNiy4+dgY9O+sxT5c5NwJwRtfFDd5LZkizdzzkuW32pGDjIV3LzBytRDsDkJM
-	06iSAKyMD7pjotXNnRqGExeAw5v7YOrMjCfB+zCBtYq1TQuvxVcL3VD+T1hO2r5AJP9on/YLk7i
-	LtPxMl4vC9kPKAzL1qULoqd6eltprnoVf3NIpdJyMR//qVl1dwLV6RsZdW6cbkxXi88gF5vFwBi
-	O4nLXJvZR5HnARgZTWKklfSg7BxFH8pZkYH5PZ8ZJf1NvFYZhCatXM4EPMyAQc8qniTlRIkm2se
-	n3zls06GjmODYFcZu3Sb6/20hvzzYCbRXpzr/apE5h3/cx/S6rVN3scrQrjz/W1LscZcNK/D6JE
-	m9m04l/mnn4RFRrrqBCm8CQ==
-X-Google-Smtp-Source: AGHT+IHaLIn3GH+7L7gi+hPunoOc0U5DZgK9/Dld4YIkNihB+Z2UKF7msgarMGvN+tJxIosx+3yONw==
-X-Received: by 2002:a05:6512:1316:b0:544:11cf:10c1 with SMTP id 2adb3069b0e04-54d4529dc2bmr2340782e87.30.1744534293009;
-        Sun, 13 Apr 2025 01:51:33 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d123168sm809476e87.3.2025.04.13.01.51.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 01:51:31 -0700 (PDT)
-Message-ID: <5add8ddd-fcc8-445d-9699-42c27df0e1c7@gmail.com>
-Date: Sun, 13 Apr 2025 11:51:29 +0300
+        bh=ZqFi7DTiIUrbGcISmc0jdmcPJMujJXlDGLlNJu8BBzQ=;
+        b=A6x/ePsSSy37n22loY5iUL4oGN7T5fH8bMbCJQexUI/ft2NEfqmENS0Xny/34LMFWh
+         OCp7mh5jPEyjN+Dy6gvfv9NZJJzz6CItO6eoPFnvq00RGiv6nDYpYqYqGkNbD8Txod1v
+         AW38I9NiSOLTDv/5AGw/GjZS05IvJrVSN9JtKl8sDnyrvRIDnOIVmUzslxHqbvtT8byT
+         VoCunW6RYhgut3zcE+8dwfYB3m7l83kgVG+uy5civMXm/TAsM2LjqXFU78DSR98ef10w
+         SpzxAlDgkNYI/GZrTKcIljvOiqnr5WBfbg5VNOOjwW4TW8Wd6LEPOuufWOL/Sgv2LRRH
+         eo1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWuHH3WGqFN280Jr1/0XblA6Q/2UNXbPgbvvv4iGttP+BbAuFItC3OEyTkopoiVhnmwgSV+9sCOKetM44g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqLRe2mr5hKWQ45NHF4bc8YphYa3GbMl1/po4ReWvTDpyjCHxj
+	dAa3gZOQtTSXc3NpGTxUSrmVGKc/CerlxLNPSRCFCiOLuPfinW3P
+X-Gm-Gg: ASbGncuW8rtMwP4dkBme847qjz3aF73IkwGAXRaWNg7C+A+3sW2T/Ye8YJhY7N6G4eO
+	rZrambnTQILw5mlc7dfm9+JnmQ+1trW8MOwwrzmFDAkcR5+/pnAyXeYqcKZohrUCmSu7hUA3Fm7
+	2Z43RM7z/TKXK6vF2WmPDhfPv2Vv1fRfkoesCAfSODdHuzWV1J8LoHS8mQIIsbpXJksBAGVZABz
+	tAP8SbbiOHrKYLslRgO43ml9awF8hlU4ZrmqYlbtmXtYkF8QkWN6ODNDoE7nHdxuhvmlsI+W9h5
+	i9A3QNkT8SaIYEKwh+42gZdhW6dTpacqGfP851JufQ==
+X-Google-Smtp-Source: AGHT+IGknmarvcQPpRnWlyPOaX/s+TI0PihO9g8pQhbTqXGcRFvvo7r3+rVBtN5Uv5iXOVcsWC7aiQ==
+X-Received: by 2002:a05:6000:4007:b0:39c:1404:3748 with SMTP id ffacd0b85a97d-39ea51f45b1mr6770486f8f.16.1744534374229;
+        Sun, 13 Apr 2025 01:52:54 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39eae979615sm7499956f8f.54.2025.04.13.01.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 01:52:53 -0700 (PDT)
+Date: Sun, 13 Apr 2025 10:52:50 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	mripard@kernel.org, wens@csie.org, ebiederm@xmission.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: Trying to kexec on Allwinner A80
+Message-ID: <Z_t7YuzRS5p7_D7_@Red>
+References: <20200407113454.GA457@Red>
+ <20200407122243.GN25745@shell.armlinux.org.uk>
+ <20200407130559.GB457@Red>
+ <20200407132602.GO25745@shell.armlinux.org.uk>
+ <20200407134849.GC457@Red>
+ <20200407181740.GP25745@shell.armlinux.org.uk>
+ <20200408084029.GA1859@Red>
+ <20200408093320.GQ25745@shell.armlinux.org.uk>
+ <20200408152412.GA3621@Red>
+ <20200408161657.GT25745@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] gpio: Hide valid_mask from direct assignments
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Biju Das <biju.das.jz@bp.renesas.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>
-References: <cover.1741180097.git.mazziesaccount@gmail.com>
- <4547ca90d910d60cab3d56d864d59ddde47a5e93.1741180097.git.mazziesaccount@gmail.com>
- <CAD=FV=Vg8_ZOLgLoC4WhFPzhVsxXFC19NrF38W6cW_W_3nFjbw@mail.gmail.com>
- <944dab74-f431-41e1-b4d7-fddf25ffa147@gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-In-Reply-To: <944dab74-f431-41e1-b4d7-fddf25ffa147@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200408161657.GT25745@shell.armlinux.org.uk>
 
-On 13/04/2025 11:08, Matti Vaittinen wrote:
-> Hi Doug,
+Le Wed, Apr 08, 2020 at 05:16:57PM +0100, Russell King - ARM Linux admin a �crit :
+> On Wed, Apr 08, 2020 at 05:24:12PM +0200, Corentin Labbe wrote:
+> > On Wed, Apr 08, 2020 at 10:33:20AM +0100, Russell King - ARM Linux admin wrote:
+> > > On Wed, Apr 08, 2020 at 10:40:29AM +0200, Corentin Labbe wrote:
+> > > > This is the last boot:
+> > > > ## Loading init Ramdisk from Legacy Image at 2a000000 ...
+> > > >    Image Name:   
+> > > >    Image Type:   ARM Linux RAMDisk Image (uncompressed)
+> > > >    Data Size:    8031928 Bytes = 7.7 MiB
+> > > >    Load Address: 00000000
+> > > >    Entry Point:  00000000
+> > > >    Verifying Checksum ... OK
+> > > > ## Flattened Device Tree blob at 23000000
+> > > >    Booting using the fdt blob at 0x23000000
+> > > >    Loading Ramdisk to 29857000, end 29fffeb8 ... OK
+> > > >    Loading Device Tree to 2984e000, end 29856fd1 ... OK
+> > > > Starting kernel ...
+> > > > ID:0x00000000 DT:0x2984E000
+> > > > Uncompressing Linux... done, booting the kernel.
+> > > > [...]
+> > > > fake uboot stuff
+> > > > [...]
+> > > > DEBUG: bootz: run kexec with --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 earlyprintk ip=dhcp'
+> > > > Set DEBUG!
+> > > > main:1417 OPT_KEXEC_SYSCALL
+> > > > main:1422 OPT_KEXEC_SYSCALL_AUTO
+> > > > arch_process_options:119
+> > > > main:1500
+> > > > main:1517 res=0 do_load=1
+> > > > main:1519 res=0 do_kexec_file_syscall=0
+> > > > my_load:713
+> > > > Try gzip decompression.
+> > > > kernel: 0xb6931008 kernel_size: 0x444fc8
+> > > > get_memory_ranges:36
+> > > > MEMORY RANGES
+> > > > 0000000020000000-000000009fffffff (0)
+> > > > zImage_arm_load:423
+> > > > zImage header: 0x016f2818 0x00000000 0x00444fc8
+> > > > zImage size 0x444fc8, file size 0x444fc8
+> > > > zImage requires 0x00455fc8 bytes
+> > > >   offset 0x00006738 tag 0x5a534c4b size 8
+> > > > Decompressed kernel sizes:
+> > > >  text+data 0x00b77958 bss 0x0003d428 total 0x00bb4d80
+> > > > Resulting kernel space: 0x00fcd920
+> > > > Kernel: address=0x20008000 size=0x00fcd920
+> > > > Initrd: address=0x20fd6000 size=0x016a6b97
+> > > > DT    : address=0x2267d000 size=0x00006043
+> > > > kexec_load: entry = 0x20008000 flags = 0x280000
+> > > > nr_segments = 3
+> > > > segment[0].buf   = 0xb6931008
+> > > > segment[0].bufsz = 0x444fcc
+> > > > segment[0].mem   = 0x20008000
+> > > > segment[0].memsz = 0x445000
+> > > > segment[1].buf   = 0xb528a008
+> > > > segment[1].bufsz = 0x16a6b97
+> > > > segment[1].mem   = 0x20fd6000
+> > > > segment[1].memsz = 0x16a7000
+> > > > segment[2].buf   = 0x4ef88
+> > > > segment[2].bufsz = 0x6043
+> > > > segment[2].mem   = 0x2267d000
+> > > > segment[2].memsz = 0x7000
+> > > > main:1568 res=0[   32.098439] sun7i-dwmac 830000.ethernet eth0: Link is Down
+> > > > main:1582 res=0 do_exec=1
+> > > > [   32.113191] kexec_core: Starting new kernel
+> > > > [   32.460412] Bye!
+> > > > ID:0xFFFFFFFF DT:0x2267D000
+> > > > C:0x200080C0-0x2044CFE0->0x20B80500-0x20FC5420
+> > > > ID:0xFFFFFFFF DT:0x2267D000
+> > > > Uncompressing Linux... done, booting the kernel.
+> > > 
+> > > Okay, that looks fine:
+> > > - the DT is out of the way, so shouldn't be corrupted by the
+> > >   decompression process.
+> > > - the decompressor writes the kernel image to 0x20008000 to 0x20b7f958
+> > >   which is clear of the decompressor itself (which relocated itself
+> > >   to 0x20b80500).
+> > > - the ID doesn't matter for DT booting purposes.
+> > > 
+> > > I see you've gone back to using your own dtb rather than one derived
+> > > from the booting kernel. I strongly recommend against giving your own
+> > > dtb to kexec as if the boot loader modifies the DTB when calling the
+> > > first kernel (such as adding memory region information, adding MAC
+> > > addresses, enabling or disabling various devices) those modifications
+> > > will be lost if you supply your own DTB to kexec.
+> > > 
+> > > Please drop "--dtb /tmp/dtb".
+> > > 
+> > 
+> > Thanks it works now.
+> > 
+> > With a working setup I diffed dtb and the one given by uboot and it seems the missing node for booting was /memory.
 > 
-> On 13/04/2025 02:00, Doug Anderson wrote:
->> Hi,
->>
->> On Wed, Mar 5, 2025 at 5:23 AM Matti Vaittinen 
->> <mazziesaccount@gmail.com> wrote:
->>>
->>> The valid_mask member of the struct gpio_chip is unconditionally written
->>> by the GPIO core at driver registration. Current documentation does not
->>> mention this but just says the valid_mask is used if it's not NULL. This
->>> lured me to try populating it directly in the GPIO driver probe instead
->>> of using the init_valid_mask() callback. It took some retries with
->>> different bitmaps and eventually a bit of code-reading to understand why
->>> the valid_mask was not obeyed. I could've avoided this trial and 
->>> error if
->>> the valid_mask was hidden in the struct gpio_device instead of being a
->>> visible member of the struct gpio_chip.
->>>
->>> Help the next developer who decides to directly populate the valid_mask
->>> in struct gpio_chip by hiding the valid_mask in struct gpio_device and
->>> keep it internal to the GPIO core.
->>>
->>> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
->>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>> ---
->>> Revision history:
->>> v2 => v3:
->>>   - Rebase to gpio/for-next
->>> v1 => v2:
->>>   - Hide the valid_mask instead of documenting it as internal to GPIO
->>>     core as suggested by Linus W.
->>> https://lore.kernel.org/all/Z71qphikHPGB0Yuv@mva-rohm/
->>> ---
->>>   drivers/gpio/gpiolib.c      | 16 ++++++++--------
->>>   drivers/gpio/gpiolib.h      |  3 +++
->>>   include/linux/gpio/driver.h |  8 --------
->>>   3 files changed, 11 insertions(+), 16 deletions(-)
->>
->> FWIW, I've found that this patch is crashing me at bootup on my
->> sc7180-trogdor board. The problem is pretty obvious in gdb.
->> "gc->gpiodev" is NULL in gpiochip_line_is_valid().
+> That is more or less expected - it seems kexec never adds the /memory
+> nodes to the dtb.  I've no idea whether it should or should not be doing
+> so, and is for others to thrash out the arguments for and against what
+> should be modified and how.
 > 
-> Thanks for debugging this! I find this odd. It seems to me the pinctrl- 
-> msm.c is calling the gpiochip_add_data() for the chip, in the 
-> msm_gpio_init() - which is called from the msm_pinctrl_probe().
+> The upshot of the existing kexec behaviour is you can't take a dtb from
+> the kernel build and use it with kexec.
 > 
-> The gpiochip_add_data() should go to the gpiochip_add_data_with_key() - 
-> where the gpiodev should be allocated and set.
+> > For booting a different kernel, I fdtput the dtb (for memory and bootargs), and it works until it try to mount the roofs which it find corrupt.
 > 
-> I don't spot any successful code path where the gpiodev was not allocated.
+> rootfs or initrd supplied to kexec?
 > 
->>
->> 0xffff80008066c760 in gpiochip_line_is_valid (gc=0xffff000083223890,
->> offset=offset@entry=66) at drivers/gpio/gpiolib.c:746
->> 746             if (likely(!gc->gpiodev->valid_mask))
->> (gdb) bt
->> #0  0xffff80008066c760 in gpiochip_line_is_valid
->> (gc=0xffff000083223890, offset=offset@entry=66) at
->> drivers/gpio/gpiolib.c:746
->> #1  0xffff800080666338 in msm_pinmux_request (pctldev=<optimized out>,
+> > Since the rootfs I get by the fakeuboot is a "uboot legacy image" (rootfs.cpio.gz modified by mkimage), I drop the first 64bytes but it seems not sufficiant. (even if file say it is a good rootfs.cpio.gz)
+> > Or perhaps the kernel get an invalid initrd address.
 > 
-> Ah, but now I see the call comes from the pinmux. Looking at the 
-> msm_pinctrl_probe() - the pincontroller is registered before the gpio. 
-> Maybe, with unlucky timing, the request happens right after registering 
-> the pinctrl - but before registering the gpios.
+> Yep, the file given via --initrd or --ramdisk is loaded exactly as-is
+> into memory, no parsing of the file is done.  Neither the kernel, nor
+> kexec, does any u-boot parsing of the initrd/ramdisk file; they are
+> not u-boot.
 > 
-> This, I think, can be a bug even before this change (because the 
-> valid_mask is not initialized prior the gpio registration) - but this 
-> change now made it obvious.
-> 
-> I see the probe is actually an exported function, and there are mentions 
-> about ACPI support etc. I don't really know if there are valid cases 
-> where the pincontroller should be usable without the gpiochip. If this 
-> is the case, the unconditional call to the gpiochip_line_is_valid() from 
-> the msm_pinmux_request() smells wrong.
-> 
-> I am not sure about the right fix. One could try:
-> 
-> @@ -1568,6 +1568,10 @@ int msm_pinctrl_probe(struct platform_device *pdev,
->          if (pctrl->irq < 0)
->                  return pctrl->irq;
-> 
-> +       ret = msm_gpio_init(pctrl);
-> +       if (ret)
-> +               return ret;
-> +
->          pctrl->desc.owner = THIS_MODULE;
->          pctrl->desc.pctlops = &msm_pinctrl_ops;
->          pctrl->desc.pmxops = &msm_pinmux_ops;
-> @@ -1582,10 +1586,6 @@ int msm_pinctrl_probe(struct platform_device *pdev,
->                  return PTR_ERR(pctrl->pctrl);
->          }
-> 
-> -       ret = msm_gpio_init(pctrl);
-> -       if (ret)
-> -               return ret;
-> -
->          platform_set_drvdata(pdev, pctrl);
-> 
->          dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n")
-> 
-> but I am not at all this is the fix we're looking after. I wonder if 
-> Krzysztof has any suggestions? (Seeing he has been authoring some 
-> changes here :] )
-> 
-
-+Björn
-
-> Yours,
->      -- Matti
-> 
-> 
->> offset=66) at drivers/pinctrl/qcom/pinctrl-msm.c:152
->> #2  0xffff800080662314 in pin_request (pctldev=0xffff000082686ac0,
->> pin=66, owner=0xffff000082c02790 "3500000.pinctrl", gpio_range=0x0)
->>      at drivers/pinctrl/pinmux.c:176
->> #3  0xffff800080662900 in pinmux_enable_setting
->> (setting=0xffff000082684b40) at drivers/pinctrl/pinmux.c:445
->> #4  0xffff80008065fd54 in pinctrl_commit_state (p=0xffff000083a07520,
->> state=0xffff000082684a40) at drivers/pinctrl/core.c:1300
->> #5  0xffff8000806605bc in pinctrl_select_state (p=0xffff000083223890,
->> p@entry=0xffff000082686ac0, state=0x42) at drivers/pinctrl/core.c:1381
->> #6  pinctrl_claim_hogs (pctldev=0xffff000082686ac0) at
->> drivers/pinctrl/core.c:2136
->> #7  pinctrl_enable (pctldev=0xffff000082686ac0) at drivers/pinctrl/ 
->> core.c:2156
->> #8  0xffff800080660814 in pinctrl_register
->> (pctldesc=0xffff000083223a90, dev=0xffff000081406410,
->> driver_data=0xffff000083223880) at drivers/pinctrl/core.c:2193
->> #9  0xffff800080660df4 in devm_pinctrl_register
->> (dev=0xffff000081406410, pctldesc=0xffff000083223a90,
->> driver_data=0xffff000083223880) at drivers/pinctrl/core.c:2313
->> #10 0xffff8000806657b4 in msm_pinctrl_probe (pdev=0xffff000081406400,
->> soc_data=<optimized out>) at drivers/pinctrl/qcom/pinctrl-msm.c:1579
->> #11 0xffff80008066afcc in sc7180_pinctrl_probe
->> (pdev=0xffff000083223890) at
->> drivers/pinctrl/qcom/pinctrl-sc7180.c:1147
->> #12 0xffff80008089583c in platform_probe (_dev=0xffff000081406410) at
->> drivers/base/platform.c:1404
->>
->> (gdb) print gc->gpiodev
->> $1 = (struct gpio_device *) 0x0
->>
->> -Doug
+> If you want to try giving the kernel a bit more space, you can try
+> --image-size=$((0x01000000)) to see whether that affects the ramdisk
+> image problem - if it does, it means we're still not properly
+> calculating the space the kernel needs.
 > 
 
+Hello
+
+Just to say that adding --image-size=128000000 lead to a working setup.
+
+Thanks
