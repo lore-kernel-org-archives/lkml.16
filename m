@@ -1,43 +1,41 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D9B131E49
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3066131E49;
+	Sun, 13 Apr 2025 20:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744576873; cv=none; b=Xsua5BxX8qfTGsDsCgouvRIdbrI8rQUgBXgU1G32h8B13K4VYRlvooUwqxVYjtFJJer427Hi0slAeSGrTj3PcNAY0iYVaRLEauzpIXy4fDYr4KicUg83KkZB1/smsncFx8kncadr10h+5M7tC5Kk8UMW+GvZMqGyod8a4bz6Bnk=
+	t=1744576912; cv=none; b=XZXBdnDPruXDn3dGecp7oF1GXpyDH48exeuGYbwKhJertN5HId5Mp4wcYQphzaHu3NVyx/6C/UhNl7BLN5nTYb6XQ7xY4f8PIilVANvs8uVwLpsO9YJTkX+I1qbuRyJKB3I+F1kudxvPri+bjTRQ9sTE7X42/mD//+qeFqpFsj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744576873; c=relaxed/simple;
-	bh=EBOpep+wKnfQWZv6+xJ+jCvtxjdlqDRVyHGUQ7e4MTk=;
+	s=arc-20240116; t=1744576912; c=relaxed/simple;
+	bh=8BblCTdCvwkOkbtJ9xAbALEBDKyCEwg3Ua9/9+xfMq0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6PiYteas/wX4jMP6zqh69edxlh1bCmkqTIwjueVYg2pGOuhSMKpT0/d8QN+q9e/xCvII/td32Z/pE6/S6MpM8prKvUquXymVq9P1meP//V9XxgcSgGEkmqQonguABPPkJpg4n3QOJv6b7pelMPRBg6plESurRiShHjbwsZZHaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lIPjmd6h; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=b6FnZtVIGfP87iKyQ8U2qZnsRv/NnqVyt950wGWgXxNoFN/ML2uCdE1JMyfxkt/Tgcie5RXVLDwXV5soG/G4vWDgdlLgBHUfCgBMBv5wFdNLU2i7VxiaUJF2bGzsdbwMQx04e8cggGaOJ6+5CQDLOSd5EamcSxe+Pnf4xlZBEMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdyW5OQx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lIPjmd6h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JuNqfYs05aJJ7FgR0AQXI6iDjBbL9hVdThYe09IHpQc=; b=lIPjmd6hoUmdrMTnbWcG9HqRis
-	yVdbmXgxdlikDUB0/Ul9waktVLv+dlh3gNv3E6+iURDFMgWrY3Lhj595rgPMweusYm9lv+sAr+Ocq
-	H/LbHHNFUAzgEmADChmDpdlvy2BfIPS/DRhLSOX+fkH270ruUsBBD6IximbuzY73B6FnOE3zYV0SF
-	e2ORUgmLxSO1Zdl7uCN3IYdghIfxxiqXJc5EzTWIRvnDUm1Ja+WpVt5nFbF6jw7xY2JAKgFVGMiPF
-	eYU+Hbni1o5hfJUW8daZ+1WLByAMzClKtSZBAmA5mw24o2GRdTZa+UOei6n8WXhPGxXV4TpIJ4rfe
-	mrBio7sw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u448a-00000007FOL-0cu1;
-	Sun, 13 Apr 2025 20:41:08 +0000
-Date: Sun, 13 Apr 2025 21:41:08 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: shaggy@kernel.org, jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
-Subject: Re: [PATCH] jfs: implement migrate_folio for jfs_metapage_aops
-Message-ID: <Z_whZHPR64FHq6ve@casper.infradead.org>
-References: <20250413172356.561544-1-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdyW5OQx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB4BDC4CEDD;
+	Sun, 13 Apr 2025 20:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744576911;
+	bh=8BblCTdCvwkOkbtJ9xAbALEBDKyCEwg3Ua9/9+xfMq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mdyW5OQxZ6en/4OBLFNVCk92zJvCNmiAi7HcR1ou+cMzwZKJiIFDt4QwX/UMctbwI
+	 hoOZ/FFuJRmHJsTxHIbxkTkDZdyOKggDlDIUiN5Gxi401DM2zTIQQV7UWDAUSY1fF9
+	 Jcqbf0oJzk1Uo6YzgB0T/1wjsBh6tE7nWZBjE5MZLl5o7QfdZnLgoO8FlT/f0OIAdr
+	 wdAkA9OZv99Zk2KRZGF9xniFRJ/0aQytze0Pk9sRQlJIvc6MdRiTgFEfpqCx27Rmgz
+	 8rf1ccog654bY3O8YCSZ3wOg63kuUSD4fxEDjCiZSDOl2tPnj1FUpV3hebfS3Fpqai
+	 DyvdjG2XegyyQ==
+Date: Sun, 13 Apr 2025 22:41:46 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
+	Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Subject: Re: [PATCH v1 1/1] i2c: qcom-geni: Use generic definitions for bus
+ frequencies
+Message-ID: <7jhgwtwhgmxooofln2zjpjp4kdqjuc5dd5bnrht54ts63s626u@ixaa53eptlkr>
+References: <20250322144736.472777-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,28 +44,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250413172356.561544-1-shivankg@amd.com>
+In-Reply-To: <20250322144736.472777-1-andriy.shevchenko@linux.intel.com>
 
-On Sun, Apr 13, 2025 at 05:23:57PM +0000, Shivank Garg wrote:
-> +++ b/fs/jfs/jfs_metapage.c
-> @@ -570,6 +570,7 @@ const struct address_space_operations jfs_metapage_aops = {
->  	.release_folio	= metapage_release_folio,
->  	.invalidate_folio = metapage_invalidate_folio,
->  	.dirty_folio	= filemap_dirty_folio,
-> +	.migrate_folio	= filemap_migrate_folio,
->  };
+Hi Andy,
 
-Ooh, damn, I think we're going to need more than this ;-(
+On Sat, Mar 22, 2025 at 04:47:36PM +0200, Andy Shevchenko wrote:
+> Since we have generic definitions for bus frequencies, let's use them.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-static inline struct metapage *folio_to_mp(struct folio *folio, int offset)
-{
-        return folio->private;
-}
+merged to i2c/i2c-host.
 
-struct metapage {
-...
-        void *data;             /* Data pointer */
-
-So we're going to need something like buffer_migrate_folio(), but
-specialised to jfs metadata.  And when we come up with it, that'll
-be Fixes: 35474d52c605
+Thanks,
+Andi
