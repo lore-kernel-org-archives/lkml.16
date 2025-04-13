@@ -1,121 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8F91C1F21;
-	Sun, 13 Apr 2025 14:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D65847B;
+	Sun, 13 Apr 2025 14:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744555499; cv=none; b=SNvTYb00oa9rdsmD7wQCSpbANM1UXK4RT1EKG1BjDCq8Fxk7/16KdT/ZznG2NOu7gDlhKye1a7BCQ4409oNyqSFMpFeo7za5ah8A279ZcPLXkDj/8DF/AYyZScl6yxHVjgSxHQo6nyZRrZtSWVjG+Gj4froW8+gUMsOQXKqtdrM=
+	t=1744556066; cv=none; b=rOMe7tXtujAsCSexF5WsfQj4/FUQ6WxxsSh7S+AfNKbkNeIUc+KsafmV38dIZmoQAt8WSJjJQ/XQJSp8fZQ6NC8YjHL0DBADFEGftT8nPr8Y7oWZevOuCtDpk7eFWFOYcMs2X0WOXFjHXMh6gV32QJ0aoRJk6NJBVz61NhyaD94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744555499; c=relaxed/simple;
-	bh=aJWz1QDvLinhEs6itBhA0RHzGTs8f6L+aT6P1LOOut8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ss4nBWHsWLoqG6J5p4MlyybznwhjuRS4kc8MNKuGOsC+j8yCG73ouUBeWM1nn4/XawF8CsQ9Tm6/PZI/PyNUYsRe/2hK9rYqRol9nDlpsudCKbjVZRV0TunJb6DsY0aT7Rm+4KU+Yj3DFeNV9zXY5O8+KLtbhnwChAkdP48liOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTv0EwJL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744556066; c=relaxed/simple;
+	bh=dvelPXkUdIwCAdAldSQ4W7PyCYIe7eFMCwQTwWTrGcA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e0q87zgm97D48RZ0/jLx9DUoSlnqgr+cP4sIx0D661ZCuOMPA9zouCQDmmu/PIkOPnR0RsBkyn5QRww50wdeK33xDnjaYMgD6xzkRUrKsepfAsFuSedRPA9b5WUNs1GFpiVI/s4WoacZ8a/V6BFJfHEzafEUrLvyYLMCl17Twfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kN+WVC48; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTv0EwJL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744555499; x=1776091499;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=aJWz1QDvLinhEs6itBhA0RHzGTs8f6L+aT6P1LOOut8=;
-  b=aTv0EwJLcM8oKpfp+hLuLPGsm37EfGJtE1l2wE7COHooMXqNxIZ0v9c2
-   w0U6Bo2yaZ22dTxJshOVl3VM6xnSSuM5OiZwuxGe851xGguXsit715Zhk
-   4+hbBVdJIdo7xMh0u+ldkBZBqmF8qk5mypmfUpElo4jHU6eWQBOel2ztB
-   389zL8G+xrPmhR4EW79fPjNUo1xIRSR/DjLA0jhb0RdSgSQTcwOz/86pA
-   umplq6kyMiDbnBftsaEOLAKmD01mMvSmAbTsP5pkdspj3irba2Boa/gog
-   iCuFb25h2xVoMdddlHfZvELZs4mCvGV8WyvyOWTSU0r9v0K5IsZH3uQQI
-   A==;
-X-CSE-ConnectionGUID: 8B1ZHo6xS8mrRdFs41Xp1w==
-X-CSE-MsgGUID: Xs4+6GHqT82j9xnA9X6GMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45742740"
-X-IronPort-AV: E=Sophos;i="6.15,210,1739865600"; 
-   d="scan'208";a="45742740"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 07:44:58 -0700
-X-CSE-ConnectionGUID: 6OnYtDAmT/CaghxEm3Zoxg==
-X-CSE-MsgGUID: Hwr+u6p/SRGmn21JzaBj4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,210,1739865600"; 
-   d="scan'208";a="160565674"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.108.247])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 07:44:57 -0700
-Message-ID: <b7b0b3f98f8fad9cc9559e1c4ce832387c520d7a.camel@linux.intel.com>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Use raw_smp_processor_id() in
- hwp_get_cpu_scaling()
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Xi Ruoyao <xry111@xry111.site>, "Rafael J. Wysocki" <rafael@kernel.org>,
-  Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Dave Hansen
- <dave.hansen@linux.intel.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 13 Apr 2025 07:44:56 -0700
-In-Reply-To: <20250412103434.5321-1-xry111@xry111.site>
-References: <20250412103434.5321-1-xry111@xry111.site>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kN+WVC48"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so5699804a12.1;
+        Sun, 13 Apr 2025 07:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744556063; x=1745160863; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dvelPXkUdIwCAdAldSQ4W7PyCYIe7eFMCwQTwWTrGcA=;
+        b=kN+WVC48S4I4jG3t8eO90+QdtaQ4fN0jkGRaytHPmb/5CEb2UF0UzIOtGm3CiynZhg
+         ImfOpePGsaHN6tbAQrrC0JrvJgYMrdKkv7JBQnOmWoPGNu/t23BGJ3JVQIlzssScdt//
+         vzSnfGMe5DYT3zeZ1WDJO5uDn2e0Q/P4Y3aOI0oZRKJha3X6rfANGHs6yon8rK1uitxT
+         SkaUGwNQrecEsUkk1v34PRFJxKsNbfIaOJwPdWwh+kMmazZ0O7AziEvMpJbSJFKymGPf
+         YhdE00FfjxEgeAzL4s0VHn9yqXJWVS07WxO9GfwAQfII9tTkF/sEUvq8Gs8CBOgMTq/l
+         KGnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744556063; x=1745160863;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dvelPXkUdIwCAdAldSQ4W7PyCYIe7eFMCwQTwWTrGcA=;
+        b=cgOVSI+wcGGfWkgNMqCuvQbc4cqtJ4s1YoMZUifcPTY+H62/jIFWTeXlUmcybPQ6YK
+         yoWNnGWtNJDi2Y1KjfTcD988TegSlemvCJqigdqIs0zrUeBujlwo8k8dTBmFzfMZUv52
+         7wJocw2zRsW+7u0FP5VTug6kZKkXijIs0lktMRmqdkO5N91o/Cf0TeZH08sgr31pbvw0
+         mYRrYq+WDZzVcP+c7ar+xZdRVea69xJMXdJyZDUYgMfNDiM40vn+N1Q4jc2lM7rRLtA/
+         0TiUo8ett7oF2tCoZrsinDP/018llnhJfUYmT/gYGoM0UxPPKi9ipJaFt6ZpJCEs2qmx
+         7rog==
+X-Forwarded-Encrypted: i=1; AJvYcCV587bk+b0+XlRHlV0w7pP2cVAbSoaQwGPTp2hvlKvm+UXdPuvNoXh1/vuCJq4A094dxlTbNcKk6MMN@vger.kernel.org, AJvYcCXY5MwcAEqA4EiJGpCTPvzteb4K7kMJ4WUrjiYiKptQXga0sMvAdN+GcFx9LSllF8pN/MQn0qQbW57KIkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjMrlv2Sq7gCAGdROYIuS99+lUqr9L48kQYFnBHui87kzqTQU4
+	CGjEyhFR7mTJlqDQ8wprmf+Zlw+P6p3ziC8EcefNlLJC7yYDW7UA
+X-Gm-Gg: ASbGnct2kkOmkYXwWYMP74x3w0de1MChdDpdpLLd3C+b+snB9sKSavmGxW1l+qhUng2
+	pjPIXMuAbzUMgzJV/uyDdBn5c047644hiK5icTTOLDDlcq633MS+WgXn41nIHclQSFXc9bJpg8W
+	alJJPjOq9JJn7elg4F9YLbm+vC/r1Oav8pGjsc87XmNo6o/uErbI3C0ehVJ/d8L0T7jPjJMI2pm
+	4x3rsQB5e9uViOYFtxJXMFtv8Jgko7zrv1EW48qOK34ayn8yfR1jXGsJUBnJx3sE2ImOXHiEx56
+	qCS/7CKiFThiPlZlw42NnORZwrtTdvRXgIEBkTOe0w7md5/iRuBKSq2lijU=
+X-Google-Smtp-Source: AGHT+IFgqGhavNUgVnAURGWH2ePtNWVyQ3zUa0nRZiYGvzy8qKrKzUY1RZR3SZ91BcXNuvYs1xz9TQ==
+X-Received: by 2002:a17:907:1c07:b0:ac3:3f11:b49d with SMTP id a640c23a62f3a-acad31f535amr897088366b.0.1744556062628;
+        Sun, 13 Apr 2025 07:54:22 -0700 (PDT)
+Received: from jernej-laptop.localnet ([80.90.89.143])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1999d96sm741027466b.0.2025.04.13.07.54.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 07:54:22 -0700 (PDT)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>, Mans Rullgard <mans@mansr.com>
+Cc: Pan Nan <pannan@allwinnertech.com>, Maxime Ripard <mripard@kernel.org>,
+ linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: sun4i: add support for GPIO chip select lines
+Date: Sun, 13 Apr 2025 16:54:18 +0200
+Message-ID: <12643311.O9o76ZdvQC@jernej-laptop>
+In-Reply-To: <20250410115303.5150-1-mans@mansr.com>
+References: <20250410115303.5150-1-mans@mansr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, 2025-04-12 at 18:34 +0800, Xi Ruoyao wrote:
-> Use raw_smp_processor_id() instead of plain smp_processor_id() in
-> hwp_get_cpu_scaling(), otherwise we get some errors on a Lenovo
-> Thinkpad
-> T14P Gen 2:
+Dne =C4=8Detrtek, 10. april 2025 ob 13:53:03 Srednjeevropski poletni =C4=8D=
+as je Mans Rullgard napisal(a):
+> Set use_gpio_descriptors to true so that GPIOs can be used for chip
+> select in accordance with the DT binding.
 >=20
-> =C2=A0=C2=A0=C2=A0 BUG: using smp_processor_id() in preemptible [00000000=
-] code:
-> swapper/0/1
-> =C2=A0=C2=A0=C2=A0 caller is hwp_get_cpu_scaling+0x7f/0xc0
->=20
-> Fixes: b52aaeeadfac ("cpufreq: intel_pstate: Avoid SMP calls to get
-> cpu-type")
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 
-> ---
-> =C2=A0drivers/cpufreq/intel_pstate.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/cpufreq/intel_pstate.c
-> b/drivers/cpufreq/intel_pstate.c
-> index 4aad79d26c64..bfc20b978240 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -2209,7 +2209,7 @@ static int knl_get_turbo_pstate(int cpu)
-> =C2=A0static int hwp_get_cpu_scaling(int cpu)
-> =C2=A0{
-> =C2=A0	if (hybrid_scaling_factor) {
-> -		struct cpuinfo_x86 *c =3D
-> &cpu_data(smp_processor_id());
-> +		struct cpuinfo_x86 *c =3D
-> &cpu_data(raw_smp_processor_id());
-> =C2=A0		u8 cpu_type =3D c->topo.intel_type;
-> =C2=A0
-> =C2=A0		/*
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Best regards,
+Jernej
+
 
