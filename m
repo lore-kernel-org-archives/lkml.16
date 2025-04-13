@@ -1,64 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481D2A927;
-	Sun, 13 Apr 2025 22:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B610B2BB13;
+	Sun, 13 Apr 2025 22:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744582534; cv=none; b=JeLFzo9e5Eu383eiH3Eoer30pxX6oXRAs0kkBZoRg9JgnPYOd+VXZ/vBRn28m1+z8deZoS4wtzaCcPN6xSe+GDYoJFIyYAoe/cmF4I4BU3H4TFIqQ+bBn6MQK1nIacODW1lENpe1jW/EBURWjsskFG0M1DBxnIaAKDKlSNLN4BM=
+	t=1744583014; cv=none; b=Ee3pkRpyHubwqCGm5vo4wrEyicwA0hSyJYx7pqa77hXW4g7weLnoJEwn9fgm+aiAjOr/9SnSvb/eAXOy5PdXm3PpbklI9whEx24pCc08sqZ0fN0XcM4i9h/a+QRc+5FqP8t+LV3g8QsiW36fDOqqQturD+v1/j4NQ97XHhDVm5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744582534; c=relaxed/simple;
-	bh=JoJ6FwrMtTQecT32IcduAeWImMav6us8t8dtC+zaacA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pp27Jq1FGFKrIxcWV5dvVDX1qXsaON81V8HQtq/MW34xYeR2lrAmRZ5uBampWisgLaYXG8e3Ak9yMYBohs2JE/gcd7JFRlDsOZBTfcOvaaOJ+qJqZuvEJj6yEWZgg9aUnjEZz908vlZdc90sPrRB/YIqBrTe9wzYV0dU9eGifOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqZUGnUt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744583014; c=relaxed/simple;
+	bh=p8rl0ugrPz+r9s3XevtrYuL3Y1lu3KCTloWrHJurTAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iOPEpI6Jbl9BYWN0FbqH8LzVkbjm6KjGasAfrnGmu4b8dx2VxYoFx2e1GPseWN3d5AgkSBro4XyuCjwxcwq70LDjWAFZk57IERyOQegKMkljeNvDkqQncUwe0k7LeMnJ0m6J7rAtdXpDptf5cc8jGdpDGiIhvyDop8o6YNNIw5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qXtWBi6O; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqZUGnUt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F55C4CEDD;
-	Sun, 13 Apr 2025 22:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744582533;
-	bh=JoJ6FwrMtTQecT32IcduAeWImMav6us8t8dtC+zaacA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jqZUGnUtyqI+w2LEhI8JPXPaCRsjcIjrdDEnr8Ce4Y0mDp3/4WB7vxmVHsEn83DRT
-	 Gp1pB8XvG1nTGz9Py3aAijt0BEAe1Dw22pyTORAIp0sdhSHwGDd0kNqvUe4vmqNAb/
-	 MmaJBoDMq55LWDButr3Dx2h6dtVHo8d9YZ8+rHI4XYloqSWPnZibpeAk1eC7QnYYro
-	 tJ/Ir6GUtq0xGK6e9Qlw93jo0PFFawSiD6xiGQIeaTAX3zdUfqXR6cloIFnmh9RdMV
-	 ZTgs29kjrhfucHQI1D5v0jQ5dmUIoyqupCub4f2P1vzhj72jYfPIS79pUDvlogt1ui
-	 b79PGBS6da25g==
-Date: Mon, 14 Apr 2025 00:15:28 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-Cc: vz@mleia.com, wsa@kernel.org, manabian@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: lpc2k: Add check for clk_enable()
-Message-ID: <l4e6yznusqnkc4czvwywcrxbqxqjld32udulb23rcempj7f6dc@grj6y5hbv7y4>
-References: <20250412193713.105838-1-chenyuan0y@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qXtWBi6O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744583001;
+	bh=rPQgq1AS+YFBd1TdDwePG8f7kNMtqqCLvqIFBXZR/nI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qXtWBi6O5Vh5cCTb8HSEt2eOWCclc6hZQB9kOFJxCnSUQbm/uVQyMBETiCou11xOr
+	 XqqPZyRGO2sjNg7HkaZMv3lVpDF1m3FPLSjDzIqDEG0bjmKLT+OTOSduKoZbYcbjsB
+	 UKZkXxMtJNHU9gMO21Ka+GYQmnV1/CPnMvvyD5sU1gpXa76s6OU6HBx+tTB3/S/Ea5
+	 w7p8ZJiQmgLXq4gx2wuOPeZodTMvqfViF/pF6U9Wdzx6q3H/zqkB4K/09KlS1TpCur
+	 qB6FT+Dq5Sk5w9WEy4ny9VXxjP8uD5PepzjyR98DARRDssumzJkz6PV6k6w0veCxpV
+	 TY5VK0lT5EueA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbQ154cVJz4wcj;
+	Mon, 14 Apr 2025 08:23:21 +1000 (AEST)
+Date: Mon, 14 Apr 2025 08:23:06 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the vfs-brauner
+ tree
+Message-ID: <20250414082306.577df183@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412193713.105838-1-chenyuan0y@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/ETrtgT.A3l8Kj9cO9qllcYW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Chenyuan,
+--Sig_/ETrtgT.A3l8Kj9cO9qllcYW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 12, 2025 at 02:37:13PM -0500, Chenyuan Yang wrote:
-> Add check for the return value of clk_enable() to catch
-> the potential error.
-> 
-> This is similar to the commit 8332e6670997
-> ("spi: zynq-qspi: Add check for clk_enable()").
-> 
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> Fixes: 3f9c37a0c9a5 ("i2c: lpc2k: add driver")
+Hi all,
 
-I removed the Fixes tag, I think it's a bit of an overkill.
+Commit
 
-Merged into i2c/i2c-host.
+  a8fca9b51158 ("fs/fs_parse: Correct comments of fs_validate_description()=
+")
 
-Thanks,
-Andi
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ETrtgT.A3l8Kj9cO9qllcYW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8OUoACgkQAVBC80lX
+0Gyv2wgAhm5J7joVQGnaJCkZGl+dh+vsx/0F4CMYeS4+yJ5HCN8MiLfT5na2ZxbD
+kEVsm2HtzCCZpYuJyRHbnrX9oQ92ZseU2kknaHoHSwpBUPzoIHhI9WmWSjhG/6tq
+xgu2BZNt47vLF4W8XKZ1wRvnd/gYf91aIlVFEbUU1vjdLNGh+kpAtLdqWur0O5Sq
+Jhdr+1H2uvNtUSNff81QPDCHzF54yGpm/rtnLPsgZfXiUyTSUx0j6Aorx6UoAFmf
+RI6S43o6dJIQUk/cBiLHyIu6eOAev1+1JL8KfNyzD3IiliTkjaX2meDUw2MmNt0V
+nkwswtrDc9jSA0EAK1Kp9YigKb/JIg==
+=jNlX
+-----END PGP SIGNATURE-----
+
+--Sig_/ETrtgT.A3l8Kj9cO9qllcYW--
