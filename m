@@ -1,88 +1,70 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA15161310;
-	Sun, 13 Apr 2025 22:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1DB1F95C;
+	Sun, 13 Apr 2025 22:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744583395; cv=none; b=XTP1RGAMX9krDSAWndQ0/BGH8eI1w0ikGkuAVW/hQmvPeIGnLujKM7+yly8RWcZcjAo3PFUpo9Wic0/9tI31/2YNvpuubRqR7SzClFEqaRD9eKc075YM2TJo7MBC1h7ZkhTSutbasBCcMh1tAZ/Xc+h9YvtiYPsnA0hc8W1wIS4=
+	t=1744583443; cv=none; b=niAbfQ8ykz8x+zbEjju3VtjvCSS3J5PLj4XkIY4EPVYVaOHfpEaaQgj0VeXmn2Z0LsFytNnqUo/pi0TChZ8jSNYU+7vTRJEcZ2xS3lD1TbifXogHYacKGHTQbFKRjZ4UkuuqlJjkWdffrg71lc5RhIEQRMm+iScQZpijKgxVgyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744583395; c=relaxed/simple;
-	bh=UW7GLHA/OhLe/TGvPvOmkTw1S0ebDeYlNE5c1vCQcgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sxpEbGHh62Zt2GFyLjazJ5P6NtJ0yzqwcXpsrtcsUsf0ogDVufw1/05JNxBZXr3hw2hrtXBVJX4pCzfU+AagTeVc6VlW3lY+lNwhQkoWUeEQbddW4SBT9lbBGIlfobuI25uIW2i/kNd3Bxql5Vs3PQqsix4i0pC0Oqt8qagU0Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=agTcQ3B4; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744583443; c=relaxed/simple;
+	bh=IWvBZeKrqdYC6r3NvWqAvivZq1FG96ilxfnAQsvWQeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WxBmkAL8jxi51daD6DS8j65n4MszG8ymmK96An0QYY8w0KfLQH6R2DKgkMJnA6EYFwb7AcoEqJchGvtWc/bTyLkyBC4D2oYFj87J9FkOqGHEqO8K5ZW+4BLBnUAEujE/3TzHYn7l7FybPeITKFrmQjXg46zU4tzSG174DMcxOkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlKlTzbY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="agTcQ3B4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744583389;
-	bh=S8fm/kcGacVtR90EwNvMYMQG3ESJXNDj/tWzFKrGNtU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=agTcQ3B4YIb00kGsCh0E9AcOZwvOVh8M+RzqY0afPjvTMrBu9wETKf0u3keK52GGY
-	 iVDENooGDQ0+qurAlZOn0zGhJv82JeZK7mAUMdpMjJKHvgoY6V7YqqDfw7hGlcKb6d
-	 5tHU77bcQxziUNZv6wKuWdNBvi+IbpAmxOyb6ZLsR6P/zO9xtrhkAbz+GCgPqapB7y
-	 4zXSwR+0lrM9PTYrKCrBb32KLKc3TBQHxOPuNzPfF4yvkOgixPaN+Xz0SE+oE4nHEK
-	 nRcAYYH9h6UgiBUI3i+yNfqtOUIT2FGVu4hFlg5t2mjgTLPi7HCCtghnPYfqCTwrLn
-	 IDxtobC8W/opg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbQ8X687sz4wcd;
-	Mon, 14 Apr 2025 08:29:48 +1000 (AEST)
-Date: Mon, 14 Apr 2025 08:29:47 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the mm-hotfixes
- tree
-Message-ID: <20250414082947.0858c8a9@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlKlTzbY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2851C4CEDD;
+	Sun, 13 Apr 2025 22:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744583442;
+	bh=IWvBZeKrqdYC6r3NvWqAvivZq1FG96ilxfnAQsvWQeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BlKlTzbYZhy+rzLI1OGixfD/aUzhOw+Q97TtCTebdnzJYVdAOvNKS5YJfdwh40X8C
+	 VAdFLglwsBQrai0/zFjl4ILO7Efi1O1XECEwlIfCQo+18KkWFGvAcgyBWuZ5nNJNkO
+	 A/Lsf9R9TC3UbFVYyAFhUOX0b/772v5WHZNV06okpDdPRa7cyOMuQ9pTK9uNmuntdh
+	 LZwWHxF1SwST2YnLUk0Np8t/1LCtvgdspeCMlrGGV1aMXplYQRyPP18wqdDv7tQcse
+	 k9TVD4grzh+yeOabAUS91gefhYWyiCtAPsLDKtVjIEkGavGCWOZX7Eu07KpbwtlZY2
+	 9t6ZECXtOAIeg==
+Date: Mon, 14 Apr 2025 00:30:38 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: xgene-slimpro: Simplify PCC shared memory region
+ handling
+Message-ID: <gzrqpn7a5g5bqvlc6ryw64iux3w5v3a4iqxu2i4qkivn7l2nf7@4drkvcwi6pyw>
+References: <20250411112303.1149086-1-sudeep.holla@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6x4J0.H_L=RrqEG3b6i2dr+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411112303.1149086-1-sudeep.holla@arm.com>
 
---Sig_/6x4J0.H_L=RrqEG3b6i2dr+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Sudeep,
 
-Hi all,
+On Fri, Apr 11, 2025 at 12:23:03PM +0100, Sudeep Holla wrote:
+> The PCC driver now handles mapping and unmapping of shared memory
+> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> this xgene-slimpro I2C driver did handling of those mappings like several
+> other PCC mailbox client drivers.
+> 
+> There were redundant operations, leading to unnecessary code. Maintaining
+> the consistency across these driver was harder due to scattered handling
+> of shmem.
+> 
+> Just use the mapped shmem and remove all redundant operations from this
+> driver.
+> 
+> Cc: Andi Shyti <andi.shyti@kernel.org>
+> Cc: linux-i2c@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Commit
+I thought this patch was going to take other paths. Anyway, I
+merged it to i2c/i2c-host.
 
-  4bbce82f2e29 ("MAINTAINERS: update HUGETLB reviewers")
-
-from the mm-hotfixes-stable branch is missing a Signed-off-by from
-its author.
-
-This is just a typo - Signed-of-by v Signed-off-by - and so may not be
-worth fixing.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6x4J0.H_L=RrqEG3b6i2dr+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8OtwACgkQAVBC80lX
-0GziwQf/RpnyF3/SNjVNFbL8Bn3XMHgl1/ctIM4DIQzQ09aBZtd+W62HLBtKB0/P
-Bj/Acz5DjVWWkLlkHrqpZY9vL3F35ocTsCk3W4gQc/PDNbfeqIEPXgYPv0CT1Tab
-5JY4pSepUqFGanEMW9xZk+mjdnW1UayxxqGrRNppwBrURNW6kYhNfkyF+7gyFcqc
-qsLLPii0YnKCV6WXId9ExvcjoxsOPpxgRDIbxeYUzTdVU3aR3L/01EBoE2QEKQl/
-HYAt7lu5iuCw1QPZm3+TC111Zdf0ar5cphRvpTweRAuQbHJ19W7zfw4KNNoOjYva
-GZfVApMtmW5qNaPBB0ohATT26O2z/g==
-=tsbr
------END PGP SIGNATURE-----
-
---Sig_/6x4J0.H_L=RrqEG3b6i2dr+--
+Thanks,
+Andi
