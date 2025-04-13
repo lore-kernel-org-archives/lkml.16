@@ -1,174 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575461494A8
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 03:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A192AF0A
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 03:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744514108; cv=none; b=fUISMNeVPzdh7wDAZjJWYBcs8d1wsx54GniIlGuugU/oU02LLrBSq5Hu68xI8eEddb9nbbHqkQ6o6MS9H3x4aImrB9UU7qmNkF5myn8jXEqDQMFuicCD2U11h/MoR+Ee98+SJ4JUavnxdUmJ1FAh3bgRGCgZBhDDRFSE/hbeg9w=
+	t=1744515688; cv=none; b=KMWEj5o85s6v5xuT1UegM8GOmTTNl32FsDkN4xHRbTHaVxQaNnYLXe0rTuYymkI5RttKGVIGe5YysfHrwYo0ccu6bCeBPTUn2Wv46M6uERmzDfcjO8gQznvvBYN9irS3m3c4vpf/nKJ61GS21x8wvypnNim2el6UqATWPmzrRXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744514108; c=relaxed/simple;
-	bh=GXoItoIHVQGxDk0GZCjHQsM8qdSgDcBsL2mFmkWaNc8=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FZBhF5/8IWahVeEIgjIQFTzOZ8JiW2mWUAeGbMoOdwnf2ZV6cdQHqG2QeCcOeXrbArQO7HCTVYtTFgOHwa8ylI78UHfIE6704aVg5ODzGtt/NpFe+yp3VWOV0aNMLLMGEYPiT9Yt7KUXUTHvKlBQXLnsRdzz9RJgrJSio9c9Y4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WMUAkrpw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMUAkrpw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744514105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BZ2AIgXN2yGPN7Sxu2wl5jNXWejeTiuda2OwXuQQY0I=;
-	b=WMUAkrpwkpKSbdggmy+HjO0VBj17OE1AcLqqaDOTl4l2yQ8cHfhUX3mtI3g2MCS6sWvX6c
-	X89j+PrcOOug+6G9i1hfEh/8DXCPFrnWEpSH8/d/PFwFqxiRxnWQv/1gqBC2b03Lq3vmdx
-	WwYe1bbz4g5Y2c6qGCXuFWyvT00RfDk=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-135-0344IwXKOT2BRHVd2bJgTg-1; Sat, 12 Apr 2025 23:15:03 -0400
-X-MC-Unique: 0344IwXKOT2BRHVd2bJgTg-1
-X-Mimecast-MFC-AGG-ID: 0344IwXKOT2BRHVd2bJgTg_1744514103
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c09f73873fso532860485a.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 20:15:03 -0700 (PDT)
+	s=arc-20240116; t=1744515688; c=relaxed/simple;
+	bh=HcDGY79STyTj64bFDzATXVJp5YPz5hSDBJcu+3unNVk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=b3wYRhRrYKDs7a+7LVCwk/mEpx14tDw00AsU4rIX0Bdq+k4lkh9e1ceNWpk5YERALXxl2Us2ad2VmQLMeZ6gfqXnhiSRfq8PwJOgvcR4vQ4qHQKBHUmByH3a0/bat7F4lHEd6eGY/SSFoBzEICPBxuNSguZFhmqwpKd1MP7sHsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so711637639f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Apr 2025 20:41:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744514103; x=1745118903;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BZ2AIgXN2yGPN7Sxu2wl5jNXWejeTiuda2OwXuQQY0I=;
-        b=XFFgY3EWDxaWapJmCCBReElFs8zJUDXNkEUWDkZk44NBCpQL0+NttW0y6gazPC6UB0
-         3hGKbWLDe4n+NA3XV2Yw5/0hMJqwi7Cd9IDREfmzUhH4MdrLxMRfw/mvdWiFuJgNJZGa
-         kVPuc3WYZo+hZIqG5NLYj10H5RlSa8NskHeRduQvfnq7tRJFfrgoY2qxsfmX3JPTdtL7
-         RJwBTghHRoXmnF0nZ8L5RWPKpNCQ/9gj/3yrY355QSqjcja3tmxxUWH+d9r2RC6AwmYD
-         EVRIOe9SHfSOxMwi9qcK3lPFCgyq7eZG85VegAaBNrZXqMf4t48sAYC5pin1tVBax65W
-         MEEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDnc0olBgU3g9dPja1ymEH85HKmzXZ9XqbIqjdrxdasp35NJlx8OUPTEcX34ZSmjhgfsSwAAk4K2BXEGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK0cqgkAg9ho1kSdxaqG24wtf6sOWZNKPTeJc4N3ZVpp+AMwsK
-	fV83jWlE1IaJLJ3lhdScuExVoCU3G8NHJOJ8pO0VtTDO/pX6om80nyx3EPWOte4n6qE2s2s384y
-	p6PVm/hu/kpFSSHCPHjpe0CTzmega3ET0eG4eBH27ofT9AQmCo099UCTzdAVBRA==
-X-Gm-Gg: ASbGnctNdvsF2YvvR+EmaLU7X+y/i0P9lw1zXIuRO+LjeR3dz8Nlbf5A1jLi2tWfzL4
-	gx8+KvI89MJjw/Wk8xtcQ+alPRb3X3b+Y1YjvEmRswVnE82ywkQyC8xUx7BNqfYphZFEpgNdnzI
-	294FVM5XTs+8kDAsKbU89Ut5KLAjRjLFQR7YWvCR/F3MInFVr2eBQawk70TjSLtgpO0ho47TdFt
-	Pq1FvxKd3+xiztFz374MWG0cG453yXewFId3Y7JGGqwNFqj0FTLJq0iJhY4E5VuAdt2Aju72ElW
-	WXovmU1aBGjOONIildkWEWxrgzbpxzG43KQgq3WZWRSbGc3jkwsKWg==
-X-Received: by 2002:a05:620a:f0c:b0:7c5:50ab:de07 with SMTP id af79cd13be357-7c7af0d4854mr1206658785a.21.1744514103031;
-        Sat, 12 Apr 2025 20:15:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEgZdkNpb8M2sLPV1/LXGt3hDMHfPduIrP6ippNwIGXHw9JexKgaMOOMOlNxn4UhxXHLuaKg==
-X-Received: by 2002:a05:620a:f0c:b0:7c5:50ab:de07 with SMTP id af79cd13be357-7c7af0d4854mr1206655885a.21.1744514102577;
-        Sat, 12 Apr 2025 20:15:02 -0700 (PDT)
-Received: from [172.20.3.175] (syn-108-176-116-062.biz.spectrum.com. [108.176.116.62])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0f1fasm495773985a.112.2025.04.12.20.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Apr 2025 20:15:01 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <bbc48f40-274c-44ec-9a98-7c18b64628c0@redhat.com>
-Date: Sat, 12 Apr 2025 23:15:00 -0400
+        d=1e100.net; s=20230601; t=1744515686; x=1745120486;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uUfK+wgMqVs/BJpvK0cKAWUv0FLQu6T+iRlQBVH/WQg=;
+        b=M+loeSmN2tQNcqWBWF8xh00no5rOehsjUs4GVVzmcMBx0tyGROC1jfdketUXUGph8O
+         5GgnEPAqbjQH2LrVRUpjAtxv7+kCsM+ab9lkpPk74QRqO8rs79Py8KUshZ1CRr5n2bXS
+         7hiwk4T18E/uY0GU6yIbwT+m+bjK9vmcadbvE3sTb9AALl63NtkHI1apJofKtMp5AzrG
+         RGuYD7EIF9q5m+2OOdCv8/HgzV73uhXMLmBJdpEqSlReIGVFWUwkn3TozRK14Pa2J2CM
+         nNdZhWqAu7hLAUf2f7hNd0HKnTZ+6XKnEBA2V+C1Bjga+OI+MMufILAlnw6W8msK7PM+
+         fA3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXbJHWEwQZ3Vmz4YtFkmvKe+MAZbpipQEFBCDVkK5ZXQN75sdk9XIUuYkkQafdDVnwPEI/gJlMDG7oyLBE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUM9yTsCpJhxQFX2wsoxcw5EmtS+j7pHCLu0Q7vKBX/i1DfiBT
+	8ISFevIe7a0l5ibRkKd+JyEO77zLvVGpsffbx/g9S+yAbpx895djMcxMWVrImTLW3ubVztIfvnT
+	SJh3dgH54Be+d19mxlQoiozXdWT3iEKCDKGsYefaPAbo29syAYNUU6u0=
+X-Google-Smtp-Source: AGHT+IGwelPeCeZOsle2UWt2rUnFDqN4vsLSoqBF8N91DWB6cGB5Fn68ptvGeBfzVunoVI0PjU6C+CFYayOvGrEC1hyqGEEJ5WwN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] selftests: memcg: Increase error tolerance of
- child memory.current check in test_memcg_protection()
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-References: <20250406024010.1177927-1-longman@redhat.com>
- <20250406024010.1177927-3-longman@redhat.com> <Z_Wht7kyWyk62IBU@google.com>
-Content-Language: en-US
-In-Reply-To: <Z_Wht7kyWyk62IBU@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1b08:b0:3d3:dfc2:912f with SMTP id
+ e9e14a558f8ab-3d7ec1f3f42mr85250585ab.7.1744515685903; Sat, 12 Apr 2025
+ 20:41:25 -0700 (PDT)
+Date: Sat, 12 Apr 2025 20:41:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fb3265.050a0220.2c5fcf.001a.GAE@google.com>
+Subject: [syzbot] [afs?] BUG: unable to handle kernel paging request in afs_put_vlserverlist
+From: syzbot <syzbot+5c042fbab0b292c98fc6@syzkaller.appspotmail.com>
+To: dhowells@redhat.com, linux-afs@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    bec7dcbc242c Merge tag 'probes-fixes-v6.14' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13067a74580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7a4e108575159039
+dashboard link: https://syzkaller.appspot.com/bug?extid=5c042fbab0b292c98fc6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=179b323f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fe17cf980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/36d8f571e9a9/disk-bec7dcbc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3fc027e5e923/vmlinux-bec7dcbc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/964a62b47535/bzImage-bec7dcbc.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5c042fbab0b292c98fc6@syzkaller.appspotmail.com
+
+kAFS: bad VL server IP address
+BUG: unable to handle page fault for address: fffffffffffffffa
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD e186067 P4D e186067 PUD e188067 PMD 0 
+Oops: Oops: 0002 [#1] SMP KASAN PTI
+CPU: 1 UID: 0 PID: 5834 Comm: syz-executor362 Not tainted 6.15.0-rc1-syzkaller-00025-gbec7dcbc242c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:arch_atomic_fetch_add arch/x86/include/asm/atomic.h:93 [inline]
+RIP: 0010:raw_atomic_fetch_sub_release include/linux/atomic/atomic-arch-fallback.h:949 [inline]
+RIP: 0010:atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:401 [inline]
+RIP: 0010:__refcount_sub_and_test include/linux/refcount.h:389 [inline]
+RIP: 0010:__refcount_dec_and_test include/linux/refcount.h:432 [inline]
+RIP: 0010:refcount_dec_and_test include/linux/refcount.h:450 [inline]
+RIP: 0010:afs_put_vlserverlist+0x3a/0x220 fs/afs/vl_list.c:67
+Code: 53 48 83 ec 18 e8 e6 35 2f fe 48 85 ed 74 43 e8 dc 35 2f fe 4c 8d 65 10 be 04 00 00 00 bb ff ff ff ff 4c 89 e7 e8 76 ad 93 fe <f0> 0f c1 5d 10 31 ff 89 de e8 f8 30 2f fe 85 db 7e 29 e8 af 35 2f
+RSP: 0018:ffffc90003e5fae0 EFLAGS: 00010246
+RAX: 0000000000000001 RBX: 00000000ffffffff RCX: ffffffff838c071a
+RDX: fffffc0000000000 RSI: 0000000000000004 RDI: fffffffffffffffa
+RBP: ffffffffffffffea R08: 0000000000000001 R09: fffffbffffffffff
+R10: fffffffffffffffd R11: 0000000000000001 R12: fffffffffffffffa
+R13: ffffffffffffffea R14: ffff8880216ad700 R15: ffff888034ec2000
+FS:  0000555561d3e380(0000) GS:ffff888124ab9000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffffa CR3: 000000007a922000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ afs_alloc_cell fs/afs/cell.c:218 [inline]
+ afs_lookup_cell+0x12a5/0x1680 fs/afs/cell.c:264
+ afs_cell_init+0x17a/0x380 fs/afs/cell.c:386
+ afs_proc_rootcell_write+0x21f/0x290 fs/afs/proc.c:247
+ proc_simple_write+0x114/0x1b0 fs/proc/generic.c:825
+ pde_write fs/proc/inode.c:330 [inline]
+ proc_reg_write+0x23d/0x330 fs/proc/inode.c:342
+ vfs_write+0x25c/0x1180 fs/read_write.c:682
+ ksys_write+0x12a/0x240 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fab4ed8ba79
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff0c666448 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000200000000000 RCX: 00007fab4ed8ba79
+RDX: 000000000000009e RSI: 0000200000000200 RDI: 0000000000000003
+RBP: 00007fab4edfe5f0 R08: 0000000000000006 R09: 0000000000000006
+R10: 0000000000000006 R11: 0000000000000246 R12: 0000000000000001
+R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+CR2: fffffffffffffffa
+---[ end trace 0000000000000000 ]---
+RIP: 0010:arch_atomic_fetch_add arch/x86/include/asm/atomic.h:93 [inline]
+RIP: 0010:raw_atomic_fetch_sub_release include/linux/atomic/atomic-arch-fallback.h:949 [inline]
+RIP: 0010:atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:401 [inline]
+RIP: 0010:__refcount_sub_and_test include/linux/refcount.h:389 [inline]
+RIP: 0010:__refcount_dec_and_test include/linux/refcount.h:432 [inline]
+RIP: 0010:refcount_dec_and_test include/linux/refcount.h:450 [inline]
+RIP: 0010:afs_put_vlserverlist+0x3a/0x220 fs/afs/vl_list.c:67
+Code: 53 48 83 ec 18 e8 e6 35 2f fe 48 85 ed 74 43 e8 dc 35 2f fe 4c 8d 65 10 be 04 00 00 00 bb ff ff ff ff 4c 89 e7 e8 76 ad 93 fe <f0> 0f c1 5d 10 31 ff 89 de e8 f8 30 2f fe 85 db 7e 29 e8 af 35 2f
+RSP: 0018:ffffc90003e5fae0 EFLAGS: 00010246
+RAX: 0000000000000001 RBX: 00000000ffffffff RCX: ffffffff838c071a
+RDX: fffffc0000000000 RSI: 0000000000000004 RDI: fffffffffffffffa
+RBP: ffffffffffffffea R08: 0000000000000001 R09: fffffbffffffffff
+R10: fffffffffffffffd R11: 0000000000000001 R12: fffffffffffffffa
+R13: ffffffffffffffea R14: ffff8880216ad700 R15: ffff888034ec2000
+FS:  0000555561d3e380(0000) GS:ffff888124ab9000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffffa CR3: 000000007a922000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	53                   	push   %rbx
+   1:	48 83 ec 18          	sub    $0x18,%rsp
+   5:	e8 e6 35 2f fe       	call   0xfe2f35f0
+   a:	48 85 ed             	test   %rbp,%rbp
+   d:	74 43                	je     0x52
+   f:	e8 dc 35 2f fe       	call   0xfe2f35f0
+  14:	4c 8d 65 10          	lea    0x10(%rbp),%r12
+  18:	be 04 00 00 00       	mov    $0x4,%esi
+  1d:	bb ff ff ff ff       	mov    $0xffffffff,%ebx
+  22:	4c 89 e7             	mov    %r12,%rdi
+  25:	e8 76 ad 93 fe       	call   0xfe93ada0
+* 2a:	f0 0f c1 5d 10       	lock xadd %ebx,0x10(%rbp) <-- trapping instruction
+  2f:	31 ff                	xor    %edi,%edi
+  31:	89 de                	mov    %ebx,%esi
+  33:	e8 f8 30 2f fe       	call   0xfe2f3130
+  38:	85 db                	test   %ebx,%ebx
+  3a:	7e 29                	jle    0x65
+  3c:	e8                   	.byte 0xe8
+  3d:	af                   	scas   %es:(%rdi),%eax
+  3e:	35                   	.byte 0x35
+  3f:	2f                   	(bad)
 
 
-On 4/8/25 6:22 PM, Roman Gushchin wrote:
-> On Sat, Apr 05, 2025 at 10:40:10PM -0400, Waiman Long wrote:
->> The test_memcg_protection() function is used for the test_memcg_min and
->> test_memcg_low sub-tests. This function generates a set of parent/child
->> cgroups like:
->>
->>    parent:  memory.min/low = 50M
->>    child 0: memory.min/low = 75M,  memory.current = 50M
->>    child 1: memory.min/low = 25M,  memory.current = 50M
->>    child 2: memory.min/low = 0,    memory.current = 50M
->>
->> After applying memory pressure, the function expects the following
->> actual memory usages.
->>
->>    parent:  memory.current ~= 50M
->>    child 0: memory.current ~= 29M
->>    child 1: memory.current ~= 21M
->>    child 2: memory.current ~= 0
->>
->> In reality, the actual memory usages can differ quite a bit from the
->> expected values. It uses an error tolerance of 10% with the values_close()
->> helper.
->>
->> Both the test_memcg_min and test_memcg_low sub-tests can fail
->> sporadically because the actual memory usage exceeds the 10% error
->> tolerance. Below are a sample of the usage data of the tests runs
->> that fail.
->>
->>    Child   Actual usage    Expected usage    %err
->>    -----   ------------    --------------    ----
->>      1       16990208         22020096      -12.9%
->>      1       17252352         22020096      -12.1%
->>      0       37699584         30408704      +10.7%
->>      1       14368768         22020096      -21.0%
->>      1       16871424         22020096      -13.2%
->>
->> The current 10% error tolerenace might be right at the time
->> test_memcontrol.c was first introduced in v4.18 kernel, but memory
->> reclaim have certainly evolved quite a bit since then which may result
->> in a bit more run-to-run variation than previously expected.
->>
->> Increase the error tolerance to 15% for child 0 and 20% for child 1 to
->> minimize the chance of this type of failure. The tolerance is bigger
->> for child 1 because an upswing in child 0 corresponds to a smaller
->> %err than a similar downswing in child 1 due to the way %err is used
->> in values_close().
->>
->> Before this patch, a 100 test runs of test_memcontrol produced the
->> following results:
->>
->>       17 not ok 1 test_memcg_min
->>       22 not ok 2 test_memcg_low
->>
->> After applying this patch, there were no test failure for test_memcg_min
->> and test_memcg_low in 100 test runs.
-> Ideally we want to calculate these values dynamically based on the machine
-> size (number of cpus and total memory size).
->
-> We can calculate the memcg error margin and scale memcg sizes if necessarily.
-> It's the only way to make it pass both on a 2-CPU's vm and 512-CPU's physical
-> server.
->
-> Not a blocker for this patch, just an idea for the future.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Thanks for the suggestion.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-As I said in a previous mail, the way the test works is by waiting until 
-the the memory.current of the parent is close to 50M, then it checks the 
-memory.current's of its children to see how much usage each of them 
-have. I am not sure if nr of CPUs or total memory size is really a 
-factor here. We will probably need to run some experiments to find out. 
-Anyway, it will be a future patch if they are really a factor here.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Cheers,
-Longman
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
->
-> Thanks!
->
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
