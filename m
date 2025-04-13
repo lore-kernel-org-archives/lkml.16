@@ -1,123 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83E128F4
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753C016A395
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 10:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744539503; cv=none; b=F3n6tGmyH9c7+rG11ieb1MpJs/ATF5uz6qSOn7zurSvepUwHIllF6HJjbTA2KcwzTHaBNWB9Y305dUw9XpysPYlg0NrpFvrbKBPCxPOPbTa2g9W3WQnqCVYTcFMUvF1eyhcjbnFMnjSsJ3a+eMsXMWoECpG7Sbjlp41Hi3pGJ98=
+	t=1744540045; cv=none; b=UYWmkiNfbqBgUNhlmmcAMJoUqoGktb4xY3yJrgJQA0mHHyUxVUzGSAdqbcmBKsERiehAND/33o2IUx/RtftIWvnKUxRiyLF0Yv73sZYz7JNd1i+1UPoQAOKFdH0Kl2j+jXhJb2BVMeSRBpXy98zmgSStb4YQOizc7TjCfJ1DdVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744539503; c=relaxed/simple;
-	bh=ErHM0KXBmIzSgllbEKAnlsbmbsSO3NBrDWRZS4AynPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FVxwkmBdlginLtYW42JxOpnEi6c17EvTOFDd+f6MjWJYGSxrngoNkdpnvenJp7xS/1jbwDIZcEAL0FlFW3ZEqj3Yr/LlKEj0OKUMHOXOrGMXrFLoxgfqdSk0ZXmTPlTW2zxNTIg6eBhA3YoT4ZYTVyFHOpmMnMIKMf1P1uLuhmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlOQw3pe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744540045; c=relaxed/simple;
+	bh=sPDAKDyO1vG+j68JQ5OFsc1uXXtzOsMoyAfVMADSyv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k7/S+zDx/2ugj7cqi7Mw78jUYLXzP/xRfcYQ3qRcWAuNqfwIr54AxCT4nfiW2eXa+k4xDWUz3PiB64oAe4flm5Yf1IuNONNBprAvMrCmQxMjMCg5o+LKTQlAZemXH05DnFceeq8jm/YFmH+C1OqOAoNRUK9ueJBHvvh9i6PWXEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JOIurfZL; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlOQw3pe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744539500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EBni/JY02a1CDsHN5yYPIoZRjHqyTeDi/pp/KcYRYRE=;
-	b=FlOQw3peCKBuz4pBeWCKwy3IVA9TVBPU3QGIgqPfDTbuh4UgapGAtBOWwsYPqayF62QMVL
-	UHp1Oo0mwIBaGowCf708bBkf4UzlRdU76mzL9AyKkT5gjMufHjqxcXBhp8tfrDs+mSCkHF
-	m+hBd1Z4ND4IZBCRe9Q4q/Zy8mF+Azs=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-oZ5xsQ5jOJihTtK3kpZwHg-1; Sun,
- 13 Apr 2025 06:18:17 -0400
-X-MC-Unique: oZ5xsQ5jOJihTtK3kpZwHg-1
-X-Mimecast-MFC-AGG-ID: oZ5xsQ5jOJihTtK3kpZwHg_1744539495
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9075719560BC;
-	Sun, 13 Apr 2025 10:18:14 +0000 (UTC)
-Received: from [10.44.32.81] (unknown [10.44.32.81])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CF968180B487;
-	Sun, 13 Apr 2025 10:18:08 +0000 (UTC)
-Message-ID: <4f1633ca-bc75-4e81-8747-52605ce352d8@redhat.com>
-Date: Sun, 13 Apr 2025 12:18:07 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOIurfZL"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so5490606a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 03:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744540042; x=1745144842; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jd4upcUcfzhoKKCd8gyGkHUUEfo7cXF0p4D0ste2Qms=;
+        b=JOIurfZLiDJXhf954KhVVkCn/nIEOS/6Oh+ShF9AelWipJtJD7gxRkG370JysvkbS5
+         VUEJcU/HJkmwtw7f/XOdQ2cXwzbDCiPTIyg8BuEVtNCPfPYB8Rn5sTlWVi2YZGdMBSi1
+         8MPuH0CzQFmgJ+oIgEGZx3p45Kxw5fCSXLjelemRasSg3adbclTghCNATLHJMvOKFRDO
+         gmfxnz5N5GWDXQVOrTscZ5efr37V/D1BUxEndugY0yisA5EBwSpjdFoif0RupCi9/s9R
+         LjYh37c4TDcAOIrciuTUdMncPWJrHEQm4zeOyQG37b+uDLZI7V0pPabXs6mIb/xdFTBt
+         PVVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744540042; x=1745144842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jd4upcUcfzhoKKCd8gyGkHUUEfo7cXF0p4D0ste2Qms=;
+        b=IShP3kzEnKtq3HLHsEsStTk58oeVMFXPQjbxxkeZwKSTjLLEEFNPIEuJiyl2qHBdYY
+         ptu015BR+fQ5IgtbgKdYhOIZVqMooAT9X03GxadVMOh3vHC1WRKqowfJARvOL2hE3lwy
+         i9V/b91lh/cdOTOupAucXd27T2DvKcjQZvzvkP/ngXsGo4k+rAWbVhYbftypvhpetXIG
+         hvQknfkuRwAf9N/3/F09R13J+kRDeyM9e3/GAmnGB1TTcWatXzMKi4b8MU7Iu4MrZzYZ
+         xKGqoA8SJvsTgksFRRZBj2sCBaYfVGxqeuRMWHXCiIBq8XZ19ampPvI+bIhDfVLwT5qH
+         UHpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXexlti048Z0N2hGEImbZSBS/mWQhI4dqXIedBAtFhakiZnOea8XEubyy1SDVbSsGnc+X8Nl5NHGW/2IPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/X1pvPvA3v/GHpMVKjf7W7Fhef3VmhdHvo5RNQFk5fvmB+BBQ
+	bqDwtTT+1Nmu8rkNnjlvshZczz6apSPj4T9mVTRZ/u4buIjRO4uBclCbiBeZQYVeC4PGb667J3T
+	JGcAZswoTO89+MqwigA7AsERyUEQ=
+X-Gm-Gg: ASbGnctcSnKpIELfTqKwQSgvAKnwJXWAXypbdiBajZmbxrUDVnmAvWCMMYPO4C6EpTZ
+	JjBVAtFjbPTQ11W39F6uFjazTBVZnS4IOE/TjIC4ugsbGBTWU+ywbjHkMCH3tL+3U0LOvXZnKdy
+	Lum4XKdu3fprbnHD2d2AYU
+X-Google-Smtp-Source: AGHT+IGSmD/1ocEyYCCvWtIRlXeUOYfxspl9WUnwfGHJgbodwFDre8xJpPzYUkY8vAvKrOK7/qTqvkrAeS3MsuoyA18=
+X-Received: by 2002:a05:6402:13c1:b0:5e4:b874:3df7 with SMTP id
+ 4fb4d7f45d1cf-5f37015b8fbmr7595335a12.25.1744540041311; Sun, 13 Apr 2025
+ 03:27:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers
- access
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-7-ivecera@redhat.com>
- <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
- <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
- <CAHp75VfR_6gQdcBU6YDTvtX0A2NDjto4LXyjTteGLmp-u1t2qA@mail.gmail.com>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <CAHp75VfR_6gQdcBU6YDTvtX0A2NDjto4LXyjTteGLmp-u1t2qA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw>
+ <CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com> <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
+In-Reply-To: <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sun, 13 Apr 2025 12:27:08 +0200
+X-Gm-Features: ATxdqUHn4aVJ3uJPcU8AN2QUX1bmEIhS2ScS5hp2skJX5skKqwVwHaEeJPhVRFU
+Message-ID: <CAGudoHFvPqE=Sby-ttn1ar8b+abj15X2jX3FvgY3ca_TRqoc-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 2, 2025 at 6:27=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
+ote:
+>
+> On Wed, Apr 2, 2025 at 6:22=E2=80=AFPM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Wed, 2 Apr 2025 at 06:42, Mateusz Guzik <mjguzik@gmail.com> wrote:
+> > >
+> > >
+> > > +ifdef CONFIG_CC_IS_GCC
+> > > +#
+> > > +# Inline memcpy and memset handling policy for gcc.
+> > > +#
+> > > +# For ops of sizes known at compilation time it quickly resorts to i=
+ssuing rep
+> > > +# movsq and stosq. On most uarchs rep-prefixed ops have a significan=
+t startup
+> > > +# latency and it is faster to issue regular stores (even if in loops=
+) to handle
+> > > +# small buffers.
+> > > +#
+> > > +# This of course comes at an expense in terms of i-cache footprint. =
+bloat-o-meter
+> > > +# reported 0.23% increase for enabling these.
+> > > +#
+> > > +# We inline up to 256 bytes, which in the best case issues few movs,=
+ in the
+> > > +# worst case creates a 4 * 8 store loop.
+> > > +#
+> > > +# The upper limit was chosen semi-arbitrarily -- uarchs wildly diffe=
+r between a
+> > > +# threshold past which a rep-prefixed op becomes faster, 256 being t=
+he lowest
+> > > +# common denominator. Someone(tm) should revisit this from time to t=
+ime.
+> > > +#
+> > > +KBUILD_CFLAGS +=3D -mmemcpy-strategy=3Dunrolled_loop:256:noalign,lib=
+call:-1:noalign
+> > > +KBUILD_CFLAGS +=3D -mmemset-strategy=3Dunrolled_loop:256:noalign,lib=
+call:-1:noalign
+> > > +endif
+> >
+> > Please make this a gcc bug-report instead - I really don't want to
+> > have random compiler-specific tuning options in the kernel.
+> >
+> > Because that whole memcpy-strategy thing is something that gets tuned
+> > by a lot of other compiler options (ie -march and different versions).
+> >
+>
+> Ok.
 
+So I reported this upstream:
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119596
 
-On 10. 04. 25 7:53 odp., Andy Shevchenko wrote:
-> On Thu, Apr 10, 2025 at 11:21 AM Ivan Vecera <ivecera@redhat.com> wrote:
->> On 10. 04. 25 9:17 dop., Krzysztof Kozlowski wrote:
->>> On 09/04/2025 16:42, Ivan Vecera wrote:
-> 
-> ...
-> 
->>>> +    WARN_ON(idx >= (_num));                                         \
->>>
->>> No need to cause panic reboots. Either review your code so this does not
->>> happen or properly handle.
->>
->> Ack, will replace by
->>
->> if (idx >= (_num))
->>          return -EINVAL
-> 
-> If these functions are called under regmap_read() / regmap_write() the
-> above is a dead code. Otherwise you need to configure regmap correctly
-> (in accordance with the HW registers layout and their abilities to be
-> written or read or reserved or special combinations).
-> 
-Hi Andy,
-these functions are not called under regmap_{read,write} but above. Some 
-(non-mailboxed) registers are indexed.
+And found some other problems in the meantime:
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119703
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D119704
 
-E.g. register ref_freq is defined as 4-bytes for 10 input references:
-ref0: address 0x144-0x147
-ref1: address 0x148-0x14b
-...
+Looks like this particular bit was persisting for quite some time now.
 
-So the caller (this mfd driver or dpll driver) will access it as:
-zl3073x_read_ref_freq(zldev, idx, &value);
+I also confirmed there is a benefit on AMD CPUs.
 
-and this helper then computes the addr value according base (0x144) and 
-provided index with ref number and then calls regmap_*read().
+I added a new bench: page faults of an area 2MB - 4096 (as in just shy
+of a huge page). With this I'm seeing 17% increase in throughput.
 
-And the 'if' check is just for a sanity check that the caller does not 
-provide wrong index and if so return -EINVAL.
+Profile before shows sync_regs at 11.81%, after it drops down to below 1%(!=
+)
 
-I.
+That is to say, the 'movsq' and 'stosq' codegen is really harmful and
+I think it would be a shame to let it linger given how easy it is to
+avoid.
 
+Even if the gcc folk address this soon(tm), users wont be able to
+benefit from it for quite some time.
+
+I think it is a fair point that the patch as posted completely ignored
+-mtune, but this particular aspect is trivially remedied by gating it
+like so:
++ifdef CONFIG_CC_IS_GCC
++ifndef CONFIG_X86_NATIVE_CPU
++       KBUILD_CFLAGS +=3D
+-mmemcpy-strategy=3Dunrolled_loop:256:noalign,libcall:-1:noalign
++       KBUILD_CFLAGS +=3D
+-mmemset-strategy=3Dunrolled_loop:256:noalign,libcall:-1:noalign
++endif
++endif
+
+Given the above, would you be ok with allowing the patch into the tree
+as a temporary measure? It can be gated on compiler version later on
+(if gcc folk fix the problem) or straight up removed.
+
+Here is perf top from that page fault test, before:
+  22.07%  [kernel]                  [k] asm_exc_page_fault
+  12.83%  pf_processes              [.] testcase
+  11.81%  [kernel]                  [k] sync_regs
+   7.55%  [kernel]                  [k] _raw_spin_lock
+   2.32%  [kernel]                  [k] __handle_mm_fault
+   2.27%  [kernel]                  [k] mas_walk
+   2.15%  [kernel]                  [k]
+__raw_callee_save___pv_queued_spin_unlock
+   2.02%  [kernel]                  [k] clear_page_erms
+   1.98%  [kernel]                  [k] __mod_memcg_lruvec_state
+   1.62%  [kernel]                  [k] lru_add
+   1.60%  [kernel]                  [k] do_anonymous_page
+   1.39%  [kernel]                  [k] folios_put_refs
+   1.39%  [kernel]                  [k] unmap_page_range
+   1.28%  [kernel]                  [k] do_user_addr_fault
+   1.22%  [kernel]                  [k] __lruvec_stat_mod_folio
+   1.21%  [kernel]                  [k] get_page_from_freelist
+   1.20%  [kernel]                  [k] lock_vma_under_rcu
+
+and after:
+  26.06%  [kernel]                  [k] asm_exc_page_fault
+  13.18%  pf_processes              [.] testcase
+   8.53%  [kernel]                  [k] _raw_spin_lock
+   2.19%  [kernel]                  [k] __mod_memcg_lruvec_state
+   2.17%  [kernel]                  [k]
+__raw_callee_save___pv_queued_spin_unlock
+   2.15%  [kernel]                  [k] clear_page_erms
+   2.13%  [kernel]                  [k] __handle_mm_fault
+   1.94%  [kernel]                  [k] do_anonymous_page
+   1.93%  [kernel]                  [k] mas_walk
+   1.68%  [kernel]                  [k] lru_add
+   1.65%  [kernel]                  [k] __lruvec_stat_mod_folio
+   1.53%  [kernel]                  [k] folios_put_refs
+   1.53%  [kernel]                  [k] get_page_from_freelist
+   1.45%  [kernel]                  [k] unmap_page_range
+   1.33%  [kernel]                  [k] do_user_addr_fault
+   1.19%  [kernel]                  [k] lock_vma_under_rcu
+   1.18%  [kernel]                  [k] error_entry
+[..]
+   0.91%  [kernel]              [k] sync_regs
+
+bench pluggable into will-it-scale:
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <assert.h>
+
+#define MEMSIZE ((2 * 1024 * 1024) - 4096)
+
+char *testcase_description =3D "Anonymous memory page fault";
+
+void testcase(unsigned long long *iterations, unsigned long nr)
+{
+        unsigned long pgsize =3D getpagesize();
+
+        while (1) {
+                unsigned long i;
+
+                char *c =3D mmap(NULL, MEMSIZE, PROT_READ|PROT_WRITE,
+                               MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+                assert(c !=3D MAP_FAILED);
+
+                for (i =3D 0; i < MEMSIZE; i +=3D pgsize) {
+                        c[i] =3D 0;
+                        (*iterations)++;
+                }
+
+                munmap(c, MEMSIZE);
+        }
+}
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
