@@ -1,78 +1,114 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB3E1684AE
-	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 21:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95EC522F
+	for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 21:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744580646; cv=none; b=JtxlJEMB1v0uISxnVJaY+/JxpxnWviuGieNT8ez0fsDF8c6hXqI+yYukXHvYaAlvvfD8e4XuFlVs3Sb0iGknNuQ++q8ZOfw+gOMuMbCoW/jrb00OZVT7FByeOjKWgJoYmG21dq6PhJlxHrxShqkTM7BHurVrzSaMrVIU4SkHHN0=
+	t=1744581169; cv=none; b=KaIcqYZP73CQiOc0ElvePTH5yp228cv+bb1WWvn3UUYAETQYMUSrvfEUECcklkRxiLF1EM6jHkiB9ARKrxntzG11RSRnDKfuWMoqS3E8hfAQ3RjVmn87bn4/snnpWLprBz+ljI5YWAdslFbaOjhudyW4cKlrbunSrBVfJv9VN4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744580646; c=relaxed/simple;
-	bh=IBV5m84sDUINaPAtWzZoXJRZeUNDXlHqpbb2Bg/qkg4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kXcw+OyR6GU8zAEArYcbKETqiRqIZn7y5IfZAgcZ9LbRjtwcxgzW44VUraz6PRoUMHgbwkduj8wP5HdTds2yGmC/I/AhV5j4eY2SXbjOYoiJ88FzMnptDnjqN4Cqxw8pQXt8Rhh6jJjYRqqSSvPjvAelb9aMLpKvFD1I4dn/nZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d6e10e3644so38951435ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 14:44:04 -0700 (PDT)
+	s=arc-20240116; t=1744581169; c=relaxed/simple;
+	bh=KHm8vcRAUY242LnE47nTTtBC+8/anitDSKeEbWY1YsI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aWvR5qh4MlWxZIy2xNZ493sM0xf5b8FpFjd7RYbOu/rZTFl1R+vBnNm1Ik3f3VFr7zHCwdcPH0uU9g3yGt1jhVsty7BcSHwQsq9mgSFxJF86j7h99oHOhMXQU31FIQNbNOfWQr3cWyo0vcuW0aFl8mEJl789sVGWSqyKjqpW+pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtAdsouY; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtAdsouY"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1534178e0c.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 14:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744581166; x=1745185966; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hdckprofwx7J6++yuwlKM5RZmEqP0SzggfNYMDxxHmU=;
+        b=FtAdsouYtSsgKqFm7BKtjFC1eD2dOhOJRfAJ1mBV0K/uWC9JaM9vgWidQmAqVjqjeT
+         c3Hpiz+ig3EIO4KgMK/IVehER/IsjgtDPYkHKsyk+LIWIInY506oaZnAJWIeAx3BNgte
+         ZeNgBEjwhiV0QRA72qmg3o23X2zztenIlaexR9cp81W3CiyYn75UGNpbe0G6sB83nMLU
+         ke9IByzPzZB9c09XJSPUJpX4Yqjz0eWKuBSJh31wnO6KPL4LKyUnnP6xQgqvJ7cNX7a6
+         m+qE7o6CGj3O70HOPHvcFHO/hFUtHV0AmWC+UmR5EQfSvMnF77RaX90Ed9aqlpU/T0iI
+         wH5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744580644; x=1745185444;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J1txnWgtU8RQyOa828P2LoRE5i4oIfHS8ZwXuHV/jyU=;
-        b=k5d4fDABugrBk8CHoa7MnOH/7sO+9geka0p0uNs73pT95wjni5yyRpwa4r3J5+w7Vk
-         /ri8tDYF2ybeTSDNyAhGRXxUECbeDZ6MkTpcKwhofpeGPceFHCGyZQsGnzgJMU5/Netu
-         n+bpixQL2AOYxg4XHL7eb6vT2Gj7UjR/GDgyC8BN0SwBByVSIc1ezcm0hNXvZqsJOA54
-         TvNnkgdpYXip7hFOetdpFqAQtTtrIRQJknU+L6pYV30OQMAldq44r5jyJQ97jwbTsIU/
-         owZ3tBe9eE0vjBwKH5rw38aKE4xqwvCphNiawYYTQhNUPKfjWzzRIKLqtnszX68w79fR
-         9AiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXI4xJjikJcmm+/EKOt2urw22YCvfq4X5SvYizcoGSezyIWGqCNuCih2YAEJ/t5smEqlnyy+4PUBd5q7Ms=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy/Z4kqEIask3thrcqaJ118eqS1/IARI4sc3n4/bP5EMRcB4fi
-	UYsM91TimGeRs6POyoGlIsuT0eGd1SrfEx7hR3tvEGyy80b34Dko8/ZxBbIgdhqEs9smurEQmo6
-	CwISfbKAkFw7ZwBipA34rc6WoCi6iOjvPnJI69d3VHc1sZ0Tgddfc9rQ=
-X-Google-Smtp-Source: AGHT+IGJsxAFKJy/nRo7m/UlNnZ9fULeDSQsk2Dq6/E68LZo2qm0BqMPAJtKGkj5mqLMq5eFpwR+DwA0uaNgHXh4JVuq9QJwFn4R
+        d=1e100.net; s=20230601; t=1744581166; x=1745185966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hdckprofwx7J6++yuwlKM5RZmEqP0SzggfNYMDxxHmU=;
+        b=EQs5k1t6Pu9s3kB1wqVx3C8kUKy2mCHJ47NmKPev68MjIU1F+RV9s0ZeSf1MXuJOWl
+         aZWw5XYNjQTiJy2hUdWeBtHeK0dDB++jPeEQv/kwyvrYcWPVmkm3WhR/dIZYt6AG1K9a
+         9TlggQOTOGivSJGLxMzTMkLicqLPjws9oKRhuXa87RXOvsFR9r3ljb/q8R2aAv5MBijZ
+         wu4dSd6fMuRms1PL0FewBidC72aJk/k8VGd4aG5BbfHc8AtPjCc1altj+tkMfGowZDxV
+         fSTptq/sm1RFnNfEn8iqoXZEQ4UDu2FDDZz+yaoyEN/svf5HnXgdwKCm6t8zuEXfYlgI
+         6tLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzJZyR6s1UlxawH7/sQjKApnFKneNZa1gx0UKMPyB7ZbrRCd+T7vrRZWmhBpU3NssoF2/1AV4oSEeZ58I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5ySLHmdEziry9cXymA7tH/9MbPIvfkuefMjUs++GBHlAJll2C
+	JwGnNIqtzfWwqCqQTLwvt0mWEcr7Dj4OEHpi+r+KE5NXMlWuJPxdCTdT8d7WVb14Pt2ACZ8NW2s
+	BXC7CiVXBeSFx8Qxi2ZwggBu4Mjo=
+X-Gm-Gg: ASbGncviHXqt6Or6WN6O01NlPbcvqVkStFuRT24BE6KVTFd2TK9z64PSQt7QaNCJwrb
+	pAPmTUciByjMyME5izcv3tBCqPBjUaDvJNYG/ralNFIo9brNvLlB/pjEVGaP9Lo0oHeGnPqWqoi
+	adWG9VbHNlC2S4d8Jku0Dh3Q==
+X-Google-Smtp-Source: AGHT+IF52wloyZlpGGZzMtS1CxjhKrzNf2GC3dbnLxwOmoivfW7+D5MgvX3rXoagYBIDkXYrYQvzwPGf8p19IwJoxLQ=
+X-Received: by 2002:a05:6122:2090:b0:526:7f3:16e0 with SMTP id
+ 71dfb90a1353d-527c346661bmr5862667e0c.1.1744581166291; Sun, 13 Apr 2025
+ 14:52:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:16c9:b0:3d4:6f9d:c0d0 with SMTP id
- e9e14a558f8ab-3d7ec1f389cmr90320285ab.8.1744580643800; Sun, 13 Apr 2025
- 14:44:03 -0700 (PDT)
-Date: Sun, 13 Apr 2025 14:44:03 -0700
-In-Reply-To: <67faff52.050a0220.379d84.001b.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fc3023.050a0220.2970f9.0361.GAE@google.com>
-Subject: Re: [syzbot] [mm?] WARNING in move_to_new_folio
-From: syzbot <syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, brauner@kernel.org, 
-	jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, shaggy@kernel.org, shivankg@amd.com, 
-	syzkaller-bugs@googlegroups.com, willy@infradead.org
+References: <d92eeff74f7a4578a14ac777cfe3603a@honor.com>
+In-Reply-To: <d92eeff74f7a4578a14ac777cfe3603a@honor.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Mon, 14 Apr 2025 09:52:35 +1200
+X-Gm-Features: ATxdqUGgqiBW2HmNSCl2Ko_fAMUAoorMu__CYtK8LcuF3vaCwcRHTKyJoWDSR0Q
+Message-ID: <CAGsJ_4yX9-WPBfrmTSiHka5-=TZ2dyAH3zTAuSt-+P_UFJ5NkA@mail.gmail.com>
+Subject: Re: [PATCH] mm: add nr_free_highatomic in show_free_areas
+To: gaoxu <gaoxu2@honor.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	"surenb@google.com" <surenb@google.com>, Yu Zhao <yuzhao@google.com>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yipengxiang <yipengxiang@honor.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has bisected this issue to:
+On Sat, Apr 12, 2025 at 9:27=E2=80=AFPM gaoxu <gaoxu2@honor.com> wrote:
+>
+> The commit c928807f6f6b6("mm/page_alloc: keep track of free highatomic")
+> adds a new variable nr_free_highatomic, which is useful for analyzing low
+> mem issues. add nr_free_highatomic in show_free_areas.
+>
+> Signed-off-by: gao xu <gaoxu2@honor.com>
 
-commit 7ee3647243e5c4a9d74d4c7ec621eac75c6d37ea
-Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-Date:   Wed Apr 2 14:59:57 2025 +0000
+Reviewed-by: Barry Song <baohua@kernel.org>
 
-    migrate: Remove call to ->writepage
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15be8fe4580000
-start commit:   01c6df60d5d4 Add linux-next specific files for 20250411
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=17be8fe4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13be8fe4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db03cefa26ecf825
-dashboard link: https://syzkaller.appspot.com/bug?extid=8bb6fd945af4e0ad9299
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10afca3f980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116f5c04580000
-
-Reported-by: syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
-Fixes: 7ee3647243e5 ("migrate: Remove call to ->writepage")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> ---
+>  mm/show_mem.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/mm/show_mem.c b/mm/show_mem.c
+> index ad373b4b6..03e8d968f 100644
+> --- a/mm/show_mem.c
+> +++ b/mm/show_mem.c
+> @@ -305,6 +305,7 @@ static void show_free_areas(unsigned int filter, node=
+mask_t *nodemask, int max_z
+>                         " low:%lukB"
+>                         " high:%lukB"
+>                         " reserved_highatomic:%luKB"
+> +                       " free_highatomic:%luKB"
+>                         " active_anon:%lukB"
+>                         " inactive_anon:%lukB"
+>                         " active_file:%lukB"
+> @@ -326,6 +327,7 @@ static void show_free_areas(unsigned int filter, node=
+mask_t *nodemask, int max_z
+>                         K(low_wmark_pages(zone)),
+>                         K(high_wmark_pages(zone)),
+>                         K(zone->nr_reserved_highatomic),
+> +                       K(zone->nr_free_highatomic),
+>                         K(zone_page_state(zone, NR_ZONE_ACTIVE_ANON)),
+>                         K(zone_page_state(zone, NR_ZONE_INACTIVE_ANON)),
+>                         K(zone_page_state(zone, NR_ZONE_ACTIVE_FILE)),
+> --
+> 2.17.1
