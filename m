@@ -1,274 +1,121 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2560EEBB;
-	Sun, 13 Apr 2025 13:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027DD1C6FF1;
+	Sun, 13 Apr 2025 13:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744551188; cv=none; b=iO9GOgQ9RvSiHBcAilgsSaV7q9VabhPzA6fOWNygF+aVy/z4NYpXWp+D/1X1FEheE/VpUmPIVsKBormipZ+86risAgNFhJWZDsBQMWqjcSzyeuWb5ZdJBRuAto8cFKYuMU3F8CbUQaopbqr97QP2uZt46P40sHlJorkb2mL23dg=
+	t=1744551392; cv=none; b=hQFQvowgykyIk5GyT3IdMLASA5srSaKgAqItLBVWv1TxmD4dMMae4jb4Pio1bwtDY1WKACGccJEkbnGp6fs7sJTj0fCGSrKz5iOk+JJFsTO2p42DKyv/dOUN0j7bEy5MPgBzJDF8h3/zK+J+1eL+OKSQTve/O1j1SUanXGwS1bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744551188; c=relaxed/simple;
-	bh=/io2fCIVwn61bzE3IZ1zRxbRmeXYtRFxR0dmm26C8GM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V9YoF8C7AbEY7EgsYkJtbfQDW1Mow2kw7Edqley5nYbUxu4F1Lh1zPnb6fjEOy/Den6fYK4ihJAjjs4cSZi3qE4UnNg4fyqmHUbQRMHJJYWN92LRldfbgpWcpWMHKRwu6xntE0LOTAyed5iyUKlHT337MOVfaT4LDNpN+BYSqUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aHN88bVa; arc=none smtp.client-ip=209.85.218.54
+	s=arc-20240116; t=1744551392; c=relaxed/simple;
+	bh=N9wz+htBUt4Thh9mmvTOacndIanMl47AV5Ka9WyAOfI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fnrs1qxi638Jw2E++GW3UFIuVnroo3Ev2KIpWfpIwb9m3i7JuhOZdem3J/JtPFIMc6p4Pl9pW3uArXMcS/YCDbG3ceLDfRk24d8iHjDnkZAIYv3wtTgJUUrRvBjqkfsukn3GKoX2uoI5HXcp5hvUzuGMZWDfAuVOheK8I7DRhkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dX5sXG+S; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHN88bVa"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac339f53df9so674542966b.1;
-        Sun, 13 Apr 2025 06:33:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dX5sXG+S"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7376e311086so4474874b3a.3;
+        Sun, 13 Apr 2025 06:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744551184; x=1745155984; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3a1u06AVbMvV39bT1It8UySBezoNCFj29bYys44rezM=;
-        b=aHN88bVasyKXiwM/avfPJrhOfEcwk4quBIcHQCLrsHbgGWX54gL7DuhbyVIsPASMJ1
-         gjHQz2xYhqa2uk7HBVQs8BhTHujQJhz2faoV6LDBEAtBS3gg6LPBNhKCNKtIn1G7XLWr
-         u3FKOw/P+7k5znTQiFy+yQEk6HOK1y/SpIzEwuPNn0QvmJD2tuBygSr0aobCqu0BBd2d
-         QoFVKy+lrGR7UVTJUsaI/Af51Xf0Javhd3xqI/5BIgxESsw13DzxGdNvxDR4junEVoKq
-         W7HExz84P2f+uOZsc8osofrYwlr3Xq5CBVyMZCQVWlI8MwDEQ7pEXQO+jXwgvUUySaCl
-         /wzw==
+        d=gmail.com; s=20230601; t=1744551390; x=1745156190; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VUFOZwO8sYK8u3NtVjSug2/K/KZv864HSmO704e9cyc=;
+        b=dX5sXG+SpJaZbMhIJx2LorW2McTEsLodWgJeXUDo1qIrUapncWlRXdv58qWh/IboxE
+         +R3fajpvAlEhYQXhRx4G4duOoJwNzzU4Y9+BJBny7eQZZ7ToS3Oz4uwnZ/dUHb1pd1On
+         ybDkhAKynixKbZPN8EDw+P9JMJVlVtVWN/IEo4JcitTVIi+e4prQYnhPEld3CFFnn+yb
+         842U+SXTTCS8PSNbVF32wYPTIgToZEneTtbhN2hHkGZQdvXDKLsMo6uJUEHvxH8YthO8
+         xYsYWUlD9SEpp+gL+mAynK70TBGwnkWiUPZN+qmg2SohyWZOe/I9gCE8azrL+6kffDn2
+         8n7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744551184; x=1745155984;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3a1u06AVbMvV39bT1It8UySBezoNCFj29bYys44rezM=;
-        b=Wic/jABdUDOOWilq/lG+qt73/a+g8ZigbzEAB0xHRR7/6pqgmOsMB16qO3gTnHIQ7b
-         zDch/PEQzeUvgfjph6/ESQBy4R4hq6R0a8l5YoiWg4jTmMDyFrWIVv2FLezmKhNgwja5
-         WQanpdUsgpS0mKVJLu2sPqZqUuMNqEljbPlEW59VL+J9Ie9F/wjjQDa6qFgQgUnWS/CN
-         eebyrBn79BvGiTjKN+JXmP/CPK8BoR2ntRY/5EDSsAx1rte351D0FW7ShUqlGxBxGKmA
-         QWj37PaaMRTOnJ53rd/uyUEabDpil6ht9Mdz+xgAo45EyFPcLhBGI3R915cdjWXYWw4l
-         V0Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+2UsfeJ4Y2qV9m1jeMwvlzy/AUsUHogYF63dGmLtmxJZFLidIweAwUfvMRWC9k4uLUspR0rDt@vger.kernel.org, AJvYcCUAfJsRggAan+gJ28du9sADrnT0ZgyNC0aM+hmvksFyNKqnR2YzX6KGgXpunlubE/ltA09jnt7Kh38HQHua@vger.kernel.org, AJvYcCWTwOcuc1+ltf4toDzgK8kT/wU/CUXFMCSd0kxHKbbXgeUVUoBo6y0k3zgndd38k9yC3ZHnbErvkg9Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDoGO9wsLvy7tL+cz2MgzZeSCsYKEeBFYy4DLVmmFlIC6FXwxR
-	FFeURM2n5I0P3WPY3FGSaNslkljSpp3PIJTagcta69oaX5OxR6OP
-X-Gm-Gg: ASbGncsny2eGPNJXcONcRofPlDrQgulMODIOhkTdcopXxPV3/NtyjjP42m+NRh25at4
-	miCbh6xSS2YysMbhlZ0e4J5H77d0meTfhkJBCsgj5xcJa1Xiu2iaxQ0Xi46Yzo3RrLNlNQClZ68
-	8ciTvXrDQeyXDFh2cRjHMF9pYnD69a+RB/4uqAgH4sYmfAFNeJLInMf+zzn/F/Qkc01kV0F95/0
-	vykWXN/a3DlMnDxwCFX6NctQD5VE9XpvRslNdLL/FUP1IAc1WQmv5ryPnlq6SHTmsiLkaDKXhnb
-	yzn3qFec2ZruQzjgFhlBp8TA8bzh5X9c66eg7c7mr7DkpUVB/cujJo/giuyaceEXvmoNVAQXWbV
-	snu1QxDbjcu6sfjiq/Q==
-X-Google-Smtp-Source: AGHT+IHTQwDuqBoQOK8q70cMWsgCsNMhH8fcIhEQocxQ5y0LxOPpy4qDpZGCpfjyyFFl5L4pd2S1EA==
-X-Received: by 2002:a17:907:9959:b0:aca:d571:7790 with SMTP id a640c23a62f3a-acad571781dmr675331266b.16.1744551183703;
-        Sun, 13 Apr 2025 06:33:03 -0700 (PDT)
-Received: from ?IPV6:2001:b07:aac:705d:3ebb:8db3:2e25:878b? ([2001:b07:aac:705d:3ebb:8db3:2e25:878b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bea6a9sm747513466b.69.2025.04.13.06.33.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 06:33:03 -0700 (PDT)
-Message-ID: <ceed9ca5-d7e4-4a86-8af9-af3e87f1c70a@gmail.com>
-Date: Sun, 13 Apr 2025 15:33:02 +0200
+        d=1e100.net; s=20230601; t=1744551390; x=1745156190;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VUFOZwO8sYK8u3NtVjSug2/K/KZv864HSmO704e9cyc=;
+        b=He4nlLc2JYPKL4grFa8aAniirYmdLvSR9zCf/b4F4HFPf+M0wBMMbuljXIds0yeY7r
+         RRcr6lbybgSyUDhRRF0s+uRsh7kw4iz6KjrG9qvErA/ZtMmasGaZFlDEGbSCy0UrRuQs
+         2rE2bNfns/K8v4WXjVLfl3JPdUhSmJBnmNa1JB72lT4YEko3HlhuKYRV5X2lTCrXjy70
+         DHU/VoI6jblidguxf2xIend5ANeuST/AjusRyH30ruQZGiCv2ImJIa0dcHk0UBLVKuKB
+         jbfKpz2TAwSxJGH2WW6nx4YLhceEN3jz5kI9NkRnRQxfwI4hmAwd7H21SzeboUNsYwKp
+         dspA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgrvEoGsDD5qqwUs3BwMRnTjTqcTJaSqwCrBYjuODL8i1dVS4CwGb7MEhLv2eGi+e5nnMeX+XKMEZVx1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsMoFi6wrEQlY59M10Np9dms/bFAgI65/UcKIklm8S+UgxliNj
+	ygIGl4zjp2rlQNhgT+RLfzJ/fwknn/meOaqRCOu6Fc9C0MB9Xi28O+ODvi9b
+X-Gm-Gg: ASbGnculY6W+OdcNBuRuadsJzt/14xov6w54lBQE2rha95GbA541xnURs3+MPhQTk7h
+	JZknPcgf4IN+OorjWieTmK8TAe9yTTikEdCYniO7eItkwpOQcUrPUGhJNDmteKjNYwMxwphv7Kb
+	0jIgmQOtE6dXOqwh2BA8rmwzD64QNTtuwKZPKf2amIZijOmoq7k5BwYkMSdGT2j8spyeawF1EmL
+	MkfEN3/cwNgyFPac4lBAQGqdFTcLzcd00OxfSTJIP3ncURrRjjsX27OW/5y1KckJjpFE2kjyhj4
+	QuVV9m1BdtYlDLJ7axZoiQoFs+LIzMpEydxezdrqNg==
+X-Google-Smtp-Source: AGHT+IHpweNlTeR1uGmDW5uEm82HsHB8VhwXDowKUguK2g07VE1f6WoIl0m3m/fsoPdRQ4WLMLknLg==
+X-Received: by 2002:a05:6a20:d04a:b0:1f5:8153:9407 with SMTP id adf61e73a8af0-201797b94ecmr12826389637.20.1744551389923;
+        Sun, 13 Apr 2025 06:36:29 -0700 (PDT)
+Received: from hh.localdomain ([222.247.199.118])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a2d3a5e5sm7806746a12.54.2025.04.13.06.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 06:36:29 -0700 (PDT)
+From: hhtracer@gmail.com
+X-Google-Original-From: huhai@kylinos.cn
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	huhai <huhai@kylinos.cn>
+Subject: [PATCH v2] net: phy: Fix return value when !CONFIG_PHYLIB
+Date: Sun, 13 Apr 2025 21:37:09 +0800
+Message-Id: <20250413133709.5784-1-huhai@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] gpio: pca953x: fix IRQ storm on system wake up
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Francesco Dolcini <francesco@dolcini.it>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
- stable@vger.kernel.org, Francesco Dolcini <francesco.dolcini@toradex.com>
-References: <20250326173838.4617-1-francesco@dolcini.it>
- <174368202234.27533.1000100252310062471.b4-ty@linaro.org>
- <Z-6TGnGUEd4JkANQ@black.fi.intel.com>
- <CAMRc=Me15MyNJiU9E-E2R9yHZ4XaS=zAuETvzKFh8=K0B4rKPw@mail.gmail.com>
- <02cab60d-9748-4227-a4aa-33373ea0be38@gmail.com>
- <Z_Px_ajf96J_LlcD@smile.fi.intel.com>
-Content-Language: en-US
-From: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-In-Reply-To: <Z_Px_ajf96J_LlcD@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 07/04/2025 17:40, Andy Shevchenko wrote:
->> I’ve found another possible solution: disable the PCA953x IRQ in
->> pca953x_suspend() and re-enable it in pca953x_resume().
->> This would prevent the ISR from being triggered while the regmap is in
->> cache-only mode.
->> The wake-up capability is preserved, since an IRQ can still wake the system
->> even when disabled with disable_irq(), as long as it has wake enabled.
-> 
-> Can you enable IRQ debugfs and dump the state of the wake* nodes for the
-> respective interrupts? In this case we will be 100% sure it works as expected.
-> 
-# cat /sys/kernel/debug/irq/irqs/124
-
-handler:  handle_level_irq
-
-
-device:   (null)
-
-
-status:   0x00000508
-
-
-            _IRQ_NOPROBE
-
-
-istate:   0x00004020
-
-
-            IRQS_ONESHOT
-
-
-ddepth:   0
-
-
-wdepth:   0
-
-
-dstate:   0x02402208
-
-
-            IRQ_TYPE_LEVEL_LOW
-
-
-            IRQD_LEVEL
-
-
-            IRQD_ACTIVATED
-
-
-            IRQD_IRQ_STARTED
-
-
-            IRQD_DEFAULT_TRIGGER_SET
-
-
-node:     0
-
-
-affinity: 0-5
-
-
-effectiv:
-
-
-domain:  :soc:gpio@47400000
-
-
- hwirq:   0xb
-
-
- chip:    gpio-vf610
-
-
-  flags:   0xa04
-
-
-             IRQCHIP_MASK_ON_SUSPEND
-
-
-             IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
-
-
-             IRQCHIP_IMMUTABLE
-
-
-# cat /sys/kernel/debug/irq/irqs/209
-
-handler:  handle_simple_irq
-
-
-device:   (null)
-
-
-status:   0x00008403
-
-
-            _IRQ_NOPROBE
-
-
-            _IRQ_NESTED_THREAD
-
-
-istate:   0x00004000
-
-
-ddepth:   0
-
-
-wdepth:   0
-
-
-dstate:   0x00400203
-
-
-            IRQ_TYPE_EDGE_RISING
-
-
-            IRQ_TYPE_EDGE_FALLING
-
-
-            IRQD_ACTIVATED
-
-
-            IRQD_IRQ_STARTED
-
-
-node:     0
-
-
-affinity: 0-5
-
-
-effectiv:
-
-
-domain:  :soc:bus@42000000:i2c@42540000:gpio-expander@29
-
-
- hwirq:   0x4
-
-
- chip:    3-0029
-
-
-  flags:   0x800
-
-
-             IRQCHIP_IMMUTABLE
-
-And these just for confirmation (4 interrupt triggered by pushing the
-SMARC_SLEEP# button):
-# cat /proc/interrupts |grep 0029
-
-124:          4          0          0          0          0          0
-gpio-vf610  11 Level     3-0029
-
-209:          0          4          0          0          0          0 3-0029
- 4 Edge      SMARC_SLEEP#
-
-
-# cat /sys/kernel/debug/wakeup_sources
-
-name            active_count    event_count     wakeup_count    expire_count
- active_since    total_time      max_time        last_change
-prevent_suspend_time
-gpio-keys       4               4               0               0
- 0               43              14              293116          0
-
->> This should avoid introducing regressions and still handle Geert’s use case
->> properly.
->>
->> Andy, Bart, Geert - what do you think?
-> 
-> Sounds okay, but please double check the above.
-> 
-It took me a while to realize that the relevant information is only available
-when CONFIG_GENERIC_IRQ_DEBUGFS is enabled.
-All /sys/kernel/irq/*/wakeup always reports "disabled", even if wakeup is
-actually configured. I guess if this is the information you were asking for.
-
-Regards,
-Emanuele
+From: huhai <huhai@kylinos.cn>
+
+Many call sites of get_phy_device() and fwnode_get_phy_node(), such as
+sfp_sm_probe_phy(), phylink_fwnode_phy_connect(), etc., rely on IS_ERR()
+to check for errors in the returned pointer.
+
+Furthermore, the implementations of get_phy_device() and
+fwnode_get_phy_node() themselves use ERR_PTR() to return error codes.
+
+Therefore, when CONFIG_PHYLIB is disabled, returning NULL is incorrect,
+as this would bypass IS_ERR() checks and may lead to NULL pointer
+dereference.
+
+Returning ERR_PTR(-ENXIO) is the correct and consistent way to indicate
+that PHY support is not available, and it avoids such issues.
+
+Signed-off-by: huhai <huhai@kylinos.cn>
+---
+ include/linux/phy.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index a2bfae80c449..be299c572d73 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1787,13 +1787,13 @@ static inline struct phy_device *device_phy_find_device(struct device *dev)
+ static inline
+ struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode)
+ {
+-	return NULL;
++	return ERR_PTR(-ENXIO);
+ }
+ 
+ static inline
+ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
+ {
+-	return NULL;
++	return ERR_PTR(-ENXIO);
+ }
+ 
+ static inline int phy_device_register(struct phy_device *phy)
+-- 
+2.25.1
 
