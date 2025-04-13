@@ -1,139 +1,142 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5043B18C32C;
-	Sun, 13 Apr 2025 09:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D89433A0;
+	Sun, 13 Apr 2025 09:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744536553; cv=none; b=fpPfA9HitCqQJpUtflBaNGIwGU2cByIP3pa2RDv5aQWPQ8mdTYvkSxtkbvtAzxH9RAu4Q+HP6hEvfZiJzb680x9M5ZK4RKNWGkTylz5t9BPAVGswxhZuyQdMKNLm9osxgQnB6YvSpUX2KQpFE+by8oR6vaOC5ZKm8Jb8ifo+rJc=
+	t=1744536676; cv=none; b=aZc6Ibjs76bw170rnLjJ/S/haoG5pEWShhG9UzIi2sRc8dNgHBJIjSo5nY/E8rWrmuzGgfHXZb8X5JMf9m0nSmWPkA9YkpeR1Rws93n2Rf5vju8gqiMuqBnjevtKfH90vFX0N4A1PC/Q7jZOyqcn3OKVJROYLqqnCq310z+MscI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744536553; c=relaxed/simple;
-	bh=gAC5LAQumBDmHJcR25hr6uZMlYiGu3JMTUs4+VWXT3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CgGuH4SdzblsW4ZhVZJOIKc6TxOLt2x4wmUwCdkIMZJuDr8QmdBsvlEgtSr0xNM4AB2ufj1mwDHCA3GpUPFkdE5zBRDNqONkzV3L61vi/gWFOfZZwcfxwKNbyHRU6uX/z8GwQiRRzHQ10Q8v7WW39okcfQHj3CnH8Aqy6aXlouo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=VNCSjzTk; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Z5hHSyYG; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1744536676; c=relaxed/simple;
+	bh=tYcgxIPGrfJ7qhHGNlRZHboyoj6zGCAl6nkM09/e+AI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HADi5VmXdJb2u7wTTtjYslIVm4SBzE3AMi/zkAd6K6hFX4yt/eK0akI5bxMRqaaj+3KceS7NkJCl4t/7f5VicAlm7MlU8iZrQFQ/RSikZCUWTl5w3zOOa/OdYuBSHLpy6bQraLJnfh7GE76P8bO0VfGKYax0ZDpXmSX9L26DOhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O737r7Te; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="VNCSjzTk";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Z5hHSyYG"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zb4qg1q66z9t87;
-	Sun, 13 Apr 2025 11:29:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744536543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qLigHGDaIeu/1Png7nmdn+cp2yXJhXD50jHy7YJID8c=;
-	b=VNCSjzTk21Eve7Z+hAqaCoAoIaDO686a1/uXqp2xVsziv26bF5vn6E9rsnU2/ugYcJjrI5
-	syuFZWiDwaseaXZRo+WyhhWeFDtw9ycr6zfxHpodzkx0WrXEXc/qDIbQzREeCkesOlRbnm
-	POuIINCHvixCQ/vclA/kbYEs21KEMXeRsujd0LTzVgdVdpkaEdlcH4kN11LvJAVweYnjf0
-	ZSDEZ5f9crvnuMyDK1gttT/D7EWeBQG5wQR2ONBpZBVDmVJvMlqgDkct1GSImhLkHxb8Og
-	M+cRGpS4cFMkZcyLMAzUiqzALHwN52cNWOQ3kgblqZEjA5t0mqa5Ao5+hIZPtg==
-Message-ID: <40c400ab-8770-4595-9a4c-004e6157c348@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744536541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qLigHGDaIeu/1Png7nmdn+cp2yXJhXD50jHy7YJID8c=;
-	b=Z5hHSyYGUjCJ8sxEk2uc5ghic5sz5e161r4Uzv5vy9eHgrABVAWnuMIWd7jNQ3IY0PR+mj
-	NElEyXHt9jEOUHCmcuhUVQLyFDvJzGDofkOKs9+PJI4bRM6edNgnr/h0yyBp9U/i7gZFsz
-	7eA8jBRPtuh67u5wRTV7Abl1BcYvr/XEEpAgI93xMhX7YOTHUoVb8qgHEXLvFRLr4zIhkQ
-	O0jiQB0yb+VxZ+kwBbzj2zomPxkwut6ybYHgahwx5wkXZSzAAUUg7A/CW/fSsDQT1xxI+F
-	8Tj0gGHmpTeZtVCKjZLdzmjT4H0+Huhc9mc0+Q/YM2SKH7174AnR5sg/I3yT/Q==
-Date: Sun, 13 Apr 2025 11:28:54 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O737r7Te"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2EBC4CEEC;
+	Sun, 13 Apr 2025 09:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744536676;
+	bh=tYcgxIPGrfJ7qhHGNlRZHboyoj6zGCAl6nkM09/e+AI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O737r7TeqOy3wzaP7h0Lt/cZjvf1tV8GTDQQPzqiI+JrKpKS2Uqr79bfm8aZ/Ecfz
+	 urHjIQT3X79wiQqOB9RTXQukJ/hK553bvmvjur4Y/kqTTWyeJjINYebVN70OfLy6Cc
+	 R9/aj47AWbAZES3FrP4LVzZgONaTMvKn9BKjmYsxS4OKQ7wMyn2/J+fwiVG89KyNoF
+	 hbeYyLax4vuX3FiVJNcnrgpFbhsk30cGXRIZHspPDkZ7+ysfF4mJfspfzTlaTf9wb0
+	 hHz8G9yANSBntaIz2IXEJVQxUXc/zoJSI79Re+iYN3J5T+GoZkI1RPNZ2d3w14wW5f
+	 Ggc7omlW2+86Q==
+Date: Sun, 13 Apr 2025 10:31:10 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, <dlechner@baylibre.com>,
+ <Michael.Hennerich@analog.com>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+Message-ID: <20250413103110.572de81e@jic23-huawei>
+In-Reply-To: <20250408-abi-oversampling-events-frequency-v2-1-4059272b7364@analog.com>
+References: <20250408-abi-oversampling-events-frequency-v2-1-4059272b7364@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
- optional aux clock
-To: Rob Herring <robh@kernel.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
- Kever Yang <kever.yang@rock-chips.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
- <20250406144822.21784-2-marek.vasut+renesas@mailbox.org>
- <20250410204845.GA1027003-robh@kernel.org>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <20250410204845.GA1027003-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: 56af0dbc93e5c7e09ea
-X-MBO-RS-META: pc3z5wauiworu1bkpr5dqhfdbznjkp6g
-X-Rspamd-Queue-Id: 4Zb4qg1q66z9t87
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 4/10/25 10:48 PM, Rob Herring wrote:
-> On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
->> Document 'aux' clock which are used to supply the PCIe bus. This
->> is useful in case of a hardware setup, where the PCIe controller
->> input clock and the PCIe bus clock are supplied from the same
->> clock synthesiser, but from different differential clock outputs:
->>
->>   ____________                    _____________
->> | R-Car PCIe |                  | PCIe device |
->> |            |                  |             |
->> |    PCIe RX<|==================|>PCIe TX     |
->> |    PCIe TX<|==================|>PCIe RX     |
->> |            |                  |             |
->> |   PCIe CLK<|======..  ..======|>PCIe CLK    |
->> '------------'      ||  ||      '-------------'
->>                      ||  ||
->>   ____________       ||  ||
->> |  9FGV0441  |      ||  ||
->> |            |      ||  ||
->> |   CLK DIF0<|======''  ||
->> |   CLK DIF1<|==========''
->> |   CLK DIF2<|
->> |   CLK DIF3<|
->> '------------'
->>
->> The clock are named 'aux' because those are one of the clock listed in
->> Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml which
->> fit closest to the PCIe bus clock. According to that binding document,
->> the 'aux' clock describe clock which supply the PMC domain, which is
->> likely PCIe Mezzanine Card domain.
+On Tue, 8 Apr 2025 10:20:29 +0200
+Jorge Marques <jorge.marques@analog.com> wrote:
+
+> Some devices have an internal clock used to space out the conversion
+> trigger for the oversampling filter,
+> Consider an ADC with conversion and data ready pins topology:
 > 
-> Pretty sure that PMC is "power management controller" given it talks
-> about low power states.
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   ++++    ++++    ++++    ++++    ++++
+>   ADC data ready      *       *       *       *       *
 > 
+> With the oversampling frequency, conversions are spaced:
 > 
->>
->> Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
->> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
->> ---
->> NOTE: Shall we patch Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
->>        instead and add 'bus' clock outright ?
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   + + + + + + + + + + + + + + + + + + + +
+>   ADC data ready         *       *       *       *       *
 > 
-> Based on the diagram, this has nothing to do with the specific
-> controller. It should also probably a root port property, not host
-> bridge.
-How would you suggest I describe the clock which supply the PCIe bus 
-clock lane (CLK DIF1 in the diagram) , which have to be enabled together 
-with clock which supply the PCIe controller input clock lane (CLK DIF0) ?
+> In some devices and ranges, this internal clock can be used to evenly
+> space the conversions between the sampling edge.
+> In other devices the oversampling frequency is fixed or is computed
+> based on the sampling frequency parameter, and the parameter is
+> read only.
+> 
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+> Some device families such as Analog Device's max1363, ad7606, ad799x, and
+> ad4052 contain internal clocks used by monitor modes and oversampling.
+> Devices' monitor modes are exposed as IIO events.
+> The max1363 driver included the events/sampling_frequency in
+> commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
+> and ad799x in
+> commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
+> hysteresis")
+> but went undocumented so far.
+> 
+> The oversampling sampling frequency is a planned feature to be patched
+> onto the ad7606 driver.
+> In this particular device, it is called oversampling padding.
+> The upcoming ad4052 linux driver will utilize both entries,
+> it is worth noting, however, there is a single register for both
+> options. Since the device is never concurrently in both modes, the
+> values will be safely cached on the device state.
+
+This patch looks fine but we will only merge it with first user so
+please add it to that series.
+
+Jonathan
+
+> ---
+> Changes in v2:
+> - Updated oversampling frequency description according to discussion 
+> - Don't include already applied
+>   commit 3a8fee68faf2 ("Documentation: ABI: add events sampling frequency in sysfs-bus-iio")
+> - Link to v1: https://lore.kernel.org/r/20250321-abi-oversampling-events-frequency-v1-0-794c1ab2f079@analog.com
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 722aa989baac43f694076074b307d134867b4533..6f5c4060704742ae5f5672a861271b88084ac8f8 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -138,6 +138,23 @@ Contact:	linux-iio@vger.kernel.org
+>  Description:
+>  		Hardware dependent values supported by the oversampling filter.
+>  
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
+> +KernelVersion:	6.15
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Some devices have internal clocks for oversampling.
+> +		Sets the resulting frequency in Hz to trigger a conversion used by
+> +		the oversampling filter.
+> +		If the device has a fixed internal clock or is computed based on
+> +		the sampling frequency parameter, the parameter is read only.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
+> +KernelVersion:	6.15
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Hardware dependent values supported by the oversampling
+> +		frequency.
+> +
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
+> 
+> ---
+> base-commit: 9f36acefb2621d980734a5bb7d74e0e24e0af166
+> change-id: 20250321-abi-oversampling-events-frequency-436c64fcece0
+> 
+> Best regards,
+
