@@ -1,494 +1,143 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694602797A5;
-	Mon, 14 Apr 2025 15:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA89427A111;
+	Mon, 14 Apr 2025 15:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644421; cv=none; b=uBMEGxtpC79s6PRKm9cTkAiNU0UteHFzKDjBlBXZFWo39nhlGd2qcEuVtJkvgMVatIU/pz8soFyorSmhTSJTjetsxbqEqfDqXLV+8PT9uaDmPp8upiHP/uTOEXDEjq9ASbxJ8OMErffnUXbm2n+EOJWbFh9hCBcMvohT6U+Z7LA=
+	t=1744644426; cv=none; b=ABK68NiU7rBaLhb1NXaEZ/q30JFypyPdLgcUolLa897R2e9jG3xBVEPCrevR8VOZSH8Vi0GNYpr5oHyuZ4RGZQbwivSq5mQ9qGKuHBFdaO404RrL50SLgLcbOP4WelMvhvwMFyrRiB7jZ+m5zNbjtoGoMZYR8MUEETC2tvEw/Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644421; c=relaxed/simple;
-	bh=/OOniz5y97ufY6GpsnjnVPhCO3eR2pFGm+lUHlJq+/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=roIj6gxyiE7QfJVocoDR3qiwiymdMf0/wAIfbNwEYkKI3fTJwOwhodDJ+TpBgDqBoEhodCSSBLB0W+lIok47Y1CtQ01IE9LU8o3iWIjkOswgLbM6O2lHJ2qQSb0ukIA8oD6FnXNrwbbFzrAW8VhzqKYgtVU16SR00JZHbgRvUHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Zbrk14hh4z9tF2;
-	Mon, 14 Apr 2025 17:26:49 +0200 (CEST)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Remo Senekowitsch <remo@buenzli.dev>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v2 2/5] rust: Add bindings for reading device properties
-Date: Mon, 14 Apr 2025 17:26:27 +0200
-Message-ID: <20250414152630.1691179-3-remo@buenzli.dev>
-In-Reply-To: <20250414152630.1691179-1-remo@buenzli.dev>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250414152630.1691179-1-remo@buenzli.dev>
+	s=arc-20240116; t=1744644426; c=relaxed/simple;
+	bh=rZvHJrIwJz7NQmb5THdH9cX3LUXpNIok5gWtBcArh/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=acUfVWjpr3l92zwcochefZ8+OXkuSLPkBhHH5+a5+l56RInvk7Qh3R5qEHtfiBKfneTi7S7P8RErwh2i4iwh+mH1pmJ4lAXiHSz47Hf3eGuNRt3WoHlg9FJTnuNkQ7zyCdIi3IyBgE5URCdSVoyK9wvhVk1kbiQRnzQOapWRH6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b=maMGq3ye; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b="maMGq3ye"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1744644407; x=1745249207; i=fiona.klute@gmx.de;
+	bh=rZvHJrIwJz7NQmb5THdH9cX3LUXpNIok5gWtBcArh/o=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=maMGq3yeDJYE6YVHxnKZNhqf7GrxMof5O/AzQQ0vsUQ4+rMjtb/iYVnak9m//uvQ
+	 tmU1+G4zvr+JImCMhRz3QC8uoSlS4zihGozDYxVCoO61jaBjPe18LSXhER/Z56C4x
+	 e46242K0nS4iXxx5eRkG/jzdlt8wB3dT23oTHGFl8p6PdFaPQOVFKCv+7V46WX0T+
+	 lBwpUdIBwsoYcFq5kJHWuf3bSw52OzmuN6fWzUWo1PTb5ZcQEwY3L/KJ6wLloIJby
+	 +SqKTaSivmwoiRQfXPCxlxI5hc0kaM8fnvu17WFjAZz3vVg4w0rUoXqlOWKL+Lj10
+	 Eq3RAdXAX1kUx/ZenQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from haruka.home.arpa ([85.22.122.10]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRCK6-1thLCl2S84-00Tvpo; Mon, 14
+ Apr 2025 17:26:47 +0200
+From: Fiona Klute <fiona.klute@gmx.de>
+To: netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-list@raspberrypi.com,
+	Fiona Klute <fiona.klute@gmx.de>
+Subject: [PATCH net] net: phy: microchip: force IRQ polling mode for lan88xx
+Date: Mon, 14 Apr 2025 17:26:33 +0200
+Message-ID: <20250414152634.2786447-1-fiona.klute@gmx.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4Zbrk14hh4z9tF2
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:fQISuGsE84gb9tJCLkCkO/Mr1OEt+VwdckZX4vn2g6nRJr9qfV2
+ XFXA5hN8qUCg7Uo3lWax82mXATulmmp3btqvx1w4VJ81U7bBLgM3P4XNqrl27JLD7YVsRT2
+ 1V5G3JE/qERxCZiwQNUFdqSXx1FDSRODP+3zMn1cAK43D9vKwEprLDyKU/Kdh1WMWhlBm6j
+ 1q7Leab/kGBEZfo8ugD0Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dpJC4PaD+dY=;X9vXcRxFnoJzXghKFD6BZKcLZaw
+ K1ubuCV0EmOCMCWujG1Y5NV6rEcjxdP4I3Za75rU2PaGSLfZqPOedOtAI46ArtTeiglGi3kPm
+ G4stvDoIbgS9a996Sen55Vymmo0j0L22NerOg/5lKjBV8zpIgkMU70LSS4ezg4ABPknEJJrQt
+ k6LlYMsWIlPwRjpr+8ku+QZQd3eppa4d68fbTdSmNdFbFWgTnzljzWKYUQwqOSIpSF6d1gi7u
+ mgR6VIlborTIHrzaqnY27CwobF2cfEXUGg2fYMptHF8grPJEzoEdMRX6V3JKi2meRYz/bISpP
+ NGeXBh/F3lf+jRimIvuAukXWZISyJXAVI5cULfCSRhpjA0+Qta+RKqYG7FLH3x1iZuzOObtq6
+ 13Z9x4X063xXFAfmy0xVUmSnlYPzHzY7ZIKZOt36YFgHnlxKbwuMw0qZ4tzXY46FHHFkV6x/c
+ 1BO0VT5dM/r0lmvexYj6Zty/FJvESiZwuK+xhWMFw85XOzoUzijWa90WR2bMR56/bAceOg9bJ
+ mWl0NhKrzLDUqH0Uwr4636nmk1BDb7gQmmjjdAtx4gX4RBgJnfJR3pP4HzG9qa4yerXDlIo/t
+ Fg8iKZmt+ClyWAX4sKMK88xVFYQ2WcWVYE5ygenXG2pT4TdzkkpjnQZpEmfFCzv1YZ6jxyJJz
+ cylFI6HYqJ/UKDABCR6TP1FIPxoY73wv+vu+HO79wwxN6N28x5XPvqhxbRPZ6M6m4twH+lW2w
+ 1BoB2S5HfINUEHrDCihzXWvC1iBpMganRp4QDfXUFptQROj+ikXifTOca9QdORlHGc1OrWxgU
+ PGLpOy5SKYTbXwzpYcq3XIVl2rKDOmI+tWOlqrg1UBfKrwC+9FMPJg8QQaFU+jW3R1jaFPh7n
+ /9718vMiIHyGIQPQQ/0QcHYJbxNfXtYmdrLg+CDYyjdOEWSsSUKLZaaSc5DjnqRL2AxCTZceD
+ +gEBgjDY30vaoeqCWjDmeDrur66C1cWuWanZD67NwCNN7+imd/Bt+VSqGNR+1shypx01LqnBJ
+ G83yEXe0r50ovExTl7H8DlnEo0LVzJE1mlEP/3DvPDax9ztt349hK7FigjFreauomXsuLNxDA
+ 7KEGkP6R9fBv9eKmIAcaev9wK6R/4vweNdMNCaoIsat0ATD00/llpFZyL8ox4DyR3uJFHzT2C
+ mEpo4EM4Sn7BqEKq+2yh1KjR5OGcy7NC6hCTRT5QZ2ng53TijjebxZUcJyEK3poMBCjkrk7hl
+ WcVD8V7RZVYZ1VW1rnboB16NtrowaU94S4ZfChmrJm48yuF2leoJ2wlvUHBe6IbbcEgeYniGh
+ ezCuhuavhmMIJGUHwf43swcmZjYryf144g8c0I9ZFoSAZ2I+QEr8CLYezBSz6aqT81xOiCAMj
+ YXE83bQYgRsGU31zy6Hvgo20bo9G7KfYk6qNVqzs9oZCRMctjNk6xz0sDvGOUg7vV9e9+XgIo
+ 5BZiz7XJBkg9GTD/6SEOPgL7bzJF5v7eDLuTNWs2J/Lvjsb/p230HLEfpgx3HoWPEdHidtba+
+ dktz9RFq2gZFfPchq0s=
 
-The device property API is a firmware agnostic API for reading
-properties from firmware (DT/ACPI) devices nodes and swnodes.
-
-While the C API takes a pointer to a caller allocated variable/buffer,
-the rust API is designed to return a value and can be used in struct
-initialization. Rust generics are also utilized to support different
-types of properties where appropriate.
-
-The PropertyGuard is a way to force users to specify whether a property
-is supposed to be required or not. This allows us to move error
-logging of missing required properties into core, preventing a lot of
-boilerplate in drivers.
-
-Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
----
- rust/kernel/property.rs | 385 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 383 insertions(+), 2 deletions(-)
-
-diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
-index f6e6c980d..0d4ea3168 100644
---- a/rust/kernel/property.rs
-+++ b/rust/kernel/property.rs
-@@ -4,9 +4,17 @@
- //!
- //! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
- 
--use core::ptr;
-+use core::{mem::MaybeUninit, ptr};
- 
--use crate::{bindings, device::Device, str::CStr, types::Opaque};
-+use crate::{
-+    alloc::KVec,
-+    bindings, c_str,
-+    device::Device,
-+    error::{to_result, Result},
-+    prelude::*,
-+    str::{BStr, CStr, CString},
-+    types::Opaque,
-+};
- 
- impl Device {
-     /// Obtain the fwnode corresponding to the device.
-@@ -28,6 +36,38 @@ fn fwnode(&self) -> &FwNode {
-     pub fn property_present(&self, name: &CStr) -> bool {
-         self.fwnode().property_present(name)
-     }
-+
-+    /// Returns firmware property `name` boolean value
-+    pub fn property_read_bool(&self, name: &CStr) -> bool {
-+        self.fwnode().property_read_bool(name)
-+    }
-+
-+    /// Returns the index of matching string `match_str` for firmware string property `name`
-+    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
-+        self.fwnode().property_match_string(name, match_str)
-+    }
-+
-+    /// Returns firmware property `name` integer array values in a KVec
-+    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+        len: usize,
-+    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
-+        self.fwnode().property_read_array_vec(name, len)
-+    }
-+
-+    /// Returns integer array length for firmware property `name`
-+    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Result<usize> {
-+        self.fwnode().property_count_elem::<T>(name)
-+    }
-+
-+    /// Returns firmware property `name` integer scalar value
-+    pub fn property_read<'fwnode, 'name, T: Property>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+    ) -> PropertyGuard<'fwnode, 'name, T> {
-+        self.fwnode().property_read(name)
-+    }
- }
- 
- /// A reference-counted fwnode_handle.
-@@ -59,6 +99,150 @@ pub fn property_present(&self, name: &CStr) -> bool {
-         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-         unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
-     }
-+
-+    /// Returns firmware property `name` boolean value
-+    pub fn property_read_bool(&self, name: &CStr) -> bool {
-+        // SAFETY: `name` is non-null and null-terminated. `self.as_raw()` is valid
-+        // because `self` is valid.
-+        unsafe { bindings::fwnode_property_read_bool(self.as_raw(), name.as_char_ptr()) }
-+    }
-+
-+    /// Returns the index of matching string `match_str` for firmware string property `name`
-+    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
-+        // SAFETY: `name` and `match_str` are non-null and null-terminated. `self.as_raw` is
-+        // valid because `self` is valid.
-+        let ret = unsafe {
-+            bindings::fwnode_property_match_string(
-+                self.as_raw(),
-+                name.as_char_ptr(),
-+                match_str.as_char_ptr(),
-+            )
-+        };
-+        to_result(ret)?;
-+        Ok(ret as usize)
-+    }
-+
-+    /// Returns firmware property `name` integer array values in a KVec
-+    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+        len: usize,
-+    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
-+        let mut val: KVec<T> = KVec::with_capacity(len, GFP_KERNEL)?;
-+
-+        // SAFETY: `val.as_mut_ptr()` is valid because `KVec::with_capacity`
-+        // didn't return an error and it has at least space for `len` number
-+        // of elements.
-+        let err = unsafe { read_array_out_param::<T>(self, name, val.as_mut_ptr(), len) };
-+        let res = if err < 0 {
-+            Err(Error::from_errno(err))
-+        } else {
-+            // SAFETY: fwnode_property_read_int_array() writes exactly `len` entries on success
-+            unsafe { val.set_len(len) }
-+            Ok(val)
-+        };
-+        Ok(PropertyGuard {
-+            inner: res,
-+            fwnode: self,
-+            name,
-+        })
-+    }
-+
-+    /// Returns integer array length for firmware property `name`
-+    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Result<usize> {
-+        // SAFETY: `out_param` is allowed to be null because `len` is zero.
-+        let ret = unsafe { read_array_out_param::<T>(self, name, ptr::null_mut(), 0) };
-+        to_result(ret)?;
-+        Ok(ret as usize)
-+    }
-+
-+    /// Returns the value of firmware property `name`.
-+    ///
-+    /// This method is generic over the type of value to read. Informally,
-+    /// the types that can be read are booleans, strings, unsigned integers and
-+    /// arrays of unsigned integers.
-+    ///
-+    /// Reading a `KVec` of integers is done with the separate
-+    /// method [`Self::property_read_array_vec`], because it takes an
-+    /// additional `len` argument.
-+    ///
-+    /// When reading a boolean, this method never fails. A missing property
-+    /// is interpreted as `false`, whereas a present property is interpreted
-+    /// as `true`.
-+    ///
-+    /// For more precise documentation about what types can be read, see
-+    /// the [implementors of Property][Property#implementors] and [its
-+    /// implementations on foreign types][Property#foreign-impls].
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// # use crate::{device::Device, types::CString};
-+    /// fn examples(dev: &Device) -> Result {
-+    ///     let fwnode = dev.fwnode();
-+    ///     let b: bool = fwnode.property_read("some-bool").required()?;
-+    ///     if let Some(s) = fwnode.property_read::<CString>("some-str").optional() {
-+    ///         // ...
-+    ///     }
-+    /// }
-+    /// ```
-+    pub fn property_read<'fwnode, 'name, T: Property>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+    ) -> PropertyGuard<'fwnode, 'name, T> {
-+        PropertyGuard {
-+            inner: T::read(self, name),
-+            fwnode: self,
-+            name,
-+        }
-+    }
-+
-+    /// helper used to display name or path of a fwnode
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must provide a valid format string for a fwnode.
-+    unsafe fn fmt(&self, f: &mut core::fmt::Formatter<'_>, fmt_str: &CStr) -> core::fmt::Result {
-+        let mut buf = [0; 256];
-+        // SAFETY: `buf` is valid and `buf.len()` is its length. `self.as_raw()` is
-+        // valid because `self` is valid.
-+        let written = unsafe {
-+            bindings::scnprintf(buf.as_mut_ptr(), buf.len(), fmt_str.as_ptr(), self.as_raw())
-+        };
-+        // SAFETY: `written` is smaller or equal to `buf.len()`.
-+        let b: &[u8] = unsafe { core::slice::from_raw_parts(buf.as_ptr(), written as usize) };
-+        write!(f, "{}", BStr::from_bytes(b))
-+    }
-+
-+    /// Returns an object that implements [`Display`](core::fmt::Display) for
-+    /// printing the name of a node.
-+    pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
-+        struct FwNodeDisplayName<'a>(&'a FwNode);
-+
-+        impl core::fmt::Display for FwNodeDisplayName<'_> {
-+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+                // SAFETY: "%pfwP" is a valid format string for fwnode
-+                unsafe { self.0.fmt(f, c_str!("%pfwP")) }
-+            }
-+        }
-+
-+        FwNodeDisplayName(self)
-+    }
-+
-+    /// Returns an object that implements [`Display`](core::fmt::Display) for
-+    /// printing the full path of a node.
-+    pub fn display_path(&self) -> impl core::fmt::Display + use<'_> {
-+        struct FwNodeDisplayPath<'a>(&'a FwNode);
-+
-+        impl core::fmt::Display for FwNodeDisplayPath<'_> {
-+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+                // SAFETY: "%pfwf" is a valid format string for fwnode
-+                unsafe { self.0.fmt(f, c_str!("%pfwf")) }
-+            }
-+        }
-+
-+        FwNodeDisplayPath(self)
-+    }
- }
- 
- // SAFETY: Instances of `FwNode` are always reference-counted.
-@@ -73,3 +257,200 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-         unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
-     }
- }
-+
-+/// Implemented for several types that can be read as properties.
-+///
-+/// Informally, this is implemented for strings, integers and arrays of
-+/// integers. It's used to make [`FwNode::property_read`] generic over the
-+/// type of property being read. There are also two dedicated methods to read
-+/// other types, because they require more specialized function signatures:
-+/// - [`property_read_bool`](Device::property_read_bool)
-+/// - [`property_read_array_vec`](Device::property_read_array_vec)
-+pub trait Property: Sized {
-+    /// Used to make [`FwNode::property_read`] generic.
-+    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self>;
-+}
-+
-+impl Property for CString {
-+    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
-+        let mut str: *mut u8 = ptr::null_mut();
-+        let pstr: *mut _ = &mut str;
-+
-+        // SAFETY: `name` is non-null and null-terminated. `fwnode.as_raw` is
-+        // valid because `fwnode` is valid.
-+        let ret = unsafe {
-+            bindings::fwnode_property_read_string(fwnode.as_raw(), name.as_char_ptr(), pstr.cast())
-+        };
-+        to_result(ret)?;
-+
-+        // SAFETY: `pstr` contains a non-null ptr on success
-+        let str = unsafe { CStr::from_char_ptr(*pstr) };
-+        Ok(str.try_into()?)
-+    }
-+}
-+/// Implemented for all integers that can be read as properties.
-+///
-+/// This helper trait is needed on top of the existing [`Property`]
-+/// trait to associate the integer types of various sizes with their
-+/// corresponding `fwnode_property_read_*_array` functions.
-+pub trait PropertyInt: Copy {
-+    /// # Safety
-+    ///
-+    /// Callers must uphold the same safety invariants as for the various
-+    /// `fwnode_property_read_*_array` functions.
-+    unsafe fn read_array(
-+        fwnode: *const bindings::fwnode_handle,
-+        propname: *const ffi::c_char,
-+        val: *mut Self,
-+        nval: usize,
-+    ) -> ffi::c_int;
-+}
-+// This macro generates implementations of the traits `Property` and
-+// `PropertyInt` for integers of various sizes. Its input is a list
-+// of pairs separated by commas. The first element of the pair is the
-+// type of the integer, the second one is the name of its corresponding
-+// `fwnode_property_read_*_array` function.
-+macro_rules! impl_property_for_int {
-+    ($($int:ty: $f:ident),* $(,)?) => { $(
-+        impl PropertyInt for $int {
-+            unsafe fn read_array(
-+                fwnode: *const bindings::fwnode_handle,
-+                propname: *const ffi::c_char,
-+                val: *mut Self,
-+                nval: usize,
-+            ) -> ffi::c_int {
-+                // SAFETY: The safety invariants on the trait require
-+                // callers to uphold the invariants of the functions
-+                // this macro is called with.
-+                unsafe {
-+                    bindings::$f(fwnode, propname, val.cast(), nval)
-+                }
-+            }
-+        }
-+    )* };
-+}
-+impl_property_for_int! {
-+    u8: fwnode_property_read_u8_array,
-+    u16: fwnode_property_read_u16_array,
-+    u32: fwnode_property_read_u32_array,
-+    u64: fwnode_property_read_u64_array,
-+    i8: fwnode_property_read_u8_array,
-+    i16: fwnode_property_read_u16_array,
-+    i32: fwnode_property_read_u32_array,
-+    i64: fwnode_property_read_u64_array,
-+}
-+/// # Safety
-+///
-+/// Callers must ensure that if `len` is non-zero, `out_param` must be
-+/// valid and point to memory that has enough space to hold at least
-+/// `len` number of elements.
-+unsafe fn read_array_out_param<T: PropertyInt>(
-+    fwnode: &FwNode,
-+    name: &CStr,
-+    out_param: *mut T,
-+    len: usize,
-+) -> ffi::c_int {
-+    // SAFETY: `name` is non-null and null-terminated.
-+    // `fwnode.as_raw` is valid because `fwnode` is valid.
-+    // `out_param` is valid and has enough space for at least
-+    // `len` number of elements as per the safety requirement.
-+    unsafe { T::read_array(fwnode.as_raw(), name.as_char_ptr(), out_param, len) }
-+}
-+impl<T: PropertyInt, const N: usize> Property for [T; N] {
-+    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
-+        let mut val: [MaybeUninit<T>; N] = [const { MaybeUninit::uninit() }; N];
-+
-+        // SAFETY: `val.as_mut_ptr()` is valid and points to enough space for
-+        // `N` elements. Casting from `*mut MaybeUninit<T>` to `*mut T` is safe
-+        // because `MaybeUninit<T>` has the same memory layout as `T`.
-+        let ret = unsafe { read_array_out_param::<T>(fwnode, name, val.as_mut_ptr().cast(), N) };
-+        to_result(ret)?;
-+
-+        // SAFETY: `val` is always initialized when
-+        // fwnode_property_read_<T>_array is successful.
-+        Ok(val.map(|v| unsafe { v.assume_init() }))
-+    }
-+}
-+impl<T: PropertyInt> Property for T {
-+    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
-+        let val: [_; 1] = <[T; 1] as Property>::read(fwnode, name)?;
-+        Ok(val[0])
-+    }
-+}
-+
-+/// A helper for reading device properties.
-+///
-+/// Use [`Self::required`] if a missing property is considered a bug and
-+/// [`Self::optional`] otherwise.
-+///
-+/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
-+pub struct PropertyGuard<'fwnode, 'name, T> {
-+    /// The result of reading the property.
-+    inner: Result<T>,
-+    /// The fwnode of the property, used for logging in the "required" case.
-+    fwnode: &'fwnode FwNode,
-+    /// The name of the property, used for logging in the "required" case.
-+    name: &'name CStr,
-+}
-+
-+impl<T> PropertyGuard<'_, '_, T> {
-+    /// Access the property, indicating it is required.
-+    ///
-+    /// If the property is not present, the error is automatically logged. If a
-+    /// missing property is not an error, use [`Self::optional`] instead.
-+    pub fn required(self) -> Result<T> {
-+        if self.inner.is_err() {
-+            // Get the device associated with the fwnode for device-associated
-+            // logging.
-+            // TODO: Are we allowed to do this? The field `fwnode_handle.dev`
-+            // has a somewhat vague comment, which could mean we're not
-+            // supposed to access it:
-+            // https://elixir.bootlin.com/linux/v6.13.6/source/include/linux/fwnode.h#L51
-+            // SAFETY: According to the invariant of FwNode, it is valid.
-+            let dev = unsafe { (*self.fwnode.as_raw()).dev };
-+
-+            if dev.is_null() {
-+                pr_err!(
-+                    "{}: property '{}' is missing\n",
-+                    self.fwnode.display_path(),
-+                    self.name
-+                );
-+            } else {
-+                // SAFETY: If dev is not null, it points to a valid device.
-+                let dev: &Device = unsafe { &*dev.cast() };
-+                dev_err!(
-+                    dev,
-+                    "{}: property '{}' is missing\n",
-+                    self.fwnode.display_path(),
-+                    self.name
-+                );
-+            };
-+        }
-+        self.inner
-+    }
-+
-+    /// Access the property, indicating it is optional.
-+    ///
-+    /// In contrast to [`Self::required`], no error message is logged if
-+    /// the property is not present.
-+    pub fn optional(self) -> Option<T> {
-+        self.inner.ok()
-+    }
-+
-+    /// Access the property or the specified default value.
-+    ///
-+    /// Do not pass a sentinel value as default to detect a missing property.
-+    /// Use [`Self::required`] or [`Self::optional`] instead.
-+    pub fn or(self, default: T) -> T {
-+        self.inner.unwrap_or(default)
-+    }
-+}
-+
-+impl<T: Default> PropertyGuard<'_, '_, T> {
-+    /// Access the property or a default value.
-+    ///
-+    /// Use [`Self::or`] to specify a custom default value.
-+    pub fn or_default(self) -> T {
-+        self.inner.unwrap_or_default()
-+    }
-+}
--- 
-2.49.0
-
+V2l0aCBsYW44OHh4IGJhc2VkIGRldmljZXMgdGhlIGxhbjc4eHggZHJpdmVyIGNhbiBnZXQgc3R1
+Y2sgaW4gYW4KaW50ZXJydXB0IGxvb3Agd2hpbGUgYnJpbmdpbmcgdGhlIGRldmljZSB1cCwgZmxv
+b2RpbmcgdGhlIGtlcm5lbCBsb2cKd2l0aCBtZXNzYWdlcyBsaWtlIHRoZSBmb2xsb3dpbmc6Cgps
+YW43OHh4IDItMzoxLjAgZW5wMXMwdTM6IGtldmVudCA0IG1heSBoYXZlIGJlZW4gZHJvcHBlZAoK
+UmVtb3ZpbmcgaW50ZXJydXB0IHN1cHBvcnQgZnJvbSB0aGUgbGFuODh4eCBQSFkgZHJpdmVyIGZv
+cmNlcyB0aGUKZHJpdmVyIHRvIHVzZSBwb2xsaW5nIGluc3RlYWQsIHdoaWNoIGF2b2lkcyB0aGUg
+cHJvYmxlbS4KClRoZSBpc3N1ZSBoYXMgYmVlbiBvYnNlcnZlZCB3aXRoIFJhc3BiZXJyeSBQaSBk
+ZXZpY2VzIGF0IGxlYXN0IHNpbmNlCjQuMTQgKHNlZSBbMV0sIGJ1ZyByZXBvcnQgZm9yIHRoZWly
+IGRvd25zdHJlYW0ga2VybmVsKSwgYXMgd2VsbCBhcwp3aXRoIE52aWRpYSBkZXZpY2VzIFsyXSBp
+biAyMDIwLCB3aGVyZSBkaXNhYmxpbmcgcG9sbGluZyB3YXMgdGhlCnZlbmRvci1zdWdnZXN0ZWQg
+d29ya2Fyb3VuZCAodG9nZXRoZXIgd2l0aCB0aGUgY2xhaW0gdGhhdCBwaHlsaWIKY2hhbmdlcyBp
+biA0LjkgbWFkZSB0aGUgaW50ZXJydXB0IGhhbmRsaW5nIGluIGxhbjc4eHggaW5jb21wYXRpYmxl
+KS4KCklwZXJmIHJlcG9ydHMgd2VsbCBvdmVyIDkwME1iaXRzL3NlYyBwZXIgZGlyZWN0aW9uIHdp
+dGggY2xpZW50IGluCi0tZHVhbHRlc3QgbW9kZSwgc28gdGhlcmUgZG9lcyBub3Qgc2VlbSB0byBi
+ZSBhIHNpZ25pZmljYW50IGltcGFjdCBvbgp0aHJvdWdocHV0IChsYW44OHh4IGRldmljZSBjb25u
+ZWN0ZWQgdmlhIHN3aXRjaCB0byB0aGUgcGVlcikuCgpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3Jh
+c3BiZXJyeXBpL2xpbnV4L2lzc3Vlcy8yNDQ3ClsyXSBodHRwczovL2ZvcnVtcy5kZXZlbG9wZXIu
+bnZpZGlhLmNvbS90L2pldHNvbi14YXZpZXItYW5kLWxhbjc4MDAtcHJvYmxlbS8xNDIxMzQvMTEK
+Ckxpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnLzA5MDFkOTBkLTNmMjAtNGExMC1iNjgwLTlj
+OTc4ZTA0ZGRkYUBsdW5uLmNoClNpZ25lZC1vZmYtYnk6IEZpb25hIEtsdXRlIDxmaW9uYS5rbHV0
+ZUBnbXguZGU+CkNjOiBrZXJuZWwtbGlzdEByYXNwYmVycnlwaS5jb20KQ2M6IHN0YWJsZUB2Z2Vy
+Lmtlcm5lbC5vcmcKLS0tCiBkcml2ZXJzL25ldC9waHkvbWljcm9jaGlwLmMgfCA0NCAtLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDQgZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvcGh5L21pY3JvY2hpcC5jIGIvZHJpdmVy
+cy9uZXQvcGh5L21pY3JvY2hpcC5jCmluZGV4IDBlMTdjYzQ1OGVmZC4uMDZlMjg2Mzg3ZmE5IDEw
+MDY0NAotLS0gYS9kcml2ZXJzL25ldC9waHkvbWljcm9jaGlwLmMKKysrIGIvZHJpdmVycy9uZXQv
+cGh5L21pY3JvY2hpcC5jCkBAIC0zNyw0NyArMzcsNiBAQCBzdGF0aWMgaW50IGxhbjg4eHhfd3Jp
+dGVfcGFnZShzdHJ1Y3QgcGh5X2RldmljZSAqcGh5ZGV2LCBpbnQgcGFnZSkKIAlyZXR1cm4gX19w
+aHlfd3JpdGUocGh5ZGV2LCBMQU44OFhYX0VYVF9QQUdFX0FDQ0VTUywgcGFnZSk7CiB9CiAKLXN0
+YXRpYyBpbnQgbGFuODh4eF9waHlfY29uZmlnX2ludHIoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRl
+dikKLXsKLQlpbnQgcmM7Ci0KLQlpZiAocGh5ZGV2LT5pbnRlcnJ1cHRzID09IFBIWV9JTlRFUlJV
+UFRfRU5BQkxFRCkgewotCQkvKiB1bm1hc2sgYWxsIHNvdXJjZSBhbmQgY2xlYXIgdGhlbSBiZWZv
+cmUgZW5hYmxlICovCi0JCXJjID0gcGh5X3dyaXRlKHBoeWRldiwgTEFOODhYWF9JTlRfTUFTSywg
+MHg3RkZGKTsKLQkJcmMgPSBwaHlfcmVhZChwaHlkZXYsIExBTjg4WFhfSU5UX1NUUyk7Ci0JCXJj
+ID0gcGh5X3dyaXRlKHBoeWRldiwgTEFOODhYWF9JTlRfTUFTSywKLQkJCSAgICAgICBMQU44OFhY
+X0lOVF9NQVNLX01ESU5UUElOX0VOXyB8Ci0JCQkgICAgICAgTEFOODhYWF9JTlRfTUFTS19MSU5L
+X0NIQU5HRV8pOwotCX0gZWxzZSB7Ci0JCXJjID0gcGh5X3dyaXRlKHBoeWRldiwgTEFOODhYWF9J
+TlRfTUFTSywgMCk7Ci0JCWlmIChyYykKLQkJCXJldHVybiByYzsKLQotCQkvKiBBY2sgaW50ZXJy
+dXB0cyBhZnRlciB0aGV5IGhhdmUgYmVlbiBkaXNhYmxlZCAqLwotCQlyYyA9IHBoeV9yZWFkKHBo
+eWRldiwgTEFOODhYWF9JTlRfU1RTKTsKLQl9Ci0KLQlyZXR1cm4gcmMgPCAwID8gcmMgOiAwOwot
+fQotCi1zdGF0aWMgaXJxcmV0dXJuX3QgbGFuODh4eF9oYW5kbGVfaW50ZXJydXB0KHN0cnVjdCBw
+aHlfZGV2aWNlICpwaHlkZXYpCi17Ci0JaW50IGlycV9zdGF0dXM7Ci0KLQlpcnFfc3RhdHVzID0g
+cGh5X3JlYWQocGh5ZGV2LCBMQU44OFhYX0lOVF9TVFMpOwotCWlmIChpcnFfc3RhdHVzIDwgMCkg
+ewotCQlwaHlfZXJyb3IocGh5ZGV2KTsKLQkJcmV0dXJuIElSUV9OT05FOwotCX0KLQotCWlmICgh
+KGlycV9zdGF0dXMgJiBMQU44OFhYX0lOVF9TVFNfTElOS19DSEFOR0VfKSkKLQkJcmV0dXJuIElS
+UV9OT05FOwotCi0JcGh5X3RyaWdnZXJfbWFjaGluZShwaHlkZXYpOwotCi0JcmV0dXJuIElSUV9I
+QU5ETEVEOwotfQotCiBzdGF0aWMgaW50IGxhbjg4eHhfc3VzcGVuZChzdHJ1Y3QgcGh5X2Rldmlj
+ZSAqcGh5ZGV2KQogewogCXN0cnVjdCBsYW44OHh4X3ByaXYgKnByaXYgPSBwaHlkZXYtPnByaXY7
+CkBAIC01MjgsOSArNDg3LDYgQEAgc3RhdGljIHN0cnVjdCBwaHlfZHJpdmVyIG1pY3JvY2hpcF9w
+aHlfZHJpdmVyW10gPSB7CiAJLmNvbmZpZ19hbmVnCT0gbGFuODh4eF9jb25maWdfYW5lZywKIAku
+bGlua19jaGFuZ2Vfbm90aWZ5ID0gbGFuODh4eF9saW5rX2NoYW5nZV9ub3RpZnksCiAKLQkuY29u
+ZmlnX2ludHIJPSBsYW44OHh4X3BoeV9jb25maWdfaW50ciwKLQkuaGFuZGxlX2ludGVycnVwdCA9
+IGxhbjg4eHhfaGFuZGxlX2ludGVycnVwdCwKLQogCS5zdXNwZW5kCT0gbGFuODh4eF9zdXNwZW5k
+LAogCS5yZXN1bWUJCT0gZ2VucGh5X3Jlc3VtZSwKIAkuc2V0X3dvbAk9IGxhbjg4eHhfc2V0X3dv
+bCwKLS0gCjIuNDkuMAoK
