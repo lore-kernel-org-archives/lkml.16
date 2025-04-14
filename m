@@ -1,103 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D56280A51
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6233A290BCB
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744632767; cv=none; b=idIL3yGxiJ8VldpYjB1zoZLmusz0jMgew9rrpoCBEG6o830/Ubv64KF4Bjg48hIf4xIN+CvWPpNASWfkOr1VA3avp9gTv91gz0Z7xieZ+0qaepU3eHSkeZ/GcbIZRIKtUpLBoQfGtmzDik2XqAGw7NRCwIa/Ry+eFfzy2x+CgtM=
+	t=1744632818; cv=none; b=mpjzv3wolQpSsYwqg2sU8r17Ow4tqRiU05zMJ/Liz4cbYo7Hyq9+0QJ7e8pZF8BFrnjoVWimpeMzzH6TL/GVueG2pxG9PXQUSDo0CdCifj3douFSf9ZCZz8KnMSbnpXo8tWZvekyNPCzNylbFlprynczkKWyws8lnOJIzwfTSSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744632767; c=relaxed/simple;
-	bh=1S+ITQydYbgE+uA/RIk7xnL9LLWkvENVbfnlHt0wCsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ND+3aHAhmb+rckwA0avnRRaUwfNQXgjU2/iR53c14Y1l2Wi1KD9qKjxbqWw8hSYk/7zTIrlXfbwnTCMv5zKET+VUiCWVaNocuGcnqwuGVTW/oG27VcC8opLsV3S6r26TxbMiOucYdfTl203XfBZOvlJmxEYlOzgT5+Tfbu3TVs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KapxsIUU; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1744632818; c=relaxed/simple;
+	bh=tek+9yIhv/inJSoNG6Oa9yTvOsy+wDQ1yZOAEV9xRTQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EHML3XfAn3pcPa627AtAc4dYK5raJEqwAxJiy8MxBnlMQorLi0sB/k5sDjo5LbHiXW+V5dSC8gxtFTHFiB0Lolu9KMRk2fuzQwKogLyKQkGeDmOb4gzAXvf68qJLu1Y9zNkX8JDCo0MetrsktS8ngDyL7jBZJfmMaoXBncUIkLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dJpqrkAc; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KapxsIUU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJpqrkAc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744632763;
+	s=mimecast20190719; t=1744632816;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xE6hbqCqCOzEbv4rU1vZXMJioz7aWAmnIdx1bIH/tng=;
-	b=KapxsIUU86quHFmO8p7+91T0HuoabKz1zunXcHti4pog061b+IDtUdaK5ZTt6FhEVEfuJL
-	JTE6xg1vbHcEJXZs8sOBV6pjp6/4PqFkDT8lc1Rp9m4Ch1gvEAiEQmi1X/8mhUPm8+i0En
-	zIkCbJGnDIH8ZGp3iXxdxfELxNu9JBw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=jGXOIiFLOKlRL+utvX2910PESSbxXzHZjxCc4Cz0fY4=;
+	b=dJpqrkAcq/48ULvuqgiO+8TQ0/Oe+XzsP/iU/4N7oHbByEYN0Xn2RhhEAXODuYx+l/nzNP
+	jRjf5jzv/8/6Fc0tk6k1G/RmryoJ2vf1bsuZBTHWAFYUpDCGnL9nLt6XvdYQjlKFMFpMBg
+	UXC3UT9aCbncmAkrnnseDf+j9m2/GKo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-94-NNlnUyEPPz-pBzCRNTXsmQ-1; Mon,
- 14 Apr 2025 08:12:38 -0400
-X-MC-Unique: NNlnUyEPPz-pBzCRNTXsmQ-1
-X-Mimecast-MFC-AGG-ID: NNlnUyEPPz-pBzCRNTXsmQ_1744632757
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-W9yS-uk8Or22d5cyR0Mopw-1; Mon,
+ 14 Apr 2025 08:13:30 -0400
+X-MC-Unique: W9yS-uk8Or22d5cyR0Mopw-1
+X-Mimecast-MFC-AGG-ID: W9yS-uk8Or22d5cyR0Mopw_1744632808
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3CCD195608B;
-	Mon, 14 Apr 2025 12:12:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.114])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3DE761956094;
-	Mon, 14 Apr 2025 12:12:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 14 Apr 2025 14:12:00 +0200 (CEST)
-Date: Mon, 14 Apr 2025 14:11:56 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Luca Boccassi <luca.boccassi@gmail.com>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>,
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] coredump: fix error handling for replace_fd()
-Message-ID: <20250414121156.GA28345@redhat.com>
-References: <20250414-work-coredump-v1-0-6caebc807ff4@kernel.org>
- <20250414-work-coredump-v1-2-6caebc807ff4@kernel.org>
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 977881801A1A;
+	Mon, 14 Apr 2025 12:13:28 +0000 (UTC)
+Received: from [10.22.80.44] (unknown [10.22.80.44])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 539F119560AD;
+	Mon, 14 Apr 2025 12:13:24 +0000 (UTC)
+Date: Mon, 14 Apr 2025 14:13:18 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Jens Axboe <axboe@kernel.dk>, dm-devel@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] dm table: Fix W=1 build warning when
+ mempool_needs_integrity is unused
+In-Reply-To: <Z_zd1NCtn_QxaCzC@smile.fi.intel.com>
+Message-ID: <a0b1fcbf-9cda-9da2-ecbe-ac5cbc75b775@redhat.com>
+References: <20250407072126.3879086-1-andriy.shevchenko@linux.intel.com> <Z_zdwSCfaYDotOI2@smile.fi.intel.com> <Z_zd1NCtn_QxaCzC@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414-work-coredump-v1-2-6caebc807ff4@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 04/14, Christian Brauner wrote:
->
-> The replace_fd() helper returns the file descriptor number on success
-> and a negative error code on failure. The current error handling in
-> umh_pipe_setup() only works because the file descriptor that is replaced
-> is zero but that's pretty volatile. Explicitly check for a negative
-> error code.
 
-...
 
-> @@ -515,6 +517,9 @@ static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
->  
->  	err = replace_fd(0, files[0], 0);
->  	fput(files[0]);
-> +	if (err < 0)
-> +		return err;
-> +
->  	/* and disallow core files too */
->  	current->signal->rlim[RLIMIT_CORE] = (struct rlimit){1, 1};
+On Mon, 14 Apr 2025, Andy Shevchenko wrote:
 
-The patch looks trivial and correct, but if we do not want to rely on
-the fact that replace_fd(fd => 0) return 0 on sucess, then this patch
-should also do
+> On Mon, Apr 14, 2025 at 01:04:49PM +0300, Andy Shevchenko wrote:
+> > On Mon, Apr 07, 2025 at 10:21:26AM +0300, Andy Shevchenko wrote:
+> > > The mempool_needs_integrity is unused. This, in particular, prevents
+> > > kernel builds with Clang, `make W=1` and CONFIG_WERROR=y:
+> > > 
+> > > drivers/md/dm-table.c:1052:7: error: variable 'mempool_needs_integrity' set but not used [-Werror,-Wunused-but-set-variable]
+> > >  1052 |         bool mempool_needs_integrity = t->integrity_supported;
+> > >       |              ^
+> > > 
+> > > Fix this by removing the leftover.
+> > 
+> > This issue is still present in v6.15-rc1.
+> 
+> I meant v6.15-rc2, of course.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
-	-	return err;
-	+	return 0;
+I will send it to Linus (maybe with other changes) before 6.15 comes out.
 
-?
-
-otherwise this cleanup looks "incomplete" to me.
-
-Oleg.
+Mikulas
 
