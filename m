@@ -1,120 +1,84 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4665D28A3F7
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB33280A3E;
+	Mon, 14 Apr 2025 11:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628857; cv=none; b=mspXNSeUdE2mfiUG2qlkvjDtf+uF+wr+KhGCGOW4Hb7vrT0t5S1FWz+vdP8UkuMSmrLm6dyxcuHaG4GpC9VHmySsSQTfb0zIoEUS3G4MvLBKg9+cRt6PIuYEa8hU9k5/vUYJOxf05tPgt2nEtMAZhe0ALryt+qSL0VgJSgqrF0c=
+	t=1744628914; cv=none; b=VraFtLWtxkwno7/vnkwPbYZAZcA9bqzsSBPhXUIyHRQ2veDvUsP5DptC6D6qdd9jSiUAxp1hY6hGaEqsRC/wPX2hSQxGUTJ7fJQv7dYLDFLKHEqqk8sLjb1W7CXg8Yxso4YlSb3IIFxf2bHKI++teo55q4kDhcW+3/z+0JynKiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628857; c=relaxed/simple;
-	bh=8V4ceruG5PBgZuLKk3o6878Go2CYJK67IJGXeFBYrDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eEs0R9sRjZE/WOxSQnGe59/uagcTSnBz6sfuleSFxZhECJfqvIpvRd1jqvtzhrGulhBLv9xG8Sfadpn7iCpq5MtYp5+TZha/BbhMRbawGan5g4okiejmlEI1g6b3GOO/9thctajj0oh6e6VSIiFzhuRtPWD9dEUuK/d5kE6wVXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DunaRyoB; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744628914; c=relaxed/simple;
+	bh=Xdy9D5Bqc7njSHzOj1S++m6E2MnsrUv9gGmsdEPEskc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N5PFRLn+3lqNVK/kc40C1hjJ9HbbnRX2kfz8UZ62JgDebF/uDK7pLkDjQZ1zxkIvBYrXA1CikSJ6/7tRNA2K1UxOdZV3CL804rWoxFscIiIKCIe7W9WVO/X8T2/D6/pqZSNCQDr0wqBI/+kGC6WfXZz61DGRY4uBVQa+M1Vphzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kf1uHmjt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DunaRyoB"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af9a7717163so4331402a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744628853; x=1745233653; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zFEHcpXAxg/GC10Ly7Ug5qKPKL7Q2jtqdYskUyHbzxU=;
-        b=DunaRyoBd3M/pwedP13T+U0hsvSp+qVKtSN9Z18TfFY2g5HlivOl1SMCzfa/y2f8q3
-         9sm4qhncPvMMiWbuektaUNIGGzJAqQeMIRFd4CMbN3nntyx1TPdrQAutBoZBfFedpntl
-         27CaQ/o1kGIFHDtJ3ApoAbxcclHUzgjO+VOonsJi3oX6+zlmERzY7puyY9kq232WiW+Y
-         qjdsmmjNEQRrAE30LW8Q3kni5B7fZzKo3mjyDFFss09cduE5/IGwo2eY6+Miogcrkfuw
-         +WUXafnT7YELn6Z5C+TfuGPNijjadhzpFEvuGETNBAU8DiMqYv351qDtUaP5DDZl4beT
-         uVPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744628853; x=1745233653;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zFEHcpXAxg/GC10Ly7Ug5qKPKL7Q2jtqdYskUyHbzxU=;
-        b=Hyp8MAiUwuUZrZmeRBODZLDYsu+PfBZytGRWnqwtOVrWSbWW+SAwUm53J3L99P5qi4
-         blLpWm2aaKfU/W1D0Ltf3QC8KT4RlUVcGUGSdZhi6curr1PAC7u1UrPuUm8Bt8AX8JwF
-         8yGVOw+YPh+K0gMr/YmD3kI03c1J39lkDKXUp6TbHuGIxFbuAT2TUz0TxLO7Fw0R0iOO
-         Lr4OSgleWkZ2VtX+pMtP2PNPoQSCquSifW1TVDdowfsWGMqXYoouyjE9MGmKyJqIauDD
-         xw2ZqTdRMnpCwRg4TX/a6d9W5wbBN2T5cZ14ATY99Q9bUwcMjpym3KvW9SPIYpq+fKHW
-         TQkA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/aT31KWdYCbIrqXofB1o/KO1tWLgo98fXuxIuYz0YbrOx/UFAZIiWQHAiWtNEualipST50wOjy2VeckQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzERNxymoUMBZ81KFgc3vn0sha3R1BDtGA415vdlxuAUbMNPpMy
-	BP3P1XzQphDZsaSF2EiMwwfjcWYy3VP9j8nsfjteVETf0hp7dSadZ/5DGFyY8g==
-X-Gm-Gg: ASbGncvgY/6A6P2BUVsLdFEMhjcEZp03JGLC/Fz7B3L6o+DC+WpCrGgjMXxWK+FEVUo
-	lLEiyNINVOOTrDYZ9eSnWPMpdz7cOIq3fIs9gPPONwcSp+MVilGhAhwXaX5vp+CYCidry+Wbphu
-	6t4mPqTE4rf7b66Z3qlqNmTfYcHIHqhtyleXzLGitBu5JcBazAjgh1/GVtgSNogxE303/mUksgk
-	yDvo7Bt40kg38UEuFpiXcpZnREUlxwhSxoZGDauBAejRtwpoO4IGE8gbIYELL6gc09HZLnc1WVz
-	0zhH5foaJV8ZdMqzWKFF8wDPrXuR/xz9EkQATx6lk1kFbc5yMpaz
-X-Google-Smtp-Source: AGHT+IEG8eqgQ0Y8mpznX22CMbhITM96DhKYisQrcLo2Fr6NqPnURcoiXx+TnDQ54ctIZmZC2+bn2Q==
-X-Received: by 2002:a17:90a:e7d2:b0:2fe:a79e:f56f with SMTP id 98e67ed59e1d1-308236344famr15907930a91.13.1744628853242;
-        Mon, 14 Apr 2025 04:07:33 -0700 (PDT)
-Received: from thinkpad ([120.56.202.123])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd12b62dsm12164634a91.26.2025.04.14.04.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 04:07:32 -0700 (PDT)
-Date: Mon, 14 Apr 2025 16:37:23 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org, 
-	Tsai Sung-Fu <danielsftsai@google.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: [RFC] PCI: pwrctrl and link-up dependencies
-Message-ID: <uivlbxghkynwpmzenyr2b3xk4uxeuqf6dow6ao4mptcnzygrw7@ylfqavr3ry44>
-References: <Z_WAKDjIeOjlghVs@google.com>
- <Z_WUgPMNzFAftLeE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kf1uHmjt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1BCC4CEE5;
+	Mon, 14 Apr 2025 11:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744628914;
+	bh=Xdy9D5Bqc7njSHzOj1S++m6E2MnsrUv9gGmsdEPEskc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Kf1uHmjtuyTVJ2dL7Z3InjXnxMN0ij1nMdM0VaxyVCtJ+XVgnbfDG3qUu5giho5if
+	 OQAOGBJIoYTzy6MnB8AHsysI1il5NaqC6d7TcDOOjSBAkwxBFtN4g6J2TRdzMgZlYH
+	 wpLbRD4k88Bs4tMoRP29I5Cn5OD8FrUktoCwCPiyEIfnzNSqKNKUcKTcQiGkgBpiQI
+	 9D+zj6WooQ1Uczqa1qnU+h1BNqq76Crk3fzygpgg1/2RnDQa4wsfJMsdmXg9S3Gy/P
+	 PKkaDDlNyD5uUdStZJmyDsU460f9tTEnmOwpBC0yJ2HiToiLlPfuPyKMbKyQj6ybxY
+	 +v7v6imwaB+zQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] selftests: coredump: Some bug fixes
+Date: Mon, 14 Apr 2025 13:08:28 +0200
+Message-ID: <20250414-wertigkeit-sozusagen-506b362280cd@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <cover.1744383419.git.namcao@linutronix.de>
+References: <cover.1744383419.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1275; i=brauner@kernel.org; h=from:subject:message-id; bh=Xdy9D5Bqc7njSHzOj1S++m6E2MnsrUv9gGmsdEPEskc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/ebM2ve6Eh3GR27Rup9a1XQvOt/6sf/TRn3fPyRzrn 2UBp67YdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEyk8hkjQwcTg/+jbPtLS3+z c1s8Wu320IFfKHnFMn2FlR82LEg4lMnIMPHa8uQ9HlclhGz9Ph/LWVfiG/573aHctupcVdNJtip nuAE=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_WUgPMNzFAftLeE@google.com>
 
-On Tue, Apr 08, 2025 at 02:26:24PM -0700, Brian Norris wrote:
-> + adding pcie-brcmstb.c folks
+On Fri, 11 Apr 2025 17:09:40 +0200, Nam Cao wrote:
+> While trying the coredump test on qemu-system-riscv64, I observed test
+> failures for various reasons.
 > 
-> On Tue, Apr 08, 2025 at 12:59:39PM -0700, Brian Norris wrote:
-> > TL;DR: PCIe link-up may depend on pwrctrl; however, link-startup is
-> > often run before pwrctrl gets involved. I'm exploring options to resolve
-> > this.
+> This series makes the test works on qemu-system-riscv64.
 > 
-> Apologies if a quick self-reply is considered nosiy or rude, but I
-> nearly forgot that I previously was looking at "pwrctrl"-like
-> functionality and noticed that drivers/pci/controller/pcie-brcmstb.c has
-> had a portion of the same "pwrctrl" functionality for some time (commit
-> 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage
-> regulators")).
+> Best regards,
+> Nam
 > 
+> [...]
 
-Yes, the goal of the pwrctrl driver is to get rid of this clutter from the
-controller drivers.
+Applied to the vfs-6.16.coredump branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.coredump branch should appear in linux-next soon.
 
-> Notably, it performs its power sequencing before starting its link, for
-> (I believe) exactly the same reasons as I mention below. While I'm sure
-> it could theoretically be nice for them to be able to use
-> drivers/pci/pwrctrl/, I expect they cannot today, for the same reasons.
-> 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-If you look into brcm_pcie_add_bus(), they are ignoring the return value of
-brcm_pcie_start_link() precisely for the reason I explained in the previous
-thread. However, they do check for it in brcm_pcie_resume_noirq() which looks
-like a bug as the controller will fail to resume from system suspend if no
-devices are connected.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-- Mani
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
--- 
-மணிவண்ணன் சதாசிவம்
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.coredump
+
+[1/3] selftests: coredump: Properly initialize pointer
+      https://git.kernel.org/vfs/vfs/c/b3da3c6ce9f6
+[2/3] selftests: coredump: Fix test failure for slow machines
+      https://git.kernel.org/vfs/vfs/c/05ac92f73615
+[3/3] selftests: coredump: Raise timeout to 2 minutes
+      https://git.kernel.org/vfs/vfs/c/52cfbe664dc9
