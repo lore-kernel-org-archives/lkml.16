@@ -1,62 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8E21A2630;
-	Mon, 14 Apr 2025 06:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1231A2630;
+	Mon, 14 Apr 2025 06:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744613728; cv=none; b=Skw3cJ6Xabay2lN4E29J11XJQh6yDrxjqg5hTe3rn4LFxnas1ADvq1uK+KDuQhQX3507nCzsZE0FsRKo1i6x3SNy17hiPf29ZBUagP7T1DmRqJqc1jDahIg6RQ106oBXF/l4jSL9t6Jz2Wy2oV/lCahFGZ9ascnLsllIPnq2dg8=
+	t=1744613837; cv=none; b=Fo9A7oJe02Fkt5JtlYELHxjB8FxwJUjk97kJVjy6Uu0Tp3pfP1yMMpt7Gu7vJzL3FOScb+KgkTsJvgjXhxWvKLRa9EuPNnwWfrZn+0yLN8eR+W0XmlqhaCH8REO9NCfiA+lKdUsWQbfmB21gCs6xUwQX2ZXnKUWCcAhKaSBX894=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744613728; c=relaxed/simple;
-	bh=k7dhkveoyFwvi7/tUvCHIPEyndab2IDG85JIg/N+H5E=;
+	s=arc-20240116; t=1744613837; c=relaxed/simple;
+	bh=mqy+aOHjVKggByK6p/2KyFRHnUz1N9o7I6IVLGCDoWg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JCGxknB0DMOAVD5dWO96S7ASsCU2xZB4ZKtaxb/2SNu+g5oflOM1h00fr6Ijm4vr2DxPa0NxBJ/y8Sqll1QUow3xQl7IgL1x0r2IxqPADWF/kKz7S/EW3xPC288SpexDIURWaAdoNtG5MHP9cNKs1M48b01g5+CT90A+s7/d0Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jvAUGxjq; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EaoSzxsW/xXxFdq2sZPILcFKVZvlPVDA+xwKShVH9WUmW6krT2RenrpRD0rU8LO4a+x393ywv/Jjv8vMzww11fSIlV6P+xd59VSN0tMxrtu+KBJUVM499BTWRlyHA6sn2kZjn9rMlffpnevd7WtJ4kUH1ZrCWcCHs02GaO/kMnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1mwHNTd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jvAUGxjq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744613727; x=1776149727;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=k7dhkveoyFwvi7/tUvCHIPEyndab2IDG85JIg/N+H5E=;
-  b=jvAUGxjqHv+bZ2e+mvxzFJq9Pq+Ub4s/7+HDxqDALH/Di1zljlrSHK1w
-   tO6UKM4Ngne4vD1Na0+Syz/v1Rx2Is84tetstuWi8ds9YkmoNEC7RDg65
-   HCyPWiDzu9iP/Jjmz/XVN7dm/oSx/BHFKxf9Kb0AXjZhmq2+JglNuTdPh
-   5g+eeZbRBqnghjtaw49R8QeGn870mItA2CgRe5YPeLixz9gLrx9A7K63Q
-   7duIAUTCFQSNikFbdeHfDUJ45HcEv4ckRyY5QmE1x8XGTHpqkriYaNM+/
-   sLy/W1iZZLCzPOGPZZiu16TB9l31FQWn0tL9BBvRB2iAwffXA9hHv42ou
-   A==;
-X-CSE-ConnectionGUID: DiLU1NRgTrudxHXc8AaIIQ==
-X-CSE-MsgGUID: e96YyGlzQqyCWbr9ugRk/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45952058"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="45952058"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:55:22 -0700
-X-CSE-ConnectionGUID: WNE0w/XOTly35i3ezIIVjg==
-X-CSE-MsgGUID: OLhFZRTMRo2sNarFDbrQNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="133839425"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:55:19 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4Diu-0000000C9le-3zxa;
-	Mon, 14 Apr 2025 09:55:16 +0300
-Date: Mon, 14 Apr 2025 09:55:16 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: ende.tan@starfivetech.com
-Cc: linux-i2c@vger.kernel.org, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, jsd@semihalf.com,
-	andi.shyti@kernel.org, linux-kernel@vger.kernel.org,
-	leyfoon.tan@starfivetech.com, endeneer@gmail.com
-Subject: Re: [v2,1/1] i2c: designware: Add SMBus Quick Command support
-Message-ID: <Z_yxVJVc69ljaDZe@smile.fi.intel.com>
-References: <20250412093414.39351-1-ende.tan@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1mwHNTd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53266C4CEE2;
+	Mon, 14 Apr 2025 06:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744613835;
+	bh=mqy+aOHjVKggByK6p/2KyFRHnUz1N9o7I6IVLGCDoWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1mwHNTd5ZYVAB7ZS8zFkWpRKfoBKT42FaZJgQlq2mkfY70IPlKdE5GqQxfRNcMu/
+	 9xsuLXjJKf8kzqzf6SGsqaFjrU9UwliEKl9wFTEoiKulve30/JW6EN9S0QV1QLCB8I
+	 vDjEXEKNM51fholDhVIi99y6EafYba7bhE7mxHQhWcXxlZYTAS+lUw2ql7Z0n5qcNi
+	 811gh/UUXgUR7PrJEuy0PxQpszQ0Amefim3MRPm4Zd+qegKEH0pnL/BZ84bAHyYB9H
+	 Fndg5BVfKqs311r70/4kEoQgsXrON7GIFFXGaAhWOxUFGYOTOMfRMljddNi6gOkoG+
+	 au8i/dKtTCmCw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4Dkk-000000001A4-19TE;
+	Mon, 14 Apr 2025 08:57:11 +0200
+Date: Mon, 14 Apr 2025 08:57:10 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, lumag@kernel.org,
+	quic_kriskura@quicinc.com, manivannan.sadhasivam@linaro.org,
+	konrad.dybcio@oss.qualcomm.com, quic_varada@quicinc.com,
+	quic_kbajaj@quicinc.com, johan+linaro@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
+Message-ID: <Z_yxxoa12N9rNn2z@hovoldconsulting.com>
+References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,55 +50,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412093414.39351-1-ende.tan@starfivetech.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250413212518.2625540-1-chenyuan0y@gmail.com>
 
-On Sat, Apr 12, 2025 at 05:34:14PM +0800, ende.tan@starfivetech.com wrote:
-> From: Tan En De <ende.tan@starfivetech.com>
-> 
-> Add support for SMBus Quick Read and Quick Write commands.
+On Sun, Apr 13, 2025 at 04:25:18PM -0500, Chenyuan Yang wrote:
+> In qmp_usb_iomap(), one branch returns the result of devm_ioremap(), which
+> can be NULL. Since IS_ERR() does not catch a NULL pointer,
+> add an explicit NULL check in qmp_usb_parse_dt_legacy() to prevent
+> potential dereference issues.
 
-it's interesting how you made a versioning. Just run
-`git format-patch -v<X>...` where <X> is the number of version you want,
-it will make it properly in the Subject.
+Good catch, but please move the handling of this into the
+qmp_usb_iomap() helper so that it returns an error pointer also if
+devm_ioremap() fails.
 
-...
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 2a55ec4f0a04 ("phy: qcom-qmp-usb: merge driver data")
 
-> +	/* i2c-core-smbus.c: Only I2C_SMBUS_QUICK has msg[0].len = 0 */
+This is not the commit that introduced the issue; this should be:
 
-Please, remove filenames from the code, better to refer to the actual functions
-as func(). This helps also to grep for all usages in case of renaming.
+Fixes: a5d6b1ac56cb ("phy: qcom-qmp-usb: fix memleak on probe deferral")
+  
+>  	qmp->pcs = qmp_usb_iomap(dev, np, 2, exclusive);
+> +	if (!qmp->pcs)
+> +		return -ENOMEM;
+>  	if (IS_ERR(qmp->pcs))
+>  		return PTR_ERR(qmp->pcs);
 
-...
-
-> +		/* i2c-core-smbus.c: Only I2C_SMBUS_QUICK has msg[0].len = 0 */
-
-Ditto.
-
-...
-
-> +			regmap_write(
-> +				dev->map, DW_IC_DATA_CMD,
-
-Something wrong with the indentation. And you have plenty of room on the
-previous line.
-
-> +				*buf | DW_IC_DATA_CMD_STOP |
-> +				((msgs[dev->msg_write_idx].flags & I2C_M_RD) ?
-> +				DW_IC_DATA_CMD_CMD : 0)
-> +			);
-
-...
-
-> -	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
-> +	dev->functionality = I2C_FUNC_10BIT_ADDR |
-> +			     I2C_FUNC_SMBUS_QUICK |
-> +			     DW_IC_DEFAULT_FUNCTIONALITY;
-
-Ditto.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Johan
