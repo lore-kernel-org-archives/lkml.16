@@ -1,224 +1,93 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B945828F525;
-	Mon, 14 Apr 2025 13:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F97252288
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638581; cv=none; b=J192qcSldms3JpES/QR07xhmOpDW2vcLAe4AFPuqC2lVTUgw0GO5rBpk7z6GqEyf95rg+AlbVBWlxKvxIU6ia+hPTTXS+Fs+keoIoziO95nByeLtbfcvUbCrQce7ndTLhd2DlhaP9BA8Yi1EQ8cSNhXAoHZKtBOvvz9kinXmCOM=
+	t=1744638594; cv=none; b=eZ+/EgSReffkNLdyP1OIz+ZrwTINGBOsp+tA+JN5Pkz/+p9pYLaySk0ryGV9BTMWcbjgV/IcBIlzoXO4xynLnccYO/N8kgGXSmbwUQoL9TXlBWddFPGbhFUwBIrWrt9k3FV3vySHnMqmFIiaZuByjLoI0CUoHBWmkyHzNJdcHPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638581; c=relaxed/simple;
-	bh=8+orToe/4RdZZxMkZi8d6qlyA9kIqNrN26wfR6EjFsM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NieVZOTx7M/+FlIFNH7DYFoK6J0UI+Rgrsdp5f6C9Oy9JLdIJDj5itu5OaKviIktBoiv+xEPjFfkfI1KfgG2VTuodiy4PIZ5SoQl9ivi48CCCKp3W4V49j3x7KLBc2+5kcu4CLM5MRB46oB034gJQFGiCy5F92Te1jh05w/EhSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlJQxT07; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlJQxT07"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e6405b5cd9bso3642635276.1;
-        Mon, 14 Apr 2025 06:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744638578; x=1745243378; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8+orToe/4RdZZxMkZi8d6qlyA9kIqNrN26wfR6EjFsM=;
-        b=XlJQxT077jMYhL+sZ1DHGYFPsMNMWP8tiIbuWTOEvVtUAgOcwb1xV97IL6Py3h/paL
-         sENGD7UT+dGe/CyJ7Djskj8ZeTVOUatKIzb3cB0i4Sb/296xX9SG4v640ZXDca/vARXu
-         y6snuD6XcH5VoXGeCRpOkhQG+rBY5tyG2Zc6VGDNwvfifdd+Yrk++R57Si3oGvOUo+v9
-         Tvyng7rAiM74VWtfWqsEIT7WTmgsBRZR8v2erPUCjVd2GK2cOBZRGfIAP0p7VQX5HqIG
-         VvsWuU01zJ9HnPu5fGMyvWRiU1IqmQ8+f1g4I0DiFzkCondUtNQ1KoH+P2ZmraZcKLlC
-         Ag2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744638578; x=1745243378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8+orToe/4RdZZxMkZi8d6qlyA9kIqNrN26wfR6EjFsM=;
-        b=oA6+s+Qc1vAejptYBsICp76gxGezD++EyOW5z1SU1v89b22fgkUNyM1wg2i1ByUbYo
-         GXMCvcVrgvhaxBmnCoj5VPBphlDGQNObzPtsO8RbK7AB53/JgAo0zkB7yATEzNG3nQAB
-         gdnfi0ZgfarCl1PbjnFfKZwgkFLdshnIoVtn/sVfFBopNyYjpqY8PCRCToa7/SWcxn6I
-         yeRgizONjo4BAAcifr7CPE7fyl1Y7JZS5sxg9iP1XlWwBMTzmAvoUfcOxoDtqfx55zT3
-         rqaAIjMVgWTBt5YhZWO5nBStcV8TNoyPPtNxYgkgReZnwFtTHLSK5DWCxklEPoY9OhHp
-         snoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoHbupVtvyigf+pDth2P0oDyP5s2yx+aRT2V3sPu+zTr2nvXhesEoQHfi6ojnSBoYuHoBJntca@vger.kernel.org, AJvYcCW7zYBymg1LUZ1s3qj+OAo9VeMx07FdnxHI2pzH1PKX43wkthrVxQP8zn11DZJBzRh+93OQIOVAGt+ubuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyusxjA4ayHvdsxG/a8sJqiHSPRTdJj/Vw4T8nTxO5VzcCtVHg4
-	pxY9Hh67e5qfL6+fEMehH8Apz05CERBSxxv6O3y5VHTrOsmsqH1S4nMkKqqUM4uEny6/Cd/3cQw
-	6VV55SVK0v26g+tMl/93Sjd3PXxE=
-X-Gm-Gg: ASbGncvd4gPTA0y6bN3QTUIe9lARRWDoBcPXcFppzSNcs0+Z1EFgX2+yZ5fDKAca7o9
-	i/tO1OC+Bx9d8lAaylXujeD5j9lquEUm9yJxxzaGcq1Pp6t/+rh+ZhyXi6s/C40air55cqsSZjo
-	Hv/h71dWlJ9XSZ8NbvDgK3
-X-Google-Smtp-Source: AGHT+IE7pz41ktet1N5msnDIGSIJ8EVDaFKfYflTEEXpfdGTOulYVfFTKrTv4d98YMMWSu5tauXipgFsb8VtweYkv9k=
-X-Received: by 2002:a05:6902:a07:b0:e60:b135:4c07 with SMTP id
- 3f1490d57ef6-e704dfda84cmr18878812276.15.1744638578458; Mon, 14 Apr 2025
- 06:49:38 -0700 (PDT)
+	s=arc-20240116; t=1744638594; c=relaxed/simple;
+	bh=zVAXMbiliQoKMwfqMTirGNwxtHFwB03efGSbTMkE0Y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RwBmx7jO/4P0QDIt2XZ1bHbotlJSrLC44pK82JcyXYzQkTcxGZjm8/MlLH3MpImFbM12i1+FhjCeufeGScUunB9o/BziuxnV1eTqAxkOi72tpNd4kwGzHdpYAHnVyqOAQESrsBcUOAASyugP39skY14hLOgWzrHpN6+A7NndDlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A73B4C4CEE2;
+	Mon, 14 Apr 2025 13:49:52 +0000 (UTC)
+Date: Mon, 14 Apr 2025 14:49:50 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ross Stutterheim <ross.stutterheim@garmin.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	ross.sweng@gmail.com, Mike Rapoport <rppt@kernel.org>,
+	Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] arm[64]/memremap: fix arch_memremap_can_ram_remap()
+Message-ID: <Z_0SfqQHsKs3S1cn@arm.com>
+References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412122428.108029-3-jonas.gorski@gmail.com>
- <20250414124930.j435ccohw3lna4ig@skbuf> <20250414125248.55kdsbjfllz4jjed@skbuf>
-In-Reply-To: <20250414125248.55kdsbjfllz4jjed@skbuf>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Mon, 14 Apr 2025 15:49:27 +0200
-X-Gm-Features: ATxdqUFhDGYeuHnd2o7xa-r3cQYxibJ0ZKR7cyDNcq-eDDRt7bhB2BFaj0CHTI4
-Message-ID: <CAOiHx==VEbdn3ULHXf5FEBaNAxzyoHTqJEMYYtcQzjkj__RoLg@mail.gmail.com>
-Subject: Re: [PATCH RFC net 2/2] net: dsa: propagate brentry flag changes
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Nikolay Aleksandrov <razor@blackwall.org>, Ido Schimmel <idosch@nvidia.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Andrew Lunn <andrew@lunn.ch>, bridge@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414133219.107455-1-ross.stutterheim@garmin.com>
 
-On Mon, Apr 14, 2025 at 2:52=E2=80=AFPM Vladimir Oltean <vladimir.oltean@nx=
-p.com> wrote:
->
-> +Jonas, whom I've mistakenly removed from To: :-/
->
-> On Mon, Apr 14, 2025 at 03:49:30PM +0300, Vladimir Oltean wrote:
-> > On Sat, Apr 12, 2025 at 02:24:28PM +0200, Jonas Gorski wrote:
-> > > Currently any flag changes for brentry vlans are ignored, so the
-> > > configured cpu port vlan will get stuck at whatever the original flag=
-s
-> > > were.
-> > >
-> > > E.g.
-> > >
-> > > $ bridge vlan add dev swbridge vid 10 self pvid untagged
-> > > $ bridge vlan add dev swbridge vid 10 self
-> > >
-> > > Would cause the vlan to get "stuck" at pvid untagged in the hardware,
-> > > despite now being configured as tagged on the bridge.
-> > >
-> > > Fix this by passing on changed vlans to drivers, but do not increase =
-the
-> > > refcount for updates.
-> > >
-> > > Since we should never get an update for a non-existing VLAN, add a
-> > > WARN_ON() in case it happens.
-> > >
-> > > Fixes: 134ef2388e7f ("net: dsa: add explicit support for host bridge =
-VLANs")
-> > > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> > > ---
-> >
-> > I think it's important to realize that the meaning of the "flags" of
-> > VLANs offloaded to the CPU port is not completely defined.
-> > "egress-untagged" from the perspective of the hardware CPU port is the
-> > opposite direction compared to "egress-untagged" from the perspective o=
-f
-> > the bridge device (one is Linux RX, the other is Linux TX).
-> >
-> > Additionally, we install in DSA as host VLANs also those bridge port VL=
-ANs
-> > which were configured by the user on foreign interfaces. It's not exact=
-ly
-> > clear how to reconcile the "flags" of a VLAN installed on the bridge
-> > itself with the "flags" of a VLAN installed on a foreign bridge port.
-> >
-> > Example:
-> > ip link add br0 type bridge vlan_filtering 1 vlan_default_pvid 0
-> > ip link set veth0 master br0 # foreign interface, unrelated to DSA
-> > ip link set swp0 master br0 # DSA interface
-> > bridge vlan add dev br0 vid 1 self pvid untagged # leads to an "dsa_vla=
-n_add_hw: cpu port N vid 1 untagged" trace event
-> > bridge vlan add dev veth0 vid 1 # still leads to an "dsa_vlan_add_bump:=
- cpu port N vid 1 refcount 2" trace event after your change
-> >
-> > Depending on your expectations, you might think that host VID 1 would
-> > also need to become egress-tagged in this case, although from the
-> > bridge's perspective, it hasn't "changed", because it is a VLAN from a
-> > different VLAN group (port veth0 vs bridge br0).
-> >
-> > The reverse is true as well. Because the user can toggle the "pvid" fla=
-g
-> > of the bridge VLAN, that will make the switchdev object be notified wit=
-h
-> > changed=3Dtrue. But since DSA clears BRIDGE_VLAN_INFO_PVID, the host VL=
-AN,
-> > as programmed to hardware, would be identical, yet we reprogram it anyw=
-ay.
-> >
-> > Both would seem to indicate that "changed" from the bridge perspective
-> > is not what matters for calling the driver, but a different "changed"
-> > flag, calculated by DSA from its own perspective.
-> >
-> > I was a bit reluctant to add such complexity in dsa_port_do_vlan_add(),
-> > considering that many drivers treat the VLANs on the CPU port as
-> > always-tagged towards software (not b53 though, except for
-> > b53_vlan_port_needs_forced_tagged() which is only for DSA_TAG_PROTO_NON=
-E).
-> > In fact, what is not entirely clear to me is what happens if they _don'=
-t_
-> > treat the CPU port in a special way. Because software needs to know in
-> > which VLAN did the hardware begin to process a packet: if the software
-> > bridge needs to continue the processing of that packet, it needs to do
-> > so _in the same VLAN_. If the accelerator sends packets as VLAN-untagge=
-d
-> > to software, that information is lost and VLAN hopping might take place=
-.
-> > So I was hoping that nobody would notice that the change of flags on
-> > host VLANs isn't propagated to drivers, because none of the flags shoul=
-d
-> > be of particular relevance in the first place.
-> >
-> > I would like to understand better, in terms of user-visible impact, wha=
-t
-> > is the problem that you see?
+Please cc the maintainers and the original contributor of the commit you
+are fixing, otherwise the patch may not be noticed.
 
-I was just in the progress of writing down some thoughts myself I had
-while thinking about this.
+On Mon, Apr 14, 2025 at 08:32:19AM -0500, Ross Stutterheim wrote:
+> commit 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure
+> presence of linear map") added the definition of
+> arch_memremap_can_ram_remap() for arm[64] specific filtering of what pages
+> can be used from the linear mapping. memblock_is_map_memory() was called
+> with the pfn of the address given to arch_memremap_can_ram_remap();
+> however, memblock_is_map_memory() expects to be given an address, not a
+> pfn.
+> 
+> This results in calls to memremap() returning a newly mapped area when
+> it should return an address in the existing linear mapping.
+> 
+> Fix this by removing the address to pfn translation and pass the
+> address directly.
+> 
+> Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure presence of linear map")
+> Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
+> ---
+>  arch/arm/mm/ioremap.c   | 4 +---
+>  arch/arm64/mm/ioremap.c | 4 +---
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
+> index 748698e91a4b..27e64f782cb3 100644
+> --- a/arch/arm/mm/ioremap.c
+> +++ b/arch/arm/mm/ioremap.c
+> @@ -515,7 +515,5 @@ void __init early_ioremap_init(void)
+>  bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
+>  				 unsigned long flags)
+>  {
+> -	unsigned long pfn = PHYS_PFN(offset);
+> -
+> -	return memblock_is_map_memory(pfn);
+> +	return memblock_is_map_memory(offset);
+>  }
 
-So to me passing on the original flags but then no updates of these
-flags feels wrong. I would expect them to be either never passed on,
-or always sync it (and let the driver choose to handle or ignore
-them).
+This indeed needs fixing.
 
-Having the cpu port as egress untagged I can easily find one case
-where this breaks stuff (at least with b53):
+> diff --git a/arch/arm64/mm/ioremap.c b/arch/arm64/mm/ioremap.c
+> index 10e246f11271..48c38c986b95 100644
+> --- a/arch/arm64/mm/ioremap.c
+> +++ b/arch/arm64/mm/ioremap.c
+> @@ -51,7 +51,5 @@ void __init early_ioremap_init(void)
+>  bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
+>  				 unsigned long flags)
+>  {
+> -	unsigned long pfn = PHYS_PFN(offset);
+> -
+> -	return pfn_is_map_memory(pfn);
+> +	return pfn_is_map_memory(offset);
 
-With lan1, lan2 being dsa ports of the same switch:
+This is already correct.
 
-# bridge with lan1
-$ ip link add swbridge type bridge vlan_filtering 1
-$ ip link set lan1 master swbridge
-$ bridge vlan add dev swbridge vid 10 self pvid untagged
-
-# lan2 stand alone
-$ ip link add lan2.10 link lan2 type vlan id 10
-
-as then lan2.10 would never receive any packets, as the VLAN 10
-packets received by the CPU ports never carry any vlan tags.
-
-The core issue here is that b53 switches do not provide any way of
-knowing the original tagged state of received packets, as the dsa
-header has no field for that (bcm56* switches do, but these are a
-different beast).
-
-I guess the proper fix for b53 is probably to always have a vlan tag
-on the cpu port (except for the special vlan 0 for untagged traffic on
-ports with no PVID), and enable untag_vlan_aware_bridge_pvid.
-
-To continue the stream of consciousness, it probably does not make
-sense to pass on the untagged flag for the bridge/cpu port, because it
-will affect all ports of the switch, regardless of them being member
-of the bridge. Looking through drivers in net/drivers/dsa, I don't see
-anyone checking if egress untag is applied to the cpu port, so I
-wonder if not most, maybe even all (dsa) switch drivers have the same
-issue and would actually need to keep the cpu port always tagged. And
-looking through the tag_* handlers, only ocelot looks like it may have
-the information available whether a packet was originally tagged or
-not, so would also need to have untag_vlan_aware_bridge_pvid enabled.
-
-Makes the think the cpu port always tagged should be the default
-behavior. It's easy to strip a vlan tag that shouldn't be there, but
-hard to add one that's missing, especially since in contrast to PVID
-you can have more than one vlan as egress untagged.
-
-Jonas
+-- 
+Catalin
