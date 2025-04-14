@@ -1,166 +1,164 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster3-host12-snip4-8.eps.apple.com [57.103.66.41])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754992BE7B1
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.66.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD45119924E;
+	Mon, 14 Apr 2025 11:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631369; cv=none; b=ah8YrX7Dk231sVq1LgC6QK+My3x76iyt/5wl5nnPX/NbdGwB/+XsEYPTkpyQIPmK3Y3b07rbIv5dzpItqyuxh+PH9R7b4Tr7mBZnaUFSSGOmVr6eeY4YFH52CLdpRDqlKwIkTj0G0tKrenttRLfikG9bSziC3Vp1gtnTQEjsTZU=
+	t=1744631436; cv=none; b=lLNzqlJEVdKAqkXPJul1gOXKpK+cPNHQFSSzUnbQ3b4r6SaecDuGn5a09tyTYi9ZPK3TMWGVO1xfwMSs6AYL7BjKdYVLB0Fc41oNgzynskN2WMyAJRk9H0A7Al1Tmhsyya+cyVuAAvgQF5P/udxSSiJR6GYmC3VMyclxL/APpRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631369; c=relaxed/simple;
-	bh=oxeNg/3kTTYdWOP+m0MjbWQatWl1xtjweDH0uB/M8o0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eMy8VrAfKW2KsyGDC4SNds1TPv9UYM3cbnitCQuFfCw9i+yMk/9cf62zzat7HohZPeDz38mA8IJDDmNAHn8YYTC+zEZBbLt6R8HWJaqK0z5xhSUgo4E+KFhtbrz2IAuEs2MfoXwYU5c09RfETd6rY1QPWeqGYT4XybEYhKAn9tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=LRzTG4QB; arc=none smtp.client-ip=57.103.66.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744631436; c=relaxed/simple;
+	bh=ZrzXp43neMTktJlC5UlCc6/EXuIAX9V8IWG+IqHuM7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=no7T1X4/zWAz7/1orOc7fArVD6UlMGbos0srZMZZMIGwOOEi+ah+IFURaEymTHXvlSxZJCOPaeJfgD9P6zg8KrjlTojyN021yajBuQQGxprF75Js/s+cjmEUW66w3sZwWLu+LCuCcz7S9k50dYa7vZLmvQen5jET0r18QQW4f+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pPvENMRg; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="LRzTG4QB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=tfkcqBi0ou5N+iPlIoNtZJvvEZ4xTbBbnOJsMG5xchk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=LRzTG4QBigC/jg3Qq9QBaxAlc/uPz9dJN9u75EqKXrnFvP5HgKR2/c4DGBAsxW61f
-	 BkfM6DUUhSBDWM6PQSJC3hdke8nZ5ivsA2UoPtFlvPAE1FyfTBVbmGOlP22X85hykY
-	 /4PTMejljC3OcnJ46HxhT6AxKcEwRQ2T9AP/F9hRdKwDZseC6YSdF5UepMN1Qh2KVf
-	 7VK+p71g6+SEBSW6ldE+W6M88GAXhSm5SXTslh1Z+o/pO3sbN8smZrV1U2vG1OVwvQ
-	 +8aI2/uQspQVQy2AufC0L3RfcDuqqRaGGguyDsxx+Fdq7nGxl36nzx2OCcIU/2lHGz
-	 Sq2/Rc7nT82cQ==
-Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id CA77218000B3;
-	Mon, 14 Apr 2025 11:49:24 +0000 (UTC)
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id A67D21800289;
-	Mon, 14 Apr 2025 11:49:21 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 14 Apr 2025 19:49:05 +0800
-Subject: [PATCH RESEND 2/2] phy: core: Remove API devm_phy_destroy()
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pPvENMRg"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EBo9lp2048113
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 06:50:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744631409;
+	bh=y5ACmq3Yrzj3X9LtXUICStUphd4BBh7NKKwspPcqHa0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=pPvENMRg+2qi8WZHRAJ+9bEgDdLWUfvZ0fxDdW/IK49AZLeXQf9sU6sL2RdMksh3O
+	 bE4SGKB+lR8N43aalUVftuBBtZpujL5kWWuAzHqiEGtvB3lbf2ojRKcsX43+reUKWg
+	 aoJMD2UFL8RTaI31oMiK6Dzo8TMVqVao8Tn6BEoE=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EBo9WB010676
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 14 Apr 2025 06:50:09 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
+ Apr 2025 06:50:08 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 14 Apr 2025 06:50:08 -0500
+Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EBo4rA059109;
+	Mon, 14 Apr 2025 06:50:05 -0500
+Message-ID: <e08b7127-4f9b-433e-b0f3-e2c4ef279b78@ti.com>
+Date: Mon, 14 Apr 2025 17:20:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] arm64: dts: ti: j721e-sk: Add DT nodes for power
+ regulators
+To: "Kumar, Udit" <u-kumar1@ti.com>, <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+ <20250409134128.2098195-2-y-abhilashchandra@ti.com>
+ <44c3ec3d-2fa3-4a61-8c93-5ef4791fcf8a@ti.com>
+Content-Language: en-US
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+In-Reply-To: <44c3ec3d-2fa3-4a61-8c93-5ef4791fcf8a@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250414-remove-apis-v1-2-6fddc9a5a16d@quicinc.com>
-References: <20250414-remove-apis-v1-0-6fddc9a5a16d@quicinc.com>
-In-Reply-To: <20250414-remove-apis-v1-0-6fddc9a5a16d@quicinc.com>
-To: Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, 
- Yanteng Si <si.yanteng@linux.dev>, Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi Udit,
 
-API devm_phy_destroy() has not had callers since 2013-09-27
-when it was introduced.
+On 11/04/25 19:04, Kumar, Udit wrote:
+> 
+> On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
+>> Add device tree nodes for two power regulators on the J721E SK board.
+>> vsys_5v0: A fixed regulator representing the 5V supply output from the
+>> LM61460 and vdd_sd_dv: A GPIO-controlled TLV71033 regulator.
+>>
+>> J721E-SK schematics: https://www.ti.com/lit/zip/sprr438
+>> Fixes: 1bfda92a3a36 ("arm64: dts: ti: Add support for J721E SK")
+> 
+> For me does not looks like a fix, you can adding missing nodes
+> 
 
-Remove the API.
+Since we are adding the regulator nodes in the sensor overlay, (Patch 4 
+of this series) which in turn references these regulator nodes, I have
+included the Fixes tag in this patch as well.
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- Documentation/driver-api/phy/phy.rst                    |  6 ++----
- Documentation/translations/zh_CN/driver-api/phy/phy.rst |  7 ++-----
- drivers/phy/phy-core.c                                  | 17 -----------------
- include/linux/phy/phy.h                                 |  5 -----
- 4 files changed, 4 insertions(+), 31 deletions(-)
+> 
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-j721e-sk.dts | 31 ++++++++++++++++++++++++++
+>>   1 file changed, 31 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts 
+>> b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
+>> index 440ef57be294..4965957e6545 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
+>> @@ -184,6 +184,17 @@ vsys_3v3: fixedregulator-vsys3v3 {
+>>           regulator-boot-on;
+>>       };
+>> +    vsys_5v0: fixedregulator-vsys5v0 {
+>> +        /* Output of LM61460 */
+>> +        compatible = "regulator-fixed";
+>> +        regulator-name = "vsys_5v0";
+>> +        regulator-min-microvolt = <5000000>;
+>> +        regulator-max-microvolt = <5000000>;
+>> +        vin-supply = <&vusb_main>;
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +    };
+>> +
+>>       vdd_mmc1: fixedregulator-sd {
+>>           compatible = "regulator-fixed";
+>>           pinctrl-names = "default";
+>> @@ -211,6 +222,20 @@ vdd_sd_dv_alt: gpio-regulator-tps659411 {
+>>                <3300000 0x1>;
+>>       };
+>> +    vdd_sd_dv: gpio-regulator-TLV71033 {
+>> +        compatible = "regulator-gpio";
+>> +        pinctrl-names = "default";
+>> +        pinctrl-0 = <&vdd_sd_dv_pins_default>;
+>> +        regulator-name = "tlv71033";
+>> +        regulator-min-microvolt = <1800000>;
+>> +        regulator-max-microvolt = <3300000>;
+>> +        regulator-boot-on;
+>> +        vin-supply = <&vsys_5v0>;
+>> +        gpios = <&main_gpio0 118 GPIO_ACTIVE_HIGH>;
+>> +        states = <1800000 0x0>,
+>> +             <3300000 0x1>;
+>> +    };
+>> +
+>>       transceiver1: can-phy1 {
+>>           compatible = "ti,tcan1042";
+>>           #phy-cells = <0>;
+>> @@ -613,6 +638,12 @@ J721E_WKUP_IOPAD(0xd4, PIN_OUTPUT, 7) /* (G26) 
+>> WKUP_GPIO0_9 */
+>>           >;
+>>       };
+>> +    vdd_sd_dv_pins_default: vdd-sd-dv-default-pins {
+>> +        pinctrl-single,pins = <
+>> +            J721E_IOPAD(0x1dc, PIN_INPUT, 7) /* (Y1) 
+>> SPI1_CLK.GPIO0_118 */
+> 
+> Shouldn't be this pin be output to control regulator ?
+> 
 
-diff --git a/Documentation/driver-api/phy/phy.rst b/Documentation/driver-api/phy/phy.rst
-index be3687a2a11bbf84e6e5561b11931ea6db984434..cae03d8a4812b3c4cfca64272cc6b8f83a81d1c8 100644
---- a/Documentation/driver-api/phy/phy.rst
-+++ b/Documentation/driver-api/phy/phy.rst
-@@ -173,13 +173,11 @@ Destroying the PHY
- ==================
- 
- When the driver that created the PHY is unloaded, it should destroy the PHY it
--created using one of the following 2 APIs::
-+created using the following API::
- 
- 	void phy_destroy(struct phy *phy);
--	void devm_phy_destroy(struct device *dev, struct phy *phy);
- 
--Both these APIs destroy the PHY and devm_phy_destroy destroys the devres
--associated with this PHY.
-+The API destroys the PHY.
- 
- PM Runtime
- ==========
-diff --git a/Documentation/translations/zh_CN/driver-api/phy/phy.rst b/Documentation/translations/zh_CN/driver-api/phy/phy.rst
-index 2d3f98deb92035c44fcb1ff0e3dc8543053140f6..37c23fcebf11f397d0dc502bbba11a74c525f085 100644
---- a/Documentation/translations/zh_CN/driver-api/phy/phy.rst
-+++ b/Documentation/translations/zh_CN/driver-api/phy/phy.rst
-@@ -164,14 +164,11 @@ PHY 关联的设备资源。
- 销毁 PHY
- ========
- 
--当创建 PHY 的驱动程序被卸载时，它应该使用以下 2 个 API 之一销毁其创
--建的 PHY::
-+当创建 PHY 的驱动程序被卸载时，它应该使用以下 API 销毁其创建的 PHY::
- 
- 	void phy_destroy(struct phy *phy);
--	void devm_phy_destroy(struct device *dev, struct phy *phy);
- 
--这两个 API 都会销毁 PHY，并且 devm_phy_destroy 会销毁与此 PHY 关
--联的 devres。
-+这个 API 会销毁 PHY。
- 
- PM Runtime
- ==========
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index dd6302dfd14d2ec060857fc019268096c33e37a2..8e0e11553e369e06f5ee4cdbb111b4ddb1b34e74 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -1107,23 +1107,6 @@ void phy_destroy(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(phy_destroy);
- 
--/**
-- * devm_phy_destroy() - destroy the PHY
-- * @dev: device that wants to release this phy
-- * @phy: the phy returned by devm_phy_get()
-- *
-- * destroys the devres associated with this phy and invokes phy_destroy
-- * to destroy the phy.
-- */
--void devm_phy_destroy(struct device *dev, struct phy *phy)
--{
--	int r;
--
--	r = devres_release(dev, devm_phy_consume, devm_phy_match, phy);
--	dev_WARN_ONCE(dev, r, "couldn't find PHY resource\n");
--}
--EXPORT_SYMBOL_GPL(devm_phy_destroy);
--
- /**
-  * __of_phy_provider_register() - create/register phy provider with the framework
-  * @dev: struct device of the phy provider
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 06037a7eefc4b0319008065d142c9f1caba2c74d..66eb664249ddaa6635bf80d8db115cb21473ceb8 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -278,7 +278,6 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- struct phy *devm_phy_create(struct device *dev, struct device_node *node,
- 			    const struct phy_ops *ops);
- void phy_destroy(struct phy *phy);
--void devm_phy_destroy(struct device *dev, struct phy *phy);
- struct phy_provider *__of_phy_provider_register(struct device *dev,
- 	struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
-@@ -521,10 +520,6 @@ static inline void phy_destroy(struct phy *phy)
- {
- }
- 
--static inline void devm_phy_destroy(struct device *dev, struct phy *phy)
--{
--}
--
- static inline struct phy_provider *__of_phy_provider_register(
- 	struct device *dev, struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
+Yes, I will correct this in the next revision.
 
--- 
-2.34.1
+Thanks and Regards
+Yemike Abhilash Chandra
 
+> 
+>> +        >;
+>> +    };
+>> +
+>>       wkup_uart0_pins_default: wkup-uart0-default-pins {
+>>           pinctrl-single,pins = <
+>>               J721E_WKUP_IOPAD(0xa0, PIN_INPUT, 0) /* (J29) 
+>> WKUP_UART0_RXD */
