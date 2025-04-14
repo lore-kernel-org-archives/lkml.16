@@ -1,335 +1,182 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CD92749CC
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB89274FDC
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642654; cv=none; b=Om+xqcLIctKpjb3/cjeEVIU6/zTfpTOJdKYmCQi9OqzZ2Qgfbh9hFwVJnWNMMH8V3+Kgfj9HBXF4skEeBETfivJ5x96szaDTwcXUSrKKwD2rLXnSkMIDXTxcTdVAViKQ3kgHZYaYyRSXwI5FjUCwRmOfH3+2egVF/t7OtO4/FsA=
+	t=1744642658; cv=none; b=OOamRO6W+MPiwz1cFa5oZtRqEh1kClnKwXVwmO4MI0/k8H+UiNmiP7xcB7sseCIanno38TT5rCcGl43zbMPAwV84lX0AxEigGCB9kgvjQIWKR7Nnls8lJR6kE2KXyHuhErqBF6i0OfuyUI2vVf8rxJtSo3cT/cYjXRiA3QRFda4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642654; c=relaxed/simple;
-	bh=hnm/oYqQDUMkUrOAAhakj/9hXx1Nt4bMrYxs2saO9t8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IeMsBIHS63b3jOgoyz2OI+V/UALfHMhxRA8VlmKh4sti4kn3qxQe0FzbO0HZ13lI7Jh4NP83XGR4CUu2EZxKQZCmM/orDWnVbYg6SDWvlzgKDEjpm3C2pwEOWCsW+POcRSVK2IvtNXOZsMiqpxoXKqw4caIYtqGCxHvskVT2Zck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=e1MI4oDY; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744642658; c=relaxed/simple;
+	bh=5uey/9jBuQQ0FWhgq32xA/AF8acy1iMqMDMOkX+Q4lM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OPus3rAfDa/oqw2BXz8R5F4Ysxb8KZQXxyV4EcMTB+U3cVl0GRCyktrNZEePOjZgv8rukcoFpre+J+8YZ7MhN4Nr1vPzBa1yEc9KUm29Mk9vNUNcvgA857mF12qEOecjIzcB9mJfehkNXPtwFpZCB/VaqTnV3yOXl2LlBy+C/+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmAjw0qe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="e1MI4oDY"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso33714795e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744642649; x=1745247449; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MkFHWdqaWX0QyUTLHCeULo3hti03rOZsj812F135JBg=;
-        b=e1MI4oDYC90ZmNoZ9N8smxZTDtrQeX/MpDS7GCJ4/zc/I5H7tdKoIHa+rkzhvrx+zU
-         Mcd5qqOmtzmPIebkJzzEL8916DSNJdjTVS6vJ+TOJuYEFvTiBC3Jl/dPXnen69iT5xDe
-         ZDyhW41kqRjexVjm8RLhjxJsKKaclxhi4CFgYaH3UQVrkmN5AujP9cGq98KWq4aNlgm+
-         k4sI02KBWolwipDewf1YjHB5MS2DoeeCct+deh4wwQVuaOdF7ObJEoIHmFe9vnhWp4Wc
-         A4ZqoFJfeOIdeCGQB79yYJcH+6LMVeq+R/ChzukTTbgHGYoaNlMCWcHi2oi76XTzrcxn
-         jqHw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmAjw0qe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744642655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5sa1KMzPVUbpw2KNCiE/Fawx4j9zSiPJcyY6hcGjqFI=;
+	b=SmAjw0qeqIUu2EF+eByzCgFnDdH69Y6XPNuhx03CVuPJ6r/cb2fjx+7pesP9px2Nv7p6G/
+	YKly0gXhTOBbw6MJtd1w+Iag6O3dkBj1FliCeyJgfCDlmiKmk1Li3yc9x/AAHFvRLTRz53
+	AeYV0B7PyEwRU+owPqI2PTyj8+CTJ+U=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-XlCvf57-PNClaxNoFwxN3w-1; Mon, 14 Apr 2025 10:57:34 -0400
+X-MC-Unique: XlCvf57-PNClaxNoFwxN3w-1
+X-Mimecast-MFC-AGG-ID: XlCvf57-PNClaxNoFwxN3w_1744642654
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3913f97d115so2206847f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:57:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744642649; x=1745247449;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MkFHWdqaWX0QyUTLHCeULo3hti03rOZsj812F135JBg=;
-        b=s6rSnV5agO3ORQ7M2FRopyb2oR/U88pWv+qCN9Snc+LD2/fytumC+mGwkmy5xE98/0
-         xPpa92NRbNv1esPUEjnryundgrI6OPguZVCC3RF/GlKoDzjR+GgjR1xKUFXbPogW9/nk
-         8EcHDw89Xb3R+QZSb+5NTH1Ybt7pD2PMPaTyF+Exmfqals3TBKyUHpG2BgWbOtwAUUN3
-         5FbUbFN7WljdLqcrZBfsRPci3ACN00LJWdE+UW3lHx9UwUqFIQ/QOEqth9mOvDOAaEl+
-         xQ4Ho87StPEvTqPc6mjYobRfEBp0SpbcaaEsHP4atAe/fcmyBSFNBnx2ZKv7CSsHgOVM
-         j4tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIo6003DTdYWNlmLzKP937OXZgfh4pC3ItuPNqHmBmWUkKFW589FRPnzpiFR0pJH+70OexcJ+9Vsy98YI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhjGjIKL3RZnWOj41iJLAen+2RHCWV4TVDxYw0v3uODhT6GwuY
-	T11Jjj7Ro9T2Tlxs9YQla/AAD/skoFWeQ5/DbbOTa4djpMGaboHKR4sewHn1Kbg=
-X-Gm-Gg: ASbGncsR16MmkyhleaTMoYYKHSj/hIzKLKchoblc5YTxsOOuE/hLtC1T+j5qbx6f/jR
-	hHvu0C3B8r/TbYjxKcsVTGEfy/5DfXOjXpIldI0NaITyLxBfVCeGwWZc2E9M9ME51CeMu4XrT4j
-	mxn9511vGHS8Zn8g8HBJ/XuyELGNTzEdzurGhoZ7cNG3Pdu4NV7X7A+gdMZ1UIjgoXSozAzHfjQ
-	LVasw7A69FlftLGT87AgEDU7dSifZFYyaD+QLZW9tsZ3ZgbMcIbYdalWW5B8LVoRVN/4uHRlmeb
-	qmzPlwAcpdFeSwuU3AvvD8SxhHtwo0CFGl+lrETU4wyzvIwwcrS4GXCWszPLnk9R0ZEc42B0QZy
-	QJhC6h/o=
-X-Google-Smtp-Source: AGHT+IEaJhoecPlmPXWGKen7dTKN59ocQmLUiBg6r4S0rqVEL6LRINhybBu0P7UQhy/dP7QC7yIQeA==
-X-Received: by 2002:a05:600c:1f11:b0:43b:cf12:2ca5 with SMTP id 5b1f17b1804b1-43f3a93c2f5mr101955755e9.8.1744642649070;
-        Mon, 14 Apr 2025 07:57:29 -0700 (PDT)
-Received: from localhost (p200300f65f13aa0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:aa04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f20625eeesm181127665e9.11.2025.04.14.07.57.28
+        d=1e100.net; s=20230601; t=1744642653; x=1745247453;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5sa1KMzPVUbpw2KNCiE/Fawx4j9zSiPJcyY6hcGjqFI=;
+        b=UP/jAMtP2CAFtz7vhRsN66VU7L1SdMWf8Bn9wibIXpBeQSK7M5hNrBP4hAYr2pyEo9
+         tyAcp7J9oilHWyAdVZVy525fc8YKuZcuATgU73T8o+lpolMAwlN+O8zVG+qOFzOSxQee
+         ptAIr4Kdr2JR7t2dq0O/25+pKlY1idIunPNJze5iw1eNpv/TzeF1ar+kf+09670g4F0O
+         NkQd863Etnl9xilRuClUhB6d7C0q4xon4jUHM3veG6x5pUBYEQZYbGCrZX1qk2H6iTZo
+         rKVGqMrgVQqOZWyTxy56J8cwVs3SWtH/zxy3ofsSrsiVVF0i8ibhuZgUc1d2Qx4lFJ4u
+         fyMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUF4BC88ecWr5fmuIUnGhuuIGF95YdXkaoJJn3yYSjC7sYShZPekgu6LocIYhmc1L3boIWAHqH8sT5SgzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhNOjkPrMeHxSOG5YjycPgyWF4FPzF9SK++LFHYd66nWGEjw6d
+	747/pDhjZJDBJaDMrN26hcpodtMk+l/6DnRmMdXgW0EljAguriOUv6AYu1w1fprA+jOx2hNsN0t
+	flRagT1Q5Cuc9l1BkfJXDxURYZQmf4wBpiB3ZnEDl+lxLF1Kaxk1AnleFugF+9w==
+X-Gm-Gg: ASbGncvNt5st8KiVQjC/X3ErHb+GqnxTm565lzSX/rVaJE71Gq1hbudBVR6Xtg7GzcN
+	Uzo9q2b4hz+N7Gf7rxk/eyCG4sgLCqRbH+f+Xo4EqHN9MhZby0n4EOKZ9FjEv7sfJZKNqNJ6MiU
+	4zEoCqT57Ci2vUmbdlvxsYDeE6zIyax0/UGwa/PeDCeWD7wZYLR6DMG/Zfd396fptG5U2JYd8H0
+	f+wxzeYLUOUhKsEYMrc4jEHGX+iqP4Z2I11gNkzmIj4RerDrVP5aH+z8zbgNRQ2FoqYH/cVZD23
+	+WOZuz/dKbVtBNOOTpNxqZry
+X-Received: by 2002:a5d:5f56:0:b0:390:e535:8750 with SMTP id ffacd0b85a97d-39e6e48846dmr9576039f8f.9.1744642653500;
+        Mon, 14 Apr 2025 07:57:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUePoA8CXCKRWtYvnKKIInk/j0CbqjuJ2mLiXYjmccJQ4ZcE+fLBnmyZcdyCqfwL3pNjKyHg==
+X-Received: by 2002:a5d:5f56:0:b0:390:e535:8750 with SMTP id ffacd0b85a97d-39e6e48846dmr9576006f8f.9.1744642652841;
+        Mon, 14 Apr 2025 07:57:32 -0700 (PDT)
+Received: from localhost.localdomain ([193.207.151.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cdfdsm11483858f8f.61.2025.04.14.07.57.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:57:28 -0700 (PDT)
-Date: Mon, 14 Apr 2025 16:57:26 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Hao Chang <ot_chhao.chang@mediatek.com>
-Cc: Sean Wang <sean.wang@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Wenbin Mei <wenbin.mei@mediatek.com>, 
-	Axe Yang <axe.yang@mediatek.com>, Qingliang Li <qingliang.li@mediatek.com>, 
-	Hanks Chen <hanks.chen@mediatek.com>, Chunhui Li <chunhui.li@mediatek.com>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v5 1/1] pinctrl: mediatek: Add EINT support for multiple
- addresses
-Message-ID: <43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoakqzd4wdi3df6y@w7ycd3k5ezvn>
-References: <20250322035307.4811-1-ot_chhao.chang@mediatek.com>
- <20250322035307.4811-2-ot_chhao.chang@mediatek.com>
+        Mon, 14 Apr 2025 07:57:32 -0700 (PDT)
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	linux-integrity@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Sumit Garg <sumit.garg@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH v3 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
+Date: Mon, 14 Apr 2025 16:56:53 +0200
+Message-ID: <20250414145653.239081-5-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250414145653.239081-1-sgarzare@redhat.com>
+References: <20250414145653.239081-1-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w4ospt4bmb4y7he7"
-Content-Disposition: inline
-In-Reply-To: <20250322035307.4811-2-ot_chhao.chang@mediatek.com>
+Content-Transfer-Encoding: 8bit
 
+From: Stefano Garzarella <sgarzare@redhat.com>
 
---w4ospt4bmb4y7he7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 1/1] pinctrl: mediatek: Add EINT support for multiple
- addresses
-MIME-Version: 1.0
+This driver does not support interrupts, and receiving the response is
+synchronous with sending the command.
 
-Hello,
+So we can set TPM_CHIP_FLAG_SYNC to support synchronous send() and
+return responses in the same buffer used for commands. This way we
+don't need to implement recv() op.
 
-this patch became commit 3ef9f710efcb in v6.15-rc1. It breaks booting a
-mt8365-evk.
+Keep using the same pre-allocated buffer to avoid having to allocate
+it for each command. We need the buffer to have the header required by
+the SVSM protocol and the command contiguous in memory.
 
-With earlycon it's possible to see a null pointer exception:
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
 
-	[    0.072938] Unable to handle kernel NULL pointer dereference at virtual=
- address 0000000000000002
-	[    0.074101] Mem abort info:
-	[    0.074468]   ESR =3D 0x0000000096000004
-	[    0.074984]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-	[    0.075681]   SET =3D 0, FnV =3D 0
-	[    0.076083]   EA =3D 0, S1PTW =3D 0
-	[    0.076495]   FSC =3D 0x04: level 0 translation fault
-	[    0.077134] Data abort info:
-	[    0.077511]   ISV =3D 0, ISS =3D 0x00000004, ISS2 =3D 0x00000000
-	[    0.078229]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
-	[    0.078891]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
-	[    0.079593] [0000000000000002] user address but active_mm is swapper
-	[    0.080426] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-	[    0.081248] Modules linked in:
-	[    0.081656] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3=
--00113-g3ef9f710efcb #18
-	[    0.082796] Hardware name: MediaTek MT8365 Open Platform EVK (DT)
-	[    0.083594] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-	[    0.084507] pc : mtk_eint_do_init+0x470/0x580
-	[    0.085088] lr : mtk_eint_do_init+0x37c/0x580
-	[    0.085663] sp : ffff80008160b7e0
-	[    0.086098] x29: ffff80008160b850 x28: 0000000000000000 x27: ffff800081=
-2600b0
-	[    0.087040] x26: ffff0000bf9b7a80 x25: ffff0000bf9baac8 x24: ffff0000bf=
-9baac8
-	[    0.087981] x23: 0000000000000000 x22: ffff8000800cebe0 x21: ffff800081=
-47e418
-	[    0.088922] x20: 0000000000000000 x19: ffff0000021be780 x18: 00000000ff=
-ffffff
-	[    0.089863] x17: 0000000000000003 x16: ffff000001832b00 x15: ffff000002=
-1b70e0
-	[    0.090804] x14: 0000000000000001 x13: ffff0000021b70e3 x12: ffff000001=
-832c00
-	[    0.091744] x11: 0000000000000000 x10: ffff800080f11cc0 x9 : ffff800081=
-60b780
-	[    0.092685] x8 : ffff80008160b780 x7 : 0000000000000000 x6 : 00000000ff=
-ffffff
-	[    0.093626] x5 : 0000000000000000 x4 : 0000000000000000 x3 : ffff800080=
-d0dbb0
-	[    0.094567] x2 : 0000000000000000 x1 : ffff800080d53100 x0 : 0000000000=
-000000
-	[    0.095509] Call trace:
-	[    0.095831]  mtk_eint_do_init+0x470/0x580 (P)
-	[    0.096408]  mtk_pctrl_init+0x464/0x4fc
-	[    0.096917]  mtk_pctrl_common_probe+0x30/0x60
-	[    0.097494]  platform_probe+0x68/0xdc
-	[    0.097981]  really_probe+0xbc/0x2c0
-	[    0.098457]  __driver_probe_device+0xcc/0x120
-	[    0.099035]  driver_probe_device+0x3c/0x154
-	[    0.099590]  __device_attach_driver+0xb8/0x140
-	[    0.100179]  bus_for_each_drv+0x88/0xe8
-	[    0.100688]  __device_attach+0xa0/0x190
-	[    0.101197]  device_initial_probe+0x14/0x20
-	[    0.101752]  bus_probe_device+0xb4/0xc0
-	[    0.102261]  device_add+0x554/0x72c
-	[    0.102724]  of_device_add+0x54/0x64
-	[    0.103201]  of_platform_device_create_pdata+0x8c/0x118
-	[    0.103891]  of_platform_bus_create+0x190/0x38c
-	[    0.104491]  of_platform_bus_create+0x1d8/0x38c
-	[    0.105091]  of_platform_populate+0x74/0x108
-	[    0.105656]  of_platform_default_populate_init+0xe8/0x10c
-	[    0.106369]  do_one_initcall+0x60/0x1d4
-	[    0.106879]  kernel_init_freeable+0x210/0x274
-	[    0.107456]  kernel_init+0x20/0x140
-	[    0.107921]  ret_from_fork+0x10/0x20
-	[    0.108400] Code: 14000002 39404265 f9403260 8b170000 (39400802)
-	[    0.109199] ---[ end trace 0000000000000000 ]---
-	[    0.109821] Kernel panic - not syncing: Attempted to kill init! exitcod=
-e=3D0x0000000b
-	[    0.110824] SMP: stopping secondary CPUs
-	[    0.111345] ---[ end Kernel panic - not syncing: Attempted to kill init=
-! exitcode=3D0x0000000b ]---
+diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+index d3ca5615b6f7..db1983072345 100644
+--- a/drivers/char/tpm/tpm_svsm.c
++++ b/drivers/char/tpm/tpm_svsm.c
+@@ -25,38 +25,32 @@ struct tpm_svsm_priv {
+ 	void *buffer;
+ };
+ 
+-static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len,
++static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t cmd_len,
+ 			 size_t buf_size)
+ {
+ 	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+ 	int ret;
+ 
+-	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
++	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, cmd_len);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/*
+ 	 * The SVSM call uses the same buffer for the command and for the
+-	 * response, so after this call, the buffer will contain the response
+-	 * that can be used by .recv() op.
++	 * response, so after this call, the buffer will contain the response.
++	 *
++	 * Note: we have to use an internal buffer because the device in SVSM
++	 * expects the svsm_vtpm header + data to be physically contiguous.
+ 	 */
+-	return snp_svsm_vtpm_send_command(priv->buffer);
+-}
+-
+-static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+-{
+-	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
++	ret = snp_svsm_vtpm_send_command(priv->buffer);
++	if (ret)
++		return ret;
+ 
+-	/*
+-	 * The internal buffer contains the response after we send the command
+-	 * to SVSM.
+-	 */
+-	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
++	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, buf_size);
+ }
+ 
+ static struct tpm_class_ops tpm_chip_ops = {
+ 	.flags = TPM_OPS_AUTO_STARTUP,
+-	.recv = tpm_svsm_recv,
+ 	.send = tpm_svsm_send,
+ };
+ 
+@@ -85,6 +79,7 @@ static int __init tpm_svsm_probe(struct platform_device *pdev)
+ 
+ 	dev_set_drvdata(&chip->dev, priv);
+ 
++	chip->flags |= TPM_CHIP_FLAG_SYNC;
+ 	err = tpm2_probe(chip);
+ 	if (err)
+ 		return err;
+-- 
+2.49.0
 
-The problem is that ...
-
-On Sat, Mar 22, 2025 at 11:52:28AM +0800, Hao Chang wrote:
->  int mtk_eint_do_init(struct mtk_eint *eint)
->  {
-> -	int i;
-> +	unsigned int size, i, port, inst =3D 0;
-> +	struct mtk_pinctrl *hw =3D (struct mtk_pinctrl *)eint->pctl;
-> =20
->  	/* If clients don't assign a specific regs, let's use generic one */
->  	if (!eint->regs)
->  		eint->regs =3D &mtk_generic_eint_regs;
-> =20
-> -	eint->wake_mask =3D devm_kcalloc(eint->dev, eint->hw->ports,
-> -				       sizeof(*eint->wake_mask), GFP_KERNEL);
-> -	if (!eint->wake_mask)
-> +	eint->base_pin_num =3D devm_kmalloc_array(eint->dev, eint->nbase, sizeo=
-f(u16),
-> +						GFP_KERNEL | __GFP_ZERO);
-> +	if (!eint->base_pin_num)
->  		return -ENOMEM;
-> =20
-> -	eint->cur_mask =3D devm_kcalloc(eint->dev, eint->hw->ports,
-> -				      sizeof(*eint->cur_mask), GFP_KERNEL);
-> -	if (!eint->cur_mask)
-> -		return -ENOMEM;
-> +	if (eint->nbase =3D=3D 1) {
-> +		size =3D eint->hw->ap_num * sizeof(struct mtk_eint_pin);
-> +		eint->pins =3D devm_kmalloc(eint->dev, size, GFP_KERNEL);
-> +		if (!eint->pins)
-> +			goto err_pins;
-> +
-> +		eint->base_pin_num[inst] =3D eint->hw->ap_num;
-> +		for (i =3D 0; i < eint->hw->ap_num; i++) {
-> +			eint->pins[i].instance =3D inst;
-> +			eint->pins[i].index =3D i;
-> +			eint->pins[i].debounce =3D (i < eint->hw->db_cnt) ? 1 : 0;
-> +		}
-> +	}
-> =20
-> -	eint->dual_edge =3D devm_kcalloc(eint->dev, eint->hw->ap_num,
-> -				       sizeof(int), GFP_KERNEL);
-> -	if (!eint->dual_edge)
-> -		return -ENOMEM;
-> +	if (hw && hw->soc && hw->soc->eint_pin) {
-> +		eint->pins =3D hw->soc->eint_pin;
-> +		for (i =3D 0; i < eint->hw->ap_num; i++) {
-> +			inst =3D eint->pins[i].instance;
-> +			if (inst >=3D eint->nbase)
-> +				continue;
-> +			eint->base_pin_num[inst]++;
-> +		}
-> +	}
-> +
-> +	eint->pin_list =3D devm_kmalloc(eint->dev, eint->nbase * sizeof(u16 *),=
- GFP_KERNEL);
-> +	if (!eint->pin_list)
-> +		goto err_pin_list;
-> +
-> +	eint->wake_mask =3D devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *)=
-, GFP_KERNEL);
-> +	if (!eint->wake_mask)
-> +		goto err_wake_mask;
-> +
-> +	eint->cur_mask =3D devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *),=
- GFP_KERNEL);
-> +	if (!eint->cur_mask)
-> +		goto err_cur_mask;
-> +
-> +	for (i =3D 0; i < eint->nbase; i++) {
-> +		eint->pin_list[i] =3D devm_kzalloc(eint->dev, eint->base_pin_num[i] * =
-sizeof(u16),
-> +						 GFP_KERNEL);
-> +		port =3D DIV_ROUND_UP(eint->base_pin_num[i], 32);
-> +		eint->wake_mask[i] =3D devm_kzalloc(eint->dev, port * sizeof(u32), GFP=
-_KERNEL);
-> +		eint->cur_mask[i] =3D devm_kzalloc(eint->dev, port * sizeof(u32), GFP_=
-KERNEL);
-> +		if (!eint->pin_list[i] || !eint->wake_mask[i] || !eint->cur_mask[i])
-> +			goto err_eint;
-> +	}
-> =20
->  	eint->domain =3D irq_domain_add_linear(eint->dev->of_node,
->  					     eint->hw->ap_num,
->  					     &irq_domain_simple_ops, NULL);
->  	if (!eint->domain)
-> -		return -ENOMEM;
-> +		goto err_eint;
-> =20
->  	if (eint->hw->db_time) {
->  		for (i =3D 0; i < MTK_EINT_DBNC_MAX; i++)
-> @@ -523,8 +580,11 @@ int mtk_eint_do_init(struct mtk_eint *eint)
-> =20
->  	mtk_eint_hw_init(eint);
->  	for (i =3D 0; i < eint->hw->ap_num; i++) {
-> +		inst =3D eint->pins[i].instance;
-
-=2E.. here eint->pins is NULL.
-
-> +		if (inst >=3D eint->nbase)
-> +			continue;
-> +		eint->pin_list[inst][eint->pins[i].index] =3D i;
->  		int virq =3D irq_create_mapping(eint->domain, i);
-> -
->  		irq_set_chip_and_handler(virq, &mtk_eint_irq_chip,
->  					 handle_level_irq);
->  		irq_set_chip_data(virq, eint);
-> @@ -534,6 +594,27 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->  					 eint);
-> =20
->  	return 0;
-> +
-> +err_eint:
-> +	for (i =3D 0; i < eint->nbase; i++) {
-> +		if (eint->cur_mask[i])
-> +			devm_kfree(eint->dev, eint->cur_mask[i]);
-> +		if (eint->wake_mask[i])
-> +			devm_kfree(eint->dev, eint->wake_mask[i]);
-> +		if (eint->pin_list[i])
-> +			devm_kfree(eint->dev, eint->pin_list[i]);
-> +	}
-> +	devm_kfree(eint->dev, eint->cur_mask);
-> +err_cur_mask:
-> +	devm_kfree(eint->dev, eint->wake_mask);
-> +err_wake_mask:
-> +	devm_kfree(eint->dev, eint->pin_list);
-> +err_pin_list:
-> +	if (eint->nbase =3D=3D 1)
-> +		devm_kfree(eint->dev, eint->pins);
-> +err_pins:
-> +	devm_kfree(eint->dev, eint->base_pin_num);
-> +	return -ENOMEM;
->  }
->  EXPORT_SYMBOL_GPL(mtk_eint_do_init);
-
-That commit can be cleanly reverted on top of v6.15-rc2 which makes my
-machine boot again.
-
-Best regards
-Uwe
-
-#regzbot introduced: 3ef9f710efcb
-
---w4ospt4bmb4y7he7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf9IlMACgkQj4D7WH0S
-/k4QXggAgyNLn6ylpjS1KX4hrElozzwTP7V+KDK8Y7CFWkovlKY0pUSCvJ3Ml6jK
-p9JLwHC4fcoPrUSmKfQD5BPvx3DtgFJn3IepDCF8HKGptPE8MFeeq6rUUmVXmvi0
-zIyCxPke3FZVhB7GqYBcWuICz3HgNzDTS0F+nxIs1t4e4gEQFXSpEmwbU0W8mmPv
-c6bcDCJgqNKdJzYeg/reovaX/rtRSy9x0o7BGZLs1RaAp7/ZcjUaDCRv3vXB/OEk
-385Xt4KjxPDUaoIsYHMXoXEQ3ToNST55h+EUWIBrfcVnaehc2HB9PUIOnd6u1cmE
-nCMWuO1KuTJ15lE1ICZPeNnKm4cz1Q==
-=bFBV
------END PGP SIGNATURE-----
-
---w4ospt4bmb4y7he7--
