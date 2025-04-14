@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E981F259CA0;
-	Mon, 14 Apr 2025 07:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9764D26656D;
+	Mon, 14 Apr 2025 07:35:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616125; cv=none; b=jGd+uWxhsjstwhrDA0d/u0fSDAgCq9gPS2ktngkFVDENYMkE0ZTf1CudoZ2CU8L2wGL99QtfhgutTomv4NsBS+L+EptafsPYP2kYrI3erHWoF7BJsJ7mqFwd6CYZZnmJTyiZlW4ZtwekhfxsLh0RZ22Zz5OFpZcgIDNoRzfrX3M=
+	t=1744616125; cv=none; b=PooA5y3cNxlezizgo1HvGSR1HFsQFlvYt5yLaLrJ3YZWuRi2lQNX5R0eJfPbZ42Pg/nGqXOw/G/ePZ6NaAK7HsfgSjc/I1lGcMSjTqi4Ph4ejw0mZP+AYbDjF+mhmfx0oGu6Jru4GFvdq745hGXiStef8LPGAeSC1vtiHZgyw2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744616125; c=relaxed/simple;
-	bh=3f+QJcDOdimtjIwkci3MWzQBxsjC53ChyNHscrkIkX8=;
+	bh=0MaAoHDr1CDVzxRbHnM4xxKoKnL4pRQuzw5J94sWokQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ixl+kof66VZiwXjREWutko0KTiqx843jsTix2PZ3EXwyF+bzts6yYjsPT7+TD/O6357RFPzfvbPPngctLFcxwU3oXLXUnXjl5z6usrCRqLVqV8CbymbqoOVmsqgKrEcPBwyASyU0C2vqctJlwx/cyMJzFcw83ZbQuMoxCE4aCTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfhKsEzt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hU3+Ukg5RPenWavhC4qle6CZ/wme8BmGwjqhMbAio/PwkQdS1BbLTQV+XOxbEItpo/MZkKMsOvDonr0qC3B/S8NRa+7FxuS3vGiJXPyATWi/QwRY0eGdsXHBDOg0a2lMe618iGKSzLvOETBvp5zWyBCpoHU2/w0yMWKDcRIIm8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O77euCSm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfhKsEzt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 73844C4CEEE;
-	Mon, 14 Apr 2025 07:35:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O77euCSm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 341BDC4CEEB;
+	Mon, 14 Apr 2025 07:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744616124;
-	bh=3f+QJcDOdimtjIwkci3MWzQBxsjC53ChyNHscrkIkX8=;
+	s=k20201202; t=1744616125;
+	bh=0MaAoHDr1CDVzxRbHnM4xxKoKnL4pRQuzw5J94sWokQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=UfhKsEztf3D6bwqvhIoDBRzwACfLpZnvuT1lpKTRCMO4sTlxW+xFjknGNgWCEQMea
-	 N32LaamGYB7vUu9iLQZjzm68ryZZsTvT3DAVKxE9Rl0Vm9g0tkjFUV38kNk3hyM6ut
-	 kircFmm0XcIq7MzbQ4WYgTwejYpTr6ejKJoNWgpNvAjuqo2CY+aFt7oM0+L1b4HyyX
-	 0WW4uHD2JAndO5mxcuO79YythpK3hIt3vjf2Wbwh2t3NXSTDrcARo0hWt1nY3+yw9Y
-	 alxzKA6HdgpstvlVorMBLoq7LfjDyocAran+UMgSqG7qpGlzH+blmvkSWi/YD/i16B
-	 r/WP6HrICtGhg==
+	b=O77euCSmAREmhpoUAxKym+ZkaxPnLhh+0NYJ70gBFAoNJmCZUbO5W2+3JVVVzu3f2
+	 99HtQznBa8oyjB88hKVzr7taYL/JNfy1DO22sWjU0s4wLSiWF63j0Tu3HEG3MWmP8F
+	 IuSNmoF5S3wjE51gVo4spPcfi73AXnYWkr9b1YRGt4qBDy1TWy5jnkLvZQkTQkZfYD
+	 85h3QpBawHX+S39i9gzPfRTR5rl1SQV2o1B1+UtJrB8BYdiDuuNx9DmTNPkB6otz78
+	 kqnuoNk2XsUeANKNXLl+tKsxcalsUTMrEJHFkot+wfIaqz2mgb61zHMRNpId/tbaq1
+	 /6jMGGTy6AWcw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67423C369AE;
-	Mon, 14 Apr 2025 07:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2E5C369B4;
+	Mon, 14 Apr 2025 07:35:25 +0000 (UTC)
 From: Keke Li via B4 Relay <devnull+keke.li.amlogic.com@kernel.org>
-Date: Mon, 14 Apr 2025 15:35:15 +0800
-Subject: [PATCH v8 02/10] media: platform: Add C3 MIPI CSI-2 driver
+Date: Mon, 14 Apr 2025 15:35:22 +0800
+Subject: [PATCH v8 09/10] Documentation: media: add documentation file
+ metafmt-c3-isp.rst
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-c3isp-v8-2-9f89e537494e@amlogic.com>
+Message-Id: <20250414-c3isp-v8-9-9f89e537494e@amlogic.com>
 References: <20250414-c3isp-v8-0-9f89e537494e@amlogic.com>
 In-Reply-To: <20250414-c3isp-v8-0-9f89e537494e@amlogic.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -51,11 +52,11 @@ Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
  laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, 
  jacopo.mondi@ideasonboard.com, Keke Li <keke.li@amlogic.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744616122; l=30658;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744616122; l=5017;
  i=keke.li@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=iBw/ra60qwqcG/9qFcvp1FSrLOmxFwvu2rSQPZZabQE=;
- b=MAIDzTeQ9GEWUsSF8RtK8h+goQPPCErcDLE+dRllmQcStQh51BwGeixxPaMwPwnd/ZpYVFK7j
- G9qiPNzDYBUA4dz8roXRo+ot8n8P0CEj8yxfKN5MpfiVWopU62a2kKC
+ bh=Y2xAhnVamQXsHOplTghUW7N4TKJYgc8KO7h0VyNU8Ic=;
+ b=iwduCRUzo7fqoPvWhuk7EjV3FgGZay5Kg4gJBntN91ZU8UKitULf6/7Ih78ZgwWNmG2ZXsDmP
+ 5jsfwPahesNCNQb5UZaTJSEP8n1bPKU+vaRMxCG851WwU6/tqeTSlmf
 X-Developer-Key: i=keke.li@amlogic.com; a=ed25519;
  pk=XxNPTsQ0YqMJLLekV456eoKV5gbSlxnViB1k1DhfRmU=
 X-Endpoint-Received: by B4 Relay for keke.li@amlogic.com/20240902 with
@@ -65,940 +66,133 @@ Reply-To: keke.li@amlogic.com
 
 From: Keke Li <keke.li@amlogic.com>
 
-Add a driver for the CSI-2 receiver uinit found on the Amlogic C3 SoC.
+Add the file 'metafmt-c3-isp.rst' that documents
+the meta format of c3-isp.
 
-Create a drivers/media/platform/amlogic/c3/ directory to host the driver
-and the forthcoming support for the Amlogic C3 MIPI adapter and C3 ISP.
-
-This driver is used to receive the MIPI data from image sensor.
-
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Keke Li <keke.li@amlogic.com>
 ---
- MAINTAINERS                                        |   1 +
- drivers/media/platform/amlogic/Kconfig             |   1 +
- drivers/media/platform/amlogic/Makefile            |   2 +
- drivers/media/platform/amlogic/c3/Kconfig          |   3 +
- drivers/media/platform/amlogic/c3/Makefile         |   3 +
- .../media/platform/amlogic/c3/mipi-csi2/Kconfig    |  16 +
- .../media/platform/amlogic/c3/mipi-csi2/Makefile   |   3 +
- .../platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c   | 827 +++++++++++++++++++++
- 8 files changed, 856 insertions(+)
+ .../userspace-api/media/v4l/meta-formats.rst       |  1 +
+ .../userspace-api/media/v4l/metafmt-c3-isp.rst     | 86 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 3 files changed, 88 insertions(+)
 
+diff --git a/Documentation/userspace-api/media/v4l/meta-formats.rst b/Documentation/userspace-api/media/v4l/meta-formats.rst
+index 86ffb3bc8ade..bb6876cfc271 100644
+--- a/Documentation/userspace-api/media/v4l/meta-formats.rst
++++ b/Documentation/userspace-api/media/v4l/meta-formats.rst
+@@ -12,6 +12,7 @@ These formats are used for the :ref:`metadata` interface only.
+ .. toctree::
+     :maxdepth: 1
+ 
++    metafmt-c3-isp
+     metafmt-d4xx
+     metafmt-generic
+     metafmt-intel-ipu3
+diff --git a/Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst b/Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+new file mode 100644
+index 000000000000..449b45c2ec24
+--- /dev/null
++++ b/Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+@@ -0,0 +1,86 @@
++.. SPDX-License-Identifier: (GPL-2.0-only OR MIT)
++
++.. _v4l2-meta-fmt-c3isp-stats:
++.. _v4l2-meta-fmt-c3isp-params:
++
++***********************************************************************
++V4L2_META_FMT_C3ISP_STATS ('C3ST'), V4L2_META_FMT_C3ISP_PARAMS ('C3PM')
++***********************************************************************
++
++.. c3_isp_stats_info
++
++3A Statistics
++=============
++
++The C3 ISP can collect different statistics over an input Bayer frame.
++Those statistics are obtained from the "c3-isp-stats" metadata capture video nodes,
++using the :c:type:`v4l2_meta_format` interface.
++They are formatted as described by the :c:type:`c3_isp_stats_info` structure.
++
++The statistics collected are  Auto-white balance,
++Auto-exposure and Auto-focus information.
++
++.. c3_isp_params_cfg
++
++Configuration Parameters
++========================
++
++The configuration parameters are passed to the c3-isp-params metadata output video node,
++using the :c:type:`v4l2_meta_format` interface. Rather than a single struct containing
++sub-structs for each configurable area of the ISP, parameters for the C3-ISP
++are defined as distinct structs or "blocks" which may be added to the data
++member of :c:type:`c3_isp_params_cfg`. Userspace is responsible for
++populating the data member with the blocks that need to be configured by the driver, but
++need not populate it with **all** the blocks, or indeed with any at all if there
++are no configuration changes to make. Populated blocks **must** be consecutive
++in the buffer. To assist both userspace and the driver in identifying the
++blocks each block-specific struct embeds
++:c:type:`c3_isp_params_block_header` as its first member and userspace
++must populate the type member with a value from
++:c:type:`c3_isp_params_block_type`. Once the blocks have been populated
++into the data buffer, the combined size of all populated blocks shall be set in
++the data_size member of :c:type:`c3_isp_params_cfg`. For example:
++
++.. code-block:: c
++
++	struct c3_isp_params_cfg *params =
++		(struct c3_isp_params_cfg *)buffer;
++
++	params->version = C3_ISP_PARAM_BUFFER_V0;
++	params->data_size = 0;
++
++	void *data = (void *)params->data;
++
++	struct c3_isp_params_awb_gains *gains =
++		(struct c3_isp_params_awb_gains *)data;
++
++	gains->header.type = C3_ISP_PARAMS_BLOCK_AWB_GAINS;
++	gains->header.flags = C3_ISP_PARAMS_BLOCK_FL_ENABLE;
++	gains->header.size = sizeof(struct c3_isp_params_awb_gains);
++
++	gains->gr_gain = 256;
++	gains->r_gain = 256;
++	gains->b_gain = 256;
++	gains->gb_gain = 256;
++
++	data += sizeof(struct c3_isp__params_awb_gains);
++	params->data_size += sizeof(struct c3_isp_params_awb_gains);
++
++	struct c3_isp_params_awb_config *awb_cfg =
++		(struct c3_isp_params_awb_config *)data;
++
++	awb_cfg->header.type = C3_ISP_PARAMS_BLOCK_AWB_CONFIG;
++	awb_cfg->header.flags = C3_ISP_PARAMS_BLOCK_FL_ENABLE;
++	awb_cfg->header.size = sizeof(struct c3_isp_params_awb_config);
++
++	awb_cfg->tap_point = C3_ISP_AWB_STATS_TAP_BEFORE_WB;
++	awb_cfg->satur = 1;
++	awb_cfg->horiz_zones_num = 32;
++	awb_cfg->vert_zones_num = 24;
++
++	params->data_size += sizeof(struct c3_isp_params_awb_config);
++
++Amlogic C3 ISP uAPI data types
++===============================
++
++.. kernel-doc:: include/uapi/linux/media/amlogic/c3-isp-config.h
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ded945532da2..311847a6d69d 100644
+index f2dbd348b6bb..b2bf9c6cd194 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -1260,6 +1260,7 @@ M:	Keke Li <keke.li@amlogic.com>
  L:	linux-media@vger.kernel.org
  S:	Maintained
- F:	Documentation/devicetree/bindings/media/amlogic,c3-mipi-csi2.yaml
-+F:	drivers/media/platform/amlogic/c3/mipi-csi2/
+ F:	Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
++F:	Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+ F:	drivers/media/platform/amlogic/c3/isp/
+ F:	include/uapi/linux/media/amlogic/
  
- AMLOGIC PINCTRL DRIVER
- M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
-diff --git a/drivers/media/platform/amlogic/Kconfig b/drivers/media/platform/amlogic/Kconfig
-index 5014957404e9..458acf3d5fa8 100644
---- a/drivers/media/platform/amlogic/Kconfig
-+++ b/drivers/media/platform/amlogic/Kconfig
-@@ -2,4 +2,5 @@
- 
- comment "Amlogic media platform drivers"
- 
-+source "drivers/media/platform/amlogic/c3/Kconfig"
- source "drivers/media/platform/amlogic/meson-ge2d/Kconfig"
-diff --git a/drivers/media/platform/amlogic/Makefile b/drivers/media/platform/amlogic/Makefile
-index d3cdb8fa4ddb..c744afcd1b9e 100644
---- a/drivers/media/platform/amlogic/Makefile
-+++ b/drivers/media/platform/amlogic/Makefile
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-y += c3/
- obj-y += meson-ge2d/
-diff --git a/drivers/media/platform/amlogic/c3/Kconfig b/drivers/media/platform/amlogic/c3/Kconfig
-new file mode 100644
-index 000000000000..098d458747b8
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/Kconfig
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+source "drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig"
-diff --git a/drivers/media/platform/amlogic/c3/Makefile b/drivers/media/platform/amlogic/c3/Makefile
-new file mode 100644
-index 000000000000..a468fb782f94
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-y += mipi-csi2/
-diff --git a/drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig b/drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig
-new file mode 100644
-index 000000000000..0d7b2e203273
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config VIDEO_C3_MIPI_CSI2
-+	tristate "Amlogic C3 MIPI CSI-2 receiver"
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on VIDEO_DEV
-+	depends on OF
-+	select MEDIA_CONTROLLER
-+	select V4L2_FWNODE
-+	select VIDEO_V4L2_SUBDEV_API
-+	help
-+	  Video4Linux2 driver for Amlogic C3 MIPI CSI-2 receiver.
-+	  C3 MIPI CSI-2 receiver is used to receive MIPI data from
-+	  image sensor.
-+
-+	  To compile this driver as a module choose m here.
-diff --git a/drivers/media/platform/amlogic/c3/mipi-csi2/Makefile b/drivers/media/platform/amlogic/c3/mipi-csi2/Makefile
-new file mode 100644
-index 000000000000..cc08fc722bfd
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/mipi-csi2/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-$(CONFIG_VIDEO_C3_MIPI_CSI2) += c3-mipi-csi2.o
-diff --git a/drivers/media/platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c b/drivers/media/platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c
-new file mode 100644
-index 000000000000..f92815ffa4ae
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c
-@@ -0,0 +1,827 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-+/*
-+ * Copyright (C) 2024 Amlogic, Inc. All rights reserved
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-common.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-fwnode.h>
-+#include <media/v4l2-mc.h>
-+#include <media/v4l2-subdev.h>
-+
-+/* C3 CSI-2 submodule definition */
-+enum {
-+	SUBMD_APHY,
-+	SUBMD_DPHY,
-+	SUBMD_HOST,
-+};
-+
-+#define CSI2_SUBMD_MASK		GENMASK(17, 16)
-+#define CSI2_SUBMD_SHIFT	16
-+#define CSI2_SUBMD(x)	(((x) & (CSI2_SUBMD_MASK)) >> (CSI2_SUBMD_SHIFT))
-+#define CSI2_REG_ADDR_MASK	GENMASK(15, 0)
-+#define CSI2_REG_ADDR(x)	((x) & (CSI2_REG_ADDR_MASK))
-+#define CSI2_REG_A(x)		((SUBMD_APHY << CSI2_SUBMD_SHIFT) | (x))
-+#define CSI2_REG_D(x)		((SUBMD_DPHY << CSI2_SUBMD_SHIFT) | (x))
-+#define CSI2_REG_H(x)		((SUBMD_HOST << CSI2_SUBMD_SHIFT) | (x))
-+
-+#define MIPI_CSI2_CLOCK_NUM_MAX			3
-+#define MIPI_CSI2_SUBDEV_NAME			"c3-mipi-csi2"
-+
-+/* C3 CSI-2 APHY register */
-+#define CSI_PHY_CNTL0				CSI2_REG_A(0x44)
-+#define CSI_PHY_CNTL0_HS_LP_BIAS_EN		BIT(10)
-+#define CSI_PHY_CNTL0_HS_RX_TRIM_11		(11 << 11)
-+#define CSI_PHY_CNTL0_LP_LOW_VTH_2		(2 << 16)
-+#define CSI_PHY_CNTL0_LP_HIGH_VTH_4		(4 << 20)
-+#define CSI_PHY_CNTL0_DATA_LANE0_HS_DIG_EN	BIT(24)
-+#define CSI_PHY_CNTL0_DATA_LANE1_HS_DIG_EN	BIT(25)
-+#define CSI_PHY_CNTL0_CLK0_LANE_HS_DIG_EN	BIT(26)
-+#define CSI_PHY_CNTL0_DATA_LANE2_HS_DIG_EN	BIT(27)
-+#define CSI_PHY_CNTL0_DATA_LANE3_HS_DIG_EN	BIT(28)
-+
-+#define CSI_PHY_CNTL1				CSI2_REG_A(0x48)
-+#define CSI_PHY_CNTL1_HS_EQ_CAP_SMALL		(2 << 16)
-+#define CSI_PHY_CNTL1_HS_EQ_CAP_BIG		(3 << 16)
-+#define CSI_PHY_CNTL1_HS_EQ_RES_MIN		(3 << 18)
-+#define CSI_PHY_CNTL1_HS_EQ_RES_MED		(2 << 18)
-+#define CSI_PHY_CNTL1_HS_EQ_RES_MAX		BIT(18)
-+#define CSI_PHY_CNTL1_CLK_CHN_EQ_MAX_GAIN	BIT(20)
-+#define CSI_PHY_CNTL1_DATA_CHN_EQ_MAX_GAIN	BIT(21)
-+#define CSI_PHY_CNTL1_COM_BG_EN			BIT(24)
-+#define CSI_PHY_CNTL1_HS_SYNC_EN		BIT(25)
-+
-+/* C3 CSI-2 DPHY register */
-+#define MIPI_PHY_CTRL				CSI2_REG_D(0x00)
-+#define MIPI_PHY_CTRL_DATA_LANE0_EN		(0 << 0)
-+#define MIPI_PHY_CTRL_DATA_LANE0_DIS		BIT(0)
-+#define MIPI_PHY_CTRL_DATA_LANE1_EN		(0 << 1)
-+#define MIPI_PHY_CTRL_DATA_LANE1_DIS		BIT(1)
-+#define MIPI_PHY_CTRL_DATA_LANE2_EN		(0 << 2)
-+#define MIPI_PHY_CTRL_DATA_LANE2_DIS		BIT(2)
-+#define MIPI_PHY_CTRL_DATA_LANE3_EN		(0 << 3)
-+#define MIPI_PHY_CTRL_DATA_LANE3_DIS		BIT(3)
-+#define MIPI_PHY_CTRL_CLOCK_LANE_EN		(0 << 4)
-+#define MIPI_PHY_CTRL_CLOCK_LANE_DIS		BIT(4)
-+
-+#define MIPI_PHY_CLK_LANE_CTRL			CSI2_REG_D(0x04)
-+#define MIPI_PHY_CLK_LANE_CTRL_FORCE_ULPS_ENTER	BIT(0)
-+#define MIPI_PHY_CLK_LANE_CTRL_FORCE_ULPS_EXIT	BIT(1)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS	(0 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_2	BIT(3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_4	(2 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_8	(3 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_16	(4 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_EN	BIT(6)
-+#define MIPI_PHY_CLK_LANE_CTRL_LPEN_DIS		BIT(7)
-+#define MIPI_PHY_CLK_LANE_CTRL_END_EN		BIT(8)
-+#define MIPI_PHY_CLK_LANE_CTRL_HS_RX_EN		BIT(9)
-+
-+#define MIPI_PHY_DATA_LANE_CTRL1		CSI2_REG_D(0x0c)
-+#define MIPI_PHY_DATA_LANE_CTRL1_INSERT_ERRESC	BIT(0)
-+#define MIPI_PHY_DATA_LANE_CTRL1_HS_SYNC_CHK_EN	BIT(1)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_MASK	GENMASK(6, 2)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_ALL_EN	(0x1f << 2)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_DELAY_MASK	GENMASK(9, 7)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_DELAY_3	(3 << 7)
-+
-+#define MIPI_PHY_TCLK_MISS			CSI2_REG_D(0x10)
-+#define MIPI_PHY_TCLK_MISS_CYCLES_MASK		GENMASK(7, 0)
-+#define MIPI_PHY_TCLK_MISS_CYCLES_9		(9 << 0)
-+
-+#define MIPI_PHY_TCLK_SETTLE			CSI2_REG_D(0x14)
-+#define MIPI_PHY_TCLK_SETTLE_CYCLES_MASK	GENMASK(7, 0)
-+#define MIPI_PHY_TCLK_SETTLE_CYCLES_31		(31 << 0)
-+
-+#define MIPI_PHY_THS_EXIT			CSI2_REG_D(0x18)
-+#define MIPI_PHY_THS_EXIT_CYCLES_MASK		GENMASK(7, 0)
-+#define MIPI_PHY_THS_EXIT_CYCLES_8		(8 << 0)
-+
-+#define MIPI_PHY_THS_SKIP			CSI2_REG_D(0x1c)
-+#define MIPI_PHY_THS_SKIP_CYCLES_MASK		GENMASK(7, 0)
-+#define MIPI_PHY_THS_SKIP_CYCLES_10		(10 << 0)
-+
-+#define MIPI_PHY_THS_SETTLE			CSI2_REG_D(0x20)
-+#define MIPI_PHY_THS_SETTLE_CYCLES_MASK		GENMASK(7, 0)
-+
-+#define MIPI_PHY_TINIT				CSI2_REG_D(0x24)
-+#define MIPI_PHY_TINIT_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TINIT_CYCLES_20000		(20000 << 0)
-+
-+#define MIPI_PHY_TULPS_C			CSI2_REG_D(0x28)
-+#define MIPI_PHY_TULPS_C_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TULPS_C_CYCLES_4096		(4096 << 0)
-+
-+#define MIPI_PHY_TULPS_S			CSI2_REG_D(0x2c)
-+#define MIPI_PHY_TULPS_S_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TULPS_S_CYCLES_256		(256 << 0)
-+
-+#define MIPI_PHY_TMBIAS				CSI2_REG_D(0x30)
-+#define MIPI_PHY_TMBIAS_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TMBIAS_CYCLES_256		(256 << 0)
-+
-+#define MIPI_PHY_TLP_EN_W			CSI2_REG_D(0x34)
-+#define MIPI_PHY_TLP_EN_W_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TLP_EN_W_CYCLES_12		(12 << 0)
-+
-+#define MIPI_PHY_TLPOK				CSI2_REG_D(0x38)
-+#define MIPI_PHY_TLPOK_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TLPOK_CYCLES_256		(256 << 0)
-+
-+#define MIPI_PHY_TWD_INIT			CSI2_REG_D(0x3c)
-+#define MIPI_PHY_TWD_INIT_DOG_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TWD_INIT_DOG_0X400000		(0x400000 << 0)
-+
-+#define MIPI_PHY_TWD_HS				CSI2_REG_D(0x40)
-+#define MIPI_PHY_TWD_HS_DOG_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TWD_HS_DOG_0X400000		(0x400000 << 0)
-+
-+#define MIPI_PHY_MUX_CTRL0			CSI2_REG_D(0x284)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_MASK	GENMASK(3, 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE0	(0 << 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE1	BIT(0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE2	(2 << 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE3	(3 << 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_MASK	GENMASK(7, 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE0	(0 << 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE1	BIT(4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE2	(2 << 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE3	(3 << 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_MASK	GENMASK(11, 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE0	(0 << 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE1	BIT(8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE2	(2 << 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE3	(3 << 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_MASK	GENMASK(14, 12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE0	(0 << 12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE1	BIT(12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE2	(2 << 12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE3	(3 << 12)
-+
-+#define MIPI_PHY_MUX_CTRL1			CSI2_REG_D(0x288)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_MASK	GENMASK(3, 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN0	(0 << 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN1	BIT(0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN2	(2 << 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN3	(3 << 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_MASK	GENMASK(7, 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN0	(0 << 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN1	BIT(4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN2	(2 << 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN3	(3 << 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_MASK	GENMASK(11, 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN0	(0 << 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN1	BIT(8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN2	(2 << 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN3	(3 << 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_MASK	GENMASK(14, 12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN0	(0 << 12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN1	BIT(12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN2	(2 << 12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN3	(3 << 12)
-+
-+/* C3 CSI-2 HOST register */
-+#define CSI2_HOST_N_LANES			CSI2_REG_H(0x04)
-+#define CSI2_HOST_N_LANES_MASK			GENMASK(1, 0)
-+#define CSI2_HOST_N_LANES_1			(0 << 0)
-+#define CSI2_HOST_N_LANES_2			BIT(0)
-+#define CSI2_HOST_N_LANES_3			(2 << 0)
-+#define CSI2_HOST_N_LANES_4			(3 << 0)
-+
-+#define CSI2_HOST_CSI2_RESETN			CSI2_REG_H(0x10)
-+#define CSI2_HOST_CSI2_RESETN_MASK		BIT(0)
-+#define CSI2_HOST_CSI2_RESETN_ACTIVE		(0 << 0)
-+#define CSI2_HOST_CSI2_RESETN_EXIT		BIT(0)
-+
-+#define C3_MIPI_CSI2_MAX_WIDTH			2888
-+#define C3_MIPI_CSI2_MIN_WIDTH			160
-+#define C3_MIPI_CSI2_MAX_HEIGHT			2240
-+#define C3_MIPI_CSI2_MIN_HEIGHT			120
-+#define C3_MIPI_CSI2_DEFAULT_WIDTH		1920
-+#define C3_MIPI_CSI2_DEFAULT_HEIGHT		1080
-+#define C3_MIPI_CSI2_DEFAULT_FMT		MEDIA_BUS_FMT_SRGGB10_1X10
-+
-+/* C3 CSI-2 pad list */
-+enum {
-+	C3_MIPI_CSI2_PAD_SINK,
-+	C3_MIPI_CSI2_PAD_SRC,
-+	C3_MIPI_CSI2_PAD_MAX
-+};
-+
-+/*
-+ * struct c3_csi_info - MIPI CSI2 information
-+ *
-+ * @clocks: array of MIPI CSI2 clock names
-+ * @clock_num: actual clock number
-+ */
-+struct c3_csi_info {
-+	char *clocks[MIPI_CSI2_CLOCK_NUM_MAX];
-+	u32 clock_num;
-+};
-+
-+/*
-+ * struct c3_csi_device - MIPI CSI2 platform device
-+ *
-+ * @dev: pointer to the struct device
-+ * @aphy: MIPI CSI2 aphy register address
-+ * @dphy: MIPI CSI2 dphy register address
-+ * @host: MIPI CSI2 host register address
-+ * @clks: array of MIPI CSI2 clocks
-+ * @sd: MIPI CSI2 sub-device
-+ * @pads: MIPI CSI2 sub-device pads
-+ * @notifier: notifier to register on the v4l2-async API
-+ * @src_pad: source sub-device pad
-+ * @bus: MIPI CSI2 bus information
-+ * @info: version-specific MIPI CSI2 information
-+ */
-+struct c3_csi_device {
-+	struct device *dev;
-+	void __iomem *aphy;
-+	void __iomem *dphy;
-+	void __iomem *host;
-+	struct clk_bulk_data clks[MIPI_CSI2_CLOCK_NUM_MAX];
-+
-+	struct v4l2_subdev sd;
-+	struct media_pad pads[C3_MIPI_CSI2_PAD_MAX];
-+	struct v4l2_async_notifier notifier;
-+	struct media_pad *src_pad;
-+	struct v4l2_mbus_config_mipi_csi2 bus;
-+
-+	const struct c3_csi_info *info;
-+};
-+
-+static const u32 c3_mipi_csi_formats[] = {
-+	MEDIA_BUS_FMT_SBGGR10_1X10,
-+	MEDIA_BUS_FMT_SGBRG10_1X10,
-+	MEDIA_BUS_FMT_SGRBG10_1X10,
-+	MEDIA_BUS_FMT_SRGGB10_1X10,
-+	MEDIA_BUS_FMT_SBGGR12_1X12,
-+	MEDIA_BUS_FMT_SGBRG12_1X12,
-+	MEDIA_BUS_FMT_SGRBG12_1X12,
-+	MEDIA_BUS_FMT_SRGGB12_1X12,
-+};
-+
-+/* Hardware configuration */
-+
-+static void c3_mipi_csi_write(struct c3_csi_device *csi, u32 reg, u32 val)
-+{
-+	void __iomem *addr;
-+
-+	switch (CSI2_SUBMD(reg)) {
-+	case SUBMD_APHY:
-+		addr = csi->aphy + CSI2_REG_ADDR(reg);
-+		break;
-+	case SUBMD_DPHY:
-+		addr = csi->dphy + CSI2_REG_ADDR(reg);
-+		break;
-+	case SUBMD_HOST:
-+		addr = csi->host + CSI2_REG_ADDR(reg);
-+		break;
-+	default:
-+		dev_err(csi->dev, "Invalid sub-module: %lu\n", CSI2_SUBMD(reg));
-+		return;
-+	}
-+
-+	writel(val, addr);
-+}
-+
-+static void c3_mipi_csi_cfg_aphy(struct c3_csi_device *csi)
-+{
-+	c3_mipi_csi_write(csi, CSI_PHY_CNTL0,
-+			  CSI_PHY_CNTL0_HS_LP_BIAS_EN |
-+			  CSI_PHY_CNTL0_HS_RX_TRIM_11 |
-+			  CSI_PHY_CNTL0_LP_LOW_VTH_2 |
-+			  CSI_PHY_CNTL0_LP_HIGH_VTH_4 |
-+			  CSI_PHY_CNTL0_DATA_LANE0_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_DATA_LANE1_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_CLK0_LANE_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_DATA_LANE2_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_DATA_LANE3_HS_DIG_EN);
-+
-+	c3_mipi_csi_write(csi, CSI_PHY_CNTL1,
-+			  CSI_PHY_CNTL1_HS_EQ_CAP_SMALL |
-+			  CSI_PHY_CNTL1_HS_EQ_RES_MED |
-+			  CSI_PHY_CNTL1_CLK_CHN_EQ_MAX_GAIN |
-+			  CSI_PHY_CNTL1_DATA_CHN_EQ_MAX_GAIN |
-+			  CSI_PHY_CNTL1_COM_BG_EN |
-+			  CSI_PHY_CNTL1_HS_SYNC_EN);
-+}
-+
-+static void c3_mipi_csi_cfg_dphy(struct c3_csi_device *csi, s64 rate)
-+{
-+	u32 val;
-+	u32 settle;
-+
-+	/* Calculate the high speed settle */
-+	val = DIV_ROUND_UP(1000000000, rate);
-+	settle = (16 * val + 230) / 10;
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_CLK_LANE_CTRL,
-+			  MIPI_PHY_CLK_LANE_CTRL_HS_RX_EN |
-+			  MIPI_PHY_CLK_LANE_CTRL_END_EN |
-+			  MIPI_PHY_CLK_LANE_CTRL_LPEN_DIS |
-+			  MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_EN |
-+			  MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_8);
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_TCLK_MISS, MIPI_PHY_TCLK_MISS_CYCLES_9);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TCLK_SETTLE,
-+			  MIPI_PHY_TCLK_SETTLE_CYCLES_31);
-+	c3_mipi_csi_write(csi, MIPI_PHY_THS_EXIT, MIPI_PHY_THS_EXIT_CYCLES_8);
-+	c3_mipi_csi_write(csi, MIPI_PHY_THS_SKIP, MIPI_PHY_THS_SKIP_CYCLES_10);
-+	c3_mipi_csi_write(csi, MIPI_PHY_THS_SETTLE, settle);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TINIT, MIPI_PHY_TINIT_CYCLES_20000);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TMBIAS, MIPI_PHY_TMBIAS_CYCLES_256);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TULPS_C, MIPI_PHY_TULPS_C_CYCLES_4096);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TULPS_S, MIPI_PHY_TULPS_S_CYCLES_256);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TLP_EN_W, MIPI_PHY_TLP_EN_W_CYCLES_12);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TLPOK, MIPI_PHY_TLPOK_CYCLES_256);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TWD_INIT,
-+			  MIPI_PHY_TWD_INIT_DOG_0X400000);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TWD_HS, MIPI_PHY_TWD_HS_DOG_0X400000);
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_DATA_LANE_CTRL1,
-+			  MIPI_PHY_DATA_LANE_CTRL1_INSERT_ERRESC |
-+			  MIPI_PHY_DATA_LANE_CTRL1_HS_SYNC_CHK_EN |
-+			  MIPI_PHY_DATA_LANE_CTRL1_PIPE_ALL_EN |
-+			  MIPI_PHY_DATA_LANE_CTRL1_PIPE_DELAY_3);
-+
-+	/* Set the order of lanes */
-+	c3_mipi_csi_write(csi, MIPI_PHY_MUX_CTRL0,
-+			  MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE3 |
-+			  MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE2 |
-+			  MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE1 |
-+			  MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE0);
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_MUX_CTRL1,
-+			  MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN3 |
-+			  MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN2 |
-+			  MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN1 |
-+			  MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN0);
-+
-+	/* Enable digital data and clock lanes */
-+	c3_mipi_csi_write(csi, MIPI_PHY_CTRL,
-+			  MIPI_PHY_CTRL_DATA_LANE0_EN |
-+			  MIPI_PHY_CTRL_DATA_LANE1_EN |
-+			  MIPI_PHY_CTRL_DATA_LANE2_EN |
-+			  MIPI_PHY_CTRL_DATA_LANE3_EN |
-+			  MIPI_PHY_CTRL_CLOCK_LANE_EN);
-+}
-+
-+static void c3_mipi_csi_cfg_host(struct c3_csi_device *csi)
-+{
-+	/* Reset CSI-2 controller output */
-+	c3_mipi_csi_write(csi, CSI2_HOST_CSI2_RESETN,
-+			  CSI2_HOST_CSI2_RESETN_ACTIVE);
-+	c3_mipi_csi_write(csi, CSI2_HOST_CSI2_RESETN,
-+			  CSI2_HOST_CSI2_RESETN_EXIT);
-+
-+	/* Set data lane number */
-+	c3_mipi_csi_write(csi, CSI2_HOST_N_LANES, csi->bus.num_data_lanes - 1);
-+}
-+
-+static int c3_mipi_csi_start_stream(struct c3_csi_device *csi,
-+				    struct v4l2_subdev *src_sd)
-+{
-+	s64 link_freq;
-+	s64 lane_rate;
-+
-+	link_freq = v4l2_get_link_freq(src_sd->ctrl_handler, 0, 0);
-+	if (link_freq < 0) {
-+		dev_err(csi->dev,
-+			"Unable to obtain link frequency: %lld\n", link_freq);
-+		return link_freq;
-+	}
-+
-+	lane_rate = link_freq * 2;
-+	if (lane_rate > 1500000000) {
-+		dev_err(csi->dev, "Invalid lane rate: %lld\n", lane_rate);
-+		return -EINVAL;
-+	}
-+
-+	c3_mipi_csi_cfg_aphy(csi);
-+	c3_mipi_csi_cfg_dphy(csi, lane_rate);
-+	c3_mipi_csi_cfg_host(csi);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_enable_streams(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_state *state,
-+				      u32 pad, u64 streams_mask)
-+{
-+	struct c3_csi_device *csi = v4l2_get_subdevdata(sd);
-+	struct media_pad *sink_pad;
-+	struct v4l2_subdev *src_sd;
-+	int ret;
-+
-+	sink_pad = &csi->pads[C3_MIPI_CSI2_PAD_SINK];
-+	csi->src_pad = media_pad_remote_pad_unique(sink_pad);
-+	if (IS_ERR(csi->src_pad)) {
-+		dev_dbg(csi->dev, "Failed to get source pad for MIPI CSI-2\n");
-+		return -EPIPE;
-+	}
-+
-+	src_sd = media_entity_to_v4l2_subdev(csi->src_pad->entity);
-+
-+	pm_runtime_resume_and_get(csi->dev);
-+
-+	c3_mipi_csi_start_stream(csi, src_sd);
-+
-+	ret = v4l2_subdev_enable_streams(src_sd, csi->src_pad->index, BIT(0));
-+	if (ret) {
-+		pm_runtime_put(csi->dev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_disable_streams(struct v4l2_subdev *sd,
-+				       struct v4l2_subdev_state *state,
-+				       u32 pad, u64 streams_mask)
-+{
-+	struct c3_csi_device *csi = v4l2_get_subdevdata(sd);
-+	struct v4l2_subdev *src_sd;
-+
-+	if (csi->src_pad) {
-+		src_sd = media_entity_to_v4l2_subdev(csi->src_pad->entity);
-+		v4l2_subdev_disable_streams(src_sd, csi->src_pad->index,
-+					    BIT(0));
-+	}
-+	csi->src_pad = NULL;
-+
-+	pm_runtime_put(csi->dev);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_enum_mbus_code(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_state *state,
-+				      struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	struct v4l2_mbus_framefmt *fmt;
-+
-+	switch (code->pad) {
-+	case C3_MIPI_CSI2_PAD_SINK:
-+		if (code->index >= ARRAY_SIZE(c3_mipi_csi_formats))
-+			return -EINVAL;
-+
-+		code->code = c3_mipi_csi_formats[code->index];
-+		break;
-+	case C3_MIPI_CSI2_PAD_SRC:
-+		if (code->index)
-+			return -EINVAL;
-+
-+		fmt = v4l2_subdev_state_get_format(state, code->pad);
-+		code->code = fmt->code;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_set_fmt(struct v4l2_subdev *sd,
-+			       struct v4l2_subdev_state *state,
-+			       struct v4l2_subdev_format *format)
-+{
-+	struct v4l2_mbus_framefmt *fmt;
-+	unsigned int i;
-+
-+	if (format->pad != C3_MIPI_CSI2_PAD_SINK)
-+		return v4l2_subdev_get_fmt(sd, state, format);
-+
-+	fmt = v4l2_subdev_state_get_format(state, format->pad);
-+
-+	for (i = 0; i < ARRAY_SIZE(c3_mipi_csi_formats); i++) {
-+		if (format->format.code == c3_mipi_csi_formats[i]) {
-+			fmt->code = c3_mipi_csi_formats[i];
-+			break;
-+		}
-+	}
-+
-+	if (i == ARRAY_SIZE(c3_mipi_csi_formats))
-+		fmt->code = c3_mipi_csi_formats[0];
-+
-+	fmt->width = clamp_t(u32, format->format.width,
-+			     C3_MIPI_CSI2_MIN_WIDTH, C3_MIPI_CSI2_MAX_WIDTH);
-+	fmt->height = clamp_t(u32, format->format.height,
-+			      C3_MIPI_CSI2_MIN_HEIGHT, C3_MIPI_CSI2_MAX_HEIGHT);
-+	fmt->colorspace = V4L2_COLORSPACE_RAW;
-+	fmt->xfer_func = V4L2_XFER_FUNC_NONE;
-+	fmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
-+	fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
-+
-+	format->format = *fmt;
-+
-+	/* Synchronize the format to source pad */
-+	fmt = v4l2_subdev_state_get_format(state, C3_MIPI_CSI2_PAD_SRC);
-+	*fmt = format->format;
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_init_state(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_state *state)
-+{
-+	struct v4l2_mbus_framefmt *sink_fmt;
-+	struct v4l2_mbus_framefmt *src_fmt;
-+
-+	sink_fmt = v4l2_subdev_state_get_format(state, C3_MIPI_CSI2_PAD_SINK);
-+	src_fmt = v4l2_subdev_state_get_format(state, C3_MIPI_CSI2_PAD_SRC);
-+
-+	sink_fmt->width = C3_MIPI_CSI2_DEFAULT_WIDTH;
-+	sink_fmt->height = C3_MIPI_CSI2_DEFAULT_HEIGHT;
-+	sink_fmt->field = V4L2_FIELD_NONE;
-+	sink_fmt->code = C3_MIPI_CSI2_DEFAULT_FMT;
-+	sink_fmt->colorspace = V4L2_COLORSPACE_RAW;
-+	sink_fmt->xfer_func = V4L2_XFER_FUNC_NONE;
-+	sink_fmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
-+	sink_fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
-+
-+	*src_fmt = *sink_fmt;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_pad_ops c3_mipi_csi_pad_ops = {
-+	.enum_mbus_code = c3_mipi_csi_enum_mbus_code,
-+	.get_fmt = v4l2_subdev_get_fmt,
-+	.set_fmt = c3_mipi_csi_set_fmt,
-+	.enable_streams = c3_mipi_csi_enable_streams,
-+	.disable_streams = c3_mipi_csi_disable_streams,
-+};
-+
-+static const struct v4l2_subdev_ops c3_mipi_csi_subdev_ops = {
-+	.pad = &c3_mipi_csi_pad_ops,
-+};
-+
-+static const struct v4l2_subdev_internal_ops c3_mipi_csi_internal_ops = {
-+	.init_state = c3_mipi_csi_init_state,
-+};
-+
-+/* Media entity operations */
-+static const struct media_entity_operations c3_mipi_csi_entity_ops = {
-+	.link_validate = v4l2_subdev_link_validate,
-+};
-+
-+/* PM runtime */
-+
-+static int c3_mipi_csi_runtime_suspend(struct device *dev)
-+{
-+	struct c3_csi_device *csi = dev_get_drvdata(dev);
-+
-+	clk_bulk_disable_unprepare(csi->info->clock_num, csi->clks);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_runtime_resume(struct device *dev)
-+{
-+	struct c3_csi_device *csi = dev_get_drvdata(dev);
-+
-+	return clk_bulk_prepare_enable(csi->info->clock_num, csi->clks);
-+}
-+
-+static const struct dev_pm_ops c3_mipi_csi_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+			    pm_runtime_force_resume)
-+	RUNTIME_PM_OPS(c3_mipi_csi_runtime_suspend,
-+		       c3_mipi_csi_runtime_resume, NULL)
-+};
-+
-+/* Probe/remove & platform driver */
-+
-+static int c3_mipi_csi_subdev_init(struct c3_csi_device *csi)
-+{
-+	struct v4l2_subdev *sd = &csi->sd;
-+	int ret;
-+
-+	v4l2_subdev_init(sd, &c3_mipi_csi_subdev_ops);
-+	sd->owner = THIS_MODULE;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	sd->internal_ops = &c3_mipi_csi_internal_ops;
-+	snprintf(sd->name, sizeof(sd->name), "%s", MIPI_CSI2_SUBDEV_NAME);
-+
-+	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
-+	sd->entity.ops = &c3_mipi_csi_entity_ops;
-+
-+	sd->dev = csi->dev;
-+	v4l2_set_subdevdata(sd, csi);
-+
-+	csi->pads[C3_MIPI_CSI2_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
-+	csi->pads[C3_MIPI_CSI2_PAD_SRC].flags = MEDIA_PAD_FL_SOURCE;
-+	ret = media_entity_pads_init(&sd->entity, C3_MIPI_CSI2_PAD_MAX,
-+				     csi->pads);
-+	if (ret)
-+		return ret;
-+
-+	ret = v4l2_subdev_init_finalize(sd);
-+	if (ret) {
-+		media_entity_cleanup(&sd->entity);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void c3_mipi_csi_subdev_deinit(struct c3_csi_device *csi)
-+{
-+	v4l2_subdev_cleanup(&csi->sd);
-+	media_entity_cleanup(&csi->sd.entity);
-+}
-+
-+/* Subdev notifier register */
-+static int c3_mipi_csi_notify_bound(struct v4l2_async_notifier *notifier,
-+				    struct v4l2_subdev *sd,
-+				    struct v4l2_async_connection *asc)
-+{
-+	struct c3_csi_device *csi = v4l2_get_subdevdata(notifier->sd);
-+	struct media_pad *sink = &csi->sd.entity.pads[C3_MIPI_CSI2_PAD_SINK];
-+
-+	return v4l2_create_fwnode_links_to_pad(sd, sink, MEDIA_LNK_FL_ENABLED |
-+					       MEDIA_LNK_FL_IMMUTABLE);
-+}
-+
-+static const struct v4l2_async_notifier_operations c3_mipi_csi_notify_ops = {
-+	.bound = c3_mipi_csi_notify_bound,
-+};
-+
-+static int c3_mipi_csi_async_register(struct c3_csi_device *csi)
-+{
-+	struct v4l2_fwnode_endpoint vep = {
-+		.bus_type = V4L2_MBUS_CSI2_DPHY,
-+	};
-+	struct v4l2_async_connection *asc;
-+	struct fwnode_handle *ep;
-+	int ret;
-+
-+	v4l2_async_subdev_nf_init(&csi->notifier, &csi->sd);
-+
-+	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(csi->dev), 0, 0,
-+					     FWNODE_GRAPH_ENDPOINT_NEXT);
-+	if (!ep)
-+		return -ENOTCONN;
-+
-+	ret = v4l2_fwnode_endpoint_parse(ep, &vep);
-+	if (ret)
-+		goto err_put_handle;
-+
-+	csi->bus = vep.bus.mipi_csi2;
-+
-+	asc = v4l2_async_nf_add_fwnode_remote(&csi->notifier, ep,
-+					      struct v4l2_async_connection);
-+	if (IS_ERR(asc)) {
-+		ret = PTR_ERR(asc);
-+		goto err_put_handle;
-+	}
-+
-+	csi->notifier.ops = &c3_mipi_csi_notify_ops;
-+	ret = v4l2_async_nf_register(&csi->notifier);
-+	if (ret)
-+		goto err_cleanup_nf;
-+
-+	ret = v4l2_async_register_subdev(&csi->sd);
-+	if (ret)
-+		goto err_unregister_nf;
-+
-+	fwnode_handle_put(ep);
-+
-+	return 0;
-+
-+err_unregister_nf:
-+	v4l2_async_nf_unregister(&csi->notifier);
-+err_cleanup_nf:
-+	v4l2_async_nf_cleanup(&csi->notifier);
-+err_put_handle:
-+	fwnode_handle_put(ep);
-+	return ret;
-+}
-+
-+static void c3_mipi_csi_async_unregister(struct c3_csi_device *csi)
-+{
-+	v4l2_async_unregister_subdev(&csi->sd);
-+	v4l2_async_nf_unregister(&csi->notifier);
-+	v4l2_async_nf_cleanup(&csi->notifier);
-+}
-+
-+static int c3_mipi_csi_ioremap_resource(struct c3_csi_device *csi)
-+{
-+	struct device *dev = csi->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	csi->aphy = devm_platform_ioremap_resource_byname(pdev, "aphy");
-+	if (IS_ERR(csi->aphy))
-+		return PTR_ERR(csi->aphy);
-+
-+	csi->dphy = devm_platform_ioremap_resource_byname(pdev, "dphy");
-+	if (IS_ERR(csi->dphy))
-+		return PTR_ERR(csi->dphy);
-+
-+	csi->host = devm_platform_ioremap_resource_byname(pdev, "host");
-+	if (IS_ERR(csi->host))
-+		return PTR_ERR(csi->host);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_get_clocks(struct c3_csi_device *csi)
-+{
-+	const struct c3_csi_info *info = csi->info;
-+
-+	for (unsigned int i = 0; i < info->clock_num; i++)
-+		csi->clks[i].id = info->clocks[i];
-+
-+	return devm_clk_bulk_get(csi->dev, info->clock_num, csi->clks);
-+}
-+
-+static int c3_mipi_csi_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct c3_csi_device *csi;
-+	int ret;
-+
-+	csi = devm_kzalloc(dev, sizeof(*csi), GFP_KERNEL);
-+	if (!csi)
-+		return -ENOMEM;
-+
-+	csi->info = of_device_get_match_data(dev);
-+	csi->dev = dev;
-+
-+	ret = c3_mipi_csi_ioremap_resource(csi);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to ioremap resource\n");
-+
-+	ret = c3_mipi_csi_get_clocks(csi);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get clocks\n");
-+
-+	platform_set_drvdata(pdev, csi);
-+
-+	pm_runtime_enable(dev);
-+
-+	ret = c3_mipi_csi_subdev_init(csi);
-+	if (ret)
-+		goto err_disable_runtime_pm;
-+
-+	ret = c3_mipi_csi_async_register(csi);
-+	if (ret)
-+		goto err_deinit_subdev;
-+
-+	return 0;
-+
-+err_deinit_subdev:
-+	c3_mipi_csi_subdev_deinit(csi);
-+err_disable_runtime_pm:
-+	pm_runtime_disable(dev);
-+	return ret;
-+};
-+
-+static void c3_mipi_csi_remove(struct platform_device *pdev)
-+{
-+	struct c3_csi_device *csi = platform_get_drvdata(pdev);
-+
-+	c3_mipi_csi_async_unregister(csi);
-+	c3_mipi_csi_subdev_deinit(csi);
-+
-+	pm_runtime_disable(&pdev->dev);
-+};
-+
-+static const struct c3_csi_info c3_mipi_csi_info = {
-+	.clocks = {"vapb", "phy0"},
-+	.clock_num = 2
-+};
-+
-+static const struct of_device_id c3_mipi_csi_of_match[] = {
-+	{
-+		.compatible = "amlogic,c3-mipi-csi2",
-+		.data = &c3_mipi_csi_info,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, c3_mipi_csi_of_match);
-+
-+static struct platform_driver c3_mipi_csi_driver = {
-+	.probe = c3_mipi_csi_probe,
-+	.remove = c3_mipi_csi_remove,
-+	.driver = {
-+		.name = "c3-mipi-csi2",
-+		.of_match_table = c3_mipi_csi_of_match,
-+		.pm = pm_ptr(&c3_mipi_csi_pm_ops),
-+	},
-+};
-+
-+module_platform_driver(c3_mipi_csi_driver);
-+
-+MODULE_AUTHOR("Keke Li <keke.li@amlogic.com>");
-+MODULE_DESCRIPTION("Amlogic C3 MIPI CSI-2 receiver");
-+MODULE_LICENSE("GPL");
 
 -- 
 2.49.0
