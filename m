@@ -1,221 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www253.your-server.de (www253.your-server.de [188.40.28.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B11292934;
-	Mon, 14 Apr 2025 13:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638922; cv=none; b=gz3HQHtE7lbG+ioPdadRHs27/F7n0J/p/wvcdOnQSchC3EHUoOmTihIKROFBozsAbvRBTIP4vn9mphafKQvM8ur3o28Gvggt8UlvFlWhmaVs7lGXMXqm2RMiEs6Ehq916OogEJgMkwax8UfMjg0mnUtKUavcsWamPN8dw7KXQZw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638922; c=relaxed/simple;
-	bh=EjPH7+pMyBOIy9AujSxvWyvHYKNLvMJ1UIyKY25E7Qo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OBE+tDP6GCe6DHPEFFFUWXBcrE8iwJJViSrMT/NVq/VC1T4XW0fwlrYqNEM3v5JUTuUORQpQlECZpvMfAWRJoMPynWyOGjLGbfBYIDJeGuKStiSu0i8OLUuTKdLAU3eKuxWUw3vVk1sjXDDuGNj+m3nN2wai2ocT9fhJ3kMLGyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ca23AS7D; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ca23AS7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 415D5C4CEEB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3BD292905;
 	Mon, 14 Apr 2025 13:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744638921;
-	bh=EjPH7+pMyBOIy9AujSxvWyvHYKNLvMJ1UIyKY25E7Qo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ca23AS7Du1op3pg7LrcSalnLIbsE1JxvlsFppdYDI1jHrCcZflFC3hgUdiS7aHKWR
-	 iRaBSZ6j1PsmjFqtrzJpO6c8ON6qKdUCToT5nvhSNCXyLzQGgOC1RAN7DVTgBeGJSy
-	 gKuliipsZ06NarNxA7a0KLKyO1wM8jpimikPRSy8uDmbgjUrUZoIRPQimBJvq5yFbr
-	 BeZMkEivR0nNluMzoAuQBMmO6S0PVc7ohZszEf6FdV8kpPysTrPed2Y8+okMUCzzb4
-	 gUOU/7eZvqrpuPgzh9wyndmMVqR1GZdBAEM2HyjbfEospONjGcL3OvmM5U1KAX17Cn
-	 KQTeuLufZSi6A==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 14 Apr 2025 15:55:07 +0200
-Subject: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
- helper
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.28.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744638923; cv=none; b=rkXxZXSNBr/seNOPjdpJd4XjV2QZvWbyzmGOdJapEZiTHy/K3KiwJIifAL43bqDR10hCt42uzF5a6ShwDWZLw9SE1aLCDCyskoy45I+9ceolvnfwVfBAOfKYMYHm6N1xq+ziHFfIPvgIpv15YuJn+O4Z5yW1A3m5GT4J2XJ/lJQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744638923; c=relaxed/simple;
+	bh=OhYbKWskgwU5GL+q9ayJnGNWoDA6TCf7bKrlPJjvSVs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 In-Reply-To:References; b=VtlNxFU/HPgJALvklZbnuRfdQuTr0RBjNKEHMHdltMgG1AiCOUdLnt3MY1E8qDIt+8JOvucqWxpfQdZBQj7TeVesldMTLm6NiZMXDgTOYR/eeBdtB1BvVRHsIeoIt1ITmLICY2uHMFgngs7fwW8mTYBNdEavpfInt1crI2st+iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de; spf=fail smtp.mailfrom=helmholz.de; dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b=Rre46JcW; arc=none smtp.client-ip=188.40.28.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=helmholz.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b="Rre46JcW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=helmholz.de
+	; s=default2501; h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=fLSCaLitPoH2xFEGe6i/k9eqnrxA4VzeMKwLwrkSMyA=; b=Rre46JcWH2gNfOTF9FK5hg/0u1
+	In14U8EFJ6FOwLyV+VqQQsrlwp4RG78jxZLBRfi6TJN/yvssFVaE3YJGeHAAXHN4k739Xd3EI23of
+	PhHIIvgJ6VgQi+qsNZbbkz2kdUhlmaWsLDXU5LasutHeX2kR2tOt2P/8CQCqHdR71im3isdk8UUE1
+	oLs5pAVO7uQZFxtD6RtDlkK/v7dVnypLndypmg1BUwaEEyFSklc63kuIlXyjElEQUh3g09EuZldgI
+	pIFQOg9kHB+wzfRamU9ZSSQXezu/tn10rLKjy5rBnSAWC3VmjtkRI7sKETr/rwF0XJyq0VfU0YNrq
+	OWwBjxzg==;
+Received: from sslproxy08.your-server.de ([78.47.166.52])
+	by www253.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <ante.knezic@helmholz.de>)
+	id 1u4JsU-0008nb-0w;
+	Mon, 14 Apr 2025 15:29:34 +0200
+Received: from [217.6.86.34] (helo=linuxdev.helmholz.local)
+	by sslproxy08.your-server.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+	(Exim 4.96)
+	(envelope-from <ante.knezic@helmholz.de>)
+	id 1u4JsT-000Eer-2l;
+	Mon, 14 Apr 2025 15:29:33 +0200
+From: Ante Knezic <ante.knezic@helmholz.de>
+To: linux-leds@vger.kernel.org
+Cc: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	knezic@helmholz.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH 2/3] dt-bindings: leds: add binding for WL-ICLED
+Date: Mon, 14 Apr 2025 15:28:50 +0200
+Message-Id: <35c7f697070b3939727f1115d3a279e280f72cd6.1744636666.git.knezic@helmholz.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1744636666.git.knezic@helmholz.com>
+References: <cover.1744636666.git.knezic@helmholz.com>
+In-Reply-To: <cover.1744636666.git.knezic@helmholz.com>
+References: <cover.1744636666.git.knezic@helmholz.com>
+X-Authenticated-Sender: knezic@helmholz.com
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27608/Mon Apr 14 10:34:28 2025)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
-In-Reply-To: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>, 
- Luca Boccassi <luca.boccassi@gmail.com>, 
- Lennart Poettering <lennart@poettering.net>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5654; i=brauner@kernel.org;
- h=from:subject:message-id; bh=EjPH7+pMyBOIy9AujSxvWyvHYKNLvMJ1UIyKY25E7Qo=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/Fd6/4t/mIA7PVddmX3hynfvRnteFBWkFexOTj1h4R
- +U7TatU6ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIlz8Mf7iYi1+K7F142MN6
- z13Zk/KqAaFLH9Rr9zLuua727crNen9Ghh8zly7zXBbXwmgu/2LZvXlnbfUkfkSaBuRGTbsr/ex
- nEwcA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-Give userspace a way to instruct the kernel to install a pidfd into the
-usermode helper process. This makes coredump handling a lot more
-reliable for userspace. In parallel with this commit we already have
-systemd adding support for this in [1].
+From: Ante Knezic <knezic@helmholz.com>
 
-We create a pidfs file for the coredumping process when we process the
-corename pattern. When the usermode helper process is forked we then
-install the pidfs file as file descriptor three into the usermode
-helpers file descriptor table so it's available to the exec'd program.
+WL-ICLED is a RGB LED with integrated IC from Wurth Elektronik.
+Individual color brightness can be controlled via SPI protocol.
 
-Since usermode helpers are either children of the system_unbound_wq
-workqueue or kthreadd we know that the file descriptor table is empty
-and can thus always use three as the file descriptor number.
-
-Note, that we'll install a pidfd for the thread-group leader even if a
-subthread is calling do_coredump(). We know that task linkage hasn't
-been removed due to delay_group_leader() and even if this @current isn't
-the actual thread-group leader we know that the thread-group leader
-cannot be reaped until @current has exited.
-
-Link: https://github.com/systemd/systemd/pull/37125 [1]
-Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Ante Knezic <knezic@helmholz.com>
 ---
- fs/coredump.c            | 59 ++++++++++++++++++++++++++++++++++++++++++++----
- include/linux/coredump.h |  1 +
- 2 files changed, 56 insertions(+), 4 deletions(-)
+ .../bindings/leds/leds-wl-icled.yaml          | 88 +++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 9da592aa8f16..403be0ff780e 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -43,6 +43,9 @@
- #include <linux/timekeeping.h>
- #include <linux/sysctl.h>
- #include <linux/elf.h>
-+#include <linux/pidfs.h>
-+#include <uapi/linux/pidfd.h>
-+#include <linux/vfsdebug.h>
- 
- #include <linux/uaccess.h>
- #include <asm/mmu_context.h>
-@@ -60,6 +63,12 @@ static void free_vma_snapshot(struct coredump_params *cprm);
- #define CORE_FILE_NOTE_SIZE_DEFAULT (4*1024*1024)
- /* Define a reasonable max cap */
- #define CORE_FILE_NOTE_SIZE_MAX (16*1024*1024)
-+/*
-+ * File descriptor number for the pidfd for the thread-group leader of
-+ * the coredumping task installed into the usermode helper's file
-+ * descriptor table.
-+ */
-+#define COREDUMP_PIDFD_NUMBER 3
- 
- static int core_uses_pid;
- static unsigned int core_pipe_limit;
-@@ -339,6 +348,27 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
- 			case 'C':
- 				err = cn_printf(cn, "%d", cprm->cpu);
- 				break;
-+			/* pidfd number */
-+			case 'F': {
-+				/*
-+				 * Installing a pidfd only makes sense if
-+				 * we actually spawn a usermode helper.
-+				 */
-+				if (!ispipe)
-+					break;
+diff --git a/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml b/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+new file mode 100644
+index 000000000000..bf79c7a1719b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-wl-icled.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+				/*
-+				 * Note that we'll install a pidfd for the
-+				 * thread-group leader. We know that task
-+				 * linkage hasn't been removed yet and even if
-+				 * this @current isn't the actual thread-group
-+				 * leader we know that the thread-group leader
-+				 * cannot be reaped until @current has exited.
-+				 */
-+				cprm->pid = task_tgid(current);
-+				err = cn_printf(cn, "%d", COREDUMP_PIDFD_NUMBER);
-+				break;
-+			}
- 			default:
- 				break;
- 			}
-@@ -493,7 +523,7 @@ static void wait_for_dump_helpers(struct file *file)
- }
- 
- /*
-- * umh_pipe_setup
-+ * umh_coredump_setup
-  * helper function to customize the process used
-  * to collect the core in userspace.  Specifically
-  * it sets up a pipe and installs it as fd 0 (stdin)
-@@ -503,12 +533,33 @@ static void wait_for_dump_helpers(struct file *file)
-  * is a special value that we use to trap recursive
-  * core dumps
-  */
--static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-+static int umh_coredump_setup(struct subprocess_info *info, struct cred *new)
- {
- 	struct file *files[2];
- 	struct coredump_params *cp = (struct coredump_params *)info->data;
- 	int err;
- 
-+	if (cp->pid) {
-+		struct file *pidfs_file __free(fput) = NULL;
++title: LED driver for WL-ICLEDs from Wurth Elektronik.
 +
-+		pidfs_file = pidfs_alloc_file(cp->pid, 0);
-+		if (IS_ERR(pidfs_file))
-+			return PTR_ERR(pidfs_file);
++maintainers:
++  - Ante Knezic <ante.knezic@helmholz.de>
 +
-+		/*
-+		 * Usermode helpers are childen of either
-+		 * system_unbound_wq or of kthreadd. So we know that
-+		 * we're starting off with a clean file descriptor
-+		 * table. So we should always be able to use
-+		 * COREDUMP_PIDFD_NUMBER as our file descriptor value.
-+		 */
-+		VFS_WARN_ON_ONCE((pidfs_file = fget_raw(COREDUMP_PIDFD_NUMBER)) != NULL);
++description: |
++  The WL-ICLEDs are RGB LEDs with integrated controller that can be
++  daisy-chained to arbitrary number of LEDs. Communication with LEDs is
++  via SPI interface and can be single or two wire, depending on the model.
++  For more product information please see the link below:
++  https://www.we-online.com/en/components/products/WL-ICLED
 +
-+		err = replace_fd(COREDUMP_PIDFD_NUMBER, pidfs_file, 0);
-+		if (err < 0)
-+			return err;
-+	}
++properties:
++  compatible:
++    enum:
++      - we,1315x246
++      - we,1315x002
++      - we,131x000
++      - we,131161x
++      - we,131212x
 +
- 	err = create_pipe_files(files, 0);
- 	if (err)
- 		return err;
-@@ -598,7 +649,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 		}
- 
- 		if (cprm.limit == 1) {
--			/* See umh_pipe_setup() which sets RLIMIT_CORE = 1.
-+			/* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
- 			 *
- 			 * Normally core limits are irrelevant to pipes, since
- 			 * we're not writing to the file system, but we use
-@@ -637,7 +688,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
- 						helper_argv, NULL, GFP_KERNEL,
--						umh_pipe_setup, NULL, &cprm);
-+						umh_coredump_setup, NULL, &cprm);
- 		if (sub_info)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
-diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-index 77e6e195d1d6..76e41805b92d 100644
---- a/include/linux/coredump.h
-+++ b/include/linux/coredump.h
-@@ -28,6 +28,7 @@ struct coredump_params {
- 	int vma_count;
- 	size_t vma_data_size;
- 	struct core_vma_metadata *vma_meta;
-+	struct pid *pid;
- };
- 
- extern unsigned int core_file_note_size_limit;
-
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++patternProperties:
++  '^led@[0-9a-f]$':
++    type: object
++    $ref: leds-class-multicolor.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        maxItems: 1
++        description:
++          This property denotes the LED position in the daisy chain
++          series. It is a zero based LED identifier.
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/leds/common.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        icled@1 {
++            compatible = "we,131x000";
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <1>;
++            cs-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
++
++            led@0 {
++                reg = <0>;
++                color = <LED_COLOR_ID_RGB>;
++                function = "error";
++            };
++
++            led@1 {
++                reg = <1>;
++                color = <LED_COLOR_ID_RGB>;
++                function = "warning";
++            };
++
++            led@2 {
++                reg = <2>;
++                color = <LED_COLOR_ID_RGB>;
++                function = "running";
++            };
++        };
++    };
++...
 -- 
-2.47.2
+2.48.1
 
