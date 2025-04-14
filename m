@@ -1,210 +1,174 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E811FECC3;
-	Mon, 14 Apr 2025 22:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744670841; cv=none; b=VItHUBNuy0IAZ3rx/ydHjnZBCOLvmtW2JZmKQThUScyvtCdpNEjLBIqdsoiskAZIqBr30MajmffVYFwR5FxsYf+Jv+VfBNpZachnHNo9/E96+1DiK+HQie5wprubhLFmjluve/ygEuIKOCNjSeiYXoCMynMI58hZdC2gB18P/BM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744670841; c=relaxed/simple;
-	bh=kNfVG+yZpaLRq1OoCyzPL29BMRStZnd75S1TRZZzGyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NU6syHYwHHw1/WfQVOR6Jhj6djRIYKmLYfZWRdJ/+IXbokhvb5a6NarwKNU5EonAklLTp/Gu9FNdGMBVKGjCgoW/nmHzqKpw2yVpVX+IHVJlfT2TyKmGlhdubPf7aH8MTAII1ib4sGpdNI2hytcfJYBdv9B6+evrqKFYW1YNpSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lPVutIap; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2221E1020;
+	Mon, 14 Apr 2025 22:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744670910; cv=fail; b=ewPRHCHGuzMhHsABTkF1pPncXBT7lx9z2SoKDK5vN6+Iwj+NUPnZiKhU/dPCIeJuvFD+zCp923ZpOQ4IHsqlwEyuxz2Y98MHfEwrOvNJlapOimM8HKV4r+5a90M3r7edXaF/uXP6C1qMOt4ObddMClas95/+dhzeyv8kFA7WLTI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744670910; c=relaxed/simple;
+	bh=NNKuVFeCyK7vtN20mRigPqCmnumQahWi0Kfu76HWIEU=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EOkiswi/O+pLNweQut1FSHpqeSHCynjxtZKFbA75I47Ry5GLJ+XLf2voQN/y2hD53dUw5UYC25E4/5HoSUYT/rpkItD7/cKeo2+B2aikl6DD+5eB3zreZF8UbwNmEyMxDV+SSLsM/ClgW5eSiV6ggjJ5UM8NSPp5wejRpU5mvUw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=As8WJJB6; arc=fail smtp.client-ip=40.107.237.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lPVutIap"
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.159.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1B1BE210C436;
-	Mon, 14 Apr 2025 15:47:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B1BE210C436
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744670839;
-	bh=SIS7Ml4VZ/wIhHt29L18904r+oPLJIB7CTsSxudVE84=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lPVutIaptWTHrT7cgcH+ye3PQBmYeR9GPO7Dkc0r17twjSXXl4N0TL32uYTZtmSJw
-	 MSoR+caetSn8mKX3MNIVfyN65CfKmfBY8REgRnSubcXDMD/vNMoPeqm5nfs2U4sGo3
-	 WBuza01bqCW0gRUcgOYszPirGJpdsitB48PEP3d4=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@arndb.de,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	catalin.marinas@arm.com,
-	conor+dt@kernel.org,
-	dan.carpenter@linaro.org,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	joey.gouly@arm.com,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	kys@microsoft.com,
-	lenb@kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	mark.rutland@arm.com,
-	maz@kernel.org,
-	mingo@redhat.com,
-	oliver.upton@linux.dev,
-	rafael@kernel.org,
-	robh@kernel.org,
-	rafael.j.wysocki@intel.com,
-	ssengar@linux.microsoft.com,
-	sudeep.holla@arm.com,
-	suzuki.poulose@arm.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	will@kernel.org,
-	yuzenghui@huawei.com,
-	devicetree@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v8 11/11] PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
-Date: Mon, 14 Apr 2025 15:47:13 -0700
-Message-ID: <20250414224713.1866095-12-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414224713.1866095-1-romank@linux.microsoft.com>
-References: <20250414224713.1866095-1-romank@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="As8WJJB6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZAboLL7YYQcNL22rI07oOgtxfm+8nbLiDD2Vh/Y0Epa2JJDT+XYv2UTga60Kfvu4SEnqE7WCKS1MODgVGHKgfhdUL1Gl/i0peGhbjhZYEmwc8weA3mLTpQzqm2cMDZvF50Tfx/jWagtoEmEWmmxyzYIsgZshw87LQBfor7et+RYHEnPpRSwkqQUJ0IF0eSS9oAsKt1QQECxUymPF7xj7qAhMmOLrTKwhu2sd3Gu3SfZN3XcJlT7uEvRBs2UusjBVfHTEyvTtPaZasjyvYpHgDLMHHMCbxC9crsx3OGCIROPB9cMeIi77hcaXkQ7lWtw4J/SWk6/pqDOSxqN2dmvDcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eCzoHrLLebSmE9H9CM+uTvEYwBUKEcaH6re5NoUahds=;
+ b=UNbiVi2BYJPdsansQ2I2Fs6O+3JQNKDhWBHx7vKVH//Bcc1l2pey/dSpkqQIOlGRO/bSbbKIT0IBVgIsCvyHvMWQGi7O9/7KiXnGH7J1xMMSbgkXoHj4XV67Cq7Lglruf5chJ/DnhzUQvhaF/uYHhpvK55vLfQEblku/Hlw9+05EUH2mxQfDnYhpX8GeafeIRB0Fpul3ZT9bANgWOa1Edsn3d1gQb5TgElkTCJHTyFVdYf2WO89DZ0xWWsACncwc1eSZJB+j6mEaOtQNFT3RUcf6Iz1aLIKql8I9P0GC3lKk1vlkXx3+9s0//Xr5TrU4m+cLWhzvyufgjBV2d14yOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eCzoHrLLebSmE9H9CM+uTvEYwBUKEcaH6re5NoUahds=;
+ b=As8WJJB6AsOUCrpMFUHU8qH0Va6Nn3JbWWouEXH1b28dShjWA6Z06GJTnuJUtcTjJd0nuaQmh8M5rmVV81hEFooGNIzKgFDPk/eIInSiKZhcuQINET2uADzx87wVcc8gUpT/+tQ5cV6mA5fBzl+hQrQ3NxrYe45wE0E7/bDuJVI=
+Received: from SJ0PR03CA0043.namprd03.prod.outlook.com (2603:10b6:a03:33e::18)
+ by MN0PR12MB6367.namprd12.prod.outlook.com (2603:10b6:208:3d3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
+ 2025 22:48:24 +0000
+Received: from SJ5PEPF00000205.namprd05.prod.outlook.com
+ (2603:10b6:a03:33e:cafe::6) by SJ0PR03CA0043.outlook.office365.com
+ (2603:10b6:a03:33e::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.36 via Frontend Transport; Mon,
+ 14 Apr 2025 22:48:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF00000205.mail.protection.outlook.com (10.167.244.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 22:48:23 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
+ 2025 17:48:22 -0500
+From: Nathan Lynch <nathan.lynch@amd.com>
+To: Eder Zulian <ezulian@redhat.com>
+CC: <Basavaraj.Natikar@amd.com>, <vkoul@kernel.org>,
+	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: ptdma: Remove dead code from
+ pt_dmaengine_register()
+In-Reply-To: <20250411165451.240830-1-ezulian@redhat.com>
+References: <20250411165451.240830-1-ezulian@redhat.com>
+Date: Mon, 14 Apr 2025 17:48:16 -0500
+Message-ID: <87y0w27427.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000205:EE_|MN0PR12MB6367:EE_
+X-MS-Office365-Filtering-Correlation-Id: a31c2c60-2b3b-41dd-0b78-08dd7ba67652
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?LokmVI1DFtUJmOKnZiSxVBwnwp9ffXsU+BT9jL8zs/BY3WaWRgWtncFK8/iM?=
+ =?us-ascii?Q?XJLziYW7dUgyUqHLXYA84eYAhzAminG65P9QhUyATNrms3WzO9hwo5z41SjJ?=
+ =?us-ascii?Q?rivz23ReUvG5rv9i3hN2GCo6jBncQHgxVuhYin3izQxKIfRoF5m2DuqlNxbx?=
+ =?us-ascii?Q?Ok65ASMeNzTdXc/0IvOFIiid9ngpk6qO2VTya/rfFhWj1cr92yXlsOZPRQTz?=
+ =?us-ascii?Q?veDlDsI1OEhLh6D8Y3N7d8jk1orOnzmDMZXSHUBB94ClhVn41QmwlLiDkR1h?=
+ =?us-ascii?Q?jwLcYNJnVxcSGGRO1dNHCllpMsej4jdHj/mkyY8vsITOl+c+kqSFFCDLBYK5?=
+ =?us-ascii?Q?okenqqOC8KW1s0P+89c7tARqpceniZEY1kRHr42/OkBfLBJ+8KB+maQXOqoK?=
+ =?us-ascii?Q?K6gMR+IXZUxel/Sn2enVQiAq8goz1nrp7b5xrBip2IyDXRhBclHbYrUfzJdg?=
+ =?us-ascii?Q?zG3c+x4mm6BjHz0Cb82Re7YeG09e/ngn7/rFKigKOMzvFdaBVa/wiYCezCHi?=
+ =?us-ascii?Q?plUw5ai6LpK+kb0e17wFPcRUwqBM+XKOL3JINhhvJBHCfomZ3VCJupvVQdsV?=
+ =?us-ascii?Q?6w9xLuE7/id3U32ugODifP/0gmokEvD6gGJlfVFK8Ty2yuDfs+05QYXB28fo?=
+ =?us-ascii?Q?bG0COdVt56Xo/ax/zlvFGlPJwt3aBQBpMiLb08xgdDJPfKxghCKmttrgBs1/?=
+ =?us-ascii?Q?WWfR1uCV6wrL78o/pDIdj0MjL3hG7nW0zN3sLkDNzA78Nnb22sIv5Do/Va9t?=
+ =?us-ascii?Q?m1oFThH0hk0NGIMK+T2XoJdvtdCDBGQso8GhI8m8DlrFj+zx5pn9OD3HUApU?=
+ =?us-ascii?Q?xQQOfzrY52WuoCM9Ekn84H1iKVxho/deFU30zXSm1uq6EqYNw39XYyNVst+t?=
+ =?us-ascii?Q?dNFnMs9FfQRzCHUGc2Mifc50tJNqisLTINA66L9In3M1Q/PMoVkbChCgliS7?=
+ =?us-ascii?Q?mIOP3nQ8ojw0mNWuHYEizLv86ij+r20gPU0PmjOjmkJr/8gjxMiLDCS2ybEZ?=
+ =?us-ascii?Q?j2BW1ihSCmRkGuQjRZMMsJ5v+JkYv6H83plAfS4a4hSWMlLoZyGAwe307zYF?=
+ =?us-ascii?Q?elccId4yadkpP5iVdtp1BkadI8iYZJ7aX8LTw5DQCB4PK8rtnk6J3Kz39NT2?=
+ =?us-ascii?Q?25+tYjZOKuqYzUXWBpHBiUD0C2EWV/FatkC3OUCNO3AP6QXaFO2AycxgM9Oz?=
+ =?us-ascii?Q?SsOCwDxtVwQ69145R7k6yCxPgqHkVhg0mLn2ewEVyBKGF5Nj67xc8ksU5sQW?=
+ =?us-ascii?Q?Uk7HfXQ4BsPPJdfADJ0bkMrErGljVBu7yg/BY9FFTKlgiWUMFScw5BezLUsT?=
+ =?us-ascii?Q?VOHVXOMu+gCTxPFZgOO1Y+Cp+Q4TSkTvZ7yqdAwO97K6j8FpRH7Twx/OtKP/?=
+ =?us-ascii?Q?PKdN3s9J471ArJ6QD+A8FpHSrTCEWt4YqjU3+xEvUsFfIQdUdvmihR2Fyxd/?=
+ =?us-ascii?Q?eMCXi1LHJM1sdtXQ6NrJB4pHU4JKtDBloDysf7U/heTy196iCIQIgCNIoEO1?=
+ =?us-ascii?Q?VLNL1/lwcCRI22dmugGReBSikHrFuwXyKwaP?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 22:48:23.4948
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a31c2c60-2b3b-41dd-0b78-08dd7ba67652
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000205.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6367
 
-The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
-arm64. It won't be able to do that in the VTL mode where only DeviceTree
-can be used.
+Eder Zulian <ezulian@redhat.com> writes:
+> devm_kasprintf() is used to allocate and format a string and the
+> returned pointer is assigned to 'cmd_cache_name'. However, the variable
+> 'cmd_cache_name' is not effectively used.
+>
+> Remove the dead code.
+>
+> Signed-off-by: Eder Zulian <ezulian@redhat.com>
 
-Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
-case, too.
+While I work at AMD, I don't work on this driver and I defer to
+Basavaraj. But it's easy to verify that cmd_cache_name is indeed
+unused.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/controller/pci-hyperv.c | 72 ++++++++++++++++++++++++++---
- 1 file changed, 66 insertions(+), 6 deletions(-)
+BTW it looks like struct pt_device->dma_cmd_cache could also be
+discarded.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6084b38bdda1..2d7de07bbf38 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -50,6 +50,7 @@
- #include <linux/irqdomain.h>
- #include <linux/acpi.h>
- #include <linux/sizes.h>
-+#include <linux/of_irq.h>
- #include <asm/mshyperv.h>
- 
- /*
-@@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
- 	int ret;
- 
- 	fwspec.fwnode = domain->parent->fwnode;
--	fwspec.param_count = 2;
--	fwspec.param[0] = hwirq;
--	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	if (is_of_node(fwspec.fwnode)) {
-+		/* SPI lines for OF translations start at offset 32 */
-+		fwspec.param_count = 3;
-+		fwspec.param[0] = 0;
-+		fwspec.param[1] = hwirq - 32;
-+		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-+	} else {
-+		fwspec.param_count = 2;
-+		fwspec.param[0] = hwirq;
-+		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	}
- 
- 	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- 	if (ret)
-@@ -887,10 +896,46 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
- 	.activate = hv_pci_vec_irq_domain_activate,
- };
- 
-+#ifdef CONFIG_OF
-+
-+static struct irq_domain *hv_pci_of_irq_domain_parent(void)
-+{
-+	struct device_node *parent;
-+	struct irq_domain *domain;
-+
-+	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
-+	if (!parent)
-+		return NULL;
-+	domain = irq_find_host(parent);
-+	of_node_put(parent);
-+
-+	return domain;
-+}
-+
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+
-+static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
-+{
-+	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
-+
-+	if (acpi_irq_model != ACPI_IRQ_MODEL_GIC)
-+		return NULL;
-+	gsi_domain_disp_fn = acpi_get_gsi_dispatcher();
-+	if (!gsi_domain_disp_fn)
-+		return NULL;
-+	return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
-+				     DOMAIN_BUS_ANY);
-+}
-+
-+#endif
-+
- static int hv_pci_irqchip_init(void)
- {
- 	static struct hv_pci_chip_data *chip_data;
- 	struct fwnode_handle *fn = NULL;
-+	struct irq_domain *irq_domain_parent = NULL;
- 	int ret = -ENOMEM;
- 
- 	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-@@ -907,9 +952,24 @@ static int hv_pci_irqchip_init(void)
- 	 * way to ensure that all the corresponding devices are also gone and
- 	 * no interrupts will be generated.
- 	 */
--	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
--							  fn, &hv_pci_domain_ops,
--							  chip_data);
-+#ifdef CONFIG_ACPI
-+	if (!acpi_disabled)
-+		irq_domain_parent = hv_pci_acpi_irq_domain_parent();
-+#endif
-+#ifdef CONFIG_OF
-+	if (!irq_domain_parent)
-+		irq_domain_parent = hv_pci_of_irq_domain_parent();
-+#endif
-+	if (!irq_domain_parent) {
-+		WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
-+		ret = -EINVAL;
-+		goto free_chip;
-+	}
-+
-+	hv_msi_gic_irq_domain = irq_domain_create_hierarchy(irq_domain_parent, 0,
-+		HV_PCI_MSI_SPI_NR,
-+		fn, &hv_pci_domain_ops,
-+		chip_data);
- 
- 	if (!hv_msi_gic_irq_domain) {
- 		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
--- 
-2.43.0
+Reviewed-by: Nathan Lynch <nathan.lynch@amd.com>
 
+> ---
+>  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 7 -------
+>  1 file changed, 7 deletions(-)
+>
+> diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> index 715ac3ae067b..3a8014fb9cb4 100644
+> --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> @@ -565,7 +565,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+>  	struct ae4_device *ae4 = NULL;
+>  	struct pt_dma_chan *chan;
+>  	char *desc_cache_name;
+> -	char *cmd_cache_name;
+>  	int ret, i;
+>  
+>  	if (pt->ver == AE4_DMA_VERSION)
+> @@ -581,12 +580,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+>  	if (!pt->pt_dma_chan)
+>  		return -ENOMEM;
+>  
+> -	cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+> -					"%s-dmaengine-cmd-cache",
+> -					dev_name(pt->dev));
+> -	if (!cmd_cache_name)
+> -		return -ENOMEM;
+> -
+>  	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+>  					 "%s-dmaengine-desc-cache",
+>  					 dev_name(pt->dev));
+> -- 
+> 2.49.0
