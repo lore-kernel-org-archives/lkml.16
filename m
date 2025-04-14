@@ -1,237 +1,172 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2074.outbound.protection.outlook.com [40.107.220.74])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E002BEC3A;
-	Mon, 14 Apr 2025 13:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744635987; cv=fail; b=VzVIg+bQEiHTgqxl6YpSHc/40kTA0qg99dx4Q5k/7OhGqnbbNydrGgnR9aOuS3412ry+DvoColP6YJ8s0TeOxUWo6aHYU4cQX/HoU2Qbfwc8hCd1gMn1w1Wh20LO9/3vAK4QekV1h5WgP8KtsrzruEKjQtHBCvJdHsSYMsR/Gas=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744635987; c=relaxed/simple;
-	bh=u29CIal9zxvtZUwYQgFD4LWtEALUGe8ZlMJTeK42U3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=IT62MoVtnl4UH/uDVx3nHoNSUhFVFS813Db9stxSjVxqlH3YgUqXFwroDUrO3uh35AARn72xKt7WLOwG5GZegiVXfSu/2pLo01oIJc9HKPO0GfA56AycBdWlJkfbhYdZiFR2rE+eE27xRyQtdKAdz/pz/SKyMCG/EinTp/lR36A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UwS+RxP7; arc=fail smtp.client-ip=40.107.220.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF702C3769
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744635991; cv=none; b=PMZBuIa7K4PaWN42dQC22zPj39o0J+0171F4ruUtvyFLv8DxD/kwjlt79umnwlQXh4AHnlODbmqDCTbT0ZOE93sDo7p4Rxm1KZpzhDUKrVlxrGycQZXpgau8Ehn54+dfDRrugYQsCf6jy64d6JL50KF3tPrLjL9H6xOqn46B87w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744635991; c=relaxed/simple;
+	bh=AZK9XRS9ZWhSfx4eNw0ALr+aw3DDUZiMNW2qilWfAtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iQuJOfQGiTEbjXrpzTs6W+js7rqMFeT9+FHZHa0M6QuhJ81f5CYRPNJCRDFYA42p8TaZwjap1mNeJPJYnzDThcqzqmbf/8q288LVjIxQvO9i+hq/LXwkZwuANEQS+MAnPCJ+79YU2wcFnFCaJ+ZvSS0KM4FnvKNK01RATv7eOtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bSx59Lrn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UwS+RxP7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jMzDQ8M3dhRSB7xdWGu95B4b4crQqgia8NcSUUI93EE8Xf9R4155J8+L2IheH/eJ40oV6WBCqXzyCsLGginSACfyH5PrqlexZc2q3qK9PWZ4izzjVMfG3yP5uwkEHkAMzNed8JXXY7PFwM4mqt7EyOHvCTXtyQyQE6nLT+kYjrZdLRu2t1uF3S51nyc/MDxaJ038K0x1FjYVF1Qgcn2EpLrbS2zA39O7WQDK7uHgWThH9pFq4fIkcJrajM/zZrqnHtLwLDufPnwNsIJ8rbPm+ZMiI+ZtpWZvzPj169URVzE3wdZlgoJFkGQSk8G9gH8WArTF8ZHLKD5gUIA9CVXnig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NDdLC2r9LEhRDlVx29ejfXwciLDvhW4QSUcD4DS34x0=;
- b=br4tkKjARI3TlwXfhRRzD2ZSzykmud+xfDlfTFxtOKl/arp3MuiiSSZjekirjURDHlcXMjQUEJo/PaaB/uSJtjiZqCoCRHxxbYFe7zVKoDZDWR25Rxx4czzupKofB1sxjzkdmZxVBn2mtsZTKMl5TQ2Ss9+uZjGW6TBFXyy5brsafOynMj6jumNDTWPZ5jICwrex/weziKEtrxlspwrW7/dfUj6cXbb1xVdMHDsxu9gjTWSDrr73KEQ2otBmgaBTuGNlPk/2Z0PJYc58u76j2KtAyGWizWLSgJ03skn09lSXO2q0D/LzVstDUuLqzV5EIDjh2v5LUc4oLWCngh4qOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NDdLC2r9LEhRDlVx29ejfXwciLDvhW4QSUcD4DS34x0=;
- b=UwS+RxP7Uv1Oei3z1fVJ+v+1cFI/nRjhmDJg4JxggvoF+yo8Ijck+3RWb9M9YDhffYB95s/NRhVAb9e1IX+6d7YJeKtR/oPRHSYjxFFrRMEbg4oNL+p6mU3PZbxdNKjuu3kE6vxKY8fkdGq0QdBevINL1zRvsEP/H0xfxHsETVdGLlCw+l0ufEpXmq9wmAtavn+h6XyAP+GSUhoO4lRz4KSauktYdkp3wVMS1WVg5lAUk8hzCOA2K5QRXaRZY+p9q2ZIef7k/d6TMnBl5CoSKBD8cXS6wduH2Yv0yBTbkCkT0T/YB9nIPm2EdxPQmygxPfevFM7uypazp0/wvOA44w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.29; Mon, 14 Apr
- 2025 13:06:23 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 13:06:23 +0000
-Date: Mon, 14 Apr 2025 10:06:22 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Message-ID: <20250414130622.GA399879@nvidia.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WqPtcm6UamhslFgw"
-Content-Disposition: inline
-X-ClientProxiedBy: BN9PR03CA0470.namprd03.prod.outlook.com
- (2603:10b6:408:139::25) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bSx59Lrn"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99rwX030666
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:06:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	J8coqQeKvuFh+O3TZuuEoTer55FpYo41z991GNWMMUg=; b=bSx59LrnlpAfCR6t
+	90Qfr3Piwo2r8+qIQXekEASVX5PDX0gqN2/lfXMu4RlPUPiGZ/vpYavUObSUEAPV
+	UCdx7I/l2CSNxD/YKXAo6IRyqqZwIJ+p+Ovntnx8bubpWRpyLyu2n+Er6foLh20p
+	3COPambWzbpDsfaRWwjj9kiDj8TCmGeGv3EdxyMmUTdqujA2DoRvelj8yHE0Xb5x
+	KPHROGhRH4AFdslD0iqTPr+DAyspuYBY/hJ38B/bj5zMO6WA+JIGyRW1VLuZNvnY
+	SWxx6pJzvTvvgsEgaeXhw913dF0V6CqDQKu9XvYFnbC6PZUrHadTR19DYpG/NKyS
+	GMvYrg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvj4t7g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:06:28 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5ad42d6bcso90568685a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:06:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744635987; x=1745240787;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J8coqQeKvuFh+O3TZuuEoTer55FpYo41z991GNWMMUg=;
+        b=fcaMRlMiodrEadEn8++8d98voiAhB/P0uHjGFfv4PALvbAZ73Nmjazp7i4O4VoEiZL
+         NipCJfMlDcftqr+wz5HLGpQ3gzCEhiIJiRn/nCpZdNgOpo9d2hgetSqUnc3PDfTou9Ds
+         tvIkJkL0vvJ8UBqR0LkN40k0W2nudmKGkh/8Q1FE4bHTW5iCDa/2fJOeCvEgln9r+5Fs
+         zs8zluDLzX9FMRb6bCek2TMSTvSsZPneX8D1DWNw0vZYKm0LbzQmrdPU493f33k5OZOr
+         88MSNVSTJb/yJFHXVx2jxniauFOA4FIMHG8nlXN9N+7OmK0jpustaY4lk3TyQBL1yqaH
+         W2Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIJDZYYKmjLTZNLdKbycrTJJJ5ftgmmVjl1vHvJknDDWPZ3FtNh/bvfiYK8V5cvC7tWt8UqmF32zIQbA8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/+Qw4ZzQQB/YrxVwWns8lRGyq0PyIk6l4TQ3pxQjF9nNzqfFg
+	XdS30ppLg65Wd3CTqOEIQgKWdQaYs9DtaOFIjeUSk8iOhskU5oDwRZMPuZfxJWMlJH7cNJhw5J0
+	3z5zlOUtgoyTD8Ns+bbvegNMLn8VCy4C/v9Gk3SgiLSb4GxCeLV749uj4+ge4H0c=
+X-Gm-Gg: ASbGnctjso6qcNUF1TN8SV0X7cCUZbtKOlCb6A5B8Kj4FmnIn2Cd+0mv/fbrEtCYf9u
+	TKryY9LbZ7TWN0i27WoBqqIy1V+crm11OB++716cLOC2CmVxE98HgX2Yoz2WF1ofOTdkDLmZ8TY
+	uLj6TXjBHR8QOBC+8W+lazfwIIZ52K18BWGnwc8LsZHhyo5h6N+skjVceegPjYHSNAzqdgA+2dQ
+	XTKm7lMJk01HdSuchM+MBMHqLS9SjA6xL1vG3SeDpoOwomNGq/cmLryHCLbSlCcW8LAWv3LODIc
+	vOkTm545GTZ4tpGFjF9dqluDPSnZH/FQsCm1+8C1KM3cP3II66kOpMG8rbIzR719fw==
+X-Received: by 2002:a05:620a:bce:b0:7c0:af16:b4a8 with SMTP id af79cd13be357-7c7b189ed2cmr593266085a.3.1744635987456;
+        Mon, 14 Apr 2025 06:06:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFF6qbagUm+W4XTsW+veeL8DouR+tzZeh7A7q5mtlDE4nmmTvZe6ePtnwhw7Dz4PGEXvzT/kA==
+X-Received: by 2002:a05:620a:bce:b0:7c0:af16:b4a8 with SMTP id af79cd13be357-7c7b189ed2cmr593262485a.3.1744635986887;
+        Mon, 14 Apr 2025 06:06:26 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f526da3sm4827693a12.67.2025.04.14.06.06.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 06:06:26 -0700 (PDT)
+Message-ID: <868c635b-0b26-4062-9a44-4ba07ca684f4@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 15:06:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SN7PR12MB8059:EE_
-X-MS-Office365-Filtering-Correlation-Id: 128a0951-4ec9-4964-0b3b-08dd7b55280d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TkyNQEOA2tn+IpdHko15vyQzc4G2r+KtNcvT1idHge9bIVyZ6xX2HnY1O93J?=
- =?us-ascii?Q?UYTVTKqcxf3fot6RJBAar7Th3HD4rzsXxRvCOZm0f7E7s/pI1UsAp+BZ0MZ4?=
- =?us-ascii?Q?j/LB2iOEeLMfwh3ZYHC7BnnmVZGYQ35moCSqLvIOIZR+c9Wpu3x4q6Rp04CM?=
- =?us-ascii?Q?H+3LrO1xpsdLLGIdt7rve0U5JIkZC77ddRbIFtOMFBciG3uv76dXcgcXaEoz?=
- =?us-ascii?Q?+rxv/e06JggnHA73Bn9oz25e+bdXTkRzr5zu4BJLCaxJESgGKd9Sic/UDM5r?=
- =?us-ascii?Q?IYYTro+kft+rjCvEizxA/JeV2g96Ke0mwP9DQjTxa2xCsI/zTZkYQSVv5GgC?=
- =?us-ascii?Q?UupMM/aWWKK3kxwxrX5aFU+zhoAXObk11z0sz0o1hpMjIaM6vbfLQ2BbRis1?=
- =?us-ascii?Q?u3LsRBohfdedRXivHWkUC+xLLuWpi5gfTO5YTd5uICDiyTJBkjZ2YILtaETo?=
- =?us-ascii?Q?pE0oeJz8Ozzc0BlcRJLbVpqkCDm55zV5EB3z5CBbroc+lS2lBLg7zC1cZyIJ?=
- =?us-ascii?Q?BPjtjLQBBNtx2WyqcIn8oLDJmf7wJOLx/Z+5H0eonZzwZuPz275obUOQJORr?=
- =?us-ascii?Q?ZDmp92p/svL8ix4g3oSWZ54mqnSiaQkTCIwfwDkz2DBs9nX9s3fC39Hxqeht?=
- =?us-ascii?Q?5ftFolTHtBsRSk6OUobxER/uw4FrsG6nCohlFR/PPgqkrbwd0IVe4otwsEjU?=
- =?us-ascii?Q?08xp87YU1/ShBHwk0tEjs3Z8HFapNvr/zDCPxSMnbfSK+CBCqXWMvqGtO2Ly?=
- =?us-ascii?Q?8uYD35c6dlmVZdc2UKhXjKQ/sGUAXM8hNYK5n9JZmTJqBbBsVTud4HAQDqEW?=
- =?us-ascii?Q?Eu+JJ8/Nam/Ycq3sseiiUQ8WdUbGOFqPiBJuI1Dy81cYx0Vfh3I8LXdNhKPa?=
- =?us-ascii?Q?LsBBwlsUFTD+8yjShDC8eEiMWfYajS11AtRfAkoSHL2hr5qy7afZS3nQAZZm?=
- =?us-ascii?Q?HoH26Doar3AraM6II18v9y0n53q4ot2SIzWdOLU1QP7wKRlXu/1JJsWVu9zy?=
- =?us-ascii?Q?cMP3nkn20oh7RKDXw2GA3+7pevzR24m8hqT/pMS6d54jIkvah9UXy4jRN4MA?=
- =?us-ascii?Q?QpfJR6vucIOxodMZSOOcd+gtXDdeT7cpcByHnn0WMHb0lH+Jhpbobgl4MlBO?=
- =?us-ascii?Q?evTyH0iJqI0MJ+ZByOwaUvdHfKq+sCyxBH4mdCLxK2T2zjr3NgiIKJuuJhwo?=
- =?us-ascii?Q?ImLcr/P2uSitSAnbMEYgagFxIrNuspecjDXDHD/APkEswN2xM0kcrXr6REAT?=
- =?us-ascii?Q?8au4m5AYH/OhQSKOgO+smmPF4zdgFJp/mhztVkYXepgS26A1Hkyx3qva/Ehs?=
- =?us-ascii?Q?9QKW3/y92AMwhs2yLa/uDtxRfjMbNB1NgaNu1wwj7VFDO5Uz5mLcaw9RzDCA?=
- =?us-ascii?Q?jKr5Bkzjk4WiMgNzdElK/46hxKkgf0X5sFUL6cIggZhxZz0CO7/s2SAhhClE?=
- =?us-ascii?Q?W+Qos51mKyA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?V7ZhBG1TyOvtIDzLtvpQX1sVnJDMA+hImns5vvigMMr/KSDTyA80hDxc2lih?=
- =?us-ascii?Q?Oi8kQOkYbvmOhGPHcq4FSCCgzwzLtfoXU5OAyS2DFdeWnlD6TqumHmqwRKUD?=
- =?us-ascii?Q?WeAqzQsrhQWkGEYzAkVgmbI0HuxUy267Jh2lAZjgJwCpmjl7yDlJYteo/RsS?=
- =?us-ascii?Q?a0Zs+koH9X/VUI5xXw74Ds95Gu7a8CY4xnYFK8gbY4ZArAe99WPh7nCSf6gl?=
- =?us-ascii?Q?ilEd1I1d1hWBHallXi6YuJpbd6NVEn8GE0KrX322gH49k7+hgAAB6UUP+f1G?=
- =?us-ascii?Q?WXAAOzFbc1kqdYjKSQo+Ah9Srog5sLSa9zboxGGhWMhEpb0tQYstmU03P8bX?=
- =?us-ascii?Q?hCSQNdwgADBSdwua0MDB4L6ZmA3D9scF6oC8LDxotIe5mf+4s47GEm24U7dc?=
- =?us-ascii?Q?DEr1W5+cohDWyXUmmDFK7o582lizdlD9hxwUcUWmVxbdDIntsooeqpP2O0HI?=
- =?us-ascii?Q?YMsDwh1a/vWJCkAtfJGHgMXTnbvOaA5l9ODI9UrjW5DPPb5otBDCFECJK9C+?=
- =?us-ascii?Q?fQ3NP62X3PH+tFMevHEhDJCm+xpLls14Bvfo8ujSXI/L4HX+jwzRq+umhXyb?=
- =?us-ascii?Q?cWxZ5fYKpwqVLcvZf3ApfBxKKEYFAQDdQvCA3iq1VUzXAfwBADT5Od31XlSv?=
- =?us-ascii?Q?TXF+YYBGA7EWBBUlYQjw4VKTzIioEmdTYs+pJ4KbMhwg3ykQfEdB+JlsTcKv?=
- =?us-ascii?Q?lhuRsyh1u0j5f260REhyF8LQQQezQZXY8hG3jfSlJlOllu7XBB/Tutk09hXJ?=
- =?us-ascii?Q?L8KlQRWePuffMuxn8WNZK22v0LEz3UpDqt7SLlZk6vEAU7jgOeb96OMsEaA4?=
- =?us-ascii?Q?QMtdIM9aw4TjYJVAHZS0/1wI53apdgLG4bML2NVf5Rd9N+EJ8cFyXonNg9sk?=
- =?us-ascii?Q?AgB9mUeQqfX/ou7rkMzfrwJzxiYdF+xZWhoLr4E58KSf40HNSa5Hpj4rZ+Oy?=
- =?us-ascii?Q?Hw+grnDeRtF+2aZh0oeBAIdwnRu2AEu7J4lN9fW3A7X/2XSHu04SYxYgljq9?=
- =?us-ascii?Q?rVwi39QjQA47ACMcKCIGkQjiY5vJOUWQ5wZNsmgb2qPgTIPTbZB1+qYk5m43?=
- =?us-ascii?Q?1tw1d5chE4h+FeXbDWHohxFjqyczdibdcVlpCjLkiE93rY6A90Y640uOpe/x?=
- =?us-ascii?Q?+20h/fODXBUarjsjO3kGueGncqrtPPXIXKwo0+XaYhK/P7/FM8xnzTUHwl1j?=
- =?us-ascii?Q?Pk64E5THoodxRq7ApYeN0FYJvhANfNE2zB/TYtZSc7f3VcUZwqcWSUOQKbM7?=
- =?us-ascii?Q?YVw/MLdcmJPHrjTu0DvlZE4PZvMG82CkNIiAruSIKrjx1o39RMjHW0EVHd6Z?=
- =?us-ascii?Q?nQP8GMyF7ABuWIkIPCjvEd7CgDNTl8zDofY81TGj/C0F/s6J1+WK3yOewMhJ?=
- =?us-ascii?Q?SGhBcHdBoONt7+fKjH1AnhoGeumgFNrJ1dHKcAKCXvCreIYJIPk75FeFt1ta?=
- =?us-ascii?Q?5ixPq54mzpuOcOzVnOCj+JKyaTJYbK+DnC6msc62o0k/Ub6ExBxSVbTcHCDA?=
- =?us-ascii?Q?ztqWQ7qvkGZj+minRPEnIMmm7jAGrD1p1Wg1cyz+G50IP3XO2UW1ncyQ2kAI?=
- =?us-ascii?Q?d2lLeR13KrtSoVgUCMYpJGp2eWvA4MC2DMqDp+t9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 128a0951-4ec9-4964-0b3b-08dd7b55280d
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 13:06:23.3300
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kfQv0zj9Dsjuh5/Xcxxtx5pyVrq4N1kNBujcOErgIhtl0Re39JnQdFh9MkgmE139
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8059
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Retrieve information about DDR from SMEM
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+ <685e784c-3f36-4cd1-9c34-7f98c64d50f2@oss.qualcomm.com>
+ <0bec3e62-0753-4c3d-abe1-1a43356afc80@oss.qualcomm.com>
+ <e7bd2840-dd93-40dd-a1bc-4cd606a34b44@oss.qualcomm.com>
+ <CAO9ioeUeNeSxz7ADZ-BbJbhEKkszVS+SmbqaZCgTpL=csak=hg@mail.gmail.com>
+ <b04464b6-2ad9-4866-88e9-437e96645726@oss.qualcomm.com>
+ <sgjporlde6bgcp2mhr3r5c6wj3a3u37s5nlrrokbutsyizixod@7shpt55muqki>
+ <4e265348-3466-49fb-82e2-255205052d1e@oss.qualcomm.com>
+ <qdip4rtk2zusxkdlui4ujnybsh7jfqk25tazx477tueytp6cbm@dom2fduk2r6z>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <qdip4rtk2zusxkdlui4ujnybsh7jfqk25tazx477tueytp6cbm@dom2fduk2r6z>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=67fd0854 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=BMwtVS2TDCMlKGfjk1MA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: g3v-pJQLu09JTFyZZP9DlSa_AxUvFfMG
+X-Proofpoint-ORIG-GUID: g3v-pJQLu09JTFyZZP9DlSa_AxUvFfMG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=524
+ spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140096
 
---WqPtcm6UamhslFgw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 4/14/25 2:28 PM, Dmitry Baryshkov wrote:
+> On Fri, Apr 11, 2025 at 12:52:32PM +0200, Konrad Dybcio wrote:
+>> On 4/11/25 12:50 PM, Dmitry Baryshkov wrote:
+>>> On Fri, Apr 11, 2025 at 12:03:03PM +0200, Konrad Dybcio wrote:
+>>>> On 4/11/25 11:57 AM, Dmitry Baryshkov wrote:
+>>>>> On Fri, 11 Apr 2025 at 12:49, Konrad Dybcio
+>>>>> <konrad.dybcio@oss.qualcomm.com> wrote:
+>>>>>>
+>>>>>> On 4/9/25 5:49 PM, Konrad Dybcio wrote:
+>>>>>>> On 4/9/25 5:44 PM, Dmitry Baryshkov wrote:
+>>>>>>>> On 09/04/2025 17:47, Konrad Dybcio wrote:
+>>>>>>>>> SMEM allows the OS to retrieve information about the DDR memory.
+>>>>>>>>> Among that information, is a semi-magic value called 'HBB', or Highest
+>>>>>>>>> Bank address Bit, which multimedia drivers (for hardware like Adreno
+>>>>>>>>> and MDSS) must retrieve in order to program the IP blocks correctly.
+>>>>>>>>>
+>>>>>>>>> This series introduces an API to retrieve that value, uses it in the
+>>>>>>>>> aforementioned programming sequences and exposes available DDR
+>>>>>>>>> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
+>>>>>>>>> information can be exposed in the future, as needed.
+>>>>>>>>
+>>>>>>>> I know that for some platforms HBB differs between GPU and DPU (as it's being programmed currently). Is there a way to check, which values are we going to program:
+>>>>>>>>
+>>>>>>>> - SM6115, SM6350, SM6375 (13 vs 14)
+>>>>>>
+>>>>>> SM6350 has INFO_V3
+>>>>>> SM6375 has INFO_V3_WITH_14_FREQS
+>>>>>
+>>>>> I'm not completely sure what you mean here. I pointed out that these
+>>>>> platforms disagreed upon the HBB value between the DPU/msm_mdss.c and
+>>>>> a6xx_gpu.c.
+>>>>> In some cases (a610/SM6115 and a619/SM6350) that was intentional to
+>>>>> fix screen corruption issues. I don't remember if it was the case for
+>>>>> QCM2290 or not.
+>>>>
+>>>> As I said below, I couldn't get a good answer yet, as the magic value
+>>>> is not provided explicitly and I'll hopefully be able to derive it from
+>>>> the available data
+>>>
+>>> I see...
+>>> Is this data even supposed to be poked into? The foo_WITH_bar types
+>>> doesn't sound like a very stable API.
+>>
+>> Yeah, it was designed with both the producer and consumer being part
+>> of a single codebase, always having the data structures in sync..
+> 
+> I feel somewhat worried about parsing those structures then. But... the
+> only viable alternative is to have an in-kernel list of possible
+> platform configurations and parse the /memory@foo/ddr_device_type
+> property.
 
-Hi Linus,
+Well, this is where that property's value comes from..
 
-Grab bag of fixes for rc
-
-Thanks,
-Jason
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-
-for you to fetch changes up to ffc59e32c67e599cc473d6427a4aa584399d5b3c:
-
-  RDMA/bnxt_re: Remove unusable nq variable (2025-04-10 14:47:55 -0300)
-
-----------------------------------------------------------------
-RDMA v6.15 first rc pull request
-
-- Hang in bnxt_re due to miscomputing the budget
-
-- Avoid a -Wformat-security message in dev_set_name()
-
-- Avoid an unused definition warning in fs.c with some kconfigs
-
-- Fix error handling in usnic and remove IS_ERR_OR_NULL() usage
-
-- Regression in RXE support foudn by blktests due to missing ODP
-  exclusions
-
-- Set the dma_segment_size on HNS so it doesn't corrupt DMA when using very
-  large IOs
-
-- Move a INIT_WORK to near when the work is allocated in cm.c to fix a
-  racey crash where work in progress was being init'd
-
-- Use __GFP_NOWARN to not dump in kvcalloc() if userspace requests a very
-  big MR
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      RDMA/ucaps: Avoid format-security warning
-
-Chengchang Tang (1):
-      RDMA/hns: Fix wrong maximum DMA segment size
-
-Kashyap Desai (1):
-      RDMA/bnxt_re: Fix budget handling of notification queue
-
-Leon Romanovsky (1):
-      RDMA/bnxt_re: Remove unusable nq variable
-
-Li Zhijian (1):
-      RDMA/rxe: Fix null pointer dereference in ODP MR check
-
-Mark Bloch (1):
-      RDMA/mlx5: Fix compilation warning when USER_ACCESS isn't set
-
-Sharath Srinivasan (1):
-      RDMA/cma: Fix workqueue crash in cma_netevent_work_handler
-
-Shay Drory (1):
-      RDMA/core: Silence oversized kvmalloc() warning
-
-Yue Haibing (1):
-      RDMA/usnic: Fix passing zero to PTR_ERR in usnic_ib_pci_probe()
-
- drivers/infiniband/core/cma.c               |  4 +++-
- drivers/infiniband/core/ucaps.c             |  2 +-
- drivers/infiniband/core/umem_odp.c          |  6 ++++--
- drivers/infiniband/hw/bnxt_re/ib_verbs.c    | 10 ----------
- drivers/infiniband/hw/hns/hns_roce_main.c   |  2 +-
- drivers/infiniband/hw/mlx5/fs.c             |  2 --
- drivers/infiniband/hw/usnic/usnic_ib_main.c | 14 +++++++-------
- drivers/infiniband/sw/rxe/rxe_loc.h         |  6 ++++++
- drivers/infiniband/sw/rxe/rxe_mr.c          |  4 ++--
- drivers/infiniband/sw/rxe/rxe_resp.c        |  4 ++--
- include/rdma/ib_verbs.h                     |  7 +++++++
- 11 files changed, 33 insertions(+), 28 deletions(-)
-
---WqPtcm6UamhslFgw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCZ/0ISgAKCRCFwuHvBreF
-YXsdAQCMEB2oSJ0YmNQC1Sq2zndWtZRxVho/DmivQOMVL4a3oQD/f460bcAAu164
-cv/lvTjvCtLeWCP+wNZwZPOQpmU1JgI=
-=RQEX
------END PGP SIGNATURE-----
-
---WqPtcm6UamhslFgw--
+Konrad
