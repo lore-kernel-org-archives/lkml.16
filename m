@@ -1,43 +1,43 @@
-Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CC91DF971
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735621E1DEF;
+	Mon, 14 Apr 2025 20:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744662515; cv=none; b=GjhPGcxFGuJRZa6L/DpyetmwWrRTtCyAgnBIbB8Y1SBAbKGRZGekT9C8KSDhqPhoMHGYMiBowek2m+0S5f7kN3hJtHMxJPlcW646y1a/3L32Fs9y2XUp3PbRTlcCV6pec85jZ5DxaYLU4rtvMzbd/bbIv2eN/BDmNqleKT5pkBs=
+	t=1744662522; cv=none; b=SsIQAiPbXkJQeIpuWbN+J3XjXug/q5tp0VKtM0iTruaxVcvNbugXa3IKSAj7EtZEEqDXbg2sm8JJHNAjDWQjA4NnilNwrffCxuVMmF/vrCEpx0Enn9FqRXsdBOeae2NivIPHavjzkvpQkX6Jxdj3VB79XItKV6sYGIDNtbY23Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744662515; c=relaxed/simple;
-	bh=8TaE4U50cKnetEE5qxz8et9q1kplSCeKNx9UK6JRhnk=;
+	s=arc-20240116; t=1744662522; c=relaxed/simple;
+	bh=tmMoYs9RIJY8JE+MjASDE7DvS+BS0lXX6Gh/vx2/yys=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WyG+CdIhkN9k0KpeQJT/SoBQ3kv4txGBEDsj8HV+Iw99amUVm6G8iwyCTKbYJ95HEDZBHwiVHWviZNIbnnnXjQTouF5YqkVkAxVthZUMVn0Q/C2BfuhMLKz4EhIxHsRjK4sTQV6+zR3CoW1R9mzDRVIz1Ffop/O3tXEPdGHC9F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=ZUykQswF; arc=none smtp.client-ip=109.224.244.17
+	 MIME-Version:Content-Type; b=ECLcH7icdHYVzt3uUk9zSR921tcfFnlfKHpatG2HP29MDXVKTgm5VqhsloOgCgdSLOOT7pr0wnsUhGv9DjC++7kMRDxKnfre1dBEYK7HCQd9asemDpNruwrQcj3Yplrs/pVxucxcAj+kPHCbpv0JC+iqJ5spfmcQlebBTURhhuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=SF1syiyb; arc=none smtp.client-ip=109.224.244.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ZUykQswF"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="SF1syiyb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1744662511; x=1744921711;
-	bh=8TaE4U50cKnetEE5qxz8et9q1kplSCeKNx9UK6JRhnk=;
+	s=protonmail3; t=1744662518; x=1744921718;
+	bh=tmMoYs9RIJY8JE+MjASDE7DvS+BS0lXX6Gh/vx2/yys=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=ZUykQswF45J0+U6T9Bt6it0yZans4SB8FPguGkZJih5PTcMyVjkm/V98vQSzsEPOv
-	 RKHmlPAxSYIfLVN9zSTgmUWon5oWn5np5LRHqBrEZb5iAYk3TDzLX+pV+khPHjW30J
-	 qPd5pPcA6DOyQPIYW6/6NIq7cGLpAESzS0FDXZ7l1uCEtN+hOWscNLNV8S1XmcTesg
-	 hhuTVuLMyuiG6ug/ceYuSezWB8eLajwhXWLoFpMI8G1LvQDjLwtA4sq2WI4gR/+3D1
-	 b99uCL1LwUdB2QcRBjoEHUb8l9WnHSTX7GueF3rif1dRHk6KH93fo8DIYUoy3lim3H
-	 lNipI0dhbs/sA==
-Date: Mon, 14 Apr 2025 20:28:26 +0000
+	b=SF1syiyb/QHcu8pthyLx6beKordc/dG0WqIfqXAwWk13iYdCagZAxwfeEGYRS2rgq
+	 vR1/SVriIJX8q0uIPhTI/igtk4nWiLDtpAcDculpnoK3O9AfCaJ+84aj/JJu0KK3bt
+	 Rym1ikGw0lgsW7DjYGR4pbsrgkYxXHrCGJ8t25Tx7XqgQeBOnNdZS6zFYlZdTHoIjV
+	 St7xspY6QiK5mzLbzq2x0TNMOqTgcf5f5Y1eNGEUiA3BDiZlKjDUyCKrljYUiKp7UE
+	 i09U0CTjdD/fz1Fzm+fokbyDaRjmuRJ6QpqDUuuLf+dwI4TZRkP4DTsDQEYdKe5aAB
+	 YkVJcm+xkirBg==
+Date: Mon, 14 Apr 2025 20:28:32 +0000
 To: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 From: =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
-Subject: [PATCH v2 RESEND 2/6] USB: serial: ftdi_sio: Add missing blank line after declarations
-Message-ID: <20250414202750.9013-3-dominik.karol.piatkowski@protonmail.com>
+Subject: [PATCH v2 RESEND 3/6] USB: serial: ftdi_sio: Remove superfluous space before statements
+Message-ID: <20250414202750.9013-4-dominik.karol.piatkowski@protonmail.com>
 In-Reply-To: <20250414202750.9013-1-dominik.karol.piatkowski@protonmail.com>
 References: <20250414202750.9013-1-dominik.karol.piatkowski@protonmail.com>
 Feedback-ID: 117888567:user:proton
-X-Pm-Message-ID: d40a20c93caa0d0ac7b8d582e74cbcad5ceb07e9
+X-Pm-Message-ID: 5b1d28e026652a1776a87defe7c901ddf022422e
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Add missing blank lines after declarations to align with code style.
+Remove superfluous space between indenting tabs and statements to align
+with code style.
 
 Signed-off-by: Dominik Karol Pi=C4=85tkowski <dominik.karol.piatkowski@prot=
 onmail.com>
@@ -55,48 +56,43 @@ onmail.com>
 
 v2: Split the patch into smaller patches
 
- drivers/usb/serial/ftdi_sio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/serial/ftdi_sio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index b02dbe4ec1e4..f52bab3a3bfd 100644
+index f52bab3a3bfd..c2b9b8edcc8e 100644
 --- a/drivers/usb/serial/ftdi_sio.c
 +++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1143,6 +1143,7 @@ static unsigned short int ftdi_232am_baud_base_to_div=
+@@ -1161,7 +1161,7 @@ static unsigned short int ftdi_232am_baud_base_to_div=
 isor(int baud, int base)
- =09unsigned short int divisor;
- =09/* divisor shifted 3 bits to the left */
- =09int divisor3 =3D DIV_ROUND_CLOSEST(base, 2 * baud);
-+
- =09if ((divisor3 & 0x7) =3D=3D 7)
- =09=09divisor3++; /* round x.7/8 up to x+1 */
- =09divisor =3D divisor3 >> 3;
-@@ -1169,6 +1170,7 @@ static u32 ftdi_232bm_baud_base_to_divisor(int baud, =
-int base)
- =09u32 divisor;
- =09/* divisor shifted 3 bits to the left */
- =09int divisor3 =3D DIV_ROUND_CLOSEST(base, 2 * baud);
-+
- =09divisor =3D divisor3 >> 3;
- =09divisor |=3D (u32)divfrac[divisor3 & 0x7] << 14;
- =09/* Deal with special cases for highest baud rates. */
-@@ -1657,6 +1659,7 @@ static ssize_t latency_timer_show(struct device *dev,
- {
- =09struct usb_serial_port *port =3D to_usb_serial_port(dev);
- =09struct ftdi_private *priv =3D usb_get_serial_port_data(port);
-+
- =09if (priv->flags & ASYNC_LOW_LATENCY)
- =09=09return sprintf(buf, "1\n");
- =09else
-@@ -2194,6 +2197,7 @@ static int ftdi_probe(struct usb_serial *serial, cons=
-t struct usb_device_id *id)
 =20
- =09if (quirk && quirk->probe) {
- =09=09int ret =3D quirk->probe(serial);
-+
- =09=09if (ret !=3D 0)
- =09=09=09return ret;
- =09}
+ static unsigned short int ftdi_232am_baud_to_divisor(int baud)
+ {
+-=09 return ftdi_232am_baud_base_to_divisor(baud, 48000000);
++=09return ftdi_232am_baud_base_to_divisor(baud, 48000000);
+ }
+=20
+ static u32 ftdi_232bm_baud_base_to_divisor(int baud, int base)
+@@ -1183,7 +1183,7 @@ static u32 ftdi_232bm_baud_base_to_divisor(int baud, =
+int base)
+=20
+ static u32 ftdi_232bm_baud_to_divisor(int baud)
+ {
+-=09 return ftdi_232bm_baud_base_to_divisor(baud, 48000000);
++=09return ftdi_232bm_baud_base_to_divisor(baud, 48000000);
+ }
+=20
+ static u32 ftdi_2232h_baud_base_to_divisor(int baud, int base)
+@@ -1213,7 +1213,7 @@ static u32 ftdi_2232h_baud_base_to_divisor(int baud, =
+int base)
+=20
+ static u32 ftdi_2232h_baud_to_divisor(int baud)
+ {
+-=09 return ftdi_2232h_baud_base_to_divisor(baud, 120000000);
++=09return ftdi_2232h_baud_base_to_divisor(baud, 120000000);
+ }
+=20
+ #define set_mctrl(port, set)=09=09update_mctrl((port), (set), 0)
 --=20
 2.34.1
 
