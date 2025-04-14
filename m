@@ -1,139 +1,130 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F9325A626
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5472641FD
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620422; cv=none; b=RVVYNHmc9YF/v6OpOQt0dn+e1dBh5eXsvY0dwVDdJScfpwiudQHXgL3xKkaiWOBNcwPL5mLxC3mA8B9ge80C2MoaGor2yoDAxP7p24Brfca9NZyMu26cYxWBghMiOiDVMV6yjuzT375mUOaCA5FX2iU9JtD6khIwL5G76I5zGFQ=
+	t=1744620429; cv=none; b=iSujJw5UlZPa+1PTJ1ANDTmHpPtfkU6WYIIrNq7tFjX5f3udqyXaFT5qC6ICmcVUKFKoZjBo5VcljD8bns5HfOaId3GepDoeVWfUvvK0GEfVuQ0Arng2Z/LQck7KwdnCiBUqWzz16c7qrVX/mpsGXHgrerEaLPmzeuZAOGfQGYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620422; c=relaxed/simple;
-	bh=SCP/PwSChNMVWttCxouuAEa4tawnRcR8a7lMxmBepnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GTs7dybBWEaSPCin6A1lIZMyBh8pFA5HvLxFSMU9/i+TdgauJYYvUxcqP3cf1NIB6Zro8rYvZQJZI9/lI3nJYoVZAcXjJRnOtjioWx1j/KdF40Yjz9EQq0xcGiCuGA/6i8fVLLT6Nif3Q8te2sw+NRcxu0RR2ZgZOqo039JdAoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cQxQeWaa; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744620429; c=relaxed/simple;
+	bh=k7r7JNcOppFMNPYec5Y3bqDunEGbtzHE6Eez3cmSTNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nw0ZSiL6G5LCicDgLaCRUz35yFYrHX9wLYk4tTt/ju4H1KDYeauFrzM09PXa6KKGyeffV0DPCjYB5Ics2BAEj6TfimAW7XZ+mo+WW5QQXo8fM8GbAW9eO8jZLIyUF9F9zMCfBAefFwmbsD1k+nXzusY5owdmI2efuXkqOmXr3Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DOaKgudE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cQxQeWaa"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so3440375f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744620419; x=1745225219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LwKDG6W8xKNbvB/TbUCZDLywQu+/SySWZsszpHukAAE=;
-        b=cQxQeWaaFxRzDq9V2UJc0opu54Tj0aqSzKFNW01exw3AGvgjnSZ2M8nA8KDULYMfqJ
-         y8PSvlI117C89Zmo/pUEXGicfQyHdM4mUmkdfyx9K5PgJcmmP2vTt2IQxw+bA8efNPTk
-         r0ca9utmspep2sPthJrxMVIP0WIc2z2/XrpT8SqI5+9P9a1wQ2Vj8FGtMcQO8cLsPf2u
-         JniEl2S+1E4gb08kEYvi16jCFGOyhGK5rqEQFcgTcuJ63rYWKzxBiSI21Ov10VJ53WHX
-         hzxSrms4a+XtpbUwl/zePbYadgUW0slqxuX7vWswJw3uDL0jsqEFwFwO3kg58rURGEZx
-         GZuw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DOaKgudE"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNsi9R013231
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	xj8e5oei6JOdb0HPupXEAc6CgdAdGfN72foVRMbbbuQ=; b=DOaKgudEC2b8pseR
+	Bu6VyKBn5oSnFnaTg/d8G38T2N20dq24Uy15QQfZXGWrgnQwvULpA9UMSKfJ56mi
+	VxYLs987SbeJub/DTLqDd3z8xp7HLaKKMpQx0p8/9NTDA6SDrWLuYhzjtiyg/X1t
+	wMCU6tC7zDCvDxWDfG8UIlDai/1+GUgy6w8DkrHjquanQxedtUdUTgGZGGXB6gGF
+	FhXazsyrjcbD1/3jLur266GJ1KudFYXImXDz9HUPh3sIF24nE9AAlEngKz1EoqGN
+	e5qxgkgY7xcocU7IHWpSlaFCYM+2cCkFjU9KiEXUbQn8piwiVAQOWtcYiaG1dNbr
+	VRVfsg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6bx24-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:06 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2242f3fd213so32825635ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:47:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744620419; x=1745225219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LwKDG6W8xKNbvB/TbUCZDLywQu+/SySWZsszpHukAAE=;
-        b=UHw7p70XmqphTDPnXePCnxft5Md6oXoI8mJjLWsZBBF6PV3sI7j14ce/7+hE5qdCZh
-         Hk7LCSPT4n6w3Ej6p8a0tcMdYiYHHQWLinyYI0pP3qe/laUJS6xDnOfjNaaObjyNMZBu
-         hLdN7vnC1v6cfdEriFdQWqJkAbcjcAadbHPEeHV5V0NTwOxLEb8E+tRlejl/EVy/S0wJ
-         MDfKN9BjquA8aEqX4oZWqf8XGpdn6pNEOK7/sM3iFBXrt3TGpy04ckzhzmqdmlrRzP7R
-         Sl2qNPARdXaAKGY05auG99D+KfpETV2Xy0tpSywgqEHW6csZh8gUQU9b1IU9EmcHLjNl
-         qOMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVT97CJ7FA+HRe7ozmFNOpWwNWVJVfqVSS0SaaXbpDBsuzQMcdySJi9T5uJ8q/RiqsAyJJelxr/D6c7y7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+P2cx9elnB7aA1f/cmgMOWlB1/qYA7l2E8cwqASqBzBI4AH1T
-	rdfLT8SKz/O9BWQHmbfhuMrH42AXqEMY4wYtl9Q5Xv9ks8m6FuaSEPMA0q7oycnuKgyu+PZ0NKA
-	VNT7s0oB5J1KSqzCbE6C9LI9Q8ikYWmVgBEvq
-X-Gm-Gg: ASbGncs+s/KA8iWKsA3x7KpmnWj+GzIRztWMSykNDjsyhH9MtAT+tx45jHV6WcWFULL
-	Jhzkk/2O6MMcEWXviZgxYcpCU8E/L03dZuVlcw2HmHf47q4TRHm39BukWPnSwXTNrtcuT8R6UjA
-	NCrMexXHEtC6iPt54cBb/I3x+laAdcYxe5wUxIb9Y9DThLTOJncGs=
-X-Google-Smtp-Source: AGHT+IHEvx7P61rJOTRerZ+a8pvfaZkJuUtapqSU6YjMcCwnJs4bOGlMqLM40z3t5trwgLUElMG5/bn+P/Y27+nuXxE=
-X-Received: by 2002:a5d:5f96:0:b0:391:ba6:c069 with SMTP id
- ffacd0b85a97d-39eaaebeb38mr10081675f8f.44.1744620418562; Mon, 14 Apr 2025
- 01:46:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744620426; x=1745225226;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xj8e5oei6JOdb0HPupXEAc6CgdAdGfN72foVRMbbbuQ=;
+        b=xOicpXaNHz8w9MY7QsYUf2M/4Q5g85mDooWofu6Uw8t3v+dka+hT4eIAn4V4rgGoiV
+         qOcprXBf/jEBqs+Y4kLvhNhYFRGmuBESkNs7lFReHN3iClJL4kXaSw3g1mR7mmKXRBG/
+         2k4N+f2DwTpaIldovX7evmSV7bTMRTGxjLMW9GDSkV+QWlXUTZLMldn/qYHqILUambjL
+         hCuUT0mZfAaHwKsXm3nv6lttm07uAGBwsqfOLOAT7lXGrJqa9TKWKusBnY7GXFhloxEt
+         C/VFmx1/VFzwmXGXUNClt9pU0hiwi43laBpf+d7iC4gFAjO4odjgHrYCPx6qvOVfwvVO
+         iH3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVNi7RpmZ/Wx0Lep9uADcPI17Mr/u3iI3wlSLeAKOHhSOneXwmgNftb5cHvXdF9PijLzZKyFmvmDjKvN6s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw75/5go7aaGWQjEMPxQo8TQUUE4zW/NTZe7SXc1HWY4DaNZik1
+	xwqGpmJsb+vaRbOS4sZ1AvOdD8E/Y55bdiqQG6z6wGM0d/1sSoOj6pVZVtB9pLLm8WP4cHSlLxs
+	7zYOvWlL2lghLP8BqOrsW+4LJLnG5XIQYrviIXaEGT4ttU2qf1hRET7JRS7QrYhM=
+X-Gm-Gg: ASbGncutdm7mJTf5oWqpoqefFX13bpVwp6MTODygRZL6bwaOn4gmhYRnQV8W90snb2T
+	xtSz6B0QxL7LeMLeLZHgURDIkwb6o9Qc5C6LuYf2aCj2Gcb5JuYXqubIAA4IAE6jJfmWU4Ki1XU
+	eVnGM2j/KFl5FLTZHkHh3G+MXyVsOcmL3s5K9RU/flNfjr+JnUK+JLnaYlb0/owokOGfQckym89
+	4g5M6VgL+lsOitUKNmGTsjmU+I/CB+ems/zC6LmLI+7xJmAOAKTnotRUD3AVgF6FjJCdCqbGstb
+	+hPbEA/R/lYJjryBxZeTGzYpdBb71lffotYdcdICPq6aB9wYxbwOrg==
+X-Received: by 2002:a17:903:3c6d:b0:224:a74:28c2 with SMTP id d9443c01a7336-22bea4c3e94mr182892975ad.29.1744620425450;
+        Mon, 14 Apr 2025 01:47:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHp7yFwbjgHGKx7tlCiZg+OFqMpG8Hw5702EW89wSfGmN3jPOC8NG+R8fOKfEBZPcmC7RgC0Q==
+X-Received: by 2002:a17:903:3c6d:b0:224:a74:28c2 with SMTP id d9443c01a7336-22bea4c3e94mr182892725ad.29.1744620425129;
+        Mon, 14 Apr 2025 01:47:05 -0700 (PDT)
+Received: from [10.152.204.0] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b2b6sm93432875ad.65.2025.04.14.01.47.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 01:47:04 -0700 (PDT)
+Message-ID: <897a8b62-04b1-1ce6-bed4-ff2061636ae6@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 14:17:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413005650.1745894-1-ojeda@kernel.org>
-In-Reply-To: <20250413005650.1745894-1-ojeda@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 14 Apr 2025 10:46:46 +0200
-X-Gm-Features: ATxdqUFTqJD6mmtLs5eNUuwhMNICFoxmw1G3Dh5Cn8tAVPlsl1viiSVgUFcLSxk
-Message-ID: <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
-Subject: Re: [PATCH] rust: add C FFI types to the prelude
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH ath-next v2 1/2] wifi: ath12k: handle scan link during
+ vdev create
+Content-Language: en-US
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+References: <20250411-fix_scan_vdev_handling-v2-0-b6740896c144@oss.qualcomm.com>
+ <20250411-fix_scan_vdev_handling-v2-1-b6740896c144@oss.qualcomm.com>
+From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+In-Reply-To: <20250411-fix_scan_vdev_handling-v2-1-b6740896c144@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 80Nw-kl7IY7536EIDIJdtuzn1KhiLbbM
+X-Proofpoint-GUID: 80Nw-kl7IY7536EIDIJdtuzn1KhiLbbM
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=67fccb8a cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=ttVt3SnfeazVJPRM6VEA:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=704 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140063
 
-On Sun, Apr 13, 2025 at 2:57=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Rust kernel code is supposed to use the custom mapping of C FFI types,
-> i.e. those from the `ffi` crate, rather than the ones coming from `core`.
->
-> Thus, to minimize mistakes and to simplify the code everywhere, just
-> provide them in the `kernel` prelude and ask in the Coding Guidelines
-> to use them directly, i.e. as a single segment path.
->
-> After this lands, we can start cleaning up the existing users.
->
-> Ideally, we would use something like Clippy's `disallowed-types` to
-> prevent the use of the `core` ones, but that one sees through aliases.
->
-> Link: https://lore.kernel.org/rust-for-linux/CANiq72kc4gzfieD-FjuWfELRDXX=
-D2vLgPv4wqk3nt4pjdPQ=3Dqg@mail.gmail.com/
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Yes please!
 
->  Documentation/rust/coding-guidelines.rst | 17 +++++++++++++++++
->  rust/kernel/prelude.rs                   |  5 +++++
->  2 files changed, 22 insertions(+)
->
-> diff --git a/Documentation/rust/coding-guidelines.rst b/Documentation/rus=
-t/coding-guidelines.rst
-> index 27f2a7bb5a4a..d0bf0b3a058a 100644
-> --- a/Documentation/rust/coding-guidelines.rst
-> +++ b/Documentation/rust/coding-guidelines.rst
-> @@ -191,6 +191,23 @@ or:
->         /// [`struct mutex`]: srctree/include/linux/mutex.h
->
->
-> +C FFI types
-> +-----------
-> +
-> +Rust kernel code does not use the C FFI types (such as ``c_char``) from
-> +``core::ffi::*``. Instead, a custom mapping that matches properly the C =
-types
-> +used in the kernel is provided in the prelude, i.e. ``kernel::prelude::*=
-``.
-> +
-> +These types (aliases) should generally be referred directly by their ide=
-ntifier,
-> +i.e. as a single segment path. For instance:
-> +
-> +.. code-block:: rust
-> +
-> +       fn f(p: *const c_char) -> c_int {
-> +           // ...
-> +       }
+On 4/11/2025 8:46 AM, Aditya Kumar Singh wrote:
+> For scanning purposes, the driver can use link ID 15 (scan link). A future
+> change will make non-ML interfaces to select the scan link. In this
+> scenario, arvif->link_id will be used to retrieve the link configuration in
+> ath12k_mac_vdev_create(). However, link ID 15 is not recognized as a valid
+> link ID in the upper kernel, which will result in a failure to fetch
+> link_conf and subsequently cause the scan to fail.
+> 
+> To avoid this issue, ensure link_conf is fetched only when the link ID is
+> within the valid range. Since link_conf cannot be retrieved using the scan
+> link, use vif->addr as the Ethernet address for creating the scan vdev.
+> This address will serve as the source address (address 2) in the probe
+> request frames during scanning. Additionally, use the automatic Tx power
+> value for the vdev. As this is a scan vdev, these values do not affect the
+> scan functionality.
+> 
+> Note that vif->addr will only be taken when a valid link_conf can not be
+> fetched. Otherwise, link_conf's address will be taken as address 2.
+> 
+> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
+> 
+> Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 
-I wonder if it would make more sense to rephrase this section to first
-say that rfl has type aliases for the C integer types called c_int and
-so on, then mention that they are available in the prelude, and then
-at the end of the section have a note that we don't use the type
-aliases from core::ffi. I think focusing on how to use C integer
-types, rather than technical details about how they are defined, is
-more relevant for a reader who is just looking for coding guidelines.
-
-Alice
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
