@@ -1,160 +1,145 @@
-Received: from forward205b.mail.yandex.net (forward205b.mail.yandex.net [178.154.239.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F31028469A;
-	Mon, 14 Apr 2025 17:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395571F236B;
+	Mon, 14 Apr 2025 17:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744651139; cv=none; b=O53JQ5wbdjhFAy0aNK7Lf6+5jcPx6hLoSWgx7Pfn6e27G3zO2rfWT55jGCStvn/9Z+k6nVW5IgG+GzBGvkVxBn1OL1OlwWCvF2FdWGE5dUWvlgVS8ZeB2QtrPOIBBU5HA3yK1OmfMc5/ZldfwEA1fR5ND1R0BV7CuLpHuh1sV/Y=
+	t=1744651188; cv=none; b=UvC30c+BF0elcM4NUSeaUBaozCaNSsJw6AySu6YNL5oMqlX6aB3o5qoti4j2JrHWd0YZV0DL1K67O8ryh9Y0/xRqhNjqf4Meh/M6r43hKkWH94UlkANzhmp3rhakXfqT4u+m+OP0DSt6+zGsTBkJVOq5TJ4hvXVtqLM0m/JcJYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744651139; c=relaxed/simple;
-	bh=G77ROff31km5oic0MrLl+7V+X9eKW5/vOe5Aa4RAjlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LEDfuewna9zvZstqmaXBHNw/HLrPX7YyPH+GX8+NoBWKilldbWBg+WXwuFeSeNMwkv11xAE1ZgoekwVUP9UMMv+RkZ/8+ro3XF2YIDP6mtZShuW8E+6SSkzlGt3XuWCJ6wgD4t1Zf1rHWKS0rJ9ORz3Lt3yhgpDW8G1SccsIGWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=mC0xs/5P; arc=none smtp.client-ip=178.154.239.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
+	s=arc-20240116; t=1744651188; c=relaxed/simple;
+	bh=z37GMPLQfQqtOQrNOtRcvsIzo/ZNg3+Bc9JSK7Jgb08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jylm6NB7eI/TvUC3ChU4FTrYAU1pip7n8ANijToTvFcrvOgY1qCfFuiISFjc2qOCF/KrG+RU8Gp/8xZI9Y1Nsf3Zcm5Gal/tFcJrlt+jLX8olI5HMUQJ0OJS43wkorImg/DieyEzZ/W3YxMUb9OlbTvuZbGl/PetOhvi6TcruG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ8f2c9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="mC0xs/5P"
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
-	by forward205b.mail.yandex.net (Yandex) with ESMTPS id 1DE766522C;
-	Mon, 14 Apr 2025 20:12:38 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net [IPv6:2a02:6b8:c11:3fa3:0:640:b228:0])
-	by forward102b.mail.yandex.net (Yandex) with ESMTPS id A739C609D3;
-	Mon, 14 Apr 2025 20:12:29 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id PCKvQd1LmW20-QSrumStn;
-	Mon, 14 Apr 2025 20:12:28 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
-	t=1744650748; bh=wFx6lLFV+QupO4M4+wLGufqzKiqBmpx6VWXYCXbP+dU=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=mC0xs/5PO+JAudJ+Yfo9WY73Caa8C77wLAUOratA0i1DxX58kUOHYB08BT86W/8rZ
-	 b7Ze9gTt3vwiUaatGbBJEpqutn8ETFPW1/SdRvqgKgS2f3mYtrwLDstFoDcZc266mB
-	 aOTD0DM6Pn8wLoZfUImzgUo2kaBN7i22r5JeJ0Tg=
-Authentication-Results: mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
-From: Mikhail Lobanov <m.lobanov@rosa.ru>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Mikhail Lobanov <m.lobanov@rosa.ru>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH v3] KVM: SVM: forcibly leave SMM mode on vCPU reset
-Date: Mon, 14 Apr 2025 20:12:06 +0300
-Message-ID: <20250414171207.155121-1-m.lobanov@rosa.ru>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ8f2c9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C958C4CEE2;
+	Mon, 14 Apr 2025 17:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744651187;
+	bh=z37GMPLQfQqtOQrNOtRcvsIzo/ZNg3+Bc9JSK7Jgb08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZ8f2c9lqfQZuQfWRr3KwemWv7exS/LcHLgCoLIJY1DNeczSaMQ2+K/p3z/mVRHXf
+	 5fYgsygYh/xIH5tIyU6QCvN2kjL9ycG1XsUaTCvSMyNM4nLwmEiQOuIVQJBGnIU6Wi
+	 eH72/9HbUpRpNs98Zbzt7Vw2DVusLEdBAFtqH9l7CD88Y6x5GgcdBgeL04Bde+YmwC
+	 uvjY5W2kBUh85KIg46dZSjcc6e1uqYGFbQIOnKSpCtulOiaTYwdjG2KKrMZ9DZebqt
+	 cv8y7JFEPsnuR9d4g+wONPywfX0U+hqROxapwUq2PEVZlBBIUUt0Kmcio/GxuCMMnk
+	 0927u0k2ScVQw==
+Date: Mon, 14 Apr 2025 18:19:41 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Prathosh.Satish@microchip.com,
+	krzk@kernel.org, netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
+	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
+	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+	mschmidt@redhat.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+Message-ID: <20250414-residual-unblended-c21c7bc6eeb2@spud>
+References: <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+ <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+ <20250410-puritan-flatbed-00bf339297c0@spud>
+ <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
+ <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
+ <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
+ <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
+ <4e331736-36f2-4796-945f-613279329585@lunn.ch>
+ <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2OKUgsrCAQgxlv5y"
+Content-Disposition: inline
+In-Reply-To: <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
 
-Previously, commit ed129ec9057f ("KVM: x86: forcibly leave nested mode
-on vCPU reset") addressed an issue where a triple fault occurring in
-nested mode could lead to use-after-free scenarios. However, the commit
-did not handle the analogous situation for System Management Mode (SMM).
 
-This omission results in triggering a WARN when a vCPU reset occurs
-while still in SMM mode, due to the check in kvm_vcpu_reset(). This
-situation was reprodused using Syzkaller by:
-1) Creating a KVM VM and vCPU
-2) Sending a KVM_SMI ioctl to explicitly enter SMM
-3) Executing invalid instructions causing consecutive exceptions and
-eventually a triple fault
+--2OKUgsrCAQgxlv5y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The issue manifests as follows:
+On Fri, Apr 11, 2025 at 11:56:15AM +0200, Ivan Vecera wrote:
+>=20
+>=20
+> On 10. 04. 25 11:12 odp., Andrew Lunn wrote:
+> > On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
+> > >=20
+> > >=20
+> > > On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
+> > > > > Prathosh, could you please bring more light on this?
+> > > > >=20
+> > > > > > Just to clarify, the original driver was written specifically w=
+ith 2-channel
+> > > > > > chips in mind (ZL30732) with 10 input and 20 outputs, which led=
+ to some confusion of using zl3073x as compatible.
+> > > > > > However, the final version of the driver will support the entir=
+e ZL3073x family
+> > > > > > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
+> > > > > > ensuring compatibility across all variants.
+> > > >=20
+> > > > Hi Prathosh
+> > > >=20
+> > > > Your email quoting is very odd, i nearly missed this reply.
+> > > >=20
+> > > > Does the device itself have an ID register? If you know you have
+> > > > something in the range ZL30731 to ZL30735, you can ask the hardware
+> > > > what it is, and the driver then does not need any additional
+> > > > information from DT, it can hard code it all based on the ID in the
+> > > > register?
+> > > >=20
+> > > > 	Andrew
+> > > >=20
+> > > Hi Andrew,
+> > > yes there is ID register that identifies the ID. But what compatible =
+should
+> > > be used?
+> > >=20
+> > > microchip,zl3073x was rejected as wildcard and we should use all
+> > > compatibles.
+> >=20
+> > You have two choices really:
+> >=20
+> > 1) You list each device with its own compatible, because they are in
+> > fact not compatible. You need to handle each one different, they have
+> > different DT properties, etc. If you do that, please validate the ID
+> > register against the compatible and return -ENODEV if they don't
+> > match.
+> >=20
+> > 2) You say the devices are compatible. So the DT compatible just
+> > indicates the family, enough information for the driver to go find the
+> > ID register. This does however require the binding is the same for all
+> > devices. You cannot have one family member listing 10 inputs in its
+> > binding, and another family member listing 20.
+> >=20
+> > If you say your devices are incompatible, and list lots of
+> > compatibles, you can then use constraints in the yaml, based on the
+> > compatible, to limit each family member to what it supports.
+> >=20
+> > My guess is, you are going to take the first route.
+>=20
+> Yes, this looks reasonable... in this case should I use
+> microchip,zl3073x.yaml like e.g. gpio/gpio-pca95xx.yaml?
 
-WARNING: CPU: 0 PID: 25506 at arch/x86/kvm/x86.c:12112
-kvm_vcpu_reset+0x1d2/0x1530 arch/x86/kvm/x86.c:12112
-Modules linked in:
-CPU: 0 PID: 25506 Comm: syz-executor.0 Not tainted
-6.1.130-syzkaller-00157-g164fe5dde9b6 #0
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-RIP: 0010:kvm_vcpu_reset+0x1d2/0x1530 arch/x86/kvm/x86.c:12112
-Call Trace:
- <TASK>
- shutdown_interception+0x66/0xb0 arch/x86/kvm/svm/svm.c:2136
- svm_invoke_exit_handler+0x110/0x530 arch/x86/kvm/svm/svm.c:3395
- svm_handle_exit+0x424/0x920 arch/x86/kvm/svm/svm.c:3457
- vcpu_enter_guest arch/x86/kvm/x86.c:10959 [inline]
- vcpu_run+0x2c43/0x5a90 arch/x86/kvm/x86.c:11062
- kvm_arch_vcpu_ioctl_run+0x50f/0x1cf0 arch/x86/kvm/x86.c:11283
- kvm_vcpu_ioctl+0x570/0xf00 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4122
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:870 [inline]
- __se_sys_ioctl fs/ioctl.c:856 [inline]
- __x64_sys_ioctl+0x19a/0x210 fs/ioctl.c:856
- do_syscall_x64 arch/x86/entry/common.c:51 [inline]
- do_syscall_64+0x35/0x80 arch/x86/entry/common.c:81
- entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+No, please pick one of the compatibles in the file and name the same as
+one of those.
 
-Architecturally, hardware CPUs exit SMM upon receiving a triple
-fault as part of a hardware reset. To reflect this behavior and
-avoid triggering the WARN, this patch explicitly calls
-kvm_smm_changed(vcpu, false) in the SVM-specific shutdown_interception()
-handler prior to resetting the vCPU.
+--2OKUgsrCAQgxlv5y
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The initial version of this patch attempted to address the issue by calling
-kvm_smm_changed() inside kvm_vcpu_reset(). However, this approach was not
-architecturally accurate, as INIT is blocked during SMM and SMM should not
-be exited implicitly during a generic vCPU reset. This version moves the
-fix into shutdown_interception() for SVM, where the triple fault is
-actually handled, and where exiting SMM explicitly is appropriate.
+-----BEGIN PGP SIGNATURE-----
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/1DrQAKCRB4tDGHoIJi
+0tgQAQDiMG2LA+SQ4PGFUrDaU4IzQmjpflF0phs6a37CN+1gnwEA/FHtd04YGCSz
+Oc9nrC2QJLVRLTQhkJ6c3IA9ypnSrwU=
+=DfiI
+-----END PGP SIGNATURE-----
 
-Fixes: ed129ec9057f ("KVM: x86: forcibly leave nested mode on vCPU reset")
-Cc: stable@vger.kernel.org
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Mikhail Lobanov <m.lobanov@rosa.ru>
----
-v2: Move SMM exit from kvm_vcpu_reset() to SVM's shutdown_interception(), 
-per suggestion from Sean Christopherson <seanjc@google.com>.
-v3: -Export kvm_smm_changed() using EXPORT_SYMBOL_GPL.
--Wrap the call to kvm_smm_changed() in svm.c with #ifdef CONFIG_KVM_SMM 
-to avoid build errors when SMM support is disabled.
-
- arch/x86/kvm/smm.c     | 1 +
- arch/x86/kvm/svm/svm.c | 4 ++++
- 2 files changed, 5 insertions(+)
-
-diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
-index 699e551ec93b..9864c057187d 100644
---- a/arch/x86/kvm/smm.c
-+++ b/arch/x86/kvm/smm.c
-@@ -131,6 +131,7 @@ void kvm_smm_changed(struct kvm_vcpu *vcpu, bool entering_smm)
- 
- 	kvm_mmu_reset_context(vcpu);
- }
-+EXPORT_SYMBOL_GPL(kvm_smm_changed);
- 
- void process_smi(struct kvm_vcpu *vcpu)
- {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index d5d0c5c3300b..c5470d842aed 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2231,6 +2231,10 @@ static int shutdown_interception(struct kvm_vcpu *vcpu)
- 	 */
- 	if (!sev_es_guest(vcpu->kvm)) {
- 		clear_page(svm->vmcb);
-+#ifdef CONFIG_KVM_SMM
-+		if (is_smm(vcpu))
-+			kvm_smm_changed(vcpu, false);
-+#endif
- 		kvm_vcpu_reset(vcpu, true);
- 	}
- 
--- 
-2.47.2
-
+--2OKUgsrCAQgxlv5y--
