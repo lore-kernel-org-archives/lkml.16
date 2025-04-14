@@ -1,122 +1,80 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCB1BA49;
-	Mon, 14 Apr 2025 20:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FAA1B4233
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744661087; cv=none; b=A02KKw+c1booQZCUJQMZWCHSoUjX6uz5J7AhVfpKw0t1iGzCobq0LGXmLpZ8XjwBrqcDzIfEqUfxugQR0HwGAc+YHgRSsa4hcrlclU8CxRZbSgvoqB+H/z66rc2TJwmNeOfXYCq2BYEFAVwKvSps9kbPYYfHQbFBiMt30PXZ4SE=
+	t=1744661362; cv=none; b=bKwf6MUAnwrEd9YD1hFfwmGTX8N1L2x90MyI5conYAWuVuQByXh2xXLNr3mQFNX5TBfePycGb2i4uqhWOikQfa1G5usrDs+Rt0o+3WTvg2zbkL7qedof6GdV6vIt9tHzz18Zlg5hObC3GNmbnTmImvRQcy8ZBOuv8SbWyqdAlOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744661087; c=relaxed/simple;
-	bh=VZ60pzN3i0UOYp6g5BL7mcTUiU5eCJI+1lnyq3a2Ueg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kaiRL4bCXUK/OymgpiUEYwawpqnagTsHIa5K55b4Nm6jvkwGu8AiyPALE78PeFx2KOC67TlNnz8X9mrG+vbInDUg1f9v9RPtvZVie3nQEndH8C1Ox0hxz9zj7CA1BxDU+bY9hyPr8gJUBM8J8TeyIGF9aVKJ1yj8XTBjpZ1K8KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkjYSp1S; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744661362; c=relaxed/simple;
+	bh=4WDCQNSjaodIeN3lKj0ADScA/nC318e7L7RKOAGTdBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEUFUEkxD+C9VvBqBU52S9kdo3EZrJc0ise48n4kt8ALwDlSW0qHUE8RWOSS/SCZGoQCHyXngBt1RcZrHaXGzIxtDAUGywSf7Ofhb0iV6TOKQpsYt/QSzkZTuG8qaxPt/Vuwi7kcv09aUzPGOMH5g5ReGVxJYHY4SsLri1p9/Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R6wnx3m1; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkjYSp1S"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so929876066b.3;
-        Mon, 14 Apr 2025 13:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744661083; x=1745265883; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9sQR+joTS7+yy0wyuXKGmwdkJETmtPh6NN0wKjS83Dw=;
-        b=MkjYSp1Ssq8xCfwY16sju0fCrGQjfHgh0PChjEBjfxwScPU2IDkhQXoySEvBMHlqUf
-         ltgwHpq0pscu2XhJ/oGnBLfBqTeu7cYNFB/+bTlIH+UYwQGJ3Mr0mhQwaAdFcxIlgTA5
-         Z9mCjC/NpHgwfUAQ6RPEavFGC3989+BUeMbJ9kgaqo8oeW+le5dD1Cfw1MYpXKxMQVjW
-         uc1+ByAl1CCcWc0vM6dTaNj46KTeVfJxjjPBA3owNx43lHZn4iTJZm5wHQrb71QG26JC
-         6iTElYcOxkww+8v9zMufOaU7IUx4jYU7kWHhw1xXMpS1Tnmmf4f0fOl3eXosjdqrN/X2
-         KIJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744661083; x=1745265883;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9sQR+joTS7+yy0wyuXKGmwdkJETmtPh6NN0wKjS83Dw=;
-        b=o1RpIsuYgUcnsXHAB8/iLilwpzWp7tgiiIYLtxopzUmq1551LoypjZ8tvu7UbETA3z
-         MbQhA2w2pMyB3d2E3dl7jxSbS0aIH87nAlC9/IPjy2Ddi5kMPj6Jnpq8a1fKp5fkq8vA
-         jPrWi8UNdL6rnXxoj12ZqvMrGNBX5RgTkV7i6ZmnGePdf1erN5jKbKSAOHPSe21EkZ5M
-         /ylTuu0a4iiKVG1Kb7EFl0Eu4Rt1R7+1EvdjASATOUO4HN49vos5IsyhkwxIErrhQfqU
-         o6zGvOtEYsIjM9+gKPMpTOsDMWwL9ky21VzaT3zTrVHX6bd3+tYbxigbIIyIxN9wxNh2
-         n9hg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1y/4a4opcEHXgnSNhVgY1ADE0Q3UKWV/aQCDlpgaVLfhGoO49NoKVGqPgLJUzUpA/8LONPMr8@vger.kernel.org, AJvYcCXX7AslUcaPcRKLZzjA66WrwgbutWpnb1mecRZ+Apd8SUv+FgAbbijWnnYKsSDc+8N5cgYa5M8ffKV8fFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+WC1QDVUPolC4CrrSilB8a+aSzaRwrv3xGD4wl09GQcCBHshv
-	pdVz8Qks+F1lrtGjLiHtvi9P6g5fDPlEaT9eRhv0tfaaiq3eDQBk
-X-Gm-Gg: ASbGnctgjDnYcaVZm818mOAcULmZ0ZVDL8WiRcuLgV5xQW+6XpeahuI3vC/F0BoGbVD
-	8Ikl9w4gwm5GNX02wZ1BsdsaCgcCVsu5fTtqcd8kwMiOyTP7Jpqowa1OV41Lk29LkRhnsgrBB/X
-	kx/DqRrnxnl57JQMhioFfCUuXneXncZSgWFh6YTJP/lf4B0+PVA5GL7hcqWe+RtSTIDFM67zzXK
-	N9XE1earHg1hNJbuMdyRTKfSkY25Z6ft7bRX/D/mOgHFXIj+QCxX/H+7x6PGb+LV6xPUeL/G3je
-	YIGGoiPic40V1igGCw/pjUg9tRd/MWX+KFxMDsRMmLqv2ff63W075jlNmylKi641vQ5e5DwkO/X
-	UVwUwbL1Zsu4bFYx3PugY
-X-Google-Smtp-Source: AGHT+IGkGOCsuRuRLFSvCcrgQY+/7X21fj/2XnQHuSO/tubZtQpZfsqip6n3I8/6toTaMmjX0M3MHg==
-X-Received: by 2002:a17:907:720f:b0:aca:c9b8:7b95 with SMTP id a640c23a62f3a-acad359b958mr1219688866b.46.1744661083129;
-        Mon, 14 Apr 2025 13:04:43 -0700 (PDT)
-Received: from localhost (dslb-002-205-021-146.002.205.pools.vodafone-ip.de. [2.205.21.146])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ccd1cfsm965998866b.138.2025.04.14.13.04.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 13:04:42 -0700 (PDT)
-From: Jonas Gorski <jonas.gorski@gmail.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: b53: enable BPDU reception for management port
-Date: Mon, 14 Apr 2025 22:04:34 +0200
-Message-ID: <20250414200434.194422-1-jonas.gorski@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R6wnx3m1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7iA3Ihr5qa4nH3OBiWe8HCN2AJNFi9fEeh9aTTqrmO0=; b=R6wnx3m1cKY1lEs7Z/up3F5cpj
+	TkutvShKoVcQouAZhI2jGz+tBMOaTExFpG86lowTau6EqCZfu9xBSG3wJJS11yroH8o3ZxftptT/0
+	kWaV+4j/yDG2jX5En24/REJ0K33gWjNlXqMVS8qY7k4N/LXqDP4bo/L1gdKhag9gbDup6qkVsga0Y
+	andu5Ee+CZtVXlQ/NUhPsRwOs8WLnrQWtycHX1wiysL0X9u70ZcudTdUwaAdDECqWaavZIYDu3M8G
+	n2Dk1u2wcAcvTXZDOHjgqpcvE6tennuPyfdQ92pYXmNSTxkQC1JinWxnCZvrUJx92JOppjWeCoQIk
+	9f4OOyig==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4Q7E-0000000GtNJ-3KVt;
+	Mon, 14 Apr 2025 20:09:12 +0000
+Date: Mon, 14 Apr 2025 21:09:12 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+	luto@kernel.org, peterz@infradead.org, paulmck@kernel.org,
+	rostedt@goodmis.org, tglx@linutronix.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com
+Subject: Re: [PATCH v3 1/4] x86/clear_page: extend clear_page*() for
+ multi-page clearing
+Message-ID: <Z_1raKrmWzXIZ0G_@casper.infradead.org>
+References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
+ <20250414034607.762653-2-ankur.a.arora@oracle.com>
+ <Z_yr_cmXti4kXHaX@gmail.com>
+ <87wmbm1px6.fsf@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wmbm1px6.fsf@oracle.com>
 
-For STP to work, receiving BPDUs is essential, but the appropriate bit
-was never set. Without GC_RX_BPDU_EN, the switch chip will filter all
-BPDUs, even if an appropriate PVID VLAN was setup.
+On Mon, Apr 14, 2025 at 12:52:37PM -0700, Ankur Arora wrote:
+> Ingo Molnar <mingo@kernel.org> writes:
+> >> +void clear_pages_orig(void *page, unsigned int length);
+> >> +void clear_pages_rep(void *page, unsigned int length);
+> >> +void clear_pages_erms(void *page, unsigned int length);
+> >
+> > What unit is 'length' in? If it's bytes, why is this interface
+> > artificially limiting itself to ~4GB? On x86-64 there's very little (if
+> 
+> I was in two minds about the unit. Given that the largest page size is
+> 1GB, decided to go with 32bit. But, as you say below, there's no reason
+> to limit the x86-64 interface for MM reasons.  Will fix.
 
-Fixes: ff39c2d68679 ("net: dsa: b53: Add bridge support")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
----
- drivers/net/dsa/b53/b53_common.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Actually, I think there is (and we went through this with SPARC, if you
+remember?)  We _shouldn't_ be calling memset() with a large size (ie
+larger than 4GB).  If we have that much memory to clear, we should be
+doing something smarter, like using padata to get lots of CPUs clearing
+individual portions of the page.
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 61d164ffb3ae..e5ba71897906 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -737,6 +737,15 @@ static void b53_enable_mib(struct b53_device *dev)
- 	b53_write8(dev, B53_MGMT_PAGE, B53_GLOBAL_CONFIG, gc);
- }
- 
-+static void b53_enable_stp(struct b53_device *dev)
-+{
-+	u8 gc;
-+
-+	b53_read8(dev, B53_MGMT_PAGE, B53_GLOBAL_CONFIG, &gc);
-+	gc |= GC_RX_BPDU_EN;
-+	b53_write8(dev, B53_MGMT_PAGE, B53_GLOBAL_CONFIG, gc);
-+}
-+
- static u16 b53_default_pvid(struct b53_device *dev)
- {
- 	if (is5325(dev) || is5365(dev))
-@@ -876,6 +885,7 @@ static int b53_switch_reset(struct b53_device *dev)
- 	}
- 
- 	b53_enable_mib(dev);
-+	b53_enable_stp(dev);
- 
- 	return b53_flush_arl(dev, FAST_AGE_STATIC);
- }
--- 
-2.43.0
-
+I don't know how relevant this is now that you're going to be using
+ALTERNATIVES.
