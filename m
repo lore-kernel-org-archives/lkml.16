@@ -1,67 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5FE1B4241;
-	Mon, 14 Apr 2025 07:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847211B4241;
+	Mon, 14 Apr 2025 07:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744615371; cv=none; b=JcWSbqqdp1ybDNodbMHDdwEk9mhlmE08TaHMelU12TE3lV0VTMGEuDiRqSAWkAvkeHRnfWnfl03AyhQkXKJM6/t82gr3A9Kb5i41mrmhll289O/qFxhxGYFgFPAqDxH078HsAsSKRmffg2KnQlnoYh6Dv+GEbWFcIJHmVcMVnN8=
+	t=1744615387; cv=none; b=Eb5hDlI1jHe1Bd+iW9ojiXc01T6mc+nA571q5BmAhT/gb7idUwgpyixdefNgeCvpaAKSVEVB1pd2ksXXq+x2P2dHunu0+rI1XLXV04SzZWpiGJj+4uUSRE8hc76UBChwcB7zUXMVwwpQpnyw0XeSXd+9pkZlcrzDoh1nQwp/rGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744615371; c=relaxed/simple;
-	bh=IOILmuO2B3RZBYuN+CUITTHeDhATmMItT1uR2lClnoM=;
+	s=arc-20240116; t=1744615387; c=relaxed/simple;
+	bh=iYfMwdwlizIVZeBodF62KsxziUgzyzoIwnXZz7RurGI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhD7SSBwdGtW97Opk+kplgd6xv02lAtJawDp/wmFIBfGqL8tCLa7jQ+EXq/PTrIJuZ3cdoG1eHxROQqwo9lh6duIaL/4TcJvXRqlyd0XzEWcYr+If+kMcEO40help3Gxw1E8qg3jKs9q4UI1GKNjK++iaGB40sy02aSv363r2Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LvObdVba; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=n2+9t9a4LkgbZLdFPPVInDc1hv18IRKlWYA2NoQDz62MtdomoGMJcyOn+UuEXfHvkSgK3Nvm2xloQm8PtInVUXnvcEWJtmHl3RYNPXQS6zNFwdpKVAm695d55Q6DHX3SPFmlbPRPY8LDy8X/BQJ7nb6VpC7l0GIC/hcLzZfUbC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xsfiJsbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LvObdVba"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744615369; x=1776151369;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IOILmuO2B3RZBYuN+CUITTHeDhATmMItT1uR2lClnoM=;
-  b=LvObdVbaUSY5/wKhbiC9XfQRSJhIZFvS32jqoAbUl6WdntBW0vtCyLO0
-   RJyrtMRn4LEz5/smXwB6N9O0k4K8c3PKoQBQCgywR6oUVCm4jgjor9mF/
-   ZNTl3Pm5zuSjgaBRQLDT6Voan1s4hzANFF5c6hXR7okKpcOPVfamKDA7+
-   7Y+8H4enlHE7c3MHS8SMuxAH2fwRMInXfa/PdtcZVglh1AVHXTc/EDCBc
-   LZMB1yGG6XkcOH9xI8g/yX1UjmP6fM2T8RPOvzlBVP1+Qd9gi11Hqig6S
-   AWfvt7HUQ68xvSL/eGAbJ4VlEY+oEghDmcAAKo8GvJ3utOn3Vk1ARtRse
-   A==;
-X-CSE-ConnectionGUID: ogJLm5uORaa40SBX1KQ3yw==
-X-CSE-MsgGUID: 89nMMZZuRKOxJObagNUNgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45210027"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="45210027"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:22:49 -0700
-X-CSE-ConnectionGUID: kFfeufNeQIKrUspjwLFnhQ==
-X-CSE-MsgGUID: vwvFqfg9TTaDyMS6+tOp0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="130600144"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:22:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4E9R-0000000CA9G-3Jc1;
-	Mon, 14 Apr 2025 10:22:41 +0300
-Date: Mon, 14 Apr 2025 10:22:41 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: dakr@kernel.org, djrscally@gmail.com, dvyukov@google.com,
-	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
-	jgg@nvidia.com, kevin.tian@intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
-	rafael@kernel.org, sakari.ailus@linux.intel.com,
-	syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
-Subject: Re: [PATCH V2] software node: Prevent link creation failure from
- causing kobj reference count imbalance
-Message-ID: <Z_y3wd7zur1_xUjM@smile.fi.intel.com>
-References: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
- <20250414071123.1228331-1-lizhi.xu@windriver.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xsfiJsbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85643C4CEE2;
+	Mon, 14 Apr 2025 07:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744615386;
+	bh=iYfMwdwlizIVZeBodF62KsxziUgzyzoIwnXZz7RurGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xsfiJsbwYnO0PxMvI/1zj4KhZlcGAw/gS9D8hxuIIM0ZSwnHtu+EZHXJEmbVm3qEL
+	 QP680KQRtSg4tbP3kh297vP+EQczeOMydml5JLa+7eHumNRZWTqknvTTY1vbJtsT/l
+	 APi00GNd4Z74spUUQF9q6Qbp35IEJofx4FwKXS/s=
+Date: Mon, 14 Apr 2025 09:21:28 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	david.laight.linux@gmail.com, dan.carpenter@linaro.org,
+	andy@kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
+Message-ID: <2025041402-colonize-rocker-1db1@gregkh>
+References: <Z/bA4tMF5uKLe55p@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,31 +41,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414071123.1228331-1-lizhi.xu@windriver.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <Z/bA4tMF5uKLe55p@ubuntu>
 
-On Mon, Apr 14, 2025 at 03:11:23PM +0800, Lizhi Xu wrote:
-> syzbot reported a uaf in software_node_notify_remove. [1]
+On Wed, Apr 09, 2025 at 06:48:02PM +0000, Abraham Samuel Adekunle wrote:
+> The sequence number is constrained to a range of [0, 4095], which
+> is a total of 4096 values. The bitmask operation using `& 0xfff` is
+> used to perform this wrap-around. While this is functionally correct,
+> it obscures the intended semantic of a 4096-based wrap.
 > 
-> When any of the two sysfs_create_link() in software_node_notify() fails,
-> the swnode->kobj reference count will not increase normally, which will
-> cause swnode to be released incorrectly due to the imbalance of kobj reference
-> count when executing software_node_notify_remove().
+> Using a modulo operation `% 4096u` makes the wrap-around logic
+> explicit and easier to understand. It clearly signals that the
+> sequence number cycles through a range of 4096 values.
+> It also makes the code robust against potential changes of the 4096
+> upper limit, especially when it becomes a non power-of-2 value while
+> the AND(&) works solely for power-of-2 values.
 > 
-> Increase the reference count of kobj before creating the link to avoid uaf.
+> The use of `% 4096u` also guarantees that the modulo operation is
+> performed with unsigned arithmetic, preventing potential issues with
+> the signed types.
 > 
-> [1]
-> BUG: KASAN: slab-use-after-free in software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
-> Read of size 1 at addr ffff888033c08908 by task syz-executor105/5844
-> Freed by task 5844:
->  software_node_notify_remove+0x159/0x1c0 drivers/base/swnode.c:1106
->  device_platform_notify_remove drivers/base/core.c:2387 [inline]
+> Found by Coccinelle.
+> 
+> Suggested by Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+> ---
+> Coccinelle semantic patch used to find cases:
+> @@
+> expression e;
+> 
+> @@
+> * e & 0xfff
+> 
+> To ensure this change does not affect the functional
+> behaviour, I compared the generated object files before and
+> after the change using the `cmp` which compares the two
+> object files byte by byte as shown below:
+> 
+> $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+> $ cmp rtw_xmit_before.o rtw_xmit_after.o
+> 
+> No differences were found in the output, confirming that the
+> change does not alter the compiled output.
 
-The fix looks correct to me,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This is version 11, right?  What happened to the list of previous
+versions and what changed down here?
 
--- 
-With Best Regards,
-Andy Shevchenko
+confused,
 
-
+greg k-h
