@@ -1,135 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3617C17A305
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6595318C32C;
+	Mon, 14 Apr 2025 12:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744633919; cv=none; b=LWpW+Iq3KUC1DgGsoJYpfj3qwvrET/nhL7/fFDJCSc/mflOkOpg6dXodHYa69b9CEae3eT3EQuozJxjXs6ZdrZnZea6TBbxk6OeXpyEKEgvHa1ayVx5J1f/USOE20gLo2fs88zZ0tziGsvLUoehnN1EM5V7uKRRZTkpATekFgdM=
+	t=1744633960; cv=none; b=HvM4qo5hGXkREZaNF5dB46fIJacXnbfOoXjN7wwfkj5C2vqzabLnClRnFLjFU/cKIhcESSgke8fZsf+GKu9Hy23a0+Kf7LGNo8lKlqFxjRiyFizCTiaAYcnM1IVPn+GNtq3uYpOnxUXoyp0MAznjfKOiIXQTiPd0IwppSjo+aPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744633919; c=relaxed/simple;
-	bh=YdJ8Zdc1cVZZZ11a0toBSETlHYNuWp6NjOnyl6+G9ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IBak5vFLgKl1wb9xSBN7j5onmqBS5YxDJKqhEqDu6QRm2T74HxgdYtPeGQ/2eu4Q1simJW9I0PrPZOK7MO3itdhNhuB4tUqsHbAiiGbKVnGMBVdD5QrqPcpEdZBcy/otGQ9dKUTa7TJoow96g1QyX+DtQhplzLfrvkX7GyOBIRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E671A1007;
-	Mon, 14 Apr 2025 05:31:54 -0700 (PDT)
-Received: from [10.57.86.225] (unknown [10.57.86.225])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 310C83F59E;
-	Mon, 14 Apr 2025 05:31:55 -0700 (PDT)
-Message-ID: <5d975762-7678-419f-8e2f-40547c079276@arm.com>
-Date: Mon, 14 Apr 2025 13:31:53 +0100
+	s=arc-20240116; t=1744633960; c=relaxed/simple;
+	bh=b1keoTXPWw7k5udECc1+8NUdD3ePHHJCcIsh6QBDyYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYvixVXn6LBHC4zyHBhFdmR8XTopoqdNm5k0xvmUs5qy+CTR2pS9NCSNH6pR1hTx7Md4NXHscPeEH+3LzptdNHNONCEiPSClMVNx+A6Wg2wgDVUPAuak7gepYpCw6Hcm8oWAEVrCpP7B69fQRv4qXLiGXba5wX0pdZZf7V7gm6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VbKNcsH5; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VbKNcsH5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744633958; x=1776169958;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=b1keoTXPWw7k5udECc1+8NUdD3ePHHJCcIsh6QBDyYc=;
+  b=VbKNcsH5nS1nIgn1hxeqxvEXiHoqGZeMNWn+QCdy9FfcLri3qnYHB2YD
+   2qU0wLyRDwdAjlLDTEORPRBufhqyY0tgeryDqW08DMiKeRpQdMId6VUrP
+   0AKowUk/lx0lBEG/vMm98ePSKnf/MALrb0QQdCq50EUKSSlO9Kxhh+6TN
+   sAl8pPDGCP+wrJN3zEr6ARsMwtsCzVGCLCJU6gfJM9SKgMty74Wpyjj38
+   Au3H1kUQfpxj/O31S0+6+6MmFECDVxtQ/GMS0FuloXw3VCdF8E5y60NpG
+   1a4yktofKXY00snQVMBQF2OmLKpbRMBIqyAA9nPPP/9KckHjfV0subauh
+   g==;
+X-CSE-ConnectionGUID: iDcnApmaSyyO1rORWUtPCw==
+X-CSE-MsgGUID: MYluBme5RVKPITNLzXV+nA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46266132"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="46266132"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 05:32:37 -0700
+X-CSE-ConnectionGUID: D/kesmV9TDqj8IL94+rbWQ==
+X-CSE-MsgGUID: 9zsfbpScQAS/3cAy6pmd/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="160797047"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 05:32:34 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 0B31C11F871;
+	Mon, 14 Apr 2025 15:32:32 +0300 (EEST)
+Date: Mon, 14 Apr 2025 12:32:31 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Yan, Dongcheng" <dongcheng.yan@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Yan, Dongcheng" <dongcheng.yan@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	hverkuil@xs4all.nl, u.kleine-koenig@baylibre.com,
+	ricardo.ribalda@gmail.com, bingbu.cao@linux.intel.com,
+	hao.yao@intel.com
+Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
+Message-ID: <Z_0AX9sdwSAWhzTc@kekkonen.localdomain>
+References: <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
+ <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
+ <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
+ <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
+ <Z_zMMtUdJYpHuny7@smile.fi.intel.com>
+ <f10f919e-7bdc-4a01-b131-41bdc9eb6573@intel.com>
+ <01570d5d-0bdf-4192-a703-88854e9bcf78@redhat.com>
+ <9dc86b0c-b63c-447d-aa2f-953fbccb1d27@redhat.com>
+ <Z_z04jMiTg_xW-c2@kekkonen.localdomain>
+ <518b1420-a356-4e4b-8422-c2689bc54794@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-Content-Language: en-GB
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
- <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
- <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
- <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
- <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <518b1420-a356-4e4b-8422-c2689bc54794@redhat.com>
 
-On 14/04/2025 13:28, Ard Biesheuvel wrote:
-> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> On 14/04/2025 10:41, Ard Biesheuvel wrote:
->>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>
->>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
->>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
->>>>> as expected if those macro constants contain some 128 bit layout elements,
->>>>> required for D128 page tables. Fix this problem via first loading up these
->>>>> macro constants into a given memory location and then subsequently setting
->>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->>>>
->>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
->>>> of 128-bit types with shifting and masking, which the assembler can't do? It
->>>> would be good to spell this out.
->>>>
->>>>>
->>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>> Cc: Will Deacon <will@kernel.org>
->>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
->>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>>>> Cc: linux-arm-kernel@lists.infradead.org
->>>>> Cc: linux-kernel@vger.kernel.org
->>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>> ---
->>>>> This patch applies on v6.15-rc1
->>>>>
->>>>>  arch/arm64/kernel/head.S         | 3 +++
->>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
->>>>>  arch/arm64/mm/mmu.c              | 1 +
->>>>>  arch/arm64/mm/proc.S             | 5 +++--
->>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->>>>> index 2ce73525de2c..4950d9cc638a 100644
->>>>> --- a/arch/arm64/kernel/head.S
->>>>> +++ b/arch/arm64/kernel/head.S
->>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->>>>>        * On return, the CPU will be ready for the MMU to be turned on and
->>>>>        * the TCR will have been set.
->>>>>        */
->>>>> +     adr_l   x0, pir_data
->>>>> +     bl      __pi_load_pir_data
->>>>
->>>> Using C code to pre-calculate the values into global variables that the assembly
->>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
->>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
->>>> asm-offsets.c:
->>>>
->>>> DEFINE(PIE_E0_ASM, PIE_E0);
->>>> DEFINE(PIE_E1_ASM, PIE_E1);
->>>>
->>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
->>>> pre-calculated values that you can then use in proc.S?
->>>>
->>>
->>> There is another issue, which is that mov_q tries to be smart, and
->>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
->>> directive evaluates the argument, which does not work with symbolic
->>> constants.
->>
->> I'm not quite understanding the detail here; what do you mean by "symbolic
->> constants"? asm-offsets.h will provide something like:
->>
->> #define PIE_E0_ASM 1234567890
->>
->> The current code is using a hash-define and that's working fine:
->>
->> mov_q   x0, PIE_E0
->>
->>
->> Won't the C preprocessor just substitute and everything will work out?
->>
+Hi Hans,
+
+On Mon, Apr 14, 2025 at 02:21:56PM +0200, Hans de Goede wrote:
+> Hi Sakari,
 > 
-> Yeah, you're right. I was experimenting with something like
+> On 14-Apr-25 13:43, Sakari Ailus wrote:
+> > Hans, Dongcheng,
+> > 
+> > On Mon, Apr 14, 2025 at 01:09:47PM +0200, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 14-Apr-25 13:04, Hans de Goede wrote:
+> >>> Hi,
+> >>>
+> >>> On 14-Apr-25 11:59, Yan, Dongcheng wrote:
+> >>>> Hi Andy and Hans,
+> >>>>
+> >>>> I found the description of lt6911uxe's GPIO in the spec:
+> >>>> GPIO5 is used as the interrupt signal (50ms low level) to inform SOC
+> >>>> start reading registers from 6911UXE;
+> >>>>
+> >>>> So setting the polarity as GPIO_ACTIVE_LOW is acceptable?
+> >>>
+> >>> Yes that is acceptable, thank you for looking this up.
+> >>
+> >> p.s.
+> >>
+> >> Note that setting GPIO_ACTIVE_LOW will invert the values returned
+> >> by gpiod_get_value(), so if the driver uses that you will need
+> >> to fix this in the driver.
+> >>
+> >> Hmm, thinking more about this, I just realized that this is an
+> >> input pin to the CPU, not an output pin like all other pins
+> >> described by the INT3472 device. I missed that as first.
+> >>
+> >> In that case using GPIO_LOOKUP_FLAGS_DEFAULT as before probably
+> >> makes the most sense. Please add a comment that this is an input
+> >> pin to the INT3472 patch and keep GPIO_LOOKUP_FLAGS_DEFAULT for
+> >> the next version.
+> > 
+> > The GPIO_LOOKUP_FLAGS_DEFAULT is the "Linux default", not the hardware or
+> > firmware default so I don't think it's relevant in this context. There's a
+> > single non-GPIO bank driver using it, probably mistakenly.
+> > 
+> > I'd also use GPIO_ACTIVE_LOW, for the reason Dongcheng pointed to above.
 > 
-> .set .Lpie_e0, PIE_E0_ASM
-> mov_q xN, .Lpie_e0
+> The GPIO being interpreted as active-low is a thing specific to
+> the chip used though. Where as in the future the HPD pin type
+> in the INT3472 device might be used with other chips...
 > 
-> where this problem does exist, but we can just use PIE_E0_ASM directly
-> and things should work as expected.
+> Anyways either way is fine with me bu, as mentioned, using GPIO_ACTIVE_LOW
+> will invert the values returned by gpiod_get_value(), for which the driver
+> likely needs to be adjusted.
 
-Ahh great, sounds like this should be pretty simple then!
+The driver appears to ask for both IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING
+and it only uses the GPIO for an ISR so it doesn't seem to require driver
+changes IMO. Although this also seems to make the polarit irrelevant, at
+least for this driver.
 
+-- 
+Regards,
 
+Sakari Ailus
