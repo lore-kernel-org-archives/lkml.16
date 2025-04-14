@@ -1,121 +1,160 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B94B1A23A6
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C951A23A6;
+	Mon, 14 Apr 2025 08:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620449; cv=none; b=f0uUXGAdZSrrIBpvHkN1CNxoNeKvt/YepN/Q/dEMM7O1ch22MzmkYXI1wD3sjbkKxm9Tk6HXYWEeqQ2MSz6o6oulhvudADOpl2T5kyvZ4p5llV3yq1iQW2ACAIdqtM7LJ9spjCKU+OAFwQGjy0chxQecx48vwQmFZm3MjI1KlP0=
+	t=1744620465; cv=none; b=XJsbVlWiqQRYyFoZRvyk0KbE3lDQrFiryGTz+6EWLXOMYKnej0RY+bIHdIyA7FhDMYsHEkwK5RoDUmZo+GAhR8XPTA8lhPjWsKp6JH7XDj/xMAzt/Lxv+JCDq6Den8qOLA5EuiOtzqzNiPi5/8fVI3ZtptQlGCkoAEeJBYH/X0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620449; c=relaxed/simple;
-	bh=4sgW7KzE5H5V2TeIgpcbKStUYHAAHnIaMnL0eP2VeHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F5dcV5TNRA4Lc62fKE1GdGQxFLKjW95q9ybgDYR/YLfGtj8sMbET3vZj21gWIjsEdnhza0NjdgNydZXN/lD69thJBU8Zq29a/3UnHi7la2RGAfDmDuY2SbqqmNg5l8YbQTgwWLLFrpTq0IdTcxtF4CAzlXdaOOPM4N+QzzmNmW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NI9ZkgYR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744620465; c=relaxed/simple;
+	bh=8kckFmYJLavCSR35fPALPhq3CLgDQ8jmvjB+vic9bQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwzMxnJLMpEvPShiXeA/eXzIdsFTpUmz9EROhzAMtnco3idnp9oKEjhyVtt74L6lybxVsJFBVR7aIIeuloxIDc8nBff3nXNN881U6fihXNBrbXcYzyMaG9J6h5HdgfYKKC4YeeAqspb+070Crdj8TWpRsVyepMeEy7nFHShs42Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDuUb3Uy; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NI9ZkgYR"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNIkiU021108
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZELbaDv0U84tC+LLC7Z/j4gjcJscb5SfXUMMBbX6orE=; b=NI9ZkgYR1ZTqTGzr
-	KAOhZqd45aaMNjOy6p4IH8aWj/94xCBfCitjHevabkKqxbySJTmNKes3J5MNLWYp
-	scAPuP0lFL2mrtwhA1PRVju8EtPZNmGC/OC9NVN9+K1OrAFFFfC6ZBd2CexvVn3N
-	3tFztWtEJQ+ho/n40K6U6JLcTKs0XL+DeMjRmg75yVVeX2liIhmXACfrThs0XPxK
-	HfXtXLdtHqNSzFnksBY/y+v6zxVNo7XA31R2OHXPUW431I5ZuUoX5Zkt0uwsvNPk
-	yI1P0to6n2nm0UOqxc7Gsnv4iqcQ7eoNKRjMPOlT9nmGsT5vRmEB85QBW2/Y9Wgl
-	2wZ6OA==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69ky85-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:26 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-739764217ecso3327137b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:47:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744620445; x=1745225245;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZELbaDv0U84tC+LLC7Z/j4gjcJscb5SfXUMMBbX6orE=;
-        b=rdPkPcSqVYx4Ip3YQ7+7BIXvb3ZB+gxD45VzozEfal4jmbh1UD7D+m/RRtQORh4Im2
-         yNx55oQL5E1qGI8QhTKdJV43ldP+w2aCB8FynJLNhncWsPjQ3hZCk5UTKQglBfgnRXlj
-         2dtj4FxwyF4obFiZ2C0PghtCvq98rcqh3nNSl1xk2VdTcL2Ozwfpm8KmQYEPghCl8trq
-         5gVrXHqlsutb3Coq9Mdylb6eyQKK8c/Av7WGMpxS942YMX9WeRBOk9Fo9rMlllxVWjX7
-         mk2C0SDH/7CRL61eRgE4XkRiPTixWhgRVaRYKCheLJy+IBrB0Bu51gWbjsv44gKY14zb
-         kpqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXV/BmCvKmgx+06lszxVVaywH5Oua0ZENVIzxim6ZUd1T6Xi4BEgZz48t3UhTLiT/20Keds4jYqKI9tlsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIZJkCd+u5QW3zUzR5esclxaa6WlhgCJV3HRXh+asgw5J//F9+
-	iP0JM1Jd0uhkj3WxqkS3O7KloCWpdTBWWX0sD2qoB3vSQMLhyUvAw9vXJ0qZ+BQsfLgnN2wznyR
-	F7jfVHJCY40lDJf1OrsXksS2Q/vib+eHXIkyWYXET8P4V+KOIo5KD2G4Gyh/oaXpFIpjlBV4=
-X-Gm-Gg: ASbGnctNJAlPZ4t34db+bZhFK6YlbkV4dNWkk3JuWsCPUYhzvL1RnygGUTN5y+mN4NL
-	vzdQMrI8FMhPkANQvkCWDipoFFLaMz4oq3jSl1Hd3hPFntirfcTGzzMMbNbpcII9A940/ZqG0+3
-	KzJRTTpd0XV9ZjFjZ+mszS4vn7btdP7mk/ngvWHZyZz1Tz5TFtxnet1FPa6YFFt4Me7KOFJAQ2w
-	e2GRuIVeUcdJaXWLTJr/g0CITkigaKZFkpQ3k02AqSDp/aGzSLgfoLVs7Bm4p5kliTt3yB/MOz7
-	m1rpSmmWk6W7wyKQPqdYDKRbVzfqR/wAc8Hi9rSodUYmlBZnvuAdtw==
-X-Received: by 2002:a05:6a00:3cc2:b0:730:9637:b2ff with SMTP id d2e1a72fcca58-73bd0cda1ecmr14619310b3a.7.1744620444986;
-        Mon, 14 Apr 2025 01:47:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEJWLlQ30HfEaPv1YPRJFLijVISI9iFiCOfu82TsEXEVpSgZrX0hTvU7P/GWv75CQw+8aNuGg==
-X-Received: by 2002:a05:6a00:3cc2:b0:730:9637:b2ff with SMTP id d2e1a72fcca58-73bd0cda1ecmr14619279b3a.7.1744620444335;
-        Mon, 14 Apr 2025 01:47:24 -0700 (PDT)
-Received: from [10.152.204.0] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f10f4sm6113090b3a.113.2025.04.14.01.47.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 01:47:24 -0700 (PDT)
-Message-ID: <c7558e1e-7030-347a-96c3-4682f32558f9@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 14:17:21 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDuUb3Uy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744620465; x=1776156465;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8kckFmYJLavCSR35fPALPhq3CLgDQ8jmvjB+vic9bQk=;
+  b=IDuUb3Uyfs9egMIWvNdq4XTsibPB3dvwoFYC4jQcM7eq4RiAgkpRcb26
+   HiqIk3DGLWb84NnUY2p4s1vfCy2fe/2ARki/BmkZEP6Qe2CbCreb1dEYc
+   ChR5Mn6C+3+U5HQZNqtw8udLZ7ZZhM3IwAkfeOXSDRNdQZDdkVZxatTVF
+   ziWm8TvFVLWOQb8fUQCkyH6400gYxF5jJoLB2Ye2MKa2YnSg/bQq549Oy
+   OwX3X9UQdKY72XKDwZxhSZ9dB53h4jwjqamVDiHiETi8aDygQpviFjYtp
+   L2qqD/7yK6jqi7/8vUWB24+ifFV1bC8FzdR2bKvXyYOb7CAXZj45PmfjA
+   Q==;
+X-CSE-ConnectionGUID: b30NKAGvSeSx8o1oks8PiA==
+X-CSE-MsgGUID: bMYIWnNaTDy06fVmdgmPpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56260452"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="56260452"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:47:44 -0700
+X-CSE-ConnectionGUID: uhI6Qh+cT7qSV/X2E8qojQ==
+X-CSE-MsgGUID: uyO/3hOgSM6gRD1Ta8zHzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="129519714"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:47:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4FTc-0000000CBKp-1ZEi;
+	Mon, 14 Apr 2025 11:47:36 +0300
+Date: Mon, 14 Apr 2025 11:47:36 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, john.ogness@linutronix.de, pmladek@suse.com,
+	arnd@arndb.de, namcao@linutronix.de, benjamin.larsson@genexis.eu,
+	schnelle@linux.ibm.com, heikki.krogerus@linux.intel.com,
+	markus.mayer@linaro.org, tim.kryger@linaro.org,
+	matt.porter@linaro.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH v3] serial: 8250: fix panic due to PSLVERR
+Message-ID: <Z_zLqH1Moavhi52x@smile.fi.intel.com>
+References: <20250414031450.42237-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH ath-next v2 2/2] wifi: ath12k: Use scan link ID 15 for all
- scan operations
-Content-Language: en-US
-To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-References: <20250411-fix_scan_vdev_handling-v2-0-b6740896c144@oss.qualcomm.com>
- <20250411-fix_scan_vdev_handling-v2-2-b6740896c144@oss.qualcomm.com>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <20250411-fix_scan_vdev_handling-v2-2-b6740896c144@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: sBmIj1pa-9T8mdz0RiGNWTtHj_g3jJVw
-X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=67fccb9e cx=c_pps a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=I5J-iTEKvd7tQp2LRP8A:9 a=QEXdDO2ut3YA:10
- a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-ORIG-GUID: sBmIj1pa-9T8mdz0RiGNWTtHj_g3jJVw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=782 lowpriorityscore=0 bulkscore=0
- impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414031450.42237-1-cuiyunhui@bytedance.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Mon, Apr 14, 2025 at 11:14:50AM +0800, Yunhui Cui wrote:
 
+You forgot to rebase against latest tty-next or, if there is something
+in the latter (but I don't see right now), even tty-testing.
 
-On 4/11/2025 8:46 AM, Aditya Kumar Singh wrote:
-> According to the code documentation in ath12k_mac_op_hw_scan(), "if no
-> links of an ML VIF are already active on the radio corresponding to the
-> given scan frequency, the scan link (link ID 15) should be used". This rule
-> should apply to non-ML interfaces as well to maintain uniformity across the
-> driver. However, currently, link 0 is selected as the scan link during
-> non-ML operations.
+> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> an error response if an attempt is made to read an empty RBR (Receive
+> Buffer Register) while the FIFO is enabled.
 > 
-> Update the code to use scan link ID 15 in all cases.
+> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> Execution proceeds to the dont_test_tx_en label:
+> ...
+> serial_port_in(port, UART_RX);
+> This satisfies the PSLVERR trigger condition.
 > 
-> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
+> Because another CPU(e.g., using printk()) is accessing the UART (UART
+> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+> (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
 > 
-> Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+> To fix this, all calls to serial_out(UART_LCR) and serial_in(UART_RX)
+> should be executed under port->lock. Additionally, checking the readiness
+> via UART_LSR should also be done under port->lock.
+> 
+> Panic backtrace:
+> [    0.442336] Oops - unknown exception [#1]
+> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> ...
+> [    0.442416] console_on_rootfs+0x26/0x70
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+This patch seems need split to three. See below.
+
+...
+
+First of all, while everything looks better now, there is a chance in the
+future to miss the same issue again. In order to avoid that I suggest to
+introduce a new helper where you made this check _and_ add a comment why.
+
+(Note that currently you have a mixture of serial_in()/serial_port_in() in
+ some cases.)
+
+static inline unsigned int serial8250_discard_data(struct uart_8250_port *up)
+{
+	u16 lsr;
+
+	lsr = serial_in(up, UART_LSR);
+	if (lsr & UART_LSR_DR)
+		return serial_in(up, UART_RX);
+
+	return 0;
+}
+
+And this can be one patch (patch 2).
+
+...
+
+> --- a/drivers/tty/serial/8250/8250_dw.c
+> +++ b/drivers/tty/serial/8250/8250_dw.c
+
+Changes here deserve the separate patch (patch 1).
+
+...
+
+> +	/*
+> +	 * Serial_in(p, UART_RX) should be under port->lock, but we can't add
+
+serial_in()
+
+> +	 * it to avoid AA deadlock as we're unsure if serial_out*(...UART_LCR)
+> +	 * is under port->lock.
+> +	 */
+> +	lockdep_assert_held_once(&p->lock);
+
+...
+
+> +	uart_port_lock_irqsave(port, &flags);
+
+And one patch (patch 3) about locking.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
