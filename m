@@ -1,81 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721371684AE;
-	Mon, 14 Apr 2025 11:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53553298CA8
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631701; cv=none; b=VX8+8OS37RbKVWuxqP7F0lNaFilfgwf6+TnXecBhKr/nuvYVM4jHq+UIN6uFtdO493fmSD2Y0VgKW0vIRISUYs/0gNjQficpkPKTiOMgmvDJZ3PFsuSHx9Hc6vhhaQ1KDjRr4tisIgPWTFeLjjqcCSLc753ICmagYKMl1hYK+xY=
+	t=1744631720; cv=none; b=eX78KES6Od2/2BjEEEbrIIcq4YPNcvtD0Ee0a74TwzmEMdTX2fMKZjXfnVj/wUH1Qug+suUuMdq8AORhxhYgyKw83pwvSTt1DS1Ov7z1RKnIgJz0e4T1aIp1jXB6+RoTHB+1wJAZoPEQ48mRN9GoR9/x4sjuRUKlrxLcCu1aYRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631701; c=relaxed/simple;
-	bh=jUon0xsIAf39XK7R0f7zGH5y3a+2qTlsy3SgS8J3sp0=;
+	s=arc-20240116; t=1744631720; c=relaxed/simple;
+	bh=0fFfBRls/z+8KQD/M53Z0B1SaecisTjEwFpVrgjPum4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZXmFlOEOM6wneAXG9/13MywpRA+LO+Zf6rPv4IWd9lmJzzBDBCe6WzTwCKsvu+SjpIdqkYVDeBq2e4dWGzWpbbHrIRyJOpP47TfUFyF5yVSD+v6EYoJpZAb41hmGBWIVDZGbl3NoYK6l1f8UX6j7c1cBnPqleqflHo4uSXIswo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hq/DHZAO; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qH1Xx1nvnX/a5cX7NWIZUt7dxk9btGx32Uuwr+8YERFGKK617LCWqk4QaaX4zed4sQc52GZtCz8lxZTznv4x9yLO6/8DBc/cWdOWu+8EJeBpgvCTnZ1VWTksFM87hDObhempofqlBgQeKfbVgfnukuhxMr7IZNIryY+D/w/9bo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=MZlFimpa; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hq/DHZAO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744631700; x=1776167700;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jUon0xsIAf39XK7R0f7zGH5y3a+2qTlsy3SgS8J3sp0=;
-  b=hq/DHZAODAX8egwulkvStoNLZqUFcBp3s6cX1fqYCtP2yz5qogPGSQEH
-   5OEbvtPJCK6WcBgtSHeuMpo47zSDtVQDxOrPsNmr4xMVQpFlrd2aClThk
-   oXTde+QkAIJuzuoznEQtA47gePHP885cEiaDA9+zTYlGpxD4iyTC0Xair
-   n6DdvFKveYvActpdlhHFjt2uS3uSX46yY9TFTdxndbtXzzNFWMvjpDdxL
-   AF87wCD1Gegzx21Z5FBDZOj2PBuR+wbksj4IqDWavvKNlu/tAiYlV+ZpL
-   +zzMCtN+/xN2HaPuzmU9zrvszHBw8o44g5ccoER3FhTLxg4h6PqpYBiEg
-   Q==;
-X-CSE-ConnectionGUID: KoGoaPLQRROdH40bQYzvdw==
-X-CSE-MsgGUID: MrJnkncBTQ6WxpdRR3E20w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46186516"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="46186516"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 04:54:59 -0700
-X-CSE-ConnectionGUID: eJd6RnMmTU2XFtQmnOQqBQ==
-X-CSE-MsgGUID: u8qeO+m7SXGY03+CMkeYWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="134638722"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 14 Apr 2025 04:54:52 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4IOn-000E98-2k;
-	Mon, 14 Apr 2025 11:54:49 +0000
-Date: Mon, 14 Apr 2025 19:54:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2] bpf, sockmap: Introduce tracing capability
- for sockmap
-Message-ID: <202504141925.PFNOfZzb-lkp@intel.com>
-References: <20250411091634.336371-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="MZlFimpa"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227aaa82fafso31481295ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1744631716; x=1745236516; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5yJE2K+GCjM4XeBBsAl4roiQvOwwQaDhCJLIwxH+aas=;
+        b=MZlFimpaiN4BVw+ofGMAav1Hdblkk3MHXzKEOvoWlFFQf4zfBvS1mENOZaTdUF/CVD
+         KfruydXKmjscth3ckAye/rMwd6HHFu1hGc17oUhYgm+UNCF2TIXtJtYONpSKodbrjNHv
+         +LRPyF5adPBN2HE92ZWlgweYGy3SqEJYO2v0Zj+MpqtVoRYpQS1Q5UOwrE1C4qiEz2OF
+         UbjqLipEyUJ9cl6K4hcj0Cel09wnQcni3Cizva+1BfRcsD4CBAQup1UD9YNC1whWikeh
+         eFkP+4cY9jVX8TQqyiEbsTwFXdNGZbH7JtFBCAysGvlBPxQXvutp1cM7RIL8lmtxtPPG
+         bb2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744631716; x=1745236516;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5yJE2K+GCjM4XeBBsAl4roiQvOwwQaDhCJLIwxH+aas=;
+        b=DhFFqril0PSbtpfK1ZYGIs6DLuyLmSkjuKY7S8R4RKWUgKTKHQYNZ7AKpK6a8PlQSu
+         HbXli1H7J0zy2/erpY4Lsqv2/cYAsTiiWioP+DzD/Xy84c323/Ji+CAn8A65SgIbM20q
+         pbfPNg8cm/Fo7kfkyg/XW01ll2hRomfwtMEPO8GjAjDkfCPuh7/OA5GYxUjX8TJYz1WI
+         BVcFqRm9DjVXlKMtNdsEejZEXc7RTD7YYp3hghhg/ZOX21TAvh6bd5h7SccGmsPxeZQ5
+         bOkizpBiRzjsFcG/2K++ow1lVZ+05DhLUaqcLEkp/LsUpwPlQVDYEhb7b9nzxyc7QVLk
+         NCaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxcNSSXz0ijBDIa6ptZfSxrPt1L/+SuzfnCJdBZnwe/ad+s5UBe+1NSVsl1LQt5EB4xev/PjsL/RKpGc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzkwYrYrCB+p5ZYwYBsKqJLzTdAjxYlrPNTNcCwzruxBjxqOvN
+	ppuE5DUI8SfZ2POKqUHdrloDUXIMhoDuVw1MieTRyaPNVF61kstrOhferikFTw==
+X-Gm-Gg: ASbGnct8WsVyRunvXs0vMxyigoO+YleE5IzhbPXGL6okZFC2/ZsYi7174U2R1HXyLtU
+	0akn5jO85DXe4Ne6OO5m9tSWeOWbPytX+ylCZVt+V2xKKL/YK/drhupGDkVqlkg/jgXHicYXUHl
+	TpTTeTb1+FzugcwplHJrsUMML52lo3EhLHonydTf8Krhrb1K4JgnQz8/whpqYXG9cAvkCD9pamY
+	MpB1BW+RAfOFgmSZTJtm/SsYAD8T2gD0RctKIQYpfBw2t+jkizw1yWT2bAHmLKiIcOrORM3QJcZ
+	GbBgQzEMtVKDUCT4w6usv6DEe2Nga+50LBuZFO2B
+X-Google-Smtp-Source: AGHT+IELN4V6Ut99rNqTLZmsH0vdlhDw7R/X5pZYNpBxm/01UGuIovlujTKOBe6lezAq/4Q7OxM51g==
+X-Received: by 2002:a17:903:1ca:b0:223:5a6e:b2c with SMTP id d9443c01a7336-22bea4adddemr142035675ad.17.1744631716316;
+        Mon, 14 Apr 2025 04:55:16 -0700 (PDT)
+Received: from bytedance ([115.190.40.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62b70sm96710185ad.39.2025.04.14.04.55.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 04:55:15 -0700 (PDT)
+Date: Mon, 14 Apr 2025 19:55:09 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [RFC PATCH v2 1/7] sched/fair: Add related data structure for
+ task based throttle
+Message-ID: <20250414115509.GB3558904@bytedance>
+References: <20250409120746.635476-1-ziqianlu@bytedance.com>
+ <20250409120746.635476-2-ziqianlu@bytedance.com>
+ <a227dd46-e6ec-4cc3-a0a3-427c4ffc9d07@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,35 +85,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250411091634.336371-1-jiayuan.chen@linux.dev>
+In-Reply-To: <a227dd46-e6ec-4cc3-a0a3-427c4ffc9d07@amd.com>
 
-Hi Jiayuan,
+On Mon, Apr 14, 2025 at 09:28:36AM +0530, K Prateek Nayak wrote:
+> Hello Aaron,
+> 
+> On 4/9/2025 5:37 PM, Aaron Lu wrote:
+> > From: Valentin Schneider <vschneid@redhat.com>
+> > 
+> > Add related data structures for this new throttle functionality.
+> > 
+> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> > Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+> > ---
+> >   include/linux/sched.h |  4 ++++
+> >   kernel/sched/core.c   |  3 +++
+> >   kernel/sched/fair.c   | 12 ++++++++++++
+> >   kernel/sched/sched.h  |  2 ++
+> >   4 files changed, 21 insertions(+)
+> > 
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index f96ac19828934..0b55c79fee209 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -880,6 +880,10 @@ struct task_struct {
+> >   #ifdef CONFIG_CGROUP_SCHED
+> >   	struct task_group		*sched_task_group;
+> > +#ifdef CONFIG_CFS_BANDWIDTH
+> > +	struct callback_head		sched_throttle_work;
+> > +	struct list_head		throttle_node;
+> 
+> Since throttled tasks are fully dequeued before placing on the
+> "throttled_limbo_list", is it possible to reuse "p->se.group_node"?
 
-kernel test robot noticed the following build errors:
+I think it might be possible.
 
-[auto build test ERROR on bpf-next/master]
+> Currently, it is used to track the task on "rq->cfs_tasks" and during
+> load-balancing when moving a bunch of tasks between CPUs but since a
+> fully throttled task is not tracked by either, it should be safe to
+> reuse this bit (CONFIG_DEBUG_LIST will scream if I'm wrong) and save
+> up on some space in the  task_struct.
+> 
+> Thoughts?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jiayuan-Chen/bpf-sockmap-Introduce-tracing-capability-for-sockmap/20250414-093146
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250411091634.336371-1-jiayuan.chen%40linux.dev
-patch subject: [PATCH bpf-next v2] bpf, sockmap: Introduce tracing capability for sockmap
-config: arm64-randconfig-001-20250414 (https://download.01.org/0day-ci/archive/20250414/202504141925.PFNOfZzb-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141925.PFNOfZzb-lkp@intel.com/reproduce)
+Is it that adding throttle_node would cause task_struct to just cross a
+cacheline boundary? :-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504141925.PFNOfZzb-lkp@intel.com/
+Or it's mainly a concern that system could have many tasks and any saving
+in task_struct is worth to try?
 
-All errors (new ones prefixed by >>):
+I can see reusing another field would cause task_is_throttled() more
+obscure to digest and implement, but I think it is doable.
 
->> ld.lld: error: undefined symbol: sock_i_ino
-   >>> referenced by sockmap.h:70 (include/trace/events/sockmap.h:70)
-   >>>               kernel/bpf/core.o:(trace_event_raw_event_sockmap_redirect) in archive vmlinux.a
-   >>> referenced by sockmap.h:121 (include/trace/events/sockmap.h:121)
-   >>>               kernel/bpf/core.o:(trace_event_raw_event_sockmap_strparser) in archive vmlinux.a
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Aaron
