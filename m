@@ -1,145 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DE026AAB9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40A126B092;
+	Mon, 14 Apr 2025 09:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624209; cv=none; b=e38FJYWxZv5LpbvhiZkXToksDndKYoGhiREd4xb7VGOxiXZvnVwAtAcxZKtvff94SoQJmkTZYR+POakQxlB9mUN/T5mhS0BxlSjHyPbwuP9QrwqVtQj6uyDsA0Dt633KxmiG6cIJiok2mAvtAWi3yXu3/GUlu3eQmUQo9r7GotA=
+	t=1744624213; cv=none; b=o2iEkPTycqMzTduV3rTq/TbzcV1/BFFzgz8vVxqcAk0TfWmJJfXO5m5Ead6j6laLuyYyKSr6hs+SBayjQCEwrUb8ub17Yc4d+h3GElPw+qacrjd1VMNtvvA6G2I4kxQo41HDkh95e4mpMI9p4dh1K274HwkFXRNeqnwRhBxPc8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624209; c=relaxed/simple;
-	bh=jp8JwSIuJk4GFCR3LmfzYuHpnYGRU8UeJvhnzagKb4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HoYOuSUj/nJdRAQjpYeDtDqXYSGpAGdJ3QM43uSkTsBoveKn/ZFU1JmnjKYMKoxfin5Gdae2f3K9/KZSEX45vzC0BCxZ7qBOFaQI9X8Z4UA1U87stvIPdZh9GWxiLpJFzh8n7870UJRsLLPBpAMLKMR2fYKFdaMCsKm+4nQ0hFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HNIg16Ro; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HNIg16Ro"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744624208; x=1776160208;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jp8JwSIuJk4GFCR3LmfzYuHpnYGRU8UeJvhnzagKb4c=;
-  b=HNIg16Rof0KEy2W1TZpSTOnbZUafi4oGnYNyxoUX7xPzMumbO5YlWZrS
-   RmKRCQG+WA4qY8sSjOJc5i/nFKvD7k8CVj5MYXSX/EJIHQy+4hn9bwoB/
-   YEd9dwu28sTYrCLFBNB7ULLQVZzRBZW5eC2uzgaWSjBY9w0HiaPFSlhvt
-   gSYkl3+25DMJEDfkr0M2c0r5aZszm28podWAHr4W8HcQEhP4dX3CmJDp4
-   7mn4CC02l7NKtUhdsQiMrUrSXPfV6NWvvc5nqhmATPMSh+0YjdB2iKxhp
-   Vh0HlONDiIlYmsclpR5Kxi5mzhEPusuj300KGmZneSIL1/beZs7+3RHmT
-   A==;
-X-CSE-ConnectionGUID: k2Rboe60SZeX3Nyhva7FCQ==
-X-CSE-MsgGUID: 9UeXRV7CTUiNBSpIiLYj6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45222851"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="45222851"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:50:07 -0700
-X-CSE-ConnectionGUID: RBwtBu+/TcK6uLlU31VsmA==
-X-CSE-MsgGUID: 10QK9666SoiL6KNjlrB6Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="152955063"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:50:02 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v8 09/12] drm/i915/nvm: add support for access mode
-Date: Mon, 14 Apr 2025 12:38:00 +0300
-Message-ID: <20250414093803.2133463-10-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414093803.2133463-1-alexander.usyskin@intel.com>
-References: <20250414093803.2133463-1-alexander.usyskin@intel.com>
+	s=arc-20240116; t=1744624213; c=relaxed/simple;
+	bh=pzAVg/gEqz48XW9Y34vG1o5PUtXkZR8QjIF6M24lUqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZlO6JNRLTsf4CICViRgHh/tezsblrFxeIQQAbfh8l4L70fRHrMj/AUtQVaty3rVD8/Fxqokpsjcb/IL70DwnhTH7Yi/nutqLkNrzStYeUQ/3YaTHOO8Tgkj/1DlL4k49ZB7PiBQRTEQZIWtZpIXIhlVjoxGnwxfxbH94S8qc5wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 491921007;
+	Mon, 14 Apr 2025 02:50:07 -0700 (PDT)
+Received: from [10.57.87.24] (unknown [10.57.87.24])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 098953F66E;
+	Mon, 14 Apr 2025 02:50:04 -0700 (PDT)
+Message-ID: <93a4ec41-3bd8-4485-a4fe-d0def3509b79@arm.com>
+Date: Mon, 14 Apr 2025 10:50:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/4] drm/panthor: Introduce BO labeling
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ "To : Boris Brezillon" <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org
+References: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
+ <20250411150357.3308921-2-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250411150357.3308921-2-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Check NVM access mode from GSC FW status registers
-and overwrite access status read from SPI descriptor, if needed.
+Hi Adrián,
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/i915/intel_nvm.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+On 11/04/2025 16:03, Adrián Larumbe wrote:
+> Add a new character string Panthor BO field, and a function that allows
+> setting it from within the driver.
+> 
+> Driver takes care of freeing the string when it's replaced or no longer
+> needed at object destruction time, but allocating it is the responsibility
+> of callers.
+> 
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> ---
+>  drivers/gpu/drm/panthor/panthor_gem.c | 39 +++++++++++++++++++++++++++
+>  drivers/gpu/drm/panthor/panthor_gem.h | 17 ++++++++++++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
+> index 8244a4e6c2a2..af0ac17f357f 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
+> @@ -2,6 +2,7 @@
+>  /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
+>  /* Copyright 2023 Collabora ltd. */
+>  
+> +#include <linux/cleanup.h>
+>  #include <linux/dma-buf.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/err.h>
+> @@ -18,6 +19,14 @@ static void panthor_gem_free_object(struct drm_gem_object *obj)
+>  	struct panthor_gem_object *bo = to_panthor_bo(obj);
+>  	struct drm_gem_object *vm_root_gem = bo->exclusive_vm_root_gem;
+>  
+> +	/*
+> +	 * Label might have been allocated with kstrdup_const(),
+> +	 * we need to take that into account when freeing the memory
+> +	 */
+> +	kfree_const(bo->label.str);
+> +
+> +	mutex_destroy(&bo->label.lock);
+> +
+>  	drm_gem_free_mmap_offset(&bo->base.base);
+>  	mutex_destroy(&bo->gpuva_list_lock);
+>  	drm_gem_shmem_free(&bo->base);
+> @@ -196,6 +205,7 @@ struct drm_gem_object *panthor_gem_create_object(struct drm_device *ddev, size_t
+>  	obj->base.map_wc = !ptdev->coherent;
+>  	mutex_init(&obj->gpuva_list_lock);
+>  	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
+> +	mutex_init(&obj->label.lock);
+>  
+>  	return &obj->base.base;
+>  }
+> @@ -247,3 +257,32 @@ panthor_gem_create_with_handle(struct drm_file *file,
+>  
+>  	return ret;
+>  }
+> +
+> +void
+> +panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label)
+> +{
+> +	struct panthor_gem_object *bo = to_panthor_bo(obj);
+> +	const char *old_label;
+> +
+> +	scoped_guard(mutex, &bo->label.lock) {
+> +		old_label = bo->label.str;
+> +		bo->label.str = label;
+> +	}
+> +
+> +	kfree(old_label);
 
-diff --git a/drivers/gpu/drm/i915/intel_nvm.c b/drivers/gpu/drm/i915/intel_nvm.c
-index 75d3ebe669ff..dd3999c934a7 100644
---- a/drivers/gpu/drm/i915/intel_nvm.c
-+++ b/drivers/gpu/drm/i915/intel_nvm.c
-@@ -10,6 +10,7 @@
- #include "intel_nvm.h"
- 
- #define GEN12_GUNIT_NVM_SIZE 0x80
-+#define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
- 
- static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
- 	[0] = { .name = "DESCRIPTOR", },
-@@ -22,6 +23,28 @@ static void i915_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool i915_nvm_writable_override(struct drm_i915_private *i915)
-+{
-+	resource_size_t base;
-+	bool writable_override;
-+
-+	if (IS_DG1(i915)) {
-+		base = DG1_GSC_HECI2_BASE;
-+	} else if (IS_DG2(i915)) {
-+		base = DG2_GSC_HECI2_BASE;
-+	} else {
-+		drm_err(&i915->drm, "Unknown platform\n");
-+		return true;
-+	}
-+
-+	writable_override =
-+		!(intel_uncore_read(&i915->uncore, HECI_FWSTS(base, 2)) &
-+		  HECI_FW_STATUS_2_NVM_ACCESS_MODE);
-+	if (writable_override)
-+		drm_info(&i915->drm, "NVM access overridden by jumper\n");
-+	return writable_override;
-+}
-+
- void intel_nvm_init(struct drm_i915_private *i915)
- {
- 	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
-@@ -43,7 +66,7 @@ void intel_nvm_init(struct drm_i915_private *i915)
- 
- 	nvm = i915->nvm;
- 
--	nvm->writeable_override = true;
-+	nvm->writable_override = i915_nvm_writable_override(i915);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
--- 
-2.43.0
+Shouldn't this be kfree_const()? I suspect as things stand we can't
+trigger this bug but it's inconsistent.
+
+> +}
+> +
+> +void
+> +panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label)
+> +{
+> +	const char *str;
+> +
+> +	str = kstrdup_const(label, GFP_KERNEL);
+> +	if (!str) {
+
+In the next patch you permit user space to clear the label
+(args->size==0) which means label==NULL and AFAICT kstrdup_const() will
+return NULL in this case triggering this warning.
+
+Thanks,
+Steve
+
+> +		/* Failing to allocate memory for a label isn't a fatal condition */
+> +		drm_warn(bo->obj->dev, "Not enough memory to allocate BO label");
+> +		return;
+> +	}
+> +
+> +	panthor_gem_bo_set_label(bo->obj, str);
+> +}
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
+> index 1a363bb814f4..af0d77338860 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> @@ -46,6 +46,20 @@ struct panthor_gem_object {
+>  
+>  	/** @flags: Combination of drm_panthor_bo_flags flags. */
+>  	u32 flags;
+> +
+> +	/**
+> +	 * @label: BO tagging fields. The label can be assigned within the
+> +	 * driver itself or through a specific IOCTL.
+> +	 */
+> +	struct {
+> +		/**
+> +		 * @label.str: Pointer to NULL-terminated string,
+> +		 */
+> +		const char *str;
+> +
+> +		/** @lock.str: Protects access to the @label.str field. */
+> +		struct mutex lock;
+> +	} label;
+>  };
+>  
+>  /**
+> @@ -91,6 +105,9 @@ panthor_gem_create_with_handle(struct drm_file *file,
+>  			       struct panthor_vm *exclusive_vm,
+>  			       u64 *size, u32 flags, uint32_t *handle);
+>  
+> +void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label);
+> +void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label);
+> +
+>  static inline u64
+>  panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
+>  {
 
