@@ -1,204 +1,232 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233F5258CFC
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69FD259C9C;
+	Mon, 14 Apr 2025 07:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616109; cv=none; b=lsttBp078pWMwTtebQVCrnfslqkh+qqxdLqCpGOQ1cpGucbYhq8cPJXADsZip0fM7FLP1a3LKkZptF3deN070lpET0bNoXJ/+UeAEjVhD0auzHnlAkjJE+wBatXBjG/sqtDnYSrBiHCG+kgNlPmAWpEX8u5BK7J7Ab6htDnOCwM=
+	t=1744616124; cv=none; b=S6Is+oxs4MAUPL5F4kCTnG7e5SscstBQshq4u8/ECu6kPqoNK/9p54QIaUpZMUtXVwCcwVMiPN1FIFMtY8PZuCzD0MgGdoRb55aVzECxJT5RKxO5KMS98SvPhSYyvaNSHHqK7ZQr4ubn4jmBl8yCC9Bsb2mkWGrZtrq2PtCa4Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616109; c=relaxed/simple;
-	bh=7EGoSxyZzU4q3wMa/1B9RL8gmsmcIFk+84VxlSi6Sno=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=m9IqlI1kGmDPc+rxLgxiz+hYW6B/Jh9JFUYc5MtBfcg3oczQOlSrpp3TFaK+C7nbdJ1JacZdneBrQF5fT1UQC0aNGsJO6Alhfgs/ubQRBpYT9EH1/mYaq0wMlTCZf3XyfJuiVp7LB0KptJUWQzJ4K8k3v/BZgL5DvKGclWdFuXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DsPiA1l8; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744616124; c=relaxed/simple;
+	bh=z8K34UautYuQzI6jGj2wD2TyJ1E+uS5EGOc8u94zZfs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hOs5tO0+TkdDqkQ0PhZh772N0db+MlXuXeXG7Np20n2zJMDamZt3stofxU9KBeJEitJJSFFV2qPvmOgjgt2JLKvtA5jz9EHGo2iVqAtBKxkPctUO/V/bIl+Y1bssv0v+xzUSgzXKcvawtJBwXW9eV0PNX8MDAQXEKSJfFa9jIWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER+QuYbZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DsPiA1l8"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso43022295e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744616105; x=1745220905; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NCLOV7LW2sCf+llBBjrEx21uZp9vw+Sjf5JHLJEffcY=;
-        b=DsPiA1l8YNuNIfQwocgG7oFk1iU1UV83hNxjK7UrUKaiLRZnLG/yb7N/5mY/FHsWhQ
-         pW7kn6Hf9fj7AtjhhHekpWix3cq5AFUDkQIg7K9iL++ZNwgIw7mfdpV7zx8xtG8IqRT6
-         W4FaxgBxZ4gi3eTuretM++NaX+sk0urZjsdTOAMdzagxdOZF2xawlMIgP+GdarLjtLQx
-         Xp0hIQZ7kJ80cPWSpS+uyhMPITdGvXT8ecRijseVTlwWGOg9NpokCy4DN6bGyajKSaNV
-         s+bSeHwng6fO2GPr39l4gAtn3ZRZCpbRoCxePkKdyPMdJ4DueGcuaIdPJYlwwC/X1XlL
-         y/Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744616105; x=1745220905;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NCLOV7LW2sCf+llBBjrEx21uZp9vw+Sjf5JHLJEffcY=;
-        b=DqAASwdIy6YllpEy0maA3FTWlp560NuEOaTZMdGLiEJ+0H4d2hbYC0ZvIQFIJU2r3h
-         T/Qe0dPkZaDnfar5QN9/S1+FheV06XwnknsuXDGxU6Hh/pgrxIghSFAv55L+ZiFHJ0dK
-         nulo2nQvHHP0ZO8NldhA9XFT2tKC67bKgHpLMj+aK3+aNyhnRAZg6n8HluasxopxPuP3
-         Yda/7s4TyARu7tfzNig2Dvoh4ypUvpXAwVTVonyCixVUdZxZxjHZNVgeHuFEvD5a4Hi9
-         QNNpbQAxpcVS15pDbtxB5jM2o9jFFOLLZ/Apfc5SsjT1qdyvdix9f6/8rqGaP224cwJ0
-         KNTA==
-X-Gm-Message-State: AOJu0Yyt394Jq3+9IAwNcnn998IPjjTHqO/LWV9SuhrmUaZSqDIMwYQD
-	NjDO5jclZHFcDw0q0i+/vlQRz4JXRXjT/+JTdPkH9mpgrioiJradhguG1vNKvAM=
-X-Gm-Gg: ASbGncvszNMrSmYNt8SOWfPVlAbLlmYY6dZahuyWGU8O+/fzMom3Ab7wlUK+nJMf5hP
-	mdrLDSrX6pU9c6gYrBcPBxDp7VNLDtISW2TyFT35S1leod9nnpwy0KIopZmU8IgSDh/+cSM5JIM
-	a9EEzlgYpTrJKTnMSKjcFgcwxrANNpvfG8aZH3iUswkTEUjIDTF5zJYEX9sOKkov+dCGo5rmdGx
-	SYIS/GSS+n9FAxlrq/+A5WDebe9CvRpoGSyzC0WBLIZACMxUhXhJuyPiFgOLRxMCOAcrLVsI8fM
-	pkINaf9NIRFp53sb1CT+/d1KIOHdedO7Yzftf50FTLNdg55gCgdKFV/HujTcGo15enB2nN7Vhnf
-	IdjGPyq+GWwLObouryg==
-X-Google-Smtp-Source: AGHT+IHa0Y15AjuuA8Tmi5tOJeVaFk6gqLu4ymA87BqNvKQnk3PftrJet0B6GXWbGctECoqC+wEEyg==
-X-Received: by 2002:a05:600c:1c8e:b0:43c:fe15:41cb with SMTP id 5b1f17b1804b1-43f3a95dc30mr91510165e9.15.1744616105264;
-        Mon, 14 Apr 2025 00:35:05 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:bf8a:3473:5c13:9743? ([2a01:e0a:3d9:2080:bf8a:3473:5c13:9743])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5d57sm169684115e9.34.2025.04.14.00.35.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 00:35:04 -0700 (PDT)
-Message-ID: <2740b178-34cc-4b95-a8da-7e6862cabc92@linaro.org>
-Date: Mon, 14 Apr 2025 09:35:04 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER+QuYbZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 63BBFC4CEEB;
+	Mon, 14 Apr 2025 07:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744616124;
+	bh=z8K34UautYuQzI6jGj2wD2TyJ1E+uS5EGOc8u94zZfs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ER+QuYbZ7oAXp9MBVMCRce5NUoOUt/33og5Y1ODiEPNjmknuUBPvgkM59FruaX87w
+	 srd3gxM+QGz33GL1lhd5EEGe+UZ77QJCaxLAYLmUILfgflM3MSAjtAaMsnppFrBCKN
+	 /wnGJtY8dUeB1w8UxcsWuHK5UYiWdI3uk7oeWP9ZuBv00EMLO9ziSwCYlf2+nWm8eb
+	 pv9dx3BwMpZc6bGE7V+0wxfPk43kgn+hn9XBciWVo8fCqhC71cyIIg8BRnQ6LRGc45
+	 QuD+54x6wr499+IcG6TC6+pJ3LmioWPqXrWRmlndnp4Uhtweebpt8ijJ7HmDWEJ4Yv
+	 8DlsI3YO9kEWw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51166C369B4;
+	Mon, 14 Apr 2025 07:35:24 +0000 (UTC)
+From: Keke Li via B4 Relay <devnull+keke.li.amlogic.com@kernel.org>
+Date: Mon, 14 Apr 2025 15:35:14 +0800
+Subject: [PATCH v8 01/10] dt-bindings: media: Add amlogic,c3-mipi-csi2.yaml
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC v5 0/8] media: qcom: iris: re-organize catalog & add
- support for SM8650
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250414-c3isp-v8-1-9f89e537494e@amlogic.com>
+References: <20250414-c3isp-v8-0-9f89e537494e@amlogic.com>
+In-Reply-To: <20250414-c3isp-v8-0-9f89e537494e@amlogic.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com, 
+ laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, 
+ jacopo.mondi@ideasonboard.com, Keke Li <keke.li@amlogic.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744616122; l=4483;
+ i=keke.li@amlogic.com; s=20240902; h=from:subject:message-id;
+ bh=iVRjco4gEZIJYH+/ThAD0of+DDk5DVtE5OQ0nAFBJZM=;
+ b=W8MIOXxv6EerHwhyuoBPseC/n/4MsAZNnDv0joncybXXAdLodGCmN2d4doJ6pqi0d1jW367RD
+ TZ+ZAqDceFTCeEpS03ywZz5KybQN+jnDSqzQJM+iwrmAWfOVEwj8Rej
+X-Developer-Key: i=keke.li@amlogic.com; a=ed25519;
+ pk=XxNPTsQ0YqMJLLekV456eoKV5gbSlxnViB1k1DhfRmU=
+X-Endpoint-Received: by B4 Relay for keke.li@amlogic.com/20240902 with
+ auth_id=204
+X-Original-From: Keke Li <keke.li@amlogic.com>
+Reply-To: keke.li@amlogic.com
 
-Hi Vikash, Dikshita,
+From: Keke Li <keke.li@amlogic.com>
 
-On 10/04/2025 18:29, Neil Armstrong wrote:
-> Re-organize the platform support core into a gen1 catalog C file
-> declaring common platform structure and include platform headers
-> containing platform specific entries and iris_platform_data
-> structure.
-> 
-> The goal is to share most of the structure while having
-> clear and separate per-SoC catalog files.
-> 
-> The organization is based on the curent drm/msm dpu1 catalog
-> entries.
+c3-mipi-csi2 is used to receive mipi data from image sensor.
 
-Any feedback on this patchset ?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Keke Li <keke.li@amlogic.com>
+---
+ .../bindings/media/amlogic,c3-mipi-csi2.yaml       | 127 +++++++++++++++++++++
+ MAINTAINERS                                        |   6 +
+ 2 files changed, 133 insertions(+)
 
-Thanks,
-Neil
+diff --git a/Documentation/devicetree/bindings/media/amlogic,c3-mipi-csi2.yaml b/Documentation/devicetree/bindings/media/amlogic,c3-mipi-csi2.yaml
+new file mode 100644
+index 000000000000..b0129beab0c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/amlogic,c3-mipi-csi2.yaml
+@@ -0,0 +1,127 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/amlogic,c3-mipi-csi2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic C3 MIPI CSI-2 receiver
++
++maintainers:
++  - Keke Li <keke.li@amlogic.com>
++
++description:
++  MIPI CSI-2 receiver contains CSI-2 RX PHY and host controller.
++  It receives the MIPI data from the image sensor and sends MIPI data
++  to MIPI adapter.
++
++properties:
++  compatible:
++    enum:
++      - amlogic,c3-mipi-csi2
++
++  reg:
++    maxItems: 3
++
++  reg-names:
++    items:
++      - const: aphy
++      - const: dphy
++      - const: host
++
++  power-domains:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: vapb
++      - const: phy0
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description: input port node, connected to sensor.
++
++        properties:
++          endpoint:
++            $ref: video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++            required:
++              - data-lanes
++
++      port@1:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: output port node
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - power-domains
++  - clocks
++  - clock-names
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/amlogic,c3-peripherals-clkc.h>
++    #include <dt-bindings/power/amlogic,c3-pwrc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        csi: csi@ff018000 {
++            compatible = "amlogic,c3-mipi-csi2";
++            reg = <0x0 0xff018000 0x0 0x400>,
++                  <0x0 0xff019000 0x0 0x300>,
++                  <0x0 0xff01a000 0x0 0x100>;
++            reg-names = "aphy", "dphy", "host";
++            power-domains = <&pwrc PWRC_C3_MIPI_ISP_WRAP_ID>;
++            clocks =  <&clkc_periphs CLKID_VAPB>,
++                      <&clkc_periphs CLKID_CSI_PHY0>;
++            clock-names = "vapb", "phy0";
++            assigned-clocks = <&clkc_periphs CLKID_VAPB>,
++                              <&clkc_periphs CLKID_CSI_PHY0>;
++            assigned-clock-rates = <0>, <200000000>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    c3_mipi_csi_in: endpoint {
++                        remote-endpoint = <&imx290_out>;
++                        data-lanes = <1 2 3 4>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    c3_mipi_csi_out: endpoint {
++                        remote-endpoint = <&c3_adap_in>;
++                    };
++                };
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2dcc38f646fc..ded945532da2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1255,6 +1255,12 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
+ F:	drivers/perf/amlogic/
+ F:	include/soc/amlogic/
+ 
++AMLOGIC MIPI CSI2 DRIVER
++M:	Keke Li <keke.li@amlogic.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/amlogic,c3-mipi-csi2.yaml
++
+ AMLOGIC PINCTRL DRIVER
+ M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
+ L:	linux-amlogic@lists.infradead.org
 
-> 
-> Add support for the IRIS accelerator for the SM8650
-> platform, which uses the iris33 hardware.
-> 
-> The vpu33 requires a different reset & poweroff sequence
-> in order to properly get out of runtime suspend.
-> 
-> Follow-up of [1]:
-> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org/
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> Changes in v4:
-> - Reorganized into catalog, rebased sm8650 support on top
-> - Link to v4: https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org
-> 
-> Changes in v4:
-> - collected tags
-> - un-split power_off in vpu3x
-> - removed useless function defines
-> - added back vpu3x disappeared rename commit
-> - Link to v3: https://lore.kernel.org/r/20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org
-> 
-> Changes in v3:
-> - Collected review tags
-> - Removed bulky reset_controller ops
-> - Removed iris_vpu_power_off_controller split
-> - Link to v2: https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
-> 
-> Changes in v2:
-> - Collected bindings review
-> - Reworked rest handling by adding a secondary optional table to be used by controller poweroff
-> - Reworked power_off_controller to be reused and extended by vpu33 support
-> - Removed useless and unneeded vpu33 init
-> - Moved vpu33 into vpu3x files to reuse code from vpu3
-> - Moved sm8650 data table into sm8550
-> - Link to v1: https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
-> 
-> ---
-> Neil Armstrong (8):
->        media: qcom: iris: move sm8250 to gen1 catalog
->        media: qcom: iris: move sm8550 to gen2 catalog
->        dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS accelerator
->        media: platform: qcom/iris: add power_off_controller to vpu_ops
->        media: platform: qcom/iris: introduce optional controller_rst_tbl
->        media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
->        media: platform: qcom/iris: add support for vpu33
->        media: platform: qcom/iris: add sm8650 support
-> 
->   .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
->   drivers/media/platform/qcom/iris/Makefile          |   6 +-
->   .../media/platform/qcom/iris/iris_catalog_gen1.c   |  83 +++++++
->   ...{iris_platform_sm8550.c => iris_catalog_gen2.c} |  85 +------
->   ...ris_platform_sm8250.c => iris_catalog_sm8250.h} |  80 +-----
->   .../media/platform/qcom/iris/iris_catalog_sm8550.h |  91 +++++++
->   .../media/platform/qcom/iris/iris_catalog_sm8650.h |  68 +++++
->   drivers/media/platform/qcom/iris/iris_core.h       |   1 +
->   .../platform/qcom/iris/iris_platform_common.h      |   3 +
->   drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
->   drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
->   drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
->   drivers/media/platform/qcom/iris/iris_vpu3x.c      | 275 +++++++++++++++++++++
->   drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
->   drivers/media/platform/qcom/iris/iris_vpu_common.h |   3 +
->   15 files changed, 598 insertions(+), 300 deletions(-)
-> ---
-> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
-> change-id: 20250410-topic-sm8x50-upstream-iris-catalog-3e2e4a033d6f
-> 
-> Best regards,
+-- 
+2.49.0
+
 
