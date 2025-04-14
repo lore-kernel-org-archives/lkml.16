@@ -1,223 +1,95 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F36D19F130;
-	Mon, 14 Apr 2025 16:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E582DFA3D;
+	Mon, 14 Apr 2025 16:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744647908; cv=none; b=CuCDz4shXrffY+VfIV3kTWNd6psCrh6nCDoAJcxQiuzpSgT1x0EiwrkoutoQLSwJHfeIMJ6H70Ad9ZKlWS3XPu0PdDlpvJrvx/wl0VoV0B77Szf3/JNg+Om5zB7vhIuAK02J4WFc1MllHPHRHmWn+BHqJNeNCcn8Cr1Qgzd9Coc=
+	t=1744648073; cv=none; b=oI0+6BFa+O5ukGrsUQ8+vsmvXtlKBkGM8Dsh3UziElUlpQXcjt0WalSt6ExrgpU/KpyHoYodrWUPIOkcFiLVGKOfCEK7gbgpsv5LmzFvfzth7kETu4T7hy2qDAJwsTdSB/FI1RdH4SH/ecieZsA/a5gZvtzMdL2n1uwxRfOm3G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744647908; c=relaxed/simple;
-	bh=4GavI1+TUHaY/auGcGgl6ajFXeqZhKPy5GPSBRjguLc=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HVoFWaYWkubYOuFQi/6LDf8f0bht5LGc+7LF8zY+UFPWeu3ZM34Wj6kynFLAoU4vw2QEJavkF2GE93DsJU3I3j8UyTbzXFOSI2NcMWEO0NzNAb1H1iR4AX9JKGoTse37d0g4960gAwavHT9SH02Irqj/hs0F8er5UBnOcbL1Q0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dz33TCc7; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744648073; c=relaxed/simple;
+	bh=GN6bGCm7c5dXhkkB/e5awNbM6ayXDhFIsgWWcafbMsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KsUiSXqEbRoEjJOF8JOsJtTWwxmLs7R2aN87fJ19NZIzHhOcIWUSR3OykffK2ebn8pEHOyGLzskqSQdVJtKBcC3AzG8dv4itCYGGKV1S5/SrkMqqrojspOuKqzB2N8Y7/ggAykNx38k3mvz84wVYii671Zw/mO20K1xicNlKoXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=h8AiMeby; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dz33TCc7"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-399749152b4so2447588f8f.3;
-        Mon, 14 Apr 2025 09:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744647904; x=1745252704; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J6TzHB9wqI4Z4IjYX+qsyY6yAP8RRCz8SzAbLTK3QFM=;
-        b=Dz33TCc7/R1hA+BETrqFjvWiN3yeIWAOQn5wPSx5z46YxIkOvYT20vroIJVI3f6Tc5
-         t3lkAycAOnx7E21yPlqzhcpTB9QeBuTCeA33Sh7dyctiXZieWDCWDI6qsR1vBxZNHyEv
-         HQ5AuYwUvVJDXzwykn71GAJVJPwrk1UGlrcnps31aUT4P9lRyj290YH+meZAMScE3KlR
-         cOX0O++Dca+l1VFOBm20JQzeNDB+WIrczoZlLxQjiHqIq2bbeXom2zF1pj0V3XIhps1b
-         XIiF5QDeR7ltsgObqgKq9v9sLNwp7fqZ4pcYfG2lyHxhWN2gxMM8NqpfemzBp5ABIckM
-         /dRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744647904; x=1745252704;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J6TzHB9wqI4Z4IjYX+qsyY6yAP8RRCz8SzAbLTK3QFM=;
-        b=XBtofdK5jVcwOenK4TqqXFZUT8+wne+HgNCI184oaibDQD+rE//vvndpcbGxVEBi/e
-         2bHAYrJ9NyWged4xDSl7xZ6KwXnbR8fDY7D9MbvsFbBXFy7hwmcF+GExvatkxq+HEENq
-         r7HmOypUYjaPAmy0Gc0WLesKBce6e7knNW/zJIiKQLTgzCdPHYppqYUl4MPQlYGTYf1t
-         v5jgQ1w9S6evA40RVMgTxNS0B8n8pDIf21gzWHIYF2r2nBZD9dmY4E3NzA4a4iPDnolB
-         Z68q33Qnn93mvTc4IkZeeK3DrtZNV7D6dGzoKd9duruqOUDI0BdUX+3wjVM9PIebHow+
-         bv+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWSC5WHBi7D9UauCtg11nqcRAJhUJQQ8kCi3GU1/S95mYF+y/BKKVv9oSOIQ+LuXLxga6advqQ1sGYq@vger.kernel.org, AJvYcCX0Yt/VnWsKVaym6B4Yu3cSAVimZgp8fPA3E9whO55hVBtmC5Sruv54HeBQz8+X5BSlpW91Oi8Hiazkp0zP@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrR1b21hRgPyBRZTlSU2L2cm3swcwCO5R3LAOadqmKz2vu1xuy
-	YdCcfCbM6oLu4/9wQAL0sU8VYocEkobhCssmKQQldgypAauHNH0BTml71OVQhzk=
-X-Gm-Gg: ASbGnctATqmx+BkpuaFgRncviIBfDM63Nlus7XqEI9l4cLMsK+acnEnJFK9+9qfxFHL
-	DUQ+ApLPeUNIk5+IGR0ssacuGr5LvcOy/XezJtZ2u71RVz8QPSTcufmf+8GLZlUa/88LK7IsjIl
-	VF7XLLObM3bimaBgESdFNyrfmGjcWy9FrNNK1KhPuH5NsXIUbQBxwV0DlcMJulzQNcJggnL71/Z
-	vUvBia8yfvnS7TiBlOBwsNYLc03OrJHxcgpgIyBr3thohXRadefJhnvinmjGrW5Lf8cl2NstzNb
-	K0iY0EhRDDRc49MJynzFLXWAVofO3Q4HNnTUGE63myXd
-X-Google-Smtp-Source: AGHT+IHkZKXxX+remWMvdQHLVO0MZupgIBRz8YvABVN+xIyy4Qq2XhC0HDU5CGN3jzT6yP507wdd8g==
-X-Received: by 2002:a05:6000:400a:b0:38d:b325:471f with SMTP id ffacd0b85a97d-39ea52035eemr10832220f8f.15.1744647903429;
-        Mon, 14 Apr 2025 09:25:03 -0700 (PDT)
-Received: from gmail.com ([103.210.134.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce0asm11508888f8f.70.2025.04.14.09.24.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 09:25:03 -0700 (PDT)
-Date: Mon, 14 Apr 2025 21:54:52 +0530
-From: Brahmajit <brahmajit.xyz@gmail.com>
-To: Robert Moore <robert.moore@intel.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] ACPI: Fix building with GCC 15
-Message-ID: <kjxkqexdkyesepwtyjsp2uuo73r65msvhl7ccxt77wv722gw3j@7ekim6v5clrh>
-References: <20250414161644.30400-1-listout@listout.xyz>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="h8AiMeby"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4Zbt4Q4T4Zzm0djJ;
+	Mon, 14 Apr 2025 16:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1744648067; x=1747240068; bh=eNupomQxpwde+WQEUUu1iZPF
+	xc7hWF7E5h8lfr3oqq0=; b=h8AiMebya6nfhoA4vE5/mZP+oR4Xx3LGMGKZ79GZ
+	hX4Wvi2ZyE4kPy2Lnv+4sjJnzXCvbJk/yFQ6ALyZ2T6Svd0ZCoXpg2OugSZdm9x9
+	1pgEuoyXzXmOV190cMcvzVC+53bN7mZuf8oXz2fMFMN8QHTPwi9UZxoAC2y3hNO9
+	pIsplrV7c6/wLRVj8IAR6kCr22rk0b/jvCmD+lT/+38seIOg/S/425sDXgpXCwUk
+	Jjya4wDciU3XL2lDgCpBgma3n1POaYlEKTLftMPnClKMTnz49Pzg86BNXexpmMT5
+	7oN9rKourfGx3ZTx2SuGFxfX5aGq/edljYyrGEXEXZNWYw==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 3so8gtFosdKX; Mon, 14 Apr 2025 16:27:47 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4Zbt4D0g7fzm0ySq;
+	Mon, 14 Apr 2025 16:27:39 +0000 (UTC)
+Message-ID: <68dea32f-e1c9-4e17-902a-aadc0a8489f7@acm.org>
+Date: Mon, 14 Apr 2025 09:27:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250414161644.30400-1-listout@listout.xyz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: core: Add NULL check in
+ ufshcd_mcq_compl_pending_transfer()
+To: Chenyuan Yang <chenyuan0y@gmail.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com, peter.wang@mediatek.com,
+ manivannan.sadhasivam@linaro.org, stanley.chu@mediatek.com,
+ quic_cang@quicinc.com, quic_nguyenb@quicinc.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250412195909.315418-1-chenyuan0y@gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250412195909.315418-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 14.04.2025 21:46, Brahmajit Das wrote:
-> Since the Linux kernel initializes many non-C-string char arrays with
-> literals. While it would be possible to convert initializers from:
->    { "BOOP", ... }
-> to something like:
->    { { 'B', 'O', 'O', 'P' }, ... }
-> that is annoying.
-> Making -Wunterminated-string-initialization stay silent about char
-> arrays marked with nonstring would be much better.
+On 4/12/25 12:59 PM, Chenyuan Yang wrote:
+> Add a NULL check for the returned hwq pointer by ufshcd_mcq_req_to_hwq().
 > 
-> Without the __attribute__((nonstring)) we would get the following build
-> error:
+> This is similar to the fix in commit 74736103fb41
+> ("scsi: ufs: core: Fix ufshcd_abort_one racing issue").
 > 
-> ...
-> drivers/acpi/acpica/acpredef.h:903:11: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
->   903 |         {{"_S3D", METHOD_0ARGS,
->       |           ^~~~~~
-> drivers/acpi/acpica/acpredef.h:906:11: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
->   906 |         {{"_S4D", METHOD_0ARGS,
->       |           ^~~~~~
-> 
-> and,
-> 
-> ...
-> drivers/acpi/acpica/nsrepair2.c:115:10: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
->   115 |         {"_ALR", acpi_ns_repair_ALR},
->       |          ^~~~~~
-> drivers/acpi/acpica/nsrepair2.c:116:10: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
->   116 |         {"_CID", acpi_ns_repair_CID},
-> ...
-> 
-> Upstream GCC has added this commit
-> 622968990beee7499e951590258363545b4a3b57[0][1] which silences warning
-> about truncating NUL char when initializing nonstring arrays.
-> 
-> [0]: https://gcc.gnu.org/cgit/gcc/commit/?id=622968990beee7499e951590258363545b4a3b57
-> [1]: https://gcc.gnu.org/cgit/gcc/commit/?id=afb46540d3921e96c4cd7ba8fa2c8b0901759455
-> 
-> Thanks to Jakub Jelinek <jakub@gcc.gnu.org> for the gcc patch.
-> 
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: ab248643d3d6 ("scsi: ufs: core: Add error handling for MCQ mode")
 > ---
->  drivers/acpi/acpica/aclocal.h   |  4 ++--
->  drivers/acpi/acpica/nsrepair2.c |  2 +-
->  drivers/acpi/tables.c           | 28 +++++++++++++++-------------
->  include/acpi/actbl.h            |  3 ++-
->  4 files changed, 20 insertions(+), 17 deletions(-)
+>   drivers/ufs/core/ufshcd.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
-> index 6f4fe47c955b..d2cda1b35e59 100644
-> --- a/drivers/acpi/acpica/aclocal.h
-> +++ b/drivers/acpi/acpica/aclocal.h
-> @@ -293,7 +293,7 @@ acpi_status (*acpi_internal_method) (struct acpi_walk_state * walk_state);
->   * expected_return_btypes - Allowed type(s) for the return value
->   */
->  struct acpi_name_info {
-> -	char name[ACPI_NAMESEG_SIZE];
-> +	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
->  	u16 argument_list;
->  	u8 expected_btypes;
->  };
-> @@ -370,7 +370,7 @@ typedef acpi_status (*acpi_object_converter) (struct acpi_namespace_node *
->  					      converted_object);
->  
->  struct acpi_simple_repair_info {
-> -	char name[ACPI_NAMESEG_SIZE];
-> +	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
->  	u32 unexpected_btypes;
->  	u32 package_index;
->  	acpi_object_converter object_converter;
-> diff --git a/drivers/acpi/acpica/nsrepair2.c b/drivers/acpi/acpica/nsrepair2.c
-> index 1bb7b71f07f1..a28b1fa2b1ea 100644
-> --- a/drivers/acpi/acpica/nsrepair2.c
-> +++ b/drivers/acpi/acpica/nsrepair2.c
-> @@ -25,7 +25,7 @@ acpi_status (*acpi_repair_function) (struct acpi_evaluate_info * info,
->  				     return_object_ptr);
->  
->  typedef struct acpi_repair_info {
-> -	char name[ACPI_NAMESEG_SIZE];
-> +	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
->  	acpi_repair_function repair_function;
->  
->  } acpi_repair_info;
-> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> index 2295abbecd14..27104cbb48b5 100644
-> --- a/drivers/acpi/tables.c
-> +++ b/drivers/acpi/tables.c
-> @@ -396,19 +396,21 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 length)
->  }
->  
->  /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
-> -static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst = {
-> -	ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
-> -	ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
-> -	ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
-> -	ACPI_SIG_ASF,  ACPI_SIG_BOOT, ACPI_SIG_DBGP, ACPI_SIG_DMAR,
-> -	ACPI_SIG_HPET, ACPI_SIG_IBFT, ACPI_SIG_IVRS, ACPI_SIG_MCFG,
-> -	ACPI_SIG_MCHI, ACPI_SIG_SLIC, ACPI_SIG_SPCR, ACPI_SIG_SPMI,
-> -	ACPI_SIG_TCPA, ACPI_SIG_UEFI, ACPI_SIG_WAET, ACPI_SIG_WDAT,
-> -	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
-> -	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
-> -	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
-> -	ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
-> -	ACPI_SIG_NBFT };
-> +static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst
-> +	__attribute__((nonstring)) = {
-> +		ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
-> +		ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
-> +		ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
-> +		ACPI_SIG_ASF,  ACPI_SIG_BOOT, ACPI_SIG_DBGP, ACPI_SIG_DMAR,
-> +		ACPI_SIG_HPET, ACPI_SIG_IBFT, ACPI_SIG_IVRS, ACPI_SIG_MCFG,
-> +		ACPI_SIG_MCHI, ACPI_SIG_SLIC, ACPI_SIG_SPCR, ACPI_SIG_SPMI,
-> +		ACPI_SIG_TCPA, ACPI_SIG_UEFI, ACPI_SIG_WAET, ACPI_SIG_WDAT,
-> +		ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
-> +		ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
-> +		ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
-> +		ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
-> +		ACPI_SIG_NBFT
-> +	};
->  
->  #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
->  
-> diff --git a/include/acpi/actbl.h b/include/acpi/actbl.h
-> index 451f6276da49..88ba1b978053 100644
-> --- a/include/acpi/actbl.h
-> +++ b/include/acpi/actbl.h
-> @@ -66,7 +66,8 @@
->   ******************************************************************************/
->  
->  struct acpi_table_header {
-> -	char signature[ACPI_NAMESEG_SIZE];	/* ASCII table signature */
-> +	char signature[ACPI_NAMESEG_SIZE]
-> +		__attribute__((nonstring)); /* ASCII table signature */
->  	u32 length;		/* Length of table in bytes, including this header */
->  	u8 revision;		/* ACPI Specification minor version number */
->  	u8 checksum;		/* To make sum of entire table == 0 */
-> -- 
-> 2.49.0
-> 
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 0534390c2a35..fd39e10c2043 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -5692,6 +5692,8 @@ static void ufshcd_mcq_compl_pending_transfer(struct ufs_hba *hba,
+>   			continue;
+>   
+>   		hwq = ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
+> +		if (!hwq)
+> +			continue;
+>   
+>   		if (force_compl) {
+>   			ufshcd_mcq_compl_all_cqes_lock(hba, hwq);
 
-Do I need to send the acpica part to GitHub first?
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
--- 
-Regards,
-listout
