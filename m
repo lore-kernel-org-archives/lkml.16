@@ -1,45 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F75B19FA92
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4C39461;
+	Mon, 14 Apr 2025 06:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744612586; cv=none; b=AZtYlHqfogeOQyR8v9mDsiFUUBTj8+hsv0WZ3GNzjumG5cMCi40iLA0DbzabAD9iomLRSqPS1Nn32+qhY+jPNEG27avd0Icv4wYcJA0IFF1l5GepoiuFQdJvC8dGfg4+xC6tRR+3JpQp0uecZpQs8TAQJa81a3rajDaIcdVnh3M=
+	t=1744612587; cv=none; b=V0+LEswBAc5i4r8bCxDNatmoiKMY/Az90NyfqJ7Hezp7RmpocZip+VKppxwCLRCVcXQgyuJDEL8rQCmM1CLlC/xQdzU5WYBgQ8iMIH/p80rMvtEN9FcXhVShGKejrHZaR+tH8w5w4B9POoe4xnIRrMq7gty/sfFiiA9B3s/rjqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744612586; c=relaxed/simple;
-	bh=cpn8A4zoLhDaSlyxrOD4O65Uuyt1YcZ9xpPGbOgNtig=;
+	s=arc-20240116; t=1744612587; c=relaxed/simple;
+	bh=Kt6zZL3qwYe3T/6wCjXt8RSMNjqz6aTlMHNVxRv1JTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbjwBkAW/nxiEH32qs+aREIfzpBZtEg+wnnvPEem8y1x/yORmI8sS99nwAwQ72R9gpXv7q9oMWtD0GYqU9XfQQlqlxG10Kc98HirIQHwWmTjT1PQDdiQaA9quhdyaaEkTmZMnAAm07Z9T20Y/WlAK81aIomB5JXYXf918JV0/bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HskB4Nvw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HskB4Nvw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED047C4CEE2;
-	Mon, 14 Apr 2025 06:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744612585;
-	bh=cpn8A4zoLhDaSlyxrOD4O65Uuyt1YcZ9xpPGbOgNtig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HskB4Nvwb9MHOEn52rvk8D0gahIPG9q/npHskyFWiY1D3I5DiPXd+f2C3OtqQn5K2
-	 f1JIH6Npc+O8pgpLPKoPfn1OMqdr4iliZwIi1HGETT9WhwVGN4n0uP27QJATFhMeqc
-	 bb+Or+okZRDYlRm2TqcGC3y9ZfDHxOcunsrkRqhwnDQ9nX1tPxe23fRqE2ljJtjwX3
-	 deUxqv12He3nnbl6zBc0GCOHGBmfMC/4sonDMPsXa9OGLqwxOBZj77xzSnUblL33+C
-	 0uHsRC3vy5qc8MQrA72uwd5tRF5EUSiQzeiJIoQbRvl3w7o3JwCZtrbdIc4rmC0o4x
-	 qdSeslvtc1ymg==
-Date: Mon, 14 Apr 2025 08:36:18 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	mingo@redhat.com, luto@kernel.org, peterz@infradead.org,
-	paulmck@kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
-	willy@infradead.org, jon.grimm@amd.com, bharata@amd.com,
-	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH v3 0/4] mm/folio_zero_user: add multi-page clearing
-Message-ID: <Z_ys4jJ8MQ4-kW8P@gmail.com>
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=vCIDMXEo/q1bB+PbE468AD65XAoy/sb36lVofvnEFlV0IL6i0MGt2q79PPWr599yWhJmI614U6EAKf/viYiOJHjiGVyIqSKCUunSQuN1QAHetS0CNnQCytuSWYhJLh3DUdAAxBgPSvXeZHhLE2sZR+1e+dvjq18njRek8NqHWhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: qijxJlCJSSiT7E5X0QS2TA==
+X-CSE-MsgGUID: wgsF3KS8Sd2u7N3kCUuUtg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="49872934"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="49872934"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:36:25 -0700
+X-CSE-ConnectionGUID: tKrMwEcIR+6eiqIM4QFn0w==
+X-CSE-MsgGUID: 51+4ks8WT4+ifV71S0N2IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="130275780"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:36:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u4DQX-0000000C9Uq-01JE;
+	Mon, 14 Apr 2025 09:36:17 +0300
+Date: Mon, 14 Apr 2025 09:36:16 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+Message-ID: <Z_ys4Lo46KusTBIj@smile.fi.intel.com>
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-2-ivecera@redhat.com>
+ <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
+ <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,38 +60,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414034607.762653-1-ankur.a.arora@oracle.com>
+In-Reply-To: <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Wed, Apr 09, 2025 at 08:40:22AM +0200, Ivan Vecera wrote:
+> On 07. 04. 25 8:05 odp., Andy Shevchenko wrote:
+> > On Mon, Apr 07, 2025 at 07:28:28PM +0200, Ivan Vecera wrote:
+
+...
+
+> > > +/*
+> > > + * Regmap ranges
+> > > + */
+> > > +#define ZL3073x_PAGE_SIZE	128
+> > > +#define ZL3073x_NUM_PAGES	16
+> > > +#define ZL3073x_PAGE_SEL	0x7F
+> > > +
+> > > +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
+> > > +	{
+> > > +		.range_min	= 0,
+> > 
+> > Are you sure you get the idea of virtual address pages here?
+> 
+> What is wrong here?
+> 
+> I have a device that uses 7-bit addresses and have 16 register pages.
+> Each pages is from 0x00-0x7f and register 0x7f is used as page selector
+> where bits 0-3 select the page.
+
+The problem is that you overlap virtual page over the real one (the main one).
+
+The drivers you mentioned in v2 discussions most likely are also buggy.
+As I implied in the above question the developers hardly get the regmap ranges
+right. It took me quite a while to see the issue, so it's not particularly your
+fault.
+
+> > > +		.range_max	= ZL3073x_NUM_PAGES * ZL3073x_PAGE_SIZE,
+> > > +		.selector_reg	= ZL3073x_PAGE_SEL,
+> > > +		.selector_mask	= GENMASK(3, 0),
+> > > +		.selector_shift	= 0,
+> > > +		.window_start	= 0,
+> > > +		.window_len	= ZL3073x_PAGE_SIZE,
+> > > +	},
+> > > +};
+
+...
+
+> > > +	zldev->regmap = devm_regmap_init_i2c(client,
+> > > +					     zl3073x_get_regmap_config());
+> > 
+> > It's perfectly a single line.
+> 
+> I tried to follow strictly 80 chars/line. Will fix.
+
+Yes, but in some cases when it gains in readability it is allowed to use longer
+lines even if one sticks with stricter 80 characters limit.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-* Ankur Arora <ankur.a.arora@oracle.com> wrote:
-
-> We also see performance improvement for cases where this optimization is
-> unavailable (pg-sz=2MB on AMD, and pg-sz=2MB|1GB on Intel) because
-> REP; STOS is typically microcoded which can now be amortized over
-> larger regions and the hint allows the hardware prefetcher to do a
-> better job.
-> 
-> Milan (EPYC 7J13, boost=0, preempt=full|lazy):
-> 
->                  mm/folio_zero_user    x86/folio_zero_user     change
->                   (GB/s  +- stddev)      (GB/s  +- stddev)
-> 
->   pg-sz=1GB       16.51  +- 0.54%        42.80  +-  3.48%    + 159.2%
->   pg-sz=2MB       11.89  +- 0.78%        16.12  +-  0.12%    +  35.5%
-> 
-> Icelakex (Platinum 8358, no_turbo=1, preempt=full|lazy):
-> 
->                  mm/folio_zero_user    x86/folio_zero_user     change
->                   (GB/s +- stddev)      (GB/s +- stddev)
-> 
->   pg-sz=1GB       8.01  +- 0.24%        11.26 +- 0.48%       + 40.57%
->   pg-sz=2MB       7.95  +- 0.30%        10.90 +- 0.26%       + 37.10%
-
-How was this measured? Could you integrate this measurement as a new 
-tools/perf/bench/ subcommand so that people can try it on different 
-systems, etc.? There's already a 'perf bench mem' subcommand space 
-where this feature could be added to.
-
-Thanks,
-
-	Ingo
