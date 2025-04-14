@@ -1,162 +1,215 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7F2749EE
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBAC23D2AA;
+	Mon, 14 Apr 2025 13:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637996; cv=none; b=V2gpvtcVHq7XGAbGkY+P3XXHV9I1FCbz7UyyqtJ8vHS/tPe2YRkQb2SKvFXiXlIxRMDvMjEegBGW8av8BK8DFzvPGEWeGWO4piYXH+hf0+CxqtZ3XmjBAu18GuNpeQtqdDqUeYmjzlsGIfT/hxihzyL60EjIu8sRWMcdokEflrw=
+	t=1744638054; cv=none; b=CqazVWiTynEuH7LcS8a1r7S6RTdDXUQFGAaKlR/zqursK1Hr98d0WnwYy8IKIfbSUQd4jp6EZTSug3Epr0c3b2hlglaUL4un0SM1onhUzcxjdNwNRQQ4xBSgB63fRUbSAF/MqWbRioQL7O9rCjX1JLB+v8XMCXJnik2otjdxbZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637996; c=relaxed/simple;
-	bh=NtCW/E8exydYTxFSwUlIDYXeH3TA9ME05Yx8nihFiFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZrLd98h6jxeFSvja7nx5z+nAQAnUXx2Iz6Pig68H8ETHQ14cT1q9swdqKQQ9wSoLkJDMgIU5H0sTK6XXCT+MpBCGI3QEKHzGiOnE8Y2t6q10qioFQVDM9j/Q/tos+K1GxCcgUuWy0hBwYfstRIikGe9erPE4OC415F+f6cNMvHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=XteWAv+h; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="XteWAv+h"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so6597641a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1744637992; x=1745242792; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZquJTzO2TMrzx3oM3vRZxn3X9pd2r24oUtQt3eHPnLc=;
-        b=XteWAv+h8B74asVCm/j/e0NLRp4TEeKg6pdI/nhhYbAsUNJVE3IKA3re7QUrGNfoC+
-         vTfI3OuJKiGhJAiEK/eMQOuQtBkRgxHt/86RkPF6rsaIIUM1JS9hswRObGwZSGF28fLv
-         6kKYMPKNZNeBUdW63FI6Iln97wCpqnBahwtJYXskzglvw4RR4qw9BTzYLmSFSyzH04GJ
-         nG0mRiJpC8Jfjs8tVIHSkqpg/aC6hJH2O40fgk4DyOFwA9MRHE8r4SoRTpWvEKmjhZge
-         C6ZGNXzx5J8XcBhQiD99pFCYJC7895BUXj2W2k6ss5P88v0xC8aQXDKJffcka/FhaBJv
-         aW3w==
+	s=arc-20240116; t=1744638054; c=relaxed/simple;
+	bh=1eCbuWm8dVGaoYTLm0vad9ErxPZVwWfXk5roSAc9z6U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VyTN2PSYwLIevnYFDmNUOQfyaXdATC2//15sDwUhnaCDmdCS0FULuTKeyEOzxY5OWTj7vDU5L2nxyd1BAcASaX2r4p6i7uqSjt9ZIxIF3v4E/Jd8yYCNn605MpUYVDcs8i8BM/n+R/HWXA9SXEM3sFK3D7CtMr8uzvhYFpcR1Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-523fa0df55dso4895453e0c.1;
+        Mon, 14 Apr 2025 06:40:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744637992; x=1745242792;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZquJTzO2TMrzx3oM3vRZxn3X9pd2r24oUtQt3eHPnLc=;
-        b=whSzI563gn6lmV2ZAXgbdVuKFl7Ltjo+0C4dDWvp3s8gqCe3QvJzyj4hOvrsOCC7pO
-         gEmsgBT1s1e+gifLvuONx/7Ofj6hBFoY4H7n3xDW24UdeO13vCVkfRATGi6tND0X6yEO
-         LI93b/CN/go6pS6AczVtbCpn1XFN8PoiuEP0WAOGzkOGRfm7QsDalispZ24H/Y+Tq/4G
-         gHh3uIx7jTDP4B4GIvQGBCzwEKVw9N1JzB8IaDID938k8LRglhcUj+cizkh60NByjXJu
-         u+gJyg5HaVe3hMebG2go40hXbPrKiLX+TviEfIBfsgQMy+eWfizK6rAVzxIu/D1tVgC7
-         QY3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWEXxtAaUZjZxMvLQSa3p8K4hp02P6gXY491IDsynAyIwxrvxHDjuSWLBoI/J700y3niNirfY8WRjFpRDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygKQd/bLwnPkflbbl3mvxTrs7KqT5x/KCBfNRDGNwZ4X9R2Y0w
-	kS2qkAPaf04xm6Y9vjeIK3znFBM4yC1W8YgpY+znjniO+LI2NAf/+3hwgxzi/jVMk8BmATo6l/y
-	45EZy5/Vu0rJj86UobXUHO9dqQvU5He5VKsmKUUfrvMHY07w3mT1fE2M=
-X-Gm-Gg: ASbGncsa6OGJ5g7AND6bbN+mqGL2cVv6D0s1u2QFxvxtJVlPPx32W0h2b8EEqXOb+AE
-	HyO5Dcl8uAv+CV0WFOocMciwExMtpLQC/hWIK6C2YUKAuQHiCHLzq/PpQVlHc1OFz3DcNqsBo8r
-	VmnxK6J1uFGYgVkG9R0gJ8XdAICGjk09qF8+zYifL0PtnxzdgeW1qDSggRlXI7mXgKUMBePXTPI
-	E/bMvO9JZj9DHxi3EeMPuydFayZkPOrVmsfBvMqJVvOnaKVTagqkFRSbHg1q1jTjlAzrK9CBQPF
-	CpA5ZPdggeGJmTM354J3u9ZvWX+aXgo1tF/5GbGws4+R4dMF4zgarGoU43W07xAYluR4QuEApoB
-	l8ghVQvQM2dObBQ==
-X-Google-Smtp-Source: AGHT+IFPxNqtw28ADerWg6CufaL1pKk/7NGw4kAzwMNIMYRZtCBUOHqCketsjh37yheEVO4bOxUj2g==
-X-Received: by 2002:a05:6402:3487:b0:5ec:f769:db07 with SMTP id 4fb4d7f45d1cf-5f36fefc74amr8488977a12.29.1744637992033;
-        Mon, 14 Apr 2025 06:39:52 -0700 (PDT)
-Received: from ?IPV6:2001:67c:2fbc:1:7de8:ff34:becd:c8f0? ([2001:67c:2fbc:1:7de8:ff34:becd:c8f0])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ef5c445sm4905583a12.31.2025.04.14.06.39.50
+        d=1e100.net; s=20230601; t=1744638050; x=1745242850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dxFVREXOrkgNS43wycobvJ4oCa9KVGBm5xx9A69fAqQ=;
+        b=rv8NOquA8LD6c3Oqyg94G1Ys6fK2eC9LO3qs+jouP9AIjmhjDrGeN/2nD5jnEAFC8G
+         736zDTr/mwCzBcxBsaw7d0/ZRv7//wdcjVGBCwABuGEcPPxgUj0DwPNoW/oCkVFT63f1
+         odz8CZC9n3M6lkHHDn86IuiT+qVD/On27c8rxKlu8DWD5PG2EfCdjaDiV00P5bFQ32XT
+         KGFhra9O4U2HnV0k9jnLqGnxn9N3obAKqpXrk0c7nkQPMmZWXWK+TALWrMq9QiGMiTDN
+         sVoUEXjtIoxQpL3YPT4+Uo9YRDN1tJiiEu9WEapMYrbV/bqLDglPPZOKKUlQwIN0BiIm
+         tEYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKjHTQRVQoOD4RN+OII/Cxs9jhIg29X96GS8e2p1XsRS5BMWFaHytUj/R+OfAeUwQkKouc2n1paiZ+OVZE@vger.kernel.org, AJvYcCUpLhgn2+l0Y38+4sl4l7iwo+Pwy0Tzxq+p/mMKsBPUIpw9a3VpXIdjfNit0XaBy9373k22r3R8i5ld@vger.kernel.org, AJvYcCVCmWfXqo/Aq5iQ3J4V57LgMc6RiDGfq3yQJdMeMQr9w6P0gR4+1t/LxC2KksCWBc2kcXkUAafClZhZ@vger.kernel.org, AJvYcCVl5/XYESOuKi1dqpwPFc2mRfPp5TnF9H8UfNmqU1i1VwDZWtTc1aqaeR7glXkHCAV/N4Kzsls6ZUBQ0dB6@vger.kernel.org, AJvYcCWY7gFFIsPL8s2armxZTjp7RJwZfQm+Qz0YWaZT4oyMfsNPOw47xenY64A0EfnOyP6+M70Gd7llBTX0XQ==@vger.kernel.org, AJvYcCWug5Y6fi0xbWpBkGrFmPNIxr9bu4h/Jhr0U7rMCQ66mT9JkDM+5NPFBrM01OYRINyilBUIvf5TxCnyseLbgI5mmVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+wl2dCcETJIDrHXcNj/7T3Gl4J1eS2zG40v4T7EgovNfnQl8q
+	3AW2oaAoRur4VuSjsSwlZB46M4nTZk4nc9AtPCcvzZyEXFyCSicFxXxAHcRD
+X-Gm-Gg: ASbGncsTO24g4CX+8bGYcuEvFq5Z/fHfhqaXkQH8QivfyzaS3IEWlc2iZK/kz//gXaW
+	zQCM2fI3D3SmPXFsr0ZeZDCpMRzfbJwvM/m92X7VkbI6Q3zBA27N28Nd+puw8U/wZNJqEQj4utj
+	0IGdFVsEqTBixb9o++EF/WuCs8ukZxRyZmn3DPOuXsmfwOU/eCUZxK83Ubl3oAHrHmuG8YzmJz8
+	WjigRKNVUyQhNUXz+ZH1TqorQv8yoJjnvO8IYpOdl5LUrrbPi9d1/tArVRv38WOSZHUhe30NLWI
+	7cDrPfm9pyrk9hvMqi7xGTR4yg8BlBacRe6azWHY17lj+hZs5rdU8erT9IPoZ7U+G72diGZC7se
+	b90ULyZM=
+X-Google-Smtp-Source: AGHT+IEPgHG1D7Dy5FoauPMAno7o5t7gB+FO9wBlka1sEgE6+I+oz6cHGCZ1pQlWovGSNPESRVEIkw==
+X-Received: by 2002:a05:6122:336:b0:523:6eef:af62 with SMTP id 71dfb90a1353d-527b5ea09eamr9485321e0c.4.1744638049960;
+        Mon, 14 Apr 2025 06:40:49 -0700 (PDT)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4cb93sm2193603e0c.1.2025.04.14.06.40.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 06:39:51 -0700 (PDT)
-Message-ID: <963c2166-aed8-4928-bdeb-6acbec2b0ea7@openvpn.net>
-Date: Mon, 14 Apr 2025 15:39:50 +0200
+        Mon, 14 Apr 2025 06:40:49 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523f721bc63so4954291e0c.0;
+        Mon, 14 Apr 2025 06:40:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTnzrhLlPXbSQXpE+7ZRXqOiJp8eApSKqrZ3cWk2xl+MENSZL0HO1fs78uETM/wmFUeKUBgXxgns/7JZlk@vger.kernel.org, AJvYcCVH6RwGZRSpM0HibuxFpwzFQ7mY3kJf/KO6fJlcHbCS9QP4mbOdJWhFBvWi1ZdY4SfKBT5TwqO1/bJFKw==@vger.kernel.org, AJvYcCWBDi5DTZQ4fnAbszA2vj/2cPnji+nGH/lmsTefTgr4iK3cGDahXM3rsMZBzzi80EmYg2IkDmxdouC9@vger.kernel.org, AJvYcCWVK3CEpMf5mak7bEbBvmfk8+sFGv7JpyCY90G0BLpQlbF9unvMpc9Tj2sB6pob241e/xyWXw3cLb0h@vger.kernel.org, AJvYcCWgvp3fZm0iLvooENaowNr1dq6Bx199daEvc/remGgbeycz0d3W0dFn8tSgjf1ClaOi2ukkKHyZ9/BKKx2s@vger.kernel.org, AJvYcCXsMPA9a2+SczrcmEIn7q6H6LdLraPcJjt+sLok0OMaly5DXuhl346r+z1l5O5me1qzuXdQWcB2zT9vrK4qAq8pas0=@vger.kernel.org
+X-Received: by 2002:a05:6122:336:b0:523:6eef:af62 with SMTP id
+ 71dfb90a1353d-527b5ea09eamr9485274e0c.4.1744638049070; Mon, 14 Apr 2025
+ 06:40:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
- Offload (ovpn)
-To: Jakub Kicinski <kuba@kernel.org>, Sabrina Dubroca <sd@queasysnail.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
- Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Xiao Liang <shaw.leon@gmail.com>, steffen.klassert@secunet.com,
- antony.antony@secunet.com
-References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
- <20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
- <20250410195440.3ba7ba0f@kernel.org>
- <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net> <Z_keORW4OWc8i5Vz@krikkit>
- <20250411141847.6dba6987@kernel.org>
-Content-Language: en-US
-From: Antonio Quartulli <antonio@openvpn.net>
-Autocrypt: addr=antonio@openvpn.net; keydata=
- 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
-Organization: OpenVPN Inc.
-In-Reply-To: <20250411141847.6dba6987@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8useBh5m+MqGXQwQJhuemehm=bPidL6XydR-FOmVN9QNQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8useBh5m+MqGXQwQJhuemehm=bPidL6XydR-FOmVN9QNQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 14 Apr 2025 15:40:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU+U8D8iQdks72=Kki2HL+bo8tw9gA1S4D3c4hOphLTuA@mail.gmail.com>
+X-Gm-Features: ATxdqUFKkMO3BbQqjnr_4N17M_FpT_VBDPVT_ExrXL2YuenRJWHQK8qxSnAps2k
+Message-ID: <CAMuHMdU+U8D8iQdks72=Kki2HL+bo8tw9gA1S4D3c4hOphLTuA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] Add support for Renesas RZ/V2N SoC and EVK
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-serial@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/04/2025 23:18, Jakub Kicinski wrote:
-> On Fri, 11 Apr 2025 15:50:49 +0200 Sabrina Dubroca wrote:
->>> My understanding is that this is the standard approach to:
->>> 1) hook in the middle of registration/deregistration;
->>> 2) handle events generated by other components/routines.
->>>
->>> I see in /drivers/net/ almost every driver registers a notifier for their
->>> own device.
->>
->> I think most of them register a notifier for their lower device
->> (bridge port, real device under a vlan, or similar).
->>
->> I've mentioned at some point that it would be more usual to replace
->> this notifier with a custom dellink, and that ovpn->registered could
->> likely be replaced with checking for NETREG_REGISTERED. I just thought
->> it could be cleaned up a bit later, but it seems Jakub wants it done
->> before taking the patches :)
-> 
-> Ideally, yes. One fewer place for us to check when trying to figure
-> out if we will break anything with the locking changes :(
-> Notifiers are very powerful but that comes at high maintenance cost.
+Hi Prabhakar,
 
-ACK, working on it!
+On Mon, 14 Apr 2025 at 13:19, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Mon, Apr 7, 2025 at 8:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
+com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > This patch series adds initial support for the Renesas RZ/V2N (R9A09G05=
+6)
+> > SoC and its evaluation board (EVK). The Renesas RZ/V2N is a vision AI
+> > microprocessor (MPU) designed for power-efficient AI inference and
+> > real-time vision processing. It features Renesas' proprietary AI
+> > accelerator (DRP-AI3), delivering up to 15 TOPS AI performance, making
+> > it ideal for applications such as Driver Monitoring Systems (DMS),
+> > industrial monitoring cameras, and mobile robots.
+> >
+> > Key features of the RZ/V2N SoC:
+> >   Processing Power:
+> >     - Quad Arm Cortex-A55 cores at 1.8GHz for high-performance computin=
+g
+> >     - Single Arm Cortex-M33 core at 200MHz for real-time processing
+> >     - 1.5MB on-chip SRAM for fast data access
+> >     - LPDDR4/LPDDR4X memory interface for high-speed RAM access
+> >
+> >   AI and Vision Processing:
+> >     - DRP-AI3 accelerator for low-power, high-efficiency AI inference
+> >     - Arm Mali-C55 ISP (optional) for image signal processing
+> >     - Dual MIPI CSI-2 camera interfaces for multi-camera support
+> >
+> >   High-Speed Interfaces:
+> >     - PCIe Gen3 (2-lane) 1ch for external device expansion
+> >     - USB 3.2 (Gen2) 1ch (Host-only) for high-speed data transfer
+> >     - USB 2.0 (Host/Function) 1ch for legacy connectivity
+> >     - Gigabit Ethernet (2 channels) for network communication
+> >
+> >   Industrial and Automotive Features:
+> >     - 6x CAN FD channels for automotive and industrial networking
+> >     - 24-channel ADC for sensor data acquisition
+> >
+> > LINK: https://tinyurl.com/renesas-rz-v2n-soc
+> >
+> > The series introduces:
+> > - Device tree bindings for various subsystems (SYS, SCIF, SDHI, CPG, pi=
+nctrl).
+> > - RZ/V2N SoC identification support.
+> > - Clock and pinctrl driver updates for RZ/V2N.
+> > - Initial DTSI and device tree for the RZ/V2N SoC and EVK.
+> >
+> > These patches have been tested on the RZ/V2N EVK with v6.15-rc1 kernel,
+> > logs can be found here:
+> > https://gist.github.com/prabhakarlad/aa3da7558d007aab8a288550005565d3
+> >
+> > @Geert, Ive rebased the patches on top of v6.15-rc1 + renesas-dts-for-v=
+6.16
+> > + renesas-clk-for-v6.16 branches. Also these patches apply on top of th=
+e below
+> > series [1] and [2]. I had to sort the order in Makefile for patch [3] t=
+o
+> > avoid conflicts.
+> > [1] https://lore.kernel.org/all/20250401090133.68146-1-prabhakar.mahade=
+v-lad.rj@bp.renesas.com/
+> > [2] https://lore.kernel.org/all/20250403212919.1137670-1-thierry.bultel=
+.yh@bp.renesas.com/#t
+> > [3] https://lore.kernel.org/all/20250403212919.1137670-13-thierry.bulte=
+l.yh@bp.renesas.com/
+> >
+> > Note, dtbs_check will generate the below warnings this is due to missin=
+g
+> > ICU support as part of initial series. I will be sending a follow-up pa=
+tch
+> > series to add ICU support which will fix these warnings.
+> > arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@1041000=
+0 (renesas,r9a09g056-pinctrl): 'interrupt-controller' is a required propert=
+y
+> >         from schema $id: http://devicetree.org/schemas/pinctrl/renesas,=
+rzg2l-pinctrl.yaml#
+> > arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@1041000=
+0 (renesas,r9a09g056-pinctrl): '#interrupt-cells' is a required property
+> >         from schema $id: http://devicetree.org/schemas/pinctrl/renesas,=
+rzg2l-pinctrl.yaml#
+> >
+> > v1->v2:
+> > - Added acks from Rob.
+> > - Squashed the RZ/V2N EVK and SoC variant documentation into a single
+> >   commit.
+> > - Updated the commit messages.
+> > - Added RZV2N_Px, RZV2N_PORT_PINMUX, and RZV2N_GPIO macros in
+> >   SoC DTSI as we are re-using renesas,r9a09g057-pinctrl.h
+> >   in pictrl driver hence to keep the consistency with the
+> >   RZ/V2H(P) SoC these macros are added.
+> > - Dropped `renesas,r9a09g056-pinctrl.h` header file.
+> > - Followed DTS coding style guidelines
+> > - Dropped defconfig changes from the series.
+> > - Dropped SDHI dt-binding patch as its already applied to mmc -next tre=
+e.
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > Lad Prabhakar (12):
+> >   dt-bindings: soc: renesas: Document Renesas RZ/V2N SoC variants and
+> >     EVK
+> >   soc: renesas: Add config option for RZ/V2N (R9A09G056) SoC
+> >   dt-bindings: soc: renesas: Document SYS for RZ/V2N SoC
+> >   soc: renesas: sysc: Add SoC identification for RZ/V2N SoC
+> >   dt-bindings: serial: renesas: Document RZ/V2N SCIF
+> >   dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
+> >   clk: renesas: rzv2h-cpg: Sort compatible list based on SoC part numbe=
+r
+> >   clk: renesas: rzv2h: Add support for RZ/V2N SoC
+> >   dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
+> >   pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+> >   arm64: dts: renesas: Add initial SoC DTSI for RZ/V2N
+> >   arm64: dts: renesas: Add initial device tree for RZ/V2N EVK
+> >
+> Would it be OK if I send version 3 containing only patches 4/12 and 10/12=
+?
 
-Thanks,
+For patch 4/12: yes, that is fine. Thx!
+For patch 10/12: I have already applied it.
 
--- 
-Antonio Quartulli
-OpenVPN Inc.
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
