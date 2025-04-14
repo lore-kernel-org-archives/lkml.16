@@ -1,312 +1,240 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF747483
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCF333997;
+	Mon, 14 Apr 2025 10:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744626098; cv=none; b=Mh3BFHJKOp3Tw22Z0920NOBmLiqhNaSTwLLGnopJG6EMHWaUcvE2QuTQvSO+49yp6saR6YlU3cTJ144bNJWCpdpT/F4Xfa0J/aV8g60KUigAhgQQBMtA2Ozo/pgP61FIbJ9R6B6/t31Mym22DdE6R2m0DpIbOOYG8Le5/Tq6TZY=
+	t=1744626128; cv=none; b=Icg92PfUkPGFPOjDckyvTg9E49ZCurhFPkeO1TFRMNpclVJ20StHcymwUeEdRnrvyioOdFtYPqLrAp6LXw//k0nECZbcYM2aQUQMCs0mGIJemBOZAfn2ffXDcMKgdX4FI4aGzFA2JTZ5+P3BviOVI4q0vDlZKafy1mQIOGpWd9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744626098; c=relaxed/simple;
-	bh=61ekFFKexwgO5M3A5GKowZa+bb0JV9zD+js9VS8c5fo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=f8MYWaLV+j+vJkhb9bStXDUowZnwQ8r4LZd/XJlAVRK/AJlfFyFIwoeR7IxIUh9Sk0ck0lBKthcGnLUPc6cwKpfB+sGaBlu3ikdYSxVl2vGKvq06HEue9pOiTXvwUz/Y2rbBhcj6KRgIh5H7opugVnPaCYDLZi6NJ4mSKaN13C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lu5exM9x; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744626128; c=relaxed/simple;
+	bh=KtqC2iditidJC2eSLn3KMSnoD5wXk8uVxjE6xg2dVhg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qMBhey+hKxDDJAGm5htJSdoYUrG+QKSMHrsKSvXF4oGLKr6HSVFNyq9qRgQBWuh9spcWVGcjlAfaqYuAOKAuBHZW7JLBt8w9RjDo6hvDdV6n+OCKPkqLhWRlETiYnWuEQ/y1j+7uYSM2R3aTu/UeyvJl0Cf13qRFrLlqHVLFOxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJIcbyEC; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lu5exM9x"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so35384605e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:21:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJIcbyEC"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524125f6cadso3449459e0c.2;
+        Mon, 14 Apr 2025 03:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744626094; x=1745230894; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yoJfn+WfhcCob3lYkX4rLFC4vL/JU+QDHeEHm6Z8Pus=;
-        b=lu5exM9xsBE4NFGpJZJDll9KJ6ybKmjRvEHeYnavWIJdsabns6chJjaMJuYi2qb2V1
-         74/JIjV/+gFGpDK8nXfNIWpeCFNI/sTnH8fIZgn6LZwIJqsBoro7W+wn/oanqDEIkzJe
-         pzlviIdNpXyb9zX2ddbZeuiTMam43LQ/CHChDkMqJmACMsM9ZPyt0vrZgTOI7G/h9v/e
-         +8dr6zA76+qjClfYpVSUZJf1IGHEsCJllYZYjjcZ7AXlBzMU8WMd88HWIsdkY9lZ0M7X
-         I2jjxE+6PwSVSqo2uM8/NKk+ytltXtrFfV4ku8ONSQh52iYbLEFMvB6N/yV7CuPvrkw9
-         eJww==
+        d=gmail.com; s=20230601; t=1744626125; x=1745230925; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
+        b=RJIcbyECyj2SxzILyTGR/ubLtHeBLY5kTyQC8cL3DkrouuBHhQdrDQ+FMObQPgpAhN
+         iiaTsF13HbF2PRL9fdICbaUtHDQpThYo54RUbEooGkDyL8dSccp/mE5d2TS+UKwsXc2q
+         iiy0VMtWrNY+zSg2lOtD7aQa8qplyJsLLutM7UJMcRNKjTaa8EivmqCpyFJfTPbAHoQJ
+         OgFnz52Yt1ZBBdD8YwV8LLH4TyyYxa4abvueXPCEnAN6yNwDIYv9ReK/25eOaFZTZlT7
+         NSZP9hrDMOn02RfaeI1xXUtLIWhdK93MTNt0D0QM1Nk0eyus7JqMqqpxLgVW6ScPUpne
+         K/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744626094; x=1745230894;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yoJfn+WfhcCob3lYkX4rLFC4vL/JU+QDHeEHm6Z8Pus=;
-        b=qTTPZGxV1LgC/XmenCw+6wky0xn0I584xznMVXJYV6+KV8oBbwDYiTFxJg1DdlBKa4
-         o6hbvryrOYo5xfB3wyjt8BfAHyQ4NQi2eDh5j3GIKfnXa64Cl0sqeU/XU1fOkt9EKpzu
-         NkFtf2WM56qrAa2TpvyTaPN6L8akCArVklBcdGc0VvgDNVCVYQDZ1Yo0Ol/WKyQqrMtg
-         oSnI3pRSBQhQ731la7cc3si6K87PLrr0+Qbz9Y8HrI0NwQTZaqeeoTsZ6g7D4UbBqYeh
-         yRznmmc4ggr7l3BRRogI6Y7cUGSvDcNV/vU0CFZZSJqPzi2eHX4+b3Zq3oYShVRtTmye
-         5Nwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZLgfYRjuVUc8d57/Gxdbnup8J5t6O0hDXEZjlqemqPAtaa9Luw5dMy7YDcnfpBCxifPb1VcPK5Cm4FvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvaUXFejZwrbRIOlGDl0O4TezYepXpPuj0meip0N3Kz51wIVeP
-	Rta6SpfmAITCRvtaeaE6eIMbC6fiVlBCYNaeWkd0jE1wF26xmLek3aRDuzsTqfo=
-X-Gm-Gg: ASbGncvt/KkNks304oukasCrkn0rMRlj53SfTU0nS1N6zPXbKBIOSah2g5VG6hInDso
-	TOdKjbMaPp6IB1XXvuPcWqiJKYvEQSDxEhKg192+rKysx3GeTzoDkXTwN8u0a78V1HjoYbLR1CE
-	3TBHxBbi97qkTTbudPzBQP4ohu7zlB74I1N4nCQWxoz1AUbAt9lc4145WYc50sALn/clFpQKysD
-	VwxLu7frO8JJxARU2UpNpDOlEEpddm6Tmbw9ih2IpcESjnDwmN+6/FZCNP9hUgI36vaUgv5micS
-	xX68yePSXgn6OdVSVJ73wOY7xUEWmaArLMl7sK3c1lNSEPxwLelvECWumXUpMZ0calrsf9MmOu/
-	m9MIXMbsWytbn6fy2Ek8RtYWJ2BC5
-X-Google-Smtp-Source: AGHT+IGi7pe4joqsduvh0sVavfTwIAZtPwHu9vH2XybtTdHDqiTbqFeoh96FoPqaD/ghle7zKPCzbg==
-X-Received: by 2002:a05:6000:1ace:b0:391:1218:d5f4 with SMTP id ffacd0b85a97d-39e7658b3aemr9537331f8f.23.1744626094457;
-        Mon, 14 Apr 2025 03:21:34 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:bf8a:3473:5c13:9743? ([2a01:e0a:3d9:2080:bf8a:3473:5c13:9743])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae964048sm10618166f8f.2.2025.04.14.03.21.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 03:21:34 -0700 (PDT)
-Message-ID: <608488e4-a744-4aef-af17-2bf19ea5b788@linaro.org>
-Date: Mon, 14 Apr 2025 12:21:31 +0200
+        d=1e100.net; s=20230601; t=1744626125; x=1745230925;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
+        b=P7CxnGT/XN/si1cRz622IaajCWSoC4i238wO4gTVdBiKCXae01yv+AlKgr6OOpigiq
+         ByRs7yuByS5/EvRjEr5JpC1C/MtyYssMP5Y3qdG/dfB52G834H0HyWdW4EqmdhTepDhG
+         eCB6gcQWeVvC0OySD3hO3lUSUaeD1PUUIkqDlrefmN/6Rco+mDa4Fsd5eZlcZ1Xd7388
+         Du6hmZaUk+Xtqy2iDhImxyodBf69+9uayw+rkkqxhlcyCPahutVMccdmsTDpnl7HXs91
+         iG5BIul//sDS2LKuSUmznmV6DBbwIn0aKrJaTd5NxhKTtbr1lQkz7jTpLxxmRGg64CG8
+         eMgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnAko+01/ipj10ovQYFkalt1zt08fk94DT1OOKTwpKvie501RlNHmEwWaDeo/n2YJo/uxsynemrfGaa+9k@vger.kernel.org, AJvYcCVnIRkP+K1yTwz+d0N0BoECiJY8wTU6xcWx3mzaw6nh2/B/qrtFICNpPubz/lXodWQcVHVMnPUE5A9Q@vger.kernel.org, AJvYcCWHt+xQKYFgFqVtmzQtJ3HU/rtvhDs5mdLPnG4/JxB2QUg4yriHHrU15Ecrdmqkkvj0RLK0+9mNdyRUkg==@vger.kernel.org, AJvYcCWRnIR+aqbPZPMmlZNoAUnQTb/HimYkEujKUVQI4i1pBVJ3nyIh0LWPUWpA+UGCNGH7IA36xxi99R8g2F5w@vger.kernel.org, AJvYcCWrW/IUI5dYNavJqcHM62cOsBStfSBunBJ9upsWH87mte+mnreSdZ1lEhMMspzqZ8oZCgoi0vxm80y52jF9FdX04oA=@vger.kernel.org, AJvYcCXUoDnoJ1HKkCLAdwkhk5/nms1emyhms4fuJ5ZBOcu0IJ9RxClewRPqtqGa8VFpRiBmEAGknDVXs2DB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrSJvsu9Ii+nT65lA/uZ1D2ufeILx0OEua4fauOkZI6UVv4CHB
+	/z9rJ5gomgaThxpnN5afjIkjIknMAOwR/DNjOmVILcRHpWd0ippdep2n9BAx0WKKowbmXr2W2ns
+	19gW1NXBZWQjHoFa7DqKqzqpcjLI=
+X-Gm-Gg: ASbGncsWRtyjuVRRK1LyIQzw03lH7NeJJZya9nNPFiYzhm0f1lPjI02nVF6BuhHBEjX
+	7rB8EZnnvOKU2U/kGJMaFio6rcx2n5msSz/h/PahKpAOEVBqmfjIfdbOQ/xwwAptGTsDhxntNtd
+	Z+D/2/8K7A5dYypR2LeQ5BgCoDdZwRN1fyoBAZQc0ScjeGmTBeiZSbyA==
+X-Google-Smtp-Source: AGHT+IFSeOGA2alvM6QeKWz4GkE6DGO1ZrCPg1gcKCQ11FxwYR0XiZJAS4I8ijlIiqbfKsOobnAycg3lAGA3S6FUZm0=
+X-Received: by 2002:a05:6122:889:b0:520:4996:7cf2 with SMTP id
+ 71dfb90a1353d-527c35f89c5mr7652543e0c.10.1744626125325; Mon, 14 Apr 2025
+ 03:22:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 1/7] soc: amlogic: clk-measure: Define MSR_CLK's
- register offset separately
-To: chuan.liu@amlogic.com, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250414-clk-measure-v2-0-65077690053a@amlogic.com>
- <20250414-clk-measure-v2-1-65077690053a@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250414-clk-measure-v2-1-65077690053a@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 11:21:39 +0100
+X-Gm-Features: ATxdqUFuOQmoL7ZTIiCRaOJodzbfgENtFmE4ZyvW6KnP_pB8NrLn_eb62g4E32I
+Message-ID: <CA+V-a8s0RbgEB2kHDtv35jOtSNw2ThMB_GEgX1SLdOdiRtiPfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] soc: renesas: sysc: Add SoC identification for
+ RZ/V2N SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 14/04/2025 12:12, Chuan Liu via B4 Relay wrote:
-> From: Chuan Liu <chuan.liu@amlogic.com>
-> 
-> Since the MSR_CLK register offset differs between chip variants, we
-> replace the macro-based definition with chip-specific assignments.
-> 
-> Change the max_register in regmap_config to be retrieved from DTS.
-> 
-> Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
-> ---
->   drivers/soc/amlogic/meson-clk-measure.c | 54 ++++++++++++++++++++++++---------
->   1 file changed, 39 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-> index 39638d6a593c..82c008ade894 100644
-> --- a/drivers/soc/amlogic/meson-clk-measure.c
-> +++ b/drivers/soc/amlogic/meson-clk-measure.c
-> @@ -14,11 +14,6 @@
->   
->   static DEFINE_MUTEX(measure_lock);
->   
-> -#define MSR_CLK_DUTY		0x0
-> -#define MSR_CLK_REG0		0x4
-> -#define MSR_CLK_REG1		0x8
-> -#define MSR_CLK_REG2		0xc
-> -
->   #define MSR_DURATION		GENMASK(15, 0)
->   #define MSR_ENABLE		BIT(16)
->   #define MSR_CONT		BIT(17) /* continuous measurement */
-> @@ -39,9 +34,17 @@ struct meson_msr_id {
->   	const char *name;
->   };
->   
-> +struct msr_reg_offset {
-> +	unsigned int duty_val;
-> +	unsigned int freq_ctrl;
-> +	unsigned int duty_ctrl;
-> +	unsigned int freq_val;
-> +};
-> +
->   struct meson_msr_data {
->   	struct meson_msr_id *msr_table;
->   	unsigned int msr_count;
-> +	struct msr_reg_offset *reg;
+Hi Geert,
 
-const truct msr_reg_offset *reg;
+Thank you for the review.
 
->   };
->   
->   struct meson_msr {
-> @@ -495,6 +498,7 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
->   			    unsigned int duration)
->   {
->   	struct meson_msr *priv = clk_msr_id->priv;
-> +	struct msr_reg_offset *reg = priv->data.reg;
->   	unsigned int val;
->   	int ret;
->   
-> @@ -502,22 +506,22 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
->   	if (ret)
->   		return ret;
->   
-> -	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
-> +	regmap_write(priv->regmap, reg->freq_ctrl, 0);
->   
->   	/* Set measurement duration */
-> -	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_DURATION,
-> +	regmap_update_bits(priv->regmap, reg->freq_ctrl, MSR_DURATION,
->   			   FIELD_PREP(MSR_DURATION, duration - 1));
->   
->   	/* Set ID */
-> -	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_CLK_SRC,
-> +	regmap_update_bits(priv->regmap, reg->freq_ctrl, MSR_CLK_SRC,
->   			   FIELD_PREP(MSR_CLK_SRC, clk_msr_id->id));
->   
->   	/* Enable & Start */
-> -	regmap_update_bits(priv->regmap, MSR_CLK_REG0,
-> +	regmap_update_bits(priv->regmap, reg->freq_ctrl,
->   			   MSR_RUN | MSR_ENABLE,
->   			   MSR_RUN | MSR_ENABLE);
->   
-> -	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
-> +	ret = regmap_read_poll_timeout(priv->regmap, reg->freq_ctrl,
->   				       val, !(val & MSR_BUSY), 10, 10000);
->   	if (ret) {
->   		mutex_unlock(&measure_lock);
-> @@ -525,10 +529,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
->   	}
->   
->   	/* Disable */
-> -	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
-> +	regmap_update_bits(priv->regmap, reg->freq_ctrl, MSR_ENABLE, 0);
->   
->   	/* Get the value in multiple of gate time counts */
-> -	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
-> +	regmap_read(priv->regmap, reg->freq_val, &val);
->   
->   	mutex_unlock(&measure_lock);
->   
-> @@ -599,11 +603,10 @@ static int clk_msr_summary_show(struct seq_file *s, void *data)
->   }
->   DEFINE_SHOW_ATTRIBUTE(clk_msr_summary);
->   
-> -static const struct regmap_config meson_clk_msr_regmap_config = {
-> +static struct regmap_config meson_clk_msr_regmap_config = {
->   	.reg_bits = 32,
->   	.val_bits = 32,
->   	.reg_stride = 4,
-> -	.max_register = MSR_CLK_REG2,
->   };
->   
->   static int meson_msr_probe(struct platform_device *pdev)
-> @@ -611,6 +614,7 @@ static int meson_msr_probe(struct platform_device *pdev)
->   	const struct meson_msr_data *match_data;
->   	struct meson_msr *priv;
->   	struct dentry *root, *clks;
-> +	struct resource *res;
->   	void __iomem *base;
->   	int i;
->   
-> @@ -636,15 +640,23 @@ static int meson_msr_probe(struct platform_device *pdev)
->   	       match_data->msr_count * sizeof(struct meson_msr_id));
->   	priv->data.msr_count = match_data->msr_count;
->   
-> -	base = devm_platform_ioremap_resource(pdev, 0);
-> +	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
->   	if (IS_ERR(base))
->   		return PTR_ERR(base);
->   
-> +	meson_clk_msr_regmap_config.max_register = resource_size(res) - 4;
->   	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
->   					     &meson_clk_msr_regmap_config);
->   	if (IS_ERR(priv->regmap))
->   		return PTR_ERR(priv->regmap);
->   
-> +	priv->data.reg = devm_kzalloc(&pdev->dev, sizeof(struct msr_reg_offset),
-> +				      GFP_KERNEL);
-> +	if (!priv->data.reg)
-> +		return -ENOMEM;
-> +
-> +	memcpy(priv->data.reg, match_data->reg, sizeof(struct msr_reg_offset));
-> +
->   	root = debugfs_create_dir("meson-clk-msr", NULL);
->   	clks = debugfs_create_dir("clks", root);
->   
-> @@ -664,29 +676,41 @@ static int meson_msr_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> +struct msr_reg_offset msr_reg_offset = {
-> +	.duty_val = 0x0,
-> +	.freq_ctrl = 0x4,
-> +	.duty_ctrl = 0x8,
-> +	.freq_val = 0xc,
-> +};
+On Thu, Apr 10, 2025 at 10:28=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add SoC identification for the RZ/V2N SoC using the System Controller
+> > (SYS) block.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/drivers/soc/renesas/r9a09g056-sys.c
+> > @@ -0,0 +1,107 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * RZ/V2N System controller (SYS) driver
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bits.h>
+> > +#include <linux/device.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/string.h>
+> > +
+> > +#include "rz-sysc.h"
+> > +
+> > +/* Register Offsets */
+> > +#define SYS_LSI_MODE           0x300
+> > +#define SYS_LSI_MODE_SEC_EN    BIT(16)
+> > +/*
+> > + * BOOTPLLCA[1:0]
+> > + *         [0,0] =3D> 1.1GHZ
+> > + *         [0,1] =3D> 1.5GHZ
+> > + *         [1,0] =3D> 1.6GHZ
+> > + *         [1,1] =3D> 1.7GHZ
+> > + */
+> > +#define SYS_LSI_MODE_STAT_BOOTPLLCA55  GENMASK(12, 11)
+> > +#define SYS_LSI_MODE_CA55_1_7GHZ       0x3
+> > +
+> > +#define SYS_LSI_PRR                    0x308
+> > +#define SYS_LSI_PRR_GPU_DIS            BIT(0)
+> > +#define SYS_LSI_PRR_ISP_DIS            BIT(4)
+> > +
+> > +#define SYS_RZV2N_FEATURE_G31          BIT(0)
+> > +#define SYS_RZV2N_FEATURE_C55          BIT(1)
+> > +#define SYS_RZV2N_FEATURE_SEC          BIT(2)
+> > +
+> > +static void rzv2n_sys_print_id(struct device *dev,
+> > +                              void __iomem *sysc_base,
+> > +                              struct soc_device_attribute *soc_dev_att=
+r)
+> > +{
+> > +       unsigned int part_number;
+> > +       char features[75] =3D "";
+> > +       u32 prr_val, mode_val;
+> > +       u8 feature_flags;
+> > +
+> > +       prr_val =3D readl(sysc_base + SYS_LSI_PRR);
+> > +       mode_val =3D readl(sysc_base + SYS_LSI_MODE);
+> > +
+> > +       /* Check GPU, ISP and Cryptographic configuration */
+> > +       feature_flags =3D !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_=
+FEATURE_G31 : 0;
+> > +       feature_flags |=3D !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N=
+_FEATURE_C55 : 0;
+> > +       feature_flags |=3D (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N=
+_FEATURE_SEC : 0;
+> > +
+> > +       part_number =3D 41;
+> > +       if (feature_flags & SYS_RZV2N_FEATURE_G31)
+> > +               part_number++;
+> > +       if (feature_flags & SYS_RZV2N_FEATURE_C55)
+> > +               part_number +=3D 2;
+> > +       if (feature_flags & SYS_RZV2N_FEATURE_SEC)
+> > +               part_number +=3D 4;
+>
+> The above construct can be simplified to
+>
+>     part_number =3D 41 + feature_flags;
+>
+Agreed.
 
-This should be static const
+> > +       if (feature_flags) {
+> > +               unsigned int features_len =3D sizeof(features);
+> > +
+> > +               strscpy(features, "with ");
+> > +               if (feature_flags & SYS_RZV2N_FEATURE_G31)
+> > +                       strlcat(features, "GE3D (Mali-G31)", features_l=
+en);
+> > +
+> > +               if (feature_flags =3D=3D (SYS_RZV2N_FEATURE_G31 |
+> > +                                     SYS_RZV2N_FEATURE_C55 |
+> > +                                     SYS_RZV2N_FEATURE_SEC))
+> > +                       strlcat(features, ", ", features_len);
+> > +               else if ((feature_flags & SYS_RZV2N_FEATURE_G31) &&
+> > +                        (feature_flags & (SYS_RZV2N_FEATURE_C55 | SYS_=
+RZV2N_FEATURE_SEC)))
+> > +                       strlcat(features, " and ", features_len);
+> > +
+> > +               if (feature_flags & SYS_RZV2N_FEATURE_SEC)
+> > +                       strlcat(features, "Cryptographic engine", featu=
+res_len);
+> > +
+> > +               if ((feature_flags & SYS_RZV2N_FEATURE_SEC) &&
+> > +                   (feature_flags & SYS_RZV2N_FEATURE_C55))
+> > +                       strlcat(features, " and ", features_len);
+> > +
+> > +               if (feature_flags & SYS_RZV2N_FEATURE_C55)
+> > +                       strlcat(features, "ISP (Mali-C55)", features_le=
+n);
+> > +       }
+>
+> The above looks overly complicated to me.  What about handling it
+> like on RZ/V2H?  I agree having 3x "with" doesn't look nice, but you
+> could just drop all "with"s.
+>
+Ok, I will switch like below:
 
-> +
->   static const struct meson_msr_data clk_msr_gx_data = {
->   	.msr_table = (void *)clk_msr_gx,
->   	.msr_count = ARRAY_SIZE(clk_msr_gx),
-> +	.reg = &msr_reg_offset,
->   };
->   
->   static const struct meson_msr_data clk_msr_m8_data = {
->   	.msr_table = (void *)clk_msr_m8,
->   	.msr_count = ARRAY_SIZE(clk_msr_m8),
-> +	.reg = &msr_reg_offset,
->   };
->   
->   static const struct meson_msr_data clk_msr_axg_data = {
->   	.msr_table = (void *)clk_msr_axg,
->   	.msr_count = ARRAY_SIZE(clk_msr_axg),
-> +	.reg = &msr_reg_offset,
->   };
->   
->   static const struct meson_msr_data clk_msr_g12a_data = {
->   	.msr_table = (void *)clk_msr_g12a,
->   	.msr_count = ARRAY_SIZE(clk_msr_g12a),
-> +	.reg = &msr_reg_offset,
->   };
->   
->   static const struct meson_msr_data clk_msr_sm1_data = {
->   	.msr_table = (void *)clk_msr_sm1,
->   	.msr_count = ARRAY_SIZE(clk_msr_sm1),
-> +	.reg = &msr_reg_offset,
->   };
->   
->   static const struct of_device_id meson_msr_match_table[] = {
-> 
+part_number =3D 41 + feature_flags;
 
-With this fixed:
+dev_info(dev, "Detected Renesas %s %sn%d Rev %s%s%s%s%s\n",
+soc_dev_attr->family,
+               soc_dev_attr->soc_id, part_number,
+soc_dev_attr->revision, feature_flags ?
+               " with" : "", feature_flags & SYS_RZV2N_FEATURE_G31 ? "
+GE3D (Mali-G31)" : "",
+               feature_flags & SYS_RZV2N_FEATURE_SEC ? " Cryptographic
+engine" : "",
+               feature_flags & SYS_RZV2N_FEATURE_C55 ? " ISP (Mali-C55)" : =
+"");
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Thanks,
-Neil
+> > +       dev_info(dev, "Detected Renesas %s %sn%d Rev %s %s\n", soc_dev_=
+attr->family,
+> > +                soc_dev_attr->soc_id, part_number, soc_dev_attr->revis=
+ion, features);
+>
+> This prints a trailing space if features is empty.
+>
+Agreed.
+
+Cheers,
+Prabhakar
