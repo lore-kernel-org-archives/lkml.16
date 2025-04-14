@@ -1,73 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D50DDDDC
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B04539A;
+	Mon, 14 Apr 2025 17:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744650084; cv=none; b=JLNfz5i2IsB+pFQNxQv94HxpG/rld/kmRmKQMq07FY7gFSq/YyKfn6cDc7ywJSiXtsNYeEf9+ujmPaVZ2eyJVFSzdqzQTt3KaM6kipvnmOWa5SAbHDu2PpxTG7JaUTCQIcRZtAmQyFfIO3HPgDcFBbGEs38F8r9+l6i0uGKD+rg=
+	t=1744650165; cv=none; b=FBRCHYgh8EJvnuLCAMHLhGvmV0pSj9ohVqoIz7zZWk9nSnx/wCcD49X2PsJUbM5KVN20v3c+zjp2eJjb8quDNExj4Qaq1i+ShD9FV8tW7apxge0ROVaGlHhtF3MS6MPz5Mrc9jKoL8i+tEfn4DSW3u0Lmn4e/Hd+R2poWqzfr0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744650084; c=relaxed/simple;
-	bh=y+wfoJzEyVaSAo4G2pKEEmEPsRWprK53Dfe1vl5oZPc=;
+	s=arc-20240116; t=1744650165; c=relaxed/simple;
+	bh=KqFT3PKAxBM7aneYNA4QM0R7Gd1DemUhbyEfOOJZdwc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmvGQMOopnQMn1/iXIE9QmxboQuMAE5VeGygrt9MKIXcUB8M4a5Itdkqc/H/xSy4CXmrN+krI0LNqV46/2WHJ28LCa0pnP/12onFQR48ZSdnRCmPXx1V89VUWHJLTeSX5OTnSfwhD/rHAMGMEgKQwLXPGXOFMdwo1r2hekKjmc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgYJDb8y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ghxVq4wfI9T/VpgrrQGHQ4EcZ6hXTesPpkVkT5G+1EJo1y6TDFT15KIhdF58v0UVv7YA+eKu6o4NP0UfDbl6TFM09v8etH55NAbK8lbB1PXKUZI7jkBzuKVVgJvnHNSk08DB0NyLncxbi4fcHgEQ3obX4jtDcEreSX6OjjxGcm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haXXUUQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgYJDb8y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74C7C4CEE2;
-	Mon, 14 Apr 2025 17:01:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haXXUUQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD4FC4CEEB;
+	Mon, 14 Apr 2025 17:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744650083;
-	bh=y+wfoJzEyVaSAo4G2pKEEmEPsRWprK53Dfe1vl5oZPc=;
+	s=k20201202; t=1744650164;
+	bh=KqFT3PKAxBM7aneYNA4QM0R7Gd1DemUhbyEfOOJZdwc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JgYJDb8yqThenSGTz9My9T1qcprCCkKQbux9yLisueQl9aB7ESNkG9/gjaK0OaLJc
-	 h0Wv8ghvz5+F9Bm+ARKb+Uy5SjCQl6d4ydJ0XtjbeMMWDZcsdBAsu2m0yxfycR08lf
-	 oBLKlUdUkhtJ6ZULWDfUGBxQ47X7ysNVmuOtu6WMl4+6JQCGwBpgujwddn/emKXzNz
-	 tnyzrW7c1oJlcnBb6NRR1oMr8Oruaw7PFK1h1wqjb0gorXiEe3ZWBic/EKHzAqUvvk
-	 774+fmsup7/bGnw2jnPV5jbM5wDSADOcspwFHLLkMOTHBn/2z4DELdHG1Gnou6GkAW
-	 P1uantNrJRbDw==
-Date: Mon, 14 Apr 2025 07:01:22 -1000
-From: Tejun Heo <tj@kernel.org>
-To: yangsonghua <jluyangsonghua@gmail.com>
-Cc: void@manifault.com, arighi@nvidia.com, changwoo@igalia.com,
-	linux-kernel@vger.kernel.org, sched-ext@meta.com,
-	yangsonghua <yangsonghua@lixiang.com>
-Subject: Re: [PATCH v1] sched_ext: Improve cross-compilation support in
- Makefile
-Message-ID: <Z_0_YsO2P4nM7LXM@slm.duckdns.org>
-References: <20250414081436.2574882-1-yangsonghua@lixiang.com>
+	b=haXXUUQ5j7/xdMK6YjwHt6lr9C50Nl/g7bFmEYMZvNiz+gF0wIYn0k0JlsN7AgIIr
+	 4iu+74zlC0pGVbnny4GpZcvFCtRv7UbXiLj/Jktoz55Xw4OI0gFEF9IMr5JRkbS89a
+	 FWUp+fMSf5UkmLfyLJ4Oh8mMhzRX4zRBtIyxizLmg1yK8LXnD6fzQ4a/5VdOID9XcX
+	 dE75rVIJSiBbQRqIjkmlXD+Sz1tODj0aRj329Hqs8wN3tRMUOekPmkiQJuBXhlIRBs
+	 zzEUQdKKdZxKbNiIRzd4lVHI7DTVE6ie+lpUtXY7UaT3cQKWd5+rfYxv5sIPEdod6N
+	 ZZHwk4psw8ppw==
+Date: Mon, 14 Apr 2025 18:02:33 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Andy Gross <agross@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, imx@lists.linux.dev,
+	linux-rockchip@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 03/17] arm64: dts: microchip: sparx5: Fix CPU node
+ "enable-method" property dependencies
+Message-ID: <20250414-fragile-same-9cd06114cd85@spud>
+References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
+ <20250410-dt-cpu-schema-v2-3-63d7dc9ddd0a@kernel.org>
+ <20250411-ebay-exerciser-392c42daf5ba@spud>
+ <CAL_JsqJza-bufzjZ415THyDDQaOfk8F+JRFvFxzNwObG=NKVJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pt+1yttKuNYLWgzQ"
 Content-Disposition: inline
-In-Reply-To: <20250414081436.2574882-1-yangsonghua@lixiang.com>
+In-Reply-To: <CAL_JsqJza-bufzjZ415THyDDQaOfk8F+JRFvFxzNwObG=NKVJQ@mail.gmail.com>
 
-On Mon, Apr 14, 2025 at 04:14:36PM +0800, yangsonghua wrote:
-> Modify the tools/sched_ext/Makefile to better handle cross-compilation
-> environments by:
-> 
-> 1. Fix host tools build directory structure by separating obj/ from output
->    (HOST_BUILD_DIR now points to $(OBJ_DIR)/host/obj)
-> 2. Properly propagate CROSS_COMPILE to libbpf sub-make invocation
-> 3. Add missing $(HOST_BPFOBJ) build rule with proper host toolchain flags
->    (ARCH=, CROSS_COMPILE=, explicit HOSTCC/HOSTLD)
-> 4. Consistently quote $(HOSTCC) in bpftool build rule
-> 5. Change LDFLAGS assignment to += to allow external extensions
-> 
-> The changes ensure proper cross-compilation behavior while maintaining
-> backward compatibility with native builds. Host tools are now correctly
-> built with the host toolchain while target binaries use the cross-toolchain.
-> 
-> Signed-off-by: yangsonghua <yangsonghua@lixiang.com>
 
-Doesn't break native builds at least. I take your words that this improves
-cross-builds. Applied to sched_ext/for-6.16.
+--pt+1yttKuNYLWgzQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On Fri, Apr 11, 2025 at 03:26:50PM -0500, Rob Herring wrote:
+> On Fri, Apr 11, 2025 at 11:22=E2=80=AFAM Conor Dooley <conor@kernel.org> =
+wrote:
+> >
+> > On Thu, Apr 10, 2025 at 10:47:24AM -0500, Rob Herring (Arm) wrote:
+> > > The "spin-table" enable-method requires "cpu-release-addr" property,
+> > > so add a dummy entry. It is assumed the bootloader will fill in the
+> > > correct values.
+> > >
+> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > > Reviewed-by: Daniel Machon <daniel.machon@microchip.com>
+> > > Tested-by: Daniel Machon <daniel.machon@microchip.com>
+> >
+> > This is already applied, guess I forgot to merge it into the branch that
+> > appears in linux next. I'll do that now..
+>=20
+> Sometimes I check next, but in this case I just looked at replies for
+> which there were none. I dislike submitting dts changes because it's a
+> range of AWOL maintainers, only applying around some rcN (so up to 2
+> months later), silently applying, and applied but never in linux-next
+> (until in soc tree).
 
--- 
-tejun
+Let's add "send the b4 ty email" to the list of things that I did not
+do, but thought that I had done.
+
+--pt+1yttKuNYLWgzQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/0/qQAKCRB4tDGHoIJi
+0llIAQCfeSIfGZefusGStXxy21uaJUGlki/H/XzQ1dq4t278oAD9GMv/CXNEj8CG
+oPoSllLdscFoA/5qVRjJh0erPiNF8gA=
+=q+yA
+-----END PGP SIGNATURE-----
+
+--pt+1yttKuNYLWgzQ--
