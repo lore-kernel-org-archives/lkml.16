@@ -1,355 +1,372 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2050.outbound.protection.outlook.com [40.107.104.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C0A28F4
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F8E191F95;
+	Mon, 14 Apr 2025 06:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744610895; cv=fail; b=IvoDVjXxA7Vw1yWnR4Hkx+SNc6LcUdfhwiTSg2pI7X7nseEOr4I3sWGOmo8V4RkYdp/RPDn6qB1Epk25mqojLGrzkr4DythDPcHlIbMkMddoI05Fva26dJ4FcMVJZUH8W4YzrDzNW0UqtLIfqNCbWQAulxBfg5KRz8d4KPtuxLo=
+	t=1744610995; cv=fail; b=GQcX9vcAi+Euqq+JzZGGVUScTpAOfQfvhmPN7c/AocF7zWi2i6rxoi7Ha9D6f0jx7k9C7SgDvbl/q8Rq4llayr5DAMEIpfo56aYTmzb+7A83VKorW/iTZtA814nXIds7GKfVqx/E2+vUs/ULOaXBOSjarmogHWZhW7/K+GzlL6o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744610895; c=relaxed/simple;
-	bh=Z06ggt/wQhSguvD9qeHtQ0H6NUOfmJ6CRslppiKNoYI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ll5JVf0hHMMTRtmdgE9EqPQyi7qjDCvt6PW0wVHk8eNiVx3uDqvxMPwa+kHcHOSEMxdWSxfP5hh+RHpEjBaSBUxTkJBXi2KhWMjaGESk0DAqjBua0Y5lvM0yLm663QVZxTMz8iv9kYuGVw9Hv7wON3ltMCFaaAF3dKPEZn3ZWxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HuwvCD9X; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=oPEXvWHB; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1744610995; c=relaxed/simple;
+	bh=YdhsN156COUWlk9uFSm1pMbi6H3bQi1TYhehQMeANCE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ohCMGJWg1sjg0nCioCS90Dc6419OPansr6wu/cpgP2hILzD8huhN6hcvWVifyTJdIo7GJmKLvVfHRWawxlpt+iV8ANNnpjNHmpwPKdk0ZQ3atAGDeehzXDOsdstBUbtUihn/6KVg8ynCdfGzIgJad+5XgtqwrqciMqraWuHAJBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SdOUyh/J; arc=fail smtp.client-ip=40.107.104.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HuwvCD9X";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="oPEXvWHB"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E3NRmr023153;
-	Mon, 14 Apr 2025 03:46:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=QS9jq8IqfRXva5KezIzWJiDSS2AnC/XV5bo2nTV5Tvo=; b=
-	HuwvCD9XHblyct3eaf5GnHGIMgBvHJaDKfPk0TySlDakwYUlvkzwygOWjAh7tukC
-	8fXULszVaMjq4znh7QdePFkuW1m7Bd3spk7+/1pqbI6kV2RJt/MHKeYy/0T+D37N
-	mQMX5eMQsMuqaaod96LMtCkHtrKK/ejVYk5gEw+jsLgrnyfnUWfRvg62nnv2oKmQ
-	x8cF3VQq1OLNP2UhCVjBicwJCcfw5NWhIwF9sfue3QIK01AN4kCftUYd1ye3n09a
-	mFwV1NBq5YGbwMv/QJGi0nu+GQne7Y4EudIQXJWQGmAderkQ/IZp/Jk0o3e2FerW
-	eJ0spCeDaYrNpT1G0Qo+7g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 460td3r0hw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 03:46:19 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53E3bADw038784;
-	Mon, 14 Apr 2025 03:46:18 GMT
-Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazlp17010002.outbound.protection.outlook.com [40.93.1.2])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d4p6fw5-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 03:46:18 +0000
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SdOUyh/J"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hj8Qw0PP9dUeGa7INdfx19Xwzwiq4ArwfxtSHXSyTT/yNJZjXH4hmxk74ERO/o5tkOiWZSVsB3ci95/kMWRW4oJxDkOmGpBwPB9Yu2YLSSEpOI3aqVJnmpsFDyLGMzRnaRo479fIUCHyPePT7grSo+xiOeOOIia9oyHLxc6ke0afx+ZGNx/jaZrLoR0bAE6Hg3T3L/WPdbsw3Plu1GEds7braFdBSClEFsTB18wkJte9Mli0CnvrVAofC1CWXgxmVbJjc3FSQhSFFzJlF6H6CGUs6BuGNGXGTn/49Q9cvpz9w0+gRk3oEa2F+KE24j8AHkNFXifwpzA9wK5eAao01g==
+ b=XymWrqTHsEGaPNg+TRN8iUgwR0bjFntFTL9u8rq23DpV9blLKIEXgrg2jfk2FDlme8KXPtMINn3uw3afnL05iMQ9Zx6x5dYP8QsuWj/PwnhCdzzI8ApNW53WCvaZgTBl9acrIQOgVN5oa18lqKCotWVV+rRpcZE/B/v6UexpYRGn7JdmotIlnxSTf+0oP5JMU8Hc75yOD4O88uYx8G5qPN8yiS0iQRp39GNXinYf91jkmmHXDyTYE+ODMWAGflS/kBwe8buSyYFaLAkxgchepF/tmp8LdYqsEwmCXgoL1XGvZy+CdXV0BhYzcAQfXv3q6eUr6bAP0hJtROvrMomj1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QS9jq8IqfRXva5KezIzWJiDSS2AnC/XV5bo2nTV5Tvo=;
- b=yCvBjA+Tf2SsZj4vSI1DVb6VfLUi3iKi6hBCeB+2xb5e/5+EhoEzfFx844PK5mlHumx97dFZqdUzjUpLWK3KNopae854nXFGTbgpvG1VDlRnhfPgidlnPseA2lF8UV8smu8xZCwIA9x/8+zjC0P/vpWPEhYxGtEQfLU9tcOMGyFdiUiTMitmE+/21/OttMjOQ/LudKE+cNskjFYZWmtz71BLQ10UwbKoHlbxz9DMRy5DM6V7wxReygxOmAWZqwH+21//WJfxErk1sYt9grAQJ3uk1bkaDptJqRlZ7eYQENPVwRVgZ0j2LkIcXZ1kGWN1iXrlt5k0H0/0jiRS9Wn6yw==
+ bh=xVAg16JVCAiG9MQW0qpPpwc3/MP7bc75m1yF5eeUErA=;
+ b=cZT1slbWvsqiAgJ+qVY/1T+7UBEtPud6KeDUxTZVj8/sdnJ1K3HUNhCPfkSSNb7z7YylRoV7ukNJyp8XP4dx+B2Y1kypy0Xcvo8D4NLPz8mlKDO+8KVe4oY30Ie/86gy1dfQ6ke08wI3ff1kjBW/a5089zdjBkiBiGfvaSgB6XYGqOajiI0+lRxSyV7ubuquVuA2u8GQzXrnXnqTVVbAY0dM7TXxxZbEr3E19nTjZ/MxM/LF7W2KFvfnr3wMgTCfOE1/4j/P0HqfP4redMECQxIi4RBQtCQMH/Sz4hxZr6ZMY44sAOZ4Tfcyt86VVX19krmuMFtk/8xp2OipA1iHKw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QS9jq8IqfRXva5KezIzWJiDSS2AnC/XV5bo2nTV5Tvo=;
- b=oPEXvWHBf7o4U1zznlQSyTnpb1r+Lfqci/Hr18sOaWouCIzLU6UxLHivcSBmtl9kuGhQuV7r689xJWYyK31on3Kt8sFle1FSya+fiJXoZlfFoqpAslZ4HQy825FQKIxg/HvoFnUjdamIeSrSf4uJuRJG9LKg+7ZL+2R7E8RRSwM=
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
- by DS4PPFDB583D803.namprd10.prod.outlook.com (2603:10b6:f:fc00::d50) with
+ bh=xVAg16JVCAiG9MQW0qpPpwc3/MP7bc75m1yF5eeUErA=;
+ b=SdOUyh/JHtr7W7hVpk6tLXHFTuZB1r7kyZvvQfhP0P6+Wad2Jc7eBvFrV0hrWvjxdw2K3efvb2owzIII/tqL59V4olDloccHUSJUuYR7zUvrJDFvVrAQM9M0yZOG6t6Y/XHv78rFijRilUxNlWkCKIwWgtaEvg+0fDlO3ephT1YqHuOa31DNoGefLteFi1bqDCqAf3svVfheWiI17gde7xCTpqW7Ev58SoTJWiZCCxpUZbNYxvA7wXJerD30aS/mM7RJTsiVgLKfK/1Tjp50oqCCHPWWKMtd0+ys63HdqnXHIprsz1yTCipMFw7szGIKXXhJSxj0Bg+spmElc65sAg==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DBAPR04MB7221.eurprd04.prod.outlook.com (2603:10a6:10:1b1::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
- 2025 03:46:15 +0000
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::25a9:32c2:a7b0:de9e]) by CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::25a9:32c2:a7b0:de9e%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 03:46:15 +0000
-From: Ankur Arora <ankur.a.arora@oracle.com>
-To: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-        luto@kernel.org, peterz@infradead.org, paulmck@kernel.org,
-        rostedt@goodmis.org, tglx@linutronix.de, willy@infradead.org,
-        jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
-        ankur.a.arora@oracle.com
-Subject: [PATCH v3 4/4] x86/folio_zero_user: multi-page clearing
-Date: Sun, 13 Apr 2025 20:46:07 -0700
-Message-Id: <20250414034607.762653-5-ankur.a.arora@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20250414034607.762653-1-ankur.a.arora@oracle.com>
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR04CA0340.namprd04.prod.outlook.com
- (2603:10b6:303:8a::15) To CO6PR10MB5409.namprd10.prod.outlook.com
- (2603:10b6:5:357::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
+ 2025 06:09:49 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 06:09:49 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Hiago De Franco <hiagofranco@gmail.com>
+CC: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Ulf Hansson
+	<ulf.hansson@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, Hiago De Franco <hiago.franco@toradex.com>
+Subject: RE: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when Cortex-M4
+ is running and it was started by U-Boot bootaux
+Thread-Topic: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
+ Cortex-M4 is running and it was started by U-Boot bootaux
+Thread-Index: AQHbpWxIyVwHrK1A2UqE7zPASmzQ0LOedbwAgAAHyXCAADO/AIAECmYA
+Date: Mon, 14 Apr 2025 06:09:49 +0000
+Message-ID:
+ <PAXPR04MB8459ED33238AA790252E730988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
+ <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
+ <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
+In-Reply-To: <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|DBAPR04MB7221:EE_
+x-ms-office365-filtering-correlation-id: 5f00f20e-aedf-421d-1612-08dd7b1af6b0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?GS08y8v7Bj0UdXM+YFZgacSaOkA5sDgnlGJqMejUa8p8q8g5Bu88WgfGafZ1?=
+ =?us-ascii?Q?ZL6bVtyG5X3MQsar34vxEALXIOCZNmAgDMVRPmxlKYSDYdeN2QTWHapsWf16?=
+ =?us-ascii?Q?R8CWEFKjV/QnQ0H7QT4+FpeKvbLjsA5TMWP/7eOWp3rp/XYixwUqOxX3RwZZ?=
+ =?us-ascii?Q?TjtFOuZYOZsPT1rlFdc2bFZl6W02DhhTKu+R3/YNn6MSFxRkcfMqpfSNHjZ2?=
+ =?us-ascii?Q?28AilgMDfl27LJFOyRP6dBJElJV9lWdp0SV1UstzCrklv7WVbxsrSVrD2p0S?=
+ =?us-ascii?Q?8MOIZ5M0e03gw13NewoZoQS4/B0GY3zGFS0DpMxJwIkamb2Ip56eqcJpjlaB?=
+ =?us-ascii?Q?AXVttCJyTl6lXxdm0kuHIWlFJKrFJjBUtkvLuBWs3SisK/wEtlqAHQeQj6ZW?=
+ =?us-ascii?Q?v5Gq7AtQH+KH2QI2R5ZDXPYnW5ZNZxA+QfV1WlTP3WR/UJIv4QSYqLllKfkj?=
+ =?us-ascii?Q?nJo9oE/rbn4obqcmsF3DAC0yBwP4xqPnGQpE+FPqiNhdDx76gxSzau76jk28?=
+ =?us-ascii?Q?82pArh+qi6bkXElHUOZLTBgBGaBuHIzzJr9t5GUlu9UYUuFV3gS+ASrPTZla?=
+ =?us-ascii?Q?muYpJQEQulDT1FUOaszMt0UshDEKt+IDFxjTFr9IpeOHuEL31uV5MWw3DEJf?=
+ =?us-ascii?Q?qBLt1stkEyoOXaV4eJrDT8gRZRqbi7TSiU9SmcMzCzldicwEQ/zgU9YdgqCI?=
+ =?us-ascii?Q?lcL1Xl2uQP43yZoE3uTQZV71kzv/1gPj1unSOwXomQN3N/H8fyGL62kyo5cM?=
+ =?us-ascii?Q?lHcA0G8dNNRk948yjAb0apKR5q4BBMuVjtHvfTJsG2a9fhbco63Yh2479Ton?=
+ =?us-ascii?Q?pEoXGr6rpGJxQXE9EoTSF96XA6R/jtniDCA8ipu/5U78lPjP1DPwzymbqNpv?=
+ =?us-ascii?Q?zgiDjNZdy1M7iFAN2YVYyJ8w0evCUVBi92FetWiWczSVgr8k0F5iQBW3LWnx?=
+ =?us-ascii?Q?jv5uMYs2pPX6n/HAG/nNOP7pGAcOxLOpgRc+YGQSA/YP3TjoeBENhzpyOkaw?=
+ =?us-ascii?Q?3dUwROFtHzw810cyG1JkllrqlPt91kgUneJ4S0UoaqZL5FUF56H/twXS3uar?=
+ =?us-ascii?Q?SMUh58PraJGyWnN4CqNgcGIP+SLVEeUSwEPEmQU1Wxelzsa2aTC6i81u3Hxv?=
+ =?us-ascii?Q?N6kZMmJWX+gV/tG2qZ8F1mN8rcI85fG0b5cfL8f85tSt74oIahicAC1o+C/3?=
+ =?us-ascii?Q?ExIJ+2nC7pQq0YqJTgZ2uT0Y0dwJ9UKO7zjmMm10Vhpjggn1U64ZdWctKsio?=
+ =?us-ascii?Q?C/OqnU9py5DFecIUWJwbl48TYO9ECEvGSYeAYRsz5wDFjiipPRnK1dAKcYdM?=
+ =?us-ascii?Q?z6kZ7MgGTC3cz/WPLn7zqLxtKpKAqCQUH/CUuNQHS7DUOJuQi8668e6jvp9m?=
+ =?us-ascii?Q?x8i/qa6Q4zdxFckfogezEk0Df6iteyrYD+23c2exkzjXfCYi3IzMd7esA200?=
+ =?us-ascii?Q?bsw+JgiGO4OQd/71X6BJ5SYOZs8vfbH6yhKmUePPfLoFzZ6cHxq7zw=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?f/CQh87NgFmyD4RNKR5C5yawiDxo9uNGpbkRlEcESP66JGZk0/bQNsrUDy0x?=
+ =?us-ascii?Q?lvURllKdvMBdJBxFa39zjA1prJ1WlbGGK4HmXuZYLEvlRxnMlOuXAL71pR4Q?=
+ =?us-ascii?Q?trNDYfpERXgoKqPJ56ae+nlf39/rsPOenJLUJD0iGQk3i9nijeYmNN/IU3tk?=
+ =?us-ascii?Q?nx4OOguA5BVkLSMgmCe6ctUClK58m5LabfMP/rjccEkg6/D1CcfoYHOw2EUP?=
+ =?us-ascii?Q?0546JWZ/OnX9O9DzQ9HXv9nQacwiWkI6Q8Pw5mK3rO4YSVcs1UJJMnoZnZUe?=
+ =?us-ascii?Q?TSYrNC9zioFdiGWAaVKEIHe4YytVlHOUQ9J+nVwygoOgiehKE/oax3uwv61p?=
+ =?us-ascii?Q?XP/rPMkWgwEGRVipNwb4v+UGyYnybtypghuQ5KowS80YIY0fye+cpWATDB5H?=
+ =?us-ascii?Q?olqMUahJHoBGN53hqZQ8QC5/YejENqTlMIlJB7iuLSQ6yNo1s08F7w0mfESo?=
+ =?us-ascii?Q?szFV2wBzUn6AgdkZHPqDNpC6woRotf0AdtUIH5Nl1adXKBH+D3pHfErVuUEB?=
+ =?us-ascii?Q?0zrvsDTtowwCLM6Wrunr9Z+ck+/tqV7XBsUYg31cZt2GbEI+BnnAsFzwu31d?=
+ =?us-ascii?Q?2HeeIVVWquWfRuMMYiZy4ZaVdIoSpSl3LR0LUMbAZfqRoqDIBDaM5pEZ2ZrI?=
+ =?us-ascii?Q?b2hyr7n3V6KFAAPwU4+S9NFel0BXxudKYzwwMdw7MzKjxmUVLhxiLGkBQe8m?=
+ =?us-ascii?Q?sgI9dugMIg5ojmZg5vsCbsxtx924HF+TEoHDKAYmpz4mu2XO4Krtvyv0vK5+?=
+ =?us-ascii?Q?C/7Fog9Kbj2tZNQGBHtr9BhT9HOlJLk7EudIcwtNsFBJ5gY6G61xm2GsAUhG?=
+ =?us-ascii?Q?ovO5CS9a1gD2ZNHP8IFQoi2CELqliX58ZljFqDhrnCnAAOv1E9B/xdkzy8s+?=
+ =?us-ascii?Q?tH8dafQLz/k+Etq/IkNe4PpWMAxQWwd0zuEgpyet72FpfxGK687C96veoEXS?=
+ =?us-ascii?Q?OmgV7+AmBFMsk4lrEVSiNjpvLg4zDc533/0/wp0/tS2qvFH/4rFAQs0Ggvuf?=
+ =?us-ascii?Q?n3SagwI7srAwFaY6ebn2gaseX4NAOizVANpJfYpdFEXisc7OuHcetVL6fV2L?=
+ =?us-ascii?Q?cJNnUZP2j1uf2wfbhMaxPwamdKoweorwDJJHDdA3ziYShnvRT4ww+LzqihSd?=
+ =?us-ascii?Q?gh5CZWFRiojU6Y75+E9Fs5vX78knhOkZY96fjW0bWTEgk3txTaG5lHDuup8i?=
+ =?us-ascii?Q?qPR4o4ErRycV7apfNRCfnvk3wXQgBdqVIXsd23K0Z3X3Pw9R6KnU+nkIJWhE?=
+ =?us-ascii?Q?ouHLIanIHsJ4mlA1pbRjy3NrIErROsQhGdJLl44LjTV18RSGqlEiSeKkDm80?=
+ =?us-ascii?Q?54uo/3NZVPl3NbQ6AUTVpxgLFQgT7fRGzhsMDXT6HhiyxBJNyOdL4m/GJOpQ?=
+ =?us-ascii?Q?CjcldavTgd/qLT2IawW9pyevSZxIKov91DmqUTOgQMUINXwV3pFkDG3yD2EN?=
+ =?us-ascii?Q?XnjX1/Rao3wD6SMeOuiKtcxNA1uUB1adq0fvO0adngp7fVHiThzHUVliVoEU?=
+ =?us-ascii?Q?K8NctyEe30U5cmrC9B04hmHpaDLOFD7t1/OLmCoc4hAk9Dz9NsrrxDMDjFaU?=
+ =?us-ascii?Q?sawUbO2t86e9VRQPUaY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|DS4PPFDB583D803:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7f12fac-2d80-43c8-e642-08dd7b06e878
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YP2SOdURxkuTdWp1K0h/3iuOT1h+7RjbPvBMeHVnh8hVO+OEU0tbdSUtDXnn?=
- =?us-ascii?Q?qmrsFq1qFdwsCH11mabru5+ui21Cr+CmIUGJ79mPacX9Rw5EfMrOQ5NDsKCU?=
- =?us-ascii?Q?nvp0jpueAxdUHKEFUaWlw6DdimqkPUqln/8J1OriJeCFZb9IbPhBaYt5RkiN?=
- =?us-ascii?Q?UKG5gzmhcNwKVsV12KF4HRTbglMpSGOW0xNj+Yr4z1s6MqZBPrsph5om0wC8?=
- =?us-ascii?Q?Sy4lYIqhrQPV1MhlQg4d3JViy/Zd0T6aHybB26l9CP1HH5VA+uWuS8EOGwrL?=
- =?us-ascii?Q?MFjJNDtMEaHMYGUyjseQu3lvcDjSquaeRBjU9THPE/m3APIU2kdIJvo1x7HW?=
- =?us-ascii?Q?FpGXiUn4aIoou7iXs3cJrTltgTYuwtcjjA9U5Y3qXGncc5qzoDl3Ys0A6YKr?=
- =?us-ascii?Q?7nteko3KQVgQyXbJ2tYjWMnubbwAFSTQOwXAAS1/+e2lNb0kIOvNjk051klF?=
- =?us-ascii?Q?znnSTUjgOc2yjqYvxHTsv+RvwaQqcZLmGmyJZoiKHxJNjnNjTUT5xRf0S4CN?=
- =?us-ascii?Q?tec17SpiP9tqDxPAacgTLuFSjldKxlQpK/jcVspoYnExzc1Armyr9xmcHZ8m?=
- =?us-ascii?Q?POIPaaEw4jTcq6PVGlrYvOtO8+1zme9vqhITNgk4xjhaGMSTeg8ZS3AXq3ao?=
- =?us-ascii?Q?KdqunEzwobNVi7k3229uvCQbo55tlII/f+HaE5hNEouI06+0MwB9msnR5PIA?=
- =?us-ascii?Q?IPA22tvV4oZx8lIDQVi8XczYXRi5Xnz0IynahBVusiyZCkS1U4OLbA4c/b3k?=
- =?us-ascii?Q?xlz8UhbVif0lLWmm9PfAxa08qQAN72NQJjWz0EGvdQdman4e7sq9v9QkDWjw?=
- =?us-ascii?Q?5zEViwvw6Cggs7j1icO2Ll3SfeWLufa/ExBx9Xirhj3WDflBnOQ0/WD2jsCJ?=
- =?us-ascii?Q?HQXSvISlDV1MHRn/0p5yLYbEquS9x4yWPZrUORmitYwkDyauQlJHT0cyzrfi?=
- =?us-ascii?Q?Gni9A8nBTW7Hz8P4hrs99Ve7i4aKydhR11hBa6FvYoUxF4X2aknecbIdE7To?=
- =?us-ascii?Q?6jbj5ufQ6yahCcrMhbf09K9QJ6Jyb56rUywIH5lLuNYT/ydu2NZHIexGWDsw?=
- =?us-ascii?Q?1kISc4f7lRMb0EMTMeCz9Du+hXxSI4iblUo2YMfQR9Gh8vgYGjJDvRunA1ok?=
- =?us-ascii?Q?KJaJ46Dy7euaCs9oMzh9iw4j0brcjayQXp/PG+/ZKSIewPV96oE9xVwFwu27?=
- =?us-ascii?Q?eq81PGkfjfWirnx+3PNvFUHVhCs6kEuE+yEZJUx56502Rdef5U/8T0hRy+g9?=
- =?us-ascii?Q?7U3LU49Zg9ZnEEZP/HhVc8BmlpQbtOBEoh7eQGFs8bBZKaQ6RoweQF4IZcdK?=
- =?us-ascii?Q?TFU7jWH1HjtKztqd3xma2Grguk9NRPO4CbPi0neDYzz1U+iXtyRdQCblFua/?=
- =?us-ascii?Q?tvu/hqdBzaRda/4gI7JRQcanZxNKPhKyzDR6s9NoPaeh4r+zu3x+SJjAtQVa?=
- =?us-ascii?Q?9HqVIJwcelM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3/OkO2bHFRYajEHPHwI+KReLd85ayYYWDZwrGME4TGNwZVP0diVs+ZngEzbS?=
- =?us-ascii?Q?h+ee//yU+3BftitsHDkm5scT+TjXXSmo+bwzt3WypDrudLhqumx8HuhlYoem?=
- =?us-ascii?Q?dUchB/YEsDpxxrX2CIb/krOnI7LeqQRY16Rm4yccjfDapmY5aPhKLG9yToWb?=
- =?us-ascii?Q?4B+Qb2Yy2PkxbblzVav+3Sc9XqTzDwoH28etfZ8/wpuXQ2oofkYtwvzYnjnJ?=
- =?us-ascii?Q?9TLlf4OqieoN+Od7aoAZoVw+g0ogk7S3wC0iad1UJqMzDGsTf/I5cbBHmpR0?=
- =?us-ascii?Q?TA5zbrdMqBBfkqxpojqPaE/pKooLbSnZia06aiSZgwu8MUmTG5pR6fzwINfK?=
- =?us-ascii?Q?Uzdjy7ElFQ3tOxu5wG9uVTAouR3Iqqs23XBKxYnBLwHa4w4Yrv4QwiayMQ4Z?=
- =?us-ascii?Q?synB7RH9x8bvoD4vJY/ADj84aEeMGm1ajW2ywqt3bOSYtiJZzGk2H7pXYa3I?=
- =?us-ascii?Q?lnZ3EC/vXrm9HZLZBQCyGgz2kOm8uREddqTLeST0/XS8xiaS+c3qODc1Acz5?=
- =?us-ascii?Q?rlKMAms3mRHt/P1uWvGnQAOnPWsmL0xIL2v/1BOId9TCDOR5liiajhV8O1J8?=
- =?us-ascii?Q?ZgOMUDaxNnA3Hgcv9sFOg4OmzvlPXg16P8QeNECQv6wyBNMhLf/gr5Lu7wSw?=
- =?us-ascii?Q?J7TeiaNlLnxzicbCvchJpiUUu1/BTW+dnhjIi6LJyyYwBpQjX78PWD5n4b6r?=
- =?us-ascii?Q?u6Jr10yepRFM3wn0/Tl0K3xSshOHtW7RVfDEcB7R/gyj8p6teHkhVmWHrgr6?=
- =?us-ascii?Q?pW8OW5NWb3S/ciNr4qmRoj/W+C+vUx+OuMZ4rBdqCML3k/FxXSdyNmD4cENr?=
- =?us-ascii?Q?Sn/7yCuDItXpFZpOTXkyM5OLd/PyEJSNXJLuUdUsamXpbbq6AHAD81qzIny5?=
- =?us-ascii?Q?8g7aQitPYshIhJDfYwice3hom/4r3C1HJz/IvTLY7ZwYVoqSfODUn1T8QL83?=
- =?us-ascii?Q?AEHlzxxoJoHcGf+tmjCXm+rD/BLmH+y+7mJMMyFxJMMYIQQ0xmYGf7j6GGpa?=
- =?us-ascii?Q?w8Rw6BZjZUc6EZ2tzcdf9I0zoeiKW2wzMcjWbvAIbM4qiscOBH5x8eBhHfow?=
- =?us-ascii?Q?tPhH3ani3Fpe5s8zOVLuwdrMZZANfmw7OrHwPKE5TRNVOkOT807RPXBL7zSq?=
- =?us-ascii?Q?2nPMaH9aHdLMRaD2b75AeW6L1qql3EgX9wNir4vItxlserLovbkRZpS9g8xI?=
- =?us-ascii?Q?fzlcMDpH2XUfWYzibRSjMDJkVhWMHVMd5GtHB0RFFbmmRMSCJWaXrv+XeeIP?=
- =?us-ascii?Q?VyQyuupMhCrjutSzjmQRi0hgCchcy+KGhzcAEr+undoGge8U4h1759xFAHaQ?=
- =?us-ascii?Q?ICDZKFf4lz27CLbrm7rWeZrZRUZXmFZMszOt7Bg8D6Ke7NCMxYl1Nm/n9Cxw?=
- =?us-ascii?Q?2ConhBkS107vpkTvwzA55nfOj2oZXtTQMykDRon8X5xEUh2U3R27BBWyNv8q?=
- =?us-ascii?Q?6tJtcFTp8Kd5j+BkBW9pTQMmJI8KUchZ5OXOywut7mKUOipBTA8Qg3tcutnf?=
- =?us-ascii?Q?uWtaw0kAdE7B41cjvGrgCzE+SY2CTMp1lGpRJLMGsLa9uriYP94S6+OkgwQ+?=
- =?us-ascii?Q?qAX8uJ1o32bc1AgbjJTzQrai1OmUNW2y7D4RznESvQlLL8WK8DADO/rBynKr?=
- =?us-ascii?Q?MA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	P5di3D2gqRr7aE8lBMVuoV+774d4vN4tw8XZUTXniuuPDfOdAP5xd897/+7Z+Yp2MLm1054J8+xHPLmVhn8YpayqfTuOYeOi+o7I2D5S4NpKtuoGuxkQKhleFNWXnN7Zzb86TnB0m/Y8R2i0spFWARGk6Nityo3yaoU/4bObEKWxTvPBuPovTm1qcGxi1Ff26pxjV79svpptAzpr3EIhnHxLd+QO+pYHNcCKPQoE6YZQmlKE/1Cm84YCMwV+HZ5EFH/2/uNv9M+U994fZ9RZd/czbRGrgc/Zjwwl4JO/06+0NbDGo2zOUb1cft4IBiMDNi0TsMcf4A1aGDDGhSIjzb8YoMQuGNMFDEBZ1qKS4N0mBFU2Jjw7UWR6H6q7EcRVBhqf3LxasV7MfOo59jiURnDVDLxB3XayXzVvkki9OYccxl6Sm1vBVYPfw4I8SViFAa32ZmS8srJFDJBJ2EeXYTgWEhphyt0NHHq38yaUmDFElkeXV+8c4p3h9+RcZcysymdf7fp4/fI6jfB9lAx6qcs5GJrxcMnC42kYZI8xxh+owZX2KHd5Y4cSy4PRcSqE9JIKgdr59F8vtpnZqY3hwpeIE5HfYMTgJf01JVODa9Q=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7f12fac-2d80-43c8-e642-08dd7b06e878
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:46:15.7971
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f00f20e-aedf-421d-1612-08dd7b1af6b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2025 06:09:49.4370
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ga1Ugbygf2JcPiBZu8+/sQ1s1BlYTsDqt2kOlONXXy7opZj4vr/QBsRSK8qofy1tXEynm+pk1JWCY8bq95ilgRDuLZSgrQGw9cqsOz3KfoA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPFDB583D803
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504140026
-X-Proofpoint-GUID: x2w-Hq3N11mBrFJuEoemsPm3_9WYSaHj
-X-Proofpoint-ORIG-GUID: x2w-Hq3N11mBrFJuEoemsPm3_9WYSaHj
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3teFmPanowaMfJr698OjANhcCST/M/nnH0OyO5KbIfZEUrbxf3c7BBqerVQQ2GAXtQRXjaSy2+qklszAiTmztA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7221
 
-clear_pages_rep(), clear_pages_erms() use string instructions to zero
-memory. When operating on more than a single page, we can use these
-more effectively by explicitly advertising the region-size to the
-processor, which can use that as a hint to optimize the clearing
-(ex. by eliding cacheline allocation.)
+> Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
+> when Cortex-M4 is running and it was started by U-Boot bootaux
+>=20
+> Hi Peng,
+>=20
+> On Fri, Apr 11, 2025 at 01:23:32PM +0000, Peng Fan wrote:
+> > Hi,
+> >
+> > Sorry for late.
+> > > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
+> when
+> > > Cortex-M4 is running and it was started by U-Boot bootaux
+> > >
+> > > On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
+> > > > #regzbot introduced: 4f6c983261
+> > > >
+> > > > Hi Peng and all,
+> > > >
+> > > > Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off
+> > > according
+> > > > to HW state") introduced a regression where the Kernel reboots
+> > > > unexpectedly (without any warnings, crashes or errors) when the
+> > > > Cortex-M4 was loaded and running by U-Boot, using the bootaux
+> > > command:
+> > > >
+> > > > # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin #
+> bootaux
+> > > > ${loadaddr} 0 # boot
+> > > >
+> > > > This is a simple hello world binary that prints a message into the
+> > > > M40.UART0 pin (demo from NXP MCUXpresso).
+> >
+> > Which release is this image from?
+>=20
+> This is MCUXpresso SDK 2.9.0.
+>=20
+> >
+> > > >
+> > > > Before this commit, everything worked as expected, Linux boots
+> > > > fine and the HMP core keeps running and printing messages to
+> the UART.
+> > > > After the commit, the kernel reboots at the beggining of the boot
+> > > > process. The only relevant message is printed by U-Boot after
+> reset:
+> > > >
+> > > > "Reset cause: SCFW fault reset"
+> > > >
+> > > > This commit was bisectabled, the same device tree, u-boot
+> version,
+> > > and
+> > > > SCFW versions were used. Reverting this commit fixes the issues.
+> > > >
+> > > > For testing purposes, I created the following patch which also
+> > > > fixes the
+> > > > issue:
+> > > >
+> > > > diff --git a/drivers/pmdomain/imx/scu-pd.c
+> > > > b/drivers/pmdomain/imx/scu-pd.c index
+> > > 38f3cdd21042..0477b3fb4991
+> > > > 100644
+> > > > --- a/drivers/pmdomain/imx/scu-pd.c
+> > > > +++ b/drivers/pmdomain/imx/scu-pd.c
+> > > > @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device
+> > > *dev, int idx,
+> > > >                 return NULL;
+> > > >         }
+> > > >
+> > > > +       if (strstr("cm40", sc_pd->name) !=3D NULL)
+> > > > +               is_off =3D true;
+> > > > +
+> > > >         ret =3D pm_genpd_init(&sc_pd->pd, NULL, is_off);
+> > > >         if (ret) {
+> > > >                 dev_warn(dev, "failed to init pd %s rsrc id %d",
+> > > >
+> > > >
+> > > > Test Environment:
+> > > > - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
+> > > > - U-Boot Version: 2024.04
+> > > > - U-Boot Build info:
+> > > > 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE
+> > > 4622115c, ATF 7c64d4e
+> > > >
+> > > > The issue is not present on: v6.5
+> > > >
+> > > > The real root cause is still unclear to me. Anybody has any ideas?
+> > > > I am happy to share more details if needed.
+> >
+> > Have you tried pd_ignore_unused?
+> >
+> > I think it is linux power down M4 which M4 is running, then SCFW
+> > reports error. So please give a try pd_ignore_unused.
+>=20
+> For debugging purposes, I tried it and it works, kernel boots fine with
+> M4 running and pd_ignore_unused parameter.
+>=20
+> >
+> > If this is the case, may I know do you have m4 nodes in dts and with
+> > power domain included?
+>=20
+> This is the device tree overlay I am testing:
+>=20
+> /dts-v1/;
+> /plugin/;
+>=20
+> #include <dt-bindings/clock/imx8mm-clock.h>
+> #include <dt-bindings/firmware/imx/rsrc.h>
+>=20
+> / {
+> 	compatible =3D "toradex,colibri-imx8x";
+> };
+>=20
+> &{/} {
+> 	imx8x-cm4 {
+> 		compatible =3D "fsl,imx8qxp-cm4";
+> 		mbox-names =3D "tx", "rx", "rxdb";
+> 		mboxes =3D <&lsio_mu5 0 1
+> 			  &lsio_mu5 1 1
+> 			  &lsio_mu5 3 1>;
+> 		memory-region =3D <&vdevbuffer>, <&vdev0vring0>,
+> <&vdev0vring1>,
+> 				<&vdev1vring0>, <&vdev1vring1>,
+> <&rsc_table>;
+> 		power-domains =3D <&pd IMX_SC_R_M4_0_PID0>,
+> 				<&pd IMX_SC_R_M4_0_MU_1A>;
+> 		fsl,entry-address =3D <0x34fe0000>;
+> 		fsl,resource-id =3D <IMX_SC_R_M4_0_PID0>;
+> 	};
+>=20
+> 	reserved-memory {
+> 		#address-cells =3D <2>;
+> 		#size-cells =3D <2>;
+> 		ranges;
+>=20
+> 		vdev0vring0: memory@90000000 {
+> 			reg =3D <0 0x90000000 0 0x8000>;
+> 			no-map;
+> 		};
+>=20
+> 		vdev0vring1: memory@90008000 {
+> 			reg =3D <0 0x90008000 0 0x8000>;
+> 			no-map;
+> 		};
+>=20
+> 		vdev1vring0: memory@90010000 {
+> 			reg =3D <0 0x90010000 0 0x8000>;
+> 			no-map;
+> 		};
+>=20
+> 		vdev1vring1: memory@90018000 {
+> 			reg =3D <0 0x90018000 0 0x8000>;
+> 			no-map;
+> 		};
+>=20
+> 		rsc_table: memory@900ff000 {
+> 			reg =3D <0 0x900ff000 0 0x1000>;
+> 			no-map;
+> 		};
+>=20
+> 		vdevbuffer: memory@90400000 {
+> 			compatible =3D "shared-dma-pool";
+> 			reg =3D <0 0x90400000 0 0x100000>;
+> 			no-map;
+> 		};
+> 	};
+> };
+>=20
+> &lsio_mu5 {
+> 	status =3D "okay";
+> };
+>=20
+> This was basically copied from
+> arch/arm64/boot/dts/freescale/imx8qxp-mek.dts. Do you see anything
+> wrong? Should I also add the "clocks" property to imx8x-cm4 node?
 
-As a secondary benefit, string instructions are typically microcoded,
-and working with larger regions helps amortize the cost of the decode.
+In your case, m4 is in same scu partition as a53, so m4
+power domain is manageable(owned) by Linux.
 
-When zeroing the 2MB page, maximize spatial locality by clearing in 
-three sections: the faulting page and its immediate neighbourhood, the
-left and the right regions, with the local neighbourhood cleared last.
+However to m4 earlyboot(kicked by bootloader),
+if you not wanna linux to handle m4, use scu_rm
+to create a separate partition in u-boot.
+If you wanna linux to handle m4, but not wanna linux
+to shutdown the pd in kernel boot, imx_rproc.c
+needs to be built in, and need to add a clock entry
+or use clock optional api in imx_rproc.c .
 
-Performance
-==
+Current imx_rproc.c needs a clock entry to probe pass.
 
-Use mmap(MAP_HUGETLB) to demand fault a 64GB region on the local
-NUMA node.
+I think in your case, this driver not probe pass, so the
+M4 pd still get powered off.
 
-Milan (EPYC 7J13, boost=0, preempt=full|lazy):
 
-                 mm/folio_zero_user    x86/folio_zero_user     change
-                  (GB/s  +- stddev)      (GB/s  +- stddev)
+Regards,
+Peng.
 
-  pg-sz=2MB       11.89  +- 0.78%        16.12  +-  0.12%    +  35.5%
-  pg-sz=1GB       16.51  +- 0.54%        42.80  +-  3.48%    + 159.2%
-
-Milan uses a threshold of LLC-size (~32MB) for eliding cacheline
-allocation, so we see a dropoff in cacheline-allocations for pg-sz=1GB.
-
-pg-sz=1GB:
-  -  9,250,034,512      cycles                           #    2.418 GHz                         ( +-  0.43% )  (46.16%)
-  -    544,878,976      instructions                     #    0.06  insn per cycle
-  -  2,331,332,516      L1-dcache-loads                  #  609.471 M/sec                       ( +-  0.03% )  (46.16%)
-  -  1,075,122,960      L1-dcache-load-misses            #   46.12% of all L1-dcache accesses   ( +-  0.01% )  (46.15%)
-
-  +  3,688,681,006      cycles                           #    2.420 GHz                         ( +-  3.48% )  (46.01%)
-  +     10,979,121      instructions                     #    0.00  insn per cycle
-  +     31,829,258      L1-dcache-loads                  #   20.881 M/sec                       ( +-  4.92% )  (46.34%)
-  +     13,677,295      L1-dcache-load-misses            #   42.97% of all L1-dcache accesses   ( +-  6.15% )  (46.32%)
-
-That's not the case with pg-sz=2MB, where we also perform better but
-the number of cacheline allocations remain the same.
-
-It's not entirely clear why the performance for pg-sz=2MB improves. We
-decode fewer instructions and the hardware prefetcher can do a better
-job, but the perf stats for both of those aren't convincing enough to
-the extent of ~30%.
-
-pg-sz=2MB:
-  - 13,110,306,584      cycles                           #    2.418 GHz                         ( +-  0.48% )  (46.13%)
-  -    607,589,360      instructions                     #    0.05  insn per cycle
-  -  2,416,130,434      L1-dcache-loads                  #  445.682 M/sec                       ( +-  0.08% )  (46.19%)
-  -  1,080,187,594      L1-dcache-load-misses            #   44.71% of all L1-dcache accesses   ( +-  0.01% )  (46.18%)
-
-  +  9,624,624,178      cycles                           #    2.418 GHz                         ( +-  0.01% )  (46.13%)
-  +    277,336,691      instructions                     #    0.03  insn per cycle
-  +  2,251,220,599      L1-dcache-loads                  #  565.624 M/sec                       ( +-  0.01% )  (46.20%)
-  +  1,092,386,130      L1-dcache-load-misses            #   48.52% of all L1-dcache accesses   ( +-  0.02% )  (46.19%)
-
-Icelakex (Platinum 8358, no_turbo=1, preempt=full|lazy):
-
-                 mm/folio_zero_user    x86/folio_zero_user     change
-                  (GB/s +- stddev)      (GB/s +- stddev)
-
-  pg-sz=2MB       7.95  +- 0.30%        10.90 +- 0.26%       + 37.10%
-  pg-sz=1GB       8.01  +- 0.24%        11.26 +- 0.48%       + 40.57%
-
-For both page-sizes, Icelakex, behaves similarly to Milan pg-sz=2MB: we
-see a drop in cycles but there's no drop in cacheline allocation.
-
-Performance for preempt=none|voluntary remains unchanged.
-
-Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
----
- arch/x86/mm/Makefile |  1 +
- arch/x86/mm/memory.c | 60 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mm.h   |  1 +
- 3 files changed, 62 insertions(+)
- create mode 100644 arch/x86/mm/memory.c
-
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 32035d5be5a0..e61b4d331cdf 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_MMIOTRACE_TEST)	+= testmmiotrace.o
- obj-$(CONFIG_NUMA)		+= numa.o numa_$(BITS).o
- obj-$(CONFIG_AMD_NUMA)		+= amdtopology.o
- obj-$(CONFIG_ACPI_NUMA)		+= srat.o
-+obj-$(CONFIG_PREEMPTION)	+= memory.o
- 
- obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS)	+= pkeys.o
- obj-$(CONFIG_RANDOMIZE_MEMORY)			+= kaslr.o
-diff --git a/arch/x86/mm/memory.c b/arch/x86/mm/memory.c
-new file mode 100644
-index 000000000000..99851c246fcc
---- /dev/null
-+++ b/arch/x86/mm/memory.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/mm.h>
-+#include <linux/range.h>
-+#include <linux/minmax.h>
-+
-+#ifndef CONFIG_HIGHMEM
-+/*
-+ * folio_zero_user_preemptible(): multi-page clearing variant of folio_zero_user().
-+ *
-+ * Taking inspiration from the common code variant, we split the zeroing in
-+ * three parts: left of the fault, right of the fault, and up to 5 pages
-+ * in the immediate neighbourhood of the target page.
-+ *
-+ * Cleared in that order to keep cache lines of the target region hot.
-+ *
-+ * For gigantic pages, there is no expectation of cache locality so just do a
-+ * straight zero.
-+ */
-+void folio_zero_user_preemptible(struct folio *folio, unsigned long addr_hint)
-+{
-+	unsigned long base_addr = ALIGN_DOWN(addr_hint, folio_size(folio));
-+	const long fault_idx = (addr_hint - base_addr) / PAGE_SIZE;
-+	const struct range pg = DEFINE_RANGE(0, folio_nr_pages(folio) - 1);
-+	int width = 2; /* pages cleared last on either side */
-+	struct range r[3];
-+	int i;
-+
-+	if (folio_nr_pages(folio) > MAX_ORDER_NR_PAGES) {
-+		clear_pages(page_address(folio_page(folio, 0)), folio_nr_pages(folio));
-+		goto out;
-+	}
-+
-+	/*
-+	 * Faulting page and its immediate neighbourhood. Cleared at the end to
-+	 * ensure it sticks around in the cache.
-+	 */
-+	r[2] = DEFINE_RANGE(clamp_t(s64, fault_idx - width, pg.start, pg.end),
-+			    clamp_t(s64, fault_idx + width, pg.start, pg.end));
-+
-+	/* Region to the left of the fault */
-+	r[1] = DEFINE_RANGE(pg.start,
-+			    clamp_t(s64, r[2].start-1, pg.start-1, r[2].start));
-+
-+	/* Region to the right of the fault: always valid for the common fault_idx=0 case. */
-+	r[0] = DEFINE_RANGE(clamp_t(s64, r[2].end+1, r[2].end, pg.end+1),
-+			    pg.end);
-+
-+	for (i = 0; i <= 2; i++) {
-+		int len = range_len(&r[i]);
-+
-+		if (len > 0)
-+			clear_pages(page_address(folio_page(folio, r[i].start)), len);
-+	}
-+
-+out:
-+	/* Explicitly invoke cond_resched() to handle any live patching necessary. */
-+	cond_resched();
-+}
-+
-+#endif /* CONFIG_HIGHMEM */
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b7f13f087954..b57512da8173 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4114,6 +4114,7 @@ enum mf_action_page_type {
- };
- 
- #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_HUGETLBFS)
-+void folio_zero_user_preemptible(struct folio *fio, unsigned long addr_hint);
- void folio_zero_user(struct folio *folio, unsigned long addr_hint);
- int copy_user_large_folio(struct folio *dst, struct folio *src,
- 			  unsigned long addr_hint,
--- 
-2.31.1
-
+>=20
+> >
+> > Anyway, I will give a try on i.MX8QM EVK.
+>=20
+> Great, thanks.
+>=20
+> >
+> > >
+> > > Hello everyone, as this introduced a regression, should I send a
+> > > revert for 4f6c983261?
+> >
+> > Please wait a while, I think we need find root cause.
+> >
+> > Thanks,
+> > Peng.
+> >
+> > Or any ideas that might help fix this issue?
+> > >
+> > > >
+> > > > Cheers,
+> > > > Hiago.
+> > >
+> > > Cheers,
+> > > Hiago.
+>=20
+> Cheers,
+> Hiago.
