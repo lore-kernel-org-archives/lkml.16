@@ -1,62 +1,62 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C45A27A102
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8868127A128
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642864; cv=none; b=qHMgJJ4pI+XAox/58YAngRLnFBAHe0g6GMWgfJJkorAd9u2H+ZWo7/mx8kqC0TAzdOp/rt7e/51BnangngEQDS9uGHUTr+w0l38R5J1EFZRb6dgjnDwM1511UwJIawcZkRsfB2fBFHcD1r94h5FdWClIjDheD20e4r//fgSuuGo=
+	t=1744642868; cv=none; b=Ok5c7w99uN40uiCQ2oZi/BMDxlWGm+RRPS9G5jshu/npu+mFj1gY1t5ZLsFwS1AkMNjiWIkpU5QuE9uYrSP9JCI7YSwpo8kvSlV8dlY7Wbe6fYL12uyQYXm7TPl2a6bnJ13Uu83w0OnA0WaqC56Mg0PzokMHWIDPLpVOr8gjhmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642864; c=relaxed/simple;
-	bh=IipyfSY4OQ0uD8QDotK2r8pQQoJcdHVSy1S1n2S8HnU=;
+	s=arc-20240116; t=1744642868; c=relaxed/simple;
+	bh=iKZ7y//es/7BqMLPkXySAEsHNWoQJ66pKSxkMkdGzx8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OFoQEXfhd3D55VsZZepCqdgwKZHP+eMC0G7l+Y/x1jqQTBNqbbT8PO15h0+kAgS8MxL1m7wJJfeEaQTjEopk3C2jp1bVyqDllHssOyoqifn3C5rQp031dOFRf7eYr/ndVWe/evwehOZGjCHRENwR8nI34UH6ZM5+resMSLf5vdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0jaeHCP; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=QzePJbr7ILC1ZprLktElmkPxcaAwNhI8gtJXK7iZ1saQ50dTBTCc+4S7SDBgPNPcLFpku2zey3+RfIwDwWaaC8nIQ6m/WxmYqOsa9sluNanaIqYoKB7CngAdSROaPmnAjPKLuFT8q50WDcxqPWvbVH6oAJiNY7/dj7vxFT9xinM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vu3vCbql; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0jaeHCP"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22401f4d35aso50313545ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:01:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vu3vCbql"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7376dd56f60so3011161b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:01:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744642861; x=1745247661; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744642866; x=1745247666; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vEhJyyZGr8mPABG1oRg5/ws5Nit95LvsCMKYdCwGE4o=;
-        b=h0jaeHCPyjd5o38ADZlmfCnj7/WV61a4Im3TuaGpL0zqLSgEZPMbD7PDOpdVtFgxNo
-         0FpLPlkekrluZyzQORIm79MuP8BMnUejwDnNS0e+1TsjrTaSGX6yLZeqjA1stZX0lGPo
-         NPYNwL+2xvnfMQspxUbvI8n4GEkohkpveK0jMOkMdyFHPRoY+58nup/arksEelpCwnyr
-         qtTSns72jdc/+lLVn129l9fVcGVrOJ2gziC0a60h3vafTSXpQQjztlcIXfIw4d78ktPB
-         ScPKcmpLszXu3uGPRmXMEMZpN2M79FtisgurgKANfeYCOz8I2h2MJsNrMJ4Gf6XXZUVs
-         Zm6Q==
+        bh=z/oPnzCyp3nNUOf+Gh6zEg1fsjVzRm2EqUu3QrubZZg=;
+        b=Vu3vCbqlJnGyzR/K6x3dA8rLiP/qywtS9xAttPXPEWP9n0jKtXvSK/Vba8hUJn73Xe
+         edZ6M585a7JljSbU1cGtU2jdCUlgpnD+hTi2GzFiG6wJxrCb3X0Ja5LmBaSTrSHzXopx
+         5PfSSGwPtnDwcbxiVYUWZJDF+Gge7JZ4PasyOJw/Nk+NtfzCJxS/8Cd1Sx0CdeDSaaNW
+         ROO6XayPOF+Zhc3hxtt1clNV2MPfvxvxsYgemAh8lcoUBSPSwL4BwGxP25bP+cmmgVgQ
+         Fgsg+NdrdDZQ/a3yEt4Mgl285rSwa5onFvlU+f8T8iryZghYdvTGJSvfGdhgsDr/BPXS
+         +5JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744642861; x=1745247661;
+        d=1e100.net; s=20230601; t=1744642866; x=1745247666;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vEhJyyZGr8mPABG1oRg5/ws5Nit95LvsCMKYdCwGE4o=;
-        b=O7aJCv+MUyCn1m1jRt4Ky0Cfip864mBXzbgtlBf6jW0yjWxzHbYmeJDKT0WmImcd1g
-         Qg4rn3CGVDRpaBQ/5mU7Y+D/oNz31YJIXP8aPSif+NFIfSju4cTlEh4Y3piJxD+bk4KB
-         LXOrwFV3hTV6KPnXDptGcXbgqNibnLivaA1CSf8nUyWC+NuZ8DM+kPlxiPvQFQ9JzWzx
-         JgT3j3onxtTFHhJm1s0jYG0mB4oqyZ0U1DHPvZsy4Q2WquMPnvQOGl+213F+f3XHM5vT
-         pgUFCxzkeCLuFCE/BWt/Z2TWaiRSrpeeRZXGucpClnOp7T0Ber0jO8VTkHOCE6Jfiwfp
-         hmVA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+4KUBp1LSMIi2d69t9bTRuoAPyYfqe0ajuzZf3DxBrf1Mj9H7/aHiFveg1KuTeSwV+kovcXVsuEk0Bmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzawOok1y29nsjRNxVjW8cVU58uUF+7ABXyh5kC2YQYlUY14oXo
-	suFIKKKgAAoNiAqxyD2AKe8CTsomY0N0TIER9LyvUsc4jdokMVKL
-X-Gm-Gg: ASbGncvjqcFyI1APyAKDOEL8UTVIUdGbNWlxt0iUdS0/hxnSVZYM7dIQKJYN13DNcM2
-	ybiqRH79COoxUKURVi4+9WtBlCZsyHvz068Ff/7ntfdtHgEJ1md7UmraBpqUkaEXkSQxwGyG1kR
-	njteLG/ZJzuLRcHHV/NXL8Xjj0fqEvnqviwUypw2yD3y+g89jjUks23my2HedQOm/ZPfIjaqtBf
-	1rrfsLiX3Or3Qu2vpBvxWY+kL6xzdqVwdCFJKEcX675jCfT1Mg8LdL275rJA5NPnFjKkWiP3dn1
-	POhGIiZ/5wP0IMDaPUMbd7PAKVmiOVslqO2PWc1o8YeeGmjC
-X-Google-Smtp-Source: AGHT+IH0swiL9S4oJx33H0R3/3ictOmt6SiSWaB4JnTk1npX56z9D5lv0eA4PQjbdtnkY142Hc6niA==
-X-Received: by 2002:a17:902:c408:b0:224:1220:7f40 with SMTP id d9443c01a7336-22bea495917mr164449305ad.3.1744642860934;
-        Mon, 14 Apr 2025 08:01:00 -0700 (PDT)
+        bh=z/oPnzCyp3nNUOf+Gh6zEg1fsjVzRm2EqUu3QrubZZg=;
+        b=HUSRWPUOIDOq/7BTauoQtDorzxXXM/PlJdXmWk/pIqtAjt+0g+FjgzIs8QGRh7uXn+
+         04YP3BJ5SUZPOoWsaee+d/ZzUIxysq+l7PkydfnvCB4HGToqigQzawsZ6/EQ/CRfgbB0
+         mYU0+XomSDHeWxwxsNvIT5KK0lyZdqswky+pFGXHXQHvJT6PXKe7qoKzipcVRtS/6aw5
+         +pRt0BEl7nWAxhT9atdxVdiGB4aIdHxNXDK/kOtX5A7Rgrqy7sLVIRD7iLlBzUfKox/7
+         7dWvf7In/lwq3XOn7zVGRLKgiI1Hsz8eA3dDVMgDgk2Dup91C3tXn12G+rAKE6CHYcz0
+         dYfg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8Qxb24kMzfORHv2dtiptrZ7NX+9TO8idgG1zm4wSi/OhUncU0bfVqTNtMa/JPVj4sG5+vlvAxaMjsJJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH1/FwPX6MZ8so5O/n9UC35lBmmMg9cGaKoacn/GtoQ6lEE4PN
+	XuBRl1xKm7D8G1ttnLDio0OfQrZyLfdJspgANmwB7U5ex0DjAwfK
+X-Gm-Gg: ASbGncuFSNR+NwrGuUnvdBFRTP9UZeGdgaoK2/lB9WNOaytGqU83rQVE41CH2nogE3n
+	2urb9N3rKnWRdZ3cR4R1coVTenet3ADjppGBrp9813mJR5xH2GOZ28tlBlZIAyGEh5ofdaouS9S
+	idTd4LGyyQ4C40BT4LQLEmBN7XdNzRGk31qYwihjY989Uv4AjNzRh3DMhL1rN8ulNREJTQHA14r
+	7AzDnmXalLmaXlSfZSiogXwjHsbFm8cWZOanXnIq4pWW9OLs49ZYU4/LwGthcKsebFa1haeBnqu
+	1YXl1/bFNlTmqUz0qAD+XkGUdZpYTa4gQekUU+JXZNGR/e1K
+X-Google-Smtp-Source: AGHT+IEzW1IyYBCVn81irD15H9jAjpJZuK4goGvOHmJdb+vI1rHREqMC844qLrMcru+2X6lbQMiLoA==
+X-Received: by 2002:a05:6a00:2188:b0:736:5f75:4a3b with SMTP id d2e1a72fcca58-73bd11e32f1mr14962635b3a.7.1744642865267;
+        Mon, 14 Apr 2025 08:01:05 -0700 (PDT)
 Received: from localhost.localdomain ([43.129.202.66])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21e0b95sm6726329b3a.82.2025.04.14.08.00.56
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21e0b95sm6726329b3a.82.2025.04.14.08.01.01
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 14 Apr 2025 08:01:00 -0700 (PDT)
+        Mon, 14 Apr 2025 08:01:04 -0700 (PDT)
 From: Lance Yang <ioworker0@gmail.com>
 To: akpm@linux-foundation.org
 Cc: will@kernel.org,
@@ -75,11 +75,10 @@ Cc: will@kernel.org,
 	tfiga@chromium.org,
 	amaindex@outlook.com,
 	jstultz@google.com,
-	Lance Yang <ioworker0@gmail.com>,
-	Mingzhe Yang <mingzhe.yang@ly.com>
-Subject: [PATCH v5 2/3] hung_task: show the blocker task if the task is hung on semaphore
-Date: Mon, 14 Apr 2025 22:59:44 +0800
-Message-ID: <20250414145945.84916-3-ioworker0@gmail.com>
+	Lance Yang <ioworker0@gmail.com>
+Subject: [PATCH v5 3/3] samples: extend hung_task detector test with semaphore support
+Date: Mon, 14 Apr 2025 22:59:45 +0800
+Message-ID: <20250414145945.84916-4-ioworker0@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250414145945.84916-1-ioworker0@gmail.com>
 References: <20250414145945.84916-1-ioworker0@gmail.com>
@@ -91,345 +90,244 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Inspired by mutex blocker tracking[1], this patch makes a trade-off to
-balance the overhead and utility of the hung task detector.
+From: Zi Li <amaindex@outlook.com>
 
-Unlike mutexes, semaphores lack explicit ownership tracking, making it
-challenging to identify the root cause of hangs. To address this, we
-introduce a last_holder field to the semaphore structure, which is
-updated when a task successfully calls down() and cleared during up().
+Extend the existing hung_task detector test module to support multiple lock
+types, including mutex and semaphore, with room for future additions (e.g.,
+spinlock, etc.). This module creates dummy files under <debugfs>/hung_task,
+such as 'mutex' and 'semaphore'. The read process on any of these files
+will sleep for enough long time (256 seconds) while holding the respective
+lock. As a result, the second process will wait on the lock for a prolonged
+duration and be detected by the hung_task detector.
 
-The assumption is that if a task is blocked on a semaphore, the holders
-must not have released it. While this does not guarantee that the last
-holder is one of the current blockers, it likely provides a practical hint
-for diagnosing semaphore-related stalls.
+This change unifies the previous mutex-only sample into a single,
+extensible hung_task_tests module, reducing code duplication and improving
+maintainability.
 
-With this change, the hung task detector can now show blocker task's info
-like below:
+Usage is:
 
-[Tue Apr  8 12:19:07 2025] INFO: task cat:945 blocked for more than 120 seconds.
-[Tue Apr  8 12:19:07 2025]       Tainted: G            E      6.14.0-rc6+ #1
-[Tue Apr  8 12:19:07 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[Tue Apr  8 12:19:07 2025] task:cat             state:D stack:0     pid:945   tgid:945   ppid:828    task_flags:0x400000 flags:0x00000000
-[Tue Apr  8 12:19:07 2025] Call Trace:
-[Tue Apr  8 12:19:07 2025]  <TASK>
-[Tue Apr  8 12:19:07 2025]  __schedule+0x491/0xbd0
-[Tue Apr  8 12:19:07 2025]  schedule+0x27/0xf0
-[Tue Apr  8 12:19:07 2025]  schedule_timeout+0xe3/0xf0
-[Tue Apr  8 12:19:07 2025]  ? __folio_mod_stat+0x2a/0x80
-[Tue Apr  8 12:19:07 2025]  ? set_ptes.constprop.0+0x27/0x90
-[Tue Apr  8 12:19:07 2025]  __down_common+0x155/0x280
-[Tue Apr  8 12:19:07 2025]  down+0x53/0x70
-[Tue Apr  8 12:19:07 2025]  read_dummy_semaphore+0x23/0x60
-[Tue Apr  8 12:19:07 2025]  full_proxy_read+0x5f/0xa0
-[Tue Apr  8 12:19:07 2025]  vfs_read+0xbc/0x350
-[Tue Apr  8 12:19:07 2025]  ? __count_memcg_events+0xa5/0x140
-[Tue Apr  8 12:19:07 2025]  ? count_memcg_events.constprop.0+0x1a/0x30
-[Tue Apr  8 12:19:07 2025]  ? handle_mm_fault+0x180/0x260
-[Tue Apr  8 12:19:07 2025]  ksys_read+0x66/0xe0
-[Tue Apr  8 12:19:07 2025]  do_syscall_64+0x51/0x120
-[Tue Apr  8 12:19:07 2025]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[Tue Apr  8 12:19:07 2025] RIP: 0033:0x7f419478f46e
-[Tue Apr  8 12:19:07 2025] RSP: 002b:00007fff1c4d2668 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[Tue Apr  8 12:19:07 2025] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f419478f46e
-[Tue Apr  8 12:19:07 2025] RDX: 0000000000020000 RSI: 00007f4194683000 RDI: 0000000000000003
-[Tue Apr  8 12:19:07 2025] RBP: 00007f4194683000 R08: 00007f4194682010 R09: 0000000000000000
-[Tue Apr  8 12:19:07 2025] R10: fffffffffffffbc5 R11: 0000000000000246 R12: 0000000000000000
-[Tue Apr  8 12:19:07 2025] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
-[Tue Apr  8 12:19:07 2025]  </TASK>
-[Tue Apr  8 12:19:07 2025] INFO: task cat:945 blocked on a semaphore likely last held by task cat:938
-[Tue Apr  8 12:19:07 2025] task:cat             state:S stack:0     pid:938   tgid:938   ppid:584    task_flags:0x400000 flags:0x00000000
-[Tue Apr  8 12:19:07 2025] Call Trace:
-[Tue Apr  8 12:19:07 2025]  <TASK>
-[Tue Apr  8 12:19:07 2025]  __schedule+0x491/0xbd0
-[Tue Apr  8 12:19:07 2025]  ? _raw_spin_unlock_irqrestore+0xe/0x40
-[Tue Apr  8 12:19:07 2025]  schedule+0x27/0xf0
-[Tue Apr  8 12:19:07 2025]  schedule_timeout+0x77/0xf0
-[Tue Apr  8 12:19:07 2025]  ? __pfx_process_timeout+0x10/0x10
-[Tue Apr  8 12:19:07 2025]  msleep_interruptible+0x49/0x60
-[Tue Apr  8 12:19:07 2025]  read_dummy_semaphore+0x2d/0x60
-[Tue Apr  8 12:19:07 2025]  full_proxy_read+0x5f/0xa0
-[Tue Apr  8 12:19:07 2025]  vfs_read+0xbc/0x350
-[Tue Apr  8 12:19:07 2025]  ? __count_memcg_events+0xa5/0x140
-[Tue Apr  8 12:19:07 2025]  ? count_memcg_events.constprop.0+0x1a/0x30
-[Tue Apr  8 12:19:07 2025]  ? handle_mm_fault+0x180/0x260
-[Tue Apr  8 12:19:07 2025]  ksys_read+0x66/0xe0
-[Tue Apr  8 12:19:07 2025]  do_syscall_64+0x51/0x120
-[Tue Apr  8 12:19:07 2025]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[Tue Apr  8 12:19:07 2025] RIP: 0033:0x7f7c584a646e
-[Tue Apr  8 12:19:07 2025] RSP: 002b:00007ffdba8ce158 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[Tue Apr  8 12:19:07 2025] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f7c584a646e
-[Tue Apr  8 12:19:07 2025] RDX: 0000000000020000 RSI: 00007f7c5839a000 RDI: 0000000000000003
-[Tue Apr  8 12:19:07 2025] RBP: 00007f7c5839a000 R08: 00007f7c58399010 R09: 0000000000000000
-[Tue Apr  8 12:19:07 2025] R10: fffffffffffffbc5 R11: 0000000000000246 R12: 0000000000000000
-[Tue Apr  8 12:19:07 2025] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
-[Tue Apr  8 12:19:07 2025]  </TASK>
+	> cd /sys/kernel/debug/hung_task
+	> cat mutex & cat mutex          # Test mutex blocking
+	> cat semaphore & cat semaphore  # Test semaphore blocking
 
-[1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com
+Update the Kconfig description to reflect multiple debugfs files support.
 
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
 Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
 Signed-off-by: Lance Yang <ioworker0@gmail.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Zi Li <amaindex@outlook.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/linux/semaphore.h  | 15 +++++++++-
- kernel/hung_task.c         | 52 ++++++++++++++++++++++++++--------
- kernel/locking/semaphore.c | 57 ++++++++++++++++++++++++++++++++++----
- 3 files changed, 106 insertions(+), 18 deletions(-)
+ samples/Kconfig                     |  9 +--
+ samples/hung_task/Makefile          |  2 +-
+ samples/hung_task/hung_task_mutex.c | 66 --------------------
+ samples/hung_task/hung_task_tests.c | 97 +++++++++++++++++++++++++++++
+ 4 files changed, 103 insertions(+), 71 deletions(-)
+ delete mode 100644 samples/hung_task/hung_task_mutex.c
+ create mode 100644 samples/hung_task/hung_task_tests.c
 
-diff --git a/include/linux/semaphore.h b/include/linux/semaphore.h
-index 04655faadc2d..89706157e622 100644
---- a/include/linux/semaphore.h
-+++ b/include/linux/semaphore.h
-@@ -16,13 +16,25 @@ struct semaphore {
- 	raw_spinlock_t		lock;
- 	unsigned int		count;
- 	struct list_head	wait_list;
+diff --git a/samples/Kconfig b/samples/Kconfig
+index 09011be2391a..753ed1f170b5 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -304,10 +304,11 @@ config SAMPLE_HUNG_TASK
+ 	tristate "Hung task detector test code"
+ 	depends on DETECT_HUNG_TASK && DEBUG_FS
+ 	help
+-	  Build a module which provide a simple debugfs file. If user reads
+-	  the file, it will sleep long time (256 seconds) with holding a
+-	  mutex. Thus if there are 2 or more processes read this file, it
+-	  will be detected by the hung_task watchdog.
++	  Build a module that provides debugfs files (e.g., mutex, semaphore,
++	  etc.) under <debugfs>/hung_task. If user reads one of these files,
++	  it will sleep long time (256 seconds) with holding a lock. Thus,
++	  if 2 or more processes read the same file concurrently, it will
++	  be detected by the hung_task watchdog.
+ 
+ source "samples/rust/Kconfig"
+ 
+diff --git a/samples/hung_task/Makefile b/samples/hung_task/Makefile
+index f4d6ab563488..86036f1a204d 100644
+--- a/samples/hung_task/Makefile
++++ b/samples/hung_task/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_SAMPLE_HUNG_TASK) += hung_task_mutex.o
++obj-$(CONFIG_SAMPLE_HUNG_TASK) += hung_task_tests.o
+diff --git a/samples/hung_task/hung_task_mutex.c b/samples/hung_task/hung_task_mutex.c
+deleted file mode 100644
+index 47ed38239ea3..000000000000
+--- a/samples/hung_task/hung_task_mutex.c
++++ /dev/null
+@@ -1,66 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * hung_task_mutex.c - Sample code which causes hung task by mutex
+- *
+- * Usage: load this module and read `<debugfs>/hung_task/mutex`
+- *        by 2 or more processes.
+- *
+- * This is for testing kernel hung_task error message.
+- * Note that this will make your system freeze and maybe
+- * cause panic. So do not use this except for the test.
+- */
+-
+-#include <linux/debugfs.h>
+-#include <linux/delay.h>
+-#include <linux/fs.h>
+-#include <linux/module.h>
+-#include <linux/mutex.h>
+-
+-#define HUNG_TASK_DIR   "hung_task"
+-#define HUNG_TASK_FILE  "mutex"
+-#define SLEEP_SECOND 256
+-
+-static const char dummy_string[] = "This is a dummy string.";
+-static DEFINE_MUTEX(dummy_mutex);
+-static struct dentry *hung_task_dir;
+-
+-static ssize_t read_dummy(struct file *file, char __user *user_buf,
+-			  size_t count, loff_t *ppos)
+-{
+-	/* If the second task waits on the lock, it is uninterruptible sleep. */
+-	guard(mutex)(&dummy_mutex);
+-
+-	/* When the first task sleep here, it is interruptible. */
+-	msleep_interruptible(SLEEP_SECOND * 1000);
+-
+-	return simple_read_from_buffer(user_buf, count, ppos,
+-				dummy_string, sizeof(dummy_string));
+-}
+-
+-static const struct file_operations hung_task_fops = {
+-	.read = read_dummy,
+-};
+-
+-static int __init hung_task_sample_init(void)
+-{
+-	hung_task_dir = debugfs_create_dir(HUNG_TASK_DIR, NULL);
+-	if (IS_ERR(hung_task_dir))
+-		return PTR_ERR(hung_task_dir);
+-
+-	debugfs_create_file(HUNG_TASK_FILE, 0400, hung_task_dir,
+-			    NULL, &hung_task_fops);
+-
+-	return 0;
+-}
+-
+-static void __exit hung_task_sample_exit(void)
+-{
+-	debugfs_remove_recursive(hung_task_dir);
+-}
+-
+-module_init(hung_task_sample_init);
+-module_exit(hung_task_sample_exit);
+-
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Masami Hiramatsu");
+-MODULE_DESCRIPTION("Simple sleep under mutex file for testing hung task");
+diff --git a/samples/hung_task/hung_task_tests.c b/samples/hung_task/hung_task_tests.c
+new file mode 100644
+index 000000000000..a5c09bd3a47d
+--- /dev/null
++++ b/samples/hung_task/hung_task_tests.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * hung_task_tests.c - Sample code for testing hung tasks with mutex,
++ * semaphore, etc.
++ *
++ * Usage: Load this module and read `<debugfs>/hung_task/mutex`,
++ *        `<debugfs>/hung_task/semaphore`, etc., with 2 or more processes.
++ *
++ * This is for testing kernel hung_task error messages with various locking
++ * mechanisms (e.g., mutex, semaphore, etc.). Note that this may freeze
++ * your system or cause a panic. Use only for testing purposes.
++ */
 +
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+	unsigned long		last_holder;
-+#endif
- };
- 
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#define __LAST_HOLDER_SEMAPHORE_INITIALIZER				\
-+	, .last_holder = 0UL
-+#else
-+#define __LAST_HOLDER_SEMAPHORE_INITIALIZER
-+#endif
++#include <linux/debugfs.h>
++#include <linux/delay.h>
++#include <linux/fs.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/semaphore.h>
 +
- #define __SEMAPHORE_INITIALIZER(name, n)				\
- {									\
- 	.lock		= __RAW_SPIN_LOCK_UNLOCKED((name).lock),	\
- 	.count		= n,						\
--	.wait_list	= LIST_HEAD_INIT((name).wait_list),		\
-+	.wait_list	= LIST_HEAD_INIT((name).wait_list)		\
-+	__LAST_HOLDER_SEMAPHORE_INITIALIZER				\
- }
- 
- /*
-@@ -47,5 +59,6 @@ extern int __must_check down_killable(struct semaphore *sem);
- extern int __must_check down_trylock(struct semaphore *sem);
- extern int __must_check down_timeout(struct semaphore *sem, long jiffies);
- extern void up(struct semaphore *sem);
-+extern unsigned long sem_last_holder(struct semaphore *sem);
- 
- #endif /* __LINUX_SEMAPHORE_H */
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 79558d76ef06..d2432df2b905 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -99,32 +99,62 @@ static struct notifier_block panic_block = {
- static void debug_show_blocker(struct task_struct *task)
- {
- 	struct task_struct *g, *t;
--	unsigned long owner, blocker;
-+	unsigned long owner, blocker, blocker_type;
- 
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
- 
- 	blocker = READ_ONCE(task->blocker);
--	if (!blocker ||
--	    hung_task_get_blocker_type(blocker) != BLOCKER_TYPE_MUTEX)
-+	if (!blocker)
- 		return;
- 
--	owner = mutex_get_owner(
--		(struct mutex *)hung_task_blocker_to_lock(blocker));
-+	blocker_type = hung_task_get_blocker_type(blocker);
++#define HUNG_TASK_DIR		"hung_task"
++#define HUNG_TASK_MUTEX_FILE	"mutex"
++#define HUNG_TASK_SEM_FILE	"semaphore"
++#define SLEEP_SECOND		256
 +
-+	switch (blocker_type) {
-+	case BLOCKER_TYPE_MUTEX:
-+		owner = mutex_get_owner(
-+			(struct mutex *)hung_task_blocker_to_lock(blocker));
-+		break;
-+	case BLOCKER_TYPE_SEM:
-+		owner = sem_last_holder(
-+			(struct semaphore *)hung_task_blocker_to_lock(blocker));
-+		break;
-+	default:
-+		WARN_ON_ONCE(1);
-+		return;
-+	}
++static const char dummy_string[] = "This is a dummy string.";
++static DEFINE_MUTEX(dummy_mutex);
++static DEFINE_SEMAPHORE(dummy_sem, 1);
++static struct dentry *hung_task_dir;
 +
- 
- 	if (unlikely(!owner)) {
--		pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
--			task->comm, task->pid);
-+		switch (blocker_type) {
-+		case BLOCKER_TYPE_MUTEX:
-+			pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
-+			       task->comm, task->pid);
-+			break;
-+		case BLOCKER_TYPE_SEM:
-+			pr_err("INFO: task %s:%d is blocked on a semaphore, but the last holder is not found.\n",
-+			       task->comm, task->pid);
-+			break;
-+		}
- 		return;
- 	}
- 
- 	/* Ensure the owner information is correct. */
- 	for_each_process_thread(g, t) {
--		if ((unsigned long)t == owner) {
-+		if ((unsigned long)t != owner)
-+			continue;
-+
-+		switch (blocker_type) {
-+		case BLOCKER_TYPE_MUTEX:
- 			pr_err("INFO: task %s:%d is blocked on a mutex likely owned by task %s:%d.\n",
--				task->comm, task->pid, t->comm, t->pid);
--			sched_show_task(t);
--			return;
-+			       task->comm, task->pid, t->comm, t->pid);
-+			break;
-+		case BLOCKER_TYPE_SEM:
-+			pr_err("INFO: task %s:%d blocked on a semaphore likely last held by task %s:%d\n",
-+			       task->comm, task->pid, t->comm, t->pid);
-+			break;
- 		}
-+		sched_show_task(t);
-+		return;
- 	}
- }
- #else
-diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
-index 34bfae72f295..db8a8f696f50 100644
---- a/kernel/locking/semaphore.c
-+++ b/kernel/locking/semaphore.c
-@@ -33,6 +33,7 @@
- #include <linux/spinlock.h>
- #include <linux/ftrace.h>
- #include <trace/events/lock.h>
-+#include <linux/hung_task.h>
- 
- static noinline void __down(struct semaphore *sem);
- static noinline int __down_interruptible(struct semaphore *sem);
-@@ -40,6 +41,41 @@ static noinline int __down_killable(struct semaphore *sem);
- static noinline int __down_timeout(struct semaphore *sem, long timeout);
- static noinline void __up(struct semaphore *sem);
- 
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+static inline void hung_task_sem_set_holder(struct semaphore *sem)
++/* Mutex-based read function */
++static ssize_t read_dummy_mutex(struct file *file, char __user *user_buf,
++				size_t count, loff_t *ppos)
 +{
-+	WRITE_ONCE((sem)->last_holder, (unsigned long)current);
++	/* Second task waits on mutex, entering uninterruptible sleep */
++	guard(mutex)(&dummy_mutex);
++
++	/* First task sleeps here, interruptible */
++	msleep_interruptible(SLEEP_SECOND * 1000);
++
++	return simple_read_from_buffer(user_buf, count, ppos, dummy_string,
++				       sizeof(dummy_string));
 +}
 +
-+static inline void hung_task_sem_clear_if_holder(struct semaphore *sem)
++/* Semaphore-based read function */
++static ssize_t read_dummy_semaphore(struct file *file, char __user *user_buf,
++				    size_t count, loff_t *ppos)
 +{
-+	if (READ_ONCE((sem)->last_holder) == (unsigned long)current)
-+		WRITE_ONCE((sem)->last_holder, 0UL);
++	/* Second task waits on semaphore, entering uninterruptible sleep */
++	down(&dummy_sem);
++
++	/* First task sleeps here, interruptible */
++	msleep_interruptible(SLEEP_SECOND * 1000);
++
++	up(&dummy_sem);
++
++	return simple_read_from_buffer(user_buf, count, ppos, dummy_string,
++				       sizeof(dummy_string));
 +}
 +
-+unsigned long sem_last_holder(struct semaphore *sem)
++/* File operations for mutex */
++static const struct file_operations hung_task_mutex_fops = {
++	.read = read_dummy_mutex,
++};
++
++/* File operations for semaphore */
++static const struct file_operations hung_task_sem_fops = {
++	.read = read_dummy_semaphore,
++};
++
++static int __init hung_task_tests_init(void)
 +{
-+	return READ_ONCE(sem->last_holder);
++	hung_task_dir = debugfs_create_dir(HUNG_TASK_DIR, NULL);
++	if (IS_ERR(hung_task_dir))
++		return PTR_ERR(hung_task_dir);
++
++	/* Create debugfs files for mutex and semaphore tests */
++	debugfs_create_file(HUNG_TASK_MUTEX_FILE, 0400, hung_task_dir, NULL,
++			    &hung_task_mutex_fops);
++	debugfs_create_file(HUNG_TASK_SEM_FILE, 0400, hung_task_dir, NULL,
++			    &hung_task_sem_fops);
++
++	return 0;
 +}
-+#else
-+static inline void hung_task_sem_set_holder(struct semaphore *sem)
++
++static void __exit hung_task_tests_exit(void)
 +{
-+}
-+static inline void hung_task_sem_clear_if_holder(struct semaphore *sem)
-+{
-+}
-+unsigned long sem_last_holder(struct semaphore *sem)
-+{
-+	return 0UL;
-+}
-+#endif
-+
-+static inline void __sem_acquire(struct semaphore *sem)
-+{
-+	sem->count--;
-+	hung_task_sem_set_holder(sem);
++	debugfs_remove_recursive(hung_task_dir);
 +}
 +
- /**
-  * down - acquire the semaphore
-  * @sem: the semaphore to be acquired
-@@ -58,7 +94,7 @@ void __sched down(struct semaphore *sem)
- 	might_sleep();
- 	raw_spin_lock_irqsave(&sem->lock, flags);
- 	if (likely(sem->count > 0))
--		sem->count--;
-+		__sem_acquire(sem);
- 	else
- 		__down(sem);
- 	raw_spin_unlock_irqrestore(&sem->lock, flags);
-@@ -82,7 +118,7 @@ int __sched down_interruptible(struct semaphore *sem)
- 	might_sleep();
- 	raw_spin_lock_irqsave(&sem->lock, flags);
- 	if (likely(sem->count > 0))
--		sem->count--;
-+		__sem_acquire(sem);
- 	else
- 		result = __down_interruptible(sem);
- 	raw_spin_unlock_irqrestore(&sem->lock, flags);
-@@ -109,7 +145,7 @@ int __sched down_killable(struct semaphore *sem)
- 	might_sleep();
- 	raw_spin_lock_irqsave(&sem->lock, flags);
- 	if (likely(sem->count > 0))
--		sem->count--;
-+		__sem_acquire(sem);
- 	else
- 		result = __down_killable(sem);
- 	raw_spin_unlock_irqrestore(&sem->lock, flags);
-@@ -139,7 +175,7 @@ int __sched down_trylock(struct semaphore *sem)
- 	raw_spin_lock_irqsave(&sem->lock, flags);
- 	count = sem->count - 1;
- 	if (likely(count >= 0))
--		sem->count = count;
-+		__sem_acquire(sem);
- 	raw_spin_unlock_irqrestore(&sem->lock, flags);
- 
- 	return (count < 0);
-@@ -164,7 +200,7 @@ int __sched down_timeout(struct semaphore *sem, long timeout)
- 	might_sleep();
- 	raw_spin_lock_irqsave(&sem->lock, flags);
- 	if (likely(sem->count > 0))
--		sem->count--;
-+		__sem_acquire(sem);
- 	else
- 		result = __down_timeout(sem, timeout);
- 	raw_spin_unlock_irqrestore(&sem->lock, flags);
-@@ -185,6 +221,9 @@ void __sched up(struct semaphore *sem)
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&sem->lock, flags);
++module_init(hung_task_tests_init);
++module_exit(hung_task_tests_exit);
 +
-+	hung_task_sem_clear_if_holder(sem);
-+
- 	if (likely(list_empty(&sem->wait_list)))
- 		sem->count++;
- 	else
-@@ -224,8 +263,10 @@ static inline int __sched ___down_common(struct semaphore *sem, long state,
- 		raw_spin_unlock_irq(&sem->lock);
- 		timeout = schedule_timeout(timeout);
- 		raw_spin_lock_irq(&sem->lock);
--		if (waiter.up)
-+		if (waiter.up) {
-+			hung_task_sem_set_holder(sem);
- 			return 0;
-+		}
- 	}
- 
-  timed_out:
-@@ -242,10 +283,14 @@ static inline int __sched __down_common(struct semaphore *sem, long state,
- {
- 	int ret;
- 
-+	hung_task_set_blocker(sem, BLOCKER_TYPE_SEM);
-+
- 	trace_contention_begin(sem, 0);
- 	ret = ___down_common(sem, state, timeout);
- 	trace_contention_end(sem, ret);
- 
-+	hung_task_clear_blocker();
-+
- 	return ret;
- }
- 
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Masami Hiramatsu <mhiramat@kernel.org>");
++MODULE_AUTHOR("Zi Li <amaindex@outlook.com>");
++MODULE_DESCRIPTION("Simple sleep under lock files for testing hung task");
 -- 
 2.49.0
 
