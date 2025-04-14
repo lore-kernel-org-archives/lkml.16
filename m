@@ -1,122 +1,123 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392121F4E54
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9978C1F3B8B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744669579; cv=none; b=FPsNRfMQqx5xh24ICH7NVS38d7R7+1z+Eztvkb0lY2o/b6u1ULGv4kBc3xrj2+3e+RzP39cyA+FVS+Dm3/ZtNqQ5eNHx0917EJnDdphDzDpYhAaocVXHVLLiyDiHlcu02vZQHh/ER1A2WFUcECJrERMmB9wWOyD548RkUwmQvqE=
+	t=1744669700; cv=none; b=g4UcPWwLImMmspHY7kx0qLRxNbcDLJcIRZbtKDIU+QdbZyEGb8tpuoeaMmuLfo6rYTSW0mJUVRFmVJjFXqVxEfoFdHDWrLTVoUcPXJFKrfxfIls7L0Pat3pW6wQohYjRwc8cuHF6TsXluvkKCIJhDeDiEQDVPFOFL1xR3I3+s8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744669579; c=relaxed/simple;
-	bh=U7cZReZjrr7NKXwZ5XAaa0GQ/TD//bG9K/aKMvyXmis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FAT/l88KnFlHBG6WUwq/mVx5QHOav3xDJvHGNuNiGzTO53/YjJydqThoEA9FblqM2wv4wdgQt0OnJuuIs2NCw0GEQV511ufYGByaq9zWxk42wD1Qi+Yk4w97/dO6/HDP3Q+h9/73oVkFYOfhHSqxyZ5DClPpOhs3ZglLHWcG34E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QebTuxHA; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744669700; c=relaxed/simple;
+	bh=GYC2/6x9N+95MGF5/R1C9EvLfL1QTUU90tcZuaWd8GI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JPwueELD4rfai6vBCCTSzoVmAVS0kBSa5/Ek6GnfskHfka7DRujQ5iR/CSqTQgjn77RL+KFhbdN3VuY1n17zd92CZBiuWCHQV2xey97AeJkKvzPSlkNV1/SorxCZtOTUPuT2fL6nYMLB9FT1ZY7+cxdmDVYsbyuZVQRIBB1YR7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QebTuxHA"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ede096d73so35509795e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:26:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744669576; x=1745274376; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Seffc+yZNHH7nQZK2TccuJe06M8bYwImxNduIh9Hks=;
-        b=QebTuxHArlXaGiN6Acymw+YgnysIUQzpfgD2X+9y78O2HAcBQB0283xkg0aPtxbFx6
-         r2h4oz8f3QF4+orj2curFfB22zBX5KppSMNClfHhp8Xhr/Qe3mIfLStEqKJZt9jNY+Xk
-         CPSGD3EUtQ3zTuOk2EUfHigd+vzRSw3uri7O632YnPAq5QOqjzIIKzwhzSgo5pclht/R
-         34UdDZHlD0HUdx30Ka52HkQUQVRYtXkWcoEFqjbt7pVX17sMetQEbF8oq5/12kLlKZmx
-         6X9TMZJiDOhyS8yVPmasHWg/h5e08SKdM+2y9OXGODC59tMyF5sI2XRzlyyxig++Zltu
-         bLHg==
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso4580422f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:28:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744669576; x=1745274376;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Seffc+yZNHH7nQZK2TccuJe06M8bYwImxNduIh9Hks=;
-        b=r3gPj18Ap6AopOmGiurltKkRbVjQgdMTTKmG6fxApSuuj9DPJjuTaRXMyAve4FfR0e
-         1iYwuBK3x/PIu/ktghs3mseUchu5W533fcRWubUxptNlALGnFSlj/xvOvJkC4mzHgAWD
-         6EhJ815ijhBpelS/l5rFlSSzuLUjCxmN1F+hxmP9xJPyDviMkdvK0KK4XeSymqMRjnbx
-         RRIYPeiJiWqRG9h2Mqyxd1LVN8UyDtOQJpYOhYehTHIsyMYHUWnTAqT2RtM2DPOvfli3
-         VGVjoGpb3ESQGN1B7saauu0Z5ioau5ImOUDsNsP0clbS0o/zyqbVj6qufLadf7nEpcXY
-         fkPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkGiQ60FME77KBtdyFtw1AGEoerw/VNnaFaZ96wYKR2IgEv9TsYwSftGxkUQfoTFle7Ev9INMrGjZoVC4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5sdDpN6IHPrQfFK1RDYTXV9QPLisinaXizsKb7ahmEc3QjOGw
-	M9/KQr5Kme7B/TLHDm+JWoCXisjK1LtQ7FDCEtyLME2dz6izWnTP
-X-Gm-Gg: ASbGncuLuAFAhv6hJKlAy5KSKOJmO3h0dJWdwnNA1yl4iH9JMRJ4SrzdErOQ1nvjdTm
-	/pHjfksj056piTxYX0X3kN9hynsHFHLxGqB2Cg6TKCUvBXZRbnywKEF59aGsvYZNQZqyQQKz4zq
-	W/1B8W7uyYHyPW7npuQc2IkEOQVP+YZSHrzQy7TlcaXRGX0fb4rR018RST9hxtRruWQFqWEX/P3
-	+M/u7g7JXHcvv0/go9lqv4o4BxFQRLp3G0dsq8qx7QIIrb2nOBAKLcYWbm/5HHLEmiCqp1W6MoR
-	p6oc/iuRor1kiXCYGZ57Nsr3C0B4SlSzv2wd1aeEz0s5EKhjHlQW2kc+7Vg0vyrJ
-X-Google-Smtp-Source: AGHT+IGl4JCafq/SyDh3qQGSjEQfpCYf/XEY/8sqQywe6otVD8GhNKZ2Fe8OOwdiYoKHHvDzNEJVxg==
-X-Received: by 2002:a05:6000:2212:b0:38f:2678:d790 with SMTP id ffacd0b85a97d-39eaaea67f4mr11937204f8f.33.1744669576284;
-        Mon, 14 Apr 2025 15:26:16 -0700 (PDT)
-Received: from f (cst-prg-79-34.cust.vodafone.cz. [46.135.79.34])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c70csm12351447f8f.38.2025.04.14.15.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 15:26:15 -0700 (PDT)
-Date: Tue, 15 Apr 2025 00:26:05 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Ankur Arora <ankur.a.arora@oracle.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com, luto@kernel.org, 
-	paulmck@kernel.org, rostedt@goodmis.org, tglx@linutronix.de, willy@infradead.org, 
-	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, 
-	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH v3 1/4] x86/clear_page: extend clear_page*() for
- multi-page clearing
-Message-ID: <pf2p3ugs3blztd5jtxuwrg3hc3qldc4a7lfpigf24tit5noyik@67qhychq2b77>
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
- <20250414034607.762653-2-ankur.a.arora@oracle.com>
- <Z_yr_cmXti4kXHaX@gmail.com>
- <20250414110259.GF5600@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1744669697; x=1745274497;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/kGU6A6Jr1/mVprmOIpSU0J1mrESNNr0cDnyTghWIYo=;
+        b=dHH/ZGjGHrQZii53Hb4bUFeUJDakFboCwS/tmFO/EHz51DLRp7rKkIH7LnGNa8nc1h
+         KMdmt0Le53DLL12Nab38+yWbF92s1La4ENO6xcq7hHoE6tk/UXbra8gZVKtY5QHv6xG8
+         DstZCX7d4w70GucMr23L+yd4yBmac6bRM6UnnpUVRVjsi15Xi8l9QWMl9+w8oSad5ada
+         aTnJITDuBuhmqFAk6ha5TyCgQLyCC7PrNagN5x1Ov4wX60OOI6MFAkq+dI1bcbHy39TE
+         N94E3MbHLLRE0nc7ZQdFLxcNmnSi+3AGu01E1aHV2UYsbUtvwk6kKFQhT6RK7ijHyMv3
+         uNcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXj2cNwFpMDXSI57Kaba2xPuGls4ienFdOCNdLiaZ8YmkKqlVQiQG74T5MLzVpxEn5cdAvefQMc28iDQec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUHSRhfvugT9hIZP7edQyz7wX8oe1zqc7TFqDPbc8ERe79jlbj
+	xVnhNQ2faCbdIjJtZv+5PmRg3d8Kc2HWrIqj3ccrPQf5AV7DoDbu
+X-Gm-Gg: ASbGncve1dZV2yCwFQnp96/86+9S9xHcKedqluy5YM8lURMkkyJwXD5mgR5gLC5+9ED
+	N+BZs1lyXI6anxeydfQ3a5ybZVxBDXBgn8bsShZsPtwCSc+a7NZWJBFHD1VOcUPn8GBIj9D8L5x
+	rY2ocs+bFKUQW1cbtrIzZxzN9TJJUssgVVjnDQ1eq8l2MOHTViEPrEuMAnn8piKEF3VjXGzy6ku
+	qfC15YHW5eowth9UkM3wrwVnGw871We8dLPkWjy2gw3uOh7jsE8OPegJGNPctNojcFc3Gh41FlS
+	9I4pJrYpebPH4NaoEeVVZklYALafoE37W/bqvFXKtctskXjZIEVIIFRrr1htViBNsU8nPg2k
+X-Google-Smtp-Source: AGHT+IGvEqNrRzk769p8HhSi/2Qv7EgWRPN9cVexNSBgMUaNihh0RLlvC98RK4ZriM82pD4bGWBV6g==
+X-Received: by 2002:a05:6000:2586:b0:39c:e28:5f0d with SMTP id ffacd0b85a97d-39ea52171d4mr11476328f8f.25.1744669696641;
+        Mon, 14 Apr 2025 15:28:16 -0700 (PDT)
+Received: from [10.10.9.121] (u-1j-178-175-199.4bone.mynet.it. [178.175.199.47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9640fdsm12098902f8f.7.2025.04.14.15.28.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 15:28:16 -0700 (PDT)
+Message-ID: <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
+Date: Tue, 15 Apr 2025 01:28:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250414110259.GF5600@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+To: Mohamed Khalfella <mkhalfella@purestorage.com>,
+ Daniel Wagner <wagi@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+ Hannes Reinecke <hare@suse.de>, John Meneghini <jmeneghi@redhat.com>,
+ randyj@purestorage.com, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20250410085137.GE1868505-mkhalfella@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 01:02:59PM +0200, Peter Zijlstra wrote:
-> This symbol is written as a C function with C calling convention, even
-> though it is only meant to be called from that clear_page() alternative.
-> 
-> If we want to go change all this, then we should go do the same we do
-> for __clear_user() and write it thusly:
-> 
-> 	asm volatile(ALTERNATIVE("rep stosb",
-> 				 "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRS)
-> 				 : "+c" (size), "+D" (addr), ASM_CALL_CONSTRAINT
-> 				 : "a" (0))
-> 
-> And forget about all those clear_page_*() thingies.
-> 
 
-I have to disagree.
 
-Next to nobody has FSRS, so for now one would have to expect everyone
-would be punting to the routine. Did you mean ERMS as sizes are in fact
-not short?
+On 10/04/2025 11:51, Mohamed Khalfella wrote:
+> On 2025-03-24 13:07:58 +0100, Daniel Wagner wrote:
+>> The TP4129 mendates that the failover should be delayed by CQT.  Thus when
+>> nvme_decide_disposition returns FAILOVER do not immediately re-queue it on
+>> the namespace level instead queue it on the ctrl's request_list and
+>> moved later to the namespace's requeue_list.
+>>
+>> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+>> ---
+>>   drivers/nvme/host/core.c      | 19 ++++++++++++++++
+>>   drivers/nvme/host/fc.c        |  4 ++++
+>>   drivers/nvme/host/multipath.c | 52 ++++++++++++++++++++++++++++++++++++++++---
+>>   drivers/nvme/host/nvme.h      | 15 +++++++++++++
+>>   drivers/nvme/host/rdma.c      |  2 ++
+>>   drivers/nvme/host/tcp.c       |  1 +
+>>   6 files changed, 90 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>> index 135045528ea1c79eac0d6d47d5f7f05a7c98acc4..f3155c7735e75e06c4359c26db8931142c067e1d 100644
+>> --- a/drivers/nvme/host/core.c
+>> +++ b/drivers/nvme/host/core.c
+>> @@ -239,6 +239,7 @@ static void nvme_do_delete_ctrl(struct nvme_ctrl *ctrl)
+>>   
+>>   	flush_work(&ctrl->reset_work);
+>>   	nvme_stop_ctrl(ctrl);
+>> +	nvme_flush_failover(ctrl);
+>>   	nvme_remove_namespaces(ctrl);
+>>   	ctrl->ops->delete_ctrl(ctrl);
+>>   	nvme_uninit_ctrl(ctrl);
+>> @@ -1310,6 +1311,19 @@ static void nvme_queue_keep_alive_work(struct nvme_ctrl *ctrl)
+>>   	queue_delayed_work(nvme_wq, &ctrl->ka_work, delay);
+>>   }
+>>   
+>> +void nvme_schedule_failover(struct nvme_ctrl *ctrl)
+>> +{
+>> +	unsigned long delay;
+>> +
+>> +	if (ctrl->cqt)
+>> +		delay = msecs_to_jiffies(ctrl->cqt);
+>> +	else
+>> +		delay = ctrl->kato * HZ;
+> I thought that delay = m * ctrl->kato + ctrl->cqt
+> where m = ctrl->ctratt & NVME_CTRL_ATTR_TBKAS ? 3 : 2
+> no?
 
-rep_stos_alternative() as implemented right now sucks in its own right
-("small" areas sorted out with an 8 byte and 1 byte loops, bigger ones
-unrolled 64 byte loop at a time, no rep stos{b,q} in sight). Someone(tm)
-should fix it and for the sake of argument suppose it happened. That's
-still some code executed to figure out how to zero and to align the buf.
+This was said before, but if we are going to always start waiting for 
+kato for failover purposes,
+we first need a patch that prevent kato from being arbitrarily long.
 
-Instead, I think one can start with just retiring clear_page_orig().
-
-With that sucker out of the way, an optional quest is to figure out if
-rep stosq vs rep stosb makes any difference for pages -- for all I know
-rep stosq is the way. This would require testing on quite a few uarchs
-and I'm not going to blame anyone for not being interested.
-
-Let's say nobody bothered OR rep stosb provides a win. In that case this
-can trivially ALTERNATIVE between rep stosb and rep stosq based on ERMS,
-no func calls necessary.
+Lets cap kato to something like 10 seconds (which is 2x the default 
+which apparently no one is touching).
