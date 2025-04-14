@@ -1,60 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8B4257AE8
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395851A3A80;
+	Mon, 14 Apr 2025 17:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744653161; cv=none; b=dMZcZUbTDqJYaXz2Xae99qMhIp0f28C8gPLHzkb4Vm/RV0xtzAHII2TexP4LtgJ3JCJz8d9ZhfB2U7DnBiWriEThM1ccG+FgXtcZQsuWTYbU7GWdoIlkWGhkruRdENQhDxuQuBxiHNLDRB40twaxfnz3nGVjwYhWo+R3XY6uq5U=
+	t=1744653269; cv=none; b=SL+6+f5dH83ELhNV+7RRWbniFr/dIrzNYXUyeE6x2gJQtPvM7XjlR5ciGjj1VKml1/iyjH6Au2uRW2DTOhFBT9OiADyfdZ2FNbObiH82YNgGbSVheqlfZrce5bUHSDnNGgajPoPzYYr4zvrtymKgZT7Bcs/fMPICTUxQkhYRhEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744653161; c=relaxed/simple;
-	bh=cjGuNYcWX7A3WWeGxELmLfILX5LvpZgsNyOBOCjyPOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trHwV8DsFJ67VecBszE7qgvJlKSv5ww73akfHnIS6+gwkYHAki1/7vwnHpdAC9HBIOHJdG/+cEr0HHapQGzbwV0WaxNyl+oxNUOop5o2lKXMeSgkxha66Fb8U9y69W9MtiqZHkX6yc36jIlV7qYsaS03f75BgUjdjMzLeFNYoEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=trguIh+8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744653269; c=relaxed/simple;
+	bh=8Qgdtz9ypU0oOKwpTo4JmZbvXA3PP/my4vKhuAjzLqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p1sTT5judPuB2FkQ43WAwrGbiupnRwTfaO5SEmewv+5In001nqXpBVGvcJmy937Ru+Kv/lWyc/6UMohO2Qd3Gc0nzVfWMjpCJUvij4Fqw+akl/SO2GBobGU6aqEPwKedgag2HLvDZk4KLfW783rCd/2S25/cC5Q0heMsrMFsKLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAdTFaXo; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="trguIh+8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1EDDC4CEE2;
-	Mon, 14 Apr 2025 17:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744653160;
-	bh=cjGuNYcWX7A3WWeGxELmLfILX5LvpZgsNyOBOCjyPOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=trguIh+8+A33Ujniy59A19uL+PM5Ql67Vp2xs2UwUsIbRirXGa8Ci99NCvL5o9SvF
-	 5ktQiAf2PHPiadp6m8vATYHVR73zlIG0kTzS6Mz9cwBxTHh+GnCwtoNVMkW7b1Kmt0
-	 YwdWdshWIKxMBVBVFgTBTAf5sk7h3EMn0cff6k1jOEWaEupkC8AuiZ/3DqgnEez62S
-	 PoN81wCF9s8om5gCgYhK19ShTZHk929OWs91ADlyyS0bLfYS45d75CokIYTDGLM9E2
-	 Nea3BcR+zEjs03oaykmK9a47PkjhTRVVbGqBVGORYjIOoKSFpZQECniQZ4mQYMmgAn
-	 Qqt3ONiTCoR0A==
-Date: Mon, 14 Apr 2025 19:52:36 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] MAINTAINERS: update the location of the driver-core git
- tree
-Message-ID: <Z_1LZHFnwiKl2MlO@cassiopeiae>
-References: <2025041447-showbiz-other-7130@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAdTFaXo"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso49769011fa.1;
+        Mon, 14 Apr 2025 10:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744653266; x=1745258066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Qgdtz9ypU0oOKwpTo4JmZbvXA3PP/my4vKhuAjzLqU=;
+        b=bAdTFaXoQDkXuWn+j+2Ki26w9N3dx+PirvmT1z9MZ2FSv0VgfHSw+d8nmCq3f0Z63k
+         ANML4xa5HJ0hHJRVkw1SL42WxxzezC/b7h+LnWN+onjuz/OjG07jJdoO429xTZ4Vym8r
+         ORMYFgFepYVFwOPLCc2xULVxqWlMeDEm8445wY4Aac8hPnWziLdHZSJsz88CE2Wo8/d9
+         rIx9UJRLzqN2SEla9pwvzsefNbSNJ2hoSf5jOQrLVoD3SOXWLH/BaRLB7+iZ74yQF434
+         8xIYmH6DKpTx1q00p2oTMBcBj6yNh5QmCRrjRaHwRDSfxjYVQu5vL90dU767M4yjbTeu
+         7AjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744653266; x=1745258066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Qgdtz9ypU0oOKwpTo4JmZbvXA3PP/my4vKhuAjzLqU=;
+        b=GIjiwwhK5VvNkDpHSJq2dxnqfVks247Fo7KqGvW14S+KJRZB1nU1onwPhw7c5ZecxK
+         EVeYEmliTKW1Es3vxLIE+k54a3Jzo0GSqq5aqshNoenCNGx42s6rkIS/XgydOSKuDABH
+         3cCW8wZ2dWe/cHstiIOaQfOYGND8EB6qlnhjd6XUCpTdrW+dgxE7k2CRGn+Nq/SWGuMx
+         XHC/AUAyejrL+n1WZjAeke/p1BkXd26BiHKmx7qsz250q3WJcDeId53w1pLeAUQ53BCL
+         9JdZkBif3zvlwL94v3WLyudcYHuIxYsRIknGXU48cJWn2QK2FhFp27SB2QmjFbXfKXzB
+         wH/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVV4IkxeeuL5q2PskyUhJb5O4tbXLjMH+TOz58+rdAjGI6ljOuU1/Hyae3o+d3h2OX06GSTKhlIHYgfyws=@vger.kernel.org, AJvYcCWE9cNB4gD7K374JiEIaJGmJWdU6dsdihrH1+kAjudH1hqPweKkRQmdWtJodpUfiz7szg8CGAH7FMH6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCdnzl99lvgY6QGDHoPEdv6qkOKNWmDrqumcGTf0QcCqBVsBpf
+	i+Seu4VVhQIXIyqDpb44Zqe5QCACHha213r6+MA33K4SsGz+vhgGnIvbFm+Edh+1iAo3wBrFCbM
+	e/kaK8TgalxxFdy+1m4V0oSELSjQ=
+X-Gm-Gg: ASbGncty+H7w1TjAVKLwV25IYUpVb2GKuK2aD8Gtj3iYr81+PGHWmkNmygNZMfBk2Nu
+	Junu2CVjdRsbZm9o3K5BtPqz8AjX3r2BM/W00wZNXVwE2Ypldgiu3xad1ssiAMW0oox3IfBz5FR
+	dAHTDc+aiQcSNGm+Rc3tkGoll9FVRLadyWx7FXNA==
+X-Google-Smtp-Source: AGHT+IFVPoTOrkVrYxVlcM8cXIdY5bKGK1WEIii/EImf8ccKrpxD0VGODBV4dBlCqt6Av0nOgZPgtEoUzN4eQ8JSR/k=
+X-Received: by 2002:a2e:9217:0:b0:30d:6a77:c498 with SMTP id
+ 38308e7fff4ca-31071be6bcdmr1293361fa.4.1744653265954; Mon, 14 Apr 2025
+ 10:54:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025041447-showbiz-other-7130@gregkh>
+References: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com> <CAJ-ks9=Q_s_XnyeZSUC+yABP+BrH+7LnJkg1mHDuH7k18vLR2A@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=Q_s_XnyeZSUC+yABP+BrH+7LnJkg1mHDuH7k18vLR2A@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 14 Apr 2025 13:53:49 -0400
+X-Gm-Features: ATxdqUFQ53tseeFKH--QP0JaZ_cPJ6zrezNHeZdYNl10Q6bQyc6ROto2ROD0eGM
+Message-ID: <CAJ-ks9=Nq+UbVMh6iqUdTk_5og6+WwTjifXKRjc=SRbpY0g8gw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] rust: list: remove HasListLinks::OFFSET
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 07:40:48PM +0200, Greg Kroah-Hartman wrote:
-> The driver core git tree has moved, so properly document it.
-> 
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Danilo Krummrich <dakr@kernel.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Dave Ertman <david.m.ertman@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, Apr 9, 2025 at 10:53=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> On Wed, Apr 9, 2025 at 10:51=E2=80=AFAM Tamir Duberstein <tamird@gmail.co=
+m> wrote:
+> >
+> > The bulk of this change occurs in the last commit, please its commit
+> > messages for details. The first commit exists in 2 other series but was
+> > picked into this series to allow using `container_of!` without the need
+> > to cast from `*const Self` to `*mut Self`.
+>
+> That first commit is now in the prerequisite patch, not here.
 
-Should we use the chance to also add the corresponding T: field to the
-FIRMWARE LOADER entry? Are there other entries that go through driver-core?
+Gentle ping; this still needs a review. The first two patches are
+trivial, and the last one is similar in spirit to
+https://lore.kernel.org/all/20250411-no-offset-v3-1-c0b174640ec3@gmail.com/
+which was reviewed by Benno Lossin, Alice Ryhl, and Andreas Hindborg.
+Could you folks have a look please?
