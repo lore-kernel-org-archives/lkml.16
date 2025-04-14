@@ -1,125 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8A710F9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5CD2DFA4E;
+	Mon, 14 Apr 2025 21:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744665536; cv=none; b=AifBiw1wrqjddCLXf7J0ygdg3+ZryyiuUxjQpXf9nN78wFk3Qgl5LI4cdyN7pkyxSj4ukJcdSZ/C41lPckvOHo4m5p6Q2O9Cz4H2RLidkhDaKNjvGbkcMPXAZhuNr2E5yKiLLR2tdJcDYd/EwN7WoQZCsQrNJrCchZYuB3dYDeA=
+	t=1744665592; cv=none; b=qTkS2WHhRB+WXZwPvD4An8asIwhq/c8yi5CXo+6BvgjMCL8fMUUO5K3jzVIji+VvHTh28iYQuUFmY2AjFVQUe4ba9+h9d+M8brPSm3DnftTrqVEdh6BYsURjO+kQBJeq/6A9edVIBQXasvgTpb1+9OWiRGEX6yuXxey79ukRJNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744665536; c=relaxed/simple;
-	bh=YQ/06zfvEcF5UMcfQSij1aUf1GFr5wunJW2D9NZOJbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I+B3DaaYcc3XE7yAvFXSCAZwJ+u+ATn/rQ/WKep9CQCidxrIQbsnNJDbBCYn+aIun140+dJQh4rW2QTnkFlf34HVito2GQowOdGb1sq+HV8uaIA6ZvnJlvqHILTKJR55E0zve0riHJ7IIFman8WZvrinlUIFRUSZ9Lv49VEDpTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZgKs7cUm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744665592; c=relaxed/simple;
+	bh=H93VNNIXfbQLimUNFSJa77wmOJ7vkVnE/zIgwACvebQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvMJgjiibXl7UOa779bvmms+kSnScDU5n4XDSpHzwrwCz5e30WT9mKyyfWNLjQXfdr+b5fHupN6+rXApxJeAidoZ6yPixNx9Wfmt55oXq/BDPXq2r9hBQcTfSqMIfk7ouYUO5f0uaZfZKbrfqpS+qcwQVabYFR0vGzSeLJeJLpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpDtmXx3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgKs7cUm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744665531;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=coS5bIjv+D/gf/yiERTG+K9wJBtK2z0KhS0caIojfFA=;
-	b=ZgKs7cUmr4Zf5+vLPlrTYiUT+4O/rWCo1tBIa2BmI+9JCi3PQWjxCR+RVcsbnOhxlJU96r
-	dKEg7bALqi2pgCKSkFrKkilINw3Ia1fKhp7HRkghT4sz06l08YHSW0q4NBJZLeVqwfpl0M
-	1BnKm4Fd89wwLBLI/WFHb+uvVAFBjLU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-446-lbrIh1omMAuEXJ--FixISw-1; Mon,
- 14 Apr 2025 17:18:48 -0400
-X-MC-Unique: lbrIh1omMAuEXJ--FixISw-1
-X-Mimecast-MFC-AGG-ID: lbrIh1omMAuEXJ--FixISw_1744665526
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F36CE18608CB;
-	Mon, 14 Apr 2025 21:18:35 +0000 (UTC)
-Received: from omen.home.shazbot.org (unknown [10.22.88.22])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 15B4F1809B73;
-	Mon, 14 Apr 2025 21:18:29 +0000 (UTC)
-From: Alex Williamson <alex.williamson@redhat.com>
-To: helgaas@kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	naravamudan@nvidia.com,
-	bhelgaas@google.com,
-	raphael.norwitz@nutanix.com,
-	ameynarkhede03@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jgg@nvidia.com,
-	yishaih@nvidia.com,
-	shameerali.kolothum.thodi@huawei.com,
-	kevin.tian@intel.com,
-	kvm@vger.kernel.org,
-	cp@absolutedigital.net,
-	stable@vger.kernel.org
-Subject: [PATCH] Revert "PCI: Avoid reset when disabled via sysfs"
-Date: Mon, 14 Apr 2025 15:18:23 -0600
-Message-ID: <20250414211828.3530741-1-alex.williamson@redhat.com>
-In-Reply-To: <20250207205600.1846178-1-naravamudan@nvidia.com>
-References: <20250207205600.1846178-1-naravamudan@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpDtmXx3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9FDC4CEE2;
+	Mon, 14 Apr 2025 21:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744665592;
+	bh=H93VNNIXfbQLimUNFSJa77wmOJ7vkVnE/zIgwACvebQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TpDtmXx379/yjgEyW6s4SjU5AVRj4ESJXMaGDUI8xeQOxIK0tRVEDoRDFiADj7sVk
+	 eAt2FmNvU657mJVfBBft+s3UXMbSnh98u2vyOpSRgUnGckjGboabfVb9J6I0YwaYQB
+	 pCmoJG21uaE1j3zvqK01z/QG7L/gJlcEIlcwKt29HhGDNtjYoQrgrkvhJW9GjVkp/8
+	 Qt0D8oVOaHnhChBd1wRR2d50ngS4mdmZqjpCYijL6Lk6XbyHfj9ijT4H1dKlTOecgI
+	 BgIzzwFMerrdUZP5nMPl0faMp4/NB3dU3ll15P+F4JB8ucpWo1By/1BBEmCdDBmbtT
+	 V2C6Vs1P7nDRA==
+Date: Mon, 14 Apr 2025 23:19:46 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, abdiel.janulgue@gmail.com,
+	daniel.almeida@collabora.com, robin.murphy@arm.com,
+	a.hindborg@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] rust: helpers: Add dma_alloc_attrs() and
+ dma_free_attrs()
+Message-ID: <Z_178hskzPrEbDXe@cassiopeiae>
+References: <20250412000507.157000-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412000507.157000-1-fujita.tomonori@gmail.com>
 
-This reverts commit 479380efe1625e251008d24b2810283db60d6fcd.
+On Sat, Apr 12, 2025 at 09:05:06AM +0900, FUJITA Tomonori wrote:
+> Add dma_alloc_attrs() and dma_free_attrs() helpers to fix a build
+> error when CONFIG_HAS_DMA is not enabled.
+> 
+> Note that when CONFIG_HAS_DMA is enabled, dma_alloc_attrs() and
+> dma_free_attrs() are included in both bindings_generated.rs and
+> bindings_helpers_generated.rs. The former takes precedence so behavior
+> remains unchanged in that case.
+> 
+> This fixes the following build error on UML:
+> 
+> error[E0425]: cannot find function `dma_alloc_attrs` in crate `bindings`
+>      --> rust/kernel/dma.rs:171:23
+>       |
+> 171   |               bindings::dma_alloc_attrs(
+>       |                         ^^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_alloc_pages`
+>       |
+>      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44568:5
+>       |
+> 44568 | /     pub fn dma_alloc_pages(
+> 44569 | |         dev: *mut device,
+> 44570 | |         size: usize,
+> 44571 | |         dma_handle: *mut dma_addr_t,
+> 44572 | |         dir: dma_data_direction,
+> 44573 | |         gfp: gfp_t,
+> 44574 | |     ) -> *mut page;
+>       | |___________________- similarly named function `dma_alloc_pages` defined here
+> 
+> error[E0425]: cannot find function `dma_free_attrs` in crate `bindings`
+>      --> rust/kernel/dma.rs:293:23
+>       |
+> 293   |               bindings::dma_free_attrs(
+>       |                         ^^^^^^^^^^^^^^ help: a function with a similar name exists: `dma_free_pages`
+>       |
+>      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44577:5
+>       |
+> 44577 | /     pub fn dma_free_pages(
+> 44578 | |         dev: *mut device,
+> 44579 | |         size: usize,
+> 44580 | |         page: *mut page,
+> 44581 | |         dma_handle: dma_addr_t,
+> 44582 | |         dir: dma_data_direction,
+> 44583 | |     );
+>       | |______- similarly named function `dma_free_pages` defined here
+> 
+> Fixes: ad2907b4e308 ("rust: add dma coherent allocator abstraction")
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-The reset_method attribute on a PCI device is only intended to manage
-the availability of function scoped resets for a device.  It was never
-intended to restrict resets targeting the bus or slot.
-
-In introducing a restriction that each device must support function
-level reset by testing pci_reset_supported(), we essentially create a
-catch-22, that a device must have a function scope reset in order to
-support bus/slot reset, when we use bus/slot reset to effect a reset
-of a device that does not support a function scoped reset, especially
-multi-function devices.
-
-This breaks the majority of uses cases where vfio-pci uses bus/slot
-resets to manage multifunction devices that do not support function
-scoped resets.
-
-Fixes: 479380efe162 ("PCI: Avoid reset when disabled via sysfs")
-Reported-by: Cal Peake <cp@absolutedigital.net>
-Link: https://lore.kernel.org/all/808e1111-27b7-f35b-6d5c-5b275e73677b@absolutedigital.net
-Cc: stable@vger.kernel.org
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/pci/pci.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4d7c9f64ea24..e77d5b53c0ce 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5429,8 +5429,6 @@ static bool pci_bus_resettable(struct pci_bus *bus)
- 		return false;
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		if (!pci_reset_supported(dev))
--			return false;
- 		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
- 		    (dev->subordinate && !pci_bus_resettable(dev->subordinate)))
- 			return false;
-@@ -5507,8 +5505,6 @@ static bool pci_slot_resettable(struct pci_slot *slot)
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		if (!pci_reset_supported(dev))
--			return false;
- 		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
- 		    (dev->subordinate && !pci_bus_resettable(dev->subordinate)))
- 			return false;
--- 
-2.48.1
-
+Acked-by: Danilo Krummrich <dakr@kernel.org>
