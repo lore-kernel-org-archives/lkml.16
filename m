@@ -1,116 +1,83 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FDE25C6E4;
-	Mon, 14 Apr 2025 08:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9C025D8E3;
+	Mon, 14 Apr 2025 08:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618136; cv=none; b=Z1cixsv/Rsh2trpCYXsV6NjTy3cKQFm1+ldVN5CJmR48QgTchOorZChVgwS1vPZTTWomZSX89Pe+TAfq46F/ACFze3+F/5xlPCritWSQ/rUvZ7VnWtl0PmiXaopA+7m3KA4PnNWBIfTz5F8nlNSiOCmin3+NqKSYAZ7Wuy2YzYU=
+	t=1744618140; cv=none; b=TXG+Pt+dJPN0ph7A8TxCqof56HGjJ2cK/iQdZxUu4OEDW8Cgk7YnuRwIvCNlr7SvrzrpFyGgx4hjk6eWzbR1V1IY7S6xW6Y1jdpJXur2Ga5z0NB6sMZLzhFJYv8NWPa/SK98/9yqJZ/Z6y0nkCA1GtX9HPrgKxX+jWh6SWoJ0ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618136; c=relaxed/simple;
-	bh=TSxR0ryeCYxEsTjpfjFmgThpxn29MIAmL2qAW49ZGuw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WBh4LZxHtBbyN21ycoEO+O8DkBPIbq+rnrJ42I4syo/K4adwTxESJOQGltee16pMTpcMB4KdKt8R7BZF3T0TDDkYVnbkn9Bojt3Q8pnLsvRl9k6C3HM/+FwO4bJXOnuKUFWg76d8/eFcdZ+Y6lzeXhGrkdkXMbbg3ND7BFci5y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Zbg1N03Brz27hSW;
-	Mon, 14 Apr 2025 16:09:28 +0800 (CST)
-Received: from dggpemf100013.china.huawei.com (unknown [7.185.36.179])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8F18F1400D4;
-	Mon, 14 Apr 2025 16:08:46 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- dggpemf100013.china.huawei.com (7.185.36.179) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 14 Apr 2025 16:08:46 +0800
-From: Yihang Li <liyihang9@huawei.com>
-To: <martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <liyihang9@huawei.com>, <liuyonglong@huawei.com>,
-	<prime.zeng@hisilicon.com>
-Subject: [PATCH v3 3/4] scsi: hisi_sas: Call I_T_nexus after soft reset for SATA disk
-Date: Mon, 14 Apr 2025 16:08:44 +0800
-Message-ID: <20250414080845.1220997-4-liyihang9@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250414080845.1220997-1-liyihang9@huawei.com>
-References: <20250414080845.1220997-1-liyihang9@huawei.com>
+	s=arc-20240116; t=1744618140; c=relaxed/simple;
+	bh=crlDOiIzpqHhF4EOe6WJHSMXqxU4ESK+mUAWvlLuFik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DxIMpO1ZmIVie0OIeosHYc7CsAcrlu+vegaJlKz1VxV939LTius+gXZ0szR5VtVsj5EvfdVkr3FhaEtCtJgILvB48ndcxcKckV9TZa79lDI9RFP4NcV3MseQxzfXKdzX6a6lzGuhTXFEobljswJWpzXlEWlCCs6F/U4k8F3CUxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D8C71007;
+	Mon, 14 Apr 2025 01:08:56 -0700 (PDT)
+Received: from [10.57.72.8] (unknown [10.57.72.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8752A3F694;
+	Mon, 14 Apr 2025 01:08:56 -0700 (PDT)
+Message-ID: <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com>
+Date: Mon, 14 Apr 2025 09:08:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemf100013.china.huawei.com (7.185.36.179)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PM: EM: Fix potential division-by-zero error in
+ em_compute_costs()
+To: Yaxiong Tian <iambestgod@qq.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yaxiong Tian <tianyaxiong@kylinos.cn>, rafael@kernel.org
+References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In commit 21c7e972475e ("scsi: hisi_sas: Disable SATA disk phy for severe
-I_T nexus reset failure"), if the softreset fails upon certain conditions,
-the PHY connected to the disk is disabled directly. Manual recovery is
-required, which is inconvenient for users in actual use.
+Hi Yaxiong,
 
-In addition, SATA disks do not support simultaneous connection of multiple
-hosts. Therefore, when multiple controllers are connected to a SATA disk
-at the same time, the controller which is connected later failed to issue
-an ATA softreset to the SATA disk. As a result, the PHY associated with
-the disk is disabled and cannot be automatically recovered.
+On 4/11/25 02:28, Yaxiong Tian wrote:
+> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> 
+> When the device is of a non-CPU type, table[i].performance won't be
+> initialized in the previous em_init_performance(), resulting in division
+> by zero when calculating costs in em_compute_costs().
+> 
+> Since the 'cost' algorithm is only used for EAS energy efficiency
+> calculations and is currently not utilized by other device drivers, we
+> should add the _is_cpu_device(dev) check to prevent this division-by-zero
+> issue.
+> 
+> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove division")
+> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> ---
+>   kernel/power/energy_model.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+> index d9b7e2b38c7a..d1fa7e8787b5 100644
+> --- a/kernel/power/energy_model.c
+> +++ b/kernel/power/energy_model.c
+> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
+>   					cost, ret);
+>   				return -EINVAL;
+>   			}
+> -		} else {
+> +		} else if (_is_cpu_device(dev)) {
+>   			/* increase resolution of 'cost' precision */
+>   			power_res = table[i].power * 10;
+>   			cost = power_res / table[i].performance;
 
-Now that, we will not focus on the execution result of softreset. No
-matter whether the execution is successful or not, we will directly carry
-out I_T_nexus_reset.
 
-Fixes: 21c7e972475e ("scsi: hisi_sas: Disable SATA disk phy for severe I_T
-nexus reset failure")
-Signed-off-by: Yihang Li <liyihang9@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c | 29 +++++----------------------
- 1 file changed, 5 insertions(+), 24 deletions(-)
+As the test robot pointed out, please set the 'cost' to 0
+where it's declared.
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index d7f9d1d853cf..5c05d14330aa 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1875,33 +1875,14 @@ static int hisi_sas_I_T_nexus_reset(struct domain_device *device)
- 	}
- 	hisi_sas_dereg_device(hisi_hba, device);
- 
--	rc = hisi_sas_debug_I_T_nexus_reset(device);
--	if (rc == TMF_RESP_FUNC_COMPLETE && dev_is_sata(device)) {
--		struct sas_phy *local_phy;
--
-+	if (dev_is_sata(device)) {
- 		rc = hisi_sas_softreset_ata_disk(device);
--		switch (rc) {
--		case -ECOMM:
--			rc = -ENODEV;
--			break;
--		case TMF_RESP_FUNC_FAILED:
--		case -EMSGSIZE:
--		case -EIO:
--			local_phy = sas_get_local_phy(device);
--			rc = sas_phy_enable(local_phy, 0);
--			if (!rc) {
--				local_phy->enabled = 0;
--				dev_err(dev, "Disabled local phy of ATA disk %016llx due to softreset fail (%d)\n",
--					SAS_ADDR(device->sas_addr), rc);
--				rc = -ENODEV;
--			}
--			sas_put_local_phy(local_phy);
--			break;
--		default:
--			break;
--		}
-+		if (rc == TMF_RESP_FUNC_FAILED)
-+			dev_err(dev, "ata disk %016llx reset (%d)\n",
-+				SAS_ADDR(device->sas_addr), rc);
- 	}
- 
-+	rc = hisi_sas_debug_I_T_nexus_reset(device);
- 	if ((rc == TMF_RESP_FUNC_COMPLETE) || (rc == -ENODEV))
- 		hisi_sas_release_task(hisi_hba, device);
- 
--- 
-2.33.0
+The rest should be fine.
 
+Regards,
+Lukasz
