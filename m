@@ -1,104 +1,133 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54BB80B;
-	Mon, 14 Apr 2025 12:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2123226656B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744632581; cv=none; b=kllX6aAO69pJY1S741BKToLzZ+lHIOK4kA+Nt68gVK8NpQ2qvwX3UqUaw+Gstei8haz7iFKdsGaQvCG7IS/G5kNrskyZjVVzF89NzIRi9n4opFlP1ssBqZq7Xf566TvTITpdPSvnXq/u8TZzx0ICTQIOGO2KUOrIZ/PZpIn5VQU=
+	t=1744632593; cv=none; b=GfQ/ozXf6UHITI3XsGoG0RgMWFpHwEZVg7GzooxgcLw0/f4bJgWfdj2VXWSnhRFYMBeVwuL1rfRkFxjrbc5hu7b9QSBW1CPbcG+rO4OXUiHy18YgYNpWjynAAJRa7h3vqbiASTD6befPkbStJFaFkrHr3RksuXtB8sctY/Qo6vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744632581; c=relaxed/simple;
-	bh=Z24WC0yRu0hGKO8M+SaIoFZZwIfYmEPH65p1iHpqsHw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QYkiuyNUY124M3w7uLZ59yOl9VkYDOaFl2Vx0eNvFyXE4jlkzP9BPyyr+ienEsOl0bJHRXpL2aFH8juQuIN4LPw12spfQ4FP+glPOvVsLANnB98QhusDTwCZY0jFI1h6hZE/uzKJq1Ly9d6ajZ1/e1dT5NPysYuSLKGWNmJC0RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eSCYkf2f; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744632593; c=relaxed/simple;
+	bh=AnZECDH63/Sx09OClwV5T1VAh2M07OMoa79dpLKTWJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lXB4+zO2YklF4clmVEjcHpuPcErgNPV0PjwNob489jIJH4LjZpel3KLBqiT9nwcFzjTVmbuY9xgZ/eaWddIET/H3KIzvaL+0RpNxWVHgVuSsKGHaM4X3cG0INZ76XmVrhTMnENsl/kw4CxSF/2L5k6Yt8NcT22q3OiCTKdoyTB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=KrcWC2uP; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eSCYkf2f"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EC9U0R2150317
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 07:09:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744632570;
-	bh=FY2G7ywdamUCOs1pJmxsy0MWSW+4XqqFqXoRrEMbON4=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=eSCYkf2f4IKIQQ2xCOtpJuiKiCMNGvpZqmaN9WPL3OGOG7TWJ+U0vbaEdmxbM0NPw
-	 DijoYY52vLkdtu3+nTedcsO5WnrSf1JtqTUq/u09eiP4l7fU0YeLQUuG8yKNT2TYFH
-	 9xicptTbWs5aYibt1NMSDadlqjGnBKVbKVFu9XEU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EC9U0x054608
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 07:09:30 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 07:09:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 07:09:30 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EC9Uic090737;
-	Mon, 14 Apr 2025 07:09:30 -0500
-Date: Mon, 14 Apr 2025 07:09:30 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH 0/2] J722S: DT Node cleanup for serdes0 and serdes1
-Message-ID: <20250414120930.m7x7zfmyby22urpo@ultimate>
-References: <20250412052712.927626-1-s-vadapalli@ti.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="KrcWC2uP"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so45455095e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1744632589; x=1745237389; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zE3/vIaDDm49Ow0awT1xfzab8Kaog4yG+YjbBkNm2n8=;
+        b=KrcWC2uPGHuP9K2UaZG6txgp8vjhZLAOj0U2qzxwwDFcJymsxhe6mjRlvbhEFvXxCr
+         NDFtRCo0wpaFMrH68hei50kcJYQrpFWAvffnbKiIt5wKjyfag1R/FLIYOL0ge5fBQApD
+         8BgjEDX0LL/3yuJEFHaUGgMJMBKUVpqqtsYuH/Rc9IApsYMkJikcHF8iFQqXu/1K3CcO
+         /S1uSvEA1VfRr7wDc3vlApj2aQPSL+gRHmz/X8gNK3DPmdSlIFSBL346ocAYtVFI+n2i
+         wrT3sazkr9LLkz1OoJIMOBCwG4/DO4utfr3A24Ifsd7UB54xYGCqZ2e6pqv6a5pMRNSu
+         H7NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744632589; x=1745237389;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zE3/vIaDDm49Ow0awT1xfzab8Kaog4yG+YjbBkNm2n8=;
+        b=UCLRfD2yieuPBkdwjnFSybB9ja8MxTZYUJ6jT2RJ2Abvs7R4nJp3gMu86j29152PrO
+         UnyniaAqqT2B/J0q5xuAbHSqtUoYdY4+NsGczqOh6TNICgLTm6v/pgRmYKH8iqMYC38e
+         ibUHfSnra6ZMMT/uj9DOiMup6iTZxXpzjSDdlFMiZS9+Myxek8ozAyLNxryOieoa5U06
+         J8gYNoGjdrwhQg1xfvocONWHLNX0wNyM7xvaQp3qwXgAfIR5JGcFstpEOGjayd/9DMIS
+         jPThDW1cGs/uF1pI45nOim9KyFvt1k6KeWWanLeLuphBJmV5pIXzAv/YepxHYaS8d1wl
+         XBXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDGtHa+A78aYPSIq6fjeO5BYkrLICzG3WVP1d8/FG66nF0XvTJ2nvsGjMJaZVr1wTys3ThTUVRp5rlROg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj1or1VDc6AUuRF3sOo7VjYwDgAXa6j8KounsrJo6OHJdlxo19
+	fIF5EP96e6WhZVB3lV6/RKBf4C7mVnfXoBAm2p3p/SjQ3Emv2Qw7wgvgMBSQs6U=
+X-Gm-Gg: ASbGncvMFpiZ8y+EkCQJ4zE+VhOFVex4eLdlVHqXBXGTY+o7NKbjW5CNt9TXbxsr7eW
+	lwvFsQE+4HZtRNWVjBTZUTPjwMJw+B+dxlx4yD81R1w9vVhmr+KPCz81Fo/3uHVXgj+MHaQYCSy
+	kMaakhnxaRkyUUDi9YUKXfaLzGXJ29pZ02HxV67k0ofE4qnP6exqnAyqc2d+8FrtEzK6GCk1/UK
+	U18OHwVze+yxFLPlv6JdwiVLPRyMR9S8OIJCRo/q6+txcXKyaymRyiEQ3HVo6rCy0JWvYaHHu7m
+	XN3qyGZuUU0YDrTKQ9M7Gw7IziVz
+X-Google-Smtp-Source: AGHT+IFNxS0Xit/RMmUSHhm4BTUKEcgXGGkLi80tu1FflJzbof+IkBnb8Wny7dyxa/mkRZ1Jg7nFRw==
+X-Received: by 2002:a05:600c:1da1:b0:43c:fb5b:84d8 with SMTP id 5b1f17b1804b1-43f3a95de2cmr125882165e9.16.1744632589124;
+        Mon, 14 Apr 2025 05:09:49 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::31af])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2c46sm174308315e9.13.2025.04.14.05.09.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 05:09:48 -0700 (PDT)
+From: Andrew Jones <ajones@ventanamicro.com>
+To: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	alex@ghiti.fr,
+	conor.dooley@microchip.com,
+	oe-kbuild-all@lists.linux.dev,
+	charlie@rivosinc.com,
+	samuel.holland@sifive.com,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] riscv: Provide all alternative macros all the time
+Date: Mon, 14 Apr 2025 14:09:48 +0200
+Message-ID: <20250414120947.135173-2-ajones@ventanamicro.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250412052712.927626-1-s-vadapalli@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
-On 10:57-20250412, Siddharth Vadapalli wrote:
-> Hello,
-> 
-> This series is based on the following series:
-> https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> Based on the discussion in the above series which disabled 'serdes_wiz0'
-> and 'serdes_wiz1' nodes in the SoC file and enabled them in the board
-> file, Udit pointed out that it wasn't necessary to disable 'serdes0' and
-> 'serdes1' in the SoC file anymore, since that is not a working
-> configuration - serdes_wizX enabled and serdesX disabled doesn't work.
-> 
-> Hence, this series aims to cleanup the serdesX nodes after the changes
-> made by the above series.
-> 
-> Regards,
-> Siddharth.
-> 
-> Siddharth Vadapalli (2):
->   arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
->   arm64: dts: ti: k3-j722s-evm: drop redundant status within
->     serdes0/serdes1
-> 
->  arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 2 --
->  arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ----
->  2 files changed, 6 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+We need to provide all six forms of the alternative macros
+(ALTERNATIVE, ALTERNATIVE_2, _ALTERNATIVE_CFG, _ALTERNATIVE_CFG_2,
+__ALTERNATIVE_CFG, __ALTERNATIVE_CFG_2) for all four cases derived
+from the two ifdefs (RISCV_ALTERNATIVE, __ASSEMBLY__) in order to
+ensure all configs can compile. Define this missing ones and ensure
+all are defined to consume all parameters passed.
 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504130710.3IKz6Ibs-lkp@intel.com/
+Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+---
+ arch/riscv/include/asm/alternative-macros.h | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-I do not understand the logic here. serdes cannot operate without wiz
-nodes, correct? why would we leave serdes on by default?
-
-
+diff --git a/arch/riscv/include/asm/alternative-macros.h b/arch/riscv/include/asm/alternative-macros.h
+index 721ec275ce57..231d777d936c 100644
+--- a/arch/riscv/include/asm/alternative-macros.h
++++ b/arch/riscv/include/asm/alternative-macros.h
+@@ -115,24 +115,19 @@
+ 	\old_c
+ .endm
+ 
+-#define _ALTERNATIVE_CFG(old_c, ...)	\
+-	ALTERNATIVE_CFG old_c
+-
+-#define _ALTERNATIVE_CFG_2(old_c, ...)	\
+-	ALTERNATIVE_CFG old_c
++#define __ALTERNATIVE_CFG(old_c, ...)		ALTERNATIVE_CFG old_c
++#define __ALTERNATIVE_CFG_2(old_c, ...)		ALTERNATIVE_CFG old_c
+ 
+ #else /* !__ASSEMBLY__ */
+ 
+-#define __ALTERNATIVE_CFG(old_c)	\
+-	old_c "\n"
++#define __ALTERNATIVE_CFG(old_c, ...)		old_c "\n"
++#define __ALTERNATIVE_CFG_2(old_c, ...)		old_c "\n"
+ 
+-#define _ALTERNATIVE_CFG(old_c, ...)	\
+-	__ALTERNATIVE_CFG(old_c)
++#endif /* __ASSEMBLY__ */
+ 
+-#define _ALTERNATIVE_CFG_2(old_c, ...)	\
+-	__ALTERNATIVE_CFG(old_c)
++#define _ALTERNATIVE_CFG(old_c, ...)		__ALTERNATIVE_CFG(old_c)
++#define _ALTERNATIVE_CFG_2(old_c, ...)		__ALTERNATIVE_CFG_2(old_c)
+ 
+-#endif /* __ASSEMBLY__ */
+ #endif /* CONFIG_RISCV_ALTERNATIVE */
+ 
+ /*
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.49.0
+
