@@ -1,120 +1,102 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7AC2DFA4D;
-	Mon, 14 Apr 2025 14:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333FAEC4;
+	Mon, 14 Apr 2025 14:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641449; cv=none; b=Zmqdz+MtSvFJlrV5BGBF6vs0B2rLPe+3wS86euBiX5pM2GUJsAKnUDMUJrO4MH5RsMSRhQwFFodvhwJ59wmgO5w0ed9YWYUsCbcnpwVNSDJ/0vFDZn95HVH/EZEXkv53VtF+4ohQlRj3z9emeZbLh9TQNBB/NKE1IQOZF/oaQmU=
+	t=1744641490; cv=none; b=a3B3wniRxka+TeSdb6zIi63Cu9vAeVZKSiC9hl4vfRv3eIU8hKV5ZKd3Vp5HBlGgSOm2n4Sq4UBB/n2ZB1gTxg/p6d+lka1LjMEq9NzDI7oo0LB37OM7NYUfmL2MWmjlz0DLbsluttH4YCX/DW5PIwVu8kA0/7UFnuM5ztodvUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641449; c=relaxed/simple;
-	bh=/RyjC2iNOfnZm2jgaWulSid9/ozmjHgS3tJdqrDAXDw=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JdVGoCMGczJwP5iUM+cIgTJGZvv3SbhHNUlVSpz4gK89fbwdIhm6VMkjntLjC+pF9xq87EmqVo/DM8pDraBGYtTRt2kVdT/RiK0ksMTgi5BjKgzfW8ADCO7gMS1807xmxHZ9B7NQ8cTq2s/fkeDuLkiPcTRWaKj5ixL+vgNFfCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZbqY14QMGzHrDV;
-	Mon, 14 Apr 2025 22:33:57 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 53FEC1401F4;
-	Mon, 14 Apr 2025 22:37:23 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 14 Apr 2025 22:37:21 +0800
-Subject: Re: [RESEND PATCH v18 1/2] ACPI: APEI: send SIGBUS to current task if
- synchronous memory error not recovered
-To: Shuai Xue <xueshuai@linux.alibaba.com>, <catalin.marinas@arm.com>,
-	<sudeep.holla@arm.com>, <lpieralisi@kernel.org>,
-	<linux-acpi@vger.kernel.org>, <yazen.ghannam@amd.com>,
-	<mark.rutland@arm.com>, <mingo@redhat.com>, <robin.murphy@arm.com>,
-	<Jonathan.Cameron@Huawei.com>, <bp@alien8.de>, <rafael@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <wangkefeng.wang@huawei.com>,
-	<tanxiaofei@huawei.com>, <mawupeng1@huawei.com>, <tony.luck@intel.com>,
-	<linmiaohe@huawei.com>, <naoya.horiguchi@nec.com>, <james.morse@arm.com>,
-	<tongtiangen@huawei.com>, <gregkh@linuxfoundation.org>, <will@kernel.org>,
-	<jarkko@kernel.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <linux-edac@vger.kernel.org>, <x86@kernel.org>,
-	<justin.he@arm.com>, <ardb@kernel.org>, <ying.huang@linux.alibaba.com>,
-	<ashish.kalra@amd.com>, <baolin.wang@linux.alibaba.com>,
-	<tglx@linutronix.de>, <dave.hansen@linux.intel.com>, <lenb@kernel.org>,
-	<hpa@zytor.com>, <robert.moore@intel.com>, <lvying6@huawei.com>,
-	<xiexiuqi@huawei.com>, <zhuo.song@linux.alibaba.com>
-References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
- <20250404112050.42040-2-xueshuai@linux.alibaba.com>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
-Date: Mon, 14 Apr 2025 22:37:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	s=arc-20240116; t=1744641490; c=relaxed/simple;
+	bh=L/J0AmkibIg4ZG+O4+FClzNVHaDwTTVY7iHUZg6U9k8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fXnKqUMDShB9ZJ3I1sUp3p1EWjc+5my7NOPoj6WtsCa02WeRZr5KcHEbWCk1adXY8smcZi9NnNcRYaycKJoB9Y3GrwoLtnsrO7s0OTnsBxw6Uwf1b9g8DqFqexC9+BBcu3FhFUFks4SAV0DhjbOsR9kgAaCAlY7BqfDt0s46Uiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cu4YiffD; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cu4YiffD"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEbsd02082720
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 09:37:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744641474;
+	bh=4rK0A9UMpj1kGHbXtIjjRIKa3M+N2J82j6cK7DYIxMU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=cu4YiffDqkQedKUId7tHwR5CWD6KoabHcGPWjMwGS77vSNeGfBV9ciCHRqLcq30/M
+	 Tb5UGxyky4zOs0td5xt4Xh5iGH2jqXz+7VIuT538pz8duQ4r4dbL+uu6knOZhcQ8Wq
+	 6Fl0Bh+jYrKf4BkTtc47HynC5NJEl3q50ypG/u2k=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEbs7v067711
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 14 Apr 2025 09:37:54 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
+ Apr 2025 09:37:53 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 14 Apr 2025 09:37:53 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EEbrma003772;
+	Mon, 14 Apr 2025 09:37:53 -0500
+Message-ID: <65119d3a-6907-4911-ba19-e3bcdb65b529@ti.com>
+Date: Mon, 14 Apr 2025 09:37:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250404112050.42040-2-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Hiago De Franco <hiagofranco@gmail.com>,
+        Adrian Hunter
+	<adrian.hunter@intel.com>,
+        Josua Mayer <josua@solid-run.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>,
+        Hiago De Franco
+	<hiago.franco@toradex.com>
+References: <20250407222702.2199047-1-jm@ti.com>
+ <20250411130354.dc3sv3e7ruekkhkp@hiago-nb>
+ <d8e45e50-f0eb-41d0-9c50-56147eaf262a@ti.com>
+ <20250411194813.c4ft2uxgdiuza5cm@hiago-nb>
+ <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
+ <20250414065119.GA6309@francesco-nb>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250414065119.GA6309@francesco-nb>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 2025/4/4 19:20, Shuai Xue wrote:
-> Synchronous error was detected as a result of user-space process accessing
-> a 2-bit uncorrected error. The CPU will take a synchronous error exception
-> such as Synchronous External Abort (SEA) on Arm64. The kernel will queue a
-> memory_failure() work which poisons the related page, unmaps the page, and
-> then sends a SIGBUS to the process, so that a system wide panic can be
-> avoided.
-> 
-> However, no memory_failure() work will be queued when abnormal synchronous
-> errors occur. These errors can include situations such as invalid PA,
-> unexpected severity, no memory failure config support, invalid GUID
-> section, etc. In such case, the user-space process will trigger SEA again.
-> This loop can potentially exceed the platform firmware threshold or even
-> trigger a kernel hard lockup, leading to a system reboot.
-> 
-> Fix it by performing a force kill if no memory_failure() work is queued
-> for synchronous errors.
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> Reviewed-by: Jane Chu <jane.chu@oracle.com>
-> ---
->   drivers/acpi/apei/ghes.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index b72772494655..50e4d924aa8b 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -799,6 +799,17 @@ static bool ghes_do_proc(struct ghes *ghes,
->   		}
->   	}
->   
-> +	/*
-> +	 * If no memory failure work is queued for abnormal synchronous
-> +	 * errors, do a force kill.
-> +	 */
-> +	if (sync && !queued) {
-> +		dev_err(ghes->dev,
-> +			HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable error (SIGBUS)\n",
-> +			current->comm, task_pid_nr(current));
-> +		force_sig(SIGBUS);
-> +	}
+Hi Francesco,
 
-I think it's reasonable to send a force kill to the task when the
-synchronous memory error is not recovered.
+On 4/14/25 1:51 AM, Francesco Dolcini wrote:
+> Hello Judith
+> 
+> On Fri, Apr 11, 2025 at 04:55:39PM -0500, Judith Mendez wrote:
+>> My understanding was that we do not like adding new DT properties if
+>> we can find a way to apply the quirk in the driver.
+> ...
+> 
+>> If this implementation flies with the maintainers, then we can go back to DT
+>> property implementation.
+> 
+> Not sure if this is clear, but this patch is NOT working according to
+> our tests, we would need to fix it in a different way.
 
-But I hope this code will not trigger some legacy firmware issues,
-let's be careful for this, so can we just introduce arch specific
-callbacks for this?
+Not sure if you are following the thread with Hiago, but we are fixing
+it a different way; add a new DT property: "ti,suppress-v1p8-ena" for SD
+card which allows us to have granular control on when v1p8 is suppressed
+for MMC1.
 
-Thanks
-Hanjun
+With this method, we make sure the quirk is never applied to your board (;
+
+~ Judith
+
