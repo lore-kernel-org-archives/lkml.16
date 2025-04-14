@@ -1,463 +1,234 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2074.outbound.protection.outlook.com [40.107.20.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E0D1A23A5;
-	Mon, 14 Apr 2025 03:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744602718; cv=fail; b=dch+unEZM/Ho+YxE/KeohWvfErWiGyQQLA/w1lwjVvfTjaNTEEERhUFzYgMHr1MgPM9MXzv43yt5FUcbq/pr+sAcweDoGdV0/6VwhCap8ZvkDKcYDooYBHPGpL7RRugdP5jhXf68ArI/9WW9s6hyEIYMPBjS2emJtcvWdKrvxVU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744602718; c=relaxed/simple;
-	bh=wfnSyJOeJG0NwW0Wcp21MIzeXZMJLz/LfpbLbrOQADg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r+LGcclDGzl+e4UrHId5Sk6BTr8HW0NxaviRAeVHCWqpoyMfyIBUjephbKLKABAVJrZkxND933s11gKavl0FdKK0GYK3ZoU4/D6X7UGWrkzzJDr/3JPOhn2AMZ/wXxYlwopvTN1wSawrn2lvN62dEgM82hk2ph5HRIpZB1cI92A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=aZYBiRGS; arc=fail smtp.client-ip=40.107.20.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="aZYBiRGS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t6SjjJdoarBTDnZUxxLbXdp/t6JZoBrqJYCDg6ogOAGykzjev/msqsj8sn5Z7dplyEDNYdcAqcWg/RCrJm8XfUqw6z0Pjlm5Tee9hyxb6HPBb9/0Wf/pYlZTLv54KEuzJLbsoG7crvKgXUlb4V07PR8GnnupQxJFi9bkDQU3Y2aoXJxaIWoccCdDLkdPiJQ3MrheLRlFNGb3f7ADxlyP3KFBi/1ZaM1HCINNtNzETLvKWDx6cmytKmpwlGOP9Yfi9dXAceLZgtYrlwQtzRROXxkv02vtdkpy4JlOrvY8d2ABPVDD+2uEUx8Zm3XNiTiokvgO5GLUogZUr4+EU9NuQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p+kL9UBzdrjmaegxyyDJO/ugO11EskvSdj0RB2Cqlgg=;
- b=lrP0wxuFn19ads05PFBuJANd0cpKAerGWmLfbpIxYBCNRVHEPp/v8goUllRQSXCGmUdqPteoaxWyuTM+I24d3zIIHnMXwBe8X917lwy5b/FhVhm+Ki8Wob8nYdGs2g1F5n5xnh41T/kDY8Oj556A+nTC7jAm0gsjnpIUl4ob5WnlrDX9inRFCiRCpM13aQxhb5/6qzO83lVD8QF7CUGXAMjLKcmPmmYxOMrfuBBtj7O4csVDVZixEOtkbYyUmuC6DgRnEPaUlu0x3ig80ng+cVImb7i75w3Kt3JaZzCmoE+fIrqGLCQF2nlYmHio1H0Wgn24JSNJ4NQg42jNwT7xyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p+kL9UBzdrjmaegxyyDJO/ugO11EskvSdj0RB2Cqlgg=;
- b=aZYBiRGSmSn3glPzX6bqaYGq6bnbgLKIAWr0SqlqzJskeJZoiOc3zRf2bz+tG+1iQ3YmTK2/6XFj5dJcBukWeDSBMRiPw4JA7TI64UpQ2M1igbIDTCKMh6j/8PquQDJGvoaWDqy1E9jjIOC0Ji7SzE7KQOhVJk5xuFfFOrZ0d8HqPiYDv6FV35x/E1iFJ6Sziv3BjzHsGR6TfNcTIirZMaB8C+ka4Jssz4MGROwYepKLMug0f88RTc8QtXXxFufD8qnYZqzMSAkWYYawVbgxzC3LRRwEyJKwWqA2NQspuLE1TFVW2/6rKrl2FvcHa8WGY2bAmafL/M5i5zdEGJZemA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by AS8PR04MB9205.eurprd04.prod.outlook.com (2603:10a6:20b:44c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
- 2025 03:51:53 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 03:51:53 +0000
-From: Liu Ying <victor.liu@nxp.com>
-To: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	tglx@linutronix.de,
-	vkoul@kernel.org,
-	kishon@kernel.org,
-	Frank.Li@nxp.com,
-	lumag@kernel.org,
-	aisheng.dong@nxp.com,
-	agx@sigxcpu.org,
-	u.kleine-koenig@baylibre.com,
-	francesco@dolcini.it,
-	dmitry.baryshkov@linaro.org
-Subject: [DO NOT MERGE PATCH v9 19/19] arm64: dts: imx8qxp-mek: Add MX8-DLVDS-LCD1 display module support
-Date: Mon, 14 Apr 2025 11:50:28 +0800
-Message-Id: <20250414035028.1561475-20-victor.liu@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250414035028.1561475-1-victor.liu@nxp.com>
-References: <20250414035028.1561475-1-victor.liu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SGBP274CA0017.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::29)
- To AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B7E664C6
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744602753; cv=none; b=G0AaOqbUt/1tuS50O6qnzAAl2nAwi2YtPKwJDyhun2B3sCKvBkoEgOtabAzOBY7GXBtyqpu6T1NOLUKPxfBsPh902jUUm1u1lGP4FKpmRcrzWS9aR7V1ukJsMak2/jtk4aiG5SiGHXklfOzd6Cf2w7d0uyDjCrayw05xm8PO9F8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744602753; c=relaxed/simple;
+	bh=XVwDcAEiYeJPSRKRhxnWs+iE9GLlQGh60EoL7fXPtNA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=H8/fl85wHq8LQAYxYzp1SZLB+TQhhXgWK73+SdP/5hjbL/SiL4YpKWENElOHiGTmr8XJIO7AJ+SqwHkqmA6w+vegOy0Q640WUivtzZF9Clf0UJo+45+oe0kGFilJ1/SqKeFoz9K8QISo4Gp0BTlxyKs8tEIcW5+8tfeOPoSh9JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d585d76b79so30767945ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:52:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744602751; x=1745207551;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K4ofJTsYjACcwFNdnN4T1b9Qb1iA3eXa6RaUP9UE9Sw=;
+        b=IOqpt6HKrjcuTbcIyxhS65wZ2MzaMlBQjJvwusgpNoH16VfWuT22RK73uBQFl3a4nF
+         MBd6v5FwCPJXkKvexXEBNMVOfTu/qJVYh0ulX+hfBxMz6AlNaHU6X5p3A6IqIDTq3J5p
+         PZehyQs3SVGBv4qqFZRIDfm/KD2SXJfiD/w6TG66jcFy+ewPnZOsHeNFjivbaJeR/ALD
+         qBaz5UNrJxiJF4KK8IxpFOxVd0XSA0RgdHvURN4Sk2A/EPtNve4Aig/F+ks5bq+/0ReV
+         h7KOmDWImVih+uHFV5zhO0Au25OcBd8+RD6PKVdIKfYe7W/sYYPt6QTwfC3JSmnlCnq3
+         2pJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSEY/29SCEj7tcDLocLxOGGMvofovXTjv/6PeeoFvshJ+kK5388q8R7FO48KrNJ2s+VIUXoKHwZnQrEp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6ZfCxBVgwGsleD7+H9CHuCZAQRJMOKF8qhPWYQXZP8G2qca2b
+	B7kaYDJJJ6JEXpizc2KSLIZKdTmWU6gtrmQKhVF10Gk+vLivSKf+yF8dms3o4CgGJH8gDZ1l5om
+	raUvcwTep1ZYdxt2LvFX9dvo0NId2WQCgtM14T88oeQnTwlE98SRWmaE=
+X-Google-Smtp-Source: AGHT+IE2kHDWEk+9Czb/Bn6XO2ZdybEoOcL+OFcO7jwto5GoDRPRfYJqLsmsbQa9cztf4P/M/TDJAgE+S6eS2adjS9NW3TWIlkMA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS8PR04MB9205:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbcb326c-9259-4091-e3a9-08dd7b07b1c1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2z4hhOuZw0pBCSrHkOp7ME3GXQ4y4SUJQXGkGB4AqJz5F0WWoyYEh/g6Imjv?=
- =?us-ascii?Q?8B8u1YaQVismJT/Zj4cXQfPfSvGKLuZBZ7s2ANaRyx5d9COAsF5CbhdMNTIC?=
- =?us-ascii?Q?80Yncbssu5M6fO/d7SL0eg9RwuYwB1ptCFL3HoAvs5UX85IFnFLVqBJZr7Sq?=
- =?us-ascii?Q?4C+RBtYtFpkCmeRWyoRp1zJj1ivNeYlYsaL11ueOJSnvivQ2D6Z6w1thwlHP?=
- =?us-ascii?Q?jjOD0lCPK/o07ZbD7Asb8MFzNGp3Yo0YYNsfSegKxzXMDEfA/3GDobxUIOJa?=
- =?us-ascii?Q?JBfa3zKJOqMzf6YJwf1v96DyqkIDeDTGB8LOZZ54naiLcmZN1vQ+SdN+Y9qa?=
- =?us-ascii?Q?GGwRpetHNM5A1+t0R+8mUPJO6vNJbOqaPYx8GackRkBq4pm4E6emV4UgORgN?=
- =?us-ascii?Q?I/dMzSDYC19ji4rLkB9m9AQmpLT1AyezNa8sGPzcCkhCPBgHmunq+6pP1xVc?=
- =?us-ascii?Q?NMyGWoiIEe2ueJRsic9zPhnqSzbQ+gSQwBZsX2bxs8P9+3fpV5Zq9p702e5V?=
- =?us-ascii?Q?QqgOPHi1tSRn9UxeYixXcbbHPe3qDK9WffoWNL70KJUFTebXyKcTAPTr51Dg?=
- =?us-ascii?Q?d6YzvJMDG8LbqJ6eCFeoqB8LRdL0Jtn88UsD0XdGfLoA9GZPfjy1VhUlWhZH?=
- =?us-ascii?Q?T4cuHSmJkwW61pl0QmHJsjU4TtBPZ3lHZxl1deoxrz8mLueNaSL5K3QOOU3Q?=
- =?us-ascii?Q?kohbqpjvdn0nOvFq9K13YFXy7sCJv2lae5HBW6dkyA+J6tbuNbkJsZMAg/bE?=
- =?us-ascii?Q?idl9ZDSOMpSTM7wBi/fnqtWiarGy0Az/KheQUGzj6B9GfVLYDJf1QRAUm5+v?=
- =?us-ascii?Q?aLU9uD7/j1Xn/vIByvqiz9yo3cuvuhEbTgikPAJ4KY0Ykh+JLQHXkt6Hkiqd?=
- =?us-ascii?Q?reUIF3dA/gitv/e0k4X6gt/eUqtuogrRa26dULUWxAGWReU5ascmad7NPv7D?=
- =?us-ascii?Q?jhUI7TUMpEP5XekIKyRljXwYCwhSwxIyPYSQoQpk/l825WA+cS+EfoApZ/+X?=
- =?us-ascii?Q?9jlaj6Z+qBec5UKgj1sIqg74kwpnXbSgVvfF0aIXeCS3uEnwYmhdkl+UaEcf?=
- =?us-ascii?Q?BzxWRjodoh84TbctiVtfW8fyZPBstjqYOL/H05+FhS7Wfll/ECSbMGEpTpVF?=
- =?us-ascii?Q?Mr0Kamlg+ftjPHzyJbp6XbHN+9JbCgJMF7qa+zzX9bB4TbQB4jG8+pOVl15g?=
- =?us-ascii?Q?JmabOKiaXV/zjK78jvoBr8CY5kHTyYYHNlxwOdTh5hBBK0fTjlavni6ayoQo?=
- =?us-ascii?Q?cAwUvmqfBfy5yNYUUB6Kb0zGaRO97lefsS7Yw6y5Ew9ma4D5YkhtlaHE6119?=
- =?us-ascii?Q?7Ziz14QfVgpTHlutI5jBheZ0BUNa9GAXYeDyRPBePaUpVNbqfH+3+4hh1ajf?=
- =?us-ascii?Q?dPgdJA68H1JH/vafRGMWR91mUnhlFK3jXT6C+xw+bOOwPlEPHCxrBOTUU6qZ?=
- =?us-ascii?Q?EN2FExI+QjUtLbUOETQyF2FwYZkZRc2lLqlv7VdAB1C7/hd+srmkKw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1cpaBBAE2D3oxC5AR6aNnsO8NzwTCDAUKsw+D5O8DLnA9rE2+gAC/l0eeacx?=
- =?us-ascii?Q?IYLaVM4FnqNgmSdSeJlDeWCAn90o3bAZhivPpO7qR8p9ZCgFmdlg2EhmelhF?=
- =?us-ascii?Q?Qtbme/AGLeK1ogMmr0GIMUTyYniwCH7HJQLG+Q9bvxVSJvl8wilHl0i6nqmz?=
- =?us-ascii?Q?2MCrSmECWslYahByhAqbs+rzTli1Y7uXiVgKvo0J5t5DiRCL8Qbd+QhyF8my?=
- =?us-ascii?Q?o+73Z4OHM2QP3W+Mjbia0ThX8rpPNzEp+0IGeWuQxbOcdEWa+9NCtLyeugaC?=
- =?us-ascii?Q?VTGMUHOuNDTQJNeccZcyJpaG98ym4Qbox947GH3Qnc4nbAd0BKYu/ESNY9Eh?=
- =?us-ascii?Q?CBxNkMTe/3Z+r1nzqVNp3ciI7FkoWWfhx81fNvOzET+HPLpPq5XadMnB5QGN?=
- =?us-ascii?Q?dJUxeb4bL9QEMUgXjK4Ov1rjI7aZpNsMnaKhAnnnUYzmvYrjs/3WdIUlxEWe?=
- =?us-ascii?Q?0DR9pmw3z1W6c5thPoDc4C/qX06FOvLgOBU63BtNOECHRhxnVdEp2RHguEm2?=
- =?us-ascii?Q?M4HiNgxwtDRCn163K1yhLzQ6c4Bef5dhvh+qBDsSqyStgS77LPD4NQ976RLV?=
- =?us-ascii?Q?rNLqMdB+TRCONc82rxF0lIwXrkKA3hatKSl7ad+dn+wzumfu8bvZ5cz8TNy4?=
- =?us-ascii?Q?UTIs21g2pqXcvK7Ea4jiEy8YUN2q4pKiWNy2gYQp1LuiGtK0Frl0ackhHUmw?=
- =?us-ascii?Q?CHoAFGx0K/hOeyjFHfjiRLzvo9p656nVoMKWqIb2YVjvaGxMAPknXgWNrztK?=
- =?us-ascii?Q?6Rnvh6CAm/O+vknaCuUog9q9HWTjpA8TXjzDcjPpZb57p8nPm1IsQS2KpWzD?=
- =?us-ascii?Q?qQZg1QzHS1lnakKwgj5YKRUS8cH+nY2Gk4GKZu1Y0ie3Kmc8mUTzGgGz7vuM?=
- =?us-ascii?Q?mIE6tP41Pv81HH040p95Hp3M34BhNGHnIqI92FZtMgr0Azgv2hEFgaGm2m4y?=
- =?us-ascii?Q?ToUMOBSDeuY2Esl5rx7EDORCVsWkgXZyzs9LSHI60q1LN6Z+UTTMf0MmdbQ4?=
- =?us-ascii?Q?UFq8CKLyAd6sXfq8dIUFnxiVYrmE0dfX3lIIOEqCSKgNqNNCg0SHvJ6w/KJB?=
- =?us-ascii?Q?nT6XT7FWUgEpbZ0kUpZQ67cGEaUmvtnbU+8sLtPkJisFVVjyIyuUb6cjjEBa?=
- =?us-ascii?Q?R3hh6VFQ7Qfb0y8LMDAMMPzsx6zIdT6gwIqVRLuffJPpcWWyWLMSf4ptMaCc?=
- =?us-ascii?Q?EigDbdRFhGWzVotn1iQtVMVizI4bnzZMY7gqkUgV690b2t9OvfS3VWM/inbV?=
- =?us-ascii?Q?7h2oY2oTDvWcqkJq5ZYDIzBD+simf7pBnyjaGoLfsGcKIon3NioTnhLkcdqu?=
- =?us-ascii?Q?raR8cS6DktFhHwbV22DiiGulhH+1r6EDoY7f+SeDoZkhKev2hjHb8mMMPH9A?=
- =?us-ascii?Q?b3PBbjwBfIHZ6MidxxycQd88hT+Sn4rF6UKVcsyVM4pyMvyYnIeXkKgIfWC7?=
- =?us-ascii?Q?ZzNgtpo4Ir/d++naK1ZAIb58Fn4EwRdThQ+wGbROFywr8ujfmFt+0o+/XXme?=
- =?us-ascii?Q?yv/vQLirDjX5DfcxyLvbo+jZI1Xt5NNkghTac1jWNW4dyFGVDT/lnd2PN3ZZ?=
- =?us-ascii?Q?eRKDkm1T+wSu/QQIKWv+8TQnt/C/2tmR57IofY+s?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbcb326c-9259-4091-e3a9-08dd7b07b1c1
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:51:53.6128
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hXxIlzSuHjVt0KQetJ5LGW14qtBy0LjFvlDEnLzAP7+seKo7pFOMiQjiO9GQPsm46Mgz9YWaEOT8SJJY0V+gQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9205
+X-Received: by 2002:a05:6e02:1582:b0:3d4:414c:6073 with SMTP id
+ e9e14a558f8ab-3d7ec1fd045mr117519705ab.8.1744602750917; Sun, 13 Apr 2025
+ 20:52:30 -0700 (PDT)
+Date: Sun, 13 Apr 2025 20:52:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fc867e.050a0220.2970f9.03b8.GAE@google.com>
+Subject: [syzbot] [bpf?] general protection fault in bpf_get_local_storage
+From: syzbot <syzbot+e6e8f6618a2d4b35e4e0@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me, 
+	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-MX8-DLVDS-LCD1 display module integrates a KOE TX26D202VM0BWA LCD panel
-and a touch IC.  Add an overlay to support the LCD panel on i.MX8qxp
-MEK.  mipi_lvds_0_ldb channel0 and mipi_lvds_1_ldb channel1 send odd
-and even pixels to the panel respectively.
+Hello,
 
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
+syzbot found the following issue on:
+
+HEAD commit:    4d872d51bc9d Merge tag 'x86-urgent-2025-03-10' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=128e67a8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f71f17a9b92472b2
+dashboard link: https://syzkaller.appspot.com/bug?extid=e6e8f6618a2d4b35e4e0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1385b074580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1785b074580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-4d872d51.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0ca94bd3aed2/vmlinux-4d872d51.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/da3cc5389139/bzImage-4d872d51.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e6e8f6618a2d4b35e4e0@syzkaller.appspotmail.com
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 5934 Comm: sshd Not tainted 6.14.0-rc6-syzkaller-00003-g4d872d51bc9d #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:____bpf_get_local_storage kernel/bpf/cgroup.c:1587 [inline]
+RIP: 0010:bpf_get_local_storage+0x17b/0x260 kernel/bpf/cgroup.c:1569
+Code: 48 8d 7b 10 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bb 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 5b 10 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 a6 00 00 00 48 8b 1b e8 13 90 73 09 83 f8 07 89
+RSP: 0018:ffffc900006c0120 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81e40b82
+RDX: 0000000000000000 RSI: ffffffff81e40c38 RDI: ffff8880356f2ca0
+RBP: ffffc900006c0140 R08: 0000000000000005 R09: 0000000000000015
+R10: 0000000000000015 R11: 0000000000000005 R12: ffff88802ae052c0
+R13: ffffc90000d36002 R14: 0000000000000000 R15: ffff88802ae052f0
+FS:  00007fb06dfb0d00(0000) GS:ffff88806a700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000400000001c40 CR3: 0000000025fd8000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ bpf_prog_3647604f6c8667e9+0x2e/0x41
+ bpf_dispatcher_nop_func include/linux/bpf.h:1290 [inline]
+ __bpf_prog_run include/linux/filter.h:701 [inline]
+ bpf_prog_run include/linux/filter.h:708 [inline]
+ __bpf_prog_run_save_cb+0x11f/0x330 include/linux/filter.h:938
+ bpf_prog_run_array_cg kernel/bpf/cgroup.c:68 [inline]
+ __cgroup_bpf_run_filter_skb+0x470/0xe60 kernel/bpf/cgroup.c:1425
+ sk_filter_trim_cap+0x234/0xac0 net/core/filter.c:147
+ tcp_filter net/ipv4/tcp_ipv4.c:2144 [inline]
+ tcp_v4_rcv+0x28fd/0x4380 net/ipv4/tcp_ipv4.c:2332
+ ip_protocol_deliver_rcu+0xba/0x4c0 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
+ dst_input include/net/dst.h:469 [inline]
+ ip_sublist_rcv_finish+0x2c1/0x620 net/ipv4/ip_input.c:578
+ ip_list_rcv_finish+0x559/0x720 net/ipv4/ip_input.c:627
+ ip_sublist_rcv net/ipv4/ip_input.c:635 [inline]
+ ip_list_rcv+0x339/0x450 net/ipv4/ip_input.c:669
+ __netif_receive_skb_list_ptype net/core/dev.c:5936 [inline]
+ __netif_receive_skb_list_core+0x755/0x950 net/core/dev.c:5983
+ __netif_receive_skb_list net/core/dev.c:6035 [inline]
+ netif_receive_skb_list_internal+0x753/0xdb0 net/core/dev.c:6126
+ gro_normal_list include/net/gro.h:518 [inline]
+ gro_normal_list include/net/gro.h:514 [inline]
+ napi_complete_done+0x218/0x940 net/core/dev.c:6493
+ e1000_clean+0xa28/0x2700 drivers/net/ethernet/intel/e1000/e1000_main.c:3815
+ __napi_poll.constprop.0+0xb7/0x550 net/core/dev.c:7188
+ napi_poll net/core/dev.c:7257 [inline]
+ net_rx_action+0xa94/0x1010 net/core/dev.c:7379
+ handle_softirqs+0x213/0x8f0 kernel/softirq.c:561
+ do_softirq kernel/softirq.c:462 [inline]
+ do_softirq+0xb2/0xf0 kernel/softirq.c:449
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:389
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:919 [inline]
+ __dev_queue_xmit+0x8b0/0x43e0 net/core/dev.c:4676
+ dev_queue_xmit include/linux/netdevice.h:3313 [inline]
+ neigh_hh_output include/net/neighbour.h:523 [inline]
+ neigh_output include/net/neighbour.h:537 [inline]
+ ip_finish_output2+0xc34/0x2180 net/ipv4/ip_output.c:236
+ __ip_finish_output net/ipv4/ip_output.c:314 [inline]
+ __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:296
+ ip_finish_output+0x35/0x380 net/ipv4/ip_output.c:324
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:434
+ dst_output include/net/dst.h:459 [inline]
+ ip_local_out net/ipv4/ip_output.c:130 [inline]
+ __ip_queue_xmit+0x1a8d/0x22d0 net/ipv4/ip_output.c:528
+ __tcp_transmit_skb+0x2b39/0x3ec0 net/ipv4/tcp_output.c:1471
+ tcp_transmit_skb net/ipv4/tcp_output.c:1489 [inline]
+ tcp_write_xmit+0x12b1/0x8560 net/ipv4/tcp_output.c:2832
+ __tcp_push_pending_frames+0xaf/0x390 net/ipv4/tcp_output.c:3015
+ tcp_push+0x221/0x6f0 net/ipv4/tcp.c:751
+ tcp_sendmsg_locked+0x290f/0x37c0 net/ipv4/tcp.c:1326
+ tcp_sendmsg+0x2e/0x50 net/ipv4/tcp.c:1358
+ inet_sendmsg+0xb9/0x140 net/ipv4/af_inet.c:851
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg net/socket.c:733 [inline]
+ sock_write_iter+0x4ac/0x5b0 net/socket.c:1137
+ new_sync_write fs/read_write.c:586 [inline]
+ vfs_write+0x5ae/0x1150 fs/read_write.c:679
+ ksys_write+0x207/0x250 fs/read_write.c:731
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb06db16bf2
+Code: 89 c7 48 89 44 24 08 e8 7b 34 fa ff 48 8b 44 24 08 48 83 c4 28 c3 c3 64 8b 04 25 18 00 00 00 85 c0 75 20 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 76 6f 48 8b 15 07 a2 0d 00 f7 d8 64 89 02 48 83
+RSP: 002b:00007fff72e409a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007fb06db16bf2
+RDX: 0000000000000034 RSI: 000055e211330970 RDI: 0000000000000004
+RBP: 000055e211339400 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000055e1e6312aa4
+R13: 000000000000002b R14: 000055e1e63133e8 R15: 00007fff72e40a18
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:____bpf_get_local_storage kernel/bpf/cgroup.c:1587 [inline]
+RIP: 0010:bpf_get_local_storage+0x17b/0x260 kernel/bpf/cgroup.c:1569
+Code: 48 8d 7b 10 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bb 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 5b 10 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 a6 00 00 00 48 8b 1b e8 13 90 73 09 83 f8 07 89
+RSP: 0018:ffffc900006c0120 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81e40b82
+RDX: 0000000000000000 RSI: ffffffff81e40c38 RDI: ffff8880356f2ca0
+RBP: ffffc900006c0140 R08: 0000000000000005 R09: 0000000000000015
+R10: 0000000000000015 R11: 0000000000000005 R12: ffff88802ae052c0
+R13: ffffc90000d36002 R14: 0000000000000000 R15: ffff88802ae052f0
+FS:  00007fb06dfb0d00(0000) GS:ffff88806a700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000400000001c40 CR3: 0000000025fd8000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	48 8d 7b 10          	lea    0x10(%rbx),%rdi
+   4:	48 89 fa             	mov    %rdi,%rdx
+   7:	48 c1 ea 03          	shr    $0x3,%rdx
+   b:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+   f:	0f 85 bb 00 00 00    	jne    0xd0
+  15:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  1c:	fc ff df
+  1f:	48 8b 5b 10          	mov    0x10(%rbx),%rbx
+  23:	48 89 da             	mov    %rbx,%rdx
+  26:	48 c1 ea 03          	shr    $0x3,%rdx
+* 2a:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
+  2e:	0f 85 a6 00 00 00    	jne    0xda
+  34:	48 8b 1b             	mov    (%rbx),%rbx
+  37:	e8 13 90 73 09       	call   0x973904f
+  3c:	83 f8 07             	cmp    $0x7,%eax
+  3f:	89                   	.byte 0x89
+
+
 ---
-v9:
-* Rebase on v6.15-rc1.
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-v8:
-* No change.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-v7:
-* No change.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-v6:
-* No change.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-v5:
-* No change.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-v4:
-* No change.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-v3:
-* No change.
-
-v2:
-* New patch. (Francesco)
-
- arch/arm64/boot/dts/freescale/Makefile        |   2 +
- .../imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso | 183 ++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  30 +++
- 3 files changed, 215 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index b6d3fe26d621..ec3f786b15ce 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -284,7 +284,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-iris.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-iris-v2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
- 
-+imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd-dtbs += imx8qxp-mek.dtb imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtbo
- imx8qxp-mek-pcie-ep-dtbs += imx8qxp-mek.dtb imx8qxp-mek-pcie-ep.dtbo
-+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-pcie-ep.dtb
- 
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso b/arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso
-new file mode 100644
-index 000000000000..7ddd90e68754
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2024 NXP
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/firmware/imx/rsrc.h>
-+
-+&{/} {
-+	panel-lvds0 {
-+		compatible = "koe,tx26d202vm0bwa";
-+		backlight = <&backlight_lvds1>;
-+		power-supply = <&reg_vcc_per_3v3>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dual-lvds-odd-pixels;
-+
-+				panel_lvds0_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-even-pixels;
-+
-+				panel_lvds1_in: endpoint {
-+					remote-endpoint = <&lvds1_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&backlight_lvds1 {
-+	status = "okay";
-+};
-+
-+&dc0_framegen0 {
-+	assigned-clocks = <&clk IMX_SC_R_DC_0_PLL_0 IMX_SC_PM_CLK_PLL>,
-+			  <&clk IMX_SC_R_DC_0 IMX_SC_PM_CLK_MISC0>;
-+	assigned-clock-parents = <0>,
-+				 <&clk IMX_SC_R_DC_0_PLL_0 IMX_SC_PM_CLK_PLL>;
-+	assigned-clock-rates = <940320000>;
-+};
-+
-+&dc0_pixel_link0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&dc0_pc {
-+	status = "okay";
-+
-+	channel@0 {
-+		status = "okay";
-+	};
-+};
-+
-+&mipi_lvds_0_ldb {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	fsl,companion-ldb = <&mipi_lvds_1_ldb>;
-+	status = "okay";
-+
-+	channel@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+		status = "okay";
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_lvds0_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_lvds_0_phy {
-+	status = "okay";
-+};
-+
-+&mipi_lvds_0_pxl2dpi {
-+	fsl,companion-pxl2dpi = <&mipi_lvds_1_pxl2dpi>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			mipi_lvds_0_pxl2dpi_dc0_pixel_link0: endpoint@0 {
-+				status = "okay";
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			mipi_lvds_0_pxl2dpi_mipi_lvds_0_ldb_ch0: endpoint@0 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_lvds_1_ldb {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	channel@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		status = "okay";
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&panel_lvds1_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_lvds_1_phy {
-+	status = "okay";
-+};
-+
-+&mipi_lvds_1_pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm_mipi_lvds1>;
-+	status = "okay";
-+};
-+
-+&mipi_lvds_1_pxl2dpi {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			mipi_lvds_1_pxl2dpi_dc0_pixel_link0: endpoint@1 {
-+				status = "okay";
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			mipi_lvds_1_pxl2dpi_mipi_lvds_1_ldb_ch1: endpoint@1 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-index a4427a77ed50..a40bfdd2a2cf 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -21,6 +21,16 @@ chosen {
- 		stdout-path = &lpuart0;
- 	};
- 
-+	backlight_lvds1: backlight-lvds1 {
-+		compatible = "pwm-backlight";
-+		pwms = <&mipi_lvds_1_pwm 0 100000 0>;
-+		brightness-levels = <0 100>;
-+		num-interpolated-steps = <100>;
-+		default-brightness-level = <100>;
-+		power-supply = <&reg_vcc_12v0>;
-+		status = "disabled";
-+	};
-+
- 	imx8x_cm4: imx8x-cm4 {
- 		compatible = "fsl,imx8qxp-cm4";
- 		mbox-names = "tx", "rx", "rxdb";
-@@ -58,6 +68,20 @@ dsp_vdev0buffer: memory@94300000 {
- 		};
- 	};
- 
-+	reg_vcc_12v0: regulator-vcc-12v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_12V0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	reg_vcc_per_3v3: regulator-vcc-per-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_PER_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	reg_usdhc2_vmmc: usdhc2-vmmc {
- 		compatible = "regulator-fixed";
- 		regulator-name = "SD1_SPWR";
-@@ -817,6 +841,12 @@ IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX       0x06000020
- 		>;
- 	};
- 
-+	pinctrl_pwm_mipi_lvds1: mipilvds1pwmgrp {
-+		fsl,pins = <
-+			IMX8QXP_MIPI_DSI1_GPIO0_00_MIPI_DSI1_PWM0_OUT		0x00000020
-+		>;
-+	};
-+
- 	pinctrl_pcieb: pcieagrp {
- 		fsl,pins = <
- 			IMX8QXP_PCIE_CTRL0_PERST_B_LSIO_GPIO4_IO00		0x06000021
--- 
-2.34.1
-
+If you want to undo deduplication, reply with:
+#syz undup
