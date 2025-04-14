@@ -1,131 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4569825F7BB;
-	Mon, 14 Apr 2025 10:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA6F25E471;
+	Mon, 14 Apr 2025 10:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625324; cv=none; b=Tz5hOGzXxZRM/+obSMbtZhvvhhSxTRBygpoV7a+DKCM6XzsH2qG91/+gw/MrKjafAVIagDytO+mSDfCEEBNDQpb09boQ0aYo95V2swpQNJkLJpr+2sYnL6IR81jsg8DHP4Q41IlTCGEap8tXrh873EbJBtTKRWoLxzFJHIZA418=
+	t=1744625333; cv=none; b=RwohT2ZuZdsk++l8s6JGm40Io8rFuX1MXJ+cR44LW7NQ7YhnAhoqKeL7CK6k6ofNa/ZNrTM187g5lYsdA3yYCLqU1JzbhJ8BkGFBLL975ukVRorJ6NXw547jfMK4hImm9++0ygW6qLGb3lcg3M39oH/gVFxMHnsh7ijOcGn6IWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625324; c=relaxed/simple;
-	bh=MrR3zw2lw8uRpfgnFdyEiW4r4y3mal3xQyzKs1wyVP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p95FSKwJgUbsikahAOqclhk073yh1U/LkIQsLM5QqFrKdj3dOmcKA2AYJm/Y3rpGM4nHyJjX4Vj57tSaXyFN3oiUn5V+2nbOmgnfY7JGmYUjJgLAKhDWEmmIaArusxL7M/fDr1HoKTlcHQzJMGuOD3vElqw6H2r4zz/5LJ+g/CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I9HEknF6; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744625333; c=relaxed/simple;
+	bh=ikcFIKiUa4XCXRzxwCujAZL//L2GImleFBpghLCAdbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a1QNizTsv5vgjUpI+dFeIWC3Y79yzhROXs1bfTL19IDi2a3oDbY/JZXG5RQG7PIK5SIRDfpg1Vpyy9gh8CPWwWdEADOKZN5GPU0wgwwCE6CXqHnmKzNQmqQ7tIkvisfgrnpFrgWPfI75OK7qVjYqoyO0Hdp3Wn9IFkiP08n82Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linatsea.fr; spf=pass smtp.mailfrom=linatsea.fr; dkim=pass (2048-bit key) header.d=linatsea.fr header.i=@linatsea.fr header.b=RO5VAnnx; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linatsea.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linatsea.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I9HEknF6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744625323; x=1776161323;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MrR3zw2lw8uRpfgnFdyEiW4r4y3mal3xQyzKs1wyVP4=;
-  b=I9HEknF6TxQKPo3Q3hfu1c5WhAW207o2mSKxEZ21SL1yf1Fu3d7EFV/H
-   YWims3JxWP6Z9b1y8eHoatZ0RpWfMhqteIbFgge0jHMENtSttCZFvIhRE
-   B45PtkZ0ZnTowkLuqjAHfmQYtLyIHKO6PkV9Y2OHaN1C+9txkAGCPLAKh
-   iulZWXv4fbrOTDMlvNVIm/BNryG/oJuDgoxw8fR4R48groY1rQmNoUMKr
-   u3tf35FkRcMyPzUg9m0wqefSHJduSjwyV1TlFUcKNvn3D2NvjewxXaWn7
-   arU8XF1Nm7Im9aT+VoAlxurAu+XaMngLLtVBq9XT+thUBbpGiptHzbq8J
-   w==;
-X-CSE-ConnectionGUID: m3r3rJzeRI2l1hF53XOXwg==
-X-CSE-MsgGUID: e9G8LXxpS0G8ny1v8Ap5/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="57077410"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="57077410"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:08:42 -0700
-X-CSE-ConnectionGUID: c7plomItRhCXTkGVSRliWw==
-X-CSE-MsgGUID: K8wOgtPYTQ+FiRs5U5pxaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="130754476"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:08:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4Gk0-0000000CCeQ-3p4I;
-	Mon, 14 Apr 2025 13:08:36 +0300
-Date: Mon, 14 Apr 2025 13:08:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Christoph Hellwig <hch@lst.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Rasesh Mody <rmody@marvell.com>,
-	GR-Linux-NIC-Dev@marvell.com, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>
-Subject: Re: [PATCH net v1 1/1] bnx2: Fix unused data compilation warning
-Message-ID: <Z_zepIheW2zKq0yg@smile.fi.intel.com>
-References: <20250303172114.6004ef32@kernel.org>
- <Z8bcaR9MS7dk8Q0p@smile.fi.intel.com>
- <5ec0a2cc-e5f6-42dd-992c-79b1a0c1b9f5@redhat.com>
- <Z8bq6XJGJNbycmJ9@smile.fi.intel.com>
- <Z8cC_xMScZ9rq47q@smile.fi.intel.com>
- <20250304083524.3fe2ced4@kernel.org>
- <CGME20250305100010eucas1p1986206542bc353300aee7ac8d421807f@eucas1p1.samsung.com>
- <Z8ggoUoKpSPPcs5S@smile.fi.intel.com>
- <067bd072-eb3f-451a-b1c4-59eae777cf00@samsung.com>
- <Z9G0QU5Ew3FusrJH@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=linatsea.fr header.i=@linatsea.fr header.b="RO5VAnnx"
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 38015584AE7;
+	Mon, 14 Apr 2025 09:23:45 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 108D4433F6;
+	Mon, 14 Apr 2025 09:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linatsea.fr; s=gm1;
+	t=1744622617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2xX1JnrLD/Xmneb1rgW8av3OLo09hQ4pZGDbeGR+qj8=;
+	b=RO5VAnnxDB8lpFxKu641LS0B9QLtjt9TUl9rTMYFBCSXgRg5jmtbsItblG8jlNiXcDHr9P
+	ZTiHksLdTyzu2/OAqJ+hurpuJitXUf4TB5aAHq7zEwh+V96wXLpyweU7W05QpDXdV9wZqz
+	iQfDu2WvOGFyNTQWdW3mf5nTGeH2sCyw59gw4S0jzlLsTRg7itiTvSNu0fcQQYBHV0Tryc
+	7v6hp5vT5D50D2T9UkuXgi8JjeojuaSRJdk6aabHHnEby2e7ieLDeqKSOvdXmcVcCNkT7g
+	uKgkyl/7vl/dZnqrL1UTjo09G7NOVaTP/lgmzAVVxHPfs8S4fqg4CYoDNA1uMg==
+Message-ID: <eba16d9a-9e07-498f-a7ab-0bb36076de40@linatsea.fr>
+Date: Mon, 14 Apr 2025 11:23:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9G0QU5Ew3FusrJH@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 10/13] serial: sh-sci: Add support for RZ/T2H SCI
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "geert@linux-m68k.org" <geert@linux-m68k.org>,
+ Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com>
+ <20250403212919.1137670-11-thierry.bultel.yh@bp.renesas.com>
+ <2025041152-puzzling-clinking-e573@gregkh>
+ <TYCPR01MB11492DDF2728C9D3B3F14DCA38AB32@TYCPR01MB11492.jpnprd01.prod.outlook.com>
+ <2025041456-legacy-craftwork-2d8b@gregkh>
+Content-Language: fr
+From: Thierry Bultel <thierry.bultel@linatsea.fr>
+In-Reply-To: <2025041456-legacy-craftwork-2d8b@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhihgvrhhrhicuuehulhhtvghluceothhhihgvrhhrhidrsghulhhtvghlsehlihhnrghtshgvrgdrfhhrqeenucggtffrrghtthgvrhhnpeffleefheeutdeuhfehteehkeduieeltdejffetkeekuedtveeivedvudelkefgteenucfkphepkeelrddvgeekrdejiedrjedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepkeelrddvgeekrdejiedrjedtpdhhvghloheplgduledvrdduieekrdehjedrleejngdpmhgrihhlfhhrohhmpehthhhivghrrhihrdgsuhhlthgvlheslhhinhgrthhsvggrrdhfrhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehthhhivghrrhihrdgsuhhlthgvlhdrhihhsegsphdrrhgvnhgvshgrshdrtghomhdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgp
+ dhrtghpthhtohepphgruhhlrdgsrghrkhgvrhdrtghtsegsphdrrhgvnhgvshgrshdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvghrihgrlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: thierry.bultel@linatsea.fr
 
-On Wed, Mar 12, 2025 at 06:20:17PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 11, 2025 at 01:51:21PM +0100, Marek Szyprowski wrote:
-> > On 05.03.2025 11:00, Andy Shevchenko wrote:
-> > > On Tue, Mar 04, 2025 at 08:35:24AM -0800, Jakub Kicinski wrote:
-> > >> On Tue, 4 Mar 2025 15:41:19 +0200 Andy Shevchenko wrote:
 
-...
 
-> > >> I meant something more like (untested):
-> > > We are starving for the comment from the DMA mapping people.
-> > 
-> > I'm really sorry for this delay. Just got back to the everyday stuff 
-> > after spending a week in bed recovering from flu...
-> 
-> Oh, I hope you feel much better now!
-> 
-> ...
-> 
-> > >>   #define DEFINE_DMA_UNMAP_ADDR(ADDR_NAME)
-> > >>   #define DEFINE_DMA_UNMAP_LEN(LEN_NAME)
-> > >> -#define dma_unmap_addr(PTR, ADDR_NAME)           (0)
-> > >> -#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { } while (0)
-> > >> -#define dma_unmap_len(PTR, LEN_NAME)             (0)
-> > >> -#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
-> > >> +#define dma_unmap_addr(PTR, ADDR_NAME)           ({ typeof(PTR) __p __maybe_unused = PTR; 0; )}
-> > >> +#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
-> > >> +#define dma_unmap_len(PTR, LEN_NAME)             ({ typeof(PTR) __p __maybe_unused = PTR; 0; )}
-> > >> +#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
-> 
-> > >> I just don't know how much code out there depends on PTR not
-> > >> existing if !CONFIG_NEED_DMA_MAP_STATE
-> > > Brief checking shows that only drivers/net/ethernet/chelsio/* comes
-> > > with ifdeffery, the rest most likely will fail in the same way
-> > > (note, overwhelming majority of the users is under the network realm):
-> > 
-> > Frankly speaking I wasn't aware of this API till now.
-> > 
-> > If got it right the above proposal should work fine. The addr/len names 
-> > can be optimized out, but the pointer to the container should exist.
-> 
-> Thanks for the reply, would you or Jakub will to send a formal patch?
-> I can test it on my configuration and build.
+Le 14/04/2025 à 10:58, Greg KH a écrit :
+> On Mon, Apr 14, 2025 at 07:54:12AM +0000, Thierry Bultel wrote:
+>> Hi Greg,
+>>
+>>> -----Original Message-----
+>>> From: Greg KH <gregkh@linuxfoundation.org>
+>>> Sent: vendredi 11 avril 2025 16:57
+>>> To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+>>> Cc: thierry.bultel@linatsea.fr; linux-renesas-soc@vger.kernel.org;
+>>> geert@linux-m68k.org; Paul Barker <paul.barker.ct@bp.renesas.com>; Wolfram
+>>> Sang <wsa+renesas@sang-engineering.com>; linux-kernel@vger.kernel.org;
+>>> linux-serial@vger.kernel.org
+>>> Subject: Re: [PATCH v7 10/13] serial: sh-sci: Add support for RZ/T2H SCI
+>>>
+>>> On Thu, Apr 03, 2025 at 11:29:12PM +0200, Thierry Bultel wrote:
+>>>> --- a/include/uapi/linux/serial_core.h
+>>>> +++ b/include/uapi/linux/serial_core.h
+>>>> @@ -231,6 +231,9 @@
+>>>>   /* Sunplus UART */
+>>>>   #define PORT_SUNPLUS	123
+>>>>
+>>>> +/* SH-SCI */
+>>>> +#define PORT_RSCI	124
+>>> Why do you need to tell userspace about this specific port?  Is that a
+>>> hard requirement that your userspace tools require?  If not, please don't
+>>> export this here.
+>> This point has been discussed with Geert and Wolfram.
+>> We cannot use PORT_GENERIC for this IP, and adding the new type
+>> is just keeping consistent with the sh-sci driver.
+> But, why does userspace need to know this number?  And why doesn't
+> PORT_GENERIC work?
 
-Any news here? The problem still persist AFAICT.
+The reason is that the sh-sci driver discriminates internally between 
+port types.
+There are number of locations when it checks for PORT_SCI, PORT_SCIF, 
+PORT_SCIFA...
+T2H SCI needs special handling, too, that is the reason why PORT_GENERIC 
+cannot work. I just therefore added this new type.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+>
+> thanks,
+>
+> greg k-h
 
