@@ -1,56 +1,81 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E9713E02A;
-	Mon, 14 Apr 2025 06:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0EDD70838;
+	Mon, 14 Apr 2025 06:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744612120; cv=none; b=QT1dNbwIETcrDOfM+ugfXb23E/vnE0lVcrQa6zLZf7oX82URgkvAJ7pnzxoOqf6xrD1JAtPSiN+wtYR8IWHm95O6/cXSLzv5iUwT9pDFT/dTTHjBAk0hrmGPgizBa8Dj9Fu+MaFkCgg3zqfsk3veysrRPVHZI7pOf1nmvfGtY3A=
+	t=1744612204; cv=none; b=RR/Ynq4F8XKjAUrSy6dMGQApirrFoMX5oUK13FS+sISEIf8bnh1fK9V/jebF/+nQ78ngTpTX60MOYVRnFWHEIJtcGjAS/aSI88F+3SC2KNzBacy8UygiYSEyN975EHIb3h4KlaV3SIXYVOtSxmcOlcC3aaM022dXC26N+aO+exk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744612120; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MEqm3XlGvPc5as2s3xnYnGPGYjVCl+HVGyXwwVqToBCw5Ab4c+a02x7+oKNAkmKfrtwzKilgMhG9Ssb3EOTyA5o1gmXqvnv5dDO0a2njpFtQb04L/QZ23Njw6Q4RlDdvyDQEBhoXRkr6pI0+wJIM0zX8zuOiJQtoLDm6DisouqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LTMFSdZD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1744612204; c=relaxed/simple;
+	bh=DFIwrdxtLKx4d33+KRQJQh9AxFdgjtzMyl2NjQQj2Bc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uMMyyIhgd6/Swk7By3NZ0uzvMaDk2vGCrvpwJoF5km6atjysFylwMJYLPKQfkw5cTo/qMrZCAomehMDcG7lnIK6/5gNEgD63XPja9gXxvVyBfSXAmQjbZQeURo8q18unqabU5MRg4TMFLnAhg1AmsHlOGOENXD6iZjcqZecFZXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Jmah9m2N; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LTMFSdZD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=LTMFSdZDjrOh6fAH/nEU2pq5H8
-	2SU/lT+fcHtJdNGAZu9ugyiyo1QklQ6gqCsqntLAXviXmU+KT4YuxFD/hi5n3vAnb4eFOQ2MX8Qpg
-	TSIEXukbdjVq1mrRI9idUzysZXf/divH/Ft8KEqzcrdhe355BdpoZRCchfuFpoNjhS+vzOldrxKoO
-	NeIYi5utesz8+5lXuEzDpoF+3XSTn38LLktzbn1JDThUMrZTzzh7PHYaRGUr+Ryv1AUiLB1dA+HU+
-	DJg2RKCvWoDJMzJqyMus88AsdE9D6jQvgD3nyC1L34SIBi22UXyrX7oRR1M5POFFIQtehzyvUYT+Y
-	KjStaQDA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4DJ7-00000000nSx-2pAA;
-	Mon, 14 Apr 2025 06:28:37 +0000
-Date: Sun, 13 Apr 2025 23:28:37 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com
-Subject: Re: [PATCH] block: fix resource leak in blk_register_queue() error
- path
-Message-ID: <Z_yrFeucUl6xemgc@infradead.org>
-References: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Jmah9m2N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=jTcPX
+	X46sVenqUwadaO0gCghMg1N4d43cIuGonkEWRA=; b=Jmah9m2NAMUROtFvA4uYi
+	KCm0kHGylQLXITlOkhP7v+3arUMhUP6gXTxxA4a/88X/7I0OObtiP1U2KyGeTM4o
+	xC2pqq+8ID4c0IeEq+SuxKyEtuGrvwFBFb338YrUKSiK4HUO5icT2q75RJqFNYs4
+	r50O5z8Z9GRjv/W2P5aDWA=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgBn0CBUq_xn8qBvAQ--.9320S2;
+	Mon, 14 Apr 2025 14:29:41 +0800 (CST)
+From: Miao Li <limiao870622@163.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	limiao870622@163.com,
+	huanglei@kylinos.cn,
+	Miao Li <limiao@kylinos.cn>
+Subject: [PATCH] usb: quirks: Add delay init quirk for SanDisk 3.2Gen1 Flash Drive
+Date: Mon, 14 Apr 2025 14:29:35 +0800
+Message-Id: <20250414062935.159024-1-limiao870622@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgBn0CBUq_xn8qBvAQ--.9320S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7XF4UAFyDJry3Zr1DWw18AFb_yoW8Jr4DpF
+	WUtrZ3Ca9rGF12yr1jka97ua4kWa1DJa45Kayft343Zrn7AF4kWF97Ar15Ga47Jr4jg34I
+	vws29F4DtFy7K3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pirOzxUUUUU=
+X-CM-SenderInfo: 5olpxtbryxiliss6il2tof0z/1tbiEQEvzWf8pX3RqQAAsJ
 
-Looks good:
+From: Miao Li <limiao@kylinos.cn> 
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+The SanDisk 3.2Gen1 Flash Drive, which VID:PID is in 0781:55a3,
+just like Silicon Motion Flash Drive:
+https://lore.kernel.org/r/20250401023027.44894-1-limiao870622@163.com
+also needs the DELAY_INIT quirk, or it will randomly work incorrectly
+(e.g.: lsusb and can't list this device info) when connecting Huawei
+hisi platforms and doing thousand of reboot test circles.
+
+Signed-off-by: Miao Li <limiao@kylinos.cn>
+Signed-off-by: Lei Huang <huanglei@kylinos.cn>
+---
+ drivers/usb/core/quirks.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 8efbacc5bc34..b00832cf626c 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -369,6 +369,9 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 	{ USB_DEVICE(0x0781, 0x5583), .driver_info = USB_QUIRK_NO_LPM },
+ 	{ USB_DEVICE(0x0781, 0x5591), .driver_info = USB_QUIRK_NO_LPM },
+ 
++	/* SanDisk Corp. SanDisk 3.2Gen1 */
++	{ USB_DEVICE(0x0781, 0x55a3), .driver_info = USB_QUIRK_DELAY_INIT },
++
+ 	/* Realforce 87U Keyboard */
+ 	{ USB_DEVICE(0x0853, 0x011b), .driver_info = USB_QUIRK_NO_LPM },
+ 
+-- 
+2.25.1
 
