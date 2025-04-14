@@ -1,158 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9511D539A
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F98F539A;
+	Mon, 14 Apr 2025 07:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617159; cv=none; b=Ct+c8skkcXEr0dyOKgIBl1GUwvFClZ3GLLLCo4OJIMx6EZOBnQv2uWbSzrw9oXRoiCftuZNsi1S3K88jn75V9m4T0YzYUiq4loLWff1zCW1FjW+VT15d6fWk28EHKk7Kvw2fxHaIA9h8CzNX4ownSFamYyBalSBB5lHdO/vQIxI=
+	t=1744617169; cv=none; b=bq3onvop6PxehCsb/ENeheZcOOana7Hz0OL64HpUlLm+eVHRhmivCF6A/hmYqUr1JDzJ9pL8Tt66CunspTEsAeQtSQ1lgehOU4yJN5/GBbT4cM+LjkoCDDJ9aas970aT+EotVIXSJ1AT5vW5jQ9EneCf/9IbVMqToj7a97XEHLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617159; c=relaxed/simple;
-	bh=WsO/QgvjFVAT0vfF+NDb5gjqkzvA3Vt1GNWmQLH1Mps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BgDVjgKyWHX63WIrIaHWJ+OgOiiC3UQf/eSEmyO+qAYOCYjEYWZAFs/9cST8a/Da0dH89M+xSXVyI5AB7+vYIEZeiAkxy7rveobkVbLl2kul48zC2qodic0BkWHPvTgn74SbDAY/E1w1lHBt80UDrhPyDKV4qrz/hkjhAoZkyg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01E621007;
-	Mon, 14 Apr 2025 00:52:34 -0700 (PDT)
-Received: from [10.57.88.7] (unknown [10.57.88.7])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CAA83F694;
-	Mon, 14 Apr 2025 00:52:33 -0700 (PDT)
-Message-ID: <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
-Date: Mon, 14 Apr 2025 08:52:32 +0100
+	s=arc-20240116; t=1744617169; c=relaxed/simple;
+	bh=nquDgEh5RnVpQx40oEhXtIB02iZOKReaSjU2Tt2wBmQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rJfhMGsXOYUotaFLMZMuXq+jPEuy33AoCNFbmZfZgELPOHlBHN+N383GzMhbcPvT+n10XFWm1/gzSLiZ5NYW79DMd5GNneMRniqJm5F8liGu9NxVK01ylof9I2roLfavlVNsosiWsZwV6cMdm9vS4nE5N8I1ETr31g8SFugOvg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524038ba657so4021192e0c.0;
+        Mon, 14 Apr 2025 00:52:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744617165; x=1745221965;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HoumkQ8dLgCbW6zBj87ypAA+R7IZgKsFVu4nfGo0KZg=;
+        b=eeIH8D71C6OiLbNyaZS9owgdpAvHEDnRaOdPd3ecq+qxM87OlnfrWO/cIknuwofRU5
+         5Z/NcaIK+7leu4KoK0/YPgpa36c57imwjOhgabz5T/iRuoYxl4xz2JfP56Ihl8T206W5
+         oZPtR4Dw5f7AMcYiLncT0LBGMJtB0MSEqq4Z7LOfDHkGKX1neCTz2Uwurz7y2XFO0R+m
+         ZLQGvPefUqPTrSY/ybGTGUTt9a4Z6yG4tR4810pGd6XsxNANi147w9XurfnVoj8Q+xxN
+         DVKKeKRrHLos/lSrhwINKg424MmY/rzBFOUSb2IA4nhurksdC2re4/po+ZO6RW1S3KQF
+         Bxrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUazBt/QEr9RlqxE29dOsfa8gjIM+Yqmq0vtifbOUiVLEPQ3ShFhcvzsRGUSipIwvA9zhA8Hi0N6dwG@vger.kernel.org, AJvYcCX/Ul4wwY7fP0N2dISJqUEKx4Qxdgohs/fiqU1geuIbNt4vcYlDyHeVRnzSWng6OZEp5k0V/EHyLmLLu1vN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMD8N5bPusn5nP19GfOt/K6Mhe7GHg1a6NAmeaCO/WjfDhl7c9
+	yyvKy3AR9v/p4LUsnxl9WmrIwHDEI9+e+Gt9anmteeWdp3f+Wk3sdeQ4g+RP
+X-Gm-Gg: ASbGnctGSd6vB/Ji/fBtG3rIDFVBN3CWZ79k8yFAVdZhUyP715HRh1ADmsTfMdB/3Pt
+	JtGbY7NSjx0RmHN+p47x7AYobbUafo6mHZebp+ZxuwpOn7Asac9zetNZr2WMzPPRml6AI9k7vff
+	/NgjS7QFKiMA9WY/xuMnfzlLGQTm1q7CQEkE07EGvR0r+PmgIxq/4hoh4TcxjakWpeKWkbbLKnp
+	lTcQRBVlJ/xl47YpjQpDvq/CFDgooFmV8cYFfyT/S9oIb+5MkU1ZqfG8ShnyxZDIFNm+oRFHZta
+	YII1N7UHGDmG7zb0ngI/B3G30M/OSnENkzIz4wX8yCM2Mpn/vUiJf3cX+CA46taWhuEYRAQzse+
+	57wo=
+X-Google-Smtp-Source: AGHT+IG2yhm9gnUhxm3YW8SMgAimqRBWxNu5pHPW8xM20mW3D4LpQfAmc2dt0W4qBfmjGjQsOGBWXw==
+X-Received: by 2002:a05:6122:318f:b0:50d:39aa:7881 with SMTP id 71dfb90a1353d-527c2d2a282mr7786125e0c.0.1744617165502;
+        Mon, 14 Apr 2025 00:52:45 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4cdf8sm2122963e0c.3.2025.04.14.00.52.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 00:52:45 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d30c329f2so3966469241.0;
+        Mon, 14 Apr 2025 00:52:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUaosL3MBIANXz/N3kys6NkGK1/JA0QlYiE+TSTddkE10zXKhFZ2/50lfDgoa3HNJ8EzJ9/BDN6T+8N@vger.kernel.org, AJvYcCWH/XC6AvSQUJOUQz+9JXc2guZzVgK2OJB8Pe7GUZJI4Yq1arQ+6/X5U6b7KzLTNClniaAMRXxStPMAQLaf@vger.kernel.org
+X-Received: by 2002:a67:bc0b:0:b0:4c2:fccb:a647 with SMTP id
+ ada2fe7eead31-4c9d3eac9b8mr11057852137.5.1744617165139; Mon, 14 Apr 2025
+ 00:52:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250410074024.1545768-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1744452787.git.dan.carpenter@linaro.org> <30210ed77b40b4b6629de659cb56b9ec7832c447.1744452787.git.dan.carpenter@linaro.org>
+In-Reply-To: <30210ed77b40b4b6629de659cb56b9ec7832c447.1744452787.git.dan.carpenter@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 14 Apr 2025 09:52:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVVo4hPExXtLf9UpFvqxX6RF4RJKgO64JpRVWtwwgqZAg@mail.gmail.com>
+X-Gm-Features: ATxdqUFL5j5FwdvCyWmzMHa5uv-jItExKzidxRmFV3hcvZ6ES-ON3sa-dq5nxLo
+Message-ID: <CAMuHMdVVo4hPExXtLf9UpFvqxX6RF4RJKgO64JpRVWtwwgqZAg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: aggregator: fix "_sysfs" prefix check in gpio_aggregator_make_group()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Koichiro Den <koichiro.den@canonical.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/04/2025 08:40, Anshuman Khandual wrote:
-> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
-> as expected if those macro constants contain some 128 bit layout elements,
-> required for D128 page tables. Fix this problem via first loading up these
-> macro constants into a given memory location and then subsequently setting
-> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
+Hi Dan,
 
-From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
-of 128-bit types with shifting and masking, which the assembler can't do? It
-would be good to spell this out.
+On Sat, 12 Apr 2025 at 12:15, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> This code is intended to reject strings that start with "_sysfs" but the
+> strcmp() limit is wrong so checks the whole string instead of the prefix.
+>
+> Fixes: 83c8e3df642f ("gpio: aggregator: expose aggregator created via legacy sysfs to configfs")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch applies on v6.15-rc1
-> 
->  arch/arm64/kernel/head.S         | 3 +++
->  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->  arch/arm64/kernel/pi/pi.h        | 1 +
->  arch/arm64/mm/mmu.c              | 1 +
->  arch/arm64/mm/proc.S             | 5 +++--
->  5 files changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index 2ce73525de2c..4950d9cc638a 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->  	 * On return, the CPU will be ready for the MMU to be turned on and
->  	 * the TCR will have been set.
->  	 */
-> +	adr_l	x0, pir_data
-> +	bl      __pi_load_pir_data
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Using C code to pre-calculate the values into global variables that the assembly
-code then loads and stuffs into the PIR registers feels hacky. I wonder if we
-can instead pre-calculate into asm-offsets.h? e.g. add the following to
-asm-offsets.c:
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -1016,7 +1016,7 @@ gpio_aggregator_make_group(struct config_group *group, const char *name)
+>          * for devices create via legacy sysfs interface.
+>          */
+>         if (strncmp(name, AGGREGATOR_LEGACY_PREFIX,
+> -                   sizeof(AGGREGATOR_LEGACY_PREFIX)) == 0)
+> +                   sizeof(AGGREGATOR_LEGACY_PREFIX) - 1) == 0)
 
-DEFINE(PIE_E0_ASM, PIE_E0);
-DEFINE(PIE_E1_ASM, PIE_E1);
+Or perhaps just strlen()? The compiler should optimize that to a constant, too.
 
-Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
-pre-calculated values that you can then use in proc.S?
+>                 return ERR_PTR(-EINVAL);
+>
+>         /* arg space is unneeded */
 
-Or if that doesn't work for some reason, is it possible to store to the PIR
-registers directly from the C code?
+Gr{oetje,eeting}s,
 
-Thanks,
-Ryan
+                        Geert
 
-> +
->  	bl	__cpu_setup			// initialise processor
->  	b	__primary_switch
->  SYM_CODE_END(primary_entry)
-> diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
-> index 81345f68f9fc..cd9d24e73046 100644
-> --- a/arch/arm64/kernel/pi/map_range.c
-> +++ b/arch/arm64/kernel/pi/map_range.c
-> @@ -103,3 +103,9 @@ asmlinkage u64 __init create_init_idmap(pgd_t *pg_dir, pteval_t clrmask)
->  
->  	return ptep;
->  }
-> +
-> +asmlinkage void __init load_pir_data(u64 pir_data[])
-> +{
-> +	pir_data[0] = PIE_E0;
-> +	pir_data[1] = PIE_E1;
-> +}
-> diff --git a/arch/arm64/kernel/pi/pi.h b/arch/arm64/kernel/pi/pi.h
-> index c91e5e965cd3..ae61df4fdb77 100644
-> --- a/arch/arm64/kernel/pi/pi.h
-> +++ b/arch/arm64/kernel/pi/pi.h
-> @@ -34,3 +34,4 @@ void map_range(u64 *pgd, u64 start, u64 end, u64 pa, pgprot_t prot,
->  asmlinkage void early_map_kernel(u64 boot_status, void *fdt);
->  
->  asmlinkage u64 create_init_idmap(pgd_t *pgd, pteval_t clrmask);
-> +asmlinkage void load_pir_data(u64 pir_data[]);
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index ea6695d53fb9..762e81ff4e85 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -58,6 +58,7 @@ static bool rodata_is_rw __ro_after_init = true;
->   * with MMU turned off.
->   */
->  long __section(".mmuoff.data.write") __early_cpu_boot_status;
-> +unsigned long __section(".mmuoff.data.write") pir_data[2];
->  
->  /*
->   * Empty_zero_page is a special page that is used for zero-initialized data
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index fb30c8804f87..7dd28cf101c2 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -524,9 +524,10 @@ alternative_else_nop_endif
->  #define PTE_MAYBE_NG		0
->  #define PTE_MAYBE_SHARED	0
->  
-> -	mov_q	x0, PIE_E0
-> +	adr_l	x1, pir_data
-> +	ldr	x0, [x1, #0]
->  	msr	REG_PIRE0_EL1, x0
-> -	mov_q	x0, PIE_E1
-> +	ldr	x0, [x1, #8]
->  	msr	REG_PIR_EL1, x0
->  
->  #undef PTE_MAYBE_NG
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
