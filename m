@@ -1,176 +1,209 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1882DFA21;
-	Mon, 14 Apr 2025 14:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B5D2DFA33
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639606; cv=none; b=EAxGtU2lc83LxDg8pmilPTxlooTnqoCGD6wUqaEU/kkygmvH/VSDWI6DnavzBJEvAQ+hsumKk03qKbUbZtLBEL/ISlTImmbUMfxwCSN477fZMESdl+ITA6THTtCB79i94L6jjtnhZ7BytH0xrZq2yXbh8JhLdje4WbhDVUOeyfw=
+	t=1744639615; cv=none; b=RNGHgCqnRqmgt4xeMdM3tuILWbQmB2KyMc3dgT0/7shv/5wF/VUlhUntfxywZXgNI/PmBJpC+/hiZ/tMuWH4Ww8DgPqz+vsNtXCNG6kKmECQyDXk89n3su7PnksgKnzuG7LS3Hrz9j0d5mTg05quqPh2ny02UdIirYh0imuQ8Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639606; c=relaxed/simple;
-	bh=sq85iaZePSBodnWG8dw4mchGLQuXkq+ro1j3ch5BREc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uBVn4RjittJqxIaEhb+4wC1jg6piKiC6QjmPC16VriW22QtBiyjHIkMNCFy5S5CEqTrE7F9NCSnsLc4bj6lNtBzCncS9BapjPUVARb/+O99qZi/aZh2ahjugCxF8DXq5xWw1o5vVRxZu3zGU03TK0kzwtuXvVbzEnoEQYChwbdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mD3zl81e; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744639615; c=relaxed/simple;
+	bh=2QUBlplyQJWl9S4zK6K4LHurh5B+0TICwmMWJN2IXjw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rVNwr/ee2nzjKucHXos2QEku6RXkd/JRQRKoo8MS4kPHFN3kOQFKpinaklZq67kMC9+mqweyow9AWt6YcO4zQCWxj2255Ifrb8H2VSEa5HtzHSb0xRX+et8m+tOg/ZkBG5pKsU8fiUxFytvD4Q1E71yE4L477VWmvf+TDexoE2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Osyoiobh; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mD3zl81e"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac297cbe017so978466166b.0;
-        Mon, 14 Apr 2025 07:06:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Osyoiobh"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso29096395e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744639603; x=1745244403; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MqJHataDJN13GWdlaeETKdRNTar6wX0Omb0Dui9smng=;
-        b=mD3zl81emCLRpvfHaC5XjAZpfh7XkJirP0y4izQZnpi8SnCKqfdP+d7UkR9+kBXuiN
-         8+kxRUGepxEKAsH1VkuiGf8sakNH5KFYAwHpg0loNCwFm1YJYmiaZEFz8/8fMI7YEXNi
-         I2jGIQlDX3njmTpuHlMXaik/WLHWjX1QENHHtFBGa2G3wZrMYYwJLVxHo7IH3NT+4kC0
-         8ydOdiPotVZO/1LEv6w4zBXTieshVg8lwZSFzRE1KmZr8fjoJ56iw8Xqos+ZvRrgcPpU
-         KpqPNDccjn3IXNBk4Q8GRTkF1WH3BmOvTKHvwRAFp/8l6oUeZhSIzCvFkjAc8bcTtQGS
-         vBGg==
+        d=suse.com; s=google; t=1744639611; x=1745244411; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DZANWr26SSzxqVBiw0ZxH74tF6wUKUhC5cuFBxT2B9Y=;
+        b=OsyoiobhZ3YtbggWu9V2T2lz9ZNSXnaGUUGkauw5fNpBmHs247XcgeJngBJd+tt9gK
+         N+6qjjxBKLV84fr9NXFs5IzkqbMdf9wfB7RJaUsdZSoM3dmpnFyWE0bzfZhFFee3AK0t
+         sBJwPwx0a+2erY+SvqPbwH8zv2GF8DAhzBIhUN/PrrFoxhchSLfO7Z1NqCsUNwjfgyp5
+         pIBNOWyQOGWfPznyO2LHrfYBCHV5icv+8ghUYyZ5e6GKM37hnJNbaAJU7CaXWvTZEX8o
+         q6sj5KbDfxEXsEdW4k5V2fbL6rGoK9hYz+ItzxDdBZ/4u+cKcX1VwP+auZgSxy6JlcsR
+         L2dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744639603; x=1745244403;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MqJHataDJN13GWdlaeETKdRNTar6wX0Omb0Dui9smng=;
-        b=DYtMCvfnamlZXhLHBrdYVuJFHAqhQVbgCCJlSyeoQJziMbXafXrr7q7RwzL4yVMtMh
-         bGxpDtv+AbOVLClR0xw/irgznY0u27xYAOfSn/I3Eusrmp/rufJd7vmT2HKfnA6L3ZMH
-         BXrbOKkLGGcX18B0J7Q7p7jabIGbDpkLHz1o9kd6G8xbhPpd7iRV9TO8eZJp/612w1w2
-         krgC2eL1trJRQJeRZ/H5oQhNVtm1ay5ZX9DtGoaVPHqRu5rqVGeN7kH11jdxwXFkn6sr
-         J4XAPNx989lRXI5skGd4FB8i8FeBzBNlovpcxkeMvbd8Ig7kFq37l1LDH0nrWuCrEEg+
-         AOjA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7MY0ut8U7Ksr8ZMcaJMp6qfeO0Ad60eCEIV9x2tZOkTsP0aLggW6wh3Ep9zFE9/F7RzLM5bs7Te9i4AIM@vger.kernel.org, AJvYcCVpq+hbkvOYyt1d0JByREbpKDmvxrbbSkbQbRdqNlzbXrn/komBDroeHPgJ3fDYGRStLkA=@vger.kernel.org, AJvYcCWm5h+qqtNJ1NZid4jq3Ro0hzH5cFxIOqhn5Po3ZZ8cjiP0CT6PvcqR7bMsc6XGBbemzlUVj86aZ5zf/dwf@vger.kernel.org, AJvYcCXYQFJvfS3hg+Dw5hMFOWEGJm5JDlcY3SZbAzI2broQ8mkxQmQ7HW9rNpl67DFKp00a8lCKbGKGsWrQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/AecL3RbXkTFk52E/Ft+cgVVALFW07mKUNPKLP5A+lTR+mw0m
-	Ekj4+zH37m4XDSVf15FsY4DsK4Avnuf9FXVh9WHV7t3gI3tIKrb8
-X-Gm-Gg: ASbGncstJ70KHtG8nmq56t/DLh/fMjt/BMNjgdoG3wvHtJCkx6BDrnqfrIArbdW1Vl/
-	DJRfSfMIWJL/LQXcHquWpHcNp8Q1ho8fxmaoRffjuX+J7qZGPlOnxQ1fav2lhzt0olt9xG+gW/e
-	AlbWAnsbitEF2hY1eC7wx6qWW5hq48IQw02QQEyZQrlsYqtoRNa56GodhG+HLjjVICa6OfIvE4E
-	+uvY4ETekCgAzwFxvVy7CkgRfelOyKx0sUGRiY85o1m40R9Lv8rSldsK6+bRjmrTS6iZapebRkT
-	j1zEHZ6BtqBvYnJ5OXd5+OV1kOjiCOeUhOk3Zg+Xig==
-X-Google-Smtp-Source: AGHT+IGv7I7mfcP3SkB2yL+BqA/SYvY6RgaRIDLCbA6d3KCPxX8mr0qnv7srH/JCsek7/hDZZbZ5NA==
-X-Received: by 2002:a17:907:1b10:b0:ac2:7ce7:cd2b with SMTP id a640c23a62f3a-acad1622b9emr958079466b.2.1744639603046;
-        Mon, 14 Apr 2025 07:06:43 -0700 (PDT)
-Received: from [192.168.1.100] ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ccd1cfsm916454566b.138.2025.04.14.07.06.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 07:06:42 -0700 (PDT)
-Message-ID: <01c65464-8535-28d8-a9b5-eb4f90114e2d@gmail.com>
-Date: Mon, 14 Apr 2025 16:06:41 +0200
+        d=1e100.net; s=20230601; t=1744639611; x=1745244411;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DZANWr26SSzxqVBiw0ZxH74tF6wUKUhC5cuFBxT2B9Y=;
+        b=IUVGsz1wF92qErqyytz5Fo39gEx8RFf0u6PHYHV315Ub6OJnfPAClDK902aI9YkPAi
+         +CXiTp1icoqqlvkACDJhw/TpDe+wWRt5NLvGXA4cmF3EL/erzg1t8XRU2sDVeDUo2dKD
+         qfGV+/ngjmUn/q/vUSMPIntiZCOAtp0bxyeoUK4fFw/8CqDnUPDyJw60/xiHbm/LUFF1
+         ufGJ6Qoul6Og92tEeJJ7yUXEIPMdHHm01FWa7saqedtBP3NLnRB1ccX692YStWaWj8Vu
+         YuX3ERP+S9cn4v44UnBUpQv/P7PbGsC6xvy+sV1/s6x0pvVnuMiRm8T2LicTWnzU3r8u
+         BlwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXU6bS53XlZFme2LRFCmIS3XDJBY6Q5zv/R/E3Oq8aiohdSqfWoCgYFD0neNxYwaHRxXuqIhp8iIKX0v24=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfzoQNRTFG9B5J1887srNNV+djy5hxeYg66X39YTwNERvHZ1ps
+	oMgBBVU2kQAUUrnnqVm3jOhUqr3o1qr/wzGvdYoqio2exgsrtOTNCdmezpAR9L8/hOS0LyoD/z6
+	KEpRZfYXTMMgzLcl+Uv3eCNSJhgA8iRE2GglSc5BZAxJ/ghS0ABk=
+X-Gm-Gg: ASbGnctEf7ZGKUdATX+fVK4zzQ5sbplVsjd2AiztvizDO+XYezZzL4ZLy5gyX63w5MI
+	rO4aitLhU2AyYScX2xsdO8a6FlFXJtzhlf2QXFYK+3FoNIuIX6gwKPmlgVvu41m98X1vNRjON5n
+	PwhG9X++hOFyad8nd1sfAY
+X-Google-Smtp-Source: AGHT+IGIEb3J2eaC+jpEeKoJQOWenQvI7Y7xQNvlpyXmkSIvuGR+dzo/NzSMEJQfpSPAALfI3ekbcx2r+teM4mNhkKs=
+X-Received: by 2002:a05:6000:2582:b0:391:2c0c:1270 with SMTP id
+ ffacd0b85a97d-39ea51d3250mr10332610f8f.1.1744639611467; Mon, 14 Apr 2025
+ 07:06:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
-To: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, jpoimboe@kernel.org,
- pawan.kumar.gupta@linux.intel.com, seanjc@google.com, pbonzini@redhat.com,
- ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
- gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.285564821@infradead.org>
-Content-Language: en-US
-From: Uros Bizjak <ubizjak@gmail.com>
-In-Reply-To: <20250414113754.285564821@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250411034425.173648-1-frank.li@vivo.com> <CAPjX3Fe34HVF2JUi2DEyxqShFhadxy7M7F6xTA_yVn5ywHMBhQ@mail.gmail.com>
+ <SEZPR06MB526928EBDA13B6463D7EE00BE8B32@SEZPR06MB5269.apcprd06.prod.outlook.com>
+In-Reply-To: <SEZPR06MB526928EBDA13B6463D7EE00BE8B32@SEZPR06MB5269.apcprd06.prod.outlook.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Mon, 14 Apr 2025 16:06:40 +0200
+X-Gm-Features: ATxdqUGmaNE0hisBQuDtH3seyNpXnSL7WLVbsXMaKZCMNBua4cNq-4zahUUW6HA
+Message-ID: <CAPjX3Ff8BQr+Wh0WtsvKcBa1qxiyPCm=0tLW=OKFJCqtLOqkPw@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: use BTRFS_PATH_AUTO_FREE in btrfs_truncate_inode_items()
+To: =?UTF-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>
+Cc: "clm@fb.com" <clm@fb.com>, "josef@toxicpanda.com" <josef@toxicpanda.com>, 
+	"dsterba@suse.com" <dsterba@suse.com>, 
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 14 Apr 2025 at 15:34, =E6=9D=8E=E6=89=AC=E9=9F=AC <frank.li@vivo.co=
+m> wrote:
+>
+> Hi Daniel,
+>
+> > And what about the other functions in that file? We could even get rid =
+of two allocations passing the path from ..._inode_ref() to ..._inode_extre=
+f().
+>
+> I made the following changes, is this what you meant?
+> I will do the rest if that's ok.
 
+Yeah, quite almost.
 
-On 14. 04. 25 13:11, Peter Zijlstra wrote:
-> What used to be a simple few instructions has turned into a giant mess
-> (for x86_64). Not only does it use static_branch wrong, it mixes it
-> with dynamic branches for no apparent reason.
-> 
-> Notably it uses static_branch through an out-of-line function call,
-> which completely defeats the purpose, since instead of a simple
-> JMP/NOP site, you get a CALL+RET+TEST+Jcc sequence in return, which is
-> absolutely idiotic.
-> 
-> Add to that a dynamic test of hyperv_paravisor_present, something
-> which is set once and never changed.
-> 
-> Replace all this idiocy with a single direct function call to the
-> right hypercall variant.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->   arch/x86/hyperv/hv_init.c       |   21 ++++++
->   arch/x86/hyperv/ivm.c           |   14 ++++
->   arch/x86/include/asm/mshyperv.h |  137 +++++++++++-----------------------------
->   arch/x86/kernel/cpu/mshyperv.c  |   18 +++--
->   4 files changed, 88 insertions(+), 102 deletions(-)
-> 
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -35,7 +35,28 @@
->   #include <linux/highmem.h>
->   
->   void *hv_hypercall_pg;
-> +
-> +#ifdef CONFIG_X86_64
-> +u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
-> +{
-> +	u64 hv_status;
-> +
-> +	if (!hv_hypercall_pg)
-> +		return U64_MAX;
-> +
-> +	register u64 __r8 asm("r8") = param2;
-> +	asm volatile (CALL_NOSPEC
-> +		      : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> +		        "+c" (control), "+d" (param1)
-> +		      : "r" (__r8),
+> Thx,
+> Yangtao
+>
+> diff --git a/fs/btrfs/inode-item.c b/fs/btrfs/inode-item.c
+> index 3530de0618c8..e082d7e27c29 100644
+> --- a/fs/btrfs/inode-item.c
+> +++ b/fs/btrfs/inode-item.c
+> @@ -105,11 +105,11 @@ btrfs_lookup_inode_extref(struct btrfs_trans_handle=
+ *trans,
+>
+>  static int btrfs_del_inode_extref(struct btrfs_trans_handle *trans,
+>                                   struct btrfs_root *root,
+> +                                 struct btrfs_path *path,
+>                                   const struct fscrypt_str *name,
+>                                   u64 inode_objectid, u64 ref_objectid,
+>                                   u64 *index)
+>  {
+> -       struct btrfs_path *path;
+>         struct btrfs_key key;
+>         struct btrfs_inode_extref *extref;
+>         struct extent_buffer *leaf;
 
-r8 is call-clobbered register, so you should use "+r" (__r8) to properly 
-clobber it:
+I think you missed this:
 
-		        "+c" (control), "+d" (param1), "+r" (__r8)
-		      : THUNK_TARGET(hv_hypercall_pg)
+@@ -123,10 +123,6 @@ static int btrfs_del_inode_extref(struct
+btrfs_trans_handle *trans,
+        key.type =3D BTRFS_INODE_EXTREF_KEY;
+        key.offset =3D btrfs_extref_hash(ref_objectid, name->name, name->le=
+n);
 
-> +		      : "cc", "memory", "r9", "r10", "r11");
-> +
-> +	return hv_status;
-> +}
-> +#else
->   EXPORT_SYMBOL_GPL(hv_hypercall_pg);
-> +#endif
->   
->   union hv_ghcb * __percpu *hv_ghcb_pg;
->   
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -376,6 +376,20 @@ int hv_snp_boot_ap(u32 cpu, unsigned lon
->   	return ret;
->   }
->   
-> +u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2)
-> +{
-> +	u64 hv_status;
-> +
-> +	register u64 __r8 asm("r8") = param2;
-> +	asm volatile("vmmcall"
-> +		     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> +		       "+c" (control), "+d" (param1)
-> +		     : "r" (__r8)
+-       path =3D btrfs_alloc_path();
+-       if (!path)
+-               return -ENOMEM;
+-
+        ret =3D btrfs_search_slot(trans, root, &key, path, -1, 1);
+        if (ret > 0)
+                ret =3D -ENOENT;
 
-Also here:
-		        "+c" (control), "+d" (param1), "+r" (__r8)
-		      :
+Which was ironically the whole point ;-)
 
-> +		     : "cc", "memory", "r9", "r10", "r11");
-> +
-> +	return hv_status;
-> +}
+> @@ -131,7 +131,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>         if (ret > 0)
+>                 ret =3D -ENOENT;
 
-Uros.
+You can also directly return -ENOENT; here.
+
+>         if (ret < 0)
+> -               goto out;
+> +               return ret;
+>
+>         /*
+>          * Sanity check - did we find the right item for this name?
+> @@ -142,8 +142,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>                                                 ref_objectid, name);
+>         if (!extref) {
+>                 btrfs_abort_transaction(trans, -ENOENT);
+> -               ret =3D -ENOENT;
+> -               goto out;
+> +               return -ENOENT;
+>         }
+>
+>         leaf =3D path->nodes[0];
+> @@ -156,8 +155,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>                  * Common case only one ref in the item, remove the
+>                  * whole item.
+>                  */
+> -               ret =3D btrfs_del_item(trans, root, path);
+> -               goto out;
+> +               return btrfs_del_item(trans, root, path);
+>         }
+>
+>         ptr =3D (unsigned long)extref;
+> @@ -168,9 +166,6 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>
+>         btrfs_truncate_item(trans, path, item_size - del_len, 1);
+>
+> -out:
+> -       btrfs_free_path(path);
+> -
+>         return ret;
+>  }
+>
+> @@ -178,7 +173,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
+ans,
+>                         struct btrfs_root *root, const struct fscrypt_str=
+ *name,
+>                         u64 inode_objectid, u64 ref_objectid, u64 *index)
+>  {
+> -       struct btrfs_path *path;
+> +       BTRFS_PATH_AUTO_FREE(path);
+>         struct btrfs_key key;
+>         struct btrfs_inode_ref *ref;
+>         struct extent_buffer *leaf;
+> @@ -230,7 +225,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
+ans,
+>                               item_size - (ptr + sub_item_len - item_star=
+t));
+>         btrfs_truncate_item(trans, path, item_size - sub_item_len, 1);
+>  out:
+> -       btrfs_free_path(path);
+> +       btrfs_release_path(path);
+>
+>         if (search_ext_refs) {
+>                 /*
+> @@ -238,7 +233,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
+ans,
+>                  * name in our ref array. Find and remove the extended
+>                  * inode ref then.
+>                  */
+> -               return btrfs_del_inode_extref(trans, root, name,
+> +               return btrfs_del_inode_extref(trans, root, path, name,
+>                                               inode_objectid, ref_objecti=
+d, index);
+>         }
