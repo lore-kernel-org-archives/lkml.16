@@ -1,145 +1,118 @@
-Received: from e2i427.smtp2go.com (e2i427.smtp2go.com [103.2.141.171])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D6E1C1F12
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58621CBA18
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744661977; cv=none; b=RQjShJGBztgAtysCY3NusGr71OEW3lBHO3v/DhSR2qksMRL/2PjiCtXEbsqyPgGRTLIaWAfKgTowXu++SXMBRRjL48v2bmURG58PBZn0dzxX1TU84xB048fJIH43Su6zcBB70d7RZp74gVhrOf2GDEIsLbnsyY9FotIUztaP39c=
+	t=1744662066; cv=none; b=cF4qT8Hs2obBh6TlPBIYP7MBJfhiT1qiAmlxhSC2PY5TM0OsHkzTWjIeFqRLqf0fAcUqBFYirDWakkWiAJo+CQA/wdYwchJyznZHvE70PsT3ygGX+nC4/i79eT+JmAZyJvsQDiijruSKV29Qwa7UqQ90EWLG7LjmB5w7Mc81fJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744661977; c=relaxed/simple;
-	bh=XleZMG7I0hBKpWBBZ30vgWlJ3X7D9YnR4f8NvVxN7ZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHeLhChUii6e+gZb3+ML+naYBziUlL1u3enipDOUBGx9xlyGp7bRyNaknmmjb6eZuDL/IY5+JZ/+20MNxxgzj3lJvNE8v/0Gjd2nI8YAnh5JdAqYZqQQZM4dX+0MelVgdtMXPxT8hXQpFTy4P9rE1krmYizhsByi06kfJNIoemk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=e3NP75Ad reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=VJxjNjSW; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=SgW9pEy3; arc=none smtp.client-ip=103.2.141.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
+	s=arc-20240116; t=1744662066; c=relaxed/simple;
+	bh=IHxH+ITR2MyYN82fNQQ7nDWZbhuT/sr8/lromKSu78I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CUOo0hRO+00EE91WTR4Z1mP9bymhgIIznRReN+OnmyaFIbbeG5NA6+gfZ8JryVJCRE1Iu1gsOtRLXORvYmXziWo0iITybLYAtU6AAcUtyeQvJyIKbGt91pAAjTZc1F48FM/XOjUlJIt/cQGfYtNt0VZ++kGG8OV/tHYjHnRpx4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GUICQXqr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="e3NP75Ad";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="VJxjNjSW";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="SgW9pEy3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1744662868; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
-	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=DBHs10rDRwWakJ+0FNRVX8rLj2BxosVKCp/U+3H5D8k=; b=e3NP75Ad8cFrD0RJjLIu4L8M3u
-	qUXGlki599QiJswH5sC9NcadD/BP2FmasvXauCYN47zyIA5QCBTWVM8Dqm1SK8dDKvaZfCkznnibV
-	G8fP+ETo5nIPdMb9+6fwLhQXOcqTgiLiRvCXcDOjUsY4Wv0eCQ9xUkGVwIoxYPklNQHPaUqlN6oO9
-	FDlTNqEUTgRPHWm01WQuzUQM7sorspqaN0tLqLpaygrtRVll7cTAbLauLZtO89OTz01dv0Ukn8teV
-	dVT3oGbsWABIR4BxPN4Lrd6bXVFd0VwL2i9X32XY1P1iLiEFCt5B1INWH5LzwbIo3mVVOaZUTF54d
-	vPPzxhsw==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1744661968; h=from : subject :
- to : message-id : date;
- bh=DBHs10rDRwWakJ+0FNRVX8rLj2BxosVKCp/U+3H5D8k=;
- b=VJxjNjSW42UgGqwDP9g7k9vaznGVqN1FWTScseMdQmS0R4td5MZUTUENlT01yl9dPmxtN
- mMi/cQ18ePA+tsbJsOAp8Dq4OIG9E0HSRErqd1y0wQKWwzCrA/YYL/BKCzrVx/eaSpbfvPT
- N+nu6SwYpIzmljgmR0i7T9BxKwqOP1AUBggDdjM48IcpuxJyHYRvVGHnddgyWvdkEYklvcm
- tePN0txRFD2GxDcmaUCi4iPsYxWebi+XzPBEDhdtgl3NRPJvNDajXDVIcsnv3DX+HTT5rHh
- Q0U6hbgzi+iSTz8fCiCGnYY1cXchtG+HYerG+N+yCuzL3V6K61cFWgx0z3UA==
-Received: from [10.172.233.58] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1u4QFI-TRjwtI-IS; Mon, 14 Apr 2025 20:17:32 +0000
-Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
- by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1u4QFH-FnQW0hPuS5z-lIjL; Mon, 14 Apr 2025 20:17:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1744661848; bh=XleZMG7I0hBKpWBBZ30vgWlJ3X7D9YnR4f8NvVxN7ZQ=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=SgW9pEy3RvEhKOAWcSympA8YWxTr9kdBVMh8OHIPWoLR2eXOIXdcilDMCyUHvC6uC
- mFBwyCLvJfZi2HP3NNPNmFFD9umMjBxCOonKwrwTO1wTyArzylURFLDHqlrUSB3izX
- bVBTVt0qWj3/rJBV+nksjCukEGxSSd+DFjaiCo8Q=
-Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id 546994973C; Mon, 14 Apr 2025 22:17:28 +0200 (CEST)
-Date: Mon, 14 Apr 2025 22:17:28 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>, linux-kbuild@vger.kernel.org,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, patches@lists.linux.dev,
- stable@vger.kernel.org
-Subject: Re: [PATCH] rust: kbuild: use `pound` to support GNU Make < 4.3
-Message-ID: <Z_1tWOkpW_d_OlOW@fjasle.eu>
-References: <20250414171241.2126137-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GUICQXqr"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EJUApW016563
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:21:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fD1kH8AdGKUlHf5k0cz3xyJc207+khrE5Z3bUIWX2lg=; b=GUICQXqrHwzWYDGE
+	LG4fKOHNFG/fnfMiWd5+iuToFru32S9mKs4jiBGSPtSDeTNh1u4aMYhtM1HksmeA
+	2O9E9UZXe6b6WWr68IlTYRNacZa8FuUBH0RXlYse+2xa5vZk85ctVjNyXJXpwZfW
+	n4V9p429FBXZTo9EDXcx36OLx7xwfDNi+UREU9PLcJzjKRChJ/eksICDBqgfq73J
+	899eoefJe6aL5DSZBqOvbsrTj+uQQhe7QsCFCgwvnGhk4ZfBiX4HdlPjpCjTft7s
+	oKZyvWZNqb+2Iry2P4Fc04Kxqx0PhMtzUcHJl/lOChXLNrIdJ3YBEmJrMvRhNC8R
+	gm4MKA==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69nsf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:21:03 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476786e50d9so10227391cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:21:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744662063; x=1745266863;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fD1kH8AdGKUlHf5k0cz3xyJc207+khrE5Z3bUIWX2lg=;
+        b=CeLXGNrhuPU2vOR+XR3x4rgCM1vC2VdOe+L+xtfGzNTKJ5WD/L46QslqQwLLq0dmfy
+         5tPu/W15V9++TDkg9Er770XDMnmj4nyrNZX/AZhqaJhtgB8z6ZmoZT77feaiJhtvSxP5
+         A4kaka4yXL2jSEtEcYouIYI+ml4E1oo8VYgvMYbYNmwwECCoQPCFbvcyoOx0S1EtEeI6
+         2u5Mglm+6/RnKgfS3VE6jZmhoULZUY94rgG7hWsEhgf+5X5mUP5O3u799EZvLBCWZFkI
+         md+VjWTbKeJwHKhripS0FK2wV1I6PC0Zco3GBGJNhfBz1jNvNY16MpdVJ3co/nwqhW9o
+         L45A==
+X-Forwarded-Encrypted: i=1; AJvYcCXmzHunvm9TgJNIJwJw9OhE0lcPY/HZ8AqYidgPS4LutbOz1H7LEcz4qJIfliZwr09bFO1Q6GvB6TTZp/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+yK8RiVDp2BZqLQCezDCym90d2VN1BihD7iAt682PSxImg32v
+	mCof+G6jkqHXHOZ/WaE9DYKDfiiPykrHLnP6ZoId/htRv5Uyg7nu5m4FmmzRbQEVxygwckiqTJs
+	O1pk6FaUbR1qXhNVnAdGxDjKyqLeqeZ0gEIZpt6s1Y9MQNml8ywo91q1JnYKpbIo=
+X-Gm-Gg: ASbGncu1G5BEfdZcIupr0fqt2koPRW1PXG4KVUPJ22ER+ZeUcbFReDKbg87ze32oLvN
+	PQuuGzVKNBv+MPonhFZcgPLphlQsZbnmaMwy0C0k4Rm0kfE9BJNlkF3lFaX6Ay9hmXx1mH/XTtz
+	hyQKi8z6ahkYGBw61zlHddN0toqNzD+EQ6cx8ioIQt7CGAf8w83ry1orWJde441RolUF/tqKx85
+	ZdcnwHqZ0wV1Pv2u0abJPkSO5jFRViMYpISEHoRqDo67IcueS33nRNxJtFbYE4ujwdyuMJjIu3u
+	rcvyqLkVmJxuaWhJzcAcP7OZ1d8PL8SMDNvlzSae9a7tiSPEMUZELuD34gTrAlQbCw==
+X-Received: by 2002:ac8:7d4d:0:b0:471:ea1a:d9e with SMTP id d75a77b69052e-479775c6474mr73469511cf.12.1744662062723;
+        Mon, 14 Apr 2025 13:21:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQmk8erDwTZPoMnwnKO/lkX8ikdJXyaa7kJzITObjAr+gigb+AnzYJwbVS5NUMmzICm5veAw==
+X-Received: by 2002:ac8:7d4d:0:b0:471:ea1a:d9e with SMTP id d75a77b69052e-479775c6474mr73469311cf.12.1744662062133;
+        Mon, 14 Apr 2025 13:21:02 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee551besm5410518a12.6.2025.04.14.13.21.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 13:21:01 -0700 (PDT)
+Message-ID: <c36c32a9-3d07-4406-a3f3-9e2d345682ff@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 22:20:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250414171241.2126137-1-ojeda@kernel.org>
-X-Smtpcorp-Track: EGjkhv9nxL9W.5MkZfR2L6lva.yZ6lOAwHHcU
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286s7UJPYc9yz
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x:
+ enable MICs LDO
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+References: <20250412124956.20562-1-alex.vinarskis@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250412124956.20562-1-alex.vinarskis@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Eoz6DlhRRNE7mL1XchuCwu_5kOktzMEg
+X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=67fd6e2f cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=1SN7V59r7WJZvlfn_q4A:9 a=QEXdDO2ut3YA:10
+ a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-ORIG-GUID: Eoz6DlhRRNE7mL1XchuCwu_5kOktzMEg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140148
 
-On Mon, Apr 14, 2025 at 07:12:41PM +0200 Miguel Ojeda wrote:
->GNU Make 4.3 changed the behavior of `#` inside commands in commit
->c6966b323811 ("[SV 20513] Un-escaped # are not comments in function
->invocations"):
->
->    * WARNING: Backward-incompatibility!
->      Number signs (#) appearing inside a macro reference or function invocation
->      no longer introduce comments and should not be escaped with backslashes:
->      thus a call such as:
->        foo := $(shell echo '#')
->      is legal.  Previously the number sign needed to be escaped, for example:
->        foo := $(shell echo '\#')
->      Now this latter will resolve to "\#".  If you want to write makefiles
->      portable to both versions, assign the number sign to a variable:
->        H := \#
->        foo := $(shell echo '$H')
->      This was claimed to be fixed in 3.81, but wasn't, for some reason.
->      To detect this change search for 'nocomment' in the .FEATURES variable.
->
->Unlike other commits in the kernel about this issue, such as commit
->633174a7046e ("lib/raid6/test/Makefile: Use $(pound) instead of \#
->for Make 4.3"), that fixed the issue for newer GNU Makes, in our case
->it was the opposite, i.e. we need to fix it for the older ones: someone
->building with e.g. 4.2.1 gets the following error:
->
->    scripts/Makefile.compiler:81: *** unterminated call to function 'call': missing ')'.  Stop.
->
->Thus use the existing variable to fix it.
->
->Reported-by: moyi geek
->Closes: https://rust-for-linux.zulipchat.com/#narrow/channel/291565/topic/x/near/512001985
->Cc: stable@vger.kernel.org
->Fixes: e72a076c620f ("kbuild: fix issues with rustc-option")
->Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
->---
-> scripts/Makefile.compiler | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/scripts/Makefile.compiler b/scripts/Makefile.compiler
->index 7ed7f92a7daa..f4fcc1eaaeae 100644
->--- a/scripts/Makefile.compiler
->+++ b/scripts/Makefile.compiler
->@@ -79,7 +79,7 @@ ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
-> # Usage: MY_RUSTFLAGS += $(call __rustc-option,$(RUSTC),$(MY_RUSTFLAGS),-Cinstrument-coverage,-Zinstrument-coverage)
-> # TODO: remove RUSTC_BOOTSTRAP=1 when we raise the minimum GNU Make version to 4.4
-> __rustc-option = $(call try-run,\
->-	echo '#![allow(missing_docs)]#![feature(no_core)]#![no_core]' | RUSTC_BOOTSTRAP=1\
->+	echo '$(pound)![allow(missing_docs)]$(pound)![feature(no_core)]$(pound)![no_core]' | RUSTC_BOOTSTRAP=1\
-> 	$(1) --sysroot=/dev/null $(filter-out --sysroot=/dev/null --target=%,$(2)) $(3)\
-> 	--crate-type=rlib --out-dir=$(TMPOUT) --emit=obj=- - >/dev/null,$(3),$(4))
->
->
->base-commit: a3cd5f507b72c0532c3345b6913557efab34f405
->-- 
->2.49.0
->
+On 4/12/25 2:49 PM, Aleksandrs Vinarskis wrote:
+> Particular device comes without headset combo jack, hence does not
+> feature wcd codec IC. In such cases, DMICs are powered from vreg_l1b.
+> Describe all 4 microphones in the audio routing. vdd-micb is defined
+> for lpass-macro already.
+> 
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> ---
 
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+Looks good, thanks
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
