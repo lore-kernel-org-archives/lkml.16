@@ -1,253 +1,297 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2068.outbound.protection.outlook.com [40.107.215.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660E82698AE;
-	Mon, 14 Apr 2025 09:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624445; cv=none; b=kWA0cIBzGdASomfS+mopHHqyPQmvs0tTVpFhnHLTm7BRjRnVXjGz4izUeSWy79GQAjlWQUsSjNTRBAAonWhcDJy5Bg4avPDLu7dTVFtG+HL4enk1Mu9wRl6IDc74A/+y4KoOXB1xSivcs03ASziNsHwf6JUkQm4SopQyDyVUau0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624445; c=relaxed/simple;
-	bh=6yyH5aI21gPB/q58TfX/WF+rBvX583JI7wTyHGzGhiA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oZ4vx7fVzEWaRToLciiNkeL8uTmofTsl/B1nKKMFfNKVP57RBj5AXk+8xg5zVrqetri/yAyYFtENhEeT1h4d74y+zEyWnq1bGNl7xAl7kcYmA/N6i+naQjzZ9ysiqGxBoLvqXbJ7/D5ftI/LXpFz7wLxSkFfFQ5iInAMnOQnpJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELrP3jxf; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF05D269AE8;
+	Mon, 14 Apr 2025 09:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744624453; cv=fail; b=ETRjCOgJNhmki1xyVIkg6BBGIxO/76oLHgsc9DceGfE1THrvtm9GfrH+vGaqMd07jUJYPrQuZ9M6r1HUxrMwvb7dqmKFyKPS0mg7jEYPXXnjtyLAFu2DTwTz/6vOV+EaOSjiQoMbnqgRMnM6kTxjKtSBOLgeOFSprmFQrG1QWW0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744624453; c=relaxed/simple;
+	bh=Uauk3EXYiIdp0b7lcfLckmi9M2hKivWJdhHphy20Nqw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MXSD1bP7TDcffkcppLR+DFiLXISD2l/VgmpoTIbfBd+t4jMReHJ/AFsuUVRDlIJXTXs+d8mn08DLPSuv5nAkkQ17IHN6gknfa+tcLl47W6x0u3RTPF7/6REMDqxoutvF4WFRCr9L0bd5ucc1gpcPtcqBrdR77bpPAHOSsn6aBhk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=ntLrKfku; arc=fail smtp.client-ip=40.107.215.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELrP3jxf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C78BAC4CEEB;
-	Mon, 14 Apr 2025 09:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744624444;
-	bh=6yyH5aI21gPB/q58TfX/WF+rBvX583JI7wTyHGzGhiA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ELrP3jxfbXW3baqctu7yTxT7dvuHUm4B+xMgKdYA7AIemQ7DAUC4kxdUqFns6PcEU
-	 /nl0/ax0jkpJymMkqhBg+V5M+bDIZmiBalqduSP72jQ+GUh3JYuOje86g2H9cyRUki
-	 bKOnZc/ZrxsMp9/R2Ir0F/aB4nhsHlw/HngA5NccxojKw7MoYXvEZZrtjlg7vGPgPZ
-	 CeSE5ZEWgflPgb75eEo12rDZJqeL4OTHTcRiOr/s+CSs6fXFYye1Uj6PrGmJ4IAp8r
-	 sIXKodBvwO7f2kC5R1RPVm5ePknW7M74JMn2zcdoMUIka2pvsczTjhHzbiy72WuCSY
-	 kcpGJhUxXW0Lg==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 14 Apr 2025 11:53:38 +0200
-Subject: [PATCH 3/3] coredump: hand a pidfd to the usermode coredump helper
+	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="ntLrKfku"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wfy2DhIaQ6PsRDsvEGdRpz/AAxlWWqMyEMZVcMVk03wuLyD7H2PmLGqVO93PArgJb/FKUalxsg4XQ9Xl45oM9cM6oDzvXJaXtxkSPFhqItNJa62LyRQ0Bch4ClMFMCIekZH3k4VhTRNCjoVrFODy5rmCcBJzqpkmJJMnAq6rG/PdF4mOtvqJA9k+rKdsWerYJ89kqJeMjMyjtOtlTprG6A2y163NUFnsO9aM9YBJHytOk6odRSDVwuV6MauKsbNgeO8eKQsc6zHlWjGXUMZnFdjObVLsyW4TJeuP1XgVBIaf6BqY1IEEJVYfWp0Ux6tBmCrhlJOdIoSW8qxAXGa1UQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HWBimcmlCJhaiI1vYrzUYSndzBVtyFZ5dAIyLYnTAHk=;
+ b=h+p3uZeLETlNMih/926RURXsRfQmltt4uK0ljIMaa7t3uED5WRqrUdd49asVWUfTdlXPv7o5bCYd/pPxF5DzodJAIqG4j1aqQbO8WZ+ajZ/XO3fqwPHZoBdM7ywnAL/qsiRR5KWMXqBg1lvVuElyfjBqkwAdmvi4WjSVJasNAbOFDO6YOoMXa0l3UBtmVYQFtyil9GP22MxHoVD/qkYi02UpyVq/DB9CgRV9dAV5685Ug3fULWL/azcvnnsKBNwVh74nKLtZTSy0yzoiQxiW8kb2QCZQrGRHIKWX0/3j6lNCUGoWQ84KAWEAsS6u48SOIxQaQVpGJY7qgJAVmrD/+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 58.252.5.68) smtp.rcpttodomain=google.com smtp.mailfrom=oppo.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=oppo.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HWBimcmlCJhaiI1vYrzUYSndzBVtyFZ5dAIyLYnTAHk=;
+ b=ntLrKfku3mKdj8/qnHOIfjpfi3MV0/eZU1+oZDgtLOtS23ffWmV80lR7E9xreMWqCC21VK1NH76KiYryn0+z4WC6yT6gKkn8hbba0bXHveB4O6TedF38tCPH4VFRMrax6VQ8mzvew0PkJXQvSWGFQP0jfozV62cHAUZaRVOh4TM=
+Received: from SL2P216CA0159.KORP216.PROD.OUTLOOK.COM (2603:1096:101:35::10)
+ by SEZPR02MB5496.apcprd02.prod.outlook.com (2603:1096:101:48::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.14; Mon, 14 Apr
+ 2025 09:54:03 +0000
+Received: from HK3PEPF0000021B.apcprd03.prod.outlook.com
+ (2603:1096:101:35:cafe::95) by SL2P216CA0159.outlook.office365.com
+ (2603:1096:101:35::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.32 via Frontend Transport; Mon,
+ 14 Apr 2025 09:54:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
+ smtp.mailfrom=oppo.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=oppo.com;
+Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
+ 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
+Received: from mail.oppo.com (58.252.5.68) by
+ HK3PEPF0000021B.mail.protection.outlook.com (10.167.8.37) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 09:54:03 +0000
+Received: from localhost.localdomain (172.16.40.118) by mailappw30.adc.com
+ (172.16.56.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
+ 2025 17:54:01 +0800
+From: Dao Huang <huangdao1@oppo.com>
+To: <samitolvanen@google.com>
+CC: <andrii@kernel.org>, <ast@kernel.org>, <bpf@vger.kernel.org>,
+	<catalin.marinas@arm.com>, <daniel@iogearbox.net>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<mark.rutland@arm.com>, <mbland@motorola.com>, <puranjay12@gmail.com>,
+	<will@kernel.org>
+Subject: Re: [PATCH bpf-next v8 1/2] cfi: add C CFI type macro
+Date: Mon, 14 Apr 2025 17:53:30 +0800
+Message-ID: <1744624410-471661-1-git-send-email-huangdao1@oppo.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20250310222942.1988975-5-samitolvanen@google.com>
+References: <20250310222942.1988975-5-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-work-coredump-v1-3-6caebc807ff4@kernel.org>
-References: <20250414-work-coredump-v1-0-6caebc807ff4@kernel.org>
-In-Reply-To: <20250414-work-coredump-v1-0-6caebc807ff4@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>, 
- Luca Boccassi <luca.boccassi@gmail.com>, 
- Lennart Poettering <lennart@poettering.net>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6614; i=brauner@kernel.org;
- h=from:subject:message-id; bh=6yyH5aI21gPB/q58TfX/WF+rBvX583JI7wTyHGzGhiA=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/uW3Mt3Ku1446Kzv30uOeDkXlDVxXE468nbA5pm32+
- l+hZVfOdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzkRhXD/xjGApnwjhqpg9qH
- /gtO7+KXNbn4K1/EvunLbs8PkhJeOgz/c7+tu77uK0O/VubiYOWFeqd8nOt9H0o4PFsUvF6/uWI
- TMwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain
+X-ClientProxiedBy: mailappw30.adc.com (172.16.56.197) To mailappw30.adc.com
+ (172.16.56.197)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK3PEPF0000021B:EE_|SEZPR02MB5496:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3f47e0e-e1f2-4f39-c920-08dd7b3a49d3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RSJcZMj/lXl78rdEWpxzVohLAaMq6wiqPlFowfk3b+0lQm5RP3rR9k2myRM3?=
+ =?us-ascii?Q?4VPbDf0WQGMMYE5PVxX2BMsqBlT1akBK7hlZmJF7o+A8tjj7GROXy/iyWGd4?=
+ =?us-ascii?Q?VfzOixQRgvjdM1rfpL7WKb+6HdwDS9Dw6BTfRS8jzCAWnARfkxva5iUQ9hm+?=
+ =?us-ascii?Q?tkTEAoncBNbolrk66UsUY6/cu3yETaTexQpTSz+GxPaPV50hcM4boNhOoZvQ?=
+ =?us-ascii?Q?ShxmRTZdrF6FhJrp2W9RftIbEcvDJnlL4JkKF18jb7e1fgDeGnu1ziaAgjLp?=
+ =?us-ascii?Q?nqM1keGtXyRKft0rGqiOC2XosA2UearAQ1byB18cPND0FBgrMVjcF2fshjJc?=
+ =?us-ascii?Q?IApOt2IjPEC7glnPZ+6/t+n1Eus9X/Y1e4TPpAqlNjaSwnC7uBeV+VOszDDo?=
+ =?us-ascii?Q?jvyEISJFnClLlK8ms4V2meSYzzDAXbjXy5L6aX9TWnngnVdn179wnZHVwvBy?=
+ =?us-ascii?Q?Cx2jUlbJgGQkSJIFY2AoBHzta+/3S5gabKBUF/bhEdNpzmd5N0vLbWH12wH8?=
+ =?us-ascii?Q?EY8NldKSEwQ7qBBL5B8c73aK85iBFuteDxN+DRpm6pC8ZtIynwkZnZI5g1YS?=
+ =?us-ascii?Q?tjYhjHYuAsxFiyJeb++JD20V9gNk6Y6p40pXq0jIyAkaIPeT+wpwfAdYLVA+?=
+ =?us-ascii?Q?9Xw85WGu2Bdr8zX/UfKf5IBN+ZcNc8ldwekZs8bWFgO05g+GzxfhBXlzs1eH?=
+ =?us-ascii?Q?ECGjVc6mp/Om7wPkqVoih+n4M96Knk/eRTdV6rRfvNFRb5Ld3b2mJ5J6XqvW?=
+ =?us-ascii?Q?qkp0jv0W41Jbv8eiLJ1SFcfCEqKSg7tdz31xbCldyBqymBC7nZjKNx+qBAA7?=
+ =?us-ascii?Q?g2s2rtuZeVN0ps8tx8SuTeJNZHmeHeghEdMxqHmqldyEhAcZ/Vm7zdWRKoI3?=
+ =?us-ascii?Q?3uMBGYnYgYB3EzplLivI/9dEexefQrZMG44bklWcTIuGPDEL0RElBofuyMMS?=
+ =?us-ascii?Q?DjDm3RtUtIXtIVCN7Wiu1DeuzsG+4j8PFdTIN/5xuGfkN7E944Qr5Bx9tHvZ?=
+ =?us-ascii?Q?THI4WGsGFAFhgcDnqMo0AmdX66JSdtYrLF8cUQGBm1W7rb1TF3C0k6Bcd9G3?=
+ =?us-ascii?Q?KnzEdtPwNvZ5I104vBUsbwYiScYE+gTx0f4Hec6mJnMVLFI8y6cNo78agi2x?=
+ =?us-ascii?Q?Yr3ALDPWMjbzGuyKEKFuiLqHGdrZuayPKVXY6B2uSUmFpqmx+j5/GcUnyY0W?=
+ =?us-ascii?Q?al6Qc79zc5EVV0wFlHDfcKLeOBepBTiUK+ThRlBNm3EvPmt9aeIqugE46EyB?=
+ =?us-ascii?Q?KX96zq1DZXIiOtDlXfNfV+GHl8dMA/e5Lga0j9fPvQ2CYGD9EXLjeScssa0B?=
+ =?us-ascii?Q?JnX2iwPhB5shDqygn9eecWz39NC/tmyrxKa4HheUGUDymV5rG3yf/z315jet?=
+ =?us-ascii?Q?GSRydkmxzm9P3om19n19k+U/DPxD1LSno3A+jYyX1F39zd4Z+Yo9yzvgu38k?=
+ =?us-ascii?Q?DavaKbmuqzyT2UJPIZkSLUrK09l3E5FUQ/NZQSzgz1J7EzvQLUtz9yVaV108?=
+ =?us-ascii?Q?mK0y6DRMH2J58DWex9favYuCe0dJzNZ64ELs?=
+X-Forefront-Antispam-Report:
+	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 09:54:03.1695
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3f47e0e-e1f2-4f39-c920-08dd7b3a49d3
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK3PEPF0000021B.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR02MB5496
 
-Give userspace a way to instruct the kernel to install a pidfd into the
-usermode helper process. This makes coredump handling a lot more
-reliable for userspace. In parallel with this commit we already have
-systemd adding support for this in [1].
+> From: Mark Rutland <mark.rutland@arm.com>
+> 
+> Currently x86 and riscv open-code 4 instances of the same logic to
+> define a u32 variable with the KCFI typeid of a given function.
+> 
+> Replace the duplicate logic with a common macro.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Co-Developed-by: Maxwell Bland <mbland@motorola.com>
+> Signed-off-by: Maxwell Bland <mbland@motorola.com>
+> Co-Developed-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/riscv/kernel/cfi.c       | 35 +++--------------------------------
+>  arch/x86/kernel/alternative.c | 35 +++--------------------------------
+>  include/linux/cfi_types.h     | 23 +++++++++++++++++++++++
+>  3 files changed, 29 insertions(+), 64 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/cfi.c b/arch/riscv/kernel/cfi.c
+> index 64bdd3e1ab8c..e7aec5f36dd5 100644
+> --- a/arch/riscv/kernel/cfi.c
+> +++ b/arch/riscv/kernel/cfi.c
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright (C) 2023 Google LLC
+>   */
+> +#include <linux/cfi_types.h>
+>  #include <linux/cfi.h>
+>  #include <asm/insn.h>
+>  
+> @@ -82,41 +83,11 @@ struct bpf_insn;
+>  /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
+>  extern unsigned int __bpf_prog_runX(const void *ctx,
+>  				    const struct bpf_insn *insn);
+> -
+> -/*
+> - * Force a reference to the external symbol so the compiler generates
+> - * __kcfi_typid.
+> - */
+> -__ADDRESSABLE(__bpf_prog_runX);
+> -
+> -/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
+> -asm (
+> -"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+> -"	.type	cfi_bpf_hash,@object				\n"
+> -"	.globl	cfi_bpf_hash					\n"
+> -"	.p2align	2, 0x0					\n"
+> -"cfi_bpf_hash:							\n"
+> -"	.word	__kcfi_typeid___bpf_prog_runX			\n"
+> -"	.size	cfi_bpf_hash, 4					\n"
+> -"	.popsection						\n"
+> -);
+> +DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+>  
+>  /* Must match bpf_callback_t */
+>  extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
+> -
+> -__ADDRESSABLE(__bpf_callback_fn);
+> -
+> -/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
+> -asm (
+> -"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+> -"	.type	cfi_bpf_subprog_hash,@object			\n"
+> -"	.globl	cfi_bpf_subprog_hash				\n"
+> -"	.p2align	2, 0x0					\n"
+> -"cfi_bpf_subprog_hash:						\n"
+> -"	.word	__kcfi_typeid___bpf_callback_fn			\n"
+> -"	.size	cfi_bpf_subprog_hash, 4				\n"
+> -"	.popsection						\n"
+> -);
+> +DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+>  
+>  u32 cfi_get_func_hash(void *func)
+>  {
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index c71b575bf229..a9f415e873dd 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  #define pr_fmt(fmt) "SMP alternatives: " fmt
+>  
+> +#include <linux/cfi_types.h>
+>  #include <linux/module.h>
+>  #include <linux/sched.h>
+>  #include <linux/perf_event.h>
+> @@ -934,41 +935,11 @@ struct bpf_insn;
+>  /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
+>  extern unsigned int __bpf_prog_runX(const void *ctx,
+>  				    const struct bpf_insn *insn);
+> -
+> -/*
+> - * Force a reference to the external symbol so the compiler generates
+> - * __kcfi_typid.
+> - */
+> -__ADDRESSABLE(__bpf_prog_runX);
+> -
+> -/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
+> -asm (
+> -"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+> -"	.type	cfi_bpf_hash,@object				\n"
+> -"	.globl	cfi_bpf_hash					\n"
+> -"	.p2align	2, 0x0					\n"
+> -"cfi_bpf_hash:							\n"
+> -"	.long	__kcfi_typeid___bpf_prog_runX			\n"
+> -"	.size	cfi_bpf_hash, 4					\n"
+> -"	.popsection						\n"
+> -);
+> +DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+>  
+>  /* Must match bpf_callback_t */
+>  extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
+> -
+> -__ADDRESSABLE(__bpf_callback_fn);
+> -
+> -/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
+> -asm (
+> -"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+> -"	.type	cfi_bpf_subprog_hash,@object			\n"
+> -"	.globl	cfi_bpf_subprog_hash				\n"
+> -"	.p2align	2, 0x0					\n"
+> -"cfi_bpf_subprog_hash:						\n"
+> -"	.long	__kcfi_typeid___bpf_callback_fn			\n"
+> -"	.size	cfi_bpf_subprog_hash, 4				\n"
+> -"	.popsection						\n"
+> -);
+> +DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+>  
+>  u32 cfi_get_func_hash(void *func)
+>  {
+> diff --git a/include/linux/cfi_types.h b/include/linux/cfi_types.h
+> index 6b8713675765..209c8a16ac4e 100644
+> --- a/include/linux/cfi_types.h
+> +++ b/include/linux/cfi_types.h
+> @@ -41,5 +41,28 @@
+>  	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
+>  #endif
+>  
+> +#else /* __ASSEMBLY__ */
+> +
+> +#ifdef CONFIG_CFI_CLANG
+> +#define DEFINE_CFI_TYPE(name, func)						\
+> +	/*									\
+> +	 * Force a reference to the function so the compiler generates		\
+> +	 * __kcfi_typeid_<func>.						\
+> +	 */									\
+> +	__ADDRESSABLE(func);							\
+> +	/* u32 name = __kcfi_typeid_<func> */					\
+> +	extern u32 name;							\
+> +	asm (									\
+> +	"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"	\
+> +	"	.type	" #name ",@object				\n"	\
+> +	"	.globl	" #name "					\n"	\
+> +	"	.p2align	2, 0x0					\n"	\
+> +	#name ":							\n"	\
+> +	"	.4byte	__kcfi_typeid_" #func "				\n"	\
+> +	"	.size	" #name ", 4					\n"	\
+> +	"	.popsection						\n"	\
+> +	);
+> +#endif
+> +
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _LINUX_CFI_TYPES_H */
+> -- 
+> 2.49.0.rc0.332.g42c0ae87b1-goog
 
-We create a pidfs file for the coredumping process when we process the
-corename pattern. When the usermode helper process is forked we then
-install the pidfs file as file descriptor three into the usermode
-helpers file descriptor table so it's available to the exec'd program.
-
-Since usermode helpers are either children of the system_unbound_wq
-workqueue or kthreadd we know that the file descriptor table is empty
-and can thus always use three as the file descriptor number.
-
-Note, that we'll install a pidfd for the thread-group leader even if a
-subthread is calling do_coredump(). We know that task linkage hasn't
-been removed due to delay_group_leader() and even if this @current isn't
-the actual thread-group leader we know that the thread-group leader
-cannot be reaped until @current has exited.
-
-Link: https://github.com/systemd/systemd/pull/37125 [1]
-Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- fs/coredump.c            | 85 +++++++++++++++++++++++++++++++++++++++++++++---
- include/linux/coredump.h |  1 +
- 2 files changed, 82 insertions(+), 4 deletions(-)
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 2ed5e6956a09..ae0c1c5efe9a 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -43,6 +43,9 @@
- #include <linux/timekeeping.h>
- #include <linux/sysctl.h>
- #include <linux/elf.h>
-+#include <linux/pidfs.h>
-+#include <uapi/linux/pidfd.h>
-+#include <linux/vfsdebug.h>
- 
- #include <linux/uaccess.h>
- #include <asm/mmu_context.h>
-@@ -60,6 +63,12 @@ static void free_vma_snapshot(struct coredump_params *cprm);
- #define CORE_FILE_NOTE_SIZE_DEFAULT (4*1024*1024)
- /* Define a reasonable max cap */
- #define CORE_FILE_NOTE_SIZE_MAX (16*1024*1024)
-+/*
-+ * File descriptor number for the pidfd for the thread-group leader of
-+ * the coredumping task installed into the usermode helper's file
-+ * descriptor table.
-+ */
-+#define COREDUMP_PIDFD_NUMBER 3
- 
- static int core_uses_pid;
- static unsigned int core_pipe_limit;
-@@ -339,6 +348,58 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
- 			case 'C':
- 				err = cn_printf(cn, "%d", cprm->cpu);
- 				break;
-+			/* pidfd number */
-+			case 'F': {
-+				struct file *pidfs_file __free(fput) = NULL;
-+
-+				/*
-+				 * Install a pidfd only makes sense if
-+				 * we actually spawn a usermode helper.
-+				 */
-+				if (!ispipe)
-+					break;
-+
-+				/*
-+				 * We already created a pidfs_file but the user
-+				 * specified F multiple times. Just print the
-+				 * number multiple times.
-+				 */
-+				if (!cprm->pidfs_file) {
-+					/*
-+					 * Create a pidfs file for the
-+					 * coredumping thread that we can
-+					 * install into the usermode helper's
-+					 * file descriptor table later.
-+					 *
-+					 * Note that we'll install a pidfd for
-+					 * the thread-group leader. We know that
-+					 * task linkage hasn't been removed yet
-+					 * and even if this @current isn't the
-+					 * actual thread-group leader we know
-+					 * that the thread-group leader cannot
-+					 * be reaped until @current has exited.
-+					 */
-+					pidfs_file = pidfs_alloc_file(task_tgid(current), 0);
-+					if (IS_ERR(pidfs_file))
-+						return PTR_ERR(pidfs_file);
-+				}
-+
-+				 /*
-+				 * Usermode helpers are childen of
-+				 * either system_unbound_wq or of
-+				 * kthreadd. So we know that we're
-+				 * starting off with a clean file
-+				 * descriptor table. Thus, we should
-+				 * always be able to use file descriptor
-+				 * number 3.
-+				 */
-+				err = cn_printf(cn, "%d", COREDUMP_PIDFD_NUMBER);
-+				if (err)
-+					return err;
-+
-+				cprm->pidfs_file = no_free_ptr(pidfs_file);
-+				break;
-+			}
- 			default:
- 				break;
- 			}
-@@ -493,7 +554,7 @@ static void wait_for_dump_helpers(struct file *file)
- }
- 
- /*
-- * umh_pipe_setup
-+ * umh_coredump_setup
-  * helper function to customize the process used
-  * to collect the core in userspace.  Specifically
-  * it sets up a pipe and installs it as fd 0 (stdin)
-@@ -503,12 +564,26 @@ static void wait_for_dump_helpers(struct file *file)
-  * is a special value that we use to trap recursive
-  * core dumps
-  */
--static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-+static int umh_coredump_setup(struct subprocess_info *info, struct cred *new)
- {
- 	struct file *files[2];
- 	struct coredump_params *cp = (struct coredump_params *)info->data;
-+	struct file *pidfs_file = cp->pidfs_file;
- 	int err;
- 
-+	if (pidfs_file) {
-+		/* We must start from a pristine file descriptor table. */
-+		VFS_WARN_ON_ONCE((pidfs_file = fget_raw(COREDUMP_PIDFD_NUMBER)) != NULL);
-+
-+		/*
-+		 * Takes it's own reference on success and do_coredump()
-+		 * will put the additional reference.
-+		 */
-+		err = replace_fd(COREDUMP_PIDFD_NUMBER, pidfs_file, 0);
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	err = create_pipe_files(files, 0);
- 	if (err)
- 		return err;
-@@ -598,7 +673,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 		}
- 
- 		if (cprm.limit == 1) {
--			/* See umh_pipe_setup() which sets RLIMIT_CORE = 1.
-+			/* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
- 			 *
- 			 * Normally core limits are irrelevant to pipes, since
- 			 * we're not writing to the file system, but we use
-@@ -637,7 +712,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
- 						helper_argv, NULL, GFP_KERNEL,
--						umh_pipe_setup, NULL, &cprm);
-+						umh_coredump_setup, NULL, &cprm);
- 		if (sub_info)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
-@@ -784,6 +859,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 	if (ispipe)
- 		atomic_dec(&core_dump_count);
- fail_unlock:
-+	if (cprm.pidfs_file)
-+		fput(cprm.pidfs_file);
- 	kfree(argv);
- 	kfree(cn.corename);
- 	coredump_finish(core_dumped);
-diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-index 77e6e195d1d6..af2ed4b68dcf 100644
---- a/include/linux/coredump.h
-+++ b/include/linux/coredump.h
-@@ -28,6 +28,7 @@ struct coredump_params {
- 	int vma_count;
- 	size_t vma_data_size;
- 	struct core_vma_metadata *vma_meta;
-+	struct file *pidfs_file;
- };
- 
- extern unsigned int core_file_note_size_limit;
-
--- 
-2.47.2
-
+we oppo team have tested this patch on Mediatek DX-5(arm64)
+with a kernel based on android-16(kernel-6.12). It has been running
+fine for a week on both machines.
