@@ -1,147 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E5428BAB9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD72428DEE0
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655685; cv=none; b=InQjWVGrQLQS9P9muKV3/NDb3WVWSaWPaJHFebwj93d8lKvCV8o/l2h6Kt7PVijGZ0rpXWKaeI1GHhX3MoNHaYpWvnD7pGVca5ZdD/6Cb8bJG6b9K6TtWtrDAXm8eSTe4TruIP9i2IN6C8BIaCD14qf8iOByL80+8HeMWoEGjd0=
+	t=1744655689; cv=none; b=bK1HSdCdvqG23maGe6TV6ikxq8HNqFbswkFdZjOcgJPHTxI+ywBRF4Iqq5a006ZbA45A3vOiLZ4dM72VbqBq8eZXi6bDYPtKmsDTBfguhtb1T2o6NLt0u/3vEjv5asa34y4/5JU0TPL2MK1CpkoMrbeP6vOSTkvAOCsZ3I62CAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655685; c=relaxed/simple;
-	bh=inFuZXDNWZB9IrQxuopCU5+gEIrcyOMeM9cQlAdeA9c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ueXLe/T2+7zIxzfgAkVBF6PkmeFp2s5J/7Z9O4L8+ITYy2wj+sfHWXr2JZyAuiFyMuKSiKkOGpc8k3xXOhrAD+Jo4sEcGJPIPfOAiFvAZubSp+1N8nEQDosOqS4WT8sace++o8PfelPqDxXws9vOrQZdDX+PXXGWXfz6ooGpVPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0EYWuhPv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=02UtCtK7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744655689; c=relaxed/simple;
+	bh=s2YUvKONZpYv6BeESkipXTOMCM3/ZgRQk8zLNK4GcdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VOXWwuRPgGCCwajq9UTu1HyUsI+HuT4q1WtJQXFY4nS/wVAmnQ1gmfQNX4Q0W51jdA33XyDfFPIb216L3lMbQInqoSUQsOzeR5kqjc20lFcWqwdS1GbRL4GmrOhL34L7vRixPMr4kvjNbkr2W0anOGz5sw5vkKfPSj0n4b7wYlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=GvqD5kMv; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0EYWuhPv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="02UtCtK7"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744655681;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D6tEG05LV9BTff7SDBxQ+0/mXImprZ89pSTAdngVfLg=;
-	b=0EYWuhPvQr+eMLSV+ybzPiRbBdCKpRXXMNhn5tX1Xq1veUgrsHQcyHOPv38sBk53+vjHJA
-	naP+l89fUdvq+Of9xVSb8dZJAxIwgYq3GPvN0meoFQRvkARCB6NidoYi4U3Tz3ZVA2zWgD
-	NdXw/1tSpPycNEvPytrDkOOF+Gg3LKBe6I6dD52KLSSpVHT/F0SJSsTLoFf7vIoU5aah84
-	zfzxAoUnhHErZAe2SyPhrKfrIeRyN8zkx6ljiPi7sttMbISYUvdA7I9gLALYwsbTzX8iB/
-	Mi5m/sDUe6FiJ8/WCbA7CFxVroVYov3UWQQ52UhI8BvpBQ5wvT8lxMJQsPol0w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744655681;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D6tEG05LV9BTff7SDBxQ+0/mXImprZ89pSTAdngVfLg=;
-	b=02UtCtK7Rkfzf2UohhvSJiB2QtqXRIZQBIod7UjonzaUF8JRWUNJSQhydFgdtI7YyGuQPE
-	V+qyCnJJc/ehG1Bg==
-To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>, "H . Peter Anvin"
- <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter
- Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 00/17] timers: Complete the timer_*() API renames
-In-Reply-To: <Z_zk94RFo2bK85iJ@gmail.com>
-References: <20250414102301.332225-1-mingo@kernel.org>
- <Z_zk94RFo2bK85iJ@gmail.com>
-Date: Mon, 14 Apr 2025 20:34:41 +0200
-Message-ID: <87ikn6sibi.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="GvqD5kMv"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id 6970F1C0E88
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:34:36 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:to:from:from; s=dkim; t=1744655671; x=
+	1745519672; bh=s2YUvKONZpYv6BeESkipXTOMCM3/ZgRQk8zLNK4GcdM=; b=G
+	vqD5kMv08/Gl0A6ZNIs8xnnTZ4OfWCMIPyVsVsS2X+MR3SfTxAQ9DRc2t3PF2b8G
+	QnFFBWuRw6inla9znKqRTdv+1AaTKTHwNyw68lstTr+TsLiwSgT6/4U+pMR+SO0H
+	IUfMZcdCRAWcE0uDLMRITAXMLqk/+vf3IHtHlu3WsI=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id IkI0rNG_qjzZ for <linux-kernel@vger.kernel.org>;
+	Mon, 14 Apr 2025 21:34:31 +0300 (MSK)
+Received: from localhost.localdomain (unknown [87.249.24.51])
+	by mail.nppct.ru (Postfix) with ESMTPSA id 9EB5A1C08C3;
+	Mon, 14 Apr 2025 21:34:15 +0300 (MSK)
+From: Alexey Nepomnyashih <sdl@nppct.ru>
+To: Juergen Gross <jgross@suse.com>
+Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	xen-devel@lists.xenproject.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH] xen-netfront: handle NULL returned by xdp_convert_buff_to_frame()
+Date: Mon, 14 Apr 2025 18:34:01 +0000
+Message-ID: <20250414183403.265943-1-sdl@nppct.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14 2025 at 12:35, Ingo Molnar wrote:
-> * Ingo Molnar <mingo@kernel.org> wrote:
->>        add_timer_global()                  =>          timer_add_global()
->>        add_timer_local()                   =>          timer_add_local()
->>        from_timer()                        =>          timer_container_of()
->>        mod_timer_pending()                 =>          timer_mod_pending()
->>        timer_delete()              ... [unchanged] ... timer_delete()
->>        timer_reduce()              ... [unchanged] ... timer_reduce()
->>        timer_shutdown()            ... [unchanged] ... timer_shutdown()
->>        timer_shutdown_sync()       ... [unchanged] ... timer_shutdown_sync()
->>        try_to_del_timer_sync()             =>          timer_delete_sync_try()
->>        add_timer()                         =>          timer_add()
->>        add_timer_on()                      =>          timer_add_on()
->>        mod_timer()                         =>          timer_mod()
->
-> BTW., my suggestion would be to maybe change this to timer_modify(), 
-> because timer_mod() reads a bit weirdly.
+The function xdp_convert_buff_to_frame() may return NULL if it fails
+to correctly convert the XDP buffer into an XDP frame due to memory
+constraints, internal errors, or invalid data. Failing to check for NULL
+may lead to a NULL pointer dereference if the result is used later in
+processing, potentially causing crashes, data corruption, or undefined
+behavior.
 
-Can you make your mind up _before_ spamming people with half baked
-changes done in a hurry? :)
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-While I appreciate proper namespace prefixes, this series is just a
-mechanical conversion without any additional value. Some of the
-conversions like try_to_del_timer_sync() are obviously fine and can't
-provide moar than a namespace consolidation.
+Cc: stable@vger.kernel.org # v5.9+
+Fixes: 6c5aa6fc4def ("xen networking: add basic XDP support for xen-netfront")
+Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
+---
+ drivers/net/xen-netfront.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-But if you look at the actual functions and their usage all over the
-place then you can see that there is way more cleanup and consolidation
-potential especially for those functions which add or modify timers.
-
-First of all the question is whether add() and mod() are really valuable
-distinctions. I'm not convinced at all. Back then, when we introduced
-hrtimers, we came to the conclusion that hrtimer_start() is sufficient.
-
-But that aside there is a major cleanup potential for this stuff. The
-vast majority of add/mod_timer() sites uses:
-
-    - Precomputed timeout values derived from a timeout provided in SE
-      units
-
-    - Instant conversions of SE unit based timeouts to jiffies
-
-          msec/usec/sec_to_jiffies()
-
-    - All variants of HZ, HZ * N, HZ / N ....
-
-This is lots of duplicated and copy and pasted code. So instead of
-blindly renaming things, we can be smarter and provide sensible
-functions:
-
-mod_timer() takes an absolute expiry value, but most places use
-
-    mod_timer(t, jiffies + $timeout);
-
-So the obvious first step is to provide:
-
-    timer_start_rel(t, $timeout);
-
-which does the addition of jiffies under the hood.
-
-And because $timeout is some of the above calculations, we can be
-smart and provide:
-
-   timer_start_rel_secs(t, timeout_in_seconds);
-   timer_start_rel_msecs(t, timeout_in_milliseconds);
-   timer_start_rel_usecs(t, timeout_in_microseconds);
-
-This all can be sensibly converted with coccinelle, which even can
-handle the cases where $timeout is calculated from HZ / N.
-
-I have a pile of half finished coccinelle scripts somewhere, which do
-exactly such a conversion. I just ran out of time to play with that, as
-I ran into a few things which need more thoughts about proper
-interfaces. I'm happy to share them.
-
-Converting the whole timer arming to use SE unit based timeouts makes a
-lot of sense in general and also paves the way to boot-time controlled
-HZ, which is something distros and others are asking for since years (of
-course nobody wants to sit down and do the actual work as usual...)
-
-That said, I'm fine to convert the obvious things, like
-try_timer_del*(), where there is no other consolidation value, but for
-everything else we better sit down and think about proper interfaces and
-large scale consolidation.
-
-Thanks,
-
-        tglx
-
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index 8425226c09f0..e99561de3cda 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -987,6 +987,10 @@ static u32 xennet_run_xdp(struct netfront_queue *queue, struct page *pdata,
+ 	case XDP_TX:
+ 		get_page(pdata);
+ 		xdpf = xdp_convert_buff_to_frame(xdp);
++		if (unlikely(!xdpf)) {
++			trace_xdp_exception(queue->info->netdev, prog, act);
++			break;
++		}
+ 		err = xennet_xdp_xmit(queue->info->netdev, 1, &xdpf, 0);
+ 		if (unlikely(!err))
+ 			xdp_return_frame_rx_napi(xdpf);
+-- 
+2.43.0
 
