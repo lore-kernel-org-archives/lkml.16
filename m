@@ -1,174 +1,134 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2221E1020;
-	Mon, 14 Apr 2025 22:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744670910; cv=fail; b=ewPRHCHGuzMhHsABTkF1pPncXBT7lx9z2SoKDK5vN6+Iwj+NUPnZiKhU/dPCIeJuvFD+zCp923ZpOQ4IHsqlwEyuxz2Y98MHfEwrOvNJlapOimM8HKV4r+5a90M3r7edXaF/uXP6C1qMOt4ObddMClas95/+dhzeyv8kFA7WLTI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744670910; c=relaxed/simple;
-	bh=NNKuVFeCyK7vtN20mRigPqCmnumQahWi0Kfu76HWIEU=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EOkiswi/O+pLNweQut1FSHpqeSHCynjxtZKFbA75I47Ry5GLJ+XLf2voQN/y2hD53dUw5UYC25E4/5HoSUYT/rpkItD7/cKeo2+B2aikl6DD+5eB3zreZF8UbwNmEyMxDV+SSLsM/ClgW5eSiV6ggjJ5UM8NSPp5wejRpU5mvUw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=As8WJJB6; arc=fail smtp.client-ip=40.107.237.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81C7188733
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744671167; cv=none; b=CPx/GBREiJrzFnEVDtrJYgzhjjsHFKjoY4mRv88ZxqZkonvzW+iEPQ//zk3fyNELyaLNgsKmbYRrzAAtRfHPFszDA7it6GtqisRyIvo5wvWf68GJi8VJPVh6nt17OGkkC+pve4E9PBXUSx/EsJTVEg9Kee0UA6rN8JZz/0TjWYA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744671167; c=relaxed/simple;
+	bh=DXp2kkpKK/EYqS0S987rmP7LN93yWyxy4no1bYoxMA8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PUd3SLjMOq80UgYCHtp1MBr/ts6mGMoT/WftGF1TloWGQ8hwqIqvdZb3nHh3wvIaIxekXEumSWda+DAC63vCcU0zP5r5u/GnnPe2JQN+SpfbvFzVbU682pbg+bP1SeKjjExIEhJccZWfj7gVd5Qz2WK8y83YGJ6CI17LyUN2bv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YTauXnyL; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="As8WJJB6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZAboLL7YYQcNL22rI07oOgtxfm+8nbLiDD2Vh/Y0Epa2JJDT+XYv2UTga60Kfvu4SEnqE7WCKS1MODgVGHKgfhdUL1Gl/i0peGhbjhZYEmwc8weA3mLTpQzqm2cMDZvF50Tfx/jWagtoEmEWmmxyzYIsgZshw87LQBfor7et+RYHEnPpRSwkqQUJ0IF0eSS9oAsKt1QQECxUymPF7xj7qAhMmOLrTKwhu2sd3Gu3SfZN3XcJlT7uEvRBs2UusjBVfHTEyvTtPaZasjyvYpHgDLMHHMCbxC9crsx3OGCIROPB9cMeIi77hcaXkQ7lWtw4J/SWk6/pqDOSxqN2dmvDcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eCzoHrLLebSmE9H9CM+uTvEYwBUKEcaH6re5NoUahds=;
- b=UNbiVi2BYJPdsansQ2I2Fs6O+3JQNKDhWBHx7vKVH//Bcc1l2pey/dSpkqQIOlGRO/bSbbKIT0IBVgIsCvyHvMWQGi7O9/7KiXnGH7J1xMMSbgkXoHj4XV67Cq7Lglruf5chJ/DnhzUQvhaF/uYHhpvK55vLfQEblku/Hlw9+05EUH2mxQfDnYhpX8GeafeIRB0Fpul3ZT9bANgWOa1Edsn3d1gQb5TgElkTCJHTyFVdYf2WO89DZ0xWWsACncwc1eSZJB+j6mEaOtQNFT3RUcf6Iz1aLIKql8I9P0GC3lKk1vlkXx3+9s0//Xr5TrU4m+cLWhzvyufgjBV2d14yOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eCzoHrLLebSmE9H9CM+uTvEYwBUKEcaH6re5NoUahds=;
- b=As8WJJB6AsOUCrpMFUHU8qH0Va6Nn3JbWWouEXH1b28dShjWA6Z06GJTnuJUtcTjJd0nuaQmh8M5rmVV81hEFooGNIzKgFDPk/eIInSiKZhcuQINET2uADzx87wVcc8gUpT/+tQ5cV6mA5fBzl+hQrQ3NxrYe45wE0E7/bDuJVI=
-Received: from SJ0PR03CA0043.namprd03.prod.outlook.com (2603:10b6:a03:33e::18)
- by MN0PR12MB6367.namprd12.prod.outlook.com (2603:10b6:208:3d3::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
- 2025 22:48:24 +0000
-Received: from SJ5PEPF00000205.namprd05.prod.outlook.com
- (2603:10b6:a03:33e:cafe::6) by SJ0PR03CA0043.outlook.office365.com
- (2603:10b6:a03:33e::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.36 via Frontend Transport; Mon,
- 14 Apr 2025 22:48:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000205.mail.protection.outlook.com (10.167.244.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 22:48:23 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
- 2025 17:48:22 -0500
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Eder Zulian <ezulian@redhat.com>
-CC: <Basavaraj.Natikar@amd.com>, <vkoul@kernel.org>,
-	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: ptdma: Remove dead code from
- pt_dmaengine_register()
-In-Reply-To: <20250411165451.240830-1-ezulian@redhat.com>
-References: <20250411165451.240830-1-ezulian@redhat.com>
-Date: Mon, 14 Apr 2025 17:48:16 -0500
-Message-ID: <87y0w27427.fsf@AUSNATLYNCH.amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YTauXnyL"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so4604346a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744671164; x=1745275964; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=togwTMsUrCvDnQk9l1lLNxbmxkHmbN4j0HA8wPGqV8E=;
+        b=YTauXnyL1oNuf6bf+pOU3j+VR6jOrmOUffUhKe8/hBY39zGKg6vvwm2im5nBaSSvNW
+         XKn41Io3DyO+I6LjrDD35PM6amJ/8FPQyCZKSw9CiJIfkC36kidWvvpfUxgPTm+jrsgY
+         mrgH7pzTOsGR3aX0dJ/ucjwRZgfaJdcuCjqGHUm3SjsJXyt6tBe8DLAApz5S74Zto1sP
+         w/eq9NGQEz2wtbt90GtS6sOrcrw9Xs9xcbEbUr/KSLDODJQEWljjKFvUpMJtcEGLb+Nb
+         PWiXMNkIcP8L0YucefatIP5NZiw8Sji/tkmPerc46S5A6gz5Jtg1c+L+lMLlg9x6xjSv
+         1iJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744671164; x=1745275964;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=togwTMsUrCvDnQk9l1lLNxbmxkHmbN4j0HA8wPGqV8E=;
+        b=GPPTUSf7IKgV9+jkOHNgNX1Bk7FcCRrNyWXkwJp4j9KJ0I8EZ82vhWQ75QeYR/Ru8s
+         0WvFDal0+/N31O6UsWduKKqReTzanV3b/he3hAAKPhwQhiIJKsbnjMuyjMEJoAgv9dKy
+         CUXHEws9J3iOzh0Ze9Lkprc0wiXs/DFyfRJGPvK7AzS3l+ACobwe+yjW+lMoC6fixbSP
+         tkFIY7TqEPDdEtemShQwt5jxTrTClyew6U31lZF0ksQAfIssp8Wg5qeo4HoG0fMKUQaV
+         3vaChqxOgDsOFwoo0jkhrYd1bRnFDs19425CF/pQ0cRTk24rMw9ZYY8N8ZTF6y5sEuP7
+         cYfA==
+X-Gm-Message-State: AOJu0Yzk2e0q/GP7cqyBvd5cOjNw9Q18NrUMaC5ItVxqna1AeN5lkznj
+	B/aXpDAmiEiJ4WwOrLf3urf62XohxRFUlpnm/3kLTbkREkV+EeEFxCa3TDPggzgFIzUOpp7cV0J
+	3WsL0PbZSlSbgjA==
+X-Google-Smtp-Source: AGHT+IEVzbizS5bwIONCCb0BiftDU4fhMTk3w7cU8mlcfeirhwdZn8Tcrol5ikyaUqfRuPhfJrQ0elLNwB7pMag=
+X-Received: from pjtq5.prod.google.com ([2002:a17:90a:c105:b0:305:2d68:2be6])
+ (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:5242:b0:2fa:1a23:c01d with SMTP id 98e67ed59e1d1-3082367497dmr18231328a91.21.1744671164151;
+ Mon, 14 Apr 2025 15:52:44 -0700 (PDT)
+Date: Mon, 14 Apr 2025 22:52:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000205:EE_|MN0PR12MB6367:EE_
-X-MS-Office365-Filtering-Correlation-Id: a31c2c60-2b3b-41dd-0b78-08dd7ba67652
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LokmVI1DFtUJmOKnZiSxVBwnwp9ffXsU+BT9jL8zs/BY3WaWRgWtncFK8/iM?=
- =?us-ascii?Q?XJLziYW7dUgyUqHLXYA84eYAhzAminG65P9QhUyATNrms3WzO9hwo5z41SjJ?=
- =?us-ascii?Q?rivz23ReUvG5rv9i3hN2GCo6jBncQHgxVuhYin3izQxKIfRoF5m2DuqlNxbx?=
- =?us-ascii?Q?Ok65ASMeNzTdXc/0IvOFIiid9ngpk6qO2VTya/rfFhWj1cr92yXlsOZPRQTz?=
- =?us-ascii?Q?veDlDsI1OEhLh6D8Y3N7d8jk1orOnzmDMZXSHUBB94ClhVn41QmwlLiDkR1h?=
- =?us-ascii?Q?jwLcYNJnVxcSGGRO1dNHCllpMsej4jdHj/mkyY8vsITOl+c+kqSFFCDLBYK5?=
- =?us-ascii?Q?okenqqOC8KW1s0P+89c7tARqpceniZEY1kRHr42/OkBfLBJ+8KB+maQXOqoK?=
- =?us-ascii?Q?K6gMR+IXZUxel/Sn2enVQiAq8goz1nrp7b5xrBip2IyDXRhBclHbYrUfzJdg?=
- =?us-ascii?Q?zG3c+x4mm6BjHz0Cb82Re7YeG09e/ngn7/rFKigKOMzvFdaBVa/wiYCezCHi?=
- =?us-ascii?Q?plUw5ai6LpK+kb0e17wFPcRUwqBM+XKOL3JINhhvJBHCfomZ3VCJupvVQdsV?=
- =?us-ascii?Q?6w9xLuE7/id3U32ugODifP/0gmokEvD6gGJlfVFK8Ty2yuDfs+05QYXB28fo?=
- =?us-ascii?Q?bG0COdVt56Xo/ax/zlvFGlPJwt3aBQBpMiLb08xgdDJPfKxghCKmttrgBs1/?=
- =?us-ascii?Q?WWfR1uCV6wrL78o/pDIdj0MjL3hG7nW0zN3sLkDNzA78Nnb22sIv5Do/Va9t?=
- =?us-ascii?Q?m1oFThH0hk0NGIMK+T2XoJdvtdCDBGQso8GhI8m8DlrFj+zx5pn9OD3HUApU?=
- =?us-ascii?Q?xQQOfzrY52WuoCM9Ekn84H1iKVxho/deFU30zXSm1uq6EqYNw39XYyNVst+t?=
- =?us-ascii?Q?dNFnMs9FfQRzCHUGc2Mifc50tJNqisLTINA66L9In3M1Q/PMoVkbChCgliS7?=
- =?us-ascii?Q?mIOP3nQ8ojw0mNWuHYEizLv86ij+r20gPU0PmjOjmkJr/8gjxMiLDCS2ybEZ?=
- =?us-ascii?Q?j2BW1ihSCmRkGuQjRZMMsJ5v+JkYv6H83plAfS4a4hSWMlLoZyGAwe307zYF?=
- =?us-ascii?Q?elccId4yadkpP5iVdtp1BkadI8iYZJ7aX8LTw5DQCB4PK8rtnk6J3Kz39NT2?=
- =?us-ascii?Q?25+tYjZOKuqYzUXWBpHBiUD0C2EWV/FatkC3OUCNO3AP6QXaFO2AycxgM9Oz?=
- =?us-ascii?Q?SsOCwDxtVwQ69145R7k6yCxPgqHkVhg0mLn2ewEVyBKGF5Nj67xc8ksU5sQW?=
- =?us-ascii?Q?Uk7HfXQ4BsPPJdfADJ0bkMrErGljVBu7yg/BY9FFTKlgiWUMFScw5BezLUsT?=
- =?us-ascii?Q?VOHVXOMu+gCTxPFZgOO1Y+Cp+Q4TSkTvZ7yqdAwO97K6j8FpRH7Twx/OtKP/?=
- =?us-ascii?Q?PKdN3s9J471ArJ6QD+A8FpHSrTCEWt4YqjU3+xEvUsFfIQdUdvmihR2Fyxd/?=
- =?us-ascii?Q?eMCXi1LHJM1sdtXQ6NrJB4pHU4JKtDBloDysf7U/heTy196iCIQIgCNIoEO1?=
- =?us-ascii?Q?VLNL1/lwcCRI22dmugGReBSikHrFuwXyKwaP?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 22:48:23.4948
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a31c2c60-2b3b-41dd-0b78-08dd7ba67652
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000205.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6367
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250414225227.3642618-1-tjmercier@google.com>
+Subject: [PATCH 0/4] Replace CONFIG_DMABUF_SYSFS_STATS with BPF
+From: "T.J. Mercier" <tjmercier@google.com>
+To: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-doc@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, android-mm@google.com, simona@ffwll.ch, 
+	corbet@lwn.net, eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com, "T.J. Mercier" <tjmercier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Eder Zulian <ezulian@redhat.com> writes:
-> devm_kasprintf() is used to allocate and format a string and the
-> returned pointer is assigned to 'cmd_cache_name'. However, the variable
-> 'cmd_cache_name' is not effectively used.
->
-> Remove the dead code.
->
-> Signed-off-by: Eder Zulian <ezulian@redhat.com>
+Until CONFIG_DMABUF_SYSFS_STATS was added [1] it was only possible to
+perform per-buffer accounting with debugfs which is not suitable for
+production environments. Eventually we discovered the overhead with
+per-buffer sysfs file creation/removal was significantly impacting
+allocation and free times, and exacerbated kernfs lock contention. [2]
+dma_buf_stats_setup() is responsible for 39% of single-page buffer
+creation duration, or 74% of single-page dma_buf_export() duration when
+stressing dmabuf allocations and frees.
 
-While I work at AMD, I don't work on this driver and I defer to
-Basavaraj. But it's easy to verify that cmd_cache_name is indeed
-unused.
+I prototyped a change from per-buffer to per-exporter statistics with a
+RCU protected list of exporter allocations that accommodates most (but
+not all) of our use-cases and avoids almost all of the sysfs overhead.
+While that adds less overhead than per-buffer sysfs, and less even than
+the maintenance of the dmabuf debugfs_list, it's still *additional*
+overhead on top of the debugfs_list and doesn't give us per-buffer info.
 
-BTW it looks like struct pt_device->dma_cmd_cache could also be
-discarded.
+This series uses the existing dmabuf debugfs_list to implement a BPF
+dmabuf iterator, which adds no overhead to buffer allocation/free and
+provides per-buffer info. While the kernel must have CONFIG_DEBUG_FS for
+the dmabuf_iter to be available, debugfs does not need to be mounted.
+The BPF program loaded by userspace that extracts per-buffer information
+gets to define its own interface which avoids the lack of ABI stability
+with debugfs (even if it were mounted).
 
-Reviewed-by: Nathan Lynch <nathan.lynch@amd.com>
+As this is a replacement for our use of CONFIG_DMABUF_SYSFS_STATS, the
+last patch is a RFC for removing it from the kernel. Please see my
+suggestion there regarding the timeline for that.
 
-> ---
->  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 7 -------
->  1 file changed, 7 deletions(-)
->
-> diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> index 715ac3ae067b..3a8014fb9cb4 100644
-> --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> @@ -565,7 +565,6 @@ int pt_dmaengine_register(struct pt_device *pt)
->  	struct ae4_device *ae4 = NULL;
->  	struct pt_dma_chan *chan;
->  	char *desc_cache_name;
-> -	char *cmd_cache_name;
->  	int ret, i;
->  
->  	if (pt->ver == AE4_DMA_VERSION)
-> @@ -581,12 +580,6 @@ int pt_dmaengine_register(struct pt_device *pt)
->  	if (!pt->pt_dma_chan)
->  		return -ENOMEM;
->  
-> -	cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-> -					"%s-dmaengine-cmd-cache",
-> -					dev_name(pt->dev));
-> -	if (!cmd_cache_name)
-> -		return -ENOMEM;
-> -
->  	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
->  					 "%s-dmaengine-desc-cache",
->  					 dev_name(pt->dev));
-> -- 
-> 2.49.0
+[1] https://lore.kernel.org/linux-media/20201210044400.1080308-1-hridya@google.com/
+[2] https://lore.kernel.org/all/20220516171315.2400578-1-tjmercier@google.com/
+
+T.J. Mercier (4):
+  dma-buf: Rename and expose debugfs symbols
+  bpf: Add dmabuf iterator
+  selftests/bpf: Add test for dmabuf_iter
+  RFC: dma-buf: Remove DMA-BUF statistics
+
+ .../ABI/testing/sysfs-kernel-dmabuf-buffers   |  24 ---
+ Documentation/driver-api/dma-buf.rst          |   5 -
+ drivers/dma-buf/Kconfig                       |  15 --
+ drivers/dma-buf/Makefile                      |   1 -
+ drivers/dma-buf/dma-buf-sysfs-stats.c         | 202 ------------------
+ drivers/dma-buf/dma-buf-sysfs-stats.h         |  35 ---
+ drivers/dma-buf/dma-buf.c                     |  40 +---
+ include/linux/btf_ids.h                       |   1 +
+ include/linux/dma-buf.h                       |   6 +
+ kernel/bpf/Makefile                           |   3 +
+ kernel/bpf/dmabuf_iter.c                      | 130 +++++++++++
+ tools/testing/selftests/bpf/config            |   1 +
+ .../selftests/bpf/prog_tests/dmabuf_iter.c    | 116 ++++++++++
+ .../testing/selftests/bpf/progs/dmabuf_iter.c |  31 +++
+ 14 files changed, 299 insertions(+), 311 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-kernel-dmabuf-buffers
+ delete mode 100644 drivers/dma-buf/dma-buf-sysfs-stats.c
+ delete mode 100644 drivers/dma-buf/dma-buf-sysfs-stats.h
+ create mode 100644 kernel/bpf/dmabuf_iter.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/dmabuf_iter.c
+ create mode 100644 tools/testing/selftests/bpf/progs/dmabuf_iter.c
+
+-- 
+2.49.0.604.gff1f9ca942-goog
+
