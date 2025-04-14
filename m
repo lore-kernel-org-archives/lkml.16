@@ -1,50 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE79E25A626;
-	Mon, 14 Apr 2025 08:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F412580CD;
+	Mon, 14 Apr 2025 08:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620344; cv=none; b=jU2vC+20Pp3/0HLJhFJ2RczAyh3c1hDJ+sTq9WTKRWyF6SFsyq/IPGmYK5iwD492sblqShGUmvFAdHK4zcZCtw6yybxbo0c4/JAJVFED0qzsImfPC3U3JV7gNrOotWbSvwhQTrRdZR2Iw1L7nPX8xfdDBFwvDVk03tBSICcCBig=
+	t=1744620351; cv=none; b=az9Bi7KKqB6wmyw1RnDu/CeUHZKXXO8HzFkrlxCG4+Mq2JzTlHVzHk7hyTmzmTILGZqznFLARYSDT7D9yRCO2Dc+XUOr4Kmw6bHxUhRYWv1Ouadwse2oObQYzgUm2CM9+A8pjaQMDkMZvLtlrYH/rdUF0877sdQl5oxyeazkx4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620344; c=relaxed/simple;
-	bh=1DneHrOh2P4wCCvAFwmXK/TSoA3m02FScStaifEQ4nU=;
+	s=arc-20240116; t=1744620351; c=relaxed/simple;
+	bh=pEc2TXvVNzLpSozgoDM7+YONkPktZs8pw/fQbXJIB08=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qCuNlPKaYR7xK0/owZi7sR9Up6lTWT3/kVwPoRMZfPzNqfiUPYY8Ycit4271wXzMhqBAje/lbjSXB7uR1g5GC28JjxJe7OAQb7S5B6WRUI/LM91GpxKEkKKXYrHZDaNv3wvBlVqEiOBrIOOnnvCyBjO+4eNPmrpkcky9YMCtF58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=s8+Piv/1; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	 In-Reply-To:Content-Type; b=WUejbi+owN9pyy+rqrZql9+ICpU+WpKQj5OIw/WURMSHNgrIOsfo0ossCnCBKKbUJPjmGZRHiGV4DHGmjI3c2nuK7vRzut9eDR8vrQBhxlOwGaAlX7/vurklph1bPyxMYjnZ4f7dbawhgVksgIGBmqdOwuK7ybTrOuW/I1O3P7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UYQCFl3O; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="s8+Piv/1"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E8Dgqr002903;
-	Mon, 14 Apr 2025 10:45:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UYQCFl3O"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNEjSx014000;
+	Mon, 14 Apr 2025 08:45:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	iMxypOAW8Oa6O6QVpYmX6cdYifOLRH3rTIKzTjQ0LoE=; b=s8+Piv/1ysUJCi+t
-	7UIfFhgwwEsmNuzbYPLELMy2rag14Nn81fUecOECARc7pji3gWZCvYKM23HALKXg
-	T8EHjYHUWpMlmmHc8k4k+AW324xnojdYfhII8eyQKqUz7gT6DeMrzhxHDh1O/dMD
-	20GKksyHX3CbcIzlu8Utbhmkz5I41Uzra7jNxmgaaIlg7Jyteoww92pcPdIAXEka
-	8cpKC0BaEI5U9GZVmQaqWJVeQN8cM+wneLJb27Hun9vPGvfrsyiSxylPsO+1HjZf
-	P7G8WcMRM/bOr6kh6bY3VvJNiED2zFfYHtCmBtA+qiJiyhos9xob46iGKsmttuWy
-	fnRGaA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45yfh1pveg-1
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TC+cBorcPZtYI+BCAvI2mJGo1QM3DFfIBbzFnXVFQPA=; b=UYQCFl3OXi+wqvc2
+	DZRlz6RsG7REsZfOPUwRzi9jRBUnLLc2SFee1mqbhKlXi9fXO9SsxPb733oPwZlN
+	gEexTm51OqPnWVFDxEzlnKyKjO2zLbT4ZFBhis9WP0P+D/B3Js8xTNdbTELPy4SO
+	3GoyvfWOcR3J6ThrSX8N0hhRXk4Mt/UOgWEyj6X2cbsi4+Ygnfh0fqDrg7v3LGK1
+	B6FQ/RXjdzYLfuhlgdsgIyT52CmLvM7kxAqITNGABkF1xcCnVpOGnoyZclgLHpmB
+	rdaA5oXVyDEk4ALYXYqPtW92lMQYiud69mpxhFMY4dsVkYbPnPh2dfiyXTbpN6gP
+	LxUL9A==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vbybr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 10:45:04 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8132B400B0;
-	Mon, 14 Apr 2025 10:43:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5BF59EA15F;
-	Mon, 14 Apr 2025 10:40:18 +0200 (CEST)
-Received: from [10.48.86.196] (10.48.86.196) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
- 2025 10:40:18 +0200
-Message-ID: <b8140b9d-b5d9-48dc-b652-9eebc3e1ee01@foss.st.com>
-Date: Mon, 14 Apr 2025 10:40:17 +0200
+	Mon, 14 Apr 2025 08:45:42 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E8jfXc021023
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 08:45:42 GMT
+Received: from [10.239.29.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 01:45:39 -0700
+Message-ID: <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
+Date: Mon, 14 Apr 2025 16:45:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,194 +50,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: stm32: Don't use %pK through printk
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-        Vinod
- Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <dmaengine@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de>
+Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Wenbin Yao
+ (Consultant)" <quic_wenbyao@quicinc.com>
+CC: <jingoohan1@gmail.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>,
+        <mrana@quicinc.com>
+References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
+ <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
 Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de>
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: mvqhVk7rKe0B7SZWuqgopOFZZvbLuKFs
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fccb36 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=4veHE8ydySSEcrfzLuYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: mvqhVk7rKe0B7SZWuqgopOFZZvbLuKFs
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=968 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140063
 
 
+On 4/8/2025 1:51 AM, Manivannan Sadhasivam wrote:
+> On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
+>> PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
+>> indicates the number of lanes to check for exit from Electrical Idle in
+>> Polling.Active and L2.Idle. It is used to limit the effective link width to
+>> ignore broken or unused lanes that detect a receiver to prevent one or more
+>> bad Receivers or Transmitters from holding up a valid Link from being
+>> configured.
+>>
+>> In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
+>> to 1 will not affect the link width that is actually intended to be used.
+> Where in the spec it is defined?
+As per DWC registers data book, NUM_OF_LANES is referred to as the 
+"Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express 
+Base 3.0 Specification, revision 1.0.
+Section 4.2.6.2.1 explains the condtions need be satisfied for enter 
+Poll.Configuration from Polling.Active.
+The original statement is
 
-On 4/7/25 10:26, Thomas Weißschuh wrote:
-> In the past %pK was preferable to %p as it would not leak raw pointer
-> values into the kernel log.
-> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-> the regular %p has been improved to avoid this issue.
-> Furthermore, restricted pointers ("%pK") were never meant to be used
-> through printk(). They can still unintentionally leak raw pointers or
-> acquire sleeping looks in atomic contexts.
-> 
-> Switch to the regular pointer formatting which is safer and
-> easier to reason about.
-> There are still a few users of %pK left, but these use it through seq_file,
-> for which its usage is safe.
+"Next state is Polling.Configuration after at least 1024 TS1 Ordered 
+Sets were transmitted, and all Lanes that detected a Receiver during 
+Detect receive eight consecutive training sequences (or
+their complement) satisfying any of the following conditions:
+...
+Otherwise, after a 24 ms timeout the next state is:
+Polling.Configuration if
+...
+(ii) At least a predetermined set of Lanes that detected a Receiver 
+during Detect have detected an exit from Electrical Idle at least once 
+since entering Polling.Active.
+     Note: _*This may prevent one or more bad Receivers or Transmitters 
+from holding up a valid Link from being configured*_, and allow for 
+additional training in Polling.Configuration. *_The exact set of 
+predetermined Lanes is implementation specific_*. Note that up to the 
+1.1 specification this predetermined set was equal to the total set of 
+Lanes that detected a Receiver.
+     Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered 
+Sets should have detected an exit from Electrical Idle at least once 
+since entering Polling.Active."
 >
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Thank you for your patch,
+>> But setting it to a value other than 1 will lead to link training fail if
+>> one or more lanes are broken.
+>>
+> Which means the link partner is not able to downsize the link during LTSSM?
+Yes, According to the theory metioned above, let's say in a 8 lanes PCIe 
+link, if we set NUM_OF_LANES to 8, then all lanes that detect a Receiver 
+during Detect need to receive eight consecutive training sequences, 
+otherwise the LTSSM can not enter Poll.Configuration and linktraing will 
+fail.
+>
+>> Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
+>> port actually supports to make linking up more robust. Link can still be
+>> established with one lane at least if other lanes are broken.
+>>
+> This looks like a specific endpoint/controller issue to me. Where exactly did
+> you see the issue?
+Althouh we met this issue on some Modem platforms where PCIe port works 
+in EP mode. But this is not a specific endpoint/controller issue. This 
+register will be set to 1 by default after reset in new QCOM platform. 
+But upstream kernel will still program it to other value here.
+>
+> - Mani
+>
+-- 
+With best wishes
+Qiang Yu
 
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-
-> ---
->   drivers/dma/stm32/stm32-dma.c  | 10 +++++-----
->   drivers/dma/stm32/stm32-dma3.c | 10 +++++-----
->   drivers/dma/stm32/stm32-mdma.c |  8 ++++----
->   3 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-> index 917f8e9223739af853e492d97cecac0e95e0aea3..ee9246c6888ffde2d416270f25890c04c72daff7 100644
-> --- a/drivers/dma/stm32/stm32-dma.c
-> +++ b/drivers/dma/stm32/stm32-dma.c
-> @@ -613,7 +613,7 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
->   	reg->dma_scr |= STM32_DMA_SCR_EN;
->   	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
->   }
->   
->   static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
-> @@ -676,7 +676,7 @@ static void stm32_dma_handle_chan_paused(struct stm32_dma_chan *chan)
->   
->   	chan->status = DMA_PAUSED;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
->   }
->   
->   static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
-> @@ -728,7 +728,7 @@ static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
->   	dma_scr |= STM32_DMA_SCR_EN;
->   	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: reconfigured after pause/resume\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: reconfigured after pause/resume\n", &chan->vchan);
->   }
->   
->   static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
-> @@ -820,7 +820,7 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
->   
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
-> -		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-> +		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
->   		stm32_dma_start_transfer(chan);
->   
->   	}
-> @@ -922,7 +922,7 @@ static int stm32_dma_resume(struct dma_chan *c)
->   
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
->   
->   	return 0;
->   }
-> diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-> index 0c6c4258b19561c94f1c68f26ade16b82660ebe6..50e7106c5cb73394c1de52ad5f571f6db63750e6 100644
-> --- a/drivers/dma/stm32/stm32-dma3.c
-> +++ b/drivers/dma/stm32/stm32-dma3.c
-> @@ -801,7 +801,7 @@ static void stm32_dma3_chan_start(struct stm32_dma3_chan *chan)
->   
->   	chan->dma_status = DMA_IN_PROGRESS;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
->   }
->   
->   static int stm32_dma3_chan_suspend(struct stm32_dma3_chan *chan, bool susp)
-> @@ -1452,7 +1452,7 @@ static int stm32_dma3_pause(struct dma_chan *c)
->   
->   	chan->dma_status = DMA_PAUSED;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
->   
->   	return 0;
->   }
-> @@ -1465,7 +1465,7 @@ static int stm32_dma3_resume(struct dma_chan *c)
->   
->   	chan->dma_status = DMA_IN_PROGRESS;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
->   
->   	return 0;
->   }
-> @@ -1490,7 +1490,7 @@ static int stm32_dma3_terminate_all(struct dma_chan *c)
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   	vchan_dma_desc_free_list(&chan->vchan, &head);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: terminated\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: terminated\n", &chan->vchan);
->   
->   	return 0;
->   }
-> @@ -1543,7 +1543,7 @@ static void stm32_dma3_issue_pending(struct dma_chan *c)
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   
->   	if (vchan_issue_pending(&chan->vchan) && !chan->swdesc) {
-> -		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-> +		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
->   		stm32_dma3_chan_start(chan);
->   	}
->   
-> diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
-> index e6d525901de7ecf822d218b87b95aba6bbf0a3ef..080c1c725216cb627675c372591b4c0c227c3cea 100644
-> --- a/drivers/dma/stm32/stm32-mdma.c
-> +++ b/drivers/dma/stm32/stm32-mdma.c
-> @@ -1187,7 +1187,7 @@ static void stm32_mdma_start_transfer(struct stm32_mdma_chan *chan)
->   
->   	chan->busy = true;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
->   }
->   
->   static void stm32_mdma_issue_pending(struct dma_chan *c)
-> @@ -1200,7 +1200,7 @@ static void stm32_mdma_issue_pending(struct dma_chan *c)
->   	if (!vchan_issue_pending(&chan->vchan))
->   		goto end;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
->   
->   	if (!chan->desc && !chan->busy)
->   		stm32_mdma_start_transfer(chan);
-> @@ -1220,7 +1220,7 @@ static int stm32_mdma_pause(struct dma_chan *c)
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   
->   	if (!ret)
-> -		dev_dbg(chan2dev(chan), "vchan %pK: pause\n", &chan->vchan);
-> +		dev_dbg(chan2dev(chan), "vchan %p: pause\n", &chan->vchan);
->   
->   	return ret;
->   }
-> @@ -1261,7 +1261,7 @@ static int stm32_mdma_resume(struct dma_chan *c)
->   
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: resume\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: resume\n", &chan->vchan);
->   
->   	return 0;
->   }
-> 
-> ---
-> base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
-> change-id: 20250404-restricted-pointers-dma-29cf839a1a0b
-> 
-> Best regards,
