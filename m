@@ -1,196 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734BA2586C3
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E591A5B82;
+	Mon, 14 Apr 2025 07:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617335; cv=none; b=ukX2eQA0pL9IGOQetgUagk7z8hmVYoP5AMvzRzvX5XjwAdrEtwxJ392MY4Kw3ytFnUKTwPHm5ivw4Gd/y4rZcfrMCZdzAUHMADBXMJ1FlChSEJ6newAsRjDaSzaIKt4xqOxAHlRHDS5DDi2ErqvlM7h8hGpAqTcYfVSgXA/dx/Y=
+	t=1744617359; cv=none; b=GTwktXYFyJ/E4DzCkTXg2aYcdsejhzc7fn2SQW3MFWpSFaYTa1gtqYZ3/iTsY9ZlIvMVp+/uplaP7w6rVZ0WfJj9gy+YPbGm07Zg6IU+vuEPdM2BeXNhY9W9omE4SeYld0hg4DxT2YiKnnCyYw46A9Tp2X3/nFKblT05P9CFf1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617335; c=relaxed/simple;
-	bh=wjNxOzatIMQ/Kiz1EXdXpytR1voiNFIQ15IZqnNJ+ec=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FTNuJaa5UaoIY7FVx+rXjqrIB4y4EdNs6BelyHS0sR9T7zycRcVlMcRqr7MWww944NznQVp/VpjJOURsfqrS5lRwTGkSK5PY13PGHir4FLwaZztjMggJtR8FQIb0SePtGN/1B/bEAJ1xnTxqQP+dVJkNoUegScmoB3w6zyiwT/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MECRARLp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744617359; c=relaxed/simple;
+	bh=vrsZh3uAG1aDJMEf6ghO31G+kZx2VPa64CHtzE45Utw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=tUEf0Q6NhV7GOX/oUBLoPUz6e5AY+LfF4R5zMSP89HUjmXe94fgChbKVAFsQOpAnFsnmykzvFGUgUGkqhnhD48wDi4eNpbSBhqU7heyUHwBnPUj+vCdjLgjGMwRsqwfdeC4ODHplsXF1kp4ORZCdo8KPYOKK5J8qUFB/yE3afps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=thQiez2c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MnFncKY3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MECRARLp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744617332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="thQiez2c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MnFncKY3"
+Date: Mon, 14 Apr 2025 07:55:51 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744617355;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VyGy8TpTRsYSW6wLWDE/VjeSgPcgxN9oD2qpQCJJZhc=;
-	b=MECRARLpxztJFVwL14OcqkuKt8I9iSocRGhZuQH4f/rHh6L3k7JBFV6idCZzzECSuLaa6a
-	jF9SI3a+VyJXvQfO3otY4ZpQdXGA+7DM8X2zweRi4JIvaMMjosB1jllRVZwnCYKcpKIxCD
-	94resalStcP5XOFxQ3c+XpW6iGlUzeo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-474-g6LhfCPvMFCtyYcdH2Rjlg-1; Mon, 14 Apr 2025 03:55:29 -0400
-X-MC-Unique: g6LhfCPvMFCtyYcdH2Rjlg-1
-X-Mimecast-MFC-AGG-ID: g6LhfCPvMFCtyYcdH2Rjlg_1744617328
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39141ffa913so2251894f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:55:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744617328; x=1745222128;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VyGy8TpTRsYSW6wLWDE/VjeSgPcgxN9oD2qpQCJJZhc=;
-        b=qOcwihhMKtP3YMfzUAC2Lc5f33EueYxLGFV7wwQVdzIVB3uNpq6Em5jhE8ZzYcLxgO
-         dChaf8TmAHLG1VMAyYZMZ3s652DX+B0tyIV27NRdwliE6tXuLpg9d7syUquhTcQHGXtx
-         jppxxcW1d9Oin8etDnBVJg2lYDBN1gsfsAgBNtWISDKyeBDnhyHp+h5eaJBggjOKoJ/a
-         RzIcBdUSCiG0FJuvyaU6p/jXgz7+b6rFucR/spyjESMxAkpYH+C0+hOLjEev1BoOShni
-         1nUeVR6eyL8lBdoQ+wlGTMZk0HoqpZ9l6+oZ4SHvV1BYNKL3ZT7UvYS5nMrIMpG4s5qP
-         LpDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXc8P5jU+o+0i7+1tJjNugWPGiKde+eozAew/4bsKRo8R+0i3mVG576KNMLznGR6CFHPn2DwndSioJ3N0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhZbC2abVR/9ZUYUEzVmT8X6ESYRgKWZAgg9qhLuBGt7El7bVz
-	mJpkUsnmoMIe7AHKEIfntmvGVZziD9suan961lPS0+A8HtGn/bM5PsXAXfeV5QErX1rsc36Wbky
-	+oflk5B7Xh1zLnPEyhZIkRZV2k/jrDhUCBSEzI+KFnVmSRmEcAT1YW8XYcz81lw==
-X-Gm-Gg: ASbGncu5lv/Hj1M7j63hplRMsZQxeSoqU2ZfRXC6fLMmM0GfZUqlMY2igYk65Gz5Ts1
-	a4Yu/0jl/9CdJAB8DtEYkDxoJH6U4/ZDC0JZO8qmvCNVfR2Dfzm+VK8DSyK9PsTZHiLuKL6WJcw
-	JNscnOkipQjzK1RQK/WKGxVuExjZDbs1gU4nGzZ7fJXC2W4WE7TvAqrT7q2hpo+FvDRjPUs2BNN
-	e0fsQmwfzfU4jqJJfdVzQrkh7khFFA0BJ0jo5EUfD6dpsYSOhprwdfvYdYydzrY+n0lz4rOX4YZ
-	k9W/yKHK0gDDePOehOdaVghPkRiOXV1jATxUMXBRTffJ
-X-Received: by 2002:a05:6000:2586:b0:39c:e28:5f0d with SMTP id ffacd0b85a97d-39ea52171d4mr8935039f8f.25.1744617327906;
-        Mon, 14 Apr 2025 00:55:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IETQUkn0hF6FLm9NcXpYwCxUXih2R9GqT9ocdhEggOG/wqrLcDmZ7Cdgh4Umo12Ue468Vucbw==
-X-Received: by 2002:a05:6000:2586:b0:39c:e28:5f0d with SMTP id ffacd0b85a97d-39ea52171d4mr8935008f8f.25.1744617327462;
-        Mon, 14 Apr 2025 00:55:27 -0700 (PDT)
-Received: from localhost ([2a01:cb1d:968a:da00:a3a9:3006:4689:68f6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cdfdsm10378556f8f.61.2025.04.14.00.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 00:55:26 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas
- Zimmermann <tzimmrmann@suse.de>
-Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
- LCD controller
-In-Reply-To: <Z_oOkb2Lx3HNhnSK@gmail.com>
-References: <20250408-st7571-v3-0-200693efec57@gmail.com>
- <20250408-st7571-v3-2-200693efec57@gmail.com>
- <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
- <Z_Uin2dvmbantQU4@gmail.com>
- <87ecy1g8z8.fsf@minerva.mail-host-address-is-not-set>
- <Z_YWq4ry6Y-Jgvjq@gmail.com>
- <87bjt5fz51.fsf@minerva.mail-host-address-is-not-set>
- <Z_iwspuiYAhARS6Y@gmail.com>
- <875xjb2jeg.fsf@minerva.mail-host-address-is-not-set>
- <Z_oOkb2Lx3HNhnSK@gmail.com>
-Date: Mon, 14 Apr 2025 09:55:25 +0200
-Message-ID: <87v7r76utu.fsf@minerva.mail-host-address-is-not-set>
+	bh=ElGkOZjkzLr8xH5zBFdX2kyDZSP44f/fcuLV7YD5vks=;
+	b=thQiez2cHEiEvkXpVsww4GK/EF17DiQzMygDlM9vB05sh4NrdKWIIZK0VWmdZwVxdvz2lr
+	BluSIbbQBBgVVu8WAHE8jfFhpT6SQCnKIa2ZkNPmPrA+I7OeEpwcNae8tE4xsnvxcbsl6n
+	m0thq6aRudGl+wYj6gkXpxgihd/KC0Ob1RZmRhzuGLm000qnqcThI+83zm2BwBUVdnE96X
+	bkACdVUW7+jfZwIMpPmNuqJiNshKgav4R5cHYIM3peygeMNkBBW9VnHw2xCABrs6a0Mv4X
+	OC9gC4wq7L5NUDkTJrUv0TS2aQYA+UHXKCzVtbuNkdqwt1A9a6DUGMPym8g+Yg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744617355;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElGkOZjkzLr8xH5zBFdX2kyDZSP44f/fcuLV7YD5vks=;
+	b=MnFncKY3ne8lTG7rT4Wq8UM6nY0EptNVfwJD7Xi3+q7TlhYDuHGjG6J52yjcZNeMqPnu79
+	unGdyA37VTg9h1AA==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/alternatives] x86/alternatives, um: Rename UML's
+ text_poke_sync() wrapper to smp_text_poke_sync_each_cpu()
+Cc: kernel test robot <lkp@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <202504141003.kc69fVoj-lkp@intel.com>
+References: <202504141003.kc69fVoj-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <174461735124.31282.10048527543027738159.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Marcus Folkesson <marcus.folkesson@gmail.com> writes:
+The following commit has been merged into the x86/alternatives branch of tip:
 
-Hello Marcus,
+Commit-ID:     f99002b9a9cc441a8f362e6fb32cf8a5a990261a
+Gitweb:        https://git.kernel.org/tip/f99002b9a9cc441a8f362e6fb32cf8a5a990261a
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Mon, 14 Apr 2025 09:39:33 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 14 Apr 2025 09:42:22 +02:00
 
-[...]
+x86/alternatives, um: Rename UML's text_poke_sync() wrapper to smp_text_poke_sync_each_cpu()
 
->> >
->> > A comment for v4:
->> >
->> > I think I will go for a property in the device tree. I've implemented
->> > board entries as above, but I'm not satisfied for two reasons:
->> >
->> > 1. All other properties like display size and resolution are already
->> >    specified in the device tree. If I add entries for specific boards,
->> >    these properties will be somehow redundant and not as generic.
->> >
->> > 2. I could not find a ST7571 with a grayscale display as a off-the-shelf
->> >    product.
->> 
->> Sure, that makes sense to me.
->> 
->> Can I ask if you could still add reasonable default values that could be set
->> in the device ID .data fields ?
->> 
->> As mentioned, I've a ST7567 based LCD and a WIP driver for it. But I could
->> just drop that and use your driver, since AFAICT the expected display data
->> RAM format is exactly the same than when using monochrome for the ST7571.
->> 
->> But due the ST7567 only supporting R1, it would be silly to always have to
->> define a property in the DT node given that does not support other format.
->
-> Sure!
-> I've looked at the ST7567 datasheet and it seems indeed to be a very similar.
-> Both in pixel format and registers are the same.
->
+Missed this UML wrapper in the rename.
 
-Thanks for confirming, that was my understanding too.
+Fixes: 6e4955a9d73e ("x86/alternatives: Rename 'text_poke_sync()' to 'smp_text_poke_sync_each_cpu()'")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/202504141003.kc69fVoj-lkp@intel.com
+---
+ arch/um/kernel/um_arch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I think specify a init-function (as those will differ) and constraints will
-> be enough to handle both chips.
->
-> I will prepare .data with something like this
->
-> struct st7571_panel_constraints {
-> 	u32 min_nlines;
-> 	u32 max_nlines;
-> 	u32 min_ncols;
-> 	u32 max_ncols;
-> 	bool support_grayscale;
-> };
->
-> struct st7571_panel_data {
-> 	int (*init)(struct st7571_device *st7571);
-> 	struct st7571_panel_constraints constraints;
-> };
->
-> struct st7571_panel_data st7571_data = {
-> 	.init = st7571_lcd_init,
-> 	.constraints = {
-> 		.min_nlines = 1,
-> 		.max_nlines = 128,
-> 		.min_ncols = 128,
-> 		.max_ncols = 128,
-> 		.support_grayscale = true,
-> 	},
-> };
->
-> static const struct of_device_id st7571_of_match[] = {
-> 	{ .compatible = "sitronix,st7571", .data = &st7571_data },
-> 	{},
-> };
->
-
-That's great! Exactly what I had in mind.
-
->
-> I can add an entry for the ST7567 when everything is in place.
-> The chip does not support the I2C interface, so it has to wait until
-
-Yes, but there are designs with carrier boards that support I2C. For
-example, I have  [1] and [2]. The former comes with an I2C interface
-and uses the ST7567S IC variant, while the latter comes with a 4-wire
-SPI interface and uses a ST7567P IC variant.
-
-But don't worry about it. Since I've these displays and your driver now
-allows for different IC families after adding the mentioned indirection
-layer, it should be very trivial for me to add support for these on top.
-
-> I've split up the driver though, which will be right after this series.
->
-
-Nice, thanks again.
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
+index d4b3b67..2f5ee04 100644
+--- a/arch/um/kernel/um_arch.c
++++ b/arch/um/kernel/um_arch.c
+@@ -477,7 +477,7 @@ void *text_poke_copy(void *addr, const void *opcode, size_t len)
+ 	return text_poke(addr, opcode, len);
+ }
+ 
+-void text_poke_sync(void)
++void smp_text_poke_sync_each_cpu(void)
+ {
+ }
+ 
