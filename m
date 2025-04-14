@@ -1,127 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BC82522BC;
-	Mon, 14 Apr 2025 14:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F5D275851
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642777; cv=none; b=UCIAuxCQI4LgV4t/xT0ZJKMwEuUt/7N0yqq2n+SuzEY5OwjVi1dJ8WU3jCN7zEE7IXXleADiy8S74nMZmMLWcj5p9XaBlaQ134O0PssLmBTxULp4okE0GUED2NUZiNbIBlziN3gqNTtn2ci8WDuUd3CpT/2GQs2atEP8rZw73Gc=
+	t=1744642806; cv=none; b=VXgHVQcG/yXJCof7q8lvP6f/bVzKTvuKxxbkEVuZ7wMBLVPHfxXZegx+Caq7pnsob+Kkp3s7cWpJ12oPr9mGjC+1C1+lJtbvo6hKyDPumOM4irsJdY+75ghdKF6+l2Kn0r6CgCXxegQmDYyrR2gPV8fHDA5lW3KdR7l9POSSH88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642777; c=relaxed/simple;
-	bh=TXFo3YH0SnxAza+gtpMwQLt8XQCR/UmGU74NQR4Cdy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YHEp7dXHesApy+CPOLUH9fcfyffFaJXEc3x/cCVobuyrH1QyR33DUfAv7c2Yngm+sclclmtaEPo4K5OkrejeOlhffjeoGrKWR2n58je0bOYHfSYFDKpNwe6p/VZpnWLJt0FdG/pC2cgrkHgYVAh/qZdzsar7Ud7X5+56+rPdpGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvyip8VH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744642806; c=relaxed/simple;
+	bh=6gOi6aUYpN/ZLhjYVXNgxwvj3feVqoIsGRlgnhgulLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CsMuo43srm8GjFFRp0gGixkqG5qXvdaNz3ZXFCR+2o0azRgzIqBDdspYWGcawHQumifX6zh+hLa38wPgd2cZaeYIpQkLR6MHlIyiX3KIKtIAEVI1a+hYWhE2UacElo1PliaGXFSzuCDvjlVBrQ39e+irDIjSo/aiEWz4teAt1ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YN5hyvkX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvyip8VH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02829C4CEE2;
-	Mon, 14 Apr 2025 14:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744642777;
-	bh=TXFo3YH0SnxAza+gtpMwQLt8XQCR/UmGU74NQR4Cdy8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uvyip8VH1mVHDRmAzVsLu+a/nS+Oz9/it7MYuLKR5OZ/6LlfUQ6iphsK5o22269lz
-	 a9lqjbfexAfoqfKtaMpAJ3yn9JIVrg7+cdpmxjVkFV0Uo0VxZck0/3hO9jsAtHNTLd
-	 U19XuNYivnph0hLnjatmZaJpvLKRueBpmF60CTSXJg0EcpGIp1NHIoZ/CiiUpe5NaD
-	 NwWfNVCieYFLCMLSL7r1VANeo6tIecpE2dMDkqjfss2FDVAaMGs0C/HZouJMnQ4hdR
-	 iUpDoN3zUa3cfvNJVgNwpLPwu8RcR/zWZgCKydDYrdaIkG2KOgoAz8ewmeBHcuNzeh
-	 nUjO4Q6Y+LtRQ==
-Date: Mon, 14 Apr 2025 15:59:32 +0100
-From: Simon Horman <horms@kernel.org>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-	Vishal Kulkarni <vishal@chelsio.com>
-Subject: Re: [PATCH net-next] cxgb4: fix memory leak in
- cxgb4_init_ethtool_filters() error path
-Message-ID: <20250414145932.GA1508032@horms.kernel.org>
-References: <20250409054323.48557-1-abdun.nihaal@gmail.com>
- <5cb34dde-fb40-4654-806f-50e0c2ee3579@web.de>
- <20250411145734.GH395307@horms.kernel.org>
- <o4o32xf7oejvzyd3cb7sr4whvganh2uds3rvkxzcaqyhllaaum@iovzdahpu3ha>
- <20250414145618.GT395307@horms.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YN5hyvkX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744642803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PiBcwGEvq2PhJfASxrOHAGOy8gVOP2qSKhUxi65Uo4U=;
+	b=YN5hyvkXeeIYtkLt/ulcZkTPOjS+s+PGo+aS8pBDU2RRMY9HcC9Om+y6D6AwYRH6I/bXqI
+	HyhWl2NdcK1RiL1gwnrQ6UqohhkLFFgHlOzbEEvB1J3481qmGnuJya4Ng8YsNmAt9NiTA3
+	kcCCAUwQjxtl7vHpj28D9mhVxKeGrEg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-150-C2CloqmON3yFly-RFNN6hA-1; Mon, 14 Apr 2025 11:00:02 -0400
+X-MC-Unique: C2CloqmON3yFly-RFNN6hA-1
+X-Mimecast-MFC-AGG-ID: C2CloqmON3yFly-RFNN6hA_1744642801
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso28320405e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:00:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744642801; x=1745247601;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PiBcwGEvq2PhJfASxrOHAGOy8gVOP2qSKhUxi65Uo4U=;
+        b=Kn2YkQmENBte5ck7KTewO7SS4zhxVmc26UD6zy1gv7x+9N1s7TY57lOwuUhnp6WGqt
+         6Ttmif4bA3y9cvgrRIYDo9kCLOjmxQfMpSNyZrr8w1GCSKn32U9wwV5v/mBOpPilYAQx
+         Fx0J0zXxxMnCn0dbJCkUQYhGl1iVDcOI7lnWMvvy5zMvaibTKxbD824oBlguSamp5v1X
+         28gI/MKNnPLvp1nzppASAZg/ofEkciqmbCumadNvLnQUrV4rHfUZhgWhCh2NWaAwa2o3
+         LCE+QDzMusRGSkZ6ceFy4xqcnKK5zX5qhV3vcZ/VuKajGa2tPgywqWve0zep9jhM78ZM
+         LEww==
+X-Forwarded-Encrypted: i=1; AJvYcCVB2oPF+UXYVQ3ktYsQhx56dlHwLfJqTZPL9RPQqDAXn0uEt97lMM2W/fYuAxa4t8Jnqaq7Emeb6ClkkeA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyenPOAQtML6dCrRjhzd520u+2zaG5IRVpLhKnt/W4kl713w7u+
+	9ZR3pS+kZqrT/ShGVQRKSyFNAMxTmmkFEpwJkwSxWAGplv4qUzPFXTgMMz72nvA1CatDgf7eYLJ
+	/Cl0C4nP6LYI0JMzRuNA7/IQcvqfXs0NfRwoJZai/KyQWJOb1whYwpAEahs/I/4xK++ao0/SQrZ
+	w4s8y6YAFN5wxiNZXj+Ld/rDQqKEBunCcbcrZY
+X-Gm-Gg: ASbGncubY7P6VkpQcP+Vg59FYK3BBPLcPf8+Rxk+G+bVRvo7H5xzy+wbF5AjjrstBIL
+	Q/13syEMrxHgRWsQzlJ2tTa0RoKi11+j/SH89PFd1n9piNDEFEPA3WP/kmmexrWtxbDf7nA==
+X-Received: by 2002:a05:600c:3c84:b0:439:91c7:895a with SMTP id 5b1f17b1804b1-43f2ea651bcmr156859825e9.7.1744642800753;
+        Mon, 14 Apr 2025 08:00:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBw02L0rMKAm8Z+1nOktn69htJsdj/Jz1OK8Cyd/Ml4PZuhztd9KZNvdjVRlhSdTo1NUKpE0xXzvNiaYGSRZU=
+X-Received: by 2002:a05:600c:3c84:b0:439:91c7:895a with SMTP id
+ 5b1f17b1804b1-43f2ea651bcmr156859495e9.7.1744642800128; Mon, 14 Apr 2025
+ 08:00:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250414145618.GT395307@horms.kernel.org>
+References: <20250414145653.239081-1-sgarzare@redhat.com> <20250414145653.239081-4-sgarzare@redhat.com>
+In-Reply-To: <20250414145653.239081-4-sgarzare@redhat.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Mon, 14 Apr 2025 16:59:47 +0200
+X-Gm-Features: ATxdqUGzkoR7R29rCyZrs6HYZjyVNgh9a1johmj3oUpZ98_9R4aglRHe8KpEBvQ
+Message-ID: <CAGxU2F5SJ9nQfAV-D1WKjsUow_01xjGBRXP4d+q4T=5Bw=yaOg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] tpm/tpm_ftpm_tee: support TPM_CHIP_FLAG_SYNC
+To: Jens Wiklander <jens.wiklander@linaro.org>, Sumit Garg <sumit.garg@kernel.org>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Peter Huewe <peterhuewe@gmx.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Naveen N Rao <naveen@kernel.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-integrity@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Jason Gunthorpe <jgg@ziepe.ca>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 14, 2025 at 03:56:22PM +0100, Simon Horman wrote:
-> On Fri, Apr 11, 2025 at 09:52:29PM +0530, Abdun Nihaal wrote:
-> > On Fri, Apr 11, 2025 at 03:57:34PM +0100, Simon Horman wrote:
-> > > On Wed, Apr 09, 2025 at 05:47:46PM +0200, Markus Elfring wrote:
-> > > > …
-> > > > > +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> > > > > @@ -2270,6 +2270,7 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
-> > > > >  		eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
-> > > > >  		if (!eth_filter->port[i].bmap) {
-> > > > >  			ret = -ENOMEM;
-> > > > > +			kvfree(eth_filter->port[i].loc_array);
-> > > > >  			goto free_eth_finfo;
-> > > > >  		}
-> > > > >  	}
-> > > > 
-> > > > How do you think about to move the shown error code assignment behind the mentioned label
-> > > > (so that another bit of duplicate source code could be avoided)?
-> > > 
-> > > Hi Markus,
-> > > 
-> > > If you mean something like the following. Then I agree that it
-> > > is both in keeping with the existing error handling in this function
-> > > and addresses the problem at hand.
-> > > 
-> > > diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> > > index 7f3f5afa864f..df26d3388c00 100644
-> > > --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> > > +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> > > @@ -2270,13 +2270,15 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
-> > >                 eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
-> > >                 if (!eth_filter->port[i].bmap) {
-> > >                         ret = -ENOMEM;
-> > > -                       goto free_eth_finfo;
-> > > +                       goto free_eth_finfo_loc_array;
-> > >                 }
-> > >         }
-> > > 
-> > >         adap->ethtool_filters = eth_filter;
-> > >         return 0;
-> > > 
-> > > +free_eth_finfo_loc_array:
-> > > +       kvfree(eth_filter->port[i].loc_array);
-> > >  free_eth_finfo:
-> > >         while (i-- > 0) {
-> > >                 bitmap_free(eth_filter->port[i].bmap);
-> > > 
-> > 
-> > I think what Markus meant, was to move the ret = -ENOMEM from both the
-> > allocations in the loop, to after the free_eth_finfo label because it is
-> > -ENOMEM on both goto jumps.
-> > 
-> > But personally I would prefer having the ret code right after the call 
-> > that is failing. Also I would avoid creating new goto labels unless
-> > necessary, because it is easier to see the kvfree in context inside the
-> > loop, than to put it in a separate label.
-> > 
-> > I just tried to make the most minimal code change to fix the memory leak.
-> 
-> Thanks Nihaal,
-> 
-> I agree that your patch is fine as-is for the reasons you describe above.
-> 
-> Reviewed-by: Simon Horman <horms@kernel.org>
+On Mon, 14 Apr 2025 at 16:57, Stefano Garzarella <sgarzare@redhat.com> wrote:
+>
+> From: Stefano Garzarella <sgarzare@redhat.com>
+>
+> This driver does not support interrupts, and receiving the response is
+> synchronous with sending the command.
+>
+> So we can set TPM_CHIP_FLAG_SYNC to support synchronous send() and
+> return responses in the same buffer used for commands. This way we
+> don't need the 4KB internal buffer used to cache the response before
+> .send() and .recv(). Also we don't need to implement recv() op.
+>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v2:
+> - set TPM_CHIP_FLAG_SYNC and support it in the new send()
+> - removed Jens' T-b
 
-As the patch was marked as changes requested, presumably due to earlier
-discussion in this thread, could you please post a v2. You can include my
-tag above. And note under the scissors ("---") that adding the tag was the
-only change between v1 and v2.
+@Jens @Sumit can you test/review this patch again since from v1 we
+changed the core a bit adding TPM_CHIP_FLAG_SYNC instead of
+send_recv() op?
+
+Thanks,
+Stefano
+
+> v1:
+> - added Jens' T-b
+> ---
+>  drivers/char/tpm/tpm_ftpm_tee.h |  4 ---
+>  drivers/char/tpm/tpm_ftpm_tee.c | 64 ++++++++++-----------------------
+>  2 files changed, 19 insertions(+), 49 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.h b/drivers/char/tpm/tpm_ftpm_tee.h
+> index e39903b7ea07..8d5c3f0d2879 100644
+> --- a/drivers/char/tpm/tpm_ftpm_tee.h
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.h
+> @@ -22,16 +22,12 @@
+>   * struct ftpm_tee_private - fTPM's private data
+>   * @chip:     struct tpm_chip instance registered with tpm framework.
+>   * @session:  fTPM TA session identifier.
+> - * @resp_len: cached response buffer length.
+> - * @resp_buf: cached response buffer.
+>   * @ctx:      TEE context handler.
+>   * @shm:      Memory pool shared with fTPM TA in TEE.
+>   */
+>  struct ftpm_tee_private {
+>         struct tpm_chip *chip;
+>         u32 session;
+> -       size_t resp_len;
+> -       u8 resp_buf[MAX_RESPONSE_SIZE];
+>         struct tee_context *ctx;
+>         struct tee_shm *shm;
+>  };
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+> index 637cc8b6599e..b9adc040ca6d 100644
+> --- a/drivers/char/tpm/tpm_ftpm_tee.c
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
+> @@ -31,46 +31,18 @@ static const uuid_t ftpm_ta_uuid =
+>                   0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
+>
+>  /**
+> - * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
+> - * @chip:      the tpm_chip description as specified in driver/char/tpm/tpm.h.
+> - * @buf:       the buffer to store data.
+> - * @count:     the number of bytes to read.
+> - *
+> - * Return:
+> - *     In case of success the number of bytes received.
+> - *     On failure, -errno.
+> - */
+> -static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> -{
+> -       struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
+> -       size_t len;
+> -
+> -       len = pvt_data->resp_len;
+> -       if (count < len) {
+> -               dev_err(&chip->dev,
+> -                       "%s: Invalid size in recv: count=%zd, resp_len=%zd\n",
+> -                       __func__, count, len);
+> -               return -EIO;
+> -       }
+> -
+> -       memcpy(buf, pvt_data->resp_buf, len);
+> -       pvt_data->resp_len = 0;
+> -
+> -       return len;
+> -}
+> -
+> -/**
+> - * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
+> + * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory
+> + * and retrieve the response.
+>   * @chip:      the tpm_chip description as specified in driver/char/tpm/tpm.h
+> - * @buf:       the buffer to send.
+> - * @len:       the number of bytes to send.
+> + * @buf:       the buffer to send and to store the response.
+> + * @cmd_len:   the number of bytes to send.
+>   * @buf_size:  the size of the buffer.
+>   *
+>   * Return:
+> - *     In case of success, returns 0.
+> + *     In case of success, returns the number of bytes received.
+>   *     On failure, -errno
+>   */
+> -static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len,
+> +static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t cmd_len,
+>                                 size_t buf_size)
+>  {
+>         struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
+> @@ -82,16 +54,15 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len,
+>         struct tee_param command_params[4];
+>         struct tee_shm *shm = pvt_data->shm;
+>
+> -       if (len > MAX_COMMAND_SIZE) {
+> +       if (cmd_len > MAX_COMMAND_SIZE) {
+>                 dev_err(&chip->dev,
+>                         "%s: len=%zd exceeds MAX_COMMAND_SIZE supported by fTPM TA\n",
+> -                       __func__, len);
+> +                       __func__, cmd_len);
+>                 return -EIO;
+>         }
+>
+>         memset(&transceive_args, 0, sizeof(transceive_args));
+>         memset(command_params, 0, sizeof(command_params));
+> -       pvt_data->resp_len = 0;
+>
+>         /* Invoke FTPM_OPTEE_TA_SUBMIT_COMMAND function of fTPM TA */
+>         transceive_args = (struct tee_ioctl_invoke_arg) {
+> @@ -105,7 +76,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len,
+>                 .attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
+>                 .u.memref = {
+>                         .shm = shm,
+> -                       .size = len,
+> +                       .size = cmd_len,
+>                         .shm_offs = 0,
+>                 },
+>         };
+> @@ -117,7 +88,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len,
+>                 return PTR_ERR(temp_buf);
+>         }
+>         memset(temp_buf, 0, (MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE));
+> -       memcpy(temp_buf, buf, len);
+> +       memcpy(temp_buf, buf, cmd_len);
+>
+>         command_params[1] = (struct tee_param) {
+>                 .attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
+> @@ -158,17 +129,20 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len,
+>                         __func__, resp_len);
+>                 return -EIO;
+>         }
+> +       if (resp_len > buf_size) {
+> +               dev_err(&chip->dev,
+> +                       "%s: resp_len=%zd exceeds buf_size=%zd\n",
+> +                       __func__, resp_len, buf_size);
+> +               return -EIO;
+> +       }
+>
+> -       /* sanity checks look good, cache the response */
+> -       memcpy(pvt_data->resp_buf, temp_buf, resp_len);
+> -       pvt_data->resp_len = resp_len;
+> +       memcpy(buf, temp_buf, resp_len);
+>
+> -       return 0;
+> +       return resp_len;
+>  }
+>
+>  static const struct tpm_class_ops ftpm_tee_tpm_ops = {
+>         .flags = TPM_OPS_AUTO_STARTUP,
+> -       .recv = ftpm_tee_tpm_op_recv,
+>         .send = ftpm_tee_tpm_op_send,
+>  };
+>
+> @@ -253,7 +227,7 @@ static int ftpm_tee_probe(struct device *dev)
+>         }
+>
+>         pvt_data->chip = chip;
+> -       pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +       pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_SYNC;
+>
+>         /* Create a character device for the fTPM */
+>         rc = tpm_chip_register(pvt_data->chip);
+> --
+> 2.49.0
+>
+
