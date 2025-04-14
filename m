@@ -1,77 +1,111 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F4F26E16A
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A1A289359;
+	Mon, 14 Apr 2025 19:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744658524; cv=none; b=nWdTwrCSgD7eEMk3JW4wt/gn7jEbTLEvMp/Hio2/V/pxgMmuqfZbfJSJPuiTHBGHp1/Tol8GcCyYC8cMoJXMQMtRIunfqJ6EAXF0n35tm3MvJ8dnn7/VPRQ6+R3ssDzRK67o+/F73dSwPA9D6dFvbVegIdw910oyit8Ec/2TCwg=
+	t=1744658703; cv=none; b=XTSl7lNJj7wpUHRdluLi2fawWxGocC9nGyzJ3YpfnIRQpcQJRbCRI4nwDk6fwmUuSAvWODFIzBq0Jt083sh4NoQ7Xl0bitABSflJdN1YWpfJT5BcfMikmEqRpICjNK3BXehBkWB3fSeltExIRXvcaSdCp7wtUUIE07QlIHeOPi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744658524; c=relaxed/simple;
-	bh=9xlzt8t5gZAIZhjWScRdd6YWLJYIILohHTFaHDvj5To=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=DKnwFj3eD1S7MFEDVueYrg7cMoLOf6jaxe/x3OiduNWsb7quSORXtpohdmw6qCCJc9zG8kgCmeSOT+k0DRMMFht4V5vN/cU8D8NmzN7zB3XFQdFwm3xPcJazb51FD0llTZ0dkD/GZ0R1/fFO3tpaf5A00OpqVbUOnXxLie3ty5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d5d6c997d2so45711165ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:22:02 -0700 (PDT)
+	s=arc-20240116; t=1744658703; c=relaxed/simple;
+	bh=n+JXe74/pWa3h8+FclaTGR7fTe2skjHHq6XttvEz1o4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=k4BpHJRbhj3pJikmpF4m51pV7mbpyGcRGEo28I7zia380b6Xh0ArLMnkBanzJYaYhaW65Zr7YLMeHe4BcthquiqwnNa2Dg1QegZCiLF92pxW2u+OAphbfAMT7wjdS03qDHPbNTzRfmv9bAi6L0PLPlee14tB7HHmSvKnuqP0rnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MHhl3WxM; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHhl3WxM"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39ac9aea656so4654990f8f.3;
+        Mon, 14 Apr 2025 12:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744658700; x=1745263500; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mkoMwn5nKL5Ff2HZW5CyqilTcEtTEB1CBWPccvd+3ZE=;
+        b=MHhl3WxMQwgt/kb9BapRYnH5IfUdAnQNdD2ZU2UN/zvbOa/L/XomOppNB++K0F/uFn
+         KH4Tsgnv3MKTkq+41trRC42wG9TtAS6mMjShl4R27ElR2GhcIxGPC0clKRZHMb4SHjE5
+         XkFW8JyZDbW3rd/th3rGMFBNy8sY+viX/iDPhtxcUdJZyOLkejlRZqU964VVLwr0AZFt
+         6Xo4my60hSMfzTjAVMM/Hsu9/Pa8ZZZKgJUhAT5neKNmPsW77KWVQCJCQAV5gMP3mBr/
+         2armLa+2gUvXUrNYCdViF+EPB46OBXw/wyaHFzMEl9luMKcR9LV/zAIkmsMD0CNhvcIr
+         P/lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744658522; x=1745263322;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1744658700; x=1745263500;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GOv5Jk3XoSN+D2KFShSde9xzzddc9ORjMDXmV9hyXBw=;
-        b=Bsr3IbHWQwdORiPmcsYZoeJp1Vc/n22oZ5ddP9ik8K7n9t0UaXRcq0mRm/Hg+VUa7w
-         fNnYzZ3SBnM5Tuk1T3Y2YgadWbCld7rInER/aN+VmNUr/0RlVtKRwC+JkOpBEkLdote3
-         k+RXEkJOXSEpF6YyALtI6MfvHprtpFPbFolTjkUexntnJALMIQIvaBni1JmZ5f1Bj0XV
-         MvgHDZrX6n55rMml/MutTbnoWDZgB0ZYJPsutazXb8CciYmE8LAd2qkCKnC6t7h+jD9A
-         kjr7UfHtZXCdbWX9FJ1iqkiuxcJGfsYhlf42PeNQUmevUkoyUceBJh+T5Iey/niEgLtY
-         v7Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVppKsDbqACs+LoiKtx9ofbWpgqt3sTtgFnXS0rfSDP+x+vFpXYQvgr/VkU/xjKzIKeqayjmY4Ejm31dDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhbUElgDp+7tDYguDAL1haHqDghL/5+iviA1MqnNbAf0uKJ0Uw
-	ALQyLdbPVviESVm8ZKP5aDG7htLcWBgdaAQlzougZUjzAxn7qvGggPeYFEyOJvDeNrdU6QteOzn
-	tXSsAGqxyNHU2T1tT7iX0z4Nms21ny0f57dqocWrjvxVdP39fRJ1izLo=
-X-Google-Smtp-Source: AGHT+IGEmCZcdWbXVW3Yowdl+fqoNrFiXUdx+Br9L+lc28touHs15V4APFkQfiEPqaQnMiuIzgUE1JifdY5R6RYkv3+LJiMpQ6LQ
+        bh=mkoMwn5nKL5Ff2HZW5CyqilTcEtTEB1CBWPccvd+3ZE=;
+        b=r2w8c6AQbLb16GOaFSlN24W1ppL3U7CR3qI28BerJxYiC92XSBURJtcWFNm59SZdRn
+         gX34iIqxTxa3eMDneJBJXt4E2ykUsZ8U1AhJkSeaLnuzaUhwggBJ0/BPmdxMcvp0+vRe
+         JQF1k+WGgv1e4KsIKoqdo8TG56DiKvGue3Srx2Cc2D10a/ZAKzzJGvveHGiejYb9FPE2
+         bMVxdCCT7hbqnDfWHvmx5qEbMtK0Cl7adkOx6YdFyGzhdQUM6c5+07Ze09GQstfZ359o
+         m4vpbJSFGchH1xWJ2RzhXmsbfQng3ptGQOZf9wgUiccdd+d6pNIc11qY97kza3NqlQZt
+         O6WA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKaAsZn5D+7bTiDWJ+iKXjPUPnRiENUnZ0vGPs+Jn6hm4oEaEpygzSoycfsZmCtwPUwuW+tPSvEZU2@vger.kernel.org, AJvYcCVrkNtJdzwuLhecfP06OGV7XO4w94+PUZTLo0yPVexcuo4AviHIA7YPrz5zh9RTslj3sINQsylKF2kh1Ivs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvDLDEdiShYfg9JT5KgU9wLPQ/2T7d6422gOCQCvUBgMqjR7IO
+	f/GADcKfaBnEbOQ0h2TgFPwmv2rQKpzjNpvmG/bQ2BRGPftsfSrX
+X-Gm-Gg: ASbGnct9YYhDmlQBCtba3s+rOi6adCYKZbVOpHS8b4ujynIwrpFWMBsZ8RmtQH2WlEn
+	o1JYNtD6i3wxd5LHKKIssSdX2AcyOlVh2excjNutGmG61XaEJZnrzYy6YLQAMP5aG/Uxq5EjFtw
+	hzw7x7EuqvO2mrdV+JFkDPCTjxr1O3V8Ru2TYZhS8Gb15pAfRPRTazbUi0/1WfeESf41AcUhoke
+	fxBsC1+YD4+Lke0UDG8FwsUHLu4iIa1JUUUi/c6/2HO+3PVmDtknkt2y48NOBjVLGw9otKTrxAV
+	+Yos932eyvmjPuU8aD7AyGnhDAwT0A==
+X-Google-Smtp-Source: AGHT+IHRH5R+1QQWktZEz7kN+KXOYE1/H/jAFM/d0Au5By8OXDCi8qkPgDY390IcEISDH432vkev+g==
+X-Received: by 2002:a5d:5f42:0:b0:38f:39e5:6b5d with SMTP id ffacd0b85a97d-39eaaed20d3mr10917629f8f.44.1744658700146;
+        Mon, 14 Apr 2025 12:25:00 -0700 (PDT)
+Received: from pc ([196.235.8.148])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338dc13sm191775795e9.3.2025.04.14.12.24.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 12:24:59 -0700 (PDT)
+Date: Mon, 14 Apr 2025 20:24:55 +0100
+From: Salah Triki <salah.triki@gmail.com>
+To: Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: salah.triki@gmail.com
+Subject: [PATCH] smb: server: smb2pdu: check return value of xa_store()
+Message-ID: <Z_1hB9GQL_Y7IAdA@pc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2143:b0:3d5:eb14:8455 with SMTP id
- e9e14a558f8ab-3d7ec276548mr118949035ab.17.1744658521895; Mon, 14 Apr 2025
- 12:22:01 -0700 (PDT)
-Date: Mon, 14 Apr 2025 12:22:01 -0700
-In-Reply-To: <67b1f949.050a0220.173698.000c.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fd6059.050a0220.3483fc.0031.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] possible deadlock in get_partial_node (2)
-From: syzbot <syzbot+725322cc4ff5c53abfac@syzkaller.appspotmail.com>
-To: anna-maria@linutronix.de, axboe@kernel.dk, frederic@kernel.org, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mmpgouride@gmail.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-syzbot suspects this issue was fixed by commit:
+xa_store() may fail so check its return value and return error code if
+error occurred.
 
-commit 3a04334d6282d08fbdd6201e374db17d31927ba3
-Author: Alan Huang <mmpgouride@gmail.com>
-Date:   Fri Mar 7 16:58:27 2025 +0000
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+ fs/smb/server/smb2pdu.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-    bcachefs: Fix b->written overflow
+diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
+index d24d95d15d87..e32f8910e892 100644
+--- a/fs/smb/server/smb2pdu.c
++++ b/fs/smb/server/smb2pdu.c
+@@ -1445,7 +1445,7 @@ static int ntlm_authenticate(struct ksmbd_work *work,
+ {
+ 	struct ksmbd_conn *conn = work->conn;
+ 	struct ksmbd_session *sess = work->sess;
+-	struct channel *chann = NULL;
++	struct channel *chann = NULL, *old;
+ 	struct ksmbd_user *user;
+ 	u64 prev_id;
+ 	int sz, rc;
+@@ -1557,7 +1557,10 @@ static int ntlm_authenticate(struct ksmbd_work *work,
+ 				return -ENOMEM;
+ 
+ 			chann->conn = conn;
+-			xa_store(&sess->ksmbd_chann_list, (long)conn, chann, KSMBD_DEFAULT_GFP);
++			old = xa_store(&sess->ksmbd_chann_list, (long)conn, chann,
++					KSMBD_DEFAULT_GFP);
++			if (xa_is_err(old))
++				return xa_err(old);
+ 		}
+ 	}
+ 
+-- 
+2.43.0
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e4ea3f980000
-start commit:   b7c90e3e717a Merge tag 'x86-urgent-2025-03-08' of git://gi..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
-dashboard link: https://syzkaller.appspot.com/bug?extid=725322cc4ff5c53abfac
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137c1fa0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e0fa54580000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: bcachefs: Fix b->written overflow
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
