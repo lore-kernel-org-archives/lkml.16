@@ -1,165 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD96F1A5B94;
-	Mon, 14 Apr 2025 08:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC4A25A2AB;
+	Mon, 14 Apr 2025 08:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619222; cv=none; b=EkFSCzOk7NrplABR0OdFL1yizt0JAbIPHL3Y3EclVvOc2AHbfSwE0DG6iZJPmsMxKeJp5Q576JAw9oPj41lM088UBvj/pPwp6J5lRXma64785tiokODsrLNHx45MvTt7dEjfNJR5lC3fRGcWZFmrLVFYJBX7QPOF2TR5MXimVWw=
+	t=1744619332; cv=none; b=XmHhFAv2AlMSaJVXqukl+pmn9ZaqG3y1jgQhA631rakpEWm8Dn2+XrqYT+lW+SxQo8UwXY1SpR11y6e3BtH46794bqWnt00h2t5wtLbk3nW67wr/7DFrICVLPYr8BL8HGXh8OK/bkdVinZUiIbKHR8E4rPN7kxTP4Rp8b9QUs0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619222; c=relaxed/simple;
-	bh=RofbViZGosLj5CtM3MzeJy2VAcecwtpspL17FRMtiMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t0tGo/LrWW8kHN80Zu8W67IlNPKPqqOU76ugNRgUDhxXMzRnhPkcYpwndBCjmluu010zRTs0MCFsgX3g3XbR94ng6iaIv9YoyR/9S8xvBqw/V5EirAjbwWF0rdQF50uIlyXlOqBB5y+q9TCFx/EH10DAv/5ncyfRhvj6OMczoE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDfFvfPN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744619332; c=relaxed/simple;
+	bh=ffXckLFAEntokyD5tZmTxTHpPkPxnbYqbNEtevXijA0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ai6IQERhVGXIAoOJ5ZVqgrAVFQMGK+IF5Z/ulCcaO5wHkGwgggwuE+V5aQpQG+a1UMRhHHkfDr0nPCIrr3mRLO4Z+gH2sWt8wzTMZn4bdI9ZBkUaF3B7mP+YC0WFvzZ5Rq9tOAbJw4oJ3wpbGoyBqxqmk/43W7EBANSqLy9mAcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c9Z6ujeC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDfFvfPN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A82C4CEE2;
-	Mon, 14 Apr 2025 08:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744619222;
-	bh=RofbViZGosLj5CtM3MzeJy2VAcecwtpspL17FRMtiMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TDfFvfPNz8yFnnXfEAmwAEshO5h94EAyNmGCYgylH60yroaEvk/LNai251/t8esqG
-	 l+yW6sUDJeEPHWHNC9YX9E3lTL1bcQ7c7ucIYn8k+Bi5dm/9rtxC5EbxzO+Y5Fnwlg
-	 0HdVzP0gfMD1RlUXa7FzNNjUcqxOe4ANry+yjVpiOktryqbMopI58LAwHjeatIBYwe
-	 omHbkiBD5ZQJFOUqFhyG+0royDMdzyw55yTTXgpcU5gAw/sG1d8588rdZpk/llFAST
-	 7KZJ3LLfGXUrOYjeUBPL0iLuwIuni6Zs6Q08CFqaec7CIQPYCBprPhjzeEYkJB7MmC
-	 svMBfkufjV0Kw==
-Date: Mon, 14 Apr 2025 10:26:54 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, ast@kernel.org
-Subject: Re: [PATCH 20/24] irqchip/gic-v5: Add GICv5 LPI/IPI support
-Message-ID: <Z/zGzjyrEMYMd8cI@lpieralisi>
-References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
- <20250408-gicv5-host-v1-20-1f26db465f8d@kernel.org>
- <Z/jgL52ZVdcxTEkP@lpieralisi>
- <87plhjrpit.ffs@tglx>
- <Z/kM/+uBsD9DAGjF@lpieralisi>
- <mcyioyevok6tixna2xwk5q3d6x5b5spyucc4fiiy3h4v5jwxbj@bw6ewonqm2ks>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c9Z6ujeC"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNFZ7j015231;
+	Mon, 14 Apr 2025 08:28:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Sym5/oRgWVcdmGxvI50kBhVFvYYDpnJCchnP364Tvpo=; b=c9Z6ujeCt6IkUA2N
+	usp4frsZqq0JlGPtL83fMSw41tX1kQiNlj/FIoK/nQ3Jysrd0GKO6WGDMtcwUdOu
+	atI+S9wzoWZT+Tl3fFz4evOIlwTWSZsiYuu93EEPcAbTZEuhTjJOf+fEhnF91MI/
+	13U7OvQZDYMYShrj1xThgBPdiFe3tbR0DzJgGRGx02Lg9V1CRDFgc/01xn/HXHuN
+	SttNyhs/nxFU5kuR0lOyyMTT3wKhlUOXzUm99mzH9RMdpPJXbfLp9KsHRvSLpXZK
+	7KkE0EbQgJlAvQPXCBP/BHeV1haRC7+9hUmf2frlMIzcvxBQxBxD79h2ikmsnd5J
+	lh6qtA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vbwk3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 08:28:42 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E8SfqA012861
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 08:28:41 GMT
+Received: from [10.217.199.111] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 01:28:37 -0700
+Message-ID: <46cd600e-b388-4225-a839-a6af76524efe@quicinc.com>
+Date: Mon, 14 Apr 2025 13:58:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mcyioyevok6tixna2xwk5q3d6x5b5spyucc4fiiy3h4v5jwxbj@bw6ewonqm2ks>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: Enable TSENS support for QCS615
+ SoC
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <amitk@kernel.org>,
+        <rafael@kernel.org>, <daniel.lezcano@linaro.org>,
+        <rui.zhang@intel.com>, <lukasz.luba@arm.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <quic_manafm@quicinc.com>
+References: <cover.1744292503.git.quic_gkohli@quicinc.com>
+ <76e0ce0e312f691abae7ce0fd422f73306166926.1744292503.git.quic_gkohli@quicinc.com>
+ <7f893243-572b-4e23-8f2b-ae364d154107@oss.qualcomm.com>
+Content-Language: en-US
+From: Gaurav Kohli <quic_gkohli@quicinc.com>
+In-Reply-To: <7f893243-572b-4e23-8f2b-ae364d154107@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4yztpCmde8wFKtCk9OlXGZT0O_y_1kUf
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fcc73a cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=3QMT7e6M7s-aR6NrdO8A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 4yztpCmde8wFKtCk9OlXGZT0O_y_1kUf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=735 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140060
 
-On Sat, Apr 12, 2025 at 09:01:18AM -0400, Liam R. Howlett wrote:
-> * Lorenzo Pieralisi <lpieralisi@kernel.org> [250411 08:37]:
+thanks for review!
+
+On 4/12/2025 5:13 AM, Konrad Dybcio wrote:
+> On 4/10/25 4:00 PM, Gaurav Kohli wrote:
+>> Add TSENS and thermal devicetree node for QCS615 SoC.
+>>
+>> Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
+>> ---
 > 
-> Thanks for the Cc.
+> subject: "arm64: dts: qcom: qcs615: ..">  arch/arm64/boot/dts/qcom/qcs615.dtsi | 281 +++++++++++++++++++++++++++
+>>   1 file changed, 281 insertions(+)
+>>
+will fix this.
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> index edfb796d8dd3..f0d8aed7da29 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> @@ -3668,6 +3668,17 @@ usb_2_dwc3: usb@a800000 {
+>>   				maximum-speed = "high-speed";
+>>   			};
+>>   		};
+>> +
+>> +		tsens0: tsens@c222000 {
+>> +			compatible = "qcom,qcs615-tsens", "qcom,tsens-v2";
+>> +			reg = <0x0 0xc263000 0x0 0x1ff>,
+>> +				<0x0 0xc222000 0x0 0x8>;
+> Pad the address part to 8 hex digits with leading zeroes> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
 > 
-> > On Fri, Apr 11, 2025 at 11:55:22AM +0200, Thomas Gleixner wrote:
-> > > On Fri, Apr 11 2025 at 11:26, Lorenzo Pieralisi wrote:
-> > > > On Tue, Apr 08, 2025 at 12:50:19PM +0200, Lorenzo Pieralisi wrote:
-> > > >> Maple tree entries are not used by the driver, only the range tracking
-> > > >> is required - therefore the driver first finds an empty area large
-> > > >> enough to contain the required number of LPIs then checks the
-> > > >> adjacent (and possibly occupied) LPI ranges and try to merge them
-> > > >> together, reducing maple tree slots usage.
-> > > >
-> > > > The maple tree usage for this purpose is an RFC at this stage.
-> > > >
-> > > > Added Alexei because I know BPF arena used the maple tree in
-> > > > a similar way in the past and moved to a range tree because
-> > > > the BPF arena requires a special purpose mem allocator.
-> > > >
-> > > > As Thomas already pointed out a plain bitmap could do even though
-> > > > it requires preallocating memory up to 2MB (or we can grow it
-> > > > dynamically).
-> > > >
-> > > > We could allocate IDs using an IDA as well, though that's 1 by 1,
-> > > > we allocate LPI INTIDs 1 by 1 - mostly, upon MSI allocation, so
-> > > > using an IDA could do (AFAIU it works for 0..INT_MAX we need
-> > > > 0..2^24 worst case).
-> > > 
-> > > The point is that you really only need a 1-bit storage per entry,
-> > > i.e. used/unused. You won't use any of the storage functions of maple
-> > > tree, idr or whatever.
-> > 
-> > IDA does use the XArray entries (i.e. the pointers) to store bitmaps,
-> > the only drawback I see is that it allocates IDs one by one (but that's
-> > not really a problem).
-> > 
-> > I wonder if it is used in the kernel for IDs larger than 16 bits, it
-> > should work for 0..INT_MAX.
-> > 
-> > > So the obvious choice is a bitmap and as you said, it's trivial to start
-> > > with a reasonably sized one and reallocate during runtime if the need
-> > > arises.
+> &pdc 26
 > 
-> I think the IDA or the bitmap for space saving would be better - the
-> xarray does do something under the hood for IDA space savings.
+>> +					<GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
 > 
-> If you want to compare, I can suggest some changes to your maple tree
-> code (mas_{next/prev}_range might help).
-
-Thank you.
-
-> > Yes I can do that too but to avoid fiddling with alloc/free ranges crossing
-> > bitmap chunks we need a single bitmap, AFAICS that may require realloc+copy,
-> > if the need arises.
+> &pdc 28
+we don't want to mark this as wake up capable, so using this approach.
 > 
-> That is the advantage of the IDA or maple tree, the expansion is handled
-> for you. I'd be inclined to suggest using the IDA, but I'm not sure how
-> important storing an entire range is for your usecase?
-
-The point is, IDs represent interrupt IDs. We allocate them in batches,
-whose length varies, it can be 1 but it can also be a larger vector
-(ie 1024).
-
-It is obviously faster to allocate a range than allocating them 1 by 1,
-that's the only reason why we have not used an IDA (and also because I
-did not know whether an IDA is recommended for a larger ID space > than,
-say, 2^16 - but I think it is because it is designed to cover 0..INT_MAX
-and I noticed that -mm folks may even ask to extend it).
+> Please align the <s
 > 
-> Are there other reasons you want to use the maple tree besides the range
-> support?
+>> +			#qcom,sensors = <16>;
+>> +			interrupt-names = "uplow", "critical";
+> 
+> it would make sense for interrupt-names to come right under interrupts
+yes, will update in next patch set.
+>> +			#thermal-sensor-cells = <1>;
+>> +		};
+>>   	};
+>>   
+>>   	arch_timer: timer {
+>> @@ -3677,4 +3688,274 @@ arch_timer: timer {
+>>   			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>>   			     <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+>>   	};
+>> +
+>> +	thermal-zones {
+>> +		aoss-thermal {
+>> +			thermal-sensors = <&tsens0 0>;
+>> +
+>> +			trips {
+>> +
+>> +				trip-point0 {
+>> +					temperature = <110000>;
+>> +					hysteresis = <5000>;
+>> +					type = "passive";
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		cpuss-0-thermal {
+>> +			thermal-sensors = <&tsens0 1>;
+>> +
+>> +			trips {
+>> +
+>> +				trip-point0 {
+>> +					temperature = <115000>;
+>> +					hysteresis = <5000>;
+>> +					type = "passive";
+>> +				};
+>> +
+>> +				trip-point1 {
+>> +					temperature = <118000>;
+>> +					hysteresis = <5000>;
+>> +					type = "passive";
+>> +				};
+> 
+> Please drop the passive trip point for the *CPU* tzones, see
+> 
 
-We used the maple tree because it handles ranges, we have not found a
-sound usage for the 8 byte entry pointer (there may be some but it is
-overengineering), that's why I try to merge adjacent ranges on
-allocation, for vectors that are length 1 or 2 it is gross to waste
-8 bytes for nothing.
+we are using trip-point 0 for cpu idle injection mitigation which i will 
+add in subsequent patches, if you are fine i will add cpu idle injection 
+cooling map in this series only ?
+> commit 06eadce936971dd11279e53b6dfb151804137836
+> ("arm64: dts: qcom: x1e80100: Drop unused passive thermal trip points for CPU")
+> 
+> and add a single critical point instead, see
+> 
+As critical shutdown is already supported by hardware, so we are not 
+defining here.
+> commit 03f2b8eed73418269a158ccebad5d8d8f2f6daa1
+> ("arm64: dts: qcom: x1e80100: Apply consistent critical thermal shutdown")
+> 
+> Konrad
 
-Using an IDA and allocating 1 by 1 has its advantages (ie if the ID
-space is fragmented it is easier to find free IDs - even though,
-again, given the expected allocation pattern, freeing IRQ IDs is rarer
-than allocating them so I am not sure we would end up having a very
-sparse ID space).
-
-All in all, other than looking sloppy (allocating 1 by 1 when we could
-allocate a range), using an IDA would work.
-
-In terms of memory space efficiency, I think this depends on allocation
-patterns (and what I did minimise wasting slot entries for nothing).
-
-I added Alexei because, memory allocation notwithstanding, handling
-ranges is what the BPF range tree does:
-
-commit b795379757eb
-
-the reason a range tree was implemented to replace a MT was the
-memory allocation requirements - they were using a maple tree before
-(with unused entries).
-
-I can go for an IDA unless someone see a point in pursuing the current
-approach - that I would update according to feedback, at least with
-this thread you get the full picture.
-
-Thanks !
-Lorenzo
