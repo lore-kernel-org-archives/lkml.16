@@ -1,386 +1,231 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE28B28F4;
-	Mon, 14 Apr 2025 06:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B041728F4;
+	Mon, 14 Apr 2025 06:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744610475; cv=none; b=bjGbeIO1hohwAQtkUMNFoc+oLj+sNgHp4cn8B0ajB6yB9J+/SgzCGdoYm8MjBVXmBsRsmFHNoZnm2/28mrFUU4pQb2sTXowMbs07B0UoyeFQy0opJIBG+LAS+7hew4kShVAJtF30aqkwTICOY1K/UtEKq6QeLFsVE4BS/P7Bj+A=
+	t=1744610483; cv=none; b=dZ2sAmTmQfmtrYmf4QshwM8vuLcXJyDyZaMzWdF0c3VXpF2gIYCqToOpel7JveUwFPJUp4POkMBbyX7qQ2rRShS6qLEPp7wb95dwcAgfhpVd+SkKS7SNAG7hCsDJLMPxojSbu6yN5igLYCQWXhBdv06XrMEK0HjNUfxVJ2ZEIXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744610475; c=relaxed/simple;
-	bh=mSAY3a+fSWoE+a40aq6TToaWfWJC62cAV9qkF6Bc0kQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Vv/lXYXkcv92nGbDyKW2Au3yWA4Agdm0LYzpaplw/E6KA5L/8K8JCcK8vwX3f7EIq3CPu7jb2dHGXF9tU5xsqQovwFQZzLICZl4Cln0WuyIq05SPGDozpsZcbnybnMTfY1rA1T2a9X/C+QboHvdh1XYw+yTKVUeSCy94MATZlK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eNecHrcs; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744610483; c=relaxed/simple;
+	bh=oZAK8zrupjjH+O6tNbwe6KbSyiTI2uGDFByDdDSwCXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SMjPxwAasROPIq2ZjBAlGyF4elLWP7Wc1qvLFNu+2dzq3XVylU8XVt8QEy5qy/ygFk6ghuosC2NYKdsO3KfMazMstH9HEAWIVaXoqohlMvgaBmReDH5L3ULXtCZF5VY13qC1ZY7mbU8d879pdZTV45n/Y4RL2Q9YcE+GHDcGHRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jw1zYXRT; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eNecHrcs"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DMeTOQ003355;
-	Mon, 14 Apr 2025 06:01:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=R3UXd/
-	FoEzDEZ/l6o/aqQq+UWAbcKTgnnD42YUOJCY8=; b=eNecHrcsrS1a/y7znP+A0k
-	GGRMP0NWewHBde4wToXNIz6IxU/TG7b4ojMJrmtc8pEJgibO8MTR5jI1MvEHl54x
-	Izut+aw+czZ1u5kRuLvIM/3ZnPDsxS6rjSuKPJD/AMP71y6Mq6wV/2x1lvbFc3hh
-	x4GnecjoiJsAiuvMGE76kQo/HEkJlcTqeetb6RFOJj5Vs3VvXbmvEhwWklTgqcSg
-	nFjTSpCZC9ZzfyEYY23gue8VmwDF/IVPspRgw7UGapWwbKEozHyUo5CYU+LqHX9r
-	6NmHOz3qcYWHYD954vIHuDvwQ3c7avVSAUtrjsCBOgtYN/5hFHFSjMaZL6J20E1A
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460ndssctj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 06:01:07 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53E4tTYs016407;
-	Mon, 14 Apr 2025 06:01:06 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 460571vj4b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 06:01:06 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53E615g031982248
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 06:01:05 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 473FB58063;
-	Mon, 14 Apr 2025 06:01:05 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 55C6C5805A;
-	Mon, 14 Apr 2025 06:01:02 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com (unknown [9.43.55.58])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 14 Apr 2025 06:01:01 +0000 (GMT)
-Message-ID: <ceb2759f3bdcebc4be99d8967b9292a9b85fadc7.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] cpuidle: menu: Prefer polling state for short
- idle durations
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-        Christian Loehle
-	 <christian.loehle@arm.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gautam Menghani	
- <gautam@linux.ibm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date: Mon, 14 Apr 2025 11:31:00 +0530
-In-Reply-To: <CAJZ5v0js=Ca4MtcTa2zO2B_fCZNJrOAJzRKAPWSD6fFzn88z_w@mail.gmail.com>
-References: <20250317060357.29451-1-aboorvad@linux.ibm.com>
-	 <525a2352-dc57-45ca-adb2-f7039c37145e@arm.com>
-	 <CAJZ5v0js=Ca4MtcTa2zO2B_fCZNJrOAJzRKAPWSD6fFzn88z_w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jw1zYXRT"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6ecfa716ec1so38718716d6.2;
+        Sun, 13 Apr 2025 23:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744610479; x=1745215279; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=L0L1XVEs/40Inqn2wXUAx/QRxfMJixUhrq/LYTX7ULk=;
+        b=Jw1zYXRTtV0/wsSGoVh8sq4HMOwSuBQIMQjOYVzG5d1Oqk8vkvj4Um9O9fRY7+sU8T
+         FHvSfwwhjF7aD78g1n5NmMtd2yR0CzGy6CU4NSR3Cut5cpZDEQRuG1t47V7MC3vNeq1T
+         VsxLAaMVYAo/AiXs7JDx8kE2ILgYzqAdORs3nGiKNsNwGjkyVOw5ZwvzarWXeIzrI2sw
+         HkMksynIFnQRjg2L6BTQE2y3pQ86KPYsHTLl/ygqLyNWsKB2YjI/WAdHKzReKS7zg7ki
+         ixGoYrqLmLd+iYagKUV64fCkNVE0T94d07Z4Qf9IZWCGgTC/8WAcYVP3L4KvKEEa+YFF
+         H20A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744610479; x=1745215279;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L0L1XVEs/40Inqn2wXUAx/QRxfMJixUhrq/LYTX7ULk=;
+        b=FxriTyLu4pk/Et2bvrysMfbkwksMWIojeXrmWTrlqegrMuiyseKo5hTL8w2AzaBu5I
+         OBDNTBDOPyjPOqlndK56iziKZ1MK4CKB8krhpoIDMjxwW0yg6tRe11qN9QQvcHJbJ2I9
+         SDBygbdAyaAEeRllW23oJMVBVWaHt5ASRKz+cq7sVS22aOu2KeSXCh1ruDaR/kCzoRiD
+         UaP7pNcvz4lAiRFBT8OSM7zLLBwPO1Jl260zy7jJ0ice3ZTev0oxp9QaGstxLooB2nQj
+         5YHD6aj/PXXtsgnrviXdx+3VX6EiArn5Lig/mU9cu2MhEMwMUKUwaYdPy8KK6MZEE5gB
+         bBEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkIT8j1Px90jtoRU4Deb0p7urjFWOFaTz3Qu3enDJfm5GF6Sv+1QqZar4n0ELwUH67h8kf4vQvTmDwGOU=@vger.kernel.org, AJvYcCWGEcQNZviBnK0MybyON8RWOLobmOvUzOgN7PJjrQFnmaLX/mxC1sU/cMTbNeVSzJaD+YhrWdRh@vger.kernel.org, AJvYcCXhS97G9LviOKZtbPb52j9dglaJ8+/IecpZ4Nm/7Tr+ycMvYDov8SeqDzaOUYoHulubFoOL@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlR+PVzT6RwXm6hOzE9wj8viUKVRyCDI29/6dd4pZv2Bl6hcuk
+	2Z3/MeHu7y6lLVW4yraQ6BdpimMYU4IyMO5f0kM9EPH9Ss3IlVzs
+X-Gm-Gg: ASbGncvF8VPE8BPDq+0CuPuvHcBte0mGkEox/WjFT24uYdLPLnJUpaPvXfUqLSGzZbP
+	snXqHdxbaUo9+zK9TlGCCGEF7JYGJjIBIYAUfEGgOrWGYJU6LhT7GcfKNdV3lDCyHY3GXmVM2H+
+	rJ3V8JLOOAxoaa7SzN86SvyeW7W8sqs1GvAWd1uRGLL/WqEXOC7v5n9+vBFQFBg2tl15IxH6ptd
+	I0jEtQv0JaGaHjhtu5Iu9ElQxKTxk5zxDrlpNcv5cIMjHT2dk9QAS/7ChAi+mUoIzUSYk2SBnd+
+	VNMOAU2jF/t8Mobove/jKaoxe8KjZ1kbOJkKOCGtSSxhncGjifl7esdLsK0/ZtVV6ARI5SYGXI2
+	ILBMF4R+akfyZ2FtOT3pOoHAQA2WbhYI=
+X-Google-Smtp-Source: AGHT+IETl7E/+bzwq61cS2fWibUseOcyKaw0dAYo3A+plXELvtQoVtUaR+f6mDLalDZp7TNAsX4tEQ==
+X-Received: by 2002:ad4:5c64:0:b0:6e8:ef80:bcbc with SMTP id 6a1803df08f44-6f230cb9778mr167100666d6.5.1744610479281;
+        Sun, 13 Apr 2025 23:01:19 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0de11sm682145785a.101.2025.04.13.23.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 23:01:18 -0700 (PDT)
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 241701200043;
+	Mon, 14 Apr 2025 02:01:18 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Mon, 14 Apr 2025 02:01:18 -0400
+X-ME-Sender: <xms:rqT8ZyHTy2LBwH2v3_nnp5OCGu6cEzSlURtWJxHEskXZKhcAKl98oA>
+    <xme:rqT8ZzWn2rjwaBl9rg7u_4ZvZXLvVyQGM8PYN7FPvLldyPT_oa0sXuO1wjev7Sxz8
+    yq_xji3SfaEpfFJBQ>
+X-ME-Received: <xmr:rqT8Z8InjznoLs0NWBUPZoHrW4HjnfN722D88fUkDTQBp18iCwIeC1fb7VOogg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudeljeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttden
+    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
+    gtohhmqeenucggtffrrghtthgvrhhnpeeggeeukeeghfevudektdevjeehhfekffevueef
+    udeivdelteeltdekheejgfeiveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
+    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
+    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
+    mhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    eplhgvihhtrghoseguvggsihgrnhdrohhrghdprhgtphhtthhopehpvghtvghriiesihhn
+    fhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomh
+    dprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhonhhg
+    mhgrnhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprggvhhesmhgvthgrrdgtohhmpd
+    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:rqT8Z8GlZ0cHY8lIpgu0dp1X1nZKRXI0VadFbxDCvEdIs7LcRm-C4w>
+    <xmx:rqT8Z4W9PO4LnyzNAeAn2XtR96sZpmUdbU1hma1Kc5AlCpIMHnTHUQ>
+    <xmx:rqT8Z_PLpI9zz2SASZvNpjoObvWPwjCr3YIRo_uawWVO-gAiAfDLWA>
+    <xmx:rqT8Z_25CGlTdI6lgz_yaJSqvwdtLsOzq8t6GMQL5qcS6l4oaNZvzQ>
+    <xmx:rqT8Z5VLvXMdMielQ5yr1d1OyMXftwyE5xipADGIHjlEEGi5eZH7pKT5>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Apr 2025 02:01:17 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Breno Leitao <leitao@debian.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Cc: aeh@meta.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	edumazet@google.com,
+	jhs@mojatatu.com,
+	kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	rcu@vger.kernel.org,
+	Boqun Feng <boqun.feng@gmail.com>
+Subject: [RFC PATCH 0/8] Introduce simple hazard pointers for lockdep
+Date: Sun, 13 Apr 2025 23:00:47 -0700
+Message-ID: <20250414060055.341516-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: B9HCfGWrE8rNVFWt8NdnCucvliKio5zo
-X-Proofpoint-ORIG-GUID: B9HCfGWrE8rNVFWt8NdnCucvliKio5zo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
- mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504140042
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-04-01 at 18:58 +0200, Rafael J. Wysocki wrote:
-> On Mon, Mar 17, 2025 at 9:35=E2=80=AFAM Christian Loehle
-> <christian.loehle@arm.com> wrote:
-> >=20
-> > On 3/17/25 06:03, Aboorva Devarajan wrote:
-> > > Avoid selecting deep idle state when the predicted idle duration is
-> > > shorter than its target residency, as this leads to unnecessary state
-> > > transitions without energy savings.
-> > >=20
-> > > On virtualized PowerPC (pseries) systems, where only one polling stat=
-e
-> > > (Snooze) and one deep state (CEDE) are available, selecting CEDE when
-> > > its target residency exceeds the predicted idle duration hurts
-> > > performance.
-> > >=20
-> > > For example, if the predicted idle duration is 15 us and the first
-> > > non-polling state has a target residency of 120 us, selecting it
-> > > would be suboptimal.
-> > >=20
-> > > Remove the condition introduced in commit 69d25870f20c
-> > > ("cpuidle: fix the menu governor to boost IO performance") that
-> > > prioritized non-polling states even when their target residency
-> > > exceeded the predicted idle duration and allow polling states to
-> > > be selected when appropriate.
-> > >=20
-> > > Performance improvement observed with pgbench on PowerPC (pseries)
-> > > system:
-> > > +---------------------------+------------+------------+------------+
-> > > > Metric=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | Baseline=C2=A0=C2=
-=A0 | Patched=C2=A0=C2=A0=C2=A0 | Change (%) |
-> > > +---------------------------+------------+------------+------------+
-> > > > Transactions/sec (TPS)=C2=A0=C2=A0=C2=A0 | 494,834=C2=A0=C2=A0=C2=
-=A0 | 538,707=C2=A0=C2=A0=C2=A0 | +8.85%=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > > > Avg latency (ms)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 0.162=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 0.149=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | -8.02%=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > > +---------------------------+------------+------------+------------+
-> > >=20
-> > > CPUIdle state usage:
-> > > +--------------+--------------+-------------+
-> > > > Metric=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | Baseline=C2=A0=C2=A0=
-=C2=A0=C2=A0 | Patched=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > > +--------------+--------------+-------------+
-> > > > Total usage=C2=A0 | 12,703,630=C2=A0=C2=A0 | 13,941,966=C2=A0 |
-> > > > Above usage=C2=A0 | 11,388,990=C2=A0=C2=A0 | 1,620,474=C2=A0=C2=A0 =
-|
-> > > > Below usage=C2=A0 | 19,973=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 68=
-4,708=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > > +--------------+--------------+-------------+
-> > >=20
-> > > Above/Total and Below/Total usage percentages:
-> > > +------------------------+-----------+---------+
-> > > > Metric=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | Baseline=C2=A0 | Patched |
-> > > +------------------------+-----------+---------+
-> > > > Above % (Above/Total)=C2=A0 | 89.67%=C2=A0=C2=A0=C2=A0 | 11.63%=C2=
-=A0 |
-> > > > Below % (Below/Total)=C2=A0 | 0.16%=C2=A0=C2=A0=C2=A0=C2=A0 | 4.91%=
-=C2=A0=C2=A0 |
-> > > > Total cpuidle miss (%) | 89.83%=C2=A0=C2=A0=C2=A0 | 16.54%=C2=A0 |
-> > > +------------------------+-----------+---------+
-> > >=20
-> > > Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > >=20
-> > > ---
-> > >=20
-> > > v1: https://lore.kernel.org/all/20240809073120.250974-1-aboorvad@linu=
-x.ibm.com/
-> > >=20
-> > > v1 -> v2:
-> > >=20
-> > > - Drop cover letter and improve commit message.
-> > > ---
-> > > =C2=A0drivers/cpuidle/governors/menu.c | 11 -----------
-> > > =C2=A01 file changed, 11 deletions(-)
-> > >=20
-> > > diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/gover=
-nors/menu.c
-> > > index 28363bfa3e4c..4b199377e4be 100644
-> > > --- a/drivers/cpuidle/governors/menu.c
-> > > +++ b/drivers/cpuidle/governors/menu.c
-> > > @@ -296,17 +296,6 @@ static int menu_select(struct cpuidle_driver *dr=
-v, struct cpuidle_device *dev,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 idx =3D i; /* fir=
-st enabled state */
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 if (s->target_residency_ns > predicted_ns) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Use a physic=
-al idle state, not busy polling, unless
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * a timer is g=
-oing to trigger soon enough.
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((drv->states[idx=
-].flags & CPUIDLE_FLAG_POLLING) &&
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 s->exit_latency_ns <=3D latency_req &&
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 s->target_residency_ns <=3D data->next_timer_ns) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 predicted_ns =3D s->target_residency_ns;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 idx =3D i;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (predicted_ns =
-< TICK_NSEC)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
-> > >=20
-> >=20
-> > I'm still fine with this and don't see a better way to solve the report=
-ed
-> > issue generally, see the discussion on v1.
-> > Rafael, do you have any objections?
->=20
-> The behavior change on x86 would be rather unacceptable I'm afraid.
->=20
-> As already stated in a different thread today, on x86 the polling
-> state turns out to be overly shallow most of the time even before this
-> patch.
->=20
-> > We could make this conditional on there being a high latency difference=
- between
-> > polling and non-polling to keep x86 behavior.
->=20
-> If I'm not mistaken, to address the issue at hand, it would be
-> sufficient to add an "s->target_residency_ns < RESIDENCY_THRESHOLD_NS"
-> condition to the if () statement removed by this patch, wouldn't it?
+Hi,
 
-Hi Rafael,
+This RFC is mostly a follow-up on discussion:
 
-Thanks for your response. Since the first physical state for the pseries sy=
-stem
-(PowerVM) has a target residency of is 120 us, adding the condition
-`s->target_residency_ns < RESIDENCY_THRESHOLD_NS` will indeed resolve the i=
-ssue.
+	https://lore.kernel.org/lkml/20250321-lockdep-v1-1-78b732d195fb@debian.org/
 
-This change will ensure we only switch if the target residency of the physi=
-cal polling
-state is below 15 us which should be good.
+I found that using a hazard pointer variant can speed up the
+lockdep_unregister_key(), on my system (a 96-cpu VMs), the results of:
 
+	time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq
 
-Basic CPU Idle test: (1) carried out on a PowerVM (Power10) system.
+are
 
-Base Kernel:  =20
- CPU Wakee  CPU Waker  Sleep Interval (us)  Total Usage Diff  Total Time Di=
-ff (ns)  Total Above Diff  Total Below Diff  Above %  Below %
-        10         39                2.585            302245               =
- 463259                 5                 0     0.00     0.00
-        10         39                4.735           1023429               =
-2449157                 7                 2     0.00     0.00
-        10         39                7.339           1321973               =
-2542391                 6                 0     0.00     0.00
-        10         39               12.376            798039               =
-5429695                 5                 0     0.00     0.00
-        10         39               22.373            443568               =
-7677710            232439                 0    52.40     0.00
-        10         39               32.472            306655               =
-8514874            306552                 0    99.97     0.00
-        10         39               42.385            235004               =
-8800135            231795                 1    98.63     0.00
-        10         39               52.461            190079               =
-9029907            187694                 1    98.75     0.00
-        10         39               62.473            159704               =
-9182151            157656                 0    98.72     0.00
-        10         39               72.442            137826               =
-9282009            136055                 1    98.72     0.00
-        10         39               82.462            120114               =
-9308294            118640                 1    98.77     0.00
-        10         39               92.464            106081               =
-9278734            104725                 2    98.72     0.00
-        10         39              102.477             96663               =
-9422966             95415                 2    98.71     0.00
-        10         39              112.413             88117               =
-9459074             86972                 1    98.70     0.00
-        10         39              122.465             80942               =
-9497520             79064                10    97.68     0.01
-        10         39              132.430             75825               =
-9544063              1035               913     1.36     1.20
-        10         39              142.442             70511               =
-9561624               969               843     1.37     1.20
-        10         39              152.449             65929               =
-9586042               936               762     1.42     1.16
-        10         39              202.425             49782               =
-9636037               960               591     1.93     1.19
-        10         39              302.405             33770               =
-9749277               415               392     1.23     1.16
-        10         39              402.443             25403               =
-9701667               306               292     1.20     1.15
-        10         39              502.433             20751               =
-9826491               245               236     1.18     1.14
-        10         39              602.451             17468               =
-9832612               208               203     1.19     1.16
-        10         39              702.492             15135               =
-9847269               193               168     1.28     1.11
-        10         39              802.501             13369               =
-9856279               159               151     1.19     1.13
-        10         39              902.507             12007               =
-9862544               147               138     1.22     1.15
-        10         39             1002.499             10906               =
-9865485               132               135     1.21     1.24
-       =20
-With suggested change:    =20
- CPU Wakee  CPU Waker  Sleep Interval (us)  Total Usage Diff  Total Time Di=
-ff (ns)  Total Above Diff  Total Below Diff  Above %  Below %
-        10         39                2.682            247169               =
- 433222                 1                 0     0.00     0.00
-        10         39                4.803           1007178               =
-2560799                 6                 0     0.00     0.00
-        10         39                7.357           1327004               =
-2754768                 6                 1     0.00     0.00
-        10         39               12.362            799098               =
-5556114                 6                 0     0.00     0.00
-        10         39               22.380            443901               =
-7402339                 6                 2     0.00     0.00
-        10         39               32.388            307357               =
-8190282                 6                 1     0.00     0.00
-        10         39               42.423            234908               =
-8625490                 6                 0     0.00     0.00
-        10         39               52.425            190224               =
-8882797                 0                 0     0.00     0.00
-        10         39               62.354            159019               =
-9000032                 6                 0     0.00     0.00
-        10         39               72.380            137887               =
-9182585                11                 4     0.01     0.00
-        10         39               82.412            121129               =
-9285328                 2                 1     0.00     0.00
-        10         39               92.398            107844               =
-9326098                 3                15     0.00     0.01
-        10         39              102.456             97320               =
-9408519                 3                 1     0.00     0.00
-        10         39              112.358             88884               =
-9468555                 6                 4     0.01     0.00
-        10         39              122.402             81630               =
-9517007                 6                42     0.01     0.05
-        10         39              132.359            111082               =
-9528254             38190             37018    34.38    33.32
-        10         39              142.368             71612               =
-9636036              1309              1318     1.83     1.84
-        10         39              152.466             66791               =
-9663690              1152              1086     1.72     1.63
-        10         39              202.453             50412               =
-9745668               999               707     1.98     1.40
-        10         39              302.454             34045               =
-9828326               429               427     1.26     1.25
-        10         39              402.480             25851               =
-9868703               319               328     1.23     1.27
-        10         39              502.407             20931               =
-9877533               273               271     1.30     1.29
-        10         39              602.440             17602               =
-9878219               224               225     1.27     1.28
-        10         39              702.465             15254               =
-9915818               192               196     1.26     1.28
-        10         39              802.452             13462               =
-9930026               161               158     1.20     1.17
-        10         39              902.461             12089               =
-9933506               144               138     1.19     1.14
-        10         39             1002.483             10988               =
-9942937               130               130     1.18     1.18
-       =20
+	(without the patchset)
+	real    0m1.039s
+	user    0m0.001s
+	sys     0m0.069s
 
+	(with the patchset)
+	real    0m0.053s
+	user    0m0.000s
+	sys     0m0.051s
 
+i.e. almost 20x speed-up.
 
-I'm a bit curious on why RESIDENCY_THRESHOLD_NS is hardcoded to 15 us? Woul=
-d it make sense to make this value tunable instead?
+Other comparisons between RCU and shazptr, the rcuscale results (using
+default configuration from
+tools/testing/selftests/rcutorture/bin/kvm.sh):
 
-I actually have a patch that makes it configurable via sysfs to include it =
-along with this change if you think that would be useful.=20
+RCU:
 
-Looking forward for your comments on this.
+	Average grace-period duration: 7470.02 microseconds
+	Minimum grace-period duration: 3981.6
+	50th percentile grace-period duration: 6002.73
+	90th percentile grace-period duration: 7008.93
+	99th percentile grace-period duration: 10015
+	Maximum grace-period duration: 142228
 
-Thanks and regards,
-Aboorva
+shazptr:
 
-[1]: https://github.com/AboorvaDevarajan/linux-utils/tree/main/cpuidle/cpui=
-dle_wakeup
+	Average grace-period duration: 0.845825 microseconds
+	Minimum grace-period duration: 0.199
+	50th percentile grace-period duration: 0.585
+	90th percentile grace-period duration: 1.656
+	99th percentile grace-period duration: 3.872
+	Maximum grace-period duration: 3049.05
+
+shazptr (skip_synchronize_self_scan=1, i.e. always let scan kthread to
+wakeup):
+
+	Average grace-period duration: 467.861 microseconds
+	Minimum grace-period duration: 92.913
+	50th percentile grace-period duration: 440.691
+	90th percentile grace-period duration: 460.623
+	99th percentile grace-period duration: 650.068
+	Maximum grace-period duration: 5775.46
+
+shazptr_wildcard (i.e. readers always use SHAZPTR_WILDCARD):
+
+	Average grace-period duration: 599.569 microseconds
+	Minimum grace-period duration: 1.432
+	50th percentile grace-period duration: 582.631
+	90th percentile grace-period duration: 781.704
+	99th percentile grace-period duration: 1160.26
+	Maximum grace-period duration: 6727.53
+
+shazptr_wildcard (skip_synchronize_self_scan=1):
+
+	Average grace-period duration: 460.466 microseconds
+	Minimum grace-period duration: 303.546
+	50th percentile grace-period duration: 424.334
+	90th percentile grace-period duration: 482.637
+	99th percentile grace-period duration: 600.214
+	Maximum grace-period duration: 4126.94
+	
+
+Overall it looks promising to me, but I would like to see how it
+performs in the environment of Breno. Also as Paul always reminds me:
+buggy code usually run faster, so please take a look in case I'm missing
+something ;-) Thanks!
+
+The patchset is based on v6.15-rc1.
+
+Boqun Feng (8):
+  Introduce simple hazard pointers
+  shazptr: Add refscale test
+  shazptr: Add refscale test for wildcard
+  shazptr: Avoid synchronize_shaptr() busy waiting
+  shazptr: Allow skip self scan in synchronize_shaptr()
+  rcuscale: Allow rcu_scale_ops::get_gp_seq to be NULL
+  rcuscale: Add tests for simple hazard pointers
+  locking/lockdep: Use shazptr to protect the key hashlist
+
+ include/linux/shazptr.h  |  73 +++++++++
+ kernel/locking/Makefile  |   2 +-
+ kernel/locking/lockdep.c |  11 +-
+ kernel/locking/shazptr.c | 318 +++++++++++++++++++++++++++++++++++++++
+ kernel/rcu/rcuscale.c    |  60 +++++++-
+ kernel/rcu/refscale.c    |  77 ++++++++++
+ 6 files changed, 534 insertions(+), 7 deletions(-)
+ create mode 100644 include/linux/shazptr.h
+ create mode 100644 kernel/locking/shazptr.c
+
+-- 
+2.47.1
+
