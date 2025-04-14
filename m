@@ -1,164 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E88918C031
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C3D27B517
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744647817; cv=none; b=Y3oa68bEtvqFtMRI6zikWy1pOx6yT8n+Z9lFxCkXEhp2yzw5gh0DLH/6okceHXIlu7qTmM2WTZGMUh4kbTTZLP0y7TxY+lHgt8aFTjm0U6ZobRVpjkrQEegYWojDlVZg40VPssIHUWIm0bbbBxOTgzaaTbXziMsQcf6+mSO3FZk=
+	t=1744647861; cv=none; b=Xg19zhX45/ZTpyCDiUmfJI4eHoIO3HSnWoGHVa1F4Zq/BRuecmxPBRrMZzv83XgylkOX/icLqdwY83hvCklEcZ8s/chVh9519bI6+UW5HfCAlmZ3a3tMhM9be2vfVGfxeK+J7BPFxu+O5gvbLEZQub7wYz24tLlEhF63LrYnTXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744647817; c=relaxed/simple;
-	bh=irp9PXJtIIx2teIMnPiDImHx5G/IpFENzHfE8+kY8bE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VI43WHks08CR7sf8C9nYiVPdHMoPa7S0olMdG3yATwqd5DZXnmGJtWdhNzuRV6X5D87Qqejw3JH2Z60mwiKUmEsWFNxMI6vufDYiYLeBQolnfQ1E5GnRtujS8+uevI9xTdBfT4zd3BMSEJDHqtMJw0fEtdfJQqLXly7SLN1qzG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YVVRwPEC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+btaYtm/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YVVRwPEC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+btaYtm/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744647861; c=relaxed/simple;
+	bh=UmdW1St39aq050VNiM74EH5czD6jWQHbVk2lTum0ecA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RgYeK6ARDMpcO+2TKJyxUuvxJsUMbToTx3JO3JwuXNwGPp1/CGg5XdMqX+27RbubR9E6fN/8gdG3MEPbrdLYgKhbsBKdOeoeC9n0XyD/FyXiWcAGCDHxO9mUrBJIvAjvQoA1fFAc64Vc2GK7DV3HaCxLfQqZk2p9J8BZ57kHA58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CGyLzDbV; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YVVRwPEC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+btaYtm/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YVVRwPEC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+btaYtm/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6659C1F7D6;
-	Mon, 14 Apr 2025 16:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744647813;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+JQuTBW77bWtfE5+W53YaiupIeeFOBZnWOzf0kq4/c=;
-	b=YVVRwPECQmftqbDS5SLIeArNCXOHrD34/qEN8aRNBPRPUHFgGlN4QFQ5VmNeMy2cOE0Uu6
-	cHR/mjKwbfeVHn7IWQBdyKOQS6xrkD+GsapGO8L9zArbBFoa0goUCli6F8ExykDolAATof
-	EK1w2apUYDynErIcaZPtbJlpnZP1Suk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744647813;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+JQuTBW77bWtfE5+W53YaiupIeeFOBZnWOzf0kq4/c=;
-	b=+btaYtm/9AWveh+lTgvB8gdsjOn85Q4qHcinpVrGz4+srtVGTDRA6prKpO80Wb8u+axE7O
-	CaxPKNkMSXDz3+Dg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YVVRwPEC;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="+btaYtm/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744647813;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+JQuTBW77bWtfE5+W53YaiupIeeFOBZnWOzf0kq4/c=;
-	b=YVVRwPECQmftqbDS5SLIeArNCXOHrD34/qEN8aRNBPRPUHFgGlN4QFQ5VmNeMy2cOE0Uu6
-	cHR/mjKwbfeVHn7IWQBdyKOQS6xrkD+GsapGO8L9zArbBFoa0goUCli6F8ExykDolAATof
-	EK1w2apUYDynErIcaZPtbJlpnZP1Suk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744647813;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+JQuTBW77bWtfE5+W53YaiupIeeFOBZnWOzf0kq4/c=;
-	b=+btaYtm/9AWveh+lTgvB8gdsjOn85Q4qHcinpVrGz4+srtVGTDRA6prKpO80Wb8u+axE7O
-	CaxPKNkMSXDz3+Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3CB211336F;
-	Mon, 14 Apr 2025 16:23:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yCuYDoU2/We6MwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Mon, 14 Apr 2025 16:23:33 +0000
-Date: Mon, 14 Apr 2025 18:23:28 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	now4yreal <now4yreal@foxmail.com>, Jan Kara <jack@suse.com>,
-	Viro <viro@zeniv.linux.org.uk>, Bacik <josef@toxicpanda.com>,
-	Stone <leocstone@gmail.com>, Sandeen <sandeen@redhat.com>,
-	Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug Report] OOB-read BUG in HFS+ filesystem
-Message-ID: <20250414162328.GD16750@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <tencent_B730B2241BE4152C9D6AA80789EEE1DEE30A@qq.com>
- <20250414-behielt-erholen-e0cd10a4f7af@brauner>
- <Z_0aBN-20w20-UiD@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGyLzDbV"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301317939a0so835604a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744647859; x=1745252659; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WZud10eViPHjvJZrQ1WbVgYCANxeLpCUxFVXE3wcfRY=;
+        b=CGyLzDbVoWanhJMYeHnp4ls6lPXJ8++D5l/x11XHeqzD+K0CE/rSDxEl0jX1iKRmMk
+         LnPfAHgovYAUOsZYxSJGce6CvIzLmvG0I8npKpta8TO1//U8N+b/v9MW+ue5ocjZs23w
+         zflNiLaoiLPXQLrQLMh/BX80YT/l1IyRBXk/M3M9nhxRIAZGQe2mHIsON/ZF+5pZV8FW
+         bn6uxSEWx2Boh6cFAIL8FU4ZHw1yJnnml/oE3EKOIH85AuSWiLHYN53Ueh4rXMrA8wci
+         mfyJtAqN/hX0sKuuheS/LUtJ6oqqFJdKiXd/asnd7ocJksfKryySbcSBtEUZvs2nALX9
+         cGyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744647859; x=1745252659;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WZud10eViPHjvJZrQ1WbVgYCANxeLpCUxFVXE3wcfRY=;
+        b=N148RxfgcBN3GtLo5BarqQnqTB31/Bvoo+5/JpHi3Mgrh3RUBUqwtNd1M4i9GPjSIG
+         LozE2/sMrP/QC0bMU/O0Ok8Zi7EOE+87Jevp0m4nuUwKgl/1PNUvHiTdOREXMDmES8j9
+         HEBsCTLOnsxBGF5ib9D3XoEXKqhx5CUhQ1pofs/Z0qVZt80KdrT5lg56YU5P+aWMXdWD
+         mD10fGgU0Gig8RRmoG751TWnRxPT71yJePBnmh2YKE1CtnL0gqD2a7qnQnCbTfCsygYm
+         LbzQNXjcIMtQwn0IoVHGfcCA9WMIBrRQfqyaVrNyZFcKzlKRrvo8INyYrnZ1kaOhu4j9
+         EnwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOgFGPujAMYIsT/d2i3eLLSs77RtSjMoV1VVmCg4psFYKpsnPPaVsYj9zxFYSYRrupGx+blwzr/o1eKxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg8yZQFKbKQUmCojeM7LoCY+UWjCDGHr1NNSAwmfkB/JIWiX6H
+	erB0GxMJZc+wIQREA0ZCeuOlPwCbFKsbMQImsrtGZdFR5yKtBtxzCRtVsT+5u/7UNKHTDRZuP5L
+	TCoMIob3zGqfEnadkZXBbZPR6rMM=
+X-Gm-Gg: ASbGncs/8WB9WfaepclIaAdU6PTto6tFYw8xkyFva/vLIbCkTzyXveQP90R7IYetCYl
+	HlrqsjBDOwhtAe8Xgas+FxCsz9xKpxYGo3ENzdXIr4cxW0a8ymXk6AmW6aGMEXkcGrUhOQs+EWk
+	UYVTyCFi4jdYn8rRazFf/etg==
+X-Google-Smtp-Source: AGHT+IHIsZgwmUE371RVExdjfe3uDKkVX+OFob1yNsscZOphYZFPIzOV7hJu8uNOR/J8RHrfXHyWpwMz99OlQxJV/9Y=
+X-Received: by 2002:a17:90b:3905:b0:2ff:7b15:8138 with SMTP id
+ 98e67ed59e1d1-308237e2734mr7400483a91.7.1744647858847; Mon, 14 Apr 2025
+ 09:24:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_0aBN-20w20-UiD@casper.infradead.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 6659C1F7D6
-X-Spam-Score: -4.21
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[foxmail.com,gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,foxmail.com,suse.com,zeniv.linux.org.uk,toxicpanda.com,gmail.com,redhat.com,oss.qualcomm.com,vger.kernel.org];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <cover.1744468610.git.dan.carpenter@linaro.org>
+ <b9adf038b3ccf058c49e7e74e1998bc2216e0678.1744468610.git.dan.carpenter@linaro.org>
+ <3d8df435-a248-4f38-7a2a-b0f2ec908ae0@amd.com>
+In-Reply-To: <3d8df435-a248-4f38-7a2a-b0f2ec908ae0@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 14 Apr 2025 12:24:07 -0400
+X-Gm-Features: ATxdqUF3GQVImlGRef4uHJ3JWI5t9seFoFszL8FAVduTHerGcRdz3Qd2V-m_S-0
+Message-ID: <CADnq5_N+qd3k6gPrZwXD7suU-6diXWAr1N4st113RzCLJqg_Fg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/amdgpu: Clean up error handling in amdgpu_userq_fence_driver_alloc()
+To: "Yadav, Arvind" <arvyadav@amd.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>, Arvind Yadav <Arvind.Yadav@amd.com>, 
+	Shashank Sharma <shashank.sharma@amd.com>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 03:21:56PM +0100, Matthew Wilcox wrote:
-> On Mon, Apr 14, 2025 at 04:18:27PM +0200, Christian Brauner wrote:
-> > On Mon, Apr 14, 2025 at 09:45:25PM +0800, now4yreal wrote:
-> > > Dear Linux Security Maintainers,
-> > > I would like to report a OOB-read vulnerability in the HFS+ file
-> > > system, which I discovered using our in-house developed kernel fuzzer,
-> > > Symsyz.
-> > 
-> > Bug reports from non-official syzbot instances are generally not
-> > accepted.
-> > 
-> > hfs and hfsplus are orphaned filesystems since at least 2014. Bug
-> > reports for such filesystems won't receive much attention from the core
-> > maintainers.
-> > 
-> > I'm very very close to putting them on the chopping block as they're
-> > slowly turning into pointless burdens.
-> 
-> I've tried asking some people who are long term Apple & Linux people,
-> but haven't been able to find anyone interested in becoming maintainer.
-> Let's drop both hfs & hfsplus.  Ten years of being unmaintained is
-> long enough.
+Applied the series.  Thanks!
 
-Agreed. If needed there are FUSE implementations to access .dmg files
-with HFS/HFS+ or other standalone tools.
-
-https://github.com/0x09/hfsfuse
-https://github.com/darlinghq/darling-dmg
+On Mon, Apr 14, 2025 at 12:48=E2=80=AFAM Yadav, Arvind <arvyadav@amd.com> w=
+rote:
+>
+> Reviewed-by:Arvind Yadav <arvind.yadav@amd.com>
+>
+> On 4/12/2025 8:09 PM, Dan Carpenter wrote:
+> > 1) Checkpatch complains if we print an error message for kzalloc()
+> >     failure.  The kzalloc() failure already has it's own error messages
+> >     built in.  Also this allocation is small enough that it is guarante=
+ed
+> >     to succeed.
+> > 2) Return directly instead of doing a goto free_fence_drv.  The
+> >     "fence_drv" is already NULL so no cleanup is necessary.
+> >
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > v2: New patch
+> >
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c | 7 ++-----
+> >   1 file changed, 2 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c b/drivers/=
+gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
+> > index b012fece91e8..86eab5461162 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
+> > @@ -75,11 +75,8 @@ int amdgpu_userq_fence_driver_alloc(struct amdgpu_de=
+vice *adev,
+> >       int r;
+> >
+> >       fence_drv =3D kzalloc(sizeof(*fence_drv), GFP_KERNEL);
+> > -     if (!fence_drv) {
+> > -             DRM_ERROR("Failed to allocate memory for fence driver\n")=
+;
+> > -             r =3D -ENOMEM;
+> > -             goto free_fence_drv;
+> > -     }
+> > +     if (!fence_drv)
+> > +             return -ENOMEM;
+> >
+> >       /* Acquire seq64 memory */
+> >       r =3D amdgpu_seq64_alloc(adev, &fence_drv->va, &fence_drv->gpu_ad=
+dr,
