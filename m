@@ -1,92 +1,145 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA6028F52E;
-	Mon, 14 Apr 2025 14:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E62428F513;
+	Mon, 14 Apr 2025 14:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640402; cv=none; b=ij06P4udHjL7ZnYNs7888ALoZ9mHZUmFwlfz2UxPKTv2t1TRMkk9KZfPN6fS8POdpxyZG8reHo4kklVH5YmqKnkkSyfAksg4c0jmyVhrjyb8PEkkF6gBKD05jICS4520OI0g/tSpTDGIJDVqYDHjuRE42Wp7ykWHiZgwo67ZGOU=
+	t=1744640402; cv=none; b=Gf/BXdDmXpnmO3KjhFGOY550DPlokQAOTeRWG71bwEECvsByo+p+wK8QsX2Wz8z+2EvLebNx3v8ge3hDO8miDwT30nc22dHXAD5NlJyo5Ix+v8sRcTVJK3cPX8R7pnn2Qjf2kCSbi0mxUu9huTgz+oQFSD2DgGZ36rVlVeil7wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744640402; c=relaxed/simple;
-	bh=CwaFplckSD7S0EpcNcWb7VUupSTqyxxJFgfu202ina4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I2zKKUQBpQNNzdr6zSrVLahx5xmRweyLCP1t9l1y3RVtXrQr56HD14TSxCNvu+5OWyDHXOPRFYZ0XkMBM7Ne2vayvQFu+Y0Iqq8uB0Qm3nRitQ5dlRziP9Kvb0ClGskSEu9IA8rckT+iEo0eiVBWLCv5oP4tdXO9Yw/CmsKXrOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbqCK2SXpz6F94p;
-	Mon, 14 Apr 2025 22:18:37 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 489C61402EA;
-	Mon, 14 Apr 2025 22:19:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
- 2025 16:19:51 +0200
-Date: Mon, 14 Apr 2025 15:19:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 01/19] cxl/mbox: Flag support for Dynamic Capacity
- Devices (DCD)
-Message-ID: <20250414151950.00001823@huawei.com>
-In-Reply-To: <20250413-dcd-type2-upstream-v9-1-1d4911a0b365@intel.com>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
-	<20250413-dcd-type2-upstream-v9-1-1d4911a0b365@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	bh=4HluSwNWTBR8eHRrEF+w8ybc5StWcpkyjDrH6+uQSwI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AjW5UBWMCFG8zOiOqwGNkC2UsnX2LWDiDsd+hCoaLWWSIvuwyPGokXULA/+0q3hve50r1wo5vhTzMzHoS/X7eNmSh10cHWv5UG/eqPGup3SkDNjBMDD9FH57epJkhGnNocrlMrudMS4ZV1+whl4zn63v/Sgu3ZcxPzgezlpraII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsJjg6G+; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsJjg6G+"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so23550035e9.2;
+        Mon, 14 Apr 2025 07:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744640399; x=1745245199; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=glJjEQgGBLhG4Ninmzh++t+Xe4BZvesnJ6GFYu9vl6g=;
+        b=QsJjg6G+ts6tzHYe99KhHvsHJQiqyrQRpmzilJrDFdZrkYDDElJwtFfq2Qj4nbFEN5
+         sfRuBN/6peI7efVl1Hbq8OiKft6f7Kzgy+xHm1ejeWznZwCp9BzuHKHiAb8i8qy6TDob
+         7k34ulfixJxNN8zXDa2AuTOcPkbNCLSAdIeyhFYY3eTo0KfOIGvhG7bsuRX4kUPRGoXw
+         f0a1MqF/3STmPolu2nEXnCXktElFxDv3VX2rXH9VuolEQoDb7ug2MmDi7boOjQKdjoz+
+         hGH6abpTK2sA3HC/HE7Tf9rH5Ywl6UwMkjPc3wuJC2nxAe6SznvjLwv5W7R5bsxRPAgE
+         BCoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744640399; x=1745245199;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=glJjEQgGBLhG4Ninmzh++t+Xe4BZvesnJ6GFYu9vl6g=;
+        b=RPHJaA3OKu+E7aiz015hOF4nbs3k3LhG4gg9xzu75mbJHCHz7nv174zaJetW2nuz3w
+         M/fEm426PsM0UoH/lH12BiNwwU+BwwiIQ7GL7vlP9UXzO79CUkVZ/MMQYkPJLoTnzNnm
+         WbbCA1Asvn4gxaYz6n+fFLs4Dn2b9cNEJLsO98pv2WnpvbXMCdMoQxrlho54brmBqqXa
+         Tkdioa5+RvG4n7o9mJcXxHiUalIXS3VkxhNVOVHkCA6XNolyQv9XfSAuvuHwsRCdFlXi
+         jec+XOnb+TKPjqGaYKr+ATw21tdBV89iIOwaLUmr8Brbe2voDICV2EIhO3PTDSWgk65R
+         noLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaufDo5trk6E1ZZ1z9BE3un8pOguHJwJVym8a9fwvfGB/1bj9v46ygncjfuX807ceqgyicytLzExYLaO+I@vger.kernel.org, AJvYcCWrX36nx12zteO0MdgNgkDJsh07uzKsFwbjKHmoD4QtOT9vUCdR/TvF/Uvdz4gmNsn09zVuUOYLoXhJgdI/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUm4fRZpv40m35CLz5342AyPKr/6Jdv0IDbAlIeESDWCWlgonv
+	1qPQchQhUTotSgDICLetDisSyAjusP8+29qKQs2cQ+8RmlzfQxYXsyIK0bxKCFo=
+X-Gm-Gg: ASbGncvFooZlN4thqZCdLxCcQVEBDlLnqKOnp9cLR09GBwMuYqLDXUtFamcY2LhkRMp
+	B8dV92N8rBjNrj6OtW4V8yEF/uGvsP4Tt+lvaJ4wpU8pQVPDTRabWWtyhQ+AWaPrTY2yj4E5aOf
+	IP4UgeT1scbKBsgh2yaKdCKf9MUvgZ5XMWDJAhh8CcUCnLV2aXG1bvYNBltrwbHz3JztIl2SS0U
+	hiKO99yBArPWQvcXJabu/n+o4tXrj7lCdcgJapijsOjF43ikrpg+3bm9u8aCe8wAUdzRZx3TYpV
+	KkvdimH2dukaJ8MWBe7xG6AgDe97OggjN/GCJXwO0UCWFH8=
+X-Google-Smtp-Source: AGHT+IEzS7RuQM+JXTxQhuUASOr5aQ5FuO0AY24LlH9uKFE9DugCkzr8JbnEOiJvoEsrDVG0ljh0UA==
+X-Received: by 2002:a05:600c:6a16:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-43f415d29a7mr72789265e9.14.1744640398599;
+        Mon, 14 Apr 2025 07:19:58 -0700 (PDT)
+Received: from noctura.suse.cz ([103.210.134.105])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f23572bb2sm178143515e9.29.2025.04.14.07.19.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 07:19:58 -0700 (PDT)
+From: Brahmajit Das <brahmajit.xyz@gmail.com>
+X-Google-Original-From: Brahmajit Das <listout@listout.xyz>
+To: 
+Cc: jlayton@kernel.org,
+	David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] netfs: fix building with GCC 15
+Date: Mon, 14 Apr 2025 19:49:43 +0530
+Message-ID: <20250414141945.11044-1-listout@listout.xyz>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, 13 Apr 2025 17:52:09 -0500
-Ira Weiny <ira.weiny@intel.com> wrote:
+Since the Linux kernel initializes many non-C-string char arrays with
+literals. While it would be possible to convert initializers from:
+   { "BOOP", ... }
+to:
+   { { 'B', 'O', 'O', 'P' }, ... }
+that is annoying.
+Making -Wunterminated-string-initialization stay silent about char
+arrays marked with nonstring would be much better.
 
-> Per the CXL 3.1 specification software must check the Command Effects
-> Log (CEL) for dynamic capacity command support.
-> 
-> Detect support for the DCD commands while reading the CEL, including:
-> 
-> 	Get DC Config
-> 	Get DC Extent List
-> 	Add DC Response
-> 	Release DC
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Without the __attribute__((nonstring)) we would get the following build
+error:
+fs/netfs/fscache_cache.c:375:67: error: initializer-string for array of ‘char’ is too long [-Werror=unterminated-string-initialization]
+  375 | static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
+      |                                                                   ^~~~~~~
+...
+fs/netfs/fscache_cookie.c:32:69: error: initializer-string for array of ‘char’ is too long [-Werror=unterminated-string-initialization]
+   32 | static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
+      |                                                                     ^~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
+Upstream GCC has added this commit
+622968990beee7499e951590258363545b4a3b57[0][1] which silences warning
+about truncating NUL char when initializing nonstring arrays.
 
-> +
-> +static bool cxl_verify_dcd_cmds(struct cxl_memdev_state *mds, unsigned long *cmds_seen)
+[0]: https://gcc.gnu.org/cgit/gcc/commit/?id=622968990beee7499e951590258363545b4a3b57
+[1]: https://gcc.gnu.org/cgit/gcc/commit/?id=afb46540d3921e96c4cd7ba8fa2c8b0901759455
 
-It's not immediately obvious to me what the right behavior
-from something called cxl_verify_dcd_cmds() is.  A comment might help with that.
+Thanks to Jakub Jelinek <jakub@gcc.gnu.org> for the gcc patch.
 
-I think all it does right now is check if any bits are set. In my head
-it was going to check that all bits needed for a useful implementation were
-set. I did have to go check what a 'logical and' of a bitmap was defined as
-because that bit of the bitmap_and() return value wasn't obvious to me either!
+Signed-off-by: Brahmajit Das <listout@listout.xyz>
+---
+ fs/netfs/fscache_cache.c  | 3 ++-
+ fs/netfs/fscache_cookie.c | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-
-> +{
-> +	DECLARE_BITMAP(all_cmds, CXL_DCD_ENABLED_MAX);
-> +	DECLARE_BITMAP(dst, CXL_DCD_ENABLED_MAX);
-> +
-> +	bitmap_fill(all_cmds, CXL_DCD_ENABLED_MAX);
-> +	return bitmap_and(dst, cmds_seen, all_cmds, CXL_DCD_ENABLED_MAX);
-> +}
-> +
-
+diff --git a/fs/netfs/fscache_cache.c b/fs/netfs/fscache_cache.c
+index 9397ed39b0b4..ccfe52056ed3 100644
+--- a/fs/netfs/fscache_cache.c
++++ b/fs/netfs/fscache_cache.c
+@@ -372,7 +372,8 @@ void fscache_withdraw_cache(struct fscache_cache *cache)
+ EXPORT_SYMBOL(fscache_withdraw_cache);
+ 
+ #ifdef CONFIG_PROC_FS
+-static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
++static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE]
++	__attribute__((nonstring)) = "-PAEW";
+ 
+ /*
+  * Generate a list of caches in /proc/fs/fscache/caches
+diff --git a/fs/netfs/fscache_cookie.c b/fs/netfs/fscache_cookie.c
+index d4d4b3a8b106..c455d1b0f440 100644
+--- a/fs/netfs/fscache_cookie.c
++++ b/fs/netfs/fscache_cookie.c
+@@ -29,7 +29,8 @@ static LIST_HEAD(fscache_cookie_lru);
+ static DEFINE_SPINLOCK(fscache_cookie_lru_lock);
+ DEFINE_TIMER(fscache_cookie_lru_timer, fscache_cookie_lru_timed_out);
+ static DECLARE_WORK(fscache_cookie_lru_work, fscache_cookie_lru_worker);
+-static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
++static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR]
++	__attribute__((nonstring)) = "-LCAIFUWRD";
+ static unsigned int fscache_lru_cookie_timeout = 10 * HZ;
+ 
+ void fscache_print_cookie(struct fscache_cookie *cookie, char prefix)
+-- 
+2.49.0
 
