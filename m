@@ -1,429 +1,259 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A5A028BAB8;
-	Mon, 14 Apr 2025 18:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28494291153
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655332; cv=none; b=qyaK585CXvAcTRp/VXMJDJ0rQl6ghqXtoFvfFjHO1rzcciCqhHMQdh/4RCztuM8QWPixc0CjchMOgG6X8VYZlev8E0LbTejgJIsuoOOFe/FxhCmYHVuX63CLRxOMgoWTP8ov5CeIP5y3eTPcKPBdCP6jYk2kUa25bXjqp7KgE6g=
+	t=1744655336; cv=none; b=fHne4DNqc8lML4f07gFu3qt+qNMkQDr7yuNn7KXMI+6oH8mg/pGwmvmO/tORzPYinoYeFaJXN+R8AYYVUoT8x9PomzMIEIYtdTxZcbG2yaG1K/IK2P3uJoUBvHYdITfDKs7pA0RfH2hh+aUdhLl8ATXdZ7JY0K09+iHXYlTv3fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655332; c=relaxed/simple;
-	bh=0Z6o5gRVOGGcYGpTcvsAf5WidBsbm2jJTEjac+rAg5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=eCm+S9/HVNjxAqAiuZqBnvXszSS9pTxKUyKjmDzNefHnV6toE3qK6eyfn+5IuyogWoaGp4SDFd7k0oQ6I0bK/lhgrxpoPg7NwPjVvWd+sWAkUrfTfEqAjodbZUW6O1OKix6ZdCT69FM6c6cFq3PdrfCIT+PDPWX1PVv7frDV7tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ObAPb9oU; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ObAPb9oU"
-Received: by linux.microsoft.com (Postfix, from userid 1186)
-	id B480E205250F; Mon, 14 Apr 2025 11:28:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B480E205250F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744655329;
-	bh=Al6Ldu/IpFvCyzpMDhDaf6DXVtLbjcdcZxCAAKtmyx0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ObAPb9oUW4liCulsaj98Qo0ozHZw4abjE3jcAauvQ5y9prdz7JmgHZlzgFghXSXX1
-	 Q5ws+QoiRJXwX/biSwSpb8ZUyn0IU4ib376pbuI9gOSJo5vTMiWOI/bw0DSiWRkgDl
-	 dclpFi7VfsjoswrxAr7IYQkzfmPVhe/jo2pfVxE4=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	pabeni@redhat.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	decui@microsoft.com,
-	wei.liu@kernel.org,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH rdma-next 2/4] RDMA/mana_ib: Add support of mana_ib for RNIC and ETH nic
-Date: Mon, 14 Apr 2025 11:28:47 -0700
-Message-Id: <1744655329-13601-3-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1744655329-13601-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1744655329-13601-1-git-send-email-kotaranov@linux.microsoft.com>
+	s=arc-20240116; t=1744655336; c=relaxed/simple;
+	bh=yQZIRN/m/NNacuYZmQ+79acxFhU3m+L3SUA4DUZTEO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=auJAiSal4NyKdDmIibT5k/sFYnN6/mtrIXxqNLqMyMGZ+9/WKJoKItAkOflwiodHAFm+dxyCOZeO82WcURQVkzrkd5evLOjZJsWkPwyOv2rIURyfHl82O2UUYiqElsqcXWKqWYpezt/KNqGYJ/zLroCRa8lwWi7JioZR1mmaGMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 662741595;
+	Mon, 14 Apr 2025 11:28:51 -0700 (PDT)
+Received: from [10.57.86.225] (unknown [10.57.86.225])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 191BD3F59E;
+	Mon, 14 Apr 2025 11:28:47 -0700 (PDT)
+Message-ID: <aabc9fb1-4e74-409a-b25b-8e844e65c502@arm.com>
+Date: Mon, 14 Apr 2025 19:28:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 11/11] arm64/mm: Batch barriers when updating kernel
+ mappings
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Kevin Brodsky <kevin.brodsky@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250304150444.3788920-1-ryan.roberts@arm.com>
+ <20250304150444.3788920-12-ryan.roberts@arm.com> <Z_1IC-_Fp-yGLRSc@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <Z_1IC-_Fp-yGLRSc@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+On 14/04/2025 18:38, Catalin Marinas wrote:
+> On Tue, Mar 04, 2025 at 03:04:41PM +0000, Ryan Roberts wrote:
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index 1898c3069c43..149df945c1ab 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -40,6 +40,55 @@
+>>  #include <linux/sched.h>
+>>  #include <linux/page_table_check.h>
+>>  
+>> +static inline void emit_pte_barriers(void)
+>> +{
+>> +	/*
+>> +	 * These barriers are emitted under certain conditions after a pte entry
+>> +	 * was modified (see e.g. __set_pte_complete()). The dsb makes the store
+>> +	 * visible to the table walker. The isb ensures that any previous
+>> +	 * speculative "invalid translation" marker that is in the CPU's
+>> +	 * pipeline gets cleared, so that any access to that address after
+>> +	 * setting the pte to valid won't cause a spurious fault. If the thread
+>> +	 * gets preempted after storing to the pgtable but before emitting these
+>> +	 * barriers, __switch_to() emits a dsb which ensure the walker gets to
+>> +	 * see the store. There is no guarrantee of an isb being issued though.
+>> +	 * This is safe because it will still get issued (albeit on a
+>> +	 * potentially different CPU) when the thread starts running again,
+>> +	 * before any access to the address.
+>> +	 */
+>> +	dsb(ishst);
+>> +	isb();
+>> +}
+>> +
+>> +static inline void queue_pte_barriers(void)
+>> +{
+>> +	if (test_thread_flag(TIF_LAZY_MMU))
+>> +		set_thread_flag(TIF_LAZY_MMU_PENDING);
+> 
+> As we can have lots of calls here, it might be slightly cheaper to test
+> TIF_LAZY_MMU_PENDING and avoid setting it unnecessarily.
 
-Allow mana_ib to be created over ethernet gdma device and
-over rnic gdma device. The HW has two devices with different
-capabilities and different use-cases. Initialize required
-resources depending on the used gdma device.
+Yes, good point.
 
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/device.c  | 174 +++++++++++++--------------
- drivers/infiniband/hw/mana/main.c    |  49 +++++++-
- drivers/infiniband/hw/mana/mana_ib.h |   6 +
- 3 files changed, 134 insertions(+), 95 deletions(-)
+> 
+> I haven't checked - does the compiler generate multiple mrs from sp_el0
+> for subsequent test_thread_flag()?
 
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index b310893..c484bed 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -101,103 +101,95 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 			 const struct auxiliary_device_id *id)
- {
- 	struct mana_adev *madev = container_of(adev, struct mana_adev, adev);
-+	struct gdma_context *gc = madev->mdev->gdma_context;
-+	struct mana_context *mc = gc->mana.driver_data;
- 	struct gdma_dev *mdev = madev->mdev;
- 	struct net_device *ndev;
--	struct mana_context *mc;
- 	struct mana_ib_dev *dev;
- 	u8 mac_addr[ETH_ALEN];
- 	int ret;
- 
--	mc = mdev->driver_data;
--
- 	dev = ib_alloc_device(mana_ib_dev, ib_dev);
- 	if (!dev)
- 		return -ENOMEM;
- 
- 	ib_set_device_ops(&dev->ib_dev, &mana_ib_dev_ops);
--
--	dev->ib_dev.phys_port_cnt = mc->num_ports;
--
--	ibdev_dbg(&dev->ib_dev, "mdev=%p id=%d num_ports=%d\n", mdev,
--		  mdev->dev_id.as_uint32, dev->ib_dev.phys_port_cnt);
--
- 	dev->ib_dev.node_type = RDMA_NODE_IB_CA;
--
--	/*
--	 * num_comp_vectors needs to set to the max MSIX index
--	 * when interrupts and event queues are implemented
--	 */
--	dev->ib_dev.num_comp_vectors = mdev->gdma_context->max_num_queues;
--	dev->ib_dev.dev.parent = mdev->gdma_context->dev;
--
--	ndev = mana_get_primary_netdev(mc, 0, &dev->dev_tracker);
--	if (!ndev) {
--		ret = -ENODEV;
--		ibdev_err(&dev->ib_dev, "Failed to get netdev for IB port 1");
--		goto free_ib_device;
--	}
--	ether_addr_copy(mac_addr, ndev->dev_addr);
--	addrconf_addr_eui48((u8 *)&dev->ib_dev.node_guid, ndev->dev_addr);
--	ret = ib_device_set_netdev(&dev->ib_dev, ndev, 1);
--	/* mana_get_primary_netdev() returns ndev with refcount held */
--	netdev_put(ndev, &dev->dev_tracker);
--	if (ret) {
--		ibdev_err(&dev->ib_dev, "Failed to set ib netdev, ret %d", ret);
--		goto free_ib_device;
--	}
--
--	ret = mana_gd_register_device(&mdev->gdma_context->mana_ib);
--	if (ret) {
--		ibdev_err(&dev->ib_dev, "Failed to register device, ret %d",
--			  ret);
--		goto free_ib_device;
--	}
--	dev->gdma_dev = &mdev->gdma_context->mana_ib;
--
--	dev->nb.notifier_call = mana_ib_netdev_event;
--	ret = register_netdevice_notifier(&dev->nb);
--	if (ret) {
--		ibdev_err(&dev->ib_dev, "Failed to register net notifier, %d",
--			  ret);
--		goto deregister_device;
--	}
--
--	ret = mana_ib_gd_query_adapter_caps(dev);
--	if (ret) {
--		ibdev_err(&dev->ib_dev, "Failed to query device caps, ret %d",
--			  ret);
--		goto deregister_net_notifier;
--	}
--
--	ib_set_device_ops(&dev->ib_dev, &mana_ib_stats_ops);
--
--	ret = mana_ib_create_eqs(dev);
--	if (ret) {
--		ibdev_err(&dev->ib_dev, "Failed to create EQs, ret %d", ret);
--		goto deregister_net_notifier;
--	}
--
--	ret = mana_ib_gd_create_rnic_adapter(dev);
--	if (ret)
--		goto destroy_eqs;
--
-+	dev->ib_dev.num_comp_vectors = gc->max_num_queues;
-+	dev->ib_dev.dev.parent = gc->dev;
-+	dev->gdma_dev = mdev;
- 	xa_init_flags(&dev->qp_table_wq, XA_FLAGS_LOCK_IRQ);
--	ret = mana_ib_gd_config_mac(dev, ADDR_OP_ADD, mac_addr);
--	if (ret) {
--		ibdev_err(&dev->ib_dev, "Failed to add Mac address, ret %d",
--			  ret);
--		goto destroy_rnic;
-+
-+	if (mana_ib_is_rnic(dev)) {
-+		dev->ib_dev.phys_port_cnt = 1;
-+		ndev = mana_get_primary_netdev(mc, 0, &dev->dev_tracker);
-+		if (!ndev) {
-+			ret = -ENODEV;
-+			ibdev_err(&dev->ib_dev, "Failed to get netdev for IB port 1");
-+			goto free_ib_device;
-+		}
-+		ether_addr_copy(mac_addr, ndev->dev_addr);
-+		addrconf_addr_eui48((u8 *)&dev->ib_dev.node_guid, ndev->dev_addr);
-+		ret = ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-+		/* mana_get_primary_netdev() returns ndev with refcount held */
-+		netdev_put(ndev, &dev->dev_tracker);
-+		if (ret) {
-+			ibdev_err(&dev->ib_dev, "Failed to set ib netdev, ret %d", ret);
-+			goto free_ib_device;
-+		}
-+
-+		dev->nb.notifier_call = mana_ib_netdev_event;
-+		ret = register_netdevice_notifier(&dev->nb);
-+		if (ret) {
-+			ibdev_err(&dev->ib_dev, "Failed to register net notifier, %d",
-+				  ret);
-+			goto free_ib_device;
-+		}
-+
-+		ret = mana_ib_gd_query_adapter_caps(dev);
-+		if (ret) {
-+			ibdev_err(&dev->ib_dev, "Failed to query device caps, ret %d", ret);
-+			goto deregister_net_notifier;
-+		}
-+
-+		ib_set_device_ops(&dev->ib_dev, &mana_ib_stats_ops);
-+
-+		ret = mana_ib_create_eqs(dev);
-+		if (ret) {
-+			ibdev_err(&dev->ib_dev, "Failed to create EQs, ret %d", ret);
-+			goto deregister_net_notifier;
-+		}
-+
-+		ret = mana_ib_gd_create_rnic_adapter(dev);
-+		if (ret)
-+			goto destroy_eqs;
-+
-+		ret = mana_ib_gd_config_mac(dev, ADDR_OP_ADD, mac_addr);
-+		if (ret) {
-+			ibdev_err(&dev->ib_dev, "Failed to add Mac address, ret %d", ret);
-+			goto destroy_rnic;
-+		}
-+	} else {
-+		dev->ib_dev.phys_port_cnt = mc->num_ports;
-+		ret = mana_eth_query_adapter_caps(dev);
-+		if (ret) {
-+			ibdev_err(&dev->ib_dev, "Failed to query ETH device caps, ret %d", ret);
-+			goto free_ib_device;
-+		}
- 	}
- 
--	dev->av_pool = dma_pool_create("mana_ib_av", mdev->gdma_context->dev,
--				       MANA_AV_BUFFER_SIZE, MANA_AV_BUFFER_SIZE, 0);
-+	dev->av_pool = dma_pool_create("mana_ib_av", gc->dev, MANA_AV_BUFFER_SIZE,
-+				       MANA_AV_BUFFER_SIZE, 0);
- 	if (!dev->av_pool) {
- 		ret = -ENOMEM;
- 		goto destroy_rnic;
- 	}
- 
--	ret = ib_register_device(&dev->ib_dev, "mana_%d",
--				 mdev->gdma_context->dev);
-+	ibdev_dbg(&dev->ib_dev, "mdev=%p id=%d num_ports=%d\n", mdev,
-+		  mdev->dev_id.as_uint32, dev->ib_dev.phys_port_cnt);
-+
-+	ret = ib_register_device(&dev->ib_dev, mana_ib_is_rnic(dev) ? "mana_%d" : "manae_%d",
-+				 gc->dev);
- 	if (ret)
- 		goto deallocate_pool;
- 
-@@ -208,15 +200,16 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- deallocate_pool:
- 	dma_pool_destroy(dev->av_pool);
- destroy_rnic:
--	xa_destroy(&dev->qp_table_wq);
--	mana_ib_gd_destroy_rnic_adapter(dev);
-+	if (mana_ib_is_rnic(dev))
-+		mana_ib_gd_destroy_rnic_adapter(dev);
- destroy_eqs:
--	mana_ib_destroy_eqs(dev);
-+	if (mana_ib_is_rnic(dev))
-+		mana_ib_destroy_eqs(dev);
- deregister_net_notifier:
--	unregister_netdevice_notifier(&dev->nb);
--deregister_device:
--	mana_gd_deregister_device(dev->gdma_dev);
-+	if (mana_ib_is_rnic(dev))
-+		unregister_netdevice_notifier(&dev->nb);
- free_ib_device:
-+	xa_destroy(&dev->qp_table_wq);
- 	ib_dealloc_device(&dev->ib_dev);
- 	return ret;
- }
-@@ -227,25 +220,24 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- 
- 	ib_unregister_device(&dev->ib_dev);
- 	dma_pool_destroy(dev->av_pool);
-+	if (mana_ib_is_rnic(dev)) {
-+		mana_ib_gd_destroy_rnic_adapter(dev);
-+		mana_ib_destroy_eqs(dev);
-+		unregister_netdevice_notifier(&dev->nb);
-+	}
- 	xa_destroy(&dev->qp_table_wq);
--	mana_ib_gd_destroy_rnic_adapter(dev);
--	mana_ib_destroy_eqs(dev);
--	unregister_netdevice_notifier(&dev->nb);
--	mana_gd_deregister_device(dev->gdma_dev);
- 	ib_dealloc_device(&dev->ib_dev);
- }
- 
- static const struct auxiliary_device_id mana_id_table[] = {
--	{
--		.name = "mana.rdma",
--	},
-+	{ .name = "mana.rdma", },
-+	{ .name = "mana.dpdk", },
- 	{},
- };
- 
- MODULE_DEVICE_TABLE(auxiliary, mana_id_table);
- 
- static struct auxiliary_driver mana_driver = {
--	.name = "rdma",
- 	.probe = mana_ib_probe,
- 	.remove = mana_ib_remove,
- 	.id_table = mana_id_table,
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index a28b712..64526b8 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -551,6 +551,7 @@ int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
- int mana_ib_get_port_immutable(struct ib_device *ibdev, u32 port_num,
- 			       struct ib_port_immutable *immutable)
- {
-+	struct mana_ib_dev *dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
- 	struct ib_port_attr attr;
- 	int err;
- 
-@@ -560,10 +561,12 @@ int mana_ib_get_port_immutable(struct ib_device *ibdev, u32 port_num,
- 
- 	immutable->pkey_tbl_len = attr.pkey_tbl_len;
- 	immutable->gid_tbl_len = attr.gid_tbl_len;
--	immutable->core_cap_flags = RDMA_CORE_PORT_RAW_PACKET;
--	if (port_num == 1) {
--		immutable->core_cap_flags |= RDMA_CORE_PORT_IBA_ROCE_UDP_ENCAP;
-+
-+	if (mana_ib_is_rnic(dev)) {
-+		immutable->core_cap_flags = RDMA_CORE_PORT_IBA_ROCE_UDP_ENCAP;
- 		immutable->max_mad_size = IB_MGMT_MAD_SIZE;
-+	} else {
-+		immutable->core_cap_flags = RDMA_CORE_PORT_RAW_PACKET;
- 	}
- 
- 	return 0;
-@@ -597,12 +600,17 @@ int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr *props,
- 	props->max_pkeys = 1;
- 	props->local_ca_ack_delay = MANA_CA_ACK_DELAY;
- 
-+	if (!mana_ib_is_rnic(dev)) {
-+		props->raw_packet_caps = IB_RAW_PACKET_CAP_CVLAN_STRIPPING | IB_RAW_PACKET_CAP_IP_CSUM;
-+	}
-+
- 	return 0;
- }
- 
- int mana_ib_query_port(struct ib_device *ibdev, u32 port,
- 		       struct ib_port_attr *props)
- {
-+	struct mana_ib_dev *dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
- 	struct net_device *ndev = mana_ib_get_netdev(ibdev, port);
- 
- 	if (!ndev)
-@@ -623,7 +631,7 @@ int mana_ib_query_port(struct ib_device *ibdev, u32 port,
- 	props->active_width = IB_WIDTH_4X;
- 	props->active_speed = IB_SPEED_EDR;
- 	props->pkey_tbl_len = 1;
--	if (port == 1) {
-+	if (mana_ib_is_rnic(dev)) {
- 		props->gid_tbl_len = 16;
- 		props->port_cap_flags = IB_PORT_CM_SUP;
- 		props->ip_gids = true;
-@@ -703,6 +711,36 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 	return 0;
- }
- 
-+int mana_eth_query_adapter_caps(struct mana_ib_dev *dev)
-+{
-+	struct mana_ib_adapter_caps *caps = &dev->adapter_caps;
-+	struct gdma_query_max_resources_resp resp = {};
-+	struct gdma_general_req req = {};
-+	int err;
-+
-+	mana_gd_init_req_hdr(&req.hdr, GDMA_QUERY_MAX_RESOURCES,
-+			     sizeof(req), sizeof(resp));
-+
-+	err = mana_gd_send_request(mdev_to_gc(dev), sizeof(req), &req, sizeof(resp), &resp);
-+	if (err) {
-+		ibdev_err(&dev->ib_dev,
-+			  "Failed to query adapter caps err %d", err);
-+		return err;
-+	}
-+
-+	caps->max_qp_count = min_t(u32, resp.max_sq, resp.max_rq);
-+	caps->max_cq_count = resp.max_cq;
-+	caps->max_mr_count = resp.max_mst;
-+	caps->max_pd_count = 0x6000;
-+	caps->max_qp_wr = min_t(u32,
-+				0x100000 / GDMA_MAX_SQE_SIZE,
-+				0x100000 / GDMA_MAX_RQE_SIZE);
-+	caps->max_send_sge_count = 30;
-+	caps->max_recv_sge_count = 15;
-+
-+	return 0;
-+}
-+
- static void
- mana_ib_event_handler(void *ctx, struct gdma_queue *q, struct gdma_event *event)
- {
-@@ -921,6 +959,9 @@ int mana_ib_gd_create_cq(struct mana_ib_dev *mdev, struct mana_ib_cq *cq, u32 do
- 	struct mana_rnic_create_cq_req req = {};
- 	int err;
- 
-+	if (!mdev->eqs)
-+		return -EINVAL;
-+
- 	mana_gd_init_req_hdr(&req.hdr, MANA_IB_CREATE_CQ, sizeof(req), sizeof(resp));
- 	req.hdr.dev_id = gc->mana_ib.dev_id;
- 	req.adapter = mdev->adapter_handle;
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index f0dbd90..42bebd6 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -544,6 +544,11 @@ static inline void mana_put_qp_ref(struct mana_ib_qp *qp)
- 		complete(&qp->free);
- }
- 
-+static inline bool mana_ib_is_rnic(struct mana_ib_dev *mdev)
-+{
-+	return mdev->gdma_dev->dev_id.type == GDMA_DEVICE_MANA_IB;
-+}
-+
- static inline struct net_device *mana_ib_get_netdev(struct ib_device *ibdev, u32 port)
- {
- 	struct mana_ib_dev *mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
-@@ -643,6 +648,7 @@ int mana_ib_query_gid(struct ib_device *ibdev, u32 port, int index,
- void mana_ib_disassociate_ucontext(struct ib_ucontext *ibcontext);
- 
- int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *mdev);
-+int mana_eth_query_adapter_caps(struct mana_ib_dev *mdev);
- 
- int mana_ib_create_eqs(struct mana_ib_dev *mdev);
- 
--- 
-2.43.0
+It emits a single mrs but it loads from the pointer twice. I think v3 is the version we want?
+
+
+void TEST_queue_pte_barriers_v1(void)
+{
+	if (test_thread_flag(TIF_LAZY_MMU))
+		set_thread_flag(TIF_LAZY_MMU_PENDING);
+	else
+		emit_pte_barriers();
+}
+
+void TEST_queue_pte_barriers_v2(void)
+{
+	if (test_thread_flag(TIF_LAZY_MMU) &&
+	    !test_thread_flag(TIF_LAZY_MMU_PENDING))
+		set_thread_flag(TIF_LAZY_MMU_PENDING);
+	else
+		emit_pte_barriers();
+}
+
+void TEST_queue_pte_barriers_v3(void)
+{
+	unsigned long flags = read_thread_flags();
+
+	if ((flags & (_TIF_LAZY_MMU | _TIF_LAZY_MMU_PENDING)) == _TIF_LAZY_MMU)
+		set_thread_flag(TIF_LAZY_MMU_PENDING);
+	else
+		emit_pte_barriers();
+}
+
+
+000000000000101c <TEST_queue_pte_barriers_v1>:
+    101c:	d5384100 	mrs	x0, sp_el0
+    1020:	f9400001 	ldr	x1, [x0]
+    1024:	37f80081 	tbnz	w1, #31, 1034 <TEST_queue_pte_barriers_v1+0x18>
+    1028:	d5033a9f 	dsb	ishst
+    102c:	d5033fdf 	isb
+    1030:	d65f03c0 	ret
+    1034:	14000004 	b	1044 <TEST_queue_pte_barriers_v1+0x28>
+    1038:	d2c00021 	mov	x1, #0x100000000           	// #4294967296
+    103c:	f821301f 	stset	x1, [x0]
+    1040:	d65f03c0 	ret
+    1044:	f9800011 	prfm	pstl1strm, [x0]
+    1048:	c85f7c01 	ldxr	x1, [x0]
+    104c:	b2600021 	orr	x1, x1, #0x100000000
+    1050:	c8027c01 	stxr	w2, x1, [x0]
+    1054:	35ffffa2 	cbnz	w2, 1048 <TEST_queue_pte_barriers_v1+0x2c>
+    1058:	d65f03c0 	ret
+
+000000000000105c <TEST_queue_pte_barriers_v2>:
+    105c:	d5384100 	mrs	x0, sp_el0
+    1060:	f9400001 	ldr	x1, [x0]
+    1064:	37f80081 	tbnz	w1, #31, 1074 <TEST_queue_pte_barriers_v2+0x18>
+    1068:	d5033a9f 	dsb	ishst
+    106c:	d5033fdf 	isb
+    1070:	d65f03c0 	ret
+    1074:	f9400001 	ldr	x1, [x0]
+    1078:	b707ff81 	tbnz	x1, #32, 1068 <TEST_queue_pte_barriers_v2+0xc>
+    107c:	14000004 	b	108c <TEST_queue_pte_barriers_v2+0x30>
+    1080:	d2c00021 	mov	x1, #0x100000000           	// #4294967296
+    1084:	f821301f 	stset	x1, [x0]
+    1088:	d65f03c0 	ret
+    108c:	f9800011 	prfm	pstl1strm, [x0]
+    1090:	c85f7c01 	ldxr	x1, [x0]
+    1094:	b2600021 	orr	x1, x1, #0x100000000
+    1098:	c8027c01 	stxr	w2, x1, [x0]
+    109c:	35ffffa2 	cbnz	w2, 1090 <TEST_queue_pte_barriers_v2+0x34>
+    10a0:	d65f03c0 	ret
+
+00000000000010a4 <TEST_queue_pte_barriers_v3>:
+    10a4:	d5384101 	mrs	x1, sp_el0
+    10a8:	f9400020 	ldr	x0, [x1]
+    10ac:	d2b00002 	mov	x2, #0x80000000            	// #2147483648
+    10b0:	92610400 	and	x0, x0, #0x180000000
+    10b4:	eb02001f 	cmp	x0, x2
+    10b8:	54000080 	b.eq	10c8 <TEST_queue_pte_barriers_v3+0x24>  // b.none
+    10bc:	d5033a9f 	dsb	ishst
+    10c0:	d5033fdf 	isb
+    10c4:	d65f03c0 	ret
+    10c8:	14000004 	b	10d8 <TEST_queue_pte_barriers_v3+0x34>
+    10cc:	d2c00020 	mov	x0, #0x100000000           	// #4294967296
+    10d0:	f820303f 	stset	x0, [x1]
+    10d4:	d65f03c0 	ret
+    10d8:	f9800031 	prfm	pstl1strm, [x1]
+    10dc:	c85f7c20 	ldxr	x0, [x1]
+    10e0:	b2600000 	orr	x0, x0, #0x100000000
+    10e4:	c8027c20 	stxr	w2, x0, [x1]
+    10e8:	35ffffa2 	cbnz	w2, 10dc <TEST_queue_pte_barriers_v3+0x38>
+    10ec:	d65f03c0 	ret
+
+
+
+> 
+>> +	else
+>> +		emit_pte_barriers();
+>> +}
+>> +
+>> +#define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+>> +static inline void arch_enter_lazy_mmu_mode(void)
+>> +{
+>> +	VM_WARN_ON(in_interrupt());
+>> +	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
+>> +
+>> +	set_thread_flag(TIF_LAZY_MMU);
+>> +}
+>> +
+>> +static inline void arch_flush_lazy_mmu_mode(void)
+>> +{
+>> +	if (test_and_clear_thread_flag(TIF_LAZY_MMU_PENDING))
+>> +		emit_pte_barriers();
+>> +}
+>> +
+>> +static inline void arch_leave_lazy_mmu_mode(void)
+>> +{
+>> +	arch_flush_lazy_mmu_mode();
+>> +	clear_thread_flag(TIF_LAZY_MMU);
+>> +}
+>> +
+>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+>>  
+>> @@ -323,10 +372,8 @@ static inline void __set_pte_complete(pte_t pte)
+>>  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
+>>  	 * has the necessary barriers.
+>>  	 */
+>> -	if (pte_valid_not_user(pte)) {
+>> -		dsb(ishst);
+>> -		isb();
+>> -	}
+>> +	if (pte_valid_not_user(pte))
+>> +		queue_pte_barriers();
+>>  }
+> 
+> I think this scheme works, I couldn't find a counter-example unless
+> __set_pte() gets called in an interrupt context. You could add
+> VM_WARN_ON(in_interrupt()) in queue_pte_barriers() as well.
+> 
+> With preemption, the newly mapped range shouldn't be used before
+> arch_flush_lazy_mmu_mode() is called, so it looks safe as well. I think
+> x86 uses a per-CPU variable to track this but per-thread is easier to
+> reason about if there's no nesting.
+> 
+>>  static inline void __set_pte(pte_t *ptep, pte_t pte)
+>> @@ -778,10 +825,8 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>>  
+>>  	WRITE_ONCE(*pmdp, pmd);
+>>  
+>> -	if (pmd_valid(pmd)) {
+>> -		dsb(ishst);
+>> -		isb();
+>> -	}
+>> +	if (pmd_valid(pmd))
+>> +		queue_pte_barriers();
+>>  }
+> 
+> We discussed on a previous series - for pmd/pud we end up with barriers
+> even for user mappings but they are at a much coarser granularity (and I
+> wasn't keen on 'user' attributes for the table entries).
+> 
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+
+Thanks!
+
+Ryan
 
