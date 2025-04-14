@@ -1,54 +1,54 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C076207A2A
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114632144DC
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667335; cv=none; b=c93qIW36qlvc1n8JCeBG4NY/W3MnjdE8jQq0S2zRDUDOegivm23P4VTzWZ1tOUI7f7OoICs9ZZPGfJWmfyYBCvOqEs6HK94Jm20AhCUzNXLNfW0DPPo3/Kr4CGCY9yRMCkellxW/hHZIgtpAxOSU8NZUxW96QPe9KEal34t4E5M=
+	t=1744667339; cv=none; b=IOYXhHMh/jA9fUzpiQOXk3mqty+1rO36vi/Nsyl1dyuQGE93iLctxD6P/opoA/2B5MeGyvy8vvRxHXJCxHEYncDg1p1JYtx6phfZeZKCh4RByJsbkO10vR7Dq7FoTp08XUv34B9JIHPcGDAwksHxLfXK4W2nqPuufwl6fiLY2S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667335; c=relaxed/simple;
-	bh=AwljbBHlJNb2pxBBkRDg/ZIfEgwIi7baPaAeA1iPhLU=;
+	s=arc-20240116; t=1744667339; c=relaxed/simple;
+	bh=Nf68Hpj/B0bYkNJ0fi76CIoXX9cOd4n2nffUccXvdbo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VWH44LSFFSHy3lJDNEd+bIIwyV2ndeqAFpFQdXhrxPdL0Ug0axdEq8drUKvqO2RaDryMBQFsIelVrGhWPViTLdQk02BO6YI3fr4TEx0THb28lz/X3TeE9zTFug9cirhj4zkC6C4XhjHK2ri60ZIqcPseWIT7g96MPfh8/naYcu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SE4nZr5G; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=hwKnjMBWvo6Qk9+aSDZ7yGJ1qt6vJtivgJQxn85mrkL3jXZQweZ0KDTIleXMUQ07ug9Bk4uB2ArVHVSmnwyRp0pP+xA8J3I+HLPD1muFw5xlcBLTe9JNEbxt1FtmBaK0lHYgIsAtYKu8iWLPMAEl6TtIxlwdBgOoh1MXbF70cCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=leHEaUX1; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SE4nZr5G"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-225107fbdc7so41462205ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="leHEaUX1"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736bf7eb149so3513660b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744667332; x=1745272132; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744667336; x=1745272136; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hgS0drNtXto2vjqcC+uAp6ay40RcqxFx1C4SRMQLUi8=;
-        b=SE4nZr5G6alqj+Men1KNQV4iyXiTeH94LoTv408jRk9ks+Tmegsl8Nx0+lGFy8hAsc
-         0Wa3LcEDLbYboqPd26KfG9WZEBxYXa5RE/dB3wVtTbBZHUbgQdGPFHtL1OuYoAG2Vvlm
-         PrZ72N7Dzl+rIRKApjj/Lj+KgKl+X/zPG7jcVtm5hK6GgTDvbO8z0YhhUJTsVIKyrrbF
-         cQdXls++jkwli+gQau03tWUiofEhImkhhm0v7IjMIxofxxLo4SXo6wyFt75VC1SbruN9
-         0OnGKyB6w9qgSXVltejyB2/aYwvUunlEf6ghOAtUkSNBd5YOkCozxFbW+iQO8fVz8sD3
-         z7DQ==
+        bh=eZnXi8xFdz69Pn6l5zsGjn/cdx88HjbtqpfJijhW+g0=;
+        b=leHEaUX18JdtX/CbN4/34XqjtWMNkXF//mfY5gDMU16m25zLLbaFfKrW0DwpcrQriC
+         CCmvHOVL8zFqkqFGCoEB6VkMgy+AO01Q8fcN1h/pp86C1LAE6TX9fpUY5l4TlM5Tt3YA
+         NB5wmFKpRIdzQp5WBwTTky0AD+0HWMTqhjxvEECaulYa+y+xGYqJKMNEqSO/7k+uS/5I
+         Aj60Ot490k5wX0IEjKk1CDhzfJmSL7gQwz6CcREJqDA4FO2R/qFNN2HC80iXXno7UIOW
+         Q/LeMV/o+J+sP2ArHxe8KaEoNJj5HKOjfnjSZxzPA8DetODKPef//qtikyGB8RThRtjT
+         ykcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744667332; x=1745272132;
+        d=1e100.net; s=20230601; t=1744667336; x=1745272136;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hgS0drNtXto2vjqcC+uAp6ay40RcqxFx1C4SRMQLUi8=;
-        b=FgKOeHk3Xy8miyyEizvlCHfscPbMHmPlKiwcMDiL4/zekFtCLkb5tLHUlSXiWilWNt
-         yExRRd6r0kJ5w4FoVu5v7vFlF4APZ6bjNZTTOZ93X+XZMg3o+KGlHTmmgDsf9A4vWdfr
-         bNRA6kCh2QKpG4fbfNRWrOrb+ui3WlLSVUwBsaVh+oSIXapCWLMvX6hbxo65p3oEysh0
-         N0LEIWKzGTrV8III92Y6pX+tYov2uiaN3k02+t/F86i+Eh4JYMMoY6ymR+lL48Af8j9D
-         RvaHgFFnNJfCSeZfGdrLU0mzgPF/pbkttcjN2mWsverHodSaaK+XKMZt0JesiZX6eSJf
-         pvCA==
-X-Gm-Message-State: AOJu0Yy2P2wwC7KgnNc4OFtAO0lsvT4Gx+7Vf/SBbB+mXlEJM8XS9nei
-	raLu5RHTODb4bvHXXboJoVZ1uTPbvug02B9XktPtFdAvP+fCX3bT9sOt2ukJJezfPhvpoDLIeA=
+        bh=eZnXi8xFdz69Pn6l5zsGjn/cdx88HjbtqpfJijhW+g0=;
+        b=FBaaRaXOkeBIkCFR5zP528oF/kHwSlP6lOVjNzFvqDpQ/P8JU9P6tkQCNxOHPUsj39
+         utGpQE/HmE14aNqPuxr64ebHTpqKM3/Vf0rFyZJ4Lfq2hwhJQmFKfetP4xBfIUsMESbP
+         oLeRcIEHwD88HjtVTUaFQ00YI1l0S10D+mRxWU5j01SZGeli3mbfK3K4pXjm9UoBJGWh
+         jxCXTd3J8o9izHYHSipYA0YPSjabXQDBkF5iD01r38UDBg0ZAxWVvuv60sm2RRm7FYDt
+         w2ZwEDPyPk7JLD0tKy9QGXUPGr+ei8NAIKlN8PzyHNDOneoanbwLQMTCUF9FJ0w5ZWNx
+         eP3w==
+X-Gm-Message-State: AOJu0YwuRXBSj2NiZsSGBofYs8Yl90umq7QCug10R4sARW4d1fd9UdJI
+	QN2l+OwjtRNjQIFjIIo5zG+37EZjTkR0dT7weajj08BvDKfl50APcaxZb3iAzcPIonhQGSp25w=
 	=
-X-Google-Smtp-Source: AGHT+IGvpH2CVGXM8TBrY5c2fGY41xqkr6arLTnktI+7+7zZU0OC+/9v/DIhta55E+ZkUisFp+He4zFDtA==
-X-Received: from plbju14.prod.google.com ([2002:a17:903:428e:b0:223:5a6e:b17])
- (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:230e:b0:226:30f6:1639
- with SMTP id d9443c01a7336-22bea50e0d3mr186211325ad.51.1744667331846; Mon, 14
- Apr 2025 14:48:51 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:47:38 -0700
+X-Google-Smtp-Source: AGHT+IHOmm323OTZwKcRLQC0RI7w4RCrLlWXe7PNO4rM1ZH+/bjNb2QH0/SJjqGE8Tg72UQrJ3rjbaVsYg==
+X-Received: from pfbgv13.prod.google.com ([2002:a05:6a00:4e8d:b0:730:848d:a5a3])
+ (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:18a9:b0:736:a7ec:a366
+ with SMTP id d2e1a72fcca58-73bd11e5925mr14616860b3a.9.1744667336277; Mon, 14
+ Apr 2025 14:48:56 -0700 (PDT)
+Date: Mon, 14 Apr 2025 14:47:41 -0700
 In-Reply-To: <20250414214801.2693294-1-sagis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250414214801.2693294-1-sagis@google.com>
 X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250414214801.2693294-10-sagis@google.com>
-Subject: [PATCH v6 09/30] KVM: selftests: TDX: Add TDX lifecycle test
+Message-ID: <20250414214801.2693294-13-sagis@google.com>
+Subject: [PATCH v6 12/30] KVM: selftests: TDX: Add basic TDX CPUID test
 From: Sagi Shahar <sagis@google.com>
 To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
 	Shuah Khan <shuah@kernel.org>, Sean Christopherson <seanjc@google.com>, 
@@ -72,416 +72,210 @@ To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
 Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Erdem Aktas <erdemaktas@google.com>
+The test reads CPUID values from inside a TD VM and compare them
+to expected values.
 
-Adding a test to verify TDX lifecycle by creating a TD and running a
-dummy TDG.VP.VMCALL <Instruction.IO> inside it.
+The test targets CPUID values which are virtualized as "As Configured",
+"As Configured (if Native)", "Calculated", "Fixed" and "Native"
+according to the TDX spec.
 
-Co-developed-by: Sagi Shahar <sagis@google.com>
-Signed-off-by: Sagi Shahar <sagis@google.com>
-Co-developed-by: Ackerley Tng <ackerleytng@google.com>
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Co-developed-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Erdem Aktas <erdemaktas@google.com>
+Co-developed-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Signed-off-by: Sagi Shahar <sagis@google.com>
 ---
- tools/testing/selftests/kvm/Makefile.kvm      |  4 +
- .../selftests/kvm/include/x86/tdx/tdcall.h    | 32 +++++++
- .../selftests/kvm/include/x86/tdx/tdx.h       | 12 +++
- .../selftests/kvm/include/x86/tdx/test_util.h | 41 ++++++++
- .../selftests/kvm/lib/x86/tdx/tdcall.S        | 95 +++++++++++++++++++
- tools/testing/selftests/kvm/lib/x86/tdx/tdx.c | 27 ++++++
- .../selftests/kvm/lib/x86/tdx/test_util.c     | 61 ++++++++++++
- tools/testing/selftests/kvm/x86/tdx_vm_test.c | 47 +++++++++
- 8 files changed, 319 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/include/x86/tdx/tdcall.h
- create mode 100644 tools/testing/selftests/kvm/include/x86/tdx/tdx.h
- create mode 100644 tools/testing/selftests/kvm/include/x86/tdx/test_util.h
- create mode 100644 tools/testing/selftests/kvm/lib/x86/tdx/tdcall.S
- create mode 100644 tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
- create mode 100644 tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
- create mode 100644 tools/testing/selftests/kvm/x86/tdx_vm_test.c
+ .../selftests/kvm/include/x86/tdx/test_util.h | 15 +++
+ .../selftests/kvm/lib/x86/tdx/test_util.c     | 20 ++++
+ tools/testing/selftests/kvm/x86/tdx_vm_test.c | 98 ++++++++++++++++++-
+ 3 files changed, 132 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 8e7a12d74745..e98d5413991a 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -30,6 +30,9 @@ LIBKVM_x86 += lib/x86/ucall.c
- LIBKVM_x86 += lib/x86/vmx.c
- LIBKVM_x86 += lib/x86/tdx/tdx_util.c
- LIBKVM_x86 += lib/x86/tdx/td_boot.S
-+LIBKVM_x86 += lib/x86/tdx/tdcall.S
-+LIBKVM_x86 += lib/x86/tdx/tdx.c
-+LIBKVM_x86 += lib/x86/tdx/test_util.c
- 
- LIBKVM_arm64 += lib/arm64/gic.c
- LIBKVM_arm64 += lib/arm64/gic_v3.c
-@@ -141,6 +144,7 @@ TEST_GEN_PROGS_x86 += rseq_test
- TEST_GEN_PROGS_x86 += steal_time
- TEST_GEN_PROGS_x86 += system_counter_offset_test
- TEST_GEN_PROGS_x86 += pre_fault_memory_test
-+TEST_GEN_PROGS_x86 += x86/tdx_vm_test
- 
- # Compiled outputs used by test targets
- TEST_GEN_PROGS_EXTENDED_x86 += x86/nx_huge_pages_test
-diff --git a/tools/testing/selftests/kvm/include/x86/tdx/tdcall.h b/tools/testing/selftests/kvm/include/x86/tdx/tdcall.h
-new file mode 100644
-index 000000000000..a6c966e93486
---- /dev/null
-+++ b/tools/testing/selftests/kvm/include/x86/tdx/tdcall.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Adapted from arch/x86/include/asm/shared/tdx.h */
-+
-+#ifndef SELFTESTS_TDX_TDCALL_H
-+#define SELFTESTS_TDX_TDCALL_H
-+
-+#include <linux/bits.h>
-+#include <linux/types.h>
-+
-+#define TDX_HCALL_HAS_OUTPUT BIT(0)
-+
-+#define TDX_HYPERCALL_STANDARD 0
-+
-+/*
-+ * Used in __tdx_hypercall() to pass down and get back registers' values of
-+ * the TDCALL instruction when requesting services from the VMM.
-+ *
-+ * This is a software only structure and not part of the TDX module/VMM ABI.
-+ */
-+struct tdx_hypercall_args {
-+	u64 r10;
-+	u64 r11;
-+	u64 r12;
-+	u64 r13;
-+	u64 r14;
-+	u64 r15;
-+};
-+
-+/* Used to request services from the VMM */
-+u64 __tdx_hypercall(struct tdx_hypercall_args *args, unsigned long flags);
-+
-+#endif // SELFTESTS_TDX_TDCALL_H
-diff --git a/tools/testing/selftests/kvm/include/x86/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
-new file mode 100644
-index 000000000000..a7161efe4ee2
---- /dev/null
-+++ b/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef SELFTEST_TDX_TDX_H
-+#define SELFTEST_TDX_TDX_H
-+
-+#include <stdint.h>
-+
-+#define TDG_VP_VMCALL_INSTRUCTION_IO 30
-+
-+uint64_t tdg_vp_vmcall_instruction_io(uint64_t port, uint64_t size,
-+				      uint64_t write, uint64_t *data);
-+
-+#endif // SELFTEST_TDX_TDX_H
 diff --git a/tools/testing/selftests/kvm/include/x86/tdx/test_util.h b/tools/testing/selftests/kvm/include/x86/tdx/test_util.h
-new file mode 100644
-index 000000000000..07d63bf1ffe1
---- /dev/null
+index cf11955d56d6..2af6e810ef78 100644
+--- a/tools/testing/selftests/kvm/include/x86/tdx/test_util.h
 +++ b/tools/testing/selftests/kvm/include/x86/tdx/test_util.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef SELFTEST_TDX_TEST_UTIL_H
-+#define SELFTEST_TDX_TEST_UTIL_H
+@@ -9,6 +9,9 @@
+ #define TDX_TEST_SUCCESS_PORT 0x30
+ #define TDX_TEST_SUCCESS_SIZE 4
+ 
++#define TDX_TEST_REPORT_PORT 0x31
++#define TDX_TEST_REPORT_SIZE 4
 +
-+#include <stdbool.h>
-+
-+#include "tdcall.h"
-+
-+#define TDX_TEST_SUCCESS_PORT 0x30
-+#define TDX_TEST_SUCCESS_SIZE 4
-+
-+/* Port I/O direction */
-+#define PORT_READ	0
-+#define PORT_WRITE	1
+ /* Port I/O direction */
+ #define PORT_READ	0
+ #define PORT_WRITE	1
+@@ -77,4 +80,16 @@ void tdx_test_fatal_with_data(uint64_t error_code, uint64_t data_gpa);
+  */
+ void tdx_assert_error(uint64_t error);
+ 
++/*
++ * Report a 32 bit value from the guest to user space using TDG.VP.VMCALL
++ * <Instruction.IO> call. Data is reported on port TDX_TEST_REPORT_PORT.
++ */
++uint64_t tdx_test_report_to_user_space(uint32_t data);
 +
 +/*
-+ * Run a test in a new process.
-+ *
-+ * There might be multiple tests running and if one test fails, it will
-+ * prevent the subsequent tests to run due to how tests are failing with
-+ * TEST_ASSERT function. run_in_new_process() will run a test in a new process
-+ * context and wait for it to finish or fail to prevent TEST_ASSERT to kill the
-+ * main testing process.
++ * Read a 32 bit value from the guest in user space, sent using
++ * tdx_test_report_to_user_space().
 + */
-+int run_in_new_process(void (*func)(void));
++uint32_t tdx_test_read_report_from_guest(struct kvm_vcpu *vcpu);
 +
-+/*
-+ * Verify that the TDX is supported by KVM.
-+ */
-+bool is_tdx_enabled(void);
-+
-+/*
-+ * Report test success to userspace.
-+ *
-+ * Use tdx_test_assert_success() to assert that this function was called in the
-+ * guest.
-+ */
-+void tdx_test_success(void);
-+void tdx_test_assert_success(struct kvm_vcpu *vcpu);
-+
-+#endif // SELFTEST_TDX_TEST_UTIL_H
-diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/tdcall.S b/tools/testing/selftests/kvm/lib/x86/tdx/tdcall.S
-new file mode 100644
-index 000000000000..b10769d1d557
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/x86/tdx/tdcall.S
-@@ -0,0 +1,95 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Adapted from arch/x86/coco/tdx/tdcall.S */
-+
-+/*
-+ * TDCALL is supported in Binutils >= 2.36, add it for older version.
-+ */
-+#define tdcall		.byte 0x66,0x0f,0x01,0xcc
-+
-+#define TDX_HYPERCALL_r10 0 /* offsetof(struct tdx_hypercall_args, r10) */
-+#define TDX_HYPERCALL_r11 8 /* offsetof(struct tdx_hypercall_args, r11) */
-+#define TDX_HYPERCALL_r12 16 /* offsetof(struct tdx_hypercall_args, r12) */
-+#define TDX_HYPERCALL_r13 24 /* offsetof(struct tdx_hypercall_args, r13) */
-+#define TDX_HYPERCALL_r14 32 /* offsetof(struct tdx_hypercall_args, r14) */
-+#define TDX_HYPERCALL_r15 40 /* offsetof(struct tdx_hypercall_args, r15) */
-+
-+/*
-+ * Bitmasks of exposed registers (with VMM).
-+ */
-+#define TDX_R10 0x400
-+#define TDX_R11 0x800
-+#define TDX_R12 0x1000
-+#define TDX_R13 0x2000
-+#define TDX_R14 0x4000
-+#define TDX_R15 0x8000
-+
-+#define TDX_HCALL_HAS_OUTPUT 0x1
-+
-+/*
-+ * These registers are clobbered to hold arguments for each
-+ * TDVMCALL. They are safe to expose to the VMM.
-+ * Each bit in this mask represents a register ID. Bit field
-+ * details can be found in TDX GHCI specification, section
-+ * titled "TDCALL [TDG.VP.VMCALL] leaf".
-+ */
-+#define TDVMCALL_EXPOSE_REGS_MASK	( TDX_R10 | TDX_R11 | \
-+					  TDX_R12 | TDX_R13 | \
-+					  TDX_R14 | TDX_R15 )
-+
-+.code64
-+.section .text
-+
-+.globl __tdx_hypercall
-+.type __tdx_hypercall, @function
-+__tdx_hypercall:
-+	/* Set up stack frame */
-+	push %rbp
-+	movq %rsp, %rbp
-+
-+	/* Save callee-saved GPRs as mandated by the x86_64 ABI */
-+	push %r15
-+	push %r14
-+	push %r13
-+	push %r12
-+
-+	/* Mangle function call ABI into TDCALL ABI: */
-+	/* Set TDCALL leaf ID (TDVMCALL (0)) in RAX */
-+	xor %eax, %eax
-+
-+	/* Copy hypercall registers from arg struct: */
-+	movq TDX_HYPERCALL_r10(%rdi), %r10
-+	movq TDX_HYPERCALL_r11(%rdi), %r11
-+	movq TDX_HYPERCALL_r12(%rdi), %r12
-+	movq TDX_HYPERCALL_r13(%rdi), %r13
-+	movq TDX_HYPERCALL_r14(%rdi), %r14
-+	movq TDX_HYPERCALL_r15(%rdi), %r15
-+
-+	movl $TDVMCALL_EXPOSE_REGS_MASK, %ecx
-+
-+	tdcall
-+
-+	/* TDVMCALL leaf return code is in R10 */
-+	movq %r10, %rax
-+
-+	/* Copy hypercall result registers to arg struct if needed */
-+	testq $TDX_HCALL_HAS_OUTPUT, %rsi
-+	jz .Lout
-+
-+	movq %r10, TDX_HYPERCALL_r10(%rdi)
-+	movq %r11, TDX_HYPERCALL_r11(%rdi)
-+	movq %r12, TDX_HYPERCALL_r12(%rdi)
-+	movq %r13, TDX_HYPERCALL_r13(%rdi)
-+	movq %r14, TDX_HYPERCALL_r14(%rdi)
-+	movq %r15, TDX_HYPERCALL_r15(%rdi)
-+.Lout:
-+	/* Restore callee-saved GPRs as mandated by the x86_64 ABI */
-+	pop %r12
-+	pop %r13
-+	pop %r14
-+	pop %r15
-+
-+	pop %rbp
-+	ret
-+
-+/* Disable executable stack */
-+.section .note.GNU-stack,"",%progbits
-diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
-new file mode 100644
-index 000000000000..f417ee75bee2
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include "tdx/tdcall.h"
-+#include "tdx/tdx.h"
-+
-+uint64_t tdg_vp_vmcall_instruction_io(uint64_t port, uint64_t size,
-+				      uint64_t write, uint64_t *data)
-+{
-+	struct tdx_hypercall_args args = {
-+		.r10 = TDX_HYPERCALL_STANDARD,
-+		.r11 = TDG_VP_VMCALL_INSTRUCTION_IO,
-+		.r12 = size,
-+		.r13 = write,
-+		.r14 = port,
-+	};
-+	uint64_t ret;
-+
-+	if (write)
-+		args.r15 = *data;
-+
-+	ret = __tdx_hypercall(&args, write ? 0 : TDX_HCALL_HAS_OUTPUT);
-+
-+	if (!write)
-+		*data = args.r11;
-+
-+	return ret;
-+}
+ #endif // SELFTEST_TDX_TEST_UTIL_H
 diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c b/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
-new file mode 100644
-index 000000000000..7355b213c344
---- /dev/null
+index 4ccc5298ba25..f9bde114a8bc 100644
+--- a/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
 +++ b/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+@@ -104,3 +104,23 @@ void tdx_assert_error(uint64_t error)
+ 	if (error)
+ 		tdx_test_fatal(error);
+ }
 +
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#include "kvm_util.h"
-+#include "tdx/tdx.h"
-+#include "tdx/test_util.h"
-+
-+int run_in_new_process(void (*func)(void))
++uint64_t tdx_test_report_to_user_space(uint32_t data)
 +{
-+	int wstatus;
-+	pid_t ret;
++	/* Upcast data to match tdg_vp_vmcall_instruction_io() signature */
++	uint64_t data_64 = data;
 +
-+	if (fork() == 0) {
-+		func();
-+		exit(0);
-+	}
-+	ret = wait(&wstatus);
-+	if (ret == -1)
-+		return -1;
-+
-+	if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus))
-+		return -1;
-+	else if (WIFSIGNALED(wstatus))
-+		return -1;
-+
-+	return 0;
++	return tdg_vp_vmcall_instruction_io(TDX_TEST_REPORT_PORT,
++					    TDX_TEST_REPORT_SIZE, PORT_WRITE,
++					    &data_64);
 +}
 +
-+bool is_tdx_enabled(void)
++uint32_t tdx_test_read_report_from_guest(struct kvm_vcpu *vcpu)
 +{
-+	return !!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_TDX_VM));
-+}
++	uint32_t res;
 +
-+void tdx_test_success(void)
-+{
-+	uint64_t code = 0;
++	tdx_test_assert_io(vcpu, TDX_TEST_REPORT_PORT, 4, PORT_WRITE);
++	res = *(uint32_t *)((void *)vcpu->run + vcpu->run->io.data_offset);
 +
-+	tdg_vp_vmcall_instruction_io(TDX_TEST_SUCCESS_PORT, TDX_TEST_SUCCESS_SIZE,
-+				     PORT_WRITE, &code);
-+}
-+
-+/*
-+ * Assert that tdx_test_success() was called in the guest.
-+ */
-+void tdx_test_assert_success(struct kvm_vcpu *vcpu)
-+{
-+	TEST_ASSERT((vcpu->run->exit_reason == KVM_EXIT_IO) &&
-+		    (vcpu->run->io.port == TDX_TEST_SUCCESS_PORT) &&
-+		    (vcpu->run->io.size == TDX_TEST_SUCCESS_SIZE) &&
-+		    (vcpu->run->io.direction == PORT_WRITE),
-+		    "Unexpected exit values while waiting for test completion: %u (%s) %d %d %d\n",
-+		    vcpu->run->exit_reason,
-+		    exit_reason_str(vcpu->run->exit_reason),
-+		    vcpu->run->io.port, vcpu->run->io.size,
-+		    vcpu->run->io.direction);
++	return res;
 +}
 diff --git a/tools/testing/selftests/kvm/x86/tdx_vm_test.c b/tools/testing/selftests/kvm/x86/tdx_vm_test.c
-new file mode 100644
-index 000000000000..fdb7c40065a6
---- /dev/null
+index 97330e28f236..bbdcca358d71 100644
+--- a/tools/testing/selftests/kvm/x86/tdx_vm_test.c
 +++ b/tools/testing/selftests/kvm/x86/tdx_vm_test.c
-@@ -0,0 +1,47 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <signal.h>
-+
-+#include "kvm_util.h"
-+#include "tdx/tdx_util.h"
-+#include "tdx/test_util.h"
-+#include "test_util.h"
-+
-+static void guest_code_lifecycle(void)
+@@ -3,6 +3,7 @@
+ #include <signal.h>
+ 
+ #include "kvm_util.h"
++#include "processor.h"
+ #include "tdx/tdcall.h"
+ #include "tdx/tdx.h"
+ #include "tdx/tdx_util.h"
+@@ -146,6 +147,99 @@ void verify_td_ioexit(void)
+ 	printf("\t ... PASSED\n");
+ }
+ 
++/*
++ * Verifies CPUID functionality by reading CPUID values in guest. The guest
++ * will then send the values to userspace using an IO write to be checked
++ * against the expected values.
++ */
++void guest_code_cpuid(void)
 +{
++	uint32_t ebx, ecx;
++	uint64_t err;
++
++	/* Read CPUID leaf 0x1 */
++	asm volatile ("cpuid"
++		      : "=b" (ebx), "=c" (ecx)
++		      : "a" (0x1)
++		      : "edx");
++
++	err = tdx_test_report_to_user_space(ebx);
++	tdx_assert_error(err);
++
++	err = tdx_test_report_to_user_space(ecx);
++	tdx_assert_error(err);
++
 +	tdx_test_success();
 +}
 +
-+static void verify_td_lifecycle(void)
++void verify_td_cpuid(void)
 +{
++	uint32_t guest_max_addressable_ids, host_max_addressable_ids;
++	const struct kvm_cpuid_entry2 *cpuid_entry;
++	uint32_t guest_clflush_line_size;
++	uint32_t guest_initial_apic_id;
++	uint32_t guest_sse3_enabled;
++	uint32_t guest_fma_enabled;
 +	struct kvm_vcpu *vcpu;
 +	struct kvm_vm *vm;
++	uint32_t ebx, ecx;
 +
 +	vm = td_create();
 +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-+	vcpu = td_vcpu_add(vm, 0, guest_code_lifecycle);
++	vcpu = td_vcpu_add(vm, 0, guest_code_cpuid);
 +	td_finalize(vm);
 +
-+	printf("Verifying TD lifecycle:\n");
++	printf("Verifying TD CPUID:\n");
 +
-+	vcpu_run(vcpu);
++	/* Wait for guest to report ebx value */
++	tdx_run(vcpu);
++	ebx = tdx_test_read_report_from_guest(vcpu);
++
++	/* Wait for guest to report either ecx value or error */
++	tdx_run(vcpu);
++	ecx = tdx_test_read_report_from_guest(vcpu);
++
++	/* Wait for guest to complete execution */
++	tdx_run(vcpu);
 +	tdx_test_assert_success(vcpu);
++
++	/* Verify the CPUID values received from the guest. */
++	printf("\t ... Verifying CPUID values from guest\n");
++
++	/* Get KVM CPUIDs for reference */
++	cpuid_entry = vcpu_get_cpuid_entry(vcpu, 1);
++	TEST_ASSERT(cpuid_entry, "CPUID entry missing\n");
++
++	host_max_addressable_ids = (cpuid_entry->ebx >> 16) & 0xFF;
++
++	guest_sse3_enabled = ecx & 0x1;  // Native
++	guest_clflush_line_size = (ebx >> 8) & 0xFF;  // Fixed
++	guest_max_addressable_ids = (ebx >> 16) & 0xFF;  // As Configured
++	guest_fma_enabled = (ecx >> 12) & 0x1;  // As Configured (if Native)
++	guest_initial_apic_id = (ebx >> 24) & 0xFF;  // Calculated
++
++	TEST_ASSERT_EQ(guest_sse3_enabled, 1);
++	TEST_ASSERT_EQ(guest_clflush_line_size, 8);
++	TEST_ASSERT_EQ(guest_max_addressable_ids, host_max_addressable_ids);
++
++	/* TODO: This only tests the native value. To properly test
++	 * "As Configured (if Native)" this value needs override in the
++	 * TD params.
++	 */
++	TEST_ASSERT_EQ(guest_fma_enabled, (cpuid_entry->ecx >> 12) & 0x1);
++
++	/* TODO: guest_initial_apic_id is calculated based on the number of
++	 * vCPUs in the TD. From the spec: "Virtual CPU index, starting from 0
++	 * and allocated sequentially on each successful TDH.VP.INIT"
++	 * To test non-trivial values either use a TD with multiple vCPUs
++	 * or pick a different calculated value.
++	 */
++	TEST_ASSERT_EQ(guest_initial_apic_id, 0);
 +
 +	kvm_vm_free(vm);
 +	printf("\t ... PASSED\n");
 +}
 +
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+
-+	if (!is_tdx_enabled())
-+		ksft_exit_skip("TDX is not supported by the KVM. Exiting.\n");
-+
-+	ksft_set_plan(1);
-+	ksft_test_result(!run_in_new_process(&verify_td_lifecycle),
-+			 "verify_td_lifecycle\n");
-+
-+	ksft_finished();
-+	return 0;
-+}
+ int main(int argc, char **argv)
+ {
+ 	ksft_print_header();
+@@ -153,13 +247,15 @@ int main(int argc, char **argv)
+ 	if (!is_tdx_enabled())
+ 		ksft_exit_skip("TDX is not supported by the KVM. Exiting.\n");
+ 
+-	ksft_set_plan(3);
++	ksft_set_plan(4);
+ 	ksft_test_result(!run_in_new_process(&verify_td_lifecycle),
+ 			 "verify_td_lifecycle\n");
+ 	ksft_test_result(!run_in_new_process(&verify_report_fatal_error),
+ 			 "verify_report_fatal_error\n");
+ 	ksft_test_result(!run_in_new_process(&verify_td_ioexit),
+ 			 "verify_td_ioexit\n");
++	ksft_test_result(!run_in_new_process(&verify_td_cpuid),
++			 "verify_td_cpuid\n");
+ 
+ 	ksft_finished();
+ 	return 0;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
