@@ -1,67 +1,25 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D23258CD0
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2861F258CD0
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616247; cv=none; b=dFENZ8QcZamNZdIE9yqjqEsKr3ocqjzZkBSAa6KwM52O6Ou4saZqaZk8VKAh/SS+dXOZVd/WxiRrAyhIc6D/8v9EtZ5m4N70rRH7KzRqKaSq1dYmT4l2NJwUXk9ZRIr9vMldV14JnyRn5k+b6+MdfWyXQ0BLqrHNZqygrt0+Ve8=
+	t=1744616290; cv=none; b=tY4V8sjOQB8X0Mcd9XXWOeulzTX6op1FIhhqLnF2A+urhFCJT7MVV/b9yQeD13GRMMLVRIb08xdByX65FCYpJIEUtMfrfzTjA55+LG1zh3lV/hATr0NPLPGs0O/z/VvMAF/lZ6WfKautv0vutqKmOEtH+puQM6A2dAP2cKDeY9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616247; c=relaxed/simple;
-	bh=elbZRn0KEha2cx13iQpfpa//89K5oQ0uVKk5PhMhcgM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pdmEzFQLqnxiY7zVbKvR7w4GiFc6FOUFTHAYlpLnm4o828jPQGXYHGWwlGnxm3PPe/clPaMjKnyrOIMAfqN026tFE03MH4cbhy/ovaqIKL5NzJNkIENm6NxqHQ0QbiPlCqN9FeIowAfukgpWsS2O1r6Xpm++hdq70x6IX/hT7ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sN2yIVa+; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sN2yIVa+"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43edb40f357so32965365e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744616244; x=1745221044; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=epOflPPMn5sd54LuK8TeD9jvB1zpkeDQerq12nfOF1Q=;
-        b=sN2yIVa+OY6YobE3P+A1k/d55sv7Ddnlz5oVeMcbb/Frm20bl813MIk7/3C0x2eQjF
-         TkYK9mzM4jW+4FaUbUXHGoPGVYkVk5skd/CEPbBdL5n+TBA7Jh1c4FALwvNxsgAJjElI
-         gO1u85P6/uymnG0LCqwkAx0JVYISbd2Zd6J3cAgmGETelA0y7Zpo7CfOEVgm3oN1h304
-         Fvpj3gWkYhgOgO4fj3xxoJ8BaE3QqNEV+VbsVqK1DrGWXXbczoOrgASMQGwYIylNslSB
-         SBCwaN9mI+Op8D3vB/WEURTLA/pP5AT6yXxzrX25+g5CRxqR/VaYZR9FdBwycTM1ONVY
-         /1rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744616244; x=1745221044;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=epOflPPMn5sd54LuK8TeD9jvB1zpkeDQerq12nfOF1Q=;
-        b=ceuiMiamfFI1iUWsEfSTjdsjqZ4qcrJhknIb6DWh+qYLXs9OC3q0mW7VxecZ0Q480B
-         7oY+LzJ661q+OLLKVhVn0t7NAr3BT2pJXN+g1U1Wobx0x1OY+XZGYjousoB28fN7wk7a
-         H8tbEIFi10jA1JmTJ+05VUmiYzBI6gTKIhMFr0rUj2pkSH6hE9LtwbljtB6ekQcQkWQX
-         dtyesctBymkQJH1r23AoFsTBn6un9eiNsO9faAsqR+WzRq3+CVFrCSDpQmCIsShDfNfD
-         TCfH5kKBmItC9VfWc77oLDrKv/UO9wCYRtlKD/8XKthtnR3eyZ/KkLZ+fWSFSQiv1mrK
-         eUHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZajKzJvVq2qRXUDKZJtzjsWMTo1G8SwWmkfd9nSG7u10qekVr5XzzG6zlMtigI/wg+fcRFOWWtyjHQig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnGhXx5Qe9oSoC56HzU0V83OguPw+ysYltScQTa/CXVeRBPEim
-	OcpOjOEE8bcrYS11e/fEZYzpDKWtaRrmDzsy/f/H4FOHngPqpgnUg21w4Wr01PQ=
-X-Gm-Gg: ASbGncuQAGH2Mj6pRxcGlzrVohVANezXCI1Me1aspfxFT/x9HqrMCfQOvN6QgDCA+VU
-	91R0vweVRcS8VxOvec5xm+WQX9CXzwa7gQBYjCS93QvI4tzouaWdVyjigW4G1qS5hvKl9oTxHYt
-	zaFFHWpPpLQpApL3UxM8s1OfVU0Wy8o2Fpq4ZyRp3JjBgvPoeu0dylGnI/5XdT1J/Lq9xbwta09
-	rLujZyfdtAtOp+MJSWSs+c5K62CAXRCMyv54ZgfUzkzCJT3F6B1X2XByJbAjPWn5XcZgh4vJLSz
-	KuPw2ztlG9fIL3tTxxbguX2GPTHYAV5xRKhwZm4eF+LMWTrGKHhgMfhJ5rmaUWtyua0UW2i9Kyr
-	JMMzFLu5SyBXi4pVZvg==
-X-Google-Smtp-Source: AGHT+IE30Q2IBg8vdQdMaK+lkm0TuOWEMeFPr4luM2VRd6nAtjAYz/RxT1+55R50LGFAcEjPktU29w==
-X-Received: by 2002:a05:600c:384b:b0:43d:609:b305 with SMTP id 5b1f17b1804b1-43f3a95aee6mr100167945e9.17.1744616244198;
-        Mon, 14 Apr 2025 00:37:24 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:bf8a:3473:5c13:9743? ([2a01:e0a:3d9:2080:bf8a:3473:5c13:9743])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae964048sm10193831f8f.2.2025.04.14.00.37.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 00:37:23 -0700 (PDT)
-Message-ID: <07c6f893-1e46-4f18-95be-5519f1fe9c80@linaro.org>
-Date: Mon, 14 Apr 2025 09:37:23 +0200
+	s=arc-20240116; t=1744616290; c=relaxed/simple;
+	bh=KBgcLZgZ04rQIVeeXInxaBqHYguuULvUqdyZoqZcCso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X36dDMgmVdT0iLuapZmrL+TZpGh8rmUniHo3Egd0yDZmu0YHuq2GentgfV+PXfxNsxBPbwHJN1jSDB8hhO9QpxmMURJcpYaCpSl7+oZL2lsc7mJ9ovTK8FeEKSdoWtoOJDqzsT7udHku/ZYzsYslKnqREiwkV0f3xRKcA2XWOUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u4EOE-0003g2-OI; Mon, 14 Apr 2025 09:37:58 +0200
+Message-ID: <c28945bc-85ff-4353-8215-8c9ff4d6c2bd@pengutronix.de>
+Date: Mon, 14 Apr 2025 09:37:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,70 +27,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] drm/bridge: dw-hdmi: Avoid including uapi headers
-To: Andy Yan <andyshrk@163.com>, lumag@kernel.org
-Cc: cristian.ciocaltea@collabora.com, mripard@kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- heiko@sntech.de, Andy Yan <andy.yan@rock-chips.com>
-References: <20250314075754.539221-1-andyshrk@163.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250314075754.539221-1-andyshrk@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] checkpatch: suppress MAINTAINERS warning for newly added
+ device tree files
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>,
+ Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel@pengutronix.de
+References: <20250113-b4-dts-mainainers-check-v1-1-794ed5749a94@pengutronix.de>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250113-b4-dts-mainainers-check-v1-1-794ed5749a94@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 14/03/2025 08:57, Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
+Dear device tree maintainers,
+
+On 13.01.25 22:47, Ahmad Fatoum wrote:
+> Linux ships with thousands of device trees and device tree maintainers
+> have indicated that they don't want to see hundreds of maintainer entries
+> added for them[1].
 > 
-> It is not recommended for drivers to include UAPI header
-> directly.
+> Yet, checkpatch.pl keeps warning about it, which is annoying:
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>   WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> 
+> Avoid this by making the warning conditional on the file not having a
+> .dts or .dtsi extension.
+
+Any thoughts on this patch?
+
+Thanks,
+Ahmad
+
+> 
+> Link: https://lore.kernel.org/all/e3b73baf-b36b-17c0-f414-bbf2dd746411@linaro.org/ [1]
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 > ---
+>  scripts/checkpatch.pl | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 7b28ad3317427a6bf9e27b77065aa3915cb13053..269cfa459162bbc00c2372cfcb0da709f9202a79 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3401,7 +3401,7 @@ sub process {
+>  		}
+>  
+>  # Check for added, moved or deleted files
+> -		if (!$reported_maintainer_file && !$in_commit_log &&
+> +		if (!$reported_maintainer_file && !$in_commit_log && $realfile !~ /\.(dts|dtsi)$/ &&
+>  		    ($line =~ /^(?:new|deleted) file mode\s*\d+\s*$/ ||
+>  		     $line =~ /^rename (?:from|to) [\w\/\.\-]+\s*$/ ||
+>  		     ($line =~ /\{\s*([\w\/\.\-]*)\s*\=\>\s*([\w\/\.\-]*)\s*\}/ &&
 > 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 0890add5f707..306e09a24a1c 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -22,8 +22,8 @@
->   
->   #include <media/cec-notifier.h>
->   
-> -#include <uapi/linux/media-bus-format.h>
-> -#include <uapi/linux/videodev2.h>
-> +#include <linux/media-bus-format.h>
-> +#include <linux/videodev2.h>
->   
->   #include <drm/bridge/dw_hdmi.h>
->   #include <drm/display/drm_hdmi_helper.h>
+> ---
+> base-commit: 37136bf5c3a6f6b686d74f41837a6406bec6b7bc
+> change-id: 20250113-b4-dts-mainainers-check-fa069e9c63ee
+> 
+> Best regards,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
