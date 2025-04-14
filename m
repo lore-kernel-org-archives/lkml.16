@@ -1,86 +1,66 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A631265622;
-	Mon, 14 Apr 2025 07:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAC2259CAA;
+	Mon, 14 Apr 2025 07:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616410; cv=none; b=G/oSI4dpygY+E+is/WQgqkE+D+W+yDsTya4fBbySdD5IaExPlIAcDtvOVqZ4g0OIe3yGEy9HVmPsNRVB2KKkKJ+BZydPit4sUWeFqQSIedoWu3QOg1Te7edM7SVV926CYNpNYgxkTdoj4AzVrKWacD3IFY92s0DAqwatUepsT+Y=
+	t=1744616420; cv=none; b=Bch/EB8ISv9jB9PhP46aS0p7bf4Di4CcD2uiqg1jSCazAihvDLIFYPxOlzMaHJhZ2t1buxmeZzt4i5me7b9DRelFxufRdy2ywXx9+PqXr6DqEYwfXdWqDO6esgV587qej+oT8veMhGsX9rk47q4flUpfRM1cRoPSWw1EIgC3jY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616410; c=relaxed/simple;
-	bh=9E2qxErytjSnrPNbfHAsWh4YIUhM/c8A1tRX+fTXxdU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TKekE61KKH0iNgiyXv/JMVCnF6kvPhglRkr8bWUy42zZ196us5TgkMqtnpYrNIi608i/t9bpRBL/avp6i5H1eXrtZUJffjpQWhCQa/HkPVySDSWIpGxHVQd5574arIYxIIswoSHGj5Z45kdvKEEJWo5FhQBVwq7neJKkzhiotA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAAnYgrUu_xnvr_nCA--.15082S2;
-	Mon, 14 Apr 2025 15:40:05 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: jikos@kernel.org,
-	bentiss@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] HID: corsair-void: Use to_delayed_work()
-Date: Mon, 14 Apr 2025 15:39:55 +0800
-Message-Id: <20250414073955.3954020-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744616420; c=relaxed/simple;
+	bh=t2r22kypL7dkgR5icGf+FItZxkqG4+5fcqunKc1xsiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X4v5+mSJvZaWLgjbP8mhRpVpewAJZmA21Ynx9S4ue5McYv9bBhqvJevh44Vrglpm6L8RzVTdPoziscRIer8a7rZspfqNGbbZfgvnYcVYOp5qxWSSO93hByyIcxaRuWg8UXQ7qfMDkd6omZEmA2bo+EJx+4quC0emtgwZxobEkDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FX7WHlli; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FX7WHlli"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DD2C4CEE2;
+	Mon, 14 Apr 2025 07:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744616417;
+	bh=t2r22kypL7dkgR5icGf+FItZxkqG4+5fcqunKc1xsiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FX7WHlli6ntZdKYS5xf1F3wb3fLcfj/ewa5Pb4N8s+GkRSbkZsgn6fB3R+oL7V8hO
+	 L1OTVYTlRsfuRJqWEcFMqymXAqw03e9DAgaOPrfh+xziTPDwVjUtvm1hASLNkoMGML
+	 r+3iKHcBc3VIjAw4ekjZlTw36IfQMAFeeRtjT7xkgBRNNSu0BoDBGGkhXx3K0Xky/p
+	 IPBcP2lJg3Fv2uSHcx5JQ4MPfxoGxmYrWTj1LkItKbNDkP09NrKzeE8H6oYbF11Yv/
+	 +KjqCMX/puR7+DXXvvRxwb+VckQyqE6JmMPLraf06CQb5Kn4LrHb7+Ico6K376sNCc
+	 e6RPJiqAoTF4Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4EQP-000000001tW-2uQ5;
+	Mon, 14 Apr 2025 09:40:13 +0200
+Date: Mon, 14 Apr 2025 09:40:13 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Chenyuan Yang <chenyuan0y@gmail.com>, vkoul@kernel.org,
+	kishon@kernel.org, lumag@kernel.org, quic_kriskura@quicinc.com,
+	manivannan.sadhasivam@linaro.org, konrad.dybcio@oss.qualcomm.com,
+	quic_varada@quicinc.com, quic_kbajaj@quicinc.com,
+	johan+linaro@kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
+Message-ID: <Z_y73a5IDO66AzY1@hovoldconsulting.com>
+References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
+ <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAnYgrUu_xnvr_nCA--.15082S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw1xJF43KFy7AF4xXF4xJFb_yoWkZFb_u3
-	4xZr4jgF1jkw1fGF98ArsxZr95Jws7Zrn2grZYg398JayUAry5J3yUArsrCryfWr4IyFy3
-	Cr9xZa15Cws7tjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfU1T5dDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
 
-Use to_delayed_work() instead of open-coding it.
+On Mon, Apr 14, 2025 at 09:30:19AM +0200, Krzysztof Kozlowski wrote:
+> On 13/04/2025 23:25, Chenyuan Yang wrote:
+> > In qmp_usb_iomap(), one branch returns the result of devm_ioremap(), which
+> > can be NULL. Since IS_ERR() does not catch a NULL pointer,
+> 
+> No, that's not true. NAK.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/hid/hid-corsair-void.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm afraid you're mistaken here. See __devm_ioremap() which can return
+NULL.
 
-diff --git a/drivers/hid/hid-corsair-void.c b/drivers/hid/hid-corsair-void.c
-index afbd67aa9719..fee134a7eba3 100644
---- a/drivers/hid/hid-corsair-void.c
-+++ b/drivers/hid/hid-corsair-void.c
-@@ -507,7 +507,7 @@ static void corsair_void_status_work_handler(struct work_struct *work)
- 	struct delayed_work *delayed_work;
- 	int battery_ret;
- 
--	delayed_work = container_of(work, struct delayed_work, work);
-+	delayed_work = to_delayed_work(work);
- 	drvdata = container_of(delayed_work, struct corsair_void_drvdata,
- 			       delayed_status_work);
- 
-@@ -525,7 +525,7 @@ static void corsair_void_firmware_work_handler(struct work_struct *work)
- 	struct delayed_work *delayed_work;
- 	int firmware_ret;
- 
--	delayed_work = container_of(work, struct delayed_work, work);
-+	delayed_work = to_delayed_work(work);
- 	drvdata = container_of(delayed_work, struct corsair_void_drvdata,
- 			       delayed_firmware_work);
- 
--- 
-2.25.1
-
+Johan
