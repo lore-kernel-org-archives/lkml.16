@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CF325A356;
-	Mon, 14 Apr 2025 08:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA3225D1F5;
+	Mon, 14 Apr 2025 08:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618518; cv=none; b=b/lZi9dWJyp3wIUabMWps3FQouYBEYli8J1xkwqt2k/E02PAnpel0d9k+DbAG7/NKHE/pl1z3pmxRxOO3N7RjIN6GFLlIDgK/Knme1o5RxDgW+3L1gpm6WCvb5FDNMFFILX8ilwgjKVlcTYdehe8xj720ookv1fSkjBhhvUqcyU=
+	t=1744618521; cv=none; b=COBb+DYjZSpV9yxpXxaaZdcp3WD0el3I/yCMf2YpOZZ+MMKlgTfyR1c+ETHmY+1s4EBV/IJ13D/hok/JJPGOjiM7wIW6ieouAOnTeR1Dsl3fnyL9aN1jrlBkRbykbkqPIzHEN+bJFxQ9BZfLXfhBCU8DEW+CCbXXdCnIo17fy2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618518; c=relaxed/simple;
-	bh=SrpbiCXAqMyMUcDf1sJ5vnGHipQ5tOGJ5cj6W3kTo7A=;
+	s=arc-20240116; t=1744618521; c=relaxed/simple;
+	bh=imPlQ7Utu0clXxGHQyfloBkmCr1IPiq4ogUrE8gyV0o=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RDpH9Q8/1S8nSNDZrIv+/WYWLm0FtZQMZ3nS12gVKSfibH/+yFyOlhowb9Hkfev9G3rm8SK4pelBSqDlnjemwbKsLl5ShF7rXIS8HuLFkybWfnbKfxX2wF2Jx6v/fOsYmfG+YzMbymioxGxVbEFIY9X4cdHIPDEpffgr6Nnpcc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4QwQ5VPp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BUOgVBzz; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=PJLsrHH3zfjq1dpP3KcAmYOI08k8v2PRqnTV0rSW1cjxJazIi6z9nDGuxU7KUpRRocl9NkjXugO2MxolpgzMwsNNinCbNxhXPcBIb1vH46bEHC6mNAEyp5/nYzzSxI5bxZAzHH3XleEkRHBX28mJgnc09WEazm6BV7YHBWnhwpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=td9uxoK5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u+1Vkgno; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4QwQ5VPp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BUOgVBzz"
-Date: Mon, 14 Apr 2025 08:15:13 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="td9uxoK5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u+1Vkgno"
+Date: Mon, 14 Apr 2025 08:15:15 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744618514;
+	s=2020; t=1744618516;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KdXyAZzPT0i9GmnLaiycJl+PMT2o9NpXdroPlwwQFpI=;
-	b=4QwQ5VPp/v76UZmh9nrqHVIBGcWnGL5NE7uA40vQmJnWZGONabBQ5sAmORRw5fISAeUMiV
-	NX0wJTiM/HV5qWv/BZBUkYY7vW/5LCcsWWkuqNLa2vM6En4giOuaYl6yA21tbQgQeK7BcJ
-	+T42+Jm3uoCc2swVVLUie5YdUL61xJa2OwLP+wCJwZRsNUsiHLfku762Rd8zYzpRAsgudT
-	rAU6jFctx+ZtveyrwjV/BlHPT+AumNxGifXnRPAEO2xUTcTDc1xb4C/LvRYdK574IdH+tf
-	AjwxNQgJAWAZEZ37KegzPDS4KBcPgvj7sZJF7b+/rsDwG67Kb32GP6WjJEai5Q==
+	bh=InGg9cFY0QFE8inOUg1yrd+7a3iwqCnh725Wh5iaEI0=;
+	b=td9uxoK53cQgJ8hqIOSY8xwc0M8H1RkYYm0Iqtc3cWSI73/qIjgCY+WvTTnPnNuPFgos6t
+	PMCAxlOHhyNAj+A4H7N1Z4mE8yrgYz4K8UsWqpUvyO+tyXGcpqd0REH29QSZLGoWV3t7sD
+	32nNvv+XfVMX1vnhHvFx5RURKcmyzSemlobdaOMFcqfO1+0zIHu7wC+WAN0iYXOQwk3bfu
+	wxHE0gVp3YLSvrALNqB8WGxWDdkSgZEQXXmQqSr2EsNWUL/3jCVLknHYiJciVmJkEcIRgX
+	w3vosi1sgKNU5nII1E6mK299IHBJySGFq71GtlOh2eS//LyMGv2m5PU24Qvwtw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744618514;
+	s=2020e; t=1744618516;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KdXyAZzPT0i9GmnLaiycJl+PMT2o9NpXdroPlwwQFpI=;
-	b=BUOgVBzzKYGrYn0rum8HufZcspmx5o2QqvYCuLOkGEUHbdU5orM7LNcBNFRYPvoP/icI//
-	FTu1DgiXGxKbZyBQ==
+	bh=InGg9cFY0QFE8inOUg1yrd+7a3iwqCnh725Wh5iaEI0=;
+	b=u+1VkgnoganeyYHf0BFpnhzpx0ZhPa3qGSJ9NMOscPPwtaw9bAGZjpii8+5IcSwsF5/y52
+	E6m5mKydD981i3Bw==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/merge] x86/platform/amd: Move the <asm/amd_nb.h> header to
- <asm/amd/nb.h>
+Subject: [tip: x86/merge] x86/platform/amd: Move the <asm/amd-ibs.h> header to
+ <asm/amd/ibs.h>
 Cc: Ingo Molnar <mingo@kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Mario Limonciello <superm1@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250413084144.3746608-4-mingo@kernel.org>
-References: <20250413084144.3746608-4-mingo@kernel.org>
+In-Reply-To: <20250413084144.3746608-2-mingo@kernel.org>
+References: <20250413084144.3746608-2-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174461851346.31282.14244298779117666231.tip-bot2@tip-bot2>
+Message-ID: <174461851581.31282.6843254487155835008.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,14 +70,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/merge branch of tip:
 
-Commit-ID:     bcbb65559532891148d990527e9df6b8fc98e98d
-Gitweb:        https://git.kernel.org/tip/bcbb65559532891148d990527e9df6b8fc98e98d
+Commit-ID:     3846389c03a8518884f09056611619bd1461ffc7
+Gitweb:        https://git.kernel.org/tip/3846389c03a8518884f09056611619bd1461ffc7
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 14 Apr 2025 09:32:04 +02:00
+AuthorDate:    Sun, 13 Apr 2025 10:41:39 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 14 Apr 2025 09:34:14 +02:00
+CommitterDate: Mon, 14 Apr 2025 09:31:47 +02:00
 
-x86/platform/amd: Move the <asm/amd_nb.h> header to <asm/amd/nb.h>
+x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>
 
 Collect AMD specific platform header files in <asm/amd/*.h>.
 
@@ -86,373 +86,371 @@ Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mario Limonciello <superm1@kernel.org>
-Link: https://lore.kernel.org/r/20250413084144.3746608-4-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250413084144.3746608-2-mingo@kernel.org
 ---
- arch/x86/include/asm/amd/nb.h           | 77 ++++++++++++++++++++++++-
- arch/x86/include/asm/amd_nb.h           | 77 +------------------------
- arch/x86/kernel/amd_gart_64.c           |  2 +-
- arch/x86/kernel/amd_nb.c                |  2 +-
- arch/x86/kernel/aperture_64.c           |  2 +-
- arch/x86/kernel/cpu/amd_cache_disable.c |  2 +-
- arch/x86/kernel/cpu/cacheinfo.c         |  2 +-
- arch/x86/kernel/cpu/mce/inject.c        |  2 +-
- arch/x86/mm/amdtopology.c               |  2 +-
- arch/x86/mm/numa.c                      |  2 +-
- arch/x86/pci/amd_bus.c                  |  2 +-
- drivers/char/agp/amd64-agp.c            |  2 +-
- drivers/edac/amd64_edac.c               |  2 +-
- drivers/platform/x86/amd/pmc/mp1_stb.c  |  2 +-
- drivers/pnp/quirks.c                    |  2 +-
- drivers/ras/amd/atl/internal.h          |  2 +-
- 16 files changed, 91 insertions(+), 91 deletions(-)
- create mode 100644 arch/x86/include/asm/amd/nb.h
- delete mode 100644 arch/x86/include/asm/amd_nb.h
+ arch/x86/events/amd/ibs.c        |   2 +-
+ arch/x86/include/asm/amd-ibs.h   | 153 +------------------------------
+ arch/x86/include/asm/amd/ibs.h   | 153 ++++++++++++++++++++++++++++++-
+ tools/perf/check-headers.sh      |   2 +-
+ tools/perf/util/amd-sample-raw.c |   2 +-
+ 5 files changed, 156 insertions(+), 156 deletions(-)
+ delete mode 100644 arch/x86/include/asm/amd-ibs.h
+ create mode 100644 arch/x86/include/asm/amd/ibs.h
 
-diff --git a/arch/x86/include/asm/amd/nb.h b/arch/x86/include/asm/amd/nb.h
-new file mode 100644
-index 0000000..adfa085
---- /dev/null
-+++ b/arch/x86/include/asm/amd/nb.h
-@@ -0,0 +1,77 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_AMD_NB_H
-+#define _ASM_X86_AMD_NB_H
-+
-+#include <linux/ioport.h>
-+#include <linux/pci.h>
-+#include <asm/amd_node.h>
-+
-+struct amd_nb_bus_dev_range {
-+	u8 bus;
-+	u8 dev_base;
-+	u8 dev_limit;
-+};
-+
-+extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
-+
-+extern bool early_is_amd_nb(u32 value);
-+extern struct resource *amd_get_mmconfig_range(struct resource *res);
-+extern void amd_flush_garts(void);
-+extern int amd_numa_init(void);
-+extern int amd_get_subcaches(int);
-+extern int amd_set_subcaches(int, unsigned long);
-+
-+struct amd_l3_cache {
-+	unsigned indices;
-+	u8	 subcaches[4];
-+};
-+
-+struct amd_northbridge {
-+	struct pci_dev *misc;
-+	struct pci_dev *link;
-+	struct amd_l3_cache l3_cache;
-+};
-+
-+struct amd_northbridge_info {
-+	u16 num;
-+	u64 flags;
-+	struct amd_northbridge *nb;
-+};
-+
-+#define AMD_NB_GART			BIT(0)
-+#define AMD_NB_L3_INDEX_DISABLE		BIT(1)
-+#define AMD_NB_L3_PARTITIONING		BIT(2)
-+
-+#ifdef CONFIG_AMD_NB
-+
-+u16 amd_nb_num(void);
-+bool amd_nb_has_feature(unsigned int feature);
-+struct amd_northbridge *node_to_amd_nb(int node);
-+
-+static inline bool amd_gart_present(void)
-+{
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
-+		return false;
-+
-+	/* GART present only on Fam15h, up to model 0fh */
-+	if (boot_cpu_data.x86 == 0xf || boot_cpu_data.x86 == 0x10 ||
-+	    (boot_cpu_data.x86 == 0x15 && boot_cpu_data.x86_model < 0x10))
-+		return true;
-+
-+	return false;
-+}
-+
-+#else
-+
-+#define amd_nb_num(x)		0
-+#define amd_nb_has_feature(x)	false
-+static inline struct amd_northbridge *node_to_amd_nb(int node)
-+{
-+	return NULL;
-+}
-+#define amd_gart_present(x)	false
-+
-+#endif
-+
-+
-+#endif /* _ASM_X86_AMD_NB_H */
-diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 0252b7e..1726199 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -26,7 +26,7 @@ static u32 ibs_caps;
+ #include <linux/hardirq.h>
+ 
+ #include <asm/nmi.h>
+-#include <asm/amd-ibs.h>
++#include <asm/amd/ibs.h>
+ 
+ /* attr.config2 */
+ #define IBS_SW_FILTER_MASK	1
+diff --git a/arch/x86/include/asm/amd-ibs.h b/arch/x86/include/asm/amd-ibs.h
 deleted file mode 100644
-index adfa085..0000000
---- a/arch/x86/include/asm/amd_nb.h
+index 77f3a58..0000000
+--- a/arch/x86/include/asm/amd-ibs.h
 +++ /dev/null
-@@ -1,77 +0,0 @@
+@@ -1,153 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_X86_AMD_NB_H
--#define _ASM_X86_AMD_NB_H
+-/*
+- * From PPR Vol 1 for AMD Family 19h Model 01h B1
+- * 55898 Rev 0.35 - Feb 5, 2021
+- */
 -
--#include <linux/ioport.h>
--#include <linux/pci.h>
--#include <asm/amd_node.h>
+-#include <asm/msr-index.h>
 -
--struct amd_nb_bus_dev_range {
--	u8 bus;
--	u8 dev_base;
--	u8 dev_limit;
+-/* IBS_OP_DATA2 DataSrc */
+-#define IBS_DATA_SRC_LOC_CACHE			 2
+-#define IBS_DATA_SRC_DRAM			 3
+-#define IBS_DATA_SRC_REM_CACHE			 4
+-#define IBS_DATA_SRC_IO				 7
+-
+-/* IBS_OP_DATA2 DataSrc Extension */
+-#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
+-#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
+-#define IBS_DATA_SRC_EXT_DRAM			 3
+-#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
+-#define IBS_DATA_SRC_EXT_PMEM			 6
+-#define IBS_DATA_SRC_EXT_IO			 7
+-#define IBS_DATA_SRC_EXT_EXT_MEM		 8
+-#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
+-
+-/*
+- * IBS Hardware MSRs
+- */
+-
+-/* MSR 0xc0011030: IBS Fetch Control */
+-union ibs_fetch_ctl {
+-	__u64 val;
+-	struct {
+-		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
+-			fetch_cnt:16,	/* 16-31: instruction fetch count */
+-			fetch_lat:16,	/* 32-47: instruction fetch latency */
+-			fetch_en:1,	/* 48: instruction fetch enable */
+-			fetch_val:1,	/* 49: instruction fetch valid */
+-			fetch_comp:1,	/* 50: instruction fetch complete */
+-			ic_miss:1,	/* 51: i-cache miss */
+-			phy_addr_valid:1,/* 52: physical address valid */
+-			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
+-					 *	  (needs IbsPhyAddrValid) */
+-			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
+-			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
+-			rand_en:1,	/* 57: random tagging enable */
+-			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
+-					 *      (needs IbsFetchComp) */
+-			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
+-			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
+-			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
+-			reserved:2;	/* 62-63: reserved */
+-	};
 -};
 -
--extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
--
--extern bool early_is_amd_nb(u32 value);
--extern struct resource *amd_get_mmconfig_range(struct resource *res);
--extern void amd_flush_garts(void);
--extern int amd_numa_init(void);
--extern int amd_get_subcaches(int);
--extern int amd_set_subcaches(int, unsigned long);
--
--struct amd_l3_cache {
--	unsigned indices;
--	u8	 subcaches[4];
+-/* MSR 0xc0011033: IBS Execution Control */
+-union ibs_op_ctl {
+-	__u64 val;
+-	struct {
+-		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
+-			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
+-			op_en:1,	/* 17: op sampling enable */
+-			op_val:1,	/* 18: op sample valid */
+-			cnt_ctl:1,	/* 19: periodic op counter control */
+-			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
+-			reserved0:5,	/* 27-31: reserved */
+-			opcurcnt:27,	/* 32-58: periodic op counter current count */
+-			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
+-			ldlat_en:1;	/* 63: Load Latency enabled */
+-	};
 -};
 -
--struct amd_northbridge {
--	struct pci_dev *misc;
--	struct pci_dev *link;
--	struct amd_l3_cache l3_cache;
+-/* MSR 0xc0011035: IBS Op Data 1 */
+-union ibs_op_data {
+-	__u64 val;
+-	struct {
+-		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
+-			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
+-			reserved1:2,		/* 32-33: reserved */
+-			op_return:1,		/* 34: return op */
+-			op_brn_taken:1,		/* 35: taken branch op */
+-			op_brn_misp:1,		/* 36: mispredicted branch op */
+-			op_brn_ret:1,		/* 37: branch op retired */
+-			op_rip_invalid:1,	/* 38: RIP is invalid */
+-			op_brn_fuse:1,		/* 39: fused branch op */
+-			op_microcode:1,		/* 40: microcode op */
+-			reserved2:23;		/* 41-63: reserved */
+-	};
 -};
 -
--struct amd_northbridge_info {
--	u16 num;
--	u64 flags;
--	struct amd_northbridge *nb;
+-/* MSR 0xc0011036: IBS Op Data 2 */
+-union ibs_op_data2 {
+-	__u64 val;
+-	struct {
+-		__u64	data_src_lo:3,	/* 0-2: data source low */
+-			reserved0:1,	/* 3: reserved */
+-			rmt_node:1,	/* 4: destination node */
+-			cache_hit_st:1,	/* 5: cache hit state */
+-			data_src_hi:2,	/* 6-7: data source high */
+-			reserved1:56;	/* 8-63: reserved */
+-	};
 -};
 -
--#define AMD_NB_GART			BIT(0)
--#define AMD_NB_L3_INDEX_DISABLE		BIT(1)
--#define AMD_NB_L3_PARTITIONING		BIT(2)
+-/* MSR 0xc0011037: IBS Op Data 3 */
+-union ibs_op_data3 {
+-	__u64 val;
+-	struct {
+-		__u64	ld_op:1,			/* 0: load op */
+-			st_op:1,			/* 1: store op */
+-			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
+-			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
+-			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
+-			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
+-			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
+-			dc_miss:1,			/* 7: data cache miss */
+-			dc_mis_acc:1,			/* 8: misaligned access */
+-			reserved:4,			/* 9-12: reserved */
+-			dc_wc_mem_acc:1,		/* 13: write combining memory access */
+-			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
+-			dc_locked_op:1,			/* 15: locked operation */
+-			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
+-			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
+-			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
+-			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
+-			l2_miss:1,			/* 20: L2 cache miss */
+-			sw_pf:1,			/* 21: software prefetch */
+-			op_mem_width:4,			/* 22-25: load/store size in bytes */
+-			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
+-			dc_miss_lat:16,			/* 32-47: data cache miss latency */
+-			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
+-	};
+-};
 -
--#ifdef CONFIG_AMD_NB
+-/* MSR 0xc001103c: IBS Fetch Control Extended */
+-union ic_ibs_extd_ctl {
+-	__u64 val;
+-	struct {
+-		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
+-			reserved:48;		/* 16-63: reserved */
+-	};
+-};
 -
--u16 amd_nb_num(void);
--bool amd_nb_has_feature(unsigned int feature);
--struct amd_northbridge *node_to_amd_nb(int node);
+-/*
+- * IBS driver related
+- */
 -
--static inline bool amd_gart_present(void)
--{
--	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
--		return false;
--
--	/* GART present only on Fam15h, up to model 0fh */
--	if (boot_cpu_data.x86 == 0xf || boot_cpu_data.x86 == 0x10 ||
--	    (boot_cpu_data.x86 == 0x15 && boot_cpu_data.x86_model < 0x10))
--		return true;
--
--	return false;
--}
--
--#else
--
--#define amd_nb_num(x)		0
--#define amd_nb_has_feature(x)	false
--static inline struct amd_northbridge *node_to_amd_nb(int node)
--{
--	return NULL;
--}
--#define amd_gart_present(x)	false
--
--#endif
--
--
--#endif /* _ASM_X86_AMD_NB_H */
-diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-index c884dec..3485d41 100644
---- a/arch/x86/kernel/amd_gart_64.c
-+++ b/arch/x86/kernel/amd_gart_64.c
-@@ -39,7 +39,7 @@
- #include <asm/gart.h>
- #include <asm/set_memory.h>
- #include <asm/dma.h>
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/x86_init.h>
- 
- static unsigned long iommu_bus_base;	/* GART remapping area (physical) */
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 5a8cc48..ffaad17 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -14,7 +14,7 @@
- #include <linux/spinlock.h>
- #include <linux/pci_ids.h>
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/cpuid.h>
- 
- static u32 *flush_words;
-diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
-index 89c0c8a..7693211 100644
---- a/arch/x86/kernel/aperture_64.c
-+++ b/arch/x86/kernel/aperture_64.c
-@@ -29,7 +29,7 @@
- #include <asm/gart.h>
- #include <asm/pci-direct.h>
- #include <asm/dma.h>
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/x86_init.h>
- #include <linux/crash_dump.h>
- 
-diff --git a/arch/x86/kernel/cpu/amd_cache_disable.c b/arch/x86/kernel/cpu/amd_cache_disable.c
-index d860ad3..8843b95 100644
---- a/arch/x86/kernel/cpu/amd_cache_disable.c
-+++ b/arch/x86/kernel/cpu/amd_cache_disable.c
+-struct perf_ibs_data {
+-	u32		size;
+-	union {
+-		u32	data[0];	/* data buffer starts here */
+-		u32	caps;
+-	};
+-	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
+-};
+diff --git a/arch/x86/include/asm/amd/ibs.h b/arch/x86/include/asm/amd/ibs.h
+new file mode 100644
+index 0000000..77f3a58
+--- /dev/null
++++ b/arch/x86/include/asm/amd/ibs.h
+@@ -0,0 +1,153 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * From PPR Vol 1 for AMD Family 19h Model 01h B1
++ * 55898 Rev 0.35 - Feb 5, 2021
++ */
++
++#include <asm/msr-index.h>
++
++/* IBS_OP_DATA2 DataSrc */
++#define IBS_DATA_SRC_LOC_CACHE			 2
++#define IBS_DATA_SRC_DRAM			 3
++#define IBS_DATA_SRC_REM_CACHE			 4
++#define IBS_DATA_SRC_IO				 7
++
++/* IBS_OP_DATA2 DataSrc Extension */
++#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
++#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
++#define IBS_DATA_SRC_EXT_DRAM			 3
++#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
++#define IBS_DATA_SRC_EXT_PMEM			 6
++#define IBS_DATA_SRC_EXT_IO			 7
++#define IBS_DATA_SRC_EXT_EXT_MEM		 8
++#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
++
++/*
++ * IBS Hardware MSRs
++ */
++
++/* MSR 0xc0011030: IBS Fetch Control */
++union ibs_fetch_ctl {
++	__u64 val;
++	struct {
++		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
++			fetch_cnt:16,	/* 16-31: instruction fetch count */
++			fetch_lat:16,	/* 32-47: instruction fetch latency */
++			fetch_en:1,	/* 48: instruction fetch enable */
++			fetch_val:1,	/* 49: instruction fetch valid */
++			fetch_comp:1,	/* 50: instruction fetch complete */
++			ic_miss:1,	/* 51: i-cache miss */
++			phy_addr_valid:1,/* 52: physical address valid */
++			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
++					 *	  (needs IbsPhyAddrValid) */
++			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
++			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
++			rand_en:1,	/* 57: random tagging enable */
++			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
++					 *      (needs IbsFetchComp) */
++			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
++			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
++			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
++			reserved:2;	/* 62-63: reserved */
++	};
++};
++
++/* MSR 0xc0011033: IBS Execution Control */
++union ibs_op_ctl {
++	__u64 val;
++	struct {
++		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
++			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
++			op_en:1,	/* 17: op sampling enable */
++			op_val:1,	/* 18: op sample valid */
++			cnt_ctl:1,	/* 19: periodic op counter control */
++			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
++			reserved0:5,	/* 27-31: reserved */
++			opcurcnt:27,	/* 32-58: periodic op counter current count */
++			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
++			ldlat_en:1;	/* 63: Load Latency enabled */
++	};
++};
++
++/* MSR 0xc0011035: IBS Op Data 1 */
++union ibs_op_data {
++	__u64 val;
++	struct {
++		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
++			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
++			reserved1:2,		/* 32-33: reserved */
++			op_return:1,		/* 34: return op */
++			op_brn_taken:1,		/* 35: taken branch op */
++			op_brn_misp:1,		/* 36: mispredicted branch op */
++			op_brn_ret:1,		/* 37: branch op retired */
++			op_rip_invalid:1,	/* 38: RIP is invalid */
++			op_brn_fuse:1,		/* 39: fused branch op */
++			op_microcode:1,		/* 40: microcode op */
++			reserved2:23;		/* 41-63: reserved */
++	};
++};
++
++/* MSR 0xc0011036: IBS Op Data 2 */
++union ibs_op_data2 {
++	__u64 val;
++	struct {
++		__u64	data_src_lo:3,	/* 0-2: data source low */
++			reserved0:1,	/* 3: reserved */
++			rmt_node:1,	/* 4: destination node */
++			cache_hit_st:1,	/* 5: cache hit state */
++			data_src_hi:2,	/* 6-7: data source high */
++			reserved1:56;	/* 8-63: reserved */
++	};
++};
++
++/* MSR 0xc0011037: IBS Op Data 3 */
++union ibs_op_data3 {
++	__u64 val;
++	struct {
++		__u64	ld_op:1,			/* 0: load op */
++			st_op:1,			/* 1: store op */
++			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
++			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
++			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
++			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
++			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
++			dc_miss:1,			/* 7: data cache miss */
++			dc_mis_acc:1,			/* 8: misaligned access */
++			reserved:4,			/* 9-12: reserved */
++			dc_wc_mem_acc:1,		/* 13: write combining memory access */
++			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
++			dc_locked_op:1,			/* 15: locked operation */
++			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
++			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
++			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
++			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
++			l2_miss:1,			/* 20: L2 cache miss */
++			sw_pf:1,			/* 21: software prefetch */
++			op_mem_width:4,			/* 22-25: load/store size in bytes */
++			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
++			dc_miss_lat:16,			/* 32-47: data cache miss latency */
++			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
++	};
++};
++
++/* MSR 0xc001103c: IBS Fetch Control Extended */
++union ic_ibs_extd_ctl {
++	__u64 val;
++	struct {
++		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
++			reserved:48;		/* 16-63: reserved */
++	};
++};
++
++/*
++ * IBS driver related
++ */
++
++struct perf_ibs_data {
++	u32		size;
++	union {
++		u32	data[0];	/* data buffer starts here */
++		u32	caps;
++	};
++	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
++};
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index a4499e5..493a138 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -185,7 +185,7 @@ done
+ # diff with extra ignore lines
+ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memcpy_\(erms\|orig\))" -I"^#include <linux/cfi_types.h>"'
+ check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+-check arch/x86/include/asm/amd-ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
++check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
+ check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
+ check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+ check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
+diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
+index 9d0ce88..456ce64 100644
+--- a/tools/perf/util/amd-sample-raw.c
++++ b/tools/perf/util/amd-sample-raw.c
 @@ -9,7 +9,7 @@
- #include <linux/pci.h>
- #include <linux/sysfs.h>
+ #include <inttypes.h>
  
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
+ #include <linux/string.h>
+-#include "../../arch/x86/include/asm/amd-ibs.h"
++#include "../../arch/x86/include/asm/amd/ibs.h"
  
- #include "cpu.h"
- 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index cc7ae2b..f866d94 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -13,7 +13,7 @@
- #include <linux/cpuhotplug.h>
- #include <linux/stop_machine.h>
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/cacheinfo.h>
- #include <asm/cpufeature.h>
- #include <asm/cpuid.h>
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-index 06e3cf7..bb060f8 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -24,7 +24,7 @@
- #include <linux/pci.h>
- #include <linux/uaccess.h>
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/apic.h>
- #include <asm/irq_vectors.h>
- #include <asm/mce.h>
-diff --git a/arch/x86/mm/amdtopology.c b/arch/x86/mm/amdtopology.c
-index 628833a..f980b0e 100644
---- a/arch/x86/mm/amdtopology.c
-+++ b/arch/x86/mm/amdtopology.c
-@@ -25,7 +25,7 @@
- #include <asm/numa.h>
- #include <asm/mpspec.h>
- #include <asm/apic.h>
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- 
- static unsigned char __initdata nodeids[8];
- 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 64e5cdb..fed02d1 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -18,7 +18,7 @@
- #include <asm/e820/api.h>
- #include <asm/proto.h>
- #include <asm/dma.h>
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- 
- #include "numa_internal.h"
- 
-diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
-index 631512f..95ae197 100644
---- a/arch/x86/pci/amd_bus.c
-+++ b/arch/x86/pci/amd_bus.c
-@@ -5,7 +5,7 @@
- #include <linux/cpu.h>
- #include <linux/range.h>
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/pci_x86.h>
- 
- #include <asm/pci-direct.h>
-diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
-index 8e41731..bf49096 100644
---- a/drivers/char/agp/amd64-agp.c
-+++ b/drivers/char/agp/amd64-agp.c
-@@ -16,7 +16,7 @@
- #include <linux/mmzone.h>
- #include <asm/page.h>		/* PAGE_SIZE */
- #include <asm/e820/api.h>
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/gart.h>
- #include "agp.h"
- 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 90f0eb7..417940f 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -2,7 +2,7 @@
- #include <linux/ras.h>
- #include <linux/string_choices.h>
- #include "amd64_edac.h"
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/amd_node.h>
- 
- static struct edac_pci_ctl_info *pci_ctl;
-diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c b/drivers/platform/x86/amd/pmc/mp1_stb.c
-index c005f00..3b9b9f3 100644
---- a/drivers/platform/x86/amd/pmc/mp1_stb.c
-+++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
-@@ -11,7 +11,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
- #include <linux/uaccess.h>
-diff --git a/drivers/pnp/quirks.c b/drivers/pnp/quirks.c
-index 6085a14..6e1d4bf 100644
---- a/drivers/pnp/quirks.c
-+++ b/drivers/pnp/quirks.c
-@@ -290,7 +290,7 @@ static void quirk_system_pci_resources(struct pnp_dev *dev)
- 
- #ifdef CONFIG_AMD_NB
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- 
- static void quirk_amd_mmconfig_area(struct pnp_dev *dev)
- {
-diff --git a/drivers/ras/amd/atl/internal.h b/drivers/ras/amd/atl/internal.h
-index f9be26d..c63fee3 100644
---- a/drivers/ras/amd/atl/internal.h
-+++ b/drivers/ras/amd/atl/internal.h
-@@ -17,7 +17,7 @@
- #include <linux/bitops.h>
- #include <linux/ras.h>
- 
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
- #include <asm/amd_node.h>
- 
- #include "reg_fields.h"
+ #include "debug.h"
+ #include "session.h"
