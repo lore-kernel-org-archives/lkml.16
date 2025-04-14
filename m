@@ -1,98 +1,185 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80471DF42
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE82D26B959;
+	Mon, 14 Apr 2025 11:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744629061; cv=none; b=At550iHpDn/Jh3mCgQ8zZxT2+xnl795r3DIGxVWg4VWd7l6imTYKj4uV/LAn2IpV4cul47jWq3H4RrM62WqVRHpq/rIcMWKMW8rYnwdl6gdc29Y1ONOvRIhh/GGDGbiO8VLOTKRNTr5JwDBM9Ag07JZ2YABtieNWVW1HGttMrlo=
+	t=1744629131; cv=none; b=AHMK3Ob/NGMCgZ7sbILBhismSTJRmwUhbLT5FxVlxSvSOW80tG+qbqUHjf04TFmLFzykyWIgM+U1g2HRJ6+dEW1ujbYNdOWcahtQCswz6d+X3HZoBzksVcqtJp98JRcN2TIFPG+hXBc9M4k3XqKQFrnw+yOov/daaV/o4KwaM1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744629061; c=relaxed/simple;
-	bh=9Vep7/5YPgD9bMair/kXqnEQVoJBlizsE2UGtAaNckE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PnaqqRGf4QcJTW/kLw8YEirFPX5o/FydlxuVov/5n3b4cOY4k6YoI9RdKbEfBwtLHDne4lQHHBt7ll7FCS7FgVfNjaFdgjZ//JTCJydiOeqDLVe9zQOTpiNnxnoUCJwx6BC80ujwwDq30hS3tNLL48Ij5N45sX7/H1sHsnOYD20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Um6HdJmM; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744629131; c=relaxed/simple;
+	bh=lORcb9m4t9mzbdgmugR7mPLJcYroDKZKkInsJ6OO9lM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZQBbYrNhRPgr9L3nxAE8/9AXDaRSoW8TNpaqxQ64R9IaQpyghAd5t04p7PHW03IKymlZtZQDbSyxDNjfmRHGk77T+4iDMG0jghdIAjFoWMeH0nUdEzxivgdvQOQw5RKEwwSHnyh+C0uK9Qd4h1R7EgUhSK5/0k0wMtV6Zo6ks1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ZU699fq5; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Um6HdJmM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=6ugw3erzbffzvieb4nbfwa2try.protonmail; t=1744629057; x=1744888257;
-	bh=YB3aL+anaTQ18vPfGLTzxQTLMQsbFelLoVESPaQBWz4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Um6HdJmM+BE2UxoijTgbn1ejCIVGeWK5jbj8AfSl4CUhCM0ZUcfV/OuBU2L5jDIM0
-	 mK2hDWav5eMG3qtGwzdEIDFMkJTFMjJtVhmvfJu3QjeXEeygWjNEz5BuRS1p5wB3+q
-	 Al/kiQkRfw18moCHU8XDupYUdKbnNZLZO7U389guNFy/J4NfciWHzHY/JPQy1IX3+1
-	 Xdr9RBnONNIn8it1qJjMA6ByftYpOi0jQvS6Tn4zUgVgbEoWvAYj5Eco7zflM3TGjd
-	 bX2tCuCuI3m+486uz/94/aToTysf1pkvFssj/kKjc9i7dzYpc/FeVKQ2KwLbbHHLBf
-	 OnIl3jT7OlT8A==
-Date: Mon, 14 Apr 2025 11:10:50 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, abdiel.janulgue@gmail.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, daniel.almeida@collabora.com, robin.murphy@arm.com, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] rust: device: implement Bound device context
-Message-ID: <D96BDR2E04KF.1CSIS0TVB0YI6@proton.me>
-In-Reply-To: <Z_zp-AvQ6FMv0ZRK@pollux>
-References: <20250413173758.12068-1-dakr@kernel.org> <20250413173758.12068-7-dakr@kernel.org> <D96AXNJRUAA0.3E5KYNM5PZZPG@proton.me> <Z_zp-AvQ6FMv0ZRK@pollux>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 14a5d6a4b0252adb2c75c6db8f812e331aacf4c9
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ZU699fq5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744629051;
+	bh=lORcb9m4t9mzbdgmugR7mPLJcYroDKZKkInsJ6OO9lM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=ZU699fq5vxkY/aYaTBwcVpg5TzaiUrud7fZshUK8lb0RskHhpfvT3C19wM+gZPzb9
+	 T2ny1gC2zOPBQnXFijQST/qLFlxYJ/IlzC/37ywmLuUfIebwiGG4KNPMlE83cMKxcC
+	 tSx45VVQzU6RU6aGstuV+yv08z/8gxXIxmdS+d9w=
+X-QQ-mid: zesmtpip3t1744629041te8fcaa17
+X-QQ-Originating-IP: zm72CyPFSN3HxWel4IMJZZMuN5OE/OD/Wr97GB9Tz5A=
+Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 14 Apr 2025 19:10:39 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13134516107291588432
+EX-QQ-RecipientCnt: 12
+Message-ID: <1F0B4039A1EC1361+e24aa199-17e5-4cb3-9218-52412a60924e@uniontech.com>
+Date: Mon, 14 Apr 2025 19:10:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] ALSA: korg1212: snd_korg1212_prepare: Rename
+ del_timer in comment
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: akpm@linux-foundation.org, guanwentao@uniontech.com,
+ linux-kernel@vger.kernel.org, mingo@kernel.org, niecheng1@uniontech.com,
+ tglx@linutronix.de, zhanjun@uniontech.com, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ SOUND <linux-sound@vger.kernel.org>
+References: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
+ <590769506CF46967+20250414042629.63019-5-wangyuli@uniontech.com>
+ <70bb676764099754d10c4be2f095e0fb829f233a.camel@redhat.com>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <70bb676764099754d10c4be2f095e0fb829f233a.camel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------sPjNKp0JqAX05b2Dt0lPHU60"
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N/BaP5J2bFjvMRKaFiRNfFFXWkSTsi195Q8MQKFHtgSYvGxddYOCDzeX
+	SOlx7SvUoVseCExqlbF/1DPzV1b8X1TqVD8BcSMNKq1yocBcqF8xC/x2uGtQ68+anWA9+Xy
+	HlvAJPsqnxHPT5WcTOeHRdwC8x7dV15nXmqZl6Viq6ZZh8AbB8ccKl7goxiuJdKGu5wt4OS
+	wMBeOLPwhkKapkBsRdHep/iwhr7XT1VDua1ubx4Cur7581dzyRR+ZVKtjf+tIJ/I/Dn35Qc
+	NBJHS4d5puNTgIRuNfqqIkAV7I54QF8LbsNewXk13eVBMcEsZkMlXH7OcVAOvxGfKVUgN/m
+	0DLbb4OyMaQ/mBqWq2EQOI70LaXvEZ2SFNWkT4ETBERXXwFA9yT0lNUmCJsp1Lbo6I9ScG8
+	R1yEQvWg0poeUMLfPTsyK46zXwvTWFfAO3jwyLN1M9elaOsTNN90iwOV7Lr7HD56Sj0nbRa
+	0qCkfviaB1D4DOm1WW7h+o5K22MSKDeW2NLjYncvzsoCrsXVoM1VTMu84T7/c/SgYQlK6O1
+	4MIN8p10DVwRhnX8+dJt8wUlPqcct44oN/bnd1G3JYgs4rJ3iNZRoMRgC7pMZLsSxo2LHb3
+	1nceT2xzl0s8rSJJji9Su4woGvakzTxe3XkYtXtrUKHnlnhH8xFwYS8FWg2E1r40DXRT5GD
+	zl4E7FAnqCIRSTcTPe65EmCZ8CThoob9kjIH5tXWcOwpIvDnjQBBiPo3yLLHnuJHYLd+Nbv
+	J/hX+DP424nQImvCx6BA55i0K4DsQwWtC0q/jfCSDLe6aBpZstz3MtkX0mfxB1aLMgg/qGG
+	xCPQ6cbFKAU06I7cWEZoNKuhWwyZCaUEWNdzSk96zCDzIT5+OrWdQFoLX3aveNLDGC+5pJm
+	RbrUT4MHJBhsLDl/MrUASr2s16alFHtziJ9J9viICZf6N6g6+qC9aMqmJD8DKFixiG50K+1
+	H7fHeG0Dg1J4RCwTvpYbrnKsc8rxUipcvyb0PTcZ4Kf2kDwRJL0hB7ZTzFIj+d0hJAceiDh
+	QXiw0GhpP+EiC164nvpjEUNrNSJ3eEBwliuWkWpSopylqaFgLtOXQDhb3yp1TY0uPaniUTm
+	0u0GEtRcjxzSEbcoKfaO6i8kcR7yFp0NTWhoLeH7ZVQ
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------sPjNKp0JqAX05b2Dt0lPHU60
+Content-Type: multipart/mixed; boundary="------------05aqf5MoCRa2ZHVvHIRAzqRJ";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: akpm@linux-foundation.org, guanwentao@uniontech.com,
+ linux-kernel@vger.kernel.org, mingo@kernel.org, niecheng1@uniontech.com,
+ tglx@linutronix.de, zhanjun@uniontech.com, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ SOUND <linux-sound@vger.kernel.org>
+Message-ID: <e24aa199-17e5-4cb3-9218-52412a60924e@uniontech.com>
+Subject: Re: [PATCH v2 5/5] ALSA: korg1212: snd_korg1212_prepare: Rename
+ del_timer in comment
+References: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
+ <590769506CF46967+20250414042629.63019-5-wangyuli@uniontech.com>
+ <70bb676764099754d10c4be2f095e0fb829f233a.camel@redhat.com>
+In-Reply-To: <70bb676764099754d10c4be2f095e0fb829f233a.camel@redhat.com>
+
+--------------05aqf5MoCRa2ZHVvHIRAzqRJ
+Content-Type: multipart/mixed; boundary="------------R1Q0LKs0bvWxDHn0Z8pAJmdN"
+
+--------------R1Q0LKs0bvWxDHn0Z8pAJmdN
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+SGkgUGhpbGlwcCBTdGFubmVyLA0KDQpPbiAyMDI1LzQvMTQgMTY6MzQsIFBoaWxpcHAgU3Rh
+bm5lciB3cm90ZToNCj4gV291bGRuJ3QgaXQgYmUgYmV0dGVyIHRvIGp1c3QgcmVtb3ZlIGFs
+bCB0aGF0PyBPciBhdCBsZWFzdCBkb2N1bWVudA0KPiB3aGF0IGl0IGlzIGdvb2QgZm9yPw0K
+DQpUaGlzIGNvZGUgY29tZXMgZnJvbSBjb21taXQgNGQ2ZGNmNjBiOSAoIkFMU0EgdXBkYXRl
+IMKgwqAtIGRvY3VtZW50YXRpb24gDQogwqDCoC0gY29udHJvbCBBUEkgLSBhZGRlZCBtdWx0
+aS1lbGVtZW50cyB0byByZWR1Y2UgbWVtb3J5IHVzYWdlIMKgwqAtIA0KaW1wcm92ZWQgcHJl
+YWxsb2NhdGlvbiBvZiBETUEgYnVmZmVycyDCoMKgLSBDUzQ2eHggZHJpdmVyIC0gYWRkZWQg
+c3VwcG9ydCANCmZvciBzZWNvbmRhcnkgY29kZWMgwqDCoC0gSERTUCBkcml2ZXIgLSBiaWcg
+dXBkYXRlIMKgwqDCoMKgLSBmaXJtd2FyZSBpcyANCmxvYWRlZCB3aXRoIGhkc3B0b29sIG5v
+dyDCoMKgLSBwbWFjIGRyaXZlciB1cGRhdGVzIChmaXhlZCBvb3BzIGFuZCBiZWVwIA0Kc3R1
+ZmYpIMKgwqAtIFZJQTgyeHggZHJpdmVyIHVwZGF0ZWQgwqDCoC0geW1mcGNpIGRyaXZlciB1
+cGRhdGVkIMKgwqAtIGRyaXZlcnMgDQp1cGRhdGVkIHRvIG5ldyBQblAgbGF5ZXIgwqDCoMKg
+wqAtIHdhdmVmcm9udCwgYWQxODE2YSwgY3M0MjN4LCBlczE4eHgsIA0KaW50ZXJ3YXZlLCBv
+cGwzc2EyLCBjbWk4MzMwIikgaW4gdGhlIGhpc3RvcnkgdHJlZSBbMV0gYXMgcGFydCBvZiBh
+IGh1Z2UgDQpwYXRjaC4NCg0KSSBjb3VsZG4ndCBmaW5kIGFueSB1c2VmdWwgaW5mb3JtYXRp
+b24gYWJvdXQgdGhpcyBzcGVjaWZpYyBjb2RlIHdpdGhpbiANCnRoYXQgY29tbWl0Lg0KDQpT
+aW5jZSBJJ20gdW5jZXJ0YWluIGlmIHdlIHRydWx5IGRvbid0IG5lZWQgaXQgKHRoaXMgY29k
+ZSBpcyBtYXJrZWQgd2l0aCANCiJGSVhNRSIgYWJvdmUpLCBJJ3ZlIGtlcHQgdGhpcyBjb21t
+ZW50Lg0KDQpGdXJ0aGVybW9yZSwgdGhpcyBkcml2ZXIgaGFzIG90aGVyIHNlY3Rpb25zIG9m
+IGNvbW1lbnRlZC1vdXQgY29kZSBhcyANCndlbGwsIHNvIGEgbW9yZSBjb21wcmVoZW5zaXZl
+IGNsZWFudXAgb2YgdGhpcyBkcml2ZXIgbWlnaHQgYmUgYSBiZXR0ZXIgDQphcHByb2FjaCBp
+biB0aGUgZnV0dXJlLg0KDQpJZiBwb3NzaWJsZSwgSSdkIGFsc28gYmUgaGFwcHkgdG8gY29u
+dHJpYnV0ZSB0byB0aGF0IGVmZm9ydC4NCg0KSG93ZXZlciwgdGhpcyBjb21taXQgaXNuJ3Qg
+aW50ZW5kZWQgZm9yIHRoYXQgcHVycG9zZS4NCg0KSXRzIHNvbGUgYWltIGlzIHRvIGNsZWFu
+IHVwIHRoZSBjb21tZW50IHRoYXQgd2VyZSBtaXNzZWQgYnkgY29tbWl0IA0KOGZhNzI5MmZl
+ZTVjICgidHJlZXdpZGU6IFN3aXRjaC9yZW5hbWUgdG8gdGltZXJfZGVsZXRlX3N5bmMiKSBh
+bmQgc2hvdWxkIA0KaGF2ZSBiZWVuIHVwZGF0ZWQuDQoNCg0KWzFdLiANCmh0dHBzOi8vd2Vi
+LmdpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90Z2x4L2hpc3Rvcnku
+Z2l0L2NvbW1pdC8/aWQ9NGQ2ZGNmNjBiOTgwMDBjMjA0YjMwOWI1MjljMTBiMmEzODg0Nzg5
+ZQ0KDQoNClRoYW5rcywNCg0KLS0gDQpXYW5nWXVsaQ0K
+--------------R1Q0LKs0bvWxDHn0Z8pAJmdN
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-On Mon Apr 14, 2025 at 12:56 PM CEST, Danilo Krummrich wrote:
-> On Mon, Apr 14, 2025 at 10:49:49AM +0000, Benno Lossin wrote:
->> On Sun Apr 13, 2025 at 7:37 PM CEST, Danilo Krummrich wrote:
->> > The Bound device context indicates that a device is bound to a driver.
->> > It must be used for APIs that require the device to be bound, such as
->> > Devres or dma::CoherentAllocation.
->> >
->> > Implement Bound and add the corresponding Deref hierarchy, as well as =
-the
->> > corresponding ARef conversion for this device context.
->> >
->> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->> > ---
->> >  rust/kernel/device.rs | 16 +++++++++++++++-
->> >  1 file changed, 15 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
->> > index 487211842f77..585a3fcfeea3 100644
->> > --- a/rust/kernel/device.rs
->> > +++ b/rust/kernel/device.rs
->> > @@ -232,13 +232,19 @@ pub trait DeviceContext: private::Sealed {}
->> >  /// any of the bus callbacks, such as `probe()`.
->> >  pub struct Core;
->> > =20
->> > +/// The [`Bound`] context is the context of a bus specific device ref=
-erence when it is guranteed to
->> > +/// be bound for the duration of its lifetime.
->> > +pub struct Bound;
->>=20
->> One question about this: is it possible for me to
->> 1. have access to a `ARef<Device<Bound>>` (or `Core`) via some callback,
->> 2. store a clone of the `ARef` in some datastructure,
->> 3. wait for the device to become unbound,
->> 4. use a `Bound`-only context function and blow something up?
->
-> You can never get an ARef<Device> that has a different device context tha=
-n
-> Normal.
->
-> A device must only ever implement AlwaysRefCounted for Device (i.e.
-> Device<Normal>).
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Ah yes, I thought there was something there, that's perfect. Might also
-be a good idea to write this down before it becomes tribal knowledge :)
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
 
----
-Cheers,
-Benno
+--------------R1Q0LKs0bvWxDHn0Z8pAJmdN--
 
+--------------05aqf5MoCRa2ZHVvHIRAzqRJ--
+
+--------------sPjNKp0JqAX05b2Dt0lPHU60
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/ztLwUDAAAAAAAKCRDF2h8wRvQL7o76
+AP4vSp2RHZenKwJ+Yu32HKSYi0EElx32Xd/hb6RALXlZogEA1En6z9Tw1+yNPa0hFLuwdkKuuwaw
+qS44lwKdZLFzJAg=
+=fnlv
+-----END PGP SIGNATURE-----
+
+--------------sPjNKp0JqAX05b2Dt0lPHU60--
