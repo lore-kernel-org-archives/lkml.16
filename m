@@ -1,209 +1,86 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx1.secunet.com (mx1.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C082526B976
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3031C25D906;
+	Mon, 14 Apr 2025 10:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.96.220.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625156; cv=none; b=tv+4O/2SgO5e5zynlO2+uzMWgGamIs3k4wKuAIDz4jnGZkV+u0dYy1dF8E4YMp2Zo5lsvdlXxXcejbGWLvDPge7At1Ad13Ko+Js8gjJXCtPp/KqBBswMLISwmCitM7ld0C+NIHY3oezbXd9NX3V9FfKsXIAPlutNGuBIiFT9Q00=
+	t=1744625190; cv=none; b=qMP5aTZoDv1fDojc7xGiRDHZW8gHrZ2j+t51kVjrjWSe37LwAj+rSPiG9CyiG8jTeqwx3puu9oMBSlkKfxH5hlQr+Yun5PWinlqrvCeWZRCJIc84dBNgo+aWbUFBNtxvHExeSsiNgPys1HlW+lPI+ZHjpmQkeAvfZVO8yle28mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625156; c=relaxed/simple;
-	bh=jDs8thLNCqncuvS6eDO8362rXAxntviZVG8dwQeCguA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UbF9S/sBT26Xfe7BKyMoA6LRk9+/N3uRdCLcmG20Y9UaR2qIkLnLhNbDg/QxarfhwXs6Uqp906XaxIwGehqTGd5+kipE1G5Pr55rdNlBdlWkwMkk6Umh9Z/GAeciumRe9qao99p9ydtk/EcggdKtAuWytJ0acMA9UT7IHHagwSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BGFWwjQa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744625190; c=relaxed/simple;
+	bh=ZNyWoh62au4hKwUORM15ujCiAze3gVDBcUmNw4dKBGs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQxxYAmOZuQifj3pHzgTjXkfLpu8uSweI4nRwFD0T+xukPn7mg++sJOr4/vMrbA165odRLizNsvWB05orwCmfI78xWYsoLyOGcewAsOAObV00q64tn2xDVlqVCkc37TLU20lojjucpeTpl5CGRkctamJHmb/PVVzuJ9g3cD1Qh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com; spf=pass smtp.mailfrom=secunet.com; dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b=MQVQFc3d; arc=none smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=secunet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BGFWwjQa"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99ojM031333
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:05:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UMvb8N95/gaSyVsSWCc3DQiAI8CRlEgBC06NE46MZVI=; b=BGFWwjQa2f9cEjFT
-	qbBrfWdM+RFdK0K9hdYfPuRteQ8XNaiYwx67b3Ohkbvu55nMDHsq/Vu1HliRSriu
-	G8YP0GPLDLIhb/pRr+RCG7ds+150Bmpj6tF0j5w3EfAUhGu1egHaUHu5o6JwgAsW
-	EX0UNu99uROjyJlAnmg5ljh5DGJOE374S2ttB89cFaW5GNlrnec2iQX2TZUM9LM2
-	vVMbxndBqfFYBx/4KJnmDmmcAqD9aVQ2xC9+aA4aCFwbA/GX40vp8Gn9A7FdKEYD
-	Wwz4eulHTX7xCMDig8iDUl0dMS54L7mummSuDy6dnWbx9JFL0RvvwLZSoaxe3BJ9
-	BsFp/w==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxjv1t0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:05:53 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6eeb8a269a7so13196526d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:05:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744625135; x=1745229935;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UMvb8N95/gaSyVsSWCc3DQiAI8CRlEgBC06NE46MZVI=;
-        b=CkphiUm4epUJBIHOLtpNxN5BHM/eB45Eb3dXPBDEDK1YaIxEUaprdwvIHl9i1tRYjm
-         9qXlkAdhaS597cn0mQOzQhuBBAcf0rkxfKZzD8I5dEg2eSNBxANy1pMvQUlFIDN6acyk
-         ABxRL5E6Y312sOVwM2ryara0nxVlYtwhYBV1n0/2riydyeD2SoTlRoiAv+t2EfXZ6+OJ
-         H1w4AXv3g/aZulSV0kKo+VjbEdG15Zm5ec1DtGT42xD+D/CwmqSaYlNZwPA1kLa5w6zH
-         joiP2lK5OTww4wK/Fmt9wYL97Rrt0LC3/G9yG+FAlFHf1BRKWM8bbcmsj6K1ZdGX7cKL
-         M+WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFZR++vlRrIuBJAbfmLqZ6N1wHMi8T7z8O8dDMfeO4gli/U9+mBvmq72qhXPjKCJ2UvV3wnHBfq5a7X0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE9zc0fUdG9vfbnu0G4E3DWFsUdonpKvmYMZlnqu+bknJq7yuz
-	SXY1bvuMeoxTmB3KR0btqPf1Bc4my+f9C23wX2KBgfBPUBFRXVmcMdxYU03e2ftE09KsLZ8xVa0
-	z3uwInsKPxuPKAI/el3PiSC5s3pNJ9nAoGWYynmSVXhXzOyCu51jsdvlKPaevlAU=
-X-Gm-Gg: ASbGncvSetz6jR0qSlfw6ZU/lo+SkI5kBTqK/4lvUYF+VPGjxH43P3nX/q9tZm8CyFp
-	u96yeHaWZ4RId2TSBapExCg2E7IJv2lf0IJyksJSsznT3bRCG54ZPTsq+MrJN2MGKfZSE9MvXR7
-	+ylJj9Zu0tTsnIAl3wwZnvLiHGiMnd78ek7dS4UKkaB42+Loq6BerTjR5FYVnnwkjTneiEqGCU8
-	th0nv05DRr0FcDGx7nlShIhpG5i/8cDsj4UCt1iM4ioC1XUcjTIB14rgrfPDrnzjeyJJTDHxxBy
-	5vWFuFZmWrr2I3mnqA4P9FyFT0LllWYn0uRPMW78ju2HaT254M/ZairRRoiSOcqRKw==
-X-Received: by 2002:a05:620a:3197:b0:7c5:8f37:1eb2 with SMTP id af79cd13be357-7c7af113d7bmr603259185a.9.1744625134285;
-        Mon, 14 Apr 2025 03:05:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmBUa5andw4pRRHVYC8/NGtkbW9c5vRVpeMF8s8vhz5E8trZWGxeC/sN+v6rRNhzWhNX/m+Q==
-X-Received: by 2002:a05:620a:3197:b0:7c5:8f37:1eb2 with SMTP id af79cd13be357-7c7af113d7bmr603256585a.9.1744625133674;
-        Mon, 14 Apr 2025 03:05:33 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3120sm868414666b.1.2025.04.14.03.05.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 03:05:33 -0700 (PDT)
-Message-ID: <691a2358-bf5d-4f03-ae2d-97fb2e40952a@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 12:05:30 +0200
+	dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b="MQVQFc3d"
+Received: from localhost (localhost [127.0.0.1])
+	by mx1.secunet.com (Postfix) with ESMTP id 1EE55201D3;
+	Mon, 14 Apr 2025 11:56:38 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from mx1.secunet.com ([127.0.0.1])
+ by localhost (mx1.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 8E33jBSiOPq7; Mon, 14 Apr 2025 11:56:37 +0200 (CEST)
+Received: from cas-essen-01.secunet.de (rl1.secunet.de [10.53.40.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.secunet.com (Postfix) with ESMTPS id 9917720189;
+	Mon, 14 Apr 2025 11:56:37 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.secunet.com 9917720189
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secunet.com;
+	s=202301; t=1744624597;
+	bh=lLW1th0ueqLQqVlTjqxfT6KMgj1F2ySWK7RoNNfWyyA=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To:From;
+	b=MQVQFc3doqvtbUKl1uCfUzj5zmkNRhpTXHU+LNRxYNv3Iw7DDxdjmAQgU6xdE09vS
+	 /6VZ0lQf9WYljXDcTynNz5d8AuG3Pj4CeLse7WAXHx9ODi7M0KKuDTvn/gBhKZt5Qm
+	 RXjHwXnn+MqW9IP+kdp7uQSrwauNUYzdySMIzeqrSNY9n84Bzy+E89v6KsA1dhi/o2
+	 CYARUAkFGSNuBWdEYVhWz08SIgydoRcJWNf8P+U/dVx8fC3dhGa488hEH1LMH5wMLC
+	 B11c7EaJJ10sv2bjWimpNwaZ/Hu5Zj0DovpoeHoJptjkZmiKUucE29BXgwtzlmHX85
+	 CXn2tXmjRQxVQ==
+Received: from mbx-essen-02.secunet.de (10.53.40.198) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 14 Apr 2025 11:56:37 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
+ (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
+ 2025 11:56:36 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+	id 9D96F3182D8A; Mon, 14 Apr 2025 11:56:36 +0200 (CEST)
+Date: Mon, 14 Apr 2025 11:56:36 +0200
+From: Steffen Klassert <steffen.klassert@secunet.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+CC: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] xfrm: Remove unnecessary strscpy_pad() size
+ arguments
+Message-ID: <Z/zb1KBdnCgAgdYe@gauss3.secunet.de>
+References: <20250320124450.32562-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
- to DP bridge nodes
-To: Ayushi Makhija <quic_amakhija@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com
-References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
- <20250404115539.1151201-8-quic_amakhija@quicinc.com>
- <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
- <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
- <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
- <bb277124-a225-450b-acfe-0acd0f94b263@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <bb277124-a225-450b-acfe-0acd0f94b263@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=67fcde01 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=ovN_W45TYzZQxDyi82gA:9 a=QEXdDO2ut3YA:10
- a=iYH6xdkBrDN1Jqds4HTS:22 a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-GUID: 7Jo61CB2bWibS9oM9lc0-gZiL2bJJifn
-X-Proofpoint-ORIG-GUID: 7Jo61CB2bWibS9oM9lc0-gZiL2bJJifn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140073
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250320124450.32562-2-thorsten.blum@linux.dev>
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-02.secunet.de (10.53.40.198)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 
-On 4/14/25 11:56 AM, Ayushi Makhija wrote:
-> Hi Dmitry,
+On Thu, Mar 20, 2025 at 01:44:51PM +0100, Thorsten Blum wrote:
+> If the destination buffer has a fixed length, strscpy_pad()
+> automatically determines its size using sizeof() when the argument is
+> omitted. This makes the explicit sizeof() calls unnecessary - remove
+> them.
 > 
-> On 4/11/2025 1:31 AM, Dmitry Baryshkov wrote:
->> On Thu, Apr 10, 2025 at 06:37:54PM +0530, Ayushi Makhija wrote:
->>> Hi Dmirity/Konard
->>>
->>> On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
->>>> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
->>>>> Add anx7625 DSI to DP bridge device nodes.
+> No functional changes intended.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-[...]
-
->>>>> @@ -517,9 +548,135 @@ &i2c11 {
->>>>>  
->>>>>  &i2c18 {
->>>>>  	clock-frequency = <400000>;
->>>>> -	pinctrl-0 = <&qup_i2c18_default>;
->>>>> +	pinctrl-0 = <&qup_i2c18_default>,
->>>>> +		    <&io_expander_intr_active>,
->>>>> +		    <&io_expander_reset_active>;
->>>>
->>>> These pinctrl entries should go to the IO expander itself.
->>>>
->>>>>  	pinctrl-names = "default";
->>>>> +
->>>>>  	status = "okay";
->>>>> +
->>>>> +	io_expander: gpio@74 {
->>>>> +		compatible = "ti,tca9539";
->>>>> +		reg = <0x74>;
->>>>> +		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
->>>>> +		gpio-controller;
->>>>> +		#gpio-cells = <2>;
->>>>> +		interrupt-controller;
->>>>> +		#interrupt-cells = <2>;
->>>>> +
->>>>> +		gpio2-hog {
->>>>
->>>> This needs a huuge explanation in the commit message. Otherwise I'd say
->>>> these pins should likely be used by the corresponding anx bridges.
->>>
->>> Thanks, for the review.
->>>
->>> Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
->>> After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
->>> to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
->>> ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
->>
->> Please make sure that there are pinctrl entries for all pins.
->>
-> 
-> Thanks, for the review.
-> 
-> While declaring the pinctrl entries inside the io_expander node, I am getting below error while checking the DTBS check against DT-binding.
-> 
-> Error : /local/mnt/workspace/amakhija/linux_next_11042025/linux/arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: gpio@74: 'dsi0-int-pin-state', 'dsi1-int-pin-state' do not match any of the regexes:
->         '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+' from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
-> 
->         io_expander: gpio@74 {
->                 compatible = "ti,tca9539";
->                 reg = <0x74>;
->                 interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
->                 gpio-controller;
->                 #gpio-cells = <2>;
->                 interrupt-controller;
->                 #interrupt-cells = <2>;
-> 
->                 pinctrl-0 = <&io_expander_intr_active>,
->                             <&io_expander_reset_active>;
->                 pinctrl-names = "default";
-> 
->                 dsi0_int_pin: dsi0-int-pin-state {
->                         pins = "gpio2";
->                         input-enable;
->                         bias-disable;
->                 };
-> 
->                 dsi1_int_pin: dsi1-int-pin-state {
->                         pins = "gpio10";
->                         input-enable;
->                         bias-disable;
->                 };
-> 
->         };
-> 
-> I couldn't find any devicetree example of tca9539 which is using pinctrl. The gpio-pca95xx.yaml DT binding does not match with any regex of the patterns properties.
-
-It looks like patternProperties should be extended, perhaps with
-something that includes pincfg-node.yaml? Krzysztof?
-
-Konrad
+Applied, thanks a lot!
