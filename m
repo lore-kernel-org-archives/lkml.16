@@ -1,48 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0A31F542E;
-	Mon, 14 Apr 2025 21:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD1A1F8731;
+	Mon, 14 Apr 2025 21:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744666930; cv=none; b=ADAVqcc02pZlsNgZGR2aT+JSNgaRfWWMLhV6Hs7JMVLnra8q2njbaQKAeV3oiwGf8wdtUhRHZJicsjPXS2/mANqac1GpRzFexRpdJ+nqz3TBeap3p0CPrXVPCCQ9Y6RxntQE/9WXdhoSnWWpjNTc4rVfXsToOJj/p0PD1ut5n+0=
+	t=1744666931; cv=none; b=WcjDS5qziYd6+QNpgoeAHwQjf/lLwgDKjfcpBugRcdkL1gcyRyVGRKe3W9wWoqewJVh9KpS1hiv4GOfaB1eOwPa0HfbUEGzh1D91y1WkPajhFK2gTV60Y/QsQrLRknw2brgLq5hHhQ+PM/ReV3wKR/5ZGIYgaP35TTL+368GImo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744666930; c=relaxed/simple;
-	bh=VCaMKVR89ookuZONPoMM9YW1f2EPtej4NWNimSc/EFo=;
+	s=arc-20240116; t=1744666931; c=relaxed/simple;
+	bh=jUvxnIYUbRoDsGcxWrRs5hQT0rBrN7ve+6frDdnr+zc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SjsnvuEhOs+5RmhLDxFYjJQZyTvjbxG+Nr85B5/Abr3u5zeId0DoK6D8bpDO6gQk0V21Uzz9PoCy2EZv/7p70L8O0ye0PMblY7JNHrzdJt87RlD5izQycCoSCKqyw3m/kU8gSsvbgV6cYBWRJSCwr09GHs2l0H4j5/35yIGwR48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Rq7U2VC4; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=kPLocxjqmMtvbkhMReKiJngIKpOK9FfE/rdALqBZkhVCdqDMysEqH4MAha3bNJrb0Y+SczXgt8C6UTNm6GJmAg8Ko3tSaMXH8HQqD6pA4QwYXSeQoS2qtS0PAweV22ibrAXpAattepz5Fnae4xc7aV9lir8fPxKGJieD9DKkym0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ha8m4C6s; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Rq7U2VC4"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ha8m4C6s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1744666928; x=1776202928;
+  t=1744666929; x=1776202929;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VCaMKVR89ookuZONPoMM9YW1f2EPtej4NWNimSc/EFo=;
-  b=Rq7U2VC4EzVpMlzExlzCEogiQOSzPjMgZa0mEocuGyz+mz1X3aG/DZE/
-   Qa/ifwYvwV7jAnfzbskYNaPZn3iyeRUKi7ziWKzVTXvliFsgAi5Th2RoP
-   tFWm+IZYlkBc8Ev4a35Xzj98pxPXEPmSC0OnsM/qwLh3L6t8rO1v87OKO
-   gBmxMJIBV9Hu3Wf1+KbRnBRWq6cGbYOMN288yK5jVtyQxwguCh/QbhwtL
-   uGGa3VWgBjxNjBcw7W+KyJ/60TdnAlDZnwP5PE1ELkDtUKTpd9qSPuAVy
-   cgvtphgECFzPsscwkqxvV/O5rYPjyr/NXmoD15q+cKtOycyIz4AuQX+Zb
-   g==;
+  bh=jUvxnIYUbRoDsGcxWrRs5hQT0rBrN7ve+6frDdnr+zc=;
+  b=ha8m4C6s5biXrefQBRKl5Nts4CsgH3jENSXRudq2JtNmCy3WX/C3LFL4
+   4oYJ7nfrOv4og6jVz8nEM/kgCHBaucGEN/dsQD6BPemD2jqGPYt7jtqpP
+   1l+Fb+I9Azs5uamm9ceDv6aM0bc6pJlLo2HEQv+8G8kLNAVXlwHd8BMjB
+   1/lkV7VGbe/FekqmYbWP1kpnQipDY/hEP8Og7vpbjy1N/LjOV/xGZN7hr
+   7wGhn1dUEucNXOU+EbWqvai98exvex51NibjPHiUmKm+tiU4tgVJVSe4o
+   1R2+S9Af/cRdgZZs3nGSES+DiXf3KRE3Sfyf6MV2SiWOaItsN2ZfbS7/M
+   Q==;
 X-CSE-ConnectionGUID: jf75aQsXSneWELgtntpGWQ==
-X-CSE-MsgGUID: D0dtunMcRnuRprEgLd2nHQ==
+X-CSE-MsgGUID: H+TRc6fwTnGuExqarZ3BvA==
 X-IronPort-AV: E=Sophos;i="6.15,212,1739862000"; 
-   d="scan'208";a="40006675"
+   d="scan'208";a="40006677"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Apr 2025 14:41:57 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 14 Apr 2025 14:41:05 -0700
+ 15.1.2507.44; Mon, 14 Apr 2025 14:41:06 -0700
 Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Mon, 14 Apr 2025 14:41:05 -0700
+ 15.1.2507.44 via Frontend Transport; Mon, 14 Apr 2025 14:41:06 -0700
 From: <Ryan.Wanner@microchip.com>
 To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -50,11 +50,10 @@ To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 	<p.zabel@pengutronix.de>
 CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-rtc@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 07/11] dt-bindings: mfd: syscon: atmel,sama5d2-secumod: convert to yaml
-Date: Mon, 14 Apr 2025 14:41:24 -0700
-Message-ID: <a999a719a652ec834f1176d69a3e9b207cbd63e6.1744666011.git.Ryan.Wanner@microchip.com>
+	<linux-rtc@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH v5 09/11] ARM: dts: microchip: sama7d65: Add SRAM and DRAM components support
+Date: Mon, 14 Apr 2025 14:41:26 -0700
+Message-ID: <354ecd628fdd292d2125570a6b10a93cbecb7706.1744666011.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1744666011.git.Ryan.Wanner@microchip.com>
 References: <cover.1744666011.git.Ryan.Wanner@microchip.com>
@@ -69,103 +68,73 @@ Content-Type: text/plain
 
 From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Convert Microchip AT91 secumod to YAML format.
+Add SRAM, secumod, UDDRC, and DDR3phy to enable support for low power modes.
 
 Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/arm/atmel,sama5d2-secumod.yaml   | 48 +++++++++++++++++++
- .../devicetree/bindings/arm/atmel-sysregs.txt | 25 ----------
- 2 files changed, 48 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml
+ arch/arm/boot/dts/microchip/sama7d65.dtsi | 35 +++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml b/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml
-new file mode 100644
-index 000000000000..b1f766e333d4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/atmel,sama5d2-secumod.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip AT91 Security Module (SECUMOD)
-+
-+maintainers:
-+  - Nicolas Ferre <nicolas.ferre@microchip.com>
-+
-+description:
-+  The Security Module also offers the PIOBU pins which can be used as GPIO pins.
-+  Note that they maintain their voltage during Backup/Self-refresh.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: atmel,sama5d2-secumod
-+          - const: syscon
-+      - items:
-+          - enum:
-+              - microchip,sama7g5-secumod
-+          - const: atmel,sama5d2-secumod
-+          - const: syscon
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    security-module@fc040000 {
-+      compatible = "atmel,sama5d2-secumod", "syscon";
-+      reg = <0xfc040000 0x100>;
-+      gpio-controller;
-+      #gpio-cells = <2>;
-+    };
-diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-index d3821f651e72..5ce54f9befe6 100644
---- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-@@ -46,28 +46,3 @@ Examples:
- 		reg = <0xffffe800 0x200>;
+diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+index b6710ccd4c36..8439c6a9e9f2 100644
+--- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
++++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+@@ -47,6 +47,14 @@ slow_xtal: clock-slowxtal {
+ 		};
  	};
  
--Security Module (SECUMOD)
--
--The Security Module macrocell provides all necessary secure functions to avoid
--voltage, temperature, frequency and mechanical attacks on the chip. It also
--embeds secure memories that can be scrambled.
--
--The Security Module also offers the PIOBU pins which can be used as GPIO pins.
--Note that they maintain their voltage during Backup/Self-refresh.
--
--required properties:
--- compatible: Should be "atmel,<chip>-secumod", "syscon".
--  <chip> can be "sama5d2".
--- reg: Should contain registers location and length
--- gpio-controller:	Marks the port as GPIO controller.
--- #gpio-cells:		There are 2. The pin number is the
--			first, the second represents additional
--			parameters such as GPIO_ACTIVE_HIGH/LOW.
--
--
--	secumod@fc040000 {
--		compatible = "atmel,sama5d2-secumod", "syscon";
--		reg = <0xfc040000 0x100>;
--		gpio-controller;
--		#gpio-cells = <2>;
--	};
++	ns_sram: sram@100000 {
++		compatible = "mmio-sram";
++		reg = <0x100000 0x20000>;
++		ranges;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		ranges;
+@@ -58,6 +66,23 @@ sfrbu: sfr@e0008000 {
+ 			reg = <0xe0008000 0x20>;
+ 		};
+ 
++		securam: sram@e0000800 {
++			compatible = "microchip,sama7d65-securam", "atmel,sama5d2-securam", "mmio-sram";
++			reg = <0xe0000800 0x4000>;
++			ranges = <0 0xe0000800 0x4000>;
++			clocks = <&pmc PMC_TYPE_PERIPHERAL 17>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			no-memory-wc;
++		};
++
++		secumod: security-module@e0004000 {
++			compatible = "microchip,sama7d65-secumod", "atmel,sama5d2-secumod", "syscon";
++			reg = <0xe0004000 0x4000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
+ 		pioa: pinctrl@e0014000 {
+ 			compatible = "microchip,sama7d65-pinctrl", "microchip,sama7g5-pinctrl";
+ 			reg = <0xe0014000 0x800>;
+@@ -227,6 +252,16 @@ i2c10: i2c@600 {
+ 			};
+ 		};
+ 
++		uddrc: uddrc@e3800000 {
++			compatible = "microchip,sama7d65-uddrc", "microchip,sama7g5-uddrc";
++			reg = <0xe3800000 0x4000>;
++		};
++
++		ddr3phy: ddr3phy@e3804000 {
++			compatible = "microchip,sama7d65-ddr3phy", "microchip,sama7g5-ddr3phy";
++			reg = <0xe3804000 0x1000>;
++		};
++
+ 		gic: interrupt-controller@e8c11000 {
+ 			compatible = "arm,cortex-a7-gic";
+ 			reg = <0xe8c11000 0x1000>,
 -- 
 2.43.0
 
