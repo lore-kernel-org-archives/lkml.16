@@ -1,72 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721D32D1F55
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B642989AA;
+	Mon, 14 Apr 2025 11:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630807; cv=none; b=lK9wKtH5veZJhsZ9lkJaC5N6NcmaY0mT9+adhUaODIOfIJnskZoB6NX/b2OogNHMpHh211fxVBwkpcM1teSBrbTA4FQRdgXmehza8S9WLrWn6yyOrHqiVCT9bI+ubWOiKuPVSNc16X0Lmkfipt6PjyItit3mQHo/HrLkEz1eLQQ=
+	t=1744630882; cv=none; b=FDGHyqe/vUj3/9kZEl+7qS7rlIgHIaE6T6Y6kaPNgDtDXS1Z3AfeE+1aXWz+b3/Xj81ARfyTrcrMmSilKuR0haDWFwL8VUU5DgUZ8UMQZkKHAk+JnT/VIZjgxijiPQq+f6owZqq8+/lir8fzIefbW5rJBXjUBv+Do898mt9OSr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630807; c=relaxed/simple;
-	bh=Kg8lNN2D9PxXCfWAeQsfblY+CBN9LmqT7NHbOJtwZII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a3UxeY9Va6ck6yOvLHElCgvS4lhf6wmPLV3qskpD/8LB2Q7UxUU5zSN3Gik8ZLuFDvxD9fPO8P5xgXRTb6vLGZglwXahfWjJhV6pZgaOYrm44hove2nCouOp2yA4KAb1rR4w9bXbrpWPEwBnS/8ApZlEjcoMD9nGUzUW0h7V+cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b8ZlYgP0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744630882; c=relaxed/simple;
+	bh=ChNHziXZOA2FpaIGY9w+vgsO8XllfkcXrxbG4utZ4bs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=f6QRKNTMH/anK2o+NvWzAipiOcqzw3gQnP9LFSSBX2un6zzA8YGYVvEadJ00BpiQf3/Dp4szm/UETXtieHzW48IuGb8gflNgI8oHAcsYeXr34YcvYchPbIV3UjBkB5fYsLPDfACckViU+4Y0gSb7IjqZEghMcpnfGoF5JMy/GAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xfUZB7np; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b8ZlYgP0"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99x1e031476
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:40:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DV6qhiKBAUU2imjFAbN+AkEgNtvS7jyxRXDtngWxQDc=; b=b8ZlYgP0nO/bKyvG
-	B0H3DK80AYm2/oG18ZJ0U99qoqONX15MY2fJGBOVGfpoCwpRxxyO67Q5G+Y1F5uT
-	avl+sT/nNwTcg21E9hjhwJNA1N0009iEWfOffuuqFNKFL/H9ckoiEU6ssf0A2ny1
-	FM+XYt/hx8dJ0VzRYdHMRCwAC9EJQ9tj6CfG0SnMAbpWY7FtK71bqWOtVyu5Bi9g
-	dldORNiYnfdb+5OSA7WLziG4CXIy6n2VAG4CFRe+u8h6ra2ilPrnSIKk8XefejGJ
-	kRpe4oat1/kgg2KtQ4yQUAeaqoN2ksNRUqO2Win5ctdRMzNZ7cuqRekyRrJAB0l3
-	0fJvPQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxjv9y6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:40:03 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5ad42d6bcso88765785a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:40:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744630802; x=1745235602;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DV6qhiKBAUU2imjFAbN+AkEgNtvS7jyxRXDtngWxQDc=;
-        b=Dbm1c5v8A1/VGtxvQmmNZsmbs4YpVkI05Y/DikCLIs0JNlIzmnqlEM1/QWkrKypoe7
-         6DJVFoZnmUAxa4u8l8jdNPZabgR9T+94dImJODN1XatVjy+4V8MqxmutpFgRNSbDsnDo
-         fdtIJ/YyOCN7l8KUOMZIUwyjUxevQps6PRzqLraDWJV1RE+bqjvN9qySe8LO8kALIB62
-         Ou1LPZpLgGmdIJR/juFzizO2iLDDeyNvcFMI9sfEpH7r+XbGN2t+4PmcGTC5ayUTHl6C
-         RGfrldigieJVqVqAPGH03AQpwJQ/2nA2HqoldZCjiJQLaPVviYddgOkPfrqXb5wU95F2
-         xJkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlJU8H+IS/LbNOBilzfLwzpV27ENx30w2aiOsikCOarItn+KU2w7xXLXvwUX0ulhzUfv+/0Brx9etPbtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU0iw+DhwJnoZLUzWkJqIYZRkrsby/ygmNb5Qahx7C6nENW6X1
-	/FdrUe4eiRA/qyH5cfrng02dQQinZAG4wI0E8Xw/e7v12v/47AflkYrCr5ySLKNCVzuu/07ih+h
-	CUjyx6LyIn+4koRyA6Go3pQ4KQS3+iSDrmTR8fmosUKD/i1djCOmNWNnzQfvh4aI=
-X-Gm-Gg: ASbGncuJ4Dwk7uaHOFcT4H+mhZv9mbPhos8/DcJSgj6PZdyK/QopVQ0g/BCmWYbMD7o
-	/x77tjDKR5m+NwTiAj9UnVdlRVpVI1ywgoVM2cDbdaU+OJdcMWmxGwiFsceXIYzotuvNsokOdNo
-	0yczhKVrNI+BZzIT0EuGpFZDAG4NQV7RaFUOtrCWj7Sv/tpR47Mwxyx1NBMCE4aN/JNOqw96IGC
-	NIy/0qf6JWb8alX/jtBj0yKbWgK2Re+4UARxBlXk9y7AzaAthwXJTJbBk1GG3YuNF18M+dJciVm
-	QrRaQkPNgZslbIpUR/XA3h1trF/1Y9aBEi0j+qp3NFQcVTRXVj8CKnZNCoqIsgn0Zg==
-X-Received: by 2002:a05:6214:1d08:b0:6e8:fe16:4d42 with SMTP id 6a1803df08f44-6f283adc8e5mr73752086d6.1.1744630802095;
-        Mon, 14 Apr 2025 04:40:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3E0L9e0/RIci+ADRrX4qrK6GQFhC+G2QaLdC4aN8GFac4k2hQr5Yh2rzqnOdAyJM+rcAvig==
-X-Received: by 2002:a05:6214:1d08:b0:6e8:fe16:4d42 with SMTP id 6a1803df08f44-6f283adc8e5mr73751686d6.1.1744630801548;
-        Mon, 14 Apr 2025 04:40:01 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3569sm887225066b.3.2025.04.14.04.39.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 04:40:01 -0700 (PDT)
-Message-ID: <8fe8c0f8-71d5-4a85-96e5-17cb4773820d@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 13:39:56 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xfUZB7np"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EBekXw2046321
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 06:40:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744630846;
+	bh=z2v2YqDM9wvESESnYHXaNZpR11dPLsmv6R7Z15lYtSc=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=xfUZB7npYQOpoB54c4TURLLSpjiSlMy8CTSi5P27KH4fLe3UbByHjGqDXcxWveT6W
+	 cUClb1Xcl+4td+jDQzvDUzL4rEz70rsnu5gtBYjIp6FjXN5maISUSsHe0UXO5fZusg
+	 gvrTGJjo3JO+CEq5C7QbtGbQQpF9FZAvUepIjfRk=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EBekMm102049
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 14 Apr 2025 06:40:46 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
+ Apr 2025 06:40:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 14 Apr 2025 06:40:45 -0500
+Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EBefOi038625;
+	Mon, 14 Apr 2025 06:40:42 -0500
+Message-ID: <28fa61b8-15a6-40c6-96b8-268939226a03@ti.com>
+Date: Mon, 14 Apr 2025 17:10:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,93 +51,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/10] arm64: dts: qcom: sar2130p: add display nodes
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
- <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20250314-sar2130p-display-v2-0-31fa4502a850@oss.qualcomm.com>
- <20250314-sar2130p-display-v2-10-31fa4502a850@oss.qualcomm.com>
- <c14dfd37-7d12-40c3-8281-fd0a7410813e@oss.qualcomm.com>
- <umhperyjdgiz4bo6grbxfhe44wiwoqb3w3qrzg62gf3ty66mjq@pddxfo3kkohv>
+Subject: Re: [PATCH v2 4/7] arm64: dts: ti: k3-j721e-sk: Add requiried voltage
+ supplies for IMX219
+To: "Francis, Neha" <n-francis@ti.com>, <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <stable@vger.kernel.org>
+References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+ <20250409134128.2098195-5-y-abhilashchandra@ti.com>
+ <16713a1b-1e74-4b08-bd4c-12dc0a9d32df@ti.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <umhperyjdgiz4bo6grbxfhe44wiwoqb3w3qrzg62gf3ty66mjq@pddxfo3kkohv>
-Content-Type: text/plain; charset=UTF-8
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+In-Reply-To: <16713a1b-1e74-4b08-bd4c-12dc0a9d32df@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=67fcf413 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=wOxLtKptuZxHWs9q4SMA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: cN-APnmcPdwCl-H8XKnsgKYf4u7qZQtW
-X-Proofpoint-ORIG-GUID: cN-APnmcPdwCl-H8XKnsgKYf4u7qZQtW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=688 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140085
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 4/14/25 1:37 PM, Dmitry Baryshkov wrote:
-> On Mon, Apr 14, 2025 at 01:13:28PM +0200, Konrad Dybcio wrote:
->> On 3/14/25 7:09 AM, Dmitry Baryshkov wrote:
->>> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>
->>> Add display controller, two DSI hosts, two DSI PHYs and a single DP
->>> controller. Link DP to the QMP Combo PHY.
->>>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>> ---
+Hi Neha,
+
+On 11/04/25 19:08, Francis, Neha wrote:
+> On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
+>> The device tree overlay for the IMX219 sensor requires three voltage
+>> supplies to be defined: VANA (analog), VDIG (digital core), and VDDL
+>> (digital I/O). Add the corresponding voltage supply definitions to avoid
+>> dtbs_check warnings.
 >>
->> [...]
+>> Fixes: f767eb918096 ("arm64: dts: ti: k3-j721e-sk: Add overlay for IMX219")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+>> ---
+>>   .../dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  | 33 +++++++++++++++++++
+>>   1 file changed, 33 insertions(+)
 >>
->>> +			mdss_mdp: display-controller@ae01000 {
->>> +				compatible = "qcom,sar2130p-dpu";
->>> +				reg = <0x0 0x0ae01000 0x0 0x8f000>,
->>> +				      <0x0 0x0aeb0000 0x0 0x2008>;
->>
->> size = 0x3000
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
+>> index 4a395d1209c8..4eb3cffab032 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
 > 
-> Existing platforms (including SM8650) use 0x2008 here. Would you like to
-> change all the platforms and why?
-
-The last register is base+0x2004 but the region is 0x3000-sized on 2130
-
-[...]
-
->>> +
->>> +					opp-540000000 {
->>> +						opp-hz = /bits/ 64 <540000000>;
->>> +						required-opps = <&rpmhpd_opp_svs_l1>;
->>> +					};
->> Weirdly enough the 540 rate isn't in the clock plan for the pclk
->> and so isn't 162
+> The link to the schematics seems to need updation, would like to see where these
+> regulators are mentioned, can't find them in [0] which I assume is the latest link.
 > 
-> Nevertheless we need them for the DP to work.
 
-I would assume one would like to have dp compliance, so perhaps they were
-just not on the very page I looked at..
+Yes, It seems that the link to the schematics has been changed.
+I will submit a separate patch to fix that.
 
-Konrad
+While the regulators are not clearly documented in the schematics,
+the voltage levels can be observed in the top-right corner of the 
+schematics.
+
+However, the required regulators are explicitly described in the device 
+tree bindings.
+Please refer: ./Documentation/devicetree/bindings/media/i2c/imx219.yaml
+
+Thanks and Regards
+Yemike Abhilash Chandra
+
+
+>> @@ -19,6 +19,33 @@ clk_imx219_fixed: imx219-xclk {
+>>   		#clock-cells = <0>;
+>>   		clock-frequency = <24000000>;
+>>   	};
+>> +
+>> +	reg_2p8v: regulator-2p8v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "2P8V";
+>> +		regulator-min-microvolt = <2800000>;
+>> +		regulator-max-microvolt = <2800000>;
+>> +		vin-supply = <&vdd_sd_dv>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	reg_1p8v: regulator-1p8v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "1P8V";
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +		vin-supply = <&vdd_sd_dv>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	reg_1p2v: regulator-1p2v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "1P2V";
+>> +		regulator-min-microvolt = <1200000>;
+>> +		regulator-max-microvolt = <1200000>;
+>> +		vin-supply = <&vdd_sd_dv>;
+>> +		regulator-always-on;
+>> +	};
+>>   };
+>>   
+>>   &csi_mux {
+>> @@ -34,6 +61,9 @@ imx219_0: imx219-0@10 {
+>>   		reg = <0x10>;
+>>   
+>>   		clocks = <&clk_imx219_fixed>;
+>> +		VANA-supply = <&reg_2p8v>;
+>> +		VDIG-supply = <&reg_1p8v>;
+>> +		VDDL-supply = <&reg_1p2v>;
+>>   
+>>   		port {
+>>   			csi2_cam0: endpoint {
+>> @@ -55,6 +85,9 @@ imx219_1: imx219-1@10 {
+>>   		reg = <0x10>;
+>>   
+>>   		clocks = <&clk_imx219_fixed>;
+>> +		VANA-supply = <&reg_2p8v>;
+>> +		VDIG-supply = <&reg_1p8v>;
+>> +		VDDL-supply = <&reg_1p2v>;
+>>   
+>>   		port {
+>>   			csi2_cam1: endpoint {
+> [0] https://datasheets.raspberrypi.com/camera/camera-module-2-schematics.pdf
+> 
