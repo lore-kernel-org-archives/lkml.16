@@ -1,194 +1,157 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF5D291148;
-	Mon, 14 Apr 2025 14:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC6F25F984
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640409; cv=none; b=DNT7LiCmKpAx9Ygv5GNUCJhpp63FqViip+FfgWz4iNbg8SIc0l7ZBr5uxb5AbtDjlUQ8cWG8uTk5gkbNHAp+ramObS2b52i3pSQaUqGHADniYWgVpY9nNBYbXqRjqx+9HlFBQEVC0nnC5+7GXoYr3F+UTK+6L3to+uYG4x4eeR4=
+	t=1744640424; cv=none; b=FcR7YyQnmCQje7X1DtnkbaYFwHmY0h/2Z7RtwpFH0OMxMyVYxAHsa0zEZjGp6UWljudjAlrm/aCCb34y6qQ3xm/Zyi+ls8CneDa85L6+GA2QfOs5ehD+SWkdOpBbnHUcBv9J+boGxoG3yyWc/aGu2b3qU3fcu6vpHJglu083tzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640409; c=relaxed/simple;
-	bh=jXVyZDItmaL5AzoSHs1iPAA9ILTmI1rTDbn9+iURJQs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=a7wNkuty9rrx5DuHN7PaLQ6hrquGhh3O8zz3UiMlRDyQqnq70+kRasSxvL8ygXlhznYoxLIBJE5lCRVGUB7SK++H+E884YHFuO3PmqK4Nq7j7A4SlrKHD+eDxEE9HATxCa+n4B7SwICY7UZS2OHS/yDzc8L2Tj61Tk0QRbeN6Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ilqHsJsn; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=LUVeU7UL reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ilqHsJsn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="LUVeU7UL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744640405; x=1776176405;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=EXQyd0r4TZiqZpKsUTx2M/IYp8XzCZHA1OaGt/pVy74=;
-  b=ilqHsJsnFXHDYpGrTv4URmBwY5GNP9inrD58caZldCx6AiTe6r4mHeDt
-   2tPOSDurP1Ww+rR1EC3/J8CnED1Ns12892170PN+Z/g4ukV6UlQAXIYlS
-   H+Evx0bg0y5I/P8Jic60UbMJoTmC6kjShlfoRIKZEtwOIRCf5LHIW94WQ
-   6YlQqhguahAQEw5GgqHtFBCmQXJE0ZMI2jYUyYtQvJOCCcJO9ImWdRS58
-   nsEWqvbJk+1lUkp/ecMcmp3olkTSY8oD1DU94bd4gm2Sa8aZ5+iK9hi7t
-   PbYyfhTug3qiPZhhyaWUPEOhO+IyfLVjM/Jj4axAo66UdU9ws61oQ6RqY
-   A==;
-X-CSE-ConnectionGUID: oSsEAGTcRwy12Ys1dk3Cbw==
-X-CSE-MsgGUID: cLZBKCDnRzOCOQfG1eH8sg==
-X-IronPort-AV: E=Sophos;i="6.15,212,1739833200"; 
-   d="scan'208";a="43517552"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 14 Apr 2025 16:20:02 +0200
-X-CheckPoint: {67FD1992-1B-DC4DC9A0-F4F29281}
-X-MAIL-CPID: 6C967A4B7A7BB545A05DFDBA4709EEEB_0
-X-Control-Analysis: str=0001.0A006399.67FD1993.008A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4496F16B658;
-	Mon, 14 Apr 2025 16:19:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744640398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EXQyd0r4TZiqZpKsUTx2M/IYp8XzCZHA1OaGt/pVy74=;
-	b=LUVeU7UL04FhGhMDoOsHSPSzV+Bax3bDk2Uz56ZDySKjvuo3p/zjaiKs3W4EjeC/O7l4gk
-	sl27UY7h8G13OJ1iNv0MKMNInjukXelfOXhXZEYSsri7+yRFFyg+kGJSuGcCwY+9MPsNwE
-	9Eg1YUhHsG90RD2I+nbLsVjZ241sPVcAIyJbhkTOkr7PGQA3yqK2vYg2vifiNIkCCzP/r0
-	Ol9OBqwt5LGyT+1CbmRS4eyKAC/bmn/e2QXTITzrvxxnEtxgwbG31ee75kzqTjuw7FzxxE
-	54tcc6dI1L1E2M9fU6C3LBFEX4Bd/eU9CCNXP/aBLQTZ0qu+FqGQyBfZQzi8sg==
-Message-ID: <c0c9cbcaf8bb8fd46d2ca618302bed8caa7bc812.camel@ew.tq-group.com>
-Subject: Re: [PATCH net-next 1/2] net: phy: dp83867: remove check of delay
- strap configuration
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux@ew.tq-group.com
-Date: Mon, 14 Apr 2025 16:19:56 +0200
-In-Reply-To: <8013ae5966dd22bcb698c0c09d2fc0912ae7ac25.1744639988.git.matthias.schiffer@ew.tq-group.com>
-References: 
-	<8013ae5966dd22bcb698c0c09d2fc0912ae7ac25.1744639988.git.matthias.schiffer@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1744640424; c=relaxed/simple;
+	bh=Mj6c7WdZQhf3ijm7yytTkCr+/vkJW2+utZFvWZvAdIA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=qOSyGeCaixWIfBNvkgnoSJsQBhP+RefQodR0C0TOL/QJUI2t5jnRm0wIZ/iM8QykTX7/OmkfgfP5Vwm91nvSBth0rGU6nP+mlhxs+fkjf3WvIXZmdcUmh0ErM4WvVmwzzf3VZquQLdWLWW61dyqkA3hqBWSq6OkYHLvdlsHqim8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so42354455ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:20:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744640422; x=1745245222;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7I37HzaF5M9MfTDYR36+tqp84ocbCY8yCRx5Lxmimho=;
+        b=lgX+yxXyvr7ipxuo0NFu0/XN89eldzbQ/pqekxu9iJuoNxMf9DYuh+8KByZHpL7uP8
+         CM0HjeDntCmI/iXF1GmHLQqd9x8lUjTj6Z7jqoKz8XAi56EFW/t61KnIkX6VwBwer9cE
+         sck4bs9kpp63W86/b3scny2q4iB7evFXYEBDN+pTA4j7k5SoWBJhj9W6pZBod7ET6OWA
+         YdEVqz/MQmwPsdRO+sqQNOCHoYAU1P64/2lhD3kOXciB+uLsSz6lLHbeMf7WQD2dnbmM
+         CST/idfQndgUsnievrS4JiyZhbA162ZgJKOEr7ybPFD+JRExSD0fDylkm7GO8J5zLjF6
+         c4tQ==
+X-Gm-Message-State: AOJu0YxxzvdNv+z431uXBzrSeAh1KkXdvwnz3cpa0WQCc/UVuqBv6r+m
+	4AQWSiP08M8ZR4DIarhlMplGqQqbj0LQWmeizqxzZTj4L1Jaw68tK7EHwci8lOIkKpDZZbh8O0S
+	PwgcEYKzcyNa2uvr+TdNMr+EfA9egCTasDd2L2uJbmV/PBi8O1q95weH0GA==
+X-Google-Smtp-Source: AGHT+IHpm44OqTs+cbL7F3+y+dkmId12KFaB5faG+RpxhBBbxCTM+c+riC2zh9h+lAjxz7WiZATz4f7PIhDDQSFaI4LNzAjIJY7z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+X-Received: by 2002:a05:6e02:1889:b0:3cf:c7d3:e4b with SMTP id
+ e9e14a558f8ab-3d7ec27efd0mr139059305ab.21.1744640422169; Mon, 14 Apr 2025
+ 07:20:22 -0700 (PDT)
+Date: Mon, 14 Apr 2025 07:20:22 -0700
+In-Reply-To: <000000000000974b090622004b40@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fd19a6.050a0220.3483fc.0028.GAE@google.com>
+Subject: Re: [syzbot] [media?] general protection fault in dvb_usbv2_generic_write
+From: syzbot <syzbot+f9f5333782a854509322@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	mchehab@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-04-14 at 16:13 +0200, Matthias Schiffer wrote:
-> The check that intended to handle "rgmii" PHY mode differently from the
-> other RGMII modes never worked as intended:
->=20
-> - added in commit 2a10154abcb7 ("net: phy: dp83867: Add TI dp83867 phy"):
->   logic error caused the condition to always evaluate to true
-> - changed in commit a46fa260f6f5 ("net: phy: dp83867: Fix warning check
->   for setting the internal delay"): now the condition always evaluates
->   to false
-> - removed in commit 2b892649254f ("net: phy: dp83867: Set up RGMII TX
->   delay")
->=20
-> Around the time of the removal, commit c11669a2757e ("net: phy: dp83867:
-> Rework delay rgmii delay handling") started clearing the delay enable
-> flags in RGMIICTL (or it would have, if the condition ever evaluated to
-> true at that time). The change attempted to preserve the historical
-> behavior of not disabling internal delays with "rgmii" PHY mode and also
-> documented this in a comment, but due to a conflict between "Set up
-> RGMII TX delay" and "Rework delay rgmii delay handling", the behavior
-> dp83867_verify_rgmii_cfg() warned about (and that was also described in
-> a commit in dp83867_config_init()) disappeared in the following merge
+syzbot has found a reproducer for the following issue on:
 
-Ugh, of course I find a mistake in the commit message right after submittin=
-g the
-patch - this should read "a comment in ...". I'm going to wait for review a=
-nd
-then fix this in v2.
+HEAD commit:    8ffd015db85f Linux 6.15-rc2
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11fca0cc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a972ee73c2fcf8ca
+dashboard link: https://syzkaller.appspot.com/bug?extid=f9f5333782a854509322
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12827398580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161620cc580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/2640fd4fd0f2/disk-8ffd015d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1c5931df89bc/vmlinux-8ffd015d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f8fece45017d/bzImage-8ffd015d.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f9f5333782a854509322@syzkaller.appspotmail.com
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000019: 0000 [#1] SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x00000000000000c8-0x00000000000000cf]
+CPU: 1 UID: 0 PID: 5849 Comm: syz-executor279 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:580 [inline]
+RIP: 0010:__mutex_lock+0x15d/0x10c0 kernel/locking/mutex.c:746
+Code: c0 80 f6 73 9a 48 c1 e8 03 42 0f b6 04 38 84 c0 0f 85 07 0e 00 00 83 3d 40 ba 41 0e 00 75 21 49 8d 7e 60 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00 74 05 e8 17 52 fb f5 4d 39 76 60 0f 85 81 0d 00 00
+RSP: 0018:ffffc90004206f80 EFLAGS: 00010202
+RAX: 0000000000000019 RBX: ffffc90004207040 RCX: ffffffff9a73f603
+RDX: ffff888035f65a00 RSI: ffffffff8e4fde18 RDI: 00000000000000c8
+RBP: ffffc90004207118 R08: ffffc90004207087 R09: 0000000000000000
+R10: ffffc90004207060 R11: fffff52000840e11 R12: 0000000000000000
+R13: ffffc90004207048 R14: 0000000000000068 R15: dffffc0000000000
+FS:  0000555594939380(0000) GS:ffff888125093000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f79554c50f0 CR3: 000000007cfd2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ dvb_usbv2_generic_write+0x26/0x50 drivers/media/usb/dvb-usb-v2/dvb_usb_urb.c:77
+ mxl111sf_ctrl_msg+0x172/0x2e0 drivers/media/usb/dvb-usb-v2/mxl111sf.c:73
+ mxl111sf_write_reg+0xda/0x1f0 drivers/media/usb/dvb-usb-v2/mxl111sf.c:123
+ mxl111sf_i2c_start drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c:130 [inline]
+ mxl111sf_i2c_sw_xfer_msg drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c:-1 [inline]
+ mxl111sf_i2c_xfer+0x923/0x8aa0 drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c:813
+ __i2c_transfer+0x859/0x2250 drivers/i2c/i2c-core-base.c:-1
+ i2c_transfer+0x2c2/0x430 drivers/i2c/i2c-core-base.c:2315
+ i2c_transfer_buffer_flags+0x182/0x260 drivers/i2c/i2c-core-base.c:2343
+ i2c_master_recv include/linux/i2c.h:79 [inline]
+ i2cdev_read+0x10a/0x220 drivers/i2c/i2c-dev.c:155
+ vfs_read+0x21f/0xb90 fs/read_write.c:568
+ ksys_read+0x19d/0x2d0 fs/read_write.c:713
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f795544e4e9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc002847a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000200000000000 RCX: 00007f795544e4e9
+RDX: 0000000000000063 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 00000000000f4240 R08: 00232d6332692f76 R09: 00000000000000a0
+R10: 000000000000000f R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffc002849c8 R14: 00007ffc002847d0 R15: 00007ffc002847c0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:580 [inline]
+RIP: 0010:__mutex_lock+0x15d/0x10c0 kernel/locking/mutex.c:746
+Code: c0 80 f6 73 9a 48 c1 e8 03 42 0f b6 04 38 84 c0 0f 85 07 0e 00 00 83 3d 40 ba 41 0e 00 75 21 49 8d 7e 60 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00 74 05 e8 17 52 fb f5 4d 39 76 60 0f 85 81 0d 00 00
+RSP: 0018:ffffc90004206f80 EFLAGS: 00010202
+
+RAX: 0000000000000019 RBX: ffffc90004207040 RCX: ffffffff9a73f603
+RDX: ffff888035f65a00 RSI: ffffffff8e4fde18 RDI: 00000000000000c8
+RBP: ffffc90004207118 R08: ffffc90004207087 R09: 0000000000000000
+R10: ffffc90004207060 R11: fffff52000840e11 R12: 0000000000000000
+R13: ffffc90004207048 R14: 0000000000000068 R15: dffffc0000000000
+FS:  0000555594939380(0000) GS:ffff888125093000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055dccfef9670 CR3: 000000007cfd2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	c0 80 f6 73 9a 48 c1 	rolb   $0xc1,0x489a73f6(%rax)
+   7:	e8 03 42 0f b6       	call   0xb60f420f
+   c:	04 38                	add    $0x38,%al
+   e:	84 c0                	test   %al,%al
+  10:	0f 85 07 0e 00 00    	jne    0xe1d
+  16:	83 3d 40 ba 41 0e 00 	cmpl   $0x0,0xe41ba40(%rip)        # 0xe41ba5d
+  1d:	75 21                	jne    0x40
+  1f:	49 8d 7e 60          	lea    0x60(%r14),%rdi
+  23:	48 89 f8             	mov    %rdi,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1) <-- trapping instruction
+  2f:	74 05                	je     0x36
+  31:	e8 17 52 fb f5       	call   0xf5fb524d
+  36:	4d 39 76 60          	cmp    %r14,0x60(%r14)
+  3a:	0f 85 81 0d 00 00    	jne    0xdc1
 
 
-> of net into net-next in commit b4b12b0d2f02
-> ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net").
->=20
-> While is doesn't appear that this breaking change was intentional, it
-> has been like this since 2019, and the new behavior to disable the delays
-> with "rgmii" PHY mode is generally desirable - in particular with MAC
-> drivers that have to fix up the delay mode, resulting in the PHY driver
-> not even seeing the same mode that was specified in the Device Tree.
->=20
-> Remove the obsolete check and comment.
->=20
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/net/phy/dp83867.c | 32 +-------------------------------
->  1 file changed, 1 insertion(+), 31 deletions(-)
->=20
-> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-> index 063266cafe9c7..e5b0c1b7be13f 100644
-> --- a/drivers/net/phy/dp83867.c
-> +++ b/drivers/net/phy/dp83867.c
-> @@ -92,11 +92,6 @@
->  #define DP83867_STRAP_STS1_RESERVED		BIT(11)
-> =20
->  /* STRAP_STS2 bits */
-> -#define DP83867_STRAP_STS2_CLK_SKEW_TX_MASK	GENMASK(6, 4)
-> -#define DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT	4
-> -#define DP83867_STRAP_STS2_CLK_SKEW_RX_MASK	GENMASK(2, 0)
-> -#define DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT	0
-> -#define DP83867_STRAP_STS2_CLK_SKEW_NONE	BIT(2)
->  #define DP83867_STRAP_STS2_STRAP_FLD		BIT(10)
-> =20
->  /* PHY CTRL bits */
-> @@ -510,25 +505,6 @@ static int dp83867_verify_rgmii_cfg(struct phy_devic=
-e *phydev)
->  {
->  	struct dp83867_private *dp83867 =3D phydev->priv;
-> =20
-> -	/* Existing behavior was to use default pin strapping delay in rgmii
-> -	 * mode, but rgmii should have meant no delay.  Warn existing users.
-> -	 */
-> -	if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII) {
-> -		const u16 val =3D phy_read_mmd(phydev, DP83867_DEVADDR,
-> -					     DP83867_STRAP_STS2);
-> -		const u16 txskew =3D (val & DP83867_STRAP_STS2_CLK_SKEW_TX_MASK) >>
-> -				   DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT;
-> -		const u16 rxskew =3D (val & DP83867_STRAP_STS2_CLK_SKEW_RX_MASK) >>
-> -				   DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT;
-> -
-> -		if (txskew !=3D DP83867_STRAP_STS2_CLK_SKEW_NONE ||
-> -		    rxskew !=3D DP83867_STRAP_STS2_CLK_SKEW_NONE)
-> -			phydev_warn(phydev,
-> -				    "PHY has delays via pin strapping, but phy-mode =3D 'rgmii'\n"
-> -				    "Should be 'rgmii-id' to use internal delays txskew:%x rxskew:%x=
-\n",
-> -				    txskew, rxskew);
-> -	}
-> -
->  	/* RX delay *must* be specified if internal delay of RX is used. */
->  	if ((phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
->  	     phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_RXID) &&
-> @@ -836,13 +812,7 @@ static int dp83867_config_init(struct phy_device *ph=
-ydev)
->  		if (ret)
->  			return ret;
-> =20
-> -		/* If rgmii mode with no internal delay is selected, we do NOT use
-> -		 * aligned mode as one might expect.  Instead we use the PHY's default
-> -		 * based on pin strapping.  And the "mode 0" default is to *use*
-> -		 * internal delay with a value of 7 (2.00 ns).
-> -		 *
-> -		 * Set up RGMII delays
-> -		 */
-> +		/* Set up RGMII delays */
->  		val =3D phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL);
-> =20
->  		val &=3D ~(DP83867_RGMII_TX_CLK_DELAY_EN | DP83867_RGMII_RX_CLK_DELAY_=
-EN);
-
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
