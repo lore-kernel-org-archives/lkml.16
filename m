@@ -1,107 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA741A0BFA;
-	Mon, 14 Apr 2025 22:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A84B1448E0;
+	Mon, 14 Apr 2025 22:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744668078; cv=none; b=ckx2XXB2YWweO4gbwcNf2pvsqmEPyu/76QIFoNuMH0U5SvCTdDnILWqPgDjJBAwDlJT/RlDMGWQggKRXQuMnatIZFHQO9NNbKqdfcWDVpZLNwFngwB3bpzFtpwvdXMrBGyfP6S555wfEwL4MhC8/3+e/yms0ZFM8MUs7dsS+JNg=
+	t=1744668116; cv=none; b=m1Iq/AAw/q3K0xuTRC6XQgzj6bwH3ZCzjzhl3JCbeWi1hM1jgv54WSlxarbCDjN8f+Om+WjM9NLqy8//tC+Aal1oMQFM6KNc31+Tj00VxncCwvLEwCjKBOy166tP0SN8fuU2SBZPuWYuPGooKYhNxHmbrLMqpDGm6r4OXboXPOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744668078; c=relaxed/simple;
-	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Be1pYYg7al9sQElxyypCTkVAK6PbWPzq2v5siRPCxOSehq0QPSTNt3W8Ciz4GRaqFn5CmzxAxD8TbsnkxbsRkjXxAvnAOG+kZNlpgOwYAvtqzT3dHhxRtWXIJRJfML3vOjPay7t4zoxHecoH2mSCftTIcEfWknqvdStjzgBcqH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avycfQ4/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744668116; c=relaxed/simple;
+	bh=2ycU6iKCnCWzvEpDO0IKF/KqyalrZfuBb3MC3tlhlS8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mZZvBI6KZAN+mOMRtr+DgrhFJyE9NvG9cFGk/nR9O1j/S9hH7SkFPOfl+agkj7s6VV2HRmXk7lsYckeq661I+dZN5UCh0X3FaypU25QK2eBeGU1GzJBPhPT9Ro2eNMsxaP5lD+4YJ7ml6koP2VbPM3uJC1A4r0nABIOPd1DNCy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gzVsk6Kd; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avycfQ4/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA36C4CEE5;
-	Mon, 14 Apr 2025 22:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744668076;
-	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
-	h=From:Date:Subject:To:Cc:From;
-	b=avycfQ4/0cG4DMg8yoIOazqlWCLis60DvfwmQwQ1vdOPuF6I2gjyJTxQ3zPOgTiM7
-	 cwCXLjU3lalJsXZnZEGzvUpDTmhfoleQf9Pjd8sN4z0VjmyCfEol/pcWG3GJpplFDq
-	 XdEwyzLslHTU7l7VVY3mcV+pmm6557XrN78FmvLYPkRy74y8pqUSUHJ3M5OcnZE0hu
-	 0NGecSiDdypE1ydyoyvvBCxc2BotJpGJvduTn8Pk3hPt8M39Dth+QVyzS/MBmsWKx4
-	 pz9decYhFN4GFA5xTiYXmb8ILHHXYeUeiDTWKYc7d3CUfAuCVrx849/J+a8PkmYLzZ
-	 j+z0azCYRu4Mg==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 14 Apr 2025 15:00:59 -0700
-Subject: [PATCH] lib/Kconfig.ubsan: Remove 'default UBSAN' from
- UBSAN_INTEGER_WRAP
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzVsk6Kd"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso55852795e9.3;
+        Mon, 14 Apr 2025 15:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744668112; x=1745272912; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ql+/MgQRZ7yNwEhIlZd81cPtURJutCh2b7dRPFnDxvI=;
+        b=gzVsk6KdPo1ck6Da+fz61KOrNllk//yLFqFbjmdfb12JFLv/XWiOtZdfPXsnih9sUd
+         F62rhVq9TnjXHrIaUDaMwkeT4PgfP4Jo4uG1rVvLa34IoFDS2pl1Qg0TKbuHyOoPKu1F
+         9xCzvXL3ghHlfPO5rTEUzQPtyK5TdkOOOTQmEfHnwt52vAebQprM+lyRCCD48M8BnQ5i
+         LwIrW3iNjnKMF5PSTpvGeLtVx7wBuzb1cIcQIOBTC9P5Po6IrYM3zeje/otHnvDWWx22
+         mDFIj9XjL23boJsk28DotLic8tK4t+iT/Jl/6vBON+wThBIiP41eyy3gKGFk5mkC0NVa
+         2KBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744668112; x=1745272912;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ql+/MgQRZ7yNwEhIlZd81cPtURJutCh2b7dRPFnDxvI=;
+        b=ZdOr/3Qy5iHZNlYYLZ0jAm2A38Wigfhx/QPYaljquVrUIkPHlEXaWCaq/zyC7pSoGw
+         nQI6XUoB2GZgdO1AIoxPbJuzBQkvXijcP8nJ6/1fydEdz1nXNTsds9qKSPGKFV2V7pyx
+         VMXdtjgCSTTeWrSyb1thOMbOAcOqnLe0LN9zRSgJSeBpPXDbExxBUN1e1WqVs7jHw0kF
+         y6f5TnmtAtmuj4n5ERPAn+A8s/A0BPnkLCPjwMuwehZee2xXRPI2QvXkVhLk+TkH7Tgx
+         eB56MQaI0nU4LQSsIOTLEKCK8cBQNFjfyfNxNo1Puo6eMrontyJRTjNx87uzhX4b/L99
+         Nhgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUG4HBYNWAH0NtxcBRucECR/9bOusRZnXfoK1MoVemsD1nutfs1OzTBlPtrDMslujzK7+ID3u8Re2uXGpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGAEH7lWtB2ALAGBbNxnoX1TZcKJUI9P4fB2V686+OQOJHW4+s
+	v7Dc2h8hx2WpSbaHtnx9VGWd53+DK5GtMSlsFMoMweKUSkuR/Nyt
+X-Gm-Gg: ASbGncvskRT5MWMUtNoXlo7HerpMo1LFv6/2DF3b+JaGazzHrKCTjcobwzm0syFEWFw
+	N+MUjUQybIpW6KF2UyMm8ENIDJg64rEbABVlSW7gt3s5l91j3n0WNkEJhdB4lk6O7TwrQsEx3sx
+	/pMkfeGtXryoesTgP4kqr3hgyf339yGhInzG8cKFAa+hLGz/j4k5AZVJL1C/VsP2gym5CJHOdEB
+	4m5YlQVm2S/0HPHk3B9K56GbpHQpftdz0XidaIrmRjxThzEAog8RmDAJZNYitMeM3xRwbp4vqTC
+	JOT4tOa5CKA7ahgSys8i5whtXkfK+Tkwj+8kjNZm7KYbvPtpDpbcCbKcALcf
+X-Google-Smtp-Source: AGHT+IFHRW0t/wgg33LCmU4H2TI11W3/dyIjeTQA7OJSva1SFx2PORbXybto0JoSn4kfs6HI4JJHSQ==
+X-Received: by 2002:a05:600c:a04:b0:43c:ef55:f1e8 with SMTP id 5b1f17b1804b1-43f3a93f7c6mr120655375e9.13.1744668112028;
+        Mon, 14 Apr 2025 15:01:52 -0700 (PDT)
+Received: from localhost.localdomain ([46.120.85.37])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae977513sm11971546f8f.42.2025.04.14.15.01.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 15:01:51 -0700 (PDT)
+From: Yacov Simhony <ysimhony@gmail.com>
+To: jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yacov Simhony <ysimhony@gmail.com>
+Subject: [PATCH] hwmon: acpi_power_meter: replace deprecated strcpy() with strscpy()
+Date: Mon, 14 Apr 2025 18:01:44 -0400
+Message-ID: <20250414220145.4111-1-ysimhony@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-drop-default-ubsan-integer-wrap-v1-1-392522551d6b@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJqF/WcC/x3NQQrCMBBG4auUWTuQhiroVcRFpvlTByQNk7YKp
- XdvcPlt3tupwhSVHt1Ohk2rzrmhv3Q0vkOewBqbyTt/dUM/cLS5cEQK62fhVWrIrHnBBOOvhcK
- SHOSGJP4u1CrFkPT3Pzxfx3ECt51ZE3EAAAA=
-X-Change-ID: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
-To: Kees Cook <kees@kernel.org>
-Cc: Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
- Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
- kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
- stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1816; i=nathan@kernel.org;
- h=from:subject:message-id; bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOl/W1eWOfmu1DwxweuGvH3/Sf4k3X33El1u672ftf+R6
- henoktLO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBElJgYGeYJHfpSVKezRjLY
- 5psHd3usUePBLd6OTZ3hbaoW72cmWDIy7Hz4Penn6vQbBxLDUk+xfPrTVGl7w5jjnt4j/YUhAeq
- tXAA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: 8bit
 
-CONFIG_UBSAN_INTEGER_WRAP is 'default UBSAN', which is problematic for a
-couple of reasons.
+Use strscpy() instead of strcpy() to prevent potential buffer overflows
+in acpi_device_name() and acpi_device_class(), which point to fixed-size
+buffers.
 
-The first is that this sanitizer is under active development on the
-compiler side to come up with a solution that is maintainable on the
-compiler side and usable on the kernel side. As a result of this, there
-are many warnings when the sanitizer is enabled that have no clear path
-to resolution yet but users may see them and report them in the meantime.
+This change improves safety and aligns with current kernel cleanup efforts.
 
-The second is that this option was renamed from
-CONFIG_UBSAN_SIGNED_WRAP, meaning that if a configuration has
-CONFIG_UBSAN=y but CONFIG_UBSAN_SIGNED_WRAP=n and it is upgraded via
-olddefconfig (common in non-interactive scenarios such as CI),
-CONFIG_UBSAN_INTEGER_WRAP will be silently enabled again.
-
-Remove 'default UBSAN' from CONFIG_UBSAN_INTEGER_WRAP until it is ready
-for regular usage and testing from a broader community than the folks
-actively working on the feature.
-
-Cc: stable@vger.kernel.org
-Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Yacov Simhony <ysimhony@gmail.com>
 ---
- lib/Kconfig.ubsan | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/hwmon/acpi_power_meter.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 4216b3a4ff21..f6ea0c5b5da3 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -118,7 +118,6 @@ config UBSAN_UNREACHABLE
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index 29ccdc2fb..a64497ddb 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -890,8 +890,12 @@ static int acpi_power_meter_add(struct acpi_device *device)
+ 	resource->sensors_valid = 0;
+ 	resource->acpi_dev = device;
+ 	mutex_init(&resource->lock);
+-	strcpy(acpi_device_name(device), ACPI_POWER_METER_DEVICE_NAME);
+-	strcpy(acpi_device_class(device), ACPI_POWER_METER_CLASS);
++	strscpy(acpi_device_name(device), 
++		ACPI_POWER_METER_DEVICE_NAME,
++	        MAX_ACPI_DEVICE_NAME_LEN);
++	strscpy(acpi_device_class(device), 
++		ACPI_POWER_METER_CLASS,
++		MAX_ACPI_CLASS_NAME_LEN);
+ 	device->driver_data = resource;
  
- config UBSAN_INTEGER_WRAP
- 	bool "Perform checking for integer arithmetic wrap-around"
--	default UBSAN
- 	depends on !COMPILE_TEST
- 	depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
- 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
-
----
-base-commit: 26fe62cc5e8420d5c650d6b86fee061952d348cd
-change-id: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
-
-Best regards,
+ #if IS_REACHABLE(CONFIG_ACPI_IPMI)
 -- 
-Nathan Chancellor <nathan@kernel.org>
+2.47.0
 
