@@ -1,136 +1,73 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA15259C84;
-	Mon, 14 Apr 2025 08:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C0D2F42;
+	Mon, 14 Apr 2025 08:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618300; cv=none; b=DxAKT4rzInMRpYkd9lgm4epzOXnWrq0MzH3YooXy84zSTtNqSv9bosUiiG4givzRnhExbqj7845E71Hgt8jYy/rheVcBTsTQ4XZVRQoKZp54vd5fF2wUaKmKkrn1ZIOrtZbenfyUvs26d2wyiGSmxNL8klQITDA11ZP/zenqiKY=
+	t=1744618427; cv=none; b=fdjC8OCInDRxddz2Ee7V/u9tPiM8gWKflGW/VOdglvMrYyd2FkJsWzjDpgKutkXxLG0Skd+4dKW5K83sD7oV1+huDzxpohWBrBneQz8m2sHFpcbrGOSNyQRCMR71fYvhqFXtIqsLOMUzcGEsqoDtAs/MUU8jLMcJErFVNgiGs3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618300; c=relaxed/simple;
-	bh=M0Px4sQq0Ua88FTGip8MlAZaR44q/swxW1mcn7Kadw8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ENopIlI6TCQdiatfiGXgghdMheFHde9qjVEQVN7Galz7zO5jIPmyJ13vdnmU3xXO7wWyckc87BjSHhEUKfv97GmoIjndxYmZj9EH0QxvH/5FGhtloOi7Ab8a6hShlTNGwj/kW2hrnJDQCz0UEKIJDydefzNmiwvUEUNSTvboY0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kS96/vwx; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744618427; c=relaxed/simple;
+	bh=/GliPvWxqmWkfViSv1OxAlqTAyRsqoblIC/0Lf7EkFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGX4EpVt8Thl1yKnW/q/fCY7usMk/hPWHPH64ItA1Vc1aXIAw9V75Y0eELepKxLMhlDDdfcw20ubWy9G83sou/RAWEHMjUNut8gluTNEoWITWUImdXngd9hqy2E+GMK1qqC9qaL41c+kqEJFuNzrg4hP3ISg90DfmI5to7ej7GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxXdKqWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kS96/vwx"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so7335047a12.2;
-        Mon, 14 Apr 2025 01:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744618296; x=1745223096; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JQLehcjcbISmim2iPvDB9cValC6G9pjc/biEGN2jZVA=;
-        b=kS96/vwxcVevwCv35sjKfGua8bCo4JrSXScINfk/xRBabcsKkg62CGlk28taiEbc1L
-         jdyoByJSCpwAvzs1J+1Z2lp5M7ciHFyKxRPZDKg4/EsJ9kfs5Zuk52MrPh1wMctlQusm
-         9NTFNVyzLUGieANuY2QV0bUOYxfcovkFhdgsqC2v4COOy+W/g4NuwNmKDB+UJyRD/7RT
-         wpBvsO7/IhGOMx9Bxl4jZCehWhcscQduPtnA0iqQ2RM+26sWqFDIOJjkN29BdxP11/4C
-         Ffi9mizkJQOsVyshvl6jrvnMSu1N9jFCP/0aT2qbky5YAZHe7lwZrH2UHkTe/WL1iOzW
-         ZCvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744618296; x=1745223096;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JQLehcjcbISmim2iPvDB9cValC6G9pjc/biEGN2jZVA=;
-        b=OA9OWp+jSTxRHUJ1o+7WDoO01KjjmI+ysYGnQG9S4YKqpFtO5oBqC4xz5yvQzDkfgf
-         3EN7tgmXdVHDza2Enw4+eq3yj8HCsQxRNFSANiMbxd1d5xIu3UxN3u3W5p1FTjbcAUHH
-         rDYhVi/cQroc3lbyuvF50KXa2VjGrfSgIgqfTy9DFrVMR3XZE8d69/cHHyi5yGXtl48d
-         HYyLEgIl2eX6jmkk48YJq6h92svVF0YOCG6pa0C1C1Ic/BCJP6g+Zcsb7y9ePzOTg/jY
-         Fp7coztzjJMJsOskeeacZEc6ujXJgziwQixdjH4XeTTomXgonMmA9Md+B4K2XRxf6XX8
-         VeAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyg2eAg+Y7tvJjv9JDhldNX/WQY6ulpACB6xDaPAe3n1Krq7/d5p/pP6Qt/3Hd8VWGx0/fn5KOE8PC03Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvVY3RTAhHtn5Ar/zQryzJI4MH/8H3oUMLjqtBlhBw7MTzRFTM
-	q5yzCOgyXvk8lvec37oddycrD6twNNwnWtKKxZZCFTjlSEjSLG1i0vad4FZ6
-X-Gm-Gg: ASbGncvbNkuDvG0j17BBVcOxt855PMgryrI+VmA4ns7Q99walHp3f9024Ce+OugHNOI
-	cKmvKCgge8LEl5hjLS/Jrx5APipxc8IQPO/JO9K/HaW7xTcElqBZw1VLZWnLkGGIZFidISJLUlO
-	vS/dNDPreDt1Hp9sBQ2FD6IRGANRTQJFNCH596OaieB0LwoYLCrLiquC956sP5DaAtalBHcpGLX
-	VYLpuW5i4E5sjFlVc49cMuoJiYQB/kTuFw0iQy0WsAekI5ahJdGYqGSmQB+8Xb/30oK44P85Jzo
-	texLqdVilPiOUTk5TvTaEUUKU0JwFtD7
-X-Google-Smtp-Source: AGHT+IEt0SfgVcxAhqTlfRSXKOZHjazMKmKgeZnwLG/vZgN0qwUdwA1UDhLWRkFlgHXABhWiZx1p9Q==
-X-Received: by 2002:a05:6402:2812:b0:5e5:cb92:e770 with SMTP id 4fb4d7f45d1cf-5f36f77ffdamr9859194a12.1.1744618295711;
-        Mon, 14 Apr 2025 01:11:35 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee55212sm4435244a12.9.2025.04.14.01.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 01:11:35 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: kvm@vger.kernel.org,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 2/2] KVM: VMX: Use LEAVE in vmx_do_interrupt_irqoff()
-Date: Mon, 14 Apr 2025 10:10:51 +0200
-Message-ID: <20250414081131.97374-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250414081131.97374-1-ubizjak@gmail.com>
-References: <20250414081131.97374-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxXdKqWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A79C4CEE2;
+	Mon, 14 Apr 2025 08:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744618426;
+	bh=/GliPvWxqmWkfViSv1OxAlqTAyRsqoblIC/0Lf7EkFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rxXdKqWribRXynbgV7o3GDzN2oslDuc1R0xhHvkUN73fltLvhGPwB3GdIpID/30zV
+	 NK9sDhneTmHDTc7VNkc92ieX2mDNwAb8xuufHOx+7qIt6vf3tPW/pb3nE6qf+Fdx4v
+	 mYNGgzlI6jVS5J+fTbaid5jA2YKVcIBCLZZHUDsQlr6oXF6hLkbKBHsGkJ8/KAbvfy
+	 7uYDM1aE/8iBEVoAhSXLkdpwQwpbsSfj6pXL+SYUdDtQeRkCAfGTH08wuF3tFWV89V
+	 KaHlrQY6IkuF94u808CWE+Y1U0OSoTu6HaA2EIKGLGyASZocH/pW+goowlEVcKyxw5
+	 CjRgstDAy5n1A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4Ewn-000000002q1-2onL;
+	Mon, 14 Apr 2025 10:13:42 +0200
+Date: Mon, 14 Apr 2025 10:13:41 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Chenyuan Yang <chenyuan0y@gmail.com>, vkoul@kernel.org,
+	kishon@kernel.org, lumag@kernel.org, quic_kriskura@quicinc.com,
+	manivannan.sadhasivam@linaro.org, konrad.dybcio@oss.qualcomm.com,
+	quic_varada@quicinc.com, quic_kbajaj@quicinc.com,
+	johan+linaro@kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
+Message-ID: <Z_zDtfEsgXsFodG9@hovoldconsulting.com>
+References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
+ <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
+ <Z_y73a5IDO66AzY1@hovoldconsulting.com>
+ <f3b77aa4-e7a4-475f-a633-48aab59fa9b1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3b77aa4-e7a4-475f-a633-48aab59fa9b1@kernel.org>
 
-Micro-optimize vmx_do_interrupt_irqoff() by substituting
-MOV %RBP,%RSP; POP %RBP instruction sequence with equivalent
-LEAVE instruction. GCC compiler does this by default for
-a generic tuning and for all modern processors:
+On Mon, Apr 14, 2025 at 10:08:18AM +0200, Krzysztof Kozlowski wrote:
+> On 14/04/2025 09:40, Johan Hovold wrote:
 
-DEF_TUNE (X86_TUNE_USE_LEAVE, "use_leave",
-	  m_386 | m_CORE_ALL | m_K6_GEODE | m_AMD_MULTIPLE | m_ZHAOXIN
-	  | m_TREMONT | m_CORE_HYBRID | m_CORE_ATOM | m_GENERIC)
+> > I'm afraid you're mistaken here. See __devm_ioremap() which can return
+> > NULL.
+> > 
+> Uh, you are right, I only checked devm_of_iomap in qmp_usb_iomap().
+> Anyway, the fix should be different - given function should either
+> return ERR or NULL, not both, so devm_ioremap return value needs to be
+> wrapped in ERR_PTR.
 
-The new code also saves a couple of bytes, from:
+Right, I already suggested that:
 
-  27:	48 89 ec             	mov    %rbp,%rsp
-  2a:	5d                   	pop    %rbp
+	https://lore.kernel.org/lkml/Z_yxxoa12N9rNn2z@hovoldconsulting.com/
 
-to:
-
-  27:	c9                   	leave
-
-No functional change intended.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/kvm/vmx/vmenter.S | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-index f6986dee6f8c..0a6cf5bff2aa 100644
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -59,8 +59,7 @@
- 	 * without the explicit restore, thinks the stack is getting walloped.
- 	 * Using an unwind hint is problematic due to x86-64's dynamic alignment.
- 	 */
--	mov %_ASM_BP, %_ASM_SP
--	pop %_ASM_BP
-+	leave
- 	RET
- .endm
- 
--- 
-2.49.0
-
+Johan
