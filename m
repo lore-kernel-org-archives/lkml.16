@@ -1,150 +1,182 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA4F1A0BFA;
-	Mon, 14 Apr 2025 22:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744669381; cv=fail; b=FDFgMNzMvWQpnC5++NBqNQgS0n/ZRR8r58m3Tk5cNzQN+6prMsLRUdOOMjHlMyD1FWGKHT6t0yL5J9W/Mw+1KseOr+cWlinL9thM8qVT4IcFwkdzv0SnLieZ/gqNkQiareKjzH+ew+SetDTGCdDQl/YwU9NCa8qK9KQf5Nk0cR0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744669381; c=relaxed/simple;
-	bh=T4H1ttHBbcTDkhLqeUzOfIxR72ymCu4IKQJfARLvl6o=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=as4qAEW6V2vX6kHeATtsXrAjuCM/94VJMLpVn6hd5iAOupycjpweoQB471w2KRvgcC7FW2GWPZMyW7rVtIc2AWBpBOY9ZEoOBudNxadp3h1K3vmkt6j2WPkNB67WrFv/7dMl82MvunekoYbtiaeuGCRIPwC+BZ9Ls+wCwI8Gbi0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IAYrmMA/; arc=fail smtp.client-ip=40.107.94.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494281A0BFA
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744669536; cv=none; b=M6Pndnv6M4SHXe/9Gk5dgE5WdVxtVBqxYYQWnHEKm5wyoUUjhJ2B0IP0xwWcZ4GMy16dOnAyMJaY04yshJvbwrV2Y4MDgdbCNqX0wjQchiBOdZfw1XW41Xvb8dwRu901B9WKIw9P2I2u7tHm0Wx2tDmV26dm5w4jKgDb6SwdQPI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744669536; c=relaxed/simple;
+	bh=yJh360MlnBAEJy/QLsiSOsRpkj+tmEeTtyeIyewln0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GdKMBSYEEwFHTKVvjAmAd7w0DDs12pIB59WPG19dBjLC9hvIJfzYAwVaKGoyX57LXK0cFpsBjc2rBv3OjjtM4TK3jW9djp0HkqnTQLef78ZdvAikC2ssRiVwn3ea9DlHNJdt6inihmmdFQWQ33jxoxgHRpGNEq2WbT0mGQG1lVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PH091o37; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IAYrmMA/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TbA07TOWCX58A8OhZYBw4BxNljUMxilivK034Vzad7+6QuRwcJokTQYxA6SfTS+gw51Qp2tJpJoIw13HI/yL0JeUJdLae1XUfu/ALS9K/dhLl24dJgA2mH2oBam3luO6K+C/KP8U8j6Y3+v9WdgTrlDZSgrLq7uml2csiY/zHw9YY2PsQdbapUJqHiwGtw1e0sCajiTOfCim+McZXxYuuf3szf1rw1NOoEWZYgBNiXfjOUrtrUnCE/6VYf8tYg4RGC2RAUG1PhuKlD4YhdRW7bS+tMYMJRmFqXDEsGqWl6+6Ug3YB51gmHT5Ap9ZeYRnmeadWEAK5wjBr41y+VSq8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2O04tSvbBizD61VC9DclIVAKvY35WbHPv/SPzjsb56s=;
- b=N/2DHWt3zOtEM4Gwua7XdWCN/nQkTco5aC7qj+licXi8KzPexA0FSxGBetq4iAQRmE1T4KPugHNmjTacxURxteDw0zPTXZD879KHE936FThhtB5Y/9ZpKXhjt23voef4mnxeNeu6QpLa1JMqVzrW7ieqe2RAaBFEdR1ave/owmyjiqHmGtmnudR4pzhPTWUFqQ1Hte6JxvGJXVOoEE43u6njKyVHn2YvMwoNu44dVTBZHVCOOK7477yE5Vy1om/oOcBnyn5nwb1ed8MvWGYcoAnqoy/v+37XTFmqeFRbmUmzUYeSuHCQjV62EqWx+Ule9xGUdJU0gIxuaPsEywMMtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2O04tSvbBizD61VC9DclIVAKvY35WbHPv/SPzjsb56s=;
- b=IAYrmMA/KAHF7cIeeUg047FrFBjnTdcdRjjsPGe+OLEb+hntDR+qCeeeEftGNsaGfGhvdYbgWTLXBms8uXXjpgxgJ6E7QsJcwuyjBejbwscwgSIIm3Uaw9Tf1fsT7pZBmRnxRrxo3y4Cx+TrSUKu8++NK3ywKLO0jFlwq4KgadU=
-Received: from BL1PR13CA0024.namprd13.prod.outlook.com (2603:10b6:208:256::29)
- by CH0PR12MB8580.namprd12.prod.outlook.com (2603:10b6:610:192::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
- 2025 22:22:50 +0000
-Received: from MN1PEPF0000ECD5.namprd02.prod.outlook.com
- (2603:10b6:208:256:cafe::fc) by BL1PR13CA0024.outlook.office365.com
- (2603:10b6:208:256::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.10 via Frontend Transport; Mon,
- 14 Apr 2025 22:22:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000ECD5.mail.protection.outlook.com (10.167.242.133) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 22:22:50 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
- 2025 17:22:50 -0500
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>, Vinicius
- Costa Gomes <vinicius.gomes@intel.com>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "dmaengine: dmatest: Fix dmatest waiting less
- when interrupted"
-In-Reply-To: <20250403-dmaengine-dmatest-revert-waiting-less-v1-1-8227c5a3d7c8@amd.com>
-References: <20250403-dmaengine-dmatest-revert-waiting-less-v1-1-8227c5a3d7c8@amd.com>
-Date: Mon, 14 Apr 2025 17:22:49 -0500
-Message-ID: <871ptu8jt2.fsf@AUSNATLYNCH.amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PH091o37"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744669533;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Wasdk2OzhDHLNgttFk1rmIb7qXMNrsMULtRHlj6BUo4=;
+	b=PH091o37xwGxlFOWU5WFo2Aa1e3Zdi5GyhLMNA7q+bAVgnTgfllJHkcoFQ+/ImzokSz2AV
+	bRE9HWxSiv5/y9VoWj1i2mZLPmXuQs78dZiFh3ti/7Zn/yQY7X05aYprThFOAPd90yNHzd
+	v91HAfJ8xmIK9a5wuDb3M2P7WfFO5Ik=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-nNWww7m0NbSHMf6qDuTOAw-1; Mon,
+ 14 Apr 2025 18:25:29 -0400
+X-MC-Unique: nNWww7m0NbSHMf6qDuTOAw-1
+X-Mimecast-MFC-AGG-ID: nNWww7m0NbSHMf6qDuTOAw_1744669525
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6CDC61800349;
+	Mon, 14 Apr 2025 22:25:24 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.64.91])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C771F180B487;
+	Mon, 14 Apr 2025 22:25:13 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	corbet@lwn.net,
+	shuah@kernel.org,
+	david@redhat.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	ryan.roberts@arm.com,
+	willy@infradead.org,
+	peterx@redhat.com,
+	ioworker0@gmail.com,
+	ziy@nvidia.com,
+	wangkefeng.wang@huawei.com,
+	dev.jain@arm.com,
+	mhocko@suse.com,
+	rientjes@google.com,
+	hannes@cmpxchg.org,
+	zokeefe@google.com,
+	surenb@google.com,
+	jglisse@google.com,
+	cl@gentwo.org,
+	jack@suse.cz,
+	dave.hansen@linux.intel.com,
+	will@kernel.org,
+	tiwai@suse.de,
+	catalin.marinas@arm.com,
+	anshuman.khandual@arm.com,
+	raquini@redhat.com,
+	aarcange@redhat.com,
+	kirill.shutemov@linux.intel.com,
+	yang@os.amperecomputing.com,
+	thomas.hellstrom@linux.intel.com,
+	vishal.moola@gmail.com,
+	sunnanyong@huawei.com,
+	usamaarif642@gmail.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org
+Subject: [PATCH v3 0/4] mm: introduce THP deferred setting
+Date: Mon, 14 Apr 2025 16:24:52 -0600
+Message-ID: <20250414222456.43212-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD5:EE_|CH0PR12MB8580:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ae5b126-90a8-486a-7193-08dd7ba2e480
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pUZaFWiLTzrDGiYkIFkDqrfk/om8razP1whHkbVQUOiFW+HlfIookhDDbtVj?=
- =?us-ascii?Q?K7Kfgj5S9hG/4mYgIXKM6FiGkSkNcrquOsbH9zhcrsSaXRllXQ7yU04888Ks?=
- =?us-ascii?Q?5e6h40YazJRFnDeIgoov7RxgT+uAFEui2RsLmERcJ8jpkidH3fJe0DTu3m2e?=
- =?us-ascii?Q?fIIhdCkdh5O9ZiPMFr19xC8yld7Zyy2B+xtbREmgVROrFfZj2duMQJhSW+68?=
- =?us-ascii?Q?0CD6oX1f0H1Q0zTgnpxPiBtfVPBBr5L6vYNAMjTPORcsIBESxWvTyNMztPDY?=
- =?us-ascii?Q?1h7EvQIWJxG4i59TmymuW7IHaRCpwgYZLdhqeY7fX01/2WFy2p6ZEpEcuIfN?=
- =?us-ascii?Q?w6UMb+8+hDbtOo4vACG/1eWJJTTsw6Iw7waqM+wXYC0lQf6p/ZRdcyzKn+qz?=
- =?us-ascii?Q?APt9KLqhcFgKaDCj3yBSQJSmlcTGX5bpaNcvH2cX6n+psS+xCkuoCLJ66w6B?=
- =?us-ascii?Q?mRducz2gXSbqL6JKerKoZ3iYWFWQ8ZvXUxDyA7zHl5I/Hcry/X3R9hFPHOQQ?=
- =?us-ascii?Q?bAgyUkWW0PZsjF26FHZApurNYaobpNQ1soMw6fvtQ55FORE+I7L8SCMtNOZu?=
- =?us-ascii?Q?OfYzFwKa6MNYSwsE8K6oy15IXvPwUrEWXQWtbXN1KxTfgD2ZBNhs9zvVAM5E?=
- =?us-ascii?Q?8e18i1r6cE4L17cnRIqb28gN2b9RYsRvjZYcJTJpYHC7fbZ63bzxA2k55L0t?=
- =?us-ascii?Q?iYC/FDatrRZ9HL2ZzXw/v+GcV5FoYhSgj4EyJDh4WSRARBLKzTypLTCJ7JSD?=
- =?us-ascii?Q?+sZ6byjmNM3upd484+HdqFOuCTnzDuRS0bGfzxQfBXrP+ckLIsjvsQTfOGrf?=
- =?us-ascii?Q?wtECVmLo4Zt2mJR4HBS7dJTJ7YFrsMJIcChlqLZmutseic1d0YDdR3rmEzIh?=
- =?us-ascii?Q?4tbGVAO3A/AWTdHUGTeMVPoh+3DLWHRTC9ojXYawbiZDKEHvz/VsZl5JZS10?=
- =?us-ascii?Q?+4ImoZNbV/KwzSDeeMOuiYAEBdBQg3Wipp7PlTr7YAMRsfKCyXit/kzIEgHG?=
- =?us-ascii?Q?VR8KZOTbDeSVjEPwJVqerMsK8z0YipxE7p6Ueps61YQJbHKLuTNRsaxZBEIw?=
- =?us-ascii?Q?Pk+SYAX3NV5jV+QB7Ifni+JQj+oVMpwgp+5ZALadPwdMD7KXWtBia0UdpK65?=
- =?us-ascii?Q?/ea6JJhAE2FqeEPg0FP0XbpN9JNvh+gStqe48n+i4ej6C7HhmU7sO13O4+3r?=
- =?us-ascii?Q?2dW1dme1mxTDc9gfB5Zs1JbpKM6FNmCND8HN9BaisEta7R3lTGJ1HWeIfR3v?=
- =?us-ascii?Q?1qnznNNYAkOktaWmIxJgKGAjmW91UQf8YpivHrI7BRUU6Pmir16mL/uu4fHy?=
- =?us-ascii?Q?LCPB2PUkbztJkYhkMy8MtljJtlRD9aCtWfLral9qLs22i2TQ4LXo5Ys6rXJe?=
- =?us-ascii?Q?/fFs426fVXqOrgfMk0Whq3EmW/n1kBelT6j3LUQzdhQjZs2mpnY4UB9O9bZE?=
- =?us-ascii?Q?bbEKPvXzYf1TV5qmt9gm+JFkhnuZHEB6WdyoJdzs39VUMvg+oNlHWI+DBxJc?=
- =?us-ascii?Q?4+JmiKd4K9NmrKcI2tqk5ifE+YhdvnvqXgLW?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 22:22:50.4551
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ae5b126-90a8-486a-7193-08dd7ba2e480
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECD5.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8580
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Nathan Lynch <nathan.lynch@amd.com> writes:
-> Several issues with this change:
->
-> * The analysis is flawed and it's unclear what problem is being
->   fixed. There is no difference between wait_event_freezable_timeout()
->   and wait_event_timeout() with respect to device interrupts. And of
->   course "the interrupt notifying the finish of an operation happens
->   during wait_event_freezable_timeout()" -- that's how it's supposed
->   to work.
->
-> * The link at the "Closes:" tag appears to be an unrelated
->   use-after-free in idxd.
->
-> * It introduces a regression: dmatest threads are meant to be
->   freezable and this change breaks that.
->
-> See discussion here:
-> https://lore.kernel.org/dmaengine/878qpa13fe.fsf@AUSNATLYNCH.amd.com/
->
-> Fixes: e87ca16e9911 ("dmaengine: dmatest: Fix dmatest waiting less when interrupted")
-> Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
+This series is a follow-up to [1], which adds mTHP support to khugepaged.
+mTHP khugepaged support is a "loose" dependency for the sysfs/sysctl
+configs to make sense. Without it global="defer" and  mTHP="inherit" case
+is "undefined" behavior.
 
-I'm puzzled by the silence here. This is a clear regression fix and
-Vinicius agreed that the change should be reverted in the original
-thread.
+We've seen cases were customers switching from RHEL7 to RHEL8 see a
+significant increase in the memory footprint for the same workloads.
+
+Through our investigations we found that a large contributing factor to
+the increase in RSS was an increase in THP usage.
+
+For workloads like MySQL, or when using allocators like jemalloc, it is
+often recommended to set /transparent_hugepages/enabled=never. This is
+in part due to performance degradations and increased memory waste.
+
+This series introduces enabled=defer, this setting acts as a middle
+ground between always and madvise. If the mapping is MADV_HUGEPAGE, the
+page fault handler will act normally, making a hugepage if possible. If
+the allocation is not MADV_HUGEPAGE, then the page fault handler will
+default to the base size allocation. The caveat is that khugepaged can
+still operate on pages thats not MADV_HUGEPAGE.
+
+This allows for three things... one, applications specifically designed to
+use hugepages will get them, and two, applications that don't use
+hugepages can still benefit from them without aggressively inserting
+THPs at every possible chance. This curbs the memory waste, and defers
+the use of hugepages to khugepaged. Khugepaged can then scan the memory
+for eligible collapsing. Lastly there is the added benefit for those who want
+THPs but experience higher latency PFs. Now you can get base page performance at
+the PF handler and Hugepage performance for those mappings after they collapse.
+
+Admins may want to lower max_ptes_none, if not, khugepaged may
+aggressively collapse single allocations into hugepages.
+
+TESTING:
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- In [1] I provided a script [2] that has multiple access patterns
+- lots of general use. These changes have been running in my VM for some time
+- redis testing. This test was my original case for the defer mode. What I was
+   able to prove was that THP=always leads to increased max_latency cases; hence
+   why it is recommended to disable THPs for redis servers. However with 'defer'
+   we dont have the max_latency spikes and can still get the system to utilize
+   THPs. I further tested this with the mTHP defer setting and found that redis
+   (and probably other jmalloc users) can utilize THPs via defer (+mTHP defer)
+   without a large latency penalty and some potential gains.
+   I uploaded some mmtest results here [3] which compares:
+       stock+thp=never
+       stock+(m)thp=always
+       khugepaged-mthp + defer (max_ptes_none=64)
+
+  The results show that (m)THPs can cause some throughput regression in some
+  cases, but also has gains in other cases. The mTHP+defer results have more
+  gains and less losses over the (m)THP=always case.
+
+V3 Changes:
+- moved some Documentation to the other series and merged the remaining
+   Documentation updates into one
+
+V2 Changes:
+- base changes on mTHP khugepaged support
+- Fix selftests parsing issue
+- add mTHP defer option
+- add mTHP defer Documentation
+
+[1] - https://lore.kernel.org/lkml/20250414220557.35388-1-npache@redhat.com/
+[2] - https://gitlab.com/npache/khugepaged_mthp_test
+[3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutput2/output.html
+
+Nico Pache (4):
+  mm: defer THP insertion to khugepaged
+  mm: document (m)THP defer usage
+  khugepaged: add defer option to mTHP options
+  selftests: mm: add defer to thp setting parser
+
+ Documentation/admin-guide/mm/transhuge.rst | 31 +++++++---
+ include/linux/huge_mm.h                    | 18 +++++-
+ mm/huge_memory.c                           | 69 +++++++++++++++++++---
+ mm/khugepaged.c                            | 10 ++--
+ tools/testing/selftests/mm/thp_settings.c  |  1 +
+ tools/testing/selftests/mm/thp_settings.h  |  1 +
+ 6 files changed, 107 insertions(+), 23 deletions(-)
+
+-- 
+2.48.1
+
