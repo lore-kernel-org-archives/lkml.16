@@ -1,94 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE6E25776;
-	Mon, 14 Apr 2025 05:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD12B28F4;
+	Mon, 14 Apr 2025 06:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744610291; cv=none; b=fGBm1BpRZWCfhjZMwYBGELp5HxPRQ+niqqop0pquMNLWsLNylllWPqlgtn6budpSulGj7H/8xZIKP5chZpXYLeOIlWHZazKgec6Rtl7r26PtCNBYdiiTudp1WWMjscHTuAljrab0KesuXgBPDJPR3+9Gx56uxsW6JpPiIi0SCAs=
+	t=1744610441; cv=none; b=N+Ue5omNVH9vZbOVU2FJ2sRuv2XdeLTN+Hs9zmnNRFUZUK3OohsKofbo6eORbjVDpbID1+Qw6UAQPCaPEmC1BancykXqWJGfIomqRpudpe8M67rXbE82Ch/Myo5fBgoAuivvTpSWcqQelXA6LPukJ1VMVSil1cx9OqA9Qxu+tm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744610291; c=relaxed/simple;
-	bh=dSAe/V3pdbTWgzxSG+hkc2cBmCm2XsfRx7mmsO8TE6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YYZLxplnMdD5TkmLTV+4Cw7Sup6bWlW+0mf+gqfMquWOEDgqKwoQSMiSMVWodMbQWgm5pYtkxY1u8O5J2ytuz1sLc1yQPzbuk92yVSaG6PTSE4eVMWsCctygUP0/i0V7ou1eGizmB+ACDfgCqOWAXgx4As/85fP6bh41wcEomw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPqEGceB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744610441; c=relaxed/simple;
+	bh=rVZcTwDNqe0ZDhhksVpKMZmXPkNUspEtmilQLlgmpZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=umMX19zqjw2JZ+zuu3UM8jIKPTndksIY+hIuiS763NaFb/4IQfp1vg+wbeT0BWKxTZzuwKDLHEV/iwsKcL+mOgThX5ANm+euL8SsJmoRwx3MY8Fh9EtGolVhSDWBSpMvPCCon56HwDh8B9Lv0gusLy+ePk9Z9jh42B/JivE2MXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TlXqQqtI; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPqEGceB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F422C4CEE2;
-	Mon, 14 Apr 2025 05:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744610290;
-	bh=dSAe/V3pdbTWgzxSG+hkc2cBmCm2XsfRx7mmsO8TE6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LPqEGceBXKFqy/A7O9EyIcKSWNTbQsWN4o2hrpcITT2XCA9S4n+1BveHX4p/dCbaI
-	 eJY93y8SV3KV4+xcI6I+Anrh+zvTW86amac4rqnlAEe9J07+r4izKcCxBXlBMrwjNn
-	 C+X9wIo8anw973b8fX14L/rt2FhfCkwRI/hilH+h1Qm/Ax65JeokC5pcHi3OpCKkxh
-	 TcUXGt88etZEKhZWZslNIU5w+aWSrYgZd9Cfl1FfiuH5uEpbKD2gNM7DMg+JnQT4/V
-	 08DrGR3b7gAn6MVEI2hsynjHFuPQCsz2NydY1HX2nPp2gqJZO+q+CanDooA7yjHca5
-	 0kIGCKDLkTDbQ==
-Date: Mon, 14 Apr 2025 07:58:07 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
-	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
-	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
-	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, elder@riscstar.com, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support
- for BPI-F3
-Message-ID: <5lfnxricxm2k3fuf6nfvjd6cbkmsjkx7inoi52uy5uwwvld7sq@abn4i62tdics>
-References: <20250411131423.3802611-1-guodong@riscstar.com>
- <20250411131423.3802611-8-guodong@riscstar.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TlXqQqtI"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5499c5d9691so4168722e87.2;
+        Sun, 13 Apr 2025 23:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744610438; x=1745215238; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AcIn03qHBJHK9ZybMtH0fREfD8sLUUq68wtHGB9S3aU=;
+        b=TlXqQqtIpRe7VSZoqqo08pCqRxinBk/sJLzCUNw1sCGE0ODH3zHgNDswFVObKs2CDN
+         CdghX16cXwppnLizxoeKg+2FH7ipeRgfRJEANnktf6s27+pfqdyC3Y4APygkfzzhJgQH
+         FZbZeYV0mGS+u+axYclK26RLMWPmMHFzN4GnNQt/zbWf6tYXwKd9NXLg1NNcDHqUWPf9
+         6YAZW85MfaHTdD852nlBl1MDH8D6Y21BdmIXtDsQsBg2FYvyxuKB9glxg/iK/uQhl6AU
+         HpoTRh7niIhhqQB+R2F/g1VJ9n84Xrztg4dVVOqNkWQxxDwYZL/lZc6342p+9AwbSMaX
+         36yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744610438; x=1745215238;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AcIn03qHBJHK9ZybMtH0fREfD8sLUUq68wtHGB9S3aU=;
+        b=DQNTkCwP+t6+wLDW0kabBAZAboM9+Y92MYmShzIIxWI5lX5h+fC58pAOfN+2Y5DcZp
+         tmYjH7aV5T2dczAgBFV5agesZ+gUHHoPiAvvtyndTeFckpFOmIm1sB55LpuTC/tc666a
+         Qh9SY1QuqohDOylCyTHmlq0Q17scvZgSARiyHkZZDcQqVRUcAozIyrdq82NuvWjv2auO
+         sRR/sChpfcyqQXah1Y18/MfsV6f5fCuGbaBZGd2KS+1kdL7l77fis9d8laS9ysJkLXVx
+         ACr27SMK4fAI2FfB6ic9tu22VMuOuNbRAQA9jcVAKe4nMiyEkixDVtqCcdSF/xNtIOir
+         GkJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfEeCUQzEf6htz3QJh6EX8G65d3BUXKOJRdxk21OPYQJqXuMJ5EWG383wYgSQcWK3OCTkzPw741lqN@vger.kernel.org, AJvYcCVBDxTbdGeW2S1/XFYDp2rR2DMa5v01lvk3Odx3dS1cxi/wqtMIDhBJFkBNY7vh3QSQ5lujjqnDjJxSNGQW@vger.kernel.org, AJvYcCX3XRBcqYlhFDNK1yiiy9fCEsGktkcPediRqV6aPs80biG/vgaqPf8ObVIhxoz4npm+5YtTT71r8xSC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yytj84AmOnog9z9dlL5d6SikStnwqltHMfUKhEvRpaGIJlWoxFM
+	c4H5zXE7asEO7yGGJD4uzlNfRqEpZeeUIluU0EWW5OhoZL+WNfh+GRdgFQ==
+X-Gm-Gg: ASbGnctYq/8P/dZYvE56oMbSBHSU9rdhJjI6/bYPRzcer41UGcyl61rbKrSN77tvP1i
+	AsmGyGxqwx+/p2uB/b56p55pRzTL4u69dBQzll1hoqZX5Zy179uaIZZIX/flCwiifXCxx0tN/It
+	2L+6dIqPcdubIFWCKjs8eEzlkXI+aP6c9tU97UMbYkeAsXp4HRTwv70aTXIeAQ3EqcotoZNOSHh
+	HZGwypCNiIvFlszu9hTp829zMhWBzdUh6Ts9zGLSdkefxotxv0v45q0ELNQRNqwdSDbh6rg0dR0
+	6MyF3YtH0JAnDoxXuDZAXBq5m4MtGw1Ixw1M8ktd3UFzf9yHKGatsBVqthxnHr17doY5oUyu8ei
+	giL1y0APwcbZ2ocdAfLRWFg==
+X-Google-Smtp-Source: AGHT+IH0cUKTxL25iLjT2ZG9STnoFpV9gLLZyLsXwHIy6uY0/oJbxypUfloa/SLaEw0Worz/jhyBoQ==
+X-Received: by 2002:a05:6512:3503:b0:549:8d07:ff13 with SMTP id 2adb3069b0e04-54d452d9b65mr3046591e87.51.1744610437469;
+        Sun, 13 Apr 2025 23:00:37 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d52037bsm997934e87.241.2025.04.13.23.00.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Apr 2025 23:00:35 -0700 (PDT)
+Message-ID: <ab0fa023-91b6-48de-a71d-95eb9aa70c01@gmail.com>
+Date: Mon, 14 Apr 2025 09:00:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i5dhgaf5vtkosusu"
-Content-Disposition: inline
-In-Reply-To: <20250411131423.3802611-8-guodong@riscstar.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 8/8] iio: ti-adc128s052: Drop variable vref
+To: David Lechner <dlechner@baylibre.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1744022065.git.mazziesaccount@gmail.com>
+ <db5cb2e1543e03d5a9953faa3934d66f4621cd12.1744022065.git.mazziesaccount@gmail.com>
+ <78d17b05-3f0d-4903-afe3-8051d4bd051d@baylibre.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <78d17b05-3f0d-4903-afe3-8051d4bd051d@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 11/04/2025 16:34, David Lechner wrote:
+> On 4/7/25 6:37 AM, Matti Vaittinen wrote:
+>> According to Jonathan, variable reference voltages are very rare. It is
+>> unlikely it is needed, and supporting it makes the code a bit more
+>> complex.
+>>
+>> Simplify the driver and drop the variable vref support.
+>>
+>> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>>
+>> ---
+> 
+> ...
+> 
+>>   static int adc128_probe(struct spi_device *spi)
+>>   {
+>>   	const struct adc128_configuration *config;
+>> @@ -183,17 +173,12 @@ static int adc128_probe(struct spi_device *spi)
+>>   	indio_dev->channels = config->channels;
+>>   	indio_dev->num_channels = config->num_channels;
+>>   
+>> -	adc->reg = devm_regulator_get(&spi->dev, config->refname);
+>> -	if (IS_ERR(adc->reg))
+>> -		return PTR_ERR(adc->reg);
+>> +	adc->vref_mv = devm_regulator_get_enable_read_voltage(&spi->dev,
+>> +							   config->refname);
+>> +	if (adc->vref_mv < 0)
+>> +		return adc->vref_mv;
+>>   
+>> -	ret = regulator_enable(adc->reg);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -	ret = devm_add_action_or_reset(&spi->dev, adc128_disable_regulator,
+>> -				       adc->reg);
+>> -	if (ret)
+>> -		return ret;
+>> +	adc->vref_mv /= 1000;
+> 
+> In other drivers, we've been doing:
+> 
+> ret = devm_regulator_get_enable_read_voltage(...);
+> if (ret < 0)
+> 	return dev_err_probe(dev, ret, "failed to read '%s' voltage, ...);
+> 
+> adc->vref_mv = ret / 1000;
+> 
+> It can be easy to make a typo or forget to specify the voltage when creating
+> a .dts, so I think the error message is helpful to catch that.
 
---i5dhgaf5vtkosusu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support
- for BPI-F3
-MIME-Version: 1.0
+Good idea. Thanks.
 
-Hello,
+> And we use ret to avoid having adc->vref_mv temporarily holding a
+> value with the wrong units (and can make it have an unsigned type).
 
-On Fri, Apr 11, 2025 at 09:14:21PM +0800, Guodong Xu wrote:
-> +&pwm14 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm14_1_cfg>;
-> +	status = "disabled";
-> +};
+I'm not convinced about the benefits. The "temporary holding" is not 
+really an issue as it is only held unmodified for the duration of the 
+error check. Furthermore, converting the voltage unsigned does not add 
+much as the regulator framework does any way return the voltage as integer.
 
-I wonder if the pinctrl properties can better be added to the SoC's
-.dtsi file. (Only applies if this is a canonical choice, i.e. there is
-no other possible output configuration.)
+Still, even if I am not convinced about the benefits, I don't really see 
+any downsides in your suggestions either :)
 
-Best regards
-Uwe
+>>   
+>>   	if (config->num_other_regulators) {
+>>   		ret = devm_regulator_bulk_get_enable(&spi->dev,
+> 
 
---i5dhgaf5vtkosusu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf8o+wACgkQj4D7WH0S
-/k54NQf/XNpxz5lJlk/TwLJlajf1AX025zknqO/ixUHqueqlXnbKK/OibTGeNoaX
-krZaG9anMBPV6mgaiMCs44DAwcY/w8Tpb+EDikpzpPHY1+HYGNoMyKSM8z5Sjv8F
-WJHeqiOm7woGJeixt4iLU5YhDq1eBclttJdOR6/790y0cHzrNoEJiBDzFbge4QtN
-tjLEzOZjhVLTTqVXswOKi2fGa3AslElnxL+wnDQip9Utu/dXXU4ZKCeLwhx1b3pb
-n3mVy5/h4R0WtG+7Xn4/HNgpPyQn6elS3aezcgupymNZaUzmlpg9SmRoxrHr0RHW
-To/FljppSG7iMKjjiCnwjB20ZTuaww==
-=9urF
------END PGP SIGNATURE-----
-
---i5dhgaf5vtkosusu--
+Yours,
+	-- Matti
