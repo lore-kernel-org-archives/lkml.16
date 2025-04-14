@@ -1,147 +1,101 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6624A28466C;
-	Mon, 14 Apr 2025 18:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E0E36C
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655424; cv=none; b=BVb6DmIXTtIUyPz6m+okUVKw2Sc0dbppscyEUT3lfU53Xovoxtb5cuNJZ6jpL1rDm/nyKA9dM5I2mWOj0nKVriIZy/QQE7XL3SbNqOSbTfA2Wxjws2CRxCMe4exD+87TOka3ru6uOqx9ILybL53X2WCrh4//+yAsuFJuaHdhMjU=
+	t=1744655455; cv=none; b=aDTvAON32RdvsnA77T5IwiiW8b9L15KVByiRFx9Uv5f73+8DymzqUeEy/klEp2P3TkV9S14afs+f6L2BbiO1idPlnotiX7W+dQw5Jm4V3V6Gofhp6jcJqRFPOaL+6/o28/S68WpLOk+VJAdMNrMs01N/67Ar6fc6Jj2jWWgNM8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655424; c=relaxed/simple;
-	bh=6HmJKQO2X4WyvpQqfOeCUt/KLjexAoDH+2V1AxIXnok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hwMrDM+J3F184UlbPx82vf7DgSap74II99OuAaC0gz6TihgCk1EACydvo2JNauBQDaMrOxy0Fl/dbhAnUqcWW7K+VbWm0M5Zj4GuCUD82O12JXskkV95wjJqKt8yN/jMdga86TJi3sZ6TSQhlgANwFEP0m3bt5upJojyjs+ha38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=F0+Mk7aB; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744655455; c=relaxed/simple;
+	bh=iMCnbrJiSVgsnlnzip6/crB87NSMbiRPqYzRRrVE8XU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UYmHxLGSFdcmkUcq+PGnyLfdPLru87ZN1X6vF3YmrVBQ844kyqFEviECghstuNARWFindngvoyRd2T5Gq4cz3/dig07wjy/nix2OH4N7IzZowpSAlCJUtxBamiea+3oU/PFRJ/yIAvQHBCvyFaBnhL7jP3dtLJv/eWfv+URmrr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jV7It78L; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="F0+Mk7aB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=KvrP4YX9S88PE5IGWj9XQEJrki5oMuCrrMt/Wwr1Hxw=; b=F0+Mk7aBUK+0Qn8yr3+0zXWTV4
-	Y6tEaB+VVFzxQ5xMlEqWLRg99PhfBRfcefiA++Hi/koQtHGy5Xe2qzxrpHUFoy/+55OKQufU3Yin5
-	XPnHk7xWytSkie8IVd5hishRde0WcEpsneqeOJ/tD8dy/tTdSo9EGks8j9H4F/YkGs6s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4OZI-009FcJ-GO; Mon, 14 Apr 2025 20:30:04 +0200
-Date: Mon, 14 Apr 2025 20:30:04 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Bo-Cun Chen <bc-bocun.chen@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net 1/5] net: ethernet: mtk_eth_soc: revise mdc divider
- configuration
-Message-ID: <6c36505c-7af3-49f5-9141-8a655f90a2f9@lunn.ch>
-References: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jV7It78L"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30beedb99c9so41443201fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744655451; x=1745260251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iMCnbrJiSVgsnlnzip6/crB87NSMbiRPqYzRRrVE8XU=;
+        b=jV7It78LAKjX1iF+4nxI2oIuv1XZJpt6Iy5uLV46Gb9+mwltTXBYQCn5QtO11ChD1a
+         nVbDlaLPq+aKY341lBfHk+T1s/39/OIh2tlYwW3dxrCMKONY5KPzR+2Eaot/xUPWvuHp
+         Xjmtk7ToQILSAnf2Wj1axX2rhA5kRnLcZEi986u/DVQ/dRape/WK4Hh5zxUjbzQLGQrQ
+         sPHomYTc1sd6IBz5HnDeBjmboGbin6wgG0A38Yi5uuvH8E1cMyUAi2/TJt1/+882IKoe
+         At/lDrRIn0q719+Qwof/X8IxSVy+L0BOqMO+aB3O7PoTVnaTPdpOi1K5ycrEcHbcEV0x
+         0j6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744655451; x=1745260251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iMCnbrJiSVgsnlnzip6/crB87NSMbiRPqYzRRrVE8XU=;
+        b=vbPxeOZxuuweToCG1j0SKLah5W2k3gbnn0r455ExkDj1cpJkKOzzTspa3BHNFNn5j3
+         mY8387royueu2dGhmw/bBEXA4AyItUjB1Gf/kbK99YZ/bcSgP2eQsn/fjFVsqhajO1Fl
+         zMk7WhHJN5Mz3SC9NQoqsFlgn30GcyOPEls05NqlbtKU/Hl41AiQXeCAXVwRk0xZRcT6
+         k0MUvQA/jTbulp77RaAPbOBC4x6gHnke33ElaZWuS5xMI1mUAwHK5tLYgis+ME1Fs5z/
+         +kBTZvZBePzB86jdpLN4kh4EpXWRUu7j9cG2iJbzL4JYiRcKtulfMfhKUTFGh98yXO1g
+         2pgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPexhcmFKFb845TsE0h79rQVnZcF4tJlKOE4ZunVyHacluviIwi5JHaRQsee8Pb/9T56CPTySs7q23C7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJqr0zJSFfplAN1B2NG+eMe4SCQ9pGGSKNNjrxi5758Mu5SEVb
+	pKphVQ80eMDm64Qzi+hyaudMY7fUBIlZPngof7VK2SnIk/9D4/h42FYx0BKA7AJumZyERmJNo+z
+	r/+FQ7uxnR0qr0HCQcSya8HUgBbfvXZ0i0DM/0w==
+X-Gm-Gg: ASbGnct7zQvHVrEQdH1/EnAqjxl+PrSHHwkrS1pSWFzTvZHPZAwk3aoiBrpNBfkZpNG
+	wiagzzhL+0fDeqrhjdcuXOcXYFiWOnzp9BvMYiz8M/ooySPSOCzlQMCZZ1G6g572zwSns9H1aSK
+	A5hDhhQwM2lcpUm0I6IaycK7lDYMoe3K3u7ihFIfd6ft1yNmFy2c0bwoZCqxdcf0A=
+X-Google-Smtp-Source: AGHT+IGG6HfO0a687DQ2ObWoW5dsDkKpKT5mJSVYkj4mYbmZ4ySEjWG7K8FyQL0/ZDaad7PXpi1Rz3cQhvFr0qElIMU=
+X-Received: by 2002:a05:651c:1597:b0:30c:160b:c76c with SMTP id
+ 38308e7fff4ca-31049a1c6d6mr38019201fa.17.1744655451082; Mon, 14 Apr 2025
+ 11:30:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
+References: <20250412193153.49138-1-chenyuan0y@gmail.com> <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
+ <CALGdzurLWayryjUEdSy4iuHAgFO=RA=HN=u+BZY96JqESKvi+A@mail.gmail.com>
+In-Reply-To: <CALGdzurLWayryjUEdSy4iuHAgFO=RA=HN=u+BZY96JqESKvi+A@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 14 Apr 2025 20:30:40 +0200
+X-Gm-Features: ATxdqUHR3IF_jBbcAtQS5Mjt4i90SIKTxCncQEK71lUbbQWQS1vGZ6vrZEF8J6s
+Message-ID: <CAMRc=Md+w7Wp8gS=PvpYkz6z4y45z6QiO7A0i24ESSa8N_byeg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 07:11:20PM +0100, Daniel Golle wrote:
-> From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-> 
-> In the current method, the MDC divider was reset to the default setting
-> of 2.5MHz after the NETSYS SER. Therefore, we need to move the MDC
-> divider configuration function to mtk_hw_init().
-> 
-> Fixes: c0a440031d431 ("net: ethernet: mtk_eth_soc: set MDIO bus clock frequency")
-> Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
->  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 60 ++++++++++++++-------
->  1 file changed, 42 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index 43197b28b3e74..fd643cc1b7dd2 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -871,11 +871,11 @@ static const struct phylink_mac_ops mtk_phylink_ops = {
->  	.mac_enable_tx_lpi = mtk_mac_enable_tx_lpi,
->  };
->  
-> -static int mtk_mdio_init(struct mtk_eth *eth)
-> +static int mtk_mdio_config(struct mtk_eth *eth)
->  {
->  	unsigned int max_clk = 2500000, divider;
->  	struct device_node *mii_np;
-> -	int ret;
-> +	int ret = 0;
->  	u32 val;
->  
->  	mii_np = of_get_available_child_by_name(eth->dev->of_node, "mdio-bus");
-> @@ -884,22 +884,6 @@ static int mtk_mdio_init(struct mtk_eth *eth)
->  		return -ENODEV;
->  	}
->  
-> -	eth->mii_bus = devm_mdiobus_alloc(eth->dev);
-> -	if (!eth->mii_bus) {
-> -		ret = -ENOMEM;
-> -		goto err_put_node;
-> -	}
-> -
-> -	eth->mii_bus->name = "mdio";
-> -	eth->mii_bus->read = mtk_mdio_read_c22;
-> -	eth->mii_bus->write = mtk_mdio_write_c22;
-> -	eth->mii_bus->read_c45 = mtk_mdio_read_c45;
-> -	eth->mii_bus->write_c45 = mtk_mdio_write_c45;
-> -	eth->mii_bus->priv = eth;
-> -	eth->mii_bus->parent = eth->dev;
-> -
-> -	snprintf(eth->mii_bus->id, MII_BUS_ID_SIZE, "%pOFn", mii_np);
-> -
->  	if (!of_property_read_u32(mii_np, "clock-frequency", &val)) {
->  		if (val > MDC_MAX_FREQ || val < MDC_MAX_FREQ / MDC_MAX_DIVIDER) {
->  			dev_err(eth->dev, "MDIO clock frequency out of range");
-> @@ -922,6 +906,42 @@ static int mtk_mdio_init(struct mtk_eth *eth)
->  
->  	dev_dbg(eth->dev, "MDC is running on %d Hz\n", MDC_MAX_FREQ / divider);
->  
-> +err_put_node:
-> +	of_node_put(mii_np);
-> +	return ret;
-> +}
-> +
-> +static int mtk_mdio_init(struct mtk_eth *eth)
-> +{
-> +	struct device_node *mii_np;
-> +	int ret;
-> +
-> +	mii_np = of_get_child_by_name(eth->dev->of_node, "mdio-bus");
-> +	if (!mii_np) {
-> +		dev_err(eth->dev, "no %s child node found", "mdio-bus");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!of_device_is_available(mii_np)) {
-> +		ret = -ENODEV;
-> +		goto err_put_node;
-> +	}
+On Mon, Apr 14, 2025 at 2:11=E2=80=AFPM Chenyuan Yang <chenyuan0y@gmail.com=
+> wrote:
+>
+> On Mon, Apr 14, 2025 at 4:24=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@boo=
+tlin.com> wrote:
+> >
+> > As for why irq_startup returns an unsigned int, I am unsure. The kernel
+> > Git history isn't enough to know more. The startup field in struct
+> > hw_interrupt_type appeared on v2.3.14 [2], so no commit message to
+> > explain decisions.
+> >
+> > Seeing the __irq_startup() code, my proposal would be to turn the retur=
+n
+> > value to a signed int, but I haven't exhaustively checked codepaths.
+>
+> Good catch! I agree that using a signed int could be a better option.
+>
+> Dear Linus and Bartosz, could you please share your thoughts? If
+> you=E2=80=99re on board with the change, I=E2=80=99ll go ahead and send a=
+ new patch.
+>
 
-It seems like you end up doing these checks twice. In theory it might
-change between the calls, but it is very unlikely? Maybe just keep
-node reference returned by of_get_child_by_name() and release it in
-mtk_mdio_cleanup()?
+Ok, I'm backing out this one then.
 
-Or calculate the divider in mtk_mdio_init() as is, but store it away
-in struct mtk_eth, so you don't need to redo all the DT parsing?
-
-	Andrew
+Bartosz
