@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108131F418C;
-	Mon, 14 Apr 2025 21:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D491F428F;
+	Mon, 14 Apr 2025 21:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667487; cv=none; b=nCUDqSpqtfNxL37xFsa86di13blcKbWlyn22mZUyAUMXZDdG/anKlNBTBuNIyVOq78YvnLGh680R+7WgNQjfbk900NT9TmSK7GrZMLvhaoP0p54s2IPNSFtdTtawzsFNHT//h7j2bFFwqjqPjaX4TpWBHSykTGcK8vvgSjArCoo=
+	t=1744667567; cv=none; b=PeLOVR+rTy73e0t/WU7otbG5T6XrHUk/VSTIt9lnUJSb7c/NY6LwnyXIdbjbEG+40u5RAJGL+CpdRwlBVcF1xkMD77kKJNjPrfXo4sj164gggNcPP3uLHzwnPqORwmLaSfvA5+wm0USWJb5ZjPsazQdJH3L4e9OJWDo/6lcmb0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667487; c=relaxed/simple;
-	bh=ZnQJt8KWqoC/Bdzd0TUu785MQNxC5WK3nuj32O8nzeQ=;
+	s=arc-20240116; t=1744667567; c=relaxed/simple;
+	bh=9Y6+16CTYHBYxtlREsuqFnCE62ervheulxQaRrmg184=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R+qD4DC96/Ex/iWon0hQ2z49ZpuD13Y5Q2QpLTQ53/lTAkkA2adqaXjpQJ8mHFatWdZicuZwwl5WWRBEseyM++kIkkC/5IxDpPuVvL72VfNvvUDlJwCcO4OvZnmWRxr7wozgfhMXOAUDNN7pAPhoB+DU4WQV4AoF1Z+R54hoihY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uluLCMIe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CGPMMc7IGRgl2dEk2bH9frTuFb8FNv7/pEG8/g1Xwzr79YElR4C8dS9XtT3zSyiGBl+YdS+FfxEtoo/xtLGxKe3l6Wc179/3wRhhTl/kOBc5QePO7RPc0RqAnaubRYt2MU5J1Jqn3pOKpNm8SIjJ0a4qzm0SqmFRXLRxM/4griA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQ3yFx9K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uluLCMIe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46331C4CEE5;
-	Mon, 14 Apr 2025 21:51:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQ3yFx9K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C63C4CEE2;
+	Mon, 14 Apr 2025 21:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744667486;
-	bh=ZnQJt8KWqoC/Bdzd0TUu785MQNxC5WK3nuj32O8nzeQ=;
+	s=k20201202; t=1744667566;
+	bh=9Y6+16CTYHBYxtlREsuqFnCE62ervheulxQaRrmg184=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uluLCMIe9flp78x2qe1VmduJ6A8rPzAozqhUaIOS64uIh4uSRjQZUT0jWyDFgMgNN
-	 0/peI8SA/C4TkLBB2soPkiZweaq3ONFBeEUUP/HBbLq/iN2wmOcMr1i14MUY8nmeKT
-	 ZoSCL4hDiG6bgpNK+xjb8+hkaw4UoE5uRrsse8SDWZ7CTpZzzR9rsmI332MfIKY1q8
-	 MnG0bnqwVdom7ZRGIpbjQB9nyPqkZaSYlbNraYVD0rNX98WEtQrlQaMEeGMORG268r
-	 zVfg7AlgiFM+EAr2Q8HR/iVbxLH2VBwlZY9EiL4zUb6rfr3qiJVUa5Wk/BxcNZvfrJ
-	 W/IVjY3dzE9oA==
-Date: Mon, 14 Apr 2025 14:51:25 -0700
+	b=BQ3yFx9KoWO3F7yJoP2HDSjq8ldn1TXrFhX2V5lkx1n9DBxHvLPr1jQohazn9k36F
+	 tz6ABZzhq0DgOU8dO4nWTAPrl8wddbS6rjR2E9YwRjTHvhvDrjsb60wBYKogGwhGo8
+	 V657+I2E4GaoZRVRNrjGg87s06Z40n1c/nMl+Va0GpkLVc9NzZIwCNTFFSSDGXySz0
+	 1V6aLmIhn5LcFScBPaEaxECEOp6FB62nf1OEKfZUWx4TW3IMF2NfdF56/Dv5gLZgXk
+	 WHS1maBHZGsz94qaFWEfXgAYZTdljy0KXMexlzdImtd2IfZQMiaEwU/54jaq1AawCn
+	 dvIHrUJH5hxAw==
+Date: Mon, 14 Apr 2025 14:52:45 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: Peter Seiderer <ps.report@gmx.net>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S . Miller"
  <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
  <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH net-next v1 09/11] net: pktgen: fix code style (WARNING:
- braces {} are not necessary for single statement blocks)
-Message-ID: <20250414145125.4db4368f@kernel.org>
-In-Reply-To: <20250410071749.30505-10-ps.report@gmx.net>
+Subject: Re: [PATCH net-next v1 11/11] net: pktgen: fix code style (WARNING:
+ Prefer strscpy over strcpy)
+Message-ID: <20250414145245.088ff483@kernel.org>
+In-Reply-To: <20250410071749.30505-12-ps.report@gmx.net>
 References: <20250410071749.30505-1-ps.report@gmx.net>
-	<20250410071749.30505-10-ps.report@gmx.net>
+	<20250410071749.30505-12-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Apr 2025 09:17:46 +0200 Peter Seiderer wrote:
-> Fix checkpatch code style warnings:
+On Thu, 10 Apr 2025 09:17:48 +0200 Peter Seiderer wrote:
+>  			memset(pkt_dev->dst_min, 0, sizeof(pkt_dev->dst_min));
+> -			strcpy(pkt_dev->dst_min, buf);
+> +			strscpy(pkt_dev->dst_min, buf);
 
-The code is fine, these aren't worth addressing.
+these should probably be strcpy_pad()
