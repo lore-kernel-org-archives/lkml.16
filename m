@@ -1,136 +1,78 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mr85p00im-ztdg06011201.me.com (mr85p00im-ztdg06011201.me.com [17.58.23.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B203427585C;
-	Mon, 14 Apr 2025 13:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09A9279918
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637090; cv=none; b=EpQ+YABmDV/Z5uJhDX/bilLjTltM/nQwinAAkUNUQVSuTnyjUP7f2XNMf502XBfFlBOybPd/tIfjXcT3PbxrTXMwwnuW8C5XgEq2jvXof8XfY06BdwLj8ULRWkiqSGmZB6ycvMnKiarXQ9Sc+mkUMji6MpbkmMeA2R5aG0VeJY4=
+	t=1744637098; cv=none; b=KMWBUXb8EAwjh4WUTsACl13Fc7SPEuvbgmhJoEFosqEdYaiMH0EaceRdHXUIaOxU0GwxKwggE2AyJ/mvTQFDQajliCtgrV2KHfyFa14ti3SSu4CUjpbVPMeoh0C1Ry2smYpaCQsAAPgK2K7xmfmWwbN6aZ3ZsR+Dm4MAqhUvttc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637090; c=relaxed/simple;
-	bh=QH4HBkEgzWlR+iLppNxzhUiHrA5hDihNEzcMAW7W4Oo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fmNRxZw0RrwBujwmbO9PkP8lB+SdqDOt6oEbL1pv4s3lZD3N8wGamljQAVB7ZOz6b2a15w8kTeFHP6Ne4+82rN49PnzjfZit5y3mjCXdx3mYvQzN4+xItwFnuTLUO18nKkSQkmOhNZkY7vP3CPdmEAVA2J/Z3Nvkjaf2pfkbBv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac289147833so866674266b.2;
-        Mon, 14 Apr 2025 06:24:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744637087; x=1745241887;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZRtNPlxz2zfsOHt7gPeh2UUvvFdJM11RSUvY0S+WMYU=;
-        b=APeJONcCn286sZy66aYe+LgaT/3EFz/WatTUntgPKOMt96yulQb7BI7rhxzEY7hNtM
-         LSCV6zbPtd+e/EF/vtgW+aWXITw7IQD0goiQvqJUF9BF8yRSxkDGCeOubBGou8WYKt4u
-         Mps5sdVTqdtvqiXfkHl7RXXSIjJotBcD95sBz1LN5MT20bmFd+XZEH3sxUO9csnly8/a
-         ziUqxjFUZ4rkcs3IlQ5NnS0MuemI/CKFgsifJa2YKSmkkqCopokzSZOk1rXQo1u+ywbG
-         j9vq1uBcLX3D4H5Mx3jMf4Zg4Q6IO16HECnCz9Stcbd+tbd9mB3Z2ySfnDBpUbUSLP98
-         GgdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1ifWjG5770oDD+jcrTJTd1Z5fAnlCX8rE0kj/9XZIxoddliAU1G/oZOHMchEGGddNg70D1sdFYWxaa/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIT5lj/JHG4EM0dlfM+OJqgqVYvHDtC/O0wJo3dLQWlYepBkOt
-	k11aa+g4LdP0BxWPSW5nX9sP+Pf5gLeK1tyfab8Zx6c+koOfymgy
-X-Gm-Gg: ASbGnctqigL0f5zC7tS0RIfm3tZ1d0X1UA1mPzUFAKuXOnsKA9VOr88AbzGcigvCurE
-	91ngxHuzUg1hGYROnkzz2HYauL1lHH/4Rjk77rsRpJkJCOOwV+oj1AwZAfnzIoC9BWYXvwwhdeF
-	k7ie1MU+fk76rHUtvHUZXOUwXwUTyab2kcc6pdWZAm+Y/KTYLA+H3OqOTsnasjfJK6yOuzyyKuL
-	wcWoKshngSHb3voNbrRkoRxUfGuqin8rCH/vniyrPuk6rQjVYvF6qy9iIk7il2phTcSIKkZvwS7
-	M2FBMOiVB/+KcH3HKk7CbrYICo3mINQ=
-X-Google-Smtp-Source: AGHT+IGOWuCkTf+8tbhnvHToKES03iq4QshkRj7yoBfScEmpqVGoq4VGxClzsOy3zoBI1YXrodGUDw==
-X-Received: by 2002:a17:906:4889:b0:acb:e1:6503 with SMTP id a640c23a62f3a-acb00e1666emr226128366b.50.1744637087053;
-        Mon, 14 Apr 2025 06:24:47 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:8::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce7fdcsm921165966b.176.2025.04.14.06.24.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 06:24:46 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 14 Apr 2025 06:24:16 -0700
-Subject: [PATCH net-next v2 10/10] net: fib_rules: Use nlmsg_payload in
- fib_{new,del}rule()
+	s=arc-20240116; t=1744637098; c=relaxed/simple;
+	bh=uSczamGJoJKbGvV0A8rmuxq4WURqfp+pw4w7uxYDPZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IuZNkB3DjqYULurQyC8xzFk0ZvO+Y39GEt8Wmvm0UbwFeWmmZ+GlnqW4GfwtVTE94Y8EI4oKSG0p4fFbkQVimtfce+JTTY+qyaLFLJJieqLHy7Jy3kmym9V5lGfITeJeG70psRG5rwYYPGD5Xes+6K8ZQ2MQipAIj9sEIkU513c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=TAWOW2ID; arc=none smtp.client-ip=17.58.23.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="TAWOW2ID"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=uSczamGJoJKbGvV0A8rmuxq4WURqfp+pw4w7uxYDPZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=TAWOW2ID6aTTvU+2MgRsbja7BK3I6WCve1CEcTJdzcuVylzCmnxH51hkvXlnJUDQW
+	 NN5lKvFdU5YC64bkyNn7WvK8siqEibla7THc0XjaD7zu1HFDaSTdrJSSZA7aolMKaU
+	 dMsR223FEqx8/giBGj4YiCi5AFdphjWH02Q67639CeDHtMweGU+1kxlrE5IwHCsk1U
+	 YtplErG4FcFBUnp+mjdKzotOjXFVMbjtb0YdrK3ZZU4awXHuLkC+unzgpXK8fw+bOe
+	 O7j6pAvdpxg6y8amQtYDOhjyvW5LNE3ML7swuaMoD4JSjCWhiAQG2xE0asiW9IOUDn
+	 56eEyGr1LFBXg==
+Received: from mr85p00im-ztdg06011201.me.com (mr85p00im-ztdg06011201.me.com [17.58.23.181])
+	by mr85p00im-ztdg06011201.me.com (Postfix) with ESMTPS id A9AD19600F8;
+	Mon, 14 Apr 2025 13:24:54 +0000 (UTC)
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-ztdg06011201.me.com (Postfix) with ESMTPSA id 5F754960248;
+	Mon, 14 Apr 2025 13:24:52 +0000 (UTC)
+Message-ID: <c6c5ab5d-8895-4c16-9f74-ad311cd8ac14@icloud.com>
+Date: Mon, 14 Apr 2025 21:24:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] fs/fs_parse: Fix 3 issues for
+ validate_constant_table()
+To: Jan Kara <jack@suse.cz>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250411-fix_fs-v2-0-5d3395c102e4@quicinc.com>
+ <20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com>
+ <pgxiizhnhcuaol2vhwikrtqfcp6b3g4cxs26rwxzdxuyjnadtv@smpxafscsxod>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <pgxiizhnhcuaol2vhwikrtqfcp6b3g4cxs26rwxzdxuyjnadtv@smpxafscsxod>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-nlmsg-v2-10-3d90cb42c6af@debian.org>
-References: <20250414-nlmsg-v2-0-3d90cb42c6af@debian.org>
-In-Reply-To: <20250414-nlmsg-v2-0-3d90cb42c6af@debian.org>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com, 
- Kuniyuki Iwashima <kuniyu@amazon.com>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1686; i=leitao@debian.org;
- h=from:subject:message-id; bh=QH4HBkEgzWlR+iLppNxzhUiHrA5hDihNEzcMAW7W4Oo=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn/QyO/SuSwBqi5s9qnVkbc6llOeGblYxm27yEv
- ZvXm0acPDSJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/0MjgAKCRA1o5Of/Hh3
- bTecEACpv2HtCD+FWwLu+5RJN460rj/87oBfaM8dK1Gu+3sOHXt/OW/YdI0jkj4HC+uz4OZpLKj
- 5YeLycdVwlfHUf23eT04t7VlcTreOucWB7SmfM6MCOV5EbdnAxwGxczKSI53HZG3fM4ndTIE2Q1
- 6vf+/BZO3XiX47Z7GZ+Qh9cdp4Zvqc/fSltIVCldkp7P/81DsWwKYRep4CHehWMHJzzEDRql469
- huXTxjzBH+aI30gCjBXCgCuUpLFqPX/0D7bW9H3GMx2q9kaoUKmj+DDTonN6frejmSoWfcF8Y7e
- 6ELwFg2oPC4ENWLlXOhHJOX8ddKqqtoNiDh29MkxsNVgpmmjJ6XkxkEU/BABAA/uIM1Fsbi/93f
- 4gV+uS1LIsrmWu5P2LO9hC2BcHutVQNZXoggNkWOieoMkaG4ZrXEmUeom+C8Sqf6obe0gzDR+Xf
- SDlvUwRSKL+WT9lBrKQ/ybTganD2KRnoI+aZibaukiDqQ0H4FsgBkhk5xJWcwtAcgFepk9by561
- ccx8tzzBPtz3HRqFxhpeKyX7LtbvcXEvpUaiXvWH9ur5DxIvSuN5q0JTwUrj2jh6XHxVEd2K+U9
- /qNMsJNBFn2SYRS4ugTlnb6ZIRDHH5Nq67IWy6aOeBSV3q7uHXU6qJIZUDfAsRlFD1LisGh81rR
- NOPSYSElMrNXQPg==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Proofpoint-ORIG-GUID: Oe2BybD7vv3eR5YIj3SuH323SYG7yc6E
+X-Proofpoint-GUID: Oe2BybD7vv3eR5YIj3SuH323SYG7yc6E
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 mlxscore=0 phishscore=0 adultscore=0
+ clxscore=1015 mlxlogscore=937 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2504140097
 
-Leverage the new nlmsg_payload() helper to avoid checking for message
-size and then reading the nlmsg data.
+On 2025/4/14 21:17, Jan Kara wrote:
+>> Fortunately, the function has no caller currently.
+>> Fix these issues mentioned above.
+>>
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> As discussed, I'd rather drop this function since it is unused as well.
 
-Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- net/core/fib_rules.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index 6a7a28bf631c2..06052b6c946b9 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -852,13 +852,14 @@ int fib_newrule(struct net *net, struct sk_buff *skb, struct nlmsghdr *nlh,
- 		struct netlink_ext_ack *extack, bool rtnl_held)
- {
- 	struct fib_rule *rule = NULL, *r, *last = NULL;
--	struct fib_rule_hdr *frh = nlmsg_data(nlh);
- 	int err = -EINVAL, unresolved = 0;
- 	struct fib_rules_ops *ops = NULL;
- 	struct nlattr *tb[FRA_MAX + 1];
- 	bool user_priority = false;
-+	struct fib_rule_hdr *frh;
- 
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*frh))) {
-+	frh = nlmsg_payload(nlh, sizeof(*frh));
-+	if (!frh) {
- 		NL_SET_ERR_MSG(extack, "Invalid msg length");
- 		goto errout;
- 	}
-@@ -980,13 +981,14 @@ int fib_delrule(struct net *net, struct sk_buff *skb, struct nlmsghdr *nlh,
- 		struct netlink_ext_ack *extack, bool rtnl_held)
- {
- 	struct fib_rule *rule = NULL, *nlrule = NULL;
--	struct fib_rule_hdr *frh = nlmsg_data(nlh);
- 	struct fib_rules_ops *ops = NULL;
- 	struct nlattr *tb[FRA_MAX+1];
- 	bool user_priority = false;
-+	struct fib_rule_hdr *frh;
- 	int err = -EINVAL;
- 
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*frh))) {
-+	frh = nlmsg_payload(nlh, sizeof(*frh));
-+	if (!frh) {
- 		NL_SET_ERR_MSG(extack, "Invalid msg length");
- 		goto errout;
- 	}
-
--- 
-2.47.1
+thank you Jan for comments.
+will drop it in next revision (^^).
 
