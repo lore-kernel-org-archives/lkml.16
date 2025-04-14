@@ -1,222 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AF328B508;
-	Mon, 14 Apr 2025 18:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F89D28B50A
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655194; cv=none; b=LXoe90PDPpQfYU1JMcoaGnskWVETcCSiQvBqi3lHTREF33wcYU3czsS8B/Ih6b0uaZKuth8HL8/3S0ucw+tsSr6ZcfpD5rIVzn+Ezu3oFelYDZinoD4squqLVADBqvSR27nbnBnocZjbhu/Cw22Ft/nW68PFsWU4wB+iHgDGzho=
+	t=1744655219; cv=none; b=MujwMAEWVrpBYPgPnWFllNGGyc7p/0MLcR5wuWKXJ9NjxsZMhUz/BZIMTVH8zJhDgEJmyp5cFTunC2zs8WhqSZt9RjLFrfT2uZD45INmRD45cNyZPl+5IDxgFMTD9hh4JtvM4TyszEzGxHyunt9h8CnWwetp4RyMoA1iFKWdDMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655194; c=relaxed/simple;
-	bh=zxI4p+wjrRQ0jkQ2RkuWxk4aLUvNDztSLjxQS/HnlH4=;
+	s=arc-20240116; t=1744655219; c=relaxed/simple;
+	bh=xd5jcO/BnBVZ1KGnoNKPpwebkDQMkVngLYRvhQQPt7U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UkJjf90lb2ItQG+udbT3WDWNXl8BPLD4aLKM3qAtkmaBYOHEkda5G+5NHLTr5e1TkcoHkY4FfQl0Bd5vZtte83QipjSa6wLIABXPlWITAMcd5Mngbu0aurohGKK9tFhz0z9w2a+kXQZsDfC53EKepj7qM5A/wP3qEP6za3fafAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsvItA+H; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AbCuc1WH5rjijE+zLSvn3OoVm+zBrnS8eb7hMI5arEBLXw/RdAW9BbSsEcsb+nE72QS6nOPJKFXnoo1mWw7wpP07IakAP8XjB29L65sNOUudyrzo6MoJyfjbFSTjuS75463IfspCkqivwYO57zGFeYO7ZuJYUPDRqBd5wKgLVzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BzbTPNFX; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsvItA+H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8447C4CEEC;
-	Mon, 14 Apr 2025 18:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744655193;
-	bh=zxI4p+wjrRQ0jkQ2RkuWxk4aLUvNDztSLjxQS/HnlH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HsvItA+HZnP3HMwBQ0qn+x/+lX1FG8CYN4emOP0fuPiFIaW0eg0g2P3VCBAqIkWzd
-	 PyZIJd0I99m2kBnv9F5ZVfljpT0YVJ5Gjn2yBkvzwbNKMgbrRuWM306E91jCF/YkrJ
-	 dE1ODM/M5U/z9xyjxZYb9/ladb++fU2RT8Zz+oiA78qQGbf24NpbOrIZxvuL9P0YQf
-	 cfnKSNQ4ak4I9cEGuFl64IV62zdVUO0OB9zF8lP49BvRVYoP2q0/vk9Rrro4qTmpM2
-	 Cvq2b7ko1z2JRarESeNUDv/Oou4PimbWKUJztypjS19v0aHQcvqNUOiPxTsC5z43sh
-	 WFKs/m81h9LKA==
-Date: Mon, 14 Apr 2025 23:52:45 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: dave.hansen@linux.intel.com, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Kirill Shutemov <kirill.shutemov@linux.intel.com>, Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] x86/devmem: Restrict /dev/mem access for
- potentially unaccepted memory by default
-Message-ID: <l2crzyeoux2pammbifkivrhp637gza7piumd3s6j66mezsfvdy@nwczgs2hkq4f>
-References: <174433453526.924142.15494575917593543330.stgit@dwillia2-xfh.jf.intel.com>
- <174433455868.924142.4040854723344197780.stgit@dwillia2-xfh.jf.intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BzbTPNFX"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913d129c1aso3234937f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744655216; x=1745260016; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xd5jcO/BnBVZ1KGnoNKPpwebkDQMkVngLYRvhQQPt7U=;
+        b=BzbTPNFXo66w7ZzDCz75iXLFqT9z3TUMPExALvWfv442W5lZ8Cp0eP8gg3S6cwRcXy
+         kdpM5GnwjQbR1nty9GJClOUxyyENshN7vEpkdTPrnnCstHjqaU96gYiBm2ti1i0DfQYb
+         EkQ8pOZoIp/HSl/OottEP8vzjjMFA4bvfKhI29FVAKADzX3pagM56+jLCCGjMowis1XB
+         Eq2APjdfKjN5WaiRu0ga4ZWJlTcggnnEnfrT9KT4MF7oLm9/eBuI8pSGjyYB2Yc8yDu8
+         r4iPnVSsQutz/i+OUUiVCJiQ0sJnn4Pa/yJ5zPDWpb01eJOrslf+tt82dt/OEY1b2kn7
+         rOIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744655216; x=1745260016;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xd5jcO/BnBVZ1KGnoNKPpwebkDQMkVngLYRvhQQPt7U=;
+        b=H3fmU5JBSpiKAnE2Vf5E42qkOimHcoZgUp0IR4Y397IOAmGJny6cxZKRgUNLU+atHz
+         UZIX79n3F/9RYQJasmy/16IvJ3qJp0b8ZRn2ocjjQUrv4eYnhkcDV/ON67pcFGMANGAQ
+         UhJdofkmxcC9XCCQpsA5Zi0WQA75AxS7tI0OwYxT6zCC6J9UmJjQCRYIq2STze/ggp8t
+         mSGYw+qqQnBNwo4csyDlWrNO3pzt/J3Eul2xdY0IS3f64NCeDmzjUpKXv9yTLZedEJYG
+         7M7NAZB534vDRAdI90Ej+8MJgYfb/ZCmvx69oJU+M3Gkh5EdHBseQpvkqoW/RFkPk1fJ
+         H2Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTc/7MGOBag5NHf4X7A4pGYPjP0l4Bu8sgMJ9ZXbDQByc4aV6k3Aj4amUEDF/EQB81SfSF8RXCGElXPlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy00gadU3su71dQVtM+Ndq1nz3cnfriA8X4tzW+D2tj27nsHzDx
+	MnFdWQAzhP3nRu6XXTqDeCxFtBVX0wQdTqMTOCjAlmBcsx3myM3sQpG4QjhiHi0=
+X-Gm-Gg: ASbGnctOa2dIZiyYNSKNVR3ZUujB1Fo5JfDfCAMOj83VNnKwQLzhqXRRthNdg7QZCaz
+	AZzLC0scagnHpd++GJpzDm36PNgA6D7D32icpCgPsJ2nhGKJTVtqeRlnLE/1M4Wi7QIAY/APXfo
+	+afWBRqm5i5h/SGIK1KI3GnjD+dEh2lQcieE+eBtq6FnyaUR4+uJ8gMVesdw/khTXpWfr0b7QQ4
+	0xUTPW4r8QXHwbPdnNbwnfnoydtyc6Co4eVevqWlvs87mzBOjO7oNNRtlt6IfDh2JZg9kazfkKQ
+	L3bOFEyyidO9oslAOKAfO5wkc9m/Pby1JHEeSN86BcU=
+X-Google-Smtp-Source: AGHT+IEgtFl79lgav6UWKkPN+8xkDBQnarv3nm1k6JqhcjfOJxYNuRFCM5qVW5DXBpugJOQoLYbwZw==
+X-Received: by 2002:a05:6000:40c9:b0:39b:f44b:e176 with SMTP id ffacd0b85a97d-39edc32fee5mr331676f8f.24.1744655215559;
+        Mon, 14 Apr 2025 11:26:55 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20626c0csm189776595e9.14.2025.04.14.11.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 11:26:55 -0700 (PDT)
+Date: Mon, 14 Apr 2025 20:26:53 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cgroup/cpuset-v1: Add missing support for cpuset_v2_mode
+Message-ID: <ysc4oguaisa7s5qvdevxyiqoerhmcvywhvfnmnpryaeookmjzc@667ethp4kp4p>
+References: <20250414162842.3407796-1-tjmercier@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qatjcuy2nkc33ezb"
 Content-Disposition: inline
-In-Reply-To: <174433455868.924142.4040854723344197780.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <20250414162842.3407796-1-tjmercier@google.com>
 
-On Thu, Apr 10, 2025 at 06:22:38PM -0700, Dan Williams wrote:
-> Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
-> address space) via /dev/mem results in an SEPT violation.
-> 
-> The cause is ioremap() (via xlate_dev_mem_ptr()) establishes an
-> unencrypted mapping where the kernel had established an encrypted
-> mapping previously.
-> 
-> An initial attempt to fix this revealed that TDX and SEV-SNP have
-> different expectations about which and when address ranges can be mapped
-> via /dev/mem.
-> 
-> Rather than develop a precise set of allowed /dev/mem capable TVM
-> address ranges, teach devmem_is_allowed() to always restrict access to
-> the BIOS data space.
 
-This patch does more than just restrict the BIOS data space - it rejects 
-all accesses to /dev/mem _apart_ from the first 1MB. That should be made 
-clear here.
+--qatjcuy2nkc33ezb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH] cgroup/cpuset-v1: Add missing support for cpuset_v2_mode
+MIME-Version: 1.0
 
-> This means return 0s for read(), drop write(), and
-> -EPERM mmap(). This can still be later relaxed as specific needs arise,
-> but in the meantime, close off this source of mismatched
-> IORES_MAP_ENCRYPTED expectations.
-> 
-> Cc: <x86@kernel.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Vishal Annapurve <vannapurve@google.com>
-> Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-by: Nikolay Borisov <nik.borisov@suse.com>
-> Closes: http://lore.kernel.org/20250318113604.297726-1-nik.borisov@suse.com [1]
-> Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-> Fixes: 9aa6ea69852c ("x86/tdx: Make pages shared in ioremap()")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  arch/x86/Kconfig                |    2 ++
->  arch/x86/include/asm/x86_init.h |    2 ++
->  arch/x86/kernel/x86_init.c      |    6 ++++++
->  arch/x86/mm/init.c              |   23 +++++++++++++++++------
->  4 files changed, 27 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 4b9f378e05f6..12a1b5acd55b 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -891,6 +891,7 @@ config INTEL_TDX_GUEST
->  	depends on X86_X2APIC
->  	depends on EFI_STUB
->  	depends on PARAVIRT
-> +	depends on STRICT_DEVMEM
->  	select ARCH_HAS_CC_PLATFORM
->  	select X86_MEM_ENCRYPT
->  	select X86_MCE
-> @@ -1510,6 +1511,7 @@ config AMD_MEM_ENCRYPT
->  	bool "AMD Secure Memory Encryption (SME) support"
->  	depends on X86_64 && CPU_SUP_AMD
->  	depends on EFI_STUB
-> +	depends on STRICT_DEVMEM
->  	select DMA_COHERENT_POOL
->  	select ARCH_USE_MEMREMAP_PROT
->  	select INSTRUCTION_DECODER
-> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-> index 213cf5379a5a..0ae436b34b88 100644
-> --- a/arch/x86/include/asm/x86_init.h
-> +++ b/arch/x86/include/asm/x86_init.h
-> @@ -305,6 +305,7 @@ struct x86_hyper_runtime {
->   * 				semantics.
->   * @realmode_reserve:		reserve memory for realmode trampoline
->   * @realmode_init:		initialize realmode trampoline
-> + * @devmem_is_allowed		restrict /dev/mem and PCI sysfs resource access
->   * @hyper:			x86 hypervisor specific runtime callbacks
->   */
->  struct x86_platform_ops {
-> @@ -323,6 +324,7 @@ struct x86_platform_ops {
->  	void (*set_legacy_features)(void);
->  	void (*realmode_reserve)(void);
->  	void (*realmode_init)(void);
-> +	bool (*devmem_is_allowed)(unsigned long pfn);
->  	struct x86_hyper_runtime hyper;
->  	struct x86_guest guest;
->  };
-> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-> index 0a2bbd674a6d..346301375bd4 100644
-> --- a/arch/x86/kernel/x86_init.c
-> +++ b/arch/x86/kernel/x86_init.c
-> @@ -143,6 +143,11 @@ static void enc_kexec_begin_noop(void) {}
->  static void enc_kexec_finish_noop(void) {}
->  static bool is_private_mmio_noop(u64 addr) {return false; }
->  
-> +static bool platform_devmem_is_allowed(unsigned long pfn)
-> +{
-> +	return !cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
-> +}
-> +
->  struct x86_platform_ops x86_platform __ro_after_init = {
->  	.calibrate_cpu			= native_calibrate_cpu_early,
->  	.calibrate_tsc			= native_calibrate_tsc,
-> @@ -156,6 +161,7 @@ struct x86_platform_ops x86_platform __ro_after_init = {
->  	.restore_sched_clock_state	= tsc_restore_sched_clock_state,
->  	.realmode_reserve		= reserve_real_mode,
->  	.realmode_init			= init_real_mode,
-> +	.devmem_is_allowed		= platform_devmem_is_allowed,
->  	.hyper.pin_vcpu			= x86_op_int_noop,
->  	.hyper.is_private_mmio		= is_private_mmio_noop,
->  
-> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> index bfa444a7dbb0..df5435c8dbea 100644
-> --- a/arch/x86/mm/init.c
-> +++ b/arch/x86/mm/init.c
-> @@ -861,18 +861,23 @@ void __init poking_init(void)
->   * area traditionally contains BIOS code and data regions used by X, dosemu,
->   * and similar apps. Since they map the entire memory range, the whole range
->   * must be allowed (for mapping), but any areas that would otherwise be
-> - * disallowed are flagged as being "zero filled" instead of rejected.
-> + * disallowed are flagged as being "zero filled" instead of rejected, for
-> + * read()/write().
-> + *
->   * Access has to be given to non-kernel-ram areas as well, these contain the
->   * PCI mmio resources as well as potential bios/acpi data regions.
->   */
->  int devmem_is_allowed(unsigned long pagenr)
->  {
-> +	bool platform_allowed = x86_platform.devmem_is_allowed(pagenr);
-> +
+Hello.
 
-If we are going to do this, I don't see the point of having an 
-x86_platform_op. It may be better to simply gate this on  
-cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) directly here.
+On Mon, Apr 14, 2025 at 04:28:41PM +0000, "T.J. Mercier" <tjmercier@google.com> wrote:
+> Add cgroup v1 parameter parsing to the cpuset filesystem type so that it
+> works like the cgroup filesystem type:
+
+Nothing against 'cpuset_v2_mode' for the cpuset_fs_type (when it's
+available on cgroup v1) but isn't it too benevolent reusing all of
+cgroup1_fs_parameters? AFAICS, this would allow overriding release agent
+also for cpuset fs hierarchies among other options from
+cgroup1_fs_parameters.
+
+(This would likely end up with a separate .parse_param callback but I
+think that's better than adding so many extra features to cpuset fs.)
 
 
 Thanks,
-Naveen
+Michal
 
->  	if (region_intersects(PFN_PHYS(pagenr), PAGE_SIZE,
->  				IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE)
->  			!= REGION_DISJOINT) {
->  		/*
-> -		 * For disallowed memory regions in the low 1MB range,
-> -		 * request that the page be shown as all zeros.
-> +		 * For disallowed memory regions in the low 1MB range, request
-> +		 * that the page be shown as all zeros for read()/write(), fail
-> +		 * mmap()
->  		 */
->  		if (pagenr < 256)
->  			return 2;
-> @@ -885,14 +890,20 @@ int devmem_is_allowed(unsigned long pagenr)
->  	 * restricted resource under CONFIG_STRICT_DEVMEM.
->  	 */
->  	if (iomem_is_exclusive(pagenr << PAGE_SHIFT)) {
-> -		/* Low 1MB bypasses iomem restrictions. */
-> -		if (pagenr < 256)
-> +		/*
-> +		 * Low 1MB bypasses iomem restrictions unless the platform says
-> +		 * the physical address is not suitable for direct access.
-> +		 */
-> +		if (pagenr < 256) {
-> +			if (!platform_allowed)
-> +				return 2;
->  			return 1;
-> +		}
->  
->  		return 0;
->  	}
->  
-> -	return 1;
-> +	return platform_allowed;
->  }
->  
->  void free_init_pages(const char *what, unsigned long begin, unsigned long end)
-> 
+--qatjcuy2nkc33ezb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/1TawAKCRAt3Wney77B
+SeFhAP4o1uTFfPkkQOlsOgROOemLGJYDrUvCWIEij3sRqZQEJwD+Ltb/wknA2pcO
+wBptU3n4FMcngZcezGJlb19l8MTA7gU=
+=XJgl
+-----END PGP SIGNATURE-----
+
+--qatjcuy2nkc33ezb--
