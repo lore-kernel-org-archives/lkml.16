@@ -1,92 +1,180 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A76C1AF0C7
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0470829D05;
+	Mon, 14 Apr 2025 07:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614002; cv=none; b=ScHyXK8urbdUkXfM6lzEHPCx3l4I+qGsq+aXWYN6vvFI1RqbZ1i+U7MpFzreyjNWd4o4eL7qD52PqJKwASXODy58qFBF1ebuz5IKMx9KByWlIplYBZ9ysac/QkvwDd19Dswzkzy2jIy3zoxDA7OG29ZyXPMtX6wVsDc/Avk3I1Y=
+	t=1744614134; cv=none; b=d5IxT0R94KRdAWxWe4OfckkrLpg3n/VYMVXQbPaFAQ9joA/dEfhs+4c8d18KqcPZBwJ+XzS1o9P4fWRG6FtNAgJ7EnEsXY8xqRHrqPo7modZGWvJeAfnP9mS7UEdkRir5skgjxXxNT+pcVw1UHw4laBAG9VbcMeiFiJyZzJtIBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614002; c=relaxed/simple;
-	bh=8jkBzcU2x8SA8XsDmjjKjMwFaN6foRAOjdfUUGsXjIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TzKP6R8B5SCYqX6yuUHFPymQgf0EAnVjAMjsq+aV7sh4w/Ns7tkln2QFtfprZeuUWYYDecthFUUquQL1IpLYpgozi5opTDmYSa/Mh6tYrCH4iBPVl08+sWZsj7cmjbWlheXfYGRtQ1TgiIolPKZJUExCGr4NA0WaL8l1XlwHRSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Q1TtBU5Q; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744614134; c=relaxed/simple;
+	bh=Y+PzRa5KHzS3rRu7HfCG+Yc3+iPhWFVgRe6fdYaJvW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bmd9xuxYh5E21aDIWjQUTm4RcFofDH3XJdA+cLEGk+p2+T3WgtVLk5wub1lWRba6G6gjrPZtGu8GT7y8onds0YYXzQfzbuK4rPMlUFzyyh5aUrZe0u5GntRRGjVbUAj4T2DOAFN6FUV7Lbgb33V6lKUKwONawAL4HYyDbXQj9i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZRTDiRD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Q1TtBU5Q"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744613986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AoJm+f6FnQK/O2OG0bHw+7ynZXalVbButioglhiA18s=;
-	b=Q1TtBU5QI85z8TTBoUD423w1sgzAOah1b52f0aJPYmy6spTEm11D0GEle5C/8tJ/YS3h0N
-	RXZwW9tZBEY1Po+k4MEPuYoSF3jlFkqGX5VlCMQaZ7BJ9M4RMzb3XskPvNaXygs7uskaOI
-	/aYZJOgcTxTXLY+8102RYgLdwNTdAMw=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: cs-amp-lib: Replace offsetof() with struct_size()
-Date: Mon, 14 Apr 2025 08:59:03 +0200
-Message-ID: <20250414065904.336749-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZRTDiRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CBCC4CEE2;
+	Mon, 14 Apr 2025 07:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744614133;
+	bh=Y+PzRa5KHzS3rRu7HfCG+Yc3+iPhWFVgRe6fdYaJvW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eZRTDiRDjhtRQIF5HRwOfptBoU1y+N8XY3hnlYCziTttxb4MMPTeEb89lyTvYUPCf
+	 THqpn3XG5Q7FTGm5sC99GYH/l3QBEYx3N/X7nDFXBRZSOq+9/hCrHP2bM4naaP8yXx
+	 lduBwjj9k/AWIkOQL3AmIKLC+myqfGCzQIv4ZYlwRbGYcJ3mDx6nvbqN1uQbEUOkaA
+	 qbd2mm+ElcpVXgXKT2mp84FkxjoF2DOZ44aNu2S2/M4ELraT1jhGb03n7AcsYWtnO4
+	 q2ogvg8o8JBeSZi04Bz7x400SabDmmdgiKcAQNDejww9mCIoWMX12EBrZ04epg/mBa
+	 4+jHblJNk0aHw==
+Date: Mon, 14 Apr 2025 09:02:06 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	cassel@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, michal.simek@amd.com, bharat.kumar.gogada@amd.com, 
+	thippeswamy.havalige@amd.com
+Subject: Re: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add
+ `cpm_crx` and `cpm5nc_fw_attr` properties
+Message-ID: <20250414-naughty-simple-rattlesnake-bb75bb@shite>
+References: <20250414032304.862779-1-sai.krishna.musham@amd.com>
+ <20250414032304.862779-2-sai.krishna.musham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414032304.862779-2-sai.krishna.musham@amd.com>
 
-Use struct_size() to calculate the number of bytes to allocate and used
-by 'cirrus_amp_efi_data'. Compared to offsetof(), struct_size() provides
-additional compile-time checks (e.g., __must_be_array()).
+On Mon, Apr 14, 2025 at 08:53:03AM GMT, Sai Krishna Musham wrote:
+> Add the `cpm_crx` property to manage the PCIe IP reset, and
+> `cpm5nc_fw_attr` property to clear firewall after link reset, while
+> maintaining backward compatibility with existing device trees.
+> 
+> Also, incorporate `reset-gpios` in example for GPIO-based handling of
+> the PCIe Root Port (RP) PERST# signal for enabling assert and deassert
+> control.
+> 
+> The `reset-gpios` and `cpm_crx` properties must be provided for CPM,
+> CPM5 and CPM5_HOST1. For CPM5NC, all three properties - `reset-gpios`,
+> `cpm_crx` and `cpm5nc_fw_attr` must be explicitly defined to ensure
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Compile-tested only
----
- sound/soc/codecs/cs-amp-lib-test.c | 3 +--
- sound/soc/codecs/cs-amp-lib.c      | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+This we see from the diff, but why they must be defined?
 
-diff --git a/sound/soc/codecs/cs-amp-lib-test.c b/sound/soc/codecs/cs-amp-lib-test.c
-index 45626f99a417..2369fffb58f7 100644
---- a/sound/soc/codecs/cs-amp-lib-test.c
-+++ b/sound/soc/codecs/cs-amp-lib-test.c
-@@ -40,8 +40,7 @@ static void cs_amp_lib_test_init_dummy_cal_blob(struct kunit *test, int num_amps
- 	unsigned int blob_size;
- 	int i;
- 
--	blob_size = offsetof(struct cirrus_amp_efi_data, data) +
--		    sizeof(struct cirrus_amp_cal_data) * num_amps;
-+	blob_size = struct_size(priv->cal_blob, data, num_amps);
- 
- 	priv->cal_blob = kunit_kzalloc(test, blob_size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_NULL(test, priv->cal_blob);
-diff --git a/sound/soc/codecs/cs-amp-lib.c b/sound/soc/codecs/cs-amp-lib.c
-index c677868c5d5f..c2ce828a96ae 100644
---- a/sound/soc/codecs/cs-amp-lib.c
-+++ b/sound/soc/codecs/cs-amp-lib.c
-@@ -147,7 +147,7 @@ static struct cirrus_amp_efi_data *cs_amp_get_cal_efi_buffer(struct device *dev)
- 	dev_dbg(dev, "Calibration: Size=%d, Amp Count=%d\n", efi_data->size, efi_data->count);
- 
- 	if ((efi_data->count > 128) ||
--	    offsetof(struct cirrus_amp_efi_data, data[efi_data->count]) > data_size) {
-+	    struct_size(efi_data, data, efi_data->count) > data_size) {
- 		dev_err(dev, "EFI cal variable truncated\n");
- 		ret = -EOVERFLOW;
- 		goto err;
--- 
-2.49.0
+> proper functionality.
 
+What functionality?
+
+> 
+> Include an example DTS node and complete the binding documentation for
+> CPM5NC. Also, fix the bridge register address size in the example for
+> CPM5.
+> 
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> ---
+> Changes for v7:
+> - Update CPM5NC device tree binding.
+> - Add CPM5NC device tree example node.
+> - Update commit message.
+> 
+> Changes for v6:
+> - Resolve ABI break.
+> - Update commit message.
+> 
+
+...
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - xlnx,versal-cpm5nc-host
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: CPM system level control and status registers.
+> +            - description: Configuration space region and bridge registers.
+> +            - description: CPM clock and reset control registers.
+> +            - description: CPM5NC Firewall attribute register.
+> +          minItems: 2
+> +        reg-names:
+> +          items:
+> +            - const: cpm_slcr
+> +            - const: cfg
+> +            - const: cpm_crx
+> +            - const: cpm5nc_fw_attr
+> +          minItems: 2
+
+Why interrupts are not required for this variant? Why isn't this an
+interrupt controller?
+
+>  
+>  unevaluatedProperties: false
+>  
+>  examples:
+>    - |
+> +    #include <dt-bindings/gpio/gpio.h>
+>  
+>      versal {
+>                 #address-cells = <2>;
+> @@ -98,8 +165,10 @@ examples:
+>                                  <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
+>                         msi-map = <0x0 &its_gic 0x0 0x10000>;
+>                         reg = <0x0 0xfca10000 0x0 0x1000>,
+> -                             <0x6 0x00000000 0x0 0x10000000>;
+> -                       reg-names = "cpm_slcr", "cfg";
+> +                             <0x6 0x00000000 0x0 0x10000000>,
+> +                             <0x0 0xfca00000 0x0 10000>;
+> +                       reg-names = "cpm_slcr", "cfg", "cpm_crx";
+> +                       reset-gpios = <&gpio1 38 GPIO_ACTIVE_LOW>;
+>                         pcie_intc_0: interrupt-controller {
+>                                 #address-cells = <0>;
+>                                 #interrupt-cells = <1>;
+> @@ -126,8 +195,10 @@ examples:
+>                         msi-map = <0x0 &its_gic 0x0 0x10000>;
+>                         reg = <0x00 0xfcdd0000 0x00 0x1000>,
+>                               <0x06 0x00000000 0x00 0x1000000>,
+> -                             <0x00 0xfce20000 0x00 0x1000000>;
+> -                       reg-names = "cpm_slcr", "cfg", "cpm_csr";
+> +                             <0x00 0xfce20000 0x00 0x10000>,
+> +                             <0x00 0xfcdc0000 0x00 0x10000>;
+> +                       reg-names = "cpm_slcr", "cfg", "cpm_csr", "cpm_crx";
+> +                       reset-gpios = <&gpio1 38 GPIO_ACTIVE_LOW>;
+>  
+>                         pcie_intc_1: interrupt-controller {
+>                                 #address-cells = <0>;
+> @@ -136,4 +207,22 @@ examples:
+>                         };
+>                 };
+>  
+> +               cpm5nc_pcie: pcie@e4a10000 {
+> +                       compatible = "xlnx,versal-cpm5nc-host";
+> +                       device_type = "pci";
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
+> +                       interrupt-parent = <&gic>;
+> +                       bus-range = <0x00 0xff>;
+> +                       ranges = <0x2000000 0x00 0xa8000000 0x00 0xa8000000 0x00 0x8000000>,
+> +                                <0x43000000 0x1010 0x00 0x1010 0x00 0x08 0x00>;
+> +                       msi-map = <0x0 &its_gic 0x40000 0x10000>;
+> +                       reg = <0x00 0xe4a10000 0x00 0x10000>,
+> +                             <0x00 0xa0000000 0x00 0x8000000>,
+> +                             <0x00 0xe4a00000 0x00 0x10000>,
+> +                             <0x00 0xe4301000 0x00 0x10000>;
+
+Follow DTS coding style. Or just drop this example... it also has
+incorrect indentation. :/
+
+> +                       reg-names = "cpm_slcr", "cfg", "cpm_crx", "cpm5nc_fw_attr";
+> +                       reset-gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+>      };
+> -- 
+> 2.44.1
+> 
