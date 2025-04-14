@@ -1,538 +1,539 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A706428DEF2;
-	Mon, 14 Apr 2025 17:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D7D1624E9;
+	Mon, 14 Apr 2025 17:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652646; cv=none; b=PAfrm9FX1bAGbdHcOSc3i3sj22iNguLlSBQF1oc5Ots4hA3mnPIm1UydXPD3Br62NH1SiHtFzH+PXQYwAsFwu0PhKXMoSfUdP1q4giRddtXwAAGq7zTJLYcWyPYz5+0qVnxbC+IeVmd/WZzc2xCnyhDnRa+NTp3le0cqC8wsqrs=
+	t=1744652677; cv=none; b=S3gSdmC5ojd7Be7LoGO7SUZF5MLuPHbY17vNmIiBT+hBkuQGgxHbuIuqMeuRdwfUoaLsuNy5lbJHfqzkMopW/NkmQHuhQGXKO1R9nlgsMdZcxvg/vvrD4xyGanx9oTMaiRUqTPmD2dYceFXR2NNt94xgjlYUEpxb/I2h2MtDrtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652646; c=relaxed/simple;
-	bh=OMnziA6T0qoDcBH0LxvjdH9kmVpEqTJ8xTY8ymKyFHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Nkv3tLGrZJSf0zsmX+2f0H4bECbHFzusVBf52vo2O+Zyp5dPmmotDEx8MRTF9Dzv61Tg/w68Uc2AGaqXjAvZw3WkdQUlwdEZ1kA78CKUWC+B6NFs+oCZ0UJiQZeqfL+BVp+zGmpH8cYlhHRb3I5jMWOVLfnhPn7uFPOvxQGcXOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bm1lAKfl; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744652677; c=relaxed/simple;
+	bh=yYeoJy85luQ+pjoIMuVtq89ZweiIJylxNsickOiMpd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hIcdmI/kCQ730GA0hMnqiHpW1/ahjSS/CVx8sMWxgLQ+OSAxRI7SQEWcUYfnN4xFBuc92mxVpGICXOD8GaFEXOstg6EabtZD/hQGU3vL7zDEK8mS1JSys9fny8uaqUp74uz+/g65iCXD13Tt5itbm0CCZyydntINMMLy1qaY5TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFVNobfW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bm1lAKfl"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EHhkq02220803
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 12:43:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744652626;
-	bh=uSa+mwmKRsBHbiI7E5dH/18NMyqtwpzqZyLK302xmvo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Bm1lAKflwAMgYAOCL2yVsM2jB/fBUu3cn1FssnlehWq6jbcwdnhFGtpOkaQ0gZKiy
-	 tnQGJ1/oyRbco7PFdmQi19tAi/12G9iF+CFgwog6SSPDSQ6oHlzaSBUwohh+6fYcqQ
-	 B51L9202lDKSXg9tvYPehbLnuSnTLVOBA906nzUc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EHhk8m016722
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 12:43:46 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 12:43:45 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 12:43:45 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EHhjq3117844;
-	Mon, 14 Apr 2025 12:43:45 -0500
-Message-ID: <b3391234-ea53-4a18-a1e3-b8a92d9dff5d@ti.com>
-Date: Mon, 14 Apr 2025 12:43:44 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFVNobfW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59086C4CEE2;
+	Mon, 14 Apr 2025 17:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744652676;
+	bh=yYeoJy85luQ+pjoIMuVtq89ZweiIJylxNsickOiMpd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eFVNobfWF42BeZvxkxhmAJJ3rCJtx/JPIhPECa1CtbiCME38u9ZMaGFfNZVMHOCjM
+	 JL2JiQolM8s2eHI7QM2fx3uyVkLSpu135n3gq+MtgOTsxUccy7XsDywoQRbcEt9QKo
+	 WAieOoRrPpiWIe5uX8t4XhjHy58ih4ffxJ21efo3FFYGx5CjYEta5saIuHdxyWCDZT
+	 KeatwNm2emm0Hln+HFBs0s5WHbD56//3ntpaMNRQ9V9HplR58kSwxwE+Preh3iWxxX
+	 Ev0s/Gom4FAQB2LALoTz18oho/A6+sBVdlDJh538fj3Kop5V6ddP0oA1bEbN1oQPNU
+	 9wSiAO8IGIxAQ==
+Date: Mon, 14 Apr 2025 19:44:30 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
+Message-ID: <Z_1Jfs5DXD2vuzLj@cassiopeiae>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250414152630.1691179-1-remo@buenzli.dev>
+ <20250414152630.1691179-3-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] dma-buf: heaps: Introduce a new heap for reserved
- memory
-To: "T.J. Mercier" <tjmercier@google.com>, Maxime Ripard <mripard@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        John Stultz <jstultz@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?=
-	<christian.koenig@amd.com>,
-        Mattijs Korpershoek <mkorpershoek@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-References: <20250407-dma-buf-ecc-heap-v3-0-97cdd36a5f29@kernel.org>
- <20250407-dma-buf-ecc-heap-v3-2-97cdd36a5f29@kernel.org>
- <CABdmKX0=Er-y41roEuZjGZ95YzMxt-mPd9K5982fm_eWhtX5vw@mail.gmail.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <CABdmKX0=Er-y41roEuZjGZ95YzMxt-mPd9K5982fm_eWhtX5vw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414152630.1691179-3-remo@buenzli.dev>
 
-On 4/11/25 3:26 PM, T.J. Mercier wrote:
-> On Mon, Apr 7, 2025 at 9:29 AM Maxime Ripard <mripard@kernel.org> wrote:
->>
->> Some reserved memory regions might have particular memory setup or
->> attributes that make them good candidates for heaps.
->>
->> Let's provide a heap type that will create a new heap for each reserved
->> memory region flagged as such.
->>
->> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+On Mon, Apr 14, 2025 at 05:26:27PM +0200, Remo Senekowitsch wrote:
+> The device property API is a firmware agnostic API for reading
+> properties from firmware (DT/ACPI) devices nodes and swnodes.
 > 
-> This patch looks good to me, but I think it'd be good to add more
-> justification like you did at
-> https://lore.kernel.org/all/20240515-dma-buf-ecc-heap-v1-0-54cbbd049511@kernel.org
+> While the C API takes a pointer to a caller allocated variable/buffer,
+> the rust API is designed to return a value and can be used in struct
+> initialization. Rust generics are also utilized to support different
+> types of properties where appropriate.
 > 
->> ---
->>   drivers/dma-buf/heaps/Kconfig         |   8 +
->>   drivers/dma-buf/heaps/Makefile        |   1 +
->>   drivers/dma-buf/heaps/carveout_heap.c | 360 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 369 insertions(+)
->>
->> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
->> index a5eef06c422644e8aadaf5aff2bd9a33c49c1ba3..c6981d696733b4d8d0c3f6f5a37d967fd6a1a4a2 100644
->> --- a/drivers/dma-buf/heaps/Kconfig
->> +++ b/drivers/dma-buf/heaps/Kconfig
->> @@ -1,5 +1,13 @@
->> +config DMABUF_HEAPS_CARVEOUT
->> +       bool "Carveout Heaps"
->> +       depends on DMABUF_HEAPS
->> +       help
->> +         Choose this option to enable the carveout dmabuf heap. The carveout
->> +         heap is backed by pages from reserved memory regions flagged as
->> +         exportable. If in doubt, say Y.
->> +
->>   config DMABUF_HEAPS_SYSTEM
->>          bool "DMA-BUF System Heap"
->>          depends on DMABUF_HEAPS
->>          help
->>            Choose this option to enable the system dmabuf heap. The system heap
->> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
->> index 974467791032ffb8a7aba17b1407d9a19b3f3b44..b734647ad5c84f449106748160258e372f153df2 100644
->> --- a/drivers/dma-buf/heaps/Makefile
->> +++ b/drivers/dma-buf/heaps/Makefile
->> @@ -1,3 +1,4 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> +obj-$(CONFIG_DMABUF_HEAPS_CARVEOUT)    += carveout_heap.o
->>   obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)      += system_heap.o
->>   obj-$(CONFIG_DMABUF_HEAPS_CMA)         += cma_heap.o
->> diff --git a/drivers/dma-buf/heaps/carveout_heap.c b/drivers/dma-buf/heaps/carveout_heap.c
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..f7198b781ea57f4f60e554d917c9277e9a716b16
->> --- /dev/null
->> +++ b/drivers/dma-buf/heaps/carveout_heap.c
->> @@ -0,0 +1,360 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/dma-buf.h>
->> +#include <linux/dma-heap.h>
->> +#include <linux/genalloc.h>
->> +#include <linux/highmem.h>
->> +#include <linux/of_reserved_mem.h>
->> +
->> +struct carveout_heap_priv {
->> +       struct dma_heap *heap;
->> +       struct gen_pool *pool;
->> +};
->> +
->> +struct carveout_heap_buffer_priv {
->> +       struct mutex lock;
->> +       struct list_head attachments;
->> +
->> +       unsigned long num_pages;
->> +       struct carveout_heap_priv *heap;
->> +       dma_addr_t daddr;
->> +       void *vaddr;
->> +       unsigned int vmap_cnt;
->> +};
->> +
->> +struct carveout_heap_attachment {
->> +       struct list_head head;
->> +       struct sg_table table;
->> +
->> +       struct device *dev;
->> +       bool mapped;
->> +};
->> +
->> +static int carveout_heap_attach(struct dma_buf *buf,
->> +                               struct dma_buf_attachment *attachment)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = buf->priv;
->> +       struct carveout_heap_attachment *a;
->> +       struct sg_table *sgt;
->> +       unsigned long len = priv->num_pages * PAGE_SIZE;
->> +       int ret;
->> +
->> +       a = kzalloc(sizeof(*a), GFP_KERNEL);
->> +       if (!a)
->> +               return -ENOMEM;
->> +       INIT_LIST_HEAD(&a->head);
->> +       a->dev = attachment->dev;
->> +       attachment->priv = a;
->> +
->> +       sgt = &a->table;
->> +       ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
->> +       if (ret)
->> +               goto err_cleanup_attach;
->> +
->> +       sg_dma_address(sgt->sgl) = priv->daddr;
->> +       sg_dma_len(sgt->sgl) = len;
->> +
->> +       mutex_lock(&priv->lock);
->> +       list_add(&a->head, &priv->attachments);
->> +       mutex_unlock(&priv->lock);
->> +
->> +       return 0;
->> +
->> +err_cleanup_attach:
->> +       kfree(a);
->> +       return ret;
->> +}
->> +
->> +static void carveout_heap_detach(struct dma_buf *dmabuf,
->> +                                struct dma_buf_attachment *attachment)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = dmabuf->priv;
->> +       struct carveout_heap_attachment *a = attachment->priv;
->> +
->> +       mutex_lock(&priv->lock);
->> +       list_del(&a->head);
->> +       mutex_unlock(&priv->lock);
->> +
->> +       sg_free_table(&a->table);
->> +       kfree(a);
->> +}
->> +
->> +static struct sg_table *
->> +carveout_heap_map_dma_buf(struct dma_buf_attachment *attachment,
->> +                         enum dma_data_direction direction)
->> +{
->> +       struct carveout_heap_attachment *a = attachment->priv;
->> +       struct sg_table *table = &a->table;
->> +       int ret;
->> +
->> +       ret = dma_map_sgtable(a->dev, table, direction, 0);
->> +       if (ret)
->> +               return ERR_PTR(-ENOMEM);
-> 
-> Not ERR_PTR(ret)? This is already converted to ENOMEM by
-> dma_buf_map_attachment before leaving the dmabuf code, but it might be
-> nice to retain the error type internally. The two existing heaps
-> aren't consistent about this, and I have a slight preference to
-> propagate the error here.
-> 
->> +
->> +       a->mapped = true;
->> +
->> +       return table;
->> +}
->> +
->> +static void carveout_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
->> +                                       struct sg_table *table,
->> +                                       enum dma_data_direction direction)
->> +{
->> +       struct carveout_heap_attachment *a = attachment->priv;
->> +
->> +       a->mapped = false;
->> +       dma_unmap_sgtable(a->dev, table, direction, 0);
->> +}
->> +
->> +static int
->> +carveout_heap_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
->> +                                      enum dma_data_direction direction)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = dmabuf->priv;
->> +       struct carveout_heap_attachment *a;
->> +       unsigned long len = priv->num_pages * PAGE_SIZE;
->> +
->> +       mutex_lock(&priv->lock);
->> +
->> +       if (priv->vmap_cnt > 0)
->> +               invalidate_kernel_vmap_range(priv->vaddr, len);
->> +
->> +       list_for_each_entry(a, &priv->attachments, head) {
->> +               if (!a->mapped)
->> +                       continue;
->> +
->> +               dma_sync_sgtable_for_cpu(a->dev, &a->table, direction);
->> +       }
->> +
->> +       mutex_unlock(&priv->lock);
->> +
->> +       return 0;
->> +}
->> +
->> +static int
->> +carveout_heap_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
->> +                                    enum dma_data_direction direction)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = dmabuf->priv;
->> +       struct carveout_heap_attachment *a;
->> +       unsigned long len = priv->num_pages * PAGE_SIZE;
->> +
->> +       mutex_lock(&priv->lock);
->> +
->> +       if (priv->vmap_cnt > 0)
->> +               flush_kernel_vmap_range(priv->vaddr, len);
->> +
->> +       list_for_each_entry(a, &priv->attachments, head) {
->> +               if (!a->mapped)
->> +                       continue;
->> +
->> +               dma_sync_sgtable_for_device(a->dev, &a->table, direction);
->> +       }
->> +
->> +       mutex_unlock(&priv->lock);
->> +
->> +       return 0;
->> +}
->> +
->> +static int carveout_heap_mmap(struct dma_buf *dmabuf,
->> +                             struct vm_area_struct *vma)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = dmabuf->priv;
->> +       unsigned long len = priv->num_pages * PAGE_SIZE;
->> +       struct page *page = virt_to_page(priv->vaddr);
->> +
->> +       return remap_pfn_range(vma, vma->vm_start, page_to_pfn(page),
->> +                              len, vma->vm_page_prot);
->> +}
->> +
->> +static int carveout_heap_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = dmabuf->priv;
->> +
->> +       mutex_lock(&priv->lock);
->> +
->> +       iosys_map_set_vaddr(map, priv->vaddr);
->> +       priv->vmap_cnt++;
->> +
->> +       mutex_unlock(&priv->lock);
->> +
->> +       return 0;
->> +}
->> +
->> +static void carveout_heap_vunmap(struct dma_buf *dmabuf, struct iosys_map *map)
->> +{
->> +       struct carveout_heap_buffer_priv *priv = dmabuf->priv;
->> +
->> +       mutex_lock(&priv->lock);
->> +
->> +       priv->vmap_cnt--;
->> +       mutex_unlock(&priv->lock);
->> +
->> +       iosys_map_clear(map);
->> +}
->> +
->> +static void carveout_heap_dma_buf_release(struct dma_buf *buf)
->> +{
->> +       struct carveout_heap_buffer_priv *buffer_priv = buf->priv;
->> +       struct carveout_heap_priv *heap_priv = buffer_priv->heap;
->> +       unsigned long len = buffer_priv->num_pages * PAGE_SIZE;
->> +
->> +       gen_pool_free(heap_priv->pool, (unsigned long)buffer_priv->vaddr, len);
->> +       kfree(buffer_priv);
->> +}
->> +
->> +static const struct dma_buf_ops carveout_heap_buf_ops = {
->> +       .attach         = carveout_heap_attach,
->> +       .detach         = carveout_heap_detach,
->> +       .map_dma_buf    = carveout_heap_map_dma_buf,
->> +       .unmap_dma_buf  = carveout_heap_unmap_dma_buf,
->> +       .begin_cpu_access       = carveout_heap_dma_buf_begin_cpu_access,
->> +       .end_cpu_access = carveout_heap_dma_buf_end_cpu_access,
->> +       .mmap           = carveout_heap_mmap,
->> +       .vmap           = carveout_heap_vmap,
->> +       .vunmap         = carveout_heap_vunmap,
->> +       .release        = carveout_heap_dma_buf_release,
->> +};
->> +
->> +static struct dma_buf *carveout_heap_allocate(struct dma_heap *heap,
->> +                                             unsigned long len,
->> +                                             u32 fd_flags,
->> +                                             u64 heap_flags)
->> +{
->> +       struct carveout_heap_priv *heap_priv = dma_heap_get_drvdata(heap);
->> +       struct carveout_heap_buffer_priv *buffer_priv;
->> +       DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
->> +       struct dma_buf *buf;
->> +       dma_addr_t daddr;
->> +       size_t size = PAGE_ALIGN(len);
-> 
-> This PAGE_ALIGN is not needed since dma_heap_buffer_alloc requires all
-> heap allocations to be page aligned before this function is called.
-> 
-> 
-> 
-> 
-> 
->> +       void *vaddr;
->> +       int ret;
->> +
->> +       buffer_priv = kzalloc(sizeof(*buffer_priv), GFP_KERNEL);
->> +       if (!buffer_priv)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       INIT_LIST_HEAD(&buffer_priv->attachments);
->> +       mutex_init(&buffer_priv->lock);
->> +
->> +       vaddr = gen_pool_dma_zalloc(heap_priv->pool, size, &daddr);
->> +       if (!vaddr) {
->> +               ret = -ENOMEM;
->> +               goto err_free_buffer_priv;
->> +       }
->> +
->> +       buffer_priv->vaddr = vaddr;
->> +       buffer_priv->daddr = daddr;
->> +       buffer_priv->heap = heap_priv;
->> +       buffer_priv->num_pages = size >> PAGE_SHIFT;
->> +
->> +       /* create the dmabuf */
->> +       exp_info.exp_name = dma_heap_get_name(heap);
->> +       exp_info.ops = &carveout_heap_buf_ops;
->> +       exp_info.size = size;
->> +       exp_info.flags = fd_flags;
->> +       exp_info.priv = buffer_priv;
->> +
->> +       buf = dma_buf_export(&exp_info);
->> +       if (IS_ERR(buf)) {
->> +               ret = PTR_ERR(buf);
->> +               goto err_free_buffer;
->> +       }
->> +
->> +       return buf;
->> +
->> +err_free_buffer:
->> +       gen_pool_free(heap_priv->pool, (unsigned long)vaddr, len);
->> +err_free_buffer_priv:
->> +       kfree(buffer_priv);
->> +
->> +       return ERR_PTR(ret);
->> +}
->> +
->> +static const struct dma_heap_ops carveout_heap_ops = {
->> +       .allocate = carveout_heap_allocate,
->> +};
->> +
->> +static int __init carveout_heap_setup(struct device_node *node)
->> +{
->> +       struct dma_heap_export_info exp_info = {};
->> +       const struct reserved_mem *rmem;
->> +       struct carveout_heap_priv *priv;
->> +       struct dma_heap *heap;
->> +       struct gen_pool *pool;
->> +       void *base;
->> +       int ret;
->> +
->> +       rmem = of_reserved_mem_lookup(node);
->> +       if (!rmem)
->> +               return -EINVAL;
->> +
->> +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
->> +       if (!priv)
->> +               return -ENOMEM;
->> +
->> +       pool = gen_pool_create(PAGE_SHIFT, NUMA_NO_NODE);
->> +       if (!pool) {
->> +               ret = -ENOMEM;
->> +               goto err_cleanup_heap;
->> +       }
->> +       priv->pool = pool;
->> +
->> +       base = memremap(rmem->base, rmem->size, MEMREMAP_WB);
+> The PropertyGuard is a way to force users to specify whether a property
+> is supposed to be required or not. This allows us to move error
+> logging of missing required properties into core, preventing a lot of
+> boilerplate in drivers.
 
-Why add a mapping here? What if the carveout is never mapped by the CPU
-(or maybe it shouldn't be mapped for some reason). Instead you could
-make the map at map time. I do it that way in our evil vendor tree
-version of this driver for reference[0].
+The patch adds a lot of thing, i.e.
+  * implement PropertyInt
+  * implement PropertyGuard
+  * extend FwNode by a lot of functions
+  * extend Device by some property functions
 
->> +       if (!base) {
->> +               ret = -ENOMEM;
->> +               goto err_release_mem_region;
->> +       }
->> +
->> +       ret = gen_pool_add_virt(pool, (unsigned long)base, rmem->base,
->> +                               rmem->size, NUMA_NO_NODE);
->> +       if (ret)
->> +               goto err_unmap;
->> +
->> +       exp_info.name = node->full_name;
+I see that from v1 a lot of things have been squashed, likely because there are
+a few circular dependencies. Is there really no reasonable way to break this
+down a bit?
 
-So this is the only part that concerns me. We really got the user exposed
-naming wrong with the CMA Heap IMHO (probably should have been always called
-"default_cma" or somthing, instead it changes based on how the default CMA
-area was defined).
+> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> ---
+>  rust/kernel/property.rs | 385 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 383 insertions(+), 2 deletions(-)
+> 
+> diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
+> index f6e6c980d..0d4ea3168 100644
+> --- a/rust/kernel/property.rs
+> +++ b/rust/kernel/property.rs
+> @@ -4,9 +4,17 @@
+>  //!
+>  //! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
+>  
+> -use core::ptr;
+> +use core::{mem::MaybeUninit, ptr};
+>  
+> -use crate::{bindings, device::Device, str::CStr, types::Opaque};
+> +use crate::{
+> +    alloc::KVec,
+> +    bindings, c_str,
+> +    device::Device,
+> +    error::{to_result, Result},
+> +    prelude::*,
+> +    str::{BStr, CStr, CString},
+> +    types::Opaque,
+> +};
+>  
+>  impl Device {
+>      /// Obtain the fwnode corresponding to the device.
+> @@ -28,6 +36,38 @@ fn fwnode(&self) -> &FwNode {
+>      pub fn property_present(&self, name: &CStr) -> bool {
+>          self.fwnode().property_present(name)
+>      }
+> +
+> +    /// Returns firmware property `name` boolean value
+> +    pub fn property_read_bool(&self, name: &CStr) -> bool {
+> +        self.fwnode().property_read_bool(name)
+> +    }
+> +
+> +    /// Returns the index of matching string `match_str` for firmware string property `name`
+> +    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
+> +        self.fwnode().property_match_string(name, match_str)
+> +    }
+> +
+> +    /// Returns firmware property `name` integer array values in a KVec
+> +    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
+> +        &'fwnode self,
+> +        name: &'name CStr,
+> +        len: usize,
+> +    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
+> +        self.fwnode().property_read_array_vec(name, len)
+> +    }
+> +
+> +    /// Returns integer array length for firmware property `name`
+> +    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Result<usize> {
+> +        self.fwnode().property_count_elem::<T>(name)
+> +    }
+> +
+> +    /// Returns firmware property `name` integer scalar value
+> +    pub fn property_read<'fwnode, 'name, T: Property>(
+> +        &'fwnode self,
+> +        name: &'name CStr,
+> +    ) -> PropertyGuard<'fwnode, 'name, T> {
+> +        self.fwnode().property_read(name)
+> +    }
+>  }
 
-If the name of the heap is how users select the heap, it needs to be consistent.
-And naming it after the node makes the DT name into ABI. It also means it will
-change based on device, or even based on how it is created. What if this same
-reserved region is defined by ACPI instead of DT in some cases, or from kernel
-command-line, etc.. Makes for bad ABI :(
+Okay, I start to see why you have all those Device functions in a separate file.
+:)
 
-Maybe in addition to the "export" property, in the DT node we have a "heap-name"
-that can be set which then defines what name is presented to userspace. At
-very least that allows us to kick the can down the road till we can figure out
-what good portable Heap names should look like.
+I think we should move device.rs into its own module, i.e.
+rust/kernel/device/mod.rs and then create rust/kernel/device/property.rs.
 
-Andrew
+>  
+>  /// A reference-counted fwnode_handle.
+> @@ -59,6 +99,150 @@ pub fn property_present(&self, name: &CStr) -> bool {
+>          // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+>          unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+>      }
+> +
+> +    /// Returns firmware property `name` boolean value
+> +    pub fn property_read_bool(&self, name: &CStr) -> bool {
+> +        // SAFETY: `name` is non-null and null-terminated. `self.as_raw()` is valid
+> +        // because `self` is valid.
+> +        unsafe { bindings::fwnode_property_read_bool(self.as_raw(), name.as_char_ptr()) }
+> +    }
+> +
+> +    /// Returns the index of matching string `match_str` for firmware string property `name`
+> +    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
+> +        // SAFETY: `name` and `match_str` are non-null and null-terminated. `self.as_raw` is
+> +        // valid because `self` is valid.
+> +        let ret = unsafe {
+> +            bindings::fwnode_property_match_string(
+> +                self.as_raw(),
+> +                name.as_char_ptr(),
+> +                match_str.as_char_ptr(),
+> +            )
+> +        };
+> +        to_result(ret)?;
+> +        Ok(ret as usize)
+> +    }
+> +
+> +    /// Returns firmware property `name` integer array values in a KVec
+> +    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
+> +        &'fwnode self,
+> +        name: &'name CStr,
+> +        len: usize,
+> +    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
+> +        let mut val: KVec<T> = KVec::with_capacity(len, GFP_KERNEL)?;
+> +
+> +        // SAFETY: `val.as_mut_ptr()` is valid because `KVec::with_capacity`
+> +        // didn't return an error and it has at least space for `len` number
+> +        // of elements.
+> +        let err = unsafe { read_array_out_param::<T>(self, name, val.as_mut_ptr(), len) };
+> +        let res = if err < 0 {
+> +            Err(Error::from_errno(err))
+> +        } else {
+> +            // SAFETY: fwnode_property_read_int_array() writes exactly `len` entries on success
+> +            unsafe { val.set_len(len) }
+> +            Ok(val)
+> +        };
+> +        Ok(PropertyGuard {
+> +            inner: res,
+> +            fwnode: self,
+> +            name,
+> +        })
+> +    }
+> +
+> +    /// Returns integer array length for firmware property `name`
+> +    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Result<usize> {
+> +        // SAFETY: `out_param` is allowed to be null because `len` is zero.
+> +        let ret = unsafe { read_array_out_param::<T>(self, name, ptr::null_mut(), 0) };
+> +        to_result(ret)?;
+> +        Ok(ret as usize)
+> +    }
+> +
+> +    /// Returns the value of firmware property `name`.
+> +    ///
+> +    /// This method is generic over the type of value to read. Informally,
+> +    /// the types that can be read are booleans, strings, unsigned integers and
+> +    /// arrays of unsigned integers.
+> +    ///
+> +    /// Reading a `KVec` of integers is done with the separate
+> +    /// method [`Self::property_read_array_vec`], because it takes an
+> +    /// additional `len` argument.
+> +    ///
+> +    /// When reading a boolean, this method never fails. A missing property
+> +    /// is interpreted as `false`, whereas a present property is interpreted
+> +    /// as `true`.
+> +    ///
+> +    /// For more precise documentation about what types can be read, see
+> +    /// the [implementors of Property][Property#implementors] and [its
+> +    /// implementations on foreign types][Property#foreign-impls].
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// # use crate::{device::Device, types::CString};
+> +    /// fn examples(dev: &Device) -> Result {
+> +    ///     let fwnode = dev.fwnode();
+> +    ///     let b: bool = fwnode.property_read("some-bool").required()?;
+> +    ///     if let Some(s) = fwnode.property_read::<CString>("some-str").optional() {
+> +    ///         // ...
+> +    ///     }
+> +    /// }
+> +    /// ```
+> +    pub fn property_read<'fwnode, 'name, T: Property>(
+> +        &'fwnode self,
+> +        name: &'name CStr,
+> +    ) -> PropertyGuard<'fwnode, 'name, T> {
+> +        PropertyGuard {
+> +            inner: T::read(self, name),
+> +            fwnode: self,
+> +            name,
+> +        }
+> +    }
+> +
+> +    /// helper used to display name or path of a fwnode
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must provide a valid format string for a fwnode.
+> +    unsafe fn fmt(&self, f: &mut core::fmt::Formatter<'_>, fmt_str: &CStr) -> core::fmt::Result {
+> +        let mut buf = [0; 256];
+> +        // SAFETY: `buf` is valid and `buf.len()` is its length. `self.as_raw()` is
+> +        // valid because `self` is valid.
+> +        let written = unsafe {
+> +            bindings::scnprintf(buf.as_mut_ptr(), buf.len(), fmt_str.as_ptr(), self.as_raw())
+> +        };
 
-[0] https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/drivers/dma-buf/heaps/carveout-heap.c?h=ti-linux-6.12.y
+Why do we need this? Can't we use write! right away?
 
->> +       exp_info.ops = &carveout_heap_ops;
->> +       exp_info.priv = priv;
->> +
->> +       heap = dma_heap_add(&exp_info);
->> +       if (IS_ERR(heap)) {
->> +               ret = PTR_ERR(heap);
->> +               goto err_cleanup_pool_region;
->> +       }
->> +       priv->heap = heap;
->> +
->> +       return 0;
->> +
->> +err_cleanup_pool_region:
->> +       gen_pool_free(pool, (unsigned long)base, rmem->size);
->> +err_unmap:
->> +       memunmap(base);
->> +err_release_mem_region:
->> +       gen_pool_destroy(pool);
->> +err_cleanup_heap:
->> +       kfree(priv);
->> +       return ret;
->> +}
->> +
->> +static int __init carveout_heap_init(void)
->> +{
->> +       struct device_node *rmem_node;
->> +       struct device_node *node;
->> +       int ret;
->> +
->> +       rmem_node = of_find_node_by_path("/reserved-memory");
->> +       if (!rmem_node)
->> +               return 0;
->> +
->> +       for_each_child_of_node(rmem_node, node) {
->> +               if (!of_property_read_bool(node, "export"))
->> +                       continue;
->> +
->> +               ret = carveout_heap_setup(node);
->> +               if (ret)
->> +                       return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +module_init(carveout_heap_init);
->>
->> --
->> 2.49.0
->>
+> +        // SAFETY: `written` is smaller or equal to `buf.len()`.
+> +        let b: &[u8] = unsafe { core::slice::from_raw_parts(buf.as_ptr(), written as usize) };
+> +        write!(f, "{}", BStr::from_bytes(b))
+> +    }
+> +
+> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> +    /// printing the name of a node.
+> +    pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
+> +        struct FwNodeDisplayName<'a>(&'a FwNode);
+> +
+> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
+> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> +                // SAFETY: "%pfwP" is a valid format string for fwnode
+> +                unsafe { self.0.fmt(f, c_str!("%pfwP")) }
+> +            }
+> +        }
+> +
+> +        FwNodeDisplayName(self)
+> +    }
+> +
+> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> +    /// printing the full path of a node.
+> +    pub fn display_path(&self) -> impl core::fmt::Display + use<'_> {
+> +        struct FwNodeDisplayPath<'a>(&'a FwNode);
+> +
+> +        impl core::fmt::Display for FwNodeDisplayPath<'_> {
+> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> +                // SAFETY: "%pfwf" is a valid format string for fwnode
+> +                unsafe { self.0.fmt(f, c_str!("%pfwf")) }
+> +            }
+> +        }
+> +
+> +        FwNodeDisplayPath(self)
+> +    }
+>  }
+>  
+>  // SAFETY: Instances of `FwNode` are always reference-counted.
+> @@ -73,3 +257,200 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
+>      }
+>  }
+> +
+> +/// Implemented for several types that can be read as properties.
+> +///
+> +/// Informally, this is implemented for strings, integers and arrays of
+> +/// integers. It's used to make [`FwNode::property_read`] generic over the
+> +/// type of property being read. There are also two dedicated methods to read
+> +/// other types, because they require more specialized function signatures:
+> +/// - [`property_read_bool`](Device::property_read_bool)
+> +/// - [`property_read_array_vec`](Device::property_read_array_vec)
+> +pub trait Property: Sized {
+> +    /// Used to make [`FwNode::property_read`] generic.
+> +    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self>;
+> +}
+> +
+> +impl Property for CString {
+> +    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
+> +        let mut str: *mut u8 = ptr::null_mut();
+> +        let pstr: *mut _ = &mut str;
+> +
+> +        // SAFETY: `name` is non-null and null-terminated. `fwnode.as_raw` is
+> +        // valid because `fwnode` is valid.
+> +        let ret = unsafe {
+> +            bindings::fwnode_property_read_string(fwnode.as_raw(), name.as_char_ptr(), pstr.cast())
+> +        };
+> +        to_result(ret)?;
+> +
+> +        // SAFETY: `pstr` contains a non-null ptr on success
+> +        let str = unsafe { CStr::from_char_ptr(*pstr) };
+> +        Ok(str.try_into()?)
+> +    }
+> +}
+
+I think it would be pretty weird to have a function CString::read() that takes a
+FwNode argument, no? Same for all the other types below.
+
+I assume you do this for
+
+	pub fn property_read<'fwnode, 'name, T: Property>(
+	   &'fwnode self,
+	   name: &'name CStr,
+	)
+
+but given that you have to do the separate impls anyways, is there so much value
+having the generic variant? You could still generate all the
+property_read_{int}() variants with a macro.
+
+If you really want a generic property_read(), I think you should create new
+types instead and implement the Property trait for them instead.
+
+> +/// Implemented for all integers that can be read as properties.
+> +///
+> +/// This helper trait is needed on top of the existing [`Property`]
+> +/// trait to associate the integer types of various sizes with their
+> +/// corresponding `fwnode_property_read_*_array` functions.
+> +pub trait PropertyInt: Copy {
+> +    /// # Safety
+> +    ///
+> +    /// Callers must uphold the same safety invariants as for the various
+> +    /// `fwnode_property_read_*_array` functions.
+> +    unsafe fn read_array(
+> +        fwnode: *const bindings::fwnode_handle,
+> +        propname: *const ffi::c_char,
+> +        val: *mut Self,
+> +        nval: usize,
+> +    ) -> ffi::c_int;
+> +}
+> +// This macro generates implementations of the traits `Property` and
+> +// `PropertyInt` for integers of various sizes. Its input is a list
+> +// of pairs separated by commas. The first element of the pair is the
+> +// type of the integer, the second one is the name of its corresponding
+> +// `fwnode_property_read_*_array` function.
+> +macro_rules! impl_property_for_int {
+> +    ($($int:ty: $f:ident),* $(,)?) => { $(
+> +        impl PropertyInt for $int {
+> +            unsafe fn read_array(
+> +                fwnode: *const bindings::fwnode_handle,
+> +                propname: *const ffi::c_char,
+> +                val: *mut Self,
+> +                nval: usize,
+> +            ) -> ffi::c_int {
+> +                // SAFETY: The safety invariants on the trait require
+> +                // callers to uphold the invariants of the functions
+> +                // this macro is called with.
+> +                unsafe {
+> +                    bindings::$f(fwnode, propname, val.cast(), nval)
+> +                }
+> +            }
+> +        }
+> +    )* };
+> +}
+> +impl_property_for_int! {
+> +    u8: fwnode_property_read_u8_array,
+> +    u16: fwnode_property_read_u16_array,
+> +    u32: fwnode_property_read_u32_array,
+> +    u64: fwnode_property_read_u64_array,
+> +    i8: fwnode_property_read_u8_array,
+> +    i16: fwnode_property_read_u16_array,
+> +    i32: fwnode_property_read_u32_array,
+> +    i64: fwnode_property_read_u64_array,
+> +}
+> +/// # Safety
+> +///
+> +/// Callers must ensure that if `len` is non-zero, `out_param` must be
+> +/// valid and point to memory that has enough space to hold at least
+> +/// `len` number of elements.
+> +unsafe fn read_array_out_param<T: PropertyInt>(
+> +    fwnode: &FwNode,
+> +    name: &CStr,
+> +    out_param: *mut T,
+> +    len: usize,
+> +) -> ffi::c_int {
+> +    // SAFETY: `name` is non-null and null-terminated.
+> +    // `fwnode.as_raw` is valid because `fwnode` is valid.
+> +    // `out_param` is valid and has enough space for at least
+> +    // `len` number of elements as per the safety requirement.
+> +    unsafe { T::read_array(fwnode.as_raw(), name.as_char_ptr(), out_param, len) }
+> +}
+> +impl<T: PropertyInt, const N: usize> Property for [T; N] {
+> +    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
+> +        let mut val: [MaybeUninit<T>; N] = [const { MaybeUninit::uninit() }; N];
+> +
+> +        // SAFETY: `val.as_mut_ptr()` is valid and points to enough space for
+> +        // `N` elements. Casting from `*mut MaybeUninit<T>` to `*mut T` is safe
+> +        // because `MaybeUninit<T>` has the same memory layout as `T`.
+> +        let ret = unsafe { read_array_out_param::<T>(fwnode, name, val.as_mut_ptr().cast(), N) };
+> +        to_result(ret)?;
+> +
+> +        // SAFETY: `val` is always initialized when
+> +        // fwnode_property_read_<T>_array is successful.
+> +        Ok(val.map(|v| unsafe { v.assume_init() }))
+> +    }
+> +}
+> +impl<T: PropertyInt> Property for T {
+> +    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
+> +        let val: [_; 1] = <[T; 1] as Property>::read(fwnode, name)?;
+> +        Ok(val[0])
+> +    }
+> +}
+> +
+> +/// A helper for reading device properties.
+> +///
+> +/// Use [`Self::required`] if a missing property is considered a bug and
+> +/// [`Self::optional`] otherwise.
+> +///
+> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
+> +pub struct PropertyGuard<'fwnode, 'name, T> {
+> +    /// The result of reading the property.
+> +    inner: Result<T>,
+> +    /// The fwnode of the property, used for logging in the "required" case.
+> +    fwnode: &'fwnode FwNode,
+> +    /// The name of the property, used for logging in the "required" case.
+> +    name: &'name CStr,
+> +}
+> +
+> +impl<T> PropertyGuard<'_, '_, T> {
+> +    /// Access the property, indicating it is required.
+> +    ///
+> +    /// If the property is not present, the error is automatically logged. If a
+> +    /// missing property is not an error, use [`Self::optional`] instead.
+> +    pub fn required(self) -> Result<T> {
+> +        if self.inner.is_err() {
+> +            // Get the device associated with the fwnode for device-associated
+> +            // logging.
+> +            // TODO: Are we allowed to do this? The field `fwnode_handle.dev`
+> +            // has a somewhat vague comment, which could mean we're not
+> +            // supposed to access it:
+> +            // https://elixir.bootlin.com/linux/v6.13.6/source/include/linux/fwnode.h#L51
+> +            // SAFETY: According to the invariant of FwNode, it is valid.
+> +            let dev = unsafe { (*self.fwnode.as_raw()).dev };
+
+I don't think this is valid it do, AFAICS, a firmware node handle doesn't own a
+reference to the device pointer.
+
+> +
+> +            if dev.is_null() {
+> +                pr_err!(
+> +                    "{}: property '{}' is missing\n",
+> +                    self.fwnode.display_path(),
+> +                    self.name
+> +                );
+> +            } else {
+> +                // SAFETY: If dev is not null, it points to a valid device.
+> +                let dev: &Device = unsafe { &*dev.cast() };
+> +                dev_err!(
+> +                    dev,
+> +                    "{}: property '{}' is missing\n",
+> +                    self.fwnode.display_path(),
+> +                    self.name
+> +                );
+> +            };
+> +        }
+> +        self.inner
+> +    }
+> +
+> +    /// Access the property, indicating it is optional.
+> +    ///
+> +    /// In contrast to [`Self::required`], no error message is logged if
+> +    /// the property is not present.
+> +    pub fn optional(self) -> Option<T> {
+> +        self.inner.ok()
+> +    }
+> +
+> +    /// Access the property or the specified default value.
+> +    ///
+> +    /// Do not pass a sentinel value as default to detect a missing property.
+> +    /// Use [`Self::required`] or [`Self::optional`] instead.
+> +    pub fn or(self, default: T) -> T {
+> +        self.inner.unwrap_or(default)
+> +    }
+> +}
+> +
+> +impl<T: Default> PropertyGuard<'_, '_, T> {
+> +    /// Access the property or a default value.
+> +    ///
+> +    /// Use [`Self::or`] to specify a custom default value.
+> +    pub fn or_default(self) -> T {
+> +        self.inner.unwrap_or_default()
+> +    }
+> +}
+> -- 
+> 2.49.0
+> 
