@@ -1,190 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCE62749EC;
-	Mon, 14 Apr 2025 13:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7F2749EE
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637952; cv=none; b=TdBq+L4u5ClSt7ARuXIaGXtbKRHQxmlR+vU2562QqSLyNyMnCpNL+8YVMHjllhMmVioYkYpf8ekCh4/2ew7ZQHdbNrRwNavbMav5ykNKRDes5DjzkM53Up/H9y0X5Wxtfm3j7FRBo0+8iyI1w+u37YGkrU1e53QuYcCbVqMp3pI=
+	t=1744637996; cv=none; b=V2gpvtcVHq7XGAbGkY+P3XXHV9I1FCbz7UyyqtJ8vHS/tPe2YRkQb2SKvFXiXlIxRMDvMjEegBGW8av8BK8DFzvPGEWeGWO4piYXH+hf0+CxqtZ3XmjBAu18GuNpeQtqdDqUeYmjzlsGIfT/hxihzyL60EjIu8sRWMcdokEflrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637952; c=relaxed/simple;
-	bh=BnjCiRheLd50KZFZ6NJW6u2NJG2oMLt7fJoUT9IgrY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TospO6QT83QlEI4L7sgbim5YXgZuyTBiJRZIRiGdjWaqGKY2s+uct0+9y3S55w2nSsc7wVcWkZthT3FhNruhOI9reh6NtiHtpbyAk6cFVWIAqYwTp7AXwq3hqojVn82g5y3KivdWKJClXfpeczR3fWIhDH9GoRiJkKAZyg8mXCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FOl4WQpN; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744637996; c=relaxed/simple;
+	bh=NtCW/E8exydYTxFSwUlIDYXeH3TA9ME05Yx8nihFiFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZrLd98h6jxeFSvja7nx5z+nAQAnUXx2Iz6Pig68H8ETHQ14cT1q9swdqKQQ9wSoLkJDMgIU5H0sTK6XXCT+MpBCGI3QEKHzGiOnE8Y2t6q10qioFQVDM9j/Q/tos+K1GxCcgUuWy0hBwYfstRIikGe9erPE4OC415F+f6cNMvHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=XteWAv+h; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FOl4WQpN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744637950; x=1776173950;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=BnjCiRheLd50KZFZ6NJW6u2NJG2oMLt7fJoUT9IgrY4=;
-  b=FOl4WQpNVqKcTguntsfdVOtogemmrfcyaBZlad+Rbo+AmnprVLfcXoHY
-   XX6C5zr/ljpGzzmLzMdsGHAU+se2bCfXSEf311sVXaaX5uBjLkVr78F9Q
-   RduLqoZIyIkicgMHvAtgXNv8RTNqjK2wCatQsL3Cnqscxerl45I9w4ncy
-   uDeuEE+SFmB7pUYVX7HoWo1d7Ux8Qldz4n72DM7P50zR6h7xpm3aRqixp
-   KafgXK2ed/4tu0q+4w69CqelwXpQz03yPQjn5io8CSPSp1BYrbieSFSEg
-   f6oUY/wTrAMR+fYFap8RRjvVGfL3uDkODdmOrcB0IK9WoKIKTHDfaHSOZ
-   Q==;
-X-CSE-ConnectionGUID: Q1Wrkf7eSPGvPNtmnB0b9Q==
-X-CSE-MsgGUID: lAKALSvyR6C458NeWeHL9w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57097818"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="57097818"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:39:10 -0700
-X-CSE-ConnectionGUID: xDzeAt+nTdGpMdjqU1KNyQ==
-X-CSE-MsgGUID: 5ddJHiVxSV6ucBpJq22FuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="160778914"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 14 Apr 2025 06:39:05 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4K1e-000EGs-2b;
-	Mon, 14 Apr 2025 13:39:02 +0000
-Date: Mon, 14 Apr 2025 21:38:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Adri=E1n?= Larumbe <adrian.larumbe@collabora.com>,
-	"To : Boris Brezillon" <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, kernel@collabora.com,
-	=?iso-8859-1?Q?Adri=E1n?= Larumbe <adrian.larumbe@collabora.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v7 3/4] drm/panthor: Label all kernel BO's
-Message-ID: <202504142148.NBAyzLuE-lkp@intel.com>
-References: <20250411150357.3308921-4-adrian.larumbe@collabora.com>
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="XteWAv+h"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so6597641a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1744637992; x=1745242792; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZquJTzO2TMrzx3oM3vRZxn3X9pd2r24oUtQt3eHPnLc=;
+        b=XteWAv+h8B74asVCm/j/e0NLRp4TEeKg6pdI/nhhYbAsUNJVE3IKA3re7QUrGNfoC+
+         vTfI3OuJKiGhJAiEK/eMQOuQtBkRgxHt/86RkPF6rsaIIUM1JS9hswRObGwZSGF28fLv
+         6kKYMPKNZNeBUdW63FI6Iln97wCpqnBahwtJYXskzglvw4RR4qw9BTzYLmSFSyzH04GJ
+         nG0mRiJpC8Jfjs8tVIHSkqpg/aC6hJH2O40fgk4DyOFwA9MRHE8r4SoRTpWvEKmjhZge
+         C6ZGNXzx5J8XcBhQiD99pFCYJC7895BUXj2W2k6ss5P88v0xC8aQXDKJffcka/FhaBJv
+         aW3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744637992; x=1745242792;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZquJTzO2TMrzx3oM3vRZxn3X9pd2r24oUtQt3eHPnLc=;
+        b=whSzI563gn6lmV2ZAXgbdVuKFl7Ltjo+0C4dDWvp3s8gqCe3QvJzyj4hOvrsOCC7pO
+         gEmsgBT1s1e+gifLvuONx/7Ofj6hBFoY4H7n3xDW24UdeO13vCVkfRATGi6tND0X6yEO
+         LI93b/CN/go6pS6AczVtbCpn1XFN8PoiuEP0WAOGzkOGRfm7QsDalispZ24H/Y+Tq/4G
+         gHh3uIx7jTDP4B4GIvQGBCzwEKVw9N1JzB8IaDID938k8LRglhcUj+cizkh60NByjXJu
+         u+gJyg5HaVe3hMebG2go40hXbPrKiLX+TviEfIBfsgQMy+eWfizK6rAVzxIu/D1tVgC7
+         QY3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEXxtAaUZjZxMvLQSa3p8K4hp02P6gXY491IDsynAyIwxrvxHDjuSWLBoI/J700y3niNirfY8WRjFpRDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygKQd/bLwnPkflbbl3mvxTrs7KqT5x/KCBfNRDGNwZ4X9R2Y0w
+	kS2qkAPaf04xm6Y9vjeIK3znFBM4yC1W8YgpY+znjniO+LI2NAf/+3hwgxzi/jVMk8BmATo6l/y
+	45EZy5/Vu0rJj86UobXUHO9dqQvU5He5VKsmKUUfrvMHY07w3mT1fE2M=
+X-Gm-Gg: ASbGncsa6OGJ5g7AND6bbN+mqGL2cVv6D0s1u2QFxvxtJVlPPx32W0h2b8EEqXOb+AE
+	HyO5Dcl8uAv+CV0WFOocMciwExMtpLQC/hWIK6C2YUKAuQHiCHLzq/PpQVlHc1OFz3DcNqsBo8r
+	VmnxK6J1uFGYgVkG9R0gJ8XdAICGjk09qF8+zYifL0PtnxzdgeW1qDSggRlXI7mXgKUMBePXTPI
+	E/bMvO9JZj9DHxi3EeMPuydFayZkPOrVmsfBvMqJVvOnaKVTagqkFRSbHg1q1jTjlAzrK9CBQPF
+	CpA5ZPdggeGJmTM354J3u9ZvWX+aXgo1tF/5GbGws4+R4dMF4zgarGoU43W07xAYluR4QuEApoB
+	l8ghVQvQM2dObBQ==
+X-Google-Smtp-Source: AGHT+IFPxNqtw28ADerWg6CufaL1pKk/7NGw4kAzwMNIMYRZtCBUOHqCketsjh37yheEVO4bOxUj2g==
+X-Received: by 2002:a05:6402:3487:b0:5ec:f769:db07 with SMTP id 4fb4d7f45d1cf-5f36fefc74amr8488977a12.29.1744637992033;
+        Mon, 14 Apr 2025 06:39:52 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:7de8:ff34:becd:c8f0? ([2001:67c:2fbc:1:7de8:ff34:becd:c8f0])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ef5c445sm4905583a12.31.2025.04.14.06.39.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 06:39:51 -0700 (PDT)
+Message-ID: <963c2166-aed8-4928-bdeb-6acbec2b0ea7@openvpn.net>
+Date: Mon, 14 Apr 2025 15:39:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250411150357.3308921-4-adrian.larumbe@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
+ Offload (ovpn)
+To: Jakub Kicinski <kuba@kernel.org>, Sabrina Dubroca <sd@queasysnail.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Xiao Liang <shaw.leon@gmail.com>, steffen.klassert@secunet.com,
+ antony.antony@secunet.com
+References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+ <20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
+ <20250410195440.3ba7ba0f@kernel.org>
+ <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net> <Z_keORW4OWc8i5Vz@krikkit>
+ <20250411141847.6dba6987@kernel.org>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <20250411141847.6dba6987@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Adrián,
+On 11/04/2025 23:18, Jakub Kicinski wrote:
+> On Fri, 11 Apr 2025 15:50:49 +0200 Sabrina Dubroca wrote:
+>>> My understanding is that this is the standard approach to:
+>>> 1) hook in the middle of registration/deregistration;
+>>> 2) handle events generated by other components/routines.
+>>>
+>>> I see in /drivers/net/ almost every driver registers a notifier for their
+>>> own device.
+>>
+>> I think most of them register a notifier for their lower device
+>> (bridge port, real device under a vlan, or similar).
+>>
+>> I've mentioned at some point that it would be more usual to replace
+>> this notifier with a custom dellink, and that ovpn->registered could
+>> likely be replaced with checking for NETREG_REGISTERED. I just thought
+>> it could be cleaned up a bit later, but it seems Jakub wants it done
+>> before taking the patches :)
+> 
+> Ideally, yes. One fewer place for us to check when trying to figure
+> out if we will break anything with the locking changes :(
+> Notifiers are very powerful but that comes at high maintenance cost.
 
-kernel test robot noticed the following build warnings:
+ACK, working on it!
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc2 next-20250414]
-[cannot apply to drm-misc/drm-misc-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Adri-n-Larumbe/drm-panthor-Introduce-BO-labeling/20250414-101541
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250411150357.3308921-4-adrian.larumbe%40collabora.com
-patch subject: [PATCH v7 3/4] drm/panthor: Label all kernel BO's
-config: i386-buildonly-randconfig-006-20250414 (https://download.01.org/0day-ci/archive/20250414/202504142148.NBAyzLuE-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504142148.NBAyzLuE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504142148.NBAyzLuE-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpu/drm/panthor/panthor_gem.c:86: warning: Function parameter or struct member 'name' not described in 'panthor_kernel_bo_create'
-
-
-vim +86 drivers/gpu/drm/panthor/panthor_gem.c
-
-8a1cc07578bf42 Boris Brezillon 2024-02-29   67  
-8a1cc07578bf42 Boris Brezillon 2024-02-29   68  /**
-8a1cc07578bf42 Boris Brezillon 2024-02-29   69   * panthor_kernel_bo_create() - Create and map a GEM object to a VM
-8a1cc07578bf42 Boris Brezillon 2024-02-29   70   * @ptdev: Device.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   71   * @vm: VM to map the GEM to. If NULL, the kernel object is not GPU mapped.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   72   * @size: Size of the buffer object.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   73   * @bo_flags: Combination of drm_panthor_bo_flags flags.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   74   * @vm_map_flags: Combination of drm_panthor_vm_bind_op_flags (only those
-8a1cc07578bf42 Boris Brezillon 2024-02-29   75   * that are related to map operations).
-8a1cc07578bf42 Boris Brezillon 2024-02-29   76   * @gpu_va: GPU address assigned when mapping to the VM.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   77   * If gpu_va == PANTHOR_VM_KERNEL_AUTO_VA, the virtual address will be
-8a1cc07578bf42 Boris Brezillon 2024-02-29   78   * automatically allocated.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   79   *
-8a1cc07578bf42 Boris Brezillon 2024-02-29   80   * Return: A valid pointer in case of success, an ERR_PTR() otherwise.
-8a1cc07578bf42 Boris Brezillon 2024-02-29   81   */
-8a1cc07578bf42 Boris Brezillon 2024-02-29   82  struct panthor_kernel_bo *
-8a1cc07578bf42 Boris Brezillon 2024-02-29   83  panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
-8a1cc07578bf42 Boris Brezillon 2024-02-29   84  			 size_t size, u32 bo_flags, u32 vm_map_flags,
-f48f05d54f7696 Adrián Larumbe  2025-04-11   85  			 u64 gpu_va, const char *name)
-8a1cc07578bf42 Boris Brezillon 2024-02-29  @86  {
-8a1cc07578bf42 Boris Brezillon 2024-02-29   87  	struct drm_gem_shmem_object *obj;
-8a1cc07578bf42 Boris Brezillon 2024-02-29   88  	struct panthor_kernel_bo *kbo;
-8a1cc07578bf42 Boris Brezillon 2024-02-29   89  	struct panthor_gem_object *bo;
-8a1cc07578bf42 Boris Brezillon 2024-02-29   90  	int ret;
-8a1cc07578bf42 Boris Brezillon 2024-02-29   91  
-8a1cc07578bf42 Boris Brezillon 2024-02-29   92  	if (drm_WARN_ON(&ptdev->base, !vm))
-8a1cc07578bf42 Boris Brezillon 2024-02-29   93  		return ERR_PTR(-EINVAL);
-8a1cc07578bf42 Boris Brezillon 2024-02-29   94  
-8a1cc07578bf42 Boris Brezillon 2024-02-29   95  	kbo = kzalloc(sizeof(*kbo), GFP_KERNEL);
-8a1cc07578bf42 Boris Brezillon 2024-02-29   96  	if (!kbo)
-8a1cc07578bf42 Boris Brezillon 2024-02-29   97  		return ERR_PTR(-ENOMEM);
-8a1cc07578bf42 Boris Brezillon 2024-02-29   98  
-8a1cc07578bf42 Boris Brezillon 2024-02-29   99  	obj = drm_gem_shmem_create(&ptdev->base, size);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  100  	if (IS_ERR(obj)) {
-8a1cc07578bf42 Boris Brezillon 2024-02-29  101  		ret = PTR_ERR(obj);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  102  		goto err_free_bo;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  103  	}
-8a1cc07578bf42 Boris Brezillon 2024-02-29  104  
-8a1cc07578bf42 Boris Brezillon 2024-02-29  105  	bo = to_panthor_bo(&obj->base);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  106  	kbo->obj = &obj->base;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  107  	bo->flags = bo_flags;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  108  
-f48f05d54f7696 Adrián Larumbe  2025-04-11  109  	panthor_gem_kernel_bo_set_label(kbo, name);
-f48f05d54f7696 Adrián Larumbe  2025-04-11  110  
-5d01b56f0518d8 Boris Brezillon 2024-10-30  111  	/* The system and GPU MMU page size might differ, which becomes a
-5d01b56f0518d8 Boris Brezillon 2024-10-30  112  	 * problem for FW sections that need to be mapped at explicit address
-5d01b56f0518d8 Boris Brezillon 2024-10-30  113  	 * since our PAGE_SIZE alignment might cover a VA range that's
-5d01b56f0518d8 Boris Brezillon 2024-10-30  114  	 * expected to be used for another section.
-5d01b56f0518d8 Boris Brezillon 2024-10-30  115  	 * Make sure we never map more than we need.
-5d01b56f0518d8 Boris Brezillon 2024-10-30  116  	 */
-5d01b56f0518d8 Boris Brezillon 2024-10-30  117  	size = ALIGN(size, panthor_vm_page_size(vm));
-8a1cc07578bf42 Boris Brezillon 2024-02-29  118  	ret = panthor_vm_alloc_va(vm, gpu_va, size, &kbo->va_node);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  119  	if (ret)
-8a1cc07578bf42 Boris Brezillon 2024-02-29  120  		goto err_put_obj;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  121  
-8a1cc07578bf42 Boris Brezillon 2024-02-29  122  	ret = panthor_vm_map_bo_range(vm, bo, 0, size, kbo->va_node.start, vm_map_flags);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  123  	if (ret)
-8a1cc07578bf42 Boris Brezillon 2024-02-29  124  		goto err_free_va;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  125  
-ff60c8da0aaf7e Boris Brezillon 2024-05-02  126  	kbo->vm = panthor_vm_get(vm);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  127  	bo->exclusive_vm_root_gem = panthor_vm_root_gem(vm);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  128  	drm_gem_object_get(bo->exclusive_vm_root_gem);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  129  	bo->base.base.resv = bo->exclusive_vm_root_gem->resv;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  130  	return kbo;
-8a1cc07578bf42 Boris Brezillon 2024-02-29  131  
-8a1cc07578bf42 Boris Brezillon 2024-02-29  132  err_free_va:
-8a1cc07578bf42 Boris Brezillon 2024-02-29  133  	panthor_vm_free_va(vm, &kbo->va_node);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  134  
-8a1cc07578bf42 Boris Brezillon 2024-02-29  135  err_put_obj:
-8a1cc07578bf42 Boris Brezillon 2024-02-29  136  	drm_gem_object_put(&obj->base);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  137  
-8a1cc07578bf42 Boris Brezillon 2024-02-29  138  err_free_bo:
-8a1cc07578bf42 Boris Brezillon 2024-02-29  139  	kfree(kbo);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  140  	return ERR_PTR(ret);
-8a1cc07578bf42 Boris Brezillon 2024-02-29  141  }
-8a1cc07578bf42 Boris Brezillon 2024-02-29  142  
+Thanks,
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Antonio Quartulli
+OpenVPN Inc.
+
