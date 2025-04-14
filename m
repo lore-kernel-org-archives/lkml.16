@@ -1,108 +1,65 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AD123D2B4;
-	Mon, 14 Apr 2025 15:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2A925229C;
+	Mon, 14 Apr 2025 15:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644957; cv=none; b=F7AD4Ty61fTE/NZ+55NXuI7n/hKmmruvk+6KzXRAnxKg1tcpEZz/ZyaciKa3vv+JcUgg/KIV9SBSGvvsWmik31eLIFx6EZuAKJOAlppivMz0alu0Y3SCv6B0rq+O9Mr831IDFUt5qqFmqyyiDx56huU++77L/AJrY60hVtmSCoM=
+	t=1744644972; cv=none; b=a54ZM4WXjYWKDobTP6Gib5az/hUFbgH6bp8AjyDCzdep/w6/Y8YF1mS3p7Xho//AUez9Zk23UsTrIBFMPFJ7Ou6KCpqRMsQblH55VNZuK2okkpgtn33vq7Gdd2AysqNZZ8bGEhcFqloX/cKs67BiqiJ22Hn8DIhTeAtYJk5I2/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644957; c=relaxed/simple;
-	bh=+v5GBdFU3hoXN+uGNfpMqMGmAv7vkRfYIU2MS99/34k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rm+4WDc0n3++mXJ6vEwK6psiZDcEz1EiAKVTcA8BlCcqFVzoR57LeIm7D6B5baUY5XSKEuMFf5VuGG89JDOxxRIRyHp8lZm6W9xp9M8BO8fTaWgaC7zaJQqEl+Y+FoqaGJxKe7U/C5IKIJ2hAH5Xjs/UqwQczje2FvlsocUeW7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZSkkysUl; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSkkysUl"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c592764e54so551669685a.3;
-        Mon, 14 Apr 2025 08:35:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744644955; x=1745249755; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+v5GBdFU3hoXN+uGNfpMqMGmAv7vkRfYIU2MS99/34k=;
-        b=ZSkkysUl4YoRJeE84NFIDe5sEoK22tXkmv3cu+r0YnL89uP+J6v0T7GGEYnczrIZ9N
-         9UgHQr6/akCIqhX/pSz0iKjXU6AMD9gnhktsYDhxynYVaJ7vTU1AEac8h1ZmrT77irlc
-         EYrcbYCWPePwyOJ6VamCbMH0yOO7cooqtxGMoCnt1TnqsZi+JgeuFYNP00a9/k4XhcDH
-         7+l9O9AnQdUlU95gBvHCopG5Gf12mA1AcRGVkvxNdcHblJUdWHqKjcoOk0PjWGfDoU40
-         yGv2XxfuDCAtgY/OVELmI+FECb4rY895Ezd+4GQqLi0FX6Iluw/0b5eKLbOYjwQ4jkk/
-         bELw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744644955; x=1745249755;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+v5GBdFU3hoXN+uGNfpMqMGmAv7vkRfYIU2MS99/34k=;
-        b=kw4L8/6REbCDppMguD1HhEZou5Ewz0Q2PqJZRKORNnhrKc5uMsXZWINnIanNtQEENs
-         5sCIH98um+sJVdAcVvadmLggzj5U3tkNFOQ0VzFaqkG5UydqT+9+nDBtAsdBjensUEPK
-         jFs7K/F1iSjgN9p390Mk1OC2iOybuwdqyGDVX119ZQsvIrtQYsiQI2WNgnX3482Ubav7
-         qrH67M87YUAKPr3FBRtTtQ6k+PsSAJ81CzeDI0w4kGQLUxxvYRi5mxR6H3brp01cdZzK
-         Us74v8Qg6dSeOw0pxrxnjyBs0/1OFYqUhP/ydLm0b2HOXUhCd7IOfmKn1Wm7+5wrV0sU
-         GdcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYpJByFPlq4RBzeppUWRL8nAd/E3p6Wlf7XVvThgW1qVvNt157flPfPJsmF/3XO53/ixdzy5v1R8=@vger.kernel.org, AJvYcCWeNV78spLlfUIr8KzcxhphkfZK3RtJLIjEH4fRycQVxlTx+Wvc+Xu4l1d6WqLoBOGoda+Setlx5NJvrJEr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4icDxZY92cttP5vHkVygtqRo20lZ4XpWwTkHHKdI3lvCjpnSO
-	IgnjUP3dC4NWvciJ4LkKvQ4IWGAhDOtGaFUvaCZERe/lA4CR5N3tNyDAQTxbpuL3HPbfpFHSAnG
-	qQNOkWwQf2bTj3NkOwTZechtCZFU=
-X-Gm-Gg: ASbGncs7Gaj6jygv/+S4Dirms8xA7lLuhihSpw45MTa7/9ZpYIvUEt1Uae5HJX7gIhD
-	shI64Agyo16KgXSAQRxTsuz84scUCU2BQgMhF+kCbAyReRwXqwH+9WyhGXcIQJiq3b5ghsJJuwg
-	ipXmRl3WAyQbvb1F7knCvWrHOr6rUItHM9E8ja1ovIc1s8eNq5UogQ6S4NSs6ryQHN
-X-Google-Smtp-Source: AGHT+IEXe+Wbw4q6CnrtWNp/owFqYsFsq2PQKIoSF9ymh5TUERZr/I6KyL4du/gXWT+SXUA8Un5UdgkX9zgThmHvwjA=
-X-Received: by 2002:a05:620a:4310:b0:7c5:4738:8a0f with SMTP id
- af79cd13be357-7c7af10c12fmr1618638085a.15.1744644955019; Mon, 14 Apr 2025
- 08:35:55 -0700 (PDT)
+	s=arc-20240116; t=1744644972; c=relaxed/simple;
+	bh=HZUyZl0U+ZEgkxFXywMHlDcIaFBX828g6Ua3936TNtE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E5gCpWdPG/rPoOFmNz91HE+WoLH8xSMKIH6phhg8NPLR4gzNvME5rr6xrYl4MgbNtPhbKmZsQop8SFeyGsOouK/9uAR9ExjE5ASxAZLgBEgcla6X6Uo0kdK+3nS2Ug99eF1ebENc19hNHhgC0IV4dsFTX7uqL+S/S7QrxC7IV+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbrvK2Hr5z6FGcX;
+	Mon, 14 Apr 2025 23:34:53 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6D8001401DC;
+	Mon, 14 Apr 2025 23:36:08 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
+ 2025 17:36:07 +0200
+Date: Mon, 14 Apr 2025 16:36:06 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 06/19] cxl/port: Add 'dynamic_ram_a' to endpoint
+ decoder mode
+Message-ID: <20250414163606.00000311@huawei.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-6-1d4911a0b365@intel.com>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	<20250413-dcd-type2-upstream-v9-6-1d4911a0b365@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414140901.460719-1-gshahrouzi@gmail.com> <0b1b428d-9ad0-4581-a13a-88f4ffd6c4e3@baylibre.com>
- <25db1c97-001b-4b9c-bc57-879fcd0abb14@baylibre.com>
-In-Reply-To: <25db1c97-001b-4b9c-bc57-879fcd0abb14@baylibre.com>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Mon, 14 Apr 2025 11:35:43 -0400
-X-Gm-Features: ATxdqUH9M8QgQytsQePy5fG22GAOlscRHU9LERyMaCWRCdJfNFKV9N9M4IYxo7k
-Message-ID: <CAKUZ0zJs0mgmgfHaTzsPaiZFjHO941wJG2CmyJnA036aHu5vyg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: Correct conditional logic for store mode
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	gshahrozui@gmail.com, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Apr 14, 2025 at 11:02=E2=80=AFAM David Lechner <dlechner@baylibre.c=
-om> wrote:
->
-> On 4/14/25 9:59 AM, David Lechner wrote:
-> > On 4/14/25 9:09 AM, Gabriel Shahrouzi wrote:
-> >> The mode setting logic in ad7816_store_mode was reversed due to
-> >> incorrect handling of the strcmp return value. strcmp returns 0 on
-> >> match, so the `if (strcmp(buf, "full"))` block executed when the
-> >> input was not "full".
-> >>
-> >> This resulted in "full" setting the mode to AD7816_PD (power-down) and
-> >> other inputs setting it to AD7816_FULL.
-> >>
-> >> Fix this by checking it against 0 to correctly check for "full" and
-> >> "power-down", mapping them to AD7816_FULL and AD7816_PD respectively.
-> >>
-> >
-> > Sounds like we need a Fixes: tag here that reference the commit
-> > that introduced the bug.
-Sounds good. Included the fixes tag and CC'd stable@vger.kernel.org.
-> >
-> >> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> >> ---
->
-> There is also a typo in your email address in the cc: gshahrozui@gmail.co=
-m
-Whoops - I'll update that.
+On Sun, 13 Apr 2025 17:52:14 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-I just realized I didn't update the version for the second patch
-correctly so I'll send in a new one.
+> Endpoints can now support a single dynamic ram partition following the
+> persistent memory partition.
+> 
+> Expand the mode to allow a decoder to point to the first dynamic ram
+> partition.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
