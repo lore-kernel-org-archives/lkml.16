@@ -1,113 +1,133 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB8A15DBB3;
-	Mon, 14 Apr 2025 08:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E95E2580CD;
+	Mon, 14 Apr 2025 08:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620034; cv=none; b=Q03drq3RuZqIto9z9Rj49JIcRi1KZzOF0h7oq7fSui/eb3cQvfcso55SOCH6G5JvNfoiB/ZyoHeUEO9vmxFo5KNi0MBmHsJn+aJFQ+44tUsuwO5LOP+iff65gY0u6oP4Dv/NZc5P49o+rpPwDvb9azxhYpvOcTO5YiRO9o2KMvY=
+	t=1744620129; cv=none; b=Cf39YcwmHMXXNDaKNoDTgTx7DmhIqhvYLI/iewfmMdVSb7PQRPsES9DHhgEv1SpAPXnK+NzuAwQGzWX+5NnNUIOdDWCcueSVsSm/5FQGd6qAserwaL8wN1xRo6TLVgvU6lVbPeswXbuPKsRRy9pJ6DVsTGNGJlX7We6rNEKN+t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620034; c=relaxed/simple;
-	bh=Qi7BkYrPqYiT7gOVCbd48fLoGzlj1PlhmMxJBqQEbMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLd1ns1A9ocXQ5Bug0RU4skJYIP5NKGnEYeD/JN+V8SwWD2B4apuJDz+YS3fJxS4r0XKrmospyVw3zN/b7ovKGIHH6aObGIOtaAY2tnePVQJdZWxs049Hg1Zdx65gWUXmdR4pl3J1me7bw8Zp7a/Vx7diJbT6WATKUMys8IkyI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iqbq3J4k; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1744620129; c=relaxed/simple;
+	bh=yVNb+XBjRxkJl6C+3T6/4cDm3RQwDEa5c+x2ZOfmFvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDSpWapemFaKsRqTBdsynfz06bUrR+NPYm9iBXXw/xcq5MHGJm7qoKjsH6K4MyAZ+ZIh2b/6C3HbaWs8OEhcu7AQDHlPByNWmn+JVYd+nWw6Hd5vujrXinhQFITxz9S8N7jMnKTTAmtM2/rLJKtRY7x8SMOqgJUgz7Ql78+XrHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDzng+DP; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqbq3J4k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDzng+DP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744620032; x=1776156032;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Qi7BkYrPqYiT7gOVCbd48fLoGzlj1PlhmMxJBqQEbMs=;
-  b=iqbq3J4kKuTvYPP9fhi2jTHSxRgbHRG6XBEUi9e1prfxvXlEm219ELuF
-   SdjfneVibtt/nlOmF1U2QyMY84Ceky6ywXWaUGZIV7/NLyOEVjP7YEzUr
-   UlgHx5hSIwIFRbZ2Qh/BNSE5eNEKAEXBKNQPVqBLk6DHUSOte5Gct3Ix8
-   S1hzcae3eeBTKrC5WKylxlqOhLF77hy/BKxcSxDWrlLFnBEGUyQM0z5CT
-   MKpZ8p3BpjwhkF9xFGosNnA0HCSEHI2HJvxzqzp6JXWrz3drmij5dkEyN
-   UOk6Wcsp92vkDutZ9KQjrd9LHGcWRErQ/GYu2+EYn5elCDHDxhTg+Pcf8
+  t=1744620127; x=1776156127;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yVNb+XBjRxkJl6C+3T6/4cDm3RQwDEa5c+x2ZOfmFvY=;
+  b=PDzng+DPTlsduggwX1VSiZIvlkzQDM6K0UBVa26CG51d+JTD0Ag0gE4m
+   f8tT5OFtbTxKTR/KjTzoHsTG5sKr1OV/sFoA2Aho9P1kJzgOaVpcgRoSX
+   OATevANKhtRP0fuhXSWWjTJ1/Lr4hLysjwGomZQ+U3es7QrH7KNGeMGTO
+   Czr66LLzrOySo1lpskNFFRQ4kZtaKqhe+RpVT3TU+eNlAmB7pOWpGhMwe
+   vJAIZ4VASyJynXQpoeCX5kRPVFzh7efCbogy82DmwDK8laexxZsZEctkO
+   ud5cLoPkLERTh9M0/+ULAheYYl3Xngz33Xpxx+08aedXo3hVyNrhwDp14
    A==;
-X-CSE-ConnectionGUID: O0eq5HYHS/2azmJIBonIUw==
-X-CSE-MsgGUID: yjgFSqSrRCWsumygpjblcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="49884291"
+X-CSE-ConnectionGUID: D3VLAu+JSrCPkDiagyUvCQ==
+X-CSE-MsgGUID: 5JoXE9SlT9yYWud7W2UwKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="49884403"
 X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="49884291"
+   d="scan'208";a="49884403"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:40:31 -0700
-X-CSE-ConnectionGUID: atjLFG0dQv2zpX9U5KqH/g==
-X-CSE-MsgGUID: BEHY/GH3QvWzdzuh7HSxfQ==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:42:05 -0700
+X-CSE-ConnectionGUID: U0QE6RrMRcK0cUNW5zk7Yg==
+X-CSE-MsgGUID: yXF6xqkxROG2ms0PPeFaTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="130084667"
-Received: from unknown (HELO [10.238.224.239]) ([10.238.224.239])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:40:28 -0700
-Message-ID: <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
-Date: Mon, 14 Apr 2025 16:40:26 +0800
+   d="scan'208";a="130084836"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:42:01 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 5BB5911F871;
+	Mon, 14 Apr 2025 11:41:58 +0300 (EEST)
+Date: Mon, 14 Apr 2025 08:41:58 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: andriy.shevchenko@linux.intel.com, dakr@kernel.org, djrscally@gmail.com,
+	dvyukov@google.com, gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com, jgg@nvidia.com,
+	kevin.tian@intel.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
+	rafael@kernel.org,
+	syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
+Subject: Re: [PATCH V2] software node: Prevent link creation failure from
+ causing kobj reference count imbalance
+Message-ID: <Z_zKVtxJbOYcys-J@kekkonen.localdomain>
+References: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
+ <20250414071123.1228331-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Dongcheng Yan <dongcheng.yan@intel.com>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, sakari.ailus@linux.intel.com,
- hverkuil@xs4all.nl, u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
- bingbu.cao@linux.intel.com, stable@vger.kernel.org, hao.yao@intel.com
-References: <20250411082357.392713-1-dongcheng.yan@intel.com>
- <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
- <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
- <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
-Content-Language: en-US
-From: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
-In-Reply-To: <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414071123.1228331-1-lizhi.xu@windriver.com>
 
-Hi Andy,
-
-On 4/14/2025 4:11 PM, Andy Shevchenko wrote:
-> On Mon, Apr 14, 2025 at 03:52:50PM +0800, Yan, Dongcheng wrote:
->> On 4/11/2025 4:33 PM, Hans de Goede wrote:
->>> On 11-Apr-25 10:23 AM, Dongcheng Yan wrote:
+On Mon, Apr 14, 2025 at 03:11:23PM +0800, Lizhi Xu wrote:
+> syzbot reported a uaf in software_node_notify_remove. [1]
 > 
-> ...
+> When any of the two sysfs_create_link() in software_node_notify() fails,
+> the swnode->kobj reference count will not increase normally, which will
+> cause swnode to be released incorrectly due to the imbalance of kobj reference
+> count when executing software_node_notify_remove().
 > 
->>>> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->>>> +		*con_id = "hpd";
->>>> +		*gpio_flags = GPIO_LOOKUP_FLAGS_DEFAULT;
->>>
->>> This looks wrong, we really need to clearly provide a polarity
->>> here since the ACPI GPIO resources do not provide one.
->>>
->> I tested gpio_flags=GPIO_LOOKUP_FLAGS_DEFAULT/HIGH/LOW, the lt6911uxe
->> driver can pass the test and work normally.
+> Increase the reference count of kobj before creating the link to avoid uaf.
 > 
-> I doubt you tested that correctly. It's impossible to have level triggered
-> event to work with either polarity. It might be also a bug in the code lurking
-> somewhere, but it would be unlikely (taking into account amount of systems
-> relying on this).
+> [1]
+> BUG: KASAN: slab-use-after-free in software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
+> Read of size 1 at addr ffff888033c08908 by task syz-executor105/5844
+> Freed by task 5844:
+>  software_node_notify_remove+0x159/0x1c0 drivers/base/swnode.c:1106
+>  device_platform_notify_remove drivers/base/core.c:2387 [inline]
 > 
-> Is it edge triggered event?
+> Fixes: 9eb59204d519 ("iommufd/selftest: Add set_dev_pasid in mock iommu")
+> Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
+> Tested-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
+> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+> ---
+> V1 -> V2: reduce calltrace
+> 
+>  drivers/base/swnode.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index b1726a3515f6..5c78fa6ae772 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -1080,6 +1080,7 @@ void software_node_notify(struct device *dev)
+>  	if (!swnode)
+>  		return;
+>  
+> +	kobject_get(&swnode->kobj);
+>  	ret = sysfs_create_link(&dev->kobj, &swnode->kobj, "software_node");
+>  	if (ret)
+>  		return;
+> @@ -1089,8 +1090,6 @@ void software_node_notify(struct device *dev)
+>  		sysfs_remove_link(&dev->kobj, "software_node");
+>  		return;
+>  	}
+> -
+> -	kobject_get(&swnode->kobj);
+>  }
+>  
+>  void software_node_notify_remove(struct device *dev)
+> -- 
+> 2.43.0
 > 
 
-It is an edge triggered event in lt6911uxe. In order to better adapt to
-other uses, "hpd" is meaningful to specify a polarity here.
-
-In lt6911uxe, GPIO "hpd" is used as irq, and set irq-flag to
-IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT. So no matter
-rising or falling, driver can work normally.
-"
-ret = request_threaded_irq(gpiod_to_irq(lt6911uxe->irq_gpio),	NULL,
-lt6911uxe_threaded_irq_fn, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
-IRQF_ONESHOT, NULL, lt6911uxe);
-"
-
-Thanks,
-Dongcheng
-
+-- 
+Sakari Ailus
