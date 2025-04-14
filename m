@@ -1,136 +1,85 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4D8258CF6
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD09237172;
+	Mon, 14 Apr 2025 07:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616345; cv=none; b=Ya9wA68cLaZlQFSoA9yux7PAVkGFeJd0yyTsyg1l2yAlWePG6WfjAiXNn1ZfZUPgZoBvgy97nJ1cW0oN9bo11HO5hbi3z/PlW4rjnYPRcgz9jYm97vItRizKcK/s0h7G1Pd1/gGMbwJR8w7mgN7qfrf5egTEQQZWxPJzPC+M9Sg=
+	t=1744616382; cv=none; b=hCHEVXxphqH00phmylM3ne9YZl5E7StnT7k+UZBF9MKEZkzzUHFav0kbzhCtGoUxlyUa+yoV8b0pJUHUP4llWexfPt39rHrXhMLmAwLFRQUVtko/T+FVvyzAKKSdcMDLjVFQtzuiiHb1Nr366xhW9FNbUCv1ZKhs5frnaAzsICI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616345; c=relaxed/simple;
-	bh=vRX4lPBBhSqLsj/nl5x+IlRfr1EccgtzdZwc6VAotbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YDNgNXJD0MP+2wK3Ov/sYS5u2tCAq27pYhIbboIfJz+zkTqUmOyDPKu7lF/gZ9BmjLBK7LPOT5Y2Kuf1LLsHAEiGzvF7KiyOsiLyFzOHJK0jMIHyOi1Mwc0z/oXLz0MByZCEe+B2nFeHAT0k7CjtoIAB4lh4bSrIyY8kobMJh8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0+HXcM/; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0+HXcM/"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-51eb1823a8eso1748810e0c.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744616343; x=1745221143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/z4nJEuqHuyUrFdt7zlS31Za3WCQlJE/qrLFA2Dn1yo=;
-        b=C0+HXcM/7cRk1179iZ5Zb3cwnmgMWCEW1kwRqTxqhOEwGYVcpoh3KJnrMTJYvxIGQ7
-         ovrdeEETsThTZkRf+FfqdI/WWhFBFKMDBNtnjhbLlerGC1BJw+H7GyMgmYGB/FkBu/EG
-         75R1HLfcf7TSCW3yc+UGP4qX5WOKne9v2uvZLUKB1zveiHbrhOOtJCOesDT2UPtBjuUG
-         8fFV7UZPFIYuOIkvnKaSEifeDq8FIqLiv9toJ5azgf8GjWCPoPfLySZJzmFgOcAxKosx
-         ym9Lddl/mHt0pOUzZhge8eT/OikRcanbKB3X6MQxQ+cU/JXfRsdB4hU/OFWpfgc7U49A
-         DrDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744616343; x=1745221143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/z4nJEuqHuyUrFdt7zlS31Za3WCQlJE/qrLFA2Dn1yo=;
-        b=VkYrM0RWMv8xoh+8IduwL0RTFqtP10cslmbUtZ11qP3zGHLr7P/KAY9In4WoWQahca
-         mNWSG27FfyEE246nHohHlbpaJjRaRchbunSoJ8ENoFPj6idr+3BbOQ5jG/gVXbNGeIg3
-         Fe8UzMdJfgX5Nb/McW0lJ5zFVqv1x9F6kd9KE8BeSNlcIuqdJb82pHwaziNPlkTnn9e9
-         ugmE57Rjf4jQA38EVAuFGYvSa6PqZl0UgGXtpYihMcHAVEhcg2Ttdnf2ToJkyrgtVVYN
-         fqs3rBiJj/2UDr81sfkJik/3AAmz9bXU5HUrf5YoNU9/4Z7B0x8m0MPtd3TKwY+dZRIP
-         YQ6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUs9qjdb2DWREDYlFWcuQTNh3HoYBvpyatrv0tQiN/a3XMfbpZlIrMYWmQwPY6bYwNRshn1SXD5VWQPdfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/sgnXmIPvB5M8BO2ihyS+WiFPPwcx2YzoAi+IWupGJAAAk0Gp
-	UJ3wSVOW6M7Cr5rcpKqQa3rED6sNC2Hed9mMdkEEW1SFytKZ+Uy0kgrsGNQ0ImiK/eVOBSVGOz9
-	l1sLJz4P8dJJZcA8GuqXUELYWZC0=
-X-Gm-Gg: ASbGncvCt9VfHCpBCm03RzvVGPT3InpF9KTO+tzmpe1hVUc/IecLxiDBxXG6HSQMe/3
-	VcLfChFppWGP5WaEfx2ighkRaMI6nn1fnEFZgcrxr+LequYmai9M7LHTJkbPpSpAqv7/790JmG4
-	54errpwTgB/m6is10hKFz7Fac=
-X-Google-Smtp-Source: AGHT+IFdvo68lByhsQGJ+yQpLL+Zv3BA7pLibYHmDS7I9fwBd0wKSkpga5s6mS9FNHuP1yK0qZH2x9+K4MI4eA3urWM=
-X-Received: by 2002:a05:6122:887:b0:524:2fe2:46ba with SMTP id
- 71dfb90a1353d-527c35ec74amr7513304e0c.11.1744616342793; Mon, 14 Apr 2025
- 00:39:02 -0700 (PDT)
+	s=arc-20240116; t=1744616382; c=relaxed/simple;
+	bh=khWE9cX70xPph8s7rn9jBXuJtbTTleSYbDejswZO7ds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tlVXkgExSupt1pFZKv5xqyI8M/AU+5EvRrwnAHQj/mLPtSr5U66iSMM8fuYJ5INjWnbw+QZBseNynYvoGXLp8P+fttvcUKgWq++uTXnBi1yL4qiOPnAR6RxgmhnpHAEwAX+OQeT8Xamd9gLfMo/s0TcEUUItROoAB0rmPmYdrPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAAHQwu1u_xnA7vnCA--.16499S2;
+	Mon, 14 Apr 2025 15:39:34 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: s.nawrocki@samsung.com,
+	mchehab@kernel.org,
+	krzk@kernel.org,
+	alim.akhtar@samsung.com
+Cc: linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH RESEND] media: platform: Add hardware sync wait to fimc_is_hw_change_mode()
+Date: Mon, 14 Apr 2025 15:39:14 +0800
+Message-ID: <20250414073915.2317-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z/bA4tMF5uKLe55p@ubuntu> <2025041402-colonize-rocker-1db1@gregkh>
-In-Reply-To: <2025041402-colonize-rocker-1db1@gregkh>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Mon, 14 Apr 2025 08:38:53 +0100
-X-Gm-Features: ATxdqUGeEyod9zeh4I6bChImmbBoTpYytq4sq4D941FelSGmmAGI54ZczFSbCXk
-Message-ID: <CADYq+fa18G25hfTeWTxwyxc+A=xHmk_je_9kjWbDdwbo0seaZQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	david.laight.linux@gmail.com, dan.carpenter@linaro.org, andy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAHQwu1u_xnA7vnCA--.16499S2
+X-Coremail-Antispam: 1UD129KBjvPXoW8tF43KF17AFyUtr4rWr45p5X_Gr13JoW8JF
+	yaka1xtr4UXwnIgrnru3yfAwsrurW3KrWF9FZ0gryqq3W3A3W5W393Xr4agF1YkFn5Xry5
+	Gw13AF4xJa4xn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3AaLa
+	J3UjIYCTnIWjp_UUUY-7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_
+	Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M2
+	8EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8
+	Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r1q
+	6r43MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
+	ZFpf9x0JU6UDXUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8MA2f8nMBkGQABsy
 
-On Mon, Apr 14, 2025 at 8:23=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Wed, Apr 09, 2025 at 06:48:02PM +0000, Abraham Samuel Adekunle wrote:
-> > The sequence number is constrained to a range of [0, 4095], which
-> > is a total of 4096 values. The bitmask operation using `& 0xfff` is
-> > used to perform this wrap-around. While this is functionally correct,
-> > it obscures the intended semantic of a 4096-based wrap.
-> >
-> > Using a modulo operation `% 4096u` makes the wrap-around logic
-> > explicit and easier to understand. It clearly signals that the
-> > sequence number cycles through a range of 4096 values.
-> > It also makes the code robust against potential changes of the 4096
-> > upper limit, especially when it becomes a non power-of-2 value while
-> > the AND(&) works solely for power-of-2 values.
-> >
-> > The use of `% 4096u` also guarantees that the modulo operation is
-> > performed with unsigned arithmetic, preventing potential issues with
-> > the signed types.
-> >
-> > Found by Coccinelle.
-> >
-> > Suggested by Andy Shevchenko <andy@kernel.org>
-> > Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> > ---
-> > Coccinelle semantic patch used to find cases:
-> > @@
-> > expression e;
-> >
-> > @@
-> > * e & 0xfff
-> >
-> > To ensure this change does not affect the functional
-> > behaviour, I compared the generated object files before and
-> > after the change using the `cmp` which compares the two
-> > object files byte by byte as shown below:
-> >
-> > $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
-> > $ cmp rtw_xmit_before.o rtw_xmit_after.o
-> >
-> > No differences were found in the output, confirming that the
-> > change does not alter the compiled output.
->
-> This is version 11, right?  What happened to the list of previous
-> versions and what changed down here?
->
-> confused,
+In fimc_is_hw_change_mode(), the function changes camera modes without
+waiting for hardware completion, risking corrupted data or system hangs
+if subsequent operations proceed before the hardware is ready.
 
-Hello Greg,
+Add fimc_is_hw_wait_intmsr0_intmsd0() after mode configuration, ensuring
+hardware state synchronization and stable interrupt handling.
 
-I collapsed this patch to the previous patchset I had worked on that
-made the same changes to the same driver.
-So this patch was collapsed into PATCH v10, which is the last version
-for this change.
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The change log in "[PATCH v10 0/2] staging: rtl8723bs: Improve
-readability and clarity of sequence number wrapping" explains this.
-This patch was collapsed into patch 2 of this patchset.
-Thanks
+diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+index 366e6393817d..5f9c44e825a5 100644
+--- a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
++++ b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+@@ -164,6 +164,7 @@ int fimc_is_hw_change_mode(struct fimc_is *is)
+ 	if (WARN_ON(is->config_index >= ARRAY_SIZE(cmd)))
+ 		return -EINVAL;
+ 
++	fimc_is_hw_wait_intmsr0_intmsd0(is);
+ 	mcuctl_write(cmd[is->config_index], is, MCUCTL_REG_ISSR(0));
+ 	mcuctl_write(is->sensor_index, is, MCUCTL_REG_ISSR(1));
+ 	mcuctl_write(is->setfile.sub_index, is, MCUCTL_REG_ISSR(2));
+-- 
+2.42.0.windows.2
 
-Adekunle.
