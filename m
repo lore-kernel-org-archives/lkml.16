@@ -1,74 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F8219755B;
-	Mon, 14 Apr 2025 11:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3661A18DB18;
+	Mon, 14 Apr 2025 11:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744629463; cv=none; b=cELYGmbpa622KOUn/lUC6IL/ZJcOnV7hfT23z/PxYSknklwROUc3oFKM+p7aj4orD70vJBNOAumqk5Mf45MpYIaFSY2MzR+EapjO24lD4azJsSLNQz4gCuFKBAf+lK2oEUBpYs2hJvWnPIC4NJlc7hH3CRo8Y8khRAd1HC3OcLM=
+	t=1744629559; cv=none; b=nxPKLf31lsC3XfVy3bgxYY8ZbyG5iV1zwgu1sS/JsaaDfwuP0OavDETW8c9MypOWI+oZ/PiitdZ7sSSWuALNyvmssSl7Nm+9DjJ9a8BKsLFSwS5RYWBOeY1b7yLpX/Yza8X3K8THrTBKaOIBTkutiObqbSn1s/W7QQyj+m7J7I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744629463; c=relaxed/simple;
-	bh=n+hwV9+d77KoICPvUIsZbu9cRcd26P5Ng0WQswrgyyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0PpvLAYVtd/D19rC8PTegwO+j+kPY4soRgCFnONv7nmo/fiuSkNQ0QIkHx6X1ZjVyB7Z5445iQAB76E4UFqysysSrZ29Q7sRZDFzXdtiQiog/5fE7BTIev7SnpPBWt+WPeffsm34lJu9Htr3LqWrqs6mLzuw1HE6da3f8ITboc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFB4E1007;
-	Mon, 14 Apr 2025 04:17:38 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4413F66E;
-	Mon, 14 Apr 2025 04:17:37 -0700 (PDT)
-Date: Mon, 14 Apr 2025 12:17:34 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Dan Carpenter" <dan.carpenter@linaro.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 5/7] firmware: imx: Add i.MX95 SCMI LMM driver
-Message-ID: <20250414-ebony-slug-of-felicity-421b0f@sudeepholla>
-References: <20250408-imx-lmm-cpu-v4-0-4c5f4a456e49@nxp.com>
- <20250408-imx-lmm-cpu-v4-5-4c5f4a456e49@nxp.com>
- <20250414-wonderful-cute-bandicoot-accb6b@sudeepholla>
- <PAXPR04MB8459195AAF65D38AFA1D4F9688B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250414-tiny-classic-barnacle-5f8c8f@sudeepholla>
- <PAXPR04MB84593BB91063D13BB05BEB5988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <PAXPR04MB84598733FA39A7402E91DA1988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1744629559; c=relaxed/simple;
+	bh=4sYWNtAc4YF7YZg03HO0SzkfYuVw4goAQfDHPc5y0l0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mUWkGrKRt7bSS7lINPJgQXJUhcCtTMUCMcncowfXpKPZdK1hrd7ViRyt6s8up4vkWNSznN54vvgbR7WHQ93lrCI3lkvcAzsSAW3EKQWvNPrqUtrcPjirMyL1tHYjtmKIiyWEJRm+2N6DcjEcgxoBdz3ciI/EKStQV7MajDHsX5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowABH9EAX7_xnqxTUCA--.8348S2;
+	Mon, 14 Apr 2025 19:18:59 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: davem@davemloft.net,
+	andreas@gaisler.com,
+	make24@iscas.ac.cn,
+	sam@ravnborg.org,
+	dawei.li@shingroup.cn
+Cc: sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] sparc: fix error handling in scan_one_device()
+Date: Mon, 14 Apr 2025 19:18:45 +0800
+Message-Id: <20250414111845.3084334-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB84598733FA39A7402E91DA1988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABH9EAX7_xnqxTUCA--.8348S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF13GrWUGF4kuFW8WF43GFg_yoWktwbEga
+	12v34UWr1fAwsagw43Ar4a9r1xtrnFyFWrK34Iyr1kJayrXrZrWrs5Gw4vvr9rWa17Cr1D
+	Za4qqrsFkr1SgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbQVy7UUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On Mon, Apr 14, 2025 at 11:00:20AM +0000, Peng Fan wrote:
-> 
-> Oops, I just checked wrong Kconfig under drivers/firmware/arm_scmi/
-> vendors/imx
-> 
-> Build this for ARM32 i.MX is ok, I just think no need. So add
-> a ARM64 dependency.
-> 
+Once of_device_register() failed, we should call put_device() to
+decrement reference count for cleanup. Or it could cause memory leak.
+So fix this by calling put_device(), then the name can be freed in
+kobject_cleanup().
 
-OK, I will drop the ARM64 dependency when applying. I also don't understand
-the dependency on i.MX firmware LMM and CPU drivers in the scmi vendor
-protocol as the dependency should be other way around. But I see Arnd had
-fixed it so I will keep it as you have posted to keep them all aligned.
+As comment of device_add() says, 'if device_add() succeeds, you should
+call device_del() when you want to get rid of it. If device_add() has
+not succeeded, use only put_device() to drop the reference count'.
 
+Found by code review.
+
+Cc: stable@vger.kernel.org
+Fixes: cf44bbc26cf1 ("[SPARC]: Beginnings of generic of_device framework.")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ arch/sparc/kernel/of_device_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
+index f98c2901f335..4272746d7166 100644
+--- a/arch/sparc/kernel/of_device_64.c
++++ b/arch/sparc/kernel/of_device_64.c
+@@ -677,7 +677,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
+ 
+ 	if (of_device_register(op)) {
+ 		printk("%pOF: Could not register of device.\n", dp);
+-		kfree(op);
++		put_device(&op->dev);
+ 		op = NULL;
+ 	}
+ 
 -- 
-Regards,
-Sudeep
+2.25.1
+
