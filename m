@@ -1,130 +1,192 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011033.outbound.protection.outlook.com [52.103.67.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E79AD21;
-	Mon, 14 Apr 2025 00:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744592058; cv=none; b=A6nclFJWGaZhn6X89jxFDLu7ctDSIVyzvtrprr22N49zAfYGShB4Nipu6ytYRcGa1Mfo/cjkY+pVvuDdRCE1rT/UMHsxe4pMN+WwiaC3IkKGfsLA7uDFnmxn52vqrkULMALUQXQWPSdliNCDzKHdgplo+J6EWaxwZUUOPP20d1Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744592058; c=relaxed/simple;
-	bh=qgC/Ro2YCevvViw7+wQ4N9W6yfmfYdFYPh0FG4Rejzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yd2vuYihkWC9XgE8RqKzF6zDEnqoaAIrY9iZK2X3ApHjTx5vMWj0BOIP0Psxf4a/DtxoV+/+skX5/ygQe7izZjBx6Jue2gWv3JRPIRHPl+F/Mo/HY8wTYcJ2w8DEzPZA7b01w2SuPMbvqpqHM7dXrAssWpFro/N5A9vyW3sfukE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d1/yWyBe; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DEF23CE;
+	Mon, 14 Apr 2025 00:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744592206; cv=fail; b=uz4T5+Ty5Gdk4GD/pkVOy/kjbrvARGRBiMyi+n+9XCCM26aaf5SAV2r6fnthRqb1Y/MdIEcHVjTnZgv9CcP2vxcvkwWkmkdsMMWG4FUmJDUFm7FE/0AEFN3WeBPsum2YXiS21x7s4VopoSHZeRNX6tkQ+3eOXV4KF677MU2uLiM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744592206; c=relaxed/simple;
+	bh=Z1OSMjZln/ZvJWKSNRngv+8k1+PQU/L37/L3712mKTo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NC8Fnu9DKEE6dtgG+NyAKEsaSbWLippdHyfV7TVwatwo8F8DrEFqFIYRFow8Jfy/g4hJ97pneFAxaz5Un3AR1BKM6+EDx3zLwpg8JlGWjSQVNjVJWk+UHlGC+S6xotoaTLN+t4h94fDOm51rWRmQVRZiIeiZ8pB79Szck3ZLYG4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HW19Op1i; arc=fail smtp.client-ip=52.103.67.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1/yWyBe"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-476b4c9faa2so47824831cf.3;
-        Sun, 13 Apr 2025 17:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744592055; x=1745196855; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=asGs9dXkrGA46BHiM7NeGGpvrCsy2QV43JKsFZnCKvA=;
-        b=d1/yWyBeoS5Qr2poFHlTAuPuBJ8ETCg5gJ7ZYete3FF7pXDUQHr66bjlNpSMWqj/Tt
-         Z2HyrV1+R7sDZXSSZZ/pww0HY4PYzMOrn2P82paTM5Z2F69nyFCGuwG/bpJKGGakp+Yp
-         Tr+yEqhLoxYRbL5BB6JGQEgki+Qb58roSYqsy9zGPQf7G5sssBbeWOTT7267yTKQo5wJ
-         Q/37RPftdVxR669D2SHrSbSJyf4l+Z166AaS1G8kAnk0ufhGKcl4eZA/mPJyfuzvtw5T
-         kKgbUd7stDy0khn19tH+eakH95UFJcvyFA0xhTHhjRJKxwqiOYoBSSLcmjL0jnAzLB9O
-         a71A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744592055; x=1745196855;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=asGs9dXkrGA46BHiM7NeGGpvrCsy2QV43JKsFZnCKvA=;
-        b=N51onTCniPjpdBI/ftIfPK6QNrjq5PEuopGuqklR4cSJyV55F5oLckh9mWM2v+EZNd
-         fY4GI0SDpIQKIT2U6n8SnTFk7wVtigBauUMnD3I8iq8MtFwoWPSeHXqvKrmymL56O1s2
-         jAMEaW7ZJOvjNc7laZPobZ0z+zmVzjoyOPyxa83JCrAcKX7bB6nFtRL641iIsUckeiEc
-         inum68Yi4Sb4tssa4oBd856D3xJFhGH+uZNuZwGqtEpCbl9T5qAMdWdAIzO9vS8k4z2y
-         Km/rGpVEES4YQwiwgdbO3YlUnH7LwwvcG2DJXsERDFUERn06zeYS1YLMKvt0qnoDung8
-         uuFw==
-X-Forwarded-Encrypted: i=1; AJvYcCU43qqsdID+9MqI6gMEXZNrdkS6JCQ6Xm8lUO1aAOnUQjNmkrfLmGuYU0Bdxlpi5rZO9PYBXGKxolwU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeHAqL9hrnyMXeML6PcUeGR1GpY7TSjbvzw0FzDXjbui+9znrz
-	IzUH7wjXw2aQ1YMM0iGzs2g0srjfKeV2J9gjiIOSa69ZUIym8LH1
-X-Gm-Gg: ASbGncuTAxRZJRUSC6h3454z7/i6/XMX3Z20WORl021GkhQVmr05typu+7w90Um0HFW
-	tFSTlZRCx2CQmkaYrE0oEhfYuGVs4QGotzhuWA/TF0B6ifdJJxPug0uqGDFkAU7/gE+KoW53Uw8
-	swvnFCd3z3TH0VfDRTO0SvpgJ3AeIevzlaRShf25T1Ob/8obX/ZF1ZhVR10fASQamn1+WvR45py
-	5xiqy602/bBzfwhnkv9gBUDwOZSgJfLWhJjUlMx9XRKuiFM9ivkM/6AVakOYt9+8ySUn6X5d04w
-	N8D4zzSuh5EZL9rj
-X-Google-Smtp-Source: AGHT+IE/g553Jq6yYD7LJpfkVi+E7INfcm4IyV0loUESRRflBjB6CD+tv0Ju2q/t0uPdjZL7ZYpN9g==
-X-Received: by 2002:ac8:5d16:0:b0:476:9f3e:1806 with SMTP id d75a77b69052e-479775e3614mr176219131cf.46.1744592055398;
-        Sun, 13 Apr 2025 17:54:15 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4796ea65130sm64422851cf.0.2025.04.13.17.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 17:54:15 -0700 (PDT)
-Date: Mon, 14 Apr 2025 08:53:33 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>, 
-	Chen Wang <wangchen20@iscas.ac.cn>, Thomas Gleixner <tglx@linutronix.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH v4 3/4] irqchip/sg2042-msi: introduce configurable
- chipinfo for sg2042
-Message-ID: <rss7pih2lpzi65vw57exbr57qby6edsb5dvsntcvkllp32t6ou@nbub4ubbrd4i>
-References: <20250413224922.69719-1-inochiama@gmail.com>
- <20250413224922.69719-4-inochiama@gmail.com>
- <MA0P287MB226272482F161A5C6A74638DFEB32@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HW19Op1i"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kNSsHspb9ssVyuHWX5yHSnLoNbXnsGpiovD8ZXpFCoc77tSnglL5KdNZAlzfe8uJrU6ZDy26tTZtsdmTi+5QggRJv93C4bOBsY76BF+0TUyjNboiPnAzXpwGHF6Go5t5I6Bs90ndSMFCokqIl30gtJ7qNe1tb0VPzuvHFdIkepVLdO4xyZm0O626U1/Ok11OmlsYUngkc+UQg/LbIUE/1y15StjPB/jpmvDjZkgOA+q2fyyNfvfc+5IKNw+1zIS79/QAk7mpe25+HuDWRl6jGwwQeXSpTiKJE0TJXDP7GJL/Vt4Dpov5qI3G8SbKnO1RFlbjc0FYeubgH3QBbSvyew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nWbC/Tdshs5Bv0VWx760nYQkpZEb40p5HDtGlLNhRNU=;
+ b=LUxCQNNzcj6Q1RMYWEemvVmflNGsTJ89hm5bC9nDcaKFWiUyKueqptY3lQUSc3M4uTgsErY8aZg+K/fv8nwWarjCGbiWN8ChfbMVjPMOl7dbDKwpEoiXKciS5sY7rX0T1EQoxfV81kBXTQVtDRJxcvqFTvt2ii977PlihTljiToTgZNKyzG4mIuudvMi4P9mE68FfjvqAT3g55cDSvi3N0h2OBOKmWtJdXWfp46QKnt2biV58ImgdLcw46Ww0VQRIyqJLMrxiMzDpdE+l8K5s1LTFSIHbZ4aUUBFX0yms/LxhOn+3dLRoZeO5aYeKYtULEWG/GNVlh0e5z5vAkoa3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nWbC/Tdshs5Bv0VWx760nYQkpZEb40p5HDtGlLNhRNU=;
+ b=HW19Op1iMkhtlivxeUgfthS8hwCOu/fxRFBauDG8ByNXKqS/TK2bq11PFuDpLRs5vqfInJkaWRpHrUgfEEy6Gdt0Kjf8XtUtu54d32neIAGkNlcrjcc6OY1sopTrh4HInLPjFCt7sZBKGdcArZHLG66pWJyHroQe8X2IAWutTge24hoG5rFq7Y8Z2vZOdHEvcNnVNtYfYBlehW1z3H9l8WEMFr/cT0LWiDDm8lOZURblid92S7pUVQXmuWhXZSY7byqSD1iJPHhqdESIprWt6mbDGUjshMbeCYoP7YN4ImfVeLLV8BgG/fli5dSo2KC0ylOpCndh9PadsQ4Uu0VBYA==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by MA0P287MB0019.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:5c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
+ 2025 00:56:33 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 00:56:33 +0000
+Message-ID:
+ <MA0P287MB2262A9CF72D959EC84049740FEB32@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Mon, 14 Apr 2025 08:56:26 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/10] dt-bindings: mmc: sdhci-of-dwcmhsc: Add Sophgo
+ SG2044 support
+To: Inochi Amaoto <inochiama@gmail.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+ Longbin Li <looong.bin@gmail.com>
+References: <20250413223507.46480-1-inochiama@gmail.com>
+ <20250413223507.46480-8-inochiama@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250413223507.46480-8-inochiama@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR01CA0118.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::22) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <671b1e36-cf7d-4334-b486-f7cc41b9c87e@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MA0P287MB226272482F161A5C6A74638DFEB32@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|MA0P287MB0019:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79b54e35-8597-42cc-eb37-08dd7aef3347
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|5072599009|6090799003|8060799006|19110799003|7092599003|15080799006|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NS9LV3lrM1k2UWNQMXVBN0Nhc0JPZUdjbjBBdE9wYzR1WDJtOVYrdjhTdTlK?=
+ =?utf-8?B?RFZ5djQrUUZoWVNPd29CTkc3WVBBU0lLVkJPMlM5R21mcnBTU2NqalQ5dDhN?=
+ =?utf-8?B?a3RHR1BKcVp6N2lkRUs5NEVYNFRHQVJIbWFtZGp4Ri9nOHQ5cVNOR08zS0xi?=
+ =?utf-8?B?WkdHRy9jZ3FXS0lma04yYXVHU2ltRGgydDdIeXdYc2dGZVE1YWhpRXNUWUx6?=
+ =?utf-8?B?MHJpYmxpNTVSRGVIUFdSZjRlVU4zazRVMHFiYXAvRFh1VDZvRHlNNk1qUU4x?=
+ =?utf-8?B?VTdLSnU4M0lSZHE3c1lXb0h6MTVkRFJVWHhZZm9sSE82dVFYOEM3VWp6a3Fv?=
+ =?utf-8?B?ZStiK0tubUZONmd0NGh0SEw4QS9ONURoRTRWdGJHTzk5a3JadlFQUy9PcEkv?=
+ =?utf-8?B?Z1FYck9aYThaQUltdkNuZGlRdmU0T3ZJZksvaEdCMmxEaHp6RDJTSjQxQVFW?=
+ =?utf-8?B?VitFQk1jV2pSOEZKNGFmd0U2VnhLb0xmcGV4SkNQSWMvVlVCRWNSaUhvNHRI?=
+ =?utf-8?B?Qmwzbjc4Q2MveDhmR21zY05QZHVOVjhWOXFmcVlsS3IranY5T1EyL09mWm5K?=
+ =?utf-8?B?aGNiME1FZm1ReldlK0FucTBVU2xHRW9xWXY2Z1pJRDBJbmp4dUhORE5Kcm5t?=
+ =?utf-8?B?MmM5K2g4RnVlN1ZJbGJwVG1ramFTNjBUY1UwVTFsSmV5MjFVUTNZZVJISUht?=
+ =?utf-8?B?SkRyaGRKOVVvaE1RL3dGWkFPdVphemRIOU1ZVDI1blRuc1ZuZ1VaMHdGMlpz?=
+ =?utf-8?B?eGtlOFdJWThGTjIyYW11YURxdnhaTlJyMU55R2hmQzArYXVQZzZ0K3ZROFlt?=
+ =?utf-8?B?RVNlMTlNb1dhMmdUdHd6S1BRVlgvVnlwOXp6RkdiV1duNnFLakNITFd0d2Qw?=
+ =?utf-8?B?Ny9Kei9nOHB3dTBFM0YxSGI0STJuWFRIRFBZa2hzZ29BYURqZHlpWU5vcUI3?=
+ =?utf-8?B?QVVva2k4V1BXMlRoL3NNVTZCU2t2V0hIeFdOMG5KSnBBMWVtS0IwMEN3RGhN?=
+ =?utf-8?B?c01ia0loRWF4L29DSWhUcWJFNHB1NWt0UW1aTnpzWDIxRkZlS09XNkQ4VFlZ?=
+ =?utf-8?B?WXZMcmVGelYzTUFSSGdUOURNRGhmOW1CbldWQmtteVJDZnFyWXhiTWNzTkQ0?=
+ =?utf-8?B?K3VhZkJsLzlJSmhQbzdvSHZsNmt0MSt5V3VJNkpncSthRXd5VUhxbS92YXVu?=
+ =?utf-8?B?VlE3WEd2SVhJemNMV2p3aWpzTWc4aWQzc3dWSG1lM0FBMUpmUUhHaDN6b0hk?=
+ =?utf-8?B?Yk5HT2xicGNHS0RjVnNWdFJ2Vm14VnVzTEkwZEtZYWFZRWxseWpnWFRvNzJ5?=
+ =?utf-8?B?dU00UVU4dVRFM3A4YWxTbGJpMVFvZnRweUJOM2V6dWtIZzdFUkM3ZXRaR1J1?=
+ =?utf-8?B?SG9pSDRDOE14bTNaeWZpRzg2em92cUdMRTBJeEdDM3dNUnV0UnVwbm9pamk3?=
+ =?utf-8?B?VHFXbTJCOWdNUW52NTdySzFtR25HMkxWQXU4Q1ExYXJJR0lNb1dPdEthOVdu?=
+ =?utf-8?Q?vy1feUs3+aMInu6XcwbAA5S+fu2?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S3JuVXNPRDJlT3hWczFMWUZtOGswUWFNUE1YblQ5VjU0Qk5CNkgzbG96ZlBl?=
+ =?utf-8?B?NXJuMmIwdHpZSy9BQmVJQzFwY2hBNzBrQnBvSm54MEpsd3NTTExOUXB2Q1lp?=
+ =?utf-8?B?d2FpcUNOd0lrbmlraXpBRXFTcnNseHluSHFFKzNNRzVjWmVYSzRROHRpd3Rq?=
+ =?utf-8?B?Y0lmeUZLWSt3MGtpZThqRUNDN014Q1dnY1ZEVWd0V1UwWnBDb0VVdGNHRVpP?=
+ =?utf-8?B?Z2V5RTZUSEh2YTF1SkNGbkFXMUFSTWVaenV3MGN0UUIyYis0a1VYVS9oand4?=
+ =?utf-8?B?Wnd5ZWtvaVorTVMvd0NrTXlKc3UzaUVvbHZaaVUvOUhpU3hGdVpCanQzajBH?=
+ =?utf-8?B?SHVGeGN3OGVPT0QwWEhlL0FSUWlsaDF4WWFMVnhGbElZeVJ0OEplZjhGNTlE?=
+ =?utf-8?B?Y2pzNTBIVnNxQUZTc0Erd1JRdk9sV3NTT2xkNjY2NWQ2OWtCWnFaWXBiNXgw?=
+ =?utf-8?B?V2EwN3pKQnl0Ykl4OTc5KzZTM3lLYittSStNUmJLdjJyZ2VBTzIydXhBdGdS?=
+ =?utf-8?B?eW5BcWs1L0QyNUJMdFFvalVaakVVRnZ1cTJ5Y3RpNWxtZjVhSXRoZUorMmE0?=
+ =?utf-8?B?RXplTHRqZWdrY3BuSTU5QU82WU4rNmF6MWdNWEc4aS8rSjVNYjExd29NdDVy?=
+ =?utf-8?B?c05FRzNUdGo3MHBReU9RVFB4ZlV0eVVnK3ZZNlkxMFl2WnJmb2tzWnVTMFFH?=
+ =?utf-8?B?WG5KcGlnVTRXVVRWVG9IM1YzVWpsRmlMS2JObEJDMEs3WGNneThZZEF1NEQ0?=
+ =?utf-8?B?RStoWVdTTzEyQ2U3WGkzT2MwWjFwM3h0Q0xZSWl6enZ0THVQeWFVcXJLRDg1?=
+ =?utf-8?B?NFh6NGhkN1dmbnpJSGZWcHNwcDFSTFFJYUhKVmdzeExEcHNzTmppRTFCcUZV?=
+ =?utf-8?B?ZSs0L3pPV0FGSlU2ZStBbFZ5VEJQQldRNmtzeERWamRFL2hLa2lGby8rVlJ0?=
+ =?utf-8?B?MS84L25tYytRZUxqSE5zN2wxMlVRNEtHT3VJbGVPZEN1dmJZbmpXc3FQbVJh?=
+ =?utf-8?B?UDJaZm9vN2FRbnBCeExuN3pQdzVEMEhpRmlrVGd4MVNLMjdjUVgxbDlDNWZ4?=
+ =?utf-8?B?c1ZOOWR5V3k1aTVBR0VYMFBFaG8veHFPS1c3Nlp0R3p4TldTS3EwSEVTWGNX?=
+ =?utf-8?B?QThLaWZ6ckFkNmpObWRreXdBVDN6NTc3U2g4VkdmVVF3ZkZKT1pna2VXUEwv?=
+ =?utf-8?B?emJjM1JVSEpkcFdENUVGN0hyMnJXbWo1MmZPK1FjMmJuMDVjVkdIN3h1QmZ6?=
+ =?utf-8?B?OU5KZytqT3hiVEdCM2RwZVFUV3ZmbnRmMjgvUlJRRVYzc0txUUdMZi9vd2pw?=
+ =?utf-8?B?OWxPRFNwUGJVeG1jVnBSVEdJWGNKem5DbCt4S0VORjhra0tMdmtwUWcwQTNs?=
+ =?utf-8?B?WVVnYzM4aU91bUUwVitCT2NWSkpINmd0YnM1V0M0aXkrTE1Zb1hZNGNYdmkz?=
+ =?utf-8?B?dXdkQ0NMTG9aUnJnSzV2dm1DUE1vcDdPT0lCeEN2ZzRmUy9wcWJBazhoNkJn?=
+ =?utf-8?B?UXRTWW1peVIrdExibUlySS8vOXZsd3EvdjUxL3Qyc3JzRE1uYVlMLzdJelQr?=
+ =?utf-8?B?MjhYSGdsdFAwd3lxN2xhWW1sZUhtY2dCM0VnUWN5OUhseWI5T1MxL0JXUXRx?=
+ =?utf-8?B?VkFZYnUrQlBxVlowTUJKbG9OZ2xKdDU2QU1RaDJjRDFnQitmbDRzM1JtN1k1?=
+ =?utf-8?B?K0s5WGZZaE9Bb2xJcWh5KzRPeG1zVnpQemZOVk9Pb2tHVk5DYTZWMlA0SUgz?=
+ =?utf-8?Q?/Kek3eVwqBJPIFeQ/L4jj1/HQYip1A/T/KLuf9F?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79b54e35-8597-42cc-eb37-08dd7aef3347
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 00:56:33.5064
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0019
 
-On Mon, Apr 14, 2025 at 08:44:46AM +0800, Chen Wang wrote:
-> hi, Inochi,
-> 
-> On 2025/4/14 6:49, Inochi Amaoto wrote:
-> > As the controller on SG2044 uses different msi_parent_ops and irq_chip,
-> > it is necessary to add a structure to hold the configuration across
-> > controllers.
-> > 
-> > Add the chipinfo structure and implement necessary logic for it.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
-> > Tested-by: Chen Wang <wangchen20@iscas.ac.cn> # SG2042
-> > ---
-> >   drivers/irqchip/irq-sg2042-msi.c | 52 ++++++++++++++++++++++++++------
-> >   1 file changed, 42 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
-> > index c9bff7ba693d..1001c1117b00 100644
-> > --- a/drivers/irqchip/irq-sg2042-msi.c
-> > +++ b/drivers/irqchip/irq-sg2042-msi.c
-> > @@ -19,18 +19,33 @@
-> >   #include "irq-msi-lib.h"
-> > -#define SG2042_MAX_MSI_VECTOR	32
-> > +struct sg204x_msi_chip_info {
-> > +	const struct irq_chip		*irqchip;
-> > +	const struct msi_parent_ops	*parent_ops;
-> > +};
-> > +/**
-> > + * struct sg204x_msi_chipdata - chip data for the SG204x MSI IRQ controller
-> > + * @reg_clr:		clear reg, see TRM, 10.1.33, GP_INTR0_CLR
-> > + * @doorbell_addr:	see TRM, 10.1.32, GP_INTR0_SET
-> 
-> I remember asking some questions about this last time, but you didn't
-> respond.
-> 
 
-Oh, I forgot to respond this. Since the SG2044 document is not opened
-public for now. I think it is possible to leave this for someone to
-reference it. Also, I find nothing about this address in my copy of the
-document, and was told it follows a similar design of SG2042. So I
-think it is OK to reserve it at least for now.
+On 2025/4/14 6:35, Inochi Amaoto wrote:
+> The sdhci IP of SG2044 is similar to it of SG2042. They
+> share the same clock and controller configuration.
+>
+> Add compatible string for SG2044.
+>
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>   Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> index e6e604072d3c..5fb347167004 100644
+> --- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> @@ -19,6 +19,9 @@ properties:
+>                 - rockchip,rk3562-dwcmshc
+>                 - rockchip,rk3576-dwcmshc
+>             - const: rockchip,rk3588-dwcmshc
+> +      - items:
+> +          - const: sophgo,sg2044-dwcmshc
+> +          - const: sophgo,sg2042-dwcmshc
+>         - enum:
+>             - rockchip,rk3568-dwcmshc
+>             - rockchip,rk3588-dwcmshc
 
-Regards,
-Inochi
+Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+
+Chen
 
 
