@@ -1,78 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580933FF1;
-	Mon, 14 Apr 2025 04:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8809461;
+	Mon, 14 Apr 2025 04:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744605637; cv=none; b=cHdD6EZ2z3CO+hvgaRaYjkGhZl6UqFzIbTdIn5wpA2F1Fy9I5U1lHhaeq+wf3kXKdNXnnf9QDPbGIi7xmhkDjMrTxncvk+u4hCxwfgDrsQ/oW433oIQrYcPaHJ71CFQ87kQ22g76MqpzZV4Yo996LEi2G6Dt6n9wgrI6sIupKNg=
+	t=1744605916; cv=none; b=gadQ1g+glqsHl8ZocDnloSxu61SWwfAtTqvugUEqvLVT3nsJn3lsDebEKk+LKTUktMOcsV64KRwyWzI8j443iJFRDTa8vNfyw+EziJoyocw3YKDRSCTvBDal+psbaEcIswPIGhw0J2190j7fnWyutdcSdOJ3DnMmiH+FWhHq88o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744605637; c=relaxed/simple;
-	bh=A7JKFKVW0H5TSbaaBUozxi7yn7fXcWsDMRyipQS4UoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lWwLhCBhzpNQCSgZd051zv165YMzn9jKcY2LarGrEk2V5nZULTdnNj49HrgdmWx39da8DqCy1367wZ0IrY15RFy/hScX7O2PI0nZjBgarHtSiguPZj7vVNbQsEWLGb3TK49cvY11uM9BrgnPEYcR2RcYdp2AHz6YHdQE+sNJyjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJzZJG8s; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744605916; c=relaxed/simple;
+	bh=zYqv5bRj9M7qiWBu0KP5DDWKYdaSVC/KUzyG/VznBIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AXB300J2K+x8apf7zAPaOu1CSfd7WUI9nvGV4KlnjQVHeEu209mXdHLVyd0faDiwcDGaz1qMbnhRzyAN494uaqVSLR5kOh2LMdElXaO1zPNhqZwEifa4BICJXrgB7L32UrqZiP5BZnR1kQATQ/14sy/t1PVbloAOBaIPzqH+g9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l55MWd8y; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJzZJG8s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744605635; x=1776141635;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=A7JKFKVW0H5TSbaaBUozxi7yn7fXcWsDMRyipQS4UoQ=;
-  b=YJzZJG8sFVfvM4WXUXjbcC3UNOYwdHduf/3iHLVN7Pdq1BzAVuVP/RDC
-   hCom7FtOHmRRhw+TABz7Oc+j8obTLrzRK1/QWUEd/oqc0uZNJpfZIs4Hy
-   iPJqPCcdW/2Y0L4C83sRZeXFHupgRFu6bfGU9WmchGJ4oUZ7dKo2CvzoB
-   Wb2YY8BKl1GaV4O4bSA3fCbiXnx9YPrTpXv4dqSFRT/HyWgBWCB2JbCj6
-   i2WjJTdLT6Lb1p+lAnj6YR8avnw8nM94xlGit9lI/luk4CNFX5k2rmHU2
-   Mx3iYniYYWq/Pem+ZkdDIgAqI75/pQiit+/fIOydQ7iG2blFy9zk3GU8M
-   A==;
-X-CSE-ConnectionGUID: n8cLujOyRjmAlopae4bXIA==
-X-CSE-MsgGUID: /kwiauHjSU+HxE2nsaLLrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56707838"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="56707838"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 21:40:33 -0700
-X-CSE-ConnectionGUID: V/lhlWbfShaq6N/6j7/e1Q==
-X-CSE-MsgGUID: IFzxS2gfSBKX4zgChg4XIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129679250"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 13 Apr 2025 21:40:31 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 59A4A214; Mon, 14 Apr 2025 07:40:29 +0300 (EEST)
-Date: Mon, 14 Apr 2025 07:40:29 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Cc: bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, alistair.francis@wdc.com,
-	wilfred.mallawa@wdc.com, dlemoal@kernel.org, cassel@kernel.org
-Subject: Re: [PATCH v2] PCI: fix the printed delay amount in info print
-Message-ID: <20250414044029.GD3152277@black.fi.intel.com>
-References: <20250414001505.21243-2-wilfred.opensource@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l55MWd8y"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30c461a45f8so34355351fa.1;
+        Sun, 13 Apr 2025 21:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744605913; x=1745210713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yc3jiQ8kZxV+LcAN0rkQAoQqLmjbhOlTCeWE9SKAIWI=;
+        b=l55MWd8y8QuY96KElqS3rBX65weTC5UiMlJA7G3ugCY7u/YfvYDf8zMb/K3qA2A3SX
+         jRHUSXNcUon3ENduO7VS/y8aTCGGQJNxKIW4Zi9vTIuO3ZGhJ8G34zI5rM+ryj/Gq2+B
+         UWhKMFtdpANKyMEJ3F2GyXegGB1apGId+2lDOTIuP0oQtxAnerSKurwm4h2MLiNbOBip
+         lcM0pc0hKfiBPLXHW/iYFMMsrOj9ybmNqzS58LHkhKIjED9MxdWhmh1T+HhfLnwcpINn
+         5szcMqycyphHmtWxc2HcCeTIk7GHiBY/iVQKb/chlAGSO/NKIaXaE0joViG0JS6YYh/L
+         inRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744605913; x=1745210713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yc3jiQ8kZxV+LcAN0rkQAoQqLmjbhOlTCeWE9SKAIWI=;
+        b=DDEF0QVWd5E5xdBKmfelvoKY85zeZUVcg3p3AytrkAaTPu99ZtsSGoZyySGxakIuks
+         7ww2ORKSQg1MEaVib5FUkMXJiOUE+ZsGI9UX8f9j0wNmEANYy2lvR+GMpRXBiqvS/+2l
+         n65T786x4S93lEzRBxwW80mtyjOVoBSSVIC4j8MvikIgBbj9Y2QAaXvTXPCfPXiGIzsX
+         iMpwCVGqvTf8F4yvr3mDLadxqJJI3z+RhdegwNiC4OoTfYPe/SarlbhvtUWxupUgNEmW
+         5kasZb6Rdr8cXd+S0NgKLOi37alQ8pmfSKpUQLbAHMTuy3fixyX8wzv8jAjqkxXgNFSR
+         4P3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUKS0oGg8T5ic+ivAYtuBDQLba8iOO8vruBadTBbsqIMw4BTjUGd7y6QKUTYG9bOANXvo72XLJTV1cNNIs=@vger.kernel.org, AJvYcCWyLcn6S8kHIobwPiqIBDM2QwVzP4+APSTzMzDh85TRY4Sbq4RynOd70fSEbVTwzOO4O3FXRU/F9Pagvik=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxohl1eunNVMRFFENPQJIZi09HDx1iYPDXsF3AE+bcmJMqIiLwl
+	2fEfiAdXQ4Mkl9Li8vyWR3VpmjhiL8rJab0+EO0kFkHFPXnSmt6VMhWuZk7NRMmaH+f8F7onhx7
+	7j8x9NtNF2ZxJUi7NPvb87ScdyFk=
+X-Gm-Gg: ASbGnctmVVEWQMlnputiKFR1+FSQ9YWGzWASylvvxAkkBkI4MJE9rnth3tFeo4HjCWB
+	vZ4OrP8ZD7BZfrGcPAIQMnJHZ+oMKbzl/PtjthanNT7q6/HFpCA9slpkijqNYSGM+GtkCZigdtM
+	FVLG8jpXiBSTDxjNeGWL+L8A==
+X-Google-Smtp-Source: AGHT+IEW35UpKJ3TVFI5EnVSheZ5tHl+xOgElVMnA77E6wgo7u5O3iof6q5qmhz2WrQE+pWjN/KGO4h3blUSLI4s/Ks=
+X-Received: by 2002:a2e:bd88:0:b0:30b:e96a:7d69 with SMTP id
+ 38308e7fff4ca-31049a9eff9mr30904871fa.35.1744605912293; Sun, 13 Apr 2025
+ 21:45:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250414001505.21243-2-wilfred.opensource@gmail.com>
+References: <20250404-xusb-peripheral-v1-1-99c184b9bf5f@gmail.com>
+In-Reply-To: <20250404-xusb-peripheral-v1-1-99c184b9bf5f@gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Sun, 13 Apr 2025 23:45:01 -0500
+X-Gm-Features: ATxdqUF57-rCxIpVekQ3O83bzoHuLDnXdYKspeuPx52uO3yuAc_oPztfCji0DhU
+Message-ID: <CALHNRZ_QUY7NPH87RYqFWEy4PkTgV5uZVZ6hh3sbe=U_8ga2jQ@mail.gmail.com>
+Subject: Re: [PATCH] phy: tegra: xusb: Default otg mode to peripheral
+To: webgeek1234@gmail.com
+Cc: JC Kuo <jckuo@nvidia.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-phy@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 10:15:06AM +1000, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> 
-> Print the delay amount that pcie_wait_for_link_delay() is invoked with
-> instead of the hardcoded 1000ms value in the debug info print.
-> 
-> Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links")
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+On Fri, Apr 4, 2025 at 3:18=E2=80=AFAM Aaron Kling via B4 Relay
+<devnull+webgeek1234.gmail.com@kernel.org> wrote:
+>
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> Currently, if usb-role-switch is set and role-switch-default-mode is
+> not, a xusb port will be inoperable until that port is hotplugged,
+> because the driver defaults to role none. Instead of requiring all
+> devices to set the default mode, assume that the port is primarily
+> intended for use in device mode. This assumption already has precedence
+> in the synopsys dwc3 driver.
+>
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  drivers/phy/tegra/xusb.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> index 79d4814d758d5e1f0e8200d61e131606adbb0e2d..c56e83216d0f566a09b673771=
+72fb04c8406f4cf 100644
+> --- a/drivers/phy/tegra/xusb.c
+> +++ b/drivers/phy/tegra/xusb.c
+> @@ -731,13 +731,11 @@ static void tegra_xusb_parse_usb_role_default_mode(=
+struct tegra_xusb_port *port)
+>
+>         if (mode =3D=3D USB_DR_MODE_HOST)
+>                 role =3D USB_ROLE_HOST;
+> -       else if (mode =3D=3D USB_DR_MODE_PERIPHERAL)
+> +       else
+>                 role =3D USB_ROLE_DEVICE;
+>
+> -       if (role !=3D USB_ROLE_NONE) {
+> -               usb_role_switch_set_role(port->usb_role_sw, role);
+> -               dev_dbg(&port->dev, "usb role default mode is %s", modes[=
+mode]);
+> -       }
+> +       usb_role_switch_set_role(port->usb_role_sw, role);
+> +       dev_dbg(&port->dev, "usb role default mode is %s", modes[mode]);
+>  }
+>
+>  static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *us=
+b2)
+>
+> ---
+> base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+> change-id: 20250404-xusb-peripheral-c45b1637f33b
+>
+> Best regards,
+> --
+> Aaron Kling <webgeek1234@gmail.com>
+>
+>
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Friendly reminder about this patch.
+
+Sincerely,
+Aaron
