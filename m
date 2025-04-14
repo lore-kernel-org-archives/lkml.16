@@ -1,114 +1,120 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21CF4438B
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA38125229C;
+	Mon, 14 Apr 2025 15:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744643956; cv=none; b=G7u47MoEFWBduhyjteHBO5m6BzdFkYoXBcRqtHRenJ8pChfc7wbjzMtGCjDAk4kvjvrG9r4EFSIB6qOJgRdJCOooSwRXzx6qU9FdJ/Pl6W9AOkdzyVxvEc5EIHx0v3OXIsMQ4iIYyVqF2Fje3Mwy5vplNSGXo9OUbasyjCb7lQA=
+	t=1744643956; cv=none; b=kLdkOUTDFu22lck/dtHobXqeOnCb9I2jdkImcqBSPDZg2qvYZzwdUa4rVYS7Ev+y2Uxds3Jnr8hJyP0ieq7L0VPGmAddgC2kzpGS94stcg0rd/OLBXl63JvNR9XLrjgEbVCM3KzK0EPXJdfvnlhFiBhYOvJ21WedJrZuWHVraes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744643956; c=relaxed/simple;
-	bh=p8h5KkB+GURRTJzeWUMeXBkjHv3dd9xsMdCzuGRKP10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AsrWlrctjXbleX1rS5G3mB8plLUi2KGmAcpaEQKUrbiPwxkKfMNqZl0/sg+ZmJgiQOeSogwOxcRwAryDWTniR7g2YUQtf2jMkOhJYdtc0P/1L0oJL1FuYuZELqNFa7M3Zds/rzPCdiZIxhriwoOGO36rpx3zgBjTCp7dPNGdU5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FttrDqki; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=W5YOQtXedZ5LjIHnkYlu8DTaYYS962zrtA6Gi1Nsypg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XQmBVWeBsIeNTPeb86yfo1zt/wdtQPcsuS1nkXr8xZndB5pX3OXSqzk+A6497qFI7+mv/NsvUjzpPcixFQFDRCqBulGY12uTAadjYUVRb0rQem1TbsIZU+fN4ErBehONSMw+A9DCgQULYUXoERt43NclVoBaGm+uM1W8nXWT+fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=iGrEy5To; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FttrDqki"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f09f2b3959so14756a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744643953; x=1745248753; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qqGkP7AzdyRb+ubyQ7gizWBenRx1QoIqZMI8aSglq0E=;
-        b=FttrDqkiJmGrsU7FuPK0BVQIJv0i+hEwHQgDbVBnyrozQEUk2fCfvytrUXdIx7GFCe
-         VQI90q/53UnKjJEhDdSI5XOz8K+wpmARJLSJ1ojTbrlGacopu5VFuP9YfG21RHBT0/+i
-         5CBMKOhyN/JAqeSp5y3xOFUl9x/jJnEtVuEVUFxWXsDzVfFYXxyJpG/tzTZPgmuK0PkD
-         09odWlwZ1gbCvWDrRN0pqaKHBPqvjMIlGZG38QUzdZXoC5jGCVYu8rWbcYjJayeuuCQT
-         NiTaWIgl4qS7ak6vTr9Pcl47yZeqkKN8CBlH9rkQ+4Ybe8XMQdbb9tRu1M4XPKuh5gI3
-         Rq5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744643953; x=1745248753;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qqGkP7AzdyRb+ubyQ7gizWBenRx1QoIqZMI8aSglq0E=;
-        b=tU+ykzZI5d+dqH0HTX6HT3Dwczc4A6d7uldmSdg/KprhpR5IIeweyLUhfYsKWieI7s
-         J9lxS49Z0mAHnPzqbFNdqHKsa5I0s0vtvqNXXo4RY8l3Po9SzzZPRwuSwgxtRlozLtsl
-         ssgpi+Fx1J4mL6kam1YPq3TvcvD6p5YAnrGvco6vvdjBH/13Cnd5v6w8w4tE9KEs2Ggo
-         LKLQpouQoY8tklR/HafPIa7ikM9Fi4TRYAKAATFV3x2IXHf0Xd+cL6mjkj0aM1A3OMPy
-         Qyddo4WJvgTtaB9wl3YIDVcdvIFXfIGJdiVY4/+V94Hhju69RirUvbcul4AkXDnDuIx7
-         qspQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtswdxlJDu6n2quUYcBRcMIKCzB06c9Cxlo9WnlwwYvLGgAM8RuUinpwxWvkZbVp76wWnbTtn1mHdNUsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJTafbF0Q+DCBP4RVBzjqaKuESIAxulzSRVtj/XwV1KNvJfow2
-	vJeqhg4o1mq9pu0ydoz+R38fHhDnTTPbItgJygKxOf58F/8zVMh8mRBblCud0xPNb/Tq8AAbTN7
-	r2giqSnmoNanJZ3NiFuzbrct8kBjrNpnEa29MOPRVZKhLmUYx3nT9
-X-Gm-Gg: ASbGncu7yg5ATt+1bBU8gJYGezUwU+39K5TgqeJtmcGhYevoVrMIFvxVSi/Xfzfx7CK
-	bd3hp9jhI8uo/IjEMV+0+0WWpUwkxdq7cXmJY7VCksIRMQ7apMRMdBPilPNkow9iakiJ37zmvoN
-	+fyWKtrMSjX7LlN3ddU66oMJgeJ0BoqA==
-X-Google-Smtp-Source: AGHT+IF2tbwdkcZoHBAlrPM/vjguNGPuQVp07BhndSI42K9ZzEGR8BkolfUA2D15wvLc1267hCzg4MFq260Gt1lETYU=
-X-Received: by 2002:aa7:c9c6:0:b0:5dc:ccb4:cb11 with SMTP id
- 4fb4d7f45d1cf-5f3d9d1f008mr154150a12.4.1744643952361; Mon, 14 Apr 2025
- 08:19:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="iGrEy5To"
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id E1C74662598;
+	Mon, 14 Apr 2025 17:19:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1744643945;
+	bh=W5YOQtXedZ5LjIHnkYlu8DTaYYS962zrtA6Gi1Nsypg=;
+	h=From:Subject:Date;
+	b=iGrEy5Toj8WPBIrSXoxS4Dm4ijPuzDgrmOIs1rughbdguIoAFjyQMw9P2CSU/N8md
+	 nldU/OpEpWYTBnhMquOEyaoo/+vw9/oPBYUzbZrrgCKh0+9jOlHJN/cPEmcHWqOEgL
+	 8RCtOq1/nTgA+giSSGSZgUBeRG/xRIVk9r4OQaiEMlcmwAYnDs4W05zAZ3rcQwuzxZ
+	 4fbpoKOz2iVQ22VRcEUOLZ/ZYHFNwF+vF8In5qQjSe2DqskAm3N/m+6PL2XAc//zi0
+	 0xxoubTQDbbwQ+VMcmHgETT1ldjHlEMPFI6R8hW/UkYr1yE/VZLtMCJks+V0NXYJHn
+	 ZD+EAZ24pzoOA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Xi Ruoyao <xry111@xry111.site>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject:
+ Re: [PATCH] cpufreq: intel_pstate: Use raw_smp_processor_id() in
+ hwp_get_cpu_scaling()
+Date: Mon, 14 Apr 2025 17:19:04 +0200
+Message-ID: <12659608.O9o76ZdvQC@rjwysocki.net>
+In-Reply-To: <b7b0b3f98f8fad9cc9559e1c4ce832387c520d7a.camel@linux.intel.com>
+References:
+ <20250412103434.5321-1-xry111@xry111.site>
+ <b7b0b3f98f8fad9cc9559e1c4ce832387c520d7a.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202504140435.2OoLcwfS-lkp@intel.com>
-In-Reply-To: <202504140435.2OoLcwfS-lkp@intel.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Mon, 14 Apr 2025 08:18:34 -0700
-X-Gm-Features: ATxdqUFdptLiRTgyyXD7-SwfiHHuh0sV_sAfKPkOoh58utSVLahQ5ujaA2TnepI
-Message-ID: <CABCJKucXUGB6iUh2HTZKcYQGjgMtW1L=vWm_tTwZ+Kjas+iO9Q@mail.gmail.com>
-Subject: Re: <stdin>:4:15: error: use of undeclared identifier 'csum_partial'
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeigrhihudduudesgihrhiduuddurdhsihhtvgdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrfigrnhdrkhhumhgrrhdrghhuphhtrgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
 
-On Sun, Apr 13, 2025 at 1:48=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
+On Sunday, April 13, 2025 4:44:56 PM CEST srinivas pandruvada wrote:
+> On Sat, 2025-04-12 at 18:34 +0800, Xi Ruoyao wrote:
+> > Use raw_smp_processor_id() instead of plain smp_processor_id() in
+> > hwp_get_cpu_scaling(), otherwise we get some errors on a Lenovo
+> > Thinkpad
+> > T14P Gen 2:
+> > 
+> >     BUG: using smp_processor_id() in preemptible [00000000] code:
+> > swapper/0/1
+> >     caller is hwp_get_cpu_scaling+0x7f/0xc0
+> > 
+> > Fixes: b52aaeeadfac ("cpufreq: intel_pstate: Avoid SMP calls to get
+> > cpu-type")
+> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 >
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
-> head:   8ffd015db85fea3e15a77027fda6c02ced4d2444
-> commit: 9c3681f9b9fd12cdbc4a542df599f1837512f3d5 kbuild: Add gendwarfksym=
-s as an alternative to genksyms
-> date:   3 months ago
-> config: um-randconfig-r073-20250414 (https://download.01.org/0day-ci/arch=
-ive/20250414/202504140435.2OoLcwfS-lkp@intel.com/config)
-> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f=
-819f46284f2a79790038e1f6649172789734ae8)
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20250414/202504140435.2OoLcwfS-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202504140435.2OoLcwfS-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
-> >> <stdin>:4:15: error: use of undeclared identifier 'csum_partial'
->        4 | EXPORT_SYMBOL(csum_partial);
->          |               ^
-> >> <stdin>:5:15: error: use of undeclared identifier 'csum_partial_copy_g=
-eneric'
->        5 | EXPORT_SYMBOL(csum_partial_copy_generic);
->          |               ^
->    2 errors generated.
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-This patch should fix these errors too:
+It's still broken after this patch though because the function should
+use the cpu_data() of the target CPU and not of the CPU running the code.
 
-https://lore.kernel.org/lkml/20250326190500.847236-2-samitolvanen@google.co=
-m/
+The patch below should fix it.
 
-Sami
+===
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Subject: [PATCH v1] cpufreq: intel_pstate: Fix hwp_get_cpu_scaling()
+
+Commit b52aaeeadfac ("cpufreq: intel_pstate: Avoid SMP calls to get
+cpu-type") introduced two issues into hwp_get_cpu_scaling().  First,
+it made that function use the CPU type of the CPU running the code
+even though the target CPU is passed as the argument to it and second,
+it used smp_processor_id() for that even though hwp_get_cpu_scaling()
+runs in preemptible context.
+
+Fix both of these problems by simply passing "cpu" to cpu_data().
+
+Fixes: b52aaeeadfac ("cpufreq: intel_pstate: Avoid SMP calls to get cpu-type")
+Link: https://lore.kernel.org/linux-pm/20250412103434.5321-1-xry111@xry111.site/
+Reported-by: Xi Ruoyao <xry111@xry111.site>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpufreq/intel_pstate.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2336,7 +2336,7 @@
+ static int hwp_get_cpu_scaling(int cpu)
+ {
+ 	if (hybrid_scaling_factor) {
+-		struct cpuinfo_x86 *c = &cpu_data(smp_processor_id());
++		struct cpuinfo_x86 *c = &cpu_data(cpu);
+ 		u8 cpu_type = c->topo.intel_type;
+ 
+ 		/*
+
+
+
