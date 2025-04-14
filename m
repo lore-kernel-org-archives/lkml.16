@@ -1,194 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313CB1B4132;
-	Mon, 14 Apr 2025 06:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1440845C18
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744613479; cv=none; b=HIMCDgFcLqFP9u0+LwMj50Y50iz9sTd158Beh+Tzo/ZWwPLo7zdx6501pQ0f1fB7CHCojgXrKx1GXoyrQE0N2dSXE9RaI08fGMz2hWHx1N5W+EpvxM0RaL8g32ceHBG+hdhE8tr1KCYI732if1QWp+iv6mMbTs8tcriKgZiJJ2Y=
+	t=1744613495; cv=none; b=NOnh2C5RWWodmWehrgfXKfOEC0QNWmc1Me5odoXWMQZgTmo5W5TlnVBLQ95dAAsIf6WrQueSB1rHRiyI/1Iiuy4nxse/xzwBwTCAotLfcXCM1UByHz4kVbcXAIjngdUeRDDxFvFMAlM5s8KIt4galRI6MduYUTgUF9q8rXggqsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744613479; c=relaxed/simple;
-	bh=asO4o657iz8nQe0uAHLA3O0c3AbaHXOjJNiLc6xpZcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HMHfZsC93BsozwfWQa0b5fFuco8eZq4QgEDRQ/MkzLC9MIJbMP7JP5tZCV2FBrwyrkAfZrnlDbWAJPb+6qyqfRmJ+0Qe9wQ7s81g3TQ1x8IlslqpnS3SuqPR1aTxNsk01WpOFJNA7XnWAD0MHkBrETQ55fb8PZuV8GupiYIj0z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRzhjdBt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744613495; c=relaxed/simple;
+	bh=+Ele0F1poW+d98mRXmolJyecgMIOJ5Yg0Z0vGLasXMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TwOUsjV9/DB2DWJ8oh0BRem1bqm9GGSbJN2KJrx6AzTRe1qWS2bncYdufYVOgX1UbyCzqavDDsmz0wlgNGmQfofME2DXNNgiSh6Cf3AcvYL7qyPPLrzx0PLz7gmgfmncREbizYTlF0981rQXrg9oh6xzauTw0hrQDO5XUC1yp/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mr5LhCg7; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRzhjdBt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E56C4CEE2;
-	Mon, 14 Apr 2025 06:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744613478;
-	bh=asO4o657iz8nQe0uAHLA3O0c3AbaHXOjJNiLc6xpZcA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gRzhjdBttm8QnvwtlyZLRah0rJfFxHQsMcux6mt8gjLRR7wn6z4IhVnMC3io9kMoN
-	 hfQrQiL2Z9iP7naqAxb58cx17/nO2yLRC2AfC4LHNaRtRac6/4N61YrmtOBxjtFW4g
-	 GmpSC26URPypH5WZT2HOhfSNyAhitQaxCQ8Rq8oPaFUv1EV+9DXynJ8EInc2NimXQU
-	 BYUxZUX3guQDbuugI0YjIFcDlpZ595xgQ6Fn/5OhDlaGQw9yZC0xJQUTuUVv19kjy8
-	 YnC508i4MR4MtRhhn8XzAEW6263V4hjUfQ1cE3FCsqhwjKh0f2DGhaoed7fTYCjy4U
-	 rm8j+C9sxpoqw==
-Message-ID: <7fce92da-62d3-421d-9cd1-f9167c05d2b0@kernel.org>
-Date: Mon, 14 Apr 2025 08:51:15 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mr5LhCg7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744613493; x=1776149493;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+Ele0F1poW+d98mRXmolJyecgMIOJ5Yg0Z0vGLasXMM=;
+  b=mr5LhCg7ePRN8b4ysheTJFx7w/zJQS2XgooTTaAT9rXuH3x/AHc5Q3no
+   KCkI1Ify2zIVyRpGFP6fIfatPXLs18o9o3whK5EGYfPsTLAoSAyGcxird
+   RfQ1nDCM1rFDMJc2nOEfFQDIUjnN/mcTnaonoHEy49r2GjEAQ/b65Kukb
+   CAebOVkoW6dnGUXF+rILiG9wd6CLDqhOiKG96PO1ALC5D+Xw46UEAHloj
+   mnt5R1bssATyn9TDRdyBl1+o69vp1OqwLPNX+bcpmk13wVh+i38PzkK6b
+   B0suz93ETInEiaEy2z3zv4XdKH+A/9+8zMKuCgZ7hpsy5W04AM+cUiVRW
+   A==;
+X-CSE-ConnectionGUID: 6PR9JjgQQoOSRKRmwrdurw==
+X-CSE-MsgGUID: e1Q3E1nFS5Sq0TsQ9WxzJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46203110"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="46203110"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:51:29 -0700
+X-CSE-ConnectionGUID: g/VZw56JRP6WlA831XPG0Q==
+X-CSE-MsgGUID: TU5W4yAoRUyNfwzJ82kq7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="130279695"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:51:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4Dey-0000000C9iZ-2r4k;
+	Mon, 14 Apr 2025 09:51:12 +0300
+Date: Mon, 14 Apr 2025 09:51:12 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Matt Coster <Matt.Coster@imgtec.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, Frank Binns <Frank.Binns@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Alessio Belle <Alessio.Belle@imgtec.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+Message-ID: <Z_ywYNsYjuZy8v9x@smile.fi.intel.com>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+ <7ae4be5c-b115-405e-aa57-caeaa206775b@imgtec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/11] vt: properly support zero-width Unicode code points
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, Dave Mielke <Dave@mielke.cc>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250410011839.64418-1-nico@fluxnic.net>
- <20250410011839.64418-4-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250410011839.64418-4-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ae4be5c-b115-405e-aa57-caeaa206775b@imgtec.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 10. 04. 25, 3:13, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
+On Thu, Apr 10, 2025 at 11:22:05AM +0000, Matt Coster wrote:
+> On 09/04/2025 13:22, Arnd Bergmann wrote:
+
+...
+
+> > Rather than adding more #ifdef blocks, address this by changing the
+> > existing #ifdef into equivalent IS_ENABLED() checks so gcc can see
+> > where the symbol is used but still eliminate it from the object file.
 > 
-> Zero-width Unicode code points are causing misalignment in vertically
-> aligned content, disrupting the visual layout. Let's handle zero-width
-> code points more intelligently.
-...
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -443,6 +443,15 @@ static void vc_uniscr_scroll(struct vc_data *vc, unsigned int top,
->   	}
->   }
->   
-> +static u32 vc_uniscr_getc(struct vc_data *vc, int relative_pos)
-> +{
-> +	int pos = vc->state.x + vc->vc_need_wrap + relative_pos;
-> +
-> +	if (vc->vc_uni_lines && pos >= 0 && pos < vc->vc_cols)
+> Possibly a silly question, but wouldn't adding __maybe_unused to
+> stid_fmts be a simpler change here?
 
-So that is:
-   in_range(pos, 0, vc->vc_cols)
-right?
+I'm not Arnd (and I just have read his answer), but I would like to add that
+__maybe_unused should be the last resort as it has more cons than more invasive
+solutions. In particular, it makes build time increase with a lot of work to
+be made at link time, and also it might hide the real bugs when somebody simply
+forgot to use it (depending on the configuration options) or so.
 
-> +		return vc->vc_uni_lines[vc->state.y][pos];
-> +	return 0;
-> +}
-> +
->   static void vc_uniscr_copy_area(u32 **dst_lines,
->   				unsigned int dst_cols,
->   				unsigned int dst_rows,
-> @@ -2905,18 +2914,49 @@ static bool vc_is_control(struct vc_data *vc, int tc, int c)
->   	return false;
->   }
->   
-> +static void vc_con_rewind(struct vc_data *vc)
-> +{
-> +	if (vc->state.x && !vc->vc_need_wrap) {
-> +		vc->vc_pos -= 2;
-> +		vc->state.x--;
-> +	}
-> +	vc->vc_need_wrap = 0;
-> +}
-> +
->   static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
->   		struct vc_draw_region *draw)
->   {
-> -	int next_c;
-> +	int next_c, prev_c;
->   	unsigned char vc_attr = vc->vc_attr;
->   	u16 himask = vc->vc_hi_font_mask, charmask = himask ? 0x1ff : 0xff;
->   	u8 width = 1;
->   	bool inverse = false;
->   
->   	if (vc->vc_utf && !vc->vc_disp_ctrl) {
-> -		if (ucs_is_double_width(c))
-> +		if (ucs_is_double_width(c)) {
->   			width = 2;
-> +		} else if (ucs_is_zero_width(c)) {
-> +			prev_c = vc_uniscr_getc(vc, -1);
-> +			if (prev_c == ' ' &&
-> +			    ucs_is_double_width(vc_uniscr_getc(vc, -2))) {
-> +				/*
-> +				 * Let's merge this zero-width code point with
-> +				 * the preceding double-width code point by
-> +				 * replacing the existing whitespace padding.
-> +				 */
-> +				vc_con_rewind(vc);
-> +			} else if (c == 0xfe0f && prev_c != 0) {
-> +				/*
-> +				 * VS16 (U+FE0F) is special. Let it have a
-> +				 * width of 1 when preceded by a single-width
-> +				 * code point effectively making the later
-> +				 * double-width.
-> +				 */
-> +			} else {
-> +				/* Otherwise zero-width code points are ignored */
-> +				goto out;
-> +			}
-> +		}
-
-Please, extract this width evaluation to a separate function.
-
-...
-> --- a/include/linux/consolemap.h
-> +++ b/include/linux/consolemap.h
-...
-> @@ -63,6 +68,11 @@ static inline bool ucs_is_double_width(uint32_t cp)
->   {
->   	return false;
->   }
-> +
-> +static inline bool ucs_is_zero_width(uint32_t cp)
-> +{
-> +	return false;
-> +}
-
-Again, is this necessary?
-
-thanks,
 -- 
-js
-suse labs
+With Best Regards,
+Andy Shevchenko
+
+
