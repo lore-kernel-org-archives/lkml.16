@@ -1,98 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www253.your-server.de (www253.your-server.de [188.40.28.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809F427A934;
-	Mon, 14 Apr 2025 13:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638916; cv=none; b=LYyUw9sN7np4IN1dBcZ9kYm0qzrIsXvNSfIKXxjCf3a5rA3sawbBUse9dNRvyT98WLAN7qw8z3DN+vsxtF5LNEZlI6XD1eWW93gX3n7LH7v7PNsD+d1fk0PbP++i876K3dOoHjHL9GEj2OdFcFLMobSh1HQE0/0sm1gnRT8prWc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638916; c=relaxed/simple;
-	bh=m9SucPDBiv57vDJTBiHL8Yu+1iS7jJDF3MNROUK+8qQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uPYD6Ag8M8pxdyy5vP+/x6UbYs/Fl+da5aVHVCbTaBBbQN45VBwLVQLmJ+ZSeTIkruGKvfjetso1RlPV5RCBkrP/g777fp6REZ0Wwk7YdbYfzjACo5+kenkV4FND4ePWQk/iXkavovi44HhCRixnA+LY0DoZjfhFQMdGqjJfGr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdaNTfp8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdaNTfp8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F9C8C4CEE9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DA22741D5;
 	Mon, 14 Apr 2025 13:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744638916;
-	bh=m9SucPDBiv57vDJTBiHL8Yu+1iS7jJDF3MNROUK+8qQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SdaNTfp8Er4D+Ef6aQpurGQ2VvjvPcRhLY1bMuXFARBdP8Rl7/oXWMkSjeW4b7/fU
-	 ZBsq8kAZF9QK3WAZgqzJmnMqMaTXmDkXsLUAQ5iv+m++Jjl8CA5G6WUyH0NFDEfPVe
-	 kWBR3C5dpdxH4VIilXR+Ya/J4wpl0AwyawY/xGKwSpI081AQthCqCv3mstuF7enPom
-	 x2ioWnfDVogI7yiyT3Qzjz3s3cp4c+Ee9FBoxahsC2U3u53jy/DYm2cdBwD1UxC5lp
-	 PCaOk908wCBVzmM2vZaxIhtEsKxcWpPrVhV9SZEUkOPbpl1nfgSNxYUj6OnauUC4Gz
-	 zddd7RBjrzbhA==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 14 Apr 2025 15:55:05 +0200
-Subject: [PATCH v2 1/3] pidfs: move O_RDWR into pidfs_alloc_file()
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.28.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744638917; cv=none; b=n6WV/qC1JuTIgEfQpCbLcpx0trTSwDxrQfNtgFIQuBOhCs9yJ72A2zk0ePfnmtoYyi8iIHbL2vCAN7CWGLXh3HHBF7hPFLsc+ljVJIqAXbJdokk5xe9YFOXTf4XBmYu6o4sYxjEWa9jve545rWzYsPZh0pru7Yc6SL2ZVxCXBUs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744638917; c=relaxed/simple;
+	bh=pgNx2sdENX2tGay1fmIECFu/j3ax4mCzVXRE8j5WKxU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=fr3QBINVVvVz353bWwujoifTIJ6bUbXHC5noCx96RCmsk+6lATz7ZhiqldgAuQEDi6IHjAnuadfgGoVyvhl3gJV7R7vjVbaEr5+a18vWYAHNNPSpVUBEjzUtLg9tmTQsipIMvLRNnjcsdZ5g6aSnnxRGkDMHyX9vg3gpj1QBxDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de; spf=fail smtp.mailfrom=helmholz.de; dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b=OSjUkqt9; arc=none smtp.client-ip=188.40.28.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=helmholz.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b="OSjUkqt9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=helmholz.de
+	; s=default2501; h=Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=ECoGTVyrfDzehLrz8EMEF8qTYvNgxk0rK5zEaP9773M=; b=OSjUkqt9YejcixAqdz7AIYXVv3
+	yHG/gFtVEV5W1gB+VKs77qsrFhoXOf0df0G5cll7oTa093/8etkoEPXk7ZVZUSCv8C+VF42diTng3
+	EXyE/ukFo87GDSvtVnKo0wlKCYByE3yY9Nvjfdjk44LnKPSEcHPL2ITDOIhgCkqmXAD61B/8wnp9q
+	NrKuEjUIDsNBH8RTw+A+r0gVCXYzybL3BBCMrTj56u3nt/iLd4xCS9qFRtaPTNXncCNO9fSYdh210
+	6CCq7DJ7pY2sjr7ISJ/LE0XYORy8CltwcMItRg43egrkBtTWlXnfB5rKmqvCbFVrkrzUqMeD34dyr
+	msOIB4qw==;
+Received: from sslproxy08.your-server.de ([78.47.166.52])
+	by www253.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <ante.knezic@helmholz.de>)
+	id 1u4JsP-0008n7-04;
+	Mon, 14 Apr 2025 15:29:29 +0200
+Received: from [217.6.86.34] (helo=linuxdev.helmholz.local)
+	by sslproxy08.your-server.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+	(Exim 4.96)
+	(envelope-from <ante.knezic@helmholz.de>)
+	id 1u4JsO-000Eer-1v;
+	Mon, 14 Apr 2025 15:29:28 +0200
+From: Ante Knezic <ante.knezic@helmholz.de>
+To: linux-leds@vger.kernel.org
+Cc: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	knezic@helmholz.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH 0/3] Add support for WL-ICLEDs from Wurth Elektronik
+Date: Mon, 14 Apr 2025 15:28:48 +0200
+Message-Id: <cover.1744636666.git.knezic@helmholz.com>
+X-Mailer: git-send-email 2.11.0
+X-Authenticated-Sender: knezic@helmholz.com
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27608/Mon Apr 14 10:34:28 2025)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-work-coredump-v2-1-685bf231f828@kernel.org>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
-In-Reply-To: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>, 
- Luca Boccassi <luca.boccassi@gmail.com>, 
- Lennart Poettering <lennart@poettering.net>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1239; i=brauner@kernel.org;
- h=from:subject:message-id; bh=m9SucPDBiv57vDJTBiHL8Yu+1iS7jJDF3MNROUK+8qQ=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/Fd7/bb2P99fAX+EfKhOauW6W5oczmi72yavXSV3k8
- yX7kOaNjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIn842f4p6T4cPuVP8duyApt
- nS3xVPjA3rWifx1NNn/P/rqQ07U9rYyR4eFUn8VnwjQ4hDZv3OVst97ZhysvR7P9Z/ZH4envnv5
- 7wQoA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-Since all pidfds must be O_RDWR currently enfore that directly in the
-file allocation function itself instead of letting callers specify it.
+From: Ante Knezic <knezic@helmholz.com>
 
-Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- fs/pidfs.c    | 1 +
- kernel/fork.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+This patch adds support for WL-ICLED series of RGB Leds. These LEDs
+are equipped with integrated controller and can be daisy chained to
+arbitrary number of units. The MCU communicates with the first LED
+in series via SPI. Interface can be regular SPI protocol or single
+line only (MOSI connection only) depending on the model.
 
-diff --git a/fs/pidfs.c b/fs/pidfs.c
-index d64a4cbeb0da..50e69a9e104a 100644
---- a/fs/pidfs.c
-+++ b/fs/pidfs.c
-@@ -888,6 +888,7 @@ struct file *pidfs_alloc_file(struct pid *pid, unsigned int flags)
- 		return ERR_PTR(-ESRCH);
- 
- 	flags &= ~PIDFD_CLONE;
-+	flags |= O_RDWR;
- 	pidfd_file = dentry_open(&path, flags, current_cred());
- 	/* Raise PIDFD_THREAD explicitly as do_dentry_open() strips it. */
- 	if (!IS_ERR(pidfd_file))
-diff --git a/kernel/fork.c b/kernel/fork.c
-index c4b26cd8998b..d184e51196a2 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2071,7 +2071,7 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
- 	if (pidfd < 0)
- 		return pidfd;
- 
--	pidfd_file = pidfs_alloc_file(pid, flags | O_RDWR);
-+	pidfd_file = pidfs_alloc_file(pid, flags);
- 	if (IS_ERR(pidfd_file))
- 		return PTR_ERR(pidfd_file);
- 
+Ante Knezic (3):
+  Documentation: leds: Add docs for Wurth Elektronik WL-ICLED
+  dt-bindings: leds: add binding for WL-ICLED
+  leds: add WL-ICLED SPI driver
+
+ .../bindings/leds/leds-wl-icled.yaml          |  88 ++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-wl-icled.rst          |  69 +++
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-wl-icled.c                  | 406 ++++++++++++++++++
+ 6 files changed, 575 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+ create mode 100644 Documentation/leds/leds-wl-icled.rst
+ create mode 100644 drivers/leds/leds-wl-icled.c
 
 -- 
-2.47.2
+2.48.1
 
