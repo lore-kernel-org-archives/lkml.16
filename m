@@ -1,110 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4042025F96A;
-	Mon, 14 Apr 2025 10:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A7A1C84BB
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625726; cv=none; b=LgNq3VznTflIL1N1CCPW64prtgciF5ks+DynhxmVFdSyqMomYdbB6vYsXFLZwmmspDRdJX8wOC1J4Xu4RPO2+TMDIbpjR1ivaAyTKdKGOVcl+wIsDOcN9P0j+JF2djZChCexchtTU5lVm98IgKVxpvFD/crhjlUGfGubkffIyfM=
+	t=1744625792; cv=none; b=kSVIF8fFe5w76n8oF0QFf+PzisPCZL/v9bnVg3nkkpm10Pd/eoKh2StGK+K+9ngsBrkGwth2QORaG5C3cJ6Krv3D44+czu1P2uFW6rcxThM63fDJyCNDhzyNIhMisybhOf5DAKDYrKEWkYnXSipbAzadFRCoWadWgLUtAqeoEi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625726; c=relaxed/simple;
-	bh=8pjSY5TGS66p72VQ8UWjz+9rF2ckIGkBQ9YNQuNRxHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gy3eAI/EHfnopbtk8TcErlpc+bT2ArLlbGnC8M6rOeQJZGOZLkf2C0Ss21ssG2Klb1qxWEM/r9QRVwW3W9mXlfRqnYbsws8jRx1WVDEqetQQ/zh8JoumxgyYds1xnne538dXVD5m+NOYP0OR1BYr9MKPTfhDFVneNjY44Xx0zrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41DBB1007;
-	Mon, 14 Apr 2025 03:15:22 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E12813F694;
-	Mon, 14 Apr 2025 03:15:20 -0700 (PDT)
-Date: Mon, 14 Apr 2025 11:15:17 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"Pengutronix Kernel Team" <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, "Rob Herring" <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 5/7] firmware: imx: Add i.MX95 SCMI LMM driver
-Message-ID: <20250414-tiny-classic-barnacle-5f8c8f@sudeepholla>
-References: <20250408-imx-lmm-cpu-v4-0-4c5f4a456e49@nxp.com>
- <20250408-imx-lmm-cpu-v4-5-4c5f4a456e49@nxp.com>
- <20250414-wonderful-cute-bandicoot-accb6b@sudeepholla>
- <PAXPR04MB8459195AAF65D38AFA1D4F9688B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1744625792; c=relaxed/simple;
+	bh=ekCZbBCos0S4Puu581P14EFgtTwWWhyh9SvLVtgvp1I=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bitwvysBHcXTgkCNwa5AP2o9aRRMJL8zMiM7tUQFnG8OHsQLTyQcvJx3s5jG/Bj8dJ2Ofwodrtik5uRPIFSozyb9X1L2fteqpW2ggni2ER+IhL725o0IarZyPUNuFLgovveyi5UeMzpMu0kT7VT1YOvs5zZxds2fMh8UJyjdquU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d438be189bso37252165ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:16:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744625789; x=1745230589;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dmYDgpn0/9Z8AFIpfjgX1QLlrbCO0Q5CPYFxV/DJ7mE=;
+        b=V+w0laNUW3gy/1y2lS/OhSLtDTU9kvfTR+Z1XvS2d/zcDwMhGD+RqJH0HIo3tfCZjw
+         7YwexXSxI7Tks/SwVIQrR4q0ZlDWPxXpjwzYZ0wHLnXdEkMhASv1qTK3U4P5hjfazDYA
+         5jyFMuY72Bwhk/1lej5VBeCO1nsSvfQmpGbWAvpR1XcZmWLvjtRZ2G1CMLKuqcs3zPwh
+         6Z5xVlOkVMo7E+Pr9fmyvREpqFuJRVDA5rgvTlB0z9FZBSI94v3BzNf64nC0Iz8Rh/Z5
+         7sjOAHXduo2bB+bv9wgT505kCrWy9WzG09x36GKM2zCX+1ccbs+x2Gvp+E5fMEAvtHbJ
+         6dVw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6kAkBArpvnFdQvgaILFb5fW5z54PtagsMFFBV8wxfMl8j+mklyqNTY1aZNGrUh5AkToe1FswjAWYUfeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDN0DH1I6YnsknHZ2yzNB0nmfyd/BvJXzGbWbFGKKZjsmqLSXX
+	udlRa0uCxMRhb5+fIg1nSK5v/c9RaTfqwKav3LCJvYeI1vImekZH/GXN4qpcIV1bTN+DboNINnI
+	zKvXZrOO+QbRNpOug5z/fxLxy99bJIJQzkGd4AeOMRrCSkKVUYwkD+JA=
+X-Google-Smtp-Source: AGHT+IEKncKMpvOAJujFDMTYAE0QLqvzTwv2Kfq+arFgnX1L3ZLUBdopA0CLq9aMMnfKiOyLKd05SMgtnjmqKNxUOSSMeR7XZjbm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459195AAF65D38AFA1D4F9688B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+X-Received: by 2002:a05:6e02:190f:b0:3d4:3eed:2755 with SMTP id
+ e9e14a558f8ab-3d7ec225f65mr125717715ab.12.1744625789522; Mon, 14 Apr 2025
+ 03:16:29 -0700 (PDT)
+Date: Mon, 14 Apr 2025 03:16:29 -0700
+In-Reply-To: <67eaa161.050a0220.3c3d88.0043.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fce07d.050a0220.3483fc.0023.GAE@google.com>
+Subject: Re: [syzbot] [hfs?] KMSAN: uninit-value in hfs_bnode_dump
+From: syzbot <syzbot+efd267470a41bc34bd98@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 14, 2025 at 09:57:43AM +0000, Peng Fan wrote:
-> Hi Sudeep,
-> 
-> > Subject: Re: [PATCH v4 5/7] firmware: imx: Add i.MX95 SCMI LMM
-> > driver
-> > 
-> > On Tue, Apr 08, 2025 at 04:44:29PM +0800, Peng Fan (OSS) wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > The i.MX95 System manager exports SCMI LMM protocol for linux to
-> > > manage Logical Machines. The driver is to use the LMM Protocol
-> > > interface to boot, shutdown a LM.
-> > >
-> > > Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  drivers/firmware/arm_scmi/vendors/imx/Kconfig |  3 +-
-> > >  drivers/firmware/imx/Kconfig                  | 11 ++++
-> > >  drivers/firmware/imx/Makefile                 |  1 +
-> > >  drivers/firmware/imx/sm-lmm.c                 | 91
-> > +++++++++++++++++++++++++++
-> > >  include/linux/firmware/imx/sm.h               | 14 +++++
-> > >  5 files changed, 119 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> > > b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> > > index
-> > >
-> > b5f13d0e40155e485f4d1696e9550645d888ef44..4c24e17425f83081
-> > 0f8ba376ece9
-> > > db93c8cded6d 100644
-> > > --- a/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> > > +++ b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> > > @@ -26,7 +26,8 @@ config IMX_SCMI_CPU_EXT  config
-> > IMX_SCMI_LMM_EXT
-> > >  	tristate "i.MX SCMI LMM EXTENSION"
-> > >  	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-> > > -	default y if ARCH_MXC
-> > > +	depends on IMX_SCMI_LMM_DRV
-> > > +	default y if ARCH_MXC && ARM64
-> > 
-> > I can't understand the ARM64 dependency on this and next patch.
-> 
-> ARCH_MXC both supports ARM32 and ARM64.
-> 
-> To i.MX ARM32 platform, there is no plan to enable SCMI, so only
-> set y for ARCH_MXC ARM64 platforms.
-> 
+syzbot has found a reproducer for the following issue on:
 
-OK but why is it different for IMX_SCMI_MISC_DRV. I really don't see
-any dependency. If it is not supported today fine, but do you need any
-issue to use it or compile it for arm32 ?
+HEAD commit:    8ffd015db85f Linux 6.15-rc2
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=105820cc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e30b69a28cc940e1
+dashboard link: https://syzkaller.appspot.com/bug?extid=efd267470a41bc34bd98
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=107c0470580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158a6a3f980000
 
--- 
-Regards,
-Sudeep
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b099795f8c63/disk-8ffd015d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a10b15dc31a5/vmlinux-8ffd015d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/24a20f2e33c6/bzImage-8ffd015d.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/c80aacb02924/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+efd267470a41bc34bd98@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in hfs_bnode_read_u8 fs/hfs/bnode.c:54 [inline]
+BUG: KMSAN: uninit-value in hfs_bnode_dump+0x30e/0x4c0 fs/hfs/bnode.c:172
+ hfs_bnode_read_u8 fs/hfs/bnode.c:54 [inline]
+ hfs_bnode_dump+0x30e/0x4c0 fs/hfs/bnode.c:172
+ hfs_brec_remove+0x868/0x9a0 fs/hfs/brec.c:225
+ hfs_cat_move+0xfc9/0x12e0 fs/hfs/catalog.c:364
+ hfs_rename+0x344/0x500 fs/hfs/dir.c:299
+ vfs_rename+0x1d9d/0x2280 fs/namei.c:5086
+ do_renameat2+0x1577/0x1b80 fs/namei.c:5235
+ __do_sys_rename fs/namei.c:5282 [inline]
+ __se_sys_rename fs/namei.c:5280 [inline]
+ __x64_sys_rename+0xe8/0x140 fs/namei.c:5280
+ x64_sys_call+0x3a1e/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:83
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable data.i created at:
+ hfs_bnode_read_u16 fs/hfs/bnode.c:-1 [inline]
+ hfs_bnode_dump+0x3c5/0x4c0 fs/hfs/bnode.c:156
+ hfs_brec_remove+0x868/0x9a0 fs/hfs/brec.c:225
+
+CPU: 0 UID: 0 PID: 5792 Comm: syz-executor395 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+=====================================================
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
