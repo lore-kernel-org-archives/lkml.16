@@ -1,75 +1,74 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2072.outbound.protection.outlook.com [40.107.95.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A42F32
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600859; cv=none; b=O4Gh9j+RkJSiyLnizKOWyu9JkJ83IncMUMlQlDGXs1jPeyr44f4wWyRH9ZSmxublw47jauEL4MTM5LlLWs7CUNlmKv2MgvF9O0g3NmgQlGlWxYiXT4a+cOj06KW6Ns9wLXraITqhTNTzHgvWxxOh3FpXigdhxkmeUP2obj4XEK0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600859; c=relaxed/simple;
-	bh=vDgdo7S6Np2OOE+tLCoXsHdQbNPUxnQIZ7ZYIFmLjpo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bm+1Y6zNlbt4C97v5EXRwj8SfEwjGU2rPdNnAf1nEqo+xkHNBQh99cnvjzD+GnAeHABlki/TUXv4jCfcPlPctz0pwVQNpjVfZ5H23KeR9IUgYXUQUgedFrRYTTxZbjUknGLOjzetrrKX47AiHFKZ3yVSTPvDeETWcHCPWjYoFsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OsG4SlS0; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86898DF5C;
+	Mon, 14 Apr 2025 03:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744601001; cv=fail; b=unLXzxiVw6QW5TKBj1B8Xy+Z23BQbcMb1XxW5WXs0cquvex/yHs2WrIh4Z6SUwKSeb5n3AWVZlroTUYWbHElr1+D2mrZcP7ukufrtuokw1beq3oU1oSo1l2fYwaVlsBuubNUwDnzEZtQCSPbOClLV2LxtqR1kZbpofCJtPFsNng=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744601001; c=relaxed/simple;
+	bh=hyryQGVNl9jnenAlsw5KjBIX9ioJgHFs8BVk86PTBLM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nVoZ0ruiqOBvZr673k+w2G3C4VRTCYY5axYRj3oeDT1fqSfgWQuy/YgkN5rzetfqJy6Fdb8gnfqenjrovofoPdRlgGlmZdUIGtPC78+GXuZivX2H7XluLqlUJgEi1Jhcue22JV91AIkTGLrEV7wNSzBQkfEjo9wKJ704BsdE3po=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gPwV5sI0; arc=fail smtp.client-ip=40.107.95.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsG4SlS0"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2254e0b4b79so50692135ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744600856; x=1745205656; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DWVn+xXXJZRxORbRSuoVvLMVD3a41eyrT2UvaYEBs8M=;
-        b=OsG4SlS0I/M1VD0K8tbNsb0XfYpV2+Okw2Jf42aB/E12AdHBxSxSTKY1jOYbKpjfsG
-         qIcLLLcLJOZvS2UU3kfRGmhsd7Zjk5HyWq1M/SYOy0lrJfWDUihNBG6zujUiDNiBEviN
-         XYaWbs9bd+e1pLszbnr6iktuu/kfl5djRIEAlazzHsnCxrxpM2nYFH5V7x9sk5dIqnQj
-         5kgglQdhNNaBO8mtivEB8OqYVSg+yKNIN0Ozu1e6ZpsgAMZLn+elNi1BFdLK6L6K9EGT
-         LuF/9sN8Sa3Cq4MoAoSND2h4aoSRp+Wf7TgRIEH7HxozJTu7w0j78s0+B3uSUVHO5XxT
-         1FvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744600856; x=1745205656;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DWVn+xXXJZRxORbRSuoVvLMVD3a41eyrT2UvaYEBs8M=;
-        b=LSpNehaU+iILdGJz2+rNVN09G3rPl4ziXXqcRIZ8gKv7fTObJ0eEGqu4fpUO0wxWF/
-         JgSlKUmEStTA/k/kAeLAaLzwLOYYWwx27MFdDCHt41BY9YXCC4kJJvxW4bW/89JH2r9h
-         /bdqrP6LxNbOzgRm82lp/7aAehJE+GYhUdowN8k99xaxHwH6le99fhb7FDtfw/KJoqie
-         VWMep2VSh3+NLPcVVfMVS8O5s0ufP7O//AzRGSl1goimBg9w1kFw0bXETxblh4KsI96x
-         FOyhm9wD96kMa7LVIQaWxlBtgVeGY9bUUD/QHKQNjM8Xq9MvHiTwiB/yJB+9YuXHGOM+
-         yFqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUn2cs+liwPCEbrC3RKxUAcSrupZHFXsYmSldFjCZNut3fCKDu5xqtFmNZQaq2eWbT7o2IH7HSPwx67XNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycfnnwO+sR/zkcsCtwIhPPnsCihyt+Mg5utVxqpu/Oa1/jJpkB
-	Nfl1y69Q+jCuQXNPZBI8v7vZ8FjHqEEJpugQyw3cqYsHa5uMw/bfydN89A==
-X-Gm-Gg: ASbGncu5fdvo9zNYib5cKKrtDuJ4xMvgbV0nCh/i/u/xAWn6Va3SJ8wkNsXnMwiYcJd
-	hFzGVWhawLsExzoe5P+PalAtLtgwOIV/XF7xBgvonKl9dR/GiQQe2X0+DrWlk2b1QAUCmrPuOTy
-	Ji3Wz+Gd77acFiU11qy9VHk76YC8VNQlBxttF5HLKia7nO1Rvi1W4WbyYHtbDUNkQUcr6DmXLKS
-	ZJmctrjlV542ZjWlioT1KXl9rsBQA5iN1p2Nz3fa1TtFzyg3sz3qTRc1+w51SH36WqegFgNQYGQ
-	RIkQUW4jctGEfDT5naxBRdPH3JpMK3NFkeLSoVCTCJt101kXcG4=
-X-Google-Smtp-Source: AGHT+IFVEpR1+fge0pH0O9qzWeOarRSPVcSWXXVG2imqt7tdzeO78mV+2oJAMYPwq7fnv3TT68rR3Q==
-X-Received: by 2002:a17:902:d4cd:b0:223:faf3:b9c2 with SMTP id d9443c01a7336-22bea4bd77fmr143101585ad.27.1744600856246;
-        Sun, 13 Apr 2025 20:20:56 -0700 (PDT)
-Received: from VM-16-38-fedora.. ([43.135.149.86])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230de19sm5647308b3a.124.2025.04.13.20.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 20:20:55 -0700 (PDT)
-From: Jinliang Zheng <alexjlzheng@gmail.com>
-X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
-To: gregkh@linuxfoundation.org
-Cc: alexjlzheng@gmail.com,
-	alexjlzheng@tencent.com,
-	linux-kernel@vger.kernel.org,
-	tj@kernel.org
-Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to per-fs lock
-Date: Mon, 14 Apr 2025 11:20:54 +0800
-Message-ID: <20250414032054.72526-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2025041318-unnatural-caucasian-48d2@gregkh>
-References: <2025041318-unnatural-caucasian-48d2@gregkh>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gPwV5sI0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v5W1Xmv5e95rqav4mGfP+J1NjTBDEQfS4v7xGQExyNSEnc4JvIr7Iyp3IoEwd70inDQ08uWfSiin70CuaZdNx0vH3Jhn3ggGNeZ+WszC1IX5Hbf7EF8fsySfmNVrBAqbj+mIpTqHqBK72C/HbIj2GGZVsyvwZ3RgGtxgvpod4UabkRdunfWlQGANcuyGRxFaGaOmxvHNRGT5lIT8sSCDpfAYrpe382MpDzWJ+IGyKb79qikmIFx1OXM3qNCh+xCDuIzO1/SLi3LGhDQuk6oCSfg1hFLKz5pgDu6YYrvi6rihNrwIhVNURmyHuz5Zfm825noeSGFMLrzkuMXZFP2CjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oglVPY8ihSiT3PY3Bxz0zpCQIPEC+2NQrl36+6515yA=;
+ b=PS72zmwOO+pRPcYJoTPv2iPm27jufFUNEwee5JVCP2sIdERo2S8EAKIRVKZl44rWJ3kVx7Wzdu+U/an3yoshYWx/S3ZAmnPJfEemc1aUkfYmSMkE6PaGEuonOvQSb6yjhiecK7b5AzR8f7jgW/YdhLRqvlBbVtbOrZH1HnC4ophqaC+wDc29aIp+kBEc/feslNodkIiFQXK4WK7k3bDR6YAdORar8ZW6RSPCNQP6VpLU85Y26G0YouQHghn2IbMhQOZNRjxppiKwWNBB6lflu7BpiCbgcWHTnIj8fR5FC+0mPg4tYvSbjQYR6C8x6B7iFggck1C+vJWgZB01wD9iCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oglVPY8ihSiT3PY3Bxz0zpCQIPEC+2NQrl36+6515yA=;
+ b=gPwV5sI0gQfip7sg1+4ZRwzrpbj9qiWXSlKqHJ5r0TFI/efWQJoe2JLSgLSBKssC+kqmePGWlTRVX+MJ0suPzA5afy8gfAHcCVP+QvpGj7Jl0aGnXj/bY7v7bRj3k4d/MvA05vzMBbNxn5ppGSxzWqQCuyRSpKQByEqDwDzJYT0=
+Received: from SJ0PR03CA0381.namprd03.prod.outlook.com (2603:10b6:a03:3a1::26)
+ by CY8PR12MB8313.namprd12.prod.outlook.com (2603:10b6:930:7d::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
+ 2025 03:23:15 +0000
+Received: from SJ5PEPF00000203.namprd05.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::66) by SJ0PR03CA0381.outlook.office365.com
+ (2603:10b6:a03:3a1::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.32 via Frontend Transport; Mon,
+ 14 Apr 2025 03:23:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SJ5PEPF00000203.mail.protection.outlook.com (10.167.244.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 03:23:15 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Apr
+ 2025 22:23:14 -0500
+Received: from xhdlc201369.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Sun, 13 Apr 2025 22:23:10 -0500
+From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
+	<sai.krishna.musham@amd.com>
+Subject: [RESEND PATCH v7 0/2] Add support for PCIe RP PERST#
+Date: Mon, 14 Apr 2025 08:53:02 +0530
+Message-ID: <20250414032304.862779-1-sai.krishna.musham@amd.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,76 +76,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: sai.krishna.musham@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000203:EE_|CY8PR12MB8313:EE_
+X-MS-Office365-Filtering-Correlation-Id: e30e2a2f-7ed0-4291-f4e8-08dd7b03b1c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xvWWhS4qLaE6DG5wO0EOFUww4NbkLdIIkdE+Tz6i+GY476ih3ee54FNV6UE4?=
+ =?us-ascii?Q?bjO1aUqXdHybg4b8A1jJ+t41Ooxbq3nqFfbDqAlYeuZZadhBbCHYMUd2MPdt?=
+ =?us-ascii?Q?Wp5FT5tE5xOIHsvB28isfkSsSoX3KDab2VoqmdAhmTqF6X2VUwkTVcHXr9bi?=
+ =?us-ascii?Q?m1DWhP5R2s0WL+lC0ZQfevHTw9D32Y5hAnvQ1leM+E2yJMA6E6usUs2Km/7M?=
+ =?us-ascii?Q?Ngs9nSu1LXZ8IoAOhbd8tDjOJD1s3Ii5HI7aRoKdW6KYvbNlVuINLs6p/nwo?=
+ =?us-ascii?Q?dbELlvRAASB+hRkJ1yZlBLb5UF3fMdVWSkzk3Eqp5yf82E1y09L1w1LnKKFC?=
+ =?us-ascii?Q?saNWtJjUUzObA07pWGtWrOp2Kc6lwMSnEP3ZuHd22fuyI9zv2+0i6dSq8rrL?=
+ =?us-ascii?Q?KhYpP6fpBP2doPaUeg76HRJPENHaJ7641Wm6zsEaZNDgcnomfYj8qP32jpya?=
+ =?us-ascii?Q?c1jGwoU+rZh8FyT5/9HxLvtCHWePb1qXnzvlsCY2LyDE48tyYPPICNFyuccK?=
+ =?us-ascii?Q?PWh+8iUjzCXWf21R8G99sCFu2o6g/sz+VhReUqVBzNVy1JryQ3XszwSnjjB2?=
+ =?us-ascii?Q?udw9nnnqUMlCMGcOiKZ9IVDLZNwDJAPXOzg35nLe6OxHOsUvDeJgRtU9RQDV?=
+ =?us-ascii?Q?OxHIG68g1OZXQMv/sJHKCBe3KBTFvlqI8DtEbe6ncYnxp/o1soATmYbkUqki?=
+ =?us-ascii?Q?5E0oHYP55K/AY3fE88n4UDi03nGGdBSIHPOfulwI9Xi0li2lTjXTV7VGzEAH?=
+ =?us-ascii?Q?8uCuX2z4k97D/V5T6HcoYAgz5Dq6hDGJGnrCnw9n8c5r9mSzPALP+dzVbefL?=
+ =?us-ascii?Q?xH44njC2aTKxMqYVdoz5OBgyBEZ01niQoJMofODoMk3U3VfhRYqDcQ4ZOOlT?=
+ =?us-ascii?Q?gaAogpFpkONys20DWaPHdYpwTpN1+6ljL/TUquQpsl3PTitAZqcpWgfRH+9z?=
+ =?us-ascii?Q?9O0MjVhiqJDqwNy6gX79AK8fnLH9cr8q/SKxTCEtg/vPR1PH1u7pt50h01M1?=
+ =?us-ascii?Q?eRB//NSPTDAsJmanUUZWxR+Xvm/zI/OEkUqBQcJXwQ9/PK3g2mgyUcqVc/2/?=
+ =?us-ascii?Q?pbos79+5KdBcKPWLuynpSo9HnZf4AM0YcJqlnaqIXfLjJefTo6pFqlZWU7FR?=
+ =?us-ascii?Q?VgXZCu/1AbDMyDmaxN+8UeAGjS65F9METlo7YUMOPvHwvpEbPP+6gMW3syky?=
+ =?us-ascii?Q?/NFDaqsIiFKF9IFNHIjWBtDToSLjr8FRTNVhyCz7Mhtxa3cKMtDh0/hHD/+q?=
+ =?us-ascii?Q?yy0ddzZf0Y/Iuoj6dH1q7kvOrOq4lkvJFg398K7sWYFEDRTn+/k0MiV3VueZ?=
+ =?us-ascii?Q?CLc24JMpJAcghlqglSH+efPCI/YQEe9Xt7xi2jDCav1ALdaIqJIX9SIXMHVA?=
+ =?us-ascii?Q?6nU7wH6HnSoLQYc/hOQbGCWWU1Dt6juQrmfXH90rc07903Sj/CCtopjWKNqS?=
+ =?us-ascii?Q?Y7ahvjwFgAkBbyDLbWKpH+avfPTUZDSGM495XCVNCxcwzACG/KF0cnVSuFke?=
+ =?us-ascii?Q?CsMYpR80Dn/wylPPdg1sTRaWiSkR7Wy/S2Rd?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:23:15.2731
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e30e2a2f-7ed0-4291-f4e8-08dd7b03b1c5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000203.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8313
 
-> On Sat, Apr 12, 2025 at 07:50:54PM +0800, alexjlzheng@gmail.com wrote:
-> > On Sat, 12 Apr 2025 08:12:22 +0200, gregkh@linuxfoundation.org wrote:
-> > > On Sat, Apr 13, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
-> > > > From: Jinliang Zheng <alexjlzheng@tencent.com>
-> > > > 
-> > > > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
-> > > > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
-> > > > 
-> > > > This patch switches the global kernfs_idr_lock to per-fs lock, which
-> > > > put the spinlock into kernfs_root.
-> > > > 
-> > > > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> > > > ---
-> > > >  fs/kernfs/dir.c             | 14 +++++++-------
-> > > >  fs/kernfs/kernfs-internal.h |  1 +
-> > > >  2 files changed, 8 insertions(+), 7 deletions(-)
-> > > 
-> > > What kind of testing / benchmark did you do for this series that shows
-> > > that this works, AND that this actually is measureable?  What workload
-> > > are you doing that causes these changes to be needed?
-> > 
-> > Thank you for your reply. :)
-> > 
-> > We are trying to implement a kernfs-based filesystem that will have
-> > multiple instances running at the same time, i.e., multiple kernfs_roots.
-> 
-> I don't think that kernfs is meant for that very well, what is that
-> filesystem going to be for?
+Add support for PCIe Root Port PERST# signal.
 
-Thank you for your reply. :)
+Add `reset-gpios` property to the Versal CPM PCIe controller example
+node.
+Add CPM clock and reset control register base, and CPM5NC firewall
+attribute base.
 
-Similar to cgroupfs and sysfs, it is used to export the status and configurations
-of some kernel variables in hierarchical modes of the kernel. The only difference
-is that it may have many instances, that is, many kernfs_roots.
+Sai Krishna Musham (2):
+  dt-bindings: PCI: xilinx-cpm: Add `cpm_crx` and `cpm5nc_fw_attr`
+    properties
+  PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
 
-> 
-> > While investigating the kernfs implementation, we found some global locks
-> > that would cause noticeable lock contention when there are many filesystem
-> > instances.
-> > 
-> > Fortunately, we found that some optimizations have been made in [1], which
-> > moved kernfs_rwsem into kernfs_root. But there are still some global locks
-> > left.
-> > 
-> > We think it is also necessary to switch the remaining global locks to
-> > per-fs. Moreover, we strongly agree with Tejun Heo's point in [1]:
-> > 
-> >   "... this is the right thing to do even if there is no concrete
-> >    performance argument (not saying there isn't). It's just weird to
-> >    entangle these completely unrelated users in a single rwsem."
-> > 
-> > We think kernfs will be widely used to build other filesystems, so we
-> > strongly recommend switching global locks to per-fs.
-> 
-> I don't strongly object, but I would like to see some real-world numbers first.
+ .../bindings/pci/xilinx-versal-cpm.yaml       | 129 +++++++++++++++---
+ drivers/pci/controller/pcie-xilinx-cpm.c      |  97 ++++++++++++-
+ 2 files changed, 203 insertions(+), 23 deletions(-)
 
-Haha, we are still evaluating whether to implement it based on kernfs, so it
-has not been implemented and tested yet. However, for these global locks, I
-think it is more reasonable to switch to per-fs, regardless of whether there
-is a significant performance improvement (in fact, when the number of kernfs-based
-filesystem instances increases, the lock contention will definitely be reduced.
-At least, it will not get worse, hahaha).
+-- 
+2.44.1
 
-Haha, but if you think it is not necessary to do this, just ignore this patchset.
-
-Thank you,
-Jinliang Zheng. :)
-
-> 
-> thanks,
-> 
-> greg k-h
