@@ -1,178 +1,111 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic307-30.consmr.mail.bf2.yahoo.com (sonic307-30.consmr.mail.bf2.yahoo.com [74.6.134.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D4A25395B
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649103; cv=pass; b=YtBcFDd2DH624RedcAwa2cx0LJ7ZrLkTRLuTLHYnWDg/kCb+AKCcMBOwI2EbdkUX8lu01ffsPfzgJiuf/WPIBwiv8V4Rd9tBU2+C7p8BZbNKscL+Hj82b82vWc7gBs3QxHa0MhNvUQGbE4MRC7PUJ9urDjwOKvMccHWOMTH4lFg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649103; c=relaxed/simple;
-	bh=T8s6vqc1P9H1qRSVLvRemNoe4jPc6um1RM4xG89jsy8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=tKhNCFN0fKCpqPwVqmo8TXYrV8GmacjIh2Wb6RFwG8CNc02MgYIISX45P+Lf/AhbEuN2uWTWPZFBXotC+4WPcV8k3paYqRA/WvZUVimjKpDAFGuSMxgilox3cv41e8wTy8PHxrWeuK02YHGnWjNmswjJFbIyKuaNFJKXKygiKu8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b=GKV1GX2x; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C924288C83
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.134.229
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744649104; cv=none; b=cAcPT+pv8PBzGY33iRrFkBcfNE0qxWf8IuPzl7uH07GECc79cc1z3ziO4Drvx5i0XZ/IcdcBDvYXB4KlX3g6Cgu5N3tb4Ot/xAAKYKqykRS1bFYVB3MVZMDWbXglf9a0AANHt7OU+qO8kJfml5M5qQAJ0q+8kW4QT6f0fo5ArnA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744649104; c=relaxed/simple;
+	bh=LRip5C8YXBMcattS1GRTxAuDuczRlbVQDGWhRq42ClI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RE1xp0wDsMYwzkcqE3lia43U97NzSzJfwTdjzqtN449yc2AwPyOEO/Zh9banNZWnNnRJyDe2/g6TZK8OnwFacMAu0S3pukCP2Qxg9w5zHnjbtERkL3xUjCFFD0RZguA0VFGuRCpQ/p746r/xxP5HoT61m+eWiOycgON/NKNcSq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=PLXAQqRB; arc=none smtp.client-ip=74.6.134.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b="GKV1GX2x"
-ARC-Seal: i=1; a=rsa-sha256; t=1744649069; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fOLJD2HiiAHAGXahjHXke91G4mYUIyi/iKwnhcrRNQbUeDZxRLE2U641yfwGN7Z/xfwWjOdDs5vr3HdGId9JWMN+ryKwdzlTRmUrND3wu1S2LxNdZMHy0MG62esDVWwacuCCW3fFWam9eMEPgep/8ZIhFNKE3GaEwLj1E1Dl5sw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744649069; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=5eyJYKZSjVgUVi1w+/gIBAqDOTVF1Wz6HfjZqS5wbsY=; 
-	b=GyePq+Z2yZYKlA2h55S+pfjq0esNbjYn3ZEDnREzAz9NFEAGhX6Nmvy6H4KiObZ5XC325OcxUqvfTzrta6mvJQBegyw3IjwS4Du2fJyPsEJEJ+lWXtumke/EhEnuwsYD/y+bwm3HSf3ec1DOxYmk0vY+kn3WmuJRTPQusKSdfF0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ashley.smith@collabora.com;
-	dmarc=pass header.from=<ashley.smith@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744649069;
-	s=zohomail; d=collabora.com; i=ashley.smith@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=5eyJYKZSjVgUVi1w+/gIBAqDOTVF1Wz6HfjZqS5wbsY=;
-	b=GKV1GX2xHG1bNjaT5nMa1IM0Ue8IzrIFPxGnTORkfdLAWX91Q1CWINGgC9TgSpxj
-	y8CYG6kh5337KoVq17m2wus7PYRQAxLZhkqyN/C4HC5eXXrj0OmwL73uH6NKE5VYsfL
-	pe79QlxSfMKnfHLMabFKuBhVelBKFSt51d7LTS8U=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1744649067190904.0723844219125; Mon, 14 Apr 2025 09:44:27 -0700 (PDT)
-Date: Mon, 14 Apr 2025 17:44:27 +0100
-From: Ashley Smith <ashley.smith@collabora.com>
-To: "Steven Price" <steven.price@arm.com>
-Cc: "Boris Brezillon" <boris.brezillon@collabora.com>,
-	"Liviu Dudau" <liviu.dudau@arm.com>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
-	"Maxime Ripard" <mripard@kernel.org>,
-	"Thomas Zimmermann" <tzimmermann@suse.de>,
-	"David Airlie" <airlied@gmail.com>,
-	"Simona Vetter" <simona@ffwll.ch>,
-	"Heiko Stuebner" <heiko@sntech.de>, "kernel" <kernel@collabora.com>,
-	"Daniel Stone" <daniels@collabora.com>,
-	"dri-devel" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <19635301a95.f859dc6e883590.3071663948141072628@collabora.com>
-In-Reply-To: <3a5306c8-df44-430a-a24e-72d71b2dc8c1@arm.com>
-References: <20250410125734.1005532-1-ashley.smith@collabora.com> <3a5306c8-df44-430a-a24e-72d71b2dc8c1@arm.com>
-Subject: Re: [PATCH v3] drm/panthor: Make the timeout per-queue instead of
- per-job
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="PLXAQqRB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744649102; bh=6V04kO3rpZ47EWD3X905dHz9fGQ1xlrcbJbLzzJKDj8=; h=Date:Subject:From:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=PLXAQqRBQBxCZmqsG3MmecLziQkfzx4oBEUHGQSvCPTNSoW3yW3IV4yNnzF36MWLNzWBcN9Ok+sJctQQC4SkIwW9lTNPzmy8gc/IzIoZKD17xmF/9ZXzF8yxicBGngsjwCVK5brOEId4No7fEeyyL5sr4Rlc69Zuzrog88gA9fdil5tbTaufNPp28m8Q4XIaFzi9y6NDlZncSHKgkA69gNgs0k5HDZcOqWzDnA2dErnvCu5RgxxYtCQ+p0P2S3RRmWKrChw88SLx+Am1tPKw64MsquCSq/Q+trWxzvCN6uYVkSYdFOt75oKonytbYUjJ6ZcCwAZOGQlO0ofGvrga1A==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744649102; bh=PNc+hfhIh1LCGx+RzY5TEkiADztooHAQI1WNhiDG+F6=; h=X-Sonic-MF:Date:Subject:From:To:From:Subject; b=YGpeh5mLhXMErC6iVVGHWXy3Z1/N3hncuB9hT+zXmBX3cPEfs8QhQkA2e3TKlpYGctchwa0bf3nmcoHsm53hLwMN1ddtZ0G7PflP7dSjKYrIHWhvdNFinhaLbCIpceOSwSJr6Cqyti2dmz0fGGd/wRGbHrvxI5lL84YqlzdlG618Uoov+CE/XAHRMWl93OxX42YyF1UhUCjmcOhM/NZhlkpcppdkFmeyPIJbYA90HdAfc1LAn/yg6ydkHLK9U4DLWIard+fJ2Q7H1BxmYGi6fM1caCjFYX5UVmmYJ3961piztqC7TApufsbeAJCpzWCLkZK05v4xVy0F4PgNNnPUmg==
+X-YMail-OSG: ijaescAVM1kj5AFBIzzT.YKhGnW2.GMXcoNbQi.Jna0FItqIw5ZmuNjyO6y4WBL
+ nGAdxWYqSBtPW7w6BJi3kQLTHkYS0Fyt5OKIJzTo255iMyr5RfZ0F2qquSlJh0LoiU8T3eiul4tE
+ 9K3BMCQf93_hzZCVBcXw2c95HyrFdn4XqOj1QRRS6IhnQObkdTwv3D1bmKADOU7eWlI3UKO.9tYY
+ R4TYDbz9rwrZaepSU1349IKr1S2Qu3guonNuts1Pj_jG6Faq7DR0Iwrz2B6BfxPgBGTTdU77q.tv
+ 8Ivhly6Bt82znn7SANBbhGhnHcjy_En7BAiLplxZPK3WIyGzV.Z66T8lMlMHoPyHuujr6XUB9WGi
+ kLVY7VQ5MV8mLaT2kz5aRz0DRRpi4pM8bXVYilFTujbdkgebdsnSOoaC1LlCKqBXs3VktflfFgSN
+ CCmFlAqaf1.vOE2zxeXJhHSNWG2aCSwdg1whgQDKAEvRKgQwxhAmbsLsGCEmIzu6PTwQxA3Rc4Ij
+ OWrMnMhLEyaUAYWIO4ZAmuJ1xxXJUuauhX2aEKKnOnjnyKbSpuRVz_94gDN5ZHmAPZCc_5IgU7x4
+ BzG7FpRA4amT1lhVjCqcGoQsUrxz1CeUXNivlnRhdokeNHND1KyqMMJ5Is9NqiV5CxkhIrtv6GtS
+ hXsc8aCSr4FCbuc6vF5nI.eRPFZSN5lGDEBhbwdA3JR9QVqTODNcAglR498sijcdqVYCA.xzFj7s
+ xdNwP5RSe5xRo7thDmkzRSjYSEF2S4xpDqtLM84SNt_Q4QIh2ckfp_eSfxP.aUxmQYLBCgpbvIJz
+ ElllqXu.JdgOmDgXmlH0J_vKlxNLwooRNuUnogEN.ATpAu26KV2ID9aqjtVGdGjK55MfYU0teetL
+ XA9EzdzkU3etTnb2lAEW1ebexZwiZlfxPSNUFRs01hP4Tw53ivColKJhxFD1f74kEefmVfQyCJXS
+ aCVbsRiWlVYWyt6DWA.YY8BSIE6s32LCrlVS.JlLi80lNSapZxeKkYPrfgCra.0SprZfe1XhPKEV
+ aKKW0zCa1IWqqY8hUDN.Uz.Ov4Tik4iwkJjWruy4u5hBWno.Az0b9F..xVj91vfZ37JI2wMCkSfQ
+ Yt8xmeGZaL_o_UcLLaNpkHIx6D616F5hOxo0vZcNRHJa5.zDEZPgY0ErKtwxI7yHvXxbyh7C30Dr
+ dPBVJQRTZF8XAuoIWbnDFh.SfWICdopamHEdFnV6Qp485h0Q6hvAzyBBB_.geAGdIm68d4rO5h2Y
+ M75NWavibJsQWCQ_j4ZoRSn8T2Ztn_3yI6HcIJh3Q8Gu2RpuQBF8jEqiZGNr93VaVio4Ev3tF2X3
+ ap57Wu3p0uM6UssZqY5QdAXAdtiLYCHbNj_ybVALCZN6kU1.ptLZSjArgE1kI0pMqMzwSuajpp0S
+ _wS3nRptlINDwD78V2tBeWQyhPFqOY4YHWU7JNlS6WA7Q.WGuZJyE6wO8zYIs42JimYDcMdreOck
+ 6zr.6R1hwsP0oIBcyJrz2zBCfVYHsSyR_0e17Zec3kEcWIOBlWeuqegwyZLabUkOU1Vpmdlupx1V
+ Kz2fL9agosZDxRAk6k5vHOFQ9YTLTNHYMtvBJ2g3c3DEsqOPalQyG2S7fd.rMcVG7xxWRVfCB.AB
+ 6U.Sn8VklpY4dcK1n7NBBJg0Ro6OmfnvBxc1bezv3Gt_NjUlIHD.ouh4tP28bhu5i7i8uSTIof8X
+ Y8K9RLR0OmEDIj3_C431SxQ2IZhKWuBwBNtoRT_Tz8vFg36k2BF0x.wG482p5M9G_waTKw5QBnrY
+ PV2hx6ZIaw0cUcoDxBeAiLtRENKoOhmHIEUChWDOpK.KWD5n2fHh4XUc2M0rbzNrpRXVNHlcLxaz
+ 8RQ4X2ay1lT3JvRnVa6.bSajS21qYnVW_B5.npCmkS6j8Gjy0G6FaeOxsPsJOSLD2teUZRPG4vNZ
+ 0x7enlFk1mvGEdGmkL6yLsiL1_dOiujje.akjTuY3gMuzvn0iuoqBEpEdgYIrL5PW2nLw_mhg0Di
+ BODDRNa.BCPpewEfzdGzj9ytsSG6sq3UH6J4gfS3E3eIxsYP6ebawE7oR6VOp13Nvl5K3FmrAizb
+ Z2UC84hAnQbtOw8FWFmEx20M2VRbXwrUr2c6lDfO5OVdQIWGaTzrizOeOXR.qQsB4qVDB0aPVcrD
+ WdYVqj25OaxfI.cSPKAFQssdVnUjnxie9uSdhHsEkWA6DhhpphGZ7sxGIb5KMDZn0m9QC_wo6zp5
+ UCE_iAr29sp4JfrkfixrANyuNhPZeJ1CwYGA9OD69mgFTgKl0Wu_ZNwS0L96wtjsRZOBVLjou5p_
+ gVzxzbi8m2ED32Ql8BTFHvBi2DAXzQDnybLfiZN5Vb.An
+X-Sonic-MF: <dullfire@yahoo.com>
+X-Sonic-ID: fb281f51-85b9-4bd8-87a5-49c0144f821e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.bf2.yahoo.com with HTTP; Mon, 14 Apr 2025 16:45:02 +0000
+Received: by hermes--production-ne1-9495dc4d7-vqjq6 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7de9b757f65aed43fbd0bf15ec9cf014;
+          Mon, 14 Apr 2025 16:22:47 +0000 (UTC)
+Message-ID: <3aa3b1aa-84c1-4bdd-ac79-918bcd80f98b@yahoo.com>
+Date: Mon, 14 Apr 2025 11:22:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] PCI/MSI: Add MSIX option to write to ENTRY_DATA
+ before any reads
+From: Dullfire <dullfire@yahoo.com>
+To: Paolo Abeni <pabeni@redhat.com>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jacob Keller <jacob.e.keller@intel.com>, Simon Horman <horms@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Mostafa Saleh <smostafa@google.com>,
+ Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20241117234843.19236-1-dullfire@yahoo.com>
+ <20241117234843.19236-2-dullfire@yahoo.com>
+ <a292cdfe-e319-4bbd-bcc0-a74c16db9053@redhat.com>
+ <07726755-f9e7-4c01-9a3f-1762e90734af@yahoo.com>
+ <4f621a9d-f527-4148-831b-aad577a6e097@redhat.com>
+ <5a580609-aa5e-4153-b8dd-a6751af72685@yahoo.com>
+Content-Language: en-US
+In-Reply-To: <5a580609-aa5e-4153-b8dd-a6751af72685@yahoo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Fri, 11 Apr 2025 16:51:52 +0100 Steven Price  wrote:
- > Hi Ashley,=20
- > =20
- > On 10/04/2025 13:57, Ashley Smith wrote:=20
- > > The timeout logic provided by drm_sched leads to races when we try=20
- > > to suspend it while the drm_sched workqueue queues more jobs. Let's=20
- > > overhaul the timeout handling in panthor to have our own delayed work=
-=20
- > > that's resumed/suspended when a group is resumed/suspended. When an=20
- > > actual timeout occurs, we call drm_sched_fault() to report it=20
- > > through drm_sched, still. But otherwise, the drm_sched timeout is=20
- > > disabled (set to MAX_SCHEDULE_TIMEOUT), which leaves us in control of=
-=20
- > > how we protect modifications on the timer.=20
- > >=20
- > > One issue seems to be when we call drm_sched_suspend_timeout() from=20
- > > both queue_run_job() and tick_work() which could lead to races due to=
-=20
- > > drm_sched_suspend_timeout() not having a lock. Another issue seems to=
-=20
- > > be in queue_run_job() if the group is not scheduled, we suspend the=20
- > > timeout again which undoes what drm_sched_job_begin() did when calling=
-=20
- > > drm_sched_start_timeout(). So the timeout does not reset when a job=20
- > > is finished.=20
- > >=20
- > > Co-developed-by: Boris Brezillon boris.brezillon@collabora.com>=20
- > > Signed-off-by: Boris Brezillon boris.brezillon@collabora.com>=20
- > > Tested-by: Daniel Stone daniels@collabora.com>=20
- > > Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")=
-=20
- > > Signed-off-by: Ashley Smith ashley.smith@collabora.com>=20
- > > ---=20
- > >  drivers/gpu/drm/panthor/panthor_sched.c | 244 +++++++++++++++++------=
--=20
- > >  1 file changed, 177 insertions(+), 67 deletions(-)=20
- > >=20
- > > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm=
-/panthor/panthor_sched.c=20
- > > index 446ec780eb4a..32f5a75bc4f6 100644=20
- > > --- a/drivers/gpu/drm/panthor/panthor_sched.c=20
- > > +++ b/drivers/gpu/drm/panthor/panthor_sched.c=20
- > =20
- > [...]=20
- > =20
- > > @@ -2727,8 +2784,17 @@ void panthor_sched_suspend(struct panthor_devic=
-e *ptdev)=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 * automatically terminate all active groups, so let's=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 * force the state to halted here.=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 */=20
- > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED)=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED) {=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0csg_slot->group->state =3D PANTHOR_CS_GROUP_TERM=
-INATED;=20
- > > +=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Reset the queue slots manually if the termina=
-tion=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0* request failed.=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0*/=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i queue_count; i++) {=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (group->queues[i])=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-cs_slot_reset_locked(ptdev, csg_id, i);=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
- > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0}=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0slot_mask &=3D ~BIT(csg_id);=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
- > >  =C2=A0=C2=A0=C2=A0=C2=A0}=20
- > =20
- > So this seems to be the only change from v2 (a changelog can be=20
- > helpful!). And I'm not convinced it belongs in this patch? It's not just=
-=20
- > "[making] the timeout per-queue instead of per-job".=20
- > =20
- > I haven't dug through the details, but I think this belongs in a=20
- > separate patch.=20
- > =20
- > Thanks,=20
- > Steve=20
- > =20
 
-Hi Steve,
 
-Apologies my change log did not make it in:
+On 1/20/25 6:38 AM, Dullfire wrote:
+> 
+> On 11/21/24 04:28, Paolo Abeni wrote:
+[...]
+>> The niu driver is not exactly under very active development, I guess the
+>> whole series could go via the IRQ subsystem, if Thomas agrees.
+>>
+>> Cheers,
+>>
+>> Paolo
+>>
+> 
+> Thomas, does this work for you, or is there something else you would to see in this series?
 
-    v2: Suspend timeout before setting _TERMINATED so that if a terminate
-    times out (Due to firmware hang) we don't get a spurious timeout
 
-This was a bug fix related to the scheduling patch that we found, I was thi=
-nking to include it here. However I'm happy to move it to a different patch=
-.
-
+Since it's been a few months, just wanted to give this a bump, and see if the series is lacking anything.
 Thanks,
-Ash
+
+Sincerely,
+Jonathan Currier
