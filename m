@@ -1,157 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54389253932
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FCA2749D7
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642732; cv=none; b=Q1jVtbuK4/wmnogxCr6rGQSY5n4cE8JzfZDCmAtfuDHgO0F2dZCHtShFWijvjLwH/kSJCOdQLpByfCPATlkfWG9MzuqmqrAxpnJKS/3t/7nf/P6Fd3DY19BWtoMwpTECDpCu2vS+d/mGpxyTA+tvDKIN8UEQxsDWtof4vJBFHX0=
+	t=1744642750; cv=none; b=Fmh6uDWe1VhxCp7x1yAHHbiW/0YTqCuh829frFL83uXuOUbHN8Hi1YDDhlafEwCXIzRINQElijBkXVlJXlldA0d/i/6/vxYRzPlTBsKphbeg9MDRUSODIpR2ybbVXymG5BVx69Adb/UYYb+VwvNyg8WGaZ1NNR5Owq/Q8iOqvrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642732; c=relaxed/simple;
-	bh=ZL4niwD5OzbvUtZ2QvRy0R5Zi5kBv9CNQVZDN+I4Urg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gI0WhkpsbQA9coLSUenJrQWLYG361/ZTwr8lvhOf9l4c1Kg/b4r9Cww2WZ2sXB59GM09VEHdgEZgQ0LsHUp/FO+ls7z4J9zyamSA7KBkh6ZIxPh0NYGnwnHLHCB+9rZACIYzyADbLgZN98PVAYR1xlz6awfxr2opgmKyeAJ18jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3/cRDxV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744642750; c=relaxed/simple;
+	bh=x8T8uwj/TLGIU0lF+Fq0pjFkLdrbonvSm35PpZ00zz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWGQ4oiuE8XzUNuZKFKYLhAKFvDdw5VjYtKyku8cMQG3P5THV/uav6Y+koOncuoQy9wZpJhax5GkUvPpb9TLrIEuYlQTNk4VnAv1Wt5HQkZxx0PAVkDh2ItZDPquEg2DRBYLmKpSP9QcpdGFGRzC5CvRKA3zEgoo1PXCrRs2Ego=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Lx4a5OGA; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3/cRDxV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236B5C4CEE9;
-	Mon, 14 Apr 2025 14:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744642731;
-	bh=ZL4niwD5OzbvUtZ2QvRy0R5Zi5kBv9CNQVZDN+I4Urg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X3/cRDxVV3XjNRB6h9i4f6QXNXzeFGdWszmayJQF/1Nd1i5mjQNqFinsh3dtWY6ZX
-	 B0MDm81ZnU8LNjzrQvsvGS1cTKAFzJtObN9B7hqVHrf/H2u/0Stsy/VfW6S73dm/jK
-	 98RLTfL1OR/3JI5HaKHSRDZtAYtAOHHL/CrcdtRyV1JG1UaeOs/uwIZSC5feY0OHwU
-	 0c4ia7ZOtudz75sQQ9acuC6KVLSVxa3F3oRhYwUjU+ok/OaCv6sHD4oXvEU4ZjEZC4
-	 W4T/VEASlUOwL2fUmiBVhSp90upIS4O+/RSESBuPL1/QSn3fy8DHjizdLEmCRzqz+E
-	 6Gd4EBee/7EGA==
-Date: Mon, 14 Apr 2025 16:58:48 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 06/11] drm/display: add CEC helpers code
-Message-ID: <20250414-determined-kind-peacock-e9a47c@houat>
-References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
- <20250407-drm-hdmi-connector-cec-v5-6-04809b10d206@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Lx4a5OGA"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bceb93f2fso2930327a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:59:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744642746; x=1745247546; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PTu/tTBiLDnLTo19OmaQLQq2DdZvvnanifk4lVRIq1Y=;
+        b=Lx4a5OGAN9/Wf1napXhNyDcYomwPRaOVCyVQbaj0bXa2zSxDFnRIFmpGRUwuOqE9VO
+         6cmWfN0mR+El0gG72xwmkO+1/hAuMkV+36MH4UBqgY9t5lOITLd3BtecbiZnUhSuSAeb
+         ztPLzQ6xc0WSqYiSBcueOAuKe4jQbtcMe0RWY8lXWlKyqZOBVMwrNiGZZ2Comp7y75ET
+         NEVYutaqGa7/5XjcoDlV7vCUmmIdGZ6PB9rmiuWb7TBeLoJK0C9KZ5yvTBmEkmM5qQL5
+         Ju1ESoVCDly3fF/TMtsA0bfr/ZnPUHSHAmB+Um7+lVfYINKWpkHPIY235DGtQbh/juOu
+         XaZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744642746; x=1745247546;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PTu/tTBiLDnLTo19OmaQLQq2DdZvvnanifk4lVRIq1Y=;
+        b=PGa0wyh+sf4Wdc/8fm0RhEa1R/0QNKCoww2qpSiAulzmAF+nHLtAaxyW2XgT80WuC6
+         hQzvHIF9yfe+z+Ej5IXMf85Z9FE5P57PKQ8MvdM3KrFJrfNKNIReD9tpIl4T2me9L1bU
+         XP2vkj8sCdZn+yHfc50oLjyZ5nCbNJJ8Mt/Btwm6O22IPOE2MYuJt6PCoKzBgsJLYzEZ
+         +FRGbmLv3WZeip1YynSd8DWxutPVMLneytDcv9O99EpM645evyxKXpE6RlixTZgy6fvT
+         859/PbinqHyBJyl0yfiBuVWvFXnGRhjjAD1AG7vHQb48ndqf0m0laDFh+LdJFx5bzNoJ
+         hgXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCDonE+rlxDU6zSIhXCPbMT6hTKICpTpGj8yjz7jgRX7v5/koI4+b840D4S+U2iWa1+1j+SplFMaikf5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT/WpPHnbxejxQO+P5PynJ1n5t+by0Tngm3RGOw/DEPo8pQuM9
+	kak5p6JUIUeOSnCn9KMwZjowpA/bXZWux9129NKMBPn0S2Tqun7gwf7KAOYf9d0=
+X-Gm-Gg: ASbGncuB0x7Yj6XJGpzQII9UIbDodKz8jMq/5dSxeQOtRvpg41hJAVpJe4Xr9MkVBxU
+	UKqhBpyKNjJY+gVGAwle5zeLMCbHOiSi43JBfSkw34i2+aRF8HKOsC9jqpnxoaaTmVJlt0nm3us
+	F2+QgtMFEohAiTPznDC2JNovB42+IQ7cTGBDPxvidSGa7o3Q/z0/AEA3OQIFkbRcryUdg9KXN53
+	zpH6hlx2jNyofErRaSRf/0cQpDRqdqTbnJXyWoyV133blY00dh7waxwdYSl0SOnO9/79zQNxI/j
+	WTRSQTAQ9gb4scIpUvEy6JlU9Dk0EHFb02CkCzVtZMvHkX7Pnj7iOdBrbkSOg+UigGwvorxOEY+
+	fP7nq3Z9Sg1rBN/8c/SnUjMReYds5
+X-Google-Smtp-Source: AGHT+IF1glTK7Rxcw8wLI6vS9cuIAF6Jejh7PaHmK35pumQJ1AqOK5QhIhTv8QqFc965AKmemYt/Rg==
+X-Received: by 2002:a05:6830:6209:b0:72a:1222:9e8a with SMTP id 46e09a7af769-72e863c607fmr7034537a34.14.1744642746453;
+        Mon, 14 Apr 2025 07:59:06 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:442c:b496:9db4:da43? ([2600:8803:e7e4:1d00:442c:b496:9db4:da43])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d8ee4esm2029688a34.39.2025.04.14.07.59.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 07:59:06 -0700 (PDT)
+Message-ID: <0b1b428d-9ad0-4581-a13a-88f4ffd6c4e3@baylibre.com>
+Date: Mon, 14 Apr 2025 09:59:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zeurqglj6czdayd5"
-Content-Disposition: inline
-In-Reply-To: <20250407-drm-hdmi-connector-cec-v5-6-04809b10d206@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: adc: Correct conditional logic for store mode
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: gshahrozui@gmail.com, skhan@linuxfoundation.org,
+ kernelmentees@lists.linuxfoundation.org
+References: <20250414140901.460719-1-gshahrouzi@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250414140901.460719-1-gshahrouzi@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 4/14/25 9:09 AM, Gabriel Shahrouzi wrote:
+> The mode setting logic in ad7816_store_mode was reversed due to
+> incorrect handling of the strcmp return value. strcmp returns 0 on
+> match, so the `if (strcmp(buf, "full"))` block executed when the
+> input was not "full".
+> 
+> This resulted in "full" setting the mode to AD7816_PD (power-down) and
+> other inputs setting it to AD7816_FULL.
+> 
+> Fix this by checking it against 0 to correctly check for "full" and
+> "power-down", mapping them to AD7816_FULL and AD7816_PD respectively.
+> 
 
---zeurqglj6czdayd5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v5 06/11] drm/display: add CEC helpers code
-MIME-Version: 1.0
+Sounds like we need a Fixes: tag here that reference the commit
+that introduced the bug.
 
-On Mon, Apr 07, 2025 at 06:11:03PM +0300, Dmitry Baryshkov wrote:
-> +static void drm_connector_hdmi_cec_adapter_unregister(struct drm_connector *connector)
-> +{
-> +	struct drm_connector_hdmi_cec_data *data = connector->cec.data;
-> +
-> +	cec_delete_adapter(data->adapter);
-> +
-> +	if (data->funcs->uninit)
-> +		data->funcs->uninit(connector);
-> +
-> +	kfree(data);
-> +	connector->cec.data = NULL;
-> +}
->
-> [...]
->
-> +int drm_connector_hdmi_cec_register(struct drm_connector *connector,
-> +				    const struct drm_connector_hdmi_cec_funcs *funcs,
-> +				    const char *name,
-> +				    u8 available_las,
-> +				    struct device *dev)
-> +{
-> +	struct drm_connector_hdmi_cec_data *data;
-> +	struct cec_connector_info conn_info;
-> +	struct cec_adapter *cec_adap;
-> +	int ret;
-> +
-> +	if (!funcs->init || !funcs->enable || !funcs->log_addr || !funcs->transmit)
-> +		return -EINVAL;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->funcs = funcs;
-> +
-> +	cec_adap = cec_allocate_adapter(&drm_connector_hdmi_cec_adap_ops, connector, name,
-> +					CEC_CAP_DEFAULTS | CEC_CAP_CONNECTOR_INFO,
-> +					available_las ? : CEC_MAX_LOG_ADDRS);
-> +	ret = PTR_ERR_OR_ZERO(cec_adap);
-> +	if (ret < 0)
-> +		goto err_free;
-> +
-> +	cec_fill_conn_info_from_drm(&conn_info, connector);
-> +	cec_s_conn_info(cec_adap, &conn_info);
-> +
-> +	data->adapter = cec_adap;
-> +
-> +	mutex_lock(&connector->cec.mutex);
-> +
-> +	connector->cec.data = data;
-> +	connector->cec.funcs = &drm_connector_hdmi_cec_adapter_funcs;
-> +
-> +	ret = funcs->init(connector);
-> +	if (ret < 0)
-> +		goto err_delete_adapter;
-> +
-> +	ret = cec_register_adapter(cec_adap, dev);
-> +	if (ret < 0)
-> +		goto err_delete_adapter;
-
-I'm a bit concerned about the respective lifetimes of CEC adapters and
-DRM connectors.
-
-When you register the CEC adapter, its associated structure is
-kzalloc'd, and freed when the DRM connector is freed (so when nobody has
-any reference to it anymore: either when the device is torn down, or a
-DP-MST hotplug scenario).
-
-The CEC adapter however will only be freed when its own users will close
-their file descriptor. So we can have a scenario when the CEC adapter is
-still live but the DRM connector has been unregistered. Thus, the CEC
-adapter data will have been kfree'd.
-
-You might consider safe because $REASONS, but those need to be properly
-detailed and explained.
-
-That's another reason why I think that just putting the connector
-pointer as data is better: connectors are refcounted, so we know those
-aren't an issue.
-
-Maxime>
-
---zeurqglj6czdayd5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/0iqAAKCRDj7w1vZxhR
-xdWdAP9q44A678zD8WJJmtVxiTt5lWZn5UaMYOnwGGDARhyDbQD/XVEreZfGX2br
-ElbrROnConG8KHHjwg2OxjYnfWsMrA8=
-=uFDK
------END PGP SIGNATURE-----
-
---zeurqglj6czdayd5--
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
