@@ -1,82 +1,144 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEDE280CDC;
-	Mon, 14 Apr 2025 11:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBF429AB0A;
+	Mon, 14 Apr 2025 11:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630748; cv=none; b=noFpRon12a5fahCgCNk2ZFMZVfdHbpXuEMQWiophr2fx6o0mBbQKRrcij6MF61kiX2bscMolUCm++A0jZklbElXYK8FGVrL51AB5MXJFHh4U8qsuBoZ6b6m0Xs1q4XSWl6BAEQtXJEGOWNXD7MEilgTartKBD4stCZNjVBhhCsM=
+	t=1744630755; cv=none; b=HoOVf6nXy67p6daHyZekOVp+dnUvMxdy5V/fsA0qsjIPrQgfEFNGsc7ur2+Mu136MvOz6qj53EAHUiqLZIk91/ojyGEu6Z70sge/JQJA+IUCP+HrdC/GN/rIqSsxcwyxwCV3bq10Ofjp9kl5b5LeR3UzOt/O2jQNZ4RkYET+Czc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630748; c=relaxed/simple;
-	bh=JPHN+jpWD9t+wJ6xtaBll58pm1u68FXkwIkn2RM7j84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTyKsNss3ycflLqTAe3eqbJGmwkG74dm4ezis8hGdU+XG3UDlP11dIcAmnt43obYRNdz13zBsFg+wuGMpOMXyqZH/mCyw9jFAu4o3NWpI/0S6xps7nJPmShJ03IBdg76MwTzylUS/eU3nhxNdNNvUVXChsiUEXKYfMcnAbVT250=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f6GUFixh; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1744630755; c=relaxed/simple;
+	bh=FyVWnpa4/PtbPKZcTFnoIrzLAhKqHQiTyYZCE5N8F+g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VtCOb4vUu4utr1lDt0vUOqkrcFrEcbnTECq5qFVTK/xQNx4pKHmYeRM2/bfmQ0o6QBxhI2DeBpcZfqBMDXfCC9NsM874AcsSdXHwxllFSqQiuuV3roNwt/XVjKQYpqD2PWCyz8X8gm1O7IytjSZgdO5AaaHG+ftVvU43g9Ge2VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WfFG4sTn; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f6GUFixh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8tXU7TjKACyyS9aliZITUswNNUYWl81wkuwfMZnjmYg=; b=f6GUFixhYRUezBgFjY82+UJqPU
-	LjQPp31MU/rWulduLV3GFImPuHOY67DQT6zth90CNJFtrikdxQPxji4BhXNyqRNzG4KL88doiSFS9
-	yEVeS9nrGeSz0Ii/RNyHLHWgpNqMq1Vq7kx6hAsYnOSX51xdNiSG+9pPaDb9h+pVZMYvD4mqzi4BJ
-	8G1ypN2kMwRfjPnjlFsR4q/mVobtahFpQVO/k7qpNkS/cuGm5oKsCArlMavhbXSAzE8YdMC+YVEOy
-	4MFTsuj7/c4vYm/fU+dPEXhzy6vUNs3K/RTdVjvjg5u+EylXMY8vXRmz5CGriZlcho4jRpiVqoIm6
-	i7brOdTg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4I9Z-00000001nOb-07yt;
-	Mon, 14 Apr 2025 11:39:05 +0000
-Date: Mon, 14 Apr 2025 04:39:05 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk, song@kernel.org,
-	xni@redhat.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH 1/4] block: export part_in_flight()
-Message-ID: <Z_zz2RY3zHVGScCK@infradead.org>
-References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
- <20250412073202.3085138-2-yukuai1@huaweicloud.com>
- <Z_yr67xrbkuQwy0P@infradead.org>
- <12e79682-21a3-9389-9390-14702d6ca389@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfFG4sTn"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso810883966b.0;
+        Mon, 14 Apr 2025 04:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744630752; x=1745235552; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X6PwPr4LZYXEj7QhUyvyfmnH+e+d5JgPgBGYKHOh478=;
+        b=WfFG4sTnskXpXvNHRw6tl8LwiEDEl2/GXAgmQ/GsLPbTpF3Oj1l5t7KW2VXZ6kXJ1x
+         nCCB1NAEhp3epTpXq9nWxGnRVxO5yj8kcriiVGUzkFRoWmzESMuZVNwIt5Af8ujvhyuB
+         w54SqH9vbsGiuQABrZvHWLRnYHgxmPtVcDKgXzPgcwQ7Xln2Psv2VpqQyr2MLKb98NmV
+         hgcKVPcuI8wZDrROtQFiwo4bBLKD7wkEyT2vcEwYqghcXI6UeJutXFtP5RqFFaNq+2qm
+         fDg2soE9jsy3zmezIKvi0hTbcGiCY6iZcDOc//gjvBxiDnT/H1BdAiBJxFhKCg9h7l8o
+         CmGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744630752; x=1745235552;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X6PwPr4LZYXEj7QhUyvyfmnH+e+d5JgPgBGYKHOh478=;
+        b=GJ1m8mDaGedkNAAL1JjUTqY9gKo7H8mFHcys52YpwF7eVg3LDt8ai9cUjzYB+UWa6l
+         z1XZa+TqNOWig6wUYMOLMJYKH/sfg9wZdoaaHlBzPL4K/Y5EaCPP+3j8ZMPnjOqENJyj
+         txk5fpsYc8Kz6KJR4vdaevnh+qDCcvkOmHkfyoOHX30ImZsErR8BIcwdVcyIhVcZZi7S
+         F072vnh0FOzPw8EALf0h0mmY4AO3he7HYoGWc/Qn9kSlvqMU4LdPCoY8AaP8WzNZfhVE
+         ubT3O04Rm6s77aii4kV/qT2d5pxBldD/0VFmIXEfMPExJTvplYTEAyVk237L6d1EEg/7
+         WUdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXIgOS3r/0neIOCS/5l8ADSzVRtUU7PEBrVASZYiK2rxGjqgSNTr/K0MLpbz/9/Bvf0BP6/yhyxeu/RHs=@vger.kernel.org, AJvYcCXKq3W0gn00QWbRa1n/8OMVhFqpKHi9UBmZlmkP4YN9WZ+I/O0DZLLKDSoCrCSe/8JtVvco96rF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWuclLajBE9PicHTqhBlE0KnpV9YIFXcVgShZWF8HqFCYCEYkG
+	xDIj/xZFNnIgrX6BVjZfqVkdOGqrwiZee74u61PKvXCa/shc3GRLxSfBhAdosHpbIGdxfBCINcE
+	L6ff6SoJAn+AqIwpk/5KVYIn6Th6qM5BDckc=
+X-Gm-Gg: ASbGnctwCkhuhIFjSF57ptuDadM+yZ5obkoa53APEKKhI/yVXNWwWviKh9l5FSEPDNc
+	yyApzqqzboyr8g+nifD+WMthGFNFnQfjkEjJilhHbbQctOYLkYTC/rNgEzWzFVtNue/D9L9RPMQ
+	x+Y+ZgkFFYV2VgeDrqzaYnpiapBhe2+Jg=
+X-Google-Smtp-Source: AGHT+IHgZ2/rXYU/OGDbcfayiE0rw+vTh3MWm4mOX17tRBHKvUWo5Qflea89DZfZ3iyLUiKBINgS89iXQlVnZIx3jkY=
+X-Received: by 2002:a17:906:6a27:b0:ac8:1bb3:35b0 with SMTP id
+ a640c23a62f3a-acad34a184dmr1017501966b.20.1744630751474; Mon, 14 Apr 2025
+ 04:39:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12e79682-21a3-9389-9390-14702d6ca389@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20250414085412.117120-1-maimon.sagi@gmail.com>
+ <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev> <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+ <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
+In-Reply-To: <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
+From: Sagi Maimon <maimon.sagi@gmail.com>
+Date: Mon, 14 Apr 2025 14:38:45 +0300
+X-Gm-Features: ATxdqUEpnPU3zu3s09tXz533FGAy5vpZCIylZKOeqAHMcDlPRDdFr6WOEbEI3xg
+Message-ID: <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 02:48:23PM +0800, Yu Kuai wrote:
-> > If we export this it needs a kerneldoc comment, and probably also
-> > a better name.
-> 
-> Sure about comment.
-
-I think a name like bdev_count_inflight might also be helpful as there
-is nothing partition-specific in the helper.
-
-> There are two kinds of helpers:
-> 
-> 1) part_in_flight and part_in_flight_rw
-> 2) blk_mq_in_flight and blk_mq_in_flight_rw
-> 
-> 1) is accounted at blk_account_io_start(), while 2) is
-> blk_mq_start_request(), I think this is the essential difference.
-> 
-> part_in_flight_rw() and blk_mq_in_flight_rw() is also used in sysfs API
-> inflight for bio/rq based device. And commit 7be835694dae ("block: fix
-> that util can be greater than 100%") convert blk_mq_in_flight() to
-> part_in_flight() from disk stats API. Now I just checked there is no use
-> for blk_mq_in_flight() anymore and maybe it can be removed.
-
-Yeah.  I'm still confused about having the different methods to count
-the _rw vs non-_rw variants for blk-mq, but I guess that's not really
-in scope for your series.
+On Mon, Apr 14, 2025 at 2:09=E2=80=AFPM Vadim Fedorenko
+<vadim.fedorenko@linux.dev> wrote:
+>
+> On 14/04/2025 11:56, Sagi Maimon wrote:
+> > On Mon, Apr 14, 2025 at 12:37=E2=80=AFPM Vadim Fedorenko
+> > <vadim.fedorenko@linux.dev> wrote:
+> >>
+> >> On 14/04/2025 09:54, Sagi Maimon wrote:
+> >>> Sysfs signal show operations can invoke _signal_summary_show before
+> >>> signal_out array elements are initialized, causing a NULL pointer
+> >>> dereference. Add NULL checks for signal_out elements to prevent kerne=
+l
+> >>> crashes.
+> >>>
+> >>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysf=
+s nodes")
+> >>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> >>> ---
+> >>>    drivers/ptp/ptp_ocp.c | 3 +++
+> >>>    1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+> >>> index 7945c6be1f7c..4c7893539cec 100644
+> >>> --- a/drivers/ptp/ptp_ocp.c
+> >>> +++ b/drivers/ptp/ptp_ocp.c
+> >>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct=
+ ptp_ocp *bp, int nr)
+> >>>        bool on;
+> >>>        u32 val;
+> >>>
+> >>> +     if (!bp->signal_out[nr])
+> >>> +             return;
+> >>> +
+> >>>        on =3D signal->running;
+> >>>        sprintf(label, "GEN%d", nr + 1);
+> >>>        seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%=
+d",
+> >>
+> >> That's not correct, the dereference of bp->signal_out[nr] happens befo=
+re
+> >> the check. But I just wonder how can that even happen?
+> >>
+> > The scenario (our case): on ptp_ocp_adva_board_init we
+> > initiate only signals 0 and 1 so 2 and 3 are NULL.
+> > Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summ=
+ary_show
+> > when calling signal 2 or 3  the dereference occurs.
+> > can you please explain: " the dereference of bp->signal_out[nr] happens=
+ before
+> > the check", where exactly? do you mean in those lines:
+> > struct signal_reg __iomem *reg =3D bp->signal_out[nr]->mem;
+>     ^^^
+> yes, this is the line which dereferences the pointer.
+>
+> but in case you have only 2 pins to configure, why the driver exposes 4
+> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+>
+I can (and will) expose only 2 sma in adva_timecard_attrs, but still
+ptp_ocp_summary_show runs
+on all 4 signals and not only on the on that exposed, is it not a bug?
+> > struct ptp_ocp_signal *signal =3D &bp->signal[nr];
+> >> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
+> >> the end of ptp_ocp_adva_board_init() like it's done for other boards.
+> >>
+> >> --
+> >> pw-bot: cr
+>
