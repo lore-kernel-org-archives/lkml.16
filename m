@@ -1,145 +1,120 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68647239083;
-	Mon, 14 Apr 2025 07:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5810245006;
+	Mon, 14 Apr 2025 07:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614937; cv=none; b=D8rfxXvYej8cry7NyH7STCzGWawqNv85ImbBtafvZcYKe1bJmHsc3UEWMOPPXSXugxj7Ec7BkgV67avtbBAPiG71hL+YbQMEk1+vwkqLOWszHXQ/HIIdFhJ1qKWgsN/NdZUDhcfBdl5u55bs/azfZDsiNHNMPb318HC2VokVrVc=
+	t=1744614971; cv=none; b=Fk9SMQWysPaUfsW1t+K/XuL23MX39EDK3xTdQ21tscmtsUwPrLo6UuIj12ZkYcI8fzbkEyvGPdzfMxOrEhbZOdRKLHvJ/Vq01zUJgONKP5pznrmLMdHsPeYlxoNpFkHtGBIVktt9Zmw7vGUaoM96eSAgW+QyD/YP6QRq8REeKCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614937; c=relaxed/simple;
-	bh=Tw2tXWs2wGcWRTPB0gJYGHNMRJ7yGZsEUJwm+877cbg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lu6JwR9zIstucU4bkNDfS2QkGHB4hMF+AhJBCjWM6vFTlfY3+HNU5V8jco09j0b66wtSddwXcVd9qJ+yG+tOrcnUmW5766kQXBY8e0d+iiaDIlm0l1sZW7LO3jmfcN6JUMk2I3AutRSpOFZN0SmHDVkyQNf3DC7lfGq7lVaF03M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GwG03lGK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744614971; c=relaxed/simple;
+	bh=FfWVaYl9McUOFjG3dCa4tGjF80czMFii1m3cLj4EFoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQVI7jMUvxhVF/9yDV62J9HtNL5tyJz4+LftiMk+AxATM7S8eHhXHEJGhu2qhgbJELKIwUXEPtkL1BI7Y9Xeq1VUuNMfuVcPi9ENMyrH450PIqUZJezFcapJnBGF56Yn1qdfng7OgEebiUVITXZTXXCTjPMUgNaQnBU+0tydEzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DslXwfWb; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GwG03lGK"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E708fH025241;
-	Mon, 14 Apr 2025 07:15:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Tw2tXW
-	s2wGcWRTPB0gJYGHNMRJ7yGZsEUJwm+877cbg=; b=GwG03lGKemGPtTBlyeeP7z
-	t5PiQtP/NQoZ8ZIaxdgVmAeKI2Qo8W/+LXMLBaSrbHsHmBApl4BJIQhU4jHRF5Yq
-	2uFBnIEx61zaLFsnM07EDNY5Y62akaP2fVnL5ZOO+FKy8D2xY6iETh8QYih2rbta
-	MfOQ+AxqWOGqy0YdxARMK4ahvAmEZ7KrLAEjKR92pDwEa0bl48viavBkzLzZYIe7
-	FJmuIn+GdhuRBa+F7QoepQURCx8FzA7wHMSEnsKguL6BV1YKAqNzycOKW4XxRGxr
-	jlPmHF+D+avU+BKaLJkH6fOuFbOP14M8qZONd9Lj0gPoBEcl69cgsWZ/Ie1lUs4Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460bqpb8gd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 07:15:27 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53E7FQNP001293;
-	Mon, 14 Apr 2025 07:15:26 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460bqpb8ga-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 07:15:26 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53E3vXLw017170;
-	Mon, 14 Apr 2025 07:15:25 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040kn0d9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 07:15:25 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53E7FNTW21955250
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 07:15:23 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 489C758061;
-	Mon, 14 Apr 2025 07:15:25 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F09DB58056;
-	Mon, 14 Apr 2025 07:15:21 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com (unknown [9.43.55.58])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 14 Apr 2025 07:15:21 +0000 (GMT)
-Message-ID: <23742d13848a8cdf24da43c08ebe061211f46ecc.camel@linux.ibm.com>
-Subject: Re: [PATCH v1 0/2] cpuidle: teo: Refine handling of short idle
- intervals
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM
- <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano	
- <daniel.lezcano@linaro.org>,
-        Christian Loehle <christian.loehle@arm.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Doug Smythies
- <dsmythies@telus.net>
-Date: Mon, 14 Apr 2025 12:45:20 +0530
-In-Reply-To: <4661520.LvFx2qVVIh@rjwysocki.net>
-References: <4661520.LvFx2qVVIh@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DslXwfWb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744614970; x=1776150970;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FfWVaYl9McUOFjG3dCa4tGjF80czMFii1m3cLj4EFoI=;
+  b=DslXwfWbj+A2tOAe6CHB13PP8xnH1qix+pWy4QgdXaiSGlIkoLomkusZ
+   Zzvx+xqoaxi7P+XmFlR9C+8RwGf3QlLVGMIQTxMJFVru+Wzx6VsMYvOX5
+   8JjKeaTulQMJPrREPW1G3wHXH+oIMu4pGY9LB7W87YkN46BpTeOoC+dgh
+   Q25xZC5rg6NuFQHA0JwRGre/2N4XVCSiUCypD2Wq/xhXQnmrchkGSzuvL
+   E22ysEDH6VxbSy1P/81blxMQATxX9nJF2Mo24axq1y5mTmBVztnMh9wlY
+   Zx7qAGGOodQXY3r33022rblTjzP6LeJ13egVeoiknA8O5bwcNTTxWT6h7
+   A==;
+X-CSE-ConnectionGUID: cTv6HafmT6aEVjMFpRAAcQ==
+X-CSE-MsgGUID: b1Jl7bAvRc+1VTJAt5dwRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="63475798"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="63475798"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:16:09 -0700
+X-CSE-ConnectionGUID: NYtpdj/4Q62qo5FJTlT36w==
+X-CSE-MsgGUID: 7ESE92YXQCaQ+n6B4nPSZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="133842238"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:16:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4E2z-0000000CA29-2gzh;
+	Mon, 14 Apr 2025 10:16:01 +0300
+Date: Mon, 14 Apr 2025 10:16:01 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: dakr@kernel.org, djrscally@gmail.com, dvyukov@google.com,
+	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
+	jgg@nvidia.com, kevin.tian@intel.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
+	rafael@kernel.org, sakari.ailus@linux.intel.com,
+	syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
+Subject: Re: [PATCH] software node: Prevent link creation failure from
+ causing kobj reference count imbalance
+Message-ID: <Z_y2MdGMS861mvgS@smile.fi.intel.com>
+References: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
+ <20250414070834.1224154-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Qgar2r_EoA08XHseT2LeY_WhDTieWko-
-X-Proofpoint-GUID: CsHK94dMR4RWHs-9S7HhOpJZ1qXzrPII
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=643 spamscore=0
- phishscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504140049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414070834.1224154-1-lizhi.xu@windriver.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 2025-04-03 at 21:16 +0200, Rafael J. Wysocki wrote:
-> Hi Everyone,
->=20
-> This series is intended to address an issue with overly aggressive select=
-ion
-> of idle state 0 (the polling state) in teo on x86 in some cases when time=
-r
-> wakeups dominate the CPU wakeup pattern.
->=20
-> In those cases, timer wakeups are not taken into account when they are
-> within the LATENCY_THRESHOLD_NS range and the idle state selection may
-> be based entirely on non-timer wakeups which may be rare.=C2=A0 This caus=
-es
-> the prediction accuracy to be low and too much energy may be used as
-> a result.
->=20
-> The first patch is preparatory and it is not expected to make any
-> functional difference.
->=20
-> The second patch causes teo to take timer wakeups into account if it
-> is about to skip the tick_nohz_get_sleep_length() invocation, so they
-> get a chance to influence the idle state selection.
->=20
-> I have been using this series on my systems for several weeks and observe=
-d
-> a significant reduction of the polling state selection rate in multiple
-> workloads.
->=20
-> Thanks!
->=20
->=20
+On Mon, Apr 14, 2025 at 03:08:34PM +0800, Lizhi Xu wrote:
+> On Mon, 14 Apr 2025 09:20:30 +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 11, 2025 at 08:42:02AM +0800, Lizhi Xu wrote:
+> > > syzbot reported a uaf in software_node_notify_remove. [1]
+> > >
+> > > When any of the two sysfs_create_link() in software_node_notify() fails,
+> > > the swnode->kobj reference count will not increase normally, which will
+> > > cause swnode to be released incorrectly due to the imbalance of kobj reference
+> > > count when executing software_node_notify_remove().
+> > >
+> > > Increase the reference count of kobj before creating the link to avoid uaf.
+> > >
+> > > [1]
+> > 
+> > Please, reduce this to ~5-7 lines only. This is how Submitting Patches document
+> > recommends to put backtraces in the commit messages:
+> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
+> Ok, I will reduce the calltrace, and send V2 patch.
+> > 
+> > > Fixes: 9eb59204d519 ("iommufd/selftest: Add set_dev_pasid in mock iommu")
+> > > Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
+> > > Closes: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
+> > 
+> > > Tested-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
+> > 
+> > Where is the positive result of it? I can't find the respective log.
+> > To me this one
+> > https://syzkaller.appspot.com/x/report.txt?x=158af070580000
+> > doesn't sound as a useful report as I don't know if this patch fixes one
+> > regression and introduced another.
+> You can see: https://syzkaller.appspot.com/x/log.txt?x=118af07058000
+> For tasks related to the reproducing program, there are only FAULT_INJECTION
+> related problems in the log, no other problems, and the log record duration
+> exceeds 240 seconds, and no uaf occurs, which is enough to prove that the
+> problem has been fixed.
 
-Hi Rafael,
+I'm not objecting that the original issue is being fixed, what I'm confused on
+is that the report has only one line which doesn't make it clear that there are
+no new regressions found during the same run.
 
-I'm running some tests and going through the patch.
-I haven't noticed any deviations so far, will post the results shortly.
-
-Thanks,
-Aboorva
-
-
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
