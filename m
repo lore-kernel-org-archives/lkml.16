@@ -1,93 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F97252288
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C4529115D
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638594; cv=none; b=eZ+/EgSReffkNLdyP1OIz+ZrwTINGBOsp+tA+JN5Pkz/+p9pYLaySk0ryGV9BTMWcbjgV/IcBIlzoXO4xynLnccYO/N8kgGXSmbwUQoL9TXlBWddFPGbhFUwBIrWrt9k3FV3vySHnMqmFIiaZuByjLoI0CUoHBWmkyHzNJdcHPA=
+	t=1744638601; cv=none; b=OlKHm281FxiACG7ClqJR4kHFFJIGS3vq8sAoc1SFCR/uFVq/8BxRzjjAoud3ZSGsnfoz9NIo3t9J9aypmuvU6TNVritQmeeADt293ppX/t4A7J7e1lXskR6MmSn58I7+LbwIhjvyf2JUxdiT7ujQXN/Qr1I2bXd8zLiKPF5U/bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638594; c=relaxed/simple;
-	bh=zVAXMbiliQoKMwfqMTirGNwxtHFwB03efGSbTMkE0Y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RwBmx7jO/4P0QDIt2XZ1bHbotlJSrLC44pK82JcyXYzQkTcxGZjm8/MlLH3MpImFbM12i1+FhjCeufeGScUunB9o/BziuxnV1eTqAxkOi72tpNd4kwGzHdpYAHnVyqOAQESrsBcUOAASyugP39skY14hLOgWzrHpN6+A7NndDlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A73B4C4CEE2;
-	Mon, 14 Apr 2025 13:49:52 +0000 (UTC)
-Date: Mon, 14 Apr 2025 14:49:50 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ross Stutterheim <ross.stutterheim@garmin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	ross.sweng@gmail.com, Mike Rapoport <rppt@kernel.org>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] arm[64]/memremap: fix arch_memremap_can_ram_remap()
-Message-ID: <Z_0SfqQHsKs3S1cn@arm.com>
-References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
+	s=arc-20240116; t=1744638601; c=relaxed/simple;
+	bh=9bY19X6s1XcHU0Bp+zVhPyp51N++cEtOnYIuBK8fw2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qIfLz58JPtt7+DHKFpKXJy4P+1/Qjy4qbjECOgZEiAKQOMxU7hmY/p72ISSqXFNK9PR3MsFOO05KuJiu1KveHQtumtSt9lOsc2c5FAFLKrNSANa5qCNj2PaailQFZpeAkANJ3vsMa/yBbiMSfU6ScPQjTI7EPYlr6USUrgfGWoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=e/ZwtEiL; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="e/ZwtEiL"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-477296dce76so37219281cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1744638597; x=1745243397; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9bY19X6s1XcHU0Bp+zVhPyp51N++cEtOnYIuBK8fw2Y=;
+        b=e/ZwtEiLPSuRgSFQlJwVQZDV+qAt41LrLjenc8rbwxaijIhqHcmaOe5xUg8whGjlb3
+         7VKRtZxJtZSgC5s2VmZ9oZ8kPqXpDeI6K4LJ6PQup6pbN8sHVg1VdwwXLzlqxm4m8reV
+         YkwxuQhOxu8YQl8+My2ysPba5f6S014DbRyd8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744638597; x=1745243397;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9bY19X6s1XcHU0Bp+zVhPyp51N++cEtOnYIuBK8fw2Y=;
+        b=nYHOD4XB0dpNecdQ+9PkGrDn/M8nvHvEVqHPYERL2kEQogT14qPOiZACdzsM4kBvQY
+         Qo7rc37T7N02VAORRGDx27RGZ5mA/dld7lko5o1L3AcKwwPsSd1sVIQwmqUIt42jVtV8
+         MTuOyuN9syF2n5aOSw4mzPgYdHHQSB92a44cRzBtvqeRsc2KHS5t1Fg/uqh6tYcP/lDb
+         5sOdCMozkgyHDMy0YrDo0b+y3Kk4ccLLxMjAGbHnBCLTgM/TCDQ4v7c8hRPJFv3EgVr1
+         rebZC9euPu1f/OyPz19vDEZt9j5goOgechKQpPLq3A/3BZsXsz4So5zrky9OhBpTcdJw
+         61tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVt0WZB7eM0U2UW7RvQPFugD/eQQDzc4/Hv0BK8w+byVWKXf+4dLBjwJPg6fpJoOtU8kvVaLGYQC+QS7mQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrfoTK6+ID34G0qW0ZP5uyDyVzYol/xhpQl38ek3LihCaO3W0s
+	ZQWCPsbIJzGRPF49WP4RZoaisXhBO9VuQFlw5zbRWtLLrfWirtA6PTeDvRpQMh3R+8oMiJUHhkK
+	dX4ZAnvF1ZBv1K0qGWybkuGFs3FYZGxtpQQx4ow==
+X-Gm-Gg: ASbGncugH+IWCJCqbkA9eJV5amoLrn4OxO942Q4ebLJvm+FCo9eku2Iz2bMvhy2cptv
+	7dUPgRdgu2QYsLamQPJxt86mIyLDXfr7scvAlRPk2f8o3ZKaPStRp02imhwujNkcEJdg3ziKYJL
+	y4cNcA8L9qopE+KePmALE=
+X-Google-Smtp-Source: AGHT+IEZnx2ua4BNTwwSY90xVl9/DsFfXFO/2jCY0FjwTjZbpcGwRMsGVneaA3gXMQIvMPRCpa5zRDyI3qKpKbF/JuQ=
+X-Received: by 2002:a05:622a:652:b0:476:9b40:c2cf with SMTP id
+ d75a77b69052e-479775eaa53mr209840541cf.50.1744638596951; Mon, 14 Apr 2025
+ 06:49:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414133219.107455-1-ross.stutterheim@garmin.com>
+References: <tencent_F1DBC4D1F22658222170020AC7DB0B4CF405@qq.com>
+In-Reply-To: <tencent_F1DBC4D1F22658222170020AC7DB0B4CF405@qq.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 14 Apr 2025 15:49:46 +0200
+X-Gm-Features: ATxdqUGVRx8qh1Vx9I4nLgse8lILHVF6-1K_zzvhAe6AotPhJh8_DJGed1KytJk
+Message-ID: <CAJfpegv4eAj7OL0AZJhtyvGenet5iF7cp3yKA26BuWucRW+hNg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] fs/fuse: Change 'unsigned's to 'unsigned int's.
+To: Jiale Yang <295107659@qq.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Please cc the maintainers and the original contributor of the commit you
-are fixing, otherwise the patch may not be noticed.
+On Wed, 20 Nov 2024 at 09:30, Jiale Yang <295107659@qq.com> wrote:
+>
+> Prefer 'unsigned int' to bare 'unsigned', as reported by checkpatch.pl:
+> WARNING: Prefer 'unsigned int' to bare use of 'unsigned'.
+>
+> Signed-off-by: Jiale Yang <295107659@qq.com>
 
-On Mon, Apr 14, 2025 at 08:32:19AM -0500, Ross Stutterheim wrote:
-> commit 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure
-> presence of linear map") added the definition of
-> arch_memremap_can_ram_remap() for arm[64] specific filtering of what pages
-> can be used from the linear mapping. memblock_is_map_memory() was called
-> with the pfn of the address given to arch_memremap_can_ram_remap();
-> however, memblock_is_map_memory() expects to be given an address, not a
-> pfn.
-> 
-> This results in calls to memremap() returning a newly mapped area when
-> it should return an address in the existing linear mapping.
-> 
-> Fix this by removing the address to pfn translation and pass the
-> address directly.
-> 
-> Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure presence of linear map")
-> Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
-> ---
->  arch/arm/mm/ioremap.c   | 4 +---
->  arch/arm64/mm/ioremap.c | 4 +---
->  2 files changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-> index 748698e91a4b..27e64f782cb3 100644
-> --- a/arch/arm/mm/ioremap.c
-> +++ b/arch/arm/mm/ioremap.c
-> @@ -515,7 +515,5 @@ void __init early_ioremap_init(void)
->  bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
->  				 unsigned long flags)
->  {
-> -	unsigned long pfn = PHYS_PFN(offset);
-> -
-> -	return memblock_is_map_memory(pfn);
-> +	return memblock_is_map_memory(offset);
->  }
+Applied, thanks.
 
-This indeed needs fixing.
-
-> diff --git a/arch/arm64/mm/ioremap.c b/arch/arm64/mm/ioremap.c
-> index 10e246f11271..48c38c986b95 100644
-> --- a/arch/arm64/mm/ioremap.c
-> +++ b/arch/arm64/mm/ioremap.c
-> @@ -51,7 +51,5 @@ void __init early_ioremap_init(void)
->  bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
->  				 unsigned long flags)
->  {
-> -	unsigned long pfn = PHYS_PFN(offset);
-> -
-> -	return pfn_is_map_memory(pfn);
-> +	return pfn_is_map_memory(offset);
-
-This is already correct.
-
--- 
-Catalin
+Miklos
