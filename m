@@ -1,147 +1,172 @@
-Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDAD257AC8;
-	Mon, 14 Apr 2025 09:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23360263F37
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624553; cv=none; b=BytuB0d3W+g8KwQX5sHVVUN0P6i/E6Apqig2iQXIMxi8ckT0Zc7XhCtNlJvthFXY+xHvU5zMmfQeJgb/tXfdBd6HcR5OCtsSjgLwW4w0NlhJp5tcsZLx66ESjpevh3gxz4UswP6C21Eys/PstGoxYFdx4kxQl1c0lOK/BXu+5MA=
+	t=1744624570; cv=none; b=RCqUkBVD6e2xXXPoAoe5wqOcm6SfmTQin8ckgPbLWOUVHh4GCbvDumXlAUrw8RGvtXjqFN+ncz1CyxiQTs6YkfVuoFgkpgbJe22Iau7ou3uvTeCrI0RPU+jFgxcgCsX3Ehd0c8rGSL+hi+X4EEfePZFB1dg9+3wqLewuEkvtF2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624553; c=relaxed/simple;
-	bh=BxQDXbrr6/3VNuxRublanubI90mINpkM8IVhaRSWG+A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dq7OivDhN8IaX6B5tcnYCS1VrhzwLmcGM+DZdI7rMHhMv7Fayyju4vsRDRzyQpO1pdyscGaFLsqPVJQ5tQEuf2tyG0NBRq/LSZNT3hciIRnrWhU5AkxHzaYjUYvyU5BdRLX2HRBY/Gaxc/kRoRK/CcirVCkdUYJtiIw4rFBDmU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TeFMNTrG; arc=none smtp.client-ip=209.85.208.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeFMNTrG"
-Received: by mail-lj1-f195.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so37225681fa.2;
-        Mon, 14 Apr 2025 02:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744624550; x=1745229350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GyxVfRSD+vy0gY4dSBjLNFJ9RxQsx9R+owScmKqVvVo=;
-        b=TeFMNTrGBHX/dfvlijyHeI+uulVTsWLYe2OsK7bMGPCybJdQlrumsgcF2SYg34gvjs
-         N5Gg7cE7iU0B02Ogb26q0Y0dcgNb9vxXax5U2oSPN7RcjYNQff+ELvDZo3+GmZWgzavv
-         h7BTv55ppyk/vtXllI/FWACLKAxf9lHVub+9v8RCmtsNWVWTwXKBVkYducmn0wxq6AjQ
-         9zL2w4Vhs8Db9WiYtrzQ9wlFbtr2XS+Bk0WPMQlbHGtqmjsx+mxJLuXsx/b2VLz3NMoB
-         OBp/Ek//TsNT8NWMfnxG6hr7l7sGvFE37Fsefs/Zleiv7bUTAb5iIgIx0VotzcvBpJrz
-         dckw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744624550; x=1745229350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GyxVfRSD+vy0gY4dSBjLNFJ9RxQsx9R+owScmKqVvVo=;
-        b=FNgI58R0aEPBrZdb8e9pYJ2Tt1A0if1r/XYXjkdr2M7DiprSEDHYgZmDLJOO9gv83d
-         cJc0ROTZZe28tR0PBSqfrpk0RAPfxy/4iNr0qmZoA5lz34b7jBxuAdctou5abjwQSeR9
-         L8dZXNlWj4uCWozjyDmB7BQjoSI4mqkUCysyXQcRUtZyd0l08pnEVl9kHOF5HVCZXzFy
-         WqgyUh8BqIGpq08LNxmPEsAcPtHCyEapq4pZvprxmjskWdJ5bgCTq34a7Gv/uP+rvVAd
-         xroM/L2sK1sxEco8R+zv52yHEzn2llHRhClLDQ9T2kgJoiY3h2CPmPr/ui3YijMlQ6sB
-         AK9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVJAyxmbsCAWjPm/AzfUN5Jffyj+DEXSrvoHZrAMZ3VMt8SbDeVw05LGI/xbiVN6V3r5Qyo96nsTW+FQA==@vger.kernel.org, AJvYcCX4C+0jMTCmh087ESltoCrNmpLYdH+hh0B+n8fjAtSuESYpGRAgtxgcNmQp5QvITf62jvLoZ9cU@vger.kernel.org, AJvYcCXHB6D8GnWeCqQvdOwpcK6GQoQFtwOFXCU+prBLhn4Q4SsSS8Tu8IxCZTOQJxpkKLP2nD2Yepdpwj6LNxo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGk5CTrnaJGw+clLBjU7xTxA2rBwjFYTGYBdAlLKXrGPz01Lh4
-	AkSr5RYc7ablfHvlTUqjRhZbAPHXmf/MkEKjXZ3W7GuGo+dynD4E5g1wt5qp3HzFafrphoS0GTI
-	ni0XVtphePhjrdBuF1aOAP2CEJftpPKUUiXN7yQ==
-X-Gm-Gg: ASbGncslEy/1vcVHxx4ZRBdwW457IgXtuCDQWPsBwcLGuErZnDRviZglypHt5/t2EI3
-	IEqKhxivwD+U+s3XnngVIm830JJPHrt1MTrQhV6Kv9Rd8EfCiPJ8r8g6uTlViPby2DpNLMird7Y
-	tf0nxkIyEu5Jynqte22CRk
-X-Google-Smtp-Source: AGHT+IFcLrIXePHb9OODaAWFiueffLRxnDGpGlApmshNTbsxY3gHU7X/CBaD4f10RNuc6L3qennzhlvjDKtmXNdscgs=
-X-Received: by 2002:a05:651c:144a:b0:30d:626e:d004 with SMTP id
- 38308e7fff4ca-31049a1addcmr38254561fa.20.1744624549583; Mon, 14 Apr 2025
- 02:55:49 -0700 (PDT)
+	s=arc-20240116; t=1744624570; c=relaxed/simple;
+	bh=OV1EzzxU6BT+4RXWgFZVQIO7++2gzfwNYAlmrRPG1S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWGbOI/ZWAkyLc/a2zPuEFFb1dwj4l8fzdMtHq2KKQqkOaIoe7irS6cLx9/asEnmlbNYcZvn0qT1L7x0ISf5Kx46m+lOO1rM8PwxuhVHvv4iipXH7MeKigF1dvar1dkia7q4RkfCSJlqLVqV2HQnpImn1yABZFRuJRur4HnUufU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u4GXS-0007bO-1c; Mon, 14 Apr 2025 11:55:38 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u4GXQ-000EF7-1a;
+	Mon, 14 Apr 2025 11:55:36 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 1E13C3F82E7;
+	Mon, 14 Apr 2025 09:55:36 +0000 (UTC)
+Date: Mon, 14 Apr 2025 11:55:34 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>, 
+	Maxime Ripard <mripard@kernel.org>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
+	imx@lists.linux.dev, Christophe Lizzi <clizzi@redhat.com>, 
+	Alberto Ruiz <aruizrui@redhat.com>, Enric Balletbo <eballetb@redhat.com>, 
+	Eric Chanudet <echanude@redhat.com>, Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	kernel@pengutronix.de
+Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
+Message-ID: <20250414-camouflaged-silver-dodo-d0c000-mkl@pengutronix.de>
+References: <20250414073646.1473157-1-ciprianmarian.costea@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411022916.44698-1-bsdhenrymartin@gmail.com>
- <20250411022916.44698-2-bsdhenrymartin@gmail.com> <Z/ip4y2qSYcn93U/@mev-dev.igk.intel.com>
-In-Reply-To: <Z/ip4y2qSYcn93U/@mev-dev.igk.intel.com>
-From: henry martin <bsdhenrymartin@gmail.com>
-Date: Mon, 14 Apr 2025 17:55:38 +0800
-X-Gm-Features: ATxdqUGPEffiamL1jfKYGLULBzhz4RN1uaLQvNQGrt5fccbUfnmPN_Ave18wxnA
-Message-ID: <CAEnQdOpfJAaQN+D-Wxff13v+gMS5PR8J1TPWCGtKww41=Xt-UA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] net/mlx5: Fix null-ptr-deref in mlx5_create_{inner_,}ttc_table()
-To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
-	netdev@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, amirtz@nvidia.com, 
-	ayal@nvidia.com, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="emwb45a7ubtws4mt"
+Content-Disposition: inline
+In-Reply-To: <20250414073646.1473157-1-ciprianmarian.costea@oss.nxp.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+
+--emwb45a7ubtws4mt
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
+MIME-Version: 1.0
 
-> There is ttc =3D kvzalloc() before. I think you should call kvfree(ttc)
-> before returning. It looks like the same leak is already when
-> params->ns_type is unknown.
+On 14.04.2025 10:36:46, Ciprian Costea wrote:
+> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+>=20
+> The FlexCan driver assumes that the frequency of the 'per' clock can be
+> obtained even on disabled clocks, which is not always true.
+>=20
+> According to 'clk_get_rate' documentation, it is only valid once the clock
+> source has been enabled.
 
-Thanks for the review and the helpful suggestions!
+In commit bde8870cd8c3 ("clk: Clarify clk_get_rate() expectations")
+Maxime Ripard changed the documentation of the of the function in clk.c
+to say it's allowed. However clk.h states "This is only valid once the
+clock source has been enabled.".
 
-I've addressed the kvfree(ttc) memory leak issue and updated the logic
-accordingly in both code paths. The updated patch has been sent out as v4.
+I've added the common clock maintainers to Cc.
 
-Regards,
-Henry
+Which documentation is correct? Is the clk.h correct for archs not using
+the common clock framework?
 
+regards,
+Marc
 
-Michal Swiatkowski <michal.swiatkowski@linux.intel.com> =E4=BA=8E2025=E5=B9=
-=B44=E6=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 13:34=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Fri, Apr 11, 2025 at 10:29:16AM +0800, Henry Martin wrote:
-> > Add NULL check for mlx5_get_flow_namespace() returns in
-> > mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
-> > NULL pointer dereference.
-> >
-> > Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_tab=
-le")
-> > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> > ---
-> > V2 -> V3: No functional changes, just gathering the patches in a series=
-.
-> > V1 -> V2: Add a empty line after the return statement.
-> >
-> >  drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/dri=
-vers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-> > index eb3bd9c7f66e..18cc6960a5c1 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-> > @@ -655,6 +655,9 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(=
-struct mlx5_core_dev *dev,
-> >       }
-> >
-> >       ns =3D mlx5_get_flow_namespace(dev, params->ns_type);
-> > +     if (!ns)
-> > +             return ERR_PTR(-EOPNOTSUPP);
->
-> There is ttc =3D kvzalloc() before. I think you should call kvfree(ttc)
-> before returning. It looks like the same leak is already when
-> params->ns_type is unknown.
->
-> > +
-> >       groups =3D use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE=
-] :
-> >                              &inner_ttc_groups[TTC_GROUPS_DEFAULT];
-> >
-> > @@ -728,6 +731,9 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct=
- mlx5_core_dev *dev,
-> >       }
-> >
-> >       ns =3D mlx5_get_flow_namespace(dev, params->ns_type);
-> > +     if (!ns)
-> > +             return ERR_PTR(-EOPNOTSUPP);
->
-> The same here.
->
-> > +
-> >       groups =3D use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
-> >                              &ttc_groups[TTC_GROUPS_DEFAULT];
-> >
-> > --
-> > 2.34.1
+> Co-developed-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+> ---
+>  drivers/net/can/flexcan/flexcan-core.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
+xcan/flexcan-core.c
+> index 6d80c341b26f..b142aa60620e 100644
+> --- a/drivers/net/can/flexcan/flexcan-core.c
+> +++ b/drivers/net/can/flexcan/flexcan-core.c
+> @@ -2056,6 +2056,26 @@ static int flexcan_setup_stop_mode(struct platform=
+_device *pdev)
+>  	return 0;
+>  }
+> =20
+> +static unsigned long get_per_clk_rate(struct clk *clk)
+> +{
+> +	unsigned long rate;
+> +	int err;
+> +
+> +	rate =3D clk_get_rate(clk);
+> +	if (rate)
+> +		return rate;
+> +
+> +	/* Just in case this clock is disabled by default */
+> +	err =3D clk_prepare_enable(clk);
+> +	if (err)
+> +		return 0;
+> +
+> +	rate =3D clk_get_rate(clk);
+> +	clk_disable_unprepare(clk);
+> +
+> +	return rate;
+> +}
+> +
+>  static const struct of_device_id flexcan_of_match[] =3D {
+>  	{ .compatible =3D "fsl,imx8qm-flexcan", .data =3D &fsl_imx8qm_devtype_d=
+ata, },
+>  	{ .compatible =3D "fsl,imx8mp-flexcan", .data =3D &fsl_imx8mp_devtype_d=
+ata, },
+> @@ -2137,7 +2157,7 @@ static int flexcan_probe(struct platform_device *pd=
+ev)
+>  			dev_err(&pdev->dev, "no per clock defined\n");
+>  			return PTR_ERR(clk_per);
+>  		}
+> -		clock_freq =3D clk_get_rate(clk_per);
+> +		clock_freq =3D get_per_clk_rate(clk_per);
+>  	}
+> =20
+>  	irq =3D platform_get_irq(pdev, 0);
+> --=20
+> 2.45.2
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--emwb45a7ubtws4mt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf825MACgkQDHRl3/mQ
+kZyPOgf/ZK/dctPrRanQ8cESl0HysD5WUyHjOnGz8QheSqA3FaUsQ5v4t1bvSEyL
+f0iPY0c9UoUe2aDDRppY4lSMjeiXg3YVaJLd1nBBOwUsF+SZ/WySZ3UaWGdYV+sN
+jQk+Hok8HJ4zeW2teZ03GMUJBfgmKDhiil/xmls0arclzXxoFe1vwcuvKObVoqAg
+s/6gspWKEoKBul0N+M2LkFOO2hUg7W1q/yYqZzs5PPnkHXWo28eTLLUIzenzhShW
+B3J9GopR7Q5Bphv31Djkt3afp2h8iqoQgv1Dql9XejSNG37kUbpP9b9TXltrVKDN
+OVjasVrqFdBKezzIqAF77aB9ZdzYaw==
+=PwcY
+-----END PGP SIGNATURE-----
+
+--emwb45a7ubtws4mt--
