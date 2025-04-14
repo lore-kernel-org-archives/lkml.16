@@ -1,82 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC011624E9;
-	Mon, 14 Apr 2025 18:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306D0280A4D;
+	Mon, 14 Apr 2025 18:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744653936; cv=none; b=jyFEISe8Pfxfivu9MhEmoE9KxHLFLvP/W5BtPtcjvuz/JvJRXUo8NEGu0bsZg0fDPvlVoEroIDV3xdpER0VH4aElVgvTP1uWaylaNh+z+o/noKgdih3Rm/ovEPDm9AUdBd6UGAZ7Mz+8Xu3jkpH2Rz4DhHYqNn48QJcBCrNRLdU=
+	t=1744653965; cv=none; b=nlgN/nWa/N091xetyvUsoXi/Tsb0KCtZdQJ3hEWF200nyl9jb75Wi0q1LewOKPEelOjLMXI3gKUBmtAxZ+3r7SzzBl7cA+GLLqcOHuM5fKCO1yLxEwrpQ8oaVgi0QqWWOyUR0RCnnRrlakjHQoO1LKg0LnG4zry2whpDQcEp3kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744653936; c=relaxed/simple;
-	bh=neZaO5r4sLtwQFB3OZqm9RjpLToPpDz7VMGozqpxoTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cyFesGYiRbhVLh5Itvj9OZl6lppD823hir3gLomqE/O9Y9TQMlyEobOlKR+huEMyx6O29VfdnjfX/nnLg2TdSrHt58W7cys95aDcaFehPu+2UF9s52IGu/dIeLAv0g2TLZs+hxJo3twi2CZeeuMzXl/xis7RFaqOcMED0fyurhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7C0zIh1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744653965; c=relaxed/simple;
+	bh=Bf2kK2Vw4Tc37/Kz4l3ukL8jF1/nrr/RnuXgsQDbdLs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eDJWnRYpctJnkmoQNSwZyGv0iYS888xUx2Y7LZpIyayLANsBSvIXcv656OGq4OcX0E2j8r15bSBr9bEP0EjnBXEuiYomXNHaWn3G4EVWtsYd11AUF7QEkY4b1coJhF0KnUtGszInjW3Z5wBKecH2UDFsDl0wj4/rvjVSIwjlUi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=vSMFu7i0; arc=none smtp.client-ip=213.160.73.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7C0zIh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06EAC4CEE2;
-	Mon, 14 Apr 2025 18:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744653935;
-	bh=neZaO5r4sLtwQFB3OZqm9RjpLToPpDz7VMGozqpxoTk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N7C0zIh1D7B8QdeQs+3TssGqZ6pvSYUAOjG0vnmh7dOwYyi55QLpHQRyWmwMqWsp7
-	 OdMhTDwo3xCV5YLOW4pVQSOXBnQiKY2yGdHWz08cjVIvXzCT1eJnkVW9vPqOHIxfp4
-	 IDWgCQWwbhqOEkoTRIgjWz7iNoTl4qXR1BC1ELNNwVyNf6oiXNJgT057zZywle1LKS
-	 Fg8LNlsSl3qEVXlewfkhKkPfdoQLR7Wb88AbQzG+NBpMQ3EPxDxBC/b+bpD+bkXeOp
-	 zHmWgAHeYclcx9KUYWmyCtWwTu12pfpj72SA/tpvb3Ge6/63dbK4Y7IcZU5voYQABp
-	 3Fi11dg21jKGg==
-Date: Mon, 14 Apr 2025 20:05:29 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
-Message-ID: <Z_1OaYt22_GJRX0b@cassiopeiae>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250414152630.1691179-1-remo@buenzli.dev>
- <20250414152630.1691179-3-remo@buenzli.dev>
- <Z_1Jfs5DXD2vuzLj@cassiopeiae>
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="vSMFu7i0"
+Received: from sven-desktop.home.narfation.org (unknown [IPv6:2a00:1ca0:1d86:99fc::ab85])
+	by dvalin.narfation.org (Postfix) with UTF8SMTPSA id 255F2202C6;
+	Mon, 14 Apr 2025 18:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+	s=20121; t=1744653953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EOcHNaKvVT/0mARZxcxaig61vSP0GsRncJz7Dz1LbTQ=;
+	b=vSMFu7i02yBYutbzGc4yaiiv848nkAprKsfWC59Cm0HKIA6pep/onmXU+uxnVS2Ki16pMs
+	Hu1zg6PYkolTC/JkAezLlNPSuolL8+I9VKBl6B9phFqiCc5JAGgiHVOGaZzxg4cj0ylOyw
+	tfIiAzFkwhcpfqToOu7NcFI9ZM0l6j0=
+From: Sven Eckelmann <sven@narfation.org>
+Date: Mon, 14 Apr 2025 20:05:37 +0200
+Subject: [PATCH net v5] batman-adv: Fix double-hold of meshif when getting
+ enabled
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_1Jfs5DXD2vuzLj@cassiopeiae>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250414-double_hold_fix-v5-1-10e056324cde@narfation.org>
+X-B4-Tracking: v=1; b=H4sIAHFO/WcC/3XO0QrCIBgF4FcZXudwpnPrqveIMWz+TmFpqEkx9
+ u7ZriLo8hw4H2dFEYKFiE7VigJkG613JfBDhSYj3QzYqpIRJZQT1hCs/OO6wGj8okZtn7jTRHZ
+ CCypVj8rqHqDUu3hBDhIaSqmDv+FkAsgvjPREHDllNeei6Xrc4JjBnZ0MWqZyo/Zh/ojGxuTDa
+ 7+Y2e7+fZNZYahuSauhmyhhP9ywbdsbojOGnfQAAAA=
+X-Change-ID: 20250410-double_hold_fix-8f0a87f72ad9
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com, 
+ syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com, 
+ syzbot+c35d73ce910d86c0026e@syzkaller.appspotmail.com, 
+ syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com, 
+ syzbot+f37372d86207b3bb2941@syzkaller.appspotmail.com, 
+ Sven Eckelmann <sven@narfation.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2668; i=sven@narfation.org;
+ h=from:subject:message-id; bh=Bf2kK2Vw4Tc37/Kz4l3ukL8jF1/nrr/RnuXgsQDbdLs=;
+ b=owGbwMvMwCXmy1+ufVnk62nG02pJDOl//apd1TRu/bi/dqudDOvvmMppzPUSNf1VsTduprE3h
+ 7Kcyz3TUcrCIMbFICumyLLnSv75zexv5T9P+3gUZg4rE8gQBi5OAZhIQCvDX7FNwhP/1qwsSJNa
+ W1/2Omxx+KslTe4d2w4mNhzw2M6w8BjDX/EHS6N6JzV9XJnaGp7y8rLpsj11/PMKbpRkctif9eD
+ pZgIA
+X-Developer-Key: i=sven@narfation.org; a=openpgp;
+ fpr=522D7163831C73A635D12FE5EC371482956781AF
 
-On Mon, Apr 14, 2025 at 07:44:36PM +0200, Danilo Krummrich wrote:
-> On Mon, Apr 14, 2025 at 05:26:27PM +0200, Remo Senekowitsch wrote:
-> > The device property API is a firmware agnostic API for reading
-> > properties from firmware (DT/ACPI) devices nodes and swnodes.
-> > 
-> > While the C API takes a pointer to a caller allocated variable/buffer,
-> > the rust API is designed to return a value and can be used in struct
-> > initialization. Rust generics are also utilized to support different
-> > types of properties where appropriate.
-> > 
-> > The PropertyGuard is a way to force users to specify whether a property
-> > is supposed to be required or not. This allows us to move error
-> > logging of missing required properties into core, preventing a lot of
-> > boilerplate in drivers.
-> 
-> The patch adds a lot of thing, i.e.
->   * implement PropertyInt
+It was originally meant to replace the dev_hold with netdev_hold. But this
+was missed in batadv_hardif_enable_interface(). As result, there was an
+imbalance and a hang when trying to remove the mesh-interface with
+(previously) active hard-interfaces:
 
-I meant the Property trait and all its impls of course. :)
+  unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
->   * implement PropertyGuard
->   * extend FwNode by a lot of functions
->   * extend Device by some property functions
+Fixes: 00b35530811f ("batman-adv: adopt netdev_hold() / netdev_put()")
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+Reported-by: syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com
+Reported-by: syzbot+c35d73ce910d86c0026e@syzkaller.appspotmail.com
+Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Reported-by: syzbot+f37372d86207b3bb2941@syzkaller.appspotmail.com
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+---
+This patch is skipping Simon's normal PR submission to get this problem
+fixed faster in Linus' tree. This currently creates quite a lot of wrong
+bisect results for syzkaller and it would be better to have this fixed
+sooner than later.
+---
+Changes in v5:
+- added Suggested-by: Eric Dumazet <edumazet@google.com>
+- added Reported-by: of various syzkaller reports which were affected (during
+  bisecting) by this problem
+- Link to v4: https://lore.kernel.org/r/20250410-double_hold_fix-v4-1-2f606fe8c204@narfation.org
+
+Changes in v4:
+- resubmission after 24h cooldown time
+- added kernel message during hang to commit message
+- Link to v3: https://lore.kernel.org/r/20250409073524.557189-1-sven@narfation.org
+
+Changes in v3:
+- fix submitter address
+- Link to v2: https://lore.kernel.org/r/20250409073304.556841-1-sw@simonwunderlich.de
+
+Changes in v2:
+- add missing commit message
+- Link to v1: https://lore.kernel.org/r/20250409073000.556263-1-sven@narfation.org
+---
+ net/batman-adv/hard-interface.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interface.c
+index f145f96626531053bbf8f58a31f28f625a9d80f9..7cd4bdcee43935b9e5fb7d1696430909b7af67b4 100644
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -725,7 +725,6 @@ int batadv_hardif_enable_interface(struct batadv_hard_iface *hard_iface,
+ 
+ 	kref_get(&hard_iface->refcount);
+ 
+-	dev_hold(mesh_iface);
+ 	netdev_hold(mesh_iface, &hard_iface->meshif_dev_tracker, GFP_ATOMIC);
+ 	hard_iface->mesh_iface = mesh_iface;
+ 	bat_priv = netdev_priv(hard_iface->mesh_iface);
+
+---
+base-commit: 61f96e684edd28ca40555ec49ea1555df31ba619
+change-id: 20250410-double_hold_fix-8f0a87f72ad9
+
+Best regards,
+-- 
+Sven Eckelmann <sven@narfation.org>
+
