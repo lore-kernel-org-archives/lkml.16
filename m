@@ -1,105 +1,150 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011074.outbound.protection.outlook.com [52.103.32.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2053D19CC0A;
-	Mon, 14 Apr 2025 17:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744653459; cv=none; b=t8B3J6ASymPDD57fQP5vfaOY/P+Qw1pAn2FcZ/D//GNcR/W3jMBNJb+JlIQr/13CIUdXP7ELoJYO0Qf2z+xdQyR+7FbjwqWIVWp9sO9IuAGpnzsaJ5Z6pFc06mZEidLbp58zAEMTJBtdQEV0zpp7XsVLD5HI2XEmOqDGOwmUCz4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744653459; c=relaxed/simple;
-	bh=bPgiMMaSLc+eDmqSe1HgWrhG1+XNyTjVIkUO8El3Ov0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NxUGIOUJ6N41VMyEuRzt3liP0I/7uOwt67K5z9Rkoih/1U6awzvBP+VRDpZ3t2bHDWeK1T4TcazDtWnDozy0VDL1rjrsHpuBr9OQOcYZ5IyAqmj5Cq1hbM2LFagjbxH/6etD7qp/iUk84+Vaid0gZAj8c4ZHno/DyMh7puYRFAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTdhHuxd; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859F628A1FE
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744653466; cv=fail; b=fEndcgVnfrK1TcyP/wEhtMp9U59y++fAaZuwCuEO9mH+LZeKFc2NOtwytYFvsR8BOcI5kAX9WtEn3CAO07GkEgzKHwHk2T/KsZGhSPF/2AvQmo1QfCIS8beUJrF6H+mmeiaji/rH9HjG6qtbABcvLqTZAuj/ymywM3Jkr2pAoPg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744653466; c=relaxed/simple;
+	bh=2cVquHEfRPunshMhUaAMUOyLEbRD2tusC/83U+rvKR4=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=A/tn05pzfqaAKFD69xgETVJbcDzHueb6MsnBrc9W49Jb3sHryQUXyXQAPGvD4CoQ60lOPjhTfSc5tTn5UQkflLCwq3nUCnQwT3CmI6xYuPPMoFA6DwBqaQc63IJPFXnvWNudrjI6h4oUILEQFZJZq0f8h8sVeNuIl+FhYlyLlLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=tHqgWEv1; arc=fail smtp.client-ip=52.103.32.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTdhHuxd"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so832698a91.0;
-        Mon, 14 Apr 2025 10:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744653457; x=1745258257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YDLmjU5aYGkKFZNBVtYIN1e2hFVEh2qpAqVYEYhienw=;
-        b=hTdhHuxdhSwDtbGcBB159Q2Fp7c09aipzhnzz4sjS5Pzaqe8YpctwO5A9UXsga1OsD
-         i93ri8kIt1pe8NuLnhYdEsGie4kUskRXtw0mZ9CTJDZ0R3sQ1zLBjUyPFnvL/7xiDyig
-         lV8KPjiNV1IFDWTp2kcBq4Ihk1KN7nXm5uOozsosReKVw72lz8BKu66FWAp2DSfe0+qI
-         VtQMTmIW2kPHrXvfObYilXom21cUU+13nTZURH4mYMPw7cGA1+A2kzJ6ITlQPexro694
-         xBlcWRaG7+FVz7OUKg7saTGJAElGNVzgQIG4zzsVYMSdsA8fWan0sjgM4L/g2Wimxd5Q
-         CmJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744653457; x=1745258257;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YDLmjU5aYGkKFZNBVtYIN1e2hFVEh2qpAqVYEYhienw=;
-        b=qatDCySmNJoamGqZKS1eFAbOKpm97jJIIp2u2eGq0aJnnkuSTNaZJXlhO3ZXgo7Cd7
-         Tk/O3Noo54kdy5AhLOPd2RTdAw24iS/7ckweBy50BWhHyckPazmjI02o4aCKwRkszGG+
-         vFzjYwfL+Z0o8/4m4QqQwjU/kHqUyTQ/dCqPsIxMvls9QTdOM5y0yey8sxwwlI+qjodM
-         jWE1CUoPt2E117TJ+tvvgtAGV3uZM2msoun8RwMiddrpTT6sYrQ6R+SAaBp8amZCXil5
-         HuKHdDm64xG2X6U7fq5cvIIS+4ZdqNYtaJnk7mGXkTuATf7LJ94tILJLtCpKDihyYLG0
-         zwOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCMfkKvGcpcuU+hFiLxHRuUzlUGHOkNAW75gw1rRq4dLA0jg0QekBAHS1HTfWwG83BryURbzyW9NrISgY=@vger.kernel.org, AJvYcCXJG3hZz9Uoc2AXPfsHAZpoxJJgVYp06rddBWL0GQp5acOPA+bPn3QyuxJPpV3J5BlHnTCfnI2Py/T7YByQygc=@vger.kernel.org, AJvYcCXg1jLAPrFW/TDOtKH70PpjboFhCXQ5EtvBJ5QqQZHOIGTtD/flDDYm/OS/oRBnHx1XYFTVAOhIPIwn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvPNOJmx4T+YmQ+X06qxgEy/Ilcmq0zauxUifM1onrKQe2MmW5
-	5rm8ovtyZmgDkfu0sbxy9dmvE0LurLsz7oz+TrKAGg0OHIS4kx3ge2Cf4/r5W7uXkC1OeEOzm9n
-	cycbD8tijoY8m+x1L3GLVS9cgEeY=
-X-Gm-Gg: ASbGnctU7OBXeRZ5+PsDhcq4L/y1+h2sKOzlTCXN+Vv6/89osJVzOJpY7eIjqOpT9o2
-	NdKHATvumKyc9tei/4j3807IVopRHkfLD4q0ETb+SUHiXJEYvdZ128iiqImyx3k/ui1KEKoYoh9
-	U/jSAf1TreQKXFMEgYWUXZuQ==
-X-Google-Smtp-Source: AGHT+IF2Ts02o34q1ZddiSdxAxXqspzleZrPHKOELQW3P4amtTQc9cNxfADcwUNFlZEsEvxMFZpUTX9koDttANypnEw=
-X-Received: by 2002:a17:90a:e7c1:b0:306:b593:4551 with SMTP id
- 98e67ed59e1d1-30823775704mr7205617a91.6.1744653457143; Mon, 14 Apr 2025
- 10:57:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="tHqgWEv1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ljJtg35ZLPw/HSHxhU8H5lxouC70c2fbV6D380ktGw1rsUkszOIAwhrFxtMimIzSIf6vYfHfnKWf1yzuJbRvn8acGtTSylUvoeVel97j3E/01mgeUC/x31pPDGPNn9PdOmsBzgtDBwBg4z966TvieKL7lDPe5wM1NzvpOSCMwyBNDPCUEu5TnA9aikWPOaJibX3aqPndjiORI1STACo2528DyHorKvwbcvFBh9Mo0tl3pTAoKv1czCgfhemvxHlLNVJ8Yqe+CTzasUQnmEMrzOFydagHj7MH97E1SgMu+hhNjg3cRmSNw2ZikHvavI1k8Y9YRV3ITwI56mJDYoLr/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kai0UgTYPyvlFlO/J0jfVcAaIfZPhexchYdyJmtwQbk=;
+ b=YGUAzcnHoBfSqhSBdqvvEuwgiZA9j1GKhY9KuTDqKn+if3LkwRxnT9PdskRIOpj2yEc5M+ZdeGtHgeExEtb21mmJul3nNpYJM/BqotAbuApw+D3MT6gla6wah/MQGyRjlqMpsePYrfgWH2eck6xnE78CSwalBwRVFgHR0zrMSXbsanaiYjhjpDwakOWCv1GXvGMiTIFAFW//pP3G9G9i9Fi8/tsrZUmGhMk7TnuEWT5xcOP+uvcRkQoO4AGh5l0y9cT8/wWF04cQMnIQAJJCRQxCjz3PHWOTxptNtFuWJzJxf1lEbBC7rTtMQS4QKAiwWCWLkZaBGp6L/fj0cGn3GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kai0UgTYPyvlFlO/J0jfVcAaIfZPhexchYdyJmtwQbk=;
+ b=tHqgWEv14YSHEDMl9DVvCyzveSQDCSOms59bxNiOiL8H28EAeP7Ahd2IPFhNWPHLY918xke/tEuLMCkCY+HWukYhWRibRD3zfEhlUJaYqCkzgV3+MiHOfdPcIoUuHkCjV5sXRm/7sugj9HwGhlgtrog7fwkkB8hofaVMdKVS95W+1TFECbBVWNZJFitakzXE3+oph7jCmBtZ04ctuLj7Pv/+DPWX3umhX3sU1dycgOmK5toAa6DWWZhka/zS0Kupv4S4aWEObe2eiwmz2wmNVWCCIYCOPzjCZjA4zAVtckxf+oJZ1MTJ+fjJ7qF+gPi/uQXOlcxsuiSfwrofauOqNw==
+Received: from AS8PR02MB10217.eurprd02.prod.outlook.com
+ (2603:10a6:20b:63e::17) by AS2PR02MB10374.eurprd02.prod.outlook.com
+ (2603:10a6:20b:545::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Mon, 14 Apr
+ 2025 17:57:41 +0000
+Received: from AS8PR02MB10217.eurprd02.prod.outlook.com
+ ([fe80::58c3:9b65:a6fb:b655]) by AS8PR02MB10217.eurprd02.prod.outlook.com
+ ([fe80::58c3:9b65:a6fb:b655%7]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 17:57:41 +0000
+From: David Binderman <dcb314@hotmail.com>
+To: "jgross@suse.com" <jgross@suse.com>, "sstabellini@kernel.org"
+	<sstabellini@kernel.org>, "oleksandr_tyshchenko@epam.com"
+	<oleksandr_tyshchenko@epam.com>, "xen-devel@lists.xenproject.org"
+	<xen-devel@lists.xenproject.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>
+Subject: linux-6.15-rc2/drivers/xen/balloon.c:346: Possible int/long mixup
+Thread-Topic: linux-6.15-rc2/drivers/xen/balloon.c:346: Possible int/long
+ mixup
+Thread-Index: AQHbrWZTlrpkrx2gg0SWv5xq+subcg==
+Date: Mon, 14 Apr 2025 17:57:41 +0000
+Message-ID:
+ <AS8PR02MB1021776B93FEF6D425C7223389CB32@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR02MB10217:EE_|AS2PR02MB10374:EE_
+x-ms-office365-filtering-correlation-id: 2838e0d5-97ff-430c-2fee-08dd7b7dd9cb
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|7092599003|19110799003|15030799003|15080799006|461199028|8062599003|8060799006|3412199025|440099028|21999032|102099032;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?9KEpoXN0OIAabFtfiO6Ud3abovtlN8cBIyI85vnAh/7fZBi8vRtA9WSi5m?=
+ =?iso-8859-1?Q?Jdmd6P3p4qBKK4Z2we+iRS3NEtKDFuTvJAmPC7/f+goaHN1NXmkG3t7Mc0?=
+ =?iso-8859-1?Q?aqoHth3EMZ41hUf+/ntMtL/6nKjGIrPQUC3R0EcvniVOkMpHkeMXPdLf71?=
+ =?iso-8859-1?Q?Y5KHiW6fQRI1ZRVwqTsbaNTtHWSb8aMmlpFeHxwPZrt22srLlemGCA3ZjL?=
+ =?iso-8859-1?Q?mSznN92vK5crJl8NDSjDF0gUHkKA2qwQEj1zgN4e9kMHzsiDDs/kxdez6U?=
+ =?iso-8859-1?Q?wUBsOl2pZ3ve+zSlj+J+o8divHJqsmXAJTLHP8DhTRVST0i3aIStPZpQBM?=
+ =?iso-8859-1?Q?k7QOdmABMM9pfJRWBnMwLCYtwRu2kLv9wmTAcE0qaXpqH2/GlQ2YwZ27ag?=
+ =?iso-8859-1?Q?g00Xf4PDDHJmC2CuOB/thTLIAkvteEusMjnkBNu9DeOGau/n0s1WPoS8E9?=
+ =?iso-8859-1?Q?X7d1qAjyAQOvzcr6nshd0dsd/JQlwHwhzBOUJqxGDPFGihabJic+FsJPTL?=
+ =?iso-8859-1?Q?L/B9woXQxLq7iz1SklXyhy6hUNW3F2zulEm8kFWSbRP5y9AQ8VDV+SweL1?=
+ =?iso-8859-1?Q?pGmPPkcyY7J9KPpsymiQ4JC4igphnR9r72zHyDnJjuDnBvs4EcFJfPXRKV?=
+ =?iso-8859-1?Q?TKmKdb3Zxu4BRrHD5ZgRhc4qs8bdJ2pvIZcHdL/TsPJbI+pMc8vY1G846/?=
+ =?iso-8859-1?Q?1g3nOlKWmtfYDiyATkwsQHYJ4ZWUm7xsQeINUGAEzx3rlQV18Ju3nvNXuF?=
+ =?iso-8859-1?Q?i67rbXiaAoLeZT+XjrpY+vOTRhaJgxdf6ZfrfWzLtsumeT5Mi1sBs7/XRf?=
+ =?iso-8859-1?Q?+8iwyC4pMeG0uKMxdAG77BrNTXw48/WmewckNEBtqLEz72QbrKjOYYK2s3?=
+ =?iso-8859-1?Q?MjhPBumV3NYnEk2VRqJJYjQs0VhO5UfUL6pCrf/Z4DIeDJE62MDRcSUxRk?=
+ =?iso-8859-1?Q?VxcQ6F4AaK/mp5ifP5c7Nx1mmA5zB3zr/cToLtlgNJW5G4ZR1P31nS/ZYr?=
+ =?iso-8859-1?Q?vNTIJd697SsDMhZHoq+5FsM2Xtzp2etEwYvtKbGCUeGV0QqUm0yQwHLGNQ?=
+ =?iso-8859-1?Q?9qFwFxuHl1HcjXwq143PumXsig2uFkydAhH4vnUNbIifasgjTIGgs7CPwm?=
+ =?iso-8859-1?Q?lBT6U1HiRo1P7QdUJ1ili4X1f326uutA34fInMVwzZ+7G3sa9xcNTv0bdO?=
+ =?iso-8859-1?Q?WK9xHvksPNoMyg=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?/JkNyDEdXDk3TKgi9aeSGuFcR02deHBSsFf+shsRuFPC0tUddNadn8LjRc?=
+ =?iso-8859-1?Q?2YBB17miKez0Zsk519dDqaZ7R7Ubq62YRD1Hn88dc8NpK6CvcMPkh8YtLj?=
+ =?iso-8859-1?Q?FsjubJ0yd2n3N0YdJIFDjuvD/2tApzgDXBlQ2uUfEms1N/Bv9jbL8mukv+?=
+ =?iso-8859-1?Q?7zlcKggoY8TSkR4JWVHyS4ZX7GbUzNsnLJekLHW/P5pXg++ns8DsViZFBl?=
+ =?iso-8859-1?Q?okabTGTQePtOjjS7Djglyrxd+RzwFxaEVuSo0+gKu0jPcAOoRrKYC440sa?=
+ =?iso-8859-1?Q?Wmex6Ox/Bze+jIfrcrxl4DI/btIPuY+Q//vlu5MztZ3WEYSnzofVTNN4MS?=
+ =?iso-8859-1?Q?0fX3Jy+sSKHCSeR9NZDg+a74/jIowU3rccDBJFHtCsQuLyR6yMXJWnFDyN?=
+ =?iso-8859-1?Q?3r44TYqVEQEYhH8lwpHdR+DJZKyxYcrmmbMHHETzgJajBNMgN61AQe00P/?=
+ =?iso-8859-1?Q?WzYJ3NEdQVUf7zCTfe8AS2/xjFhMcZ+UJ1FgEWh9/HU2mT146Krvu30syL?=
+ =?iso-8859-1?Q?vxhumCyssKWsHV0oavKvATHMxtEZKruiCrFEKbs0TBhmpmHOhCighzf+FQ?=
+ =?iso-8859-1?Q?3PeK8fPzQkWtb9UHJOr0Di2Yym4669p/7ut19mcv3YWjhQVjhWYo2YWOTW?=
+ =?iso-8859-1?Q?JHrAEzIDOBCWapRtxY/D+XhU4LpPEoU+b++AVyAqg0aXPtNL+VYR9Fkn7B?=
+ =?iso-8859-1?Q?8TtGNz0Z7bKsQ03TvFmnqZroDbOY25mKE7pS6MQW1IMBTlqMDv3OW1cFUy?=
+ =?iso-8859-1?Q?4orJcDaoHQN5kTsMjXerjSA9sInuLKP2LHg4g7W5JsCZQ3giqLsuOHJDUm?=
+ =?iso-8859-1?Q?YcDqZus/dXX6t3/B0gNX4wnTRF17GOwmwMys9+FGFJivKlmndTrNPw7/6o?=
+ =?iso-8859-1?Q?WbRrwUaV0CoYVHnuTcSJg0S+t24C98gMmrZoS0TYM8tigyrH0n/Nm9mbb3?=
+ =?iso-8859-1?Q?hpgnOzDUq5VyaIYkhSRV1l5DjFMzrzKxO1RQZDcN1OZMc4kcYYngQqv6xk?=
+ =?iso-8859-1?Q?qFqF5y3pJuxr5sirDUNUBOVKGXhGtSHj+Gfm18/hoWuEU0McQNvvwy+YKH?=
+ =?iso-8859-1?Q?lV8bXpg48TZXG61Ic7Vjymaar6bXp1q9KfO0hYtLWmxhRKEEuyWR4T31b/?=
+ =?iso-8859-1?Q?xxgke6fNWKHK+S2aIo9oWbRB4D2rmeijuo1sadtIi4UQREb9RghFNuvuFJ?=
+ =?iso-8859-1?Q?p8rNQV2uezQ2t1WTnTPEoFcVz6TanLGOPqOZIaB8rIiNpfhKoHros3EOBT?=
+ =?iso-8859-1?Q?zpoIm9vHm0weTVHw0B0Q=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
- <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com>
- <Z_1E2z-l1xG--BSc@slm.duckdns.org> <CANiq72keUDCzhwW9E0aw-QV4ST7k3zqit1Ea=2yj2VdKS1ujWw@mail.gmail.com>
- <Z_1H6KkIt0YnkeLB@slm.duckdns.org> <CAJ-ks9k2FEfL4SWw3ThhhozAeHB=Ue9-_1pxb9XVPRR2E1Z+SQ@mail.gmail.com>
- <Z_1KR_b0KEcqF4K8@slm.duckdns.org> <Z_1Kr71BMpXPoXS5@slm.duckdns.org>
-In-Reply-To: <Z_1Kr71BMpXPoXS5@slm.duckdns.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 14 Apr 2025 19:57:24 +0200
-X-Gm-Features: ATxdqUHa6RevVC4GEHkHk4oL9wvRUYrFYW64d-y3KmyUkrzC2yzmhJbVksGvOA8
-Message-ID: <CANiq72nDtMKNYqxrxj6gNYaJwPzqe0U6CkSQakRrV2rDKF1ZJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
-To: Tejun Heo <tj@kernel.org>
-Cc: Tamir Duberstein <tamird@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-ab7de.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB10217.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2838e0d5-97ff-430c-2fee-08dd7b7dd9cb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2025 17:57:41.0969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB10374
 
-On Mon, Apr 14, 2025 at 7:49=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> Miguel, now that I thought a bit about it, I probably shouldn't be applyi=
-ng
-> patches that I don't understand enough to tell which one depends on what.
-> Can you please apply this series and the delayed_work one?
-
-Yeah, sorry.
-
-Tamir: I know you the "prerequisite" at the footer, but it is best to
-explain what has happened in words. If I understand correctly, the
-last "version" is:
-
-    https://lore.kernel.org/all/20250409-container-of-mutness-v1-1-64f472b9=
-4534@gmail.com/
-
-Right?
-
-Cheers,
-Miguel
+Hello there,=0A=
+=0A=
+Static analyser cppcheck says:=0A=
+=0A=
+linux-6.15-rc2/drivers/xen/balloon.c:346:24: style: int result is assigned =
+to long variable. If the variable is long to avoid loss of information, the=
+n you have loss of information. [truncLongCastAssignment]=0A=
+=0A=
+Source code is=0A=
+=0A=
+    unsigned long i, size =3D (1 << order);=0A=
+=0A=
+Maybe better code:=0A=
+=0A=
+    unsigned long i, size =3D (1UL << order);=0A=
+=0A=
+Regards=0A=
+=0A=
+David Binderman=0A=
+=0A=
