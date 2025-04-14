@@ -1,65 +1,33 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5941419A9;
-	Mon, 14 Apr 2025 06:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0211419A9;
+	Mon, 14 Apr 2025 06:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744612812; cv=none; b=YUvKyTNwG8akDmdeNvXk4qCHSjJ4SRIOUov1ncK6lmnW+iI8LszG0+ABjC7NJCxcw/s5DP4+5UyhlG3Lxyw0Zf96DM4sp2/ITP16qbnlHRj5iOsv/08H6cByHek/grAaej5IYtpzFbJ9WP6tIS7wDzX5wxLPCtWVO5zsFf4ktyY=
+	t=1744612865; cv=none; b=YpyS6Kz+wO6HGQQ/hCl2EWIwY7hwpuBDTec6ZR26zzXh719350tnOSKtHkPu7JkLjTSXJCQryZnl+RNy6JpuXiMOLWMFQpTQL42tCDNQDWk9qGfJd8ufZFmOK389dkCHcTFljIwzS5NrS5/VeDjCq3tMe8Ygj35dxCwrtXuqi14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744612812; c=relaxed/simple;
-	bh=kfnjKMFZ2GPzUL1rrqAciGQykUgiMOgTaenXcHSbBPU=;
+	s=arc-20240116; t=1744612865; c=relaxed/simple;
+	bh=zGYT9/ys9XFeDrIQP3vDY/YRp42OeOH38Jn/D2K6NRI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PpTSJH4Y8d5kIneEsNASTBRzgrF0tFMEwWqDXsDTF2FCGEeb2VO1DvIrChu7Bw63RHH8qK+FX76v+6exWtnNiI+Tyb0+ZcFZRpAXKnsfeP+ebQL5eZn0XdeDO3efCr0hD0/K+R5a9FZH7t8BhXhlvXV5Z1QFOeyNJLgmZKDKt9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3ZtqbCR; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=c61Er8OlYtXlB3lZSZYzyCpPjmklPk1Kkeq/uKYRKPL8I7VewssUlhfo68fbX/zodrBciqngBQmtIn6tWyt7AIFupzhz/JKApI6yojIriCROqvQCNu90VXiLa0crn/QZTBpg8tgWqSIqRmtYKyMG8fKHVMjdoHmzvGGrXeNEAdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnOa6yx7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3ZtqbCR"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so53423711fa.1;
-        Sun, 13 Apr 2025 23:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744612808; x=1745217608; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+2iNlzdgL5vxyxuYkh8EZATDAc3DMADsVOTtwIzMOrI=;
-        b=c3ZtqbCRlx0Uv54la+EEk9lPsz4msoSpyQzunnXrWMcONLHltrtLHwhfDTcm7l7ZhU
-         OjRjHVLFpFKkMYKgLAlKNWN63zOTyagViXX+ICpId9B0EnL7EOumS0cCwwOg8l0HEblw
-         CZOTjgUiX4HoNBBVDeSslKspjjfbX8XQC1zbvdNuvMlqPQ7a6mry6rVrK5XuAfcK1wEU
-         mQzEs3jsjIE/MImwA5xPOfnq4hUzo+52K9RZFhZE2lLE9qG+8nLdUSpsyejR8mrVbsjD
-         c/wDWmGz5NW/SHExD+bxHl3Qsm4Aa68UXFEHYoiatW8f4/00MqJZpmu0W7CQwwiKNxZ6
-         d+cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744612808; x=1745217608;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+2iNlzdgL5vxyxuYkh8EZATDAc3DMADsVOTtwIzMOrI=;
-        b=v+bz3WeAhNOrxuCaopMGGbPiyanNj6VL1ovDosIYP0k76eKTU+DYDyK9sVQ3Zpsjm/
-         vtj/8rrsMqhiJTWXV9TF4WBpkdhjyiz+C0Y0imf+WONXVeGpxI7fB23KpxKeJcPPo+2b
-         EcUKVNTg4f4ZWj4EacXrVgH+5xWlLmR19GLJ3wYKShX1G5IaWbf0eouuuQAydZ14K4BG
-         1cd2LXWG6pvkYLFPd8/PSmGk5/MCpWSsloL7Ms2uU8CJww0hR0WKzoBpf5hp+G7V/bve
-         2BbOV0gK++SGMOI7HlyQZL5K3ieDnbD1IfBG668Lvf6gRa0swfwlwgOEnDt7bAPM8D8l
-         VBsw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6+ePN/rtnJOroyCg4TiKDkft9QWSF3RDIyFzpFSxZGP2tts6gS8dEzkymGuIm2sUS877F3hPVYZRwc5y2@vger.kernel.org, AJvYcCVWTXvoEPPfHJqzNfQtcLy8zvsG2rM/gAJm5Y5WbLHu2Okp6wHRiPKqtt0Jwr9i8Lvy4wbfvSr14rdd@vger.kernel.org, AJvYcCWoinFJ0SIf6D+oLwbBHTuykIGs2LeLLCTHxtv2/LSstCLcaxC8W9SUJy7VAb7O0XasxdjyOXo3wlYu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+/QRRBghNhF3NUpP8t0XnYmBz0Q/oIxV0YlWwPNljPThl7Ksm
-	0j+gMVuYDy1z7CK8WzLZnjukCHn3jOT4TDGthtJMBF5kbmemWTMhPI2N5w==
-X-Gm-Gg: ASbGncuTw/29uOmuqn4s2TGZ6aNYFgKwqTw+Z5s81jaqBKfI4a8gJ5x3amDNpezvaB7
-	sacsUHguKdKpV59PYcLLASA2aeixlTHIdw7OO/SXOcC4S/rOcROs6zD8JS0DuR3dKvYHpPVAY0S
-	RGfVOB6HbKPWAEyRPjCqEImPMKU9xuLzXksoH1/ZgPvu4mp2iSBGx/y2IivdioK9b5AawEKsFTR
-	JvhlrsxG5E3RhYmCkL5ep+0G3225iClvFg5MjZIoQjsg9hYVHZvcP+bMUpzq1ODvnx4L+rSgE9x
-	0UYEjUt+8Ovq811a/umbIqK9t7FGjF89KGiz5dBO+o5y2x1fO9Zqp+AmLnKB2+hUZ1z65ihY8/C
-	FKRde8M/UZaXYXcPfzIVt9w==
-X-Google-Smtp-Source: AGHT+IGizEHk2Etr2DFbJWSy2JbCLOrgaQJBOUGQZHu7DP2KAdeST9gjlwQ5wLgUqCVsV8eF9STNGA==
-X-Received: by 2002:a05:6512:3f8:b0:54b:f99:776c with SMTP id 2adb3069b0e04-54cdb5ef0a0mr3848512e87.24.1744612807528;
-        Sun, 13 Apr 2025 23:40:07 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d50260csm1044613e87.132.2025.04.13.23.40.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 23:40:05 -0700 (PDT)
-Message-ID: <cb81cba4-0fa3-431a-924f-b362fd0c4638@gmail.com>
-Date: Mon, 14 Apr 2025 09:40:03 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnOa6yx7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9673C4CEE2;
+	Mon, 14 Apr 2025 06:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744612864;
+	bh=zGYT9/ys9XFeDrIQP3vDY/YRp42OeOH38Jn/D2K6NRI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DnOa6yx7gomaF5lvJD34nncx7msKVxw9jhYg6uRxJmIxIl80NqZEZAaS+haEfGoR/
+	 WLnFedi1wdEN+LR/0l7PCV7pbaJP3SuGSRqduxz/SqOjC3lhqfE3xrsnuP2XN5ordV
+	 xQvb4yHgeHlQ3fQUw4EjLv5DIxLjeXT6vWOPjlX00aAT+rkbm6a6dOJEbJy6qb+qSb
+	 s2UjbRWvlBZXZNP6lotGp2a3IU67YFccxCbRoq9UB+rkyHUOuQ7ZDgA/ccUeWbVvqZ
+	 9WndFjwuDCMywybscxVsXdfCj82AII5FCZHuohPOSI3jU7fogqqtAHOdjneLNsFNLl
+	 JZU6TLyQHVU+A==
+Message-ID: <a59f3719-e6cc-4174-a913-de0303868604@kernel.org>
+Date: Mon, 14 Apr 2025 08:40:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,281 +35,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution devices
- support
-To: Sukrut Bellary <sbellary@baylibre.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Angelo Compagnucci <angelo.compagnucci@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250408132120.836461-1-sbellary@baylibre.com>
- <20250408132120.836461-3-sbellary@baylibre.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250408132120.836461-3-sbellary@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v4 4/5] clk: sophgo: Add PLL clock controller support for
+ SG2044 SoC
+To: Inochi Amaoto <inochiama@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>,
+ Vinod Koul <vkoul@kernel.org>, Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+ Longbin Li <looong.bin@gmail.com>
+References: <20250413224450.67244-1-inochiama@gmail.com>
+ <20250413224450.67244-5-inochiama@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250413224450.67244-5-inochiama@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 08/04/2025 16:21, Sukrut Bellary wrote:
-> The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> interface. The device family responds with 12-bit data, of which the LSB
-> bits are transmitted by the lower resolution devices as 0.
-> The unavailable bits are 0 in LSB.
-> Shift is calculated per resolution and used in scaling and
-> raw data read.
-> 
-> Lets reuse the driver to support the family of devices with name
-> ADC<bb><c>S<sss>, where
-> * bb is the resolution in number of bits (8, 10, 12)
-> * c is the number of channels (1, 2, 4, 8)
-> * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> and 101 for 1 MSPS)
-> 
-> Complete datasheets are available at TI's website here:
-> https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-
-I tried looking up:
-https://www.ti.com/lit/gpn/adc102s051.pdf
-
-> 
-> Tested only with ti-adc102s051 on BegalePlay SBC.
-> https://www.beagleboard.org/boards/beagleplay
-> 
-> Co-developed-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> ---
-> Changes in v3:
->          - used be16_to_cpu() for the endian conversion.
->          - used config index enum while setting up the adc128_config[]
-> 
-> - Link to v2:
->          https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
-> 
-> Changes in v2:
->          - Arranged of_device_id and spi_device_id in numeric order.
->          - Used enum to index into adc128_config.
->          - Reorder adc128_config in alphabetical.
->          - Include channel resolution information.
->          - Shift is calculated per resolution and used in scaling and
->          raw data read.
-> 
-> - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
-> ---
->   drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
->   1 file changed, 112 insertions(+), 37 deletions(-)
-> 
-
-Hi dee Ho,
-
-Thanks for improving this! It's always nice to be able to support more 
-devices with small(ish) changes!
-
-This looks good to me. I will take another, hopefully more in-depth look 
-at the rebased version when available though.
-
-I have just one comment for now, but it's not strictly related to this 
-change. If you wish to go the extra mile, then I'd appreciated it. If 
-not, then it can be re-worked later. Anyways, please, see below.
-
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index a456ea78462f..d4b76fd85abd 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -7,6 +7,22 @@
->    * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
->    * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
->    * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
-> + *
-> + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> + * interface. This driver supports the whole family of devices with a name
-> + * ADC<bb><c>S<sss>, where
-> + * bb is the resolution in number of bits (8, 10, 12)
-> + * c is the number of channels (1, 2, 4, 8)
-> + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> + * and 101 for 1 MSPS)
-> + *
-> + * Complete datasheets are available at TI's website here:
-> + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> + *
-> + * 8, 10, and 12 bits converters send 12-bit data with
-> + * unavailable bits set to 0 in LSB.
-> + * Shift is calculated per resolution and used in scaling and
-> + * raw data read.
->    */
->   
->   #include <linux/err.h>
-> @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
->   	if (ret < 0)
->   		return ret;
->   
-> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
-> +	return be16_to_cpu(*((__be16 *)adc->buffer));
->   }
->   
->   static int adc128_read_raw(struct iio_dev *indio_dev,
-> @@ -70,7 +86,8 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
->   		if (ret < 0)
->   			return ret;
->   
-> -		*val = ret;
-> +		*val = (ret >> channel->scan_type.shift) &
-> +			GENMASK(channel->scan_type.realbits - 1, 0);
->   		return IIO_VAL_INT;
->   
->   	case IIO_CHAN_INFO_SCALE:
-> @@ -80,7 +97,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
->   			return ret;
->   
->   		*val = ret / 1000;
-> -		*val2 = 12;
-> +		*val2 = channel->scan_type.realbits;
->   		return IIO_VAL_FRACTIONAL_LOG2;
->   
->   	default:
-> @@ -89,24 +106,34 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
->   
->   }
->   
-> -#define ADC128_VOLTAGE_CHANNEL(num)	\
-> -	{ \
-> -		.type = IIO_VOLTAGE, \
-> -		.indexed = 1, \
-> -		.channel = (num), \
-> -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
-> +#define _ADC128_VOLTAGE_CHANNEL(num, real_bits, store_bits)		\
-> +	{								\
-> +		.type = IIO_VOLTAGE,					\
-> +		.indexed = 1,						\
-> +		.channel = (num),					\
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> +		.scan_index = (num),					\
-> +		.scan_type = {						\
-> +			.sign = 'u',					\
-> +			.realbits = (real_bits),			\
-> +			.storagebits = (store_bits),			\
-> +			.shift = (12 - real_bits),			\
-> +		},							\
->   	}
->   
-> -static const struct iio_chan_spec adc128s052_channels[] = {
-> -	ADC128_VOLTAGE_CHANNEL(0),
-> -	ADC128_VOLTAGE_CHANNEL(1),
-> -	ADC128_VOLTAGE_CHANNEL(2),
-> -	ADC128_VOLTAGE_CHANNEL(3),
-> -	ADC128_VOLTAGE_CHANNEL(4),
-> -	ADC128_VOLTAGE_CHANNEL(5),
-> -	ADC128_VOLTAGE_CHANNEL(6),
-> -	ADC128_VOLTAGE_CHANNEL(7),
-> +#define ADC082_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 8, 16)
-> +#define ADC102_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 10, 16)
-> +#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12, 16)
+On 14/04/2025 00:44, Inochi Amaoto wrote:
 > +
-> +static const struct iio_chan_spec adc082s021_channels[] = {
-> +	ADC082_VOLTAGE_CHANNEL(0),
-> +	ADC082_VOLTAGE_CHANNEL(1),
-> +};
-> +
-> +static const struct iio_chan_spec adc102s021_channels[] = {
-> +	ADC102_VOLTAGE_CHANNEL(0),
-> +	ADC102_VOLTAGE_CHANNEL(1),
->   };
->   
->   static const struct iio_chan_spec adc122s021_channels[] = {
-> @@ -121,10 +148,46 @@ static const struct iio_chan_spec adc124s021_channels[] = {
->   	ADC128_VOLTAGE_CHANNEL(3),
->   };
->   
-> +static const struct iio_chan_spec adc128s052_channels[] = {
-> +	ADC128_VOLTAGE_CHANNEL(0),
-> +	ADC128_VOLTAGE_CHANNEL(1),
-> +	ADC128_VOLTAGE_CHANNEL(2),
-> +	ADC128_VOLTAGE_CHANNEL(3),
-> +	ADC128_VOLTAGE_CHANNEL(4),
-> +	ADC128_VOLTAGE_CHANNEL(5),
-> +	ADC128_VOLTAGE_CHANNEL(6),
-> +	ADC128_VOLTAGE_CHANNEL(7),
-> +};
-> +
-> +enum adc128_configuration_index {
-> +	ADC128_CONFIG_INDEX_082S,
-> +	ADC128_CONFIG_INDEX_102S,
-> +	ADC128_CONFIG_INDEX_122S,
-> +	ADC128_CONFIG_INDEX_124S,
-> +	ADC128_CONFIG_INDEX_128S,
-> +};
+> +MODULE_AUTHOR("Inochi Amaoto <inochiama@gmail.com>");
+> +MODULE_DESCRIPTION("Sophgo SG2044 pll clock driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:sg2044-pll");
 
-I like the fact you added these indexes as it makes this a lot clearer. 
-But...
+Drop, it's fully duplicated.
 
-> +
->   static const struct adc128_configuration adc128_config[] = {
-> -	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
-> -	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
-> -	{ adc124s021_channels, ARRAY_SIZE(adc124s021_channels) },
-> +	[ADC128_CONFIG_INDEX_082S] = {
-> +		.channels = adc082s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc082s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_102S] = {
-> +		.channels = adc102s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc102s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_122S] = {
-> +		.channels = adc122s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc122s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_124S] = {
-> +		.channels = adc124s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc124s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_128S] = {
-> +		.channels = adc128s052_channels,
-> +		.num_channels = ARRAY_SIZE(adc128s052_channels)
-> +	},
->   };
 
-... I don't really love this array. I believe the code would be clearer 
-if this array was changed to individual structs because ...
-
->   
->   static const struct iio_info adc128_info = {
-> @@ -177,31 +240,43 @@ static int adc128_probe(struct spi_device *spi)
->   }
->   
->   static const struct of_device_id adc128_of_match[] = {
-> -	{ .compatible = "ti,adc128s052", .data = &adc128_config[0] },
-> -	{ .compatible = "ti,adc122s021", .data = &adc128_config[1] },
-> -	{ .compatible = "ti,adc122s051", .data = &adc128_config[1] },
-> -	{ .compatible = "ti,adc122s101", .data = &adc128_config[1] },
-> -	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
-> -	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
-> -	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
-> +	{ .compatible = "ti,adc082s021", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ .compatible = "ti,adc082s051", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ .compatible = "ti,adc082s101", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ .compatible = "ti,adc102s021", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ .compatible = "ti,adc102s051", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ .compatible = "ti,adc102s101", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ .compatible = "ti,adc122s021", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ .compatible = "ti,adc122s051", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ .compatible = "ti,adc122s101", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ .compatible = "ti,adc124s021", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ .compatible = "ti,adc124s051", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ .compatible = "ti,adc124s101", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ .compatible = "ti,adc128s052", .data = &adc128_config[ADC128_CONFIG_INDEX_128S] },
-
-... here we could then directly refer to individual structs. That way we 
-would not need to define the names for the array indexes (for clarity), 
-or look up the individual array members based on magic numbers.
-
->   	{ /* sentinel */ },
->   };
->   MODULE_DEVICE_TABLE(of, adc128_of_match);
-
-Yours,
-	-- Matti
+Best regards,
+Krzysztof
