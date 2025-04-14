@@ -1,219 +1,120 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4658B280A3E
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4665D28A3F7
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628847; cv=none; b=UYDSpJUXxBfCSZq+rNPLzBmXyZfMAHQaNv8V5TAqhhgJuDH6Q/HU+XRxSzUrFF6a3+b3GqhuMKzV6P+h1w17pKgqOoWGfVc9HY1BIqpejlq2p7CuhG2SDGTCyHh4nNw4BO+MPKJgUt4rXek53pWuk6gAjHj85FS0n1WQcL3uEKM=
+	t=1744628857; cv=none; b=mspXNSeUdE2mfiUG2qlkvjDtf+uF+wr+KhGCGOW4Hb7vrT0t5S1FWz+vdP8UkuMSmrLm6dyxcuHaG4GpC9VHmySsSQTfb0zIoEUS3G4MvLBKg9+cRt6PIuYEa8hU9k5/vUYJOxf05tPgt2nEtMAZhe0ALryt+qSL0VgJSgqrF0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628847; c=relaxed/simple;
-	bh=G7TF4q7dZRaiEscsGkoiTtlH96Gu3YAx3lP58fif8+Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Qiro6WascZoeyd5UAoFFxy09Xmmz4ZUZnqgYkUMGYmy0xXAowhEt1C52PVmgdLkin8WrsoGopaCqpD7Oge57mq0iIp41NV4u1aweP4xBNoeW5FYWIX67Wv4ZEFUA2p4q7lQPZziAjLKqmuP9uuBsLCsyYxj8WdgWHBNZz7rgNxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e6b977ef2so470372039f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:07:25 -0700 (PDT)
+	s=arc-20240116; t=1744628857; c=relaxed/simple;
+	bh=8V4ceruG5PBgZuLKk3o6878Go2CYJK67IJGXeFBYrDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eEs0R9sRjZE/WOxSQnGe59/uagcTSnBz6sfuleSFxZhECJfqvIpvRd1jqvtzhrGulhBLv9xG8Sfadpn7iCpq5MtYp5+TZha/BbhMRbawGan5g4okiejmlEI1g6b3GOO/9thctajj0oh6e6VSIiFzhuRtPWD9dEUuK/d5kE6wVXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DunaRyoB; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DunaRyoB"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af9a7717163so4331402a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744628853; x=1745233653; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zFEHcpXAxg/GC10Ly7Ug5qKPKL7Q2jtqdYskUyHbzxU=;
+        b=DunaRyoBd3M/pwedP13T+U0hsvSp+qVKtSN9Z18TfFY2g5HlivOl1SMCzfa/y2f8q3
+         9sm4qhncPvMMiWbuektaUNIGGzJAqQeMIRFd4CMbN3nntyx1TPdrQAutBoZBfFedpntl
+         27CaQ/o1kGIFHDtJ3ApoAbxcclHUzgjO+VOonsJi3oX6+zlmERzY7puyY9kq232WiW+Y
+         qjdsmmjNEQRrAE30LW8Q3kni5B7fZzKo3mjyDFFss09cduE5/IGwo2eY6+Miogcrkfuw
+         +WUXafnT7YELn6Z5C+TfuGPNijjadhzpFEvuGETNBAU8DiMqYv351qDtUaP5DDZl4beT
+         uVPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744628844; x=1745233644;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1744628853; x=1745233653;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rcf+ERrLGDY27q9rz4Z2xEgCWwkHIxm/gM/aEPEcN6c=;
-        b=COK9JeC+uhwySw1XqHZ4J6cf4nHZ/04b8fj6xVhN0hedPTeDb6Boogjob7Juwm6vPc
-         YjDFaaJ/ZhDzVWBFWsEaKjbgw+Dlb9Efk6zsCa9ZbYT4TCqi/sRSYMBWiZc/5JF/VD5F
-         i7gDKrnu7KGRoflLXndhqzX6VsmR4s1aqMqooP5FG1N9Rcx4JWSpVjNE3z0pxEtadzBv
-         kLRRqVpIPdjmq/ahOjdaIJ2av1/ELTjkeq3ZlvGlOLCweANWjDHPelsa0LV40Z71yd/2
-         Mjs3ppDqdgeUwXLVgmWA/4c/uZsWlaLGyaIMOBQajk7hlSegZGEsP3bcHzCLpKIB2mlf
-         h+5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWrZH2SBilS684A5ioR5mP1HpFwQBUp4oHMwXjk0ftPlmypypk8wCjrbdvvOH+rB5AUocRjZjxWFfMBtFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLrDDped7erYGtN+DgT5oYqbtv0DtZUS2QDjBHKAPx+3nQ9szb
-	fWj0vjiz3DlvL5QOtEup0lrr9PdJImI4otRuZUfumMEZQ36nUq9s5AJx2wnH2LaLKjwwADG0SSp
-	o8u083U5VKTOwRq38PhmAB97vBB1UVhxbdu/SRRntei14NbcFTFg//3Q=
-X-Google-Smtp-Source: AGHT+IEoZWsHnF8N1MfzQODaqss8ETR3MjQbePJOcN0Rc70Cbyx6GhWc9RfLq9oiv3uSbJr1tJehq9R8t05J8xyyxjHb6XzNhb4Q
+        bh=zFEHcpXAxg/GC10Ly7Ug5qKPKL7Q2jtqdYskUyHbzxU=;
+        b=Hyp8MAiUwuUZrZmeRBODZLDYsu+PfBZytGRWnqwtOVrWSbWW+SAwUm53J3L99P5qi4
+         blLpWm2aaKfU/W1D0Ltf3QC8KT4RlUVcGUGSdZhi6curr1PAC7u1UrPuUm8Bt8AX8JwF
+         8yGVOw+YPh+K0gMr/YmD3kI03c1J39lkDKXUp6TbHuGIxFbuAT2TUz0TxLO7Fw0R0iOO
+         Lr4OSgleWkZ2VtX+pMtP2PNPoQSCquSifW1TVDdowfsWGMqXYoouyjE9MGmKyJqIauDD
+         xw2ZqTdRMnpCwRg4TX/a6d9W5wbBN2T5cZ14ATY99Q9bUwcMjpym3KvW9SPIYpq+fKHW
+         TQkA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/aT31KWdYCbIrqXofB1o/KO1tWLgo98fXuxIuYz0YbrOx/UFAZIiWQHAiWtNEualipST50wOjy2VeckQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzERNxymoUMBZ81KFgc3vn0sha3R1BDtGA415vdlxuAUbMNPpMy
+	BP3P1XzQphDZsaSF2EiMwwfjcWYy3VP9j8nsfjteVETf0hp7dSadZ/5DGFyY8g==
+X-Gm-Gg: ASbGncvgY/6A6P2BUVsLdFEMhjcEZp03JGLC/Fz7B3L6o+DC+WpCrGgjMXxWK+FEVUo
+	lLEiyNINVOOTrDYZ9eSnWPMpdz7cOIq3fIs9gPPONwcSp+MVilGhAhwXaX5vp+CYCidry+Wbphu
+	6t4mPqTE4rf7b66Z3qlqNmTfYcHIHqhtyleXzLGitBu5JcBazAjgh1/GVtgSNogxE303/mUksgk
+	yDvo7Bt40kg38UEuFpiXcpZnREUlxwhSxoZGDauBAejRtwpoO4IGE8gbIYELL6gc09HZLnc1WVz
+	0zhH5foaJV8ZdMqzWKFF8wDPrXuR/xz9EkQATx6lk1kFbc5yMpaz
+X-Google-Smtp-Source: AGHT+IEG8eqgQ0Y8mpznX22CMbhITM96DhKYisQrcLo2Fr6NqPnURcoiXx+TnDQ54ctIZmZC2+bn2Q==
+X-Received: by 2002:a17:90a:e7d2:b0:2fe:a79e:f56f with SMTP id 98e67ed59e1d1-308236344famr15907930a91.13.1744628853242;
+        Mon, 14 Apr 2025 04:07:33 -0700 (PDT)
+Received: from thinkpad ([120.56.202.123])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd12b62dsm12164634a91.26.2025.04.14.04.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 04:07:32 -0700 (PDT)
+Date: Mon, 14 Apr 2025 16:37:23 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org, 
+	Tsai Sung-Fu <danielsftsai@google.com>, Jim Quinlan <jim2101024@gmail.com>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Subject: Re: [RFC] PCI: pwrctrl and link-up dependencies
+Message-ID: <uivlbxghkynwpmzenyr2b3xk4uxeuqf6dow6ao4mptcnzygrw7@ylfqavr3ry44>
+References: <Z_WAKDjIeOjlghVs@google.com>
+ <Z_WUgPMNzFAftLeE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1888:b0:3d4:244b:db20 with SMTP id
- e9e14a558f8ab-3d7ec265c11mr109601905ab.16.1744628844017; Mon, 14 Apr 2025
- 04:07:24 -0700 (PDT)
-Date: Mon, 14 Apr 2025 04:07:23 -0700
-In-Reply-To: <67f097e0.050a0220.0a13.022a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fcec6b.050a0220.3483fc.0027.GAE@google.com>
-Subject: Re: [syzbot] [block?] possible deadlock in queue_wb_lat_store
-From: syzbot <syzbot+5a9d5d7faa80fa15e3db@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_WUgPMNzFAftLeE@google.com>
 
-syzbot has found a reproducer for the following issue on:
+On Tue, Apr 08, 2025 at 02:26:24PM -0700, Brian Norris wrote:
+> + adding pcie-brcmstb.c folks
+> 
+> On Tue, Apr 08, 2025 at 12:59:39PM -0700, Brian Norris wrote:
+> > TL;DR: PCIe link-up may depend on pwrctrl; however, link-startup is
+> > often run before pwrctrl gets involved. I'm exploring options to resolve
+> > this.
+> 
+> Apologies if a quick self-reply is considered nosiy or rude, but I
+> nearly forgot that I previously was looking at "pwrctrl"-like
+> functionality and noticed that drivers/pci/controller/pcie-brcmstb.c has
+> had a portion of the same "pwrctrl" functionality for some time (commit
+> 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage
+> regulators")).
+> 
 
-HEAD commit:    8ffd015db85f Linux 6.15-rc2
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a66a3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ae323da55fbd6522
-dashboard link: https://syzkaller.appspot.com/bug?extid=5a9d5d7faa80fa15e3db
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13ecdf4c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123420cc580000
+Yes, the goal of the pwrctrl driver is to get rid of this clutter from the
+controller drivers.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b7a7f5609ad8/disk-8ffd015d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c8cb2488367a/vmlinux-8ffd015d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c99e36835459/bzImage-8ffd015d.xz
+> Notably, it performs its power sequencing before starting its link, for
+> (I believe) exactly the same reasons as I mention below. While I'm sure
+> it could theoretically be nice for them to be able to use
+> drivers/pci/pwrctrl/, I expect they cannot today, for the same reasons.
+> 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5a9d5d7faa80fa15e3db@syzkaller.appspotmail.com
+If you look into brcm_pcie_add_bus(), they are ignoring the return value of
+brcm_pcie_start_link() precisely for the reason I explained in the previous
+thread. However, they do check for it in brcm_pcie_resume_noirq() which looks
+like a bug as the controller will fail to resume from system suspend if no
+devices are connected.
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc2-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor134/5835 is trying to acquire lock:
-ffff8880260c0f98 (&q->elevator_lock){+.+.}-{4:4}, at: queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+- Mani
 
-but task is already holding lock:
-ffff8880260c0a68 (&q->q_usage_counter(io)#62){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&q->q_usage_counter(io)#62){++++}-{0:0}:
-       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
-       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4348
-       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4395
-       nbd_dev_add+0x49d/0xbb0 drivers/block/nbd.c:1933
-       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
-       do_one_initcall+0x120/0x6e0 init/main.c:1257
-       do_initcall_level init/main.c:1319 [inline]
-       do_initcalls init/main.c:1335 [inline]
-       do_basic_setup init/main.c:1354 [inline]
-       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
-       kernel_init+0x1c/0x2b0 init/main.c:1457
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #1 (fs_reclaim){+.+.}-{0:0}:
-       __fs_reclaim_acquire mm/page_alloc.c:4028 [inline]
-       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4042
-       might_alloc include/linux/sched/mm.h:318 [inline]
-       slab_pre_alloc_hook mm/slub.c:4102 [inline]
-       slab_alloc_node mm/slub.c:4180 [inline]
-       kmem_cache_alloc_noprof+0x53/0x3b0 mm/slub.c:4207
-       __kernfs_new_node+0xd2/0x8a0 fs/kernfs/dir.c:637
-       kernfs_new_node+0x13c/0x1e0 fs/kernfs/dir.c:713
-       kernfs_create_dir_ns+0x4c/0x1a0 fs/kernfs/dir.c:1081
-       sysfs_create_dir_ns+0x13a/0x2b0 fs/sysfs/dir.c:59
-       create_dir lib/kobject.c:73 [inline]
-       kobject_add_internal+0x2c4/0x9b0 lib/kobject.c:240
-       kobject_add_varg lib/kobject.c:374 [inline]
-       kobject_add+0x16e/0x240 lib/kobject.c:426
-       elv_register_queue+0xd3/0x2a0 block/elevator.c:462
-       blk_register_queue+0x37e/0x500 block/blk-sysfs.c:874
-       add_disk_fwnode+0x911/0x13a0 block/genhd.c:505
-       add_disk include/linux/blkdev.h:779 [inline]
-       nbd_dev_add+0x78e/0xbb0 drivers/block/nbd.c:1963
-       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
-       do_one_initcall+0x120/0x6e0 init/main.c:1257
-       do_initcall_level init/main.c:1319 [inline]
-       do_initcalls init/main.c:1335 [inline]
-       do_basic_setup init/main.c:1354 [inline]
-       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
-       kernel_init+0x1c/0x2b0 init/main.c:1457
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #0 (&q->elevator_lock){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
-       lock_acquire kernel/locking/lockdep.c:5866 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
-       queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
-       queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
-       sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
-       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:591 [inline]
-       vfs_write+0x5ba/0x1180 fs/read_write.c:684
-       ksys_write+0x12a/0x240 fs/read_write.c:736
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)#62
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&q->q_usage_counter(io)#62);
-                               lock(fs_reclaim);
-                               lock(&q->q_usage_counter(io)#62);
-  lock(&q->elevator_lock);
-
- *** DEADLOCK ***
-
-6 locks held by syz-executor134/5835:
- #0: ffff88802ae609b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1213
- #1: ffff888024454420 (sb_writers#7){.+.+}-{0:0}, at: ksys_write+0x12a/0x240 fs/read_write.c:736
- #2: ffff888033450088 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
- #3: ffff888140fb55a8 (kn->active#47){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2b2/0x510 fs/kernfs/file.c:326
- #4: ffff8880260c0a68 (&q->q_usage_counter(io)#62){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
- #5: ffff8880260c0aa0 (&q->q_usage_counter(queue)#14){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 5835 Comm: syz-executor134 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
- queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
- queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
- sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
- kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x5ba/0x1180 fs/read_write.c:684
- ksys_write+0x12a/0x240 fs/read_write.c:736
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f217454ee39
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f21744e8218 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f21745d8318 RCX: 00007f217454ee39
-RDX: 00000000fffffdef RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f21745d8310 R08: 00007ffee7802e27 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f21745a6004
-R13: 0000200000000150 R14: 0000200000000140 R15: 00000000fffffdef
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+-- 
+மணிவண்ணன் சதாசிவம்
