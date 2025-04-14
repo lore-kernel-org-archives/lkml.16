@@ -1,267 +1,557 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6911A08A6;
-	Mon, 14 Apr 2025 07:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614511; cv=fail; b=Q6sIab1sW2YASfCF8VGKwtl+urnxFF6szD23s3g7FBbWuaSdIgSeyNV9ZFMd7s9yGy9ta1K7WCO4RHEGqio4YjwMvgtiMu8lHg4kKYqj1x4E8qJwd2No+zHGyNyT/HOnzQOBr3WMDp2eEsQ55N6IlNVyBAjb5T7B0h3o1NYtfTM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614511; c=relaxed/simple;
-	bh=Je19i0pr41lAPSIPGj+PkUSizmUTZlgR/3YkAghbocU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=s1UdEIyhal8ZyM6htDzEHn4XWG7RuGOn1HAW3f8r8NbyHDaGB+7lAbdrWEUUtX9kbAsIOTMdUtFM+huvIOn2czAoypO1U8n755ADoZg101FxQg4nnW6WUBhiJiJs6ZUSrIyJEYVO/bTzJPN4zINYoxXgbYvrI2Fi0N8E0DpfRBA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=qDu4C4Fq; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=PatWKH+D; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3531AAA2C
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744614526; cv=none; b=FIjOlTgOG4GZ8lDEcp2M96WSnGNUR0g5qsxt8g0fUjYHsAQSGarxjiA1JDtoxPX6eyLIIW1UQnOyrwyeJ3w7Lw+01XwnlPLzA6/I49jsw0KjnvlbcZ2gBaKH2VuVFzkJFsbm3CBF9Iy8sE7NhilmG/t7w7u4Pk1Q1cEk3V7S4fY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744614526; c=relaxed/simple;
+	bh=8juwAuA5QfCK9G0ZTyfkhbvbUPbhRFAk1K5ddM/3Al8=;
+	h=From:Subject:To:Message-ID:Date:MIME-Version:Content-Type; b=YarYsXokIoFQipd9Ekzso7mJcvUODeSmjzsQL57O549Vz/EghfhoPLJUcu0+t4dXCBvxqAu6hFkRK/XidnH8QDV9VxyduYD21odDxstCHGqAdCPPdLEgeGJszVd4nN6F+zAcMLS1D/P9xyAWidg+XhZDPfmIIVD27CusC7ZXqqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqICWdcB; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qDu4C4Fq";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="PatWKH+D"
-X-UUID: 411d6ac818ff11f0aae1fd9735fae912-20250414
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=Je19i0pr41lAPSIPGj+PkUSizmUTZlgR/3YkAghbocU=;
-	b=qDu4C4FqJlAMXKSTgvxM1oqA9QhNEAnKHa5VeS3R0h9/THO430e8pp9CTqavJmvlUdfcA8GpYMJE4ae0qkkKmu1wWZaEqMdk3u5P3MPKd+XTqGCL+UEJw2lAhWiG/vRcKiIiPxS/1Q2/TVg4sAzHlVd3zxJ0pQQDdr4EdrAt9sY=;
-X-CID-CACHE: Type:Local,Time:202504141508+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:91a8fbb3-43c7-4e6c-ae85-7d0785de0875,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:3eb40ba6-c619-47e3-a41b-90eedbf5b947,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
-	nt:0|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 411d6ac818ff11f0aae1fd9735fae912-20250414
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
-	(envelope-from <darren.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 611435624; Mon, 14 Apr 2025 15:08:23 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 14 Apr 2025 15:08:17 +0800
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 14 Apr 2025 15:08:17 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JTEHjOjKkP/4HnP45uyTCu6JOtXAlbPVXVlDE8wP+5om5cwJ5osxqxFUcqMDQh7qgjNBiaP27hbXyN+wIqS4vOK8nARfoqYQN7gDLoO3am1KE1/GGrvUho1uWiVl8fN43yNRNsqqrDqhA7RmujKw5iMw5ulY9NV9kbQJa8ZMc5g878ciVYpc4QD6eOrmk8cn684K8TVaCp9u1mhhQ3l4QWkfGlDFb+1XwYAzZaUT4JdrAyWM49JF6tk1UGkjEx5mlK9KAjPEczym5vYTvNhOhKfMQsZw+in6K87ByvJ9KWIFq2LBcQvEHYZZ4yHlTHkQAUW8ba7j+ujK4T3kKPLlxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Je19i0pr41lAPSIPGj+PkUSizmUTZlgR/3YkAghbocU=;
- b=B+rlVzybnQfU1AYdJtam5MbBvmqXpMLDBnyxbS1lhT8sXYxVlD8IRiwEy+sGdM+snejQqTljKKjecSId6AZOzNokZO/eJI9GjNk+pt24znSgcMIYQUJXGsxpBkjlhgMGaYxRqmrOqQ3TJrZPS6c7VkEa81c4tOVMmmSQM0ZX3xj6nEH1bXHgLQUx1+vTAyxol+Ux9+Bn9TikiURvl8YUpc3BjOYDP8RoqxZaHoH07NXTfCHrGfkML6/i8BFU2Vq2TvmTQP+X6Qchh/Qyga2CvYWahBRTANU/OsBOL7x1OEJGoOt3F/LqUTIoJGYPdt0zJFzYazCmtRdF0LZrEygj9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqICWdcB"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223f4c06e9fso36141385ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:08:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Je19i0pr41lAPSIPGj+PkUSizmUTZlgR/3YkAghbocU=;
- b=PatWKH+DgTomeMgHPWB5eW1QwtS25ylUQ4w9wBUELfKTXag/ltr0xJULy+sqTThKw7P78Lo6h7zAkp7LYE8lIhwY7BPiGcgsJfc4X1QDIaOjf2MAPRNN5gBFvQXN0u8p59Y+/2tqxKIxS5Fl55xOpMclr7LccWQNm8tYkV6jnbc=
-Received: from SEYPR03MB7588.apcprd03.prod.outlook.com (2603:1096:101:146::10)
- by SEZPR03MB6666.apcprd03.prod.outlook.com (2603:1096:101:7d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Mon, 14 Apr
- 2025 07:08:15 +0000
-Received: from SEYPR03MB7588.apcprd03.prod.outlook.com
- ([fe80::f427:bd2f:f38d:17dd]) by SEYPR03MB7588.apcprd03.prod.outlook.com
- ([fe80::f427:bd2f:f38d:17dd%4]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 07:08:13 +0000
-From: =?utf-8?B?RGFycmVuIFllICjlj7bpo54p?= <Darren.Ye@mediatek.com>
-To: "krzk@kernel.org" <krzk@kernel.org>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>,
-	"brgl@bgdev.pl" <brgl@bgdev.pl>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"tiwai@suse.com" <tiwai@suse.com>, "robh@kernel.org" <robh@kernel.org>,
-	"lgirdwood@gmail.com" <lgirdwood@gmail.com>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"perex@perex.cz" <perex@perex.cz>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>, "linux-sound@vger.kernel.org"
-	<linux-sound@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 11/11] ASoC: dt-bindings: mediatek,mt8196-mt6681: add
- mt8196-mt6681 document
-Thread-Topic: [PATCH v2 11/11] ASoC: dt-bindings: mediatek,mt8196-mt6681: add
- mt8196-mt6681 document
-Thread-Index: AQHbp7ZSsWzeuVpKoEKwWEyQWlI0hrOYLh+AgAqabAA=
-Date: Mon, 14 Apr 2025 07:08:13 +0000
-Message-ID: <b67a231529c2f8cf0053d8180df95da94ef6d6d2.camel@mediatek.com>
-References: <20250407120708.26495-1-darren.ye@mediatek.com>
-	 <20250407120708.26495-12-darren.ye@mediatek.com>
-	 <6a9bd37e-ffec-4365-891a-64259c0cc115@kernel.org>
-In-Reply-To: <6a9bd37e-ffec-4365-891a-64259c0cc115@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR03MB7588:EE_|SEZPR03MB6666:EE_
-x-ms-office365-filtering-correlation-id: e46eccdc-9772-4d66-28d2-08dd7b231f2a
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014|38070700018|921020;
-x-microsoft-antispam-message-info: =?utf-8?B?Tzh4OHZ5Vkt2dGF4RmhGSlhETGlRTXBFNTMwa05Pekpqem8yS2x5VytrWG0y?=
- =?utf-8?B?Q1F5UDQwVzkvTC8zZWd6dE96TEVURlJwRXIyZTMwcmFPN3Zua2ZsVkJLaTk4?=
- =?utf-8?B?MTMza3FraHdiM1hyZFoxVlpQZDUxNEg2M1Nua3lxYnZFdnhKQkd3cnZ4VW8y?=
- =?utf-8?B?TGlraU1HZ01BeG5PcXQyZW1wZ0MwcW8zRzl5R2dyaXowNm4rbUx0UGxxSzlJ?=
- =?utf-8?B?T2lUeW9pK3hNVE1sMVFEQ3lmbjVuTEZHWE5qaExxMXk0cGlub012ZTdQV0E0?=
- =?utf-8?B?NFN4WXo4OEJoY2xxV2hQTU52L0Nsc0U5Rm54dmlDTzJMNWZHd2V2MnNzZ3Av?=
- =?utf-8?B?RTUzbEU4T3cxWVNXYmJsTGtIUlZDYmFTYmZJQTdWbi9XOW42Q3BiWnlBZkdW?=
- =?utf-8?B?VzBNQzFwSDVTMktlcTFiTTRDMk5zZE8xc1k3S3JIWGQ0VEwra3ZMQjcxdDdW?=
- =?utf-8?B?TEx4bGJqcVJkT1BXbkhJRFQwVFF2T3ZlejFkNWlhWDNtejkrOGtIdEZoYk1p?=
- =?utf-8?B?U1l4M3hnM05IdlBVSEcrL09sbXZaNCs5c01ZbTk0ZlA1ZGx3dG9aSmtVK0VV?=
- =?utf-8?B?ZElleUwwVS81Y2Z1VXlrNWJxdnZBV1lLUllrcWV4WHBCNEFET2FKOURUNkZM?=
- =?utf-8?B?cHg3bUZONXNxd0RZdzlEazBndTd6S3lMRDhwYi9pYWVtNy9naXJqbWsxVFlw?=
- =?utf-8?B?SUtJK0hvY1Uva3VJcWxpYkxoaHdGUTNBTmdudTZoZmkxSDhSRTArYnN5YWg0?=
- =?utf-8?B?aGZaMkI0V2ViRERMTitPM280NDZQM3FJM1N3elpoanl3Uit3OFl5R0ZVV05B?=
- =?utf-8?B?ZEovZk9lelRvVkk2VkdjK1VZM3FkdlFIdldCTjE3S0lUZEdmQXNmQWE1WThx?=
- =?utf-8?B?WmhaZmVRY0VyTW45QSsrdG44Uno4VWxycTdjdXBuV3NMZktLQzR0V21INTZY?=
- =?utf-8?B?VmZ2Mm56REVQczRxVElvdmVEZkR4NkdTYlV0UXFyWWdXUVZlUFRYOE1KalQy?=
- =?utf-8?B?dDUwQ2lJZnFkNk10Y29xdlpJbm9URmMxS1IxWk0xMEpURXF5SVlxTXpncG1z?=
- =?utf-8?B?bEFzOVNmUXh5RE9YL2kyUkN3TkV0UDQyOXliTUpYeVB3UFp4aWpLU3JObjdw?=
- =?utf-8?B?S1I0cVQxQWRHWEFoTWgyb0ZSODFRalhUaTZ3aEhpTEU2bGlWeVNUdUpLelIz?=
- =?utf-8?B?OWthYWtPN2xGSisvQXBraGlrOVRNVFVPbGE3c3hGcG1CbVB0Wi9WOHN6YU1h?=
- =?utf-8?B?SHVtTFNmTkFCY3dGMEtrVjZjYWcyRGtuSmVaM3lXdVJsWW5oLzRjTDN3L1lj?=
- =?utf-8?B?L0RXbTBYU3JrK3lUMmNaRVdjTUxXbVBObDlqbzNLZVcwWnVhMG5Qa1NEV0Fv?=
- =?utf-8?B?UCtnZ2ptZ1piR2hNYkF6YUJJUy9IcFRFLzJ2aTcwNVEwSkQzYWJveHJsYUV5?=
- =?utf-8?B?am9HcHY3OEdRNm1SN0V5dCtQY015MUI2OVROVXU1ZDRFK3VMTVVGazU1SVE3?=
- =?utf-8?B?VGN5SEZDL1RIaWU0RmJqY3hVMFZwSVRodDNlSmp5V0Nmcy80U2M3WXBZbkpR?=
- =?utf-8?B?OSs2bUYzeXZwNjE5eXljak1oMHJLTS9WS1RaeUVkTEs1ZmwzakQrVDl0dEtp?=
- =?utf-8?B?NCtndUovNURiNVd2Z254bXdkWTFpZGF1VTRTblVEZ0RNblBGY1VUbXZDeDFC?=
- =?utf-8?B?VjA0OUZLQ3RCUmpLUGU4QUdWVVBSRVM5WXBSTWdwdE1Wa0w1RkVkUWdnbG1Z?=
- =?utf-8?B?Nlp2eUhLaTdPWDVsYy84RzdaeWpRSStEaVRSZ1B5UjlLWU1qQzVreEZ6U3Np?=
- =?utf-8?B?dDJpOE5MV2drVDJ2NzZwd040elVIQVVFODBZTldOc3A0bDdEL3BGcEFKVzhB?=
- =?utf-8?B?bnI3YWJXSnJmcVRGeGEzOFU5ZlZ1anNRcmdvODA2ZkFkWk9Vb0xrUDdrcXRY?=
- =?utf-8?B?cUtGU1NKdHU5YUtsOHlEM0hxMnpJMHJYeFZDbENTSXg3OUszeDhIMk1Md1FI?=
- =?utf-8?Q?PVBRC/AIguOZ18flIwWQDHRiw9tTvc=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB7588.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YmJVVHg1WDdrekRxcnlxektnS2Z1eW02V3prdzhUK21sUUFQOTh5eHNOYWFZ?=
- =?utf-8?B?U0hVVWlKTStlZ0dXZHNOMDJvWExRRThZQ2svWklSVWFITk15Y295c2FvQjZ5?=
- =?utf-8?B?N09hRFJIaU83TjlOdndzSlgrNVFuSWxJcEIvZ1VBbE9nQjZxQWdoREpjcjBm?=
- =?utf-8?B?TWNWRjNIVy9PamViY1hSeGIvenA0aWtTY2oxVTJPMmNvazlHS0ZNN1d3MkQw?=
- =?utf-8?B?YXpmeTQ2TzcvNFNRSlQvYkkrS1BVTk5GMVJSdndzYWF6S1ozQ0Y3akFId0xu?=
- =?utf-8?B?N25ocFl5SXAvMnNkOVNKRWpYSXNkT29HNTdPK0Q5ZTVsTHU0WGlyakZkMlp2?=
- =?utf-8?B?QnZURDZDTFBjbkVlNFFmZGtDR3ZlWU84ejVKS2pwcTdCZndMekpFUG1wVXox?=
- =?utf-8?B?R25hcDE1cERwa2dYVmZlNllncm1ZaDgxUG8xREcySW1vZ2dNRG5jaFFHL1Az?=
- =?utf-8?B?bHUvYVlZVzlsdTEvVDdITUl6Q09MNXd0VnMvaXJwd052ZytKS0JMVGYyRzFB?=
- =?utf-8?B?Y0h0TWtEVE1SMCtBMjFhcXZtVHRWRVRmdGNTbjFSZm9KMnBiK1RmTzFJWlph?=
- =?utf-8?B?ZklMdUp2VGEyM0ZpOWVZak05OXdnMVNqemJreEZWMGFZS3BpczlFVjNHMWx6?=
- =?utf-8?B?N2lyT0U5MUFha1M5VDE1bGM0MTlhRll0bDhPem1GZTZScGdxRG90S3hNdWF2?=
- =?utf-8?B?YTFGMU1ucWdQYUg0aWVzZEtjSkVNV0lXSEdETytPOFZmWXIxYTlNck43Z0Y2?=
- =?utf-8?B?Rm9ERVdBYngvNDNwQWFMYW5uYVVjazRXZmhITktnc0ZGZ2dybFBUbnJ4Y213?=
- =?utf-8?B?Zk8xZGw1ODdsMVJJVmVtSzlVMjVkK2xmdUJnZC9yenV6emVGMHZvWHFIcTV5?=
- =?utf-8?B?dXVETThiNisyOTExK0I3ZFp2cVUwRFY0Z3lxQjEvb1R4MkZGdnJtZGRYWkYr?=
- =?utf-8?B?blVNL3orWXRqdDdHTlZGM01EaFBFc0ZNN3RGK2Q2VHhyMDQ4L0FNNm5aMEpE?=
- =?utf-8?B?eUV0b1pNSklTVkpPVzRDOWFGLy9nWjd3R2FEaHVWZXlqMXdQamFUSUxKSWtV?=
- =?utf-8?B?NEZNVEpMVStwR3FpbXl6eGp6Y0ZVVEc1WDJ2VlFqL0JiLzFNNXp6N1BRN2Nh?=
- =?utf-8?B?Y21GSXVzc01VN1JDTk1JT2hRRXpkMUNhalhzWGdlZ1Zkd0pCc1NVUFRQUkQv?=
- =?utf-8?B?akRDUGFVZHpTcUNXWG1QVXhpVlcyLzVFTWwzMjY0UkU5VWlDa0FpTndpODhU?=
- =?utf-8?B?QjFwdWtxcFQ2UGRaelpmUk16ZTJGRkFNck5HSUc2T1FKQm1LRHVPMHYzUDhJ?=
- =?utf-8?B?ajZLWXU1TVFiQmRlcWxiMk9qMnI0aVlLNzZBSkt4UWtBNHdmUnE2SEdnTTFt?=
- =?utf-8?B?eGFyU3ZpS2NuS1NFbVM1TFkxaHVlTlBwV29pUm9PaEh4UEtTQ0NMS2tPTFIv?=
- =?utf-8?B?WitwVXFsdWRDcTlPbDJqOXl6dGw3UGpsNkVNSW9POFFqOHQxMHJmQjZ5ejFv?=
- =?utf-8?B?aUhjeCthMzYramFsWmRZbXRYN3phSk51bU1BV2JsOC9HSVhZVGhZWXpIQldi?=
- =?utf-8?B?eVdKWS9IMzRJY0RLZS90cktiVjV3Q09ycEFVcG5Vd0dMWms5citoSTZaZEpN?=
- =?utf-8?B?Q2c4SjlJNS9aSG54VmNxQUFTTTliaVExU21tanZBZnV2aloxa0ZDcmRHYXJn?=
- =?utf-8?B?VWF1bFdYSTdubjFwQ28rdlRwRjFLa1c5RU54QzYzeWpWM05wM0txdVJ4QUR6?=
- =?utf-8?B?R05MSVJkcGhOYVJHZ3hEKzhzTFhCb1ZBQkJERmdTSWo5cDBSOXZwajY5ZGQ4?=
- =?utf-8?B?eG1iaXFSQ09QZDFZOXlTNmdvOVNnMkFlYmJrbzNKeHhoNG05emhpQU9YRkt3?=
- =?utf-8?B?VkUxQ2RPaXViMkQ2SGZEa3A2VXFuNkEzS1d4d1lEMUZrRFBidmIzbHE0WS81?=
- =?utf-8?B?L2pCbmh0em1wVFpVVi9uUUhFdUxmeVpLOGFGUjhsWC9BWDhBU1NkU3NFREQz?=
- =?utf-8?B?VldVeCtjNFZ3Y00wNm9aZTlyOXFQN0NpUGttR1QvOGliQThIdmlteHNGVTcy?=
- =?utf-8?B?RDY2U1BTR0x3STVYb3ZhRWxMTDAzN3huUmo3SDF5Y1dLSGw3VmZiT1g5aThH?=
- =?utf-8?B?b3gxMmFsVWd0d0x2Zzc3dlpGaURjQTRBUmZqYmwrRndFdmQ2aGFLbkl5eTBP?=
- =?utf-8?B?TUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <952D326F87567640BB97A9D959A7F007@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1744614522; x=1745219322; darn=vger.kernel.org;
+        h=content-language:content-transfer-encoding:mime-version:user-agent
+         :date:message-id:to:subject:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8juwAuA5QfCK9G0ZTyfkhbvbUPbhRFAk1K5ddM/3Al8=;
+        b=nqICWdcBIMFOLPeo35tLOSaotOtWT9tE65LdKA6u/FY/ZbPuc1IJywFDughq2AvlZ3
+         AOG09cYbMTi7+3vnzDGWEyFlxim+x3zHd658m+814SpROH9qFZPgFQ38PIRjWasIZeQb
+         84HRRK25pALtC6wXX9fs0hfYZ5CyWoKLs44XMo/j41Q0AxRmSZbmH5rWSZo7mor5AIQE
+         0SZYf/hXXZZpA5mClTK+2hBWnEDqZvh3TSuppR2q5KfR30gRmfogvfHHnuM7QQrje4nk
+         tcNhEaIldNZYIANghMJ9cEVeTHQMolUttVa53n/YN9KkI+qFbtfUtBwoCcNg8iN+S3I+
+         UMNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744614522; x=1745219322;
+        h=content-language:content-transfer-encoding:mime-version:user-agent
+         :date:message-id:to:subject:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8juwAuA5QfCK9G0ZTyfkhbvbUPbhRFAk1K5ddM/3Al8=;
+        b=nisFO5ICfzHqV1rjStr8+9RNoifgNkZtxYbdlYYR0SIRuXuUaZurmR6GTgycGu/OKa
+         0oLCd0laDjTd+4BNc93iCPbETcnr9P8jai32DvB8cKY0LMqpE5tIxduX9XhIlDNsZfu9
+         Ly1iCAc8PzJGV+GGLHP83VKAA3A9CW68VHkdlnNVwh607OBhYyKPV5QZsTyAK3/Kp+0s
+         cDRMXCHRkyWDM4LZhc5CCXv8bQ26n8nNWSeMOxnDVninXXQM/wTYnIlS0UyEBoiu26GV
+         DfN+/qS+PRuCEF7BPyRoYMfq58OM1citma9J7Q658FTCw/wF1vuqN2D1JTtgc5yG5MZg
+         i1FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8KMDaJlBMUGI9fA9qdLA7StCEow/GpsKS5kfya3nQNiBvNhlIycV7g3PlAOCPrz2kN8Tx8/a8ZOcL5HE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNfUTt5hMMzjHmobu6sDmQX2/AUIKyo16EpTkbU/XrTqKB5Fyu
+	6WKzrLRwJbYnmt7Xzo6yqCJjfbgq9DVtziia6z6ShrJxEUhVFgYoV6FOY93yiMJCI9An
+X-Gm-Gg: ASbGncsgKo+UorCgv8WWJ9iKmV33Z/A2Zsg4tmqXSDBZsfY1FQVZWphTZtvb/tu391F
+	YlZA99iEZKg1DpiaXscBVwCR9Ep41ZpuZvyI8u/AOfvIAkiZOuOMd9NqG+ktuhnTMTODLhR7BdG
+	RIuMVQLbMwAvoCeiI/pfgi8mJQs7+/s0QXpLSp6yt9kUQl6sj4TV5/n+ViU7f4PISFRP03QjbVH
+	Tv5uUmT/YJpH4Za3lOvMmE/BBJ6aaNG+iXMKFO35WjNwdPAyJRZIHX8AMUXCO1XFy3pZfAj6705
+	lo+rJLlKCG8FhYWJgdEx+HIs+ArYkLEsWxR6zIMlxuHp1gHulTjqnF/ArNTAdcCmzdIqwBgabDU
+	=
+X-Google-Smtp-Source: AGHT+IFI+TJHtXuU1Um1khf1rw63watwMWDxf39z1l44AL0ytJFyYwaYRdKUfwGI9oSBq3JyA0oBxA==
+X-Received: by 2002:a17:903:2ac5:b0:223:607c:1d99 with SMTP id d9443c01a7336-22be9f68255mr174065865ad.0.1744614521164;
+        Mon, 14 Apr 2025 00:08:41 -0700 (PDT)
+Received: from [0.0.0.0] ([103.127.219.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cc9202sm92845015ad.211.2025.04.14.00.08.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 00:08:40 -0700 (PDT)
+From: Linjun Bao <meljbao@gmail.com>
+Subject: nvme: potential stack collision when running nvme_setup_io_queues and
+ nvme_user_cmd in parallel
+To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+ Christoph Hellwig <hch@lst.de>, sagi@grimberg.me,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <3c6be8cb-753a-6efb-e2a6-5686740e6361@gmail.com>
+Date: Mon, 14 Apr 2025 15:08:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB7588.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e46eccdc-9772-4d66-28d2-08dd7b231f2a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2025 07:08:13.3013
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LPCE64XQQBoMjSud8080MOj6QHSb0qLNmoU2fzz/Re5Ko4Xil6TYru+d59XSsu6RrIWcONBXFgHsHbfKHK9taA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB6666
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 
-T24gTW9uLCAyMDI1LTA0LTA3IGF0IDE1OjEyICswMjAwLCBLcnp5c3p0b2YgS296bG93c2tpIHdy
-b3RlOg0KPiBFeHRlcm5hbCBlbWFpbCA6IFBsZWFzZSBkbyBub3QgY2xpY2sgbGlua3Mgb3Igb3Bl
-biBhdHRhY2htZW50cyB1bnRpbA0KPiB5b3UgaGF2ZSB2ZXJpZmllZCB0aGUgc2VuZGVyIG9yIHRo
-ZSBjb250ZW50Lg0KPiANCj4gDQo+IE9uIDA3LzA0LzIwMjUgMTQ6MDYsIERhcnJlbi5ZZSB3cm90
-ZToNCj4gPiArDQo+ID4gK2FsbE9mOg0KPiA+ICsgIC0gJHJlZjogc291bmQtY2FyZC1jb21tb24u
-eWFtbCMNCj4gPiArDQo+ID4gK3Byb3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiAr
-ICAgIG9uZU9mOg0KPiANCj4gRHJvcA0KDQpEcm9wIG9uZU9mID8NCj4gDQo+ID4gKyAgICAgIC0g
-ZW51bToNCj4gPiArICAgICAgICAgIC0gbWVkaWF0ZWssbXQ4MTk2LW10NjY4MS1zb3VuZA0KPiA+
-ICsgICAgICAgICAgLSBtZWRpYXRlayxtdDgxOTYtbmF1ODgyNS1zb3VuZA0KPiA+ICsgICAgICAg
-ICAgLSBtZWRpYXRlayxtdDgxOTYtcnQ1Njgycy1zb3VuZA0KPiA+ICsgICAgICAgICAgLSBtZWRp
-YXRlayxtdDgxOTYtcnQ1NjUwLXNvdW5kDQo+ID4gKw0KPiA+ICsgIGF1ZGlvLXJvdXRpbmc6DQo+
-ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgVmFsaWQgbmFtZXMgY291bGQgYmUgdGhl
-IGlucHV0IG9yIG91dHB1dCB3aWRnZXRzIG9mIGF1ZGlvDQo+ID4gY29tcG9uZW50cywNCj4gPiAr
-ICAgICAgcG93ZXIgc3VwcGxpZXMsIE1pY0JpYXMgb2YgY29kZWMgYW5kIHRoZSBzb2Z0d2FyZSBz
-d2l0Y2guDQo+ID4gKw0KPiA+ICsgIG1lZGlhdGVrLHBsYXRmb3JtOg0KPiA+ICsgICAgJHJlZjog
-L3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRsZQ0KPiA+ICsgICAgZGVzY3Jp
-cHRpb246IFRoZSBwaGFuZGxlIG9mIE1UODE4OCBBU29DIHBsYXRmb3JtLg0KPiA+ICsNCj4gPiAr
-ICBtZWRpYXRlayxhZHNwOg0KPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVm
-aW5pdGlvbnMvcGhhbmRsZQ0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFRoZSBw
-aGFuZGxlIG9mIHRoZSBNVDgxODggQURTUCBwbGF0Zm9ybSwgd2hpY2ggaXMgdGhlDQo+ID4gb3B0
-aW9uYWwgQXVkaW8gRFNQDQo+ID4gKyAgICAgIGhhcmR3YXJlIHRoYXQgcHJvdmlkZXMgYWRkaXRp
-b25hbCBhdWRpbyBmdW5jdGlvbmFsaXRpZXMgaWYNCj4gPiBwcmVzZW50Lg0KPiA+ICsgICAgICBU
-aGUgQUZFIHdpbGwgbGluayB0byBBRFNQIHdoZW4gdGhlIHBoYW5kbGUgaXMgcHJvdmlkZWQuDQo+
-ID4gKw0KPiA+ICtwYXR0ZXJuUHJvcGVydGllczoNCj4gPiArICAiXmRhaS1saW5rLVswLTldKyQi
-Og0KPiA+ICsgICAgdHlwZTogb2JqZWN0DQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAg
-ICAgQ29udGFpbmVyIGZvciBkYWktbGluayBsZXZlbCBwcm9wZXJ0aWVzIGFuZCBDT0RFQyBzdWIt
-bm9kZXMuDQo+ID4gKw0KPiANCj4gRXZlcnl0aGluZyBsb29rcyBoZXJlIGV4YWN0bHkgdGhlIHNh
-bWUgYXMgbXQ4MTg4LW10NjM1OSwgZXhjZXB0DQo+IGFjY2RldC4NCj4gQXJlIHlvdSBzdXJlLCBy
-ZWFsbHksIHJlYWxseSBzdXJlIHRoZXNlIGFyZSBkaWZmZXJlbnQgYW5kIHlvdSBkbyBub3QNCj4g
-aGF2ZSBhY2NkZXQ/DQp5ZXMsIGl0J3MgdGhlIHNhbWUgYXMgbXQ4MTg4LW10NjM1OSwgYnV0IG10
-ODE5NiBwbGF0Zm9ybSBkb24ndCBzdXBwb3J0DQpwbWljIGNvZGVjLCBzbyBkbyBub3QgaGF2ZSBh
-Y2NkZXQuDQoNCj4gDQo+ID4gKyAgICBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgICBsaW5rLW5hbWU6
-DQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgICAgICBUaGlzIHByb3BlcnR5
-IGNvcnJlc3BvbmRzIHRvIHRoZSBuYW1lIG9mIHRoZSBCRSBkYWktbGluayANCj4gPiB0byB3aGlj
-aA0KPiA+ICsgICAgICAgICAgd2UgYXJlIGdvaW5nIHRvIHVwZGF0ZSBwYXJhbWV0ZXJzIGluIHRo
-aXMgbm9kZS4NCj4gPiArICAgICAgICBpdGVtczoNCj4gPiArICAgICAgICAgIGVudW06DQo+ID4g
-KyAgICAgICAgICAgIC0gVERNX0RQVFhfQkUNCj4gPiArICAgICAgICAgICAgLSBJMlNPVVQ2X0JF
-DQo+ID4gKyAgICAgICAgICAgIC0gSTJTSU42X0JFDQo+ID4gKyAgICAgICAgICAgIC0gSTJTT1VU
-NF9CRQ0KPiA+ICsgICAgICAgICAgICAtIEkyU09VVDNfQkUNCj4gPiArDQo+ID4gKyAgICAgIGNv
-ZGVjOg0KPiA+ICsgICAgICAgIGRlc2NyaXB0aW9uOiBIb2xkcyBzdWJub2RlIHdoaWNoIGluZGlj
-YXRlcyBjb2RlYyBkYWkuDQo+ID4gKyAgICAgICAgdHlwZTogb2JqZWN0DQo+ID4gKyAgICAgICAg
-YWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKyAgICAgICAgcHJvcGVydGllczoNCj4g
-PiArICAgICAgICAgIHNvdW5kLWRhaToNCj4gPiArICAgICAgICAgICAgbWluSXRlbXM6IDENCj4g
-PiArICAgICAgICAgICAgbWF4SXRlbXM6IDINCj4gPiArICAgICAgICByZXF1aXJlZDoNCj4gPiAr
-ICAgICAgICAgIC0gc291bmQtZGFpDQo+ID4gKw0KPiA+ICsgICAgICBkYWktZm9ybWF0Og0KPiA+
-ICsgICAgICAgIGRlc2NyaXB0aW9uOiBhdWRpbyBmb3JtYXQuDQo+ID4gKyAgICAgICAgaXRlbXM6
-DQo+ID4gKyAgICAgICAgICBlbnVtOg0KPiA+ICsgICAgICAgICAgICAtIGkycw0KPiA+ICsgICAg
-ICAgICAgICAtIHJpZ2h0X2oNCj4gPiArICAgICAgICAgICAgLSBsZWZ0X2oNCj4gPiArICAgICAg
-ICAgICAgLSBkc3BfYQ0KPiA+ICsgICAgICAgICAgICAtIGRzcF9iDQo+ID4gKw0KPiA+ICsgICAg
-ICBtZWRpYXRlayxjbGstcHJvdmlkZXI6DQo+ID4gKyAgICAgICAgJHJlZjogL3NjaGVtYXMvdHlw
-ZXMueWFtbCMvZGVmaW5pdGlvbnMvc3RyaW5nDQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246IElu
-ZGljYXRlcyBkYWktbGluayBjbG9jayBtYXN0ZXIuDQo+ID4gKyAgICAgICAgaXRlbXM6DQo+ID4g
-KyAgICAgICAgICBlbnVtOg0KPiA+ICsgICAgICAgICAgICAtIGNwdQ0KPiA+ICsgICAgICAgICAg
-ICAtIGNvZGVjDQo+ID4gKw0KPiA+ICsgICAgYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+
-ID4gKw0KPiA+ICsgICAgcmVxdWlyZWQ6DQo+ID4gKyAgICAgIC0gbGluay1uYW1lDQo+ID4gKw0K
-PiA+ICt1bmV2YWx1YXRlZFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoN
-Cj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIG1lZGlhdGVrLHBsYXRmb3JtDQo+ID4gKw0K
-PiA+ICtleGFtcGxlczoNCj4gPiArICAtIHwNCj4gPiArICAgIHNvdW5kIHsNCj4gPiArICAgICAg
-ICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE5Ni1tdDY2ODEtc291bmQiOw0KPiA+ICsgICAg
-ICAgIG1vZGVsID0gIm10ODE5Ni1tdDY2ODEiOw0KPiA+ICsgICAgICAgIG1lZGlhdGVrLHBsYXRm
-b3JtID0gPCZhZmU+Ow0KPiANCj4gTWFrZSB0aGUgZXhhbXBsZSBjb21wbGV0ZS4NCm10ODE5NiBw
-aW5jdHJsIGluIG10ODE5Ni1hZmUsIGRvZXMgaXQgaGF2ZSB0byBiZSBzZXQgaW4gdGhlIG1hY2hp
-bmUNCmRyaXZlcj8NCj4gDQo+IA0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBLcnp5c3p0b2YNCg==
+Hi there,
+
+This is Linjun Bao from Solidigm, a SSD vendor. Recently we get some drive drop report from customer, and we confirm this is solid on the latest kernel.
+
+## Issue Description
+This issue happens across different platform, from Intel BHS server to several desktop system. This issue happens on newer kernel including
+5.19, 6.0, 6.3 and 6.6, but older kernel 5.14 does not have such issue. This issue happens on SSDs from different vendors.
+
+This issue is easily reproduced under test scenario below. Two scripts are running concurrently, one is keeping sending nvme reset to the SSD, another is keeping querying smart log from the same SSD. After several reset cycles, when issue happens, the dmesg message prints out "nvme nvme0: I/O 11 QID 0 timeout, disable controller, nvme nvme0: Disabling device after reset failure: -4".
+
+Using the kernel 6.6.85 (almost latest) to debug, from both Lecory PCIe trace and kernel ftrace, it shows the host stops sending out nvme_admin_create_cq or nvme_admin_create_sq during the nvme_reset_work. This issue happens only when the nvme_queue_rq() from user cmd executes just after the nvme_queue_rq() from nvme_setup_io_queues(), and with the same CPU core and thread.
+In the example below, I marked "Q" as parent cmd is nvme_setup_io_queues(). "L" as parent cmd is user cmd of getting smart log.
+
+```
+ 13)    <idle>-0    => kworker-151717
+ ------------------------------------------
+ 13)Q ! 561.302 us  |        } /* nvme_execute_rq [nvme_core] */
+ 19)L   0.125 us    |            nvme_init_request [nvme_core]();
+ 13)Q ! 563.722 us  |      } /* nvme_submit_sync_cmd [nvme_core] */
+ 19)L   1.244 us    |          }
+ 19)L   1.549 us    |          nvme_map_user_request [nvme_core]();
+ 13)Q               |      nvme_submit_sync_cmd [nvme_core]() {
+ 13)Q   0.368 us    |        nvme_init_request [nvme_core]();
+ 19)L               |          nvme_passthru_start [nvme_core]() {
+ 13)Q               |        nvme_execute_rq [nvme_core]() {
+ 19)L   0.140 us    |            nvme_command_effects [nvme_core]();
+ 19)L   0.348 us    |          }
+ 19)L + 13.250 us   |          nvme_execute_rq [nvme_core]();
+ 13)Q               |          nvme_queue_rq [nvme]() {
+ 13)Q               |            nvme_setup_cmd [nvme_core]() {
+ 13)Q               |              /* nvme_setup_cmd: nvme0: qid=0, cmdid=8214, nsid=0, flags=0x0, meta=0x0, cmd=(nvme_admin_create_sq sqid=19, qsize=1023, sq_flags=0x1, cqid=19) */
+ 13)Q   1.716 us    |            }
+ 13)Q   0.494 us    |            nvme_prep_rq.part.0 [nvme]();
+ 13)Q   3.718 us    |          }
+ 13)L               |          nvme_queue_rq [nvme]() {
+ 13)L               |            nvme_fail_nonready_command [nvme_core]() {
+ 13)L               |              nvme_complete_rq [nvme_core]() {
+ 13)L               |                /* nvme_complete_rq: nvme0: qid=0, cmdid=0, opcode=2, res=0x0, retries=0, flags=0x2, status=0x370 */
+ 13)L               |                nvme_end_req [nvme_core]() {
+ 13)L   0.411 us    |                  nvme_error_status [nvme_core]();
+ 13)L   3.194 us    |                }
+ 13)L   4.299 us    |              }
+ 13)L   4.952 us    |            }
+ 13)L   5.729 us    |          }
+ 19)L   0.158 us    |          nvme_passthru_end [nvme_core]();
+ 19)L + 18.486 us   |        }
+ 19)L + 19.510 us   |      }
+ 19)L + 19.731 us   |    }
+ 19)L + 19.966 us   |  }
+ 19)L               |  nvme_release [nvme_core]() {
+ 19)L   0.159 us    |    nvme_ns_release [nvme_core]();
+ 19)L   0.433 us    |  }
+
+// this nvme_admin_create_sq completion irq comes way later, 60s after the host sets nvme admin cmd timeout
+ ## line 3165365
+ 12)  nvme-303232   =>    <idle>-0  
+ ------------------------------------------
+
+ 12)               |  nvme_irq [nvme]() {
+ 12)               |  /* nvme_sq: nvme0: qid=0, head=27, tail=27 */
+ 12)   1.341 us    |  }
+ 12)               |  nvme_pci_complete_rq [nvme]() {
+ 12)               |    nvme_complete_rq [nvme_core]() {
+ 12)               |      /* nvme_complete_rq: nvme0: qid=0, cmdid=8214, opcode=1, res=0x0, retries=0, flags=0x1, status=0x0 */
+ 12)               |      nvme_end_req [nvme_core]() {
+ 12)   0.076 us    |        nvme_error_status [nvme_core]();
+ 12)   1.486 us    |      }
+ 12)   1.794 us    |    }
+ 12)   2.087 us    |  }
+```
+
+A call stack ftrace shows more. Among the lines that I comment "wield behavior here," the call stack for nvme_fail_nonready_command <-nvme_queue_rq seems wrong, for an user nvme smart cmd during nvme_create_io_queues(), it should go the path nvme_fail_nonready_command <- nvme_queue_rq <- blk_mq_dispatch_rq_list <-...<- nvme_execute_rq <- nvme_submit_user_cmd since this NVMe is in CONNECTING status, but the trace shows nvme_fail_nonready_command <- nvme_queue_rq <- ... <- nvme_submit_sync_cmd <- nvme_setup_io_queues. This is wrong, since this user cmd is now using the same thread kworker/u40:5-302 and cpu core #19, I believe some stack collision happens, and this user cmd wrongly uses the stack for the sync cmd from nvme_setup_io_queues, that's the reason why there is no further create sq/cq cmds afterwards. But I do not know how to debug further, please do help guide me.
+```
+=> cpu_startup_entry
+ => start_secondary
+ => secondary_startup_64_no_verify
+           <...>-20136   [018]L .....   744.363379: nvme_open <-blkdev_get_whole
+   kworker/u40:5-302     [019]Q .....   744.363379: nvme_setup_io_queues_trylock <-nvme_setup_io_queues
+   kworker/u40:5-302     [019]Q .....   744.363380: <stack trace>
+ => nvme_setup_io_queues_trylock
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]Q .....   744.363381: nvme_init_queue <-nvme_setup_io_queues
+   kworker/u40:5-302     [019]Q .....   744.363382: <stack trace>
+ => nvme_init_queue
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+           <...>-20136   [018]L .....   744.363383: <stack trace>
+ => nvme_open
+ => blkdev_get_whole
+ => blkdev_get_by_dev
+ => blkdev_open
+ => do_dentry_open
+ => vfs_open
+ => path_openat
+ => do_filp_open
+ => do_sys_openat2
+ => do_sys_open
+ => __x64_sys_openat
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363383: nvme_ns_open <-nvme_open
+           <...>-20136   [018]L .....   744.363385: <stack trace>
+ => nvme_ns_open
+ => nvme_open
+ => blkdev_get_whole
+ => blkdev_get_by_dev
+ => blkdev_open
+ => do_dentry_open
+ => vfs_open
+ => path_openat
+ => do_filp_open
+ => do_sys_openat2
+ => do_sys_open
+ => __x64_sys_openat
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363390: nvme_ioctl <-blkdev_ioctl
+           <...>-20136   [018]L .....   744.363391: <stack trace>
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363391: nvme_ctrl_ioctl <-nvme_ioctl
+           <...>-20136   [018]L .....   744.363392: <stack trace>
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363392: nvme_user_cmd.constprop.0 <-nvme_ctrl_ioctl
+           <...>-20136   [018]L .....   744.363393: <stack trace>
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363393: nvme_validate_passthru_nsid.isra.0 <-nvme_user_cmd.constprop.0
+           <...>-20136   [018]L .....   744.363394: <stack trace>
+ => nvme_validate_passthru_nsid.isra.0
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363394: nvme_cmd_allowed <-nvme_user_cmd.constprop.0
+           <...>-20136   [018]L .....   744.363395: <stack trace>
+ => nvme_cmd_allowed
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363395: nvme_submit_user_cmd <-nvme_user_cmd.constprop.0
+           <...>-20136   [018]L .....   744.363396: <stack trace>
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363396: nvme_alloc_user_request <-nvme_submit_user_cmd
+           <...>-20136   [018]L .....   744.363397: <stack trace>
+ => nvme_alloc_user_request
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363399: nvme_init_request <-nvme_alloc_user_request
+           <...>-20136   [018]L .....   744.363400: <stack trace>
+ => nvme_init_request
+ => nvme_alloc_user_request
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363400: nvme_map_user_request <-nvme_submit_user_cmd
+           <...>-20136   [018]L .....   744.363401: <stack trace>
+ => nvme_map_user_request
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+   kworker/u40:5-302     [019]Q .....   744.363402: nvme_submit_sync_cmd <-nvme_setup_io_queues
+   kworker/u40:5-302     [019]Q .....   744.363403: <stack trace>
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+           <...>-20136   [018]L .....   744.363404: nvme_passthru_start <-nvme_submit_user_cmd
+   kworker/u40:5-302     [019]Q .....   744.363405: nvme_init_request <-__nvme_submit_sync_cmd
+           <...>-20136   [018]L .....   744.363405: <stack trace>
+ => nvme_passthru_start
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363405: nvme_command_effects <-nvme_passthru_start
+   kworker/u40:5-302     [019]Q .....   744.363405: <stack trace>
+ => nvme_init_request
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]Q .....   744.363406: nvme_execute_rq <-__nvme_submit_sync_cmd
+           <...>-20136   [018]L .....   744.363406: <stack trace>
+ => nvme_command_effects
+ => nvme_passthru_start
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363406: nvme_execute_rq <-nvme_submit_user_cmd
+   kworker/u40:5-302     [019]Q .....   744.363407: <stack trace>
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+           <...>-20136   [018]L .....   744.363407: <stack trace>
+ => nvme_execute_rq
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+   kworker/u40:5-302     [019]Q .....   744.363408: nvme_queue_rq <-blk_mq_dispatch_rq_list
+   kworker/u40:5-302     [019]Q .....   744.363409: <stack trace>
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]Q .....   744.363409: nvme_setup_cmd <-nvme_queue_rq
+   kworker/u40:5-302     [019]Q .....   744.363410: <stack trace>
+ => nvme_setup_cmd
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]Q .....   744.363411: nvme_setup_cmd: nvme0: qid=0, cmdid=0, nsid=0, flags=0x0, meta=0x0, cmd=(nvme_admin_create_cq cqid=13, qsize=1023, cq_flags=0x3, irq_vector=13)
+   kworker/u40:5-302     [019]Q .....   744.363411: nvme_setup_cmd: nvme0: qid=0, cmdid=0, nsid=0, flags=0x0, meta=0x0, cmd=(nvme_admin_create_cq cqid=13, qsize=1023, cq_flags=0x3, irq_vector=13)
+   kworker/u40:5-302     [019]Q .....   744.363411: nvme_setup_cmd: nvme0: qid=0, cmdid=57352, nsid=0, flags=0x0, meta=0x0, cmd=(nvme_admin_create_cq cqid=13, qsize=1023, cq_flags=0x3, irq_vector=13)
+   kworker/u40:5-302     [019]Q .....   744.363412: nvme_prep_rq.part.0 <-nvme_queue_rq
+   kworker/u40:5-302     [019]Q .....   744.363413: <stack trace>
+ => nvme_prep_rq.part.0
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+ ## wield behavior here
+   kworker/u40:5-302     [019]Q ...1.   744.363413: nvme_queue_rq: nvme_sq_copy_cmd
+   kworker/u40:5-302     [019]L .....   744.363415: nvme_fail_nonready_command <-nvme_queue_rq
+   kworker/u40:5-302     [019]L .....   744.363416: <stack trace>
+ => nvme_fail_nonready_command
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]L .....   744.363417: nvme_complete_rq <-nvme_fail_nonready_command
+   kworker/u40:5-302     [019]L .....   744.363418: <stack trace>
+ => nvme_complete_rq
+ => nvme_fail_nonready_command
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]L .....   744.363418: nvme_complete_rq: nvme0: qid=0, cmdid=0, opcode=2, res=0x0, retries=0, flags=0x2, status=0x370
+   kworker/u40:5-302     [019]L .....   744.363418: nvme_end_req <-nvme_complete_rq
+   kworker/u40:5-302     [019]L .....   744.363419: <stack trace>
+ => nvme_end_req
+ => nvme_complete_rq
+ => nvme_fail_nonready_command
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+   kworker/u40:5-302     [019]L .....   744.363420: nvme_error_status <-nvme_end_req
+   kworker/u40:5-302     [019]L .....   744.363421: <stack trace>
+ => nvme_error_status
+ => nvme_end_req
+ => nvme_complete_rq
+ => nvme_fail_nonready_command
+ => nvme_queue_rq
+ => blk_mq_dispatch_rq_list
+ => __blk_mq_sched_dispatch_requests
+ => blk_mq_sched_dispatch_requests
+ => blk_mq_run_hw_queue
+ => blk_execute_rq
+ => nvme_execute_rq
+ => __nvme_submit_sync_cmd
+ => nvme_submit_sync_cmd
+ => nvme_setup_io_queues
+ => nvme_reset_work
+ => process_scheduled_works
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+           <...>-20136   [018]L .....   744.363429: nvme_passthru_end <-nvme_submit_user_cmd
+           <...>-20136   [018]L .....   744.363430: <stack trace>
+ => nvme_passthru_end
+ => nvme_submit_user_cmd
+ => nvme_user_cmd.constprop.0
+ => nvme_ctrl_ioctl
+ => nvme_ioctl
+ => blkdev_ioctl
+ => __x64_sys_ioctl
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363449: nvme_release <-blkdev_put_whole
+           <...>-20136   [018]L .....   744.363450: <stack trace>
+ => nvme_release
+ => blkdev_put_whole
+ => blkdev_put
+ => blkdev_release
+ => __fput
+ => __fput_sync
+ => __x64_sys_close
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+           <...>-20136   [018]L .....   744.363451: nvme_ns_release <-nvme_release
+           <...>-20136   [018]L .....   744.363452: <stack trace>
+ => nvme_ns_release
+ => nvme_release
+ => blkdev_put_whole
+ => blkdev_put
+ => blkdev_release
+ => __fput
+ => __fput_sync
+ => __x64_sys_close
+```
+
+
