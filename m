@@ -1,467 +1,182 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2043.outbound.protection.outlook.com [40.107.249.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C9D1CD2C;
-	Mon, 14 Apr 2025 09:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622364; cv=none; b=Uy0MW26OrVcUr/dn79F1oRlTubJtagjr/D927VO2ce1Cj+LOPa3/e66CS86tqKy0DbXURfoErD+Lj+X3qnhs/gbgp14yrCmrH1bdMFOVbU2tXR6Sa29CLN4aSt3k9fpFSD0LfOfGQlsPDQP+lDVBxoUOSrNvwHHYRWTIQMWsOr4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622364; c=relaxed/simple;
-	bh=TifcQAl4aS6K7rhrSCZWDyDsKVK9v6YUR2Ji4L2XBXQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lm5IK7xJPkLmbhF3ipnJKEZwVQvtlN6ZT/o+b+CxpyALN8j8rgE9jsO9yQ0RgquLXjaqtRSWK5jAI3Z94lG53/Ckkn34DolKgiZT3EYk9aeCHlHUJLnl6/I3VH6tLY8h9JS8B1C73Fd6gs1wCLwGGzR9jjbRzdtBgNs/jfeREoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=WU/zIyYe; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEAB1A8401;
+	Mon, 14 Apr 2025 09:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744622382; cv=fail; b=W6NSLS+6taSdv0+1KbgH4S/V5/2wJfw2eGExjpSydmsXXcDIrBBPRI4jKGsyeYwCWDKDYkP+HXXppFvL9cDMdH9I4iT9i40QYdMNg6U4GrqZzOZ3DreyaT4pq7EorcVWeQ42iWZ/uzWOa98Q3Oe7fu4Awfl3CcJ5ks2dRQFretk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744622382; c=relaxed/simple;
+	bh=pz5hJLISxbIxGyOp3GC5a7LMYv67KXmK/h1jx7jRLcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lYKcVVCUly1mA0GUC7FJEn0FlZ9AIlc4o9q3Dq4TVGF7LS1tFICFe/HSN4LAdDPOklkldkLTSNjyqI7Y300GlZA3oWWlIgOnRfc3cbtwW1wNIkh94/6HXz2vD72py7XDpWnVC7chpj3fCZ4Ecv5yaUVDzYllv4+pPsQr15HrX+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=rj16lEwt; arc=fail smtp.client-ip=40.107.249.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="WU/zIyYe"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZbhYy4WFqz9tLg;
-	Mon, 14 Apr 2025 11:19:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744622358; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJsigFcfz58hJJS0Uu3EBhrbgTwACfaSGvrpf/wE+IY=;
-	b=WU/zIyYePT57G3RcGtgcCCwqI3cRxahJH88uuop+NVU3jsrmDwQyIg8KPoDCw5MLHCbZy4
-	irc7LzyQiaFfe7e9niuyF+7uzdcyQdC0pKxyuilzQ8ZZuJ3AW5Gd9ulcgjGcB+smJACbps
-	qsZZGunfJU6pD6ifnpiOUqme3JXom7RXSYzn9kV0v4qCF1gLLJ7cFdnZYfm0/3xLyahNFL
-	eX96HxyLyi6Smb+hsCaNQ0zY78+vT07nnHpHUmKf0DJxrrY3tsTJN+iqsQEYoJ6YaenL6H
-	m/TAdKktCNaoIOfi68AKBpqCeHkbM0GpXGIQNj1ni2IkdGN7q/vCmdage9i8ow==
-Message-ID: <37b8ec86b98706984019b418bc20f0d0883ed555.camel@mailbox.org>
-Subject: Re: [PATCH net-next v4 01/14] yt6801: Add support for a pci table
- in this module
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Frank Sae <Frank.Sae@motor-comm.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>,  Russell King <linux@armlinux.org.uk>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, netdev@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
- Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org, 
- "andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
- horms@kernel.org,  linux-doc@vger.kernel.org, corbet@lwn.net,
- geert+renesas@glider.be,  xiaogang.fan@motor-comm.com,
- fei.zhang@motor-comm.com, hua.sun@motor-comm.com
-Date: Mon, 14 Apr 2025 11:19:11 +0200
-In-Reply-To: <20250408092835.3952-2-Frank.Sae@motor-comm.com>
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
-	 <20250408092835.3952-2-Frank.Sae@motor-comm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="rj16lEwt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YwsX0froMaGATWQxouZJd/AIo0J1+w5MWNu5XtA2PCqYm5eJX8lb9F0R685Om1iEhvjnrx77pY4YvsMN1Ni4/wHwvVMjBbtZSE7wVHvt3lxSEun2KoxWxZzP0chkXhxsw4ehXFDU7g2QAWy1/9HaQmu3Utsqe2kruCCZqJRZzFUCi+Mf6Y5pWwYwabjrAe+eZjdqCjwxlF1fYs1tpxS/zNe4WVPfMPI8fQslNMImwo+3n2DH73d3a9h4Bl0a7nckQ0g5m6N+IkLTjl8SQ04+lH+xPtgIU94TzTw2F7PRa/xr+dahbdEJXy3cyQqImbYqzGEt3J9KgpC01NhrNkLTRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rQtmspkb1aROd1Ubk666XgmYAjTNK3z/oh+kFf0qBqs=;
+ b=Pz1QCVCA8enJiOk37k/2LLYhYNhgAeCRns12Xk9wLHdbD+nQOicRyd4xJy4n5xLQCdplphULJ53GlLkd8cGF2/N91jSsifZ+Gt8ZrA/rOn+KhTyeIffRBqn2ePnvSbynYcyhSoYjcPTXvQliVEihmSmh20yuc1LXL7ixpxt3zL6Ay18sF+gJbF8oeGO8svDINj4HdYU9iK+PkNbYrtTlTjf8mjxWBKQMXYF4xOxVXpPayFuH9I+L+fr8Y+7aIwowavEiGN639xW1/Fprm9LRtAckMAHFd057LBscxPCl0j+2qBNptH3nDyJ8aqFmZOKPZVKpa+fjmjkjoybFJy93VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rQtmspkb1aROd1Ubk666XgmYAjTNK3z/oh+kFf0qBqs=;
+ b=rj16lEwtw3yiptHySmsXJWusdsnXTYWYdrQGrEBHE/d3JGe9BySPGJM4erdshu/RE99r5dj84g1XGmMIy8/rFHrWxbqcdKXGmfW+X4vIe8m+u9ng+1vc7IgB//p+lPxA+V8bAHGLQKOEZGUMTKz+y3U3TSs1kPVpeuYs5iHlTDhJaic4vSjPrl+VYjrwhHtIPE3oxCt31pJaLn+AF/hIQUAEA6YA1hLEL5zDMtMCi9Dbde//Q9ej5XWiKrh0dmqs6lxg5HJrty/b3OYuP8Qz5HpRRqsWFWdrfSUT9nAh9IPOnZ/ATrR3mye0kAHDblUaioumnnooWbxNHSp5Xs5AgQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AM0PR04MB6786.eurprd04.prod.outlook.com (2603:10a6:208:184::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
+ 2025 09:19:37 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 09:19:37 +0000
+Date: Mon, 14 Apr 2025 18:28:14 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mike Tipton <quic_mdtipton@quicinc.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: scmi: Skip SCMI devices that aren't used by the
+ CPUs
+Message-ID: <20250414102813.GB19563@nxa18884-linux>
+References: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
+ <20250414083832.GA19563@nxa18884-linux>
+ <20250414-splendid-clam-of-democracy-dacf96@sudeepholla>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414-splendid-clam-of-democracy-dacf96@sudeepholla>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR06CA0003.apcprd06.prod.outlook.com
+ (2603:1096:4:186::14) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: 96ryrkux9bx13h3yao3hs7wc7boh1ear
-X-MBO-RS-ID: 906e233922f47e34ffa
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM0PR04MB6786:EE_
+X-MS-Office365-Filtering-Correlation-Id: 934be631-e7c9-4ec6-99e4-08dd7b357a18
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3WTy5am47lyMQ2frmVfrfdSnVzSr80PuMrxOUyNXiWZCSbCTJR38/E1+3+cB?=
+ =?us-ascii?Q?asXr/cXIUTRxcUCaF8OCsGU1UWeKyUEFbAxAQ9rAZZv2VNB0BSXMu16IwEf8?=
+ =?us-ascii?Q?IcKJ27qvpuxWxNLMhge4QasWLpewGS42yKWXXwVbQO1F6kZKD2TFDEUzjq5B?=
+ =?us-ascii?Q?O9uyab1keA3n3g/+AyNwRsBiNyAMEbuMCk/4IA1MYmi5MfNVvk9DjPCTAQ5E?=
+ =?us-ascii?Q?g5Fm7g2oSNPXeMYZZAJjm8tXSpI1LDcJZzQJ4XObFf0zXHHRHSawjoXB4Rd+?=
+ =?us-ascii?Q?8DYH9X9psLQZw5l5KfB6tYtr0icLm0WYj7oAeQ6xrbTBpH2NWzAXdj245Hvt?=
+ =?us-ascii?Q?MgaI6k3eQTd7NYOwvajZMS/x0fzWKoYjrymNUCnF+FE32hrUbwXfmffxTfIf?=
+ =?us-ascii?Q?LhDRu6roIUBTFdZzQpxsZv36HPMFcEEh+qxiw7ruW0Ca1TocASs5MvEXdCJp?=
+ =?us-ascii?Q?5vaHXQ+3xILKsCQtZ2b3MbNK/Djq6BRaPhu5lyWNBJc9LOw79e7rFhNQk7dL?=
+ =?us-ascii?Q?GDYvYZSBbDpwmeJR2Rz0fJ/s7cq5mwei1BtJ9bijiUVIj+HvHYIc+ld/za+T?=
+ =?us-ascii?Q?5frkcxSkgcuS3z1Z9yatY2A8opCOVrO3iTJxUj4xYmAYZYuaoec9dK9fBE+3?=
+ =?us-ascii?Q?KTSI8fOsWK4+UJ7Q6VKvccCKCRsN//fp/bWeklluF1duEtHeRKTkMbwp+S0U?=
+ =?us-ascii?Q?g8sqIBjDp1t1VDFpz80n/4ihYzH6A0ApGwiyuw/sgde0nS6J44HBw1oNXp8Z?=
+ =?us-ascii?Q?hZVd3hUL3ksWMk0RA3FQK1n5yrBdM33nDNoONgSjWpVxlkUpXlywtbPKyFqo?=
+ =?us-ascii?Q?dLnotf8DFBKUqTiNF/q42IXCP96RyNfCOYPEeTkeeTfanWpOK4YMKCOAvnP3?=
+ =?us-ascii?Q?6KOoJ0VmcnP7Lj10g4bySSGgnbdT3DsR+LtEGykgsbSKIs+k33ecJVx0IgnS?=
+ =?us-ascii?Q?BiZhTlTpiFgsgPJVMJN2dIDdgMfaz24wo7Wa/s9d+wlXt3KCGEexHKzkFwgc?=
+ =?us-ascii?Q?TQYqNkP15fKXfEVKQMK8wuSVy+ue4yO30mLNBOG5bjlNZcYoH8HmKmSTWcAH?=
+ =?us-ascii?Q?YRNzd2Xn8u4UGrmJAWOYwfikIqbEo5qajV9RHzCTqa4OHCeumbAu7t2IrZhx?=
+ =?us-ascii?Q?qENQJTSNM1TIq7ZQMqejUIl1+Bns9Mf4ysqie3xQ4A0hhRFfUcWsKQC/xUgb?=
+ =?us-ascii?Q?Tg71E+ZORXdFg2AGocsEcoo0yYCIKZQEQISQ9HFZbhZsfLVuAZZG99aeA7yu?=
+ =?us-ascii?Q?x4492tPb00aGwX0sQk3RMbTLO/f4SORIMt6fszQUpjiFMDcPgEZj9XrmfA5F?=
+ =?us-ascii?Q?csoQXMR7zJRi+b3yDMBqnVWTSI8qXTxFQ7UnhXnCYIn9j3NogF7EXGDq3p1m?=
+ =?us-ascii?Q?RWz7b8U3lQCxRH7iPfHS8PjyewyBm6/KEMeWX6KSdPmH2IypvMbHAvBC+75i?=
+ =?us-ascii?Q?ZtbourcBayz34m4y71KisGE+/GOpaHw4qqT2MxdUE8izIi93WxE4JQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IQMV68WnUuobs0zmFSkylyPyim4wdl0DfnaKrrt6KGjpLjTxleFPf203xTdm?=
+ =?us-ascii?Q?tnUvv3TjWdhS15SrWqG71i9JTEnr/F48IFN2sHc/cCj3rx/aBRisoE7AhKIU?=
+ =?us-ascii?Q?lFEbTQSowAFPbDsKlnMsw4alRw8BspCrWgOyVzE/2t0ikoVDCESu6KQcqwPj?=
+ =?us-ascii?Q?usb0IwgOlPr/6rusvMGlOtWG2yc/yCTAYlM4l7msIqfzjcx6pKFcNxzL/9ze?=
+ =?us-ascii?Q?rkll+lkrGU36dlTUcU1l4tN/Xt5jhJp0sz2ATPSjBdI4xyFnIycKv9j1Dft/?=
+ =?us-ascii?Q?ghzUw+aIHAy0TgN9kjuvwj9sARAratQ6IwQrQdDoDT0vAS/L7orHV4Ep1Z/d?=
+ =?us-ascii?Q?quVjxJVknDNR/a12Mecwy39NXSm2e9Qrld9Jc9YrtIHSdG+cpeZkxyRbU8j+?=
+ =?us-ascii?Q?LYFxvpam+CiMo1ebBj8CFMXCauwbbAlKu8PSpSrGnCiVQo5Kuby1Eq+ElXDr?=
+ =?us-ascii?Q?dItxQaIpbiVq7/DZzbwhEBR01x/lzzwh3UGeKyyxQE9bbqvJ2mMoBKvorXyg?=
+ =?us-ascii?Q?9FmfrIalH1n9T99/HGRo21thgmVT6dEhAoZ3py6W9gw6YElK0MC2gU+DT0t3?=
+ =?us-ascii?Q?cKB5/ziRDCxr97DBFGAHrX2T5UHaVIDkNtySzmsXGLpLarErLJl9oWhwap2W?=
+ =?us-ascii?Q?TToW5uf5vyaj1V2YOBxr3LDhaLkV08oxW8x+9lv04kGiCTVHnb9MsRA4HsHH?=
+ =?us-ascii?Q?gW8DMStrMYLoZLC6GJNKH/RIUIIlZE/zUiDVr8sXsrecUxMbKVM2O4psa4KA?=
+ =?us-ascii?Q?z2Uqjiiy2bM5QBBGTOA3r6Mi+ctAZ2QtEimYIy3XMRlV0G89Oeut8ZevLxWk?=
+ =?us-ascii?Q?Yw980D6xpZvog3k5B8ChwH70tdQU6jXceKjmfjsJhUMwidiKhRLvPZVBvmIy?=
+ =?us-ascii?Q?qSQD1HC3tuZl6coOclCQsB2q61jr4sGSSUGI8t9I5axH4AYHUNa5MYh9LvV+?=
+ =?us-ascii?Q?e1V7OSP70+31aVtJiTPfrbiaKJWqDwW15M+YgCrX5QrqdCqga6GsDzBrhQ+l?=
+ =?us-ascii?Q?r7d4vnMGwKVvn+SwEpBxgDkNybZXZuzRh+zHhhC5DyWak6ybKAtePmJpZwp4?=
+ =?us-ascii?Q?1G2Y1Xdf8+tiLH6rbRwAO+Ls9mAHnzZL+EoROr67lVCzGI4yhtoGcR2IzIve?=
+ =?us-ascii?Q?CB4r+f3FtrtcY7cCTPGJyQl1G0bgi79KRybErUaJG0T9TUKqNyVsmKKgmj1o?=
+ =?us-ascii?Q?WZNHvR9SEK2AiVGh365OwOBQVtSRmyVU5q5ztW9bWqDpL9sApi0T/RTqI9GN?=
+ =?us-ascii?Q?GSV0TdDS1s8s0NgnKiruUYmKdM83XpfQoIF41aYFqw7I3/ijr6HwpOaaKvpv?=
+ =?us-ascii?Q?oSdBosa+1YMeEU9HlFgBA/wBrBwtDThVQLOWuypuXhw32Sku9GNzpInBOd2O?=
+ =?us-ascii?Q?GIkXBueBnQpHXLqkbazUYzbNB2qseuxzR46usDhpoG6+GWU69SEN2jRRMPzY?=
+ =?us-ascii?Q?7ykQSgcPBRRiTQYUi2m4mvr88DjX68enL5K0wOiTdxpCVGqRXEHNwt7+wvPy?=
+ =?us-ascii?Q?rCIlzMuZ8HWUCw6HQWDMZQC3XMFGdTlPDjqi51Ruo/k/iGP5VqBOgn8SmvWN?=
+ =?us-ascii?Q?QH5ZPRICxbyKPwieiyne4K1GOgr0YiGuEE1P1QZk?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 934be631-e7c9-4ec6-99e4-08dd7b357a18
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 09:19:37.0462
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /GP/UrloCVSSHx/nw3lHK0PmFyOB1VN1ip6/dzLQKqcLxAmhEKpRrcxBQ9lsQJnIcw2FDK7lwAUxfvpZgyqjcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6786
 
-On Tue, 2025-04-08 at 17:28 +0800, Frank Sae wrote:
-> Add support for a pci table in this module, and implement pci_driver
-> =C2=A0function to initialize this driver, remove this driver or shutdown
-> this
-> =C2=A0driver.
-> Implement the fxgmac_drv_probe function to init interrupts, register
-> mdio
-> =C2=A0and netdev.
->=20
-> Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
-> ---
-> =C2=A0.../ethernet/motorcomm/yt6801/yt6801_main.c=C2=A0=C2=A0 | 194
-> ++++++++++++++++++
-> =C2=A0.../ethernet/motorcomm/yt6801/yt6801_type.h=C2=A0=C2=A0 | 114 +++++=
-+++++
-> =C2=A02 files changed, 308 insertions(+)
-> =C2=A0create mode 100644
-> drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-> =C2=A0create mode 100644
-> drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
->=20
-> diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-> b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-> new file mode 100644
-> index 000000000..10d63a8ed
-> --- /dev/null
-> +++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-> @@ -0,0 +1,194 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/* Copyright (c) 2022 - 2024 Motorcomm Electronic Technology
-> Co.,Ltd.
-> + *
-> + * Below is a simplified block diagram of YT6801 chip and its
-> relevant
-> + * interfaces.
-> + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ||
-> + *=C2=A0 ********************++**********************
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | PCIE Endpoint |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 +---------------+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | GMAC |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +--++--+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |**|=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GMII --> |**|=
- <-- MDIO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-++--+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | Integrated PHY |=C2=A0 YT8531S=C2=A0=C2=A0 *
-> + *=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-++-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *
-> + *=C2=A0 ********************||******************* **
-> + */
-> +
-> +#include <linux/module.h>
-> +#include "yt6801_type.h"
-> +
-> +static void fxgmac_phy_release(struct fxgmac_pdata *priv)
-> +{
-> +	fxgmac_io_wr_bits(priv, EPHY_CTRL, EPHY_CTRL_RESET, 1);
-> +	fsleep(100);
-> +
-> +static void fxgmac_phy_reset(struct fxgmac_pdata *priv)
-> +{
-> +	fxgmac_io_wr_bits(priv, EPHY_CTRL, EPHY_CTRL_RESET, 0);
-> +	fsleep(1500);
-> +}
-> +
-> +static void fxgmac_init_interrupt_scheme(struct fxgmac_pdata *priv)
-> +{
-> +	struct pci_dev *pdev =3D to_pci_dev(priv->dev);
-> +	int req_vectors =3D FXGMAC_MAX_DMA_CHANNELS;
-> +
-> +	/* Since we have FXGMAC_MAX_DMA_CHANNELS channels, we must
-> ensure the
-> +	 * number of cpu core is ok. otherwise, just roll back to
-> legacy.
-> +	 */
-> +	if (num_online_cpus() < FXGMAC_MAX_DMA_CHANNELS - 1)
-> +		goto enable_msi_interrupt;
-> +
-> +	priv->msix_entries =3D
-> +		kcalloc(req_vectors, sizeof(struct msix_entry),
-> GFP_KERNEL);
-> +	if (!priv->msix_entries)
-> +		goto enable_msi_interrupt;
-> +
-> +	for (u32 i =3D 0; i < req_vectors; i++)
-> +		priv->msix_entries[i].entry =3D i;
-> +
-> +	if (pci_enable_msix_exact(pdev, priv->msix_entries,
-> req_vectors) < 0) {
-> +		/* Roll back to msi */
-> +		kfree(priv->msix_entries);
-> +		priv->msix_entries =3D NULL;
-> +		dev_err(priv->dev, "Enable MSIx failed, clear msix
-> entries.\n");
-> +		goto enable_msi_interrupt;
-> +	}
-> +
-> +	priv->int_flag &=3D ~INT_FLAG_INTERRUPT;
-> +	priv->int_flag |=3D INT_FLAG_MSIX;
-> +	priv->per_channel_irq =3D 1;
-> +	return;
-> +
-> +enable_msi_interrupt:
-> +	priv->int_flag &=3D ~INT_FLAG_INTERRUPT;
-> +	if (pci_enable_msi(pdev) < 0) {
-> +		priv->int_flag |=3D INT_FLAG_LEGACY;
-> +		dev_err(priv->dev, "rollback to LEGACY.\n");
-> +	} else {
-> +		priv->int_flag |=3D INT_FLAG_MSI;
-> +		dev_err(priv->dev, "rollback to MSI.\n");
-> +		priv->dev_irq =3D pdev->irq;
-> +	}
-> +}
-> +
-> +static int fxgmac_drv_probe(struct device *dev, struct
-> fxgmac_resources *res)
-> +{
-> +	struct fxgmac_pdata *priv;
-> +	struct net_device *ndev;
-> +	int ret;
-> +
-> +	ndev =3D alloc_etherdev_mq(sizeof(struct fxgmac_pdata),
-> +				 FXGMAC_MAX_DMA_RX_CHANNELS);
-> +	if (!ndev)
-> +		return -ENOMEM;
-> +
-> +	SET_NETDEV_DEV(ndev, dev);
-> +	priv =3D netdev_priv(ndev);
-> +
-> +	priv->dev =3D dev;
-> +	priv->ndev =3D ndev;
-> +	priv->dev_irq =3D res->irq;
-> +	priv->hw_addr =3D res->addr;
-> +	priv->msg_enable =3D NETIF_MSG_DRV;
-> +	priv->dev_state =3D FXGMAC_DEV_PROBE;
-> +
-> +	/* Default to legacy interrupt */
-> +	priv->int_flag &=3D ~INT_FLAG_INTERRUPT;
-> +	priv->int_flag |=3D INT_FLAG_LEGACY;
-> +
-> +	pci_set_drvdata(to_pci_dev(priv->dev), priv);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		fxgmac_init_interrupt_scheme(priv);
-> +
-> +	ret =3D fxgmac_init(priv, true);
-> +	if (ret < 0) {
-> +		dev_err(dev, "fxgmac init failed:%d\n", ret);
-> +		goto err_free_netdev;
-> +	}
-> +
-> +	fxgmac_phy_reset(priv);
-> +	fxgmac_phy_release(priv);
-> +	ret =3D fxgmac_mdio_register(priv);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Register fxgmac mdio failed:%d\n",
-> ret);
-> +		goto err_free_netdev;
-> +	}
-> +
-> +	netif_carrier_off(ndev);
-> +	ret =3D register_netdev(ndev);
-> +	if (ret) {
-> +		dev_err(dev, "Register ndev failed:%d\n", ret);
-> +		goto err_free_netdev;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_free_netdev:
-> +	free_netdev(ndev);
-> +	return ret;
-> +}
-> +
-> +static int fxgmac_probe(struct pci_dev *pcidev, const struct
-> pci_device_id *id)
-> +{
-> +	struct fxgmac_resources res;
-> +	int err;
-> +
-> +	err =3D pcim_enable_device(pcidev);
-> +	if (err)
-> +		return err;
-> +
-> +	memset(&res, 0, sizeof(res));
-> +	res.irq =3D pcidev->irq;
-> +	res.addr=C2=A0 =3D pcim_iomap_region(pcidev, 0, pci_name(pcidev));
+Hi Sudeep,
+On Mon, Apr 14, 2025 at 09:23:24AM +0100, Sudeep Holla wrote:
+>Hi Peng,
+>
+>On Mon, Apr 14, 2025 at 04:38:32PM +0800, Peng Fan wrote:
+>> Hi Mike,
+>> On Fri, Apr 11, 2025 at 02:29:41PM -0700, Mike Tipton wrote:
+>> >Currently, all SCMI devices with performance domains attempt to register
+>> >a cpufreq driver,
+>> 
+>> The scmi cpufreq device is created based on entry
+>> { SCMI_PROTOCOL_PERF, "cpufreq" },
+>> 
+>> So the scmi-cpufreq driver could only probe the upper single device.
+>> 
+>> How could the driver work with all SCMI devices with performance domains?
+>> 
+>
+>IIUC, this is on a system with multiple SCMI servers/providers some of
+>which don't deal with CPU performance domains at all.
 
-This is actually a slight misuse: the "name" parameter should be your
-driver's name, not the PCI device's name.
+Yeah. This sounds valid case.
+CPU perf only needs to be managed by one server, the other server
+also has performance domains that only for peripherals.
 
-That string gets printed in case of a request collision regarding that
-device, and the print is only useful if it says who stole the region,
-not on which device sth was stolen.
+Thanks,
+Peng
 
-(pcim_iomap_region() doesn't copy the string, so be careful to put it
-in the TEXT segment or sth like that)
-
-Regards
-P.
-
-
-> +	err =3D PTR_ERR_OR_ZERO(res.addr);
-> +	if (err)
-> +		return err;
-> +
-> +	pci_set_master(pcidev);
-> +	return fxgmac_drv_probe(&pcidev->dev, &res);
-> +}
-> +
-> +static void fxgmac_remove(struct pci_dev *pcidev)
-> +{
-> +	struct fxgmac_pdata *priv =3D dev_get_drvdata(&pcidev->dev);
-> +	struct net_device *ndev =3D priv->ndev;
-> +
-> +	unregister_netdev(ndev);
-> +	fxgmac_phy_reset(priv);
-> +	free_netdev(ndev);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI) &&
-> +	=C2=A0=C2=A0=C2=A0 FIELD_GET(INT_FLAG_MSIX, priv->int_flag)) {
-> +		pci_disable_msix(pcidev);
-> +		kfree(priv->msix_entries);
-> +		priv->msix_entries =3D NULL;
-> +	}
-> +}
-> +
-> +#define MOTORCOMM_PCI_ID			0x1f0a
-> +#define YT6801_PCI_DEVICE_ID			0x6801
-> +
-> +static const struct pci_device_id fxgmac_pci_tbl[] =3D {
-> +	{ PCI_DEVICE(MOTORCOMM_PCI_ID, YT6801_PCI_DEVICE_ID) },
-> +	{ 0 }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(pci, fxgmac_pci_tbl);
-> +
-> +static struct pci_driver fxgmac_pci_driver =3D {
-> +	.name		=3D FXGMAC_DRV_NAME,
-> +	.id_table	=3D fxgmac_pci_tbl,
-> +	.probe		=3D fxgmac_probe,
-> +	.remove		=3D fxgmac_remove,
-> +};
-> +
-> +module_pci_driver(fxgmac_pci_driver);
-> +
-> +MODULE_AUTHOR("Motorcomm Electronic Tech. Co., Ltd.");
-> +MODULE_DESCRIPTION(FXGMAC_DRV_DESC);
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-> b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-> new file mode 100644
-> index 000000000..bb6c2640a
-> --- /dev/null
-> +++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-> @@ -0,0 +1,114 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/* Copyright (c) 2022 - 2024 Motorcomm Electronic Technology
-> Co.,Ltd. */
-> +
-> +#ifndef YT6801_TYPE_H
-> +#define YT6801_TYPE_H
-> +
-> +#include <linux/netdevice.h>
-> +#include <linux/types.h>
-> +#include <linux/pci.h>
-> +
-> +#define FXGMAC_DRV_NAME		"yt6801"
-> +#define FXGMAC_DRV_DESC		"Motorcomm Gigabit Ethernet
-> Driver"
-> +
-> +#define FXGMAC_RX_BUF_ALIGN	64
-> +#define FXGMAC_TX_MAX_BUF_SIZE	(0x3fff & ~(FXGMAC_RX_BUF_ALIGN -
-> 1))
-> +#define FXGMAC_RX_MIN_BUF_SIZE	(ETH_FRAME_LEN + ETH_FCS_LEN +
-> VLAN_HLEN)
-> +
-> +/* Descriptors required for maximum contiguous TSO/GSO packet */
-> +#define FXGMAC_TX_MAX_SPLIT	((GSO_MAX_SIZE /
-> FXGMAC_TX_MAX_BUF_SIZE) + 1)
-> +
-> +/* Maximum possible descriptors needed for a SKB */
-> +#define FXGMAC_TX_MAX_DESC_NR	(MAX_SKB_FRAGS + FXGMAC_TX_MAX_SPLIT
-> + 2)
-> +
-> +#define FXGMAC_DMA_STOP_TIMEOUT		5
-> +#define FXGMAC_JUMBO_PACKET_MTU		9014
-> +#define FXGMAC_MAX_DMA_RX_CHANNELS	4
-> +#define FXGMAC_MAX_DMA_TX_CHANNELS	1
-> +#define
-> FXGMAC_MAX_DMA_CHANNELS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> +	(FXGMAC_MAX_DMA_RX_CHANNELS + FXGMAC_MAX_DMA_TX_CHANNELS)
-> +
-> +#define EPHY_CTRL				0x1004
-> +#define EPHY_CTRL_RESET				BIT(0)
-> +#define EPHY_CTRL_STA_LINKUP			BIT(1)
-> +#define EPHY_CTRL_STA_DUPLEX			BIT(2)
-> +#define EPHY_CTRL_STA_SPEED			GENMASK(4, 3)
-> +
-> +struct fxgmac_resources {
-> +	void __iomem *addr;
-> +	int irq;
-> +};
-> +
-> +enum fxgmac_dev_state {
-> +	FXGMAC_DEV_OPEN		=3D 0x0,
-> +	FXGMAC_DEV_CLOSE	=3D 0x1,
-> +	FXGMAC_DEV_STOP		=3D 0x2,
-> +	FXGMAC_DEV_START	=3D 0x3,
-> +	FXGMAC_DEV_SUSPEND	=3D 0x4,
-> +	FXGMAC_DEV_RESUME	=3D 0x5,
-> +	FXGMAC_DEV_PROBE	=3D 0xFF,
-> +};
-> +
-> +struct fxgmac_pdata {
-> +	struct net_device *ndev;
-> +	struct device *dev;
-> +	struct phy_device *phydev;
-> +
-> +	void __iomem *hw_addr;			/* Registers base */
-> +
-> +	/* Device interrupt */
-> +	int dev_irq;
-> +	unsigned int per_channel_irq;
-> +	u32 channel_irq[FXGMAC_MAX_DMA_CHANNELS];
-> +	struct msix_entry *msix_entries;
-> +#define INT_FLAG_INTERRUPT		GENMASK(4, 0)
-> +#define INT_FLAG_MSI			BIT(1)
-> +#define INT_FLAG_MSIX			BIT(3)
-> +#define INT_FLAG_LEGACY			BIT(4)
-> +#define INT_FLAG_RX0_NAPI		BIT(18)
-> +#define INT_FLAG_RX1_NAPI		BIT(19)
-> +#define INT_FLAG_RX2_NAPI		BIT(20)
-> +#define INT_FLAG_RX3_NAPI		BIT(21)
-> +#define INT_FLAG_RX0_IRQ		BIT(22)
-> +#define INT_FLAG_RX1_IRQ		BIT(23)
-> +#define INT_FLAG_RX2_IRQ		BIT(24)
-> +#define INT_FLAG_RX3_IRQ		BIT(25)
-> +#define INT_FLAG_TX_NAPI		BIT(26)
-> +#define INT_FLAG_TX_IRQ			BIT(27)
-> +#define INT_FLAG_LEGACY_NAPI		BIT(30)
-> +#define INT_FLAG_LEGACY_IRQ		BIT(31)
-> +	u32 int_flag;		/* interrupt flag */
-> +
-> +	u32 msg_enable;
-> +	enum fxgmac_dev_state dev_state;
-> +};
-> +
-> +static inline u32 fxgmac_io_rd(struct fxgmac_pdata *priv, u32 reg)
-> +{
-> +	return ioread32(priv->hw_addr + reg);
-> +}
-> +
-> +static inline u32
-> +fxgmac_io_rd_bits(struct fxgmac_pdata *priv, u32 reg, u32 mask)
-> +{
-> +	u32 cfg =3D fxgmac_io_rd(priv, reg);
-> +
-> +	return FIELD_GET(mask, cfg);
-> +}
-> +
-> +static inline void fxgmac_io_wr(struct fxgmac_pdata *priv, u32 reg,
-> u32 set)
-> +{
-> +	iowrite32(set, priv->hw_addr + reg);
-> +}
-> +
-> +static inline void
-> +fxgmac_io_wr_bits(struct fxgmac_pdata *priv, u32 reg, u32 mask, u32
-> set)
-> +{
-> +	u32 cfg =3D fxgmac_io_rd(priv, reg);
-> +
-> +	cfg &=3D ~mask;
-> +	cfg |=3D FIELD_PREP(mask, set);
-> +	fxgmac_io_wr(priv, reg, cfg);
-> +}
-> +
-> +#endif /* YT6801_TYPE_H */
-
+>
+>-- 
+>Regards,
+>Sudeep
