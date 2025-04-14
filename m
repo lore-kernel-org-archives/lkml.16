@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E8328BAA0
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AF328B508;
+	Mon, 14 Apr 2025 18:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655190; cv=none; b=ig93rotUCpyUFA7hO+wuNEOo5pGdXmsF//PJENA0UqInKBIr6Z5JynBRdFq1vF67qO2pvTexdAb4c6crDzQS/UR3d0z6usE1WnmvuIbXJ0KPF9KgeUc2H76WsnSDW6YYO3lDAi9ysmCZDf2ow5sZLXNcV5SXHomyaiPkG/DaqcQ=
+	t=1744655194; cv=none; b=LXoe90PDPpQfYU1JMcoaGnskWVETcCSiQvBqi3lHTREF33wcYU3czsS8B/Ih6b0uaZKuth8HL8/3S0ucw+tsSr6ZcfpD5rIVzn+Ezu3oFelYDZinoD4squqLVADBqvSR27nbnBnocZjbhu/Cw22Ft/nW68PFsWU4wB+iHgDGzho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655190; c=relaxed/simple;
-	bh=HnkXJtCVRnEMCUvFPYUEs1QXruXr66jUiiB53dxXg2k=;
+	s=arc-20240116; t=1744655194; c=relaxed/simple;
+	bh=zxI4p+wjrRQ0jkQ2RkuWxk4aLUvNDztSLjxQS/HnlH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XaufEi2mCN0XQNZbpVMI4rUkizivo6svZl+My2YK2t1Fr4aevIIq3rq5VWwNBRnw8O/8x5nY6XKJ3EzoRmnd8pJZ3PvcFDm1D9GS/JkPcpOmZykqcL0CslOw9a88DkXGrS2dzFvDAoBn1F+dCbR7ZCzk5UDTJkBLE/o9iHKam+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C99oKZFn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UkJjf90lb2ItQG+udbT3WDWNXl8BPLD4aLKM3qAtkmaBYOHEkda5G+5NHLTr5e1TkcoHkY4FfQl0Bd5vZtte83QipjSa6wLIABXPlWITAMcd5Mngbu0aurohGKK9tFhz0z9w2a+kXQZsDfC53EKepj7qM5A/wP3qEP6za3fafAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsvItA+H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C99oKZFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B301C4CEE5;
-	Mon, 14 Apr 2025 18:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsvItA+H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8447C4CEEC;
+	Mon, 14 Apr 2025 18:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744655189;
-	bh=HnkXJtCVRnEMCUvFPYUEs1QXruXr66jUiiB53dxXg2k=;
+	s=k20201202; t=1744655193;
+	bh=zxI4p+wjrRQ0jkQ2RkuWxk4aLUvNDztSLjxQS/HnlH4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C99oKZFnAmk6EpD3d+eJG6j6VEQhoRZcBdR9M8m9Sonv/jk6L6VnFM1G4GijnBhw5
-	 GDMYS8r5C/69G2iEUsBGQzzTRfazw0EyMNM61CE/6NOJQ+xK69/mhhRMI3DU+L4lw2
-	 iu+DRcKJ3yKwp/X9ebL0Lv2r0td7ay1wn6y5BEORsQEccRG0xlv8D5WM86ZAu5aXJY
-	 apAod0QPdN1LyFUdy7lQLquvXSQ1d4u82F2fV/BBWVrv7t8KWGFuvfkRBItpIyVwYg
-	 5ofMbO63hk9jK3Pn0ktLGa2nPYEhOW0brUCUirG+B9DP0PpomVOm0AJ44TkU4TvluN
-	 gVPFrxe+oa7LQ==
-Date: Mon, 14 Apr 2025 23:47:19 +0530
+	b=HsvItA+HZnP3HMwBQ0qn+x/+lX1FG8CYN4emOP0fuPiFIaW0eg0g2P3VCBAqIkWzd
+	 PyZIJd0I99m2kBnv9F5ZVfljpT0YVJ5Gjn2yBkvzwbNKMgbrRuWM306E91jCF/YkrJ
+	 dE1ODM/M5U/z9xyjxZYb9/ladb++fU2RT8Zz+oiA78qQGbf24NpbOrIZxvuL9P0YQf
+	 cfnKSNQ4ak4I9cEGuFl64IV62zdVUO0OB9zF8lP49BvRVYoP2q0/vk9Rrro4qTmpM2
+	 Cvq2b7ko1z2JRarESeNUDv/Oou4PimbWKUJztypjS19v0aHQcvqNUOiPxTsC5z43sh
+	 WFKs/m81h9LKA==
+Date: Mon, 14 Apr 2025 23:52:45 +0530
 From: Naveen N Rao <naveen@kernel.org>
 To: Dan Williams <dan.j.williams@intel.com>
-Cc: dave.hansen@linux.intel.com, Ingo Molnar <mingo@kernel.org>, 
+Cc: dave.hansen@linux.intel.com, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Kirill Shutemov <kirill.shutemov@linux.intel.com>, Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] x86/devmem: Remove duplicate range_is_allowed()
- definition
-Message-ID: <s6fek3k3zsgf74yuppzckhcnud67pgfitz66n6uwkky7gvjcpc@rp4pxvie2dpb>
+Subject: Re: [PATCH v2 3/3] x86/devmem: Restrict /dev/mem access for
+ potentially unaccepted memory by default
+Message-ID: <l2crzyeoux2pammbifkivrhp637gza7piumd3s6j66mezsfvdy@nwczgs2hkq4f>
 References: <174433453526.924142.15494575917593543330.stgit@dwillia2-xfh.jf.intel.com>
- <174433454327.924142.13014632539194148381.stgit@dwillia2-xfh.jf.intel.com>
+ <174433455868.924142.4040854723344197780.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,154 +46,177 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174433454327.924142.13014632539194148381.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <174433455868.924142.4040854723344197780.stgit@dwillia2-xfh.jf.intel.com>
 
-On Thu, Apr 10, 2025 at 06:22:23PM -0700, Dan Williams wrote:
-> It looks like x86 has a local re-implementation of range_is_allowed()
-> just to add a pat_enabled() check for the strong symbol override of
-> phys_mem_access_prot_allowed() from drivers/char/mem.c.
+On Thu, Apr 10, 2025 at 06:22:38PM -0700, Dan Williams wrote:
+> Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
+> address space) via /dev/mem results in an SEPT violation.
 > 
-> In preparation for updating range_is_allowed() logic, arrange for there
-> to be only one shared instance of "range_is_allowed()" in the kernel by
-> moving a common helper to include/linux/io.h.
+> The cause is ioremap() (via xlate_dev_mem_ptr()) establishes an
+> unencrypted mapping where the kernel had established an encrypted
+> mapping previously.
 > 
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> An initial attempt to fix this revealed that TDX and SEV-SNP have
+> different expectations about which and when address ranges can be mapped
+> via /dev/mem.
+> 
+> Rather than develop a precise set of allowed /dev/mem capable TVM
+> address ranges, teach devmem_is_allowed() to always restrict access to
+> the BIOS data space.
+
+This patch does more than just restrict the BIOS data space - it rejects 
+all accesses to /dev/mem _apart_ from the first 1MB. That should be made 
+clear here.
+
+> This means return 0s for read(), drop write(), and
+> -EPERM mmap(). This can still be later relaxed as specific needs arise,
+> but in the meantime, close off this source of mismatched
+> IORES_MAP_ENCRYPTED expectations.
+> 
+> Cc: <x86@kernel.org>
 > Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Vishal Annapurve <vannapurve@google.com>
+> Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
+> Reported-by: Nikolay Borisov <nik.borisov@suse.com>
+> Closes: http://lore.kernel.org/20250318113604.297726-1-nik.borisov@suse.com [1]
+> Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+> Fixes: 9aa6ea69852c ("x86/tdx: Make pages shared in ioremap()")
+> Cc: <stable@vger.kernel.org>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  arch/x86/mm/pat/memtype.c |   31 ++++---------------------------
->  drivers/char/mem.c        |   18 ------------------
->  include/linux/io.h        |   21 +++++++++++++++++++++
->  3 files changed, 25 insertions(+), 45 deletions(-)
+>  arch/x86/Kconfig                |    2 ++
+>  arch/x86/include/asm/x86_init.h |    2 ++
+>  arch/x86/kernel/x86_init.c      |    6 ++++++
+>  arch/x86/mm/init.c              |   23 +++++++++++++++++------
+>  4 files changed, 27 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-> index 72d8cbc61158..c97b6598f187 100644
-> --- a/arch/x86/mm/pat/memtype.c
-> +++ b/arch/x86/mm/pat/memtype.c
-> @@ -38,6 +38,7 @@
->  #include <linux/kernel.h>
->  #include <linux/pfn_t.h>
->  #include <linux/slab.h>
-> +#include <linux/io.h>
->  #include <linux/mm.h>
->  #include <linux/highmem.h>
->  #include <linux/fs.h>
-> @@ -773,38 +774,14 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
->  	return vma_prot;
->  }
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 4b9f378e05f6..12a1b5acd55b 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -891,6 +891,7 @@ config INTEL_TDX_GUEST
+>  	depends on X86_X2APIC
+>  	depends on EFI_STUB
+>  	depends on PARAVIRT
+> +	depends on STRICT_DEVMEM
+>  	select ARCH_HAS_CC_PLATFORM
+>  	select X86_MEM_ENCRYPT
+>  	select X86_MCE
+> @@ -1510,6 +1511,7 @@ config AMD_MEM_ENCRYPT
+>  	bool "AMD Secure Memory Encryption (SME) support"
+>  	depends on X86_64 && CPU_SUP_AMD
+>  	depends on EFI_STUB
+> +	depends on STRICT_DEVMEM
+>  	select DMA_COHERENT_POOL
+>  	select ARCH_USE_MEMREMAP_PROT
+>  	select INSTRUCTION_DECODER
+> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+> index 213cf5379a5a..0ae436b34b88 100644
+> --- a/arch/x86/include/asm/x86_init.h
+> +++ b/arch/x86/include/asm/x86_init.h
+> @@ -305,6 +305,7 @@ struct x86_hyper_runtime {
+>   * 				semantics.
+>   * @realmode_reserve:		reserve memory for realmode trampoline
+>   * @realmode_init:		initialize realmode trampoline
+> + * @devmem_is_allowed		restrict /dev/mem and PCI sysfs resource access
+>   * @hyper:			x86 hypervisor specific runtime callbacks
+>   */
+>  struct x86_platform_ops {
+> @@ -323,6 +324,7 @@ struct x86_platform_ops {
+>  	void (*set_legacy_features)(void);
+>  	void (*realmode_reserve)(void);
+>  	void (*realmode_init)(void);
+> +	bool (*devmem_is_allowed)(unsigned long pfn);
+>  	struct x86_hyper_runtime hyper;
+>  	struct x86_guest guest;
+>  };
+> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+> index 0a2bbd674a6d..346301375bd4 100644
+> --- a/arch/x86/kernel/x86_init.c
+> +++ b/arch/x86/kernel/x86_init.c
+> @@ -143,6 +143,11 @@ static void enc_kexec_begin_noop(void) {}
+>  static void enc_kexec_finish_noop(void) {}
+>  static bool is_private_mmio_noop(u64 addr) {return false; }
 >  
-> -#ifdef CONFIG_STRICT_DEVMEM
-> -/* This check is done in drivers/char/mem.c in case of STRICT_DEVMEM */
-> -static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-> -{
-> -	return 1;
-> -}
-
-It looks like no checks were done here if CONFIG_STRICT_DEVMEM was set, 
-so this patch changes that.
-
-> -#else
-> -/* This check is needed to avoid cache aliasing when PAT is enabled */
-> -static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-> -{
-> -	u64 from = ((u64)pfn) << PAGE_SHIFT;
-> -	u64 to = from + size;
-> -	u64 cursor = from;
-> -
-> -	if (!pat_enabled())
-> -		return 1;
-> -
-> -	while (cursor < to) {
-> -		if (!devmem_is_allowed(pfn))
-> -			return 0;
-> -		cursor += PAGE_SIZE;
-> -		pfn++;
-> -	}
-> -	return 1;
-> -}
-> -#endif /* CONFIG_STRICT_DEVMEM */
-> -
->  int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
->  				unsigned long size, pgprot_t *vma_prot)
+> +static bool platform_devmem_is_allowed(unsigned long pfn)
+> +{
+> +	return !cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
+> +}
+> +
+>  struct x86_platform_ops x86_platform __ro_after_init = {
+>  	.calibrate_cpu			= native_calibrate_cpu_early,
+>  	.calibrate_tsc			= native_calibrate_tsc,
+> @@ -156,6 +161,7 @@ struct x86_platform_ops x86_platform __ro_after_init = {
+>  	.restore_sched_clock_state	= tsc_restore_sched_clock_state,
+>  	.realmode_reserve		= reserve_real_mode,
+>  	.realmode_init			= init_real_mode,
+> +	.devmem_is_allowed		= platform_devmem_is_allowed,
+>  	.hyper.pin_vcpu			= x86_op_int_noop,
+>  	.hyper.is_private_mmio		= is_private_mmio_noop,
+>  
+> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+> index bfa444a7dbb0..df5435c8dbea 100644
+> --- a/arch/x86/mm/init.c
+> +++ b/arch/x86/mm/init.c
+> @@ -861,18 +861,23 @@ void __init poking_init(void)
+>   * area traditionally contains BIOS code and data regions used by X, dosemu,
+>   * and similar apps. Since they map the entire memory range, the whole range
+>   * must be allowed (for mapping), but any areas that would otherwise be
+> - * disallowed are flagged as being "zero filled" instead of rejected.
+> + * disallowed are flagged as being "zero filled" instead of rejected, for
+> + * read()/write().
+> + *
+>   * Access has to be given to non-kernel-ram areas as well, these contain the
+>   * PCI mmio resources as well as potential bios/acpi data regions.
+>   */
+>  int devmem_is_allowed(unsigned long pagenr)
 >  {
->  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_WB;
->  
-> +	if (!pat_enabled())
-> +		return 1;
+> +	bool platform_allowed = x86_platform.devmem_is_allowed(pagenr);
 > +
 
-Shouldn't this test for pat_enabled() (perhaps only if 
-CONFIG_STRICT_DEVMEM is set) and continue with the rest of the function 
-otherwise?
+If we are going to do this, I don't see the point of having an 
+x86_platform_op. It may be better to simply gate this on  
+cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) directly here.
 
 
-- Naveen
+Thanks,
+Naveen
 
->  	if (!range_is_allowed(pfn, size))
+>  	if (region_intersects(PFN_PHYS(pagenr), PAGE_SIZE,
+>  				IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE)
+>  			!= REGION_DISJOINT) {
+>  		/*
+> -		 * For disallowed memory regions in the low 1MB range,
+> -		 * request that the page be shown as all zeros.
+> +		 * For disallowed memory regions in the low 1MB range, request
+> +		 * that the page be shown as all zeros for read()/write(), fail
+> +		 * mmap()
+>  		 */
+>  		if (pagenr < 256)
+>  			return 2;
+> @@ -885,14 +890,20 @@ int devmem_is_allowed(unsigned long pagenr)
+>  	 * restricted resource under CONFIG_STRICT_DEVMEM.
+>  	 */
+>  	if (iomem_is_exclusive(pagenr << PAGE_SHIFT)) {
+> -		/* Low 1MB bypasses iomem restrictions. */
+> -		if (pagenr < 256)
+> +		/*
+> +		 * Low 1MB bypasses iomem restrictions unless the platform says
+> +		 * the physical address is not suitable for direct access.
+> +		 */
+> +		if (pagenr < 256) {
+> +			if (!platform_allowed)
+> +				return 2;
+>  			return 1;
+> +		}
+>  
 >  		return 0;
+>  	}
 >  
-> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-> index 169eed162a7f..48839958b0b1 100644
-> --- a/drivers/char/mem.c
-> +++ b/drivers/char/mem.c
-> @@ -61,29 +61,11 @@ static inline int page_is_allowed(unsigned long pfn)
->  {
->  	return devmem_is_allowed(pfn);
->  }
-> -static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-> -{
-> -	u64 from = ((u64)pfn) << PAGE_SHIFT;
-> -	u64 to = from + size;
-> -	u64 cursor = from;
-> -
-> -	while (cursor < to) {
-> -		if (!devmem_is_allowed(pfn))
-> -			return 0;
-> -		cursor += PAGE_SIZE;
-> -		pfn++;
-> -	}
 > -	return 1;
-> -}
->  #else
->  static inline int page_is_allowed(unsigned long pfn)
->  {
->  	return 1;
+> +	return platform_allowed;
 >  }
-> -static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-> -{
-> -	return 1;
-> -}
->  #endif
 >  
->  static inline bool should_stop_iteration(void)
-> diff --git a/include/linux/io.h b/include/linux/io.h
-> index 6a6bc4d46d0a..0642c7ee41db 100644
-> --- a/include/linux/io.h
-> +++ b/include/linux/io.h
-> @@ -183,4 +183,25 @@ static inline void arch_io_free_memtype_wc(resource_size_t base,
->  int devm_arch_io_reserve_memtype_wc(struct device *dev, resource_size_t start,
->  				    resource_size_t size);
->  
-> +#ifdef CONFIG_STRICT_DEVMEM
-> +static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-> +{
-> +	u64 from = ((u64)pfn) << PAGE_SHIFT;
-> +	u64 to = from + size;
-> +	u64 cursor = from;
-> +
-> +	while (cursor < to) {
-> +		if (!devmem_is_allowed(pfn))
-> +			return 0;
-> +		cursor += PAGE_SIZE;
-> +		pfn++;
-> +	}
-> +	return 1;
-> +}
-> +#else
-> +static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-> +{
-> +	return 1;
-> +}
-> +#endif
->  #endif /* _LINUX_IO_H */
+>  void free_init_pages(const char *what, unsigned long begin, unsigned long end)
 > 
