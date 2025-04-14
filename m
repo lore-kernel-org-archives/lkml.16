@@ -1,98 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pv50p00im-hyfv10011601.me.com (pv50p00im-hyfv10011601.me.com [17.58.6.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7741826869D;
-	Mon, 14 Apr 2025 09:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04341267F4E
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624440; cv=none; b=NfPIYfRgMotQeHG9jQMiW1QTodz37dJbhP0RcvsRW8Qcsx76yNraLYWYKG7g1g5Hz8nvRwDcsq5npOUfkyRQE9okxM1ufp1Q40UoXTqgVkuv6wM+fhnlIJNe3Rz41IiijYt+00IVvwq7+ZyV/xqR91wmYBCWkJTeawZks4IUgn4=
+	t=1744624442; cv=none; b=CFDvDKrwtxuiXi3yWt5i3A338rNSu/q5pMnHyv3o+oSyCcYFlarV1J7xUzvIn7j100oAjUEHvuKm3tPqmxEHj9EgxkERhHL8oGMMIwUbvu10vIOADlZiS7uvAniHcNtmVw0M2TnH5cJe2DY8S+T3CO4pxhdBOgMnOELOpCqIe/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624440; c=relaxed/simple;
-	bh=m9SucPDBiv57vDJTBiHL8Yu+1iS7jJDF3MNROUK+8qQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SgcZ+LIfjYv8pU3urQ0IpolqL43LS9MJOs3KFmOxh/Bbbo3TTmrHS0nEIItWBWsWvy/7pfIAByt+J65eRhFsv9KzBCSNQPVmwYvLCK5SlxOFUNuJHFErE3Udzn9wRaSPmava2hl48AKU6QbOrkt9LJYNy0BVqAY9eGJy00Ybfhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fc8ckTZ/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744624442; c=relaxed/simple;
+	bh=gT+UhUX0QyqLLLrvyKECQCtxYK/Pau+ebvJTKqmnf0I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=efK6u6W+3EoYkk27IDnKO2aAiAhxMZ1hMCc/c/QaaUd9q8EH4tPRJN7cMw3h8uhDmi3v4GIclhPF9gzInsrQLoU6txB2KwxGJk0b8KuuE7JLG2YSO8qXVcTnlm70aw5h+j9syWTBYR54ekzPl82j7zasSqz8+j13tPk71TPLeps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me; spf=pass smtp.mailfrom=etehtsea.me; dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b=b9fJRN/G; arc=none smtp.client-ip=17.58.6.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etehtsea.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fc8ckTZ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED7B5C4CEEB;
-	Mon, 14 Apr 2025 09:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744624439;
-	bh=m9SucPDBiv57vDJTBiHL8Yu+1iS7jJDF3MNROUK+8qQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Fc8ckTZ/SfzFNkOryUV5xlexdLBpVcIYXA2pp9lFG0A7uKvit1zRy0dfLuohd+6ZN
-	 /2fl76carqTlfHKuxwxy821zHZMY3p7Zbq1EqSH2W1ar4baYUay8QaEYMzhYak6NqX
-	 Lg5S62x/FqfGDbi+vrMhA4gPR6Tzh5/GepYxezks6L9FJl1G0AVK5GHKA1XkvUoGx1
-	 LDziGqR32d/EoEHBS1nJLHdomwVIb1qgqTBWnbKxTA6P6w0H+ScnptbcyMeEUnj34y
-	 6Z2nq9agBaWAX8c+rJ3JVaKbb/dJtFzThHrRFXoCiCS7wDnX26Thkj86UPKkeQGyJ4
-	 PceUbox4hgv4g==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 14 Apr 2025 11:53:36 +0200
-Subject: [PATCH 1/3] pidfs: move O_RDWR into pidfs_alloc_file()
+	dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b="b9fJRN/G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=etehtsea.me; s=sig1;
+	bh=Ybx8WjOqXxdOPt7jZILI3TQyxAH2lerFDHqdPBDPGyI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
+	b=b9fJRN/G8UE2xxLqmqQXE2YrxmbrCFA27S4njRGjhbbnIKSIpIydlaS8WBnimOrTZ
+	 7tq+yP5FZHB73dZYuqpBlDtkCPbvnp/vds+rcsVitrrdRuif2zTe9woenvAnYwSbcU
+	 LluGsewjMrU0TXxWv0pl0m5URMdYmwQe9CeP8ifgT0uTxdacdZh20pYo6mYHfY4U2N
+	 ycugs9vPnMc7yNtD9eKzliTD3eGMEFgBc7ssd2gE2FRtx6zVgzg6sASlFjWhyeyiS1
+	 i0JXC477vFsl9K6wN/5SUpQAS9URR3GEeHb0huaaYQH5RNUHaZqWm3C+zFRv20SqdS
+	 QHU/SN7VWOB1A==
+Received: from pv50p00im-hyfv10011601.me.com (pv50p00im-hyfv10011601.me.com [17.58.6.43])
+	by pv50p00im-hyfv10011601.me.com (Postfix) with ESMTPS id 30A2DC80118;
+	Mon, 14 Apr 2025 09:53:52 +0000 (UTC)
+Received: from localhost (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-hyfv10011601.me.com (Postfix) with ESMTPSA id 27735C8009F;
+	Mon, 14 Apr 2025 09:53:51 +0000 (UTC)
+From: Konstantin Shabanov <mail@etehtsea.me>
+To: Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Konstantin Shabanov <mail@etehtsea.me>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Dan Callaghan <djc@djc.id.au>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] (drm/rockchip) Reject AFBC for resolutions >2560x1600
+Date: Mon, 14 Apr 2025 09:53:31 +0000
+Message-ID: <20250414095332.9674-1-mail@etehtsea.me>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250402125320.21836-1-mail@etehtsea.me>
+References: <20250402125320.21836-1-mail@etehtsea.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-work-coredump-v1-1-6caebc807ff4@kernel.org>
-References: <20250414-work-coredump-v1-0-6caebc807ff4@kernel.org>
-In-Reply-To: <20250414-work-coredump-v1-0-6caebc807ff4@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>, 
- Luca Boccassi <luca.boccassi@gmail.com>, 
- Lennart Poettering <lennart@poettering.net>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1239; i=brauner@kernel.org;
- h=from:subject:message-id; bh=m9SucPDBiv57vDJTBiHL8Yu+1iS7jJDF3MNROUK+8qQ=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/uW3ctC82gn9fJDf7KxfjFr2t/6qzDP++9Gh/5hTG+
- T/xndjDjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIm8tWFkaFqscaZ3b8J0Wc3Z
- ER5aDzeYZxZE/lr5+MH6068cfyzlkGT4xSS5n3uTY+O2ZuNJ3hEfHLe4V2krlb+OTPjePGfGNsM
- CHgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 4idf3hj8_sYT2UrNeBvaZFeG976A8GMg
+X-Proofpoint-ORIG-GUID: 4idf3hj8_sYT2UrNeBvaZFeG976A8GMg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1030 bulkscore=0
+ mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504140071
 
-Since all pidfds must be O_RDWR currently enfore that directly in the
-file allocation function itself instead of letting callers specify it.
+As it isn't supported by hardware. At least, RK3399 doesn't support
+it. From the datasheet[1]
+("1.2.10 Video IN/OUT", "Display Interface", p. 17):
 
-Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+  Support AFBC function co-operation with GPU
+    * support 2560x1600 UI
+
+Manually tested on RockPro64 (rk3399):
+- ARM_AFBC modifier is used for 1920x1080
+- DRM_FORMAT_MOD_LINEAR modifier us used for 3840x2160
+- No noise on the screen when sway is running in 4k
+- Dynamic resolution switching works correctly in sway
+
+Signed-off-by: Konstantin Shabanov <mail@etehtsea.me>
+Cc: Daniel Stone <daniel@fooishbar.org>
+Reported-by: Dan Callaghan <djc@djc.id.au>
+Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/7968
+
+[1]: https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
 ---
- fs/pidfs.c    | 1 +
- kernel/fork.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/pidfs.c b/fs/pidfs.c
-index d64a4cbeb0da..50e69a9e104a 100644
---- a/fs/pidfs.c
-+++ b/fs/pidfs.c
-@@ -888,6 +888,7 @@ struct file *pidfs_alloc_file(struct pid *pid, unsigned int flags)
- 		return ERR_PTR(-ESRCH);
- 
- 	flags &= ~PIDFD_CLONE;
-+	flags |= O_RDWR;
- 	pidfd_file = dentry_open(&path, flags, current_cred());
- 	/* Raise PIDFD_THREAD explicitly as do_dentry_open() strips it. */
- 	if (!IS_ERR(pidfd_file))
-diff --git a/kernel/fork.c b/kernel/fork.c
-index c4b26cd8998b..d184e51196a2 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2071,7 +2071,7 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
- 	if (pidfd < 0)
- 		return pidfd;
- 
--	pidfd_file = pidfs_alloc_file(pid, flags | O_RDWR);
-+	pidfd_file = pidfs_alloc_file(pid, flags);
- 	if (IS_ERR(pidfd_file))
- 		return PTR_ERR(pidfd_file);
- 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+index dcc1f07632c3..1379bc3cd937 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+@@ -18,6 +18,8 @@
+ #include "rockchip_drm_fb.h"
+ #include "rockchip_drm_gem.h"
 
--- 
-2.47.2
++#define ROCKCHIP_AFBC_MAX_WIDTH		2560
++
+ static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+ 	.destroy       = drm_gem_fb_destroy,
+ 	.create_handle = drm_gem_fb_create_handle,
+@@ -52,6 +54,13 @@ rockchip_fb_create(struct drm_device *dev, struct drm_file *file,
+ 	}
 
+ 	if (drm_is_afbc(mode_cmd->modifier[0])) {
++		if (mode_cmd->width > ROCKCHIP_AFBC_MAX_WIDTH) {
++			DRM_DEBUG_KMS("AFBC is not supported for the width %d (max %d)\n",
++				      mode_cmd->width,
++				      ROCKCHIP_AFBC_MAX_WIDTH);
++			return ERR_PTR(-EINVAL);
++		};
++
+ 		int ret, i;
+
+ 		ret = drm_gem_fb_afbc_init(dev, mode_cmd, afbc_fb);
+
+base-commit: e7bb7d44c3b97aea1f0e354c6499900154ac67f2
+--
+2.48.1
