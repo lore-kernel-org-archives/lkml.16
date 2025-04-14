@@ -1,246 +1,140 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEC54C6C;
-	Mon, 14 Apr 2025 04:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DAE1BC3C;
+	Mon, 14 Apr 2025 05:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744606607; cv=none; b=US4jegtmrex/fVx7inUPhrMJ+jrXBZ/Olv1mHpTn4wWkk7hh2at5IEhZM9S0mDhsEQCiJFf/HJpwpq1M6mRi5QACqaC5mNGM9DaqX7OVwlO08vY5trPgIjmjc88E4S+yWr94u5iGzTA6e77OggVywH0sxyExWr5MqsuuoyiwDGA=
+	t=1744607347; cv=none; b=IFfmamZYYOAjohOn/5+xeQper6XVWNtO9m2rnMyQG0se3dHC5W3FipmXmNVdR+IBj9T9fhug3EmeDeRf4Og+6j82Bi42KYFiEIE0N2efmhtqaAKn3ZCkE0feXS5fysjyz8TsWGsPVfOY8T/41UaRCqV52L1vfu6p8F8CeWrVzLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744606607; c=relaxed/simple;
-	bh=vO4jUJHwcH+m+8bC5DsW3yUMu82/5uJcsqROx6JdFqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uhmAFaIJhr4OAy9BWDz/mnQLSzL31Xi5tYfKp5+EadNs0OCljWZdSIopwLHEytyyg/kgeiiW21pkyZdh9Ai7TvGRj77t9RCCiLZUel2dcnlsaM55LUMHrbXRYRWXE9qvi3PpXlQDPqFdKltec7IqvlVE4VYZmJPUV1fJ03SIT+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=b6jymS1f; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744607347; c=relaxed/simple;
+	bh=EUELgt4hMnMMJOO/U7NuEFbDX9SHw5BmfrFvM/ORxqI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pZd3DShHYvQIqVrzbObDUAQaFa39gpQBVavBxAzSVzXI6OwzgMnSvVO6VCkstn3X5vp391nDkTAr6CG9388EXJp/Pk4NMXbH5KtRLmQLmigQMQFtb+oLtwPkb+Owu47CGD2MOnl+g5/HaEFF82nKcsL0DocDjSjtCAeg8Pbjt1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bcp92RhW; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b6jymS1f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744606601;
-	bh=ucft/O37Ovs+jFJZRAT1PB1jXiJWS+RdietOi8yN0eI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=b6jymS1fmYQkDhlabk1t2bHJw5AskOL3jKbbaS/9ioyOXK9hpTXmGbBcwNNBRd1GA
-	 V6zwvAEbk6MGAau8KO+nsQu65SqyYgHjUNhZslyJE68aMJ/yU9qGznx5TRDSs/SxUV
-	 a79t2eeBOzdFOcNklj7chotCnm2t2CwlUGVducI+Bk2P1Dcpeh3c01GW0B/FQ88nqv
-	 iXGf4ElMmTZBrjDS3qnLg2Vu1osq5WgsaguThNH/V2v599ZxyIbpuy6XfK2Bf40A4R
-	 jn8X2A0UUAYdndMQOW7CF2iHDSyv5yd7DvHRjoV1SBCIe+sOlOygjYipPaJHJZg0Rc
-	 lp3IVymF6jm2A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbZkw5FzJz4x1V;
-	Mon, 14 Apr 2025 14:56:40 +1000 (AEST)
-Date: Mon, 14 Apr 2025 14:56:39 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>, James Bottomley
- <James.Bottomley@HansenPartnership.com>
-Cc: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>, Huan Tang
- <tanghuan@vivo.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Lu Hongfei <luhongfei@vivo.com>
-Subject: linux-next: manual merge of the scsi-mkp tree with the scsi-fixes
- and scsi trees
-Message-ID: <20250414145639.5894a570@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bcp92RhW"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af523f4511fso3381749a12.0;
+        Sun, 13 Apr 2025 22:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744607345; x=1745212145; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Fej5fA5t2ol5BfFTXsvj0x2AUS/N3lMaLna6woIGmM=;
+        b=Bcp92RhWcd0/jDkkNmAlqQlUGkp4NTuEM24Ir/jO1SoJJ4wG/qFXanQ6/T6ylpiEmN
+         w38Guik4BWwf0aU4BPETOpGZzCVsNo28+gKC2I9jdiDZh+bEj837Kn8ZgtaWvmmumNgD
+         S6uHDvmveWqz2aXWRYjmx3SqbZGpzNjYvwLKXL4K7TIT50h5UiG0p7/a6bmXc9Qbf8/A
+         UiQCbCSCEledYgnHyFFsw69K8DHBuTS0tjx1GFkzDseKU2REc7n5k0B7TuYJDoY7QX3B
+         k0copjxk+EAUKnVocM+7e7ktypdW1VpIvmVYPJ8t2PGA2rtHjZm7M5AkAgEpQVKWG9k9
+         Pqkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744607345; x=1745212145;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1Fej5fA5t2ol5BfFTXsvj0x2AUS/N3lMaLna6woIGmM=;
+        b=CG98WgRIGi4KBtK3ObXpkOBL0sAxmEV0QJirbUa6brpdKCAAXufAL5Qu0rHJ06V4yT
+         JLvJouKLNWLOGgIg3LHkHvYYiYjvR+RYCxbzycofzpoUEfYhtUEITYISJs+MrAxz3QAv
+         V5PDrMB70s9OadhxszFdX1ic2Bn+ofLAQUJYfYZNM+LgFZX0ZCm6aheKbCL7/PgArjcg
+         REZxF0MyGFQWV1ce1RC0OYxkPxt1Q95uTX6QqIMs/eMHOU06CgHgFuXbC/YYGBLGX4J3
+         OtQ/uKwkIaW5AQUOxoqq6aAg1PzBg9IbcTN69efGV4jAbDz6pF9sZAGB5um5hOpeJJPQ
+         4tCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVujYn1rBeey4A0CrHxQ3hnkYmB7BSZo1n0Qtz5OJza4UkjjH3cOQ69Ok8kgbIquclitmE=@vger.kernel.org, AJvYcCX1ghCtEd1qoVIIhuh3XqkQP+WMGk939sifgIMgiY3vJ28oyGAbgG8zuqk1K80TTP5AmmJQnNSUHb0eY1UC@vger.kernel.org, AJvYcCXarsZGlMzhr4+k5tQUzTzRx+pFvGHyr5JhIGa7jXsCwX3Z/+j0QPU4g2CFFqit1mU6fK28KqAp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6xuPuUkzDhufOyWKt7xHZl+ZHytMWGF5hIXOOPfQwPK7lailO
+	7d3zRCnqKlOvnL2Ag2cAPIegvbYhYfC2Uz1NRRA3IgEd+2f8vCkTM5KyiLxFOpg=
+X-Gm-Gg: ASbGncvZ5QXBMUpu+a48zFYKzUrZuqHg+FSLkyTYGSWrwst+SLQ8mcifsPjK4J/77n3
+	t78GFusIW1r1bRXHl2y0iskLT/vORUhYaYU3dxGmkPattNZrYfFB3GsbFq6h2W/Mhwqy2B51eLB
+	kljGgcffnLoTTPyiRduq4avDjiaONZM01IHsmMtXBGNAh6tMIPxPCFi5dO+H8F5aTRfFo2f70j2
+	9CKrEjTqNwae3yVqaMk4ucvSPOJ8rf3OVypmqdS/peosiZgYNBbw4yExj3y1qpmGp6P1HS7O3pa
+	LBqfYj7fYOoLxYE3vNTOXMFX3GF+TiQ+DkgDlYV8KtVYRILiX+LwYcHtLa1+TdH2Pw==
+X-Google-Smtp-Source: AGHT+IGdtrEP7ucqfNOc8FOWb04RISSfzP7ZCyxG4G1woJVwa1KuxSGZbHjR22opAFd/Nl338AzsgQ==
+X-Received: by 2002:a17:902:c951:b0:220:e5be:29c8 with SMTP id d9443c01a7336-22bea4f185dmr178332735ad.32.1744607344881;
+        Sun, 13 Apr 2025 22:09:04 -0700 (PDT)
+Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:b80:9edb:557f:f8a7])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22ac7cb5047sm90778665ad.170.2025.04.13.22.08.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 22:09:04 -0700 (PDT)
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: virtualization@lists.linux.dev
+Cc: "Michael S . Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Bui Quang Minh <minhquangbui99@gmail.com>
+Subject: [PATCH v2 0/3] virtio-net: disable delayed refill when pausing rx
+Date: Mon, 14 Apr 2025 12:08:34 +0700
+Message-ID: <20250414050837.31213-1-minhquangbui99@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.JzQ53mtP2gf2vd2NR/_UBb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/.JzQ53mtP2gf2vd2NR/_UBb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi everyone,
 
-Hi all,
+This series tries to fix a deadlock in virtio-net when binding/unbinding
+XDP program, XDP socket or resizing the rx queue.
 
-Today's linux-next merge of the scsi-mkp tree got conflicts in:
+When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
+napi_disable() on the receive queue's napi. In delayed refill_work, it
+also calls napi_disable() on the receive queue's napi. When
+napi_disable() is called on an already disabled napi, it will sleep in
+napi_disable_locked while still holding the netdev_lock. As a result,
+later napi_enable gets stuck too as it cannot acquire the netdev_lock.
+This leads to refill_work and the pause-then-resume tx are stuck
+altogether.
 
-  Documentation/ABI/testing/sysfs-driver-ufs
-  drivers/ufs/core/ufshcd.c
-  include/ufs/ufs.h
+This scenario can be reproducible by binding a XDP socket to virtio-net
+interface without setting up the fill ring. As a result, try_fill_recv
+will fail until the fill ring is set up and refill_work is scheduled.
 
-between commits:
+This fix adds virtnet_rx_(pause/resume)_all helpers and fixes up the
+virtnet_rx_resume to disable future and cancel all inflights delayed
+refill_work before calling napi_disable() to pause the rx.
 
-  bdab40480b14 ("scsi: ufs: core: Rename ufshcd_wb_presrv_usrspc_keep_vcc_o=
-n()")
-  1fd2e77b8897 ("scsi: ufs: core: Add device level exception support")
+Version 2 changes:
+- Add selftest for deadlock scenario
 
-from the scsi-fixes and scsi trees and commit:
+Thanks,
+Quang Minh.
 
-  500d4b742e0c ("scsi: ufs: core: Add WB buffer resize support")
+Bui Quang Minh (3):
+  virtio-net: disable delayed refill when pausing rx
+  selftests: net: move xdp_helper to net/lib
+  selftests: net: add a virtio_net deadlock selftest
 
-from the scsi-mkp tree.
+ drivers/net/virtio_net.c                      | 60 ++++++++++++++++---
+ tools/testing/selftests/Makefile              |  2 +-
+ tools/testing/selftests/drivers/net/Makefile  |  2 -
+ tools/testing/selftests/drivers/net/queues.py |  4 +-
+ .../selftests/drivers/net/virtio_net/Makefile |  2 +
+ .../selftests/drivers/net/virtio_net/config   |  1 +
+ .../drivers/net/virtio_net/lib/py/__init__.py | 16 +++++
+ .../drivers/net/virtio_net/xsk_pool.py        | 52 ++++++++++++++++
+ tools/testing/selftests/net/lib/.gitignore    |  1 +
+ tools/testing/selftests/net/lib/Makefile      |  1 +
+ .../{drivers/net => net/lib}/xdp_helper.c     |  0
+ 11 files changed, 127 insertions(+), 14 deletions(-)
+ create mode 100644 tools/testing/selftests/drivers/net/virtio_net/lib/py/__init__.py
+ create mode 100755 tools/testing/selftests/drivers/net/virtio_net/xsk_pool.py
+ rename tools/testing/selftests/{drivers/net => net/lib}/xdp_helper.c (100%)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+-- 
+2.43.0
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/ABI/testing/sysfs-driver-ufs
-index e36d2de16cbd,e7b49bc894f5..000000000000
---- a/Documentation/ABI/testing/sysfs-driver-ufs
-+++ b/Documentation/ABI/testing/sysfs-driver-ufs
-@@@ -1605,34 -1605,51 +1605,83 @@@ Description
- =20
-  		The attribute is read/write.
- =20
- +What:		/sys/bus/platform/drivers/ufshcd/*/device_lvl_exception_count
- +What:		/sys/bus/platform/devices/*.ufs/device_lvl_exception_count
- +Date:		March 2025
- +Contact:	Bao D. Nguyen <quic_nguyenb@quicinc.com>
- +Description:
- +		This attribute is applicable to ufs devices compliant to the
- +		JEDEC specifications version 4.1 or later. The
- +		device_lvl_exception_count is a counter indicating the number of
- +		times the device level exceptions have occurred since the last
- +		time this variable is reset.  Writing a 0 value to this
- +		attribute will reset the device_lvl_exception_count.  If the
- +		device_lvl_exception_count reads a positive value, the user
- +		application should read the device_lvl_exception_id attribute to
- +		know more information about the exception.
- +
- +		The attribute is read/write.
- +
- +What:		/sys/bus/platform/drivers/ufshcd/*/device_lvl_exception_id
- +What:		/sys/bus/platform/devices/*.ufs/device_lvl_exception_id
- +Date:		March 2025
- +Contact:	Bao D. Nguyen <quic_nguyenb@quicinc.com>
- +Description:
- +		Reading the device_lvl_exception_id returns the
- +		qDeviceLevelExceptionID attribute of the ufs device JEDEC
- +		specification version 4.1. The definition of the
- +		qDeviceLevelExceptionID is the ufs device vendor specific
- +		implementation.  Refer to the device manufacturer datasheet for
- +		more information on the meaning of the qDeviceLevelExceptionID
- +		attribute value.
- +
- +		The attribute is read only.
-++
-+ What:		/sys/bus/platform/drivers/ufshcd/*/wb_resize_enable
-+ What:		/sys/bus/platform/devices/*.ufs/wb_resize_enable
-+ Date:		April 2025
-+ Contact:	Huan Tang <tanghuan@vivo.com>
-+ Description:
-+ 		The host can enable the WriteBooster buffer resize by setting this
-+ 		attribute.
-+=20
-+ 		=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+ 		idle      There is no resize operation
-+ 		decrease  Decrease WriteBooster buffer size
-+ 		increase  Increase WriteBooster buffer size
-+ 		=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+=20
-+ 		The file is write only.
-+=20
-+ What:		/sys/bus/platform/drivers/ufshcd/*/attributes/wb_resize_hint
-+ What:		/sys/bus/platform/devices/*.ufs/attributes/wb_resize_hint
-+ Date:		April 2025
-+ Contact:	Huan Tang <tanghuan@vivo.com>
-+ Description:
-+ 		wb_resize_hint indicates hint information about which type of resize
-+ 		for WriteBooster buffer is recommended by the device.
-+=20
-+ 		=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+ 		keep       Recommend keep the buffer size
-+ 		decrease   Recommend to decrease the buffer size
-+ 		increase   Recommend to increase the buffer size
-+ 		=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+=20
-+ 		The file is read only.
-+=20
-+ What:		/sys/bus/platform/drivers/ufshcd/*/attributes/wb_resize_status
-+ What:		/sys/bus/platform/devices/*.ufs/attributes/wb_resize_status
-+ Date:		April 2025
-+ Contact:	Huan Tang <tanghuan@vivo.com>
-+ Description:
-+ 		The host can check the resize operation status of the WriteBooster
-+ 		buffer by reading this attribute.
-+=20
-+ 		=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-+ 		idle              Resize operation is not issued
-+ 		in_progress       Resize operation in progress
-+ 		complete_success  Resize operation completed successfully
-+ 		general_failure   Resize operation general failure
-+ 		=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-+=20
-+ 		The file is read only.
-diff --cc drivers/ufs/core/ufshcd.c
-index ca2b0aae9d11,be65fc4b5ccd..000000000000
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@@ -6105,7 -6080,22 +6102,22 @@@ int ufshcd_wb_toggle_buf_flush(struct u
-  	return ret;
-  }
- =20
-+ int ufshcd_wb_set_resize_en(struct ufs_hba *hba, enum wb_resize_en en_mod=
-e)
-+ {
-+ 	int ret;
-+ 	u8 index;
-+=20
-+ 	index =3D ufshcd_wb_get_query_index(hba);
-+ 	ret =3D ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
-+ 				QUERY_ATTR_IDN_WB_BUF_RESIZE_EN, index, 0, &en_mode);
-+ 	if (ret)
-+ 		dev_err(hba->dev, "%s: Enable WB buf resize operation failed %d\n",
-+ 			__func__, ret);
-+=20
-+ 	return ret;
-+ }
-+=20
- -static bool ufshcd_wb_presrv_usrspc_keep_vcc_on(struct ufs_hba *hba,
- +static bool ufshcd_wb_curr_buff_threshold_check(struct ufs_hba *hba,
-  						u32 avail_buf)
-  {
-  	u32 cur_buf;
-diff --cc include/ufs/ufs.h
-index 1c47136d8715,9188f7aa99da..000000000000
---- a/include/ufs/ufs.h
-+++ b/include/ufs/ufs.h
-@@@ -181,7 -181,9 +181,10 @@@ enum attr_idn=20
-  	QUERY_ATTR_IDN_WB_BUFF_LIFE_TIME_EST    =3D 0x1E,
-  	QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE        =3D 0x1F,
-  	QUERY_ATTR_IDN_TIMESTAMP		=3D 0x30,
- +	QUERY_ATTR_IDN_DEV_LVL_EXCEPTION_ID     =3D 0x34,
-+ 	QUERY_ATTR_IDN_WB_BUF_RESIZE_HINT	=3D 0x3C,
-+ 	QUERY_ATTR_IDN_WB_BUF_RESIZE_EN		=3D 0x3D,
-+ 	QUERY_ATTR_IDN_WB_BUF_RESIZE_STATUS	=3D 0x3E,
-  };
- =20
-  /* Descriptor idn for Query requests */
-
---Sig_/.JzQ53mtP2gf2vd2NR/_UBb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8lYcACgkQAVBC80lX
-0Gzxywf+M6WW04kVhhnExRD4xuRaoMuKW1tvDr4qX7BH39rPkTVYq7Djv0xFSWbS
-GXsg+Fdm41vyVauHzmrhtxm5+HeywGdYg95oZA3nQN/zji44jR3MpTBMGBucuC7f
-aCjpxPu1Dc5qiI8KJr55H/lCCLJrh9ecLU44LYteLQKeYUYBa7eE65b7btIDZ1ZC
-D9OQaQxN0IbyRfQod0L061VrHwLEJbi5mettXoVyMBrS188hXlD/NqqbVhZ9CoWQ
-mCna2/sQsVhGPozXJQci8tjArW8iNIV+apFcOJrI1h9BUEWggj8c/5SGVZEyPox2
-jVszMhnTg8pZNbSbRg//UtMlSNCFMg==
-=Y3lk
------END PGP SIGNATURE-----
-
---Sig_/.JzQ53mtP2gf2vd2NR/_UBb--
