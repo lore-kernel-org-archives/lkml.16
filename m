@@ -1,99 +1,98 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A94188733;
-	Mon, 14 Apr 2025 22:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0FD1A0BFA;
+	Mon, 14 Apr 2025 22:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744669130; cv=none; b=Zz+AfQsRN2MxfAPGDNLbnSST9+tvjZfdD0aNJf3yyLBOCSbfvXAhdtwXZKpeWYXVFBHoAzXAaNqcxwbSDW8iprvhawalhR3KigtJUy1JSrFWEyqxQRylfq2oqJnQCDOY7cSkBcFOmJjEdrxSI+Kv1d/Vji0H3gq3FLXiaPtuwF8=
+	t=1744669160; cv=none; b=sGevEmE0Fh6QePRsng3IRyVFYNpTtHz3pxQFRaxBg+5OTVtE88cHcg3c0UpbE8lUTypGg2BrpK/kVAygn6tUni9qY2BFkmLxgo+proMo9eGCgKAT14WV6lPx8xqOLvRsHmg7V3EWGWvbUkEbB1wx8LSJuS3y0P6rdG+e9ewdVas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744669130; c=relaxed/simple;
-	bh=/Zb1XV2bYof6BzTOqn3Nl2/4vBAP/XCy2fGjFlKM2c0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QyR4I2N7NZej5Bir0AAuXkSuQvG6BxSHWaff2J6p67ad212ezF7Lmc2mKZ3IPNaVgleHRa4hhnHAfhl/RLeKcrWfhAxCooHzmrwJ5mKv2cihZPLl2BbH3K5938UzpGVsJBpKp3PCPnuxDQM5eh3TSVBvd+66qrobNMEyyA/I4Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OuSa7Yw4; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OuSa7Yw4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=NzdrtjgDo4uBW10GHqjcnuFCyc2xfj83QuuvTGF5XJU=; b=OuSa7Yw4IXAtwTCvgAdSHneXg0
-	HtcripUjUS+d5ejgsf0yQkIvBpMvaH7ELC/DoLd7qyUEQvRM1q+KcDelHuHIh4QLsL8sHumUJyYCw
-	weMvEblTpEgIvCFVgfeJVRsWkUL+5o1BFZrENgXUNa+n2V9YqYuzxxJkQPg8JrygAAS4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4S8M-009Hvy-Lv; Tue, 15 Apr 2025 00:18:30 +0200
-Date: Tue, 15 Apr 2025 00:18:30 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Nelson, Shannon" <shannon.nelson@amd.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, brett.creeley@amd.com
-Subject: Re: [PATCH net-next 2/3] ionic: support ethtool
- get_module_eeprom_by_page
-Message-ID: <891f1b66-0b49-41ce-bb00-5345ef9afb5c@lunn.ch>
-References: <20250411182140.63158-1-shannon.nelson@amd.com>
- <20250411182140.63158-3-shannon.nelson@amd.com>
- <ed497741-9fcc-44fc-850d-5c018f2ef90e@lunn.ch>
- <a32f6b8a-860b-4452-87f0-04e0d289d473@amd.com>
+	s=arc-20240116; t=1744669160; c=relaxed/simple;
+	bh=wazrb6p70nMSbfR4wfH6K//sev3lSxv9Y5wdY1L/exo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YwyoGZ5EIZKE2Zr09U1ia6ipen9/p57ZBArjpDOJoTMCQs0r+eh/opPxMhFjKEnTW9fESAq8yvGaUfjMYKhm9Bz1QPaL49X6PYQYJ8CYldcOjKZQT8b1WAnS7pJt3kGx0oxAn61uct8gQAeVMWZ2SNdtrDQp3T7wbq5K3kA1LYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6C18C4CEE2;
+	Mon, 14 Apr 2025 22:19:18 +0000 (UTC)
+Date: Mon, 14 Apr 2025 18:20:50 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
+ page faults
+Message-ID: <20250414182050.213480aa@gandalf.local.home>
+In-Reply-To: <20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
+References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
+	<20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a32f6b8a-860b-4452-87f0-04e0d289d473@amd.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> > > +static int ionic_get_module_eeprom_by_page(struct net_device *netdev,
-> > > +                                        const struct ethtool_module_eeprom *page_data,
-> > > +                                        struct netlink_ext_ack *extack)
+On Mon, 14 Apr 2025 22:54:41 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-> > > +     switch (page_data->page) {
-> > > +     case 0:
-> > > +             src = &idev->port_info->status.xcvr.sprom[page_data->offset];
-> > > +             break;
-> > > +     case 1:
-> > > +             src = &idev->port_info->sprom_page1[page_data->offset - 128];
-> > > +             break;
-> > > +     case 2:
-> > > +             src = &idev->port_info->sprom_page2[page_data->offset - 128];
-> > > +             break;
-> > > +     default:
-> > > +             return -EINVAL;
-> > 
-> > It is a valid page, your firmware just does not support it. EOPNOSUPP.
+> On Mon, Apr 14, 2025 at 03:35:41PM -0500, Junxuan Liao wrote:
+> > Rename page_fault_{user,kernel} to page_fault_{user,kernel}_enter, and
+> > add the exit counterparts. This might be useful for measuring page fault  
+> 				  ^^^^^^^^^^^^^^^^
 > 
-> I can see the argument for this, but EINVAL seems to me to match the
-> out-of-bounds case from ionic_get_module_eprom(), as well as what other
-> drivers are reporting for an unsupported address.  It seems to me that
-> passing EOPNOSUPP back to the user is telling them that they can't get
-> eeprom data at all, not that they asked for the wrong page.
+> Well, come back when it really becomes useful.
 
-I would disagree with at. Look at the ethtool usage:
+It's useful for me ;-)
 
-ethtool -m|--dump-module-eeprom|--module-info devname [raw on|off]
-          [hex on|off] [offset N] [length N] [page N] [bank N] [i2c N]
+ # cd /sys/kernel/tracing
+ # echo 's:user_faults u64 delta;' >> dynamic_events
+ # echo 'hist:keys=common_pid:ts0=common_timestamp.usecs' >> events/exceptions/page_fault_user_enter/trigger
+ # echo 'hist:keys=common_pid:delta=common_timestamp.usecs-$ts0:onmatch(exceptions.page_fault_user_enter).trace(user_faults,$delta)' >> events/exceptions/page_fault_user_exit/trigger
 
-You can ask for any page. The only validation that can be done is,
-does the page number fit within the page selection register. And that
-is a u8. So any value < 256 is valid for page.  Some pages are
-currently defined, some pages are reserved, and pages 128-255 are for
-vendor specific functions.
+ # cd /work/git/trace-cmd.git
+ # echo 'hist:keys=delta.log2:sort=delta if COMM == "cc1"' > /sys/kernel/tracing/events/synthetic/user_faults/trigger
+ # make
+[..]
 
-The limitation here is your firmware, you don't support what the
-specification allows. So EOPNOTSUPP for a page you don't supports
-would give an indication of this.
+ # cat /sys/kernel/tracing/events/synthetic/user_faults/hist
+# event histogram
+#
+# trigger info: hist:keys=delta.log2:vals=hitcount:sort=delta.log2:size=2048 if COMM == "cc1" [active]
+#
 
-ethtool's pretty print should handle -EOPNOTSUPP. It knows some netdev
-have limits, and don't give full access to the module data. I would
-not be too surprised to find ethtool actually interprets EINVAL for a
-valid page to be fatal, but i've not checked. EOPNOTSUPP should just
-stop it pretty printing that section of the module.
+{ delta: ~ 2^0  } hitcount:          1
+{ delta: ~ 2^1  } hitcount:        334
+{ delta: ~ 2^2  } hitcount:       4090
+{ delta: ~ 2^3  } hitcount:      86037
+{ delta: ~ 2^4  } hitcount:     108790
+{ delta: ~ 2^5  } hitcount:      27387
+{ delta: ~ 2^6  } hitcount:       6015
+{ delta: ~ 2^7  } hitcount:        481
+{ delta: ~ 2^8  } hitcount:        134
+{ delta: ~ 2^9  } hitcount:         74
+{ delta: ~ 2^10 } hitcount:         54
+{ delta: ~ 2^11 } hitcount:          6
 
-	Andrew
+Totals:
+    Hits: 233403
+    Entries: 12
+    Dropped: 0
+
+
+The above shows a histogram in microseconds where the buckets increase in a
+power of two. The biggest bucket is between 2^4 (16) and 2^5 (32) microseconds
+with 108790 hits.
+
+The longest bucket of 2^11 (2ms) to 2^12 (4ms) had 6 hits.
+
+And when sframes is supported, it will be able to show the user space stack
+trace of where the longest page faults occur.
+
+-- Steve
