@@ -1,254 +1,190 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2057.outbound.protection.outlook.com [40.107.223.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2098510F9;
-	Mon, 14 Apr 2025 08:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744621154; cv=none; b=KgQ+OHn4UWciR+vQaZXxbrdQFv1h1/6GkekGCq3X3b60F16zSOfFVfrRogCwRxXpECK9+p/n8fQmPsDmK8PP/xu6Zjde5DQb7m9iCHNVnugknj07n9I7FuSdiCzIAjDtj+Af7gr7zKcPeUgGCSvUHH4B3Q8M+5sllMzY7Ok4Taw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744621154; c=relaxed/simple;
-	bh=679JyxtqUTtjXOCtuELbbzQlbnCOHolevxYOM+wI9WM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lBKXb3UxpV5qMNZLhUe/uKCoMc1fd8AY4FJkAn00jb2iPz/rgHbW6fx5bTIkNyGevd4XQcc0+8B8xEwl9QcqvG/aKcTKTUc+daEKUZhAUPAVvClkwgpocfkT18rErFxgV+ZHXCtC2ZjCUess7Yw7BwOWFX+ASUfrnuRsuPLZF+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E5KVxg026809;
-	Mon, 14 Apr 2025 08:58:21 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ydd1hup2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 14 Apr 2025 08:58:21 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Mon, 14 Apr 2025 01:58:20 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 14 Apr 2025 01:58:17 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
-        <ematsumiya@suse.de>, <stfrench@microsoft.com>, <sfrench@samba.org>,
-        <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>
-Subject: [PATCH 5.15.y 1/2] smb: client: fix UAF in async decryption
-Date: Mon, 14 Apr 2025 16:58:16 +0800
-Message-ID: <20250414085816.1631807-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425DF42AA1;
+	Mon, 14 Apr 2025 08:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744621189; cv=fail; b=VxzkCTXRuTqYi57LME+BjaoQ218XLXilKwRhmxzfrvQJqakKpZ7qsbHSgkW46TsyFiSHl3g+/N23LAaiGajywtXubgqU9TxoITWYXyP+byYCrEHB7R91fobnuwQ8X2qsbdk2UVxLVbmdcgrQoYIq0QraS5aqXDYpvkBTpLaVAKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744621189; c=relaxed/simple;
+	bh=pLY8sZAIR+xJsLxLCEF3UqRnizSnJbIl5dgNfr+dGAA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BzOFbWLS/rAbueEoRbKxY7APd8aZpu4ljn5YSP3HN/ws1t1jIrVNp9elT3wQz3wOFxExAfS0K943HQfY25l0/kT6/Dh0kpEkMEAxqHfjkC+8QM9zErv5HSdK72Upm610L44oE3IBMxJX4qti1rwFZJDHij2IkGDBxOXyFJAi8+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AGOftLDs; arc=fail smtp.client-ip=40.107.223.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AGOftLDs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=su5ql1FAaoN7uXC+jkt+hhr4Qv1homabczbNk2SkO9oXUwYVe30ZC5HVCtqS8vDE5IFhOMBDvD4X2/5ZvWEzuKbt3MwoVnaMltiYgM/ggqSPxOzcc4KJOFSu15BN/7x90DZrJYYI0Xi4v2I5W5V652i0ypyk4k1WvVHk0lFcR1BCei3UnCMKMkuDG5h/H/8KK2WQYwwtB/BcDj6GaQBUpb6XwixgFZmR+lkCVpu1UeuAgT7ZHAzA/dIc5mBo9QbhY6IDvbfJbfK76Kl4iWkWfXOj6q9Ayzom+pCV5qGN11y+XoxDVLu6lS0gvftMlL79eOXmcYmV5IhQBXqpoE8OjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pLY8sZAIR+xJsLxLCEF3UqRnizSnJbIl5dgNfr+dGAA=;
+ b=di9JiEtS9EeP5ZtWqZG5XEGw7nfzrKg+hNPk7RjMrjBVrVDp4eZYLa04+8l5eNNULyKOIW7JXwNkOGXzYzFtakFxA9uHC1z4Iq2o2SmmlTXhMk/b/nFptIVLnUte3Uf+Gs7acUSf2PJJ2p/Sncj4gqfrVH1HIsBJnL8UWFIYXUm0g2WvwIC7k30IsvepoMuiEcDHOubUm2e6/kERZ53oEV1uouAUm82krKA5z2hMoJvl7dXCQ+r+8MO9EVHFE4KhBV9Lz/hbYSpAIUICZRAPSjERlCbQDfM7uu0LCN0qQr6PPTxou0Ro+Vf+dBAzHbeBsUbaxG9rMZ5wKCCTxXGQdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pLY8sZAIR+xJsLxLCEF3UqRnizSnJbIl5dgNfr+dGAA=;
+ b=AGOftLDsjYjsIlgCjwQfZky1EC63s5o7mHR4vroY9niyE5ehWhC41EMoWmvxt/cFqdWk3PIxjHaYmxp0OPhItcbPLk07mm4+CLoZbOxbcQkWo4IJe/3m5zq5OAdEWUHLUabZ7Xj9U5z7hVyM9ngFQxn75k4LU0H58SyHYcR6FX4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CH3PR12MB9024.namprd12.prod.outlook.com (2603:10b6:610:176::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Mon, 14 Apr
+ 2025 08:59:46 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8632.025; Mon, 14 Apr 2025
+ 08:59:46 +0000
+Message-ID: <9598082e-3719-4436-bdc9-15faa19837d0@amd.com>
+Date: Mon, 14 Apr 2025 10:59:41 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA addresses.
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
+ <09a5beeb-bae3-4a00-9aff-66adf68064e6@amd.com>
+ <20250410214307.361e373f@windsurf>
+ <b596c9af-c0e3-4557-b45a-462a33179235@amd.com>
+ <60e2d844-418a-4bde-b6ef-76d10448d5ec@bootlin.com>
+ <45bbee88-0446-4773-a4b6-d19a1747c43f@amd.com>
+ <20250414101729.598c1422@windsurf>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250414101729.598c1422@windsurf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR3P281CA0017.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1d::20) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 4x5p8KcGYi6M9WbulcPqMSRP6arYfMyV
-X-Proofpoint-GUID: 4x5p8KcGYi6M9WbulcPqMSRP6arYfMyV
-X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=67fcce2d cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=ID6ng7r3AAAA:8 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=DEdtFxlGgKspwUSy9V0A:9 a=AkheI1RvQwOzcTXhi5f4:22
- a=FdTzh2GWekK77mhwV6Dw:22
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0 clxscore=1011
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504140064
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH3PR12MB9024:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d2af5e7-9bd7-4838-b11a-08dd7b32b42d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UjlZbEVuMUxldEZtSzVEdzVBdFhBSzJ3UzJzQThUMUY4UWd2ZC8vZGw0bHJo?=
+ =?utf-8?B?UkxqUzVLTVBrN2VIKzJod3l5bUtzNmtSNURYOGxCb0tEK0Y4d25kRkc2elFs?=
+ =?utf-8?B?eEVHaVQyUzZsZ0Zac1VZOUVzU3dtbjQxMW9yQVVOajdqNndQR0F1Tzg0RUZZ?=
+ =?utf-8?B?RW9rbUwyZVNnZGZTT01QdU9aRGtSdkI4bHE0Ty9ybmpEbm5DQ3pFclBNZUE1?=
+ =?utf-8?B?UDZxVDlXTVFXZlJVNERLY1ZoSGxuUHFOUzZ3SEZIbTNDbkRSUVAwS05kOTN1?=
+ =?utf-8?B?OVNjbFdHTVI5SVdpUjEyRFE2VVAvMzk1VHlMQkQxNVRtTnU1cG5wcnRUMzha?=
+ =?utf-8?B?VWNNT2dWeUMrVUV3UGFmc2dGSUhIV2QyWldnR2JhclJ1a0NzZWtWYjQ1M2hI?=
+ =?utf-8?B?OVZpb0RBYkNndUdvcWxYeXdsVmRMVGI5UHg3aUx0WWlKV3JPejVxcEsyVVBU?=
+ =?utf-8?B?anhMUmNKbW9VWWYyMlJ3QVlMVTVYT0xWRUhQVU1VcEFUMVpiTEJBNlFjUFRw?=
+ =?utf-8?B?K3Y2OFJ5OHNpb3BvcW9WTGUwanBmd1JsTUpTSlI5UVBsV0tnOEJVSUlQUFl6?=
+ =?utf-8?B?aEtsZlU0cGFHSng5dmEvZzdBRHhYWnNsbE1LdVRueXBJMXFCazlqbDdqV1Y2?=
+ =?utf-8?B?bFp6Y3c1WkZyN3JDd1JYTVpCZzFubzJmRVFzUGhWcHk4MW9hVnFxT3Z4MnV5?=
+ =?utf-8?B?R05JV1g1WUxhMUZxOGtCdWppdkpFWDFNai9KMDBHWXZ1OWRNVnBZRG5qZVMv?=
+ =?utf-8?B?VEpsV011aFNYYWxxejhGcFRFdkVkbjBURnJvQU5WVkRYUzN0MFNyV0tnbDY2?=
+ =?utf-8?B?bXhLZ0ErUVRPcWdSM2R3YXlxTjUzek1za0ZPaHc3L2twcXNJQ0hnVkVsUkM3?=
+ =?utf-8?B?SGpjS3RuQThvZW9YRTVDeUZHQ2tNdHpvby9aeG50d1FQUXB1RlFxOVFuWXpM?=
+ =?utf-8?B?Zm5mbFBDRjJZd1dkcUlPbDlrN3JmdDRhSUExWU5ocnU2MFNFNXI3MUJHelB6?=
+ =?utf-8?B?ak82TE84Qlg2eUhwOTFjTm9QYklMekJkQURLL3ZJakgxQ1ozTTJhU1VET29X?=
+ =?utf-8?B?K1JCUU9HQ2ZYbFdIa3FFQ1lJYmQ4RVVzLzFQeGFtNDh0L1gxc1R0YU1QcVJ1?=
+ =?utf-8?B?KzJZNXdkYitUMkhIWVdHWFplWDFicWZ0QTZGWS9VM0ttU0djazJQRWlrUkR5?=
+ =?utf-8?B?bmljcjFTY0RwUTJFZk5aMDFRRjlVd0pJUlpOakxVUHh3eVd2QWYvYmRrY3FJ?=
+ =?utf-8?B?N2M4bE5XT3dFcTE3dW5vbE9WazhPaVcvcTNLdjRVQjlKRUtmOGhvVno1UVdj?=
+ =?utf-8?B?VVppajJzeVIzWGxyR1RMMUkvR3ZKNzNCbStlcU1FdnZCM1R2NkxMQ3dhQTVp?=
+ =?utf-8?B?VWxwQXp6azlDWlJuNUlSa3NkOGplMklsbVZ0ME1sRndyUjZGc2tqbjhGbG9X?=
+ =?utf-8?B?bzhOUllsRGJSZFVia2V5R2I0aGZJanI2bjVrTTNMd0x1RFlGcVUxcUhWQkp3?=
+ =?utf-8?B?WnhGeUxTUm5SQ3c0c25WQTFVNytGQ1RQSFAxOVdUdVg4MzVBT3o4ck43M2RU?=
+ =?utf-8?B?ek56dWVWNEc4NkVaM2FFWlg1Y1M2ZThjWUY3SmVYUXc4RkthZXJpdWV1V3pi?=
+ =?utf-8?B?OW5QWDdZeFV6S3R5TERFRkEyQnVyN0ZZOVI1S25LRm01T0hpRmJqVkltOVBz?=
+ =?utf-8?B?Qlh0TzdFV1ZrZG8waGxEbk1ubXAzMzh5L3JHcitSak51RFBOMEF4NHFKZnha?=
+ =?utf-8?B?SzNYcUxUOGVWUXN3N2lVM3ZCWjlka2dVWVBtTWpQT0RLNzlESGNQdTZmZWQw?=
+ =?utf-8?B?Y0cyQ0RCWDNmWkJFdGRIRGhBNDQ4UG5tNk10KzVZdU1NK3JsNEVhRmtzdHV0?=
+ =?utf-8?B?bDhJMDJHSlZnRHloNEZYSll5MHBnMFBTQUFIeFV3RWpWRWswV1RRdFZkbTZY?=
+ =?utf-8?Q?TSJXuME87c4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b3VBWHQ5V0xVckVYVE5leVVpNmhEL3ZUeFVqSjExVC9LcGNXMXpGZ2xia1JB?=
+ =?utf-8?B?Nit4bDh5eUY3VHp0R3I4QXhvS1BBcVNsTThTZHQ5NEd0d0FjdEFJRCtubm1j?=
+ =?utf-8?B?dmc5eFpLL24vTkJoNXFES1pvU2FEV1NCam1nNW41NG5zZ2Vnc2NqdGo4bXZC?=
+ =?utf-8?B?bzB2bFBsWW9FVXgzMXpDYlFIUWM2N3JoeHp4OVRranE4clZqaUlwcUliSTdZ?=
+ =?utf-8?B?dWxiUGhYbTBZUXBQcTN6Q0RHbnFoenNJOVMzd3ZpNVlNRi81cXc1ditTczJO?=
+ =?utf-8?B?dWpMK2hZMUkzSGU4Vy9JcisxaG5CTzFSN3BNT3ErYzVzM2ZzYjlITU10aE5S?=
+ =?utf-8?B?eEx6UVBaN21Zd25LdXo3SnYwN2VJSitrWmthSmRkOHhwT2dacFoxTG1EQU5U?=
+ =?utf-8?B?dUtWL29aaTZKTmhsS0dyR2ZoSjRIMC9LTXBJSFZ5aXoxeXp0Vy9TVGZhWG9l?=
+ =?utf-8?B?S3QyblNjZmZYaXFaV1UyVXBlVkVTcUFETVJjUEdnRmpQMlFpcmZRNmx5Ky9a?=
+ =?utf-8?B?dkJpb2pQRElhMHBiRGxZWloyTEpUcGkwaW9oQVdLRWE4cFNDcU5BZVlvOVlj?=
+ =?utf-8?B?OXFiOGU0MjE2VWVBVVcyV2IxWXc1Zmt2S2EvZkhtL2psWjJEZk5Cdk5rQTEw?=
+ =?utf-8?B?dFNjSERVajE0Yy9qVmphZ2hPdkc0QnV3MTFZdmk1YW1rc3NzamtRL2crRytL?=
+ =?utf-8?B?b3NjeTJuNHVsOU1ZSlkzZjJaOU95dFZvYTl3WXUwSHNQWXVvWG5COEtXMHg0?=
+ =?utf-8?B?Rko0SkNwai9vQVdFSFFjOERhTGFtYStkSEZSVG5uSlhDazJYL1lYWUJKeitE?=
+ =?utf-8?B?Z0tXR3FyQ0dnRHNldHZ1aEpzQ2UwQ2ovQ3FqTHdzRE1tRExqVXR1a3ErWUJv?=
+ =?utf-8?B?VGRJekZ4eHMvUGlQbnI4Y250TFEyeTdQbmp5ck1qVW1EcDFXT3hPekpLSDNp?=
+ =?utf-8?B?K3B3ZnFwWWd3MjZFQUVVeEJCdjVRbVhiMUtDQWcxTG5TaGpNN1RObWY4N091?=
+ =?utf-8?B?MWVHSCtnaC81Z1VVU0JVV1RHeDdSWndTVGhielBUdHAvcWxkSzZlK25iaWhz?=
+ =?utf-8?B?VE9tSksvbGNGc1BxTUlwU3MrM3NsUG10WTZXRWU5aklTdkZhdmo4aVNwb1Uv?=
+ =?utf-8?B?WUpxbXlDNDRVYVRlQi94WEtBU2NPS2pMY1JnRkJYbTIyY1Y5by9PcjFNbDc0?=
+ =?utf-8?B?TjlMZ3IySVcxa3dsZDM5ZlE5NjVJUlBpbExFaER3MGhCMmozK1JVcFR6VWVE?=
+ =?utf-8?B?Z21sTGkzT0l6d1lQeHVnRVNOZkYxSXRjd1JzZzArWldURklRbzRjUzVSczBU?=
+ =?utf-8?B?VnpneWtzLy82Z3B0UVYzV0JhaHRMOFVKaURJenlXa1pKSHovTXl6d08xRzA0?=
+ =?utf-8?B?REZnUTVPd2JpNmp2RlhYSkh3d1J4TmxMdWgwSjZrVU9TM3JzaGVmdTEvdUFs?=
+ =?utf-8?B?bU95TzJGT2lNdjBtNVQzd2xJOVEyTUdtajRTcThDdkJBeCswUW5SWlBsa014?=
+ =?utf-8?B?bGNGYi9FdXRUUTlzQzVUdGp4L0ZUK2llVG1YUDNDclVFVkpLd3FDR0haU295?=
+ =?utf-8?B?dWNCc25VbGRRRXpJSEZrYlAvc2hKNnRBeEZGd3JmTFFyd3QyTFhDbk5lcVho?=
+ =?utf-8?B?dmwveHZyM0U2ZE5uUHBCSlFOVWZBZUhPVS9ML3ZUemJHL3V1b2IrekNTZVRv?=
+ =?utf-8?B?MWx6N1l0TlYwOTJXYmludUpuSWFCbHgyZVR1SWs2SDl5Zy81TTZibEhJUCtN?=
+ =?utf-8?B?YVV1dG9GL2xMWjNqd2dGMmM1UHQ5OFpWcE8wUkd2d1RZcEYwZ2pjOXp2cW81?=
+ =?utf-8?B?M1A4bTZmS2dYQjVPNWR2RXNocDNvYkQwVWNwRXJmTEpzcFYwZU9WenN6S2g0?=
+ =?utf-8?B?YlZQS1VxWXRWK3FiRll0RWgwYnNsMlhpL0Z6Y1Z0dWlIQkJ5WFZkUXd5RkQ4?=
+ =?utf-8?B?SC9Kd050cnNVbkh4SlZxYXNjTWx4ejkzenN0Z3d5UUs3d1MyK2J6ZE9ERHdT?=
+ =?utf-8?B?VDYyZVYyVG9EbXByNnR4S0JXYnlqMk1WZFhSYVdvTkdDU051T0Y1Y0sxMnlx?=
+ =?utf-8?B?NC9JOTY3R2RlMjhyV1VkRlM5b05ZRkdMMnZaMEZySURTN0dkRGorb1VJVHpi?=
+ =?utf-8?Q?0lok=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d2af5e7-9bd7-4838-b11a-08dd7b32b42d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 08:59:46.0717
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: atV14Xthnv7lxN+3zzLcy7pK/nk+b21PhhIMfAsKPsvh5e4GRzGNWDAZFxy07Tit
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9024
 
-From: Enzo Matsumiya <ematsumiya@suse.de>
+Am 14.04.25 um 10:17 schrieb Thomas Petazzoni:
+> Hello Christian,
+>
+> On Fri, 11 Apr 2025 14:41:56 +0200
+> Christian König <christian.koenig@amd.com> wrote:
+>
+>> But anyway please note that when you want to create new UAPI you need
+>> to provide an open source user of it. E.g. link to a repository or
+>> something similar in the covert letter should do it.
+> Could you clarify what is the "reference" user-space user of UIO that
+> exists today?
 
-commit b0abcd65ec545701b8793e12bc27dc98042b151a upstream.
+I honestly don't know. I have never looked into UIO before this patch set arrived.
 
-Doing an async decryption (large read) crashes with a
-slab-use-after-free way down in the crypto API.
+What I mean is that the general rule to justify adding UAPI to the Linux kernel is that you need to have an open source user of that UAPI.
 
-Reproducer:
-    # mount.cifs -o ...,seal,esize=1 //srv/share /mnt
-    # dd if=/mnt/largefile of=/dev/null
-    ...
-    [  194.196391] ==================================================================
-    [  194.196844] BUG: KASAN: slab-use-after-free in gf128mul_4k_lle+0xc1/0x110
-    [  194.197269] Read of size 8 at addr ffff888112bd0448 by task kworker/u77:2/899
-    [  194.197707]
-    [  194.197818] CPU: 12 UID: 0 PID: 899 Comm: kworker/u77:2 Not tainted 6.11.0-lku-00028-gfca3ca14a17a-dirty #43
-    [  194.198400] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-3-gd478f380-prebuilt.qemu.org 04/01/2014
-    [  194.199046] Workqueue: smb3decryptd smb2_decrypt_offload [cifs]
-    [  194.200032] Call Trace:
-    [  194.200191]  <TASK>
-    [  194.200327]  dump_stack_lvl+0x4e/0x70
-    [  194.200558]  ? gf128mul_4k_lle+0xc1/0x110
-    [  194.200809]  print_report+0x174/0x505
-    [  194.201040]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-    [  194.201352]  ? srso_return_thunk+0x5/0x5f
-    [  194.201604]  ? __virt_addr_valid+0xdf/0x1c0
-    [  194.201868]  ? gf128mul_4k_lle+0xc1/0x110
-    [  194.202128]  kasan_report+0xc8/0x150
-    [  194.202361]  ? gf128mul_4k_lle+0xc1/0x110
-    [  194.202616]  gf128mul_4k_lle+0xc1/0x110
-    [  194.202863]  ghash_update+0x184/0x210
-    [  194.203103]  shash_ahash_update+0x184/0x2a0
-    [  194.203377]  ? __pfx_shash_ahash_update+0x10/0x10
-    [  194.203651]  ? srso_return_thunk+0x5/0x5f
-    [  194.203877]  ? crypto_gcm_init_common+0x1ba/0x340
-    [  194.204142]  gcm_hash_assoc_remain_continue+0x10a/0x140
-    [  194.204434]  crypt_message+0xec1/0x10a0 [cifs]
-    [  194.206489]  ? __pfx_crypt_message+0x10/0x10 [cifs]
-    [  194.208507]  ? srso_return_thunk+0x5/0x5f
-    [  194.209205]  ? srso_return_thunk+0x5/0x5f
-    [  194.209925]  ? srso_return_thunk+0x5/0x5f
-    [  194.210443]  ? srso_return_thunk+0x5/0x5f
-    [  194.211037]  decrypt_raw_data+0x15f/0x250 [cifs]
-    [  194.212906]  ? __pfx_decrypt_raw_data+0x10/0x10 [cifs]
-    [  194.214670]  ? srso_return_thunk+0x5/0x5f
-    [  194.215193]  smb2_decrypt_offload+0x12a/0x6c0 [cifs]
+In other words for UIO this means that you *can't* do things like exposing some kernel functionality like DMA-buf through UIO and then write a binary only driver on top of it.
 
-This is because TFM is being used in parallel.
+Regards,
+Christian.
 
-Fix this by allocating a new AEAD TFM for async decryption, but keep
-the existing one for synchronous READ cases (similar to what is done
-in smb3_calc_signature()).
-
-Also remove the calls to aead_request_set_callback() and
-crypto_wait_req() since it's always going to be a synchronous operation.
-
-Signed-off-by: Enzo Matsumiya <ematsumiya@suse.de>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[In linux-5.15, dec and enc fields are named ccmaesdecrypt and ccmaesencrypt.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- fs/cifs/smb2ops.c | 48 +++++++++++++++++++++++++++--------------------
- fs/cifs/smb2pdu.c |  6 ++++++
- 2 files changed, 34 insertions(+), 20 deletions(-)
-
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 7bce1ab86c4d..da9305f0b6f5 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -4541,7 +4541,7 @@ smb2_get_enc_key(struct TCP_Server_Info *server, __u64 ses_id, int enc, u8 *key)
-  */
- static int
- crypt_message(struct TCP_Server_Info *server, int num_rqst,
--	      struct smb_rqst *rqst, int enc)
-+	      struct smb_rqst *rqst, int enc, struct crypto_aead *tfm)
- {
- 	struct smb2_transform_hdr *tr_hdr =
- 		(struct smb2_transform_hdr *)rqst[0].rq_iov[0].iov_base;
-@@ -4552,8 +4552,6 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 	u8 key[SMB3_ENC_DEC_KEY_SIZE];
- 	struct aead_request *req;
- 	u8 *iv;
--	DECLARE_CRYPTO_WAIT(wait);
--	struct crypto_aead *tfm;
- 	unsigned int crypt_len = le32_to_cpu(tr_hdr->OriginalMessageSize);
- 	void *creq;
- 
-@@ -4564,15 +4562,6 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 		return rc;
- 	}
- 
--	rc = smb3_crypto_aead_allocate(server);
--	if (rc) {
--		cifs_server_dbg(VFS, "%s: crypto alloc failed\n", __func__);
--		return rc;
--	}
--
--	tfm = enc ? server->secmech.ccmaesencrypt :
--						server->secmech.ccmaesdecrypt;
--
- 	if ((server->cipher_type == SMB2_ENCRYPTION_AES256_CCM) ||
- 		(server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
- 		rc = crypto_aead_setkey(tfm, key, SMB3_GCM256_CRYPTKEY_SIZE);
-@@ -4611,11 +4600,7 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 	aead_request_set_crypt(req, sg, sg, crypt_len, iv);
- 	aead_request_set_ad(req, assoc_data_len);
- 
--	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
--				  crypto_req_done, &wait);
--
--	rc = crypto_wait_req(enc ? crypto_aead_encrypt(req)
--				: crypto_aead_decrypt(req), &wait);
-+	rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
- 
- 	if (!rc && enc)
- 		memcpy(&tr_hdr->Signature, sign, SMB2_SIGNATURE_SIZE);
-@@ -4704,7 +4689,7 @@ smb3_init_transform_rq(struct TCP_Server_Info *server, int num_rqst,
- 	/* fill the 1st iov with a transform header */
- 	fill_transform_hdr(tr_hdr, orig_len, old_rq, server->cipher_type);
- 
--	rc = crypt_message(server, num_rqst, new_rq, 1);
-+	rc = crypt_message(server, num_rqst, new_rq, 1, server->secmech.ccmaesencrypt);
- 	cifs_dbg(FYI, "Encrypt message returned %d\n", rc);
- 	if (rc)
- 		goto err_free;
-@@ -4730,8 +4715,9 @@ decrypt_raw_data(struct TCP_Server_Info *server, char *buf,
- 		 unsigned int npages, unsigned int page_data_size,
- 		 bool is_offloaded)
- {
--	struct kvec iov[2];
-+	struct crypto_aead *tfm;
- 	struct smb_rqst rqst = {NULL};
-+	struct kvec iov[2];
- 	int rc;
- 
- 	iov[0].iov_base = buf;
-@@ -4746,9 +4732,31 @@ decrypt_raw_data(struct TCP_Server_Info *server, char *buf,
- 	rqst.rq_pagesz = PAGE_SIZE;
- 	rqst.rq_tailsz = (page_data_size % PAGE_SIZE) ? : PAGE_SIZE;
- 
--	rc = crypt_message(server, 1, &rqst, 0);
-+	if (is_offloaded) {
-+		if ((server->cipher_type == SMB2_ENCRYPTION_AES128_GCM) ||
-+		    (server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
-+			tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
-+		else
-+			tfm = crypto_alloc_aead("ccm(aes)", 0, 0);
-+		if (IS_ERR(tfm)) {
-+			rc = PTR_ERR(tfm);
-+			cifs_server_dbg(VFS, "%s: Failed alloc decrypt TFM, rc=%d\n", __func__, rc);
-+
-+			return rc;
-+		}
-+	} else {
-+		if (unlikely(!server->secmech.ccmaesdecrypt))
-+			return -EIO;
-+
-+		tfm = server->secmech.ccmaesdecrypt;
-+	}
-+
-+	rc = crypt_message(server, 1, &rqst, 0, tfm);
- 	cifs_dbg(FYI, "Decrypt message returned %d\n", rc);
- 
-+	if (is_offloaded)
-+		crypto_free_aead(tfm);
-+
- 	if (rc)
- 		return rc;
- 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index bd7aeb4dcacf..2b2c3330ba96 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -1063,6 +1063,12 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
- 		else
- 			cifs_server_dbg(VFS, "Missing expected negotiate contexts\n");
- 	}
-+
-+	if (server->cipher_type && !rc) {
-+		rc = smb3_crypto_aead_allocate(server);
-+		if (rc)
-+			cifs_server_dbg(VFS, "%s: crypto alloc failed, rc=%d\n", __func__, rc);
-+	}
- neg_exit:
- 	free_rsp_buf(resp_buftype, rsp);
- 	return rc;
--- 
-2.34.1
+>
+> Thomas
 
