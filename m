@@ -1,133 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B5225A32D;
-	Mon, 14 Apr 2025 08:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25371258CD0;
+	Mon, 14 Apr 2025 08:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620753; cv=none; b=tpkb012BQkykIssfFf7dAgKO4Fkc9k4q5R2WYGhgXB01l+efHn+zPsWvL94fix6hadfrI7oTVtQXqu2a0MS1X6oFnbh/dAMYyRIsPsV6uD45XydGp7Agamw9I4ZVOtCWJuUUQTOnUIAa8/aeHbsx3u5WfXnmqHRtcRERdhdXBR4=
+	t=1744620774; cv=none; b=Z+zHUK7qYksCfnRYlGmTy5A2frV5zpFirb4iC/Npn7LZLISk7R/mUnWcxkqdN3DECuS1rM7TJN3kFAKSG50jQLjkiqsU6lVC3hwjlRBdQE7Lk2hvRH+jcc4TgUdSV+KRoUYJwlOfYrMKJErHAOlaIQYQ6oIcbz+wON5Na+RKwNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620753; c=relaxed/simple;
-	bh=a+UyqqBZ3qHlcRVEHyB9KT3Hd3Ym9c5aYmE1OsjWZ/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uZdIzGl5/zH8pils7v8imMJvIP5r9eB5g9ItkBYmjpUOrgo8qrhnlOV/Cuw0StxdQ5NhkQg1Q5RYAPoOK7hUUqaThg4liExza0P/k2l0Z844IzYagJRE87ScwaDj9QflvA6yZMbh/bqitFLT/5kqulVOSR2t5FIh6MakANl8oaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JFcGHdyZ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744620774; c=relaxed/simple;
+	bh=InbklK980sc2Hl5l2LdpFp3sTcyRxx81UWaVcsxBvAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k59+oQ27NgbFAU/1g1FBSR0zYOUUKFu/3h45XMju8FvRN3ipZZYkjObP78O3zp3n4qgGz1OgP52ZemOHscHOrskoVqBJUvL6naVaDcVd78x5J/qcKkvQKDmIYsQDHYjPf8i+Fu2cXNCsZHyNGlxFJ6NEBYVx25EfIYS8YQgokmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ndvzx4Qp; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JFcGHdyZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744620752; x=1776156752;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a+UyqqBZ3qHlcRVEHyB9KT3Hd3Ym9c5aYmE1OsjWZ/o=;
-  b=JFcGHdyZi/E8OaTQp6gT0wLg1JuMzXTEOySGLewRxCWXZ8/xmxPZj51z
-   HxY5QhFUWK7iI3rdU5iuyiCwY1yWHDJLpDo9bKRhN6hnMBC91yhZNYVuY
-   bkuMdWClSm7VdXOdZKYCprLRkkw7Ja6nUVbjtqhtj9LcOSMT4o9NdW4wT
-   SfPdrEDPDMvu55SbjBsyLf6VVtt1XWVptpusYaXGF63s1jlrYOuvTfsXH
-   DlrXAa7bvmeYqDUtb+ltukVNekbq/wXXPtRdZTU2XT7kTP+N5EhygzZJF
-   417dETKDU56mc2iMV7Geo9gDL3qP0KmTvr0Hu6X05CWi07X/VNoCm2VIa
-   w==;
-X-CSE-ConnectionGUID: jwBu1aZnTCauMZlsPNHosA==
-X-CSE-MsgGUID: jW5SVFaUT+qtCEepCsLW/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="57464458"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="57464458"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:52:32 -0700
-X-CSE-ConnectionGUID: 2dtfH+mQTLaHmAaeO+td4A==
-X-CSE-MsgGUID: T/Ie1eAGQXOG0fdRoMIkjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="160714477"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:52:29 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 81F9211F871;
-	Mon, 14 Apr 2025 11:52:26 +0300 (EEST)
-Date: Mon, 14 Apr 2025 08:52:26 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	hverkuil@xs4all.nl, u.kleine-koenig@baylibre.com,
-	ricardo.ribalda@gmail.com, bingbu.cao@linux.intel.com,
-	hao.yao@intel.com
-Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
-Message-ID: <Z_zMyodMQoH6EtSR@kekkonen.localdomain>
-References: <20250411082357.392713-1-dongcheng.yan@intel.com>
- <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
- <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
- <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
- <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ndvzx4Qp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744620770;
+	bh=InbklK980sc2Hl5l2LdpFp3sTcyRxx81UWaVcsxBvAs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ndvzx4QpjvxRLVd/JpqTOQGcOTkRKjRxNoUTlHu+HJb/APV2XF33Fp6Rt3g72youU
+	 JhVm5LhxHUFxGB/or1l5DQDcfJrKltBQhY8EErlj6nodXX7b3Kfo96rv2TScFzUwT4
+	 1Wvqil1NVJFZLoFnMnKAACV+ZDVaQvfMb0cysSJCWJYnxzX2+AlZmxrnM3o5o/xQHh
+	 eIeI6MHhV7uKdCX5AWoA00QVMBsch0NohzOaJznNCmMqkhV26ArInXUuKQYJ7BKuJc
+	 TIm3W3qpMFDKPpUPWhokZV63FwLY/yq3IStFoSMqeM8+bE6yeKexpRm3CBboUz2vkX
+	 WLYKA21xJ0Qiw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D406B17E0702;
+	Mon, 14 Apr 2025 10:52:48 +0200 (CEST)
+Message-ID: <bc6e0c12-2af8-4608-a05a-3d04209a4325@collabora.com>
+Date: Mon, 14 Apr 2025 10:52:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 16/23] drm/mediatek: mtk_hdmi: Split driver and add
+ common probe function
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>,
+ "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
+ <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
+ <jitao.shi@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
+ =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
+References: <20250409131318.108690-1-angelogioacchino.delregno@collabora.com>
+ <20250409131318.108690-17-angelogioacchino.delregno@collabora.com>
+ <b9eafca53149fec817433da3d10bf06a6c96f959.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <b9eafca53149fec817433da3d10bf06a6c96f959.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Dongcheng,
-
-On Mon, Apr 14, 2025 at 04:40:26PM +0800, Yan, Dongcheng wrote:
-> Hi Andy,
+Il 11/04/25 10:18, CK Hu (胡俊光) ha scritto:
+> On Wed, 2025-04-09 at 15:13 +0200, AngeloGioacchino Del Regno wrote:
+>> External email : Please do not click links or open attachments until you have verified the sender or the content.
+>>
+>>
+>> In preparation for adding a new driver for the HDMI TX v2 IP,
+>> split out the functions that will be common between the already
+>> present mtk_hdmi (v1) driver and the new one.
+>>
+>> Since the probe flow for both drivers is 90% similar, add a common
+>> probe function that will be called from each driver's .probe()
+>> callback, avoiding lots of code duplication.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   drivers/gpu/drm/mediatek/Kconfig           |  11 +-
+>>   drivers/gpu/drm/mediatek/Makefile          |   1 +
+>>   drivers/gpu/drm/mediatek/mtk_hdmi.c        | 542 +--------------------
+>>   drivers/gpu/drm/mediatek/mtk_hdmi_common.c | 426 ++++++++++++++++
+>>   drivers/gpu/drm/mediatek/mtk_hdmi_common.h | 188 +++++++
+>>   5 files changed, 633 insertions(+), 535 deletions(-)
+>>   create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+>>   create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.h
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
+>> index e47debd60619..994b48b82d44 100644
+>> --- a/drivers/gpu/drm/mediatek/Kconfig
+>> +++ b/drivers/gpu/drm/mediatek/Kconfig
+>> @@ -30,9 +30,18 @@ config DRM_MEDIATEK_DP
+>>          help
+>>            DRM/KMS Display Port driver for MediaTek SoCs.
+>>
+>> +config DRM_MEDIATEK_HDMI_COMMON
+>> +       tristate
+>> +       depends on DRM_MEDIATEK
+>> +       select DRM_DISPLAY_HDMI_HELPER
+>> +       select DRM_DISPLAY_HELPER
+>> +       select SND_SOC_HDMI_CODEC if SND_SOC
+>> +       help
+>> +         MediaTek SoC HDMI common library
+>> +
+>>   config DRM_MEDIATEK_HDMI
+>>          tristate "DRM HDMI Support for Mediatek SoCs"
+>>          depends on DRM_MEDIATEK
+>> -       select SND_SOC_HDMI_CODEC if SND_SOC
+>> +       select DRM_MEDIATEK_HDMI_COMMON
+>>          help
+>>            DRM/KMS HDMI driver for Mediatek SoCs
+>> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+>> index 43afd0a26d14..78cf2d4fc85f 100644
+>> --- a/drivers/gpu/drm/mediatek/Makefile
+>> +++ b/drivers/gpu/drm/mediatek/Makefile
+>> @@ -21,6 +21,7 @@ mediatek-drm-y := mtk_crtc.o \
+>>
+>>   obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+>>
+>> +obj-$(CONFIG_DRM_MEDIATEK_HDMI_COMMON) += mtk_hdmi_common.o
 > 
-> On 4/14/2025 4:11 PM, Andy Shevchenko wrote:
-> > On Mon, Apr 14, 2025 at 03:52:50PM +0800, Yan, Dongcheng wrote:
-> >> On 4/11/2025 4:33 PM, Hans de Goede wrote:
-> >>> On 11-Apr-25 10:23 AM, Dongcheng Yan wrote:
-> > 
-> > ...
-> > 
-> >>>> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
-> >>>> +		*con_id = "hpd";
-> >>>> +		*gpio_flags = GPIO_LOOKUP_FLAGS_DEFAULT;
-> >>>
-> >>> This looks wrong, we really need to clearly provide a polarity
-> >>> here since the ACPI GPIO resources do not provide one.
-> >>>
-> >> I tested gpio_flags=GPIO_LOOKUP_FLAGS_DEFAULT/HIGH/LOW, the lt6911uxe
-> >> driver can pass the test and work normally.
-> > 
-> > I doubt you tested that correctly. It's impossible to have level triggered
-> > event to work with either polarity. It might be also a bug in the code lurking
-> > somewhere, but it would be unlikely (taking into account amount of systems
-> > relying on this).
-> > 
-> > Is it edge triggered event?
-> > 
+> The whole patch looks good to me.
+> But make common part to a module looks a little bit more modularized.
+> Let things to be simple, I would like the whole MediaTek hdmi driver be a single module.
+> For MediaTek drm driver, it is already broken to mediatek-drm, hdmi, dp modules.
+> Maybe someday dsi or dpi would be broken to modules.
+> So I would like hdmi to be a single module which include v1, v2 and common part.
+> If someday we need to optimize code size, then send patch to break hdmi module.
 > 
-> It is an edge triggered event in lt6911uxe. In order to better adapt to
-> other uses, "hpd" is meaningful to specify a polarity here.
-> 
-> In lt6911uxe, GPIO "hpd" is used as irq, and set irq-flag to
-> IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT. So no matter
-> rising or falling, driver can work normally.
-> "
-> ret = request_threaded_irq(gpiod_to_irq(lt6911uxe->irq_gpio),	NULL,
-> lt6911uxe_threaded_irq_fn, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
-> IRQF_ONESHOT, NULL, lt6911uxe);
-> "
 
-include/linux/gpio/machine.h:
+Hello CK,
 
-	GPIO_PERSISTENT                 = (0 << 3),
-...
-	GPIO_LOOKUP_FLAGS_DEFAULT       = GPIO_ACTIVE_HIGH | GPIO_PERSISTENT,
+The HDMIv1 and HDMIv2 drivers are handling two *very* different IPs that can never
+be *both* present at the same time on one SoC: having one Kconfig for both would
+not only add unnecessary bloat (especially on older SoCs!!), but would actually be
+wrong.
 
-I.e. you effectively have GPIO_ACTIVE_HIGH there.
+Also, please be aware that old LK bootloaders (smartphones/tablets) have a very
+limited RAM carveout for kernel + ramdisk that should be around 8MB if I recall
+correctly.
 
-Btw. no need to cc this set to stable@vger.kernel.org, I've dropped it from
-the cc list. See Documentation/process/submitting-patches.rst .
+Remember as well that these devices *cannot* run different bootloaders as those
+are only able to run *OEM signed* binaries in the early bootchain, so replacing
+the bootloader is not a viable solution.
 
--- 
+It's true, people can (and most probably want to and will) build this as a module
+but, in my opinion, freedom should be given to have the HDMI driver built-in even
+in these cases - and that's another good reason to keep them split.
+
+This is done to avoid being hostile to old platforms, in full upstream spirit.
+
 Regards,
+Angelo
 
-Sakari Ailus
+> Regards,
+> CK
+> 
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_cec.o
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi.o
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi_ddc.o
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> 
+
