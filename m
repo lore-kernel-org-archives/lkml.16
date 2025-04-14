@@ -1,112 +1,119 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0D8C13D;
-	Mon, 14 Apr 2025 09:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3580C13D;
+	Mon, 14 Apr 2025 09:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622675; cv=none; b=Qi3+XMKXt4q0FoPd572ehnZb+GiBP4OoCvihaY0/I73uPTTCwFP6LRih+h73uwp0VGGWEAcGN+I0PrzJNKk0RHxyC1HOrfeI19dUOYjBW7ucryQxhPV4BadvVJlax2S/jjX7f1Dm037pSVtcKTkGSGkft5po3haOnF0YFGezd3Y=
+	t=1744622696; cv=none; b=la7QEUN2FeQpDTzvLZ+8Zn0LDblHNUTSBbNsMEkbPxmitUkABNyMQKeAbICUmpVgjn1gEVa33HNbpMeiE6RE0GEwgRDVwn3ocX0mZjeRFaHngl4tKLRBIddN699OUXBKkI2y2SpaoGtVavSjql7mQ0dTamakj8qcNxTkAuJ35z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622675; c=relaxed/simple;
-	bh=agTCgMoSAjEhU2SJdZ9IyLmvMRHBWqSCUMYVX1x+tbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mhe0YpFHRupgwC1xRkI4YRJIbSWUmVZT+64d4nz5JEQCZqDK8+JmUhBkxAWZPYQTkgxu0edH6kFudmGa9Q4AVWY0Nq+B/I17i2N7FX45hQb0MqE8GFGQtv04DphVVunLgVvVjW+978donkuxLPn1q5LTnLrFAsxypAVKFoK9Ibk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSOjll3b; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744622696; c=relaxed/simple;
+	bh=cuPUt25ydCoI90Mo7CFpmSw+zuTe2HfgUcXwmGgJgJQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=m9Dvc4ioAGD1be8VJGykmbnkJb0tfnFyLFj96dZk0ggdOS7LpVEE/SFaxi5UMhfNsGuKRDc4u8udRZ/3mkk9FR2ye4tn9mdfJ+Uv055JSYuvV3kFTDX79aRynVcFINLzcfT+5Td291i6mKHl+5UhoInDAoEbw/PHpT8hDN0hyq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XD9uxQEP; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSOjll3b"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so34355585e9.3;
-        Mon, 14 Apr 2025 02:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744622672; x=1745227472; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xzue1Jqf/6PZMYk21IFwYXYNC/Y+Ds8648fAr55/H5I=;
-        b=WSOjll3bfqGOL/IjTDFaKJFg901NdMT5hQivaNKEqqQPc07u6Sj5/GWM29PKI92WUR
-         T8QJDW74rrtja9rQ7WDjzEoHOMFcXQnufsSBQjXP+9oxDcl1DppojYEK84GHWXM3aApk
-         6tMjyLscMu5Req2voS7+EscPuBSAg1Fk1jEieRpQztmgQNxvNcVI7ITWgrXXna22DOBB
-         SOYyPbN04sESDP/djRQcf2KQ+qek5pYAh43Lo0/8MwtEFS8hJjdFNjoXxllCR8bY3ZKS
-         yTgjWFD7vJou3COVixwXC/+WPp/czoeoHeOuMC3tV0vIx8yfxaGx8bHK3W0ct2ILTwgN
-         i3xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744622672; x=1745227472;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xzue1Jqf/6PZMYk21IFwYXYNC/Y+Ds8648fAr55/H5I=;
-        b=kiKxPrsd9wFnPj7F/ivFcb1IXC9jVfncrUkYjl/dWW9YEwrK2OXt1PA9KXGPRx3iKW
-         8dsBWFCTiJlD3D2AZvytuq4iVzp3xo12pG9qKF4bAO63oTwjp63sK0nvNqPmfxNtva/s
-         FGJc7+rIaw43YH1qjQiinPCoyXtoJ21sW+JFla7++o/bX7X40RJLUbWUTh/ExrsldmTv
-         DtqTh6No2PvUdjyLilV0wwaAMeF2r1pxSFHbCrc5i5NRU509DL+EiqLKmfUOdM6TRU0r
-         L978CZsqpoVsAc/QMAbINJpfx6MFHVdcTG3EPeisEy9KM1a+9TNRNz3enHlJAOIHEpU5
-         Z/hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSJRjjKtmScc/MCeQtFM9AoMoyOXteu4OIXyIbNc8K1ilUFPVFcpabB6n+lFk5sT70cPjj0TLadTnrwi2u@vger.kernel.org, AJvYcCVZzMl1j09XT6lyJGn9ucx2qSolIR2pVNesWNZrYT+v/UMYYMWd9zmll7uJbo9kh0xNbgnn6sWGbITn0TLP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr/FwDToINVFzCXNhYiU3chRKl7OrWdxMozdmFLl74ZYxKGTNF
-	C36fvg+vU2m2Sp4AVrYfHTPrv/nZTRP36f96JQtPGKgUQLjSaeDv
-X-Gm-Gg: ASbGncvhDAFsYzK4AeDuX5npZvgt4r1OWJzM2s26+gXM8Psw5eQPWL34apJPXfOngwo
-	miGnyKWTGi6KCTIfeV+D2uje0azgDi7o1fghJ+42YDgmceaV55rSlzsOkpuLZ0/3LG1ai9P+MIh
-	WEdLL2V1M4dzoXwlN/ZiP59zxucWU5kXWsnGqx+GnaJYFzGgpPyvgO5ratjSLU8b0YoSsTPhhGf
-	9tz+LdqJj8GQh+cyfEWO7PFOgpYJoD9VUjUclghcWyNqifrZ4aBahXvY3DjN2c5NoLSu2Za2Wu9
-	bvbizVkH9me5cAYitdSzWtbMIkTr0aGadolmMltRAqMhclXgrHYT
-X-Google-Smtp-Source: AGHT+IHtWY6E+K4K+bXtvTUnA8A+xDFVvz/cd8uuterYyuoV91+43oLtXfRw8mAVEcC4tqjNcP+mAA==
-X-Received: by 2002:a05:600c:46d1:b0:43c:e9f7:d6a3 with SMTP id 5b1f17b1804b1-43f3a93d697mr94168135e9.13.1744622671428;
-        Mon, 14 Apr 2025 02:24:31 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f23572c4esm172954905e9.26.2025.04.14.02.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 02:24:31 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] select: core_sys_select add unlikely branch hint on return path
-Date: Mon, 14 Apr 2025 10:24:26 +0100
-Message-ID: <20250414092426.53529-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XD9uxQEP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BAC1043308;
+	Mon, 14 Apr 2025 09:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744622692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uHxCj/WeuO0V6P+rYLNraNK+W/B4StlcnsBL6N3GDhw=;
+	b=XD9uxQEPOqb9XH3Y8lP0LIktXX66Zjcgrrr02TlP/0pcgaoLtzpbsqyGFrJHxuFsaiaNLo
+	XCfsbd+c6COT9G7i9LIOBvAf2Yz0KF7yAfdpXU6EeeIm/Q9Cu6Hf9clpBPnMbyCDj7OQBf
+	z1S9Q7xvLcls6qTSrmbAKP2WFczvfCOtyPxnkPeuf7XT88+UpmHvLYDC6mOAOmeLv3FVVF
+	DiiF3R+Z0B6owa7XveaS/KmRN729YKFbEwnZBy55MiT2bKAiAwDJNaD40HC/0x0DOnCYYV
+	PLs2VuqnQv6ZOSNMUV5dBnZ91zfSjN3CR57bZ/5KvsvTZL2bMBHcuCbekrrbww==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 14 Apr 2025 11:24:51 +0200
+Message-Id: <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
+Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
+Cc: <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+To: "Chenyuan Yang" <chenyuan0y@gmail.com>, <linus.walleij@linaro.org>,
+ <brgl@bgdev.pl>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250412193153.49138-1-chenyuan0y@gmail.com>
+In-Reply-To: <20250412193153.49138-1-chenyuan0y@gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevvffhofhfjgesthhqredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduteeltdevjedvkeelueejhfdvleeiueetvdfgveffffekueeghffhieduleejveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheptghhvghnhihurghntdihsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtt
+ hhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Adding an unlikely() hint on the n < 0 comparison return path improves
-run-time performance of the select() system call, the negative
-value of n is very uncommon in normal select usage.
+Hello Chenyuan, Linus, Bartosz,
 
-Benchmarking on an Debian based Intel(R) Core(TM) Ultra 9 285K with
-a 6.15-rc1 kernel built with 14.2.0 using a select of 1000 file
-descriptors with zero timeout shows a consistent call reduction from
-258 ns down to 254 ns, which is a ~1.5% performance improvement.
+On Sat Apr 12, 2025 at 9:31 PM CEST, Chenyuan Yang wrote:
+> Add check for the return value of clk_enable() to catch
+> the potential error.
+>
+> This is similar to the commit 8332e6670997
+> ("spi: zynq-qspi: Add check for clk_enable()").
+>
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 966942ae4936 ("gpio: nomadik: extract GPIO platform driver from dr=
+ivers/pinctrl/nomadik/")
+> ---
+>  drivers/gpio/gpio-nomadik.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+> index fa19a44943fd..dbc4cdddf4df 100644
+> --- a/drivers/gpio/gpio-nomadik.c
+> +++ b/drivers/gpio/gpio-nomadik.c
+> @@ -262,8 +262,11 @@ static unsigned int nmk_gpio_irq_startup(struct irq_=
+data *d)
+>  {
+>  	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+>  	struct nmk_gpio_chip *nmk_chip =3D gpiochip_get_data(gc);
+> +	int ret;
+> =20
+> -	clk_enable(nmk_chip->clk);
+> +	ret =3D clk_enable(nmk_chip->clk);
+> +	if (ret)
+> +		return ret;
+>  	nmk_gpio_irq_unmask(d);
+>  	return 0;
+>  }
 
-Results based on running 25 tests with turbo disabled (to reduce clock
-freq turbo changes), with 30 second run per test and comparing the number
-of select() calls per second. The % standard deviation of the 25 tests
-was 0.24%, so results are reliable.
+Returning a negative value whereas the ->irq_startup() [0] return value
+is an unsigned int? From some quick godbolt testing and briefly reading
+the spec it looks safe to do a round trip (signed->unsigned->signed),
+though not ideal to my eyes.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- fs/select.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The caller is __irq_startup() [1].
 
-diff --git a/fs/select.c b/fs/select.c
-index 0eaf3522abe9..9fb650d03d52 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -630,7 +630,7 @@ int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
- 	long stack_fds[SELECT_STACK_ALLOC/sizeof(long)];
- 
- 	ret = -EINVAL;
--	if (n < 0)
-+	if (unlikely(n < 0))
- 		goto out_nofds;
- 
- 	/* max_fds can increase, so grab it once to avoid race */
--- 
-2.49.0
+As for why irq_startup returns an unsigned int, I am unsure. The kernel
+Git history isn't enough to know more. The startup field in struct
+hw_interrupt_type appeared on v2.3.14 [2], so no commit message to
+explain decisions.
+
+Seeing the __irq_startup() code, my proposal would be to turn the return
+value to a signed int, but I haven't exhaustively checked codepaths.
+
+Thanks,
+
+[0]: https://elixir.bootlin.com/linux/v6.13.7/source/include/linux/irq.h#L5=
+03
+[1]: https://elixir.bootlin.com/linux/v6.13.7/source/kernel/irq/chip.c#L244
+[2]: https://elixir.bootlin.com/linux/2.3.14/source/include/linux/irq.h#L21
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
