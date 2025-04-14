@@ -1,108 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F40B17583
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E865A79B;
+	Mon, 14 Apr 2025 14:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640140; cv=none; b=kicskZnIBaamPmbePTOGN2NEujS371Cz5HsSrj5VvAkt73sVzikApVq/JjV9tgCAkxlKXpSFelDi4Kl761j8yqGJ3pwMuxz/4Dymjmktni5uKMrNHMO2Lfw44YvoVTcv3qWmrEpzTy5TzRgmQGpjupmBfMb2y1ltkKLFAP6e4Uc=
+	t=1744640189; cv=none; b=bdtKxQspvx9FB2abo0q2jNvrMsls1hmkbFXQ3QcNtTGT03IGr+Y4g5CC3fCIkrm+7Vu+NLH16UhmvU0J8mJtT9BdBKaUEQhdtwOgjFfPJ0jT/CdGkK9UefNAzRwseh/TQq0uMCt4Fq9pkbuFl5MbL2KabCC/LbAiVz83HAYnalo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640140; c=relaxed/simple;
-	bh=11tee5UsvnEd55TCLb/uQyNrUWOp6I96sGheUZV8tNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UfJWjdoH3mlwaFOLWJj/GVs6iFXg5fV7uTnIDkvhGremAYzKW2aHnhCbXCzM/KC24meZzNCWk6R2tds49E4wvMdFVHKZrgr53QcjgWJryVjjH629lJvn5NwfHMs5kXxUrunuLPlqXDBi/+/Kuz0+z97riu568JpCfC2rliXO0oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JHXl1087; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744640189; c=relaxed/simple;
+	bh=yL0Sa6QkPb6yOTB+AKE1N/5GefbRJ1U5BkCbUn4519M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMJTB5qtj/kEabTM78X1CJzcQXExN16lrBWgS+UBI4Q1y2sfSDGYZny5ka9K6ISyIMdCS1TUW7ypHMnV+gUfOAQqhcJ74mbBE1uzyNdNPA2Lx6vDH4txcuLDVnBi9y7Zm38kNaOku3gkl2pl43LiA8mF8vLMwlSfevoMP+10M9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kln8X0I0; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JHXl1087"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744640137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u84Ty7HMMCeXsOUPP5hTPV4+DYYz+9u3WtfeTfyLclw=;
-	b=JHXl10871aUTceE+6DVCVHp5grnqvJe6lEV8XRBViXu4CVZ6GUPSrLHn+59LrcoBtjxBSr
-	zrKQoFFMeaBbja0/4dmaZPJ80m5QoF9Xf5Dy0Gj057jn99YEIwosK9XlB3JdOAwQc3Z/pE
-	5iZ6MMJuMwwKtdNgnMlt9D9A29fG0KY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-79-sBZ09lvgNSq6lij3xWa0FQ-1; Mon,
- 14 Apr 2025 10:15:32 -0400
-X-MC-Unique: sBZ09lvgNSq6lij3xWa0FQ-1
-X-Mimecast-MFC-AGG-ID: sBZ09lvgNSq6lij3xWa0FQ_1744640131
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AE1D419560BD;
-	Mon, 14 Apr 2025 14:15:30 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.114])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7E4D83001D13;
-	Mon, 14 Apr 2025 14:15:27 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 14 Apr 2025 16:14:54 +0200 (CEST)
-Date: Mon, 14 Apr 2025 16:14:50 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Luca Boccassi <luca.boccassi@gmail.com>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>,
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
- helper
-Message-ID: <20250414141450.GE28345@redhat.com>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
- <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kln8X0I0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744640188; x=1776176188;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yL0Sa6QkPb6yOTB+AKE1N/5GefbRJ1U5BkCbUn4519M=;
+  b=kln8X0I004ePfzr5FIsUdCHl2UpI8gjJq0WEnH9IFNwmfMtfr7LO2ppF
+   LifynZVYnUxE355oacO6n9ZEnLamroDD3Vmk2O5EKpr6PEE0bKUaTs94t
+   D/M3dqcHSLt5TRN9lh/MXcocJdmJ1mYNLBGu/DMSN3RNKKmfzxtkyYh05
+   dl91EvCdDMnBrBDpCguSY//MXLutjqTI3hdrj1gPHeWWEFEi18ZGfO4Kz
+   e/n/t40z4/2LkgBZ4x9etxK5QNCvRTiEliIIfVhw7hI5qPfK2NkPpWBts
+   0ZLwU3Z0i+uwxu4PgYEpTAC4jmXfi9Aa5ZFOOVmHGKHx7MI4uW/s+m7DS
+   Q==;
+X-CSE-ConnectionGUID: RdW9Uw0GQsOUdEA+XXKTVw==
+X-CSE-MsgGUID: RNDKuIidRp2WJW9BH8ydSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45821629"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="45821629"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 07:16:27 -0700
+X-CSE-ConnectionGUID: 4Y9/6GOWReOyhUmHLgkaXg==
+X-CSE-MsgGUID: C6Xn+4YpTYqHvW0bGRqXtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="129791245"
+Received: from mylly.fi.intel.com (HELO [10.237.72.50]) ([10.237.72.50])
+  by orviesa006.jf.intel.com with ESMTP; 14 Apr 2025 07:16:24 -0700
+Message-ID: <7b619cf2-8f50-4f6e-9a5f-cce9112a99b3@linux.intel.com>
+Date: Mon, 14 Apr 2025 17:16:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2,1/1] i2c: designware: Add SMBus Quick Command support
+To: ende.tan@starfivetech.com, linux-i2c@vger.kernel.org
+Cc: andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+ jsd@semihalf.com, andi.shyti@kernel.org, linux-kernel@vger.kernel.org,
+ leyfoon.tan@starfivetech.com, endeneer@gmail.com
+References: <20250412093414.39351-1-ende.tan@starfivetech.com>
+Content-Language: en-US
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+In-Reply-To: <20250412093414.39351-1-ende.tan@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/14, Christian Brauner wrote:
->
-> -static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-> +static int umh_coredump_setup(struct subprocess_info *info, struct cred *new)
->  {
->  	struct file *files[2];
->  	struct coredump_params *cp = (struct coredump_params *)info->data;
->  	int err;
->
-> +	if (cp->pid) {
-> +		struct file *pidfs_file __free(fput) = NULL;
-> +
-> +		pidfs_file = pidfs_alloc_file(cp->pid, 0);
-> +		if (IS_ERR(pidfs_file))
-> +			return PTR_ERR(pidfs_file);
-> +
-> +		/*
-> +		 * Usermode helpers are childen of either
-> +		 * system_unbound_wq or of kthreadd. So we know that
-> +		 * we're starting off with a clean file descriptor
-> +		 * table. So we should always be able to use
-> +		 * COREDUMP_PIDFD_NUMBER as our file descriptor value.
-> +		 */
-> +		VFS_WARN_ON_ONCE((pidfs_file = fget_raw(COREDUMP_PIDFD_NUMBER)) != NULL);
-> +
-> +		err = replace_fd(COREDUMP_PIDFD_NUMBER, pidfs_file, 0);
-> +		if (err < 0)
-> +			return err;
+Hi
 
-Yes, but if replace_fd() succeeds we need to nullify pidfs_file
-to avoid fput from __free(fput) ?
+On 4/12/25 12:34 PM, ende.tan@starfivetech.com wrote:
+> From: Tan En De <ende.tan@starfivetech.com>
+> 
+> Add support for SMBus Quick Read and Quick Write commands.
+> 
+> Signed-off-by: Tan En De <ende.tan@starfivetech.com>
+> ---
+> v1 -> v2: Removed redundant check of tx_limit and rx_limit
+> ---
+>   drivers/i2c/busses/i2c-designware-core.h   |  4 ++++
+>   drivers/i2c/busses/i2c-designware-master.c | 18 +++++++++++++++++-
+>   2 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index 347843b4f5dd..91f17181ece1 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -40,6 +40,8 @@
+>   
+>   #define DW_IC_DATA_CMD_DAT			GENMASK(7, 0)
+>   #define DW_IC_DATA_CMD_FIRST_DATA_BYTE		BIT(11)
+> +#define DW_IC_DATA_CMD_STOP			BIT(9)
+> +#define DW_IC_DATA_CMD_CMD			BIT(8)
+>   
+If you like these defines would be nice to have in another patch before 
+this and convert i2c-designware-master.c to use them instead of 0x100, 
+BIT(9) and BIT(10) in existing code. Makes code more uniform together 
+with your change.
 
-And I think in this case __free(fput) doesn't buy too much, but
-up to you.
-
-Oleg.
-
+I'm not demanding it but wanted to give you idea if you like to do some 
+additional cleanups to the code :-)
