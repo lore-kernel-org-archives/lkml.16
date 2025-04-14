@@ -1,99 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E865A79B;
-	Mon, 14 Apr 2025 14:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84FFC2FD;
+	Mon, 14 Apr 2025 14:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640189; cv=none; b=bdtKxQspvx9FB2abo0q2jNvrMsls1hmkbFXQ3QcNtTGT03IGr+Y4g5CC3fCIkrm+7Vu+NLH16UhmvU0J8mJtT9BdBKaUEQhdtwOgjFfPJ0jT/CdGkK9UefNAzRwseh/TQq0uMCt4Fq9pkbuFl5MbL2KabCC/LbAiVz83HAYnalo=
+	t=1744640203; cv=none; b=BCN+BkYq2SktATsVQYTsxJHV9Ya/ZBf1NUYdZPMiasRjjrxmFrjxiFCLlICLd87spSRcDjBqa6iyk7xOqL42h3+s5ndl5tQG+6DXWVxqrkpr6Pw06N0xeoTjt44At4BUiTYydDguVtm1ppJLTQ9Qdy6awzFwpiJBvCUxALKHu5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640189; c=relaxed/simple;
-	bh=yL0Sa6QkPb6yOTB+AKE1N/5GefbRJ1U5BkCbUn4519M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MMJTB5qtj/kEabTM78X1CJzcQXExN16lrBWgS+UBI4Q1y2sfSDGYZny5ka9K6ISyIMdCS1TUW7ypHMnV+gUfOAQqhcJ74mbBE1uzyNdNPA2Lx6vDH4txcuLDVnBi9y7Zm38kNaOku3gkl2pl43LiA8mF8vLMwlSfevoMP+10M9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kln8X0I0; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744640203; c=relaxed/simple;
+	bh=diwh9sJlAZ6JHvbBFHjJH33QtdeJPgUadGdsqmCAdfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bpCc/+1irMEHTVNyb/AQ0AFGUcsxz6W+NLkf/PM/T75wAmoeW5IPc8t/ln+0cF5pVRBErzaUmq1Xo5crnTxl9c/kymFMHpzIfuXRRPWrYIm42HkRO6W7MAMhiA9DX+uqYkhao8kuE4SsNfepeSFG60H7GsyGp0bYLXU9exXkS18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4e+6L91; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kln8X0I0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744640188; x=1776176188;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yL0Sa6QkPb6yOTB+AKE1N/5GefbRJ1U5BkCbUn4519M=;
-  b=kln8X0I004ePfzr5FIsUdCHl2UpI8gjJq0WEnH9IFNwmfMtfr7LO2ppF
-   LifynZVYnUxE355oacO6n9ZEnLamroDD3Vmk2O5EKpr6PEE0bKUaTs94t
-   D/M3dqcHSLt5TRN9lh/MXcocJdmJ1mYNLBGu/DMSN3RNKKmfzxtkyYh05
-   dl91EvCdDMnBrBDpCguSY//MXLutjqTI3hdrj1gPHeWWEFEi18ZGfO4Kz
-   e/n/t40z4/2LkgBZ4x9etxK5QNCvRTiEliIIfVhw7hI5qPfK2NkPpWBts
-   0ZLwU3Z0i+uwxu4PgYEpTAC4jmXfi9Aa5ZFOOVmHGKHx7MI4uW/s+m7DS
-   Q==;
-X-CSE-ConnectionGUID: RdW9Uw0GQsOUdEA+XXKTVw==
-X-CSE-MsgGUID: RNDKuIidRp2WJW9BH8ydSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45821629"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="45821629"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 07:16:27 -0700
-X-CSE-ConnectionGUID: 4Y9/6GOWReOyhUmHLgkaXg==
-X-CSE-MsgGUID: C6Xn+4YpTYqHvW0bGRqXtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="129791245"
-Received: from mylly.fi.intel.com (HELO [10.237.72.50]) ([10.237.72.50])
-  by orviesa006.jf.intel.com with ESMTP; 14 Apr 2025 07:16:24 -0700
-Message-ID: <7b619cf2-8f50-4f6e-9a5f-cce9112a99b3@linux.intel.com>
-Date: Mon, 14 Apr 2025 17:16:23 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4e+6L91"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso690878166b.1;
+        Mon, 14 Apr 2025 07:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744640200; x=1745245000; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=diwh9sJlAZ6JHvbBFHjJH33QtdeJPgUadGdsqmCAdfM=;
+        b=b4e+6L91zeggrpOwJiiLJHlL2w7B2JppKvYy6VvGXWj8CkzHmjzTvpaEcSL4Nw4A5H
+         /6KGD1JDcdKi0PWTNXYUzmEWjOAJ9I6YzSSvIy5w2g9OJEW8VyRvj1BPPPtaxoYu4YYo
+         a+r17gOyd1iWQfJ093vOto+jxOe/EdDl+QkGWv/yqvKqi1J9WtPZeDeZwxq9HPjI2/Bz
+         Q4yo+F/pn6CrEo3TMAW37Es4M80Io9qcxuVkxEaFP8eK9X3Tj9JAvNK8vEQFzTY7qOBc
+         EX5QCZTK1snfTmWzjBODu57UAumdvZ3SE5Ev8q759t+HyqB4+wFyyfCgFBfY8XXqY0rb
+         4rMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744640200; x=1745245000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=diwh9sJlAZ6JHvbBFHjJH33QtdeJPgUadGdsqmCAdfM=;
+        b=aLNxYG1rh3aY1Vu0BEalt4fcwTYQveUVnASW9Z/nOCERwTOx1tjh51XX3B0RQcihyu
+         59Qqsves3oTLA22sNUriThaRqzEx2BIHBJ9Djox5KNQCgaq8eg9niTLa8K/NtR9RXGu1
+         gnKRwpkB95jMrrhqkOp0hT/6O3VsFqUEUWA0lCydGJ+pGs7HgoiX19Od5X/3KvEB6WMW
+         9e607bx5FpewMv+UTtusIMstMOEK6g4fMy3OZF002CYM679pDeHcQnNPgSBbWqEdsISw
+         jQiXw8gRAs6CN0Ib39uHjCPKw4yIqKa4yxsDrSbZbWRaqoYnHBtcTVnlOrLSRj1lugsX
+         UO2g==
+X-Forwarded-Encrypted: i=1; AJvYcCU+93o06I3mpAf6VUoTQFPbKbQ56/Je2hrHMuhY0isP3oJVGdNLO3r5zP2ayFnaCPHx9wL5olrcGe67Bbbq@vger.kernel.org, AJvYcCVQDkxwqUyd0jqILg9OnpyaL2uexqlk7bfhq4yuCocr0tlDbLe54X0mEYua1mMoZ3bP17ED9q3Uh5p5PoFMzI00@vger.kernel.org, AJvYcCWNhdmLNjh1r3uc4zV7nKhvszRJng1WFow9UIpkowoirEXFGyyaKgLGms3JqLKXZKIVKfTOOw5ZKctw@vger.kernel.org, AJvYcCXrbQnitQX5gt/HM/2R9BJVBYYO8z/y1xC4DM2669etc9kNsD+N4vg9hwZ5qNkoe9v99pfnRxyA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz3/lMLrioRodzvNRGkA5csD0T+aRwYHe5qcyDynXpXgv3M2uX
+	PiNRhQ4ETHsYE4N30EpYt0EAJE0B74Cizdy6JlazSmXQYouo/zFZ5InoFED2CuSqdLMw91vH0Ga
+	MYihFa5ddIL2BaQIpGEHOLuTcC8E=
+X-Gm-Gg: ASbGncu4sxa14NMAtzXGUMJG1DmfFahCy9krXVjMXfad8FaLxFVgjFJLf2I8EZjHEgZ
+	3hLooehrEjL9+iWPIkb2Fp+PDSqtTBp2pJaDKo6RbfP4o+GKTxyfsb3a21TEvwLc575SFt8h/5h
+	rVZPN5zqMotRCzdKuc/gUn+A==
+X-Google-Smtp-Source: AGHT+IF/dyYWGh6vTRn9WISWNs+JWALOiRcPmlW21EE0KFIxAgk2tzzM8tV4hVd0FH0lpQbw1g1Vk0LIeGq8/fYkMB0=
+X-Received: by 2002:a17:906:9fcb:b0:ac3:f1dc:f3db with SMTP id
+ a640c23a62f3a-acad3482777mr1214389166b.13.1744640199893; Mon, 14 Apr 2025
+ 07:16:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2,1/1] i2c: designware: Add SMBus Quick Command support
-To: ende.tan@starfivetech.com, linux-i2c@vger.kernel.org
-Cc: andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
- jsd@semihalf.com, andi.shyti@kernel.org, linux-kernel@vger.kernel.org,
- leyfoon.tan@starfivetech.com, endeneer@gmail.com
-References: <20250412093414.39351-1-ende.tan@starfivetech.com>
-Content-Language: en-US
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <20250412093414.39351-1-ende.tan@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407172836.1009461-2-ivecera@redhat.com>
+ <Z_QTzwXvxcSh53Cq@smile.fi.intel.com> <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
+ <Z_ys4Lo46KusTBIj@smile.fi.intel.com> <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
+ <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com> <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
+ <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com> <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
+In-Reply-To: <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 14 Apr 2025 17:16:02 +0300
+X-Gm-Features: ATxdqUGEaankkXek3ZluXxWOTF2i2W4gz9IvUXvOR0KII6dhJTmYpm-3LghKjzo
+Message-ID: <CAHp75Vej0MCAV7v7Zom8CXqh3F6f3QXevW93pOkXSLEZn7Yxfg@mail.gmail.com>
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org, 
+	Michal Schmidt <mschmidt@redhat.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On Mon, Apr 14, 2025 at 5:13=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Apr 14, 2025 at 5:10=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Apr 14, 2025 at 5:07=E2=80=AFPM Ivan Vecera <ivecera@redhat.com=
+> wrote:
+> > > On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
 
-On 4/12/25 12:34 PM, ende.tan@starfivetech.com wrote:
-> From: Tan En De <ende.tan@starfivetech.com>
-> 
-> Add support for SMBus Quick Read and Quick Write commands.
-> 
-> Signed-off-by: Tan En De <ende.tan@starfivetech.com>
-> ---
-> v1 -> v2: Removed redundant check of tx_limit and rx_limit
-> ---
->   drivers/i2c/busses/i2c-designware-core.h   |  4 ++++
->   drivers/i2c/busses/i2c-designware-master.c | 18 +++++++++++++++++-
->   2 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index 347843b4f5dd..91f17181ece1 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -40,6 +40,8 @@
->   
->   #define DW_IC_DATA_CMD_DAT			GENMASK(7, 0)
->   #define DW_IC_DATA_CMD_FIRST_DATA_BYTE		BIT(11)
-> +#define DW_IC_DATA_CMD_STOP			BIT(9)
-> +#define DW_IC_DATA_CMD_CMD			BIT(8)
->   
-If you like these defines would be nice to have in another patch before 
-this and convert i2c-designware-master.c to use them instead of 0x100, 
-BIT(9) and BIT(10) in existing code. Makes code more uniform together 
-with your change.
+...
 
-I'm not demanding it but wanted to give you idea if you like to do some 
-additional cleanups to the code :-)
+> > > Long story short, I have to move virtual range outside real address
+> > > range and apply this offset in the driver code.
+> > >
+> > > Is this correct?
+> >
+> > Bingo!
+> >
+> > And for the offsets, you form them as "page number * page offset +
+> > offset inside the page".
+>
+> Note, for easier reference you may still map page 0 to the virtual
+> space, but make sure that page 0 (or main page) is available outside
+> of the ranges, or i.o.w. ranges do not overlap the main page, even if
+> they include page 0.
+
+So, you will have the following layout
+
+0x00 - 0xnn - real registers of page 0.
+
+0x100 - 0xppp -- pages 0 ... N
+
+Register access either direct for when direct is required, or as
+0x100 + PageSize * Index + RegOffset
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
