@@ -1,86 +1,58 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A609F252287;
-	Mon, 14 Apr 2025 15:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A6B71B0435;
+	Mon, 14 Apr 2025 15:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744643880; cv=none; b=uu8UTj0ZS6eM3egTjQm6sl6TzIuaUxI24zRxWZPUbxX1pkq1SgRfLnegAvSzpgGUxkks/h1rLgLoNLSKqG1YPlDMWpGIoWPiVUDisNmaZKdariPvEjLs5Y+irVof5n1Uu+Q8wA2pCSS5Ty/eA87F/J57lyap8eteX2e6uxLU738=
+	t=1744643899; cv=none; b=f8pgDyDy7JNz9pmld781niVRHorGvQOdvmE6GteMMdE+lvDS+a4uwIWTynXl4WhyEGEhZQ9bFc6xK2D0ajI8/bnhXLYukdr0vBj+DrsOyv517t0rQnUSfKz3/vSn7k0Hj7u8o2/6K1foNksm4ptAWYeT5AuK6/72ZTdwhIVpRVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744643880; c=relaxed/simple;
-	bh=rDkXLDwYmt/2joQ7m8tnzWcJ/cvpR3dyNsQbz6Tegy8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pcxwLBPbPI10+993qVwxgcX69HuSwVMgSEFELxsPSqUrr7iIHl+yUyZSSGT3VNgJR/TNqgpzIyFcE3ljQ11oveNLGWpDhqWjOSR8QCb4SLl3H4HBS5ITBFHisv2VpQVcR0WpirKzMF+L4zKcJvMPiI3XOl+D1w+y6F73Dr9/Sdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=nAXG+lJU; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="nAXG+lJU"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1B5F041062
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1744643872; bh=u8pfzpkwPnivH/uUd7ymXPRbzzsoj+QwmHnBMg5MiJk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nAXG+lJU4P9TqdrFiH7oUxrIem1hLJOWx6rPuqQ9lfQTXmucrr+2it9+Nrx6Y8zn1
-	 0xIMtlEG9po6SopSoSnVou103P0UWSib3HtPH6Tr75nh+Kvh3KCk47fmswCOYOEKRV
-	 IPf2jtEDogyFTbVm7Q17+FbFzsAkXmXnehj4OTYID6EQS4ResxUdwlR3HHhdHdy26h
-	 q38j29NYd6EOD1SNk5dx9ziKdawizm3CFxvbeAqZ0sxnd8HXE6laKtubt1kDN1oq4D
-	 WYwiZw2kQ/RMlA25df5NDU6vEA7qV4bmaGcd7YqVTbkaN+9eX9XwbpT7PvsfnJAX4D
-	 GZmk+vFOmyRNg==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 1B5F041062;
-	Mon, 14 Apr 2025 15:17:52 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, "Gustavo
- A. R. Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Russell
- King <linux@armlinux.org.uk>, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
-In-Reply-To: <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
- <871pu1193r.fsf@trenco.lwn.net> <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
-Date: Mon, 14 Apr 2025 09:17:51 -0600
-Message-ID: <87mscibwm8.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1744643899; c=relaxed/simple;
+	bh=o+5+l9A67F2ez/JZb3g7VeO8szwkk8adaSE+LF/2TRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jlUFl6BPnJ2wksXZYuSjAGL0uookfegA1da56SaOpfsXADMbgCTH/GnIfLTx0xim3vAu10A8yso3quQPa0RwH6nLnEOmASxkZHlPMB+nFYj+hT/t32jPZDXcRL9imwQupAS1JpvITW+/n5rX5c4GEcz3sztZG4XdodG7GvOnPXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EE871007;
+	Mon, 14 Apr 2025 08:18:10 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68F483F66E;
+	Mon, 14 Apr 2025 08:18:10 -0700 (PDT)
+Date: Mon, 14 Apr 2025 16:18:07 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Stuart Yoder <stuart.yoder@arm.com>
+Cc: <linux-integrity@vger.kernel.org>, <jarkko@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>, <peterhuewe@gmx.de>,
+	<jgg@ziepe.ca>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm_crb: ffa_tpm: return errors from interface functions
+ if no ffa-crb driver
+Message-ID: <20250414-tiny-swan-of-tempest-ddcbdd@sudeepholla>
+References: <20250414145235.938924-1-stuart.yoder@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414145235.938924-1-stuart.yoder@arm.com>
 
-Andy Shevchenko <andriy.shevchenko@intel.com> writes:
+On Mon, Apr 14, 2025 at 09:52:35AM -0500, Stuart Yoder wrote:
+> If ACPI advertises an FF-A based TPM but the tpm_crb_ffa driver is not
+> enabled via Kconfig, inline stub versions of the interface functions
+> are used. These functions incorrectly return 0, which indicates success.
+> The result is that the tpm_crb probe function continues execution and
+> eventually detects a timeout at the TPM.
+> 
+> Change the inline functions to return errors, so that probe() sees that
+> tpm_crb_ffa is not present and aborts the probe.
+> 
 
-> On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
->> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
->> 
->> > This changeset contains the kernel-doc.py script to replace the verable
->> > kernel-doc originally written in Perl. It replaces the first version and the
->> > second series I sent on the top of it.
->> 
->> OK, I've applied it, looked at the (minimal) changes in output, and
->> concluded that it's good - all this stuff is now in docs-next.  Many
->> thanks for doing this!
->> 
->> I'm going to hold off on other documentation patches for a day or two
->> just in case anything turns up.  But it looks awfully good.
->
-> This started well, until it becomes a scripts/lib/kdoc.
-> So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
-> "disgusting turd" )as said by Linus) in the clean tree.
->
-> *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
+LGTM,
 
-If nothing else, "make cleandocs" should clean it up, certainly.
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
-We can also tell CPython to not create that directory at all.  I'll run
-some tests to see what the effect is on the documentation build times;
-I'm guessing it will not be huge...
-
-Thanks,
-
-jon
+-- 
+Regards,
+Sudeep
