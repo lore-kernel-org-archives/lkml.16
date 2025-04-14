@@ -1,85 +1,210 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683E07E9;
-	Mon, 14 Apr 2025 05:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEFD1A01CC;
+	Mon, 14 Apr 2025 05:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744607836; cv=none; b=ETkmVGKhbdIQPSbcRw/HqEt9xrrs+6W26uU7Dyr98uGACncPAUW7dMIwWBzhyFavWGzP0klOW2eX56gRcCqM7X9RsfPm3OW0tf8QZ75EwqSuP6ZxHnz/2rflQK3zrRwvAaHF7hoFadPhVKE3lV6NL3DmS/l/Z0RvNNudoX0OZcs=
+	t=1744608607; cv=none; b=qzMPjiSgm+Q10Un97tiFj/F0KBXDKPxK1fGDXF4aOwu9b+Eq5kpA1fW3yhZDUzsKgU0TJJcf3YHRTxq8vON2qFB40SiMuYq75glJevHrW/BiyZ8DvbaWApyPcWVl3w2PdRDkUEYgG9pNhdFVtHyb6Y+TdeLIsBeroyZe3tggWaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744607836; c=relaxed/simple;
-	bh=SDy3egfL5IDgvPeL0mrXHP4S0r+q/UvjOcD3uIkTv30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N3jSNY1yyFJs+VTfCopgzIr+wQQvYpZd7wmUDRZDCG2m9sThzvWtF/XG1LKIKazm6krNE08aE+yWb5hzCxDJfDfLM+OPDJ2kzsLLOQEnFAjY+N62dNnMNZB7jO4k6tYD15X89s25DpsqKMlWX9hzfax8O1kjafB5AuVbFJJ7nqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=BPMQdUls; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744608607; c=relaxed/simple;
+	bh=iZY9QAKOfXVun3HWANZNIRrBgogPcLzmhf78/TcVOjs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p2tF1IUCqQsesy/XLbHk6MufGJmyP8rOSc7nHpu0C5PFM9Yysu1p/C1S5UsrU6gr3x4OmM4ckzZZDKalArgBpRjYlQhhV/QAn7rSZTEDwetryb3dtrpwtbU0AFO1k5mQH4TK6D4q0/W9yXRQJMda+9+vrvdllZ6elgSM/TVVisc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eONhvGqd; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="BPMQdUls"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=cRKULB2qPIZFDaNugiFcdTYMoir+vA8thM83kE8yoC8=; b=BPMQdUlsIKZ4pRp71LKbxPb8Dc
-	Zb4RI4bJDQX7WjnQUihot8bSBbneaX3VdKdh84pkCsFaGLCdRgYp0GYlWCFk1x37thlLZmXssKP5m
-	sRavvE1r2y6Ue4jWWAwJTkXYQHOxEsFnUDuV3AkXIVuDM4QjK9lgi7odWaXzI8tid6Pso4UaelqcU
-	+4iq6hwolE7g1AQr0yRGYJBxDVx07IJkYMnNEp1idislPcfTtfzHioZ4fGgARNJEIe24h9a1Nx7Br
-	gqyeWhmj+agyzS1mPR8s6c0AiWSULvLqZXGxXplkw/r2E0jr++EF2azA7V7M0vJXrI5FTVHsceMnQ
-	Rbj01uIw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u4CBa-00FOkk-1b;
-	Mon, 14 Apr 2025 13:16:47 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 14 Apr 2025 13:16:46 +0800
-Date: Mon, 14 Apr 2025 13:16:46 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Sean Anderson <sean.anderson@linux.dev>,
-	Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>, linux-crypto@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-kernel@vger.kernel.org,
-	Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
-Subject: Re: [PATCH] crypto: api - Add support for duplicating algorithms
- before registration
-Message-ID: <Z_yaPhwelNpuKrb_@gondor.apana.org.au>
-References: <17f9af67-de10-4b96-99ef-3c5cd78124c0@linux.dev>
- <Z_SxYFdyBJTYe_7G@gondor.apana.org.au>
- <e3dd2f83-8451-47b0-a774-a697b861ceb3@linux.dev>
- <Z_XiPLmSVs8PGTZD@gondor.apana.org.au>
- <Z_XpfyPaoZ6Y8u6z@gondor.apana.org.au>
- <cf7e20a2-dc30-4940-9abe-bbf5ea1ac413@linux.dev>
- <Z_hyG816TRNGoSaP@gondor.apana.org.au>
- <Z_n3O_IZhbgQE02q@gondor.apana.org.au>
- <20250413160304.GA16145@quark.localdomain>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eONhvGqd"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53E5TTA72067104
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 00:29:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744608569;
+	bh=CMYMCaqeBwu/Fe6FSF4eS3p6oexTggwtdf65Un1px78=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=eONhvGqd2L2Utz0BA5kTwrlIN/n0Ude6PCTmVodo/rUFoo0dVVAAC513ARWb4uiS8
+	 O/tXc92cLgpy2K3IRYMqu5xwMdBPCuKr1M9iHIT/bYVNXKqFR7Ce61Llbka4lKm2Yt
+	 0sGphcv1REgoO08u9OJWaFt1hdRrTXxtNE9CWK/4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53E5TTq8117012
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 14 Apr 2025 00:29:29 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
+ Apr 2025 00:29:28 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 14 Apr 2025 00:29:28 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53E5TR4g113799;
+	Mon, 14 Apr 2025 00:29:28 -0500
+Date: Mon, 14 Apr 2025 10:59:26 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <vigneshr@ti.com>, <kishon@kernel.org>, <18255117159@163.com>,
+        <cassel@kernel.org>, <wojciech.jasko-EXT@continental-corporation.com>,
+        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>,
+        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH v2 4/4] PCI: j721e: Add support to build as a loadable
+ module
+Message-ID: <7ec59716-a4e2-4727-801d-07e227dcfece@ti.com>
+References: <20250330083914.529222-1-s-vadapalli@ti.com>
+ <20250330083914.529222-5-s-vadapalli@ti.com>
+ <zsxnx7biwogov5dw5yiafkgk6tsrtspac75bjbrca5uevweaim@ly67hwfyk7qh>
+ <20250409064227.ctzznnb2shaygxhm@uda0492258>
+ <6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250413160304.GA16145@quark.localdomain>
+In-Reply-To: <6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sun, Apr 13, 2025 at 09:03:04AM -0700, Eric Biggers wrote:
->
-> Why does this make any sense?  The lifetime of the algorithm struct memory
-> should be the same as that of the owning module, and drivers should ensure that.
-> In which case hacks like this are not needed.
+On Sun, Apr 13, 2025 at 07:43:05PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Apr 09, 2025 at 12:12:27PM +0530, Siddharth Vadapalli wrote:
+> > On Wed, Apr 09, 2025 at 12:06:35PM +0530, Manivannan Sadhasivam wrote:
+> > 
+> > Hello Mani,
+> > 
+> > > On Sun, Mar 30, 2025 at 02:09:14PM +0530, Siddharth Vadapalli wrote:
+> > > > The 'pci-j721e.c' driver is the application/glue/wrapper driver for the
+> > > > Cadence PCIe Controllers on TI SoCs. Implement support for building it as a
+> > > > loadable module.
+> > > > 
+> > > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > > > ---
+> > > > 
+> > > > v1:
+> > > > https://lore.kernel.org/r/20250307103128.3287497-5-s-vadapalli@ti.com/
+> > > > Changes since v1:
+> > > > - Based on feedback from Thomas at:
+> > > >   https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
+> > > >   the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
+> > > >   dropped.
+> > > > 
+> > > > Regards,
+> > > > Siddharth.
+> > > > 
+> > > >  drivers/pci/controller/cadence/Kconfig     |  6 ++--
+> > > >  drivers/pci/controller/cadence/pci-j721e.c | 33 +++++++++++++++++++++-
+> > > >  2 files changed, 35 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> > > > index 82b58096eea0..72d7d264d6c3 100644
+> > > > --- a/drivers/pci/controller/cadence/Kconfig
+> > > > +++ b/drivers/pci/controller/cadence/Kconfig
+> > > > @@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
+> > > >  	  different vendors SoCs.
+> > > >  
+> > > >  config PCI_J721E
+> > > > -	bool
+> > > > +	tristate
+> > > >  
+> > > >  config PCI_J721E_HOST
+> > > > -	bool "TI J721E PCIe controller (host mode)"
+> > > > +	tristate "TI J721E PCIe controller (host mode)"
+> > > >  	depends on ARCH_K3 || COMPILE_TEST
+> > > >  	depends on OF
+> > > >  	select PCIE_CADENCE_HOST
+> > > > @@ -57,7 +57,7 @@ config PCI_J721E_HOST
+> > > >  	  core.
+> > > >  
+> > > >  config PCI_J721E_EP
+> > > > -	bool "TI J721E PCIe controller (endpoint mode)"
+> > > > +	tristate "TI J721E PCIe controller (endpoint mode)"
+> > > >  	depends on ARCH_K3 || COMPILE_TEST
+> > > >  	depends on OF
+> > > >  	depends on PCI_ENDPOINT
+> > > > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> > > > index ef1cfdae33bb..8bffcd31729c 100644
+> > > > --- a/drivers/pci/controller/cadence/pci-j721e.c
+> > > > +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> > > > @@ -15,6 +15,7 @@
+> > > >  #include <linux/irqchip/chained_irq.h>
+> > > >  #include <linux/irqdomain.h>
+> > > >  #include <linux/mfd/syscon.h>
+> > > > +#include <linux/module.h>
+> > > >  #include <linux/of.h>
+> > > >  #include <linux/pci.h>
+> > > >  #include <linux/platform_device.h>
+> > > > @@ -27,6 +28,7 @@
+> > > >  #define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
+> > > >  
+> > > >  #define ENABLE_REG_SYS_2	0x108
+> > > > +#define ENABLE_CLR_REG_SYS_2	0x308
+> > > >  #define STATUS_REG_SYS_2	0x508
+> > > >  #define STATUS_CLR_REG_SYS_2	0x708
+> > > >  #define LINK_DOWN		BIT(1)
+> > > > @@ -116,6 +118,15 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
+> > > >  	return IRQ_HANDLED;
+> > > >  }
+> > > >  
+> > > > +static void j721e_pcie_disable_link_irq(struct j721e_pcie *pcie)
+> > > > +{
+> > > > +	u32 reg;
+> > > > +
+> > > > +	reg = j721e_pcie_intd_readl(pcie, ENABLE_CLR_REG_SYS_2);
+> > > > +	reg |= pcie->linkdown_irq_regfield;
+> > > > +	j721e_pcie_intd_writel(pcie, ENABLE_CLR_REG_SYS_2, reg);
+> > > > +}
+> > > > +
+> > > >  static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
+> > > >  {
+> > > >  	u32 reg;
+> > > > @@ -633,9 +644,25 @@ static void j721e_pcie_remove(struct platform_device *pdev)
+> > > >  	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
+> > > >  	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
+> > > >  	struct device *dev = &pdev->dev;
+> > > > +	struct cdns_pcie_ep *ep;
+> > > > +	struct cdns_pcie_rc *rc;
+> > > > +
+> > > > +	if (pcie->mode == PCI_MODE_RC) {
+> > > > +		rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
+> > > > +		cdns_pcie_host_disable(rc);
+> > > > +	} else {
+> > > > +		ep = container_of(cdns_pcie, struct cdns_pcie_ep, pcie);
+> > > > +		cdns_pcie_ep_disable(ep);
+> > > > +	}
+> > > > +
+> > > > +	if (pcie->reset_gpio) {
+> > > > +		msleep(PCIE_T_PVPERL_MS);
+> > > 
+> > > There is no point in adding a delay before PERST# assertion.
+> > 
+> > True :)
+> > 
+> > > 
+> > > > +		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+> > > 
+> > > This is not PERST# assert, isn't it? Typo?
+> > 
+> > It is PERST# assert.
+> 
+> Since the reset-gpios polarity is defined as GPIO_ACTIVE_HIGH in DT (which is
+> wrong unless you have an external component that changes polarity), for PERST#
+> assert, you need to set 0. If you set 1, then PERST# will be signalled as
+> deassert.
 
-Hardware can be unplugged at any time.  Once all hardware backing
-a driver has been removed, you need to unregister that algorithm.
+I realize now that I have accidentally set it to 1 when it should have
+been 0. It was meant to be PERST# assert since it is the .remove callback.
+The v3 patch at:
+https://patchwork.kernel.org/project/linux-pci/patch/20250410104426.463453-5-s-vadapalli@ti.com/
+dropped the delay which is not required for PERST# assert, but the
+polarity is still incorrect. I will fix it in the v4 series.
 
-Please read my explanation for the prior patch:
+Thank you for noticing this and pointing it out.
 
-https://patchwork.kernel.org/project/linux-crypto/patch/Z_XpfyPaoZ6Y8u6z@gondor.apana.org.au/
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Regards,
+Siddharth.
