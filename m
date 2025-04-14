@@ -1,47 +1,41 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF271A29A;
-	Mon, 14 Apr 2025 14:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3751A29A;
+	Mon, 14 Apr 2025 14:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640524; cv=none; b=rZetWrBe+ESSmalFqe1/Z6pHPHneQUTdDn9ywUjAH5tcpj0NuBlgFi+0PVrsuBfiAZrhwfGk0Jm+IOV2WzUwqJHJvXvLvBgAbO/MDEfFPSN8/lmRPXP71cuLiJcfTwFsntFKm9W4ZUsC3nVhVR0tXdtwa8P0PmKRj5fPUhwZtS4=
+	t=1744640528; cv=none; b=OO28wdKQfgVtXjYxG9vQDS9lWIAvCmNB9xByIEITzqDkR+GgLciQ0jh/UsD9o5tx0mkPGK44p9jqDmxbe8P8RGM985cGIIPxCQi0C/rhABnjID+k8/Hz8B4WiPWbuCSVGmTTI8PjeuRht8N4VkB1givHakJFG10aPmFLPmryaRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640524; c=relaxed/simple;
-	bh=Ox3Mxcva8shnhmPL5QTttNU+HxVkiYIiUfVChVyst+k=;
+	s=arc-20240116; t=1744640528; c=relaxed/simple;
+	bh=3fNBOwE754iG88jD0y+EyHyTfQKeUQI6NeGIyUiGJFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F0iOPrhe3ugdYLav9/3Lb4cvHbMgHiNLrUyFbCvijzM++OLfGLyIjGsjn2HDbHcW/+6TtneJAuv95Qb7tsxOMaN017Qx83rRpD4UiCXqLqxvRESBhXe27VmfOocUMeX9+BUO4UG4/tlt4nb2jPJz9K2WVjwCVdeDJ5P2saqEPD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OR9014Bq; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=BB1P5xz7ihyaZc1+7S1NTbHsUrrwuS6kls7gvQu0XaJjSNnc2WkHTgkdvxBZUkmBnicMsTCpixSRWemtfVr2zA/yy1G9Qhkkyo1moHNsHeEDEXRyYPCaCmvkUoNbUtVud4Q5hHd3zNRGb8zo7+q2gKZVH6BCaP5O+y+3uRWg9vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEUcfMRO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OR9014Bq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/2Ay/NCZeMYV79X2lYUpJCsDxCV73NsQVVoLTfLSenQ=; b=OR9014BqF5pCdtfSGu9a6lXIso
-	eTm5mI/mT9yVwG/MwqOQovvTBI6ZsVwxgZWlioHX8iFm4oY695uADNck9D0mvqoExTX5hqiaefSHX
-	yls7HIGtgrKIwxLLHuqxlPSw80cAgpbpOaSNr3mw6r+lF39ATHERgKj9zKd4d/6jkaxVrknfkyTUd
-	MmUf4aMwhpx0d2ncyiSpCiJDY7tqWNBvdXTX4ap0vTbAaXuEhxsljtUR3VmZ3pHIgzq53x3DIw90d
-	s/JJyKv/v+vR/S64w7A2wnsopvvsgAzvuKPIybcqlPvaCWkzXd//7754f70ZkT4QEJG3NBISqPqcp
-	VEAC/RUg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4KhA-00000008Exf-1Umc;
-	Mon, 14 Apr 2025 14:21:56 +0000
-Date: Mon, 14 Apr 2025 15:21:56 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: now4yreal <now4yreal@foxmail.com>, Jan Kara <jack@suse.com>,
-	Viro <viro@zeniv.linux.org.uk>, Bacik <josef@toxicpanda.com>,
-	Stone <leocstone@gmail.com>, Sandeen <sandeen@redhat.com>,
-	Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug Report] OOB-read BUG in HFS+ filesystem
-Message-ID: <Z_0aBN-20w20-UiD@casper.infradead.org>
-References: <tencent_B730B2241BE4152C9D6AA80789EEE1DEE30A@qq.com>
- <20250414-behielt-erholen-e0cd10a4f7af@brauner>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEUcfMRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54356C4CEE2;
+	Mon, 14 Apr 2025 14:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744640527;
+	bh=3fNBOwE754iG88jD0y+EyHyTfQKeUQI6NeGIyUiGJFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sEUcfMRO+rp0WDkKdWvJDOgyKJbCsIW7p6NHFJTf4iiNWWBnZLozx+PIlhf6e9cHk
+	 lZQdaqObYz5zoZo6xFrs1Tk67uh5TC0VX6EPWLlQYZjqF+caqrseGaB6wM+sZb7mz3
+	 L+NWMAeMqSuZMlCZbmSoVtk/8Ui6tCu6AhUmWXO42hVTE162sCmHgQS2hgGCnX+Cse
+	 GruTHDyLCDPiSLxtkLxJKeBAqTjo8Po+kBrWMS2tnvXh05ylqXrDYGyk1T7hGoMjfq
+	 7Mmqm1tsQhyhomZhiAYwaJNZaS5sPd3OEuxD+4eCloat682Jt4SaOS3ePOqIP1NA/P
+	 I8GkTSBi+56dA==
+Date: Mon, 14 Apr 2025 17:22:03 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: peterhuewe@gmx.de, jgg@ziepe.ca, sudeep.holla@arm.com,
+	stuart.yoder@arm.com, sgarzare@redhat.com,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tpm_ffa_crb: access tpm service over FF-A direct
+ message request v2
+Message-ID: <Z_0aBHJ16l-Vw72p@kernel.org>
+References: <20250412054721.1647439-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,26 +44,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414-behielt-erholen-e0cd10a4f7af@brauner>
+In-Reply-To: <20250412054721.1647439-1-yeoreum.yun@arm.com>
 
-On Mon, Apr 14, 2025 at 04:18:27PM +0200, Christian Brauner wrote:
-> On Mon, Apr 14, 2025 at 09:45:25PM +0800, now4yreal wrote:
-> > Dear Linux Security Maintainers,
-> > I would like to report a OOB-read vulnerability in the HFS+ file
-> > system, which I discovered using our in-house developed kernel fuzzer,
-> > Symsyz.
+On Sat, Apr 12, 2025 at 06:47:21AM +0100, Yeoreum Yun wrote:
+> For secure partition with multi service, tpm_ffa_crb can access tpm
+> service with direct message request v2 interface according to chapter 3.3,
+> TPM Service Command Response Buffer Interface Over FF-A specification, v1.0 BET.
 > 
-> Bug reports from non-official syzbot instances are generally not
-> accepted.
+> This patch reflects this spec to access tpm service over
+> FF-A direct message request v2 ABI.
 > 
-> hfs and hfsplus are orphaned filesystems since at least 2014. Bug
-> reports for such filesystems won't receive much attention from the core
-> maintainers.
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+> Since v2:
+>     - rewokring commit message
+>     - https://lore.kernel.org/all/20250411090856.1417021-1-yeoreum.yun@arm.com/
 > 
-> I'm very very close to putting them on the chopping block as they're
-> slowly turning into pointless burdens.
+> Since v1:
+>     - Fix indentation.
+>     - https://lore.kernel.org/all/20250410110701.1244965-1-yeoreum.yun@arm.com/
+> ---
+>  drivers/char/tpm/tpm_crb_ffa.c | 55 ++++++++++++++++++++++++----------
+>  1 file changed, 40 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> index 3169a87a56b6..fed775cf53ab 100644
+> --- a/drivers/char/tpm/tpm_crb_ffa.c
+> +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> @@ -105,7 +105,10 @@ struct tpm_crb_ffa {
+>  	u16 minor_version;
+>  	/* lock to protect sending of FF-A messages: */
+>  	struct mutex msg_data_lock;
+> -	struct ffa_send_direct_data direct_msg_data;
+> +	union {
+> +		struct ffa_send_direct_data direct_msg_data;
+> +		struct ffa_send_direct_data2 direct_msg_data2;
+> +	};
+>  };
+> 
+>  static struct tpm_crb_ffa *tpm_crb_ffa;
+> @@ -185,18 +188,34 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
+> 
+>  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+> 
+> -	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+> -	       sizeof(struct ffa_send_direct_data));
+> -
+> -	tpm_crb_ffa->direct_msg_data.data1 = func_id;
+> -	tpm_crb_ffa->direct_msg_data.data2 = a0;
+> -	tpm_crb_ffa->direct_msg_data.data3 = a1;
+> -	tpm_crb_ffa->direct_msg_data.data4 = a2;
+> +	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> +		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
+> +		       sizeof(struct ffa_send_direct_data2));
+> +
+> +		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> +		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+> +		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+> +		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
+> +
+> +		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
+> +				&tpm_crb_ffa->direct_msg_data2);
+> +		if (!ret)
+> +			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
+> +	} else {
+> +		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+> +		       sizeof(struct ffa_send_direct_data));
+> +
+> +		tpm_crb_ffa->direct_msg_data.data1 = func_id;
+> +		tpm_crb_ffa->direct_msg_data.data2 = a0;
+> +		tpm_crb_ffa->direct_msg_data.data3 = a1;
+> +		tpm_crb_ffa->direct_msg_data.data4 = a2;
+> +
+> +		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+> +				&tpm_crb_ffa->direct_msg_data);
+> +		if (!ret)
+> +			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
+> +	}
+> 
+> -	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+> -			&tpm_crb_ffa->direct_msg_data);
+> -	if (!ret)
+> -		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
+> 
+>  	return ret;
+>  }
+> @@ -231,8 +250,13 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
+> 
+>  	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
+>  	if (!rc) {
+> -		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+> -		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+> +		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> +			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
+> +			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
+> +		} else {
+> +			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+> +			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+> +		}
+>  	}
+> 
+>  	return rc;
+> @@ -277,7 +301,8 @@ static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
+> 
+>  	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
+> 
+> -	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
+> +	if (!ffa_partition_supports_direct_recv(ffa_dev) &&
+> +	    !ffa_partition_supports_direct_req2_recv(ffa_dev)) {
+>  		pr_err("TPM partition doesn't support direct message receive.\n");
 
-I've tried asking some people who are long term Apple & Linux people,
-but haven't been able to find anyone interested in becoming maintainer.
-Let's drop both hfs & hfsplus.  Ten years of being unmaintained is
-long enough.
+did not notice but there's couple of things:
+
+1. It should be probably warn. Driver is working incorrectly, isn't it?
+2. dev_warn()
+
+So along the lines of would summarize all this:
+
+dev_warn(&ffa_dev->dev, "partition doesn't support direct message receive.\n");
+
+"TPM" was removed because this gives the device info.
+
+
+>  		return -EINVAL;
+>  	}
+> --
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> 
+
+BR, Jarkko
