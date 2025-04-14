@@ -1,119 +1,204 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C6EDDC3;
-	Mon, 14 Apr 2025 18:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42165DDC3
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744656719; cv=none; b=FX8X0F4x9JeO+nFw8aywBppoAzCn7AuaUVQqjPu2v9qHdMbhGXZ08+dErJxse0OthVzlzejflw7+MoUIaFgvpPoMxj6IQToUJ7B1YzRvRPVfYB+vba9IfrUk4Ta0iiH4fzc3Yy2zGmwvkdzbeSmIRHGAL5iWMeE+sIZLDw0qiDI=
+	t=1744656799; cv=none; b=ArwV9dti3oBVbRAoD7eE2a6vYMnnUAMLMFNYFbe4Qc3qeNjxXPKTZejoyHfmmeqTbGbqHk/+JsteWTcsN4oPX+XPSE4oNMavNbHU2DtFtBgAmyYWgj3ZmLgv20fgzMDuz13On3JwAPPcwpTwFVoua65k6sj6BSAk9Ro3QgJ9FFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744656719; c=relaxed/simple;
-	bh=cvV7xn1odW8VfvP0Gdr6hJhh6UzfaVFbvI1J7LRet5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NycAYxxIJjTcIqH8H/LtzFTDb7f2wv5FFDaCSdNM2M9A6y2Amkbf0LU/rLE98gjycK0+bVje89CcFi3s7jmuU804yWWusWbp+ekMGH20Q7shhPwJ6Eih663oF4yPa50bu+9CmN+dZkHllR3GGL4bVK68/GUIVEnytIQd4Yv/85Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nIjdRDDg; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744656799; c=relaxed/simple;
+	bh=hW3zsbu4Jee0l5JUlzX9vhoRmfmGposgsVqkRXKf/CU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type:
+	 References; b=JXkCVZJpXMOvYkttJkbc3sMbTBDCTH3DcwiIWNI0FECwCHwgboDJUpHowSLjRvCJEOy+EvSsBCdh5T0+Ijhh8j56IkcwAK869KV92pLnF0PIthu4Fzu44sRT6a9tZfi2H478DG7RWE0vyITRlIWsXeA4QA6YHifbBL24gSNnSy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Idjva7+N; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nIjdRDDg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LKHJuVA8j6ug4Ho7oRC/dzD6Qn1UJkygT8onm2ayDCk=; b=nIjdRDDgMTEecuFBvEDaO3iI56
-	qyqChv227+kh+sZVvjOgPYmzfKTfBM6QL8Eq0AlWZH41ioNANzL8Ke4fBWuUYFqhBsimPZCHA2vAt
-	UEnclwcQgLikcw8CkOvD5ICW9fopssncK+Kady/L7S7nn/svxLc2EpYxaKSJ5NvMIN8UOAJGwSZ9i
-	UjJJkH/Xl3/VCSsOY7rPsok9XBahC8ekql94+u++5P92kQUM3SMA5scLSuejDgXDxGIwba58r9npU
-	Fj+woAiwb8sgLnfdGr2bvmD03y1sT8P5NhCx7Wd3Rb54AH/A33SzsCTUU3T+LvDX9kaOC8Iapz4r6
-	JzsfD9wQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4OtF-0000000EZgN-0sWS;
-	Mon, 14 Apr 2025 18:50:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 301343003AF; Mon, 14 Apr 2025 20:50:31 +0200 (CEST)
-Date: Mon, 14 Apr 2025 20:50:31 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: syzbot <syzbot+c2537ce72a879a38113e@syzkaller.appspotmail.com>,
-	riel@surriel.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-	tglx@linutronix.de, x86@kernel.org
-Subject: Re: [syzbot] [kernel?] linux-next test error: WARNING in
- switch_mm_irqs_off
-Message-ID: <20250414185031.GA13096@noisy.programming.kicks-ass.net>
-References: <67fce34b.050a0220.3483fc.0026.GAE@google.com>
- <20250414135629.GA17910@noisy.programming.kicks-ass.net>
- <Z_0lSxPcw4WW1wAP@gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Idjva7+N"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250414185314euoutp017fc5dd30b8d5d2dc07b968886ea4fabe~2RBxtjnTK3271432714euoutp01J
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:53:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250414185314euoutp017fc5dd30b8d5d2dc07b968886ea4fabe~2RBxtjnTK3271432714euoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744656794;
+	bh=79N7YNqv9Q66PnnxS3ThNfEZmd8804r38ebjHmA2ETY=;
+	h=From:Subject:Date:To:Cc:References:From;
+	b=Idjva7+Nn4Weil9B2UJGQrGs/9r58U6WiPcViHfieAhgc43k+GdyZDAV/PNAyR2Q0
+	 knHqY2olN1eeyM7lGjo6X/3uH/q/oyklZjg0IDgm/7CQTZmLIGZT4VmNMdu2ufQ76T
+	 bvOLrfzAs+HZZWeac95wPZjIILEm7maFv7Fl2/is=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250414185313eucas1p1883acb9c583cdb21212456eaeb16d4ce~2RBxJkejU3185731857eucas1p1s;
+	Mon, 14 Apr 2025 18:53:13 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id AD.8E.20821.9995DF76; Mon, 14
+	Apr 2025 19:53:13 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250414185313eucas1p1c4d13c657f3a3c3e47810955db645ca2~2RBwbyutx3185731857eucas1p1r;
+	Mon, 14 Apr 2025 18:53:13 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250414185313eusmtrp105ea9ceb1fee2bedf389b05a4f395cba~2RBwbBi4B0705407054eusmtrp1e;
+	Mon, 14 Apr 2025 18:53:13 +0000 (GMT)
+X-AuditID: cbfec7f2-b11c470000005155-76-67fd5999daeb
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 03.64.19654.8995DF76; Mon, 14
+	Apr 2025 19:53:13 +0100 (BST)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250414185311eusmtip2570ca62f1c430e3b0a5aeb600ccb1f91~2RBvQeDvV2214922149eusmtip2t;
+	Mon, 14 Apr 2025 18:53:11 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH v2 0/4] Add GPU clock/reset management for TH1520 in genpd
+Date: Mon, 14 Apr 2025 20:52:54 +0200
+Message-Id: <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_0lSxPcw4WW1wAP@gmail.com>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIZZ/WcC/x3MQQqAIBBA0avErBPUDKurRIjZaLOxGCGC6O5Jy
+	7f4/4GCTFhgah5gvKjQkSt020DYfU4oaKsGLXUvjTLCn+yUcfFgVzBvlJPo125UdlDWhwA1PBk
+	j3f90Xt73Aywd1PpkAAAA
+X-Change-ID: 20250414-apr_14_for_sending-5b3917817acc
+To: "Rafael J. Wysocki" <rafael@kernel.org>,  Danilo Krummrich
+	<dakr@kernel.org>, Pavel Machek <pavel@kernel.org>,  Drew Fustini
+	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei <wefu@redhat.com>, Rob
+	Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
+	Dooley <conor+dt@kernel.org>,  Michal Wilczynski <m.wilczynski@samsung.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,  Philipp Zabel
+	<p.zabel@pengutronix.de>,  Frank Binns <frank.binns@imgtec.com>, Matt Coster
+	<matt.coster@imgtec.com>,  Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,  m.szyprowski@samsung.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+X-Mailer: b4 0.15-dev
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0xTVxzOuff23tKs5FLYPII4VoMbLtKygDuKcXMQvWEjQbdlssSMDu+K
+	4+VaYeBmeKwyHpWHPMZzxc4JljEUSkdrgaXpqAxsiSKwBBAnpo7HGA9FwcdWLtv87/t93/c7
+	3/lODh8XlZLe/KNJx1lFkixBTAoIQ89Dx/aq6Mdy6aOnEnRlWIuhHzrtGJqu+ItEGqudh8av
+	6TE0eG+ORD/eGaDQ3c4sAv1RPU6i66ZaEi2etgJkWFSRqNk6RqGWexoMnZ1vJ9C5DhNAOXnn
+	eWhs/AqBcucycVS3VI6jp+YOCtX82U0h/UwJD9maP0Cq7jLizY1M5/16gjFWj1GM2tgPmFZd
+	HsmMDplJ5tveA8zNAhvGtJ3LYFTNPRhT9FjKzHXdIJlCvQ4wbX1fMIutm6PcPxTsPsImHE1l
+	FZI9MYK4bH02deyST1pBxR0qE2S/kA/4fEgHw77pyHwg4IvoRgAdFdcwblgCsGn5AckNiwAu
+	3Tbi+cBtbeNUxV3gwiK6AcD6yy9zphwMztSXEi6BpF+DEw0angt70hHwof63NZ6g/WFLyQLl
+	ihbS++GwJsxFC2kP2Fs1uWbB6RfhT7O1uOtMSF8E0Fw5h3HBIbBsuRK4BC96lQdzs3vWXDhd
+	B6DF8BXBuZ6Hq6UmglsvF8CvpwzrQjjsWp3lcdgTTtn0FIc3wb5S9bonGU60L6z3/BIa1bZ1
+	HApH7Suk69o4HQBbTBKO3gsnH90iuId0hyOzHlwDd3jG8A3O0UKYmyPi3Fthufr0f6H2RgNW
+	DMTVz/SvfqZ/9f9Z9QDXgQ1sijJRziqDktjPA5WyRGVKkjwwNjmxFfzzb/ue2BY6QN3UfKAF
+	YHxgAZCPi72EgrAVuUh4RJZ+glUkf6RISWCVFuDDJ8QbhNruU3IRLZcdZ+NZ9hir+FfF+G7e
+	mdgn0shuprL1FdA7tLlEnVG4w1ns1+2YOdgfOimR/iwN1lUcAtbLu94YzXLXha+ejKn15enf
+	WVpuetcR4nfhdb+FmsG6yrrD+5QFsbqgeP/9qpzvHKnKLfGpYMJtqLAm7JZz50Hc28Pc88sD
+	avrV9I03tW7DLc/FjoQ0iN+O20GNFQdcyOqfP3k19a33nsTuEVTd9ogc3HniQHCGbxF2WLsv
+	yDBwyNfutTf9omXXx/cDRmK+/938qR1E+Qxsq/W8NNxY9qszNRdFoy79pvDo4aAYK7nkNG4x
+	561EvG9yRlyVqNoD8xMmo9I+uxHaU5N5Puv6eG3bbk3u9jRTb9NL/lq4XCQmlHGyoG24Qin7
+	G+hP89EmBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsVy+t/xe7ozI/+mG7THW5y4vojJYs3ec0wW
+	r6d9YLOYf+Qcq8W9S1uYLK58fc9mse7pBXaLF3sbWSxezrrHZnF51xw2i8+9Rxgttn1uYbNY
+	e+Quu8X6r/OZLBZ+3MpisWTHLkaLts5lrBZ3751gseh438BsMffLVGaL/3t2sFvMfref3WLL
+	m4msFsfXhlu07J/C4iDpsffbAhaPnbPusnv07DzD6LFpVSebx51re9g85p0M9LjffZzJY/OS
+	eo+WtceYPPr/Gni833eVzaNvyypGj82nqz0+b5IL4IvSsynKLy1JVcjILy6xVYo2tDDSM7S0
+	0DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy2ja0sResFG6onvaU/YGxiaxLkZODgkBE4nW
+	aS8Yuxi5OIQEljJKfO86wQaRkJG41v2SBcIWlvhzrYsNoqiFSeJO+yuwBJuAkcSD5fNZQWxh
+	AS+Jn1tugsVZBFQl1k/8xN7FyMHBK+AucX2+M0iYV0BQ4uTMJywgYWYBTYn1u/RBwswC8hLb
+	385hBhkvIbCBUeLXhz5GiL2mElO+zwA7TkSgiU3i2/bPYEcwC8xjlPg0bwLUdaISvyfvYpnA
+	KDgLyZJZCEtmIVmygJF5FaNIamlxbnpusZFecWJucWleul5yfu4mRmAa2Xbs55YdjCtffdQ7
+	xMjEwXiIUYKDWUmEl8v5V7oQb0piZVVqUX58UWlOavEhRlOgPycyS4km5wMTWV5JvKGZgamh
+	iZmlgamlmbGSOC/blfNpQgLpiSWp2ampBalFMH1MHJxSDUyLJZT+X7lgeumn274/epuUvLuS
+	jgg9FXllH/hyfZ2eBGeZaOCVf5Z2sw5YcYqsYp+4dX/leaOJz0+dfn5jsiyTZtbMPQlugreU
+	i1/yHpo1Z8ZnueQnrmdWRmi9iOtwTTvof+2o4cZpNm80/vlv/Do1+1nZ0ouzSpyPLazewZDQ
+	KN2e+NAhW1yFq1R5Wsztd6nH76xuOPLszcK1mz/vVn7bVsARvbRHq0GzPjxXeuX2qdOC3Vcp
+	V+6QUTpRKOK3+frFPjYm76xqw5S+lxGvby7sDL4Xv9yg7f1T/e8q976/3vBWbv3X83NYjUPW
+	OckesXdnf+57YOWMDbzLf/5+vejEC4O7DmuW2728fWDr0xWWa5RYijMSDbWYi4oTAT6JRkes
+	AwAA
+X-CMS-MailID: 20250414185313eucas1p1c4d13c657f3a3c3e47810955db645ca2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250414185313eucas1p1c4d13c657f3a3c3e47810955db645ca2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250414185313eucas1p1c4d13c657f3a3c3e47810955db645ca2
+References: <CGME20250414185313eucas1p1c4d13c657f3a3c3e47810955db645ca2@eucas1p1.samsung.com>
 
-On Mon, Apr 14, 2025 at 05:10:03PM +0200, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > Call Trace:
-> > >  <TASK>
-> > >  unuse_temporary_mm+0x9f/0x100 arch/x86/mm/tlb.c:1038
-> > >  __text_poke+0x7b6/0xb40 arch/x86/kernel/alternative.c:2214
-> > >  text_poke arch/x86/kernel/alternative.c:2257 [inline]
-> > >  smp_text_poke_batch_finish+0x3e7/0x12c0 arch/x86/kernel/alternative.c:2565
-> > >  arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
-> > >  static_key_disable_cpuslocked+0xd2/0x1c0 kernel/jump_label.c:240
-> > >  static_key_disable+0x1a/0x20 kernel/jump_label.c:248
-> > >  once_deferred+0x70/0xb0 lib/once.c:20
-> > >  process_one_work kernel/workqueue.c:3238 [inline]
-> > >  process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-> > >  worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-> > >  kthread+0x7b7/0x940 kernel/kthread.c:464
-> > >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-> > >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> > >  </TASK>
-> > 
-> > So I can reproduce, and I I think I see what happens, except I'm
-> > confused as to why the recently merged patches show this.
-> > 
-> > AFAIU what happens is that unuse_temporary_mm() clears the 
-> > mm_cpumask() for the current CPU, while switch_mm_irqs_off() then 
-> > checks that the mm_cpumask() bit is set for the current CPU.
-> > 
-> > This behaviour hasn't really changed since 209954cbc7d0 ("x86/mm/tlb: 
-> > Update mm_cpumask lazily") introduced both.
-> > 
-> > I'm not entirely sure what the best way forward is.. we can simply 
-> > delete the warning, or make use_temporary_mm() tag the special MMs 
-> > somehow and exclude them from the warning.
-> 
-> So, mm_cpumask is basically tracking on which CPUs the MM ran on, and 
-> this gets cleared lazily whenever there's an opportune time, but not 
-> during context switches (for shared cacheline performance reasons), 
-> right?
-> 
-> So why do we need to clear the mm_cpumask in unuse_temporary_mm() to 
-> begin with:
-> 
-> 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
->         cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
-> 
-> What TLB flushing are we worried about here? Nothing much should 
-> trigger any TLB flushing for text_poke_mm AFAICS?
+This small patch series adds clock and reset management for the GPU in
+the T-HEAD TH1520 SoC through the generic power domain (genpd)
+framework.
 
-No, it will actually try and issue TLBI for text_poking_mm and then
-things go sideways. If you look up the original thread:
+The TH1520 GPU requires a special sequence involving multiple clocks and
+resets to safely bring it up. Coordinating this sequence properly is
+necessary for correct GPU operation. Following discussions on the
+mailing list with kernel maintainers [1], the recommended approach is to
+model this complexity inside a power domain driver, keeping SoC specific
+details out of the GPU driver, clock framework, and reset framework.
 
-  https://lkml.kernel.org/r/20241113095550.GBZzR3pg-RhJKPDazS@fat_crate.local
+This series consists of four patches:
+- Patch 1 introduces a new dev_pm_info flag to allow device drivers
+  to detect when platform PM domains manage clocks or resets
+- Patch 2 updates the AON firmware bindings to describe the GPU clkgen
+  reset
+- Patch 3 extends the TH1520 PM domain driver to handle GPU-specific
+  clock and reset sequencing at runtime, using genpd start/stop and
+  attach/detach callbacks
+- Patch 4 updates the Imagination DRM driver to skip direct clock
+  management when platform PM ownership is detected
 
-you'll find this was discussed. You were on Cc there.
+This approach aligns with recent efforts to treat PM domains as
+SoC-specific power management drivers, as presented at OSSEU 2024 [2].
 
-Some of the solutions there made the TLBI not explode, but fundamentally
-the whole temporary_mm thing is CPU local and the CR3 switch away is
-sufficient.
+This patchset continues the work started in bigger series [3] by moving
+the GPU initialization sequence for the TH1520 SoC into a generic PM
+domain driver, specifically handling clock and reset management as part
+of GPU bring-up.
+
+v2:
+
+Extended the series by adding two new commits:
+ - introduced a new platform_resources_managed flag in dev_pm_info along
+   with helper functions, allowing drivers to detect when clocks and resets
+   are managed by the platform
+ - updated the DRM Imagination driver to skip claiming clocks when
+   platform_resources_managed is set
+
+Split the original bindings update:
+ - the AON firmware bindings now only add the GPU clkgen reset (the GPU
+   core reset remains handled by the GPU node)
+
+Reworked the TH1520 PM domain driver to:
+ - acquire GPU clocks and reset dynamically using attach_dev/detach_dev
+   callbacks
+ - handle clkgen reset internally, while GPU core reset is obtained from
+   the consumer device node
+ - added a check to enforce that only a single device can be attached to
+   the GPU PM domain
+
+[1] - https://lore.kernel.org/all/CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com/
+[2] - https://osseu2024.sched.com/event/1ej38/the-case-for-an-soc-power-management-driver-stephen-boyd-google
+[3] - https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
+
+---
+Michal Wilczynski (4):
+      PM: device: Introduce platform_resources_managed flag
+      dt-bindings: firmware: thead,th1520: Add resets for GPU clkgen
+      pmdomain: thead: Add GPU-specific clock and reset handling for TH1520
+      drm/imagination: Skip clocks if platform PM manages resources
+
+ .../bindings/firmware/thead,th1520-aon.yaml        |  11 ++
+ drivers/gpu/drm/imagination/pvr_device.c           |  14 +-
+ drivers/pmdomain/thead/th1520-pm-domains.c         | 199 +++++++++++++++++++++
+ include/linux/device.h                             |  11 ++
+ include/linux/pm.h                                 |   1 +
+ 5 files changed, 232 insertions(+), 4 deletions(-)
+---
+base-commit: 7c89da246c1268c8dbfc1c7f1edc55aabce45b43
+change-id: 20250414-apr_14_for_sending-5b3917817acc
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
+
