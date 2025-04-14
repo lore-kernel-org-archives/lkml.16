@@ -1,110 +1,123 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C7828467A;
-	Mon, 14 Apr 2025 14:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE002797A2
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641149; cv=none; b=f2ZeFzETBNDKIX00+tYpdMJKfOG50x32+ifDk3nyKAql59VNTzjpp1tJsZlVTeTbdg1ob3o1h2KhhWWErlU9qrgN1I/Fb45siwzpdD3rtV9uY69dfTVS+zx5dlibBU8yWBoTSrXfNsDO59sawud7yOWA265Ee8c2ZkWyNnDX3eU=
+	t=1744641171; cv=none; b=sjAMzc3nw+Zdqk6z/f3PBEWdHI6ZoM8ElEU6DLQs6cbFMysw7lXvHJV8vwOTZrbq6p6a72tW/FkQ7xL5MeqKFcHKPW3Mm1eRukzcyYHV5PVbYt+I0xAq/8f9UqZcmnjVmJH3OHOqwAOxQxt277QbaEXZJdZv6LAQhvmT6UABplE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641149; c=relaxed/simple;
-	bh=Ognfh7wJOPNlfUCFIxmGGVXr3bmYiK+ZrCCmo20WZTw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZoDXtul3nXrJm9hTHsI57IRJ/3TALQcozxi5yiCoCXZCsQMMWhVnrf3n2hxY26Uhd28xqi27nXO3tpaCJXtblSge+MibUNyfOpn2t9UpSqNf2YY5hDxl7vEVM8jKC5Sw+CsRNDqLuIE98bqRjknZW9BfdlbS/jT8EufQShRrksw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WX48ZoZo; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744641171; c=relaxed/simple;
+	bh=jpjZmA4zgM3AY74Jxbvk/XGeCsdF79xZ+w0kBMrXYKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PZzie4vkoOtD2NrjB93BssHyidl+qU7Bs2KOBbsKeFUzvuz+Rc+SYpTK17Wl9EwV84c1heQwpdKAMADybsMqyfDHmg8PxHRdqfQvIbag1Rqka/zENnEEnRWqoE8k0eqlVOOZ9atx737QJozO/gqIeRRQCgpdhyqhWGYsLAEwiso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LQHD6mBL; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WX48ZoZo"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6ecf0e07954so63129336d6.1;
-        Mon, 14 Apr 2025 07:32:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LQHD6mBL"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af579e46b5dso3215986a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744641146; x=1745245946; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DEISKZ32+v6e9D8ZKBglVGv5jngtAwP6VcoGwP1gGiA=;
-        b=WX48ZoZoZGmpivfRgFqvWCUQ7cnrvt6rsOOOw/HgZX12+Duou/y9bSWmag2m19Aq8t
-         cXqvYG+OzM4RTcM3TR8iMs6ULTbuFV6oPdhftbZszX0VEsfJAR7IM+H/yicLUfTmLXdK
-         6vPdD/8vyjZ8Zhodzohdm059Y2gMKjylS6Hs8V6XNohKWkosKlXgF6Ty/hk3ToPwLO6u
-         iQVJpGe48kHNMv4gAiLTiWBFIdPpiwbFZJlRd3Ocq4Afy3Vs3zXAzTl6QnSPS0a/JkpN
-         I+YYltzltEQZ45Ggsxt8uiVjly3rfF7ImFCQ/piD/2aXCMGN1Ci42lWt4zsBuQ39CPB2
-         eVDQ==
+        d=chromium.org; s=google; t=1744641164; x=1745245964; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hEwbITKXTRWO3igClAwf6QVpWecwQU37EfC9bLpZ+hI=;
+        b=LQHD6mBLNwA5HqG8UweX+fcqE3YzoeGIZSnJyy/Qx+9WthcwWytYjZhGbt2NKfv4aQ
+         Kp5z0bkfMszJLmEUemyChd1CpfRgNB4PADFNya0xYuWm4CX2HU6TBjbEuYFNki8sizNS
+         aM5ls2kVrnVh0ZtexiYvjbVH4cmVIELB9/YCk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744641146; x=1745245946;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DEISKZ32+v6e9D8ZKBglVGv5jngtAwP6VcoGwP1gGiA=;
-        b=lp1LdrRqIJtxbHaUP1n4lnSRo7TDGclJjCjp+uoiG4O+h54mb4bBgKLA1mn+lPtDED
-         2t9WJNkH+v+N31cwmkower13AUW3ZCkp0LJwUCPy+8bqKvJllC24Okwo0YEMJOPNBIza
-         KKwpc+dRy4Rk07gs37hmvbjD1RTO0dRV+YUPsDUxpgk5iJs7pHTOrFariGD9n8GnD8Zk
-         xAZnoaFtUmo4cavGRLjDzirXoDVihEQWajN96RDr4GpYzmM0hZIuw0XcQBC7QAFtArl7
-         ZECXcdrGkp/wx2EYAQQS48dnLdEe2qnkM+VsO09KtXY2djz302xtSrq/0lPsuC1ry5DT
-         8HhA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5v2ibXYqqXvNuoKMRd/DE0ciNIXcwvRtpEUe0g+5S11tdH8DpSMg6qPigqENjuXJ8bmPusaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze/RLLG6DsqN+CatwIg8KOPB68iTBB0q9nTDNpe1IvjBP8jjc1
-	4Zam7/n0KEFQkewzChkxFxyUEZR7wvFJZQD8UHkJBiJBW5Jlit1K
-X-Gm-Gg: ASbGncuc+V1I6BAqNNN2osmpgUMkRQHiLzBSQAtexmBl4Rtq10Wce9Qnfkuc6t2gSZ+
-	X5nNNsXMugVPLZbmN1L0MrphIFovec0C1eeEUozxqTAg3/j+PBObI0wglI+CiZi0W3mRzlmY84O
-	70QQ2MYrV4451HsghifjeB9YAVNWFFq57AROPyqZWT1YGrzRgWNRn4KdZv3ljX2+AvpFNe0F8MY
-	4W1+G1QDZqIWFbTu3hRw3g2MdBI/+NcCQ5zkB+jq519WkgUxErCOMeUClU/7/RBPD02+h4FMzVd
-	zZ2JM3J0F08dmgj2GcJjVxiI/ITB+EejtBWywwa1QLhQ5vK0+GEsHekWs/At8mh3fjMiVNTFIzU
-	j/g==
-X-Google-Smtp-Source: AGHT+IFfw7TFgAS1+PJ2ixoq5QbghC65zW6OUluhn0c2YqIkAi39TMiTOlYUimLRyzbcfwSs961xew==
-X-Received: by 2002:ad4:596f:0:b0:6e8:f65a:67c5 with SMTP id 6a1803df08f44-6f230cf5d59mr176620996d6.11.1744641146211;
-        Mon, 14 Apr 2025 07:32:26 -0700 (PDT)
-Received: from fedora.advaoptical.com ([82.166.23.19])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea101dasm83906436d6.97.2025.04.14.07.32.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:32:25 -0700 (PDT)
-From: Sagi Maimon <maimon.sagi@gmail.com>
-To: jonathan.lemon@gmail.com,
-	vadim.fedorenko@linux.dev,
-	richardcochran@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Sagi Maimon <maimon.sagi@gmail.com>
-Subject: [PATCH v1] ptp: ocp: fix start time alignment in ptp_ocp_signal_set
-Date: Mon, 14 Apr 2025 17:32:20 +0300
-Message-ID: <20250414143220.121657-1-maimon.sagi@gmail.com>
-X-Mailer: git-send-email 2.47.0
+        d=1e100.net; s=20230601; t=1744641164; x=1745245964;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hEwbITKXTRWO3igClAwf6QVpWecwQU37EfC9bLpZ+hI=;
+        b=vaLR11ykMqoqcgKsZ35xWizQpxr1Luvwv6YvGios5SrUbW+y1+RV+vg/8w/H0+BZI+
+         QXvCvYSnuQbz57TMZNlliOf6L+cHIANP/E6w3D1fD9NcCocN6cbxdfi0qpX6bJbGsoBs
+         Dsj3uPrZFHJV/ZqxzZ8Bh19x7D6Bi67xupbu4rLEqHPdPlcaG945Cb9nA1zshPhz0mye
+         yvgOErX2L5SmIq4ayKXduJ8bpLgnBnV/7XjdzkINy3h/+uV66gZ4SEcc/iY6lpg0fdVM
+         CLYIw45UEulKhwF2YWA5gumjYeo92/mruDee0CTQYwWwXWjmVVnPUKSKkHIOQAZcOc+a
+         kxDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZHsnKicnmzLsoZSkEbFZA67/y8pEJdmlmiOjbVFyXYGKqEPD0zNsofN09rklTemmZQ/KgDNJ5s+cw+5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymcTndVxBTkAVTZk/XUoViEanBvDTZvOcnW8UqTsZAAwlXcDvM
+	QPZVy5p9ucJDQBxObfqLyXbj7RSJuEo07qTwYb6HYH0BtPursOG3khKPUSmgTj6W8poxT3xd5SM
+	=
+X-Gm-Gg: ASbGncvzDVaov0vS3PivQfLEQkBsyqHL+nmAq0ybOrJtWEeihv71KXvUNwi/JNNh4WH
+	5//i4B3nzlpPWBoPWFJ4z0teQLCXcozwixJeBhGgBjqdEeVTskUQVNZzZbcfwBiVfoE/NK2o6QB
+	UJcaZ4D2fyv++i1xkNyPsJKQz+QAtYzwus25d5MzEquTY0meNrAJ5TYr1RFBhdGF3c71+M9W3Yk
+	iDKolvO86WceTf8x+FUdvqbQbNdhw09EgsYw+0O+8jHV2QMVNg/3hIJ3lZQ5JuTmIlruh1ErhAL
+	fuT4qDhcYgpY/V2zW09PA6kMF+TCh1ESdVkX5LKJH4wwBloV2j0azvX/J/ooX+NbIUAwiG7lOMc
+	GsX1NGtyzw5zx7KM=
+X-Google-Smtp-Source: AGHT+IF368d+wQI4Jpk60t16L+SwWpA0hf7g4jHNLoDiHNlmjx3Zv0QRv/CIvqooQJXsgfdeu5rfBg==
+X-Received: by 2002:a17:903:244c:b0:223:4d7e:e523 with SMTP id d9443c01a7336-22bea4fd198mr166705445ad.50.1744641163448;
+        Mon, 14 Apr 2025 07:32:43 -0700 (PDT)
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com. [209.85.216.52])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cf3sm99813615ad.156.2025.04.14.07.32.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 07:32:40 -0700 (PDT)
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so4482105a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:32:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXFxxXq9z5QVbxx0HBCdzLJNKJFYJmEN0s84kb/rhQUdyzEQ4efUAlB2JIfJu0cE9zqRlvRF6mRycnwYP0=@vger.kernel.org
+X-Received: by 2002:a17:90b:538f:b0:2fe:d766:ad8e with SMTP id
+ 98e67ed59e1d1-30823624780mr18884993a91.4.1744641159979; Mon, 14 Apr 2025
+ 07:32:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250413035959.255842-1-tejasvipin76@gmail.com>
+In-Reply-To: <20250413035959.255842-1-tejasvipin76@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 14 Apr 2025 07:32:28 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V5bfaBA-ZOyG2UCpCwE=5bGP4GFDTW3qQ671raTVnq=Q@mail.gmail.com>
+X-Gm-Features: ATxdqUEtNjRWho83CnY45CQBEgIpB6T8M8gcQk2GkqBNaYtQ6vGZNkbRYOrJfPQ
+Message-ID: <CAD=FV=V5bfaBA-ZOyG2UCpCwE=5bGP4GFDTW3qQ671raTVnq=Q@mail.gmail.com>
+Subject: Re: [PATCH v3] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi
+ wrapped functions
+To: Tejas Vipin <tejasvipin76@gmail.com>
+Cc: neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, asrivats@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In ptp_ocp_signal_set, the start time for periodic signals is not
-aligned to the next period boundary. The current code rounds up the
-start time and divides by the period but fails to multiply back by
-the period, causing misaligned signal starts. Fix this by multiplying
-the rounded-up value by the period to ensure the start time is the
-closest next period.
+Hi,
 
-Fixes: 4bd46bb037f8e ("ptp: ocp: Use DIV64_U64_ROUND_UP for rounding.")
-Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
----
- drivers/ptp/ptp_ocp.c | 1 +
- 1 file changed, 1 insertion(+)
+On Sat, Apr 12, 2025 at 9:00=E2=80=AFPM Tejas Vipin <tejasvipin76@gmail.com=
+> wrote:
+>
+> Changes the boe-bf060y8m-aj0 panel to use multi style functions for
+> improved error handling. Additionally the MIPI_DSI_MODE_LPM flag is set
+> after the off commands are run in boe_bf060y8m_aj0_off regardless of any
+> failures, and regulators are disabled if the boe_bf060y8m_aj0_on call in
+> boe_bf060y8m_aj0_prepare fails.
+>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> ---
+> Changes in v3:
+>     - Disable regulators in boe_bf060y8m_aj0_prepare if
+>       boe_bf060y8m_aj0_on fails.
+> Changes in v2:
+>     - Always set MIPI_DSI_MODE_LPM in boe_bf060y8m_aj0_off
+>
+> Link to v2: https://lore.kernel.org/all/20250331061838.167781-1-tejasvipi=
+n76@gmail.com/
+> Link to v1: https://lore.kernel.org/all/20250330151304.128417-1-tejasvipi=
+n76@gmail.com/
+> ---
+>  .../gpu/drm/panel/panel-boe-bf060y8m-aj0.c    | 114 +++++++-----------
+>  1 file changed, 44 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index 7945c6be1f7c..e5b55b78a6d7 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -2067,6 +2067,7 @@ ptp_ocp_signal_set(struct ptp_ocp *bp, int gen, struct ptp_ocp_signal *s)
- 	if (!s->start) {
- 		/* roundup() does not work on 32-bit systems */
- 		s->start = DIV64_U64_ROUND_UP(start_ns, s->period);
-+		s->start = (s->start) * (s->period);
- 		s->start = ktime_add(s->start, s->phase);
- 	}
- 
--- 
-2.47.0
+Not worth resending for, but for future reference this probably should
+have been marked as "v4". Now there are two versions both marked "v3"
+that are not identical.
 
+In any case, looks good to me.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
