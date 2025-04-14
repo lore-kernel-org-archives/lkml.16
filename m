@@ -1,101 +1,108 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6312957CD;
-	Mon, 14 Apr 2025 13:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8920296D03;
+	Mon, 14 Apr 2025 13:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637336; cv=none; b=fM6TcYLLaU0QP28AhSJizI12c6zCvH2Jzq4WDwnPc373/VIAAHr+I/tgBP+TWIpj5Ao7C/p1teOKO1msEJ3OrdWlLYaBPXIrcceuyPSXkEOh6awoaKeJfjHKeNDWN3SWuyb9948PPK4k7inF5Lo9hxF1k+/J9FrMFp5+VeELQqw=
+	t=1744637338; cv=none; b=O/gi6WywXOukr5WyajjYJ9GAzFVrBS8+KSeNjJlA4yl9nhco56CQLUic9OAzMiL4CPY6jGLpJWQZTcTrj0Efx5J4kH/FndChZgkXAU5yCCBucxO81Sw5zzjzq1U79w7E2RFhgU7K5xw7DSJrcleMIVSzpq2BFpnad8N8fICBRNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637336; c=relaxed/simple;
-	bh=6C5Jici+EhLeC4d7iAWY8LbyVL6AZqGWquMhefHINnQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iul95l4yYz8w+owN5j3N7CiXQF0qwWFpn5qxfDNHiliL0oaRntVuq2Pm3VQZxV6XVumbtJ1w7l3YqR4dA6vVeNfWyBqjz9pijKOJrJpQEBJOXqOlAtY6dRXmvILtW0B5D/ykLFdmJWRbypC+GcK7MLBC0ErQi37ymIzvGCwK9A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jd9WLyX8; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744637338; c=relaxed/simple;
+	bh=Skw2haJGpIZiFYqO2n3E1IxwuSukQmD1H2oxwPBWPho=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MRY/SFy6cIvEl5MxG7e1uSIdFWzgGbcDmDN+VINqF3NQBrZg1L82/BFWCP8LbQvAyJLRDCZgG9etQW3asPHhRaR3QHAeNrtwEHKOatHp/4RqiB1JL6z/+jOhZY89OWjaARs3mclB/KKa93l1TqarwVQJ3CnwJxRWDUTgRwNv70U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FI1XV/0i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jd9WLyX8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744637331;
-	bh=6C5Jici+EhLeC4d7iAWY8LbyVL6AZqGWquMhefHINnQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jd9WLyX895EKUjHfL//CV32DucIcz3vI971IypjJ/VtSZ0bnryE/NwcUE4aA/ntqW
-	 LT7smg2s9M5tcwC1Qq4QNiVPBOLrhnUpSdoC8Z7d8HGtM1qg2cFrwBt58/U2duC8hn
-	 qkkapL95veKTcscEzHUO3+/syZaqUbjh7oPQn8xWloLeq1WkG/88NpHtgOA5bnax6Y
-	 wOcm9HGZigw3XeYvH4t7s35JH1rMKmPtP+0AMZH5cHBGCLaHG6ZSvsytDyg00JjoNj
-	 Ajj7nBcfxoCfFF428trLp8AKC8KwTvGjn6uEodv2xo3g4rDxalqd6R1HGCfziE/Ydq
-	 pUv8dc62tNr3Q==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F347717E017D;
-	Mon, 14 Apr 2025 15:28:49 +0200 (CEST)
-Message-ID: <296144dec19f3aee958dcdae7700e7a7ed38b8ff.camel@collabora.com>
-Subject: Re: [RESEND PATCH v1 0/7] Performance improvement of decoder
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: "jackson.lee" <jackson.lee@chipsnmedia.com>, "mchehab@kernel.org"	
- <mchehab@kernel.org>, "hverkuil-cisco@xs4all.nl"
- <hverkuil-cisco@xs4all.nl>,  "bob.beckett@collabora.com"	
- <bob.beckett@collabora.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
- "lafley.kim" <lafley.kim@chipsnmedia.com>,  "b-brnich@ti.com"	
- <b-brnich@ti.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, Nas Chung	
- <nas.chung@chipsnmedia.com>
-Date: Mon, 14 Apr 2025 09:28:48 -0400
-In-Reply-To: <SE1P216MB130320F62126A2F02BDB7FB3EDB32@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-References: <20250410034002.88-1-jackson.lee@chipsnmedia.com>
-	 <b11f2cd9706c409775a44db06dd8399193be3758.camel@collabora.com>
-	 <SE1P216MB130320F62126A2F02BDB7FB3EDB32@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FI1XV/0i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E14C4CEE2;
+	Mon, 14 Apr 2025 13:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744637338;
+	bh=Skw2haJGpIZiFYqO2n3E1IxwuSukQmD1H2oxwPBWPho=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FI1XV/0i5hqfT4X9azDEfCMqTtY3W7F9M6CPxTbCPknVCdlPVytwoGIVJCFgx/6qD
+	 3WBx+L0ogcB0Eq6/+O/YDa200il4cbeFWoJRHpx7+r1d44TSHvQu8S/gy8aq8Mr0X6
+	 zmvkGGPEoP7y/sYcCiIzolcixLgKsRDMFj5yBfdLOaZNfKfvftGr9Si/O9eqFHfIg4
+	 MsFkbrDTsudeo7LbJ7TsDeenZR5EB3TQ7/2TWG2/QIQ1scq0HvStkzGwI4NjCJtMam
+	 r6OnsQjP6fBXwd4YG8xTkGlk+ihC5jT/7ZOyXuAv5HejBXvbThC/2c7fyUZfzuvlMN
+	 zaX6WoAPTMmbg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Uday Shankar <ushankar@purestorage.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	shuah@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 04/30] selftests: ublk: fix test_stripe_04
+Date: Mon, 14 Apr 2025 09:28:21 -0400
+Message-Id: <20250414132848.679855-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250414132848.679855-1-sashal@kernel.org>
+References: <20250414132848.679855-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.23
 Content-Transfer-Encoding: 8bit
 
-Jackson,
+From: Ming Lei <ming.lei@redhat.com>
 
-Le lundi 14 avril 2025 à 02:04 +0000, jackson.lee a écrit :
-> > > Sequence Change test
-> > > =====================
-> > > gst-launch-1.0 filesrc location=./switch_1080p_720p_240frames.h264 !
-> > > h264parse ! v4l2h264dec ! filesink location=./h264_output_420.yuv
-> > > Setting pipeline to PAUSED ...
-> > > Pipeline is PREROLLING ...
-> > > Redistribute latency...
-> > > Redistribute latency...
-> > > Pipeline is PREROLLED ...
-> > > Setting pipeline to PLAYING ...
-> > > Redistribute latency...
-> > > New clock: GstSystemClock
-> > > Got EOS from element "pipeline0".
-> > > Execution ended after 0:00:05.772414400 Setting pipeline to NULL ...
-> > > Freeing pipeline ...
-> > 
-> > I did a test of my own here, and did get kernel splat. The warning
-> > indicate that the state machine is no longer respected. This needs to be
-> > address in v2, we added these check, since the locking is bound to legal
-> > use of the state machine.
-> 
-> 
-> Since applying the performance patch, device_run and wave5_vpu_dec_finish_decode is not synchronized any more.
-> How about removing this warning message ?
+[ Upstream commit 72070e57b0a518ec8e562a2b68fdfc796ef5c040 ]
 
-I would like to understand how it makes sense the we've reached STOP
-state while the HW is still actively decoding. It does not feel robust
-to me, perhaps you want to introduce a new state ? Also, I'm concern
-with overall thread-safety now.
+Commit 57ed58c13256 ("selftests: ublk: enable zero copy for stripe target")
+added test entry of test_stripe_04, but forgot to add the test script.
 
-regards,
+So fix the test by adding the script file.
 
+Reported-by: Uday Shankar <ushankar@purestorage.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Uday Shankar <ushankar@purestorage.com>
+Link: https://lore.kernel.org/r/20250404001849.1443064-1-ming.lei@redhat.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../testing/selftests/ublk/test_stripe_04.sh  | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100755 tools/testing/selftests/ublk/test_stripe_04.sh
+
+diff --git a/tools/testing/selftests/ublk/test_stripe_04.sh b/tools/testing/selftests/ublk/test_stripe_04.sh
+new file mode 100755
+index 0000000000000..1f2b642381d17
+--- /dev/null
++++ b/tools/testing/selftests/ublk/test_stripe_04.sh
+@@ -0,0 +1,24 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
++
++TID="stripe_04"
++ERR_CODE=0
++
++_prep_test "stripe" "mkfs & mount & umount on zero copy"
++
++backfile_0=$(_create_backfile 256M)
++backfile_1=$(_create_backfile 256M)
++dev_id=$(_add_ublk_dev -t stripe -z -q 2 "$backfile_0" "$backfile_1")
++_check_add_dev $TID $? "$backfile_0" "$backfile_1"
++
++_mkfs_mount_test /dev/ublkb"${dev_id}"
++ERR_CODE=$?
++
++_cleanup_test "stripe"
++
++_remove_backfile "$backfile_0"
++_remove_backfile "$backfile_1"
++
++_show_result $TID $ERR_CODE
 -- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+2.39.5
+
