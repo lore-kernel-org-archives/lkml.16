@@ -1,39 +1,48 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC93F1A08AB;
-	Mon, 14 Apr 2025 17:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C6C288CB6;
+	Mon, 14 Apr 2025 18:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744653561; cv=none; b=ZzLJtcmRk2+QLVIwhIAQcdJDCnNBNqKS3DW9I71hZCzh/7U63qz0LUmGHGtjheL1zRqspl4yAuax1MKuAxcmnpmMLUEnO0nmrJWeZsRlAuaDlPooKy6RQsZRLXgrTuqHjPaa+epDDAZNLz1A5TKk7haqlX0yrGMauc4FcbOUVJo=
+	t=1744653612; cv=none; b=RIX+11W6vn4FnNVc9HRXbIMfM/M+Vuz1HefaYRAXVyFi72FgGdEWFjIBftwRo1obL51gDgrzRrWXx0ITBOYXeaZeu8eH7vKuf9QGRQfPgtT/VgMwIoiiDp8wLHTdVwVhGqtigcOZddqqaWa7inK5rZaVmEC5cq7UXMOOxloRVYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744653561; c=relaxed/simple;
-	bh=izHoMpjiDMEPcNnJKy/EPdzd29yVBe0tWK63jGCJu1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RhoXzD10VugpkdXxByy8eoUbuO4tR5Wxf5pRMUGOGazXHJ5/JZfIIDCnsQng0Fg6QSdAhwGte+rHV4Vyjv1MwkL1sO1CeAy038E9OTRZ78ZOJjoG55qtRGVn2P3mKBma8XGMIxA4NKC3n7igkEYd8SlDwA/Gs88lR9ee6aH+SNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OvSSxGHc; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744653612; c=relaxed/simple;
+	bh=+CoYcsP98tUeuncLLLFjvVY9A37RssOyoYXVp+8fEpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nX0xRBvC19w9Y2dGRXnn/3hl5KNWoQbl1qXvMj+FpbGs0HbAEN0o7hzZej8wPiXSQhBMsiJp00uMLAnlT1+gAbs3ExKV1vwOqozN1jvTaCcnX3JP/7m4ZvNn2TcQc5esoKlLQGDCQ2a1DqgcplZ88ofOUUmEftknS5HV5c5A1yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OZV6rAjo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OvSSxGHc"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53EHxDr72308244
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 14 Apr 2025 10:59:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53EHxDr72308244
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744653555;
-	bh=p4lhl3SeNve08MUw1GRBS2FETk4fVhCOs/fGiDb9eW4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OvSSxGHc5YBn+D0+RJiBGNfTLRJTg2TxHIAFv7wpUgwlTQf2QC+J5AdRUMEMZxDDG
-	 rmVzV5dgbGeILeguDEe/S6vytJzVDCr3+CuOGbjQ7S73vU60Um+ecZO+zDlw9GrtgN
-	 QqQBkh61qbhhwEf4n0jsrsuliOIPidtxWqJYKarsEN6+8/4rDNMQLjOXiAcLuCnRhd
-	 I7kt2XwCQ017eo6BzYMAK0XJ/2twgpI72QkiU9E/MbFA6zROi42JiZCYMX7Mp3zAO2
-	 I8Zh62sf9bRboagIVItnHBiAxO1IrX7vr36qIRGoU1gk7YGbU2ZM247wV2Wa/d+Tr+
-	 6k7+cojOyyDTQ==
-Message-ID: <ab422dd6-94aa-4da7-9f92-fe358bae8ed5@zytor.com>
-Date: Mon, 14 Apr 2025 10:59:12 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OZV6rAjo"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E9AF9T017437;
+	Mon, 14 Apr 2025 18:00:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+m3M7q4RcMjSlbZqaN3PtP+0QBeAAlsXq7JC4+LsdA0=; b=OZV6rAjo/XCBN5sF
+	Uvc+kqFXH3xiJRyXKau+5wYOVdtNLTr88zklQZpJk1ZIRl5/zInqS5BTNa/y5wZ9
+	iqtybdYnW6oCCoB9fgHyYHQQTLNte8EF9DU5UgFHcpsDu3seqvih0z5SLl5HnD9N
+	K8yAa7RL0uIYDz1P5tlKucGVYarNxPtSxePmxrRAWvNb7DSs4xiPTLs5BeZfkWE/
+	tdqkeQ49YkFJ8aiN9Trh7u/B8c4iMxVFu/n8UzQAt5KuOuJOZ6LhX20F+Q+Q+8cz
+	XLstUJKHrukk/oN7ynn3KLCnGFe0SFFp3zzbFiLfWCGPscD771uF4kRRTz6hcrtn
+	KIcs3g==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6de10-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 18:00:06 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53EI05Nb018506
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 18:00:05 GMT
+Received: from [10.216.13.250] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 10:59:57 -0700
+Message-ID: <1e69b6f5-efe7-4b81-8bea-b463b1eacfd4@quicinc.com>
+Date: Mon, 14 Apr 2025 23:29:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,72 +50,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] Documentation: kvm: Fix a section number
-To: Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: pbonzini@redhat.com
-References: <20250414165146.2279450-1-xin@zytor.com>
- <87sema8yhy.fsf@trenco.lwn.net>
- <747d9d7d-c500-46f0-b0f8-a157dc7524ad@zytor.com>
- <87o6wy8who.fsf@trenco.lwn.net>
+Subject: Re: [PATCH v1 4/9] soc: qcom: geni-se: Enable QUPs on SA8255p
+ Qualcomm platforms
+To: Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
+ <20250410174010.31588-5-quic_ptalari@quicinc.com>
+ <abbfc13d-d6f5-485f-a73d-6a89e15f0ff6@kernel.org>
 Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <87o6wy8who.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <abbfc13d-d6f5-485f-a73d-6a89e15f0ff6@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: mcRZeR5fc5ZqeuH0u5O6SW9r8zsyvGff
+X-Proofpoint-GUID: mcRZeR5fc5ZqeuH0u5O6SW9r8zsyvGff
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=67fd4d26 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=BTMtgF0SbkP0gLXr6YcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140130
 
-On 4/14/2025 10:48 AM, Jonathan Corbet wrote:
-> Xin Li <xin@zytor.com> writes:
-> 
->> On 4/14/2025 10:05 AM, Jonathan Corbet wrote:
->>>> -7.37 KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
->>>> +7.42 KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
->>>>    -------------------------------------
->>> The fix seems fine but ... I have to ask ... do the section numbers buy
->>> anything here?  We have a documentation system that can do nice
->>> cross-references when needed, so I'm not sure that these numbers add
->>> anything other than a bit of manual maintenance hassle.
->>
->> So you prefer to get rid of the section numbering?
->>
->> Looks it makes it simpler to maintain the documentation.  But that would
->> anyway be another serial patches, right?
-> 
-> *I* would prefer it, but that call is really up to the KVM folks, not
-> me.  Their preference far outweighs mine on this ... I'm just venting :)
 
-/facepalm
+On 4/14/2025 1:26 PM, Jiri Slaby wrote:
+> On 10. 04. 25, 19:40, Praveen Talari wrote:
+>> On the sa8255p platform, resources such as clocks,interconnects
+>> and TLMM (GPIO) configurations are managed by firmware.
+>>
+>> Introduce a platform data function callback to distinguish whether
+>> resource control is performed by firmware or directly by the driver
+>> in linux.
+>>
+>> The refactor ensures clear differentiation of resource
+>> management mechanisms, improving maintainability and flexibility
+>> in handling platform-specific configurations.
+>>
+>> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+>> ---
+>>   drivers/soc/qcom/qcom-geni-se.c | 78 +++++++++++++++++++++------------
+>>   1 file changed, 50 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/qcom-geni-se.c 
+>> b/drivers/soc/qcom/qcom-geni-se.c
+>> index 4cb959106efa..5e2add1e04d3 100644
+>> --- a/drivers/soc/qcom/qcom-geni-se.c
+>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>> @@ -105,6 +105,8 @@ struct geni_wrapper {
+>>   struct geni_se_desc {
+>>       unsigned int num_clks;
+>>       const char * const *clks;
+>> +    int (*geni_se_rsc_init)(struct geni_wrapper *wrapper,
+>> +                const struct geni_se_desc *desc);
+>>   };
+>>     static const char * const icc_path_names[] = {"qup-core", 
+>> "qup-config",
+>> @@ -891,10 +893,44 @@ int geni_icc_disable(struct geni_se *se)
+>>   }
+>>   EXPORT_SYMBOL_GPL(geni_icc_disable);
+>>   +static int geni_se_resource_init(struct geni_wrapper *wrapper,
+>> +                 const struct geni_se_desc *desc)
+>> +{
+>> +    struct device *dev = wrapper->dev;
+>> +    int ret;
+>> +    int i;
+>> +
+>> +    wrapper->num_clks = min_t(unsigned int, desc->num_clks, MAX_CLKS);
+>
+> I thought min_t is no longer needed in these cases?
+
+it is needed since there are two types of QUPs - the normal QUP which 
+uses 2 clocks,
+
+and HUB QUP which uses only 1 clock.
+
+>
+>> +
+>> +    for (i = 0; i < wrapper->num_clks; ++i)
+>
+> FWIW i should be unsigned too.
+>
+> thanks,
