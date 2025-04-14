@@ -1,101 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069121B0F3C;
-	Mon, 14 Apr 2025 22:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E68A1B0F3C;
+	Mon, 14 Apr 2025 22:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744669774; cv=none; b=q16QYPr9dYildzE6w2jnNRcJvYVD1GgzUs9++lIPbEcChiTFXouWnjiiqC/hT4C/sD1zJN1kL3UQc1GLqczbMc7i/euG5JQCy4ioEaX5YpQxmgJMrZBWrrssXMJnw3kxf6yhJ9T23c3sZZHRSGIVMBBDYcKduAYn8y4plQwIPsU=
+	t=1744669781; cv=none; b=TiwEGZVoR/q7VAjKH2E3Um7+bHPXDrUJ5k5HhfFtkvUBG5jJKvrUEbqzqop1i7E0CFlrNST+M9IuPKK/bCY0bzh98A4UEGqOXcYwLBKzGFfFNSHIw8H+FCo8XKIeeOwpdyfduLUsId9crYX5gZjCkGEc045w2Ach1oDowkDCXB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744669774; c=relaxed/simple;
-	bh=MVlqs/ATqHLPaxxaiCF96uREsAduXa5I6ciuYSAoyY4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Xzb4KKL/RETnPyqKJ+M4MU2HGvKOv8sxOJIgkA63n3lMfjr8/e0pctGzIT5SAtKmCnqI3uv0BIYqdlBq6cxNTWGWwVdEhWhcPLi91DUStehLBSel0WRPt4gpe4vZdaVis7xRfX+YG+eyqOZq3tIlApHGXi8j4OmqP8UGXKms2n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBkQLXzj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744669781; c=relaxed/simple;
+	bh=aWzFmrByEiQpHeFqUMLJWrw0YrAKBEXSIOzTMhlEszA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SA8gN4MeI10ExILi9BDlVU1zYMN1qFl55CDVyzeBNilt/GwFITrsdQ5yz6TP5+KXt6ub0YQ9DU/zSa1/UKpUX3HAuCkmvea2WB3eZWuyJ7R60yP0Qs3q+xaC5VwdOLDLWOtbnKQ6I42zwk6HNOhzC0YX3x3RqyFBONECpRXcTAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=JN3DTeIO; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBkQLXzj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359CDC4CEE9;
-	Mon, 14 Apr 2025 22:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744669773;
-	bh=MVlqs/ATqHLPaxxaiCF96uREsAduXa5I6ciuYSAoyY4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QBkQLXzjgmTSicJ4PFikso2I2Z5kVvuLAeNdpBP4+qrDAY5E0X2iKJqTGZXrN88vQ
-	 eVJNJWuESjme3Rr6Z9NgPYdEr1n4HLoLXygL3NLibGrlAEJ1X1FrvN5y2HYoXoyGGg
-	 13sMAeI0jNJcp0ETo9/F4M7c2tQfuLzLh0pHns3yMLBW5RpiZqq7KdbcRiDVWBHPES
-	 6gls1PqBA2lZFJ3Ih9C1vf02htkTJXkkLj3S/N+QkdIGEBVZgRK4w8hXOAXsvimZth
-	 VBqKFHNCAeaXBHYq83dIa/+vIyjHyvYga2wNlsAZFOn+zFtOSlbgA25UtI2yK70xYR
-	 MbvuBohwZXktQ==
-Date: Mon, 14 Apr 2025 17:29:31 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JN3DTeIO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744669780; x=1776205780;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aHHd5cv1PbgrN2FsZ3Kqs5/AxC5vUjD32/KdY+9chrU=;
+  b=JN3DTeIOmY0BiGysd/I3pF84jgl0x593hegB5x/P8n2wkjOuOofBGnIP
+   htf4KICA8AxQWFbXWxg70OBNXqxLzEOzTo8AUTzYE57MucUMzZouL/ki8
+   0wbDa6Fb/ud5Qaz/1rgDki8Qhb/PPs6eiSBNuBGG+YYtufMCfuyfNaXq1
+   A=;
+X-IronPort-AV: E=Sophos;i="6.15,213,1739836800"; 
+   d="scan'208";a="40586871"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 22:29:38 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:35975]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.147:2525] with esmtp (Farcaster)
+ id ce2f6dde-b6dc-4e42-a497-b74667ee2332; Mon, 14 Apr 2025 22:29:37 +0000 (UTC)
+X-Farcaster-Flow-ID: ce2f6dde-b6dc-4e42-a497-b74667ee2332
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 14 Apr 2025 22:29:37 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.39) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 14 Apr 2025 22:29:34 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jlayton@kernel.org>
+CC: <akpm@linux-foundation.org>, <andrew@lunn.ch>, <davem@davemloft.net>,
+	<edumazet@google.com>, <horms@kernel.org>, <kuba@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <nathan@kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <qasdev00@gmail.com>
+Subject: Re: [PATCH 4/4] net: register debugfs file for net_device refcnt tracker
+Date: Mon, 14 Apr 2025 15:27:36 -0700
+Message-ID: <20250414222926.72911-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250414-reftrack-dbgfs-v1-4-f03585832203@kernel.org>
+References: <20250414-reftrack-dbgfs-v1-4-f03585832203@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org
-To: "Rob Herring (Arm)" <robh@kernel.org>
-In-Reply-To: <20250414214135.1680076-1-robh@kernel.org>
-References: <20250414214135.1680076-1-robh@kernel.org>
-Message-Id: <174466977142.1877467.9140482106900041765.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: PCI: Convert marvell,armada8k-pcie to
- schema
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D043UWC004.ant.amazon.com (10.13.139.206) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-
-On Mon, 14 Apr 2025 16:41:33 -0500, Rob Herring (Arm) wrote:
-> Convert the marvell,armada8k-pcie binding to DT schema. The binding
-> uses different names for reg, clocks, and phys which have to be added
-> to the common Synopsys DWC binding.
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 14 Apr 2025 10:45:49 -0400
+> As a nearly-final step in register_netdevice(), finalize the name in the
+> refcount tracker, and register a debugfs file for it.
 > 
-> The "marvell,reset-gpio" property was not documented. Mark it deprecated
-> as the "reset-gpios" property can be used instead. The "msi-parent"
-> property was also not documented.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->  .../bindings/pci/marvell,armada8k-pcie.yaml   | 100 ++++++++++++++++++
->  .../devicetree/bindings/pci/pci-armada8k.txt  |  48 ---------
->  .../bindings/pci/snps,dw-pcie-common.yaml     |   3 +-
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
->  MAINTAINERS                                   |   2 +-
->  5 files changed, 106 insertions(+), 51 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
+>  net/core/dev.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 2f7f5fd9ffec7c0fc219eb6ba57d57a55134186e..db9cac702bb2230ca2bbc2c04ac0a77482c65fc3 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -10994,6 +10994,8 @@ int register_netdevice(struct net_device *dev)
+>  	    dev->rtnl_link_state == RTNL_LINK_INITIALIZED)
+>  		rtmsg_ifinfo(RTM_NEWLINK, dev, ~0U, GFP_KERNEL, 0, NULL);
+>  
+> +	/* Register debugfs file for the refcount tracker */
+> +	ref_tracker_dir_debugfs(&dev->refcnt_tracker, dev->name);
 
-My bot found errors running 'make dt_binding_check' on your patch:
+dev->name is not unique across network namespaces, so we should specify
+a netns-specific parent dir here.
 
-yamllint warnings/errors:
+For example, syzkaller creates a bunch of devices with the same name in
+different network namespaces.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.example.dtb: pcie@f2600000 (marvell,armada8k-pcie): interrupts: [[0], [32], [4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/marvell,armada8k-pcie.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250414214135.1680076-1-robh@kernel.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Then, we also need to move the file when dev is moved to another netns
+in __dev_change_net_namespace().
