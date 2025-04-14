@@ -1,89 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E9718DB05;
-	Mon, 14 Apr 2025 06:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089432F32
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744612242; cv=none; b=nVsSGxeQSCbnZAilH6XVt3CUllOZua1Tht8CMe1LvcdFpllIOuw+gfuQ6KEKakyAXkVuf1f6JEiVPIqH9VMC3R1BUymNnK9u56izeDKYXb9zwPaHTAbDm7wzHGXQlcRI4eXwAlJlxDawD4anTMrUHQUxjAEPoObdQtxB1E3sSHc=
+	t=1744612285; cv=none; b=hAMYCD1+A0RtuErFndDUWz+rn2Icx/LAPMe7lkGrLpVE1r5IEyRW3NKWMLFa7KO9Yi4JAzPoaoSNAWIaxMIiIF1fKbk6yZ+ZjovCPpH7t6nzEuY1Y2hW1x7ZSwU7jfvz+tGciOp5IHD3eGfB3GwrQf9gGQrisBVe6aNxNK3Bf+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744612242; c=relaxed/simple;
-	bh=aT/4donNVn5uBD8KT5k0h2cbp19I4j5BAlV0bafHIz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRovb6d+FkaESN5rD3+Xm6bAAJK6MoOmmCfLC36LnZjzE2M5AmH38kZDmLxc21dJrTM4K1qGlMlgo6run/cX4CEn/8tIeYKRUnyk+LoMOGDBdH8JR598pK5qiVNMEePgX0A6ua56QQ1L7DEI2T2rblJgR+sgYRdrLlq47u+LY0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cjWxvZen; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cjWxvZen"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744612241; x=1776148241;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aT/4donNVn5uBD8KT5k0h2cbp19I4j5BAlV0bafHIz4=;
-  b=cjWxvZenA33FwonlXrwmpiy2zaYWTr5QmqW80DloFUP1iX385I1djUil
-   pp+86rmjACW/3JNpsKJmNBuB1fuBswZ4Xh/WaI35wceit4bkpaLkx2IN5
-   dy23UQhRiQLKAVnpBGYOFTVBDmg4x86kNwUWm+7pqUTjonc3SEhW/Pb7K
-   yQsdw0/iHutVzmECTOoiEu38fvvOONX+yEa/44FjFmWgo9IBAKNeVoDcW
-   1GlgjVVrZww1xta7RzBmJTqmbdv9GMhC0fEDYlwOeHTS6AfEU0LGZ+TPl
-   eZgdBcrYufA0ckt0EB+h+bvIT5AchLItsgFGPak7AYx8l4+X7t57WT49w
-   w==;
-X-CSE-ConnectionGUID: xS5fruHOSDOkXrS+qEqQKQ==
-X-CSE-MsgGUID: +psypVrdTbK51puxXVydag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56726956"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="56726956"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:30:40 -0700
-X-CSE-ConnectionGUID: 7c22gHSsSn2UTlaAa6MZLw==
-X-CSE-MsgGUID: rN+ehYh0SdWYEq/ncs4XTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129694190"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 13 Apr 2025 23:30:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 073F6214; Mon, 14 Apr 2025 09:30:36 +0300 (EEST)
-Date: Mon, 14 Apr 2025 09:30:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] HID: simplify code in fetch_item()
-Message-ID: <Z_yrjPBO_CPS8WX1@black.fi.intel.com>
-References: <ZvwYbESMZ667QZqY@google.com>
- <20241010222451.GA3571761@thelio-3990X>
+	s=arc-20240116; t=1744612285; c=relaxed/simple;
+	bh=w8H0Yk/aiUBgp2kpAaBgGM3BJ2V7MPiQ8mvoAI/hWM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BgqNWAh9/g9Uz9gzd5982mqcfgLruW5S3DWgyJyyMtGW/1bLUhzIbmnIK1EshEMLyairhzuDDGMFVK5eWDO1wJp5DK7XR5U5zuqKyW0NC+JwPX0tsPiR0bsAVVzTe2nEVb6o1rL9VlbAanMw2p0wIsmbAS1Hg2UT295JOPl0WoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAAnYgqqq_xnDYjlCA--.14406S2;
+	Mon, 14 Apr 2025 14:31:08 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v3 RESEND] mtd: bcm47xxnflash: Add error handling for bcm47xxnflash_ops_bcm4706_ctl_cmd()
+Date: Mon, 14 Apr 2025 14:30:40 +0800
+Message-ID: <20250414063041.2060-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241010222451.GA3571761@thelio-3990X>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAnYgqqq_xnDYjlCA--.14406S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw18WF17uw47XFyUAr1UZFb_yoW8WFWUpr
+	47Xa45t3Z5X3WDtFyUWF18KF1Yv348KF4jg3yvva48ursavFWxGrZ3Ga4jq3y8Gw18Jw17
+	XF4F93WxWr9FkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUUmL9UUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAMA2f8nMA0BgAAsj
 
-On Thu, Oct 10, 2024 at 03:24:51PM -0700, Nathan Chancellor wrote:
-> On Tue, Oct 01, 2024 at 08:42:36AM -0700, Dmitry Torokhov wrote:
+The function bcm47xxnflash_ops_bcm4706_cmd_ctrl() calls the function
+bcm47xxnflash_ops_bcm4706_ctl_cmd(), but does not check its return value.
+A proper implementation can be found in bcm47xxnflash_ops_bcm4706_write().
 
-...
+Add error log to the bcm47xxnflash_ops_bcm4706_ctl_cmd() via pr_err()
+to prevent silent failure. The error Log funciton 'dev_err' is unsuitable
+in this situation for it is hard to get device pointer.
 
-> Getting rid of the unreachable() in some way resolves the issue. I
-> tested using BUG() in lieu of unreachable() like the second change I
-> mentioned above, which resolves the issue cleanly, as the default case
-> clearly cannot happen. ...
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v3: Improve code for logging error.
+v2: Fix spelling problem.
 
-As Dmitry pointed out to this old discussion, I have a question about the above
-test. Have you tried to use BUG() while CONFIG_BUG=n? Does it _also_ solve the
-issue?
+ drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
+index 6487dfc64258..e532c3535b16 100644
+--- a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
++++ b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
+@@ -171,6 +171,7 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
+ {
+ 	struct bcm47xxnflash *b47n = nand_get_controller_data(nand_chip);
+ 	u32 code = 0;
++	int rc;
+ 
+ 	if (cmd == NAND_CMD_NONE)
+ 		return;
+@@ -182,7 +183,9 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
+ 	if (cmd != NAND_CMD_RESET)
+ 		code |= NCTL_CSA;
+ 
+-	bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
++	rc = bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
++	if (rc)
++		pr_err("ctl_cmd didn't work with error %d\n", rc);
+ }
+ 
+ /* Default nand_select_chip calls cmd_ctrl, which is not used in BCM4706 */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.42.0.windows.2
 
