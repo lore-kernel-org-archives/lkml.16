@@ -1,422 +1,209 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333B28A1C8;
-	Mon, 14 Apr 2025 17:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.196
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744651642; cv=none; b=mIKvvhFvt7L7EjwqqbWF21DpDN4OvlOobMv+AG2KuxKRDFVGFLIhNatCQDpHIerGv/rVnDZsYCC/nnhXin+4JBgFk6I6hsheydCgefOyX7EvHtoUmcyplxsTwGS1DpDkeIiGoprOAZojUTE2PKEx3+W+HJmU01YWAwbD8p91vVc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744651642; c=relaxed/simple;
-	bh=g56Vipoq6HUBpLla+OuoOsiQ00R2ayiReHuouEVku4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hfAf84t0HG55QOgtVLJ1pDjpoj35M3Af2zvzSoskZVvGy5KsiW0lOVgPputtzKJ50tb+nzIS9/JIftiXyFEEobWA3/jJyAtftr0q4LfIck+qwjNLeLjWNakvLaLIwHAc8UiWHs5FAt1YPpr8yS0ocnQ9gyWsGVmSl+qrIf0S860=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EW0lWDNI; arc=none smtp.client-ip=209.85.208.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B65284664
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744651731; cv=fail; b=GlpL1dd7PQjebN6YlC4DHK1zKzuQwTR3nq0vp3HKk7cdoFwHaO+A/1ZTAsOdGwWj5or0kRKoDMg6IoO22uHvBi7nshNnslYOjmdkPGf9azfZ7O7tvaTJ4B8kqze78n0sLssz8F6oGFeyHl4JhNQnhOkC79dtN1j22/wesP52pIk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744651731; c=relaxed/simple;
+	bh=LFpD9rc8luVR3B9lTFr3PsUQhviPRbbe8mjyMdMLLfk=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FkJ8Z19ggsVHqR7jalMKp6wl7rqMmBAEyeXdbbObvhJXlaOAK3XkToUZQh+rbAWdPzmxWTYZ78OMMiMCyLSR05EVfCnp9RyfSn+gYWTQeSHcGGMS2tQQfhXtr4YlxvhJYlt/eP4yNQFw6s5BxeVC/UsjwkD1pH+WZLBPHf2dBTg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hVTrt0wd; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EW0lWDNI"
-Received: by mail-lj1-f196.google.com with SMTP id 38308e7fff4ca-310447fe59aso39524181fa.0;
-        Mon, 14 Apr 2025 10:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744651639; x=1745256439; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8PS+7NrCXvFh78LgYOMEcDp3CqAjYw7INI4pqlwq6ZE=;
-        b=EW0lWDNIpZo1HAt45APPFtG3RG0FEmVdNCdlRt3nC+R+wjGNSfsaOpguNL+tMcnIG9
-         kCgBk7EBuclLdyqrvLw4/wBScwWgD8oGMIwehkoB9czm7Q7IxDKLcIAq8Dx7XIqc35e7
-         XM0QklCmCCQkGE7NRE1ddHB8zacCZNVgHYvXA0bMKQ5GgoKfmAfw4QaqUsbWqiMTNN8e
-         qoH/dIMOfLzxdsyzNWKJ7HcvbVQy0Bg3iYxPVjsj0P1Uy+YTfaFW4JxLWNFANKBx1Qpf
-         Qhv0erNUrC2nNWtRTtr/0ONifLsMkFtcrLxkWBRsv1qNDMVuFfv2diEE1OhEP4RyiPNE
-         f91w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744651639; x=1745256439;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8PS+7NrCXvFh78LgYOMEcDp3CqAjYw7INI4pqlwq6ZE=;
-        b=aYXqCUizwtQIdDPKRfxYEzAV7gn5HMYXec/pjqTtjveqCjHoulg4ighX5YYSGh6+ZH
-         HMuKNPZocYQ+/Cjf00IHjCgpWb0ZrfbM2ii/z9k/wGOjIu6cKlFnetUTj+gS6aRVSvzv
-         /w7I3b8lrjqHMpE/39LcYpiWyfe+whb6+hjn7NkrXV7nFZuX9nkH45xmNzGl7QElJiVa
-         kv0ugIhGRysQiYTuGHrKx66YcWSQefARpKV9ReSVbAagwqeFZt+i4N2S3LfdQSJjl+hE
-         ATiUcNasfpvh1jwGDrhxVroH2/eXRU5694+U4LgvdD3LIYQooS3sLjG2CnlwEFTwi2Qh
-         USVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOU4b2NkUeKi6tnwpGZmJV/03baA43uzmn3ikhQ1taArYTi3fwWq0AEPQGpR/c/lrDJAPDwOvaKWRW@vger.kernel.org, AJvYcCXykdmNcy9GN9LPsJs5JaR1ZX0aNCKf+dpxvq3jVnj8QupWoUhoyyDqyKBebpurVQOj9NaWWDeqjW8sjRrS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzEll84kVI37yMTpWX74oCLG4csY/Pr0OK/7P+J/ZeIWjeir8K
-	i4+E4wyxuyymaeaf1WPoX5dfDZwIlpzyHxGsIrFMWbjWKhm9S3yL
-X-Gm-Gg: ASbGncsqLulRqfHGWd492SVl+8nAWXLpo4CTMBsCrUfGb9125VrI82ff17zxxdaLXUW
-	uWmb0WcouU9xBXGgrGYjk1kEnutP8eGUJ3ZfTnmc8Ssdd9hXirS6+Px/RknQZzzU2Nj1UbOuRl4
-	hvyvXT8L2OUh6Y2EcMXofKL08kPwH5fMJRIlB5T3YSuwQvpCbfGIanpwYoGM7yWCJH2e1Pk2+hR
-	PW5QjsOkxQPe+9lbft1YzVj2JGIlt/9QYvLKEGKu383oPxIRvH45sIWH8W7aQUSWjU6X1rNIrXO
-	3Mc3li4pnumwGhq7IuMMz5vRCfbKfOCDGcNPjMlw8Zp0TiLYqeZPin3/q2XTzeSj
-X-Google-Smtp-Source: AGHT+IEp7r9YxWiM4xhC1mKgcSVKvPC/QbHZ1HUoak4rVDR6Z2EuPXqvQyBXdFtNGqAhoUvFI2vUJA==
-X-Received: by 2002:a2e:bc26:0:b0:30b:b8e6:86d7 with SMTP id 38308e7fff4ca-310499faea9mr45815661fa.22.1744651638296;
-        Mon, 14 Apr 2025 10:27:18 -0700 (PDT)
-Received: from PilotMainTrash.lan ([178.34.180.83])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464cc441sm17806061fa.35.2025.04.14.10.27.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 10:27:17 -0700 (PDT)
-From: Alexander Baransky <sanyapilot496@gmail.com>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: Alexander Baransky <sanyapilot496@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] drm/panel: Add Visionox G2647FB105 panel driver
-Date: Mon, 14 Apr 2025 20:26:32 +0300
-Message-ID: <20250414172637.197792-3-sanyapilot496@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250414172637.197792-1-sanyapilot496@gmail.com>
-References: <20250414172637.197792-1-sanyapilot496@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hVTrt0wd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744651729; x=1776187729;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=LFpD9rc8luVR3B9lTFr3PsUQhviPRbbe8mjyMdMLLfk=;
+  b=hVTrt0wdniSsjDmwnY/zUKQfUAjPU3HIUdSfWl32sqxHSDPsz2+CWbKT
+   BNSNVKDL+nIiX7HHe3YANmx/46iIrdI7DXkhxTUD4j/kCsa568qaRHD/q
+   tKcxNd9NbVDZ5GfvjGGOabbtjoOMso890S+zGt/zTETQrKnoui13F7+gX
+   KgkmYiIC19SKh8rEA4of9ga81PEOpKovLB8yvYcu8Fxnk+mk+NogbXdwl
+   oPOXXndExrwSN1aysmFGyU/UIK4XAjUYG9ETWQPNC8uSm9D1d0ObCmkqM
+   ki2kByW37D8UzK9ryOpfYZJ12QlD6C6LIi7fBg1OdbEZmUyoQoX8+FFrq
+   w==;
+X-CSE-ConnectionGUID: vRsdc0GlT1KZThEpTRP8xw==
+X-CSE-MsgGUID: RbXbqkQUTwmpABayAgMYOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45367497"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="45367497"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 10:28:48 -0700
+X-CSE-ConnectionGUID: OoWnO9LsQDm2mdJbbqzCdA==
+X-CSE-MsgGUID: aS5/sA6FRImVog5Nm2+s+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="130760556"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 10:28:48 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 14 Apr 2025 10:28:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 14 Apr 2025 10:28:47 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 14 Apr 2025 10:28:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xonNZikK1vU1VBtNZg0UleZc6irCgb8ma5gkPsC3cQLRQ6+f76LV2PrzmekPKg3cLlAZ6DFVZ/YUNU1nT1Nm3h2+Q27VUWJVG00ljD0GRvZnaj58ysDnfBPuiVXacDhwqbLzaMaxhPkXmlJpL+hVpohSMkAmlPlMe8nGl3zn2//JJKBhuxNn2Y0cfIzqeCjq4WUTla/bFeQ/ERMuAaEBxiqmpwUi7U0/em0CZXUAqCt3bEVuPEx2DqznbosGBAvLQWbkKOEUBQ8QOTgQvvvx2ZyqjcNxEBxcUEGF1MJpECInbsZrcYD/GtXdUHNM8/YEZ8V41hU0t+J3ktUq1opNpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x7RiRt4fFi9ff4Uo7UNEHwVHRVrGI+4kW0yEoI8Z2NU=;
+ b=ZAcMGUjJRge6cU0b0g1rK8s7FNR8sBvBnJ3n9sAWPru0XLlnBT4tkdiWEcRFVhuuCNtYf9PieOdTVBElEDWbAA197GLbF0GOvPPHEwXXsPj0wmj3VroaxVpTzvYslqpgi5JenQiAxobWOjfwLRrkWzQGXMK3d71qutmFgO7sdsydTwJrDr4Ep2aug4SokL8ArhpTI0P/X5V3IkTjpfkl1+Fy5Na7ivSvaYzD55FPqBxcnG8QQkz6rG4jzuPxd2029svN2dLKojaxyn0VwdztxKPQjgbLsJD3h5tMp12zmgfcEA1PyX+Vixm+EmkqC+H7SZDtTvMooTwqmAAG7GXHRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by PH7PR11MB6499.namprd11.prod.outlook.com (2603:10b6:510:1f0::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
+ 2025 17:28:18 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%7]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 17:28:18 +0000
+Message-ID: <eb33f181-a89f-47a9-ad98-f5a079920950@intel.com>
+Date: Mon, 14 Apr 2025 10:28:17 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2a 5/9] x86/cpufeatures: Add X86_FEATURE_APX
+Content-Language: en-US
+To: Ingo Molnar <mingo@kernel.org>, "Chang S. Bae" <chang.seok.bae@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
+References: <20250320234301.8342-6-chang.seok.bae@intel.com>
+ <20250411161250.14662-1-chang.seok.bae@intel.com>
+ <d076ee8c-0c22-4e99-964c-5ea254f5be14@intel.com>
+ <7b91d929-fe97-44c6-aa94-05417bce1014@intel.com>
+ <009062d3-d4db-443f-8337-ae4223efffa1@intel.com> <Z_onl1QbH9L1-8dq@gmail.com>
+ <Z_zGCCNE_Qt3IlMZ@gmail.com>
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <Z_zGCCNE_Qt3IlMZ@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0070.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::47) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|PH7PR11MB6499:EE_
+X-MS-Office365-Filtering-Correlation-Id: d420b85f-3567-47df-f21b-08dd7b79bec7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?YWxwUFpIS2M2cVNGb09KVW1iOFJqdkNNU3hhbGJ0VVMxMWFMSUNySHd1eFpQ?=
+ =?utf-8?B?Y0lvbndEK3I0TW1DaEwrWlZrSFRjTVRpYUdVbHQ1eEg4RFlJUGI2UGppTThM?=
+ =?utf-8?B?R2RWUVVvMmhtckY0S09RY3RWREozaTk2ZE9haUEzTGk2a0NkaDNSRWZlK1dN?=
+ =?utf-8?B?WStVN2RISFgyQ2xCN1l5L1MvM0JnbWtKMmlnOWwva2Z3RG53TDQvSzg5ZXRN?=
+ =?utf-8?B?UWNEWlBSeU5GRHUvY2ZtckVOaUpmanZmWGJGNzZGeGNMUWwwaEFFMnp2NmFW?=
+ =?utf-8?B?bnpLRE45SmR0ekFhVk9ocXc4WGpOcks4NDR1ODZoMldmZlJzbXFmUmdsZHRI?=
+ =?utf-8?B?TExRVW1PaURUaGtkQTlaSjNRWElSUng5VHE4OG4zTUlaVEZFaDJ6UE9YQlAy?=
+ =?utf-8?B?YTJUeDREM0F5elY3Wi9DTHI3eUIzV3lXNkExYVIyemRxMjM4R1QyTUVnblVC?=
+ =?utf-8?B?SEFEZi9CTUZsTjkxdjdHdVE4bUdxam9pR1dVRlNmejJCM0tDSU5ldCtjUk5v?=
+ =?utf-8?B?c1hKU3FVNjAzcllMdFFTZnNtb0JOek5wTGk0SlBwVHNSZkxuWWtHMVZwTkNH?=
+ =?utf-8?B?QW1YQTN0eG42RnF5cksyeVMraUpFbTJTS3NEdnJielRwb0xmSGpOU2V1Y3kr?=
+ =?utf-8?B?RDJ6eFEyU1ZqMGxuc2dVSHN0eFBEOEVaM3JoQkRWQ0Q2TWxIcHRXbm5JaVdG?=
+ =?utf-8?B?alViOGhMaTFzVHBPZmwvZ0tldW9KVTg3NVp1cG5JMExjbzJFazVleDVxQzJs?=
+ =?utf-8?B?VjBvQ0Q0UjhhSGxtOHhqeHhoUVJpeDkrYkdVV0hmSEZoYTRWN2w1bWkxd3B3?=
+ =?utf-8?B?Y0FNZHlYMDQ0dUVJTW1hRUNkaUVRVnQwTHdhemtCbWUxUmI2VlZRaXk0QUls?=
+ =?utf-8?B?TTRGZlErVW51WHc3SitFV3dzdmxGWXRwUkxBV3JpdVZxa2NyZkJhcVFlL2ZU?=
+ =?utf-8?B?V3JsQkNXZmlVbklNWTE3VjBNQVkvNjJJTkt6QnRLMUdBVGE0aTQ3NlRzLzZy?=
+ =?utf-8?B?VEo0Q3dsbzI0ZU5wSWFnS2xPOExVN01OMkdXcUk4TjhvYnUyU201anRJaGNn?=
+ =?utf-8?B?VU9CcDV3YXNEc3pIOHBVY3d4alZDWkxLQjROclgxL0Vqc1dGN1hRMUNGNU00?=
+ =?utf-8?B?QjFZYVUwZmZvWjFqS2xjcURKTDFnSGR6bXpSYzU2TzM3d3Y3blp1bnZCUldu?=
+ =?utf-8?B?SmVYaWYweml0c05oR1J1STB3aXNuSDlZL1M1MFhhNENhc0xWYU9wdDhsdTA3?=
+ =?utf-8?B?OG1OQldlUlYvcytQUTdFeXR6QmIyVVZiek5SenZNUjNFNUppaHprVVgvQTl2?=
+ =?utf-8?B?WnM2ZUg1REpYZ1N5aU5qc3hnT2VWUERiQVlDQk1OajNUUk51QWdSTUswUVdX?=
+ =?utf-8?B?c3dtdEdUd2Q2bm8yd1FrOWcrVW5yM05mTkdpVTNrZ2xnZnFKTEFUaUJKS2xi?=
+ =?utf-8?B?ZEVJWng4N2gvbDFVVmw4OVNyUlhyUndxeWxxQ2krZWVkWGdwa0NTZlBKcC9R?=
+ =?utf-8?B?bmEvU1NISXRrOUI0ekNmNERzUy9xWVRTcUZxNFFGeFVIdkh4MDhUMmgrdnkw?=
+ =?utf-8?B?cHNIUEcvS1VISzk3NWVnUStPZ0twMzRodHZFQm5HbGxqK1luRGVFWkNZTEZv?=
+ =?utf-8?B?dGpJZWpvSENRc1ZOdEhjSHJUWGQ0UTkwZXZENTVDQUFrcUNONTZKUTVtcXY0?=
+ =?utf-8?B?K2cvQ1Npbit2anUxS09RbE54dzFoS1ZDQ1J4b0w5b2pSajQrYW5RNVJJVHUw?=
+ =?utf-8?B?SlpYQkhoam1pQ042WklMVGFUUWVpUDBlcmRQRXJaVE1tbFdrZ3M1YTRFV205?=
+ =?utf-8?B?V2RkMkNHaUJuSEl2Z1BwbXZnQUpGRjNLZ1hCaG5KTFpHMnZUL2p1b3c5UkRx?=
+ =?utf-8?B?Kzgva2w2NDFkdFp4K0UrN05pcmdLZmRWM0dqQ3lKRTNTR1hZTnNIUWsrMXRJ?=
+ =?utf-8?Q?9rxpdZhcInY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U2JORGVrR0VPYk9tWk40eDcrU2NkQTFBemVHc2pKeGdNSitteERtaW05Wk1V?=
+ =?utf-8?B?dnAzV1RIRENjZ01mQndYZVpTRlNYOGV0OG44bU5NSktWM0dBWFI2Vk5mcFBZ?=
+ =?utf-8?B?b2plY211NjBCaWw4ckY5bFY0TlNYSlMwSHJDT0JMK2hrSEpOanNpMS9OZ2VR?=
+ =?utf-8?B?MS9KeEF6VXF2MzVFVk5qUTA5eTN2bmUrTFBYVmd1MHdsZmd5bTdJcmpEU3BR?=
+ =?utf-8?B?OXhacmJMbkR1QWFneWFJTnBnc0JvN21nVWxSRWNYaTJCVk9uOEFKYTlvcDBG?=
+ =?utf-8?B?ZGMwRVFMTUNEeTIxUmFZblVGSmpPNEVnTGl0ZzVPRHBxSDh1MGNwOVJ3d2x0?=
+ =?utf-8?B?d3lrR1cyZUM1ZzJrdUNCZ1M3WnNuNnBrNDNLQUFrZmpRamQvSzJlQm9OaHZO?=
+ =?utf-8?B?V0hyUUlNQTBLUTJiSUdVQXBFeHJ4MTBxWEd6SWxxajNnWmRwOXhhbTQ5Sk4v?=
+ =?utf-8?B?cU5RWEhrWkVuVVgwbkd0VzNpSHVMN2xuaFZOUmJlejRGOGh6ZzRVSFhPZlhO?=
+ =?utf-8?B?WDY3ZnhNSVVRNFlHSWFQU1dDNGx0RU91M2tQWW9jVlpEaWVWdm5CZTh1clBP?=
+ =?utf-8?B?OUZKVitycC9tZnF1eVcwM0ZweDRuQ1dXc0hscUh0RU42YWtoNjVCdjR5TDdD?=
+ =?utf-8?B?eUp2RkY1RWljWk40SXVFQjhxbFVDY1lmK0t3TFQ0bHlUNGRBK1psV0FEa1Fn?=
+ =?utf-8?B?UW02dExDMXBiRWJSV0IrNm8rQlczaDBXaGVrcHNkOUdncnN3aXVmNnBHUEIz?=
+ =?utf-8?B?Wk9CU2JuOEpVZjdTcG1IamJZODFoNTVqZFZHNTRmeFgvQjhvT2x3Mkd6SUI3?=
+ =?utf-8?B?ek91ZEJPN3BsY3hNOXFtcXp2RHJ5RHRUbXVXb2RjOEtxTnR3WVRHRys3RFlV?=
+ =?utf-8?B?Zit6L3p4TmREK3J3Z0pMSkFKRFZJdTNNd3ZlOFdVM1hnSUFBMDFjU1RVd2lR?=
+ =?utf-8?B?VFhXVFoxaDd1YUgwUGVwbzQ4QmV0bEMxdS85eS92NTBuVVAwTWV4cDRjN3Jq?=
+ =?utf-8?B?M3ozUEUzWXFEQ2NoeXV2eVAwQWgwVEIvdkcwUHpiTE0veGtJZXJUSUVJSlBo?=
+ =?utf-8?B?NFdSMVYxVnl1blN2RDdGZHhDSFA4MVY1N0trY1UreFFuSDU4QzRrU1hVQy80?=
+ =?utf-8?B?K1hQcjEyZ3o1d2xHeWFEeE1NdjZZVXlPSTdXL1c4Zm5SeU9QRHZ4THhNZlVV?=
+ =?utf-8?B?R3ZsT0pGeVRpcFAvV0JOaCswVnVyVFpIb3FDS2d2bnpwMFFYWWkyem9vaE5k?=
+ =?utf-8?B?RGJoK3lCZG53eWIrak1UMGVFYXNTNjF4N3lYSDJpNmRjeWhVWWZxSXJzMm1Y?=
+ =?utf-8?B?aXhrRGNOekdYcUhCUU5DMHNKVGhnYzNSMldmMUQxSU9ZaXYrZzhzc05QR0tH?=
+ =?utf-8?B?UXFiZTZDZThaMGk2VDQvWWhrWWJaVlo5VGVLM0UyM3RoSGVoTVVWSUhlL2t6?=
+ =?utf-8?B?alQyVnVZYW5zS1pmTzkxcUV5ZlZBQi9uRE1mV0RtUU5uUjRkMnNycHcwKzZM?=
+ =?utf-8?B?eGpwZmhnZmlKeDlIZXAzMTg3em5acE94dXR3WEVPRzRNcmQxT1ovK1R1aDFG?=
+ =?utf-8?B?SkZVZURTRHcvZ0djTitqY25jU1lydjdVTUg2eVZFTGIyZEM3RVBGUjJyMHBU?=
+ =?utf-8?B?UkFxaCtsZlp0QUxVV2hGVEttaURjYnRwUFlBODd0NXBpWWVMK2FLMGhyWDc5?=
+ =?utf-8?B?dk5DTFJMZ0hFc2Npc09JZW44ck5kc3BGeXNJNTd3dmNwUFgzMnlBc1FTWWhz?=
+ =?utf-8?B?RDk0UEZsRnFzVFBtell5ZkFsUUNZWDQwT3FCZDg4WFZxb1ZtL1hRNzlmNnlV?=
+ =?utf-8?B?NzdZWGtoV2xMSjlPRHBRdDFRVEVLcGN1OEI5a3JNRVFRc0x3TnhQRmgzM2Vq?=
+ =?utf-8?B?bE9OVHpLVzZtL0s0bkxPenl4ZVhiZXFqV1NiS0VrcUxtWkpEWVZxeGk2Nisz?=
+ =?utf-8?B?dUt2MVo0eE9FTy91ZFoxR1U0aHlWbkZDMDkzV1JpRTY1SWNCY3hkRVc0bUsw?=
+ =?utf-8?B?elNqeUxQc2hTNHBkNEoybW1LUDZndFFxVlFPKzFmUS91NTF2OXJGTm1WRUZ6?=
+ =?utf-8?B?eTBoOVpIYjRLanV5cThYMEpkYU81ZUFvSUQ0NTMrYlBZQVZsTy9tMWRCKy9W?=
+ =?utf-8?Q?awuHODYaYYfw1a6VPtBhsJZWt?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d420b85f-3567-47df-f21b-08dd7b79bec7
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 17:28:18.5715
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mYdWiwvjzkuiN0Ib4f7FCznjKDtnbAFuvbKyACa5BTnM4YunX+TDoiqBAzTqgIlN8sTEtLFrxSS9g4bpl+VvHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6499
+X-OriginatorOrg: intel.com
 
-Add the driver for Visionox G2647FB105 6.47" FHD Plus CMD mode AMOLED panel
-support found in:
-- Xiaomi Mi Note 10 / CC9 Pro (sm7150-xiaomi-tucana)
-- Xiaomi Mi Note 10 Lite (sm7150-xiaomi-toco)
+On 4/14/2025 1:23 AM, Ingo Molnar wrote:
 
-Signed-off-by: Alexander Baransky <sanyapilot496@gmail.com>
----
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-visionox-g2647fb105.c | 280 ++++++++++++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-visionox-g2647fb105.c
+> I think we could now start merging the rest of the APX patches, for 
+> v6.16 upstreaming.
+> 
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index e059b06e0239..8b73f1e8bef4 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -996,6 +996,15 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
- 	  Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
- 	  Video Mode panel
- 
-+config DRM_PANEL_VISIONOX_G2647FB105
-+	tristate "Visionox G2647FB105"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the Visionox
-+	  G2647FB105 (2340x1080@60Hz) AMOLED DSI cmd mode panel.
-+
- config DRM_PANEL_VISIONOX_R66451
- 	tristate "Visionox R66451"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 1bb8ae46b59b..911400bca51a 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -101,6 +101,7 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
- obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
- obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
- obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
-+obj-$(CONFIG_DRM_PANEL_VISIONOX_G2647FB105) += panel-visionox-g2647fb105.o
- obj-$(CONFIG_DRM_PANEL_VISIONOX_RM69299) += panel-visionox-rm69299.o
- obj-$(CONFIG_DRM_PANEL_VISIONOX_RM692E5) += panel-visionox-rm692e5.o
- obj-$(CONFIG_DRM_PANEL_VISIONOX_VTDR6130) += panel-visionox-vtdr6130.o
-diff --git a/drivers/gpu/drm/panel/panel-visionox-g2647fb105.c b/drivers/gpu/drm/panel/panel-visionox-g2647fb105.c
-new file mode 100644
-index 000000000000..413849f7b4de
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-visionox-g2647fb105.c
-@@ -0,0 +1,280 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree:
-+ *   Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ *   Copyright (c) 2025, Alexander Baransky <sanyapilot496@gmail.com>
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+
-+struct visionox_g2647fb105 {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct gpio_desc *reset_gpio;
-+	struct regulator_bulk_data *supplies;
-+};
-+
-+static const struct regulator_bulk_data visionox_g2647fb105_supplies[] = {
-+	{ .supply = "vdd3p3" },
-+	{ .supply = "vddio" },
-+	{ .supply = "vsn" },
-+	{ .supply = "vsp" },
-+};
-+
-+static inline
-+struct visionox_g2647fb105 *to_visionox_g2647fb105(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct visionox_g2647fb105, panel);
-+}
-+
-+static void visionox_g2647fb105_reset(struct visionox_g2647fb105 *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(1000, 2000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(10000, 11000);
-+}
-+
-+static int visionox_g2647fb105_on(struct visionox_g2647fb105 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
-+
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x70, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x40);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4d, 0x32);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x40);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbe, 0x17);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbf, 0xbb);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc0, 0xdd);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc1, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0xd0);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x03, 0x24);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x04, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc2, 0x08);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x00);
-+
-+	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, 0x0000);
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 100);
-+
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
-+static int visionox_g2647fb105_off(struct visionox_g2647fb105 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
-+
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 50);
-+
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
-+static int visionox_g2647fb105_prepare(struct drm_panel *panel)
-+{
-+	struct visionox_g2647fb105 *ctx = to_visionox_g2647fb105(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(visionox_g2647fb105_supplies), ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	visionox_g2647fb105_reset(ctx);
-+
-+	ret = visionox_g2647fb105_on(ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int visionox_g2647fb105_unprepare(struct drm_panel *panel)
-+{
-+	struct visionox_g2647fb105 *ctx = to_visionox_g2647fb105(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = visionox_g2647fb105_off(ctx);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(visionox_g2647fb105_supplies), ctx->supplies);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode visionox_g2647fb105_mode = {
-+	.clock = (1080 + 28 + 4 + 36) * (2340 + 8 + 4 + 4) * 60 / 1000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 28,
-+	.hsync_end = 1080 + 28 + 4,
-+	.htotal = 1080 + 28 + 4 + 36,
-+	.vdisplay = 2340,
-+	.vsync_start = 2340 + 8,
-+	.vsync_end = 2340 + 8 + 4,
-+	.vtotal = 2340 + 8 + 4 + 4,
-+	.width_mm = 69,
-+	.height_mm = 149,
-+};
-+
-+static int visionox_g2647fb105_get_modes(struct drm_panel *panel,
-+					struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &visionox_g2647fb105_mode);
-+	if (!mode)
-+		return -ENOMEM;
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs visionox_g2647fb105_panel_funcs = {
-+	.prepare = visionox_g2647fb105_prepare,
-+	.unprepare = visionox_g2647fb105_unprepare,
-+	.get_modes = visionox_g2647fb105_get_modes,
-+};
-+
-+static int visionox_g2647fb105_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = backlight_get_brightness(bl);
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops visionox_g2647fb105_bl_ops = {
-+	.update_status = visionox_g2647fb105_bl_update_status,
-+};
-+
-+static struct backlight_device *
-+visionox_g2647fb105_create_backlight(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	const struct backlight_properties props = {
-+		.type = BACKLIGHT_RAW,
-+		.brightness = 1023,
-+		.max_brightness = 2047,
-+	};
-+
-+	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-+					      &visionox_g2647fb105_bl_ops, &props);
-+}
-+
-+static int visionox_g2647fb105_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct visionox_g2647fb105 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ret = devm_regulator_bulk_get_const(dev,
-+					    ARRAY_SIZE(visionox_g2647fb105_supplies),
-+					    visionox_g2647fb105_supplies,
-+					    &ctx->supplies);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+				     "Failed to get reset-gpios\n");
-+
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM;
-+
-+	ctx->panel.prepare_prev_first = true;
-+
-+	drm_panel_init(&ctx->panel, dev, &visionox_g2647fb105_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+	ctx->panel.prepare_prev_first = true;
-+
-+	ctx->panel.backlight = visionox_g2647fb105_create_backlight(dsi);
-+	if (IS_ERR(ctx->panel.backlight))
-+		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
-+				     "Failed to create backlight\n");
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = devm_mipi_dsi_attach(dev, dsi);
-+	if (ret < 0) {
-+		drm_panel_remove(&ctx->panel);
-+		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static void visionox_g2647fb105_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct visionox_g2647fb105 *ctx = mipi_dsi_get_drvdata(dsi);
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id visionox_g2647fb105_of_match[] = {
-+	{ .compatible = "visionox,g2647fb105" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, visionox_g2647fb105_of_match);
-+
-+static struct mipi_dsi_driver visionox_g2647fb105_driver = {
-+	.probe = visionox_g2647fb105_probe,
-+	.remove = visionox_g2647fb105_remove,
-+	.driver = {
-+		.name = "panel-visionox-g2647fb105",
-+		.of_match_table = visionox_g2647fb105_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(visionox_g2647fb105_driver);
-+
-+MODULE_AUTHOR("Alexander Baransky <sanyapilot496@gmail.com>");
-+MODULE_DESCRIPTION("DRM driver for Visionox G2647FB105 AMOLED DSI panel");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0
+Chang, Ingo,
 
+The series looks good to me.
+
+Functionally, the only change I have requested is in patch 7/9 to add a
+"disabling XSAVE" message to the error print.
+
+The rest of the comments are mainly about clarifications in the commit
+logs. Feel free to ignore them if they seem redundant.
