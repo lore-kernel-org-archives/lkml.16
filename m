@@ -1,138 +1,84 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E2B253939;
-	Mon, 14 Apr 2025 14:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C4023D28D
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641565; cv=none; b=qvmh0rEzBVSSfdZDJYFy8bgHMWXiCOWTRpqUN1c36gzWNg8656xonoMM3E1jzaphNXO9IngxhhH+fkWKvQ/d7XJi/MymKNTMbMsuZ1NUkTPq7foVh8rYnOSFAuBTJBznYAzpNmiUdKlwynUARLCZsY1ODNIa9xQGE317hAdRAr0=
+	t=1744641573; cv=none; b=q8kcEpwlYdGqO0BBJWfBG3kiVwrxjnmsPh/LWC9n3MHDL3fK+orRmLUeVNGILZWz1yQfbHE02ECqa0W1+Lk3Te7GVIdl+Hnldk3ZGNn47ogBhhPmADLX2t/SUUJLI6doVXrosw9nPkwbNZvzu97i/ZU4TgN3/DEjVMyoy+8Mx9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641565; c=relaxed/simple;
-	bh=dN/mp2yb6Vyluny35NznME5OES8c23IkRVI3W3K2ki0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDlf6mhAQreDyzGDKjrEQfYBWpG14l0+enU8N8q1vsn5+MdBd1ecPZm8oeC4Gy5jARN139uJ8HVSppN487DIAOAQnMJXQ0bH3dUQwvjVmB8ElYO6hLpCYH/+nnqsznMc5906scAz5+1gjxKKE0yXv4GkUwrwKjYNWk24/FN6oW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oBUxOJNF; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744641573; c=relaxed/simple;
+	bh=E8CW3uF0r3pYKI5vL0qiGCSaZCcinAb+z8OYrt/N84g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mQbPz91zV+1Tpq1G19J2Ro+0m5x0Tjj0roCRiGKut/TEL0sXmoZ4auXyuW4UV1a7wS6O3l7d2i1ZrQXkKTbbY7E3rppPQkasURTtX+4RfjMdold59giyOYlVKnHLQ4Do1eth3b+RllQJnBHC7NRL2meo8eHG9WYpAYarSOSbVSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=HWMQI26T; arc=none smtp.client-ip=185.136.65.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oBUxOJNF"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEdH2C2082862
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 09:39:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744641557;
-	bh=fEPgO6nsWxDMhcy69FrfMIaR0CqA/3l+hKQM8diis4M=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=oBUxOJNFmj+s6rDyqWI8q+/h0cMaEO62LC5qknhy/X9b5623vfJJLxPQ47iI1Gu+f
-	 elar/5WqF2HWWwxj6A/hMQWJuX4e0jVL8hg5f8pjENJhEPkJaN54+G6AAyFrKioUXY
-	 6nSkqGqbhtKrAlmiNl6QjqoPxWuDSJ6Pq51c468U=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEdHo7089201
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 09:39:17 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 09:39:16 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 09:39:16 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EEdGVp005436;
-	Mon, 14 Apr 2025 09:39:16 -0500
-Date: Mon, 14 Apr 2025 09:39:16 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH 0/2] J722S: DT Node cleanup for serdes0 and serdes1
-Message-ID: <20250414143916.zhskssezbffmvnsz@dragonfly>
-References: <20250412052712.927626-1-s-vadapalli@ti.com>
- <20250414120930.m7x7zfmyby22urpo@ultimate>
- <79ef7f50-22d5-4c40-ae28-02bf297ca79c@ti.com>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="HWMQI26T"
+Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 202504141439244e369ea11dacd5bca5
+        for <linux-kernel@vger.kernel.org>;
+        Mon, 14 Apr 2025 16:39:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=florian.bezdeka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=zbLwYuCFWrEzw2d9sLcC0GKzi6TvOJK9n6fs8Ekwr6I=;
+ b=HWMQI26TvI4xQU0etrb+fN1dHr0XQPwBi4SmQWXAbHPyr5Fal3ngKCrvjwGXSWMM2eQeFY
+ R+uhienwMfZootBuuFj+BW06bCJDfyWoyMCITsqKpGaoeDNwWO//rRiLmZZEYit0OISkpWPU
+ OaPd0m+OaH/VL8wcIOwpz2t936Z9e2QZOIgiK0ns01mw3X2P+77tNsLE7AozpVqgY3WhNeVh
+ ggO9BcNFYGhT8cCxYLjCFYMwxERshwq3BzKr9wA3JUZue95Hk7FIhdBkV6QyxwzZYUVZbART
+ RuGBsA7XQxqd8L0Tsp2Jj5WU/q4XHO/se62xr2JWguHva7mfl0r4QNzA==;
+Message-ID: <7ad8e4fe779d9a63de999aa5572ff204302351f7.camel@siemens.com>
+Subject: Re: [RFC PATCH v2 2/7] sched/fair: Handle throttle path for task
+ based throttle
+From: Florian Bezdeka <florian.bezdeka@siemens.com>
+To: Aaron Lu <ziqianlu@bytedance.com>, Valentin Schneider
+ <vschneid@redhat.com>,  Ben Segall <bsegall@google.com>, K Prateek Nayak
+ <kprateek.nayak@amd.com>, Peter Zijlstra	 <peterz@infradead.org>, Josh Don
+ <joshdon@google.com>, Ingo Molnar	 <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang	 <xii@google.com>
+Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,  Chengming Zhou
+ <chengming.zhou@linux.dev>, Chuyi Zhou <zhouchuyi@bytedance.com>, Jan
+ Kiszka	 <jan.kiszka@siemens.com>
+Date: Mon, 14 Apr 2025 16:39:23 +0200
+In-Reply-To: <20250409120746.635476-3-ziqianlu@bytedance.com>
+References: <20250409120746.635476-1-ziqianlu@bytedance.com>
+	 <20250409120746.635476-3-ziqianlu@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <79ef7f50-22d5-4c40-ae28-02bf297ca79c@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-68982:519-21489:flowmailer
 
-On 18:30-20250414, Siddharth Vadapalli wrote:
-> On Mon, Apr 14, 2025 at 07:09:30AM -0500, Nishanth Menon wrote:
-> 
-> Hello Nishanth,
-> 
-> > On 10:57-20250412, Siddharth Vadapalli wrote:
-> > > Hello,
-> > > 
-> > > This series is based on the following series:
-> > > https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> > > Based on the discussion in the above series which disabled 'serdes_wiz0'
-> > > and 'serdes_wiz1' nodes in the SoC file and enabled them in the board
-> > > file, Udit pointed out that it wasn't necessary to disable 'serdes0' and
-> > > 'serdes1' in the SoC file anymore, since that is not a working
-> > > configuration - serdes_wizX enabled and serdesX disabled doesn't work.
-> > > 
-> > > Hence, this series aims to cleanup the serdesX nodes after the changes
-> > > made by the above series.
-> > > 
-> > > Regards,
-> > > Siddharth.
-> > > 
-> > > Siddharth Vadapalli (2):
-> > >   arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
-> > >   arm64: dts: ti: k3-j722s-evm: drop redundant status within
-> > >     serdes0/serdes1
-> > > 
-> > >  arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 2 --
-> > >  arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ----
-> > >  2 files changed, 6 deletions(-)
-> > > 
-> > > -- 
-> > > 2.34.1
-> > > 
-> > 
-> > 
-> > I do not understand the logic here. serdes cannot operate without wiz
-> > nodes, correct? why would we leave serdes on by default?
-> 
-> Yes, serdesX requires serdes_wizX, but at the same time, serdesX is the
-> child node of serdes_wizX. Therefore, without enabling serdes_wizX, we
-> cannot enable serdesX.
-> 
-> Prior to this series, but with the dependent series at:
-> https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> applied, the nodes look like:
-> 
-> 	serdes_wizX {
-> 		...
-> 		status = "disabled";
-> 
-> 		serdesX {
-> 			...
-> 			status = "disabled";
-> 		};
-> 	};
-> 
-> The dependent series fixes 'serdes_wizX' by disabling it in the SoC file
-> k3-j722s-main.dtsi. But after the fix, we have a 'status = "disabled";'
-> within the serdesX node which isn't required since:
-> a) serdes_wizX enabled but serdesX disabled is non-functional and
-> unusable
-> b) serdes_wizX disabled in DT implies that serdesX is also disabled
+On Wed, 2025-04-09 at 20:07 +0800, Aaron Lu wrote:
+> @@ -8888,6 +8884,9 @@ pick_next_task_fair(struct rq *rq, struct task_stru=
+ct *prev, struct rq_flags *rf
+> =C2=A0		goto idle;
+> =C2=A0	se =3D &p->se;
+> =C2=A0
+> +	if (throttled_hierarchy(cfs_rq_of(se)))
+> +		task_throttle_setup_work(p);
+> +
+> =C2=A0#ifdef CONFIG_FAIR_GROUP_SCHED
+> =C2=A0	if (prev->sched_class !=3D &fair_sched_class)
+> =C2=A0		goto simple;
 
+For testing purposes I would like to backport that to 6.1-stable. The
+situation around pick_next_task_fair() seems to have changed meanwhile:
 
-Can we handle all of this in one series instead of two series?
+- it moved out of the CONFIG_SMP guard
+- Completely different implementation
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Backporting to 6.12 looks doable, but 6.6 and below looks challenging
+at first glance. Do you have any insights that could help backporting,
+especially for this hunk, but maybe even in general?
+
+Best regards,
+Florian
