@@ -1,269 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E6E2586C7;
-	Mon, 14 Apr 2025 08:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B63259C90;
+	Mon, 14 Apr 2025 08:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618177; cv=none; b=t8d45btx2+HHrnzEP0OWM6Tmij2HFZViUNEIoZmWuKhsFl1lxls3T5Bj3v/qeuwGpp/kPGvpwP7+bJIjMg1N/lB+TVzUbEGTHDWXVVI06/AmEsbOYN/z1LKaO8E8tyBD1XUm47LGhs73rHquCSh3v4VNPJ28Uo7SSEynEX+C4/8=
+	t=1744618206; cv=none; b=ndr1VID46GSm6Li9+m05ok6XTQaCJcETlaldEId9C3xqowtjkKopHFeR8OVAsMuVhCL4kwnx2Ugn6uzVKa8qdADmB0vIVh+xWik0vOX4NWREnF+xx9tnkBC1wWTWYzcSCztzL1VucFy0NNPaDV19DaGMzcWG6j9Tr6mtoMs9RZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618177; c=relaxed/simple;
-	bh=h0j1Hfu+P4Ik7wn30u2UB2Z6uWgvo3dBsKVHdecR3uE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GihPtHjlUyClWijOd2qsCpqdFLs7uGK35up08sy2QRPq0hNSl9nUYGa8yMo8gw0El/uoOVMVDFZBEwGdHCEeS3G1J9TSwSZRVviRm9SFme1/fs/roN3319yfPUNz8uEcYer87U2J6HtBzPw2YRioNviiayDUlePWoRcuzYgQ5nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nGk2Asg/; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744618206; c=relaxed/simple;
+	bh=7gW73NKAyGGLmTkMsehID/ovPJ452vhDfNk50dFRytw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k0nxbBbTPSMsBkY3JRYCcXMw6oKgHN1iOzR3LtUyzyROVL56t5EQSyV6Sxbytb1XjGRzEMC/igLo4+AzoV41VT1qNHhCND8hUZRB/dQey6vEtf9idOhFCKmTQhNW0vxi4C2R9QWprF8enBYiqhj92dDHR2TqsgEPnxaQczWaoJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNgMweN6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nGk2Asg/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744618174; x=1776154174;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h0j1Hfu+P4Ik7wn30u2UB2Z6uWgvo3dBsKVHdecR3uE=;
-  b=nGk2Asg/XlFN1GEZg9NIPfKZ/POr27KDjT5Ijlf3CztjG+WMghXjzV25
-   OcZXlGkXusZ1+/s0E5tmEAi9KcjHx4jh4vwLvSmXXriLMAS6SXgxi1Szt
-   2cBSSnOSL2bTEMP7PTZYz3iF9zYnLkOgN4yf2/SvWVNJGFLfh40EAoITl
-   LikWR4JzEENdCZZnT46MhWZqDcWaPGVn3Z5Y03f5gjyKUkWTuHE2yk92G
-   V2gt0gXCmWrm04Wj1nKrGxtXzpIr4CVP7Ms7g/UzEPMzHivxXYtHkhjKu
-   AuxaI0WfMPwjOJro/F0MYhJu+VRtGzq1rGfCf0wqN2aiJfgyBhUj1SDa2
-   w==;
-X-CSE-ConnectionGUID: zNQwS6mjTEGwzCKN5+o0Ww==
-X-CSE-MsgGUID: JLaQMe3JSs+FW4oZimKk5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46239540"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="46239540"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:09:33 -0700
-X-CSE-ConnectionGUID: HS0x0csZR3WR491+o8WFfw==
-X-CSE-MsgGUID: 5AiuT9BLSwOJ7JRHOjoxdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129691082"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 14 Apr 2025 01:09:30 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4Esh-000DvK-09;
-	Mon, 14 Apr 2025 08:09:27 +0000
-Date: Mon, 14 Apr 2025 16:08:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Luke Wang <ziniu.wang_1@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Josua Mayer <josua@solid-run.com>, imx@lists.linux.dev,
-	linux-mmc@vger.kernel.org, s32@nxp.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] mmc: esdhc-imx: convert to modern PM_OPS
-Message-ID: <202504141551.hdiQj4os-lkp@intel.com>
-References: <20250411085932.1902662-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNgMweN6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 114D2C4CEE2;
+	Mon, 14 Apr 2025 08:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744618206;
+	bh=7gW73NKAyGGLmTkMsehID/ovPJ452vhDfNk50dFRytw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hNgMweN6/Y5qu+EhOVBOvoRV/oXQHcyv/chvp1dhnNx63bbu0+p66cxuLIwJ0H6nd
+	 ObUXN7GrOT0gjgIBrquoTS9LUcL1odwrdNfOgV1nnANPplchbytwjDLzs6WXfdgaYb
+	 WfnabJVAfWA5yJw54HqH5G0ukDbr45zazdQd0XuXIUlVBmqSQLWViaAaqESBVPdE/z
+	 hvnYk4wLQvJ0Ch+ZoguRjCGoUqNM8K+4trSb8QSybKRHfc+QCRWIBeZSFJg5sDFiML
+	 W4RmKKRBwJTA9c0ofQ/YWFX5yvspyxUCgsQ7KYGNgzkSq+FcwvDP+t0YsQoeJ4Z9eQ
+	 PLrr3mQAxVxCw==
+Message-ID: <4183462f-7e4c-4da2-8f6b-0dadf26e1b2a@kernel.org>
+Date: Mon, 14 Apr 2025 10:09:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411085932.1902662-1-arnd@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 9/9] serial: qcom-geni: Enable Serial on SA8255p
+ Qualcomm platforms
+To: Praveen Talari <quic_ptalari@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com,
+ quic_vtanuku@quicinc.com, quic_arandive@quicinc.com,
+ quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
+References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
+ <20250410174010.31588-10-quic_ptalari@quicinc.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250410174010.31588-10-quic_ptalari@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Arnd,
+On 10. 04. 25, 19:40, Praveen Talari wrote:
+> The Qualcomm automotive SA8255p SoC relies on firmware to configure
+> platform resources, including clocks, interconnects and TLMM.
+> The driver requests resources operations over SCMI using power
+> and performance protocols.
+> 
+> The SCMI power protocol enables or disables resources like clocks,
+> interconnect paths, and TLMM (GPIOs) using runtime PM framework APIs,
+> such as resume/suspend, to control power states(on/off).
+> 
+> The SCMI performance protocol manages UART baud rates, with each baud
+> rate represented by a performance level. The driver uses the
+> dev_pm_opp_set_level() API to request the desired baud rate by
+> specifying the performance level.
+> 
+> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+> ---
+>   drivers/tty/serial/qcom_geni_serial.c | 150 +++++++++++++++++++++++---
+>   1 file changed, 136 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 9649297d4a9e..40b71d4b7590 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+...
+> @@ -1624,8 +1669,27 @@ static int geni_serial_resources_on(struct uart_port *uport)
+>   	return ret;
+>   }
+>   
+> -static int geni_serial_resource_init(struct qcom_geni_serial_port *port)
+> +static int geni_serial_resource_state(struct uart_port *uport, bool power_on)
+> +{
+> +	return power_on ? geni_serial_resources_on(uport) : geni_serial_resources_off(uport);
+> +}
+> +
+> +static int geni_serial_pwr_init(struct uart_port *uport)
+>   {
+> +	struct qcom_geni_serial_port *port = to_dev_port(uport);
+> +	int ret;
+> +
+> +	ret = dev_pm_domain_attach_list(port->se.dev,
+> +					&port->dev_data->pd_data, &port->pd_list);
+> +	if (ret <= 0)
+> +		return -EINVAL;
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on v6.15-rc2]
-[also build test ERROR on linus/master next-20250411]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Arnd-Bergmann/mmc-esdhc-imx-convert-to-modern-PM_OPS/20250414-092134
-base:   v6.15-rc2
-patch link:    https://lore.kernel.org/r/20250411085932.1902662-1-arnd%40kernel.org
-patch subject: [PATCH] [v2] mmc: esdhc-imx: convert to modern PM_OPS
-config: i386-buildonly-randconfig-006-20250414 (https://download.01.org/0day-ci/archive/20250414/202504141551.hdiQj4os-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141551.hdiQj4os-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504141551.hdiQj4os-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/mmc/host/sdhci-esdhc-imx.c: In function 'sdhci_esdhc_suspend':
->> drivers/mmc/host/sdhci-esdhc-imx.c:1902:15: error: implicit declaration of function 'sdhci_suspend_host'; did you mean 'sdhci_add_host'? [-Werror=implicit-function-declaration]
-    1902 |         ret = sdhci_suspend_host(host);
-         |               ^~~~~~~~~~~~~~~~~~
-         |               sdhci_add_host
-   drivers/mmc/host/sdhci-esdhc-imx.c: In function 'sdhci_esdhc_resume':
->> drivers/mmc/host/sdhci-esdhc-imx.c:1927:15: error: implicit declaration of function 'sdhci_resume_host'; did you mean 'sdhci_remove_host'? [-Werror=implicit-function-declaration]
-    1927 |         ret = sdhci_resume_host(host);
-         |               ^~~~~~~~~~~~~~~~~
-         |               sdhci_remove_host
-   drivers/mmc/host/sdhci-esdhc-imx.c: In function 'sdhci_esdhc_runtime_suspend':
->> drivers/mmc/host/sdhci-esdhc-imx.c:1953:15: error: implicit declaration of function 'sdhci_runtime_suspend_host' [-Werror=implicit-function-declaration]
-    1953 |         ret = sdhci_runtime_suspend_host(host);
-         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/mmc/host/sdhci-esdhc-imx.c: In function 'sdhci_esdhc_runtime_resume':
->> drivers/mmc/host/sdhci-esdhc-imx.c:1999:15: error: implicit declaration of function 'sdhci_runtime_resume_host' [-Werror=implicit-function-declaration]
-    1999 |         err = sdhci_runtime_resume_host(host, 0);
-         |               ^~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +1902 drivers/mmc/host/sdhci-esdhc-imx.c
-
-95f25efe0ce22e Wolfram Sang      2010-10-15  1879  
-04143fbaeb5799 Dong Aisheng      2016-07-12  1880  static int sdhci_esdhc_suspend(struct device *dev)
-04143fbaeb5799 Dong Aisheng      2016-07-12  1881  {
-3e3274ab9ff37f Ulf Hansson       2016-07-27  1882  	struct sdhci_host *host = dev_get_drvdata(dev);
-a26a4f1baca55a Haibo Chen        2020-02-19  1883  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-a26a4f1baca55a Haibo Chen        2020-02-19  1884  	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1885  	int ret;
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1886  
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1887  	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1888  		ret = cqhci_suspend(host->mmc);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1889  		if (ret)
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1890  			return ret;
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1891  	}
-3e3274ab9ff37f Ulf Hansson       2016-07-27  1892  
-a26a4f1baca55a Haibo Chen        2020-02-19  1893  	if ((imx_data->socdata->flags & ESDHC_FLAG_STATE_LOST_IN_LPMODE) &&
-a26a4f1baca55a Haibo Chen        2020-02-19  1894  		(host->tuning_mode != SDHCI_TUNING_MODE_1)) {
-a26a4f1baca55a Haibo Chen        2020-02-19  1895  		mmc_retune_timer_stop(host->mmc);
-a26a4f1baca55a Haibo Chen        2020-02-19  1896  		mmc_retune_needed(host->mmc);
-a26a4f1baca55a Haibo Chen        2020-02-19  1897  	}
-a26a4f1baca55a Haibo Chen        2020-02-19  1898  
-d38dcad4e7b48f Adrian Hunter     2017-03-20  1899  	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
-d38dcad4e7b48f Adrian Hunter     2017-03-20  1900  		mmc_retune_needed(host->mmc);
-d38dcad4e7b48f Adrian Hunter     2017-03-20  1901  
-af8fade4bd7bc7 Haibo Chen        2020-02-19 @1902  	ret = sdhci_suspend_host(host);
-f6140462611308 Haibo Chen        2020-05-27  1903  	if (ret)
-f6140462611308 Haibo Chen        2020-05-27  1904  		return ret;
-f6140462611308 Haibo Chen        2020-05-27  1905  
-f6140462611308 Haibo Chen        2020-05-27  1906  	ret = pinctrl_pm_select_sleep_state(dev);
-f6140462611308 Haibo Chen        2020-05-27  1907  	if (ret)
-f6140462611308 Haibo Chen        2020-05-27  1908  		return ret;
-f6140462611308 Haibo Chen        2020-05-27  1909  
-f6140462611308 Haibo Chen        2020-05-27  1910  	ret = mmc_gpio_set_cd_wake(host->mmc, true);
-af8fade4bd7bc7 Haibo Chen        2020-02-19  1911  
-af8fade4bd7bc7 Haibo Chen        2020-02-19  1912  	return ret;
-04143fbaeb5799 Dong Aisheng      2016-07-12  1913  }
-04143fbaeb5799 Dong Aisheng      2016-07-12  1914  
-04143fbaeb5799 Dong Aisheng      2016-07-12  1915  static int sdhci_esdhc_resume(struct device *dev)
-04143fbaeb5799 Dong Aisheng      2016-07-12  1916  {
-cc17e1294b8aeb Dong Aisheng      2016-07-12  1917  	struct sdhci_host *host = dev_get_drvdata(dev);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1918  	int ret;
-cc17e1294b8aeb Dong Aisheng      2016-07-12  1919  
-af8fade4bd7bc7 Haibo Chen        2020-02-19  1920  	ret = pinctrl_pm_select_default_state(dev);
-af8fade4bd7bc7 Haibo Chen        2020-02-19  1921  	if (ret)
-af8fade4bd7bc7 Haibo Chen        2020-02-19  1922  		return ret;
-af8fade4bd7bc7 Haibo Chen        2020-02-19  1923  
-19dbfdd3d5152d Dong Aisheng      2016-07-12  1924  	/* re-initialize hw state in case it's lost in low power mode */
-19dbfdd3d5152d Dong Aisheng      2016-07-12  1925  	sdhci_esdhc_imx_hwinit(host);
-cc17e1294b8aeb Dong Aisheng      2016-07-12  1926  
-bb6e358169bf62 BOUGH CHEN        2019-01-07 @1927  	ret = sdhci_resume_host(host);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1928  	if (ret)
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1929  		return ret;
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1930  
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1931  	if (host->mmc->caps2 & MMC_CAP2_CQE)
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1932  		ret = cqhci_resume(host->mmc);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1933  
-f6140462611308 Haibo Chen        2020-05-27  1934  	if (!ret)
-f6140462611308 Haibo Chen        2020-05-27  1935  		ret = mmc_gpio_set_cd_wake(host->mmc, false);
-f6140462611308 Haibo Chen        2020-05-27  1936  
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1937  	return ret;
-04143fbaeb5799 Dong Aisheng      2016-07-12  1938  }
-04143fbaeb5799 Dong Aisheng      2016-07-12  1939  
-89d7e5c131228a Dong Aisheng      2013-11-04  1940  static int sdhci_esdhc_runtime_suspend(struct device *dev)
-89d7e5c131228a Dong Aisheng      2013-11-04  1941  {
-89d7e5c131228a Dong Aisheng      2013-11-04  1942  	struct sdhci_host *host = dev_get_drvdata(dev);
-89d7e5c131228a Dong Aisheng      2013-11-04  1943  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-070e6d3ff5a696 Jisheng Zhang     2016-02-16  1944  	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
-89d7e5c131228a Dong Aisheng      2013-11-04  1945  	int ret;
-89d7e5c131228a Dong Aisheng      2013-11-04  1946  
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1947  	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1948  		ret = cqhci_suspend(host->mmc);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1949  		if (ret)
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1950  			return ret;
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1951  	}
-bb6e358169bf62 BOUGH CHEN        2019-01-07  1952  
-89d7e5c131228a Dong Aisheng      2013-11-04 @1953  	ret = sdhci_runtime_suspend_host(host);
-371d39fabcebc3 Michael Trimarchi 2018-01-04  1954  	if (ret)
-371d39fabcebc3 Michael Trimarchi 2018-01-04  1955  		return ret;
-89d7e5c131228a Dong Aisheng      2013-11-04  1956  
-d38dcad4e7b48f Adrian Hunter     2017-03-20  1957  	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
-d38dcad4e7b48f Adrian Hunter     2017-03-20  1958  		mmc_retune_needed(host->mmc);
-d38dcad4e7b48f Adrian Hunter     2017-03-20  1959  
-3602785b341a95 Michael Trimarchi 2018-01-04  1960  	imx_data->actual_clock = host->mmc->actual_clock;
-3602785b341a95 Michael Trimarchi 2018-01-04  1961  	esdhc_pltfm_set_clock(host, 0);
-89d7e5c131228a Dong Aisheng      2013-11-04  1962  	clk_disable_unprepare(imx_data->clk_per);
-89d7e5c131228a Dong Aisheng      2013-11-04  1963  	clk_disable_unprepare(imx_data->clk_ipg);
-89d7e5c131228a Dong Aisheng      2013-11-04  1964  	clk_disable_unprepare(imx_data->clk_ahb);
-89d7e5c131228a Dong Aisheng      2013-11-04  1965  
-1c4989b000aeac BOUGH CHEN        2019-04-29  1966  	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-d1b98305916bc0 Rafael J. Wysocki 2020-02-12  1967  		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
-1c4989b000aeac BOUGH CHEN        2019-04-29  1968  
-89d7e5c131228a Dong Aisheng      2013-11-04  1969  	return ret;
-89d7e5c131228a Dong Aisheng      2013-11-04  1970  }
-89d7e5c131228a Dong Aisheng      2013-11-04  1971  
-89d7e5c131228a Dong Aisheng      2013-11-04  1972  static int sdhci_esdhc_runtime_resume(struct device *dev)
-89d7e5c131228a Dong Aisheng      2013-11-04  1973  {
-89d7e5c131228a Dong Aisheng      2013-11-04  1974  	struct sdhci_host *host = dev_get_drvdata(dev);
-89d7e5c131228a Dong Aisheng      2013-11-04  1975  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-070e6d3ff5a696 Jisheng Zhang     2016-02-16  1976  	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  1977  	int err;
-89d7e5c131228a Dong Aisheng      2013-11-04  1978  
-1c4989b000aeac BOUGH CHEN        2019-04-29  1979  	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-d1b98305916bc0 Rafael J. Wysocki 2020-02-12  1980  		cpu_latency_qos_add_request(&imx_data->pm_qos_req, 0);
-1c4989b000aeac BOUGH CHEN        2019-04-29  1981  
-5c11f1ffb02244 Haibo Chen        2020-02-19  1982  	if (imx_data->socdata->flags & ESDHC_FLAG_CLK_RATE_LOST_IN_PM_RUNTIME)
-5c11f1ffb02244 Haibo Chen        2020-02-19  1983  		clk_set_rate(imx_data->clk_per, pltfm_host->clock);
-5c11f1ffb02244 Haibo Chen        2020-02-19  1984  
-a0ad3087586d09 Michael Trimarchi 2018-01-04  1985  	err = clk_prepare_enable(imx_data->clk_ahb);
-a0ad3087586d09 Michael Trimarchi 2018-01-04  1986  	if (err)
-1c4989b000aeac BOUGH CHEN        2019-04-29  1987  		goto remove_pm_qos_request;
-a0ad3087586d09 Michael Trimarchi 2018-01-04  1988  
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  1989  	err = clk_prepare_enable(imx_data->clk_per);
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  1990  	if (err)
-a0ad3087586d09 Michael Trimarchi 2018-01-04  1991  		goto disable_ahb_clk;
-af5d2b7b0d24f5 Ulf Hansson       2019-09-08  1992  
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  1993  	err = clk_prepare_enable(imx_data->clk_ipg);
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  1994  	if (err)
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  1995  		goto disable_per_clk;
-af5d2b7b0d24f5 Ulf Hansson       2019-09-08  1996  
-3602785b341a95 Michael Trimarchi 2018-01-04  1997  	esdhc_pltfm_set_clock(host, imx_data->actual_clock);
-a0ad3087586d09 Michael Trimarchi 2018-01-04  1998  
-c6303c5d52d5ec Baolin Wang       2019-07-25 @1999  	err = sdhci_runtime_resume_host(host, 0);
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2000  	if (err)
-a0ad3087586d09 Michael Trimarchi 2018-01-04  2001  		goto disable_ipg_clk;
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2002  
-bb6e358169bf62 BOUGH CHEN        2019-01-07  2003  	if (host->mmc->caps2 & MMC_CAP2_CQE)
-bb6e358169bf62 BOUGH CHEN        2019-01-07  2004  		err = cqhci_resume(host->mmc);
-bb6e358169bf62 BOUGH CHEN        2019-01-07  2005  
-bb6e358169bf62 BOUGH CHEN        2019-01-07  2006  	return err;
-89d7e5c131228a Dong Aisheng      2013-11-04  2007  
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2008  disable_ipg_clk:
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2009  	clk_disable_unprepare(imx_data->clk_ipg);
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2010  disable_per_clk:
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2011  	clk_disable_unprepare(imx_data->clk_per);
-a0ad3087586d09 Michael Trimarchi 2018-01-04  2012  disable_ahb_clk:
-a0ad3087586d09 Michael Trimarchi 2018-01-04  2013  	clk_disable_unprepare(imx_data->clk_ahb);
-1c4989b000aeac BOUGH CHEN        2019-04-29  2014  remove_pm_qos_request:
-1c4989b000aeac BOUGH CHEN        2019-04-29  2015  	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-d1b98305916bc0 Rafael J. Wysocki 2020-02-12  2016  		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
-17b1eb7f0bf3dc Fabio Estevam     2017-05-16  2017  	return err;
-89d7e5c131228a Dong Aisheng      2013-11-04  2018  }
-89d7e5c131228a Dong Aisheng      2013-11-04  2019  
+Any reason to reroute every (sane) error code into EINVAL?
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+js
+suse labs
