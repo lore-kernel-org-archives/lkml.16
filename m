@@ -1,44 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BE619924E
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA31293B62;
+	Mon, 14 Apr 2025 11:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630978; cv=none; b=Igx3ws8myhIVdZSuFqb0NJUE87UOlbJiq3gs+j4aqhTFAUMkF6J/5qhYJAU9w2XdIzPKui2gYM6Ygm6JRm7nCaSWWEHiXZfqyCAQczFV0mW4laozPsgCgsRCe5Y5JnFV6ZJlx52C0OA8lpAui98fXlE8jymkfWQjToo9zjruwGM=
+	t=1744630993; cv=none; b=PyxDAYVBYDh9EwuOS5dwpevPgsv1myBmIXyiZLUvEFcPPWfetumT8MkegWg95TiCxl+K+z5Vo/SF25ZY8UZxroQeIyFqIHCz0sIqgYh6LMkGwoeH1TdJHTbs78HNkuDM0qZRWPslEmsWIDqySha2QxPvE/wFoEXIbsVMZXxQb/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630978; c=relaxed/simple;
-	bh=tCNsgrDri8daLFGZvhhEyRWqH5aNJdMnDcDM9O99Hm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qDvevjEcpomAOUeBEsFlD/+ao+XgAN1Jnb4dPg4WNorr2YunQrEuN61KluuOHwqQWg7faoJ8nMmMwoInC6h8uwUB0Q8Bi+zfZWh/9MYw4tX3xIT58jdZ1T7QilGZSbpuRW3MvFoaLLY1sVVTdl5za5lsQ4ySZJCxo/GmgZdxGCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6GlVXGM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744630993; c=relaxed/simple;
+	bh=FYKvrynLsDaxZBstU34tOoBLrmrnzq8eiLT9NiQLpNM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KZFea2DrE+iX+QKRFKhvAjIKUuq8GeOYmVNQHydA6kmcJsGd2DJkkTTeXlZrjOlESv0Bq+3NF5T0B51wZ+ZoAapN+J6vJ2NhNfip/j3PbOtcE6UyXzBpKCuhyBUTRxM9FpDgYbP8EN0O9mIZqRWBE16hWIS1C4q8/Tc7H6gNNc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Vt9CxhJj; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6GlVXGM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50434C4CEE2;
-	Mon, 14 Apr 2025 11:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744630977;
-	bh=tCNsgrDri8daLFGZvhhEyRWqH5aNJdMnDcDM9O99Hm4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U6GlVXGMrI6w9y190podeFPKmPimN1ITyX0x+5DSidnZAt/g0vVCl8g4Vi9OwSBlZ
-	 n0he8ZOP7RXn/kJO8MA4g49mbvpE3GZ7MqCa8fe+idrCztHFngTvcQTF+NZSsP/joS
-	 R/frX1L9zPP9/2Z7rjXmV1teoZS4WBQuM18ANw0CgCawNnGtGpzg7scIxhEdwGGFab
-	 bN9hSbMn8teXgox8LsWF+e/JLB5KmK+u2xmFNCEP8FF8HuD3lN9KtypVeEloKmsnW+
-	 Y7AsTfrMgW+jO8yMziXVBuYZmPZwjuzDQ8xb2Vl1P99SyRMM47/53Ocny3fe8YEUu+
-	 Xi+q+Im6W1q8A==
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	"Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] release_task: kill the no longer needed get/put_pid(thread_pid)
-Date: Mon, 14 Apr 2025 13:42:51 +0200
-Message-ID: <20250414-ertasten-gelassen-78abebf1625e@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250411121857.GA10550@redhat.com>
-References: <20250411121857.GA10550@redhat.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Vt9CxhJj"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c31:2dc0:c767:bd08:cc70:b57a])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 840A6502;
+	Mon, 14 Apr 2025 13:41:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744630868;
+	bh=FYKvrynLsDaxZBstU34tOoBLrmrnzq8eiLT9NiQLpNM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Vt9CxhJjUp384eX0SE9lh7JywyHooJ6NoM8Bzui049UY6kiVMnaLaMcBI0JROIQz5
+	 6Vqvd1o9FMNLFTkilpRtjDNcwm8/NJ3PvNgL0nCzXAtbZtJf8/WkPxeChKuVibOUGA
+	 Ds1dpassjjLaDuS10yrOpwsh0NatFstXcxmT8pxs=
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+Subject: [PATCH v4 0/2] media: rockchip: rkisp1: Add support for WDR and
+ AWB64
+Date: Mon, 14 Apr 2025 17:12:11 +0530
+Message-Id: <20250414-awb64-v4-0-bfaea506cbd0@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,32 +37,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1117; i=brauner@kernel.org; h=from:subject:message-id; bh=tCNsgrDri8daLFGZvhhEyRWqH5aNJdMnDcDM9O99Hm4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/+bJ3qa6g+zmvGl7W8B8LvjIvYfqt1HY0SNB6yk6r6 oK2PXrGHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABN5FM7wV/Bla/zbACv9HTtt 1nEb9vms/HZTzyhk5uqEDRlpF06cjGRkuCNxJebg1SduxXKsuV2JB8Om5/MflPycPSlC4ecVJdV WJgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJP0/GcC/3XMQQ6CMBCF4auYrq3pDC0FV97DuGhhkC6kpjVVQ
+ 7i7hQRNjC7fZL5/ZJGCo8j2m5EFSi46P+QhtxvW9GY4E3dt3gwFSsBCcHO3peS6Ri1EXREoYvn
+ 3Gqhzj6VzPOXdu3jz4blkE8zX70ICDhy1FUSl6pSCg2vJRD9Yb0K7a/yFzaGEK1YC4I0xYwFWd
+ 1ZqkKX6g4sPRlQrLnjudFhbQAEkqx94mqYX/sIG7RsBAAA=
+X-Change-ID: 20241230-awb64-79270098e15e
+To: Dafna Hirschfeld <dafna@fastmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Stefan Klug <stefan.klug@ideasonboard.com>, 
+ Jai Luthra <jai.luthra@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2309;
+ i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
+ bh=FYKvrynLsDaxZBstU34tOoBLrmrnzq8eiLT9NiQLpNM=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBn/PTHLnQUsCSzjRwBWU2Y1/b+qWlo0gSSQAD8e
+ KjbIjPClf2JAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ/z0xwAKCRBD3pH5JJpx
+ RfNdD/0X+Nb1A930CAE3wd2x3UK3vb76iVoM/SIoDZwcxuJ/JrNWLEWC7vbo/lzID8SYNAQON4Y
+ lrGYzX+XbFvz/Z90oLM/y+6Lnw+TPkkQqhxpPNpHT7NWv9DvtfTOJ6hfqLdjLaci/MdXcl5Bl0j
+ bpV154zUtIVBdKbsdre5JSLmDLbj5mc6vo+u//P6oNal6eiR4YcNWt2zdSesKxvI3pKMNu31847
+ 8ianIc/OnJt9jI5a1XzjWqxvmm5rGpKTKFUtmSNJKRmBiBJFe+btxWmpitvfYE7ovBHUTbd69EI
+ 2Tx694nKfUF5ou0Jk2WLMKRBsQijJUtp8aY4MpflZJhzZo7YDPn2zn8tnbyENtGIcpvLgFBbA/T
+ VlvRZdSvrGhPOAo9CAPi4fHWtVnDGekIpyO25rH3KE2gXA61RKyiUzwk7xqA9kunGlyKSbUx4jg
+ hmRTvNQBkiTocs9O2l9DZxY4QfeAtqaHXc3gaUd8SmFYsRDdYLFhuM9bXR2FuMnXaXIOogbZNKX
+ cWLaPqy5vqKkqj6QXUpO0sC8dWpKF5P2wiVm7t7Mea6/gRYL3P+AhGCFijq9iUew2dqnQWs7jcY
+ r/CEjE+ydcFhNAihHV6PFTGs7tomh4ItQSyxOH5j64++Zostud6Wixr2ZHPIGYAYf5Ox50Sz56C
+ gtQZk7JRrR+ov6Q==
+X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
 
-On Fri, 11 Apr 2025 14:18:57 +0200, Oleg Nesterov wrote:
-> After the commit 7903f907a2260 ("pid: perform free_pid() calls outside
-> of tasklist_lock") __unhash_process() -> detach_pid() no longer calls
-> free_pid(), proc_flush_pid() can just use p->thread_pid without the
-> now pointless get_pid() + put_pid().
-> 
-> 
+Add support for Wide Dynamic Range and Auto White Balance 64 modules of
+the ISP.
 
-Applied to the vfs-6.16.pidfs branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.pidfs branch should appear in linux-next soon.
+This series is in continuation of the v2 posted earlier that enabled
+only AWB64. We add a new patch enabling WDR, and rebase the AWB64
+patch on top of it, as WDR is a simpler module which is present across
+different variants of the ISP.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+---
+Changes in v4:
+- Rebase on v6.15-rc1
+- Address Laurent's review comments on WDR patch
+- Link to v3: https://lore.kernel.org/r/20250225-awb64-v3-0-af29b1201e48@ideasonboard.com
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Changes in v3:
+- Add a new patch that enables support for WDR module, and rebase AWB64
+  support on top of it
+- Document the fractional bits used for AWB64 configuration parameters
+- Link to v2: https://lore.kernel.org/r/20250110-awb64-v2-1-01b7fb471465@ideasonboard.com
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Changes in v2:
+- Fix register offsets
+- Drop the _v10 suffix from awb64 functions
+- Combine the min and max for R, G, B components into a single value in
+  the struct
+- Move all the configuration except IRQ and module enable in the
+  meas_config() routine, making sure the bool bits are cleared if
+  userspace updates the struct
+- Fix documentation and indent at various places
+- Create a single function for getting both AWB and AWB64 stats for
+  IMX8MP
+- Rename accumulator fields to only specify RGB and not YUV, as AWB64
+  block does not operate on YUV colorspace
+- Link to v1: https://lore.kernel.org/r/20241230-awb64-v1-1-27b0ee65f551@ideasonboard.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.pidfs
+---
+Jai Luthra (2):
+      media: rockchip: rkisp1: Add support for Wide Dynamic Range
+      media: rockchip: rkisp1: Add support for AWB64
 
-[1/1] release_task: kill the no longer needed get/put_pid(thread_pid)
-      https://git.kernel.org/vfs/vfs/c/c9e3b2f77268
+ .../media/platform/rockchip/rkisp1/rkisp1-common.h |   2 +
+ .../media/platform/rockchip/rkisp1/rkisp1-dev.c    |   3 +-
+ .../media/platform/rockchip/rkisp1/rkisp1-params.c | 213 +++++++++++++++++++++
+ .../media/platform/rockchip/rkisp1/rkisp1-regs.h   | 140 +++++++-------
+ .../media/platform/rockchip/rkisp1/rkisp1-stats.c  |  40 ++++
+ include/uapi/linux/rkisp1-config.h                 | 208 ++++++++++++++++++++
+ 6 files changed, 531 insertions(+), 75 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20241230-awb64-79270098e15e
+
+Best regards,
+-- 
+Jai Luthra <jai.luthra@ideasonboard.com>
+
