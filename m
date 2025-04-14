@@ -1,148 +1,189 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053F827E1D7;
-	Mon, 14 Apr 2025 14:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415BD275844
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641811; cv=none; b=CxpxzpX73ef6J9OqZhF5Hjgmt9DtAMDwND/mWY5u4pDyeQM6xJ8z9CMxx8ckbqtyOwFF7ZtyFiVN+11PMJSGTVoh4pokneY8He7dFBva7TonaT/yt6am9HOaAsyAysy65hLPN1ruk2lr/qXZervzOClDG5K4MP/T21l9sswfFzA=
+	t=1744641841; cv=none; b=BYGSNQMcO63ehW3nIzr6SeVREBdM0UOyJC0QlXgUz4LHZMzHHd9eo9Y5lMFuZsRUuVdCJK8C9Ah5+7m+hhBVobcA08pvXo7QG1zEcIcxj8n3u47od/0dZx6vQQPdq/zUKccnrCnp7IPGFi1sgwEMTr3xFyrJJenIlXb19JlSRX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641811; c=relaxed/simple;
-	bh=8ZpuCzo9q4nC5XCcYPWf329v5uOHg8EsUG8V5EQZMzs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3d1X+da7fxVEfuJogD+J9ZPr4ONcXKpY05hSHJk89UZHcREK1qZXEliiyHszZYO2Z91CYysx9XhZSmux1dL1wi9AhZVDNpvOJx98jbvq6qxClCul0gXS5DZI3YFz/LrGQZR2S7skkgc27vT2PKf4kj94AKK0smzsYPgvbRmgtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vH9oVWJ2; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744641841; c=relaxed/simple;
+	bh=uMNdskFvWxs/ZeJV24VQb2bK2kwD4jcq/9MRREdZl7I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XtHms7iChjHyJM9tzpI3bO9JdWTaix0mBhjvM87OTPyv8661ckdZ2v7TC+b8xpg5s0t8hsXSj2vtsZWcfOj9rMlH15kOkXQmcpczU27St+DBi4zHm8MEH98RrqpFUoTQmyQ5PYwsCyB0Npb69usf8SRCzJb+3P9sZ+aj+ufFNiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IjtG/CAn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vH9oVWJ2"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEhM5S2715884
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 09:43:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744641802;
-	bh=Yv0jQ+VDdZHaxd5uxpw41+0vDJIDkJhqKIpTgHF8Kg4=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=vH9oVWJ2uIyvBSU9VlhDOoxmlYDwgXuyyr0/WbkRZLFjfHZ6gyIxuS/8sfOKY0d1E
-	 7s4yZEEYzfT3zdXEc9TkLzJnHTubagy0rDw2NqlbwuATOBbhLypN8FvrfIDRmFFRNN
-	 zYVbi2NEEezCnGmu7AHrtUBvHSc4RsufvJo5Bf3Q=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEhMVi091782
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 09:43:22 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 09:43:21 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 09:43:21 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EEhKZR010492;
-	Mon, 14 Apr 2025 09:43:21 -0500
-Date: Mon, 14 Apr 2025 20:13:19 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Nishanth Menon <nm@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <u-kumar1@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 0/2] J722S: DT Node cleanup for serdes0 and serdes1
-Message-ID: <4106b4b8-6ca7-400f-8862-a45214284326@ti.com>
-References: <20250412052712.927626-1-s-vadapalli@ti.com>
- <20250414120930.m7x7zfmyby22urpo@ultimate>
- <79ef7f50-22d5-4c40-ae28-02bf297ca79c@ti.com>
- <20250414143916.zhskssezbffmvnsz@dragonfly>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IjtG/CAn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744641838;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjqVtifpWkKj0b4Ug0nm9RhQbFWSBSXQpQ4bYLNf9BA=;
+	b=IjtG/CAnQJAXusTwOhQS+xBO01DqJFMNSYLQ6FSgESfrn+fQymVqgR9OfIjg9IS62ubTzX
+	/Y7MqD+/54KJVOMhLx1LII6Hfn2hh7CN2KbIVFPnQcDv7V7EMyFiEVfG5PQR2ks2Clw1Iz
+	t6HKiccuREkJGabakRSJDJ9ByTt7WKE=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-272-rjG7-ta9Pg2EHAF7icT2kg-1; Mon, 14 Apr 2025 10:43:56 -0400
+X-MC-Unique: rjG7-ta9Pg2EHAF7icT2kg-1
+X-Mimecast-MFC-AGG-ID: rjG7-ta9Pg2EHAF7icT2kg_1744641836
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e917965e3eso65301966d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:43:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744641836; x=1745246636;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kjqVtifpWkKj0b4Ug0nm9RhQbFWSBSXQpQ4bYLNf9BA=;
+        b=Mz6q450adlDTGwJdZ2lWo4PPE0rMhqoVF85diTYjvenoG+yOhdKMgkviafZxmqWGon
+         LFTl9Fa4+BUybsUvTDu8zeLfGyEqa9Ohx2IBbj+7JdPUrKHn4jGDD4GsbHhB9WLibH9h
+         8KYa6MULTrf5XPDI/PZcfdedzNAw46q//GEwJlahDI9NSUuHsaKY+ZAcvs2RwyHA3a1t
+         a9kJZ0UeNJMLrDI4B4GfLRalL2gCUEprVKn1xhwBLg6rWfgBxnWvpshpBKgqqMsEM6nQ
+         zvd1WK2dR4aIp7I62vdVX7aLY86ESbe+Qjr3VgDZjQhoTvvZDmxc8koYIvJdSCpD5bqP
+         FPvw==
+X-Forwarded-Encrypted: i=1; AJvYcCULPfW5Yhfa00tuAEvQotJLhDGvHM+o9qkOh0iG3evmrenRhFApo5g1+TG9435V2+i4v1euE8PEflya2wU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu6gkqDLSBtvjKMAJNaf5RUln7xL5+/hlnQPrSlQF7429dRTTQ
+	kIRbuHvFO6PlAi+ajkDnZNbsP8ZFAG9AxZPX/2VXyOaCgWSQGLDqliD95jnWERnp4CF+Du4m0Um
+	FRqYKKNM2wFIfNCqvwtIvvS3O2CBwSm9Tt1H79U8dtX/kh8tp/n1ABpwvs1Xo0A==
+X-Gm-Gg: ASbGncvclXAEcyT2J6+CJEtoE6+UqZm8/6YbKhI5HWehHs7tIxBNqIB46hB4eeXiBjC
+	aBS3kHTJd9cZJiD1vLKn2oUkMoa3qf/IW9Fjtp725PxFeBTrM7neSFnkTaloI8UUtuC37e6n4iO
+	7MZe9yWMYbdte4I4rc/U/HvOOHAf72UbsgdF1B+BcZOf/3YByt06kd25vDl6xbyS/CqYiOCK4ck
+	4baYSSrMQnGolrazPztnMTns/snwNXccPMSCwFJhw52kOYn28xBl/FWXGC4QxVsj5JWigA9eku0
+	2x1yHz9mvI8=
+X-Received: by 2002:a05:6214:501d:b0:6d8:ada3:26c9 with SMTP id 6a1803df08f44-6f230d7ad92mr185320596d6.10.1744641836152;
+        Mon, 14 Apr 2025 07:43:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGel5tH1Eww8AUnNw43KwiocL2hPNlXM4/YDX3le/rvzrhbUb9fxhhQvoE2YODqL1n6WcfW1g==
+X-Received: by 2002:a05:6214:501d:b0:6d8:ada3:26c9 with SMTP id 6a1803df08f44-6f230d7ad92mr185320156d6.10.1744641835603;
+        Mon, 14 Apr 2025 07:43:55 -0700 (PDT)
+Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de970badsm84997516d6.26.2025.04.14.07.43.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 07:43:55 -0700 (PDT)
+Message-ID: <6af77fa765ecee9cf1368d0715b65a383d67bc7e.camel@redhat.com>
+Subject: Re: [PATCH v3 0/6] KVM: SVM: Fix DEBUGCTL bugs
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: Sandipan Das <sandipan.das@amd.com>, Sean Christopherson
+ <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Xiaoyao Li <xiaoyao.li@intel.com>, rangemachine@gmail.com,
+ whanos@sergal.fun,  nikunj.dadhania@amd.com
+Date: Mon, 14 Apr 2025 10:43:54 -0400
+In-Reply-To: <3bb22f41-9218-47c1-8a0f-c484bdaeb9eb@amd.com>
+References: <20250227222411.3490595-1-seanjc@google.com>
+	 <1b0fbad5b2be164da13034fe486c207d8a19f5e7.camel@redhat.com>
+	 <Z_WmdAZ9E2dxHpBE@google.com>
+	 <3bb22f41-9218-47c1-8a0f-c484bdaeb9eb@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250414143916.zhskssezbffmvnsz@dragonfly>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 09:39:16AM -0500, Nishanth Menon wrote:
-> On 18:30-20250414, Siddharth Vadapalli wrote:
-> > On Mon, Apr 14, 2025 at 07:09:30AM -0500, Nishanth Menon wrote:
-> > 
-> > Hello Nishanth,
-> > 
-> > > On 10:57-20250412, Siddharth Vadapalli wrote:
-> > > > Hello,
+On Mon, 2025-04-14 at 12:02 +0530, Sandipan Das wrote:
+> On 4/9/2025 4:13 AM, Sean Christopherson wrote:
+> > On Tue, Apr 01, 2025, Maxim Levitsky wrote:
+> > > On Thu, 2025-02-27 at 14:24 -0800, Sean Christopherson wrote:
+> > > > Fix a long-lurking bug in SVM where KVM runs the guest with the host's
+> > > > DEBUGCTL if LBR virtualization is disabled.  AMD CPUs rather stupidly
+> > > > context switch DEBUGCTL if and only if LBR virtualization is enabled (not
+> > > > just supported, but fully enabled).
 > > > > 
-> > > > This series is based on the following series:
-> > > > https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> > > > Based on the discussion in the above series which disabled 'serdes_wiz0'
-> > > > and 'serdes_wiz1' nodes in the SoC file and enabled them in the board
-> > > > file, Udit pointed out that it wasn't necessary to disable 'serdes0' and
-> > > > 'serdes1' in the SoC file anymore, since that is not a working
-> > > > configuration - serdes_wizX enabled and serdesX disabled doesn't work.
+> > > > The bug has gone unnoticed because until recently, the only bits that
+> > > > KVM would leave set were things like BTF, which are guest visible but
+> > > > won't cause functional problems unless guest software is being especially
+> > > > particular about #DBs.
 > > > > 
-> > > > Hence, this series aims to cleanup the serdesX nodes after the changes
-> > > > made by the above series.
+> > > > The bug was exposed by the addition of BusLockTrap ("Detect" in the kernel),
+> > > > as the resulting #DBs due to split-lock accesses in guest userspace (lol
+> > > > Steam) get reflected into the guest by KVM.
 > > > > 
-> > > > Regards,
-> > > > Siddharth.
+> > > > Note, I don't love suppressing DEBUGCTL.BTF, but practically speaking that's
+> > > > likely the behavior that SVM guests have gotten the vast, vast majority of
+> > > > the time, and given that it's the behavior on Intel, it's (hopefully) a safe
+> > > > option for a fix, e.g. versus trying to add proper BTF virtualization on the
+> > > > fly.
 > > > > 
-> > > > Siddharth Vadapalli (2):
-> > > >   arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
-> > > >   arm64: dts: ti: k3-j722s-evm: drop redundant status within
-> > > >     serdes0/serdes1
+> > > > v3:
+> > > >  - Suppress BTF, as KVM doesn't actually support it. [Ravi]
+> > > >  - Actually load the guest's DEBUGCTL (though amusingly, with BTF squashed,
+> > > >    it's guaranteed to be '0' in this scenario). [Ravi]
 > > > > 
-> > > >  arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 2 --
-> > > >  arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ----
-> > > >  2 files changed, 6 deletions(-)
+> > > > v2:
+> > > >  - Load the guest's DEBUGCTL instead of simply zeroing it on VMRUN.
+> > > >  - Drop bits 5:3 from guest DEBUGCTL so that KVM doesn't let the guest
+> > > >    unintentionally enable BusLockTrap (AMD repurposed bits). [Ravi]
+> > > >  - Collect a review. [Xiaoyao]
+> > > >  - Make bits 5:3 fully reserved, in a separate not-for-stable patch.
 > > > > 
-> > > > -- 
-> > > > 2.34.1
+> > > > v1: https://lore.kernel.org/all/20250224181315.2376869-1-seanjc@google.com
 > > > > 
 > > > 
+> > > Hi,
 > > > 
-> > > I do not understand the logic here. serdes cannot operate without wiz
-> > > nodes, correct? why would we leave serdes on by default?
+> > > Amusingly there is another DEBUGCTL issue, which I just got to the bottom of.
+> > > (if I am not mistaken of course).
+> > > 
+> > > We currently don't let the guest set DEBUGCTL.FREEZE_WHILE_SMM and neither
+> > > set it ourselves in GUEST_IA32_DEBUGCTL vmcs field, even when supported by the host
+> > > (If I read the code correctly, I didn't verify this in runtime)
 > > 
-> > Yes, serdesX requires serdes_wizX, but at the same time, serdesX is the
-> > child node of serdes_wizX. Therefore, without enabling serdes_wizX, we
-> > cannot enable serdesX.
+> > Ugh, SMM.  Yeah, KVM doesn't propagate DEBUGCTLMSR_FREEZE_IN_SMM to the guest
+> > value.  KVM intercepts reads and writes to DEBUGCTL, so it should be easy enough
+> > to shove the bit in on writes, and drop it on reads.
 > > 
-> > Prior to this series, but with the dependent series at:
-> > https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> > applied, the nodes look like:
+> > > This means that the host #SMIs will interfere with the guest PMU.  In
+> > > particular this causes the 'pmu' kvm-unit-test to fail, which is something
+> > > that our CI caught.
+> > > 
+> > > I think that kvm should just set this bit, or even better, use the host value
+> > > of this bit, and hide it from the guest, because the guest shouldn't know
+> > > about host's smm, and we AFAIK don't really support freezing perfmon when the
+> > > guest enters its own emulated SMM.
 > > 
-> > 	serdes_wizX {
-> > 		...
-> > 		status = "disabled";
+> > Agreed.  Easy thing is to use the host's value, so that KVM doesn't need to check
+> > for its existence.  I can't think of anything that would go sideways by freezing
+> > perfmon if the host happens to take an SMI.
 > > 
-> > 		serdesX {
-> > 			...
-> > 			status = "disabled";
-> > 		};
-> > 	};
+> > > What do you think? I'll post patches if you think that this is a good idea.
+> > > (A temp hack to set this bit always in GUEST_IA32_DEBUGCTL fixed the problem for me)
+> > > 
+> > > I also need to check if AMD also has this feature, or if this is Intel specific.
 > > 
-> > The dependent series fixes 'serdes_wizX' by disabling it in the SoC file
-> > k3-j722s-main.dtsi. But after the fix, we have a 'status = "disabled";'
-> > within the serdesX node which isn't required since:
-> > a) serdes_wizX enabled but serdesX disabled is non-functional and
-> > unusable
-> > b) serdes_wizX disabled in DT implies that serdesX is also disabled
+> > Intel only.  I assume/think/hope AMD's Host/Guest Only field in the event selector
+> > effectively hides SMM from the guest.
 > 
+> Just using the GuestOnly bit does not hide SMM activity from guests. SMIs are
+> generally intercepted (kvm_amd.intercept_smi defaults to true)
+
+Hi,
+
+Actually this setting doesn't really work these days, at lesat not on my Zen2 machine (3070x).
+
+Long ago I tested it, and despite loading the system with SMIs either via APIC or via 0xB2 ioport write, 
+where in both cases I noticed significant slowdown of a VM, pinned on the receiving CPU I got no SMI VM exits.
+
+BIOS likely has an option to override this setting. 
+
+I guess the reason is security, because with SVM,
+one can effectively block the SMIs from being processed on the host.
+
+Best regards,
+	Maxim Levitsky
+
+
+>  and handled in the
+> host context. So guest PMCs are isolated by a combination of having the GuestOnly
+> bit set and the #VMEXITs resulting from SMI interception.
 > 
-> Can we handle all of this in one series instead of two series?
 
-The idea behind splitting it was that the dependent series is a "Fix":
-- Fix to follow the convention of disabling nodes in SoC file and enable
-  them in the board file.
-while the current series is a "cleanup":
-- No fixes are introduced by this series and therefore it doesn't
-  require a backport.
 
-I can squash the two series and post them as a v2 if that helps.
-
-Regards,
-Siddharth.
