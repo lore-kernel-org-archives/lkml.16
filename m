@@ -1,97 +1,69 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089432F32
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40212F32;
+	Mon, 14 Apr 2025 06:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744612285; cv=none; b=hAMYCD1+A0RtuErFndDUWz+rn2Icx/LAPMe7lkGrLpVE1r5IEyRW3NKWMLFa7KO9Yi4JAzPoaoSNAWIaxMIiIF1fKbk6yZ+ZjovCPpH7t6nzEuY1Y2hW1x7ZSwU7jfvz+tGciOp5IHD3eGfB3GwrQf9gGQrisBVe6aNxNK3Bf+A=
+	t=1744612335; cv=none; b=dAbXh9ffATIMT8HAqNpggsE/daFA/LudtRiFiVmpDos1SzK9BrbmTR4KOl6Lz4wi1PPSWgz9H0saF1UC2v8udxfXYUYSkX2FXCrOcrn5Kk8LhRtnSJt4wGPt8yjWgYdKJvmquqPC6xZ9FwfjdyxlLzMvj6/7W2kt/9hW7z+T2vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744612285; c=relaxed/simple;
-	bh=w8H0Yk/aiUBgp2kpAaBgGM3BJ2V7MPiQ8mvoAI/hWM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BgqNWAh9/g9Uz9gzd5982mqcfgLruW5S3DWgyJyyMtGW/1bLUhzIbmnIK1EshEMLyairhzuDDGMFVK5eWDO1wJp5DK7XR5U5zuqKyW0NC+JwPX0tsPiR0bsAVVzTe2nEVb6o1rL9VlbAanMw2p0wIsmbAS1Hg2UT295JOPl0WoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAAnYgqqq_xnDYjlCA--.14406S2;
-	Mon, 14 Apr 2025 14:31:08 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v3 RESEND] mtd: bcm47xxnflash: Add error handling for bcm47xxnflash_ops_bcm4706_ctl_cmd()
-Date: Mon, 14 Apr 2025 14:30:40 +0800
-Message-ID: <20250414063041.2060-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744612335; c=relaxed/simple;
+	bh=Z/+/n5jbaTPjHtfywykFMMUYgD+TwDgkhpHvKNrTH+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sUBkgHaVXzDWDPee33Keuo8BJuzs3ewDRGe/A+2dIb8te/MWUXHAIhy0FTV4A83wla7ymtIk4qPKfkrP5+tpEeypNlqb6Lh/5RA9Lo4jXH9/H+vpN+OngHnjRzRFO4jmIPNBnVF+e5biaPJpZmJpw+pzfg9KaTBtBcv21kyzZak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mX/TD+4O; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mX/TD+4O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JxcSgy0PXBEd6hHA6a9RYFS2/AatfYZKyainF/Hr3As=; b=mX/TD+4OW+9kXx2g9n3M8h5aVc
+	64da07fAiHEVzhphmUbXDcjKdGNOeclbubi9yQHem/fq+wW69qkgRCfA6bAwTocoTclZGk8j0tF+u
+	HmYahxd5i7x//8GdgIqN682RzbLqk6QrJCS2eBBmgC+FXM8/hcGAx9AU/kG3JdyEIArdgB4OgqeIa
+	7FdtltuJJZI/7rk6rk3FsWvKqwqH6IcruYXFRsywGKWw2Gc1VzYmTdgQD+bh8HFjsEMOz7aPWOFxy
+	lr+McRWi1Ln/ceZvx4U+ElWqXNproMCEiTLvP2FLV3+W2fFc2rnnhiQazwNYlyd+hRo9Lk5pC13e3
+	skbD2RHQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4DMZ-00000000ntO-1tBf;
+	Mon, 14 Apr 2025 06:32:11 +0000
+Date: Sun, 13 Apr 2025 23:32:11 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, xni@redhat.com,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: Re: [PATCH 1/4] block: export part_in_flight()
+Message-ID: <Z_yr67xrbkuQwy0P@infradead.org>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
+ <20250412073202.3085138-2-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAnYgqqq_xnDYjlCA--.14406S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw18WF17uw47XFyUAr1UZFb_yoW8WFWUpr
-	47Xa45t3Z5X3WDtFyUWF18KF1Yv348KF4jg3yvva48ursavFWxGrZ3Ga4jq3y8Gw18Jw17
-	XF4F93WxWr9FkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-	UI43ZEXa7VUUmL9UUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAMA2f8nMA0BgAAsj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412073202.3085138-2-yukuai1@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The function bcm47xxnflash_ops_bcm4706_cmd_ctrl() calls the function
-bcm47xxnflash_ops_bcm4706_ctl_cmd(), but does not check its return value.
-A proper implementation can be found in bcm47xxnflash_ops_bcm4706_write().
+On Sat, Apr 12, 2025 at 03:31:59PM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> This helper will be used in mdraid in later patches, check if there
+> are normal IO inflight while generating background sync IO, to fix a
+> problem in mdraid that foreground IO can be starved by background sync
+> IO.
 
-Add error log to the bcm47xxnflash_ops_bcm4706_ctl_cmd() via pr_err()
-to prevent silent failure. The error Log funciton 'dev_err' is unsuitable
-in this situation for it is hard to get device pointer.
+If we export this it needs a kerneldoc comment, and probably also
+a better name.
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v3: Improve code for logging error.
-v2: Fix spelling problem.
-
- drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-index 6487dfc64258..e532c3535b16 100644
---- a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-+++ b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-@@ -171,6 +171,7 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
- {
- 	struct bcm47xxnflash *b47n = nand_get_controller_data(nand_chip);
- 	u32 code = 0;
-+	int rc;
- 
- 	if (cmd == NAND_CMD_NONE)
- 		return;
-@@ -182,7 +183,9 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
- 	if (cmd != NAND_CMD_RESET)
- 		code |= NCTL_CSA;
- 
--	bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
-+	rc = bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
-+	if (rc)
-+		pr_err("ctl_cmd didn't work with error %d\n", rc);
- }
- 
- /* Default nand_select_chip calls cmd_ctrl, which is not used in BCM4706 */
--- 
-2.42.0.windows.2
+Looking at this I'm also a little confused about blk_mq_in_flight_rw vs
+blk_mq_in_flight and why one needs blk-mq special casing and the other
+not, maybe we need to dig into the history and try to understand that
+as well while we're at it.
 
