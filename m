@@ -1,37 +1,40 @@
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BB4259C85;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B3F259C84;
 	Mon, 14 Apr 2025 08:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618132; cv=none; b=HZIR5DhnCXR/7TIpiI1Cnp3y+aoMF2m9r7977j3kgI/r/Bls2H3H78OdOaUWxZExtoguPvsOgauUXaWzHFCrhU6ZVCdNbHKO7QEQXV6PtTf78ZwOtws2qGwBx5Kf6m3GWAHD26/rDx02VNRrXVo+SttmQVVLJj/uZgGVW8KY40E=
+	t=1744618133; cv=none; b=nllizoG+xR5UIuiasfuN6pqNFtVYsdIIljdHtbZOwVY1rxwy0JgmziuT9JWmki9+NeYu1Snqgi+I+P/cdeHwO+5tnCSWNJ7ebsmenWraXgcYMs2UlGisJNUjDfxxhL+56urvLffmsQ+Iu38MD2x8AyI01O4Uo8BxapaPL6ukUm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618132; c=relaxed/simple;
-	bh=4GoCfFjO+Q6qsBe2qU4cD93K2hb0bVQ7KfNS41nFI8I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gwt1GqrkG5G8AUo7Scvk/nY9Pz1n3lVM7W7tqDnkt4rIXR8u1pZCGn03bRKmpwAH7iJnWvDzLNuAt9rBwjNYk+9MYgAruvIFyPmwwhcpeoL+Na65ReRoxxp7ekvNqpAOPNhn5ciKV30OtMbVetcLSHK380C4HLWg4h14PGfRPlE=
+	s=arc-20240116; t=1744618133; c=relaxed/simple;
+	bh=RXiIoJmwdgY+eS+X74ykYmE1AL9TNuJ+L3FNsdrHTmE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jjh4ljhdkHaCdME3zfYTfZ5eYD02x0CKh2+rv9dBPN3qDrfLgcZJVSDgDpSYI4B4sJJxJKANql1FADuGc/T1T32Lg6qqXyMF8aHtNqcEgtQYPwhe7Pp1AWjMYwyI8Byg0UVaFiG8NmH4YcjOzLx0kl475RXaKZfqTsCuWBJ9+BY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zbfzf6Cdkz13LQ1;
-	Mon, 14 Apr 2025 16:07:58 +0800 (CST)
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zbfzg3KqPz13LPZ;
+	Mon, 14 Apr 2025 16:07:59 +0800 (CST)
 Received: from dggpemf100013.china.huawei.com (unknown [7.185.36.179])
-	by mail.maildlp.com (Postfix) with ESMTPS id 23EEA180080;
+	by mail.maildlp.com (Postfix) with ESMTPS id B5282180080;
 	Mon, 14 Apr 2025 16:08:46 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  dggpemf100013.china.huawei.com (7.185.36.179) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 14 Apr 2025 16:08:45 +0800
+ 15.2.1544.11; Mon, 14 Apr 2025 16:08:46 +0800
 From: Yihang Li <liyihang9@huawei.com>
 To: <martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
 CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linuxarm@huawei.com>, <liyihang9@huawei.com>, <liuyonglong@huawei.com>,
 	<prime.zeng@hisilicon.com>
-Subject: [PATCH v3 0/4] hisi_sas: Misc patches and cleanups
-Date: Mon, 14 Apr 2025 16:08:41 +0800
-Message-ID: <20250414080845.1220997-1-liyihang9@huawei.com>
+Subject: [PATCH v3 4/4] scsi: hisi_sas: Wait until eh is recovered
+Date: Mon, 14 Apr 2025 16:08:45 +0800
+Message-ID: <20250414080845.1220997-5-liyihang9@huawei.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250414080845.1220997-1-liyihang9@huawei.com>
+References: <20250414080845.1220997-1-liyihang9@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,34 +46,37 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  dggpemf100013.china.huawei.com (7.185.36.179)
 
-This series contains some minor bugfix and general tidying:
-- Ignore the soft reset result by calling I_T_nexus after the SATA disk
-  is soft reset
-- General minor tidying
+SATA devices are lost when FLR is performed while the controller and disks
+are in suspended state.
 
-Thanks!
+This is because the libata layer is called to initialize the SATA device
+during controller resuming. If FLR is executed at this time, the IDENTIFY
+command fails. As a result, the revalidate fails, and the SATA device is
+disabled by the libata layer.
 
-Changes since v2:
-- Fix some compile errors after applying this series.
+So, wait until eh is recovered.
 
-Changes since v1:
-- Remove patch 1 and come up with a better solution to fix the issue:
-  https://lore.kernel.org/linux-block/eef1e927-c9b2-c61d-7f48-92e65d8b0418@huawei.com/
-  maybe in libsas or libata.
+Signed-off-by: Yihang Li <liyihang9@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yihang Li (4):
-  scsi: hisi_sas: Use macro instead of magic number
-  scsi: hisi_sas: Code style cleanup
-  scsi: hisi_sas: Call I_T_nexus after soft reset for SATA disk
-  scsi: hisi_sas: Wait until eh is recovered
-
- drivers/scsi/hisi_sas/hisi_sas.h       |  51 +++--
- drivers/scsi/hisi_sas/hisi_sas_main.c  |  81 ++++----
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |   2 +-
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |   6 +-
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 259 +++++++++++++++----------
- 5 files changed, 236 insertions(+), 163 deletions(-)
-
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index 15f1d5d783cb..d7a5522890a3 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -5100,9 +5100,11 @@ static void hisi_sas_reset_prepare_v3_hw(struct pci_dev *pdev)
+ {
+ 	struct sas_ha_struct *sha = pci_get_drvdata(pdev);
+ 	struct hisi_hba *hisi_hba = sha->lldd_ha;
++	struct Scsi_Host *shost = hisi_hba->shost;
+ 	struct device *dev = hisi_hba->dev;
+ 	int rc;
+ 
++	wait_event(shost->host_wait, !scsi_host_in_recovery(shost));
+ 	dev_info(dev, "FLR prepare\n");
+ 	down(&hisi_hba->sem);
+ 	set_bit(HISI_SAS_RESETTING_BIT, &hisi_hba->flags);
 -- 
 2.33.0
 
