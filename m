@@ -1,100 +1,108 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275BB25DD14;
-	Mon, 14 Apr 2025 09:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8151A2632;
+	Mon, 14 Apr 2025 09:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622108; cv=none; b=tjPgLc1pMDGE7HKmpJKg+kKGe2rBuYr30VN4ItkQn1Xp4QOIH5vLRlCJnA/CzeFTDvSLaomDOP3qxGtawdTRm9RgT4zVcxk1bPKmsi5lnjtRarPWhHR9anU+n9A4hhWr9I3A6vd/asbdkeqq6GL91017mEOsVnYiWVStB5rr8rE=
+	t=1744622143; cv=none; b=pc7CI2WJjOyHEzNY6JmAJl1ptvPnV91gJKo/Zgs1Lx5V3vosDrl5pWhWfsNUc0vcxHtHS2iUzR2od3Aa0wiB1Fick/w4ggytOLbJpBzGdgGscKW5h+mxtMFjSTuhGPjUEvNlzcGbazIDl5xysqgJRcwYfKV0eCgt4XEjpnLe950=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622108; c=relaxed/simple;
-	bh=tbf2Ml+im2U5RuM0vedTThyItIN7sEEhL5l/QHjL5o0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s3AhVmW73173nGvi++ggsdoasCgme0sXiwB4/iYebvGP8J+EYD1IhWgWJcXqSvOGuMdUoVTF0aNx1CTzzk7SiEM0kvEa26rc90JwC/HFwH8bjZXlOE8WKEgr4N//V7MFlnT++xif+pObAgAmhuhHY5SSjU7WuCmyyQqmiUBfNc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=SThNxVR1; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1744622143; c=relaxed/simple;
+	bh=yhNoOiFhKMqhM55XCGcnS3Kn7NPth90G1vtMJxHWXno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouMtZDYIt0V5AA5hD6UAKK/bF1p+jvmTkKe4KKzo973kucW0UZZhgXdQmgZrCL35mfl8o4TijO1lAixwiorK+LmqdP39tAWqMsLbBrc8pbLZxixKIrGCB4Wg7F2ZzU4oQuw6lbso1Epb7xUgHlCdNpwRak+j4GREGGSlVFgMI9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S8yrmAww; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="SThNxVR1"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZbhHk3fWvz9sDW;
-	Mon, 14 Apr 2025 11:06:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744621618; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tbf2Ml+im2U5RuM0vedTThyItIN7sEEhL5l/QHjL5o0=;
-	b=SThNxVR1vzQL7BET5P1K6nuJsueazkEi+KLxlj6xQUXphxIbKznNn2FLOscQWCk+FuI4HF
-	H0FUT7xq4or84vM2711OLYFfJvlmphetgICzJuGn2FdPZc3+q4w7dsEZBP/wE18eU0ye73
-	iZ6mThKow7JkzxMmh6cli2pmlNyFZ/AynGitljkjbo1U241VkrYX7HhvAqixtJG+BhxFdv
-	qgcTkYvv+DtqsQH2L7ajUW04wcyP1s9TpwhIi4XRoak66dzx/pewJWDJrL4o51jlInyw7M
-	wezMfzs4JEurV88SU4bueNomg31ufOehPf/AGMlhdwJHnEUtZg1kfVQi+yrxfg==
-Message-ID: <edf236654c39fbd3afb6db20e3ef42501a8628b0.camel@mailbox.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8yrmAww"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744622143; x=1776158143;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=yhNoOiFhKMqhM55XCGcnS3Kn7NPth90G1vtMJxHWXno=;
+  b=S8yrmAwwOrp9T+zQ6WEdoK5+sj0IsjapgfyMfbbypajPQszZBjVNlruI
+   XVt1XRGlM0hhFWELwZj/I6n5Y6GrAzPJSe+PXz8zye0JWmjIeZp3AcsSz
+   uuXLOtCe4y+pkJszq8eNJfP/OqpMN5+moLMGp3x8+PHEWfieeu7mPljk0
+   e47GnFHgtF5blKTQBRQG2eFHSJQUfIS8uJnYtIuSaWeb2FelpFHGIDd7O
+   Kg2NjU6JpN96l3t1tYdzOra4ZXyf2Zt6NdAW9hzGs5I5KjEj23yGpq7/F
+   hUschkESbgWJ+vFeWKBHaGrbbKmjxFdW5XHLGVspo+y9n1cCW0EYw0aKW
+   w==;
+X-CSE-ConnectionGUID: 3yPUzMBwTkWJ01j5zExmOQ==
+X-CSE-MsgGUID: uPbBzMxMQTKRtPfjT2QRfg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56263406"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="56263406"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:15:41 -0700
+X-CSE-ConnectionGUID: ZZyy/ybuQY2r81ih0hCPhQ==
+X-CSE-MsgGUID: or6s5L7/RIq6BeoHSXOC1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="129522705"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:15:37 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 5B7FC11F871;
+	Mon, 14 Apr 2025 12:15:34 +0300 (EEST)
+Date: Mon, 14 Apr 2025 09:15:34 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: phasta@kernel.org
+Cc: Yong Zhi <yong.zhi@intel.com>, Bingbu Cao <bingbu.cao@intel.com>,
+	Dan Scally <djrscally@gmail.com>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Akihiro Tsukada <tskd08@gmail.com>,
+	Bluecherry Maintainers <maintainers@bluecherrydvr.com>,
+	Andrey Utkin <andrey_utkin@fastmail.com>,
+	Ismael Luceno <ismael@iodev.co.uk>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 0/5] media: Replace deprecated PCI functions
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Philipp Stanner <phasta@kernel.org>, Yong Zhi <yong.zhi@intel.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao
- <bingbu.cao@intel.com>, Dan Scally <djrscally@gmail.com>, Tianshu Qiu
- <tian.shu.qiu@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Akihiro Tsukada <tskd08@gmail.com>, Bluecherry Maintainers
- <maintainers@bluecherrydvr.com>, Andrey Utkin <andrey_utkin@fastmail.com>, 
- Ismael Luceno <ismael@iodev.co.uk>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 14 Apr 2025 11:06:54 +0200
-In-Reply-To: <20250404135344.93241-2-phasta@kernel.org>
+Message-ID: <Z_zSNuLl_dTSsQOw@kekkonen.localdomain>
 References: <20250404135344.93241-2-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <edf236654c39fbd3afb6db20e3ef42501a8628b0.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: gmpbdfu87n44n7f5mo3d6tw1tu6ifmbr
-X-MBO-RS-ID: 7b9016a84fb764f1ee5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <edf236654c39fbd3afb6db20e3ef42501a8628b0.camel@mailbox.org>
 
-On Fri, 2025-04-04 at 15:53 +0200, Philipp Stanner wrote:
-> Replaces pcim_iomap_regions() and pcim_iomap_table(), which have been
-> deprecated.
->=20
-> The successor pcim_iomap_region() is already used in many places and
-> shouldn't cause trouble.
->=20
-> I test-built it, but have no hardware for testing.
->=20
-> P.
->=20
-> Philipp Stanner (5):
-> =C2=A0 media: ipu3-cio2: Replace deprecated PCI functions
-> =C2=A0 media: pt3: Replace deprecated PCI functions
-> =C2=A0 media: intel/ipu6: Replace deprecated PCI functions
-> =C2=A0 media: solo6x10: Replace deprecated PCI functions
-> =C2=A0 media: tw5864: Replace deprecated PCI functions
+Hi Philipp,
 
-Hello,
+On Mon, Apr 14, 2025 at 11:06:54AM +0200, Philipp Stanner wrote:
+> On Fri, 2025-04-04 at 15:53 +0200, Philipp Stanner wrote:
+> > Replaces pcim_iomap_regions() and pcim_iomap_table(), which have been
+> > deprecated.
+> > 
+> > The successor pcim_iomap_region() is already used in many places and
+> > shouldn't cause trouble.
+> > 
+> > I test-built it, but have no hardware for testing.
+> > 
+> > P.
+> > 
+> > Philipp Stanner (5):
+> >   media: ipu3-cio2: Replace deprecated PCI functions
+> >   media: pt3: Replace deprecated PCI functions
+> >   media: intel/ipu6: Replace deprecated PCI functions
+> >   media: solo6x10: Replace deprecated PCI functions
+> >   media: tw5864: Replace deprecated PCI functions
+> 
+> Hello,
+> 
+> is there someone who's in charge of all of media: who could take this,
+> or would it be more feasible to aim for the subcomponents?
 
-is there someone who's in charge of all of media: who could take this,
-or would it be more feasible to aim for the subcomponents?
+I'll check the ipu patches soonish.
 
-P.
+-- 
+Kind regards,
 
->=20
-> =C2=A0drivers/media/pci/intel/ipu3/ipu3-cio2.c=C2=A0=C2=A0 |=C2=A0 5 ++--=
--
-> =C2=A0drivers/media/pci/intel/ipu6/ipu6.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 8 ++++----
-> =C2=A0drivers/media/pci/pt3/pt3.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 +++++++++++------
-> =C2=A0drivers/media/pci/solo6x10/solo6x10-core.c |=C2=A0 4 ++--
-> =C2=A0drivers/media/pci/tw5864/tw5864-core.c=C2=A0=C2=A0=C2=A0=C2=A0 | 13=
- ++++++++-----
-> =C2=A05 files changed, 27 insertions(+), 20 deletions(-)
->=20
-
+Sakari Ailus
