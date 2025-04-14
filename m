@@ -1,111 +1,109 @@
-Received: from sonic307-30.consmr.mail.bf2.yahoo.com (sonic307-30.consmr.mail.bf2.yahoo.com [74.6.134.229])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C924288C83
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.134.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341A289340;
+	Mon, 14 Apr 2025 16:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649104; cv=none; b=cAcPT+pv8PBzGY33iRrFkBcfNE0qxWf8IuPzl7uH07GECc79cc1z3ziO4Drvx5i0XZ/IcdcBDvYXB4KlX3g6Cgu5N3tb4Ot/xAAKYKqykRS1bFYVB3MVZMDWbXglf9a0AANHt7OU+qO8kJfml5M5qQAJ0q+8kW4QT6f0fo5ArnA=
+	t=1744649108; cv=none; b=FFQ3htaeNQHHIwjaJbTsZ3VjCeIJTxgn7lLj9ydyjJfDBsHZZH9moP4BENE9T3eFfde/J33WYkgzc1GDbGN6hLfh7jSL1Pi90nXBjPWEe+ydgxCXCKeNsqM1K3Pfp3jnsG/Rg9h5zeIklHpP3GrE41e9WRID20yKpa1UxNn/QoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649104; c=relaxed/simple;
-	bh=LRip5C8YXBMcattS1GRTxAuDuczRlbVQDGWhRq42ClI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RE1xp0wDsMYwzkcqE3lia43U97NzSzJfwTdjzqtN449yc2AwPyOEO/Zh9banNZWnNnRJyDe2/g6TZK8OnwFacMAu0S3pukCP2Qxg9w5zHnjbtERkL3xUjCFFD0RZguA0VFGuRCpQ/p746r/xxP5HoT61m+eWiOycgON/NKNcSq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=PLXAQqRB; arc=none smtp.client-ip=74.6.134.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1744649108; c=relaxed/simple;
+	bh=CyRmz6WDnLlgE/Au89ERUZt3OIYiAJnvydjXIw1skME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pXElyqOi5TuT/y+RS3oHFnsar2eyvGbjLjkxSgcGlsPg6OFe5mid7D0GNpUNM2mnyu85kGhWwXpQZnOx/1Z6NqBaaeRxnxrj5D8o7bvLT1Yil8fL/w7Z5UFjaSYlinDzyPRLZK9fz6hbYCcPX3fs3ftlKUn62onWWpTZFZbDFzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLjjFtT0; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="PLXAQqRB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744649102; bh=6V04kO3rpZ47EWD3X905dHz9fGQ1xlrcbJbLzzJKDj8=; h=Date:Subject:From:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=PLXAQqRBQBxCZmqsG3MmecLziQkfzx4oBEUHGQSvCPTNSoW3yW3IV4yNnzF36MWLNzWBcN9Ok+sJctQQC4SkIwW9lTNPzmy8gc/IzIoZKD17xmF/9ZXzF8yxicBGngsjwCVK5brOEId4No7fEeyyL5sr4Rlc69Zuzrog88gA9fdil5tbTaufNPp28m8Q4XIaFzi9y6NDlZncSHKgkA69gNgs0k5HDZcOqWzDnA2dErnvCu5RgxxYtCQ+p0P2S3RRmWKrChw88SLx+Am1tPKw64MsquCSq/Q+trWxzvCN6uYVkSYdFOt75oKonytbYUjJ6ZcCwAZOGQlO0ofGvrga1A==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744649102; bh=PNc+hfhIh1LCGx+RzY5TEkiADztooHAQI1WNhiDG+F6=; h=X-Sonic-MF:Date:Subject:From:To:From:Subject; b=YGpeh5mLhXMErC6iVVGHWXy3Z1/N3hncuB9hT+zXmBX3cPEfs8QhQkA2e3TKlpYGctchwa0bf3nmcoHsm53hLwMN1ddtZ0G7PflP7dSjKYrIHWhvdNFinhaLbCIpceOSwSJr6Cqyti2dmz0fGGd/wRGbHrvxI5lL84YqlzdlG618Uoov+CE/XAHRMWl93OxX42YyF1UhUCjmcOhM/NZhlkpcppdkFmeyPIJbYA90HdAfc1LAn/yg6ydkHLK9U4DLWIard+fJ2Q7H1BxmYGi6fM1caCjFYX5UVmmYJ3961piztqC7TApufsbeAJCpzWCLkZK05v4xVy0F4PgNNnPUmg==
-X-YMail-OSG: ijaescAVM1kj5AFBIzzT.YKhGnW2.GMXcoNbQi.Jna0FItqIw5ZmuNjyO6y4WBL
- nGAdxWYqSBtPW7w6BJi3kQLTHkYS0Fyt5OKIJzTo255iMyr5RfZ0F2qquSlJh0LoiU8T3eiul4tE
- 9K3BMCQf93_hzZCVBcXw2c95HyrFdn4XqOj1QRRS6IhnQObkdTwv3D1bmKADOU7eWlI3UKO.9tYY
- R4TYDbz9rwrZaepSU1349IKr1S2Qu3guonNuts1Pj_jG6Faq7DR0Iwrz2B6BfxPgBGTTdU77q.tv
- 8Ivhly6Bt82znn7SANBbhGhnHcjy_En7BAiLplxZPK3WIyGzV.Z66T8lMlMHoPyHuujr6XUB9WGi
- kLVY7VQ5MV8mLaT2kz5aRz0DRRpi4pM8bXVYilFTujbdkgebdsnSOoaC1LlCKqBXs3VktflfFgSN
- CCmFlAqaf1.vOE2zxeXJhHSNWG2aCSwdg1whgQDKAEvRKgQwxhAmbsLsGCEmIzu6PTwQxA3Rc4Ij
- OWrMnMhLEyaUAYWIO4ZAmuJ1xxXJUuauhX2aEKKnOnjnyKbSpuRVz_94gDN5ZHmAPZCc_5IgU7x4
- BzG7FpRA4amT1lhVjCqcGoQsUrxz1CeUXNivlnRhdokeNHND1KyqMMJ5Is9NqiV5CxkhIrtv6GtS
- hXsc8aCSr4FCbuc6vF5nI.eRPFZSN5lGDEBhbwdA3JR9QVqTODNcAglR498sijcdqVYCA.xzFj7s
- xdNwP5RSe5xRo7thDmkzRSjYSEF2S4xpDqtLM84SNt_Q4QIh2ckfp_eSfxP.aUxmQYLBCgpbvIJz
- ElllqXu.JdgOmDgXmlH0J_vKlxNLwooRNuUnogEN.ATpAu26KV2ID9aqjtVGdGjK55MfYU0teetL
- XA9EzdzkU3etTnb2lAEW1ebexZwiZlfxPSNUFRs01hP4Tw53ivColKJhxFD1f74kEefmVfQyCJXS
- aCVbsRiWlVYWyt6DWA.YY8BSIE6s32LCrlVS.JlLi80lNSapZxeKkYPrfgCra.0SprZfe1XhPKEV
- aKKW0zCa1IWqqY8hUDN.Uz.Ov4Tik4iwkJjWruy4u5hBWno.Az0b9F..xVj91vfZ37JI2wMCkSfQ
- Yt8xmeGZaL_o_UcLLaNpkHIx6D616F5hOxo0vZcNRHJa5.zDEZPgY0ErKtwxI7yHvXxbyh7C30Dr
- dPBVJQRTZF8XAuoIWbnDFh.SfWICdopamHEdFnV6Qp485h0Q6hvAzyBBB_.geAGdIm68d4rO5h2Y
- M75NWavibJsQWCQ_j4ZoRSn8T2Ztn_3yI6HcIJh3Q8Gu2RpuQBF8jEqiZGNr93VaVio4Ev3tF2X3
- ap57Wu3p0uM6UssZqY5QdAXAdtiLYCHbNj_ybVALCZN6kU1.ptLZSjArgE1kI0pMqMzwSuajpp0S
- _wS3nRptlINDwD78V2tBeWQyhPFqOY4YHWU7JNlS6WA7Q.WGuZJyE6wO8zYIs42JimYDcMdreOck
- 6zr.6R1hwsP0oIBcyJrz2zBCfVYHsSyR_0e17Zec3kEcWIOBlWeuqegwyZLabUkOU1Vpmdlupx1V
- Kz2fL9agosZDxRAk6k5vHOFQ9YTLTNHYMtvBJ2g3c3DEsqOPalQyG2S7fd.rMcVG7xxWRVfCB.AB
- 6U.Sn8VklpY4dcK1n7NBBJg0Ro6OmfnvBxc1bezv3Gt_NjUlIHD.ouh4tP28bhu5i7i8uSTIof8X
- Y8K9RLR0OmEDIj3_C431SxQ2IZhKWuBwBNtoRT_Tz8vFg36k2BF0x.wG482p5M9G_waTKw5QBnrY
- PV2hx6ZIaw0cUcoDxBeAiLtRENKoOhmHIEUChWDOpK.KWD5n2fHh4XUc2M0rbzNrpRXVNHlcLxaz
- 8RQ4X2ay1lT3JvRnVa6.bSajS21qYnVW_B5.npCmkS6j8Gjy0G6FaeOxsPsJOSLD2teUZRPG4vNZ
- 0x7enlFk1mvGEdGmkL6yLsiL1_dOiujje.akjTuY3gMuzvn0iuoqBEpEdgYIrL5PW2nLw_mhg0Di
- BODDRNa.BCPpewEfzdGzj9ytsSG6sq3UH6J4gfS3E3eIxsYP6ebawE7oR6VOp13Nvl5K3FmrAizb
- Z2UC84hAnQbtOw8FWFmEx20M2VRbXwrUr2c6lDfO5OVdQIWGaTzrizOeOXR.qQsB4qVDB0aPVcrD
- WdYVqj25OaxfI.cSPKAFQssdVnUjnxie9uSdhHsEkWA6DhhpphGZ7sxGIb5KMDZn0m9QC_wo6zp5
- UCE_iAr29sp4JfrkfixrANyuNhPZeJ1CwYGA9OD69mgFTgKl0Wu_ZNwS0L96wtjsRZOBVLjou5p_
- gVzxzbi8m2ED32Ql8BTFHvBi2DAXzQDnybLfiZN5Vb.An
-X-Sonic-MF: <dullfire@yahoo.com>
-X-Sonic-ID: fb281f51-85b9-4bd8-87a5-49c0144f821e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.bf2.yahoo.com with HTTP; Mon, 14 Apr 2025 16:45:02 +0000
-Received: by hermes--production-ne1-9495dc4d7-vqjq6 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7de9b757f65aed43fbd0bf15ec9cf014;
-          Mon, 14 Apr 2025 16:22:47 +0000 (UTC)
-Message-ID: <3aa3b1aa-84c1-4bdd-ac79-918bcd80f98b@yahoo.com>
-Date: Mon, 14 Apr 2025 11:22:54 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLjjFtT0"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so849775a91.2;
+        Mon, 14 Apr 2025 09:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744649106; x=1745253906; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CyRmz6WDnLlgE/Au89ERUZt3OIYiAJnvydjXIw1skME=;
+        b=dLjjFtT0BqdIHXpMLrPbFKTTx3/APgx/zgrgg5/9xtD5PIkJMf1BPhQNMEiXSJHqYN
+         iZN3U437zC/AO2BSiNQyIQ3htV5kJ03zQWVgqBT2XLu8nJEGRWs0YbDm5+HV5M9C1T+3
+         XYY4RGL3nxF8QTXuNKstAc9eGviX5GPWAE56q1iBV/INDsQIIUuFRuhjQ4+HRQzK/dTw
+         nL14V3+uVgQmZSvEdH1oaXS1+Dz3I0ZcoWh6ZEYNZRrmY+OxOWcEQpiEVFnd/InKPqnK
+         /x+BVtqVpWuDT4L1R88437lh0rce+PSSV0xVWV9J5fJtxu2sktx6TLUkDW6bvI4wwG4U
+         wrBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744649106; x=1745253906;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CyRmz6WDnLlgE/Au89ERUZt3OIYiAJnvydjXIw1skME=;
+        b=JpKYw6v54FDajcIr0ZBboILak/UHF1ndXnOBaKS+cHoEVJe+0ffTFqVvHfCCLKhYIZ
+         D4bLGiUW14LjFk2CNR+opTm8DGoC7GnjffFFbxxd//+v3O1p0i47mnWr3oyYAGHu1/sI
+         baDztz77BDgn915e7RswRjoo9eJFAtIgKIqk9SgHV18+80uOjlXKW9Cxsjkp8IfTrCjG
+         DQdAZyvlKjCyamshHu7Tpe7hy3SQP880ief5xrJBLCjRaG6oYOZOpi+vaLyhwR0Jd4kR
+         VafPs0fCRZfmMECbYUtTEo0SiZxPCbSq+/mm6Iy6s5YJ20VVWUDQ5C3N2wea32DIZG9r
+         3xrg==
+X-Forwarded-Encrypted: i=1; AJvYcCURNjv5HPvK39/Sfvyqe4KwcbY1Cj+ADVqgTju/QngjqdXyoH6GkjMH60VZCl5R/0qxfDvG48KusQqFakwUir0=@vger.kernel.org, AJvYcCUu4XVHs7tsBXLiXVaKSldpiRjgWmijLMMrMtPtsQ09L+Jw5W8xomybvsUWieMoRBpCGHU4cXMIGSzj@vger.kernel.org, AJvYcCVHXWLd9+ytwY2AN/Kn01PyLnA1zp2ck0tQjNBZXIBjf/BzLgSTqPRJ9BgQde9ZUyWbYUTyx1ah2HXnRazu@vger.kernel.org
+X-Gm-Message-State: AOJu0YznnfYAyIC9S1rfZLihsm7Lr6uXyQDSv+XaCR7yWy48aU7v53gY
+	4bhdmu5dKkTDCk9aIiKEXUCra4v/k37fDXlNJq06DDusk3a+lpy6mQN0glQBsnuaFYWtPf5jDmG
+	ssWvy+flKysIt28HQaTwsw67YC4w=
+X-Gm-Gg: ASbGncvrYwJXD43KVazbt7VkvUUfcnmtxbboMILaV6NhbAjYxUI8bB2I3Kys453NfcC
+	/GDOs58wclEeA5MSq393ZAjxdKrv8U/LE4h9TeRnTILG1pgAe404WVFamt+RBCS+iSmCQL6+8rq
+	+XuRjP782KFbOnxsi1gu/80QcWTeevFBop
+X-Google-Smtp-Source: AGHT+IFFO/6s6YgrPEO3OnxOg96c+7vd2ZcP2QQOQbeI5zAqmfo8OAJafhVQhOHi2OQPh5zM8jjw1Stv0z3LdLO72T4=
+X-Received: by 2002:a17:90b:1a88:b0:2fe:b2ea:30f0 with SMTP id
+ 98e67ed59e1d1-3084e75a57emr284165a91.4.1744649105757; Mon, 14 Apr 2025
+ 09:45:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] PCI/MSI: Add MSIX option to write to ENTRY_DATA
- before any reads
-From: Dullfire <dullfire@yahoo.com>
-To: Paolo Abeni <pabeni@redhat.com>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Jacob Keller <jacob.e.keller@intel.com>, Simon Horman <horms@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Mostafa Saleh <smostafa@google.com>,
- Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20241117234843.19236-1-dullfire@yahoo.com>
- <20241117234843.19236-2-dullfire@yahoo.com>
- <a292cdfe-e319-4bbd-bcc0-a74c16db9053@redhat.com>
- <07726755-f9e7-4c01-9a3f-1762e90734af@yahoo.com>
- <4f621a9d-f527-4148-831b-aad577a6e097@redhat.com>
- <5a580609-aa5e-4153-b8dd-a6751af72685@yahoo.com>
-Content-Language: en-US
-In-Reply-To: <5a580609-aa5e-4153-b8dd-a6751af72685@yahoo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+References: <20250326171411.590681-1-remo@buenzli.dev> <20250414152630.1691179-1-remo@buenzli.dev>
+ <CANiq72mJubnGyqSk3sqKVa7g9HvnJvmRg=gJ2kaBtbMMVWWC8g@mail.gmail.com> <D96HP1UV49SY.1U1BFA14P8XHE@buenzli.dev>
+In-Reply-To: <D96HP1UV49SY.1U1BFA14P8XHE@buenzli.dev>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 14 Apr 2025 18:44:53 +0200
+X-Gm-Features: ATxdqUErYkDDBOGFPEFB-nfL3C3C2TIMbtTywdzeB3ydwzNNRQdwTBq8nO3zs6g
+Message-ID: <CANiq72=ru+M0W2Gw5bYD4zMD-mkMU0He-tAX4Tna9g-ddbC-0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] More Rust bindings for device property reads
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 14, 2025 at 6:07=E2=80=AFPM Remo Senekowitsch <remo@buenzli.dev=
+> wrote:
+>
+> Junio Hamano recently wrote on the Git mailing list[1] that he wants
+> his contributors to do this, so the original message-ID can be used as
+> a "patch set ID". A quick glace at the archive[2] confirms that people
+> work this way. I assumed the kernel community would appreciate this
+> as well.
 
+I see, thanks for the reference!
 
-On 1/20/25 6:38 AM, Dullfire wrote:
-> 
-> On 11/21/24 04:28, Paolo Abeni wrote:
-[...]
->> The niu driver is not exactly under very active development, I guess the
->> whole series could go via the IRQ subsystem, if Thomas agrees.
->>
->> Cheers,
->>
->> Paolo
->>
-> 
-> Thomas, does this work for you, or is there something else you would to see in this series?
+I don't think it is a good idea for long series, given how some
+clients render things, e.g. GMail just shows the new version in a
+single linear thread and it gets really confusing.
 
+Even in a nested/tree render, like Lore's option, it is harder to see
+and/or compare the versions, in my opinion. Perhaps Lore could be
+improved here (e.g. offering (auto-)folding of versions) -- most of
+the time we only care about the last version (and perhaps last - 1)
+anyway.
 
-Since it's been a few months, just wanted to give this a bump, and see if the series is lacking anything.
-Thanks,
+I think `b4` behavior of subject+author works OK, but an explicit
+change-id would be nice. Reusing the Message-ID for that would only
+really work well if we could control the UI for everyone, I think.
 
-Sincerely,
-Jonathan Currier
+Cheers,
+Miguel
