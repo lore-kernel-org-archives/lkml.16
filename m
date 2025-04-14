@@ -1,63 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142B52820BD
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5E342A92
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640935; cv=none; b=L6ayOr2ebK89U5qiaicBvoPQylQeI6z5VQCe66zoo4mDs+uW7pqBBXVqd9R96Ds3IRA5RAq5PO5MR63iEhjVgNgPbq/A7xkmveRPTuv0DiKplJqzuwREFT1c0cPV/IOfewc2ybSvksWNDp87hdJq4xCql/5vQGfQu3y1vhYjCOM=
+	t=1744640985; cv=none; b=Fpd+2/nP/iaf/zR9+TX2SyyNp05feUEbPRCNFy4ln1UPJQjI+bHl9laSMwlGgvQQkE19RfWphu/B/70O1e+8hiRv8jQaokaU9I7uNE4aSG23xNR27i7X/HhmTzWnLWFecziTyitkRqatiTMe/JH7MSVVpbJ9mKjBSv17LofFD2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640935; c=relaxed/simple;
-	bh=blv48R6B7vWiz0UYLJWcs3h270DPa8dk2P5WDUKDcFg=;
+	s=arc-20240116; t=1744640985; c=relaxed/simple;
+	bh=PYyC37ueCOpBUbo+TCfDnXFv8g1QRim78BgE/UgP+Ac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbS3mAgJvC81TDd8nZ/oigZrtGuqXlkG0PcnK2+tkqw5Vb0/VsENT0bSkKdH4p7pU+l+NjD/wyCalVgqoO+rsAxpEWZlO+Vmn+X6gZUQ/NW6TTG9ZnQ73f+eNtxdIDDD2IL+baXdRMU2dU1rEh6EqZ97/ua+6YlcTmUDCQItPKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ErlMj3PN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGNJ6z34GQI9Y/RVAh5EYiDgDVBMSnIBXnlfnjQQG9xeoYvPu/6DVtvq2pL1uB+ZNA7aYU4d3CdnmWp9OlirS283vWxycRn1Mf3wDPRFjd0N5wWPf8c4slRJMqibQbkJLMjBKqPI+aippSNAE/6WtB8nM8DfQMB4NI/NQD+600E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4RTmtVGI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pwum4eUc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErlMj3PN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744640932;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4RTmtVGI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pwum4eUc"
+Date: Mon, 14 Apr 2025 16:29:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744640981;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QmzL+6oHQI4eVdsu/YCAC9ojI8tmHQUBWtrcimZovNI=;
-	b=ErlMj3PNgIITryvizvZo7a+M2XsnqTTX7eAiemHoNw4JtRIU5V+4sy97lRGmq9dJ5736GI
-	fK2QFbRuv8o875c8nXSNN3ZasXJHc026j98m0pNaRhJ+3EMgDxfTzD5b8o60UBtGsdnF6g
-	JfT1TpqoeUu45Jlryv7AfttAX3pDNWA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-lWgCaTSoPH-42IKj5yl_QQ-1; Mon,
- 14 Apr 2025 10:28:49 -0400
-X-MC-Unique: lWgCaTSoPH-42IKj5yl_QQ-1
-X-Mimecast-MFC-AGG-ID: lWgCaTSoPH-42IKj5yl_QQ_1744640928
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB5C8180025A;
-	Mon, 14 Apr 2025 14:28:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.114])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B24CB195DF86;
-	Mon, 14 Apr 2025 14:28:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 14 Apr 2025 16:28:12 +0200 (CEST)
-Date: Mon, 14 Apr 2025 16:28:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Luca Boccassi <luca.boccassi@gmail.com>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>,
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
- helper
-Message-ID: <20250414142807.GF28345@redhat.com>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
- <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
- <20250414141450.GE28345@redhat.com>
+	bh=JCUsE5Mdst+54lv6uqxK3a911+jGBbURT4DUM5+r8wY=;
+	b=4RTmtVGIAsn27UnoywqRIktgysFxocsqCNiiviD73Ao8/zA/2jhm9IWtgJMV+cMB2FSSz8
+	ILbZKyY08Uxr7ofCP2y4k5YpeRyDeukuL5wS+CiPWy7v7GYCXoczuZvjXTW15Fjq+NQOvT
+	j3MPlN/zJ2pcOTa40NcaEk9WIHQl6zfl4u/IWsBZ7PLgDo27/tH1G35WP51Wn5m4japOzX
+	6pgFvHyQyfjNfZxgyatg+aab8h2Ulj5w2zMmVr021W3QFaIMg0xfgHdb8mhOOq0WYo59QX
+	DN3BxsikJ/JXTroHV3IKgEdOPdZCak1cEbfr0WlBTDlBMqNgZu6FCnkJA5VfFg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744640981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JCUsE5Mdst+54lv6uqxK3a911+jGBbURT4DUM5+r8wY=;
+	b=pwum4eUcXM8e7GqhOmL2DnsAkzSDa+KV3RrDQuVlO4sbye+oY59eMup61kpvpKRo6ONcB3
+	uXfM4uVvb5fNU9CQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Aleksandr Nogikh <nogikh@google.com>
+Cc: llvm@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	syzkaller <syzkaller@googlegroups.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>
+Subject: Re: Latest clang versions fail to compile CONFIG_X86_X32_ABI=y
+Message-ID: <20250414162453-469e4a0c-d2f4-48a9-bd0f-c0a1d64d9dc2@linutronix.de>
+References: <CANp29Y4FmGDXm3LWvW6D+JR8CWf=fvuiAseFb1h2HQSDjFKO2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,47 +53,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414141450.GE28345@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <CANp29Y4FmGDXm3LWvW6D+JR8CWf=fvuiAseFb1h2HQSDjFKO2A@mail.gmail.com>
 
-On 04/14, Oleg Nesterov wrote:
->
-> On 04/14, Christian Brauner wrote:
-> >
-> > -static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-> > +static int umh_coredump_setup(struct subprocess_info *info, struct cred *new)
-> >  {
-> >  	struct file *files[2];
-> >  	struct coredump_params *cp = (struct coredump_params *)info->data;
-> >  	int err;
-> >
-> > +	if (cp->pid) {
-> > +		struct file *pidfs_file __free(fput) = NULL;
-> > +
-> > +		pidfs_file = pidfs_alloc_file(cp->pid, 0);
-> > +		if (IS_ERR(pidfs_file))
-> > +			return PTR_ERR(pidfs_file);
-> > +
-> > +		/*
-> > +		 * Usermode helpers are childen of either
-> > +		 * system_unbound_wq or of kthreadd. So we know that
-> > +		 * we're starting off with a clean file descriptor
-> > +		 * table. So we should always be able to use
-> > +		 * COREDUMP_PIDFD_NUMBER as our file descriptor value.
-> > +		 */
-> > +		VFS_WARN_ON_ONCE((pidfs_file = fget_raw(COREDUMP_PIDFD_NUMBER)) != NULL);
-> > +
-> > +		err = replace_fd(COREDUMP_PIDFD_NUMBER, pidfs_file, 0);
-> > +		if (err < 0)
-> > +			return err;
->
-> Yes, but if replace_fd() succeeds we need to nullify pidfs_file
-> to avoid fput from __free(fput) ?
+Hi,
 
-Aah, please ignore me ;) replace_fd/do_dup2 does get_file() .
+On Mon, Apr 14, 2025 at 04:11:15PM +0200, Aleksandr Nogikh wrote:
+> I've been trying to build a Linux kernel using newer llvm toolchain
+> versions (18, 19, 20), but it consistently fails with the following
+> errors:
+> 
+> ld.lld: error: arch/x86/entry/vdso/vgetrandom-x32.o:(.note.gnu.property+0x0):
+> data is too short
+> ld.lld: error: arch/x86/entry/vdso/vgetcpu-x32.o:(.note.gnu.property+0x0):
+> data is too short
+> ld.lld: error: arch/x86/entry/vdso/vclock_gettime-x32.o:(.note.gnu.property+0x0):
+> data is too short
+> 
+> The steps to reproduce:
+> $ git checkout v6.15-rc2
+> $ make defconfig
+> $ ./scripts/config -e X86_X32_ABI
+> $ make CC=clang LD=ld.lld -j48
+> 
+> The versions used:
+> $ clang --version
+> Debian clang version 20.1.2
+> (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97)
+> $ ld.lld --version
+> Debian LLD 20.1.2 (compatible with GNU linkers)
+> 
+> Is this a known clang/Linux issue?
+> 
+> There's a kernel commit that addresses a similar problem:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=aaeed6ecc1253ce1463fa1aca0b70a4ccbc9fa75
+> 
+> but the error is slightly different there and the added Kconfig
+> condition apparently did not kick in.
 
-For this series:
+The Kconfig condition does not kick in because this make invocation uses the
+regular objcopy and not llvm-objcopy.
+To use all parts of the LLVM toolchain use "make LLVM=1".
+(Barring existings bugs where linking is done through $CC/clang which may use the
+default system linker, instead of ld.lld)
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
+Thomas
