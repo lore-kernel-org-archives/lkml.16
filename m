@@ -1,95 +1,70 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DEF289364;
-	Mon, 14 Apr 2025 17:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF782DFA3B;
+	Mon, 14 Apr 2025 17:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652107; cv=none; b=UuDOf1+TTs0NpAcJUI0mp0vDcYxr4VAcoYn9K7kifMqhMtKQj3lGmgx5Zz2zkj0Dk30nJIRCZZ5cuMZdC7S/zVESc8EI2ELbyHOwwqVxlblsFSNNAW3JPDr8Bf8o5WaIaoO5ijjzZX4/OD11WX1g4lrJLuJenWpo5t30IM3O1Ow=
+	t=1744652249; cv=none; b=J+urJ9SpUVJ1wNugelSFnl0hEnokgJWZe/YZUjjFxcdAFmsDF6tyiEPm7eBTFdkA0GzyT1Ow4seEoAJih+JTsE6iIX8j81PKMmZHnaSY5ofmr2n0pQjzQQySOvYk+kdfyu/ICA/JtIDd59rQuujFkeZeHUGSyua+cbWroCCac5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652107; c=relaxed/simple;
-	bh=hnCqke+KYEWsbRH+n/2MbSls4gRBzabjtFY6nYemYPA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YmLWL3zqpI5Qn+4Pgvxd8L7zmrULPqRooxnq5Khdj3KWYkfjhNS54nfYeR3MBJ9UwAYOzqBoDllPKMjlZ9NMAcrBKIfh+hWMZIrvxh+XyIruNzTYRUpzXH4pX88ZaHCH8m7pp6B6LggG8ocNyLtKY2ZZdmh8E04aQlX6VpClUZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzak7Bp+; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744652249; c=relaxed/simple;
+	bh=bv3JKaNt5rx0LnwZ1DOrPwjLkqw6RVsySzVRPn8KFwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HOJa80rJuP6t9mkVhaH4S6DbIKOvD2eeGMkJyappaNmaqUBD9bx1c+90yl6Ehr/TcyEpZ3FQORb2Pf2VzgY8kWqo6yDZh8+qTHMK1Ucr0Uc2zYaIZDpuiIGmUJx2iGmAl3giUnC95+S8GxyDR7o33r+6kaEyIoewtRYpxrlS9ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtMKiUok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzak7Bp+"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso862380a91.1;
-        Mon, 14 Apr 2025 10:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744652105; x=1745256905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hnCqke+KYEWsbRH+n/2MbSls4gRBzabjtFY6nYemYPA=;
-        b=hzak7Bp+/kZc6lOgxhSBr9iKN6OgdAOP2bf5/flbg7CPESYI0PINgXR7baNVnidN0S
-         V8LWeEbq3jWehvxnfWycxe2+4Emu85MT7rrDYfYGofuyl4A0mUYD10cUUHHAaWJR4WPu
-         klmF8B+4rHAoq5DBsbbcN8TOB6MayLXWC3OoHFKhKIV5DIaAz9hX5LMYew0twJZIZS5G
-         kdPA6hUEdsvA1dlzs8eHTUDmszZJHt1pZ0gMscsdSqX7csppFLBvHuG4nfWmchc+6O8Q
-         YOWz/cuSuhdjHEZaOPIpfdqTNcJBs2njyP7ffoD9o8PRSsF+xvP4FIkvBhvVUTnV76x1
-         Avyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652105; x=1745256905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hnCqke+KYEWsbRH+n/2MbSls4gRBzabjtFY6nYemYPA=;
-        b=DRt3Icmo9qj42TA4K4TqB+ZLZwIUQdbiCXmuRaP6gXsCFVvxIBbNb1XxeS1U4h77Pf
-         I4kaF4kTh58V8J+4rXn5cuOZc82sikc3AsUgbE3Pb1nzW7KKTb93LAnN+eqWNrXSfh8A
-         HHdkGYqXb2C5KxB89Lwe8nRo4upE0Bj4tiYMsuakfs2H0khJI4JhMuVlaRtTa2+MQ5kP
-         VpDe+rjjIaBv+vw82gX6Nkpw+RN3px9xEtC0TJ2BcKEUIajJssu7rb21Z7mb4q6ajhWT
-         lVkz7U0GR5KqU8q7CKdlOsutJxRjMiR/tVGctxdaobDAiVcdJbZ8vDPAVdNqQzPQtWRB
-         OBbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyf9gn44Q0YDqOeNXTaSC3pekAjwBXc3G2XD6Bm+VcqkG2RrE5aqwk+aIz7dJ29jkKOb7A4UcVco41@vger.kernel.org, AJvYcCXNEs+8k2aPGHtctwXyFnjpMjAAwfzLVk3foWxyig63CKVSGa2Y3irHjUYPsilhVHUkRjrD+zDR8HfLxs8=@vger.kernel.org, AJvYcCXwH7/yBJ0bD4dnNp4+KhM3MAhaUXjSKkaUBhqspo02hre7vKkFh8pK7vzB8C9wj0DpPcobTFJXzIlj1nuRJ1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx59SrLJJ/VnGj54YWbNfn+ONaG0iTfpF8H9F/O0Gv3XGrPy/aS
-	nK2p1uch6AYu/8QivjfbP38j3HGlzGnU/FzZmJxB3DwK643gC+ZmFy109Rn7N7aM7OBwq+KVTOJ
-	MjJmAW+tdKg94H8Axx4zNsxaeuxo=
-X-Gm-Gg: ASbGnct0L3viOIzt9/eEQxSsMo6BX0ADNU8VyUIBiobvwsOU5ggLHi5CafXILcOGANt
-	bnAVe38L23+FNQpiLVxa2cnr+WcaulptAKf8B80CHjbpfzxSGUDwBo91re9BcTPu8VPwG2uC/Ba
-	UDJkYMefnlfBPi7vy6O83sYA==
-X-Google-Smtp-Source: AGHT+IEiX5HOql1Behi5jkLzmw54WU/0LI8y3MDjwTeXZWJSMxCU6ssUQq9vNwiDGP9M2/NeyvAyM0pzLPiYXq47u8g=
-X-Received: by 2002:a17:90b:3b4c:b0:2fe:b77a:2eba with SMTP id
- 98e67ed59e1d1-3084e6f3e13mr420967a91.1.1744652104535; Mon, 14 Apr 2025
- 10:35:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtMKiUok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 915ABC4CEE2;
+	Mon, 14 Apr 2025 17:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744652249;
+	bh=bv3JKaNt5rx0LnwZ1DOrPwjLkqw6RVsySzVRPn8KFwc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UtMKiUok7FM2vHx7iVPzBMdDnSKkEIgdvBTqIlcNK0utqs2dV/9dmN6DjWJKlCPKn
+	 7cVsd2ZJHgcSxPPrDWyGnEDzLgzqZVs7xcMsYmiIrYGO1VqhZ8AjxFidFzXitVmFDf
+	 ZoTxzxf3Uq63+D3einbLEUYZsLF/1SBX7tDMYvmfrxHLVb5tsvupavzXHtCJRZS1j9
+	 k02a9aORyFXj6ttDLM6W+4WIgoCypDYIHNLCmSlhMFlczX3WOjV1779MMVu22ffEH8
+	 b+/VDbRoAM0/xobEsPMpoNyN04XYuutAA9ULdyNioHO6bFnIE2ipVWPny5f3kFENbj
+	 hoAcJCDtmPrTw==
+Date: Mon, 14 Apr 2025 10:37:27 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: <syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com>,
+ <cratiu@nvidia.com>, <davem@davemloft.net>, <edumazet@google.com>,
+ <horms@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <pabeni@redhat.com>, <sdf@fomichev.me>,
+ <syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [net?] general protection fault in rtnl_create_link
+Message-ID: <20250414103727.0ea92049@kernel.org>
+In-Reply-To: <20250414023048.44721-1-kuniyu@amazon.com>
+References: <67fc6f85.050a0220.2970f9.039e.GAE@google.com>
+	<20250414023048.44721-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
- <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com> <Z_1E2z-l1xG--BSc@slm.duckdns.org>
-In-Reply-To: <Z_1E2z-l1xG--BSc@slm.duckdns.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 14 Apr 2025 19:34:51 +0200
-X-Gm-Features: ATxdqUEzSxdx6sOQ3IAHBXJpdp1RewVIQEw06kaYohz9SvIiNEakVjahBYqNxIU
-Message-ID: <CANiq72keUDCzhwW9E0aw-QV4ST7k3zqit1Ea=2yj2VdKS1ujWw@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
-To: Tejun Heo <tj@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Tamir Duberstein <tamird@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 7:24=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> Acked-by: Tejun Heo <tj@kernel.org>
->
-> Please let me know how you want it routed.
+On Sun, 13 Apr 2025 19:30:46 -0700 Kuniyuki Iwashima wrote:
+> diff --git a/include/net/netdev_lock.h b/include/net/netdev_lock.h
+> index 5706835a660c..270e157a4a79 100644
+> --- a/include/net/netdev_lock.h
+> +++ b/include/net/netdev_lock.h
+> @@ -30,7 +30,8 @@ static inline bool netdev_need_ops_lock(const struct net_device *dev)
+>  	bool ret = dev->request_ops_lock || !!dev->queue_mgmt_ops;
+>  
+>  #if IS_ENABLED(CONFIG_NET_SHAPER)
+> -	ret |= !!dev->netdev_ops->net_shaper_ops;
+> +	if (dev->netdev_ops)
+> +		ret |= !!dev->netdev_ops->net_shaper_ops;
+>  #endif
 
-If you would like to take it, then that would be nice. Otherwise, I
-can also take it.
+This is a bit surprising, we pretty much never validate if dev has ops.
 
-Thanks!
-
-Cheers,
-Miguel
+I think we're guaranteed that IFF_UP will not be set if we just
+allocated the device, so we can remove the locks in rtnl_create_link()
+and to double confirm add a netdev_ops_assert_locked_or_invisible() 
+in netif_state_change() ?
