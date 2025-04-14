@@ -1,40 +1,43 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D311DB34C
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970E51E47B0
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744662501; cv=none; b=G9wx5PJ0gBwkKwW6tchQhN48Y8NhWHn4mHUHZmXOclYZuUhXY3KJBrm+JwCdoqs0rHS6YygwPGsNXJ6tL5qA/A9+dPJPyO5bUCPQnTX8VFkKILR/z/BKYN1JCj3LzBWLWVRshUbDxs4kNFJTf+t8Gtc9pxxGoMit/4VWw3cnl6k=
+	t=1744662506; cv=none; b=Vw1cBkFQM+WLLwnwbnXxxhYE73XuEZtvuuGRwJ1+4ALp+ybsJeT/TpDf/zwsNy4nIGDqD+ZarlQJZI4e6zQs5XWp/ikM2ztAtbjQrq8KWbOmJgyfLlSbaQ4jsi6XV7x1dax1aRR97GgN7pTZG+CmoPgizbc+GHEXJD2hDcd91RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744662501; c=relaxed/simple;
-	bh=mJsv2tM/I8C66voig+fQdm4mxuvEjmzB9vpmbCCufdw=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n0D2or7SGZCj8EiPzX0yoIkouZy7m1VdluIjkgjZy0MrH5QJD7RjS3gvkad9K1X6DV7KQO9GsP+FSEglw5985pjtcuF7kfqJ+mmbBooRAHNe78d//UnA31DmRmBNNkvIIlJSFs0OrwlT3Jai9leW5oeHhZIIvc4DJq9xL349FzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=l8cL8YH3; arc=none smtp.client-ip=79.135.106.29
+	s=arc-20240116; t=1744662506; c=relaxed/simple;
+	bh=hyU4NSwdZyi1ic0q6erpOYIB7qc2G4+0kHu3Htlz0kk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kGe+UWbzP0Rc03db3fiEVIPeY4MXkHGVV/CqeaMBjou9ma9O6co+ApC/MQdQpMtSB4DTDWyx5QtuZxXTNq8DOBDHy+cYVcODW7X2HO4t3yToxVHGshGSIOQnXz3EvG9i2AT8xs0JWGoNQ3kAIo6axfUv8SdkCQ5/twbJD3ajmbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=cPgVwTS1; arc=none smtp.client-ip=79.135.106.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="l8cL8YH3"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="cPgVwTS1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1744662498; x=1744921698;
-	bh=5qEU6hzSwCnesMZRIBLEpCHkGx+ziAMm4+Nl/oZk6/U=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=l8cL8YH3Dlx/HaA2tXeQfGdzsN0aU+S4SmL2c3K6Q92JGNmIvPA0Q/ez9PANUsnEp
-	 2MB/TaXj620gElAURPuXCeuPyqN6DM2TyCkwortXofWuWbbiNoUQyRuYOybOHF0Bj7
-	 430t2AKHMiFEmbmi+UpijCtaIbMStov8haRms291DDxNWI09vwmzO3hzx56KqChExl
-	 XjcQAjz627O8KHoF0EFuYS/5gb24ZhZmjUYtkwS55JLR6wDPTwQ9/woQupTF3thC6M
-	 qH3CreqFHaPoBX2uw5m6XihBKSNAthc3Fwe6wcBQHlV0oZyHL1s51jHuzf5Qakt5jZ
-	 NgcPwRjytdDgg==
-Date: Mon, 14 Apr 2025 20:28:10 +0000
+	s=protonmail3; t=1744662502; x=1744921702;
+	bh=hyU4NSwdZyi1ic0q6erpOYIB7qc2G4+0kHu3Htlz0kk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=cPgVwTS1hPj6+0ZZs7ImFLWv5JHUesAB9oVoG5T8k1bUL+z7jKhaHkeTzpkD3D6m8
+	 zd9CgQi/KbVBF2Q9Q3LuJBlo1bYkabM9omqPVCQLIPCgWxbA/x/Sw+5r+V1xLwHf0Y
+	 UKmLkC8a2bEAyQDYtxm44g6i2+fqz0yIqvdixjBKnuW2OsV+RtkLvYdFxmrjQG3ZGw
+	 Ulo1ioaWvi3xUOMG20RU8UIlYY7nLkICFYZ/t365BX7s9Sokaf1NqOk9orFsSZ3QLL
+	 4gEH5J7AowS2EgkH4dTvRakdgZxi3SG6+lrBrCP/Ph2Wh0V55iO594fDUg4FR+o2wg
+	 veua050yQROWA==
+Date: Mon, 14 Apr 2025 20:28:17 +0000
 To: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 From: =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
-Subject: [PATCH v2 RESEND 0/6] USB: serial: ftdi_sio: Code style cleanup
-Message-ID: <20250414202750.9013-1-dominik.karol.piatkowski@protonmail.com>
+Subject: [PATCH v2 RESEND 1/6] USB: serial: ftdi_sio: Remove space before comma
+Message-ID: <20250414202750.9013-2-dominik.karol.piatkowski@protonmail.com>
+In-Reply-To: <20250414202750.9013-1-dominik.karol.piatkowski@protonmail.com>
+References: <20250414202750.9013-1-dominik.karol.piatkowski@protonmail.com>
 Feedback-ID: 117888567:user:proton
-X-Pm-Message-ID: cc50f789df1fcf2fa6aebd54ffaea40d9690eb68
+X-Pm-Message-ID: 2f0616f2af7df125ac6d2715b5bc3a208d5ea6c7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,26 +47,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-This series fixes spotted code style issues in ftdi_sio driver.
-
-v2: Split the patch into smaller patches
+Remove the space before comma in id_table_combined to align with code
+style.
 
 Signed-off-by: Dominik Karol Pi=C4=85tkowski <dominik.karol.piatkowski@prot=
 onmail.com>
+---
 
-Dominik Karol Pi=C4=85tkowski (6):
-  USB: serial: ftdi_sio: Remove space before comma
-  USB: serial: ftdi_sio: Add missing blank line after declarations
-  USB: serial: ftdi_sio: Remove superfluous space before statements
-  USB: serial: ftdi_sio: Fix indentation made with spaces
-  USB: serial: ftdi_sio: Fix misaligned block comment
-  USB: serial: ftdi_sio: Remove space before tabs
+v2: Split the patch into smaller patches
 
- drivers/usb/serial/ftdi_sio.c     | 16 ++++++++++------
- drivers/usb/serial/ftdi_sio.h     |  2 +-
- drivers/usb/serial/ftdi_sio_ids.h |  4 ++--
- 3 files changed, 13 insertions(+), 9 deletions(-)
+ drivers/usb/serial/ftdi_sio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 9b34e23b7091..b02dbe4ec1e4 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -190,7 +190,7 @@ static const struct usb_device_id id_table_combined[] =
+=3D {
+ =09{ USB_DEVICE(FTDI_VID, FTDI_8U232AM_PID) },
+ =09{ USB_DEVICE(FTDI_VID, FTDI_8U232AM_ALT_PID) },
+ =09{ USB_DEVICE(FTDI_VID, FTDI_232RL_PID) },
+-=09{ USB_DEVICE(FTDI_VID, FTDI_8U2232C_PID) ,
++=09{ USB_DEVICE(FTDI_VID, FTDI_8U2232C_PID),
+ =09=09.driver_info =3D (kernel_ulong_t)&ftdi_8u2232c_quirk },
+ =09{ USB_DEVICE(FTDI_VID, FTDI_4232H_PID) },
+ =09{ USB_DEVICE(FTDI_VID, FTDI_232H_PID) },
 --=20
 2.34.1
 
