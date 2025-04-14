@@ -1,149 +1,182 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2052.outbound.protection.outlook.com [40.107.93.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9D228EB;
-	Mon, 14 Apr 2025 03:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600141; cv=fail; b=kggyIQFjmHRRd8tupuTLxs6h9DL6/2Fj8Fp+Z2k+PhIK6+nQspaetTu5DqrvZtDUd1FUos1GNDcDzozHO23pnzbxCVUSDZgONpI6kOgDJQrZkULIEpwfqPgnwz9yDCOvkARrQSWc5WWx5/b5SOr3yzkHSdTpl9LPdeXiYmnmZHA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600141; c=relaxed/simple;
-	bh=hyryQGVNl9jnenAlsw5KjBIX9ioJgHFs8BVk86PTBLM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GIkcsGL5+Bx50JUU9rGmQhstcVDG7w2tRPhxnasLUahkrAluX/7F9Cx27c7E41Mg3w9OYcMIiaepA7Eg9GbSejzG5snqY383N26GhMiHdP99lblAj9Qr+0pSoOnHJEE+A0ey/WjRwOZO0xe03gUp9S0HIeaH1z8RlFAK98qNLYM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ogmK6zHZ; arc=fail smtp.client-ip=40.107.93.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0C21953AD;
+	Mon, 14 Apr 2025 03:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744600142; cv=none; b=Drwh4EUCfE7aeT4MuGvfe9I0R3m8FyMTEuMR/1TVcjKYrmMtsUmgpelAnEfrHrnioyIyK08lCs9H82nKxm+vFxxRcybBGRfwEAoBxTnegkeheQzNXvl8e8bCImAojwu3coNXtJyeWG0ny9AkozRsNmn9x29l4HgvJRSCcYZ7qPk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744600142; c=relaxed/simple;
+	bh=g7wafSBCYLabX41Qp9oGHFXOid7epq0wqGnZyAyGK4Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=aKtNqd5zDJ2NTuYX6GSegQ3uRiH+bqH11xKkPbAE78iniWbq1zcFRid2pYpmHee38XkJNU8c/HJn+B2shgxHK/a1pZYtYetn4jsBix9/cK2sPbsqk/oGnWUcWVfRf1aNSzx0NPT6pgwR7Hm/o6nhwRE942zvC1pO/xWBRXJwaGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMaZkW8c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ogmK6zHZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xFAL3cJZR7UUSygcqMTSu2Q8LPbcu55q8x3ZgcNxcL8y15Ygx4tsbpFjsi+7FD7FNrJDY/TbU1SuGwnz2ylfyq7l2M0h/gGSHFO4WJLYntTMwiqVkgjCHjThZPsVwFMEWBqhhFTAxoBghiyzQ53uC2tuR93a/fGwsrQtr0bMOl5Z6ORWtPujIv++JjaAZ+xYBqZW2ZKejk4yLkXI+rBy8eogQL7D8qq3ay7NbT3njsUEQuAetao/HLESXloJlhCS+0tumPjkk3TGOHd393DzczOtHoGvQMgEieRpsAv/byZNjayus6Iq7ZMRACotp3bwBw/9FHmUWj0ly1p9Ib52/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oglVPY8ihSiT3PY3Bxz0zpCQIPEC+2NQrl36+6515yA=;
- b=K4lp3qs7LbAwj0OPkvEKVNtkdFz3JjpaFBYg830RoDl9Ni2OxfmE6s+wwJ52KNiWt4uDo0BnxmECxv5jjU+pkKqYAKlsaxqdw7yFH2uHduHg9M/4px+B1EU7VS0ziEK40eQkxWjGpAmVm6cgvqLb1wEna61IyLsRNkILZy7lx5GI/oTz9kbG+bWwW//AuchIxEzToFjebF/9VPcbmfN8ik+1+/dUD/IcVVClkZvGEV/DkOk2RM4es8uiq9sqYXbQAVtYENk8rJ41vUrZeMYYpGPvbuFC06md0cnQKBA5sdeEhgvbJZrDiQ11bePKR7jbNEQwZJvKBz8izW+9wDiwog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oglVPY8ihSiT3PY3Bxz0zpCQIPEC+2NQrl36+6515yA=;
- b=ogmK6zHZk+gHIHc0GXfxsDOY/4VHW8AatnX0IoBoAAheMAJm2LKoHKrsn37tnldRSLyHNDeOcOFhE7Wm/HvTztmUpK9s+hJIx6ya/8hCNAx87py1ZspjuvmxTguYKKqPqcOnSiGzXVLT/xW02TkMKRjNaPxuliH7RQFt27thKj4=
-Received: from PH7P222CA0011.NAMP222.PROD.OUTLOOK.COM (2603:10b6:510:33a::6)
- by CH1PR12MB9693.namprd12.prod.outlook.com (2603:10b6:610:2b0::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Mon, 14 Apr
- 2025 03:08:56 +0000
-Received: from MWH0EPF000A672E.namprd04.prod.outlook.com
- (2603:10b6:510:33a:cafe::88) by PH7P222CA0011.outlook.office365.com
- (2603:10b6:510:33a::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.32 via Frontend Transport; Mon,
- 14 Apr 2025 03:08:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- MWH0EPF000A672E.mail.protection.outlook.com (10.167.249.20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 03:08:55 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Apr
- 2025 22:08:54 -0500
-Received: from xhdlc201369.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Sun, 13 Apr 2025 22:08:51 -0500
-From: Sai Krishna Musham <sai.krishna.musham@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <cassel@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
-	<sai.krishna.musham@amd.com>
-Subject: [LINUX PATCH v7 0/2] Add support for PCIe RP PERST#
-Date: Mon, 14 Apr 2025 08:38:40 +0530
-Message-ID: <20250414030842.857176-1-sai.krishna.musham@amd.com>
-X-Mailer: git-send-email 2.44.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMaZkW8c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C8DC4CEDD;
+	Mon, 14 Apr 2025 03:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744600142;
+	bh=g7wafSBCYLabX41Qp9oGHFXOid7epq0wqGnZyAyGK4Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gMaZkW8cG8zb0rXc8EQvuTKQGyDDPwrftGnN5vzXYBwB/RsaivHlpKBUt6MIUOBLH
+	 VfgRbu1imzTIe6VvtUk3ZHsWW/UgWZpQa2sYlbRh25oA9z5okRxw6rKYJnW3YybAjp
+	 oUUByWppBw8t6S48uzTI7bX19NWpazxKZkYCC5h1/Z7CFkyBNVy7s8qxR56OEVFows
+	 68wPpMN+Y4QvXkymvxaUpEf/AmbmShOTVGIriYg2ewg6qWDtE/nj46TYOg0HMsEhRE
+	 /AHPXxPVfCYJ7yoNbDaiAWXrKhmbp9Lf12OLfavvO/CtK1RDpm7nfvWZ57hNhgoMh3
+	 FlMf3jl1DTMnQ==
+Date: Mon, 14 Apr 2025 12:08:58 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Donglin
+ Peng <dolinux.peng@gmail.com>, Zheng Yejian <zhengyejian@huaweicloud.com>,
+ Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-Id: <20250414120858.0cda755e37a68537a8ae5b67@kernel.org>
+In-Reply-To: <20250411151358.1d4fd8c7@gandalf.local.home>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+	<20250411124552.36564a07@gandalf.local.home>
+	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
+	<20250411131254.3e6155ea@gandalf.local.home>
+	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
+	<9dafc156-1272-4039-a9c0-3448a1bd6d1f@sirena.org.uk>
+	<20250411142427.3abfb3c3@gandalf.local.home>
+	<20250411143132.56096f76@gandalf.local.home>
+	<20250411151358.1d4fd8c7@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: sai.krishna.musham@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A672E:EE_|CH1PR12MB9693:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36f695f5-90b0-465a-79b3-08dd7b01b198
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TH52HhSmFu97KbpZX8rtxclUyNzzBWDa8Mk8btkwImFYM5n2pNMU02stJDLG?=
- =?us-ascii?Q?r4wOvbb5fVjTPkbycYzvDVN+18gIj817rRf1zuciMQBQZyoJ2Dg8nt6hL09f?=
- =?us-ascii?Q?lom+NlgPoyz/n3hNEOU4ABIvIxAQ/P8R+8gmyJ8L26XuiIm3Psb8BdIIbTSr?=
- =?us-ascii?Q?WKaZPWfiWliPYTc6O48R0uB0XKHJjmBQ3HVFdPmu7Z6kKfVopkl9WAi860i2?=
- =?us-ascii?Q?COMzs8XMpqH6h6N8NFUZdKCcdQIyW4hhsOiR7ffcIPr2zCe01pcEttcsToqy?=
- =?us-ascii?Q?kuD1Z5mfqb6reeFiBCyfjXCGTMwk5bzVULY5Zaj4s8amsQ7AEMZHBblIX1fA?=
- =?us-ascii?Q?9tIG+xkXEBm2Wy0epjNqCK5Seq1fNiRPPyvrpSO6tn7imX2u4BSA1NEIjsrr?=
- =?us-ascii?Q?TehiYBrvK5Y8jXqo5cNw3z4+XaF66EvQxBfBr7xF962C/Hg4QW8BgTfleBBD?=
- =?us-ascii?Q?o7uRKCv7ghnDETUFNLJ/xhX24ojBeVy7cdC/W6FrDqLa333aILG1k0BSXobj?=
- =?us-ascii?Q?jiIkIYgB+BhtGn+9ek9rE9siO/+FIev6ckhWzWh/sxNjqt4ZpKXLPpr033fa?=
- =?us-ascii?Q?Si1/grNrrxASgQ8bVzxmJC9ryYYktQMlJAiIWXEw2/gw2Hsn21FvxDdjpTWZ?=
- =?us-ascii?Q?RxLDHtv7ri4nFr7nE2MGSMMZQ7G6IE7ugwkWdZtiZITia3Lk0dIrzNfjIZrl?=
- =?us-ascii?Q?7nffbvIMOwzj9Kihh+ob/CGDlwUM0OzVUGahbf3yBHFfAzhwcIKMuiqtXSQH?=
- =?us-ascii?Q?XdHqX2rVSe9hH/e0PJ7/2wWWTSffzFBY6+6OQ+0ghlKmdGgRfI1aeFviWhrT?=
- =?us-ascii?Q?4+HtI5nt2FcaQPE5+FtWcd0x6ARLT1IFFwfVtYBy7xqgA41l0uIvmhTNA7ST?=
- =?us-ascii?Q?gsmOjOEM1gOu0mtCPbt1v4Kh06pTn0ud94lhXkuaS2gmAEMSmebwUOh+/hNa?=
- =?us-ascii?Q?hQBbTpfUXYNOsc1jFZuR6ENd+HtRVpP6stRakF3p4vc+v4zMdt2uoVK0/hfB?=
- =?us-ascii?Q?RM6qLUoPTpFLcVSxX8KN2IGMfVucXHQq7DNnXMf7HrcFUWP/nsW/is9yUrl9?=
- =?us-ascii?Q?iuacof2I0rGn8Rx69V/tJ6aDPLNVZOrahvuUKGcMrkVH2chcIaN2RmgBzArf?=
- =?us-ascii?Q?Krhn0ygkR6qA9B+kCT9Y9flh1qHR8k+yp8Yk2j0tyxcXSLudEFYvb84m24MP?=
- =?us-ascii?Q?Lw7Wg/g1d/W4ug+6p1yF7RKUtQrW1rzswKMmGyOOKQVhICYXUT764pjBqlJ8?=
- =?us-ascii?Q?/DmY/5Csfn6JJlUlVgKWZseLIEkC5oyofVkgzG+fF6v4KQPKLc0/Qh1zxPVt?=
- =?us-ascii?Q?BXZAk61vDd+mrhtQmSIAFSe+6ELxN/wgsFae+mM0b3/STRsaT9PJ8XN9dcOB?=
- =?us-ascii?Q?w3Q0vzhEJuiZlz0PRCGgYSbDF4dYBoJtvYBoOJ2xbwmHTx7UCAf/+ydvklY2?=
- =?us-ascii?Q?XaSf6w9n/7r1PbY9G+/jGMHYfFoUEGfYY+/5J1phjLVrxfoFpN6CtXJisaCZ?=
- =?us-ascii?Q?8QOi3g2IBIkJsKFgY4ecvAr8mlDcMyaZhSEm?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:08:55.9659
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36f695f5-90b0-465a-79b3-08dd7b01b198
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000A672E.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9693
 
-Add support for PCIe Root Port PERST# signal.
+On Fri, 11 Apr 2025 15:13:58 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Add `reset-gpios` property to the Versal CPM PCIe controller example
-node.
-Add CPM clock and reset control register base, and CPM5NC firewall
-attribute base.
+> On Fri, 11 Apr 2025 14:31:32 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > Hmm, I just tested this, and it fails on my box too (I test on a debian VM).
+> > 
+> > It fails with and without setting it to bash. I'll take a look too.
+> 
+> Hmm, maybe it is a bashism.
+> 
+> The test has this:
+> 
+>   # Max arguments limitation
+>   MAX_ARGS=128
+>   EXCEED_ARGS=$((MAX_ARGS + 1))
+> 
+>   check_max_args() { # event_header
+>     TEST_STRING=$1
+>     # Acceptable
+>     for i in `seq 1 $MAX_ARGS`; do
+>       TEST_STRING="$TEST_STRING \\$i"
+>     done
+>     echo "$TEST_STRING" >> dynamic_events
+>     echo > dynamic_events
+>     # Error
+>     TEST_STRING="$TEST_STRING \\$EXCEED_ARGS"
+>     ! echo "$TEST_STRING" >> dynamic_events
+>     return 0
+>   }
+> 
+>   # Kprobe max args limitation
+>   if grep -q "kprobe_events" README; then
+>     check_max_args "p vfs_read"
+>   fi
+> 
+> So I tried manually executing this in bash:
+> 
+> --------------------------8<--------------------------
+> # TEST_STRING='p vfs_read'
+> # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
+> # echo $TEST_STRING
+> p vfs_read \1 \2 \3 \4 \5 \6 \7 \8 \9 \10 \11 \12 \13 \14 \15 \16 \17 \18 \19 \20 \21 \22 \23 \24 \25 \26 \27 \28 \29 \30 \31 \32 \33 \34 \35 \36 \37 \38 \39 \40 \41 \42 \43 \44 \45 \46 \47 \48 \49 \50 \51 \52 \53 \54 \55 \56 \57 \58 \59 \60 \61 \62 \63 \64 \65 \66 \67 \68 \69 \70 \71 \72 \73 \74 \75 \76 \77 \78 \79 \80 \81 \82 \83 \84 \85 \86 \87 \88 \89 \90 \91 \92 \93 \94 \95 \96 \97 \98 \99 \100 \101 \102 \103 \104 \105 \106 \107 \108 \109 \110 \111 \112 \113 \114 \115 \116 \117 \118 \119 \120 \121 \122 \123 \124 \125 \126 \127 \128
+> # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
+> # echo $?
+> 0
+> # cat /sys/kernel/tracing/dynamic_events
+> p:kprobes/p_vfs_read_0 vfs_read arg1=\1 arg2=\2 arg3=\3 arg4=\4 arg5=\5 arg6=\6 arg7=\7 arg8=\8 arg9=\9 arg10=\10 arg11=\11 arg12=\12 arg13=\13 arg14=\14 arg15=\15 arg16=\16 arg17=\17 arg18=\18 arg19=\19 arg20=\20 arg21=\21 arg22=\22 arg23=\23 arg24=\24 arg25=\25 arg26=\26 arg27=\27 arg28=\28 arg29=\29 arg30=\30 arg31=\31 arg32=\32 arg33=\33 arg34=\34 arg35=\35 arg36=\36 arg37=\37 arg38=\38 arg39=\39 arg40=\40 arg41=\41 arg42=\42 arg43=\43 arg44=\44 arg45=\45 arg46=\46 arg47=\47 arg48=\48 arg49=\49 arg50=\50 arg51=\51 arg52=\52 arg53=\53 arg54=\54 arg55=\55 arg56=\56 arg57=\57 arg58=\58 arg59=\59 arg60=\60 arg61=\61 arg62=\62 arg63=\63 arg64=\64 arg65=\65 arg66=\66 arg67=\67 arg68=\68 arg69=\69 arg70=\70 arg71=\71 arg72=\72 arg73=\73 arg74=\74 arg75=\75 arg76=\76 arg77=\77 arg78=\78 arg79=\79 arg80=\80 arg81=\81 arg82=\82 arg83=\83 arg84=\84 arg85=\85 arg86=\86 arg87=\87 arg88=\88 arg89=\89 arg90=\90 arg91=\91 arg92=\92 arg93=\93 arg94=\94 arg95=\95 arg96=\96 arg97=\97 arg98=\98 arg99=\99 arg100=\100 arg101=\101 arg102=\102 arg103=\103 arg104=\104 arg105=\105 arg106=\106 arg107=\107 arg108=\108 arg109=\109 arg110=\110 arg111=\111 arg112=\112 arg113=\113 arg114=\114 arg115=\115 arg116=\116 arg117=\117 arg118=\118 arg119=\119 arg120=\120 arg121=\121 arg122=\122 arg123=\123 arg124=\124 arg125=\125 arg126=\126 arg127=\127 arg128=\128
+> -------------------------->8--------------------------
+> 
+> Doing the same in dash:
+> 
+> --------------------------8<--------------------------
+> # dash
+> # TEST_STRING='p vfs_read'
+> # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
+> # echo $TEST_STRING
+> p vfs_read         \8 \9 	 
+>  
+>   
+>    8 9         8 9   ␦  9   ! " # $ % & ' 8 9 ( ) * + , - . / 8 9 0 1 2 3 4 5 6 7 8 9 8 9 : ; < = > ? 8 9 \80 \81 \82 \83 \84 \85 \86 \87 \88 \89 \90 \91 \92 \93 \94 \95 \96 \97 \98 \99 @ A B C D E F G89 H I J K L M N O 	8 	9 P Q R S T U V W 
+> 8
+> # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
+> dash: 8: echo: echo: I/O error
+> -------------------------->8--------------------------
 
-Sai Krishna Musham (2):
-  dt-bindings: PCI: xilinx-cpm: Add `cpm_crx` and `cpm5nc_fw_attr`
-    properties
-  PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
+Oops...
 
- .../bindings/pci/xilinx-versal-cpm.yaml       | 129 +++++++++++++++---
- drivers/pci/controller/pcie-xilinx-cpm.c      |  97 ++++++++++++-
- 2 files changed, 203 insertions(+), 23 deletions(-)
+> 
+> Looks like dash will translate those "\#" into the ASCII equivalent,
+> whereas bash does not.
+
+Ah, I didn't know that.
+
+> 
+> This patch seems to fix it:
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> index 6b94b678741a..ebe2a34cbf92 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> @@ -11,7 +11,7 @@ check_max_args() { # event_header
+>    TEST_STRING=$1
+>    # Acceptable
+>    for i in `seq 1 $MAX_ARGS`; do
+> -    TEST_STRING="$TEST_STRING \\$i"
+> +    TEST_STRING="$TEST_STRING \\\\$i"
+>    done
+>    echo "$TEST_STRING" >> dynamic_events
+>    echo > dynamic_events
+> 
+> 
+> Masami, you just recently added this test (it's dated March 27th 2025), did
+> you mean to write in the ASCII characters? Why the backslash?
+
+No, the kprobe_event accepts raw digit values to record in the trace buffer
+which is for the probe points which uses a fixed digit value for the actual
+local variable (or function parameter), e.g. constant propagation with
+optimized function instances.
+
+In this case, can we use below?
+
+TEST_STRING="$TEST_STRING "'\\'$i
+
+
+Thank you,
+
+> 
+> -- Steve
+> 
+
 
 -- 
-2.44.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
