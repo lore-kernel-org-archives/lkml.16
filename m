@@ -1,144 +1,219 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C702DFA22;
-	Mon, 14 Apr 2025 20:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9E61ACEAF
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744661648; cv=none; b=IDkddC2HADkSRHfBarOhCOURcQTMPJS/F+9pIPeRNk/J+MuDKLaTfdUg8019E1jNgQVeKoq1chB0wGZ2Q5MZZdsjJgJ5rT0bOT69T60lwbRWYsOHx2T41uGg0aNhdmzbSJPXhm6V+Y01MezyPlkMkTKVmhbU8d1gQHeM5zUSLcc=
+	t=1744661752; cv=none; b=G3pbWm7Hyh4V46MW13n1XLQt1199AX0evwUU7nrKwu8uvcoBc3B/oZNQnWSZTFIftukQBf/a1hq/K6ipvm9VlY0VOCn08TIjd1HPfEAR3pmRa73RoYW/azmQAFbysPoiH2N+1L0vDOk32LpzH1er0ZdHIgb68q4N60zKup+2Fgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744661648; c=relaxed/simple;
-	bh=noaVMCDz4lZ4IZqYld8mmTRprEHBuk+qqeU/R2k7iHs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FesTnI9CNDhX9ub25nzxHXiFNyumjAi3F/CdnaPWpjQcbR6Ll5jZXzzRJhDATYR/x6n9gymgQoM5L373ctMBF+ROaOk/GMx2XP9QH9J4sPG6xYX+T97d6v1cn0aJ1hY7CH7gAi3/ClV5o494wjmZBNUiLqjD7JDUrr5t3TFR43g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rdxPbLcW; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744661752; c=relaxed/simple;
+	bh=LbhbCo+zbVvMZaZ4UPNWEgaPM3+UBAl8LfeZaHYhc+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ibdgez1zJxgnRhBTKklmYe8hkU+M2ngMNLFtauvIzLCf4ZN2G0r8CqKWLVOCsy4ECEeU0DIvB1kM0aGquz9TaOuusMZ1OrxlQ48wOC0RbcivrjkpZwG5EmMnfumMK9UjKrzEgBmhvcTfBXND8lOYIi0xwnu5g+eZj4aD2zNQBbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OSxdxWY/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rdxPbLcW"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EKDr7M2255205
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 15:13:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744661633;
-	bh=u4s325uvuTrWBpavXWq6UQUmHw42JVkD/r2Zx8Uy0G4=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=rdxPbLcWyTDIJ9phfExl7sbHI2mZmInXxPpoGj/wFsJkGVlvtRGloTMdtZxIBXrED
-	 7TELmyo9rNl8zsOJZBDwZhvqEeu0SIJRVV9jNqOvbbk9PLU9jZeuGLrJIyw5ATrZyM
-	 KOFq5+UyrUBsVdrOplbysZE/EGNZ9W6GdmLbrMMQ=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EKDrWo107347
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 15:13:53 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 15:13:52 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 15:13:53 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EKDqaS030321;
-	Mon, 14 Apr 2025 15:13:52 -0500
-Message-ID: <4c77a566-d231-43f2-ada6-a81ec6b58237@ti.com>
-Date: Mon, 14 Apr 2025 15:13:52 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OSxdxWY/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744661749;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=67wq8uX0UDI4+mNd83RsPzYK7yn9VdDdlik8w849lpc=;
+	b=OSxdxWY/qYtBYWDG2q+CUQ+AGZvCHStCAFNDFruoCrO7cC2vpTPv749HGDBqYV4zX501uq
+	32H4uVtei9XbwoqMVim4Hmmcc2uslGe+kRC1zttueNdMFylrKMf4O0RdJ1cCU7FfAYSyKD
+	IjGP0RyfSmyxGyN3qjwqQaQnY1sFyoI=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-483-Yp2X1c6nMeqsMHHf1RaJWw-1; Mon, 14 Apr 2025 16:15:48 -0400
+X-MC-Unique: Yp2X1c6nMeqsMHHf1RaJWw-1
+X-Mimecast-MFC-AGG-ID: Yp2X1c6nMeqsMHHf1RaJWw_1744661747
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b5c68c390so51574539f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:15:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744661747; x=1745266547;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=67wq8uX0UDI4+mNd83RsPzYK7yn9VdDdlik8w849lpc=;
+        b=twYssIAxacedeIf1tMDhxuDnTqvWohvmHFN8O4saUtitiKE3Po8tl+U2LeiGY09yFo
+         tHfuvbA/pnLMaCaFZ+Ou7tKpoKJO1EAuZrn0LrYKbaAJDTReLWvMn74VnRvgshlHBgVn
+         3wx5/8wx1wDykeML32sZoGIsScL5sZ2Z6w0uydOBdQBSFeNbP+CnsBLWbYza8QBQEHo6
+         D77UDZ0kfRpU6t+gWtoKR6PnCEK+569+UGgHAZNjPfb1j7tUxT9GDLUOlLMPUwfM8h53
+         PZ9/eE3nscTKGWFodRbT2cOPllxJ965/2eNgzrS8o216CWBs9qCtogEufONEDFmF84fw
+         O+1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUHacIkUhHBedT3IZu25qG2ACsyBWy/mhXiQaqBMyJMBdLYS6/C1OHTvp5z/Sun9yZaA81j1kbcAAbP8vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzihuzqN66HvqsaJdwcLOyh4WQuhgjKbJg7eTRHHmvDXd5P14jM
+	ZnaJGeLpmaVuo3b4IQdRObpOLeFa/n3Up9Hx47l/it64KTCRTWtVJftWHTedUo+ReTGyTROHBwr
+	vUMgVR4Zozmc7XCbeBRDRSAop17bdLfTtdrjyDAU+LtnBn+pX30AkBT5l11a91Q==
+X-Gm-Gg: ASbGncuCitmxaxtFseIYJ9McxCG6xfpD8A7uOYpG8i/gxy2YhRj0MjO2yP4LQlPTY8m
+	IPKJ+N66Q+7S/kcLv7LDqJmbEo4kLWAOihE/xPs0x2KM1knCcnISheZVyirZSNgHszTv/qUpfcR
+	ddTlLp40rJ8OToJtfuTLJS36taeTiRGiShFxQRiyHIwSufDSiUKc7W6LwuJpRrONB20xwdbnUcL
+	h+gVNJh9Lx+Vj4TLJdMr5cio4fF7xzm0VIEEgsnjwVcn083/S8kyl5+VKBQpUrk/9ULDzKRZtnl
+	433UkvE/3yNjoAM=
+X-Received: by 2002:a05:6e02:1544:b0:3d4:6d6f:6e1f with SMTP id e9e14a558f8ab-3d8099c8c68mr2336045ab.6.1744661747535;
+        Mon, 14 Apr 2025 13:15:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEvYHcXa5XzzEeeBnhYrriz1zDFvRJNFHVKn7pAJsuo0WYw3znjjkQIP0oUx01t/dn7SlakGw==
+X-Received: by 2002:a05:6e02:1544:b0:3d4:6d6f:6e1f with SMTP id e9e14a558f8ab-3d8099c8c68mr2335905ab.6.1744661747096;
+        Mon, 14 Apr 2025 13:15:47 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2f3f9sm2726409173.129.2025.04.14.13.15.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 13:15:46 -0700 (PDT)
+Date: Mon, 14 Apr 2025 14:15:44 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Nishanth Aravamudan <naravamudan@nvidia.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Raphael Norwitz <raphael.norwitz@nutanix.com>, Amey
+ Narkhede <ameynarkhede03@gmail.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>, Yishai
+ Hadas <yishaih@nvidia.com>, Shameer Kolothum
+ <shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: account for sysfs-disabled reset in
+ pci_{slot,bus}_resettable()
+Message-ID: <20250414141544.22ebd4c9.alex.williamson@redhat.com>
+In-Reply-To: <20250304234050.GA265524@bhelgaas>
+References: <20250207205600.1846178-1-naravamudan@nvidia.com>
+	<20250304234050.GA265524@bhelgaas>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA addresses.
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-CC: Christoph Hellwig <hch@infradead.org>,
-        Bastien Curutchet
-	<bastien.curutchet@bootlin.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
- <Z_yjNgY3dVnA5OVz@infradead.org> <20250414102455.03331c0f@windsurf>
- <Z_zwZYBO5Txz6lDF@infradead.org> <20250414134831.20b04c77@windsurf>
- <8f55367e-45c0-4280-b1ed-7ce9160c1fad@ti.com>
- <20250414212125.4b3e6f33@windsurf>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250414212125.4b3e6f33@windsurf>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 4/14/25 2:21 PM, Thomas Petazzoni wrote:
-> Hello Andrew,
+On Tue, 4 Mar 2025 17:40:50 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+> On Fri, Feb 07, 2025 at 02:56:00PM -0600, Nishanth Aravamudan wrote:
+> > Commit d88f521da3ef ("PCI: Allow userspace to query and set
+> > device reset mechanism") added support for userspace to disable reset of
+> > specific PCI devices (by echo'ing "" into reset_method) and
+> > pci_{slot,bus}_resettable() methods do not check pci_reset_supported()
+> > to see if userspace has disabled reset.
+
+The reset_method attribute selects which reset mechanism is available
+to pci_reset_function().  It is not intended to interact with the
+slot and bus scope reset mechanisms.
+
+> > 
+> > __pci_reset_bus()  
+> > 	-> pci_bus_reset(..., PCI_RESET_PROBE)
+> > 		-> pci_bus_resettable()  
+> > 
+> > __pci_reset_slot()  
+> > 	-> pci_slot_reset(..., PCI_RESET_PROBE)
+> > 		-> pci_slot_resettable()  
+> > 
+> > pci_reset_bus()  
+> > 	-> pci_probe_reset_slot()
+> > 		-> pci_slot_reset(..., PCI_RESET_PROBE)
+> > 			-> pci_bus_resettable()  
+> > 	if true:
+> > 		__pci_reset_slot()
+> > 	else:
+> > 		__pci_reset_bus()
+> > 
+> > I was able to reproduce this issue with a vfio device passed to a qemu
+> > guest, where I had disabled PCI reset via sysfs. Both
+> > vfio_pci_ioctl_get_pci_hot_reset_info() and
+> > vfio_pci_ioctl_pci_hot_reset() check if either the vdev's slot or bus is
+> > not resettable by calling pci_probe_reset_slot(). Before my change, this
+> > ends up ignoring the sysfs file contents and vfio-pci happily ends up
+> > issuing a reset to that device.
+
+And that's exactly how it's supposed to work, bus and slot resets are
+different mechanisms.  This change has broken vfio-pci's ability to
+perform bus/slot reset for the vast majority of use cases, where the
+reset_methods array is empty because we have devices that have no reset
+mechanism other than bus reset.  This is seen for example in the
+trivial case of a multi-function GPU and audio device.  We can no
+longer perform a bus reset here because audio function has no reset
+mechanism[1].
+
+The irony here is that the bus/slot reset is meant to provide resets
+when the device does not support function level reset, but now we need
+function level reset support in order to perform a bus/slot reset.
+
+This change has been pushed to stable trees and is already beginning to
+cause problems:
+
+https://lore.kernel.org/all/808e1111-27b7-f35b-6d5c-5b275e73677b@absolutedigital.net/
+
+Please revert this change with a cc to stable.  Thanks,
+
+Alex
+
+[1] Both the GPU and the audio device should report no available reset,
+but I suspect we have an ordering problem that function 1 hadn't been
+discovered before we probed bus reset on function 0.
+
+> > 
+> > Add an explicit check of pci_reset_supported() in both
+> > pci_slot_resettable() and pci_bus_resettable() to ensure both the reset
+> > status and reset execution are both bypassed if an administrator
+> > disables it for a device.
+> > 
+> > Fixes: d88f521da3ef ("PCI: Allow userspace to query and set device reset mechanism")
+> > Signed-off-by: Nishanth Aravamudan <naravamudan@nvidia.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > Cc: Amey Narkhede <ameynarkhede03@gmail.com>
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Jason Gunthorpe <jgg@nvidia.com>
+> > Cc: Yishai Hadas <yishaih@nvidia.com>
+> > Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Cc: kvm@vger.kernel.org  
 > 
-> On Mon, 14 Apr 2025 12:08:44 -0500
-> Andrew Davis <afd@ti.com> wrote:
+> Applied to pci/reset for v6.15, thanks!
 > 
->> "UIO is a broken legacy mess, so let's add more broken things
->> to it as broken + broken => still broken, so no harm done", am I
->> getting that right?
+> > ---
+> > 
+> > Changes since v2:
+> >  - update commit message to include more details
+> > 
+> > Changes since v1:
+> >  - fix capitalization and ()s
+> >  - clarify same checks are done in reset path
+> > 
+> >  drivers/pci/pci.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 869d204a70a3..738d29375ad3 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5405,6 +5405,8 @@ static bool pci_bus_resettable(struct pci_bus *bus)
+> >  		return false;
+> >  
+> >  	list_for_each_entry(dev, &bus->devices, bus_list) {
+> > +		if (!pci_reset_supported(dev))
+> > +			return false;
+> >  		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
+> >  		    (dev->subordinate && !pci_bus_resettable(dev->subordinate)))
+> >  			return false;
+> > @@ -5481,6 +5483,8 @@ static bool pci_slot_resettable(struct pci_slot *slot)
+> >  	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+> >  		if (!dev->slot || dev->slot != slot)
+> >  			continue;
+> > +		if (!pci_reset_supported(dev))
+> > +			return false;
+> >  		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
+> >  		    (dev->subordinate && !pci_bus_resettable(dev->subordinate)))
+> >  			return false;
+> > -- 
+> > 2.34.1
+> >   
 > 
-> Who says UIO is a "broken legacy mess"? Only you says so. I don't see
-> any indication anywhere in the kernel tree suggesting that UIO is
-> considered a broken legacy mess.
-> 
 
-I'm not saying that*, I'm pointing out your argument is that even
-though what you are trying to do is broken and unsafe, it is okay to
-do because it isn't any "more "broken and unsafe" than UIO already is."
-
-*It is, but that is an argument to have outside of this thread :)
-
-> Keep in mind that when you're running code as root, you can load a
-> kernel module, which can do anything on the system security-wise. So
-> letting UIO expose MMIO registers of devices to userspace applications
-> running as root is not any worse than that.
-> 
-
-You can take your computer out back and shoot it too, but we shouldn't
-encourage that either :) According to the original docs, UIO was created
-to support "industrial I/O cards", think old one-off custom ISA cards by
-vendors that had no intention of ever writing a proper driver and just
-wanted to poke registers and wait on an IRQ.
-
-IMHO we shouldn't be encouraging that, and trying to modernize UIO does just
-that. It gives the impression that is how drivers should still be written.
-If you setup your FPGA card to go blink an LED, sure UIO driver it is,
-anything more complex, then writing a proper driver is the way to go.
-
->> If your FPGA IP can do DMA then you should not be using UIO in
->> the first place, see UIO docs:
->>
->>> Please note that UIO is not an universal driver interface. Devices that
->>> are already handled well by other kernel subsystems (like networking or
->>> serial or USB) are no candidates for an UIO driver.
->>
->> The DMA subsystem already handles DMA devices, so write a DMA driver.
-> 
-> My FPGA IP block is not a DMA controller that would fit the dmaengine
-> kernel subsystem. It's a weird custom device that doesn't fit in any
-> existing subsystem, and that happens to do "peripheral DMA" (i.e the IP
-> block is DMA-capable itself, without relying on a separate DMA
-> controller). So this (very valid) recommendation from the UIO
-> documentation doesn't apply to my device.
-
-Peripheral DMA is the much more common case, nothing new here. Could
-you give a hint as to what this device does that doesn't fit *any*
-current subsystem? Or are we talking a hypothetical device (which
-for the sake of argument is a valid thing to say, I'm sure with an
-FPGA card I could make something that doesn't fit any current
-framework too). Just want to know if you are trying to solve a
-specific issue or a generic issue here.
-
-Andrew
-
-> 
-> Best regards,
-> 
-> Thomas
