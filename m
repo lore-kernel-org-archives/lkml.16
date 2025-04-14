@@ -1,121 +1,110 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB2F64D;
-	Mon, 14 Apr 2025 06:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7A5148832;
+	Mon, 14 Apr 2025 06:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744611349; cv=none; b=MkJQTLkUREolsEfdkcq16Z1hZ7K97SKn3nicbEbtrzxhQV3Z/GuZ80CcRu4ZePg6I5tkXPrU3eyrAhYaM84C6+5+N9gR+skjuce7So/ANqGDZh9haUwgRAJVfFKbyj3vHYXRQlaRJeshClz+ckeSwR6fzBHee22HmK3pq1dm+VM=
+	t=1744611640; cv=none; b=Vhxjj20OUWrkJyuMUhH5EcWAKo7IaZys0EfCOCdXc14UefJ2Y5dX8bzDhtIoLxsPgKj5HW6ColkHDiGuqDdnjLNpDMChpinGAYHIq1IhwltLmnJXV6TBiIUCJmOYClxl4q9Yn0wjbMfGRpxQAXg812/WL6ZR8i6BMLzEY3RSC+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744611349; c=relaxed/simple;
-	bh=UJ/RWRlDV7zKKAfftCWu26aDq4GEVcBmM5GR1+w6ZEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lc+ObKF7ppEq8wbjRQCD9j0XwHxRy0L6El9LbK3jZPXuP1slkSE6KzDXrzxl3TZtdSCefqVuNv34mtgQf0DOL/ZnogiZpB8xliIBd36fc6AMtnOVIYQe+9jnP5nSg3AOcwxq3OdRjb/wk14yX+RjF7alxTzo8wv1bb2yLp+7dC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enDnc/g7; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744611640; c=relaxed/simple;
+	bh=C4PKF284bm3UK2WkXwxqL/tl8w290NK+P9saOflVdu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFYQDGs7xSDx7h7A/Je0BPWyU3w6mgJHsrsL7x4wz0vSD0DK3be0L0vpFmXrepJIM4SS3w2np2vwnHDDQbhrYnSm43IDgt51bsV3IHNsggYi3Ki7+70ffR/meuX9TigMhuPNEJNJQc0Mhap/2KUEUthBvLgkK19T4m7aRLow5kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ftsJRx/T; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enDnc/g7"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30ddad694c1so39048231fa.2;
-        Sun, 13 Apr 2025 23:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744611346; x=1745216146; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YjcF2WJUuCtRN/KG1IsSFo708u3n1AwBwA8993WsM/M=;
-        b=enDnc/g7L27PUVzNAok4LAopqnLvmfRGh13tYmXXG7yeQ3vCla5JOZk7/f6I6RsM1c
-         VtAuHQkvHmG2nJH2waRBwrQScEmi1n21Qy0TyXDkAAPbQH5woY9DhatYhrT8kqhwEfZK
-         bTvitlc8liqUrIVNBXWRqkULBoo3druoUaYLTR/ubVhOCCp9+00GVCVwW4jpOd9afViJ
-         He4yq/afJuzzizTQO6igQLpT1ESHYaCvwTqKwpS29x6CkIrNSrvnCuR+5Zv1n0QlwopJ
-         uRzwXltA7mtrrgt9LeolhMBRVgU68G7LbUYUmYtAkzv8Lv0oeY2+yrTOZCdev84iv9hU
-         SC/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744611346; x=1745216146;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YjcF2WJUuCtRN/KG1IsSFo708u3n1AwBwA8993WsM/M=;
-        b=F0cByAGK+lBBvuhj2ndnL8fiYh6y4oy8/VMe+poJ2hVs4cX6+IzanA/VgFI+OHj+rj
-         UbQhn38k2+SR91DES/lMHJZZX3T1ieT0tmLK6uDUG5ToGG2IDpdtp5zwasEVnW71Ju7C
-         7CCdeZ+RjyIy6TnhNEIs+DL6gf+3L61ru8dgK2O6NYZIfobnOJb3sAxyyqb3vd/8dl/t
-         3u+8PFeXt2IPOATt0QxZfSE8594PsX4kCNpebwlTvhd2MJ1Lu20NqVV59IFhwLB10/m0
-         lApUhH3834PWDuIG48IIO6+2yDQB715KLJ3ZTvoicQyR0JuF+ToUS7bxREmy2CvwlkWc
-         KphQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOzfBndqeP2ZVZIDpHAI9hZHwZosNiQnGClTMY/IKC0pOGEIhSmOFS0/ISSdCiMEvkUvMXRu+pMs+AS96q@vger.kernel.org, AJvYcCWE188yrerZ7lxlYPrf9tDcgH+Jr3t0yz2M9ZTKPzHKP8VkpZb1zo62wnA/9aUCHP0cxdtzbdGaGL2Q@vger.kernel.org, AJvYcCWfO7WTNWfaqPXge6xC3K+iu6PncPupCSEgRRYZC6RDwcLQKhNlt94OcfNuhSHQvbgrPz1HbYsTw3Gi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxas6RX4iFoBZPxfQMTsCztAk7268JBih08oZ7gBCeInEtWEg3M
-	JnRb41k2N6PqlBb+3KmwlPnxlFXfDVlyRfdrQo0d6CsTZCj4TFkd
-X-Gm-Gg: ASbGncuGl6gCKld12wVf29H0lhPQgHv+/UyHTnPhHSvYV4HoVUlc/BRkooWWYqG/a7Z
-	0jxVr0qz+mTHUPhf27e5byYP+wOZ5YCRvXI1LmLoWSgduOnyMUDiKfdE8ZPhDxJoGGXxuJc9YSk
-	lk6a/ulw7JVFzba6RPTs9n7lTghxEHBi69iRvAFuGRR5ILsee9Az6UrF3gLQFNqIIcjVM4N+/9j
-	q1Kc5srVXG5ZGWAIJLczIAMvgBHphNSRDCR6KuP6upwSnbJWx4HE5J3dJkS5B8FuyZKTcGevO7m
-	t50gNkzJ31b35xg4UfnPGOgki7a1QNBxHZNlFvdbAAhMe4QUOG0P4C3UUjYyQ51bOeAIPo/Jbre
-	Nca2vyf3Pf6XkWT/QE8IyxA==
-X-Google-Smtp-Source: AGHT+IESXdygoKOi7ura1Pv1kh/pO5a5AqCwYTwFhNnVbWVyYagbC+892+upURVMW7rDkcW0EO4DzA==
-X-Received: by 2002:a2e:b8cd:0:b0:30c:111d:d7b8 with SMTP id 38308e7fff4ca-310499d56fdmr29792181fa.10.1744611345747;
-        Sun, 13 Apr 2025 23:15:45 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464eb11esm15543821fa.58.2025.04.13.23.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 23:15:45 -0700 (PDT)
-Message-ID: <022605b1-dd61-467d-85f3-ec60a8d1da8f@gmail.com>
-Date: Mon, 14 Apr 2025 09:15:44 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ftsJRx/T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744611640; x=1776147640;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C4PKF284bm3UK2WkXwxqL/tl8w290NK+P9saOflVdu0=;
+  b=ftsJRx/TNF+lSRj0VBx5yY0HkSca+aF1id/D9ddbulPC4CSMn14uUcHL
+   5l1DHWSTPpf80Yu5wHPJvIvtKoPAm62F79p28ROUIaggaMUSTEAcyX9/e
+   d0wsWPo+urx8RhVDO+WWQ383JZwpFYrwLyKAbKbZM40JXGHLZ1yBOl4ft
+   qaShnd1S2e7V+3XbUXdC899aEHuMrf0fHCFTQpXgRgwNQeBptUk/6ooni
+   ADei+tQK/FbGn25MLJnI3RbDico/QRjKfrAUKdp1QlhMgSw9SxLkuOGMg
+   jLa+wqci37PmvwVHZsOZ794xu1zJdQp/Vs+LEvQhhzCR4yeta7r5h0MCI
+   Q==;
+X-CSE-ConnectionGUID: Yr6PNfBoSh2+6N56+50TDg==
+X-CSE-MsgGUID: xQj6W90gQmiwnvSupsxgsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46155621"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="46155621"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:20:39 -0700
+X-CSE-ConnectionGUID: hHu137UcT1i8XbcVzQpbXw==
+X-CSE-MsgGUID: kx8RNqZlTn+fi23yg60x/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="129693328"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:20:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4DBG-0000000C9Ex-2w5y;
+	Mon, 14 Apr 2025 09:20:30 +0300
+Date: Mon, 14 Apr 2025 09:20:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lizhi Xu <lizhi.xu@windriver.com>, Dmitry Vyukov <dvyukov@google.com>
+Cc: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com, dakr@kernel.org,
+	djrscally@gmail.com, gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com, jgg@nvidia.com,
+	kevin.tian@intel.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
+	rafael@kernel.org, sakari.ailus@linux.intel.com,
+	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
+Subject: Re: [PATCH] software node: Prevent link creation failure from
+ causing kobj reference count imbalance
+Message-ID: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
+References: <67f26778.050a0220.0a13.0265.GAE@google.com>
+ <20250411004203.2932899-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] iio: adc: ti-adc128s052: Add support for adc102s021
-To: Jonathan Cameron <jic23@kernel.org>,
- Sukrut Bellary <sbellary@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Angelo Compagnucci <angelo.compagnucci@gmail.com>,
- Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250408132120.836461-1-sbellary@baylibre.com>
- <20250412141047.4273a8b1@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250412141047.4273a8b1@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411004203.2932899-1-lizhi.xu@windriver.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 12/04/2025 16:10, Jonathan Cameron wrote:
-> On Tue,  8 Apr 2025 06:21:18 -0700
-> Sukrut Bellary <sbellary@baylibre.com> wrote:
+On Fri, Apr 11, 2025 at 08:42:02AM +0800, Lizhi Xu wrote:
+> syzbot reported a uaf in software_node_notify_remove. [1]
 > 
->> The patch series adds the support for adc102s021 and family.
->>
->> The family of devices are easier to
->> support since they all (no matter the resolution) seem to respond in
->> 12-bits with the LSBs set to 0 for the reduced resolution devices.
+> When any of the two sysfs_create_link() in software_node_notify() fails,
+> the swnode->kobj reference count will not increase normally, which will
+> cause swnode to be released incorrectly due to the imbalance of kobj reference
+> count when executing software_node_notify_remove().
 > 
-> This has raced against Matti's series
-> https://lore.kernel.org/linux-iio/cover.1744022065.git.mazziesaccount@gmail.com/
-> Support ROHM BD79104 ADC
+> Increase the reference count of kobj before creating the link to avoid uaf.
 > 
-> With hindsight that wasn't obvious from the patch series name though
-> which should ideally have been
-> iio: adc: ti-adc128s052: Support ROHM BD79104 ADC
+> [1]
 
-Oh, right. Sorry about that!
+Please, reduce this to ~5-7 lines only. This is how Submitting Patches document
+recommends to put backtraces in the commit messages:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
 
-> Please rebase on the iio testing branch on kernel.org or on top of that series.
-> Technically I've only applied the first 7 patches so far, but the 8th
-> should be a simple change from that v3.
+> Fixes: 9eb59204d519 ("iommufd/selftest: Add set_dev_pasid in mock iommu")
+> Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
 
-I can also rebase the 8th on top of these changes if these get in before 
-I rework the 8th.
+> Tested-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
 
-> Matti, you volunteered as maintainer :)  Hence please take a look at
-> this one.
+Where is the positive result of it? I can't find the respective log.
+To me this one
+https://syzkaller.appspot.com/x/report.txt?x=158af070580000
+doesn't sound as a useful report as I don't know if this patch fixes one
+regression and introduced another.
 
-Sure. Thanks for CC'ing me. I didn't have this driver included in my 
-mail filters yet.
+Dmitry?
 
-Yours,
-	-- Matti
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
