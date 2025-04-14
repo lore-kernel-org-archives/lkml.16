@@ -1,128 +1,292 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2FD27FD79;
-	Mon, 14 Apr 2025 16:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EDF1487E1
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649890; cv=none; b=uGDAWxwauVbPtDWFHAInPEI+EoKhn2dDhKxuizI/ZhB0xaXsQGHN6mgxjifOvpgKUrxFTskDSzio1w2FyLT7ysfIQ92lQbWO6wRgocd4J1HS0JpXW4QV3SCJbEEBwnFhxMoNJLO4gLgnTHyJTc0eDl6slmFybLC+it20KXTq8ow=
+	t=1744650048; cv=none; b=loIyQmaJ8PBGjK1zUgq4HL9GQdeKDZEKIHCaSdQ4ppkL5zOdVhSr88VX8Wz64tRaA18GjF83VNxXYB3tcxHX3Fr4R6I/vEWx80XXyLQDYlVhh3x4g34sG/63ckRfWn/0iMv5BM6PhlhN+4623mDB2CnKW9+tf8Tc0imFuHhmcgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649890; c=relaxed/simple;
-	bh=4hYhsz4kTt2pLX6PzDOVl8NRG0L8du4Knh7lEqCz75w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JAhVTFmQDk/QXG58AUaLiFRCo7nijxJ0FcW78FVROaIotEEsQDomOe4f7jyxG1EKf7WIquBgxl1Ju1N42DEi4h3CZa2YO5mpjVN+zYgVff1ZuuS+HzvnQLHOcp7V8dfjmld/l9uQiPdXxxX9+Bb/UAaTjCVyd9lYb4sytGz0+hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=OjIeHuD9; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744650048; c=relaxed/simple;
+	bh=T3i3Ks6KYkqogNKePbw/HvYGCtTGpF8cMDelJPNuhvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XOg64ZhCydvBnHhLKiuudq7QkerA+Mx4M1b1NwozL/7ZKEGA05n0SJLpo+3lhrLSKHhZkwknOxLXykUQT2B2LPJjOAOrRzKERat2KHP9PmlQYXHp6M4VBAcd3YD4PN4E3aHmueKBo/aYY7jsKnAbIf59bk2akBncwOquhcg2ZxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nRAu8Kqv; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OjIeHuD9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yZVRVFitHVYKh8lUFpDXz29jMQ4TVL55S2+Fg6L3zdM=; b=OjIeHuD93l2eyXtskX24h8WOtk
-	L0lAdRcCp2gO9pW7MVq+3mm1HqBIp0Qpome2851bjAZ/uO0U4rITvM2C13uYfxaq5jcMJlLhx46gb
-	CFyTcWeFOjvOWJuTu23KNEiGhH/TJiPjV2yV9bOq86Zto0+sQ5ACQ3wFcc0BXltuA+S6veUoXhKOZ
-	9givV4yMZuESfUKFgiHLB6mudZhFAdWPUxka2yklXXBHXCWKHWA1An3lhBuu1ogx0NNNbjgn0d+se
-	KNKSCbD+JBnwkWd7Lfk9p/Qv8HiRzUoOjhd8wKNXJCvd/DVerSJ2YlJT6Lz/j4YmfUNVhRMBuisF8
-	wlBiGAnw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35404)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u4N83-0006rx-0D;
-	Mon, 14 Apr 2025 17:57:51 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u4N7w-0007v6-0o;
-	Mon, 14 Apr 2025 17:57:44 +0100
-Date: Mon, 14 Apr 2025 17:57:44 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
- Renesas GBETH
-Message-ID: <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk>
-References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nRAu8Kqv"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2264c9d0295so8155ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744650046; x=1745254846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qZgX0R3k7vRMomOHwpjZi0jdYMGFvDiknbY7T9HOMsQ=;
+        b=nRAu8KqvQ4kS0ybZFtgBnISSWbLsavgoE6ks5AAv1dZc6o6EpGA4RAYLotdtL4AzUF
+         NEq5ux1L25rfz3rzg2dQIQHEk4puS5olEBwZWLnakB2WBPg5RFdrF0J84IaKQKPfFibh
+         pxztmAynaRj73jkUNfnFVG3ORCo0WIyJA55Ad4/sqJkqjLYLUhAQVS/y/jVTX+bC6rvR
+         xKNFxuR1RqfOH4hZMhhxjV3qNaMGzj4bjBWUEMPja2UxLkkyg6aG1Y4PVqzQ446HJmVi
+         4vvjEFl5CcoZ4TZ4OSZ7el45eDjaUCuJ6PwhhfOXwZ2Yhz5Dqtst//fOmQPcc/O8wGOO
+         NqCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744650046; x=1745254846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qZgX0R3k7vRMomOHwpjZi0jdYMGFvDiknbY7T9HOMsQ=;
+        b=XTCpttCZQfF7qmdOu5UPlwnPVj7h0Ubhjn/OsExKsL74+M6T65yHtc078ikmPjoiyI
+         1XPiTAaPw5tTJmXm3nhAzUzvOCu1RvXs1k+3WTmuB5F3d6zmCUWVn5YoNO9tl9Di7Cd/
+         7j4IQ8tI/NeAl8l7wTRo3tS74jAALZWxbbmiwyiAhAyxM0xDz4DmW95ZWIdtXZ9wNL8N
+         RoizXxXsF5SXMxj9zfMrScPpg7K2fcmZ468raZMe6nL5ClUZQ0d+azUgDqfiW/5ebdEd
+         +PGQ/QBGDElEi71RMPZu5Bl2Ca8UNrFS8F45C2JZcfoYxhOia8DDiH7+r3uMW8vQcXoF
+         cBvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ5KhyqvQi6RpVY0ARRPLAmGXRozsR5qig1q1q8jV68WJQi1ibyw5YZtJYC312N6lFMVdGfWrD3ptELpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqLMqcJqo/ISooP1ypEjCNa7SPXNcDt2YLKo0WzqFYBXatOvuV
+	6uxgvDLuGnebkgW2qQUEAIF8olfMdz1mMhNGID5YHbFtASBoWIhdM2HZNvbv3NOd9XvaAAai3yA
+	dsL1V9140Rt8qo43Y2vAsCVZRV8TRhegKfHS7
+X-Gm-Gg: ASbGncusPDqwekcbm5eAMyqJWQnQky6F1J5yPWryROpCTu4SoqGFfWsiRCp6X/6qKuu
+	WCFBKD6Dpg1KutbCRrkcPZOfCkC4wY2fUfuJWP0Yf6oQ/Xb102U3IKuFPt7qaLRoUjRaOmGZW13
+	KPdO4sBkkLgTAr5dHplZ8tYaVoH9pznhtui1yWCjOjPao7P7nBaM8=
+X-Google-Smtp-Source: AGHT+IHbWnNScRnDC9p2CxmWIsPBssiO6wqSRUmKycp5VifarINCOYVDkALgNzE72DCmcrUWFYaAK9lIrLJeqLkXimQ=
+X-Received: by 2002:a17:903:230b:b0:215:42a3:e844 with SMTP id
+ d9443c01a7336-22bf52cef09mr4902755ad.17.1744650045179; Mon, 14 Apr 2025
+ 10:00:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250409061043.700792-1-irogers@google.com> <20250409061043.700792-12-irogers@google.com>
+ <Z_mdvahT2i6djhj1@z2>
+In-Reply-To: <Z_mdvahT2i6djhj1@z2>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 14 Apr 2025 10:00:34 -0700
+X-Gm-Features: ATxdqUGBZuUbvz6xLLwag4Dc8Fd8WOuz04UChczVE7TzS6jr-r-Ohiw-pMK6PnI
+Message-ID: <CAP-5=fWWiodHK1e6MsMfNXd=vNsHN5VTg9QOViH+2OF8d7FBZg@mail.gmail.com>
+Subject: Re: [PATCH v4 11/16] perf intel-tpebs: Add mutex for tpebs_results
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Weilin Wang <weilin.wang@intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
+	Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 01:03:17PM +0100, Prabhakar wrote:
-> +	gbeth->rstc = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(gbeth->rstc))
-> +		return PTR_ERR(gbeth->rstc);
-> +
-> +	gbeth->dev = dev;
-> +	gbeth->regs = stmmac_res.addr;
-> +	gbeth->plat_dat = plat_dat;
-> +	plat_dat->bsp_priv = gbeth;
-> +	plat_dat->set_clk_tx_rate = stmmac_set_clk_tx_rate;
-> +	plat_dat->clks_config = renesas_gbeth_clks_config;
-> +	plat_dat->flags |= STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY |
-> +			   STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP |
-> +			   STMMAC_FLAG_SPH_DISABLE;
-> +
-> +	err = renesas_gbeth_clks_config(gbeth, true);
-> +	if (err)
-> +		return err;
-> +
-> +	err = stmmac_dvr_probe(dev, plat_dat, &stmmac_res);
-> +	if (err)
-> +		renesas_gbeth_clks_config(gbeth, false);
-> +
-> +	return err;
-> +}
-> +
-> +static void renesas_gbeth_remove(struct platform_device *pdev)
-> +{
-> +	stmmac_dvr_remove(&pdev->dev);
-> +
-> +	renesas_gbeth_clks_config(get_stmmac_bsp_priv(&pdev->dev), false);
-> +}
+On Fri, Apr 11, 2025 at 3:54=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Apr 08, 2025 at 11:10:38PM -0700, Ian Rogers wrote:
+> > Ensure sample reader isn't racing with events being added/removed.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/intel-tpebs.c | 51 ++++++++++++++++++++++++++++++-----
+> >  1 file changed, 44 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpeb=
+s.c
+> > index f648fca17556..c5ccdbc42dc6 100644
+> > --- a/tools/perf/util/intel-tpebs.c
+> > +++ b/tools/perf/util/intel-tpebs.c
+> > @@ -16,6 +16,7 @@
+> >  #include "debug.h"
+> >  #include "evlist.h"
+> >  #include "evsel.h"
+> > +#include "mutex.h"
+> >  #include "session.h"
+> >  #include "tool.h"
+> >  #include "cpumap.h"
+> > @@ -32,6 +33,7 @@ bool tpebs_recording;
+> >  static LIST_HEAD(tpebs_results);
+> >  static pthread_t tpebs_reader_thread;
+> >  static struct child_process tpebs_cmd;
+> > +static struct mutex tpebs_mtx;
+> >
+> >  struct tpebs_retire_lat {
+> >       struct list_head nd;
+> > @@ -51,6 +53,19 @@ struct tpebs_retire_lat {
+> >
+> >  static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *e=
+vsel);
+> >
+> > +static void tpebs_mtx_init(void)
+> > +{
+> > +     mutex_init(&tpebs_mtx);
+> > +}
+> > +
+> > +static struct mutex *tpebs_mtx_get(void)
+> > +{
+> > +     static pthread_once_t tpebs_mtx_once =3D PTHREAD_ONCE_INIT;
+> > +
+> > +     pthread_once(&tpebs_mtx_once, tpebs_mtx_init);
+> > +     return &tpebs_mtx;
+> > +}
+> > +
+> >  static int evsel__tpebs_start_perf_record(struct evsel *evsel, int con=
+trol_fd[], int ack_fd[])
+> >  {
+> >       const char **record_argv;
+> > @@ -59,13 +74,15 @@ static int evsel__tpebs_start_perf_record(struct ev=
+sel *evsel, int control_fd[],
+> >       char cpumap_buf[50];
+> >       struct tpebs_retire_lat *t;
+> >
+> > +     mutex_lock(tpebs_mtx_get());
+> >       list_for_each_entry(t, &tpebs_results, nd)
+> >               tpebs_event_size++;
+> >
+> >       record_argv =3D malloc((10 + 2 * tpebs_event_size) * sizeof(*reco=
+rd_argv));
+> > -     if (!record_argv)
+> > +     if (!record_argv) {
+> > +             mutex_unlock(tpebs_mtx_get());
+> >               return -ENOMEM;
+> > -
+> > +     }
+> >       record_argv[i++] =3D "perf";
+> >       record_argv[i++] =3D "record";
+> >       record_argv[i++] =3D "-W";
+> > @@ -101,6 +118,7 @@ static int evsel__tpebs_start_perf_record(struct ev=
+sel *evsel, int control_fd[],
+> >       list_for_each_entry(t, &tpebs_results, nd)
+> >               t->started =3D true;
+> >
+> > +     mutex_unlock(tpebs_mtx_get());
+> >       return ret;
+> >  }
+> >
+> > @@ -112,9 +130,12 @@ static int process_sample_event(const struct perf_=
+tool *tool __maybe_unused,
+> >  {
+> >       struct tpebs_retire_lat *t;
+> >
+> > +     mutex_lock(tpebs_mtx_get());
+> >       t =3D tpebs_retire_lat__find(evsel);
+> > -     if (!t)
+> > +     if (!t) {
+> > +             mutex_unlock(tpebs_mtx_get());
+> >               return -EINVAL;
+> > +     }
+> >       /*
+> >        * Need to handle per core results? We are assuming average retir=
+e
+> >        * latency value will be used. Save the number of samples and the=
+ sum of
+> > @@ -123,6 +144,7 @@ static int process_sample_event(const struct perf_t=
+ool *tool __maybe_unused,
+> >       t->count +=3D 1;
+> >       t->sum +=3D sample->retire_lat;
+> >       t->val =3D (double) t->sum / t->count;
+> > +     mutex_unlock(tpebs_mtx_get());
+> >       return 0;
+> >  }
+> >
+> > @@ -229,7 +251,6 @@ static struct tpebs_retire_lat *tpebs_retire_lat__n=
+ew(struct evsel *evsel)
+> >               return NULL;
+> >       }
+> >       result->evsel =3D evsel;
+> > -     list_add_tail(&result->nd, &tpebs_results);
+> >       return result;
+> >  }
+> >
+> > @@ -282,16 +303,22 @@ static struct tpebs_retire_lat *tpebs_retire_lat_=
+_find(struct evsel *evsel)
+> >  static int evsel__tpebs_prepare(struct evsel *evsel)
+> >  {
+> >       struct evsel *pos;
+> > -     struct tpebs_retire_lat *tpebs_event =3D tpebs_retire_lat__find(e=
+vsel);
+> > +     struct tpebs_retire_lat *tpebs_event;
+> >
+> > +     mutex_lock(tpebs_mtx_get());
+> > +     tpebs_event =3D tpebs_retire_lat__find(evsel);
+> >       if (tpebs_event) {
+> >               /* evsel, or an identically named one, was already prepar=
+ed. */
+> > +             mutex_unlock(tpebs_mtx_get());
+> >               return 0;
+> >       }
+> >       tpebs_event =3D tpebs_retire_lat__new(evsel);
+> >       if (!tpebs_event)
+> >               return -ENOMEM;
+>
+> The mutex_unlock() is missing here.
 
-Would calling renesas_gbeth_clks_config() in the suspend/resume paths
-cause problems?
+Good catch, I'll fix in v5. Fwiw cleanups would have avoided this.
 
-If not, please consider using plat_dat->init() and plat_dat->exit()
-to control these clocks, and then use devm_stmmac_pltfr_probe()
-which will call the ->init and ->exit functions around the probe
-as necessary and at removal time (and you won't need the remove
-method.)
+Thanks,
+Ian
 
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> Thanks,
+> Namhyung
+>
+> >
+> > +     list_add_tail(&tpebs_event->nd, &tpebs_results);
+> > +     mutex_unlock(tpebs_mtx_get());
+> > +
+> >       /*
+> >        * Eagerly prepare all other evsels on the list to try to ensure =
+that by
+> >        * open they are all known.
+> > @@ -317,6 +344,7 @@ static int evsel__tpebs_prepare(struct evsel *evsel=
+)
+> >  int evsel__tpebs_open(struct evsel *evsel)
+> >  {
+> >       int ret;
+> > +     bool tpebs_empty;
+> >
+> >       /* We should only run tpebs_start when tpebs_recording is enabled=
+. */
+> >       if (!tpebs_recording)
+> > @@ -336,7 +364,10 @@ int evsel__tpebs_open(struct evsel *evsel)
+> >       if (ret)
+> >               return ret;
+> >
+> > -     if (!list_empty(&tpebs_results)) {
+> > +     mutex_lock(tpebs_mtx_get());
+> > +     tpebs_empty =3D list_empty(&tpebs_results);
+> > +     mutex_unlock(tpebs_mtx_get());
+> > +     if (!tpebs_empty) {
+> >               struct pollfd pollfd =3D { .events =3D POLLIN, };
+> >               int control_fd[2], ack_fd[2], len;
+> >               char ack_buf[8];
+> > @@ -436,8 +467,10 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu=
+_map_idx, int thread)
+> >        */
+> >       tpebs_stop();
+> >
+> > +     mutex_lock(tpebs_mtx_get());
+> >       t =3D tpebs_retire_lat__find(evsel);
+> >       val =3D rint(t->val);
+> > +     mutex_unlock(tpebs_mtx_get());
+> >
+> >       if (old_count) {
+> >               count->val =3D old_count->val + val;
+> > @@ -460,9 +493,13 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu=
+_map_idx, int thread)
+> >   */
+> >  void evsel__tpebs_close(struct evsel *evsel)
+> >  {
+> > -     struct tpebs_retire_lat *t =3D tpebs_retire_lat__find(evsel);
+> > +     struct tpebs_retire_lat *t;
+> >
+> > +     mutex_lock(tpebs_mtx_get());
+> > +     t =3D tpebs_retire_lat__find(evsel);
+> > +     list_del_init(&t->nd);
+> >       tpebs_retire_lat__delete(t);
+> > +     mutex_unlock(tpebs_mtx_get());
+> >
+> >       if (list_empty(&tpebs_results))
+> >               tpebs_stop();
+> > --
+> > 2.49.0.504.g3bcea36a83-goog
+> >
