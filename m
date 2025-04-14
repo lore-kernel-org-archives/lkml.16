@@ -1,148 +1,88 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DC019F416;
-	Mon, 14 Apr 2025 17:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA474274FD8;
+	Mon, 14 Apr 2025 17:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652821; cv=none; b=LRayiuqQi4GjEDs6XxdclY4FGdxgDbyzhWr+rLP+lfhsFt+ynvn5kI82rjJocF3d1GIa6fxDHI+pyemHbkaPkxR8wUVmxBpKfE5qEClf1BkuD/6mVUvMu5XfvS7AprZlRko+ANFZa+8rl6d55MD1M4sz5Jok3Mz3aheY0AIBC9U=
+	t=1744652841; cv=none; b=ExLs2iLjlndzByt5su8ZT/xRoY1ontGn+Xua3OJelsXuBK8JqXWUaHTJDiK3eL92NuC8n1ev5aHcP276nEUsY1wunmwr1Ii9znVMYo0Cm+8rEZ+hp7xMuYaGklvZARX012u17H5mE3kZjldpBwL0HhN8cIoxwCLx/HmropsQ2Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652821; c=relaxed/simple;
-	bh=1Zv8lTmcI/PFiiojhYLcEn53jAUhNU90QYC3xNWV2mU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y9nlh2AbU4dT/aj3SbGMvnz0aZB/N0eRbCBXMdTIPJoT34PgY7UmyrnWgZsvY+fyPR26KZAZsQQ4KE9Fzc1YZAETKzj60kr2/LT1lXp6gfzxpZE7DSIanv4X1G7JtRc30QA+ir7VdOvbBZK5Dm8PIHEDzVdS4DhaNS6Mkr5Lbt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BeawCdJR; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744652841; c=relaxed/simple;
+	bh=n52F+k3/sJAswTnbsTZnWYDe6nfThXy3jd0ISfC88Ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cS49kB7XXNaD/zpERDx0TyKwYUtnHijU16WZXViGXfsTCYo2WGqpTAcRbU4NJECQ6wr5Zwp0qeHsQr+HNgjxNoTW1qqSGs3lIP4d8sMe+7A5kXpZsfPduKgXaOXVGdYUeocuvv27j2q2xhibdJuc37p7n0IEdHSMMjmH1rYZ+cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9Kyrger; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeawCdJR"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5262475372eso1989649e0c.2;
-        Mon, 14 Apr 2025 10:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744652819; x=1745257619; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6mnOCYFSjWFOoLwt3RQzlywXL3wyhVGlM01HXZ4BM00=;
-        b=BeawCdJRArepCrSRFG1uaVMsadZgNDqAh1vtavMEdYcpstpxFvae1MB3Nx7i6FmuT1
-         bMaTm9uBtqwl9u70cK4ua9Z80FtWumsXTq+VHyGg3lOvCwNr6Mhp5M5UUCxcqAkFYdaT
-         a4qOYiUipdUHej3aEdJQcIqCp4L79AIKNe++IyujdJebeFliZcZ6kSkB20XocMXqrqlG
-         uYVhxFohXvXdwqqOXUBGEJ55yzSmz5dUO/JK69lKqXEt/EkMIOmhEZVvOpJXsVVIMItl
-         MnFt9hIw3lidsJKRmmodsG+7qqOu+8U4smuyNQklLbmDDD8kQtzU57mWsiRN98Hm4sDg
-         JOZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652819; x=1745257619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6mnOCYFSjWFOoLwt3RQzlywXL3wyhVGlM01HXZ4BM00=;
-        b=rWuqJBTcODBxSc8DESzj4794aRO0W+jFfWnx/khS0Gim2eNYsw20W3LYyaF+dlgEbQ
-         RW6dHsk+1ak+FacwOMHnm0tVOmDW6UnjqXd2SJ0V5nixtAtHzdAtvrCayQSATSAkBRhm
-         +gaQruGBd8Cdk54/PSjgM2ToyvNqHboLRTOGVjAITu314eHZKzgSjE2Jq5501ySGPDNL
-         NRn7FQglRUL9xFy9Pzmvm6FiMdvk71RUaUTKcNvyQCQ5mM8BwA3IfmXQZAabXS7/QfP1
-         ULNNO4igqflxS2Bps8K3o1UzmpFOyBQDwM/qgLOqVpW9H3PdVpzsh2ifsPc9E3p1TBvX
-         LgrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUla2B1P9vZIWvixVa6u5uiDd+Y1PvolFCfIk9DqjVzCHBRVTmIFYXd4w9LZ+y/TwcQzBRD0DMRX3sf8pML@vger.kernel.org, AJvYcCVFi6MRlA/Ze3MaxcC+IG21ANAunoMc1etDJR1gmR4OYIf7faKofVFGSdCMy/erUoSlL+7nfK8c48aN@vger.kernel.org, AJvYcCWy03jGesHx5lKAZ92Dz27GRcswBkoU1VeIQiSneI48GITVsaX3t77n2cGWGjaZoBnPhBjnVWhUx6GN1GxZvISg2nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfTbfbimNIJRhIHwKuHjlNbjFPoqvI5KdOfgp5hAK9aSLGGNcj
-	aN5rrv+XAuklEKSaTFa+yMfzfEJb24Z0yU5/iHzjFq504iD9XPEUzsp89G2tMyO/ToPZa8z5Uel
-	UioQj0hn2appXs1wvNJzFMKT+6ig=
-X-Gm-Gg: ASbGncv4PGyYQO3qsT2UeFI4xyxl1qBhVJE//+b2tpfzAhE2NCM8XkvlHG0eGs+pb3x
-	KlOID4hJwxUaaba6T89gVK5W1FAqawexVUxedwBJM0INQf0ESNMZhOpRyE+pL4QskK4An37/mEN
-	AdzszPNlAVd3NktUt6ek3D3hBuTOqNk5OPHEwUz2WoWQYIGpFx1lydPA==
-X-Google-Smtp-Source: AGHT+IHG+me+Cap139G7KRdec+4aFe6GDDoeldpdn6aC6YTRk3PACqIlElTLgCQ91Nr/5vmRgW/fw2fjaajOvUpED2Q=
-X-Received: by 2002:a05:6122:2521:b0:526:1dde:3613 with SMTP id
- 71dfb90a1353d-527c32bb4d3mr7714686e0c.0.1744652818891; Mon, 14 Apr 2025
- 10:46:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9Kyrger"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DFDFC4CEE2;
+	Mon, 14 Apr 2025 17:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744652840;
+	bh=n52F+k3/sJAswTnbsTZnWYDe6nfThXy3jd0ISfC88Ek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l9KyrgerRz6+gBiMIpCsSo1fLFiB3LvVA1NAP58tT/VKiJj3ZVIp0AzhilveQwBrU
+	 8xyrEKfxiyFSV+KCY+xWlGM97DwZOHLCyriSUbHuECTgUJqzOXznVbbMkepKG9CDAF
+	 RkIewoRm+ZQ3lVaOSumqmBiS/SonkriSOT4ey4akSjonH8VlZ4LcQwfunFzBWntqym
+	 gyvrkrmDuKCG/seitQBA2bcW78sTkur7ozWpQpRldAqzsyyVCj/DfScRKA5shcoDbk
+	 dMH15Bh1ovqdezJx1vgN05joCHhGqJ5jCKFTuG613f1A8Qzcaf4HzAJwiAfAhSpxjy
+	 nVmrme4ipzwAw==
+Date: Mon, 14 Apr 2025 07:47:19 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: rust: add delayed work items
+Message-ID: <Z_1KJ98k7WL5qWfS@slm.duckdns.org>
+References: <20250411-workqueue-delay-v1-1-26b9427b1054@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414130020.248374-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250414130020.248374-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <9c32c9aa-3895-4969-8a33-059c4ad93143@oracle.com> <TYCPR01MB1209398B324FDB1691D80545FC2B32@TYCPR01MB12093.jpnprd01.prod.outlook.com>
- <d71cea86-034c-4448-92de-217ea9d1d018@oracle.com>
-In-Reply-To: <d71cea86-034c-4448-92de-217ea9d1d018@oracle.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 14 Apr 2025 18:46:33 +0100
-X-Gm-Features: ATxdqUHW-vVe9VFrhj0vHaDmswgScuhI_hHpx6AYlPoesNf-zZb2WZLb4ffhwwY
-Message-ID: <CA+V-a8tJoBPBBQ+66m1P3fxJfFXsFg0fWajCoG0GOQRwEapqAg@mail.gmail.com>
-Subject: Re: RE: [PATCH v4 2/3] reset: Add USB2PHY port reset driver for
- Renesas RZ/V2H(P)
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411-workqueue-delay-v1-1-26b9427b1054@google.com>
 
-Hi ALOK,
+On Fri, Apr 11, 2025 at 11:12:29AM +0000, Alice Ryhl wrote:
+> This patch is being sent for use in the various Rust GPU drivers that
+> are under development. It provides the additional feature of work items
+> that are executed after a delay.
+> 
+> The design of the existing workqueue is rather extensible, as most of
+> the logic is reused for delayed work items even though a different work
+> item type is required. The new logic consists of:
+> 
+> * A new DelayedWork struct that wraps struct delayed_work.
+> * A new impl_has_delayed_work! macro that provides adjusted versions of
+>   the container_of logic, that is suitable with delayed work items.
+> * A `enqueue_delayed` method that can enqueue a delayed work item.
+> 
+> This patch does *not* rely on the fact that `struct delayed_work`
+> contains `struct work_struct` at offset zero. It will continue to work
+> even if the layout is changed to hold the `work` field at a different
+> offset.
+> 
+> Please see the example introduced at the top of the file for example
+> usage of delayed work items.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-On Mon, Apr 14, 2025 at 5:51=E2=80=AFPM ALOK TIWARI <alok.a.tiwari@oracle.c=
-om> wrote:
->
-> Hi Fabrizio,
->
-> On 14-04-2025 21:13, Fabrizio Castro wrote:
-> > Hi Alok,
-> >
-> > Thanks for your email.
-> >
-> >> From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-> >> Sent: 14 April 2025 14:46
-> >> Subject: Re: [PATCH v4 2/3] reset: Add USB2PHY port reset driver for R=
-enesas RZ/V2H(P)
-> >>
-> >>
-> >>> +static int rzv2h_usbphy_reset_assert(struct reset_controller_dev *rc=
-dev,
-> >>> +                                unsigned long id)
-> >>> +{
-> >>> +   struct rzv2h_usb2phy_reset_priv *priv =3D rzv2h_usbphy_rcdev_to_p=
-riv(rcdev);
-> >>> +   struct device *dev =3D priv->dev;
-> >>> +   int ret;
-> >>> +
-> >>> +   ret =3D pm_runtime_resume_and_get(dev);
-> >>> +   if (ret) {
-> >>
-> >> nit: it will good if we check similar to reset-rzg2l-usbphy-ctrl.c
-> >> pm_runtime_resume_and_get -> 0 on success, or a negative error code
-> >> otherwise.
-> >> 1 =E2=86=92 if the device was resumed and incremented usage count
-> >> 0 =E2=86=92 if the device was already active or successfully resumed
-> >> if (ret < 0)
-> >
-> > No.
-> >
-> > As you can see from:
-> > https://urldefense.com/v3/__https://github.com/torvalds/linux/blob/mast=
-er/include/linux/pm_runtime.h*L444__;Iw!!ACWV5N9M2RV99hQ!Ly8gpEBQHhYXOeCcKQ=
-avVHfM1XUSy1IubKnHjuQAgvfkK0jrMXc0ebBcvFRvNDcpaJwoUOk1JLLuzih2fLd7JReyapWOo=
-uY$
-> >
-> > pm_runtime_resume_and_get returns a negative error code or 0 (when
-> > successful).
-> >
-> > The same explanation applies to your other comments.
-> >
->
-> Thanks to you for the explanation.
-> I got you point.
->
-> so We are keeping different styles of error checks:
-> In reset-rzv2h-usb2phy.c, we check using if (error),
-> Whereas in reset-rzg2l-usbphy-ctrl.c, we use if (error < 0)."
-> https://github.com/torvalds/linux/blob/master/drivers/reset/reset-rzg2l-u=
-sbphy-ctrl.c#L148
->
-Thanks for pointing that out. I'll update reset-rzg2l-usbphy-ctrl.c to
-use the same style of error checks for consistency.
+FWIW, looks fine to me on the first glance. Please let me know how you want
+to route it. If you want it to be through the wq tree, please let me know
+what to do about the dependencies (I just applied the "remove
+HasWork::OFFSET" patch to wq/for-6.16 but don't have the other one).
 
-Cheers,
-Prabhakar
+Thanks.
+
+-- 
+tejun
