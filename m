@@ -1,49 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBFB29DB9E
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F8219755B;
+	Mon, 14 Apr 2025 11:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744629306; cv=none; b=FqYvugaODA9k13L6OSEdDFyujWjBLGili00H6z1WRw0Wm6H9M0PteD/fD51tc8D3itS3YMvEUXbZnmQYDZAO88zMgO5kRKxBVW5+VgyTeForN5VvcqW6OUVkc9PDzEd33NS/L6UCpAlcMEgs7fiYMrDwh0+SVN7pk1J7JTJmWu8=
+	t=1744629463; cv=none; b=cELYGmbpa622KOUn/lUC6IL/ZJcOnV7hfT23z/PxYSknklwROUc3oFKM+p7aj4orD70vJBNOAumqk5Mf45MpYIaFSY2MzR+EapjO24lD4azJsSLNQz4gCuFKBAf+lK2oEUBpYs2hJvWnPIC4NJlc7hH3CRo8Y8khRAd1HC3OcLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744629306; c=relaxed/simple;
-	bh=8yHKkbWoft8F9o9x75jDIA+cD6IIJndCHKNdCRxUXB8=;
+	s=arc-20240116; t=1744629463; c=relaxed/simple;
+	bh=n+hwV9+d77KoICPvUIsZbu9cRcd26P5Ng0WQswrgyyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJPqWkaRg9hyxyz38CNcJip2mp14JVhVbE+92MBFaUnbJft164pbJx8CVA8parvf4XiQ2IftYcGuZyRmI08Vz9nuF+EuIPwd99nMGS21fvtzHyzcP//rEwJMOywahUPdvLbG7XnQzsRF5USXgXbqePhhpnZFgxh23gOsS9g+irQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIiY88Lq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIiY88Lq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 225BDC4CEE2;
-	Mon, 14 Apr 2025 11:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744629305;
-	bh=8yHKkbWoft8F9o9x75jDIA+cD6IIJndCHKNdCRxUXB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lIiY88LqfgtcHo/NfiDeMJp/NkC1MUfTzb8mUF3W9UC47qtCUJXwswFVuszSOoYDj
-	 mAv4NgnZHBDNgK76G8J9imNBkukYlejO+ypo8D5CJasPRzSqGZHp3Z/qQAAvIdFYSu
-	 ABiv1sHU2mOjushl3E5q+VzsnpQ6sKKrm8OqCdtpb29739iONLKqyYJgLywqct9z+W
-	 iLIdkLfVhFXfLq8UBH4CpWW5bB5a1osu+yVn5b8n+Xf4OGgnA4sORfaPltYPqCtm0U
-	 gbcqTN1ElfPLwaam8/IMSK7mc+Ehom0vE9bJ7jnjcM13u4YBQPQCFNi32db1f+cIgB
-	 kJNytXd9WS9Zg==
-Date: Mon, 14 Apr 2025 13:14:58 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-	luto@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
-	tglx@linutronix.de, willy@infradead.org, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH v3 1/4] x86/clear_page: extend clear_page*() for
- multi-page clearing
-Message-ID: <Z_zuMvZq43nc0SoO@gmail.com>
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
- <20250414034607.762653-2-ankur.a.arora@oracle.com>
- <Z_yr_cmXti4kXHaX@gmail.com>
- <20250414110259.GF5600@noisy.programming.kicks-ass.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y0PpvLAYVtd/D19rC8PTegwO+j+kPY4soRgCFnONv7nmo/fiuSkNQ0QIkHx6X1ZjVyB7Z5445iQAB76E4UFqysysSrZ29Q7sRZDFzXdtiQiog/5fE7BTIev7SnpPBWt+WPeffsm34lJu9Htr3LqWrqs6mLzuw1HE6da3f8ITboc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFB4E1007;
+	Mon, 14 Apr 2025 04:17:38 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4413F66E;
+	Mon, 14 Apr 2025 04:17:37 -0700 (PDT)
+Date: Mon, 14 Apr 2025 12:17:34 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Dan Carpenter" <dan.carpenter@linaro.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 5/7] firmware: imx: Add i.MX95 SCMI LMM driver
+Message-ID: <20250414-ebony-slug-of-felicity-421b0f@sudeepholla>
+References: <20250408-imx-lmm-cpu-v4-0-4c5f4a456e49@nxp.com>
+ <20250408-imx-lmm-cpu-v4-5-4c5f4a456e49@nxp.com>
+ <20250414-wonderful-cute-bandicoot-accb6b@sudeepholla>
+ <PAXPR04MB8459195AAF65D38AFA1D4F9688B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250414-tiny-classic-barnacle-5f8c8f@sudeepholla>
+ <PAXPR04MB84593BB91063D13BB05BEB5988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <PAXPR04MB84598733FA39A7402E91DA1988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,102 +53,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414110259.GF5600@noisy.programming.kicks-ass.net>
+In-Reply-To: <PAXPR04MB84598733FA39A7402E91DA1988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Mon, Apr 14, 2025 at 08:32:29AM +0200, Ingo Molnar wrote:
+On Mon, Apr 14, 2025 at 11:00:20AM +0000, Peng Fan wrote:
 > 
-> > >  static inline void clear_page(void *page)
-> > >  {
-> > > +	unsigned int length = PAGE_SIZE;
-> > >  	/*
-> > > -	 * Clean up KMSAN metadata for the page being cleared. The assembly call
-> > > +	 * Clean up KMSAN metadata for the pages being cleared. The assembly call
-> > >  	 * below clobbers @page, so we perform unpoisoning before it.
-> > 
-> > >  	 */
-> > > -	kmsan_unpoison_memory(page, PAGE_SIZE);
-> > > -	alternative_call_2(clear_page_orig,
-> > > -			   clear_page_rep, X86_FEATURE_REP_GOOD,
-> > > -			   clear_page_erms, X86_FEATURE_ERMS,
-> > > +	kmsan_unpoison_memory(page, length);
-> > > +
-> > > +	alternative_call_2(clear_pages_orig,
-> > > +			   clear_pages_rep, X86_FEATURE_REP_GOOD,
-> > > +			   clear_pages_erms, X86_FEATURE_ERMS,
-> > >  			   "=D" (page),
-> > > -			   "D" (page),
-> > > +			   ASM_INPUT("D" (page), "S" (length)),
-> > >  			   "cc", "memory", "rax", "rcx");
-> > >  }
-> > >  
-> > > diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
-> > > index a508e4a8c66a..bce516263b69 100644
-> > > --- a/arch/x86/lib/clear_page_64.S
-> > > +++ b/arch/x86/lib/clear_page_64.S
-> > > @@ -13,20 +13,35 @@
-> > >   */
-> > >  
-> > >  /*
-> > > - * Zero a page.
-> > > - * %rdi	- page
-> > > + * Zero kernel page aligned region.
-> > > + *
-> > > + * Input:
-> > > + * %rdi	- destination
-> > > + * %esi	- length
-> > > + *
-> > > + * Clobbers: %rax, %rcx
-> > >   */
-> > > -SYM_TYPED_FUNC_START(clear_page_rep)
-> > > -	movl $4096/8,%ecx
-> > > +SYM_TYPED_FUNC_START(clear_pages_rep)
-> > > +	movl %esi, %ecx
-> > >  	xorl %eax,%eax
-> > > +	shrl $3,%ecx
-> > >  	rep stosq
-> > >  	RET
-> > > -SYM_FUNC_END(clear_page_rep)
-> > > -EXPORT_SYMBOL_GPL(clear_page_rep)
-> > > +SYM_FUNC_END(clear_pages_rep)
-> > > +EXPORT_SYMBOL_GPL(clear_pages_rep)
-> > >  
-> > > -SYM_TYPED_FUNC_START(clear_page_orig)
-> > > +/*
-> > > + * Original page zeroing loop.
-> > > + * Input:
-> > > + * %rdi	- destination
-> > > + * %esi	- length
-> > > + *
-> > > + * Clobbers: %rax, %rcx, %rflags
-> > > + */
-> > > +SYM_TYPED_FUNC_START(clear_pages_orig)
-> > > +	movl   %esi, %ecx
-> > >  	xorl   %eax,%eax
-> > > -	movl   $4096/64,%ecx
-> > > +	shrl   $6,%ecx
-> > 
-> > So if the natural input parameter is RCX, why is this function using 
-> > RSI as the input 'length' parameter? Causes unnecessary register 
-> > shuffling.
+> Oops, I just checked wrong Kconfig under drivers/firmware/arm_scmi/
+> vendors/imx
 > 
-> This symbol is written as a C function with C calling convention, even
-> though it is only meant to be called from that clear_page() alternative.
->
-> If we want to go change all this, then we should go do the same we do
-> for __clear_user() and write it thusly:
+> Build this for ARM32 i.MX is ok, I just think no need. So add
+> a ARM64 dependency.
 > 
-> 	asm volatile(ALTERNATIVE("rep stosb",
-> 				 "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRS)
-> 				 : "+c" (size), "+D" (addr), ASM_CALL_CONSTRAINT
-> 				 : "a" (0))
-> 
-> And forget about all those clear_page_*() thingies.
 
-Yeah.
+OK, I will drop the ARM64 dependency when applying. I also don't understand
+the dependency on i.MX firmware LMM and CPU drivers in the scmi vendor
+protocol as the dependency should be other way around. But I see Arnd had
+fixed it so I will keep it as you have posted to keep them all aligned.
 
-Thanks,
-
-	Ingo
+-- 
+Regards,
+Sudeep
