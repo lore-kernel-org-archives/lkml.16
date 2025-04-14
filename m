@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD132673A3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D868C25E47F;
 	Mon, 14 Apr 2025 10:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625061; cv=none; b=DKQdcTzkA7gx0mOFaPL6/CJVtuG+W2ygp6qtKAalqOzR5Wb3OoHL1Ieaan4/Yi1Mn3d1Y8MZ4D87cJCRmkBXuOOhvfhK8V8+LlPAMlBpx03Au2bjApAfwhsLwahZ79JZ5XqwMFG2+YWMhfm8lhslp355UleT2IDXYx4hl57pPMo=
+	t=1744625062; cv=none; b=Ezu6x0muM6JfT9fCQoZhE6Q9VFWe0k+ZUw5L2vM0BGzVML89W09iUOdoBb5vJ10VcQj1fwUTeNdhC6GlWio+rKb2xon0YYV/j4/pB3oiPZ7fZD6dwucam5er+IOHFPpp7+N3PGylTxU2NmAEGfFwJicUTPEwnTwOwCfJA3+eVsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625061; c=relaxed/simple;
-	bh=5PFQYjaUnb3ZPXJCpgDL6Af4OLub5qhRthcMuDczcC4=;
+	s=arc-20240116; t=1744625062; c=relaxed/simple;
+	bh=ePHhqI9hu+n6tZEJhbHqhlZGeiDxvd33Qi45kz+hnIY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fm4feHVh6JaWtUbIE2h2b737p5MkX8tzPQBzfvQtpD+HxuYNOkk+f+XDDrgyuIO2RLQQPeVPSNIQGOJ6/bzfHKIGgqIRy5X5mCwGsL7KT4XrPnvuC8rD++i/sDuXetEb1U+LiYky0hbQr/Xki3qC1bEQUidNfbWp4tWK7s0wRCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iBZQnRCd; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=UDYAUsfFhKk2vjNddu/uHDFguRYo27I5eHFX6yDaEdwCEYNfjBLHVIeDzQ9o3JYZRkyLE42/M6QechpUJS8zhw9EEcPaFGEimIuSOuv6LVEg+escGfanS4MtZVMcF3F6nHUQAzmZBLQRBchVlNgpID18IiJdQqRbkLY4tpL1g8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CPwcXMBh; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iBZQnRCd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CPwcXMBh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1744625060; x=1776161060;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5PFQYjaUnb3ZPXJCpgDL6Af4OLub5qhRthcMuDczcC4=;
-  b=iBZQnRCd3CJfdxtZ6pP0Ksi0X3B9AN4A3RB3rN9TUKD8iLYJBwVnH+Jd
-   TlvYGPsdXn7qF82pz/OiwMG+OQh8tQd8B5cLOGyReVHLwImWxDW3pv6kF
-   ECRk/uiXqlbyVk9YLVIXh51K+dBMLWX7K2U0e/HgrG1Ty5soGTIEFePck
-   mCQsQDaxjEM2dV4GP5F7agr1+X641WOIDkNdMrZsAjVCAiKQLEsviHr+V
-   rb3QF2pI5frI3yODuYZ55Y/PMF4O/6zMPcbyczq6PYb1DdQIGvD8aeXaP
-   5dO2JpeGLWfe3PQOPR12XDN3huX93Sxt4Ild5Y3RFnErxJyFGSSigMNId
-   w==;
-X-CSE-ConnectionGUID: 4n2AaKJPRly6hYA2ULvrvQ==
-X-CSE-MsgGUID: 87stsSEhS1itpEKZPKU/Ng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56747117"
+  bh=ePHhqI9hu+n6tZEJhbHqhlZGeiDxvd33Qi45kz+hnIY=;
+  b=CPwcXMBh/CDz2zskngxx7D1QGm6rBucDk3APy6w3rB7uhU44IXILZGWW
+   1hbG/jwOSAGTYE+x7k2PdjjXVr8XE1LwuoD+kZScFsRe+7raKurpKJA1H
+   /cfg/sujOwyN+gcb0IFRghPSx6hYIr2Asu5Awnkrs06nK8jMbwxa/9IfH
+   44fOLAZYS6YrNDt3fk+LVipq66Z8ucd1XP/V+Be3CHm+VjOYnz7N+26VF
+   ILPVlW63wsAyhvwmsSzyOBiy6ppHpUkSb/HA8XQ+TyXhRvRYFL0pX25cM
+   jYijFhhGw3VWipmzl7NYbz8kYCobNt9DyMknNlDTnZDAc4HNyqQO9tTcB
+   g==;
+X-CSE-ConnectionGUID: y2j4/SR5SR2nnDFMRPmVqQ==
+X-CSE-MsgGUID: vQ8VGCfuQJqV1SYb8F566Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46177062"
 X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="56747117"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:04:16 -0700
-X-CSE-ConnectionGUID: DelqBiD6RjWU8Mo/iJTaew==
-X-CSE-MsgGUID: 0QDMolCpSeKqBEc9MZnVvQ==
+   d="scan'208";a="46177062"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:04:16 -0700
+X-CSE-ConnectionGUID: KvEKAKpeQ9uggmWlMc+kAA==
+X-CSE-MsgGUID: yGcfJo0KQHG2EQg6V62NgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="134747319"
+   d="scan'208";a="130100420"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 14 Apr 2025 03:04:13 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 14 Apr 2025 03:04:13 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E0C28A90; Mon, 14 Apr 2025 13:04:11 +0300 (EEST)
+	id CD9E920B; Mon, 14 Apr 2025 13:04:11 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -56,9 +56,9 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH v4 3/7] i2c: core: Switch to fwnode APIs to get IRQ
-Date: Mon, 14 Apr 2025 13:01:53 +0300
-Message-ID: <20250414100409.3910312-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 1/7] i2c: core: Drop duplicate check before calling OF APIs
+Date: Mon, 14 Apr 2025 13:01:51 +0300
+Message-ID: <20250414100409.3910312-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
 References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
@@ -70,59 +70,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switch to fwnode APIs to get IRQ. In particular this enables
-a support of the separate wakeup IRQ. The rest is converted
-just for the sake of consistency and fwnode reuse.
+OF APIs are usually NULL-aware and return an error in case when
+device node is not present or supported. We already have a check
+for the returned value, no need to check for the parameter.
 
 Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/i2c/i2c-core-base.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/i2c/i2c-core-base.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index edab56e5d5e5..04985abe0e5d 100644
+index 7ad1ad5c8c3f..c14ffd6190d3 100644
 --- a/drivers/i2c/i2c-core-base.c
 +++ b/drivers/i2c/i2c-core-base.c
-@@ -26,14 +26,13 @@
- #include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
--#include <linux/irqflags.h>
-+#include <linux/irq.h>
- #include <linux/jump_label.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of_device.h>
- #include <linux/of.h>
--#include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pinctrl/devinfo.h>
- #include <linux/pm_domain.h>
-@@ -510,9 +509,9 @@ static int i2c_device_probe(struct device *dev)
- 			pm_runtime_get_sync(&client->adapter->dev);
- 			irq = i2c_smbus_host_notify_to_irq(client);
- 		} else if (is_of_node(fwnode)) {
--			irq = of_irq_get_byname(dev->of_node, "irq");
-+			irq = fwnode_irq_get_byname(fwnode, "irq");
- 			if (irq == -EINVAL || irq == -ENODATA)
--				irq = of_irq_get(dev->of_node, 0);
-+				irq = fwnode_irq_get(fwnode, 0);
- 		} else if (is_acpi_device_node(fwnode)) {
- 			bool wake_capable;
+@@ -1209,11 +1209,9 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
+ 	u32 addr = default_addr;
+ 	int i;
  
-@@ -547,7 +546,7 @@ static int i2c_device_probe(struct device *dev)
- 	if (client->flags & I2C_CLIENT_WAKE) {
- 		int wakeirq;
+-	if (np) {
+-		i = of_property_match_string(np, "reg-names", name);
+-		if (i >= 0)
+-			of_property_read_u32_index(np, "reg", i, &addr);
+-	}
++	i = of_property_match_string(np, "reg-names", name);
++	if (i >= 0)
++		of_property_read_u32_index(np, "reg", i, &addr);
  
--		wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
-+		wakeirq = fwnode_irq_get_byname(fwnode, "wakeup");
- 		if (wakeirq == -EPROBE_DEFER) {
- 			status = wakeirq;
- 			goto put_sync_adapter;
+ 	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
+ 	return i2c_new_dummy_device(client->adapter, addr);
+@@ -1651,12 +1649,10 @@ int i2c_add_adapter(struct i2c_adapter *adapter)
+ 	struct device *dev = &adapter->dev;
+ 	int id;
+ 
+-	if (dev->of_node) {
+-		id = of_alias_get_id(dev->of_node, "i2c");
+-		if (id >= 0) {
+-			adapter->nr = id;
+-			return __i2c_add_numbered_adapter(adapter);
+-		}
++	id = of_alias_get_id(dev->of_node, "i2c");
++	if (id >= 0) {
++		adapter->nr = id;
++		return __i2c_add_numbered_adapter(adapter);
+ 	}
+ 
+ 	mutex_lock(&core_lock);
 -- 
 2.47.2
 
