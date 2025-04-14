@@ -1,73 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9767E267395
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D8F2BE7A8
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744636566; cv=none; b=K1JFD4+oAc+z7mihEZM0eT2vTqvMC7G5k8JRp7UumPSXTvr7ICzS9CHD1g8eTo77VGEknjchY/JR0GsMxBtQBfIrbTUFVLkkCe0c7Xhgxu2P4KtY27fqx30HbkUfr/Zq6myTyO3D4TEYJV+883mbgUxMzNUoKw6SQABWcWR34hM=
+	t=1744636633; cv=none; b=nZXQvBMKFUN5ykWRRf4LsK1cCzGBXm8hEllIvmLGBsjyd7Jyv/JkyAhCjF2X2rZ6NirfZx8rmxSBq7KFqeGKfvjxwj94q86XKl/qNseq2yztWbEh+jYiPsyJaD/jgeAccFzN0dG6gAkkJBIPFshgFiaPreJRr+4GfOlq7QnP7zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744636566; c=relaxed/simple;
-	bh=lxd1ChqF718weWD+hNXDxRZqp4DmKNuj/omQ+yf+A9I=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ao3p62jWvsc9iFZSvOsUmCAdK4CUNAxGO3afr03HtmMmNviDDHwhckcDuYXluNKylQ9aNHVBzpI/N+98yFX12yeDB8az8fvctKA6dO5VH1vNxlkPVM0/rpq3T05MnHYSHO5NQikvw6dlG4QkO027OGoEiV0cE9mfFjztTuCijPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aZwR6tre; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744636633; c=relaxed/simple;
+	bh=Zrb43kFWTVR3Ap7CSrwLk4KdL5IDZkubcFHeBrO1oPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VrRMekApqSf7e2DR66Tii46w2pBMt4KM3P83w9Si3CKNk3G3BF+GcxfRNSgV2bSgs8aGLPbwRi6eRIZPUKFNFZr4x2nHeY8ipwKwXeLpm1/zbbLmGqVw/M1+JXM24ONwo7tzgYtyE/PFu6tdeCM77crJCySACLgAv74YpzOaGKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LbrucH6q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZwR6tre"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744636563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CRlj2XiJciKq03l66vQT5GTuJKT9oCmFfbWUfZiluAk=;
-	b=aZwR6tre+CLY9kmSATStuF1lPjPqvDMlRQK1rDRJHZkZjJU4WxKhTbd8PPPt0aWePL4729
-	/zqdHOk+PJZgjAqkmgNX/XCa3838HYFHmKMUGmZOBa4DSrh2qf53YsAgGwbBvzmZrnGusp
-	fatv2L8o8wnVeU3XcMCjrxeZpAKJRDk=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-tHM6XpffO4GSb_Q1Ybaf8Q-1; Mon, 14 Apr 2025 09:16:02 -0400
-X-MC-Unique: tHM6XpffO4GSb_Q1Ybaf8Q-1
-X-Mimecast-MFC-AGG-ID: tHM6XpffO4GSb_Q1Ybaf8Q_1744636561
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d4423d0c49so42067445ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:16:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LbrucH6q"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99o18017652
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:17:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jhLo8hSG2Sld52yb+t7u12oLKb8fAopxH7KGEdG/7u4=; b=LbrucH6qkNHhnwDq
+	VqnpY1Uu8aBi8aT+FJVkIaU8ZYRL/rz6ufU4ip4mnCqLAYkJ0OaPiY/j23TFaE0l
+	YKkTRQftvLF3mpuXf8/NMJMH23E2XduSwpoAk25TMveScHlywqdbT73Wnr8QcUk7
+	8pS9v275A7I20BwTvszBWhrW+5fJZU10moodSdyHboSQMArAvJkkcGmO5gHsbvoj
+	kvY1sx8Wij1X+IkEgRBeqh/VuqSk9/u2zCs3ghYDfAQ2vwt45Gn7mEW68TkGet/x
+	seRCC4ZdBquBDq2XzX5ncnoLAfaWJU2ecqNK7uERhnuOvlHcundxmb8mc3A2TiDs
+	nupA+A==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vcqjb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:17:10 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c555d4ad75so29686185a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:17:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744636561; x=1745241361;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
+        d=1e100.net; s=20230601; t=1744636629; x=1745241429;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CRlj2XiJciKq03l66vQT5GTuJKT9oCmFfbWUfZiluAk=;
-        b=obxzEzLgrRzWIqfT6EJU78vaGyuFSi1K3o8ySmKtPYVkAzBuV5PymF3vuhIswQJN/m
-         eakyIRoe2rb/X2mTQmzceacNiVqeTU31RPQ7yVvXdw0prBaSV0yTUacKfSz5U4JfJ6/d
-         AoVLELxp4YFPf/tAiCxEA8um6n/nw766atnu99jNGwSYLGiQkrEYELmcp1cTL1Ei+Dad
-         OLT5K+XGFiv+Nv9ePvXC6iwqhp0LdzL8MdE2qB5B8zUr3Z80vbQW87hQNZtVwsNo+hVh
-         Hw6OeXEAkI2DL0ntZAH+4/EEHJxVz+9KHYgVbV5LnThisT3Yb3FdvQ+CoM7YfpTtPsnz
-         G3Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwpMiTFY3ynM6bOad+Ci1s4tfHL9NBYWLiAfVy/yg0V+S6/UigwCAD7FnBT+Hp8iXVodrVganlJt2YNvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsirC+ewJrRmeerVHAtQZrCnuR4et5LHSx+lCabfV4QnCviOCi
-	Ap8b3nSSM7Tvox7X1c/+ZRsMdyjaF38isYaaN8SANmsqIIM43E7Crjsa70Xs3J1i5lDgazSHIrp
-	9qKJ+tbDlAIlfezks9ZtUqSJkSIrEkAkmpz7vU+Zu6e3mb6e5TP1g4xlMYEenmJXswYdHTg==
-X-Gm-Gg: ASbGncv+EHexoUIfwsshLddiUzJYm9iUQxbtoFb0TOX+HuOtnWV1s4hMIbZk9BwnQWW
-	I1hbGN+A9kaNTyvPSg4s4/ILA3vfagLrDpNskV2HaTqMzpbOdobVTMdR9xo3MZJQOXRGCn+UTXI
-	LwHEdQVcmXGDiV5rHeApYYHf96FM6MBwcIs8+ndAfUzKPgOZ+HitgIQ1O+4+S6WeGs+DYVkkBc8
-	M7Ys6g5khK1DlIP6uskg9xE1Om9kkmxhx5s1ypiGVV8qTtLdXkX2Lw99oGMjfiZk3YRjZsCo+8V
-	5HXHnPE8QSWheATrPchoXv5axGeFGt1qI3c1D7MTLtoXlxR+rOrocrFsRw==
-X-Received: by 2002:a05:6e02:3e03:b0:3d3:fbf9:194b with SMTP id e9e14a558f8ab-3d7ec0e19e8mr104215035ab.0.1744636560576;
-        Mon, 14 Apr 2025 06:16:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExgHhxXQS+UkS433TZApZsN2X07PGZoXRirGDSpfOpQyLI61v16Ezptx5B12okrDFUSAgvBg==
-X-Received: by 2002:a05:6e02:3e03:b0:3d3:fbf9:194b with SMTP id e9e14a558f8ab-3d7ec0e19e8mr104214525ab.0.1744636560045;
-        Mon, 14 Apr 2025 06:16:00 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc5826f5sm27429815ab.49.2025.04.14.06.15.58
+        bh=jhLo8hSG2Sld52yb+t7u12oLKb8fAopxH7KGEdG/7u4=;
+        b=jx+RbWINmaqYPY7cM5ugUyozBwO3BiqeiOv1gtGQIrx9lSEjQlyX04etr8YHEX4a4g
+         TYce051O6piDKqrOKX6ION/nKth5OsoOU41R+4Z8Lfj8CaoSFAlIuB41VZ/FF5XwOtz0
+         FHrpvzBejde32ODcBlxJuGenSBalrSgpwS1YcUfR4RXXuzEAOeqhMe+rsN4zLr/bMcCb
+         nFGZSQ9jjYWJqayBkTWjYXlAC6AJPJd+Ln8dymeX2vbXzofW8QjeHrftzF1aIgwyEV5Q
+         3ah0c03J7uTgJSMFpzJb30E1HPe1UpYvSNtVQ71teL8zsNUxWMGiBz7j2cGqdvRdtuIS
+         C0Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXeACiu0o20optelgaZ5PX+Zsa4BMlGDiliSmVCkxs7aNiZjmB3Enb8tBH8l3N5H8ALavzlqkTDckgG7Wo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz88sSg6GRyf+xZ+UUOkplN9Or21AMmP291Zh7wuMkE4d81XyNQ
+	5iY4RsaxRi0l8TcbvTZ2g3FBYAEiYmit8Ahk6Hfg6TZj2/lLihcdBPSyZiDbwOla4s2WGEZRfe2
+	u1ldqimaeSledsxh6uo1k5NXXCOl9vHiNKOjoIDf01ImLyJMb/MuBc9cW7Uf5cr8=
+X-Gm-Gg: ASbGnct/rHttcWXFzw1u7+0lDE6uhK9474DkmswRyOGKbbmHm1Cb1uTBNiwHRuj/vb9
+	89moYYZ8MZg+QDOzzcKZwxWdk5urk/jj/y0gmcSM/ZumG4/eKK8jn2OU2JTnsfXLaMv09KsZed/
+	+FcpDHbOji7ig8np5ft9DCWQGQbOhGdjqTpG4R0yA8gqk1fHceNdOKQJpFW9dqj2Ee3Vb4mevCu
+	Luaz6zuKruYrj30BEHGasm2fp/TTYv7tHI+i5bmopx10Xf40xMpBsY9QWQ6hRhnSMXgL07/Wn7r
+	c6GkwzPcNanc/k44NSIeuqR0LvQH9a7pNEsHOReEdaMJadwhltgfVvIT0f0MrtKx1w==
+X-Received: by 2002:a05:620a:4093:b0:7c3:d1b9:e667 with SMTP id af79cd13be357-7c7af1037bfmr760507885a.5.1744636629144;
+        Mon, 14 Apr 2025 06:17:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEt6LiWKzY6fMPs2bAMNAcdjvfSSy0XirJTkEaglVnC5MXIbVEOqGO5m0fSpi/xvMwYDjLw1Q==
+X-Received: by 2002:a05:620a:4093:b0:7c3:d1b9:e667 with SMTP id af79cd13be357-7c7af1037bfmr760496185a.5.1744636626494;
+        Mon, 14 Apr 2025 06:17:06 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ef61911sm4872735a12.32.2025.04.14.06.17.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 06:15:59 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <6572da04-d6d6-4f5e-9f17-b22d5a94b9fa@redhat.com>
-Date: Mon, 14 Apr 2025 09:15:57 -0400
+        Mon, 14 Apr 2025 06:17:05 -0700 (PDT)
+Message-ID: <629bcae5-f999-448c-885f-4737ac0c64c3@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 15:17:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,86 +74,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-References: <20250414021249.3232315-1-longman@redhat.com>
- <20250414021249.3232315-2-longman@redhat.com>
- <kwvo4y6xjojvjf47pzv3uk545c2xewkl36ddpgwznctunoqvkx@lpqzxszmmkmj>
+Subject: Re: [PATCH v3 2/4] soc: qcom: llcc-qcom: Add support for LLCC V6
+To: Melody Olvera <quic_molvera@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250324-sm8750_llcc_master-v3-0-2afd5c0fdbde@quicinc.com>
+ <20250324-sm8750_llcc_master-v3-2-2afd5c0fdbde@quicinc.com>
+ <0ca929c6-6ff5-4ab0-8ebf-aed3cc5f350b@oss.qualcomm.com>
+ <92b6ea9d-0b13-472f-afad-2b67d869a0bb@quicinc.com>
 Content-Language: en-US
-In-Reply-To: <kwvo4y6xjojvjf47pzv3uk545c2xewkl36ddpgwznctunoqvkx@lpqzxszmmkmj>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <92b6ea9d-0b13-472f-afad-2b67d869a0bb@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: Fk7CqS_kniI2lmRd_nqduWdxMwxdrrLB
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fd0ad6 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=gk2TToWdodi_jzWV97IA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: Fk7CqS_kniI2lmRd_nqduWdxMwxdrrLB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140097
 
+On 4/9/25 11:16 PM, Melody Olvera wrote:
+> 
+> 
+> On 3/26/2025 6:39 AM, Konrad Dybcio wrote:
+>> On 3/24/25 9:29 PM, Melody Olvera wrote:
+>>> Add support for LLCC V6. V6 adds several additional usecase IDs,
+>>> rearrages several registers and offsets, and supports slice IDs
+>>> over 31, so add a new function for programming LLCC V6.
+>>>
+>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>>> ---
+>> [...]
+>>
+>>> +
+>>> +    if (config->parent_slice_id && config->fixed_size) {
+>>> +        attr2_val |= FIELD_PREP(ATTR2_PARENT_SCID_MASK, config->parent_slice_id);
+>>> +        attr2_val |= ATTR2_IN_A_GROUP_MASK;
+>>> +    }
+>> This is fragile if parent_slice_id == 0, but let's say this is not an issue
+>> for now..
+> 
+> Agreed, but I don't anticipate that being an issue. I don't think any slice ID is/will be 0.
+> 
+>>
+>>> +
+>>> +    attr3_val = MAX_CAP_TO_BYTES(config->max_cap);
+>>> +    attr3_val /= drv_data->num_banks;
+>>> +    attr3_val >>= CACHE_LINE_SIZE_SHIFT;
+>>> +
+>>> +    ret = regmap_write(drv_data->bcast_regmap, attr0_cfg, attr0_val);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    ret = regmap_write(drv_data->bcast_regmap, attr1_cfg, attr1_val);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    ret = regmap_write(drv_data->bcast_regmap, attr2_cfg, attr2_val);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    ret = regmap_write(drv_data->bcast_regmap, attr3_cfg, attr3_val);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    slice_offset = config->slice_id % 32;
+>>> +    reg_offset = (config->slice_id / 32) * 4;
+>>> +
+>>> +    wren = config->write_scid_en << slice_offset;If I'm reading the wrappers right, you should be able to drop both the
+>> shifting and intermediate variables with regmap_assign_bits()
+> 
+> I'm not so sure. I tried with regmap_assign_bits and it seems the correct way to use it would be roughly:
+> 
+> regmap_assign_bits(drv_data->bcast_regmap,
+>             cfg->reg_offset[LLCC_TRP_WRS_EN], BIT(config->slice_id),
+>             (bool)config->write_scid_en);
+> 
+> but the third argument is an unsigned int (the BIT(config->slice_id)). I tried just putting the slice_id there,
+> but got some bizarre results leading me to believe that's not the correct way to use this api. If I'm missing
+> something, let me know, but AFAICT, this is six one way, a half-dozen another.
 
-On 4/14/25 8:42 AM, Michal Koutný wrote:
-> On Sun, Apr 13, 2025 at 10:12:48PM -0400, Waiman Long <longman@redhat.com> wrote:
->> 2) memory.low is set to a non-zero value but the cgroup has no task in
->>     it so that it has an effective low value of 0. Again it may have a
->>     non-zero low event count if memory reclaim happens. This is probably
->>     not a result expected by the users and it is really doubtful that
->>     users will check an empty cgroup with no task in it and expecting
->>     some non-zero event counts.
-> I think you want to distinguish "no tasks" vs "no usage" in this
-> paragraph.
+Yeah let's not waste time on this
 
-Good point. Will update it if I need to send a new version.
-
-
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -5963,6 +5963,10 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
->>   
->>   		mem_cgroup_calculate_protection(target_memcg, memcg);
->>   
->> +		/* Skip memcg with no usage */
->> +		if (!mem_cgroup_usage(memcg, false))
->> +			continue;
->> +
->>   		if (mem_cgroup_below_min(target_memcg, memcg)) {
-> As I think more about this -- the idea expressed by the diff makes
-> sense. But is it really a change?
-> For non-root memcgs, they'll be skipped because 0 >= 0 (in
-> mem_cgroup_below_min()) and root memcg would hardly be skipped.
-
-I did see some low event in the no usage case because of the ">=" 
-comparison used in mem_cgroup_below_min(). I originally planning to 
-guard against the elow == 0 case but Johannes advised against it.
-
-
->
->
->> --- a/tools/testing/selftests/cgroup/test_memcontrol.c
->> +++ b/tools/testing/selftests/cgroup/test_memcontrol.c
->> @@ -380,10 +380,10 @@ static bool reclaim_until(const char *memcg, long goal);
->>    *
->>    * Then it checks actual memory usages and expects that:
->>    * A/B    memory.current ~= 50M
->> - * A/B/C  memory.current ~= 29M
->> - * A/B/D  memory.current ~= 21M
->> - * A/B/E  memory.current ~= 0
->> - * A/B/F  memory.current  = 0
->> + * A/B/C  memory.current ~= 29M [memory.events:low > 0]
->> + * A/B/D  memory.current ~= 21M [memory.events:low > 0]
->> + * A/B/E  memory.current ~= 0   [memory.events:low == 0 if !memory_recursiveprot, > 0 otherwise]
-> Please note the subtlety in my suggestion -- I want the test with
-> memory_recursiveprot _not_ to check events count at all. Because:
-> 	a) it forces single interpretation of low events wrt effective
-> 	   low limit
-> 	b) effective low limit should still be 0 in E in this testcase
-> 	   (there should be no unclaimed protection of C and D).
-
-Yes, low event count for E is 0 in the !memory_recursiveprot case, but 
-C/D still have low events and setting no_low_events_index to -1 will 
-fail the test and it is not the same as not checking low event counts at 
-all.
-
-Cheers,
-Longman
-
+Konrad
