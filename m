@@ -1,268 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4850B289377;
-	Mon, 14 Apr 2025 14:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C309028A1EA;
+	Mon, 14 Apr 2025 14:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639203; cv=none; b=JLiktMU8SAnVrz2mC6MSROyZxdb8I2dTF2s8/2Hzw/FuC9L4z+kOGjTGEu9IwRTVYT7R6bEE8gq03BBjDMYQH89t50pm6wMlPvQ6EM1Z1CpFdmlA4nSwn4zMYp4M0v2NrlRAtr92FrD/9rpXsw5T7uw6pNMcMS3iVOgBF46V1Y8=
+	t=1744639210; cv=none; b=SVtOZb8XIf5q9bzXulJfpZe4ZA3U95VKJ5KxOLjFk2JZejvxXGlEMYUuv8OZG9k6JKjoSwB15YpnavIxR4+cZ18YAn6XdeEyx5RODPPbxkqsPlik+DvoZjdMWr65mO+9R6NCByGuaXao4mtW45Q6zesH1tD1kH+RTJ8IshP7vK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639203; c=relaxed/simple;
-	bh=nY2jtEZRHlv9V/RIKzrxyGRKCAifwpg4RNap/n4sscE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tmtq6bxXJrGodkpAQaBzE1ooACuRzimD8/vcUqCc4sQp9Ess66qyl873hAmK8tzzKnxCmDyws+EPf+cWGNgtnrO0pxxn8x99N0P8tnHpR02oUdQlbr4ouVhz6KgTYASFvTKuchVHFHnLJP7JgFKAk2sRNhhwvAY7kB4OWGJvPoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0cTqYE0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744639210; c=relaxed/simple;
+	bh=uO+eV4aZVfBwQEB4CC07gNteKYe4Wixr9odzUwRols4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2u3MTKuUJxBul+PmbIsAfJTX6ZQ4Da0pHsRdJhSK0mmTso12Rk+45flJerYee3VjV/7nqOGVwwrq+VCbVHreXawJ4wU4Pg+U5JJb3Czm6q7ZQ5m3xorjivxw1dUoGaBJ++7VUaByOjZMDiQXJfwtjRaR9G6RLy6Jb1+fjA1FtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCxAurar; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0cTqYE0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF91DC4CEED;
-	Mon, 14 Apr 2025 14:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744639202;
-	bh=nY2jtEZRHlv9V/RIKzrxyGRKCAifwpg4RNap/n4sscE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P0cTqYE0WtuJeWZA6MbCkmNThUzBl8wjlhvoRicd3ljOFI0BUChk48ntXs7gVUzvN
-	 Nd0fX0EOgLnFBb5Lmco9IShXsL3N06viCcyom8hamxY0ICXtdpCHfEfzSFm0bHZIjb
-	 hZm8wVE5DtWTnue/gyLpwCXhphLSs+onecgQHWyrpQUonqxl+UzPZi5HTONg1da8jc
-	 42LvNXvzOyV+qRtJtIIDw7uZ8Zs3DdmXIzegZjNRmWByKOxYRG7BIg2Yiprc9OSLmJ
-	 4UhSAswXDevFNcnb4RykD6yKcK+GNgM5Sa8jh+UuGDZkFybCBjJ8bZkG89IelDZAtZ
-	 C5z5B4t25/4hw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso7216714a12.0;
-        Mon, 14 Apr 2025 07:00:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUtNNR8ZCwIA7DrGUkSRUvASvTmJvNNgbNj8RBtvES4+nyzM9+mTWnqr0q7JzHejVewNtDNZ9IDawEz1rvo@vger.kernel.org, AJvYcCVe9xCAHqhYq8mvCGSUOmiRDwwPhsZMbetLvm85InJOmiFjuu5NedCraIz1qOt1oCwMFIUlLJ9ozFkGsQPKxFgR@vger.kernel.org, AJvYcCXcw+YIbjQ5kA/ZULbpri6AB60TTKmPUFbjAhO7+hIyiCK/rC6SaWLPcag6Dw/HXJBfw3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxSy2wKCNjm75a7q/2f6JL2PNMUaDtvecZKdY/0C+5/ZbSPkhP
-	yflJVrk+7Ne+z61JKDEU1EUKy7VJ0hSINAGmS0uzVvS2LP/uXP4FOEN5Z/9reTu3btKPyiyHNqG
-	FE41SUMOcdYwOAbXZAtgkXtc6/Mk=
-X-Google-Smtp-Source: AGHT+IHTrFhMlY0mu/G+RXpZnyeIw7i/v2ZmgjUtm3x60VmXOAXRT4o1706xtyGtGLxxknXCe3hb49bt+W6ImpCZYYk=
-X-Received: by 2002:a17:907:608c:b0:ac4:3cd:2cb2 with SMTP id
- a640c23a62f3a-acad3446924mr983552166b.1.1744639201346; Mon, 14 Apr 2025
- 07:00:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCxAurar"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso5836103b3a.2;
+        Mon, 14 Apr 2025 07:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744639208; x=1745244008; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VC1oKsvn3gXo/XMH+Dp5lmVzBwV+v49dkge2W+EDw4w=;
+        b=mCxAurarGo5GDqBZPmr0TLqXy4PPLg/ex5MfOAincp+g1U361ytb/sm4/kcHHeYLZO
+         7tXmnhsmE1gqilbCKPf4p5N71j60H3bI/50yfWcF2LyIh5PIhhg2xHmApl8mdI4jn9H6
+         W23vLp7O6aPEadCxd54JEEh6SAdf7UN49GyOhkFwESU768Wk3cYrPFDk9mOrgXvG/xjZ
+         nUghyKkSynku1ObVlEOYPDMjbSS8Zv/Vo4DfwtRNfYcHZpQVCy+LpU/pyTw1Jw38na9r
+         Cl1kFt6oBU5BFexw+fh3n68WePjTiHUR7wjq3fhwNI/sq1jXfPomwWUKd7hafyCGSk8U
+         +TCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744639208; x=1745244008;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VC1oKsvn3gXo/XMH+Dp5lmVzBwV+v49dkge2W+EDw4w=;
+        b=ocSzbnSa7jmiL3OSdDQ1qS4BaIhV1YXMHuMF4HeIANXR/+srXBPhmLT7Nsvke047Gw
+         eC0ztRj9hRppd6L5sZjNJSxiAUm+XcyNaJuzCl3S9/uBBp+tfb1h523AjwgIV/qYrsqb
+         Tu82rO9L8Ecal+qfMBFA4SrigUokiQFXqnLovd+kCvg+6eJZpMtU1dSWEZBsT5tAfq9m
+         z/PYUUdgCi7px9f1fsiaSTuGs6tFInd84kEPja4S1iYz97TsYy1wpXUGDIAxkIeCGpLa
+         iBcOPKHFVNjO8z8AR/wvH9QkeAOdWVunE1NHZ/8vTGetrUonseOmGxmsYzi/TUWJryPl
+         m/vg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6a1JB5b8LTTK5wFk8rejtBsAoueA9I8V1W0RhSSehq4BohBA5lZy0EnsHnRm7AioO9EhJ5EiijpTu@vger.kernel.org, AJvYcCVGzTR8SdavgAoF7T+2qEGSN/MEHaFp68xGWIe7xrN1Hs0txz56FoEKX6AZio87y+8UBDIyaqJlj1Xz0bOC@vger.kernel.org, AJvYcCXBJEMWLj42VqKodjFd7cES3lxZSmKUwc0dCmWeTP/PGgo88ysTeP1aTgUlSkBaBkZxPtV+HxAuZJAC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvaHBdz5M2969OETqby//R6zlFRDSjHaO0zlY895c4AFtMK3CD
+	Rt2m2U9vAIcUpcTNRiOQBRWYmkFOxqA7t1YE7Jk8c6X0Qk/Za1Y0
+X-Gm-Gg: ASbGncuUDoaz/VNw5iQf1JG39OenAwN6F3pfiAtE7RcthZ+3q1QozGOeqeZ6kTOvzsT
+	28E6MHnKGiyHNJAj0AhbHg6hHeiAvWeIQFwIcHCmFGhaXD4YZRCmLk+q7vJd5bza6dIjd46Ec0e
+	tl1S7PI+DtlkBIuoHy+6DnREJIdAd7kJLwayOnRep3yJdQ7083NK7ePb83ENmsv08aIf2TI6Zc+
+	TgAXPdFZXuS7asazql+tdDMxo+gEPH08eu2rXUT/VSb8diO1nsDE+Y5sVYvNMNUAfcmOt/tngVV
+	+E1baf+3gp1XtgpNyWe5XILahR7s7Q6jnHGdDCRXXAcBn4fT
+X-Google-Smtp-Source: AGHT+IEkvLlbcPEcypR/Qtt7sHwVK3dG3MFbG7DrjmG7RajsJrDFKOd6e/1/23IkcgiQxLcY6pjA2A==
+X-Received: by 2002:a05:6a00:3a25:b0:739:b1df:2410 with SMTP id d2e1a72fcca58-73bd12a1eacmr16940619b3a.20.1744639207554;
+        Mon, 14 Apr 2025 07:00:07 -0700 (PDT)
+Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd22f0fddsm6603043b3a.112.2025.04.14.07.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 07:00:06 -0700 (PDT)
+Date: Mon, 14 Apr 2025 11:01:16 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v1 2/7] iio: adc: Add basic support for AD4170
+Message-ID: <Z_0VLLmnefbzOj2y@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1744200264.git.marcelo.schmitt@analog.com>
+ <5f79007f0b9f9f67360d04fb904b6a59111a4ebe.1744200264.git.marcelo.schmitt@analog.com>
+ <9c115086bd574b6c778a093143ebf54e14d7202b.camel@gmail.com>
+ <Z_k3e1DfxmcJgQeu@debian-BULLSEYE-live-builder-AMD64>
+ <20250412171920.531993c1@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410035647.3501139-1-maobibo@loongson.cn> <20250410035647.3501139-2-maobibo@loongson.cn>
-In-Reply-To: <20250410035647.3501139-2-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 14 Apr 2025 21:59:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5-RXzHP8L2Hv6Drvaakwv4v=NYcDQhQUkzOEcgPTMm1Q@mail.gmail.com>
-X-Gm-Features: ATxdqUFqgrZzEtN3FqqqG0wrYHfkvjREitGDfkEtzooKC0jRIO4R0yaVZNfMm3U
-Message-ID: <CAAhV-H5-RXzHP8L2Hv6Drvaakwv4v=NYcDQhQUkzOEcgPTMm1Q@mail.gmail.com>
-Subject: Re: [PATCH v8 1/4] KVM: selftests: Add KVM selftests header files for LoongArch
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250412171920.531993c1@jic23-huawei>
 
-Hi, Bibo,
+> > > > +	ret = devm_regulator_get_enable_read_voltage(dev, "refin1n");
+> > > > +	if (ret < 0 && ret != -ENODEV)
+> > > > +		return dev_err_probe(dev, ret, "Failed to get REFIN- voltage.\n");
+> > > > +
+> > > > +	/* Negative supplies are assumed to provide negative voltage */
+> > > > +	st->vrefs_uv[AD4170_REFIN1N_SUP] = ret == -ENODEV ? -ENODEV : -ret;  
+> > > 
+> > > Maybe to early for me but the comment does not make it clear to me why the negation?
+> > > Won't the regulator return a negative voltage?  
+> > 
+> > devm_regulator_get_enable_read_voltage(), regulator_get_voltage(), and anything
+> > about reading the regulator voltage returns either a positive voltage value or
+> > a negative error code. I couldn't find out how to read a negative voltage with
+> > regulator API. So, for now, this is making the simplifying assumption that
+> > the negative end of external reference supplies is always below GND level (even
+> > though they could be positive).
+> 
+> Hmm. We went around this a long time back but I can't remember what the outcome was...
+> https://lore.kernel.org/linux-iio/544AC56F16B56944AEC3BD4E3D59177137546EF3FC@LIMKCMBX1.ad.analog.com/ 
+> looks like the thread.
+> 
+> Take a look at dac/ad5791.c for example of a negative reference
 
-On Thu, Apr 10, 2025 at 11:57=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
-te:
->
-> Add KVM selftests header files for LoongArch, including processor.h
-> and kvm_util_base.h. It mainly contains LoongArch CSR register
-> definition and page table entry definition.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  .../testing/selftests/kvm/include/kvm_util.h  |   5 +
->  .../kvm/include/loongarch/kvm_util_arch.h     |   7 +
->  .../kvm/include/loongarch/processor.h         | 138 ++++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/kvm_uti=
-l_arch.h
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/process=
-or.h
->
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testi=
-ng/selftests/kvm/include/kvm_util.h
-> index 373912464fb4..d9cb62207c57 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -232,6 +232,11 @@ extern enum vm_guest_mode vm_mode_default;
->  #define MIN_PAGE_SHIFT                 12U
->  #define ptes_per_page(page_size)       ((page_size) / 8)
->
-> +#elif defined(__loongarch__)
-> +#define VM_MODE_DEFAULT                        VM_MODE_P36V47_16K
-Maybe we can add VM_MODE_P40V47_16K and VM_MODE_P48V47_16K? That is
-more suitable for LoongArch in my opinion.
+AD5791 references are always either only negative (V_REFNF, V_REFNS) or only
+positive (V_REFPS, V_REFPF) so the driver is fine with only adding a negative
+sign to the voltage obtained from the negative supply.
 
-> +#define MIN_PAGE_SHIFT                 12U
-> +#define ptes_per_page(page_size)       ((page_size) / 8)
-> +
->  #endif
->
->  #define VM_SHAPE_DEFAULT       VM_SHAPE(VM_MODE_DEFAULT)
-> diff --git a/tools/testing/selftests/kvm/include/loongarch/kvm_util_arch.=
-h b/tools/testing/selftests/kvm/include/loongarch/kvm_util_arch.h
-> new file mode 100644
-> index 000000000000..e43a57d99b56
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/loongarch/kvm_util_arch.h
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef SELFTEST_KVM_UTIL_ARCH_H
-> +#define SELFTEST_KVM_UTIL_ARCH_H
-> +
-> +struct kvm_vm_arch {};
-> +
-> +#endif  // SELFTEST_KVM_UTIL_ARCH_H
-> diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/=
-tools/testing/selftests/kvm/include/loongarch/processor.h
-> new file mode 100644
-> index 000000000000..e95dd2059605
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
-> @@ -0,0 +1,138 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef SELFTEST_KVM_PROCESSOR_H
-> +#define SELFTEST_KVM_PROCESSOR_H
-> +
-> +#ifndef __ASSEMBLER__
-> +#include "ucall_common.h"
-> +
-> +#else
-> +/* general registers */
-> +#define zero                           $r0
-> +#define ra                             $r1
-> +#define tp                             $r2
-> +#define sp                             $r3
-> +#define a0                             $r4
-> +#define a1                             $r5
-> +#define a2                             $r6
-> +#define a3                             $r7
-> +#define a4                             $r8
-> +#define a5                             $r9
-> +#define a6                             $r10
-> +#define a7                             $r11
-> +#define t0                             $r12
-> +#define t1                             $r13
-> +#define t2                             $r14
-> +#define t3                             $r15
-> +#define t4                             $r16
-> +#define t5                             $r17
-> +#define t6                             $r18
-> +#define t7                             $r19
-> +#define t8                             $r20
-> +#define u0                             $r21
-> +#define fp                             $r22
-> +#define s0                             $r23
-> +#define s1                             $r24
-> +#define s2                             $r25
-> +#define s3                             $r26
-> +#define s4                             $r27
-> +#define s5                             $r28
-> +#define s6                             $r29
-> +#define s7                             $r30
-> +#define s8                             $r31
-> +#endif
-> +
-> +/* LoongArch page table entry definition */
-> +#define _PAGE_VALID_SHIFT              0
-> +#define _PAGE_DIRTY_SHIFT              1
-> +#define _PAGE_PLV_SHIFT                        2  /* 2~3, two bits */
-> +#define  PLV_KERN                      0
-> +#define  PLV_USER                      3
-> +#define  PLV_MASK                      0x3
-> +#define _CACHE_SHIFT                   4  /* 4~5, two bits */
-> +#define _PAGE_PRESENT_SHIFT            7
-> +#define _PAGE_WRITE_SHIFT              8
-> +
-> +#define _PAGE_VALID                    BIT_ULL(_PAGE_VALID_SHIFT)
-> +#define _PAGE_PRESENT                  BIT_ULL(_PAGE_PRESENT_SHIFT)
-> +#define _PAGE_WRITE                    BIT_ULL(_PAGE_WRITE_SHIFT)
-> +#define _PAGE_DIRTY                    BIT_ULL(_PAGE_DIRTY_SHIFT)
-> +#define _PAGE_USER                     (PLV_USER << _PAGE_PLV_SHIFT)
-> +#define   __READABLE                   (_PAGE_VALID)
-> +#define   __WRITEABLE                  (_PAGE_DIRTY | _PAGE_WRITE)
-> +/* Coherent Cached */
-> +#define _CACHE_CC                      BIT_ULL(_CACHE_SHIFT)
-> +#define PS_4K                          0x0000000c
-> +#define PS_8K                          0x0000000d
-> +#define PS_16K                         0x0000000e
-The page size supported by kernel is 4K, 16K and 64K, so remove 8K and add =
-64K?
+AD4170 external references can be set to a negative voltage in some setups, or
+to positive voltages on other setups. They're also constrained on the resulting
+nominal reference voltage (REFIN+ − REFIN−) which is typically 2.5V but can
+range from 1V minmum AVDD maximum. From that perspective, maybe this could be
+abstracted as a differential voltage supply? Though, the multiplexer in the
+chip can bet set to connect individual REFIN+, REFIN−, ..., REFIN2- supplies
+ends to ADC analog inputs so an API like get_voltage(reg, &voltage)) would make
+it easier to handle those configurations.
 
-Huacai
+From the mentioned thread, I see no hard objection to extending the regulator
+framework in that sense so I'll start working on something to provide better
+support for these cases where we have negative voltage.
 
-> +#define PS_DEFAULT_SIZE                        PS_16K
-> +
-> +/* LoongArch Basic CSR registers */
-> +#define LOONGARCH_CSR_CRMD             0x0 /* Current mode info */
-> +#define  CSR_CRMD_PG_SHIFT             4
-> +#define  CSR_CRMD_PG                   BIT_ULL(CSR_CRMD_PG_SHIFT)
-> +#define  CSR_CRMD_IE_SHIFT             2
-> +#define  CSR_CRMD_IE                   BIT_ULL(CSR_CRMD_IE_SHIFT)
-> +#define  CSR_CRMD_PLV_SHIFT            0
-> +#define  CSR_CRMD_PLV_WIDTH            2
-> +#define  CSR_CRMD_PLV                  (0x3UL << CSR_CRMD_PLV_SHIFT)
-> +#define  PLV_MASK                      0x3
-> +#define LOONGARCH_CSR_PRMD             0x1
-> +#define LOONGARCH_CSR_EUEN             0x2
-> +#define LOONGARCH_CSR_ECFG             0x4
-> +#define LOONGARCH_CSR_ESTAT            0x5  /* Exception status */
-> +#define LOONGARCH_CSR_ERA              0x6  /* ERA */
-> +#define LOONGARCH_CSR_BADV             0x7  /* Bad virtual address */
-> +#define LOONGARCH_CSR_EENTRY           0xc
-> +#define LOONGARCH_CSR_TLBIDX           0x10 /* TLB Index, EHINV, PageSiz=
-e */
-> +#define  CSR_TLBIDX_PS_SHIFT           24
-> +#define  CSR_TLBIDX_PS_WIDTH           6
-> +#define  CSR_TLBIDX_PS                 (0x3fUL << CSR_TLBIDX_PS_SHIFT)
-> +#define  CSR_TLBIDX_SIZEM              0x3f000000
-> +#define  CSR_TLBIDX_SIZE               CSR_TLBIDX_PS_SHIFT
-> +#define LOONGARCH_CSR_ASID             0x18 /* ASID */
-> +#define LOONGARCH_CSR_PGDL             0x19
-> +#define LOONGARCH_CSR_PGDH             0x1a
-> +/* Page table base */
-> +#define LOONGARCH_CSR_PGD              0x1b
-> +#define LOONGARCH_CSR_PWCTL0           0x1c
-> +#define LOONGARCH_CSR_PWCTL1           0x1d
-> +#define LOONGARCH_CSR_STLBPGSIZE       0x1e
-> +#define LOONGARCH_CSR_CPUID            0x20
-> +#define LOONGARCH_CSR_KS0              0x30
-> +#define LOONGARCH_CSR_KS1              0x31
-> +#define LOONGARCH_CSR_TMID             0x40
-> +#define LOONGARCH_CSR_TCFG             0x41
-> +/* TLB refill exception entry */
-> +#define LOONGARCH_CSR_TLBRENTRY                0x88
-> +#define LOONGARCH_CSR_TLBRSAVE         0x8b
-> +#define LOONGARCH_CSR_TLBREHI          0x8e
-> +#define  CSR_TLBREHI_PS_SHIFT          0
-> +#define  CSR_TLBREHI_PS                        (0x3fUL << CSR_TLBREHI_PS=
-_SHIFT)
-> +
-> +#define EXREGS_GPRS                    (32)
-> +
-> +#ifndef __ASSEMBLER__
-> +void handle_tlb_refill(void);
-> +void handle_exception(void);
-> +
-> +struct ex_regs {
-> +       unsigned long regs[EXREGS_GPRS];
-> +       unsigned long pc;
-> +       unsigned long estat;
-> +       unsigned long badv;
-> +};
-> +
-> +#define PC_OFFSET_EXREGS               offsetof(struct ex_regs, pc)
-> +#define ESTAT_OFFSET_EXREGS            offsetof(struct ex_regs, estat)
-> +#define BADV_OFFSET_EXREGS             offsetof(struct ex_regs, badv)
-> +#define EXREGS_SIZE                    sizeof(struct ex_regs)
-> +
-> +#else
-> +#define PC_OFFSET_EXREGS               ((EXREGS_GPRS + 0) * 8)
-> +#define ESTAT_OFFSET_EXREGS            ((EXREGS_GPRS + 1) * 8)
-> +#define BADV_OFFSET_EXREGS             ((EXREGS_GPRS + 2) * 8)
-> +#define EXREGS_SIZE                    ((EXREGS_GPRS + 3) * 8)
-> +#endif
-> +
-> +#endif /* SELFTEST_KVM_PROCESSOR_H */
-> --
-> 2.39.3
->
+Thanks,
+Marcelo
