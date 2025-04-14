@@ -1,181 +1,165 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6B2481C4;
-	Mon, 14 Apr 2025 08:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD96F1A5B94;
+	Mon, 14 Apr 2025 08:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619199; cv=none; b=YP+KgXkVVkUWlrXLTf0oSFygcN27OqKx+PwFWjWe7sHXDd1u9MlKJydiqQmd3XNun9rQAktDzVeTbTAQeDETMAHOfBYjaCcCc7L9IKNwdJtQDubeVRzmPqNfxF58PWq+wHVIVazS2+L2Lh+C5irHAP8JBOaxjEwVpbmMK7LZ1wY=
+	t=1744619222; cv=none; b=EkFSCzOk7NrplABR0OdFL1yizt0JAbIPHL3Y3EclVvOc2AHbfSwE0DG6iZJPmsMxKeJp5Q576JAw9oPj41lM088UBvj/pPwp6J5lRXma64785tiokODsrLNHx45MvTt7dEjfNJR5lC3fRGcWZFmrLVFYJBX7QPOF2TR5MXimVWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619199; c=relaxed/simple;
-	bh=xOZ0p2CUeWSfBf8GwfXNZH/GcKScQzSTLiG6gz0ey8E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HNNGKy1WsruqaUYW5/hvqVZe2dAaxxL0nM9+HHJfNBDL8M4UnOu0+ec7ERBCSmsVO5QPL28PlKp1Q7siTi13ErAL+wyCglVnnZVRVk/PuZJEg13AId+4ZKOmPYy/uAkxz9IxuaeOMEZyFNdt4Eg8Dg3vQaQ7Z2H29gRuXcn2hoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jWCHeLnK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mCYor8kj; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744619222; c=relaxed/simple;
+	bh=RofbViZGosLj5CtM3MzeJy2VAcecwtpspL17FRMtiMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t0tGo/LrWW8kHN80Zu8W67IlNPKPqqOU76ugNRgUDhxXMzRnhPkcYpwndBCjmluu010zRTs0MCFsgX3g3XbR94ng6iaIv9YoyR/9S8xvBqw/V5EirAjbwWF0rdQF50uIlyXlOqBB5y+q9TCFx/EH10DAv/5ncyfRhvj6OMczoE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDfFvfPN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jWCHeLnK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mCYor8kj"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744619195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0o60EM5//gG+xcS+6Ra9+Xd3X2itCl9vIft8DhAGysU=;
-	b=jWCHeLnKsc7ZPbXMDBEd1b1eFTZqJeSgE+FM0le2TSfm/ZoARKzq6xC9O/agFCEtsG1JE3
-	+nxlh5ICekYgTqpHvksOCrlUPaYO1Ca7eER0MN+XwB1wdzBWOMoff1DMovwAk1LhqTStq/
-	LeubQ355UjZ5ChxYFTcF+jSYYLy1IZpZ+k683SOvQBSOrmixTlSInm/CjeL/2ldA2QxE4p
-	ov0jtI+oyNINUd+dUTb0Ag53WF+f2/MgJnAJ9LNlYIiOHwpt+EX815p1HbIRSYcJ52n0dG
-	qCJKLBWWJ6TZ9fzOxtgnbOEhQJQuqqHbplxibWLcKD/PHvvJoyaP1JttcL1cSA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744619195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0o60EM5//gG+xcS+6Ra9+Xd3X2itCl9vIft8DhAGysU=;
-	b=mCYor8kj3Se8cUDCYI6eccCyxZdqPnaImx1hv6QSXF5POsdF6owsu+MGuIAt0SyUVRuxH8
-	p5LxAxF7QrQZlXCg==
-Date: Mon, 14 Apr 2025 10:26:22 +0200
-Subject: [PATCH v2 2/2] kunit: qemu_configs: Add MIPS configurations
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDfFvfPN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A82C4CEE2;
+	Mon, 14 Apr 2025 08:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744619222;
+	bh=RofbViZGosLj5CtM3MzeJy2VAcecwtpspL17FRMtiMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TDfFvfPNz8yFnnXfEAmwAEshO5h94EAyNmGCYgylH60yroaEvk/LNai251/t8esqG
+	 l+yW6sUDJeEPHWHNC9YX9E3lTL1bcQ7c7ucIYn8k+Bi5dm/9rtxC5EbxzO+Y5Fnwlg
+	 0HdVzP0gfMD1RlUXa7FzNNjUcqxOe4ANry+yjVpiOktryqbMopI58LAwHjeatIBYwe
+	 omHbkiBD5ZQJFOUqFhyG+0royDMdzyw55yTTXgpcU5gAw/sG1d8588rdZpk/llFAST
+	 7KZJ3LLfGXUrOYjeUBPL0iLuwIuni6Zs6Q08CFqaec7CIQPYCBprPhjzeEYkJB7MmC
+	 svMBfkufjV0Kw==
+Date: Mon, 14 Apr 2025 10:26:54 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, ast@kernel.org
+Subject: Re: [PATCH 20/24] irqchip/gic-v5: Add GICv5 LPI/IPI support
+Message-ID: <Z/zGzjyrEMYMd8cI@lpieralisi>
+References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+ <20250408-gicv5-host-v1-20-1f26db465f8d@kernel.org>
+ <Z/jgL52ZVdcxTEkP@lpieralisi>
+ <87plhjrpit.ffs@tglx>
+ <Z/kM/+uBsD9DAGjF@lpieralisi>
+ <mcyioyevok6tixna2xwk5q3d6x5b5spyucc4fiiy3h4v5jwxbj@bw6ewonqm2ks>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250414-kunit-mips-v2-2-4cf01e1a29e6@linutronix.de>
-References: <20250414-kunit-mips-v2-0-4cf01e1a29e6@linutronix.de>
-In-Reply-To: <20250414-kunit-mips-v2-0-4cf01e1a29e6@linutronix.de>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744619194; l=4132;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=xOZ0p2CUeWSfBf8GwfXNZH/GcKScQzSTLiG6gz0ey8E=;
- b=6MArL1Pme5j96Z3PT+Uc3FqhKPvqPD+N5kRKQ+BHejj8arkJBTTECOYhiq1oUX6BoKYse0Rjv
- L/A5YqCRTvRAum88ylOMmONCUeK6WpH0m+Fym0Ibe/WKRI5GwHya0QH
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mcyioyevok6tixna2xwk5q3d6x5b5spyucc4fiiy3h4v5jwxbj@bw6ewonqm2ks>
 
-Add basic support to run various MIPS variants via kunit_tool using the
-virtualized malta platform.
+On Sat, Apr 12, 2025 at 09:01:18AM -0400, Liam R. Howlett wrote:
+> * Lorenzo Pieralisi <lpieralisi@kernel.org> [250411 08:37]:
+> 
+> Thanks for the Cc.
+> 
+> > On Fri, Apr 11, 2025 at 11:55:22AM +0200, Thomas Gleixner wrote:
+> > > On Fri, Apr 11 2025 at 11:26, Lorenzo Pieralisi wrote:
+> > > > On Tue, Apr 08, 2025 at 12:50:19PM +0200, Lorenzo Pieralisi wrote:
+> > > >> Maple tree entries are not used by the driver, only the range tracking
+> > > >> is required - therefore the driver first finds an empty area large
+> > > >> enough to contain the required number of LPIs then checks the
+> > > >> adjacent (and possibly occupied) LPI ranges and try to merge them
+> > > >> together, reducing maple tree slots usage.
+> > > >
+> > > > The maple tree usage for this purpose is an RFC at this stage.
+> > > >
+> > > > Added Alexei because I know BPF arena used the maple tree in
+> > > > a similar way in the past and moved to a range tree because
+> > > > the BPF arena requires a special purpose mem allocator.
+> > > >
+> > > > As Thomas already pointed out a plain bitmap could do even though
+> > > > it requires preallocating memory up to 2MB (or we can grow it
+> > > > dynamically).
+> > > >
+> > > > We could allocate IDs using an IDA as well, though that's 1 by 1,
+> > > > we allocate LPI INTIDs 1 by 1 - mostly, upon MSI allocation, so
+> > > > using an IDA could do (AFAIU it works for 0..INT_MAX we need
+> > > > 0..2^24 worst case).
+> > > 
+> > > The point is that you really only need a 1-bit storage per entry,
+> > > i.e. used/unused. You won't use any of the storage functions of maple
+> > > tree, idr or whatever.
+> > 
+> > IDA does use the XArray entries (i.e. the pointers) to store bitmaps,
+> > the only drawback I see is that it allocates IDs one by one (but that's
+> > not really a problem).
+> > 
+> > I wonder if it is used in the kernel for IDs larger than 16 bits, it
+> > should work for 0..INT_MAX.
+> > 
+> > > So the obvious choice is a bitmap and as you said, it's trivial to start
+> > > with a reasonably sized one and reallocate during runtime if the need
+> > > arises.
+> 
+> I think the IDA or the bitmap for space saving would be better - the
+> xarray does do something under the hood for IDA space savings.
+> 
+> If you want to compare, I can suggest some changes to your maple tree
+> code (mas_{next/prev}_range might help).
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- tools/testing/kunit/qemu_configs/mips.py     | 18 ++++++++++++++++++
- tools/testing/kunit/qemu_configs/mips64.py   | 19 +++++++++++++++++++
- tools/testing/kunit/qemu_configs/mips64el.py | 19 +++++++++++++++++++
- tools/testing/kunit/qemu_configs/mipsel.py   | 18 ++++++++++++++++++
- 4 files changed, 74 insertions(+)
+Thank you.
 
-diff --git a/tools/testing/kunit/qemu_configs/mips.py b/tools/testing/kunit/qemu_configs/mips.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..8899ac157b30bd2ee847eacd5b90fe6ad4e5fb04
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mips.py
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_32BIT=y
-+CONFIG_CPU_BIG_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mips',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta'])
-diff --git a/tools/testing/kunit/qemu_configs/mips64.py b/tools/testing/kunit/qemu_configs/mips64.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..1478aed05b94da4914f34c6a8affdcfe34eb88ea
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mips64.py
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_CPU_MIPS64_R2=y
-+CONFIG_64BIT=y
-+CONFIG_CPU_BIG_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mips64',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta', '-cpu', '5KEc'])
-diff --git a/tools/testing/kunit/qemu_configs/mips64el.py b/tools/testing/kunit/qemu_configs/mips64el.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..300c711d7a82500b2ebcb4cf1467b6f72b5c17aa
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mips64el.py
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_CPU_MIPS64_R2=y
-+CONFIG_64BIT=y
-+CONFIG_CPU_LITTLE_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mips64el',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta', '-cpu', '5KEc'])
-diff --git a/tools/testing/kunit/qemu_configs/mipsel.py b/tools/testing/kunit/qemu_configs/mipsel.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..3d3543315b45776d0e77fb5c00c8c0a89eafdffd
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mipsel.py
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_32BIT=y
-+CONFIG_CPU_LITTLE_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mipsel',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta'])
+> > Yes I can do that too but to avoid fiddling with alloc/free ranges crossing
+> > bitmap chunks we need a single bitmap, AFAICS that may require realloc+copy,
+> > if the need arises.
+> 
+> That is the advantage of the IDA or maple tree, the expansion is handled
+> for you. I'd be inclined to suggest using the IDA, but I'm not sure how
+> important storing an entire range is for your usecase?
 
--- 
-2.49.0
+The point is, IDs represent interrupt IDs. We allocate them in batches,
+whose length varies, it can be 1 but it can also be a larger vector
+(ie 1024).
 
+It is obviously faster to allocate a range than allocating them 1 by 1,
+that's the only reason why we have not used an IDA (and also because I
+did not know whether an IDA is recommended for a larger ID space > than,
+say, 2^16 - but I think it is because it is designed to cover 0..INT_MAX
+and I noticed that -mm folks may even ask to extend it).
+> 
+> Are there other reasons you want to use the maple tree besides the range
+> support?
+
+We used the maple tree because it handles ranges, we have not found a
+sound usage for the 8 byte entry pointer (there may be some but it is
+overengineering), that's why I try to merge adjacent ranges on
+allocation, for vectors that are length 1 or 2 it is gross to waste
+8 bytes for nothing.
+
+Using an IDA and allocating 1 by 1 has its advantages (ie if the ID
+space is fragmented it is easier to find free IDs - even though,
+again, given the expected allocation pattern, freeing IRQ IDs is rarer
+than allocating them so I am not sure we would end up having a very
+sparse ID space).
+
+All in all, other than looking sloppy (allocating 1 by 1 when we could
+allocate a range), using an IDA would work.
+
+In terms of memory space efficiency, I think this depends on allocation
+patterns (and what I did minimise wasting slot entries for nothing).
+
+I added Alexei because, memory allocation notwithstanding, handling
+ranges is what the BPF range tree does:
+
+commit b795379757eb
+
+the reason a range tree was implemented to replace a MT was the
+memory allocation requirements - they were using a maple tree before
+(with unused entries).
+
+I can go for an IDA unless someone see a point in pursuing the current
+approach - that I would update according to feedback, at least with
+this thread you get the full picture.
+
+Thanks !
+Lorenzo
