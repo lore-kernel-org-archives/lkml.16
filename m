@@ -1,33 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5512F42;
-	Mon, 14 Apr 2025 08:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5E02F42;
+	Mon, 14 Apr 2025 08:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617708; cv=none; b=Q9h1rG8a1lg7f1HXtV61p6OIPPMjzhlzMrty6gOGWP4IHKGUmK2eaQyuctht8bs3hrdr9OqszgzLgX/lQ8I8LwlZk2/5tLwp+A0DBHwqlac6n8cMlmV0Z+Rn3sAjJGZXRRz1ORu5tRRBDshgnw999DUxNWsl3zUStqEHeRYY7gM=
+	t=1744617767; cv=none; b=JSmf+MYygiTwgtgGS/A2KGjCTiOb3PkO/vSRpbez4e2cCaX4CNon1641j3XiQy61/eyHR/24YcfJFzQoLLYm9n2HEVm0OF6ilCkRKj8vQWR71Z+av8YGMYZKs8xoRhuKVjeYth2cjy0+X8FIMmzlhVNI4JG7PJ6e2tuwdULKGjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617708; c=relaxed/simple;
-	bh=TjMXHWiQGYFhQQlesKoJ3UCFTUeDAYPGaObEjM5rE50=;
+	s=arc-20240116; t=1744617767; c=relaxed/simple;
+	bh=ZuoDYhZgQ9D/0t1zWRqqcz1yH1nnJRZLbD2PvZP3Xxc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jyuDmHPCKmcwT4tvoapNn45CKgFWlkY1NUuKI+wVwjCRIhmB9uCbzvB7caHwNxhi1dKkkuHaoGUv7DMW7JFWj4UCsqUEbia3DDhTD9HO9Ep4dev30f/sJvL9IQfRplCZlo5pYhpl3icTZxWacbeZHvIA4iLG8qBK8x1n6fVc94M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RejD54Bj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DR8YhM3Kt4/rndpJDGt+PT0QyBxUwGIaddf/Ozu48pmZ+s/nRo2kuTqWbZ/tYX/Xv3gZQTSV80uq66W5OO6vqO65Uek6VYp/tJzdH4Ck3D45GBDtXTPTJuBuZ8WhacizCl1M0uix+1mkLAzpmLNRf8oGLJ/Y2hb4Ly/6lVUFNRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=ROakJ9Y+; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RejD54Bj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CA95C4CEE2;
-	Mon, 14 Apr 2025 08:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744617707;
-	bh=TjMXHWiQGYFhQQlesKoJ3UCFTUeDAYPGaObEjM5rE50=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RejD54Bj7c3QEILZ45XVMVfY4jsiT6+1kO+U4hwQCTADHPVTGkEFZpmMfUkTN7noh
-	 XiLrPnINqEqJ8pQKeM8gvdgmkgzRYegYDbDr8zS1E/IazeF6bGqOeE4B+I9CQ6n9BZ
-	 HuH/eKLWScOV40TOSXVyRGxGAp16zH9BsY6BenX22ieAqN3BLgpS5+emRoGxXLEXIX
-	 Hr627CEc5md4pTatCOgEEno1lH6uEFVr5XoVzcLEgsMAQhSFlAXNODHhGJMzVIzwbu
-	 eGZI+TZXXwXz0UWRLxfFSaGWetx5MC8aYxY6Jhr/oKVFZERkqVNasVDH+za7TxKi87
-	 MGVWe8mfNL2Cw==
-Message-ID: <966960bf-0d5a-4e1f-af77-b573c3d1e1cb@kernel.org>
-Date: Mon, 14 Apr 2025 10:01:41 +0200
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="ROakJ9Y+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=YpQSiQvy1hnifDQxt9SKOFDxpRliEXMBm8AYZHweb8Q=; b=ROakJ9Y+q0ECieFlwrTFMktMUn
+	XLNOr33NXrnIQeB14gm0uUCA6yzpUweg29px4LkdTzZ4qWXJWTM2MFRD9OQYgiGIiHAoPsaOTzgRO
+	sEGBACSi06vZsRTX2sZeDdutQyIwOCGke1qG03xmWu2wgZ5cTtxEVO3yJHNtCcdCKqZ2E5reJHCdk
+	FWn2sdFUvpI5rVisCRgrJTT4wxaN1CwSSuGBFnwuyzhHgdfW4UE5lUTctgEW80PLBC3w3GtnvGv0l
+	/AbJS9f8ZA+U0S3WsINIzpenutc/rqRf/LXlcEcXsT08fisRL87BwLJCJK7POFeLsC0ra3dngUu/l
+	bgmvZDbQ==;
+Received: from [89.212.21.243] (port=49436 helo=[192.168.69.116])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1u4Em7-00DMch-1a;
+	Mon, 14 Apr 2025 10:02:38 +0200
+Message-ID: <1571414e-5e7d-4c9e-b69d-11a6fdf454e2@norik.com>
+Date: Mon, 14 Apr 2025 10:02:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,134 +43,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/9] serial: qcom-geni: move clock-rate logic to
- separate function
-To: Praveen Talari <quic_ptalari@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com,
- quic_vtanuku@quicinc.com, quic_arandive@quicinc.com,
- quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
-References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
- <20250410174010.31588-8-quic_ptalari@quicinc.com>
+Subject: Re: [PATCH 10/13] arm64: dts: freescale: imx93-phyboard-segin: Add
+ CAN support
+To: Marc Kleine-Budde <mkl@pengutronix.de>, Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, upstream@lists.phytec.de,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ linux-arm-kernel@lists.infradead.org
+References: <20250410090251.1103979-1-primoz.fiser@norik.com>
+ <20250410090251.1103979-11-primoz.fiser@norik.com>
+ <Z/fifUQ4M2doQbHx@lizhi-Precision-Tower-5810>
+ <ef74e49d-c413-4719-a174-42df91384469@norik.com>
+ <Z/knehHQeTTUXgr3@lizhi-Precision-Tower-5810>
+ <20250412-tentacled-rugged-bee-fd7e9c-mkl@pengutronix.de>
 Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250410174010.31588-8-quic_ptalari@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Primoz Fiser <primoz.fiser@norik.com>
+Autocrypt: addr=primoz.fiser@norik.com; keydata=
+ xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
+ JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
+ ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
+ gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
+ jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
+ 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
+ TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
+ AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
+Organization: Norik systems d.o.o.
+In-Reply-To: <20250412-tentacled-rugged-bee-fd7e9c-mkl@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On 10. 04. 25, 19:40, Praveen Talari wrote:
-> Facilitates future modifications within the new function,
-> leading to better readability and maintainability of the code.
+Hi Marc and Frank,
+
+On 12. 04. 25 15:41, Marc Kleine-Budde wrote:
+> On 11.04.2025 10:30:18, Frank Li wrote:
+>> On Fri, Apr 11, 2025 at 10:08:21AM +0200, Primoz Fiser wrote:
+>>> Hi Frank,
+>>>
+>>> On 10. 04. 25 17:23, Frank Li wrote:
+>>>> On Thu, Apr 10, 2025 at 11:02:48AM +0200, Primoz Fiser wrote:
+>>>>> Add support for CAN networking on phyBOARD-Segin-i.MX93 via the flexcan1
+>>>>> interface. The CAN1_EN regulator enables the SN65HVD234 CAN transceiver
+>>>>> chip.
+>>>>
+>>>> Can you use drivers/phy/phy-can-transceiver.c to enable CAN phy instead
+>>>> of use hacked regulator-flexcan1-en.
+>>>
+>>> Sorry can't do.
+>>>
+>>> This doesn't align with other i.MX PHYTEC products using flexcan such as
+>>> imx8mp-phyboard-pollux-rdk.dts.
+>>>
+>>> Even the i.MX93 EVK uses the same mechanism.
+>>
+>> I think previous method is NOT good enough. Suggest involve CAN and PHY
+>> maintainer to discuss these.
 > 
-> Move the code that handles the actual logic of clock-rate
-> calculations to a separate function geni_serial_set_rate()
-> which enhances code readability.
+> Since d80bfde3c57a ("can: flexcan: add transceiver capabilities"), which
+> git mainline with v6.15-rc1 there is proper PHY support in the flexcan
+> driver. So from my point of view, there's no need to stick to regulator
+> hack.
+
+This arrived at the perfect moment. Just in time :)
+
+I will switch to this mechanism in v2.
+
+Thank you both for your input.
+
+BR,
+Primoz
+
 > 
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> ---
->   drivers/tty/serial/qcom_geni_serial.c | 56 +++++++++++++++++----------
->   1 file changed, 36 insertions(+), 20 deletions(-)
+> regards,
+> Marc
 > 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index e341f5090ecc..25d16ac3f406 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-...
-> @@ -1323,6 +1310,37 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->   	port->se.icc_paths[CPU_TO_GENI].avg_bw = Bps_to_icc(baud);
->   	geni_icc_set_bw(&port->se);
->   
-> +	writel(ser_clk_cfg, uport->membase + GENI_SER_M_CLK_CFG);
-> +	writel(ser_clk_cfg, uport->membase + GENI_SER_S_CLK_CFG);
-> +	return 0;
 
-Did this pass checkpatch?
-
-> +}
-> +
-> +static void qcom_geni_serial_set_termios(struct uart_port *uport,
-> +					 struct ktermios *termios,
-> +					 const struct ktermios *old)
-> +{
-> +	struct qcom_geni_serial_port *port = to_dev_port(uport);
-> +	unsigned int baud;
-> +	unsigned long timeout;
-> +	u32 bits_per_char;
-> +	u32 tx_trans_cfg;
-> +	u32 tx_parity_cfg;
-> +	u32 rx_trans_cfg;
-> +	u32 rx_parity_cfg;
-> +	u32 stop_bit_len;
-> +	int ret = 0;
-> +
-> +	/* baud rate */
-> +	baud = uart_get_baud_rate(uport, termios, old, 300, 4000000);
-> +
-> +	ret = geni_serial_set_rate(uport, baud);
-> +	if (ret) {
-> +		dev_err(port->se.dev,
-> +			"%s: Failed to set  baud: %u  ret: %d\n",
-
-Why the doubled spaces?
-
-> +			__func__, baud, ret);
-> +		return;
-> +	}
-> +
->   	/* parity */
->   	tx_trans_cfg = readl(uport->membase + SE_UART_TX_TRANS_CFG);
->   	tx_parity_cfg = readl(uport->membase + SE_UART_TX_PARITY_CFG);
-
-thanks,
 -- 
-js
-suse labs
+Primoz Fiser
+phone: +386-41-390-545
+email: primoz.fiser@norik.com
+--
+Norik systems d.o.o.
+Your embedded software partner
+Slovenia, EU
+phone: +386-41-540-545
+email: info@norik.com
