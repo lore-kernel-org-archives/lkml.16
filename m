@@ -1,99 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C484528A1FB
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DEF289364;
+	Mon, 14 Apr 2025 17:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652093; cv=none; b=LhfpXy/E38G5xGdCeAk9BrZv9bht3PlhOAp/z+3o4ZrZyayNk5Ib+CuAgUA8FS4vlACv4yYzJLfkevTSWUNqxXRzceT8s98Ak20FXo6/sH4Us2tV93s8kHLXAwHtLe/I3AzkJVGdEqmuYvb2CWWmhzxA/V6Vl17n4uqY3u0RXfk=
+	t=1744652107; cv=none; b=UuDOf1+TTs0NpAcJUI0mp0vDcYxr4VAcoYn9K7kifMqhMtKQj3lGmgx5Zz2zkj0Dk30nJIRCZZ5cuMZdC7S/zVESc8EI2ELbyHOwwqVxlblsFSNNAW3JPDr8Bf8o5WaIaoO5ijjzZX4/OD11WX1g4lrJLuJenWpo5t30IM3O1Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652093; c=relaxed/simple;
-	bh=IYdhxZakHmigCV0vshdrC04wSMfHYqJO6uk9KviS6fY=;
-	h=Subject:To:Cc:From:Date:References:In-Reply-To:Message-Id; b=RnKTxaMGe8bJ7X2pU5NnLAas5xVeAYTKRR5Lb9UNRBsfaUzvw2ZsPI+9PPU34S+GXGArGv4PtfWoaF9qjCsFqzLxkrjxomAxK7Nd3WEgnEqXaeQOV0yevbOCSKR48rFFcEaBm2DmfXrWVni7ncDcMBpUHiHfFJJwWpWZFITJwT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R1Ck6Wh5; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744652107; c=relaxed/simple;
+	bh=hnCqke+KYEWsbRH+n/2MbSls4gRBzabjtFY6nYemYPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YmLWL3zqpI5Qn+4Pgvxd8L7zmrULPqRooxnq5Khdj3KWYkfjhNS54nfYeR3MBJ9UwAYOzqBoDllPKMjlZ9NMAcrBKIfh+hWMZIrvxh+XyIruNzTYRUpzXH4pX88ZaHCH8m7pp6B6LggG8ocNyLtKY2ZZdmh8E04aQlX6VpClUZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzak7Bp+; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R1Ck6Wh5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744652091; x=1776188091;
-  h=subject:to:cc:from:date:references:in-reply-to:
-   message-id;
-  bh=IYdhxZakHmigCV0vshdrC04wSMfHYqJO6uk9KviS6fY=;
-  b=R1Ck6Wh5JWdc8aQRAFS+VixvLjjnvq0v3sVHey2LSVyHxjlsV8pkOhSQ
-   VJ17FNymwmxyzg09lcdlBijO1Wh8A0dIYhZsVy0xTC/o4Yt4UBiE9Y7Vh
-   I1MHEW8F8lSVk18eiV/CVo1m7Oxz+VeLPCR350/Fjug1QNbYGYGRWcdui
-   L24SB4lvDtHeMNciMr1QpiEMKS5cd1XcjLZMIXpbFtbA9XmzEvbJSBSU5
-   9mmqGYd0PrR73uY2rzJh9sfQL9EBtqJse1MqlJL5WGSNhyegXYBNMWDP4
-   DHd/bi/25zC9YpWVYxa1xawmQa1azwpgoEE5C1ys3jZekLDQo9tforli0
-   w==;
-X-CSE-ConnectionGUID: 8ThXy/1GSzmpekShgq6WGw==
-X-CSE-MsgGUID: l83eV4f+R3y4RIbcTZGfkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="49790119"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="49790119"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 10:34:47 -0700
-X-CSE-ConnectionGUID: q14wDk67SF+d3ZnsIBK9dQ==
-X-CSE-MsgGUID: tg+m3yuMQdeBaWytmdsgiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="129645450"
-Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
-  by orviesa009.jf.intel.com with ESMTP; 14 Apr 2025 10:32:44 -0700
-Subject: [PATCH 7/8] x86/mm: Remove duplicated PMD preallocation macro
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,tglx@linutronix.de,bp@alien8.de,joro@8bytes.org,luto@kernel.org,peterz@infradead.org,kirill.shutemov@linux.intel.com,rick.p.edgecombe@intel.com,jgross@suse.com,Dave Hansen <dave.hansen@linux.intel.com>
-From: Dave Hansen <dave.hansen@linux.intel.com>
-Date: Mon, 14 Apr 2025 10:32:42 -0700
-References: <20250414173232.32444FF6@davehans-spike.ostc.intel.com>
-In-Reply-To: <20250414173232.32444FF6@davehans-spike.ostc.intel.com>
-Message-Id: <20250414173242.5ED13A5B@davehans-spike.ostc.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzak7Bp+"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso862380a91.1;
+        Mon, 14 Apr 2025 10:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744652105; x=1745256905; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hnCqke+KYEWsbRH+n/2MbSls4gRBzabjtFY6nYemYPA=;
+        b=hzak7Bp+/kZc6lOgxhSBr9iKN6OgdAOP2bf5/flbg7CPESYI0PINgXR7baNVnidN0S
+         V8LWeEbq3jWehvxnfWycxe2+4Emu85MT7rrDYfYGofuyl4A0mUYD10cUUHHAaWJR4WPu
+         klmF8B+4rHAoq5DBsbbcN8TOB6MayLXWC3OoHFKhKIV5DIaAz9hX5LMYew0twJZIZS5G
+         kdPA6hUEdsvA1dlzs8eHTUDmszZJHt1pZ0gMscsdSqX7csppFLBvHuG4nfWmchc+6O8Q
+         YOWz/cuSuhdjHEZaOPIpfdqTNcJBs2njyP7ffoD9o8PRSsF+xvP4FIkvBhvVUTnV76x1
+         Avyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744652105; x=1745256905;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hnCqke+KYEWsbRH+n/2MbSls4gRBzabjtFY6nYemYPA=;
+        b=DRt3Icmo9qj42TA4K4TqB+ZLZwIUQdbiCXmuRaP6gXsCFVvxIBbNb1XxeS1U4h77Pf
+         I4kaF4kTh58V8J+4rXn5cuOZc82sikc3AsUgbE3Pb1nzW7KKTb93LAnN+eqWNrXSfh8A
+         HHdkGYqXb2C5KxB89Lwe8nRo4upE0Bj4tiYMsuakfs2H0khJI4JhMuVlaRtTa2+MQ5kP
+         VpDe+rjjIaBv+vw82gX6Nkpw+RN3px9xEtC0TJ2BcKEUIajJssu7rb21Z7mb4q6ajhWT
+         lVkz7U0GR5KqU8q7CKdlOsutJxRjMiR/tVGctxdaobDAiVcdJbZ8vDPAVdNqQzPQtWRB
+         OBbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyf9gn44Q0YDqOeNXTaSC3pekAjwBXc3G2XD6Bm+VcqkG2RrE5aqwk+aIz7dJ29jkKOb7A4UcVco41@vger.kernel.org, AJvYcCXNEs+8k2aPGHtctwXyFnjpMjAAwfzLVk3foWxyig63CKVSGa2Y3irHjUYPsilhVHUkRjrD+zDR8HfLxs8=@vger.kernel.org, AJvYcCXwH7/yBJ0bD4dnNp4+KhM3MAhaUXjSKkaUBhqspo02hre7vKkFh8pK7vzB8C9wj0DpPcobTFJXzIlj1nuRJ1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx59SrLJJ/VnGj54YWbNfn+ONaG0iTfpF8H9F/O0Gv3XGrPy/aS
+	nK2p1uch6AYu/8QivjfbP38j3HGlzGnU/FzZmJxB3DwK643gC+ZmFy109Rn7N7aM7OBwq+KVTOJ
+	MjJmAW+tdKg94H8Axx4zNsxaeuxo=
+X-Gm-Gg: ASbGnct0L3viOIzt9/eEQxSsMo6BX0ADNU8VyUIBiobvwsOU5ggLHi5CafXILcOGANt
+	bnAVe38L23+FNQpiLVxa2cnr+WcaulptAKf8B80CHjbpfzxSGUDwBo91re9BcTPu8VPwG2uC/Ba
+	UDJkYMefnlfBPi7vy6O83sYA==
+X-Google-Smtp-Source: AGHT+IEiX5HOql1Behi5jkLzmw54WU/0LI8y3MDjwTeXZWJSMxCU6ssUQq9vNwiDGP9M2/NeyvAyM0pzLPiYXq47u8g=
+X-Received: by 2002:a17:90b:3b4c:b0:2fe:b77a:2eba with SMTP id
+ 98e67ed59e1d1-3084e6f3e13mr420967a91.1.1744652104535; Mon, 14 Apr 2025
+ 10:35:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+ <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com> <Z_1E2z-l1xG--BSc@slm.duckdns.org>
+In-Reply-To: <Z_1E2z-l1xG--BSc@slm.duckdns.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 14 Apr 2025 19:34:51 +0200
+X-Gm-Features: ATxdqUEzSxdx6sOQ3IAHBXJpdp1RewVIQEw06kaYohz9SvIiNEakVjahBYqNxIU
+Message-ID: <CANiq72keUDCzhwW9E0aw-QV4ST7k3zqit1Ea=2yj2VdKS1ujWw@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
+To: Tejun Heo <tj@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Tamir Duberstein <tamird@gmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 14, 2025 at 7:24=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
+>
+> Acked-by: Tejun Heo <tj@kernel.org>
+>
+> Please let me know how you want it routed.
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+If you would like to take it, then that would be nice. Otherwise, I
+can also take it.
 
-MAX_PREALLOCATED_PMDS and PREALLOCATED_PMDS are now identical. Just
-use PREALLOCATED_PMDS and remove "MAX".
+Thanks!
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
----
-
- b/arch/x86/mm/pgtable.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff -puN arch/x86/mm/pgtable.c~simplify-PREALLOCATED_PMDS-4 arch/x86/mm/pgtable.c
---- a/arch/x86/mm/pgtable.c~simplify-PREALLOCATED_PMDS-4	2025-04-09 11:49:42.535989732 -0700
-+++ b/arch/x86/mm/pgtable.c	2025-04-09 11:49:42.538989843 -0700
-@@ -118,7 +118,6 @@ static void pgd_dtor(pgd_t *pgd)
-  * new process's life, we just pre-populate them here.
-  */
- #define PREALLOCATED_PMDS	PTRS_PER_PGD
--#define MAX_PREALLOCATED_PMDS	PTRS_PER_PGD
- 
- /*
-  * "USER_PMDS" are the PMDs for the user copy of the page tables when
-@@ -154,7 +153,6 @@ void pud_populate(struct mm_struct *mm,
- 
- /* No need to prepopulate any pagetable entries in non-PAE modes. */
- #define PREALLOCATED_PMDS	0
--#define MAX_PREALLOCATED_PMDS	0
- #define PREALLOCATED_USER_PMDS	 0
- #define MAX_PREALLOCATED_USER_PMDS 0
- #endif	/* CONFIG_X86_PAE */
-@@ -324,7 +322,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
- {
- 	pgd_t *pgd;
- 	pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
--	pmd_t *pmds[MAX_PREALLOCATED_PMDS];
-+	pmd_t *pmds[PREALLOCATED_PMDS];
- 
- 	pgd = _pgd_alloc(mm);
- 
-_
+Cheers,
+Miguel
