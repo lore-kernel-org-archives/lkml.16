@@ -1,123 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9514724729E
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B2227FD49;
+	Mon, 14 Apr 2025 14:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639284; cv=none; b=e7lXSIvRubmsu+7wq/xVWHtJDABZQQC/OCe8l8y/IYv9jPJAs6P1gOLsOSIoK1tGsRQ/jLaEQM2vJrnYtAUyOj98BnLxQpTl5jz30Lchwm26H+qrmgR32/mIpOaXuhlY8uPMRj9JGBMQdjEcirJKDoj4x10HhBHkXLKMJoOqHxI=
+	t=1744639328; cv=none; b=Fp20f4H6pVZNnKYLUqqFXxT0A1ola9xGzw7KgWz3EtiqdGoxN48FBP7DVseL6LEOy+AnBArLfC1Rswk5lk5g3LJisfpe/ztLDoMiBiQvTPv+RAh/cPbx4JmLd6gRrMRJvm28xs72wfszMw4CSz3AcS53M/pSmS6TV2sJxrqDf3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639284; c=relaxed/simple;
-	bh=+YodFNNTUuQhUEBZab6r6F10eQt952ve/wIQC9RSQ74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QyvZLyd+Khqh0/bdxQTzS5DXcyR9J0Gg6pjcYO2+N1TuSf0Nsl8nJl3lQkulVokzhS2qSxRG7aJZak6Ve9xv4RysbTQBLh+HH+ykXcVKgHmeqRdIiSvA1i3sQ3YZ2NRgDuEZju6n3vXUsBDOr71m+4W9HClPim7nfGtSXSIq7SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lb5cLzqb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744639328; c=relaxed/simple;
+	bh=sNefBMxH9d05RBIiV8BbvUq1auotHkfFm+DadS6lVlI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OFZpQ+pcbE17GpK4taMOwMyhNeOLY+YDDVC5zy3+v1xBFwyQpXp7Us1e7tBVMr988q2oTzDjdH+9q2eOXyYYXzGcPub0X5eXo6Drv9Pl8b7x3H8mOAvDzBxsjnszJ8E0hEAoTNt6dl6+pQzkQcZCK9tAUzko//yulLDxqfijXVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=fRECQpnR; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lb5cLzqb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B2EC4CEE2;
-	Mon, 14 Apr 2025 14:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744639284;
-	bh=+YodFNNTUuQhUEBZab6r6F10eQt952ve/wIQC9RSQ74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lb5cLzqbKEQZeiPHNFs7vn1FgagHY0WucQZtCbf6NoKfzfH63YBpLhoClGHY2PT02
-	 N0Bc1yFqTiaO1a+tu8559J5GZylaeq60IK2ujm9D0+0YMkz42sbLvBKMZbImykdTPr
-	 TwhKWCw3fI/Tig04mfhE6LhL/21nruX+VOts0seIjcsp5a6166SQxSY099ocl/Ey1e
-	 ZONalVhK/+uqRxuiZdeTHnIEQ6z9atPVMVR62/TvRcMisu3CO/GlH4TGPNudBAI4oY
-	 hxR6sec1UcxiIOjSdE+7x2nfIeS+NiKpR+L4Ubyz/Eiepn0VVgOlLsqCr2Umryciim
-	 ZyWYmz3OML3vQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4KNE-000000004jy-2RWP;
-	Mon, 14 Apr 2025 16:01:20 +0200
-Date: Mon, 14 Apr 2025 16:01:20 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mux: suppress lookup errors for mux controls
-Message-ID: <Z_0VMCmfnDZxd4GC@hovoldconsulting.com>
-References: <20250414124220.30578-1-johan+linaro@kernel.org>
- <c0f63b8a-7197-050a-ca01-a1050a2e287e@axentia.se>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="fRECQpnR"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3C875103801B7;
+	Mon, 14 Apr 2025 16:01:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744639317; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=sVSzr9MoLYQLsnfqPt+wdg+ZWOABKxQrKv/DSGRxEPI=;
+	b=fRECQpnRvPqd36QtTIYfN6O/MfPloi9Vjzq9Mjg852cVw1r73K1Aqw8QHAk25dl7cWaEU6
+	3riWVS4KGgsWH1fyzijljiBAfye/o0avBEcd8dWEZZA95zofZYuWeQbLAQBSKjuaNWrUGw
+	MH1M3F0vqbgT50sZjDxL+3tZLIDDiRYnaTpw32neqEC/VqA7bfkTQqDkqNzxfiGfXN3WI5
+	9aJVldgVqNW4fqpxYVLabgFZHVaLCtkhQWewJLD0tNqX+dg8Mx829ydNqFXAVKbZjrrpup
+	wfvl59KI5A2Qn3mXnKV6AZhvKDoFLDkqwgH0kF9Y2ON46lKZL4HI6NwnSXNpKw==
+From: Lukasz Majewski <lukma@denx.de>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Simon Horman <horms@kernel.org>,
+	Lukasz Majewski <lukma@denx.de>
+Subject: [net-next v5 0/6] net: mtip: Add support for MTIP imx287 L2 switch driver
+Date: Mon, 14 Apr 2025 16:01:22 +0200
+Message-Id: <20250414140128.390400-1-lukma@denx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0f63b8a-7197-050a-ca01-a1050a2e287e@axentia.se>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, Apr 14, 2025 at 03:18:03PM +0200, Peter Rosin wrote:
-> 2025-04-14 at 14:42, Johan Hovold wrote:
-> > Since commit eec611d26f84 ("ASoC: codecs: wcd938x: add mux control
-> > support for hp audio mux") we have drivers looking up mux controls that
-> > are optional. This results in errors incorrectly being logged on
-> > machines like the Lenovo ThinkPad X13s where the mux is missing:
-> > 
-> >     wcd938x_codec audio-codec: /audio-codec: failed to get mux-control (0)
-> > 
-> > Suppress the error message when lookup of mux controls fails and make
-> > sure to return -ENOENT consistently also when looking up controls by
-> > name so that consumer drivers can easily determine how to proceed.
-> > 
-> > Note that most current consumers already log mux lookup failures
-> > themselves.
-> > 
-> > Fixes: eec611d26f84 ("ASoC: codecs: wcd938x: add mux control support for hp audio mux")
-> > Link: https://lore.kernel.org/lkml/Z-z_ZAyVBK5ui50k@hovoldconsulting.com/
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+This patch series adds support for More Than IP's L2 switch driver embedded
+in some NXP's SoCs. This one has been tested on imx287, but is also available
+in the vf610.
 
-> > --- a/drivers/mux/core.c
-> > +++ b/drivers/mux/core.c
-> > @@ -544,8 +544,13 @@ static struct mux_control *mux_get(struct device *dev, const char *mux_name,
-> >  			index = of_property_match_string(np, "mux-control-names",
-> >  							 mux_name);
-> >  		if (index < 0) {
-> > -			dev_err(dev, "mux controller '%s' not found\n",
-> > -				mux_name);
-> > +			if (!state && index == -EINVAL)
-> > +				index = -ENOENT;
-> 
-> Why exclude states? For me, that's entirely random and inconsistent. If there's
-> a reason to exclude them, I'd like to hear about it. If there is no reason and
-> this is just defensive programming, then I'd like for someone to dig into it
-> and either find a reason for the difference or clean up the inconsistency.
+In the past there has been performed some attempts to upstream this driver:
 
-I only found one user of "mux states" and I'm still not quite sure why
-there are two interfaces for looking up muxes. But my impression was
-that if you need a mux set to a specific state and you even encode that
-directly in DT, then there should be no need to support optional
-resources.
+1. The 4.19-cip based one [1]
+2. DSA based one for 5.12 [2] - i.e. the switch itself was treat as a DSA switch
+   with NO tag appended.
+3. The extension for FEC driver for 5.12 [3] - the trick here was to fully reuse
+   FEC when the in-HW switching is disabled. When bridge offloading is enabled,
+   the driver uses already configured MAC and PHY to also configure PHY.
 
-After taking a closer look at the single consumer now, I see that it
-already implements optional lookups itself and thus could benefit from
-generalising this.
+All three approaches were not accepted as eligible for upstreaming.
 
-There's no other reason for why this could not be extended to "mux
-states".
+The driver from this series has floowing features:
 
-> I think the model of explicitly marking when you'd like a mux to be optional
-> is a better and less fragile model. Who is to say that -EINVAL from some other
-> call is, and will remain, a perfect match for the optional case you are aiming
-> for?
+1. It is fully separated from fec_main - i.e. can be used interchangeable
+   with it. To be more specific - one can build them as modules and
+   if required switch between them when e.g. bridge offloading is required.
 
--EINVAL is simply the error returned from the OF helpers when the name
-properties are missing. I map that to -ENOENT for consistency with index
-lookups (i.e. when the "mux-controls" property is missing) and that
-error is much less likely to be returned for other reasons.
+   To be more specific:
+        - Use FEC_MAIN: When one needs support for two ETH ports with separate
+          uDMAs used for both and bridging can be realized in SW.
 
-> Srinivas Kandagatla is looking into optional muxes as a side issue to
-> exclusive muxes.
-> https://lore.kernel.org/all/20250326154613.3735-1-srinivas.kandagatla@linaro.org/
+        - Use MTIPL2SW: When it is enough to support two ports with only uDMA0
+          attached to switch and bridging shall be offloaded to HW. 
 
-The audio codec change introduces a de-facto regression so if you want
-something different, we'll have to fix this in the codec driver directly
-by checking for a "mux-controls" property before doing the lookup for
-now (i.e. like is done in the TI driver looking up an optional "mux
-state").
+2. This driver uses MTIP's L2 switch internal VLAN feature to provide port
+   separation at boot time. Port separation is disabled when bridging is
+   required.
 
-Johan
+3. Example usage:
+        Configuration:
+        ip link set lan0 up; sleep 1;
+        ip link set lan1 up; sleep 1;
+        ip link add name br0 type bridge;
+        ip link set br0 up; sleep 1;
+        ip link set lan0 master br0;
+        ip link set lan1 master br0;
+        bridge link;
+        ip addr add 192.168.2.17/24 dev br0;
+        ping -c 5 192.168.2.222
+
+        Removal:
+        ip link set br0 down;
+        ip link delete br0 type bridge;
+        ip link set dev lan1 down
+        ip link set dev lan0 down
+
+4. Limitations:
+        - Driver enables and disables switch operation with learning and ageing.
+        - Missing is the advanced configuration (e.g. adding entries to FBD). This is
+          on purpose, as up till now we didn't had consensus about how the driver
+          shall be added to Linux.
+
+Links:
+[1] - https://github.com/lmajewski/linux-imx28-l2switch/commits/master
+[2] - https://github.com/lmajewski/linux-imx28-l2switch/tree/imx28-v5.12-L2-upstream-RFC_v1
+[3] - https://source.denx.de/linux/linux-imx28-l2switch/-/tree/imx28-v5.12-L2-upstream-switchdev-RFC_v1?ref_type=heads
+
+Lukasz Majewski (6):
+  dt-bindings: net: Add MTIP L2 switch description
+  ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2 switch description
+  ARM: dts: nxp: mxs: Adjust XEA board's DTS to support L2 switch
+  net: mtip: The L2 switch driver for imx287
+  ARM: mxs_defconfig: Update mxs_defconfig to 6.15-rc1
+  ARM: mxs_defconfig: Enable CONFIG_FEC_MTIP_L2SW to support MTIP L2
+    switch
+
+ .../bindings/net/nxp,imx28-mtip-switch.yaml   |  141 ++
+ MAINTAINERS                                   |    7 +
+ arch/arm/boot/dts/nxp/mxs/imx28-xea.dts       |   56 +
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |    8 +-
+ arch/arm/configs/mxs_defconfig                |   14 +-
+ drivers/net/ethernet/freescale/Kconfig        |    1 +
+ drivers/net/ethernet/freescale/Makefile       |    1 +
+ drivers/net/ethernet/freescale/mtipsw/Kconfig |   13 +
+ .../net/ethernet/freescale/mtipsw/Makefile    |    3 +
+ .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 1990 +++++++++++++++++
+ .../net/ethernet/freescale/mtipsw/mtipl2sw.h  |  788 +++++++
+ .../ethernet/freescale/mtipsw/mtipl2sw_br.c   |  120 +
+ .../ethernet/freescale/mtipsw/mtipl2sw_mgnt.c |  449 ++++
+ 13 files changed, 3578 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/Kconfig
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/Makefile
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_mgnt.c
+
+-- 
+2.39.5
+
