@@ -1,116 +1,145 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECD91B0430;
-	Mon, 14 Apr 2025 08:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E511DB548;
+	Mon, 14 Apr 2025 08:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619920; cv=none; b=O6VL3YxFruPF96VWgrNK8iQDPry+ymDPxwtlzGAxRk4NoUwyxOkBc0HU4P5zz21WnEyKqXGI9qT6flht0I0l3oPsbe8ftDS1bSpRj6snE++VB/8x9jUDPKG0JV54i1FBjZUM86jR0RaLfmPsb6aWRbDcBJgz5JLQdFmltUsx8dc=
+	t=1744619943; cv=none; b=Wq3r7xXlwiZ5IPKBUAQLBIBChjtaowXC/Fqw34TZno4Qepzr8xQXXICJgwAr1muoyJpJyqdg3IzZAVBnaUODqpqlj3KbnP5wGuU6hkKk7o/jkU89nxtK+cj8eIGxG0uMS9qCB/dxnyzrF+bHST7jBifaRPXanwWuJcc9I+lJMKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619920; c=relaxed/simple;
-	bh=m1kBBv14YQFegLy/jMqGac/IxtO6hAn6QRq+9k2CLxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jgrO2Kn9GDPA4pYxKNVh9hHdUiXyQZbyLhzsj4ShtghIhjFiIKWPREFTQFey27+CUeYER7lRxElco+CQmJ0jK/LQfBtZEI+Pvjibr/7iEn3heyeaUEB/xn5kzzym/LySQ1T8bq+QLHA16W+OOSyHbzXnOpQk1AdmyJ608191i5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CADEA1007;
-	Mon, 14 Apr 2025 01:38:35 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96F8B3F694;
-	Mon, 14 Apr 2025 01:38:35 -0700 (PDT)
-Date: Mon, 14 Apr 2025 09:38:23 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Matthew Bystrin <dev.mbstr@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	arm-scmi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Philipp Zabel <p.zabel@pengutronix.de>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] firmware: arm_scmi: add timeout in
- do_xfer_with_response()
-Message-ID: <Z_zJbRH7vQ0TswGg@pluto>
-References: <20250402104254.149998-1-dev.mbstr@gmail.com>
- <20250402-hidden-unyielding-carp-7ee32d@sudeepholla>
- <Z-1gY8mQLznSg5Na@pluto>
- <D8X9JJGPGDNL.1OTKIJODRFKNN@gmail.com>
- <20250409-fierce-astonishing-bug-dd2adb@sudeepholla>
- <D94LGXDHGVBD.1GB1GHOWORHMU@gmail.com>
+	s=arc-20240116; t=1744619943; c=relaxed/simple;
+	bh=1pYizhz20oToa6cWJxrwH/gUKSxRyRkYLirNJj35J1I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V+5l9PDR94X0yZRXpHJnG4nqOso/pZN+tH3GowLdW9awDJ7fzenGC1lqJxFY+jJDz2FyR/pHFKl15tdyyJ8Hj5f8AEz1q7/uwbAQj04ujBFKr1Ft5vmAN/Xam0Ug0ZPGtlRFWS/Qq7HJZHu/7/nrJbHpuy5lYKSBfOLUoydv9Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7UCw93U; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7UCw93U"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso4572982e0c.1;
+        Mon, 14 Apr 2025 01:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744619941; x=1745224741; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hTy2dMzAPbwuVa9TxRLDUeltXU5gUdwfv5c3E4fDx6s=;
+        b=R7UCw93ULDiyrmkehnlhV2aA5lWLRWf8Oiy/iWjmlhitimo1kZjJW3jd6ssEDHFPUp
+         1ID9JUVbJ8TQ6k1nlIxzaTOF7oV610XSPfPQ6XEV8QQTYLuEtH/zAFty5iuG5KlNw11B
+         ZldLokEHVPDT9G+BeMPfjcTyA7Zz0bvVdZNQGWI7Ubbi0FD0WQb6Vqk+n0fgIFfM/mnH
+         sxEgM7YrGzHaRuCGD2qa1THzMnBANbOu3ES32CwEzszOfaiQ84FAsSJRXFiBlNhk2GAM
+         g4toQGPvFCW+WkW80/PfBW767fuMcwoIbsDtkRQg/zYnaJIg8SCnF6WeQqFfKFEnE8B4
+         X/EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744619941; x=1745224741;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hTy2dMzAPbwuVa9TxRLDUeltXU5gUdwfv5c3E4fDx6s=;
+        b=ScS6ODxzA7xaB928X0JPnuCLyqtaB+lLGyO+yBYxDfrdlzYBhxUq+GK3FG/pt/FXto
+         LzdSLhi7YPFmRoRTRHTWrzwABQHokA1cdorLyHXDDtKJwr1TVAJu21ydVF3WqNkuw1F+
+         Er7u0vyz7hwILQZ7A2ylMGzj/g7DVofvz1V3yNmLIYKG0h/yO7yLuEPwpJBpSbZ1uPOX
+         cq1dbo0ek5PggiO7UkU5qxrvLzfAFcffG6ubcoJdJd2o2Wo+MmxclxiBadZPOdkVhKWI
+         TI5XZAAkP3bK1daqTeyV33KrFYg3XeAcRcRS1qmHW1k9YQmN7pDYL/J/I/sgJyNrlbWX
+         sCsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrZK1QgX0qKfFFd6TR0msDn1aDJ6Tv98zAWqD79P/a1D1Ds1eukz1eNKv5aVWK3Sne0D0E9jDoGrkZg1bJ5qPjl/Q=@vger.kernel.org, AJvYcCWIZmQABIMS5ull83GnZmD0OaVRQsR6ubDu2SAtLj2JVi5uizSYgXToazdpLUQPocIeJPhq7oApLtfD+fpk@vger.kernel.org, AJvYcCWUK1Vp6ZGsKPCfHl1OdAy5Lx3doOAvdGdS2TtuRSDsyPhirZFOXlcJGiniEvhY7OmIbJ2GosITJ4Lm1EJz@vger.kernel.org, AJvYcCWZp7NTFuQwOLJMzCxNoQvn9junbO6snSiEN/GE5qOhGyLTH6uLY821u4oKHcCxtXZ6+k+D8Z/TNkpO1A==@vger.kernel.org, AJvYcCXVeYVIAsWDjoEfwW7ypt4nQJVZM2kq2jyitqD2yv5anhnjv+oR9FqeaxSGwzfeHSDa7yRyumki5o67@vger.kernel.org, AJvYcCXjkBeaWbD4X6TsuXVpXKYkzar+kDB7Kd/lZNewppNrKpDwXI3bmxxKGD6w0X9aYSLifCAINc3ucnyk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSmsRoJHVaFvcMjlWV/qZMJr5FLMP9zHz0o1Uu/knR3PuLkgNc
+	FH1eJZS0VgdhSUiWnq8sE8PpNU9ar9vhaMuVpKnOmAW9yXwUmtZXeclpD2KzmhP4raJtRfhFXx6
+	Jj4cB/eSCOfrNr1ehLJjAsoL1jbg=
+X-Gm-Gg: ASbGnctphqaMLMxw/8eNHXIjbgn3+u2lMTmhXrrUm2Xxoe8dxThGZK1A+LcDYtAb5XL
+	Bn8LhB2aZR+mf8bBLMG+RRs5ou7WTwjSpDN/R5V3InCgqX6NhDuK79tPg8ULZ6L5sT7nv3aD6R6
+	QEH2F0sFVmSY7zk1FjsB+5PA==
+X-Google-Smtp-Source: AGHT+IFSFoNvOiSBCPBRkuOl5Uhz3zoZyl4y08/FP5haIRysNk2ejFDXSTZThvetx881XzIBVxPwNb+BF8ztClx7lZ4=
+X-Received: by 2002:a05:6122:a15:b0:520:98ec:b25c with SMTP id
+ 71dfb90a1353d-527c34834f0mr6710866e0c.1.1744619940931; Mon, 14 Apr 2025
+ 01:39:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D94LGXDHGVBD.1GB1GHOWORHMU@gmail.com>
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407191628.323613-12-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWV97ctfp+DbxdZ3c-X6hZBH9zapGEzcfp=tQ-hxt31Tw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWV97ctfp+DbxdZ3c-X6hZBH9zapGEzcfp=tQ-hxt31Tw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 09:38:34 +0100
+X-Gm-Features: ATxdqUGXA0V5Kweq44jxVUfYGeZpIlKPpS3FeZUSMLwi-wC15286H87_1RX_W9o
+Message-ID: <CA+V-a8uv4yL+CMJB-HXAmHNr25_PqPfoWAV8e5OuiAVQnizKAw@mail.gmail.com>
+Subject: Re: [PATCH v2 11/12] arm64: dts: renesas: Add initial SoC DTSI for RZ/V2N
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 12, 2025 at 01:39:45PM +0300, Matthew Bystrin wrote:
-> Sudeep,
-> 
+Hi Geert,
 
-Hi Matthew,
+Thank you for the review.
 
-> Thanks for taking your time.
-> 
-> Sudeep Holla, Apr 09, 2025 at 14:12:
-> > The start update should retain as soon as Platform uC acks the request.
-> > And 2 notifications can be sent out for update procedure started and
-> > completed. I don't see any issue there. What is the semantics you are
-> > talking about ?
-> 
-> I'm going to refer to section 4.1.1 from the spec, where stated following about
-> delayed responses,
-> 
-> "Messages sent to indicate completion of the work that is associated with an
-> asynchronous command" 
-> 
-> Compared to notifications,
-> 
-> "These messages provide notifications of events taking place in the platform.
-> Events might include changes in power state, performance state, or other
-> platform status"
-> 
-> So before I implemented mentioned driver I had red this two and had chosen
-> delayed responses, because it had seemed more appropriate. Details below.
-> 
-> > Even delayed response as some timeout so I would rather prefer to use
-> > notifications
-> 
-> Hmm, I see.
-> 
-> > in your usecase as it is completely async.
-> 
-> Just to emphasize, according to the spec I don't think that delayed responses
-> and events have different degree of asynchrony. The difference is in the
-> initiator of 'messaging'. Events are sent by platform to indicate its' state and
-> delayed responses are sent to indicate status of previously requested operation.
-> 
+On Thu, Apr 10, 2025 at 11:54=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add the initial Device Tree Source Include (DTSI) file for the Renesas
+> > RZ/V2N (R9A09G056) SoC. Include support for the following components:
+> >
+> > - CPU (Cortex-A55 cores with operating points)
+> > - External clocks (audio, qextal, rtxin)
+> > - Pin controller (GPIO support)
+> > - Clock Pulse Generator (CPG)
+> > - System controller (SYS)
+> > - Serial Communication Interface (SCIF)
+> > - Secure Digital Host Interface (SDHI 0/1/2)
+> > - Generic Interrupt Controller (GIC)
+> > - ARMv8 timer
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v1->v2:
+> > - Added RZV2N_Px, RZV2N_PORT_PINMUX, and RZV2N_GPIO macros in
+> >   SoC DTSI as we are re-using renesas,r9a09g057-pinctrl.h
+> >   in pictrl driver hence to keep the consistency with the
+> >   RZ/V2H(P) SoC these macros are added.
+>
+> Thanks for the update!
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v6.16.
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r9a09g056.dtsi
+>
+> > +               pinctrl: pinctrl@10410000 {
+> > +                       compatible =3D "renesas,r9a09g056-pinctrl";
+> > +                       reg =3D <0 0x10410000 0 0x10000>;
+> > +                       clocks =3D <&cpg CPG_CORE R9A09G056_IOTOP_0_SHC=
+LK>;
+> > +                       gpio-controller;
+> > +                       #gpio-cells =3D <2>;
+> > +                       gpio-ranges =3D <&pinctrl 0 0 96>;
+> > +                       power-domains =3D <&cpg>;
+> > +                       resets =3D <&cpg 0xa5>, <&cpg 0xa6>;
+>
+> Note that support for these resets is not yet implemented in the clock
+> driver (also on RZ/V2H).  This is not an issue if the pin control
+> driver does not use it.
+>
+Good point. I'll add the entry for both the SoCs once the initial
+patches get merged.
 
-Delayed reponses are certainly better than notification for completion
-of agent initiated actions BUT this does not exclude the usage instead
-of a sync-command to start the operation and a notification to signal
-its completion...depends really on the case.
-
-The classic example of a needed async-cmd is reading a sensor that takes
-a long time due to its own physical nature...
-
-AFAIU, in this case you have an async operation whose completion time is
-considerably longer (so you aim to configure a specific timeout for that
-specific command) BUT it is also bound to the payload itself that you
-are trying to load AND/OR to other platform specific HW charactristics
-(like how slow are your flashes in this HW releases...): this means that
-while the sensor slowness is stable and predictable, and the timeout can
-be fixed a-priori, in this case you risk to have in the future anyway to
-have to refine and tune this ad-hoc custom timeout....while you'd have
-none of this issue by simply waiting for a notification (ofc you could
-have to set a large timeout on your side anyway while waiting for
-notifs...)
-
-...unless you plan to dynamically tune the async-cmd timeout at runtime
-based on the known payload size (that means more commands to query the
-soon-to-be-flahsed payload) but anyway this does NOT solve the fact that
-the platform characteristics can influence the length of the operation.
-
-Thanks,
-Cristian
+Cheers,
+Prabhakar
