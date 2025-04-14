@@ -1,48 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477F61F4C9C;
-	Mon, 14 Apr 2025 21:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CF81F63E4;
+	Mon, 14 Apr 2025 21:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744666929; cv=none; b=QwevXJf/rHMjGC5V8TwZR6zP9l7a7wncGi8RsQVaet79Iryp+tRtuqQdxZdob/RalmUF+NXqRZPOG9SnahGDVYXiuA00SAhW/uzYFYaPVVIo2cYWTS5NDyeHTC10uaPQCFt322ZYdv7W/XfR1qhupPnhWR9A/9TwviX8g8PEcro=
+	t=1744666930; cv=none; b=bFgRP5s9AHSVIwCX50F+aoIZkbYwvevAsd7oROAyXIV8tNwFpHF4U4RV3KZFWgyEeijKCzUvPkkU8DP5xp+0vmuRelhfrASBTpc8q1/J5Knmw97FeLVEXZjm06sbvHkJ22BwnVFryJHmCghE3iNNK62npJNRCjBk55I5MPhWR9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744666929; c=relaxed/simple;
-	bh=OM1d3llXIfkK0/Fd/B3sNNDqgNroniFjy4Xdxaa5Z5c=;
+	s=arc-20240116; t=1744666930; c=relaxed/simple;
+	bh=vnVUWi683eLAl6E3rzjUozBpg+T+n1g51iJhW+AjjsE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ft/hLuxbJ2UD2zVzdSGX6U04VazCTHS5k4kam5KDvlcwInktXFk5U+J6ZGBT3suNBgNdQs/z0aWAjXB+SpqwCiHt4yq/7/IRaj8AscuNFTrTueJse13+p5ajsENFSSYgDUNcb6e0HPfXKBv8dU8z0epGGj47D856UPHe1EY4Yqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WWZou3jl; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=FcpL1hQNVUVV7zs00Q0B4XQ/g7CWUruNKr5JXwk8N9md/ehWOjzN11Z38u9o9BNsfywxxK2eZ5zrEdB2dDaNysGV/53FMnmZ/6UKCUSUK+JyqxlR1yAcfNhf/0PH9oL95MHfZiRAklXHvSSaIVXyQ3IHc8auojvYqxVfoz2gNWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=E9bpsr3h; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WWZou3jl"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="E9bpsr3h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1744666927; x=1776202927;
+  t=1744666929; x=1776202929;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OM1d3llXIfkK0/Fd/B3sNNDqgNroniFjy4Xdxaa5Z5c=;
-  b=WWZou3jlLFWxDX4AfxtxYB8SF50orUqVKwVWU4BsX4bc0VRxucD8RQFP
-   7+itvTepUHO/1FKskOkgpQgEI3V8lkHU6J3ZO+3blPmZ4Z09/k79J7HzW
-   G6O8JxraEpyn7NKYw1k5i/5elcau35w1TvZ1lOzuZrcH+/fNFK+uDyjaR
-   ZGY8+/BsxPT7XAvnmaJClJSmEfjRPt1vlLY349c/rOzfGc+TXLT6bmM0S
-   tuVCMXv60I3LoJOBLYaf3YVb/Eb/kZjU/2f9GT1qYlhZXYlFOxCEmBbkI
-   eFb0gYdQW40CZ7byGYXYu3MRLSH2hCyZ4YwI0Fpv6jzL91jCWLPIITURz
-   g==;
+  bh=vnVUWi683eLAl6E3rzjUozBpg+T+n1g51iJhW+AjjsE=;
+  b=E9bpsr3hlhOomy9Jtk6Z2UlKJPtdnkg36bzaOWMJQUljNOHufFwMMQ2R
+   lPFkrgEuYj63VK5MOOFONiPGX1SAzNQ8Q/ofmrEnflUnQlCamxBu5cEZO
+   wQXvkImHmYgpQjo+O8N+iXW/znAjSXf8PMhiXEoVd72Qa/zvWv2qg3QaK
+   mji9QSH47zDIkpaPTdkXVLTLyOMvTLsYS1tZof0YRwCPA/EfX6DacJkcS
+   +HosITs5A9c92xCnr5QNSR3SwUEBFQYzM49b7PS8hcWfr9zyXnwx3u9Gb
+   qosEd/j2bvEjz7Mo/4zUIyXCCw94akYi/q5u8x3HMsKnomROnIS/h0rDD
+   w==;
 X-CSE-ConnectionGUID: jf75aQsXSneWELgtntpGWQ==
-X-CSE-MsgGUID: fu3b2IBCT8mVUyCt3fIHXQ==
+X-CSE-MsgGUID: P6YyYl5bShyxINJv3ViNTQ==
 X-IronPort-AV: E=Sophos;i="6.15,212,1739862000"; 
-   d="scan'208";a="40006674"
+   d="scan'208";a="40006676"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Apr 2025 14:41:56 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Apr 2025 14:41:57 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 14 Apr 2025 14:41:05 -0700
+ 15.1.2507.44; Mon, 14 Apr 2025 14:41:06 -0700
 Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Mon, 14 Apr 2025 14:41:05 -0700
+ 15.1.2507.44 via Frontend Transport; Mon, 14 Apr 2025 14:41:06 -0700
 From: <Ryan.Wanner@microchip.com>
 To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -52,9 +52,9 @@ CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
 	<linux-rtc@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 06/11] dt-bindings: mfd: atmel: Add microchip,sama7d65-gpbr
-Date: Mon, 14 Apr 2025 14:41:23 -0700
-Message-ID: <ddbcb306699b8c09f3210d714c0701afa1a7cb96.1744666011.git.Ryan.Wanner@microchip.com>
+Subject: [PATCH v5 08/11] dt-bindings: mfd: syscon: add microchip,sama7d65-secumod
+Date: Mon, 14 Apr 2025 14:41:25 -0700
+Message-ID: <2fdd14313d9cf008dbc4a63a91ba0cb5cf372ad6.1744666011.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1744666011.git.Ryan.Wanner@microchip.com>
 References: <cover.1744666011.git.Ryan.Wanner@microchip.com>
@@ -69,26 +69,26 @@ Content-Type: text/plain
 
 From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Add SAMA7D65 GPBR compatible to DT bindings documentation.
+Add SAMA7D65 SECUMOD compatible string to DT bindings documentation.
 
 Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../devicetree/bindings/mfd/atmel,at91sam9260-gpbr.yaml          | 1 +
+ Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel,at91sam9260-gpbr.yaml b/Documentation/devicetree/bindings/mfd/atmel,at91sam9260-gpbr.yaml
-index f805545aa62a..f6f47999c6c1 100644
---- a/Documentation/devicetree/bindings/mfd/atmel,at91sam9260-gpbr.yaml
-+++ b/Documentation/devicetree/bindings/mfd/atmel,at91sam9260-gpbr.yaml
-@@ -19,6 +19,7 @@ properties:
-       - items:
-           - enum:
-               - atmel,at91sam9260-gpbr
-+              - microchip,sama7d65-gpbr
+diff --git a/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml b/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml
+index b1f766e333d4..ad4a98a4ee67 100644
+--- a/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml
++++ b/Documentation/devicetree/bindings/arm/atmel,sama5d2-secumod.yaml
+@@ -21,6 +21,7 @@ properties:
            - const: syscon
        - items:
            - enum:
++              - microchip,sama7d65-secumod
+               - microchip,sama7g5-secumod
+           - const: atmel,sama5d2-secumod
+           - const: syscon
 -- 
 2.43.0
 
