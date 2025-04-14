@@ -1,130 +1,142 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+Received: from mail-m15590.qiye.163.com (mail-m15590.qiye.163.com [101.71.155.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C1E2F4A;
-	Mon, 14 Apr 2025 02:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954BBE571
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744597870; cv=none; b=Mbk2kkjgIev0ECNOo92qX3Ycg5p0SfPQAVTEQ88zn0eCsg3547f4X3g+FOMI00wm6wVCd61gr2CClrUO0xa7NQZGgchw8kAJQEGzl/3f/dQOSqQqytAlBMU0Pmj23HyCfj/vwp89TWkLGhCtTR+AysIjKbspx3J1ZG7aaOu35/o=
+	t=1744598140; cv=none; b=LHVkWE3L19F4RUb7h47frCFSWZOY8wzDHDbhT93pVjGSfT0uh5hCqA9BipIHKpJR+3M2WfmNbSaFXBZjZ1A6YA3Ih9Z+TWYmB2zGzTohMfTVtDZhUVeNIJyjm85fCKQeXtl3LwE1l58o9UeNECkP+r4JGb5BHMO2e9tB5xlKrJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744597870; c=relaxed/simple;
-	bh=hrkt79QgwXIsiasCmcytf6NbadKuKHha5ialFnb48Ys=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZlXeH0Mx5rH06DzpSOBjDVzK69EBsCsDtxUKeUCvrsA+kvKrTuuVT6uX25lQpYwt87lYbSFg9ffxY2b2q8YtsgD272PNWws7U9f48juo8r+hzGdssIBqkdWCx6TZCOQfhDHnTlejsHaDuZ+pUIwEn73hAh0rsLBzRLRUyYTY7NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=B5djlLy9; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744598140; c=relaxed/simple;
+	bh=46XAbl9MsJrpu0/2atPcNG31CSZYtlA93xWdPwEVDkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=JHahtGOAhx9A86QONydwTDQNCkKcu/iY8JnfTSF1wFeLlvZp8kEFmCdK02fqwD5nUBUnygjBxUIIDG4eMDtIk8LLktlfDUoSvhLuVGi4onuhL76Kl6r+DMeNndACgPYKKsbriVh0aEj42nwoLeYPe+v2tFZtBLzVv8fa310YDpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=PWDQu5Yq; arc=none smtp.client-ip=101.71.155.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="B5djlLy9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744597868; x=1776133868;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mXp++OhBZeDrR/eRrZugOW96Mk+uHmRbPf2RwqEupgk=;
-  b=B5djlLy9Ghhukpx6iPxTu+KqElHFbgCiiVuP3NRt2KPusfhyd3DGwKr4
-   iknGfqckzsP6rF2gOFh3nqpL6sFcr9MaDohReig/ckru8QMzgRG8r0IqB
-   3Kv0GSY/CMmPtO05Q94KwEwQwEY9BYdPS5esgFFFhbA0oPWLeICS3Etwz
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.15,211,1739836800"; 
-   d="scan'208";a="187058078"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:31:07 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:39673]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
- id 90f9a2c6-7278-4f22-8cb8-4f854b41179f; Mon, 14 Apr 2025 02:31:06 +0000 (UTC)
-X-Farcaster-Flow-ID: 90f9a2c6-7278-4f22-8cb8-4f854b41179f
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 14 Apr 2025 02:31:05 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.88.185.97) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 14 Apr 2025 02:31:03 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com>
-CC: <cratiu@nvidia.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <sdf@fomichev.me>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [net?] general protection fault in rtnl_create_link
-Date: Sun, 13 Apr 2025 19:30:46 -0700
-Message-ID: <20250414023048.44721-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67fc6f85.050a0220.2970f9.039e.GAE@google.com>
-References: <67fc6f85.050a0220.2970f9.039e.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="PWDQu5Yq"
+Received: from [172.16.12.26] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11b9cb942;
+	Mon, 14 Apr 2025 09:20:00 +0800 (GMT+08:00)
+Message-ID: <6b662c34-7a1d-4e07-aaa7-752bc0c7575f@rock-chips.com>
+Date: Mon, 14 Apr 2025 09:20:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWC001.ant.amazon.com (10.13.139.218) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] drm/bridge: analogix_dp: drop extra calls to
+ analogix_dp_prepare_panel()
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+ <20250401-panel-return-void-v1-1-93e1be33dc8d@oss.qualcomm.com>
+Content-Language: en-US
+Cc: Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
+ andrzej.hajda@intel.com, dri-devel@lists.freedesktop.org,
+ jernej.skrabec@gmail.com, jonas@kwiboo.se, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, rfoss@kernel.org,
+ simona@ffwll.ch, tzimmermann@suse.de
+From: Damon Ding <damon.ding@rock-chips.com>
+In-Reply-To: <20250401-panel-return-void-v1-1-93e1be33dc8d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRhNSlZCHhgaQxhOSBlCH0tWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9631e1bfb403a3kunm11b9cb942
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kwg6Fxw5OjIDLC4NTxw6KDIs
+	IglPCkNVSlVKTE9PTkJITUtKQ09NVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFIQ0JNNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=PWDQu5YqPF1XeNhsR+IW7rTbu91p2McyotfPxrjfiqQuJeuhN+4kuCmiEXKXfqGOd18Qf/Ru6LCJIxgp6s1JBrmZscb78w0xwMdBhrOOCnQ0KFs5ptBRvCOTzKc1VL9Ig/hooslZgz2WisstwU+VLQn7K6JvMiKFtDTgdo30goE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=YaobMm8o+70LNUX6WDcV+2R5nfMUxLQHI1fhk+wAPpU=;
+	h=date:mime-version:subject:message-id:from;
 
-From: syzbot <syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com>
-Date: Sun, 13 Apr 2025 19:14:29 -0700
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    eaa517b77e63 ethtool: cmis_cdb: Fix incorrect read / write..
-> git tree:       net
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1541f23f980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-> dashboard link: https://syzkaller.appspot.com/bug?extid=de1c7d68a10e3f123bdd
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1429874c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1353f74c580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/8ff6a34dbd2f/disk-eaa517b7.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/80dc0689a89b/vmlinux-eaa517b7.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/093b749f228d/bzImage-eaa517b7.xz
-> 
-> The issue was bisected to:
-> 
-> commit 04efcee6ef8d0f01eef495db047e7216d6e6e38f
-> Author: Stanislav Fomichev <sdf@fomichev.me>
-> Date:   Fri Apr 4 16:11:22 2025 +0000
-> 
->     net: hold instance lock during NETDEV_CHANGE
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=151db7e4580000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=171db7e4580000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=131db7e4580000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com
-> Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
-> 
-> netlink: 4 bytes leftover after parsing attributes in process `syz-executor402'.
-> netlink: 'syz-executor402': attribute type 15 has an invalid length.
-> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000055: 0000 [#1] SMP KASAN PTI
-> KASAN: null-ptr-deref in range [0x00000000000002a8-0x00000000000002af]
-> CPU: 0 UID: 0 PID: 5841 Comm: syz-executor402 Not tainted 6.14.0-syzkaller-13348-geaa517b77e63 #0 PREEMPT(full) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-> RIP: 0010:netdev_need_ops_lock include/net/netdev_lock.h:33 [inline]
-> RIP: 0010:netdev_lock_ops include/net/netdev_lock.h:41 [inline]
-> RIP: 0010:rtnl_create_link+0x6af/0xea0 net/core/rtnetlink.c:3680
+Hi Dmitry,
 
-#syz test
+On 2025/4/1 13:11, Dmitry Baryshkov wrote:
+> The analogix_dp_prepare_panel() returns immediately if there is no
+> attached panel. Drop several calls to this function which are performed
+> when dp->plat_data->panel is NULL.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 22 +---------------------
+>   1 file changed, 1 insertion(+), 21 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> index 042154e2d8ccd74ac2dc27fe527e810a50e08a09..ab1cfc340aa95bbf13fe021bd33227b565a5458d 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> @@ -1005,17 +1005,11 @@ static int analogix_dp_get_modes(struct drm_connector *connector)
+>   {
+>   	struct analogix_dp_device *dp = to_dp(connector);
+>   	const struct drm_edid *drm_edid;
+> -	int ret, num_modes = 0;
+> +	int num_modes = 0;
+>   
+>   	if (dp->plat_data->panel) {
+>   		num_modes += drm_panel_get_modes(dp->plat_data->panel, connector);
+>   	} else {
+> -		ret = analogix_dp_prepare_panel(dp, true, false);
+> -		if (ret) {
+> -			DRM_ERROR("Failed to prepare panel (%d)\n", ret);
+> -			return 0;
+> -		}
+> -
+>   		drm_edid = drm_edid_read_ddc(connector, &dp->aux.ddc);
+>   
+>   		drm_edid_connector_update(&dp->connector, drm_edid);
+> @@ -1024,10 +1018,6 @@ static int analogix_dp_get_modes(struct drm_connector *connector)
+>   			num_modes += drm_edid_connector_add_modes(&dp->connector);
+>   			drm_edid_free(drm_edid);
+>   		}
+> -
+> -		ret = analogix_dp_prepare_panel(dp, false, false);
+> -		if (ret)
+> -			DRM_ERROR("Failed to unprepare panel (%d)\n", ret);
+>   	}
+>   
+>   	if (dp->plat_data->get_modes)
+> @@ -1087,19 +1077,9 @@ analogix_dp_detect(struct drm_connector *connector, bool force)
+>   	if (dp->plat_data->panel)
+>   		return connector_status_connected;
+>   
+> -	ret = analogix_dp_prepare_panel(dp, true, false);
+> -	if (ret) {
+> -		DRM_ERROR("Failed to prepare panel (%d)\n", ret);
+> -		return connector_status_disconnected;
+> -	}
+> -
+>   	if (!analogix_dp_detect_hpd(dp))
+>   		status = connector_status_connected;
+>   
+> -	ret = analogix_dp_prepare_panel(dp, false, false);
+> -	if (ret)
+> -		DRM_ERROR("Failed to unprepare panel (%d)\n", ret);
+> -
+>   	return status;
+>   }
+>   
+> 
 
-diff --git a/include/net/netdev_lock.h b/include/net/netdev_lock.h
-index 5706835a660c..270e157a4a79 100644
---- a/include/net/netdev_lock.h
-+++ b/include/net/netdev_lock.h
-@@ -30,7 +30,8 @@ static inline bool netdev_need_ops_lock(const struct net_device *dev)
- 	bool ret = dev->request_ops_lock || !!dev->queue_mgmt_ops;
- 
- #if IS_ENABLED(CONFIG_NET_SHAPER)
--	ret |= !!dev->netdev_ops->net_shaper_ops;
-+	if (dev->netdev_ops)
-+		ret |= !!dev->netdev_ops->net_shaper_ops;
- #endif
- 
- 	return ret;
+With the patch series:
+https://patchwork.kernel.org/project/linux-rockchip/list/?series=942183
+
+When I verify this patch, there will be a small warning:
+drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1075:6: warning: 
+unused variable 'ret' [-Wunused-variable]
+         int ret;
+             ^
+
+It should be better to remove the unused 'ret'.
+
+Best regards,
+Damon
 
