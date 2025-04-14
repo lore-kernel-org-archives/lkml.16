@@ -1,37 +1,37 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4320E28E3F;
-	Mon, 14 Apr 2025 04:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F937188733;
+	Mon, 14 Apr 2025 04:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744604915; cv=none; b=tehnHW+4YDXGbOXxnQcPNOI7aaAkjz6TMlzCtH8AT4aHeNFojdbxMRlSJCAN6A93idMNT6OpY7XV6tw9YGqrQLVRc0UBC3wRvWfwEwwFaNb4sHMnoxOt7Wi90YpKDrIgYOt0J22Ak5jdPD0UlYy2A/TRWhEbMgUevM/notectjc=
+	t=1744604945; cv=none; b=dmZe2Cqt9oRsAZo/PGzZ3LWWt4pt0cSTqn7yNvN+B417c4EYYPpLLJFf5E45BJaeI/FqDF+GiJbM8QDNpgO3flL8aqU31oMabpsErAMYKkEEI7SIZbK2iOE7nm474QQFXnIK+8noyUWoUaIlyp3mLwrh2kLLDd9vjMZLt3RYdmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744604915; c=relaxed/simple;
-	bh=LZnUR7vmtdVSTSo6qFETKaD8UU1KgCEWRyr8qPadleE=;
+	s=arc-20240116; t=1744604945; c=relaxed/simple;
+	bh=9nLxry6uymEWY57ezGAJopssPlPMvQrTufAJrt4l0IU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=joOwyhUJEjY6CqsxEnAXJL5A5mO2LXYT79zmBL1K8/q526V7LEkMhAVQEM9UjfNA9jSEJpkkmZuEmEDfc/LOWwm7hVsF5D05zd5Gwl41CYIY+vrN7AVFvC799xnxIJMQyA2J3LgycIZDMyYEQVGX/JjR/RP09JENNJDVPC/cQGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dD3+9m1R; arc=none smtp.client-ip=54.254.200.92
+	 MIME-Version; b=qbJ+dn/8EPKIbzPrD4QFNX3cWPFwYzWv7ZYNLdIgsETmQu3tawUCvEKMxe4Kc33oDv7EYWceUN+sQg23Qhta0HGJYgIBQDIJ0Rh8OrEKCbrLljuwESwrLTpKngBj1xalxB4o21Vecf6ZxxL06Un5a04PTw1zCjQthFZJO1Eq7sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=e5DSpVEh; arc=none smtp.client-ip=54.207.19.206
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dD3+9m1R"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="e5DSpVEh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744604866;
-	bh=CUo+WSAZNxdFKYjPSCBE4ce1w0JxS0K3qkF+MdMjaw8=;
+	s=onoh2408; t=1744604857;
+	bh=+0Ip4t1kULw7IHR0Km+psz98T8xTOCy/rdMMlTcOddQ=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dD3+9m1RvEvw3uOakXHDtv4SPuquDW+XsXTbMkw4WyP/jxwlhVuMxeTclMMtpie/m
-	 INsml8DlJJIERx1hLE9fcmDtnWzhkWRwmTZXqDXLDNtoE0XS4c+vIYeu9c4fUo5L4s
-	 qo4dOlTqNpiPc96arVLk3sjdjf5OI8OVswbIKiig=
-X-QQ-mid: bizesmtpip4t1744604822t17b86d
-X-QQ-Originating-IP: 9EUIoungktXur6Ak3HAJ9BQt/09nZjDSBOqmFnfFsJk=
+	b=e5DSpVEhbqHeLU7aVJnSrp5m5SgQ96elMZNql7q4fw5TSrGq9l0QWI9aYRQx/D3Nv
+	 DEtcgbhnHtKmDp/jFqC22Jx1Lty2eLamDTGTmWP8/oGTyBu4Y1Zr1mRIdSPsKschuN
+	 GsxT6kXpUUOuTKeLyQZ5E2SoW1TD3xQiROOfl/OQ=
+X-QQ-mid: bizesmtpip4t1744604815t525699
+X-QQ-Originating-IP: jZ81SD253UP75DJ/PEHtvx9P72SblTv+7A+anZzUtlE=
 Received: from localhost.localdomain ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 14 Apr 2025 12:26:59 +0800 (CST)
+	id ; Mon, 14 Apr 2025 12:26:51 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 274253829898234873
-EX-QQ-RecipientCnt: 20
+X-BIZMAIL-ID: 16234562638770567262
+EX-QQ-RecipientCnt: 11
 From: WangYuli <wangyuli@uniontech.com>
 To: wangyuli@uniontech.com
 Cc: akpm@linux-foundation.org,
@@ -41,21 +41,12 @@ Cc: akpm@linux-foundation.org,
 	niecheng1@uniontech.com,
 	tglx@linutronix.de,
 	zhanjun@uniontech.com,
-	Simon Horman <horms@verge.net.au>,
-	Julian Anastasov <ja@ssi.bg>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	lvs-devel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org
-Subject: [PATCH v2 4/5] ipvs: ip_vs_conn_expire_now: Rename del_timer in comment
-Date: Mon, 14 Apr 2025 12:26:28 +0800
-Message-ID: <F1C0F449361FF57A+20250414042629.63019-4-wangyuli@uniontech.com>
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	SCSI SUBSYSTEM <linux-scsi@vger.kernel.org>
+Subject: [PATCH v2 3/5] scsi: scsi_transport_fc: Rename del_timer in comment
+Date: Mon, 14 Apr 2025 12:26:27 +0800
+Message-ID: <084BD6AB1C4759DA+20250414042629.63019-3-wangyuli@uniontech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
 References: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
@@ -68,60 +59,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OMHTpzRlrft8gDeIaQEw9WPwIiw9JGvZCWC7H7kHYniHsG8TN9Psc+ql
-	fPya3/UElyR9DVO1olGnHWz/O1mMoLKb+ebYMj39hhe4PXPGxsNdzYtCWsjPi+t5QK1pp0j
-	QTL5rNp3XVByUnPbxIhmzcqQkZpPOCbJ15saaqF9v8YJc9WMD664zKZ2BdqDf7Amb/NDCHS
-	EgaMxpFrzjXbVup/AUE/ltN8mdftuMqXU0a6wkiriOsLqUYP+x5olCxdsOaKcNeA/85RdrS
-	ZQjamCWI3n0XkMGndeWKD6JeiQyt/8HMPDTJalOBMVTyQUmv20lX6agY0TpxH8QFijq3vIY
-	azf0gJJ43riaXCXLUTwpwIa+NcXlxFu5y3upCxc66XUq+cpMXVJ73SQjyc6CN/uhU2afQBC
-	VbIyw7WHvWTE6164N9kI13BCwwu2B2FYVW+hgzFRQ/0v/KF1SVPhdmydgmDQLXGCocmkEuV
-	SucWpO65AZos6cTXkQEzJeeos8kuBTqaB2XlVGkbKnEBqsZ6/j3wUUi2+/el5zybC2GNg3S
-	omeRRfenvTWO4fa/xUTOuLVafZL3udg6MvPxd/5v+YAcbqupMIxG51aUzDXjQT3UIk8mZXi
-	ZFkwC+aPW0SlgUkdENBfQvCaMnwLgmOMDNaIKHO3Z/9slJpmKzMSziQ7Yu1tzEB1BG5BrMj
-	9pO4K2uzPfTenp0Gp0iF8wy2LTWY6yGmv67OpH2G6lM5tVZJj8vu7zVfgOXG+3mYfytUpkK
-	HU0sl7DxRrq4cd/d8jrLbtMO07n2eBZE5eHHBj7GWcpvB5221s44kQJnWgWTV06cmO/4hnD
-	e3UBfBJCCUb7/rT1en1OveNfla8o05nRE0gPmQOfw2yCZ+/ui4ah7DzQYzhYZnM55xav/MR
-	GBzoDp4S1/ik6n0nqLuYcER+ugR+CaOj4VOEZRYtrHRS9CurL4Bq4+ASfvZCFJJUYdHZLzh
-	Ic7zyWWBvR2r0x9uVGnisEqfWp6fD35knF+licpO5OcTqJ369jV1/k06bUsbPQ7P65hLw9L
-	vnc+Foa5A4bd/HF0rgMjsRXrMKFV0=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-XMAILINFO: NHmMC+6XyEPfA3ApZy0TqMz0i+E37ZpBG+MK3sXzT5V/kN7OP9yed4qz
+	uY/iaujPVeJjGpxulFwpyLyrKixxUWHDvp8GLMJTVKjbguXv6mxMgrZ3v8/fCCTEpLsP0nq
+	wpx3Flw/atsb8d28afLKtSPPOExp8uuF+zur2BQYu9k53DX7ASTdTiLMMq0DOuLJ/h/n9YU
+	XeS6pb9yTwqpHqDM7siXm8BaFAJJhbWdKBdto7heUL/kgoezdYP010Az/rNvr6jNV2AH/WG
+	685KHd7pYYPTpQID4s2LMafo+XvxmOxvxgaUKRB8XUNeux45DwywNayHpVthltj4Go2qjKr
+	8Km0aFtPjLa/mbCd+Y3IfWw1rF4L2gLPQfZFpnZKAJVk2WhdBLNFoXjHza2zsL7iA6xEhVL
+	3JQTOfQ6CYZ4x/oUuG8YIY65tApYXumt8+SMg/7fJmyEnMbtzmQnJEslpunvY8+biZyrZc6
+	HQsp3/mzPYJVPkRI//LaqBVoTdlwpuAOU2TRGDLbRxKfj/G43vo/8sPeKBaZtHJY56pGOhV
+	rxIvYHofgTw2yL2ux9h/Pr9ihUsz8ZgSPr5gGDhfYfkkQiTHlW/b/vZ1YMJSDk4+1RQhctc
+	5uklAH6tyECRpFx+KJobaQNRz//H9syD7ibdfckPEtk59AVc9MIrMds5ceMG/lje2xZhFLd
+	gGe6lz605QHU3XVPBbkUIb0E9HfwlK8wx4f2tCtMONe6SAbRNaNhknMc/T6Q1xhWTo2XTHp
+	3yDdEcr6yAKfd6UWDf8H/ZF6JVlYFs8QDsmGCwDb5qv3Yuamk8bMaCep7/r696Vq8qxvtYf
+	GbZTBJEz8oNUO9EYezMxuH/DBXY+0egOQeH3ZaMVqeT00bALH2VAzHbhYafIhjfPzIpTwDY
+	H5inb5IiPR4yzUzUerv7ZQiup3clil6aO7nxKWrZXS0aFTHvKoeTYMW6dmLHjG4G/k1N0bB
+	zlHQTP2sYO5sUJtAO5/3wXBjgrGipgfEDUwhaCQRrhOm1s89WuSk2G+f5x3GouyvhRGImnu
+	oeG7/+QeZWYbQTyxrQ
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
 X-QQ-RECHKSPAM: 0
 
 Commit 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
 switched del_timer to timer_delete, but did not modify the comment for
-ip_vs_conn_expire_now(). Now fix it.
+fc_remote_port_rolechg(). Now fix it.
 
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Julian Anastasov <ja@ssi.bg>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Cc: lvs-devel@vger.kernel.org
-Cc: netfilter-devel@vger.kernel.org
-Cc: coreteam@netfilter.org
+Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: SCSI SUBSYSTEM <linux-scsi@vger.kernel.org>
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- net/netfilter/ipvs/ip_vs_conn.c | 2 +-
+ drivers/scsi/scsi_transport_fc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
-index 8699944c0baf..ccc39c6557ee 100644
---- a/net/netfilter/ipvs/ip_vs_conn.c
-+++ b/net/netfilter/ipvs/ip_vs_conn.c
-@@ -926,7 +926,7 @@ static void ip_vs_conn_expire(struct timer_list *t)
- void ip_vs_conn_expire_now(struct ip_vs_conn *cp)
- {
- 	/* Using mod_timer_pending will ensure the timer is not
--	 * modified after the final del_timer in ip_vs_conn_expire.
-+	 * modified after the final timer_delete in ip_vs_conn_expire.
- 	 */
- 	if (timer_pending(&cp->timer) &&
- 	    time_after(cp->timer.expires, jiffies))
+diff --git a/drivers/scsi/scsi_transport_fc.c b/drivers/scsi/scsi_transport_fc.c
+index 082f76e76721..dda7be02ed9f 100644
+--- a/drivers/scsi/scsi_transport_fc.c
++++ b/drivers/scsi/scsi_transport_fc.c
+@@ -3509,7 +3509,7 @@ fc_remote_port_rolechg(struct fc_rport  *rport, u32 roles)
+ 		 *  state as the LLDD would not have had an rport
+ 		 *  reference to pass us.
+ 		 *
+-		 * Take no action on the del_timer failure as the state
++		 * Take no action on the timer_delete failure as the state
+ 		 * machine state change will validate the
+ 		 * transaction.
+ 		 */
 -- 
 2.49.0
 
