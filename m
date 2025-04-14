@@ -1,108 +1,77 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A13828A1C9;
-	Mon, 14 Apr 2025 19:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F4F26E16A
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744658492; cv=none; b=M+up9dVLDHHekLyFYL+zDy26fvYGSIaYgdxPviEFNRAuK6BjZi6KWCNkvJ8Clr8XuiaZAMVpl/3QD6kjD2hg5HS/WE4pPmPZ5xFTiy4aptCnqxfXaqaFji5jRFD8cxd6dUgWQlXyPexCvaYUHvU1hpmGK6i4V4dn/e9DWR2gDec=
+	t=1744658524; cv=none; b=nWdTwrCSgD7eEMk3JW4wt/gn7jEbTLEvMp/Hio2/V/pxgMmuqfZbfJSJPuiTHBGHp1/Tol8GcCyYC8cMoJXMQMtRIunfqJ6EAXF0n35tm3MvJ8dnn7/VPRQ6+R3ssDzRK67o+/F73dSwPA9D6dFvbVegIdw910oyit8Ec/2TCwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744658492; c=relaxed/simple;
-	bh=KEB78xiO8S8KyZq4+E0nFd+GD2Mhv67xJLJE03UULAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iK0RtUHmktLM1rxBxR9NUhYKNbqny3b9FAKm/ER0VC7e6bM83liWWvnB7j09sAkDZzBrn2JXCMVjGpx3BpCHh03cTNnG2cHS1io0Y1EHnMfCmKyyiGyVkd/UOAzaAyW+pFUXpyOht4Cgp6sjbgfvqVUmijtYxSHyWRj3HnZDm78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EoEQDZuW; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EoEQDZuW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A714A43B87;
-	Mon, 14 Apr 2025 19:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744658487;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5GTu46taMVNxHpTDe1teTJEFAE0ftANyUse/UH9TgI=;
-	b=EoEQDZuWm/YFxLogtslK/wvSP90b71yi6k3yAgSkFaq1eyiOvFAO0AZwteNO1jxBIiH14c
-	6ywnyjrkBdxEvcYxzdL2AaC2O9tBOis7LvxlYJfB9mmYPcYnO8jjJQHwuC+M1IVe6s9OmN
-	mlqsJs1U1o2UPUFWZj3rvzZEYD+BCNsC+Ed07UrTm05B4xG795lHfg+EKAfd0oGvYE5V1S
-	5HV77zJHOhECQ05uuRvl7yoHfXPkYWHB5kW5xFyKEnNUlHf4WRifcNmQ1Cf3EcXxlk/Cqg
-	plpAtDX9I+vTjiFP8y8iHcYMybhC51TFA36OCqQiCQvNwo7ACUHu/lDclcV3FA==
-Date: Mon, 14 Apr 2025 21:21:25 +0200
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To: Andrew Davis <afd@ti.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Bastien Curutchet
- <bastien.curutchet@bootlin.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
- <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA
- addresses.
-Message-ID: <20250414212125.4b3e6f33@windsurf>
-In-Reply-To: <8f55367e-45c0-4280-b1ed-7ce9160c1fad@ti.com>
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
-	<Z_yjNgY3dVnA5OVz@infradead.org>
-	<20250414102455.03331c0f@windsurf>
-	<Z_zwZYBO5Txz6lDF@infradead.org>
-	<20250414134831.20b04c77@windsurf>
-	<8f55367e-45c0-4280-b1ed-7ce9160c1fad@ti.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1744658524; c=relaxed/simple;
+	bh=9xlzt8t5gZAIZhjWScRdd6YWLJYIILohHTFaHDvj5To=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=DKnwFj3eD1S7MFEDVueYrg7cMoLOf6jaxe/x3OiduNWsb7quSORXtpohdmw6qCCJc9zG8kgCmeSOT+k0DRMMFht4V5vN/cU8D8NmzN7zB3XFQdFwm3xPcJazb51FD0llTZ0dkD/GZ0R1/fFO3tpaf5A00OpqVbUOnXxLie3ty5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d5d6c997d2so45711165ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:22:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744658522; x=1745263322;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GOv5Jk3XoSN+D2KFShSde9xzzddc9ORjMDXmV9hyXBw=;
+        b=Bsr3IbHWQwdORiPmcsYZoeJp1Vc/n22oZ5ddP9ik8K7n9t0UaXRcq0mRm/Hg+VUa7w
+         fNnYzZ3SBnM5Tuk1T3Y2YgadWbCld7rInER/aN+VmNUr/0RlVtKRwC+JkOpBEkLdote3
+         k+RXEkJOXSEpF6YyALtI6MfvHprtpFPbFolTjkUexntnJALMIQIvaBni1JmZ5f1Bj0XV
+         MvgHDZrX6n55rMml/MutTbnoWDZgB0ZYJPsutazXb8CciYmE8LAd2qkCKnC6t7h+jD9A
+         kjr7UfHtZXCdbWX9FJ1iqkiuxcJGfsYhlf42PeNQUmevUkoyUceBJh+T5Iey/niEgLtY
+         v7Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVppKsDbqACs+LoiKtx9ofbWpgqt3sTtgFnXS0rfSDP+x+vFpXYQvgr/VkU/xjKzIKeqayjmY4Ejm31dDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhbUElgDp+7tDYguDAL1haHqDghL/5+iviA1MqnNbAf0uKJ0Uw
+	ALQyLdbPVviESVm8ZKP5aDG7htLcWBgdaAQlzougZUjzAxn7qvGggPeYFEyOJvDeNrdU6QteOzn
+	tXSsAGqxyNHU2T1tT7iX0z4Nms21ny0f57dqocWrjvxVdP39fRJ1izLo=
+X-Google-Smtp-Source: AGHT+IGEmCZcdWbXVW3Yowdl+fqoNrFiXUdx+Br9L+lc28touHs15V4APFkQfiEPqaQnMiuIzgUE1JifdY5R6RYkv3+LJiMpQ6LQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddufeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefvhhhomhgrshcurfgvthgriiiiohhnihcuoehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepledtgedvjeehgeetgfeufffglefhkedvfeduveeiieelteeliedtfefguefggffhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgdphhgvlhhopeifihhnughsuhhrfhdpmhgrihhlfhhrohhmpehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghfugesthhirdgtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegsrghsthhivghnrdgtuhhruhhttghhvghtsegso
- hhothhlihhnrdgtohhmpdhrtghpthhtohepshhumhhithdrshgvmhifrghlsehlihhnrghrohdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
-X-GND-Sasl: thomas.petazzoni@bootlin.com
+X-Received: by 2002:a05:6e02:2143:b0:3d5:eb14:8455 with SMTP id
+ e9e14a558f8ab-3d7ec276548mr118949035ab.17.1744658521895; Mon, 14 Apr 2025
+ 12:22:01 -0700 (PDT)
+Date: Mon, 14 Apr 2025 12:22:01 -0700
+In-Reply-To: <67b1f949.050a0220.173698.000c.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fd6059.050a0220.3483fc.0031.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] possible deadlock in get_partial_node (2)
+From: syzbot <syzbot+725322cc4ff5c53abfac@syzkaller.appspotmail.com>
+To: anna-maria@linutronix.de, axboe@kernel.dk, frederic@kernel.org, 
+	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mmpgouride@gmail.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Andrew,
+syzbot suspects this issue was fixed by commit:
 
-On Mon, 14 Apr 2025 12:08:44 -0500
-Andrew Davis <afd@ti.com> wrote:
+commit 3a04334d6282d08fbdd6201e374db17d31927ba3
+Author: Alan Huang <mmpgouride@gmail.com>
+Date:   Fri Mar 7 16:58:27 2025 +0000
 
-> "UIO is a broken legacy mess, so let's add more broken things
-> to it as broken + broken => still broken, so no harm done", am I
-> getting that right?
+    bcachefs: Fix b->written overflow
 
-Who says UIO is a "broken legacy mess"? Only you says so. I don't see
-any indication anywhere in the kernel tree suggesting that UIO is
-considered a broken legacy mess.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e4ea3f980000
+start commit:   b7c90e3e717a Merge tag 'x86-urgent-2025-03-08' of git://gi..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
+dashboard link: https://syzkaller.appspot.com/bug?extid=725322cc4ff5c53abfac
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137c1fa0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e0fa54580000
 
-Keep in mind that when you're running code as root, you can load a
-kernel module, which can do anything on the system security-wise. So
-letting UIO expose MMIO registers of devices to userspace applications
-running as root is not any worse than that.
+If the result looks correct, please mark the issue as fixed by replying with:
 
-> If your FPGA IP can do DMA then you should not be using UIO in
-> the first place, see UIO docs:
-> 
-> > Please note that UIO is not an universal driver interface. Devices that
-> > are already handled well by other kernel subsystems (like networking or
-> > serial or USB) are no candidates for an UIO driver.  
-> 
-> The DMA subsystem already handles DMA devices, so write a DMA driver.
+#syz fix: bcachefs: Fix b->written overflow
 
-My FPGA IP block is not a DMA controller that would fit the dmaengine
-kernel subsystem. It's a weird custom device that doesn't fit in any
-existing subsystem, and that happens to do "peripheral DMA" (i.e the IP
-block is DMA-capable itself, without relying on a separate DMA
-controller). So this (very valid) recommendation from the UIO
-documentation doesn't apply to my device.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
