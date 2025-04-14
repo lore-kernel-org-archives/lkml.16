@@ -1,153 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3FF1CDFD5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EE325D207;
 	Mon, 14 Apr 2025 09:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622848; cv=none; b=C+IZ+csr2QwMOhRqlRx9ZwYcmNSkSc74DSqqKNXJJnbsxaP9SphZMl9qvv0H8qePdpwN3ScaCbztkgbE+Ok7ok3J2Wmj6ooR59Ng5DNha6CxAknpnqco+PVU55YPnYQTGeZIiNbXft6SXAfOs+e5+R+fuLYDwAG0Um88bhrUyCQ=
+	t=1744622852; cv=none; b=Onc9DnqWUHD7VFY3bIivA2lvFsSBdOncqULRNZjPSQE3+WG0bC/cuKRcr+s1u4pLeBWiCAuwDTA3DZy0RVYsGUyOLNq3KwxTe98eLV5hEgaE9OUR6vmOQgXf3Ll8D7SvwLvWDjbsgyox9C4zgKW4s3eoceqyMv+pWQ+QzwK8CQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622848; c=relaxed/simple;
-	bh=k9z8u+21LVEgAfkjUSJ5SSMbZtKhyPUmMn4Bg55YBOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bh0LBRWzG4Fe9nFxQidheyh/TiiYm64pan47H4G6G/whylyk056djxaDieqz03xpCafOCdHUZ/2JwX2CXbe7kZYvZj450V6XaRMZtwD4FywltYYeh5m/3QvP0fbw2xeQLZNMkrOuUQmq0js60xX7sgjPTyC2D1XtqGfDSqq+UMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hzICPuV9; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hzICPuV9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744622844;
-	bh=k9z8u+21LVEgAfkjUSJ5SSMbZtKhyPUmMn4Bg55YBOg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hzICPuV94bxD6HHKvy/Wd4B91VbG1VXczdYg7fWy6kGa3jUKFAZWHaPsNPorYGECV
-	 cjIkUZMjROI0HtHVyY/EPyfcVqKG8Jndcmw5iuf2UDTj+UQa/rHrF02K3qfWB/kxNu
-	 x2bNEshdtao6xCP8hai/B/4DsXNoP5H/WpAX+Pn+g/kUurso5XfOIX/rJ/F3y8fJlq
-	 BFOVsmfPYPcRyJQmgOFNPmt2NmLUOLT7Lm+pgFybA7ElUOmmcgwlaNIucpDHLG3dY7
-	 uxpQABkS2x7MTjZOxYkJ45laKd89jROk2Epkx6jxGyHGe5zZ7G+mWlMLi/2CgrAsof
-	 f/blUgmhEqlFA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A90AA17E0F85;
-	Mon, 14 Apr 2025 11:27:23 +0200 (CEST)
-Message-ID: <c8f9f019-a238-47c8-a900-9ca48ce09503@collabora.com>
-Date: Mon, 14 Apr 2025 11:27:23 +0200
+	s=arc-20240116; t=1744622852; c=relaxed/simple;
+	bh=p8L/crSaIvP89HYdkhQRcIOEzvOeFkDY8nSCAWshkQ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jOWHxSswWNXruIfGAvcXeWzrMpTrsSL9KIkn4Zh3+x1adlLCAHkvsdxKBVcpiZZZk0VcqQ1TsrdOZOjmE5MHMitk85LBIa8vMPZeBYrDH78yUxGQmOJ1QgTPNMJgzyhg9+dnKfxHhNEFEGgBlJvrtmFQvuG9+Fw4J6HWR3Aoxd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowAD3mzjo1PxninzQCA--.38456S2;
+	Mon, 14 Apr 2025 17:27:12 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: eajames@linux.ibm.com,
+	ninad@linux.ibm.com,
+	joel@jms.id.au
+Cc: linux-fsi@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] fsi/core: fix error handling in fsi_slave_init()
+Date: Mon, 14 Apr 2025 17:27:03 +0800
+Message-Id: <20250414092703.3074906-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: mediatek: mt7988a-bpi-r4: allow hw
- variants of bpi-r4
-To: Frank Wunderlich <linux@fw-web.de>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Frank Wunderlich <frank-w@public-files.de>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>
-References: <20250412102109.101094-1-linux@fw-web.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250412102109.101094-1-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAD3mzjo1PxninzQCA--.38456S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryrKw4rWw17XFW8GFyDJrb_yoW8Wr4kpa
+	1DGa4FyryUGr1kKrsrZas7Zr98CrWIy34furWrGwn2krZxJ34Yyryjg340ya48JFWkGF48
+	X3srXrykWF1kXF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbsYFJUUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Il 12/04/25 12:21, Frank Wunderlich ha scritto:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Sinovoip has released other variants of Bananapi-R4 board.
-> The known changes affecting only the LAN SFP+ slot which is replaced
-> by a 2.5G phy with optional PoE.
-> 
-> Just move the common parts to a new dtsi and keep differences (only
-> i2c for lan-sfp) in dts.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> v2:
-> - added basic dts for 2g5 variant
-> - moved i2c used for sfp-lan to board dts
-> ---
->   arch/arm64/boot/dts/mediatek/Makefile         |   2 +
->   .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts  |   5 +
->   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 404 +-----------------
->   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 403 +++++++++++++++++
->   4 files changed, 414 insertions(+), 400 deletions(-)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index 58484e830063..a1ebc9aa4ba6 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd.dtbo
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4-2g5.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4-emmc.dtbo
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4-sd.dtbo
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
-> @@ -107,4 +108,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
->   DTC_FLAGS_mt7986a-bananapi-bpi-r3 := -@
->   DTC_FLAGS_mt7986a-bananapi-bpi-r3-mini := -@
->   DTC_FLAGS_mt7988a-bananapi-bpi-r4 := -@
-> +DTC_FLAGS_mt7988a-bananapi-bpi-r4-2g5 := -@
->   DTC_FLAGS_mt8395-radxa-nio-12l := -@
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-> new file mode 100644
-> index 000000000000..76eca976b968
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-> @@ -0,0 +1,5 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +
-> +/dts-v1/;
-> +
-> +#include "mt7988a-bananapi-bpi-r4.dtsi"
+Once cdev_device_add() failed, we should use put_device() to decrement
+reference count for cleanup. Or it could cause memory leak. Although
+operations in err_free_ida are similar to the operations in callback
+function fsi_slave_release(), put_device() is a correct handling
+operation as comments require when cdev_device_add() fails.
 
-This should at least have some different compatible, if not probably also a
-different model string - as it's a different device.
+As comment of device_add() says, 'if device_add() succeeds, you should
+call device_del() when you want to get rid of it. If device_add() has
+not succeeded, use only put_device() to drop the reference count'.
 
-	compatible = "bananapi,bpi-r4-2g5", "bananapi,bpi-r4", "mediatek,mt7988a";
-	model = "Banana Pi BPI-R4 (2.5GbE)";
-	chassis-type = "embedded";
+Found by code review.
 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-> index 6623112c24c7..431bf066fffb 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
+Cc: stable@vger.kernel.org
+Fixes: 371975b0b075 ("fsi/core: Fix error paths on CFAM init")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/fsi/fsi-core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-..snip..
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 50e8736039fe..c494fc0bd747 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1084,7 +1084,8 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	rc = cdev_device_add(&slave->cdev, &slave->dev);
+ 	if (rc) {
+ 		dev_err(&slave->dev, "Error %d creating slave device\n", rc);
+-		goto err_free_ida;
++		put_device(&slave->dev);
++		return rc;
+ 	}
+ 
+ 	/* Now that we have the cdev registered with the core, any fatal
+@@ -1110,8 +1111,6 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 
+ 	return 0;
+ 
+-err_free_ida:
+-	fsi_free_minor(slave->dev.devt);
+ err_free:
+ 	of_node_put(slave->dev.of_node);
+ 	kfree(slave);
+-- 
+2.25.1
 
-a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi 
-b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-> new file mode 100644
-> index 000000000000..1ab09ed2f151
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-> @@ -0,0 +1,403 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/regulator/richtek,rt5190a-regulator.h>
-> +
-> +#include "mt7988a.dtsi"
-> +
-> +/ {
-> +	compatible = "bananapi,bpi-r4", "mediatek,mt7988a";
-> +	model = "Banana Pi BPI-R4";
-> +	chassis-type = "embedded";
-
-Please keep compatible/model/chassis-type in dts files.
-
-
-Cheers,
-Angelo
