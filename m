@@ -1,81 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5F819FA8D;
-	Mon, 14 Apr 2025 18:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5EE36C
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655746; cv=none; b=WP9ppNAG3+6Jyg2nwC3whFlplscG0iDEZUISPxkJxafD2iuqo0w8M0Y90TZdm1OrzJMrM8+NHF10/cVoDXOzWibQPIpUNqQbCB448oA8ZVpKIelSFAnoanjWK5bVi4wXTVzIbYe5wJX8TPW3fCwsfW55r2IrAv9PKmZ11naZhZM=
+	t=1744655898; cv=none; b=mZ7golr7BTSaOjdWjaeP28XykrIStsfRiSRGIx7eh2bTOU+i1DY0u1DW+/ew/kBCOc4lT2pwxgmvRmezJUjLEoBPdbTLfKYN3HlLMCzXa/0BdD7eYmfaXIvi1qCc4sf2TTXo0HSBAgkwa02tJJTauNcIL3LWd+ITWQH9t1BVHJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655746; c=relaxed/simple;
-	bh=k2g0Mk9JKK4aalvTmKqSOU0NxOAcYOyOL4e+bs5uRZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Li8r3UXjq3pr6WSplZSWWK5uxRBQjSlIYNZKU+iZPrTjD7PGYlgUQmtY6xR3jS2moRTYF4Z0K+6tXJVDTXmX/6ZPyDnjedhqXc1beS/W6szAkYJScslPMSKxzxT4Wvuc9igdfTyeAaXY/iqNl7OpOfHs52f2J4gPGwKxvsVTt30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzueOWKl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744655898; c=relaxed/simple;
+	bh=r+iF3izejEPWqub3xdXanhY9VniaYErf76Hvzp52sm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SjPUMNPwP4S8JdHCf0PZorgH5yQ9OTcx9SC8t+nlMsviP6kvAea3zvjFc0YICPhDRVDPC+Bjvwrb7SyaUJaG6RZm9OeJBI12PA/QQFjNjjDhAnOVzsH3xjmI2XCo4wmUM5mOP8mkbjtQtVD1G+LkXWmcaqlrDFnE3aObCvMtxLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=cn7+C1QM; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzueOWKl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C94C4CEEB;
-	Mon, 14 Apr 2025 18:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744655746;
-	bh=k2g0Mk9JKK4aalvTmKqSOU0NxOAcYOyOL4e+bs5uRZ4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DzueOWKl4BW13sJujFq5P68VjB/HMYPEWH0Iyt2DNdulLtZijxhRdc2OnflD2jdLE
-	 yeQNi/hPHrtuFXUBALVEUb6Hz8syT4auTaQHaY9DzLRsqngDg8bqwNqPORZkgNQYCI
-	 rOZ4nqdqjSXZBFpGyWGMpO4y+xStdLCZ+VVUDfYdy47UigkYnSjg/zHIDYlLpP0I6e
-	 6VDOwbJwvipc04OYKH6p3lVdzJ27sm/88TYcxF0IhMw0Gvvhw+uiPP+y1JNpNHejhO
-	 5SotQUsupH5yNu2ALc6353Rw7B/kNdhE1zlRjOVtPjQQzSk9t5aeRq+NnpApLEPZqs
-	 hbdWLfLxPbfSQ==
-Date: Mon, 14 Apr 2025 19:35:38 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
- <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Laxman Dewangan
- <ldewangan@nvidia.com>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] thermal: thermal-generic-adc: add temperature
- sensor channel
-Message-ID: <20250414193538.5eb8e4a4@jic23-huawei>
-In-Reply-To: <CAPVz0n16TbodhuTcqUufCk6=178ZTcc=2SLUjYHe5YsSJvettQ@mail.gmail.com>
-References: <20250310075638.6979-1-clamor95@gmail.com>
-	<20250310075638.6979-3-clamor95@gmail.com>
-	<CAPVz0n0NA+=+4da8izPvTn3XacdJndyxrvyMY-QvHdie206wVg@mail.gmail.com>
-	<20250412115354.0b266fae@jic23-huawei>
-	<CAPVz0n0eqLEjVgMX=4A8jZZ++Ffb_vfCRdqYdizDmuLbXjVb1w@mail.gmail.com>
-	<20250413102822.0cca4941@jic23-huawei>
-	<CAPVz0n16TbodhuTcqUufCk6=178ZTcc=2SLUjYHe5YsSJvettQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="cn7+C1QM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=IW26hhDBDO/5nhHJsjCd5C+mJJ7oXEkd6pqmTxSFoSo=; b=cn7+C1QMnlYQiLauPpu1bCkvT8
+	rxeTVFsbpTj78EfGta10MmZKCUZWIVZxCL+DApimzG6F0AtY9W9Dq69sUcpA/vDdVzqx/VTg4kfbY
+	udvnXyU5Ja8Ezzsryok+e8SMOXdzi+JWWHhea+gEZzvCpNFlnr2oevOwo7lhkQuJKORDVy5O71FUc
+	3hpMs6pdxX4SoqnnUkripXBHUMh+AqzrigAWHc3w5ipW/ktIq+65KdIDA3r7td5hmM/UHyIyRKxkr
+	vrdk/r2NSkgstIWBL7ojhU1aOUjBgTa0u5aNR3AmqdQW2kK0lL0bb4Lc2DpOcACYnW+7RSKt4JmSn
+	lJJSJAtg==;
+Received: from i53875b95.versanet.de ([83.135.91.149] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u4Ogz-0000dZ-Lu; Mon, 14 Apr 2025 20:38:01 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: Add HDMI support for roc-rk3576-pc
+Date: Mon, 14 Apr 2025 20:37:45 +0200
+Message-ID: <20250414183745.1352470-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Enable HDMI and VOP nodes for the roc-rk3576-pc board.
 
-> > > > > > +
-> > > > > > +       indio_dev->name = dev_name(dev);  
-> > > >
-> > > > What does this end up as?  The convention in IIO is to name after
-> > > > a part number.  If you have duplicates this isn't how you tell them
-> > > > apart.  So I'd kind of expect thermal-generic-temp or
-> > > > something like that.
-> > > >  
-> > >
-> > > it is "generic-adc-thermal" with this name, it is not present anywhere in IIO.
-> > >  
-> 
-> Then this is acceptable?
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../arm64/boot/dts/rockchip/rk3576-roc-pc.dts | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-That string is fine.  I'd still be tempted to hard code it here so the
-value is obvious to anyone looking at the driver.
-
-Thanks,
-
-Jonathan
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts
+index 612b7bb0b7493..d4e437ea6cd86 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/pwm/pwm.h>
++#include <dt-bindings/soc/rockchip,vop2.h>
+ #include <dt-bindings/usb/pd.h>
+ #include "rk3576.dtsi"
+ 
+@@ -54,6 +55,17 @@ button-recovery {
+ 		};
+ 	};
+ 
++	hdmi-con {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	vbus5v0_typec: regulator-vbus5v0-typec {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -258,6 +270,26 @@ &eth0m0_rgmii_bus
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_in {
++	hdmi_in_vp0: endpoint {
++		remote-endpoint = <&vp0_out_hdmi>;
++	};
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
++&hdptxphy {
++	status = "okay";
++};
++
+ &mdio0 {
+ 	status = "okay";
+ 
+@@ -734,3 +766,18 @@ &uart6 {
+ 	pinctrl-0 = <&uart6m3_xfer>;
+ 	status = "okay";
+ };
++
++&vop {
++	status = "okay";
++};
++
++&vop_mmu {
++	status = "okay";
++};
++
++&vp0 {
++	vp0_out_hdmi: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
++		reg = <ROCKCHIP_VOP2_EP_HDMI0>;
++		remote-endpoint = <&hdmi_in_vp0>;
++	};
++};
+-- 
+2.47.2
 
