@@ -1,128 +1,60 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7434B1990D8;
-	Mon, 14 Apr 2025 05:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DC71A257D;
+	Mon, 14 Apr 2025 05:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744609856; cv=none; b=tdXJ5KsNo8XKApE5naHH4mt+a9IQM2r05hZF/ogs5aRSAj62BVlrd0rebh0V4KaK961jxRqPLJVyht0o//In62TYldyEo9e6T20vB90P28cNCTg8kcIhAlFfUTWCh8m2IPxfb31+pHBSxGIhNtN4I63OtIsMWNKOchd4PTeQNxs=
+	t=1744609858; cv=none; b=GLly8mgaf1ck6e8O23JFPsTgZ514ATIyoLq76BxVpxRy4kl8ONdpQu6XZKoJeZu9QP8i/+m4O38y9sel+KMYQOdNp5P6QXpFMnfHqubAfFDraDcR0gpyiDRaWAWqyohZ0jsJQAeD8HXb6spq52idwliszNVrlTwMGkug+MH0r30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744609856; c=relaxed/simple;
-	bh=2Mrd74G8jnzozakHJyUqjNWTFaTsEQFw2FnelXGs4eI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PvIo1+pch5Q4xQCnZiCz2pMCzN6N1oi3M2odGbmesp02o95iIkq1OyVY8VX3WxK5e59eb4MOK1xCzrO2Ag3CICVl3+wXahd8HVa+xXjwXPovb1jYqMA298Z8MOwb1Ml3h+v7rZQ+MTBCPrKDNkLns6j6odLM9BgNbjip2BFPkOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=auXjx+Gm; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744609858; c=relaxed/simple;
+	bh=tAfFbhVdV51oLBAZnxPt1aAziTS59NvE0HEf+q6B0pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=co5VV4rKH5n/3Iw6tu+3x9nHDgOqFGKLqZMF2sbmN5KAkQdlh2XIodRZaMw+Uhp+aD8BoSTkYzvEFbTWx3doFltHOsHm0+9nRAbqwSoODG70zSH19wcz54BIcPsD6v0Lg5kCDXsa00AkrY7h+YVCpSiL5rK0AkyI0yY035zP2m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gg0FkyAZ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auXjx+Gm"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499614d3d2so4468514e87.3;
-        Sun, 13 Apr 2025 22:50:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744609852; x=1745214652; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jjZiPaurJef/nQ7PXXGeudPtbJ9Ii7WZiGcrpGC547I=;
-        b=auXjx+GmqSGJVPahuvNCUuB5zSxOI09ifa0PnxiI6ESujGx2ibNszEKRuj0zj7e8qi
-         2BIee82uHSsOzDaot1j0JF9ruhBjIxboNxYSiGmw9l0BcozGP4xchTX9G95CH9mYCgne
-         4yyRT40r7ye0m6MX/4W2xfsa7t22HF3nKz2NNTFlvnVokd57spX5VdTlLA5c8LVqom1P
-         0euL8HoTvbebvpdB1m7H1ithY9OVFFyBYT9mvWu43qOKaWerWWcaORJ5zUmtE+mt3NFG
-         FEuufGtlA2BeEmfsFzVRNiIMC8/oMy2hXqsexDHBwOCOs415SkLhNXW78HRDvju/AloY
-         nqzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744609852; x=1745214652;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjZiPaurJef/nQ7PXXGeudPtbJ9Ii7WZiGcrpGC547I=;
-        b=meGSTdCKX/k/3v5VDxjfOUagqEm1rUgKWJ8tZCqZdpXTfsuguTK8uugkO8eisj3rzZ
-         JkKBVcQAZWe9rKyzFRKvcW3FdbREYWdectMGiPkdPWZeZoyk9srU1yxayS66rxsB12oA
-         nxszit48690jZPGvtptCZuXqQPHEafV44hbQktXrPMmAUDf1lhEPxjngPhwR/DpexoNG
-         /UDI28l+b9CxXeDN80KOBpL86QtvnMzpOBSn48iTxdWjXqkYOtw5h9uu1SuE0woagNTH
-         rNRQUbhFT7buf5dK/rR1cKjh69FGn+2XINvEgrwOKnsBbJ12+ivCt66xDgMl/OSQGtJ4
-         TB4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUl/NmsuV8YxSfG93+h0ehmy+F4BmGoEX25R8lPMFtve506EudnFxtBI/aMABMo1hISEjOaL+AqkZltQvM=@vger.kernel.org, AJvYcCVM4svmuWnIkbdaNnRFMZQ4XcCz0IngPVSK+Rl/4+oYv1uHiycDuGU5Q4v568Fy5uYQcUjupQRwkG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuXccHqpitUpTyLl4cIehjBG0F84oMv/j+U1tnQcq6V/Wd1fH8
-	N3RXE22hBxpk1r9RLyWS2bV3OtKJFut7IZXcfWywv2U7ZTCV470p
-X-Gm-Gg: ASbGncvwWC++ipVbo1hM0s3raY9jMOnE1jwhdYqRw6GMwMnVaEFW6jQdCthCleUVwSM
-	21mvdyb1GBKnlXjatMNzyHl3Lb4UX1TZf997BF9ktqAH1Ww0jgZkFGpT5JBw3rEI7F//8XePGbL
-	8viQu0bt/nvdi+rGXvPvuHwqIpbjaHS1Gzl49iYFpTJ0ZjgCxOSYqxJgW5A/JNSY5YdMmH6R7dO
-	Oe7KSbapNrN9tdi3cWzv1qhoDJg3HYGrCJVqyW3sSFYS+5snbiG5u2ZK0WtIgx4naBt+b+tB+tI
-	tIbPIqXrpQbXO6hDh08yMge3sY0joKG0Jvsriek5eXNawF0VeItHxYKHMP9xsr/euALzkQ+UWzW
-	yL2+3O6qo2iJ1N5vPFPlBGQ==
-X-Google-Smtp-Source: AGHT+IGwehThK/mwC7NzmRgvxhCl43K9ObVWa+VGJVROKVO9BH25ZKpqXCcq49QGDVWL6eOlrdkO9A==
-X-Received: by 2002:a05:6512:23a3:b0:54a:fa47:b2a5 with SMTP id 2adb3069b0e04-54d45293cefmr2989067e87.23.1744609852045;
-        Sun, 13 Apr 2025 22:50:52 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d123298sm1004252e87.1.2025.04.13.22.50.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 22:50:51 -0700 (PDT)
-Message-ID: <462374bc-a7e7-4660-83aa-5c3b9127a720@gmail.com>
-Date: Mon, 14 Apr 2025 08:50:50 +0300
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gg0FkyAZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Njm3oJYrhG1uPcbOAYVKxijpEhibJEuaYWjvMEvM1LU=; b=gg0FkyAZyQs8/2nMDvjoRAQUqt
+	QNFyQ/VqqFqdkDk09Jz6ePqEWEkudKG5ow0M5iC9dffOWDOw9f/d7EHpA8fbeT9hQ4yAjiZ7ftXXf
+	Ut/kGYo/sHI9/l6/106HayrXNd0QZR5/iKrpgAT9HW3vWQmOyE48F0bvVn8ok3/LUPd8WasZBlt38
+	WeahIw0mqEcQ9fVWO16ZEb6bt53PYuIF+xrg+vOyhyLbL4VLgBrvJR5nNk9NBYXx+hIUvRlpz10wT
+	OJCk72Vvyb3B7+PkwLT84WcnE/DE2eKLeghbuN3UX29na2nB79orWIkAEoFMbrIFN6dh8wVltHAzc
+	9vSDM+xQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4Cic-00000000jqH-3W6C;
+	Mon, 14 Apr 2025 05:50:54 +0000
+Date: Sun, 13 Apr 2025 22:50:54 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com,
+	almaz.alexandrovich@paragon-software.com, brauner@kernel.org,
+	jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Message-ID: <Z_yiPk7AkwJo0c6n@infradead.org>
+References: <67f818d3.050a0220.355867.000d.GAE@google.com>
+ <20250411012428.3473333-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/7] power: Extend power_on_reason.h for upcoming PSCRR
- framework
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
- Sebastian Reichel <sre@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
- =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>,
- Guenter Roeck <groeck@chromium.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>, chrome-platform@lists.linux.dev
-References: <20250411121757.573419-1-o.rempel@pengutronix.de>
- <20250411121757.573419-2-o.rempel@pengutronix.de>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250411121757.573419-2-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411012428.3473333-1-lizhi.xu@windriver.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 11/04/2025 15:17, Oleksij Rempel wrote:
-> Prepare for the introduction of the Power State Change Reason Recorder
-> (PSCRR)  framework by expanding the power_on_reason.h header. This
-> extension includes new power-on reasons:
-> - POWER_ON_REASON_OVER_CURRENT for over-current conditions.
-> - POWER_ON_REASON_REGULATOR_FAILURE for regulator failures.
-> - POWER_ON_REASON_OVER_TEMPERATURE for over temperature situations.
-> - POWER_ON_REASON_EC_PANIC for EC panics
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Fri, Apr 11, 2025 at 09:24:27AM +0800, Lizhi Xu wrote:
+> The ntfs3 can use the page cache directly, so its address_space_operations
+> need direct_IO.
 
-FWIW:
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
-
-> ---
-> changes v6:
-> - add POWER_ON_REASON_EC_PANIC
-> - s/POWER_ON_REASON_OVERTEMPERATURE/POWER_ON_REASON_OVER_TEMPERATURE
-> ---
->   include/linux/power/power_on_reason.h | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/linux/power/power_on_reason.h b/include/linux/power/power_on_reason.h
-> index 95a1ec0c403c..bf9501792696 100644
-> --- a/include/linux/power/power_on_reason.h
-> +++ b/include/linux/power/power_on_reason.h
-> @@ -15,5 +15,9 @@
->   #define POWER_ON_REASON_XTAL_FAIL "crystal oscillator failure"
->   #define POWER_ON_REASON_BROWN_OUT "brown-out reset"
->   #define POWER_ON_REASON_UNKNOWN "unknown reason"
-> +#define POWER_ON_REASON_OVER_CURRENT "over current"
-> +#define POWER_ON_REASON_REGULATOR_FAILURE "regulator failure"
-> +#define POWER_ON_REASON_OVER_TEMPERATURE "over temperature"
-> +#define POWER_ON_REASON_EC_PANIC "EC panic"
->   
->   #endif /* POWER_ON_REASON_H */
+I can't parse that sentence.  What are you trying to say with it?
 
