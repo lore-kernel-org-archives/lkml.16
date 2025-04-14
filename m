@@ -1,150 +1,104 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8341B3929;
-	Mon, 14 Apr 2025 08:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289D619066D;
+	Mon, 14 Apr 2025 08:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618607; cv=none; b=JxqwswrE+tcohi4sorCT0GwPXD/P9McufkI3AtiifAX4qOdG+KxvLAAnuBWqYWRcDiZM1CAAt+TWyg4EP7zrH4rfm1liPx3a1w6zE02uEFFLO8WWRsQuiW0U9v4fO8t69bYQQ2yTdUSWYNwEV+YlvSPqL8GisNBnFIUhGNRn3G0=
+	t=1744618739; cv=none; b=JBI0UIBY8Vba7pl+ax/AkpoyZ+PZb1TWGX2HfVcfaDl6bHe/Jnfksx6/2IfOrwFpnJMgR0o09bzK+GDB/YlUpJB3em1zYXZ5poKfbI3wtADQg58iWyzTHm7cKaXJ0ADQeqTF7mjcaXB7boX+TcLKY6h+iSJYrmkNqQe2TcXhU7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618607; c=relaxed/simple;
-	bh=9sWbOMW+IVMom0RcqnNNgqEEMH9cNEP+F8MFK/vk3kY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VdsH37sTmFcg93RP3dyFsoxc53ZBFxZO68bubfhKFIxCgLNhNXH089V75fs6Jskf1dt4A61RJMmgjmBpsx5bYdVeX0zG8hQQK358zgMmmCUofQsheZwP7zpmXsra6n5Auu3BNhJ9h7QPrmf0bS13JqjfrbJn4xm924Drol7ZSso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=jWym5UQb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XPYnSyK/; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1744618739; c=relaxed/simple;
+	bh=NAUH6JxFCjUR5Kz8NJ0hgi+TtaaG3aiby7vc/ny+m90=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=i97WjwbMG81C2byKZEZosJwzJI3kC4Qjl0qLqS0GMMKsylyUsS2FSvhmMhcrSxBa6usz3PXGFpKvym+EGRvXboWSFLTFjvmdXZ5gfkZkSKb3nQmymcZDZ6Rgdes/Ia9PNSUrVUaZq2peFkgviRtxP4H2enYhRKyZPFPpjR25mX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gj5Gr98C; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="jWym5UQb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XPYnSyK/"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id B75BF138057D;
-	Mon, 14 Apr 2025 04:16:43 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 14 Apr 2025 04:16:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1744618603; x=1744705003; bh=A+ViW78CsL
-	GmjWmMDqqTl7B6L5Ulz3wieWbNf+7iWQk=; b=jWym5UQbgP/QvYcU5V0/PPR31I
-	/2Dya5jjAABVsp83aJm9gPKCQXfno/NA2Jj3I1+qooGs1LcYo2N5sXtduA20pTfm
-	RTK8zzWk/KTbSalbNGWcdy6t9fjVsGza2vdvXGf6jXC1o0RcxzldoVg2ZryS8e8q
-	fWPmqvtsOihaAZY6ydUAsGwouKqax3lUiiozCNnpapfCiGgb/8UHWDceEi13NibW
-	0GErYG5gNnROrg7VtxwmO3eAVPaGt8JnyFct3tTmkl5v87NvnuIivtdFy+yRnFxu
-	hfFxOWDjHKTtyn/tMN4ZpAq0tRigisIW+qW942gXCPAxb+vbac9QFmf36UcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744618603; x=1744705003; bh=A+ViW78CsLGmjWmMDqqTl7B6L5Ulz3wieWb
-	Nf+7iWQk=; b=XPYnSyK/j2extvAcUJrS74a6QXVmAZA+oYNCAgSbnX5eAEtdYMG
-	VZD+2FCwYmll7ELv2C995hobVyyOMEAsQpg49VeRexEEdjuo3h1xsT41b8T8W+Kc
-	+6FqVMzNn8oYJKjV3UFdOL8SOlPcuRRglXBqraq3CQ1Ra0G9PITHBp4hPTjJJnFG
-	aca43HZcOlwlAesn0jsBVbJbILkGhm/vFJL1UL9DgDVbY6BFpKNaeg2lYgTPYVov
-	S780FprBNyWK+cHHOTFaEh4vjdHhGOraBYmyoUocdpZ735AtK1kH85tEgW3butoV
-	lQ03z8d3/GwU5BYFTXfSWuCHDpZL8tmEWEA==
-X-ME-Sender: <xms:a8T8Z1992qqwQWSn9_FFPXTNliXk19pHgUd4SGMd1vTjLjaIdkWpYg>
-    <xme:a8T8Z5vXNEmfMz3CTqwlq-W3pvWtLSlcE-DV7txIuW_vcK73ofHokhnAQt7hYBrK1
-    FWyFhX1bonDgGp-Soc>
-X-ME-Received: <xmr:a8T8ZzBneclz8GfueAqkj0Z6t6xSabBaxOnSLcmg6neovzFHVx0u9D577pfo2dz4GdzwnlEIHnBg5CCV_dBSO9xgdyY_SutEEQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddttdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
-    cuggftrfgrthhtvghrnhepheeviefggfeivdfgueefudejgfffveejteefffefieetkedt
-    hfevheeutefgieeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlih
-    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtph
-    htthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgr
-    sehffhiflhhlrdgthhdprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprh
-    gtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:a8T8Z5d7ieCezpEBtdbDvZNnyN5V5aJbdsakaYevy0gTE3DJW1GpxA>
-    <xmx:a8T8Z6MNCz3kB1VN1p_-lX8JcMUY193s2Y87ApSVef0iDV8JIt1XIA>
-    <xmx:a8T8Z7ncH1mmXasihCrlRX6NoA6cvt4i8nCpPNFrfHAyKe6LeXOAng>
-    <xmx:a8T8Z0vCCO68d2L0hRTHv7zFfLZlTGbo4NdiQzojkEabn3UzHXNgng>
-    <xmx:a8T8Z3yCab7A1l8wz_cLjHYYMebvhrq3_QvUmTtWUpIUC6DJZTDRkzVW>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Apr 2025 04:16:42 -0400 (EDT)
-Date: Mon, 14 Apr 2025 10:16:40 +0200
-From: Janne Grunau <j@jannau.net>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] drm: Select DRM_KMS_HELPER from
- DRM_DEBUG_DP_MST_TOPOLOGY_REFS
-Message-ID: <20250414081640.GA8400@robin.jannau.net>
-References: <20250304-drm_debug_dp_mst_topo_kconfig-v1-1-e16fd152f258@jannau.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gj5Gr98C"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54298ec925bso2146079e87.3;
+        Mon, 14 Apr 2025 01:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744618736; x=1745223536; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAUH6JxFCjUR5Kz8NJ0hgi+TtaaG3aiby7vc/ny+m90=;
+        b=Gj5Gr98Cn7rV8n/6kt6noKldgKYgwK96REW++N0tHtxmBp4lsGQDOoM3JMv5c2vJy1
+         Z9R9d/pmda4ezR0W+XTC5ZmG7zNQkNACUhqD/az8LEdvuSppbVJ2ItUfuvQRl+nzFogU
+         rOeeFjlV7GeG7I8iW2vGCRXItv23CAZEGmHw9PIQPtK+rYUpQroQj2Gndk+i+QKv7Udt
+         9G9iZLSZz0P8qVSB3Azi2sPOWOCValCMqdfJl49es9Lv6h18Ygke55NxJN0yuKYlQQcj
+         S28iMQ1Qk4O1H/KoIUEBFQG+qVwLQl9xrWl+xOcJHI8xLNYUEk8zTq3jBS3R9RXqcG5U
+         3Ing==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744618736; x=1745223536;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NAUH6JxFCjUR5Kz8NJ0hgi+TtaaG3aiby7vc/ny+m90=;
+        b=tMOc0WBuCoXZjcm3RRfE5CDRB9gDFpu4ADMbY+pPxvXx+GrynXdfyp1X8nJ848Xxnq
+         EkV8C/9ViAeESJZRqAhLzksH76gIClcDFdBhUKv8pXekdL5pdncQ3xfNire/1t3cbuOg
+         ubUOgvn8E43ZlnkHEC1Gl+fsKHqZXITpf5MUzTQhHVsKnR1mLabuiqU9qJ665jr+CTvX
+         xD2oMfpVl/F90jvjpBa12nK1DdRT9CL1p/HgORrgRMpIDx0+Oyn/zbuvNRJ+XFQ6eCyQ
+         cHZujZrTMPmt8EgnM1MfzLsZWZ960o3F4cS+T36aETRchG85ZNywJVAz3uOQXihRcSkh
+         2AXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhDSDe1FwUaEbVoJgF++YFMDb7cYf3fKPrRSw6SAvhLllmfh95rkM1VIXwincBT/Y9fmB7EdJRA+Upx7E=@vger.kernel.org, AJvYcCX8GP98kNUCASuLmuK4DSARiP9vW5L7WwA7SpvOvWXb5IuNsiWNbS7jDC+BEuu3cuGSdXDvPlPH9E3S@vger.kernel.org
+X-Gm-Message-State: AOJu0YykoUOKDPYi+CybG5WPC/iOeSoL5yXwXnZrKNoQk7OGoQmAX8DD
+	opX2AKtUHo9TvffFf1ciuWu+0MCXY/F5ZhlVRzTVY32jr4aX/uPa
+X-Gm-Gg: ASbGncv8LmR5lBKZRAarKmICb0AN4MPT3N3g/ATRzG++29qYUBSvJ3P9eAovEgl5wpb
+	cM60In/D3f+8ErH6IYnj3s9e528tGTnRK51aVdsA1iM3SjDWGXoBaiHE+zsH8zqA36OPCu3C0uY
+	/BLvFmG1jjSzODLi1giZV+L7VOyyU8YtlQXo/OUxdVskbIxUmCitAvp6fEo46+TOIjtEVTnDr5R
+	m6CMnFKGwtHfL1god2JnDCWrpMFvbHuiPft5bkTWSN0azIYDs/ZrguEm8WNOZ4jvhw7CxgdzKAE
+	l+RHAPEKLiqPTEWOk0IzexYWRS2iumEkS4VxRNxq7T8cjGsCHetzsiALRw==
+X-Google-Smtp-Source: AGHT+IHiuwiPU4doHW/IUceu6jbhkBnNhnfwwEK7zwxkj4sXRDcqk5ADmX+myDIN3Uz2KmEOVP1IVA==
+X-Received: by 2002:a05:651c:2122:b0:30c:1441:9e84 with SMTP id 38308e7fff4ca-310499d61b4mr30689251fa.13.1744618735814;
+        Mon, 14 Apr 2025 01:18:55 -0700 (PDT)
+Received: from foxbook (adtk197.neoplus.adsl.tpnet.pl. [79.185.222.197])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f4661dd3csm16194381fa.112.2025.04.14.01.18.54
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 14 Apr 2025 01:18:55 -0700 (PDT)
+Date: Mon, 14 Apr 2025 10:18:50 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: Jonathan Bell <jonathan@raspberrypi.org>, Oliver Neukum
+ <oneukum@suse.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] usb: xhci: Don't trust the EP Context cycle bit when
+ moving HW dequeue
+Message-ID: <20250414101850.2d6becf2@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250304-drm_debug_dp_mst_topo_kconfig-v1-1-e16fd152f258@jannau.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hej,
+Hi,
 
-On Tue, Mar 04, 2025 at 08:12:14PM +0100, Janne Grunau via B4 Relay wrote:
-> From: Janne Grunau <j@jannau.net>
-> 
-> Using "depends on" and "select" for the same Kconfig symbol is known to
-> cause circular dependencies (cmp. "Kconfig recursive dependency
-> limitations" in Documentation/kbuild/kconfig-language.rst.
-> DRM drivers are selecting drm helpers so do the same for
-> DRM_DEBUG_DP_MST_TOPOLOGY_REFS.
-> Fixes following circular dependency reported on x86 for the downstream
-> Asahi Linux tree:
-> 
-> error: recursive dependency detected!
->   symbol DRM_KMS_HELPER is selected by DRM_GEM_SHMEM_HELPER
->   symbol DRM_GEM_SHMEM_HELPER is selected by RUST_DRM_GEM_SHMEM_HELPER
->   symbol RUST_DRM_GEM_SHMEM_HELPER is selected by DRM_ASAHI
->   symbol DRM_ASAHI depends on RUST
->   symbol RUST depends on CALL_PADDING
->   symbol CALL_PADDING depends on OBJTOOL
->   symbol OBJTOOL is selected by STACK_VALIDATION
->   symbol STACK_VALIDATION depends on UNWINDER_FRAME_POINTER
->   symbol UNWINDER_FRAME_POINTER is part of choice block at arch/x86/Kconfig.debug:224
->   symbol <choice> unknown is visible depending on UNWINDER_GUESS
->   symbol UNWINDER_GUESS prompt is visible depending on STACKDEPOT
->   symbol STACKDEPOT is selected by DRM_DEBUG_DP_MST_TOPOLOGY_REFS
->   symbol DRM_DEBUG_DP_MST_TOPOLOGY_REFS depends on DRM_KMS_HELPER
-> 
-> Fixes: 12a280c72868 ("drm/dp_mst: Add topology ref history tracking for debugging")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
->  drivers/gpu/drm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index fbef3f471bd0e5101699cf576542f7350bea3982..bd228dc77e99b4356b09de02d9001237eb2423e2 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -188,7 +188,7 @@ config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
->          bool "Enable refcount backtrace history in the DP MST helpers"
->  	depends on STACKTRACE_SUPPORT
->          select STACKDEPOT
-> -        depends on DRM_KMS_HELPER
-> +        select DRM_KMS_HELPER
->          depends on DEBUG_KERNEL
->          depends on EXPERT
->          help
-> 
+I ran into an annoying bug in VIA hardware, where Endpoint Context
+state is not updated when it's supposed to and Set TR Dequeue issued
+by the driver sets wrong cycle state and the endpoint stops working.
 
-Can this change be merged? I do not see it in v6.15-rc1.
+This can be triggered by stalls, which are relatively common:
+- some card readers without a card inserted
+- disk I/O errors
+- failing SMART commands, possibly issued by daemons like udisks2
 
-thanks
-Janne
+I knew immediately what to do, because it's a known bug and Raspberry
+Pi has a fix for it, which they submitted upstream but it got reverted
+later. The revert is puzzling, because it was a boot issue, happening
+before the changed code is supposed to run.
+
+If the problem wasn't misdiagnozed and blamed on a wrong patch, I can
+imagine the workaround could put the chip in a bad state which caused
+problems after rebooting. The commit surely had a blatant endian bug
+and VL805 is prone to locking up hard under some unclear conditions.
+
+This is my attempt at a simpler, and hopefully correct, solution.
+I tried to come up with something stable-friendly, but the patch is
+not marked for stable becasue it wouldn't compile anyway. If there
+is interest in having this in stable, we can trivially backport it
+(a matter of end_trb/last_trb rename) and submit later.
+
+Regards,
+Michal
