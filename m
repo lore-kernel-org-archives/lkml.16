@@ -1,125 +1,94 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECD127E1AC;
-	Mon, 14 Apr 2025 10:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7C527D79E;
+	Mon, 14 Apr 2025 10:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628194; cv=none; b=Ck9+pAk+Chyo2G3/1O/lpYArtDczsm/z01Dv50HZvl1VtBTWkE88Nr45G6/p9u3vPR2Fh0fV/UbL6gXGM1kNVkcllI2WIPADt8wDR3ANNOFJsy9FmmEA+O8OsHcL1Or/Fq2QiPOb1FmU8Xh8MAk8W5p5Wd75GYTifgFN4Slh8BY=
+	t=1744628224; cv=none; b=cHmuTzGAHKNB2a82+4JyDkRtVFAViXHLm7tAaP806yIMo8yDnbkBYEQxJhT2fV+Il52cq216WL1ipuh8UAKLTMlyLSm7Jdl1x3TzdwPADhZOgftJ+Ogr3IO9vMfziUc1dPEPLZP1D2CJbO7TScacw4YfJV7nwxOnKxYsXP+QMAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628194; c=relaxed/simple;
-	bh=qPsl1p/pnSxH6jU9ZCSFGRHHz0vNml6RGHCMU0Fw1AM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SAw53kQzsTEwJ0AvuOBWmeZk6MsXmARKEs0zf7lM5cAOC62OcMzejZb5tscQK+aHWbu1KF5Nah0JY+9QBCiBeevRXn4dMT5ps/Xm/h/pBYD8KUH2s6T9HtR6+6NNvJ8uTciZ+s0pQNZaUd80Dt3ECRdqXHxByolphAxPtTf3e5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P58rEOhG; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744628224; c=relaxed/simple;
+	bh=R3xwTXKuf5QwIrRarHqKkm0PSMH3ZydknPTp7+3MCps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3vDkDASQtmWkitDLq3kvm0QGHPfGfcEjoTihh4UiGFJ+miZ/C8UxwDahqSc2/tvd7c7sOK8uI8jV4pJdNOHyTEDaKyX4odVF683H84ymdT9ko1Sh16SJKfX37eXXuDbuaKo0VbRc7CVZbFOAPnUEUpKf9tl0yWYFo11s3aAo7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI5eC+fZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P58rEOhG"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2aeada833so815287566b.0;
-        Mon, 14 Apr 2025 03:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744628191; x=1745232991; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HXHgCoRS0YwOf8Q53qIdanPklBmiKbG3Rq6TfM+45WI=;
-        b=P58rEOhGkn7EDFrOixFc3AhjTZo4LQg/H58ej6ewUU7M9q72uh5vV7z7Z8HRBYFs18
-         ekhUauYybDdv1ai5QXtdBj73iHmuwkcF8JZxttg6PnJ8Jm+eoOqxpJz9g52F4VRRAwD+
-         RJWghzyqjkqOLyuMi+RiBp66Vpjatl8xAE+uXe/EIkR0DgVsOBUqBojqWRIJXTCzwFQy
-         mDDEAuiDqtqhv58XnW1CsY+U4Aw0L/JldTlpdzM6QkFrio4AaBpFxDvXPn12VXv6mnAK
-         nI8tnZ/n5BEcRLThivP9jQFQTYAunB2MNl35Ry09Kto0N084UojpQSK4VY08H9NZpCae
-         0hhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744628191; x=1745232991;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HXHgCoRS0YwOf8Q53qIdanPklBmiKbG3Rq6TfM+45WI=;
-        b=MfTWdJyA3r0avU2Qlc1Ih8eJuSROgL87l5Z3MVu7aaUhoJQDlNtETG/Gd00dN1Mn75
-         xamshqZLipyZXznGoQIyVADLDF5wsixKkBV8rg/SvXKm+hDPly47plFQaN+iCdwlWrAU
-         LAJQbDTdgkvewrGgBuNFY5Khdz9CM1lNDcZ2DS7idEGZnV99BngaHArNJwHzCy/5SeGL
-         /OlwUKUgZUljMIDIZSkxZeMITvTNPcsjiTi7chuBtEyJ+TDuKwgV8Z0+uRmhSZ1QgjGF
-         Qg2sEUkLJvD+93PKEFiF4Pr8+gzK+yWIbjObUbevuzm93ZmVildDwAkb1t9xEauFvnTD
-         xTsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXg/dMEMph+EKfZ8pnNiUeyp9ch8GhS5LxOhk635F+JxgnIWU9eAkNtH3JO/W4/kcSEyxK1c/BPqvVWyc=@vger.kernel.org, AJvYcCW2Q/noo3eUU2IKdWBifizZBhDiHMWZY6250fTGjvdeyh8gbBZbatgp/nJ4DJgHkoLiDOuio4Cr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuZJ6YT9cFU1+fyJ4H5nW4907udNBfg8IbFbyedCw9zDUA0ZIv
-	eA51QLC1qrxNUKmxgsgNOuh/QBuzdS8K4moHaXBNcyvkb6tCtFIcPdZzLbFxuDubUCTlCe+PbYv
-	Hm1+EDrwIxVH5gAq3Mo2ZmwBrhH4=
-X-Gm-Gg: ASbGncvZsdwqcZPPDcLFR1v8vhNcNkB9l4kPtF7jkz8u2RR1NX1dto4L88kELWOLxpr
-	mjnawWx105yWcm5tn+u3he5HDPc8uRTsZX85kXsRzTIEG5B1N2107K9hsafewNOceeJUb0UBmki
-	478Dg4APNh3mRYgKDcOHTI
-X-Google-Smtp-Source: AGHT+IEvDvPQZgPAoeGnnFsZrVJ3o2c9ryxxE5kj2iI8UmbuWpxSwT2OgF8oUCNJxp8+9r2VQDpWUAH7/WPQKyq5PQw=
-X-Received: by 2002:a17:907:6e9e:b0:ac7:b494:8c0c with SMTP id
- a640c23a62f3a-acabc24974cmr1125809966b.16.1744628190945; Mon, 14 Apr 2025
- 03:56:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI5eC+fZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB22DC4CEE2;
+	Mon, 14 Apr 2025 10:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744628223;
+	bh=R3xwTXKuf5QwIrRarHqKkm0PSMH3ZydknPTp7+3MCps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LI5eC+fZiNWy7i030iKL6KaQjSZFpKRXu8wsfwJ1s2GxbG8vMfNIg6YPTE1XPBJg4
+	 GPH9/3NzX95nlcB+hoUVJF3V+hd0FCbOWhvH6Oxa/B8/lJLWsVjf+lZB946fuzvTm+
+	 EzSsf4C85Slw1BI8YX/To5NE0Kh3gDq0+DE6yxNjnlfRIYSuJbjp4O7PFs3xJTNsiA
+	 cSBloqUjK95ErfkQmzyiiduDJlj3xin9cpuAaRJ+eloba+8gtBjLrDq6eWEMkWEO2c
+	 0GQjzZycNKyI1r4Xspobj1PSz+SjhKsix9b2RGVpN7NFMHJ4R+ckzFTkwVkMLWusrg
+	 5GRRjJT+4figg==
+Date: Mon, 14 Apr 2025 12:56:56 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org,
+	rafael@kernel.org, abdiel.janulgue@gmail.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu,
+	daniel.almeida@collabora.com, robin.murphy@arm.com,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/9] rust: device: implement Bound device context
+Message-ID: <Z_zp-AvQ6FMv0ZRK@pollux>
+References: <20250413173758.12068-1-dakr@kernel.org>
+ <20250413173758.12068-7-dakr@kernel.org>
+ <D96AXNJRUAA0.3E5KYNM5PZZPG@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414085412.117120-1-maimon.sagi@gmail.com> <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
-In-Reply-To: <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
-From: Sagi Maimon <maimon.sagi@gmail.com>
-Date: Mon, 14 Apr 2025 13:56:04 +0300
-X-Gm-Features: ATxdqUFLPdurWYyYiq28ZD3_gow2Jut3gXA3TatPsfgs-Xz52ZZYmbXK34K6oHg
-Message-ID: <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
-Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D96AXNJRUAA0.3E5KYNM5PZZPG@proton.me>
 
-On Mon, Apr 14, 2025 at 12:37=E2=80=AFPM Vadim Fedorenko
-<vadim.fedorenko@linux.dev> wrote:
->
-> On 14/04/2025 09:54, Sagi Maimon wrote:
-> > Sysfs signal show operations can invoke _signal_summary_show before
-> > signal_out array elements are initialized, causing a NULL pointer
-> > dereference. Add NULL checks for signal_out elements to prevent kernel
-> > crashes.
+On Mon, Apr 14, 2025 at 10:49:49AM +0000, Benno Lossin wrote:
+> On Sun Apr 13, 2025 at 7:37 PM CEST, Danilo Krummrich wrote:
+> > The Bound device context indicates that a device is bound to a driver.
+> > It must be used for APIs that require the device to be bound, such as
+> > Devres or dma::CoherentAllocation.
 > >
-> > Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs =
-nodes")
-> > Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> > Implement Bound and add the corresponding Deref hierarchy, as well as the
+> > corresponding ARef conversion for this device context.
+> >
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > > ---
-> >   drivers/ptp/ptp_ocp.c | 3 +++
-> >   1 file changed, 3 insertions(+)
+> >  rust/kernel/device.rs | 16 +++++++++++++++-
+> >  1 file changed, 15 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> > index 7945c6be1f7c..4c7893539cec 100644
-> > --- a/drivers/ptp/ptp_ocp.c
-> > +++ b/drivers/ptp/ptp_ocp.c
-> > @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct p=
-tp_ocp *bp, int nr)
-> >       bool on;
-> >       u32 val;
-> >
-> > +     if (!bp->signal_out[nr])
-> > +             return;
-> > +
-> >       on =3D signal->running;
-> >       sprintf(label, "GEN%d", nr + 1);
-> >       seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
->
-> That's not correct, the dereference of bp->signal_out[nr] happens before
-> the check. But I just wonder how can that even happen?
->
-The scenario (our case): on ptp_ocp_adva_board_init we
-initiate only signals 0 and 1 so 2 and 3 are NULL.
-Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_=
-show
-when calling signal 2 or 3  the dereference occurs.
-can you please explain: " the dereference of bp->signal_out[nr] happens bef=
-ore
-the check", where exactly? do you mean in those lines:
-struct signal_reg __iomem *reg =3D bp->signal_out[nr]->mem;
-struct ptp_ocp_signal *signal =3D &bp->signal[nr];
-> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
-> the end of ptp_ocp_adva_board_init() like it's done for other boards.
->
-> --
-> pw-bot: cr
+> > diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> > index 487211842f77..585a3fcfeea3 100644
+> > --- a/rust/kernel/device.rs
+> > +++ b/rust/kernel/device.rs
+> > @@ -232,13 +232,19 @@ pub trait DeviceContext: private::Sealed {}
+> >  /// any of the bus callbacks, such as `probe()`.
+> >  pub struct Core;
+> >  
+> > +/// The [`Bound`] context is the context of a bus specific device reference when it is guranteed to
+> > +/// be bound for the duration of its lifetime.
+> > +pub struct Bound;
+> 
+> One question about this: is it possible for me to
+> 1. have access to a `ARef<Device<Bound>>` (or `Core`) via some callback,
+> 2. store a clone of the `ARef` in some datastructure,
+> 3. wait for the device to become unbound,
+> 4. use a `Bound`-only context function and blow something up?
+
+You can never get an ARef<Device> that has a different device context than
+Normal.
+
+A device must only ever implement AlwaysRefCounted for Device (i.e.
+Device<Normal>).
+
+This is why patch 2 ("rust: device: implement impl_device_context_into_aref!")
+implements conversions from Device<Ctx> to ARef<Device>.
