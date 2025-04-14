@@ -1,266 +1,335 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79568265CD1
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1D72673A9
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624165; cv=none; b=i8/YW1HarmcWv/IsiAcDfIuOGU72WvX8P5IO7olf8pLT8Y8vA21sVlUnw2Tz7P1zG3e7YqcNUJw8noRh5suJhu6mUZpRrHJ2HTKHp8SjevhDZugxQYYBT/3bArxg70LYzsQrjpNd1516hzb88NL4hJ0Av/Z9TBkm4QD2ANXdl98=
+	t=1744624168; cv=none; b=Kvp9hdZOgPpSEz+L2n5k0zWd4KIDwmLJUeRlXeHh2XH607t30An1BDVRW7DYJbWagv1S31JvoyjoEj9EMYm58CE+wPvts5FOZf0Bbdk0hIyXAJcOxuE5aLulhLBDQ0qG7uwDWTbgfPJQgg7HFTCs2hYhS+U0cF0f7UjV1OGJvo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624165; c=relaxed/simple;
-	bh=yUKqCPPORdYVe342mQqddOKMLZ0bybmVAHWIG65MK4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mZcjDjms/4Z7OidRO05zMiPrvGnhrsZW1S0c7SunLN6Q4trcD17/AG+IfAowMn0+fZ1z+TH2YH8t9vRnBYDcnR0XVXUPtZ7mUYKuewoDo+xYIVZei0ibHaq4EOZDwHrQdQ9wgAIPyF9qiyW1BZF2QqSvmwzb/RidVhWJ5yg2Rjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MGTAg3NE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744624168; c=relaxed/simple;
+	bh=3/hTDi2F+AW7vI8uPGYluEvnRCjR8QEBwsqAK4AjFTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JD+7kAKmHvTg2CWlNTnOgtaZRlZHXAmNr22hVbevKRsl5uqCFv/fwtPLy54+sQu5XtOmSOboBE0W16YXTW5jKxWMQvs3lm5c2rX80puwY8KLrOrNn7yD+VFp0CWPu4uZD2tWL1FUIV4q/QqUIuePgwj+EPP2xBXUbMZlmZqE5FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMqfVhQ9; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MGTAg3NE"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99vr7001845
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/sdJrQAAPCExE5G43phs3Cg9sP4wasVXTslo08/sa84=; b=MGTAg3NEob7NbEkF
-	KwirsgchUJrFDt+xwKjcEdYD1rRCu6BM5E7bQv0ZxVRcBP2Dm4KHou/aNK5JWiBl
-	onbAxJKCP5xfRzwp+z6zhVwCJ7povMgpLO86sy3iA7o6/lZDtmP6zqlBJdFSToJ4
-	lBQcVdiv3AEQPfB10wdZRgaDbcLMNX5Y+hGLY0YOrU9tFIrZAsCBVtXcw86NHQCz
-	oWKORFiiU4Usd/Vt2FKCu5690IcrJFZyTi9QZOwQY6lgn2SEsI/IC8jYLXz8R+5S
-	U4YI9Jl1jNusicIYY+pLHnFwI5CS+/pOwUoRh9UF2WQgS7wDpqH4AgauSfYAIh+3
-	h3vkiw==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydhq4ajc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:21 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8fd4ef023so8003246d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:49:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744624161; x=1745228961;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/sdJrQAAPCExE5G43phs3Cg9sP4wasVXTslo08/sa84=;
-        b=iJVprkm8YzrG2tQOh2LEjhWy/XMgkgl5pht8w3Zm9EUma3Y5dhzITcO2sWr0LC5RCU
-         mEhmbSo8Z56Oau1ywX3Kv1/MFSZdrOzkok7BGxO3XXDA60+ezekgLNa0iuNu+LtvC6fV
-         VrAV1oJh/ST0giMqbudQgioYPmQvVm7MJX3mIVueVWmZMa8r9kBdcwiP/jpDEIeMkZDX
-         Ynl9HijTBTrFq0Pvdt+uGvDNdH8QJlc+YderzbW6hoSJIh1l5Fzugvg7aTY42XmgVMAW
-         Dlsw6JMvXgKA0vCfQHNcyRjYVnGdh/snExMj4Zq4oaUL2MvDRqQ76bpZixu/of0KySvL
-         lfZA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6UCbBtiC7z+TRWy0ZmdJLAnb4GBhE+mlVPU0sWvHYNRhs495l+6jczmwwS4hjFEvwU7xv3SOL2dNihnw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygeDrTJ6z2F1zP/ePmqoroacAv7ryH9gKuTNYmnNIeEnElpQld
-	o0lKyLtKsyqd83VZiPYIDq6fs+VyYersroEJKM1p6Jdz9nejPRn/z3d4cVL3+oBD+H7qs+XU9NR
-	VCkYlyiKTH6pfj+Zap65dXNHZnaSRbVWge7iVWIJgN1JJFWeJ9UTPnvcHaCgmksQ=
-X-Gm-Gg: ASbGncvKKJYtfnQ62TJySzAKd4CFKCGZiCvklgFt3tl3hjEYbZHntCsblGpuZmAKHf9
-	IbXX2XqfCUKlIwR9oiLU+zDlFllWukPw6Jr/CLbPjiV+0NvrMC6GYiEr/0LbwugYS0nYAqfuSNI
-	2UmV3Wtc+WfI6CSJ2WYEySsIojR2huVuOBOuiWZS4BlreRryJzOqoGH5xYn/e/Q0NlQa6KAc+If
-	Azg4X3v+A8MJSKUML3TxT7VO+hDuwQGmY1jfZ7+3kKDI0N0ukuhGfmSxEh5HEW6CK8pufxnMX6C
-	FThURuuz44c6NZ8Ma492QWNXDML50yxyCrs6WInPgf5lgSCGoNXALYBGY4kd2mIfDg==
-X-Received: by 2002:a05:6214:1ccc:b0:6e4:449c:ab1d with SMTP id 6a1803df08f44-6f230cb46cfmr64487986d6.2.1744624160753;
-        Mon, 14 Apr 2025 02:49:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhADRsGTwzKbE5j8WsaRwODBqXHXEGGv9BGd3uEhWTHB0foPltVfzAR/8ilB2KcoK3NHYsZg==
-X-Received: by 2002:a05:6214:1ccc:b0:6e4:449c:ab1d with SMTP id 6a1803df08f44-6f230cb46cfmr64487836d6.2.1744624160216;
-        Mon, 14 Apr 2025 02:49:20 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb422asm875859166b.115.2025.04.14.02.49.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 02:49:19 -0700 (PDT)
-Message-ID: <60239482-cc86-495c-9184-11f3453251aa@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 11:49:17 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMqfVhQ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744624167; x=1776160167;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3/hTDi2F+AW7vI8uPGYluEvnRCjR8QEBwsqAK4AjFTA=;
+  b=ZMqfVhQ9jU0iDQPbPTpF0PX6TGRj2gKJB0m3UAaCVbfjFevMHbUkgGJH
+   1pSKUiJwy0y8T8eztElbfu7sZkpKKRhrz25wNE7CZdmlPZ88pQGACveIn
+   nJL+6pmtkThzH102dPX9WEECriOWFQeyQ0+XGq3HbOOtDcJtknPvjECR+
+   //Pq6oHpULHEWJa/WKyamFIGw6F1rDbhnZlJgdrAYzM+iZtHyfDXGWAZl
+   1i/DBfEx/BcG9Fh/D3EDMx/jhA0QDe43wONei7Oh2VHO7xMZI8Rsn8gxS
+   Lf+FSBOdUt5xh+fu0+f1S31/3VJWzU3a+i9tO8UOKXHXOShfroJcnehNl
+   A==;
+X-CSE-ConnectionGUID: XyY3eMrVQAKuLXlpYrE9hg==
+X-CSE-MsgGUID: QbXjcmvRR2+1S/GGhyQuyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45222633"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="45222633"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:49:27 -0700
+X-CSE-ConnectionGUID: NLgwFse2S7akAZmcQlwmDA==
+X-CSE-MsgGUID: NPRdBFV0RUKXasfWUjavZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="152954857"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:49:21 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>,
+	linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Tomas Winkler <tomasw@gmail.com>
+Subject: [PATCH v8 02/12] mtd: add driver for intel graphics non-volatile memory device
+Date: Mon, 14 Apr 2025 12:37:53 +0300
+Message-ID: <20250414093803.2133463-3-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250414093803.2133463-1-alexander.usyskin@intel.com>
+References: <20250414093803.2133463-1-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: Add support for X1-based Asus
- Zenbook A14
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, maud_spierings@hotmail.com,
-        dmitry.baryshkov@oss.qualcomm.com
-References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
- <20250402084646.10098-4-alex.vinarskis@gmail.com>
- <2b9128be-1989-4511-995c-103c8ba71af7@oss.qualcomm.com>
- <CAMcHhXrBw6a7gSndG2F-JNgnNsYrDN3nTJjM+NjuT=s9FFWZkw@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAMcHhXrBw6a7gSndG2F-JNgnNsYrDN3nTJjM+NjuT=s9FFWZkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 1y6yRtIyrXYIJkjlSNiW0CpUD_q2ioui
-X-Authority-Analysis: v=2.4 cv=C7DpyRP+ c=1 sm=1 tr=0 ts=67fcda21 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=OOIuroA6IYICTT_mFq8A:9 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-GUID: 1y6yRtIyrXYIJkjlSNiW0CpUD_q2ioui
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0
- impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140070
+Content-Transfer-Encoding: 8bit
 
-On 4/12/25 1:47 PM, Aleksandrs Vinarskis wrote:
-> On Sat, 12 Apr 2025 at 01:36, Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 4/2/25 10:44 AM, Aleksandrs Vinarskis wrote:
->>> Initial support for Asus Zenbook A14. Particular moddel exists
->>> in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
->>>
->>> Mostly similar to other X1-based laptops. Notable differences are:
->>> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
->>>   and Qualcomm FastConnect 7800 on UX3407RA
->>> * USB Type-C retimers are Parade PS8833, appear to behave identical
->>>   to Parade PS8830
->>> * gpio90 is TZ protected
->>>
->>> Working:
->>> * Keyboard
->>> * Touchpad
->>> * NVME
->>> * Lid switch
->>> * Camera LED
->>> * eDP (FHD OLED, SDC420D) with brightness control
->>> * Bluetooth, WiFi (WCN6855)
->>> * USB Type-A port
->>> * USB Type-C ports in USB2/USB3/DP (both orientations)
->>> * aDSP/cDPS firmware loading, battery info
->>> * Sleep/suspend, nothing visibly broken on resume
->>>
->>> Out of scope of this series:
->>> * Audio (Speakers/microphones/headphone jack)
->>> * Camera (OmniVision OV02C10)
->>> * HDMI (Parade PS185HDM)
->>> * EC
->>>
->>> Add dtsi and create two configurations for UX3407QA, UX3407RA.
->>> Tested on UX3407QA with X1-26-100.
->>>
->>> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
->>> ---
->>
->> [...]
->>
->>> +     /* Left-side display-adjacent port, PS8833 */
->>> +     typec-mux@8 {
->>> +             compatible = "parade,ps8830";
->>
->> What Krzysztof referred to with fallback compatible is this:
->>
->> diff --git a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
->> index 935d57f5d26f..aeb33667818e 100644
->> --- a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
->> +++ b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
->> @@ -11,8 +11,11 @@ maintainers:
->>
->>  properties:
->>    compatible:
->> -    enum:
->> -      - parade,ps8830
->> +    oneOf:
->> +      - items:
->> +          - const: parade,ps8833
->> +          - const: parade,ps8830
->> +      - const: parade,ps8830
->>
->>
->> so that in case there are any sw changes down the line, people with older
->> DT receive the fixes, as if "parade,ps8833" is attributed to a driver, it
->> will match (due to being the primary entry) and if it's not (like today),
->> it will fall back to matching the next compatible (and the driver currently
->> looks for just that)
->>
-> 
-> Hi,
-> 
-> Thanks, was not aware of that, found it in the examples now, will update.
-> As Krzysztof suggested to drop the patch adding compatible from
-> driver's code, If I understand correctly I also need the following dts
-> change, could you please confirm:
-> 
-> ```
-> compatible = "parade,ps8833", "parade,ps8830";
-> ```
+Add auxiliary driver for intel discrete graphics
+non-volatile memory device.
 
-Yep!
+CC: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Co-developed-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ MAINTAINERS                        |   7 ++
+ drivers/mtd/devices/Kconfig        |  11 +++
+ drivers/mtd/devices/Makefile       |   1 +
+ drivers/mtd/devices/mtd_intel_dg.c | 138 +++++++++++++++++++++++++++++
+ include/linux/intel_dg_nvm_aux.h   |  27 ++++++
+ 5 files changed, 184 insertions(+)
+ create mode 100644 drivers/mtd/devices/mtd_intel_dg.c
+ create mode 100644 include/linux/intel_dg_nvm_aux.h
 
->>> +     eusb6_repeater: redriver@4f {
->>> +             compatible = "nxp,ptn3222";
->>> +             reg = <0x4f>;
->>> +             #phy-cells = <0>;
->>> +
->>> +             vdd3v3-supply = <&vreg_l13b_3p0>;
->>> +             vdd1v8-supply = <&vreg_l4b_1p8>;
->>> +
->>> +             reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
->>> +
->>> +             pinctrl-0 = <&eusb6_reset_n>;
->>> +             pinctrl-names = "default";
->>> +     };
->>> +
->>> +     /* EC */
->>
->> It's customary to leave the i2c address to make it slightly easier for
->> the next tinkerer ;)
-> 
-> I am unsure about the address. There are multiple addresses showing up
-> when discovering the bus, 0x1d, 0x5b, 0x61, 0x6a. Did a quick SMBUS
-> analysis, they all have non-zero registers responding... My best guess
-> right now is its 0x5b, as messing with it enabled backlight and broke
-> the keyboard. Will add that one.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 251b1f3d0e92..b349e6c01acf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11833,6 +11833,13 @@ L:	linux-kernel@vger.kernel.org
+ S:	Supported
+ F:	arch/x86/include/asm/intel-family.h
+ 
++INTEL DISCRETE GRAPHICS NVM MTD DRIVER
++M:	Alexander Usyskin <alexander.usyskin@intel.com>
++L:	linux-mtd@lists.infradead.org
++S:	Supported
++F:	drivers/mtd/devices/mtd_intel_dg.c
++F:	include/linux/intel_dg_nvm_aux.h
++
+ INTEL DRM DISPLAY FOR XE AND I915 DRIVERS
+ M:	Jani Nikula <jani.nikula@linux.intel.com>
+ M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
+diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
+index ff2f9e55ef28..59be6d3f0d32 100644
+--- a/drivers/mtd/devices/Kconfig
++++ b/drivers/mtd/devices/Kconfig
+@@ -183,6 +183,17 @@ config MTD_POWERNV_FLASH
+ 	  platforms from Linux. This device abstracts away the
+ 	  firmware interface for flash access.
+ 
++config MTD_INTEL_DG
++	tristate "Intel Discrete Graphics non-volatile memory driver"
++	depends on AUXILIARY_BUS
++	depends on MTD
++	help
++	  This provides an MTD device to access Intel Discrete Graphics
++	  non-volatile memory.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called mtd-intel-dg.
++
+ comment "Disk-On-Chip Device Drivers"
+ 
+ config MTD_DOCG3
+diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
+index d11eb2b8b6f8..9fe4ce9cffde 100644
+--- a/drivers/mtd/devices/Makefile
++++ b/drivers/mtd/devices/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
+ obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
+ obj-$(CONFIG_MTD_ST_SPI_FSM)    += st_spi_fsm.o
+ obj-$(CONFIG_MTD_POWERNV_FLASH)	+= powernv_flash.o
++obj-$(CONFIG_MTD_INTEL_DG)	+= mtd_intel_dg.o
+ 
+ 
+ CFLAGS_docg3.o			+= -I$(src)
+diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
+new file mode 100644
+index 000000000000..963a88cacc6c
+--- /dev/null
++++ b/drivers/mtd/devices/mtd_intel_dg.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
++ */
++
++#include <linux/device.h>
++#include <linux/intel_dg_nvm_aux.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++struct intel_dg_nvm {
++	struct kref refcnt;
++	void __iomem *base;
++	size_t size;
++	unsigned int nregions;
++	struct {
++		const char *name;
++		u8 id;
++		u64 offset;
++		u64 size;
++	} regions[] __counted_by(nregions);
++};
++
++static void intel_dg_nvm_release(struct kref *kref)
++{
++	struct intel_dg_nvm *nvm = container_of(kref, struct intel_dg_nvm, refcnt);
++	int i;
++
++	pr_debug("freeing intel_dg nvm\n");
++	for (i = 0; i < nvm->nregions; i++)
++		kfree(nvm->regions[i].name);
++	kfree(nvm);
++}
++
++static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
++			      const struct auxiliary_device_id *aux_dev_id)
++{
++	struct intel_dg_nvm_dev *invm = auxiliary_dev_to_intel_dg_nvm_dev(aux_dev);
++	struct device *device;
++	struct intel_dg_nvm *nvm;
++	unsigned int nregions;
++	unsigned int i, n;
++	char *name;
++	int ret;
++
++	device = &aux_dev->dev;
++
++	/* count available regions */
++	for (nregions = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
++		if (invm->regions[i].name)
++			nregions++;
++	}
++
++	if (!nregions) {
++		dev_err(device, "no regions defined\n");
++		return -ENODEV;
++	}
++
++	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
++	if (!nvm)
++		return -ENOMEM;
++
++	kref_init(&nvm->refcnt);
++
++	nvm->nregions = nregions;
++	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
++		if (!invm->regions[i].name)
++			continue;
++
++		name = kasprintf(GFP_KERNEL, "%s.%s",
++				 dev_name(&aux_dev->dev), invm->regions[i].name);
++		if (!name)
++			continue;
++		nvm->regions[n].name = name;
++		nvm->regions[n].id = i;
++		n++;
++	}
++	nvm->nregions = n; /* in case where kasprintf fail */
++
++	nvm->base = devm_ioremap_resource(device, &invm->bar);
++	if (IS_ERR(nvm->base)) {
++		dev_err(device, "mmio not mapped\n");
++		ret = PTR_ERR(nvm->base);
++		goto err;
++	}
++
++	dev_set_drvdata(&aux_dev->dev, nvm);
++
++	return 0;
++
++err:
++	kref_put(&nvm->refcnt, intel_dg_nvm_release);
++	return ret;
++}
++
++static void intel_dg_mtd_remove(struct auxiliary_device *aux_dev)
++{
++	struct intel_dg_nvm *nvm = dev_get_drvdata(&aux_dev->dev);
++
++	if (!nvm)
++		return;
++
++	dev_set_drvdata(&aux_dev->dev, NULL);
++
++	kref_put(&nvm->refcnt, intel_dg_nvm_release);
++}
++
++static const struct auxiliary_device_id intel_dg_mtd_id_table[] = {
++	{
++		.name = "i915.nvm",
++	},
++	{
++		.name = "xe.nvm",
++	},
++	{
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(auxiliary, intel_dg_mtd_id_table);
++
++static struct auxiliary_driver intel_dg_mtd_driver = {
++	.probe  = intel_dg_mtd_probe,
++	.remove = intel_dg_mtd_remove,
++	.driver = {
++		/* auxiliary_driver_register() sets .name to be the modname */
++	},
++	.id_table = intel_dg_mtd_id_table
++};
++
++module_auxiliary_driver(intel_dg_mtd_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Intel Corporation");
++MODULE_DESCRIPTION("Intel DGFX MTD driver");
+diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
+new file mode 100644
+index 000000000000..68df634c994c
+--- /dev/null
++++ b/include/linux/intel_dg_nvm_aux.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: MIT */
++/*
++ * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
++ */
++
++#ifndef __INTEL_DG_NVM_AUX_H__
++#define __INTEL_DG_NVM_AUX_H__
++
++#include <linux/auxiliary_bus.h>
++
++#define INTEL_DG_NVM_REGIONS 13
++
++struct intel_dg_nvm_region {
++	const char *name;
++};
++
++struct intel_dg_nvm_dev {
++	struct auxiliary_device aux_dev;
++	bool writable_override;
++	struct resource bar;
++	const struct intel_dg_nvm_region *regions;
++};
++
++#define auxiliary_dev_to_intel_dg_nvm_dev(auxiliary_dev) \
++	container_of(auxiliary_dev, struct intel_dg_nvm_dev, aux_dev)
++
++#endif /* __INTEL_DG_NVM_AUX_H__ */
+-- 
+2.43.0
 
-It may be that there are also some 'dumb' devices, like program-and-forget
-regulators or similar components, that aren't even described in your [SD]SDT
-
->>> +&uart14 {
->>> +     status = "okay";
->>> +
->>> +     bluetooth {
->>> +             compatible = "qcom,wcn7850-bt";
->>> +             pinctrl-names = "default";
->>> +             pinctrl-0 = <&bt_en_default>;
->>> +             enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
->>> +             max-speed = <3000000>;
->>
->> You'll need to provide some supplies, coming out of a pwrseq device, see
->> e.g. the QCP
->>
-> 
-> I assume you are referring to change like this [1]. There were some
-> discussions on whether the supplies are modelled correctly as it seems
-> to be different when using m.2 card, so as I was not sure about this
-> platform I did not add it. At least in the variant that I have, the
-> wcn6855 is soldered onboard, so I would assume so is the wcn7850
-> variant.
-> It seems that the two use quite different supplies - are the platform
-> dependent, or only wlan card dependent? Ie. Can I just copy pwrseq for
-> wcn6855 from a different platform?
-
-The power sequencer is a description of the hardware that's part of the
-same die as the wifi logic, IIUC
-
-The inputs are most likely fixed per SoC+PMIC combo for various reasons
-
-> For  wcn7850's pwrseq, I can add similarly to other platforms, but
-> cannot verify it. Should I still add it in this case?
-
-Let's not introduce it then
-
-> A bit unrelated question: in the meantime I managed to bring-up the
-> sound on Zenbook as well. Would it be more correct to wait for this
-> series to land, and then send it separately, or is it okay to add it
-> in directly on re-spin?
-
-Let's get what we have merged first
-
-Konrad
