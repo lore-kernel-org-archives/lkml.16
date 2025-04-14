@@ -1,77 +1,92 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7A31C8634;
-	Mon, 14 Apr 2025 19:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B406C1C700B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744660355; cv=fail; b=GmUvwCi9ScClt6ve75ACxjzz4GJ8+Jq6ViFpAoSr/Db1B7oDBBeyZ4dhk3K8NuDEm3J/iZxkZ4h9u1SeSOVY+/NNcb2tCyXlyLkNz5QYRvntWmjkwf1nGjSTPiu2E+3o9hSEkwUbZrxzV/zSQWWFuqKG7E48K1CxggIZXbuw3pc=
+	t=1744660391; cv=fail; b=B0igjvO/PTKUfwjpOEBUNcxtK6WyDr6x9djzscM1wRSIMELZyCCKuM1Rp9ewAT6FaCVRkhg8TcSwdpJyferx7WeIcOJxSJRy/issp7DRfaBpCwN3nFbcWNNa/xqEXV0J7xgFM3VdbCYmYlMUCeNo6HxsVRDk5uyULE8mZXQAgQ0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744660355; c=relaxed/simple;
-	bh=bGk9skDbJReXaJ48PBE21fRUIQMI2mbhk76Q2kFSNd4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Fu41bd8jxE1FKbs7QSvPHsTh4wQXV9aNe/bOF+rJjyhCniXiukaEh9Q3j1TQXwkPEqMxXrUxnZsnuxPAEvIkdTZtR7hVF9hIrkvUA9u7oWtRNXX8bEyyM94fkcXUMAbKyUvtSORnPQAwNULQMWL2RxOwYEMg+xu+fkaO9p97kqA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5NeJr7RW; arc=fail smtp.client-ip=40.107.92.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1744660391; c=relaxed/simple;
+	bh=B36qI00GOrjMiJz/l/L+MtKQ70ZT7QBq4CxwTnCK4vY=;
+	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
+	 Content-Type:MIME-Version; b=oGxfIQTzskeHmwl7U9GdC2QJZxU2qUJ7vgUBH7jcl8Hfmzyc18sja6+9LZkmyelKUtq7EbcNsB7m+b+MqUJ7D7EZoblUjPXQQufIbpNrgTd/pmK6lXV4Kt55zhgiULvwEBpTAxbE3A/70MuNfZf6qrAHvmWbyQyvB0tjIF9Z5bE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=h2NsjVZ6; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=h+bXYt6Q; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5NeJr7RW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h2NsjVZ6";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="h+bXYt6Q"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EHVxjj027670;
+	Mon, 14 Apr 2025 19:52:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=CQiM9tKf6G1D/Ba5Ul
+	0mtFhSMB6DDRw+zzCZsZbMDJU=; b=h2NsjVZ657fLWOq2JwVcBY+F84+b9W0C+h
+	wBcWykZz397y7PiLjUGa0SHr8ZHcUxQeskg3UtJmclvkV4tPafb0/Hi/sUg5DAf/
+	XRP/2uth5bgu4rLE7OQxY74tRC4kXZyCjD9TmFNqSEkJW4uGAnPg4BDZl6N42BSg
+	17NNmQPtP7XZEqazV1zZeHOuOrpRO1EQPldtj3X+I+dErZzbdlpMeQaZgf9K9Yd2
+	yAM7arGpnoZwflddoaYigAvXOT5znO/Ak8bYkqTvqK19TnoO8lbJtKJ4ektFxAsK
+	+9ThHCZZRD2vEE2TNf6mSYcEk1/RtwMvbb8wu1zIfTMGUR2GM0DQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4616uf0a1j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 19:52:42 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53EJPcSs008610;
+	Mon, 14 Apr 2025 19:52:41 GMT
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azlp17010020.outbound.protection.outlook.com [40.93.12.20])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 460d2p05sf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 19:52:40 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dkgtJpMahDOo93fctff/6JSjr2C+Xwgsepd4j1xvy5ikYUfkWkrDsPLiJudJKueFZUfFAmta0v5vkjBnaddw/8auAiVDgcIzWuMyuT4N0+lXJhCGS86Kqqxb5oifWcAke9QIB4OVpkCTpynueiKpRqbBCfxMntJ33UAE+fsziRgS3kYF70iu2Vhlfrw5aFR2sqwEgKIVekjBS3PPxD0fucf1ei7E1C4xHTRXZplyhlkwWAi6G7yjcUhNlRR/O2+B5TPT6gy7sss3DIk1wI1p9t741RtvhK5TMD/Scvd2wVG3mnXKib0VHjVxXP9PCdJRC/YRZ9wR7amd+SwKAAuvwg==
+ b=QI0cFPCI6DG/+A4cqket+LFQ5zqvFB2LDDt3J/miyzBwLDiujlPxPX/SbpuWPCmOiJfnDOCq5VXGHTMQyGAP7TnMoJAtDmAUbG/57Qq7pa8AHMs3aE1xziv9GF2CSquC0FgKjaHg87tEjsu0lzI4v1tUONTWkFWqT34taSMy+xdYS/U4x2e727fFtJwpE7BCRWeeK/g53zsGMBtgorno/bzRXa8kuSktm9XprINKxVgGDCyyxeGPG4mkjS5IbvANb2utp9iDcGM0euXQLCXNwwLzbB1bW9ApuLUQJj+0qPrccfWM68D5K/nXRnXLy1Mu6Wz9a4uNuF68WutVwO+uJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=khR1WPHrbtOjKM65arR+b36QOw5wutnKBJwhW5IporI=;
- b=p5d4rmGRpaQhvVPmLTKFCJD1RcO0Vh4/VFpKSrgWtOeVIdxnTQODGK5YTDVzToz4APFzkJRJjqCBMtTraAhp1jHsqXriIqOTPXKqIOyuuHdUBrozwF44ovdvmBkV8SPJY1MAEW7JX5FPm27pWkoVwOCXjtEMGWL1KCk4I1Rl+oy5EC1upKNOtmOAHei7TiD5xCqwNghZetOB3dOBZeqrFGZ9GAENREH4jAxEWt3RuDeqr8GlzFHdA50E76Vtfu1tUsFGC/doZGRX0r1C7bIg1Bp7oul+U6nfxzRydgiUo4nb1mTBZBSF3D0yk2qZnvD6rRViqQyDkFTHfhds3t7vxA==
+ bh=CQiM9tKf6G1D/Ba5Ul0mtFhSMB6DDRw+zzCZsZbMDJU=;
+ b=TCYiE5KT4wocbJbvr9ioUzjWjscUnCpZpDL5QzHMAlCYyQ/PqQvj4MxjfJlZEtMDqvEHyNLF6ZJ5fqqHEv8/OB2cz3YbjF3jGBiYJN2voeI2OfzM8/rO1SpqeZkOcr974YaUTmCSfAT6D8l8Mb6POQv9QlmDul9ifEi4Nh3O3ck5hIGEDWD5rGqdU+W7EH7pnvIMdL90ydhiXkGi/ETSTbGXFhb6Z/Jhngzt9vx+/8l6RXwwpwOai6Mjq8t996yF8zSiDe3U7RATqp6Vc3PqxeAiVrCWl2rqMlibV7gyLPxgo6uCQ5U4rSQLa2OuxMKyz3hBB1Wslot6GgvyrbMccA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=khR1WPHrbtOjKM65arR+b36QOw5wutnKBJwhW5IporI=;
- b=5NeJr7RWL5IQ485RL456LD1LXJ/nNpMwTM6tD1Sj3AqbI1A437m8inY/+1DKtEWvtcciGdHhP+N6s9d/ijIjJUD9VSQ6pOzETRa0RGoJld/FxeB62lKq+/Z6af8Lq+bMZl3fp7sFx5YM+BZ6ax+z7zntsic6sDHlHI1rthduwV0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DS7PR12MB6261.namprd12.prod.outlook.com (2603:10b6:8:97::20) with
+ bh=CQiM9tKf6G1D/Ba5Ul0mtFhSMB6DDRw+zzCZsZbMDJU=;
+ b=h+bXYt6QJmioGcjnk5UpcCO8htV/7uY1ucbRC7r5KaW2EQaTh/mNd5XIWGKxuPjY2vLi8KUUgUvseU5RKFU0Da5VGBaHsc6tVjZ9IqZ8Zjs+fnmnjijwFlcEKhZhhAKsS8fQ1PTYd3oMpMQ8CisM8iIURi5GH+U1QsYoR2okQ1I=
+Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
+ by PH0PR10MB4487.namprd10.prod.outlook.com (2603:10b6:510:40::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
- 2025 19:52:28 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%6]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 19:52:28 +0000
-Message-ID: <4fc02936-237d-4060-86af-79efc28a72e5@amd.com>
-Date: Mon, 14 Apr 2025 14:52:24 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v12 08/26] x86/resctrl: Introduce the interface to display
- monitor mode
-To: Reinette Chatre <reinette.chatre@intel.com>, tony.luck@intel.com,
- peternewman@google.com
-Cc: corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- paulmck@kernel.org, akpm@linux-foundation.org, thuth@redhat.com,
- rostedt@goodmis.org, ardb@kernel.org, gregkh@linuxfoundation.org,
- daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
- alexandre.chartre@oracle.com, pawan.kumar.gupta@linux.intel.com,
- thomas.lendacky@amd.com, perry.yuan@amd.com, seanjc@google.com,
- kai.huang@intel.com, xiaoyao.li@intel.com, kan.liang@linux.intel.com,
- xin3.li@intel.com, ebiggers@google.com, xin@zytor.com,
- sohil.mehta@intel.com, andrew.cooper3@citrix.com, mario.limonciello@amd.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- maciej.wieczor-retman@intel.com, eranian@google.com
-References: <cover.1743725907.git.babu.moger@amd.com>
- <272948ba495f51acf707d48ef60d0ba35b4417a1.1743725907.git.babu.moger@amd.com>
- <59829882-20e4-4b94-ba46-8fa622841857@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <59829882-20e4-4b94-ba46-8fa622841857@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0167.namprd11.prod.outlook.com
- (2603:10b6:806:1bb::22) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
+ 2025 19:52:38 +0000
+Received: from CO6PR10MB5409.namprd10.prod.outlook.com
+ ([fe80::25a9:32c2:a7b0:de9e]) by CO6PR10MB5409.namprd10.prod.outlook.com
+ ([fe80::25a9:32c2:a7b0:de9e%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 19:52:38 +0000
+References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
+ <20250414034607.762653-2-ankur.a.arora@oracle.com>
+ <Z_yr_cmXti4kXHaX@gmail.com>
+User-agent: mu4e 1.4.10; emacs 27.2
+From: Ankur Arora <ankur.a.arora@oracle.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, mingo@redhat.com, luto@kernel.org, peterz@infradead.org,
+        paulmck@kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
+        willy@infradead.org, jon.grimm@amd.com, bharata@amd.com,
+        raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com
+Subject: Re: [PATCH v3 1/4] x86/clear_page: extend clear_page*() for
+ multi-page clearing
+In-reply-to: <Z_yr_cmXti4kXHaX@gmail.com>
+Date: Mon, 14 Apr 2025 12:52:37 -0700
+Message-ID: <87wmbm1px6.fsf@oracle.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0113.namprd03.prod.outlook.com
+ (2603:10b6:303:b7::28) To CO6PR10MB5409.namprd10.prod.outlook.com
+ (2603:10b6:5:357::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,335 +94,248 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DS7PR12MB6261:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c841a5b-2669-40ff-879f-08dd7b8de2a6
+X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|PH0PR10MB4487:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a965c49-bc6a-447b-c8fe-08dd7b8de8f3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RTA2YjJQdHBEUDNMVHNMc0hjc0c3ZURObTFMYi90REtGeFc5d3dvdTBmVGxM?=
- =?utf-8?B?RlpDM2FPdHBNRnpGbk1LNTMxSXNuTnhHcEgra0c3QUZUV1dqOTVZelpnbGZU?=
- =?utf-8?B?bk52L0JWWkc1NnkrUXl5YXMxWmpKc1hSYnE2QVRBM0UzNTNVWjc1R0poa09m?=
- =?utf-8?B?YnZXRTBDc2U3QXdBTGp2QWFZWE5kZmdVeFB3dU1MeWQzejZJQzBYa1lNTEpk?=
- =?utf-8?B?VGRtazlVUzZjTGZDZlQ5aUN4WEkwb1BHbnl3R0xzNDFWY3o4akp6U1M4TXd1?=
- =?utf-8?B?b1ovUXlMelI5TEJ0OExtWWlVL25QR2VVRE95czZ6d2NVZk9FWEtCNWZncThI?=
- =?utf-8?B?MzAvNVA2d2RmakFKNmdLSEhQSXhHdDYrdEEwMnp4c2w0MmFmVTdYRnR2K2c2?=
- =?utf-8?B?eTJjdHNSWWloRUdyV2lJSnd5L2NhQ2w0U0orL2JpeFViY3ZhUW9EWFhoaVdN?=
- =?utf-8?B?U0c1L3Y0bXBKVW9wM1lvcUlUVHVGenJOZGFGT3JZSmVpMlVEcVo1Wnd4UWVU?=
- =?utf-8?B?Z3JTMkV3M0g4bFNYVjNRd3hUQm9HS2FIWS9MY2I3WC9qYWlOQVpQdVpleFJI?=
- =?utf-8?B?SDJIbUFJendMRTNvMUM4VmhQMWxDYVZ1RmRqUkxucnVFc1R6TjZ6cGl6NjlN?=
- =?utf-8?B?NEVIYzZSVGNBYm9hM0l2RHJ1QXpCbEVsOGtSSis0MmNnS3A3Rmx4b3Jwdmk4?=
- =?utf-8?B?QjFIUFZuaVRCQitiWHhyckkvNzNWSkVIL0ZaN01wTjBWeHlFL0Fheld1V2dI?=
- =?utf-8?B?d3pUUlpudjVOb3o1SnY5cEhGQ3V5bDNKMDVyVHBta2l4RWUzTTBBQTNzbENO?=
- =?utf-8?B?azYwekQ5ai9KQzNiL0tPMUhRUE9LNHFxb2xnUWNCd1pwWEo3cWltdDk5dFUz?=
- =?utf-8?B?OHJFNlhveExVQWlSYmdoQVB2WHVyZlk2cGl4dXRQbnl6S1NsTERFVE1ZaGFx?=
- =?utf-8?B?UHZNbHFXL2xXazBIL2lwdERwdzRLL1krVWhSdlRsZmVCUWZxR1FUMm9BbVRH?=
- =?utf-8?B?OE5GcjBqZ2Q2Qmh3V1B5WHkxMThBSERmaC9GNEpaOXNPUk1YbStDQVJwMzJG?=
- =?utf-8?B?NnZna0V3NkpNTzJON3h1M254bHZLR2hyQitoQzlFQ1prZUxDdm5wc1VmQUdS?=
- =?utf-8?B?Vzh2a2x3YmlFRWZadjJ1MlJQZFZQdnB5K01rTXNiRWZPK1F0cS8raFNreEJ6?=
- =?utf-8?B?dUFWZVdvTi83YVBBa1RuemtYN2VkMGhGbFREQlNuRlFXbDAwOFJtVUZQQjNI?=
- =?utf-8?B?endvd2FtTzBETXhYZllEU3VFOUxYdWJwME01L3kwbFFRMzlZZ0dkcmVmZmMw?=
- =?utf-8?B?YUVuTG5vQXZmYzJtcWdFNFd0UjZ4NDBaeVJSamVZZmZPNDZ1NVlnUXkvTERn?=
- =?utf-8?B?YU9MbVJlb2VBeURIdi9ZeTFuUGRyOTdTTkEyR0dPT05hV3Zmd1BkakxicjRO?=
- =?utf-8?B?ZmVZbTRpUHdHcmJxOElkRXAyWm5DZStQaytjbkh5WnBEQUh0dlhQSjRFa2VN?=
- =?utf-8?B?MkJHWWlGM29xT09WZkwrWnB4WDNsUVEyU3ZOQkJvZ3AyU01DN2dUekl5TStx?=
- =?utf-8?B?RVZ6ek9hTkRvZGtISzM0OEt6RFIzNDAyTTJKeGJwNUQ5WWVyRkhTeHJxNXZ5?=
- =?utf-8?B?WlRtVlZtLzREaE1SaDNHbkoxZkx4a3FzcjN2NXBWUUhaTFR6YkJVd1VZS1V2?=
- =?utf-8?B?YVJQMVM4cnlwemhBaWdWUVRaMHlJemRBVVBBT0lpZUhCVFdpZlI3MWJKUkpw?=
- =?utf-8?B?aE9IdGQ0TFBianRock5xdkI4WDh5SUVQVUhKRSt1YkdkRDFzZXBadkNrTkN2?=
- =?utf-8?B?WjdncXlkRGZXVGNXQWpkRmRtK3k2MHJIb1JxSjJuaFRSMFJsT1VicENtcXBa?=
- =?utf-8?B?ZWtuY0ZyRDJqMXZFN0JGVURwMnJnUTIzV2grQWNRdEJUQkxXVXFudUVCMUtQ?=
- =?utf-8?Q?aNhe6plEdfw=3D?=
+	=?us-ascii?Q?TJEGORtCcjDnIW95U7p6ucpNpM1E8TGPKaUPxoMn7GouHu/x+TLI/xNJIT+D?=
+ =?us-ascii?Q?9rPR1XpIKG7RgL9CCvWEQ2vxa+n0q3BfBbHIeydzdIJ7EX2KCR7jn2wWN5tX?=
+ =?us-ascii?Q?7//pJx7/ipJiAeHH6wk8XA04JwD+gSgHY8bdprKbfC4MQQVtd9m3pSkn9NC/?=
+ =?us-ascii?Q?NntecYz3iKRMKfpwaGSDQZcneHD82mhZ99Xabv1t4+bWv4yCSu9Ezzx4Bgt0?=
+ =?us-ascii?Q?i/V7sU30w0Ro3HuIMEZWDr2t+hbhfxXtEBIAG/x2fSS8hNY24bJyztLMjq6O?=
+ =?us-ascii?Q?6pixkSP2RN/GAWefxdqsOUsXHQRs+91vJa3OVBbxYs0m2CvZ0JByCQu9os2q?=
+ =?us-ascii?Q?NNMNuQyXgI4f1MOBnkikpCGgARh+KeGOsLgK1fREkDoP+JnMB3FppXft15F1?=
+ =?us-ascii?Q?qJryF7yVEQi+iNYciyEGcalUC1Eq5tXH6Zy8rt5nuTfDFeAWX2fV4DDCuHDy?=
+ =?us-ascii?Q?atzZedfQW85K2OJLRo3keYPFO0ZMBYCrC5VFsPGZifSAijeVdF+nXOEmPcej?=
+ =?us-ascii?Q?whoik3YRH3Ew5ukVwjhjmKhiKs7XE4PQGdaXCg2tLOn37LLJwCZTWgOozMyA?=
+ =?us-ascii?Q?AFZjs4HZlduYyZP4dD9A4KrO+0rzh6on1nDy9Cw4txBq6ZI0AGoQJbCVv+ge?=
+ =?us-ascii?Q?ivzH3oaPvFaEwyB0M10w+ocDnM02Xbo8RWrLLdkEPrP1W3IFB6y8Xecgjgxg?=
+ =?us-ascii?Q?BM5tdjjfUpdmlBiW+CCc7hUkj60obepNGBSu+d+joPxMZBjxphKfGnMWfDJR?=
+ =?us-ascii?Q?noLP8D2hRr+hOc60AcymosDIacvg+lrBF6J2mML+huhgaK4SoJvgoihs+fxo?=
+ =?us-ascii?Q?y/qb1+wnsSMn0JO9BbYV8i39z4WuCm0pls3QtT24l6J4eNg/cfx/WFMZ5IZ8?=
+ =?us-ascii?Q?Hk/xvphepBGJwdKo3iGXyBXoRO59kvQK/LVF+848Y/7dHk/sNsf1dRp/GJ8j?=
+ =?us-ascii?Q?7Mbv+odeMdI3Og0/AwtY4h4/9X0zH5GXQKszPStjGlym3QuKKdxr1XJbd5v4?=
+ =?us-ascii?Q?8MApTqMdAsSjTUIDl0EhClU+Xv5EIttqqg6uTpXVobIP4aUmshbKJoJ2NFpI?=
+ =?us-ascii?Q?Q+fGZ5PyOLjrt1vzq9MFHbmv0EZE2b0uRf9BRwIXUaMbPCkI+lTYpMB1FcSJ?=
+ =?us-ascii?Q?ADa+6SC+/v0J6ATIxjSDW8FR52sdIrkowFyuEJY2tIgxmkSHDILes8kTCCR6?=
+ =?us-ascii?Q?K2/VLHklUyfG/sOJrZlkfLUFg5fRl15pSyE/3TFV3XeHEgBMMj1eCIHyGi1t?=
+ =?us-ascii?Q?Bt0tOwygaTIPd6blQ0O9XvCy1FxpPy5c/yS0dNVu9l7Bb6jBlUO5cRm43Zbn?=
+ =?us-ascii?Q?oJfWiXJTI+v6vVZJ++mPUCYuXSFM51ZRvMXvDvx4Z7GOow2ULdBvi3am93Co?=
+ =?us-ascii?Q?i3NH0lWx032jRczuf+sBWEyWnLyC5N3kF/oZfTcLNSVnVnu61Wgbq7o2cH17?=
+ =?us-ascii?Q?/nA8W8ZyWIg=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Rm1mT0tabzVNaEYyVjRLK21uWCtNT2RyOWY3alR5UE8zNzdVYk5HVGlXZnFn?=
- =?utf-8?B?elIxV0xyS2hrU1VGbGZTYzRJclo1aUhGaURKUzQrcEdGeVpZb1JOM0ROZTg2?=
- =?utf-8?B?VjZxampYUU9yTk5MWFlDZWxHcmpzcWtNSDNLZldrRU9RSzhCZkE1SWtOVGd3?=
- =?utf-8?B?OHJmbm9ZYnpweXFCWnJQTHkxSEZpMnhuRlFleDNNS2dlM2ZQZlIyVE9zeWM1?=
- =?utf-8?B?QmNDZDhUN0RKdHNlRGhLYTlKWUlTOVppL1NrSVFWeHpSVkl3VVBSUTl2OElH?=
- =?utf-8?B?a0tDTzU0bkhkdVJ0TmxxOG4wbzhzbXhDWnYyMjlEWUhRenZ3VTBDMGVidzRL?=
- =?utf-8?B?VDg1cmdOQzNqaE1BZnp6Mm53cndaMnp0YXJFV0NxUk5uY2VQd1ZSMmVqZGhH?=
- =?utf-8?B?c3ViZU0ybE5GY2l0Y3Jmc0NuaWJkN09yVFFFRXRqWFFjS2JrRmI0d2dJZTgy?=
- =?utf-8?B?TG5uajVobjZUQTZ5RGFkS2w1ZmQvWDBaZEtpS0c1ZlZ1eUh2S1JpUzZQWG1M?=
- =?utf-8?B?SUVCWWsxU1gvclU1ZFRERE84SEZldlhBUHU0SVF4QmFTUG9IN2c5YTVYemdo?=
- =?utf-8?B?RmczQnhtV29zSWVsdjNHUndpZWlKU0Jkd3BPMXgyZGR1eDVneGFSdFJhdTVV?=
- =?utf-8?B?YXEyRTZUdnBQNGlNUUVPamVtY1JwajNQdmlQZzhUZ24wT2YzWlFzd2FlRktV?=
- =?utf-8?B?cGg0aG9lRUZPYlBYcUZiWFozVjVCYU5aWnNQRFluOXJGY3BXSnRma3ViYUxX?=
- =?utf-8?B?OGI0TG5WZXZYNVNhcUYyZm45SFJRS21GdWJsVlhFR0wzRUl2TFFrMFZVeUp1?=
- =?utf-8?B?R1Y1MUU1Vk05L2lWcGY2K2VoTUFVd3l6N2V4SkEvRDhGbmJ3NjNIR0NFWU5r?=
- =?utf-8?B?KzVSSSt4cUdCcmM5ZmZTZFFGRCsvcFpjSUJiSG9OTWlRS2NpbFZFcFBzOG90?=
- =?utf-8?B?Nkk2OVRvS1lxYTRteEZiMytyVVY3R2MyT1cwNjIvL092UTZCM3hFWlZBM1JL?=
- =?utf-8?B?TXV2RWxVZFI5Y1Z1ZUZudmw5RW5SRUwxVHkyRmhZZ3VEd1pLRTZYZTIwaWJC?=
- =?utf-8?B?NkxNcEJoYVVNbGZMVURzeHlXdm5LVklqcmh3QUl1Q0NHa3pnZ2FZcGhRWHRx?=
- =?utf-8?B?SE4rRDNMMlFjYXJYMVYxVnRQZTRNdUZRckRSY0xmNUdNdVNIeldnSDhUTDRY?=
- =?utf-8?B?c2ZHRGpyM3ZhRjcvOHdhM0VtMUpuUDR6MExRVWM5TTVHaHhVUEFpV3lHNWUv?=
- =?utf-8?B?TWJ3dzREbG1kRDdWNGhaV2FzNGlNWU80ZjF0cDVSRU9SczNDczJzbjZtQ1FW?=
- =?utf-8?B?THAvdmgwR0EvQXorMXZRbGJlb0NoUWNlMnhCKzZxZE1ubTNxeW5IWHUxR0po?=
- =?utf-8?B?ZEd6Y1ZKM1dMTnU4bmR2bExHNjlUQ1A4MzYvN080MW4rbXloZUp2YTVZR0xs?=
- =?utf-8?B?M2pNb0RsVmErRWgzdlROUC9CcXE4Z1VqUnM0UTdCczhuRGxpZDhkU1ExbGVS?=
- =?utf-8?B?OTI3eGhDTU5WR3VWZllTci9nL2Y2amZsYWlPdS9jVFZweVdGMVNFL205ZkpU?=
- =?utf-8?B?Z1kvZnlxNEMrdjFock03bk5DdjBLVkp2WERPKzJSdDhzV3JPelFFMlUyWnFO?=
- =?utf-8?B?alF5eW9lY0hVSTF1SUtTNCtyM2NHUEE1WWxJV0wwcktCMkF0R3ArcHhISGlL?=
- =?utf-8?B?Z3FDd0tEUjVkTzlmaVpoKzVPNDIwbmVMMXN0OFNucjJ4S0lKT2greDVWK3dx?=
- =?utf-8?B?aTRYMUlBd0hxL0tscy85dXFZNjBZTlc0Kzl6cTdtdkhjNE9Ea251YXA5Z1d0?=
- =?utf-8?B?bUVoUWdJQ0xQMHVlWUh5ZytxUkRoUkJKL2srZjdVMUhaalFLSDg3ZzM3Tmpa?=
- =?utf-8?B?Q2I0c0hZYzBVT2F0dXFaWVE1UFBQQjhxL3IrNkpPYkc2L3hRUGZLbjdVQWJV?=
- =?utf-8?B?SjBVS2FqcWZzWXg0QWRQbmNJOU5wOGU2dFcySGZRc0c5azFVeURBcWN3ZzRT?=
- =?utf-8?B?bWtOWTR0MjRQL3BTNEFFai9HdzdHNVBZaFRZQjZrZzB1TGQ2VVFoK245QitT?=
- =?utf-8?B?UUR3eHFMejJza25lTHUyc1dTWnFZd2hEK28rTEFBNHlMZFBaM0NUWVNCMGI1?=
- =?utf-8?Q?qzFg=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c841a5b-2669-40ff-879f-08dd7b8de2a6
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+	=?us-ascii?Q?FrsJx1WNcNHP0MXw+N3ZQ8il6Ls7FLsHV98h8XayxhVgGkV4fKp/OvJDS+x8?=
+ =?us-ascii?Q?ETUZX2na0AvjFPdtzlH+6Ukn9R0Xv2JrmZecNOjsDjqptk+Di9GGTDctM1Y/?=
+ =?us-ascii?Q?PB138qfgloU5hcF0AIsHdxnz5h8mbI5SdzKrjumrYAbd6boU0lOubGYpZBDk?=
+ =?us-ascii?Q?qhvk7GIp+bznWNoKQHWYyXAuUHKN75SBVdz1Eoro1OcBMQUSkjMowrHPW7UA?=
+ =?us-ascii?Q?RgHRmLry2HL2+gB24I/4QjdSLBmJJh4j+HSSRp9PK5tfLKK5DXXIgPxx076Y?=
+ =?us-ascii?Q?uZ5qZ/9t65Y/+1g5q9vdK2hODeBmzArPOK8bdSxO6u6TpaOvcFqPIb9Tz6gn?=
+ =?us-ascii?Q?4rSG8f0utyDsIHcvJabTGssrCyfZgCNrDc04GjUoPzPPPCjombR1tsbYdID/?=
+ =?us-ascii?Q?K2v7CpvsrMy6mE+EstB5xLFp9hXhsLIehkd+9/Ihn7C4R8nIgFOXu7ql/2hY?=
+ =?us-ascii?Q?Cekui+GTaPAp2elYBRomeqoAEZGi6pE2scHX0JIQNy6YaynvaobgZIEQch8j?=
+ =?us-ascii?Q?sNzb3AShSaSYxuanRDgN8MHzzy6rIJPxBp6VmPL5oLuztITWIAWlAPJqIlcI?=
+ =?us-ascii?Q?yhYOpKPXsXXlliktjmGx2BKwmWc40rzsWpMlo9SuDp4fNSeHFad5iyt2DFqP?=
+ =?us-ascii?Q?bxEYdxwxVjQFAG2zT1Ysryh9BNSayw44t0BCdD1lyOOOpMotMb4UxxZoepsc?=
+ =?us-ascii?Q?c+YK/taD3n4tebXtOgxLyyZ8cR2tBH6BRcXKXnwtJa0tRBHi6uKMKnq/mCeo?=
+ =?us-ascii?Q?bjbqkiujSfF9lLoGsg9lD4YmjMFsdRzbG2BFj+Xu6lxOWYHQa5ylRRQkHzXR?=
+ =?us-ascii?Q?2VxGr3cNwklPbqxr/yXc+Kmo2tzJ5bD6EQyPN2H8/VppWn4zIuEr5c5pDUHf?=
+ =?us-ascii?Q?T4+4nrB0x1EjwU89WdVuL4Tq8DBVy0oDSfKnd7WfdndwQo2iyrdeHW5fn0R3?=
+ =?us-ascii?Q?1d1/TUHpnXd8Wci6kmGa0o6BGcT+TlA55EsZIBP/lnQvTdywxhb8MzFiieRU?=
+ =?us-ascii?Q?byFmZbiZMkvqNIlbsn7RxSv86j0KdzeUUaomyX3b1olOjyVuGmevmP2wv+mr?=
+ =?us-ascii?Q?f2SiWfrciWX1+y6HJygn8EJFOvVzhSzU1F5rPxEdGvf6fxwEptfOb9vFeDQd?=
+ =?us-ascii?Q?FUmFDABzpkHf7tli2RIFc+EXBMOi4e9M6hH2G4G3AmVRktijUJZn1n64m98H?=
+ =?us-ascii?Q?noUI1yPrHx5jA+brKyKV/YSd6ohuSVbGNQO8AT/2C1FvLgptWNXdLxaaE5nz?=
+ =?us-ascii?Q?a3hwUuhBHFAUheNmePLM/1fhmPJ2xz+ataYwunu5fCAMozWnPAOn1r8BZRsu?=
+ =?us-ascii?Q?MoSXTBXkz+y/0VeVoiQJe6OJs2Pp97r0azuapgCBLmQrxlJHZ0xRn5GzSNEC?=
+ =?us-ascii?Q?H9LQuDik0ZTOoNQSFTYJS75l3X4h1lQBuCLzJr+o7s7CqF34dp2o8Jr1nrSk?=
+ =?us-ascii?Q?W7KogylMYg6sDjkzHY6ke9wmeT54cGutLgF06CrPe6jRmoRKh6MFuJ2p7DPi?=
+ =?us-ascii?Q?J8EroC92l9Fv717hbbQ/UqiD3PQKThpsu5ZN+upyvGqICLqgk00gLCrx6ZpY?=
+ =?us-ascii?Q?xMlz6HeKsvfueV86AVhtFgdgWIGy6AnJDJ//WHWPSR448TWlQAnDt70M0V60?=
+ =?us-ascii?Q?Jg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	EQy3rFEWlR2rdNitLwIKzho+tJ8AQcfg0PtJiP1JyKXa+r+uq5an7HyvRDoeYIUUIUMdwxv4kwyNfRk+g9ycGWURfyF9iN9UqFOFjEnt+Rk0E5DXjUSpN4nmnIYFD/f6ADBPdMoiQi1qutF//VvcAnrgMHcV8yyx2C+YwgLnsLCdfbTGS6fjAyMWUvkW6lVlt01dFRafbmuSR+xwI5ZbsWZF3h44z+1EDgqxFrvx2NZ+x6CHb2NL5jCm+5YufxGQ+wVfE3IHKtOhJsqaPzT35yDGO3IWGccqlL/rEcdqJ1F1f94eKMJuXJU/OtEe72JhWTRFKn6uKlJQP0CTRnuzkbaemFjaw8CiE3SLFNjINEBsIZ7JRyQP3f6gqPLdZTzcUTPlGUXeR4zPQo9IaiJGKnvklVDbvd8GFpGftX1Gwz8VsmLaWCk8oEl8DjN1/31uWhwS+s7lFZzcsd+lU+7G7oss1eZDEZhbbFLFV328VIH3vcuNi2wgafzWaXxFPy0i1nTJXYYxOJ3kCaIJk6IeUU0MZha8pAW9mqzw+nJZnsfAsI2BhaTGFLnIWQ+LRKqZBZ1X7WApZ9YBAk0mSDRCY8jqW0lLjrKqf0Qhac9ujLg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a965c49-bc6a-447b-c8fe-08dd7b8de8f3
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 19:52:28.2005
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 19:52:38.6536
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IazqmGKHDySKzbQBPrxm0ZmLj+rcSbjDAZdPnP6Us3FSeiY9TJeehV5ORdlQGp05
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6261
-
-Hi Reinette,
-
-On 4/11/25 15:56, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 4/3/25 5:18 PM, Babu Moger wrote:
->> Introduce the interface file "mbm_assign_mode" to list monitor modes
-> 
-> Using "resctrl file" instead of "interface file" should help to make it
-> clear what this patch does.
-
-ok. Sure.
-
-> 
->> supported.
->>
->> The "mbm_cntr_assign" mode provides the option to assign a counter to
->> an RMID, event pair and monitor the bandwidth as long as it is assigned.
->>
->> On AMD systems "mbm_cntr_assign" mode is backed by the ABMC (Assignable
->> Bandwidth Monitoring Counters) hardware feature and is enabled by default.
->>
->> The "default" mode is the existing monitoring mode that works without the
->> explicit counter assignment, instead relying on dynamic counter assignment
->> by hardware that may result in hardware not dedicating a counter resulting
->> in monitoring data reads returning "Unavailable".
->>
->> Provide an interface to display the monitor mode on the system.
->> $ cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
->> [mbm_cntr_assign]
->> default
->>
->> Added an IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED) check to handle Arm64
-> 
-> (needs imperative)
-
-Sure.
-
-> 
->> platforms. On x86, CONFIG_RESCTRL_ASSIGN_FIXED is not defined, whereas on
->> Arm64, it is. As a result, for MPAM, the file would be either:
-> 
-> CONFIG_RESCTRL_ASSIGN_FIXED does not yet exist anywhere so this motivation needs
-> to provide stronger support for why it is used before it exists. There is a precedent
-> here with RESCTRL_RMID_DEPENDS_ON_CLOSID already used while it does not yet
-> appear in a Kconfig file. I would propose that this is motivated by noting
-> how it is already understood how Arm supports assignable counters this was recommended
-> by James to prepare for that work. Since this is user interface this
-> work is done early to ensure user interface is compatible with that upcoming
-> support. Also set folks at ease that IS_ENABLED() works as expected with a
-> non-existing config.
-
-How about this?
-
-Add IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED) check to support Arm64.
-
-On x86, CONFIG_RESCTRL_ASSIGN_FIXED is not defined. On Arm64, it will be
-defined when the "mbm_cntr_assign" mode is supported.
-
-Add an IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED) check early to ensure the
-user interface remains compatible with upcoming Arm64 support.
-IS_ENABLED() safely evaluates to 0 when the configuration is not defined.
-
-As a result, for MPAM, the file would be either:
-[default]
-or
-[mbm_cntr_assign]
+X-MS-Exchange-CrossTenant-UserPrincipalName: 22ZNJn+titH9I+pjvrZb/AAw/ZSPH05Jg4ft5V+mHwKNecGRcX7ielNldzWrNqFFUNDE/v0L3I4fawhdZgGNq3uUqRKDE4l+F6zd3nejRXo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4487
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504140144
+X-Proofpoint-GUID: g9-UHBu2YUhUhDuR75Q-yJYGqiKCKE4q
+X-Proofpoint-ORIG-GUID: g9-UHBu2YUhUhDuR75Q-yJYGqiKCKE4q
 
 
-> 
-> 
->> [default]
->> or
->> [mbm_cntr_assign]
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
->> v12: Minor text update in change log and user documentation.
->>      Added the check CONFIG_RESCTRL_ASSIGN_FIXED to take care of arm platforms.
->>      This will be defined only in arm and not in x86.
->>
->> v11: Renamed rdtgroup_mbm_assign_mode_show() to resctrl_mbm_assign_mode_show().
->>      Removed few texts in resctrl.rst about AMD specific information.
->>      Updated few texts.
->>
->> v10: Added few more text to user documentation clarify on the default mode.
->>
->> v9: Updated user documentation based on comments.
->>
->> v8: Commit message update.
->>
->> v7: Updated the descriptions/commit log in resctrl.rst to generic text.
->>     Thanks to James and Reinette.
->>     Rename mbm_mode to mbm_assign_mode.
->>     Introduced mutex lock in rdtgroup_mbm_mode_show().
->>
->> v6: Added documentation for mbm_cntr_assign and legacy mode.
->>     Moved mbm_mode fflags initialization to static initialization.
->>
->> v5: Changed interface name to mbm_mode.
->>     It will be always available even if ABMC feature is not supported.
->>     Added description in resctrl.rst about ABMC mode.
->>     Fixed display abmc and legacy consistantly.
->>
->> v4: Fixed the checks for legacy and abmc mode. Default it ABMC.
->>
->> v3: New patch to display ABMC capability.
->>
->> ???END
->> ---
->>  Documentation/arch/x86/resctrl.rst     | 27 +++++++++++++++++++
->>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 37 ++++++++++++++++++++++++++
->>  2 files changed, 64 insertions(+)
->>
->> diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
->> index fb90f08e564e..bb96b44019fe 100644
->> --- a/Documentation/arch/x86/resctrl.rst
->> +++ b/Documentation/arch/x86/resctrl.rst
->> @@ -257,6 +257,33 @@ with the following files:
->>  	    # cat /sys/fs/resctrl/info/L3_MON/mbm_local_bytes_config
->>  	    0=0x30;1=0x30;3=0x15;4=0x15
->>  
->> +"mbm_assign_mode":
->> +	Reports the list of monitoring modes supported. The enclosed brackets
->> +	indicate which mode is enabled.
->> +	::
+Ingo Molnar <mingo@kernel.org> writes:
+
+> * Ankur Arora <ankur.a.arora@oracle.com> wrote:
+>
+>> clear_page*() variants now take a page-aligned length parameter and
+>> clears the whole region.
+>
+> Please read your changelogs and fix typos. ;-)
+
+Ack!
+
+>> +void clear_pages_orig(void *page, unsigned int length);
+>> +void clear_pages_rep(void *page, unsigned int length);
+>> +void clear_pages_erms(void *page, unsigned int length);
+>
+> What unit is 'length' in? If it's bytes, why is this interface
+> artificially limiting itself to ~4GB? On x86-64 there's very little (if
+
+I was in two minds about the unit. Given that the largest page size is
+1GB, decided to go with 32bit. But, as you say below, there's no reason
+to limit the x86-64 interface for MM reasons.  Will fix.
+
+> any) performance difference between a 32-bit and a 64-bit length
+> iterations.
+>
+> Even if we end up only exposing a 32-bit length API to the generic MM
+> layer, there's no reason to limit the x86-64 assembly code in such a
+> fashion.
+>
+>>  static inline void clear_page(void *page)
+>>  {
+>> +	unsigned int length = PAGE_SIZE;
+>>  	/*
+>> -	 * Clean up KMSAN metadata for the page being cleared. The assembly call
+>> +	 * Clean up KMSAN metadata for the pages being cleared. The assembly call
+>>  	 * below clobbers @page, so we perform unpoisoning before it.
+>
+>>  	 */
+>> -	kmsan_unpoison_memory(page, PAGE_SIZE);
+>> -	alternative_call_2(clear_page_orig,
+>> -			   clear_page_rep, X86_FEATURE_REP_GOOD,
+>> -			   clear_page_erms, X86_FEATURE_ERMS,
+>> +	kmsan_unpoison_memory(page, length);
 >> +
->> +	  # cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
->> +	  [mbm_cntr_assign]
->> +	  default
->> +
->> +	"mbm_cntr_assign":
->> +
->> +	In mbm_cntr_assign mode, a monitoring event can only accumulate data
->> +	while it is backed by a hardware counter. The user-space is able to
->> +	specify which of the events in CTRL_MON or MON groups should have a
->> +	counter assigned using the "mbm_assign_control" file. The number of
-> 
-> "mbm_assign_control" no longer exist.
-
-The user-space is able to specify which of the events in CTRL_MON or MON
-groups should have a counter assigned using the "mbm_L3_assignments"
-interface file in each resctrl group.
-
-> 
->> +	counters available is described in the "num_mbm_cntrs" file. Changing
->> +	the mode may cause all counters on the resource to reset.
->> +
->> +	"default":
->> +
->> +	In default mode, resctrl assumes there is a hardware counter for each
->> +	event within every CTRL_MON and MON group. On AMD platforms, it is
->> +	recommended to use the mbm_cntr_assign mode, if supported, to prevent
->> +	the hardware from resetting counters between reads. This can result in
-> 
-> "from resetting counters" -> "from re-allocating counters"?
-
-How about?
-
-"from resetting MBM events between reads"
-
-> 
->> +	misleading values or display "Unavailable" if no counter is assigned
->> +	to the event.
->> +
->>  "max_threshold_occupancy":
->>  		Read/write file provides the largest value (in
->>  		bytes) at which a previously used LLC_occupancy
->> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> index 17de38e26f94..626be6becca7 100644
->> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> @@ -882,6 +882,36 @@ static int rdtgroup_rmid_show(struct kernfs_open_file *of,
->>  	return ret;
+>> +	alternative_call_2(clear_pages_orig,
+>> +			   clear_pages_rep, X86_FEATURE_REP_GOOD,
+>> +			   clear_pages_erms, X86_FEATURE_ERMS,
+>>  			   "=D" (page),
+>> -			   "D" (page),
+>> +			   ASM_INPUT("D" (page), "S" (length)),
+>>  			   "cc", "memory", "rax", "rcx");
 >>  }
->>  
->> +static int resctrl_mbm_assign_mode_show(struct kernfs_open_file *of,
->> +					struct seq_file *s, void *v)
->> +{
->> +	struct rdt_resource *r = of->kn->parent->priv;
->> +	bool enabled;
->> +
->> +	mutex_lock(&rdtgroup_mutex);
->> +	enabled = resctrl_arch_mbm_cntr_assign_enabled(r);
->> +
->> +	if (r->mon.mbm_cntr_assignable) {
->> +		if (enabled)
->> +			seq_puts(s, "[mbm_cntr_assign]\n");
->> +		else
->> +			seq_puts(s, "[default]\n");
->> +
->> +		if (!IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED)) {
->> +			if (enabled)
->> +				seq_puts(s, "default\n");
->> +			else
->> +				seq_puts(s, "mbm_cntr_assign\n");
->> +		}
->> +	} else {
->> +		seq_puts(s, "[default]\n");
->> +	}
->> +
->> +	mutex_unlock(&rdtgroup_mutex);
->> +
->> +	return 0;
->> +}
->> +
->>  #ifdef CONFIG_PROC_CPU_RESCTRL
->>  
+>>
+>> diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
+>> index a508e4a8c66a..bce516263b69 100644
+>> --- a/arch/x86/lib/clear_page_64.S
+>> +++ b/arch/x86/lib/clear_page_64.S
+>> @@ -13,20 +13,35 @@
+>>   */
+>>
 >>  /*
->> @@ -1908,6 +1938,13 @@ static struct rftype res_common_files[] = {
->>  		.seq_show	= mbm_local_bytes_config_show,
->>  		.write		= mbm_local_bytes_config_write,
->>  	},
->> +	{
->> +		.name		= "mbm_assign_mode",
->> +		.mode		= 0444,
->> +		.kf_ops		= &rdtgroup_kf_single_ops,
->> +		.seq_show	= resctrl_mbm_assign_mode_show,
->> +		.fflags		= RFTYPE_MON_INFO,
-> 
-> Needs a RFTYPE_RES_CACHE?
+>> - * Zero a page.
+>> - * %rdi	- page
+>> + * Zero kernel page aligned region.
+>> + *
+>> + * Input:
+>> + * %rdi	- destination
+>> + * %esi	- length
+>> + *
+>> + * Clobbers: %rax, %rcx
+>>   */
+>> -SYM_TYPED_FUNC_START(clear_page_rep)
+>> -	movl $4096/8,%ecx
+>> +SYM_TYPED_FUNC_START(clear_pages_rep)
+>> +	movl %esi, %ecx
+>>  	xorl %eax,%eax
+>> +	shrl $3,%ecx
+>>  	rep stosq
+>>  	RET
+>> -SYM_FUNC_END(clear_page_rep)
+>> -EXPORT_SYMBOL_GPL(clear_page_rep)
+>> +SYM_FUNC_END(clear_pages_rep)
+>> +EXPORT_SYMBOL_GPL(clear_pages_rep)
+>>
+>> -SYM_TYPED_FUNC_START(clear_page_orig)
+>> +/*
+>> + * Original page zeroing loop.
+>> + * Input:
+>> + * %rdi	- destination
+>> + * %esi	- length
+>> + *
+>> + * Clobbers: %rax, %rcx, %rflags
+>> + */
+>> +SYM_TYPED_FUNC_START(clear_pages_orig)
+>> +	movl   %esi, %ecx
+>>  	xorl   %eax,%eax
+>> -	movl   $4096/64,%ecx
+>> +	shrl   $6,%ecx
+>
+> So if the natural input parameter is RCX, why is this function using
+> RSI as the input 'length' parameter? Causes unnecessary register
+> shuffling.
 
-I am not very sure about this.  This flag is added to the files in info/L3.
+True. Will fix via ALTERNATIVE as Peter describes in the other mail.
+That should get rid of some of the repetition in clear_pages_rep and
+clear_pages_erms() as well.
 
-"mbm_assign_mode" goes in info/L3_MON/
+Though I guess clear_pages_orig() will need to stick around just with
+a different parameter passing convention.
 
-The files in L3_MON does not have these flags set (for example
-mon_features, num_rmids).
+>> +/*
+>> + * Zero kernel page aligned region.
+>> + *
+>> + * Input:
+>> + * %rdi	- destination
+>> + * %esi	- length
+>> + *
+>> + * Clobbers: %rax, %rcx
+>> + */
+>> +SYM_TYPED_FUNC_START(clear_pages_erms)
+>> +	movl %esi, %ecx
+>>  	xorl %eax,%eax
+>>  	rep stosb
+>>  	RET
+>
+> Same observation: unnecessary register shuffling.
+>
+> Also, please rename this (now-) terribly named interface:
+>
+>> +void clear_pages_orig(void *page, unsigned int length);
+>> +void clear_pages_rep(void *page, unsigned int length);
+>> +void clear_pages_erms(void *page, unsigned int length);
+>
+> Because the 'pages' is now a bit misleading, and why is the starting
+> address called a 'page'?
 
-> 
->> +	},
->>  	{
->>  		.name		= "cpus",
->>  		.mode		= 0644,
-> 
-> Reinette
-> 
+> So a more sensible namespace would be to follow memset nomenclature:
+>
+> 	void memzero_page_aligned_*(void *addr, unsigned long len);
+>
+> ... and note the intentional abbreviation to 'len'.
 
--- 
-Thanks
-Babu Moger
+Ack.
+
+> Also, since most of these changes are to x86 architecture code, this is
+> a new interface only used by x86, and the MM glue is minimal, I'd like
+> to merge this series via the x86 tree, if the glue gets acks from MM
+> folks.
+
+Works for me!
+
+
+Thanks for the review.
+
+--
+ankur
