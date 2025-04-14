@@ -1,131 +1,57 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69945233723
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273852356B4;
+	Mon, 14 Apr 2025 21:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667360; cv=none; b=DV6GfzYWLNIrfJeBNEtZ2SJhKqS9/y21quebiXHMzmJ6vllGb31r6JtrzqDFc/BTvnw+mwyCibFtkz1HD0a3Shn66cH0PmMUXoKldW9EzhSYtlJLfbRk+HBHqc6JG1SYD4g5LOqzI7lgOohmOiE3vjzqc6CjhPbFERk1lZNcKqk=
+	t=1744667362; cv=none; b=HCp9baJMOtoIkrTG5aeHHVaRx13JgP6So7yGHJne6pJ1GDpXL6t/Rds6R157TGnkm2E7NgQ2FIvrlMy5blIUtDUUAP6KNjE2ihUaeGh52fh8JgvZgLihfi+XTgObD2iZ6VSuUJkWlOiek4UQKvv1lXj1txcRSGq3BLBfvbfwGiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667360; c=relaxed/simple;
-	bh=hLajejGITcuhaXBIRXTQrFTsOjzlzEWxNRGtAI1RMps=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OBwwutkiQZQ9bAtUQtbfG7hGbPSE2rgcw2CTZCnzqgWy2g6s85OhV6CTE4rHTAR/sE5cGofy/apx7WcxbnIJ+qgiU47HLisPl/+TScmE4yU+c/At/K4CLD2CFXiuOrfDge+5jqub3s3CROeEM6bYvVdTdiONvUb+wSWGvNoCd4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=awhRlCt+; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com
+	s=arc-20240116; t=1744667362; c=relaxed/simple;
+	bh=jFZt0KvrTr1LbLxZyMCPpQPqLXRpwCSYwOOLHWfTgZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bPWbTJMGf6ZEp7OU0g9AcPq42o6zKhF+jpOQsk/v9x3kBVzD4kHQhXclVGMMROZEnqAupt8sEf+AKRXsOBBIhFX8CPdlwktS7Do/ZQmoq2rOmA+ROHxRYRykSumDGTUtXlX2j+fnRgaPc7GhiJMyUxcbDJ2HyCU+0r0M0q2XBfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANw6pMfs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="awhRlCt+"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af5b9f0e075so1654493a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744667358; x=1745272158; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oo1IP0uWcijK66QdAGH5hRccKPpzDDEL85AFTPGHKFQ=;
-        b=awhRlCt+RSvO839lFmcim4Hri8mSx9euu6V1570ZRb4f532wBTUNIHpZm6GJr7ydid
-         mrYznaVjnKJcwASEq6fYamgdqwRuDDhyWgMUkv6yoX0N2MIjX6l93O2xnL9p2BCdFGId
-         nLsZlym6x6oj4E4RLXY4wz46mbeJ89bgqiYb4UoCaH1qe1OfTW8tHi7wgQVL5MLIxne7
-         5YYhPZzSdLWbakNs6wxXb8BXtBJOFS2bpDqGR90y0re4kpMiIg1RN3jfKkl+XHUm4Kzw
-         MULEfvak8KJzEvGNibSWVxgQ9utksUBWlMcvZ0pHTVYq2TgEIvHZVJ9lkw6Fbv0DWVwg
-         M6uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744667358; x=1745272158;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oo1IP0uWcijK66QdAGH5hRccKPpzDDEL85AFTPGHKFQ=;
-        b=CXETD2fxJy+BcacT/DJzzH1d2Dv60nZUuRgfuhDinKf+KHzKtWrTL9Sx39pkGX+HU6
-         nn9jAjT1toQPHNfZhyiMIzzCGbSH0h8i/rD8KOwq5yxP5UyHdySpDp6PJrjbB0qDCAfb
-         LT2txMWCjxmSeG1FCX4ZJWjj1RNpARfhGDB0NIaq/CwGMNwBe3/VZcdZYEyHSXFS8+pi
-         21yMp4Y4biYV23oXrFhYNoQ/JRsVhdHDssqa1iEAdDWpWYfFoYywWIR4/LZBQMUpfOX7
-         gn2jK/jxqPxg8NVjFFkpalvRGIcj3b7QwynQYD+wDiyVPegFiGsReqAa2GllctIUF7Cu
-         a8oQ==
-X-Gm-Message-State: AOJu0YytC2uB7Tw/G8fVThX81QDrTwpNP2yer+GpDsjmbIn4+Th3UOGq
-	LxhvJMJ/jaMHkQCXJ7Gq9KLaA4W81rnMfoX5Pi0zkJmxr2u/v0KodkdwYeA3IoOMzWKKjkjUsQ=
-	=
-X-Google-Smtp-Source: AGHT+IHAofPIGSKzrHScymrPJdqDpM5RU2HCackGHmvSKi1y01zbyqaKV2rM505+l4lypM3CcWok4IqT7w==
-X-Received: from pgpk1.prod.google.com ([2002:a63:ab41:0:b0:b05:1101:88f])
- (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4581:b0:1ee:e46d:58a2
- with SMTP id adf61e73a8af0-2017978b1f2mr20956324637.3.1744667357888; Mon, 14
- Apr 2025 14:49:17 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:47:55 -0700
-In-Reply-To: <20250414214801.2693294-1-sagis@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANw6pMfs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C557C4CEE2;
+	Mon, 14 Apr 2025 21:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744667361;
+	bh=jFZt0KvrTr1LbLxZyMCPpQPqLXRpwCSYwOOLHWfTgZY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ANw6pMfsVIpE/wWOtMamlbzbgieuaEftXKvj2PCs0yCDuvZ3grY6/jt44cr9ISSoV
+	 9+yIrHEYNy/nA1PPL60ofRRfrRSYpzgcxpSTWmCWskfD4CHcccnpJN2B17yozedvNp
+	 rNj9izSvDrYceI+UsCiklPIpkuFQAEIZrL3V68jXeSkDvOQA98Vt6YMsJpDau9Xxk2
+	 sPYZXDrUgWnnogsf8nmgxgsO3k4vhJgRHo+0dH9+Hw6tZsi0UH5wBL/t3hox52OJiC
+	 jWlut+RkV0EGi+fXwh7esjMKXXn7Oltqf/WX0LxxNAcnBTXR2H3PPurOQR29Xe7uQ2
+	 /ypN5umsuTdPA==
+Date: Mon, 14 Apr 2025 14:49:20 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Peter Seiderer <ps.report@gmx.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH net-next v1 04/11] net: pktgen: fix code style (WARNING:
+ please, no space before tabs)
+Message-ID: <20250414144920.3bdd68bc@kernel.org>
+In-Reply-To: <20250410071749.30505-5-ps.report@gmx.net>
+References: <20250410071749.30505-1-ps.report@gmx.net>
+	<20250410071749.30505-5-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414214801.2693294-1-sagis@google.com>
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250414214801.2693294-27-sagis@google.com>
-Subject: [PATCH v6 26/30] KVM: selftests: TDX: Add support for TDG.MEM.PAGE.ACCEPT
-From: Sagi Shahar <sagis@google.com>
-To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Sean Christopherson <seanjc@google.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Ryan Afranji <afranji@google.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	Erdem Aktas <erdemaktas@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Sagi Shahar <sagis@google.com>, Roger Wang <runanwang@google.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	"Pratik R. Sampat" <pratikrajesh.sampat@amd.com>, Reinette Chatre <reinette.chatre@intel.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Ackerley Tng <ackerleytng@google.com>
+On Thu, 10 Apr 2025 09:17:41 +0200 Peter Seiderer wrote:
+> Fix checkpatch code style warnings:
+> 
+>   WARNING: please, no space before tabs
+>   #230: FILE: net/core/pktgen.c:230:
+>   +#define M_NETIF_RECEIVE ^I1^I/* Inject packets into stack */$
 
-Add support for TDG.MEM.PAGE.ACCEPT that the guest uses to accept
-a pending private page, previously added by TDH.MEM.PAGE.AUG or after
-conversion using the KVM_SET_MEMORY_ATTRIBUTES ioctl().
-
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Signed-off-by: Sagi Shahar <sagis@google.com>
----
- tools/testing/selftests/kvm/include/x86/tdx/tdx.h | 2 ++
- tools/testing/selftests/kvm/lib/x86/tdx/tdx.c     | 7 +++++++
- 2 files changed, 9 insertions(+)
-
-diff --git a/tools/testing/selftests/kvm/include/x86/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
-index 88f3571df16f..53637159fa12 100644
---- a/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
-+++ b/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
-@@ -7,6 +7,7 @@
- #include "kvm_util.h"
- 
- #define TDG_VP_INFO 1
-+#define TDG_MEM_PAGE_ACCEPT 6
- 
- #define TDG_VP_VMCALL_GET_TD_VM_CALL_INFO 0x10000
- #define TDG_VP_VMCALL_MAP_GPA 0x10001
-@@ -40,5 +41,6 @@ uint64_t tdg_vp_info(uint64_t *rcx, uint64_t *rdx,
- 		     uint64_t *r8, uint64_t *r9,
- 		     uint64_t *r10, uint64_t *r11);
- uint64_t tdg_vp_vmcall_map_gpa(uint64_t address, uint64_t size, uint64_t *data_out);
-+uint64_t tdg_mem_page_accept(uint64_t gpa, uint8_t level);
- 
- #endif // SELFTEST_TDX_TDX_H
-diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
-index bae84c34c19e..a51ab7511936 100644
---- a/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
-+++ b/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
-@@ -3,6 +3,7 @@
- #include <linux/kvm_para.h>
- #include <string.h>
- 
-+#include "processor.h"
- #include "tdx/tdcall.h"
- #include "tdx/tdx.h"
- #include "tdx/tdx_util.h"
-@@ -215,3 +216,9 @@ uint64_t tdg_vp_vmcall_map_gpa(uint64_t address, uint64_t size, uint64_t *data_o
- 		*data_out = args.r11;
- 	return ret;
- }
-+
-+uint64_t tdg_mem_page_accept(uint64_t gpa, uint8_t level)
-+{
-+	return __tdx_module_call(TDG_MEM_PAGE_ACCEPT, (gpa & PAGE_MASK) | level,
-+				 0, 0, 0, NULL);
-+}
--- 
-2.49.0.504.g3bcea36a83-goog
-
+Prefer tabs, when possible
