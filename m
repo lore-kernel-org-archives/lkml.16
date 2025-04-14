@@ -1,100 +1,98 @@
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B83618B0F
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F9D23D2B0
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641307; cv=none; b=Idkor375P3mwMc83R8n8WsA792GbeTJnAM86vCzEfP4+jPUSBhz4W1+GbDxOD4ZUmhnoJoM/4GUFyjVdHc7dARu8sTID9Qd7ViYC+HbxUXjFJW02LprDHOAQMN3ao7bCjZsPeHkGyjMxsM/feAbZjsTAnrrSEbhQiDmz7bdmxwk=
+	t=1744641308; cv=none; b=hf6CIkrPC57owS3RxiqILRtBj1JAZEvbjctWDyCO9iMKROstjaTsBwnRaNMW9Huul3qlfdpOTd9Y6dSQOY8Bzy25vrL7E9BQh4nFQ+Jc972/z6EEN7LE93tNnuSqHQuxH0judCctyvu+Ill5C1MLQ0Fr+URQmqZqoZtzjXWMrkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641307; c=relaxed/simple;
-	bh=mtt7HDRpby65bqoRBPibrO4mmze86yBVk5Z2jyAKtXY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U2yWAXOOJPlMNXti1AQ/2tyGCc2+Er6V0QdDX94qX/uDqnULYuCo92jMV++nOU5hz8y2woEq/+GEdCrh1P8sBjo+ZwbSU0rz00oS9qi+/+JGAaNy8E5kr9FCCyE0uI+RdciMAeXixRz647RZYw6cNr7F7JQyrb7fJtL6sq3rKkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9c5e:8f46:94c1:ac1b])
-	by xavier.telenet-ops.be with cmsmtp
-	id d2b12E00P2Uip6W012b1Q6; Mon, 14 Apr 2025 16:35:02 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1u4Ktm-00000000ZaQ-27lO;
-	Mon, 14 Apr 2025 16:35:01 +0200
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1u4Ktp-0000000HV6z-124Y;
-	Mon, 14 Apr 2025 16:35:01 +0200
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Tamir Duberstein <tamird@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>
-Cc: linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] lib: PRIME_NUMBERS_KUNIT_TEST should not select PRIME_NUMBERS
-Date: Mon, 14 Apr 2025 16:35:00 +0200
-Message-ID: <40f8a40eef4930d3ac9febd205bc171eb04e171c.1744641237.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744641308; c=relaxed/simple;
+	bh=PwHYmS2wxI1b3Y3zAAppiwy9ELe1VraFbzOQDIvtWDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Eub46NtJv1K0I6O5hKknE4wwSTXB1la2z799rAK7FniivmwFaIHYfrXbztVTyaymNtmhTzO4BKmaxXruE78HB+vcRekdwDYl1dtl5mefYzu8FQEC3QW5u1sutSslvKsWLws+qBcsUQXmu9ZcUGruFjXJN3BhcaQyU4gpDYfRXBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NOoAoIOc; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NOoAoIOc"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39ac56756f6so3837206f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744641304; x=1745246104; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OkrLB9gt7FHS9KVCbxpiRfhwDbyLdoxlYG9hhgnamc4=;
+        b=NOoAoIOcMaozzXA7u4Q2WF9ABdWne6pWKzg1NaZUULUS9/8DcFYdDQn2q9a1Mk0JL+
+         9nzDLMeoLplJXOygDjQQ0CgPHHocJljxHYOAKifHGl+2J/Foi2YdVM5JqQMgiGgQCHYI
+         OpYAP9c+K3VmLP31DDwfvbmykS8VkwJmB5KGlLugT5llIBJdhDTvNoV0snC2ar6Tf4SC
+         2ak6hF4aIcE3HZuNkCX9ToMDG5OB02Yt8doo5G7vw8D6e2P3zl8/277IVCSvP/2GUYq3
+         Zk4Cmqr/Z+jdAfpjjY7R/xhKIBfEWoXEx+nNF3Bidh82k+5nthtvePm1BTew2k9x8oCX
+         qVNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744641304; x=1745246104;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OkrLB9gt7FHS9KVCbxpiRfhwDbyLdoxlYG9hhgnamc4=;
+        b=A9bvF/ibhaZsH/7dxoSlOebzaRHjk4Apk/jKio/z2eIMYV7AA3U0f+e+SeDfGIiTyv
+         C/7XzA9N9v3RMRzxug4Rdd+iUcsa/cmvzL7tjD7+lpNy9DAfH7yatykzGpwUywRaE5Ys
+         LyHsj1krlnvP+0lsHe0SwMAuGR9NN6QvW6QK5vu0AC6O5RO3HVghwXIebxDP0KmlUlFw
+         bFu9z28iJ08SIlDBcT4zuofN8S0FIcdEVisn9H7EvOPyMyF2oEU0xcrCL5oRZWay3wkb
+         drFA1lcydN9jOnrYHLP3EQjO8NYVXwAqMqUj9U3GitDpExkoyNtYa2m66M+KudBE7urO
+         6VCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZk9ZO6jXiLiYy6lQGUVWORFbuXs+J4BOTsYuN79bneMR5lNQtwVtJevIMuBfsOijIjpOauvF/2MW8xLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRerFDB2InXBAZPYBsVvFiwws1h7yhs/FBaUJA/fpaF4paUeZe
+	MKejJtoz7h99HdGqrjZor7f8Bn32hiJ32kUh0QeSxjGrLNKynTO0t4Pxc5AZz90=
+X-Gm-Gg: ASbGnct5B5vNEkzLXLk8v97JOytEIjgn0on+FcDIqcR6eLFG6BoVPjhceYQ6a7KsvFh
+	GUQZBPNBZQ17SeRXimqZniNceKFZ2YG71H67BNpZbYgyYcQBWJlsVFTa61XdxUHMZxmRh3WCrnn
+	ijcnzFJpZOdbNqsWBJ87xKfHudmplx46spFrOZa2j7cw+rwYvLFf6BHbkPVMj0Z/HwZ+ODO9nF+
+	kTr80n9m8ZO8yMePZeeRjdJTLUs0bxI+eDC3Rpmpx/5RVTLVN+/G2a+0dAhoSy8Qt/QK+RLbloG
+	8Aa60OKLRKwGX0nBw/cUYRr5RzFquUGKc2zmGhQu1l5dl+Wo1MhKX2AXMNA=
+X-Google-Smtp-Source: AGHT+IFh61+mZBNxOQz4dfpryHzCaL2WYW6L9vY0GBxvo/yMy304hm6LVDREd/PMvqkdMUYJdtZLYw==
+X-Received: by 2002:a5d:6d84:0:b0:39d:8d54:5eac with SMTP id ffacd0b85a97d-39ea51f44ccmr10807109f8f.11.1744641304375;
+        Mon, 14 Apr 2025 07:35:04 -0700 (PDT)
+Received: from [192.168.68.117] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f233c8219sm176816835e9.21.2025.04.14.07.35.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 07:35:03 -0700 (PDT)
+Message-ID: <20bc473e-3386-443d-8350-f6718e7903a0@linaro.org>
+Date: Mon, 14 Apr 2025 15:35:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mux: suppress lookup errors for mux controls
+To: Johan Hovold <johan@kernel.org>, Peter Rosin <peda@axentia.se>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250414124220.30578-1-johan+linaro@kernel.org>
+ <c0f63b8a-7197-050a-ca01-a1050a2e287e@axentia.se>
+ <Z_0VMCmfnDZxd4GC@hovoldconsulting.com>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <Z_0VMCmfnDZxd4GC@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Enabling a (modular) test should not silently enable additional kernel
-functionality, as that may increase the attack vector of a product.
 
-Fix this by making PRIME_NUMBERS_KUNIT_TEST depend on PRIME_NUMBERS
-instead of selecting it.
 
-After this, one can safely enable CONFIG_KUNIT_ALL_TESTS=m to build
-modules for all appropriate tests for ones system, without pulling in
-extra unwanted functionality, while still allowing a tester to manually
-enable PRIME_NUMBERS and this test suite on a system where PRIME_NUMBERS
-is not enabled by default.  Resurrect CONFIG_PRIME_NUMBERS=m in
-tools/testing/selftests/lib/config for the latter use case.
+On 14/04/2025 15:01, Johan Hovold wrote:
+>> Srinivas Kandagatla is looking into optional muxes as a side issue to
+>> exclusive muxes.
+>> https://lore.kernel.org/all/20250326154613.3735-1-srinivas.kandagatla@linaro.org/
+> The audio codec change introduces a de-facto regression so if you want
+> something different, we'll have to fix this in the codec driver directly
+> by checking for a "mux-controls" property before doing the lookup for
 
-Fixes: 313b38a6ecb46db4 ("lib/prime_numbers: convert self-test to KUnit")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Tamir Duberstein <tamird@gmail.com>
----
-v2:
-  - Add Acked-by,
-  - Resurrect CONFIG_PRIME_NUMBERS=m in
-    tools/testing/selftests/lib/config.
----
- lib/Kconfig.debug                  | 2 +-
- tools/testing/selftests/lib/config | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+This is not scalable solution, we need something in the core to allow 
+optional mux like any other framworks.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 4060a89866626c0a..51722f5d041970aa 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -3326,7 +3326,7 @@ config GCD_KUNIT_TEST
- config PRIME_NUMBERS_KUNIT_TEST
- 	tristate "Prime number generator test" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
--	select PRIME_NUMBERS
-+	depends on PRIME_NUMBERS
- 	default KUNIT_ALL_TESTS
- 	help
- 	  This option enables the KUnit test suite for the {is,next}_prime_number
-diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
-index 81a1f64a22e860a6..377b3699ff312933 100644
---- a/tools/testing/selftests/lib/config
-+++ b/tools/testing/selftests/lib/config
-@@ -1,2 +1,3 @@
- CONFIG_TEST_BITMAP=m
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_TEST_BITOPS=m
--- 
-2.43.0
+--srini
+> now (i.e. like is done in the TI driver looking up an optional "mux
 
