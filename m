@@ -1,205 +1,147 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383C527EC70
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C903827EC80
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628265; cv=none; b=lWXPyEixPKpx8rfbWEHCVqV5kKyL2aQFrlax9TJeHBnMEnlBSJhFoVHq3uftia/PNOMv9YMaWjG41w0oxHC9nvWQVYXZaWUXH8Jhs16Hwi709XaMWkcRLYfOo13auOQolR4ntQU7s9k9lFHUV6mQY29a+R47fsd6ONzIUohzRII=
+	t=1744628362; cv=none; b=CdYnLR9kj46Mv9YLT083WReAnRJzzQ5bcoP0rlvUWatbHC5FuBxL4cTzjjnekB+hUiPCOWSCyVyw5Yq5TZm0X8KcbXeyxeoNAOCUksOi3iIehn+XOHXgthHDGaXy10L9GiY/2gmBkLmUQD0L7WDSSqDefzLUucBAmI3iWdkmmCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628265; c=relaxed/simple;
-	bh=BoqcpGLsoABX4vg4/Ivt2I+MXhyCCQay6STb45Ufw+w=;
+	s=arc-20240116; t=1744628362; c=relaxed/simple;
+	bh=m3EU9kWckaL+2+tB6F557gCyHnKIrKb18rmQ9fgl0XQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aXjja1QdK91UwIAZd1mnH5APt0fUUbUEPZ0JZkJOLngxMChS0owoAYh/HjjYZibNFqP8xtq27QCOfazVsFGaFgK0s3EUC/zRf12c85zvpHPiHBJhGwHtHWVHjULZPv8Lc7HhlsJF3ZxPLsm+zqAwbcZcRamboRkOD1mfUNQn9cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FQijKSKs; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJ/Rw3F9cImCzDcI8CtVUh3OKQc+Z5dHbJ6REzrXRrAgAaISswQ1FKaRtKpdw8xfNmCC5k0KQId8BjNqKGXlwL6B2nMt3R4Qhm2eFnPI++6/26OZ448HlhB0vDVP1HCSARwwMSiHQE7am1lTDMRqZoY0XXQF/d569fbNplaRcpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fa5sa0cH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P2+pHO6w; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQijKSKs"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af6a315b491so3688104a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744628261; x=1745233061; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3gYGD0102TT7Kuba2ulJFmxLeAypj29hAhExmb/Q6KY=;
-        b=FQijKSKsdiXb/vmlvTQZ8leJiD3YZzoyTm7oxONr1ArZcTbmsSvTt8J3M/PlmRumVO
-         8oLjfGDVzTZA7RYgAQz27NGJrCHFrvLOGq078pFhXIqDhHoLKQm0t7taU5+HS0Pz8L65
-         Ht4pNWLlhThSQNflvXuJKqzUMtTg6YanuUboJVGVJhD4bRC0/9+mliSBjBjuMZFtXNFc
-         /qUWT28oq/NPxNML1/zMvqdzwuJVDxgYxyF3HGcWEzlCfd0flkFOlSN+u30pBowtrfm+
-         BSA0pma4kwCpMrdMIyAIIBjcnKBNcKTP4FojazO5f3z+/LoSusM70Nk/xCEQOhVjjZeo
-         i6Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744628261; x=1745233061;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3gYGD0102TT7Kuba2ulJFmxLeAypj29hAhExmb/Q6KY=;
-        b=R9PGHaRpVNLNxZ2GndIGC9Qi/fCs06e775Le3Jqj6GHrzyO5Gp3PTdjRR9bpjqkkpa
-         hWVQYaHj8oBQaR5YEcTw8j+OMkndrx8PX+5k7rTeyWmazlU52jQZE5PVlL/DGGuGe3Wy
-         Z+JXyqLgquomj9tN8PaiyG/teMAzQskrRdrwsTY0Ae9g9Pm29b5noKwJ8P45ZXKkGUv/
-         TTfFSnSP2zHgpkiNsZ74/pCen5Y+dkRgEsQ/hCYvFKXXLNXXmgu6R+vKqW1yxzsvfqaq
-         xElNZi7dQ4TPruU+JAokD3xRWWjgfplWFp/NJ51CPPNhwW9NnRKXhIlchOe1fANbbJ+/
-         lZLw==
-X-Forwarded-Encrypted: i=1; AJvYcCV11hHNYdt6QQwZ+nscfXBBzd2IBQGVjtIzgEFj2qZHUN0/PAtvhuw00VXnD6rhh8Sbq1aGaCpiBa20TKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo2QW5zc9evfTiZRZUZpHrLYja5TZajgcgEoyqlAMgwgX5vAde
-	FqTC9qZISd9cozbKOzTbfzIS/cMAdoSOb1Y+FMRzHJ0dJ398KFFQhKdOSgR3tQ==
-X-Gm-Gg: ASbGncslgRcyI9XcKSpdKwAOyFc11xsINSyWZbsm7Oc0qFvN5Roh8l0RF9G3MnvjLEV
-	4lHCj2dh5mqiR9FZG1NV2Nav7CQDnG7AxkN0aR7+JZ8JBKdVi1s9qUFt1tUzXTDaKSfD4sB2vhV
-	DL06ijFvD2a+PSdHXWXZ82wfGjrgtQZ+9AJn0cA8Mf2EpPt5VvzdHbgQb4IZH3rFJb8oF41tIZM
-	IghNT9NQNo41AicJMfEnMYUTndivsSK/peDjvZjHqzzz76il3rziJdjGxL3ELaNsGr63WaLoMOE
-	Lkv68le4HOozzwhhCDD4oJUYIbhzKHNca5RBbKgfe128hx77EcOS
-X-Google-Smtp-Source: AGHT+IFrTaFVyOPiYJivy5MghxyEC8vM+3s641uXVU9gQnpG1AwmzV3RmWIzhztYD7luXmb/H7jf+w==
-X-Received: by 2002:a17:90b:5206:b0:305:2d27:7ca7 with SMTP id 98e67ed59e1d1-308236523femr20387289a91.16.1744628261382;
-        Mon, 14 Apr 2025 03:57:41 -0700 (PDT)
-Received: from thinkpad ([120.56.202.123])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd10c3cdsm10893869a91.2.2025.04.14.03.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 03:57:41 -0700 (PDT)
-Date: Mon, 14 Apr 2025 16:27:35 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org, 
-	Tsai Sung-Fu <danielsftsai@google.com>
-Subject: Re: [RFC] PCI: pwrctrl and link-up dependencies
-Message-ID: <vfjh3xzfhwoppcaxlov5bcmkfngyf6no4zyrgexlcxpfajsw2t@o5nbfcep3auz>
-References: <Z_WAKDjIeOjlghVs@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fa5sa0cH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P2+pHO6w"
+Date: Mon, 14 Apr 2025 12:59:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744628357;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hiffthIPXULFGZtCVfW74tr4S/5IXupCFA9dsKwQfDg=;
+	b=fa5sa0cHqToU6gMiGCw0NqeHLptV+O/5/wX/+1bUBOEZhR52S6yf2b8ud3w2pxvICFqUm0
+	Ijgg/RA1B1Je2/jvrAmXwyI61eRN9+d1fz2zEciUjO+W9gA0yKiyQ19W2P6R511lgAnupu
+	V8llWpSOehDcr+ZnEcvaAUxSXhsoARPi8O+/xd2Ubd0b7S/9glyxftG+ULppAZFo+MA2xS
+	FGP0lmzYn7be1WP4Xl6i9cV1Eh3j1MQ0h+JxnmN+nV8ap8d9a+CQ3HLvcyn7fuQMtMxl40
+	Up6Y9fLqcGjQ0yfiNG4UoKyyk0T7aaRj7Q/al/uBKKosUtN6K4l2TqfYzoGf+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744628357;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hiffthIPXULFGZtCVfW74tr4S/5IXupCFA9dsKwQfDg=;
+	b=P2+pHO6wLFIBOdhtQyHwzpfGpiZ3YIUC9aXm6pIvUyuHit01WOGs+wHcG0fGiMw13NppNl
+	TG6v5KRWX0JkFjBw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
+Message-ID: <20250414125751-86262936-22cf-4ea9-8a68-ffed04d88d58@linutronix.de>
+References: <20250414102301.332225-1-mingo@kernel.org>
+ <20250414102301.332225-3-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_WAKDjIeOjlghVs@google.com>
+In-Reply-To: <20250414102301.332225-3-mingo@kernel.org>
 
-On Tue, Apr 08, 2025 at 12:59:36PM -0700, Brian Norris wrote:
-> TL;DR: PCIe link-up may depend on pwrctrl; however, link-startup is
-> often run before pwrctrl gets involved. I'm exploring options to resolve
-> this.
+On Mon, Apr 14, 2025 at 12:22:36PM +0200, Ingo Molnar wrote:
+> We'd like to introduce timer_mod() in the kernel, so make
+> sure the namespace is clear.
 > 
-> Hi all,
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+> ---
+>  arch/arm/mach-omap1/pm.c                         |  2 +-
+>  arch/arm/mach-s3c/s3c64xx.c                      |  4 +--
+>  arch/arm/mach-s3c/s3c64xx.h                      |  6 ++---
+>  arch/x86/kvm/cpuid.c                             |  4 +--
+>  arch/x86/kvm/lapic.c                             | 18 ++++++-------
+>  arch/x86/kvm/lapic.h                             |  4 +--
+>  drivers/clocksource/timer-ti-32k.c               |  4 +--
+>  drivers/clocksource/timer-ti-dm.c                |  6 ++---
+>  drivers/comedi/drivers/addi_apci_3120.c          | 20 +++++++-------
+>  drivers/comedi/drivers/addi_apci_3501.c          |  2 +-
+>  drivers/counter/rz-mtu3-cnt.c                    | 16 +++++------
+>  drivers/fpga/dfl-n3000-nios.c                    | 20 +++++++-------
+>  drivers/gpu/drm/msm/msm_drv.h                    |  4 +--
+>  drivers/gpu/drm/msm/msm_io_utils.c               |  4 +--
+>  drivers/leds/leds-netxbig.c                      |  4 +--
+>  drivers/scsi/bfa/bfa.h                           |  2 +-
+>  drivers/scsi/bfa/bfa_core.c                      |  4 +--
+>  drivers/scsi/bfa/bfa_ioc.c                       | 20 +++++++-------
+>  drivers/scsi/bfa/bfa_ioc.h                       | 10 +++----
+>  drivers/scsi/bfa/bfa_modules.h                   |  2 +-
+>  drivers/scsi/bfa/bfad.c                          |  2 +-
+>  fs/timerfd.c                                     |  2 +-
+>  include/clocksource/timer-ti-dm.h                |  2 +-
+>  include/linux/hrtimer.h                          | 24 ++++++++---------
+>  include/linux/torture.h                          |  2 +-
+>  include/trace/events/rxrpc.h                     | 16 +++++------
+>  include/trace/events/timer.h                     | 14 +++++-----
+>  io_uring/rw.c                                    |  2 +-
+>  io_uring/timeout.c                               |  8 +++---
+>  io_uring/timeout.h                               |  2 +-
+>  kernel/bpf/helpers.c                             |  2 +-
+>  kernel/time/hrtimer.c                            | 34 ++++++++++++------------
+>  kernel/time/posix-timers.c                       |  2 +-
+>  kernel/time/sleep_timeout.c                      |  6 ++---
+>  kernel/torture.c                                 |  2 +-
+>  net/rxrpc/ar-internal.h                          |  4 +--
+>  net/rxrpc/call_event.c                           |  2 +-
+>  net/rxrpc/input.c                                |  4 +--
+>  net/rxrpc/input_rack.c                           | 10 +++----
+>  net/rxrpc/output.c                               |  2 +-
+>  rust/kernel/time/hrtimer.rs                      | 32 +++++++++++-----------
+>  tools/testing/selftests/bpf/progs/test_vmlinux.c |  4 +--
+>  42 files changed, 167 insertions(+), 167 deletions(-)
 > 
-> I'm currently looking at reworking how some (currently out-of-tree, but I'm
-> hoping to change that) pcie-designware based drivers integrate power sequencing
-> for their endpoint devices, as well as the corresponding start_link()
-> functionality.
-> 
-> For power sequencing, drivers/pci/pwrctrl/ looks like a very good start at what
-> we need, since we have various device-specific regulators, GPIOs, and
-> sequencing requirements, which we'd prefer not to encode directly in the
-> controller driver.
-> 
+> diff --git a/arch/arm/mach-omap1/pm.c b/arch/arm/mach-omap1/pm.c
+> index 6a5815aa05e6..ce9295ca2960 100644
+> --- a/arch/arm/mach-omap1/pm.c
+> +++ b/arch/arm/mach-omap1/pm.c
+> @@ -118,7 +118,7 @@ void omap1_pm_idle(void)
+>  #endif
+>  
+>  #ifdef CONFIG_OMAP_DM_TIMER
+> -	use_idlect1 = omap_dm_timer_modify_idlect_mask(use_idlect1);
+> +	use_idlect1 = omap_dm_timer_moduleify_idlect_mask(use_idlect1);
 
-The naming is a bit confusing, but power sequencing and power control are two
-different yet related drivers. Power sequencing drivers
-(drivers/power/sequencing) are targeted towards devices having complex resource
-topology and often accessed by more than one drivers. Like the WiFI + BT combo
-PCIe cards. On the other hand, power control (drivers/pci/pwrctrl) drivers are
-used to control power to the PCIe slots/cards having simple resource topology.
+Many changes in this patch look iffy and unnecessary.
 
-> For link startup, pcie-designware-host.c currently
-> (a) starts the link via platform-specific means (dw_pcie::ops::start_link()) and
-> (b) waits for the link training to complete.
-> 
-> However, (b) will fail if the other end of the link is not powered up --
-> e.g., if the appropriate pwrctrl driver has not yet loaded, or its
-> device hasn't finished probing. Today, this can mean the designware
-> driver will either fail to probe,
+>  #endif
+>  
+>  	if (omap_dma_running())
+> diff --git a/arch/arm/mach-s3c/s3c64xx.c b/arch/arm/mach-s3c/s3c64xx.c
+> index 6c70ea7f2931..6c1d020b181e 100644
+> --- a/arch/arm/mach-s3c/s3c64xx.c
+> +++ b/arch/arm/mach-s3c/s3c64xx.c
+> @@ -165,8 +165,8 @@ static struct samsung_pwm_variant s3c64xx_pwm_variant = {
+>  	.tclk_mask	= (1 << 7) | (1 << 6) | (1 << 5),
+>  };
+>  
+> -void __init s3c64xx_set_timer_source(enum s3c64xx_timer_mode event,
+> -				     enum s3c64xx_timer_mode source)
+> +void __init s3c64xx_set_timer_source(enum s3c64xx_timer_modulee event,
+> +				     enum s3c64xx_timer_modulee source)
+>  {
+>  	s3c64xx_pwm_variant.output_mask = BIT(SAMSUNG_PWM_NUM) - 1;
+>  	s3c64xx_pwm_variant.output_mask &= ~(BIT(event) | BIT(source));
 
-This is not correct. DWC driver will start LTSSM and wait for the link to be up
-if the platform has no way of detecting link up. But it will not fail if the
-link doesn't come up. It will just continue hoping for the link to come up
-later. LTSSM would be in Detect.Quiet/Active state till a link partner is found:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-designware-host.c#n558
-
-> or at least waste time for a condition
-> that we can't achieve (link up), depending on the HW/driver
-> implementation.
-> 
-
-Unfortunately we cannot avoid this waiting time as we don't know if a device is
-attached to the bus or not. The 1s wait time predates my involvement with DWC
-drivers.
-
-> I'm wondering how any designware-based platforms (on which I believe pwrctrl
-> was developed) actually support this, and how I should look to integrate
-> additional platforms/drivers. From what I can tell, the only way things would
-> work today would either be if:
-> (1) a given platform uses the dw_pcie_rp::use_linkup_irq==true functionality,
->     which means pcie-designware-host will only start the link, but not wait for
->     training to succeed. (And presumably the controller will receive its
->     link-up IRQ after power sequencing is done, at which point both pwrctrl and
->     the IRQ may rescan the PCI bus.) Or:
-> (2) pci/pwrctrl sequencing only brings up some non-critical power rails for the
->     device in question, so link-up can actually succeed even without
->     pwrctrl.
-> 
-
-Again, failing to detect link up will not fail the probe. I don't know how you
-derived this conclusion. Even the PCIe spec itself is clear that the link should
-stay in Detect.Quiet until it has found the link partner. So failing the probe
-means we are introducing a dependency on the devices which would be bizarre.
-Imagine how a controller will end up supporting hotplug.
-
-> My guess is that (1) is the case, and specifically that the relevant folks are
-> using the pcie-qcom.c, with its "global" IRQ used for link-up events.
-> 
-
-We only recently added support for 'Link Up' event through 'global_irq' in the
-controller driver. And this was done to avoid waiting for link up during probe
-(which is what you/your colleagues also want to avoid I believe). But the
-problem in your case is that you are completely skipping the LTSSM and relying
-on custom userspace tooling to bring up the device and start LTSSM once done.
-
-> So how should I replicate this on other designware-based platforms? I suppose
-> if the platform in question has a link-up IRQ, I can imitate (1). But what if
-> it doesn't? (Today, we don't validate and utilize a link-up IRQ, although it's
-> possible there is one available. Additionally, we use various retry mechanisms
-> today, which don't trivially fit into this framework, as we won't know when
-> precisely to retry, if power sequencing is controlled entirely by some other
-> entity.)
-> 
-> Would it make sense to introduce some sort of pwrctrl -> start_link()
-> dependency? For example, I see similar work done in this series [1], for
-> slightly different reasons. In short, that series adds new
-> pci_ops::{start,stop}_link() callbacks, and teaches a single pwrctrl driver to
-> stop and restart the bridge link before/after powering things up.
-> 
-
-This switch has a crazy requirement for configuring it through I2C. The I2C
-configuration has to be done before starting LTSSM. So we disable LTSSM first
-since it was enabled way before, then do I2C config and then start LTSSM again.
-
-> I also see that Manivannan has a proposal out [2] to add semi-generic
-> link-down + retraining support to core code. It treads somewhat similar
-> ground, and I could even imagine that its pci_ops::retrain_link()
-> callback could even be reimplemented in terms of the aforementioned
-> pci_ops::{start,stop}_link(), or possibly vice versa.
-> 
-
-Retrain work is mostly to bring up a broken link, which is completely different
-from what you are trying to achieve.
-
-> Any thoughts here? Sorry for a lot of text and no patch, but I didn't just want
-> to start off by throwing a 3rd set of patches on top of the existing ones that
-> tread similar ground[1][2].
-> 
-
-No problem. If you want to use pwrctrl in your platform and get rid of the
-custom userspace tooling, I'm all in for it. But for that, I need to understand
-your controller design first. All I heard so far is, "we want to skip LTSSM and
-let our tool take care of it".
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+<snip>
