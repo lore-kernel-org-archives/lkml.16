@@ -1,50 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C0D2F42;
-	Mon, 14 Apr 2025 08:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8274B2F42;
+	Mon, 14 Apr 2025 08:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618427; cv=none; b=fdjC8OCInDRxddz2Ee7V/u9tPiM8gWKflGW/VOdglvMrYyd2FkJsWzjDpgKutkXxLG0Skd+4dKW5K83sD7oV1+huDzxpohWBrBneQz8m2sHFpcbrGOSNyQRCMR71fYvhqFXtIqsLOMUzcGEsqoDtAs/MUU8jLMcJErFVNgiGs3k=
+	t=1744618459; cv=none; b=YX+2SLVh0Z9J5hMrpgOflyjAwJ8U8BgC2baohfGOliHRoypUOj4s+QF5LD/4OplGj0PEqcV6hyZX3QG6i14GFUZxgpuigU2wSrKFNLHQa5GHyK0EYUx8OdXmgfQwG/e9oabzuraj4rbAjAzJd1GCzlThHKCooryCU1rTO1ky8To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618427; c=relaxed/simple;
-	bh=/GliPvWxqmWkfViSv1OxAlqTAyRsqoblIC/0Lf7EkFM=;
+	s=arc-20240116; t=1744618459; c=relaxed/simple;
+	bh=J6Trq140Q0iTkvxaPJrRDVWEuf7oXfIoFVDn2k/JM7k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hGX4EpVt8Thl1yKnW/q/fCY7usMk/hPWHPH64ItA1Vc1aXIAw9V75Y0eELepKxLMhlDDdfcw20ubWy9G83sou/RAWEHMjUNut8gluTNEoWITWUImdXngd9hqy2E+GMK1qqC9qaL41c+kqEJFuNzrg4hP3ISg90DfmI5to7ej7GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxXdKqWr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxXdKqWr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A79C4CEE2;
-	Mon, 14 Apr 2025 08:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744618426;
-	bh=/GliPvWxqmWkfViSv1OxAlqTAyRsqoblIC/0Lf7EkFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rxXdKqWribRXynbgV7o3GDzN2oslDuc1R0xhHvkUN73fltLvhGPwB3GdIpID/30zV
-	 NK9sDhneTmHDTc7VNkc92ieX2mDNwAb8xuufHOx+7qIt6vf3tPW/pb3nE6qf+Fdx4v
-	 mYNGgzlI6jVS5J+fTbaid5jA2YKVcIBCLZZHUDsQlr6oXF6hLkbKBHsGkJ8/KAbvfy
-	 7uYDM1aE/8iBEVoAhSXLkdpwQwpbsSfj6pXL+SYUdDtQeRkCAfGTH08wuF3tFWV89V
-	 KaHlrQY6IkuF94u808CWE+Y1U0OSoTu6HaA2EIKGLGyASZocH/pW+goowlEVcKyxw5
-	 CjRgstDAy5n1A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4Ewn-000000002q1-2onL;
-	Mon, 14 Apr 2025 10:13:42 +0200
-Date: Mon, 14 Apr 2025 10:13:41 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Chenyuan Yang <chenyuan0y@gmail.com>, vkoul@kernel.org,
-	kishon@kernel.org, lumag@kernel.org, quic_kriskura@quicinc.com,
-	manivannan.sadhasivam@linaro.org, konrad.dybcio@oss.qualcomm.com,
-	quic_varada@quicinc.com, quic_kbajaj@quicinc.com,
-	johan+linaro@kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
-Message-ID: <Z_zDtfEsgXsFodG9@hovoldconsulting.com>
-References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
- <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
- <Z_y73a5IDO66AzY1@hovoldconsulting.com>
- <f3b77aa4-e7a4-475f-a633-48aab59fa9b1@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZiEG3C2FZhZS74UflZQ3MQc5coTRYhgsoQlv4o7sxGC75dZp5lygpBIHdZ5hKhsVr1b1uuIa5Wb2ObFNL/gnP7EkF944qMj8JeVhghqQ/pjnjbzVTRhASIWhySS2O54w3YtUpnkZhOY8hnR4+zB5lcFYsCm+qd81jkOsX1NiPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: J7aHdhggRdy8TUqz5+ZPLQ==
+X-CSE-MsgGUID: YtsY+YGRSj+7WnQifhOcXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="63480395"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="63480395"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:14:16 -0700
+X-CSE-ConnectionGUID: FDZb4DZwSoSYTIUFIHqiiQ==
+X-CSE-MsgGUID: f1gDqjpoRwCHdDgMXxyQhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="134903477"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:14:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u4ExG-0000000CAqe-20vX;
+	Mon, 14 Apr 2025 11:14:10 +0300
+Date: Mon, 14 Apr 2025 11:14:10 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: jean-baptiste.maneyrol@tdk.com
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iio: imu: inv_icm42600: switch to use generic
+ name irq get
+Message-ID: <Z_zD0uvJn_Fz1SOF@smile.fi.intel.com>
+References: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+ <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-2-19e4e2f8f7eb@tdk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,21 +56,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f3b77aa4-e7a4-475f-a633-48aab59fa9b1@kernel.org>
+In-Reply-To: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-2-19e4e2f8f7eb@tdk.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 14, 2025 at 10:08:18AM +0200, Krzysztof Kozlowski wrote:
-> On 14/04/2025 09:40, Johan Hovold wrote:
+On Thu, Apr 10, 2025 at 05:39:41PM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
+> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+> 
+> Use generic fwnode_irq_get_byname() for getting interrupt pin using
+> interrupt name. Only INT1 is supported by the driver currently.
+> 
+> If not found fallback to first defined interrupt to keep compatibility.
 
-> > I'm afraid you're mistaken here. See __devm_ioremap() which can return
-> > NULL.
-> > 
-> Uh, you are right, I only checked devm_of_iomap in qmp_usb_iomap().
-> Anyway, the fix should be different - given function should either
-> return ERR or NULL, not both, so devm_ioremap return value needs to be
-> wrapped in ERR_PTR.
+...
 
-Right, I already suggested that:
+> -	return inv_icm42600_core_probe(regmap, chip, client->irq,
+> +	return inv_icm42600_core_probe(regmap, chip,
+>  				       inv_icm42600_i2c_bus_setup);
 
-	https://lore.kernel.org/lkml/Z_yxxoa12N9rNn2z@hovoldconsulting.com/
+It's only 81 character, I doubt it will be a problem to have it on one line.
 
-Johan
+...
+
+> -	return inv_icm42600_core_probe(regmap, chip, spi->irq,
+> +	return inv_icm42600_core_probe(regmap, chip,
+>  				       inv_icm42600_spi_bus_setup);
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
