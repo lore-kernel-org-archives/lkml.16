@@ -1,83 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8676C27F73A;
-	Mon, 14 Apr 2025 14:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEC727F759;
+	Mon, 14 Apr 2025 14:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640728; cv=none; b=G4vP7eL853s1u1MZqqObSVnMbXxbZtm8whLA/bo8HS6nQ4L//j2eywgwps3gLPYUclw5kDBhzwKoa7xaFuWLEpxQh23k07sLhsaHJYMmbjWsB70AevaoKQA7W5KcPtkEDtrvYRq/f30O/1h4hsUxN1ygR/5my0xJJ+KSpa/fBt0=
+	t=1744640729; cv=none; b=odm31Z+gLPN0NmovErYrCfmJlnP2CCymMbzTRcgP9dhWzp6JFrH0EbDoWLNQvRkPlkx9+twiB4axOpJ84f/iLg+p2J/Jx9Yg46aulcI8kS6wmlgIklAc9R/1hXdSV+dW9FYcvl/161NYxyewcLE4+pkNjSO0KwDIEPOQixrKBOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640728; c=relaxed/simple;
-	bh=3daDj0mcIsp68OogGpd0fzNPIdyotvmgnk6RkCbuVWc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cnU2LjeRg4GC6PpCA5TF8rPtfH6dP1nGMMTMadO4ddvb8JY2RpRiasQu74338fPKLs1+lnt5T6fQsSEgj9VLLqPkhK/GDh7gWUPVa/PUNVYm6DnpHAUawpDBVtdj+vzfGKns2wn++R6yIFw2TYByQHnwoSedy0MOxnGCIG8llpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyP9D3Nv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744640729; c=relaxed/simple;
+	bh=yg6EWMxUISCyYSYPYDJV3F2CpXW7on+QB5igo/9U3WM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dQlc8LZQjc7j9GrDU3yMQ7zcOPlQa3e96bK/uvenpiDDsuxHYwxbiLVYma8LPcsAFJWEWHDikkLjsMwW1I1qEinc8F7hcDouksd3ACqL5OqG9kYrMjbzp/4QFIrIYVg+M0hjt08KYUHhObXZareS+Focs7kddOb0zdxGprMTkWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5xnaIoI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyP9D3Nv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE2DC4CEE2;
-	Mon, 14 Apr 2025 14:25:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5xnaIoI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7006C4CEE9;
+	Mon, 14 Apr 2025 14:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744640727;
-	bh=3daDj0mcIsp68OogGpd0fzNPIdyotvmgnk6RkCbuVWc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KyP9D3Nvl9VPs4Y+adIbgJ/kWDV8oOJFDl25SW4Z8E3+fC5MdUg2iVjQ3ngxK6IHd
-	 xveMv/ctz4aIS3rkjZhiFXun4FauYhVpTc2nNHA4xMvq6kV4ZiXWvPE8melIYiWUd5
-	 WyGC28M9iH2WBh+W4SvBqfKeGzMPFqTKT7rNVN8Sl0KmrJ+8iuyGjqxdvXf11M1So3
-	 bYcp2JgZBOB5D553M4LCbhOyqODMDAxOKOCe8jJj0cRJvhNAuI3A2Docv8DbQn/jS9
-	 Hu3nE2pUhk3iL5f667EVFF7Ns2T2KTRFl8m6EvMW4c6HiwJsh4+D8qw7O8nW5iH2aW
-	 d7RuK1wsCPezQ==
-From: Mark Brown <broonie@kernel.org>
-To: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Mans Rullgard <mans@mansr.com>
-Cc: Pan Nan <pannan@allwinnertech.com>, Maxime Ripard <mripard@kernel.org>, 
- linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-In-Reply-To: <20250410115303.5150-1-mans@mansr.com>
-References: <20250410115303.5150-1-mans@mansr.com>
-Subject: Re: [PATCH] spi: sun4i: add support for GPIO chip select lines
-Message-Id: <174464072481.99542.17446384569030524351.b4-ty@kernel.org>
-Date: Mon, 14 Apr 2025 15:25:24 +0100
+	s=k20201202; t=1744640728;
+	bh=yg6EWMxUISCyYSYPYDJV3F2CpXW7on+QB5igo/9U3WM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=b5xnaIoIi/nu5s7HP6IU9n3N9sIZC6rCnMlcUAUDLYrdTKJFF+k0jOSMdO+MVL4r4
+	 Xg90kiLPLvJVsrCi3tqZ5tv4uJVVW9VOh7OV45dvPJRy8lvRizgyjLZeM0KHNAbNQU
+	 vumektwdm3FBJglsE+0AT8f55TuPusym+ubQFinR0xVW96zcCQ0Vxr/f6ngUztO+Y/
+	 2VCmMDYNNXYeyLqkVd+94p1vxAp8dPd0FQtPTgcDlOWX9NiL7C51F978BDKn8e9GGI
+	 akLwF0Vq1YigNjzIzImElNNl9BW5SX/jvDucuVsNKMTVvd3gulrwnDQZZBfaSli+vJ
+	 7p5/8j6qt/bsA==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60288fd4169so1875672eaf.3;
+        Mon, 14 Apr 2025 07:25:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUXCrC3jlN+G8ynRLpVkUkkyMetdXWGPgGXc+cJUPZ6iec7fD4AzLCpdMd/7ysN+T9GNfoXFpqJuCkGcQ4U@vger.kernel.org, AJvYcCXdqEGtzoY1XT+ooHlX/owRYS6fxuGi2bbfD0V/WocVUZOBLtzX7wkXtSb54xxjcTUyGdVQRupGqo4N@vger.kernel.org
+X-Gm-Message-State: AOJu0YyumCAmP/L+o1pnFZlhb167mTGzgdDVviBS9u4ndQErVKGH3Nuv
+	vzRpri0NsUWeJSYrs9yEaK3dCtp+RBZB979pBahZhjpkG1qsZVSaObhFZ5m2j0jE0i+5c5ITZuT
+	bT031EGAobM/XhHFOK3TVQD41mQE=
+X-Google-Smtp-Source: AGHT+IGpQ8Gu6BowkMYFfcY+1nthKg0wd1cz3rjIdC8dPfkokVglpT5SfkZnRdy5kH2Kp1RRisWLKcbiXxBnKB2lNME=
+X-Received: by 2002:a05:6871:6216:b0:2c1:6bbc:70f4 with SMTP id
+ 586e51a60fabf-2d0d5f74b56mr7444602fac.38.1744640728206; Mon, 14 Apr 2025
+ 07:25:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+References: <20250414073517.57745-1-kevinpaul468@gmail.com>
+In-Reply-To: <20250414073517.57745-1-kevinpaul468@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 14 Apr 2025 16:25:11 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gTXstnnFWi87ihxLx7u1HcNaKeUdBpE+2HyJ+40wLCbQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHoCYUB-YbsecjuItR83jefDARX0oJSWSXyKosTFhnQ3zOAQZ8DOaF_SUQ
+Message-ID: <CAJZ5v0gTXstnnFWi87ihxLx7u1HcNaKeUdBpE+2HyJ+40wLCbQ@mail.gmail.com>
+Subject: Re: [PATCH] acpica: Removing deprecated strncpy()
+To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 10 Apr 2025 12:53:03 +0100, Mans Rullgard wrote:
-> Set use_gpio_descriptors to true so that GPIOs can be used for chip
-> select in accordance with the DT binding.
-> 
-> 
+On Mon, Apr 14, 2025 at 9:35=E2=80=AFAM Kevin Paul Reddy Janagari
+<kevinpaul468@gmail.com> wrote:
+>
+> This patch suggests the replacement of strncpy with strscpy
+> as per Documentation/process/deprecated.
+> The strncpy() fails to guarantee NULL termination,
+> The function adds zero pads which isn't really convenient for short strin=
+gs
+> as it may cause performance issues.
+>
+> strscpy() is a preferred replacement because
+> it overcomes the limitations of strncpy mentioned above.
+>
+> Compile Tested
 
-Applied to
+ACPICA material is primarily handled by the upstream ACPICA project on
+GitHub, so  ACPICA changes should first be submitted to upstream ACPICA as
+indicated on this list for many times, see for instance:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+https://lore.kernel.org/linux-acpi/CAJZ5v0gUDxrAn4W+Rf3ifjrg8Z9ZzTTOZjPFSSN=
+5488mPqzXeA@mail.gmail.com/
 
-Thanks!
-
-[1/1] spi: sun4i: add support for GPIO chip select lines
-      commit: 36ff6c3f5084f2dbb6cd89d15b78cf734e9abfa6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+> ---
+>  drivers/acpi/acpica/exconvrt.c | 2 +-
+>  drivers/acpi/acpica/tbfind.c   | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/acpica/exconvrt.c b/drivers/acpi/acpica/exconvr=
+t.c
+> index bb1be42daee1..648e68a31e1f 100644
+> --- a/drivers/acpi/acpica/exconvrt.c
+> +++ b/drivers/acpi/acpica/exconvrt.c
+> @@ -226,7 +226,7 @@ acpi_ex_convert_to_buffer(union acpi_operand_object *=
+obj_desc,
+>                 /* Copy the string to the buffer */
+>
+>                 new_buf =3D return_desc->buffer.pointer;
+> -               strncpy((char *)new_buf, (char *)obj_desc->string.pointer=
+,
+> +               strscpy((char *)new_buf, (char *)obj_desc->string.pointer=
+,
+>                         obj_desc->string.length);
+>                 break;
+>
+> diff --git a/drivers/acpi/acpica/tbfind.c b/drivers/acpi/acpica/tbfind.c
+> index 1c1b2e284bd9..5536d1755188 100644
+> --- a/drivers/acpi/acpica/tbfind.c
+> +++ b/drivers/acpi/acpica/tbfind.c
+> @@ -57,8 +57,8 @@ acpi_tb_find_table(char *signature,
+>
+>         memset(&header, 0, sizeof(struct acpi_table_header));
+>         ACPI_COPY_NAMESEG(header.signature, signature);
+> -       strncpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
+> -       strncpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE=
+);
+> +       strscpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
+> +       strscpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE=
+);
+>
+>         /* Search for the table */
+>
+> --
+> 2.39.5
+>
+>
