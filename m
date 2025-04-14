@@ -1,228 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9D13FC2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744646589; cv=fail; b=rxEpw3d2E1+xWkVTDZcbMa1OmooX25uTWXbitQM+zssO7dR8SJPwJJKqlMZK1uihC45W08659xSTelHI2DyfljwvajmuK5fGIn0SJn+vlqBlPes8MWVhuC9FfPoK2L0vGs+bVHyupX69SWHEkNKcqIsBlgjtS+is/1+0ijd2rHo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744646589; c=relaxed/simple;
-	bh=q3SxBNQ4LhpI/1hOI0roeR1IsvSrRNvwhU+bILMfAos=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iuhyAHBsPdH+K9Blvce414iPEQg32GpyE3nQACVeqB8Va74WoSd3OqTXkR/eTVlRLUvXhk31onEcKVo0Wjvd9T1RLPaCtbbdqybGS4juyfuxuJh6nAW9qIHYkJHFAMshK9SGHSLuMwHIpLMRFUoG0Ygvbgg7yjjDNiAfM1z0KHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JVQ1oLBh; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F6A19992D;
+	Mon, 14 Apr 2025 16:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744646643; cv=none; b=DSf7piAuIm+SGNmKaOw7QNo7ZYMcpsKkm1E8cgdIhtGw/ABzjSEY40+W4A69AGOrMqTlt+xD2H4ddVTzS1+yRYtoXo960EiwTI8dpuSFTABdLMmitaQQ9wDiyOH/3iDDvf5XoyPqdAPMIEnSIAi6p5i50+WiCRJtOkZvR5ROQU4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744646643; c=relaxed/simple;
+	bh=orKoB/QPGzojKkdDpkIIMZGWYRyu+xOxcNOpDM0H3h8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rV4lvEsxSW2SAZ0db+mFDYMkvQoY1dRrfb5PkIBou06Bgq1XuXwY4a2S7eFQJE6iPmAkMFy7rZNO/fxyd7tEdD0hLpk6VXdNHxy69zOsorB9DhRsXLiF/T84A5lv+1O+PDCbJE9KcQ3D/cbwA35jFvOTLE3C07fvH5cpqRyDO8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbeetVoX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JVQ1oLBh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744646587; x=1776182587;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=q3SxBNQ4LhpI/1hOI0roeR1IsvSrRNvwhU+bILMfAos=;
-  b=JVQ1oLBhcVT/mwTpCXTiVzoLfFy8+G6UbZhFkCDp1onn539JIYycyd8R
-   grYd5//fWF1KZKj09J8u6qMFejCmhIDSr/59W6yBBZz6Vt63HsT2TnZFM
-   HORPOUlG39dHM9uhrNbz2Erw0OhQRAPGkUr7lznC4Y+WodJX1ieXn2/AZ
-   V21sVLNma3oWMmK/SfMkjyvcjLz7bWBwwVr4oU5Ug1znLyvzj3PFMdRPe
-   hLNwLThHxe7pioxzPAzgZ4GF8ogvfULXcBPKt3p+j2j8dup8ugjy62t/g
-   YrrUn8xfkJPbHvtFeT47hcHyflg4N2UndxMV9hOzf+3SlkbkKlsKIAU7a
-   w==;
-X-CSE-ConnectionGUID: 6zZQQhrDRoyjCeW7ICx1pw==
-X-CSE-MsgGUID: 7KzpuJ8gToKIwC6EOWnD1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="49780474"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="49780474"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:02:38 -0700
-X-CSE-ConnectionGUID: tw11HbMSQB+wBlwy0dFmPw==
-X-CSE-MsgGUID: 9vjviIEWRRiK1vSPh+D2QQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="130834606"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:02:37 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 14 Apr 2025 09:02:29 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 14 Apr 2025 09:02:29 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 14 Apr 2025 09:02:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U8Lt2W1ONQyyapFI2QaIjDe1DedMNJ/1SvG4H0zdd5XyrSkkeozDH2pHf9k0MsGvRdzItzcf+Bf2t2nML3cbTZbWRvBeezimVYtN/azvj/B3BQx18fRhhj5j6dqdLFH/zMh7uGbK2O1vP9M8VcV7L9qN+sQXbBV5M7ZZmOL+czx0KU5i0XmrDhvCLvywGmcJuSh5dEO5qa9CxOkOql0c71CMJWr6g4SwEaaprONvh/X+5dLuscpwLvRgwOIZoD4r0AkFwwJSXGRNn9UcwmnWqX8MNpFwb8q/BHTtN24sCfc61hEEDMtjRApYdIsa835klsGG7wjgMjmyq4KN43sGCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rnlfm2BG1CmXSf77Z1Ni06rs99eVz8kcYTXKym+w6G0=;
- b=ilzu9hdAOWgtUd52OYoQDAyCf0GjOpCfMgCLJOcFfoiaM69wuCd0x0KueYqYixyp8pd/1AU5KrUei93IbUX0oHOA0i7s6ZRtBKwgw3EtWvaVcNrcWStM2ORceN4WXIApOLuQCdj5WwiX6BEm9JTVQnoD42R+2Gj/qYCRNE/wejODV8TorA+kOTa1kr8zLoznF/qSTJz4d9LgPkRNAKOsRIpuV+X6jztWBDKdlb82XkKeg/T8fbxNPAoLXhmNUeEfuEiIPhpGrXD2DqTxBN9xH3r2b3vU4BZSJp3uCBU2OOF1cjJo2wFZvkDAkTHyCg3oPwTopcCxTqMscF508OBfbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
- by DM6PR11MB4594.namprd11.prod.outlook.com (2603:10b6:5:2a0::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
- 2025 16:02:16 +0000
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b%7]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 16:02:16 +0000
-Message-ID: <005c633c-aabe-4e60-9cb5-31cde7d30df7@intel.com>
-Date: Mon, 14 Apr 2025 09:02:14 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 9/9] selftests/x86/apx: Add APX test
-Content-Language: en-US
-To: "Chang S. Bae" <chang.seok.bae@intel.com>
-CC: <x86@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, LKML Mailing List
-	<linux-kernel@vger.kernel.org>
-References: <20250227184502.10288-1-chang.seok.bae@intel.com>
- <20250320234301.8342-1-chang.seok.bae@intel.com>
- <20250320234301.8342-10-chang.seok.bae@intel.com>
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <20250320234301.8342-10-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY1P220CA0021.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:5c3::16) To BYAPR11MB3320.namprd11.prod.outlook.com
- (2603:10b6:a03:18::25)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbeetVoX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 71DD8C4CEE2;
+	Mon, 14 Apr 2025 16:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744646642;
+	bh=orKoB/QPGzojKkdDpkIIMZGWYRyu+xOxcNOpDM0H3h8=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=IbeetVoXhK+Evf3YH60lar86ju2F24pZvmYIjNwYfcHC+0wve22C8ecw6K1cTBI+/
+	 Dimmm7jyzzXsbGo9ZtW28x6ipAxPCNS9x5eeqshMVG2nKBz7Q+/y25Wk02GYfVD1gc
+	 GP9DaQFwbsHSrO8a23TmC9zfN4l2flu5DyfjyGbt6nZGNm+PyWNaAumi55BHHoKeDo
+	 +1mpQbL44M5ifGbbl93HXev9fZjdEbO6gky73/IKYpqVQXN0s8LkOlI5LPkhlbSczW
+	 W4Nm+Cyd8+PBmIEH3CMLnyAXUChc9DSdWHn4aBTADYsii7ObAwwSmai92x4WRc3NFM
+	 liTW7ciR+pXBA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59576C369A2;
+	Mon, 14 Apr 2025 16:04:02 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Mon, 14 Apr 2025 18:04:01 +0200
+Subject: [PATCH v3] media: dt-bindings: Convert Analog Devices ad5820 to DT
+ schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|DM6PR11MB4594:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ce89a7f-b41f-4bc0-6d42-08dd7b6dba03
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?R1FBWmFiZlFMTG1QRVNZbW9MTDd3dERvS3JiRWZGczBFbzdZVFJyTzBOYWlv?=
- =?utf-8?B?TmZNM0p0NnI4ZGhTditGRkcxTnBpcWUrem1iakkwRlUxVzVFZlF6VUZSM0tV?=
- =?utf-8?B?eDlJUThJTVNOVFAwUzdVWW1GbEt3bFZWTzNTbHpZNnROdExubnArWWMxNjdB?=
- =?utf-8?B?a1pKVlhveCtraitvcTEwL0RZL0tJWjVpck95MEFvQVJxZXRlM3FPd3BUU2Zp?=
- =?utf-8?B?Mkc3TWNpZks3ZFZvVUNLdUdzcmZCRG9HMllMSDc0YVhiVHZpSzhXM3VUbWNh?=
- =?utf-8?B?T3JNc2l4bDBiU2hzTURPeDNCMEVrSy9ybmtvdHJmK1VFTzdrRXlvVExQWjA4?=
- =?utf-8?B?WUlQN0I0UWVWZlNHUzFYLytwdXBYK252YXhzZEtkNUwrVG1ROExHZ2M2V0h5?=
- =?utf-8?B?S241UWZlcUt0azBpVGVvLzYyMTNVVzJIalRTbmZaVmRMTjFrY3hxeHJicSt4?=
- =?utf-8?B?RW9RZkUzZlNCK0hRZFQySlVZRDJ4Si9UbEQxVzJHUE81Y0VLTVFPUTVraXVz?=
- =?utf-8?B?dkExUHorQjRtNHdqblluQWtsZU5ZNUhJTmF3TG05RDQ2ODFlUWYyYWlFSkNB?=
- =?utf-8?B?RXZ2R0hMTnpLOW0ydDBUL1l6SC9UazNHOW5QWG5iQWZuMEIwN0l3NFQvWWxQ?=
- =?utf-8?B?dHBHYWRuK2o5Vjc3NXpFS3J1dFdRajdJcy9keENacHdXNXhMRy91ZDN2VDZX?=
- =?utf-8?B?Nk4wdFZFa2RvQXA0RkszeHl0MXJhZXQ2d3JWUlk1M0xyRitTQkZVYlk1ck5J?=
- =?utf-8?B?Wjd5azlVMXA2aHErNUUrWHlmdkNMOGxmV1lGSW0rY0x0akFUc2Y1OW9RbE8z?=
- =?utf-8?B?Y0tQdXVQckhrNW9HdVh5OWNLczNQejZvdzdFQTdHbjIveHY3ckNwUFhXaE9x?=
- =?utf-8?B?TmdzSE5XTzdkZkZjRk5yN2dILysxcm5hTG9La3RuaVFES1I2QXpoYXZiKzJj?=
- =?utf-8?B?UjF3Vk5BT0xiY0FIZXNNRVBJRkE0ejBwaGNGb0c3YWFxOHNFNjJ1MWRMUEJz?=
- =?utf-8?B?OG9CMnZVNWppT1dWU2R5QTAwRkVCK1V2OUs0ZXJDQm9yRVlFZ2hRdHVaLzVG?=
- =?utf-8?B?V3J2ZTZVQTZGTjV5SjJwem8xd0tPNHhtajlUVjhNTTJ2ZEdBRkU5QjRuNTlK?=
- =?utf-8?B?UXVGMmFhdlJJUGFRQmdmS0VjRzNnZGRSTUx3NDZkdVBUbmF1N005RXIwTTRz?=
- =?utf-8?B?OG4wSEtYTTc3SFdRaXVTYVhvOEZOc3BZUi9wamZYa0gvN0gzcnhiVDV5YUhX?=
- =?utf-8?B?U3p1RElxZTZhNm9raWdCS21kNkFoUWJiSVBiaVpuem9yaFVXSjBVd2ttTTYv?=
- =?utf-8?B?cUZRUEE5aFNZU0RycE1yMFB4MnoydEZ3YVBhMUVMR1V1dUpjRWhxU2JNNUdO?=
- =?utf-8?B?NzZqbElyR2lEYjRjcUZ5UjRUZWxmRmJ3SVlmMlR2ZEpyWUQrRnpZd3B4NXB0?=
- =?utf-8?B?NmhqWFFWUzR1WUhMeTd3dG8rZ3pudW01akNaOE5HRWE4REN5VXlhdWd6UDJa?=
- =?utf-8?B?Y1MxVnJLdWRiYVAyQ2grKzBRdHVJMzhTSGkwL0o3SUZPY3JlWFZOMVhjekha?=
- =?utf-8?B?OG1UNjZmdHNiMHV3dkNmcEZacmtxWmI1OTNtWTVSVWx2TGV4RjBJSlZ3Z0VE?=
- =?utf-8?B?d3h0Z08xZmJFa3Naakt4eHlFanVQY214MENMREdxd2ZabjllZkY4WVFYeVhj?=
- =?utf-8?B?Z3JQY2xYL3NlRnVEaEFYa2pwSXQzTjg0Nmt5b0hyVkpHU1o1SndMRkEyM1VN?=
- =?utf-8?B?Ny9OT0hvMmwzTkQxZW5ZQVFPMDk1bXdZU3o4cWZqYU0xWVZCVERrUEZpdjZu?=
- =?utf-8?B?V1FOWTFjOWZHaHNoc3Y1dUcwbDVFenRiem1iNDNJT1VjQnBSSUJUdTBqYzdS?=
- =?utf-8?B?MWVMQVdhRzFxNjhxMkd5cnVRZFpKeHVVQ1p4cTF1TlJoWHFjeDJSbFM0TUs5?=
- =?utf-8?Q?ntwiS01lxcI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZXlwdk9wd1BPQWJhZXdhY3Y5RVh0QStKa0RhMytDcGVsQ203K1FiRHJZWXlv?=
- =?utf-8?B?ZDlxZDhkd1NvVWtmUjBKVVBrLzNGNkQ5TDNmR2tNVFhGRDZ3bWNpVlJVZUlz?=
- =?utf-8?B?YVQxMzkyN1FKTVJ3NzhaUWo5SW8wTVBiL2poNmVHYVVyejBPcUtSaTl5SkI1?=
- =?utf-8?B?aCtkY2JDbGIra2xJUjZqcENUUmg1QlRXRG1iTzVlT3ZqWmVDdmlRamtEOEdq?=
- =?utf-8?B?RHE3cDl6aU4ra3ZXWDRDV00vYURXaTVSMmZYOUZXVlVtZGJvS1BYeUljeFhh?=
- =?utf-8?B?MjBsQWQxakZhR294RnMwU2hxVFRtemtNTTdjVkJ1cDFGaUdibTVKRkFKMkRV?=
- =?utf-8?B?dDFHSWE3bk5JMkVQRHZhQmdjQjNqWmdsL2JsZWFEaDNLZVhqUm1QV3ZvY1li?=
- =?utf-8?B?aEh3YWYzdTU2ZGtob1MrS3h6VTJmbm1sY0c1WmZSQU1EdEFERjA0MEp4YVJx?=
- =?utf-8?B?a2p4eGxDWkZWRGNGT1VvZVlvYjJUZGczMytXajVnMWlkVnArS3VLNUZlTFNm?=
- =?utf-8?B?STZBVzQydElUdXhmOFNNVVlkU04vODNadkY2elNDdVhFbmVUL29wR3JuTUxM?=
- =?utf-8?B?QkcxaXVIS01vSDBUZEc2bzJoYnAwYko3SWg3Y01ZTndoVkxXOFpMaDVZR1d2?=
- =?utf-8?B?RlRXQWVzcVRZa3lRTmc0QzlwZkxXSjltTjFYZVZBa3BucU9qYU1kU3VCdGN3?=
- =?utf-8?B?cWdMMHZiWXNadFZqMXZGdUtBRlZiR2xOR0NMM1BtZjJwK2RkaHRRR2NjMHdz?=
- =?utf-8?B?MFYybHNmL25uVDFOcG4yUU8waWhRcTdGN045b01ORml2SEhDNXREdFUxdDY5?=
- =?utf-8?B?Z3lPRFdoMVZYRzlNenFvVFZjR3pDWmV5YTFEUExtMHVYbnJnTHYycHp2ajFX?=
- =?utf-8?B?cEFTKzd6Y0tmd0l2TlRSbCsrYnMwM3ljeXZQZXBNakdDT0hYUWcxUXgweHpY?=
- =?utf-8?B?T3ZwUjJ1U256M0VTajBzRXBWR0g0UEljMmdaQVpvbmZsd3p5RzZ1amlZQWJS?=
- =?utf-8?B?THdVRkVva2RKTjd2TEJSbWkzNWZiVndId2p6VlVsZEI2MTN2azUxank5Q2RZ?=
- =?utf-8?B?MWRTQkJVa2l1dVpYdUM3L2JKc3ptUUJmN1pwVW5SNmVuNmRLOXB5dlNNNlFJ?=
- =?utf-8?B?VVhkVW0xNUgweGdTMk9rWi9NTmNwdUU0U3lOcjZrNmlWTHc2cGFzNStqU0lX?=
- =?utf-8?B?TzZxTklmNlFmOEhvR1lsMmFwK2w3TUlqQldHZmhCUGNMT1crWHhMYWVqN0JB?=
- =?utf-8?B?Y3JIeW1pZlExMThTOHVGa0o0ZzlHVERNODZQaGVpUmloWFBxaENtTzZUdUli?=
- =?utf-8?B?bVNMc3k1b296Y25ZcGVNR3F5WXhHenkyOEdBUHdSb1lyeWg0MFhwNUMvU2dz?=
- =?utf-8?B?K3R3c0F3QlFzbW5uYU9tN25NRlI3QktlNXhSc3htSkF6NWZ2WVdJcjZDZmpJ?=
- =?utf-8?B?aytqQXZ0OVdOY3JML0FtbWRkdFpPT1BzcEw0L04rNDJaekRJOXNXTE1SSCtr?=
- =?utf-8?B?QllNWUhjZ05pZFNrd0FCUmE0Y2p5SUxrNlNsYmRWc1ZpWGRzbGlwbFY1UHZr?=
- =?utf-8?B?OXpBUW9nSDZjSGV5TXBRR3VRSTgwN3VwZ3JHVlh4U045UU9CS1BKcGo4a0hs?=
- =?utf-8?B?cGlaZmpaR2g5WURDcG9ZRG5LbjA3dFRQRUtCUlhoZlpaZUpSbWtDeDhhc1Za?=
- =?utf-8?B?UTBtQWJpOU1PVmlPSDk3VUdjS0dFVCtwa0hndXNSZzFxN2MvNFVSVVdSVVlU?=
- =?utf-8?B?SXRFSWtQbDhMSUROWW52SnNjTHczTEZYVXVybktWR0VESjdCd0tQSFBxWGxY?=
- =?utf-8?B?UUFlalA0ejViMzRzNm1Nbkx3NmFXWi9pM09uMWYrRFNjMlJvWjkvaWFPZEky?=
- =?utf-8?B?TW9MQ1lxbVNnRGo2b3h6WlNJU0ViQkpNeDFOMnZLNUhMOHdSOFIxODVIV2d4?=
- =?utf-8?B?cGtZZ0RrbVZwenRiNm9JemdyeWdZTGlFZXVVVmhTQXlSaytPUHdjZ0k4SkxH?=
- =?utf-8?B?bjFCN2IzeVdYZFB4SVVZRlVjYkwyQjRzaUtmeDUzdnJKS2NuaGhLVnlpazNn?=
- =?utf-8?B?dUdoTjNReDZybC9xcmhNcE4vSUF1Q0g0Y2c4MXZyaHkyNGpZRXF0RVhiODBI?=
- =?utf-8?Q?HD7Us/1bYp0ldEcfHnW75pVDd?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ce89a7f-b41f-4bc0-6d42-08dd7b6dba03
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 16:02:16.0158
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ojjSiNhZk1aA4rXyxjP/dVQXWGfVO5cu4LLh+/xa6XNinc3FOcywoWVK7VmHhRTFw3z2XGqwRi97NA/7tT+x2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4594
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250414-b4-ad5820-dt-yaml-v3-1-39bbb5db7b2b@ixit.cz>
+X-B4-Tracking: v=1; b=H4sIAPAx/WcC/22NwQ6CMBAFf4X0bMl2S0Pryf8wHqAtsomiaUkDE
+ v7dggcuHuclM29h0QfykZ2LhQWfKNJryCBPBbN9M9w9J5eZIaACKSreVrxxSiNwN/K5eT64RIS
+ 2w074Clj23sF3NO3N6y1zT3F8hXm/SGJbfzUEgyBNBaVQBrTmgrsmkbvQRGNpP2yTEx7C//uEW
+ URdG6WttFDbw1/X9QsF0Pli4QAAAA==
+X-Change-ID: 20250314-b4-ad5820-dt-yaml-3220bf2f1e40
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4449; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=GVJ7MQh4loOY2204mfe4sVnmHlFZoSugyiPkIxthxvE=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn/THxEeQ9VrqZrRI0BVA+GI6KqZURU8oVJ+k3Z
+ wlPBP6HjQGJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ/0x8QAKCRBgAj/E00kg
+ ci6VD/47lyr0VIkS4o4S8nUdOgKCTRLt9a4HlhUST6TncfzeBFeOBHCu7Mo44VLxiQtsyiMjczO
+ Mdj6LmnJd6fSVUKDg1k9ux/HYwmterhssFF3fHsjcSxNFnyNYNzpccrOHxTcaCxIvSwtFlkBJcA
+ aj6f6fnyJnpG/QQ7lIPPXYBWqiChWId4oO2yAFwoqAEgD7el6IBDgoobOalXbVFt67KK4ksoRq0
+ kBE3IjWColhgK+UEt0Lb6USD9A8d5x7jGgC1hn/pLmBJ13et47M7/ep3GVVCL+beuEJUfyxkcal
+ nrgFOuHI5p50cZOqy/41hlNxOafIRIf453JsyYy/e34MBMeqIWNlccjbtDpwhjf/s19sNwXYtcg
+ jRLfrM0N4g92kKXvGAz/OxdeAnFq+IFXSWtIeZMVH2TuVhuZjjhw03So9pglVzF/b+b++7J0AyE
+ Hbie236TBIPHIo4c9U2zWx9kR1ssZA7yGmWOTGICgJ8nJBOEkspMZdPZIpkAlVSnz66UxFUHY6/
+ QEKo7PwS1g5hH3jodD2nLV4YBnSCc71FvPRS44DrCiEU+Ep61yMCLQkPEU966by+kkYQfQOmqG0
+ SSdlLnEebwOpbznoCDCKQLNjQREkwP5WzexsvF2F0m18+cWm7eVtXBNVYdzuuxsv773hdNZdlkd
+ nN/A59tcViSeETg==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
-On 3/20/2025 4:43 PM, Chang S. Bae wrote:
-> The extended general-purpose registers for APX may contain random data,
-> which is currently assumed by the xstate testing framework. This allows
-> the testing of the new userspace feature using the common test code.
-> 
-> Invoke the test entry function from apx.c after enumerating the
-> state component and adding it to the support list
-> 
-> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-> ---
+From: David Heidelberg <david@ixit.cz>
 
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Convert the Analog Devices ad5820 to DT schema format.
 
-AVX and APX have very similar single line testcases. If we end up adding
-more, it might be useful to consider merging them into a common file.
+Added the io-channel-cells property, because it's already used by the
+Nokia N900 device-tree and defines ad5820 as having only single output.
 
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+Changes in v3:
+- Removed documentation of io-channel-cells property. Now it's 1:1 to
+  the original binding. The reference to it from the Nokia N900 dts
+  was removed in the -next.
+- Link to v2: https://lore.kernel.org/r/20250314-b4-ad5820-dt-yaml-v2-1-287958c3c07c@ixit.cz
 
-> diff --git a/tools/testing/selftests/x86/apx.c b/tools/testing/selftests/x86/apx.c
-> new file mode 100644
-> index 000000000000..d9c8d41b8c5a
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/apx.c
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#define _GNU_SOURCE
-> +
-> +#include "xstate.h"
-> +
-> +int main(void)
-> +{
-> +	test_xstate(XFEATURE_APX);
-> +}
+Changes in v2:
+- added MAINTAINERS entry for the binding
+- documented why io-channel-cells got added into the binding.
+- dropped io-channel-cells in required properties.
+- adjusted example indentation to 4 spaces.
+- Link to v1: https://lore.kernel.org/r/20250209203940.159088-1-david@ixit.cz
+---
+ .../devicetree/bindings/media/i2c/ad5820.txt       | 28 ----------
+ .../devicetree/bindings/media/i2c/adi,ad5820.yaml  | 59 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 3 files changed, 60 insertions(+), 28 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+deleted file mode 100644
+index 5764cbedf9b73387ad1bfa9acf99c643f959b84a..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-* Analog Devices AD5820 autofocus coil
+-
+-Required Properties:
+-
+-  - compatible: Must contain one of:
+-		- "adi,ad5820"
+-		- "adi,ad5821"
+-		- "adi,ad5823"
+-
+-  - reg: I2C slave address
+-
+-  - VANA-supply: supply of voltage for VANA pin
+-
+-Optional properties:
+-
+-   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
+-active low, a high level on the pin enables the device.
+-
+-Example:
+-
+-       ad5820: coil@c {
+-               compatible = "adi,ad5820";
+-               reg = <0x0c>;
+-
+-               VANA-supply = <&vaux4>;
+-               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+-       };
+-
+diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..93349e7daf262fc8939f984fbe93cf064a0cbaf8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/adi,ad5820.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD5820 autofocus coil
++
++maintainers:
++  - Pavel Machek <pavel@ucw.cz>
++
++description:
++  The AD5820 is a current sink driver designed for precise control of
++  voice coil motors (VCMs) in camera autofocus systems.
++
++allOf:
++  - $ref: /schemas/iio/iio.yaml#
++
++properties:
++  compatible:
++    enum:
++      - adi,ad5820
++      - adi,ad5821
++      - adi,ad5823
++
++  reg:
++    maxItems: 1
++
++  enable-gpios:
++    maxItems: 1
++    description:
++      GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is active low,
++      a high level on the pin enables the device.
++
++  VANA-supply:
++    description: supply of voltage for VANA pin
++
++required:
++  - compatible
++  - reg
++  - VANA-supply
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        coil@c {
++            compatible = "adi,ad5820";
++            reg = <0x0c>;
++
++            enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
++            VANA-supply = <&vaux4>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index af3537005de35dfd0ded11bdc2b9c63e10c70e93..366ed4905fc9b32862a4fd665cf5f4e09fafc989 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17274,6 +17274,7 @@ M:	Pavel Machek <pavel@kernel.org>
+ M:	Sakari Ailus <sakari.ailus@iki.fi>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+ F:	drivers/media/i2c/ad5820.c
+ F:	drivers/media/i2c/et8ek8
+ 
+
+---
+base-commit: b425262c07a6a643ebeed91046e161e20b944164
+change-id: 20250314-b4-ad5820-dt-yaml-3220bf2f1e40
+
+Best regards,
+-- 
+David Heidelberg <david@ixit.cz>
 
 
