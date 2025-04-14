@@ -1,87 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFB417D2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E51217D2;
+	Mon, 14 Apr 2025 16:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649475; cv=none; b=DT4kHlGtC76vWs+vbD+n2RPSeXEEYcj7CvU/X8QV4IdNLoHksKl+3p/eF4E3jH3Gz8m8YOgFIdIlHag2Fn0ZJWgLvquoIxPbMdF64Hw1nElzsrBvKAvKhmClMNyQgnv34qJGClQMzJP5cCgMvHhBiHUqeWC9aOSzUyoQJlZBzwY=
+	t=1744649480; cv=none; b=oEMj1Yc9eFPiKEPgGINRklASLpGu7t6N/nlJJ9DPQV4AEFHVnFRFnQaeatD+dneU21J+Kv5aKr16TKLHoU8gGiB8LfMOduAcN1cwV2pMZF95sVjnF/L7XdHFFUzuDyKm/QqM0G1/ICtW+mT/EhJ5Mz9HOliBmmhS9N21NuWhvg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649475; c=relaxed/simple;
-	bh=r7PVrf74ItTR/ep8MImxlxwoMtPvqU/ZtRsdpeTPTaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FDvZ54tWPvVdIw5y8cKgB1wHdqR9f2zk0pqTlkRUyuRJU608ZTlyK57SmFJ7pYNkYhu7KJp1S2AvbN4X+KHJV/Z8STzctIGopZJUng5HVJtQlwTNoA0H69p8YVfBSvXYcFOjhwyCi1kXd4ewXzP1LU7r2smInigDwNGen4elAkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i5c4dmqj; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744649480; c=relaxed/simple;
+	bh=o+wzfibnavHMC7J2lEVyyjq8baNIRWdQcvmecfP/e3U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nstMKZo6jSZDhCh8yY76cQcAPShZq6OPuybVHZEaeKL1y5aw9vmAVz8qfJzWS4vWsIq6l+TbzrrqoS4ZQVFdA/EZaVFD/9drv6/7bfV0MeIiUPMoeL1QSe2JJ06cGvLWBTSismhKRCvJwJ3u2BIq6XpK2JPp7ki9GEP9xb7pGRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PxEzMLk/; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i5c4dmqj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744649474; x=1776185474;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r7PVrf74ItTR/ep8MImxlxwoMtPvqU/ZtRsdpeTPTaM=;
-  b=i5c4dmqjGvRo6zF7zC4A4k5JgFbpHh01SXDXizWihDsmT0xVxD3lWNbY
-   XAaQ6dpq/h/j2OyUMCAsyRsGBu1umZs0oZ5lqGLu8NmjqhHjo3ps8p0Hg
-   n8bA0FHHogzqxEYlFHazo45kNGOGhVjCW0clvGmqgUzL5x0Xyhac4bRbI
-   AGwRgW+B0WMYCeVnfLdheE3X6SU1iGgQAXZFVfDxuc3VJX0CXkYHSCGnH
-   cxsL1yA1AGW342HGuOAUpDqMh+qa68sbmkOhs1PrshM3cMVKBM/0uxpNi
-   XElONcV8FIAdN4wjiB03XcrRUXR66wbk8acJx3d8KUFID0r+ALR/iW9g+
-   g==;
-X-CSE-ConnectionGUID: 7JoPIDdbSheqOMf9QJ1Xww==
-X-CSE-MsgGUID: Dfw9YLk8Q+ua54mgS420Iw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="49962647"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="49962647"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:51:13 -0700
-X-CSE-ConnectionGUID: 1v/GUOEHQxyzLmh//jTPqA==
-X-CSE-MsgGUID: KUiJp73BTFCOuMTDhnpxNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="133978089"
-Received: from jamart5x-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.223])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:51:11 -0700
-Date: Mon, 14 Apr 2025 09:51:04 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	David Kaplan <david.kaplan@amd.com>, X86 ML <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: Re: [PATCH] x86/bugs: Remove X86_BUG_MMIO_UNKNOWN
-Message-ID: <20250414165104.2ivcicu32vfxk5qv@desk>
-References: <20250414150951.5345-1-bp@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxEzMLk/"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7398d65476eso3616405b3a.1;
+        Mon, 14 Apr 2025 09:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744649478; x=1745254278; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=loEmrCXlDHvkJcHT8n6886+X5mxbYdBpBzNFyNbvBHE=;
+        b=PxEzMLk/HR+//cb6PJ3Sh2zNQJSZSM+WqwWX54qXiuCfE7r9CpjwLwuf9aOkLK7rzO
+         miR4xGGcNUC6M+XLOSIj2BfQbCa35niCJl1SNr8XoAuw5AU5ieIYjQWVFnjkBOIGofqh
+         R9fQACtVpIerlOCwiaVBuEiwA6X32/M6B/sKUjaHNw94s1tvQ82Mo03x0hRGSOYrVflF
+         kn3J+guwEIVruhybcypeenqOW7eH61sddDvai7okwa8Ad3+Isv3Lt68hbGpPSEUUc8ro
+         nFt4rptJQHYP1SvWeL6bsUgjz8i/ucAMuTc2LkeKJUIxRk0Q76SysWZC9j3dNlWywnfj
+         s34g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744649478; x=1745254278;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=loEmrCXlDHvkJcHT8n6886+X5mxbYdBpBzNFyNbvBHE=;
+        b=ju9j/B2hzK6qK6hSEMQExYI4bJoEbxFpWYluVGpM9zUs1+jdwN3hxIF1dDLlTzI88r
+         atV60KGBipb4OcaRT8kgJw+nKm40dnnV0M3d6TX5X9+UQgfgI4lTFGW7/UH0wid8rYxR
+         j0EpXKkjphH6+LVyImtXgEXj15vyRFELjHjdizq49GYHC8rPPkmyohN7F20r6ClzYjIK
+         Br9z5ErH2NkPf3bEturzqSLdFiHCSXiC7x7y1kkTJ4aUxV/ZwZJFz9Vfu1heRO1i7/Vx
+         NQ9zu6jUYkPHQjsLCfvw4yGY0dVs9ksubuefSmkQUqjH2gW6oxbRq7jVDOqiUcppsInl
+         rn2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVWaEoPoqdEyF6qjCjc5k0BQLAoRe3FrSl/cWoceumm7IiTM10rqvvqMBAUYek1OrifEw+LgdPs@vger.kernel.org, AJvYcCWvvtQ+pCusZ3t9z8yJ6CMuApb240t7J5EME+bxswh/as8wcbG9Ye3hfgYFOrStGP0LrD9n8X8REZ9aOfI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXISYpFX89gKnWeov+lmrEYvMN+rAZsw4CuPhaocd04gMJfB6R
+	+uPR5UQSt2LmuzR+ixCQLQiOL+1nYxyww2D5wzvBwcrELzxkvvQ=
+X-Gm-Gg: ASbGncvRc8rJ0i6q3Zq9OTaSAqGzT/xyB7azCBN8Osu+aRLyeM0uG9nikJQBNfyRYiK
+	zs9v1MZnadikwL7hw7rjOlsFK6k6N4RATcFOzhKE3S9Gz9LlgSPDySuejIY4nVFQ/44mt9qj6qg
+	vVISerCd+IdT7qaZQcAr2iZyUaN99Tyh33o/elUS9d4Ks+iZR0ZeaQvH4r4grV8UcGN7zX9RT/P
+	x87ShmYCM0Hr6SZpw1iUOM5xYa6sSfx61JWJtXtjJHrUd6nV3Id5VGyzYBClMMSC+mSxNzBr1Bb
+	eSoh7txesrEDBRjJwKN8mWKJecNjgXh0HT2GfyqIFI/eNNuaDhXzsw93DOwZH0YXCIhe9M0APnm
+	y+ae0EGL0tXrIppGgY63M565XHDQ=
+X-Google-Smtp-Source: AGHT+IFWF+LX4ypZexKPnyQu+tljsinsEoWsXd3Gz59DBlhrO+4E3isX1zqq/GKw1lArNb5tNIva3Q==
+X-Received: by 2002:aa7:8e15:0:b0:732:56a7:a935 with SMTP id d2e1a72fcca58-73c0c9f7219mr198972b3a.12.1744649478227;
+        Mon, 14 Apr 2025 09:51:18 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:115c:1:7c7f:9279:7925:2f16? ([2620:10d:c090:500::6:5817])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c3216sm6832023b3a.49.2025.04.14.09.51.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 09:51:17 -0700 (PDT)
+Message-ID: <a944aa22-5d29-45d1-b93f-79f18551d245@gmail.com>
+Date: Mon, 14 Apr 2025 09:51:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414150951.5345-1-bp@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net: ncsi: Fix GCPS 64-bit member variables
+To: Paul Fertser <fercerpav@gmail.com>,
+ David Laight <david.laight.linux@gmail.com>
+Cc: sam@mendozajonas.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, npeacock@meta.com,
+ akozlov@meta.com, hkalavakunta@meta.com
+References: <20250410012309.1343-1-kalavakunta.hari.prasad@gmail.com>
+ <Z/eiki2mlBiAeBrc@home.paul.comp> <20250412102304.3f74738c@pumpkin>
+ <Z/xAHeYXfFAUpxbR@home.paul.comp>
+Content-Language: en-US
+From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
+In-Reply-To: <Z/xAHeYXfFAUpxbR@home.paul.comp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 05:09:51PM +0200, Borislav Petkov wrote:
-> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+On 4/13/2025 3:52 PM, Paul Fertser wrote:
 > 
-> Whack this thing because:
+> Many thanks for chiming in and correcting my mistake. Hari, sorry for
+> misleading you on the last iteration.
 > 
-> - the "unknown" handling is done only for this vuln and not for the
->   others
-> 
-> - it doesn't do anything besides reporting things differently. It
->   doesn't apply any mitigations - it is simply causing unnecessary
->   complications to the code which don't bring anything besides
->   maintenance overhead to what is already a very nasty spaghetti pile
-> 
-> - all the currently unaffected CPUs can also be in "unknown" status so
->   there's no need for special handling here
-> 
-> so get rid of it.
-> 
-> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Good morning, Paul. I've completed three versions so far, and the test 
+results for v3 are clean. However, I'd like to confirm the next steps to 
+address the incorrect GCPS structure. I believed v3 would be the 
+definitive fix. Could you please provide guidance if that's not the case?
