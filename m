@@ -1,110 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7A5148832;
-	Mon, 14 Apr 2025 06:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A68148832;
+	Mon, 14 Apr 2025 06:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744611640; cv=none; b=Vhxjj20OUWrkJyuMUhH5EcWAKo7IaZys0EfCOCdXc14UefJ2Y5dX8bzDhtIoLxsPgKj5HW6ColkHDiGuqDdnjLNpDMChpinGAYHIq1IhwltLmnJXV6TBiIUCJmOYClxl4q9Yn0wjbMfGRpxQAXg812/WL6ZR8i6BMLzEY3RSC+Q=
+	t=1744611649; cv=none; b=Gw2yKMqYDq9lhL6JDJ7S2jt562KHxxXiLaVvWVVrbf8scS4gTk4Fb6QfPjuOtfZ8xW1BMxpLuqtRrzREELxMbnWsA9yCIFB1poSIB54LzB04rVe5Su5X5lFxCgpKsoK4DnYX1Efp+T7V/9du5im7wnMU35AfPLORVQkRMVWpsyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744611640; c=relaxed/simple;
-	bh=C4PKF284bm3UK2WkXwxqL/tl8w290NK+P9saOflVdu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AFYQDGs7xSDx7h7A/Je0BPWyU3w6mgJHsrsL7x4wz0vSD0DK3be0L0vpFmXrepJIM4SS3w2np2vwnHDDQbhrYnSm43IDgt51bsV3IHNsggYi3Ki7+70ffR/meuX9TigMhuPNEJNJQc0Mhap/2KUEUthBvLgkK19T4m7aRLow5kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ftsJRx/T; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ftsJRx/T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744611640; x=1776147640;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C4PKF284bm3UK2WkXwxqL/tl8w290NK+P9saOflVdu0=;
-  b=ftsJRx/TNF+lSRj0VBx5yY0HkSca+aF1id/D9ddbulPC4CSMn14uUcHL
-   5l1DHWSTPpf80Yu5wHPJvIvtKoPAm62F79p28ROUIaggaMUSTEAcyX9/e
-   d0wsWPo+urx8RhVDO+WWQ383JZwpFYrwLyKAbKbZM40JXGHLZ1yBOl4ft
-   qaShnd1S2e7V+3XbUXdC899aEHuMrf0fHCFTQpXgRgwNQeBptUk/6ooni
-   ADei+tQK/FbGn25MLJnI3RbDico/QRjKfrAUKdp1QlhMgSw9SxLkuOGMg
-   jLa+wqci37PmvwVHZsOZ794xu1zJdQp/Vs+LEvQhhzCR4yeta7r5h0MCI
-   Q==;
-X-CSE-ConnectionGUID: Yr6PNfBoSh2+6N56+50TDg==
-X-CSE-MsgGUID: xQj6W90gQmiwnvSupsxgsg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46155621"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="46155621"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:20:39 -0700
-X-CSE-ConnectionGUID: hHu137UcT1i8XbcVzQpbXw==
-X-CSE-MsgGUID: kx8RNqZlTn+fi23yg60x/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129693328"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:20:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4DBG-0000000C9Ex-2w5y;
-	Mon, 14 Apr 2025 09:20:30 +0300
-Date: Mon, 14 Apr 2025 09:20:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lizhi Xu <lizhi.xu@windriver.com>, Dmitry Vyukov <dvyukov@google.com>
-Cc: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com, dakr@kernel.org,
-	djrscally@gmail.com, gregkh@linuxfoundation.org,
-	heikki.krogerus@linux.intel.com, jgg@nvidia.com,
-	kevin.tian@intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
-	rafael@kernel.org, sakari.ailus@linux.intel.com,
-	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
-Subject: Re: [PATCH] software node: Prevent link creation failure from
- causing kobj reference count imbalance
-Message-ID: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
-References: <67f26778.050a0220.0a13.0265.GAE@google.com>
- <20250411004203.2932899-1-lizhi.xu@windriver.com>
+	s=arc-20240116; t=1744611649; c=relaxed/simple;
+	bh=ILfg5pyctVPHtkSPD5Gd/QGaqHzm5kjfCvQdn9D5FAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lNC+big/UG3mVqCtO9vhFGpkYV0uxjz4RdJVUlvzrq+MyUF8JVlw80daE23wOcgdfObfIBQ8cXlOd8s1ycH9LPrvuXvwzTkBGHwdmVyo6ni07LfIe+zeSOG9NjtoLVlZcZnVOyjkeZkpN+8QbKuGbeI1MyWGkzIkWcfLXZ+TB7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowABnpQ03qfxnkijlCA--.684S2;
+	Mon, 14 Apr 2025 14:20:41 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] media: dst_ca: Add error handling for dst_comm_init()
+Date: Mon, 14 Apr 2025 14:20:11 +0800
+Message-ID: <20250414062012.2026-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411004203.2932899-1-lizhi.xu@windriver.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABnpQ03qfxnkijlCA--.684S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7GryUJrykJF4kZr43GrWrGrg_yoW8Jr4Dpa
+	yqy39IkF98Jw4UX3srA348uFy5GanYka43Ka4Skw13Z3Z8JFsFvr4jq342gr4jgrW7Zay3
+	JF15WryUG3WkCw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUUbAw7UUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwMA2f8nCQemQABsg
 
-On Fri, Apr 11, 2025 at 08:42:02AM +0800, Lizhi Xu wrote:
-> syzbot reported a uaf in software_node_notify_remove. [1]
-> 
-> When any of the two sysfs_create_link() in software_node_notify() fails,
-> the swnode->kobj reference count will not increase normally, which will
-> cause swnode to be released incorrectly due to the imbalance of kobj reference
-> count when executing software_node_notify_remove().
-> 
-> Increase the reference count of kobj before creating the link to avoid uaf.
-> 
-> [1]
+The function dst_ci_command() calls the function dst_comm_init()
+but does not handle the error if the init fails. A proper implementation
+can be found in dst_command() in /source/drivers/media/pci/bt8xx/dst.c.
 
-Please, reduce this to ~5-7 lines only. This is how Submitting Patches document
-recommends to put backtraces in the commit messages:
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
+Add error handling to the dst_comm_init(). Print an error message via
+dprintk(), and jump to the 'error' label if the function fails.
 
-> Fixes: 9eb59204d519 ("iommufd/selftest: Add set_dev_pasid in mock iommu")
-> Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
+Fixes: 50b215a05878 ("[PATCH] dvb: DST: reorganize Twinhan DST driver to support CI")
+Cc: stable@vger.kernel.org # v2.6+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/media/pci/bt8xx/dst_ca.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> Tested-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
-
-Where is the positive result of it? I can't find the respective log.
-To me this one
-https://syzkaller.appspot.com/x/report.txt?x=158af070580000
-doesn't sound as a useful report as I don't know if this patch fixes one
-regression and introduced another.
-
-Dmitry?
-
+diff --git a/drivers/media/pci/bt8xx/dst_ca.c b/drivers/media/pci/bt8xx/dst_ca.c
+index a9cc6e7a57f9..a743f7653fdd 100644
+--- a/drivers/media/pci/bt8xx/dst_ca.c
++++ b/drivers/media/pci/bt8xx/dst_ca.c
+@@ -66,7 +66,10 @@ static int dst_ci_command(struct dst_state* state, u8 * data, u8 *ca_string, u8
+ 	u8 reply;
+ 
+ 	mutex_lock(&state->dst_mutex);
+-	dst_comm_init(state);
++	if (dst_comm_init(state) < 0) {
++		dprintk(verbose, DST_CA_ERROR, 1, "DST initialization failed.");
++		goto error;
++	}
+ 	msleep(65);
+ 
+ 	if (write_dst(state, data, len)) {
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.42.0.windows.2
 
