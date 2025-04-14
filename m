@@ -1,239 +1,219 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2073.outbound.protection.outlook.com [40.107.101.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A79F283698
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628823; cv=fail; b=pFzwhQ1IlkHv4tNouluIrj3hESE8xiHH7jEyjPwgc4L4C/rh6LK+y+L91mb2Vr1NLnIheh7ZHsOTUyrnlIb7AiN6OJSb3VZH1itPYTjsQOUA6/oEQganDrF7ZZHpHvohqowkuUExdqTQGK+LZ7kCiUs+g8H9Bbpr6ASMKvapEIg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628823; c=relaxed/simple;
-	bh=U9fkisTtrrjmdZfA5ysML+AzkGIws/bd5Rr+irTv8Oc=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uyUSTlyelHfIsqXZ7CqoWFdeoNzMxGz1YPDm2FM2ZOjLZBnoxULQuV+eemgjU2bdk6yMdw+19EiH0SLUGxnxo0SSnKCgmi8j+AdZXcR84WsGl5ONOnrTyG3wI/zeo3v8jrbH5gmxx5UElkYyGGV4qf1+R366NbhnlcucwwpL+lA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=txj1Re4v; arc=fail smtp.client-ip=40.107.101.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="txj1Re4v"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H1BRUS0UMBGCM6ZKa+hdIYN0B00kwwuhFH4gGG3HFs0XUWoNn9k1O6OW2TAyrnWvOau/kKerTG6rbrUAdbb+Wlrl2DY1dngHs6/D9HxPRR49sXZJXCaiHBpWHDMF3B/oYDvZWQOZB6CBZ+egrLJ35jogup9GgrG0QVKQXmIjOxVP1ehTXdgWBOJtlXpWU7x9sEn+DH2PWU0RNgp5QbrJzS2oi0bVqVAlav3xXrjt0vQeJRf6k9+tvkcvdjfiO+jMaLN8VZym6UftT1n6N11rzSH3TlZ3F4U+/hMUPKTOm/5GP5CoGnge8aGkVA4LhLFa1jgqhN7heHEBIdHpDJ4FGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5zgxiHs9xR5vvhSqx8e6oxDnFQByaO025APBcIKCYic=;
- b=aEcFTiOkbtWCNaULXi8EPsL2nsNroxcVdHGFF/9Hll4j9rW4QILxSqkNg42cMtFMoKL78tcwIxXcWJtzZOnQ/xCPZO9WfOgACgawyfcCniFWMWPsXTjv/U8URDyjs9LsnfIAJTt8xkjnTlMiQJ+gV49O/t3M4qcm4naWP6mWS4NGwLVX7HZd2G7xsSjDaHh2gYDnkpMHLo9yFo40IGXa8J98R0uHT1mrVwsjlA6lfS0ZQIDg6s6dBazTN721IwhinRx6J0Snj9SS1FdFP54EVZCV+cWkbDydAjzac/n8Za1vifJVHx90UhubOT7q8t2pu/Jyan6HhcweZ2HCHMsl+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5zgxiHs9xR5vvhSqx8e6oxDnFQByaO025APBcIKCYic=;
- b=txj1Re4vnWy0tLjTiFD5tZ2zPwml+jeGA0U6dplLg1Q6pvn6IWT6LfEAV1XcGS9O8+MqbUVxXAfIRFajwC4tp+oxxLCZEkytd1CL4fzgbulSAN65OGioaiXMJu3JvIKJcUnrSyqSt3kOrsGWTJS3auhqppWY6FXl13nfFg7XZCfHsfkWQ5QNFac5g5KohCbAKT7W6bD6+m8SOFRQ47OIcx+KbW6x1r3hG2FwCyOEf8aIIDoFDe9KQuesPr06kn5FBbi+E6gOrS8Lx1KBx7RJdIVQBQYN961zUVvo6VRxN8JtnQt0xttlMt38GokgckR98c5x/PJ0j1vab4Ac5dgdIQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
- by CY8PR12MB7413.namprd12.prod.outlook.com (2603:10b6:930:5f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Mon, 14 Apr
- 2025 11:06:56 +0000
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::3a4:70ea:ff05:1251]) by PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::3a4:70ea:ff05:1251%6]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 11:06:56 +0000
-From: Balbir Singh <balbirs@nvidia.com>
-To: iommu@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	Balbir Singh <balbirs@nvidia.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Bert Karwatzki <spasswolf@web.de>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH] dma/mapping.c: dev_dbg support for dma_addressing_limited
-Date: Mon, 14 Apr 2025 21:06:46 +1000
-Message-ID: <20250414110647.3294017-1-balbirs@nvidia.com>
-X-Mailer: git-send-email 2.49.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR13CA0005.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::10) To PH8PR12MB7277.namprd12.prod.outlook.com
- (2603:10b6:510:223::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4658B280A3E
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744628847; cv=none; b=UYDSpJUXxBfCSZq+rNPLzBmXyZfMAHQaNv8V5TAqhhgJuDH6Q/HU+XRxSzUrFF6a3+b3GqhuMKzV6P+h1w17pKgqOoWGfVc9HY1BIqpejlq2p7CuhG2SDGTCyHh4nNw4BO+MPKJgUt4rXek53pWuk6gAjHj85FS0n1WQcL3uEKM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744628847; c=relaxed/simple;
+	bh=G7TF4q7dZRaiEscsGkoiTtlH96Gu3YAx3lP58fif8+Q=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Qiro6WascZoeyd5UAoFFxy09Xmmz4ZUZnqgYkUMGYmy0xXAowhEt1C52PVmgdLkin8WrsoGopaCqpD7Oge57mq0iIp41NV4u1aweP4xBNoeW5FYWIX67Wv4ZEFUA2p4q7lQPZziAjLKqmuP9uuBsLCsyYxj8WdgWHBNZz7rgNxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e6b977ef2so470372039f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:07:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744628844; x=1745233644;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rcf+ERrLGDY27q9rz4Z2xEgCWwkHIxm/gM/aEPEcN6c=;
+        b=COK9JeC+uhwySw1XqHZ4J6cf4nHZ/04b8fj6xVhN0hedPTeDb6Boogjob7Juwm6vPc
+         YjDFaaJ/ZhDzVWBFWsEaKjbgw+Dlb9Efk6zsCa9ZbYT4TCqi/sRSYMBWiZc/5JF/VD5F
+         i7gDKrnu7KGRoflLXndhqzX6VsmR4s1aqMqooP5FG1N9Rcx4JWSpVjNE3z0pxEtadzBv
+         kLRRqVpIPdjmq/ahOjdaIJ2av1/ELTjkeq3ZlvGlOLCweANWjDHPelsa0LV40Z71yd/2
+         Mjs3ppDqdgeUwXLVgmWA/4c/uZsWlaLGyaIMOBQajk7hlSegZGEsP3bcHzCLpKIB2mlf
+         h+5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWrZH2SBilS684A5ioR5mP1HpFwQBUp4oHMwXjk0ftPlmypypk8wCjrbdvvOH+rB5AUocRjZjxWFfMBtFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLrDDped7erYGtN+DgT5oYqbtv0DtZUS2QDjBHKAPx+3nQ9szb
+	fWj0vjiz3DlvL5QOtEup0lrr9PdJImI4otRuZUfumMEZQ36nUq9s5AJx2wnH2LaLKjwwADG0SSp
+	o8u083U5VKTOwRq38PhmAB97vBB1UVhxbdu/SRRntei14NbcFTFg//3Q=
+X-Google-Smtp-Source: AGHT+IEoZWsHnF8N1MfzQODaqss8ETR3MjQbePJOcN0Rc70Cbyx6GhWc9RfLq9oiv3uSbJr1tJehq9R8t05J8xyyxjHb6XzNhb4Q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|CY8PR12MB7413:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46337563-9c90-4f21-502d-08dd7b447833
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cHJwY3NDOWthZTM5VUlXNWIyYTNhRVlWNWRLaW9lQjBLMTBEUDlIWU1MV1Rq?=
- =?utf-8?B?emx1TGU2N0ViNEpNUjZ0NDhldXR0UmV3N2pEYy9YTG40ZUN5QmsrODNJT0Jn?=
- =?utf-8?B?bUFUdE5mZXZlSUtJNUhOQm84K2Fuc1BOblNINUpSNFpVNFIwcHhacTdJZmdW?=
- =?utf-8?B?MmFsV2NOejU4aTdFZXRuTGNkUEZWQUZka1RScDVLN2ZnVXplUE1mdVdObXdG?=
- =?utf-8?B?TldVVGE0SW9OTERNeWYzRUlXZTlKbnRzV3VGT2RPUzdQcjk4YWpmbTBHcTNs?=
- =?utf-8?B?UUhqZ1hYeVpPL0JmSi9kaVN1bnB3N2NrNlN5bWNsaytXalpWYlJhSVI4aXN0?=
- =?utf-8?B?amJxQ0trdnh3RVd6SVZIa1FzZ09kR201RmVZMlpMZjNsVldLRG4zRU1FbXlG?=
- =?utf-8?B?M2MvVFRJbWxLdWp6R1Fqa0w5Q0Fqd0Jhdmxnem9RYkt2M2EyU0kvbU5wa09j?=
- =?utf-8?B?SUN2Q3ppZmxCSEttbWpaeU5nQndENVAxTStoQmEramVCM1NUL2pwWnFBbHdr?=
- =?utf-8?B?Nm9rY1Y2Y0NIOHE0c2ZkTGJ4UGZiNi9idUFabUVDTGFYRWcvMUZQcGcvYjRI?=
- =?utf-8?B?ZU15enRveXhBWGRnUTVvd0hEVlVYR3NJT3FYbjBxZVVwUjNlYXExKzYrMjlP?=
- =?utf-8?B?Q0gvNFlnbVNDaWJsbHdFR2ExcG5QbUpEeTNaZ3ZNaWwvdXM4RGFjZEJDeFcy?=
- =?utf-8?B?SUhjcVl2WVJJd3lucjV6U2c2UjNLa1BBTVMwTlhnajFDcHFBZ2FzQUJSenpK?=
- =?utf-8?B?YXZSQktoVnBEaHdiRHhES2o4OTVycVM4c2ZLY3hJZGpmNk5lZ214L3o3Q0kv?=
- =?utf-8?B?Z012cTBQL1lVd3VNYzFxODN6c0EzdEdmMVhGbjE3NjJoa2x0LzBpZVA5dmpX?=
- =?utf-8?B?cmJvUE81ZW84OWVaamhoSGlDWGwwUWQwRENYTkdwa0hmTEJvQ1BMSUJwckt3?=
- =?utf-8?B?b2crZEFLVndsTXRBd3YxaXk1aFlCN0FINXB2ZGovRmlpR3QwQnRSYkxTMUhn?=
- =?utf-8?B?UlJIK0grWmwvZStWWW1UMXlOdlJpY0s4c2JDb0ZES25jam01WWU4eDU3dnha?=
- =?utf-8?B?UXIrVEFhY0w1ejc3dnVWWVZWSjlJSkdEL3puWmNrTFZxbUVVSk4zNzlyWTdp?=
- =?utf-8?B?cWxWdVFRcGN0dDE0TGZCYlUrc01BRGUwRUVrcHFJNzl6U01wVW9nWnlKS2lG?=
- =?utf-8?B?MVJTVzBYcXowV3VvWXcrYUFTNXpVcjFLWDdHanl4R2JyazIzeHhQcXk1QWND?=
- =?utf-8?B?MHJnb3pjK0puT0RHZGNTc1dDYytRaFVUWW5oUm1kMjZueHNNUVNZY0VpNHk2?=
- =?utf-8?B?V2hvUSt3OGgvTSt3KzZyL2tPdnkxb1FiVW9ZUHMyUTFTYXNrQlBsVHVvaFJK?=
- =?utf-8?B?cFlPMEM1Nm8zY0VsNEMzQ0hsSERDekh2QXZHYTE0Yitqa2U1WXNCeCtoUnlw?=
- =?utf-8?B?S1JlVVBxZUVYcW9LUnU2eEtZMkRlSUVpSTFBTzJtTlp0UFNrM2tnL3NJUDJH?=
- =?utf-8?B?QlRkVEJEdUN2cEZab1FQdnQ3SUhBRVZpY2l1aTRRMzlqUzh4dTRweDFzV2ZY?=
- =?utf-8?B?emNDSE9oTFBFc0txelB1MkVuaW5jckpXNVNuSFdVRmFsOGkrUFo0L29wYlNI?=
- =?utf-8?B?QkQwNE5lWFRoZ2FBa0lBMERsWXVybmhGRVpwTWRoYjdTUWhVN1BPRzJUeUJK?=
- =?utf-8?B?a1JaUHFjbFRxUk1BZzFLNzRNZlZ0aGY4UDdrNk03ZG1ZU0Q2L2s1aTNKMjVE?=
- =?utf-8?B?SEp0TjNYMlNPSHdkcHVmeDZVT1VoOUNmSVc0cDREYjRiNmhRcXorc1hRQ3U4?=
- =?utf-8?B?a2FrNWVkQS9LQTVNeDVqN2UvUHNXRW54aXdVUlM5QzBMVnErY3pIWTgwR21F?=
- =?utf-8?B?R1BYMWtUV05FcGEwOXZkZ0VXaGFDRjZkZTlaZnFQZmJaZ1ZLRk4yendGL1k2?=
- =?utf-8?Q?EEISPcjCSME=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bUxSK1Zxa3pWbDJ6U3J6cHNtaXlia0laTVNvTDhrSmtkZDZMenJrb0RqNzZN?=
- =?utf-8?B?QXJJdUlhYzBNS3JyMlZ2ZzgwOGdjZ2NGNzZYakgwYWZGbHg4RGw2bFJWQldL?=
- =?utf-8?B?OG5tQjBLaW5ubjVQT0Vlb2ZpU2dnMzN0M05QU1NXdVhSL1VMTzVZaldSQTJj?=
- =?utf-8?B?OEdHWG9rMXpsYWpHejU0Uy9iSitES1VvWDJEdGV5akx5V2ZlQ25CVlNPU21y?=
- =?utf-8?B?U1NOMlM0TnhCbjdENkk3NzRtY01mUlp5eGRXV3NZOVBSbDNkM1BqUmtwdVRM?=
- =?utf-8?B?REdxL0FkbHl2QkpYSVluU1dzZUJ5T1V2ZStwUFlSSmVJMG9TeitjdjNJK2J2?=
- =?utf-8?B?OTNUS2k3WFZwWEsvS2VTSzloRklYUDBhbW1zKzBPdjB6OGNkZElkMzkyMThl?=
- =?utf-8?B?K2hhVDhuNWNUNkI4R1M2cVo4OGQySUxmRitsbHNweU9HbUQxanFTZk82QnFY?=
- =?utf-8?B?S3VpNFJERFJpc2loZWNhOURIUVAwazczNTRqNENyTk5CVXBYNWtPNC8rSWFC?=
- =?utf-8?B?VmZ4Z3JXQjRwTmhYQ2VVRGczdzRxTTc4eWFhSTBWcTU0dDg5blRxcWdmdlA3?=
- =?utf-8?B?OTVIbFFPeXJCL0ZoS3FZWkJYSWhYOTZ4bjY2U3Y4SEtzNXVmWEFCd2J3UzZi?=
- =?utf-8?B?cGhrVUZaWlhxaG5Da0tHeFVTcjRLbktaM28vOWJUSlFRVXRiMFhCbWdmYmZh?=
- =?utf-8?B?dGQyR3VWSzJEY2ZYVkFVWDZxOFhxbEZKTlkrM09HZmg5RW9aVmZGR0VYcmkv?=
- =?utf-8?B?a1p6bmtWbnNYdkpBNTJUUWZzZUMwZWRCZzdoMXhqdlp1K1F6QzRlR1hKYXow?=
- =?utf-8?B?U0lOSm9TQnlhalRoc25jd0hwWWhudjRkOGdqUmZkZFliZkZBUldEY01hdFJ5?=
- =?utf-8?B?NXdvckp2bW80bnIrVnMrN2E0a3BFeS8rd1hQVHJqS1V4TlMvR280TlNzQTRy?=
- =?utf-8?B?dFBwampNWEE0NC9hL2RwTVdNdnlaZ3pYU3pjWFVWcWorY0x0dXYzQ3FDTExU?=
- =?utf-8?B?Z1dBT0pla2JnTTBDMFgza3hwa05jb0E2V0RPaEp0eHJwY0NIVFhXNUptbVZY?=
- =?utf-8?B?QWtnMEhuUWcxR3JiczZVQUpLOWtRK1dpOFkzZXVDMzBzOW1lTDhxZmc5WGJD?=
- =?utf-8?B?Z0dtNGVINUdvcEFqejBGZ1Fwa1UwYWI3STNub253d1NzdHBRd3BqZGJnUFM0?=
- =?utf-8?B?V3o2d0w0TEtVQlYwYzNxYUk3MklkcVJnYXExYmdSTnQxMENTbDI0T3E4UkJ6?=
- =?utf-8?B?ZWhlTWtNNnB3cHpmc21MVzZ6Z2tNRU92cUZiOUROZGNUOGhxemo3aGJqTFow?=
- =?utf-8?B?OUZsaTI4ZlFkaHNDVWNZd1Q3TFVWWWIyTzN2eFN5RVhmU2U0NC9OYklEZVZQ?=
- =?utf-8?B?clpGSG9ZVmtud280Tmd3QXMyUHcybThZVmNkcVBGM3NWRyt5R1dsMWJyZHpx?=
- =?utf-8?B?aVdXKzVHU1NTMExuSE1XOWtDR29iem5IY1QwWjl1MmN5eDlkR2crZGsvZ1pD?=
- =?utf-8?B?V3NaREV3MktNK1VGTS8xdGZPdEhIR1B5ekpqa09GTVNwWERGZ3l1aElQOWNy?=
- =?utf-8?B?bjJJb3I2ZEJaMzF3TEFST2FrN1NBeklnUlYwU3dMc0lIWkdFMnlzRllnbmp6?=
- =?utf-8?B?aHpwNHdtYzRsNUlRYmF4d2pibkNsNThWVkRkWVp6TGZZbkpPN2oyU0NLUEFQ?=
- =?utf-8?B?NHJxLzFIdWFkTnFLQi9RVVRLUEgzMk9NN2xIVzl4MEF2NksvRlk5R09DWjV6?=
- =?utf-8?B?SG5qaXUrYVJCKzk5ODRDTm5zMlBJQmtwMW94TkE5RnVlOTBHbG1hY3dPQW9v?=
- =?utf-8?B?UWIrK1Vmc2FHano1SWR5YnpMTm9XdXo4alRFenV1b1cxUlVZSk5zM0NjUXJw?=
- =?utf-8?B?TUF5QXpRRTlKWlVxdU9Bc0VpbjlUcnFIVE9SVXFOcGZUUVloR3UxTDRsOWxa?=
- =?utf-8?B?U1pkdmh4TWJJdFNPWVJUMURnSk4xNnZDZklrSEVGcHlORm1NdEJtU3RRZVB2?=
- =?utf-8?B?TWxiTEVEK25LWmczTHFENHBJV0NvdWIrQnFxNFc0Sm9oSmJ2Q1dFcUV6bkwr?=
- =?utf-8?B?MjNvS3dFK1QxT2hETFFPOW8yc1FhRGxRdGhWZGpScnZ5TXlaLzg5eGpkT1Ji?=
- =?utf-8?Q?cX3y3Sw75UxyR1OQ9ueEZ8tTb?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46337563-9c90-4f21-502d-08dd7b447833
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 11:06:56.3391
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KgoyADx32fAyQaSosgb2EJellwXUXlpdq0Hfj9hsMdzcwRz02y6y2Y9xFRB+eI1Dwc34Z2V4zV3umOGmCB5ixQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7413
+X-Received: by 2002:a05:6e02:1888:b0:3d4:244b:db20 with SMTP id
+ e9e14a558f8ab-3d7ec265c11mr109601905ab.16.1744628844017; Mon, 14 Apr 2025
+ 04:07:24 -0700 (PDT)
+Date: Mon, 14 Apr 2025 04:07:23 -0700
+In-Reply-To: <67f097e0.050a0220.0a13.022a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fcec6b.050a0220.3483fc.0027.GAE@google.com>
+Subject: Re: [syzbot] [block?] possible deadlock in queue_wb_lat_store
+From: syzbot <syzbot+5a9d5d7faa80fa15e3db@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-In the debug and resolution of an issue involving forced use of bounce
-buffers, 7170130e4c72 ("x86/mm/init: Handle the special case of device
-private pages in add_pages(), to not increase max_pfn and trigger
-dma_addressing_limited() bounce buffers"). It would have been easier
-to debug the issue if dma_addressing_limited() had debug information
-about the device not being able to address all of memory and thus forcing
-all accesses through a bounce buffer. Please see[2]
+syzbot has found a reproducer for the following issue on:
 
-Implement dev_dbg to debug the potential use of bounce buffers
-when we hit the condition. When swiotlb is used,
-dma_addressing_limited() is used to determine the size of maximum dma
-buffer size in dma_direct_max_mapping_size(). The debug prints could be
-triggered in that check as well (when enabled).
+HEAD commit:    8ffd015db85f Linux 6.15-rc2
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a66a3f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ae323da55fbd6522
+dashboard link: https://syzkaller.appspot.com/bug?extid=5a9d5d7faa80fa15e3db
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13ecdf4c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123420cc580000
 
-Link: https://lore.kernel.org/lkml/20250401000752.249348-1-balbirs@nvidia.com/ [1]
-Link: https://lore.kernel.org/lkml/20250310112206.4168-1-spasswolf@web.de/ [2]
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b7a7f5609ad8/disk-8ffd015d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c8cb2488367a/vmlinux-8ffd015d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c99e36835459/bzImage-8ffd015d.xz
 
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Bert Karwatzki <spasswolf@web.de>
-Cc: Christoph Hellwig <hch@infradead.org>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5a9d5d7faa80fa15e3db@syzkaller.appspotmail.com
 
-Signed-off-by: Balbir Singh <balbirs@nvidia.com>
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-rc2-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor134/5835 is trying to acquire lock:
+ffff8880260c0f98 (&q->elevator_lock){+.+.}-{4:4}, at: queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+
+but task is already holding lock:
+ffff8880260c0a68 (&q->q_usage_counter(io)#62){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&q->q_usage_counter(io)#62){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4348
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4395
+       nbd_dev_add+0x49d/0xbb0 drivers/block/nbd.c:1933
+       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #1 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:4028 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4042
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       slab_pre_alloc_hook mm/slub.c:4102 [inline]
+       slab_alloc_node mm/slub.c:4180 [inline]
+       kmem_cache_alloc_noprof+0x53/0x3b0 mm/slub.c:4207
+       __kernfs_new_node+0xd2/0x8a0 fs/kernfs/dir.c:637
+       kernfs_new_node+0x13c/0x1e0 fs/kernfs/dir.c:713
+       kernfs_create_dir_ns+0x4c/0x1a0 fs/kernfs/dir.c:1081
+       sysfs_create_dir_ns+0x13a/0x2b0 fs/sysfs/dir.c:59
+       create_dir lib/kobject.c:73 [inline]
+       kobject_add_internal+0x2c4/0x9b0 lib/kobject.c:240
+       kobject_add_varg lib/kobject.c:374 [inline]
+       kobject_add+0x16e/0x240 lib/kobject.c:426
+       elv_register_queue+0xd3/0x2a0 block/elevator.c:462
+       blk_register_queue+0x37e/0x500 block/blk-sysfs.c:874
+       add_disk_fwnode+0x911/0x13a0 block/genhd.c:505
+       add_disk include/linux/blkdev.h:779 [inline]
+       nbd_dev_add+0x78e/0xbb0 drivers/block/nbd.c:1963
+       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (&q->elevator_lock){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain kernel/locking/lockdep.c:3909 [inline]
+       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+       lock_acquire kernel/locking/lockdep.c:5866 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
+       queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+       queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
+       sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
+       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+       new_sync_write fs/read_write.c:591 [inline]
+       vfs_write+0x5ba/0x1180 fs/read_write.c:684
+       ksys_write+0x12a/0x240 fs/read_write.c:736
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)#62
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->q_usage_counter(io)#62);
+                               lock(fs_reclaim);
+                               lock(&q->q_usage_counter(io)#62);
+  lock(&q->elevator_lock);
+
+ *** DEADLOCK ***
+
+6 locks held by syz-executor134/5835:
+ #0: ffff88802ae609b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1213
+ #1: ffff888024454420 (sb_writers#7){.+.+}-{0:0}, at: ksys_write+0x12a/0x240 fs/read_write.c:736
+ #2: ffff888033450088 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
+ #3: ffff888140fb55a8 (kn->active#47){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2b2/0x510 fs/kernfs/file.c:326
+ #4: ffff8880260c0a68 (&q->q_usage_counter(io)#62){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+ #5: ffff8880260c0aa0 (&q->q_usage_counter(queue)#14){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 5835 Comm: syz-executor134 Not tainted 6.15.0-rc2-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain kernel/locking/lockdep.c:3909 [inline]
+ __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+ __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
+ queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+ queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
+ sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
+ kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x5ba/0x1180 fs/read_write.c:684
+ ksys_write+0x12a/0x240 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f217454ee39
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f21744e8218 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f21745d8318 RCX: 00007f217454ee39
+RDX: 00000000fffffdef RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f21745d8310 R08: 00007ffee7802e27 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f21745a6004
+R13: 0000200000000150 R14: 0000200000000140 R15: 00000000fffffdef
+ </TASK>
+
+
 ---
-Changelog v2:
-- Convert WARN_ONCE to dev_dbg
-
-Testing:
-- Limited testing on a VM, could not trigger the debug message on the machine
-
- kernel/dma/mapping.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index cda127027e48..eea14302fa20 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -918,7 +918,7 @@ EXPORT_SYMBOL(dma_set_coherent_mask);
-  * the system, else %false.  Lack of addressing bits is the prime reason for
-  * bounce buffering, but might not be the only one.
-  */
--bool dma_addressing_limited(struct device *dev)
-+static bool __dma_addressing_limited(struct device *dev)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
- 
-@@ -930,6 +930,15 @@ bool dma_addressing_limited(struct device *dev)
- 		return false;
- 	return !dma_direct_all_ram_mapped(dev);
- }
-+
-+bool dma_addressing_limited(struct device *dev)
-+{
-+	if (!__dma_addressing_limited(dev))
-+		return false;
-+
-+	dev_dbg(dev, "might have lower perf due to bounce buffering\n");
-+	return true;
-+}
- EXPORT_SYMBOL_GPL(dma_addressing_limited);
- 
- size_t dma_max_mapping_size(struct device *dev)
--- 
-2.49.0
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
