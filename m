@@ -1,51 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6C91E1DE9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E24E1FF1C4
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667691; cv=none; b=HWqAj9d27goiU3PyhfDi29FtTtf5W9atjTC46/arsR7ScbrGE12EFbi7SNjLb12d3I1gj/ecMc88ODQRlIgV+iuJiTuhfrp+KUn+9GgEwBJdc17ki99pE4BVQi5+QIf9o3VeptXCoPuzEM8JA9VzFgFznsrUDWLkKF7B2JCfIYg=
+	t=1744667696; cv=none; b=B08XumJwLK4jpUw55Ma/CllOhAJQnh9l+5HgONZGnS3SCKtC4oa0yfpRjFoqP+zzI012sdFoXaLEU31FxAhVHIQ1nC2nB1P4dHU1dxZg3c0EZ58hhEgOoQ3LxmhY2rLFaV5kvUixoNF5GQ9Sxd3prylcOqlczZxW9NB5hyynTBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667691; c=relaxed/simple;
-	bh=NluaHN8vbYIuMdi0zkqQlt2XTjZ3T+6WKKvBru1qg9Y=;
+	s=arc-20240116; t=1744667696; c=relaxed/simple;
+	bh=iMtSB9xocvWbwKfSUfynwLjJ1rn1FdgcQTu2ScaEku8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cXPclSZ57b5DTnda/3Lf4cpZPSqCKQ8gxlzDToHeaQLxP2UvwipVCkb9rns74Gcqd129nVwAEunFMn9Af2+AVFHtsWryTd0RyJBtF8UUIIDaWL2u1/J8almOA+HmBK5+TdW8A8fIwDIJ//Hjj5pvgYfsKUNXxzZHyFxRQyuRECE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ittsr6Wd; arc=none smtp.client-ip=192.198.163.7
+	 In-Reply-To:To:Cc; b=cAl6Eqz6S1ayJ3epkuNC7jESWxSxNyUPD0y3TNN/f2ZbskqbeAycJmjRTHoQXzFmPbEI/HU3K5oOp5cuT2vdOmAfl97hNFyn2eHJRA6ww6xlLn21mSu3Nx7JpwzMLkZv6Tlrcy/TKTR6dqXrZn4Jqjq+rzFOVslVcpxWtS4eRFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSVsw3VA; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ittsr6Wd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSVsw3VA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744667689; x=1776203689;
+  t=1744667694; x=1776203694;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=NluaHN8vbYIuMdi0zkqQlt2XTjZ3T+6WKKvBru1qg9Y=;
-  b=ittsr6Wd1oQj3/Bb2WJ+ZbC6udt9JlZqa19WIu5Jczq+hHybPPjMdXj3
-   YfqRLw2lAEojV55Q9ldTdqRaSb7s1MVGqYnvvKPmkrvMrKC2UDlAXUePb
-   DwZiCuxp4tcl/7Jn/qJPIkuAId6a5uGdkYHai6mwy0ep0grs2EQ+lRRRb
-   P90NpgF3tYbq2TQZ/v47mHRgvzkm+048BGFdhu8igfBNj+Ya72aSJK1Jb
-   dvrwZ1BCs9WX80JOfNw3FyZuPw00XkF6FRc10pOb1TxlE4jNrAS1oz5Y6
-   Wubwp7U5aGHzt9aNyrotM/AkJN5GdcgIvrIh//cQEWCbzKRdHpm1Dhuec
-   w==;
-X-CSE-ConnectionGUID: wjizbXDVSsGxloULwo79CQ==
-X-CSE-MsgGUID: 4G8PZTVQSkimn0sk76wO9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="71544345"
+  bh=iMtSB9xocvWbwKfSUfynwLjJ1rn1FdgcQTu2ScaEku8=;
+  b=PSVsw3VAYuqUAGm7sSBBKSPA1B6rq50fYx2z1zhN+kMiRDLKh+b5zTD/
+   idRGfYX5eECkDq+evorNRrRzf+6BO7RijfTeCQoazRy2z7aUNrshS5Y93
+   sdt6L4eMwh6mZnVJeMMKe1DPvSlxLEPu/f8g67gF9Ceez2HMrnC+FoEGK
+   nTiYuecoceGDlBvqa3C1vkJJp3vJf/HSYZ4hAye9riOCJ9cshbYsNNL5C
+   Nl1fiy4sITQwBuXVaMKq8uTeD3Ijzn8iFjjzpXYPFq7UYK1oUVrXiGldV
+   syAYTcKhPJ0e19uSXY76frk7rjblrdJUSuzmDgL6KlLAEKt/G5jj/WFn7
+   g==;
+X-CSE-ConnectionGUID: ngFtlmoPTjGO/g/9IbGb6w==
+X-CSE-MsgGUID: YH84lXB2RZCUSph6W5yolQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="71544385"
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="71544345"
+   d="scan'208";a="71544385"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 14:54:48 -0700
-X-CSE-ConnectionGUID: Kg6vwTFMTXOypzSpSNKfPg==
-X-CSE-MsgGUID: 0KvxxVEKTRyXpSk6ZxNM7Q==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 14:54:54 -0700
+X-CSE-ConnectionGUID: 0MqbIKJiTz+nOnkEON1FeA==
+X-CSE-MsgGUID: P3XR6nuEQbaFHAtUBtaL5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130474154"
+   d="scan'208";a="130474173"
 Received: from hasmith-mobl1.amr.corp.intel.com (HELO bxing-mobl1.clients.intel.com) ([10.246.115.71])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 14:54:47 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 14:54:52 -0700
 From: Cedric Xing <cedric.xing@intel.com>
-Date: Mon, 14 Apr 2025 16:54:19 -0500
-Subject: [PATCH v4 1/5] tsm-mr: Add TVM Measurement Register support
+Date: Mon, 14 Apr 2025 16:54:23 -0500
+Subject: [PATCH v4 5/5] virt: tdx-guest: Expose TDX MRs as sysfs attributes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,8 +53,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-tdx-rtmr-v4-1-7edfa8d98716@intel.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250414-tdx-rtmr-v4-5-7edfa8d98716@intel.com>
 References: <20250414-tdx-rtmr-v4-0-7edfa8d98716@intel.com>
 In-Reply-To: <20250414-tdx-rtmr-v4-0-7edfa8d98716@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>, 
@@ -73,585 +73,498 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
  Cedric Xing <cedric.xing@intel.com>
 X-Mailer: b4 0.13.0
 
-Introduce new TSM Measurement helper library (tsm-mr) for TVM guest drivers
-to expose MRs (Measurement Registers) as sysfs attributes, with Crypto
-Agility support.
+Expose the most commonly used TDX MRs (Measurement Registers) as sysfs
+attributes. Use the ioctl() interface of /dev/tdx_guest to request a full
+TDREPORT for access to other TD measurements.
 
-Add the following new APIs (see include/linux/tsm-mr.h for details):
+Directory structure of TDX MRs inside a TDVM is as follows:
 
-- tsm_mr_create_attribute_group(): Take on input a `struct
-  tsm_measurements` instance, which includes one `struct
-  tsm_measurement_register` per MR with properties like `TSM_MR_F_READABLE`
-  and `TSM_MR_F_WRITABLE`, to determine the supported operations and create
-  the sysfs attributes accordingly. On success, return a `struct
-  attribute_group` instance that will typically be included by the guest
-  driver into `miscdevice.groups` before calling misc_register().
+/sys/class/misc/tdx_guest
+└── mr
+    ├── mrconfigid
+    ├── mrowner
+    ├── mrownerconfig
+    ├── mrtd:sha384
+    ├── rtmr0:sha384
+    ├── rtmr1:sha384
+    ├── rtmr2:sha384
+    └── rtmr3:sha384
 
-- tsm_mr_free_attribute_group(): Free the memory allocated to the attrubute
-  group returned by tsm_mr_create_attribute_group().
-
-tsm_mr_create_attribute_group() creates one attribute for each MR, with
-names following this pattern:
-
-        MRNAME[:HASH]
-
-- MRNAME - Placeholder for the MR name, as specified by
-  `tsm_measurement_register.mr_name`.
-- :HASH - Optional suffix indicating the hash algorithm associated with
-  this MR, as specified by `tsm_measurement_register.mr_hash`.
-
-Support Crypto Agility by allowing multiple definitions of the same MR
-(i.e., with the same `mr_name`) with distinct HASH algorithms.
-
-NOTE: Crypto Agility, introduced in TPM 2.0, allows new hash algorithms to
-be introduced without breaking compatibility with applications using older
-algorithms. CC architectures may face the same challenge in the future,
-needing new hashes for security while retaining compatibility with older
-hashes, hence the need for Crypto Agility.
+Read the file/attribute to retrieve the current value of an MR. Write to
+the file/attribute (if writable) to extend the corresponding RTMR. Refer to
+Documentation/ABI/testing/sysfs-devices-virtual-misc-tdx_guest-mr for more
+information.
 
 Signed-off-by: Cedric Xing <cedric.xing@intel.com>
 ---
- Documentation/driver-api/coco/index.rst            |  12 +
- .../driver-api/coco/measurement-registers.rst      |  12 +
- Documentation/driver-api/index.rst                 |   1 +
- MAINTAINERS                                        |   4 +-
- drivers/virt/coco/Kconfig                          |   5 +
- drivers/virt/coco/Makefile                         |   1 +
- drivers/virt/coco/tsm-mr.c                         | 247 +++++++++++++++++++++
- include/linux/tsm-mr.h                             |  94 ++++++++
- include/trace/events/tsm_mr.h                      |  80 +++++++
- 9 files changed, 454 insertions(+), 2 deletions(-)
+ .../testing/sysfs-devices-virtual-misc-tdx_guest   |  60 +++++
+ MAINTAINERS                                        |   1 +
+ drivers/virt/coco/tdx-guest/Kconfig                |   1 +
+ drivers/virt/coco/tdx-guest/tdx-guest.c            | 291 +++++++++++++--------
+ 4 files changed, 250 insertions(+), 103 deletions(-)
 
-diff --git a/Documentation/driver-api/coco/index.rst b/Documentation/driver-api/coco/index.rst
+diff --git a/Documentation/ABI/testing/sysfs-devices-virtual-misc-tdx_guest b/Documentation/ABI/testing/sysfs-devices-virtual-misc-tdx_guest
 new file mode 100644
-index 000000000000..af9f08ca0cfd
+index 000000000000..fb7b27ae0b74
 --- /dev/null
-+++ b/Documentation/driver-api/coco/index.rst
-@@ -0,0 +1,12 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/ABI/testing/sysfs-devices-virtual-misc-tdx_guest
+@@ -0,0 +1,60 @@
++What:		/sys/devices/virtual/misc/tdx_guest/mr/MRNAME[:HASH]
++Date:		April, 2025
++KernelVersion:	v6.16
++Contact:	linux-coco@lists.linux.dev
++Description:
++		Value of a TDX measurement register (MR). MRNAME and HASH above
++		are placeholders. The optional suffix :HASH is used for MRs
++		that have associated hash algorithms. See below for a complete
++		list of TDX MRs exposed via sysfs. Refer to Intel TDX Module
++		ABI Specification for the definition of TDREPORT and the full
++		list of TDX measurements.
 +
-+======================
-+Confidential Computing
-+======================
++		Intel TDX Module ABI Specification can be found at:
++		https://www.intel.com/content/www/us/en/developer/tools/trust-domain-extensions/documentation.html#architecture
 +
-+.. toctree::
-+   :maxdepth: 1
++What:		/sys/devices/virtual/misc/tdx_guest/mr/mrconfigid
++Date:		April, 2025
++KernelVersion:	v6.16
++Contact:	linux-coco@lists.linux.dev
++Description:
++		(RO) MRCONFIGID - 48-byte immutable storage typically used for
++		software-defined ID for non-owner-defined configuration of the
++		guest TD – e.g., run-time or OS configuration.
 +
-+   measurement-registers
++What:		/sys/devices/virtual/misc/tdx_guest/mr/mrowner
++Date:		April, 2025
++KernelVersion:	v6.16
++Contact:	linux-coco@lists.linux.dev
++Description:
++		(RO) MROWNER - 48-byte immutable storage typically used for
++		software-defined ID for the guest TD’s owner.
 +
-+.. only::  subproject and html
-diff --git a/Documentation/driver-api/coco/measurement-registers.rst b/Documentation/driver-api/coco/measurement-registers.rst
-new file mode 100644
-index 000000000000..cef85945a9a7
---- /dev/null
-+++ b/Documentation/driver-api/coco/measurement-registers.rst
-@@ -0,0 +1,12 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
++What:		/sys/devices/virtual/misc/tdx_guest/mr/mrownerconfig
++Date:		April, 2025
++KernelVersion:	v6.16
++Contact:	linux-coco@lists.linux.dev
++Description:
++		(RO) MROWNERCONFIG - 48-byte immutable storage typically used
++		for software-defined ID for owner-defined configuration of the
++		guest TD – e.g., specific to the workload rather than the
++		run-time or OS.
 +
-+=====================
-+Measurement Registers
-+=====================
++What:		/sys/devices/virtual/misc/tdx_guest/mr/mrtd:sha384
++Date:		April, 2025
++KernelVersion:	v6.16
++Contact:	linux-coco@lists.linux.dev
++Description:
++		(RO) MRTD - Measurement of the initial contents of the TD.
 +
-+.. kernel-doc:: include/linux/tsm-mr.h
-+   :internal:
-+
-+.. kernel-doc:: drivers/virt/coco/tsm-mr.c
-+   :export:
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 16e2c4ec3c01..3e2a270bd828 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -81,6 +81,7 @@ Subsystem-specific APIs
-    acpi/index
-    backlight/lp855x-driver.rst
-    clk
-+   coco/index
-    console
-    crypto/index
-    dmaengine/index
++What:		/sys/devices/virtual/misc/tdx_guest/mr/rtmr[0123]:sha384
++Date:		April, 2025
++KernelVersion:	v6.16
++Contact:	linux-coco@lists.linux.dev
++Description:
++		(RW) RTMR[0123] - 4 Run-Time extendable Measurement Registers.
++		Read from any of these returns the current value of the
++		corresponding RTMR. Write extends the written buffer to the
++		RTMR. All writes must start at offset 0 and be 48 bytes in
++		size. Partial writes will result in EINVAL returned by the
++		write() syscall.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index c59316109e3f..bc4033efe2fa 100644
+index 870b34190de7..1632dfb0051d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -24560,8 +24560,8 @@ M:	Dan Williams <dan.j.williams@intel.com>
+@@ -26228,6 +26228,7 @@ L:	x86@kernel.org
  L:	linux-coco@lists.linux.dev
- S:	Maintained
- F:	Documentation/ABI/testing/configfs-tsm
--F:	drivers/virt/coco/tsm.c
--F:	include/linux/tsm.h
-+F:	drivers/virt/coco/tsm*.c
-+F:	include/linux/tsm*.h
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/tdx
++F:	Documentation/ABI/testing/sysfs-devices-virtual-misc-tdx_guest-mr
+ F:	arch/x86/boot/compressed/tdx*
+ F:	arch/x86/coco/tdx/
+ F:	arch/x86/include/asm/shared/tdx.h
+diff --git a/drivers/virt/coco/tdx-guest/Kconfig b/drivers/virt/coco/tdx-guest/Kconfig
+index 22dd59e19431..dbbdc14383b1 100644
+--- a/drivers/virt/coco/tdx-guest/Kconfig
++++ b/drivers/virt/coco/tdx-guest/Kconfig
+@@ -2,6 +2,7 @@ config TDX_GUEST_DRIVER
+ 	tristate "TDX Guest driver"
+ 	depends on INTEL_TDX_GUEST
+ 	select TSM_REPORTS
++	select TSM_MEASUREMENTS
+ 	help
+ 	  The driver provides userspace interface to communicate with
+ 	  the TDX module to request the TDX guest details like attestation
+diff --git a/drivers/virt/coco/tdx-guest/tdx-guest.c b/drivers/virt/coco/tdx-guest/tdx-guest.c
+index 224e7dde9cde..e76810d89e0b 100644
+--- a/drivers/virt/coco/tdx-guest/tdx-guest.c
++++ b/drivers/virt/coco/tdx-guest/tdx-guest.c
+@@ -5,6 +5,8 @@
+  * Copyright (C) 2022 Intel Corporation
+  */
  
- TRUSTED SERVICES TEE DRIVER
- M:	Balint Dobszay <balint.dobszay@arm.com>
-diff --git a/drivers/virt/coco/Kconfig b/drivers/virt/coco/Kconfig
-index ff869d883d95..737106d5dcbc 100644
---- a/drivers/virt/coco/Kconfig
-+++ b/drivers/virt/coco/Kconfig
-@@ -7,6 +7,11 @@ config TSM_REPORTS
- 	select CONFIGFS_FS
- 	tristate
- 
-+config TSM_MEASUREMENTS
-+	select CRYPTO_HASH_INFO
-+	select CRYPTO
-+	bool
++#define pr_fmt(fmt)			KBUILD_MODNAME ": " fmt
 +
- source "drivers/virt/coco/efi_secret/Kconfig"
- 
- source "drivers/virt/coco/pkvm-guest/Kconfig"
-diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
-index c3d07cfc087e..eb6ec5c1d2e1 100644
---- a/drivers/virt/coco/Makefile
-+++ b/drivers/virt/coco/Makefile
-@@ -3,6 +3,7 @@
- # Confidential computing related collateral
- #
- obj-$(CONFIG_TSM_REPORTS)	+= tsm.o
-+obj-$(CONFIG_TSM_MEASUREMENTS)	+= tsm-mr.o
- obj-$(CONFIG_EFI_SECRET)	+= efi_secret/
- obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
- obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
-diff --git a/drivers/virt/coco/tsm-mr.c b/drivers/virt/coco/tsm-mr.c
-new file mode 100644
-index 000000000000..adc32328018e
---- /dev/null
-+++ b/drivers/virt/coco/tsm-mr.c
-@@ -0,0 +1,247 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/sysfs.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/tsm_mr.h>
-+
-+/*
-+ * struct tm_context - contains everything necessary to implement sysfs
-+ * attributes for MRs.
-+ * @rwsem: protects the MR cache from concurrent access.
-+ * @agrp: contains all MR attributes created by tsm_mr_create_attribute_group().
-+ * @tm: input to tsm_mr_create_attribute_group() containing MR definitions/ops.
-+ * @in_sync: %true if MR cache is up-to-date.
-+ * @mrs: array of &struct bin_attribute, one for each MR.
-+ *
-+ * This internal structure contains everything needed to implement
-+ * tm_digest_read() and tm_digest_write().
-+ *
-+ * Given tm->refresh() is potentially expensive, tm_digest_read() caches MR
-+ * values and calls tm->refresh() only when necessary. Only live MRs (i.e., with
-+ * %TSM_MR_F_LIVE set) can trigger tm->refresh(), while others are assumed to
-+ * retain their values from the last tm->write(). @in_sync tracks if there have
-+ * been tm->write() calls since the last tm->refresh(). That is, tm->refresh()
-+ * will be called only when a live MR is being read and the cache is stale
-+ * (@in_sync is %false).
-+ *
-+ * tm_digest_write() sets @in_sync to %false and calls tm->write(), whose
-+ * semantics is arch and MR specific. Most (if not all) writable MRs support the
-+ * extension semantics (i.e., tm->write() extends the input buffer into the MR).
-+ */
-+struct tm_context {
-+	struct rw_semaphore rwsem;
-+	struct attribute_group agrp;
-+	const struct tsm_measurements *tm;
-+	bool in_sync;
-+	struct bin_attribute mrs[];
-+};
-+
-+static ssize_t tm_digest_read(struct file *filp, struct kobject *kobj,
-+			      const struct bin_attribute *attr, char *buffer,
-+			      loff_t off, size_t count)
-+{
-+	struct tm_context *ctx;
-+	const struct tsm_measurement_register *mr;
-+	int rc;
-+
-+	ctx = attr->private;
-+	rc = down_read_interruptible(&ctx->rwsem);
-+	if (rc)
-+		return rc;
-+
-+	mr = &ctx->tm->mrs[attr - ctx->mrs];
-+
-+	/*
-+	 * @ctx->in_sync indicates if the MR cache is stale. It is a global
-+	 * instead of a per-MR flag for simplicity, as most (if not all) archs
-+	 * allow reading all MRs in oneshot.
-+	 *
-+	 * ctx->refresh() is necessary only for LIVE MRs, while others retain
-+	 * their values from their respective last ctx->write().
-+	 */
-+	if ((mr->mr_flags & TSM_MR_F_LIVE) && !ctx->in_sync) {
-+		up_read(&ctx->rwsem);
-+
-+		rc = down_write_killable(&ctx->rwsem);
-+		if (rc)
-+			return rc;
-+
-+		if (!ctx->in_sync) {
-+			rc = ctx->tm->refresh(ctx->tm, mr);
-+			ctx->in_sync = !rc;
-+			trace_tsm_mr_refresh(mr, rc);
-+		}
-+
-+		downgrade_write(&ctx->rwsem);
-+	}
-+
-+	memcpy(buffer, mr->mr_value + off, count);
-+	trace_tsm_mr_read(mr);
-+
-+	up_read(&ctx->rwsem);
-+	return rc ?: count;
-+}
-+
-+static ssize_t tm_digest_write(struct file *filp, struct kobject *kobj,
-+			       const struct bin_attribute *attr, char *buffer,
-+			       loff_t off, size_t count)
-+{
-+	struct tm_context *ctx;
-+	const struct tsm_measurement_register *mr;
-+	ssize_t rc;
-+
-+	/* partial writes are not supported */
-+	if (off != 0 || count != attr->size)
-+		return -EINVAL;
-+
-+	ctx = attr->private;
-+	mr = &ctx->tm->mrs[attr - ctx->mrs];
-+	trace_tsm_mr_write(mr, buffer);
-+
-+	rc = down_write_killable(&ctx->rwsem);
-+	if (rc)
-+		return rc;
-+
-+	rc = ctx->tm->write(ctx->tm, mr, buffer);
-+
-+	/* mark MR cache stale */
-+	if (!rc)
-+		ctx->in_sync = false;
-+
-+	up_write(&ctx->rwsem);
-+	return rc ?: count;
-+}
-+
-+/**
-+ * tsm_mr_create_attribute_group() - creates an attribute group for measurement
-+ * registers (MRs)
-+ * @tm: pointer to &struct tsm_measurements containing the MR definitions.
-+ *
-+ * This function creates attributes corresponding to the MR definitions
-+ * provided by @tm->mrs.
-+ *
-+ * The created attributes will reference @tm and its members. The caller must
-+ * not free @tm until after tsm_mr_free_attribute_group() is called.
-+ *
-+ * Context: Process context. May sleep due to memory allocation.
-+ *
-+ * Return:
-+ * * On success, the pointer to a an attribute group is returned; otherwise
-+ * * %-EINVAL - Invalid MR definitions.
-+ * * %-ENOMEM - Out of memory.
-+ */
-+const struct attribute_group *
-+tsm_mr_create_attribute_group(const struct tsm_measurements *tm)
-+{
-+	size_t nlen;
-+
-+	if (!tm || !tm->mrs)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* aggregated length of all MR names */
-+	nlen = 0;
-+	for (size_t i = 0; i < tm->nr_mrs; ++i) {
-+		if ((tm->mrs[i].mr_flags & TSM_MR_F_LIVE) && !tm->refresh)
-+			return ERR_PTR(-EINVAL);
-+
-+		if ((tm->mrs[i].mr_flags & TSM_MR_F_WRITABLE) && !tm->write)
-+			return ERR_PTR(-EINVAL);
-+
-+		if (!tm->mrs[i].mr_name)
-+			return ERR_PTR(-EINVAL);
-+
-+		if (tm->mrs[i].mr_flags & TSM_MR_F_NOHASH)
-+			continue;
-+
-+		if (tm->mrs[i].mr_hash >= HASH_ALGO__LAST)
-+			return ERR_PTR(-EINVAL);
-+
-+		/* MR sysfs attribute names have the form of MRNAME:HASH */
-+		nlen += strlen(tm->mrs[i].mr_name) + 1 +
-+			strlen(hash_algo_name[tm->mrs[i].mr_hash]) + 1;
-+	}
-+
-+	/*
-+	 * @bas and the MR name strings are combined into a single allocation
-+	 * so that we don't have to free MR names one-by-one in
-+	 * tsm_mr_free_attribute_group()
-+	 */
-+	struct bin_attribute **bas __free(kfree) =
-+		kzalloc(sizeof(*bas) * (tm->nr_mrs + 1) + nlen, GFP_KERNEL);
-+	struct tm_context *ctx __free(kfree) =
-+		kzalloc(struct_size(ctx, mrs, tm->nr_mrs), GFP_KERNEL);
-+	char *name, *end;
-+
-+	if (!ctx || !bas)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* @bas is followed immediately by MR name strings */
-+	name = (char *)&bas[tm->nr_mrs + 1];
-+	end = name + nlen;
-+
-+	for (size_t i = 0; i < tm->nr_mrs; ++i) {
-+		bas[i] = &ctx->mrs[i];
-+		sysfs_bin_attr_init(bas[i]);
-+
-+		if (tm->mrs[i].mr_flags & TSM_MR_F_NOHASH)
-+			bas[i]->attr.name = tm->mrs[i].mr_name;
-+		else if (name < end) {
-+			bas[i]->attr.name = name;
-+			name += snprintf(name, end - name, "%s:%s",
-+					 tm->mrs[i].mr_name,
-+					 hash_algo_name[tm->mrs[i].mr_hash]);
-+			++name;
-+		} else
-+			return ERR_PTR(-EINVAL);
-+
-+		/* check for duplicated MR definitions */
-+		for (size_t j = 0; j < i; ++j)
-+			if (!strcmp(bas[i]->attr.name, bas[j]->attr.name))
-+				return ERR_PTR(-EINVAL);
-+
-+		if (tm->mrs[i].mr_flags & TSM_MR_F_READABLE) {
-+			bas[i]->attr.mode |= 0444;
-+			bas[i]->read_new = tm_digest_read;
-+		}
-+
-+		if (tm->mrs[i].mr_flags & TSM_MR_F_WRITABLE) {
-+			bas[i]->attr.mode |= 0200;
-+			bas[i]->write_new = tm_digest_write;
-+		}
-+
-+		bas[i]->size = tm->mrs[i].mr_size;
-+		bas[i]->private = ctx;
-+	}
-+
-+	if (name != end)
-+		return ERR_PTR(-EINVAL);
-+
-+	init_rwsem(&ctx->rwsem);
-+	ctx->agrp.name = "mr";
-+	ctx->agrp.bin_attrs = no_free_ptr(bas);
-+	ctx->tm = tm;
-+	return &no_free_ptr(ctx)->agrp;
-+}
-+EXPORT_SYMBOL_GPL(tsm_mr_create_attribute_group);
-+
-+/**
-+ * tsm_mr_free_attribute_group() - frees the attribute group returned by
-+ * tsm_mr_create_attribute_group()
-+ * @attr_grp: attribute group returned by tsm_mr_create_attribute_group()
-+ *
-+ * Context: Process context.
-+ */
-+void tsm_mr_free_attribute_group(const struct attribute_group *attr_grp)
-+{
-+	if (!IS_ERR_OR_NULL(attr_grp)) {
-+		kfree(attr_grp->bin_attrs);
-+		kfree(container_of(attr_grp, struct tm_context, agrp));
-+	}
-+}
-+EXPORT_SYMBOL_GPL(tsm_mr_free_attribute_group);
-diff --git a/include/linux/tsm-mr.h b/include/linux/tsm-mr.h
-new file mode 100644
-index 000000000000..3d4576849885
---- /dev/null
-+++ b/include/linux/tsm-mr.h
-@@ -0,0 +1,94 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __TSM_MR_H
-+#define __TSM_MR_H
-+
-+#include <crypto/hash_info.h>
-+
-+/**
-+ * struct tsm_measurement_register - describes an architectural measurement
-+ * register (MR)
-+ * @mr_name: name of the MR
-+ * @mr_value: buffer containing the current value of the MR
-+ * @mr_size: size of the MR - typically the digest size of @mr_hash
-+ * @mr_flags: bitwise OR of one or more flags, detailed below
-+ * @mr_hash: optional hash identifier defined in include/uapi/linux/hash_info.h.
-+ *
-+ * A CC guest driver encloses an array of this structure in struct
-+ * tsm_measurements to detail the measurement facility supported by the
-+ * underlying CC hardware.
-+ *
-+ * @mr_name and @mr_value must stay valid until this structure is no longer in
-+ * use.
-+ *
-+ * @mr_flags is the bitwise-OR of zero or more of the flags below.
-+ *
-+ * * %TSM_MR_F_READABLE - the sysfs attribute corresponding to this MR is readable.
-+ * * %TSM_MR_F_WRITABLE - the sysfs attribute corresponding to this MR is writable.
-+ *   The semantics is typically to extend the MR but could vary depending on the
-+ *   architecture and the MR.
-+ * * %TSM_MR_F_LIVE - this MR's value may differ from the last value written, so
-+ *   must be read back from the underlying CC hardware/firmware.
-+ * * %TSM_MR_F_RTMR - bitwise-OR of %TSM_MR_F_LIVE and %TSM_MR_F_WRITABLE.
-+ * * %TSM_MR_F_NOHASH - this MR does NOT have an associated hash algorithm.
-+ *   @mr_hash will be ignored when this flag is set.
-+ */
-+struct tsm_measurement_register {
-+	const char *mr_name;
-+	void *mr_value;
-+	u32 mr_size;
-+	u32 mr_flags;
-+	enum hash_algo mr_hash;
-+};
-+
-+#define TSM_MR_F_NOHASH 1
-+#define TSM_MR_F_WRITABLE 2
-+#define TSM_MR_F_READABLE 4
-+#define TSM_MR_F_LIVE 8
-+#define TSM_MR_F_RTMR (TSM_MR_F_LIVE | TSM_MR_F_WRITABLE)
-+
-+#define TSM_MR_(mr, hash)                              \
-+	.mr_name = #mr, .mr_size = hash##_DIGEST_SIZE, \
-+	.mr_hash = HASH_ALGO_##hash, .mr_flags = TSM_MR_F_READABLE
-+
-+/**
-+ * struct tsm_measurements - defines the CC architecture specific measurement
-+ * facility and methods for updating measurement registers (MRs)
-+ * @mrs: Array of MR definitions.
-+ * @nr_mrs: Number of elements in @mrs.
-+ * @refresh: Callback function to load/sync all MRs from TVM hardware/firmware
-+ *           into the kernel cache.
-+ * @write: Callback function to write to the MR specified by the parameter @mr.
-+ *         Typically, writing to an MR extends the input buffer to that MR.
-+ *
-+ * @refresh takes two parameters:
-+ *
-+ * * @tm - points back to this structure.
-+ * * @mr - points to the MR (an element of @mrs) being read (hence triggered
-+ *   this callback).
-+ *
-+ * Note that @refresh is invoked only when an MR with %TSM_MR_F_LIVE set is
-+ * being read and the cache is stale. However, @refresh must reload not only
-+ * the MR being read (@mr) but also all MRs with %TSM_MR_F_LIVE set.
-+ *
-+ * @write takes an additional parameter besides @tm and @mr:
-+ *
-+ * * @data - contains the bytes to write and whose size is @mr->mr_size.
-+ *
-+ * Both @refresh and @write should return 0 on success and an appropriate error
-+ * code on failure.
-+ */
-+struct tsm_measurements {
-+	const struct tsm_measurement_register *mrs;
-+	size_t nr_mrs;
-+	int (*refresh)(const struct tsm_measurements *tm,
-+		       const struct tsm_measurement_register *mr);
-+	int (*write)(const struct tsm_measurements *tm,
-+		     const struct tsm_measurement_register *mr, const u8 *data);
-+};
-+
-+const struct attribute_group *
-+tsm_mr_create_attribute_group(const struct tsm_measurements *tm);
-+void tsm_mr_free_attribute_group(const struct attribute_group *attr_grp);
-+
-+#endif
-diff --git a/include/trace/events/tsm_mr.h b/include/trace/events/tsm_mr.h
-new file mode 100644
-index 000000000000..f40de4ad3e2d
---- /dev/null
-+++ b/include/trace/events/tsm_mr.h
-@@ -0,0 +1,80 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM tsm_mr
-+
-+#if !defined(_TRACE_TSM_MR_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_TSM_MR_H
-+
-+#include <linux/tracepoint.h>
+ #include <linux/kernel.h>
+ #include <linux/miscdevice.h>
+ #include <linux/mm.h>
+@@ -15,8 +17,9 @@
+ #include <linux/set_memory.h>
+ #include <linux/io.h>
+ #include <linux/delay.h>
++#include <linux/sockptr.h>
+ #include <linux/tsm.h>
+-#include <linux/sizes.h>
 +#include <linux/tsm-mr.h>
+ 
+ #include <uapi/linux/tdx-guest.h>
+ 
+@@ -66,39 +69,144 @@ static DEFINE_MUTEX(quote_lock);
+  */
+ static u32 getquote_timeout = 30;
+ 
+-static long tdx_get_report0(struct tdx_report_req __user *req)
++/* Buffers for TDREPORT and RTMR extension */
++static u8 *tdx_report_buf, *tdx_extend_buf;
 +
-+TRACE_EVENT(tsm_mr_read,
++/* Lock to serialize TDG.MR.REPORT & TDG.MR.RTMR.EXTEND requests */
++static DEFINE_MUTEX(mr_lock);
 +
-+	TP_PROTO(const struct tsm_measurement_register *mr),
++/* TDREPORT fields */
++enum {
++	TDREPORT_reportdata = 128,
++	TDREPORT_tee_tcb_info = 256,
++	TDREPORT_tdinfo = TDREPORT_tee_tcb_info + 256,
++	TDREPORT_attributes = TDREPORT_tdinfo,
++	TDREPORT_xfam = TDREPORT_attributes + sizeof(u64),
++	TDREPORT_mrtd = TDREPORT_xfam + sizeof(u64),
++	TDREPORT_mrconfigid = TDREPORT_mrtd + SHA384_DIGEST_SIZE,
++	TDREPORT_mrowner = TDREPORT_mrconfigid + SHA384_DIGEST_SIZE,
++	TDREPORT_mrownerconfig = TDREPORT_mrowner + SHA384_DIGEST_SIZE,
++	TDREPORT_rtmr0 = TDREPORT_mrownerconfig + SHA384_DIGEST_SIZE,
++	TDREPORT_rtmr1 = TDREPORT_rtmr0 + SHA384_DIGEST_SIZE,
++	TDREPORT_rtmr2 = TDREPORT_rtmr1 + SHA384_DIGEST_SIZE,
++	TDREPORT_rtmr3 = TDREPORT_rtmr2 + SHA384_DIGEST_SIZE,
++	TDREPORT_servtd_hash = TDREPORT_rtmr3 + SHA384_DIGEST_SIZE,
++};
 +
-+	TP_ARGS(mr),
++static inline int tdx_mr_report_locked(sockptr_t data, sockptr_t tdreport)
+ {
+-	u8 *reportdata, *tdreport;
+-	long ret;
++	scoped_cond_guard(mutex_intr, return -EINTR, &mr_lock) {
++		u8 *p = tdx_report_buf + TDREPORT_reportdata;
++		int ret;
+ 
+-	reportdata = kmalloc(TDX_REPORTDATA_LEN, GFP_KERNEL);
+-	if (!reportdata)
+-		return -ENOMEM;
++		if (!sockptr_is_null(data) &&
++		    copy_from_sockptr(p, data, TDX_REPORTDATA_LEN))
++			return -EFAULT;
+ 
+-	tdreport = kzalloc(TDX_REPORT_LEN, GFP_KERNEL);
+-	if (!tdreport) {
+-		ret = -ENOMEM;
+-		goto out;
++		ret = tdx_mcall_get_report0(p, tdx_report_buf);
++		if (WARN(ret, "tdx_mcall_get_report0() failed: %d", ret))
++			return ret;
 +
-+	TP_STRUCT__entry(
-+		__string(mr, mr->mr_name)
-+		__string(hash, mr->mr_flags & TSM_MR_F_NOHASH ?
-+			 "data" : hash_algo_name[mr->mr_hash])
-+		__dynamic_array(u8, d, mr->mr_size)
-+	),
++		if (!sockptr_is_null(tdreport) &&
++		    copy_to_sockptr(tdreport, tdx_report_buf, TDX_REPORT_LEN))
++			return -EFAULT;
+ 	}
++	return 0;
++}
+ 
+-	if (copy_from_user(reportdata, req->reportdata, TDX_REPORTDATA_LEN)) {
+-		ret = -EFAULT;
+-		goto out;
++static inline int tdx_mr_extend_locked(ptrdiff_t mr_ind, const u8 *data)
++{
++	scoped_cond_guard(mutex_intr, return -EINTR, &mr_lock) {
++		int ret;
 +
-+	TP_fast_assign(
-+		__assign_str(mr);
-+		__assign_str(hash);
-+		memcpy(__get_dynamic_array(d), mr->mr_value, __get_dynamic_array_len(d));
-+	),
++		memcpy(tdx_extend_buf, data, SHA384_DIGEST_SIZE);
 +
-+	TP_printk("[%s] %s:%s", __get_str(mr), __get_str(hash),
-+		  __print_hex_str(__get_dynamic_array(d), __get_dynamic_array_len(d)))
-+);
++		ret = tdx_mcall_extend_rtmr(mr_ind, tdx_extend_buf);
++		if (WARN(ret, "tdx_mcall_extend_rtmr(%ld) failed: %d", mr_ind, ret))
++			return ret;
+ 	}
++	return 0;
++}
 +
-+TRACE_EVENT(tsm_mr_refresh,
++#define TDX_MR_(r) .mr_value = (void *)TDREPORT_##r, TSM_MR_(r, SHA384)
++static struct tsm_measurement_register tdx_mrs[] = {
++	{ TDX_MR_(rtmr0) | TSM_MR_F_RTMR },
++	{ TDX_MR_(rtmr1) | TSM_MR_F_RTMR },
++	{ TDX_MR_(rtmr2) | TSM_MR_F_RTMR },
++	{ TDX_MR_(rtmr3) | TSM_MR_F_RTMR },
++	{ TDX_MR_(mrtd) },
++	{ TDX_MR_(mrconfigid) | TSM_MR_F_NOHASH },
++	{ TDX_MR_(mrowner) | TSM_MR_F_NOHASH },
++	{ TDX_MR_(mrownerconfig) | TSM_MR_F_NOHASH },
++};
++#undef TDX_MR_
 +
-+	TP_PROTO(const struct tsm_measurement_register *mr, int rc),
++static int tdx_mr_refresh(const struct tsm_measurements *tm,
++			  const struct tsm_measurement_register *mr)
++{
++	return tdx_mr_report_locked(KERNEL_SOCKPTR(NULL), KERNEL_SOCKPTR(NULL));
++}
+ 
+-	/* Generate TDREPORT0 using "TDG.MR.REPORT" TDCALL */
+-	ret = tdx_mcall_get_report0(reportdata, tdreport);
++static int tdx_mr_extend(const struct tsm_measurements *tm,
++			 const struct tsm_measurement_register *mr,
++			 const u8 *data)
++{
++	return tdx_mr_extend_locked(mr - tm->mrs, data);
++}
 +
-+	TP_ARGS(mr, rc),
++static struct tsm_measurements tdx_measurements = {
++	.mrs = tdx_mrs,
++	.nr_mrs = ARRAY_SIZE(tdx_mrs),
++	.refresh = tdx_mr_refresh,
++	.write = tdx_mr_extend,
++};
 +
-+	TP_STRUCT__entry(
-+		__string(mr, mr->mr_name)
-+		__field(int, rc)
-+	),
++/* attribute groups of tdx_misc_dev */
++static const struct attribute_group *tdx_attr_groups[] = {
++	NULL,
++	NULL,
++};
 +
-+	TP_fast_assign(
-+		__assign_str(mr);
-+		__entry->rc = rc;
-+	),
++static int tdx_mr_init(void)
++{
++	int ret;
 +
-+	TP_printk("[%s] %s:%d", __get_str(mr),
-+		  __entry->rc ? "failed" : "succeeded", __entry->rc)
-+);
++	u8 *report_buf __free(kfree) = kzalloc(TDX_REPORT_LEN, GFP_KERNEL);
 +
-+TRACE_EVENT(tsm_mr_write,
++	/* TDG.MR.RTMR.EXTEND requires 64-byte aligned input */
++	u8 *extend_buf __free(kfree) = kmalloc(64, GFP_KERNEL);
 +
-+	TP_PROTO(const struct tsm_measurement_register *mr, const u8 *data),
++	if (!report_buf || !extend_buf)
++		return -ENOMEM;
 +
-+	TP_ARGS(mr, data),
++	tdx_report_buf = report_buf;
++	ret = tdx_mr_refresh(&tdx_measurements, NULL);
+ 	if (ret)
+-		goto out;
++		return ret;
+ 
+-	if (copy_to_user(req->tdreport, tdreport, TDX_REPORT_LEN))
+-		ret = -EFAULT;
++	for (size_t i = 0; i < ARRAY_SIZE(tdx_mrs); ++i)
++		*(long *)&tdx_mrs[i].mr_value += (long)report_buf;
+ 
+-out:
+-	kfree(reportdata);
+-	kfree(tdreport);
++	tdx_attr_groups[0] = tsm_mr_create_attribute_group(&tdx_measurements);
++	if (IS_ERR(tdx_attr_groups[0]))
++		return PTR_ERR(tdx_attr_groups[0]);
+ 
+-	return ret;
++	tdx_report_buf = no_free_ptr(report_buf);
++	tdx_extend_buf = no_free_ptr(extend_buf);
++	return 0;
++}
 +
-+	TP_STRUCT__entry(
-+		__string(mr, mr->mr_name)
-+		__string(hash, mr->mr_flags & TSM_MR_F_NOHASH ?
-+			 "data" : hash_algo_name[mr->mr_hash])
-+		__dynamic_array(u8, d, mr->mr_size)
-+	),
++static void tdx_mr_deinit(void)
++{
++	tsm_mr_free_attribute_group(tdx_attr_groups[0]);
++	kfree(tdx_extend_buf);
++	kfree(tdx_report_buf);
++}
 +
-+	TP_fast_assign(
-+		__assign_str(mr);
-+		__assign_str(hash);
-+		memcpy(__get_dynamic_array(d), data, __get_dynamic_array_len(d));
-+	),
++static long tdx_get_report0(struct tdx_report_req __user *req)
++{
++	return tdx_mr_report_locked(USER_SOCKPTR(req->reportdata),
++				    USER_SOCKPTR(req->tdreport));
+ }
+ 
+ static void free_quote_buf(void *buf)
+@@ -159,91 +267,60 @@ static int wait_for_quote_completion(struct tdx_quote_buf *quote_buf, u32 timeou
+ 
+ static int tdx_report_new(struct tsm_report *report, void *data)
+ {
+-	u8 *buf, *reportdata = NULL, *tdreport = NULL;
++	u8 *buf;
+ 	struct tdx_quote_buf *quote_buf = quote_data;
+ 	struct tsm_desc *desc = &report->desc;
+ 	int ret;
+ 	u64 err;
+ 
+-	/* TODO: switch to guard(mutex_intr) */
+-	if (mutex_lock_interruptible(&quote_lock))
+-		return -EINTR;
+-
+-	/*
+-	 * If the previous request is timedout or interrupted, and the
+-	 * Quote buf status is still in GET_QUOTE_IN_FLIGHT (owned by
+-	 * VMM), don't permit any new request.
+-	 */
+-	if (quote_buf->status == GET_QUOTE_IN_FLIGHT) {
+-		ret = -EBUSY;
+-		goto done;
+-	}
+-
+-	if (desc->inblob_len != TDX_REPORTDATA_LEN) {
+-		ret = -EINVAL;
+-		goto done;
+-	}
+-
+-	reportdata = kmalloc(TDX_REPORTDATA_LEN, GFP_KERNEL);
+-	if (!reportdata) {
+-		ret = -ENOMEM;
+-		goto done;
+-	}
+-
+-	tdreport = kzalloc(TDX_REPORT_LEN, GFP_KERNEL);
+-	if (!tdreport) {
+-		ret = -ENOMEM;
+-		goto done;
+-	}
+-
+-	memcpy(reportdata, desc->inblob, desc->inblob_len);
+-
+-	/* Generate TDREPORT0 using "TDG.MR.REPORT" TDCALL */
+-	ret = tdx_mcall_get_report0(reportdata, tdreport);
+-	if (ret) {
+-		pr_err("GetReport call failed\n");
+-		goto done;
++	scoped_cond_guard(mutex_intr, ret = -EINTR, &quote_lock) {
++		/*
++		 * If the previous request is timedout or interrupted, and the
++		 * Quote buf status is still in GET_QUOTE_IN_FLIGHT (owned by
++		 * VMM), don't permit any new request.
++		 */
++		if (quote_buf->status == GET_QUOTE_IN_FLIGHT)
++			return -EBUSY;
 +
-+	TP_printk("[%s] %s:%s", __get_str(mr), __get_str(hash),
-+		  __print_hex_str(__get_dynamic_array(d), __get_dynamic_array_len(d)))
-+);
++		if (desc->inblob_len != TDX_REPORTDATA_LEN)
++			return -EINVAL;
 +
-+#endif
++		memset(quote_data, 0, GET_QUOTE_BUF_SIZE);
 +
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
++		/* Update Quote buffer header */
++		quote_buf->version = GET_QUOTE_CMD_VER;
++		quote_buf->in_len = TDX_REPORT_LEN;
++
++		/* Generate TDREPORT0 using "TDG.MR.REPORT" TDCALL */
++		ret = tdx_mr_report_locked(KERNEL_SOCKPTR(desc->inblob),
++					   KERNEL_SOCKPTR(quote_buf->data));
++		if (ret)
++			break;
++
++		err = tdx_hcall_get_quote(quote_data, GET_QUOTE_BUF_SIZE);
++		if (err) {
++			pr_err("GetQuote hypercall failed, status:%llx\n", err);
++			return -EIO;
++		}
++
++		ret = wait_for_quote_completion(quote_buf, getquote_timeout);
++		if (ret) {
++			pr_err("GetQuote request timedout\n");
++			break;
++		}
++
++		buf = kvmemdup(quote_buf->data, quote_buf->out_len, GFP_KERNEL);
++		if (!buf)
++			return -ENOMEM;
++
++		report->outblob = buf;
++		report->outblob_len = quote_buf->out_len;
++
++		/*
++		 * TODO: parse the PEM-formatted cert chain out of the quote
++		 * buffer when provided
++		 */
+ 	}
+-
+-	memset(quote_data, 0, GET_QUOTE_BUF_SIZE);
+-
+-	/* Update Quote buffer header */
+-	quote_buf->version = GET_QUOTE_CMD_VER;
+-	quote_buf->in_len = TDX_REPORT_LEN;
+-
+-	memcpy(quote_buf->data, tdreport, TDX_REPORT_LEN);
+-
+-	err = tdx_hcall_get_quote(quote_data, GET_QUOTE_BUF_SIZE);
+-	if (err) {
+-		pr_err("GetQuote hypercall failed, status:%llx\n", err);
+-		ret = -EIO;
+-		goto done;
+-	}
+-
+-	ret = wait_for_quote_completion(quote_buf, getquote_timeout);
+-	if (ret) {
+-		pr_err("GetQuote request timedout\n");
+-		goto done;
+-	}
+-
+-	buf = kvmemdup(quote_buf->data, quote_buf->out_len, GFP_KERNEL);
+-	if (!buf) {
+-		ret = -ENOMEM;
+-		goto done;
+-	}
+-
+-	report->outblob = buf;
+-	report->outblob_len = quote_buf->out_len;
+-
+-	/*
+-	 * TODO: parse the PEM-formatted cert chain out of the quote buffer when
+-	 * provided
+-	 */
+-done:
+-	mutex_unlock(&quote_lock);
+-	kfree(reportdata);
+-	kfree(tdreport);
+-
+ 	return ret;
+ }
+ 
+@@ -289,6 +366,7 @@ static struct miscdevice tdx_misc_dev = {
+ 	.name = KBUILD_MODNAME,
+ 	.minor = MISC_DYNAMIC_MINOR,
+ 	.fops = &tdx_guest_fops,
++	.groups = tdx_attr_groups,
+ };
+ 
+ static const struct x86_cpu_id tdx_guest_ids[] = {
+@@ -311,10 +389,14 @@ static int __init tdx_guest_init(void)
+ 	if (!x86_match_cpu(tdx_guest_ids))
+ 		return -ENODEV;
+ 
+-	ret = misc_register(&tdx_misc_dev);
++	ret = tdx_mr_init();
+ 	if (ret)
+ 		return ret;
+ 
++	ret = misc_register(&tdx_misc_dev);
++	if (ret)
++		goto free_tsm_mr;
++
+ 	quote_data = alloc_quote_buf();
+ 	if (!quote_data) {
+ 		pr_err("Failed to allocate Quote buffer\n");
+@@ -332,6 +414,8 @@ static int __init tdx_guest_init(void)
+ 	free_quote_buf(quote_data);
+ free_misc:
+ 	misc_deregister(&tdx_misc_dev);
++free_tsm_mr:
++	tdx_mr_deinit();
+ 
+ 	return ret;
+ }
+@@ -342,6 +426,7 @@ static void __exit tdx_guest_exit(void)
+ 	tsm_unregister(&tdx_tsm_ops);
+ 	free_quote_buf(quote_data);
+ 	misc_deregister(&tdx_misc_dev);
++	tdx_mr_deinit();
+ }
+ module_exit(tdx_guest_exit);
+ 
 
 -- 
 2.43.0
