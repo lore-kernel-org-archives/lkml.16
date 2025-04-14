@@ -1,152 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F412580CD;
-	Mon, 14 Apr 2025 08:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F9325A626
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620351; cv=none; b=az9Bi7KKqB6wmyw1RnDu/CeUHZKXXO8HzFkrlxCG4+Mq2JzTlHVzHk7hyTmzmTILGZqznFLARYSDT7D9yRCO2Dc+XUOr4Kmw6bHxUhRYWv1Ouadwse2oObQYzgUm2CM9+A8pjaQMDkMZvLtlrYH/rdUF0877sdQl5oxyeazkx4M=
+	t=1744620422; cv=none; b=RVVYNHmc9YF/v6OpOQt0dn+e1dBh5eXsvY0dwVDdJScfpwiudQHXgL3xKkaiWOBNcwPL5mLxC3mA8B9ge80C2MoaGor2yoDAxP7p24Brfca9NZyMu26cYxWBghMiOiDVMV6yjuzT375mUOaCA5FX2iU9JtD6khIwL5G76I5zGFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620351; c=relaxed/simple;
-	bh=pEc2TXvVNzLpSozgoDM7+YONkPktZs8pw/fQbXJIB08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WUejbi+owN9pyy+rqrZql9+ICpU+WpKQj5OIw/WURMSHNgrIOsfo0ossCnCBKKbUJPjmGZRHiGV4DHGmjI3c2nuK7vRzut9eDR8vrQBhxlOwGaAlX7/vurklph1bPyxMYjnZ4f7dbawhgVksgIGBmqdOwuK7ybTrOuW/I1O3P7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UYQCFl3O; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744620422; c=relaxed/simple;
+	bh=SCP/PwSChNMVWttCxouuAEa4tawnRcR8a7lMxmBepnY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GTs7dybBWEaSPCin6A1lIZMyBh8pFA5HvLxFSMU9/i+TdgauJYYvUxcqP3cf1NIB6Zro8rYvZQJZI9/lI3nJYoVZAcXjJRnOtjioWx1j/KdF40Yjz9EQq0xcGiCuGA/6i8fVLLT6Nif3Q8te2sw+NRcxu0RR2ZgZOqo039JdAoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cQxQeWaa; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UYQCFl3O"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNEjSx014000;
-	Mon, 14 Apr 2025 08:45:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TC+cBorcPZtYI+BCAvI2mJGo1QM3DFfIBbzFnXVFQPA=; b=UYQCFl3OXi+wqvc2
-	DZRlz6RsG7REsZfOPUwRzi9jRBUnLLc2SFee1mqbhKlXi9fXO9SsxPb733oPwZlN
-	gEexTm51OqPnWVFDxEzlnKyKjO2zLbT4ZFBhis9WP0P+D/B3Js8xTNdbTELPy4SO
-	3GoyvfWOcR3J6ThrSX8N0hhRXk4Mt/UOgWEyj6X2cbsi4+Ygnfh0fqDrg7v3LGK1
-	B6FQ/RXjdzYLfuhlgdsgIyT52CmLvM7kxAqITNGABkF1xcCnVpOGnoyZclgLHpmB
-	rdaA5oXVyDEk4ALYXYqPtW92lMQYiud69mpxhFMY4dsVkYbPnPh2dfiyXTbpN6gP
-	LxUL9A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vbybr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 08:45:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E8jfXc021023
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 08:45:42 GMT
-Received: from [10.239.29.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
- 2025 01:45:39 -0700
-Message-ID: <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
-Date: Mon, 14 Apr 2025 16:45:26 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cQxQeWaa"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so3440375f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744620419; x=1745225219; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LwKDG6W8xKNbvB/TbUCZDLywQu+/SySWZsszpHukAAE=;
+        b=cQxQeWaaFxRzDq9V2UJc0opu54Tj0aqSzKFNW01exw3AGvgjnSZ2M8nA8KDULYMfqJ
+         y8PSvlI117C89Zmo/pUEXGicfQyHdM4mUmkdfyx9K5PgJcmmP2vTt2IQxw+bA8efNPTk
+         r0ca9utmspep2sPthJrxMVIP0WIc2z2/XrpT8SqI5+9P9a1wQ2Vj8FGtMcQO8cLsPf2u
+         JniEl2S+1E4gb08kEYvi16jCFGOyhGK5rqEQFcgTcuJ63rYWKzxBiSI21Ov10VJ53WHX
+         hzxSrms4a+XtpbUwl/zePbYadgUW0slqxuX7vWswJw3uDL0jsqEFwFwO3kg58rURGEZx
+         GZuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744620419; x=1745225219;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LwKDG6W8xKNbvB/TbUCZDLywQu+/SySWZsszpHukAAE=;
+        b=UHw7p70XmqphTDPnXePCnxft5Md6oXoI8mJjLWsZBBF6PV3sI7j14ce/7+hE5qdCZh
+         Hk7LCSPT4n6w3Ej6p8a0tcMdYiYHHQWLinyYI0pP3qe/laUJS6xDnOfjNaaObjyNMZBu
+         hLdN7vnC1v6cfdEriFdQWqJkAbcjcAadbHPEeHV5V0NTwOxLEb8E+tRlejl/EVy/S0wJ
+         MDfKN9BjquA8aEqX4oZWqf8XGpdn6pNEOK7/sM3iFBXrt3TGpy04ckzhzmqdmlrRzP7R
+         Sl2qNPARdXaAKGY05auG99D+KfpETV2Xy0tpSywgqEHW6csZh8gUQU9b1IU9EmcHLjNl
+         qOMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVT97CJ7FA+HRe7ozmFNOpWwNWVJVfqVSS0SaaXbpDBsuzQMcdySJi9T5uJ8q/RiqsAyJJelxr/D6c7y7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+P2cx9elnB7aA1f/cmgMOWlB1/qYA7l2E8cwqASqBzBI4AH1T
+	rdfLT8SKz/O9BWQHmbfhuMrH42AXqEMY4wYtl9Q5Xv9ks8m6FuaSEPMA0q7oycnuKgyu+PZ0NKA
+	VNT7s0oB5J1KSqzCbE6C9LI9Q8ikYWmVgBEvq
+X-Gm-Gg: ASbGncs+s/KA8iWKsA3x7KpmnWj+GzIRztWMSykNDjsyhH9MtAT+tx45jHV6WcWFULL
+	Jhzkk/2O6MMcEWXviZgxYcpCU8E/L03dZuVlcw2HmHf47q4TRHm39BukWPnSwXTNrtcuT8R6UjA
+	NCrMexXHEtC6iPt54cBb/I3x+laAdcYxe5wUxIb9Y9DThLTOJncGs=
+X-Google-Smtp-Source: AGHT+IHEvx7P61rJOTRerZ+a8pvfaZkJuUtapqSU6YjMcCwnJs4bOGlMqLM40z3t5trwgLUElMG5/bn+P/Y27+nuXxE=
+X-Received: by 2002:a5d:5f96:0:b0:391:ba6:c069 with SMTP id
+ ffacd0b85a97d-39eaaebeb38mr10081675f8f.44.1744620418562; Mon, 14 Apr 2025
+ 01:46:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Wenbin Yao
- (Consultant)" <quic_wenbyao@quicinc.com>
-CC: <jingoohan1@gmail.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>,
-        <mrana@quicinc.com>
-References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
- <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
-Content-Language: en-US
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mvqhVk7rKe0B7SZWuqgopOFZZvbLuKFs
-X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fccb36 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=4veHE8ydySSEcrfzLuYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: mvqhVk7rKe0B7SZWuqgopOFZZvbLuKFs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=968 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140063
+References: <20250413005650.1745894-1-ojeda@kernel.org>
+In-Reply-To: <20250413005650.1745894-1-ojeda@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 14 Apr 2025 10:46:46 +0200
+X-Gm-Features: ATxdqUFTqJD6mmtLs5eNUuwhMNICFoxmw1G3Dh5Cn8tAVPlsl1viiSVgUFcLSxk
+Message-ID: <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
+Subject: Re: [PATCH] rust: add C FFI types to the prelude
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Apr 13, 2025 at 2:57=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
+>
+> Rust kernel code is supposed to use the custom mapping of C FFI types,
+> i.e. those from the `ffi` crate, rather than the ones coming from `core`.
+>
+> Thus, to minimize mistakes and to simplify the code everywhere, just
+> provide them in the `kernel` prelude and ask in the Coding Guidelines
+> to use them directly, i.e. as a single segment path.
+>
+> After this lands, we can start cleaning up the existing users.
+>
+> Ideally, we would use something like Clippy's `disallowed-types` to
+> prevent the use of the `core` ones, but that one sees through aliases.
+>
+> Link: https://lore.kernel.org/rust-for-linux/CANiq72kc4gzfieD-FjuWfELRDXX=
+D2vLgPv4wqk3nt4pjdPQ=3Dqg@mail.gmail.com/
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-On 4/8/2025 1:51 AM, Manivannan Sadhasivam wrote:
-> On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
->> PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
->> indicates the number of lanes to check for exit from Electrical Idle in
->> Polling.Active and L2.Idle. It is used to limit the effective link width to
->> ignore broken or unused lanes that detect a receiver to prevent one or more
->> bad Receivers or Transmitters from holding up a valid Link from being
->> configured.
->>
->> In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
->> to 1 will not affect the link width that is actually intended to be used.
-> Where in the spec it is defined?
-As per DWC registers data book, NUM_OF_LANES is referred to as the 
-"Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express 
-Base 3.0 Specification, revision 1.0.
-Section 4.2.6.2.1 explains the condtions need be satisfied for enter 
-Poll.Configuration from Polling.Active.
-The original statement is
+Yes please!
 
-"Next state is Polling.Configuration after at least 1024 TS1 Ordered 
-Sets were transmitted, and all Lanes that detected a Receiver during 
-Detect receive eight consecutive training sequences (or
-their complement) satisfying any of the following conditions:
-...
-Otherwise, after a 24 ms timeout the next state is:
-Polling.Configuration if
-...
-(ii) At least a predetermined set of Lanes that detected a Receiver 
-during Detect have detected an exit from Electrical Idle at least once 
-since entering Polling.Active.
-     Note: _*This may prevent one or more bad Receivers or Transmitters 
-from holding up a valid Link from being configured*_, and allow for 
-additional training in Polling.Configuration. *_The exact set of 
-predetermined Lanes is implementation specific_*. Note that up to the 
-1.1 specification this predetermined set was equal to the total set of 
-Lanes that detected a Receiver.
-     Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered 
-Sets should have detected an exit from Electrical Idle at least once 
-since entering Polling.Active."
+>  Documentation/rust/coding-guidelines.rst | 17 +++++++++++++++++
+>  rust/kernel/prelude.rs                   |  5 +++++
+>  2 files changed, 22 insertions(+)
 >
->> But setting it to a value other than 1 will lead to link training fail if
->> one or more lanes are broken.
->>
-> Which means the link partner is not able to downsize the link during LTSSM?
-Yes, According to the theory metioned above, let's say in a 8 lanes PCIe 
-link, if we set NUM_OF_LANES to 8, then all lanes that detect a Receiver 
-during Detect need to receive eight consecutive training sequences, 
-otherwise the LTSSM can not enter Poll.Configuration and linktraing will 
-fail.
+> diff --git a/Documentation/rust/coding-guidelines.rst b/Documentation/rus=
+t/coding-guidelines.rst
+> index 27f2a7bb5a4a..d0bf0b3a058a 100644
+> --- a/Documentation/rust/coding-guidelines.rst
+> +++ b/Documentation/rust/coding-guidelines.rst
+> @@ -191,6 +191,23 @@ or:
+>         /// [`struct mutex`]: srctree/include/linux/mutex.h
 >
->> Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
->> port actually supports to make linking up more robust. Link can still be
->> established with one lane at least if other lanes are broken.
->>
-> This looks like a specific endpoint/controller issue to me. Where exactly did
-> you see the issue?
-Althouh we met this issue on some Modem platforms where PCIe port works 
-in EP mode. But this is not a specific endpoint/controller issue. This 
-register will be set to 1 by default after reset in new QCOM platform. 
-But upstream kernel will still program it to other value here.
 >
-> - Mani
->
--- 
-With best wishes
-Qiang Yu
+> +C FFI types
+> +-----------
+> +
+> +Rust kernel code does not use the C FFI types (such as ``c_char``) from
+> +``core::ffi::*``. Instead, a custom mapping that matches properly the C =
+types
+> +used in the kernel is provided in the prelude, i.e. ``kernel::prelude::*=
+``.
+> +
+> +These types (aliases) should generally be referred directly by their ide=
+ntifier,
+> +i.e. as a single segment path. For instance:
+> +
+> +.. code-block:: rust
+> +
+> +       fn f(p: *const c_char) -> c_int {
+> +           // ...
+> +       }
 
+I wonder if it would make more sense to rephrase this section to first
+say that rfl has type aliases for the C integer types called c_int and
+so on, then mention that they are available in the prelude, and then
+at the end of the section have a note that we don't use the type
+aliases from core::ffi. I think focusing on how to use C integer
+types, rather than technical details about how they are defined, is
+more relevant for a reader who is just looking for coding guidelines.
+
+Alice
