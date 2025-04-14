@@ -1,145 +1,161 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B9942A92;
-	Mon, 14 Apr 2025 15:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68FE2741D6;
+	Mon, 14 Apr 2025 15:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644562; cv=none; b=m9lWmN8I2X/XmaWzU25i4+n62vmSiohK1T0cs1j+Txbj935jxTRZIrE/Eta10wfOldzoZkHiND1RecJ/nE1tar7JnS/7wtk6fvMetEB5BxDlK+Ks6ZE8IBb/dnikV960BTEojdbP35Sv+nrcwQzuL/K8u4ayqxrjSj9xz3k1CUo=
+	t=1744644562; cv=none; b=iSY6stPgN4IJo7POhcAbJ4eZvgQ2RirD+AtqkCDKr9zRyqDyjzrOEFGbJLMNsONDy0iAlQrB694EbBJn5Zva2nowYh6fII42pJ2uWuhsM5aRU6t+4V6E3jGA81AD0anF+MMlY8V9NfA0cNVm2c06C51EQ+ic3IhpygrIOca6qKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744644562; c=relaxed/simple;
-	bh=QZSysy87dYHtOp1kIeVLsXQQyhnG6n15AfE/rji7EWU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bz5iswAYdA3qhIxVC+NXeMn5jLsYDYApHOwClEj7E0DibzMYY5KcoYzH4eEaaPnL1ayjY1L0vMy4MIzrK6WeEMpaHlnWN1Ze25ZuMK4Va4iuKGT5RJqN1hPrhjWG2lTsjSRpS3nBEk5/qxuUUWyW6KNADVENHoo+PbbQruUk8zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zbrh36Dw5z6K9XS;
-	Mon, 14 Apr 2025 23:25:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B32DC1401DC;
-	Mon, 14 Apr 2025 23:29:16 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
- 2025 17:29:16 +0200
-Date: Mon, 14 Apr 2025 16:29:14 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 03/19] cxl/cdat: Gather DSMAS data for DCD partitions
-Message-ID: <20250414162914.00006bb7@huawei.com>
-In-Reply-To: <20250413-dcd-type2-upstream-v9-3-1d4911a0b365@intel.com>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
-	<20250413-dcd-type2-upstream-v9-3-1d4911a0b365@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	bh=Zfxt9pzsycQ44C7fc2uUTKbR36TCBIXwtLawvoFRbzw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Aml0hXol5+iTxIX1OdQqEHzhS0mqNFSFoJsRynNFY1sW6AJSsxTR4r1dS0FzXS9UB/hTjx9bvYitGJ9Y2oT9qB5KOC7YQZspM8yLRXE1PuFhoI4V8laWLA2wfy9tbM4ki5olPviQuD3DFdgDH6l2C2ye4sfGDqxmT/pGEb6KwyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=mntqWbOF; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="mntqWbOF"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DFB8E41062
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1744644560; bh=1jK3yJ43Y4sGCHxXLdedDiZmuvB+Y7tZLtCUL/i2on0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mntqWbOFsNQAYHj4sRpw8TY+m9L7Rs6tBkz6DFlTly52FEbncyeA5i31M0iPnzPK+
+	 TGzjG/rK4p28IhjqJwCU1hxm2bDWBZat4Tgw64dyrNJuxzV3QVEoPfErarkG4TZvpg
+	 Ae+FyeXvaWUC036W1eH5XGTQSze211UIM3U5UGZXPtAM9ZtlqkSSCko/Nh3lu03cfn
+	 g6aHHtHltbRHjmykKm1hq6CmjWDbv355H5T0gigaKGkKeCyPHjPK4+6XrpeU/XK7dt
+	 0nejM/3CsjLtddWl9lyt329RqtoqGFILA8/w38XHfM9zygkIZrdItXWdfWWrNXsdAR
+	 JwT6B07E/hdtw==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id DFB8E41062;
+	Mon, 14 Apr 2025 15:29:19 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: saivishnu725@gmail.com, mchehab@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, saivishnu725
+ <saivishnu725@gmail.com>
+Subject: Re: [PATCH] Add --interactive option to prompt for dependency
+ installation if missing
+In-Reply-To: <20250410155414.47114-1-saivishnu725@gmail.com>
+References: <20250410155414.47114-1-saivishnu725@gmail.com>
+Date: Mon, 14 Apr 2025 09:29:19 -0600
+Message-ID: <87ikn6bw34.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain
 
-On Sun, 13 Apr 2025 17:52:11 -0500
-Ira Weiny <ira.weiny@intel.com> wrote:
+Thanks for working to make our tooling better.  Various comments...
 
-> Additional DCD partition (AKA region) information is contained in the
-> DSMAS CDAT tables, including performance, read only, and shareable
-> attributes.
-> 
-> Match DCD partitions with DSMAS tables and store the meta data.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+saivishnu725@gmail.com writes:
 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 866a423d6125..c589d8a330bb 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1321,6 +1321,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_a
->  	part_array[index].start = le64_to_cpu(dev_part->base);
->  	part_array[index].size = le64_to_cpu(dev_part->decode_length);
->  	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
-> +	part_array[index].handle = le32_to_cpu(dev_part->dsmad_handle) & 0xFF;
+> From: saivishnu725 <saivishnu725@gmail.com>
+>
+> Introduce the --interactive flag to enable user prompts before running commands to install missing dependencies.
+> Asks if the user would like to run the distro appropriate commands if any dependency is not available.
 
-Perhaps a comment on this.  Or a check that it is representable in
-CDAT (where we only have the one byte) and a print + fail to carry on if not?
+Please keep changelog text within the 80-column limit.
 
->  	len = le64_to_cpu(dev_part->length);
->  	blk_size = le64_to_cpu(dev_part->block_size);
+> Signed-off-by: saivishnu725 <saivishnu725@gmail.com>
+
+The signoff should have your full name, please.
+
+> ---
+>  scripts/sphinx-pre-install | 27 ++++++++++++++++++++++++---
+>  1 file changed, 24 insertions(+), 3 deletions(-)
+>
+> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+> index ad9945ccb0cf..581d694eb0fd 100755
+> --- a/scripts/sphinx-pre-install
+> +++ b/scripts/sphinx-pre-install
+> @@ -42,6 +42,7 @@ my $latest_avail_ver;
+>  my $pdf = 1;
+>  my $virtualenv = 1;
+>  my $version_check = 0;
+> +my $interactive = 0;
 >  
-> @@ -1453,6 +1454,7 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
->  	/* Return 1st partition */
->  	dc_info->start = partitions[0].start;
->  	dc_info->size = partitions[0].size;
-> +	dc_info->handle = partitions[0].handle;
->  	dev_dbg(dev, "Returning partition 0 %zu size %zu\n",
->  		dc_info->start, dc_info->size);
+>  #
+>  # List of required texlive packages on Fedora and OpenSuse
+> @@ -338,6 +339,21 @@ sub which($)
+>  	return undef;
+>  }
 >  
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 057933128d2c..96d8edaa5003 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -104,6 +104,7 @@ struct cxl_dpa_info {
->  	struct cxl_dpa_part_info {
->  		struct range range;
->  		enum cxl_partition_mode mode;
-> +		u8 handle;
->  	} part[CXL_NR_PARTITIONS_MAX];
->  	int nr_partitions;
->  };
-> @@ -387,12 +388,14 @@ enum cxl_devtype {
->   * @coord: QoS performance data (i.e. latency, bandwidth)
->   * @cdat_coord: raw QoS performance data from CDAT
->   * @qos_class: QoS Class cookies
-> + * @shareable: Is the range sharable
->   */
->  struct cxl_dpa_perf {
->  	struct range dpa_range;
->  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
->  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
->  	int qos_class;
-> +	bool shareable;
+> +sub run_if_interactive($)
+> +{
+> +	my $command = shift;
+> +
+> +	if ($interactive) {
+> +		printf("Do you want to run the command now [Y/n]: ");
+> +		my $user_input = <STDIN>;
+> +		chomp $user_input;
+> +		if ($user_input =~ /Y|y/) {
+> +			printf("\$ $command\n");
+> +			system($command);
+> +		}
+> +	}
+> +}
 
-It feels a bit odd to have this in the dpa_perf structure as not really
-a performance thing but I guess this is only convenient place to stash it.
+It seems to me that you might want to check the exit status of the
+command and stop if something does not work properly.
 
->  };
+>  #
+>  # Subroutines that check distro-specific hints
+>  #
+> @@ -374,7 +390,9 @@ sub give_debian_hints()
 >  
->  /**
-> @@ -400,11 +403,13 @@ struct cxl_dpa_perf {
->   * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
->   * @perf: performance attributes of the partition from CDAT
->   * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
-> + * @handle: DMASS handle intended to represent this partition
+>  	return if (!$need && !$optional);
+>  	printf("You should run:\n") if ($verbose_warn_install);
+> -	printf("\n\tsudo apt-get install $install\n");
+> +	my $command = "sudo apt-get install $install";
+> +	printf("\n\t$command\n");
+> +	run_if_interactive($command);
+>  }
 
-DSMAS ?
+It seems you'll print the command twice?
 
+>  sub give_redhat_hints()
+> @@ -1002,12 +1020,15 @@ while (@ARGV) {
+>  		$pdf = 0;
+>  	} elsif ($arg eq "--version-check"){
+>  		$version_check = 1;
+> +	} elsif ($arg eq "--interactive") {
+> +		$interactive = 1;
+>  	} else {
+> -		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check>\n\n";
+> +		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check> <--interactive>\n\n";
+>  		print "Where:\n";
+>  		print "\t--no-virtualenv\t- Recommend installing Sphinx instead of using a virtualenv\n";
+>  		print "\t--version-check\t- if version is compatible, don't check for missing dependencies\n";
+> -		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n\n";
+> +		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n";
+> +		print "\t--interactive\t- Ask to install missing dependencies\n\n";
+>  		exit -1;
+>  	}
+>  }
+> -- 
+>
+> This is not the complete patch - I'm sending this to get early feedback before I go further. If this looks good, I plan to follow up with additional patches that will:
+> 1. use the run_if_interactive on the hints for every distro
+> 2. add more quality-to-life features to make the script more useful
+>
+> Any form of feedback would be helpful! If there is a reason why none of the scripts are interactable, please let me know why.
 
->   */
->  struct cxl_dpa_partition {
->  	struct resource res;
->  	struct cxl_dpa_perf perf;
->  	enum cxl_partition_mode mode;
-> +	u8 handle;
->  };
->  
->  /**
-> @@ -881,6 +886,7 @@ struct cxl_mem_dev_info {
->  struct cxl_dc_partition_info {
->  	size_t start;
->  	size_t size;
-> +	u8 handle;
->  };
->  
->  int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> 
+Here too, please stick with the 80-column limit.
 
+When you post an RFC patch like this, it's good to put "RFC" into the
+subject line, just to help ensure that it doesn't end up being applied
+prematurely.
+
+Overall, I have no objection to the intent of the patch.  Nobody has
+asked for this, but that doesn't mean that they wouldn't have found it
+useful.  If you want to proceed, I would expect to apply the final
+result.
+
+Thanks,
+
+jon
