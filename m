@@ -1,356 +1,931 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6DD383A2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744635747; cv=fail; b=oLdRuWaFBrUkgmstRdZJ/X2Kg9qLj/jgQw5KvUmzKhWo7hHuK+lYG/g1lysNKziH5jmiudt0gzfINTshGHtSp1cc48hKUTPiBdgYt7wmq10krluskbaC3icDylLAaeE4Y1jU7GUdJ2WzQVbaiMLBAHnobL2A4IHBhjxiOqAh0/8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744635747; c=relaxed/simple;
-	bh=fbYkN+QpdtPYTZgcznKEbZpmbe8as3X5sRUiAr621qE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fOAjhAveLGNu7J0lLVpwl7/tKZfTfEzAnFlXm9Zl/yFYss1DxAWQHG4z2QkgUweTfKNMv5RC1h+DCr0Y4j0bhfe//sCRnaNMbtCMA15wz+KXswRQcjN2hE5nKoxKkElUiBK/9c5vHRlgczvO2BMdIZCbdFgiJippIXWfjRVn96M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=iL+X9A+w; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=Z4Nh/tgg; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F45D481B1;
+	Mon, 14 Apr 2025 13:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744635804; cv=none; b=hy5GIpJV6ZqiKRNlsgkz7YyLHUQ5V1/wdOAkX2npUMSP/6WjiHQ0b7T1+kaEZqImXNUZzc7eN5z/m1AGfHsSCHFP5oAmli2MBk6+e4jrwSZdUJBo23ATt6k/CqqbXE5Z50dRpiTCdZhxJnQMEMqIvfjtcOguplb7G4FdoWF6JoA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744635804; c=relaxed/simple;
+	bh=Xjqu7WsLNNmuSc2tYNkOjQveQMPv5T09P2X+4HZybds=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Po2XsB1nEMlho72zOkf3A7NK8zC2g5UvnAey+IOPCjLu/L0FWhGA+Dwyid8uKfS7tWTj8+hzlTsbAmkz9AQQFBKeIQrExG2keJvcFxom43dQ0nUDAlfSLuW7szNWLxPRs5npFwAy9m0lcCLGD/xpKPi5JO19M25VMEfLw/dlBsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=QjInb0ib; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iL+X9A+w";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="Z4Nh/tgg"
-X-UUID: b30edc30193011f08eb9c36241bbb6fb-20250414
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=fbYkN+QpdtPYTZgcznKEbZpmbe8as3X5sRUiAr621qE=;
-	b=iL+X9A+wu1FC4qnxsi0jkf+L41Pa2+f24zOzi5MzpAFIXBrGVrWADxDRUEEeqm+edt2QxJmTkcAzONhKnLK3ZNsac9ygmJcPlQrptvwJotkgzDGSCAmjpBkOzAzV1P8UX0H0cieZ5z/D8vA714iR3Zqc/0gAg2Aw1i4x+rcr3vk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:b1f0b658-282b-4518-84b4-1ff0a9e8ad9c,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:d7268ec7-16da-468a-87f7-8ca8d6b3b9f7,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
-	nt:0|50,EDM:-3,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: b30edc30193011f08eb9c36241bbb6fb-20250414
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <tze-nan.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 411366745; Mon, 14 Apr 2025 21:02:20 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 14 Apr 2025 21:02:18 +0800
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 14 Apr 2025 21:02:18 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BtS3pZ1RijVTSLsFAmGxKM+mfKb89LGm8JoaP1epnwW1WOZVcQlL4LhK8wRy4yj3TdFvRyhF9pV3jfWOxiHmXB5f09QIioVYX09d7vyMQoDd7T+JRRhDTRwfx3g3T9BsdiHVgv/Gnmn3kBLzdrWdBCFV7jkGJUDxa2Q1khMw9M1WjxBOBRb10vJPUD2n0Vjad6lOdbwgzYtDshoKQxrUxDIoN+IfWHr6AzkzD9nACnFk1LxCpqdi+0f+W1yxNqGk5FvFbrGVC4sHmJYzrgu1ATRr4Md5X4CWnUQ1p+TmqfZ4rjhVvnnffSTA6zO4j8R7875/qFlG/8S6lF98MXikhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fbYkN+QpdtPYTZgcznKEbZpmbe8as3X5sRUiAr621qE=;
- b=Zr3MV51+Z+z+OZR0+UFxqm9kMvMxJcyCW0Hu2M6/xaLlRGM83knWUfp83nIjU8/VyU0LLv/FSCrcU790B1992wPc9aKNnd0klZgCi27sPHIJ+lLM50kF6XVitb+iQEKKoEtttphnYRMMYLwKDYja85gxEQU1wkik9EWTsBc4gX8o8MU0VLUFoqHz73xFxLRBVYL+uZk7HFNemKVAQSa5u/eWgIeGZy0lJq5kawdU77as7BwEcjYlpHGxV1GAT/CgeCUVV5fWW0QYnmO7qYHN9aNAZTIY2l7ckoaI+ML/wcBJANm8Ri/joaW2x4vm9rs9GviB3XTiUxo5VFO5GOZBKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fbYkN+QpdtPYTZgcznKEbZpmbe8as3X5sRUiAr621qE=;
- b=Z4Nh/tgguKmePOKf5q+5FYpHdXCjR2eVdf4aPQuNglYXE/bCNNjkv1ZUtFkPV7x+NVTqZZW5EvQFmuZOJV+OvCr+r+PRYXnPGTaLW5TDvT7zg3GUyZZa+JYhAyAPY/PdOwCXKaKZ7jb7WO1YCpNpYKgLvKSiZ5+yUi3rznRHZz8=
-Received: from TYZPR03MB7183.apcprd03.prod.outlook.com (2603:1096:400:33a::11)
- by TYZPR03MB8464.apcprd03.prod.outlook.com (2603:1096:405:77::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Mon, 14 Apr
- 2025 13:02:16 +0000
-Received: from TYZPR03MB7183.apcprd03.prod.outlook.com
- ([fe80::5a8:982:e044:3350]) by TYZPR03MB7183.apcprd03.prod.outlook.com
- ([fe80::5a8:982:e044:3350%5]) with mapi id 15.20.8632.035; Mon, 14 Apr 2025
- 13:02:16 +0000
-From: =?utf-8?B?VHplLW5hbiBXdSAo5ZCz5r6k5Y2XKQ==?= <Tze-nan.Wu@mediatek.com>
-To: "oleg@redhat.com" <oleg@redhat.com>
-CC: =?utf-8?B?Qm9idWxlIENoYW5nICjlvLXlvJjnvqkp?= <bobule.chang@mediatek.com>,
-	"brauner@kernel.org" <brauner@kernel.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, wsd_upstream
-	<wsd_upstream@mediatek.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "chenqiwu@xiaomi.com" <chenqiwu@xiaomi.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>
-Subject: Re: [RFC PATCH] exit: Skip panic in do_exit() during poweroff
-Thread-Topic: [RFC PATCH] exit: Skip panic in do_exit() during poweroff
-Thread-Index: AQHbqibEtkPx8ADgEUO33Q74Ap66W7OdZC0AgAXCaIA=
-Date: Mon, 14 Apr 2025 13:02:15 +0000
-Message-ID: <249567d33e088a340780456c7ecd3ef3ee1433a1.camel@mediatek.com>
-References: <20250410143937.1829272-1-Tze-nan.Wu@mediatek.com>
-	 <20250410210507.GD15280@redhat.com>
-In-Reply-To: <20250410210507.GD15280@redhat.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB7183:EE_|TYZPR03MB8464:EE_
-x-ms-office365-filtering-correlation-id: c612a0ad-26c7-4652-8b30-08dd7b5494c4
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?Nkdibit5c1NkSENvYzM2VDVQTi9mZTM4RXBiMEFPNUpNOU1ZZzdqZDBIU2s5?=
- =?utf-8?B?WTBsY3dUVWRMazdlcTduUFpKcG1rd0wyMU9ST1kxVnQ2UE01WGVha1QwczR4?=
- =?utf-8?B?TkZuc0l1WnBBdjk4TjF5TDNzUFpvQjRwcFNJekFrdGhTaEZsaERaRnlubUsv?=
- =?utf-8?B?OS9mbTBwc3BRU1lML1RBekVnVUpZaUlmUFV5Y1pyNGpORFE5a0xoV1BvWG8y?=
- =?utf-8?B?alJnRmNqWWI3aVY2ZGgwTTZkaVVRZmpuZUs4MUtSVDJOZTFwMkR0a1RiU3Fi?=
- =?utf-8?B?dUFQbWlxRm9hWTRnUDRxMVk4U0UrM090ZnhQbnlNUVhJQjRLTU1WemFXczQ0?=
- =?utf-8?B?UG1ya1NoYVQ4TjRpQ21KK1F0akNTcHNmWlB3bklVd3V2a1U3ZEc1cUlaWkJ3?=
- =?utf-8?B?V2FSYnhON0puN1M1WGV0dlVvdUp4aWFBalVkN09XcTMwZGFFM2JUeEo1T2hk?=
- =?utf-8?B?cTI5VnBDbTlEYTFhRWpRSWtLYTRBeVA0YmVzbE9URGF1eUg5dUZDK2VScGdS?=
- =?utf-8?B?bUxxZnVjT2NaWkNDOUM5WmY1NzByRFdEUzVSRDRUUWNGcnY3b1Z2R0YzM0tQ?=
- =?utf-8?B?cjFRa2NjMlpxRi9vOGpRaWRxTXpMTVNhWVl5SHppR1ZBSnZxUnUrV3hveGFP?=
- =?utf-8?B?UnpZcnBYUUcrN1ZWOVYxTnZ6VVorWGgyS0dMVG94L2tUK1g1QWtKN01FZHVK?=
- =?utf-8?B?UkNTaHVmU2lIdktvbTIwcE4zYmVTSEtvZ3V0dXpheEFlVnFha3haK0FVajhk?=
- =?utf-8?B?aTlNSUJUSXJSa3pGaHh2SGpHVmtlS1NKWllpVDEza1QwUUpWSXhQaFBUQ0Nl?=
- =?utf-8?B?UVRibElqZlBONWhxdEpYYlBDT1BFdkVyQ2Q1OGtPcXZkTTJvZkFVZldNQk5w?=
- =?utf-8?B?dE8zV2VZWThVemV5TkFLOFMwSzh3WmxMdzF5em5SY2lxZTd0WGxvSlJTZmlo?=
- =?utf-8?B?aGVWZTNvdCtGT24vbVBkNUJzS0xsMUtrL1VBSjNLZkhtdE1qWkIraXBKSGs1?=
- =?utf-8?B?NGlYN3lhUHZIaHM5cnhyMEJLQXBYM1MxOXRVdkdlVko4UnkzejdkZ1RQT1V5?=
- =?utf-8?B?cWdKaFJNYUV5cUY0WXFpUnlZWTVZaTY3MWNqV2paWnh3cnJraFFheVM2Y1By?=
- =?utf-8?B?WCttTnVtbGxNa3FsUG45L0xBQlBzd2ZOQU5YMmxuSWw0akJDVCt1dCtma2Z4?=
- =?utf-8?B?UTJWcDVCcVFNY3Z0TWQrdysvZHN1b0s4WUdVQ05pdWNacFV4dVZIVGJ4dnJu?=
- =?utf-8?B?K1BuUWtyUE1RSnlsR0xkL2lKR0dlREwvc0Q4MDRrWWo4Q28yNWlXUHlpRkZm?=
- =?utf-8?B?SUF2cDBoMmRpNXIzdmV6K2tIM1ZYWVAydHVnYWEzMHh1cXkwNjVheVhud2Zk?=
- =?utf-8?B?YWd0WVJPMlZuL3RUczllQUh4WG1HR0kwcFRyQUszT0o3bVRlNzhoeHlaTDRD?=
- =?utf-8?B?OCtaYmNGWnAyTnp5dW1YdmFmeFliZ09KOGxrZUVHcU0vaHJIQ2pGa1ZvUnZB?=
- =?utf-8?B?V1JTWlQ1OUtQVk5kbHZ4eXZXWjNqR2J2WjQzam1HUVN0VkozZy9NN2YvalpW?=
- =?utf-8?B?U1ZoZmxPU3EyVGgyckg5M3FQNmRHeU02TXpSMU5RdHlaK0xhSk1vMjk0Z3Uy?=
- =?utf-8?B?OVlhdVVXUzArVk1oWmd3WGZ2cG1KbWY4MDhsL09jR0dzSHJZcjBnak5zTUZj?=
- =?utf-8?B?bUx0ZTgyLys4TEN2b2VxSkZMVFdKdXB6TXV6ZHN4ejJEMlU3c09ySDVaQTFV?=
- =?utf-8?B?OThMejlsSU1UK0dER3lVVGl5cmo3SFUrTHJUMG1RZURmWndwaGxEdTM4eEFM?=
- =?utf-8?B?RTRBRm4vYjJSU0FDRVhPZElsSFFTaGc2RnI2bTYzcVlsTXNTMGo2QVdUSkgv?=
- =?utf-8?B?eU1xcFNNTk1uOWpKbzlzN09JSGRjbmF2M0NwRCswSXhOSDZaaUpWeWNBaHBV?=
- =?utf-8?B?N01OakxxeVU0V2FwZWNjM25JMXhlUlVHUy9iRW0yUjUyWjRUcTdhbll3K1FP?=
- =?utf-8?Q?Yy+4mE4uwyYZ1CpC5EHe7AxHpGZjnc=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7183.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UXBzTlQ5SWRZNUl1VWVGRnFkUXIvUUtyajVEUG9hWmVZZmQ5TitFYk40ZVl6?=
- =?utf-8?B?NFJuS0RJMkF0WFo3MlVyZDhiMWUxWDd0bm56N2dLYVRCT2RvY2lKZzdtbTIy?=
- =?utf-8?B?QVdXWUo3M3NMaFAzR3I3YzJieVhNK0h6MVhrWnZzK2ZKTHRsbk1CRzVHa2dJ?=
- =?utf-8?B?SXlOVG84SVgzTDRzdlErbVRJeEh5bnpSY0VUc01QZGtqSkJNNWQ2TTY2VkdC?=
- =?utf-8?B?YnR4U3UwUmpnRXQxeS9uMWxWM1NoWlpSdUdjMElkMjNSWkxMSzd1Z1V2akJr?=
- =?utf-8?B?d05ubm1wdHdnUFhNUk5jYjhsdkcwbUJac2Z3NkhFOVB4Q2dralo2WjBYbzVt?=
- =?utf-8?B?azRCM01HMWZHWEM1K1NmSkFwMzBtU0ZRaUNKWGhodTg4MHdPVm5tZDRHQVJV?=
- =?utf-8?B?NGNuR2V1QlJ4eUlRVnY4amxqc2IzUWwvd0hCbjczbW56VUt3Z2VBOHkwUzJI?=
- =?utf-8?B?alZOek1pVlNGWm50WTlJN1EzV08rSkRTZW1GeFl1YW1CaGQ2N09MV0hqT3Za?=
- =?utf-8?B?R29IYldKOEZiS1MzVE8vak1IeVNyNjliMlVjODdzd21BaWJFaGFaTENGM0VZ?=
- =?utf-8?B?VEN2MW02MDVIMUQ5WXYrRGlIODFqM0RvV2R6SlEyNVJxZ2w2WFFhTVpKdjlG?=
- =?utf-8?B?bDF1WWswdEVmOUhGdjJ1d3ZuVGlXc2IrZVhrU1hLNzVCU2tYOUVLMmNjVVB1?=
- =?utf-8?B?ejBlVjJZV1lXRVV0VVFJMHQ2dVBNOGJ1L3lQWFdlRnNIbTF1S3ExRmJGUjlk?=
- =?utf-8?B?M2VhRzNERUJ5NTlkVDcrMXNiTW1NT3dTRS9NNkpsaUV0QllqanNTWWlvL3k2?=
- =?utf-8?B?bnN3N0UvbnJtVGJYZjhCTEpEalVvVlh3SVpOQ2x3YjZRTDlMN01MQnFVb2s3?=
- =?utf-8?B?T0Y0Nm9jK1E1VmY0VUVxbG9VcnV0WmJZVk96dFkyY2JEeFltblljdXZWWC8y?=
- =?utf-8?B?eXRXQXF4WHhNczJTVVdsNEtuSWh4RjhPWTZQMFJVUCtxUnQzcmphSDVIVWFU?=
- =?utf-8?B?R3pER0RmOTB0N0pyK0k5N3VNWk16dTFPN2xhWm1nK0JsbW00MWlzdnIyNDcw?=
- =?utf-8?B?cWxkWXlDYzlaS0VLcmhhRzJoNlZTVTZKUzlXWnJyNWlkRDhJa25lbzZ3VmhR?=
- =?utf-8?B?L0FwUTVnbVFqazBoYUhGdlZGYi9WL2VPUkF1cU9uM2VJam1OU2tJMmtVaHNw?=
- =?utf-8?B?bFZlRmYxd3EvSXlhb0dxSFZ0bzFHczdFcndKY0t5RVh2YlpQVDlJbkora0lJ?=
- =?utf-8?B?VFpLdGo1a0RydzZEdGVKalBXYzFZRHRaaUc4TXMyd3l0ZVB5S0FEUy9Yc1JX?=
- =?utf-8?B?aWRaOXdtZGVuRjhBc0tLaGpJTlJhL3hDOHo3ajhwUUgyNktCdWtCOGNNK0hH?=
- =?utf-8?B?YXZrL1VPSnNaMjZaTS9JUlQ4dkFTUHp2U3pDNElvT1hzR2Vyb2VrNkd4ajM1?=
- =?utf-8?B?S0hUM3QwOWlpOHBYaHRZREduV2xEcnJuWVE0QUZGT2ZTOEx6cWlyS3U4alNW?=
- =?utf-8?B?VEtDOWJYWnV4bTdZSEZXTHJtQkYyZFlKdVJuK1Y0SldkUDFUK2N6UjhDNnhW?=
- =?utf-8?B?bXJ2WktFbjBVOFRUajFnU0pORjJZTjlGTlUyWXM2MEEzU1hwblU1a1FGTUow?=
- =?utf-8?B?QTlxZGFWdklULzVGdUU2VEhKVCtZWGM3bDRJZzhqZTAwU2JZUm9vMGZUTG1M?=
- =?utf-8?B?eEhqNE1pcFJIdFQxdWpxMjB1SnZVT05jUFEybGkxR20remFzSVFSMTMzbkRS?=
- =?utf-8?B?eU5QeXNJcDBZc2ZDcm4rejc2MU5RMW1SQWxQd0kzU1BZTm9WTDIyVVp1bVpm?=
- =?utf-8?B?TWVVQnRVV3hlUXY4ZVcvNXNsV1RIWEVDcWk4SzNsWWRvbFFoNXN5cmR5eU95?=
- =?utf-8?B?akU3RWV4RTBRcWNSNVh2OFBxUG5yK1FWem40Mks0Z0pUOTdmcjRYNkFKWk1I?=
- =?utf-8?B?T0ppL0hVcFpEaWVZRXhyMmlZZ2NzbTJPNS9DbDN4Vk82a2V2QWRrMFdFVkVu?=
- =?utf-8?B?WnE0NkUwa1JhUEtGK3owMG1Ga0UyTjhlSHFYUllneklJRksraEZVMG9LTWo1?=
- =?utf-8?B?Z0NQbEJrbVpRejVOZmtwU1JIL0VTS3hFeWxZL0w3clkvc3JqODV0dWR6YTRl?=
- =?utf-8?B?ZnRKN3Q4SW5vbWV6MDBDQ2JlUW5vTDhibnlFbUlaTVJkd3lFNDRkUDU0V3lW?=
- =?utf-8?B?dFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F36AF6277ADAF54D92FAD8E1779E594F@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="QjInb0ib"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=avUZIRR63gVWC5+6tppVtbgOGEA09DiOMN4f9In4OTA=; b=QjInb0ib/H5HizYxOtZS9SybQF
+	nxcLL7orYhFnFpcW/mMRFbZIX3mgPq4AL26uhIf5YQUHmKGwdAGxo3fnq0OUGT1Ya0hJYbN15WuP5
+	xeRqyoVvMNiYswpRZrIjH7lq/K9On41JYFePbI0bmpTkjW37/6n6E6IwZDI0IbyREFnFJzCEmV4GF
+	UXTe1BcWTmXe5R1emFx8P/fcsRqQBxPIgpPC2b6l2Y7UmYUjlV2Ec5bdsa4T7cvPSmBdZGgyAvC05
+	Za0RMfkfVntiB1cS46bZTymaMxxnWtiJ2MZD+wXlmSHWvBb/9gD0pd1HiS6M9oGLBMACl6oEcmzwL
+	LOM0SH9w==;
+Received: from [122.175.9.182] (port=25366 helo=cypher.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpa (Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u4JSz-00000000238-1PWm;
+	Mon, 14 Apr 2025 18:33:13 +0530
+From: Parvathi Pudi <parvathi@couthit.com>
+To: danishanwar@ti.com,
+	rogerq@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nm@ti.com,
+	ssantosh@kernel.org,
+	tony@atomide.com,
+	richardcochran@gmail.com,
+	glaroque@baylibre.com,
+	schnelle@linux.ibm.com,
+	m-karicheri2@ti.com,
+	s.hauer@pengutronix.de,
+	rdunlap@infradead.org,
+	diogo.ivo@siemens.com,
+	basharath@couthit.com,
+	parvathi@couthit.com,
+	horms@kernel.org,
+	jacob.e.keller@intel.com,
+	m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com,
+	afd@ti.com,
+	s-anna@ti.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pratheesh@ti.com,
+	prajith@ti.com,
+	vigneshr@ti.com,
+	praneeth@ti.com,
+	srk@ti.com,
+	rogerq@ti.com,
+	krishna@couthit.com,
+	pmohan@couthit.com,
+	mohan@couthit.com
+Subject: [PATCH net-next v5 04/11] net: ti: prueth: Adds link detection, RX and TX support.
+Date: Mon, 14 Apr 2025 18:32:30 +0530
+Message-Id: <20250414130237.1915448-5-parvathi@couthit.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250414113458.1913823-1-parvathi@couthit.com>
+References: <20250414113458.1913823-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7183.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c612a0ad-26c7-4652-8b30-08dd7b5494c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2025 13:02:15.9491
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y4Jg1XzD+L3tS/03KPIvQi5/GnRwMoYgfbOZNuPi8TgCXpb9Y/hQzdxU49EJIVL6dmNvq4xvEgFvJwTn5WoYdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8464
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: parvathi@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: parvathi@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-T24gVGh1LCAyMDI1LTA0LTEwIGF0IDIzOjA1ICswMjAwLCBPbGVnIE5lc3Rlcm92IHdyb3RlOg0K
-PiANCj4gRXh0ZXJuYWwgZW1haWwgOiBQbGVhc2UgZG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4g
-YXR0YWNobWVudHMgdW50aWwNCj4geW91IGhhdmUgdmVyaWZpZWQgdGhlIHNlbmRlciBvciB0aGUg
-Y29udGVudC4NCj4gDQo+IA0KPiBXZWxsLi4uDQo+IA0KPiBMZXQgbWUgcmVwZWF0LiBJIGRvbid0
-IHVuZGVyc3RhbmQgdGhlIGtlcm5lbC9yZWJvb3QuYyBwYXRocywgeW91IGNhbg0KPiBzYWZlbHkg
-aWdub3JlIG1lLg0KPiANCj4gQnV0IEkgc3RpbGwgdGhpbmsgdGhhdCB5b3UgdGFyZ2V0IHRoZSB3
-cm9uZyBnb2FsLiBRdWl0ZSBwb3NzaWJseSBJIGFtDQo+IHdyb25nLg0KPiANCj4gT24gMDQvMTAs
-IFR6ZS1uYW4gV3Ugd3JvdGU6DQo+ID4gDQo+ID4gSWYgUElEIDEgZXhpdHMgZHVlIHRvIHRoZSB1
-bnJlbGlhYmxlIHVzZXJzcGFjZSBhZnRlcg0KPiA+IGtlcm5lbF9wb3dlcl9vZmYoKQ0KPiA+IGlu
-dm9rZWQsDQo+IA0KPiBXaHkuIFdoeSB0aGUgZ2xvYmFsIGluaXQgZG9lcyBkb19leGl0KCk/IEl0
-IHNob3VsZCBub3QsIHRoYXQgaXMgYWxsLg0KPiBJdCBkb2Vzbid0IG1hdHRlciBpZiBpdCBpcyBz
-aW5nbGUgdGhyZWFkZWQgb3Igbm90Lg0KPiANCj4gQXMgZm9yIHN5c19yZWJvb3QoKSwgSSB0aGlu
-ayB0aGF0IGtlcm5lbF9wb3dlcl9vZmYoKSBtdXN0IGJlDQo+IF9fbm9yZXR1cm4sDQo+IGFuZCBz
-eXNfcmVib290KCkgc2hvdWxkIHVzZSBCVUcoKSBhZnRlcg0KPiBMSU5VWF9SRUJPT1RfQ01EX1BP
-V0VSX09GRi9fSEFMVA0KPiBpbnN0ZWFkIG9mIGRvX2V4aXQoKS4NCj4gDQoNClllcywga2VybmVs
-X3Bvd2VyX29mZigpIHNob3VsZCBub3QgcmV0dXJuLCBidXQgdGhpcyBpcyB0aGUgY2FzZSBvbmx5
-IGlmDQprZXJuZWxfcG93ZXJfb2ZmKCkgaXMgaW52b2tlZCBieSBQSUQgMSB0aHJvdWdoIHN5c19y
-ZWJvb3QoKS4NCklmIGtlcm5lbF9wb3dlcl9vZmYoKSBpcyBpbnZva2VkIGJ5IGEga2VybmVsIHRo
-cmVhZCAoZS5nLiwgdGhlIHRoZXJtYWwNCmtlcm5lbCBtb2R1bGUpIG90aGVyIHRoYW4gUElEIDEs
-IHRoZW4gZG9fZXhpdCgpIGNvdWxkIHBvc3NpYmx5IGJlDQppbnZva2VkIGJ5IFBJRCAxIGFmdGVy
-IGtlcm5lbF9wb3dlcl9vZmYoKSBvbiBhbm90aGVyIENQVS4gKHNob3duIGFzDQpiZWxvdykNCg0K
-Y3B1IDEgKHRoZXJtYWwga28pICAgICAgICAgICAgICAgIGNwdSAyIChQSUQgMSkNCi0tLS0tLS0t
-LS0tLS0tLS0tICAgICAgICAgICAgICAgICAtLS0tLS0tLS0tLS0tLS0NCmtlcm5lbF9wb3dlcl9v
-ZmYgICAgICAgICAgICAgICAgICAgICAgLi4uDQotPnVmc2hjZF93bF9zaHV0ZG93bihVRlMgZG93
-bikgICAgICAgLi4uDQouLi4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBJRCAxIHBh
-Z2UgZmF1bHQNCi4uLiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmFpbCB0byBoYW5k
-bGUgcGFnZSBmYXVsdCAoVUZTIGRvd24pDQouLi4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHNlbmQgU0lHQlVTIHRvIFBJRCAxDQouLi4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIFBJRCAxIHRyYXAgdG8gZG9fZXhpdCgpDQouLi4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHBhbmljKCkNCi0+bWFjaGluZV9wb3dlcl9vZmYoKQ0KICAtPiBzbXBfc2VuZF9zdG9w
-KCkgLy9zdG9wIG90aGVyIENQVXMNCg0KV2UgaGF2ZSBlbmNvdW50ZXIgdGhpcyBzY2VuYXJpbyBz
-ZXZlcmFsIHRpbWVzIGluIGEgbG93IHJhdGUgb24ga2VybmVsLQ0KNi4xMi4NCg0KPiBJZiBub3Ro
-aW5nIGVsc2UuIGRvX2V4aXQoKSBhbHNvIGRvZXMgZGVidWdfY2hlY2tfbm9fbG9ja3NfaGVsZCgp
-IGFuZA0KPiBzeXNfcmVib290KCkgY2FsbHMgZG9fZXhpdCgpIHdpdGggc3lzdGVtX3RyYW5zaXRp
-b25fbXV0ZXggaGVsZC4NCj4gDQo+IElPVy4gSU1PLCBpdCBpcyBub3QgdGhhdCBkb19leGl0KCkg
-bmVlZHMgc29tZSBjaGFuZ2VzLiBUaGUgdmVyeSBmYWN0DQo+IHRoYXQgdGhlIGdsb2JhbCBpbml0
-IGRvZXMgZG9fZXhpdCgpIGlzIHdyb25nLCB0aGlzIHNob3VsZCBiZSBmaXhlZC4NCj4gDQpJJ20g
-bm90IGFuIGV4cGVydCBvbiBVRlMsIGJ1dCBpZiB3ZSB3YW50IHRvIHByZXZlbnQgZW50ZXJpbmcg
-ZG9fZXhpdCgpDQphZnRlciBrZXJuZWxfcG93ZXJfb2ZmKCksIHBlcmhhcHMgbW92aW5nIHVmc2hj
-ZF93bF9zaHV0ZG93bigpIGFmdGVyIA0Kc21wX3NlbmRfc3RvcCgpIGNvdWxkIGhlbHAuDQpTaW5j
-ZSB0aGUgdXNlcnNwYWNlIHByb2Nlc3MgcnVubmluZyBvbiB0aGUgb3RoZXIgQ1BVcyBiZWZvcmUN
-CnNtcF9zZW5kX3N0b3AoKSBjb3VsZCBzdGlsbCBhY2Nlc3MgdGhlIFVGUy4NCkJ1dCBub3Qgc3Vy
-ZSBpZiB0aGF0J3MgcG9zc2libGUuLi4NCg0KVHplLW5hbg0KPiBCdXQgYWdhaW4sIGFnYWluLCBJ
-IGNhbid0IHJlYWxseSBjb21tZW50Lg0KPiANCj4gT2xlZy4NCj4gDQo+ID4gdGhlIHBhbmljIGZv
-bGxvdyBieSB0aGUgbGFzdCB0aHJlYWQgb2YgZ2xvYmFsIGluaXQgZXhpdGVkIGluDQo+ID4gZG9f
-ZXhpdCgpIHdpbGwgc3RvcCB0aGUga2VybmVsX3Bvd2VyX29mZigpIHByb2NlZHVyZSwgdHVybiBh
-DQo+ID4gc2h1dGRvd24NCj4gPiBiZWhhdmlvciBpbnRvIHBhbmljIGZsb3cocmVib290KS4NCj4g
-PiANCj4gPiBBZGQgYSBjb25kaXRpb24gY2hlY2sgdG8gZW5zdXJlIHRoYXQgdGhlIHBhbmljIHRy
-aWdnZXJlZCBieSB0aGUNCj4gPiBsYXN0DQo+ID4gdGhyZWFkIG9mIHRoZSBnbG9iYWwgaW5pdCBl
-eGl0aW5nLCBvbmx5IG9jY3VycyB3aGlsZToNCj4gPiAoIHN5c3RlbV9zdGF0ZSAhPSBTWVNURU1f
-UE9XRVJfT0ZGIGFuZCBzeXN0ZW1fc3RhdGUgIT0NCj4gPiBTWVNURU1fUkVTVEFSVCkuDQo+ID4g
-T3RoZXJ3aXNlLCBXQVJOKCkgaW5zdGVhZC4NCj4gPiANCj4gPiBbT24gQW5kcm9pZCAxNiB3aXRo
-IGFybTY0IGFyY2hdDQo+ID4gSGVyZSdzIGEgc2NlbmFyaW8gd2hlcmUgdGhlIGdsb2JhbCBpbml0
-IGV4aXRzIGR1cmluZw0KPiA+IGtlcm5lbF9wb3dlcl9vZmY6DQo+ID4gSWYgUElEIDEgZW5jb3Vu
-dGVycyBhIHBhZ2UgZmF1bHQgYWZ0ZXIga2VybmVsX3Bvd2VyX29mZigpIGhhcyBiZWVuDQo+ID4g
-aW52b2tlZCwgdGhlIGtlcm5lbCB3aWxsIGZhaWwgdG8gaGFuZGxlIHRoZSBwYWdlIGZhdWx0IGJl
-Y2F1c2UgdGhlDQo+ID4gZGlzayhVRlMpIGhhcyBhbHJlYWR5IHNodXQgZG93bi4NCj4gPiBDb25z
-ZXF1ZW50bHksIHRoZSBrZXJuZWwgd2lsbCBzZW5kIGEgU0lHQlVTIHRvIFBJRCAxIHRvIGluZGlj
-YXRlDQo+ID4gdGhlDQo+ID4gcGFnZSBmYXVsdCBmYWlsdXJlLCBhbmQgdWx0aW1hdGVseSwgdGhl
-IHBhbmljIHdpbGwgb2NjdXIgYWZ0ZXIgUElEDQo+ID4gMQ0KPiA+IGV4aXRzIGR1ZSB0byByZWNl
-aXZpbmcgdGhlIFNJR0JVUy4NCj4gPiANCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNwdTHC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNwdTIN
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqAgLS0tLS0tLS0tLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgLS0tLS0tLS0tLQ0KPiA+IMKgwqDCoCBrZXJuZWxfcG93ZXJfb2Zm
-KCkgc3RhcnQNCj4gPiDCoMKgwqDCoMKgwqDCoCBVRlMgc2h1dGRvd24NCj4gPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIC4uLsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgUElEIDEgcGFnZSBmYXVsdA0KPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgLi4uwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFnZSBmYXVs
-dCBoYW5kbGUgZmFpbHVyZQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLi4uwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBQSUQgMSByZWNlaXZlZA0KPiA+IFNJR0JVUw0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgLi4uwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgcGFuaWMNCj4gPiDCoMKgIGtlcm5lbF9wb3dlcl9vZmYoKSBub3QgZG9uZQ0KPiA+IA0K
-PiA+IEJhY2t0cmFjZSB3aGlsZSBQSUQgMSByZWNlaXZlZCBzaWduYWwgNzoNCj4gPiDCoMKgIGlu
-aXQtMSBbMDA3XSBkLi4xIDQxMjM5LjkyMjM4NTogXA0KPiA+IMKgwqDCoMKgwqAgc2lnbmFsX2dl
-bmVyYXRlOiBzaWc9NyBlcnJubz0wIGNvZGU9MiBjb21tPWluaXQgcGlkPTEgZ3JwPTANCj4gPiBy
-ZXM9MA0KPiA+IMKgwqAgaW5pdC0xIFswMDddIGQuLjEgNDEyMzkuOTIyMzg5OiBrZXJuZWxfc3Rh
-Y2s6IDxzdGFjayB0cmFjZT4NCj4gPiDCoMKgID0+IF9fc2VuZF9zaWduYWxfbG9ja2VkDQo+ID4g
-wqDCoCA9PiBzZW5kX3NpZ25hbF9sb2NrZWQNCj4gPiDCoMKgID0+IGZvcmNlX3NpZ19pbmZvX3Rv
-X3Rhc2sNCj4gPiDCoMKgID0+IGZvcmNlX3NpZ19mYXVsdA0KPiA+IMKgwqAgPT4gYXJtNjRfZm9y
-Y2Vfc2lnX2ZhdWx0DQo+ID4gwqDCoCA9PiBkb19wYWdlX2ZhdWx0DQo+ID4gwqDCoCA9PiBkb190
-cmFuc2xhdGlvbl9mYXVsdA0KPiA+IMKgwqAgPT4gZG9fbWVtX2Fib3J0DQo+ID4gwqDCoCA9PiBl
-bDBfaWENCj4gPiDCoMKgID0+IGVsMHRfNjRfc3luY19oYW5kbGVyDQo+ID4gDQo+ID4gU2ltcGxp
-ZmllZCBrZXJuZWwgbG9nOg0KPiA+IGtlcm5lbF9wb3dlcl9vZmYoKSBpbnZva2VkIGJ5IHB0X25v
-dGlmeV90aHJlYWQuDQo+ID4gWzQxMjM5LjUyNjEwOV0gcHRfbm90aWZ5X3RocmVhOiByZWJvb3Qg
-c2V0IGZsYWcsIG9sZCB2YWx1ZQ0KPiA+IDB4KioqKioqKiosDQo+ID4gKi4NCj4gPiBbNDEyMzku
-NTI2MTE0XSBwdF9ub3RpZnlfdGhyZWE6IHJlYm9vdCBzZXQgZmxhZyBuZXcgdmFsdWUNCj4gPiAw
-eCoqKioqKioqLg0KPiA+IFVGUyByZWplY3QgSS9PIGFmdGVyIGtlcmVubF9wb3dlcl9vZmYuDQo+
-ID4gWzQxMjM5LjY4NjQxMV3CoCBzY3NpICtzY3NpKioqKioqKiogYXBleGQ6IHNkKiAqKioqKioq
-KiByZWplY3RpbmcNCj4gPiBJL08gdG8NCj4gPiBvZmZsaW5lIGRldmljZS4NCj4gPiBMb3RzIG9m
-IEkvTyBlcnJvciAmIGVyb2ZzIGVycm9yIGhhcHBlbmVkIGFmdGVyIGtlcm5lbF9wb3dlcl9vZmYo
-KS4NCj4gPiBbNDEyMzkuNjkwMzEyXSBhcGV4ZDogSS9PIGVycm9yLCBkZXYgc2RjLCBzZWN0b3Ig
-KioqKioqKiBvcA0KPiA+ICoqKjooUkVBRCkNCj4gPiBmbGFncyAweCoqKiogcGh5c19zZWcgKiog
-cHJpbyBjbGFzcyAwLg0KPiA+IFs0MTIzOS42OTA0NjVdIGFwZXhkOiBJL08gZXJyb3IsIGRldiBz
-ZGMsIHNlY3RvciAqKioqKioqIG9wDQo+ID4gKioqOihSRUFEKQ0KPiA+IGZsYWdzIDB4KioqKiBw
-aHlzX3NlZyAqKiBwcmlvIGNsYXNzIDAuDQo+ID4gLi4uDQo+ID4gLi4uDQo+ID4gWzQxMjM5Ljky
-MjI2NV0gaW5pdDogZXJvZnM6IChkZXZpY2UgKioqKik6IHpfZXJvZnNfcmVhZF9mb2xpbzogcmVh
-ZA0KPiA+IGVycm9yICogQCAqKiogb2YgbmlkICoqKioqKioqLg0KPiA+IFs0MTIzOS45MjIzNDFd
-IGluaXQ6IGVyb2ZzOiAoZGV2aWNlICoqKiopOiB6X2Vyb2ZzX3JlYWRfZm9saW86IHJlYWQNCj4g
-PiBlcnJvciAqIEAgKioqIG9mIG5pZCAqKioqKioqKi4NCj4gPiBGaW5hbGx5IGRldmljZSBwYW5p
-YyBkdWUgdG8gUElEIDEgcmVjZWl2ZWQgU0lHQlVTLg0KPiA+IFs0MTIzOS45MjM3ODldIGluaXQ6
-IEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbA0KPiA+IGluaXQh
-DQo+ID4gZXhpdGNvZGU9MHgwMDAwMDAwNw0KPiA+IA0KPiA+IEZpeGVzOiA0M2NmNzVkOTY0MDkg
-KCJleGl0OiBwYW5pYyBiZWZvcmUgZXhpdF9tbSgpIG9uIGdsb2JhbCBpbml0DQo+ID4gZXhpdCIp
-DQo+ID4gTGluazoNCj4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAxOTEyMTkxMDQy
-MjMueHZrNnBwZm9nb3hyZ213NkB3aXR0Z2Vuc3RlaW4vDQo+ID4gU2lnbmVkLW9mZi1ieTogVHpl
-LW5hbiBXdSA8VHplLW5hbi5XdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gDQo+ID4gSSBh
-bSBhbHNvIHdvbmRlcmluZyBpZiB0aGlzIHBhdGNoIGlzIHJlYXNvbmFibGU/DQo+ID4gDQo+ID4g
-RnJvbSBteSBwZXJzcGVjdGl2ZSwgdGhlcmUgYXJlIHR3byByZWFzb25zIG5vdCB0byB0cmlnZ2Vy
-IHN1Y2gNCj4gPiBwYW5pYw0KPiA+IGR1cmluZyBrZXJuZWxfcG93ZXJfb2ZmKCkgb3Iga2VybmVs
-X3Jlc3RhcnQoKToNCj4gPiDCoCAxLiBJdCBpcyBub3Qgd29ydGh3aGlsZSB0byBpbnRlcnJ1cHQg
-a2VybmVsX3Bvd2VyX29mZigpIGJ5IGENCj4gPiBwYW5pYw0KPiA+IMKgwqDCoMKgIHJlc3VsdGVk
-IGZyb20gdXNlcnNwYWNlIGluc3RhYmlsaXR5Lg0KPiA+IMKgIDIuIFRoZSBwYW5pYyBpbiBkb19l
-eGl0KCkgd2FzIG9yaWdpbmFsbHkgZGVzaWduZWQgdG8gZW5zdXJlIGENCj4gPiB1c2FibGUNCj4g
-PiDCoMKgwqDCoCBjb3JlZHVtcCBpZiB0aGUgbGFzdCB0aHJlYWQgb2YgdGhlIGdsb2JhbCBpbml0
-IHByb2Nlc3MgZXhpdGVkLg0KPiA+IMKgwqDCoMKgwqDCoCBIb3dldmVyLCBjYXB0dXJlIGEgY29y
-ZWR1bXAgdHJpZ2dlcmVkIGJ5IHVzZXJzcGFjZSBjcmFzaA0KPiA+IGFmdGVyDQo+ID4gwqDCoMKg
-wqAga2VybmVsX3Bvd2VyX29mZigpIHNlZW1zIG5vdCBwYXJ0aWN1bGFybHkgdXNlZnVsLCBpbiBt
-eQ0KPiA+IG9waW5pb24uDQo+ID4gDQo+ID4gSW4gY2VydGFpbiBzY2VuYXJpb3MsIGEga2VybmVs
-IG1vZHVsZSBtYXkgbmVlZCB0byBkaXJlY3RseSBwb3dlcg0KPiA+IG9mZg0KPiA+IGZyb20ga2Vy
-bmVsIHNwYWNlIHRvIHByb3RlY3QgaGFyZHdhcmUgKGUuZy4sIHRoZXJtYWwgcHJvdGVjdGlvbiku
-DQo+ID4gSW4gbXkgb3BpbmlvbiwgcmF0aGVyIHRoYW4gY2F1c2luZyBhIHBhbmljIGR1cmluZw0K
-PiA+IGtlcm5lbF9wb3dlcl9vZmYoKSwNCj4gPiBpdCBzb3VuZHMgYmV0dGVyIHRvIGFsbG93IHRo
-ZSBkZXZpY2UgdG8gY29tcGxldGUgaXRzIHBvd2VyLW9mZg0KPiA+IHByb2Nlc3MuDQo+ID4gDQo+
-ID4gQXBwcmVjaWF0ZSBmb3IgYW55IGNvbW1lbnQgb24gdGhpcywgaWYgdGhlcmUncyBhbnkgYmV0
-dGVyIHdheSB0bw0KPiA+IGhhbmRsZSB0aGlzIHBhbmljLCBwbGVhc2UgcG9pbnQgbWUgb3V0Lg0K
-PiA+IA0KPiA+IC0tLQ0KPiA+IMKga2VybmVsL2V4aXQuYyB8IDE0ICsrKysrKysrKystLS0tDQo+
-ID4gwqAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4g
-PiANCj4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL2V4aXQuYyBiL2tlcm5lbC9leGl0LmMNCj4gPiBp
-bmRleCAxZGNkZGZlNTM3ZWUuLjIzY2I2YjQyYTFmMSAxMDA2NDQNCj4gPiAtLS0gYS9rZXJuZWwv
-ZXhpdC5jDQo+ID4gKysrIGIva2VybmVsL2V4aXQuYw0KPiA+IEBAIC05MDEsMTEgKzkwMSwxNyBA
-QCB2b2lkIF9fbm9yZXR1cm4gZG9fZXhpdChsb25nIGNvZGUpDQo+ID4gwqDCoMKgwqDCoCBpZiAo
-Z3JvdXBfZGVhZCkgew0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qDQo+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIElmIHRoZSBsYXN0IHRocmVhZCBvZiBnbG9iYWwg
-aW5pdCBoYXMgZXhpdGVkLA0KPiA+IHBhbmljDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgICogaW1tZWRpYXRlbHkgdG8gZ2V0IGEgdXNlYWJsZSBjb3JlZHVtcC4NCj4gPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgKiBpbW1lZGlhdGVseSB0byBnZXQgYSB1c2FibGUgY29yZWR1
-bXAsIGV4Y2VwdCB3aGVuDQo+ID4gdGhlDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-ICogZGV2aWNlIGlzIGN1cnJlbnRseSBwb3dlcmluZyBvZmYgb3IgcmVzdGFydGluZy4NCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICovDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBpZiAodW5saWtlbHkoaXNfZ2xvYmFsX2luaXQodHNrKSkpDQo+ID4gLcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFuaWMoIkF0dGVtcHRlZCB0byBraWxsIGlu
-aXQhDQo+ID4gZXhpdGNvZGU9MHglMDh4XG4iLA0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0c2stPnNpZ25hbC0+Z3JvdXBfZXhp
-dF9jb2RlID86DQo+ID4gKGludCljb2RlKTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGlmICh1bmxpa2VseShpc19nbG9iYWxfaW5pdCh0c2spKSkgew0KPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIChzeXN0ZW1fc3RhdGUgIT0gU1lTVEVNX1BP
-V0VSX09GRiAmJg0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgc3lzdGVtX3N0YXRlICE9IFNZU1RFTV9SRVNUQVJUKQ0KPiA+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwYW5pYygiQXR0
-ZW1wdGVkIHRvIGtpbGwgaW5pdCENCj4gPiBleGl0Y29kZT0weCUwOHhcbiIsDQo+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHRzay0+c2lnbmFsLT5ncm91cF9leGl0X2NvZGUgPzoNCj4gPiAoaW50KWNvZGUpOw0K
-PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFdBUk4oMSwgIkF0
-dGVtcHRlZCB0byBraWxsIGluaXQhDQo+ID4gZXhpdGNvZGU9MHglMDh4XG4iLA0KPiA+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0c2stPnNpZ25h
-bC0+Z3JvdXBfZXhpdF9jb2RlID86DQo+ID4gKGludCljb2RlKTsNCj4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIH0NCj4gPiANCj4gPiDCoCNpZmRlZiBDT05GSUdfUE9TSVhfVElNRVJTDQo+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaHJ0aW1lcl9jYW5jZWwoJnRzay0+c2lnbmFs
-LT5yZWFsX3RpbWVyKTsNCj4gPiAtLQ0KPiA+IDIuNDUuMg0KPiA+IA0KPiANCg0K
+From: Roger Quadros <rogerq@ti.com>
+
+Changes corresponding to link configuration such as speed and duplexity.
+IRQ and handler initializations are performed for packet reception.Firmware
+receives the packet from the wire and stores it into OCMC queue. Next, it
+notifies the CPU via interrupt. Upon receiving the interrupt CPU will
+service the IRQ and packet will be processed by pushing the newly allocated
+SKB to upper layers.
+
+When the user application want to transmit a packet, it will invoke
+sys_send() which will inturn invoke the PRUETH driver, then it will write
+the packet into OCMC queues. PRU firmware will pick up the packet and
+transmit it on to the wire.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+---
+ drivers/net/ethernet/ti/icssm/icssm_prueth.c | 611 ++++++++++++++++++-
+ drivers/net/ethernet/ti/icssm/icssm_prueth.h |  45 ++
+ 2 files changed, 650 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+index 60f911a6e621..56c4deeace90 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+@@ -36,6 +36,13 @@
+ #define TX_START_DELAY		0x40
+ #define TX_CLK_DELAY_100M	0x6
+ 
++static inline void icssm_prueth_write_reg(struct prueth *prueth,
++					  enum prueth_mem region,
++					  unsigned int reg, u32 val)
++{
++	writel_relaxed(val, prueth->mem[region].va + reg);
++}
++
+ /* Below macro is for 1528 Byte Frame support, to Allow even with
+  * Redundancy tag
+  */
+@@ -299,18 +306,31 @@ static void icssm_prueth_init_ethernet_mode(struct prueth *prueth)
+ 	icssm_prueth_hostinit(prueth);
+ }
+ 
+-static int icssm_prueth_emac_config(struct prueth_emac *emac)
++static void icssm_prueth_port_enable(struct prueth_emac *emac, bool enable)
+ {
+ 	struct prueth *prueth = emac->prueth;
++	void __iomem *port_ctrl;
++	void __iomem *ram;
+ 
+-	/* PRU needs local shared RAM address for C28 */
+-	u32 sharedramaddr = ICSS_LOCAL_SHARED_RAM;
++	ram = prueth->mem[emac->dram].va;
++	port_ctrl = ram + PORT_CONTROL_ADDR;
++	writeb(!!enable, port_ctrl);
++}
+ 
+-	/* PRU needs real global OCMC address for C30*/
+-	u32 ocmcaddr = (u32)prueth->mem[PRUETH_MEM_OCMC].pa;
++static int icssm_prueth_emac_config(struct prueth_emac *emac)
++{
++	struct prueth *prueth = emac->prueth;
++	u32 sharedramaddr, ocmcaddr;
+ 	void __iomem *dram_base;
+ 	void __iomem *mac_addr;
+ 	void __iomem *dram;
++	void __iomem *sram;
++
++	/* PRU needs local shared RAM address for C28 */
++	sharedramaddr = ICSS_LOCAL_SHARED_RAM;
++	/* PRU needs real global OCMC address for C30*/
++	ocmcaddr = (u32)prueth->mem[PRUETH_MEM_OCMC].pa;
++	sram = prueth->mem[PRUETH_MEM_SHARED_RAM].va;
+ 
+ 	/* Clear data RAM */
+ 	icssm_prueth_clearmem(prueth, emac->dram);
+@@ -331,6 +351,9 @@ static int icssm_prueth_emac_config(struct prueth_emac *emac)
+ 	memcpy_toio(dram, queue_descs[emac->port_id],
+ 		    sizeof(queue_descs[emac->port_id]));
+ 
++	emac->rx_queue_descs = sram + HOST_QUEUE_DESC_OFFSET;
++	emac->tx_queue_descs = dram;
++
+ 	/* Set in constant table C28 of PRU0 to ICSS Shared memory */
+ 	pru_rproc_set_ctable(emac->pru, PRU_C28, sharedramaddr);
+ 
+@@ -345,8 +368,12 @@ static void icssm_emac_adjust_link(struct net_device *ndev)
+ {
+ 	struct prueth_emac *emac = netdev_priv(ndev);
+ 	struct phy_device *phydev = emac->phydev;
++	struct prueth *prueth = emac->prueth;
+ 	bool new_state = false;
++	enum prueth_mem region;
+ 	unsigned long flags;
++	u32 port_status = 0;
++	u32 delay;
+ 
+ 	spin_lock_irqsave(&emac->lock, flags);
+ 
+@@ -369,8 +396,38 @@ static void icssm_emac_adjust_link(struct net_device *ndev)
+ 		emac->link = 0;
+ 	}
+ 
+-	if (new_state)
++	if (new_state) {
+ 		phy_print_status(phydev);
++		region = emac->dram;
++
++		/* update phy/port status information based on PHY values*/
++		if (emac->link) {
++			port_status |= PORT_LINK_MASK;
++
++			icssm_prueth_write_reg(prueth, region, PHY_SPEED_OFFSET,
++					       emac->speed);
++
++			delay = TX_CLK_DELAY_100M;
++			delay = delay << PRUSS_MII_RT_TXCFG_TX_CLK_DELAY_SHIFT;
++
++			if (emac->port_id) {
++				regmap_update_bits
++					(prueth->mii_rt,
++					 PRUSS_MII_RT_TXCFG1,
++					 PRUSS_MII_RT_TXCFG_TX_CLK_DELAY_MASK,
++					 delay);
++			} else {
++				regmap_update_bits
++					(prueth->mii_rt,
++					 PRUSS_MII_RT_TXCFG0,
++					 PRUSS_MII_RT_TXCFG_TX_CLK_DELAY_MASK,
++					 delay);
++			}
++		}
++
++		writeb(port_status, prueth->mem[region].va +
++		       PORT_STATUS_OFFSET);
++	}
+ 
+ 	if (emac->link) {
+ 	       /* reactivate the transmit queue if it is stopped */
+@@ -384,6 +441,397 @@ static void icssm_emac_adjust_link(struct net_device *ndev)
+ 	spin_unlock_irqrestore(&emac->lock, flags);
+ }
+ 
++static unsigned int
++icssm_get_buff_desc_count(const struct prueth_queue_info *queue)
++{
++	unsigned int buffer_desc_count;
++
++	buffer_desc_count = queue->buffer_desc_end -
++			    queue->buffer_desc_offset;
++	buffer_desc_count /= BD_SIZE;
++	buffer_desc_count++;
++
++	return buffer_desc_count;
++}
++
++static void icssm_get_block(struct prueth_queue_desc __iomem *queue_desc,
++			    const struct prueth_queue_info *queue,
++			    int *write_block, int *read_block)
++{
++	*write_block = (readw(&queue_desc->wr_ptr) -
++			queue->buffer_desc_offset) / BD_SIZE;
++	*read_block = (readw(&queue_desc->rd_ptr) -
++		       queue->buffer_desc_offset) / BD_SIZE;
++}
++
++/**
++ * icssm_prueth_tx_enqueue - queue a packet to firmware for transmission
++ *
++ * @emac: EMAC data structure
++ * @skb: packet data buffer
++ * @queue_id: priority queue id
++ *
++ * Return: 0 (Success)
++ */
++static int icssm_prueth_tx_enqueue(struct prueth_emac *emac,
++				   struct sk_buff *skb,
++				   enum prueth_queue_id queue_id)
++{
++	struct prueth_queue_desc __iomem *queue_desc;
++	const struct prueth_queue_info *txqueue;
++	struct net_device *ndev = emac->ndev;
++	unsigned int buffer_desc_count;
++	int free_blocks, update_block;
++	bool buffer_wrapped = false;
++	int write_block, read_block;
++	void *src_addr, *dst_addr;
++	int pkt_block_size;
++	void __iomem *dram;
++	int txport, pktlen;
++	u16 update_wr_ptr;
++	u32 wr_buf_desc;
++	void *ocmc_ram;
++
++	dram = emac->prueth->mem[emac->dram].va;
++	if (eth_skb_pad(skb)) {
++		if (netif_msg_tx_err(emac) && net_ratelimit())
++			netdev_err(ndev, "packet pad failed\n");
++		return -ENOMEM;
++	}
++
++	/* which port to tx: MII0 or MII1 */
++	txport = emac->tx_port_queue;
++	src_addr = skb->data;
++	pktlen = skb->len;
++	/* Get the tx queue */
++	queue_desc = emac->tx_queue_descs + queue_id;
++	txqueue = &queue_infos[txport][queue_id];
++
++	buffer_desc_count = icssm_get_buff_desc_count(txqueue);
++
++	/* the PRU firmware deals mostly in pointers already
++	 * offset into ram, we would like to deal in indexes
++	 * within the queue we are working with for code
++	 * simplicity, calculate this here
++	 */
++	icssm_get_block(queue_desc, txqueue, &write_block, &read_block);
++
++	if (write_block > read_block) {
++		free_blocks = buffer_desc_count - write_block;
++		free_blocks += read_block;
++	} else if (write_block < read_block) {
++		free_blocks = read_block - write_block;
++	} else { /* they are all free */
++		free_blocks = buffer_desc_count;
++	}
++
++	pkt_block_size = DIV_ROUND_UP(pktlen, ICSS_BLOCK_SIZE);
++	if (pkt_block_size > free_blocks) /* out of queue space */
++		return -ENOBUFS;
++
++	/* calculate end BD address post write */
++	update_block = write_block + pkt_block_size;
++
++	/* Check for wrap around */
++	if (update_block >= buffer_desc_count) {
++		update_block %= buffer_desc_count;
++		buffer_wrapped = true;
++	}
++
++	/* OCMC RAM is not cached and write order is not important */
++	ocmc_ram = (__force void *)emac->prueth->mem[PRUETH_MEM_OCMC].va;
++	dst_addr = ocmc_ram + txqueue->buffer_offset +
++		   (write_block * ICSS_BLOCK_SIZE);
++
++	/* Copy the data from socket buffer(DRAM) to PRU buffers(OCMC) */
++	if (buffer_wrapped) { /* wrapped around buffer */
++		int bytes = (buffer_desc_count - write_block) * ICSS_BLOCK_SIZE;
++		int remaining;
++
++		/* bytes is integral multiple of ICSS_BLOCK_SIZE but
++		 * entire packet may have fit within the last BD
++		 * if pkt_info.length is not integral multiple of
++		 * ICSS_BLOCK_SIZE
++		 */
++		if (pktlen < bytes)
++			bytes = pktlen;
++
++		/* copy non-wrapped part */
++		memcpy(dst_addr, src_addr, bytes);
++
++		/* copy wrapped part */
++		src_addr += bytes;
++		remaining = pktlen - bytes;
++		dst_addr = ocmc_ram + txqueue->buffer_offset;
++		memcpy(dst_addr, src_addr, remaining);
++	} else {
++		memcpy(dst_addr, src_addr, pktlen);
++	}
++
++       /* update first buffer descriptor */
++	wr_buf_desc = (pktlen << PRUETH_BD_LENGTH_SHIFT) &
++		       PRUETH_BD_LENGTH_MASK;
++	writel(wr_buf_desc, dram + readw(&queue_desc->wr_ptr));
++
++	/* update the write pointer in this queue descriptor, the firmware
++	 * polls for this change so this will signal the start of transmission
++	 */
++	update_wr_ptr = txqueue->buffer_desc_offset + (update_block * BD_SIZE);
++	writew(update_wr_ptr, &queue_desc->wr_ptr);
++
++	return 0;
++}
++
++void icssm_parse_packet_info(struct prueth *prueth, u32 buffer_descriptor,
++			     struct prueth_packet_info *pkt_info)
++{
++	pkt_info->start_offset = false;
++
++	pkt_info->shadow = !!(buffer_descriptor & PRUETH_BD_SHADOW_MASK);
++	pkt_info->port = (buffer_descriptor & PRUETH_BD_PORT_MASK) >>
++			 PRUETH_BD_PORT_SHIFT;
++	pkt_info->length = (buffer_descriptor & PRUETH_BD_LENGTH_MASK) >>
++			   PRUETH_BD_LENGTH_SHIFT;
++	pkt_info->broadcast = !!(buffer_descriptor & PRUETH_BD_BROADCAST_MASK);
++	pkt_info->error = !!(buffer_descriptor & PRUETH_BD_ERROR_MASK);
++	pkt_info->sv_frame = false;
++	pkt_info->lookup_success = !!(buffer_descriptor &
++				      PRUETH_BD_LOOKUP_SUCCESS_MASK);
++	pkt_info->flood = !!(buffer_descriptor & PRUETH_BD_SW_FLOOD_MASK);
++	pkt_info->timestamp = !!(buffer_descriptor & PRUETH_BD_TIMESTAMP_MASK);
++}
++
++/**
++ * icssm_emac_rx_packet - EMAC Receive function
++ *
++ * @emac: EMAC data structure
++ * @bd_rd_ptr: Buffer descriptor read pointer
++ * @pkt_info: packet information structure
++ * @rxqueue: Receive queue information structure
++ *
++ * Get a packet from receive queue
++ *
++ * Return: 0 (Success)
++ */
++int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
++			 struct prueth_packet_info *pkt_info,
++			 const struct prueth_queue_info *rxqueue)
++{
++	struct net_device *ndev = emac->ndev;
++	unsigned int buffer_desc_count;
++	int read_block, update_block;
++	unsigned int actual_pkt_len;
++	bool buffer_wrapped = false;
++	void *src_addr, *dst_addr;
++	u16 start_offset = 0;
++	struct sk_buff *skb;
++	int pkt_block_size;
++	void *ocmc_ram;
++
++	/* the PRU firmware deals mostly in pointers already
++	 * offset into ram, we would like to deal in indexes
++	 * within the queue we are working with for code
++	 * simplicity, calculate this here
++	 */
++	buffer_desc_count = icssm_get_buff_desc_count(rxqueue);
++	read_block = (*bd_rd_ptr - rxqueue->buffer_desc_offset) / BD_SIZE;
++	pkt_block_size = DIV_ROUND_UP(pkt_info->length, ICSS_BLOCK_SIZE);
++
++	/* calculate end BD address post read */
++	update_block = read_block + pkt_block_size;
++
++	/* Check for wrap around */
++	if (update_block >= buffer_desc_count) {
++		update_block %= buffer_desc_count;
++		if (update_block)
++			buffer_wrapped = true;
++	}
++
++	/* calculate new pointer in ram */
++	*bd_rd_ptr = rxqueue->buffer_desc_offset + (update_block * BD_SIZE);
++
++	/* Pkt len w/ HSR tag removed, If applicable */
++	actual_pkt_len = pkt_info->length - start_offset;
++
++	/* Allocate a socket buffer for this packet */
++	skb = netdev_alloc_skb_ip_align(ndev, actual_pkt_len);
++	if (!skb) {
++		if (netif_msg_rx_err(emac) && net_ratelimit())
++			netdev_err(ndev, "failed rx buffer alloc\n");
++		return -ENOMEM;
++	}
++
++	dst_addr = skb->data;
++
++	/* OCMC RAM is not cached and read order is not important */
++	ocmc_ram = (__force void *)emac->prueth->mem[PRUETH_MEM_OCMC].va;
++
++	/* Get the start address of the first buffer from
++	 * the read buffer description
++	 */
++	src_addr = ocmc_ram + rxqueue->buffer_offset +
++		   (read_block * ICSS_BLOCK_SIZE);
++	src_addr += start_offset;
++
++	/* Copy the data from PRU buffers(OCMC) to socket buffer(DRAM) */
++	if (buffer_wrapped) { /* wrapped around buffer */
++		int bytes = (buffer_desc_count - read_block) * ICSS_BLOCK_SIZE;
++		int remaining;
++		/* bytes is integral multiple of ICSS_BLOCK_SIZE but
++		 * entire packet may have fit within the last BD
++		 * if pkt_info.length is not integral multiple of
++		 * ICSS_BLOCK_SIZE
++		 */
++		if (pkt_info->length < bytes)
++			bytes = pkt_info->length;
++
++		/* If applicable, account for the HSR tag removed */
++		bytes -= start_offset;
++
++		/* copy non-wrapped part */
++		memcpy(dst_addr, src_addr, bytes);
++
++		/* copy wrapped part */
++		dst_addr += bytes;
++		remaining = actual_pkt_len - bytes;
++
++		src_addr = ocmc_ram + rxqueue->buffer_offset;
++		memcpy(dst_addr, src_addr, remaining);
++		src_addr += remaining;
++	} else {
++		memcpy(dst_addr, src_addr, actual_pkt_len);
++		src_addr += actual_pkt_len;
++	}
++
++	if (!pkt_info->sv_frame) {
++		skb_put(skb, actual_pkt_len);
++
++		/* send packet up the stack */
++		skb->protocol = eth_type_trans(skb, ndev);
++		local_bh_disable();
++		netif_receive_skb(skb);
++		local_bh_enable();
++	} else {
++		dev_kfree_skb_any(skb);
++	}
++
++	/* update stats */
++	ndev->stats.rx_bytes += actual_pkt_len;
++	ndev->stats.rx_packets++;
++
++	return 0;
++}
++
++/**
++ * icssm_emac_rx_thread - EMAC Rx interrupt thread handler
++ * @irq: interrupt number
++ * @dev_id: pointer to net_device
++ *
++ * EMAC Rx Interrupt thread handler - function to process the rx frames in a
++ * irq thread function. There is only limited buffer at the ingress to
++ * queue the frames. As the frames are to be emptied as quickly as
++ * possible to avoid overflow, irq thread is necessary. Current implementation
++ * based on NAPI poll results in packet loss due to overflow at
++ * the ingress queues. Industrial use case requires loss free packet
++ * processing. Tests shows that with threaded irq based processing,
++ * no overflow happens when receiving at ~92Mbps for MTU sized frames and thus
++ * meet the requirement for industrial use case.
++ *
++ * Return: interrupt handled condition
++ */
++static irqreturn_t icssm_emac_rx_thread(int irq, void *dev_id)
++{
++	struct net_device *ndev = (struct net_device *)dev_id;
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth_queue_desc __iomem *queue_desc;
++	const struct prueth_queue_info *rxqueue;
++	struct prueth *prueth = emac->prueth;
++	struct net_device_stats *ndevstats;
++	struct prueth_packet_info pkt_info;
++	int start_queue, end_queue;
++	void __iomem *shared_ram;
++	u16 bd_rd_ptr, bd_wr_ptr;
++	u16 update_rd_ptr;
++	u8 overflow_cnt;
++	u32 rd_buf_desc;
++	int used = 0;
++	int i, ret;
++
++	ndevstats = &emac->ndev->stats;
++	shared_ram = emac->prueth->mem[PRUETH_MEM_SHARED_RAM].va;
++
++	start_queue = emac->rx_queue_start;
++	end_queue = emac->rx_queue_end;
++retry:
++	/* search host queues for packets */
++	for (i = start_queue; i <= end_queue; i++) {
++		queue_desc = emac->rx_queue_descs + i;
++		rxqueue = &queue_infos[PRUETH_PORT_HOST][i];
++
++		overflow_cnt = readb(&queue_desc->overflow_cnt);
++		if (overflow_cnt > 0) {
++			emac->ndev->stats.rx_over_errors += overflow_cnt;
++			/* reset to zero */
++			writeb(0, &queue_desc->overflow_cnt);
++		}
++
++		bd_rd_ptr = readw(&queue_desc->rd_ptr);
++		bd_wr_ptr = readw(&queue_desc->wr_ptr);
++
++		/* while packets are available in this queue */
++		while (bd_rd_ptr != bd_wr_ptr) {
++			/* get packet info from the read buffer descriptor */
++			rd_buf_desc = readl(shared_ram + bd_rd_ptr);
++			icssm_parse_packet_info(prueth, rd_buf_desc, &pkt_info);
++
++			if (pkt_info.length <= 0) {
++				/* a packet length of zero will cause us to
++				 * never move the read pointer ahead, locking
++				 * the driver, so we manually have to move it
++				 * to the write pointer, discarding all
++				 * remaining packets in this queue. This should
++				 * never happen.
++				 */
++				update_rd_ptr = bd_wr_ptr;
++				ndevstats->rx_length_errors++;
++			} else if (pkt_info.length > EMAC_MAX_FRM_SUPPORT) {
++				/* if the packet is too large we skip it but we
++				 * still need to move the read pointer ahead
++				 * and assume something is wrong with the read
++				 * pointer as the firmware should be filtering
++				 * these packets
++				 */
++				update_rd_ptr = bd_wr_ptr;
++				ndevstats->rx_length_errors++;
++			} else {
++				update_rd_ptr = bd_rd_ptr;
++				ret = icssm_emac_rx_packet(emac, &update_rd_ptr,
++							   &pkt_info, rxqueue);
++				if (ret)
++					return IRQ_HANDLED;
++				used++;
++			}
++
++			/* after reading the buffer descriptor we clear it
++			 * to prevent improperly moved read pointer errors
++			 * from simply looking like old packets.
++			 */
++			writel(0, shared_ram + bd_rd_ptr);
++
++			/* update read pointer in queue descriptor */
++			writew(update_rd_ptr, &queue_desc->rd_ptr);
++			bd_rd_ptr = update_rd_ptr;
++		}
++	}
++
++	if (used) {
++		used = 0;
++		goto retry;
++	}
++
++	return IRQ_HANDLED;
++}
++
+ static int icssm_emac_set_boot_pru(struct prueth_emac *emac,
+ 				   struct net_device *ndev)
+ {
+@@ -412,6 +860,21 @@ static int icssm_emac_set_boot_pru(struct prueth_emac *emac,
+ 		netdev_err(ndev, "failed to boot PRU0: %d\n", ret);
+ 		return ret;
+ 	}
++	return ret;
++}
++
++static int icssm_emac_request_irqs(struct prueth_emac *emac)
++{
++	struct net_device *ndev = emac->ndev;
++	int ret;
++
++	ret = request_threaded_irq(emac->rx_irq, NULL, icssm_emac_rx_thread,
++				   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
++				   ndev->name, ndev);
++	if (ret) {
++		netdev_err(ndev, "unable to request RX IRQ\n");
++		return ret;
++	}
+ 
+ 	return ret;
+ }
+@@ -442,10 +905,27 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = icssm_emac_request_irqs(emac);
++	if (ret)
++		goto rproc_shutdown;
++
+ 	/* start PHY */
+ 	phy_start(emac->phydev);
++
++	/* enable the port and vlan */
++	icssm_prueth_port_enable(emac, true);
++
+ 	prueth->emac_configured |= BIT(emac->port_id);
++
++	if (netif_msg_drv(emac))
++		dev_notice(&ndev->dev, "started\n");
++
+ 	return 0;
++
++rproc_shutdown:
++	rproc_shutdown(emac->pru);
++
++	return ret;
+ }
+ 
+ /**
+@@ -459,18 +939,116 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
+ static int icssm_emac_ndo_stop(struct net_device *ndev)
+ {
+ 	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++
++	prueth->emac_configured &= ~BIT(emac->port_id);
++
++	/* disable the mac port */
++	icssm_prueth_port_enable(emac, false);
+ 
+ 	/* stop PHY */
+ 	phy_stop(emac->phydev);
+ 
++	/* stop the PRU */
+ 	rproc_shutdown(emac->pru);
+ 
++	/* free rx interrupts */
++	free_irq(emac->rx_irq, ndev);
++
++	if (netif_msg_drv(emac))
++		dev_notice(&ndev->dev, "stopped\n");
++
+ 	return 0;
+ }
+ 
++/* VLAN-tag PCP to priority queue map for EMAC/Switch/HSR/PRP used by driver
++ * Index is PCP val / 2.
++ *   low  - pcp 0..3 maps to Q4 for Host
++ *   high - pcp 4..7 maps to Q3 for Host
++ *   low  - pcp 0..3 maps to Q2 (FWD Queue) for PRU-x
++ *   where x = 1 for PRUETH_PORT_MII0
++ *             0 for PRUETH_PORT_MII1
++ *   high - pcp 4..7 maps to Q1 (FWD Queue) for PRU-x
++ */
++static const unsigned short emac_pcp_tx_priority_queue_map[] = {
++	PRUETH_QUEUE4, PRUETH_QUEUE4,
++	PRUETH_QUEUE3, PRUETH_QUEUE3,
++	PRUETH_QUEUE2, PRUETH_QUEUE2,
++	PRUETH_QUEUE1, PRUETH_QUEUE1,
++};
++
++static u16 icssm_prueth_get_tx_queue_id(struct prueth *prueth,
++					struct sk_buff *skb)
++{
++	u16 vlan_tci, pcp;
++	int err;
++
++	err = vlan_get_tag(skb, &vlan_tci);
++	if (likely(err))
++		pcp = 0;
++	else
++		pcp = (vlan_tci & VLAN_PRIO_MASK) >> VLAN_PRIO_SHIFT;
++
++	/* Below code (pcp >>= 1) is made common for all
++	 * protocols (i.e., EMAC, RSTP, HSR and PRP)*
++	 * pcp value 0,1 will be updated to 0 mapped to QUEUE4
++	 * pcp value 2,3 will be updated to 1 mapped to QUEUE4
++	 * pcp value 4,5 will be updated to 2 mapped to QUEUE3
++	 * pcp value 6,7 will be updated to 3 mapped to QUEUE3
++	 */
++	pcp >>= 1;
++
++	return emac_pcp_tx_priority_queue_map[pcp];
++}
++
++/**
++ * icssm_emac_ndo_start_xmit - EMAC Transmit function
++ * @skb: SKB pointer
++ * @ndev: EMAC network adapter
++ *
++ * Called by the system to transmit a packet  - we queue the packet in
++ * EMAC hardware transmit queue
++ *
++ * Return: enum netdev_tx
++ */
++static enum netdev_tx icssm_emac_ndo_start_xmit(struct sk_buff *skb,
++						struct net_device *ndev)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	int ret;
++	u16 qid;
++
++	qid = icssm_prueth_get_tx_queue_id(emac->prueth, skb);
++	ret = icssm_prueth_tx_enqueue(emac, skb, qid);
++	if (ret) {
++		if (ret != -ENOBUFS && netif_msg_tx_err(emac) &&
++		    net_ratelimit())
++			netdev_err(ndev, "packet queue failed: %d\n", ret);
++		goto fail_tx;
++	}
++
++	ndev->stats.tx_packets++;
++	ndev->stats.tx_bytes += skb->len;
++	dev_kfree_skb_any(skb);
++
++	return NETDEV_TX_OK;
++
++fail_tx:
++	if (ret == -ENOBUFS) {
++		ret = NETDEV_TX_BUSY;
++	} else {
++		/* error */
++		ndev->stats.tx_dropped++;
++		ret = NET_XMIT_DROP;
++	}
++
++	return ret;
++}
++
+ static const struct net_device_ops emac_netdev_ops = {
+ 	.ndo_open = icssm_emac_ndo_open,
+ 	.ndo_stop = icssm_emac_ndo_stop,
++	.ndo_start_xmit = icssm_emac_ndo_start_xmit,
+ };
+ 
+ /* get emac_port corresponding to eth_node name */
+@@ -540,16 +1118,37 @@ static int icssm_prueth_netdev_init(struct prueth *prueth,
+ 	/* by default eth_type is EMAC */
+ 	switch (port) {
+ 	case PRUETH_PORT_MII0:
++		emac->tx_port_queue = PRUETH_PORT_QUEUE_MII0;
++
++		/* packets from MII0 are on queues 1 through 2 */
++		emac->rx_queue_start = PRUETH_QUEUE1;
++		emac->rx_queue_end = PRUETH_QUEUE2;
++
+ 		emac->dram = PRUETH_MEM_DRAM0;
+ 		emac->pru = prueth->pru0;
+ 		break;
+ 	case PRUETH_PORT_MII1:
++		emac->tx_port_queue = PRUETH_PORT_QUEUE_MII1;
++
++		/* packets from MII1 are on queues 3 through 4 */
++		emac->rx_queue_start = PRUETH_QUEUE3;
++		emac->rx_queue_end = PRUETH_QUEUE4;
++
+ 		emac->dram = PRUETH_MEM_DRAM1;
+ 		emac->pru = prueth->pru1;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
++
++	emac->rx_irq = of_irq_get_byname(eth_node, "rx");
++	if (emac->rx_irq < 0) {
++		ret = emac->rx_irq;
++		if (ret != -EPROBE_DEFER)
++			dev_err(prueth->dev, "could not get rx irq\n");
++		goto free;
++	}
++
+ 	/* get mac address from DT and set private and netdev addr */
+ 	ret = of_get_ethdev_address(eth_node, ndev);
+ 	if (!is_valid_ether_addr(ndev->dev_addr)) {
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+index fc59087c214d..3c70dc9c4be0 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+@@ -20,6 +20,12 @@
+ 
+ /* PRUSS local memory map */
+ #define ICSS_LOCAL_SHARED_RAM	0x00010000
++#define EMAC_MAX_PKTLEN		(ETH_HLEN + VLAN_HLEN + ETH_DATA_LEN)
++/* Below macro is for 1528 Byte Frame support, to Allow even with
++ * Redundancy tag
++ */
++#define EMAC_MAX_FRM_SUPPORT (ETH_HLEN + VLAN_HLEN + ETH_DATA_LEN + \
++			      ICSSM_LRE_TAG_SIZE)
+ 
+ /* PRU Ethernet Type - Ethernet functionality (protocol
+  * implemented) provided by the PRU firmware being loaded.
+@@ -76,6 +82,32 @@ struct prueth_queue_info {
+ 	u16 buffer_desc_end;
+ } __packed;
+ 
++/**
++ * struct prueth_packet_info - Info about a packet in buffer
++ * @start_offset: start offset of the frame in the buffer for HSR/PRP
++ * @shadow: this packet is stored in the collision queue
++ * @port: port packet is on
++ * @length: length of packet
++ * @broadcast: this packet is a broadcast packet
++ * @error: this packet has an error
++ * @sv_frame: indicate if the frame is a SV frame for HSR/PRP
++ * @lookup_success: src mac found in FDB
++ * @flood: packet is to be flooded
++ * @timestamp: Specifies if timestamp is appended to the packet
++ */
++struct prueth_packet_info {
++	bool start_offset;
++	bool shadow;
++	unsigned int port;
++	unsigned int length;
++	bool broadcast;
++	bool error;
++	bool sv_frame;
++	bool lookup_success;
++	bool flood;
++	bool timestamp;
++};
++
+ /* In switch mode there are 3 real ports i.e. 3 mac addrs.
+  * however Linux sees only the host side port. The other 2 ports
+  * are the switch ports.
+@@ -169,14 +201,21 @@ struct prueth_emac {
+ 
+ 	struct rproc *pru;
+ 	struct phy_device *phydev;
++	struct prueth_queue_desc __iomem *rx_queue_descs;
++	struct prueth_queue_desc __iomem *tx_queue_descs;
+ 
+ 	int link;
+ 	int speed;
+ 	int duplex;
++	int rx_irq;
+ 
++	enum prueth_port_queue_id tx_port_queue;
++	enum prueth_queue_id rx_queue_start;
++	enum prueth_queue_id rx_queue_end;
+ 	enum prueth_port port_id;
+ 	enum prueth_mem dram;
+ 	const char *phy_id;
++	u32 msg_enable;
+ 	u8 mac_addr[6];
+ 	phy_interface_t phy_if;
+ 	spinlock_t lock;	/* serialize access */
+@@ -201,4 +240,10 @@ struct prueth {
+ 	size_t ocmc_ram_size;
+ 	u8 emac_configured;
+ };
++
++void icssm_parse_packet_info(struct prueth *prueth, u32 buffer_descriptor,
++			     struct prueth_packet_info *pkt_info);
++int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
++			 struct prueth_packet_info *pkt_info,
++			 const struct prueth_queue_info *rxqueue);
+ #endif /* __NET_TI_PRUETH_H */
+-- 
+2.34.1
+
