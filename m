@@ -1,215 +1,203 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013027.outbound.protection.outlook.com [40.107.159.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCC02BF3C5;
-	Mon, 14 Apr 2025 12:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634980; cv=fail; b=FnY27eLeFTFkwjnXkhieexd2fRRrM+q7XfYoXKxBfEOkxoEedGkMB73l8arkB9NnKi+Pz8hFa92dHgBmCym1F6z2P3/hDPZEguZAnrrxMVXZ7881SzauTKfliXda0DPH16hsXhxEV3BrfETAMBX5DzNBYBkPxv8ao8W3NsKVgZo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634980; c=relaxed/simple;
-	bh=xevKO1RsEPlxooes/u1ay21jR8eYtSIf6iGg8Ma4YdQ=;
-	h=Date:From:Cc:Subject:Message-ID:Content-Type:Content-Disposition:
-	 In-Reply-To:MIME-Version; b=TxmN+Tmp65VXmXahGsNgeuGQxrJuzaoP2V17OT/wuuMd1Qp8B8DAJsWwcUnLFFabN6Nh82f0tPlB4msiFxovY4S323XLkRc4hC7R94fqmzH8eIWUP2kzjcI0jNGzc/C6O8xrtuH1KZxrgLXlxnB4zJV0pUUHzS30EcuvGIOfMQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=EKTr8CTM; arc=fail smtp.client-ip=40.107.159.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234A629CB4B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744635025; cv=none; b=s/dYe6RbMoFPajSAjcSGD7iyFVBCEndC2m6D84ApO1dicXKQPMssm2TNAmpdkkpABwDH0PaBBwuFEy0c8d6zvbheiiRBQexCbG5AUT+iGGUjOEzyUI9Qu8MTBBi3Wr4NrNGw72ltSnjT+2CHuKBCm1URrfwBvR+4GUdqtZ+9XlM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744635025; c=relaxed/simple;
+	bh=aauT3GXVgkpvi4e640lDkwhNh379xrTu4THGAGH1JXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W5skr4KCBXBqFtLeXljkzDJWz0mCseU8wCNek4gjFxNRVM2hyKkYidxOFjdHHe4pNsoeMAOInSiM3318rPL6PoE3zz9X0deHZzJ/L/X5RZThjyv9zwkjR5FhebJRuXiu1eG9WIbOgDJr6JvpbzTK+wZNcpLdgz+JhNPhT9g4MP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HAJEOtjE; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="EKTr8CTM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pJbDVax9M2xeyTRpx1wWIHtU17wkzV+6TNg5kbNcIa0scQCaJA2cnretogyt/rLiOA2BfleEA0mpWveYReozY0u5s7+LgAcG9elRqGxgvrbV8/ezhCjzNUycNv8YwlqiJeb3clJMgA1sKgeTAo7ynGfqyfa/E6IblRvNO0sa8jRotFzP+TUCP43myylLvyG+ArnfxfUka514V1xSH5QB9U9BZORVQKVr0uqkAas2lDdyA0ZAXZPJ2n0dpMewJdHj/ikVrC+pGLX8EgWSB9SBfDbdW2qixCgqOcUYwSuFkCZr9/BKHLrIUhLr2tX8fO7iqth2J511dIrugeuDViyMig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mHL3ACAMjGdfjpMLN+ZHvnKPbf8y++fpU2kIyEuO1Qw=;
- b=IybI56bMT/Dk9P6cP6HW1mVFTGouJ3sn/97OGipa8EUfL8kkhqzYZvsi4Kjx9YXJO4tZAPIrSYmKcUu3iFjIvt9kaziMyqOn2a6c65yK36myzOlWRxMqU/Cbrx08RGC6svvRn21UzIJ260wkhr6vEMp7ZH1BTO+SVadZf1hQV6/ZmUtgcXUQzdtb8QeaB5uMT524phqSKlZHc2YYeWGNDmSMY0twMzQ5Z2jlCfRCto9PCZk5xgjWuQrhwbO9LZgAiB8fXak67VsBzlVzMehlVzcLE1OyBFypzMjVSZuoBvqr56j+oQoP7dgCUr8QWSb6c+gmZQO9P8uvCkAiLQeZKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mHL3ACAMjGdfjpMLN+ZHvnKPbf8y++fpU2kIyEuO1Qw=;
- b=EKTr8CTMgH6qTbl8Ruf6FjNwkdlAjaRz6E3SecnCRzsVrc/g/N/PYrbKN0SdmLMsDIpKEEX4DbgGoMnAmpt83TLA5Fs/RcRM2IVzwfJk20PAKi8jP7xpgRb7uSV47iK7EXqSjCPSEhRI7l7FBq8l0yX44XRk27PCtyN/hU4VdSja/Ptv6pvuFP0XN7cquGiwGf6XsAh2zEcja+7h9nWn0EQyZpaovnXGQFgYRY/sVWiZFRnu+2OJxA2MVHzJggjl/IHDTkFUacAGDk36L19kj+Ydjnmae6kFG6+WfGBDPwC4ucDSV1iS6GPUy/ERiUYvDAXUC8pvbfn00hPtlxafwQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by AS8PR04MB8977.eurprd04.prod.outlook.com (2603:10a6:20b:42c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
- 2025 12:49:34 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8632.035; Mon, 14 Apr 2025
- 12:49:34 +0000
-Date: Mon, 14 Apr 2025 15:49:30 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Nikolay Aleksandrov <razor@blackwall.org>,
-	Ido Schimmel <idosch@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>, bridge@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net 2/2] net: dsa: propagate brentry flag changes
-Message-ID: <20250414124930.j435ccohw3lna4ig@skbuf>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412122428.108029-3-jonas.gorski@gmail.com>
- <20250412122428.108029-3-jonas.gorski@gmail.com>
-X-ClientProxiedBy: PA7P264CA0216.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:374::15) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HAJEOtjE"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so22710395e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744635021; x=1745239821; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x+pAXTJjBGvhFO5Jgnk3HRVtR9DMXrzjv5IH0mVyBfI=;
+        b=HAJEOtjEEnQzVwVqh+buhQv+P1wc8JjRokY/+gMnuusihX39fYrqbVZ43ucWmDsrp1
+         1RX+cqOYZaordPadW9TD3F3LqeCGxaLW2FoSKx8bfT6uYrB20c3P9mcQuH6q5KiAYrnl
+         shw+tGr5e7aaOu1fo9YrukXEVnbUuRLxrheKO7NTZv64m35BxHO6/Q/pF65Eva5hMlrC
+         oCHENbrCfjFi2v1sK1XWyW0gAq2uu3MEDFoUiL2WhCtTCsq9bldhAqs3LGnC67+H+dNL
+         B91SYpQTSnApsBaw7t+xWiG3mwEturKMZyXq5E/4n28TMmGoMufMbCjPOpZIIyS65WSa
+         bwaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744635021; x=1745239821;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+pAXTJjBGvhFO5Jgnk3HRVtR9DMXrzjv5IH0mVyBfI=;
+        b=nBuQGVo7WS0RnGjG6/37KouAQQy1TXZKH51L4k2APHmtFa+7cZNXfOy2Xg2LGG3Ucd
+         8ReVtlZcnlEUUwIEgjQ+MeUha1IoCabpfyYkWgcaAYuw7wtWuNvsA45LC+NYuLAuRRAp
+         o3H/Jkx3lkZaowR3H6xGTLMS+QmhpG7cScUOb9fFJKTCCLsWuThtrUcYSzfZdXn3x9w+
+         lnFSmzhjkLFIKgc7pzwViGwfx4w+3ktG11wPJVbxdEZWz4xE0PmiDUDK4xsBfApq+e87
+         g+LKiEbY71fuSWoHLUqGDYNHFsmWzzB/+wnw0YRCApk+zeTjpEH/f9G/Sg4XWgsXAjIg
+         A4Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCU91J27DFN1F4AuQlQ3o+ibNo8zRS1KujU3O6bW/QAIrdGlK57YtbF+KTBovJy2Sp1TJf5vKNUgnPl2vsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoiTYuWnCWGUd/vy38wnKhVUgmY7rH4wLmpHFk/Hi44VZX/YCv
+	KcjiAXBDTKtETsg1CGDC258WQBLxMd/ScNVSGy8w7Br8UrtUzWLdA7+fQTR7pPpI1QGamCbxT3w
+	y5Zo=
+X-Gm-Gg: ASbGncu8anqu+Kqz5aH0XHBN9r5YKzeof8Rjiv57cVbsWL8AvxA25vw5X9jQxTbtoCK
+	KuhXaA1l0yUmf1ATlDPuOt4kzwbuSRQlPeAyDLZGfNvCJzftUU7Tol02X2Ozj3sh9zm8CpQJe+X
+	UHpZKDaSB07aGkkWcZj9wIxh7/FL0fSgBTmNxt5om1ndRsV5T+Y+pHyaqQVBesoFJOGhqSwhjiC
+	zmljoWVJF6fNieANG6PNm3vw86c2HS+Up+RKgydKg6nMiHpKXUsXdfT8suyZi+MOvlSFzhI4xxQ
+	CKqNRrnpayFi+w+dKsJaWYry9VPOmy/jVpK4T289ljp14UmEj4FAm4ro5nB0Yxgbbrw5+8c=
+X-Google-Smtp-Source: AGHT+IH430QYM+FJhca1rtm5d/b7VTqFwzxeB45/GUv639pRmbX2Q64Po04fC/f2TeaHco+nMrWWlg==
+X-Received: by 2002:a05:600c:3554:b0:43d:5ec:b2f4 with SMTP id 5b1f17b1804b1-43f3a93f2d8mr116392145e9.10.1744635021303;
+        Mon, 14 Apr 2025 05:50:21 -0700 (PDT)
+Received: from [192.168.1.47] (i5E863B76.versanet.de. [94.134.59.118])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc83sm182939685e9.26.2025.04.14.05.50.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 05:50:20 -0700 (PDT)
+Message-ID: <6db146b9-ad63-42c7-9f33-83ecf64ed344@linaro.org>
+Date: Mon, 14 Apr 2025 14:50:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|AS8PR04MB8977:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e9a1f32-e26d-4777-863c-08dd7b52ce49
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?H1QI/BBzLRV8G2qXz7LZnA5ExFXliU/CJ+7iXvRjxkru8XUdnIYfvYFs3UD1?=
- =?us-ascii?Q?dtnB+18K/td6QuOC+8bgHePV6CY7fVRzRAppQsXYZ0cS1ZISkFpxQG1KE1Iv?=
- =?us-ascii?Q?IxaVbTPoFOVLqp0Vsoc7tdlhk3Gd+zvhe3zjiLFriJPzW7EzRL+YEiRZe1BX?=
- =?us-ascii?Q?ns9+eJ8oConFdgiH/Dlxx7aCXA1SUhmn1b4wmjuJBPHqUr1kkWDbTlqJFlde?=
- =?us-ascii?Q?aGld4uJQj6SHAYT+5GgrrpMcDo35ECdOm8Fdj7+uK7MNvSG9iUPrG3kwjqTC?=
- =?us-ascii?Q?UdtHcxvqLtXw5bdvj4GovVN6Nyrrm5jqVwpflrMEk7LoBLyTfvZvxyxIcmLS?=
- =?us-ascii?Q?kiTRWQMs2qTBVgU8CC9hi7Ji5EKKv2OZeLEq4ocKQerIItI2nrEOboi59AZu?=
- =?us-ascii?Q?tmBmqSoFLYxKQA+oFvE9ofin10mauzFLdm89Smkyh9x/huAZ+1lMnHPaDJvf?=
- =?us-ascii?Q?NXFgKBMpOws74UgOlaqwnmvraNF9AfmW2XCUzzmJXyP3Vgm872vhWpfZlmGk?=
- =?us-ascii?Q?bbsMJ5Oj1k3raeZ8fqEYGqpsxJJ/eo7E2YgiOX8KDfDF0ogUPKNhI0jwxOFt?=
- =?us-ascii?Q?YcA4xY4fFkmfbrACYJuUd4TN1DfECDeiANDABvKRbqqCPcYEL/7RkYK4MMJw?=
- =?us-ascii?Q?xOtjEyy+nVT1UBCWvcsl3zIo9HS9wJjXPAQ9yqNckw80fCXJBpJCpDwhviNr?=
- =?us-ascii?Q?B7L8ntnwBrZu+yS0wJBEQ8Haaa5wYy3oTCZqAcYe8UBxdcytqiOLUrLlYZXL?=
- =?us-ascii?Q?ylsPJmWeqzW+MS+tEO4WI608JOFm7U9FZSKAD69THDuZiUJ9Py6Zo9vLD1lA?=
- =?us-ascii?Q?tnIk19HWQ4cEJQOn2quFssNJlDy6aOcI89EIuz1CJolhvZfkyk623eqeG5zP?=
- =?us-ascii?Q?sGqSh99fYSMQ2filjsFKni8Y6P/HjVN+eIwzKvsffsSINXhHIqAo9wdyRNor?=
- =?us-ascii?Q?S3gMzu8pXQMQIpZc1d7c+J8tQo3o862Cxg0yJTQ7NOV31mOLwaOizH/h8zBR?=
- =?us-ascii?Q?h3EsvE8CNk0JoLNQkJpXllVp6WBDnPur8Y8BUYUwePjHGyq+53XIoyotwWsg?=
- =?us-ascii?Q?dS6N3Mu7hEGCyyO2PfYtCBE/aSqQjy/aXU03UFYo1RkVP8R6/OI9Z+gDi3B6?=
- =?us-ascii?Q?YiMinU3I/Jf9WR5fI4/3be9I50QSUuulS/DOKZ3TumjjtB282X35zQmyAAO4?=
- =?us-ascii?Q?5dZklRZYDUfGHduE7a5iicC0jNw3ikZp6NExR9zovg0U7erY9We/0ij1UIls?=
- =?us-ascii?Q?+tdRH+9Xm9iP1nlkA2OrrH/ppKf90lEsBT8RbikMgoRkTOntvStD7YMjMNOS?=
- =?us-ascii?Q?CQxoGfivUPV8JDg1wpcsBikJB+k7xU07eh3gT9KLlDtRO4Vjdibc0kNkTzfJ?=
- =?us-ascii?Q?fqE/uShiZBG1377+pQ0pUgW9aAmwvG5sRdERIi1k16/e7u7DDDAGpNMr3Lml?=
- =?us-ascii?Q?fgf3tvs7cHQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SESL8W7TezzadUP2ajiXZYVICQ5FtGGz9t/3G7LQ3wIFB4g0WlAgBpB+JMGg?=
- =?us-ascii?Q?JZyQrDCGBGtAE0IWncCpkJtIwjb00S0OmF5TpjhOcKSiRWc2JiD0xHDALG9r?=
- =?us-ascii?Q?/oalQYrcDNANJDEEMTvq6t/NC1PAtX9SEIcmwzT7KNSlFtsDvTQM7pqwxaya?=
- =?us-ascii?Q?izBtz8ytCVq0NwhayrVMM1FGiG10wgqpkx7QkVam5d420yDLkV5jBdROtQJz?=
- =?us-ascii?Q?6drPgusCrf3V7tQtaR01wPejhohPHUFWyTTqwFUxlh4sX/f/MXvnTfg5uX+A?=
- =?us-ascii?Q?Sr/dhEIzQPUgNWuMluiiuU0NTJGjb5jjwIYzTBGE7wq7CiwPuuObXgYoJtEu?=
- =?us-ascii?Q?GKLKdsjNziWNYhPtmRA+leA9dE2gsKv4VXRqjbfTCmjfJOm0jnRF8O2MAcVe?=
- =?us-ascii?Q?sd+hwKFuAk9L48FVqVmMgkKiVea97wezi5ffO9UyVzDc+r+JnTnfFG3NnghM?=
- =?us-ascii?Q?seV/9KHcggGJmfsMcM2dg6Ns284PnsZ8rKLcKPFPuJw0b2qeHZFLIlbCNEt4?=
- =?us-ascii?Q?sKdBX2MG6o9fGTvlGa/dcWIVL3vOynB7R3lIgi2FU6QiFpNgUnCexfVtGdcH?=
- =?us-ascii?Q?qU93gmh+1nZ9y0WCyWby0w0BsPRuPTmgHzxRwJaiK3zCz7EjYmte3t0mQKyn?=
- =?us-ascii?Q?wGqmasiPDOzVk9VIOa2IC2p6OpLLFw/qjw63u4KnBPca2xmfw/z8hqzbcyH7?=
- =?us-ascii?Q?kaLBNNXknAGHq7/KdpT3OFb1TVCF1m/QsMwx4YBWfhSFboAECVbfJUWBtaeW?=
- =?us-ascii?Q?49Vh/qevkWphlQvnD8EwtsaUrKy4cdqUrZ5ln5S/Dqpn0axc7yQtqxBwTotM?=
- =?us-ascii?Q?z40zdS7TrPKfHA2Xx4osodUleXLTEzRnZlDbM87o+FGMy1gSLmEKMUun48IZ?=
- =?us-ascii?Q?WGplqaqrZpDO3FM6+ufS5HYGdwioDzzr6DcsJI/QrPhU8GuMDtHG5slYINGS?=
- =?us-ascii?Q?jooRUFjOShHdLV1G9LkzCalo7dflTVkuYnNB0e0BG+DZccsVm+Sp1vOvcXwV?=
- =?us-ascii?Q?6TtF8g/KAmrkRjte4sK2UeQQSZbncEbFT/iYX4k6Rx/ThyLCKkU7XMgvCwSc?=
- =?us-ascii?Q?h6n7UQqg+uLj9hdqBFEiW2ySV3X88wg6mHVBp/j/h2vOEJ6TVjuVZma4h3I0?=
- =?us-ascii?Q?RR1Og+6zOcas/StlF0OT7HC1RNBbZqSrPZcufevVxs5kzSO6u4cNb9hZ/DLW?=
- =?us-ascii?Q?w/7jIHtCABWi9w5XbllyKO/JN4G5ZgYwqal94cH3ojMTm64aU/55tjTNtjI2?=
- =?us-ascii?Q?ZqLijlzUuMdrb9lzmbBPQNE6ziyVKUfN+6171qC+FGEOoDtSsAmYWd3PI7S+?=
- =?us-ascii?Q?J30+eFY8qORiiek02ES8UB+KRfW7zOCI5TtuxajQyT1PJeAvQM7MDyfDbfzD?=
- =?us-ascii?Q?anUriZK5iuHjztonjUyf1kU7/UYuzJ9aJwwnZJ/xbVW5fHUzSTXMG35X6g29?=
- =?us-ascii?Q?cG0wX14Rv38cBrQE4WDs1cCJuc5HYbIS5s6b5KlsNFpDBnYbH0+kID2bYoxr?=
- =?us-ascii?Q?Oyo2zLl6FBEjOSlESEjt+4T2RY0oRGP7bSOv0/YqWBq2Muq6AnS/wQikvcNJ?=
- =?us-ascii?Q?8C5LZ3regBttCQOLA2F2K08qSple3OU6uNB5lQfFHtMAEREv8UoXsj3iynbi?=
- =?us-ascii?Q?ww=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e9a1f32-e26d-4777-863c-08dd7b52ce49
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 12:49:34.1237
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gOHvcto8C4U0ZdJhahl4MurFBdyx61OSSsZyFKSEooB3FkU9VZkQ+kIWeysmvzxd8740GivyMa1LzWj2sq3vPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8977
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
+ gpio's to root port
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
+ <20250414-perst-v2-1-89247746d755@oss.qualcomm.com>
+ <ody5tbmdcmxxzovubac4aeiuxvrjjmwujqmo6uz7kczktefcxz@b6i5bkwpvmzl>
+Content-Language: en-US
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <ody5tbmdcmxxzovubac4aeiuxvrjjmwujqmo6uz7kczktefcxz@b6i5bkwpvmzl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 12, 2025 at 02:24:28PM +0200, Jonas Gorski wrote:
-> Currently any flag changes for brentry vlans are ignored, so the
-> configured cpu port vlan will get stuck at whatever the original flags
-> were.
+
+
+On 4/14/25 10:04, Dmitry Baryshkov wrote:
+> On Mon, Apr 14, 2025 at 11:09:12AM +0530, Krishna Chaitanya Chundru wrote:
+>> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
+>> the bridge node, as agreed upon in multiple places one instance is[1].
+>>
+>> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
+>> wake-gpios properties in the root port node. There is already reset-gpio
+>> defined for PERST# in pci-bus-common.yaml, start using that property
+>> instead of perst-gpio.
+>>
+>> For backward compatibility, do not remove any existing properties in the
+>> bridge node.
+>>
+>> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>>   .../devicetree/bindings/pci/qcom,pcie-common.yaml      | 18 ++++++++++++++++++
+>>   .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml      | 17 +++++++++++++----
+>>   2 files changed, 31 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+>> index 0480c58f7d998adbac4c6de20cdaec945b3bab21..16e9acba1559b457da8a8a9dda4a22b226808f86 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+>> @@ -85,6 +85,24 @@ properties:
+>>     opp-table:
+>>       type: object
+>>   
+>> +patternProperties:
+>> +  "^pcie@":
+>> +    type: object
+>> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
+>> +
+>> +    properties:
+>> +      reg:
+>> +        maxItems: 1
+>> +
+>> +      phys:
+>> +        maxItems: 1
+>> +
+>> +      wake-gpios:
+>> +        description: GPIO controlled connection to WAKE# signal
+>> +        maxItems: 1
+>> +
+>> +    unevaluatedProperties: false
 > 
-> E.g.
+> Please mark old properties as deprecated.
+
+Since this is a trivial change, just moving two properties, I don't see 
+why it makes sense to deprecate -- just remove the old properties, and 
+move over all the platforms at once.
+
 > 
-> $ bridge vlan add dev swbridge vid 10 self pvid untagged
-> $ bridge vlan add dev swbridge vid 10 self
+>> +
+>>   required:
+>>     - reg
+>>     - reg-names
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+>> index 76cb9fbfd476fb0412217c68bd8db44a51c7d236..beb092f53019c31861460570cd2142506e05d8ef 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+>> @@ -162,9 +162,6 @@ examples:
+>>               iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
+>>                           <0x100 &apps_smmu 0x1c81 0x1>;
+>>   
+>> -            phys = <&pcie1_phy>;
+>> -            phy-names = "pciephy";
+>> -
+>>               pinctrl-names = "default";
+>>               pinctrl-0 = <&pcie1_clkreq_n>;
+>>   
+>> @@ -173,7 +170,19 @@ examples:
+>>               resets = <&gcc GCC_PCIE_1_BCR>;
+>>               reset-names = "pci";
+>>   
+>> -            perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>               vddpe-3v3-supply = <&pp3300_ssd>;
+>> +            pcie1_port0: pcie@0 {
+>> +              device_type = "pci";
 > 
-> Would cause the vlan to get "stuck" at pvid untagged in the hardware,
-> despite now being configured as tagged on the bridge.
+> The rest of the file uses 4 spaces to indent the next level. Any reason
+> for breaking this custom?
 > 
-> Fix this by passing on changed vlans to drivers, but do not increase the
-> refcount for updates.
+>> +              reg = <0x0 0x0 0x0 0x0 0x0>;
+>> +              bus-range = <0x01 0xff>;
+>> +
+>> +              #address-cells = <3>;
+>> +              #size-cells = <2>;
+>> +              ranges;
+>> +              phys = <&pcie1_phy>;
+>> +
+>> +              reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>> +            };
+>> +
 > 
-> Since we should never get an update for a non-existing VLAN, add a
-> WARN_ON() in case it happens.
+> Drop extra empty liines
 > 
-> Fixes: 134ef2388e7f ("net: dsa: add explicit support for host bridge VLANs")
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> ---
+>>           };
+>>       };
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
 
-I think it's important to realize that the meaning of the "flags" of
-VLANs offloaded to the CPU port is not completely defined.
-"egress-untagged" from the perspective of the hardware CPU port is the
-opposite direction compared to "egress-untagged" from the perspective of
-the bridge device (one is Linux RX, the other is Linux TX).
+-- 
+Caleb (they/them)
 
-Additionally, we install in DSA as host VLANs also those bridge port VLANs
-which were configured by the user on foreign interfaces. It's not exactly
-clear how to reconcile the "flags" of a VLAN installed on the bridge
-itself with the "flags" of a VLAN installed on a foreign bridge port.
-
-Example:
-ip link add br0 type bridge vlan_filtering 1 vlan_default_pvid 0
-ip link set veth0 master br0 # foreign interface, unrelated to DSA
-ip link set swp0 master br0 # DSA interface
-bridge vlan add dev br0 vid 1 self pvid untagged # leads to an "dsa_vlan_add_hw: cpu port N vid 1 untagged" trace event
-bridge vlan add dev veth0 vid 1 # still leads to an "dsa_vlan_add_bump: cpu port N vid 1 refcount 2" trace event after your change
-
-Depending on your expectations, you might think that host VID 1 would
-also need to become egress-tagged in this case, although from the
-bridge's perspective, it hasn't "changed", because it is a VLAN from a
-different VLAN group (port veth0 vs bridge br0).
-
-The reverse is true as well. Because the user can toggle the "pvid" flag
-of the bridge VLAN, that will make the switchdev object be notified with
-changed=true. But since DSA clears BRIDGE_VLAN_INFO_PVID, the host VLAN,
-as programmed to hardware, would be identical, yet we reprogram it anyway.
-
-Both would seem to indicate that "changed" from the bridge perspective
-is not what matters for calling the driver, but a different "changed"
-flag, calculated by DSA from its own perspective.
-
-I was a bit reluctant to add such complexity in dsa_port_do_vlan_add(),
-considering that many drivers treat the VLANs on the CPU port as
-always-tagged towards software (not b53 though, except for
-b53_vlan_port_needs_forced_tagged() which is only for DSA_TAG_PROTO_NONE).
-In fact, what is not entirely clear to me is what happens if they _don't_
-treat the CPU port in a special way. Because software needs to know in
-which VLAN did the hardware begin to process a packet: if the software
-bridge needs to continue the processing of that packet, it needs to do
-so _in the same VLAN_. If the accelerator sends packets as VLAN-untagged
-to software, that information is lost and VLAN hopping might take place.
-So I was hoping that nobody would notice that the change of flags on
-host VLANs isn't propagated to drivers, because none of the flags should
-be of particular relevance in the first place.
-
-I would like to understand better, in terms of user-visible impact, what
-is the problem that you see?
