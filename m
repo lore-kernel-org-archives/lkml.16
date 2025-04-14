@@ -1,83 +1,82 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE8128B4E0
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97781A5BB1;
+	Mon, 14 Apr 2025 18:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744656308; cv=none; b=uGjRo3CZ0v6z9evEtS4r+JbCy7gObQcFJLhC28R6it0B1MtGnKiUMnJa4zrg+sTycXxJ1o/jj3C4+OMKvF6ZmHo1iIAZqbvZXYrDerROvy3Dzw6fwwHlWiTPVj/67IczOKLvnqIdi2tDGf4/+8sb2SJe9/M9BMefkjv2GXA6mEI=
+	t=1744656357; cv=none; b=XmlFM8oiHaLXLMQIb9rL9piCeSvYYfbFZjwD0xS3YgyvgOd8vvwZBoz2OB2B35Ey3JODb7Qdjs47ZaQInYRFVewhpi6XTp9+3/G16LzQR61yrAq9KSnJc7S6/hipugB+PGPmJ9EekaFVeVPnOnY8d7Q39aAwtCN/HXdOMrwneNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744656308; c=relaxed/simple;
-	bh=GKbEjGwaeeuz4P18SdEWi3KA3yTaFC89U8NRwU2OdHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUwMf9l0wwW0GeQPxYBRpAAnQT3AwSoRRS9lB3wtr57XWye8VLy/e1V3ka+ORwwklahwaoNWPDJ4umym8PQVJUaMjGm51+jaRGRsgHWwSGFxeZ4nVBc0C4jYviLh0VJgQqRVvVwpb6qiur4EYWsTcJhgePBv+Th8QvDgKp6uy7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=u7sxAJ6N; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744656357; c=relaxed/simple;
+	bh=Q+ArbtoUYHF9rW7RmtIkv3LRhYSlJIYQ+VVn8GGi6bk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dGaIrkD5mCgsW++E1LuBRWbAEg5EmRDp0vHTUymRHhpigzxdCIAHs/1XRqWZSLOx2ySo4B5WLl5FPnjbsc9vbyHpkZoFr4aHGiGnY1GIMlANMORwPfuVgKvcPKmSHVusgtp2A/YmquxI0AjA02AfTJxqRxcOAoXrOp3SmBfyvkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8IuGRn2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="u7sxAJ6N"
-Date: Mon, 14 Apr 2025 11:44:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744656294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IE34eKIrzni8w8jruJy7hhdwzJ4NPk/TJmLf6LYd+yw=;
-	b=u7sxAJ6N5cToxpICD1gtAyZcq08ZDvYeAGIZpo3/nHwIhpy8rlLz3hdJLyZqnxdCLX2A7G
-	JmQ41r6Mev5SvHL07Qm7zRLRPiHKd7/cTWExXmXkLPrnQ41EwTci0zDL7sklWDoGV0DTVC
-	3aVYjUvii+KT1jrtQTJOYGv53IhcZlo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Waiman Long <llong@redhat.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: no refill for offlined objcg
-Message-ID: <ttlcvw2jiwloctvqblvoo4mdn7cg7av6uzauzjlwnpyevghnpt@jthjpbztrvii>
-References: <20250410210535.1005312-1-shakeel.butt@linux.dev>
- <7ia47c3r1sb0.fsf@castle.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8IuGRn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A3AC4CEE5;
+	Mon, 14 Apr 2025 18:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744656357;
+	bh=Q+ArbtoUYHF9rW7RmtIkv3LRhYSlJIYQ+VVn8GGi6bk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S8IuGRn2FGs+y0ChWAs0HGqqeUM7B9v3Y1QIjDgHqkVOn6M1ZIETBr/bprujigXeF
+	 xflvYJhpUmLXg5GZnGRb9vcc3Jzg6gvMY2npb7iASSHiUpQWO0jzQqdJPdEeJMYyj/
+	 Ul7r/Q7pmXD/UPKt75c0myhmdxI+kTmNFtm2OqHK55pvqp0kNjEqdOf/Fp+cC9LAs5
+	 VGUzgr9RyBa9fnWNoLDG6avcVExASmkbywescYFAvtrQx7n9MnjB5T4ggYafto/N5e
+	 upW9nXGKW+XQnr3yaOq7Xw8wYIuGV8Fs/XECn/IbVTwi0A1ne7LiVDED6LBOv0r1bU
+	 /RcHRMoskwVRA==
+Date: Mon, 14 Apr 2025 19:45:49 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: jean-baptiste.maneyrol@tdk.com, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iio: imu: inv_icm42600: switch to use generic
+ name irq get
+Message-ID: <20250414194549.4786338a@jic23-huawei>
+In-Reply-To: <Z_zD0uvJn_Fz1SOF@smile.fi.intel.com>
+References: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+	<20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-2-19e4e2f8f7eb@tdk.com>
+	<Z_zD0uvJn_Fz1SOF@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7ia47c3r1sb0.fsf@castle.c.googlers.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 10, 2025 at 11:59:47PM +0000, Roman Gushchin wrote:
-> Shakeel Butt <shakeel.butt@linux.dev> writes:
+On Mon, 14 Apr 2025 11:14:10 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
+
+> On Thu, Apr 10, 2025 at 05:39:41PM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
+> > From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+> > 
+> > Use generic fwnode_irq_get_byname() for getting interrupt pin using
+> > interrupt name. Only INT1 is supported by the driver currently.
+> > 
+> > If not found fallback to first defined interrupt to keep compatibility.  
 > 
-> > In our fleet, we are observing refill_obj_stock() spending a lot of cpu
-> > in obj_cgroup_get() and on further inspection it seems like the given
-> > objcg is offlined and the kernel has to take the slow path i.e. atomic
-> > operations for objcg reference counting.
-> >
-> > Other than expensive atomic operations, refilling stock of an offlined
-> > objcg is a waster as there will not be new allocations for the offlined
-> > objcg. In addition, refilling triggers flush of the previous objcg which
-> > might be used in future. So, let's just avoid refilling the stock with
-> > the offlined objcg.
+> ...
 > 
-> Hm, but on the other side if there are multiple uncharges in a row,
-> refilling obj stocks might be still cheaper?
+> > -	return inv_icm42600_core_probe(regmap, chip, client->irq,
+> > +	return inv_icm42600_core_probe(regmap, chip,
+> >  				       inv_icm42600_i2c_bus_setup);  
+> 
+> It's only 81 character, I doubt it will be a problem to have it on one line.
+> 
+> ...
+> 
+> > -	return inv_icm42600_core_probe(regmap, chip, spi->irq,
+> > +	return inv_icm42600_core_probe(regmap, chip,
+> >  				       inv_icm42600_spi_bus_setup);  
+> 
+> Ditto.
 > 
 
-Thanks for the review. I looked at the fleet data again and what you are
-suspecting i.e. multiple objects of same objcg getting freed closeby is
-possible. I think I should be optimizing/batching at the upper layer. I
-will be looking at rcu freeing side which is the most obvious batching
-opportunity.
-
-> In general I think that switching to atomic css refcnt on memcg
-> offlining is a mistake - it makes memory reclaim generally more
-> expensive. We can simple delay it until the approximate refcnt
-> number reaches some low value, e.g. 100 objects.
-
-This is a good idea. For the memcg, I think after Muchun's LRU
-reparenting, we should not have zombie refcnt slowdown but for objcg
-this idea might help. Anyways this is for later.
+tweaked and pushed out.
