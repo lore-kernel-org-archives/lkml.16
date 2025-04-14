@@ -1,109 +1,183 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBAB274677
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6AB288C90;
+	Mon, 14 Apr 2025 17:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652367; cv=none; b=E8b27ik4A0C4hoHDCz4Ztnyvi06gCiJivV0dHPJmr7ytmpLkonaboMtYJ45d6dYSE8tisr+/0LiEw+33rnM2fAMtSNSgcGuRdU3lq3gfPCztcUqIKy8EiImTBgEMS+pd6LplXv5TY6O8IeseF7hcYu2Sv16esXZCObaKTa75oII=
+	t=1744652385; cv=none; b=QZ65wlOFg6ixHnpGBcQsXt3v1HMIPEpVNLt4zBu8V6X3iPU/dB7VkAsvbQhR622W/7h81CNZ0VRTMBUdSM5OFYGNhHv3JTwKJEbM1leqpnZTUCeStxoV1NbrJTCbsnjo2pHXWwMzZ7z+mEH3cW/VHv7jVg30zq7kt1dAx/xCbW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652367; c=relaxed/simple;
-	bh=BG3cptmdu19bcMThD7NA8lSfN1+Pt2oTQaKk/y8dL1A=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nEpxqvUDEZRfTJay6I/ae69yGEP4FtRzC+d+vvXSBRKLkDu2I2Id28TDnfHJxhzbk9bTw0uq67M2Vp3YO5ldTVnysvVq02pQhfq6p+iqwcUSLHgfnfxC6Ay91DiGA3mupBe4ehcZ2SQEgjrpNb6Fax14vZy0H4VQtWj7uwcKFL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pWPBeeSb; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1744652385; c=relaxed/simple;
+	bh=1miE+Xirhhc9aJgSybbhbDvqReImIOATEScmEnFfVEw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=eFSVgpT22cCsP6LKNDSRCu2Slb1nMA+wnwAhhxC0gQkx6zGNmpcbD08DuGPhjcbSSVRnPTfJEPbtS57Kv+oJ+ZvLwygDpGXg5WWhwXP/ZkVWgbZkIX4zQhf2KqGSi0cYr+mqzVCttWDAfQ7O0d2ecItGiLnev99gYzwA52SKCao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FjnyyLm6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ileuK6q7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pWPBeeSb"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22651aca434so36558565ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744652365; x=1745257165; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7950JDAftF3WK1K3IHlXMlo7VBEmV/ZzEp3V/TzSc1I=;
-        b=pWPBeeSbQwvD9lcQwgjBReQPHzgvZfW9OJrHTnvOp8KOSsGgcyW/LTD4vJ8XELaajj
-         rrfEiJQtUdK+5773uWwPVjBkFCwIO6SH0XzBhtTPhg7Jy5stOUFP/Js7teVjPKwQa3dv
-         DyW6foec7LpxbRP/enawMlrw5DZdAvUjx1789rvNvYY1xU0y+SD4+5obH9aC6AqgVJX4
-         qaI8+9vsVVwfujxNzemvONEL329HoLn8KV1Wz2ClCul2BokYEjMtE16rrSrndCQqYzge
-         xfg+k+uMaVIfvMc52VHjV4ZJIRdlgy2WXqKzOGQ1kTjtqd58S8G/jdCcATexjAlsHdEy
-         zk0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652365; x=1745257165;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7950JDAftF3WK1K3IHlXMlo7VBEmV/ZzEp3V/TzSc1I=;
-        b=QGRmyAWW+HrSjfBD8UZ+mBH6Nx58qPTQEBdq+JIBcJla8bFUdXqeUNu5S/3sELog9M
-         kUv05DqxgRp4x6MVBc/XWLamo6TmMYj99mvn0+9mZalBsgilpi6zOu7km4M3YsMFSc32
-         PEwvzN1KOjFu63eidHYGkRI2EfubO9F5Ccf1IkezFtFn5UKEanNleufuN0Y5CkJ5x+D3
-         axpDDWuXo0i/yLUpVnjz5vM/1sETf6uk5DNSwjeFQD+UHC7IOtQgldChGi13fdVPNvVP
-         +3Ii/3kpBktuRk52HUEygLJczP1b+cJiz5akQ5AUtj1sax8E7CtuZCWYG+EY0UBzReYh
-         /lhg==
-X-Gm-Message-State: AOJu0YwnpUMz+KLPkmbwwWv44F3BeIXnKti8dQwqBFnXt5G4QQaLJ34j
-	j+XxISQJvziQebJda7ON9DCI+EF1VQjxx03xtBkbEaZrYXXFWFCEDhfDNom6o/veuXKQnbXSIzM
-	9mDMAW3lo36WTjN68fFYOwiag8kptu8L1wqOWXwHRezmhkXkeQlFixALrnF3JkUGi1KhqDSUdiL
-	hCvbYCiv3axW0nmCHK0HkmuJtrgMdxaqs+Qv2AcWd7
-X-Google-Smtp-Source: AGHT+IH1p8VV9GA+2/0n7svkfNRofRqo/IgobaiRkPAO9uHauKMovWFaKwDcD1yp7RJEITfCn6jE3AhcyZs=
-X-Received: from pldy12.prod.google.com ([2002:a17:902:cacc:b0:226:453a:f2db])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e947:b0:220:fb23:48df
- with SMTP id d9443c01a7336-22bea5013d9mr187970925ad.36.1744652365084; Mon, 14
- Apr 2025 10:39:25 -0700 (PDT)
-Date: Mon, 14 Apr 2025 10:38:56 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FjnyyLm6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ileuK6q7"
+Date: Mon, 14 Apr 2025 17:39:36 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744652381;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9op2omhG4s+6Tzy0u9IbDVJd7A+UCx91whMljnykb80=;
+	b=FjnyyLm6gSS1xJS/BhkRzeRff2o0uhqwI91L4YWgcofAco1VPvwRKudFq8aCe4yo5RpM6P
+	5330xIuIiv+QlmQQhqm8Rt4KLF9Vq8xDrtGCzlVFSfAyNeMqjD8ZAvgBUgNTX+FCHUtCuF
+	WT2BzK3/GQM1PlX8Ne6WWhx9mwA9zvUcgmYfLBa1fd8xsWz5p/FESSgCIkJAGyt2yZTWYE
+	A5Mj8+tapaPHwMOqvayElgOHrdnFJ+E4Cpwgkn/LQIcDY83jog7pzkFqlDCdH6lS45Hamq
+	NO28PifgXCY0MhLgeOEoqhtdnFFPEaory0kcEpv5QmyU8d/bC5P4SEmKpoEA/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744652381;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9op2omhG4s+6Tzy0u9IbDVJd7A+UCx91whMljnykb80=;
+	b=ileuK6q7zfm7mv8RJMjipaQbIJfV+DmTpmM6umziXJQATcoalbPSuYuic0CQ3YxwpROjtr
+	DpFfAXk5zCAZwTDw==
+From: "tip-bot2 for Inochi Amaoto" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI
+ interrupt controller
+Cc: Inochi Amaoto <inochiama@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Chen Wang <wangchen20@iscas.ac.cn>, Chen Wang <unicorn_wang@outlook.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250413224922.69719-5-inochiama@gmail.com>
+References: <20250413224922.69719-5-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250414173921.2905822-1-ctshao@google.com>
-Subject: [PATCH v4] perf report: Skip unsupported new event types
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	dvyukov@google.com, ben.gainey@arm.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Message-ID: <174465237682.31282.4222322323672893287.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-`perf report` currently halts with an error when encountering
-unsupported new event types (`event.type >= PERF_RECORD_HEADER_MAX`).
-This patch modifies the behavior to skip these samples and continue
-processing the remaining events. Additionally, stops reporting if the
-new event size is not 8-byte aligned.
+The following commit has been merged into the irq/drivers branch of tip:
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Commit-ID:     e96b93a97c90181627cef6e70a0dbc8dbdae4adc
+Gitweb:        https://git.kernel.org/tip/e96b93a97c90181627cef6e70a0dbc8dbdae4adc
+Author:        Inochi Amaoto <inochiama@gmail.com>
+AuthorDate:    Mon, 14 Apr 2025 06:49:15 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 14 Apr 2025 19:35:36 +02:00
+
+irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
+
+Add support for Sophgo SG2044 MSI interrupt controller.
+
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Chen Wang <wangchen20@iscas.ac.cn> # SG2042
+Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+Link: https://lore.kernel.org/all/20250413224922.69719-5-inochiama@gmail.com
+
 ---
- tools/perf/util/session.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-sg2042-msi.c | 53 +++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 60fb9997ea0d..ba32f8461a4b 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struct perf_session *session,
- 	if (session->header.needs_swap)
- 		event_swap(event, evlist__sample_id_all(evlist));
+diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
+index 325a83c..8a83c69 100644
+--- a/drivers/irqchip/irq-sg2042-msi.c
++++ b/drivers/irqchip/irq-sg2042-msi.c
+@@ -94,6 +94,35 @@ static const struct irq_chip sg2042_msi_middle_irq_chip = {
+ 	.irq_compose_msi_msg	= sg2042_msi_irq_compose_msi_msg,
+ };
  
--	if (event->header.type >= PERF_RECORD_HEADER_MAX)
--		return -EINVAL;
-+	if (event->header.type >= PERF_RECORD_HEADER_MAX) {
-+		/* perf should not support unaligned event, stop here. */
-+		if (event->header.size % sizeof(u64))
-+			return -EINVAL;
++static void sg2044_msi_irq_ack(struct irq_data *d)
++{
++	struct sg204x_msi_chipdata *data = irq_data_get_irq_chip_data(d);
 +
-+		/* This perf is outdated and does not support the latest event type. */
-+		ui__warning("Unsupported type %u, please considering update perf.\n",
-+			    event->header.type);
-+		/* Skip unsupported event by returning its size. */
-+		return event->header.size;
-+	}
++	writel(0, (u32 *)data->reg_clr + d->hwirq);
++	irq_chip_ack_parent(d);
++}
++
++static void sg2044_msi_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
++{
++	struct sg204x_msi_chipdata *data = irq_data_get_irq_chip_data(d);
++	phys_addr_t doorbell = data->doorbell_addr + 4 * (d->hwirq / 32);
++
++	msg->address_lo = lower_32_bits(doorbell);
++	msg->address_hi = upper_32_bits(doorbell);
++	msg->data = d->hwirq % 32;
++}
++
++static struct irq_chip sg2044_msi_middle_irq_chip = {
++	.name			= "SG2044 MSI",
++	.irq_ack		= sg2044_msi_irq_ack,
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++#ifdef CONFIG_SMP
++	.irq_set_affinity	= irq_chip_set_affinity_parent,
++#endif
++	.irq_compose_msi_msg	= sg2044_msi_irq_compose_msi_msg,
++};
++
+ static int sg204x_msi_parent_domain_alloc(struct irq_domain *domain, unsigned int virq, int hwirq)
+ {
+ 	struct sg204x_msi_chipdata *data = domain->host_data;
+@@ -132,13 +161,11 @@ static int sg204x_msi_middle_domain_alloc(struct irq_domain *domain, unsigned in
+ 		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
+ 					      data->chip_info->irqchip, data);
+ 	}
+-
+ 	return 0;
  
- 	events_stats__inc(&evlist->stats, event->header.type);
+ err_hwirq:
+ 	sg204x_msi_free_hwirq(data, hwirq, nr_irqs);
+ 	irq_domain_free_irqs_parent(domain, virq, i);
+-
+ 	return err;
+ }
  
--- 
-2.49.0.604.gff1f9ca942-goog
-
+@@ -172,6 +199,22 @@ static const struct msi_parent_ops sg2042_msi_parent_ops = {
+ 	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
+ };
+ 
++#define SG2044_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
++				   MSI_FLAG_USE_DEF_CHIP_OPS)
++
++#define SG2044_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
++				    MSI_FLAG_PCI_MSIX)
++
++static const struct msi_parent_ops sg2044_msi_parent_ops = {
++	.required_flags		= SG2044_MSI_FLAGS_REQUIRED,
++	.supported_flags	= SG2044_MSI_FLAGS_SUPPORTED,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
++	.bus_select_mask	= MATCH_PCI_MSI,
++	.bus_select_token	= DOMAIN_BUS_NEXUS,
++	.prefix			= "SG2044-",
++	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
++};
++
+ static int sg204x_msi_init_domains(struct sg204x_msi_chipdata *data,
+ 				   struct irq_domain *plic_domain, struct device *dev)
+ {
+@@ -265,8 +308,14 @@ static const struct sg204x_msi_chip_info sg2042_chip_info = {
+ 	.parent_ops	= &sg2042_msi_parent_ops,
+ };
+ 
++static const struct sg204x_msi_chip_info sg2044_chip_info = {
++	.irqchip	= &sg2044_msi_middle_irq_chip,
++	.parent_ops	= &sg2044_msi_parent_ops,
++};
++
+ static const struct of_device_id sg2042_msi_of_match[] = {
+ 	{ .compatible	= "sophgo,sg2042-msi", .data	= &sg2042_chip_info },
++	{ .compatible	= "sophgo,sg2044-msi", .data	= &sg2044_chip_info },
+ 	{ }
+ };
+ 
