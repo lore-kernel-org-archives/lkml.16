@@ -1,91 +1,138 @@
-Received: from www253.your-server.de (www253.your-server.de [188.40.28.33])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DA22741D5;
-	Mon, 14 Apr 2025 13:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.28.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B762918D1
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638917; cv=none; b=n6WV/qC1JuTIgEfQpCbLcpx0trTSwDxrQfNtgFIQuBOhCs9yJ72A2zk0ePfnmtoYyi8iIHbL2vCAN7CWGLXh3HHBF7hPFLsc+ljVJIqAXbJdokk5xe9YFOXTf4XBmYu6o4sYxjEWa9jve545rWzYsPZh0pru7Yc6SL2ZVxCXBUs=
+	t=1744638919; cv=none; b=WVQMHFb3ZcXeX0p3FDukWg8cBcjfUEDc+OXwhCynDbwlDuf6MFQE6nLykUgZ9HzNQ2/SIQvqdKFL1t5w+1iaTvlaiLtDul6z70HKSJWAE4twtHuuS6lbqxKA4yMpT7yn0hHtESDT6K8oQxQRm2KViMuapzPdg+BftASBFshPPxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638917; c=relaxed/simple;
-	bh=pgNx2sdENX2tGay1fmIECFu/j3ax4mCzVXRE8j5WKxU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=fr3QBINVVvVz353bWwujoifTIJ6bUbXHC5noCx96RCmsk+6lATz7ZhiqldgAuQEDi6IHjAnuadfgGoVyvhl3gJV7R7vjVbaEr5+a18vWYAHNNPSpVUBEjzUtLg9tmTQsipIMvLRNnjcsdZ5g6aSnnxRGkDMHyX9vg3gpj1QBxDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de; spf=fail smtp.mailfrom=helmholz.de; dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b=OSjUkqt9; arc=none smtp.client-ip=188.40.28.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=helmholz.de
+	s=arc-20240116; t=1744638919; c=relaxed/simple;
+	bh=MaeOxhcy0kSXPdQa9c6bBXclCHpRlK8Oy1Bs7ACf41E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tD+iNoW8S5bm2lGNaLHwBX5ApCA8eUZ97IwC+yNGAvmTJ8+4ZbERRPVR6AUXtpRmy6xLE9AxQFFRGby+Y4E2/HdwSb50RSFwhouv2n0RSKNoRhdWUp1vJf543+HbuDetT48rGPJ8csmRB0DLwLyB+lSdyQthgc3dfUBWiVdcNAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YhYf3UmX; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b="OSjUkqt9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=helmholz.de
-	; s=default2501; h=Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=ECoGTVyrfDzehLrz8EMEF8qTYvNgxk0rK5zEaP9773M=; b=OSjUkqt9YejcixAqdz7AIYXVv3
-	yHG/gFtVEV5W1gB+VKs77qsrFhoXOf0df0G5cll7oTa093/8etkoEPXk7ZVZUSCv8C+VF42diTng3
-	EXyE/ukFo87GDSvtVnKo0wlKCYByE3yY9Nvjfdjk44LnKPSEcHPL2ITDOIhgCkqmXAD61B/8wnp9q
-	NrKuEjUIDsNBH8RTw+A+r0gVCXYzybL3BBCMrTj56u3nt/iLd4xCS9qFRtaPTNXncCNO9fSYdh210
-	6CCq7DJ7pY2sjr7ISJ/LE0XYORy8CltwcMItRg43egrkBtTWlXnfB5rKmqvCbFVrkrzUqMeD34dyr
-	msOIB4qw==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www253.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <ante.knezic@helmholz.de>)
-	id 1u4JsP-0008n7-04;
-	Mon, 14 Apr 2025 15:29:29 +0200
-Received: from [217.6.86.34] (helo=linuxdev.helmholz.local)
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
-	(Exim 4.96)
-	(envelope-from <ante.knezic@helmholz.de>)
-	id 1u4JsO-000Eer-1v;
-	Mon, 14 Apr 2025 15:29:28 +0200
-From: Ante Knezic <ante.knezic@helmholz.de>
-To: linux-leds@vger.kernel.org
-Cc: lee@kernel.org,
-	pavel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	knezic@helmholz.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 0/3] Add support for WL-ICLEDs from Wurth Elektronik
-Date: Mon, 14 Apr 2025 15:28:48 +0200
-Message-Id: <cover.1744636666.git.knezic@helmholz.com>
-X-Mailer: git-send-email 2.11.0
-X-Authenticated-Sender: knezic@helmholz.com
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27608/Mon Apr 14 10:34:28 2025)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YhYf3UmX"
+Message-ID: <44b67f86-ed27-49e8-9e15-917fa2b75a60@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744638903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tIYBysX76Fq0W6ZzBNpz3VdTuJO+XbHPB2gh+NH0oiQ=;
+	b=YhYf3UmX62HiPWiKx9Jb9bTh2qfoNKm1g8TFp4kyNxPUh79RKASumn49R+QV+Oi22fbBc1
+	cINUW7G83eGbPijrSPelhVdmWGT9szsliFjT+VGubpZMsJeTyUm8MVVbwp4Cmiz+NE3YXC
+	V6GCRpbZEy0m2l5Zq//RfiglDRtyHnw=
+Date: Mon, 14 Apr 2025 14:54:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20250414085412.117120-1-maimon.sagi@gmail.com>
+ <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
+ <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+ <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
+ <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+ <39839bcb-90e9-4886-913d-311c75c92ad8@linux.dev>
+ <CAMuE1bHsPeaokc-_qR4Ai8o=b3Qpbosv6MiR5_XufyRTtE4QFQ@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <CAMuE1bHsPeaokc-_qR4Ai8o=b3Qpbosv6MiR5_XufyRTtE4QFQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Ante Knezic <knezic@helmholz.com>
+On 14/04/2025 14:43, Sagi Maimon wrote:
+> On Mon, Apr 14, 2025 at 4:01 PM Vadim Fedorenko
+> <vadim.fedorenko@linux.dev> wrote:
+>>
+>> On 14/04/2025 12:38, Sagi Maimon wrote:
+>>> On Mon, Apr 14, 2025 at 2:09 PM Vadim Fedorenko
+>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>
+>>>> On 14/04/2025 11:56, Sagi Maimon wrote:
+>>>>> On Mon, Apr 14, 2025 at 12:37 PM Vadim Fedorenko
+>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>
+>>>>>> On 14/04/2025 09:54, Sagi Maimon wrote:
+>>>>>>> Sysfs signal show operations can invoke _signal_summary_show before
+>>>>>>> signal_out array elements are initialized, causing a NULL pointer
+>>>>>>> dereference. Add NULL checks for signal_out elements to prevent kernel
+>>>>>>> crashes.
+>>>>>>>
+>>>>>>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs nodes")
+>>>>>>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+>>>>>>> ---
+>>>>>>>      drivers/ptp/ptp_ocp.c | 3 +++
+>>>>>>>      1 file changed, 3 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+>>>>>>> index 7945c6be1f7c..4c7893539cec 100644
+>>>>>>> --- a/drivers/ptp/ptp_ocp.c
+>>>>>>> +++ b/drivers/ptp/ptp_ocp.c
+>>>>>>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+>>>>>>>          bool on;
+>>>>>>>          u32 val;
+>>>>>>>
+>>>>>>> +     if (!bp->signal_out[nr])
+>>>>>>> +             return;
+>>>>>>> +
+>>>>>>>          on = signal->running;
+>>>>>>>          sprintf(label, "GEN%d", nr + 1);
+>>>>>>>          seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
+>>>>>>
+>>>>>> That's not correct, the dereference of bp->signal_out[nr] happens before
+>>>>>> the check. But I just wonder how can that even happen?
+>>>>>>
+>>>>> The scenario (our case): on ptp_ocp_adva_board_init we
+>>>>> initiate only signals 0 and 1 so 2 and 3 are NULL.
+>>>>> Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_show
+>>>>> when calling signal 2 or 3  the dereference occurs.
+>>>>> can you please explain: " the dereference of bp->signal_out[nr] happens before
+>>>>> the check", where exactly? do you mean in those lines:
+>>>>> struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+>>>>       ^^^
+>>>> yes, this is the line which dereferences the pointer.
+>>>>
+>>>> but in case you have only 2 pins to configure, why the driver exposes 4
+>>>> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+>>>>
+>>> I can (and will) expose only 2 sma in adva_timecard_attrs, but still
+>>> ptp_ocp_summary_show runs
+>>> on all 4 signals and not only on the on that exposed, is it not a bug?
+>>
+>> Yeah, it's a bug, but different one, and we have to fix it other way.
+>>
+> Do you want to instruct me how to fix it , or will you fix it?
 
-This patch adds support for WL-ICLED series of RGB Leds. These LEDs
-are equipped with integrated controller and can be daisy chained to
-arbitrary number of units. The MCU communicates with the first LED
-in series via SPI. Interface can be regular SPI protocol or single
-line only (MOSI connection only) depending on the model.
+well, the original device structure was not designed to have the amount
+of SMAs less than 4. We have to introduce another field to store actual
+amount of SMAs to work with, and adjust the code to check the value. The
+best solution would be to keep maximum amount of 4 SMAs in the structure
+but create a helper which will init new field and will have
+BUILD_BUG_ON() to prevent having more SMAs than fixed size array for
+them. That will solve your problem, but I will need to check it on the
+HW we run.
 
-Ante Knezic (3):
-  Documentation: leds: Add docs for Wurth Elektronik WL-ICLED
-  dt-bindings: leds: add binding for WL-ICLED
-  leds: add WL-ICLED SPI driver
-
- .../bindings/leds/leds-wl-icled.yaml          |  88 ++++
- Documentation/leds/index.rst                  |   1 +
- Documentation/leds/leds-wl-icled.rst          |  69 +++
- drivers/leds/Kconfig                          |  10 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-wl-icled.c                  | 406 ++++++++++++++++++
- 6 files changed, 575 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
- create mode 100644 Documentation/leds/leds-wl-icled.rst
- create mode 100644 drivers/leds/leds-wl-icled.c
-
--- 
-2.48.1
+>>>>> struct ptp_ocp_signal *signal = &bp->signal[nr];
+>>>>>> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
+>>>>>> the end of ptp_ocp_adva_board_init() like it's done for other boards.
+>>>>>>
+>>>>>> --
+>>>>>> pw-bot: cr
+>>>>
+>>
 
