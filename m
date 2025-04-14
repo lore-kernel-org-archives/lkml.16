@@ -1,115 +1,84 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA6F25E471;
-	Mon, 14 Apr 2025 10:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B0E2698BE;
+	Mon, 14 Apr 2025 10:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625333; cv=none; b=RwohT2ZuZdsk++l8s6JGm40Io8rFuX1MXJ+cR44LW7NQ7YhnAhoqKeL7CK6k6ofNa/ZNrTM187g5lYsdA3yYCLqU1JzbhJ8BkGFBLL975ukVRorJ6NXw547jfMK4hImm9++0ygW6qLGb3lcg3M39oH/gVFxMHnsh7ijOcGn6IWU=
+	t=1744625349; cv=none; b=TRH69vBlN5mVcMkbKnLuwGr0xi5bUZSy2bOo6wKNH6IZ66HG1jXYposcenlo/ah01SY9LGBMlditEftI4ndm5w+bAXcWfbsL6jqiQFeHO1kpsuSEHAPrcfJbAgX7+/vvJwE5lA+u/fu+Z9WR1pWj0V1Aau6XwSiFySnkd1ZY4oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625333; c=relaxed/simple;
-	bh=ikcFIKiUa4XCXRzxwCujAZL//L2GImleFBpghLCAdbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a1QNizTsv5vgjUpI+dFeIWC3Y79yzhROXs1bfTL19IDi2a3oDbY/JZXG5RQG7PIK5SIRDfpg1Vpyy9gh8CPWwWdEADOKZN5GPU0wgwwCE6CXqHnmKzNQmqQ7tIkvisfgrnpFrgWPfI75OK7qVjYqoyO0Hdp3Wn9IFkiP08n82Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linatsea.fr; spf=pass smtp.mailfrom=linatsea.fr; dkim=pass (2048-bit key) header.d=linatsea.fr header.i=@linatsea.fr header.b=RO5VAnnx; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linatsea.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linatsea.fr
+	s=arc-20240116; t=1744625349; c=relaxed/simple;
+	bh=iYgJGM+ELKUPOGb8b/QLqMww9EWRkl/iutAxpaWye3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fEANP23gW4/2bd2YX3f6vmXk3H4UdyBWgy3apz2J8pKNH6X9Kqc/XdxjGOHIL92NSOzyNYW4SnuSQd0/chS9MtH0wBTl4B6Px6kUAbUWkVyXpx61C4z/j+lMXg8giY86tS1vDSvcdn8Q7zN3hoNdfWoNeDwbB35J3YrMgChXSzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZV95Tyx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linatsea.fr header.i=@linatsea.fr header.b="RO5VAnnx"
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id 38015584AE7;
-	Mon, 14 Apr 2025 09:23:45 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 108D4433F6;
-	Mon, 14 Apr 2025 09:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linatsea.fr; s=gm1;
-	t=1744622617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2xX1JnrLD/Xmneb1rgW8av3OLo09hQ4pZGDbeGR+qj8=;
-	b=RO5VAnnxDB8lpFxKu641LS0B9QLtjt9TUl9rTMYFBCSXgRg5jmtbsItblG8jlNiXcDHr9P
-	ZTiHksLdTyzu2/OAqJ+hurpuJitXUf4TB5aAHq7zEwh+V96wXLpyweU7W05QpDXdV9wZqz
-	iQfDu2WvOGFyNTQWdW3mf5nTGeH2sCyw59gw4S0jzlLsTRg7itiTvSNu0fcQQYBHV0Tryc
-	7v6hp5vT5D50D2T9UkuXgi8JjeojuaSRJdk6aabHHnEby2e7ieLDeqKSOvdXmcVcCNkT7g
-	uKgkyl/7vl/dZnqrL1UTjo09G7NOVaTP/lgmzAVVxHPfs8S4fqg4CYoDNA1uMg==
-Message-ID: <eba16d9a-9e07-498f-a7ab-0bb36076de40@linatsea.fr>
-Date: Mon, 14 Apr 2025 11:23:34 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZV95Tyx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5644C4CEE2;
+	Mon, 14 Apr 2025 10:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744625348;
+	bh=iYgJGM+ELKUPOGb8b/QLqMww9EWRkl/iutAxpaWye3k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MZV95TyxUu7Qtbh9b/1T22ep35nRHWVScOeX6QfmgePQyCmWbkIKM62eiNhNOfNcK
+	 nIu1LU/7wyJwfuc21s7WpxIPGcf3uBsZtpbtlhKk+jBeHpZG4k2CyPk2GPObCfKNwB
+	 78F8D8fiQr5so+rhURnVrH9Pylo8WQbKTDaH1AkbzbfZlKVAQCGVGKVbwwodBOHRIb
+	 2jI8nEuBPs+to99k06hX12Ya5Art7PnAuBDNDPr7L9Z9euvHJBEvDmprlEnYkW2Z6l
+	 8pPKIxc3Gvzyq2MedTHYiGmm6nD213/nuMibPYfLJYEWaI13Ccu/uVuqo2uO83wY+p
+	 C4UOu4hY/66BQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] fs: improve codegen in link_path_walk()
+Date: Mon, 14 Apr 2025 12:09:02 +0200
+Message-ID: <20250414-gezollt-bareinlage-890370cd835b@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250412110935.2267703-1-mjguzik@gmail.com>
+References: <20250412110935.2267703-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 10/13] serial: sh-sci: Add support for RZ/T2H SCI
-To: Greg KH <gregkh@linuxfoundation.org>,
- Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "geert@linux-m68k.org" <geert@linux-m68k.org>,
- Paul Barker <paul.barker.ct@bp.renesas.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com>
- <20250403212919.1137670-11-thierry.bultel.yh@bp.renesas.com>
- <2025041152-puzzling-clinking-e573@gregkh>
- <TYCPR01MB11492DDF2728C9D3B3F14DCA38AB32@TYCPR01MB11492.jpnprd01.prod.outlook.com>
- <2025041456-legacy-craftwork-2d8b@gregkh>
-Content-Language: fr
-From: Thierry Bultel <thierry.bultel@linatsea.fr>
-In-Reply-To: <2025041456-legacy-craftwork-2d8b@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1410; i=brauner@kernel.org; h=from:subject:message-id; bh=iYgJGM+ELKUPOGb8b/QLqMww9EWRkl/iutAxpaWye3k=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/ubc/YNdU5nc1busF9xzwswhxDvn1X2r6wvtlZmfau NaKHwpY11HKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjARMVZGhl3c39LmO9TPMhE+ 8v3vzZd7fJ5OmpB6IjpW5qRh/t8jpa0M/91nVj68O239gsm76nz2xk3RZHqo8yF59wqJ6RaPRMo VVvAAAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhihgvrhhrhicuuehulhhtvghluceothhhihgvrhhrhidrsghulhhtvghlsehlihhnrghtshgvrgdrfhhrqeenucggtffrrghtthgvrhhnpeffleefheeutdeuhfehteehkeduieeltdejffetkeekuedtveeivedvudelkefgteenucfkphepkeelrddvgeekrdejiedrjedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepkeelrddvgeekrdejiedrjedtpdhhvghloheplgduledvrdduieekrdehjedrleejngdpmhgrihhlfhhrohhmpehthhhivghrrhihrdgsuhhlthgvlheslhhinhgrthhsvggrrdhfrhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehthhhivghrrhihrdgsuhhlthgvlhdrhihhsegsphdrrhgvnhgvshgrshdrtghomhdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgp
- dhrtghpthhtohepphgruhhlrdgsrghrkhgvrhdrtghtsegsphdrrhgvnhgvshgrshdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvghrihgrlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: thierry.bultel@linatsea.fr
 
+On Sat, 12 Apr 2025 13:09:35 +0200, Mateusz Guzik wrote:
+> Looking at the asm produced by gcc 13.3 for x86-64:
+> 1. may_lookup() usage was not optimized for succeeding, despite the
+>    routine being inlined and rightfully starting with likely(!err)
+> 2. the compiler assumed the path will have an indefinite amount of
+>    slashes to skip, after which the result will be an empty name
+> 
+> As such:
+> 1. predict may_lookup() succeeding
+> 2. check for one slash, no explicit predicts. do roll forward with
+>    skipping more slashes while predicting there is only one
+> 3. predict the path to find was not a mere slash
+> 
+> [...]
 
+Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.misc branch should appear in linux-next soon.
 
-Le 14/04/2025 à 10:58, Greg KH a écrit :
-> On Mon, Apr 14, 2025 at 07:54:12AM +0000, Thierry Bultel wrote:
->> Hi Greg,
->>
->>> -----Original Message-----
->>> From: Greg KH <gregkh@linuxfoundation.org>
->>> Sent: vendredi 11 avril 2025 16:57
->>> To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
->>> Cc: thierry.bultel@linatsea.fr; linux-renesas-soc@vger.kernel.org;
->>> geert@linux-m68k.org; Paul Barker <paul.barker.ct@bp.renesas.com>; Wolfram
->>> Sang <wsa+renesas@sang-engineering.com>; linux-kernel@vger.kernel.org;
->>> linux-serial@vger.kernel.org
->>> Subject: Re: [PATCH v7 10/13] serial: sh-sci: Add support for RZ/T2H SCI
->>>
->>> On Thu, Apr 03, 2025 at 11:29:12PM +0200, Thierry Bultel wrote:
->>>> --- a/include/uapi/linux/serial_core.h
->>>> +++ b/include/uapi/linux/serial_core.h
->>>> @@ -231,6 +231,9 @@
->>>>   /* Sunplus UART */
->>>>   #define PORT_SUNPLUS	123
->>>>
->>>> +/* SH-SCI */
->>>> +#define PORT_RSCI	124
->>> Why do you need to tell userspace about this specific port?  Is that a
->>> hard requirement that your userspace tools require?  If not, please don't
->>> export this here.
->> This point has been discussed with Geert and Wolfram.
->> We cannot use PORT_GENERIC for this IP, and adding the new type
->> is just keeping consistent with the sh-sci driver.
-> But, why does userspace need to know this number?  And why doesn't
-> PORT_GENERIC work?
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-The reason is that the sh-sci driver discriminates internally between 
-port types.
-There are number of locations when it checks for PORT_SCI, PORT_SCIF, 
-PORT_SCIFA...
-T2H SCI needs special handling, too, that is the reason why PORT_GENERIC 
-cannot work. I just therefore added this new type.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
->
-> thanks,
->
-> greg k-h
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.misc
+
+[1/1] fs: improve codegen in link_path_walk()
+      https://git.kernel.org/vfs/vfs/c/80cf41f567f5
