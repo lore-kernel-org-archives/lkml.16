@@ -1,68 +1,102 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46C8E571;
-	Mon, 14 Apr 2025 22:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274EF188733;
+	Mon, 14 Apr 2025 22:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744668674; cv=none; b=rwVSNxFHxohxZkdh4XaGaWQJQXnOg+u24unz0qGStq31mYgQ2OyRGyQvJ6YEjcp/GTwjkYi96QTfd3bMhdJsZ+QKqH+0VsE2FVk6YNaEJT0OuIUwV8BOtW3TWo44OudOZiHgz/5Pck03K0rBX35yREwzAa4eHTV2/kxQMU4koh4=
+	t=1744668961; cv=none; b=hGFAqiLwZcdl3wiP9s01rwHnLMxVdnq2IGzN1XYtq4SshOKQCOTY0X0R7roUdTv/zvuUo2UlWqyTZJ5NlQ6dMnl+8MHzD1pTJ3BJiAWuA2apdug1ooyHIjfC35vdh2hGn393tO+ajZzlsQGadGyHVXrAkiEc4ov644WFzZCvFr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744668674; c=relaxed/simple;
-	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=liVHONeZxNysIiRGnMEn13GW6vvYgJo8DwQhyCq4ljQg7P2nBH2N3H3/ONIUe15VRIPMCU8XK4NVqeiIcGYayr5Iq2Fa0QMhf5ZucpxSrGCtSyI8UEaAnMZwlwX+SQR0DQnJF4PUB1zKtGzqSnMp+Py2ace8TzyVHiNfj9s8brY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-399749152b4so2650551f8f.3;
-        Mon, 14 Apr 2025 15:11:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744668671; x=1745273471;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=Ztq5tZ7frTZbEQqdINrmGBnFXFESB2Sw78MF6fFsngit7qN/EaKGRlDRsBQt/RxibN
-         s30SlUiElmUsOWBRdUZwkTtPrwKNkkAAzJKGbefwGxSXSAwggcblnGuxLkogdVgMr4EK
-         tI/qdqo2831qKPSI4xunIT4UHyeyMqgFJs8BBtxSGWZxZQUo2KE7X/ilpZ2wUGpCNoyA
-         /JGE5Gs1T4j77aBcpB6x/zmYkr4Rb3EVBJdsKJ6fNseT6SunwABJkpajCEbprz9G5Lal
-         2yyyrdEU7chdj1qb+3fCY1Isp52Thery1Z1BUfPZMuXKPyQBNJiz9UQ3szNd+fL55N9N
-         YOGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcQWuOmdxOUD5F7jQvLujE0/HfXzY4wg3039pcTAyRNNJcDaP5SB0KklzQHGhJFXAGz7ers58/HM7WVz2QchQ=@vger.kernel.org, AJvYcCX2nIrRPAw84kDbhpGShvXu6JZ2P9qHVjnT2EOXWTpkLGYfy7TScHnHo2n2o8wU1n3ANjP8LyidLeyEfxGP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCt5cOZAjAEpmBOHr+k+eQjk0l3a1TReJ3vzlWEpxSOGvdKQp4
-	ReT0p9cXCu4w3D77MoTBwqmrI8Ib3hro9SupYyUmlzgjSm5w1z89
-X-Gm-Gg: ASbGncus66quMbxY/cwzAP3sj0DubLJs/Nddzao197Wns1Rp/3KOj0UsL2BL67s7Tth
-	2vpidbL4v6KKxCoB3L+kHjBc1in7BXweoBRHmW578qvlVQqCea8IDPh1qA0hNFocfnp9/g7njq8
-	jdnWKFOjJp3YFqEnSs3L3bd4dwhuDPi04N2d6hIJ750jk0Jb2ovyg+73+iebdCpGPytq1K+v1hW
-	JXB3dvSGly4nXLz6GAejRUg/z/qBCrAA5SiCyfYE81aXom3THb61qUihziVPQGWd4QK0ZFF/stT
-	UV5G3BQ1CConvcLB2IuEx0zy/7KTqmQJZ1DjBLUoHM+s1rhbLiYSzNhckYMedyif1DTlIL5O
-X-Google-Smtp-Source: AGHT+IFCiTY/l8yOfCw5tgPLcaFmiVl0aCRjtPjcf+Zz6hNuEVn0GZMpZiy+vJzvhsh0z12ZqOmlkw==
-X-Received: by 2002:a05:6000:184e:b0:39c:cc7:3c5f with SMTP id ffacd0b85a97d-39eaaecdacemr12156572f8f.45.1744668671022;
-        Mon, 14 Apr 2025 15:11:11 -0700 (PDT)
-Received: from [10.10.9.121] (u-1j-178-175-199.4bone.mynet.it. [178.175.199.47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9640a9sm12253790f8f.10.2025.04.14.15.11.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 15:11:10 -0700 (PDT)
-Message-ID: <a3fa6c12-22d8-44da-82fb-ad4e044cfa25@grimberg.me>
-Date: Tue, 15 Apr 2025 01:11:09 +0300
+	s=arc-20240116; t=1744668961; c=relaxed/simple;
+	bh=HEu9OtF4BtaBMlr0OFBUyUbeTpsXoNaLSVmNNaDy42c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KYWEldhHG5NswAG88tTQpygxiMgJfOK7Z52ukYlhcmjPiLHgzkCQxsE3jl2nRwplyep6Zw9dwB/QjkKbYkoJXdqY7lVHULYYwEaD0rm3PonCknDk6bfw0Rl8hxmau2W5cWnAY8e1yGIi1u575N0PUJg7c7kcepkFTdclB+54uqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oR5KFMl/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oR5KFMl/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764D4C4CEE2;
+	Mon, 14 Apr 2025 22:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744668960;
+	bh=HEu9OtF4BtaBMlr0OFBUyUbeTpsXoNaLSVmNNaDy42c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oR5KFMl/UgO5dphG0vdfLbeo84Bpz6MW4BoXPoDo1PgUpSLioz3XvpOSY/IGQvx2h
+	 jL1bk7S6F1BNcxkG5E/Qczchley5OkvcAm0GwqVo0jeIwSydxbYuXLVyZ7IBn+CFV4
+	 Idr4TNZT8RuQdJNOAUM0xudqdCzVU9sCryu9zJR8597OPgCtkpXyX1tWT7lECocWCl
+	 72lfe7H/XAi0Iz2PPDubW7mk0yXkCD9GNqW91PgulYvNOTvicpFYFWN6Ep2Kl5bJuu
+	 bTueuD53hyAIv3QpKLqkhtsTDAyRdfK5+wWbO9PY5K68bO68hXWxiD5QgOv6pDSndg
+	 M2QtJ6lToeB+w==
+Date: Mon, 14 Apr 2025 15:15:59 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Charalampos Mitrodimas <charmitro@posteo.net>
+Cc: Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Verify DA node btree hash order
+Message-ID: <20250414221559.GC25675@frogsfrogsfrogs>
+References: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] nvme-loop: Avoid -Wflex-array-member-not-at-end
- warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z-axRObjXYjIHGQC@kspp>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <Z-axRObjXYjIHGQC@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On Sat, Apr 12, 2025 at 08:03:57PM +0000, Charalampos Mitrodimas wrote:
+> The xfs_da3_node_verify() function checks the integrity of directory
+> and attribute B-tree node blocks. However, it was missing a check to
+> ensure that the hash values of the btree entries within the node are
+> strictly increasing, as required by the B-tree structure.
+> 
+> Add a loop to iterate through the btree entries and verify that each
+> entry's hash value is greater than the previous one. If an
+> out-of-order hash value is detected, return failure to indicate
+> corruption.
+> 
+> This addresses the "XXX: hash order check?" comment and improves
+> corruption detection for DA node blocks.
+> 
+> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+> ---
+>  fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+> index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
+> --- a/fs/xfs/libxfs/xfs_da_btree.c
+> +++ b/fs/xfs/libxfs/xfs_da_btree.c
+> @@ -247,7 +247,16 @@ xfs_da3_node_verify(
+>  	    ichdr.count > mp->m_attr_geo->node_ents)
+>  		return __this_address;
+>  
+> -	/* XXX: hash order check? */
+> +	/* Check hash order */
+> +	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
+> +
+> +	for (int i = 1; i < ichdr.count; i++) {
+> +		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
+> +
+> +		if (curr_hash <= prev_hash)
+
+Does XFS support a directory with two names that hash to the same value?
+
+--D
+
+> +			return __this_address;
+> +		prev_hash = curr_hash;
+> +	}
+>  
+>  	return NULL;
+>  }
+> 
+> ---
+> base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
+> change-id: 20250412-xfs-hash-check-be7397881a2c
+> 
+> Best regards,
+> -- 
+> Charalampos Mitrodimas <charmitro@posteo.net>
+> 
+> 
