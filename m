@@ -1,172 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331CFEC4
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C6A1F3D54;
+	Mon, 14 Apr 2025 15:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744643396; cv=none; b=b80eEbWXCDgVVr55dKpLUNUxhi1ZFBSP/+/G02XMc1pWI7GjA2+Vr4qpefC1g57EuKHWsmajSQxR7JvsRnMlJFMwYLD1rF/UrXLV0Sp9m3C8jb7MVkogBScGqIFtbmUn0oF/3mMGLujsZwk5Jb8hpXCRe0TXNqef3f9OkGGBbjI=
+	t=1744643410; cv=none; b=LPIXeX8fbF/XlfK0t7Srt230vzMXegeKkUmmYirBe98Ed/zXcQWCdidkHtJdMFP+oOogisika6b8aO2CsOXD4Ty4j7JUGlOcKhqaggypof6bFIWmZjAEKXMgrTdcBtDEbFx8V+XMU1ycix//AHm/EvrLiYxD4hESw8u62JbP+8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744643396; c=relaxed/simple;
-	bh=7Hi6DqkEM9fIB3dfF/pbu20fNXGcLxy+2NwCVtPc+jk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Am03kQQHJn6ijn9xDsyOkgPgZBLG/iYfXT6BKhHKPa1oA/m9u3YttQto0A2Z7WFUz+tDV9TVmdM9eJ/lUdmwv5V52xujGrbv61vWJg19CMRnumPi9Kam4rKIowjJvGYYbK0TqyIJaQZobpl1Y2qzh6xmF9GNnZX7JfHxx0DdT+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgjNcwxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744643410; c=relaxed/simple;
+	bh=qSiKrGMiJDaDDXBJBhkiBIPOZWCKcsrgk7W1G9JlKf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9rzbB3As+AsXys4gIoOg8ghHsOsyaz+is1deZEERHPrpur3D/Dsc872o1Ftodzc0ouNGL9G7CJYg5NvvTDzGc+Eeqy2qPYdierGaYbRsNQ5SplP8e+CpKcQ3UpQr5hVhlwLNjoa2y0XNdjNtE098Rd4rFro5upmDkkbriEXRTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2+pk2CC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgjNcwxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7512C4CEEB;
-	Mon, 14 Apr 2025 15:09:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2+pk2CC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75E2AC4CEE9;
+	Mon, 14 Apr 2025 15:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744643395;
-	bh=7Hi6DqkEM9fIB3dfF/pbu20fNXGcLxy+2NwCVtPc+jk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bgjNcwxSJFfU84m9mCpCgqp1v49/ptx8IOaCmYPzXeqcJmAxDE+Kbc2oTlUBNb0u0
-	 hsctD1HmQCeGIBJumPKZPeDvcMTE1zvgk9ubQmQaU9Cy6dc2RLe/6OYpN1q9o+CRPk
-	 HWZhpoOl44MfQpWp2OMvaBO4qcdNmu5Bbe85IgjQ39MK2iIjdN/t+QG//Mejxnbsek
-	 qaiF6klUzm13W0ymGaY7l5wQgOZ+3KUOnTzRYJtMjQbojFMqhOkwYM9QGRnE0MK8js
-	 iNlL+UgB02SpB2Txs3c3b+wKNAOcwGaQ94WZn6fdi4Qe0eOVa11kYcxEXwGG1uWF8h
-	 zarlOxzYAk44g==
-From: Borislav Petkov <bp@kernel.org>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	David Kaplan <david.kaplan@amd.com>,
-	X86 ML <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: [PATCH] x86/bugs: Remove X86_BUG_MMIO_UNKNOWN
-Date: Mon, 14 Apr 2025 17:09:51 +0200
-Message-ID: <20250414150951.5345-1-bp@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1744643409;
+	bh=qSiKrGMiJDaDDXBJBhkiBIPOZWCKcsrgk7W1G9JlKf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H2+pk2CCPEX2GAUEUnqJ4Cwk+KFvqFtENK5Oh24m6fqgPS3LZ/9Y2TsMbQw3ZzrAp
+	 izTQ3VUiCxufEWKFM026EnhyW6MwYyb6PZLa8DSbyiluOOBDQz/mBPK2lZmrkfuvSC
+	 JO3aif+VlZ/Ko6In0GGeZIlKJxStGZvx/b22qeN0jp3V6EydrkwKnOGacz41xb2377
+	 1bq5/3XkQc7dbfNUQCW3AAwGlzw80a/swIIbiFR2WMIbko633paAq7uXjBduZg0Lw6
+	 cPjDrn6Vstjx31U0xkSW5su/DJXm/A3Gm0Q/25M43pz/vuRZ0UqJzLepr57uU+wAZy
+	 Uw05cthWpsu5Q==
+Date: Mon, 14 Apr 2025 17:10:03 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: syzbot <syzbot+c2537ce72a879a38113e@syzkaller.appspotmail.com>,
+	riel@surriel.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+	tglx@linutronix.de, x86@kernel.org
+Subject: Re: [syzbot] [kernel?] linux-next test error: WARNING in
+ switch_mm_irqs_off
+Message-ID: <Z_0lSxPcw4WW1wAP@gmail.com>
+References: <67fce34b.050a0220.3483fc.0026.GAE@google.com>
+ <20250414135629.GA17910@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414135629.GA17910@noisy.programming.kicks-ass.net>
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-Whack this thing because:
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-- the "unknown" handling is done only for this vuln and not for the
-  others
+> > Call Trace:
+> >  <TASK>
+> >  unuse_temporary_mm+0x9f/0x100 arch/x86/mm/tlb.c:1038
+> >  __text_poke+0x7b6/0xb40 arch/x86/kernel/alternative.c:2214
+> >  text_poke arch/x86/kernel/alternative.c:2257 [inline]
+> >  smp_text_poke_batch_finish+0x3e7/0x12c0 arch/x86/kernel/alternative.c:2565
+> >  arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
+> >  static_key_disable_cpuslocked+0xd2/0x1c0 kernel/jump_label.c:240
+> >  static_key_disable+0x1a/0x20 kernel/jump_label.c:248
+> >  once_deferred+0x70/0xb0 lib/once.c:20
+> >  process_one_work kernel/workqueue.c:3238 [inline]
+> >  process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+> >  worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+> >  kthread+0x7b7/0x940 kernel/kthread.c:464
+> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> >  </TASK>
+> 
+> So I can reproduce, and I I think I see what happens, except I'm
+> confused as to why the recently merged patches show this.
+> 
+> AFAIU what happens is that unuse_temporary_mm() clears the 
+> mm_cpumask() for the current CPU, while switch_mm_irqs_off() then 
+> checks that the mm_cpumask() bit is set for the current CPU.
+> 
+> This behaviour hasn't really changed since 209954cbc7d0 ("x86/mm/tlb: 
+> Update mm_cpumask lazily") introduced both.
+> 
+> I'm not entirely sure what the best way forward is.. we can simply 
+> delete the warning, or make use_temporary_mm() tag the special MMs 
+> somehow and exclude them from the warning.
 
-- it doesn't do anything besides reporting things differently. It
-  doesn't apply any mitigations - it is simply causing unnecessary
-  complications to the code which don't bring anything besides
-  maintenance overhead to what is already a very nasty spaghetti pile
+So, mm_cpumask is basically tracking on which CPUs the MM ran on, and 
+this gets cleared lazily whenever there's an opportune time, but not 
+during context switches (for shared cacheline performance reasons), 
+right?
 
-- all the currently unaffected CPUs can also be in "unknown" status so
-  there's no need for special handling here
+So why do we need to clear the mm_cpumask in unuse_temporary_mm() to 
+begin with:
 
-so get rid of it.
+	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
+        cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/include/asm/cpufeatures.h       |  2 +-
- arch/x86/kernel/cpu/bugs.c               | 12 +-----------
- arch/x86/kernel/cpu/common.c             |  5 -----
- tools/arch/x86/include/asm/cpufeatures.h |  2 +-
- 4 files changed, 3 insertions(+), 18 deletions(-)
+What TLB flushing are we worried about here? Nothing much should 
+trigger any TLB flushing for text_poke_mm AFAICS?
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 6c2c152d8a67..e8f8d43a3825 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -519,7 +519,7 @@
- #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* "itlb_multihit" CPU may incur MCE during certain page attribute changes */
- #define X86_BUG_SRBDS			X86_BUG(24) /* "srbds" CPU may leak RNG bits if not mitigated */
- #define X86_BUG_MMIO_STALE_DATA		X86_BUG(25) /* "mmio_stale_data" CPU is affected by Processor MMIO Stale Data vulnerabilities */
--#define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) /* "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
-+/* unused, was #define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
- #define X86_BUG_RETBLEED		X86_BUG(27) /* "retbleed" CPU is affected by RETBleed */
- #define X86_BUG_EIBRS_PBRSB		X86_BUG(28) /* "eibrs_pbrsb" EIBRS is vulnerable to Post Barrier RSB Predictions */
- #define X86_BUG_SMT_RSB			X86_BUG(29) /* "smt_rsb" CPU is vulnerable to Cross-Thread Return Address Predictions */
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 4f6bda8b5361..0e120da17414 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -427,7 +427,6 @@ static const char * const mmio_strings[] = {
- static void __init mmio_select_mitigation(void)
- {
- 	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) ||
--	     boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN) ||
- 	     cpu_mitigations_off()) {
- 		mmio_mitigation = MMIO_MITIGATION_OFF;
- 		return;
-@@ -590,8 +589,6 @@ static void __init md_clear_update_mitigation(void)
- 		pr_info("TAA: %s\n", taa_strings[taa_mitigation]);
- 	if (boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA))
- 		pr_info("MMIO Stale Data: %s\n", mmio_strings[mmio_mitigation]);
--	else if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
--		pr_info("MMIO Stale Data: Unknown: No mitigations\n");
- 	if (boot_cpu_has_bug(X86_BUG_RFDS))
- 		pr_info("Register File Data Sampling: %s\n", rfds_strings[rfds_mitigation]);
- }
-@@ -2780,9 +2777,6 @@ static ssize_t tsx_async_abort_show_state(char *buf)
- 
- static ssize_t mmio_stale_data_show_state(char *buf)
- {
--	if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
--		return sysfs_emit(buf, "Unknown: No mitigations\n");
--
- 	if (mmio_mitigation == MMIO_MITIGATION_OFF)
- 		return sysfs_emit(buf, "%s\n", mmio_strings[mmio_mitigation]);
- 
-@@ -2967,7 +2961,6 @@ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr
- 		return srbds_show_state(buf);
- 
- 	case X86_BUG_MMIO_STALE_DATA:
--	case X86_BUG_MMIO_UNKNOWN:
- 		return mmio_stale_data_show_state(buf);
- 
- 	case X86_BUG_RETBLEED:
-@@ -3036,10 +3029,7 @@ ssize_t cpu_show_srbds(struct device *dev, struct device_attribute *attr, char *
- 
- ssize_t cpu_show_mmio_stale_data(struct device *dev, struct device_attribute *attr, char *buf)
- {
--	if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
--		return cpu_show_common(dev, attr, buf, X86_BUG_MMIO_UNKNOWN);
--	else
--		return cpu_show_common(dev, attr, buf, X86_BUG_MMIO_STALE_DATA);
-+	return cpu_show_common(dev, attr, buf, X86_BUG_MMIO_STALE_DATA);
- }
- 
- ssize_t cpu_show_retbleed(struct device *dev, struct device_attribute *attr, char *buf)
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 079ded4eeb86..d7fe0fdb2cfa 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1402,15 +1402,10 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
- 	 * Affected CPU list is generally enough to enumerate the vulnerability,
- 	 * but for virtualization case check for ARCH_CAP MSR bits also, VMM may
- 	 * not want the guest to enumerate the bug.
--	 *
--	 * Set X86_BUG_MMIO_UNKNOWN for CPUs that are neither in the blacklist,
--	 * nor in the whitelist and also don't enumerate MSR ARCH_CAP MMIO bits.
- 	 */
- 	if (!arch_cap_mmio_immune(x86_arch_cap_msr)) {
- 		if (cpu_matches(cpu_vuln_blacklist, MMIO))
- 			setup_force_cpu_bug(X86_BUG_MMIO_STALE_DATA);
--		else if (!cpu_matches(cpu_vuln_whitelist, NO_MMIO))
--			setup_force_cpu_bug(X86_BUG_MMIO_UNKNOWN);
- 	}
- 
- 	if (!cpu_has(c, X86_FEATURE_BTC_NO)) {
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 9e3fa7942e7d..e88500d90309 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -508,7 +508,7 @@
- #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* "itlb_multihit" CPU may incur MCE during certain page attribute changes */
- #define X86_BUG_SRBDS			X86_BUG(24) /* "srbds" CPU may leak RNG bits if not mitigated */
- #define X86_BUG_MMIO_STALE_DATA		X86_BUG(25) /* "mmio_stale_data" CPU is affected by Processor MMIO Stale Data vulnerabilities */
--#define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) /* "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
-+/* unused, was #define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) * "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
- #define X86_BUG_RETBLEED		X86_BUG(27) /* "retbleed" CPU is affected by RETBleed */
- #define X86_BUG_EIBRS_PBRSB		X86_BUG(28) /* "eibrs_pbrsb" EIBRS is vulnerable to Post Barrier RSB Predictions */
- #define X86_BUG_SMT_RSB			X86_BUG(29) /* "smt_rsb" CPU is vulnerable to Cross-Thread Return Address Predictions */
--- 
-2.43.0
+Thanks,
 
+	Ingo
