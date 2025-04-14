@@ -1,108 +1,217 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FAB2581;
-	Mon, 14 Apr 2025 16:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B78E274679;
+	Mon, 14 Apr 2025 16:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744647389; cv=none; b=WQwY6fwHbZqcd2CQrsFqH9I2vgocTSvzY2bv/4i+EqGdufv+cPSqz7RseDWxSNyQCpDvS5jlZNd4nwJEsA2/IUAf9PEne2THzww7b4cPGHZ/QriTnCEIC/DcmhPHc8nEEYS5UfoihD/5ievO4x2K77Dc7vV4s0j0ttIUTPgg4Ms=
+	t=1744647425; cv=none; b=KZCxVFfJA43XRrMAkzj0GTrYK9+TgRSlUGjCRI3MWdnRDc76Uuif9PcJZpwU7jnBzb778y2QDGropEaiktdJ7OUYH0c+tKZTfKEzkTdJOumkRkDEccr/ryzHCzXv30eUTw7bNpFusfI4fyfx3JUOBEssyEc0fhpVuRSteSOtAPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744647389; c=relaxed/simple;
-	bh=JW3DZlESxFpH/J8R2XOqvNVZDI3osLBTkD5mXT4x/Tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fVwsLM+Aqj84q/ccvAXj4geY4KMzdFnFhy8vtoEQKu6Y4kubrANGsbk5aPpM3iy4GNoG/P3xInu1xRsvGxHSkvCSFc7lLZhlyemQFoizlBJolMcD716OXUEdUHiMXyeAj6D7XzjBkYdRetLamKTz2gjTPp1cUR01cgLgZ2vV+Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=2HDvSMa3; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1744647425; c=relaxed/simple;
+	bh=5mIrpgYYyOWnWfHA4froNo0fLcAsTlaVkF6dDIafk/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Czn+q6SIVTwHaVfFXyNh2kvbLWm+JpdGAhcRumx8zy13rI62mQz8u/u506albY0uVWXBqaIqKBqSEvLpfyOByWGQD8NOseyGbtkIdeFVlU+bTt0ZKb3xU+SzxVzDcLkrlkoy9gWvvk+1zr3nBDV6QM9ESSqsbt/Q2R1n946Zouw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nemufrau; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="2HDvSMa3"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4Zbsq83ZpFzm0ySN;
-	Mon, 14 Apr 2025 16:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1744647378; x=1747239379; bh=rSsUk9uG/IxXmmElRZckPLD1
-	w7rzdsFKjqCbyTaMZB0=; b=2HDvSMa3UebxqOen6fHTfLBvpMkgZK15rrKZv+i0
-	Aw4fDtYsy2jc63wl8bNWmwOzN2FFpGsV2fPqCFdJdL65KJ1l9xE/j9V5sv+2568D
-	dnACiNlri/5B0O2q6a+X/q1Th8jWcOFPQPSKZ8eAXNPNwT72eQokvV3/r5QF1dZ1
-	3ly080uzmkWmNq3jRH1kMpAtRtiseGaRMkIpB42GB8waPUCdN0kN5oMTbpcHH+vd
-	rZe30hI6lRltjTV/5XLulS8ZE4S8YovoTLDp4+8e+FUwm1bB4BkQ/Mu/md6AZfqz
-	7zIh3zoMCAlY+dwP5UlJbE5YgjDNXf8oxtghTQ+kos8c8g==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 7unPeglGk_UE; Mon, 14 Apr 2025 16:16:18 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4Zbsq30mf0zm0pKn;
-	Mon, 14 Apr 2025 16:16:13 +0000 (UTC)
-Message-ID: <e038e519-c301-4928-a246-ebd25f16bb32@acm.org>
-Date: Mon, 14 Apr 2025 09:16:12 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nemufrau"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso23102495e9.3;
+        Mon, 14 Apr 2025 09:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744647422; x=1745252222; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JkjFVNMudnik//LPfbYGJBFZCdlS+2tZiHLOdVcdf7c=;
+        b=nemufrauGiZlhIh0s8c40fltRNQCIgSGtB7WVuDhbKRiVntPMKwdBuD3bdn7boVQSO
+         3QZ6Cj5q51CylfIEXC1xW/6fo3foPWOdM3F0RHGmfFNoJJxHXvL+Pv6JsHc6gnULEQAj
+         IXN8bRTn3WOHEdtjZKIUgeZ/rj66fYohQpvJf5C9IS39/9aAeQ07fPYEfp41T5yhdZ8U
+         1JjhDRJNJsEhX1Y86a85plg50c457l9IVvl5iW1KChmwy4HfboSAoMF0XyjMVVrn2bYE
+         x6MzczY8miNODyrujZLisx33V42eblb19dm+mt2Bna/JSkTFgsSqL2HkuIknZPPkBu7A
+         e0Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744647422; x=1745252222;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JkjFVNMudnik//LPfbYGJBFZCdlS+2tZiHLOdVcdf7c=;
+        b=lPYJlIdsPFwPZ2sZBkLyiwsoXvvTt/9JTFoFaEC3Yi6750SPUOi6tcVa49VwsnZkO5
+         07Gv4rc4C6DzELgljHxg3mM44225XAvIi3NIIrhjlm/TSH7YqLIjbWaxGTH6rqeJ0f7v
+         R99zIdjMpTh7/wV07al0Wlt4ywIBwKmUnxSGKlP7PtO4bY1XWzGq77qLbo4IoQy1T0fe
+         kxnXwul3WqxFbd5kmGzZcYbgSt7lUU2i5h8RAQOsDKryMbCefi8v5TXveC4Xb3mvTee/
+         dr4O6Jih1s/hZ8orLE3Yqvve/jr0ra2RGoPJpMmMswH9JKchAa0DA3vaocRd0SvJNn4K
+         kKYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnnoIptiIG3zeQ6iVJ4/5TiDNycvrA4cRZvGR7quyCPMejxD+IOVKz89pS1KHUBSMjoAN5VJ5czPEK@vger.kernel.org, AJvYcCW6DgQrnJDcr79kviBZmLTHhusyjvK2IpPuVKbz61Fbdnlpp07KBki24oxPgO3zN4vpRqtbruw91qy+YF2i@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCU2KLPlYxoYisWw4MajCsfpen73rUf0H3xtG+KzU9KjsVOlYT
+	zv41LwDsgNi9VP+hOTGnuIvX0OLByRgJ7IOhI2bpYrqYQj8IvU4L
+X-Gm-Gg: ASbGncvkJBmzjPWjSicFl5rycgdZ97xehKbdxMvSBapFd4thD5X83CmWi98pa2cRohn
+	4WiSDfQ5FRlc4hDQhoMSFna0aTDORuKavSSYaDVa5J9/qZ/VMoRF+9cT2czuUO9RXmxAlibGEKY
+	Z9mfBe84uarUaRFxsNBQPJUmqOuHtqK9EzaYiAKgq0EdyNz/mCBBsjrVbbvCPKmFw3jmeCqTDmt
+	J3X359vT62+cYrI3fJrJJek4XRh0Nq7xb9eJflYIHDWc02xkxNiAU1qPUNjk/4MGQN3zmpQXL/t
+	2Pm/YVvctl8g6ED73chyJ4YQlSCKGO3y4NcG009HnGrYWUo=
+X-Google-Smtp-Source: AGHT+IHPIbTS1R/1F7V1Djo8inVDRUiqSFcAusGYcbzQSAXcB8tgjd3bWvhTCAjZTBdrpgu/BpVLDg==
+X-Received: by 2002:a05:600c:3b15:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-43f3a9266e0mr91073805e9.5.1744647421175;
+        Mon, 14 Apr 2025 09:17:01 -0700 (PDT)
+Received: from noctura.suse.cz ([103.210.134.105])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f206264a1sm186983455e9.9.2025.04.14.09.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 09:17:00 -0700 (PDT)
+From: Brahmajit Das <brahmajit.xyz@gmail.com>
+X-Google-Original-From: Brahmajit Das <listout@listout.xyz>
+To: 
+Cc: Robert Moore <robert.moore@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] ACPI: Fix building with GCC 15
+Date: Mon, 14 Apr 2025 21:46:42 +0530
+Message-ID: <20250414161644.30400-1-listout@listout.xyz>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ufs: bsg: Add hibern8 enter/exit to
- ufshcd_send_bsg_uic_cmd
-To: Arthur Simchaev <arthur.simchaev@sandisk.com>
-Cc: avri.altman@sandisk.com, Avi.Shchislowski@sandisk.com,
- beanhuo@micron.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 4/14/25 5:02 AM, Arthur Simchaev wrote:
-> This patch adds functionality to allow user-level applications to send
-> the Hibern8 Enter command via the BSG framework. With this feature,
-> applications can perform H8 stress tests. Also can be used as one
-> of the triggers for the Eye monitor measurement feature added to the
-> M-PHY v5 specification.
-> For completion, allow the sibling functionality of hibern8 exit as well.
-> 
-> Signed-off-by: Arthur Simchaev <arthur.simchaev@sandisk.com>
-> 
-> ---
-> Changed since v1:
->   - elaborate commit log
-> ---
->   drivers/ufs/core/ufshcd.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index be65fc4b5ccd..536b54ccc860 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -4363,6 +4363,16 @@ int ufshcd_send_bsg_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
->   		goto out;
->   	}
->   
-> +	if (uic_cmd->command == UIC_CMD_DME_HIBER_ENTER) {
-> +		ret = ufshcd_uic_hibern8_enter(hba);
-> +		goto out;
-> +	}
-> +
-> +	if (uic_cmd->command == UIC_CMD_DME_HIBER_EXIT) {
-> +		ret = ufshcd_uic_hibern8_exit(hba, uic_cmd);
-> +		goto out;
-> +	}
-> +
->   	mutex_lock(&hba->uic_cmd_mutex);
->   	ufshcd_add_delay_before_dme_cmd(hba);
+Since the Linux kernel initializes many non-C-string char arrays with
+literals. While it would be possible to convert initializers from:
+   { "BOOP", ... }
+to something like:
+   { { 'B', 'O', 'O', 'P' }, ... }
+that is annoying.
+Making -Wunterminated-string-initialization stay silent about char
+arrays marked with nonstring would be much better.
 
-This is wrong. The BSG interface shouldn't alter the power state without
-informing the SCSI core about these power state changes. Please use
-existing sysfs attributes to modify the power state or add new sysfs
-attributes if necessary.
+Without the __attribute__((nonstring)) we would get the following build
+error:
 
-Bart.
+...
+drivers/acpi/acpica/acpredef.h:903:11: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
+  903 |         {{"_S3D", METHOD_0ARGS,
+      |           ^~~~~~
+drivers/acpi/acpica/acpredef.h:906:11: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
+  906 |         {{"_S4D", METHOD_0ARGS,
+      |           ^~~~~~
+
+and,
+
+...
+drivers/acpi/acpica/nsrepair2.c:115:10: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
+  115 |         {"_ALR", acpi_ns_repair_ALR},
+      |          ^~~~~~
+drivers/acpi/acpica/nsrepair2.c:116:10: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
+  116 |         {"_CID", acpi_ns_repair_CID},
+...
+
+Upstream GCC has added this commit
+622968990beee7499e951590258363545b4a3b57[0][1] which silences warning
+about truncating NUL char when initializing nonstring arrays.
+
+[0]: https://gcc.gnu.org/cgit/gcc/commit/?id=622968990beee7499e951590258363545b4a3b57
+[1]: https://gcc.gnu.org/cgit/gcc/commit/?id=afb46540d3921e96c4cd7ba8fa2c8b0901759455
+
+Thanks to Jakub Jelinek <jakub@gcc.gnu.org> for the gcc patch.
+
+Signed-off-by: Brahmajit Das <listout@listout.xyz>
+---
+ drivers/acpi/acpica/aclocal.h   |  4 ++--
+ drivers/acpi/acpica/nsrepair2.c |  2 +-
+ drivers/acpi/tables.c           | 28 +++++++++++++++-------------
+ include/acpi/actbl.h            |  3 ++-
+ 4 files changed, 20 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
+index 6f4fe47c955b..d2cda1b35e59 100644
+--- a/drivers/acpi/acpica/aclocal.h
++++ b/drivers/acpi/acpica/aclocal.h
+@@ -293,7 +293,7 @@ acpi_status (*acpi_internal_method) (struct acpi_walk_state * walk_state);
+  * expected_return_btypes - Allowed type(s) for the return value
+  */
+ struct acpi_name_info {
+-	char name[ACPI_NAMESEG_SIZE];
++	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
+ 	u16 argument_list;
+ 	u8 expected_btypes;
+ };
+@@ -370,7 +370,7 @@ typedef acpi_status (*acpi_object_converter) (struct acpi_namespace_node *
+ 					      converted_object);
+ 
+ struct acpi_simple_repair_info {
+-	char name[ACPI_NAMESEG_SIZE];
++	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
+ 	u32 unexpected_btypes;
+ 	u32 package_index;
+ 	acpi_object_converter object_converter;
+diff --git a/drivers/acpi/acpica/nsrepair2.c b/drivers/acpi/acpica/nsrepair2.c
+index 1bb7b71f07f1..a28b1fa2b1ea 100644
+--- a/drivers/acpi/acpica/nsrepair2.c
++++ b/drivers/acpi/acpica/nsrepair2.c
+@@ -25,7 +25,7 @@ acpi_status (*acpi_repair_function) (struct acpi_evaluate_info * info,
+ 				     return_object_ptr);
+ 
+ typedef struct acpi_repair_info {
+-	char name[ACPI_NAMESEG_SIZE];
++	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
+ 	acpi_repair_function repair_function;
+ 
+ } acpi_repair_info;
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index 2295abbecd14..27104cbb48b5 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -396,19 +396,21 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 length)
+ }
+ 
+ /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
+-static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst = {
+-	ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
+-	ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
+-	ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
+-	ACPI_SIG_ASF,  ACPI_SIG_BOOT, ACPI_SIG_DBGP, ACPI_SIG_DMAR,
+-	ACPI_SIG_HPET, ACPI_SIG_IBFT, ACPI_SIG_IVRS, ACPI_SIG_MCFG,
+-	ACPI_SIG_MCHI, ACPI_SIG_SLIC, ACPI_SIG_SPCR, ACPI_SIG_SPMI,
+-	ACPI_SIG_TCPA, ACPI_SIG_UEFI, ACPI_SIG_WAET, ACPI_SIG_WDAT,
+-	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
+-	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
+-	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
+-	ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
+-	ACPI_SIG_NBFT };
++static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst
++	__attribute__((nonstring)) = {
++		ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
++		ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
++		ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
++		ACPI_SIG_ASF,  ACPI_SIG_BOOT, ACPI_SIG_DBGP, ACPI_SIG_DMAR,
++		ACPI_SIG_HPET, ACPI_SIG_IBFT, ACPI_SIG_IVRS, ACPI_SIG_MCFG,
++		ACPI_SIG_MCHI, ACPI_SIG_SLIC, ACPI_SIG_SPCR, ACPI_SIG_SPMI,
++		ACPI_SIG_TCPA, ACPI_SIG_UEFI, ACPI_SIG_WAET, ACPI_SIG_WDAT,
++		ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
++		ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
++		ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
++		ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
++		ACPI_SIG_NBFT
++	};
+ 
+ #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
+ 
+diff --git a/include/acpi/actbl.h b/include/acpi/actbl.h
+index 451f6276da49..88ba1b978053 100644
+--- a/include/acpi/actbl.h
++++ b/include/acpi/actbl.h
+@@ -66,7 +66,8 @@
+  ******************************************************************************/
+ 
+ struct acpi_table_header {
+-	char signature[ACPI_NAMESEG_SIZE];	/* ASCII table signature */
++	char signature[ACPI_NAMESEG_SIZE]
++		__attribute__((nonstring)); /* ASCII table signature */
+ 	u32 length;		/* Length of table in bytes, including this header */
+ 	u8 revision;		/* ACPI Specification minor version number */
+ 	u8 checksum;		/* To make sum of entire table == 0 */
+-- 
+2.49.0
+
