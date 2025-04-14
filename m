@@ -1,190 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8EB262801
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185C0267386;
+	Mon, 14 Apr 2025 09:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624430; cv=none; b=hL0kJkCMOwNVSF9+pK5LbAYiFde8mahdR9hfqdGXHbnPO+74jVm+XHaQohMHEL5BGXuElnKKH7lnHuccBfBJBtjAf/E7cIf6uUqcMJadqqV29lpGoejsDkwBdDA24kQ8UFU7B0BlZ7wcbJ5NsluNxe7N1ZFJartmr4b8Up1ZQdE=
+	t=1744624438; cv=none; b=LGrthAxnjPIHb75s/BcxLP7bVtGyqfGq5gP5c/MifDnDz0mjddL7hql5MPgOnhHrpVl5myJrdyu1ylLJZ8pKilLlOHb0A/QNHL0MJ1/SDTkd5m7Ze7ytWeLVkJN1Yj2ZcE0REu/qIJVHSbYWn/EcTrbTrRtebFUMBtizsl4e2j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624430; c=relaxed/simple;
-	bh=fE+JE5cENnrFnAtimgq9nSWmgLL8B8MGJLAmn4zv+vg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rflvB26SO4EecOmMXGFq5HGu8ZYLdEKDomOt1j/GqCiuKKcNK3UoTZSbyfW2XttOtMxEQAQ7Ubs5xhN4vVAEMuDtA7CucYvrLNc5LJJKEI3I+2mDmWaq1xa1F0wuPdHys3Iq48ZSqaK3kx1taRml5KiUwcPdriYcmYK+AK/wsFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UYG2sVfB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744624438; c=relaxed/simple;
+	bh=6dH+b9MaL6GsV1HwwP7gMxj2ujMAyYYOTi7g4Qz1eBE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a0LYhXpjG0hnjoLtRhAm12P0vYTMu6phjpoOSCAVF1Q/k9rHMNsyQLU/0Hb0MlHLr2yiCk2EnHahx3P1XAC9dQH/FV88ngSuPB0bNz7cLSdD6JaYk/E+vtNeXhUgpccc8TMSB4i+4vyWOljriqMV1QFtdp6QbrILbJGtTePaR/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meWazmN1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UYG2sVfB"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99o8m031346
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:53:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EdclKkXxFTt0I2OWvs6ezf5xV8oX2spytT768VYcNQo=; b=UYG2sVfBCarTcUZ4
-	Eau8ZJPh1ckqR0jc8pUV/a17Pw4W/yl5434cRscP+fR8qBEYQ31C8hPMaenrWdqA
-	DCCex1srCikdUyb0+VT1Yymz8pAwWoQ9Hcrst+3EsjsdKwJqj92swyTFWd74xDox
-	5LubjTS27sBK1zuOJRQyK9mduRuJObMIEHU4Tho2DT3VBI/ACryRgUP136AZNzlP
-	UpJ/gVUGMD5Wz4v3GNDJQGQtH8K3ioxwkTfhJ1TQxDhonRnS4Q8b8bZQS2OayyH1
-	nHKntVEOgCfbldqpfcPGGAYlIBB+LobUB8Mgy517LUbFeGW5HZiv2q/Q7KQZtMiO
-	LCgg+Q==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxjv0t5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:53:47 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e906c7cd2bso9156176d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:53:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744624426; x=1745229226;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EdclKkXxFTt0I2OWvs6ezf5xV8oX2spytT768VYcNQo=;
-        b=qYefZHQ14TdDOI8P3h39wSvRBt4POG//UPK71WpFsSgGGkRQfeMXuEiSyLjDgo6FY+
-         F5aIt/CA+QsIcOuzhFxBBDe4ToR6i4l9Mmz94EgiKbTyALirxo7pLV3Cy3ZL48qJ7x3c
-         nqxtdPtDhGFdWG6Ei9lvecEFvBHfAz30YlceMvn3dB3XSBkrDhcNldiD8xTGqfMyhu5o
-         cqVuun356tDPUK2tn5w3mfxUfDB/Mp4k5JjXVaC+ySdBvRgQHTA9PJ9LJJQa/O48qyAr
-         Bx+LiiE1jmdL0+QFHTVhv4ElkpeFZV8W0iv5GvldjrGpzlfUDcG+KRbGIvDtJnQwUTyg
-         wJTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbZUZ24pXRja8PZLTDwIC5wK45TCqb23VB5AAiMiISr6TvmBh5/ZJqexIvzfyUKpHQHp8aWUbx/9zn37w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtA+7xdbgEGqvMD5tFWbyW4FHzouYfWKxpkqpIeyw4YqaUJrc6
-	KLO8BR3r9vu6YSJrZqmig25xgktqz8ftNm+kJPUaH+m3z4Q1CV8kHLaa6Dtia+lMzg8UbxjP1gK
-	U71XMiqXZQvo00OgaPugRZB40K7plNBi3BiOUlqQKJ+DRfD9RmQwseuMLw/LMoc0=
-X-Gm-Gg: ASbGncsBUx8/sKrZHnMrbHOxofsWtBN0sUvCQChYeKZXthobQ3/JCL33LXG6jHDAhwc
-	8lNLhfh4d1AnfGoaucdjpmCG8JH3K/r5OTQqrSELj+UETKd5fOMM3H3ZAMPl6QHfctRHxi+QROO
-	Fim2K/sn88AdEqo9CtN7gqn/ONYyNgcF8A+k2YNTfaGSWvpta53t+oe5cGaf3r1alzG+jm8or/5
-	xs7dLrw3Pdyb2vG32BtQ9wW9iw79TNyIn7R6hrAuDA2x3//Qe3N/qgwqXr8kd/Le1DtML7esUh/
-	JlUUgre4nVl6/9oX3g3VyJmXAZqbkwd66nBvhC+IKIG17pDgadl58GXxX3H8Lhm2/w==
-X-Received: by 2002:a05:620a:424f:b0:7c0:be0e:cb09 with SMTP id af79cd13be357-7c7af113653mr552036785a.7.1744624426100;
-        Mon, 14 Apr 2025 02:53:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEoXdqkcpaAerObGEK8HRnwc8WmDaStUQwIiHR1xvbhIiHbRhcZx7+Jtthf6NJhgUhOWtDZ6w==
-X-Received: by 2002:a05:620a:424f:b0:7c0:be0e:cb09 with SMTP id af79cd13be357-7c7af113653mr552035685a.7.1744624425611;
-        Mon, 14 Apr 2025 02:53:45 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3513sm890098866b.11.2025.04.14.02.53.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 02:53:45 -0700 (PDT)
-Message-ID: <2b889254-2847-4c6b-a01d-3626332dcb0a@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 11:53:42 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meWazmN1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755B8C4CEE2;
+	Mon, 14 Apr 2025 09:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744624437;
+	bh=6dH+b9MaL6GsV1HwwP7gMxj2ujMAyYYOTi7g4Qz1eBE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=meWazmN1Swt2j23Qjj6Fs6l9Uw7Yq3VFoPwuR05kiFG77PDcljvQW/sPr3vbPE7LC
+	 j3STWi7dU5DFauTvmBEXVkZDhn70i+c2iMkGhqs0F8eB+kC9S0cPJtFRthiv8EWj6S
+	 2tMXZB5uy+MZlGGiRSuyt62AU8IE72zre/Ur07cYfSIAZA/OXRYfhyHY4k+tDSftIy
+	 uad14pTq/5gTe/TWxL35zO3VtivsMiTejD0ieu3I2a+4kJ1+5vH1GQat4k05b5frfb
+	 mRHdsWeskWyOzoCit0bzbLk67rKAxxT9LugXw3g2+ylIOTjGoJy30C3sNFGPhSSVnq
+	 ippr6bI2IIXvA==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH 0/3] coredump: hand a pidfd to the usermode coredump helper
+Date: Mon, 14 Apr 2025 11:53:35 +0200
+Message-Id: <20250414-work-coredump-v1-0-6caebc807ff4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: Enable TSENS support for QCS615
- SoC
-To: Gaurav Kohli <quic_gkohli@quicinc.com>, amitk@kernel.org,
-        rafael@kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com,
-        lukasz.luba@arm.com, robh@kernel.org, krzk+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, quic_manafm@quicinc.com
-References: <cover.1744292503.git.quic_gkohli@quicinc.com>
- <76e0ce0e312f691abae7ce0fd422f73306166926.1744292503.git.quic_gkohli@quicinc.com>
- <7f893243-572b-4e23-8f2b-ae364d154107@oss.qualcomm.com>
- <46cd600e-b388-4225-a839-a6af76524efe@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <46cd600e-b388-4225-a839-a6af76524efe@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=67fcdb2b cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=PLlEqiOu4NsstTQGM3oA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: bshKo1G6L2Z1NE2kCs2sg-N9QXSlkHbd
-X-Proofpoint-ORIG-GUID: bshKo1G6L2Z1NE2kCs2sg-N9QXSlkHbd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140071
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB/b/GcC/x3MQQ6CMBBA0auQWTukAwUSr2JcDGUqjaElU0USw
+ t2tLt/i/wOyaJAM1+oAlS3kkGIBXSpwM8eHYJiKoTFNZyy1+En6RJdUpveyovGD50F6S9ZBaVY
+ VH/b/73YvHjkLjsrRzb/LwvklWm99TR2qIzjPL1poCHiCAAAA
+X-Change-ID: 20250413-work-coredump-0f7fa7e6414c
+To: linux-fsdevel@vger.kernel.org
+Cc: Oleg Nesterov <oleg@redhat.com>, 
+ Luca Boccassi <luca.boccassi@gmail.com>, 
+ Lennart Poettering <lennart@poettering.net>, 
+ Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
+ =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
+ linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2517; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=6dH+b9MaL6GsV1HwwP7gMxj2ujMAyYYOTi7g4Qz1eBE=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/uW1UsG7jgqD/bCf3BWps/dUf6Dz9geU38wIDs2v1n
+ AqOpxkvd5SwMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEyk6i3DN6XLTFZvm00kgk8Z
+ vlyxJ4qX7+DE2BfZAi/E3kQV8LzmZvinLHHpzCXJbYoqR0TYuPlvFIW5d8++F3ne8YPvrPgLQeJ
+ cAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-On 4/14/25 10:28 AM, Gaurav Kohli wrote:
-> thanks for review!
-> 
-> On 4/12/2025 5:13 AM, Konrad Dybcio wrote:
->> On 4/10/25 4:00 PM, Gaurav Kohli wrote:
->>> Add TSENS and thermal devicetree node for QCS615 SoC.
->>>
->>> Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
->>> ---
->>
->> subject: "arm64: dts: qcom: qcs615: ..">  arch/arm64/boot/dts/qcom/qcs615.dtsi | 281 +++++++++++++++++++++++++++
->>>   1 file changed, 281 insertions(+)
->>>
-> will fix this.
->>> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
->>> index edfb796d8dd3..f0d8aed7da29 100644
->>> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
->>> @@ -3668,6 +3668,17 @@ usb_2_dwc3: usb@a800000 {
->>>                   maximum-speed = "high-speed";
->>>               };
->>>           };
->>> +
->>> +        tsens0: tsens@c222000 {
->>> +            compatible = "qcom,qcs615-tsens", "qcom,tsens-v2";
->>> +            reg = <0x0 0xc263000 0x0 0x1ff>,
->>> +                <0x0 0xc222000 0x0 0x8>;
->> Pad the address part to 8 hex digits with leading zeroes> +            interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
->>
->> &pdc 26
->>
->>> +                    <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
->>
->> &pdc 28
-> we don't want to mark this as wake up capable, so using this approach.
+Give userspace a way to instruct the kernel to install a pidfd for the
+crashing process into the process started as a usermode helper. There's
+still tricky race-windows that cannot be easily or sometimes not closed
+at all by userspace. There's various ways like looking at the start time
+of a process to make sure that the usermode helper process is started
+after the crashing process but it's all very very brittle and fraught
+with peril.
 
-Why not?
+The crashed-but-not-reaped process can be killed by userspace before
+coredump processing programs like systemd-coredump have had time to
+manually open a PIDFD from the PID the kernel provides them, which means
+they can be tricked into reading from an arbitrary process, and they run
+with full privileges as they are usermode helper processes.
 
->>> +
->>> +        cpuss-0-thermal {
->>> +            thermal-sensors = <&tsens0 1>;
->>> +
->>> +            trips {
->>> +
->>> +                trip-point0 {
->>> +                    temperature = <115000>;
->>> +                    hysteresis = <5000>;
->>> +                    type = "passive";
->>> +                };
->>> +
->>> +                trip-point1 {
->>> +                    temperature = <118000>;
->>> +                    hysteresis = <5000>;
->>> +                    type = "passive";
->>> +                };
->>
->> Please drop the passive trip point for the *CPU* tzones, see
->>
-> 
-> we are using trip-point 0 for cpu idle injection mitigation which i will add in subsequent patches, if you are fine i will add cpu idle injection cooling map in this series only ?
+Even if that specific race-window wouldn't exist it's still the safest
+and cleanest way to let the kernel provide the pidfd directly instead of
+requiring userspace to do it manually. In parallel with this commit we
+already have systemd adding support for this in [1].
 
-The folks working on qcs9xxx have made this point too, but I'm lukewarm
-on duplicating meaningless dt description everywhere. I've asked them to
-conduct some measurements on whether random default settings (that would
-be preset in the driver and require no additional dt fluff) show any
-significant difference - if not, we can save up on boilerplate.
+We create a pidfs file for the coredumping process when we process the
+corename pattern. When the usermode helper process is forked we then
+install the pidfs file as file descriptor three into the usermode
+helpers file descriptor table so it's available to the exec'd program.
 
-So let's wait to hear back from them on this.
+Since usermode helpers are either children of the system_unbound_wq
+workqueue or kthreadd we know that the file descriptor table is empty
+and can thus always use three as the file descriptor number.
 
->> commit 06eadce936971dd11279e53b6dfb151804137836
->> ("arm64: dts: qcom: x1e80100: Drop unused passive thermal trip points for CPU")
->>
->> and add a single critical point instead, see
->>
-> As critical shutdown is already supported by hardware, so we are not defining here.
+Note, that we'll install a pidfd for the thread-group leader even if a
+subthread is calling do_coredump(). We know that task linkage hasn't
+been removed yet and even if this @current isn't the actual thread-group
+leader we know that the thread-group leader cannot be reaped until
+@current has exited.
 
-The hardware critical shutdown will literally pull the plug out with the OS
-having no chance to sync the filesystem etc.
+[1]: https://github.com/systemd/systemd/pull/37125
 
-Please define one that's like 5 degC below the hardware limit, so that the
-operating system can try to take some steps to avoid data loss
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Christian Brauner (3):
+      pidfs: move O_RDWR into pidfs_alloc_file()
+      coredump: fix error handling for replace_fd()
+      coredump: hand a pidfd to the usermode coredump helper
 
-Konrad
+ fs/coredump.c            | 92 +++++++++++++++++++++++++++++++++++++++++++++---
+ fs/pidfs.c               |  1 +
+ include/linux/coredump.h |  1 +
+ kernel/fork.c            |  2 +-
+ 4 files changed, 90 insertions(+), 6 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250413-work-coredump-0f7fa7e6414c
+
