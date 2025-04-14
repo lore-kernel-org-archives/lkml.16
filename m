@@ -1,82 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DB325DAE8;
-	Mon, 14 Apr 2025 10:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559C126770E
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625093; cv=none; b=DAejPPqUvoLaBNXnBfTu/07Qb3SAhI/hZoiBKu5EjZCHWvRbCUGkDO94jSVD6PjzdIbmaXtTdDJpmEoJYFpqjqRpJOaFG0Nk6mB9P1ir1VFp00kdi1B3YaTCrFaBiqD/WyptlpRNDoOeKTOH0x29fkwePernfielYqY9iKwHd1I=
+	t=1744625097; cv=none; b=TCesB2FK2Ge/7O81zGCQCd8GY3L51elpW6pPaYwLPcYMRWLe/wrXuUJ4JsxIOzksUHwACdfpbYtUUPUChjRb2W7uu66P37Mo5SrTE86q7yv+oCvVQ5/JiMDPxLPlndaEdJkD4QcxT9xylHViQTj961czUwQh1+E7tDFyxi5aCww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625093; c=relaxed/simple;
-	bh=gruAiv2P1YYiqXyfzoaPnkaggXJ0sX1fRdxIf7A/6lQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qn26GLjunbNfgJN65P/25cb2sXQTNWc7kgKqr+l4UUHnNwh4sG1hosj18dnJjForlZzqoj0/XmTgOvzsC7661z7fAepRgkPGSycJ85qPxWgRZSQddNZX9Ub0RfgnKKCjucavYFHT/ZEE5n1EMqDGR7zqzJbHddbmuxJDVSWFSKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1VMecFN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744625097; c=relaxed/simple;
+	bh=B4+8mhY5Rf52CyIiU1x8DAj27NU1NFg//5iFDhqhKlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohQk3xVolURvG0MXc2bKRsovfnlIMS/koCSpcwVfhfhrQwanTEcWGqlwhHDsDazQEYaZtNu+4jsqG+ikoErSbKgA4D/TwdMBSjA04X8WcsVNDiPQrSJfN05eXEA8jSLU6wtOuT9b8uaDh+URnQgj9xT1dbQoCn0e2v8GDaWSR1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEi5+Ox7; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1VMecFN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C60C4CEE2;
-	Mon, 14 Apr 2025 10:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744625092;
-	bh=gruAiv2P1YYiqXyfzoaPnkaggXJ0sX1fRdxIf7A/6lQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R1VMecFNtXrF88nRgXzVAyFg4aQtUR59dLErSB+wh/LhZIkUrnAZeZ4erzWDsUTyX
-	 RK0SrkNv8HeXjH3ClYkMftKNWOKrwk/DUtBTJAmLza3t57tO+XqzChyXhDrmT1yBgJ
-	 K130eGDBwRmA7/uZaxe31sux+jQCH63dobjzQGxIYIl2ec4ctcLDaBoWxoRLM2Hluk
-	 CeA8C338DNSS+KGZ0Xg1i8KBErRjZQ26dqDGVyjOChHFx8E+dO45LwfNZdM9Q3csMc
-	 rL1Dz95EeCfmH03S3c7zzayBGG0jSbDj2ekt11yuNvFK9C4w/5OMaHUJixqOlQdTl4
-	 7CHXczIaooKEg==
-From: Christian Brauner <brauner@kernel.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] select: core_sys_select add unlikely branch hint on return path
-Date: Mon, 14 Apr 2025 12:04:41 +0200
-Message-ID: <20250414-desolat-bauindustrie-7a705d36a1d0@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250414092426.53529-1-colin.i.king@gmail.com>
-References: <20250414092426.53529-1-colin.i.king@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEi5+Ox7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744625096; x=1776161096;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B4+8mhY5Rf52CyIiU1x8DAj27NU1NFg//5iFDhqhKlc=;
+  b=LEi5+Ox7rk0+PcSSa9ugUgXsJeIjwW424I/0yOYqny43fzUnA9GWq1Sa
+   dGk/Na8JFNLKh8VNf4/nreeYxXHVCAcTGL80jCCNUtG7ZXSql1x0tyBPg
+   UP5bGlA46jHeHgPEctJoq5KNInl5kCTHGPK/n15OwJpMZ/6riO66hAV2n
+   wB8NJvsaCoeiilorvvDfywJVdcnrtc5rmsLFHjmu9fTp5dXiE6MiST3Tc
+   MEaWCXTE9MbJ5emR0eQjvYEoqobw98+QHW/j83Me4ssqwT6N+XI0jxD5n
+   wkSjYRaFwmBw+bxpn8AVghZXDLrpcVAmg0XekYbUuaAj1KRSe8QyjLe+Z
+   Q==;
+X-CSE-ConnectionGUID: RD/1jWjSSYezq9/gkvBM3Q==
+X-CSE-MsgGUID: mJLc5VoARGeXiRVnbQedTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46177148"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="46177148"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:04:55 -0700
+X-CSE-ConnectionGUID: sYvzi0ujQVisNrbvSfgiYQ==
+X-CSE-MsgGUID: BAG13m+QQM+xrs3GY3cglg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="129625749"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:04:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4GgL-0000000CCZO-1BjH;
+	Mon, 14 Apr 2025 13:04:49 +0300
+Date: Mon, 14 Apr 2025 13:04:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jens Axboe <axboe@kernel.dk>, dm-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] dm table: Fix W=1 build warning when
+ mempool_needs_integrity is unused
+Message-ID: <Z_zdwSCfaYDotOI2@smile.fi.intel.com>
+References: <20250407072126.3879086-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1339; i=brauner@kernel.org; h=from:subject:message-id; bh=gruAiv2P1YYiqXyfzoaPnkaggXJ0sX1fRdxIf7A/6lQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/ubt/5+wLtzXP67C8uFznMLduzuvtls8VYtIZvxz+c Il/j0Xyx45SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJuMYy/LP1+6vx/41eg5zI 5s9LO91aV0SUzDrvfnjzHruH+yJX+ysxMtzb0Zo7r8nTqTTOZsGHh7Ieho3mnpPXzJuZOPnQEVu JZC4A
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407072126.3879086-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 14 Apr 2025 10:24:26 +0100, Colin Ian King wrote:
-> Adding an unlikely() hint on the n < 0 comparison return path improves
-> run-time performance of the select() system call, the negative
-> value of n is very uncommon in normal select usage.
+On Mon, Apr 07, 2025 at 10:21:26AM +0300, Andy Shevchenko wrote:
+> The mempool_needs_integrity is unused. This, in particular, prevents
+> kernel builds with Clang, `make W=1` and CONFIG_WERROR=y:
 > 
-> Benchmarking on an Debian based Intel(R) Core(TM) Ultra 9 285K with
-> a 6.15-rc1 kernel built with 14.2.0 using a select of 1000 file
-> descriptors with zero timeout shows a consistent call reduction from
-> 258 ns down to 254 ns, which is a ~1.5% performance improvement.
+> drivers/md/dm-table.c:1052:7: error: variable 'mempool_needs_integrity' set but not used [-Werror,-Wunused-but-set-variable]
+>  1052 |         bool mempool_needs_integrity = t->integrity_supported;
+>       |              ^
 > 
-> [...]
+> Fix this by removing the leftover.
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
+This issue is still present in v6.15-rc1.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
-
-[1/1] select: core_sys_select add unlikely branch hint on return path
-      https://git.kernel.org/vfs/vfs/c/7732f21402b5
