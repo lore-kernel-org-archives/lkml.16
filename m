@@ -1,199 +1,291 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8556D25229C;
-	Mon, 14 Apr 2025 13:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C129D7E105;
+	Mon, 14 Apr 2025 13:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638758; cv=none; b=Tm/6l+ecNzb5eAbwS4eFvgAxCwsgwyMAGoZWVGh2xzXjFNfwjgOCqcnehS5jymLTPcI3MBn7PDgl3xDsgi/SaI6CDCKqr4mzJZSaedmT+iNYCNaSBG9Vx7fsMnR30z1jkyjVFSDgmSqMskqW17S5RKX5hrIBBeD5hULGo5D33V4=
+	t=1744638880; cv=none; b=NCgaB7rciAZpnLfB0qIaUhyhAB8xPFfYCNdF7rxxW6mgYNF6cBUG2w+9+HW3VYqkv50JQODJzcsFZ0VW4UC/F8ioZxqUMHqcGRc+gKkEoJCo9GravL7TdqFFNP8VI/JweWzTfvC+WAxMSFNuIg9HRqoDuWQiUNjXKt1yCve9zps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638758; c=relaxed/simple;
-	bh=ua8cASNkPaWRfa3lb5p4l80TaaxTdU9VK5enTPHP22U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RmcLoCYPMx8bP9D0Ut79TVHPMYX8OqLizKZI7QgewbXbTb7mi3+wMk4eCrqasDQdFlEdmZEup005TfaS5n76webK8u7aOPqvmQMDK+KHJa/z48kyt0LADBVI3GBv0gqxQPQwVWsjWzVPGsNwm0poYjHgK41OK8bpTng4XLQ4ytU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0NuMVO2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744638880; c=relaxed/simple;
+	bh=toq1x+yfpLAlOdz3Hukv5VPdbaNpii0b8ddAH8Q0ZJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ifEkKTdiJg092kB8mHxxGkowLwo4aXBY9Vb1C1Bmt3wzDsXBBRm/m3AZeN2j6UZGzhWPzSyN6AFVncxETFrymr4GQL0gL0mpscnAEAJFoVT329qu+QPx3Z0dw9JFThVx3jhdZd4oSRVam+hKuKmh/zjj5CRuMNsFwOK57sJbupk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V8Bwk5cA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0NuMVO2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04825C4CEED;
-	Mon, 14 Apr 2025 13:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744638758;
-	bh=ua8cASNkPaWRfa3lb5p4l80TaaxTdU9VK5enTPHP22U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m0NuMVO26ktidw9tegT2dsWUHdlydwNaqfHnjdcVc3u1AdX3nP9ymx5Yx06eUhAwr
-	 d5dyW7yEEDBPaPPmzrmDTVJ1JO5U37iebS9J1aE0dza8PPSYHV45YQAWvC9HXptWuf
-	 Xc/J7GIVQ0DuAtZEdNVfceNsTYUo58uxOYb36I7wbU3wRgULo+V55zl2Cn1CdI1bx8
-	 719McGg+A+Z/fXu+j+7BaYwLhkBPlXhO8cgIbmMqS9f5+eFeuJatPjShhFU2yImCre
-	 UAZaMrZ6+7mttz6LxuaVizP40/4XYFBRyDttkKJrXTx5Lq4XLLpvng3oqnvopkrvWq
-	 tTXnVrA7V3Gfw==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac29fd22163so690414966b.3;
-        Mon, 14 Apr 2025 06:52:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMLlrzCqqppRRknQ8FHCrxRUVe2RGw6LGjwmfXsZzch+mHAEKHqxlPeUD0tNBZo40nj7ZvV3eACw==@vger.kernel.org, AJvYcCVptBw6O/LLy4Iq8hl8iVu+4VrarZ4qn8cP+5sO/XexJ6ZX3H5R4d+4G/ONpR68vYpPaFSCUUHk@vger.kernel.org, AJvYcCX47vhs1m6BqYYvPk1IlHye9tAMHFYRCSzZWZh56vZyF74mFRv7lj6Yp4b7jpCfRaCJUHNRM5hRIsBiHuJO@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy54qMwCfx0gsPsDkB3Aj5cIZ7gy4n3+6wPr2xQ0ElOOoRUG3P
-	qZo7LrGGPPNZdp5EguieOHvVDfCJ9Hw1dQlDzeCTnN40Z7XmVkh/FKKH5Tvi4SBBSJY7eMT0UaL
-	5KBZ23X55yiOWsXPqEeJgONNMWzI=
-X-Google-Smtp-Source: AGHT+IEb9cXahzO8rO6tTtsRYaxmrd0g3AGSHrWP5pO4nON1SGuxFGxFHtpFDvEAu9sp8G1Us6/u8WHw7IosPBIF6N0=
-X-Received: by 2002:a17:906:f585:b0:ac7:3912:5ea8 with SMTP id
- a640c23a62f3a-acad371af0amr1104496566b.61.1744638756467; Mon, 14 Apr 2025
- 06:52:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V8Bwk5cA"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99rD0017681;
+	Mon, 14 Apr 2025 13:54:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BinHOCinPI338yugraQz0cpe88AAnVEfOW5PkdXTadY=; b=V8Bwk5cAaPkMmYiq
+	DoKC3ncSGRnSpdRDefqT8AgO24M4Wcb/8hQioEo9A+9197j4vzWc5Hgal9100Atk
+	1aUAtv+WuJh19TVhcBlIk0EkBvs+CelAFdsg5y1MfekspyjAqNh0K5lxRoKn3gVm
+	nbySoAuH/mL5kzixOO/ir/7soNzqq6i6+nILqfRFLGwrHZ2Re+dmBdRcWg2yySEQ
+	K6oGgV5r9lI1ZjGiXNoV5Re3RcHaPsMW8iATh2RnuGqZuuhzGTgiJpVDoY2EvMp6
+	jp0ziXtXkLKSaIIilG+g1OchWvoGwEmm0l6an1EHZoJNWUda71wcvVnXVX0B2arz
+	Rdw9fg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vctcx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 13:54:20 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53EDsKso010566
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 13:54:20 GMT
+Received: from [10.216.10.155] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 06:54:11 -0700
+Message-ID: <a2b44f41-bb54-4d88-bba0-f5b86b8186b5@quicinc.com>
+Date: Mon, 14 Apr 2025 19:24:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
- <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
- <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh>
- <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
- <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com> <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
-In-Reply-To: <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 14 Apr 2025 21:52:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG1icZREjZMGI3uSy2brC-wqNFlBfkcadOO9-HvQ5kt1SjX-qscPsLmFhE
-Message-ID: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
-Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
- provider for OPENSSL MAJOR >= 3
-To: Jan Stancek <jstancek@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
-	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
-	Neal Gompa <neal@gompa.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robdclark@gmail.com>, <dmitry.baryshkov@linaro.org>,
+        <sean@poorly.run>, <marijn.suijten@somainline.org>,
+        <andersson@kernel.org>, <robh@kernel.org>, <robh+dt@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@gmail.com>, <quic_abhinavk@quicinc.com>,
+        <quic_rajeevny@quicinc.com>, <quic_vproddut@quicinc.com>,
+        <quic_jesszhan@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+ <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
+ <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
+ <bb277124-a225-450b-acfe-0acd0f94b263@quicinc.com>
+ <7b876428-6f54-4c40-a234-57443eb97ecb@oss.qualcomm.com>
+Content-Language: en-US
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <7b876428-6f54-4c40-a234-57443eb97ecb@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: KBgi0-aiRUwaw1NYQ3mVCU--yc54mEAl
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fd138c cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=ZtzYOHLiVSdmrietJfUA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: KBgi0-aiRUwaw1NYQ3mVCU--yc54mEAl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140100
 
-Hi, Greg and Sasha,
+On 4/14/2025 3:37 PM, Dmitry Baryshkov wrote:
+> On 14/04/2025 12:56, Ayushi Makhija wrote:
+>> Hi Dmitry,
+>>
+>> On 4/11/2025 1:31 AM, Dmitry Baryshkov wrote:
+>>> On Thu, Apr 10, 2025 at 06:37:54PM +0530, Ayushi Makhija wrote:
+>>>> Hi Dmirity/Konard
+>>>>
+>>>> On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+>>>>> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+>>>>>> Add anx7625 DSI to DP bridge device nodes.
+>>>>>>
+>>>>>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>>>>>> ---
+>>>>>>   arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+>>>>>>   1 file changed, 207 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>> index 175f8b1e3b2d..8e784ccf4138 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>> @@ -28,6 +28,13 @@ chosen {
+>>>>>>           stdout-path = "serial0:115200n8";
+>>>>>>       };
+>>>>>>   +    vph_pwr: vph-pwr-regulator {
+>>>>>> +        compatible = "regulator-fixed";
+>>>>>> +        regulator-name = "vph_pwr";
+>>>>>> +        regulator-always-on;
+>>>>>> +        regulator-boot-on;
+>>>>>> +    };
+>>>>>> +
+>>>>>>       vreg_conn_1p8: vreg_conn_1p8 {
+>>>>>>           compatible = "regulator-fixed";
+>>>>>>           regulator-name = "vreg_conn_1p8";
+>>>>>> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+>>>>>>               };
+>>>>>>           };
+>>>>>>       };
+>>>>>> +
+>>>>>> +    dp-dsi0-connector {
+>>>>>> +        compatible = "dp-connector";
+>>>>>> +        label = "DSI0";
+>>>>>> +        type = "full-size";
+>>>>>> +
+>>>>>> +        port {
+>>>>>> +            dp_dsi0_connector_in: endpoint {
+>>>>>> +                remote-endpoint = <&dsi2dp_bridge0_out>;
+>>>>>> +            };
+>>>>>> +        };
+>>>>>> +    };
+>>>>>> +
+>>>>>> +    dp-dsi1-connector {
+>>>>>> +        compatible = "dp-connector";
+>>>>>> +        label = "DSI1";
+>>>>>> +        type = "full-size";
+>>>>>> +
+>>>>>> +        port {
+>>>>>> +            dp_dsi1_connector_in: endpoint {
+>>>>>> +                remote-endpoint = <&dsi2dp_bridge1_out>;
+>>>>>> +            };
+>>>>>> +        };
+>>>>>> +    };
+>>>>>>   };
+>>>>>>     &apps_rsc {
+>>>>>> @@ -517,9 +548,135 @@ &i2c11 {
+>>>>>>     &i2c18 {
+>>>>>>       clock-frequency = <400000>;
+>>>>>> -    pinctrl-0 = <&qup_i2c18_default>;
+>>>>>> +    pinctrl-0 = <&qup_i2c18_default>,
+>>>>>> +            <&io_expander_intr_active>,
+>>>>>> +            <&io_expander_reset_active>;
+>>>>>
+>>>>> These pinctrl entries should go to the IO expander itself.
+>>>>>
+>>>>>>       pinctrl-names = "default";
+>>>>>> +
+>>>>>>       status = "okay";
+>>>>>> +
+>>>>>> +    io_expander: gpio@74 {
+>>>>>> +        compatible = "ti,tca9539";
+>>>>>> +        reg = <0x74>;
+>>>>>> +        interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>>>>> +        gpio-controller;
+>>>>>> +        #gpio-cells = <2>;
+>>>>>> +        interrupt-controller;
+>>>>>> +        #interrupt-cells = <2>;
+>>>>>> +
+>>>>>> +        gpio2-hog {
+>>>>>
+>>>>> This needs a huuge explanation in the commit message. Otherwise I'd say
+>>>>> these pins should likely be used by the corresponding anx bridges.
+>>>>
+>>>> Thanks, for the review.
+>>>>
+>>>> Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
+>>>> After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
+>>>> to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
+>>>> ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
+>>>
+>>> Please make sure that there are pinctrl entries for all pins.
+>>>
+>>
+>> Thanks, for the review.
+>>
+>> While declaring the pinctrl entries inside the io_expander node, I am getting below error while checking the DTBS check against DT-binding.
+>>
+>> Error : /local/mnt/workspace/amakhija/linux_next_11042025/linux/arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: gpio@74: 'dsi0-int-pin-state', 'dsi1-int-pin-state' do not match any of the regexes:
+>>          '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+' from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
+> 
+> TCA9539 is a GPIO controller rather than a pinctrl device, so it doesn't use pinctrl functions. You don't need to describe properties of the pins that it provides. However, it can use some pins on its own (like reset-gpios). In such a case corresponding pin should have a pinctrl configuration under its pinctrl device.
+> 
 
-On Sun, Mar 30, 2025 at 9:40=E2=80=AFPM Jan Stancek <jstancek@redhat.com> w=
-rote:
->
-> On Sun, Mar 30, 2025 at 3:08=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redhat.c=
-om> wrote:
-> > >
-> > > On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
-> > > > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrot=
-e:
-> > > > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
-> > > > > > > From: Jan Stancek <jstancek@redhat.com>
-> > > > > > >
-> > > > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
-> > > > > > >
-> > > > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-> > > > > > > Distros have started dropping support from headers and in fut=
-ure
-> > > > > > > it will likely disappear also from library.
-> > > > > > >
-> > > > > > > It has been superseded by the PROVIDER API, so use it instead
-> > > > > > > for OPENSSL MAJOR >=3D 3.
-> > > > > > >
-> > > > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENG=
-INES.md
-> > > > > > >
-> > > > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl =
---strict]
-> > > > > > >
-> > > > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-> > > > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > > ---
-> > > > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++---=
-----------
-> > > > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++-------=
------
-> > > > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > > > > >
-> > > > > > This seems to differ from what is upstream by a lot, please doc=
-ument
-> > > > > > what you changed from it and why when you resend this series ag=
-ain.
-> > > > >
-> > > > > Hunks are arranged differently, but code appears to be identical.
-> > > > > When I apply the series to v6.6.83 and compare with upstream I ge=
-t:
-> > > >
-> > > > If so, why is the diffstat different?  Also why are the hunks arran=
-ged
-> > > > differently,
-> > >
-> > > He appears to be using "--diff-algorithm=3Dminimal", while you probab=
-ly
-> > > patience or histogram.
-> > Hi, Jan,
-> >
-> > I tried --diff-algorithm=3Dminimal/patience/histogram from the upstream
-> > commit, they all give the same result as this patch. But Sasha said
-> > the upstream diffstat is different, so how does he generate the patch?
->
-> Hi,
->
-> I don't know how he generates the patch, but with git-2.43 I get noticabl=
-e
-> different patches and diff stats for minimal vs. histogram. "minimal" one
-> matches your v3 patch. I don't know details of Greg's workflow, just offe=
-red
-> one possible explanation that would allow this series to progress further=
-.
->
-> $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb2 |
-> grep -A3 -m1 -- "---"
-Could you please tell me how you generate patches? I always get the
-same result from the upstream repo.
+Hi Dmitry,
 
-Huacai
+Thanks, for the review.
 
-> ---
->  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
->  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
->  2 files changed, 138 insertions(+), 58 deletions(-)
->
-> $ git format-patch -1 --stdout --diff-algorithm=3Dhistogram 558bdc45dfb2
-> | grep -A3 -m1 -- "---"
-> ---
->  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
->  scripts/sign-file.c  |  95 +++++++++++++++++++++++++++------------
->  2 files changed, 139 insertions(+), 59 deletions(-)
->
-> Regards,
-> Jan
->
-> >
-> > Huacai
-> >
-> > >
-> > > $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb=
-2 |
-> > > grep -A3 -m1 -- "---"
-> > > ---
-> > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-----------=
---
-> > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
-> > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > >
-> > > Should be easy to regenerate with different diff-alg for v4.
-> > >
-> > > Regards,
-> > > Jan
-> > >
-> > > > that's a hint to me that something went wrong and I can't
-> > > > trust the patch at all.
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> > > >
-> > >
-> >
->
->
+ ______________                  _____________________                       ___________________
+|              |                |                     |                     |                   |
+|       GPIO 98|---ioexp_intr-->|              GPIO 0 |------Reset--------->|RESET_N            |
+|       GPIO 97|<--ioexp_reset--|              GPIO 1 |----power-enable---->|POWER_EN           |
+|              |                |                     |                     |                   |
+|    SOC       |                |  tca9539            |                     |    anx7625 bridge |
+|  LeMans      |                |  io_expander        |                     |                   |
+|              |                |              GPIO 2 |<----DSI0_INT_1P8_N--|ALERT_N/INTP       |
+|______________|                |_____________________|                     |___________________|
+
+
+Based on the above connection diagram, I have already configured the reset(gpio0), power-enable(gpio1) and interrupt (ALERT_N/INTP) (gpio2) for first instance of anx7625 bridge. Similarly I have configured the reset(gpio8), power-enable(gpio9) and interrupt (gpio10) for the second instance of the anx7625 bridge.
+
+bridge@58 {
+             compatible = "analogix,anx7625";
+             reg = <0x58>;
+             interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
+             enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
+             reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
+
+
+I think above configuration should be fine, we don't need any pinctrl for io expander's gpios going to anx7625 bridge.
+
+Other two RESET (gpio97) and INTR (gpio98) gpios, which is connecting SOC to io expander (tca9539), I have already declared them under tlmm node.
+
+io_expander_intr_active: io-expander-intr-active-state {
+        pins = "gpio98";
+        function = "gpio";
+        drive-strength = <2>;
+        bias-disable;
+};
+
+io_expander_reset_active: io-expander-reset-active-state {
+        pins = "gpio97";
+        function = "gpio";
+        drive-strength = <2>;
+        bias-disable;
+        output-high;
+};
+
+Thanks,
+Ayushi
+
+>>
+>>          io_expander: gpio@74 {
+>>                  compatible = "ti,tca9539";
+>>                  reg = <0x74>;
+>>                  interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>                  gpio-controller;
+>>                  #gpio-cells = <2>;
+>>                  interrupt-controller;
+>>                  #interrupt-cells = <2>;
+>>
+>>                  pinctrl-0 = <&io_expander_intr_active>,
+>>                              <&io_expander_reset_active>;
+>>                  pinctrl-names = "default";
+>>
+>>                  dsi0_int_pin: dsi0-int-pin-state {
+>>                          pins = "gpio2";
+>>                          input-enable;
+>>                          bias-disable;
+>>                  };
+>>
+>>                  dsi1_int_pin: dsi1-int-pin-state {
+>>                          pins = "gpio10";
+>>                          input-enable;
+>>                          bias-disable;
+>>                  };
+>>
+>>          };
+>>
+>> I couldn't find any devicetree example of tca9539 which is using pinctrl. The gpio-pca95xx.yaml DT binding does not match with any regex of the patterns properties.
+>>
+>> Thanks,
+>> Ayushi
+> 
+> 
+
