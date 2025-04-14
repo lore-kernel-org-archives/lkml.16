@@ -1,97 +1,172 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773B844C77;
-	Mon, 14 Apr 2025 15:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331CFEC4
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744643321; cv=none; b=QYDsNh/4AQYoZZCEMMYfP5O57yjbZTX6NQi9VtxbsETHwTNgKoPKpq22Yy5PmgNmMjJRmAPWHAB7bopdvIHQ34V4YgDzcmB0cM20jCJ5xc/yjCiwf5vBYMH6xAAUzDgKQyiJRC62H3EYjPdKDX/crJQK0d/Ofc063Lyd5hUbfbI=
+	t=1744643396; cv=none; b=b80eEbWXCDgVVr55dKpLUNUxhi1ZFBSP/+/G02XMc1pWI7GjA2+Vr4qpefC1g57EuKHWsmajSQxR7JvsRnMlJFMwYLD1rF/UrXLV0Sp9m3C8jb7MVkogBScGqIFtbmUn0oF/3mMGLujsZwk5Jb8hpXCRe0TXNqef3f9OkGGBbjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744643321; c=relaxed/simple;
-	bh=DK4Qu0qldN+pzv3ZrtGi5/PL9yAuBfEn1jbExHHQuoI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZLym3XuETicsYQO3Izc2zJT2z0kjldwaZvWw77Q+Iky5dJRnyAfhb0u3XqqKbkzMZfGqbcILpFMLHxS7/LyFeKSSARviv83bfYvbtcab5nU4BAjelJhQI/Fr+HeLim+Dl0RHMqSAybBD7nh7+o1MiRcHTVahSZFBTMwbKPFfhRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsNBtTCo; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744643396; c=relaxed/simple;
+	bh=7Hi6DqkEM9fIB3dfF/pbu20fNXGcLxy+2NwCVtPc+jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Am03kQQHJn6ijn9xDsyOkgPgZBLG/iYfXT6BKhHKPa1oA/m9u3YttQto0A2Z7WFUz+tDV9TVmdM9eJ/lUdmwv5V52xujGrbv61vWJg19CMRnumPi9Kam4rKIowjJvGYYbK0TqyIJaQZobpl1Y2qzh6xmF9GNnZX7JfHxx0DdT+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgjNcwxS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsNBtTCo"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so782632a91.3;
-        Mon, 14 Apr 2025 08:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744643320; x=1745248120; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DK4Qu0qldN+pzv3ZrtGi5/PL9yAuBfEn1jbExHHQuoI=;
-        b=XsNBtTCobxxpHg3gxMNH59EaDjByQJLkX7vcxz88dfYJ+xhHCqA3XZGRNIAWx47bBS
-         v4IBRLC42OtO0DhjCorpj/vAXaN6nOTf7YlU8g7OqurVo4ug+uQmfdoSMzzyYYD+IAKd
-         VIZiJzgDdloiiEADELETnE58Ys1w8wu7aDRjltoz0yCIPbZGZAIfTRkWBpxOKbyTnsWg
-         pzSo/EyCW9r3LxZh1hSGNYq1DIQO7UAyNAtpV45ppHxHO+UxmfPQQlml70b99jp0Wo59
-         U/BBApiGRr2z3xzoHjHmUI/JYtODrr7cAOGl0mfoIBx8oFBYi5s/9+u7Sz6c6HVoRJbc
-         1BUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744643320; x=1745248120;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DK4Qu0qldN+pzv3ZrtGi5/PL9yAuBfEn1jbExHHQuoI=;
-        b=Wdn3UuxOfPJh7mv5Y+nGv4c4wJW948AzTPywhGDglpzzLrOH0YJFcX9m05HPyJnNC8
-         sAAlcVx/3mFFkbFQ6JyLELUVG0mmz/c7jPqZazPTY1HTfjwMOhz7hmcIzGvw81m7d1s3
-         UJze7bjbv1EyMFJ9r8V1mjIQ021vOpnLODZubcjJ0fUvBTS9pwxx1kAlTZ7J1a15sMVr
-         SKi6XO7srIEwgYWCpf7EbwFb0IurVn1OSW0y/YSIbaK1NMgWHcCcg/csbus6ufY0Ndw0
-         L8I4nBPZ6yv42lMuY9KASZ98I/hgT2f1QopuOn3inoNuooSwk+bXKyPlAUuvV5cfTFof
-         PODQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwImfnndvjQqwaf8zEpH7runshI5XGa7lf1ATKlacTnErc+sYoZiuXVUkjiAUKcw3ZA+yRd/L5@vger.kernel.org, AJvYcCUxpv2z2RnTKLCRbiooMg6op+1UcwnYfgtoPK6P3We/ASyhLgHnWutTXCkZYLZcIagQFd6ooLvGUhjx5SI=@vger.kernel.org, AJvYcCVkdmuk3yKPjSUqBIakne8jDioHvDdZm1wKkqy40XI/tTYNJiQct/HotJwz81/vabIcDwpU53k968uTDXU/IgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7SD/JHC1GLFhCCB8ri3IQ0o/f9WOsgf8t7oTaV88YtpUNb75a
-	TXWLkLYJVgx5Rs/0mTVRTOUkS2LhFpxVVC4EsfVFTD/eFeDjTNqHc/g32Z8UYLNfwwqVTb3DC2Q
-	jHF4nE/aSXRcowVHXgvpeDertkFc=
-X-Gm-Gg: ASbGncs2HaZBSEAE2ac7xdEFRJyDI10z8drS48RcrMyIiSWcptzcfgZzByTlO/9DmOn
-	A3WfKFOH9V1/2mprqU5d5Asp/SncavAFjtYD13cN87a6lebufjBepb+QvuhLWzw7srZH+Pp1By1
-	GF5RNfpEPAsFxq6MIOtvapBQ==
-X-Google-Smtp-Source: AGHT+IF/3Sug4cH71Iy1yUd34jEFWmX1uxiWoMXWWYEYLAEU8PckJu1uG0PfMyeFYO7FJKOwZzJ7L3pUGCudlaYn1Cw=
-X-Received: by 2002:a17:90b:384b:b0:306:b6ae:4d7a with SMTP id
- 98e67ed59e1d1-3084e75753emr84387a91.3.1744643319470; Mon, 14 Apr 2025
- 08:08:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgjNcwxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7512C4CEEB;
+	Mon, 14 Apr 2025 15:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744643395;
+	bh=7Hi6DqkEM9fIB3dfF/pbu20fNXGcLxy+2NwCVtPc+jk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bgjNcwxSJFfU84m9mCpCgqp1v49/ptx8IOaCmYPzXeqcJmAxDE+Kbc2oTlUBNb0u0
+	 hsctD1HmQCeGIBJumPKZPeDvcMTE1zvgk9ubQmQaU9Cy6dc2RLe/6OYpN1q9o+CRPk
+	 HWZhpoOl44MfQpWp2OMvaBO4qcdNmu5Bbe85IgjQ39MK2iIjdN/t+QG//Mejxnbsek
+	 qaiF6klUzm13W0ymGaY7l5wQgOZ+3KUOnTzRYJtMjQbojFMqhOkwYM9QGRnE0MK8js
+	 iNlL+UgB02SpB2Txs3c3b+wKNAOcwGaQ94WZn6fdi4Qe0eOVa11kYcxEXwGG1uWF8h
+	 zarlOxzYAk44g==
+From: Borislav Petkov <bp@kernel.org>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	David Kaplan <david.kaplan@amd.com>,
+	X86 ML <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [PATCH] x86/bugs: Remove X86_BUG_MMIO_UNKNOWN
+Date: Mon, 14 Apr 2025 17:09:51 +0200
+Message-ID: <20250414150951.5345-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413002338.1741593-1-ojeda@kernel.org>
-In-Reply-To: <20250413002338.1741593-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 14 Apr 2025 17:08:27 +0200
-X-Gm-Features: ATxdqUH6rGk6r6-lQ_KWE9TQvnHIiYAFIJPEWNi0sSuE_uUs1uqjOst-DwFVQ_g
-Message-ID: <CANiq72=W_JOV+WLWFpkqt=cbqOiOKkxbsa4wvyuW82O80srMoQ@mail.gmail.com>
-Subject: Re: [PATCH] objtool/rust: add one more `noreturn` Rust function
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 13, 2025 at 2:26=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Thus add it to the list so that `objtool` knows it is actually `noreturn`=
-.
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-Applied to `rust-fixes` -- thanks everyone! I applied it early to
-start to get testing -- tags still welcomed for a day or so.
+Whack this thing because:
 
-I changed the title a bit (adding "for Rust 1.86.0") to avoid
-confusion with a previous patch (and future ones), since a bot already
-got confused.
+- the "unknown" handling is done only for this vuln and not for the
+  others
 
-If `objtool` prefers to apply this instead, please let me know and I
-will drop it!
+- it doesn't do anything besides reporting things differently. It
+  doesn't apply any mitigations - it is simply causing unnecessary
+  complications to the code which don't bring anything besides
+  maintenance overhead to what is already a very nasty spaghetti pile
 
-Cheers,
-Miguel
+- all the currently unaffected CPUs can also be in "unknown" status so
+  there's no need for special handling here
+
+so get rid of it.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/include/asm/cpufeatures.h       |  2 +-
+ arch/x86/kernel/cpu/bugs.c               | 12 +-----------
+ arch/x86/kernel/cpu/common.c             |  5 -----
+ tools/arch/x86/include/asm/cpufeatures.h |  2 +-
+ 4 files changed, 3 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 6c2c152d8a67..e8f8d43a3825 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -519,7 +519,7 @@
+ #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* "itlb_multihit" CPU may incur MCE during certain page attribute changes */
+ #define X86_BUG_SRBDS			X86_BUG(24) /* "srbds" CPU may leak RNG bits if not mitigated */
+ #define X86_BUG_MMIO_STALE_DATA		X86_BUG(25) /* "mmio_stale_data" CPU is affected by Processor MMIO Stale Data vulnerabilities */
+-#define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) /* "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
++/* unused, was #define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
+ #define X86_BUG_RETBLEED		X86_BUG(27) /* "retbleed" CPU is affected by RETBleed */
+ #define X86_BUG_EIBRS_PBRSB		X86_BUG(28) /* "eibrs_pbrsb" EIBRS is vulnerable to Post Barrier RSB Predictions */
+ #define X86_BUG_SMT_RSB			X86_BUG(29) /* "smt_rsb" CPU is vulnerable to Cross-Thread Return Address Predictions */
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 4f6bda8b5361..0e120da17414 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -427,7 +427,6 @@ static const char * const mmio_strings[] = {
+ static void __init mmio_select_mitigation(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) ||
+-	     boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN) ||
+ 	     cpu_mitigations_off()) {
+ 		mmio_mitigation = MMIO_MITIGATION_OFF;
+ 		return;
+@@ -590,8 +589,6 @@ static void __init md_clear_update_mitigation(void)
+ 		pr_info("TAA: %s\n", taa_strings[taa_mitigation]);
+ 	if (boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA))
+ 		pr_info("MMIO Stale Data: %s\n", mmio_strings[mmio_mitigation]);
+-	else if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
+-		pr_info("MMIO Stale Data: Unknown: No mitigations\n");
+ 	if (boot_cpu_has_bug(X86_BUG_RFDS))
+ 		pr_info("Register File Data Sampling: %s\n", rfds_strings[rfds_mitigation]);
+ }
+@@ -2780,9 +2777,6 @@ static ssize_t tsx_async_abort_show_state(char *buf)
+ 
+ static ssize_t mmio_stale_data_show_state(char *buf)
+ {
+-	if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
+-		return sysfs_emit(buf, "Unknown: No mitigations\n");
+-
+ 	if (mmio_mitigation == MMIO_MITIGATION_OFF)
+ 		return sysfs_emit(buf, "%s\n", mmio_strings[mmio_mitigation]);
+ 
+@@ -2967,7 +2961,6 @@ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr
+ 		return srbds_show_state(buf);
+ 
+ 	case X86_BUG_MMIO_STALE_DATA:
+-	case X86_BUG_MMIO_UNKNOWN:
+ 		return mmio_stale_data_show_state(buf);
+ 
+ 	case X86_BUG_RETBLEED:
+@@ -3036,10 +3029,7 @@ ssize_t cpu_show_srbds(struct device *dev, struct device_attribute *attr, char *
+ 
+ ssize_t cpu_show_mmio_stale_data(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+-	if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
+-		return cpu_show_common(dev, attr, buf, X86_BUG_MMIO_UNKNOWN);
+-	else
+-		return cpu_show_common(dev, attr, buf, X86_BUG_MMIO_STALE_DATA);
++	return cpu_show_common(dev, attr, buf, X86_BUG_MMIO_STALE_DATA);
+ }
+ 
+ ssize_t cpu_show_retbleed(struct device *dev, struct device_attribute *attr, char *buf)
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 079ded4eeb86..d7fe0fdb2cfa 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1402,15 +1402,10 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+ 	 * Affected CPU list is generally enough to enumerate the vulnerability,
+ 	 * but for virtualization case check for ARCH_CAP MSR bits also, VMM may
+ 	 * not want the guest to enumerate the bug.
+-	 *
+-	 * Set X86_BUG_MMIO_UNKNOWN for CPUs that are neither in the blacklist,
+-	 * nor in the whitelist and also don't enumerate MSR ARCH_CAP MMIO bits.
+ 	 */
+ 	if (!arch_cap_mmio_immune(x86_arch_cap_msr)) {
+ 		if (cpu_matches(cpu_vuln_blacklist, MMIO))
+ 			setup_force_cpu_bug(X86_BUG_MMIO_STALE_DATA);
+-		else if (!cpu_matches(cpu_vuln_whitelist, NO_MMIO))
+-			setup_force_cpu_bug(X86_BUG_MMIO_UNKNOWN);
+ 	}
+ 
+ 	if (!cpu_has(c, X86_FEATURE_BTC_NO)) {
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 9e3fa7942e7d..e88500d90309 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -508,7 +508,7 @@
+ #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* "itlb_multihit" CPU may incur MCE during certain page attribute changes */
+ #define X86_BUG_SRBDS			X86_BUG(24) /* "srbds" CPU may leak RNG bits if not mitigated */
+ #define X86_BUG_MMIO_STALE_DATA		X86_BUG(25) /* "mmio_stale_data" CPU is affected by Processor MMIO Stale Data vulnerabilities */
+-#define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) /* "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
++/* unused, was #define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) * "mmio_unknown" CPU is too old and its MMIO Stale Data status is unknown */
+ #define X86_BUG_RETBLEED		X86_BUG(27) /* "retbleed" CPU is affected by RETBleed */
+ #define X86_BUG_EIBRS_PBRSB		X86_BUG(28) /* "eibrs_pbrsb" EIBRS is vulnerable to Post Barrier RSB Predictions */
+ #define X86_BUG_SMT_RSB			X86_BUG(29) /* "smt_rsb" CPU is vulnerable to Cross-Thread Return Address Predictions */
+-- 
+2.43.0
+
