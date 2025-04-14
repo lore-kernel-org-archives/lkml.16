@@ -1,240 +1,312 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCF333997;
-	Mon, 14 Apr 2025 10:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554401A0739
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744626128; cv=none; b=Icg92PfUkPGFPOjDckyvTg9E49ZCurhFPkeO1TFRMNpclVJ20StHcymwUeEdRnrvyioOdFtYPqLrAp6LXw//k0nECZbcYM2aQUQMCs0mGIJemBOZAfn2ffXDcMKgdX4FI4aGzFA2JTZ5+P3BviOVI4q0vDlZKafy1mQIOGpWd9Y=
+	t=1744626130; cv=none; b=WjJv/GLTwhzdqK3pmcEf6jcpzjsqpX1zRyfxReFgiD3fhzGq2KaX6DReuFuV/gen07HWpOfRq3W/DJSyEyU69dK6b+DEwL8/GzYjGq9Yx4hR1dfM/BlnVmJjNoYH5CKHrgHlw4q0h8GpzxG49i0izeHS8OvW8oE2bjHH8ehcYHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744626128; c=relaxed/simple;
-	bh=KtqC2iditidJC2eSLn3KMSnoD5wXk8uVxjE6xg2dVhg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qMBhey+hKxDDJAGm5htJSdoYUrG+QKSMHrsKSvXF4oGLKr6HSVFNyq9qRgQBWuh9spcWVGcjlAfaqYuAOKAuBHZW7JLBt8w9RjDo6hvDdV6n+OCKPkqLhWRlETiYnWuEQ/y1j+7uYSM2R3aTu/UeyvJl0Cf13qRFrLlqHVLFOxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJIcbyEC; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744626130; c=relaxed/simple;
+	bh=R7HtG40WcOpirUi7l0xNR5wubXrlUN5xrUi66Bh4PRw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rqu8uUHVRlnuLUhkit2sOiVweonlUXihPj3FFonTYcBr4Zmup4r+Y64oTQp3nHHJVsoLDirGTvuf/wjQr1szLY7iuNp4rUYWvsRXfOTUL9WzbTujOEZcpEZU11zTxsOy0moXD++RsRVew5CPECffhSvTHNWZJaozl5qhAkwy+wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eCTtFxzo; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJIcbyEC"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524125f6cadso3449459e0c.2;
-        Mon, 14 Apr 2025 03:22:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eCTtFxzo"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so3505804f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744626125; x=1745230925; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
-        b=RJIcbyECyj2SxzILyTGR/ubLtHeBLY5kTyQC8cL3DkrouuBHhQdrDQ+FMObQPgpAhN
-         iiaTsF13HbF2PRL9fdICbaUtHDQpThYo54RUbEooGkDyL8dSccp/mE5d2TS+UKwsXc2q
-         iiy0VMtWrNY+zSg2lOtD7aQa8qplyJsLLutM7UJMcRNKjTaa8EivmqCpyFJfTPbAHoQJ
-         OgFnz52Yt1ZBBdD8YwV8LLH4TyyYxa4abvueXPCEnAN6yNwDIYv9ReK/25eOaFZTZlT7
-         NSZP9hrDMOn02RfaeI1xXUtLIWhdK93MTNt0D0QM1Nk0eyus7JqMqqpxLgVW6ScPUpne
-         K/Xg==
+        d=linaro.org; s=google; t=1744626126; x=1745230926; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c03obW5LsKMo4CGjzfYGD7yKrSspSapWD8522GDRY+E=;
+        b=eCTtFxzoEoqCT7h1aDpjqTsidx3dGiSRh3nIOrovUuI4e8u3woapvrlcYMCLQ3rnKn
+         Ygaq8yDgym8a0l9g3tZOu0PnfWvuesXGs/HbFvk+5OgdLh6EOlTYDd4ZxYlVeNGK9K+e
+         LMw8EcZ8lJDB8P+LDa9PXjLqlxktsRQLm0rdeh+NjIl4dtnLvlggFv6O9ZbnzRU8SsAn
+         eBbwKsK04uyqcjbmHRbkBaBacf2iUc9fieb/OlJ8xKW2PG409Jvveazyc2kTJPUX0Ke8
+         MKA3hSRGXw71nfSNA6sUHGAp6MjWtEWVI6QhIXNuErrTUeohkhrxI/PLiReu2VLTYei4
+         3Abw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744626125; x=1745230925;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
-        b=P7CxnGT/XN/si1cRz622IaajCWSoC4i238wO4gTVdBiKCXae01yv+AlKgr6OOpigiq
-         ByRs7yuByS5/EvRjEr5JpC1C/MtyYssMP5Y3qdG/dfB52G834H0HyWdW4EqmdhTepDhG
-         eCB6gcQWeVvC0OySD3hO3lUSUaeD1PUUIkqDlrefmN/6Rco+mDa4Fsd5eZlcZ1Xd7388
-         Du6hmZaUk+Xtqy2iDhImxyodBf69+9uayw+rkkqxhlcyCPahutVMccdmsTDpnl7HXs91
-         iG5BIul//sDS2LKuSUmznmV6DBbwIn0aKrJaTd5NxhKTtbr1lQkz7jTpLxxmRGg64CG8
-         eMgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnAko+01/ipj10ovQYFkalt1zt08fk94DT1OOKTwpKvie501RlNHmEwWaDeo/n2YJo/uxsynemrfGaa+9k@vger.kernel.org, AJvYcCVnIRkP+K1yTwz+d0N0BoECiJY8wTU6xcWx3mzaw6nh2/B/qrtFICNpPubz/lXodWQcVHVMnPUE5A9Q@vger.kernel.org, AJvYcCWHt+xQKYFgFqVtmzQtJ3HU/rtvhDs5mdLPnG4/JxB2QUg4yriHHrU15Ecrdmqkkvj0RLK0+9mNdyRUkg==@vger.kernel.org, AJvYcCWRnIR+aqbPZPMmlZNoAUnQTb/HimYkEujKUVQI4i1pBVJ3nyIh0LWPUWpA+UGCNGH7IA36xxi99R8g2F5w@vger.kernel.org, AJvYcCWrW/IUI5dYNavJqcHM62cOsBStfSBunBJ9upsWH87mte+mnreSdZ1lEhMMspzqZ8oZCgoi0vxm80y52jF9FdX04oA=@vger.kernel.org, AJvYcCXUoDnoJ1HKkCLAdwkhk5/nms1emyhms4fuJ5ZBOcu0IJ9RxClewRPqtqGa8VFpRiBmEAGknDVXs2DB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrSJvsu9Ii+nT65lA/uZ1D2ufeILx0OEua4fauOkZI6UVv4CHB
-	/z9rJ5gomgaThxpnN5afjIkjIknMAOwR/DNjOmVILcRHpWd0ippdep2n9BAx0WKKowbmXr2W2ns
-	19gW1NXBZWQjHoFa7DqKqzqpcjLI=
-X-Gm-Gg: ASbGncsWRtyjuVRRK1LyIQzw03lH7NeJJZya9nNPFiYzhm0f1lPjI02nVF6BuhHBEjX
-	7rB8EZnnvOKU2U/kGJMaFio6rcx2n5msSz/h/PahKpAOEVBqmfjIfdbOQ/xwwAptGTsDhxntNtd
-	Z+D/2/8K7A5dYypR2LeQ5BgCoDdZwRN1fyoBAZQc0ScjeGmTBeiZSbyA==
-X-Google-Smtp-Source: AGHT+IFSeOGA2alvM6QeKWz4GkE6DGO1ZrCPg1gcKCQ11FxwYR0XiZJAS4I8ijlIiqbfKsOobnAycg3lAGA3S6FUZm0=
-X-Received: by 2002:a05:6122:889:b0:520:4996:7cf2 with SMTP id
- 71dfb90a1353d-527c35f89c5mr7652543e0c.10.1744626125325; Mon, 14 Apr 2025
- 03:22:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744626126; x=1745230926;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c03obW5LsKMo4CGjzfYGD7yKrSspSapWD8522GDRY+E=;
+        b=unro2EyutwlJ8xYBGP2N+BGQvfWNwJKGgWbDDWPEZVNFRf/l84h8V0McOwi426lw9x
+         0xKH0nJtObEf8lKWcnlNytB5ViwVLABpFDyAiFakxI2FtKe6E5+GtPDjLyIAbnnG2XdL
+         FrDVO51FI5Nf1LgTetvSkifPGlzWH/vpmj3CIn0Fd0LcO+RWoy1Hv0V78OBRNoo5MRIU
+         ywKGTrZ6YTzeZSRSj3TXyANbq57eV0KcbOWgFOgdNCBTXmVSEu4D19UJvGtASCh6LUue
+         WpxWH04FmJFOJQy9Bl0KueBfLQBtpu7DmfGlrfXJBX1i5F5hF9yIUrkaVUryGb2qjA2K
+         TyCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbo7ruMHSO7UHQ7qz3s9DHdfMsIrtMCLGgLPXYyY/QUgYO7toX3EZJ3iKCP3Ifxkhsp5kKSO8o8VgYLO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX0LTvrXniZXztab+C4yi5UcetzgVazXdoVUqZ2AVyWeNqP9iN
+	lL6DuHEv7bLWLRGjkUxaX759NiyTrz4XSVIip88Pavsh4MKkgvrTivN/cXi4VDA=
+X-Gm-Gg: ASbGncteH52HORzeuSACjcs05zWNSWovmWkM19nVtBEWbyVbsRJF6I4jDuSmoIELXPp
+	X+P4PICETQVj/aGqvLuxUL98g2xZoux1Ye5Co44m4s7aULumS+e6prZ27Rg2A8o1J6u7f3W/tkc
+	Ud993cLlt0EXW5s53b9e5LB8VnZEJomKBNaOVaHYsmrnbGJjlNX9hox02LjE9pSHuyePKAPOER9
+	yPrnbDemvz9mLUrYWn521kKJNjE9wu4PMoMeNe6maG2OdV8X30x76EnZaIrwaRgh50pMP+aMZvt
+	GrvyWh+LrYEEkxvaiVD4L1vOPgtY5egbT9vsnvGrXfp2ugCD5VPiH0lwAvJhSqrNBGPQGssyPXv
+	FVSSm+RoKj6qwV6BuAA==
+X-Google-Smtp-Source: AGHT+IG3Fteb6fKVMQ8a4Y/6aL+K9VtOylBs6apDdCb2Zm0pQ2pWFytupwBh7IsBWbm67TQyeEH02w==
+X-Received: by 2002:a05:6000:4285:b0:39c:1efb:ee8a with SMTP id ffacd0b85a97d-39eaaebdecfmr8897783f8f.38.1744626126394;
+        Mon, 14 Apr 2025 03:22:06 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:bf8a:3473:5c13:9743? ([2a01:e0a:3d9:2080:bf8a:3473:5c13:9743])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43d053sm10696481f8f.68.2025.04.14.03.22.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 03:22:06 -0700 (PDT)
+Message-ID: <a6eafcb0-8fa8-44f7-9afc-e368f931127b@linaro.org>
+Date: Mon, 14 Apr 2025 12:21:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 14 Apr 2025 11:21:39 +0100
-X-Gm-Features: ATxdqUFuOQmoL7ZTIiCRaOJodzbfgENtFmE4ZyvW6KnP_pB8NrLn_eb62g4E32I
-Message-ID: <CA+V-a8s0RbgEB2kHDtv35jOtSNw2ThMB_GEgX1SLdOdiRtiPfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] soc: renesas: sysc: Add SoC identification for
- RZ/V2N SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 4/7] soc: amlogic: clk-measure: Add support for C3
+To: chuan.liu@amlogic.com, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250414-clk-measure-v2-0-65077690053a@amlogic.com>
+ <20250414-clk-measure-v2-4-65077690053a@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250414-clk-measure-v2-4-65077690053a@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
+On 14/04/2025 12:12, Chuan Liu via B4 Relay wrote:
+> From: Chuan Liu <chuan.liu@amlogic.com>
+> 
+> Add the clk-measurer clocks IDs for the Amlogic C3 SoC family.
+> 
+> Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
+> ---
+>   drivers/soc/amlogic/meson-clk-measure.c | 157 ++++++++++++++++++++++++++++++++
+>   1 file changed, 157 insertions(+)
+> 
+> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
+> index 82c008ade894..810454ac4119 100644
+> --- a/drivers/soc/amlogic/meson-clk-measure.c
+> +++ b/drivers/soc/amlogic/meson-clk-measure.c
+> @@ -494,6 +494,146 @@ static const struct meson_msr_id clk_msr_sm1[] = {
+>   	CLK_MSR_ID(127, "csi2_data"),
+>   };
+>   
+> +static const struct meson_msr_id clk_msr_c3[] = {
+> +	CLK_MSR_ID(0,	"sys_clk"),
+> +	CLK_MSR_ID(1,	"axi_clk"),
+> +	CLK_MSR_ID(2,	"rtc_clk"),
+> +	CLK_MSR_ID(3,	"p20_usb2_ckout"),
+> +	CLK_MSR_ID(4,	"eth_mpll_test"),
+> +	CLK_MSR_ID(5,	"sys_pll"),
+> +	CLK_MSR_ID(6,	"cpu_clk_div16"),
+> +	CLK_MSR_ID(7,	"ts_pll"),
+> +	CLK_MSR_ID(8,	"fclk_div2"),
+> +	CLK_MSR_ID(9,	"fclk_div2p5"),
+> +	CLK_MSR_ID(10,	"fclk_div3"),
+> +	CLK_MSR_ID(11,	"fclk_div4"),
+> +	CLK_MSR_ID(12,	"fclk_div5"),
+> +	CLK_MSR_ID(13,	"fclk_div7"),
+> +	CLK_MSR_ID(15,	"fclk_50m"),
+> +	CLK_MSR_ID(16,	"sys_oscin32k_i"),
+> +	CLK_MSR_ID(17,	"mclk_pll"),
+> +	CLK_MSR_ID(19,	"hifi_pll"),
+> +	CLK_MSR_ID(20,	"gp0_pll"),
+> +	CLK_MSR_ID(21,	"gp1_pll"),
+> +	CLK_MSR_ID(22,	"eth_mppll_50m_ckout"),
+> +	CLK_MSR_ID(23,	"sys_pll_div16"),
+> +	CLK_MSR_ID(24,	"ddr_dpll_pt_clk"),
+> +	CLK_MSR_ID(26,	"nna_core"),
+> +	CLK_MSR_ID(27,	"rtc_sec_pulse_out"),
+> +	CLK_MSR_ID(28,	"rtc_osc_clk_out"),
+> +	CLK_MSR_ID(29,	"debug_in_clk"),
+> +	CLK_MSR_ID(30,	"mod_eth_phy_ref_clk"),
+> +	CLK_MSR_ID(31,	"mod_eth_tx_clk"),
+> +	CLK_MSR_ID(32,	"eth_125m"),
+> +	CLK_MSR_ID(33,	"eth_rmii"),
+> +	CLK_MSR_ID(34,	"co_clkin_to_mac"),
+> +	CLK_MSR_ID(36,	"co_rx_clk"),
+> +	CLK_MSR_ID(37,	"co_tx_clk"),
+> +	CLK_MSR_ID(38,	"eth_phy_rxclk"),
+> +	CLK_MSR_ID(39,	"eth_phy_plltxclk"),
+> +	CLK_MSR_ID(40,	"ephy_test_clk"),
+> +	CLK_MSR_ID(66,	"vapb"),
+> +	CLK_MSR_ID(67,	"ge2d"),
+> +	CLK_MSR_ID(68,	"dewarpa"),
+> +	CLK_MSR_ID(70,	"mipi_dsi_meas"),
+> +	CLK_MSR_ID(71,	"dsi_phy"),
+> +	CLK_MSR_ID(79,	"rama"),
+> +	CLK_MSR_ID(94,	"vc9000e_core"),
+> +	CLK_MSR_ID(95,	"vc9000e_sys"),
+> +	CLK_MSR_ID(96,	"vc9000e_aclk"),
+> +	CLK_MSR_ID(97,	"hcodec"),
+> +	CLK_MSR_ID(106,	"deskew_pll_clk_div32_out"),
+> +	CLK_MSR_ID(107,	"mipi_csi_phy_clk_out[0]"),
+> +	CLK_MSR_ID(108,	"mipi_csi_phy_clk_out[1]"),
+> +	CLK_MSR_ID(110,	"spifc"),
+> +	CLK_MSR_ID(111,	"saradc"),
+> +	CLK_MSR_ID(112,	"ts"),
+> +	CLK_MSR_ID(113,	"sd_emmc_c"),
+> +	CLK_MSR_ID(114,	"sd_emmc_b"),
+> +	CLK_MSR_ID(115,	"sd_emmc_a"),
+> +	CLK_MSR_ID(116,	"gpio_msr_clk"),
+> +	CLK_MSR_ID(117,	"spicc_b"),
+> +	CLK_MSR_ID(118,	"spicc_a"),
+> +	CLK_MSR_ID(122,	"mod_audio_pdm_dclk_o"),
+> +	CLK_MSR_ID(124,	"o_earcrx_dmac_clk"),
+> +	CLK_MSR_ID(125,	"o_earcrx_cmdc_clk"),
+> +	CLK_MSR_ID(126,	"o_earctx_dmac_clk"),
+> +	CLK_MSR_ID(127,	"o_earctx_cmdc_clk"),
+> +	CLK_MSR_ID(128,	"o_tohdmitx_bclk"),
+> +	CLK_MSR_ID(129,	"o_tohdmitx_mclk"),
+> +	CLK_MSR_ID(130,	"o_tohdmitx_spdif_clk"),
+> +	CLK_MSR_ID(131,	"o_toacodec_bclk"),
+> +	CLK_MSR_ID(132,	"o_toacodec_mclk"),
+> +	CLK_MSR_ID(133,	"o_spdifout_b_mst_clk"),
+> +	CLK_MSR_ID(134,	"o_spdifout_mst_clk"),
+> +	CLK_MSR_ID(135,	"o_spdifin_mst_clk"),
+> +	CLK_MSR_ID(136,	"o_audio_mclk"),
+> +	CLK_MSR_ID(137,	"o_vad_clk"),
+> +	CLK_MSR_ID(138,	"o_tdmout_d_sclk"),
+> +	CLK_MSR_ID(139,	"o_tdmout_c_sclk"),
+> +	CLK_MSR_ID(140,	"o_tdmout_b_sclk"),
+> +	CLK_MSR_ID(141,	"o_tdmout_a_sclk"),
+> +	CLK_MSR_ID(142,	"o_tdminb_1b_sclk"),
+> +	CLK_MSR_ID(143,	"o_tdmin_1b_sclk"),
+> +	CLK_MSR_ID(144,	"o_tdmin_d_sclk"),
+> +	CLK_MSR_ID(145,	"o_tdmin_c_sclk"),
+> +	CLK_MSR_ID(146,	"o_tdmin_b_sclk"),
+> +	CLK_MSR_ID(147,	"o_tdmin_a_sclk"),
+> +	CLK_MSR_ID(148,	"o_resampleb_clk"),
+> +	CLK_MSR_ID(149,	"o_resamplea_clk"),
+> +	CLK_MSR_ID(150,	"o_pdmb_sysclk"),
+> +	CLK_MSR_ID(151,	"o_pdmb_dclk"),
+> +	CLK_MSR_ID(152,	"o_pdm_sysclk"),
+> +	CLK_MSR_ID(153,	"o_pdm_dclk"),
+> +	CLK_MSR_ID(154,	"c_alockerb_out_clk"),
+> +	CLK_MSR_ID(155,	"c_alockerb_in_clk"),
+> +	CLK_MSR_ID(156,	"c_alocker_out_clk"),
+> +	CLK_MSR_ID(157,	"c_alocker_in_clk"),
+> +	CLK_MSR_ID(158,	"audio_mst_clk[34]"),
+> +	CLK_MSR_ID(159,	"audio_mst_clk[35]"),
+> +	CLK_MSR_ID(160,	"pwm_n"),
+> +	CLK_MSR_ID(161,	"pwm_m"),
+> +	CLK_MSR_ID(162,	"pwm_l"),
+> +	CLK_MSR_ID(163,	"pwm_k"),
+> +	CLK_MSR_ID(164,	"pwm_j"),
+> +	CLK_MSR_ID(165,	"pwm_i"),
+> +	CLK_MSR_ID(166,	"pwm_h"),
+> +	CLK_MSR_ID(167,	"pwm_g"),
+> +	CLK_MSR_ID(168,	"pwm_f"),
+> +	CLK_MSR_ID(169,	"pwm_e"),
+> +	CLK_MSR_ID(170,	"pwm_d"),
+> +	CLK_MSR_ID(171,	"pwm_c"),
+> +	CLK_MSR_ID(172,	"pwm_b"),
+> +	CLK_MSR_ID(173,	"pwm_a"),
+> +	CLK_MSR_ID(174,	"AU_DAC1_CLK_TO_GPIO"),
+> +	CLK_MSR_ID(175,	"AU_ADC_CLK_TO_GPIO"),
+> +	CLK_MSR_ID(176,	"rng_ring_osc_clk[0]"),
+> +	CLK_MSR_ID(177,	"rng_ring_osc_clk[1]"),
+> +	CLK_MSR_ID(178,	"rng_ring_osc_clk[2]"),
+> +	CLK_MSR_ID(179,	"rng_ring_osc_clk[3]"),
+> +	CLK_MSR_ID(180,	"sys_cpu_ring_osc_clk[0]"),
+> +	CLK_MSR_ID(181,	"sys_cpu_ring_osc_clk[1]"),
+> +	CLK_MSR_ID(182,	"sys_cpu_ring_osc_clk[2]"),
+> +	CLK_MSR_ID(183,	"sys_cpu_ring_osc_clk[3]"),
+> +	CLK_MSR_ID(184,	"sys_cpu_ring_osc_clk[4]"),
+> +	CLK_MSR_ID(185,	"sys_cpu_ring_osc_clk[5]"),
+> +	CLK_MSR_ID(186,	"sys_cpu_ring_osc_clk[6]"),
+> +	CLK_MSR_ID(187,	"sys_cpu_ring_osc_clk[7]"),
+> +	CLK_MSR_ID(188,	"sys_cpu_ring_osc_clk[8]"),
+> +	CLK_MSR_ID(189,	"sys_cpu_ring_osc_clk[9]"),
+> +	CLK_MSR_ID(190,	"sys_cpu_ring_osc_clk[10]"),
+> +	CLK_MSR_ID(191,	"sys_cpu_ring_osc_clk[11]"),
+> +	CLK_MSR_ID(192,	"am_ring_osc_clk_out[12](dmc)"),
+> +	CLK_MSR_ID(193,	"am_ring_osc_clk_out[13](rama)"),
+> +	CLK_MSR_ID(194,	"am_ring_osc_clk_out[14](nna)"),
+> +	CLK_MSR_ID(195,	"am_ring_osc_clk_out[15](nna)"),
+> +	CLK_MSR_ID(200,	"rng_ring_osc_clk_1[0]"),
+> +	CLK_MSR_ID(201,	"rng_ring_osc_clk_1[1]"),
+> +	CLK_MSR_ID(202,	"rng_ring_osc_clk_1[2]"),
+> +	CLK_MSR_ID(203,	"rng_ring_osc_clk_1[3]"),
+> +
+> +};
+> +
+>   static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+>   			    unsigned int duration)
+>   {
+> @@ -713,6 +853,19 @@ static const struct meson_msr_data clk_msr_sm1_data = {
+>   	.reg = &msr_reg_offset,
+>   };
+>   
+> +struct msr_reg_offset msr_reg_offset_v2 = {
+> +	.freq_ctrl = 0x0,
+> +	.duty_ctrl = 0x4,
+> +	.freq_val = 0x8,
+> +	.duty_val = 0x18,
+> +};
 
-Thank you for the review.
+Same as patch 1
 
-On Thu, Apr 10, 2025 at 10:28=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
-:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add SoC identification for the RZ/V2N SoC using the System Controller
-> > (SYS) block.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- /dev/null
-> > +++ b/drivers/soc/renesas/r9a09g056-sys.c
-> > @@ -0,0 +1,107 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * RZ/V2N System controller (SYS) driver
-> > + *
-> > + * Copyright (C) 2025 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/device.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/string.h>
-> > +
-> > +#include "rz-sysc.h"
-> > +
-> > +/* Register Offsets */
-> > +#define SYS_LSI_MODE           0x300
-> > +#define SYS_LSI_MODE_SEC_EN    BIT(16)
-> > +/*
-> > + * BOOTPLLCA[1:0]
-> > + *         [0,0] =3D> 1.1GHZ
-> > + *         [0,1] =3D> 1.5GHZ
-> > + *         [1,0] =3D> 1.6GHZ
-> > + *         [1,1] =3D> 1.7GHZ
-> > + */
-> > +#define SYS_LSI_MODE_STAT_BOOTPLLCA55  GENMASK(12, 11)
-> > +#define SYS_LSI_MODE_CA55_1_7GHZ       0x3
-> > +
-> > +#define SYS_LSI_PRR                    0x308
-> > +#define SYS_LSI_PRR_GPU_DIS            BIT(0)
-> > +#define SYS_LSI_PRR_ISP_DIS            BIT(4)
-> > +
-> > +#define SYS_RZV2N_FEATURE_G31          BIT(0)
-> > +#define SYS_RZV2N_FEATURE_C55          BIT(1)
-> > +#define SYS_RZV2N_FEATURE_SEC          BIT(2)
-> > +
-> > +static void rzv2n_sys_print_id(struct device *dev,
-> > +                              void __iomem *sysc_base,
-> > +                              struct soc_device_attribute *soc_dev_att=
-r)
-> > +{
-> > +       unsigned int part_number;
-> > +       char features[75] =3D "";
-> > +       u32 prr_val, mode_val;
-> > +       u8 feature_flags;
-> > +
-> > +       prr_val =3D readl(sysc_base + SYS_LSI_PRR);
-> > +       mode_val =3D readl(sysc_base + SYS_LSI_MODE);
-> > +
-> > +       /* Check GPU, ISP and Cryptographic configuration */
-> > +       feature_flags =3D !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_=
-FEATURE_G31 : 0;
-> > +       feature_flags |=3D !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N=
-_FEATURE_C55 : 0;
-> > +       feature_flags |=3D (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N=
-_FEATURE_SEC : 0;
-> > +
-> > +       part_number =3D 41;
-> > +       if (feature_flags & SYS_RZV2N_FEATURE_G31)
-> > +               part_number++;
-> > +       if (feature_flags & SYS_RZV2N_FEATURE_C55)
-> > +               part_number +=3D 2;
-> > +       if (feature_flags & SYS_RZV2N_FEATURE_SEC)
-> > +               part_number +=3D 4;
->
-> The above construct can be simplified to
->
->     part_number =3D 41 + feature_flags;
->
-Agreed.
+> +
+> +static const struct meson_msr_data clk_msr_c3_data = {
+> +	.msr_table = (void *)clk_msr_c3,
+> +	.msr_count = ARRAY_SIZE(clk_msr_c3),
+> +	.reg = &msr_reg_offset_v2,
+> +};
+> +
+>   static const struct of_device_id meson_msr_match_table[] = {
+>   	{
+>   		.compatible = "amlogic,meson-gx-clk-measure",
+> @@ -738,6 +891,10 @@ static const struct of_device_id meson_msr_match_table[] = {
+>   		.compatible = "amlogic,meson-sm1-clk-measure",
+>   		.data = &clk_msr_sm1_data,
+>   	},
+> +	{
+> +		.compatible = "amlogic,c3-clk-measure",
+> +		.data = &clk_msr_c3_data,
+> +	},
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, meson_msr_match_table);
+> 
 
-> > +       if (feature_flags) {
-> > +               unsigned int features_len =3D sizeof(features);
-> > +
-> > +               strscpy(features, "with ");
-> > +               if (feature_flags & SYS_RZV2N_FEATURE_G31)
-> > +                       strlcat(features, "GE3D (Mali-G31)", features_l=
-en);
-> > +
-> > +               if (feature_flags =3D=3D (SYS_RZV2N_FEATURE_G31 |
-> > +                                     SYS_RZV2N_FEATURE_C55 |
-> > +                                     SYS_RZV2N_FEATURE_SEC))
-> > +                       strlcat(features, ", ", features_len);
-> > +               else if ((feature_flags & SYS_RZV2N_FEATURE_G31) &&
-> > +                        (feature_flags & (SYS_RZV2N_FEATURE_C55 | SYS_=
-RZV2N_FEATURE_SEC)))
-> > +                       strlcat(features, " and ", features_len);
-> > +
-> > +               if (feature_flags & SYS_RZV2N_FEATURE_SEC)
-> > +                       strlcat(features, "Cryptographic engine", featu=
-res_len);
-> > +
-> > +               if ((feature_flags & SYS_RZV2N_FEATURE_SEC) &&
-> > +                   (feature_flags & SYS_RZV2N_FEATURE_C55))
-> > +                       strlcat(features, " and ", features_len);
-> > +
-> > +               if (feature_flags & SYS_RZV2N_FEATURE_C55)
-> > +                       strlcat(features, "ISP (Mali-C55)", features_le=
-n);
-> > +       }
->
-> The above looks overly complicated to me.  What about handling it
-> like on RZ/V2H?  I agree having 3x "with" doesn't look nice, but you
-> could just drop all "with"s.
->
-Ok, I will switch like below:
-
-part_number =3D 41 + feature_flags;
-
-dev_info(dev, "Detected Renesas %s %sn%d Rev %s%s%s%s%s\n",
-soc_dev_attr->family,
-               soc_dev_attr->soc_id, part_number,
-soc_dev_attr->revision, feature_flags ?
-               " with" : "", feature_flags & SYS_RZV2N_FEATURE_G31 ? "
-GE3D (Mali-G31)" : "",
-               feature_flags & SYS_RZV2N_FEATURE_SEC ? " Cryptographic
-engine" : "",
-               feature_flags & SYS_RZV2N_FEATURE_C55 ? " ISP (Mali-C55)" : =
-"");
-
-
-> > +       dev_info(dev, "Detected Renesas %s %sn%d Rev %s %s\n", soc_dev_=
-attr->family,
-> > +                soc_dev_attr->soc_id, part_number, soc_dev_attr->revis=
-ion, features);
->
-> This prints a trailing space if features is empty.
->
-Agreed.
-
-Cheers,
-Prabhakar
+With this fixed:
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
