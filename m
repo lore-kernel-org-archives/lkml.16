@@ -1,104 +1,89 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57576EEC3
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA9918BC3B;
+	Mon, 14 Apr 2025 19:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744657965; cv=none; b=lwgD2HdCy77YAVltBsIqlH08Xp4J/kfyJ7OAHFE/AqEg29SWLV6gehgUHP8dXCGfWaJOMwfKu0n00CAeAn8IcZbo6ldUZKCRvMpNOcp0L/itq7Ses1FE/S2Qg30apChqbD022k0P/irkVGZgCrVyoiwNXzN7lNNdyWkqEHukLPQ=
+	t=1744658099; cv=none; b=Xj3QTesfI1avPDqFT8cuZ5d3x/SfaeNforCkZ9djM1dLrE3nf1DKpmD+l7bl6+lUXRXfJZ7yqGNVK2kRVpz3qWHv7szoSuBZ5G58iTgTyl6SimvSvKdbWEJ23HLMU4IEXXDE2qZkhBGI0N72AVeSyU8ovVx6hNY8Y6z2M+u6p6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744657965; c=relaxed/simple;
-	bh=IhRuZepcsCK+qXWZ2V/TC2+eiOz/oDuk2WL53L5B6yQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S8cgaNJ+5n3nUVUqrTXuCUVH/NnEweFyCw8OtL1tthjIU+v8SN0t+vUIY/9l/5QoFvy+dHvlTfwE9R2Ef7Lirfj6wsC/2Q/rRrQAToI3LHNmb72TrNEm0DWQW4kdTzTHkNWyZijzoKiqYGIWJ+N9zYpZ/1/H5+Fb5DDO7grnEMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgodgVfz; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744658099; c=relaxed/simple;
+	bh=d6bsR5l7cg9Y5z2eVE/tx/vMQBEe8OgypU34VvTet8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a/w5JIHdm0offxd7245W98Bahky9Jgw572vj9e5FF9kHkx2KiLxheBaXgnxCqmEk6235SeuQgD0SJ/3Zd5GvINUc9lN1dDtFzIC8bHiV9Tuun/Fu3ya6KXw2NetJ09LJWH6kKcR/3Q6cRDEXZN3ptWKEuvGcof3HDTEOlmLP01E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZ9nlmw2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgodgVfz"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso7481379a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744657962; x=1745262762; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IhRuZepcsCK+qXWZ2V/TC2+eiOz/oDuk2WL53L5B6yQ=;
-        b=CgodgVfzQrNdKjCFAf2UUavBqkSOvtiA80Z6nbjyu8Z+9RtLMk/HQwoufEwcRopBjc
-         LorWD4l40Z5bf112wP2yv6rEVMGdn9H1PTxkKs0Nynmm/hzILKsxHO+ph8wtQCvfIQoo
-         WN0u9SgWyTEUHcgxL29Ys2I0UxAsoTn2G0qlJ+UXn8xR20eBaLQ1N8qz2d7uaqVpaJRj
-         jJOuZ8Vfjy89IRDoz5UD5CqFd2VHTT71s9KqOFXlvG8u8N4hb5qE85+4PlPKTZ1HrS8t
-         e260M2HgK9ZdScNrj63OdvmXWnNWd9oaS0AlOpes9IaTu9yN/kLRI1cz8JYrDLuUcuHt
-         6oIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744657962; x=1745262762;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IhRuZepcsCK+qXWZ2V/TC2+eiOz/oDuk2WL53L5B6yQ=;
-        b=pwYpXmTAs3xJ2ovr/tr4yIugZ5GsH9qq1HNSOQfY+qHl0RtHRMeWNnpDUPKwP3hBiv
-         I/Ajl1tQZTpnOkARzwQpFQHxmbLO2IQ9AodI2a0w3qOH4Jn8eDZat9pQMOc2qvfK8PJa
-         WgfrqXjgQdBtiUl5MUZFwcaMBkpeQDj44DDbUls4L9W8TnQHFFqhpmnsL6N2nO8AwS3w
-         esRN3gFnyAPD9+tcZzrmvs1ssqLw6UBUbPNho8IYCx/3sL0X2njDHwkWOlz+K25hEj+o
-         /WNAEJMZH5Mqc+iMmzeIr8ZkcnTNpe3sbR0KKIoC6yisHMW0rOjMV+DEoQfUUV7zNR2g
-         HtBw==
-X-Gm-Message-State: AOJu0Yzsi5cEJDYJRfVz+oh3zgwDm9pvzGIlHFCPguqZ8bQoefEvS/6T
-	w6A3ceUNFN+IM3OCTmOrhpc9+QMkV9W4LHQhVVCor6rfAdiGuuBL2SxsySyWkhvuyO4rhfKLe3p
-	LyMZSnmnjmIRBweFobluDQ7yTHvM=
-X-Gm-Gg: ASbGncucainlOJOyGVwo15gdKW11AMj2VLQc3s7vKUdbKNu/USIf45PlhLYsLP+Knek
-	j5Ct7rclUbnpmbGcPeaNWR6rds3fxFKYocYceglgOIZIx2mYCZra92h3PM3UgiNS7JQbZ8j43BV
-	fGLi/TZNvzH5C5whoXjctJ6w==
-X-Google-Smtp-Source: AGHT+IFxF/KeOC1drCOZxzAXvht1UzKdbif9N42GIKSFCTyDDMAkuOVstF1j0XKVOdLkYakfDJDgT9bVW1rm1LQtqB0=
-X-Received: by 2002:a05:6402:4313:b0:5ed:1444:7914 with SMTP id
- 4fb4d7f45d1cf-5f36ff07bd3mr12628106a12.28.1744657961414; Mon, 14 Apr 2025
- 12:12:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZ9nlmw2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77B2AC4CEE2;
+	Mon, 14 Apr 2025 19:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744658099;
+	bh=d6bsR5l7cg9Y5z2eVE/tx/vMQBEe8OgypU34VvTet8s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZZ9nlmw2MvpBPOy5qbcCVnza5uH33dxy7y4iBkRc4v6Y2/GMmgxjPS6ANIZTErwGU
+	 EcJ+hPsfWLdLMA7OCBgRfv4fMrHlf+CoQdzCHc/Gnh2J7LJ54xRoUhLywtr2by8K+2
+	 zMmn+wWc9+0brKBDOm2YUTtmIxzvGbN4ZW9C+5lhz6OUYjtGt8sd/z1KcB6B9ShF15
+	 o9MBWJ7f2b7fxE16tH0ahFOrNpi8bH9eK5hHMueUpvSEdHlOr2Ykz7pWUxALEpa1Kv
+	 G0uB7D5ByWVM9Z2P0VYKPiRsDaPD3+wa+SEWUiiFiLVXTUr5rOIvxkUk67I1NsCPLm
+	 1gaw/NEx7XPjA==
+Date: Mon, 14 Apr 2025 20:14:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] property: Use tidy for_each_named_* macros
+Message-ID: <20250414201450.43fb8d9c@jic23-huawei>
+In-Reply-To: <Z_yvkKTgI4XSlGya@smile.fi.intel.com>
+References: <Z_ew4DN0z71nCX3C@mva-rohm>
+	<Z_yvNl23GcEpOkK1@smile.fi.intel.com>
+	<Z_yvkKTgI4XSlGya@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKSQd8Ug3Vk3A7eE6nB8UbhmOBBzVpfAqDYLf35Ym444MeQRdA@mail.gmail.com>
- <Z_0oWnbcjsekHXJd@gmail.com>
-In-Reply-To: <Z_0oWnbcjsekHXJd@gmail.com>
-Reply-To: ludloff@gmail.com
-From: Christian Ludloff <ludloff@gmail.com>
-Date: Mon, 14 Apr 2025 21:12:31 +0200
-X-Gm-Features: ATxdqUGOyTIOkL9eowq55FR8vghkoYqcCwXMFoEutNgWRmJ6JQHp0mXG2SacIts
-Message-ID: <CAKSQd8V4xBQgx3x+SpRBq7pEdEr6zUw_NmajL=X-k=-APDUz2Q@mail.gmail.com>
-Subject: Re: [PATCH -v2] x86/cpu: Add CPU model number for Bartlett Lake CPUs
- with Raptor Cove cores
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Pi Xiange <xiange.pi@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Tony Luck <tony.luck@intel.com>, 
-	Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	John Ogness <john.ogness@linutronix.de>, "Ahmed S. Darwish" <darwi@linutronix.de>, 
-	x86-cpuid@lists.linux.dev, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 5:23=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrot=
-e:
-> * Christian Ludloff <ludloff@gmail.com> wrote:
-> > > +#define INTEL_RAPTORCOVE IFM(6, 0xD7) /* Bartlett Lake */
-> >
-> > Please fix this. It has the core and the product reversed. That is, it
-> > should be INTEL_BARTLETTLAKE and /* Raptor Cove */ to match
-> > the bulk of that file.
->
-> I switched it around for this commit - see the updated patch below.
+On Mon, 14 Apr 2025 09:47:44 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Thanks.
+> On Mon, Apr 14, 2025 at 09:46:14AM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 10, 2025 at 02:52:00PM +0300, Matti Vaittinen wrote:  
+> > > Implementing if-conditions inside for_each_x() macros requires some
+> > > thinking to avoid side effects in the calling code. Resulting code
+> > > may look somewhat awkward, and there are couple of different ways it is
+> > > usually done.
+> > > 
+> > > Standardizing this to one way can help making it more obvious for a code
+> > > reader and writer. The newly added for_each_if() is a way to achieve this.
+> > > 
+> > > Use for_each_if() to make these macros look like many others which
+> > > should in the long run help reading the code.  
+> > 
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Thanks for cleaning these up!
+> >   
+> > > ---
+> > > The patch was crafted against the IIO/testing branch, and it depends on
+> > > the 76125d7801e5 ("property: Add functions to iterate named child").
+> > > Hence I'd suggest taking this via IIO tree (if this gets accepted).  
+> > 
+> > I'm not sure why. The for_each_if() is part of v6.15-rc1.  
+> 
+> Ah, I see, you are trying to fix newly introduced stuff? I would rather suggest
+> to make this straightforward against the current upstream and ask Jonathan to
+> rebase the testing to fold the fixes into a new APIs.
+> 
 
-> > And yes, you also want to fix this for INTEL_PANTHERCOVE_X
-> > and /* Diamond Rapids */ entry.
->
-> Please send a patch if you have the time.
+Or we just do this next cycle maybe.  Definitely not going to take anything
+through IIO that hasn't been on the iio list btw.
 
-Peter had proposed...
-
-https://lore.kernel.org/lkml/20250214130205.GK14028@noisy.programming.kicks=
--ass.net/
-
---
-Christian
+Jonathan
