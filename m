@@ -1,178 +1,82 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91731A9B4A;
-	Mon, 14 Apr 2025 11:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEDE280CDC;
+	Mon, 14 Apr 2025 11:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630732; cv=none; b=m3wH0s99TFfqUGhrgmKNb27R9ALMPS4/jaY9XSuFtmWtJYre/7A8kkJX7nlrj2DV5dvLyI6CEgHJzP4CCh3hO6+xDLTFG7q40rKdOHSmETENQ9oS0mf14/wbpzFSdz2T2JJ+bsKvIgsp0DfDd6BZgu+RU7zG69YfMBMxDS7fNm0=
+	t=1744630748; cv=none; b=noFpRon12a5fahCgCNk2ZFMZVfdHbpXuEMQWiophr2fx6o0mBbQKRrcij6MF61kiX2bscMolUCm++A0jZklbElXYK8FGVrL51AB5MXJFHh4U8qsuBoZ6b6m0Xs1q4XSWl6BAEQtXJEGOWNXD7MEilgTartKBD4stCZNjVBhhCsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630732; c=relaxed/simple;
-	bh=tw8NicR85wtZWn7+Of5iPSQ4ltvwsaFU5yYg/jkmpFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OB4ZKpkdozPf0cc8Jq7ehoZ1lNtgveD5kGX1GS2UiomOebP3vyB2iKqFQCqSeD4v2yu54SpAh/X/uBxv7HL6neGRaSItUPqaGh58Tw4L/7Mfv9BdZa0wi+QnaUiJkUPFSwFnI0XrFZ2BpsrgunG2+ToPXARIk66MpKucuCuS0+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=H0sFDIZs; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1744630748; c=relaxed/simple;
+	bh=JPHN+jpWD9t+wJ6xtaBll58pm1u68FXkwIkn2RM7j84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTyKsNss3ycflLqTAe3eqbJGmwkG74dm4ezis8hGdU+XG3UDlP11dIcAmnt43obYRNdz13zBsFg+wuGMpOMXyqZH/mCyw9jFAu4o3NWpI/0S6xps7nJPmShJ03IBdg76MwTzylUS/eU3nhxNdNNvUVXChsiUEXKYfMcnAbVT250=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f6GUFixh; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="H0sFDIZs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744630711; x=1745235511; i=wahrenst@gmx.net;
-	bh=5Yqz6YDLmosCf4LwVIBid/uZpaNuifGBNUOWF1Ok3z8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=H0sFDIZsvbu7eadEOfhvpsig557h5T4fVsdqhIrBvDjjyxf+kw5m2dYClZv3FATR
-	 rpATfe2E5LMuvoZL8B+aKpyj9Bwg6//OnkxVxgdoXrv68ycU9zOh7uIVb8CLp9w0I
-	 VzBOxdVZvAvqby0MLfPVA7ztYVMQijJ3rtzDfCXt0Hh/vgaU0FltcFkW1Z+af9u2C
-	 913J6HX7dOF21eWTKxsYC4hwGs4yvnVHVXlNnef9DAy+MGPXvImJzcJgNKeOk03oB
-	 zO6aC/1IhSLQgshoySKcyTB1EBJzg6aItmds8ZWWjpkWREKzfjphWDQDJ1/7TzqjH
-	 pZEyJzAGIDZaxAaRqg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1poA-1u26Hv1PB2-00DKvJ; Mon, 14
- Apr 2025 13:38:31 +0200
-Message-ID: <abb3405a-45fb-4425-a817-89a03b0c16c4@gmx.net>
-Date: Mon, 14 Apr 2025 13:38:29 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f6GUFixh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8tXU7TjKACyyS9aliZITUswNNUYWl81wkuwfMZnjmYg=; b=f6GUFixhYRUezBgFjY82+UJqPU
+	LjQPp31MU/rWulduLV3GFImPuHOY67DQT6zth90CNJFtrikdxQPxji4BhXNyqRNzG4KL88doiSFS9
+	yEVeS9nrGeSz0Ii/RNyHLHWgpNqMq1Vq7kx6hAsYnOSX51xdNiSG+9pPaDb9h+pVZMYvD4mqzi4BJ
+	8G1ypN2kMwRfjPnjlFsR4q/mVobtahFpQVO/k7qpNkS/cuGm5oKsCArlMavhbXSAzE8YdMC+YVEOy
+	4MFTsuj7/c4vYm/fU+dPEXhzy6vUNs3K/RTdVjvjg5u+EylXMY8vXRmz5CGriZlcho4jRpiVqoIm6
+	i7brOdTg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4I9Z-00000001nOb-07yt;
+	Mon, 14 Apr 2025 11:39:05 +0000
+Date: Mon, 14 Apr 2025 04:39:05 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk, song@kernel.org,
+	xni@redhat.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH 1/4] block: export part_in_flight()
+Message-ID: <Z_zz2RY3zHVGScCK@infradead.org>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
+ <20250412073202.3085138-2-yukuai1@huaweicloud.com>
+ <Z_yr67xrbkuQwy0P@infradead.org>
+ <12e79682-21a3-9389-9390-14702d6ca389@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 10/13] arm64: dts: Add overlay for RP1 device
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m8JLxCwdInGWwVIBpPbWU85afGcQak8XuDSiAyyOP0EmeklFBz0
- hl4x34oAp+KNiLjDCLAoxHrznsBPvcnDWCFB193V4upZYpMs40GI2TqwkaQ6gaacflG7bOQ
- EMPaxpr1mFixC81q0mbv+LRK8wc44QYFoCnKnP6uT1vlasOa6ZQCCtek/T2Kz9SKVqA1bFJ
- wdUbubZcymN48TQHDXT0w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:EhsPipdgz2M=;g3X/9zeu8NWjQ6d/rmQ0irfcxJ/
- XzlBaf60rX/TLoFVsn5MVtvPRLvOEiKdfGSUC2bX2UBW0EpJOJWfagXAKhkfoBkCMlwm+tZpw
- yYaJ+bIiqADOU/+GZ3dSVaQMzLVKMESLZJorEtoqtT49HEFCVfMAVFrcxlr/FnodYVTuvqBLI
- 2jd+2LK6QUd6RMo3b5S1tiP3NkJTLX65UIGJb+EX3QKlzcBbuDtqET0D5edbUxhgiK+1aEPao
- RqNr7IiJFI9AP4Yk5T3RjT5KsrBN+BJ7kt5Z9V/lQvOqwL9RDiMH94pi/6xu9MCZ3TeN8n4Lk
- WC0tILwnOgBUzD2ZYLdI1yjpGzRSOYNN3y5NGaK1kYHJ29X2kyN+H0HZD1em6uskGWU3v5B6o
- +Jsi+HUlsphsvY9OM8lubZC9dqQ2DzWvUZkKS7dzSO1ugQcH3nt/UXxzAyh7xKYClx0WUgFvh
- QJ1a4rI4nl43TZ4E7uoLMWHAwn+cdy+iFFUQcCSC0J/WYgvhm9NtLaloCHypcu4DECk/EN1KM
- yf57bYcS92ZavxWNGeoNMOSwd/zp0hMQPBF1BSPVPWOZZ5z1iBaK9k4o36xnLrDNZrVJeD4OP
- IcLtxlUtrRE5KH/+F9jWouP9eNhK+hesGmYyvY/P7RnDdBeGfdXjPc9oKEk1OJqHN4wLXFzik
- roe44AAeU5YSHd3NZ8j/5tDyKiRklQYpjlqVbAnd4jIVpXZK/o6DZWiyZRmhcCtPP0ZMgeUro
- ytiZQqeQMCDdYBupYDfclhA+Zgh72EYTt8OUImEIdiDMILHbUtZk/RyXn39oY+cRiKa2LBUK/
- 0ElUSPw4u++83Pu+kOYpXRuf0lmJ3obBHSgkdKbNh6AVWlbHuvnEKXRaAbhROt1b2c1a5S2/H
- JvrGHvmGwapmXSL/y7bKIZRbIwEsnff8fsyKRBQyRd6w1smn1gK2A9UEuuIvWQ7egeQo1i4PL
- l+fDr4/1GbDzkXXDlHHg5d6eBEAIJMIhKWs8eaIt/Fa9wOTDj0xUF8Dr6gvAhrqJ0ZEkZ9oF0
- mtD2MCFsFlpijH8E3NeRoJCAI0wuEbGPD5dvv6K+vIo+LyQpKjdUNw5PZVWNFR3smQdC4u7oh
- XYu9Zv4PO6cu+8A6HIJ6KvmYj0GCVxzUkXkZsE3ZdmlA/W09eZmJzNG3b/vQOQdGY18GoJsZw
- 3TRjhx1bvUtr/jUtoSSaTPJ1iJAtK2nfLkrv8i/rJqBko+T7nDfLx1KIqKoOGZWkks1r8f5zU
- aqN2d+8ChDTNSFENFKtnofG/2w/7U7vnkncD134pe6x9S/0xaZwBIsGyAQD2G5oSsHR+Wr3/o
- yiC8Jdj9mo1q/5fKhnM4RLVQNrUfWocUhqMig2BqR8ovSxtNEInnV/QlaAxcPG8+iKRqjnIak
- HpFb5XQquykn9MQLQx6/9+vrpAyceuUW9Tx1hEBYooWafXQerd482sXlUw1Riuw8zk3NuYQ7a
- 3wMVDcCP5dcHNixEAYB82cPXEpmg=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12e79682-21a3-9389-9390-14702d6ca389@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Andrea,
+On Mon, Apr 14, 2025 at 02:48:23PM +0800, Yu Kuai wrote:
+> > If we export this it needs a kerneldoc comment, and probably also
+> > a better name.
+> 
+> Sure about comment.
 
-just a nit. Could you please add "broadcom:" to the subject?
+I think a name like bdev_count_inflight might also be helpful as there
+is nothing partition-specific in the helper.
 
-Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> Define the RP1 node in an overlay. The inclusion tree is
-> as follow (the arrow points to the includer):
->
->                        rp1.dtso
->                            ^
->                            |
-> rp1-common.dtsi ----> rp1-nexus.dtsi
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
-> This patch can be considered optional, since it fills just the second
-> scenario as detailed in [1], which is the RP1 DT node loaded from a dtb
-> overlay by the FW at early boot stage.
-> This may be useful for debug purpose, but as such not strictly necessary=
-.
->
-> [1] https://lore.kernel.org/all/CAMEGJJ0f4YUgdWBhxvQ_dquZHztve9KO7pvQjoD=
-WJ3=3Dzd3cgcg@mail.gmail.com/#t
-> ---
->   arch/arm64/boot/dts/broadcom/Makefile |  3 ++-
->   arch/arm64/boot/dts/broadcom/rp1.dtso | 11 +++++++++++
->   2 files changed, 13 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
->
-> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts=
-/broadcom/Makefile
-> index 4836c6da5bee..58293f9c16ab 100644
-> --- a/arch/arm64/boot/dts/broadcom/Makefile
-> +++ b/arch/arm64/boot/dts/broadcom/Makefile
-> @@ -13,7 +13,8 @@ dtb-$(CONFIG_ARCH_BCM2835) +=3D bcm2711-rpi-400.dtb \
->   			      bcm2837-rpi-3-b.dtb \
->   			      bcm2837-rpi-3-b-plus.dtb \
->   			      bcm2837-rpi-cm3-io3.dtb \
-> -			      bcm2837-rpi-zero-2-w.dtb
-> +			      bcm2837-rpi-zero-2-w.dtb \
-> +			      rp1.dtbo
->  =20
->   subdir-y	+=3D bcmbca
->   subdir-y	+=3D northstar2
-> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts=
-/broadcom/rp1.dtso
-> new file mode 100644
-> index 000000000000..ab4f146d22c0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
-> @@ -0,0 +1,11 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +&pcie2 {
-> +	#address-cells =3D <3>;
-> +	#size-cells =3D <2>;
-> +
-> +	#include "rp1-nexus.dtsi"
-> +};
+> There are two kinds of helpers:
+> 
+> 1) part_in_flight and part_in_flight_rw
+> 2) blk_mq_in_flight and blk_mq_in_flight_rw
+> 
+> 1) is accounted at blk_account_io_start(), while 2) is
+> blk_mq_start_request(), I think this is the essential difference.
+> 
+> part_in_flight_rw() and blk_mq_in_flight_rw() is also used in sysfs API
+> inflight for bio/rq based device. And commit 7be835694dae ("block: fix
+> that util can be greater than 100%") convert blk_mq_in_flight() to
+> part_in_flight() from disk stats API. Now I just checked there is no use
+> for blk_mq_in_flight() anymore and maybe it can be removed.
 
+Yeah.  I'm still confused about having the different methods to count
+the _rw vs non-_rw variants for blk-mq, but I guess that's not really
+in scope for your series.
