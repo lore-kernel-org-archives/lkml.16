@@ -1,168 +1,253 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB18627FD79
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162BE4C74;
+	Mon, 14 Apr 2025 19:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744656807; cv=none; b=ESHDjvYIm7XeX1NCxokCbN3HghtKlzvWwIEYVoTTTzCUItsTd6LsXoCyk6g7E0rpOXP8HJQLJRYznOV6eVIcaWWh8OIKVeiSqxONKIFeQOyQy6snOZe3Dgc8nkYNCTiJHFlVYARMpzJTciKa4Ormt/ztPyJpye0Bwa/L0hVSKPg=
+	t=1744657400; cv=none; b=X/WDis//bU13QnT4fznmKpB9PKV/sNCGJsuNlfMK2HJye5zlKYAsuafH0XyRYCvYGSdSe6jW3NvlsNOJ9PjJxu5RVd/oEH+klG1l0WNcPXC3dqGYxGgQUGbMxBzaJzWSfIG+p8v71t6a6Rd79LBYCDaldz9I6podYpabH9cZmhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744656807; c=relaxed/simple;
-	bh=TdQ7pQpU0JnTiHhlWrvD+tSYVG+wDTEGAVyByh2OK0w=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=ZrOLjYRWfiyjAFMM5BwW0vxn+oX25x7z0nM3SYg501EQCSsJBxdAVboCvoPBgJLIt02Ngu/iTXeBFw51v6uZ6f/Sog0v8DmrQFyGlXxbUuG805K2iTzS9g5LJ4Z2Hbzd3V9/ozRMdifUPSy+AjUINtyOX1nHMmom7fl/95ir9ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GfkAtLgZ; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744657400; c=relaxed/simple;
+	bh=se/vRsTZaPEhVgAiD0XO6GX4CH2RBgPSUSoyyjeFias=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QdKJRZ4V42+/q+SWxfB4skWjq2yT+FC6V+VFxmV7XZ1JogSWJ+9C2ButVYa4z/66VmMAhA+JQUYA3ECc0iwQ4PRWv3iDt/keFqxZKDQRO3+Uy9ef8CJF35f+jTNKLUUzFz7/TujlUQToTPjkMzroW96Qqlm6Jla7pfc89qTuhoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+hrtS9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GfkAtLgZ"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250414185318euoutp0218449a1281733f617a190d2f9c301fb1~2RB1wY4t-2800028000euoutp02U
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:53:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250414185318euoutp0218449a1281733f617a190d2f9c301fb1~2RB1wY4t-2800028000euoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744656798;
-	bh=qnyf6hlDWuWsG9w7ndgnCLFpfCuFBEM/Kpzf3HaSX/c=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=GfkAtLgZEbONy7/aUF5aYyPd9ZXoTs96Uo/XOhkbHbuGbpJAsktudccfb2pgJSSNu
-	 S/6aJ0GPC7KWNy+ee589AtwBPPnlDiUA3jateQ96cMXmdH4aTTiu3+bh4Y1wzPA3Ma
-	 2yM9xi9w8/hek5QFQ/Q1wVfsCNltVCh/IQP8ah6Y=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250414185317eucas1p16a400431aaf5bb8865c6b26d22190246~2RB02ccgA3084730847eucas1p1s;
-	Mon, 14 Apr 2025 18:53:17 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id EC.72.20397.D995DF76; Mon, 14
-	Apr 2025 19:53:17 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250414185317eucas1p139284a38dc4418ac90bd081c2825142a~2RB0YURv33084730847eucas1p1r;
-	Mon, 14 Apr 2025 18:53:17 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250414185317eusmtrp15acfa0562b019e9407af601f1d8a6600~2RB0V7sFQ0705407054eusmtrp1h;
-	Mon, 14 Apr 2025 18:53:17 +0000 (GMT)
-X-AuditID: cbfec7f5-e59c770000004fad-3b-67fd599dc9db
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 66.64.19654.D995DF76; Mon, 14
-	Apr 2025 19:53:17 +0100 (BST)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250414185316eusmtip247f53d5453989b8f086b807c2a4109b1~2RBzRoeRG2643326433eusmtip2e;
-	Mon, 14 Apr 2025 18:53:16 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Mon, 14 Apr 2025 20:52:58 +0200
-Subject: [PATCH v2 4/4] drm/imagination: Skip clocks if platform PM manages
- resources
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+hrtS9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F948C4CEE2;
+	Mon, 14 Apr 2025 19:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744657399;
+	bh=se/vRsTZaPEhVgAiD0XO6GX4CH2RBgPSUSoyyjeFias=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=C+hrtS9p9moVrGAbSthm9AOWFsL58+N/YA+7g572Z/Bu/wkBSKBh3Wi+IhuF+pW2i
+	 S1+J5vsFe/fhTdhjALPWu2/7wcRs5fMPGutZnHw4oS5hhlJig6qfxKOJLLhXQGMo+Q
+	 1sz20sfHOsuTbUiPAHDS8iKkMHYfF/suuuxt7J8DUCO8DIUqfxNjoGPwNKNlZutAFF
+	 +RwFy4kmeZLNekrXhyrmmpBBypjyPah3ZZomV+jqWH6sfDqE68jwIV7xdfnvNkVxvF
+	 yOejvymwC8muNksXF01n+680/tZ6ZhfhscYtwwW2HTCbEgv2qEsNBG4qeCB8geFcAe
+	 +EaiXTskq47Yg==
+Date: Mon, 14 Apr 2025 20:03:12 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Siddharth Menon <simeddon@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-staging@lists.linux.dev, gregkh@linuxfoundation.org,
+ Michael.Hennerich@analog.com, lars@metafoo.de, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH] Documentation: iio: Document ad9832 driver
+Message-ID: <20250414200312.0b9eeb10@jic23-huawei>
+In-Reply-To: <20250414164811.36879-1-simeddon@gmail.com>
+References: <20250414164811.36879-1-simeddon@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-apr_14_for_sending-v2-4-70c5af2af96c@samsung.com>
-In-Reply-To: <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,  Danilo Krummrich
-	<dakr@kernel.org>, Pavel Machek <pavel@kernel.org>,  Drew Fustini
-	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei <wefu@redhat.com>, Rob
-	Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
-	Dooley <conor+dt@kernel.org>,  Michal Wilczynski <m.wilczynski@samsung.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,  Philipp Zabel
-	<p.zabel@pengutronix.de>,  Frank Binns <frank.binns@imgtec.com>, Matt Coster
-	<matt.coster@imgtec.com>,  Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,  m.szyprowski@samsung.com
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-X-Mailer: b4 0.15-dev
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf1CTZRz3ed9378a64euwfMBOL0ov65wUHD4X1WXrzlexrKvLFmDt9G2A
-	MLxNIqRyKBK/JGJCMZkz4mSA/Dg2135Ai7nb2GGjA1S6G/gDFVNx4GCecLOc7yz/+3w/n8/3
-	+X6+33t4uFBNxvGy5PsYhVyaE0/yCZPr/tB6rSQkS2iYTEADF5owdKrPi6Fb9TMk0jm9HDQx
-	bMTQ6LyfRJ3X/uSiG33FBPpbM0GiEWsjiQJHnACZAiUk6nCOc1HXvA5DP8+eJlCz2QpQaflJ
-	DhqfGCBQmV+FI+1cHY7+6TVz0bE7di4y3v6Bg9wdO1CJ/SjxVizdFzxB0BbNOJeuspwFdE9b
-	OUn7zveS9HHPB/TFSjdGG5oP0CUdLoz+PpRA+387R9LVxjZAGwaL6EDPqvejP+W/vpvJyfqS
-	UWx483N+pmZyiNh79amvPOXNuApciaoAUTxIJcH+gy68AvB5QkoP4I1QK5ct5gCst6kiSgBA
-	Z7uB+7hFrbtAsEILgPqxGg5blGLQ13KRCLtI6lV4qUX3UODxCGoN1NUmh+kYage85reQYSyg
-	lkFPw9VHdpxaDX+dbsRZfjO0Hb5FhFujKBpa1DvDzy+nFjmwLJIVp7QAOkyHCDbR03BRbX2U
-	CFLVfBg8VxwR3oFarZFkcQy86TZGVngWDqqrIp48eOn0XZzFX0NLlTuCU6DPu0CGU+DUOthl
-	3cDSm+DiXzN4mIZUNBybXsbmj4a1ph8jtACWlQpZ91pYV3Xkv6FevQljMQ37Lx/k1IDnNE9c
-	QvPEJTT/zz0B8DawgslX5soYZaKcKRAppbnKfLlMtCsvtwc8/LeDD9zzZqC/OStyAIwHHADy
-	8PjlAr54QSYU7JYW7mcUeZ8p8nMYpQOs5BHxKwRN9sMyISWT7mP2MMxeRvFYxXhRcSqMcfD3
-	b1/jmDw7M7U5+XLqtx+HqEMOU4F0GBvakmi2Sz86MOUZzkLDoqFQe6op/XfbLzXp0a22ezWD
-	sal3R06Bbcn6ftFraSljoYLsyoWdi0u0henKe2eSjs32xCzdmDrSmi/uCqz6ovl6abvhujdT
-	fJ+xFku6PTqpRLJEvPWZJqpuY9TRxMl2y3rxWGa95kxcdxF4caLS4LV3fvhd8GV3cNvolaW7
-	pnC3vGFgLqO7/xPDCyv7VNltvZSz6bjzbctJ2PjTwHvQ4X9+z4M776Ylpbtct/HCrQPBRQ5K
-	q/CaO8WSlIzq6XUZq//YdL7IRmeP+rbXrlXyR2Nn3zBs8X0TTygzpa+8hCuU0n8BVFGYJCYE
-	AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsVy+t/xe7pzI/+mG9z7zWtx4voiJos1e88x
-	Wbye9oHNYv6Rc6wW9y5tYbK48vU9m8W6pxfYLV7sbWSxeDnrHpvF5V1z2Cw+9x5htNj2uYXN
-	Yu2Ru+wW67/OZ7JY+HEri8WSHbsYLdo6l7Fa3L13gsWi430Ds8XcL1OZLf7v2cFuMfvdfnaL
-	LW8mslocXxtu0bJ/CouDpMfebwtYPHbOusvu0bPzDKPHplWdbB53ru1h85h3MtDjfvdxJo/N
-	S+o9WtYeY/Lo/2vg8X7fVTaPvi2rGD02n672+LxJLoAvSs+mKL+0JFUhI7+4xFYp2tDCSM/Q
-	0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS9j1uPzLAVPuCtOdi5hbmB8xNnFyMkhIWAi
-	MXn+dZYuRi4OIYGljBLTLj9ihkjISFzrfskCYQtL/LnWxQZR1MIkcf/fSTaQBJuAkcSD5fNZ
-	uxg5OFgEVCXmTzIDCQsLhEs8fb8TrIRXQFDi5MwnLCAlzAKaEut36YOEmQXkJba/ncMMUeIu
-	sbv1NdgqISB72oKvbCDlnAIeEjsnx4FsFRFoYpP4tv0z2AnMAvMYJT7NmwB1m6jE78m7WCYw
-	Cs5Csm4WwrpZSNYtYGRexSiSWlqcm55bbKRXnJhbXJqXrpecn7uJEZhEth37uWUH48pXH/UO
-	MTJxMB5ilOBgVhLh5XL+lS7Em5JYWZValB9fVJqTWnyI0RTo44nMUqLJ+cA0llcSb2hmYGpo
-	YmZpYGppZqwkzst25XyakEB6YklqdmpqQWoRTB8TB6dUA5N3yUfuZUdenfFpnPh2te/pOx+j
-	oi7tnKnG+TtSTG6ivN6rtreuJ55piM8/c1lpnqZp4p9NGQfkX75ZbarwWc5kl0VexlnJGt2k
-	2Oz/XdJ9Xwq0/+iyan67tmoOo4qcjRozy2f+m7HuORqcCfGXdCc6T4q48HbS9eWCIZOe+Mbt
-	7ctbwNX/Iz5/0tz4zSYBad3JWtZMG1TXGPyra7zsdrvp+y73bp6bES909OZ6Tspuq7tdfUGD
-	t332RZsNK1zE7DX3zgtK9XIMrdY817owufIiq1pv1q6iH21F/8sdCvP1CzL7hQrlm/z3T83Y
-	qP+7p9ZnCfv8+V8bWTw7RPLe/Zp9iI3j5WFDr8NBkfzxSizFGYmGWsxFxYkAGKJT/qsDAAA=
-X-CMS-MailID: 20250414185317eucas1p139284a38dc4418ac90bd081c2825142a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250414185317eucas1p139284a38dc4418ac90bd081c2825142a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250414185317eucas1p139284a38dc4418ac90bd081c2825142a
-References: <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
-	<CGME20250414185317eucas1p139284a38dc4418ac90bd081c2825142a@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Update the Imagination PVR driver to skip clock management during
-initialization if the platform PM has indicated that it manages platform
-resources.
+On Mon, 14 Apr 2025 22:17:49 +0530
+Siddharth Menon <simeddon@gmail.com> wrote:
 
-This is necessary for platforms like the T-HEAD TH1520, where the GPU's
-clocks and resets are managed via a PM domain, and should not be
-manipulated directly by the GPU driver.
+> The Analog Devices Inc. AD983X chips will benefit from a detailed
+> driver documentation.
+>=20
+> This documents the current features supported by the driver.
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- drivers/gpu/drm/imagination/pvr_device.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Hi Siddharth,
 
-diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
-index 1704c0268589bdeb65fa6535f9ec63182b0a3e94..f40468b99cf14da418aeecde086f009695ff877c 100644
---- a/drivers/gpu/drm/imagination/pvr_device.c
-+++ b/drivers/gpu/drm/imagination/pvr_device.c
-@@ -504,10 +504,16 @@ pvr_device_init(struct pvr_device *pvr_dev)
- 	if (err)
- 		return err;
- 
--	/* Enable and initialize clocks required for the device to operate. */
--	err = pvr_device_clk_init(pvr_dev);
--	if (err)
--		return err;
-+	/*
-+	 * Only initialize clocks if they are not managed by the platform's
-+	 * PM domain.
-+	 */
-+	if (!device_platform_resources_pm_managed(dev)) {
-+		/* Enable and initialize clocks required for the device to operate. */
-+		err = pvr_device_clk_init(pvr_dev);
-+		if (err)
-+			return err;
-+	}
- 
- 	/* Explicitly power the GPU so we can access control registers before the FW is booted. */
- 	err = pm_runtime_resume_and_get(dev);
+Whilst I'm fine with better documentation, I'm not keen to merge if for
+a staging driver until we have that cleaned up and moved out of staging.
 
--- 
-2.34.1
+Anyhow, that doesn't stop us reviewing what you have here!
+
+My main comment is that we should be focusing on what is useful to someone
+reading the kernel docs rather than providing detailed description of the
+device.  If anyone has one of these and wants to know more they can
+get the data sheet.  As such most of what you have here is a case
+of too much information.=20
+
+Jonathan
+
+>=20
+> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> ---
+>  Documentation/iio/ad9832.rst | 119 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+>  create mode 100644 Documentation/iio/ad9832.rst
+>=20
+> diff --git a/Documentation/iio/ad9832.rst b/Documentation/iio/ad9832.rst
+> new file mode 100644
+> index 000000000000..a3a58569ff89
+> --- /dev/null
+> +++ b/Documentation/iio/ad9832.rst
+> @@ -0,0 +1,119 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +AD9832 driver
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Direct Digital Synthesizer driver for Analog Devices Inc. AD9832 and AD9=
+835.
+> +
+> +Supported devices
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +The following chips are supported by this driver:
+> +
+> +* `AD9832 <https://www.analog.com/AD9832>`_
+> +* `AD9835 <https://www.analog.com/AD9835>`_
+> +
+> +The AD9832 is a numerically controlled oscillator employing
+
+Very short wrap.  For docs keep to a 80 char limit (or over that if=20
+necessary for links etc.
+
+> +a phase accumulator, a sine look-up table, and a 10-bit digital-
+> +to-analog converter (DAC) integrated on a single CMOS chip.
+> +
+> +Supported features
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +SPI wiring modes
+> +----------------
+> +
+> +The driver currently supports the following SPI wiring configuration:
+
+This one is very straight forward unidirectional SPI. The only thing docume=
+nting
+it brings is perhaps to make it clear we can never read anything back from
+the device.
+
+We tend to have these diagrams so as to add information relevant to what the
+driver does internally and any limitations on what is supported based
+on particular wiring.
+
+> +
+> +3-wire mode
+> +^^^^^^^^^^^
+> +
+> +In this mode, communication occurs via SCLK, SDATA, and FSYNC signals.
+> +
+> +.. code-block::
+> +
+> +    +-------------+         +-------------+
+> +    |       FSYNC |<--------| CS/GPIO     |
+> +    |             |         |             |
+> +    |    AD983X   |         |     HOST    |
+> +    |             |         |             |
+> +    |       SDATA |<--------| MOSI        |
+> +    |        SCLK |<--------| SCK         |
+> +    +-------------+         +-------------+
+> +
+> +
+> +Channel configuration
+> +---------------------
+> +
+> +The AD9832 features two frequency registers (FREQ0 and FREQ1) and
+> +four phase registers (PHASE0, PHASE1, PHASE2, and PHASE3).
+> +The selection of which of these registers is actively used to generate
+> +the output waveform can be controlled in two ways: via external pins or
+> +via internal control bits.
+> +
+> +* Pin Control: The ``FSELECT`` pin determines whether FREQ0 REG or FREQ1
+> +  REG is used.
+> +* The ``PSEL0`` and ``PSEL1`` pins select which of the four PHASE regist=
+ers
+> +  is active.
+
+This seems to be documenting a mode we don't support in the driver? That
+level of extra detail doesn't belong in the kernel documentation.
+
+These docs should focus on what the driver provides rather than the full
+scope of what it could provide.  We'll update the docs when we add
+new features.
+
+
+> +* These pins are sampled on the rising edge of the master clock (MCLK).
+> +* Bit Control: This is utilized by the driver for the selection of the
+> +  frequency and phase registers can be controlled using internal bits.
+> +* Bit D11 (within a control word) can select the FREQx REG, and Bits D9 =
+and
+> +  D10 can select the PHASEx REG.
+> +
+> +The source of control, whether from the external pins or the internal bi=
+ts,
+> +is determined by the SELSRC bit (Select Source bit, D12) within a control
+> +register.
+> +When SELSRC =3D 0, the pins are used for selection, which is the default=
+ state
+> +after the CLR (Clear) bit is set high. When SELSRC =3D 1,
+> +the internal bits are used for selection.
+> +
+> +Synchronization
+> +---------------
+> +
+> +The SYNC bit (D13) determines how the reading of the FSELECT, PSEL0, and
+> +PSEL1 pins (when SELSRC =3D 0) is synchronized with the master clock (MC=
+LK):
+> +
+> +When SYNC =3D 1: The reading of the pins is synchronized with the rising=
+ edge
+> +of MCLK. This ensures the inputs are valid at the sampling instant, even=
+ if
+> +the setup and hold times are violated. This mode introduces a latency of=
+ 8
+> +MCLK cycles.
+> +When SYNC =3D 0: The sampling occurs asynchronously, and the latency is =
+reduced
+> +to 6 MCLK cycles if the timing characteristics are met.
+> +
+> +The SYNC bit is particularly important in applications where the timing =
+of
+> +register selection changes is critical or when interfacing with control =
+systems
+> +that may not strictly adhere to the setup and hold time requirements.
+> +
+> +Power Supply
+> +------------
+> +
+> +The AD9832 supports separate power supply pins for the analog and digital
+> +sections via the ``AVDD`` and ``DVDD`` inputs. Both pins support voltage
+> +ranges from 2.97V to 5.5V (5V =C2=B110% or 3.3V =C2=B110%).
+> +
+> +Proper decoupling is critical: both AVDD and DVDD should be decoupled wi=
+th
+> +0.1=C2=B5F ceramic capacitors in parallel with 10=C2=B5F tantalum capaci=
+tors to AGND
+> +and DGND respectively.
+> +
+> +The device also supports a low power sleep mode, reducing current
+> +consumption to 350=C2=B5A maximum. When powered down using the power-dow=
+n bit,
+> +power consumption is reduced to 5mW (5V) or 3mW (3V).
+
+This bit isn't really relevant for kernel docs.  Whoever designed the board
+ought to know this.
+
+> +
+> +Reference Voltage
+> +-----------------
+> +
+> +The AD9832 supports using either an internal 1.21V reference or an exter=
+nal
+> +reference voltage via the ``REFIN`` input.
+> +
+> +If ``refin-supply`` is present, then an external reference of 1.21V nomi=
+nal is
+> +supplied to the REFIN pin. If not specified, the internal reference is u=
+sed
+> +and is available at the ``REFOUT`` pin.
+> +
+> +The internal reference has an accuracy of 1.21V =C2=B17% min/max across =
+the full
+> +temperature range (-40=C2=B0C to +85=C2=B0C) with a typical temperature =
+coefficient of
+> +100 ppm/=C2=B0C. The REFOUT pin should be decoupled with a 10nF capacito=
+r to AGND.
+> +
+> +For applications requiring reduced wake-up time at low power supplies and
+> +low temperatures, the use of an external reference is recommended.
 
