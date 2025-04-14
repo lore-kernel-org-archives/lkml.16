@@ -1,85 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0CD275872;
-	Mon, 14 Apr 2025 14:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17990279792;
+	Mon, 14 Apr 2025 14:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639687; cv=none; b=YNk3KORgqyQRkI4VKR/hMhdcuChvEMUFRAyCFi2Q2QYWdPXpyARFwrZ5yaSjLBeJns1KmVe9JQ9xAMJ180RqvF8VVqRS+vb8dquVOGjIbnH/6jC7BvTYjdgBuTkLpyeLVRPwaaJSl508666LFTdvQ+8Ume1jO3G8P8aI7VOzPRo=
+	t=1744639706; cv=none; b=feIEm3+TDaqTmfS0dT9TJ+y3X8ECA2YoQgl8I53qA5iVN8Wxk+xoq5aOeKgfOVZGTgRYbFokgueD0gyZQuG/Q6npfE71xqnn/OBMJrI2p4hNPVNQIajA7YWCNvnuuhJhj5k1tyYEHJu/sJFAUze7FINnDpcwEb3C0C5tU3JmTRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639687; c=relaxed/simple;
-	bh=mVXzleBwN6nd3/QYvohoX7roWf9FNuTbGS5M9TLycpk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LXmPGSlHSTyn2Idy7j4wHAesTN44GtzKmaqPlXz0BR0L+kwu/fNwZqRAVm522d5JECGeCJlZfXN+GcGZ7mTBT+5R66tHn0lrlpZs/sJm4mylhZj3N3W8lHqVcfOd6Car5i2SJO7DIcS5tVLp6eSMFcew/WmnXslevS7Rbw6V1t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbPeaO5Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744639706; c=relaxed/simple;
+	bh=ADFeH5tjt1W9hhHOoguOiCVcN/udHzOW/9LpN4Ta6UE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nv2qgHtu347c4CBKUpWti6H3J562S/SfzHXTsAHXBrChYkOsLPjVceVGKxKQ+dAlpceaT+A8rv0dC/RhAlAqyYYRhQVKc3e7IwW/w3v70LzKPgGqWuNgXDYHUrKALYfPUqRE7P9sYqSIln+/fXSuYa459RlaAJBjsw32RKo4Nb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gtu++a6c; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbPeaO5Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34025C4CEEC;
-	Mon, 14 Apr 2025 14:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744639686;
-	bh=mVXzleBwN6nd3/QYvohoX7roWf9FNuTbGS5M9TLycpk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DbPeaO5ZoqkJ1jfouO54WoEKYhMXO097iZVfHM9OAExjdgxIw6VvawjGvGcyhvHAa
-	 cuy8htl6Rzbsot5d//ECHIM4Lou6UqWtjuacIlvg2iYIgRnsocEc1WbsZg11uEFuvT
-	 RIh3GlvAH/DJfpNJzInBPAiBiHTDc+3vdlLM5ZmIKVUs/Eg2BO/8e0L0H/DOBd+UFD
-	 UsrgD+W6HGCpQcM9zBDFX3M0UUphfNpxzuDXLb5HqE7Wqxv1ccNuS5P2QN7IfiwCvg
-	 OwioZ2HRbPIZnbcFKegTjAWwcnmctgG6XoQqzecQEvsG+R8u1604gyNK5F1pcWimnc
-	 quE4Uh1RrjACg==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bf1d48843so37686511fa.2;
-        Mon, 14 Apr 2025 07:08:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVPwuhFoIPJDz5yxeuZpDy71ZUgz0QMpSrbH/B/DsMED+C9u2zBSE5p/v9SzgEq/l7ZRsI4zHJ2orsV4sA/Cksxyw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSe+BYqUdhdsTU4iQ6/+iRn+O0NJH5zVTRTBkpavB+bZ0e14UB
-	SeSkBCstWomJO1x4ZZ79kF112rdhIT4WBxvrg3EEDbvDUjH+K8a2J4f7d2dZCiUeyAyzEm2cPcb
-	dLswJfvBSzbPqIcFpJ4J+ZAPavEo=
-X-Google-Smtp-Source: AGHT+IH7OxxyR4h0JXlxMB261wcukiaE7crk6AYDbA7texG5N3I/4SXNBYa9M3wsoguijYWfl4ITZaWruFCMeK3zDYQ=
-X-Received: by 2002:a2e:bd0d:0:b0:30b:ed8c:b1e7 with SMTP id
- 38308e7fff4ca-31049a1ae20mr37817911fa.18.1744639684477; Mon, 14 Apr 2025
- 07:08:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gtu++a6c"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=O/jdKSlHgdd5W08mEbl7mUAGiGWimlSatVW/4OfjF3M=; b=gtu++a6c8AnOoqOwrZBfc4C5fA
+	eFF3Rz7+mKUFP3eiF9TWOgBi5+stFHU9nLz7d4pUc0T6dYUxwFUnpRPkZsevOmigZVuwjZJIjUEKT
+	xC8RMMjQeKekaOA1JzHOPK/e9jvtMyAjuL3Qgq8apMPyxc+WS/+ZjHV5QyCOPmXM32X4l7/QeHxu9
+	lZpfDncoMK6OyLd5jfGUaBS5aH0Plh9LSxU2wO48/LskZbLgjDbCqGODEXy57hGGU0ku98LDmEis1
+	WCwGCfRt+q6zsL6EUE0gz8JuQuBvwTaqnqO0dXZVLEV0szX1OmAfYRw5tg/GNCvYLRAz0IkEVmkkT
+	HjOnaaYg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u4KTs-00000009i5p-2WUX;
+	Mon, 14 Apr 2025 14:08:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 30FCE3003FF; Mon, 14 Apr 2025 16:08:12 +0200 (CEST)
+Date: Mon, 14 Apr 2025 16:08:12 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, jpoimboe@kernel.org,
+	pawan.kumar.gupta@linux.intel.com, seanjc@google.com,
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
+Message-ID: <20250414140812.GH5600@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.285564821@infradead.org>
+ <01c65464-8535-28d8-a9b5-eb4f90114e2d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312081204.521411-2-ardb+git@google.com> <174178137443.14745.10057090473999621829.tip-bot2@tip-bot2>
- <20250414135625.GDZ_0UCcIQ-fg8DKZL@fat_crate.local>
-In-Reply-To: <20250414135625.GDZ_0UCcIQ-fg8DKZL@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 14 Apr 2025 16:07:53 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEWerW9A7t0njN7hM7Ms48+mE94p3CTv_LP9P-CotOtPg@mail.gmail.com>
-X-Gm-Features: ATxdqUG3OaCZJqQnkJUtiKvQtfxuI5gqHG06Tz27A8Eu6AmJzJx6B3m7X-DaUdM
-Message-ID: <CAMj1kXEWerW9A7t0njN7hM7Ms48+mE94p3CTv_LP9P-CotOtPg@mail.gmail.com>
-Subject: Re: [tip: x86/build] x86/boot: Add back some padding for the CRC-32 checksum
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, Ian Campbell <ijc@hellion.org.uk>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01c65464-8535-28d8-a9b5-eb4f90114e2d@gmail.com>
 
-On Mon, 14 Apr 2025 at 15:56, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Wed, Mar 12, 2025 at 12:09:34PM -0000, tip-bot2 for Ard Biesheuvel wrote:
-> > The following commit has been merged into the x86/build branch of tip:
-> >
-> > Commit-ID:     e471a86a8c523eccdfd1c4745ed7ac7cbdcc1f3f
-> > Gitweb:        https://git.kernel.org/tip/e471a86a8c523eccdfd1c4745ed7ac7cbdcc1f3f
-> > Author:        Ard Biesheuvel <ardb@kernel.org>
-> > AuthorDate:    Wed, 12 Mar 2025 09:12:05 +01:00
-> > Committer:     Ingo Molnar <mingo@kernel.org>
-> > CommitterDate: Wed, 12 Mar 2025 13:04:52 +01:00
-> >
-> > x86/boot: Add back some padding for the CRC-32 checksum
-> >
-> > Even though no uses of the bzImage CRC-32 checksum are known, ensure
-> > that the last 4 bytes of the image are unused zero bytes, so that the
-> > checksum can be generated post-build if needed.
->
-> Sounds like it is not needed and sounds like we should whack this thing no?
->
-> Or are we doing a grace period and then whack it when that grace period
-> expires?
->
+On Mon, Apr 14, 2025 at 04:06:41PM +0200, Uros Bizjak wrote:
+> 
+> 
+> On 14. 04. 25 13:11, Peter Zijlstra wrote:
+> > What used to be a simple few instructions has turned into a giant mess
+> > (for x86_64). Not only does it use static_branch wrong, it mixes it
+> > with dynamic branches for no apparent reason.
+> > 
+> > Notably it uses static_branch through an out-of-line function call,
+> > which completely defeats the purpose, since instead of a simple
+> > JMP/NOP site, you get a CALL+RET+TEST+Jcc sequence in return, which is
+> > absolutely idiotic.
+> > 
+> > Add to that a dynamic test of hyperv_paravisor_present, something
+> > which is set once and never changed.
+> > 
+> > Replace all this idiocy with a single direct function call to the
+> > right hypercall variant.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >   arch/x86/hyperv/hv_init.c       |   21 ++++++
+> >   arch/x86/hyperv/ivm.c           |   14 ++++
+> >   arch/x86/include/asm/mshyperv.h |  137 +++++++++++-----------------------------
+> >   arch/x86/kernel/cpu/mshyperv.c  |   18 +++--
+> >   4 files changed, 88 insertions(+), 102 deletions(-)
+> > 
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -35,7 +35,28 @@
+> >   #include <linux/highmem.h>
+> >   void *hv_hypercall_pg;
+> > +
+> > +#ifdef CONFIG_X86_64
+> > +u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
+> > +{
+> > +	u64 hv_status;
+> > +
+> > +	if (!hv_hypercall_pg)
+> > +		return U64_MAX;
+> > +
+> > +	register u64 __r8 asm("r8") = param2;
+> > +	asm volatile (CALL_NOSPEC
+> > +		      : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> > +		        "+c" (control), "+d" (param1)
+> > +		      : "r" (__r8),
+> 
+> r8 is call-clobbered register, so you should use "+r" (__r8) to properly
+> clobber it:
 
-This was done on hpa's request - maybe he has a duration in mind for
-this grace period?
+Ah, okay. 
