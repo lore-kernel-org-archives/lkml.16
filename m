@@ -1,167 +1,179 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B642989AA;
-	Mon, 14 Apr 2025 11:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F417280CDC;
+	Mon, 14 Apr 2025 11:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630882; cv=none; b=FDGHyqe/vUj3/9kZEl+7qS7rlIgHIaE6T6Y6kaPNgDtDXS1Z3AfeE+1aXWz+b3/Xj81ARfyTrcrMmSilKuR0haDWFwL8VUU5DgUZ8UMQZkKHAk+JnT/VIZjgxijiPQq+f6owZqq8+/lir8fzIefbW5rJBXjUBv+Do898mt9OSr0=
+	t=1744630920; cv=none; b=jH5qUybvKKton1mRNJqKO52eLbttZTYy5liWNFJOkNfHZjk2f+fdMwHCkqy7QvplakyKO7BB/wjU3Al+sGuEQqXpoZHk6eMPUve1OdFr84sKsqqiQjzbeC0Cv8yUUBwRphyqul6r5D7XjXrqJNnXbLwdpUt8Wb/TVLPiblUGQ1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630882; c=relaxed/simple;
-	bh=ChNHziXZOA2FpaIGY9w+vgsO8XllfkcXrxbG4utZ4bs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=f6QRKNTMH/anK2o+NvWzAipiOcqzw3gQnP9LFSSBX2un6zzA8YGYVvEadJ00BpiQf3/Dp4szm/UETXtieHzW48IuGb8gflNgI8oHAcsYeXr34YcvYchPbIV3UjBkB5fYsLPDfACckViU+4Y0gSb7IjqZEghMcpnfGoF5JMy/GAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xfUZB7np; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744630920; c=relaxed/simple;
+	bh=+flCr9B8P37u4bBFb3aOCmmw+SZCIGiAOZIqkNB3dU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=asKPde/59VNjgPbeKirBVA2Hu9CBzT/6UVTRTFMusRjG4Eh21mcjF2ocAUg4Nw0YO3smvwAa62UrsxvpCgWrf3XRAQQir1DuLIeUn/b7z4Hh4CvAEqXtcIM1s6cLWzZ4K0mgLiNysSNfKBBANGSc5zqCveOIpoBVAAyKfg6QiBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A8Uo6uZe; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xfUZB7np"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EBekXw2046321
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 06:40:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744630846;
-	bh=z2v2YqDM9wvESESnYHXaNZpR11dPLsmv6R7Z15lYtSc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=xfUZB7npYQOpoB54c4TURLLSpjiSlMy8CTSi5P27KH4fLe3UbByHjGqDXcxWveT6W
-	 cUClb1Xcl+4td+jDQzvDUzL4rEz70rsnu5gtBYjIp6FjXN5maISUSsHe0UXO5fZusg
-	 gvrTGJjo3JO+CEq5C7QbtGbQQpF9FZAvUepIjfRk=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EBekMm102049
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 06:40:46 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 06:40:46 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 06:40:45 -0500
-Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EBefOi038625;
-	Mon, 14 Apr 2025 06:40:42 -0500
-Message-ID: <28fa61b8-15a6-40c6-96b8-268939226a03@ti.com>
-Date: Mon, 14 Apr 2025 17:10:41 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A8Uo6uZe"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e6e01e8f4cdso530179276.2;
+        Mon, 14 Apr 2025 04:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744630917; x=1745235717; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0evTumqrDq5rgQu+eyGkQcd4gB3aTt7ZM+UWsJy63Qg=;
+        b=A8Uo6uZeYPj1rQzlqOIw+ZGnSzftDojEHVlwV+P8B+n6FjXQkrjepsBPnc1uwsMvss
+         r337kgFaxjdXySjdMZoSW/EaMZ6BMwb+0sZbNvYotGHYphavJkS7kj1Ol7+cG4vVh8ec
+         HlrhAiMdoeKW+/gSNfR9TTPGE22gdaNb/ioT87ceM1w3z6yACUFCxQuGqSltVM2FuRDe
+         tAW/GCVLGPr7v616OQvUkGuato8A9CeQg7atiT1XkdMidbiYJLqowcNsduCiLwrleYWP
+         sgsGhLVdABrf4HCbhRqVc/RSjsW0aOhjfkBSDhu3kZZPkGQAExq89N1GVX3vOKjnCGhH
+         5kOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744630917; x=1745235717;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0evTumqrDq5rgQu+eyGkQcd4gB3aTt7ZM+UWsJy63Qg=;
+        b=XfhInPEjh1lQ+JuKbK+FO/uZz9q1rPYt6/33/7rKjSty9FGEcuhSshzEw63UIq7jIN
+         TObqZ36laIgmy2ufy6ftRvA7SiqB3PtAX2CW0EYWczO0LZNZVdoRs4NA0AIBbph8c8Lh
+         ves0Dic+s5iN50PGv5rrOadqA/htyjahJfZV+t/zqLu4uyo0S/0R8elRGYJiOpbE58w8
+         CMplLJO3vWuBTQ8LZlya34GFQDS21NiJhuge+CKSsaEdsy0fne0qUJo2WtUlrVtnnJip
+         t06Mvh6+t5aJmNcnMIZ37VxTwBnKwKr3ybaDPOzinBZd+hlbRCrn5lXNig2nqIyTZ61a
+         M16A==
+X-Forwarded-Encrypted: i=1; AJvYcCV+yQEIkUwqp9Xj84Pd+rPhOJQ0MiUMIEAdp+1h6TTpSD083aU0/ixuhO4t8ivGoy3b045QXH1Hh68=@vger.kernel.org, AJvYcCV5eX+l/T8W/N3ilHz3e7Ga3B8AFSADMiDOv5dAOi4e3YguWj+IGSp4wzTq6gU98FVpzPXrtFZSMe3Hh63d@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFhhfqTgPt6qh2Ftw+vpNZVgu9WE5Z3At+qmETTnjyJCB8DdOa
+	kpocjfLfzB59gMktXyS548sS3GXsjlxTORi7SA1jbK+EgBOwvASQXneGoNiywgMCU5m8BNrREwK
+	sAeDSLixTmPWrgBPqmMYQ7izCQAw=
+X-Gm-Gg: ASbGncvYnVaYtx9M/GStrCWqbcR3L2Ac+QoGzTkudjEQnRAXYO/xuMjxxPg3JYRE8oI
+	T0MTSpMSG2hZzoQ93N4HTlPxSlDDA/WOWn9q5blSaikXU3LShV3WgY2yL793p4kgMAeOGlLUcaY
+	WBLuyc1PJlcESBLQhNp03sag==
+X-Google-Smtp-Source: AGHT+IFDomMNYVsrWNhO0Ec+GPOxt3o6S//Vn3Jrwr6Xb1c+fiIJiCnf/nVaQcMB0WQLscuTGS6QO8aX6JkUHEsKsQE=
+X-Received: by 2002:a05:690c:60c4:b0:704:3da8:f8cf with SMTP id
+ 00721157ae682-70559abb1b0mr85861067b3.7.1744630917021; Mon, 14 Apr 2025
+ 04:41:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] arm64: dts: ti: k3-j721e-sk: Add requiried voltage
- supplies for IMX219
-To: "Francis, Neha" <n-francis@ti.com>, <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <stable@vger.kernel.org>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
- <20250409134128.2098195-5-y-abhilashchandra@ti.com>
- <16713a1b-1e74-4b08-bd4c-12dc0a9d32df@ti.com>
-Content-Language: en-US
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-In-Reply-To: <16713a1b-1e74-4b08-bd4c-12dc0a9d32df@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250318230843.76068-1-l.rubusch@gmail.com> <20250318230843.76068-7-l.rubusch@gmail.com>
+ <20250331113300.08379a5a@jic23-huawei>
+In-Reply-To: <20250331113300.08379a5a@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Mon, 14 Apr 2025 13:41:20 +0200
+X-Gm-Features: ATxdqUFT2CFgzE3Or-cOLwHoJMOZ6Ky5yPqesU3WPs1SKmDmfbPBAjyLfLgpHGU
+Message-ID: <CAFXKEHau6n2o_MPimiEkYRNvE3TO9f5j_tDH0FwJYsk6V5B9WA@mail.gmail.com>
+Subject: Re: [PATCH v5 06/11] iio: accel: adxl345: extend sample frequency adjustments
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Neha,
+On Mon, Mar 31, 2025 at 12:33=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Tue, 18 Mar 2025 23:08:38 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Introduce enums and functions to work with the sample frequency
+> > adjustments. Let the sample frequency adjust via IIO and configure
+> > a reasonable default.
+> >
+> > Replace the old static sample frequency handling. During adjustment of
+> > bw registers, measuring is disabled and afterwards enabled again.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> One minor thing inline.
+>
+>
+> >       return -EINVAL;
+> > @@ -504,7 +581,12 @@ static int adxl345_write_raw(struct iio_dev *indio=
+_dev,
+> >                            int val, int val2, long mask)
+> >  {
+> >       struct adxl345_state *st =3D iio_priv(indio_dev);
+> > -     s64 n;
+> > +     enum adxl345_odr odr;
+> > +     int ret;
+> > +
+> > +     ret =3D adxl345_set_measure_en(st, false);
+>
+> Why is this necessary but wasn't before?
+> If it should always have been done for existing calibbias etc,
+> perhaps a separate precursor patch is appropriate?
+>
 
-On 11/04/25 19:08, Francis, Neha wrote:
-> On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
->> The device tree overlay for the IMX219 sensor requires three voltage
->> supplies to be defined: VANA (analog), VDIG (digital core), and VDDL
->> (digital I/O). Add the corresponding voltage supply definitions to avoid
->> dtbs_check warnings.
->>
->> Fixes: f767eb918096 ("arm64: dts: ti: k3-j721e-sk: Add overlay for IMX219")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
->> ---
->>   .../dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  | 33 +++++++++++++++++++
->>   1 file changed, 33 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
->> index 4a395d1209c8..4eb3cffab032 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
->> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
-> 
-> The link to the schematics seems to need updation, would like to see where these
-> regulators are mentioned, can't find them in [0] which I assume is the latest link.
-> 
+On the one side the datasheet recommends to have measurement disabled,
+when adjusting certain sensor registers, mostly related to interrupt
+events. Before the sensor was operated in FIFO_BYPASS mode only
+without using the sensor events. With interrupt based events, it will
+operate in FIFO_STREAM or similar. Then it seems to me to be a better
+approach to put it generally in standby mode when configuring
+registers to avoid ending up e.g. in FIFO overrun or the like. On the
+other side, I saw similar approaches in the sources of Analog sensors.
+Enable/disable measurement was done there in the particular functions.
+In the particular case of adxl345_write_raw, odr and range values are
+going to be set and I implement enable/disable measurement directly in
+the write_raw. In comparison to the ADXL380 (different sensor!) where
+this is done, too, but down in the specific setter functions. I can
+see a bit of an advantage, if something fails, the sensor generally
+stays turned off. I'll keep this in v6 of the patches.
 
-Yes, It seems that the link to the schematics has been changed.
-I will submit a separate patch to fix that.
+Pls,  note, I did not observe faulty behavior due to that or analyzed
+it thoroughly if and where it is probably better to have measurement
+turned off. At best, it won't make any difference and is probably
+rather kind of "best practice". If not, I would expect rather sporadic
+minor issues.
 
-While the regulators are not clearly documented in the schematics,
-the voltage levels can be observed in the top-right corner of the 
-schematics.
+As always, pls consider my patch(es) as a proposal, sometimes with an
+invisible question mark ;) If you have a contrary opinion and/or
+experience, please let me know.
 
-However, the required regulators are explicitly described in the device 
-tree bindings.
-Please refer: ./Documentation/devicetree/bindings/media/i2c/imx219.yaml
-
-Thanks and Regards
-Yemike Abhilash Chandra
-
-
->> @@ -19,6 +19,33 @@ clk_imx219_fixed: imx219-xclk {
->>   		#clock-cells = <0>;
->>   		clock-frequency = <24000000>;
->>   	};
->> +
->> +	reg_2p8v: regulator-2p8v {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "2P8V";
->> +		regulator-min-microvolt = <2800000>;
->> +		regulator-max-microvolt = <2800000>;
->> +		vin-supply = <&vdd_sd_dv>;
->> +		regulator-always-on;
->> +	};
->> +
->> +	reg_1p8v: regulator-1p8v {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "1P8V";
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <1800000>;
->> +		vin-supply = <&vdd_sd_dv>;
->> +		regulator-always-on;
->> +	};
->> +
->> +	reg_1p2v: regulator-1p2v {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "1P2V";
->> +		regulator-min-microvolt = <1200000>;
->> +		regulator-max-microvolt = <1200000>;
->> +		vin-supply = <&vdd_sd_dv>;
->> +		regulator-always-on;
->> +	};
->>   };
->>   
->>   &csi_mux {
->> @@ -34,6 +61,9 @@ imx219_0: imx219-0@10 {
->>   		reg = <0x10>;
->>   
->>   		clocks = <&clk_imx219_fixed>;
->> +		VANA-supply = <&reg_2p8v>;
->> +		VDIG-supply = <&reg_1p8v>;
->> +		VDDL-supply = <&reg_1p2v>;
->>   
->>   		port {
->>   			csi2_cam0: endpoint {
->> @@ -55,6 +85,9 @@ imx219_1: imx219-1@10 {
->>   		reg = <0x10>;
->>   
->>   		clocks = <&clk_imx219_fixed>;
->> +		VANA-supply = <&reg_2p8v>;
->> +		VDIG-supply = <&reg_1p8v>;
->> +		VDDL-supply = <&reg_1p2v>;
->>   
->>   		port {
->>   			csi2_cam1: endpoint {
-> [0] https://datasheets.raspberrypi.com/camera/camera-module-2-schematics.pdf
-> 
+>
+> > +     if (ret)
+> > +             return ret;
+> >
+> >       switch (mask) {
+> >       case IIO_CHAN_INFO_CALIBBIAS:
+> > @@ -512,20 +594,26 @@ static int adxl345_write_raw(struct iio_dev *indi=
+o_dev,
+> >                * 8-bit resolution at +/- 2g, that is 4x accel data scal=
+e
+> >                * factor
+> >                */
+> > -             return regmap_write(st->regmap,
+> > -                                 ADXL345_REG_OFS_AXIS(chan->address),
+> > -                                 val / 4);
+> > +             ret =3D regmap_write(st->regmap,
+> > +                                ADXL345_REG_OFS_AXIS(chan->address),
+> > +                                val / 4);
+> > +             if (ret)
+> > +                     return ret;
+> > +             break;
+> >       case IIO_CHAN_INFO_SAMP_FREQ:
+> > -             n =3D div_s64(val * NANOHZ_PER_HZ + val2,
+> > -                         ADXL345_BASE_RATE_NANO_HZ);
+> > +             ret =3D adxl345_find_odr(st, val, val2, &odr);
+> > +             if (ret)
+> > +                     return ret;
+> >
+> > -             return regmap_update_bits(st->regmap, ADXL345_REG_BW_RATE=
+,
+> > -                                       ADXL345_BW_RATE,
+> > -                                       clamp_val(ilog2(n), 0,
+> > -                                                 ADXL345_BW_RATE));
+> > +             ret =3D adxl345_set_odr(st, odr);
+> > +             if (ret)
+> > +                     return ret;
+> > +             break;
+> > +     default:
+> > +             return -EINVAL;
+> >       }
+> >
+> > -     return -EINVAL;
+> > +     return adxl345_set_measure_en(st, true);
+> >  }
