@@ -1,268 +1,274 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A20267AE8;
-	Mon, 14 Apr 2025 10:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A46267706
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625576; cv=none; b=tDV6wleenV3yX+WYhUcj2dZheqQiWmBv/VV5ltbOw+DlzhFqWgLdZIq5+7jvN4ic4ICrdU0AcFM9iKR/m6/QYjLW5SrnRzq8E8BMADGRjgdoinzBQxzxIIvWR7nNvmFTKkjo+hRkuFnCIj1ZECcJxjDGtjYZJP/fMoarX9Xewcc=
+	t=1744625607; cv=none; b=JWMCu0zJa5hjCbDt6pM3zobHqUtS5p3kxrvI2Z/Keyy/dEBRbBq+3m9b93aE3w9Lpd5W25A1jfkd8hWUWbKaFYDUP7AtOyp4It5PRiSWBnl1Y2+MYdnTxl4bJjNY0HP4u05HkQ1Kof3izUOHKOochnU4KxVCTMj8NK4F0F2zOWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625576; c=relaxed/simple;
-	bh=53W1bNK9W7QQYZ6q3O5F0QS6Wr0aZL8OTvR5FfS4m5I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cWrd7i7MCX4PV0xmdIY1h+cijW1KxvS13HzB6JLGdXC2VzrFjM5c98QXJec/v9FCoVuyOnj7jS7J0Mn4wThuvQ4wg4eAc3n1F00ySNNKrSbmdK0mWWwNhBZc0tBf6uaBMhjsXf3k8bokONa4qdKd36/jJd+/BBxgeIJZ9UGg90o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtNfq9DZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744625607; c=relaxed/simple;
+	bh=JyWeZEpKoFJ2MTnGd7zb0bEz198j7FjVbkRh4IEcWZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uFYJseES//kzgaDml7EAWoUmDDWgKPytKnMEoC7lUgycu4Nl0+a+oHUl8Ko4vL0jXr9lWJnH6ceqYInVVzLB4Zj2+78Dm5ndkYprNRdqruAbaNMK87ryGgBvxSmwDCo+VslFHtibrZxg65eBaPgE2plCIUrfDnSdTwUyk+VJxeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WS4iXlHb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtNfq9DZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E566FC4CEEB;
-	Mon, 14 Apr 2025 10:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744625576;
-	bh=53W1bNK9W7QQYZ6q3O5F0QS6Wr0aZL8OTvR5FfS4m5I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WtNfq9DZaUJZBTjgwNHG1uk0idTsHZZh+OkaKxmr6V08euXlkfT3Wi2hItvPn3eLu
-	 t25Bitpm9+Vk8umrDmpKak5ZU6OmWAF8oapIXnIGRGrs1h3ZMz+4laYzzga1hgI0Th
-	 a/lpuRt3KPvAtvxf7cvIWLKQhSH0L2ulpoyV6qSLduj2NiuONQWCfFQ40xpyuv++E0
-	 QvdmSYP14SIkQ9tBu7U1zvIYlxuWC2+6OoZFdP1w0+7FRK3cqn2LQUVK7AucsrT0/j
-	 0/Wb4qpAzqzAPYU9wD21489zqHMDkH4Fc9GkfyK3NC6I7d+27P4yVnEaxwjOXwV9WE
-	 iBREDYDsjfXGw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB044C369BA;
-	Mon, 14 Apr 2025 10:12:55 +0000 (UTC)
-From: Chuan Liu via B4 Relay <devnull+chuan.liu.amlogic.com@kernel.org>
-Date: Mon, 14 Apr 2025 18:12:32 +0800
-Subject: [PATCH v2 5/7] soc: amlogic: clk-measure: Add support for S4
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WS4iXlHb"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99qNn013716
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:13:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=KOk2FJOKln1h9f40tHitRpBq
+	43JW0qQMBy6iSTVf1/0=; b=WS4iXlHbTYtaJSM3MUAtdKvZ5Zx+1FCSrjlluP2c
+	OCI68f2HbGwYmmUwhQ16MY4Vj/4zF0Q8NCYx24E/PJZec9ydkyBLEUaOJYNsOpCV
+	Pp4rdFhaKR4J9EAaeGUDOhC46Wi4iIa32uz72YIq56xj9iDEISc46Ln8GrpXNzRC
+	BB6n8Tjzph+ivmmVM02+Uws113tFhW9tm+2PPoS0sUqRmH0YuSJcaW10sKwEITz8
+	BX1vmX5bai0K51JeB6DY3+etvqQJ0F2EJAHeBldQ4CBFgZAssAQYJE9VCLZKf8RN
+	/zJtQ20MxWGPur6l3FQSE/MLdfZ3L6/CQfv2zY/ToA+Mww==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhfcv20x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:13:24 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8f4367446so44424266d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:13:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744625602; x=1745230402;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KOk2FJOKln1h9f40tHitRpBq43JW0qQMBy6iSTVf1/0=;
+        b=wECIMEzwAbAuAsHmaLHwX9ewHYpD2n3fNOkRRoE4+djXms0txJN69G2ya8XrnBuWSO
+         msjZEy/aePGwjPlSnbgSbjKivbN7iXzyP2bwf0UsgGpW11dz4XmvTUQRLK6L+5to71rY
+         kmmDUUJkrGzibcAk7qN7gARV4PTyggZeHpmPAyEKLW1gkw9dtmJtJ8CFsw6SRR3jFuyY
+         +5WS16NtMypcaL/ZRTudN5IjySD94uoKpzhky05mLY1+P1HNhJNtyZMTx57VkE5YFYkb
+         Q8JSGteWq5ZphNl0WJJscxpO4FUXpmTQ+8Xt9Nyth1sI0FBqJhhlwvYsbagnieQWFVAS
+         6uLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhbgKK+8f0xBfbUmnsglBnowKk4giYuYsM4y119BAOZe5E6Q4oe9rnAJaREZ9N60ag5SIsuR1NHcHorAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLQP1OwNaXrATlMk5wJ0TOZAMjNrc3aiV/GixJ4KHu/myxLtFh
+	b+zJBgc4aykbCgjXSSJYnJVFd1mle78dSRmV9cd6LZ9qBPTEX0vpw/uL//nu9ab6XkzknkYR0J+
+	r3pkRKf/BjxoYS0hyk83NsDR+zT22nWtwAAnd+oiBKlp1Bx+fKq696pM4fEjsTBA=
+X-Gm-Gg: ASbGncu/eXSGr9Q0dX1BEMMfD9qWgBwBlITSymKHGsoa8kiCZPtxrpnxYzzc1S8ej6C
+	q5TKjOkwc3xpD4l5JyUj5OrBNr4i7QQnugwdBsz+8sbBfYqcD/LywgFJqpU5V5+PNiLt26eST8e
+	BQueCI1zEQ5kttssmvJxE4uqWyLarYGeJDeFNpuaRPMyDIHzQIj8BY+rC/f1sylBmflJOxmUXM4
+	wWXnMw+ue9xZZ7GdKC4sqjtudBuLav+P5Zwfa+Za5y3WjR6AVKJMyP126D037Fc386iFuT9X7E8
+	ae5e8iKJ8NFrwUX6zt81bZrB/azxAcSI6r9W8jp0rPx2/PhmdsDT2DPJK9OUl7zOo2HTYm8SdRk
+	=
+X-Received: by 2002:a05:620a:424b:b0:7c5:49ee:86aa with SMTP id af79cd13be357-7c7af0b97b6mr1407519685a.4.1744625602347;
+        Mon, 14 Apr 2025 03:13:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHzDsIFNCfCc1ZoeycTbDTNBesY22eIKmB83BOMthLAJTRiIc4E97bghFBGk6bi4e5QAPBjNQ==
+X-Received: by 2002:a05:620a:424b:b0:7c5:49ee:86aa with SMTP id af79cd13be357-7c7af0b97b6mr1407516585a.4.1744625601749;
+        Mon, 14 Apr 2025 03:13:21 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f4649d604sm16122111fa.19.2025.04.14.03.13.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 03:13:20 -0700 (PDT)
+Date: Mon, 14 Apr 2025 13:13:19 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jagadeesh Kona <quic_jkona@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v3 06/18] clk: qcom: common: Add support to configure clk
+ regs in qcom_cc_really_probe
+Message-ID: <r5okekuiv4jdocho47ytmf3aiprdby6mqvdeg63fr2uzs4edwa@rk3mhscdhc2p>
+References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
+ <20250327-videocc-pll-multi-pd-voting-v3-6-895fafd62627@quicinc.com>
+ <aidlp3iq6pxym52tp63w35tpcctw4443yihvcwsdszk62xbwfp@esqpmsc4e6qd>
+ <f1125370-c16a-4c20-a01d-2221fb12fdcb@quicinc.com>
+ <CAO9ioeWmuPhBPivthidXTFfnXRBx9rd=iX5aqjB4bMcCKueXeg@mail.gmail.com>
+ <efe91d3f-a2e3-4bee-a7e5-36ea4fc0968a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-clk-measure-v2-5-65077690053a@amlogic.com>
-References: <20250414-clk-measure-v2-0-65077690053a@amlogic.com>
-In-Reply-To: <20250414-clk-measure-v2-0-65077690053a@amlogic.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Chuan Liu <chuan.liu@amlogic.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744625573; l=6928;
- i=chuan.liu@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=B+ImmzcSg0MnVcqeFPpwfyQB4KHRlMlguio/y8LkwZU=;
- b=tkfMcPfGE93Dh4PX41BJ/zc7JCsxxnVtg7yhCqo2w2OXsKiJKNdHloJ/VHZcYRxn7HhJ7Iwy/
- aRJ0SlWgooeCMEfO6JriOE4LC/rCs99RVF054ta24l4EyckYC2XgIsQ
-X-Developer-Key: i=chuan.liu@amlogic.com; a=ed25519;
- pk=fnKDB+81SoWGKW2GJNFkKy/ULvsDmJZRGBE7pR5Xcpo=
-X-Endpoint-Received: by B4 Relay for chuan.liu@amlogic.com/20240902 with
- auth_id=203
-X-Original-From: Chuan Liu <chuan.liu@amlogic.com>
-Reply-To: chuan.liu@amlogic.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <efe91d3f-a2e3-4bee-a7e5-36ea4fc0968a@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=CfUI5Krl c=1 sm=1 tr=0 ts=67fcdfc4 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=rqxffTeNWxrA2CmQLHoA:9 a=CjuIK1q_8ugA:10 a=OIgjcC2v60KrkQgK7BGD:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: -dT-JwQmlqY00BUg13j3hmoftTTLb8Rv
+X-Proofpoint-ORIG-GUID: -dT-JwQmlqY00BUg13j3hmoftTTLb8Rv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140074
 
-From: Chuan Liu <chuan.liu@amlogic.com>
+On Mon, Apr 14, 2025 at 03:39:04PM +0530, Jagadeesh Kona wrote:
+> 
+> 
+> On 4/11/2025 2:21 PM, Dmitry Baryshkov wrote:
+> > On Fri, 11 Apr 2025 at 10:14, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
+> >>
+> >>
+> >>
+> >> On 3/27/2025 6:20 PM, Dmitry Baryshkov wrote:
+> >>> On Thu, Mar 27, 2025 at 03:22:26PM +0530, Jagadeesh Kona wrote:
+> >>>> Add support to configure PLLS and clk registers in qcom_cc_really_probe().
+> >>>> This ensures all required power domains are enabled and kept ON by runtime
+> >>>> PM code in qcom_cc_really_probe() before configuring the PLLS or clock
+> >>>> registers.
+> >>>>
+> >>>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> >>>> ---
+> >>>>  drivers/clk/qcom/common.c | 28 ++++++++++++++++++++++++++++
+> >>>>  drivers/clk/qcom/common.h | 19 +++++++++++++++++++
+> >>>>  2 files changed, 47 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+> >>>> index 9cbf1c5296dad3ee5477a2f5a445488707663b9d..c4d980c6145834969fada14863360ee81c9aa251 100644
+> >>>> --- a/drivers/clk/qcom/common.c
+> >>>> +++ b/drivers/clk/qcom/common.c
+> >>>> @@ -14,6 +14,8 @@
+> >>>>  #include <linux/of.h>
+> >>>>
+> >>>>  #include "common.h"
+> >>>> +#include "clk-alpha-pll.h"
+> >>>> +#include "clk-branch.h"
+> >>>>  #include "clk-rcg.h"
+> >>>>  #include "clk-regmap.h"
+> >>>>  #include "reset.h"
+> >>>> @@ -285,6 +287,29 @@ static int qcom_cc_icc_register(struct device *dev,
+> >>>>                                                   desc->num_icc_hws, icd);
+> >>>>  }
+> >>>>
+> >>>> +static void qcom_cc_clk_pll_configure(const struct qcom_cc_desc *desc,
+> >>>> +                                  struct regmap *regmap)
+> >>>> +{
+> >>>> +    int i;
+> >>>> +
+> >>>> +    for (i = 0; i < desc->num_alpha_plls; i++)
+> >>>> +            qcom_clk_alpha_pll_configure(desc->alpha_plls[i], regmap);
+> >>>> +}
+> >>>> +
+> >>>> +static void qcom_cc_clk_regs_configure(const struct qcom_cc_desc *desc,
+> >>>> +                                   struct regmap *regmap)
+> >>>> +{
+> >>>> +    struct qcom_clk_reg_setting *clk_regs = desc->clk_regs;
+> >>>> +    int i;
+> >>>> +
+> >>>> +    for (i = 0; i < desc->num_clk_cbcrs; i++)
+> >>>> +            qcom_branch_set_clk_en(regmap, desc->clk_cbcrs[i]);
+> >>>> +
+> >>>> +    for (i = 0 ; i < desc->num_clk_regs; i++)
+> >>>> +            regmap_update_bits(regmap, clk_regs[i].offset,
+> >>>> +                               clk_regs[i].mask, clk_regs[i].val);
+> >>>
+> >>> I think there are other semantic functions which we don't want to
+> >>> convert to offset-mask-val tuples. See drivers/clk/qcom/clk-branch.h.
+> >>> I'd suggest to move setup steps to a driver callback. We can improve it
+> >>> later on if it is found to make sense, but it won't block this series
+> >>> from being merged.
+> >>>
+> >>
+> >> Yes, there are other wrapper functions as well but they are unused in most
+> >> clock controllers. We will check more on how we can improve this in a separate
+> >> series.
+> > 
+> > Please do it the other way around. Implement a generic callback, then
+> > we can check how to sort things out.
+> > 
+> 
+> Yeah, but since this series doesn't require any misc register settings update, I
+> will remove the above regmap_update_bits() code for now. I will check further on
+> this and post a separate series for it.
 
-Add the clk-measurer clocks IDs for the Amlogic S4 SoC family.
+This way we end up with a non-generic solution with no proposed path.
+I'd really suggest using a callback for now to configure all
+platform-specific and then post a separte series adding clk_cbcrs and
+related functionality.
 
-Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
----
- drivers/soc/amlogic/meson-clk-measure.c | 163 ++++++++++++++++++++++++++++++++
- 1 file changed, 163 insertions(+)
-
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 810454ac4119..f2fca59a6fc4 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -634,6 +634,159 @@ static const struct meson_msr_id clk_msr_c3[] = {
- 
- };
- 
-+static const struct meson_msr_id clk_msr_s4[] = {
-+	CLK_MSR_ID(0, "sys_clk"),
-+	CLK_MSR_ID(1, "axi_clk"),
-+	CLK_MSR_ID(2, "rtc_clk"),
-+	CLK_MSR_ID(5, "mali"),
-+	CLK_MSR_ID(6, "cpu_clk_div16"),
-+	CLK_MSR_ID(7, "ceca_clk"),
-+	CLK_MSR_ID(8, "cecb_clk"),
-+	CLK_MSR_ID(10, "fclk_div5"),
-+	CLK_MSR_ID(11, "mpll0"),
-+	CLK_MSR_ID(12, "mpll1"),
-+	CLK_MSR_ID(13, "mpll2"),
-+	CLK_MSR_ID(14, "mpll3"),
-+	CLK_MSR_ID(15, "fclk_50m"),
-+	CLK_MSR_ID(16, "pcie_clk_inp"),
-+	CLK_MSR_ID(17, "pcie_clk_inn"),
-+	CLK_MSR_ID(18, "mpll_clk_test_out"),
-+	CLK_MSR_ID(19, "hifi_pll"),
-+	CLK_MSR_ID(20, "gp0_pll"),
-+	CLK_MSR_ID(21, "gp1_pll"),
-+	CLK_MSR_ID(22, "eth_mppll_50m_ckout"),
-+	CLK_MSR_ID(23, "sys_pll_div16"),
-+	CLK_MSR_ID(24, "ddr_dpll_pt_clk"),
-+	CLK_MSR_ID(30, "mod_eth_phy_ref_clk"),
-+	CLK_MSR_ID(31, "mod_eth_tx_clk"),
-+	CLK_MSR_ID(32, "eth_125m"),
-+	CLK_MSR_ID(33, "eth_rmii"),
-+	CLK_MSR_ID(34, "co_clkin_to_mac"),
-+	CLK_MSR_ID(35, "mod_eth_rx_clk_rmii"),
-+	CLK_MSR_ID(36, "co_rx_clk"),
-+	CLK_MSR_ID(37, "co_tx_clk"),
-+	CLK_MSR_ID(38, "eth_phy_rxclk"),
-+	CLK_MSR_ID(39, "eth_phy_plltxclk"),
-+	CLK_MSR_ID(40, "ephy_test_clk"),
-+	CLK_MSR_ID(50, "vid_pll_div_clk_out"),
-+	CLK_MSR_ID(51, "enci"),
-+	CLK_MSR_ID(52, "encp"),
-+	CLK_MSR_ID(53, "encl"),
-+	CLK_MSR_ID(54, "vdac"),
-+	CLK_MSR_ID(55, "cdac_clk_c"),
-+	CLK_MSR_ID(56, "mod_tcon_clko"),
-+	CLK_MSR_ID(57, "lcd_an_clk_ph2"),
-+	CLK_MSR_ID(58, "lcd_an_clk_ph3"),
-+	CLK_MSR_ID(59, "hdmitx_pixel"),
-+	CLK_MSR_ID(60, "vdin_meas"),
-+	CLK_MSR_ID(61, "vpu"),
-+	CLK_MSR_ID(62, "vpu_clkb"),
-+	CLK_MSR_ID(63, "vpu_clkb_tmp"),
-+	CLK_MSR_ID(64, "vpu_clkc"),
-+	CLK_MSR_ID(65, "vid_lock"),
-+	CLK_MSR_ID(66, "vapb"),
-+	CLK_MSR_ID(67, "ge2d"),
-+	CLK_MSR_ID(68, "cts_hdcp22_esmclk"),
-+	CLK_MSR_ID(69, "cts_hdcp22_skpclk"),
-+	CLK_MSR_ID(76, "hdmitx_tmds"),
-+	CLK_MSR_ID(77, "hdmitx_sys_clk"),
-+	CLK_MSR_ID(78, "hdmitx_fe_clk"),
-+	CLK_MSR_ID(79, "rama"),
-+	CLK_MSR_ID(93, "vdec"),
-+	CLK_MSR_ID(99, "hevcf"),
-+	CLK_MSR_ID(100, "demod_core"),
-+	CLK_MSR_ID(101, "adc_extclk_in"),
-+	CLK_MSR_ID(102, "cts_demod_core_t2_clk"),
-+	CLK_MSR_ID(103, "adc_dpll_intclk"),
-+	CLK_MSR_ID(104, "adc_dpll_clk_b3"),
-+	CLK_MSR_ID(105, "s2_adc_clk"),
-+	CLK_MSR_ID(106, "deskew_pll_clk_div32_out"),
-+	CLK_MSR_ID(110, "sc"),
-+	CLK_MSR_ID(111, "sar_adc"),
-+	CLK_MSR_ID(113, "sd_emmc_c"),
-+	CLK_MSR_ID(114, "sd_emmc_b"),
-+	CLK_MSR_ID(115, "sd_emmc_a"),
-+	CLK_MSR_ID(116, "gpio_msr_clk"),
-+	CLK_MSR_ID(118, "spicc0"),
-+	CLK_MSR_ID(121, "ts"),
-+	CLK_MSR_ID(130, "audio_vad_clk"),
-+	CLK_MSR_ID(131, "acodec_dac_clk_x128"),
-+	CLK_MSR_ID(132, "audio_locker_in_clk"),
-+	CLK_MSR_ID(133, "audio_locker_out_clk"),
-+	CLK_MSR_ID(134, "audio_tdmout_c_sclk"),
-+	CLK_MSR_ID(135, "audio_tdmout_b_sclk"),
-+	CLK_MSR_ID(136, "audio_tdmout_a_sclk"),
-+	CLK_MSR_ID(137, "audio_tdmin_lb_sclk"),
-+	CLK_MSR_ID(138, "audio_tdmin_c_sclk"),
-+	CLK_MSR_ID(139, "audio_tdmin_b_sclk"),
-+	CLK_MSR_ID(140, "audio_tdmin_a_sclk"),
-+	CLK_MSR_ID(141, "audio_resamplea_clk"),
-+	CLK_MSR_ID(142, "audio_pdm_sysclk"),
-+	CLK_MSR_ID(143, "audio_spdifout_b_mst_clk"),
-+	CLK_MSR_ID(144, "audio_spdifout_mst_clk"),
-+	CLK_MSR_ID(145, "audio_spdifin_mst_clk"),
-+	CLK_MSR_ID(146, "audio_pdm_dclk"),
-+	CLK_MSR_ID(147, "audio_resampleb_clk"),
-+	CLK_MSR_ID(160, "pwm_j"),
-+	CLK_MSR_ID(161, "pwm_i"),
-+	CLK_MSR_ID(162, "pwm_h"),
-+	CLK_MSR_ID(163, "pwm_g"),
-+	CLK_MSR_ID(164, "pwm_f"),
-+	CLK_MSR_ID(165, "pwm_e"),
-+	CLK_MSR_ID(166, "pwm_d"),
-+	CLK_MSR_ID(167, "pwm_c"),
-+	CLK_MSR_ID(168, "pwm_b"),
-+	CLK_MSR_ID(169, "pwm_a"),
-+	CLK_MSR_ID(176, "rng_ring_0"),
-+	CLK_MSR_ID(177, "rng_ring_1"),
-+	CLK_MSR_ID(178, "rng_ring_2"),
-+	CLK_MSR_ID(179, "rng_ring_3"),
-+	CLK_MSR_ID(180, "dmc_osc_ring(LVT16)"),
-+	CLK_MSR_ID(181, "gpu_osc_ring0(LVT16)"),
-+	CLK_MSR_ID(182, "gpu_osc_ring1(ULVT16)"),
-+	CLK_MSR_ID(183, "gpu_osc_ring2(SLVT16)"),
-+	CLK_MSR_ID(184, "vpu_osc_ring0(SVT24)"),
-+	CLK_MSR_ID(185, "vpu_osc_ring1(LVT20)"),
-+	CLK_MSR_ID(186, "vpu_osc_ring2(LVT16)"),
-+	CLK_MSR_ID(187, "dos_osc_ring0(SVT24)"),
-+	CLK_MSR_ID(188, "dos_osc_ring1(SVT16)"),
-+	CLK_MSR_ID(189, "dos_osc_ring2(LVT16)"),
-+	CLK_MSR_ID(190, "dos_osc_ring3(ULVT20)"),
-+	CLK_MSR_ID(192, "axi_sram_osc_ring(SVT16)"),
-+	CLK_MSR_ID(193, "demod_osc_ring0"),
-+	CLK_MSR_ID(194, "demod_osc_ring1"),
-+	CLK_MSR_ID(195, "sar_osc_ring"),
-+	CLK_MSR_ID(196, "sys_cpu_osc_ring0"),
-+	CLK_MSR_ID(197, "sys_cpu_osc_ring1"),
-+	CLK_MSR_ID(198, "sys_cpu_osc_ring2"),
-+	CLK_MSR_ID(199, "sys_cpu_osc_ring3"),
-+	CLK_MSR_ID(200, "sys_cpu_osc_ring4"),
-+	CLK_MSR_ID(201, "sys_cpu_osc_ring5"),
-+	CLK_MSR_ID(202, "sys_cpu_osc_ring6"),
-+	CLK_MSR_ID(203, "sys_cpu_osc_ring7"),
-+	CLK_MSR_ID(204, "sys_cpu_osc_ring8"),
-+	CLK_MSR_ID(205, "sys_cpu_osc_ring9"),
-+	CLK_MSR_ID(206, "sys_cpu_osc_ring10"),
-+	CLK_MSR_ID(207, "sys_cpu_osc_ring11"),
-+	CLK_MSR_ID(208, "sys_cpu_osc_ring12"),
-+	CLK_MSR_ID(209, "sys_cpu_osc_ring13"),
-+	CLK_MSR_ID(210, "sys_cpu_osc_ring14"),
-+	CLK_MSR_ID(211, "sys_cpu_osc_ring15"),
-+	CLK_MSR_ID(212, "sys_cpu_osc_ring16"),
-+	CLK_MSR_ID(213, "sys_cpu_osc_ring17"),
-+	CLK_MSR_ID(214, "sys_cpu_osc_ring18"),
-+	CLK_MSR_ID(215, "sys_cpu_osc_ring19"),
-+	CLK_MSR_ID(216, "sys_cpu_osc_ring20"),
-+	CLK_MSR_ID(217, "sys_cpu_osc_ring21"),
-+	CLK_MSR_ID(218, "sys_cpu_osc_ring22"),
-+	CLK_MSR_ID(219, "sys_cpu_osc_ring23"),
-+	CLK_MSR_ID(220, "sys_cpu_osc_ring24"),
-+	CLK_MSR_ID(221, "sys_cpu_osc_ring25"),
-+	CLK_MSR_ID(222, "sys_cpu_osc_ring26"),
-+	CLK_MSR_ID(223, "sys_cpu_osc_ring27"),
-+
-+};
-+
- static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 			    unsigned int duration)
- {
-@@ -866,6 +1019,12 @@ static const struct meson_msr_data clk_msr_c3_data = {
- 	.reg = &msr_reg_offset_v2,
- };
- 
-+static const struct meson_msr_data clk_msr_s4_data = {
-+	.msr_table = (void *)clk_msr_s4,
-+	.msr_count = ARRAY_SIZE(clk_msr_s4),
-+	.reg = &msr_reg_offset_v2,
-+};
-+
- static const struct of_device_id meson_msr_match_table[] = {
- 	{
- 		.compatible = "amlogic,meson-gx-clk-measure",
-@@ -895,6 +1054,10 @@ static const struct of_device_id meson_msr_match_table[] = {
- 		.compatible = "amlogic,c3-clk-measure",
- 		.data = &clk_msr_c3_data,
- 	},
-+	{
-+		.compatible = "amlogic,s4-clk-measure",
-+		.data = &clk_msr_s4_data,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, meson_msr_match_table);
+> 
+> Thanks,
+> Jagadeesh
+> 
+> >>
+> >> Thanks,
+> >> Jagadeesh
+> >>
+> >>>> +}
+> >>>> +
+> >>>>  int qcom_cc_really_probe(struct device *dev,
+> >>>>                       const struct qcom_cc_desc *desc, struct regmap *regmap)
+> >>>>  {
+> >>>> @@ -315,6 +340,9 @@ int qcom_cc_really_probe(struct device *dev,
+> >>>>                      return ret;
+> >>>>      }
+> >>>>
+> >>>> +    qcom_cc_clk_pll_configure(desc, regmap);
+> >>>> +    qcom_cc_clk_regs_configure(desc, regmap);
+> >>>> +
+> >>>>      reset = &cc->reset;
+> >>>>      reset->rcdev.of_node = dev->of_node;
+> >>>>      reset->rcdev.ops = &qcom_reset_ops;
+> >>>> diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
+> >>>> index 9c10bc8c197cd7dfa25ccd245763ad6acb081523..01b1ae52f2dc580350409d6244578944cce571f0 100644
+> >>>> --- a/drivers/clk/qcom/common.h
+> >>>> +++ b/drivers/clk/qcom/common.h
+> >>>> @@ -25,6 +25,19 @@ struct qcom_icc_hws_data {
+> >>>>      int clk_id;
+> >>>>  };
+> >>>>
+> >>>> +/**
+> >>>> + * struct qcom_clk_reg_setting - Represents miscellaneous clock register settings
+> >>>> + * @offset: address offset for the clock register
+> >>>> + * @mask: bit mask indicating the bits to be updated
+> >>>> + * @val: Encoded value to be set within the specified bit mask
+> >>>> + *       (e.g., if writing 7 to bits 4-7, mask = 0xF0 and val = 0x70)
+> >>>> + */
+> >>>> +struct qcom_clk_reg_setting {
+> >>>> +    u32 offset;
+> >>>> +    u32 mask;
+> >>>> +    u32 val;
+> >>>> +};
+> >>>> +
+> >>>>  struct qcom_cc_desc {
+> >>>>      const struct regmap_config *config;
+> >>>>      struct clk_regmap **clks;
+> >>>> @@ -38,6 +51,12 @@ struct qcom_cc_desc {
+> >>>>      const struct qcom_icc_hws_data *icc_hws;
+> >>>>      size_t num_icc_hws;
+> >>>>      unsigned int icc_first_node_id;
+> >>>> +    u32 *clk_cbcrs;
+> >>>> +    size_t num_clk_cbcrs;
+> >>>> +    struct clk_alpha_pll **alpha_plls;
+> >>>> +    size_t num_alpha_plls;
+> >>>> +    struct qcom_clk_reg_setting *clk_regs;
+> >>>> +    size_t num_clk_regs;
+> >>>>      bool use_rpm;
+> >>>>  };
+> >>>>
+> >>>>
+> >>>> --
+> >>>> 2.34.1
+> >>>>
+> >>>
+> > 
+> > 
+> > 
 
 -- 
-2.42.0
-
-
+With best wishes
+Dmitry
