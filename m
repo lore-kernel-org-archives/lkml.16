@@ -1,119 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazolkn19011038.outbound.protection.outlook.com [52.103.43.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF1D27CCC6;
-	Mon, 14 Apr 2025 10:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628125; cv=none; b=WiYfe131dNPQy/MiDauVOMTtgn4HO9Ze7ltPzuvwcSTBXiBg38k7PQopKPQ8eOkRVdfpTr4fINv9nc7+wtHilcUkmAba0/v6y05tl1d5OaoNYyNRX6jG2opMvJkHx266PTsfFPdRTx+mSPFMIMnTvFdRjcznz4sBNgshSuxHkaU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628125; c=relaxed/simple;
-	bh=sFL0SY01M0ooEAeGm2+7EY2DjKRjMJosXfbO3upoTZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L3eOBjSOamQFZgfee/6XrKyObv8JWCIvKiQ1sV3S8R0uUEQKdHzXk42YgWHhIPoHg2CmUmG18ftjswf4HoEX2i7ic6aBAEenfNez+m5+X0hWXb140QQ9JfaQsaoHExwlWUKmbav1N3WVA1Zs661lMlRJqly8Di1A1sXMHUQ5+4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCtwJial; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C5727D774;
+	Mon, 14 Apr 2025 10:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744628183; cv=fail; b=MMwKuBSW+kAhac3CCq47Hcn732LzUZwyRZe1p8K2xZDetekNUNRROKPqTX1SOXiZP0FSeZZQ0xYG3vZjZrqQyvFpMcaMVkql2EHPQ40SJkdGkR+5ibA3+VzjL/JOsr0BIZOWrvTvw/8aeeARbB8R8eEF7GMKF8/NeGQgluw3n6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744628183; c=relaxed/simple;
+	bh=PacMVHLy3VNRqqpG239cDaTJgM/56zMo2ncSMRJLu9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=CO/mBPauaS88BfTlcw/dOVeC1YRAPX9MrsO4Oao6sZ1OcaaT0gBIuqL5gAnlr+VS/wPyttkzLojqLOjvIDKisERymzGvZWn8XM/unEVFPyKTKSE067K1tw83Btkebx41iwW0EpM2WXOvFn7PmawyZ1G9GP+n6uIRKGXEDO5oSzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=BptUTXwK; arc=fail smtp.client-ip=52.103.43.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCtwJial"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8850C4CEE5;
-	Mon, 14 Apr 2025 10:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744628125;
-	bh=sFL0SY01M0ooEAeGm2+7EY2DjKRjMJosXfbO3upoTZ8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PCtwJialYxjcGhDjswA24RqBthBGn8Hu88xXZqhpSWtXgeyqCI3IrLJHkhbEGBq/g
-	 N6JplGA0xTImKlX6ldfmqjWbqsHObkpp/9A8E+LYX08WrE7nJzUNZeRA8E5G0JdEKi
-	 DpFOjH6KOAArRIMqWJ1NPIo0jyjsG6ObR0t1RCy796OHBebGCKi5vc7ZB95spmUnOI
-	 cqNEKNXX6vOdG/pmp8ueb9vqMctHGVMC5zjDHsDs/R6Sz51bcHVM0Nx4akZFEwSECV
-	 uiQPpWa7+jClJ+bDTiXJN7KzGALPTHxhkBmFggtO6E3lS5a6NH8ibhihGwrxYIyERQ
-	 ddH8IRUuN20eA==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] f2fs: fix to do sanity check on sit_bitmap_size
-Date: Mon, 14 Apr 2025 18:55:20 +0800
-Message-ID: <20250414105520.729616-1-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="BptUTXwK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m0W8pM3Gqp+n5+4fSi8Y1wTzjQAjXETESZhcoOuWvIchnInHQnBVPHVR8tYc41RVa5utgbYGmwBygl/tSgPbccFR6oVasG9577dYc2r2gY5Yio2uz7XiY/eapyk2vfikl5e42yESEHc/k337fp5hlLJgDYUjdRYj3iJNObdP5HbZnkUjI+qMzMP1EQfF8Rl0hyY5qy1ogXbj5uTD8i5MLb07IQYRn7cxzY+yWbxagEn1CNWJ2lsabQGlMDhtxgLUvAyV8MPTBW/D7VI+pVkJ0VWV9NAXmTbdLEQHocTMBXF17SBsF+kib+/I4QNZr0OLS9lnXYCzZ2buxkkWJ2T1Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zoxi1tatPdJRb6kxphS1Zx5K/5VHNaRYx1a9QYgl6y0=;
+ b=HU/PYpz511f1cCM1HE4OQ3lbqLKcqQhebYqYDt4IEgPNVMbTkYaQidJbdx7xq06VfUB7iD1xVzaR3R4qCDluqvmFyrFarns6dA7EUct32HTniBrorSZDOtbuM3QxObiG9mNVNxns5jaRxLp8v38Ec1jDbB++rFJz19USP3UR5AZJI5blyYEQZPbD4qAWMPAg5g6Jq601+Sljv0xJj4A0qcof/tknA0h67fOhVyvRWsSvF390YycfD4rEd4MW2fK9IdfJnHs2yYkKCrMebv0P6KtHiIS25J1AS2r91g4h1mmU1v4H7wtbNMoqUBxrVPO1Nwqq900EyPOfLOv7/UQKEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zoxi1tatPdJRb6kxphS1Zx5K/5VHNaRYx1a9QYgl6y0=;
+ b=BptUTXwKxs/OUa/KaGxRFfBLviFGy0BtSvYq3UQ8eX67pa9mJbsS2c8jsHWC+cBjCT+LvjECn0iqbEXdPr6OCCGbSOZJY9K6H8Zj7YvjQyn5Bj1JYgz/iaonz0kTH2Kai1n3U95bV8pojwImelaOydKUK2BYAsBPfSaAjj6rUHnis8KzPUTaZKkhCqp3bwFy2PDiZDBwReGEOXjnvL2NNJd9U9vU/lEU/I4AaXGZlDawEzVkIn2pHzbUY6XEQdeqKkw7OeeGBptv/o7lFbSPHwN2T9SaKy9T7FQFug0a19BG5KIfXvIF1Mx1z4M3hdvX0aDsD6n+O+GILib+p9MSwQ==
+Received: from OSZPR01MB8434.jpnprd01.prod.outlook.com (2603:1096:604:183::12)
+ by TY4PR01MB14482.jpnprd01.prod.outlook.com (2603:1096:405:238::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 14 Apr
+ 2025 10:56:11 +0000
+Received: from OSZPR01MB8434.jpnprd01.prod.outlook.com
+ ([fe80::7c3f:73bc:3c62:fe7]) by OSZPR01MB8434.jpnprd01.prod.outlook.com
+ ([fe80::7c3f:73bc:3c62:fe7%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 10:56:11 +0000
+From: Shengyu Qu <wiagn233@outlook.com>
+To: razor@blackwall.org,
+	idosch@nvidia.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	bridge@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shengyu Qu <wiagn233@outlook.com>,
+	Felix Fietkau <nbd@nbd.name>
+Subject: [PATCH net-next v3] net: bridge: locally receive all multicast packets if IFF_ALLMULTI is set
+Date: Mon, 14 Apr 2025 18:56:01 +0800
+Message-ID:
+ <OSZPR01MB8434308370ACAFA90A22980798B32@OSZPR01MB8434.jpnprd01.prod.outlook.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0013.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::12) To OSZPR01MB8434.jpnprd01.prod.outlook.com
+ (2603:1096:604:183::12)
+X-Microsoft-Original-Message-ID: <20250414105601.8083-1-wiagn233@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSZPR01MB8434:EE_|TY4PR01MB14482:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed9acf4e-685b-4c88-638e-08dd7b42f7c9
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|5062599005|8060799006|19110799003|5072599009|15080799006|7092599003|3412199025|440099028|10035399004|26104999006|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?INfcNy6T6DA3DOZimRW/E3KDWjQ+qvj+M+CROdsFM+7N/+Dk/kG3qE81gcPL?=
+ =?us-ascii?Q?tuhKqpLQ3ugtWRX7DfFvSFFIlJCLMXxw0Z+YoB8wmJ0R4+je6JT8QSzFVtpM?=
+ =?us-ascii?Q?swTMzyfje/XE+27r8wZoNv02eowNildcq84HZfobul1NOqBQdCH4yhjHAmeZ?=
+ =?us-ascii?Q?duifkn5BWF/Ys98O5xw4Kmh5ogmbrKt8s7vbcTzJt4qDBKoyWSXfy1JFERJG?=
+ =?us-ascii?Q?q0BVtptHc4JFUMRXZxt63efeMODtxSkdgtUzaEE1O3tkArdBF2A0ESyfxDgj?=
+ =?us-ascii?Q?gaHBKE4s08IUYfmTx4FRrcTJnviMHjx9DUUAb324iad3seUmCL7hXj4HPfgh?=
+ =?us-ascii?Q?ZqR+n9f7nAQVg68LNf9pD4pA9RAWRFekGmpRe2myPz55MD5WZ33XiS9Dk+MY?=
+ =?us-ascii?Q?g2S4RthbwOdCQViVr/xfgCCPj4g/xzpms7HqOqP+VEqDs358bqcKMsucgND/?=
+ =?us-ascii?Q?WhRPAV4YhpIBwDdxutjFcKgYMWQsaP3LbnQZq/iI/nBOVppCp7Nus5oH1bIN?=
+ =?us-ascii?Q?pZVAKnmbEOykKVzM8mKTxexkFjowHiHmS4PVmYDymLvs9kDv81BqraEA0fe+?=
+ =?us-ascii?Q?nqjkXJVkImg8a51p9OAlTHdRu9LhIJOT41UfYHniVRWSTVBD7wK1JUfCMzT8?=
+ =?us-ascii?Q?EBFQLWJUSGIXflH0AXZOJ6i0eVIpLgzJALS0Ppd+dvx9RVjZO1ts/Rzi9tMM?=
+ =?us-ascii?Q?/hmGnZhD6WFYglM3WLBw8v4ZvE0Fn5Gw0jSLdMNc1FC/gcruRDkGNDCTasEA?=
+ =?us-ascii?Q?4bdq3PGcm8/1cuVXCo48cVOGMgOJ5TVkT/h2BAE51MwHaUj2Ff8LO/VlXvMQ?=
+ =?us-ascii?Q?nmAryEc570lhwtWGZU8/rRquElSlrwcAHTta1TY5Rv3TbdEZSW6OedHbjXzi?=
+ =?us-ascii?Q?SVXjbZOHQkvmOkuJ/OHNerY4EQa9f1Dv4thjjWWEsok0qJijIMTU7oVZMv3n?=
+ =?us-ascii?Q?b5p8Xg3UaaZCft6nlZiyG3UuZTaiYMCYyutl6IgA84BPXW0lFRXM4eN2L05L?=
+ =?us-ascii?Q?ZAfof/+zFAOj10bH4KvdZoqL9hv2zYVO78LZTzLGC0gjmtoIDdSgADxP/nK3?=
+ =?us-ascii?Q?bwX3j3gX7ZTmVoseyuF1uJsVQKJceaLjXhxuagDq2b306uG7GexP66xeOIr4?=
+ =?us-ascii?Q?qTPttALJAeDapiEYmn+crqH5Exlf1FQOEU+2acEnk2IXOS5z+O0kfBMAIskS?=
+ =?us-ascii?Q?sMFtkuPQOJdMFLAGMcpI5321cy33lm+bJw2QsCZTLUfVsXbQlTY7YbreDLwo?=
+ =?us-ascii?Q?p2Kddz4HZGMz+y059dLE?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?42rBFRDdHoUVduO3OUcQa7joMibNIBS/oEJJJMA6PIuSl1ZHsKTldrwf/QBv?=
+ =?us-ascii?Q?5cboPtHiOK9fJZoXXGmLPrYGfsOCDMgAPBLuFwj+7jB2EhLiN0a/pK77kjhm?=
+ =?us-ascii?Q?Plq/NpURHyZDmYcR0fFAZ7Cc/KvxEbohtWcPLC0dS5ABi4FEpMw4O+fwcc79?=
+ =?us-ascii?Q?hBtRugPrQ1kCDOuhAsFdgXnjaQ6SfwM9vNQoUIr+LcF/RM5AeqRAoc2cmm0I?=
+ =?us-ascii?Q?DdWG4X+OeRrm6HdyVCydYUkW7AwuN5T86vOe+TKk8pcRxdqqLGGfMAc3ysET?=
+ =?us-ascii?Q?XJxuGKBFZQYj8YwbhrJtlQfhtNi6IKrvd5Ng2RgAS4Q4jUwVQeZw4n8Q8VoH?=
+ =?us-ascii?Q?t3YncS//TuOllCp3bqctqfInFgQ30uNT2CMEJsg9NF6DSPcS65t0ZwgcOWYy?=
+ =?us-ascii?Q?X/j5QtVdrfHb4zYbwSYYWOdjSJpeUaAIJNKHHzoSomTt73262KMk57Hg1MkF?=
+ =?us-ascii?Q?tlvzBcVL2Ka4qVf1L6SH7XHqMMGzdYS2WNxAnMWF3LOMHJmFnm/BWKWmJeVV?=
+ =?us-ascii?Q?dNYD2e5IEqKxL+/hxK9RE7jqGLijdQT2FYP3UAiXax3UoryWxDArsX/hCb09?=
+ =?us-ascii?Q?LIyUFywMsnHW5y7KT688h9bDwWk+84DHPIQ5jYVhMenhtOmc+3atU0CUEaDa?=
+ =?us-ascii?Q?nV0oUY+kzrM4z1e9H/ebwwZHatpaTteCjrqRtqTFk11jKJPnHmlgs+Zswu6C?=
+ =?us-ascii?Q?v0bezXD25ue3RlrqF5Cvm5/KoiTg6rLISgEBswBRVRn9FALd4KuYu0GBIrq0?=
+ =?us-ascii?Q?JyNADeJYCWmmhu9evz00BdZ3ibrt1xUMTiH8CeMV/fjQu33WRlx28wa8nVAX?=
+ =?us-ascii?Q?kRu3oURwGLP7d4Ny+otb8ukcxvbCfKNkymSCH5mh1T5G5V6wZqJ62j9W+uRP?=
+ =?us-ascii?Q?4Iqb/7BC96Ac+ODMOsVwZavsT0678hLlbNzK+Qh3kPlgW41j/KXggfQSjBPO?=
+ =?us-ascii?Q?7Y+vaOkzwjXC4lF4KswJJ7hLRp4YuqE3VdnpyZeDTic29STmIsRbsFYFXSaO?=
+ =?us-ascii?Q?R7P+CbO/lnoYaTsiz4oWpgbrscd3TVRLLOG+g8KgLsF+a9kXHiIlsCSD4deo?=
+ =?us-ascii?Q?wcsjYoGmBqMwmobC5qX+lEMFZTp6jWM9ePkHVk7eNTgd5xkLqa5rZuspui2u?=
+ =?us-ascii?Q?A1ufMFWzIUyaya4vvUnaQJE6AdMszndgiwZwQ0xcrkg1lFoz9X6BVNG3rKoY?=
+ =?us-ascii?Q?s5VQTzKKj37XslUBf/qeulVHyNrp13XIynnFISPtx/xET/78cf6X5/4vSKKV?=
+ =?us-ascii?Q?zHdZZg6zSYk5ViYDhnzbBmmiyS38AKBnLVFtEUwkZr8o2DV7C1AjwJIERGF0?=
+ =?us-ascii?Q?ZmU=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed9acf4e-685b-4c88-638e-08dd7b42f7c9
+X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB8434.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 10:56:11.3783
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4PR01MB14482
 
-w/ below testcase, resize will generate a corrupted image which
-contains inconsistent metadata, so when mounting such image, it
-will trigger kernel panic:
+If multicast snooping is enabled, multicast packets may not always end up
+on the local bridge interface, if the host is not a member of the multicast
+group. Similar to how IFF_PROMISC allows all packets to be received
+locally, let IFF_ALLMULTI allow all multicast packets to be received.
 
-touch img
-truncate -s $((512*1024*1024*1024)) img
-mkfs.f2fs -f img $((256*1024*1024))
-resize.f2fs -s -i img -t $((1024*1024*1024))
-mount img /mnt/f2fs
+OpenWrt uses a user space daemon for DHCPv6/RA/NDP handling, and in relay
+mode it sets the ALLMULTI flag in order to receive all relevant queries on
+the network.
 
-------------[ cut here ]------------
-kernel BUG at fs/f2fs/segment.h:863!
-Oops: invalid opcode: 0000 [#1] SMP PTI
-CPU: 11 UID: 0 PID: 3922 Comm: mount Not tainted 6.15.0-rc1+ #191 PREEMPT(voluntary)
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-RIP: 0010:f2fs_ra_meta_pages+0x47c/0x490
+This works for normal network interfaces and non-snooping bridges, but not
+snooping bridges (unless multicast routing is enabled).
 
-Call Trace:
- f2fs_build_segment_manager+0x11c3/0x2600
- f2fs_fill_super+0xe97/0x2840
- mount_bdev+0xf4/0x140
- legacy_get_tree+0x2b/0x50
- vfs_get_tree+0x29/0xd0
- path_mount+0x487/0xaf0
- __x64_sys_mount+0x116/0x150
- do_syscall_64+0x82/0x190
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7fdbfde1bcfe
-
-The reaseon is:
-
-sit_i->bitmap_size is 192, so size of sit bitmap is 192*8=1536, at maximum
-there are 1536 sit blocks, however MAIN_SEGS is 261893, so that sit_blk_cnt
-is 4762, build_sit_entries() -> current_sit_addr() tries to access
-out-of-boundary in sit_bitmap at offset from [1536, 4762), once sit_bitmap
-and sit_bitmap_mirror is not the same, it will trigger f2fs_bug_on().
-
-Let's add sanity check in f2fs_sanity_check_ckpt() to avoid panic.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Chao Yu <chao@kernel.org>
+Reported-by: Felix Fietkau <nbd@nbd.name>
+Closes:https://github.com/openwrt/openwrt/issues/15857#issuecomment-2662851243
+Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
 ---
- fs/f2fs/super.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes since v1:
+ - Move to net-next
+ - Changed code according to Nikolay's advice
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index eb1275616d8c..8abfbee13204 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3716,6 +3716,7 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
- 	block_t user_block_count, valid_user_blocks;
- 	block_t avail_node_count, valid_node_count;
- 	unsigned int nat_blocks, nat_bits_bytes, nat_bits_blocks;
-+	unsigned int sit_blk_cnt;
- 	int i, j;
- 
- 	total = le32_to_cpu(raw_super->segment_count);
-@@ -3827,6 +3828,13 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
- 		return 1;
- 	}
- 
-+	sit_blk_cnt = DIV_ROUND_UP(main_segs, SIT_ENTRY_PER_BLOCK);
-+	if (sit_bitmap_size * 8 < sit_blk_cnt) {
-+		f2fs_err(sbi, "Wrong bitmap size: sit: %u, sit_blk_cnt:%u",
-+			 sit_bitmap_size, sit_blk_cnt);
-+		return 1;
-+	}
-+
- 	cp_pack_start_sum = __start_sum_addr(sbi);
- 	cp_payload = __cp_payload(sbi);
- 	if (cp_pack_start_sum < cp_payload + 1 ||
+Changes since v2:
+ - Fix alignment
+ - Remove redundant parenthesis
+ - Add more infomation in commit message
+---
+ net/bridge/br_input.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
+index 232133a0fd21..5f6ac9bf1527 100644
+--- a/net/bridge/br_input.c
++++ b/net/bridge/br_input.c
+@@ -189,7 +189,8 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+ 		if ((mdst || BR_INPUT_SKB_CB_MROUTERS_ONLY(skb)) &&
+ 		    br_multicast_querier_exists(brmctx, eth_hdr(skb), mdst)) {
+ 			if ((mdst && mdst->host_joined) ||
+-			    br_multicast_is_router(brmctx, skb)) {
++			    br_multicast_is_router(brmctx, skb) ||
++			    br->dev->flags & IFF_ALLMULTI) {
+ 				local_rcv = true;
+ 				DEV_STATS_INC(br->dev, multicast);
+ 			}
 -- 
-2.49.0
+2.43.0
 
