@@ -1,104 +1,132 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8101247299;
-	Mon, 14 Apr 2025 15:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFFB192D8A
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744645114; cv=none; b=atg/6bmF9/1/zoJYqnvdxI8OOfyAeFB0ocgrpEmd8uNl+36P6ZBWDN4n8ACsStfbhyZ0+hBf5NomI9PbJHPAgjbv8aF8xQZy4UxFO9jrGPsmCQVLfhJsPvFvn9JqaaQwpZmhdLBEvatRAVvH2Dkuf2DgJC5bjXcHRK1UbkRQRHs=
+	t=1744645121; cv=none; b=afu26aejAiRZ37/OvwLoV/qzdaUikLEYYBVnUli63XEtMH+9iCpgAsPQKNGLPZEvoPcZmpQu5v2rtP4SZkrxN8qOMpK00kinh6NJvh+no43FmoX3Dp8xeIuK21K2uxPYs7AQz/RqrBNw+/H3DwO3a/OtercFBO+Gk0uEL4eHRjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744645114; c=relaxed/simple;
-	bh=RuecTKg0iaNM2FTHixYTxLi4zj7VKfj4amF92wuExCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rz9PZr8/38+cuqTWrkCpNKuxniPpe1V87TI00NZPs/IfU1A2vEockmDe6mhZN0t8/26WynqITgMLaqpJ/lxMdRLZjHIQ7VKRJBumzLORyhe6Q9RX0PNizvkUKM56t8NccJM5FOsdcKrfvcDe9T6UCP8wqyv5aR5Hf3Fk4oCe5DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mOkodUOk; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744645121; c=relaxed/simple;
+	bh=QQWrFCU0lxYwyZvkufIrKpj9QZGeF1jQQqxeadFVPSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PhHhQUi1YfMz7EM5zziq2XKV75wjZ+pVH5WTTrjDGgxsZJjvlZuW5TIXX7Rlbqje9mZew5+TyQ5RTLQQ9+F6pPQZpJ15BQLJ9bWEnuninlpSU0zkBMQsr1lqlogGO5QjtHMFH1No6F8kDzTsvnWAwXCVHi4oSX4bt/wh/xjXK7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sargun.me; spf=pass smtp.mailfrom=sargun.me; dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b=HHJtgGjE; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sargun.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sargun.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOkodUOk"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b07698318ebso122644a12.2;
-        Mon, 14 Apr 2025 08:38:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="HHJtgGjE"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e707fba5a16so229296276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744645112; x=1745249912; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hTVE72PCT4HpQ9Apgj1j1o70imaRSlg41FJYH8UsUw=;
-        b=mOkodUOkYFh91YD9qDudqktn+oBiGjWvUybCk0XRA/WWQ4Ai33PY/WLuWn4AKOVQmO
-         ua2Hzy8PEV2IRs9qDS2f1g15+ee3N7ZfKmSDsqKRdnrCpLtFaqxaP5KZgjGD3JUJzNX0
-         RDGd8wEQvUCe8KWfoFDG0OvniPeqokiWDNCC0eyYjilVmy3RTLXEkpdZoofWFVyQ29Qk
-         ZnGVUjMysMruvXtHr5Qb07oBZ+ZToZ7LX9qOuf2o3f+l+WBmKrXYN9+4b0XEExWxt5As
-         wU8ayOoEUORnzCXO7+rNCQI8ME2H/9u8J3zS/y9BsGh5X421TD7FKanhCqet3CCMbZdn
-         /sww==
+        d=sargun.me; s=google; t=1744645118; x=1745249918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cg7wm1gQKxPnYT5N6cnKLlagimUWPqnH4hJORex0FBs=;
+        b=HHJtgGjEv06ipS7G0Ge46lVbecHEBRJSmXdDLuOmcl0FpN/pv+Jt2h+bBmYx/vB3fp
+         PtEXqMA78ovGjreYYK9OtDhRweY+eAX+wmRJ1o+UPBRnStwQQWa+kGnnKP0jRYgp1cij
+         DAyqzayBxZryvTfZX2hrp0/jZfUGVGWyEm3Ys=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744645112; x=1745249912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7hTVE72PCT4HpQ9Apgj1j1o70imaRSlg41FJYH8UsUw=;
-        b=LLrXOYx8N0by2DCNQoeGShgw9KOdIDUmPHpzFLQrjOKth0Aji+Nstai3Kergsy/5Qd
-         IO8Ndel+4fikDJar2FifPXzhH/itPteKoBTHm9vmH5SuOCqOA3C0zGmXks4UsHQKVnG0
-         oioc674dtBS7b4VaqAaMJV1ljfW1vEJ8rucIECKO3/IrrkEwYUV/ly3EhtG72afjLJUw
-         ZA1nrEETGa7m7njzWMT5TSLjO/dAP/PrKsDMldMlJoVBLfz7YCIQBjxGF9UpWbr93pYF
-         ZaJFCilEYQfm3uT112Ncqd4NhD2UP2Lv8cEeHKXqOSS68WzrAOD7z+2/HONdqTlnHN84
-         SoTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9iTC6g9fJdhgHf5Mos0SEnyR2D3SI9wZSFjwn2OsHR5jRrP2hWV+S6ViYcWYbF+2KUOqu+WbKiBiOBTiU@vger.kernel.org, AJvYcCWvhKlJTGKfoVF9mRBHFODW8KBIbTPH3MuUADt5W8+TzZ9SOyEDotar52fTjNRUvrUb3NLjXJN7J+k+@vger.kernel.org, AJvYcCWzvFfAsmHeFYn5pkdRpaje2QqTVa3V07CkQ5YcLRsB8mMabCsy0y7A5rlj5rPgEP5dhZLjbuwg857TGRFtlt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkQsR2vNcHgL2Bjfa8bvKE21BjR05TRx1lwTHL9gZpB0Rq9e50
-	fAuNePaafKDX+gEV53V+HPw03k+Youq/M10oILdd8lHwOjWwhWtUDakha6emgN3tgUloSSkw/Xz
-	CCXzMmYz3zlQQ91gsoV0qz7ZnDJA=
-X-Gm-Gg: ASbGncsOH9qmggji9+k+26Y8dk19a7fVvY6G3zV0yVCmoKDaITf20mrk095b8zoEJpa
-	XiolzHgyXwU3xzd0fRpPAxyRyWTNFMuWvXvfKL4/7oeXFN7lqOpV1/2Ciia3d2mLeDTxEvGTEp0
-	eFSsdZY8Fgf6SrYXLh7lqAkg==
-X-Google-Smtp-Source: AGHT+IEl7wHf0Sakgfm/WJeSfZvJ7q2i4J1DoJtq8lyP7HES/L27EXmyf/TNfYuKtRGxT9VdHhTRtMrGWU2WyCxoBIg=
-X-Received: by 2002:a17:90b:1c8c:b0:306:e6ec:dc82 with SMTP id
- 98e67ed59e1d1-3084e76898dmr133828a91.6.1744645111895; Mon, 14 Apr 2025
- 08:38:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744645118; x=1745249918;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cg7wm1gQKxPnYT5N6cnKLlagimUWPqnH4hJORex0FBs=;
+        b=wAyWbOdcWZGbfeie2rWhWQ/kp/E0tRgC7fMOxdk8a2pAUWtrBI09iSHFOAdS4rKSv4
+         hrEtgoDQhRTwP/3e+9UeVDSkgWExxtetwh4yvcZLqO6eAsQbuYWx8OzK/U3emfFLr16d
+         FV2seBDQBIS2vEirL94nXJzQTFFovqpBU3RTkxhLF4OoP9P57wvhixC+xQ52LyLQyzBF
+         GtsbansVHjdL960R2gpPEVqd1CiKhcJ2pLZMrP/ckPgK7zP5rdMHbqU3vqcVZsDCZm8S
+         e/wSdFT8b5sUJoeq228qNRzkjgqbfNrAHe/I4YFwz8S8jMNQhBTcx5tk5gvbP0m+Flcq
+         PMJQ==
+X-Gm-Message-State: AOJu0Yzmwf8toeOBRP58MvcK/8N1ruD1dhqPk7kJeTpnoTdH3C4p3pLt
+	WANwEoMBlk5oDNLGblh1DEtBsL9Ymfkspz3I6gilSKgybmyXc++2DqbStSBljy+zSdGCBVVhi+Y
+	x0m8=
+X-Gm-Gg: ASbGnctXXzhoZyFTg6lf7IUBY+XVXlMug3yaipAAqf3Zz81xeZ3Nw/IAnAYLSYTzvf6
+	2GgPi2P2I+7a9/3UlygGivfMN9MmqJdzBBD3bx+bzwQ0rtTctrxdP5s4/jkkRt4e29y9+zv5HUD
+	oW64ztiuN4+oj3UlnXwkVrNWCD+9qSxtvIC1joD7qhp2y0YVBwOwTDvB6igZgLfUHwvZNaNDAzz
+	2hm+M84jWw0AuyVKp4MQFVrqvXa6+CiFubpchJe6ACeFKxU2/C0JKjT3EQWaM9y+PreDilAXLuZ
+	jRRW6yRQdIPz0v7xGB5NkVPhPtrO7w==
+X-Google-Smtp-Source: AGHT+IFXaJHA4jn4texV8xgFTA2mT/ZVZHNvt7z4f2KvUDw2pLx36QdW+AE9X7ghaoCnIgTjMYyeMA==
+X-Received: by 2002:a05:690c:d94:b0:6f5:be28:632c with SMTP id 00721157ae682-705599965b5mr95917727b3.2.1744645117480;
+        Mon, 14 Apr 2025 08:38:37 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:8::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7053e11d349sm31264617b3.43.2025.04.14.08.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 08:38:36 -0700 (PDT)
+From: Sargun Dhillon <sargun@sargun.me>
+To: linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org
+Cc: Sargun Dhillon <sargun@sargun.me>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: [PATCH v2] trace, RAS: Use __print_symbolic helper for entry severity for aer_events
+Date: Mon, 14 Apr 2025 08:38:34 -0700
+Message-ID: <20250414153835.947207-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326171411.590681-1-remo@buenzli.dev> <20250414152630.1691179-1-remo@buenzli.dev>
-In-Reply-To: <20250414152630.1691179-1-remo@buenzli.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 14 Apr 2025 17:38:18 +0200
-X-Gm-Features: ATxdqUHT3bhfx4obPIev5V4LNaD5n_eUigTkiTFuP1PQG7JIim9RVDEyLqHrD9g
-Message-ID: <CANiq72mJubnGyqSk3sqKVa7g9HvnJvmRg=gJ2kaBtbMMVWWC8g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] More Rust bindings for device property reads
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 5:26=E2=80=AFPM Remo Senekowitsch <remo@buenzli.dev=
-> wrote:
->
-> changes in v2:
+The chained ternary conditional operator in the perf event format for
+ras:aer_event was causing a misrepresentation of the severity of the event
+when used with "perf script". Rather than building our own hand-rolled
+formatting, just use the __print_symbolic helper to format it.
 
-If possible (no need to resend, it is just a suggestion), please
-submit new versions (especially multi-patch ones) in a new thread,
-otherwise in some clients (including lore.kernel.org) it gets harder
-to read.
+Specifically, all corrected errors were being formatted as non-fatal,
+uncorrected errors, as shown below with the BAD_TLP errors, which is
+correctable. This is due to a bug in libtraceevent, where chained
+ternary conditions are not parsed correctly.
 
-> Link: https://www.kernel.org/doc/html/latest/process/submitting-patches.h=
-tml#the-canonical-patch-format [2]
+The before / after are as follows (and also tested to make sure
+uncorrectable events) still show up as uncorrectable.
 
-By the way, since I am here: to link to docs, nowadays there is
-docs.kernel.org which is nicer/shorter:
+aer-inject was used with the following AER event injection script:
+AER
+PCI_ID 00:05.0
+COR_STATUS BAD_TLP
+HEADER_LOG 0 1 2 3
 
-    https://docs.kernel.org/process/submitting-patches.html#the-canonical-p=
-atch-format
+dmesg (unchanged between runs):
+pcieport 0000:00:05.0: aer_inject: Injecting errors 00000040/00000000 into device 0000:00:05.0
+pcieport 0000:00:05.0: AER: Correctable error message received from 0000:00:05.0
+pcieport 0000:00:05.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+pcieport 0000:00:05.0:   device [1b36:000c] error status/mask=00000040/0000e000
+pcieport 0000:00:05.0:    [ 6] BadTLP
 
-I hope that helps!
+Before:
+virtme-ng:/# perf script |cat
+   irq/24-aerdrv     424 [002]   392.240255:          ras:aer_event: 0000:00:05.0 PCIe Bus Error: severity=Uncorrected, non-fatal, Bad TLP, TLP Header=Not available
 
-Cheers,
-Miguel
+After:
+   irq/24-aerdrv     424 [002]    29.198383:          ras:aer_event: 0000:00:05.0 PCIe Bus Error: severity=Corrected, Bad TLP, TLP Header=Not available
+
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+---
+ include/ras/ras_event.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+index e5f7ee0864e7..9312007096d7 100644
+--- a/include/ras/ras_event.h
++++ b/include/ras/ras_event.h
+@@ -327,9 +327,10 @@ TRACE_EVENT(aer_event,
+ 
+ 	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+ 		__get_str(dev_name),
+-		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+-			__entry->severity == AER_FATAL ?
+-			"Fatal" : "Uncorrected, non-fatal",
++		__print_symbolic(__entry->severity,
++				 {AER_NONFATAL, "Uncorrected, non-fatal"},
++				 {AER_FATAL, "Fatal"},
++				 {AER_CORRECTABLE, "Corrected"}),
+ 		__entry->severity == AER_CORRECTABLE ?
+ 		__print_flags(__entry->status, "|", aer_correctable_errors) :
+ 		__print_flags(__entry->status, "|", aer_uncorrectable_errors),
+-- 
+2.47.1
+
