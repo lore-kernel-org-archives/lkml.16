@@ -1,103 +1,296 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC80718AE2;
-	Mon, 14 Apr 2025 16:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09A519F130;
+	Mon, 14 Apr 2025 16:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649678; cv=none; b=DiigNJcO7Psh/UFk/7fNBfBwrkVyheKPMQQ8u9OzFxVvFv8ec6SsWWHhreao5gbxK6nskZFElbTel+Il7+GYj64kMIYMYyflH3NUyzkbReVjvGGfZORF3Lau29FGQ1SFAQO6dpLiAfolNUOtzGCsTeXHMPcDKt8df8w/jKa2bKk=
+	t=1744649706; cv=none; b=Ai3P225ksUePnJIWI1kXQMIo8CaLG0WOs5UpcBs3ole3prqXWgOTwoyL6m7Kykt6NnyjO0tZi4RWXr0eXXCUa7SXjy8pId4AFX6JuRMrh3OxbMywd0TtSnIxrbYzOiKowUhXPFdqmDHHRtQ7jlX9gZYb9cQ+HZKJPw11TvgU30A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649678; c=relaxed/simple;
-	bh=TlLo2V+P23M04ibXVhAtKB8eN7wVxHONQhMLi8g+Wy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNWK4vYXoQqIixPbWPgWNOlBkr9hzy8oy3KPCcReDtbIpDbacF5Zdyg6bIPPRdwX4lWlS9P6qVQ/ecIFlZQnnHOwZxNZjpca3kY/0gmv2RPG42W7SU3NMCLu2CJYgl7AfDPlyLwbUuIDf1SR8Mh3A2jjPLFqTqE+lHBWUtZklMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AbtTEHrU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744649706; c=relaxed/simple;
+	bh=ZY843y8r7FkKDxZ3LXY9PDcDmWSaRKZYXZmCMZjQnd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LgY+QBbdKsPgNV3HV3wytgBXeOFJ0xTRmPCsfmk5HoqnEJket36kQBcW6Tya4JV/r3K8TLdwMQPtPtfcXb+1zYM1+2BoJVu21i6nb3NmZCVKrzBAH+SKVTnN+zA1MJ2N7jEHnQeB3i/+r/j2BWPEpACDi55ejrxNxvKCWzAOP7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZIG4agDJ; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AbtTEHrU"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53EGrj2W2279976
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 14 Apr 2025 09:53:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53EGrj2W2279976
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744649627;
-	bh=gkSmYGpPUA9X0Hu0/bWpEiCAc5nTBVyLlBjMRADvf74=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AbtTEHrU/0IaPssbSGU6JRvEhFoPXzx/va2KvHsnGqM9yJ28JMJLf9euQBD8ph5dt
-	 Y+mN0UwSrcOVyKCyP+UDmXaUYUUm09PiOSC4WsJQKlCO8GkluEyYENOYxvHYsLyjq5
-	 SfNekNjTZ66P032mN3SBSZKukK8/aNMSFMewYcu9FQ8j3MBmG68guM2RSPJ42kav/N
-	 VX0tSqTTFm3e/M8H8fJIg+uguuFAeueMUOOhbBPxR29v3yQt3rbKPEVLhQ7D2RMu1I
-	 s/t92x0bROLXGnteifoY6LPpoX1uwGEiKC7NS2RDFHFG6imiwc6F2R0ubbLRCRIzSM
-	 P1PMqb7b+Iw0w==
-Message-ID: <299817fc-0940-432c-bfbb-a02781a48c9f@zytor.com>
-Date: Mon, 14 Apr 2025 09:53:45 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZIG4agDJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4D11F43AF0;
+	Mon, 14 Apr 2025 16:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744649701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=42t/2/QY6y41gKecCEXacZfooM3QKM6eiym303yETDg=;
+	b=ZIG4agDJ3kRw+jCcVsyRWc4rHtC2Ir0hItngUSWFtYx17MR5Sw2S3Z2dajWQ/WveU3Lpht
+	53gm/fnA6bhDXKT3Dq0/v3dIyguGDkpe3zrZp4MGNb2SbIayZ03efoyf7rlsa7jPYIzuMU
+	9/pn5772cl9l8I7jXz2V2n2RNrdZmDBBvOTkztCxneTOu4BmCIZUnpFMSd8W7Tfo9ruv4I
+	xygtHeBcgvlzoZbg9jkOFO0HhdqZMyUIVnTHRR0jQQtTdjS9050ymYJLHWYXYbjJyBgXdG
+	oNkHgeQXeeHFPOgdzOEE/qPWievOLWPu083EIaC5zHuuNEEXQAHk7QFAoyt5zA==
+Date: Mon, 14 Apr 2025 18:54:58 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Minas Harutyunyan <hminas@synopsys.com>, linux-usb@vger.kernel.org,
+ Kever Yang <kever.yang@rock-chips.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, =?UTF-8?B?SGVydsOp?= Codina
+ <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Stefan Wahren <wahrenst@gmx.net>, Fabrice
+ Gasnier <fabrice.gasnier@foss.st.com>
+Subject: DWC2 gadget: unexpected device reenumeration on Rockchip RK3308
+Message-ID: <20250414185458.7767aabc@booty>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/19] KVM: VMX: Initialize VM entry/exit FRED controls
- in vmcs_config
-To: Chao Gao <chao.gao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
-        xin3.li@intel.com
-References: <20250328171205.2029296-1-xin@zytor.com>
- <20250328171205.2029296-3-xin@zytor.com> <Z/y8DamYKsutPHvo@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <Z/y8DamYKsutPHvo@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddutdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhoofggtgfgsehtqhertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeeljedthfeggefgteejvdeugefgtdegieegudduveekjefhhfekgeevfedtjeefnecuffhomhgrihhnpehrrggugigrrdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehhmhhinhgrshesshihnhhophhshihsrdgtohhmpdhrtghpthhtoheplhhinhhugidquhhssgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhin
+ hhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeifrghhrhgvnhhsthesghhmgidrnhgvthdprhgtphhtthhopehfrggsrhhitggvrdhgrghsnhhivghrsehfohhsshdrshhtrdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On 4/14/2025 12:41 AM, Chao Gao wrote:
->> +		{ VM_ENTRY_LOAD_IA32_FRED,		VM_EXIT_ACTIVATE_SECONDARY_CONTROLS },
-> This line should be removed. It enforces that "Activate secondary controls"
-> is supported iff FRED is supported, which isn't true.
-> 
-> Bit 3 of 2nd VM-exit controls is "Prematurely busy shadow stack". Some CPUs
-> support it, but not FRED.
+Hello Minas, Kever, linux-usb, recent dwc2 driver contributors,
 
-Sigh, 2nd time on the same shit.
+I am facing an unexpected behavior (apparently a bug) with a dwc2
+controller in gadget mode, using a mainline kernel: the gadget device is
+enumerated normally but then disappears and gets re-enumerated about 6
+seconds after the initial enumeration, for no apparent reason. Here are
+the details.
+
+Testing setup:
+
+SoC:             Rockchip RK3308
+Board:           Rock Pi S [1]
+USB controller:  rockchip,rk3308-usb, snps,dwc2 [2]
+Controller mode: device only (dr_mode =3D "peripheral") [3]
+Tested kernels:
+ - v6.15-rc2
+ - v6.14.1
+ - v6.12.20
+ - v6.6.87
+ - v6.1.134
+ - v5.15.180
+Device tree:     upstream Rock Pi S dts [4]
+Kernel config:   ARM64 defconfig
+
+Hardware setup: USB A-C cable connected from PC A port to the C
+connector on the Rock Pi S board. This cable provides board power as
+well as the connection between the host and the gadget.
+
+Behavior:
+ 1. boot board normally
+ 2. optionally wait some time
+ 3. run script to start a CDC serial gadget [5]
+ 4. after about 0.6 seconds the ttyGS0 serial device is present and
+    working, and so is ttyACM0 on the host: so far all good
+ 5. after about 6 seconds the dwc2 controller receives some
+    interrupts and starts a new enumeration sequence
+
+This is what the kernel logs:
+
+[   20.105688] dwc2 ff400000.usb: bound driver configfs-gadget.g1
+[   20.285431] dwc2 ff400000.usb: new device is high-speed
+[   20.373455] dwc2 ff400000.usb: new device is high-speed
+[   20.426496] dwc2 ff400000.usb: new address 28
+[   26.688388] dwc2 ff400000.usb: new device is high-speed
+[   26.775363] dwc2 ff400000.usb: new device is high-speed
+[   26.836880] dwc2 ff400000.usb: new address 29
+
+Here is a side-by-side log of host and device, synced manually using
+a video capture (sorry about the long lines, can't do without):
+
+    *** HOST ***                                                           =
+                           *** DEVICE ***
+                                                                           =
+                      <<< Last line of the script: 'echo ff400000.usb > UDC=
+' >>>
+                                                                           =
+                      [   14.281350] dwc2 ff400000.usb: bound driver config=
+fs-gadget.g1
+                                                                           =
+                      [   14.482332] dwc2 ff400000.usb: new device is high-=
+speed
+[108204.084049] usb 3-2: new high-speed USB device number 39 using xhci_hcd
+                                                                           =
+                      [   14.675692] dwc2 ff400000.usb: new device is high-=
+speed
+[108204.274639] usb 3-2: New USB device found, idVendor=3D1209, idProduct=
+=3D0001, bcdDevice=3D 1.00    [   14.737395] dwc2 ff400000.usb: new address=
+ 44
+[108204.274652] usb 3-2: New USB device strings: Mfr=3D1, Product=3D2, Seri=
+alNumber=3D3
+[108204.274656] usb 3-2: Product: ...
+[108204.274659] usb 3-2: Manufacturer: ...
+[108204.274662] usb 3-2: SerialNumber: 12345678
+[108204.282555] cdc_acm 3-2:1.0: ttyACM0: USB ACM device
+                                                            (...nothing hap=
+pens for about 6 seconds...)
+[108209.972180] usb 3-2: USB disconnect, device number 39
+                                                                           =
+                      [   20.766950] dwc2 ff400000.usb: new device is high-=
+speed
+[108210.339297] usb 3-2: new high-speed USB device number 40 using xhci_hcd
+                                                                           =
+                      [   20.960375] dwc2 ff400000.usb: new device is high-=
+speed
+[108210.739738] usb 3-2: New USB device found, idVendor=3D1209, idProduct=
+=3D0001, bcdDevice=3D 1.00    [   21.200670] dwc2 ff400000.usb: new address=
+ 45
+[108210.739750] usb 3-2: New USB device strings: Mfr=3D1, Product=3D2, Seri=
+alNumber=3D3
+[108210.739753] usb 3-2: Product: ...
+[108210.739756] usb 3-2: Manufacturer: ...
+[108210.739758] usb 3-2: SerialNumber: 12345678
+[108210.747084] cdc_acm 3-2:1.0: ttyACM0: USB ACM device
+
+Note: the device address is different on the host and the target. Is
+this expected?
+
+In the driver there are 2 interrupt handlers involved:
+ - dwc2_handle_common_intr in core_intr.c for the common events
+ - dwc2_hsotg_irq in gadget.c for gadget events
+
+They share the same interrupt number, which AFAICU is because they
+actually read different bits from the same GINTSTS register.
+
+I enabled DEBUG in the dwc2 driver and captured the initial events
+logged after the ~6 seconds pause, i.e. where the 2nd enumeration
+starts. Here they are with some annotations:
+
+ 1. first interrupt after the ~6 s break:
+    - dwc2_handle_common_intr finds no bits high
+    - dwc2_hsotg_irq finds one (early suspend bit):
+       [   46.203094] dwc2 ff400000.usb: dwc2_hsotg_irq: 04008428 00000400 =
+(d88c3cc4) retry 8
+       [   46.204060] dwc2 ff400000.usb: GINTSTS_ErlySusp
+
+ 2. second interrupt
+    - dwc2_handle_common_intr finds one bits high (suspend):
+       [   46.206807] dwc2 ff400000.usb: USB SUSPEND
+       [   46.206824] dwc2 ff400000.usb: dwc2_handle_usb_suspend_intr: DSTS=
+=3D0x502a01
+       [   46.206842] dwc2 ff400000.usb: DSTS.Suspend Status=3D1 HWCFG4.Pow=
+er Optimize=3D1 HWCFG4.Hibernation=3D0
+       [   46.206872] dwc2 ff400000.usb: dwc2_hsotg_irq: 04008028 00000000 =
+(d88c3cc4) retry 8     =20
+    - dwc2_hsotg_irq finds no bits high
+
+ 3. third interrupt
+    - dwc2_handle_common_intr finds no bits high
+    - dwc2_hsotg_irq finds two (reset detected + USB reset):
+       [   46.437109] dwc2 ff400000.usb: dwc2_hsotg_irq: 04809028 00801000 =
+(d88c3cc4) retry 8
+       [   46.437607] dwc2 ff400000.usb: dwc2_hsotg_irq: USBRstDet
+       [   46.437630] dwc2 ff400000.usb: dwc2_hsotg_irq: USBRst
+       [   46.437649] dwc2 ff400000.usb: GNPTXSTS=3D00080010
+       [   46.437673] dwc2 ff400000.usb: complete: ep 00000000dab859c8 ep0,=
+ req 000000009cb97255, -108 =3D> 00000000acdb2ee9
+       [   46.437719] dwc2 ff400000.usb: dwc2_hsotg_complete_setup: failed =
+-108
+       [   46.437765] dwc2 ff400000.usb: dwc2_hsotg_ep_disable(ep 00000000c=
+f8cf06f)
+       [   46.437790] dwc2 ff400000.usb: dwc2_hsotg_ep_disable: DxEPCTL=3D0=
+x08080200
+       ...
+
+=46rom now on the log appears as a normal enumeration process.
+
+I'm stuck at a dead end, trying to understand what may be triggering the
+second enumeration.
+
+Some more facts:
+
+ * the 2nd enumeration happens always
+ * there is never a 3rd enumeration
+ * the ~6 seconds delay is always between 5 and 6.5 seconds
+ * no relevant kernel activity is logged during the 6 seconds, except
+   for some OPP changes; disabling CONFIG_CPU_IDLE and CONFIG_CPU_FREQ
+   the OPP changes disappear but USB behaves like before
+ * happens (with same delay) if after the 1st enumeration the USB
+   serial is opened and kept in use
+ * happens even if using a different device class (tried 0x8, 0x2)
+ * happens even using g_mass_storage or g_zero instead of libcomposite
+   (but with g_zero it happens when the g_zero module is loaded,
+   without any configfs configuration)
+ * tried different cables, no change
+ * there is no evidence of power glitches
+ * happens also on a custom hardware which is self-powered
+ * happens with different hosts: two different PCs, one running Linux
+   and one running Windows
+ * to be double checked: does not happen if the host is an Android phone
+   (but I haven't gone into the details of what happens with that setup)
+
+So I'm looking for any hints or directions for further investigation.
+Any input would be very appreciated.
+
+Thanks in advance!
+
+Luca
+
+[1] https://wiki.radxa.com/RockpiS
+[2]
+https://elixir.bootlin.com/linux/v6.13.7/source/arch/arm64/boot/dts/rockchi=
+p/rk3308.dtsi#L696-L710
+[3]
+https://elixir.bootlin.com/linux/v6.13.7/source/arch/arm64/boot/dts/rockchi=
+p/rk3308-rock-pi-s.dts#L383=20
+[4]
+https://elixir.bootlin.com/linux/v6.13.7/source/arch/arm64/boot/dts/rockchi=
+p/rk3308-rock-pi-s.dts
+
+[5] Script used to configure the gadget serial:
+
+------------------------8<------------------------
+
+#!/bin/sh
+
+set -eu
+
+modprobe libcomposite
+
+mount -t configfs none /sys/kernel/config
+
+mkdir -p "/sys/kernel/config/usb_gadget/g1"
+cd "/sys/kernel/config/usb_gadget/g1"
+
+echo 0x0200 > bcdUSB
+echo 0x0100 > bcdDevice
+echo 0x1209 > idVendor
+echo 0x0001 > idProduct
+echo 0x02   > bDeviceClass=20
+echo 0x00   > bDeviceSubClass=20
+echo 0x00   > bDeviceProtocol=20
+
+mkdir -p strings/0x409
+echo 12345678 > strings/0x409/serialnumber
+echo "ACME"   > strings/0x409/manufacturer
+echo "foobar" > strings/0x409/product
+
+# create the configuration
+mkdir -p configs/c.1
+mkdir -p configs/c.1/strings/0x409
+echo "foobar Config" > configs/c.1/strings/0x409/configuration
+echo 500 > configs/c.1/MaxPower
+
+# create the function
+mkdir functions/acm.0
+
+# associate the function with the configuration
+ln -s functions/acm.0 configs/c.1
+
+# enable the gadget using rock pi s UDC controller name (from /sys/class/ud=
+c/)
+echo ff400000.usb > UDC
+
+------------------------8<------------------------
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
