@@ -1,203 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1561A28D;
-	Mon, 14 Apr 2025 12:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35E529CB47
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634909; cv=none; b=ZoitksxqSXHCAW+XGAmMgZl6tRoRx3nUjff6mtfsTbx8F+fz9Gw4gz6iU6rLwcv3BdtLRbgPbwe2Be/tHebdXMkQAIvrHtSoGdghM9i04f6Qc6nEcNE6R720psgpdxY9wueJtTt5sMqpg+VHSOiZBbp76JqhxowcBiZE0ZnvKjw=
+	t=1744634945; cv=none; b=rZqwrkH6egIYqAZonnUiWviNd9yuHdjuF1LE/EVsR3QH8OeluH+ERfGrk996hMSdZdvOYlmsBPpaDTTiIb79PMKX2TGt4Asu0VAfXCBN4vctqSItQbxIBdR43BSlo3THhbr2A65EGbSBqO0wvQcQb0w9kKzHM0vA3/cRA2IsTt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634909; c=relaxed/simple;
-	bh=5RzIFJOiTbN0vX462+6AoJyYWW3P/YzuGGmYLNmznIs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U/12Fd4K/hdQS7k1e2TwRC6tNtix+RG24Fr+/JLgvoztjwoz2CM1P87jwulMkeRGATP50CPzGVOdgZV3fAuV5dwJqdbhDauhcV+4xOtrchWHBi/vsMuVEpI7N9YtXzylxeyr04VoH9U6NdLv6gvalH3GT/YRO2EGiYew2eBDXdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afVN0bFU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744634945; c=relaxed/simple;
+	bh=pgTXZ7T0kREJFhqQfhjzGMWPlR9y7pVF4ppbZuRjtYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f7sii07ezptedrFiECipue9YAjRmLux3Gjx0F+Mu5kJqJi7jkFoWg8wGXa0AkXg6SPo3NjCbRpGxuomH5j0WLys9kyVxK3yJMMKbW/zpxzK4xutBkGp7ocFBfq7vE5LJdH0URqC9+ku4Uc30YtmshHoGzlsImh8j19pOVjm49ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hH0gb+8Y; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afVN0bFU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1603C4CEE2;
-	Mon, 14 Apr 2025 12:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744634908;
-	bh=5RzIFJOiTbN0vX462+6AoJyYWW3P/YzuGGmYLNmznIs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=afVN0bFU9Zb+3grQfOLGhD9Ol+1maQWMmnpbyABr8RjS1k1Pyl85OFI9js7C1BJwg
-	 UJv+v4+OwLj2+dJgsSwSe6NLJgsg2TmFng8yp3ZUqDfUhv7MUtH3mKWSTiQJ6yyZYq
-	 T1jyMWwfw15AWLTUaeWrb7Bnhg3qTzrX+ESvLXZCvUa/r8HuvpLXemBqKmO8FqsMox
-	 8SyAiLZeMabyBD1iqVtCSLxH0WYrvHNynk1fA59EYYmvr+Hf2P654M3Qd5yoWks3ny
-	 LfrYx4GrBphwDLpzbkGtjn3xmMG183v8o8sT1Evyb6HFrMFwXYWJjSvnMG9BEyqQg/
-	 /B18nvyGa4WNA==
-Message-ID: <cc695a916d9abd79fa1cd9725c767c7e294a3b39.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns
- refcount tracking info
-From: Jeff Layton <jlayton@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, 	netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 14 Apr 2025 08:48:26 -0400
-In-Reply-To: <1bc3164b-0e41-49e1-9ed2-cf37997ab53e@lunn.ch>
-References: <20250408-netns-debugfs-v2-0-ca267f51461e@kernel.org>
-	 <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
-	 <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
-	 <91d6d3c60ef5d4ed90418f8a06228767be8a5b1b.camel@kernel.org>
-	 <ff2b7cfb7657a185469747d930b834dbdfdf6eac.camel@kernel.org>
-	 <f4722246-5694-4b1a-9b1b-d4352fa54ee7@lunn.ch>
-	 <23f93f84e000ebee28614bf85a4013648fa66a00.camel@kernel.org>
-	 <71adf369-a803-4d06-906c-97b5bf48bcf8@lunn.ch>
-	 <a34f5e6d34210bae0badfd08aec15bed0bdb306e.camel@kernel.org>
-	 <1bc3164b-0e41-49e1-9ed2-cf37997ab53e@lunn.ch>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hH0gb+8Y"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43690d4605dso33270135e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744634942; x=1745239742; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sAiRwoIBQeS8CLJ0a9KnyQoPyTuXm99/84zDGKBFhxE=;
+        b=hH0gb+8YxhU5JeA/nHAVxlIP/GA2V9oHeo0OAj8dxCJCVe3GjldCByx2DzxU9dZYqx
+         zUmLt7/c6I+V4wm7rD/pHJNCuhT8xDtk+UhfZhtYMj9EoiXBqi40tuvAAhwkXLNLFIbo
+         FNDa+L9GPCrik/YDukEdmM4LvdtfAQs4jh04t3AhFsGIHnnof7zurxubXYCFcycStnFc
+         0fZual7PLrnMm8NgCRWMA1bzM/xtRoapbUuZhJFMYe1qGSmVPZHcytN1ueIhas/2ea7q
+         0PVAZYKMDS8ZtX50I6ueSiWIjad7A1ITsS/tJsW7FeF8/ggqGrK1MT5U5Mu37M5U6CZZ
+         QHCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744634942; x=1745239742;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sAiRwoIBQeS8CLJ0a9KnyQoPyTuXm99/84zDGKBFhxE=;
+        b=vSUxweKMRfF480kHf0V76ndzsW1nIsziwBGdu61GDjxJlRRcCErHqELwE18k4rUady
+         FMGQF3gEErYLlNhxsugRhjtbQ5YrvGADwQJVO1i/Gx6iT/qx++8SU4Y3VnF7zD8LHrAE
+         OnT2DvNNlvI0yUmAWz1YpRndRT+F8EHJc/41agkxxzHhfwF8RtfVTBCSF5F9gVdil4cz
+         rCj1lbkSDOdYEswMaQxM6U2e318ZZ+P386s09oFtykq6UibDMSnT+tgBGeVbdHMKvETY
+         LIcaBsGZURq1ssY479jbx7eGnfTJ06uFzQtcljC32l0/MlyJa69oWdi+oJ4Kzx36foqN
+         To1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW28GkEV9rOlXJHakddQb7Xp0mnUhYjxQvayyf7QJuX8+ikHSnWCC9EwrJzzAbglkUo5GEwOoqDtqfS0bQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpz2vQfpdS228HABFismE0lwGyWHCGJyyWhsykKz5KBLzKyPsg
+	V45d2szl5snSX1K+fKY2G34t42nXy1KWVCvi6T2R0c2WFt3D6y3fXvCZKHPag6o7XWHQU6cjaBV
+	eqvg=
+X-Gm-Gg: ASbGncvP6yYT5glszNuMHu9m4S+wABR0K7sxSsbkqi/rl3qO1ukYCgMs4EPYhuNVB74
+	zFfXLqRFaq08r0hHcM/jp+iGw0efNRF4S2I7sQKQgaBKs5MqbZBFz3ws6BGdIVmR21g4bZ3o2RV
+	1ilGEWjUZTazEV4nGX/TX0lvj6hZJBeSp5QDENXiBm+t1kJuObaCbOaprHKV/T5ez3ALQq7y8bv
+	9bLJd4m9e474Uf03xJ/ltZvEhWnSQAu1ixXiaheNe/jiMb16xOCX/I1FgCUy1wTfB6e66cfPI4y
+	efCbKeIy3XWPD/BvoiebTXhAhXMDp43Q7xBHYl7Bs7PDZ3+9kAz9762zXT3J+BNEJ6HlgNo=
+X-Google-Smtp-Source: AGHT+IETwcdqSWAHTq3QoeUATJXYSc4gAa1L7vf/YNEJK/cRM1V6QRl3HprdoCFJadXMO+Mj9tQQ4w==
+X-Received: by 2002:a05:600c:4e09:b0:43d:45a:8fca with SMTP id 5b1f17b1804b1-43f3a9b035fmr130109435e9.30.1744634942029;
+        Mon, 14 Apr 2025 05:49:02 -0700 (PDT)
+Received: from [192.168.1.47] (i5E863B76.versanet.de. [94.134.59.118])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc78sm180134335e9.27.2025.04.14.05.49.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 05:49:01 -0700 (PDT)
+Message-ID: <511f8414-bbb1-4069-a0a6-f7505190c1e0@linaro.org>
+Date: Mon, 14 Apr 2025 14:49:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
+ <20250414-perst-v2-2-89247746d755@oss.qualcomm.com>
+Content-Language: en-US
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <20250414-perst-v2-2-89247746d755@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-04-14 at 14:46 +0200, Andrew Lunn wrote:
-> > > > We'll need some input from the i915 folks then.
-> > >=20
-> > > That is why i think it would be better to add a warning, give the i91=
-5
-> > > folks a heads up, and leave them to fix it how they want. We want the
-> > > warning anyway to cover new refcount instances being added.
-> > >=20
-> >=20
-> > There will definitely be a pr_warn() if creation fails. I was hoping to
-> > send a suggested change alongside the patchset, but I may have to just
-> > leave it up to them.
-> >=20
-> > I threw together a draft patchset that auto-registers a debugfs file
-> > for every call to ref_tracker_dir_init(). The problem I've hit now
-> > though is that at least in the networking cases, the kernel calls
-> > ref_tracker_dir_init() very early in the process of creating a new
-> > objects, so we're not getting good names here:
-> >=20
-> > The "name" in alloc_netdev_mqs is actually a format string, so we end
-> > up with a name like "eth%d" here:
-> >=20
-> > net/core/dev.c: ref_tracker_dir_init(&dev->refcnt_tracker, 128, name);
-> =C2=A0
->=20
->=20
->=20
-> Oh, yes, never thought about that...
->=20
-> It also seems like it might be a common problem, the subsystem defined
-> name has not been given yet, although the core dev_name(dev) should
-> work. But in netdev drivers, alloc_netdev_mqs() does not have access
-> to that.
->=20
-> > At the point that we call these (preinit), net->ns.inum hasn't been
-> > assigned yet, so we can't incorporate it properly into the dentry name:
-> >=20
-> > net/core/net_namespace.c:       ref_tracker_dir_init(&net->refcnt_track=
-er, 128, "net refcnt");
-> > net/core/net_namespace.c:       ref_tracker_dir_init(&net->notrefcnt_tr=
-acker, 128, "net notrefcnt");
-> >=20
-> > We could do the ref_tracker_dir_init() calls later, but we may end up
-> > missing some references that way (or end up crashing because the "dir"
-> > isn't initialized.
-> >=20
-> > My current thinking is to add a new ref_tracker_dir_finalize() function
-> > that we could use to=C2=A0finalize the name and register the debugfs fi=
-les
-> > after we have the requisite info. It's an extra manual step, but I like
-> > that better than moving around the ref_tracker_dir_init() calls.
->=20
-> Agree. Although, bike shedding, i don't really like the _finalize in
-> ref_tracker_dir_finalize(). Ideally this should be optional and
-> populate debugfs.  _finalize does not sound particularly optional. So
-> maybe ref_tracker_dir_debugfs()?
->=20
 
-I'm terrible at naming, so we can go with that. That last step will
-definitely be optional.
 
-> This also has the advantage of we need to worry less about GPU
-> drivers. They see no change in behaviour, but we can give them a heads
-> up the new call exists if they want to use it to populate debugfs.
->=20
+On 4/14/25 07:39, Krishna Chaitanya Chundru wrote:
+> Move phy, perst, to root port from the controller node.
+> 
+> Rename perst-gpios to reset-gpios to align with the expected naming
+> convention of pci-bus-common.yaml.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+>   arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+>   arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+>   arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+>   4 files changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -709,8 +709,11 @@ &mdss_edp_phy {
+>   	status = "okay";
+>   };
+>   
+> +&pcie1_port0 {
+> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> +};
+> +
+>   &pcie1 {
+> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>   
+>   	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+>   	pinctrl-names = "default";
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> index 2ba4ea60cb14736c9cfbf9f4a9048f20a4c921f2..ff11d85d015bdab6a90bd8a0eb9113a339866953 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> @@ -472,10 +472,13 @@ &pcie1 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&pcie1_clkreq_n>, <&ssd_rst_l>, <&pe_wake_odl>;
+>   
+> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>   	vddpe-3v3-supply = <&pp3300_ssd>;
+>   };
+>   
+> +&pcie1_port0 {
+> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> +};
+> +
+>   &pm8350c_pwm {
+>   	status = "okay";
+>   };
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> index 7370aa0dbf0e3f9e7a3e38c3f00686e1d3dcbc9f..3209bb15dfec36299cabae07d34f3dc82db6de77 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> @@ -414,9 +414,12 @@ &lpass_va_macro {
+>   	vdd-micb-supply = <&vreg_bob>;
+>   };
+>   
+> +&pcie1_port0 {
+> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> +};
+> +
+>   &pcie1 {
+>   	status = "okay";
+> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>   
+>   	vddpe-3v3-supply = <&nvme_3v3_regulator>;
+>   
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 0f2caf36910b65c398c9e03800a8ce0a8a1f8fc7..376fabf3b4eac34d75bb79ef902c9d83490c45f7 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2271,9 +2271,6 @@ pcie1: pcie@1c08000 {
+>   
+>   			power-domains = <&gcc GCC_PCIE_1_GDSC>;
+>   
+> -			phys = <&pcie1_phy>;
+> -			phy-names = "pciephy";
 
-+1
---=20
-Jeff Layton <jlayton@kernel.org>
+Isn't this a huge API breakage that will break using new DT with old 
+kernels? It will also break U-boot which uses upstream DT.
+
+This is bad enough, but at least let's break it a clean break by 
+changing all platforms at once.
+
+As I understand it, we seem to allow these breakages in DT for now (and 
+this patch landing will confirm that), but perhaps we could at least 
+track them somewhere or at acknowledge the breakage with a tag in the 
+commit message pointing to the relevant dt-bindings patch.
+
+Breaks-dt: 
+https://lore.kernel.org/linux-arm-msm/20250414-perst-v2-1-89247746d755@oss.qualcomm.com
+
+Kind regards,
+
+> -
+>   			pinctrl-names = "default";
+>   			pinctrl-0 = <&pcie1_clkreq_n>;
+>   
+> @@ -2284,7 +2281,7 @@ pcie1: pcie@1c08000 {
+>   
+>   			status = "disabled";
+>   
+> -			pcie@0 {
+> +			pcie1_port0: pcie@0 {
+>   				device_type = "pci";
+>   				reg = <0x0 0x0 0x0 0x0 0x0>;
+>   				bus-range = <0x01 0xff>;
+> @@ -2292,6 +2289,7 @@ pcie@0 {
+>   				#address-cells = <3>;
+>   				#size-cells = <2>;
+>   				ranges;
+> +				phys = <&pcie1_phy>;
+>   			};
+>   		};
+>   
+> 
+
+-- 
+Caleb (they/them)
+
