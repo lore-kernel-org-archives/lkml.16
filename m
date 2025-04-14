@@ -1,194 +1,236 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11022076.outbound.protection.outlook.com [52.101.66.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCF822097
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744636676; cv=none; b=E2A5K2C3UkaNaUaZ2BqfWKjuIJfdLyRtsBuT8dvdShoxCHyIJmoZ/nFbDneNzP2g1479FfxzxJOV+gHcFVWK/dhJG3usRoW4duhRu+XGt805qoNzG3Ksm1uZ73Nd0sggJYUetqIz6KEmDakaZd7MHR++X2zXvmxwMNH/E3EWcrc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744636676; c=relaxed/simple;
-	bh=CKy6vWqX6n7t35He7yvaKX/u/mgAG0viU6lx94CgZcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lY7HvO5pbD6EdzoAXd3uQw1AEYApovzZr6OpaUOMq8YlD4qKmQl19T5QRvBzGidsf6VAviQuNlbHo+v/6ZGWepZ2dJmXzBInrN0TL0rYagEKs6rkKv4p4gi/AEO/npLdbDEvsIoVHHNSSk8iW7mvknIVGkG4hvseA5yX9s+bNqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=tOoSzLEZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=m5XMjYlV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=tOoSzLEZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=m5XMjYlV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664F1101EE
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744636700; cv=fail; b=cXBSRSsOhvNEyCJfoiT+ikcie3gN2PSfTe77QOKK8TSYcAdgb/Hm3rmgIXGVqU4QsuVTMzr3dy1lWridGcWyv0buOVkMAxZyPAgT6OxxwXAox5Mn41kVir+0YJowRbZpnJBzMYV1RZ/sLSWj8K65nryFqPzqF4XOgQIprchZzl4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744636700; c=relaxed/simple;
+	bh=6n8f/Dg22bshEHN/v4l4XGRCAfWpFTFmQCMabKIxmBM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BAdOqsB0hQL+aFpQnGbuk51Qfq9m/YfDI4vjIjQa2E1nazjuquNrLylttIcQCEZwZmH3A+JNLHmgwCUDF7n7Wfy91S2y8fKMkLE/dczyAf+oty8hCpb7TJls1MxnjhztNEtscRmcaK6b/OjM26v0X+av43PRjmKkHuSUJjQUwj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axentia.se; spf=pass smtp.mailfrom=axentia.se; dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b=C5WqiuIr; arc=fail smtp.client-ip=52.101.66.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axentia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axentia.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tOoSzLEZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="m5XMjYlV";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tOoSzLEZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="m5XMjYlV"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 12E801F80E;
-	Mon, 14 Apr 2025 13:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744636672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbgemuGnlaKe1p5x1f82wXpF+J8wx9HvzivI2BFjeR4=;
-	b=tOoSzLEZtgmrk2M/SP51rOoO7tGj1cILfi4vPiAeJIHlacKSyJrYRTzJb4/9A1RAU9QlFn
-	i+05yOnYuXTN1KvjF1DkOULutrl9+LeoEiEQyqy36NzO2skbLGlFMRtw2+rfuClynJ7oiR
-	Nk17tkJdBN156C/QhYMhDQmpksJgIJo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744636672;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbgemuGnlaKe1p5x1f82wXpF+J8wx9HvzivI2BFjeR4=;
-	b=m5XMjYlVbVKG7ru1vqrEHpU+WTEtcyXN3uGyGFeAZVH/PjhtwvNpedi9USvkLm00x0Jkgd
-	BhONV3GUMDODThDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=tOoSzLEZ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=m5XMjYlV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744636672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbgemuGnlaKe1p5x1f82wXpF+J8wx9HvzivI2BFjeR4=;
-	b=tOoSzLEZtgmrk2M/SP51rOoO7tGj1cILfi4vPiAeJIHlacKSyJrYRTzJb4/9A1RAU9QlFn
-	i+05yOnYuXTN1KvjF1DkOULutrl9+LeoEiEQyqy36NzO2skbLGlFMRtw2+rfuClynJ7oiR
-	Nk17tkJdBN156C/QhYMhDQmpksJgIJo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744636672;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbgemuGnlaKe1p5x1f82wXpF+J8wx9HvzivI2BFjeR4=;
-	b=m5XMjYlVbVKG7ru1vqrEHpU+WTEtcyXN3uGyGFeAZVH/PjhtwvNpedi9USvkLm00x0Jkgd
-	BhONV3GUMDODThDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05D64136A7;
-	Mon, 14 Apr 2025 13:17:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IWRrAf8K/WfIeQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 14 Apr 2025 13:17:51 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B70AAA094B; Mon, 14 Apr 2025 15:17:46 +0200 (CEST)
-Date: Mon, 14 Apr 2025 15:17:46 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v2 2/2] fs/fs_parse: Fix 3 issues for
- validate_constant_table()
-Message-ID: <pgxiizhnhcuaol2vhwikrtqfcp6b3g4cxs26rwxzdxuyjnadtv@smpxafscsxod>
-References: <20250411-fix_fs-v2-0-5d3395c102e4@quicinc.com>
- <20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com>
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="C5WqiuIr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dn+IB1FXhhWOBKRioAMKVqeVpLAwHEsfjnqtSIinnkfUmBAstWERL+/qMk/8z/LR53BBZ8g12QS4K5cc7ULvDh34XBbXDqY1khi3TOVUkgA/qvF0LCe+oURX8DLVYDfyFHFClYbB+WuWiyMZnBRfp2UftP2UcEGYqAKKt1vIk1VjoR8ZUrfF1d3gMcU8hAO3NfMD4a5toxN/uwz/u9j6Bx3La9LsjiLFWBxT08exm7aaF6OkO2lxlJsUjVOGt3DvwaOGvLiGoI7eV9AMOb7w+Y3lC1kB23FZzJ70zjLlOvaLTIPc59Mct6dkfZ5uHCF1L3kqSKsNT3EooyITbnSikQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5ilKclNN3H5GFWF17Jcz7b5vTq9J+9zZyPsyt4D0RWA=;
+ b=ppu7fkHJQIjgKUN9zDqFnWjwjrnAPFPzgwIMa+5BQfjgCGY21tE93TlXoG0FehMO4bOJXj8R2NF3omLnE/kM5ERgQ5RbJYQV0oC8rEr0FsbZ10X4e21eDFtYALnKUqyLJGTguud8AwbfvCrUbCiYtfokNv01fI1AwGgcvlS+TyLbaZyTwaQkw1klC/4MRXxAs45xOQ+ODWenyRpdITzQRlHswspGSVFsyX3gyrZl7KGH1wA4FeMiBjG9VM6MaRka0yu/BF0xJG2SaD4gqn0jWfN8yvGnJ29vTamr0WQW9my5slThUUgYxMLQSSTaIVDXQZTMiZNpaD3NhACsfzZLBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5ilKclNN3H5GFWF17Jcz7b5vTq9J+9zZyPsyt4D0RWA=;
+ b=C5WqiuIrPn8OXw636fDWx3qvmmc08qXv9NFtNxT0Ae+mDo7j8Y3fOzXo8gprm2a5UOrBQOxMvdn714g4tXHiuBoAkufAAZggjnTPlwEjtvfrBtA8s8yBctVxL+1KLZoihKzFbjuTZcZahd6fub2F9sniGMlTMBGhqqoxPWyBgCU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axentia.se;
+Received: from DU0PR02MB8500.eurprd02.prod.outlook.com (2603:10a6:10:3e3::8)
+ by DB4PR02MB9336.eurprd02.prod.outlook.com (2603:10a6:10:3fc::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
+ 2025 13:18:10 +0000
+Received: from DU0PR02MB8500.eurprd02.prod.outlook.com
+ ([fe80::aff4:cbc7:ff18:b827]) by DU0PR02MB8500.eurprd02.prod.outlook.com
+ ([fe80::aff4:cbc7:ff18:b827%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 13:18:09 +0000
+Message-ID: <c0f63b8a-7197-050a-ca01-a1050a2e287e@axentia.se>
+Date: Mon, 14 Apr 2025 15:18:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] mux: suppress lookup errors for mux controls
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250414124220.30578-1-johan+linaro@kernel.org>
+Content-Language: sv-SE, en-US
+From: Peter Rosin <peda@axentia.se>
+In-Reply-To: <20250414124220.30578-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: GVYP280CA0001.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:fa::20) To DU0PR02MB8500.eurprd02.prod.outlook.com
+ (2603:10a6:10:3e3::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com>
-X-Rspamd-Queue-Id: 12E801F80E
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[icloud.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[icloud.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR02MB8500:EE_|DB4PR02MB9336:EE_
+X-MS-Office365-Filtering-Correlation-Id: fced7280-3bd1-4e9f-09c7-08dd7b56ccf7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WTlZSUpjdDZWejZRcU5oUVFTQWI1bFc4dEFWM3BmOERoMU1MaDQrOXlmQ2Zx?=
+ =?utf-8?B?WHJZRVl2R0VJcnRoc0V1ZFhQZTJzY1JUdWl5N21XcXgvaEJUTk5PdlhBN0pq?=
+ =?utf-8?B?Vmt5dWJsRkhhTnBQUlZKQXU3UjBydldmTGczZGlncTNianN4TTdmZmFOLzFB?=
+ =?utf-8?B?WHNlcFdhZG9FekhIOFkzR2k0Qk56MEp3TVFRK245aEZZK3FXbjJ0ZnNJSFNY?=
+ =?utf-8?B?Y29KVmk3bjY1OXo3ZFlLcm5neENreTJxdFJwZWpoSWMvanlnNlhRbjErWGFG?=
+ =?utf-8?B?SGdTQ1VEUjRCS3NNcUxRTjRGWFFnOEY2UUF5U0xGTUpQQ05sdTNNWGMxZE5X?=
+ =?utf-8?B?bWFRQ0xjM0NnQjZ1MGpyM01LV0pKeHdmQjdsQ1MyM3NHbnprRTFGODNmWHUr?=
+ =?utf-8?B?L2lueG8xckRSTGVhK3pMRUNkSFFyNzIzcUtQMHlqRlNlV1pvazdmMzBzUlUv?=
+ =?utf-8?B?NTVLSUlCc3QxZDV2OW8vYzlpc0JLcjNrMUNlRzlUT0Q0TVJFa2tyemdvblJU?=
+ =?utf-8?B?OWcyOVNoZnk2S1k0RTNacTVaWFlFeEthM3ovVHR2Tnp6SlV2TVRrdmYyblFK?=
+ =?utf-8?B?d0phdjA2c0NkbkFTZXVJUjB1Zi96MWx2dDVIZThGdlFiR1RZbVBuOEk3NnMy?=
+ =?utf-8?B?a3I4d2o3ellGRVg3cjRwS2ZKT2d2SGdYZi9LazAxU1JpK1MvVUl4QzkvQ1BC?=
+ =?utf-8?B?WTI3Z1FtRzdtMnNoakljRE5TUkNtTS9RVnNUd1dpVW9GKzJIRFhSNzhVK3FI?=
+ =?utf-8?B?RHg1V1lMZUcrSUtnNTlsWUljV285UXdLTlpYZ3NMUW02NUoxSmlBR3lmVVRW?=
+ =?utf-8?B?d0tteTFoWGdyWUY2b0xsWEo2UUVnNVdmakNTV0FiMUtBSmxhblk2bHNqdGJI?=
+ =?utf-8?B?T25wMWlXbm5kc2RxYi9BK1RFWHprSVdYREtxUUtjeFFBczRyeXQ0dVQ5UERv?=
+ =?utf-8?B?V3V1QlNyVEpkR0JZdVFTU2pJQ2Yxd1o1cTlBd2NOUU5oL0F4bldsR0xNaDdn?=
+ =?utf-8?B?VDBETm14ajhEa2xLZlVBa2lEREltQVFuUzZWWW1RTk1QdDNnclBDOHdydVlL?=
+ =?utf-8?B?OXd6RHZ1L3VWK0tDOGhpZ0JtQzUzakJpcmhheXFVKzZzZU5tVjAwYyt4UXdl?=
+ =?utf-8?B?d2NUdTQrVEJUK2ZuZjlQWlZIa0xEaWlqNUJUbEhlTy96T0hIYm1kTzFZdWp2?=
+ =?utf-8?B?eWNzd2l4d2VmVEpHMWR0cnlNbHVMTVhST296cUU4WjV6SFRnbE0waVZxQnQ3?=
+ =?utf-8?B?OVBYZStHR2dCc2ZCelNhNmtXdE1lVzFibjNiR1pmcks1K2cxNy9hTFdpVjhM?=
+ =?utf-8?B?YU5SY1RPekdEdG4zaHhKcm1vRUduU2s1dlIxdDZ2U1poRXhrdVByZ1lWbXlD?=
+ =?utf-8?B?RlhCMEJIV05jQVJGMSt5U3M2QlZNOEt3aXBYNU9VZFF2SDRXcjBBWU9Pa0J3?=
+ =?utf-8?B?RUVVL3N6SHZlbTZJMmhoSWNadEFGbTQ1WVpiamJNK3dZRUdmTHNtcWNBS1BJ?=
+ =?utf-8?B?T0FaeVByb3hOZFp1ZzVKQS9IZzF0WFdxc2JXN2lieloyMk5TQWxwWndZbXFv?=
+ =?utf-8?B?bERrQk9namxPSnp1NFFoQStJaTJja3VDWi8xeEJjaHllRDZVdmZlS2tqaHJ2?=
+ =?utf-8?B?WXBUaFNnMjFyenFZRkx2WjRxVWtLRFgrbVpwWngxOVFZRnh4RWczcFhBOHJr?=
+ =?utf-8?B?UEE4UHYyUHRzSjJpY1U0MU1lUER6Y0NRTmIvbHVqYUd2Vi9PbENhemZnVEtW?=
+ =?utf-8?B?VXNvL2tDMGY2WXlBSEJ4N1FOZXlPOXNrMkJUWlExbDVHbDRlTE13SktnU2cz?=
+ =?utf-8?B?MWkwMFd1ejRDOFFFZzNOa1k1bDJFK1JESng2KzQ0ak5ES0Yrb2RISHVWZmpo?=
+ =?utf-8?B?TEIvbFRPUXJaS0I1Z3RsdnVxMVIyaW45TXA2V0M0SFJ5ak1peHEvRUVrekZm?=
+ =?utf-8?Q?3oaUHOMbtAU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR02MB8500.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OUozVUVHUHN3OWg2bjF0M0lsUGNmQmZ3Zit6NWEyTE1TNzJsTkRUUDdRc0Ra?=
+ =?utf-8?B?UEtudERmZk1BeXdVTVJ2L0hOcGFGdWVTbWx6a2J1eVNtek5jMXBHcDNoZFRx?=
+ =?utf-8?B?Ty92MjUvWVkxNUZtZEExdDdwWmR3RDNWaWZJb1ovNE1TeG1VZGZKSE93WUZ0?=
+ =?utf-8?B?MVJCL3ovN3pLb04yYnVmTTd6TUdtRC9EcnlOMWJ1R3NvN0RRWVdCbkl4WEFO?=
+ =?utf-8?B?SVdWbFdFTm5XYXNjUnpNYS9ReXhPY2prSGhTRWVlOUlid1RJL3V0bjdaNU5n?=
+ =?utf-8?B?MWxWaDRBWTRHRHdvUU1KS043Y0RDa1VGYzVYYXJEZGhralI3K1F5bndTU3dv?=
+ =?utf-8?B?enF5alYrbStFdXhVVFRuS0p6SFA3S3drU2dlNStrdklWb3huZlFPeGFHNWJ3?=
+ =?utf-8?B?OVc5a1lLSVk3c1JNRlZYY3NDclhnajFGZ0lrcStmRTFoSjRCSTB0dzlKVHdr?=
+ =?utf-8?B?ZHBNZm5LZWl5UzJ2MmZvS2p4UnZZYXFFZVpWRkxYdTd2cFZVR0doWGdSWlUv?=
+ =?utf-8?B?M0pRQ05ZbXJHQURYU01OYUhSdXg3cnpDcmtJTlY5VXM1dXVvZGRqcktuOGdT?=
+ =?utf-8?B?d2FJVG5pRm02RnlKR2lPZjMwNENxdngxNXlTYmVuZ2hIVy9hcDk0WXpRQUhK?=
+ =?utf-8?B?dmgwczQ4VmZ5d3Z5QVRkOHdOd1lsM3ZuYXd1RzRkSnZhY3NlRGo4aCtIYzZW?=
+ =?utf-8?B?NDhyYVh6Njd1emFZd0wrOGdpVkJpK0hiK2ZaTGdyWXIxK2ltU0lkN01nMHpD?=
+ =?utf-8?B?MWF1UjBhdE1ueFRUMlpBYVdMM0VSaWJhcFBQMDNOcnZZUlZFckpsdExETXJT?=
+ =?utf-8?B?M1BmK1V6bTdkbVlOM0c0Zis5N3piRnkvUUtVN1VLcExSaTRVa2xwTnFQZDk3?=
+ =?utf-8?B?ditxbjFELytHYW9rcE9NMG9kUjd4WExraU5sdXNnenE5cnNlclgxdkg4dkM2?=
+ =?utf-8?B?RklIaU1YRTNGbDJQeG1ZOXVSeDgwTVFuck45MldxZW5OSHkrblFKOHpnZDRZ?=
+ =?utf-8?B?Z2ZXZE5zUEpQSW5tNGVCb3lrTDJJd0RxN2RKTFdGWmdKRlZYOXMyUU5VU3Z4?=
+ =?utf-8?B?Z0M1MngvS0pMbHZsZWJrMnh6ZlFOK3lRV3lySS9RdVY3ejRvbHVucEpWQlJx?=
+ =?utf-8?B?NDBsVU0vSS9weTUwOVhLV2hOd0JOeXo3VUhITDJ5bEJPL0E0bnp2OWJ6SHpH?=
+ =?utf-8?B?akQwdFQ5YzJzUWxYTXNmQnp3UjFnaTROTzByS0RlcmQzaDgweWlDTWQvQXc2?=
+ =?utf-8?B?NkR4Z01WekVLcFc0czRpUTR1TmcxNjBETVJabEczWjVtcmo2YUVuWXo3cWlI?=
+ =?utf-8?B?Z3Q0RndpMEpKLzVtUzJ5S1JDZFZRMmZSVElEMXNhQko0eWk0a2QrTlAzcFBJ?=
+ =?utf-8?B?UStlallmc2swamlNQVI3WGlaNkU4bStRcXp0a3VFZDBTeTZDTmlxRFY5M3RZ?=
+ =?utf-8?B?UkM3TGVZZk8xUklPNGQrZjlNWmNhcmtzeCtOUGNkd1pNN2xFaERTTUd3WFAz?=
+ =?utf-8?B?bXl5c2FHQXFhcHRrR3pMSEplY3BGY2dSa0Ezc3VkSTZVcUR5K096dlJUQzkx?=
+ =?utf-8?B?cStaZjRzMUhJQmFBMXdCNU9JUnhMd3pYUjdjajd6YzZyZ3A3dERRODdHcXgr?=
+ =?utf-8?B?UmNLbVRhd2M3YTBKNjNtMTNHUXBMS2h1S05zYXQ5QytQcUhGbzVnR1FneDN0?=
+ =?utf-8?B?Q0ltSi9hSE1ubE1pamNmY0NLZUN2U0RqS1NNalg3b3FNOGtqWEhmRVpzSnd0?=
+ =?utf-8?B?V3g2L3lJNkRJMmU0ZTZQcDJnUDdyMnJRV0xxTG5VK0g0VEFyNWE2WVhNT2dZ?=
+ =?utf-8?B?aE9MQnhrY2FhSWNtb2wxRW5TSE1tUlVlcHJFSndmMS95bFdCNnNNZFExVGxR?=
+ =?utf-8?B?TmFJVFNwdUt1clVkTUZnOWw1OG1Tb281NW9rWm0yUE1JTjVPQlluMEF3SEdm?=
+ =?utf-8?B?ejFKNWRNZkg4VXBLa2VndUFZcFFQeFliVGN0TnFQRkt4YkxyYWRYRXRGQ1Fh?=
+ =?utf-8?B?eVhybnNZZjliQ3Qya2JyV3d0TUIzZEJBalVsdnY3aEtnTXk2QWlxWHRxOWds?=
+ =?utf-8?B?ZTUwY041Ny96ZzNCWTQ0dmlzQm5tL2dRb2grbFQycEQySSs1UjN5RGFKa1JT?=
+ =?utf-8?Q?91Swn7/62NrAlbHIdYczN6R5j?=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: fced7280-3bd1-4e9f-09c7-08dd7b56ccf7
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR02MB8500.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 13:18:09.8112
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6sMZaV/mCBw9nFNHtoyJQ/bFbglnRqbrt8zNEdVYa6tPwyLxhgbvwjE3BNbuFGZ9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR02MB9336
 
-On Fri 11-04-25 23:31:41, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> Constant table array array[] which must end with a empty entry and fix
-> below issues for validate_constant_table(array, ARRAY_SIZE(array), ...):
-> 
-> - Always return wrong value for good constant table array which ends
->   with a empty entry.
-> 
-> - Imprecise error message for missorted case.
-> 
-> - Potential NULL pointer dereference since the last pr_err() may use
->   'tbl[i].name' NULL pointer to print the last constant entry's name.
-> 
-> Fortunately, the function has no caller currently.
-> Fix these issues mentioned above.
-> 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi!
 
-As discussed, I'd rather drop this function since it is unused as well.
-
-								Honza
-
+2025-04-14 at 14:42, Johan Hovold wrote:
+> Since commit eec611d26f84 ("ASoC: codecs: wcd938x: add mux control
+> support for hp audio mux") we have drivers looking up mux controls that
+> are optional. This results in errors incorrectly being logged on
+> machines like the Lenovo ThinkPad X13s where the mux is missing:
+> 
+>     wcd938x_codec audio-codec: /audio-codec: failed to get mux-control (0)
+> 
+> Suppress the error message when lookup of mux controls fails and make
+> sure to return -ENOENT consistently also when looking up controls by
+> name so that consumer drivers can easily determine how to proceed.
+> 
+> Note that most current consumers already log mux lookup failures
+> themselves.
+> 
+> Fixes: eec611d26f84 ("ASoC: codecs: wcd938x: add mux control support for hp audio mux")
+> Link: https://lore.kernel.org/lkml/Z-z_ZAyVBK5ui50k@hovoldconsulting.com/
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->  fs/fs_parser.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  drivers/mux/core.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-> index e635a81e17d965df78ffef27f6885cd70996c6dd..ef7876340a917876bc40df9cdde9232204125a75 100644
-> --- a/fs/fs_parser.c
-> +++ b/fs/fs_parser.c
-> @@ -399,6 +399,9 @@ bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
+> diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+> index 02be4ba37257..b95bc03e3d6b 100644
+> --- a/drivers/mux/core.c
+> +++ b/drivers/mux/core.c
+> @@ -544,8 +544,13 @@ static struct mux_control *mux_get(struct device *dev, const char *mux_name,
+>  			index = of_property_match_string(np, "mux-control-names",
+>  							 mux_name);
+>  		if (index < 0) {
+> -			dev_err(dev, "mux controller '%s' not found\n",
+> -				mux_name);
+> +			if (!state && index == -EINVAL)
+> +				index = -ENOENT;
+
+Why exclude states? For me, that's entirely random and inconsistent. If there's
+a reason to exclude them, I'd like to hear about it. If there is no reason and
+this is just defensive programming, then I'd like for someone to dig into it
+and either find a reason for the difference or clean up the inconsistency.
+
+I think the model of explicitly marking when you'd like a mux to be optional
+is a better and less fragile model. Who is to say that -EINVAL from some other
+call is, and will remain, a perfect match for the optional case you are aiming
+for?
+
+Srinivas Kandagatla is looking into optional muxes as a side issue to
+exclusive muxes.
+https://lore.kernel.org/all/20250326154613.3735-1-srinivas.kandagatla@linaro.org/
+
+Cheers,
+Peter
+
+> +
+> +			if (index != -ENOENT) {
+> +				dev_err(dev, "mux controller '%s' not found\n",
+> +					mux_name);
+> +			}
+>  			return ERR_PTR(index);
+>  		}
+>  	}
+> @@ -559,8 +564,11 @@ static struct mux_control *mux_get(struct device *dev, const char *mux_name,
+>  						 "mux-controls", "#mux-control-cells",
+>  						 index, &args);
+>  	if (ret) {
+> -		dev_err(dev, "%pOF: failed to get mux-%s %s(%i)\n",
+> -			np, state ? "state" : "control", mux_name ?: "", index);
+> +		if (state || ret != -ENOENT) {
+> +			dev_err(dev, "%pOF: failed to get mux-%s %s(%i)\n",
+> +				np, state ? "state" : "control",
+> +				mux_name ?: "", index);
+> +		}
+>  		return ERR_PTR(ret);
 >  	}
 >  
->  	for (i = 0; i < tbl_size; i++) {
-> +		if (!tbl[i].name && (i + 1 == tbl_size))
-> +			break;
-> +
->  		if (!tbl[i].name) {
->  			pr_err("VALIDATE C-TBL[%zu]: Null\n", i);
->  			good = false;
-> @@ -411,13 +414,13 @@ bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
->  				good = false;
->  			}
->  			if (c > 0) {
-> -				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>=%s\n",
-> +				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>%s\n",
->  				       i, tbl[i-1].name, tbl[i].name);
->  				good = false;
->  			}
->  		}
->  
-> -		if (tbl[i].value != special &&
-> +		if (tbl[i].name && tbl[i].value != special &&
->  		    (tbl[i].value < low || tbl[i].value > high)) {
->  			pr_err("VALIDATE C-TBL[%zu]: %s->%d const out of range (%d-%d)\n",
->  			       i, tbl[i].name, tbl[i].value, low, high);
-> 
-> -- 
-> 2.34.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
