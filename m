@@ -1,119 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A50F1917F9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C1E2F4A;
+	Mon, 14 Apr 2025 02:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744597785; cv=none; b=C4LZI1yLBtFXnT9aOPvO5F51VGzld2F8VnGaWZPcEhuEGSPElUKEW2zb4kMWrbL96S0ModctkUXjYx7MYyXNif4bbLE1uYUova4cdV9+BckO+FnQoxF/Hm7HWA++HSnUTdhAUUmdxLT0O1Obw57SIXqg/HF3VE31CznIuJt4yjA=
+	t=1744597870; cv=none; b=Mbk2kkjgIev0ECNOo92qX3Ycg5p0SfPQAVTEQ88zn0eCsg3547f4X3g+FOMI00wm6wVCd61gr2CClrUO0xa7NQZGgchw8kAJQEGzl/3f/dQOSqQqytAlBMU0Pmj23HyCfj/vwp89TWkLGhCtTR+AysIjKbspx3J1ZG7aaOu35/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744597785; c=relaxed/simple;
-	bh=Ij3M9xTV2cJVyqoJpwuWnj7OztPPD/2nBy+flsgK+Ds=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WQYu9Ze+hEEzGa666hDhB6PtBCyWIe9Rn/71iJHAMKTwOyQ34bWfEiLQuvKp9o25KO5HWL5LzHqclx4NxM45GoGVCswc4svSouY/pljkYNPZSnQ/dY/ZVFSGt342/Mq/xXjon+nIqivf2BL//6AyEu3k6YlRI3hScaRvUbDgiNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEMgK4R8; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744597870; c=relaxed/simple;
+	bh=hrkt79QgwXIsiasCmcytf6NbadKuKHha5ialFnb48Ys=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZlXeH0Mx5rH06DzpSOBjDVzK69EBsCsDtxUKeUCvrsA+kvKrTuuVT6uX25lQpYwt87lYbSFg9ffxY2b2q8YtsgD272PNWws7U9f48juo8r+hzGdssIBqkdWCx6TZCOQfhDHnTlejsHaDuZ+pUIwEn73hAh0rsLBzRLRUyYTY7NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=B5djlLy9; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEMgK4R8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744597783; x=1776133783;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Ij3M9xTV2cJVyqoJpwuWnj7OztPPD/2nBy+flsgK+Ds=;
-  b=EEMgK4R8jeR4DHJrlNrl92z+YcalZl78kCxXPEnfgda7RzQ0h0YM9vzX
-   Pk38nIhFZNgtq39dsT8AuYCwnlAuxJuim/pWnlvMaYgC2goAk5ZoBUNYt
-   voIjSVjAhcQAD9nEZpWmNDDPPc/FphVLieWWmXLqe/kQwdEr1jnV5ba3Q
-   fWDKEA+sxSA80X6N8HL2l8sX+CbLEL8fVTWbk77/QIc5LcgX5FoPelbc5
-   2qC0sX/AURvsDbhmhN0/NqW3krp8eGNBz48YOxsLMRdN381oWIXg6CVGw
-   YQwo0QkoHgFnGybOjA4DMJUneQBsIuTARdTkILWPWRLrbRwMlJ6lxMdGq
-   A==;
-X-CSE-ConnectionGUID: YoyrL5XxSLmakxByykrOkw==
-X-CSE-MsgGUID: esyImdHvTh6VQsPgk1dcYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="49856893"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="49856893"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 19:29:43 -0700
-X-CSE-ConnectionGUID: CZ7wq4IxSSqXlqfmrW3ZDQ==
-X-CSE-MsgGUID: sSzqAEDsSo2Y0d/+IGNPow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="134763487"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 13 Apr 2025 19:29:41 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u49Zr-000DCh-0N;
-	Mon, 14 Apr 2025 02:29:39 +0000
-Date: Mon, 14 Apr 2025 10:29:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [tip:x86/alternatives 38/58] arch/x86/um/../kernel/module.c:209:
- undefined reference to `smp_text_poke_sync_each_cpu'
-Message-ID: <202504141003.kc69fVoj-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="B5djlLy9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744597868; x=1776133868;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mXp++OhBZeDrR/eRrZugOW96Mk+uHmRbPf2RwqEupgk=;
+  b=B5djlLy9Ghhukpx6iPxTu+KqElHFbgCiiVuP3NRt2KPusfhyd3DGwKr4
+   iknGfqckzsP6rF2gOFh3nqpL6sFcr9MaDohReig/ckru8QMzgRG8r0IqB
+   3Kv0GSY/CMmPtO05Q94KwEwQwEY9BYdPS5esgFFFhbA0oPWLeICS3Etwz
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.15,211,1739836800"; 
+   d="scan'208";a="187058078"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:31:07 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:39673]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
+ id 90f9a2c6-7278-4f22-8cb8-4f854b41179f; Mon, 14 Apr 2025 02:31:06 +0000 (UTC)
+X-Farcaster-Flow-ID: 90f9a2c6-7278-4f22-8cb8-4f854b41179f
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 14 Apr 2025 02:31:05 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.88.185.97) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 14 Apr 2025 02:31:03 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com>
+CC: <cratiu@nvidia.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <sdf@fomichev.me>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [net?] general protection fault in rtnl_create_link
+Date: Sun, 13 Apr 2025 19:30:46 -0700
+Message-ID: <20250414023048.44721-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <67fc6f85.050a0220.2970f9.039e.GAE@google.com>
+References: <67fc6f85.050a0220.2970f9.039e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWC001.ant.amazon.com (10.13.139.218) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/alternatives
-head:   af8967158f9ad759a93e8e7a933c10e7cbb01ba2
-commit: 6e4955a9d73ebdc8496e6bff7f6d2bf83c01959f [38/58] x86/alternatives: Rename 'text_poke_sync()' to 'smp_text_poke_sync_each_cpu()'
-config: um-defconfig (https://download.01.org/0day-ci/archive/20250414/202504141003.kc69fVoj-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141003.kc69fVoj-lkp@intel.com/reproduce)
+From: syzbot <syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com>
+Date: Sun, 13 Apr 2025 19:14:29 -0700
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    eaa517b77e63 ethtool: cmis_cdb: Fix incorrect read / write..
+> git tree:       net
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1541f23f980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+> dashboard link: https://syzkaller.appspot.com/bug?extid=de1c7d68a10e3f123bdd
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1429874c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1353f74c580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/8ff6a34dbd2f/disk-eaa517b7.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/80dc0689a89b/vmlinux-eaa517b7.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/093b749f228d/bzImage-eaa517b7.xz
+> 
+> The issue was bisected to:
+> 
+> commit 04efcee6ef8d0f01eef495db047e7216d6e6e38f
+> Author: Stanislav Fomichev <sdf@fomichev.me>
+> Date:   Fri Apr 4 16:11:22 2025 +0000
+> 
+>     net: hold instance lock during NETDEV_CHANGE
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=151db7e4580000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=171db7e4580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=131db7e4580000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com
+> Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+> 
+> netlink: 4 bytes leftover after parsing attributes in process `syz-executor402'.
+> netlink: 'syz-executor402': attribute type 15 has an invalid length.
+> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000055: 0000 [#1] SMP KASAN PTI
+> KASAN: null-ptr-deref in range [0x00000000000002a8-0x00000000000002af]
+> CPU: 0 UID: 0 PID: 5841 Comm: syz-executor402 Not tainted 6.14.0-syzkaller-13348-geaa517b77e63 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> RIP: 0010:netdev_need_ops_lock include/net/netdev_lock.h:33 [inline]
+> RIP: 0010:netdev_lock_ops include/net/netdev_lock.h:41 [inline]
+> RIP: 0010:rtnl_create_link+0x6af/0xea0 net/core/rtnetlink.c:3680
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504141003.kc69fVoj-lkp@intel.com/
+#syz test
 
-All errors (new ones prefixed by >>):
+diff --git a/include/net/netdev_lock.h b/include/net/netdev_lock.h
+index 5706835a660c..270e157a4a79 100644
+--- a/include/net/netdev_lock.h
++++ b/include/net/netdev_lock.h
+@@ -30,7 +30,8 @@ static inline bool netdev_need_ops_lock(const struct net_device *dev)
+ 	bool ret = dev->request_ops_lock || !!dev->queue_mgmt_ops;
+ 
+ #if IS_ENABLED(CONFIG_NET_SHAPER)
+-	ret |= !!dev->netdev_ops->net_shaper_ops;
++	if (dev->netdev_ops)
++		ret |= !!dev->netdev_ops->net_shaper_ops;
+ #endif
+ 
+ 	return ret;
 
-   /usr/bin/ld: warning: .tmp_vmlinux1 has a LOAD segment with RWX permissions
-   /usr/bin/ld: arch/x86/kernel/module.o: in function `apply_relocate_add':
->> arch/x86/um/../kernel/module.c:209: undefined reference to `smp_text_poke_sync_each_cpu'
-   clang: error: linker command failed with exit code 1 (use -v to see invocation)
-
-
-vim +209 arch/x86/um/../kernel/module.c
-
-   188	
-   189	static int write_relocate_add(Elf64_Shdr *sechdrs,
-   190				      const char *strtab,
-   191				      unsigned int symindex,
-   192				      unsigned int relsec,
-   193				      struct module *me,
-   194				      bool apply)
-   195	{
-   196		int ret;
-   197		bool early = me->state == MODULE_STATE_UNFORMED;
-   198		void *(*write)(void *, const void *, size_t) = memcpy;
-   199	
-   200		if (!early) {
-   201			write = text_poke;
-   202			mutex_lock(&text_mutex);
-   203		}
-   204	
-   205		ret = __write_relocate_add(sechdrs, strtab, symindex, relsec, me,
-   206					   write, apply);
-   207	
-   208		if (!early) {
- > 209			smp_text_poke_sync_each_cpu();
-   210			mutex_unlock(&text_mutex);
-   211		}
-   212	
-   213		return ret;
-   214	}
-   215	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
