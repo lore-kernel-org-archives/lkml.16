@@ -1,111 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0471482E7;
-	Mon, 14 Apr 2025 13:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CFE44C77
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744635691; cv=none; b=ZGHLtudTxgi+oN0yoIRGxADLsKr2ZppWb04UcXx7+3fPjUlsKw3HRHReCrgL0ase/yOW3LnKp1qUe5JNdSKI2Zc3TazafmljkaLqkzvrJ1fAHYXKsFOC8B32H4zyD/wYrDA6/ZfmD9bHpNlbml5huXfxam99FYrLIvavF1whVvo=
+	t=1744635713; cv=none; b=jyFO1lPR2FEe2Z7ZBtCAkBY0ECicAws+4QZkLpdswu6jpQjwq8+VwKyC4CKaSnJXJ6P398hOZeqEtBfJPkXZtQ/WoOELWPmR3+mzhiHC5WAFA9Gj9Yeu5dcpU5JwExz/mL5MK21y4JadUUk6xBjhGEnKaQMwGfb0GloekIbKu9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744635691; c=relaxed/simple;
-	bh=TvT6KZOm7khG7yOX2mT8/OUHx94BznZi+RP/jNeSTik=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UvLHjcLCmAR9VypK+pgfkb1sADKGgz5PkRdjzvVTIY2eZ3e91GKpx2lWJ6dNVheI4ctEYQHCmtbe5rL1nMd5PsHwe6OVMQGQWaqTQkZexcJjhpRcEkwBfqZAeX0oDOz4CWpOWTdOFY7mb0hLJsROVc/b6biCUSzgOFQVPWy74xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SJJ9i6Yc; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744635713; c=relaxed/simple;
+	bh=cQpYBJT1BS6d2aNLlx3jhhLQ73c+7Qwy83avSo07Uaw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A9DHPo19YAUKy7rTPiWtx7/paefjmtSi3bvBSo7qBthNAkNYcdreSAioBhKPQuCjT1bwRYdBfDY/CJOJPaEDYvFqB4VP6hrM83eLAEwv255zTUuyliKpcT3nwadY1LhBtLnnRpCfofpV85qQl12Mc3NUxJB77QCX61VPGi86dpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CZLYlnOY; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SJJ9i6Yc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744635690; x=1776171690;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TvT6KZOm7khG7yOX2mT8/OUHx94BznZi+RP/jNeSTik=;
-  b=SJJ9i6Yc6TyJNOfF6N7rDLU3gE4sGYuzb2lf9bz7YbGgQW3Nc4SqUlIQ
-   aThPkYv4GwFLbQUrq3jEpvM7ohqGo1a2trI9bVUmPVU4RXnyChZOGFi7j
-   tkoonynBUvT3nOELXp/Kjj/C2Kyd/6dQeXvGZnYsyBf0iEimo3vkQ79Hl
-   AmHkWVC3/D3CUWu9jOEviWga8A0s4OsnUsHAPqnsW8IA0tVShJp2RWvUk
-   gc3/IbbTmRiMfiyL593aSFSKtbMyN+6fnI2SV5uIUbV2DLAGgWc9eXE1P
-   MXvS/Qz0E0wx1g0cDZjCn43l51zT0ANrrprcWxb8E8BMSaWkhJSRwg98M
-   g==;
-X-CSE-ConnectionGUID: GJYU/GCxQKeXBaNQyPhHCg==
-X-CSE-MsgGUID: sUAApCIISWOKLZAf9u7oBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46192989"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="46192989"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:01:28 -0700
-X-CSE-ConnectionGUID: HjakGuZXQIm9xRmzrj6KBg==
-X-CSE-MsgGUID: KEpAqU9zTRWnlvq1ckZmIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="166984908"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:01:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 14 Apr 2025 16:01:21 +0300 (EEST)
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-cc: bhelgaas@google.com, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, Lukas Wunner <lukas@wunner.de>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    alistair.francis@wdc.com, wilfred.mallawa@wdc.com, dlemoal@kernel.org, 
-    cassel@kernel.org
-Subject: Re: [PATCH v2] PCI: fix the printed delay amount in info print
-In-Reply-To: <20250414001505.21243-2-wilfred.opensource@gmail.com>
-Message-ID: <01ff78f6-0708-4556-1fce-69250d625b2b@linux.intel.com>
-References: <20250414001505.21243-2-wilfred.opensource@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CZLYlnOY"
+Message-ID: <39839bcb-90e9-4886-913d-311c75c92ad8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744635698;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=92Ns63mKqKSi1Gpjb4z8VtgowBHrPaaCCaojmxVMIOU=;
+	b=CZLYlnOYrK7MvKRVU8lfgTrDdE9WR+TaY23koug0t86L9mHPPxPReugOzKI/avqRADBrEP
+	l1rh9yUYnwwH6MUjUlkwEIVzw/MtG/qio10CHcHluDYUrWOa8I5EeitQgXkwqiFc09hZbI
+	pWiu0eZ2YwR7/QeNH7Rxvfdf4WWyjKs=
+Date: Mon, 14 Apr 2025 14:01:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-482290908-1744635681=:10563"
+Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20250414085412.117120-1-maimon.sagi@gmail.com>
+ <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
+ <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+ <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
+ <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 14/04/2025 12:38, Sagi Maimon wrote:
+> On Mon, Apr 14, 2025 at 2:09 PM Vadim Fedorenko
+> <vadim.fedorenko@linux.dev> wrote:
+>>
+>> On 14/04/2025 11:56, Sagi Maimon wrote:
+>>> On Mon, Apr 14, 2025 at 12:37 PM Vadim Fedorenko
+>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>
+>>>> On 14/04/2025 09:54, Sagi Maimon wrote:
+>>>>> Sysfs signal show operations can invoke _signal_summary_show before
+>>>>> signal_out array elements are initialized, causing a NULL pointer
+>>>>> dereference. Add NULL checks for signal_out elements to prevent kernel
+>>>>> crashes.
+>>>>>
+>>>>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs nodes")
+>>>>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+>>>>> ---
+>>>>>     drivers/ptp/ptp_ocp.c | 3 +++
+>>>>>     1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+>>>>> index 7945c6be1f7c..4c7893539cec 100644
+>>>>> --- a/drivers/ptp/ptp_ocp.c
+>>>>> +++ b/drivers/ptp/ptp_ocp.c
+>>>>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+>>>>>         bool on;
+>>>>>         u32 val;
+>>>>>
+>>>>> +     if (!bp->signal_out[nr])
+>>>>> +             return;
+>>>>> +
+>>>>>         on = signal->running;
+>>>>>         sprintf(label, "GEN%d", nr + 1);
+>>>>>         seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
+>>>>
+>>>> That's not correct, the dereference of bp->signal_out[nr] happens before
+>>>> the check. But I just wonder how can that even happen?
+>>>>
+>>> The scenario (our case): on ptp_ocp_adva_board_init we
+>>> initiate only signals 0 and 1 so 2 and 3 are NULL.
+>>> Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_show
+>>> when calling signal 2 or 3  the dereference occurs.
+>>> can you please explain: " the dereference of bp->signal_out[nr] happens before
+>>> the check", where exactly? do you mean in those lines:
+>>> struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+>>      ^^^
+>> yes, this is the line which dereferences the pointer.
+>>
+>> but in case you have only 2 pins to configure, why the driver exposes 4
+>> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+>>
+> I can (and will) expose only 2 sma in adva_timecard_attrs, but still
+> ptp_ocp_summary_show runs
+> on all 4 signals and not only on the on that exposed, is it not a bug?
 
---8323328-482290908-1744635681=:10563
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Yeah, it's a bug, but different one, and we have to fix it other way.
 
-On Mon, 14 Apr 2025, Wilfred Mallawa wrote:
+>>> struct ptp_ocp_signal *signal = &bp->signal[nr];
+>>>> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
+>>>> the end of ptp_ocp_adva_board_init() like it's done for other boards.
+>>>>
+>>>> --
+>>>> pw-bot: cr
+>>
 
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
->=20
-> Print the delay amount that pcie_wait_for_link_delay() is invoked with
-> instead of the hardcoded 1000ms value in the debug info print.
->=20
-> Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus()=
- wait time for slow links")
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..8139b70cafa9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_de=
-v *dev, char *reset_type)
->  =09=09delay);
->  =09if (!pcie_wait_for_link_delay(dev, true, delay)) {
->  =09=09/* Did not train, no need to wait any further */
-> -=09=09pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n"=
-);
-> +=09=09pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", =
-delay);
->  =09=09return -ENOTTY;
->  =09}
-> =20
->=20
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-482290908-1744635681=:10563--
