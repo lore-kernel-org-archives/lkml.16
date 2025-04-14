@@ -1,170 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A8C1A83E8
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7738F1A83E8
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744623718; cv=none; b=ZAsJ/SxZRN1V7EXljoWQCGSmEDOjRrDwwpLE1cld1BEFiMtrRbIT+RgmYh9GQvcQPnmrCyHVzZ8YQSmV/sqx8DXWOU07yJo59SAt2h9O9O/8dYZLh1jMrZtH1+JpermuDKgDawDTQdhRSog5KEjx3/AjwdeQcceZzJkJQ/OlO/k=
+	t=1744623725; cv=none; b=uLfHruVDLzTM9QP3Qb6xHQbGoVanXIFECnvX45kRfvC1Ksm15qR8SsGdj5Iqw2scMdVW0VO4tTb/k113ajui/ESczb9AQ8i4ou4iJ24vbGgt7AAeWU4dndkVFuTgp4sutjXz4xrDblQstGoC/XvwmIw1+822zMQmzeVXlFjBKw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744623718; c=relaxed/simple;
-	bh=GdQhefI5+oCSBALyDof/jblTMXYLvXJmYT0zE2k1BLM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PXOP04KYU97yZEoaY4l1ByS/MBd/KGS6msNmep5XsLOEFA6qzL5KrCfqqedKj6qK0pHBhut5rYXspR3SFWJ2f0M6TZg9lXnFxuY9BPkCSD8rupH6StkGpcztZv2OEvUZ3Q/Hf9IDuVP+RUq/kzaeZJxNg8aAIDEv+4zAOoZ3n3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uf6SZC9T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744623725; c=relaxed/simple;
+	bh=4RJpB0q5NaWPN8EEvbrCWUeXezOsr2VYL1mVYllqRas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PE1XzdqO2M/nVJW+KSBPbqaL3/ENP9BbsFEcC4FIvYTLalJ4/bNZu/wA2BnWMt9mqX7HVm2zyLWdMIxxWnRyr3uSoBTJfGPSrIqdMiRxihCEq12QD1qHxy2lo6TJV4f4U5YKIhHogy5asMuZtv2ht6nOoGFUlF+1eu9BsWAjvCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NyGj8Zxs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uf6SZC9T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B450C4CEE2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744623718;
-	bh=GdQhefI5+oCSBALyDof/jblTMXYLvXJmYT0zE2k1BLM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uf6SZC9TBZJIB1PfcaUKoHI/7U+IvCovUWI+UctNMryk6NZ13YIF0KZ4yL8Mg8Obw
-	 WSEl95JbEEADMp8JIT8y/9FJt86XsS4mSeirlTQbtHX9I0JI2blr4Xi2I7cq7rXnZr
-	 hSbujWCRng92kvPyE/hBcfxC8vG3/i7TG0rEnXxSUsM34QS1+YQ7watYLTR2TaM9ja
-	 CAPdlqhN3Dia0JmgWMe7iNDg+rkB29b++1kt2RyarIHD/8H2p9nTekEfF2ALk5THJ8
-	 vnVb4/RwqC1Vf5sOfbGScLbsgz4A7XTmI6+R7P7qUe9ouE6gxwjNPCzFrSq2yIUIRo
-	 G93mt0e7pdvSA==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54b1095625dso4401116e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:41:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLJ/tppyqNqzpTXPnlcIZ+JZKx0fjN2uz957WBdxAQ+rWyyNSyHyc6WA1zxnqkKvQkGw4IMXpEsydU1Lk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKDIUnjvMLw5thcXj8VLKDl41WSKxqEgggXmijI93wYFthu+HA
-	C4i8NOPE2G2XcS1vXl7UeOxx+wiyufum5p1NEaXio+hhnuTROFaZtS9ulZs8c2RsjjsCyxUBjq1
-	AZrrnlvmNYLFBgwW4TUUcUMZo2Js=
-X-Google-Smtp-Source: AGHT+IGN+2vl1e9n3k0ai4rr73RoRvHU15tFFhInBSxmBSENpQCtacFhAtCVM2nhqPHVvKR+Ig0uGsOvM7LzRyO2K+I=
-X-Received: by 2002:a05:6512:eaa:b0:54a:cc03:693d with SMTP id
- 2adb3069b0e04-54d45289cc5mr2765732e87.9.1744623716547; Mon, 14 Apr 2025
- 02:41:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NyGj8Zxs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744623722;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QK/7AZreqZVkjxHigwsMCq6Lf6FYPl5aMA5lsnqfXFs=;
+	b=NyGj8ZxsRh7HHlJKoJnS2uIJGO6spAH3Pzf0FGA0S5TRCgp1nDGUYM7JHdaNnokPuEFang
+	UqmQ9xQ6Id4QJg3xnkDhvUvPwSTKHCMss/NSk1u2IcDFukSzZb9t9uaJPhZq1nsA/8z/Xi
+	NtuErtwIZmLkrEYMyiouFE92n8I3viY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-172-CQWKBw4IOJyIy2gZwDsCvA-1; Mon, 14 Apr 2025 05:42:01 -0400
+X-MC-Unique: CQWKBw4IOJyIy2gZwDsCvA-1
+X-Mimecast-MFC-AGG-ID: CQWKBw4IOJyIy2gZwDsCvA_1744623720
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d917b1455so1574177f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:42:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744623720; x=1745228520;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QK/7AZreqZVkjxHigwsMCq6Lf6FYPl5aMA5lsnqfXFs=;
+        b=HtiSsM5ud7WCpGTvSRWpdRooFaMW3HQ9n2B/p9dQCjHMsreetBQssMNz6wXCH7q2kc
+         PyrVg6cDIHwlDljq6IIhmnwIuJbSyOwG1P3ZOdTEeruoxjQIIrqBxk/inP/fSqG0NAVz
+         kxEq1pdV/fwIXzTKM8DhY1gNytIDxB5ZSCxMBw/mYlVlIRzENlpu/f5mkIeTZpJTa0L6
+         Ct0KYQkzDod9vc7HkOr3UUg8MZgTV59AN8arUKWitNyjGgJN1i/a9T6Wem55OxR0acvU
+         cnoVVJKcPldIicyJAFSGxdhFd4pEDryUOo63MiuN/m3wqGpOlYQfAhLq4gSh4TbtztXx
+         EAPw==
+X-Gm-Message-State: AOJu0YxiKInGrLcnyyRW6jHaeIKFAY2iGTGGymgEmzDIhbUGtWqSiRvu
+	KU+JGfbvHSM9UkrQHASOINw4d9zuu9Fg4Lzx0CUkUNsKJTMJuniIirANErgVK8k+CiIu88+1Frd
+	gy6jD2CdQlwTm71miZrZxkeVjH91eNoPZnFHJieyR4BuVv8uv/RNw5Nxt5OcvTA==
+X-Gm-Gg: ASbGncssVoBUQi4zAfQc+Ghk56PBIS/DGFcQ/RWjvB4s6Vmm8Cvmy8a8KovpHIOzZKi
+	Xtu9DcJu6ougV2wJanx6d3GH13jGYy0iz/59mmr6TWsKNJIxJ6RTLOc95E8+tsAoR/0YUHAO7an
+	iXHI6X5dDwd5ZLXWCLLo1NhQyqOT/U6LPkk7fQlH8p0BRv5YVbnFCrZSAvvLdG3dHPa9doZIEwi
+	kPZRPBWG+ob5uEWg0s0UJPqkzOqWegUNqiOIBcVZjlOnL2pYobblCB+I1sTtWiZzVwuR7k30IGA
+	crQFsPbf8+LLELXYJMMLSmX9FbuaEXyYB6+yQLaDCA==
+X-Received: by 2002:a05:6000:40e0:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39eaaea5c7emr8320032f8f.32.1744623719689;
+        Mon, 14 Apr 2025 02:41:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGYqyuQrmaEBLpWZcIXDEX0QoeCfP/76Z7l2ly5E6JgeCKlmVL69eF+/i0kew7NeQFEw6hp7g==
+X-Received: by 2002:a05:6000:40e0:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39eaaea5c7emr8320009f8f.32.1744623719200;
+        Mon, 14 Apr 2025 02:41:59 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.27.15])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae963c15sm10702179f8f.13.2025.04.14.02.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 02:41:58 -0700 (PDT)
+Date: Mon, 14 Apr 2025 11:41:56 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Metin Kaya <Metin.Kaya@arm.com>,
+	Xuewen Yan <xuewen.yan94@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
+Subject: Re: [PATCH v16 5/7] sched: Add an initial sketch of the
+ find_proxy_task() function
+Message-ID: <Z_zYZAbv86MlITOM@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250412060258.3844594-1-jstultz@google.com>
+ <20250412060258.3844594-6-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com> <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
-In-Reply-To: <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 14 Apr 2025 11:41:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
-X-Gm-Features: ATxdqUG-h7FhdtKqi_-Pzig_Izf956mbmRP4wzK1BT0F8gINixEbIsmfTC8HPxc
-Message-ID: <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412060258.3844594-6-jstultz@google.com>
 
-On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
->
-> On 10/04/2025 08:40, Anshuman Khandual wrote:
-> > mov_q cannot really move PIE_E[0|1] macros into a general purpose register
-> > as expected if those macro constants contain some 128 bit layout elements,
-> > required for D128 page tables. Fix this problem via first loading up these
-> > macro constants into a given memory location and then subsequently setting
-> > up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->
-> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
-> of 128-bit types with shifting and masking, which the assembler can't do? It
-> would be good to spell this out.
->
-> >
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: Ryan Roberts <ryan.roberts@arm.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> > ---
-> > This patch applies on v6.15-rc1
-> >
-> >  arch/arm64/kernel/head.S         | 3 +++
-> >  arch/arm64/kernel/pi/map_range.c | 6 ++++++
-> >  arch/arm64/kernel/pi/pi.h        | 1 +
-> >  arch/arm64/mm/mmu.c              | 1 +
-> >  arch/arm64/mm/proc.S             | 5 +++--
-> >  5 files changed, 14 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> > index 2ce73525de2c..4950d9cc638a 100644
-> > --- a/arch/arm64/kernel/head.S
-> > +++ b/arch/arm64/kernel/head.S
-> > @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
-> >        * On return, the CPU will be ready for the MMU to be turned on and
-> >        * the TCR will have been set.
-> >        */
-> > +     adr_l   x0, pir_data
-> > +     bl      __pi_load_pir_data
->
-> Using C code to pre-calculate the values into global variables that the assembly
-> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
-> can instead pre-calculate into asm-offsets.h? e.g. add the following to
-> asm-offsets.c:
->
-> DEFINE(PIE_E0_ASM, PIE_E0);
-> DEFINE(PIE_E1_ASM, PIE_E1);
->
-> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
-> pre-calculated values that you can then use in proc.S?
->
+Hi John,
 
-There is another issue, which is that mov_q tries to be smart, and
-emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
-directive evaluates the argument, which does not work with symbolic
-constants.
+On 11/04/25 23:02, John Stultz wrote:
+> Add a find_proxy_task() function which doesn't do much.
+> 
+> When we select a blocked task to run, we will just deactivate it
+> and pick again. The exception being if it has become unblocked
+> after find_proxy_task() was called.
+> 
+> Greatly simplified from patch by:
+>   Peter Zijlstra (Intel) <peterz@infradead.org>
+>   Juri Lelli <juri.lelli@redhat.com>
+>   Valentin Schneider <valentin.schneider@arm.com>
+>   Connor O'Brien <connoro@google.com>
+> 
+> Cc: Joel Fernandes <joelagnelf@nvidia.com>
+> Cc: Qais Yousef <qyousef@layalina.io>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Zimuzo Ezeozue <zezeozue@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Metin Kaya <Metin.Kaya@arm.com>
+> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Suleiman Souhlal <suleiman@google.com>
+> Cc: kernel-team@android.com
+> [jstultz: Split out from larger proxy patch and simplified
+>  for review and testing.]
+> Signed-off-by: John Stultz <jstultz@google.com>
+> ---
 
-I wouldn't mind just dropping that, i.e.,
+...
 
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -545,17 +545,9 @@ alternative_endif
-         *         magnitude and sign of the operand)
-         */
-        .macro  mov_q, reg, val
--       .if (((\val) >> 31) == 0 || ((\val) >> 31) == 0x1ffffffff)
--       movz    \reg, :abs_g1_s:\val
--       .else
--       .if (((\val) >> 47) == 0 || ((\val) >> 47) == 0x1ffff)
--       movz    \reg, :abs_g2_s:\val
--       .else
-        movz    \reg, :abs_g3:\val
-        movk    \reg, :abs_g2_nc:\val
--       .endif
-        movk    \reg, :abs_g1_nc:\val
--       .endif
-        movk    \reg, :abs_g0_nc:\val
-        .endm
+> +static struct task_struct *
+> +find_proxy_task(struct rq *rq, struct task_struct *donor, struct rq_flags *rf)
+> +{
+> +	struct task_struct *p = donor;
+> +	struct mutex *mutex;
+> +
+> +	mutex = p->blocked_on;
+> +	/* Something changed in the chain, so pick again */
+> +	if (!mutex)
+> +		return NULL;
+> +	/*
+> +	 * By taking mutex->wait_lock we hold off concurrent mutex_unlock()
+> +	 * and ensure @owner sticks around.
+> +	 */
+> +	guard(raw_spinlock)(&mutex->wait_lock);
+> +
+> +	/* Check again that p is blocked with blocked_lock held */
+> +	if (!task_is_blocked(p) || mutex != __get_task_blocked_on(p)) {
+> +		/*
+> +		 * Something changed in the blocked_on chain and
+> +		 * we don't know if only at this level. So, let's
+> +		 * just bail out completely and let __schedule
+> +		 * figure things out (pick_again loop).
+> +		 */
+> +		return NULL; /* do pick_next_task again */
+> +	}
+> +	return proxy_deactivate(rq, donor);
 
-Then, we can apply Ryan's trick to move these constants into
-asm-offsets.c, but you'll need to tweak the PTE_MAYBE macros as well:
+Nitpick. We might either want to use donor (and remove p) or use p
+everywhere in the function; think makes it more clear.
 
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -182,5 +182,22 @@ int main(void)
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-   DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops,
-direct_call));
- #endif
-+#undef PTE_MAYBE_NG
-+#define PTE_MAYBE_NG           0
-+
-+#undef PTE_MAYBE_SHARED
-+#define PTE_MAYBE_SHARED       0
-+
-+  DEFINE(PIE_E0_ASM, PIE_E0);
-+  DEFINE(PIE_E1_ASM, PIE_E1);
-   return 0;
- }
+Best,
+Juri
 
-(We should also move the comment from proc.S to asm-offsets.c but I
-omitted that here for brevity.)
-
-Then you should be able to use PIE_En_ASM in mov_q instructions without issue.
-
-Alternatively, if changing the implementation of mov_q creates any
-problems, we can just add a variant of that macro that lacks the
-conditional directives and always emits MOVZ/MOVK/MOVK/MOVK
