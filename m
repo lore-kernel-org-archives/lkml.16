@@ -1,115 +1,212 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417A1274641;
-	Mon, 14 Apr 2025 15:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956171A9B48;
+	Mon, 14 Apr 2025 15:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644983; cv=none; b=n2vCOgx2RnSFTAnF97k9fqpS3pDgJKLnC/mjMwLufW3Czt3e9vWJub+sK8ncZckjg/VJNkjlffFht3jtsm8/nDVZqIdVFsYsijAj8/ZYVSMRFd03JEer7/JjvvwiB7xP2fbtXKsWea6GodUD3Pb39tjm7UoM9Ffg40T3U2NSgyQ=
+	t=1744645061; cv=none; b=eaVv2Ll58/yvhaYjArbNGuB0yLtFY8DHJ6dqADcfonDq8IPwLzoGm/itm/ZGxTRRuzQ+5cJsklW5k5SkAZ6CCrjs//AihlgnWsfqyMFAyCWFzMP8Dw2ebUfC5nlDBgyGKyOgL0DBCeCDsdwdQNBFSqWCXlez4mxEk2tX22j8qD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644983; c=relaxed/simple;
-	bh=pSe1a/5w5YFGWFBSIQgUt47dc05tpAipm/dfn4X1bzI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=gWkxPHnCmTmmpJNNGueoJu5prCJHP3AnWCMIsNFdtuKyondISyz9VYFCCzZp/wNncwX1nlS0tCAlguTmstlihkBNSAXOqvJ4/JGpDwNVj9ktSwwqeBdJnbEsndCvQzprc3ddTuoY4xqtf2xg289y1YRQXdG/AezpIs7qLzVV8gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G65MpwbI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F6nA/jkv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744645061; c=relaxed/simple;
+	bh=9eA0G2YnsWGbHG56g49nbEXD6xFoAGUKbnrZB7bpMaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMsnB9wPlElG6hRi60uEYBBu/dAaI2Oc5svpsBrPm2KbN9ZGV+M4FyjAgSOb2/fqSOflJPxL+c/uRgzG2mabVCRpQVPKBdAoFZbbFLCYLf4fZVKFe2YPp6CQ8xS3jkHuiMQzDuwZqR/GCtNcHB8M/fFkeif3wnJPcZrjtnkFtsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ROUdZb/A; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G65MpwbI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F6nA/jkv"
-Date: Mon, 14 Apr 2025 15:36:17 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744644980;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vsv2zN6FvKvtYohkvETjx/9zDLPOYPPhbrYicf37NP0=;
-	b=G65MpwbIL1P2e0/DEFxYlzB4P0MnkPxCIhEjKqxX7EkSvqTCkgY5KDOvPHy9H1ekQAttzN
-	sawiVlrlltKEUYBbtJ0vtz/wY23UA3ccgKrf1gRvepL7l33i8o5xKLNf29xe4dIsU02cuT
-	wNOUep+zmaeb1dVZgbG+IMiniwRdTQfyLbj8WaJeviPx6eVE5fmcGbQUoL1hnEhJd2r17a
-	xU/7EQZjYhdedMZjQPDjmT2s+lJs9BP3yo6P3oOAYmDZZhnINP+WNy8VBboX2qEwHOdYK4
-	5NxigaCw3fNYqphNM6Vcl+RXmWW9wMbOnxLkBLKm2QUN5Cr82uXpiInFgBt1kA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744644980;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vsv2zN6FvKvtYohkvETjx/9zDLPOYPPhbrYicf37NP0=;
-	b=F6nA/jkv9krBFBydmD2pXz7xmka6+28hA4IxSvqLQVBHrQrPUqkxoQKKEzQBcHqOsRHH0b
-	FN2hhnze2zj+CRCQ==
-From: "tip-bot2 for Pi Xiange" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpu: Add CPU model number for Bartlett Lake
- CPUs with Raptor Cove cores
-Cc: Pi Xiange <xiange.pi@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Christian Ludloff <ludloff@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Tony Luck <tony.luck@intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
- "H. Peter Anvin" <hpa@zytor.com>, John Ogness <john.ogness@linutronix.de>,
- "Ahmed S. Darwish" <darwi@linutronix.de>, x86-cpuid@lists.linux.dev,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250414032839.5368-1-xiange.pi@intel.com>
-References: <20250414032839.5368-1-xiange.pi@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROUdZb/A"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301918a4e1bso3506680a91.1;
+        Mon, 14 Apr 2025 08:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744645059; x=1745249859; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Mokm6ZH48h5sXQ5iAT2NSE+CCCr/3eOYDxIfr/1engI=;
+        b=ROUdZb/A7gBJBzaGTOQa37RaWCxJSfLBTZ6YRoTom7zwiD0ddOafdsZtJ6Fe2QYGqB
+         iutwSPIyC/EMF0avAQ9kaAPSx9mQ0yS0jWyyfox4Wpg2cSx/LbuI5+c5/0SNgfZwiZot
+         hjcufoxftlg0C75kBlQZtAWgtJPQzh0ZfJo6+sMOcOIirxFcEMUbIh3Z5sUdAjjmQLiW
+         vYuieKgANvTYe/goWkQy83o0GjnUXQGu6/PTphfrRVLhFiAfwuwN+qDVn5j3Jc1bsqTw
+         rtCL8pfS9tlDAhjIgMWN/zhOxh2eJkmpnomP39IOap55Goh9vCZyOFajYeW17prW/g5k
+         JPcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744645059; x=1745249859;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mokm6ZH48h5sXQ5iAT2NSE+CCCr/3eOYDxIfr/1engI=;
+        b=vNul2fgg1QetpxYF1tP8KPsZ/BIaRQ6jvMll6r118sfd8iOy59hlGgASI5GTad0zmC
+         GaMVZ9fLViufsMch7wtof/hIQs9uSj3CDIF5/rdHfjNX0tFYS7h8yK3ioP8+0ni78bR8
+         PkAW4wIFr9O5S2DwdoIq8sHRp/FvgcFUrg3oCtaqEWOL5C8tQ054N2hjPXQUM506eTR1
+         BjUTvjsO17FEgLJMIGrccHvftdhZra2KYnzLmfPCMP5PODsVTdUPXkjEcYLXKTb97N1M
+         H8fTDf5fK8fEFRLFmNINesK1Mf9WD5+8dW0u0gqp82QGf/pL7Uth7ELHDUvyzJkuu4ms
+         IEXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpi/071cVygeuVu60tbuwCLb8k7jEC2HwgTduXhiZuBZJmOYhDfokh9L0+WzzQZiVlM8RvqDh8z0Yd@vger.kernel.org, AJvYcCVFkLx5wKxixYXaA3IgRoBfqqE3hn7ENVGuiH/f+wSuVWhVAxXRGZwtDuCPTXOpC5jZuXGQUKH0EbVkTZr6@vger.kernel.org, AJvYcCVV7F+oOAlCniZXKHv632MffdXDt6bgzxSGjgr22rJGsJcehJee+e0pGrW5aKq9aDNC6algI6JMCOma@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw10j0Ipn7Cul/2ZJqF0AZs8Q5Ox0lYrgAZyJRHFV9KBgsr9vQQ
+	WUBHcy2HvDlAsOJlzHvQPuw7LaYC+p70DeJhQCKUAFNFZqtRb0H2
+X-Gm-Gg: ASbGncu3BqpTfiXLYVghSOek0WmhR4gi50QASflI57wCdrvhQ3+N67n9BryIWjtn/qT
+	npcpH3V6rRM2E3YI8BBMf2jUYFj4/h5LGHz3YWCd36Fb7MOxpt1ggFeVglRCdyuI+QgVio9Ao5Y
+	VTrf/5r0Td2+DxZVRq7m6at0s68qWTUFfcjAt0L0iRYlVqQxi4NgtwIvum1eVjVC5dZJV2bn83p
+	WLBYT/PPol0vOhl4rqRTnx319m9EUr7OmllKc0jGPW1x9fp5g3OScE51HAyLG+WNeGDzKy5Rihx
+	bovYsNwFOI6vSCphIHPorUrHMy5Pd2HrA965K9Asx42PSuMCEosZFnFq77Q=
+X-Google-Smtp-Source: AGHT+IGZsxgQ60vAJuvwxmwilDb8mJqLVo6mioN8QshkEcroQC5a2lPwjRGuXJKzKyRTL3DGpS4BOw==
+X-Received: by 2002:a17:90b:2891:b0:2ee:db8a:2a01 with SMTP id 98e67ed59e1d1-308237ce138mr14871891a91.30.1744645058550;
+        Mon, 14 Apr 2025 08:37:38 -0700 (PDT)
+Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-306dd2fe1a4sm6679448a91.0.2025.04.14.08.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 08:37:37 -0700 (PDT)
+Date: Mon, 14 Apr 2025 12:38:46 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v1 7/7] iio: adc: ad4170: Add support for weigh scale and
+ RTD sensors
+Message-ID: <Z_0sBomGtMKXysgJ@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1744200264.git.marcelo.schmitt@analog.com>
+ <56e76070b72d15950bf1fb01e68e94c42e79905b.1744200264.git.marcelo.schmitt@analog.com>
+ <149672e84f09fb178c90856920e3cfd4f140529d.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174464497802.31282.8938459942122265802.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <149672e84f09fb178c90856920e3cfd4f140529d.camel@gmail.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+...
+> > +static int ad4170_setup_rtd(struct ad4170_state *st,
+> > +			    struct fwnode_handle *child,
+> > +			    struct ad4170_setup *setup, u32 *exc_pins,
+> > +			    int num_exc_pins, int exc_cur, bool ac_excited)
+> > +{
+> > +	int current_src, ret, i;
+> > +
+> > +	for (i = 0; i < num_exc_pins; i++) {
+> > +		unsigned int pin = exc_pins[i];
+> > +
+> > +		current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK,
+> > pin);
+> > +		current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_VAL_MSK,
+> > exc_cur);
+> > +
+> > +		ret = regmap_write(st->regmap16, AD4170_CURRENT_SRC_REG(i),
+> > +				   current_src);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	if (ac_excited)
+> > +		setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_IEXC_MSK,
+> > +					  num_exc_pins == 2 ? 0x2 : 0x3);
+> > +
+> > +	return 0;
+> > +}
+> 
+> In the above I do not see any explicit GPIO configuration which makes me wonder
+> if having the RTD is mutual exclusive with having GPIOs?
 
-Commit-ID:     45842b59ec93a5c8f24b4e62f3a5759d3857c08e
-Gitweb:        https://git.kernel.org/tip/45842b59ec93a5c8f24b4e62f3a5759d3857c08e
-Author:        Pi Xiange <xiange.pi@intel.com>
-AuthorDate:    Mon, 14 Apr 2025 11:28:39 +08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 14 Apr 2025 17:19:30 +02:00
+For RTD sensors, it's recommended to use a different excitation mechanism which
+is configured in CURRENT_SOURCE and MISCELLANEOUS registers. The current source
+for RTD sensor excitation could come from a GPIO, but only implemented support
+for outputting the current from an analog pin. Will handle the case of using
+GPIOs in v2.
 
-x86/cpu: Add CPU model number for Bartlett Lake CPUs with Raptor Cove cores
+> 
+> > +
+> > +static int ad4170_setup_bridge(struct ad4170_state *st,
+> > +			       struct fwnode_handle *child,
+> > +			       struct ad4170_setup *setup, u32 *exc_pins,
+> > +			       int num_exc_pins, int exc_cur, bool
+> > ac_excited)
+> > +{
+> > +	int current_src, ret, i;
+> > +
+> > +	if (!ac_excited)
+> > +		return 0;
+> 
+> Same as above, if !ac_excited, can't we use the GPIOs? because
+> ad4170_validate_excitation_pins() just unconditionally sets
+> AD4170_GPIO_AC_EXCITATION. Or maybe this DT property is only adding
+> complexity... See below
 
-Bartlett Lake has a P-core only product with Raptor Cove.
+I see, maybe AD4170_GPIO_EXCITATION would better describe the function. 
 
-[ mingo: Switch around the define as pointed out by Christian Ludloff:
-         Ratpr Cove is the core, Bartlett Lake is the product.
+...
+> > +
+> > +			st->gpio_fn[3] |= AD4170_GPIO_OUTPUT;
+> > +			st->gpio_fn[2] |= AD4170_GPIO_OUTPUT;
+> > +			st->gpio_fn[1] |= AD4170_GPIO_OUTPUT;
+> > +			st->gpio_fn[0] |= AD4170_GPIO_OUTPUT;
+> 
+> Not sure if you gain much with having the funcs OR'ed like this... If I'm not
+> missing nothing it's only about logging in ad4170_validate_excitation_pins()?
+> It's up to you but I would consider using bitmaps (unsigned long) for this and
+> just test the bits.
+> 
+Ah, yes, a bitmap is what was trying to do but misimplemented it.
+There are 4 possible functions for AD4170 GPIOs.
+(1) Power-down switches (currently not supported);
+(2) External sensor excitation;
+(3) GPIO;
+(4) CHANNEL_TO_GPIO (not eager to support that).
 
-Signed-off-by: Pi Xiange <xiange.pi@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Christian Ludloff <ludloff@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>
-Cc: x86-cpuid@lists.linux.dev
-Link: https://lore.kernel.org/r/20250414032839.5368-1-xiange.pi@intel.com
----
- arch/x86/include/asm/intel-family.h | 2 ++
- 1 file changed, 2 insertions(+)
+If a GPIO is used for external circuit excitation, we don't want to export it as
+a GPIO. If the GPIO were set a power-down switch we would also not expose it.
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 3a97a7e..be10c18 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -126,6 +126,8 @@
- #define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD) /* Redwood Cove */
- #define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
- 
-+#define INTEL_BARTLETTLAKE		IFM(6, 0xD7) /* Raptor Cove */
-+
- /* "Hybrid" Processors (P-Core/E-Core) */
- 
- #define INTEL_LAKEFIELD			IFM(6, 0x8A) /* Sunny Cove / Tremont */
+...
+> > +
+> > +	ac_excited = fwnode_property_read_bool(child, "adi,ac-excited");
+> > +
+> > +	num_exc_pins = fwnode_property_count_u32(child, "adi,excitation-
+> > pins");
+> > +	if (num_exc_pins != 2 && num_exc_pins != 4)
+> > +		return dev_err_probe(dev, -EINVAL,
+> > +				     "Invalid number of excitation pins\n");
+> 
+> Can't we assume that a valid num_exc_pins property means ac_excited = true?
+> Because that looks to be the logic in ad4170_validate_excitation_pins().
+
+Unfortunately, no. The user may want and set AD4170 to DC excite the external
+circuit. They may want to use the same set of excitation pins, but not enable
+channel chop or output current chop (leading to DC excitation). Well, we may
+choose to not support the DC case in the driver I guess, but since this is
+already fairly complicated, why not going an step further to support it fully?
+
+> 
+> > +
+> > +	ret = fwnode_property_read_u32_array(child, "adi,excitation-pins",
+> > +					     exc_pins, num_exc_pins);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret,
+> > +				     "Failed to read adi,excitation-pins\n");
+> > +
+...
+> > @@ -2081,6 +2412,10 @@ static int ad4170_parse_firmware(struct iio_dev
+> > *indio_dev)
+> >  
+> >  	/* Only create a GPIO chip if flagged for it */
+> >  	if (device_property_read_bool(&st->spi->dev, "gpio-controller")) {
+> > +		for (i = 0; i < AD4170_NUM_GPIO_PINS; i++)
+> > +			if (st->gpio_fn[i] != AD4170_GPIO_UNASIGNED)
+> > +				return 0;
+> 
+> I think you could improve this... You're taking an all or nothing approach.
+> IIUC, we can have cases where only two GPIOs are in use which means we could use
+> the other 2? There the gpiochio init_valid_mask() call that you could
+> potentially use.
+
+Isn't gpiochio init_valid_mask() only to distinguish between GPIOs that can
+(or cannot) be used as interrupts? Not sure AD4170 GPIOs can be used for
+interrupts at all (think they can't) so didn't implement init_valid_mask().
+
+Thanks,
+Marcelo
