@@ -1,310 +1,364 @@
-Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+Received: from mx0b-007b0c01.pphosted.com (mx0b-007b0c01.pphosted.com [205.220.177.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC6DDDC3;
-	Mon, 14 Apr 2025 20:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744662995; cv=none; b=Tz/JYO9c0eVDJvhibTPdy+hNKnnMh9VAhLTwHlOidyRqGin5QsphZrqtVVl9xZO18Isn/OkyBw5OGqNzSZF0xIn1DlsMNFObZksWfFoPj9UiT7fqM5l4o2duxv2z/OhXAfnp9/89ZrRS6agvEmJQ+YHRojOYNEmhSpQE4qNK0+c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744662995; c=relaxed/simple;
-	bh=H3AlfWc4HckikePy1/xy0xWTAGiqVTou0EoOHD2VbyY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L2rGw56vFi9jqr63GqDSQwFbRcg5FopIMfAG4FAzIjYsJhIKzVNo43gxS5wJ2bshLbeQ5DdVrojAFY+ZFJVBR2E0nid8lBdhTWE/G9JSNKWkkYZxXjRYMJ4f1xPbkWNRbFqHYVa8I4lxRbZieehdSiJkHlbazdVp+K/0mI5Cdms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=rmGH6Xyb; arc=none smtp.client-ip=168.119.26.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD3018E20;
+	Mon, 14 Apr 2025 20:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744662994; cv=fail; b=Ya/QZeWhO+LGalexKAZUkUD/O68Cqinh5Ojqwei84w8MMZEiGrGQFz3OlIJuWBhofhjbUD2isCmz3PT2zaTiTis+g+ePZeZKXOCHWBl/8IF92+ZY0DLACFj/TMGvJelX7sjfSwPPkkRXbs0s8SiTNFSixstJdulkrran3Dk7gro=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744662994; c=relaxed/simple;
+	bh=v4xh7eDsEMC4aIX9XC9xr7b1tsZt+JcT3o+Qxgk+9YA=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=o9Or3m/gfz4QDfsG/SYbabjTD4AIgubTfDxmgr1q1MbYU+9DktMeAcGgrUg11MoghHH8cnKdCF3Sp1MVGdXys51xwJNSRFNjdTyqef9BRlwtfjwbTVNSvRdeuRDFhj+9AVIjZWZKCVOD00cP3sdQA6bzXjzu1eknt5uxS9WJwAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=GfDdW0be; arc=fail smtp.client-ip=205.220.177.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="rmGH6Xyb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
-	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=zW7oKL0wQmrcu03UddL03xW7nNuPlUCo3FfX9tH6gX8=; b=rmGH6XybWFqiNCYXDN0aGMTR7d
-	sZPnrWqQDdi55fd1ktRwLOz6FSbGdMUO69FdDrbDEP5GHFfg0837VAxonvWUL4Htxk7Y9RV3Yg88o
-	JvuXNNpc9p/yWi6QK55SW0AYFYdAeke4C5MLEaSMkEe65bm2oQSjhYK4EYkhguSHty8FHhcM84R7E
-	KZ4ZdHLqHPEaL6TSUx7eX2bml1N4lxkhCu6H0P78vAX9ND6K95l82kfdJn9RTevBiA93t/8m108NV
-	YOzhN0TKg7yMRWD4pCg/TVKPDOojB6AWgv4h4VYPIdYgVvVL+fjNaql2X82CFtgFfYfliMSdz1+65
-	/Mf9svFQ==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <git@apitzsch.eu>)
-	id 1u4QXV-000ApX-0m;
-	Mon, 14 Apr 2025 22:36:21 +0200
-Received: from [92.206.190.59] (helo=framework.lan)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <git@apitzsch.eu>)
-	id 1u4QXU-0008F8-36;
-	Mon, 14 Apr 2025 22:36:21 +0200
-Message-ID: <589344c6d63f6dfef39e85c65f8142d0e23046ce.camel@apitzsch.eu>
-Subject: Re: [PATCH RESEND 0/4] media: i2c: imx214: Problem with CCS PLL
- calculator
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Ricardo Ribalda <ribalda@kernel.org>, Mauro Carvalho Chehab
-	 <mchehab@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 14 Apr 2025 22:36:19 +0200
-In-Reply-To: <29677b7d5ceb07693d0b530c88a5aa9bde6c04dd.camel@apitzsch.eu>
-References: <20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu>
-			 <Z87I2xh0HY-YD_tZ@kekkonen.localdomain>
-		 <4c62bb9d5575e9075b39500917e09687d37cf7ca.camel@apitzsch.eu>
-	 <29677b7d5ceb07693d0b530c88a5aa9bde6c04dd.camel@apitzsch.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="GfDdW0be"
+Received: from pps.filterd (m0316046.ppops.net [127.0.0.1])
+	by mx0b-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EIqMKY028844;
+	Mon, 14 Apr 2025 15:35:45 -0500
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2047.outbound.protection.outlook.com [104.47.57.47])
+	by mx0b-007b0c01.pphosted.com (PPS) with ESMTPS id 4608n31tmp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 15:35:44 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tIX3QZVP3c33eYxh4hklGbW0ulGpzHqLQwD0c4IGXQPZ1+t1XAXxvkGs6L6qUwbgEfa2vqEW7qj0Uf+diiyl6a9zkyDGsYWitpmV3JqaFnkn7q48OyTdS3z8TCxEDqBtXNxDPj8qlelTr7xuR2yWdoVTuM+GcpDlRNXLwyb3k/jISxQQkVw2qkTzR3AHhHTy6CdUjEQGVxM5lO5pQbx9QZ4oEt+8W9cVPEa/Ur17VRfzQwoJq7UQAmmZCXm72TEuRDR4/3jUZ7Zjuz72X/JQSnLvkx/YNjiqtGUMQr6hYEwBw4zqwauFEbsSl9uNPT3ES1CkPwFwCNiua+JOxGZipA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nBBheZoW40t854ecFlKtBQXGV0NOwLBJrwQ4EkrYMpM=;
+ b=I7SC3SQevQWl7bwyO8aU2dlYdUNkXcot0OwI2bR98ddP0URLtRiV2d/pHC19k/Fgjl82ZphUfH2dODWuq2nAAHDz0ijIozZ4TOnOaboyPPh6W16BfXmhr2kORCBpjXLk5DXsGWcWCOrYB1crmgVpuv4FGFMB6TNHlYZT4ZUiBvuH/nCyszTN7sD2v2beMxjAgpS33I4CyTVkhfIO7D4T11oxYp5S2oHs5uU8SZzCmiRSsH178KtcewUkyjwIzCY+KBQpoYzU/Wyjbia/khK9W1yzw4z24UYv48P9UFTtAZjcWeQgtZEnDSeM359MyY9RzonRNUkYJmQr8FqpJ1hUtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
+ dkim=pass header.d=cs.wisc.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nBBheZoW40t854ecFlKtBQXGV0NOwLBJrwQ4EkrYMpM=;
+ b=GfDdW0beSAHef2WHDkYFZjd1ciw/wJEusGpiFYRVA7oAJEtPcxO42E5HF9FLYjKtNBYq7xH/w21N65Vvsavb8vDHb5/10kh98jVdtsrYdbRG4pUAacyqtnbMJtmsO6T8DnRLwWkjiGL9J9MGLTBzw03Yt0zrcZjf482tkYMQukWXRyBezUR41K04imbqzUiLLc6PjN/Fs7azBXQhm64gmaLY/IaK6OgUu4Sl736jh2CfwVQ1is+XzqjD2il0oEftyIRiGWNd9brhGqPhJgqx2bC4wL0Wbm98bXWmYcEbnbSgYppLKpx+ZmmMULsw7f6CZY3pzOvOPMXTgdM9NcJ8dA==
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
+ by DM8PR06MB7815.namprd06.prod.outlook.com (2603:10b6:8:37::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
+ 2025 20:35:43 +0000
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 20:35:43 +0000
+Message-ID: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
+Date: Mon, 14 Apr 2025 15:35:41 -0500
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Junxuan Liao <ljx@cs.wisc.edu>
+Subject: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for page
+ faults
+To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0187.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::12) To DS7PR06MB6808.namprd06.prod.outlook.com
+ (2603:10b6:5:2d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authenticated-Sender: andre@apitzsch.eu
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27608/Mon Apr 14 10:34:28 2025)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|DM8PR06MB7815:EE_
+X-MS-Office365-Filtering-Correlation-Id: f84048de-9307-430c-3d05-08dd7b93ed64
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|41320700013|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?elZ1SmdtbDM1RVVhNlI5bXZGTTRxdjVGbEx3U1hQbUdCdk9ldW5ZNnBVMTJl?=
+ =?utf-8?B?cUM2Mkc2c1ArY2xnS3VxSGVaTW5nY0hwc3E2ZXpTdnZrZldhQTRCVW15MUdz?=
+ =?utf-8?B?Rkk1VGRJME5UeEhLdXRMTStpSnhwRHZkcEozdDA0VGtOWk0waGZFUjVuM2w1?=
+ =?utf-8?B?WUZJa0taZVcxakZnbytjdkJ0NFk1dVc2bFd0L3Y0VWF0eVc1eVZjTllqL3M0?=
+ =?utf-8?B?eWZzZ1lkOVU3bHMyQmVpeXJ0MVhyN0NZYUVTeTU3d2dRTHpGUENFL0NtYVh1?=
+ =?utf-8?B?dFZsUEROQ1p6QUFHYTVXYTJGYVdMWjd3S25yam9vbjJnQnlGNXQwMzRxZE5i?=
+ =?utf-8?B?cHcrcWRDWmRvMXZTOElLaXRaQ2RLcmRzRlhsSHVKUm95dE1pT1RIejhrbUsv?=
+ =?utf-8?B?ZW01WXRwbjNKS05xRkJPcytjZDRSQWFMdGVISkZlUlNhMzY3L09xNXA4czlx?=
+ =?utf-8?B?clNEWERoSDhGU0JjM3VFWG9uRVpJYVk0b21yby9UZ0hnWC93clJQMmVFTjdy?=
+ =?utf-8?B?TStEbi9LcEhhVzRuS3N5bHN4RGIwUjFXcng4b0pqT3hJTUgvNGdPcEdkWW5w?=
+ =?utf-8?B?dHh2akZ1amxVOURnRzBmcE1YYndYcGlrZWtMRGdzSEpnV1BlejZLZmdlUTM2?=
+ =?utf-8?B?U3ZxMG03OG14Q3R3czJwYjV0aExsYWVxaTBiclVycmw5MlV0YkRjTXNuUFRi?=
+ =?utf-8?B?a1NJZVUzeUJERUtSZTVWdTBoWHpmd1pBVDBkOGtwMXdFZ1c5R3l5QjFxbEZP?=
+ =?utf-8?B?UmxhaDRhZ050Y21CS0kxS3FGRmlVYk9PbG90VjQybXc0TlE2RjFnSnpQRVBx?=
+ =?utf-8?B?V2ZNS093ZlQ2bCtDL21EblJ5VFYzMzZYL3VxSTM1TE0wc2FPZXN5WmUvdTFk?=
+ =?utf-8?B?YkNVUDE2b1RUMlNKb2xnWHJ1MmxMODhYLzRHS0FaYVU3eDk0OFVoNWkza0ty?=
+ =?utf-8?B?L3BtL29MbW44TEEvbFNmWHd0Q2dENWp1THNOL2IwRHZLeXFndzdKaUlUcGdU?=
+ =?utf-8?B?cTc0cjlrQlA0RlY1Zmp6Ti9RQTlpWUczY3dOa2xUaUtjOUhHWkZjUzN0UVNF?=
+ =?utf-8?B?ek9MZmpCZ3dEZ2xEZmNsZ1RQQS92Q01Qc1IrdmlwdVFZTWlXek82d3ltT2FY?=
+ =?utf-8?B?T1RweWw0OTVOVHJtZERPWWRSNjVKYmhzTEd6QkVBS0pNWnVtTkU1ZWN0VFMv?=
+ =?utf-8?B?NGRibGwrNisyUm5ZY3FFYTBOU3JHK0NLRVdIVko2ZUpSM2JYNW5wK3AwQ09r?=
+ =?utf-8?B?WEJjKzFsMkovRTdMak11YWljVUhKMFF4ejdta2trVWViTHhWTUEzTnhlSFY5?=
+ =?utf-8?B?YXdmdEtETlRRMnpmN29KVGp3SDJTaFRmZWFPOGtGOUVqbzUydDRCNWl1VWNs?=
+ =?utf-8?B?VUtpMjY0ejFONU41WW5BMUcyTFFkYzhjMGV6VUJJUWVsYVIxVEFGK2dqQXQr?=
+ =?utf-8?B?ZnJndjBIVlZRQjJIbmdEUUxIbmJ4VjRzaFNDLyt6ZWQ4T0ZpT0tTcWgvUUxV?=
+ =?utf-8?B?ZGhjK3NjQVRjbzJRUUlmNC81NnN4QnRMSXNTL0tMQW4weEVpN09BSDV2cWYr?=
+ =?utf-8?B?bEZweEU4czBOUGJ1ZkZuUnVmYkpqS3FsQTdxbGVMbmpZMk5TL0tFNnlFMVdM?=
+ =?utf-8?B?TGRsWjZ1L0o4Mktab3lCOFo5Q2dZMllOeE0ybk0zUTJMRGpUUk5FUWZ1S0Vy?=
+ =?utf-8?B?QW0xQlU3MmlibmRqUGNzTlVJK0dPVnlBV1VJM29EUWpjOCt3K216bWVnOHk0?=
+ =?utf-8?B?VVlNSmd5ZHVNa04rRUtQTUkvNEl0cU1wN0x1dzYyL0MwMENRKzc3SDNlQ1lr?=
+ =?utf-8?B?NTArWHJvdmFCN2YzNW0wTEs1ZHpzMmZtcEFqRVNIa0xCUFV0cHMydjI4cTlu?=
+ =?utf-8?B?clFCR2MrdDc1ZmdrcWt2Z0dOZ2tLakhzUVVPNXY3ajFYV1R0TStiL1krWTBM?=
+ =?utf-8?Q?MdTppuaiJeY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dXc5dWZFcW9zQzVWMnEzVmVlZFhDeUNyNHJzZnNHeUt1OVBBSm83R0xiZGV0?=
+ =?utf-8?B?VWVkRE9YT0x0QVZoWGtVVkF1Z09nR1NhMXNlUC9jVFcxT3dCRXpQdUpDTEp1?=
+ =?utf-8?B?NmxsdlFxRmI3eUxERWdwSDhjSytVc05OZURsb1N3aDk5ZERzaGZPTUU5UlJn?=
+ =?utf-8?B?QjllaTRNYnlNVFpYL3JKemZLQ3lCdDl1NFlzQ21mdjI0WnhBank4MEtNU3Vo?=
+ =?utf-8?B?bmNxV2R0N1lrY1hZaFNMdGJHSjVtcU44aEdNOGNzdldSZWRKNjYxUkkreDJG?=
+ =?utf-8?B?c3RSbVQzN2pDYTVJVlgzU1Z1NUt4NHQyWFlhaC9zM0ZQbXB3Q3BmeFROUXhS?=
+ =?utf-8?B?R0FQWHB3MVlhc2JVL3lLWkhURUpobUtWRWp5dmFxQXN6clptSmhQVW9reFJ3?=
+ =?utf-8?B?cDZkNXpsRGpsZytWK1ZJYVM4MVdSeUM0NWhUV2g2L1lkZ3Q3bHJZL0xudm02?=
+ =?utf-8?B?Sk1Xa09pNW9nZXIyYkR4cEtWSDlPUU5XUU52SzZXK3hhTWJoR1phclB2eUgy?=
+ =?utf-8?B?eWgrNk9nWGFBRWtndTlxMThISU5pMEdNeSsxME1BOVp6L0h5MHcycFVoNjRM?=
+ =?utf-8?B?Mk5kTG40K0VRamhsZUhJUW1YTE9vRTd1MHlSOHdyQ280Vy9FMTNmNjJjM3hL?=
+ =?utf-8?B?bTFjLzE1SzJOaVNDMmI0T2RHS2hVYjRLcXdadWczOUJUWU4xVDBsbWVDV1E0?=
+ =?utf-8?B?Q1hwWWE3QkFOQ3MyY0FXUHViU1d6Y2VDeVZVZG1xVFVQVk92NWJUV3hRMFc5?=
+ =?utf-8?B?ZDIxcmhUVU5YbVBqTU5DSnZWUGhEc21pSXJIUVAxUzZnd3l1cEtFNDQ2QXdN?=
+ =?utf-8?B?UVB3RTVhaGtTRy9mb3paWWp0Q2owUHdkbU03R0FObjArN2NMeTVPNlV5VDNw?=
+ =?utf-8?B?VVNwTWNxcURpbjNPOE03M0ZkenBKUHlvQ0Z3cTgxUTVFdHpHWnIzVy9FeTV4?=
+ =?utf-8?B?SEI4bGJrTjdqeDM5S2I5c1IwSnhyT2JOMHlFOWwrREJFc0xBeWJWbjlqVVRq?=
+ =?utf-8?B?K2xhSmFCaTdGakh1WG8vVGRYYTJEWmFacjhwVUtmTWJNNWNETndxOVNCdmFJ?=
+ =?utf-8?B?bU1FSld1TmdDczd5MGpabTFPYzQ4OExjdnViMVdJZ0hOTWJMczgzWE0zUzls?=
+ =?utf-8?B?NTlKWXRKTGV5THpCUTNqNWJzWmF3N1p4YWZSYnJ3SDVWUzV4aUdmMk1XWVRL?=
+ =?utf-8?B?RElmbnF2MnIwWWhrQW54Wk0xNDFKT3dLV3VaZlVSeWljZjkvTkRnbWVydUNv?=
+ =?utf-8?B?eGRPcG90Uys5ZE4yQS9IY1JzZkpJcWpKdEVITU5Dc1VDMXRtWG1VWk5icm1C?=
+ =?utf-8?B?V3RsRnhJQWZTVDM4emFjL2tzWjhieldqZzZPR1JqQmc4emxpZE42cnhCQ2Y2?=
+ =?utf-8?B?MEs0QTV0Tnp2Y3VaVXBqaGJ5SXBxdmE4RVVaNnFiSlo3a1JjdExIdDY3Q2Nx?=
+ =?utf-8?B?bHRWVzRYZ2hvcjhaRDJqRmtxdXljNkp4Wkg4VEFZQnNTekptbWlzQVQ2YlFw?=
+ =?utf-8?B?UmR6WVR5c1h1cXlaMFdrR21XR3pjWUttVk42R3UrMWFaTTB0Z0R6OHNVeC8r?=
+ =?utf-8?B?Mmg4Z054bVVnaFZxdlhnakpEUVBSUkRtSkdxaTV2ZDBjd3Rod2FIVXJnOHJC?=
+ =?utf-8?B?dGxvNzFjRVd5VUlQc0RZYWdpbVlWZ0xpd0J6dnRPNVVxZGlJbnFMWU05OFNR?=
+ =?utf-8?B?a1h2V0E3NGdQUCtkVGlJdHFYY3VoREhxdkhzZXNmSEhZaEFZSndlV0pLckR6?=
+ =?utf-8?B?VU04UFdnVGtyWFJWeENsdEZNN0s1MTVybnJnOU54SnlBZ2F0TlAzQjNQY2Nh?=
+ =?utf-8?B?WDBzZlJvcVdCMHhIK29hY2g0Z1FqMDlIZ1drQk5LTmhjWlNhd2JiYm5SMzU2?=
+ =?utf-8?B?VWwrTmx5OVZRWHdlMHBmY3Q2WWlTVVMxZ2NuTytMODh3TjBQODZtek12SDJ1?=
+ =?utf-8?B?VDBpL1NqY1ljcW82ZDBFNWxlMzRDNzFlRGpRSzNYM0lOam10bXM3a1FhNGtK?=
+ =?utf-8?B?SmYwM1dKd0pjMU4rMFhrVVhQeHlwWG4xNTVpcmJKcXdyUVk1YlFRUk1aNTZB?=
+ =?utf-8?B?aTNVZS96bGRjZ1JqaUVHRW0zVHpEdm5EdnU2aHdSNDdEd3pEZ2xVcGQzd2pU?=
+ =?utf-8?Q?P9o1XQQQShyiUgZHurBfEhAcH?=
+X-OriginatorOrg: cs.wisc.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: f84048de-9307-430c-3d05-08dd7b93ed64
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 20:35:43.1210
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5r9kuL/Su0zPHg1l4lhMtAj+9txRmjsc4z0hMtGQr67X4NyW5lx7860uphkUGmkbrmMsuRXvVuPEHQF8WP3Y1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR06MB7815
+X-Proofpoint-ORIG-GUID: jfqK44b7QBNiCMD8nFYtW1ja3J_edf25
+X-Authority-Analysis: v=2.4 cv=R+MDGcRX c=1 sm=1 tr=0 ts=67fd71a1 cx=c_pps a=RoG0BMNHDmmKSZcrvsSD+g==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=3-xYBkHg-QkA:10 a=VwQbUJbxAAAA:8 a=E2wWf0L7ji8XHI0cZFEA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: jfqK44b7QBNiCMD8nFYtW1ja3J_edf25
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 spamscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1011 phishscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=699 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140150
 
-Am Montag, dem 07.04.2025 um 21:10 +0200 schrieb Andr=C3=A9 Apitzsch:
-> Am Montag, dem 10.03.2025 um 23:35 +0100 schrieb Andr=C3=A9 Apitzsch:
-> > Hi Sakari,
-> >=20
-> > Am Montag, dem 10.03.2025 um 11:11 +0000 schrieb Sakari Ailus:
-> > > Hi Andr=C3=A9,
-> > >=20
-> > > On Sat, Mar 08, 2025 at 10:47:54PM +0100, Andr=C3=A9 Apitzsch via B4
-> > > Relay
-> > > wrote:
-> > > > The imx214 driver currently supports only a 24MHz external
-> > > > clock.
-> > > > But
-> > > > there are devices, like Qualcomm-MSM8916-based phones, which
-> > > > cannot
-> > > > provide this frequency. To make the sensor usable by those
-> > > > devices,
-> > > > add
-> > > > support for 23.88MHz clock.
-> > > >=20
-> > > > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > > > ---
-> > > > Andr=C3=A9 Apitzsch (4):
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Calculate link b=
-it rate from clock
-> > > > frequency
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Prepare for vari=
-able clock frequency
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Read clock frequ=
-ency from device tree
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Add support for =
-23.88MHz clock
-> > > >=20
-> > > > =C2=A0drivers/media/i2c/imx214.c | 188
-> > > > +++++++++++++++++++++++++++++++++++----------
-> > > > =C2=A01 file changed, 146 insertions(+), 42 deletions(-)
-> > >=20
-> > > Thanks for the patches.
-> > >=20
-> > > Do you think the driver could use the CCS PLL calculator? The PLL
-> > > appears to be compliant. The AR0234 driver will do the same. (The
-> > > sensor might just work with the CCS driver, too, but that's
-> > > another
-> > > discussion.)
-> > >=20
-> > Using the CCS PLL calculator seems quite complicated compared to
-> > switching to the CCS driver. That's why I looked at the later
-> > first.
-> > But for it to work, quirks already need to be applied in
-> > ccs_power_on(), to disable writing to COMPRESSION_MODE, and in
-> > ccs_identify_module(), to change the MODULE_MANUFACTURER_ID
-> > register.
-> >=20
-> > I'll check if CCS PLL calculator could be used.
-> >=20
-> > Best regards,
-> > Andr=C3=A9
->=20
-> Hi Sakari,
->=20
-> the CCS PLL calculator seems to work (up to one problem) and to be a
-> more elegant way forward.
-> The problem is, that the pixel rate is too small by a factor of 10
-> and I cannot figure out why. Any help would be appreciated.
->=20
-> My devices uses a clock-frequency of 24000000 and a link-frequency of
-> 600000000. There are four data lanes.
-> The calculator returns a pixel rate of 480.000.000. The expected
-> value is 4800.000.000.
+Rename page_fault_{user,kernel} to page_fault_{user,kernel}_enter, and
+add the exit counterparts. This might be useful for measuring page fault
+handling latencies.
 
-Hi,
+The exit tracepoints use a separate static key.
 
-Everything works as expected.
+Signed-off-by: Junxuan Liao <ljx@cs.wisc.edu>
+Link: https://lore.kernel.org/9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu
+---
+ arch/x86/include/asm/trace/common.h     | 18 ++++++++++----
+ arch/x86/include/asm/trace/exceptions.h | 32 ++++++++++++++++++++-----
+ arch/x86/kernel/tracepoint.c            | 22 +++++++++++++----
+ arch/x86/mm/fault.c                     | 21 +++++++++++++---
+ 4 files changed, 75 insertions(+), 18 deletions(-)
 
-For some reason, I assumed the unit of pixel rate to be bits per
-second. But to get the bits per second, the pixel rate needs to be
-multiplied by bits per pixel (here: 10), which gives the expected value
-of 4,800,000,000.
+diff --git a/arch/x86/include/asm/trace/common.h b/arch/x86/include/asm/trace/common.h
+index f0f9bcdb74d9..4b289be75173 100644
+--- a/arch/x86/include/asm/trace/common.h
++++ b/arch/x86/include/asm/trace/common.h
+@@ -2,11 +2,21 @@
+ #define _ASM_TRACE_COMMON_H
+ 
+ #ifdef CONFIG_TRACING
+-DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
+-#define trace_pagefault_enabled()			\
+-	static_branch_unlikely(&trace_pagefault_key)
++DECLARE_STATIC_KEY_FALSE(trace_pagefault_enter_key);
++DECLARE_STATIC_KEY_FALSE(trace_pagefault_exit_key);
++#define trace_pagefault_enter_enabled() \
++	static_branch_unlikely(&trace_pagefault_enter_key)
++#define trace_pagefault_exit_enabled() \
++	static_branch_unlikely(&trace_pagefault_exit_key)
+ #else
+-static inline bool trace_pagefault_enabled(void) { return false; }
++static inline bool trace_pagefault_enter_enabled(void)
++{
++	return false;
++}
++static inline bool trace_pagefault_exit_enabled(void)
++{
++	return false;
++}
+ #endif
+ 
+ #endif
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/arch/x86/include/asm/trace/exceptions.h
+index 6b1e87194809..76729fcdb249 100644
+--- a/arch/x86/include/asm/trace/exceptions.h
++++ b/arch/x86/include/asm/trace/exceptions.h
+@@ -8,8 +8,10 @@
+ #include <linux/tracepoint.h>
+ #include <asm/trace/common.h>
+ 
+-extern int trace_pagefault_reg(void);
+-extern void trace_pagefault_unreg(void);
++extern int trace_pagefault_enter_reg(void);
++extern void trace_pagefault_enter_unreg(void);
++extern int trace_pagefault_exit_reg(void);
++extern void trace_pagefault_exit_unreg(void);
+ 
+ DECLARE_EVENT_CLASS(x86_exceptions,
+ 
+@@ -34,15 +36,33 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+ 		  (void *)__entry->address, (void *)__entry->ip,
+ 		  __entry->error_code) );
+ 
+-#define DEFINE_PAGE_FAULT_EVENT(name)				\
++#define DEFINE_PAGE_FAULT_EVENT(name, reg, unreg)		\
+ DEFINE_EVENT_FN(x86_exceptions, name,				\
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs,	\
+ 		 unsigned long error_code),			\
+ 	TP_ARGS(address, regs, error_code),			\
+-	trace_pagefault_reg, trace_pagefault_unreg);
++	reg, unreg)
+ 
+-DEFINE_PAGE_FAULT_EVENT(page_fault_user);
+-DEFINE_PAGE_FAULT_EVENT(page_fault_kernel);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_user_enter,
++	trace_pagefault_enter_reg,
++	trace_pagefault_enter_unreg
++);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_user_exit,
++	trace_pagefault_exit_reg,
++	trace_pagefault_exit_unreg
++);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_kernel_enter,
++	trace_pagefault_enter_reg,
++	trace_pagefault_enter_unreg
++);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_kernel_exit,
++	trace_pagefault_exit_reg,
++	trace_pagefault_exit_unreg
++);
+ 
+ #undef TRACE_INCLUDE_PATH
+ #undef TRACE_INCLUDE_FILE
+diff --git a/arch/x86/kernel/tracepoint.c b/arch/x86/kernel/tracepoint.c
+index 03ae1caaa878..108285046226 100644
+--- a/arch/x86/kernel/tracepoint.c
++++ b/arch/x86/kernel/tracepoint.c
+@@ -7,15 +7,27 @@
+ 
+ #include <asm/trace/exceptions.h>
+ 
+-DEFINE_STATIC_KEY_FALSE(trace_pagefault_key);
++DEFINE_STATIC_KEY_FALSE(trace_pagefault_enter_key);
++DEFINE_STATIC_KEY_FALSE(trace_pagefault_exit_key);
+ 
+-int trace_pagefault_reg(void)
++int trace_pagefault_enter_reg(void)
+ {
+-	static_branch_inc(&trace_pagefault_key);
++	static_branch_inc(&trace_pagefault_enter_key);
+ 	return 0;
+ }
+ 
+-void trace_pagefault_unreg(void)
++void trace_pagefault_enter_unreg(void)
+ {
+-	static_branch_dec(&trace_pagefault_key);
++	static_branch_dec(&trace_pagefault_enter_key);
++}
++
++int trace_pagefault_exit_reg(void)
++{
++	static_branch_inc(&trace_pagefault_exit_key);
++	return 0;
++}
++
++void trace_pagefault_exit_unreg(void)
++{
++	static_branch_dec(&trace_pagefault_exit_key);
+ }
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 296d294142c8..cd933edf1e19 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1455,13 +1455,26 @@ static __always_inline void
+ trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
+ 			 unsigned long address)
+ {
+-	if (!trace_pagefault_enabled())
++	if (!trace_pagefault_enter_enabled())
+ 		return;
+ 
+ 	if (user_mode(regs))
+-		trace_page_fault_user(address, regs, error_code);
++		trace_page_fault_user_enter(address, regs, error_code);
+ 	else
+-		trace_page_fault_kernel(address, regs, error_code);
++		trace_page_fault_kernel_enter(address, regs, error_code);
++}
++
++static __always_inline void
++trace_page_fault_exits(struct pt_regs *regs, unsigned long error_code,
++			 unsigned long address)
++{
++	if (!trace_pagefault_exit_enabled())
++		return;
++
++	if (user_mode(regs))
++		trace_page_fault_user_exit(address, regs, error_code);
++	else
++		trace_page_fault_kernel_exit(address, regs, error_code);
+ }
+ 
+ static __always_inline void
+@@ -1487,6 +1500,8 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
+ 		 */
+ 		local_irq_disable();
+ 	}
++
++	trace_page_fault_exits(regs, error_code, address);
+ }
+ 
+ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
+-- 
+2.48.1
 
-I'll send my patches in the coming days.
-
-Best regards,
-Andr=C3=A9
-
->=20
-> You can find the PLL input parameters in [1] and the generated debug
-> output below.
->=20
-> Best regards,
-> Andr=C3=A9
->=20
-> [1]
-> https://github.com/a-andre/linux/blob/58e10a814985f700579847ac7c99468a65c=
-b55bb/drivers/media/i2c/imx214.c#L1116-L1196
->=20
-> $ dmesg | grep imx
-> [=C2=A0=C2=A0 17.851215] imx214 4-0010: vt_lanes: 4
-> [=C2=A0=C2=A0 17.851245] imx214 4-0010: op_lanes: 4
-> [=C2=A0=C2=A0 17.851254] imx214 4-0010: binning: 1x1
-> [=C2=A0=C2=A0 17.851262] imx214 4-0010: min / max op_pre_pll_clk_div: 1 /=
- 15
-> [=C2=A0=C2=A0 17.851272] imx214 4-0010: pre-pll check: min / max
-> op_pre_pll_clk_div: 1 / 15
-> [=C2=A0=C2=A0 17.851281] imx214 4-0010: mul 50 / div 1
-> [=C2=A0=C2=A0 17.851290] imx214 4-0010: pll_op check: min / max
-> op_pre_pll_clk_div: 1 / 15
-> [=C2=A0=C2=A0 17.851300] imx214 4-0010: op_pre_pll_clk_div 1
-> [=C2=A0=C2=A0 17.851308] imx214 4-0010: more_mul_max: max_op_pll_multipli=
-er
-> check: 24
-> [=C2=A0=C2=A0 17.851317] imx214 4-0010: more_mul_max: max_pll_op_clk_freq=
-_hz
-> check: 1
-> [=C2=A0=C2=A0 17.851325] imx214 4-0010: more_mul_max: max_op_sys_clk_div =
-check:
-> 1
-> [=C2=A0=C2=A0 17.851333] imx214 4-0010: more_mul_max: min_pll_multiplier =
-check:
-> 1
-> [=C2=A0=C2=A0 17.851341] imx214 4-0010: more_mul_min: min_op_pll_op_clk_f=
-req_hz
-> check: 1
-> [=C2=A0=C2=A0 17.851349] imx214 4-0010: more_mul_min: min_op_pll_multipli=
-er
-> check: 1
-> [=C2=A0=C2=A0 17.851357] imx214 4-0010: more_mul_factor: 1
-> [=C2=A0=C2=A0 17.851365] imx214 4-0010: more_mul_factor: min_op_sys_clk_d=
-iv: 1
-> [=C2=A0=C2=A0 17.851373] imx214 4-0010: final more_mul: 1
-> [=C2=A0=C2=A0 17.851381] imx214 4-0010: op_sys_clk_div: 1
-> [=C2=A0=C2=A0 17.851389] imx214 4-0010: op_pix_clk_div: 10
-> [=C2=A0=C2=A0 17.851398] imx214 4-0010: min_vt_div: 10
-> [=C2=A0=C2=A0 17.851406] imx214 4-0010: min_vt_div: max_vt_pix_clk_freq_h=
-z: 10
-> [=C2=A0=C2=A0 17.851414] imx214 4-0010: min_vt_div: min_vt_clk_div: 10
-> [=C2=A0=C2=A0 17.851422] imx214 4-0010: max_vt_div: 40
-> [=C2=A0=C2=A0 17.851486] imx214 4-0010: max_vt_div: min_vt_pix_clk_freq_h=
-z: 40
-> [=C2=A0=C2=A0 17.851502] imx214 4-0010: min_sys_div: 2
-> [=C2=A0=C2=A0 17.851510] imx214 4-0010: min_sys_div: max_vt_pix_clk_div: =
-2
-> [=C2=A0=C2=A0 17.851518] imx214 4-0010: min_sys_div: max_pll_op_clk_freq_=
-hz: 2
-> [=C2=A0=C2=A0 17.851526] imx214 4-0010: min_sys_div: one or even: 2
-> [=C2=A0=C2=A0 17.851534] imx214 4-0010: max_sys_div: 4
-> [=C2=A0=C2=A0 17.851541] imx214 4-0010: max_sys_div: min_vt_pix_clk_div: =
-4
-> [=C2=A0=C2=A0 17.851549] imx214 4-0010: max_sys_div: min_vt_pix_clk_freq_=
-hz: 4
-> [=C2=A0=C2=A0 17.851557] imx214 4-0010: pix_div 3 too small or too big (5=
---10)
-> [=C2=A0=C2=A0 17.851568] imx214 4-0010: ext_clk_freq_hz		24000000
-> [=C2=A0=C2=A0 17.851578] imx214 4-0010: vt_pre_pll_clk_div		1
-> [=C2=A0=C2=A0 17.851587] imx214 4-0010: vt_pll_multiplier		50
-> [=C2=A0=C2=A0 17.851595] imx214 4-0010: vt_pll_ip_clk_freq_hz	24000000
-> [=C2=A0=C2=A0 17.851603] imx214 4-0010: vt_pll_op_clk_freq_hz	1200000000
-> [=C2=A0=C2=A0 17.851612] imx214 4-0010: vt_sys_clk_div		2
-> [=C2=A0=C2=A0 17.851620] imx214 4-0010: vt_pix_clk_div		5
-> [=C2=A0=C2=A0 17.851629] imx214 4-0010: vt_sys_clk_freq_hz	600000000
-> [=C2=A0=C2=A0 17.851637] imx214 4-0010: vt_pix_clk_freq_hz	120000000
-> [=C2=A0=C2=A0 17.851645] imx214 4-0010: op_sys_clk_div		1
-> [=C2=A0=C2=A0 17.851653] imx214 4-0010: op_pix_clk_div		10
-> [=C2=A0=C2=A0 17.851661] imx214 4-0010: op_sys_clk_freq_hz	1200000000
-> [=C2=A0=C2=A0 17.851669] imx214 4-0010: op_pix_clk_freq_hz	120000000
-> [=C2=A0=C2=A0 17.851677] imx214 4-0010: pixel rate in pixel
-> array:	480000000
-> [=C2=A0=C2=A0 17.851685] imx214 4-0010: pixel rate on CSI-2 bus:	48000000=
-0
-> [=C2=A0=C2=A0 17.851694] imx214 4-0010: flags lane-speed
-> [=C2=A0=C2=A0 17.869313] imx214 4-0010: vt_lanes: 4
-> [=C2=A0=C2=A0 17.869342] imx214 4-0010: op_lanes: 4
-> [=C2=A0=C2=A0 17.869352] imx214 4-0010: binning: 1x1
-> [=C2=A0=C2=A0 17.869361] imx214 4-0010: min / max op_pre_pll_clk_div: 1 /=
- 15
-> [=C2=A0=C2=A0 17.869372] imx214 4-0010: pre-pll check: min / max
-> op_pre_pll_clk_div: 1 / 15
-> [=C2=A0=C2=A0 17.869382] imx214 4-0010: mul 50 / div 1
-> [=C2=A0=C2=A0 17.869391] imx214 4-0010: pll_op check: min / max
-> op_pre_pll_clk_div: 1 / 15
-> [=C2=A0=C2=A0 17.869400] imx214 4-0010: op_pre_pll_clk_div 1
-> [=C2=A0=C2=A0 17.869409] imx214 4-0010: more_mul_max: max_op_pll_multipli=
-er
-> check: 24
-> [=C2=A0=C2=A0 17.869417] imx214 4-0010: more_mul_max: max_pll_op_clk_freq=
-_hz
-> check: 1
-> [=C2=A0=C2=A0 17.869426] imx214 4-0010: more_mul_max: max_op_sys_clk_div =
-check:
-> 1
-> [=C2=A0=C2=A0 17.869435] imx214 4-0010: more_mul_max: min_pll_multiplier =
-check:
-> 1
-> [=C2=A0=C2=A0 17.869443] imx214 4-0010: more_mul_min: min_op_pll_op_clk_f=
-req_hz
-> check: 1
-> [=C2=A0=C2=A0 17.869451] imx214 4-0010: more_mul_min: min_op_pll_multipli=
-er
-> check: 1
-> [=C2=A0=C2=A0 17.869460] imx214 4-0010: more_mul_factor: 1
-> [=C2=A0=C2=A0 17.869468] imx214 4-0010: more_mul_factor: min_op_sys_clk_d=
-iv: 1
-> [=C2=A0=C2=A0 17.869476] imx214 4-0010: final more_mul: 1
-> [=C2=A0=C2=A0 17.869483] imx214 4-0010: op_sys_clk_div: 1
-> [=C2=A0=C2=A0 17.869491] imx214 4-0010: op_pix_clk_div: 10
-> [=C2=A0=C2=A0 17.869501] imx214 4-0010: min_vt_div: 10
-> [=C2=A0=C2=A0 17.869509] imx214 4-0010: min_vt_div: max_vt_pix_clk_freq_h=
-z: 10
-> [=C2=A0=C2=A0 17.869517] imx214 4-0010: min_vt_div: min_vt_clk_div: 10
-> [=C2=A0=C2=A0 17.869525] imx214 4-0010: max_vt_div: 40
-> [=C2=A0=C2=A0 17.869533] imx214 4-0010: max_vt_div: min_vt_pix_clk_freq_h=
-z: 40
-> [=C2=A0=C2=A0 17.869541] imx214 4-0010: min_sys_div: 2
-> [=C2=A0=C2=A0 17.869549] imx214 4-0010: min_sys_div: max_vt_pix_clk_div: =
-2
-> [=C2=A0=C2=A0 17.869557] imx214 4-0010: min_sys_div: max_pll_op_clk_freq_=
-hz: 2
-> [=C2=A0=C2=A0 17.869565] imx214 4-0010: min_sys_div: one or even: 2
-> [=C2=A0=C2=A0 17.869572] imx214 4-0010: max_sys_div: 4
-> [=C2=A0=C2=A0 17.869580] imx214 4-0010: max_sys_div: min_vt_pix_clk_div: =
-4
-> [=C2=A0=C2=A0 17.869588] imx214 4-0010: max_sys_div: min_vt_pix_clk_freq_=
-hz: 4
-> [=C2=A0=C2=A0 17.869596] imx214 4-0010: pix_div 3 too small or too big (5=
---10)
-> [=C2=A0=C2=A0 17.869607] imx214 4-0010: ext_clk_freq_hz		24000000
-> [=C2=A0=C2=A0 17.869616] imx214 4-0010: vt_pre_pll_clk_div		1
-> [=C2=A0=C2=A0 17.869624] imx214 4-0010: vt_pll_multiplier		50
-> [=C2=A0=C2=A0 17.869633] imx214 4-0010: vt_pll_ip_clk_freq_hz	24000000
-> [=C2=A0=C2=A0 17.869642] imx214 4-0010: vt_pll_op_clk_freq_hz	1200000000
-> [=C2=A0=C2=A0 17.869651] imx214 4-0010: vt_sys_clk_div		2
-> [=C2=A0=C2=A0 17.869659] imx214 4-0010: vt_pix_clk_div		5
-> [=C2=A0=C2=A0 17.869667] imx214 4-0010: vt_sys_clk_freq_hz	600000000
-> [=C2=A0=C2=A0 17.869675] imx214 4-0010: vt_pix_clk_freq_hz	120000000
-> [=C2=A0=C2=A0 17.869684] imx214 4-0010: op_sys_clk_div		1
-> [=C2=A0=C2=A0 17.869692] imx214 4-0010: op_pix_clk_div		10
-> [=C2=A0=C2=A0 17.869699] imx214 4-0010: op_sys_clk_freq_hz	1200000000
-> [=C2=A0=C2=A0 17.869707] imx214 4-0010: op_pix_clk_freq_hz	120000000
-> [=C2=A0=C2=A0 17.869716] imx214 4-0010: pixel rate in pixel
-> array:	480000000
-> [=C2=A0=C2=A0 17.869724] imx214 4-0010: pixel rate on CSI-2 bus:	48000000=
-0
-> [=C2=A0=C2=A0 17.869732] imx214 4-0010: flags lane-speed
