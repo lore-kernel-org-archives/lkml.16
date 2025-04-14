@@ -1,57 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273852356B4;
-	Mon, 14 Apr 2025 21:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AE1234970
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667362; cv=none; b=HCp9baJMOtoIkrTG5aeHHVaRx13JgP6So7yGHJne6pJ1GDpXL6t/Rds6R157TGnkm2E7NgQ2FIvrlMy5blIUtDUUAP6KNjE2ihUaeGh52fh8JgvZgLihfi+XTgObD2iZ6VSuUJkWlOiek4UQKvv1lXj1txcRSGq3BLBfvbfwGiA=
+	t=1744667361; cv=none; b=cwzocxbtA4T3zh+rMZy92GPclYbPpDSagcHaLrdeXI4nAWiIsgqdFnniVBwDCR10HyOU0+SEYlznI+XT1+TccpDZfQ9t/HeYJCEJ9dRgaz9HqI9UCk2n6xq4Re6vwhZjy/HInTjecEzLSliHdwwdF6panu11GpTWHY8gM2f/OTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667362; c=relaxed/simple;
-	bh=jFZt0KvrTr1LbLxZyMCPpQPqLXRpwCSYwOOLHWfTgZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bPWbTJMGf6ZEp7OU0g9AcPq42o6zKhF+jpOQsk/v9x3kBVzD4kHQhXclVGMMROZEnqAupt8sEf+AKRXsOBBIhFX8CPdlwktS7Do/ZQmoq2rOmA+ROHxRYRykSumDGTUtXlX2j+fnRgaPc7GhiJMyUxcbDJ2HyCU+0r0M0q2XBfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANw6pMfs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744667361; c=relaxed/simple;
+	bh=Mw9ngi2WIAwJubFbLZdotPitdqMiBA16Qp2W5R8dW9M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EBkLB0unOSpwtS4dcNP9jDus4bKdMmwabmZQZVDp7npE3+9WPZQmDmjELXZoGua1Tm6ksWtjXy5bjYGRWALmlVAs4KSqZvI7G4E1tXf2UgM1HukYMQPZz81xs30RTlqeuNgPWk5IXzZe9h6Lzc3uSyLSyrU+2LTzfE55fhrRyl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZWIfeaj5; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANw6pMfs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C557C4CEE2;
-	Mon, 14 Apr 2025 21:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744667361;
-	bh=jFZt0KvrTr1LbLxZyMCPpQPqLXRpwCSYwOOLHWfTgZY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ANw6pMfsVIpE/wWOtMamlbzbgieuaEftXKvj2PCs0yCDuvZ3grY6/jt44cr9ISSoV
-	 9+yIrHEYNy/nA1PPL60ofRRfrRSYpzgcxpSTWmCWskfD4CHcccnpJN2B17yozedvNp
-	 rNj9izSvDrYceI+UsCiklPIpkuFQAEIZrL3V68jXeSkDvOQA98Vt6YMsJpDau9Xxk2
-	 sPYZXDrUgWnnogsf8nmgxgsO3k4vhJgRHo+0dH9+Hw6tZsi0UH5wBL/t3hox52OJiC
-	 jWlut+RkV0EGi+fXwh7esjMKXXn7Oltqf/WX0LxxNAcnBTXR2H3PPurOQR29Xe7uQ2
-	 /ypN5umsuTdPA==
-Date: Mon, 14 Apr 2025 14:49:20 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH net-next v1 04/11] net: pktgen: fix code style (WARNING:
- please, no space before tabs)
-Message-ID: <20250414144920.3bdd68bc@kernel.org>
-In-Reply-To: <20250410071749.30505-5-ps.report@gmx.net>
-References: <20250410071749.30505-1-ps.report@gmx.net>
-	<20250410071749.30505-5-ps.report@gmx.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWIfeaj5"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so3536947b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744667359; x=1745272159; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aku4Yw7zO7OsZeH36NG5KN8j8EoVwWNrgcEFNKQCwsg=;
+        b=ZWIfeaj5OaghmfQuBew0d3cCDKkWMyXXZwirTlk95wi7ujRG5TiQdHqQgMbZzp6+Pa
+         RPLk7xs81tJn+eykDP97CMPc1vdxVkeAq+1hFFdOdyF2KFOA5FKT/H1C5jIFekf014jQ
+         NdhMFAwhofpsWO7AaLA5soFqmrn+5kq64w+9iSGj9qtL6KDbsw6M9fGGoc7H/djhLcak
+         e67EGRFvm6089Gs7hgCsQGCfWd6HbOvy/fvsaFui8doBjsN851eel7NW62jqAN/DtIz1
+         w1tPe983PVY7+qcOn9PXOSWYU1aREWvPfinLnA5pLjpVxKODRROaam2UsQmW4KXHROvb
+         3C3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744667359; x=1745272159;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aku4Yw7zO7OsZeH36NG5KN8j8EoVwWNrgcEFNKQCwsg=;
+        b=bDzmieihIYzdyOeSDiKXF8NHX/CGx8BHbnaKu0hbx4PjqG2EhR8DpfiquLIYgLCMgQ
+         dpfFkiJ65+P4LavvXqXRMSCzsmMHBjrzA8J0AKcAjLf1mm+ms7U38JvLdYV7dMkXukEz
+         ndx0748uJQzcyfQa6hN/3dYRFGDEdH9WHBLXdQZqIFlSDiEPmYZcZDObRpQ/ha8vfV/E
+         XWARvYZ7qE6TAa/3YbU7YbvoQKyLVuxEwONppT+gI9lCPt+VhPzGpknTww5ZL8cFez2B
+         CJ8FHKAeBCCz3Kk0ya+3OB9oz7fYgwRgbGiH+gWq6gZVDatDQXkMsTQOwNpv5a7GrkWW
+         Biqg==
+X-Gm-Message-State: AOJu0Yyu1ItuASEVkBM/X99XK2obwvfeI3sD4RrOtdM6NsXolGuNy1/Q
+	76HQIf0WtCcsPf7a7hSPlVGtHd9in0m75SSf7IUxTqfPE6DueXJYi+5I0EV39d2n+yUsje9FHg=
+	=
+X-Google-Smtp-Source: AGHT+IG8xqLHZi9XsMuZB46ES92EkxgWjfBuR45ihAxM020eVGrPAm5wMGqwickd0mweff3imgDYEPLx8w==
+X-Received: from pfbcm26.prod.google.com ([2002:a05:6a00:339a:b0:736:8727:67fd])
+ (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1945:b0:736:b9f5:47c6
+ with SMTP id d2e1a72fcca58-73bd129b42cmr18027429b3a.16.1744667359490; Mon, 14
+ Apr 2025 14:49:19 -0700 (PDT)
+Date: Mon, 14 Apr 2025 14:47:56 -0700
+In-Reply-To: <20250414214801.2693294-1-sagis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250414214801.2693294-1-sagis@google.com>
+X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
+Message-ID: <20250414214801.2693294-28-sagis@google.com>
+Subject: [PATCH v6 27/30] KVM: selftests: TDX: Add support for TDG.VP.VEINFO.GET
+From: Sagi Shahar <sagis@google.com>
+To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Ryan Afranji <afranji@google.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Erdem Aktas <erdemaktas@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Sagi Shahar <sagis@google.com>, Roger Wang <runanwang@google.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	"Pratik R. Sampat" <pratikrajesh.sampat@amd.com>, Reinette Chatre <reinette.chatre@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 10 Apr 2025 09:17:41 +0200 Peter Seiderer wrote:
-> Fix checkpatch code style warnings:
-> 
->   WARNING: please, no space before tabs
->   #230: FILE: net/core/pktgen.c:230:
->   +#define M_NETIF_RECEIVE ^I1^I/* Inject packets into stack */$
+From: Ackerley Tng <ackerleytng@google.com>
 
-Prefer tabs, when possible
+Support TDG.VP.VEINFO.GET that the guest uses to obtain the
+virtualization exception information of the recent #VE
+exception.
+
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+Signed-off-by: Sagi Shahar <sagis@google.com>
+---
+ .../selftests/kvm/include/x86/tdx/tdx.h       | 21 +++++++++++++++++++
+ tools/testing/selftests/kvm/lib/x86/tdx/tdx.c | 19 +++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/tools/testing/selftests/kvm/include/x86/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
+index 53637159fa12..55e52ad3de55 100644
+--- a/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
++++ b/tools/testing/selftests/kvm/include/x86/tdx/tdx.h
+@@ -7,6 +7,7 @@
+ #include "kvm_util.h"
+ 
+ #define TDG_VP_INFO 1
++#define TDG_VP_VEINFO_GET 3
+ #define TDG_MEM_PAGE_ACCEPT 6
+ 
+ #define TDG_VP_VMCALL_GET_TD_VM_CALL_INFO 0x10000
+@@ -43,4 +44,24 @@ uint64_t tdg_vp_info(uint64_t *rcx, uint64_t *rdx,
+ uint64_t tdg_vp_vmcall_map_gpa(uint64_t address, uint64_t size, uint64_t *data_out);
+ uint64_t tdg_mem_page_accept(uint64_t gpa, uint8_t level);
+ 
++/*
++ * Used by the #VE exception handler to gather the #VE exception
++ * info from the TDX module. This is a software only structure
++ * and not part of the TDX module/VMM ABI.
++ *
++ * Adapted from arch/x86/include/asm/tdx.h
++ */
++struct ve_info {
++	uint64_t exit_reason;
++	uint64_t exit_qual;
++	/* Guest Linear (virtual) Address */
++	uint64_t gla;
++	/* Guest Physical Address */
++	uint64_t gpa;
++	uint32_t instr_len;
++	uint32_t instr_info;
++};
++
++uint64_t tdg_vp_veinfo_get(struct ve_info *ve);
++
+ #endif // SELFTEST_TDX_TDX_H
+diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
+index a51ab7511936..e42b586808a1 100644
+--- a/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
++++ b/tools/testing/selftests/kvm/lib/x86/tdx/tdx.c
+@@ -222,3 +222,22 @@ uint64_t tdg_mem_page_accept(uint64_t gpa, uint8_t level)
+ 	return __tdx_module_call(TDG_MEM_PAGE_ACCEPT, (gpa & PAGE_MASK) | level,
+ 				 0, 0, 0, NULL);
+ }
++
++uint64_t tdg_vp_veinfo_get(struct ve_info *ve)
++{
++	struct tdx_module_output out;
++	uint64_t ret;
++
++	memset(&out, 0, sizeof(struct tdx_module_output));
++
++	ret = __tdx_module_call(TDG_VP_VEINFO_GET, 0, 0, 0, 0, &out);
++
++	ve->exit_reason = out.rcx;
++	ve->exit_qual   = out.rdx;
++	ve->gla         = out.r8;
++	ve->gpa         = out.r9;
++	ve->instr_len   = out.r10 & 0xffffffff;
++	ve->instr_info  = out.r10 >> 32;
++
++	return ret;
++}
+-- 
+2.49.0.504.g3bcea36a83-goog
+
