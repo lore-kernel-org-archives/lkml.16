@@ -1,125 +1,128 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B85A28B4FD
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C1E28B4E5;
+	Mon, 14 Apr 2025 18:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744654358; cv=none; b=cn8l75ldh6yyF8ZGxgpzZKbTqfJWFqM+NX77IC7Emyvo9utaD1k+Anb+qkRIlKEeYIQ1PrmT7aje3rU8oZx5RNlMZBQISMRWvzydSoNtK5ahUA6KoX+OwEHuyp7xgB3Xu2wLpm52hlJaZFiaXcZY+MzkYHPZQxFSFk4wjPbYzdM=
+	t=1744654369; cv=none; b=U46ShIz47XtcxpCwe0tKubrS4u/3PtgJ0KFXvhDlZ5qJ0aNE8Id9MXanqDaVLthnOf8D4WikappZqqXc7JPmNGTNNdzncv/u9LzftWQDtsWPvstzMRKhp+nCFgPMQ+2S8svcakqp4kqtTaWVf+LA6nKDfYJeaJNllFlvQn52xRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744654358; c=relaxed/simple;
-	bh=M88zxHxMuT5Hi+r12Pej1eNGbm2XjVO4O0bNQWtajxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P98m5OpTOcHl77B/itsnEpbdZRYdjs4Wu1AkXdsrjsAKdxbuWuBOgkuuY9Cf0cjfCGKvAn8PSBxo569eib1a+L9XkfbufdhuFymrMWnFLk3D/NnAbni1s4tUEmw0AVhFa0Kxg826/iIv4yREdslLQVV3L+FcxIng4SLvPtWd4+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=k0alu5/t; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="k0alu5/t"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85de3e8d0adso82683539f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744654354; x=1745259154; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uo0iy7MAQ4hbf5+c4Te/phX/shJ7ZZ2Na/tgJWtoOGQ=;
-        b=k0alu5/tlamnZvfN2Ar7I9lIPbMJBJFhRfIhT74ju7BpbO7EDq8VZQGVQ5HH28ANaT
-         cyhVUFbGdyY4ceh2aDaMBAF8Dp4l3pXkAThBal6jXexOXLpKsIzj/6TmozNFJ9nR9GIv
-         3ixOvzVzAjlulrwANeQNLaRtft+loQoMrHN2f+B6Azz5+SiSS+zZ5V5Kxye8fiPoDI1Z
-         unMQyhP2PLPHoKa9m4noPNWTSSYVPClgFJLsQOfGhyQZkN6e0kvygARdxJav3AOdEqQW
-         c/77LLhV6fO6hw7W4BZ3Tz2OZpsk1DLrUFJnRD7XllW65MbAW2+w5J4z6ME70+Ee/ByL
-         oBIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744654354; x=1745259154;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uo0iy7MAQ4hbf5+c4Te/phX/shJ7ZZ2Na/tgJWtoOGQ=;
-        b=IknyKtS8lLPuHh9pZYmWsG0mYva+NLg+Uksxa9UUCXq6oBMcRWIyXEkgHjjcULkRJU
-         RVZR+u/rscTAaV5o16qWxOY5niYEODUyiYurB8P/C15x2mQTYUKLJJNXF4UsJi/DsoHM
-         xYgJFmyBU5H0AcffFlTfOixwOtq4x/IovL9011Xxf/Fra9QMJokF3F1vaItxtoiSCakR
-         NU/hqApaZ7+sY/bCNuboGOgWVdBNNyJwNFmvrp/dMisaHVt+fD2b0PbIADTTv/xLh5IW
-         /SoS+GTBunQFqmcbntgHShERv1GQbFCz9jFP4ADqh1ER6sPA6NGwJ4/vIiUXxGp5WeAh
-         TG3A==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Hh+usp+havp8H1SoH3I/nIC4uRN+H5mDhZKF+COiiJ2/Y7HA7XMAaRlg0VCW7Z3+vJcpECNwE1lYfbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIPol2xL2yEOkSe2Zaa7mCQsPIylBo2Tua5RfDBaoeuScM0YVu
-	uPWg4iUTfrxStHyCstB9ElqjiSc3CWjf//fsoHOvP1p9MgzC1AwZrgaTv0no4e0=
-X-Gm-Gg: ASbGncvtvXbCxPNHY79Az2B+jQw2+eodFAc2itisCcDiG9o2fUlpdZfXPCjV8FFHNI8
-	+Uqzc3g7BnD5IWOM25LLaKqktxy0TFKgA9MWMYkTmFbVh9dyIbGF8m18YietcusNh9vTth+7NhA
-	fxGpMEJB3MM3pEDRUezHjgYlbe2vCG9wbCZZSKhC41N3QVIyMb1uXFmbr4dvk/cH/Wucs65KkHN
-	bX9JoOMyIdnoqvzaLqk1eKkbBZCJZDmr9mQ2VR+6OVeMlikl2fIA0Db0S5SVV53ADAd5CQwN88H
-	UJpUQZNmgrK/XO0XnGbGeXWbu0UlF6mBslTjne1P8KRjiUyXMnDtEicjL9yqqj1cveWEdpFSVlm
-	neJkr
-X-Google-Smtp-Source: AGHT+IEPulg8UQUye+ERWDwcR54kMX3JF3oXHebpwxdb/gMTX99uIyKUf+GhSeeH3MJ9K8PzDd2i+A==
-X-Received: by 2002:a05:6602:3890:b0:85b:3e32:9afb with SMTP id ca18e2360f4ac-8617cc00bbamr1642828239f.14.1744654353950;
-        Mon, 14 Apr 2025 11:12:33 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86165428af3sm219588339f.15.2025.04.14.11.12.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 11:12:33 -0700 (PDT)
-Message-ID: <eadb0ac9-f46b-4525-a198-0c6c289084f3@riscstar.com>
-Date: Mon, 14 Apr 2025 13:12:32 -0500
+	s=arc-20240116; t=1744654369; c=relaxed/simple;
+	bh=t8HuXvsQUxPekA1I+Lq/ebwLxzgTOlv4SCBmD055xGI=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gcRX29r7hcT3pRtmfYeQ2GWCGAjqA/tiGx8eVxzwQDXvxmcJZHNn6VjZMcBmCQspzktMMGzimQy8YVMiZ9cOomWPZbrGgsD7JCSzzjhqVFxQVa7gGZ8s43Pq871Nu6+bcmHS7zbB05YVJ0j0x1iLnzyTERUtA3hZ2o12Fwhp95g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u4OIU-000000003z3-13rP;
+	Mon, 14 Apr 2025 18:12:42 +0000
+Date: Mon, 14 Apr 2025 19:12:39 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Bo-Cun Chen <bc-bocun.chen@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net 4/5] net: ethernet: mtk_eth_soc: net: revise NETSYSv3
+ hardware configuration
+Message-ID: <6dccbdc6730bf43b59b3f75e39673b6bf42fbd4f.1744654076.git.daniel@makrotopia.org>
+References: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 6/6] riscv: defconfig: spacemit: enable clock
- controller driver for SpacemiT K1
-To: Haylen Chu <heylenay@4d2.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Haylen Chu <heylenay@outlook.com>,
- Yixun Lan <dlan@gentoo.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
- Chen Wang <unicornxdotw@foxmail.com>, Jisheng Zhang <jszhang@kernel.org>,
- Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
-References: <20250412074423.38517-2-heylenay@4d2.org>
- <20250412074423.38517-8-heylenay@4d2.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250412074423.38517-8-heylenay@4d2.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
 
-On 4/12/25 2:44 AM, Haylen Chu wrote:
-> Clock controller unit, or CCU, generates various clocks frequency for
-> peripherals integrated in SpacemiT K1 SoC and is essential for normal
-> operation. Let's enable it as built-in driver in defconfig.
-> 
-> Signed-off-by: Haylen Chu <heylenay@4d2.org>
+From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
 
-I know Inochi wanted this to be "m", but you can see that
-SOPHGO sets it to "y".  Meanwhile SIFIVE uses a default
-value for its CLK_SIFIVE and CLK_SIFIVE_PRCI config options.
+Change hardware configuration for the NETSYSv3.
+ - Enable PSE dummy page mechanism for the GDM1/2/3
+ - Enable PSE drop mechanism when the WDMA Rx ring full
+ - Enable PSE no-drop mechanism for packets from the WDMA Tx
+ - Correct PSE free drop threshold
+ - Correct PSE CDMA high threshold
 
-I'm not going to solve this, so I'll just say this looks good.
+Fixes: 1953f134a1a8b ("net: ethernet: mtk_eth_soc: add NETSYS_V3 version support")
+Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 20 ++++++++++++++++----
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |  7 ++++++-
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-Reviewed-by: Alex Elder <elder@riscstar.com>
-
-
-> ---
->   arch/riscv/configs/defconfig | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 3c8e16d71e17..4888529df1d8 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -250,6 +250,8 @@ CONFIG_CLK_SOPHGO_CV1800=y
->   CONFIG_CLK_SOPHGO_SG2042_PLL=y
->   CONFIG_CLK_SOPHGO_SG2042_CLKGEN=y
->   CONFIG_CLK_SOPHGO_SG2042_RPGATE=y
-> +CONFIG_SPACEMIT_CCU=y
-> +CONFIG_SPACEMIT_K1_CCU=y
->   CONFIG_SUN8I_DE2_CCU=m
->   CONFIG_SUN50I_IOMMU=y
->   CONFIG_RPMSG_CHAR=y
-
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 4e9775ea7783a..af164b9f02347 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -4058,11 +4058,23 @@ static int mtk_hw_init(struct mtk_eth *eth, bool reset)
+ 	mtk_w32(eth, 0x21021000, MTK_FE_INT_GRP);
+ 
+ 	if (mtk_is_netsys_v3_or_greater(eth)) {
+-		/* PSE should not drop port1, port8 and port9 packets */
+-		mtk_w32(eth, 0x00000302, PSE_DROP_CFG);
++		/* PSE dummy page mechanism */
++		mtk_w32(eth, PSE_DUMMY_WORK_GDM(1) | PSE_DUMMY_WORK_GDM(2) |
++			PSE_DUMMY_WORK_GDM(3) | DUMMY_PAGE_THR, PSE_DUMY_REQ);
++
++		/* PSE free buffer drop threshold */
++		mtk_w32(eth, 0x00600009, PSE_IQ_REV(8));
++
++		/* PSE should not drop port8, port9 and port13 packets from WDMA Tx */
++		mtk_w32(eth, 0x00002300, PSE_DROP_CFG);
++
++		/* PSE should drop packets to port8, port9 and port13 on WDMA Rx ring full */
++		mtk_w32(eth, 0x00002300, PSE_PPE_DROP(0));
++		mtk_w32(eth, 0x00002300, PSE_PPE_DROP(1));
++		mtk_w32(eth, 0x00002300, PSE_PPE_DROP(2));
+ 
+ 		/* GDM and CDM Threshold */
+-		mtk_w32(eth, 0x00000707, MTK_CDMW0_THRES);
++		mtk_w32(eth, 0x08000707, MTK_CDMW0_THRES);
+ 		mtk_w32(eth, 0x00000077, MTK_CDMW1_THRES);
+ 
+ 		/* Disable GDM1 RX CRC stripping */
+@@ -4079,7 +4091,7 @@ static int mtk_hw_init(struct mtk_eth *eth, bool reset)
+ 		mtk_w32(eth, 0x00000300, PSE_DROP_CFG);
+ 
+ 		/* PSE should drop packets to port 8/9 on WDMA Rx ring full */
+-		mtk_w32(eth, 0x00000300, PSE_PPE0_DROP);
++		mtk_w32(eth, 0x00000300, PSE_PPE_DROP(0));
+ 
+ 		/* PSE Free Queue Flow Control  */
+ 		mtk_w32(eth, 0x01fa01f4, PSE_FQFC_CFG2);
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 90a377ab4359e..aae86e172bdb3 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -151,7 +151,12 @@
+ #define PSE_FQFC_CFG1		0x100
+ #define PSE_FQFC_CFG2		0x104
+ #define PSE_DROP_CFG		0x108
+-#define PSE_PPE0_DROP		0x110
++#define PSE_PPE_DROP(x)		(0x110 + ((x) * 0x4))
++
++/* PSE Last FreeQ Page Request Control */
++#define PSE_DUMY_REQ		0x10C
++#define PSE_DUMMY_WORK_GDM(x)	BIT(16 + (x))
++#define DUMMY_PAGE_THR		0x1
+ 
+ /* PSE Input Queue Reservation Register*/
+ #define PSE_IQ_REV(x)		(0x140 + (((x) - 1) << 2))
+-- 
+2.49.0
