@@ -1,109 +1,143 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDC4293B7A;
-	Mon, 14 Apr 2025 11:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E624629C34B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631561; cv=none; b=YPCOxKmRADKZeN3XPkRpRhBSsa77me8udoUT16M5OUo25EQ0khg5PykS1qbiN8gNwfjwG/rQM0L0RcAN3PDyXmY2aPWO3AS+4Cs39macttB9v4+B+3GCzC8aRwXlS6JGj6PBKp6mnhMQ/KCOu5tMa+jS0DdWsGad0Vg0Adm18aE=
+	t=1744631577; cv=none; b=WfLXb8xsPZQqGUyTZ6JG3ve+bN5iYY8rY8QWZ8ZyxZoZ9dds1Ob0bi9rrTnKbn0XH0UFRKQZPOEgYTCwp46rQeuyl0YXSI+am57doIkKNjOKiMVDnYcHmd+gqGc1L1AoaBGHAfaHICsgScYzy933JZcft8w+SW5F1/q/m/3EIKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631561; c=relaxed/simple;
-	bh=O7fwWD1mrXhcYE+62v3u8tACzz3xgehepQ421SFC7Y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uav0O1drH2tkzKf7uin8BL80c3FJ+FHegdqWb7c0Kuz7DT1lu7w3hduq3B4jz6Qo1fAvTBavNOEB/OYJH9zkVCs/z+4D7KdM+wUurwZUPvnQTjhhwpprXWvxAeDfhYYIIbiZEgpywnZGVi6xAzDW94eruQ31wOnS99LVsQAnrUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IhGYi+h7; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744631577; c=relaxed/simple;
+	bh=fQ4qPB+Mli3z1n5LezSzg2TJ0AglAvt1CrhfoGQTVsY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JxtscWSWbIFYm9OZpmQ/SSiIw0f+QPxI73Oo5TSY9ARZag66Fe4oK/F4qNdLNdqEvS1xs4FOyUSqUp5paG1ejyM5CInAC7SXMN72P7nxa6AMn52yS1pfUl/ekGY7IUdry+Ya/1D/Q/5LCMt3UnItBFihsricZEJn+JNEo784skA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G3s06/37; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IhGYi+h7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FFE91FCE8;
-	Mon, 14 Apr 2025 11:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744631551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7fwWD1mrXhcYE+62v3u8tACzz3xgehepQ421SFC7Y4=;
-	b=IhGYi+h78AvbQGLD5cEOJulxIDP+2+4l3nLgXrIGuxmV9DsjjL+7P340iwkXJSV2LUV7s4
-	THBdzmeFxAxisAiks8R2gwmyUqgB0BhN/Q2+9xb1u/UIC4a6sVgDua9OjJPr7PEVRRrPzE
-	EOw7dha9QqISuFU89I981uZaI8/YnLtAScOsAzcPDenHsWofgNSyRcERL9EwI8icCeVx4A
-	oU9/uF4aKTrzuvOWxiah8ItsZLI4AjH26n/gm4N10FqxvhiW9COuZ9TpL9Q6JG//LVuPkh
-	zJFRriURbRjyzsUfjkkRQ/VFT3bZtAZtTrhjQ/QN9Z4/FGZoIuL2HsfKUNBoTQ==
-Date: Mon, 14 Apr 2025 13:52:28 +0200
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Bastien Curutchet
- <bastien.curutchet@bootlin.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA
- addresses.
-Message-ID: <20250414135228.600c13e6@windsurf>
-In-Reply-To: <29eb3698-7dc2-4c32-b636-8ef0ee6d1f47@amd.com>
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
-	<Z_yjNgY3dVnA5OVz@infradead.org>
-	<20250414102455.03331c0f@windsurf>
-	<29eb3698-7dc2-4c32-b636-8ef0ee6d1f47@amd.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G3s06/37"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99nis015705
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:52:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=s8nngil2zyr5bKlo3biA6U
+	hMXvQ4bHWgj1yHs15aB8w=; b=G3s06/37W7W3HvHlliNENMudE6nK+uOpP/x4xt
+	AWL6OHYzhKBvpK1KBQkFgMz09CsWq7TI7cfXKO6OFw2t371sFbMwKG0hYKnkMF+b
+	WK8ExTobmeJGbNCFpk+Fg+Qeip/u7UNH6o945D7w1LvKd9f0HVSWsqhL4V8w+hcB
+	zrag0xZDIju8wJ+CA1DZOC5O3Rgt2qpEVHyOWs7aWS4KFdsbC+jf0wPKPOIX6qMD
+	uz/mVSRU2lHEkORYA1ZurRu1p+25Pa7Xy8MW0tWEXxpFbFdF0CtXZjQcsR5Q1DCV
+	0FFLSIV2jCq7JJ1LKrw+2SYIOY+cKW0QxAaNWf3C9LNR+eow==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6cejq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:52:54 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22650077995so60224865ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:52:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744631574; x=1745236374;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s8nngil2zyr5bKlo3biA6UhMXvQ4bHWgj1yHs15aB8w=;
+        b=hPoM8FJcBNsh7hgPzYScsP++h1l+gnV6r2wmzQOTKcVt585BMfxiyz/PMzoaFhNw3J
+         2T8zKm26YzJa8t4Jur3WbG3aGBd8mj1EdBJN1U/7KB9ETZA2cYLudmQrVSNFE0dv7EyB
+         IGpbyG9iJcRqcPZE22V3u/JXcVKJ41913KPcSve59B1uTBa0JNBBXyxhecDQ5ZqZqr1i
+         U8DF6+wsgyOmAzJa1h+ZimRJb/0AMXgqjJK3A7WCGd2rwrtHrN8Y/Tu8rqLcO6IbYRj3
+         JOR9jDgvEUHp5HJb898i3j78uTsmKz8eAKq7ARbgl3urvYENJEaOt1B5OMDT9DCvTtP2
+         hWfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWddTztKsLD/q3f4BPqbRMUb/E1Wzk8Fh4VokhGsZQxFOmXoyXT6anAQ77G6ISPcYl+DEENdJn2MNTCgSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxglmtl3kFoDn0T4GTtBqM8aqUt9ZoRMDrViY/S0x0HrDNBEXEW
+	U6kuS8qH5xeIbT1NscdY37QcttxxkIJJD8ihsPNvcAvmC2GCw8GMqpd6QLKiH6eKvEiIkzZWDVQ
+	nfKEbHE2W2rHbwRkAGoOjTyHCJd+r2Ok0jUllzUkhmTJXmcN8VSnut54+QYeijWQ=
+X-Gm-Gg: ASbGncskvDKTKeaoeHBGzsCqc2oEDzdkW4u7S4Dl2Obdjk/04+KAxxv9jGVTBm0hcoL
+	n13lSqFrZGyEq3MmL7M3xGNMktAmBJ82Fiohg3fi8yaCL2l1HnAPbXDiRp2+3LQY/9k3vK8pvD6
+	YBhY3I6wI+CtqtOvg4xoHmghNPrcVGmQjYfIDS+zV+jhztpZOFOoKBpO7U5Rj/ZmAGTyn5y0ecL
+	0f0hVwBhz1Q/mCMFKtDeKWVtieGfkDbC3SMAEyUiRk1tf447RBp90CR8CsBWQhi33svb8jevTOp
+	BCibbIlzRqmUG74X6+XuT6L0QgvsHT27NIsWLnoUWD+oCSgJZn5+Nt1LJD2W8icA2VAdyY+Pwu9
+	oCcoxq0jVAwxkijCmN9NNYN6vkM7qbYChX/kRlLSShEjVAEY=
+X-Received: by 2002:a17:902:d58b:b0:223:501c:7581 with SMTP id d9443c01a7336-22bea4ab90amr169760795ad.16.1744631574012;
+        Mon, 14 Apr 2025 04:52:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgqzwIYoVFf1FpG2p39nVO093y9ug3V5NlwPoSdWoLWQWnXODX6iVg/8xyBTblPnMlaKR3ng==
+X-Received: by 2002:a17:902:d58b:b0:223:501c:7581 with SMTP id d9443c01a7336-22bea4ab90amr169760495ad.16.1744631573646;
+        Mon, 14 Apr 2025 04:52:53 -0700 (PDT)
+Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b73asm96425735ad.86.2025.04.14.04.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 04:52:53 -0700 (PDT)
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Subject: [PATCH v2 0/2] Reuse the IPQ6018 QUSB2 PHY settings for IPQ5424
+Date: Mon, 14 Apr 2025 17:22:48 +0530
+Message-Id: <20250414-revert_hs_phy_settings-v2-0-25086e20a3a3@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtgeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefvhhhomhgrshcurfgvthgriiiiohhnihcuoehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheduteeufeekieevieegueegiefgvdevhefggfdutdeiuedvtdfgledvgeevleeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgdphhgvlhhopeifihhnughsuhhrfhdpmhgrihhlfhhrohhmpehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsggrshhtihgvn
- hdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsuhhmihhtrdhsvghmfigrlheslhhinhgrrhhordhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheplhhinhgrrhhoqdhmmhdqshhigheslhhishhtshdrlhhinhgrrhhordhorhhg
-X-GND-Sasl: thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABD3/GcC/3WMwQqDMBAFf0X23EgSo2JP/kcpIY2rCVRjs6m0i
+ P/e0FMvvTwYeDM7EEaPBOdih4ibJx+WDPJUgHVmmZD5ITNILmuuhGL5hDFpR3p1b02Ykl8mYqp
+ tVDVI29Y3A1leI47+9Q1frpnHGGaWXETzk+Ptv9wmmGBoO4WVaNCIrg9E5eNp7jbMc5kHjuMDQ
+ zg5cr0AAAA=
+X-Change-ID: 20250414-revert_hs_phy_settings-47643d2c75ba
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744631571; l=1101;
+ i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
+ h=from:subject:message-id; bh=fQ4qPB+Mli3z1n5LezSzg2TJ0AglAvt1CrhfoGQTVsY=;
+ b=kgepGMZcGaqZhH5hzO36PqOvZutcLa7n3nhrg1HBepTjF2w51aDhkXXu/oOVtMQVc3NAFWJpK
+ f54hdIhYHMwDlFVC4TI3Qp+B9Jlxl0MwPWmXH+qVIwrKO5KE8IPasHL
+X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-Proofpoint-ORIG-GUID: HzX8uHqd2uoAZ3cAs5u3WoLEpR5T7TgQ
+X-Proofpoint-GUID: HzX8uHqd2uoAZ3cAs5u3WoLEpR5T7TgQ
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=67fcf717 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=__A2vHsfkmyGJhSVeV8A:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=659 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140086
 
-Hello Christian,
+With the current settings, complaince tests are failing, especially eye
+diagram (Host High-speed Signal Quality) tests. As recommended by the
+design team, reuse the IPQ6018 settings.
 
-On Mon, 14 Apr 2025 11:11:48 +0200
-Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+Merge Strategy:
+--------------
+Both the patch in the series should be merged together to avoid breaking
+the USB feature.
 
-> Maybe I should try to better explain the concern here. The question
-> is "Where is the source code of your FPGA driver?".
->=20
-> I mean that you are trying to replace the out-of-tree solution is
-> rather welcomed, but the out-of-tree solutions are out-of-tree
-> because they don't fit with requirements to be added to the core
-> Linux tree.
->=20
-> And one of those requirements is that you need to provide the source
-> code of the userspace user of this interface, in this case here that
-> is your FPGA driver. An MIT/X11 license is usually sufficient, GPL is
-> of course seen as better and it must not be a toy application, but
-> rather the real thing.
+--
+Changes in V2
+	- Splitted the patch into 2 patches, first revert the commit and
+	  then reuse the IPQ6018 data (Vinod K)
+	- Dropped the R-b tag from Dmitry
+	- Link to v1 -
+	  https://lore.kernel.org/linux-arm-msm/20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com/
 
-Where is this requirement for UIO? The UIO subsystem does not have such
-a requirement, unlike indeed some other kernel subsystems such as DRM.
+---
+Kathiravan Thirumoorthy (2):
+      Revert "phy: qcom-qusb2: add QUSB2 support for IPQ5424"
+      phy: qcom-qusb2: reuse the IPQ6018 settings for IPQ5424
 
-But the practical situation is different: for DRM it makes a lot of
-sense to enforce having open-source code in user-space, as we want to
-force GPU vendors to open their OpenGL/Vulkan implementations. However,
-for UIO it makes little sense, because UIO is typically used to control
-some super-specific FPGA IP blocks that are totally irrelevant outside
-of the very specific product they are included in. Most likely if those
-drivers were open-sourced and tried to be upstream they would be
-rejected because their usefulness in the upstream kernel is basically
-zero (but they would have an on-going maintenance effort for the whole
-community).
+ drivers/phy/qualcomm/phy-qcom-qusb2.c | 27 +--------------------------
+ 1 file changed, 1 insertion(+), 26 deletions(-)
+---
+base-commit: b425262c07a6a643ebeed91046e161e20b944164
+change-id: 20250414-revert_hs_phy_settings-47643d2c75ba
 
-> And that is what people usually don't want and that's why no in-tree
-> solution exists for this.
+Best regards,
+-- 
+Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 
-And that doesn't make sense because UIO already exists, and allows to
-achieve 95% of what people already need, to the exception of this DMA
-issue.
-
-Thomas
---=20
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
