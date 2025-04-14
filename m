@@ -1,154 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F31A274640
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2053D19CC0A;
+	Mon, 14 Apr 2025 17:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744653391; cv=none; b=aGpadAGwti5vHmvpOv/hRzhZm+IQPVLJYFlzeI2hIQfrvmE4n8XItN9o0CSpTHWXH2PQ+iKLhPjJ4/BxesVcPppwZKQQB5GDiUidn6EgVp8dQx5+pLIrQb2P1Hd/vizsD+xmqw8wkoaPbY+xTzFZRecM79sAK+syZuBI1vnGsIA=
+	t=1744653459; cv=none; b=t8B3J6ASymPDD57fQP5vfaOY/P+Qw1pAn2FcZ/D//GNcR/W3jMBNJb+JlIQr/13CIUdXP7ELoJYO0Qf2z+xdQyR+7FbjwqWIVWp9sO9IuAGpnzsaJ5Z6pFc06mZEidLbp58zAEMTJBtdQEV0zpp7XsVLD5HI2XEmOqDGOwmUCz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744653391; c=relaxed/simple;
-	bh=AZK12C0Fqchmlto8qBrceDdsuvAShASuIB+dDuARDr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DCZDh7FHpUpAqQ6Bp483allp6ESpeTDf2gthN/4rCkPPCjeMvHj4qVcdKG065LNBcBxZ0Ho4wWMgkekwm2/Rs4HfdTCaDQLjBpyjrZXCdE/a/e90/dCSHkz0Yc5QQrnH9C3ws+jEs/SN5ixlzvgaSwraIH0jL5p5ue3qPi2cztU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mI0sWe26; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744653459; c=relaxed/simple;
+	bh=bPgiMMaSLc+eDmqSe1HgWrhG1+XNyTjVIkUO8El3Ov0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NxUGIOUJ6N41VMyEuRzt3liP0I/7uOwt67K5z9Rkoih/1U6awzvBP+VRDpZ3t2bHDWeK1T4TcazDtWnDozy0VDL1rjrsHpuBr9OQOcYZ5IyAqmj5Cq1hbM2LFagjbxH/6etD7qp/iUk84+Vaid0gZAj8c4ZHno/DyMh7puYRFAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTdhHuxd; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mI0sWe26"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744653390; x=1776189390;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AZK12C0Fqchmlto8qBrceDdsuvAShASuIB+dDuARDr0=;
-  b=mI0sWe26wEEGl25sjW/NttLZksshanXrO4lrPrCulwl1XYHm3dozFlgq
-   M4mGT8k0nyBP1oD+N6ItOA1zOODFNyEecNOXZHfkSgHYSxa4MoP55J7xl
-   37+V1q+eAR/aG9YHYd56HG7ZwJX6g2Dk/wxn7cwPBjsen3W1ZLGBCEH/I
-   M+yGeRaHSvwvJFPPF5VqDp3LeFpXpydBoqtjA86sczhlJ5UHnz1jWQQwZ
-   meB+KCbclQhijZPn6qAR7UgtiurV4k3cPMjdpGsk/AhOBNloi3DhSPAdx
-   JOY8ujPxUhYuM5MzxLIduEFzIp+VX2QALfEEW1TSAh1+Ngr1K7XWnMiqD
-   w==;
-X-CSE-ConnectionGUID: H+0PK9Q3QU6ZekXPWzdz6w==
-X-CSE-MsgGUID: HoeMGylDQUCpd+FtcWbNFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56779930"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="56779930"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 10:56:29 -0700
-X-CSE-ConnectionGUID: dPwM8Y+UT8qyeKBve9u41A==
-X-CSE-MsgGUID: ltLoji/CTuKkNCN7WKpCmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="134941100"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 10:56:30 -0700
-Date: Mon, 14 Apr 2025 10:56:27 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: Region aware RDT options for resctrl
-Message-ID: <Z_1MS8ocgi1_LkAp@agluck-desk3>
-References: <Z_mBcnAcGzMMvfxV@agluck-desk3>
- <Z_mB-gmQe_LR4FWP@agluck-desk3>
- <4bec8924-6125-45ef-a212-f123ab2e4f5b@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTdhHuxd"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so832698a91.0;
+        Mon, 14 Apr 2025 10:57:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744653457; x=1745258257; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YDLmjU5aYGkKFZNBVtYIN1e2hFVEh2qpAqVYEYhienw=;
+        b=hTdhHuxdhSwDtbGcBB159Q2Fp7c09aipzhnzz4sjS5Pzaqe8YpctwO5A9UXsga1OsD
+         i93ri8kIt1pe8NuLnhYdEsGie4kUskRXtw0mZ9CTJDZ0R3sQ1zLBjUyPFnvL/7xiDyig
+         lV8KPjiNV1IFDWTp2kcBq4Ihk1KN7nXm5uOozsosReKVw72lz8BKu66FWAp2DSfe0+qI
+         VtQMTmIW2kPHrXvfObYilXom21cUU+13nTZURH4mYMPw7cGA1+A2kzJ6ITlQPexro694
+         xBlcWRaG7+FVz7OUKg7saTGJAElGNVzgQIG4zzsVYMSdsA8fWan0sjgM4L/g2Wimxd5Q
+         CmJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744653457; x=1745258257;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YDLmjU5aYGkKFZNBVtYIN1e2hFVEh2qpAqVYEYhienw=;
+        b=qatDCySmNJoamGqZKS1eFAbOKpm97jJIIp2u2eGq0aJnnkuSTNaZJXlhO3ZXgo7Cd7
+         Tk/O3Noo54kdy5AhLOPd2RTdAw24iS/7ckweBy50BWhHyckPazmjI02o4aCKwRkszGG+
+         vFzjYwfL+Z0o8/4m4QqQwjU/kHqUyTQ/dCqPsIxMvls9QTdOM5y0yey8sxwwlI+qjodM
+         jWE1CUoPt2E117TJ+tvvgtAGV3uZM2msoun8RwMiddrpTT6sYrQ6R+SAaBp8amZCXil5
+         HuKHdDm64xG2X6U7fq5cvIIS+4ZdqNYtaJnk7mGXkTuATf7LJ94tILJLtCpKDihyYLG0
+         zwOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVCMfkKvGcpcuU+hFiLxHRuUzlUGHOkNAW75gw1rRq4dLA0jg0QekBAHS1HTfWwG83BryURbzyW9NrISgY=@vger.kernel.org, AJvYcCXJG3hZz9Uoc2AXPfsHAZpoxJJgVYp06rddBWL0GQp5acOPA+bPn3QyuxJPpV3J5BlHnTCfnI2Py/T7YByQygc=@vger.kernel.org, AJvYcCXg1jLAPrFW/TDOtKH70PpjboFhCXQ5EtvBJ5QqQZHOIGTtD/flDDYm/OS/oRBnHx1XYFTVAOhIPIwn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvPNOJmx4T+YmQ+X06qxgEy/Ilcmq0zauxUifM1onrKQe2MmW5
+	5rm8ovtyZmgDkfu0sbxy9dmvE0LurLsz7oz+TrKAGg0OHIS4kx3ge2Cf4/r5W7uXkC1OeEOzm9n
+	cycbD8tijoY8m+x1L3GLVS9cgEeY=
+X-Gm-Gg: ASbGnctU7OBXeRZ5+PsDhcq4L/y1+h2sKOzlTCXN+Vv6/89osJVzOJpY7eIjqOpT9o2
+	NdKHATvumKyc9tei/4j3807IVopRHkfLD4q0ETb+SUHiXJEYvdZ128iiqImyx3k/ui1KEKoYoh9
+	U/jSAf1TreQKXFMEgYWUXZuQ==
+X-Google-Smtp-Source: AGHT+IF2Ts02o34q1ZddiSdxAxXqspzleZrPHKOELQW3P4amtTQc9cNxfADcwUNFlZEsEvxMFZpUTX9koDttANypnEw=
+X-Received: by 2002:a17:90a:e7c1:b0:306:b593:4551 with SMTP id
+ 98e67ed59e1d1-30823775704mr7205617a91.6.1744653457143; Mon, 14 Apr 2025
+ 10:57:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4bec8924-6125-45ef-a212-f123ab2e4f5b@intel.com>
+References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+ <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com>
+ <Z_1E2z-l1xG--BSc@slm.duckdns.org> <CANiq72keUDCzhwW9E0aw-QV4ST7k3zqit1Ea=2yj2VdKS1ujWw@mail.gmail.com>
+ <Z_1H6KkIt0YnkeLB@slm.duckdns.org> <CAJ-ks9k2FEfL4SWw3ThhhozAeHB=Ue9-_1pxb9XVPRR2E1Z+SQ@mail.gmail.com>
+ <Z_1KR_b0KEcqF4K8@slm.duckdns.org> <Z_1Kr71BMpXPoXS5@slm.duckdns.org>
+In-Reply-To: <Z_1Kr71BMpXPoXS5@slm.duckdns.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 14 Apr 2025 19:57:24 +0200
+X-Gm-Features: ATxdqUHa6RevVC4GEHkHk4oL9wvRUYrFYW64d-y3KmyUkrzC2yzmhJbVksGvOA8
+Message-ID: <CANiq72nDtMKNYqxrxj6gNYaJwPzqe0U6CkSQakRrV2rDKF1ZJQ@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
+To: Tejun Heo <tj@kernel.org>
+Cc: Tamir Duberstein <tamird@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 10:30:18AM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> Could you please help clarify how memory regions should be viewed?
-> 
-> On 4/11/25 1:56 PM, Luck, Tony wrote:
-> > On Fri, Apr 11, 2025 at 01:54:12PM -0700, Luck, Tony wrote:
-> > 
-> > Add Cc: lkml
-> > 
-> >> A future CPU from Intel will implement "region aware" memory bandwidth
-> >> monitoring and bandwidth allocation. This will provide for more granular
-> >> monitoring and control for heterogeneous memory configurations. BIOS
-> >> will populate an ACPI table that describes which system physical address
-> >> ranges belong to each region. E.g. for a two socket system with both
-> >> DDR and CXL memory regions could be assigned like this:
-> >>
-> >> Region 0: Local DDR
-> >> Region 1: Remote DDR
-> >> Region 2: Local CXL
-> >> Region 3: Remote CXL
-> 
-> If considering an assignment like above ...
-> 
-> ...
-> 
-> >> Option 1: Per-memory regions might be described individually like this:
-> >>
-> >> 	$ cat schemata
-> >> 	RMB0:0=100;1=100
-> >> 	RMB1:0=75;1=75
-> >> 	RMB2:0=25;1=25
-> >>
-> 
-> ... I assume "RMB0" represents "Region 0" and so forth. In this case, what do
-> the "domain IDs" used in above option represent?
+On Mon, Apr 14, 2025 at 7:49=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
+>
+> Miguel, now that I thought a bit about it, I probably shouldn't be applyi=
+ng
+> patches that I don't understand enough to tell which one depends on what.
+> Can you please apply this series and the delayed_work one?
 
-Measurement and control is still done at the scope of each L3 cache. So
-the domain ids in the schemata file and in the names of the directories
-under "mon_data" are the Linux L3 cache ids.
+Yeah, sorry.
 
-Here's a different example of a schemata file (with different throttle
-values in all positions to make the explanation below easier):
+Tamir: I know you the "prerequisite" at the footer, but it is best to
+explain what has happened in words. If I understand correctly, the
+last "version" is:
 
-	$ cat schemata
-	RMB0:0=100;1=75
-	RMB1:0=50;1=25
+    https://lore.kernel.org/all/20250409-container-of-mutness-v1-1-64f472b9=
+4534@gmail.com/
 
-This is a two socket system with just two regions (DDR local and remote)
+Right?
 
-0=100	CPUs in the domain of L3 instance 0 are not throttled for
-	accesses to their local DDR
-1=75	CPUs in the domain of L3 instance 1 are throttled to 75% for
-	accesses to their local DDR
-0=50	CPUS in the domain of L3 instance 0 are throttled to 50% for
-	accesses to remote DDR
-1=25	CPUs in the domain of L3 instance 1 are throttled to 25% for
-	accesses to remote DDR
-
-The ACPI MRRM table describes the memory ranges in each region. Each
-range has two region number associated with it. One for local access,
-the other for remote access. A dump of one entry looks like this:
-
-[0002]                       Memory Range : 0000
-[0002]                             Length : 0020
-[0004]                           Reserved : 00000000
-[0008]                System Address Base : 0000000000000000
-[0008]              System Address Length : 00000000E0000000
-[0002]                 Region Valid Flags : 0003
-[0001]             Static Local Region ID : 00
-[0001]            Static Remote Region ID : 01
-[0004]                           Reserved : 00000000
-
-It shows that the range from 0 GB to 3.5 GB will be counted/controlled
-in region 0 when accessed by a CPU where this is local memory, but as
-region 1 when accessed by a CPU where this range is remote.
-
-> 
-> Thank you.
-> 
-> Reinette
-
--Tony
+Cheers,
+Miguel
