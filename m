@@ -1,109 +1,188 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD20523D289;
-	Mon, 14 Apr 2025 14:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06142749D9
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639809; cv=none; b=m+Rdu16kAxa45Ww+GaEkyPI0X8oMhEgbyr8cd/lJCD2oLDN6eNYkPwwp97fS8L3pQ2U2QmIX80rFJmsMFXICtuaaxK6qmcY6UVHOnqXPdxvOXaK/LHv4tQBeRqIr3oUeDg2/TF7Ki5NkqVND2HdZc8pWqmlL6pTJjYW4XOcUmr8=
+	t=1744639816; cv=none; b=FjLEGTzWCgdJN6c3aPv3aqm6fq463XPp+Ja59eqHzX+7aTQz4I/w83zjAEQLcKj8ZR+FChDintJdq5mrKr0Xd+4MyRBBDaKnWxY48akk3BiAt4y8AZKbMcRCuFCCq4jj63Y6LdKXUMA4g1TdvreYr58eooDoiC+iCkGwXy8u1Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639809; c=relaxed/simple;
-	bh=vlliZdXZ++kEiIyM6dC/4E9eSNr05QSQUnNnkDinvRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATBJH9zslvKTV/ZK3tG3aHgRKrvGIG6KiRdh8+7494wRxTNjTJ8xjakx8J2CQ2QdT2pR7v6l2c7ZK5h1J5V8+ZMq3ZoQjAv2X0IkzMInpyDMVSN+vLeF9jvLMp3ASPYAYDugMjH6saOWrBrGUB8veKQTuICWdj795NjH4hZYhjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHuUm7tB; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744639816; c=relaxed/simple;
+	bh=vDKshwSTLzfVb2b9QCGRuLoLV9vmwy7bdEHMCW4HXco=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DnfgJvwM/SII2KbIuWSyGmoTllBv+HV5olUfw0t3tmyUCLoo0JY3OTxilJ9Rsxt6bdSYcYSsba11GWgywnmvFUHnWnNhfMBtquMXPQqsExthlmWcAmDvH3MVn0SkxkOEM+5aMlYbiyGj4GmIkN1mXznBjI1I1JQXETGVrImg6rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JmtHzcMT; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHuUm7tB"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2279915e06eso45253395ad.1;
-        Mon, 14 Apr 2025 07:10:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JmtHzcMT"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbd96bef64so908320866b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744639806; x=1745244606; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nmOn+oFj0d7pHr8fRjRfQJH33DMT3557rnDIwg1ASzo=;
-        b=LHuUm7tB2fDglyG1K7Ljs709wcIfHSV9ch4NUGW+/BOPVMJZaR5hlttDfPqO4ZHfmL
-         lNxr3/Tg6FMEkswnfxL2J0+DiFBIAj6FpCsBxSRofmJVQ2QHe+Lr5KwH1QJ1nfuLw98E
-         uIq8/4cpgpmiAPoaUEXhqDtlYsEX5O1TcAnOF9AY38A0c1l6+qqq4ExBLNPkPkhH70bJ
-         9ctVq3rjiWWpeSJF0oABUYT5PxILRA75M5FRRQfP4/uhShO40HG0PvZejavYTRdaBHQ4
-         x31xLSNK1uvISQld0Q2mnMNMohu7HVb94pWiKtRnAEq0/8aUHiXFwbBpVCNox7oR8R3H
-         4UWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744639806; x=1745244606;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=suse.com; s=google; t=1744639812; x=1745244612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nmOn+oFj0d7pHr8fRjRfQJH33DMT3557rnDIwg1ASzo=;
-        b=sa/9sGZW3p++wcVIHRtfFFAU9Vywe6zYR27WPf9l3pNhUzzNOZoeWQDa8hBEyifsdG
-         zSpq7/LESfHQx9tsiFxqcbBveUrZ7QCXls8OTLwBcJnwpDKxAajx3CYq78Lg0PT9uoPL
-         7pgA6xYqb7jMQgVpCc1ZcW/2ZOPdQd0vbsnIvwTqQ1jT4ppEzwIYDyhkx4vJEymMvtT2
-         xptCYQYn7fdA30qIrjMz3bDAZ6S/1c71BugHUk0Lf+WIDNPhCM8tDsbA2GRNfnfanCrQ
-         /pd7VP+wvbFl+BPTrh4x9iH313OzUuWtgdSuCEiNi3lSaD2H+5nwO/iwrg7k/AxfImro
-         RRAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUW82xb2qpUHzNEkZF1VqXQzewaJGNAKhr5ylFhOEgkN10/WPywdfeSyl7pa/fFbYwtkLfikFxNZAKg@vger.kernel.org, AJvYcCWGNcK3zfIF43iStgs2qAuCobkrFwraT7L/md8zWZSMgra1fz36qj7znTFFsKDxB3hwqJsuTW00LA7nBAHF@vger.kernel.org, AJvYcCWgycH0HpcEDmUEaw90g2lLtuPPiDxVW6suIDQ9tS/bLt608slIs+fbcc0isIJTp2W9WLRjot6Btenb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnT+NBbPT8nxmo/p3J8TKI1v6x/7vCXucZWyNHDt6UPvkfEwNv
-	nmUkrK7dfn/UDC6nBsxmRxS9UYf62UeTXHPzU7BhtZqGkXAouGL0
-X-Gm-Gg: ASbGncuCK3AHSC2t6J5ZR3HKbGcajpnhPwUKdpjEI1PpUPBxmKwetw4XFr1HIYT8x7B
-	vhL+Bkfswt9dNAdwuY9bx50cggf1TymmrKARF5vshatNp0sitKFAWUOpZ5egcfU0GR9+OfP5KsG
-	yXzP9L7MF+FJNOb1WEOjcJdV4tvql/ddgMkHkWARa1hBxlZnOBXb/7i2u+AJFAP2/qbarNg5m/J
-	cZdBC1hN1JPPe0XrKLQhOwqMQQAa/t7a5aFkNR6uBDvE3WQtxVvN/pEHkIY4VPbYb4YqQw9jqwK
-	BOOLWuYNo/ZufmG8B+rlGzSC+YwZAEZuc8qfrWCm9KOLKWqu
-X-Google-Smtp-Source: AGHT+IFpmOSTusA5gVrkDDqkyM7yH2msjLo0wNeGVBrKewB442d3eRoBO5F5zv2OQxq14VNIJLn64g==
-X-Received: by 2002:a17:902:fc4b:b0:21f:85d0:828 with SMTP id d9443c01a7336-22bea4f183bmr214847625ad.41.1744639805632;
-        Mon, 14 Apr 2025 07:10:05 -0700 (PDT)
-Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22ac7ccca88sm99049045ad.256.2025.04.14.07.10.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:10:04 -0700 (PDT)
-Date: Mon, 14 Apr 2025 11:11:13 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v1 5/7] iio: adc: ad4170: Add GPIO controller support
-Message-ID: <Z_0XgTYnDXd2x0b9@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1744200264.git.marcelo.schmitt@analog.com>
- <247566f848cdf2a245a8b6da6a84c22e155beeb7.1744200264.git.marcelo.schmitt@analog.com>
- <6669da27c78714d76ff21f810cd57045e90d701a.camel@gmail.com>
+        bh=V3ULzXYtgp5knes5jjtCb7NVfP7NhcV6WWSN7DiMNC0=;
+        b=JmtHzcMTHHxQwX8jGlv0Ilp9i4Ot/f/2pFQ+/2+2dIAh4bOBDXtmw9W+EDhVvziJQW
+         x+WxdRHD/FTySaQmmOuHD9gFBq69zHkiiNYIfQV9wdIVsbQrcdZ17EApD/3lNK7cIMOq
+         32GItiv+XWXf1BLrFFU01rt40yuctHkUgOn6/Ckq4yxRC5TbdY+/5DS+Ft52aduM3Lrm
+         CIcG4kf141QFMn34iruEro3ZJj5wU8wO7RILGaTuhUaZaaqsIqYfgZRMc6hkkYtiBNad
+         hsN/zSGxNJmFV5VPrR+ZkRS4fpewCtiDBv8tP3Y0vySeLDYCNg4r9g+2n8zr0+hUfeo4
+         OzhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744639812; x=1745244612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V3ULzXYtgp5knes5jjtCb7NVfP7NhcV6WWSN7DiMNC0=;
+        b=BGVA8bzZT0/CUBtjvhQ1kh8DsYrz164LOxLEt43JiK+gAK1wVv0BI47kS7W+03gnLD
+         IzZg+u31Q6ZN2oaJFz4FrI7bQXY0ppl02LX/MXRctqWK5UHJNpAx87VZ9D1WyE+icv41
+         09k3mzfqnT2p1mvsT2My4cPVzZXFqo5i5QHlFZ8rdXCehsfghUKd33CK4RiPsHcT0E/B
+         dyvqNszr3hC6LrPLKJtTelb4Meo0krubOqIICgjJZ1IqLOLMh4ZS8Rvth/jZi+nJy4v8
+         Ho2ps/hmrUDSj9mJR8c5HMfsfHAVKZKvJJu78hJS+4JFjrAnZ8Xr0XjoEOXhixdlQ3Oc
+         ek9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWfDt0Y4X6Co2vmjAifldOz3DY7enj4FPvDTMZCDZPO66pCIznykPzEXTUwUlDt1dC8LuSVEKD28ZVDlgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF/ELsTowUryfVcY6KTcMxdlimhfsOneEjjl7tDDidHLh/Vsda
+	wJAPjas8C+XoKldNnmFA27sZrywimWZZOpIjLbcJPE7IFuJxE36HM4U3HbR6NkRcW1vS8PR5Vif
+	Fa9pnFEvgZHp4I8vn3InZeP1B0CTGSVTx5371KQ==
+X-Gm-Gg: ASbGncvV2F1uQJhdUuOaLVqrNMJbrt48TSSNe1gAbzzFkFUj6oQGPACNPQKsVxAsNAw
+	0Egs9lGjwZ3ARFciZCHOPuN2e7kCpuEEZHvGfa0HS6+eSRkNPzqF5WV0hHXEPxREP2ZEATbVN4j
+	MVqeBsTYWqgkAGFumxqfGV
+X-Google-Smtp-Source: AGHT+IELmTa6kdG3m1wAOWSwzEYUsnM/AZVCS9gi1W5ygeB0nf9Akb94M2AIebg2Cbph/RHIMED8A0XttdyPTJBTj2w=
+X-Received: by 2002:a17:907:3d91:b0:ac7:391b:e689 with SMTP id
+ a640c23a62f3a-acad36da6b2mr1186418366b.59.1744639811991; Mon, 14 Apr 2025
+ 07:10:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6669da27c78714d76ff21f810cd57045e90d701a.camel@gmail.com>
+References: <20250411034425.173648-1-frank.li@vivo.com> <CAPjX3Fe34HVF2JUi2DEyxqShFhadxy7M7F6xTA_yVn5ywHMBhQ@mail.gmail.com>
+ <SEZPR06MB526928EBDA13B6463D7EE00BE8B32@SEZPR06MB5269.apcprd06.prod.outlook.com>
+In-Reply-To: <SEZPR06MB526928EBDA13B6463D7EE00BE8B32@SEZPR06MB5269.apcprd06.prod.outlook.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Mon, 14 Apr 2025 16:10:01 +0200
+X-Gm-Features: ATxdqUGqwksgvRY6yOhrk3sIyK_6RLT1HyjWUkZFMqMHqeY4xOQJGFeLp1V1UxM
+Message-ID: <CAPjX3FcGaV9rQXRodznCud+_zzHao3ZWfNnuFAv=ut=uGi3MPw@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: use BTRFS_PATH_AUTO_FREE in btrfs_truncate_inode_items()
+To: =?UTF-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>
+Cc: "clm@fb.com" <clm@fb.com>, "josef@toxicpanda.com" <josef@toxicpanda.com>, 
+	"dsterba@suse.com" <dsterba@suse.com>, 
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-...
-> > +static int ad4170_gpio_get_direction(struct gpio_chip *gc, unsigned int
-> > offset)
-> > +{
-> > +	struct iio_dev *indio_dev = gpiochip_get_data(gc);
-> > +	struct ad4170_state *st = iio_priv(indio_dev);
-> > +	unsigned int val;
-> > +	int ret;
-> > +
-> > +	if (!iio_device_claim_direct(indio_dev))
-> > +		return -EBUSY;
-> > +
-> 
-> This claim_direct() makes me wonder if there's any overlap between the GPIO func
-> and normal readings? Like, imagine a consumer requests a gpio and no buffering
-> is happening so all is good. However, there's nothing stopping us for enabling
-> buffering afterwards, right? Wouldn't that be an issue? If there are shared
-> pins, I can see this also being an issue even for single shot reading...
-> Otherwise, I wonder why we have this iio_device_claim_direct() calls? Is it just
-> for using the internal IIO lock?
+On Mon, 14 Apr 2025 at 15:34, =E6=9D=8E=E6=89=AC=E9=9F=AC <frank.li@vivo.co=
+m> wrote:
+>
+> Hi Daniel,
+>
+> > And what about the other functions in that file? We could even get rid =
+of two allocations passing the path from ..._inode_ref() to ..._inode_extre=
+f().
+>
+> I made the following changes, is this what you meant?
+> I will do the rest if that's ok.
+>
+> Thx,
+> Yangtao
+>
+> diff --git a/fs/btrfs/inode-item.c b/fs/btrfs/inode-item.c
+> index 3530de0618c8..e082d7e27c29 100644
+> --- a/fs/btrfs/inode-item.c
+> +++ b/fs/btrfs/inode-item.c
+> @@ -105,11 +105,11 @@ btrfs_lookup_inode_extref(struct btrfs_trans_handle=
+ *trans,
+>
+>  static int btrfs_del_inode_extref(struct btrfs_trans_handle *trans,
+>                                   struct btrfs_root *root,
+> +                                 struct btrfs_path *path,
+>                                   const struct fscrypt_str *name,
+>                                   u64 inode_objectid, u64 ref_objectid,
+>                                   u64 *index)
+>  {
+> -       struct btrfs_path *path;
+>         struct btrfs_key key;
+>         struct btrfs_inode_extref *extref;
+>         struct extent_buffer *leaf;
+> @@ -131,7 +131,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>         if (ret > 0)
+>                 ret =3D -ENOENT;
+>         if (ret < 0)
+> -               goto out;
+> +               return ret;
+>
+>         /*
+>          * Sanity check - did we find the right item for this name?
+> @@ -142,8 +142,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>                                                 ref_objectid, name);
+>         if (!extref) {
+>                 btrfs_abort_transaction(trans, -ENOENT);
+> -               ret =3D -ENOENT;
+> -               goto out;
+> +               return -ENOENT;
+>         }
+>
+>         leaf =3D path->nodes[0];
+> @@ -156,8 +155,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>                  * Common case only one ref in the item, remove the
+>                  * whole item.
+>                  */
+> -               ret =3D btrfs_del_item(trans, root, path);
+> -               goto out;
+> +               return btrfs_del_item(trans, root, path);
+>         }
+>
+>         ptr =3D (unsigned long)extref;
+> @@ -168,9 +166,6 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
+handle *trans,
+>
+>         btrfs_truncate_item(trans, path, item_size - del_len, 1);
+>
+> -out:
+> -       btrfs_free_path(path);
+> -
+>         return ret;
 
-We need read/write to AD4170 registers to configure/set/read GPIOs so the intent
-of claiming direct mode here is to avoid that from happening while we are doing
-something else (e.g. a buffered capture). I'm now considering to also lock on the
-state mutex to prevent concurrent run with the single-shot read routine.
+And if I look correctly you can also directly return 0 here.
 
-Thanks,
-Marcelo
+>  }
+>
+> @@ -178,7 +173,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
+ans,
+>                         struct btrfs_root *root, const struct fscrypt_str=
+ *name,
+>                         u64 inode_objectid, u64 ref_objectid, u64 *index)
+>  {
+> -       struct btrfs_path *path;
+> +       BTRFS_PATH_AUTO_FREE(path);
+>         struct btrfs_key key;
+>         struct btrfs_inode_ref *ref;
+>         struct extent_buffer *leaf;
+> @@ -230,7 +225,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
+ans,
+>                               item_size - (ptr + sub_item_len - item_star=
+t));
+>         btrfs_truncate_item(trans, path, item_size - sub_item_len, 1);
+>  out:
+> -       btrfs_free_path(path);
+> +       btrfs_release_path(path);
+>
+>         if (search_ext_refs) {
+>                 /*
+> @@ -238,7 +233,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
+ans,
+>                  * name in our ref array. Find and remove the extended
+>                  * inode ref then.
+>                  */
+> -               return btrfs_del_inode_extref(trans, root, name,
+> +               return btrfs_del_inode_extref(trans, root, path, name,
+>                                               inode_objectid, ref_objecti=
+d, index);
+>         }
