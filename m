@@ -1,309 +1,413 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197F725776;
-	Mon, 14 Apr 2025 07:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC8C1624CE;
+	Mon, 14 Apr 2025 07:04:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614250; cv=none; b=McTPYhbljNm9nuUva2ebsstgpudyfNdPXkTl6AFAeJZkKT3t3jemWC1qahn9YLGNwBDAd0eLxuW6WTZZ5b+GmU14bgiAifnGy3h99BIu4n5jNOGIsA0R3f+nd8jo/KEwgDJUIrPBN7gLGX0/o++fhdaSauzOEN8tfX0dqk90ip8=
+	t=1744614262; cv=none; b=asgfsxgZGFvQNSjGLCmx9/3Q8PgQkSgMbpoJaJZ6czXT85AIRzRs4GBCHOUJ/jOOufSKaZuizien9158F+K6PrtvpAJsaz57JpsJMaHrOCZRkqLI4KHpBHINIrrfr3CZJ67HORpS4tAgjWk2VquLTjzYn1STohhqIqsof/YP8Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614250; c=relaxed/simple;
-	bh=icC6pKxwkk63ydYys6oK1ioyyV4qcPSvCmG0NKiQefg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=erHj8vLjA+4ylF9ndK/dbQyLbkeerQ3iRxZA4C4nITyJ49UMeEty1qMXYtDaHZmk6eY13VuvqTmOJtCTVJGE25PZoW2ZwDbrUjs9HdcGLIvDyskbf5cFLa07Hk+ek1hcX9zlg2EodPbPLkXpIZa+uyBgs0/Zfnb4tXEgoO0dYt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOKguFF2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744614262; c=relaxed/simple;
+	bh=ow4VPVSfISjDPYdyBMU/7JUZsHmuWJmK278b3Re5Ka4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RaM4gxA9eSGJVE6+TsNlT5Hr16Aki+eg489qYePeWJAClaalOqbJ+dBB0+8kPw6H2oRl5tthCcnI0Xx4DtXrgZP0ueXZQFjVWodHd9ZZaoY+1j9UDDj0O7/M56v6uxTVkjjQYFkJl8LM5B9MTvFDyI6GRODb+FAcD/bjXQWMj2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGk2/sMN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOKguFF2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 969E8C4CEEC;
-	Mon, 14 Apr 2025 07:04:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGk2/sMN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CAAC4CEE2;
+	Mon, 14 Apr 2025 07:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744614249;
-	bh=icC6pKxwkk63ydYys6oK1ioyyV4qcPSvCmG0NKiQefg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EOKguFF2VxI82DMzK1Hz/A36DdD6tyL16iCFnyNocB04XiHAEx2Usjf/l6jDguOkg
-	 x3x3GRKL3w5pPVXZXuWw8qka//Ftfz2gh2c3JWvNBxmk2NWEGeFWbV1va2ur/nm60z
-	 GY7tun/dRfez4UgI3Y+aeNdjEkOUTPStzp/a77Huyjwo9YDobX5TXngfK1JnmNckvv
-	 Pxe1thYVFZ8sjvAerBTj+XrQO6k9DRsERd4IDnLmszh5hTBhX9R1hMavHavnnO/RBa
-	 8vBY9W5SWdJavz0DzdjfjrDYaFhxI5GAVDy48t8XDSSp72bBnRzw+3Sv8wRiahxeGv
-	 Hqppo3tkdiUcg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-549946c5346so4563449e87.2;
-        Mon, 14 Apr 2025 00:04:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMy9NkNs+FsFrRXfyOYjPqojV6Bx3otIbNwMMrCWFQDqtm8P4ct9hzToHmD5VQMtyGKsRdBOMYdMewivo=@vger.kernel.org, AJvYcCW55GQrRD3piXZUzy5eCNXDqKiA4V9RbaidzJ8hu6evyUaOP5nLhw+YseqAyiPGlrrZzJQX2H/yS+N2cw==@vger.kernel.org, AJvYcCWdBD5JvLx2ACqPzNccHi/291TEYc0hiVJSoICbEVHeet40SjW1AXPNroaVcJbBkL8PsXITiZnQJH4tRA==@vger.kernel.org, AJvYcCX7gYMYpZcZntVkxgQ61OyEwf45v6t+lVYA97SnpQXvHXv8Pq/s1fpCA5OsAYq39ZBox+6V/fXvFVg9CA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYWZSK+UmsGZJ/I+GU/FUXwvfeXKAtPVlp6y0aV2n5ot0DYDBF
-	yqHm+4VZ5bemkqf3tHOtzCRHXBAeGDw8h+50aRvJDkBlJtlJwCDVXq6NozX63TKWWN3UoTkUaPn
-	PbXn2nXZoIwJ788qtymL2OH5egfo=
-X-Google-Smtp-Source: AGHT+IEoYXlejAjxOwys1OLaOhDBK3py6wT/Y0QJYW6cfE2lr6fzReeEdjo+qSenumfyEoIhuh4zXG1xEt+R7ijOO8Y=
-X-Received: by 2002:a05:6512:ba7:b0:546:2f7a:38c4 with SMTP id
- 2adb3069b0e04-54d45292cd1mr2746051e87.13.1744614247886; Mon, 14 Apr 2025
- 00:04:07 -0700 (PDT)
+	s=k20201202; t=1744614262;
+	bh=ow4VPVSfISjDPYdyBMU/7JUZsHmuWJmK278b3Re5Ka4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UGk2/sMNUtXNpH8pbQAYjGmPXDyC4bIKK8xPVGGpZD4nqcHh0LWcQLHAXmL9TrpkG
+	 Y1YVbt6DFgN71478p/BPzJtMrTuDYnnpBPpv3VE7kiaJ8OU03UNzDVMRYpziQVeWZi
+	 qa0Har+0hFl8JLShFZaQMJby39IM2vqxbBAM9LyfYA9OkmV2q9BCmOb1WoluqwBdyz
+	 kdNnX+kdvjUm85IQzUonrmco2ZY2msfDBEVycNZ/pp+sMRTnkAT1KnWYIxlksSFSqX
+	 DGTYorskeNbzBqWf5EMn6RKxZctV0H1eJoW7IHCB4k0rt3j6h+24MS736C72/rC5dV
+	 Dp8lFd3eI/qSA==
+Message-ID: <e1cfe5a4-5b4b-4b72-821c-9fae81fff3fa@kernel.org>
+Date: Mon, 14 Apr 2025 09:04:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413154350.10819-1-ebiggers@kernel.org>
-In-Reply-To: <20250413154350.10819-1-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 14 Apr 2025 09:03:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGhG6PKVzqmVT6qrQ+GPkk_oxXE5d-ut0swi49V2=o-wQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEnYfS7U-gc63ktCKYv5CbPjrmaDdsHdKGekiLY6qQSH14mpXQi1o5UxKs
-Message-ID: <CAMj1kXGhG6PKVzqmVT6qrQ+GPkk_oxXE5d-ut0swi49V2=o-wQ@mail.gmail.com>
-Subject: Re: [PATCH] lib/crc: make the CPU feature static keys __ro_after_init
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/11] vt: introduce gen_ucs_width.py to create
+ ucs_width.c
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, Dave Mielke <Dave@mielke.cc>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410011839.64418-1-nico@fluxnic.net>
+ <20250410011839.64418-5-nico@fluxnic.net>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250410011839.64418-5-nico@fluxnic.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 13 Apr 2025 at 17:44, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> All of the CRC library's CPU feature static_keys are initialized by
-> initcalls and never change afterwards, so there's no need for them to be
-> in the regular .data section.  Put them in .data..ro_after_init instead.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+On 10. 04. 25, 3:13, Nicolas Pitre wrote:
+> From: Nicolas Pitre <npitre@baylibre.com>
+> 
+> The table in the current ucs_width.c is terribly out of date and
+> incomplete. We also need a second table to store zero-width code points.
+> Properly maintaining those tables manually is impossible. So here's a
+> script to automatically generate them.
+> 
+> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 > ---
->
-> I'm planning to take this via the crc tree.
->
->  arch/arm/lib/crc-t10dif-glue.c       | 4 ++--
->  arch/arm/lib/crc32-glue.c            | 4 ++--
->  arch/arm64/lib/crc-t10dif-glue.c     | 4 ++--
->  arch/loongarch/lib/crc32-loongarch.c | 2 +-
->  arch/mips/lib/crc32-mips.c           | 2 +-
->  arch/powerpc/lib/crc-t10dif-glue.c   | 2 +-
->  arch/powerpc/lib/crc32-glue.c        | 2 +-
->  arch/s390/lib/crc32-glue.c           | 2 +-
->  arch/sparc/lib/crc32_glue.c          | 2 +-
->  arch/x86/lib/crc-t10dif-glue.c       | 2 +-
->  arch/x86/lib/crc32-glue.c            | 4 ++--
->  arch/x86/lib/crc64-glue.c            | 2 +-
->  12 files changed, 16 insertions(+), 16 deletions(-)
->
+>   drivers/tty/vt/gen_ucs_width.py | 264 ++++++++++++++++++++++++++++++++
+>   1 file changed, 264 insertions(+)
+>   create mode 100755 drivers/tty/vt/gen_ucs_width.py
+> 
+> diff --git a/drivers/tty/vt/gen_ucs_width.py b/drivers/tty/vt/gen_ucs_width.py
+> new file mode 100755
+> index 0000000000..41997fe001
+> --- /dev/null
+> +++ b/drivers/tty/vt/gen_ucs_width.py
+> @@ -0,0 +1,264 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# This script uses Python's unicodedata module to generate ucs_width.c
+
+That is obvious, no need for the comment, IMO :).
+
+> +import unicodedata
+> +import sys
+> +
+> +def generate_ucs_width():
+> +    # Output file name
+> +    c_file = "ucs_width.c"
+> +
+> +    # Width data mapping
+> +    width_map = {}  # Maps code points to width (0, 1, 2)
+> +
+> +    # Define emoji modifiers and components that should have zero width
+> +    emoji_zero_width = [
+> +        # Skin tone modifiers
+> +        (0x1F3FB, 0x1F3FF),  # Emoji modifiers (skin tones)
+> +
+> +        # Variation selectors (note: VS16 is treated specially in vt.c)
+> +        (0xFE00, 0xFE0F),    # Variation Selectors 1-16
+> +
+> +        # Gender and hair style modifiers
+> +        (0x2640, 0x2640),    # Female sign
+> +        (0x2642, 0x2642),    # Male sign
+> +        (0x26A7, 0x26A7),    # Transgender symbol
+> +        (0x1F9B0, 0x1F9B3),  # Hair components (red, curly, white, bald)
+> +
+> +        # Tag characters
+> +        (0xE0020, 0xE007E),  # Tags
+> +    ]
+> +
+> +    # Mark these emoji modifiers as zero-width
+> +    for start, end in emoji_zero_width:
+> +        for cp in range(start, end + 1):
+> +            try:
+> +                width_map[cp] = 0
+> +            except (ValueError, OverflowError):
+
+When can this happen and why is it not fatal?
+
+> +                continue
+> +
+> +    # Mark all regional indicators as single-width as they are usually paired
+> +    # providing a combined with of 2.
+
+s/with/width/
+
+> +    regional_indicators = (0x1F1E6, 0x1F1FF)  # Regional indicator symbols A-Z
+> +    start, end = regional_indicators
+> +    for cp in range(start, end + 1):
+> +        try:
+> +            width_map[cp] = 1
+> +        except (ValueError, OverflowError):
+> +            continue
+> +
+> +    # Process all assigned Unicode code points (Basic Multilingual Plane + Supplementary Planes)
+> +    # Range 0x0 to 0x10FFFF (the full Unicode range)
+> +    for block_start in range(0, 0x110000, 0x1000):
+> +        block_end = block_start + 0x1000
+> +        for cp in range(block_start, block_end):
+> +            try:
+> +                char = chr(cp)
+> +
+> +                # Skip if already processed
+> +                if cp in width_map:
+> +                    continue
+> +
+> +                # Check if the character is a combining mark
+> +                category = unicodedata.category(char)
+> +
+> +                # Combining marks, format characters, zero-width characters
+> +                if (category.startswith('M') or  # Mark (combining)
+> +                    (category == 'Cf' and cp not in (0x061C, 0x06DD, 0x070F, 0x180E, 0x200F, 0x202E, 0x2066, 0x2067, 0x2068, 0x2069)) or
+> +                    cp in (0x200B, 0x200C, 0x200D, 0x2060, 0xFEFF)):  # Known zero-width characters
+
+Convert this if to a function.
+
+> +                    width_map[cp] = 0
+> +                    continue
+> +
+> +                # Use East Asian Width property
+> +                eaw = unicodedata.east_asian_width(char)
+> +
+> +                if eaw in ('F', 'W'):  # Fullwidth or Wide
+> +                    width_map[cp] = 2
+> +                elif eaw in ('Na', 'H', 'N', 'A'):  # Narrow, Halfwidth, Neutral, Ambiguous
+> +                    width_map[cp] = 1
+> +                else:
+> +                    # Default to single-width for unknown
+> +                    width_map[cp] = 1
+> +
+> +            except (ValueError, OverflowError):
+> +                # Skip invalid code points
+> +                continue
+> +
+> +    # Process Emoji - generally double-width
+> +    # Ranges according to Unicode Emoji standard
+
+No capital in "ranges".
+
+"to the Unicode Emoji standard"
+
+> +    emoji_ranges = [
+> +        (0x1F000, 0x1F02F),  # Mahjong Tiles
+> +        (0x1F0A0, 0x1F0FF),  # Playing Cards
+> +        (0x1F300, 0x1F5FF),  # Miscellaneous Symbols and Pictographs
+> +        (0x1F600, 0x1F64F),  # Emoticons
+> +        (0x1F680, 0x1F6FF),  # Transport and Map Symbols
+> +        (0x1F700, 0x1F77F),  # Alchemical Symbols
+> +        (0x1F780, 0x1F7FF),  # Geometric Shapes Extended
+> +        (0x1F800, 0x1F8FF),  # Supplemental Arrows-C
+> +        (0x1F900, 0x1F9FF),  # Supplemental Symbols and Pictographs
+> +        (0x1FA00, 0x1FA6F),  # Chess Symbols
+> +        (0x1FA70, 0x1FAFF),  # Symbols and Pictographs Extended-A
+> +    ]
+> +
+> +    for start, end in emoji_ranges:
+> +        for cp in range(start, end + 1):
+> +            if cp not in width_map or width_map[cp] != 0:  # Don't override zero-width
+> +                try:
+> +                    char = chr(cp)
+> +                    width_map[cp] = 2
+> +                except (ValueError, OverflowError):
+> +                    continue
+> +
+> +    # Optimize to create range tables
+> +    def ranges_optimize(width_data, target_width):
+> +        points = sorted([cp for cp, width in width_data.items() if width == target_width])
+> +        if not points:
+> +            return []
+> +
+> +        # Group consecutive code points into ranges
+> +        ranges = []
+> +        start = points[0]
+> +        prev = start
+> +
+> +        for cp in points[1:]:
+> +            if cp > prev + 1:
+> +                ranges.append((start, prev))
+> +                start = cp
+> +            prev = cp
+> +
+> +        # Add the last range
+> +        ranges.append((start, prev))
+> +        return ranges
+> +
+> +    # Extract ranges for each width
+> +    zero_width_ranges = ranges_optimize(width_map, 0)
+> +    double_width_ranges = ranges_optimize(width_map, 2)
+> +
+> +    # Get Unicode version information
+> +    unicode_version = unicodedata.unidata_version
+> +
+> +    # Generate C implementation file
+> +    with open(c_file, 'w') as f:
+> +        f.write(f"""\
+
+Why this backslash?
+
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ucs_width.c - Unicode character width lookup
+> + *
+> + * Auto-generated by gen_ucs_width.py
+> + *
+> + * Unicode Version: {unicode_version}
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/array_size.h>
+> +#include <linux/bsearch.h>
+> +#include <linux/consolemap.h>
+
+Pls sort includes alphabetically.
+
+> +
+> +struct interval {{
+> +	uint32_t first;
+> +	uint32_t last;
+> +}};
+> +
+> +/* Zero-width character ranges */
+> +static const struct interval zero_width_ranges[] = {{
+> +""")
+> +
+> +        for start, end in zero_width_ranges:
+> +            try:
+> +                start_char_desc = unicodedata.name(chr(start)) if start < 0x10000 else f"U+{start:05X}"
+> +                if start == end:
+> +                    comment = f"/* {start_char_desc} */"
+> +                else:
+> +                    end_char_desc = unicodedata.name(chr(end)) if end < 0x10000 else f"U+{end:05X}"
+> +                    comment = f"/* {start_char_desc} - {end_char_desc} */"
+> +            except:
+> +                if start == end:
+> +                    comment = f"/* U+{start:05X} */"
+> +                else:
+> +                    comment = f"/* U+{start:05X} - U+{end:05X} */"
+> +
+> +            f.write(f"\t{{ 0x{start:05X}, 0x{end:05X} }}, {comment}\n")
+> +
+> +        f.write("""\
+> +};
+> +
+> +/* Double-width character ranges */
+> +static const struct interval double_width_ranges[] = {
+> +""")
+> +
+> +        for start, end in double_width_ranges:
+> +            try:
+> +                start_char_desc = unicodedata.name(chr(start)) if start < 0x10000 else f"U+{start:05X}"
+> +                if start == end:
+> +                    comment = f"/* {start_char_desc} */"
+> +                else:
+> +                    end_char_desc = unicodedata.name(chr(end)) if end < 0x10000 else f"U+{end:05X}"
+> +                    comment = f"/* {start_char_desc} - {end_char_desc} */"
+> +            except:
+> +                if start == end:
+> +                    comment = f"/* U+{start:05X} */"
+> +                else:
+> +                    comment = f"/* U+{start:05X} - U+{end:05X} */"
+> +
+> +            f.write(f"\t{{ 0x{start:05X}, 0x{end:05X} }}, {comment}\n")
+> +
+> +        f.write("""\
+> +};
+> +
+> +
+> +static int ucs_cmp(const void *key, const void *element)
+> +{
+> +	uint32_t cp = *(uint32_t *)key;
+> +	const struct interval *e = element;
+> +
+> +	if (cp > e->last)
+> +		return 1;
+> +	if (cp < e->first)
+> +		return -1;
+> +	return 0;
+> +}
+> +
+> +static bool is_in_interval(uint32_t cp, const struct interval *intervals, size_t count)
+> +{
+> +	if (cp < intervals[0].first || cp > intervals[count - 1].last)
+> +		return false;
+> +
+> +	return __inline_bsearch(&cp, intervals, count,
+> +				sizeof(*intervals), ucs_cmp) != NULL;
+> +}
+> +
+> +/**
+> + * Determine if a Unicode code point is zero-width.
+> + *
+> + * @param ucs: Unicode code point (UCS-4)
+> + * Return: true if the character is zero-width, false otherwise
+> + */
+> +bool ucs_is_zero_width(uint32_t cp)
+> +{
+> +	return is_in_interval(cp, zero_width_ranges, ARRAY_SIZE(zero_width_ranges));
+> +}
+> +
+> +/**
+> + * Determine if a Unicode code point is double-width.
+> + *
+> + * @param ucs: Unicode code point (UCS-4)
+> + * Return: true if the character is double-width, false otherwise
+> + */
+> +bool ucs_is_double_width(uint32_t cp)
+> +{
+> +	return is_in_interval(cp, double_width_ranges, ARRAY_SIZE(double_width_ranges));
+> +}
+> +""")
+> +
+> +    # Print summary
+> +    zero_width_count = sum(end - start + 1 for start, end in zero_width_ranges)
+> +    double_width_count = sum(end - start + 1 for start, end in double_width_ranges)
+> +
+> +    print(f"Generated {c_file} with:")
+> +    print(f"- {len(zero_width_ranges)} zero-width ranges covering ~{zero_width_count} code points")
+> +    print(f"- {len(double_width_ranges)} double-width ranges covering ~{double_width_count} code points")
+> +
+> +if __name__ == "__main__":
+
+Will this be a lib at some point?
+
+> +    generate_ucs_width()
 
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+I wonder, if you could generate only zero_width_ranges[] to some 
+generated.c and "maintain" the C functions in the kernel the standard 
+way -- including that generated.c. I.e. not having C functions in a py 
+script.
 
-
-
-> diff --git a/arch/arm/lib/crc-t10dif-glue.c b/arch/arm/lib/crc-t10dif-glue.c
-> index 6efad3d78284..382437094bdd 100644
-> --- a/arch/arm/lib/crc-t10dif-glue.c
-> +++ b/arch/arm/lib/crc-t10dif-glue.c
-> @@ -14,12 +14,12 @@
->  #include <crypto/internal/simd.h>
->
->  #include <asm/neon.h>
->  #include <asm/simd.h>
->
-> -static DEFINE_STATIC_KEY_FALSE(have_neon);
-> -static DEFINE_STATIC_KEY_FALSE(have_pmull);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_pmull);
->
->  #define CRC_T10DIF_PMULL_CHUNK_SIZE    16U
->
->  asmlinkage u16 crc_t10dif_pmull64(u16 init_crc, const u8 *buf, size_t len);
->  asmlinkage void crc_t10dif_pmull8(u16 init_crc, const u8 *buf, size_t len,
-> diff --git a/arch/arm/lib/crc32-glue.c b/arch/arm/lib/crc32-glue.c
-> index 4340351dbde8..7ef7db9c0de7 100644
-> --- a/arch/arm/lib/crc32-glue.c
-> +++ b/arch/arm/lib/crc32-glue.c
-> @@ -16,12 +16,12 @@
->
->  #include <asm/hwcap.h>
->  #include <asm/neon.h>
->  #include <asm/simd.h>
->
-> -static DEFINE_STATIC_KEY_FALSE(have_crc32);
-> -static DEFINE_STATIC_KEY_FALSE(have_pmull);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_crc32);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_pmull);
->
->  #define PMULL_MIN_LEN  64      /* min size of buffer for pmull functions */
->
->  asmlinkage u32 crc32_pmull_le(const u8 buf[], u32 len, u32 init_crc);
->  asmlinkage u32 crc32_armv8_le(u32 init_crc, const u8 buf[], u32 len);
-> diff --git a/arch/arm64/lib/crc-t10dif-glue.c b/arch/arm64/lib/crc-t10dif-glue.c
-> index bacd18f23168..99d0b5668a28 100644
-> --- a/arch/arm64/lib/crc-t10dif-glue.c
-> +++ b/arch/arm64/lib/crc-t10dif-glue.c
-> @@ -15,12 +15,12 @@
->  #include <crypto/internal/simd.h>
->
->  #include <asm/neon.h>
->  #include <asm/simd.h>
->
-> -static DEFINE_STATIC_KEY_FALSE(have_asimd);
-> -static DEFINE_STATIC_KEY_FALSE(have_pmull);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_asimd);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_pmull);
->
->  #define CRC_T10DIF_PMULL_CHUNK_SIZE    16U
->
->  asmlinkage void crc_t10dif_pmull_p8(u16 init_crc, const u8 *buf, size_t len,
->                                     u8 out[16]);
-> diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/crc32-loongarch.c
-> index c44ee4f32557..8e6d1f517e73 100644
-> --- a/arch/loongarch/lib/crc32-loongarch.c
-> +++ b/arch/loongarch/lib/crc32-loongarch.c
-> @@ -24,11 +24,11 @@ do {                                                        \
->  } while (0)
->
->  #define CRC32(crc, value, size)                _CRC32(crc, value, size, crc)
->  #define CRC32C(crc, value, size)       _CRC32(crc, value, size, crcc)
->
-> -static DEFINE_STATIC_KEY_FALSE(have_crc32);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_crc32);
->
->  u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
->  {
->         if (!static_branch_likely(&have_crc32))
->                 return crc32_le_base(crc, p, len);
-> diff --git a/arch/mips/lib/crc32-mips.c b/arch/mips/lib/crc32-mips.c
-> index 676a4b3e290b..84df361e7181 100644
-> --- a/arch/mips/lib/crc32-mips.c
-> +++ b/arch/mips/lib/crc32-mips.c
-> @@ -60,11 +60,11 @@ do {                                                        \
->         _CRC32(crc, value, size, crc32)
->
->  #define CRC32C(crc, value, size) \
->         _CRC32(crc, value, size, crc32c)
->
-> -static DEFINE_STATIC_KEY_FALSE(have_crc32);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_crc32);
->
->  u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
->  {
->         if (!static_branch_likely(&have_crc32))
->                 return crc32_le_base(crc, p, len);
-> diff --git a/arch/powerpc/lib/crc-t10dif-glue.c b/arch/powerpc/lib/crc-t10dif-glue.c
-> index f411b0120cc5..ddd5c4088f50 100644
-> --- a/arch/powerpc/lib/crc-t10dif-glue.c
-> +++ b/arch/powerpc/lib/crc-t10dif-glue.c
-> @@ -19,11 +19,11 @@
->  #define VMX_ALIGN              16
->  #define VMX_ALIGN_MASK         (VMX_ALIGN-1)
->
->  #define VECTOR_BREAKPOINT      64
->
-> -static DEFINE_STATIC_KEY_FALSE(have_vec_crypto);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_vec_crypto);
->
->  u32 __crct10dif_vpmsum(u32 crc, unsigned char const *p, size_t len);
->
->  u16 crc_t10dif_arch(u16 crci, const u8 *p, size_t len)
->  {
-> diff --git a/arch/powerpc/lib/crc32-glue.c b/arch/powerpc/lib/crc32-glue.c
-> index dbd10f339183..42f2dd3c85dd 100644
-> --- a/arch/powerpc/lib/crc32-glue.c
-> +++ b/arch/powerpc/lib/crc32-glue.c
-> @@ -11,11 +11,11 @@
->  #define VMX_ALIGN              16
->  #define VMX_ALIGN_MASK         (VMX_ALIGN-1)
->
->  #define VECTOR_BREAKPOINT      512
->
-> -static DEFINE_STATIC_KEY_FALSE(have_vec_crypto);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_vec_crypto);
->
->  u32 __crc32c_vpmsum(u32 crc, const u8 *p, size_t len);
->
->  u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
->  {
-> diff --git a/arch/s390/lib/crc32-glue.c b/arch/s390/lib/crc32-glue.c
-> index 124214a27340..8f20a8e595c3 100644
-> --- a/arch/s390/lib/crc32-glue.c
-> +++ b/arch/s390/lib/crc32-glue.c
-> @@ -16,11 +16,11 @@
->
->  #define VX_MIN_LEN             64
->  #define VX_ALIGNMENT           16L
->  #define VX_ALIGN_MASK          (VX_ALIGNMENT - 1)
->
-> -static DEFINE_STATIC_KEY_FALSE(have_vxrs);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_vxrs);
->
->  /*
->   * DEFINE_CRC32_VX() - Define a CRC-32 function using the vector extension
->   *
->   * Creates a function to perform a particular CRC-32 computation. Depending
-> diff --git a/arch/sparc/lib/crc32_glue.c b/arch/sparc/lib/crc32_glue.c
-> index a70752c729cf..d34e7cc7e1a1 100644
-> --- a/arch/sparc/lib/crc32_glue.c
-> +++ b/arch/sparc/lib/crc32_glue.c
-> @@ -15,11 +15,11 @@
->  #include <linux/kernel.h>
->  #include <linux/crc32.h>
->  #include <asm/pstate.h>
->  #include <asm/elf.h>
->
-> -static DEFINE_STATIC_KEY_FALSE(have_crc32c_opcode);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_crc32c_opcode);
->
->  u32 crc32_le_arch(u32 crc, const u8 *data, size_t len)
->  {
->         return crc32_le_base(crc, data, len);
->  }
-> diff --git a/arch/x86/lib/crc-t10dif-glue.c b/arch/x86/lib/crc-t10dif-glue.c
-> index f89c335cde3c..d073b3678edc 100644
-> --- a/arch/x86/lib/crc-t10dif-glue.c
-> +++ b/arch/x86/lib/crc-t10dif-glue.c
-> @@ -7,11 +7,11 @@
->
->  #include <linux/crc-t10dif.h>
->  #include <linux/module.h>
->  #include "crc-pclmul-template.h"
->
-> -static DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
->
->  DECLARE_CRC_PCLMUL_FUNCS(crc16_msb, u16);
->
->  u16 crc_t10dif_arch(u16 crc, const u8 *p, size_t len)
->  {
-> diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
-> index e3f93b17ac3f..e6a6285cfca8 100644
-> --- a/arch/x86/lib/crc32-glue.c
-> +++ b/arch/x86/lib/crc32-glue.c
-> @@ -9,12 +9,12 @@
->
->  #include <linux/crc32.h>
->  #include <linux/module.h>
->  #include "crc-pclmul-template.h"
->
-> -static DEFINE_STATIC_KEY_FALSE(have_crc32);
-> -static DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_crc32);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
->
->  DECLARE_CRC_PCLMUL_FUNCS(crc32_lsb, u32);
->
->  u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
->  {
-> diff --git a/arch/x86/lib/crc64-glue.c b/arch/x86/lib/crc64-glue.c
-> index b0e1b719ecbf..1214ee726c16 100644
-> --- a/arch/x86/lib/crc64-glue.c
-> +++ b/arch/x86/lib/crc64-glue.c
-> @@ -7,11 +7,11 @@
->
->  #include <linux/crc64.h>
->  #include <linux/module.h>
->  #include "crc-pclmul-template.h"
->
-> -static DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
->
->  DECLARE_CRC_PCLMUL_FUNCS(crc64_msb, u64);
->  DECLARE_CRC_PCLMUL_FUNCS(crc64_lsb, u64);
->
->  u64 crc64_be_arch(u64 crc, const u8 *p, size_t len)
->
-> base-commit: e8c24520a1338f938774268a9bafb679ace93b76
-> --
-> 2.49.0
->
+thanks,
+-- 
+js
+suse labs
