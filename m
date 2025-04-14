@@ -1,58 +1,45 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4076A2BE7CD;
-	Mon, 14 Apr 2025 12:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59D72BEC26
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634559; cv=none; b=AEuTAYwtYVlj9siHrXYnAqNqomb45pEl43078TR3CImXSvOowYMUdSnWlqG2CT2w76H3vQgGB4ZU3EAXdKB91LkgDWm2Nmyocp9Y/WbC0EjC+ewHYKnfbhKNlIiiodBjdMKspiiyOMaoefBmeWH0tP/1IgOnk/g+DlwUev/lwFo=
+	t=1744634570; cv=none; b=AqEzfotWvQTxBBIxBbfTrX7D+8lWLr0ZHtKsROBSLurIxd33L2KShvRERvMNhASo2qPCF8CyaMcFieg2F567zWjFcLsSgblVAV/dbkKyWsWpjNT7nqORReyU/ojl5vQhM2L/rpWnfh7oC5uF1ssdAoKuKJHFiE6QQX/+VGhcZOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634559; c=relaxed/simple;
-	bh=GtYw0qEJu+ndi2eFJB6leAOMfQg3UNOm9YY7B4VxYUo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eak2XoqI6sdW2x1SHDbvg/LAwaaIx/hxZlPCmXwB2rEEbLGkWI/TIywXWX4GZ39/wz+Q/Uck9ANgzTTMts4HAFDRNbqG8US3+O3Vpab15OBAjeUU4+rbNtRBh3YT06DO8JKW+SDfsgssJBytqjl8Q2ZGGl2AW3BBziyU3uGGHo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gq18NaZa; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744634570; c=relaxed/simple;
+	bh=KvSjMUGPYaqnIntw3wU5bGMjVjj18qPkU+mxT6SOfe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qRPMtcG5MrO83As7bTOjYlswa74wuXOi7WXDRsJ5T4430CZKv83KAepZuQXnfm+cIbV5NcYbzMs9goqiUhqolBGbJEC1ygC6NA7b9PMjff2j8ces7ywRdHnGn5AdR/c8bkOItswDp/wJh1S85y765CoKrUdoDJawG7mkLSPQnMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9PxZeac; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gq18NaZa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744634555;
-	bh=GtYw0qEJu+ndi2eFJB6leAOMfQg3UNOm9YY7B4VxYUo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gq18NaZaqYVr7ZXF4mu03IoDJhgyee/P8Zvh5CXL1mQpE2q4T6OfrYKnDt/bHXctJ
-	 3EMXe/j/WuI9SFF+ujYlvHw/1BVpUMgPfHFbW201FMJSxME0UJhd8xRltehAuiN+Yo
-	 d4QW82829AxtQ5BqMjg669OCAtMY4yXrpJIO4Yc0BzlB2rSpVPP99LbgyJXSUKqBeu
-	 2xHSbdB3xM6lr9MJByteCHQiX4F035Gs3DFDCOp1GwPAPotdY3xBxerOomCnOdV8rH
-	 6SLWq2Rz1XNrpwu8qdlmBI7JGu6nKVqfb1rePzwCqj6ZvMxowmLTe2oxa/6XmQj5as
-	 pCY9obsXgt1og==
-Received: from [IPv6:2606:6d00:11:e976::c41] (unknown [IPv6:2606:6d00:11:e976::c41])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 63B1817E1034;
-	Mon, 14 Apr 2025 14:42:33 +0200 (CEST)
-Message-ID: <cffb6a6448a0cb32cc7b13e3048c097b3efc6f93.camel@collabora.com>
-Subject: Re: [PATCH 2/3] mailmap: add entry for Michael Riesch
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: michael.riesch@collabora.com, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Sakari Ailus <sakari.ailus@linux.intel.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=	
- <u.kleine-koenig@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>
-Cc: Collabora Kernel Team <kernel@collabora.com>, Pengutronix Kernel Team	
- <kernel@pengutronix.de>, imx@lists.linux.dev, linux-kernel@vger.kernel.org,
- 	linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Date: Mon, 14 Apr 2025 08:42:31 -0400
-In-Reply-To: <9f1c7c30082de242b4906e5ecbeb382400fcd4a2.camel@collabora.com>
-References: <20250410-maintainer-mriesch-v1-0-cdc5c6c68238@collabora.com>
-		 <20250410-maintainer-mriesch-v1-2-cdc5c6c68238@collabora.com>
-	 <9f1c7c30082de242b4906e5ecbeb382400fcd4a2.camel@collabora.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9PxZeac"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46717C4CEE2;
+	Mon, 14 Apr 2025 12:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744634570;
+	bh=KvSjMUGPYaqnIntw3wU5bGMjVjj18qPkU+mxT6SOfe8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=a9PxZeac5+4p4kEv5bE6vICAYRiMXUQ4Y1uF1ReST/BsI6kIJN3yKH9xEK2zf9cL/
+	 3ahsV4jSINawqKAbmDSbyY0lKW7B1UiSkG04M/DyjBUbvpjBcsS7M99QjllGUXAcer
+	 63IelloPZaK5nUeeLCHqrdD5ojcE/p7bs7LtJlxIMoUhsfSj6ABysvCFcvJNeFDxy+
+	 7qI8K+gkFqU/I9sQrspJix7dTYwETSIk+tJP/xp62iqGLTESKspr8te9y7bpCdlx6O
+	 9pd78zTGqkh/nDTsmrRHBYTJOKpAWHIeaVTgusr63sEgQ00hSKgpvCBWC6kuD6aIKP
+	 MLOw4Xgm90n/Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1u4J9C-000000007xj-0N88;
+	Mon, 14 Apr 2025 14:42:46 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH] mux: suppress lookup errors for mux controls
+Date: Mon, 14 Apr 2025 14:42:20 +0200
+Message-ID: <20250414124220.30578-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,40 +48,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Le vendredi 11 avril 2025 à 17:25 -0400, Nicolas Dufresne a écrit :
-> Le jeudi 10 avril 2025 à 21:41 +0200, Michael Riesch via B4 Relay a
-> écrit :
-> > From: Michael Riesch <michael.riesch@collabora.com>
-> > 
-> > After five interesting years, I left WolfVision and started to work
-> > for
-> > Collabora. Add a corresponding mailmap entry.
-> > 
-> > Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
-> 
-> Reviewed-by: Nicolas Dufresne <nicolas.collabora@collabora.com>
+Since commit eec611d26f84 ("ASoC: codecs: wcd938x: add mux control
+support for hp audio mux") we have drivers looking up mux controls that
+are optional. This results in errors incorrectly being logged on
+machines like the Lenovo ThinkPad X13s where the mux is missing:
 
-Friday's typo special:
-                                 nicolas.dufresne@collabora.com
+    wcd938x_codec audio-codec: /audio-codec: failed to get mux-control (0)
 
-:-(
-Nicolas
+Suppress the error message when lookup of mux controls fails and make
+sure to return -ENOENT consistently also when looking up controls by
+name so that consumer drivers can easily determine how to proceed.
 
-> 
-> > ---
-> >  .mailmap | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/.mailmap b/.mailmap
-> > index 4f7cd8e23177..59f99aa83185 100644
-> > --- a/.mailmap
-> > +++ b/.mailmap
-> > @@ -503,6 +503,7 @@ Mayuresh Janorkar <mayur@ti.com>
-> >  Md Sadre Alam <quic_mdalam@quicinc.com> <mdalam@codeaurora.org>
-> >  Miaoqing Pan <quic_miaoqing@quicinc.com> <miaoqing@codeaurora.org>
-> >  Michael Buesch <m@bues.ch>
-> > +Michael Riesch <michael.riesch@collabora.com>
-> > <michael.riesch@wolfvision.net>
-> >  Michal Simek <michal.simek@amd.com> <michal.simek@xilinx.com>
-> >  Michel Dänzer <michel@tungstengraphics.com>
-> >  Michel Lespinasse <michel@lespinasse.org>
+Note that most current consumers already log mux lookup failures
+themselves.
+
+Fixes: eec611d26f84 ("ASoC: codecs: wcd938x: add mux control support for hp audio mux")
+Link: https://lore.kernel.org/lkml/Z-z_ZAyVBK5ui50k@hovoldconsulting.com/
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/mux/core.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+index 02be4ba37257..b95bc03e3d6b 100644
+--- a/drivers/mux/core.c
++++ b/drivers/mux/core.c
+@@ -544,8 +544,13 @@ static struct mux_control *mux_get(struct device *dev, const char *mux_name,
+ 			index = of_property_match_string(np, "mux-control-names",
+ 							 mux_name);
+ 		if (index < 0) {
+-			dev_err(dev, "mux controller '%s' not found\n",
+-				mux_name);
++			if (!state && index == -EINVAL)
++				index = -ENOENT;
++
++			if (index != -ENOENT) {
++				dev_err(dev, "mux controller '%s' not found\n",
++					mux_name);
++			}
+ 			return ERR_PTR(index);
+ 		}
+ 	}
+@@ -559,8 +564,11 @@ static struct mux_control *mux_get(struct device *dev, const char *mux_name,
+ 						 "mux-controls", "#mux-control-cells",
+ 						 index, &args);
+ 	if (ret) {
+-		dev_err(dev, "%pOF: failed to get mux-%s %s(%i)\n",
+-			np, state ? "state" : "control", mux_name ?: "", index);
++		if (state || ret != -ENOENT) {
++			dev_err(dev, "%pOF: failed to get mux-%s %s(%i)\n",
++				np, state ? "state" : "control",
++				mux_name ?: "", index);
++		}
+ 		return ERR_PTR(ret);
+ 	}
+ 
+-- 
+2.49.0
+
