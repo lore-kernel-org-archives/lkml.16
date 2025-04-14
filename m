@@ -1,22 +1,26 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 04F1A178372;
-	Mon, 14 Apr 2025 01:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from mail-m49209.qiye.163.com (mail-m49209.qiye.163.com [45.254.49.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BB8178372
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744595319; cv=none; b=fKvKXICFT4Ymw2XI7Vk84EGs8ucLKBj9moVGgxvGrlJbBy6+9AHw+jQOyoRZfVtkTa+zg7HTs0EyJGLsIwT/GNqUSlctqskIWdarlis0ZLH77krjw6Yv9bINFa9c/6ZMNnnGCcDxUicw8Ty6RDM3VVP5hD4mVJqfCtf2F1ISTZk=
+	t=1744595530; cv=none; b=QBaZa3ygXjGUuCG8Bbe6wsjeX8E1gFKgr2CJZwsIAl+RvlnIFJ3xA5x+82Sb74DQjYOeHSgWngNIIenxw0HrcbHX2pD8bQNWxCoBi77Qm8lOKMhXg8uuweZ7Sd9YPz4cSfDXkoP1qgvttUcVuQqPxde89jO0eeLSBR17dVil6FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744595319; c=relaxed/simple;
-	bh=k3+Pw6nnVOlaFTatgzu829SDj9sOEFPIIJet/21rX2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=ZwxX1RHCuvE1CYbDVsvqmoZLj1016hjkIml11Pe9zF/tXgLCGgl7hDIcRcTwg3v5QZgv3/PkI4VMXTNndNa7y6vcA1LzelfFWeItvoGIT1y/xu90K7qNXn99jE3OcRjPkvz9uqfdb3885NnPqH3AYsLbVH9SJdT+W6i78OKEI+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id DA88F60187F4F;
-	Mon, 14 Apr 2025 09:48:28 +0800 (CST)
-Message-ID: <c6fb3f34-4296-4b86-a08c-92b16cd8e1d0@nfschina.com>
-Date: Mon, 14 Apr 2025 09:48:28 +0800
+	s=arc-20240116; t=1744595530; c=relaxed/simple;
+	bh=fBLTP093vuIiAC7yiioro40haF2CXcMH9lftbu3sCWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=AKCOb1u/1YGDFo/mmxurTQWxd4FeNEA7e1g4C8BK3o3/h8Vs27X3e3bYLriNGRRiJw+p3upt2Dpisc0wEzbhksU6JsZTRnOYf5rSQ6nxSIDqDmTokZM4mgZuYyfk8WIi5vdWjO9nG8MhTupQ2H6T6tLE8Z8V6kGY58z97BRhClI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=aWGYzSyl; arc=none smtp.client-ip=45.254.49.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="aWGYzSyl"
+Received: from [172.16.12.26] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11bad66ba;
+	Mon, 14 Apr 2025 09:46:49 +0800 (GMT+08:00)
+Message-ID: <65b5da62-3994-42e0-916c-4a8505fa3844@rock-chips.com>
+Date: Mon, 14 Apr 2025 09:46:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -24,82 +28,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "PCI: Fix reference leak in
- pci_register_host_bridge()"
-To: "liwei (JK)" <liwei728@huawei.com>
-Cc: linux-kernel@vger.kernel.org, make24@iscas.ac.cn, bhelgaas@google.com,
- linux-pci@vger.kernel.org, bobo.shaobowang@huawei.com,
- wangxiongfeng2@huawei.com
+Subject: Re: [PATCH 3/7] drm/bridge: analogic_dp: drop panel_is_modeset
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+ <20250401-panel-return-void-v1-3-93e1be33dc8d@oss.qualcomm.com>
 Content-Language: en-US
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <c81b43b7-e993-4e9f-ad27-acacd0b85847@huawei.com>
+Cc: Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
+ andrzej.hajda@intel.com, dri-devel@lists.freedesktop.org,
+ jernej.skrabec@gmail.com, jonas@kwiboo.se, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, rfoss@kernel.org,
+ simona@ffwll.ch, tzimmermann@suse.de
+From: Damon Ding <damon.ding@rock-chips.com>
+In-Reply-To: <20250401-panel-return-void-v1-3-93e1be33dc8d@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQk8aQ1ZLGh0YT0oaTRlOSU9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9631fa4e5d03a3kunm11bad66ba
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ODo6HSo*PDIDPC4eHx5PKjoz
+	SBBPCRRVSlVKTE9PTkJOSUpKT0lOVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFITUNLNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=aWGYzSylNmiXIDwCVvLnCAHkwVkH+FU/Po9CcypUW8aTsrHMC3rkXTEcXBG3rsC6VTLUs0kcRSGiRad3itQq2Z1wKUbpFJztxXAvFkstah8OhiI0iQyJMU8SmRH+VtmJGM72/tY4NRXsUX4hzikzu2EeAGWe5myDv2V8gItVo8k=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=Ig4iftYOsYlJff/8wBUz9XCqK3qD58dlsifH7hNudHw=;
+	h=date:mime-version:subject:message-id:from;
 
-On 2025/4/12 11:18, liwei (JK) wrote:
-> 在 2025/4/10 19:19, Su Hui 写道:
->> On 2025/4/10 11:28, Xiangwei Li wrote:
->>> This reverts commit 804443c1f27883926de94c849d91f5b7d7d696e9.
->>>
->>> The newly added logic incorrectly sets bus_registered to true even when
->>> device_register returns an error, this is incorrect.
->>>
->>> When device_register fails, there is no need to release the 
->>> reference count,
->> I think you missed some thing about device_register(). This patch is 
->> wrong.
->>
->> device_register()
->>      -> device_initialize()
->>                -> kobject_init()
->>                      -> kobject_init_internal()
->>                          -> kref_init(&kobj->kref); //set 
->> kref->refcount to 1
->>                             ^^^^^^^^^^^^^^^^^^^^^
->>
-> Sorry, I missed the initialization of refcount in device_initialize,
-> but I’m confused about the branch logic for bus_registered. Why isn’t
-> free(bus) executed when bus_registered == true? My understanding is
-> that the kobject_cleanup operation triggered when refcount reaches zero
-> does not clean up the allocated bus. Could you clarify this further?
->
-1020         dev_set_name(&bus->dev, "%04x:%02x", pci_domain_nr(bus), 
-bus->number);
-                   ^^^^^^^^^^^^^^^^^^^^
-                 //device name is allocated, and should be freed when 
-device_register() is failed.
+Hi Dmitry,
 
-1021         name = dev_name(&bus->dev);
-1022
-1023         err = device_register(&bus->dev);
-1024         bus_registered = true;
-1025         if (err)
-1026                 goto unregister;
-                         [...]
-1117         if (bus_registered)
-1118                 put_device(&bus->dev);
-                            ^^^^^^^^^^^^^^^^
-                            // decrement reference count  to zero and 
-call release_pcibus_dev() to free bus.
-                            // And call kfree_const() to free device 
-name in kobject_cleanup().
+On 2025/4/1 13:11, Dmitry Baryshkov wrote:
+> The dp->panel_is_modeset is now a write-only field. Drop it completely.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 11 +----------
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  1 -
+>   2 files changed, 1 insertion(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> index 82dc4b01806f9728dc882b0128171838e81f21b0..704c6169116eb2601d2ad02dc7294455ceff5460 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> @@ -964,9 +964,7 @@ static int analogix_dp_disable_psr(struct analogix_dp_device *dp)
+>    * is false, the panel will be unprepared.
+>    *
+>    * The function will disregard the current state
+> - * of the panel and either prepare/unprepare the panel based on @prepare. Once
+> - * it finishes, it will update dp->panel_is_modeset to reflect the current state
+> - * of the panel.
+> + * of the panel and either prepare/unprepare the panel based on @prepare.
+>    */
+>   static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
+>   				     bool prepare)
+> @@ -983,12 +981,6 @@ static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
+>   	else
+>   		ret = drm_panel_unprepare(dp->plat_data->panel);
+>   
+> -	if (ret)
+> -		goto out;
+> -
+> -	dp->panel_is_modeset = prepare;
+> -
+> -out:
+>   	mutex_unlock(&dp->panel_lock);
+>   	return ret;
+>   }
+> @@ -1532,7 +1524,6 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+>   	dp->dpms_mode = DRM_MODE_DPMS_OFF;
+>   
+>   	mutex_init(&dp->panel_lock);
+> -	dp->panel_is_modeset = false;
+>   
+>   	/*
+>   	 * platform dp driver need containor_of the plat_data to get
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> index 774d11574b095b093ddf2818ad5b84be6605c9bf..b679d5b71d276f458d905c936160f107225bc6c5 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> @@ -170,7 +170,6 @@ struct analogix_dp_device {
+>   	bool			psr_supported;
+>   
+>   	struct mutex		panel_lock;
+> -	bool			panel_is_modeset;
+>   
+>   	struct analogix_dp_plat_data *plat_data;
+>   };
+> 
 
-1119         else
-1120                 kfree(bus);
+The patch has been verified with the eDP panel "lg,lp079qx1-sp0v" in 
+RK3588S EVB1 board.
 
-Commit 804443c1f278 fixes the memory leak of 'name' and consistent with 
-the annotation of device_degister():
+Tested-by: Damon Ding <damon.ding@rock-chips.com>
 
-  '* NOTE: _Never_ directly free @dev after calling this function, even
-  * if it returned an error! Always use put_device() to give up the
-  * reference initialized in this function instead.'
-
-Su Hui
-
-
-
-
-
+Best regards,
+Damon
 
