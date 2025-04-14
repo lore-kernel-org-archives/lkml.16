@@ -1,131 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7A2192B8C;
-	Mon, 14 Apr 2025 04:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951ABF9FE;
+	Mon, 14 Apr 2025 04:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744604018; cv=none; b=M23d16fhmyYmRgQKps/HQ2QyW8ouj2+DU1IVo/dn3DWyOGIMF/W/47xtHvREgtzDcJHWvKtnPalQXciJY1NvSsHtyMzscfr+76yfAiCJCkR9woz7yiXAR/q3s1+cuRuoJvT9ZWRAog5PwZ5nWST9QSDWQvvir3tvZiJ5Zr7PXc8=
+	t=1744604064; cv=none; b=Yd74YKoK5CGIX5l568sDcgxdec9s4zE3NxsF96E+myXKQHm+ZJzVrJgkGiFzALhQdW79F/pUB0PJYUvwRvNOKqZ+FxPVY/UWgs507cO9Tha2Lc3lYOklOzvdYxq56GzwJxkgTaul3Ylhr7sOSbpwIqX7LsD8peQ4smRsbKnn2EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744604018; c=relaxed/simple;
-	bh=CB8pu/44ToFwI9NWz+1xSf7PMSuFUI0+WvVfiTyezjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dc6sjNZVVHD7PQr5dLp66PQ0qtAIB8IhG9zaNs6gDRi6yRc+nrAytSSbjeuzGuVmchVXTqmeXMyDXWhu1+Xa0I4Qrwi82fPVX6KqMv5P1IQhwVWMcYy8wpzFPudz+B0ixNF0Bsq/OeNm8i7QoLrtmjcI/zAI6sL3W1QBXuRscdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOAi+vag; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744604064; c=relaxed/simple;
+	bh=9ycSAGCn/N7lHXI00aJ49NEF/zfU6sodzqjJrT6h6Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bR4lmZshICPcDSMZw1ut0S3c/XOtXzGjmhbqDzELlJqq2JGoxrdSTmb/bPJNPT9l5Pqs+/bVzWUO0OjRakoD4Cj8j0TtU06cXppGrz46voYWTg1SVcpM7fB7Lws8XQl2P7WZ0Xi1vNp6H7MlZbBwz0jc936xNcEdorPoT88Jn5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=HN6IPRCX; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOAi+vag"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744604016; x=1776140016;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CB8pu/44ToFwI9NWz+1xSf7PMSuFUI0+WvVfiTyezjM=;
-  b=gOAi+vagrTK9bezNbQDOcFRIz7U0WJhcMn/SKgMIdsVC6QC/kZyfo2mo
-   2wKxLYdxFjBA+QlfvhTpJUedSvv8f4mR/CnT4/+vgDvmWRRtr3FhPZgaV
-   gp0iMsMAcGgaXdHJNvEJSIoE3Eo2gtsUMgFeI9Z91r/ezO24X6ayJELif
-   d9MmxZBdOvdJOMEB3uAE96RUulFH80fZdfS/bI3ffiXPxNGXg1FqhfmLY
-   GB7byRUXpBAM5PzTjxcFrX3VIhq4QfZ2eNZoFmmjAosyyAJ/EcxWFwiVS
-   2q8FWq7J91QIUYaG/y5KMUga0zrFR4rNcSHsO/jHECgkaIIrQIWL6KKVc
-   w==;
-X-CSE-ConnectionGUID: I9ztO0mJTsS5spLvxTdo/w==
-X-CSE-MsgGUID: mfQSlc4NSkC6OkULop8aMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46069616"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="46069616"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 21:13:35 -0700
-X-CSE-ConnectionGUID: e1diT5iITya16f02jEWIeA==
-X-CSE-MsgGUID: qW0vI5rURz6dohE7ULXZaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="160657009"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 13 Apr 2025 21:13:33 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4BCM-000DXK-1K;
-	Mon, 14 Apr 2025 04:13:30 +0000
-Date: Mon, 14 Apr 2025 12:13:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Manikandan K Pillai <mpillai@cadence.com>,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and
- EP controller
-Message-ID: <202504141101.J2GJGhRZ-lkp@intel.com>
-References: <20250411103656.2740517-6-hans.zhang@cixtech.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HN6IPRCX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744604054;
+	bh=+W04DPVRK/5aBuiIFsxv0Q9xp/bifT9N7ci3BNtR8oQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=HN6IPRCX9Q+zAxm9iIgtg+x3BldQum1YUaay2DEmtrB88goNETQck4100TT25o6ZL
+	 H7JPBoiPARz/7+8KjvlrnPtfyGtvK9N4q15U/1o4dDGOfymDrHpv+fh6THaNsI370Z
+	 3AfPotLKZ3FUGsyAIqCl+p77AL3w4hfJM95uBQCnsGTNDeOrmsFNEycA3KPtA1H66d
+	 DQ3Fsg9YW+KLAyL4ErCz6RWtqaCOMIKsxhzROv6HvulzJ9BE8XqwT6AUop0eielSm6
+	 IXFJ71RCJzolFbJSSFaYFmcy+5qYrJP2g/aAEpn5vhCt6mxMZOy99lc4cahjVmPN8Z
+	 IYJ7Lp0wCoVAw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbYnw1YcMz4wbr;
+	Mon, 14 Apr 2025 14:14:12 +1000 (AEST)
+Date: Mon, 14 Apr 2025 14:14:11 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Binbin Wu
+ <binbin.wu@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, KVM
+ <kvm@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the kvm tree with the tip tree
+Message-ID: <20250414141411.469e897f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411103656.2740517-6-hans.zhang@cixtech.com>
+Content-Type: multipart/signed; boundary="Sig_/nSJ+XbEAEFZjcicWsadWvu3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi,
+--Sig_/nSJ+XbEAEFZjcicWsadWvu3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build errors:
+Hi all,
 
-[auto build test ERROR on a24588245776dafc227243a01bfbeb8a59bafba9]
+Today's linux-next merge of the kvm tree got a conflict in:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/dt-bindings-pci-cadence-Extend-compatible-for-new-RP-configuration/20250414-094836
-base:   a24588245776dafc227243a01bfbeb8a59bafba9
-patch link:    https://lore.kernel.org/r/20250411103656.2740517-6-hans.zhang%40cixtech.com
-patch subject: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
-config: arc-randconfig-001-20250414 (https://download.01.org/0day-ci/archive/20250414/202504141101.J2GJGhRZ-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141101.J2GJGhRZ-lkp@intel.com/reproduce)
+  arch/x86/kvm/vmx/vmx.c
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504141101.J2GJGhRZ-lkp@intel.com/
+between commits:
 
-All error/warnings (new ones prefixed by >>):
+  c435e608cf59 ("x86/msr: Rename 'rdmsrl()' to 'rdmsrq()'")
+  78255eb23973 ("x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'")
 
-   In file included from drivers/pci/controller/cadence/pcie-cadence-host.c:13:
-   drivers/pci/controller/cadence/pcie-cadence-host.c: In function 'cdns_pci_hpa_map_bus':
->> drivers/pci/controller/cadence/pcie-cadence.h:309:9: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
-     309 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK, \
-         |         ^~~~~~~~~~
-   drivers/pci/controller/cadence/pcie-cadence-host.c:108:17: note: in expansion of macro 'CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS'
-     108 |         addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
---
->> drivers/pci/controller/cadence/pcie-cadence-plat.c:59:23: error: 'cdns_pcie_hpa_startlink' undeclared here (not in a function); did you mean 'cdns_pcie_hpa_start_link'?
-      59 |         .start_link = cdns_pcie_hpa_startlink,
-         |                       ^~~~~~~~~~~~~~~~~~~~~~~
-         |                       cdns_pcie_hpa_start_link
->> drivers/pci/controller/cadence/pcie-cadence-plat.c:58:35: warning: 'cdns_hpa_plat_ops' defined but not used [-Wunused-const-variable=]
-      58 | static const struct cdns_pcie_ops cdns_hpa_plat_ops = {
-         |                                   ^~~~~~~~~~~~~~~~~
+from the tip tree and commit:
 
+  7172c753c26a ("KVM: VMX: Move common fields of struct vcpu_{vmx,tdx} to a=
+ struct")
 
-vim +/FIELD_PREP +309 drivers/pci/controller/cadence/pcie-cadence.h
+from the kvm tree.
 
-fc9e872310321c Manikandan K Pillai 2025-04-11  304  
-fc9e872310321c Manikandan K Pillai 2025-04-11  305  /* Region r Outbound AXI to PCIe Address Translation Register 0 */
-fc9e872310321c Manikandan K Pillai 2025-04-11  306  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r) (0x1010 + ((r) & 0x1f) * 0x0080)
-fc9e872310321c Manikandan K Pillai 2025-04-11  307  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK GENMASK(5, 0)
-fc9e872310321c Manikandan K Pillai 2025-04-11  308  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(nbits)           \
-fc9e872310321c Manikandan K Pillai 2025-04-11 @309  	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK, \
-fc9e872310321c Manikandan K Pillai 2025-04-11  310  		   ((nbits) - 1))
-fc9e872310321c Manikandan K Pillai 2025-04-11  311  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK GENMASK(23, 16)
-fc9e872310321c Manikandan K Pillai 2025-04-11  312  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) \
-fc9e872310321c Manikandan K Pillai 2025-04-11  313  	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK, devfn)
-fc9e872310321c Manikandan K Pillai 2025-04-11  314  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS_MASK GENMASK(31, 24)
-fc9e872310321c Manikandan K Pillai 2025-04-11  315  #define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(bus) \
-fc9e872310321c Manikandan K Pillai 2025-04-11  316  	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS_MASK, bus)
-fc9e872310321c Manikandan K Pillai 2025-04-11  317  
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/kvm/vmx/vmx.c
+index cd0d6c1fcf9c,ef2d7208dd20..000000000000
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@@ -1335,10 -1337,10 +1337,10 @@@ void vmx_prepare_switch_to_guest(struc
+  		savesegment(fs, fs_sel);
+  		savesegment(gs, gs_sel);
+  		fs_base =3D read_msr(MSR_FS_BASE);
+- 		vmx->msr_host_kernel_gs_base =3D read_msr(MSR_KERNEL_GS_BASE);
++ 		vt->msr_host_kernel_gs_base =3D read_msr(MSR_KERNEL_GS_BASE);
+  	}
+ =20
+ -	wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+ +	wrmsrq(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+  #else
+  	savesegment(fs, fs_sel);
+  	savesegment(gs, gs_sel);
+@@@ -1382,10 -1384,10 +1384,10 @@@ static void vmx_prepare_switch_to_host(
+  #endif
+  	invalidate_tss_limit();
+  #ifdef CONFIG_X86_64
+- 	wrmsrq(MSR_KERNEL_GS_BASE, vmx->msr_host_kernel_gs_base);
+ -	wrmsrl(MSR_KERNEL_GS_BASE, vmx->vt.msr_host_kernel_gs_base);
+++	wrmsrq(MSR_KERNEL_GS_BASE, vmx->vt.msr_host_kernel_gs_base);
+  #endif
+  	load_fixmap_gdt(raw_smp_processor_id());
+- 	vmx->guest_state_loaded =3D false;
++ 	vmx->vt.guest_state_loaded =3D false;
+  	vmx->guest_uret_msrs_loaded =3D false;
+  }
+ =20
+@@@ -1393,8 -1395,8 +1395,8 @@@
+  static u64 vmx_read_guest_kernel_gs_base(struct vcpu_vmx *vmx)
+  {
+  	preempt_disable();
+- 	if (vmx->guest_state_loaded)
++ 	if (vmx->vt.guest_state_loaded)
+ -		rdmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+ +		rdmsrq(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+  	preempt_enable();
+  	return vmx->msr_guest_kernel_gs_base;
+  }
+@@@ -1402,8 -1404,8 +1404,8 @@@
+  static void vmx_write_guest_kernel_gs_base(struct vcpu_vmx *vmx, u64 data)
+  {
+  	preempt_disable();
+- 	if (vmx->guest_state_loaded)
++ 	if (vmx->vt.guest_state_loaded)
+ -		wrmsrl(MSR_KERNEL_GS_BASE, data);
+ +		wrmsrq(MSR_KERNEL_GS_BASE, data);
+  	preempt_enable();
+  	vmx->msr_guest_kernel_gs_base =3D data;
+  }
+
+--Sig_/nSJ+XbEAEFZjcicWsadWvu3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8i5MACgkQAVBC80lX
+0GzeIwgAnzRzSi2V66oIYBWxZD4sIyBa2SGobBMhHPkR8v10wuPt3U3Tqj7EQ0pr
+PKXY+6Yn+6qRpbce9eMFJvGwKf8IfeT6/pvCm6Skv+QAZMHTJ4Fa1HItT5nltvyB
+4+APOrzYjg7CMyXtVWPQlyA08FgH5O3c4VheP3tapvsjCz7NF+nUtQZkgWWyCfly
+yIfmq1PWrVGB1Jf+B3j7U7AFhzBHIjEodxh2/1X276Hu2oCHXzf+9t9MFF2cGLlM
+tPkBrCGxxQ2bvQzAld9rPU+f0tRyE1jpBP3+W9JuzZYW3HPCbYdrXd6Qxcvav0ED
+DJfzmKAq99fbx/PDEIq47MiBSfVLSw==
+=U3sT
+-----END PGP SIGNATURE-----
+
+--Sig_/nSJ+XbEAEFZjcicWsadWvu3--
