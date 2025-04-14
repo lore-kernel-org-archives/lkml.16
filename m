@@ -1,254 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCA7288CB2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718AC28B4EA
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744653702; cv=none; b=Eaujaie/OoE1DL7V5AnDpzrsZxu+nvsh3dX7n8YNyMebFbE7WBu++ChaYOJEQz5LZtfCcZhwKf6v+z8u1goI8/ejQVLOhR2QSBjMdscDboD5HsXDTPYnGhSiDVJH5Jg5XjL59PK6T/TjpXoQZLk+KvUjWZju3+s0rrvCE5lo4kI=
+	t=1744653708; cv=none; b=hL0sZiHL6GFGSl3zvhEpb5wOZEfCeesMkfnqN1Rg+Ds7+AWPB9G3ijxBu3lhhM7QkENGynjUOWmCplK1IQJ4uM4gO8Qin7soZf/GqScK5IKiptj+MduScStObu/7x6GDjqh/KRmTGYdJzyv6ztDNQzFBWgqPOqwKwAski2b/IR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744653702; c=relaxed/simple;
-	bh=G7PxkYqPYv3OuWhhgnZ02TsFSmlFOr6o2vQSKFes5m0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WV+igyFuvNY86gP1oGCoxlNwePAHIhAyf5xlRkgfSa9uzVVERIv1TItM9mHJph+6XcztLJI/iNjqnObn7eWhkbfdK8lcrKqrOD7WFDBngkjpQ8lskaTSCpMmNv+flGRGBfvfRVvV3K5HUYA8zqK9B2vQVtUGUUCMYVomh7zq9DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OeLjm0Mg; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744653708; c=relaxed/simple;
+	bh=iW3kH2HTEzdUPe3PMacgKc10LLcFWt408tAqpj5Ug38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sunx8nfk3TsGXWM6OIrRpI84K71NKFWAnSGAv0McqKsLL4L/Ujf3QuEdhiFhRtjg9p3cYIAh4AByzmG55fpsHljGR7V8hz4uRfFHsktEI9+NGYExtNIYhkgcVwabe84VnP+lsEIZ4D3qIpEJEAe8jn3C9MkTLp+MQbl4hvgAvsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NI2KrdVN; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OeLjm0Mg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744653699; x=1776189699;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=G7PxkYqPYv3OuWhhgnZ02TsFSmlFOr6o2vQSKFes5m0=;
-  b=OeLjm0Mg9VvMaKL0O7GRvOyeJ47f+0f4xscd/Bys2a3qeAS2Z2nNlNSf
-   vXPR+c3MLDdQk6EBskLGZZ59zSNiNHLDgUKj1BSSCSdqBW6nhlkkYk46g
-   p9Y0S1d5SuTWsX7093vqbuN3A/tc0tCpGM0pFi4Pfa4zN/5odu45AWemN
-   +U79GLC5uizUvCxoCn98KFQBUR/Vl/LjUyJlRt+77OqQ91qpgxMW6SARk
-   dtX/XXY6hnre9Z9hX70glLjrgGYzxZTyxfXnu4Ia3S6zmDboCx4IHMthw
-   S/QVJUWLgyru9HcIAvGEekPQ7/vIunKcgxPpBl1eE2VDw+LuVTwnck2/6
-   A==;
-X-CSE-ConnectionGUID: gcwySwEGQ66+S8Q2jh//+g==
-X-CSE-MsgGUID: X2M79tlmS+u6lDEuHnd8EQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="63680507"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="63680507"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 11:01:38 -0700
-X-CSE-ConnectionGUID: h7BjMY/wQ2Oy1DbBMygCSA==
-X-CSE-MsgGUID: Q4S2C2njQ4CuFzdtXNKz2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="129888200"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 14 Apr 2025 11:01:37 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4O7j-000EXz-0U;
-	Mon, 14 Apr 2025 18:01:35 +0000
-Date: Tue, 15 Apr 2025 02:01:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Penkler <dpenkler@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/staging/gpib/eastwood/fluke_gpib.c:1013:19: warning:
- assignment makes pointer from integer without a cast
-Message-ID: <202504150249.sGJCdyor-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NI2KrdVN"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3995ff6b066so2521431f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744653704; x=1745258504; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nBLuWbdtMel6i38ax54FckIfRTO54jFDOdfOeU/b1uA=;
+        b=NI2KrdVNy1gI5DLkGdbkUcn6RCAlzOGICv/nFe8gCoFZcs0AIbvZMBAJdEMIg7dSqZ
+         P4VcKF8s5+D7Yk2uM91Df38hiLoPVqzd20yjPZWmVULpVm4W4UftlhIfHTozErXjyABI
+         2aoN4991rewB8Sh8rLoNS7HsaI26/fvi7v6SfXSsAS8K0SnUX5Yg7eiVZldxhja6ePrX
+         3W0knjBG4k09gk9MQHf9h2gQl12pXZUkWcVJeXpRPDBhnRIXgYG47OvqhAF9P++LE80J
+         jbImAf5XyujuNEg6hDhCRUVr19fVNE6wfKMgGpdU4Kn4xZeqQpwN7elQhTCdNxAoyD2D
+         BsEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744653704; x=1745258504;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBLuWbdtMel6i38ax54FckIfRTO54jFDOdfOeU/b1uA=;
+        b=WLL/wVR4HgmuwlbyTz2vFbLIIfWE3DUzWVL/BqFUkTEDFXJMRCC2n4Bn5X1T8Xs5Wq
+         YVLfkvRv6iqqnzsES09vLVc56NaiQopOoonTcxZ1HC6uP5gVhmjLijF/rDX3RkqPu3lK
+         KYn4ipczzPRXfqU44gM5KVpVKBMBDSV/WdTnD7qMWRGMcYiFqufA/G47yb+4tFn1EJvs
+         g85fTzlti9TjBlp9Y3PvVxogkiRj7D2cr8HnBU79MDrsqNULDOoetH2KE3iWoeiKxcHg
+         IHE+VVo/8n4CggskNzpZkaOxqD9WuRqUVNg+8CNtPSEzVuWTNhr1eBtYBnasR/Es2KKA
+         S7gg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWyRE8xMn51YAnh4QbjeRf0XwR+UpKC4w/WyQYEMRpMu592ZQ8KjTvvywXuxcX4TnQsohu8WwnufYX5Uo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHiuhGfyye10AZzJL6rFjsDr96JmLnKiFncttULQQi50pCQQqw
+	jg6jSUgGx7V9Swo7DkZXYuLLEhvG4XfCkoZg6ZrZiJIzBqieekEA+2JN52Uw4rM=
+X-Gm-Gg: ASbGncsLMAHtIjb/AOsH5cGzcRmslACwcdTx+erZE5kX7lnKvG9Y8nVajzL5074KDmI
+	rZiddP5w3XsxOPB0cYlunqMqHvhMLC/vw82OH0oMFq2WtqdYW18ArClbddD2HeMcU0t+S6DO6J+
+	4Enqn3YMClUR89/v7NFvHgTLP0LGBe0BT+yjH0re+tBMm5PctkyTniNY8lRyYWzm4crdIbJYybm
+	ZiStimuKDXjo6ds8cEVx6LpPBRZLRXDnEz+L/K7FKhdoIwhCKvNGsl7D4YY0oNu0lo7i8YDWLbU
+	faVpl6CbxhKDW19dB0UCU8x1bnoKLnBIwi3NutcLh0w=
+X-Google-Smtp-Source: AGHT+IEtQycgr4S3+PgCeHikW/Hyvr38HbspTFMfglvu/9qnMU6MbIV/XlhPDnBnlVxtCbAFfxNM+w==
+X-Received: by 2002:a5d:598e:0:b0:39c:3122:ad55 with SMTP id ffacd0b85a97d-39ea51f5b0dmr9250849f8f.18.1744653704398;
+        Mon, 14 Apr 2025 11:01:44 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae978023sm11710271f8f.47.2025.04.14.11.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 11:01:43 -0700 (PDT)
+Date: Mon, 14 Apr 2025 20:01:42 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Waiman Long <llong@redhat.com>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] mm/vmscan: Skip memcg with !usage in
+ shrink_node_memcgs()
+Message-ID: <gpzfja7rsb6cy6r5mpfbakx7xp444xskdumooocytwhi6362fk@hdjhr7zampaj>
+References: <20250414021249.3232315-1-longman@redhat.com>
+ <20250414021249.3232315-2-longman@redhat.com>
+ <kwvo4y6xjojvjf47pzv3uk545c2xewkl36ddpgwznctunoqvkx@lpqzxszmmkmj>
+ <6572da04-d6d6-4f5e-9f17-b22d5a94b9fa@redhat.com>
+ <uaxa3qttqmaqxsphwukrxdbfrx6px7t4iytjdksuroqiu6w7in@75o4bigysttw>
+ <20250414164721.GA741145@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s2v2mxjanhgmijod"
 Content-Disposition: inline
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8ffd015db85fea3e15a77027fda6c02ced4d2444
-commit: 165e8cc3cfec9ef51f3376b0d49b115294f34f3b staging: gpib: Add KBUILD files for GPIB drivers
-date:   6 months ago
-config: s390-randconfig-002-20250415 (https://download.01.org/0day-ci/archive/20250415/202504150249.sGJCdyor-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504150249.sGJCdyor-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504150249.sGJCdyor-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/staging/gpib/eastwood/fluke_gpib.c: In function 'fluke_line_status':
-   drivers/staging/gpib/eastwood/fluke_gpib.c:196:23: warning: variable 'nec_priv' set but not used [-Wunused-but-set-variable]
-     struct nec7210_priv *nec_priv;
-                          ^~~~~~~~
-   drivers/staging/gpib/eastwood/fluke_gpib.c: In function 'fluke_attach_impl':
-   drivers/staging/gpib/eastwood/fluke_gpib.c:1013:21: error: implicit declaration of function 'ioremap'; did you mean 'iounmap'? [-Werror=implicit-function-declaration]
-     nec_priv->iobase = ioremap(e_priv->gpib_iomem_res->start,
-                        ^~~~~~~
-                        iounmap
->> drivers/staging/gpib/eastwood/fluke_gpib.c:1013:19: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-     nec_priv->iobase = ioremap(e_priv->gpib_iomem_res->start,
-                      ^
-   drivers/staging/gpib/eastwood/fluke_gpib.c:1050:33: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-     e_priv->write_transfer_counter = ioremap(e_priv->write_transfer_counter_res->start,
-                                    ^
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.c:10:0:
-   At top level:
-   drivers/staging/gpib/eastwood/fluke_gpib.h:140:18: warning: 'fluke_num_regs' defined but not used [-Wunused-const-variable=]
-    static const int fluke_num_regs = 8;
-                     ^~~~~~~~~~~~~~
-   In file included from drivers/staging/gpib/include/nec7210.h:17:0,
-                    from drivers/staging/gpib/eastwood/fluke_gpib.h:13,
-                    from drivers/staging/gpib/eastwood/fluke_gpib.c:10:
-   drivers/staging/gpib/include/nec7210_registers.h:21:18: warning: 'nec7210_num_registers' defined but not used [-Wunused-const-variable=]
-    static const int nec7210_num_registers = 8;
-                     ^~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/staging/gpib/include/gpib_types.h:16:0,
-                    from drivers/staging/gpib/include/nec7210.h:16,
-                    from drivers/staging/gpib/eastwood/fluke_gpib.h:13,
-                    from drivers/staging/gpib/eastwood/fluke_gpib.c:10:
-   drivers/staging/gpib/uapi/gpib_user.h:344:18: warning: 'request_service_bit' defined but not used [-Wunused-const-variable=]
-    static const int request_service_bit = 0x40;
-                     ^~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/uapi/gpib_user.h:264:18: warning: 'gpib_addr_max' defined but not used [-Wunused-const-variable=]
-    static const int gpib_addr_max = 30; /* max address for primary/secondary gpib addresses */
-                     ^~~~~~~~~~~~~
-   drivers/staging/gpib/uapi/gpib_user.h:212:22: warning: 'gpib_command_mask' defined but not used [-Wunused-const-variable=]
-    static const uint8_t gpib_command_mask = 0x7f;
-                         ^~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/uapi/gpib_user.h:53:18: warning: 'board_status_mask' defined but not used [-Wunused-const-variable=]
-    static const int board_status_mask = ERR | TIMO | END | CMPL | SPOLL |
-                     ^~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/uapi/gpib_user.h:52:18: warning: 'device_status_mask' defined but not used [-Wunused-const-variable=]
-    static const int device_status_mask = ERR | TIMO | END | CMPL | RQS;
-                     ^~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+In-Reply-To: <20250414164721.GA741145@cmpxchg.org>
 
 
-vim +1013 drivers/staging/gpib/eastwood/fluke_gpib.c
+--s2v2mxjanhgmijod
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 1/2] mm/vmscan: Skip memcg with !usage in
+ shrink_node_memcgs()
+MIME-Version: 1.0
 
-55936779f496129 Dave Penkler 2024-09-18   973  
-55936779f496129 Dave Penkler 2024-09-18   974  static int fluke_attach_impl(gpib_board_t *board, const gpib_board_config_t *config,
-55936779f496129 Dave Penkler 2024-09-18   975  			     unsigned int handshake_mode)
-55936779f496129 Dave Penkler 2024-09-18   976  {
-55936779f496129 Dave Penkler 2024-09-18   977  	struct fluke_priv *e_priv;
-55936779f496129 Dave Penkler 2024-09-18   978  	struct nec7210_priv *nec_priv;
-55936779f496129 Dave Penkler 2024-09-18   979  	int isr_flags = 0;
-55936779f496129 Dave Penkler 2024-09-18   980  	int retval;
-55936779f496129 Dave Penkler 2024-09-18   981  	int irq;
-55936779f496129 Dave Penkler 2024-09-18   982  	struct resource *res;
-55936779f496129 Dave Penkler 2024-09-18   983  	dma_cap_mask_t dma_cap;
-55936779f496129 Dave Penkler 2024-09-18   984  
-55936779f496129 Dave Penkler 2024-09-18   985  	if (!fluke_gpib_pdev) {
-55936779f496129 Dave Penkler 2024-09-18   986  		pr_err("No gpib platform device was found, attach failed.\n");
-55936779f496129 Dave Penkler 2024-09-18   987  		return -ENODEV;
-55936779f496129 Dave Penkler 2024-09-18   988  	}
-55936779f496129 Dave Penkler 2024-09-18   989  
-55936779f496129 Dave Penkler 2024-09-18   990  	retval = fluke_generic_attach(board);
-55936779f496129 Dave Penkler 2024-09-18   991  	if (retval)
-55936779f496129 Dave Penkler 2024-09-18   992  		return retval;
-55936779f496129 Dave Penkler 2024-09-18   993  
-55936779f496129 Dave Penkler 2024-09-18   994  	e_priv = board->private_data;
-55936779f496129 Dave Penkler 2024-09-18   995  	nec_priv = &e_priv->nec7210_priv;
-55936779f496129 Dave Penkler 2024-09-18   996  	nec_priv->offset = fluke_reg_offset;
-55936779f496129 Dave Penkler 2024-09-18   997  	board->dev = &fluke_gpib_pdev->dev;
-55936779f496129 Dave Penkler 2024-09-18   998  
-55936779f496129 Dave Penkler 2024-09-18   999  	res = platform_get_resource(fluke_gpib_pdev, IORESOURCE_MEM, 0);
-55936779f496129 Dave Penkler 2024-09-18  1000  	if (!res) {
-55936779f496129 Dave Penkler 2024-09-18  1001  		dev_err(&fluke_gpib_pdev->dev, "Unable to locate mmio resource for cb7210 gpib\n");
-55936779f496129 Dave Penkler 2024-09-18  1002  		return -ENODEV;
-55936779f496129 Dave Penkler 2024-09-18  1003  	}
-55936779f496129 Dave Penkler 2024-09-18  1004  
-55936779f496129 Dave Penkler 2024-09-18  1005  	if (request_mem_region(res->start,
-55936779f496129 Dave Penkler 2024-09-18  1006  			       resource_size(res),
-55936779f496129 Dave Penkler 2024-09-18  1007  			       fluke_gpib_pdev->name) == NULL) {
-55936779f496129 Dave Penkler 2024-09-18  1008  		dev_err(&fluke_gpib_pdev->dev, "cannot claim registers\n");
-55936779f496129 Dave Penkler 2024-09-18  1009  		return -ENXIO;
-55936779f496129 Dave Penkler 2024-09-18  1010  	}
-55936779f496129 Dave Penkler 2024-09-18  1011  	e_priv->gpib_iomem_res = res;
-55936779f496129 Dave Penkler 2024-09-18  1012  
-55936779f496129 Dave Penkler 2024-09-18 @1013  	nec_priv->iobase = ioremap(e_priv->gpib_iomem_res->start,
-55936779f496129 Dave Penkler 2024-09-18  1014  				   resource_size(e_priv->gpib_iomem_res));
-55936779f496129 Dave Penkler 2024-09-18  1015  	pr_info("gpib: iobase %lx remapped to %p, length=%d\n",
-55936779f496129 Dave Penkler 2024-09-18  1016  		(unsigned long)e_priv->gpib_iomem_res->start,
-55936779f496129 Dave Penkler 2024-09-18  1017  		nec_priv->iobase, (int)resource_size(e_priv->gpib_iomem_res));
-55936779f496129 Dave Penkler 2024-09-18  1018  	if (!nec_priv->iobase) {
-55936779f496129 Dave Penkler 2024-09-18  1019  		dev_err(&fluke_gpib_pdev->dev, "Could not map I/O memory\n");
-55936779f496129 Dave Penkler 2024-09-18  1020  		return -ENOMEM;
-55936779f496129 Dave Penkler 2024-09-18  1021  	}
-55936779f496129 Dave Penkler 2024-09-18  1022  
-55936779f496129 Dave Penkler 2024-09-18  1023  	res = platform_get_resource(fluke_gpib_pdev, IORESOURCE_MEM, 1);
-55936779f496129 Dave Penkler 2024-09-18  1024  	if (!res) {
-55936779f496129 Dave Penkler 2024-09-18  1025  		dev_err(&fluke_gpib_pdev->dev, "Unable to locate mmio resource for gpib dma port\n");
-55936779f496129 Dave Penkler 2024-09-18  1026  		return -ENODEV;
-55936779f496129 Dave Penkler 2024-09-18  1027  	}
-55936779f496129 Dave Penkler 2024-09-18  1028  	if (request_mem_region(res->start,
-55936779f496129 Dave Penkler 2024-09-18  1029  			       resource_size(res),
-55936779f496129 Dave Penkler 2024-09-18  1030  			       fluke_gpib_pdev->name) == NULL) {
-55936779f496129 Dave Penkler 2024-09-18  1031  		dev_err(&fluke_gpib_pdev->dev, "cannot claim registers\n");
-55936779f496129 Dave Penkler 2024-09-18  1032  		return -ENXIO;
-55936779f496129 Dave Penkler 2024-09-18  1033  	}
-55936779f496129 Dave Penkler 2024-09-18  1034  	e_priv->dma_port_res = res;
-55936779f496129 Dave Penkler 2024-09-18  1035  
-55936779f496129 Dave Penkler 2024-09-18  1036  	res = platform_get_resource(fluke_gpib_pdev, IORESOURCE_MEM, 2);
-55936779f496129 Dave Penkler 2024-09-18  1037  	if (!res) {
-55936779f496129 Dave Penkler 2024-09-18  1038  		dev_err(&fluke_gpib_pdev->dev, "Unable to locate mmio resource for write transfer counter\n");
-55936779f496129 Dave Penkler 2024-09-18  1039  		return -ENODEV;
-55936779f496129 Dave Penkler 2024-09-18  1040  	}
-55936779f496129 Dave Penkler 2024-09-18  1041  
-55936779f496129 Dave Penkler 2024-09-18  1042  	if (request_mem_region(res->start,
-55936779f496129 Dave Penkler 2024-09-18  1043  			       resource_size(res),
-55936779f496129 Dave Penkler 2024-09-18  1044  			       fluke_gpib_pdev->name) == NULL) {
-55936779f496129 Dave Penkler 2024-09-18  1045  		dev_err(&fluke_gpib_pdev->dev, "cannot claim registers\n");
-55936779f496129 Dave Penkler 2024-09-18  1046  		return -ENXIO;
-55936779f496129 Dave Penkler 2024-09-18  1047  	}
-55936779f496129 Dave Penkler 2024-09-18  1048  	e_priv->write_transfer_counter_res = res;
-55936779f496129 Dave Penkler 2024-09-18  1049  
-55936779f496129 Dave Penkler 2024-09-18  1050  	e_priv->write_transfer_counter = ioremap(e_priv->write_transfer_counter_res->start,
-55936779f496129 Dave Penkler 2024-09-18  1051  						 resource_size(e_priv->write_transfer_counter_res));
-55936779f496129 Dave Penkler 2024-09-18  1052  	pr_info("gpib: write transfer counter %lx remapped to %p, length=%d\n",
-55936779f496129 Dave Penkler 2024-09-18  1053  		(unsigned long)e_priv->write_transfer_counter_res->start,
-55936779f496129 Dave Penkler 2024-09-18  1054  		e_priv->write_transfer_counter,
-55936779f496129 Dave Penkler 2024-09-18  1055  		(int)resource_size(e_priv->write_transfer_counter_res));
-55936779f496129 Dave Penkler 2024-09-18  1056  	if (!e_priv->write_transfer_counter) {
-55936779f496129 Dave Penkler 2024-09-18  1057  		dev_err(&fluke_gpib_pdev->dev, "Could not map I/O memory\n");
-55936779f496129 Dave Penkler 2024-09-18  1058  		return -ENOMEM;
-55936779f496129 Dave Penkler 2024-09-18  1059  	}
-55936779f496129 Dave Penkler 2024-09-18  1060  
-55936779f496129 Dave Penkler 2024-09-18  1061  	irq = platform_get_irq(fluke_gpib_pdev, 0);
-55936779f496129 Dave Penkler 2024-09-18  1062  	pr_info("gpib: irq %d\n", irq);
-55936779f496129 Dave Penkler 2024-09-18  1063  	if (irq < 0) {
-55936779f496129 Dave Penkler 2024-09-18  1064  		dev_err(&fluke_gpib_pdev->dev, "fluke_gpib: request for IRQ failed\n");
-55936779f496129 Dave Penkler 2024-09-18  1065  		return -EBUSY;
-55936779f496129 Dave Penkler 2024-09-18  1066  	}
-55936779f496129 Dave Penkler 2024-09-18  1067  	retval = request_irq(irq, fluke_gpib_interrupt, isr_flags, fluke_gpib_pdev->name, board);
-55936779f496129 Dave Penkler 2024-09-18  1068  	if (retval) {
-55936779f496129 Dave Penkler 2024-09-18  1069  		dev_err(&fluke_gpib_pdev->dev,
-55936779f496129 Dave Penkler 2024-09-18  1070  			"cannot register interrupt handler err=%d\n",
-55936779f496129 Dave Penkler 2024-09-18  1071  			retval);
-55936779f496129 Dave Penkler 2024-09-18  1072  		return retval;
-55936779f496129 Dave Penkler 2024-09-18  1073  	}
-55936779f496129 Dave Penkler 2024-09-18  1074  	e_priv->irq = irq;
-55936779f496129 Dave Penkler 2024-09-18  1075  
-55936779f496129 Dave Penkler 2024-09-18  1076  	dma_cap_zero(dma_cap);
-55936779f496129 Dave Penkler 2024-09-18  1077  	dma_cap_set(DMA_SLAVE, dma_cap);
-55936779f496129 Dave Penkler 2024-09-18  1078  	e_priv->dma_channel = dma_request_channel(dma_cap, gpib_dma_channel_filter, NULL);
-55936779f496129 Dave Penkler 2024-09-18  1079  	if (!e_priv->dma_channel) {
-55936779f496129 Dave Penkler 2024-09-18  1080  		pr_err("fluke_gpib: failed to allocate a dma channel.\n");
-55936779f496129 Dave Penkler 2024-09-18  1081  		// we don't error out here because unaccel interface will still
-55936779f496129 Dave Penkler 2024-09-18  1082  		// work without dma
-55936779f496129 Dave Penkler 2024-09-18  1083  	}
-55936779f496129 Dave Penkler 2024-09-18  1084  
-55936779f496129 Dave Penkler 2024-09-18  1085  	return fluke_init(e_priv, board, handshake_mode);
-55936779f496129 Dave Penkler 2024-09-18  1086  }
-55936779f496129 Dave Penkler 2024-09-18  1087  
+On Mon, Apr 14, 2025 at 12:47:21PM -0400, Johannes Weiner <hannes@cmpxchg.o=
+rg> wrote:
+> It's not a functional change to the protection semantics or the
+> reclaim behavior.
 
-:::::: The code at line 1013 was first introduced by commit
-:::::: 55936779f4961299efa99a6843c8ff3b019d3858 staging: gpib: Add Fluke cda based cards GPIB driver
+Yes, that's how I understand it, therefore I'm wondering what does it
+change.
 
-:::::: TO: Dave Penkler <dpenkler@gmail.com>
-:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If this is taken:
+               if (!mem_cgroup_usage(memcg, false))
+                       continue;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+this would've been taken too:
+                if (mem_cgroup_below_min(target_memcg, memcg))
+                        continue;
+(unless target_memcg =3D=3D memcg but that's not interesting for the events
+here)
+
+> The problem is if we go into low_reclaim and encounter an empty group,
+> we'll issue "low-protected group is being reclaimed" events,
+
+How can this happen when
+	page_counter_read(&memcg->memory) <=3D memcg->memory.emin
+? (I.e. in this case 0 <=3D emin and emin >=3D 0.)
+
+> which is kind of absurd (nothing will be reclaimed) and thus confusing
+> to users (I didn't even configure any protection!)
+
+Yes.
+=20
+> I suggested, instead of redefining the protection definitions for that
+> special case, to bypass all the checks and the scan count calculations
+> when we already know the group is empty and none of this applies.
+>=20
+> https://lore.kernel.org/linux-mm/20250404181308.GA300138@cmpxchg.org/
+
+Is this non-functional change to make shrink_node_memcgs() robust
+against possible future redefinitions of mem_cgroup_below_*()?
+
+
+Michal
+
+--s2v2mxjanhgmijod
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/1NhAAKCRAt3Wney77B
+SRqTAP9ceEwBCy9asOHNELiBKAgokXBXGmLAsJ7NOFiKLG7XAgD/WuDqfbDSlDL8
+jqWttQx7fV7ktBUPZ6qqN4+sjbp5fgE=
+=UgxG
+-----END PGP SIGNATURE-----
+
+--s2v2mxjanhgmijod--
