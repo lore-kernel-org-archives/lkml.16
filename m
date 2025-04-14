@@ -1,126 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EDE2D3A89;
-	Mon, 14 Apr 2025 13:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6312957CD;
+	Mon, 14 Apr 2025 13:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637336; cv=none; b=Oc9xGyFQ3veF2mQmJlF3BLxQ5xg9TamSZTnztwvCDu+cDOO5e+K94sWy9IQGoJZ8id42WhLl7k2ckOJfMfRDp4tZwIjRtoQr/qlbXdhyrLT/a4wG/dPgFXrRVi+a4ivdXUXP4IdD2ULACpP6Ki8/uU3ZDcPiJ33eDrTVG2ENrYI=
+	t=1744637336; cv=none; b=fM6TcYLLaU0QP28AhSJizI12c6zCvH2Jzq4WDwnPc373/VIAAHr+I/tgBP+TWIpj5Ao7C/p1teOKO1msEJ3OrdWlLYaBPXIrcceuyPSXkEOh6awoaKeJfjHKeNDWN3SWuyb9948PPK4k7inF5Lo9hxF1k+/J9FrMFp5+VeELQqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744637336; c=relaxed/simple;
-	bh=Gqe6osqrDtogyYH4e2lRBOFcj02xeka10yVlkz2hg8g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qYjuF6fF5d0DykoNnWynFScTwN/doEpDC3GnZBiw8Z3CvhLkuiZGfUY6nyvpsG5d/+LqafTnvx9bfiJraSsUxEnsxFAWpI4HpdUCqPQ1i/3zJ6wNYEFTQ6hUIrcQ5qUpA+HlXpmrSGoAk25hm7TzgSrIuItp1KjNKpHanyzDou0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfMsNjFn; arc=none smtp.client-ip=10.30.226.201
+	bh=6C5Jici+EhLeC4d7iAWY8LbyVL6AZqGWquMhefHINnQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iul95l4yYz8w+owN5j3N7CiXQF0qwWFpn5qxfDNHiliL0oaRntVuq2Pm3VQZxV6XVumbtJ1w7l3YqR4dA6vVeNfWyBqjz9pijKOJrJpQEBJOXqOlAtY6dRXmvILtW0B5D/ykLFdmJWRbypC+GcK7MLBC0ErQi37ymIzvGCwK9A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jd9WLyX8; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfMsNjFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5495FC4CEE2;
-	Mon, 14 Apr 2025 13:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744637335;
-	bh=Gqe6osqrDtogyYH4e2lRBOFcj02xeka10yVlkz2hg8g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YfMsNjFnGZffy+OGOpQlZWmSAdDh2QNLTWseUbW6Son+DDHggiSa9lQalDqv4Aceh
-	 18l9f2K2zc8n1iEiEQ9fMt6AfKRzPBI1DKxuxKplTvv1rN2n+oKKrxbVpx2JDMtokq
-	 cNiSQa/TAqJtc3BPDXFWSzTNO9ve8LjOHzhMroG7OmPJPF3EHaHPHRf7Tu2JdFUjtH
-	 6Vm8ciAQU2T4vyyoKHiKecSByltt5F8AsczBpRmt6djr919hVmvxL3RWtsLW8lDhgI
-	 Q4D/FEFppwNVTsoGuOM6hIm1FmfGkToAqp5NLPW/8LvRfE033i+lu6oZjYGfG7oxBB
-	 UcBLZpWCUDctQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	hannes@cmpxchg.org,
-	mkoutny@suse.com,
-	cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 03/30] cgroup/cpuset: Don't allow creation of local partition over a remote one
-Date: Mon, 14 Apr 2025 09:28:20 -0400
-Message-Id: <20250414132848.679855-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250414132848.679855-1-sashal@kernel.org>
-References: <20250414132848.679855-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jd9WLyX8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744637331;
+	bh=6C5Jici+EhLeC4d7iAWY8LbyVL6AZqGWquMhefHINnQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=jd9WLyX895EKUjHfL//CV32DucIcz3vI971IypjJ/VtSZ0bnryE/NwcUE4aA/ntqW
+	 LT7smg2s9M5tcwC1Qq4QNiVPBOLrhnUpSdoC8Z7d8HGtM1qg2cFrwBt58/U2duC8hn
+	 qkkapL95veKTcscEzHUO3+/syZaqUbjh7oPQn8xWloLeq1WkG/88NpHtgOA5bnax6Y
+	 wOcm9HGZigw3XeYvH4t7s35JH1rMKmPtP+0AMZH5cHBGCLaHG6ZSvsytDyg00JjoNj
+	 Ajj7nBcfxoCfFF428trLp8AKC8KwTvGjn6uEodv2xo3g4rDxalqd6R1HGCfziE/Ydq
+	 pUv8dc62tNr3Q==
+Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id F347717E017D;
+	Mon, 14 Apr 2025 15:28:49 +0200 (CEST)
+Message-ID: <296144dec19f3aee958dcdae7700e7a7ed38b8ff.camel@collabora.com>
+Subject: Re: [RESEND PATCH v1 0/7] Performance improvement of decoder
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: "jackson.lee" <jackson.lee@chipsnmedia.com>, "mchehab@kernel.org"	
+ <mchehab@kernel.org>, "hverkuil-cisco@xs4all.nl"
+ <hverkuil-cisco@xs4all.nl>,  "bob.beckett@collabora.com"	
+ <bob.beckett@collabora.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
+ "lafley.kim" <lafley.kim@chipsnmedia.com>,  "b-brnich@ti.com"	
+ <b-brnich@ti.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, Nas Chung	
+ <nas.chung@chipsnmedia.com>
+Date: Mon, 14 Apr 2025 09:28:48 -0400
+In-Reply-To: <SE1P216MB130320F62126A2F02BDB7FB3EDB32@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+References: <20250410034002.88-1-jackson.lee@chipsnmedia.com>
+	 <b11f2cd9706c409775a44db06dd8399193be3758.camel@collabora.com>
+	 <SE1P216MB130320F62126A2F02BDB7FB3EDB32@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.23
 Content-Transfer-Encoding: 8bit
 
-From: Waiman Long <longman@redhat.com>
+Jackson,
 
-[ Upstream commit 6da580ec656a5ed135db2cdf574b47635611a4d7 ]
+Le lundi 14 avril 2025 à 02:04 +0000, jackson.lee a écrit :
+> > > Sequence Change test
+> > > =====================
+> > > gst-launch-1.0 filesrc location=./switch_1080p_720p_240frames.h264 !
+> > > h264parse ! v4l2h264dec ! filesink location=./h264_output_420.yuv
+> > > Setting pipeline to PAUSED ...
+> > > Pipeline is PREROLLING ...
+> > > Redistribute latency...
+> > > Redistribute latency...
+> > > Pipeline is PREROLLED ...
+> > > Setting pipeline to PLAYING ...
+> > > Redistribute latency...
+> > > New clock: GstSystemClock
+> > > Got EOS from element "pipeline0".
+> > > Execution ended after 0:00:05.772414400 Setting pipeline to NULL ...
+> > > Freeing pipeline ...
+> > 
+> > I did a test of my own here, and did get kernel splat. The warning
+> > indicate that the state machine is no longer respected. This needs to be
+> > address in v2, we added these check, since the locking is bound to legal
+> > use of the state machine.
+> 
+> 
+> Since applying the performance patch, device_run and wave5_vpu_dec_finish_decode is not synchronized any more.
+> How about removing this warning message ?
 
-Currently, we don't allow the creation of a remote partition underneath
-another local or remote partition. However, it is currently possible to
-create a new local partition with an existing remote partition underneath
-it if top_cpuset is the parent. However, the current cpuset code does
-not set the effective exclusive CPUs correctly to account for those
-that are taken by the remote partition.
+I would like to understand how it makes sense the we've reached STOP
+state while the HW is still actively decoding. It does not feel robust
+to me, perhaps you want to introduce a new state ? Also, I'm concern
+with overall thread-safety now.
 
-Changing the code to properly account for those remote partition CPUs
-under all possible circumstances can be complex. It is much easier to
-not allow such a configuration which is not that useful. So forbid
-that by making sure that exclusive_cpus mask doesn't overlap with
-subpartitions_cpus and invalidate the partition if that happens.
+regards,
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/cgroup/cpuset-internal.h |  1 +
- kernel/cgroup/cpuset.c          | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/kernel/cgroup/cpuset-internal.h b/kernel/cgroup/cpuset-internal.h
-index 976a8bc3ff603..383963e28ac69 100644
---- a/kernel/cgroup/cpuset-internal.h
-+++ b/kernel/cgroup/cpuset-internal.h
-@@ -33,6 +33,7 @@ enum prs_errcode {
- 	PERR_CPUSEMPTY,
- 	PERR_HKEEPING,
- 	PERR_ACCESS,
-+	PERR_REMOTE,
- };
- 
- /* bits in struct cpuset flags field */
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 24ece85fd3b12..01e0af84552f7 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -62,6 +62,7 @@ static const char * const perr_strings[] = {
- 	[PERR_CPUSEMPTY] = "cpuset.cpus and cpuset.cpus.exclusive are empty",
- 	[PERR_HKEEPING]  = "partition config conflicts with housekeeping setup",
- 	[PERR_ACCESS]    = "Enable partition not permitted",
-+	[PERR_REMOTE]    = "Have remote partition underneath",
- };
- 
- /*
-@@ -2807,6 +2808,19 @@ static int update_prstate(struct cpuset *cs, int new_prs)
- 			goto out;
- 		}
- 
-+		/*
-+		 * We don't support the creation of a new local partition with
-+		 * a remote partition underneath it. This unsupported
-+		 * setting can happen only if parent is the top_cpuset because
-+		 * a remote partition cannot be created underneath an existing
-+		 * local or remote partition.
-+		 */
-+		if ((parent == &top_cpuset) &&
-+		    cpumask_intersects(cs->exclusive_cpus, subpartitions_cpus)) {
-+			err = PERR_REMOTE;
-+			goto out;
-+		}
-+
- 		/*
- 		 * If parent is valid partition, enable local partiion.
- 		 * Otherwise, enable a remote partition.
 -- 
-2.39.5
-
+Nicolas Dufresne
+Principal Engineer at Collabora
