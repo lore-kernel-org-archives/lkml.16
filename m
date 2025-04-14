@@ -1,108 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EE01A9B49;
-	Mon, 14 Apr 2025 08:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96DF258CF2;
+	Mon, 14 Apr 2025 08:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618288; cv=none; b=syHc4biPa4cCLuuQf5QU3ae7KZEP4mJE170r/i07X4pnaMxq01KqKWXb0n4MCWHR/6m07wlehpGGbDOQX7P+DRxz4jQUvq/3aLZ4n46CPCbCF2GwlquedkHAn+WfY5T7wMPjIc2ixrES/UDBjnsV8FE25nYj6aq2aFgnaJHqhOA=
+	t=1744618299; cv=none; b=jUGCd3lzID+efF2c8eRNz3d4kJd92Zd6a+NC2C2pQniZ1GnqAeVP8hduHbkbdjYVAV7Lorpjej2d95yMmh2Bdyp69Ilz6qeUzgfv9pPsgOT8jaxBeodE7is27vB68hmiiUrj/KG9e1nFl9xjMqzplk4g92mRzDceRlvs9+XPqwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618288; c=relaxed/simple;
-	bh=E0DN7a8A+y5Kvvfvhro0n9ha/aKnB9uQ9ShbKAHxGt8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lGSFC/Y7xBb+TnT3Wo5xaufsaJAUskgzIQcUe9lG1WrwxsUlJJGhuxAolkODL7QFUgDTJeLKkBy2TnFHcTZ9CB5trOMYh7KCani6BXJ87FzzqBowMIZIBYPeqb9vhKW9Qs1ImrPFVcbQMlJxC3I2YPT5zBHcJudm/P3NPCo/90g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNVMYZKU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744618299; c=relaxed/simple;
+	bh=WiNB2ppjNeN7UPDQ3srWOqez2dv5sjdGd2i612Gjopo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YfTGNMXc581PjZdJGRx1BMNLQzHP8OHzAPBWOt5KXxCeP+GSo6QZcfnUPm+DCjh+FWRNvDxhzXBljcZyhI6uYHWQuEoK0I97pb1tAKKBe4XYblqo1SZyQIzUS2hXEfRkKcVxf6r0lxAkGqjOjO8TRCO8OuAnkniH0X7xxY+kJjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7gZ74VL; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNVMYZKU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A04BC4CEE2;
-	Mon, 14 Apr 2025 08:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744618287;
-	bh=E0DN7a8A+y5Kvvfvhro0n9ha/aKnB9uQ9ShbKAHxGt8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oNVMYZKUwR/RguJZM6Zq/d+aGkU19e3fVom7e4Unc3odCAhC9kMnsNv0rU+8pqyq7
-	 sDMmY3r+skV8IcBVQ0oXpnUUSACFiRkxPEmDS+Qo9Fv5VawlYyDBDdvMRpzMhhna19
-	 164lCc5HXXC4KyOcM8GDBV6sEfx0Dj0TWZ70QfYXQfkepBja6sFaJFMb6H6IGLaqOO
-	 n6jVjIx16Q+C5D7mLpfkfxR9rjbLNDTcfXArdHcxQmHuipStFM+Qlp41HWw+bo+SLN
-	 y6G19a6l6ZyEzuvwxuPTPUsrnEQoDNaKc4vMdD1VG/AE7eX4DmpkTndO9MMgKZJX5J
-	 XCMKeFfdr608w==
-Message-ID: <e52ee383-6803-4b2d-aa30-0f081d3564e0@kernel.org>
-Date: Mon, 14 Apr 2025 10:11:20 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7gZ74VL"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso7408349a12.3;
+        Mon, 14 Apr 2025 01:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744618295; x=1745223095; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yFiL7XQwjMNSusYEB+zRirLMLyCH2wO7H0kvak0x6S8=;
+        b=j7gZ74VLWpfWvG4lbWvukHoo0ggUbtL2imp0Rq+F5yXdD9f9Dd4oCAb88K5Gk5ndv2
+         uuZ0eSkuPrmk1Q1xHukucjHCNlx5kOM1iotu1X3E2N10Bj1ojzykAuqeA9iRzidAzWME
+         yaWrlZeB/fCLpU/eIWnPY3I/Or4it1aafwsOtURS+w5Vas9Vij6hfsxUKD/g/CQI3D79
+         Z8ZLrRHCdlZhdlRakUNZvjW89pyZ83V6COHip4zMvOa8o24/OQYbP40PWOzC5wHQJ208
+         ct7C2RbtHMZAAW02MXh4Lq8cN61PR6mSe/IAURQCpraQUk87KzRWHhdk36gZolXWsmRH
+         jxpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744618295; x=1745223095;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yFiL7XQwjMNSusYEB+zRirLMLyCH2wO7H0kvak0x6S8=;
+        b=nBJ9iD97hWIyHLcthc0TdgBS/JQQOggJEzX6FceuBxjHgoXHA+2BtvUApRoIRRtaZy
+         EL0k4BldS7jQiP7CykXsTd/6paKVwgVaEegelDdZ6KoB2hTp7zep8mohddDD9R8W+C0a
+         +W/cF5Voc2lGEKbLx5vx/WiNleKo0fLzynaHEbvP7KAK7AyQFcMyP3C3Clm8J229Lbd2
+         4ULNz6wXYX2Vhw7FYpryZyrhphi2nIbyq+58BLnHhr1Of30uJT7Qew0gDYmmP68w3kGg
+         +gTfs48v5juBUk8r1FH9osDw/ov3d5tRwUSwFqfO/Su5gdS8X/+i5ilzNN9kf5MOdarC
+         yCYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUkol4/66vlQEe21sOYw6KSjHXluIWTkDlFJfdcJpFk+zaBV9G4mb3K8of9VDXlg4kK/K9MW5F0ZFQ7Gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjMU8HVxyI4wcv1wcQrMycvQuV3+AqKlmUAzx83Ic+A52sQMWk
+	2zHvS6GNfvuxcQX0ya6xk8VYqlCILnd1wQzovVjgae0ho2zbKGaLLvGBbW7H
+X-Gm-Gg: ASbGncta3rQSY2Gynq2gvPL+siC7be9n8oBw7Q1wZCdeOWAlfb0cPXD+YbSvKAeW6kJ
+	IJQk8L9fr32sgI0AsWlySv0rg/s2zVdE3sWTHzgLuu9mN34ShcSQKw64PxdvObwQcXmcxfIZVWr
+	2tl2ixo+tBGILSm+YeUX358/Sw1OSiFmwuv0jLN9Qwbzi72wZFBA3QFPqnadFCLfnf8XXw1BhV1
+	2B6g7heOJ6B1n31vLWSTTJIZML5nwyWWk3YIk+KDLOnkxtmuRo8ai0nocJmw4yhCnGJXUUJOtdh
+	bZNPs9Pht3T9Vi2JBwheysB4yZETLqLEodmbM/qt3Fg=
+X-Google-Smtp-Source: AGHT+IHd5XfB1F4BTG4yVgpJ1M8ZY4YhHp7lAzw+Vzz8WQVt+Y12JzvPfddOXG5nCrBfMyHnds0oTA==
+X-Received: by 2002:a17:906:c14e:b0:ac3:c56c:26ca with SMTP id a640c23a62f3a-acad3446a15mr1011810566b.8.1744618294716;
+        Mon, 14 Apr 2025 01:11:34 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee55212sm4435244a12.9.2025.04.14.01.11.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 01:11:34 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: kvm@vger.kernel.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 1/2] KVM: x86: Use asm_inline() instead of asm() in kvm_hypercall[0-4]()
+Date: Mon, 14 Apr 2025 10:10:50 +0200
+Message-ID: <20250414081131.97374-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] soc: samsung: usi: prevent wrong bits inversion during
- unconfiguring
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250413163755.788907-1-ivo.ivanov.ivanov1@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250413163755.788907-1-ivo.ivanov.ivanov1@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/04/2025 18:37, Ivaylo Ivanov wrote:
-> Instead of setting bit 1 (USI_OPTION_CLKSTOP_ON) during USI unconfiguring,
-> all the other bits in the USI_OPTION register get inverted, which
-> should not happen as that means the clock will keep getting provided
-> to the USI IP. Remove the unnecessary tilde.
-> 
-> Fixes: 11e77776b58a ("soc: samsung: usi: add a routine for unconfiguring the ip")
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> ---
+Use asm_inline() to instruct the compiler that the size of asm()
+is the minimum size of one instruction, ignoring how many instructions
+the compiler thinks it is. ALTERNATIVE macro that expands to several
+pseudo directives causes instruction length estimate to count
+more than 20 instructions.
 
-Thanks, applied.
+bloat-o-meter reports minimal code size increase
+(x86_64 defconfig, gcc-14.2.1):
 
-Best regards,
-Krzysztof
+  add/remove: 0/0 grow/shrink: 1/0 up/down: 10/0 (10)
+
+	Function                          old     new   delta
+	-----------------------------------------------------
+	__send_ipi_mask                   525     535     +10
+
+  Total: Before=23751224, After=23751234, chg +0.00%
+
+due to different compiler decisions with more precise size
+estimations.
+
+No functional change intended.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/kvm_para.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+index 57bc74e112f2..519ab5aee250 100644
+--- a/arch/x86/include/asm/kvm_para.h
++++ b/arch/x86/include/asm/kvm_para.h
+@@ -38,7 +38,7 @@ static inline long kvm_hypercall0(unsigned int nr)
+ 	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
+ 		return tdx_kvm_hypercall(nr, 0, 0, 0, 0);
+ 
+-	asm volatile(KVM_HYPERCALL
++	asm_inline volatile(KVM_HYPERCALL
+ 		     : "=a"(ret)
+ 		     : "a"(nr)
+ 		     : "memory");
+@@ -52,7 +52,7 @@ static inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
+ 	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
+ 		return tdx_kvm_hypercall(nr, p1, 0, 0, 0);
+ 
+-	asm volatile(KVM_HYPERCALL
++	asm_inline volatile(KVM_HYPERCALL
+ 		     : "=a"(ret)
+ 		     : "a"(nr), "b"(p1)
+ 		     : "memory");
+@@ -67,7 +67,7 @@ static inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
+ 	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
+ 		return tdx_kvm_hypercall(nr, p1, p2, 0, 0);
+ 
+-	asm volatile(KVM_HYPERCALL
++	asm_inline volatile(KVM_HYPERCALL
+ 		     : "=a"(ret)
+ 		     : "a"(nr), "b"(p1), "c"(p2)
+ 		     : "memory");
+@@ -82,7 +82,7 @@ static inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
+ 	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
+ 		return tdx_kvm_hypercall(nr, p1, p2, p3, 0);
+ 
+-	asm volatile(KVM_HYPERCALL
++	asm_inline volatile(KVM_HYPERCALL
+ 		     : "=a"(ret)
+ 		     : "a"(nr), "b"(p1), "c"(p2), "d"(p3)
+ 		     : "memory");
+@@ -98,7 +98,7 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
+ 	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
+ 		return tdx_kvm_hypercall(nr, p1, p2, p3, p4);
+ 
+-	asm volatile(KVM_HYPERCALL
++	asm_inline volatile(KVM_HYPERCALL
+ 		     : "=a"(ret)
+ 		     : "a"(nr), "b"(p1), "c"(p2), "d"(p3), "S"(p4)
+ 		     : "memory");
+-- 
+2.49.0
+
