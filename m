@@ -1,31 +1,73 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B1025229A;
-	Mon, 14 Apr 2025 15:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB7725229D
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642957; cv=none; b=MpUp1kHCwBU+jW/OowX7q1MNLdmT5fAEUnIn8dPGmLoGOv+cz56ubb3qZrv6y++HP6jMkOVThx3cqJ2Vt9KGYb/j9rHum2qnlSChWnwK+liA0VnmEy3N5pCgssh4rqSrkk/XwjyYTHRzoKcdZSFdOchjpnuppYfwr4x1qg4M+BA=
+	t=1744642966; cv=none; b=Kk3fQZiD1mc92sOQOAQXwweMUhIGwj7c4Eh6+jVn66dnEz/lYbfxumW9U1QOFYfdOKTyx/7FaD0aEphyWF14bhahfJLBLprytyTloE5chJ9gXNn63usZGBBBM0eBPy+KJxmXK8DvWcFBDqD2QniTepXGeLz0ctQ8Ezcg5YNGhS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642957; c=relaxed/simple;
-	bh=29LBL8Eiyg9CDsCmAAfUL9mYEIwFGfoqYzoIU8iyiQY=;
+	s=arc-20240116; t=1744642966; c=relaxed/simple;
+	bh=RaBjxibi9OpSLsL0pgUQXBGLegZ2HPMaVA4aQ8D2I9Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AraeoyfV7P58C11VuC5gcFxohfX4O3aSz0j2zrKaxsPxznwgve1WvNCHsZAOubm89JKK2oE/t5q73SdaIZ3D2HUrwRge8vPSoO2t6mpFnE3iF9U6/fbcHi5ZCURtMfshG6ZD9sCDzyR318gr7xn4ODb8Oy778hy9fjvHjNDJeCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qWPsN03x; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=aTVr3KGw2QS4pCZRin1i+7LfjGS0MUzHDUV9veoW9vDkI4sIWQ/bsF4r1qRNcuvkrUbUIvU0Cn8ZzamerwJWyuAfLN1SSInZUB1I9YwjQASdHNxT86x/NyT0BELNuspcB6Z01Pp1Em6I6bjskToimZBEkE8rA7IbnfGodHl80sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kFYSey27; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qWPsN03x"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744642944; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=XP1wiJKn79M25SDS7QDbse457FmVwidLJBCVM8ARXV4=;
-	b=qWPsN03xz9+pTwownWuaBgpyTH0pHxo1wiofftgmL4NUgVGKBx1rkK6Oc1UfaanaiLvQB5xPRY8PV3a9AquDZJ1I+R2PS3DQbJkxxcCjWz+N+mxOmRxoUl/shW77PYKWLyXuBt+ZRJvi9SGe0HcE0BRz4lOCI87ZOp2NORAKphE=
-Received: from 30.246.161.79(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WWsd0xB_1744642940 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 14 Apr 2025 23:02:22 +0800
-Message-ID: <709ee8d2-8969-424c-b32b-101c6a8220fb@linux.alibaba.com>
-Date: Mon, 14 Apr 2025 23:02:19 +0800
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kFYSey27"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99qFa002933
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:02:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Fx9CLNx6B9Vh7w2Q67gBVSliKW/Q6vuPCUUdblElgFI=; b=kFYSey27HL8ztTDg
+	RdpAvxgZ9m4z4naV34qjlKe322EcwPVu0dTVnfPZZoyOdXUJ5E7wux2TeOqRJ4cg
+	2I23PD7rdAlxiI0HYOEieepyI1mShxQcF8F6Y1o6s3QYkTAyNatHpR3StJnJHmOe
+	n0lIZfIVSP02j0rp4r8uiD7Tk5zoWDd1em3eS3Q37qd5aF+3T6OY9AqQFyTVpJ4B
+	TrXR/Rrm3wfGoSnWErszLRs4u1X6Tb16EmX8Q9/jInhOi4z5JarRPgcVFD6QRjsM
+	cI/1f4oldAetzdjVh8rgjuL2xxugaN6sKplOEl3/wFEr8GZggBwlvk6fkfz+6Ou/
+	0XmDpg==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpmsjc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:02:43 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso3207655b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:02:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744642963; x=1745247763;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fx9CLNx6B9Vh7w2Q67gBVSliKW/Q6vuPCUUdblElgFI=;
+        b=G9pAfnw7yT1vyAO5qNkq2kb/ImmuXHhkYDpWK6pXc4pC4QdHe7TYrKhllM8hJ+6F6h
+         rY20swWK7yRtL/e+g1o9OkvY+Ac5KOA1WiCb8dA5/BAcanNnwU2gDi7ZJ0TfBq13KUp4
+         gSRXwUcuTarAHulVk/RBws7krZqQTIlSOx8+P7YfJDclMjoDcTDcTMlCVaklsyAtgWp2
+         ioTDVX8HU0H2ALPWZPqtv64H4xeiArLpnIAMI8+ZAgx1t+lUc6u2PlSLraEpTUkvnbv5
+         Cano2YFj7T3B7Ug047C3ITyvycMrNHXE7i3uRqmyfvlC6PVvM8TRmnW0de1B5JxSBRYo
+         Vr8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUfu+TABSJh8jYmBm/Tw/yLiAWAu5ySJba/Ot4HWCVBIhvS6jmCf+RsrViOlMnZzHe61yrd7nlghVa4/p4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxemmz8C+sCkN0KEx2kmc7uIJ2axhssURiaAByw7oG4CPMB1ni0
+	KLK9Hkbc3TmvZ9VRlWdsjEldzZG3uKq26ampgRMP0Dm1N5pW+UdjlmANpUdeSdZ9y2YzI/sKIgv
+	c5rQk3MwrLrWAUYWAfe7wE5y3Au5B9Ok4M5OGhaGMFHPK3uwCV+HB6UP/Dd4cs9A=
+X-Gm-Gg: ASbGncvn4MHe4PwtOvm9oyFvdrzbVTbOyW06jN3EtjcqrbQjC8h+aTDVDhvGRyzm7vI
+	YLmh4rx4Tw1iVuSw/MN8tGG3Q+RKnaH6bsM0MiFAZ2mWpm9+f3YHdnvDirvQUEvBwYNWNLuTu1L
+	OcJO7f5o6QMUBwEBHLTauhwTVWS+zAUZ6Y05NoEagx5veA7+WC9OA2tP9X8PdH51LQtIUor5pQv
+	zINpNglDoqVd6COkNc+BM7qKA+xQ7WBLoIW4O1Z5cF0+V8FqhdIvM9hgCcjiDvh2PWYqkLNJ1GV
+	STl2s0DtuVLV2mzgxhhR70AjLSvlCai6utao7xSx8/Uudtc3LoFQDV9NA88rFYYdo3nDSTO9L1j
+	qa7/R
+X-Received: by 2002:a05:6a20:94c9:b0:1f5:9024:3246 with SMTP id adf61e73a8af0-201797a39c1mr17925501637.17.1744642962968;
+        Mon, 14 Apr 2025 08:02:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF1bvcHXdGUC9wzx8xCOFjLvQn3x2hUBSOQvCCcOvrLi0D37ffqN0AxJ/2rFL/I3g9ErbikTQ==
+X-Received: by 2002:a05:6a20:94c9:b0:1f5:9024:3246 with SMTP id adf61e73a8af0-201797a39c1mr17925443637.17.1744642962376;
+        Mon, 14 Apr 2025 08:02:42 -0700 (PDT)
+Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0de8926sm7855972a12.30.2025.04.14.08.02.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 08:02:41 -0700 (PDT)
+Message-ID: <9c53011a-0e00-49f8-bf7e-b04ddc8c575b@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 08:02:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,96 +75,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v18 1/2] ACPI: APEI: send SIGBUS to current task if
- synchronous memory error not recovered
-To: Hanjun Guo <guohanjun@huawei.com>, catalin.marinas@arm.com,
- sudeep.holla@arm.com, lpieralisi@kernel.org, linux-acpi@vger.kernel.org,
- yazen.ghannam@amd.com, mark.rutland@arm.com, mingo@redhat.com,
- robin.murphy@arm.com, Jonathan.Cameron@Huawei.com, bp@alien8.de,
- rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
- wangkefeng.wang@huawei.com, tanxiaofei@huawei.com, mawupeng1@huawei.com,
- tony.luck@intel.com, linmiaohe@huawei.com, naoya.horiguchi@nec.com,
- james.morse@arm.com, tongtiangen@huawei.com, gregkh@linuxfoundation.org,
- will@kernel.org, jarkko@kernel.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- akpm@linux-foundation.org, linux-edac@vger.kernel.org, x86@kernel.org,
- justin.he@arm.com, ardb@kernel.org, ying.huang@linux.alibaba.com,
- ashish.kalra@amd.com, baolin.wang@linux.alibaba.com, tglx@linutronix.de,
- dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
- robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
- zhuo.song@linux.alibaba.com
-References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
- <20250404112050.42040-2-xueshuai@linux.alibaba.com>
- <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH net-next 0/7] net: Don't use %pK through printk
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Francesco Dolcini <francesco@dolcini.it>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+ <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
+Cc: ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ath11k@lists.infradead.org, ath12k@lists.infradead.org,
+        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+References: <20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: pqjCHxKCX5VF5nDNgLq3JRZn_T4rSIEU
+X-Proofpoint-GUID: pqjCHxKCX5VF5nDNgLq3JRZn_T4rSIEU
+X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=67fd2394 cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=e70TP3dOR9hTogukJ0528Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=2xVh5uQ6XZRltrFgOl4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=582 clxscore=1015 impostorscore=0 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140109
 
+On 4/14/2025 1:26 AM, Thomas Weißschuh wrote:
+>       wifi: ath10k: Don't use %pK through printk
+>       wifi: ath11k: Don't use %pK through printk
+>       wifi: ath12k: Don't use %pK through printk
+>       wifi: wcn36xx: Don't use %pK through printk
 
+the first four should go through ath-next and not net-next
 
-在 2025/4/14 22:37, Hanjun Guo 写道:
-> On 2025/4/4 19:20, Shuai Xue wrote:
->> Synchronous error was detected as a result of user-space process accessing
->> a 2-bit uncorrected error. The CPU will take a synchronous error exception
->> such as Synchronous External Abort (SEA) on Arm64. The kernel will queue a
->> memory_failure() work which poisons the related page, unmaps the page, and
->> then sends a SIGBUS to the process, so that a system wide panic can be
->> avoided.
->>
->> However, no memory_failure() work will be queued when abnormal synchronous
->> errors occur. These errors can include situations such as invalid PA,
->> unexpected severity, no memory failure config support, invalid GUID
->> section, etc. In such case, the user-space process will trigger SEA again.
->> This loop can potentially exceed the platform firmware threshold or even
->> trigger a kernel hard lockup, leading to a system reboot.
->>
->> Fix it by performing a force kill if no memory_failure() work is queued
->> for synchronous errors.
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
->> Reviewed-by: Jane Chu <jane.chu@oracle.com>
->> ---
->>   drivers/acpi/apei/ghes.c | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
->> index b72772494655..50e4d924aa8b 100644
->> --- a/drivers/acpi/apei/ghes.c
->> +++ b/drivers/acpi/apei/ghes.c
->> @@ -799,6 +799,17 @@ static bool ghes_do_proc(struct ghes *ghes,
->>           }
->>       }
->> +    /*
->> +     * If no memory failure work is queued for abnormal synchronous
->> +     * errors, do a force kill.
->> +     */
->> +    if (sync && !queued) {
->> +        dev_err(ghes->dev,
->> +            HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable error (SIGBUS)\n",
->> +            current->comm, task_pid_nr(current));
->> +        force_sig(SIGBUS);
->> +    }
-> 
-> I think it's reasonable to send a force kill to the task when the
-> synchronous memory error is not recovered.
-> 
-> But I hope this code will not trigger some legacy firmware issues,
-> let's be careful for this, so can we just introduce arch specific
-> callbacks for this?
+>       wifi: mwifiex: Don't use %pK through printk
 
-Sorry, can you give more details? I am not sure I got your point.
+this should go through wireless-next
 
-For x86, Tony confirmed that ghes will not dispatch x86 synchronous errors
-(a.k.a machine check exception), in previous vesion.
-Sync is only used in arm64 platform, see is_hest_sync_notify().
-
-> 
-> Thanks
-> Hanjun
-
-Thanks.
-Shuai
+/jeff
