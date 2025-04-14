@@ -1,103 +1,85 @@
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B5228D827;
-	Mon, 14 Apr 2025 12:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB0129CB4E;
+	Mon, 14 Apr 2025 12:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744632184; cv=none; b=bOhGWb7qSp0N3+hCTY63+4Ef6oDnpAeh40+m5YJOCY8XP7T1/YOJm9RKIStVeUHoTtYFmsgOj7ZLFLv5C8XwDOLJRF3UdVzRrqLqnXpw0aq6hcIRyiyWDnyi6CjY9zMrYvdZjtT0fhMNa7RSV+y7SwIM7GIKLW2k8XdxfFvt1Vs=
+	t=1744632187; cv=none; b=aWMVpfu+5wxme1skIW2NzUbStLpQuPJt5r2XngSa92KNmPDQ4G68KHok+/Nefr5rJJ7YTTYluBvbGYZXsoKF6V73m8fJIhQCU79vzF7WCXVRP6I8SbYTmyo9jPis3shIbGOqzPiHECnj0hQOtpgJkWFLR1TgXhvsxCCrQdOIWaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744632184; c=relaxed/simple;
-	bh=yQhu3P/IVBTkj6xKgQDgbt0udy6TtralCwdBILsjbqw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GisnrQ2ekD4lmbdYbVnUgy1GjE+PQi1c1N/U1hiEEH3f0Cf02Mhfw2LMTxgWDCAJMWlj9XI0OLizrwOYH0+rYP50a4VUjf+OB9tRK301SAVKELUZfbHSxIfvJ6YiH/n6cpTKHW0ZWgbyEGFj9Lnhb36454Ji7cylUP+RhR+SQw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com; spf=pass smtp.mailfrom=sandisk.com; dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b=wm3Q76uZ; arc=none smtp.client-ip=216.71.154.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandisk.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b="wm3Q76uZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=sandisk.com; i=@sandisk.com; q=dns/txt;
-  s=dkim.sandisk.com; t=1744632182; x=1776168182;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yQhu3P/IVBTkj6xKgQDgbt0udy6TtralCwdBILsjbqw=;
-  b=wm3Q76uZwaBx+wDOAD72IDN3TuS5vcqL1y/4PqHyYdxF0QKmSViZtKc2
-   U+uQK8Tne4e2zBSfzr6YVFE3+EdcvyMLCTRgll/Q/vpHmCGsHfwSdpOQA
-   MO16eRgq32UYqDI4Q5Xv1pRJ84kiLAst8k9hKIEX0jU7RL2yFT1VcGJw6
-   JrRiTSA8RlIyQCh6IgomlYoUMzBJmY6vwRf3rRGpxCOB/QRQM1dCWpxdR
-   T+HhTjqVG4RI5h1LqwdBycCE6hnJMTOr1R/rgbEIezPPWMucrGeGb9Az5
-   Jryw9zQLXdClVV29N3//5+1+SVut4zr8ngCTyjNrIjVc/WF00jmh6naxp
-   g==;
-X-CSE-ConnectionGUID: YMPsY1kcQeOVJ8dc0UIymw==
-X-CSE-MsgGUID: R8Qh5MOVRomEyWBdJ/pGng==
-X-IronPort-AV: E=Sophos;i="6.15,212,1739808000"; 
-   d="scan'208";a="81236032"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Apr 2025 20:03:01 +0800
-IronPort-SDR: 67fceb6b_WvB7lkGHdaYXgz2KQMTW4Dkj82JgsSUJxQ9KaeeMFgxFc+4
- 5oacgmI422vMvieH8FsOkPw7E8SZis+UDDseeIA==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Apr 2025 04:03:07 -0700
-WDCIronportException: Internal
-Received: from unknown (HELO WDAP-ez2C89klLd.corp.sandisk.com) ([10.45.30.122])
-  by uls-op-cesaip01.wdc.com with ESMTP; 14 Apr 2025 05:02:59 -0700
-From: Arthur Simchaev <arthur.simchaev@sandisk.com>
-To: arthur.simchaev@sandisk.com
-Cc: avri.altman@sandisk.com,
-	Avi.Shchislowski@sandisk.com,
-	beanhuo@micron.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bvanassche@acm.org
-Subject: [PATCH v2] ufs: bsg: Add hibern8 enter/exit to ufshcd_send_bsg_uic_cmd
-Date: Mon, 14 Apr 2025 15:02:57 +0300
-Message-ID: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744632187; c=relaxed/simple;
+	bh=byz0Xi0jCuuOuBx1TCeITGZEdBmUoxRM/PvGpUw9vfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fAzvqklOg8l/NqjOTlGqd3rbKdb6b+xd8pdYpdueXEHyCkPjBN96cYLzmL2ShX2YFEq3bANn+QLQ6gVFN8zuDulHCeiIlSCeyLjhzht/HWwpGgu0JLugH7AoAkUC2M1ydDSJQE2M9Y8prbC25cbfXn4nJZLhyLc6hCu6SMMStXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so6133384a12.0;
+        Mon, 14 Apr 2025 05:03:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744632184; x=1745236984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L/F6w/jKotn2gBYtH0XsI2WxseTGW06hCSmGwk9bJso=;
+        b=MDEyXdN2BAbAdQmmkBbt2zhuFKqBAsMpiW4yFv11XkM9NGFZdyuDGaq34Mt/MQjgwy
+         qswPjRWHEjyH4qh0tHtds0DdTiayYzt0C4ZjCOV194JYGYSPbhyL0tJAk8t6IRFXSNz0
+         tdDimVXskwa0ucqrXZa6xtYKfMa8BxflWsWE01Diy4BqlfdSnn4ewKiGz0wtKoiPdcp2
+         AsjlmytXDgdVA1CzDMDk1lgiswEZxbeYG377EVGjSU23+4fdFQObuo/QO3cxJVEmJtfr
+         NEkgr3h14lz5Q/GcUNAOYciRRaK6gnfPMYrtu5Ls2HwVTnTnPLgSWo2G+bhkTMb0efo5
+         sM1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV98o5HoQgvBs2noiiEGP7Ud39+lZxsadeW7yAoyfv9FDkzFPJkfTU1JouJ13gvkB7Lo7CEORZ3@vger.kernel.org, AJvYcCWDoQb7vLr/hyfEGip8z6TsPRrm5Ry+mQ3C0U9SSOsSyu1SHPAMSXsotKB2nED/XmcjfmFu1XrkYxJDBqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx7oJ2aL92kQ3/lJ1fpy7gbXlR2p/F6qn3BROykWGqOk6Sl8PN
+	1GdmiIrzel3fgWV14xfaGUXmwFrsKjVFgAMn55yvQ7ZerH9dxM8Y
+X-Gm-Gg: ASbGnctrlJlt/a+wRqb2Fr0BICgHHFJ1UjfjVDvRxhEr7+Ys/veB2bYBUyH6TA3eIt0
+	ONaUzZpjGIIIfhpXMaCz8ZkJ2VZkrEQiJJ/q9mk/93/PdoQvFwc6fV9IgY38b6b+kWFTNRh9fIY
+	73svPJ46OCxgKvhPALIEDBBfqyapXoVbQdpUkdwArQJ6bhzhSlKyGKYNZAE14131mUVA2XrrhdN
+	h6oahRIW9YjgQ7nMwIRDxndQl5CjA7hR4eFdv/e1EEROJ2I3DQVh5Bloi0sEPkC61C80JENK66h
+	SVl2sY+gmZhozZDRiUs1Kk0+74UG
+X-Google-Smtp-Source: AGHT+IF3qbKXOEi8k4LkqguutUu++uj40Fsc9bpD9fLF6uF+6eG4gP5qdvuX3YPF/n8oO4K31IOsgA==
+X-Received: by 2002:a05:6402:34d4:b0:5ec:9e6e:c48f with SMTP id 4fb4d7f45d1cf-5f370127346mr8172062a12.29.1744632184203;
+        Mon, 14 Apr 2025 05:03:04 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f527df0sm4863042a12.71.2025.04.14.05.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 05:03:03 -0700 (PDT)
+Date: Mon, 14 Apr 2025 05:03:01 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com
+Subject: Re: [PATCH net-next 9/9] net: fib_rules: Use nlmsg_payload in
+ fib_valid_dumprule_req
+Message-ID: <Z/z5dTyAdyiBsiit@gmail.com>
+References: <20250411-nlmsg-v1-9-ddd4e065cb15@debian.org>
+ <20250411213952.69561-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411213952.69561-1-kuniyu@amazon.com>
 
-This patch adds functionality to allow user-level applications to send
-the Hibern8 Enter command via the BSG framework. With this feature,
-applications can perform H8 stress tests. Also can be used as one
-of the triggers for the Eye monitor measurement feature added to the
-M-PHY v5 specification.
-For completion, allow the sibling functionality of hibern8 exit as well.
+On Fri, Apr 11, 2025 at 02:38:01PM -0700, Kuniyuki Iwashima wrote:
+> From: Breno Leitao <leitao@debian.org>
+> Date: Fri, 11 Apr 2025 10:00:56 -0700
+> > Leverage the new nlmsg_payload() helper to avoid checking for message
+> > size and then reading the nlmsg data.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> 
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> 
+> You can use it for fib_newrule() and fib_delrule() where
+> nlmsg_data() is prefetched.
 
-Signed-off-by: Arthur Simchaev <arthur.simchaev@sandisk.com>
+Agree. the code becomes way more readable, and more looks like more
+"net" code.
 
----
-Changed since v1:
- - elaborate commit log
----
- drivers/ufs/core/ufshcd.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Thanks for the suggestion, I am adding an additional patch for this one.
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index be65fc4b5ccd..536b54ccc860 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -4363,6 +4363,16 @@ int ufshcd_send_bsg_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
- 		goto out;
- 	}
- 
-+	if (uic_cmd->command == UIC_CMD_DME_HIBER_ENTER) {
-+		ret = ufshcd_uic_hibern8_enter(hba);
-+		goto out;
-+	}
-+
-+	if (uic_cmd->command == UIC_CMD_DME_HIBER_EXIT) {
-+		ret = ufshcd_uic_hibern8_exit(hba, uic_cmd);
-+		goto out;
-+	}
-+
- 	mutex_lock(&hba->uic_cmd_mutex);
- 	ufshcd_add_delay_before_dme_cmd(hba);
- 
--- 
-2.49.0
-
+--breno
