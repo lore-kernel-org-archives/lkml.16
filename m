@@ -1,162 +1,158 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085A31A2398
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9511D539A
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617078; cv=none; b=Ac+IBpNT352HhdMkTR90Qu2Lh5MZGFkh3RDICo0SQPwFsmoL/f2d6ZvzoxBA713px9mB28bKAxv1XPCtHcV4V7eFIikw5uy5BROmUFsLCv1prvfaBHNsKviVOwRlxHmKiCeal25R6VafyFpwMQaTSU67y8d3yCV+///Vbfoqw2A=
+	t=1744617159; cv=none; b=Ct+c8skkcXEr0dyOKgIBl1GUwvFClZ3GLLLCo4OJIMx6EZOBnQv2uWbSzrw9oXRoiCftuZNsi1S3K88jn75V9m4T0YzYUiq4loLWff1zCW1FjW+VT15d6fWk28EHKk7Kvw2fxHaIA9h8CzNX4ownSFamYyBalSBB5lHdO/vQIxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617078; c=relaxed/simple;
-	bh=ko/P1m7xZzhuBMwiB8qtH/1RMjxDoBHhgLxpW41nwrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mfRjKWmDu9M0qZclnWn2JHIZ7X1cLjzEryfvMwDMrflSs5SITJxesk5CQC2ePIfhTIhQOU0EJQZHNluL/HqeT5QQ4Qe+GifdZeZEzFjO8ntq5kvEH0QmLLBJe4He3RmyT7VB/b7QkL1S+gquIX6bSmleJOmYfNSZIq/tOJUNock=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WhoEarbt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hEkKVgAz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WhoEarbt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hEkKVgAz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WhoEarbt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hEkKVgAz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WhoEarbt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hEkKVgAz"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3CB3C21169;
-	Mon, 14 Apr 2025 07:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744617069; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K4Nqye6OxjaWqK7MliMY16hKvt/ySbQ/u8awpN1fXXk=;
-	b=WhoEarbt2KDhHYG9b1UlMnX6hOz22z8J+t6QV7rAdPiEeeHnHMl2qvHHbhm4bD9dE7ERiz
-	Ixh6++Z52EFGC1mS3ZUFmvlIXKUept3teInRbiEplzG0hE4e2DEPXREfjwj8YpD7Q1KqM9
-	DwuQY8BHaIHLlzIWUq8tZpasxgRp76I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744617069;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K4Nqye6OxjaWqK7MliMY16hKvt/ySbQ/u8awpN1fXXk=;
-	b=hEkKVgAzTzHBBfYD714uYDsQ7LNVe6AzIkS3Qd2OjDueQ88ipDjzdX4gR4LK6mxgsNMESi
-	EnRbdpkXm/wPGVDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744617069; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K4Nqye6OxjaWqK7MliMY16hKvt/ySbQ/u8awpN1fXXk=;
-	b=WhoEarbt2KDhHYG9b1UlMnX6hOz22z8J+t6QV7rAdPiEeeHnHMl2qvHHbhm4bD9dE7ERiz
-	Ixh6++Z52EFGC1mS3ZUFmvlIXKUept3teInRbiEplzG0hE4e2DEPXREfjwj8YpD7Q1KqM9
-	DwuQY8BHaIHLlzIWUq8tZpasxgRp76I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744617069;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K4Nqye6OxjaWqK7MliMY16hKvt/ySbQ/u8awpN1fXXk=;
-	b=hEkKVgAzTzHBBfYD714uYDsQ7LNVe6AzIkS3Qd2OjDueQ88ipDjzdX4gR4LK6mxgsNMESi
-	EnRbdpkXm/wPGVDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1EF40136A7;
-	Mon, 14 Apr 2025 07:51:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eNVeBW2+/GeAEgAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Mon, 14 Apr 2025 07:51:09 +0000
-Date: Mon, 14 Apr 2025 09:51:08 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Daniel Wagner <wagi@kernel.org>, 
-	James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lpfc: use memcpy for bios version
-Message-ID: <6f6b4f8c-e9f3-4962-af48-baf48a91c0a9@flourine.local>
-References: <20250409-fix-lpfc-bios-str-v1-1-05dac9e51e13@kernel.org>
- <20250413190238.2cb8ec64@pumpkin>
+	s=arc-20240116; t=1744617159; c=relaxed/simple;
+	bh=WsO/QgvjFVAT0vfF+NDb5gjqkzvA3Vt1GNWmQLH1Mps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BgDVjgKyWHX63WIrIaHWJ+OgOiiC3UQf/eSEmyO+qAYOCYjEYWZAFs/9cST8a/Da0dH89M+xSXVyI5AB7+vYIEZeiAkxy7rveobkVbLl2kul48zC2qodic0BkWHPvTgn74SbDAY/E1w1lHBt80UDrhPyDKV4qrz/hkjhAoZkyg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01E621007;
+	Mon, 14 Apr 2025 00:52:34 -0700 (PDT)
+Received: from [10.57.88.7] (unknown [10.57.88.7])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CAA83F694;
+	Mon, 14 Apr 2025 00:52:33 -0700 (PDT)
+Message-ID: <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
+Date: Mon, 14 Apr 2025 08:52:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413190238.2cb8ec64@pumpkin>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
+ PIRE0_EL1 and PIR_EL1
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250410074024.1545768-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 13, 2025 at 07:02:38PM +0100, David Laight wrote:
-> On Wed, 09 Apr 2025 13:34:22 +0200
-> Daniel Wagner <wagi@kernel.org> wrote:
+On 10/04/2025 08:40, Anshuman Khandual wrote:
+> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+> as expected if those macro constants contain some 128 bit layout elements,
+> required for D128 page tables. Fix this problem via first loading up these
+> macro constants into a given memory location and then subsequently setting
+> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
+
+From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
+of 128-bit types with shifting and masking, which the assembler can't do? It
+would be good to spell this out.
+
 > 
-> > The strlcat with FORTIFY support is triggering a panic because it thinks
-> > the target buffer will overflow although the correct target buffer
-> > size is passed in.
-
-BTW, still trying to figure out what is happening here. It was observed
-on ppc64el but so far creating a crash dump is not working.
-
-> > Anyway, instead memset with 0 followed by a strlcat, just use memcpy and
-> > ensure that the resulting buffer is NULL terminated.
-> > 
-> > BIOSVersion is only used for the lpfc_printf_log which expects a
-> > properly terminated string.
-> > 
-> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> > ---
-> >  drivers/scsi/lpfc/lpfc_sli.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-> > index 6574f9e744766d49e245bd648667cc3ffc45289e..a335d34070d3c5fa4778bb1cb0eef797c7194f3b 100644
-> > --- a/drivers/scsi/lpfc/lpfc_sli.c
-> > +++ b/drivers/scsi/lpfc/lpfc_sli.c
-> > @@ -6003,9 +6003,9 @@ lpfc_sli4_get_ctl_attr(struct lpfc_hba *phba)
-> >  	phba->sli4_hba.flash_id = bf_get(lpfc_cntl_attr_flash_id, cntl_attr);
-> >  	phba->sli4_hba.asic_rev = bf_get(lpfc_cntl_attr_asic_rev, cntl_attr);
-> >  
-> > -	memset(phba->BIOSVersion, 0, sizeof(phba->BIOSVersion));
-> > -	strlcat(phba->BIOSVersion, (char *)cntl_attr->bios_ver_str,
-> > +	memcpy(phba->BIOSVersion, cntl_attr->bios_ver_str,
-> >  		sizeof(phba->BIOSVersion));
-> > +	phba->BIOSVersion[sizeof(phba->BIOSVersion) - 1] = '\0';
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This patch applies on v6.15-rc1
 > 
-> Isn't that just strscpy() ?
+>  arch/arm64/kernel/head.S         | 3 +++
+>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
+>  arch/arm64/kernel/pi/pi.h        | 1 +
+>  arch/arm64/mm/mmu.c              | 1 +
+>  arch/arm64/mm/proc.S             | 5 +++--
+>  5 files changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index 2ce73525de2c..4950d9cc638a 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
+>  	 * On return, the CPU will be ready for the MMU to be turned on and
+>  	 * the TCR will have been set.
+>  	 */
+> +	adr_l	x0, pir_data
+> +	bl      __pi_load_pir_data
 
-strscpy does more work to ensure everything is correct and has the
-advantage that it wont copy the whole buffer unnecessary. Given how
-small the work is BIOSVersion is 8 bytes and bios_ver_str is 32 bytes
-and there are other places in the driver doing something similar thing,
-I opted for the traditional memcpy with an explicit NULLing. Obviously,
-it also avoids using any of the fortify features :)
+Using C code to pre-calculate the values into global variables that the assembly
+code then loads and stuffs into the PIR registers feels hacky. I wonder if we
+can instead pre-calculate into asm-offsets.h? e.g. add the following to
+asm-offsets.c:
+
+DEFINE(PIE_E0_ASM, PIE_E0);
+DEFINE(PIE_E1_ASM, PIE_E1);
+
+Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
+pre-calculated values that you can then use in proc.S?
+
+Or if that doesn't work for some reason, is it possible to store to the PIR
+registers directly from the C code?
+
+Thanks,
+Ryan
+
+> +
+>  	bl	__cpu_setup			// initialise processor
+>  	b	__primary_switch
+>  SYM_CODE_END(primary_entry)
+> diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
+> index 81345f68f9fc..cd9d24e73046 100644
+> --- a/arch/arm64/kernel/pi/map_range.c
+> +++ b/arch/arm64/kernel/pi/map_range.c
+> @@ -103,3 +103,9 @@ asmlinkage u64 __init create_init_idmap(pgd_t *pg_dir, pteval_t clrmask)
+>  
+>  	return ptep;
+>  }
+> +
+> +asmlinkage void __init load_pir_data(u64 pir_data[])
+> +{
+> +	pir_data[0] = PIE_E0;
+> +	pir_data[1] = PIE_E1;
+> +}
+> diff --git a/arch/arm64/kernel/pi/pi.h b/arch/arm64/kernel/pi/pi.h
+> index c91e5e965cd3..ae61df4fdb77 100644
+> --- a/arch/arm64/kernel/pi/pi.h
+> +++ b/arch/arm64/kernel/pi/pi.h
+> @@ -34,3 +34,4 @@ void map_range(u64 *pgd, u64 start, u64 end, u64 pa, pgprot_t prot,
+>  asmlinkage void early_map_kernel(u64 boot_status, void *fdt);
+>  
+>  asmlinkage u64 create_init_idmap(pgd_t *pgd, pteval_t clrmask);
+> +asmlinkage void load_pir_data(u64 pir_data[]);
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index ea6695d53fb9..762e81ff4e85 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -58,6 +58,7 @@ static bool rodata_is_rw __ro_after_init = true;
+>   * with MMU turned off.
+>   */
+>  long __section(".mmuoff.data.write") __early_cpu_boot_status;
+> +unsigned long __section(".mmuoff.data.write") pir_data[2];
+>  
+>  /*
+>   * Empty_zero_page is a special page that is used for zero-initialized data
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index fb30c8804f87..7dd28cf101c2 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -524,9 +524,10 @@ alternative_else_nop_endif
+>  #define PTE_MAYBE_NG		0
+>  #define PTE_MAYBE_SHARED	0
+>  
+> -	mov_q	x0, PIE_E0
+> +	adr_l	x1, pir_data
+> +	ldr	x0, [x1, #0]
+>  	msr	REG_PIRE0_EL1, x0
+> -	mov_q	x0, PIE_E1
+> +	ldr	x0, [x1, #8]
+>  	msr	REG_PIR_EL1, x0
+>  
+>  #undef PTE_MAYBE_NG
+
