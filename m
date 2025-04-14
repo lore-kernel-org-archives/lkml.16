@@ -1,180 +1,108 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE031B21A7;
-	Mon, 14 Apr 2025 09:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B079325D21B;
+	Mon, 14 Apr 2025 09:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744621243; cv=none; b=mO8S+Z7VZlYiRuAULwfELAqi+OKEe1Fn8OYR03/id/fr892g6cXB6RoZbqkxIXWdctL4vDFW8q3RgM482bMBsPYtZiNEnsUcHzkgXwfqxIiiXiVKYmslHnmdDVOE0VWneOnfJmhT8gZbQ3qXqsxzmatUjbRCOo1/lA1c7Lf67ek=
+	t=1744621269; cv=none; b=BPrC4Ojyy6+FT1mskCwbgSRBcyjAwXS1GuCjUVk3F0P7ZKqGDE9oxr1sTdRk7gUDyAlj3NiLSRYn7yuNuq8Z8x7Xc6kpDEtrcx8R/ux44oazpyvNyaBKySa7VKjfMiPKLBoPiAH4NU4uykmyFj7KTsXs4WQsIPoWsEsQiPk2VmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744621243; c=relaxed/simple;
-	bh=SgC9nKmAXqOqD7lU7C44bE42f0kscW5919alLDnydik=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BUMIQUWNC97ed3OXO0yQ1Zxv+G4tNPxnrEzUKHCC7nMr6kXnRy5NY5onc75REUYFuMQvcbVR3HZp3xMuNX5cvYfcWpRbmL4RlapfsfkNOSgr/rFak2zyBkIB8j+WdkX1BS5NF8znIYDNoOsIyVfiE3nWPIqtIRbll3i1VjcwHCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Zp9kwcVA; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744621269; c=relaxed/simple;
+	bh=XpKjoyc/maM/AI83DG72PQblLDb10bwW6BBo5l4BUbk=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=uy4yhiN4U8mBQPVZu6P5StCImB0sIPiy5zdu1j0mQMuLKyFH8SgxPBdsxRzl54PnfAjWwl1IrrM+/QbmCJ5DRDN+MrBLuz0xdGC8yTucbqd/c4rj6ZyuHMYT5JaK7RBTUjtcMPyvaY13Tq3g4ROIpRUhD3raYJ2DBmVOEQtoJNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iLg09JyN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Zp9kwcVA"
-Received: by linux.microsoft.com (Postfix, from userid 1186)
-	id D1C3821180D3; Mon, 14 Apr 2025 02:00:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D1C3821180D3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744621234;
-	bh=1yD9vuRJtl+z43VxkiUGzUyb0pDEZDwEzowuVDXBCEs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zp9kwcVAi/aESsVoaTeho7EVkrFMBtx98eeWTWrv44BzJQoklx3mFYadji++dRIZE
-	 VsysN9fDIZxhyTL9zqkV/46DFhlNd4r6ChngqBhgoxX2pSpWOCdRsgs2CbW0s3VMc5
-	 QUkcEfNrNovpfKqD+tSw8NzepOuKma3wzXHmX4iM=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	pabeni@redhat.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	decui@microsoft.com,
-	wei.liu@kernel.org,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH rdma-next v2 3/3] RDMA/mana_ib: Add support of 4M, 1G, and 2G pages
-Date: Mon, 14 Apr 2025 02:00:34 -0700
-Message-Id: <1744621234-26114-4-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1744621234-26114-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1744621234-26114-1-git-send-email-kotaranov@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iLg09JyN"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DLdLrX021822;
+	Mon, 14 Apr 2025 09:01:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=lmwobYWlAXVy0Fy8/ab2+M
+	UkFHFk7p0ntZF3p/2g2XE=; b=iLg09JyN9rH8YMVqXeiR5LpTzyu142dB4UNxJQ
+	PClMGAYrKH+746QGsTgPYOJwbs4q+qy+oxYyNqWBqFSy/Giqzt8rHOH1GDRbl8o/
+	BCUwxnWWTB29R8fPVmQ+zgf3Mo/LBhiT8SlIzU9A+sct4Fjv4hQlpHEgHSU49NQw
+	JJF/vASTB88fjki16TBTdgzHQ8ejGpzIy1DZ0CCUNwLE6teSThj7c6mI3/qPtR5m
+	xQ9rcC0WUYoppKLrtE+EZYofYK+yUb99rakMsaL6sg2yCrroGHV1a0Rlzfwfc5kr
+	w41d2DmlSfxLhlnM0N/Ef7o9OjOLqy/2ch2G5EN1dckrSrkg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfgjbxph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 09:01:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E90x4C021496
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 09:00:59 GMT
+Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 14 Apr 2025 02:00:56 -0700
+From: Taniya Das <quic_tdas@quicinc.com>
+Subject: [PATCH 0/2] clk: qcom: gcc: Update the force_mem_core for UFS ICE
+Date: Mon, 14 Apr 2025 14:30:39 +0530
+Message-ID: <20250414-gcc_ufs_mem_core-v1-0-67b5529b9b5d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALfO/GcC/x3MQQqAIBBA0avIrBPKDKOrREhNU83CDKUIxLsnL
+ d/i/wSRAlOEQSQI9HBkfxY0lQA85nMnyWsxqFp1tW603BHtvUXryFn0gaRZFtXPbacMIZTsCrT
+ x+y/HKecPPDP5QmIAAAA=
+X-Change-ID: 20250414-gcc_ufs_mem_core-7bb28a3527ec
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Taniya Das <quic_tdas@quicinc.com>
+X-Mailer: b4 0.15-dev-aa3f6
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: SXp6c7EGbrymVrEx3pwBIbjwd3aSra1T
+X-Proofpoint-ORIG-GUID: SXp6c7EGbrymVrEx3pwBIbjwd3aSra1T
+X-Authority-Analysis: v=2.4 cv=Cve/cm4D c=1 sm=1 tr=0 ts=67fccecc cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=M75u7Tp2MPcvN9VRiHUA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=647 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140064
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+The MCQ feature of UFS requires the both UFS ice and UFS phy axi clocks
+to have the force_mem_core bit set to allow retention after power
+collapse.
 
-Check PF capability flag whether the 4M, 1G, and 2G pages are
-supported. Add these pages sizes to mana_ib, if supported.
-
-Define possible page sizes in enum gdma_page_type and
-remove unused enum atb_page_size.
-
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
- drivers/infiniband/hw/mana/main.c               | 10 +++++++---
- drivers/infiniband/hw/mana/mana_ib.h            |  1 +
- drivers/net/ethernet/microsoft/mana/gdma_main.c |  1 +
- include/net/mana/gdma.h                         | 17 +++--------------
- 4 files changed, 12 insertions(+), 17 deletions(-)
+Taniya Das (2):
+      clk: qcom: gcc: Set FORCE_MEM_CORE_ON for gcc_ufs_axi_clk for 8650/8750
+      clk: qcom: gcc-x1e80100: Set FORCE MEM CORE for UFS clocks
 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 730f958..a28b712 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -479,7 +479,7 @@ int mana_ib_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- {
- 	unsigned long page_sz;
- 
--	page_sz = ib_umem_find_best_pgsz(umem, PAGE_SZ_BM, virt);
-+	page_sz = ib_umem_find_best_pgsz(umem, dev->adapter_caps.page_size_cap, virt);
- 	if (!page_sz) {
- 		ibdev_dbg(&dev->ib_dev, "Failed to find page size.\n");
- 		return -EINVAL;
-@@ -494,7 +494,7 @@ int mana_ib_create_zero_offset_dma_region(struct mana_ib_dev *dev, struct ib_ume
- 	unsigned long page_sz;
- 
- 	/* Hardware requires dma region to align to chosen page size */
--	page_sz = ib_umem_find_best_pgoff(umem, PAGE_SZ_BM, 0);
-+	page_sz = ib_umem_find_best_pgoff(umem, dev->adapter_caps.page_size_cap, 0);
- 	if (!page_sz) {
- 		ibdev_dbg(&dev->ib_dev, "Failed to find page size.\n");
- 		return -EINVAL;
-@@ -577,7 +577,7 @@ int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr *props,
- 
- 	memset(props, 0, sizeof(*props));
- 	props->max_mr_size = MANA_IB_MAX_MR_SIZE;
--	props->page_size_cap = PAGE_SZ_BM;
-+	props->page_size_cap = dev->adapter_caps.page_size_cap;
- 	props->max_qp = dev->adapter_caps.max_qp_count;
- 	props->max_qp_wr = dev->adapter_caps.max_qp_wr;
- 	props->device_cap_flags = IB_DEVICE_RC_RNR_NAK_GEN;
-@@ -696,6 +696,10 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 	caps->max_recv_sge_count = resp.max_recv_sge_count;
- 	caps->feature_flags = resp.feature_flags;
- 
-+	caps->page_size_cap = PAGE_SZ_BM;
-+	if (mdev_to_gc(dev)->pf_cap_flags1 & GDMA_DRV_CAP_FLAG_1_GDMA_PAGES_4MB_1GB_2GB)
-+		caps->page_size_cap |= (SZ_4M | SZ_1G | SZ_2G);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 6903946..f0dbd90 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -60,6 +60,7 @@ struct mana_ib_adapter_caps {
- 	u32 max_recv_sge_count;
- 	u32 max_inline_data_size;
- 	u64 feature_flags;
-+	u64 page_size_cap;
- };
- 
- struct mana_ib_queue {
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 4a2b17f..b5156d4 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -937,6 +937,7 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
- 			err, resp.hdr.status);
- 		return err ? err : -EPROTO;
- 	}
-+	gc->pf_cap_flags1 = resp.pf_cap_flags1;
- 	if (resp.pf_cap_flags1 & GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG) {
- 		err = mana_gd_query_hwc_timeout(pdev, &hwc->hwc_timeout);
- 		if (err) {
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 3db506d..89abf98 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -407,6 +407,8 @@ struct gdma_context {
- 
- 	/* Azure RDMA adapter */
- 	struct gdma_dev		mana_ib;
-+
-+	u64 pf_cap_flags1;
- };
- 
- #define MAX_NUM_GDMA_DEVICES	4
-@@ -556,6 +558,7 @@ enum {
- #define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
- #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
- #define GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT BIT(5)
-+#define GDMA_DRV_CAP_FLAG_1_GDMA_PAGES_4MB_1GB_2GB BIT(4)
- 
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
-@@ -704,20 +707,6 @@ struct gdma_query_hwc_timeout_resp {
- 	u32 reserved;
- };
- 
--enum atb_page_size {
--	ATB_PAGE_SIZE_4K,
--	ATB_PAGE_SIZE_8K,
--	ATB_PAGE_SIZE_16K,
--	ATB_PAGE_SIZE_32K,
--	ATB_PAGE_SIZE_64K,
--	ATB_PAGE_SIZE_128K,
--	ATB_PAGE_SIZE_256K,
--	ATB_PAGE_SIZE_512K,
--	ATB_PAGE_SIZE_1M,
--	ATB_PAGE_SIZE_2M,
--	ATB_PAGE_SIZE_MAX,
--};
--
- enum gdma_mr_access_flags {
- 	GDMA_ACCESS_FLAG_LOCAL_READ = BIT_ULL(0),
- 	GDMA_ACCESS_FLAG_LOCAL_WRITE = BIT_ULL(1),
+ drivers/clk/qcom/gcc-sm8650.c   | 2 ++
+ drivers/clk/qcom/gcc-sm8750.c   | 3 ++-
+ drivers/clk/qcom/gcc-x1e80100.c | 4 ++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+---
+base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
+change-id: 20250414-gcc_ufs_mem_core-7bb28a3527ec
+
+Best regards,
 -- 
-2.43.0
+Taniya Das <quic_tdas@quicinc.com>
 
