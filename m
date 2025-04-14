@@ -1,123 +1,100 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEDA284663;
-	Mon, 14 Apr 2025 13:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEC627586E;
+	Mon, 14 Apr 2025 13:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637612; cv=none; b=FD/mxM/a64JNchoxEi7YKEWPNmEI5UrLBEjoYkCqW6ugScKFSG3WnWSNKcvKQsosRdXTeBDj6fxE73c4T6YPSYWev6PxA12giqwUnWD5bElRU3gdxG+WoSwz4NIvZ/uxd5KcSHIYILhJNxG8pVxZuOfMicMUmjdyABcjJNdZGHI=
+	t=1744637619; cv=none; b=q6uJ6PxsukEYw+Taw76btnUz5hePOGy7Ub+hAqRqhV+6Pm1nRFn2+72ni7PAa+6h3ovVFf1qmYIZTJ84HODTnVv+cu7IWEF4e3ZapkKpl6Au0SnX98QrFnPiN+AZauQoIqtJcFpAmlpNxn7WzW+MK6sA6m0gyS9l5MTG4C1jVKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637612; c=relaxed/simple;
-	bh=lqW6r23bqwjzU8W+dQYPibsu0Htt43yKptwOLimSSI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dR4UXSebNSPHGCXfrAv3vsFJYwVzwVL+pBV+Kiz6AedXcm2i6ZiXRxRhdKiuAijubcmC8x3pT9BiJJLGcvZaV/I6sXsDpHWBzeZ1VAM3rRvoZ2ZpzBK6XmLQFLcfEsxz/DAU95RonhxcBVywEyhfowm533FuM4tdlsm8ldrgk9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RSWkZtkW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744637619; c=relaxed/simple;
+	bh=E3mB6BujgckUAwXQRauflpVXiosYt2n5U3TDMrhOzSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tFwLUoC3Z+EpE8KQsgtIQaHEM18tPxYkRJdtyOo/c2zowms+JiyyrrQY4r0y+xd8JNM4IsycwGQqPgw55OLc+qxT6cW7yP5LB5wwo87G/5qkJcxUqVztJ3XBMlmKnSv9LRfLHNYicAlS2/nHlqkPhiXrIONltnl9vwtNxKydVPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TpJyHSZ1; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RSWkZtkW"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99mOh028978;
-	Mon, 14 Apr 2025 13:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gajFuDe8TlUWiwwz6npyfgicOLypHaXBz6NQBr/Pqv4=; b=RSWkZtkWtLAh5dMj
-	0I0bSVW8q1aMWUwxzskxIyXYk+lFOmc8H9z25jltJ7bEFAF7eUIgN0wx4vh1tyFT
-	XP/0I96+oCSSb2gmrEbOs5dmFERjSe2OjCEn71bJ2tpKHDHXufOSBBwgS5562O7V
-	Osb2ZoUWipiI27q/b4cXoNIntt/iISebdWcKW/CS0pRUIb/d8FRMlQbVXKJqUXQF
-	Pr7Tw4ptvRW3TExaIOEYxjJ7FOjZN9XMNws2CgfZM5xrQQf/IUQ/QQrVhldLJhCV
-	xW5Iz0B3F8ZTlDJgtJdffXEjejhnTeUMFB8ZMDV9AB6KfViRsKvQnJ7Wi2LuN6jH
-	+MBYTA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs14r5k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 13:33:22 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53EDXLMu023018
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 13:33:21 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
- 2025 06:33:19 -0700
-Message-ID: <08b5187b-0e74-4ba8-9893-4be61c2f9bdf@quicinc.com>
-Date: Mon, 14 Apr 2025 19:03:16 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpJyHSZ1"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3105ef2a071so16697771fa.1;
+        Mon, 14 Apr 2025 06:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744637616; x=1745242416; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E3mB6BujgckUAwXQRauflpVXiosYt2n5U3TDMrhOzSY=;
+        b=TpJyHSZ1jlUwGHAuJSkCA14k/DoPtLqM+SMcM+4m0KpBKkrInbT8h74lE54tBHbOR1
+         XR9ElXQVxOFQNcjM7W7CuQKsQZJSIqLiLb5xtNDBqbRkYbS/jhM/W8uvvyUHAk/twdwN
+         6ioDIsMIrEI2x+SKY4pbvSUzbW7NcLYxLrgz5YP9hkWUWvzF8jW6q8YhJ1CjT01FDG+n
+         Pox0Oy0DNoqHvNJolLuC3blXUCXW2+7u2i5ISy+Z2i+tZ8n/qPcc+9KCZUbPYSSYbf3H
+         /nxIn4EbdmAzspkakrsADm5bAdNalTDxG3tY95fYaMecaumKdSc0tG1F8jFlmiFY4q+g
+         JAfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744637616; x=1745242416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E3mB6BujgckUAwXQRauflpVXiosYt2n5U3TDMrhOzSY=;
+        b=uxcULFnuyQ+40AiMee/bPAN69OQB5CQ02ovSWFP+ZFefZeql/XJQAWc7Z+teTj3Db+
+         +6GXPPXcwL/Mv0MVD7mmkvO0Tw79VP98yXzbF9dAEZ10a1vuYFcS9hOiIVnpn5aOfV8g
+         eizuuGKhUfr6H7Ma5SCgXnMhQekr6g1m4YMpXUynLakrqqFMGxgT0kKVCFbDquDnfPUg
+         WlyiPvLwmMvGpQqkA+/z7AWoJWVf6P1utX5hWCNHKKhLKeC6VhDT/AG1mcvaAgi3Xcfq
+         mVAxEw9ehoLNqpPc2p7p+oiukd7Bw3yxqs2ZdRQ8xC7gtOD5PNfPL9N7awGUZHU7p7uS
+         Cibw==
+X-Forwarded-Encrypted: i=1; AJvYcCVuVDgm6HfvxMmyKQm7W2uHXeI5CCG9t2HdwwoC3KdvDFFtuz+2iLBBIW1YiQyg1g/B4oCU3HHoN/ByG5rvFNgb@vger.kernel.org, AJvYcCWRT9SxJXjiLthosdhOpFOUNEOhKe7MKK2OWvza8pUaMaYHX/4nXJdUYUmJiwu2qq3umBY754Q+XHuNOQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1VvAJODJSNZ+XUaYpnnIq5Ff33hnguPirao1O/CzzTeFYkztu
+	9ePs+rc2fnS9tJbk8JD3Vq35wfnDfC7O2KBfnbAAe0hu/CLm81a4TvZutOe7kSEwViXp1CHt/Hq
+	osBIrAdZAqD/KEHHpBg+FrG41+H8=
+X-Gm-Gg: ASbGnct37klPyuDoL6mnSRGhA7H3Upz5X1cKsTBde8KwGyrw0u7QcEg+R1EQDOupGLg
+	bBLFaFdffTfNud9mR55jLMCZH/OCTSyA3coCHu3t9ZqYuLGNjYvdnDzuXMCBpul3vdK+VRf40xM
+	UxtMdrAStL1TGWj6z0T8asDpZFM5aNwiTnU5COeEbj/LtAy+bq
+X-Google-Smtp-Source: AGHT+IEX0GysSwjlpQprX51hP4s8VVSAArPBAR6N8iyKPuunSUiPeYAh0D8ZQuInCrnBlAZQTHRcSd9o5kDxFZYA34E=
+X-Received: by 2002:a2e:9214:0:b0:30c:3099:13d0 with SMTP id
+ 38308e7fff4ca-31049a01919mr32258501fa.21.1744637615547; Mon, 14 Apr 2025
+ 06:33:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] phy: qcom-qusb2: reuse the IPQ6018 settings for
- IPQ5424
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
-        "Vinod
- Koul" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        "Dmitry
- Baryshkov" <lumag@kernel.org>,
-        Varadarajan Narayanan
-	<quic_varada@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250414-revert_hs_phy_settings-v2-0-25086e20a3a3@oss.qualcomm.com>
- <20250414-revert_hs_phy_settings-v2-2-25086e20a3a3@oss.qualcomm.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20250414-revert_hs_phy_settings-v2-2-25086e20a3a3@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=67fd0ea2 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=zk4drvL23OH2Cl8ndaEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: oQJvh3Jsy19-CKRiBkrsx3xET0t4VOIY
-X-Proofpoint-ORIG-GUID: oQJvh3Jsy19-CKRiBkrsx3xET0t4VOIY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140098
+References: <6c3889e81d7396886b91120ba7871b2bffd6d934.1744615218.git.geert@linux-m68k.org>
+ <CAMuHMdXxg-05x4g2hFL9f3MnmWiZ2AjM3mPp8Bc1V1wH2xhSwg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXxg-05x4g2hFL9f3MnmWiZ2AjM3mPp8Bc1V1wH2xhSwg@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 14 Apr 2025 09:32:59 -0400
+X-Gm-Features: ATxdqUHoyT6ZvfW_Ib23pjpRU-GGSupSS3PKnsqTqdSWf7IvDBUzikP3KdEI54k
+Message-ID: <CAJ-ks9k_kaGiLi069EcE0WduKtA6pF_vM3PAE5-nzhLDUinjQQ@mail.gmail.com>
+Subject: Re: [PATCH] lib: PRIME_NUMBERS_KUNIT_TEST should not select PRIME_NUMBERS
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 14, 2025 at 5:02=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> On Mon, 14 Apr 2025 at 10:50, Geert Uytterhoeven <geert@linux-m68k.org> w=
+rote:
+> > Enabling a (modular) test should not silently enable additional kernel
+> > functionality, as that may increase the attack vector of a product.
+> >
+> > Fix this by making PRIME_NUMBERS_KUNIT_TEST depend on PRIME_NUMBERS
+> > instead of selecting it.
+> >
+> > After this, one can safely enable CONFIG_KUNIT_ALL_TESTS=3Dm to build
+> > modules for all appropriate tests for ones system, without pulling in
+> > extra unwanted functionality, while still allowing a tester to manually
+> > enable PRIME_NUMBERS and this test suite on a system where PRIME_NUMBER=
+S
+> > is not enabled by default.
+> >
+> > Fixes: 313b38a6ecb46db4 ("lib/prime_numbers: convert self-test to KUnit=
+")
+> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-
-On 4/14/2025 5:22 PM, Kathiravan Thirumoorthy wrote:
-> With the settings used in the commit 9c56a1de296e ("phy: qcom-qusb2: add
-> QUSB2 support for IPQ5424"), complaince test cases especially
-compliance
-> eye-diagram (Host High-speed Signal Quality) tests are failing.
-> 
-> Reuse the IPQ6018 settings for IPQ5424 as suggested by design team,
-No mention of team. Write it as generic.
-> which helps to meet all the complaince requirement test cases.
-compliance
-> 
-> Fixes: 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for IPQ5424")
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> index 81b9e9349c3ebb4d303cb040b5c913336bb6b6d6..49c37c53b38e70db2a1591081a1a12db7092555d 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> @@ -929,6 +929,9 @@ static const struct phy_ops qusb2_phy_gen_ops = {
->   
->   static const struct of_device_id qusb2_phy_of_match_table[] = {
->   	{
-> +		.compatible	= "qcom,ipq5424-qusb2-phy",
-> +		.data		= &ipq6018_phy_cfg,
-> +	}, {
->   		.compatible	= "qcom,ipq6018-qusb2-phy",
->   		.data		= &ipq6018_phy_cfg,
->   	}, {
-> 
-
+Acked-by: Tamir Duberstein <tamird@gmail.com>
