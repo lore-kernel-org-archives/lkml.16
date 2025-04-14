@@ -1,143 +1,88 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA89427A111;
-	Mon, 14 Apr 2025 15:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3134C7C;
+	Mon, 14 Apr 2025 15:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644426; cv=none; b=ABK68NiU7rBaLhb1NXaEZ/q30JFypyPdLgcUolLa897R2e9jG3xBVEPCrevR8VOZSH8Vi0GNYpr5oHyuZ4RGZQbwivSq5mQ9qGKuHBFdaO404RrL50SLgLcbOP4WelMvhvwMFyrRiB7jZ+m5zNbjtoGoMZYR8MUEETC2tvEw/Yw=
+	t=1744644448; cv=none; b=qpP4cDufuxFmcVm+C9Ctj1pNyj9HCXIprDYqp+ZW4bbutm0CsLveqV9iSKrQ1SKDO1RzeHFV3VbkpL82Nmcyu9dSX/v1d8XvTHDrAf3hNIE7cP6vLv6O0AnQ6IYPFgqE2204R/Paw1p0MqgnFcG9r3Tm5m7XdQ6u0JdtuF9lTYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644426; c=relaxed/simple;
-	bh=rZvHJrIwJz7NQmb5THdH9cX3LUXpNIok5gWtBcArh/o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=acUfVWjpr3l92zwcochefZ8+OXkuSLPkBhHH5+a5+l56RInvk7Qh3R5qEHtfiBKfneTi7S7P8RErwh2i4iwh+mH1pmJ4lAXiHSz47Hf3eGuNRt3WoHlg9FJTnuNkQ7zyCdIi3IyBgE5URCdSVoyK9wvhVk1kbiQRnzQOapWRH6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b=maMGq3ye; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1744644448; c=relaxed/simple;
+	bh=xOz4bqQ06a6dRshKQPZ0CbVIQt48i1yKdpWjSoQ9OEE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=GvaSGohHdRRkjIiqArB0411/YTb2SY7NSY90RcZaAqSW8sqx84uqq+10PmEH1i+FikGPVuk080r0QgpIN2MTW6xZImC6GdmkrkkyX2+o5F+8iP8B5UmOYxD5Ao1KlaevcXYXB24a9th8/95okaKTKoyY1zz8ndBh/WnVl65fVXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLJ5YZa4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b="maMGq3ye"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744644407; x=1745249207; i=fiona.klute@gmx.de;
-	bh=rZvHJrIwJz7NQmb5THdH9cX3LUXpNIok5gWtBcArh/o=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=maMGq3yeDJYE6YVHxnKZNhqf7GrxMof5O/AzQQ0vsUQ4+rMjtb/iYVnak9m//uvQ
-	 tmU1+G4zvr+JImCMhRz3QC8uoSlS4zihGozDYxVCoO61jaBjPe18LSXhER/Z56C4x
-	 e46242K0nS4iXxx5eRkG/jzdlt8wB3dT23oTHGFl8p6PdFaPQOVFKCv+7V46WX0T+
-	 lBwpUdIBwsoYcFq5kJHWuf3bSw52OzmuN6fWzUWo1PTb5ZcQEwY3L/KJ6wLloIJby
-	 +SqKTaSivmwoiRQfXPCxlxI5hc0kaM8fnvu17WFjAZz3vVg4w0rUoXqlOWKL+Lj10
-	 Eq3RAdXAX1kUx/ZenQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from haruka.home.arpa ([85.22.122.10]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRCK6-1thLCl2S84-00Tvpo; Mon, 14
- Apr 2025 17:26:47 +0200
-From: Fiona Klute <fiona.klute@gmx.de>
-To: netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-list@raspberrypi.com,
-	Fiona Klute <fiona.klute@gmx.de>
-Subject: [PATCH net] net: phy: microchip: force IRQ polling mode for lan88xx
-Date: Mon, 14 Apr 2025 17:26:33 +0200
-Message-ID: <20250414152634.2786447-1-fiona.klute@gmx.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLJ5YZa4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FED9C4CEE2;
+	Mon, 14 Apr 2025 15:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744644447;
+	bh=xOz4bqQ06a6dRshKQPZ0CbVIQt48i1yKdpWjSoQ9OEE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=TLJ5YZa4gSz7hyRClUzRPtCjVQc/VW1NSezb3F8PkpZfBndSsLNJ5LCRDR/PJ2kaB
+	 lvK6Sg6MUJXjaYmzWcVFxuhnrizqfJinu7LvbeZhUyUQiMG31SNVhS9grritk1uy77
+	 0Sr3AzSYcoDUlTZY619o7soHWwLknjeSbCyfOnq0k12LRgQFLRNJXvE6T3gGYMht61
+	 9OxDiVkklROcLXd1WS7a30Z7rUZe5RwKuePInTyzmzwY0HRL9aK+WBvq/qfocdjEVQ
+	 MrkQgjyUmkwh6eQbkXooPujG/mUmuasvsaFIxK+zD0v8AzToc4dAQexTAHp+CK7z9H
+	 UYL9xc7HqvAQA==
+Date: Mon, 14 Apr 2025 10:27:25 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:fQISuGsE84gb9tJCLkCkO/Mr1OEt+VwdckZX4vn2g6nRJr9qfV2
- XFXA5hN8qUCg7Uo3lWax82mXATulmmp3btqvx1w4VJ81U7bBLgM3P4XNqrl27JLD7YVsRT2
- 1V5G3JE/qERxCZiwQNUFdqSXx1FDSRODP+3zMn1cAK43D9vKwEprLDyKU/Kdh1WMWhlBm6j
- 1q7Leab/kGBEZfo8ugD0Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dpJC4PaD+dY=;X9vXcRxFnoJzXghKFD6BZKcLZaw
- K1ubuCV0EmOCMCWujG1Y5NV6rEcjxdP4I3Za75rU2PaGSLfZqPOedOtAI46ArtTeiglGi3kPm
- G4stvDoIbgS9a996Sen55Vymmo0j0L22NerOg/5lKjBV8zpIgkMU70LSS4ezg4ABPknEJJrQt
- k6LlYMsWIlPwRjpr+8ku+QZQd3eppa4d68fbTdSmNdFbFWgTnzljzWKYUQwqOSIpSF6d1gi7u
- mgR6VIlborTIHrzaqnY27CwobF2cfEXUGg2fYMptHF8grPJEzoEdMRX6V3JKi2meRYz/bISpP
- NGeXBh/F3lf+jRimIvuAukXWZISyJXAVI5cULfCSRhpjA0+Qta+RKqYG7FLH3x1iZuzOObtq6
- 13Z9x4X063xXFAfmy0xVUmSnlYPzHzY7ZIKZOt36YFgHnlxKbwuMw0qZ4tzXY46FHHFkV6x/c
- 1BO0VT5dM/r0lmvexYj6Zty/FJvESiZwuK+xhWMFw85XOzoUzijWa90WR2bMR56/bAceOg9bJ
- mWl0NhKrzLDUqH0Uwr4636nmk1BDb7gQmmjjdAtx4gX4RBgJnfJR3pP4HzG9qa4yerXDlIo/t
- Fg8iKZmt+ClyWAX4sKMK88xVFYQ2WcWVYE5ygenXG2pT4TdzkkpjnQZpEmfFCzv1YZ6jxyJJz
- cylFI6HYqJ/UKDABCR6TP1FIPxoY73wv+vu+HO79wwxN6N28x5XPvqhxbRPZ6M6m4twH+lW2w
- 1BoB2S5HfINUEHrDCihzXWvC1iBpMganRp4QDfXUFptQROj+ikXifTOca9QdORlHGc1OrWxgU
- PGLpOy5SKYTbXwzpYcq3XIVl2rKDOmI+tWOlqrg1UBfKrwC+9FMPJg8QQaFU+jW3R1jaFPh7n
- /9718vMiIHyGIQPQQ/0QcHYJbxNfXtYmdrLg+CDYyjdOEWSsSUKLZaaSc5DjnqRL2AxCTZceD
- +gEBgjDY30vaoeqCWjDmeDrur66C1cWuWanZD67NwCNN7+imd/Bt+VSqGNR+1shypx01LqnBJ
- G83yEXe0r50ovExTl7H8DlnEo0LVzJE1mlEP/3DvPDax9ztt349hK7FigjFreauomXsuLNxDA
- 7KEGkP6R9fBv9eKmIAcaev9wK6R/4vweNdMNCaoIsat0ATD00/llpFZyL8ox4DyR3uJFHzT2C
- mEpo4EM4Sn7BqEKq+2yh1KjR5OGcy7NC6hCTRT5QZ2ng53TijjebxZUcJyEK3poMBCjkrk7hl
- WcVD8V7RZVYZ1VW1rnboB16NtrowaU94S4ZfChmrJm48yuF2leoJ2wlvUHBe6IbbcEgeYniGh
- ezCuhuavhmMIJGUHwf43swcmZjYryf144g8c0I9ZFoSAZ2I+QEr8CLYezBSz6aqT81xOiCAMj
- YXE83bQYgRsGU31zy6Hvgo20bo9G7KfYk6qNVqzs9oZCRMctjNk6xz0sDvGOUg7vV9e9+XgIo
- 5BZiz7XJBkg9GTD/6SEOPgL7bzJF5v7eDLuTNWs2J/Lvjsb/p230HLEfpgx3HoWPEdHidtba+
- dktz9RFq2gZFfPchq0s=
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, conor+dt@kernel.org, lee@kernel.org, 
+ pavel@kernel.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org, 
+ knezic@helmholz.com, corbet@lwn.net, linux-kernel@vger.kernel.org, 
+ krzk+dt@kernel.org
+To: Ante Knezic <ante.knezic@helmholz.de>
+In-Reply-To: <35c7f697070b3939727f1115d3a279e280f72cd6.1744636666.git.knezic@helmholz.com>
+References: <cover.1744636666.git.knezic@helmholz.com>
+ <35c7f697070b3939727f1115d3a279e280f72cd6.1744636666.git.knezic@helmholz.com>
+Message-Id: <174464444574.455759.7081664205185002557.robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: leds: add binding for WL-ICLED
 
-V2l0aCBsYW44OHh4IGJhc2VkIGRldmljZXMgdGhlIGxhbjc4eHggZHJpdmVyIGNhbiBnZXQgc3R1
-Y2sgaW4gYW4KaW50ZXJydXB0IGxvb3Agd2hpbGUgYnJpbmdpbmcgdGhlIGRldmljZSB1cCwgZmxv
-b2RpbmcgdGhlIGtlcm5lbCBsb2cKd2l0aCBtZXNzYWdlcyBsaWtlIHRoZSBmb2xsb3dpbmc6Cgps
-YW43OHh4IDItMzoxLjAgZW5wMXMwdTM6IGtldmVudCA0IG1heSBoYXZlIGJlZW4gZHJvcHBlZAoK
-UmVtb3ZpbmcgaW50ZXJydXB0IHN1cHBvcnQgZnJvbSB0aGUgbGFuODh4eCBQSFkgZHJpdmVyIGZv
-cmNlcyB0aGUKZHJpdmVyIHRvIHVzZSBwb2xsaW5nIGluc3RlYWQsIHdoaWNoIGF2b2lkcyB0aGUg
-cHJvYmxlbS4KClRoZSBpc3N1ZSBoYXMgYmVlbiBvYnNlcnZlZCB3aXRoIFJhc3BiZXJyeSBQaSBk
-ZXZpY2VzIGF0IGxlYXN0IHNpbmNlCjQuMTQgKHNlZSBbMV0sIGJ1ZyByZXBvcnQgZm9yIHRoZWly
-IGRvd25zdHJlYW0ga2VybmVsKSwgYXMgd2VsbCBhcwp3aXRoIE52aWRpYSBkZXZpY2VzIFsyXSBp
-biAyMDIwLCB3aGVyZSBkaXNhYmxpbmcgcG9sbGluZyB3YXMgdGhlCnZlbmRvci1zdWdnZXN0ZWQg
-d29ya2Fyb3VuZCAodG9nZXRoZXIgd2l0aCB0aGUgY2xhaW0gdGhhdCBwaHlsaWIKY2hhbmdlcyBp
-biA0LjkgbWFkZSB0aGUgaW50ZXJydXB0IGhhbmRsaW5nIGluIGxhbjc4eHggaW5jb21wYXRpYmxl
-KS4KCklwZXJmIHJlcG9ydHMgd2VsbCBvdmVyIDkwME1iaXRzL3NlYyBwZXIgZGlyZWN0aW9uIHdp
-dGggY2xpZW50IGluCi0tZHVhbHRlc3QgbW9kZSwgc28gdGhlcmUgZG9lcyBub3Qgc2VlbSB0byBi
-ZSBhIHNpZ25pZmljYW50IGltcGFjdCBvbgp0aHJvdWdocHV0IChsYW44OHh4IGRldmljZSBjb25u
-ZWN0ZWQgdmlhIHN3aXRjaCB0byB0aGUgcGVlcikuCgpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3Jh
-c3BiZXJyeXBpL2xpbnV4L2lzc3Vlcy8yNDQ3ClsyXSBodHRwczovL2ZvcnVtcy5kZXZlbG9wZXIu
-bnZpZGlhLmNvbS90L2pldHNvbi14YXZpZXItYW5kLWxhbjc4MDAtcHJvYmxlbS8xNDIxMzQvMTEK
-Ckxpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnLzA5MDFkOTBkLTNmMjAtNGExMC1iNjgwLTlj
-OTc4ZTA0ZGRkYUBsdW5uLmNoClNpZ25lZC1vZmYtYnk6IEZpb25hIEtsdXRlIDxmaW9uYS5rbHV0
-ZUBnbXguZGU+CkNjOiBrZXJuZWwtbGlzdEByYXNwYmVycnlwaS5jb20KQ2M6IHN0YWJsZUB2Z2Vy
-Lmtlcm5lbC5vcmcKLS0tCiBkcml2ZXJzL25ldC9waHkvbWljcm9jaGlwLmMgfCA0NCAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDQgZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvcGh5L21pY3JvY2hpcC5jIGIvZHJpdmVy
-cy9uZXQvcGh5L21pY3JvY2hpcC5jCmluZGV4IDBlMTdjYzQ1OGVmZC4uMDZlMjg2Mzg3ZmE5IDEw
-MDY0NAotLS0gYS9kcml2ZXJzL25ldC9waHkvbWljcm9jaGlwLmMKKysrIGIvZHJpdmVycy9uZXQv
-cGh5L21pY3JvY2hpcC5jCkBAIC0zNyw0NyArMzcsNiBAQCBzdGF0aWMgaW50IGxhbjg4eHhfd3Jp
-dGVfcGFnZShzdHJ1Y3QgcGh5X2RldmljZSAqcGh5ZGV2LCBpbnQgcGFnZSkKIAlyZXR1cm4gX19w
-aHlfd3JpdGUocGh5ZGV2LCBMQU44OFhYX0VYVF9QQUdFX0FDQ0VTUywgcGFnZSk7CiB9CiAKLXN0
-YXRpYyBpbnQgbGFuODh4eF9waHlfY29uZmlnX2ludHIoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRl
-dikKLXsKLQlpbnQgcmM7Ci0KLQlpZiAocGh5ZGV2LT5pbnRlcnJ1cHRzID09IFBIWV9JTlRFUlJV
-UFRfRU5BQkxFRCkgewotCQkvKiB1bm1hc2sgYWxsIHNvdXJjZSBhbmQgY2xlYXIgdGhlbSBiZWZv
-cmUgZW5hYmxlICovCi0JCXJjID0gcGh5X3dyaXRlKHBoeWRldiwgTEFOODhYWF9JTlRfTUFTSywg
-MHg3RkZGKTsKLQkJcmMgPSBwaHlfcmVhZChwaHlkZXYsIExBTjg4WFhfSU5UX1NUUyk7Ci0JCXJj
-ID0gcGh5X3dyaXRlKHBoeWRldiwgTEFOODhYWF9JTlRfTUFTSywKLQkJCSAgICAgICBMQU44OFhY
-X0lOVF9NQVNLX01ESU5UUElOX0VOXyB8Ci0JCQkgICAgICAgTEFOODhYWF9JTlRfTUFTS19MSU5L
-X0NIQU5HRV8pOwotCX0gZWxzZSB7Ci0JCXJjID0gcGh5X3dyaXRlKHBoeWRldiwgTEFOODhYWF9J
-TlRfTUFTSywgMCk7Ci0JCWlmIChyYykKLQkJCXJldHVybiByYzsKLQotCQkvKiBBY2sgaW50ZXJy
-dXB0cyBhZnRlciB0aGV5IGhhdmUgYmVlbiBkaXNhYmxlZCAqLwotCQlyYyA9IHBoeV9yZWFkKHBo
-eWRldiwgTEFOODhYWF9JTlRfU1RTKTsKLQl9Ci0KLQlyZXR1cm4gcmMgPCAwID8gcmMgOiAwOwot
-fQotCi1zdGF0aWMgaXJxcmV0dXJuX3QgbGFuODh4eF9oYW5kbGVfaW50ZXJydXB0KHN0cnVjdCBw
-aHlfZGV2aWNlICpwaHlkZXYpCi17Ci0JaW50IGlycV9zdGF0dXM7Ci0KLQlpcnFfc3RhdHVzID0g
-cGh5X3JlYWQocGh5ZGV2LCBMQU44OFhYX0lOVF9TVFMpOwotCWlmIChpcnFfc3RhdHVzIDwgMCkg
-ewotCQlwaHlfZXJyb3IocGh5ZGV2KTsKLQkJcmV0dXJuIElSUV9OT05FOwotCX0KLQotCWlmICgh
-KGlycV9zdGF0dXMgJiBMQU44OFhYX0lOVF9TVFNfTElOS19DSEFOR0VfKSkKLQkJcmV0dXJuIElS
-UV9OT05FOwotCi0JcGh5X3RyaWdnZXJfbWFjaGluZShwaHlkZXYpOwotCi0JcmV0dXJuIElSUV9I
-QU5ETEVEOwotfQotCiBzdGF0aWMgaW50IGxhbjg4eHhfc3VzcGVuZChzdHJ1Y3QgcGh5X2Rldmlj
-ZSAqcGh5ZGV2KQogewogCXN0cnVjdCBsYW44OHh4X3ByaXYgKnByaXYgPSBwaHlkZXYtPnByaXY7
-CkBAIC01MjgsOSArNDg3LDYgQEAgc3RhdGljIHN0cnVjdCBwaHlfZHJpdmVyIG1pY3JvY2hpcF9w
-aHlfZHJpdmVyW10gPSB7CiAJLmNvbmZpZ19hbmVnCT0gbGFuODh4eF9jb25maWdfYW5lZywKIAku
-bGlua19jaGFuZ2Vfbm90aWZ5ID0gbGFuODh4eF9saW5rX2NoYW5nZV9ub3RpZnksCiAKLQkuY29u
-ZmlnX2ludHIJPSBsYW44OHh4X3BoeV9jb25maWdfaW50ciwKLQkuaGFuZGxlX2ludGVycnVwdCA9
-IGxhbjg4eHhfaGFuZGxlX2ludGVycnVwdCwKLQogCS5zdXNwZW5kCT0gbGFuODh4eF9zdXNwZW5k
-LAogCS5yZXN1bWUJCT0gZ2VucGh5X3Jlc3VtZSwKIAkuc2V0X3dvbAk9IGxhbjg4eHhfc2V0X3dv
-bCwKLS0gCjIuNDkuMAoK
+
+On Mon, 14 Apr 2025 15:28:50 +0200, Ante Knezic wrote:
+> From: Ante Knezic <knezic@helmholz.com>
+> 
+> WL-ICLED is a RGB LED with integrated IC from Wurth Elektronik.
+> Individual color brightness can be controlled via SPI protocol.
+> 
+> Signed-off-by: Ante Knezic <knezic@helmholz.com>
+> ---
+>  .../bindings/leds/leds-wl-icled.yaml          | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/leds/leds-wl-icled.example.dtb: icled@1 (we,131x000): 'cs-gpios', 'reg' do not match any of the regexes: '^led@[0-9a-f]$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/leds/leds-wl-icled.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/35c7f697070b3939727f1115d3a279e280f72cd6.1744636666.git.knezic@helmholz.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
