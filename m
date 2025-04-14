@@ -1,119 +1,147 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED7D2472AF
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985702522B8
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642375; cv=none; b=sEEvIXXhx2YDaUcsnHaYyzDKnFhm+AdIUnky1xzdu8TsY8K9/3DI1nY+sG8JoWZg68xt5y4+kYvouYvRC5RFRTKU8ygcSejLHSwKx7TyKtmFifJhXkn2CaPfhS+bGAhaXMCOlthSw/dvrh2MjoSvn7LNUCF0Un7PZ3U7xhcChJM=
+	t=1744642436; cv=none; b=aXdcunlbvDPD6OxYKNze7y0FJh8P6KXE7iY2Vcy1ogx7+F9Zoyz6Leqsof2v5oP9hqWVqgArDwEeo3ImMqXp1fwhk9r0AdLjugk7uAo9RjzNMnIYi4CFvH7Sd4J7E9+KU1tfCyL+WJk0+1HQZCFic4BYoIiM5kueIjE4W9d3qF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642375; c=relaxed/simple;
-	bh=q275gpJ5gkFxsqAByotGoyQ2YIzbhtPnLFBEwofgH7w=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QTs2coW3Fsh0khn/DQoaeyIkTWsLKc8WmP7qWcEZjBhkc674EZxjivEwTTf8ZFRXjPx1HNMF2wbDkoOpTftpb36Y4VEa7XYxKmcdr61fXQFqbdlDgSEpgQsqS5va/fGH6W93T0oFzAMeqOkHxd0kVwX42RNr4LzAFkPJ4ertxVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=SCAxwFSL; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744642436; c=relaxed/simple;
+	bh=CPWUMoO/hJ8wp8Jksk3JD28gquTg6bVUwkKbgmJ0LpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W2o7aZLmsiUp/rh8NQTnwERbsfXlIx6JnBhZi1VM4o0qqQ2Xifm1cSzbVdofoRI5eEntlqm9rRy3j7ouuNhs+RJnyaL4+C3srJYfVf6onpg/bamCOir8CLmVj1fBkQAB5BVL7N7MVD+73w2W6oxDnUpWpVawRIF12fWgS7i1fEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=btu89kFa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="SCAxwFSL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744642370; x=1744901570;
-	bh=dD5e/1Fu7mhWrgn3QSi/3YdnMeUu7C/RwKN6vJhntek=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=SCAxwFSLxDPZSu7uhNHnIZxdUSR2tLa3lzxcULMslZQcyzF4ZPPACYURlLvOP24cA
-	 Y0tCItwnUQvahI5wU7hcCz0RXidtdtnHCpSqTdUBrUjma/sYd3Ladogpy4isL18Z+f
-	 ogWSlc0u88J1YDt8CqElcTnwEQX4tcwGE5tsp3CX+5BDi8Vf20eISTDYNhWXA7F2hg
-	 cLaOyAbhSwH+Sr43ajpaT4YyBoWQs7E+5Sj0EwEuqzGjOeURg/wx2b39iBmWVp1r8s
-	 rc2hIOeRsry0i/rrAzdpCfmxAIr+mXZNJ5Q5Ikxs5rXkMHTmgHnei8Zqsp47/9EFoZ
-	 Clprdy/koFxFA==
-Date: Mon, 14 Apr 2025 14:52:42 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christian Schrefl <chrisi.schrefl@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] rust: fix building firmware abstraction on 32bit arm
-Message-ID: <D96G3LM70821.3O228HXNXZ3OA@proton.me>
-In-Reply-To: <Z_0WRohxxMYqKxM5@google.com>
-References: <20250411-rust_arm_fix_fw_abstaction-v1-1-0a9e598451c6@gmail.com> <D93TIWHR8EZM.25205EFWBLJLM@proton.me> <CANiq72kc4gzfieD-FjuWfELRDXXD2vLgPv4wqk3nt4pjdPQ=qg@mail.gmail.com> <D94KNIHTJOWU.1EHA7217LSC4S@proton.me> <Z_0WRohxxMYqKxM5@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 3caaa48efb154cbf541da6ca91722a1468259d9c
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="btu89kFa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744642433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cd0S4b4Qg1iHX5AktXHWyQVLtGhRM54Nv+RIauLgOUs=;
+	b=btu89kFaqEROWlT2FDkXcqmzGLgYecPXGVDtvZP2Pse3K2yIbpgo3YZf6It5ePb888vpRM
+	tuYc6T1roGIg3URN1l3Qr3kRELHpkaQI247ZXvd7Yq1bcV3Gj5P396zXgcf6lrkkhZwPQf
+	bsHWiz8tT/yF+YROPZmgce9mh8N6gKk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-286-CCIMtZdNPDyXOgxqVeNC8Q-1; Mon,
+ 14 Apr 2025 10:53:48 -0400
+X-MC-Unique: CCIMtZdNPDyXOgxqVeNC8Q-1
+X-Mimecast-MFC-AGG-ID: CCIMtZdNPDyXOgxqVeNC8Q_1744642422
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1D1F1828A89;
+	Mon, 14 Apr 2025 14:53:40 +0000 (UTC)
+Received: from [10.44.32.81] (unknown [10.44.32.81])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 57F333001D0F;
+	Mon, 14 Apr 2025 14:53:35 +0000 (UTC)
+Message-ID: <ad5ada81-d611-41bb-8358-3675f90767f1@redhat.com>
+Date: Mon, 14 Apr 2025 16:53:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-2-ivecera@redhat.com>
+ <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
+ <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
+ <Z_ys4Lo46KusTBIj@smile.fi.intel.com>
+ <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
+ <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com>
+ <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
+ <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
+ <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
+ <CAHp75Vej0MCAV7v7Zom8CXqh3F6f3QXevW93pOkXSLEZn7Yxfg@mail.gmail.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <CAHp75Vej0MCAV7v7Zom8CXqh3F6f3QXevW93pOkXSLEZn7Yxfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon Apr 14, 2025 at 4:05 PM CEST, Alice Ryhl wrote:
-> On Sat, Apr 12, 2025 at 10:01:22AM +0000, Benno Lossin wrote:
->> On Fri Apr 11, 2025 at 4:15 PM CEST, Miguel Ojeda wrote:
->> > On Fri, Apr 11, 2025 at 2:46=E2=80=AFPM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
->> >>
->> >> Ah I overlooked this, you should be using `kernel::ffi` (or
->> >> `crate::ffi`) instead of `core`. (for `c_char` it doesn't matter, but=
- we
->> >> shouldn't be using `core::ffi`, since we have our own mappings).
->> >
->> > In 6.6, C `char` changed to unsigned, but `core::ffi::c_char` is
->> > signed (in x86_64 at least).
->> >
->> > We should just never use `core::ffi` (except in `rust/ffi.rs`, of
->> > course) -- I think we should just add the C types to the prelude
->> > (which we discussed in the past) so that it is easy to avoid the
->> > mistake (something like the patch attached as the end result, but
->> > tested and across a kernel cycle or two) and mention it in the Coding
->> > Guidelines. Thoughts?
->>=20
->> Yeah sounds like a good idea.
->>=20
->> > I tried to use Clippy's `disallowed-types` too:
->> >
->> >     disallowed-types =3D [
->> >         { path =3D "core::ffi::c_void", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_char", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_schar", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_uchar", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_short", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_ushort", reason =3D "the `kernel::ffi=
-`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_int", reason =3D "the `kernel::ffi` t=
-ypes
->> > should be used instead" },
->> >         { path =3D "core::ffi::c_uint", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_long", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_ulong", reason =3D "the `kernel::ffi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_longlong", reason =3D "the `kernel::f=
-fi`
->> > types should be used instead" },
->> >         { path =3D "core::ffi::c_ulonglong", reason =3D "the `kernel::=
-ffi`
->> > types should be used instead" },
->> >     ]
->> >
->> > But it goes across aliases.
->>=20
->> We could make the types in `ffi` be transparent newtypes. But not sure
->> if that could interfere with kCFI or other stuff.
->
-> Transparent newtypes for all integers would be super inconvenient.
 
-Yeah I noticed that too when trying... We often assign integer literals
-to the ffi types.
 
----
-Cheers,
-Benno
+On 14. 04. 25 4:16 odp., Andy Shevchenko wrote:
+> On Mon, Apr 14, 2025 at 5:13 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Mon, Apr 14, 2025 at 5:10 PM Andy Shevchenko
+>> <andy.shevchenko@gmail.com> wrote:
+>>> On Mon, Apr 14, 2025 at 5:07 PM Ivan Vecera <ivecera@redhat.com> wrote:
+>>>> On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
+> 
+> ...
+> 
+>>>> Long story short, I have to move virtual range outside real address
+>>>> range and apply this offset in the driver code.
+>>>>
+>>>> Is this correct?
+>>>
+>>> Bingo!
+>>>
+>>> And for the offsets, you form them as "page number * page offset +
+>>> offset inside the page".
+>>
+>> Note, for easier reference you may still map page 0 to the virtual
+>> space, but make sure that page 0 (or main page) is available outside
+>> of the ranges, or i.o.w. ranges do not overlap the main page, even if
+>> they include page 0.
+> 
+> So, you will have the following layout
+> 
+> 0x00 - 0xnn - real registers of page 0.
+> 
+> 0x100 - 0xppp -- pages 0 ... N
+> 
+> Register access either direct for when direct is required, or as
+> 0x100 + PageSize * Index + RegOffset
+
+Now, get it...
+
+I was a little bit confused by code of _regmap_select_page() that takes 
+care of selector_reg.
+
+Btw, why is this needed? why they cannot overlap?
+
+Let's say I have virtual range <0, 0xfff>, window <0, 0xff> and window 
+selector 0xff>.
+1. I'm calling regmap_read(regmap, 0x8f, ...)
+2. The regmap looks for the range and it finds it (0..0xfff)
+3. Then it calls _regmap_select_page() that computes:
+    window_offset = (0x8f - 0x000) % 0x100 = 0x8f
+    window_page = (0x8f - 0x000) / 0x100 = 0
+4. _regmap_select_page() set window selector to 0 and reg is updated to
+    reg = window_start + window_offset = 0x8f
+
+And for window_selector value: regmap_read(regmap, 0xff, ...) is the 
+same except _regmap_select_page() checks that the given address is 
+selector_reg and won't perform page switching.
+
+When I think about it, in my case there is no normal page, there is only 
+volatile register window <0x00-0x7e> and only single direct register 
+that is page selector at 0x7f.
+
+Thanks,
+Ivan
 
