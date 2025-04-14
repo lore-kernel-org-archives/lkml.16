@@ -1,124 +1,191 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121A623D298;
-	Mon, 14 Apr 2025 13:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391C917741
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744636981; cv=none; b=sUo2Q9L2gAW+qn+a05Gc/V6L0dx9qaY5rHpbJUWb8BGA6/uqC/KrxOjINf/tI5HsJYOlrk8lV2llqgL7RqKzLY+7F5kX7xif7lAKWbhakH0sB/zrDYLXYC7d1Z22/FpwtAyiomCl4XSiXujGWw9bQf8W4eUgh/agEUfxtAw/i/c=
+	t=1744637071; cv=none; b=CNKLrLArp3pZxRJvdnQqy169/cw0RxMz6cjJyev3AYRS9JCPBxgfsw59yEif8w3+t6LfBNX5QdrtYspLlMVe89BSgHFSZ8iEh4Y8xTawc56ds+o0eB1zDW7/LYN2VWDTmp+ev39KH39DibV7kBMZeHCtAmi7gWfPG90/V1+zdGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744636981; c=relaxed/simple;
-	bh=YqZznskXltnYKmBVLbbwElNix3jQOvyAnCNlCgTo76Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ii1moUu7p7pjvVgIE4KanJE+rUwVSPNTOm1n57cXphJ0ySNZPzA/Q7RlpilVEMKxrgbzIqCeG+EIykoGJylWv5ece2rh6eQqzX/lpQn4QajxXDN4i1AgtpxE3TvneJ2Xn++qcE7eTyR2i1jD2SJyhV/9HBR8qjxDbFGlgKz5vsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUBvirNX; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744637071; c=relaxed/simple;
+	bh=Hybz39FZma9Cyg3nKyz13PSchI9YPrOfhu5q7waKemo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=il+FzZjoTNvLYAtmC/B+G0akQ13+4Rov2cbQcnfRoemBqbbhgbJyStemVD8ZcDIPAf157DsEN4RM2IqvWGP+F5Bd85GMEkEjbuSeqP4cL06ljdGux9qr7+IU/Qr52liVX3O8rYYOtW7HCMnIS+De33H8FlhCbLYJH9Uk92ZWzMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=T/pvW068; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3nt0s0Hf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=T/pvW068; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3nt0s0Hf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUBvirNX"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so813032a91.2;
-        Mon, 14 Apr 2025 06:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744636979; x=1745241779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Df4ZlcRCkKHa57BJ2xndOrkK/FrGdY+gTPtYXvqZp/Y=;
-        b=FUBvirNXlyYNsQQ720KK9CNBXci40wAVWAPRaBmLf4osj6B4EOB0HubByzLc8vbcTI
-         AbXNRNGZlXBiKzSkKCVn/ChOXOGN0U3I6xYZR8CHLwd0JjnltyGXK9R54MwtTizVwahD
-         VYZmhC3aW6ilhU3PD/wIJ1K3E03t+IdvTuD1Olgrmi9/fS45VnUFmEqNMWl5iusRPPgT
-         wU4nv4FG0dYULSGD7Fm0U2Lzqp3pz8NAsOBkjf9F6zxmMqaEqk0krZvWDxoXp+OQUlxI
-         uqMJVOibsDw2sCKOrMOythQ4Q7lbmflgE3YUuvKtY3UQyrgIOXBw3/PVA0D657PNmDg4
-         EfYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744636979; x=1745241779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Df4ZlcRCkKHa57BJ2xndOrkK/FrGdY+gTPtYXvqZp/Y=;
-        b=kqi83jEJHaVMJU46Kr5odwdhDJsgMzfNM5Ic9HFctpY9hFpXkCJb6OHCvlg0Q7dPkJ
-         fwBH1K3YaHpFt226KluW96uAG+5QOizaxdRjSoLfeEj18cOtEqjO90SvN56UV1zbYQVn
-         70AXMoWIsAzbzHqBOo6gMU0Z5tX7sn1Gdl9J8Ldcr+KddtLGv282FaKAxmQD892+PmFF
-         7CFo+Mqw++61SKENmO8FquywHzfvdciRuUpI1WmWLdUfvBOiD3LcWEs6M7YU96WACjwz
-         kEPHudE+G2/Z5v1drTPbQ+U8kivAgdKxag8cm8JSlFj3sIUHTdj7anofRL87KHbPQNJb
-         XihA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmtMlhoE3tFZwTEaoQu2QZ1rLXPZJzcdfD9uMT22jCCCt3bAT1LBgDa4YBYLrtEGq8WXG4szJdy+K1t50=@vger.kernel.org, AJvYcCWEgnC5sM69+xVYQnUN4KH4n/4E4tV6Adg/FU0ODXc2+t0l5Wk0N5x2+GAZR58htUk/On+leniuSGeV+JD6bZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxucz0pVaKoZKaqIl4gtOb+kfY923tbYEeMx5EwF0HRLu+hjEEo
-	8ozaVjrZXVotPrin6zXkb37Biq16gAV9piLkelBNKh4mt9BXlZitcgqt7LymAG1AqgFHO8PoKYy
-	TPNiXJuBM1CuBon6rFMzcLRtcjh8=
-X-Gm-Gg: ASbGncsXiMW5SNCSTzVBbdfYBSqYfrQOmmNZkglNBeSjXfbj1YPgRJIci5imsc5EjlF
-	rxbhftOZWwzTxSS5jlvHE31jKz+GtsM6Wnb5X1NH4C0nqmefbdBwKeueHPx7HEHipe5ZrE7aFbn
-	rr293zqVJYyxzhhx6prqoRNw==
-X-Google-Smtp-Source: AGHT+IH3zMwiQZZF0MrooAxLxss2WjlELR7XDWfoKS8xT5Swj4kCI9USG4kreGACDD6msII1YqtOpACzPgTOIcNg6iQ=
-X-Received: by 2002:a17:90b:1b0a:b0:306:e6ec:dc82 with SMTP id
- 98e67ed59e1d1-308273f3c3amr5931863a91.6.1744636979074; Mon, 14 Apr 2025
- 06:22:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="T/pvW068";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3nt0s0Hf";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="T/pvW068";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3nt0s0Hf"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5ED07218FE;
+	Mon, 14 Apr 2025 13:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744637068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/XOuGgsFDfzaw3odh04S2DPENIai1JkJFf4sFeasm8=;
+	b=T/pvW068HgdILPwwvVNRYkcex0xoq4V7gQ5onNJtLqU/Jp/aL6G1NYZ0MN6Yl1DmzksgsX
+	3pOG9rmB53fvBYaauUB3Ez5Sl0y3qTofDy5OJRxD1Or1hkWvrmOzggyl6Nyx6hmTaJZSlp
+	Uddqwos63sG8FgxGzxxQDBLa6ZcBn3U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744637068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/XOuGgsFDfzaw3odh04S2DPENIai1JkJFf4sFeasm8=;
+	b=3nt0s0Hf09loo9mAN8WSGKpMNLtm5/x682S3d1CydYo5iEvVGu1ki80z+yyfrZQ+4yYtcj
+	rEd2mMHEwmRE/gAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744637068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/XOuGgsFDfzaw3odh04S2DPENIai1JkJFf4sFeasm8=;
+	b=T/pvW068HgdILPwwvVNRYkcex0xoq4V7gQ5onNJtLqU/Jp/aL6G1NYZ0MN6Yl1DmzksgsX
+	3pOG9rmB53fvBYaauUB3Ez5Sl0y3qTofDy5OJRxD1Or1hkWvrmOzggyl6Nyx6hmTaJZSlp
+	Uddqwos63sG8FgxGzxxQDBLa6ZcBn3U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744637068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/XOuGgsFDfzaw3odh04S2DPENIai1JkJFf4sFeasm8=;
+	b=3nt0s0Hf09loo9mAN8WSGKpMNLtm5/x682S3d1CydYo5iEvVGu1ki80z+yyfrZQ+4yYtcj
+	rEd2mMHEwmRE/gAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 53242136A7;
+	Mon, 14 Apr 2025 13:24:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 9pNHFIwM/WckfAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 14 Apr 2025 13:24:28 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1760DA094B; Mon, 14 Apr 2025 15:24:28 +0200 (CEST)
+Date: Mon, 14 Apr 2025 15:24:28 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] fs: improve codegen in link_path_walk()
+Message-ID: <ayawbty4mgxuxkbncblr6xgl25ixjb34ywh3qxhozwuhxnr5t3@2fk4hmvtwuq3>
+References: <20250412110935.2267703-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413005650.1745894-1-ojeda@kernel.org> <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
-In-Reply-To: <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 14 Apr 2025 15:22:44 +0200
-X-Gm-Features: ATxdqUGEpSrfVFnwvmwXXDxiUjWRT_U8CHO5cnUITp-hEVmYDeKZxvObhfYQwF0
-Message-ID: <CANiq72ngfTJ5PTYaJOOQ2NedERrLYzA62hL8Fgw5C4QkuZ2R-Q@mail.gmail.com>
-Subject: Re: [PATCH] rust: add C FFI types to the prelude
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412110935.2267703-1-mjguzik@gmail.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-0.998];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-On Mon, Apr 14, 2025 at 10:47=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> I wonder if it would make more sense to rephrase this section to first
-> say that rfl has type aliases for the C integer types called c_int and
-> so on, then mention that they are available in the prelude, and then
-> at the end of the section have a note that we don't use the type
-> aliases from core::ffi. I think focusing on how to use C integer
-> types, rather than technical details about how they are defined, is
-> more relevant for a reader who is just looking for coding guidelines.
+On Sat 12-04-25 13:09:35, Mateusz Guzik wrote:
+> Looking at the asm produced by gcc 13.3 for x86-64:
+> 1. may_lookup() usage was not optimized for succeeding, despite the
+>    routine being inlined and rightfully starting with likely(!err)
+> 2. the compiler assumed the path will have an indefinite amount of
+>    slashes to skip, after which the result will be an empty name
+> 
+> As such:
+> 1. predict may_lookup() succeeding
+> 2. check for one slash, no explicit predicts. do roll forward with
+>    skipping more slashes while predicting there is only one
+> 3. predict the path to find was not a mere slash
+> 
+> This also has a side effect of shrinking the file:
+> add/remove: 1/1 grow/shrink: 0/3 up/down: 934/-1012 (-78)
+> Function                                     old     new   delta
+> link_path_walk                                 -     934    +934
+> path_parentat                                138     112     -26
+> path_openat                                 4864    4823     -41
+> path_lookupat                                418     374     -44
+> link_path_walk.part.constprop                901       -    -901
+> Total: Before=46639, After=46561, chg -0.17%
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-Hmm... I see what you mean. In other places in the document, we start
-comparing with userspace Rust in order to establish a bit of context.
-But, more importantly, in this particular guideline I think it is
-quite important to say "do not use the usual ones", because they are
-actually different types, i.e. it is not just a style thing.
+Looks sensible. Feel free to add:
 
-I have thought a couple times about perhaps changing the overall style
-of the document to have a 1-liner short summary on each guideline --
-some books do something like that consistently. And perhaps an
-example, before a longer description. So something like the following,
-which is closer to what you are suggesting:
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-    To refer to C types, use the FFI types (aliases) available from
-the `kernel` prelude, e.g. ``c_int``.
+								Honza
 
-    For instance:
-
-        ...
-
-    Refer to them with a single segment path: e.g. ``c_char`` instead
-of ``ffi::c_char`` or ``kernel::ffi::c_char``.
-
-    Do not use the `core::ffi::*` types -- they are different and some
-do not map to the correct C type.
-
-But even with this style, I think it is important putting the last
-sentence in the "1-liner summary". Otherwise, someone may skip the
-guideline thinking "oh, OK, it is just a style thing about using just
-small paths, I will fix it later", without realizing they are actually
-different sets of types unless they read the entire section, no?
-
-Thanks!
-
-Cheers,
-Miguel
+> ---
+> 
+> I'm looking at skipping perm checks with an "everybody can MAY_EXEC and
+> there are no acls" bit for opflags. This crapper is a side effect of
+> straighetning out the code before I get there.
+> 
+>  fs/namei.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 360a86ca1f02..40a636bbfa0c 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2424,9 +2424,12 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+>  	nd->flags |= LOOKUP_PARENT;
+>  	if (IS_ERR(name))
+>  		return PTR_ERR(name);
+> -	while (*name=='/')
+> -		name++;
+> -	if (!*name) {
+> +	if (*name == '/') {
+> +		do {
+> +			name++;
+> +		} while (unlikely(*name == '/'));
+> +	}
+> +	if (unlikely(!*name)) {
+>  		nd->dir_mode = 0; // short-circuit the 'hardening' idiocy
+>  		return 0;
+>  	}
+> @@ -2439,7 +2442,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+>  
+>  		idmap = mnt_idmap(nd->path.mnt);
+>  		err = may_lookup(idmap, nd);
+> -		if (err)
+> +		if (unlikely(err))
+>  			return err;
+>  
+>  		nd->last.name = name;
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
