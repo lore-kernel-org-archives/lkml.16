@@ -1,198 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A44A28BA9B;
-	Mon, 14 Apr 2025 18:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E5428BAB9
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655662; cv=none; b=IbQO8emfB+SLLB+o7YzNQqaNCVpU/C0nIVfdT+feUvtQHf5wRc+Z37IP9ZfyRQZ8dC3uZkroWsG3NETg18vz2PGghSbFZxrT8EgbiCtCvBe0LZaMbbtPwBRlBJORnP35TEvo+UVVxfx6I4L9kAKGmH88r+g0HRrRaUl0ndqKAlg=
+	t=1744655685; cv=none; b=InQjWVGrQLQS9P9muKV3/NDb3WVWSaWPaJHFebwj93d8lKvCV8o/l2h6Kt7PVijGZ0rpXWKaeI1GHhX3MoNHaYpWvnD7pGVca5ZdD/6Cb8bJG6b9K6TtWtrDAXm8eSTe4TruIP9i2IN6C8BIaCD14qf8iOByL80+8HeMWoEGjd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655662; c=relaxed/simple;
-	bh=kbfxJkK2rgB4pt5FmbCLbUjzGPsUj25XGObFLO5oUJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fAvQ2clJCScl7oqSGKayvL3CC+4EkF95Va4ve+p9abibMV/aZbpXHLwDdurklojP3AxARHMomA/ikjMw2DQbhabJCWQC5Sckb97rga61Tw5QbOhQXzs9m364gum67v49guHM3ZQW9i1A3Kg/t2ChnyU4e3mj1sHcmeBAuT99gyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNVomyoh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744655685; c=relaxed/simple;
+	bh=inFuZXDNWZB9IrQxuopCU5+gEIrcyOMeM9cQlAdeA9c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ueXLe/T2+7zIxzfgAkVBF6PkmeFp2s5J/7Z9O4L8+ITYy2wj+sfHWXr2JZyAuiFyMuKSiKkOGpc8k3xXOhrAD+Jo4sEcGJPIPfOAiFvAZubSp+1N8nEQDosOqS4WT8sace++o8PfelPqDxXws9vOrQZdDX+PXXGWXfz6ooGpVPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0EYWuhPv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=02UtCtK7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNVomyoh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94E42C4CEE2;
-	Mon, 14 Apr 2025 18:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744655661;
-	bh=kbfxJkK2rgB4pt5FmbCLbUjzGPsUj25XGObFLO5oUJM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gNVomyohQtRHaJaACQJaHblKiCfBzZvC9XrSc4e2HuAa+2qJVEfulA0wbfBikHrIr
-	 5mgvkw+0BoJMg8821VCRmd49UCpzgPLSpSfiKckyxZmZp9DHntTXiJA0GSWQlHx8Hh
-	 IJ3ZyUrph8FpEQvyQjKOAvPt7zMTHeBaZJhugqxbJ6ExzspARwiyKfPvdNlsa2m8g+
-	 r3OFJts+mBIcxHhWVzo9bvGPPw30YOBBzf1SAkhVrkAqU4XxNmI6pC9TmceDQWIaxf
-	 3XM5m/AQdD+A5My26LwWtQzFRb6e3Rfj0JbaH7qybTZ3HGeCU8P4oIigFmXhnHAsxI
-	 4HPKGtZleBoBw==
-Date: Mon, 14 Apr 2025 19:34:14 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v5 09/11] iio: accel: adxl345: add inactivity feature
-Message-ID: <20250414193414.02d0ee0b@jic23-huawei>
-In-Reply-To: <CAFXKEHYXnN9ddSM3wzgRTCZDu3JiaBJ6n8htQEBCiS52G+QzQQ@mail.gmail.com>
-References: <20250318230843.76068-1-l.rubusch@gmail.com>
-	<20250318230843.76068-10-l.rubusch@gmail.com>
-	<20250331114724.2c2c2e9b@jic23-huawei>
-	<CAFXKEHYXnN9ddSM3wzgRTCZDu3JiaBJ6n8htQEBCiS52G+QzQQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0EYWuhPv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="02UtCtK7"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744655681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D6tEG05LV9BTff7SDBxQ+0/mXImprZ89pSTAdngVfLg=;
+	b=0EYWuhPvQr+eMLSV+ybzPiRbBdCKpRXXMNhn5tX1Xq1veUgrsHQcyHOPv38sBk53+vjHJA
+	naP+l89fUdvq+Of9xVSb8dZJAxIwgYq3GPvN0meoFQRvkARCB6NidoYi4U3Tz3ZVA2zWgD
+	NdXw/1tSpPycNEvPytrDkOOF+Gg3LKBe6I6dD52KLSSpVHT/F0SJSsTLoFf7vIoU5aah84
+	zfzxAoUnhHErZAe2SyPhrKfrIeRyN8zkx6ljiPi7sttMbISYUvdA7I9gLALYwsbTzX8iB/
+	Mi5m/sDUe6FiJ8/WCbA7CFxVroVYov3UWQQ52UhI8BvpBQ5wvT8lxMJQsPol0w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744655681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D6tEG05LV9BTff7SDBxQ+0/mXImprZ89pSTAdngVfLg=;
+	b=02UtCtK7Rkfzf2UohhvSJiB2QtqXRIZQBIod7UjonzaUF8JRWUNJSQhydFgdtI7YyGuQPE
+	V+qyCnJJc/ehG1Bg==
+To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Frederic Weisbecker <frederic@kernel.org>, "H . Peter Anvin"
+ <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter
+ Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 00/17] timers: Complete the timer_*() API renames
+In-Reply-To: <Z_zk94RFo2bK85iJ@gmail.com>
+References: <20250414102301.332225-1-mingo@kernel.org>
+ <Z_zk94RFo2bK85iJ@gmail.com>
+Date: Mon, 14 Apr 2025 20:34:41 +0200
+Message-ID: <87ikn6sibi.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, 14 Apr 2025 15:19:52 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On Mon, Apr 14 2025 at 12:35, Ingo Molnar wrote:
+> * Ingo Molnar <mingo@kernel.org> wrote:
+>>        add_timer_global()                  =>          timer_add_global()
+>>        add_timer_local()                   =>          timer_add_local()
+>>        from_timer()                        =>          timer_container_of()
+>>        mod_timer_pending()                 =>          timer_mod_pending()
+>>        timer_delete()              ... [unchanged] ... timer_delete()
+>>        timer_reduce()              ... [unchanged] ... timer_reduce()
+>>        timer_shutdown()            ... [unchanged] ... timer_shutdown()
+>>        timer_shutdown_sync()       ... [unchanged] ... timer_shutdown_sync()
+>>        try_to_del_timer_sync()             =>          timer_delete_sync_try()
+>>        add_timer()                         =>          timer_add()
+>>        add_timer_on()                      =>          timer_add_on()
+>>        mod_timer()                         =>          timer_mod()
+>
+> BTW., my suggestion would be to maybe change this to timer_modify(), 
+> because timer_mod() reads a bit weirdly.
 
-> On Mon, Mar 31, 2025 at 12:47=E2=80=AFPM Jonathan Cameron <jic23@kernel.o=
-rg> wrote:
-> >
-> > On Tue, 18 Mar 2025 23:08:41 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Add the inactivity feature of the sensor. When activity and inactivity
-> > > are enabled, a link bit will be set linking activity and inactivity
-> > > handling. Additionally, the auto-sleep mode will be enabled. Due to t=
-he
-> > > link bit the sensor is going to auto-sleep when inactivity was
-> > > detected.
-> > >
-> > > Inactivity detection needs a threshold to be configured, and a time
-> > > after which it will go into inactivity state if measurements under
-> > > threshold.
-> > >
-> > > When a ODR is configured this time for inactivity is adjusted with a
-> > > corresponding reasonable default value, in order to have higher
-> > > frequencies and lower inactivity times, and lower sample frequency but
-> > > give more time until inactivity. Both with reasonable upper and lower
-> > > boundaries, since many of the sensor's features (e.g. auto-sleep) will
-> > > need to operate beween 12.5 Hz and 400 Hz. This is a default setting
-> > > when actively changing sample frequency, explicitly setting the time
-> > > until inactivity will overwrite the default.
-> > >
-> > > Similarly, setting the g-range will provide a default value for the
-> > > activity and inactivity thresholds. Both are implicit defaults, but
-> > > equally can be overwritten to be explicitly configured.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
-> >
-> > A few comments inline.  The magic handling of the value 0 is
-> > a bit of unexpected ABI.
-> >
-> > Jonathan
-> > =20
-> > > @@ -327,6 +358,7 @@ static int adxl345_set_act_inact_en(struct adxl34=
-5_state *st,
-> > >                                   bool cmd_en)
-> > >  {
-> > >       bool axis_en, en;
-> > > +     unsigned int inact_time_s;
-> > >       unsigned int threshold;
-> > >       u32 axis_ctrl =3D 0;
-> > >       int ret;
-> > > @@ -345,6 +377,20 @@ static int adxl345_set_act_inact_en(struct adxl3=
-45_state *st,
-> > >               default:
-> > >                       return -EINVAL;
-> > >               }
-> > > +     } else {
-> > > +             switch (axis) {
-> > > +             case IIO_MOD_X:
-> > > +                     axis_ctrl =3D ADXL345_INACT_X_EN;
-> > > +                     break;
-> > > +             case IIO_MOD_Y:
-> > > +                     axis_ctrl =3D ADXL345_INACT_Y_EN;
-> > > +                     break;
-> > > +             case IIO_MOD_Z:
-> > > +                     axis_ctrl =3D ADXL345_INACT_Z_EN;
-> > > +                     break;
-> > > +             default:
-> > > +                     return -EINVAL;
-> > > +             }
-> > >       }
-> > >
-> > >       if (cmd_en)
-> > > @@ -365,11 +411,67 @@ static int adxl345_set_act_inact_en(struct adxl=
-345_state *st,
-> > >       if (type =3D=3D ADXL345_ACTIVITY) {
-> > >               axis_en =3D FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ct=
-rl) > 0;
-> > >               en =3D axis_en && threshold > 0;
-> > > +     } else { =20
-> >
-> > So previous suggestion on setting en doesn't work but you can still com=
-bine
-> > the bits other than the type match to simplify code and get rid of axis=
-_en
-> > in both paths.
-> > =20
-> > > +             ret =3D regmap_read(st->regmap, ADXL345_REG_TIME_INACT,=
- &inact_time_s);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +
-> > > +             axis_en =3D FIELD_GET(ADXL345_REG_INACT_AXIS_MSK, axis_=
-ctrl) > 0;
-> > > +             en =3D axis_en && threshold > 0 && inact_time_s > 0;
-> > >       } =20
-> > =20
-> > > +/**
-> > > + * adxl345_set_inact_time_s - Configure inactivity time explicitly o=
-r by ODR.
-> > > + * @st: The sensor state instance.
-> > > + * @val_s: A desired time value, between 0 and 255.
-> > > + *
-> > > + * If val_s is 0, a default inactivity time will be computed. It sho=
-uld take
-> > > + * power consumption into consideration. Thus it shall be shorter fo=
-r higher
-> > > + * frequencies and longer for lower frequencies. Hence, frequencies =
-above 255 Hz
-> > > + * shall default to 10 s and frequencies below 10 Hz shall result in=
- 255 s to
-> > > + * detect inactivity. =20
-> >
-> > I'd missed this previously.  I've no problem with a default time being =
-set
-> > on driver load, but a later write of 0 should not result in something v=
-ery different
-> > as that's not standard use of the ABI.  If a user wants to go back to a=
- sensible
-> > default then they should have stored out what was set initially.
-> >
-> > I don't mind if you update the default until the point where they first=
- override
-> > it, but from there on we should obey what they request or error out if =
-the
-> > value requested is not possible.
-> > =20
->=20
-> Hm, I'm unsure if I got this wrong. It is not supposed to be an
-> automatic feature to kick in and change user configured values,
-> actually. Let me try to explain it differently:
-> Setting a threshold for an inactivity time in [s] is always applied as
-> a user wishes. Setting 0s for inactivity time IMHO does not make much
-> sense, where one could also simply disable the sensor event. So, what
-> I did now is I implemented when 0s was set by a user for inactivity
-> time, it will result in an automatic adjustment of inactivity time,
-> depending on range and odr.
+Can you make your mind up _before_ spamming people with half baked
+changes done in a hurry? :)
 
-This is still a bit unexpected so ABI that is unlikely to be in general
-useful.  If userspace can figure out this automatic value I'd rather we
-just reject 0 as -EINVAL and let userspace code decide on a better value
-given that 'hint'
+While I appreciate proper namespace prefixes, this series is just a
+mechanical conversion without any additional value. Some of the
+conversions like try_to_del_timer_sync() are obviously fine and can't
+provide moar than a namespace consolidation.
 
->=20
-> In v6 I will try to refrase the text, and double-check it's contained
-> in documentation, too. Pls, let me know what you think.
->=20
+But if you look at the actual functions and their usage all over the
+place then you can see that there is way more cleanup and consolidation
+potential especially for those functions which add or modify timers.
+
+First of all the question is whether add() and mod() are really valuable
+distinctions. I'm not convinced at all. Back then, when we introduced
+hrtimers, we came to the conclusion that hrtimer_start() is sufficient.
+
+But that aside there is a major cleanup potential for this stuff. The
+vast majority of add/mod_timer() sites uses:
+
+    - Precomputed timeout values derived from a timeout provided in SE
+      units
+
+    - Instant conversions of SE unit based timeouts to jiffies
+
+          msec/usec/sec_to_jiffies()
+
+    - All variants of HZ, HZ * N, HZ / N ....
+
+This is lots of duplicated and copy and pasted code. So instead of
+blindly renaming things, we can be smarter and provide sensible
+functions:
+
+mod_timer() takes an absolute expiry value, but most places use
+
+    mod_timer(t, jiffies + $timeout);
+
+So the obvious first step is to provide:
+
+    timer_start_rel(t, $timeout);
+
+which does the addition of jiffies under the hood.
+
+And because $timeout is some of the above calculations, we can be
+smart and provide:
+
+   timer_start_rel_secs(t, timeout_in_seconds);
+   timer_start_rel_msecs(t, timeout_in_milliseconds);
+   timer_start_rel_usecs(t, timeout_in_microseconds);
+
+This all can be sensibly converted with coccinelle, which even can
+handle the cases where $timeout is calculated from HZ / N.
+
+I have a pile of half finished coccinelle scripts somewhere, which do
+exactly such a conversion. I just ran out of time to play with that, as
+I ran into a few things which need more thoughts about proper
+interfaces. I'm happy to share them.
+
+Converting the whole timer arming to use SE unit based timeouts makes a
+lot of sense in general and also paves the way to boot-time controlled
+HZ, which is something distros and others are asking for since years (of
+course nobody wants to sit down and do the actual work as usual...)
+
+That said, I'm fine to convert the obvious things, like
+try_timer_del*(), where there is no other consolidation value, but for
+everything else we better sit down and think about proper interfaces and
+large scale consolidation.
+
+Thanks,
+
+        tglx
 
 
