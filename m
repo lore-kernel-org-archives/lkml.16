@@ -1,136 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25255298CCA
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDC4293B7A;
+	Mon, 14 Apr 2025 11:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631551; cv=none; b=d5+QpvMrvFeyq7D3tsLiQ+n/+k5aznOSbbTZVoPcNJXh34fAsCI49AlTO3h0cLJ8Um1nl716DmrWcyc1BMtQVMix4wrufwSfujmelDpQn0Mr3ZoGynjTZ4MIfow9dSeONRtGKHtsm7AIyb+C1aIg9ChYA/xxkAwpSZ3ntur9LB0=
+	t=1744631561; cv=none; b=YPCOxKmRADKZeN3XPkRpRhBSsa77me8udoUT16M5OUo25EQ0khg5PykS1qbiN8gNwfjwG/rQM0L0RcAN3PDyXmY2aPWO3AS+4Cs39macttB9v4+B+3GCzC8aRwXlS6JGj6PBKp6mnhMQ/KCOu5tMa+jS0DdWsGad0Vg0Adm18aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631551; c=relaxed/simple;
-	bh=D91Ia1pGKZJkmlOIZvvVBQnMUMbHaF4O3dvtsIBon9s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EEpcmgVyJahNLdLj28JDhct1FkE4iiMEpnRyegLZVKICKgPsdQwsiXo+4HQjQa3bCeAl//dO7pREdu5PCo4bShUpQ4MQ4hofqUnSSpnKrpB1OtBTtXoBnEkqGBxptRaB4LAjjZoNJgN6rarf1oCW546DVfLHaAOYikBWNoQsqL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I1x99f8n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744631561; c=relaxed/simple;
+	bh=O7fwWD1mrXhcYE+62v3u8tACzz3xgehepQ421SFC7Y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uav0O1drH2tkzKf7uin8BL80c3FJ+FHegdqWb7c0Kuz7DT1lu7w3hduq3B4jz6Qo1fAvTBavNOEB/OYJH9zkVCs/z+4D7KdM+wUurwZUPvnQTjhhwpprXWvxAeDfhYYIIbiZEgpywnZGVi6xAzDW94eruQ31wOnS99LVsQAnrUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IhGYi+h7; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I1x99f8n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744631549;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IhGYi+h7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FFE91FCE8;
+	Mon, 14 Apr 2025 11:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744631551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=00kkU7VDnxwaz8Oj1ywsgzfiYZTZml1BEDq6NOcZlJk=;
-	b=I1x99f8nrwVvnBTbCTe6IsDqO6U9UHb3MfJb6fkPMXPw5J5p7P6eCHLoF+G/TV6BELHstV
-	R2nwFjtwPyW1LZcw2CxfGl8K1qQlZVXy1Vlx3iqzRXrWPvUMwAK3twOmKXpD+C+FdUSSIV
-	1LE8hegGuWpA81S1x074R1ZN6STKnIU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-wGqhvCzaMKWjkn9M7OImMg-1; Mon,
- 14 Apr 2025 07:52:24 -0400
-X-MC-Unique: wGqhvCzaMKWjkn9M7OImMg-1
-X-Mimecast-MFC-AGG-ID: wGqhvCzaMKWjkn9M7OImMg_1744631542
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F2B3A180034D;
-	Mon, 14 Apr 2025 11:52:21 +0000 (UTC)
-Received: from [10.44.32.81] (unknown [10.44.32.81])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 877E3180B487;
-	Mon, 14 Apr 2025 11:52:16 +0000 (UTC)
-Message-ID: <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com>
-Date: Mon, 14 Apr 2025 13:52:15 +0200
+	bh=O7fwWD1mrXhcYE+62v3u8tACzz3xgehepQ421SFC7Y4=;
+	b=IhGYi+h78AvbQGLD5cEOJulxIDP+2+4l3nLgXrIGuxmV9DsjjL+7P340iwkXJSV2LUV7s4
+	THBdzmeFxAxisAiks8R2gwmyUqgB0BhN/Q2+9xb1u/UIC4a6sVgDua9OjJPr7PEVRRrPzE
+	EOw7dha9QqISuFU89I981uZaI8/YnLtAScOsAzcPDenHsWofgNSyRcERL9EwI8icCeVx4A
+	oU9/uF4aKTrzuvOWxiah8ItsZLI4AjH26n/gm4N10FqxvhiW9COuZ9TpL9Q6JG//LVuPkh
+	zJFRriURbRjyzsUfjkkRQ/VFT3bZtAZtTrhjQ/QN9Z4/FGZoIuL2HsfKUNBoTQ==
+Date: Mon, 14 Apr 2025 13:52:28 +0200
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Bastien Curutchet
+ <bastien.curutchet@bootlin.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA
+ addresses.
+Message-ID: <20250414135228.600c13e6@windsurf>
+In-Reply-To: <29eb3698-7dc2-4c32-b636-8ef0ee6d1f47@amd.com>
+References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
+	<Z_yjNgY3dVnA5OVz@infradead.org>
+	<20250414102455.03331c0f@windsurf>
+	<29eb3698-7dc2-4c32-b636-8ef0ee6d1f47@amd.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
-From: Ivan Vecera <ivecera@redhat.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-2-ivecera@redhat.com>
- <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
- <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
- <Z_ys4Lo46KusTBIj@smile.fi.intel.com>
- <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
-Content-Language: en-US
-In-Reply-To: <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtgeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefvhhhomhgrshcurfgvthgriiiiohhnihcuoehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheduteeufeekieevieegueegiefgvdevhefggfdutdeiuedvtdfgledvgeevleeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgdphhgvlhhopeifihhnughsuhhrfhdpmhgrihhlfhhrohhmpehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsggrshhtihgvn
+ hdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsuhhmihhtrdhsvghmfigrlheslhhinhgrrhhordhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheplhhinhgrrhhoqdhmmhdqshhigheslhhishhtshdrlhhinhgrrhhordhorhhg
+X-GND-Sasl: thomas.petazzoni@bootlin.com
 
+Hello Christian,
 
+On Mon, 14 Apr 2025 11:11:48 +0200
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
 
-On 14. 04. 25 1:39 odp., Ivan Vecera wrote:
-> 
-> 
-> On 14. 04. 25 8:36 dop., Andy Shevchenko wrote:
->>> What is wrong here?
->>>
->>> I have a device that uses 7-bit addresses and have 16 register pages.
->>> Each pages is from 0x00-0x7f and register 0x7f is used as page selector
->>> where bits 0-3 select the page.
->> The problem is that you overlap virtual page over the real one (the 
->> main one).
->>
->> The drivers you mentioned in v2 discussions most likely are also buggy.
->> As I implied in the above question the developers hardly get the 
->> regmap ranges
->> right. It took me quite a while to see the issue, so it's not 
->> particularly your
->> fault.
-> Hi Andy,
-> 
-> thank you I see the point.
-> 
-> Do you mean that the selector register should not be part of the range?
-> 
-> If so, does it mean that I have to specify a range for each page? Like 
-> this:
-> 
->      {
->          /* Page 0 */
->          .range_min    = 0x000,
->          .range_max    = 0x07e,
->          .selector_reg    = ZL3073x_PAGE_SEL,
->          .selector_mask    = GENMASK(3, 0),
->          .selector_shift    = 0,
->          .window_start    = 0,
->          .window_len    = 0x7e,
->      },
->      {
->          /* Page 1 */
->          .range_min    = 0x080,
->          .range_max    = 0x0fe,
->          .selector_reg    = ZL3073x_PAGE_SEL,
->          .selector_mask    = GENMASK(3, 0),
->          .selector_shift    = 0,
->          .window_start    = 0,
->          .window_len    = 0x7e,
->      },
-> ...
-> 
-> 
-> Thank you,
-> Ivan
-Sorry,
-.window_len = 0x7f /* Exclude selector reg */
+> Maybe I should try to better explain the concern here. The question
+> is "Where is the source code of your FPGA driver?".
+>=20
+> I mean that you are trying to replace the out-of-tree solution is
+> rather welcomed, but the out-of-tree solutions are out-of-tree
+> because they don't fit with requirements to be added to the core
+> Linux tree.
+>=20
+> And one of those requirements is that you need to provide the source
+> code of the userspace user of this interface, in this case here that
+> is your FPGA driver. An MIT/X11 license is usually sufficient, GPL is
+> of course seen as better and it must not be a toy application, but
+> rather the real thing.
 
-I.
+Where is this requirement for UIO? The UIO subsystem does not have such
+a requirement, unlike indeed some other kernel subsystems such as DRM.
 
+But the practical situation is different: for DRM it makes a lot of
+sense to enforce having open-source code in user-space, as we want to
+force GPU vendors to open their OpenGL/Vulkan implementations. However,
+for UIO it makes little sense, because UIO is typically used to control
+some super-specific FPGA IP blocks that are totally irrelevant outside
+of the very specific product they are included in. Most likely if those
+drivers were open-sourced and tried to be upstream they would be
+rejected because their usefulness in the upstream kernel is basically
+zero (but they would have an on-going maintenance effort for the whole
+community).
+
+> And that is what people usually don't want and that's why no in-tree
+> solution exists for this.
+
+And that doesn't make sense because UIO already exists, and allows to
+achieve 95% of what people already need, to the exception of this DMA
+issue.
+
+Thomas
+--=20
+Thomas Petazzoni, co-owner and CEO, Bootlin
+Embedded Linux and Kernel engineering and training
+https://bootlin.com
