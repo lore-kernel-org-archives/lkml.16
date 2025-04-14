@@ -1,90 +1,114 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27FB1C75E2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5721C75E2
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744662369; cv=none; b=JRPYhPgwhLBVrqnMoJhiv/7YSuGv9A7DqR++tEluMb6doiJYFE1VFMynaJkN2WRUhO9z9qM+XRF4YXgTiM2ng/N3CQBR2tC2C2meibUBw7NxV3vUFCG20JjY+FFPAg+YrLATyQQMOQkVmsVSto+TwW+FxRuOKXKxS80v0pFPgDw=
+	t=1744662382; cv=none; b=feGLZPM1WkMyhHqJ5Z6D8/fyJSq1hgKwm7DJ0FB7SzEFzl3+9vDD5JzKwgmIhd7B+VhcVyxmk6o/TdBneDGg/iettsIaeealqysPjlcA2p2o/iUqRsLmNtaTSUVMw5CasFGNlKAzYH5KkMUKyFQcxiXy3Fi7648uZN/XuLHMbTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744662369; c=relaxed/simple;
-	bh=e8RuQjvX7EC8rJIFazxow+KpM5ax/UsWJUoMj3kPKTI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z8qj1pd+i0od5mdm8/38+8bicMpqjvt3uW99rFTkAPTJgqjvLixlO2VJV6/OnxwAouH4v4Lja8P9kDI0g2oydIarU3zrwPUonpipvM4Kbak8VKaH7QEw0YAD7sb5qgyIY5BMKye3oekztMBcYvrFALSL0zaHBOOILalgPy7CXlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KRKKA9KT; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744662382; c=relaxed/simple;
+	bh=iBs+aKRDJ7M7roaZ4THHof2CSfvuprVGdvuAkyf+vYc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sqEaYeDw8FglZaOded//XHFNqfpFOBG0cJn1Iy9Pl66vl66EoTUVr18/54RPG7Ycl8eEQq9/OEEF/SATsTZ759qbHfyDklqwLZSTkhMkBJUDAjq8904cx2O81UR+YiW09hmLKMEw0GSU574j0UjLBUaVzTCaBLyVTVMtukiKUMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=itFfqqCK; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRKKA9KT"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e6e2a303569so3601184276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="itFfqqCK"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so4626477f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744662366; x=1745267166; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744662379; x=1745267179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e8RuQjvX7EC8rJIFazxow+KpM5ax/UsWJUoMj3kPKTI=;
-        b=KRKKA9KTJLwDOv/j85iqeAteHbnRRThNrFG1v9dr9pIvRgMvzICKCPFyrZO2Y3oUbR
-         tutVDXS0X/8k1V/4dWxHPiqLZFSVfQGhXEAZZPdhCBUkYHOVKkeK5iwBWHcAYPZXLikA
-         CECW1DqWpq6jcDUMFF4GbmIZB+PxBz32qmragIPXFTGnZR3L2FlhKqTPwjIPAYBinGpo
-         HaxzZKEF/kHKeMFxWhs+woabXNqxnUrmYd7pe7DE20q/ldq+337zRrgGacCLMNKRVk9a
-         EnHhVWJeMir1zo60IwygqgZrRKwHeHf56sqyKN2fxMcM28nLHSQKQW22TnzpAHrH5PI9
-         8PkA==
+        bh=nvNmFSACobqMSZp4wEbaxtSHKBqkIkOhCMM6s/FWtxE=;
+        b=itFfqqCKjUeIdXzuV4EX4ImNR6zexn672sWf/mWOmAwpRLSnhSRG4V1pKeUaTz3lyl
+         +GTui2NtecI5zLysVl/PedwX6qHde+A4LwsY282MOdSiSQKgSftS4QVxQDrlJf1axbpq
+         3O6rIPOn5Je8ESjioMXDFN/5ZjpnTWQ8xs6K2bW4yqt3KKo/oYfkbknAvlro4ltphCf1
+         sLDpULfC1lQMhL4+m6BPVgtmQ5s/2sAwE53XL3VfARrAD39+hY4eTbECEr0v+lC+OE2f
+         8GZOqjPpjU1E6JoA+gnLT1MUbs5vD9l0EcdCCS0TtpSKyuDcNzYOsR7S0y20fP5WJgv3
+         1uMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744662366; x=1745267166;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744662379; x=1745267179;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e8RuQjvX7EC8rJIFazxow+KpM5ax/UsWJUoMj3kPKTI=;
-        b=QGpeItF2HkpgsPxuRN07dHi25/n2MQB/IvIFoxbr74e/UsODg2YyDG9ePS5+pDsiDD
-         KQC9+nVHdu1rAmOCf8bu/OtlPm5MxBxS0L4ewJpMFD4BJNKttbC2hQQXbCOIVez9/c+2
-         rEd0jub4lYhxRaSaIqe8O6IUROSCXM9f45x+aQe2btU/+RZMrDBAtR4E2qxsySWZkcee
-         sjbnRVkxeiG9ooRHS9fdoT0Y8RyjPfuNWVtv4+rXmAxvHsuyVKmNkQqhzNPdUanuHnCF
-         QCSSefg6MWO1IxdGCT99gsK3Ko3nLZvUTTS+QF2hlHTsp5WrDyNagXlvjfvW0UYEMxYm
-         /PXA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6vtdKmU1/11+uOnOULE0WZZdtLeKk8PwXVyVTfH1S1Kwf5kbm75X/hLFWPFRsIahFcpX6in6GrOEzrPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrvnWZDRDA7ckuMWKT1c8VjCMmJkVgvHyusJWfbQFETTCUpbQj
-	dWNX20l1F9lWWX/8BDHTp0q4+5QAYuerU/sPCuYtquBtqx96kn+MOjS6K+m5HMgFpSUblFz5su9
-	a7SinLR5ece1w6Mk2XBndNgdoL7SCbHyhcoA2
-X-Gm-Gg: ASbGncs69iayxgkbSywpldRYcVc4LxCAblEGkNOcGIZ45Qw/OnDl3DmrZv22WQO3icT
-	3458i4DLP31GY30p65SkkyU5YOImJWd4hSYlMmZIKg5jDLVMP1oed+gQGINlGBx5e54H1jiPnZm
-	E0kwFGqg1b/d2U597NRr1mJqOK1mmUKBIB/H4vVDPbhMgxheiEw7SIMQE/889XWQ==
-X-Google-Smtp-Source: AGHT+IHim7LKMVAssyTOnOfMgHoryUchjWHO0ARJ2hg5JmtdO8AhbqOEh3YOdPUF47H4HZYQwddbnu499M0vFJgq5eU=
-X-Received: by 2002:a05:6902:4912:b0:e58:a25c:2787 with SMTP id
- 3f1490d57ef6-e704df84608mr21722964276.38.1744662366434; Mon, 14 Apr 2025
- 13:26:06 -0700 (PDT)
+        bh=nvNmFSACobqMSZp4wEbaxtSHKBqkIkOhCMM6s/FWtxE=;
+        b=DGmUi36tbS9h2W6GTZ/ljj+m/yNXBKz1DmtgdwEeMkfoqGoXAWWu8YFQRbQpfK5Dw6
+         3sZKWWAl49AcpHbRmh2YRcgsaTynVsSkwiT/W6RXLV28s65ql0Fr3ggsJnkOFoyXNzuo
+         vCy04r3JI72bzZrvzmhPok5cuH3y7RLs9cqBL27Z8eC/jdJnKF3YvWTxi5JF9V053SBf
+         VTdwILJVPsloAWYSUa6L7/8N2QrIWAE6syT/0PlIuAb6eIw48Jvkx150uaikHdTNyLwE
+         KsH/dO6+cwI0hx3LKvu4d8ERjy7GVMyXAjVCX9B9GjelVc39T8fitxk2iyipjnjzYVk0
+         PdHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCANr3HRWszBv0bSq2q0Wtb1pA/IOheCJYlx1aFmkeGMcYgcRkGqumptPp7L1cDorz4HF6OWWv7JER/IM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAtAqPBc9Tq9S5RDkK5tmoWejtVi2qeDWOjz/M/IL2L6OhnhDM
+	NXjVd/hfTjwITVMHEuivVXhCHgXrgXmAT2WH9Q1fnLN1f3NpVnUbl4V2F6ML+zw=
+X-Gm-Gg: ASbGncvgkh1mWRUnAXmVmp2qFHsTvNIKpMTMyMsIMgVCO/Y+2vvs2gSF40wnE04+v5x
+	uqn8tsg0bEd7aEpiDNT3Pup+eVtYEOb+1/YUJnPuFrQo7IcAHZ91JK+OyUtJmjGeF4TnZq88i9S
+	WgRgKYwi2c+SJAFNnxvYcoXu6Jtfz2cqvieB5kRnu1o1F20FtQJcTTsh9fm+BbDeq8VIGmMx8VR
+	OUqztUNtSPcL31FZW6U15ptUoMEoXfKc8r0NzKg6kIS+DaI4wgdtYv6STXzmgioBO9fLcplM5e5
+	Xw+L/oufGdRjD6h+mxGHCfYDdGLbU6+VFYQK
+X-Google-Smtp-Source: AGHT+IFuDUIgj/D/cN3IBnUD9RJzcG1WoLZxxnJQx2bCsy9FAjjPxuG+fuJ3T3TcBdKtR3haLjrBYA==
+X-Received: by 2002:a5d:6daa:0:b0:39c:dfa:d347 with SMTP id ffacd0b85a97d-39ea51f4467mr12141770f8f.2.1744662378981;
+        Mon, 14 Apr 2025 13:26:18 -0700 (PDT)
+Received: from brgl-pocket.. ([2a01:e0a:81f:5e10:5368:1715:4c6b:8be6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae964073sm11872229f8f.9.2025.04.14.13.26.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 13:26:18 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Koichiro Den <koichiro.den@canonical.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] gpio: aggregator: Fix Smatch warnings
+Date: Mon, 14 Apr 2025 22:26:16 +0200
+Message-ID: <174466237012.5065.7312812236129842983.b4-ty@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1744452787.git.dan.carpenter@linaro.org>
+References: <cover.1744452787.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414200929.3098202-1-jthoughton@google.com> <20250414200929.3098202-4-jthoughton@google.com>
-In-Reply-To: <20250414200929.3098202-4-jthoughton@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Mon, 14 Apr 2025 13:25:30 -0700
-X-Gm-Features: ATxdqUGwhQ01tB21e31AgRtLSVaaR6Jizfi-T6B2oRJ8KFk1W8QQrgJ2NgNsjhU
-Message-ID: <CADrL8HWfF84VLmrVkzXTdwi-xxbUTPRUBDx1URZOsYv1DuB1-Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] cgroup: selftests: Move cgroup_util into its own library
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Yu Zhao <yuzhao@google.com>, 
-	David Matlack <dmatlack@google.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 1:09=E2=80=AFPM James Houghton <jthoughton@google.c=
-om> wrote:
->
-> KVM selftests will soon need to use some of the cgroup creation and
-> deletion functionality from cgroup_util.
->
-> Suggested-by: David Matlack <dmatlack@google.com>
-> Signed-off-by: James Houghton <jthoughton@google.com>
 
-Tejun had provided his Acked-by[1] and I somehow forgot to include it.
-(I know I should just use b4 and redownload the series with
-everything...) Sorry about that.
+On Sat, 12 Apr 2025 13:14:53 +0300, Dan Carpenter wrote:
+> Fix some static checker warnings from Smatch:
+> https://github.com/error27/smatch
+> 
+> Dan Carpenter (5):
+>   gpio: aggregator: fix "_sysfs" prefix check in
+>     gpio_aggregator_make_group()
+>   gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
+>   gpio: aggregator: Return an error if there are no GPIOs in
+>     gpio_aggregator_parse()
+>   gpio: aggregator: Fix error code in gpio_aggregator_activate()
+>   gpio: aggregator: Fix leak in gpio_aggregator_parse()
+> 
+> [...]
 
-[1]: https://lore.kernel.org/kvm/Z-sQ76PG14ai9jC0@slm.duckdns.org/
+Applied, thanks!
+
+[1/5] gpio: aggregator: fix "_sysfs" prefix check in gpio_aggregator_make_group()
+      https://git.kernel.org/brgl/linux/c/eebfcb98cdc0228f5e1b7407f9db1c602bd8e545
+[2/5] gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
+      https://git.kernel.org/brgl/linux/c/2e8636ca340002f3ac31383622911a1aa75fb086
+[3/5] gpio: aggregator: Return an error if there are no GPIOs in gpio_aggregator_parse()
+      https://git.kernel.org/brgl/linux/c/db1baf69e563fc222a75c0add5c76f437c717ac0
+[4/5] gpio: aggregator: Fix error code in gpio_aggregator_activate()
+      https://git.kernel.org/brgl/linux/c/05b43de95add3d787a7a88378086bf01c10b3f40
+[5/5] gpio: aggregator: Fix leak in gpio_aggregator_parse()
+      https://git.kernel.org/brgl/linux/c/d945ff52642d98eb6fa191f88a9cfde729129395
+
+Best regards,
+-- 
+Bartosz Golaszewski <brgl@bgdev.pl>
