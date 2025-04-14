@@ -1,461 +1,211 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2065.outbound.protection.outlook.com [40.107.237.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B8F27B4FB;
-	Mon, 14 Apr 2025 16:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744647088; cv=none; b=txiy3LPu8ap/ix/S8FWyOk59MGQ7RwvEC+JXJdIAoz3/8IMNSqIDxrr4je02RDXBv4dxMl3GiAN0aCXM7UF/aIlsRMzxnjY0khVBX4KVtFZs+MuPjr3U3ePaPZ85nLAXnbD/9GCF0ndNu0KT3YOFRzbMqfG4XxUxGxVf17tvBhY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744647088; c=relaxed/simple;
-	bh=/DZrOtUiLIvB0RYHz3UInqX8rOp8TEQxO+c83g66qkU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWTBltEj1IjsqusePvF3Rt/BDvVhyl85nQSdZ5jL/VNBm6UP7/kHC/QQrhCKA4AfQcN34zqFPXkjXcuZrBghZfDIPGQv4kyixKLhYYrkiDOkRAI1gxxJhb0xE/bE3eRokbV+fQ2ePZuKuUn4nk2TVmafolBCJc2d1j9Nfqmhihg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZDTZIzX; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C486927B51A;
+	Mon, 14 Apr 2025 16:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744647103; cv=fail; b=SXleaz+FIm24R+cpFBvXdrm39o3JvFh/Lqr5BrLAxPnldJZA0Fm1Q/0HiDzxB9ADGPm9qtpqHh7gy2h+hO7+oBCFkwMGaqkUoaYFS2joei02zk3iBaIwUp3UdVtQNfYs4brX934KY7Mfi3sJoqEFd72t7Ggq6J2Wpkrj1dShhKw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744647103; c=relaxed/simple;
+	bh=mb7PteltdVqRy0kSu10XgKYIc6AaeLde+hPe+OdT6ko=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hRb2Bkvf3fYTAerU/MdiCq3HG1+ygCBath9d3VzadYQ3Io9K7kIcCrB4z9uNt1GoA1ZH830asFSmlry50zyxx7nCK99nP+LPBWLtkpRycfbsZXfNQnQrpa3Vs3BQDxOLtH3HvdYCPbT/6gTtS7mGv34OxR2QNVLdJdmejXE64Oo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OjujXcwE; arc=fail smtp.client-ip=40.107.237.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZDTZIzX"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-702628e34f2so37132397b3.0;
-        Mon, 14 Apr 2025 09:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744647085; x=1745251885; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bqpk8SGR8teV3ZxFZ/rFHkAcX7lTSPF74ozTQzuv8ak=;
-        b=VZDTZIzXfTB0maNa+3HRWHBQtoDbHgGOCpqrcptYMKTGiRirl5tpMzm23lvmnsMZVF
-         fBAGNREUt9xp7T63yohSRWSA8AAZT3tWbfBFja3aiMiIxGNXmzVaL21IHqfR6y/i0XWb
-         z2Iv29MpbLZLUJuV6vUzOCfI4ScFLVCNO8dIFQhayYepA8FEXSUsEkLhBT7VM0cZB0Sd
-         yCrGRMJQ7hhLXOjC1G7dK8lYRK5N2Qu1aWzOPwOAa71oX6u42IdUgMhTbN4K4uAU4qfQ
-         z7uyyGquqlxz5gZqFeOEJRpLl7zkqhgFmjgUt4q2P4X0pvOZES+/SLsR4ZQJ7EJgBmO8
-         yxJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744647085; x=1745251885;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bqpk8SGR8teV3ZxFZ/rFHkAcX7lTSPF74ozTQzuv8ak=;
-        b=t8BBLEKsYqZo92KkjLSqAnh/tQBHmEMAny01Q3mBIEN4JIKAcL9uUpsDLJPTW9OX4b
-         y8zk8IKLZ2UGODX8d5DXnRsrVZI05KctAhA5K6jla8w9mBNfRsp4KLw3l18hMDmSvjDW
-         Rr1UnGrigc8tnUdJbcYietIjOd8EHbiG45viKBfn6AMO5rdnuUL42HNWRAJMqD6/+wTp
-         UxkP0ww09pjgxeuB1fdHHt1brdaLq6LQXMZBgw+dWK2Azoz3cgZVd0rvRzNvXycma+2I
-         lem0uIBZVXhdxrfH8ZBg+zNRuSOyikZsdrzN7Rs3lkBL+XJlNxEjU8QONM+U3tAUX8/Y
-         HwaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5xMA+7UkgdyscNM3xYMjX0PjbSmmn/LCb4xtOO1qG2o1UYVY763h4IZqN/in9j+1vjWR6mCnJTrU=@vger.kernel.org, AJvYcCWIuaWR2bLnVidX751IPa0UbHNeS8Fp+K/TbubmWIb4+N4rEllN/ZMyrbmHcuTEKn7ycngI61x9esBES1A3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj+Y+HZY+5gCfvG27bAGoJt7Ce5xgDh34jUfVosAj5FvJv8p+G
-	9uJyWLNjaroeVDASuKkUhoWUJAueuyGgxM/b4gsegQKZIcI3HQAT
-X-Gm-Gg: ASbGnct9m/LRLQg5tHVidPxsjSFW9jVh84lUgjpJR5JRNnc7GRin2ywAbkdCcA5zrab
-	aigradPSOok9FTO/uuT3l+zG2LgUtG3fm85hmdmdM9OqMDXFiuCwQzTQnKyA9tERcDIKhGY2gEk
-	T08gJy0bDzhyv/G5fCalK4TfXab1AX/4vpAEbVz/MByhNzzRJ5wm+/PNgIVdCjw5Wc/cko01gna
-	oDO+ZMTl2NFv1NL0O7oq8h2A589xorkLpJ+SF3LKxnXaiYuVXS5+2riTgGmthP15T18frLnGupE
-	tVNpBAgKC8lGx0aqX9l5REYhxjEjoQ==
-X-Google-Smtp-Source: AGHT+IHUrrg/lT1214yxsnOp1hvAeZgKF8L2o9GlvAiaCxQNwDZIaF20RaSc34o3pOoSxUwgTKTvJw==
-X-Received: by 2002:a05:690c:6e8e:b0:6fb:a251:2450 with SMTP id 00721157ae682-7055941baa5mr198096017b3.1.1744647085159;
-        Mon, 14 Apr 2025 09:11:25 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7053e138a1dsm31577287b3.61.2025.04.14.09.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 09:11:24 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 14 Apr 2025 09:11:20 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v9 00/19] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <Z_0v-iFQpWlgG7oT@debian>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OjujXcwE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RapcnlM1HCbcQ9yEene03Bl3eHxln/qOjC63U8pFFuVy8lRFewpAbYbVC7gGh7oFvl2Iy3rpM3kZZ/Ezpe+XqE35dPpXXOiN8Eg31fgsinmOTAYYs5ITYegnrJ7F5b07YKKkVSVxVLgxapBXdyMuWYhbjuwQp3ryjMntCEGcVSNtdlQM9+PIMXXGIcO01uPKQEidvogfSNJj7LdWMVP5zhCIecezPLVM8CLQBDakinEfmHbgT221vynwYFtm0ihXUl4M0kkoxlTNE9OWhvRDd/kY14i5INOgux6g6pDM+S9agR4N6UA3K/T7IGZ/q1e6Q/eedersYnXreakNgFIM8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oqdybxygNwRUx3JCK8wUYhrI/U38Zv9PRpxBbjLgTxk=;
+ b=Mq0eG39Ms7zqHtJUGy1f/IJKYH8lChg3WaDoGvWz8Ir3xpmftSsDBgvoqTMcNEBG3ghzq4WF8gl9/oQvlRyY3XEJfuMSEGHEZf+p8VGY5oTRwfpHi2XDOeIH6ZKu0CD2jSM9Dm2BR+F4AsYrptdHbepFhBFn7oiadVTIojiBkH8xFsvwiQ5gkGN3YBttAxN4KU8cb2vUJR4q3ExjAlPeu+EFe+4z53EphQQD1Hv2jLbkR5G/jhEBhD6m/xrRflDvxJvt4NwVtHS7Atjc5oYLIvOpTlNzEBumB+tdu9LtKJOUeDG375zom8NUKs03YG6RjC9PdBbdvrW7JMJBEQVi8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oqdybxygNwRUx3JCK8wUYhrI/U38Zv9PRpxBbjLgTxk=;
+ b=OjujXcwEiKXNPUum8YzSQr8fowt1RwrqcXI11H8mssXwbTArr5PdLKNstmwXsXZKuvnsQFOT7cwe4u9fLP7IfIaXGugJSsLp7KmePucgxWonRf+TkTXulJhxWFviY28YrhvhaWpWifQRFIz+Tjo67CAtbjEF08fXlODZiItxZqA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by IA0PR12MB8746.namprd12.prod.outlook.com (2603:10b6:208:490::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
+ 2025 16:11:38 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 16:11:38 +0000
+Message-ID: <fb5acbc5-3a16-b29e-0496-3977177ed8de@amd.com>
+Date: Mon, 14 Apr 2025 11:11:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/5] KVM: SVM: Decrypt SEV VMSA in dump_vmcb() if
+ debugging is enabled
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+References: <cover.1742477213.git.thomas.lendacky@amd.com>
+ <ea3b852c295b6f4b200925ed6b6e2c90d9475e71.1742477213.git.thomas.lendacky@amd.com>
+ <a06ed3bf-b8ac-15b7-4d46-306c48b897ca@amd.com> <Z_hQxXtLaB_OTJFh@google.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <Z_hQxXtLaB_OTJFh@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0038.namprd13.prod.outlook.com
+ (2603:10b6:806:22::13) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|IA0PR12MB8746:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9fb2c9be-0bc3-4a2f-f422-08dd7b6f095d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eTNtV2xkUVdhdmRLa25zVCtNblNQY1hUdCtTRmc1SjBkQUNGMW5XYmtXOElW?=
+ =?utf-8?B?NHdCL0FxeTQ5Tm9ENEZDUHRJeEswdHMxeW1yL2t5WUlndmduZ2t1TS9HMVpw?=
+ =?utf-8?B?dmRQWDY5TzJsdWdKQ1BuWHpmTzgwOGJhelVaUHZyWmVCdS82bHdQV09naXdy?=
+ =?utf-8?B?M0lOZlFieU5uYVZjcHVrekJKSmN2aVFNbitDRXArTElpSmM0RG5zcXhsUHRO?=
+ =?utf-8?B?ckJaQ3V5STNKaFBNdEpvdVNVbzhES0hHQzVFNWptVzI1Mlc4eGk4TmMxR1NI?=
+ =?utf-8?B?cWtGQWdtWXNjcjNLUnplRlR5WHNTMzR3QVZrTTZ1MlF0Qm80SXg1ZmRWQllW?=
+ =?utf-8?B?clJaaS82bmY3cW94V3BrUC9FYWNKVGloemxaUjh5YjZXRlh1U1RaZnpxVjRr?=
+ =?utf-8?B?bnIxeDVxQTVSVWVLL1hiUnp3RExidUp3cVhNL1R5TTRScEM5UnhNVHVuQVpx?=
+ =?utf-8?B?NkdPVXZIaU5mVEt5U3E4aWpJakhWTm9ZN21VYVhYNGhwQm56VS8vM0t1Q216?=
+ =?utf-8?B?YXBjUUdjSUFlWThIaVh1VnlxcTJBeE1tM2ZmMDE4TnhLN0ZsVVpKaUFQeGxK?=
+ =?utf-8?B?SDZRaWVxajVKYTY5bE5vb2lXWFU4RnMycThPQlMwYW8yVStiT0pYZTVQQjIy?=
+ =?utf-8?B?Q1NtWTBDa0JHbUhja2lERUtKRk9aSnk4Q2JJSFpwOUFDbVBldkk3WEY2c0xE?=
+ =?utf-8?B?UjZSMDNab1ZPakVXam9KNC80YmtuRHZucEhycGdNQ2ZjUFN5QmsxUzVrVjNh?=
+ =?utf-8?B?WjMweUIxOGpqM2p6TFhCckJPWkd5SWhGUTdsbG5xYUxXdkpvTXlEV1VoTFRE?=
+ =?utf-8?B?elRqUUJrRzdGSVN4cTZIdzd2c0ZyblRMWHo2RjNjTWpLNnh6YmtJMi91OUpS?=
+ =?utf-8?B?dklCZFJZQkNlUCtkaC9tK3gvc0VNT2pZL0pGUzR5amNsOGdINVdOL2R1WHVP?=
+ =?utf-8?B?OUp1aS9DNys4WnRwYVhmcHBLMjUxei95bFNvNHpZVkhzNU5STTRBbFBDdVZM?=
+ =?utf-8?B?YnpyRWx3L0ZFek9EV1RyeWExczNHWDM5NWxROXJYcVBCTjhBb0NGQXUzajVn?=
+ =?utf-8?B?Q21vMlhIVzBLMDhwYVQ5bnF3WDhjc2pCL2lSaWprbHc1bHVPeWRIUGtMSkhJ?=
+ =?utf-8?B?eTlmWlY2YlZWeFF4MDBKWHJhT0lJSjJpT0xHWERoK2ViaFdqY2RHTmhWSHhh?=
+ =?utf-8?B?Z3ZDRHlUQmVqcmV2aDJweGE1OGorZ1BqZGczNm90OXQrV3lLU0FydlNMMGQ4?=
+ =?utf-8?B?V2pEcDJURUUycE43eXNwZXBXZU9IVDF2UlRwT1djN3ZJb3NmNE9KRUVtVTlt?=
+ =?utf-8?B?alNmOHMzcXMydDNMSDNBV3BGWGJIaHVudWVOUVMzRzdiWllFcFg0VFZPaUsx?=
+ =?utf-8?B?cU5HcGM3MnBMU0x0ZFczeFFOTnovb29TUDR3cmJQc0szR28zNFdxZ2hvWXZW?=
+ =?utf-8?B?azFZdkpuSDExL2tnamFTTjgwcS8wUWpvU3FNclBnbWU0Yk0wTDdHVDlXd2dp?=
+ =?utf-8?B?OVF0bGp6ZXZvaVl4SlMwL3hmbktKNVBUSmlURlBmS3hDSVlTMHdKcnRscFlZ?=
+ =?utf-8?B?bE13S2lqd2pTaHg3MFNmckpZSCtGTC9reFJkQWZNQ1NRYThFV2gzbytSeVA1?=
+ =?utf-8?B?dnRaYk9IbDVvVXh4QUE3a3FwRG1YbkxXbW8wRHc0OVZ6ZUFoRWluM1NtcnRT?=
+ =?utf-8?B?S0ZmUDJTUTFXWHNqaVpKcVE4SEN2ZXVPUk01aUF0YzVpdDBrSkp4RUdPWGhw?=
+ =?utf-8?B?czdobEhjSjh1TFJqNEZpckZTTUlrY244OS8zb2dodkk3b1pCbUJDcE5YMENl?=
+ =?utf-8?B?MFlNVC9JLzhvaC9DNG8wZkpFODNiYVRUSEFtZHNqUHhRb3o3NzZHVEpHMUlT?=
+ =?utf-8?B?VEFNdzZBMzdXVGF2RklNK1JhZE1NSklxS2xURGNUQnF0d3c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?enRLN0tmb0ZzR1lJOVU5OWdvZ2htd2dRcCtzY1M5cVBXMzcvcU92NERJMmRZ?=
+ =?utf-8?B?bG16Mll4Z1JBWU1hd3V1V0xvOTV6UzZPTFh0L0dTZSt5S3VLbEhTZUx1NG82?=
+ =?utf-8?B?QVlOR2IxVGJCajhwZmxVVGp0NkE5K0xzaFdvSGVFNXpqTGxadGNHQWVUcmVo?=
+ =?utf-8?B?Y3VmQ2ZQbnlXR095M2lBVFRzYVMvTnZZVEQxYlNvVmtENkcybEVXQzFMbXhy?=
+ =?utf-8?B?OUZSMHFsRnhKaSsrWVpCVGx3NjBGbUhJUGVVd1dKc0Jka2Vsa2hmMjlYcnFJ?=
+ =?utf-8?B?eWhhdFdseHZWRHJmdW1FZVFYUDVGLzhaZElWd0tPa2dkOVlrYy9qT2tWWitj?=
+ =?utf-8?B?TnVvSjdzQzh6TTlkemNCYUgvZG5PSnlKbDd0QUdsYUNZeU5idjZvdTZmWEQ5?=
+ =?utf-8?B?MUFnT0tGRXRNWXBLQzhxZmljd3JUM2g3Vi9LN1AyS1VMaWxteHRtdlByc0Fx?=
+ =?utf-8?B?VmYzcVZnbVBOVWJORFBPUFNRRHdNYmprdDM5ZHlQcjRKdmJhOVhYVTZWTTNs?=
+ =?utf-8?B?NGJQeHVvNWl0dkpueDlsS0V5YitVTHVsQUh0UWdleFZCM3ZHeG1Wbk02ZEMy?=
+ =?utf-8?B?eFNya24xRnhiL0s3clJNS3plS1FjVlJlRGxZZTN1VXJkNGtMYUdKSmJqZmJL?=
+ =?utf-8?B?TDZXNVkwYW1sNUtTSldFaituMUxiMS9Md2xsTmttdHdCUVdSU3ZqVmZ3Sy9C?=
+ =?utf-8?B?bm9Pc0diZzZzY3NwTTlXWFhseUdRV01GVG42STUwWVU1U2I2WDhrTy9jTlRv?=
+ =?utf-8?B?OWZtam9XN0M1TXBjNVB4bkVkWWYrM3RTL0c1dkJXT2F0VVQzdVFNM3RXQTFH?=
+ =?utf-8?B?dHoyTnY0Uk1OQlRMUTN1R0FDTkVkOXhWUjFPbnhadXFBZUxQaE9zVi9QK01i?=
+ =?utf-8?B?RTJIcFJxUEJPeGNuZTBVUXpqWUlLRk52QWtoQ3Z0MlppUXdid0g0VHRsODNq?=
+ =?utf-8?B?ZDZsWHZPVGJaaXdQem42S3RUaHE2SjVZcVlnalhnMnVvcWdHclBIT21pYmJ3?=
+ =?utf-8?B?bzlVTmc5SzJhTXZCOVBWbVNheVg0aXZjQStBWThKZ3JsWnAwd0NxL3UrVVBo?=
+ =?utf-8?B?QnRnZjQ0VlEvc2UvNFhVR0NYeUJhV1NMVDJxT2k1a2NqZ2hQV2haM3VDWXZQ?=
+ =?utf-8?B?UnFhK2NyMzFzZTZOd2ZSOUJZekxJZDQraHVEOXR3ZmNBcFRIbjB4cHFjRm1k?=
+ =?utf-8?B?SlBWNjVhbG9UU2szNUpDOWZvZjRjeUNENS9aNTgrMm05eFkyTEFYdmRoV01R?=
+ =?utf-8?B?MGpZTzgxVmREMkNZbWxsT0JrM081Rjc2TTNLNTJldkg2eE9oWHdGbFZJZFZp?=
+ =?utf-8?B?MGN2azJzZ2UrKyt2RkhlWFI0TXR6MTgrNDZGeXlPaGhJY1BXempFNjl2d3ZY?=
+ =?utf-8?B?SXlRZzh3UEFGemNKeWNOeUpHenBLNFVYTUlQOVpuNnNRNlYwZHdsMUVZVGQv?=
+ =?utf-8?B?UjROUndiRzJ1VWlTUm5jZEYrSHZVNVBmcGNLcEVqQUd1dnVBWWhwZkR3M2lP?=
+ =?utf-8?B?ZlZLakxTVC9HZ2hyZmVDMHgwaTZXMk1lSk9zVDV3M2gvbjFiVmM3MzRNTUo0?=
+ =?utf-8?B?bEdEcUVnWFVHb3U5WG9YYUN1UW5ndWtkOEcySHNWWVovUnZaOFhPd3o2dEY0?=
+ =?utf-8?B?Wk1LQUI3RGhLNnl5OU5kU1JCZEM1ckdJRmcybUsvSUxZVUhUMlBhTmgyWVNw?=
+ =?utf-8?B?SmQyUXdiUEhRWHpSQU5Db25pOWhNcUQxeXIwQkIraGk2Sy9rc3RYRXdKcEp1?=
+ =?utf-8?B?cDZwcTN3WU5XK1B5V2docHBFaFlRYzRRNlVxcW14cm44R2RMRDlIRWN4b1hp?=
+ =?utf-8?B?MENReXVHa0lQVUZuWmpBemg1QWtrRCtOd2l3WVM1NWNwZE9lcWM5QzdHRzdX?=
+ =?utf-8?B?T3I1dkhHQTJzSllyWGgydHdlU3Q4OGNjYWpSdkswS2o5emtpbzE0d1M4Znpu?=
+ =?utf-8?B?U0dxUmdqVTVtSGFZOFZ1WkovOGdjaTFKWmdobzZ4SDlXcTVYelBLZWpmTXcv?=
+ =?utf-8?B?OExqMitrNGlVQTlqSjMvRHlOazFVdVJvdFNZZmlqMWlyQTA3REt0dEFDbENT?=
+ =?utf-8?B?K1BnN2tJRWtYcVRURlA2ajJrejFwaFlWMFd2ZWM1OXl6aGd1WVFVd0RVeEtj?=
+ =?utf-8?Q?0zz00vmVa3uHO/Cj3QflfR9oc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fb2c9be-0bc3-4a2f-f422-08dd7b6f095d
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 16:11:38.7420
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aJlomYOckCV5nZ9cJSvGdOPGzyQpnZEUwgE5y4WPwcDI8yBBFtbGyDTDq2Fdle0ykyFJmq3yCBou4OvlLjDnyw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8746
 
-On Sun, Apr 13, 2025 at 05:52:08PM -0500, Ira Weiny wrote:
-> A git tree of this series can be found here:
+On 4/10/25 18:14, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Tom Lendacky wrote:
+>> On 3/20/25 08:26, Tom Lendacky wrote:
+>>> An SEV-ES/SEV-SNP VM save area (VMSA) can be decrypted if the guest
+>>> policy allows debugging. Update the dump_vmcb() routine to output
+>>> some of the SEV VMSA contents if possible. This can be useful for
+>>> debug purposes.
+>>>
+>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>>> ---
+>>>  arch/x86/kvm/svm/sev.c | 98 ++++++++++++++++++++++++++++++++++++++++++
+>>>  arch/x86/kvm/svm/svm.c | 13 ++++++
+>>>  arch/x86/kvm/svm/svm.h | 11 +++++
+>>>  3 files changed, 122 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+>>> index 661108d65ee7..6e3f5042d9ce 100644
+>>> --- a/arch/x86/kvm/svm/sev.c
+>>> +++ b/arch/x86/kvm/svm/sev.c
+>>
+>>> +
+>>> +	if (sev_snp_guest(vcpu->kvm)) {
+>>> +		struct sev_data_snp_dbg dbg = {0};
+>>> +
+>>> +		vmsa = snp_alloc_firmware_page(__GFP_ZERO);
+>>> +		if (!vmsa)
+>>> +			return NULL;
+>>> +
+>>> +		dbg.gctx_paddr = __psp_pa(sev->snp_context);
+>>> +		dbg.src_addr = svm->vmcb->control.vmsa_pa;
+>>> +		dbg.dst_addr = __psp_pa(vmsa);
+>>> +
+>>> +		ret = sev_issue_cmd(vcpu->kvm, SEV_CMD_SNP_DBG_DECRYPT, &dbg, &error);
+>>
+>> This can also be sev_do_cmd() where the file descriptor isn't checked.
+>> Since it isn't really a user initiated call, that might be desirable since
+>> this could also be useful for debugging during guest destruction (when the
+>> file descriptor has already been closed) for VMSAs that haven't exited
+>> with an INVALID exit code.
+>>
+>> Just an FYI, I can change this call and the one below to sev_do_cmd() if
+>> agreed upon.
 > 
-> 	https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-04-13
-> 
-> This is now based on 6.15-rc2.
-> 
-> Due to the stagnation of solid requirements for users of DCD I do not
-> plan to rev this work in Q2 of 2025 and possibly beyond.
-> 
-> It is anticipated that this will support at least the initial
-> implementation of DCD devices, if and when they appear in the ecosystem.
-> The patch set should be reviewed with the limited set of functionality in
-> mind.  Additional functionality can be added as devices support them.
-> 
-> It is strongly encouraged for individuals or companies wishing to bring
-> DCD devices to market review this set with the customer use cases they
-> have in mind.
+> Works for me.  Want to provide a delta patch?  I can fixup when applying.
 
-Hi Ira,
-thanks for sending it out.
+Will do.
 
-I have not got a chance to check the code or test it extensively.
-
-I tried to test one specific case and hit issue.
-
-I tried to add some DC extents to the extent list on the device when the
-VM is launched by hacking qemu like below,
-
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 87fa308495..4049fc8dd9 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -826,6 +826,11 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-     QTAILQ_INIT(&ct3d->dc.extents);
-     QTAILQ_INIT(&ct3d->dc.extents_pending);
- 
-+    cxl_insert_extent_to_extent_list(&ct3d->dc.extents, 0,
-+                                     CXL_CAPACITY_MULTIPLIER, NULL, 0);
-+    ct3d->dc.total_extent_count = 1;
-+    ct3_set_region_block_backed(ct3d, 0, CXL_CAPACITY_MULTIPLIER);
-+
-     return true;
- }
-
-
-Then after the VM is launched, I tried to create a DC region with
-commmand: cxl create-region -m mem0 -d decoder0.0 -s 1G -t
-dynamic_ram_a.
-
-It works fine. As you can see below, the region is created and the
-extent is showing correctly.
-
-root@debian:~# cxl list -r region0 -N
-[
-  {
-    "region":"region0",
-    "resource":79725330432,
-    "size":1073741824,
-    "interleave_ways":1,
-    "interleave_granularity":256,
-    "decode_state":"commit",
-    "extents":[
-      {
-        "offset":0,
-        "length":268435456,
-        "uuid":"00000000-0000-0000-0000-000000000000"
-      }
-    ]
-  }
-]
-
-
-However, after that, I tried to create a dax device as below, it failed.
-
-root@debian:~# daxctl create-device -r region0 -v
-libdaxctl: __dax_regions_init: no dax regions found via: /sys/class/dax
-error creating devices: No such device or address
-created 0 devices
-root@debian:~# 
-
-root@debian:~# ls /sys/class/dax 
-ls: cannot access '/sys/class/dax': No such file or directory
-
-The dmesg shows the really_probe function returns early as resource
-presents before probe as below,
-
-[ 1745.505068] cxl_core:devm_cxl_add_dax_region:3251: cxl_region region0: region0: register dax_region0
-[ 1745.506063] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4801
-[ 1745.506953] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
-[ 1745.507911] cxl_core:__cxl_process_extent_list:1802: cxl_pci 0000:0d:00.0: Got extent list 0-0 of 1 generation Num:0
-[ 1745.508958] cxl_core:__cxl_process_extent_list:1815: cxl_pci 0000:0d:00.0: Processing extent 0/1
-[ 1745.509843] cxl_core:cxl_validate_extent:975: cxl_pci 0000:0d:00.0: DC extent DPA [range 0x0000000000000000-0x000000000fffffff] (DCR:[range 0x0000000000000000-0x000000007fffffff])(00000000-0000-0000-0000-000000000000)
-[ 1745.511748] cxl_core:__cxl_dpa_to_region:2869: cxl decoder2.0: dpa:0x0 mapped in region:region0
-[ 1745.512626] cxl_core:cxl_add_extent:460: cxl decoder2.0: Checking ED ([mem 0x00000000-0x3fffffff flags 0x80000200]) for extent [range 0x0000000000000000-0x000000000fffffff]
-[ 1745.514143] cxl_core:cxl_add_extent:492: cxl decoder2.0: Add extent [range 0x0000000000000000-0x000000000fffffff] (00000000-0000-0000-0000-000000000000)
-[ 1745.515485] cxl_core:online_region_extent:176:  extent0.0: region extent HPA [range 0x0000000000000000-0x000000000fffffff]
-[ 1745.516576] cxl_core:cxlr_notify_extent:285: cxl dax_region0: Trying notify: type 0 HPA [range 0x0000000000000000-0x000000000fffffff]
-[ 1745.517768] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: 0
-[ 1745.524984] cxl dax_region0: Resources present before probing
-
-
-btw, I hit the same issue with the previous verson also.
-
-Fan
-
-> 
-> Series info
-> ===========
-> 
-> This series has 2 parts:
-> 
-> Patch 1-17: Core DCD support
-> Patch 18-19: cxl_test support
-> 
-> Background
-> ==========
-> 
-> A Dynamic Capacity Device (DCD) (CXL 3.1 sec 9.13.3) is a CXL memory
-> device that allows memory capacity within a region to change
-> dynamically without the need for resetting the device, reconfiguring
-> HDM decoders, or reconfiguring software DAX regions.
-> 
-> One of the biggest anticipated use cases for Dynamic Capacity is to
-> allow hosts to dynamically add or remove memory from a host within a
-> data center without physically changing the per-host attached memory nor
-> rebooting the host.
-> 
-> The general flow for the addition or removal of memory is to have an
-> orchestrator coordinate the use of the memory.  Generally there are 5
-> actors in such a system, the Orchestrator, Fabric Manager, the Logical
-> device, the Host Kernel, and a Host User.
-> 
-> An example work flow is shown below.
-> 
-> Orchestrator      FM         Device       Host Kernel    Host User
-> 
->     |             |           |            |               |
->     |-------------- Create region ------------------------>|
->     |             |           |            |               |
->     |             |           |            |<-- Create ----|
->     |             |           |            |    Region     |
->     |             |           |            |(dynamic_ram_a)|
->     |<------------- Signal done ---------------------------|
->     |             |           |            |               |
->     |-- Add ----->|-- Add --->|--- Add --->|               |
->     |  Capacity   |  Extent   |   Extent   |               |
->     |             |           |            |               |
->     |             |<- Accept -|<- Accept  -|               |
->     |             |   Extent  |   Extent   |               |
->     |             |           |            |<- Create ---->|
->     |             |           |            |   DAX dev     |-- Use memory
->     |             |           |            |               |   |
->     |             |           |            |               |   |
->     |             |           |            |<- Release ----| <-+
->     |             |           |            |   DAX dev     |
->     |             |           |            |               |
->     |<------------- Signal done ---------------------------|
->     |             |           |            |               |
->     |-- Remove -->|- Release->|- Release ->|               |
->     |  Capacity   |  Extent   |   Extent   |               |
->     |             |           |            |               |
->     |             |<- Release-|<- Release -|               |
->     |             |   Extent  |   Extent   |               |
->     |             |           |            |               |
->     |-- Add ----->|-- Add --->|--- Add --->|               |
->     |  Capacity   |  Extent   |   Extent   |               |
->     |             |           |            |               |
->     |             |<- Accept -|<- Accept  -|               |
->     |             |   Extent  |   Extent   |               |
->     |             |           |            |<- Create -----|
->     |             |           |            |   DAX dev     |-- Use memory
->     |             |           |            |               |   |
->     |             |           |            |<- Release ----| <-+
->     |             |           |            |   DAX dev     |
->     |<------------- Signal done ---------------------------|
->     |             |           |            |               |
->     |-- Remove -->|- Release->|- Release ->|               |
->     |  Capacity   |  Extent   |   Extent   |               |
->     |             |           |            |               |
->     |             |<- Release-|<- Release -|               |
->     |             |   Extent  |   Extent   |               |
->     |             |           |            |               |
->     |-- Add ----->|-- Add --->|--- Add --->|               |
->     |  Capacity   |  Extent   |   Extent   |               |
->     |             |           |            |<- Create -----|
->     |             |           |            |   DAX dev     |-- Use memory
->     |             |           |            |               |   |
->     |-- Remove -->|- Release->|- Release ->|               |   |
->     |  Capacity   |  Extent   |   Extent   |               |   |
->     |             |           |            |               |   |
->     |             |           |     (Release Ignored)      |   |
->     |             |           |            |               |   |
->     |             |           |            |<- Release ----| <-+
->     |             |           |            |   DAX dev     |
->     |<------------- Signal done ---------------------------|
->     |             |           |            |               |
->     |             |- Release->|- Release ->|               |
->     |             |  Extent   |   Extent   |               |
->     |             |           |            |               |
->     |             |<- Release-|<- Release -|               |
->     |             |   Extent  |   Extent   |               |
->     |             |           |            |<- Destroy ----|
->     |             |           |            |   Region      |
->     |             |           |            |               |
-> 
-> Implementation
-> ==============
-> 
-> This series requires the creation of regions and DAX devices to be
-> closely synchronized with the Orchestrator and Fabric Manager.  The host
-> kernel will reject extents if a region is not yet created.  It also
-> ignores extent release if memory is in use (DAX device created).  These
-> synchronizations are not anticipated to be an issue with real
-> applications.
-> 
-> Only a single dynamic ram partition is supported (dynamic_ram_a).  The
-> requirements, use cases, and existence of actual hardware devices to
-> support more than one DC partition is unknown at this time.  So a less
-> complex implementation was chosen.
-> 
-> In order to allow for capacity to be added and removed a new concept of
-> a sparse DAX region is introduced.  A sparse DAX region may have 0 or
-> more bytes of available space.  The total space depends on the number
-> and size of the extents which have been added.
-> 
-> It is anticipated that users of the memory will carefully coordinate the
-> surfacing of capacity with the creation of DAX devices which use that
-> capacity.  Therefore, the allocation of the memory to DAX devices does
-> not allow for specific associations between DAX device and extent.  This
-> keeps allocations of DAX devices similar to existing DAX region
-> behavior.
-> 
-> To keep the DAX memory allocation aligned with the existing DAX devices
-> which do not have tags, extents are not allowed to have tags in this
-> implementation.  Future support for tags can be added when real use
-> cases surface.
-> 
-> Great care was taken to keep the extent tracking simple.  Some xarray's
-> needed to be added but extra software objects are kept to a minimum.
-> 
-> Region extents are tracked as sub-devices of the DAX region.  This
-> ensures that region destruction cleans up all extent allocations
-> properly.
-> 
-> The major functionality of this series includes:
-> 
-> - Getting the dynamic capacity (DC) configuration information from cxl
->   devices
-> 
-> - Configuring a DC partition found in hardware.
-> 
-> - Enhancing the CXL and DAX regions for dynamic capacity support
-> 	a. Maintain a logical separation between hardware extents and
-> 	   software managed extents.  This provides an abstraction
-> 	   between the layers and should allow for interleaving in the
-> 	   future
-> 
-> - Get existing hardware extent lists for endpoint decoders upon region
->   creation.
-> 
-> - Respond to DC capacity events and adjust available region memory.
->         a. Add capacity Events
-> 	b. Release capacity events
-> 
-> - Host response for add capacity
-> 	a. do not accept the extent if:
-> 		If the region does not exist
-> 		or an error occurs realizing the extent
-> 	b. If the region does exist
-> 		realize a DAX region extent with 1:1 mapping (no
-> 		interleave yet)
-> 	c. Support the event more bit by processing a list of extents
-> 	   marked with the more bit together before setting up a
-> 	   response.
-> 
-> - Host response for remove capacity
-> 	a. If no DAX device references the extent; release the extent
-> 	b. If a reference does exist, ignore the request.
-> 	   (Require FM to issue release again.)
-> 	c. Release extents flagged with the 'more' bit individually as
-> 	   the specification allows for the asynchronous release of
-> 	   memory and the implementation is simplified by doing so.
-> 
-> - Modify DAX device creation/resize to account for extents within a
->   sparse DAX region
-> 
-> - Trace Dynamic Capacity events for debugging
-> 
-> - Add cxl-test infrastructure to allow for faster unit testing
->   (See new ndctl branch for cxl-dcd.sh test[1])
-> 
-> - Only support 0 value extent tags
-> 
-> Fan Ni's upstream of Qemu DCD was used for testing.
-> 
-> Remaining work:
-> 
-> 	1) Allow mapping to specific extents (perhaps based on
-> 	   label/tag)
-> 	   1a) devise region size reporting based on tags
-> 	2) Interleave support
-> 
-> Possible additional work depending on requirements:
-> 
-> 	1) Accept a new extent which extends (but overlaps) already
-> 	   accepted extent(s)
-> 	2) Rework DAX device interfaces, memfd has been explored a bit
-> 	3) Support more than 1 DC partition
-> 
-> [1] https://github.com/weiny2/ndctl/tree/dcd-region3-2025-04-13
-> 
-> ---
-> Changes in v9:
-> - djbw: pare down support to only a single DC parition
-> - djbw: adjust to the new core partition processing which aligns with
->   new type2 work.
-> - iweiny: address smaller comments from v8
-> - iweiny: rebase off of 6.15-rc1
-> - Link to v8: https://patch.msgid.link/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com
-> 
-> ---
-> Ira Weiny (19):
->       cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
->       cxl/mem: Read dynamic capacity configuration from the device
->       cxl/cdat: Gather DSMAS data for DCD partitions
->       cxl/core: Enforce partition order/simplify partition calls
->       cxl/mem: Expose dynamic ram A partition in sysfs
->       cxl/port: Add 'dynamic_ram_a' to endpoint decoder mode
->       cxl/region: Add sparse DAX region support
->       cxl/events: Split event msgnum configuration from irq setup
->       cxl/pci: Factor out interrupt policy check
->       cxl/mem: Configure dynamic capacity interrupts
->       cxl/core: Return endpoint decoder information from region search
->       cxl/extent: Process dynamic partition events and realize region extents
->       cxl/region/extent: Expose region extent information in sysfs
->       dax/bus: Factor out dev dax resize logic
->       dax/region: Create resources on sparse DAX regions
->       cxl/region: Read existing extents on region creation
->       cxl/mem: Trace Dynamic capacity Event Record
->       tools/testing/cxl: Make event logs dynamic
->       tools/testing/cxl: Add DC Regions to mock mem data
-> 
->  Documentation/ABI/testing/sysfs-bus-cxl |  100 ++-
->  drivers/cxl/core/Makefile               |    2 +-
->  drivers/cxl/core/cdat.c                 |   11 +
->  drivers/cxl/core/core.h                 |   33 +-
->  drivers/cxl/core/extent.c               |  495 +++++++++++++++
->  drivers/cxl/core/hdm.c                  |   13 +-
->  drivers/cxl/core/mbox.c                 |  632 ++++++++++++++++++-
->  drivers/cxl/core/memdev.c               |   87 ++-
->  drivers/cxl/core/port.c                 |    5 +
->  drivers/cxl/core/region.c               |   76 ++-
->  drivers/cxl/core/trace.h                |   65 ++
->  drivers/cxl/cxl.h                       |   61 +-
->  drivers/cxl/cxlmem.h                    |  134 +++-
->  drivers/cxl/mem.c                       |    2 +-
->  drivers/cxl/pci.c                       |  115 +++-
->  drivers/dax/bus.c                       |  356 +++++++++--
->  drivers/dax/bus.h                       |    4 +-
->  drivers/dax/cxl.c                       |   71 ++-
->  drivers/dax/dax-private.h               |   40 ++
->  drivers/dax/hmem/hmem.c                 |    2 +-
->  drivers/dax/pmem.c                      |    2 +-
->  include/cxl/event.h                     |   31 +
->  include/linux/ioport.h                  |    3 +
->  tools/testing/cxl/Kbuild                |    3 +-
->  tools/testing/cxl/test/mem.c            | 1021 +++++++++++++++++++++++++++----
->  25 files changed, 3102 insertions(+), 262 deletions(-)
-> ---
-> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
-> change-id: 20230604-dcd-type2-upstream-0cd15f6216fd
-> 
-> Best regards,
-> -- 
-> Ira Weiny <ira.weiny@intel.com>
-> 
+Thanks,
+Tom
