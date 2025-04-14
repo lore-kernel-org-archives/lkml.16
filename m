@@ -1,153 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B2318DF80
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C91F26AD0
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744596793; cv=none; b=ADpYbJAE05laSGg5tadUpaKWy7yTdYgamXsimZactjiMBhQEv6qMLTnJh1nAJLQP4s5XRSf0pepfda+m/oZRZCTVQTQW25icH/2e3pSYrF5lUQUGGdPw5bx2KYBf7z6Hdx/Cc9f9U0tyDP3VsgoBhGaPJR1fyAhJ84DPx0sS4QQ=
+	t=1744596872; cv=none; b=lOyMJM2yU/YFhObG8VyukNvbqAWFXrc9liLnA9pFQO5ZKUu3JHeJKkhKt0+QzrcDrTzarh4k6nMTvXsiCgU4Nwcg8wCgjjmD9NS/2Zv6ykE3f+QR/lASqAnwQvpgms1BgsOjUrONmZM3E6T5WXfiwOL8AuWapVCktzWIZJtx5CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744596793; c=relaxed/simple;
-	bh=M9u8GhzSuXNi2zRw5UTGbv3kuYBa26qTcGgdOIkDTc4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qxL2eNpOsAH8kSL8BV2PkAStwtFZvpsZ6WO/W2cR0DX6WZ6SkR3iFIoIKnvOquf7c9OlCufKGEl39H85X2Boo2M/0mv/ZRAMi8Kh3gF+3bON5iE3s4F+jLSFI/DDbGDzOOyNUv/knJXuSAtdkJ6Y51LRY52MNK0J9afvolOoRJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hoxrYWzz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hoxrYWzz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744596790;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cWd3wodO+vJYf6OkqNBmP1cg6W0V7cLt+fJ3yVah9lQ=;
-	b=hoxrYWzzQBtDjqh8GvmMCewrbo+xpdoT/dbQ03tg61Yhq+JmeJyJPiQLExaFi4e/cKetyh
-	kwgqOHgqFU0RPHGzFPaxzOJiu/W938KErzPGQvHvgRmXcrlvb7XvStHVMc8005bI5Xj+7X
-	Wp//WBes4kTsTBcLKgbHqz6QaHXeGhI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-500-iG2B4VqjNJyB-FSbxmYGvw-1; Sun,
- 13 Apr 2025 22:13:09 -0400
-X-MC-Unique: iG2B4VqjNJyB-FSbxmYGvw-1
-X-Mimecast-MFC-AGG-ID: iG2B4VqjNJyB-FSbxmYGvw_1744596787
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CCF5D1955DC5;
-	Mon, 14 Apr 2025 02:13:06 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.88.48])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 11E63180B488;
-	Mon, 14 Apr 2025 02:13:02 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH v6 2/2] selftests: memcg: Increase error tolerance of child memory.current check in test_memcg_protection()
-Date: Sun, 13 Apr 2025 22:12:49 -0400
-Message-ID: <20250414021249.3232315-3-longman@redhat.com>
-In-Reply-To: <20250414021249.3232315-1-longman@redhat.com>
-References: <20250414021249.3232315-1-longman@redhat.com>
+	s=arc-20240116; t=1744596872; c=relaxed/simple;
+	bh=1ZwwdYTGU5eP1PvszW23eXK3SXV/9wrKU1PZuxVNGq8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=A4/Rc1mmMaH0EEt4wSteOfp06yndwzweoJBh2o//mrJsmCUZTcfQUsP/F2Uvtpq2ekM3cI3zbELbLN9T7oFu2+g7xRvdaFKDa+e/ygvoVbGHxOfslKT3knxeKMvGBL1WSnhlcLuQIeTOD7hO2OGfy+2JlSpAqEIMwXCu/InKzI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso38015005ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 19:14:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744596869; x=1745201669;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B4U3vm5KyLDVe813rGEZxD6jhF3GorwL/kZbe5pwLbA=;
+        b=RFAnbYl4ifCoCvGqPIfdqGjcDkfStPp7NRMbxYLSYs5g7u9fFh8SvvVuiZSvbb++Rx
+         hP7bg/QZJM25v93irVdAdkaz1tl1KyMyC1FsoBoSw0olEEr2ufyJiJ7lRMqJ7oaIAd5r
+         wuFfz3EjOCCKFoMihdGZAa/Tt5oQNLEqmchjguuaYmEhEZqoCYfoTl02+h9EhnUhJeGN
+         /mzbtloRrykdmtTjS1Ns0mPHwlEhUfGGKi0o0GhaBfpQXrz7gyVTbwrFW6DnMArFoNf5
+         fXT2ig4sWCQTREhMZhzcju+xABmbIhIcATGX5JRe/Jws3rwpUCBye6uMspZ7J0U9YQSO
+         wyLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmiVpYsZvlDVKb4Po74XmcdSrMoGh7RexQjQiXhISpFfh3xBSrpbU4qyGbH+QlRcx9029PUFgWC1LBEk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc9wtzKWBwc+o+TuNrrTev0F7ICQK8GNRHtivTat80FGtA7V/e
+	mMhYX12wHwVosWxZQBT+7JBqbyhiUbmTlJQEePq6q7mbsOYHtTf3aDAbUcAdNJIyJP2nSSuvyIB
+	keREraZ1/YEO9ScUW4QWfUOiODG8JMy9YuYY5HQyCwiMq0VeLT472PdI=
+X-Google-Smtp-Source: AGHT+IGDSvTUmB4gCQMpiUIkgtkxZWWUgx12ReBIKshV37JfP7dx3ZEyF1LvEpAywzJVhlykljAbiZP/1u8AKO4bK9b4Bz3yO3wr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Received: by 2002:a05:6e02:2601:b0:3d4:3ab3:5574 with SMTP id
+ e9e14a558f8ab-3d7ec1dd010mr117782695ab.3.1744596869451; Sun, 13 Apr 2025
+ 19:14:29 -0700 (PDT)
+Date: Sun, 13 Apr 2025 19:14:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fc6f85.050a0220.2970f9.039d.GAE@google.com>
+Subject: [syzbot] [net?] WARNING in netdev_nl_dev_fill
+From: syzbot <syzbot+ab6046c8981706660600@syzkaller.appspotmail.com>
+To: almasrymina@google.com, davem@davemloft.net, edumazet@google.com, 
+	horms@kernel.org, jdamato@fastly.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	sdf@fomichev.me, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The test_memcg_protection() function is used for the test_memcg_min and
-test_memcg_low sub-tests. This function generates a set of parent/child
-cgroups like:
+Hello,
 
-  parent:  memory.min/low = 50M
-  child 0: memory.min/low = 75M,  memory.current = 50M
-  child 1: memory.min/low = 25M,  memory.current = 50M
-  child 2: memory.min/low = 0,    memory.current = 50M
+syzbot found the following issue on:
 
-After applying memory pressure, the function expects the following
-actual memory usages.
+HEAD commit:    311920774c40 configs/debug: run and debug PREEMPT
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15fe37e4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+dashboard link: https://syzkaller.appspot.com/bug?extid=ab6046c8981706660600
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1594f74c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c5723f980000
 
-  parent:  memory.current ~= 50M
-  child 0: memory.current ~= 29M
-  child 1: memory.current ~= 21M
-  child 2: memory.current ~= 0
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5e03f27bfdf3/disk-31192077.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a331144c511b/vmlinux-31192077.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/50e193bbfbdd/bzImage-31192077.xz
 
-In reality, the actual memory usages can differ quite a bit from the
-expected values. It uses an error tolerance of 10% with the values_close()
-helper.
+The issue was bisected to:
 
-Both the test_memcg_min and test_memcg_low sub-tests can fail
-sporadically because the actual memory usage exceeds the 10% error
-tolerance. Below are a sample of the usage data of the tests runs
-that fail.
+commit 99e44f39a8f7138f8b9d2bd87b17fceb483f8998
+Author: Jakub Kicinski <kuba@kernel.org>
+Date:   Tue Apr 8 19:59:53 2025 +0000
 
-  Child   Actual usage    Expected usage    %err
-  -----   ------------    --------------    ----
-    1       16990208         22020096      -12.9%
-    1       17252352         22020096      -12.1%
-    0       37699584         30408704      +10.7%
-    1       14368768         22020096      -21.0%
-    1       16871424         22020096      -13.2%
+    netdev: depend on netdev->lock for xdp features
 
-The current 10% error tolerenace might be right at the time
-test_memcontrol.c was first introduced in v4.18 kernel, but memory
-reclaim have certainly evolved quite a bit since then which may result
-in a bit more run-to-run variation than previously expected.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1519f23f980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1719f23f980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1319f23f980000
 
-Increase the error tolerance to 15% for child 0 and 20% for child 1 to
-minimize the chance of this type of failure. The tolerance is bigger
-for child 1 because an upswing in child 0 corresponds to a smaller
-%err than a similar downswing in child 1 due to the way %err is used
-in values_close().
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ab6046c8981706660600@syzkaller.appspotmail.com
+Fixes: 99e44f39a8f7 ("netdev: depend on netdev->lock for xdp features")
 
-Before this patch, a 100 test runs of test_memcontrol produced the
-following results:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5842 at ./include/net/netdev_lock.h:17 netdev_assert_locked include/net/netdev_lock.h:17 [inline]
+WARNING: CPU: 0 PID: 5842 at ./include/net/netdev_lock.h:17 netdev_nl_dev_fill+0x6bc/0x860 net/core/netdev-genl.c:41
+Modules linked in:
+CPU: 0 UID: 0 PID: 5842 Comm: syz-executor216 Not tainted 6.14.0-syzkaller-13332-g311920774c40 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:netdev_assert_locked include/net/netdev_lock.h:17 [inline]
+RIP: 0010:netdev_nl_dev_fill+0x6bc/0x860 net/core/netdev-genl.c:41
+Code: 1c 24 44 29 eb 4c 89 e8 48 c1 e8 03 42 0f b6 04 38 84 c0 0f 85 4a 01 00 00 41 89 5d 00 31 c0 e9 4d fe ff ff e8 e5 ed c4 f7 90 <0f> 0b 90 e9 2c fa ff ff e8 d7 ed c4 f7 90 0f 0b 90 42 80 3c 3b 00
+RSP: 0018:ffffc90004166a20 EFLAGS: 00010293
+RAX: ffffffff89fe695b RBX: 0000000000000000 RCX: ffff8880303b5a00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90004166b50 R08: ffffffff89fe637c R09: 1ffff11009e4f5dc
+R10: dffffc0000000000 R11: ffffed1009e4f5dd R12: ffff88803259c000
+R13: ffff888034e433c0 R14: ffff888034e433c0 R15: ffffc90004166ba0
+FS:  000055557df6b480(0000) GS:ffff888124f96000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f95074a6b30 CR3: 000000007d20e000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ netdev_genl_dev_notify+0x1fb/0x450 net/core/netdev-genl.c:102
+ netdev_genl_netdevice_event+0x81/0xa0 net/core/netdev-genl.c:-1
+ notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2273 [inline]
+ call_netdevice_notifiers net/core/dev.c:2287 [inline]
+ register_netdevice+0x16c0/0x1b80 net/core/dev.c:11109
+ cfg80211_register_netdevice+0x149/0x2f0 net/wireless/core.c:1490
+ ieee80211_if_add+0x119b/0x1780 net/mac80211/iface.c:2225
+ ieee80211_register_hw+0x3718/0x42d0 net/mac80211/main.c:1604
+ mac80211_hwsim_new_radio+0x2adc/0x4a60 drivers/net/wireless/virtual/mac80211_hwsim.c:5559
+ hwsim_new_radio_nl+0xed0/0x2290 drivers/net/wireless/virtual/mac80211_hwsim.c:6243
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb38/0xf00 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:727
+ __sys_sendto+0x365/0x4c0 net/socket.c:2180
+ __do_sys_sendto net/socket.c:2187 [inline]
+ __se_sys_sendto net/socket.c:2183 [inline]
+ __x64_sys_sendto+0xde/0x100 net/socket.c:2183
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f95074f6dac
+Code: ba 56 02 00 44 8b 4c 24 2c 4c 8b 44 24 20 89 c5 44 8b 54 24 28 48 8b 54 24 18 b8 2c 00 00 00 48 8b 74 24 10 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 34 89 ef 48 89 44 24 08 e8 00 57 02 00 48 8b
+RSP: 002b:00007ffe66048c60 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00007f950757f300 RCX: 00007f95074f6dac
+RDX: 0000000000000024 RSI: 00007f950757f350 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 00007ffe66048cb4 R09: 000000000000000c
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000001
+R13: 0000000000000000 R14: 00007f950757f350 R15: 0000000000000000
+ </TASK>
 
-     17 not ok 1 test_memcg_min
-     22 not ok 2 test_memcg_low
 
-After applying this patch, there were no test failure for test_memcg_min
-and test_memcg_low in 100 test runs. However, these tests may still fail
-once in a while if the memory usage goes beyond the newly extended range.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
-index 5a5dcbe57b56..2ef07b8fa718 100644
---- a/tools/testing/selftests/cgroup/test_memcontrol.c
-+++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-@@ -495,10 +495,10 @@ static int test_memcg_protection(const char *root, bool min)
- 	for (i = 0; i < ARRAY_SIZE(children); i++)
- 		c[i] = cg_read_long(children[i], "memory.current");
- 
--	if (!values_close(c[0], MB(29), 10))
-+	if (!values_close(c[0], MB(29), 15))
- 		goto cleanup;
- 
--	if (!values_close(c[1], MB(21), 10))
-+	if (!values_close(c[1], MB(21), 20))
- 		goto cleanup;
- 
- 	if (c[3] != 0)
--- 
-2.48.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
