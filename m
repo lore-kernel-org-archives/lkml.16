@@ -1,172 +1,236 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23360263F37
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6094E257AFA;
+	Mon, 14 Apr 2025 09:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624570; cv=none; b=RCqUkBVD6e2xXXPoAoe5wqOcm6SfmTQin8ckgPbLWOUVHh4GCbvDumXlAUrw8RGvtXjqFN+ncz1CyxiQTs6YkfVuoFgkpgbJe22Iau7ou3uvTeCrI0RPU+jFgxcgCsX3Ehd0c8rGSL+hi+X4EEfePZFB1dg9+3wqLewuEkvtF2c=
+	t=1744624640; cv=none; b=uhjOM43zQ4oDFIkcUJwlnwuLuD2iN06AtwCS0x2fu6ZMKHeB0x6obdr6cqqfP6TdwijjB+RWkMe+BNLCmLMT8o4dgMg3gE++ngwrBB8RcKTkc8WZ0vIOY/a/xwj06nyvgLb/Awl6kbbHx9G8ZI51bc3CssOgKmwL5sUI6koIbh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624570; c=relaxed/simple;
-	bh=OV1EzzxU6BT+4RXWgFZVQIO7++2gzfwNYAlmrRPG1S8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sWGbOI/ZWAkyLc/a2zPuEFFb1dwj4l8fzdMtHq2KKQqkOaIoe7irS6cLx9/asEnmlbNYcZvn0qT1L7x0ISf5Kx46m+lOO1rM8PwxuhVHvv4iipXH7MeKigF1dvar1dkia7q4RkfCSJlqLVqV2HQnpImn1yABZFRuJRur4HnUufU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u4GXS-0007bO-1c; Mon, 14 Apr 2025 11:55:38 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u4GXQ-000EF7-1a;
-	Mon, 14 Apr 2025 11:55:36 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 1E13C3F82E7;
-	Mon, 14 Apr 2025 09:55:36 +0000 (UTC)
-Date: Mon, 14 Apr 2025 11:55:34 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>, 
-	Maxime Ripard <mripard@kernel.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
-	imx@lists.linux.dev, Christophe Lizzi <clizzi@redhat.com>, 
-	Alberto Ruiz <aruizrui@redhat.com>, Enric Balletbo <eballetb@redhat.com>, 
-	Eric Chanudet <echanude@redhat.com>, Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	kernel@pengutronix.de
-Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
-Message-ID: <20250414-camouflaged-silver-dodo-d0c000-mkl@pengutronix.de>
-References: <20250414073646.1473157-1-ciprianmarian.costea@oss.nxp.com>
+	s=arc-20240116; t=1744624640; c=relaxed/simple;
+	bh=7GgL3xtvI7pnGeuvq9RVd04janbGJVSlvm5BxXVmlgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TG6CkPW8aFgZyMD3JFNiLry3LAIKkiIHj+CnKE4VRqKlioBZZk3paXkLJv2X0qTCtoLBMbvTdIAwp5ZN/eHGdfURTg1KXF25p8rkbM2CG8GQKSrzmAj5TYA0bzzmsC8cpVo8EEaG30TEAS63kKOCVl1pQ4I/JasjJqWe7ONQRxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZHx+w8bl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZHx+w8bl"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99qRt011398;
+	Mon, 14 Apr 2025 09:56:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4VHC8WYpl+uLggBA75zLhVV+Fe7u1dbbrYvZ0DxrmwE=; b=ZHx+w8blJmgNpPdx
+	ZuI3JHLeJJ0EpXJT9Ql1p0pzljSctU6IqOmkcWjmvFvL0DaVexXTM/08XA6ySM5o
+	6HG3jxqUIinw+R9LFxJfIsiQrc6OmW+heO8sB77+Eromy1i4v2bJAxWJW4Cj3HcN
+	ckbQYSU2r7BMkKd1v9pl7YtuUXV+rZyJOQ+qUCczugtsY0L7a2Jyut58Rn9W1iak
+	YOvRUtKSc2/iq+enK+jjyQ2ovoYtw+BRn+CV2q3pHfbEXVRnMjPWtyLHX5uAjr1J
+	clJV25yfr36AJRivRDT+/vO9tbJnVIsqHzlZ3R7bvHJGzJYP++Ji7hubdSa4xfWk
+	b4V8Iw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wc2u6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 09:56:54 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E9ur1R006022
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 09:56:53 GMT
+Received: from [10.204.66.137] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 02:56:46 -0700
+Message-ID: <bb277124-a225-450b-acfe-0acd0f94b263@quicinc.com>
+Date: Mon, 14 Apr 2025 15:26:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="emwb45a7ubtws4mt"
-Content-Disposition: inline
-In-Reply-To: <20250414073646.1473157-1-ciprianmarian.costea@oss.nxp.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robdclark@gmail.com>, <dmitry.baryshkov@linaro.org>,
+        <sean@poorly.run>, <marijn.suijten@somainline.org>,
+        <andersson@kernel.org>, <robh@kernel.org>, <robh+dt@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@gmail.com>, <quic_abhinavk@quicinc.com>,
+        <quic_rajeevny@quicinc.com>, <quic_vproddut@quicinc.com>,
+        <quic_jesszhan@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+ <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
+ <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
+Content-Language: en-US
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fcdbe7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=8v7svmj6aq3A3Q3kazgA:9
+ a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 8Z-j7vyNj4iUSOfE710VIG7ZGQwXoleI
+X-Proofpoint-GUID: 8Z-j7vyNj4iUSOfE710VIG7ZGQwXoleI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140072
 
+Hi Dmitry,
 
---emwb45a7ubtws4mt
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
-MIME-Version: 1.0
+On 4/11/2025 1:31 AM, Dmitry Baryshkov wrote:
+> On Thu, Apr 10, 2025 at 06:37:54PM +0530, Ayushi Makhija wrote:
+>> Hi Dmirity/Konard
+>>
+>> On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+>>> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+>>>> Add anx7625 DSI to DP bridge device nodes.
+>>>>
+>>>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+>>>>  1 file changed, 207 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>> index 175f8b1e3b2d..8e784ccf4138 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>> @@ -28,6 +28,13 @@ chosen {
+>>>>  		stdout-path = "serial0:115200n8";
+>>>>  	};
+>>>>  
+>>>> +	vph_pwr: vph-pwr-regulator {
+>>>> +		compatible = "regulator-fixed";
+>>>> +		regulator-name = "vph_pwr";
+>>>> +		regulator-always-on;
+>>>> +		regulator-boot-on;
+>>>> +	};
+>>>> +
+>>>>  	vreg_conn_1p8: vreg_conn_1p8 {
+>>>>  		compatible = "regulator-fixed";
+>>>>  		regulator-name = "vreg_conn_1p8";
+>>>> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+>>>>  			};
+>>>>  		};
+>>>>  	};
+>>>> +
+>>>> +	dp-dsi0-connector {
+>>>> +		compatible = "dp-connector";
+>>>> +		label = "DSI0";
+>>>> +		type = "full-size";
+>>>> +
+>>>> +		port {
+>>>> +			dp_dsi0_connector_in: endpoint {
+>>>> +				remote-endpoint = <&dsi2dp_bridge0_out>;
+>>>> +			};
+>>>> +		};
+>>>> +	};
+>>>> +
+>>>> +	dp-dsi1-connector {
+>>>> +		compatible = "dp-connector";
+>>>> +		label = "DSI1";
+>>>> +		type = "full-size";
+>>>> +
+>>>> +		port {
+>>>> +			dp_dsi1_connector_in: endpoint {
+>>>> +				remote-endpoint = <&dsi2dp_bridge1_out>;
+>>>> +			};
+>>>> +		};
+>>>> +	};
+>>>>  };
+>>>>  
+>>>>  &apps_rsc {
+>>>> @@ -517,9 +548,135 @@ &i2c11 {
+>>>>  
+>>>>  &i2c18 {
+>>>>  	clock-frequency = <400000>;
+>>>> -	pinctrl-0 = <&qup_i2c18_default>;
+>>>> +	pinctrl-0 = <&qup_i2c18_default>,
+>>>> +		    <&io_expander_intr_active>,
+>>>> +		    <&io_expander_reset_active>;
+>>>
+>>> These pinctrl entries should go to the IO expander itself.
+>>>
+>>>>  	pinctrl-names = "default";
+>>>> +
+>>>>  	status = "okay";
+>>>> +
+>>>> +	io_expander: gpio@74 {
+>>>> +		compatible = "ti,tca9539";
+>>>> +		reg = <0x74>;
+>>>> +		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>>> +		gpio-controller;
+>>>> +		#gpio-cells = <2>;
+>>>> +		interrupt-controller;
+>>>> +		#interrupt-cells = <2>;
+>>>> +
+>>>> +		gpio2-hog {
+>>>
+>>> This needs a huuge explanation in the commit message. Otherwise I'd say
+>>> these pins should likely be used by the corresponding anx bridges.
+>>
+>> Thanks, for the review.
+>>
+>> Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
+>> After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
+>> to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
+>> ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
+> 
+> Please make sure that there are pinctrl entries for all pins.
+> 
 
-On 14.04.2025 10:36:46, Ciprian Costea wrote:
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
->=20
-> The FlexCan driver assumes that the frequency of the 'per' clock can be
-> obtained even on disabled clocks, which is not always true.
->=20
-> According to 'clk_get_rate' documentation, it is only valid once the clock
-> source has been enabled.
+Thanks, for the review.
 
-In commit bde8870cd8c3 ("clk: Clarify clk_get_rate() expectations")
-Maxime Ripard changed the documentation of the of the function in clk.c
-to say it's allowed. However clk.h states "This is only valid once the
-clock source has been enabled.".
+While declaring the pinctrl entries inside the io_expander node, I am getting below error while checking the DTBS check against DT-binding.
 
-I've added the common clock maintainers to Cc.
+Error : /local/mnt/workspace/amakhija/linux_next_11042025/linux/arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: gpio@74: 'dsi0-int-pin-state', 'dsi1-int-pin-state' do not match any of the regexes:
+        '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+' from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
 
-Which documentation is correct? Is the clk.h correct for archs not using
-the common clock framework?
+        io_expander: gpio@74 {
+                compatible = "ti,tca9539";
+                reg = <0x74>;
+                interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                interrupt-controller;
+                #interrupt-cells = <2>;
 
-regards,
-Marc
+                pinctrl-0 = <&io_expander_intr_active>,
+                            <&io_expander_reset_active>;
+                pinctrl-names = "default";
 
-> Co-developed-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> ---
->  drivers/net/can/flexcan/flexcan-core.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
-xcan/flexcan-core.c
-> index 6d80c341b26f..b142aa60620e 100644
-> --- a/drivers/net/can/flexcan/flexcan-core.c
-> +++ b/drivers/net/can/flexcan/flexcan-core.c
-> @@ -2056,6 +2056,26 @@ static int flexcan_setup_stop_mode(struct platform=
-_device *pdev)
->  	return 0;
->  }
-> =20
-> +static unsigned long get_per_clk_rate(struct clk *clk)
-> +{
-> +	unsigned long rate;
-> +	int err;
-> +
-> +	rate =3D clk_get_rate(clk);
-> +	if (rate)
-> +		return rate;
-> +
-> +	/* Just in case this clock is disabled by default */
-> +	err =3D clk_prepare_enable(clk);
-> +	if (err)
-> +		return 0;
-> +
-> +	rate =3D clk_get_rate(clk);
-> +	clk_disable_unprepare(clk);
-> +
-> +	return rate;
-> +}
-> +
->  static const struct of_device_id flexcan_of_match[] =3D {
->  	{ .compatible =3D "fsl,imx8qm-flexcan", .data =3D &fsl_imx8qm_devtype_d=
-ata, },
->  	{ .compatible =3D "fsl,imx8mp-flexcan", .data =3D &fsl_imx8mp_devtype_d=
-ata, },
-> @@ -2137,7 +2157,7 @@ static int flexcan_probe(struct platform_device *pd=
-ev)
->  			dev_err(&pdev->dev, "no per clock defined\n");
->  			return PTR_ERR(clk_per);
->  		}
-> -		clock_freq =3D clk_get_rate(clk_per);
-> +		clock_freq =3D get_per_clk_rate(clk_per);
->  	}
-> =20
->  	irq =3D platform_get_irq(pdev, 0);
-> --=20
-> 2.45.2
->=20
->=20
+                dsi0_int_pin: dsi0-int-pin-state {
+                        pins = "gpio2";
+                        input-enable;
+                        bias-disable;
+                };
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+                dsi1_int_pin: dsi1-int-pin-state {
+                        pins = "gpio10";
+                        input-enable;
+                        bias-disable;
+                };
 
---emwb45a7ubtws4mt
-Content-Type: application/pgp-signature; name="signature.asc"
+        };
 
------BEGIN PGP SIGNATURE-----
+I couldn't find any devicetree example of tca9539 which is using pinctrl. The gpio-pca95xx.yaml DT binding does not match with any regex of the patterns properties.
 
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf825MACgkQDHRl3/mQ
-kZyPOgf/ZK/dctPrRanQ8cESl0HysD5WUyHjOnGz8QheSqA3FaUsQ5v4t1bvSEyL
-f0iPY0c9UoUe2aDDRppY4lSMjeiXg3YVaJLd1nBBOwUsF+SZ/WySZ3UaWGdYV+sN
-jQk+Hok8HJ4zeW2teZ03GMUJBfgmKDhiil/xmls0arclzXxoFe1vwcuvKObVoqAg
-s/6gspWKEoKBul0N+M2LkFOO2hUg7W1q/yYqZzs5PPnkHXWo28eTLLUIzenzhShW
-B3J9GopR7Q5Bphv31Djkt3afp2h8iqoQgv1Dql9XejSNG37kUbpP9b9TXltrVKDN
-OVjasVrqFdBKezzIqAF77aB9ZdzYaw==
-=PwcY
------END PGP SIGNATURE-----
-
---emwb45a7ubtws4mt--
+Thanks,
+Ayushi
