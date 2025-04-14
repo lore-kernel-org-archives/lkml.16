@@ -1,101 +1,104 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814B723D2AF;
-	Mon, 14 Apr 2025 14:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF449187858
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639866; cv=none; b=qw/xBGJcke7Th8wUoJnRWHTk1g4cyPzJuZa0xbUzdjyoiVAhyuiNJjNCrpCVJZPemtdYPiDBVtFb5HVOtWmKkADR0c/+++cd8nIeOYSpifG9JSS6QcAqNrvJGrjK2vWtq9VSE4W/oGbfDPZXTsz8g1So7IXcLPgETlKAyDx8DxI=
+	t=1744639890; cv=none; b=fg4dxaKnyx0wYnxgaAZs/YgiH0RvMi/HMJWK3wXBsjznTsGYgZMJKbJfx1s0yqIqw4rhzJEYN5pxmtD/zBP8F91PskPTrvXAMYnLkOnFHNA16PgXSGE0JyL7E9JGBMMuLJlwN4/BEqSU3wHkvtpurwWZKq8IU4xOM9mUMb2ccUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639866; c=relaxed/simple;
-	bh=2UF1+d4niNyOW8VA+r1HnFvlvMrBYZBQGW+6Ol6wzTU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UlBh/kyw75YekILOkiSORSRmIYgJs25bLrLCRFqjsqbvq4LfHeJbBpiaQMUcbPuh8dznqLYEzKMitZrZ1lh2UISRdH1ubeb+347BgmYWr803Pp7sagSXMypR2vfIgNHUiQlapa0QMJ+qTfHlaOqVa3j94CFEL8htnHaAcdUbvqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBbBEZgz; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744639890; c=relaxed/simple;
+	bh=tEuPCZrbW4uGWbDihJx7L/LXb8gjOIKkMgf9s/m/B/w=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=l//rLd1FubW5Y6s+7D0to3J7H0F8lXM6Ov+YvAtuRkpAOZb7zZk6pB9eyavcxYIxLvnCaY9v8o7U/GuGY9P7DyA/BQlt6l8kiZQ2r6531oJ/1+rmI2258Tw0Z6ZzXuui2kt3nNs4Gi5r4cURD5/DNNDV1MXjRZl8tmchWLcDCeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2PVqUfvb; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBbBEZgz"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so860975966b.3;
-        Mon, 14 Apr 2025 07:11:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2PVqUfvb"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af28bc68846so3868063a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744639863; x=1745244663; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2UF1+d4niNyOW8VA+r1HnFvlvMrBYZBQGW+6Ol6wzTU=;
-        b=hBbBEZgzBI6VAJ6QJ6z801z8cKRKRp5BlHt0wxbfGYh1i/Ll3CxXYFDLVqysnVUP5z
-         JyQpuqDe9+x4JfPxkaABK7vFZyungHo24DmlP8b5bSKTqr6ndNvU2hUQ9oLvJkTpvBud
-         xe9IKcLwoA5yBapuHXNpuKTGt/NDBAreczuk6lzwroAj7IAFdmgDb7s3xYYC3SvJORRS
-         4fdDrF3mbGDbSe8wfzvYYsxaaXoA/R+IYO3Xy++YCCqKBc1O7JQ/J4Nle31grjiymSeB
-         AFPXF+5H5XeajHxGOb0ku04lPSb2qQie2s+ShQ8pcullZsHVZ5YP2x0ul9kaEC07xgCy
-         L0yA==
+        d=google.com; s=20230601; t=1744639888; x=1745244688; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rN4c8fNLuwFLiyiUAz0qlqS5AwW3WCou4y1O1Fl9+04=;
+        b=2PVqUfvbZna/Ovn8a325o9ELiN6ZsBlYz2OE4q9/PymbpBw+8bwQ19YAVZPcJEfRxJ
+         mY7bezvuBI+z5TMQvO4d/jWAC3U+xNppFFNRC9pbe114h9rxZwktkFqwnLP/FrmS2VEy
+         juIfDkSoyiQ+Tj3yVStiVVx1CW3EHn7fTKEahiWuKZJIfu9VNlTH5Dy2baCBqm0kKMGS
+         OoF0WL6kmImMMXLmoYjAVyq4WYU75O2iWfTOV8/h7heNtPSMH0ZTOb+281ZXoj28Edzv
+         ZdTyUf4qpbEGJmvvfjoPIifk3WnI9FgT15vTLTHZtXFJKgLwLl4YMqfxTticIbHWo+R3
+         G04g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744639863; x=1745244663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2UF1+d4niNyOW8VA+r1HnFvlvMrBYZBQGW+6Ol6wzTU=;
-        b=IRvP1J4IX+WVmW7iZtAB6gb5OdHMtsoB/kwW69Ndd1U8EfbX+/QowuxvVK6MvPOBPB
-         njk5cjVg1eb3Bpmiz9EXwg5QoI6YovFfad4O1oUtheYvLQnbp+aV4q3WCq6QvEG4JnTc
-         TcOINzO+7g4OQNc34kK7Nq1zmiuOib0A4iNvrxKgqdlqI8E8C0FZ5nj4uMl7OXXhygZX
-         UEdaL5QbR8XXmt7JW0QFK7ykksPIX3HG7/c9ecrL1wKXp9LFXYcopqAaddU1cEFwE9X7
-         codxZrKslJT1xr6wI0CbnFi2T9CA3MIk1zE0LJp1bKrX4Hb1zQXHPj90yElt3ZOk+5/C
-         xDog==
-X-Forwarded-Encrypted: i=1; AJvYcCVYaYylHIFMlOa1oorNbhHcM+TcGZFjrD2zKrTEwh/p2yuhKDBpzcW0nPMCjONf8+Gu30zeZexqFMANqmeIz8S+@vger.kernel.org, AJvYcCVnGs/s7NT/NBDmN5q0/LHH8rhx+ghYw2ZiVhPRZdPUWKUVmw1G5w5Avm8Ys3M1eAO6nXBbY9b6ZsizX8wj@vger.kernel.org, AJvYcCWz8+UJ+4Lc8y3ZC/PKML+lKOMh9JkXSO9lzdw1I72j6cHQIC1co2vbTMBHXqvGU61Zd3Pd6YjV@vger.kernel.org, AJvYcCX827BtMS4phjE+Xrm+BxwmiSXnAiVHnQfcW8rABY4lYLzgW1BxCRaVs4CooFIlGAGmFtQdlDlYfdyW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTPTSV5vK8dc4rN6zGoEK2FiQGo5ivQlEel852BMhd1as+26ed
-	0X/D3iS2tfP3myfc8HW3L2jw4hhvWs+f0nExtY7iIYNgvErfuV0yaWe0pJKCYbpElBIiPqX40Au
-	0rfdV6P2/aeGWgOLYMDfzmvosR+Y=
-X-Gm-Gg: ASbGncuyfV11xZW2rPKbazH9qPAIQ8zuAKV54lnZ7s2nQ23wdzNYTqnyvi83ASBZ8hQ
-	H7OXuV1bpnlrfTVaKIo/GVHPMb3Mlv2k9HxxFOG1G+gyoKaYqry8O66fDerczsfo9LEkVAIjSQo
-	LjJ0A1A6yCEUDxIO0S1zgQTA==
-X-Google-Smtp-Source: AGHT+IFoPgrticcftSCZx1LGPInW+lGPNUg8jlDa6rvGb7o/dXr02rm19k0XwSHPZJei1J02/SX8L17QergcAsaWUv8=
-X-Received: by 2002:a17:907:728e:b0:ac7:391a:e158 with SMTP id
- a640c23a62f3a-acad36c3b7fmr979623666b.59.1744639862468; Mon, 14 Apr 2025
- 07:11:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744639888; x=1745244688;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rN4c8fNLuwFLiyiUAz0qlqS5AwW3WCou4y1O1Fl9+04=;
+        b=J86fPR2F0v3b4/ZMkRIcaGgWkGWGQXN0hw552sL+rkzFVERiruTgyHUwyulZWA09pT
+         3UMSKGbqHAZoG2+oCFW9GKRo1Ig17qLk0pSbO5e9lOXR8esm6rh/7TgGbjvpsUzWTRUj
+         nMDYQBqm4HKU9zL/XQClK/ZSV3nGcjrWXuRyqWMuMW9I2WSeh/85ZedQuQ6fSXYkqhX7
+         VhvPfXHESJklZmqDadXkfBEnAKPtrDRFGGWxWBeZcNefDpE63xZTUMrsPX+NeJNmvWXA
+         wZ4WCXZr0hm3WNisA1DQ+EhIm8QoxG7g8eH0KIgGBOKTOQYCyIM/Cs2PWvn3P/5X9ufY
+         OXeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAkPzflRqfUjaAgD1Ul5WErerzv7I89TP2YY61b05zuL9FUqcr/CkfXsgET8yOzrQyJRhfH3oi4POm7gk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzd3OpvQjKhzGXma2ufdVEDst4UTI7qu5AogjNef6oLR5+dTlG
+	A5uWlD4zpPFER9yka1pG0Qq1o11Tgdgw+CBuCh/XpfBr7pXVG+OrzGPPxJqhF9Yv4AWqFdWcQD8
+	7s5OndT7OWr3OtWDQPyMdEZSFpFtQ1BMO+6fW
+X-Gm-Gg: ASbGncvceK6U0Ni1fKxzV8l+kRtPDJ1d9xdXt9jLKz0FHCcXwtE42X6maQuyhITCa+H
+	7C23Xa/upgm9mTytFBCd57+ZHZebyitjqFfByNX+o7n89Rg2FmMDRCjQC+tOkR0VFHWYuHhZgiv
+	Nq9uOozvc4A0ltw4DHZAOO8aXF+F1hqtpwRM2048ZdGKhvjJqSzYA=
+X-Google-Smtp-Source: AGHT+IGvcRdqaiufKsFDDDQaCGUwRsDmsPajuU91sQMLxAcWYm80/WD1jFGm+db3CQMcEptop6u1R1NHxXqb63usPvA=
+X-Received: by 2002:a17:90b:2811:b0:2ee:c291:765a with SMTP id
+ 98e67ed59e1d1-30823639c94mr17879078a91.8.1744639887495; Mon, 14 Apr 2025
+ 07:11:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407172836.1009461-2-ivecera@redhat.com>
- <Z_QTzwXvxcSh53Cq@smile.fi.intel.com> <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
- <Z_ys4Lo46KusTBIj@smile.fi.intel.com> <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
- <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com> <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
-In-Reply-To: <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 14 Apr 2025 17:10:25 +0300
-X-Gm-Features: ATxdqUEK9qElNdnTKa2QHn3BaDCna6lMjxXsS9Z11fOG73o2nUUr80_22U4xjJ8
-Message-ID: <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
-Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org, 
-	Michal Schmidt <mschmidt@redhat.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Mon, 14 Apr 2025 16:11:15 +0200
+X-Gm-Features: ATxdqUE88UhynrTms5J5w8VyMpN0utUaEsGYZOg0K2pAoIUegIx51WjnYJJGywU
+Message-ID: <CANp29Y4FmGDXm3LWvW6D+JR8CWf=fvuiAseFb1h2HQSDjFKO2A@mail.gmail.com>
+Subject: Latest clang versions fail to compile CONFIG_X86_X32_ABI=y
+To: llvm@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Cc: syzkaller <syzkaller@googlegroups.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 5:07=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> wr=
-ote:
-> On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
+Hi,
 
-...
+I've been trying to build a Linux kernel using newer llvm toolchain
+versions (18, 19, 20), but it consistently fails with the following
+errors:
 
-> Long story short, I have to move virtual range outside real address
-> range and apply this offset in the driver code.
->
-> Is this correct?
+ld.lld: error: arch/x86/entry/vdso/vgetrandom-x32.o:(.note.gnu.property+0x0):
+data is too short
+ld.lld: error: arch/x86/entry/vdso/vgetcpu-x32.o:(.note.gnu.property+0x0):
+data is too short
+ld.lld: error: arch/x86/entry/vdso/vclock_gettime-x32.o:(.note.gnu.property+0x0):
+data is too short
 
-Bingo!
+The steps to reproduce:
+$ git checkout v6.15-rc2
+$ make defconfig
+$ ./scripts/config -e X86_X32_ABI
+$ make CC=clang LD=ld.lld -j48
 
-And for the offsets, you form them as "page number * page offset +
-offset inside the page".
+The versions used:
+$ clang --version
+Debian clang version 20.1.2
+(++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97)
+$ ld.lld --version
+Debian LLD 20.1.2 (compatible with GNU linkers)
 
---=20
-With Best Regards,
-Andy Shevchenko
+Is this a known clang/Linux issue?
+
+There's a kernel commit that addresses a similar problem:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=aaeed6ecc1253ce1463fa1aca0b70a4ccbc9fa75
+
+but the error is slightly different there and the added Kconfig
+condition apparently did not kick in.
+
+-- 
+Aleksandr
