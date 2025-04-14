@@ -1,77 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9178185260;
-	Mon, 14 Apr 2025 23:42:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7882419DFB4;
+	Mon, 14 Apr 2025 23:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744674136; cv=none; b=ST5oZpMQUzk+RDY/SDBTtaCZTwtIvFTa4+XoI15y058JD36IMehkh9N540vrn9YZNKZ+bj70DfAep3tTwi0LLC1uqn9zVedBEXfPnHPWzOv1FdsI9PDh0jHZN10/+K6vyjiSeeEzdBABCPAn3eqndKwfmlydjkyYz29qPsT6LCY=
+	t=1744674210; cv=none; b=banaAUas2z327L+/xulnSYZ9Z+PQHUbf9aOY5SrsITJK44b4EhTPUSKU4fJE01ND0TgA1bZD7XMElqRoVo6eviX3yjCJBMFe1BXKBYjTuQFLujMtOFmRLtG21BctfbPwry2+s3gvnFJmtdgSY7Zzi5+jC6m/FOd+oyrPcB0aL5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744674136; c=relaxed/simple;
-	bh=24Ez7NwKTbJPPhlgSQ7VmP1wM1mGec1z7GcqdMf68WA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yz9n4bLnFBVSKaAAmQg5e41MftfIr0R8CRWTOYzVCuwyaK2n/otzW95wGaq6qgGGlOGLd7wCQPuB/Ymw2i5xlq5l/FT3fipZ1QQPxL6x02xFr+XXtCQHxK7C9lmWhmCEvYlkCw8Zy2ObM46ONU1h4g58g0O4gsHi6ZjZfUSyPl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8835AC4CEE2;
-	Mon, 14 Apr 2025 23:42:14 +0000 (UTC)
-Date: Mon, 14 Apr 2025 19:43:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
- page faults
-Message-ID: <20250414194346.060f96c6@gandalf.local.home>
-In-Reply-To: <d64ec287-c85e-4b50-beac-4517462882f6@intel.com>
-References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
-	<214abd94-7fb3-4515-a1ae-a60abe81af88@intel.com>
-	<a40a1add-00a5-49bd-887a-5fc722c9814a@cs.wisc.edu>
-	<41e7d947-d59f-41a9-a540-d3c07e4678c4@cs.wisc.edu>
-	<d64ec287-c85e-4b50-beac-4517462882f6@intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744674210; c=relaxed/simple;
+	bh=mYt0rbUDMBdDTLPdWGuS/Bnh03XJEhDanQRD6dzfsgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Djpwhgo8xWgkj3DAVE+u68LqLpqY3JCfRzvxPoLFvCVqMPoDRukIHqsY8y2jLUq8/Ndxa6wNszsvhv+yf/LEYi6gre9Aj/0aPeJq3MjIiE9ADTIMVu89ibiOCd+/XxUqU5Od3tW9ycEc/aUlhpZgtqiksOh7mKoz3xLx88aQrl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I71bEzD3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I71bEzD3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DA3C4CEE2;
+	Mon, 14 Apr 2025 23:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744674210;
+	bh=mYt0rbUDMBdDTLPdWGuS/Bnh03XJEhDanQRD6dzfsgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I71bEzD3NRM2S1F1pdsYNi6bANyOji5p+V8DBDIaQJYynC5bdJ0f010MjTzjI7Kh/
+	 VNWuDmkQcmFV+uUEVlruf2t+phFwZ6akclg8AJxeR9uv7OLuWkwa/0JW/UYrzuZYPD
+	 bP/+j4RHpUT0K5kh+R3c6iFU5iDmIJpOP+z+s3QCX0SEkwfLubBWgauR8seemhVGms
+	 kjyfxpBT1w2P+vz1QxKaxX+wY1r+FwPP+HHVdJPH9BQkl+KI19fK4BISx90WKhA6I+
+	 cBxVS2fXHUWJHEIOLLLS0JkPX/ViLlc5i6kic2qCivRHJC+EldLCeIdK28uPucGqZC
+	 5MKEqXtoq5feQ==
+Date: Mon, 14 Apr 2025 16:43:26 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	pawan.kumar.gupta@linux.intel.com, seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org, 
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 6/6] objtool: Validate kCFI calls
+Message-ID: <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.540779611@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414113754.540779611@infradead.org>
 
-On Mon, 14 Apr 2025 16:37:19 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+On Mon, Apr 14, 2025 at 01:11:46PM +0200, Peter Zijlstra wrote:
+>  SYM_FUNC_START(__efi_call)
+> +	/*
+> +	 * The EFI code doesn't have any CFI :-(
+> +	 */
+> +	ANNOTATE_NOCFI
+>  	pushq %rbp
+>  	movq %rsp, %rbp
+>  	and $~0xf, %rsp
 
-> On 4/14/25 16:22, Junxuan Liao wrote:
-> > On 4/14/25 6:14 PM, Junxuan Liao wrote:  
-> >> Do people find separate user/kernel tracepoints useful? For me, I can
-> >> check regs in eBPF tracing code instead.  
-> > I think it might be good to add a field to the tracepoints to indicate
-> > whether it's in user space or not.  
-> 
-> Sounds sane to me.  Doing something like this:
-> 
->         TP_STRUCT__entry(
->                 __field(                unsigned long, address  )
->                 __field(                unsigned long, ip       )
-> +               __field(                bool	     , user_mode)
->                 __field(                unsigned long, error_code )
->         ),
-> 
->         TP_fast_assign(
->                  __entry->address = address;
->                  __entry->ip         = regs->ip;
-> +                __entry->user_mode  = user_mode(regs);
->                  __entry->error_code = error_code;
->         ),
-> 
-> seems highly superior to having two sets of tracepoints and static keys.
+This looks like an insn annotation but is actually a func annotation.
+ANNOTATE_NOCFI_SYM() would be a lot clearer, for all the asm code.
 
-I agree.
+Though maybe it's better for ANNOTATE_NOCFI to annotate the call site
+itself (for asm) while ANNOTATE_NOCFI_SYM annotates the entire function
+(in C).  So either there would be two separate annotypes or the
+annotation would get interpreted based on whether it's at the beginning
+of the function.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> +++ b/include/linux/objtool.h
+> @@ -185,6 +185,8 @@
+>   */
+>  #define ANNOTATE_REACHABLE(label)	__ASM_ANNOTATE(label, ANNOTYPE_REACHABLE)
+>  
+> +#define ANNOTATE_NOCFI_SYM(sym)		asm(__ASM_ANNOTATE(sym, ANNOTYPE_NOCFI))
 
--- Steve
+This needs a comment like the others.
+
+> @@ -2436,6 +2438,15 @@ static int __annotate_late(struct objtoo
+>  		insn->_jump_table = (void *)1;
+>  		break;
+>  
+> +	case ANNOTYPE_NOCFI:
+> +		sym = insn->sym;
+> +		if (!sym) {
+> +			WARN_INSN(insn, "dodgy NOCFI annotation");
+> +			break;
+
+Return an error?
+
+> @@ -4006,6 +4017,36 @@ static int validate_retpoline(struct obj
+> +	/*
+> +	 * kCFI call sites look like:
+> +	 *
+> +	 *     movl $(-0x12345678), %r10d
+> +	 *     addl -4(%r11), %r10d
+> +	 *     jz 1f
+> +	 *     ud2
+> +	 *  1: cs call __x86_indirect_thunk_r11
+> +	 *
+> +	 * Verify all indirect calls are kCFI adorned by checking for the
+> +	 * UD2. Notably, doing __nocfi calls to regular (cfi) functions is
+> +	 * broken.
+
+This "__nocfi calls" is confusing me.  IIUC, there are two completely
+different meanings for "nocfi":
+
+  - __nocfi: disable the kcfi function entry stuff
+  
+  - ANNOTATE_NOCFI_SYM: Regardless of whether the function is __nocfi,
+    allow it to have non-CFI indirect call sites.
+
+Can we call this ANNOTATE_NOCFI_SAFE or something?
+
+-- 
+Josh
