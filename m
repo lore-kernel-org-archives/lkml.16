@@ -1,83 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDE711C6FF0;
-	Mon, 14 Apr 2025 09:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16BDC25DAF4;
+	Mon, 14 Apr 2025 09:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744623291; cv=none; b=AI+czQQ2bzJ8S9hvUdtxS9TfdhRYEGwJIGRubXIIzUzZ781XKQmjG00Z0eAyaP4HOjea8rN4P65nC1OtWwLNntv5gSL/dH9M5QPtYy01TNNWAAL/sBpGInXciDcZUX2XH6BBSKGuW4UuHLmfJ42MdNMu3lfDGlrPOFUQAu99YXM=
+	t=1744623318; cv=none; b=DlKPdUhLaoTi2DSA7eZe4Kj4IzDf02QSqFpGSDNa1VgOalLlvcT0Oe2bzK0nK7QLchSct8+9FEgOOWIr6iJz9XhTJgSd3YYTToL2pjGLmRkKHMfnAEeVS2XH1WCF+PEYNyIZKHX4Sz+w4tFRueLvUmvpyf0KGzvMiiZiWAfNozc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744623291; c=relaxed/simple;
-	bh=s9P+lPWol/IuJoqkp1kwaVOcllKRdOOaYaTaD9BMsi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eO7gDjigQFlITnr1CE7s5lKignzEp37ZBWyuRNJBxk/rBGMiwzS/MRnmBqiM9dofLF9IuGnBZbVTMr3TdQhrvjzRrR0f7/MjlC/dHMEp/bJeRqlAypJazYnqBjO7VBCk5bf4hrmm2pHdGcktEtFTUHsUFTolQSE28aYSzKXA+dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B1B71007;
-	Mon, 14 Apr 2025 02:34:44 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DAB63F66E;
-	Mon, 14 Apr 2025 02:34:43 -0700 (PDT)
-Date: Mon, 14 Apr 2025 10:34:40 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	<linux-kernel@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <imx@lists.linux.dev>,
-	<devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v4 5/7] firmware: imx: Add i.MX95 SCMI LMM driver
-Message-ID: <20250414-wonderful-cute-bandicoot-accb6b@sudeepholla>
-References: <20250408-imx-lmm-cpu-v4-0-4c5f4a456e49@nxp.com>
- <20250408-imx-lmm-cpu-v4-5-4c5f4a456e49@nxp.com>
+	s=arc-20240116; t=1744623318; c=relaxed/simple;
+	bh=F/5d1IghKb0pg2zSrK+aro4P7knuhG6MLhzJzvNfyUA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Sq9+SH2ANUv9Aa/zHQQR2b07GHKMWxdxTT6e41OG89HrQxqZa3+ocJOf17QiGv796xJIlESdPH07tMCpqv3MUBRhQTB6XOA4Ocoz/ZXZoqumgLlqNwexNOreTrDEXouUxHr6eoJ6OEUSMI3bbFpQjTTbP8NPqKBxpIObGGB8WdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ehn8t9YI; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ehn8t9YI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OC0HT
+	YodGB+352Xa0PvGM8HnRnVdjQBVMt67uxyrdSA=; b=ehn8t9YIhv7ibOc7sb/E0
+	OyYbg8zrqvJGpkcYejDrqE5QIUkspA8J8jj2RcGcZNKmyIKHuSU+Sths1ZRPSG3A
+	+C8dmBdrrfXpt7YCluGbllj+pY7FdInR+FYD5EERcp9EWhmLspHKMo7VFTI3XjLL
+	Y6ZRkwjDKHCkwxfgB4yKR4=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnj1Sb1vxnxkYWGg--.23370S4;
+	Mon, 14 Apr 2025 17:34:23 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	hengqi.chen@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 bpf-next 2/3] selftests/bpf: Add test for attaching uprobe with long event names
+Date: Mon, 14 Apr 2025 17:34:01 +0800
+Message-Id: <20250414093402.384872-3-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250414093402.384872-1-yangfeng59949@163.com>
+References: <20250414093402.384872-1-yangfeng59949@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-imx-lmm-cpu-v4-5-4c5f4a456e49@nxp.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnj1Sb1vxnxkYWGg--.23370S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4DCw4fXF13GFyDWFW8Xrb_yoW5WF4fpa
+	1v9ryYkF45X3W29FZ8G34qkr4rtr18Gr1xGr1Dtr13XF4UWF1xXry7AF4YyFnxJrZav3W5
+	A3y3tryUWay7ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j7R6rUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwhwveGf808xdSAABsZ
 
-On Tue, Apr 08, 2025 at 04:44:29PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> The i.MX95 System manager exports SCMI LMM protocol for linux to manage
-> Logical Machines. The driver is to use the LMM Protocol interface to
-> boot, shutdown a LM.
-> 
-> Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/arm_scmi/vendors/imx/Kconfig |  3 +-
->  drivers/firmware/imx/Kconfig                  | 11 ++++
->  drivers/firmware/imx/Makefile                 |  1 +
->  drivers/firmware/imx/sm-lmm.c                 | 91 +++++++++++++++++++++++++++
->  include/linux/firmware/imx/sm.h               | 14 +++++
->  5 files changed, 119 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/vendors/imx/Kconfig b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> index b5f13d0e40155e485f4d1696e9550645d888ef44..4c24e17425f830810f8ba376ece9db93c8cded6d 100644
-> --- a/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> +++ b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> @@ -26,7 +26,8 @@ config IMX_SCMI_CPU_EXT
->  config IMX_SCMI_LMM_EXT
->  	tristate "i.MX SCMI LMM EXTENSION"
->  	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-> -	default y if ARCH_MXC
-> +	depends on IMX_SCMI_LMM_DRV
-> +	default y if ARCH_MXC && ARM64
+From: Feng Yang <yangfeng@kylinos.cn>
 
-I can't understand the ARM64 dependency on this and next patch.
+This test verifies that attaching uprobe/uretprobe with long event names
+does not trigger EINVAL errors.
 
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ .../selftests/bpf/prog_tests/attach_probe.c   | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+
+diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+index 329c7862b52d..9b7f36f39c32 100644
+--- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
++++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+@@ -122,6 +122,52 @@ static void test_attach_probe_manual(enum probe_attach_mode attach_mode)
+ 	test_attach_probe_manual__destroy(skel);
+ }
+ 
++/* attach uprobe/uretprobe long event name testings */
++static void test_attach_uprobe_long_event_name(void)
++{
++	DECLARE_LIBBPF_OPTS(bpf_uprobe_opts, uprobe_opts);
++	struct bpf_link *uprobe_link, *uretprobe_link;
++	struct test_attach_probe_manual *skel;
++	ssize_t uprobe_offset;
++	char path[PATH_MAX] = {0};
++
++	skel = test_attach_probe_manual__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "skel_kprobe_manual_open_and_load"))
++		return;
++
++	uprobe_offset = get_uprobe_offset(&trigger_func);
++	if (!ASSERT_GE(uprobe_offset, 0, "uprobe_offset"))
++		goto cleanup;
++
++	if (!ASSERT_GT(readlink("/proc/self/exe", path, PATH_MAX - 1), 0, "readlink"))
++		goto cleanup;
++
++	/* manual-attach uprobe/uretprobe */
++	uprobe_opts.attach_mode = PROBE_ATTACH_MODE_LEGACY;
++	uprobe_opts.ref_ctr_offset = 0;
++	uprobe_opts.retprobe = false;
++	uprobe_link = bpf_program__attach_uprobe_opts(skel->progs.handle_uprobe,
++						      0 /* self pid */,
++						      path,
++						      uprobe_offset,
++						      &uprobe_opts);
++	if (!ASSERT_OK_PTR(uprobe_link, "attach_uprobe_long_event_name"))
++		goto cleanup;
++	skel->links.handle_uprobe = uprobe_link;
++
++	uprobe_opts.retprobe = true;
++	uretprobe_link = bpf_program__attach_uprobe_opts(skel->progs.handle_uretprobe,
++							 -1 /* any pid */,
++							 path,
++							 uprobe_offset, &uprobe_opts);
++	if (!ASSERT_OK_PTR(uretprobe_link, "attach_uretprobe_long_event_name"))
++		goto cleanup;
++	skel->links.handle_uretprobe = uretprobe_link;
++
++cleanup:
++	test_attach_probe_manual__destroy(skel);
++}
++
+ static void test_attach_probe_auto(struct test_attach_probe *skel)
+ {
+ 	struct bpf_link *uprobe_err_link;
+@@ -323,6 +369,9 @@ void test_attach_probe(void)
+ 	if (test__start_subtest("uprobe-ref_ctr"))
+ 		test_uprobe_ref_ctr(skel);
+ 
++	if (test__start_subtest("uprobe-long_name"))
++		test_attach_uprobe_long_event_name();
++
+ cleanup:
+ 	test_attach_probe__destroy(skel);
+ 	ASSERT_EQ(uprobe_ref_ctr, 0, "uprobe_ref_ctr_cleanup");
 -- 
-Regards,
-Sudeep
+2.43.0
+
