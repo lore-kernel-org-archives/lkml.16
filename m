@@ -1,77 +1,86 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1603317A305
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FDA199FAF;
+	Mon, 14 Apr 2025 11:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631249; cv=none; b=jgQtjet59oqPEVTljSBcsLjuTuNE25phmhDRTvFR5ngBQFHtGU1iV5hefVimU2ZpPIgEAUhNifcA4g1jclLWFU+m5W2qpP+BQljCQjeJnODFXt42lGPEUJ0NGm5WHtRIZBXSGd+5u5/EYMVIqvx+XmywCvEpcC0LA34BHhXNKmE=
+	t=1744631281; cv=none; b=FTsYAMiYhVP/wtMX28xuiQ7RG1LL6FyGTrzgYvaiv4+beoBGi86J532VhIplD9mpOinnhwswOTYru63EsnhDv5wpCCwR6mDrvzriBeGXBoUr0uOI9J63ziT4SqlwqnLFnIgiKiC09R/DR2wFAu7YDLvZfjvk0UUhXBJb9M48OqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631249; c=relaxed/simple;
-	bh=zUO6CHdVzqap3LuvQY76AT66CGy4KqQ48Q1KnHG0avM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=kQRPQddRGwmziAOYkgPYQPmpf+acba9aqdn+gnYNdSySbJQIqVBH+m5efFjDUIWh0E6vdHHSah6rou0t18VNURQ3FD63yQgKFDY+u6hHLV86pS5ocyfNp1dfQwgAjbWteX8/K9IwFzJ6olEtC5Y2tYVL9dMSJnn5LieZtKi9K+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Zblrp5x9wz9tLL;
-	Mon, 14 Apr 2025 13:47:22 +0200 (CEST)
+	s=arc-20240116; t=1744631281; c=relaxed/simple;
+	bh=rsZJVMyiJWRZIkgXEdTJUAU7MRBMZlOfLgE1wevy0I8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ilqon0l3GZe2nHF1de/fUqQfEkTkjSWegi5aSKIJLyI1ogPY6ps8WW3yxJdeUo2WWpFXQmbcMlYucfeV1rWpW54HffRKwe46N460WVPemTSJDgMB0+eTIp9xpYKzj7ou7e4Gp+ZLQ/KSNIz+qL8iHwRtn6+P8BidbL8+M/h0d1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cH/FVMrZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cH/FVMrZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hxeTC3AwF/U4zM+fafNv0sTiM765czZfk/h3ZPa9SE8=; b=cH/FVMrZ0BZM4Ru4hVdJfoOKdo
+	+tJ7sZ1vGwT/YQdwWrckK92xUscWHWIypr2s9x/r8f6dAoeA+wONaCBDVVfGT/THVl+83RwgNFvhD
+	pwJ3ur3ZRGlRMMhsD1NvPaePPlxAe1LPidVCLedwO+NZXobWx+4fjSRVzu9Wzii4WomjnIcxtmAIn
+	Y8j1OG+evJ278ZlD6jEJDStS7dUJQ7tnOmV8pWUYRMhcO/ew6oR/31rgRQ1M+wdbiRd+U4MOmAWn6
+	3ZfYCkqO+2vWZSrWKwBQPg4OfYm2MNOGDxFpdKIt/trfgywuTvoc3Oz4d2+YIFDvnHMmQvREkNXZe
+	f7tf0z7A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4II2-000000084qm-3ALM;
+	Mon, 14 Apr 2025 11:47:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E2716300619; Mon, 14 Apr 2025 13:47:50 +0200 (CEST)
+Date: Mon, 14 Apr 2025 13:47:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
+	seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org
+Subject: Re: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
+Message-ID: <20250414114750.GG5600@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.285564821@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 14 Apr 2025 13:47:19 +0200
-Message-Id: <D96C5R3AENKF.SYMOHIO4NZLB@buenzli.dev>
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Rasmus Villemoes" <linux@rasmusvillemoes.dk>
-Cc: "Petr Mladek" <pmladek@suse.com>, "Steven Rostedt"
- <rostedt@goodmis.org>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>, "Sergey Senozhatsky"
- <senozhatsky@chromium.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Exporting functions from vsprintf.c for Rust
-References: <D931ZH9KRY2E.2D7HN6QWELGFJ@buenzli.dev>
- <Z_jj_8vvmWY-WuTU@pathway.suse.cz> <D93S1SHPJDDU.INJ3UWZUM1UY@buenzli.dev>
- <CAKwiHFi_egfePDdXQEtYNvO-U65O==MosHNQ7Vm4F6iudJs95g@mail.gmail.com>
-In-Reply-To: <CAKwiHFi_egfePDdXQEtYNvO-U65O==MosHNQ7Vm4F6iudJs95g@mail.gmail.com>
-X-Rspamd-Queue-Id: 4Zblrp5x9wz9tLL
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414113754.285564821@infradead.org>
 
-On Fri Apr 11, 2025 at 3:43 PM CEST, Rasmus Villemoes wrote:
-> On Fri, Apr 11, 2025, 13:36 Remo Senekowitsch <remo@buenzli.dev> wrote:
->
->> On Fri Apr 11, 2025 at 11:42 AM CEST, Petr Mladek wrote:
->> >
->> > Honestly, I do not have a good feeling about exporting the internal
->> > vsprintf() functions. They have a very specific semantic.
->> >
->> > Especially, they return pointer to the next-to-write character.
->> > And it might be even beyond the given *end pointer. It is because, for
->> > example, vsnprintf() returns the number of characters which would
->> > have been written to the buffer when it was big enough.
->> >
->> > Instead, I suggest to create a wrapper which would have a sane
->> > semantic and call scnprintf() internally. Something like:
->> >
->> > int fwnode_full_name_to_string(char *buf, size_t size,
->> >                              struct fwnode_handle *fwnode)
->> > {
->> >       return scnprintf(buf, size, "%pfwf", fwnode);
->> > }
->>
->> That makes sense. I tried your suggestion and it works, thank you!
->>
->>
-> But is a wrapper even needed for this? Can't the appropriate sprintf
-> variant just be called from Rust with that %pfwf format string?
+On Mon, Apr 14, 2025 at 01:11:44PM +0200, Peter Zijlstra wrote:
 
-Yeah, that works. Seems like the simplest solution - no C changes needed.
-Thanks!
+> +u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
+> +{
+> +	u64 hv_status;
+> +
+> +	if (!hv_hypercall_pg)
+> +		return U64_MAX;
+> +
+> +	register u64 __r8 asm("r8") = param2;
+> +	asm volatile (CALL_NOSPEC
+> +		      : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> +		        "+c" (control), "+d" (param1)
+> +		      : "r" (__r8),
+> +		        THUNK_TARGET(hv_hypercall_pg)
+> +		      : "cc", "memory", "r9", "r10", "r11");
+> +
+> +	return hv_status;
+> +}
 
-Remo
+I've tried making this a tail-call, but even without the
+ASM_CALL_CONSTRAINT on it confuses the compiler (objtool warns on
+frame-pointer builds about non-matching stack).
+
+I could of course have written the entire thing in asm, but meh.
