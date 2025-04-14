@@ -1,229 +1,102 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2087.outbound.protection.outlook.com [40.107.20.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E912580E2;
-	Mon, 14 Apr 2025 07:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744615804; cv=fail; b=jsL2VykAi9dnCxE9JTi66ewwgGlGV6SEeQLFz4Qp5110Qjdp9ZjrwFhjeMlC52uu6Ij2cP736z1iza/HjrIuHNMu50CIzEWpa7LoAi9gPpSgboG30TjXirqNSFUy7UIFZ/t3jAAcIlzq56Gc9tSR/fTQXoaYNmiYZvMHdxe3o0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744615804; c=relaxed/simple;
-	bh=j9rmK+JF/+WyGOGexsbedMRO96VN8FfPpUCByn46kYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=b5fF161jP1S0i6H90nApRA4J6hmVAM/QDhatVz3YeMHJHEbPMuLEyI6qE0xRvR0SFdD/S7EltaS30Tyqikl22Yz/kiSL5y+O0DHBtvdCTVTy7PU7wMRQbbzdDg+DChMV0wimIZIcNAg33YP8SmmnEI3CIfNuKUvK1TJPVTTBdeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=RvTsITje; arc=fail smtp.client-ip=40.107.20.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879D21A5B94;
+	Mon, 14 Apr 2025 07:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744615824; cv=none; b=D1b0ysmy3QirhmQmWIMzTqFLaH1QG1n8U3rkO3xEZTXwRnorhop1AZyBrdxkgamnc7L+izvuS/ipyFh/HLRq17EVmW2kffQ/4n6ZueptBOiN6cCADEguuiKj0iNJZ7A9wdr4XzOJTID3LEXQ+NxD/WFVSwDPPZdjMei+pHegVkM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744615824; c=relaxed/simple;
+	bh=hEsji1Z7oUC2YGDwgWedXB/uWGnCu+xnHNQu52nKQ9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hHH4P6UHQ+ERG+HdkBFDiXHthKmaQUKgc5PtK+RpywJR8gzQ/5MAfSw8CasiZKS/lh+hcADtnZX9T592r1LTPFmb5UAc6hJBIsdejVH8fVi5SGHLaBfw120IdeSIPaff/d1PLw9ATDfvKxFHVKhlyCXcRDtsPdqEwhSwR4F6Rts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odOEbNg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="RvTsITje"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eTI2noXXcpH3CwyXVPj5XR+Qvep1ZVMmQ5qGFdBrVD6VYwIO8O2A95kem8kuBGTTmbg3rHG9wUX5boSYaD8yMXwNSJJCeIx5PwvMl+fqR7AQ3Co8bXYzymZw5sWVsWDWpxSIXEZT3/tg7aw68B/Q7a7gOmj3UrtqzDNeKfLNocy6pGgVeTMTYgfW6ULV9T+RoD77XmU2yyqP3HYUolKjdBecBgnvanAsPPyaIagfw5iywI8lPID8x8YF4TxGDUVcTQafgi3p43cwG8580o6eoNXAYJxl1Myku1wPGABgX/lMiH7BJ66xq/K1kFdUJ4uxuCwJPQN3R2d+gxt0qQ0Jcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j9o0jXCE5hD4daEBKAOIGXyiE+qpD7JfaS2c+IxirS8=;
- b=LtQQ2mkRvjs18Ewb6D+glwNxaCwny2xY/x3ms+I4xhHvE3dvVKWTa3VzXQ9X+OU9UPOkeP0UEZb15a+HHZNI7TMdt/RmRUE+bR+SGHiZ1Eqq70g/v9V42j0LI5jKEhjVsWg89hWDUaqxmhjlxhMQBWBUrWlfleR/46/6GslZ6DPcWd5gVvbviwLSHiFtOFvxa5uCW2exvgIpdXwRGXeTmB8jQfizpuPN1QEv162SaYLTRqpJ7OgAhdDFeJoJ5Es2kXGnJLG28oJ211NBld44PQjQ8gV7XqD/eSz4f9AgJOaCQyy9vj0qvUijtn9DiUK5n9Dt0BpmyDpY3VVIqhqKfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j9o0jXCE5hD4daEBKAOIGXyiE+qpD7JfaS2c+IxirS8=;
- b=RvTsITjeuuIjaMT5jiyEbbyQ9J7wdqbH2Zk+oId//CUxJjJVxDbCMF2QwIAt6xXzZPnvYAzZA6ef+d0QXn4GwXePZ5o3vz5pTFxiNNt4m6MZo7X33MEhTcsya1FoXwMS0ldWlYq4iRalHvUoOimrxitSTsxx4jxc+i11BOQQnscDJsjr4Fy4KFy0B48nCYbXZIdjOtCoeXnjEj6xXUt/pYmhZAkt/DBY6raBTj69cPGrgFOm2llzN++7FwoGueMRs9MYUk3CNRKZQNGVwd6ofHkziQcmP19HQqzj4xzBbtbaKULeEKkwPbD7slod1US2N6YDgN2RP/xhBeBaTFkKcg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DU2PR04MB8646.eurprd04.prod.outlook.com (2603:10a6:10:2dd::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
- 2025 07:29:59 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 07:29:59 +0000
-Date: Mon, 14 Apr 2025 16:38:32 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Mike Tipton <quic_mdtipton@quicinc.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: scmi: Skip SCMI devices that aren't used by the
- CPUs
-Message-ID: <20250414083832.GA19563@nxa18884-linux>
-References: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR02CA0032.apcprd02.prod.outlook.com
- (2603:1096:4:195::12) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odOEbNg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD73C4CEE2;
+	Mon, 14 Apr 2025 07:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744615824;
+	bh=hEsji1Z7oUC2YGDwgWedXB/uWGnCu+xnHNQu52nKQ9E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=odOEbNg8kaRDh3xASyhq58ytVp8RVSJ7tVJHNd7xzuVnBLppl2xMwqwULiTSNeuHk
+	 VTMexiwmCiI2Ouhx/0/hwnpfQB5HPJi86t1zQN/hXnQnZhZ6Y3ipF3WzUPDhOXYdxr
+	 4xlq9mZSj/kajFV5ry2pDiwF+48+nWoyUBkSaotiwIyUoUAkHzdCqIhCl+yw81g/Ha
+	 HmNNTHQgIVx4rMepy02nbGDMAj1jgku8CZ28PuX3dt1FQ4u5ODxwmJzrHLK9rrmGJB
+	 HZT2aN8T56MhRYjFWdbI3nX4lUh3oStyiQ2F3Lew1LElb2metAN8jqQ00YPmkezI24
+	 VYYSKRgwvVZfA==
+Message-ID: <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
+Date: Mon, 14 Apr 2025 09:30:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DU2PR04MB8646:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef84eed6-58c0-4c1c-f4f8-08dd7b262947
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HUapr7E8/1ngRYu8T3VZBAv/FrL2H5TPnEIpXOeDhiS2jocDOWgOUvPiTNfi?=
- =?us-ascii?Q?cQa4u6/HkqZ/Yop2iStocgyWVMb7Ksvl8nxEib5dlUpKB/DLGEa3gDhq2Z77?=
- =?us-ascii?Q?vMyzPENp0S8inwMhncl+NkM5hiPiRLZzJGo3IZNwpI0ZaccdLNsBQTKgyS0r?=
- =?us-ascii?Q?c7VUsl9GSImituiwl7sWpZ9OiipmDgohuQGISAHuhus9h5tZVpsGDEX7opYZ?=
- =?us-ascii?Q?emjTif3+pqdFqjay36t/54CCghv6beiCtFWDw09JDSGBWpu96aYVSH2EKRLe?=
- =?us-ascii?Q?BTkwavNg3nuJe6PwZnkEbcmJv2rFE3uOlsC4QmysVgfg0m/KhZIQaQEWsMqU?=
- =?us-ascii?Q?LKuEmrjQXsf6o4D7PYfgJNoUyN806Smf92GdNDPyW4NwhiGBAKTdqlMeqCj1?=
- =?us-ascii?Q?k9KytVFaYkexjYD2MCP8UGR5TEJ0l0uDwYOUWqt+IKuqNco64w/hqFKCmQjh?=
- =?us-ascii?Q?yyfn+C+IOFFFeRxUkSyWULwKFz0+/b1MpeL+6nhlXLQqorv6h63PsDCOrFzm?=
- =?us-ascii?Q?8n3ssacsoqLsAQ/9HV576wxZBcrNqR05Mn3NR1cVUFz/AUQv0+zsx9Fw/FhP?=
- =?us-ascii?Q?JDH/vForzlx2Uq1jNX7oz0m+3snw6EpJ0b+TFDrPthESmKMmHd7PITiYY73C?=
- =?us-ascii?Q?hS5MFueq6RHNOFxrmmeQJ3awro2FSL89jk9G58S8IWgFLQwRJAx22eFn8yP9?=
- =?us-ascii?Q?oPxeMlJVuBTh4+oh9cB46IfcDEvu1+EccWdMC+J0uQ+MPPIzDAH9SeJyzK/T?=
- =?us-ascii?Q?dTNkq/ZgmtKJLavenYJLW1aXA/UnhWlbiNS+o0GDJbamrvplLDCMZB3G9T1y?=
- =?us-ascii?Q?HzdWxFw77qyj9+j7/Lk5i9SpGHnDrwVGa+T0Nla3aJHxwvkdncMXDMljtCvq?=
- =?us-ascii?Q?o1u/JlAbfLWgBCTV7jt5eM7A2PpfL8l8C3Ar6A2mHKsvIJOF2fQ6lbzGkZPU?=
- =?us-ascii?Q?XwqPIECYTTlMnLs6VWS0jCC8VSj6PHZYGxu0nS9OYFv7nuToznLUHZsguUHj?=
- =?us-ascii?Q?4fVE8ArmSZBQ0tGfCZ2CGp2kdEUUjP+iz6Fq6OgKkBLiM+0jSrPoH0Xe1rus?=
- =?us-ascii?Q?Nlae2CmCbzOjWSCAcHAJSKLl094DC42dHWBIGOmpowt7RtfujNATwmTGAiWL?=
- =?us-ascii?Q?wTtDCDx5bqPGBXnsjNXFjXfDgBquDZFwySGo1Nz+FDcsa81NaTgb7gPoTVwA?=
- =?us-ascii?Q?CXNSQzxmFNr5ioDzoTW+v4E96a4Ct44hkqKxJ6cvpuUk1uwq6dG0U22vMIRW?=
- =?us-ascii?Q?Y4vvNyebd8zFkHcUK45ZPFkLWHJ7qhvP6aLLibiX29QNMBU+BHAXbpnaDplW?=
- =?us-ascii?Q?UgNRtnHNVow3/xkzjZPSJiw2SJGZtzZjVmcbh2sc2qGVpWBp16kgmnXJkSaA?=
- =?us-ascii?Q?vJTjtwkISHHajsoy6nyPU6oPDXaWo7v1r9RFral9XkO1RaQxx+m4g7HneWSB?=
- =?us-ascii?Q?8NAuKVVj6cAWEzjz7kkC1AYIRVkHGaaz95x99ehbrq4BKkmu2VCRyA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uBLaYWOzeCcyBkctEsgBBzyexYFgdgCmbvDiOgb4bCeVPsiHnCy+XpBm61iP?=
- =?us-ascii?Q?KW529Cah6pjWP4rNzZqVPyYYsq/fQJjGQplzoMa3OOEpwrs/whHFfgI5UI8O?=
- =?us-ascii?Q?CdsBuPAZg+Xp+0zvVYFolah0I3YDGnF89928A1a6i45lE1w55NrEL6eZukFB?=
- =?us-ascii?Q?vjgPIvZ7X8ienzclU0E34ArMsmgBKxKwyCBe7Am7ZSjzcsgydZkifnFDfSTm?=
- =?us-ascii?Q?WjG9eMXKz5uEdbZzX8gHHF/6BZtsmChv+OQqN7Aoj47klYGLQxEADzhBbK0s?=
- =?us-ascii?Q?wUUF2vzunmXdlbbYQ3apLR9DXkR3tbeWFth1rgwbmSlRKm/XARDyGCNNZVKO?=
- =?us-ascii?Q?TtZ1u074XTK3lW4CPGjc3jAYWkSpp/a+egCQ1meRNHrEo05sdvvDyGSykbj2?=
- =?us-ascii?Q?pvy8OrCOn3wCyAX+NeZNBPy2O1vQ2CDkPtpaR2jdzmtuWcTFVdBOOGzB/DvB?=
- =?us-ascii?Q?LhkNj54hkbMsvXGtjqi1y/6fjh3XjOCWdwKlJOqKQrYwplQwmKwq9NlCHWV8?=
- =?us-ascii?Q?/yy1QTi6EUHscRYhXPxb+UzFt6ZWMRJe7kCGE4z4oeWu4R/x/0ES44s+LdaJ?=
- =?us-ascii?Q?L5jt4q1fQQqlzZ6fG4yzELZlviaAQrRG+qnEdYexReONyRPa9JvqbmKeGJam?=
- =?us-ascii?Q?0WbFMbpR4jF6VmBj2auHhWyAf5/mPtl8wuLKwRYPYIPs2xs4ODG92t3tMBqN?=
- =?us-ascii?Q?wux2H7ukOfrhKaGE8Tb2jZ5vA3EW1m9UKaa+YfM4ZhcZg1Wv0qyUtgTsAske?=
- =?us-ascii?Q?jfwUbc3ToiiK3/v/P1zNnDrp0B3cb7u2HzOo9Xu++pQx7zRS45Br+CAnHvWZ?=
- =?us-ascii?Q?aEGrebQqS5lhx3d9JAI82wGVbQIq5ivqoIcQfVPMpnBK8R8ajkqNTWPFZgkL?=
- =?us-ascii?Q?kGsTMgrPFwj7sz1gVlgLtUqnnUxPllT3AazHjoSMFL5F3D6OGeW96WYR9Le8?=
- =?us-ascii?Q?tHY0idvCbhpI7EFR8IA10yG8+nfanCp3GXVfGgvC9hH8HbD0tQuOH0m4IG0N?=
- =?us-ascii?Q?hP1rrx5RpCkc7miuPum6vvHiJe6izBQAzA26Y/cYLdw4jxqkzrMgAJ042So/?=
- =?us-ascii?Q?KM5GI13RipGHAPY7bzD0xCDukjIN032/98k5fyXDPVZkuBy+bTy2e/PcgQBs?=
- =?us-ascii?Q?I9FMjUHJVFDGGb0mv1fCv8/qEe3O3YqPfKk+48yZTJBNunFRLRjvW64oJk3z?=
- =?us-ascii?Q?er1tYdeEhM+J5V0ZuQ1RldSqbMMlg++ZnitGiHcw+Dp1XXDpfc81zErXxpNh?=
- =?us-ascii?Q?vqWR9hafpNp7oo4hRqn40scSkyMxNDNslpXLSNi5YSYVYIV4OqKJ/IS+m2ki?=
- =?us-ascii?Q?5zGie8tVcB0C/R+k+EeBQK+uPl9ABPIPQ5hRmyaNzusF/6MeTWWshjh5ig9Y?=
- =?us-ascii?Q?G7UmSSaTCTnTHigjoYe0bjkPhsEc4M5Xx149majuxFgEW/pj6JuOX6jey1IG?=
- =?us-ascii?Q?lW169B8JJGmTjiThr+8Jql2eNbPFjUF9moIM82ylkUAAi/EV6N56mlepAzGu?=
- =?us-ascii?Q?APAbzsZD6o3veGzrAsuJVCyGy2hvIGcACGvgKS5vR082mzmop9SQDebQTMR4?=
- =?us-ascii?Q?q0Z1gD+2LjvODA9i+yKib0bBiL5AxAbbgo1BooWz?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef84eed6-58c0-4c1c-f4f8-08dd7b262947
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 07:29:59.0427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PLq9O1TREi7ntmsJdM8RfvBArbwX00QwIA0QTbWytRrQXhxnGxPhwUmNBQz6D//9DPTDwbndHqRCOEQcPgVdyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8646
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
+To: Chenyuan Yang <chenyuan0y@gmail.com>, vkoul@kernel.org,
+ kishon@kernel.org, lumag@kernel.org, quic_kriskura@quicinc.com,
+ manivannan.sadhasivam@linaro.org, konrad.dybcio@oss.qualcomm.com,
+ quic_varada@quicinc.com, quic_kbajaj@quicinc.com, johan+linaro@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250413212518.2625540-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Mike,
-On Fri, Apr 11, 2025 at 02:29:41PM -0700, Mike Tipton wrote:
->Currently, all SCMI devices with performance domains attempt to register
->a cpufreq driver,
+On 13/04/2025 23:25, Chenyuan Yang wrote:
+> In qmp_usb_iomap(), one branch returns the result of devm_ioremap(), which
+> can be NULL. Since IS_ERR() does not catch a NULL pointer,
 
-The scmi cpufreq device is created based on entry
-{ SCMI_PROTOCOL_PERF, "cpufreq" },
+No, that's not true. NAK.
 
-So the scmi-cpufreq driver could only probe the upper single device.
-
-How could the driver work with all SCMI devices with performance domains?
-
-THanks,
-Peng
-
-even if their performance domains aren't used to
->control the CPUs. The cpufreq framework only supports registering a
->single driver, so only the first device will succeed. And if that device
->isn't used for the CPUs, then cpufreq will scale the wrong domains.
->
->To avoid this, return early from scmi_cpufreq_probe() if the probing
->SCMI device isn't referenced by the CPU device phandles.
->
->This keeps the existing assumption that all CPUs are controlled by a
->single SCMI device.
->
->Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
->---
-> drivers/cpufreq/scmi-cpufreq.c | 29 +++++++++++++++++++++++++++++
-> 1 file changed, 29 insertions(+)
->
->diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
->index 944e899eb1be..7981a879974b 100644
->--- a/drivers/cpufreq/scmi-cpufreq.c
->+++ b/drivers/cpufreq/scmi-cpufreq.c
->@@ -393,6 +393,32 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
-> 	.set_boost	= cpufreq_boost_set_sw,
-> };
-> 
->+static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
->+{
->+	struct device_node *scmi_np = scmi_dev->of_node;
->+	struct device_node *np;
->+	struct device *cpu_dev;
->+	int cpu, idx;
->+
->+	for_each_possible_cpu(cpu) {
->+		cpu_dev = get_cpu_device(cpu);
->+		if (!cpu_dev)
->+			continue;
->+
->+		np = cpu_dev->of_node;
->+
->+		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
->+			return true;
->+
->+		idx = of_property_match_string(np, "power-domain-names", "perf");
->+
->+		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
->+			return true;
->+	}
->+
->+	return false;
->+}
->+
-> static int scmi_cpufreq_probe(struct scmi_device *sdev)
-> {
-> 	int ret;
->@@ -404,6 +430,9 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
-> 	if (!handle)
-> 		return -ENODEV;
-> 
->+	if (!scmi_dev_used_by_cpus(dev))
->+		return 0;
->+
-> 	scmi_cpufreq_driver.driver_data = sdev;
-> 
-> 	perf_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PERF, &ph);
->-- 
->2.34.1
->
+Best regards,
+Krzysztof
