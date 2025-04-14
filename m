@@ -1,102 +1,81 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD72428DEE0
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5F819FA8D;
+	Mon, 14 Apr 2025 18:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655689; cv=none; b=bK1HSdCdvqG23maGe6TV6ikxq8HNqFbswkFdZjOcgJPHTxI+ywBRF4Iqq5a006ZbA45A3vOiLZ4dM72VbqBq8eZXi6bDYPtKmsDTBfguhtb1T2o6NLt0u/3vEjv5asa34y4/5JU0TPL2MK1CpkoMrbeP6vOSTkvAOCsZ3I62CAg=
+	t=1744655746; cv=none; b=WP9ppNAG3+6Jyg2nwC3whFlplscG0iDEZUISPxkJxafD2iuqo0w8M0Y90TZdm1OrzJMrM8+NHF10/cVoDXOzWibQPIpUNqQbCB448oA8ZVpKIelSFAnoanjWK5bVi4wXTVzIbYe5wJX8TPW3fCwsfW55r2IrAv9PKmZ11naZhZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655689; c=relaxed/simple;
-	bh=s2YUvKONZpYv6BeESkipXTOMCM3/ZgRQk8zLNK4GcdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VOXWwuRPgGCCwajq9UTu1HyUsI+HuT4q1WtJQXFY4nS/wVAmnQ1gmfQNX4Q0W51jdA33XyDfFPIb216L3lMbQInqoSUQsOzeR5kqjc20lFcWqwdS1GbRL4GmrOhL34L7vRixPMr4kvjNbkr2W0anOGz5sw5vkKfPSj0n4b7wYlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=GvqD5kMv; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1744655746; c=relaxed/simple;
+	bh=k2g0Mk9JKK4aalvTmKqSOU0NxOAcYOyOL4e+bs5uRZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Li8r3UXjq3pr6WSplZSWWK5uxRBQjSlIYNZKU+iZPrTjD7PGYlgUQmtY6xR3jS2moRTYF4Z0K+6tXJVDTXmX/6ZPyDnjedhqXc1beS/W6szAkYJScslPMSKxzxT4Wvuc9igdfTyeAaXY/iqNl7OpOfHs52f2J4gPGwKxvsVTt30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzueOWKl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="GvqD5kMv"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 6970F1C0E88
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:34:36 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1744655671; x=
-	1745519672; bh=s2YUvKONZpYv6BeESkipXTOMCM3/ZgRQk8zLNK4GcdM=; b=G
-	vqD5kMv08/Gl0A6ZNIs8xnnTZ4OfWCMIPyVsVsS2X+MR3SfTxAQ9DRc2t3PF2b8G
-	QnFFBWuRw6inla9znKqRTdv+1AaTKTHwNyw68lstTr+TsLiwSgT6/4U+pMR+SO0H
-	IUfMZcdCRAWcE0uDLMRITAXMLqk/+vf3IHtHlu3WsI=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id IkI0rNG_qjzZ for <linux-kernel@vger.kernel.org>;
-	Mon, 14 Apr 2025 21:34:31 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 9EB5A1C08C3;
-	Mon, 14 Apr 2025 21:34:15 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Juergen Gross <jgross@suse.com>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	xen-devel@lists.xenproject.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] xen-netfront: handle NULL returned by xdp_convert_buff_to_frame()
-Date: Mon, 14 Apr 2025 18:34:01 +0000
-Message-ID: <20250414183403.265943-1-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzueOWKl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C94C4CEEB;
+	Mon, 14 Apr 2025 18:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744655746;
+	bh=k2g0Mk9JKK4aalvTmKqSOU0NxOAcYOyOL4e+bs5uRZ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DzueOWKl4BW13sJujFq5P68VjB/HMYPEWH0Iyt2DNdulLtZijxhRdc2OnflD2jdLE
+	 yeQNi/hPHrtuFXUBALVEUb6Hz8syT4auTaQHaY9DzLRsqngDg8bqwNqPORZkgNQYCI
+	 rOZ4nqdqjSXZBFpGyWGMpO4y+xStdLCZ+VVUDfYdy47UigkYnSjg/zHIDYlLpP0I6e
+	 6VDOwbJwvipc04OYKH6p3lVdzJ27sm/88TYcxF0IhMw0Gvvhw+uiPP+y1JNpNHejhO
+	 5SotQUsupH5yNu2ALc6353Rw7B/kNdhE1zlRjOVtPjQQzSk9t5aeRq+NnpApLEPZqs
+	 hbdWLfLxPbfSQ==
+Date: Mon, 14 Apr 2025 19:35:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
+ <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Laxman Dewangan
+ <ldewangan@nvidia.com>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] thermal: thermal-generic-adc: add temperature
+ sensor channel
+Message-ID: <20250414193538.5eb8e4a4@jic23-huawei>
+In-Reply-To: <CAPVz0n16TbodhuTcqUufCk6=178ZTcc=2SLUjYHe5YsSJvettQ@mail.gmail.com>
+References: <20250310075638.6979-1-clamor95@gmail.com>
+	<20250310075638.6979-3-clamor95@gmail.com>
+	<CAPVz0n0NA+=+4da8izPvTn3XacdJndyxrvyMY-QvHdie206wVg@mail.gmail.com>
+	<20250412115354.0b266fae@jic23-huawei>
+	<CAPVz0n0eqLEjVgMX=4A8jZZ++Ffb_vfCRdqYdizDmuLbXjVb1w@mail.gmail.com>
+	<20250413102822.0cca4941@jic23-huawei>
+	<CAPVz0n16TbodhuTcqUufCk6=178ZTcc=2SLUjYHe5YsSJvettQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The function xdp_convert_buff_to_frame() may return NULL if it fails
-to correctly convert the XDP buffer into an XDP frame due to memory
-constraints, internal errors, or invalid data. Failing to check for NULL
-may lead to a NULL pointer dereference if the result is used later in
-processing, potentially causing crashes, data corruption, or undefined
-behavior.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> > > > > > +
+> > > > > > +       indio_dev->name = dev_name(dev);  
+> > > >
+> > > > What does this end up as?  The convention in IIO is to name after
+> > > > a part number.  If you have duplicates this isn't how you tell them
+> > > > apart.  So I'd kind of expect thermal-generic-temp or
+> > > > something like that.
+> > > >  
+> > >
+> > > it is "generic-adc-thermal" with this name, it is not present anywhere in IIO.
+> > >  
+> 
+> Then this is acceptable?
 
-Cc: stable@vger.kernel.org # v5.9+
-Fixes: 6c5aa6fc4def ("xen networking: add basic XDP support for xen-netfront")
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- drivers/net/xen-netfront.c | 4 ++++
- 1 file changed, 4 insertions(+)
+That string is fine.  I'd still be tempted to hard code it here so the
+value is obvious to anyone looking at the driver.
 
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index 8425226c09f0..e99561de3cda 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -987,6 +987,10 @@ static u32 xennet_run_xdp(struct netfront_queue *queue, struct page *pdata,
- 	case XDP_TX:
- 		get_page(pdata);
- 		xdpf = xdp_convert_buff_to_frame(xdp);
-+		if (unlikely(!xdpf)) {
-+			trace_xdp_exception(queue->info->netdev, prog, act);
-+			break;
-+		}
- 		err = xennet_xdp_xmit(queue->info->netdev, 1, &xdpf, 0);
- 		if (unlikely(!err))
- 			xdp_return_frame_rx_napi(xdpf);
--- 
-2.43.0
+Thanks,
+
+Jonathan
 
