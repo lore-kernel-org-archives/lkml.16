@@ -1,127 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4E027E1CC;
-	Mon, 14 Apr 2025 10:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C4D26B976;
+	Mon, 14 Apr 2025 10:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628232; cv=none; b=t02duAv0ogt5pj7Ta79RAgGOwP+eKbBElkKshv8gV2TKXjnJNs/q9ybpnDlb5yuNkd6PSNa1YGuuxACAatYdWWwP955xz1b7mk0vsXA46Ht8zmtArtb1FnaWmxgB0hqhcbLlFQ5jUqNKCrTlDM92ZaBVAZlTe8tcjoxdJsx9FU0=
+	t=1744628240; cv=none; b=nsUE+CbCIPTG42jQ7K8Humw4k+mRmTrgn2V/SaYByXgZ4YBeFJIEXgACUFoA4mBap/tKN4zKyEFAVEohfgi7dCk6/tDsE/dSF/9ixaoWs/ux8P/w2uj/VNrMTQ+CtR/uyBG0EOY0CYbhFf4YJ4h5gqtL6GKqWxilG/mWhWozjO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628232; c=relaxed/simple;
-	bh=Be2ydnxapnJ1r1uZegCpXDABpgwYbmS9LN3MXZ+3AaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LwmZxgiJGSGI4LGP1FzQlwACoPhSscy0uCBprfTLAM8cXm5KcOUezZ2gXSyR+xLSgKMk02r+9ChDYMZr2lQ6lDKxx409ymwgZB67qnjKqsf1rIVyRkcfyEPsE/T5W+P1TJSIUtr85lGM8rD4zMjRvhqSQ5HSHJwuSyjQkuS9H+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BTsWDRsX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gKgu5XMb; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744628240; c=relaxed/simple;
+	bh=bPZlkgcUPRfvJOxv8cjuqePT1o85uVCyswf1SssPMwc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=BPu4gef5sLnp9w5313JKPiiuN0/IJEd8xnjzIpplh2pHDT0az+Ngdrtpg3UV8c8NBcNyMyeVP0mlcYwyz1o8TCs6YQ4/NQhbfrd1EQumo/2WaN/SVSpoDwQBjg43XEfvuiczeF/z6okDmh1dGnZbiwCivU8PUE9M9qO68tyeorg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=qYm6Eu8H; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BTsWDRsX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gKgu5XMb"
-Date: Mon, 14 Apr 2025 12:57:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744628228;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T0kuMBxWgx+PRLHcph8H3TFWPvSCGgkMX4FLSszxil8=;
-	b=BTsWDRsXiDcXPw3gpV903D7uHA09pxR/ZWLgPzlVuqIMaNwtzacrfJPdJ6GDH9ROtY/wvO
-	iMYvOIR+zzm20lVV2g0WJm3tYmY9mYUi0jcledeICyCmdgKAT2PGKANHLS0LS7WjvirL6r
-	TDB2cOytPHn2P+XH38vUpZNMq1lTAk+5xNi6GLNYj8pSQMzdixy7v6DX/5s4+okj9Dlq4R
-	MumeJAvnwd269VP+F1gTTrZ0424hFRda6WdjvOmK3l/3gJoQBcgXR4QGb9RWYps18pjyPA
-	Cp6fdHPvToaMAMKzR1ke+xZCozhUGMgQtW8hBNkufYh/rJJ6qNO+dgcM0FIDwA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744628228;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T0kuMBxWgx+PRLHcph8H3TFWPvSCGgkMX4FLSszxil8=;
-	b=gKgu5XMbLZ3ojKsH+N//qkaa/GL6pLpdIqpZ0RnJWIdNhDbwz0qX7cAy1F/UfnakHmGDvh
-	57IRSZWUH5VxcvCw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com
-Subject: Re: [PATCH v2 1/2] MIPS: Don't crash in stack_top() for tasks
- without ABI or vDSO
-Message-ID: <20250414125526-98c48a5a-8950-4a3d-b49a-401cd80ecfba@linutronix.de>
-References: <20250414-kunit-mips-v2-0-4cf01e1a29e6@linutronix.de>
- <20250414-kunit-mips-v2-1-4cf01e1a29e6@linutronix.de>
- <CAAhV-H7p9TWLEYjv2K-sXUD9roMBJtkbjyq6NCEnyavG9PnWKw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="qYm6Eu8H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1744628230; x=1745233030; i=frank-w@public-files.de;
+	bh=Dox/3saUSMc6oBn1CpgQrpJElpnKUg5l+Q9XBb5++k4=;
+	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qYm6Eu8HjkxRq+gksNLYnlblLxQeP/SfqiGgjk/IZYaMAvhpdeEKBD9rMyZAM5xM
+	 ZpcQ+vcehLK7IxyovlXIBVVFEUd8IxJvIjwaBm49zeZul6hi7HhDUthrdxKaTGwG6
+	 0gP/fq4PhkH8BHtcXWDMCBjI+S33NCPZshFiJpS5vbkwPQdri2p1Vx24T4Ed/3jr6
+	 Eif0GWfm4Wv3TeW6uUj3j6qIpM2ZVvZXI8faJ2LDGiQDV8Y4bvlNlxZ0Ol8Mx+ddq
+	 4ISXphfQS1gzcPKL3o0G8NmKWHIT5jT1tCCUobengwlg7TGYmxNoDjtdf+A0ei20N
+	 IyWxTr2+4dX8LBIQ+w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([217.61.148.208]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1ML9yc-1tnA5U2KKg-00KTDb; Mon, 14
+ Apr 2025 12:57:10 +0200
+Date: Mon, 14 Apr 2025 12:57:06 +0200
+From: Frank Wunderlich <frank-w@public-files.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Frank Wunderlich <linux@fw-web.de>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+CC: Daniel Golle <daniel@makrotopia.org>, Sam Shih <sam.shih@mediatek.com>,
+ MandyJH Liu <mandyjh.liu@mediatek.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_5/5=5D_arm64=3A_dts=3A_mediatek=3A?=
+ =?US-ASCII?Q?_mt7988=3A_Add_xsphy_for_ssusb0/pcie2?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <e243cca4-40d7-4cd6-804a-7e63bb5581b0@collabora.com>
+References: <20250413085806.8544-1-linux@fw-web.de> <20250413085806.8544-6-linux@fw-web.de> <e243cca4-40d7-4cd6-804a-7e63bb5581b0@collabora.com>
+Message-ID: <E469EB89-A879-4B03-A3DF-C96D207E946D@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7p9TWLEYjv2K-sXUD9roMBJtkbjyq6NCEnyavG9PnWKw@mail.gmail.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yi7cluxJXDq4OrQaFqXXh5JHsaAJJapY8vwQzCpkAbguc1XlrM5
+ 4Sdn2WvMB5StASOjsrQk4j+LwJh6ZnFxqayr4OGRuIqK9fj8sF9hXDWUfm5Rsy/dbM+Oabn
+ uQ+J6oY5hVmp/Z+sdVHpMBXBdn3FghQBYSG6OyH7gCdIbYf62ADzYgd8c5SUNpVoP84n9wR
+ qBqeARj2vXUvi9LqpESCg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8QFW5mxT33E=;p9eKydGBnkydZTV5Tm8SBn3MzjQ
+ zrEOtq6nYRDx84ugB0KbO22SzU8HCOwAg3QP8DZSk7r0aksEaBJ+3rapipjBW4neZOHrTfRsn
+ Qp9r3s1mQiPQ1okWqdXSxl4rVC5z/GhSrqbO5keQrh9MjF6Q0YqGRr+EM/RwYveBlYaqY4xrS
+ NMrH6uN4b5tBsxBhLWcVY3UzIm0BToz4iDgid1e76Pt4ivZJ/K7mQvFdCBQ1m2U0QQe28mZSj
+ yqTKfrezqLu2Yzc9ANdjtT1gWriDSkUcBMsBQX/gUqIP0urMzKFiL2t2L+7WEtea77nkSsJ17
+ Q1ep/vfvqrxhGL1fkBWPfDyGGP7k+gtCu3S/g81VdA3AN1msv2RRA5GSX97vf2cR6YBtSjZfe
+ vkQig0b/U/J/Kv+sJlrcuAB13QbU03LMVzox6dSsIZh1PGOkk52NwffcoqmfLLL+5G5DNidvw
+ zkadNDsfhN1xCmfF28SA0B7qB58b5S/55ihNqeVExyMp6GPJu0wvmX/fkEOGt6CJABqYXLSLR
+ X78yJFURF4Ww6Vh7W3KI7vzCR103tAQuRVQKHD1YN7D93HaN+x8yp1K+GOoLxLRwwz2p4Qsb8
+ 5FwYv8ktLf2rcHw2jTQcZhuktJOnBlbldXWuPP+y5B5uS2Q/HIE1bcgPviLx/zeBmmFY1dH42
+ 82Sy9JAV1Kdc4Yj652ONnQ+4VjSLDxS3H/ht8vY50qAP+UIn4GcUVxRW9mNlLW5rUcKrNz2Ts
+ UAYv27mou96tsYraliQ+BUDmkWnYJsS0d+d0dUKKEpTcB5+/XLSmOaGqCyJnWclA+x6lg2LBJ
+ AuzMOLLBabSvIVXkgBCvPORzdGtdcjkIu8Dnks8JHvr4uTiFNavC4WSj2GwO3z3eKz9QOoiRk
+ tS93ukqYYyoSxZm8cgcDwZ+25NT4IfO2s1KRcoSI+zB6PCaunoSEyvyO0ytN0EPmKrT4LJFrn
+ vgleb0Mv9nQlOv76GFkxE6FKETr/n3/qOEdLJTyDbWkf9ZsTXzPpNVO1VwGJvSnJTa+V/k4ba
+ X4X6Dpq0lUm3biCw6fEyyYP1oZ42NjCZTfGXAAVPMA5GR3+jzAyEgzSPp/qzL0iK5c8NYPrXi
+ nb216mq/VAyxIkf7g3LuJdoBfWD8ZLwDhQTIx6WDzXvidxxPvixxl0BNO5TZYv4nwz6XuRI7b
+ HXOmUg70tx8YJLTJLKTuCxPeKV/SAXc4E0dP3whvXmOJfF7H/4sOgqWtEKRoYjSgPmPdyRxnz
+ szIAvbEjsLCsbNzZ9iuEtYFOsf9eHW7kUi7+husJIWa2dNFKHhVfkpv4gOrRZpiZ73av0QgY3
+ h4PTdgydjIwkIJGUf6kQqfJ+teC9TtFSoL4G/opL5viSTh6Nr3+J+iaIzFx3Kxbbac5WvfBxh
+ EC1qdOY4yCcJpv2LjqVGG04rTbkntjSThe1e4gpUfwYYfgXfcEetgU0tD4NsqWFV1Ur4vrK80
+ DaUL2EXDN5eAncNe5vWCtYPBbzbiWOn25KJRQBbCxrMevMQrH
 
-On Mon, Apr 14, 2025 at 05:32:47PM +0800, Huacai Chen wrote:
-> Hi, Thomas,
-> 
-> On Mon, Apr 14, 2025 at 4:29 PM Thomas Weißschuh
-> <thomas.weissschuh@linutronix.de> wrote:
-> >
-> > Not all tasks have an ABI associated or vDSO mapped,
-> > for example kthreads never do.
-> > If such a task ever ends up calling stack_top(), it will derefence the
-> > NULL vdso pointer and crash.
-> >
-> > This can for example happen when using kunit:
-> >
-> >     mips_stack_top+0x28/0xc0
-> >     arch_pick_mmap_layout+0x190/0x220
-> >     kunit_vm_mmap_init+0xf8/0x138
-> >     __kunit_add_resource+0x40/0xa8
-> >     kunit_vm_mmap+0x88/0xd8
-> >     usercopy_test_init+0xb8/0x240
-> >     kunit_try_run_case+0x5c/0x1a8
-> >     kunit_generic_run_threadfn_adapter+0x28/0x50
-> >     kthread+0x118/0x240
-> >     ret_from_kernel_thread+0x14/0x1c
-> >
-> > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> > ---
-> >  arch/mips/kernel/process.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-> > index b630604c577f9ff3f2493b0f254363e499c8318c..66343cb6c1737c4217ddd8a2c3ca244fac0ef8a5 100644
-> > --- a/arch/mips/kernel/process.c
-> > +++ b/arch/mips/kernel/process.c
-> > @@ -690,9 +690,11 @@ unsigned long mips_stack_top(void)
-> >         }
-> >
-> >         /* Space for the VDSO, data page & GIC user page */
-> > -       top -= PAGE_ALIGN(current->thread.abi->vdso->size);
-> > -       top -= PAGE_SIZE;
-> > -       top -= mips_gic_present() ? PAGE_SIZE : 0;
-> > +       if (current->thread.abi) {
-> > +               top -= PAGE_ALIGN(current->thread.abi->vdso->size);
-> > +               top -= PAGE_SIZE;
-> > +               top -= mips_gic_present() ? PAGE_SIZE : 0;
-> > +       }
-> I think the below code should also exist only when VDSO exists.
-> 
->         if (current->flags & PF_RANDOMIZE)
->                 top -= VDSO_RANDOMIZE_SIZE;
+Am 14=2E April 2025 12:27:30 MESZ schrieb AngeloGioacchino Del Regno <angel=
+ogioacchino=2Edelregno@collabora=2Ecom>:
+>Il 13/04/25 10:58, Frank Wunderlich ha scritto:
+>> From: Frank Wunderlich <frank-w@public-files=2Ede>
 
-Good point, thanks.
-I'll move that up into the same new conditional block.
+>> +		xs-phy@11e10000 {
+>
+>That shall be just "phy@addr"
 
-> Huacai
-> 
-> >
-> >         /* Space for cache colour alignment */
-> >         if (cpu_has_dc_aliases)
-> >
-> > --
-> > 2.49.0
-> >
-> >
+Ok
+
+>> +			compatible =3D "mediatek,mt7988-xsphy",
+>> +				     "mediatek,xsphy";
+>> +			#address-cells =3D <2>;
+>> +			#size-cells =3D <2>;
+>> +			ranges;
+>> +			status =3D "disabled";
+>> +
+>> +			xphyu2port0: usb-phy@11e10000 {
+>
+>Perhaps just u2port0/u3port0 like done on the other MediaTek SoC DTs is b=
+etter
+>for consistency :-)
+
+Mt7988 also have a tphy where we have it named tphyu3port=2E Leaving this =
+imho would increase confusion=2E
+
+>Cheers!
+>
+
+
+regards Frank
