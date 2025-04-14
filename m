@@ -1,532 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E0B1B3929
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79568265CD1
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624163; cv=none; b=IXpi7O/edcdtTc/yLPG0atMzjRMtKXl9RNh1p9xxpvIQTIDO9tRlG61GwLtm+vOVYkOXwo9FeFrkWNYyG4QuxhmTXqI637XcdzGgjJRYVm8qdV+MqJkzSgUTzWPc99q3L4ShnlBcD/jBK91WRQjYff7XxcIZPy+Y9dlEj8tFyHw=
+	t=1744624165; cv=none; b=i8/YW1HarmcWv/IsiAcDfIuOGU72WvX8P5IO7olf8pLT8Y8vA21sVlUnw2Tz7P1zG3e7YqcNUJw8noRh5suJhu6mUZpRrHJ2HTKHp8SjevhDZugxQYYBT/3bArxg70LYzsQrjpNd1516hzb88NL4hJ0Av/Z9TBkm4QD2ANXdl98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624163; c=relaxed/simple;
-	bh=ciby7S4K5tiBfPSBg+I9XMeCsqEGDlgG5DdkPfZhqGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S/Cje5+BseL+kTyiUr6bsqRWsfZFGOf1GibeM3qev1UOvgtnURJF3UbTlQ7WYiiggSOqsTTGBzaiVOZPjekNuTxPxGQBKJlCcYWQYTsOdE78N+IKhaRLGY6gfJc21g9rW02iRHUUjDKlnmcaGwxuH8+PwDNcywBPbxuHAoAKMXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lhqvjZIB; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744624165; c=relaxed/simple;
+	bh=yUKqCPPORdYVe342mQqddOKMLZ0bybmVAHWIG65MK4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mZcjDjms/4Z7OidRO05zMiPrvGnhrsZW1S0c7SunLN6Q4trcD17/AG+IfAowMn0+fZ1z+TH2YH8t9vRnBYDcnR0XVXUPtZ7mUYKuewoDo+xYIVZei0ibHaq4EOZDwHrQdQ9wgAIPyF9qiyW1BZF2QqSvmwzb/RidVhWJ5yg2Rjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MGTAg3NE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lhqvjZIB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744624161; x=1776160161;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ciby7S4K5tiBfPSBg+I9XMeCsqEGDlgG5DdkPfZhqGY=;
-  b=lhqvjZIB4SMp1noNb8lXxIz0C/UiHSA/kEBLmRYYGtTZ6ZCcmMVYVcf3
-   hxwDPPwb5geCeEL55f3wxOyuuaHa6DImAaYdU56Sb8EC8yzp1ha78Y64f
-   dLTY4qF2qO+iT8aU0XQp6eJ2bx8uFZ9cPLMtrFiznabzN/YDsbeU3mldd
-   YQVhV60rmhHOCduMn6uh4MQaCD7UMsULqXYKBoXZJ+I6Ltv2warzIayNg
-   pXwmqAb8+yOAckAfG1BN2zH/BCl1saUs2JgeKyXqmszTunio6thHwl+Ed
-   TjI6Qi37WGLJuDi+IE2hKBs6QYevW7z2NJkWO+M/p8pF/2x93NQC08j/W
-   A==;
-X-CSE-ConnectionGUID: lhnLOav+SRC1q8oFhWWFEg==
-X-CSE-MsgGUID: ixp/TmkOTa6okkAKvYvLOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45222611"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="45222611"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:49:21 -0700
-X-CSE-ConnectionGUID: lyAGeSDtR02lWVx5lbOeFA==
-X-CSE-MsgGUID: jAQ5oXuNQRC39sIEz22iAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="152954835"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:49:15 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v8 01/12] mtd: core: always create master device
-Date: Mon, 14 Apr 2025 12:37:52 +0300
-Message-ID: <20250414093803.2133463-2-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414093803.2133463-1-alexander.usyskin@intel.com>
-References: <20250414093803.2133463-1-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MGTAg3NE"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99vr7001845
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/sdJrQAAPCExE5G43phs3Cg9sP4wasVXTslo08/sa84=; b=MGTAg3NEob7NbEkF
+	KwirsgchUJrFDt+xwKjcEdYD1rRCu6BM5E7bQv0ZxVRcBP2Dm4KHou/aNK5JWiBl
+	onbAxJKCP5xfRzwp+z6zhVwCJ7povMgpLO86sy3iA7o6/lZDtmP6zqlBJdFSToJ4
+	lBQcVdiv3AEQPfB10wdZRgaDbcLMNX5Y+hGLY0YOrU9tFIrZAsCBVtXcw86NHQCz
+	oWKORFiiU4Usd/Vt2FKCu5690IcrJFZyTi9QZOwQY6lgn2SEsI/IC8jYLXz8R+5S
+	U4YI9Jl1jNusicIYY+pLHnFwI5CS+/pOwUoRh9UF2WQgS7wDpqH4AgauSfYAIh+3
+	h3vkiw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydhq4ajc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:21 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8fd4ef023so8003246d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:49:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744624161; x=1745228961;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/sdJrQAAPCExE5G43phs3Cg9sP4wasVXTslo08/sa84=;
+        b=iJVprkm8YzrG2tQOh2LEjhWy/XMgkgl5pht8w3Zm9EUma3Y5dhzITcO2sWr0LC5RCU
+         mEhmbSo8Z56Oau1ywX3Kv1/MFSZdrOzkok7BGxO3XXDA60+ezekgLNa0iuNu+LtvC6fV
+         VrAV1oJh/ST0giMqbudQgioYPmQvVm7MJX3mIVueVWmZMa8r9kBdcwiP/jpDEIeMkZDX
+         Ynl9HijTBTrFq0Pvdt+uGvDNdH8QJlc+YderzbW6hoSJIh1l5Fzugvg7aTY42XmgVMAW
+         Dlsw6JMvXgKA0vCfQHNcyRjYVnGdh/snExMj4Zq4oaUL2MvDRqQ76bpZixu/of0KySvL
+         lfZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6UCbBtiC7z+TRWy0ZmdJLAnb4GBhE+mlVPU0sWvHYNRhs495l+6jczmwwS4hjFEvwU7xv3SOL2dNihnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygeDrTJ6z2F1zP/ePmqoroacAv7ryH9gKuTNYmnNIeEnElpQld
+	o0lKyLtKsyqd83VZiPYIDq6fs+VyYersroEJKM1p6Jdz9nejPRn/z3d4cVL3+oBD+H7qs+XU9NR
+	VCkYlyiKTH6pfj+Zap65dXNHZnaSRbVWge7iVWIJgN1JJFWeJ9UTPnvcHaCgmksQ=
+X-Gm-Gg: ASbGncvKKJYtfnQ62TJySzAKd4CFKCGZiCvklgFt3tl3hjEYbZHntCsblGpuZmAKHf9
+	IbXX2XqfCUKlIwR9oiLU+zDlFllWukPw6Jr/CLbPjiV+0NvrMC6GYiEr/0LbwugYS0nYAqfuSNI
+	2UmV3Wtc+WfI6CSJ2WYEySsIojR2huVuOBOuiWZS4BlreRryJzOqoGH5xYn/e/Q0NlQa6KAc+If
+	Azg4X3v+A8MJSKUML3TxT7VO+hDuwQGmY1jfZ7+3kKDI0N0ukuhGfmSxEh5HEW6CK8pufxnMX6C
+	FThURuuz44c6NZ8Ma492QWNXDML50yxyCrs6WInPgf5lgSCGoNXALYBGY4kd2mIfDg==
+X-Received: by 2002:a05:6214:1ccc:b0:6e4:449c:ab1d with SMTP id 6a1803df08f44-6f230cb46cfmr64487986d6.2.1744624160753;
+        Mon, 14 Apr 2025 02:49:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhADRsGTwzKbE5j8WsaRwODBqXHXEGGv9BGd3uEhWTHB0foPltVfzAR/8ilB2KcoK3NHYsZg==
+X-Received: by 2002:a05:6214:1ccc:b0:6e4:449c:ab1d with SMTP id 6a1803df08f44-6f230cb46cfmr64487836d6.2.1744624160216;
+        Mon, 14 Apr 2025 02:49:20 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb422asm875859166b.115.2025.04.14.02.49.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 02:49:19 -0700 (PDT)
+Message-ID: <60239482-cc86-495c-9184-11f3453251aa@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 11:49:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, maud_spierings@hotmail.com,
+        dmitry.baryshkov@oss.qualcomm.com
+References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
+ <20250402084646.10098-4-alex.vinarskis@gmail.com>
+ <2b9128be-1989-4511-995c-103c8ba71af7@oss.qualcomm.com>
+ <CAMcHhXrBw6a7gSndG2F-JNgnNsYrDN3nTJjM+NjuT=s9FFWZkw@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CAMcHhXrBw6a7gSndG2F-JNgnNsYrDN3nTJjM+NjuT=s9FFWZkw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 1y6yRtIyrXYIJkjlSNiW0CpUD_q2ioui
+X-Authority-Analysis: v=2.4 cv=C7DpyRP+ c=1 sm=1 tr=0 ts=67fcda21 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=OOIuroA6IYICTT_mFq8A:9 a=QEXdDO2ut3YA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-GUID: 1y6yRtIyrXYIJkjlSNiW0CpUD_q2ioui
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140070
 
-Create master device without partition when
-CONFIG_MTD_PARTITIONED_MASTER flag is unset.
+On 4/12/25 1:47 PM, Aleksandrs Vinarskis wrote:
+> On Sat, 12 Apr 2025 at 01:36, Konrad Dybcio
+> <konrad.dybcio@oss.qualcomm.com> wrote:
+>>
+>> On 4/2/25 10:44 AM, Aleksandrs Vinarskis wrote:
+>>> Initial support for Asus Zenbook A14. Particular moddel exists
+>>> in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+>>>
+>>> Mostly similar to other X1-based laptops. Notable differences are:
+>>> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+>>>   and Qualcomm FastConnect 7800 on UX3407RA
+>>> * USB Type-C retimers are Parade PS8833, appear to behave identical
+>>>   to Parade PS8830
+>>> * gpio90 is TZ protected
+>>>
+>>> Working:
+>>> * Keyboard
+>>> * Touchpad
+>>> * NVME
+>>> * Lid switch
+>>> * Camera LED
+>>> * eDP (FHD OLED, SDC420D) with brightness control
+>>> * Bluetooth, WiFi (WCN6855)
+>>> * USB Type-A port
+>>> * USB Type-C ports in USB2/USB3/DP (both orientations)
+>>> * aDSP/cDPS firmware loading, battery info
+>>> * Sleep/suspend, nothing visibly broken on resume
+>>>
+>>> Out of scope of this series:
+>>> * Audio (Speakers/microphones/headphone jack)
+>>> * Camera (OmniVision OV02C10)
+>>> * HDMI (Parade PS185HDM)
+>>> * EC
+>>>
+>>> Add dtsi and create two configurations for UX3407QA, UX3407RA.
+>>> Tested on UX3407QA with X1-26-100.
+>>>
+>>> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+>>> ---
+>>
+>> [...]
+>>
+>>> +     /* Left-side display-adjacent port, PS8833 */
+>>> +     typec-mux@8 {
+>>> +             compatible = "parade,ps8830";
+>>
+>> What Krzysztof referred to with fallback compatible is this:
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
+>> index 935d57f5d26f..aeb33667818e 100644
+>> --- a/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
+>> +++ b/Documentation/devicetree/bindings/usb/parade,ps8830.yaml
+>> @@ -11,8 +11,11 @@ maintainers:
+>>
+>>  properties:
+>>    compatible:
+>> -    enum:
+>> -      - parade,ps8830
+>> +    oneOf:
+>> +      - items:
+>> +          - const: parade,ps8833
+>> +          - const: parade,ps8830
+>> +      - const: parade,ps8830
+>>
+>>
+>> so that in case there are any sw changes down the line, people with older
+>> DT receive the fixes, as if "parade,ps8833" is attributed to a driver, it
+>> will match (due to being the primary entry) and if it's not (like today),
+>> it will fall back to matching the next compatible (and the driver currently
+>> looks for just that)
+>>
+> 
+> Hi,
+> 
+> Thanks, was not aware of that, found it in the examples now, will update.
+> As Krzysztof suggested to drop the patch adding compatible from
+> driver's code, If I understand correctly I also need the following dts
+> change, could you please confirm:
+> 
+> ```
+> compatible = "parade,ps8833", "parade,ps8830";
+> ```
 
-This streamlines device tree and allows to anchor
-runtime power management on master device in all cases.
+Yep!
 
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/mtd/mtdchar.c          |   2 +-
- drivers/mtd/mtdcore.c          | 152 ++++++++++++++++++++++++---------
- drivers/mtd/mtdcore.h          |   2 +-
- drivers/mtd/mtdpart.c          |  16 ++--
- include/linux/mtd/partitions.h |   2 +-
- 5 files changed, 123 insertions(+), 51 deletions(-)
+>>> +     eusb6_repeater: redriver@4f {
+>>> +             compatible = "nxp,ptn3222";
+>>> +             reg = <0x4f>;
+>>> +             #phy-cells = <0>;
+>>> +
+>>> +             vdd3v3-supply = <&vreg_l13b_3p0>;
+>>> +             vdd1v8-supply = <&vreg_l4b_1p8>;
+>>> +
+>>> +             reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
+>>> +
+>>> +             pinctrl-0 = <&eusb6_reset_n>;
+>>> +             pinctrl-names = "default";
+>>> +     };
+>>> +
+>>> +     /* EC */
+>>
+>> It's customary to leave the i2c address to make it slightly easier for
+>> the next tinkerer ;)
+> 
+> I am unsure about the address. There are multiple addresses showing up
+> when discovering the bus, 0x1d, 0x5b, 0x61, 0x6a. Did a quick SMBUS
+> analysis, they all have non-zero registers responding... My best guess
+> right now is its 0x5b, as messing with it enabled backlight and broke
+> the keyboard. Will add that one.
 
-diff --git a/drivers/mtd/mtdchar.c b/drivers/mtd/mtdchar.c
-index 8dc4f5c493fc..391d81ad960c 100644
---- a/drivers/mtd/mtdchar.c
-+++ b/drivers/mtd/mtdchar.c
-@@ -559,7 +559,7 @@ static int mtdchar_blkpg_ioctl(struct mtd_info *mtd,
- 		/* Sanitize user input */
- 		p.devname[BLKPG_DEVNAMELTH - 1] = '\0';
- 
--		return mtd_add_partition(mtd, p.devname, p.start, p.length);
-+		return mtd_add_partition(mtd, p.devname, p.start, p.length, NULL);
- 
- 	case BLKPG_DEL_PARTITION:
- 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 5ba9a741f5ac..429d8c16baf0 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -68,7 +68,13 @@ static struct class mtd_class = {
- 	.pm = MTD_CLS_PM_OPS,
- };
- 
-+static struct class mtd_master_class = {
-+	.name = "mtd_master",
-+	.pm = MTD_CLS_PM_OPS,
-+};
-+
- static DEFINE_IDR(mtd_idr);
-+static DEFINE_IDR(mtd_master_idr);
- 
- /* These are exported solely for the purpose of mtd_blkdevs.c. You
-    should not use them for _anything_ else */
-@@ -83,8 +89,9 @@ EXPORT_SYMBOL_GPL(__mtd_next_device);
- 
- static LIST_HEAD(mtd_notifiers);
- 
--
-+#define MTD_MASTER_DEVS 255
- #define MTD_DEVT(index) MKDEV(MTD_CHAR_MAJOR, (index)*2)
-+static dev_t mtd_master_devt;
- 
- /* REVISIT once MTD uses the driver model better, whoever allocates
-  * the mtd_info will probably want to use the release() hook...
-@@ -104,6 +111,17 @@ static void mtd_release(struct device *dev)
- 	device_destroy(&mtd_class, index + 1);
- }
- 
-+static void mtd_master_release(struct device *dev)
-+{
-+	struct mtd_info *mtd = dev_get_drvdata(dev);
-+
-+	idr_remove(&mtd_master_idr, mtd->index);
-+	of_node_put(mtd_get_of_node(mtd));
-+
-+	if (mtd_is_partition(mtd))
-+		release_mtd_partition(mtd);
-+}
-+
- static void mtd_device_release(struct kref *kref)
- {
- 	struct mtd_info *mtd = container_of(kref, struct mtd_info, refcnt);
-@@ -367,6 +385,11 @@ static const struct device_type mtd_devtype = {
- 	.release	= mtd_release,
- };
- 
-+static const struct device_type mtd_master_devtype = {
-+	.name		= "mtd_master",
-+	.release	= mtd_master_release,
-+};
-+
- static bool mtd_expert_analysis_mode;
- 
- #ifdef CONFIG_DEBUG_FS
-@@ -634,13 +657,13 @@ static void mtd_check_of_node(struct mtd_info *mtd)
- /**
-  *	add_mtd_device - register an MTD device
-  *	@mtd: pointer to new MTD device info structure
-+ *	@partitioned: create partitioned device
-  *
-  *	Add a device to the list of MTD devices present in the system, and
-  *	notify each currently active MTD 'user' of its arrival. Returns
-  *	zero on success or non-zero on failure.
-  */
--
--int add_mtd_device(struct mtd_info *mtd)
-+int add_mtd_device(struct mtd_info *mtd, bool partitioned)
- {
- 	struct device_node *np = mtd_get_of_node(mtd);
- 	struct mtd_info *master = mtd_get_master(mtd);
-@@ -687,10 +710,17 @@ int add_mtd_device(struct mtd_info *mtd)
- 	ofidx = -1;
- 	if (np)
- 		ofidx = of_alias_get_id(np, "mtd");
--	if (ofidx >= 0)
--		i = idr_alloc(&mtd_idr, mtd, ofidx, ofidx + 1, GFP_KERNEL);
--	else
--		i = idr_alloc(&mtd_idr, mtd, 0, 0, GFP_KERNEL);
-+	if (partitioned) {
-+		if (ofidx >= 0)
-+			i = idr_alloc(&mtd_idr, mtd, ofidx, ofidx + 1, GFP_KERNEL);
-+		else
-+			i = idr_alloc(&mtd_idr, mtd, 0, 0, GFP_KERNEL);
-+	} else {
-+		if (ofidx >= 0)
-+			i = idr_alloc(&mtd_master_idr, mtd, ofidx, ofidx + 1, GFP_KERNEL);
-+		else
-+			i = idr_alloc(&mtd_master_idr, mtd, 0, 0, GFP_KERNEL);
-+	}
- 	if (i < 0) {
- 		error = i;
- 		goto fail_locked;
-@@ -738,10 +768,18 @@ int add_mtd_device(struct mtd_info *mtd)
- 	/* Caller should have set dev.parent to match the
- 	 * physical device, if appropriate.
- 	 */
--	mtd->dev.type = &mtd_devtype;
--	mtd->dev.class = &mtd_class;
--	mtd->dev.devt = MTD_DEVT(i);
--	error = dev_set_name(&mtd->dev, "mtd%d", i);
-+	if (partitioned) {
-+		mtd->dev.type = &mtd_devtype;
-+		mtd->dev.class = &mtd_class;
-+		mtd->dev.devt = MTD_DEVT(i);
-+		dev_set_name(&mtd->dev, "mtd%d", i);
-+		error = dev_set_name(&mtd->dev, "mtd%d", i);
-+	} else {
-+		mtd->dev.type = &mtd_master_devtype;
-+		mtd->dev.class = &mtd_master_class;
-+		mtd->dev.devt = MKDEV(MAJOR(mtd_master_devt), i);
-+		error = dev_set_name(&mtd->dev, "mtd_master%d", i);
-+	}
- 	if (error)
- 		goto fail_devname;
- 	dev_set_drvdata(&mtd->dev, mtd);
-@@ -749,6 +787,7 @@ int add_mtd_device(struct mtd_info *mtd)
- 	of_node_get(mtd_get_of_node(mtd));
- 	error = device_register(&mtd->dev);
- 	if (error) {
-+		pr_err("mtd: %s device_register fail %d\n", mtd->name, error);
- 		put_device(&mtd->dev);
- 		goto fail_added;
- 	}
-@@ -760,10 +799,13 @@ int add_mtd_device(struct mtd_info *mtd)
- 
- 	mtd_debugfs_populate(mtd);
- 
--	device_create(&mtd_class, mtd->dev.parent, MTD_DEVT(i) + 1, NULL,
--		      "mtd%dro", i);
-+	if (partitioned) {
-+		device_create(&mtd_class, mtd->dev.parent, MTD_DEVT(i) + 1, NULL,
-+			      "mtd%dro", i);
-+	}
- 
--	pr_debug("mtd: Giving out device %d to %s\n", i, mtd->name);
-+	pr_debug("mtd: Giving out %spartitioned device %d to %s\n",
-+		 partitioned ? "" : "un-", i, mtd->name);
- 	/* No need to get a refcount on the module containing
- 	   the notifier, since we hold the mtd_table_mutex */
- 	list_for_each_entry(not, &mtd_notifiers, list)
-@@ -771,13 +813,16 @@ int add_mtd_device(struct mtd_info *mtd)
- 
- 	mutex_unlock(&mtd_table_mutex);
- 
--	if (of_property_read_bool(mtd_get_of_node(mtd), "linux,rootfs")) {
--		if (IS_BUILTIN(CONFIG_MTD)) {
--			pr_info("mtd: setting mtd%d (%s) as root device\n", mtd->index, mtd->name);
--			ROOT_DEV = MKDEV(MTD_BLOCK_MAJOR, mtd->index);
--		} else {
--			pr_warn("mtd: can't set mtd%d (%s) as root device - mtd must be builtin\n",
--				mtd->index, mtd->name);
-+	if (partitioned) {
-+		if (of_property_read_bool(mtd_get_of_node(mtd), "linux,rootfs")) {
-+			if (IS_BUILTIN(CONFIG_MTD)) {
-+				pr_info("mtd: setting mtd%d (%s) as root device\n",
-+					mtd->index, mtd->name);
-+				ROOT_DEV = MKDEV(MTD_BLOCK_MAJOR, mtd->index);
-+			} else {
-+				pr_warn("mtd: can't set mtd%d (%s) as root device - mtd must be builtin\n",
-+					mtd->index, mtd->name);
-+			}
- 		}
- 	}
- 
-@@ -793,7 +838,10 @@ int add_mtd_device(struct mtd_info *mtd)
- fail_added:
- 	of_node_put(mtd_get_of_node(mtd));
- fail_devname:
--	idr_remove(&mtd_idr, i);
-+	if (partitioned)
-+		idr_remove(&mtd_idr, i);
-+	else
-+		idr_remove(&mtd_master_idr, i);
- fail_locked:
- 	mutex_unlock(&mtd_table_mutex);
- 	return error;
-@@ -811,12 +859,14 @@ int add_mtd_device(struct mtd_info *mtd)
- 
- int del_mtd_device(struct mtd_info *mtd)
- {
--	int ret;
- 	struct mtd_notifier *not;
-+	struct idr *idr;
-+	int ret;
- 
- 	mutex_lock(&mtd_table_mutex);
- 
--	if (idr_find(&mtd_idr, mtd->index) != mtd) {
-+	idr = mtd->dev.class == &mtd_class ? &mtd_idr : &mtd_master_idr;
-+	if (idr_find(idr, mtd->index) != mtd) {
- 		ret = -ENODEV;
- 		goto out_error;
- 	}
-@@ -1056,6 +1106,7 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
- 			      const struct mtd_partition *parts,
- 			      int nr_parts)
- {
-+	struct mtd_info *parent;
- 	int ret, err;
- 
- 	mtd_set_dev_defaults(mtd);
-@@ -1064,25 +1115,30 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
- 	if (ret)
- 		goto out;
- 
-+	ret = add_mtd_device(mtd, false);
-+	if (ret)
-+		goto out;
-+
- 	if (IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER)) {
--		ret = add_mtd_device(mtd);
-+		ret = mtd_add_partition(mtd, mtd->name, 0, MTDPART_SIZ_FULL, &parent);
- 		if (ret)
- 			goto out;
-+
-+	} else {
-+		parent = mtd;
- 	}
- 
- 	/* Prefer parsed partitions over driver-provided fallback */
--	ret = parse_mtd_partitions(mtd, types, parser_data);
-+	ret = parse_mtd_partitions(parent, types, parser_data);
- 	if (ret == -EPROBE_DEFER)
- 		goto out;
- 
- 	if (ret > 0)
- 		ret = 0;
- 	else if (nr_parts)
--		ret = add_mtd_partitions(mtd, parts, nr_parts);
--	else if (!device_is_registered(&mtd->dev))
--		ret = add_mtd_device(mtd);
--	else
--		ret = 0;
-+		ret = add_mtd_partitions(parent, parts, nr_parts);
-+	else if (!IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER))
-+		ret = mtd_add_partition(parent, mtd->name, 0, MTDPART_SIZ_FULL, NULL);
- 
- 	if (ret)
- 		goto out;
-@@ -1102,13 +1158,14 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
- 		register_reboot_notifier(&mtd->reboot_notifier);
- 	}
- 
-+	return 0;
- out:
--	if (ret) {
--		nvmem_unregister(mtd->otp_user_nvmem);
--		nvmem_unregister(mtd->otp_factory_nvmem);
--	}
-+	nvmem_unregister(mtd->otp_user_nvmem);
-+	nvmem_unregister(mtd->otp_factory_nvmem);
- 
--	if (ret && device_is_registered(&mtd->dev)) {
-+	del_mtd_partitions(mtd);
-+
-+	if (device_is_registered(&mtd->dev)) {
- 		err = del_mtd_device(mtd);
- 		if (err)
- 			pr_err("Error when deleting MTD device (%d)\n", err);
-@@ -1267,8 +1324,7 @@ int __get_mtd_device(struct mtd_info *mtd)
- 		mtd = mtd->parent;
- 	}
- 
--	if (IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER))
--		kref_get(&master->refcnt);
-+	kref_get(&master->refcnt);
- 
- 	return 0;
- }
-@@ -1362,8 +1418,7 @@ void __put_mtd_device(struct mtd_info *mtd)
- 		mtd = parent;
- 	}
- 
--	if (IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER))
--		kref_put(&master->refcnt, mtd_device_release);
-+	kref_put(&master->refcnt, mtd_device_release);
- 
- 	module_put(master->owner);
- 
-@@ -2530,6 +2585,16 @@ static int __init init_mtd(void)
- 	if (ret)
- 		goto err_reg;
- 
-+	ret = class_register(&mtd_master_class);
-+	if (ret)
-+		goto err_reg2;
-+
-+	ret = alloc_chrdev_region(&mtd_master_devt, 0, MTD_MASTER_DEVS, "mtd_master");
-+	if (ret < 0) {
-+		pr_err("unable to allocate char dev region\n");
-+		goto err_chrdev;
-+	}
-+
- 	mtd_bdi = mtd_bdi_init("mtd");
- 	if (IS_ERR(mtd_bdi)) {
- 		ret = PTR_ERR(mtd_bdi);
-@@ -2554,6 +2619,10 @@ static int __init init_mtd(void)
- 	bdi_unregister(mtd_bdi);
- 	bdi_put(mtd_bdi);
- err_bdi:
-+	unregister_chrdev_region(mtd_master_devt, MTD_MASTER_DEVS);
-+err_chrdev:
-+	class_unregister(&mtd_master_class);
-+err_reg2:
- 	class_unregister(&mtd_class);
- err_reg:
- 	pr_err("Error registering mtd class or bdi: %d\n", ret);
-@@ -2567,9 +2636,12 @@ static void __exit cleanup_mtd(void)
- 	if (proc_mtd)
- 		remove_proc_entry("mtd", NULL);
- 	class_unregister(&mtd_class);
-+	class_unregister(&mtd_master_class);
-+	unregister_chrdev_region(mtd_master_devt, MTD_MASTER_DEVS);
- 	bdi_unregister(mtd_bdi);
- 	bdi_put(mtd_bdi);
- 	idr_destroy(&mtd_idr);
-+	idr_destroy(&mtd_master_idr);
- }
- 
- module_init(init_mtd);
-diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
-index b014861a06a6..2258d31c5aa6 100644
---- a/drivers/mtd/mtdcore.h
-+++ b/drivers/mtd/mtdcore.h
-@@ -8,7 +8,7 @@ extern struct mutex mtd_table_mutex;
- extern struct backing_dev_info *mtd_bdi;
- 
- struct mtd_info *__mtd_next_device(int i);
--int __must_check add_mtd_device(struct mtd_info *mtd);
-+int __must_check add_mtd_device(struct mtd_info *mtd, bool partitioned);
- int del_mtd_device(struct mtd_info *mtd);
- int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
- int del_mtd_partitions(struct mtd_info *);
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 994e8c51e674..5a3db36d734e 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -86,8 +86,7 @@ static struct mtd_info *allocate_partition(struct mtd_info *parent,
- 	 * parent conditional on that option. Note, this is a way to
- 	 * distinguish between the parent and its partitions in sysfs.
- 	 */
--	child->dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) || mtd_is_partition(parent) ?
--			    &parent->dev : parent->dev.parent;
-+	child->dev.parent = &parent->dev;
- 	child->dev.of_node = part->of_node;
- 	child->parent = parent;
- 	child->part.offset = part->offset;
-@@ -243,7 +242,7 @@ static int mtd_add_partition_attrs(struct mtd_info *new)
- }
- 
- int mtd_add_partition(struct mtd_info *parent, const char *name,
--		      long long offset, long long length)
-+		      long long offset, long long length, struct mtd_info **out)
- {
- 	struct mtd_info *master = mtd_get_master(parent);
- 	u64 parent_size = mtd_is_partition(parent) ?
-@@ -276,12 +275,15 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
- 	list_add_tail(&child->part.node, &parent->partitions);
- 	mutex_unlock(&master->master.partitions_lock);
- 
--	ret = add_mtd_device(child);
-+	ret = add_mtd_device(child, true);
- 	if (ret)
- 		goto err_remove_part;
- 
- 	mtd_add_partition_attrs(child);
- 
-+	if (out)
-+		*out = child;
-+
- 	return 0;
- 
- err_remove_part:
-@@ -413,7 +415,7 @@ int add_mtd_partitions(struct mtd_info *parent,
- 		list_add_tail(&child->part.node, &parent->partitions);
- 		mutex_unlock(&master->master.partitions_lock);
- 
--		ret = add_mtd_device(child);
-+		ret = add_mtd_device(child, true);
- 		if (ret) {
- 			mutex_lock(&master->master.partitions_lock);
- 			list_del(&child->part.node);
-@@ -590,9 +592,6 @@ static int mtd_part_of_parse(struct mtd_info *master,
- 	int ret, err = 0;
- 
- 	dev = &master->dev;
--	/* Use parent device (controller) if the top level MTD is not registered */
--	if (!IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) && !mtd_is_partition(master))
--		dev = master->dev.parent;
- 
- 	np = mtd_get_of_node(master);
- 	if (mtd_is_partition(master))
-@@ -711,6 +710,7 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
- 		if (ret < 0 && !err)
- 			err = ret;
- 	}
-+
- 	return err;
- }
- 
-diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
-index b74a539ec581..5daf80df9e89 100644
---- a/include/linux/mtd/partitions.h
-+++ b/include/linux/mtd/partitions.h
-@@ -108,7 +108,7 @@ extern void deregister_mtd_parser(struct mtd_part_parser *parser);
- 		      deregister_mtd_parser)
- 
- int mtd_add_partition(struct mtd_info *master, const char *name,
--		      long long offset, long long length);
-+		      long long offset, long long length, struct mtd_info **part);
- int mtd_del_partition(struct mtd_info *master, int partno);
- uint64_t mtd_get_device_size(const struct mtd_info *mtd);
- 
--- 
-2.43.0
+It may be that there are also some 'dumb' devices, like program-and-forget
+regulators or similar components, that aren't even described in your [SD]SDT
 
+>>> +&uart14 {
+>>> +     status = "okay";
+>>> +
+>>> +     bluetooth {
+>>> +             compatible = "qcom,wcn7850-bt";
+>>> +             pinctrl-names = "default";
+>>> +             pinctrl-0 = <&bt_en_default>;
+>>> +             enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
+>>> +             max-speed = <3000000>;
+>>
+>> You'll need to provide some supplies, coming out of a pwrseq device, see
+>> e.g. the QCP
+>>
+> 
+> I assume you are referring to change like this [1]. There were some
+> discussions on whether the supplies are modelled correctly as it seems
+> to be different when using m.2 card, so as I was not sure about this
+> platform I did not add it. At least in the variant that I have, the
+> wcn6855 is soldered onboard, so I would assume so is the wcn7850
+> variant.
+> It seems that the two use quite different supplies - are the platform
+> dependent, or only wlan card dependent? Ie. Can I just copy pwrseq for
+> wcn6855 from a different platform?
+
+The power sequencer is a description of the hardware that's part of the
+same die as the wifi logic, IIUC
+
+The inputs are most likely fixed per SoC+PMIC combo for various reasons
+
+> For  wcn7850's pwrseq, I can add similarly to other platforms, but
+> cannot verify it. Should I still add it in this case?
+
+Let's not introduce it then
+
+> A bit unrelated question: in the meantime I managed to bring-up the
+> sound on Zenbook as well. Would it be more correct to wait for this
+> series to land, and then send it separately, or is it okay to add it
+> in directly on re-spin?
+
+Let's get what we have merged first
+
+Konrad
