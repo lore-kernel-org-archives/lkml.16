@@ -1,132 +1,111 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FE719A;
-	Mon, 14 Apr 2025 13:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0471482E7;
+	Mon, 14 Apr 2025 13:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744635671; cv=none; b=r2RqJuigEmVmFnv+QRNzv9PegCl03MyLg4PmYVl2SF2+JTS+aX6HoM2yIk09r5iGRLU8udaXm1yHOZSR45V5uvqKdQ4k+ALo35z0iiwyG4AwdLC2cl1/w6yHG3ciz2h7PoqIr6zmYE6C/G9paIx7m/hUdGkrYuw9RWhXGX2aeyo=
+	t=1744635691; cv=none; b=ZGHLtudTxgi+oN0yoIRGxADLsKr2ZppWb04UcXx7+3fPjUlsKw3HRHReCrgL0ase/yOW3LnKp1qUe5JNdSKI2Zc3TazafmljkaLqkzvrJ1fAHYXKsFOC8B32H4zyD/wYrDA6/ZfmD9bHpNlbml5huXfxam99FYrLIvavF1whVvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744635671; c=relaxed/simple;
-	bh=8S+AeCn4r6iTGoohI4XSgodtSjUncIB/ERERwnjLzLc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XvsWEJIQ83Ipdx0diGh8YGqc6b5zby3jpfqOI38nnCAvr+y0NiIRTV9cOluS5lv31hARh8Td0WAR+5gq624zHhSyo4gix5SAdsLP2JTB4eM7cC2P3XU8CZ1+hFDuGgLV2a5TzAikL8If5oTimsr+XeT8Khnp3H/3Lar5COApTy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JG4xywC2; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744635691; c=relaxed/simple;
+	bh=TvT6KZOm7khG7yOX2mT8/OUHx94BznZi+RP/jNeSTik=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UvLHjcLCmAR9VypK+pgfkb1sADKGgz5PkRdjzvVTIY2eZ3e91GKpx2lWJ6dNVheI4ctEYQHCmtbe5rL1nMd5PsHwe6OVMQGQWaqTQkZexcJjhpRcEkwBfqZAeX0oDOz4CWpOWTdOFY7mb0hLJsROVc/b6biCUSzgOFQVPWy74xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SJJ9i6Yc; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JG4xywC2"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53ED0tBe2062857
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 08:00:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744635655;
-	bh=VX8a/yvVIobMpnRl8a6ZehZn3dZHFdJf7iaKYTSI3Nw=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=JG4xywC2mDpw8S6eXsJk0pcJbPrkdw1+4Am3wGY+xOZsTUmA9lvISe9h64MMGDsAk
-	 UR7wYuXzsJtS5GXPWAziYI5ufrbwnoBkuHqY1hYiALh/lN0a3DlXrR71Ic2nnXTGiv
-	 H3b6sEMD5uHL8kXUqHuzzR6sPOwOflVgoFHq18jc=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53ED0tKH129700
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 08:00:55 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 08:00:54 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 08:00:54 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53ED0r0g024564;
-	Mon, 14 Apr 2025 08:00:54 -0500
-Date: Mon, 14 Apr 2025 18:30:53 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Nishanth Menon <nm@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <u-kumar1@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 0/2] J722S: DT Node cleanup for serdes0 and serdes1
-Message-ID: <79ef7f50-22d5-4c40-ae28-02bf297ca79c@ti.com>
-References: <20250412052712.927626-1-s-vadapalli@ti.com>
- <20250414120930.m7x7zfmyby22urpo@ultimate>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SJJ9i6Yc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744635690; x=1776171690;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TvT6KZOm7khG7yOX2mT8/OUHx94BznZi+RP/jNeSTik=;
+  b=SJJ9i6Yc6TyJNOfF6N7rDLU3gE4sGYuzb2lf9bz7YbGgQW3Nc4SqUlIQ
+   aThPkYv4GwFLbQUrq3jEpvM7ohqGo1a2trI9bVUmPVU4RXnyChZOGFi7j
+   tkoonynBUvT3nOELXp/Kjj/C2Kyd/6dQeXvGZnYsyBf0iEimo3vkQ79Hl
+   AmHkWVC3/D3CUWu9jOEviWga8A0s4OsnUsHAPqnsW8IA0tVShJp2RWvUk
+   gc3/IbbTmRiMfiyL593aSFSKtbMyN+6fnI2SV5uIUbV2DLAGgWc9eXE1P
+   MXvS/Qz0E0wx1g0cDZjCn43l51zT0ANrrprcWxb8E8BMSaWkhJSRwg98M
+   g==;
+X-CSE-ConnectionGUID: GJYU/GCxQKeXBaNQyPhHCg==
+X-CSE-MsgGUID: sUAApCIISWOKLZAf9u7oBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46192989"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="46192989"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:01:28 -0700
+X-CSE-ConnectionGUID: HjakGuZXQIm9xRmzrj6KBg==
+X-CSE-MsgGUID: KEpAqU9zTRWnlvq1ckZmIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="166984908"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:01:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 14 Apr 2025 16:01:21 +0300 (EEST)
+To: Wilfred Mallawa <wilfred.opensource@gmail.com>
+cc: bhelgaas@google.com, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com, Lukas Wunner <lukas@wunner.de>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    alistair.francis@wdc.com, wilfred.mallawa@wdc.com, dlemoal@kernel.org, 
+    cassel@kernel.org
+Subject: Re: [PATCH v2] PCI: fix the printed delay amount in info print
+In-Reply-To: <20250414001505.21243-2-wilfred.opensource@gmail.com>
+Message-ID: <01ff78f6-0708-4556-1fce-69250d625b2b@linux.intel.com>
+References: <20250414001505.21243-2-wilfred.opensource@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250414120930.m7x7zfmyby22urpo@ultimate>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/mixed; boundary="8323328-482290908-1744635681=:10563"
 
-On Mon, Apr 14, 2025 at 07:09:30AM -0500, Nishanth Menon wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hello Nishanth,
+--8323328-482290908-1744635681=:10563
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> On 10:57-20250412, Siddharth Vadapalli wrote:
-> > Hello,
-> > 
-> > This series is based on the following series:
-> > https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-> > Based on the discussion in the above series which disabled 'serdes_wiz0'
-> > and 'serdes_wiz1' nodes in the SoC file and enabled them in the board
-> > file, Udit pointed out that it wasn't necessary to disable 'serdes0' and
-> > 'serdes1' in the SoC file anymore, since that is not a working
-> > configuration - serdes_wizX enabled and serdesX disabled doesn't work.
-> > 
-> > Hence, this series aims to cleanup the serdesX nodes after the changes
-> > made by the above series.
-> > 
-> > Regards,
-> > Siddharth.
-> > 
-> > Siddharth Vadapalli (2):
-> >   arm64: dts: ti: k3-j722s-main: don't disable serdes0 and serdes1
-> >   arm64: dts: ti: k3-j722s-evm: drop redundant status within
-> >     serdes0/serdes1
-> > 
-> >  arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 2 --
-> >  arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ----
-> >  2 files changed, 6 deletions(-)
-> > 
-> > -- 
-> > 2.34.1
-> > 
-> 
-> 
-> I do not understand the logic here. serdes cannot operate without wiz
-> nodes, correct? why would we leave serdes on by default?
+On Mon, 14 Apr 2025, Wilfred Mallawa wrote:
 
-Yes, serdesX requires serdes_wizX, but at the same time, serdesX is the
-child node of serdes_wizX. Therefore, without enabling serdes_wizX, we
-cannot enable serdesX.
+> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+>=20
+> Print the delay amount that pcie_wait_for_link_delay() is invoked with
+> instead of the hardcoded 1000ms value in the debug info print.
+>=20
+> Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus()=
+ wait time for slow links")
+> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a70a3..8139b70cafa9 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_de=
+v *dev, char *reset_type)
+>  =09=09delay);
+>  =09if (!pcie_wait_for_link_delay(dev, true, delay)) {
+>  =09=09/* Did not train, no need to wait any further */
+> -=09=09pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n"=
+);
+> +=09=09pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", =
+delay);
+>  =09=09return -ENOTTY;
+>  =09}
+> =20
+>=20
 
-Prior to this series, but with the dependent series at:
-https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250408103606.3679505-1-s-vadapalli@ti.com/
-applied, the nodes look like:
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-	serdes_wizX {
-		...
-		status = "disabled";
+--=20
+ i.
 
-		serdesX {
-			...
-			status = "disabled";
-		};
-	};
-
-The dependent series fixes 'serdes_wizX' by disabling it in the SoC file
-k3-j722s-main.dtsi. But after the fix, we have a 'status = "disabled";'
-within the serdesX node which isn't required since:
-a) serdes_wizX enabled but serdesX disabled is non-functional and
-unusable
-b) serdes_wizX disabled in DT implies that serdesX is also disabled
-
-Regards,
-Siddharth.
+--8323328-482290908-1744635681=:10563--
