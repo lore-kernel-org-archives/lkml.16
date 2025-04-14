@@ -1,143 +1,160 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from forward205b.mail.yandex.net (forward205b.mail.yandex.net [178.154.239.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120E7284685;
-	Mon, 14 Apr 2025 17:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F31028469A;
+	Mon, 14 Apr 2025 17:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744651066; cv=none; b=u93ZIC7WfErsmHVNShEN2JEpb4oj9cHLXbXRXpklJnxh3ijO0kuawaKCupf47QkhQHo8xd3R9fG7V7iVXnKsyF3wrqP1PmEwAakVM+x8XUG1yziiYaal6M3UzzckMbOT9WZCBBrirSxQQxyFwYmxBZmzS18kakoVh9Ttrs3IjJw=
+	t=1744651139; cv=none; b=O53JQ5wbdjhFAy0aNK7Lf6+5jcPx6hLoSWgx7Pfn6e27G3zO2rfWT55jGCStvn/9Z+k6nVW5IgG+GzBGvkVxBn1OL1OlwWCvF2FdWGE5dUWvlgVS8ZeB2QtrPOIBBU5HA3yK1OmfMc5/ZldfwEA1fR5ND1R0BV7CuLpHuh1sV/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744651066; c=relaxed/simple;
-	bh=rzA20/pIdWBHMGU7xAsPsa+U0QCOSidUUd989Wkkeeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EEWzRrB+1Byo7CWF1hkbc/xX/bh8yyykWLOa+rd5TIJvjY3voWsi2a+2crDHWN3Joa4Hg1KCtF/IUB/xmml4i7qymU4/0LebdfYCBcmNb2mOrkUpoB8gA75U96KfVFYZCQ1xtPVY80dwEwfQlGg4/HZmB8pzBQ/r3qmQYiQlx2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Dx/VuRjp; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744651139; c=relaxed/simple;
+	bh=G77ROff31km5oic0MrLl+7V+X9eKW5/vOe5Aa4RAjlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LEDfuewna9zvZstqmaXBHNw/HLrPX7YyPH+GX8+NoBWKilldbWBg+WXwuFeSeNMwkv11xAE1ZgoekwVUP9UMMv+RkZ/8+ro3XF2YIDP6mtZShuW8E+6SSkzlGt3XuWCJ6wgD4t1Zf1rHWKS0rJ9ORz3Lt3yhgpDW8G1SccsIGWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=mC0xs/5P; arc=none smtp.client-ip=178.154.239.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Dx/VuRjp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=IYRKGwR89Rpw68pdLeCst1myOZk4GqPsPOkkIazWR3w=; b=Dx
-	/VuRjp0nFQKNbq1x3+XqZofv0ZRl6pr8c0elKq4L5tqkwKQSiOVIkavVio24lxk1k60DTPHSABwJ8
-	mWgekEFQAkOwh3KxZqIcUmirU6CVu0e92MYFR/WHbtCvI27sadxWQC7gSaWj3rKB2Y/KmiKMCAeoL
-	Jlaa3jt9wRrFnb0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4NRA-009EqC-1B; Mon, 14 Apr 2025 19:17:36 +0200
-Date: Mon, 14 Apr 2025 19:17:36 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sai Krishna Gajula <saikrishnag@marvell.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-	Geethasowjanya Akula <gakula@marvell.com>,
-	Linu Cherian <lcherian@marvell.com>,
-	Jerin Jacob <jerinj@marvell.com>,
-	Hariprasad Kelam <hkelam@marvell.com>,
-	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	"nathan@kernel.org" <nathan@kernel.org>,
-	"ndesaulniers@google.com" <ndesaulniers@google.com>,
-	"morbo@google.com" <morbo@google.com>,
-	"justinstitt@google.com" <justinstitt@google.com>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-	"horms@kernel.org" <horms@kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [net-next PATCH v3 1/2] octeontx2-af: correct __iomem
- annotations flagged by Sparse
-Message-ID: <e80bd0f7-f38e-4882-aa48-ff98d0fd0101@lunn.ch>
-References: <20250311182631.3224812-1-saikrishnag@marvell.com>
- <20250311182631.3224812-2-saikrishnag@marvell.com>
- <7009d4cc-a008-49ea-8f50-1e9aec63b592@lunn.ch>
- <BY3PR18MB4707C3348715B237C0A95C47A0B32@BY3PR18MB4707.namprd18.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="mC0xs/5P"
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
+	by forward205b.mail.yandex.net (Yandex) with ESMTPS id 1DE766522C;
+	Mon, 14 Apr 2025 20:12:38 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net [IPv6:2a02:6b8:c11:3fa3:0:640:b228:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTPS id A739C609D3;
+	Mon, 14 Apr 2025 20:12:29 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id PCKvQd1LmW20-QSrumStn;
+	Mon, 14 Apr 2025 20:12:28 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
+	t=1744650748; bh=wFx6lLFV+QupO4M4+wLGufqzKiqBmpx6VWXYCXbP+dU=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=mC0xs/5PO+JAudJ+Yfo9WY73Caa8C77wLAUOratA0i1DxX58kUOHYB08BT86W/8rZ
+	 b7Ze9gTt3vwiUaatGbBJEpqutn8ETFPW1/SdRvqgKgS2f3mYtrwLDstFoDcZc266mB
+	 aOTD0DM6Pn8wLoZfUImzgUo2kaBN7i22r5JeJ0Tg=
+Authentication-Results: mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
+From: Mikhail Lobanov <m.lobanov@rosa.ru>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mikhail Lobanov <m.lobanov@rosa.ru>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3] KVM: SVM: forcibly leave SMM mode on vCPU reset
+Date: Mon, 14 Apr 2025 20:12:06 +0300
+Message-ID: <20250414171207.155121-1-m.lobanov@rosa.ru>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <BY3PR18MB4707C3348715B237C0A95C47A0B32@BY3PR18MB4707.namprd18.prod.outlook.com>
 
-On Mon, Apr 14, 2025 at 04:38:53PM +0000, Sai Krishna Gajula wrote:
-> > -----Original Message-----
-> > From: Andrew Lunn <andrew@lunn.ch>
-> > Sent: Wednesday, March 12, 2025 2:52 AM
-> > To: Sai Krishna Gajula <saikrishnag@marvell.com>
-> > Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
-> > pabeni@redhat.com; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > Sunil Kovvuri Goutham <sgoutham@marvell.com>; Geethasowjanya Akula
-> > <gakula@marvell.com>; Linu Cherian <lcherian@marvell.com>; Jerin Jacob
-> > <jerinj@marvell.com>; Hariprasad Kelam <hkelam@marvell.com>; Subbaraya
-> > Sundeep Bhatta <sbhatta@marvell.com>; andrew+netdev@lunn.ch; Bharat
-> > Bhushan <bbhushan2@marvell.com>; nathan@kernel.org;
-> > ndesaulniers@google.com; morbo@google.com; justinstitt@google.com;
-> > llvm@lists.linux.dev; horms@kernel.org; kernel test robot <lkp@intel.com>
-> > Subject: Re: [net-next PATCH v3 1/2] octeontx2-af: correct
-> > __iomem annotations flagged by Sparse
-> > 
-> > > if (mbox->mbox. hwbase) > - iounmap(mbox->mbox. hwbase); > +
-> > > iounmap((void __iomem *)mbox->mbox. hwbase); This looks wrong. If you
-> > > are unmapping it, you must of mapped it somewhere. And that mapping
-> > > would of returned an __iomem
-> > 
-> > >  	if (mbox->mbox.hwbase)
-> > > -		iounmap(mbox->mbox.hwbase);
-> > > +		iounmap((void __iomem *)mbox->mbox.hwbase);
-> > 
-> > This looks wrong. If you are unmapping it, you must of mapped it
-> > somewhere. And that mapping would of returned an __iomem value. So
-> > mbox.hwbase should be an __iomem value and you would not need this
-> > cast.
+Previously, commit ed129ec9057f ("KVM: x86: forcibly leave nested mode
+on vCPU reset") addressed an issue where a triple fault occurring in
+nested mode could lead to use-after-free scenarios. However, the commit
+did not handle the analogous situation for System Management Mode (SMM).
 
-> Yes,  mbox->mbox.hwbase is ioremapped with cache (ioremap_wc), while initialization it is declared as __iomem. But this hwbase is actually a DRAM memory mapped to BAR for better accessibility across the system. Since we use large memcpy (64KB and more) to/from this hwbase, we forced it to use as "void */u64" before exiting with unmap. As this is DRAM memory, memory access will not have side effects. Infact the AI applications also recommended similar mechanism. Please suggest if you have any other view and this can be addressed in some other way.
+This omission results in triggering a WARN when a vCPU reset occurs
+while still in SMM mode, due to the check in kvm_vcpu_reset(). This
+situation was reprodused using Syzkaller by:
+1) Creating a KVM VM and vCPU
+2) Sending a KVM_SMI ioctl to explicitly enter SMM
+3) Executing invalid instructions causing consecutive exceptions and
+eventually a triple fault
 
-Please configure your email client to correctly wrap emails.
+The issue manifests as follows:
 
-Did you check the performance of memcpy_fromio()? That is the API you
-are supposed to be using with an __iomem. I _think_ memcpy is only
-going to work for some architectures and other architectures will give
-you problems. That is the whole point of the __iomem, to make sure you
-use the correct API which works across architectures.
+WARNING: CPU: 0 PID: 25506 at arch/x86/kvm/x86.c:12112
+kvm_vcpu_reset+0x1d2/0x1530 arch/x86/kvm/x86.c:12112
+Modules linked in:
+CPU: 0 PID: 25506 Comm: syz-executor.0 Not tainted
+6.1.130-syzkaller-00157-g164fe5dde9b6 #0
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+RIP: 0010:kvm_vcpu_reset+0x1d2/0x1530 arch/x86/kvm/x86.c:12112
+Call Trace:
+ <TASK>
+ shutdown_interception+0x66/0xb0 arch/x86/kvm/svm/svm.c:2136
+ svm_invoke_exit_handler+0x110/0x530 arch/x86/kvm/svm/svm.c:3395
+ svm_handle_exit+0x424/0x920 arch/x86/kvm/svm/svm.c:3457
+ vcpu_enter_guest arch/x86/kvm/x86.c:10959 [inline]
+ vcpu_run+0x2c43/0x5a90 arch/x86/kvm/x86.c:11062
+ kvm_arch_vcpu_ioctl_run+0x50f/0x1cf0 arch/x86/kvm/x86.c:11283
+ kvm_vcpu_ioctl+0x570/0xf00 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4122
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:870 [inline]
+ __se_sys_ioctl fs/ioctl.c:856 [inline]
+ __x64_sys_ioctl+0x19a/0x210 fs/ioctl.c:856
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x35/0x80 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x6e/0xd8
 
-> > 
-> > >  	for (qidx = 0; qidx < pf->qset.cq_cnt; qidx++) {
-> > > -		ptr = otx2_get_regaddr(pf, NIX_LF_CQ_OP_INT);
-> > > +		ptr = (__force u64 *)otx2_get_regaddr(pf,
-> > NIX_LF_CQ_OP_INT);
-> > >  		val = otx2_atomic64_add((qidx << 44), ptr);
-> > 
-> > This also looks questionable. You should be removing casts, not adding them.
-> > otx2_get_regaddr() returns an __iomem. So maybe
-> > otx2_atomic64_add() is actually broken here?
-> Similar to the above case, otx2_atomic64_add is a special case where it uses assembly code as part of definition, hence we had to use typecasting the "ptr". Please suggest if there is any better way.
-> 
-> static inline u64 otx2_atomic64_add(u64 incr, u64 *ptr)
-> {
->         u64 result;
-> 
+Architecturally, hardware CPUs exit SMM upon receiving a triple
+fault as part of a hardware reset. To reflect this behavior and
+avoid triggering the WARN, this patch explicitly calls
+kvm_smm_changed(vcpu, false) in the SVM-specific shutdown_interception()
+handler prior to resetting the vCPU.
 
-Teach this function to accept an __iomem. Worst case, you remove the
-cast here, before going into assembly.
+The initial version of this patch attempted to address the issue by calling
+kvm_smm_changed() inside kvm_vcpu_reset(). However, this approach was not
+architecturally accurate, as INIT is blocked during SMM and SMM should not
+be exited implicitly during a generic vCPU reset. This version moves the
+fix into shutdown_interception() for SVM, where the triple fault is
+actually handled, and where exiting SMM explicitly is appropriate.
 
->         __asm__ volatile(".cpu   generic+lse\n"
->                          "ldadd %x[i], %x[r], [%[b]]"
->                          : [r]"=r"(result), "+m"(*ptr)
->                          : [i]"r"(incr), [b]"r"(ptr)
->                          : "memory");
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-What actually happens if you keep the attribute? My guess is
-nothing. These are sparse markups, and gcc/as never seems them.
+Fixes: ed129ec9057f ("KVM: x86: forcibly leave nested mode on vCPU reset")
+Cc: stable@vger.kernel.org
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Mikhail Lobanov <m.lobanov@rosa.ru>
+---
+v2: Move SMM exit from kvm_vcpu_reset() to SVM's shutdown_interception(), 
+per suggestion from Sean Christopherson <seanjc@google.com>.
+v3: -Export kvm_smm_changed() using EXPORT_SYMBOL_GPL.
+-Wrap the call to kvm_smm_changed() in svm.c with #ifdef CONFIG_KVM_SMM 
+to avoid build errors when SMM support is disabled.
 
-	Andrew
+ arch/x86/kvm/smm.c     | 1 +
+ arch/x86/kvm/svm/svm.c | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
+index 699e551ec93b..9864c057187d 100644
+--- a/arch/x86/kvm/smm.c
++++ b/arch/x86/kvm/smm.c
+@@ -131,6 +131,7 @@ void kvm_smm_changed(struct kvm_vcpu *vcpu, bool entering_smm)
+ 
+ 	kvm_mmu_reset_context(vcpu);
+ }
++EXPORT_SYMBOL_GPL(kvm_smm_changed);
+ 
+ void process_smi(struct kvm_vcpu *vcpu)
+ {
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index d5d0c5c3300b..c5470d842aed 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -2231,6 +2231,10 @@ static int shutdown_interception(struct kvm_vcpu *vcpu)
+ 	 */
+ 	if (!sev_es_guest(vcpu->kvm)) {
+ 		clear_page(svm->vmcb);
++#ifdef CONFIG_KVM_SMM
++		if (is_smm(vcpu))
++			kvm_smm_changed(vcpu, false);
++#endif
+ 		kvm_vcpu_reset(vcpu, true);
+ 	}
+ 
+-- 
+2.47.2
+
