@@ -1,164 +1,116 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627692580F9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FF1A32;
+	Mon, 14 Apr 2025 12:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634585; cv=none; b=EIfWsypQPI8pR/Z86yy0bep+JUUIHpU7CNVHBIXL6FFjdEJkEnTHfXB5Qs5xt0gmQCr4LSrTej3E3AWTKtnVBm3f4hFlgH9kOOWMfYWF31kKQUdT2BpzzjqJYI35x85R9/N1qc1iY1V91DgvTPh4fZVf60DpqhuD9TY50ONfD0g=
+	t=1744634822; cv=none; b=u/cj9kxNafIeP/27QmTFurGieU1tzrHvGdAcNxYhRqjBG39x+02uXBYD+Ztmg5H8YSDThrMP5WV1ZgAGMUUT5vQHSSRcYIPGoJLT+YW42LFvJ+I+mTubW25OYS7NtQNiL1JGlx/H4SwSarZhSji/ta5neRghbtpx+9RnNU6joNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634585; c=relaxed/simple;
-	bh=mkz2kA+VXnowiojV4uf1dKbm0WdGQAV1VMpX8sQUKbk=;
+	s=arc-20240116; t=1744634822; c=relaxed/simple;
+	bh=tDsxr8IsprCMFWPEXiYJ7xbp/M0BQXqqIb3yprthJZw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNFbBqxgoUucc69WjtXteJ5g4ROvVcDVTPOoZPj1EhTuSNibgrz6fDgAWTiX85hLszKayJL/7Rlnmd/9hkndoaL4qRaWgCxFaWDZ8PkP0/VopP6ipAbI4hfjDjz87DI4RMXNZk5TS+wv8VfBs82R+ZXVJaivM5NeCgoFhcXy/vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RsAdBq9H; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiE6jZ4gxXKkPehOuDfSggXzI/C1G7EW1lptYHOBCWil61Wxb5rioDC3flMd1GGfI2YJBhGpmQYmuA8KUoin2XRlqOGMEFSKWzTXz1C9KrWV5MRgGyaCNnZ+u4J5TWbmJF/BFg0u+GH2JehGbbU1S3SvN2/piQ6GLfeRxLz0w4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=aEfTl/Yg; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RsAdBq9H"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so34387985e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744634581; x=1745239381; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T9ixK134YSYVvgH5n+g61PRZpWOKvjguSgzISWbKA2I=;
-        b=RsAdBq9HVJZPiOtXUhr4Yy/KlVOOZMiHRMjgSA6rTYzvprpodglhgCe5ufVYdoKibL
-         1r07vATVUoCqq6TBJy6lAKDgNlWF+bJ/MvQuCTgQmOut9arLH8yx/qcBWqwYJpXeOhBB
-         FY/v38ZLMLYhtF4tJPQABh5tWzqdR/N8Jorf4VnIpfIjK+uhCpgx80E5nlah9UD6b1uB
-         pNyyc3FS3pj+HOAnhgVzadQ7ZOaKiMLytyubPxmgTsBvYxl8NJikCWdhw9TBfJOnlQYB
-         kB48EmwtrizcPpkusu0Hfxj2cwq5wwHaWVBE6ikvBJOJBOQJ2biOkKYEoYeI+MS0pyCd
-         rJ6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744634581; x=1745239381;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T9ixK134YSYVvgH5n+g61PRZpWOKvjguSgzISWbKA2I=;
-        b=sH1Jl8vjDkagR61GvTCNDBbD+I4+8nvQkNAlvZoGkzk0PCmAbfu6jX2sMuRmy1+uul
-         9JiAeGocckkyuxWMsgmys3+FnOwc8fZFf+j9uxSlVQNIQEgX2AZ1PcjzIllZ/kElWYXO
-         ZZR+S2rBBSy/D/jOPPokClqnAJbGuW/29se+z7+De4VvScqrH9Sf+VhIJ/ih4wNDO6LF
-         9OlH1ayWdw1gBuKidIvuZH1t3a+BwXLPD/A01Wi+TRwhmI9qT53ccAc+rALNHQu4yBwb
-         47yogzF9e9UNOLhoYN/63uT2wEZa304l5z6LMz+EtvUnw8h4GcdaV8jwY06SzttL31vY
-         ysLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkCcK/j3lr16RuTRw6OeK7JWrgx09I8trmOSZrsel9xfsha/E02MfOaiBUhBckJzRsOxOfylyb1kduJbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySvJCazXE1fH58brlzObG2js2J2lAAox4kLnFa/4aeUPkjK83p
-	Adx4U1U8bDaM9isnF7bSKrjzP+y76fQ9nlLf1JK7pi4yUFvo0yfL80cQK6uImW0=
-X-Gm-Gg: ASbGnctUkABO7X85NQUHpX7wJHyKT4TstmjanqgtD/2xYrGI5QYswdo5vPDEmSAybYN
-	WHk6njiUZGjaCVdDOZCFf/+SjrVMNFSmzC176QWS4uQOXe/5LCA67zm3TCpULJRyQXSpj12RmRo
-	XBZLUutUT707GWJDzLGrnYWhww1P/PuSyr6s9dxVNI+tya9aTHBeGfW34CjaxnkL53z7FQRqhM5
-	HE4eXO7/RnBw1TWmjxR1+ko+HV9AjVsWCAtqyezPXB2CDluzXdu+hJ07fJ7JyICzESnIoxbzb9u
-	vLFxZb+6okdKkMbBIyQXrTdr6SU3FC3gPmz2MRKHVQE=
-X-Google-Smtp-Source: AGHT+IH7iIHRZ3vV/WkqxRDldhrP0zYk3mfrclbeNsJTpYta2piT0N21vJ20EAFWMAd7XZkrfuQvEQ==
-X-Received: by 2002:a05:600c:8519:b0:43d:300f:fa51 with SMTP id 5b1f17b1804b1-43f3a93ebb3mr104821235e9.9.1744634580452;
-        Mon, 14 Apr 2025 05:43:00 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c817dsm173048895e9.23.2025.04.14.05.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 05:43:00 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:42:58 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-Message-ID: <kwvo4y6xjojvjf47pzv3uk545c2xewkl36ddpgwznctunoqvkx@lpqzxszmmkmj>
-References: <20250414021249.3232315-1-longman@redhat.com>
- <20250414021249.3232315-2-longman@redhat.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aEfTl/Yg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=/JhgBoVQSujfjNBj5Wy635vowG04nxCTg2Y/COi9708=; b=aE
+	fTl/YgEutgzKWOPNpfQMdtCdlE6H22hmd4AjfkxXa1f9h1iDbjiDhpGLSc+gcdXAoLBGwddg7YTdS
+	TCOQGBqReDNSiuDQYgukAZLALj/9xFc9z2CWaVw++cvzeL3h6vwX7zP/zQwnJtV1XrPogHa2CF5HE
+	Itl26xZ5+mkC1/8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4JDA-009BUk-HY; Mon, 14 Apr 2025 14:46:52 +0200
+Date: Mon, 14 Apr 2025 14:46:52 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns refcount
+ tracking info
+Message-ID: <1bc3164b-0e41-49e1-9ed2-cf37997ab53e@lunn.ch>
+References: <20250408-netns-debugfs-v2-0-ca267f51461e@kernel.org>
+ <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
+ <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
+ <91d6d3c60ef5d4ed90418f8a06228767be8a5b1b.camel@kernel.org>
+ <ff2b7cfb7657a185469747d930b834dbdfdf6eac.camel@kernel.org>
+ <f4722246-5694-4b1a-9b1b-d4352fa54ee7@lunn.ch>
+ <23f93f84e000ebee28614bf85a4013648fa66a00.camel@kernel.org>
+ <71adf369-a803-4d06-906c-97b5bf48bcf8@lunn.ch>
+ <a34f5e6d34210bae0badfd08aec15bed0bdb306e.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="npwwpgxnj2lpvqxn"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250414021249.3232315-2-longman@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a34f5e6d34210bae0badfd08aec15bed0bdb306e.camel@kernel.org>
 
+> > > We'll need some input from the i915 folks then.
+> > 
+> > That is why i think it would be better to add a warning, give the i915
+> > folks a heads up, and leave them to fix it how they want. We want the
+> > warning anyway to cover new refcount instances being added.
+> > 
+> 
+> There will definitely be a pr_warn() if creation fails. I was hoping to
+> send a suggested change alongside the patchset, but I may have to just
+> leave it up to them.
+> 
+> I threw together a draft patchset that auto-registers a debugfs file
+> for every call to ref_tracker_dir_init(). The problem I've hit now
+> though is that at least in the networking cases, the kernel calls
+> ref_tracker_dir_init() very early in the process of creating a new
+> objects, so we're not getting good names here:
+> 
+> The "name" in alloc_netdev_mqs is actually a format string, so we end
+> up with a name like "eth%d" here:
+> 
+> net/core/dev.c: ref_tracker_dir_init(&dev->refcnt_tracker, 128, name);
+ 
+Oh, yes, never thought about that...
 
---npwwpgxnj2lpvqxn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-MIME-Version: 1.0
+It also seems like it might be a common problem, the subsystem defined
+name has not been given yet, although the core dev_name(dev) should
+work. But in netdev drivers, alloc_netdev_mqs() does not have access
+to that.
 
-On Sun, Apr 13, 2025 at 10:12:48PM -0400, Waiman Long <longman@redhat.com> =
-wrote:
-> 2) memory.low is set to a non-zero value but the cgroup has no task in
->    it so that it has an effective low value of 0. Again it may have a
->    non-zero low event count if memory reclaim happens. This is probably
->    not a result expected by the users and it is really doubtful that
->    users will check an empty cgroup with no task in it and expecting
->    some non-zero event counts.
+> At the point that we call these (preinit), net->ns.inum hasn't been
+> assigned yet, so we can't incorporate it properly into the dentry name:
+> 
+> net/core/net_namespace.c:       ref_tracker_dir_init(&net->refcnt_tracker, 128, "net refcnt");
+> net/core/net_namespace.c:       ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net notrefcnt");
+> 
+> We could do the ref_tracker_dir_init() calls later, but we may end up
+> missing some references that way (or end up crashing because the "dir"
+> isn't initialized.
+> 
+> My current thinking is to add a new ref_tracker_dir_finalize() function
+> that we could use to finalize the name and register the debugfs files
+> after we have the requisite info. It's an extra manual step, but I like
+> that better than moving around the ref_tracker_dir_init() calls.
 
-I think you want to distinguish "no tasks" vs "no usage" in this
-paragraph.
+Agree. Although, bike shedding, i don't really like the _finalize in
+ref_tracker_dir_finalize(). Ideally this should be optional and
+populate debugfs.  _finalize does not sound particularly optional. So
+maybe ref_tracker_dir_debugfs()?
 
+This also has the advantage of we need to worry less about GPU
+drivers. They see no change in behaviour, but we can give them a heads
+up the new call exists if they want to use it to populate debugfs.
 
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -5963,6 +5963,10 @@ static void shrink_node_memcgs(pg_data_t *pgdat, s=
-truct scan_control *sc)
-> =20
->  		mem_cgroup_calculate_protection(target_memcg, memcg);
-> =20
-> +		/* Skip memcg with no usage */
-> +		if (!mem_cgroup_usage(memcg, false))
-> +			continue;
-> +
->  		if (mem_cgroup_below_min(target_memcg, memcg)) {
-
-As I think more about this -- the idea expressed by the diff makes
-sense. But is it really a change?
-For non-root memcgs, they'll be skipped because 0 >=3D 0 (in
-mem_cgroup_below_min()) and root memcg would hardly be skipped.
-
-
-> --- a/tools/testing/selftests/cgroup/test_memcontrol.c
-> +++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-> @@ -380,10 +380,10 @@ static bool reclaim_until(const char *memcg, long g=
-oal);
->   *
->   * Then it checks actual memory usages and expects that:
->   * A/B    memory.current ~=3D 50M
-> - * A/B/C  memory.current ~=3D 29M
-> - * A/B/D  memory.current ~=3D 21M
-> - * A/B/E  memory.current ~=3D 0
-> - * A/B/F  memory.current  =3D 0
-> + * A/B/C  memory.current ~=3D 29M [memory.events:low > 0]
-> + * A/B/D  memory.current ~=3D 21M [memory.events:low > 0]
-> + * A/B/E  memory.current ~=3D 0   [memory.events:low =3D=3D 0 if !memory=
-_recursiveprot, > 0 otherwise]
-
-Please note the subtlety in my suggestion -- I want the test with
-memory_recursiveprot _not_ to check events count at all. Because:
-	a) it forces single interpretation of low events wrt effective
-	   low limit=20
-	b) effective low limit should still be 0 in E in this testcase
-	   (there should be no unclaimed protection of C and D).
-
-> + * A/B/F  memory.current  =3D 0   [memory.events:low =3D=3D 0]
-
-
-Thanks,
-Michal
-
---npwwpgxnj2lpvqxn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/0C0AAKCRAt3Wney77B
-Sd/BAP9TY2qAV5thRUJlYr+lBEw43c7tulDcGAlAmMTw3fVIxgD/TAOGmPlsQ9YN
-ZZJQOw3S4qTSiiwaCq9RFx8VCKUEjwE=
-=J0fF
------END PGP SIGNATURE-----
-
---npwwpgxnj2lpvqxn--
+	Andrew
