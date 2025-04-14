@@ -1,180 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7738F1A83E8
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0933E187858
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744623725; cv=none; b=uLfHruVDLzTM9QP3Qb6xHQbGoVanXIFECnvX45kRfvC1Ksm15qR8SsGdj5Iqw2scMdVW0VO4tTb/k113ajui/ESczb9AQ8i4ou4iJ24vbGgt7AAeWU4dndkVFuTgp4sutjXz4xrDblQstGoC/XvwmIw1+822zMQmzeVXlFjBKw4=
+	t=1744623862; cv=none; b=h7pWza0TxRHZUKhYpuq+TWc86BxQTvKlpQLopZNOEbVkIDif7T9AFsZPDtiiD43P9I/2KzRY2gMT+Ifry3wDIeGHRT17UnSIMHHXf3pdnB7JCVyoxKr7m4fd5FJtmP7CcHgTzMArBeFT7G/01O6ywsSjndHSib7b7htnaph1lGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744623725; c=relaxed/simple;
-	bh=4RJpB0q5NaWPN8EEvbrCWUeXezOsr2VYL1mVYllqRas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PE1XzdqO2M/nVJW+KSBPbqaL3/ENP9BbsFEcC4FIvYTLalJ4/bNZu/wA2BnWMt9mqX7HVm2zyLWdMIxxWnRyr3uSoBTJfGPSrIqdMiRxihCEq12QD1qHxy2lo6TJV4f4U5YKIhHogy5asMuZtv2ht6nOoGFUlF+1eu9BsWAjvCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NyGj8Zxs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744623862; c=relaxed/simple;
+	bh=NXvUhNlB1aPee7uCd9a9odVHLo/yRPdk/MtLRPcDwqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cxuyslm3wYA5zWOaHtRTeG8HMc4ucenxEdf/iLCeKS1cX+HUX3xfTGHWVv3PiHOpGk0lMeK2uVWGDen2YuQ+bJrE+m93r32jDb5ryxErmKKzcXCjVpr/Z5hcwlqXnGIQTlHzaI2xUJVNlDL0vswlgtkYEX5XbkarTi7NX/Rj9mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JEVW145G; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NyGj8Zxs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744623722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QK/7AZreqZVkjxHigwsMCq6Lf6FYPl5aMA5lsnqfXFs=;
-	b=NyGj8ZxsRh7HHlJKoJnS2uIJGO6spAH3Pzf0FGA0S5TRCgp1nDGUYM7JHdaNnokPuEFang
-	UqmQ9xQ6Id4QJg3xnkDhvUvPwSTKHCMss/NSk1u2IcDFukSzZb9t9uaJPhZq1nsA/8z/Xi
-	NtuErtwIZmLkrEYMyiouFE92n8I3viY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-172-CQWKBw4IOJyIy2gZwDsCvA-1; Mon, 14 Apr 2025 05:42:01 -0400
-X-MC-Unique: CQWKBw4IOJyIy2gZwDsCvA-1
-X-Mimecast-MFC-AGG-ID: CQWKBw4IOJyIy2gZwDsCvA_1744623720
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d917b1455so1574177f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:42:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JEVW145G"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6021e3daeabso2054118eaf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1744623859; x=1745228659; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbM+1WmBZ2Io1n+rSXRsp0Md07GTpvrvG0bVbAmVeMs=;
+        b=JEVW145GbBL3gPGGQ9yAzATfEoWvjwN4uQ2ZnglMOQR1rFW4RRXrJwNuoAJw/YWMXC
+         olPMlrvPJzGQuBe46rqJA1FD6VuA8TDuejUdwRw49YIyWcU5QfW8nN6oojahrPv49yjL
+         K8itRpTFr/HyaX7Ny0777ndiSoZnPwsACTtUE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744623720; x=1745228520;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1744623859; x=1745228659;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QK/7AZreqZVkjxHigwsMCq6Lf6FYPl5aMA5lsnqfXFs=;
-        b=HtiSsM5ud7WCpGTvSRWpdRooFaMW3HQ9n2B/p9dQCjHMsreetBQssMNz6wXCH7q2kc
-         PyrVg6cDIHwlDljq6IIhmnwIuJbSyOwG1P3ZOdTEeruoxjQIIrqBxk/inP/fSqG0NAVz
-         kxEq1pdV/fwIXzTKM8DhY1gNytIDxB5ZSCxMBw/mYlVlIRzENlpu/f5mkIeTZpJTa0L6
-         Ct0KYQkzDod9vc7HkOr3UUg8MZgTV59AN8arUKWitNyjGgJN1i/a9T6Wem55OxR0acvU
-         cnoVVJKcPldIicyJAFSGxdhFd4pEDryUOo63MiuN/m3wqGpOlYQfAhLq4gSh4TbtztXx
-         EAPw==
-X-Gm-Message-State: AOJu0YxiKInGrLcnyyRW6jHaeIKFAY2iGTGGymgEmzDIhbUGtWqSiRvu
-	KU+JGfbvHSM9UkrQHASOINw4d9zuu9Fg4Lzx0CUkUNsKJTMJuniIirANErgVK8k+CiIu88+1Frd
-	gy6jD2CdQlwTm71miZrZxkeVjH91eNoPZnFHJieyR4BuVv8uv/RNw5Nxt5OcvTA==
-X-Gm-Gg: ASbGncssVoBUQi4zAfQc+Ghk56PBIS/DGFcQ/RWjvB4s6Vmm8Cvmy8a8KovpHIOzZKi
-	Xtu9DcJu6ougV2wJanx6d3GH13jGYy0iz/59mmr6TWsKNJIxJ6RTLOc95E8+tsAoR/0YUHAO7an
-	iXHI6X5dDwd5ZLXWCLLo1NhQyqOT/U6LPkk7fQlH8p0BRv5YVbnFCrZSAvvLdG3dHPa9doZIEwi
-	kPZRPBWG+ob5uEWg0s0UJPqkzOqWegUNqiOIBcVZjlOnL2pYobblCB+I1sTtWiZzVwuR7k30IGA
-	crQFsPbf8+LLELXYJMMLSmX9FbuaEXyYB6+yQLaDCA==
-X-Received: by 2002:a05:6000:40e0:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39eaaea5c7emr8320032f8f.32.1744623719689;
-        Mon, 14 Apr 2025 02:41:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYqyuQrmaEBLpWZcIXDEX0QoeCfP/76Z7l2ly5E6JgeCKlmVL69eF+/i0kew7NeQFEw6hp7g==
-X-Received: by 2002:a05:6000:40e0:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39eaaea5c7emr8320009f8f.32.1744623719200;
-        Mon, 14 Apr 2025 02:41:59 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.27.15])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae963c15sm10702179f8f.13.2025.04.14.02.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 02:41:58 -0700 (PDT)
-Date: Mon, 14 Apr 2025 11:41:56 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Metin Kaya <Metin.Kaya@arm.com>,
-	Xuewen Yan <xuewen.yan94@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
-Subject: Re: [PATCH v16 5/7] sched: Add an initial sketch of the
- find_proxy_task() function
-Message-ID: <Z_zYZAbv86MlITOM@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250412060258.3844594-1-jstultz@google.com>
- <20250412060258.3844594-6-jstultz@google.com>
+        bh=CbM+1WmBZ2Io1n+rSXRsp0Md07GTpvrvG0bVbAmVeMs=;
+        b=kynLdnyZPdOwGBOlCyq5WBDrQ3+oqpmvA2Ow0EOXMhc5erlIEhoLLXnPNAtMbD7DXv
+         I3szPJkIBXjk4Ll3DAv8WdhRgrQlHUP2+YyaiXpjaBYRtJb4M94GXtxS/KfQxwW/p4VW
+         v/7UYzm5iIdOs211xzguI80O4Z8nTwkbmPZ1otabotGRM9pctmSrT8FnYhFd+relo6dS
+         P1ngM5Mi4l57RfydCcibQB4UES8UOR5tfoNUjZKdK1ithoSdLeyvMdOVFDItjS1ZjOah
+         F+L2S6cSAiEamT/rXx3DWaPZtS4fy1VDMBN/ty44Pah8H+v6F6lwXJTIAS/BpucmDE22
+         1yTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZS2q/aHtkb4FKbt7qLheXH//kxk91UyyIqnLphMbiPHfWiN2zl9t23RvscRNSyIE809U6vt0UXkI0ztk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZNyfZhMw41AVaxKjR3LFOIZD9ZtsFl8xCrFs+4blaMjUxqH4I
+	QZRwBEwwDA2yac2yzNG+dTqKlR1wQ0cZBsueka3SHVHUXDVfN3RvgJajtAkq8w==
+X-Gm-Gg: ASbGnctXbFB2F7r2cylOwqqSnRtkmuj488XPUpaYeikFr+QfdiWfHKwHqV6uYyyO1s4
+	qfIke9s4FSHEfn4qWBF80gwe91XV1zZHfK4hW76Y0i/J+8PRmrWPCaQit6DISZ1FzUkA5p5edpk
+	krfQ+JSWg5boz2U1Rnqv7A/HrhDOwIcEdO3IuAxvkt4rTRjudHisWuzzhN3VDXbnwZUmEP2uCPE
+	OhNBiG4tqitm9TksSmIDR8GvAM735zL0iohqdZ70U4XWaFTzlm8PKL+wSN6SqzswX0g13VpXI5B
+	9Rkqrw3A39C6D534PaYzRPxnWURgP38lNJiuu/pZoMSkg4R/mr0R4tRHEtogsfBsWFM=
+X-Google-Smtp-Source: AGHT+IHoa/4/GaqO5TrPYoiHTitCv7q3FYMa5EoLzYEXRejGfSZ58lhxAhVipcuemkWz6IEsfTI5Ig==
+X-Received: by 2002:a05:6870:1587:b0:2cb:c780:ac52 with SMTP id 586e51a60fabf-2d0d5d9e35cmr5396992fac.23.1744623858829;
+        Mon, 14 Apr 2025 02:44:18 -0700 (PDT)
+Received: from [10.176.68.80] ([192.19.176.227])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096cd262asm2314652fac.35.2025.04.14.02.44.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 02:44:17 -0700 (PDT)
+Message-ID: <282afdd9-bb71-40f8-bfa9-bc7e57e1957d@broadcom.com>
+Date: Mon, 14 Apr 2025 11:44:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412060258.3844594-6-jstultz@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] brcm80211: fmac: Add error handling for
+ brcmf_usb_dl_writeimage()
+To: Wentao Liang <vulab@iscas.ac.cn>, kvalo@kernel.org
+Cc: jacobe.zang@wesion.com, sebastian.reichel@collabora.com,
+ christophe.jaillet@wanadoo.fr, erick.archer@outlook.com,
+ linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+ brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250414072058.2222-1-vulab@iscas.ac.cn>
+Content-Language: en-US
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
+ 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
+In-Reply-To: <20250414072058.2222-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi John,
+On 4/14/2025 9:20 AM, Wentao Liang wrote:
+> The function brcmf_usb_dl_writeimage() calls the function
+> brcmf_usb_dl_cmd() but dose not check its return value. The
+> 'state.state' and the 'state.bytes' are uninitialized if the
+> function brcmf_usb_dl_cmd() fails. It is dangerous to use
+> uninitialized variables in the conditions.
+> 
+> Add error handling for brcmf_usb_dl_cmd() to jump to error
+> handling path if the brcmf_usb_dl_cmd() fails and the
+> 'state.state' and the 'state.bytes' are uninitialized.
 
-On 11/04/25 23:02, John Stultz wrote:
-> Add a find_proxy_task() function which doesn't do much.
-> 
-> When we select a blocked task to run, we will just deactivate it
-> and pick again. The exception being if it has become unblocked
-> after find_proxy_task() was called.
-> 
-> Greatly simplified from patch by:
->   Peter Zijlstra (Intel) <peterz@infradead.org>
->   Juri Lelli <juri.lelli@redhat.com>
->   Valentin Schneider <valentin.schneider@arm.com>
->   Connor O'Brien <connoro@google.com>
-> 
-> Cc: Joel Fernandes <joelagnelf@nvidia.com>
-> Cc: Qais Yousef <qyousef@layalina.io>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Zimuzo Ezeozue <zezeozue@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Metin Kaya <Metin.Kaya@arm.com>
-> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Suleiman Souhlal <suleiman@google.com>
-> Cc: kernel-team@android.com
-> [jstultz: Split out from larger proxy patch and simplified
->  for review and testing.]
-> Signed-off-by: John Stultz <jstultz@google.com>
+Agree. Have one request though...
+
+Just below the code you touched the USB bootloader state is checked:
+
+	/* 2) Check we are in the Waiting state */
+	if (rdlstate != DL_WAITING) {
+-		brcmf_err("Failed to DL_START\n");
++		brcmf_err("Invalid DL state: %u\n", rdlstate);
+		err = -EINVAL;
+		goto fail;
+	}
+
+Can you improve the error message as suggested.
+
+Regards,
+Arend
+
+> Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+> Cc: stable@vger.kernel.org # v3.4+
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
-
-...
-
-> +static struct task_struct *
-> +find_proxy_task(struct rq *rq, struct task_struct *donor, struct rq_flags *rf)
-> +{
-> +	struct task_struct *p = donor;
-> +	struct mutex *mutex;
-> +
-> +	mutex = p->blocked_on;
-> +	/* Something changed in the chain, so pick again */
-> +	if (!mutex)
-> +		return NULL;
-> +	/*
-> +	 * By taking mutex->wait_lock we hold off concurrent mutex_unlock()
-> +	 * and ensure @owner sticks around.
-> +	 */
-> +	guard(raw_spinlock)(&mutex->wait_lock);
-> +
-> +	/* Check again that p is blocked with blocked_lock held */
-> +	if (!task_is_blocked(p) || mutex != __get_task_blocked_on(p)) {
-> +		/*
-> +		 * Something changed in the blocked_on chain and
-> +		 * we don't know if only at this level. So, let's
-> +		 * just bail out completely and let __schedule
-> +		 * figure things out (pick_again loop).
-> +		 */
-> +		return NULL; /* do pick_next_task again */
-> +	}
-> +	return proxy_deactivate(rq, donor);
-
-Nitpick. We might either want to use donor (and remove p) or use p
-everywhere in the function; think makes it more clear.
-
-Best,
-Juri
-
+>   drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
