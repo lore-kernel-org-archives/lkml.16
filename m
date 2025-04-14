@@ -1,129 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE3C1BC3C;
-	Mon, 14 Apr 2025 07:13:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F6A1BC3C;
+	Mon, 14 Apr 2025 07:14:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614838; cv=none; b=D9XldGF0M8c90rA4IfLaCYQ7CaHFzD8hsdwno2fRHSUbMDFCnkjtUEw7ikthWFPYS37dEtmqogt9SPPKXbICZDm6RWSIP/hdy3Ju9aHRiLpCZKtrhPR+Wcum2VjjH/vSQLedVuSJmoxI9xEyiWUrv8MkcryLH1goB5Ky88kaCdE=
+	t=1744614873; cv=none; b=QaUjoJ46irh00TjnA/lEtsg9bRO4/TXs6hrImIXfcGLorg7MpFFPBYMHR6ClNY73y5g6W/hETNpYQ+daKvgQvKBscDYhAi8H9IOV1CL/oOvuLoZSP+v2hhEpHMspz81tQkSqqKus1V8DRmDrmZ5ikp0Uulj97jR5QRjShkVZt5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614838; c=relaxed/simple;
-	bh=yZYekePMIMVeeQwBv1Vp94M5jdHE5/SnXXfse5nxBIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j51jTmp+/rZhcq+PdgJjOT4/uum9iNqdhjdxxzmMQZsTwZwyikPTXC9bj8R2FETC53XXisix5dMWLsEIYVBPL00H877nf5SRh5pL0wi0GnZIzY25xVj2PJKEUuJqaXbKr01aUGGPalqelKS3aUeR5aj5sRcuFbkBhh4FH4kv0OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZEeF3+U+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744614873; c=relaxed/simple;
+	bh=7HbVPjdnXWOGQKYSvsMfbVCEKQSrS347+1+36BkbJzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XowzEf3YnZbWnLsBCVuPhVVDKWHnH4Oae1jZ+73Ngm+h7suW/I1kQ/7a7vk1QdiZcEChkFDftimpceFcIsWQBKZp/FXgZ4Yy0vs0IyL/sEc7bdbJqbIqBM6F12lGKJKBUkr1z2IrDSdvVqClpJDsFQLAHIofG/TCDxtjVxiA648=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpCtTyr+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZEeF3+U+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614F8C4CEEA;
-	Mon, 14 Apr 2025 07:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744614838;
-	bh=yZYekePMIMVeeQwBv1Vp94M5jdHE5/SnXXfse5nxBIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZEeF3+U+BOvzTUfZUagamiBQlpAAB/LEUHdMGjTDzc03frkm6KTOChDhCJc1USqol
-	 WHQTultBo980BXvVQZZM0D6DIIG73cUWnWUNcWUOIy9OAz+DirbW6Id3oh+QevBybS
-	 UHedwrVgLrjZz4s41uKl9Butask3PebeZklc1p9U=
-Date: Mon, 14 Apr 2025 09:12:09 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
- hcd_buffer_alloc()
-Message-ID: <2025041424-delay-distill-50b8@gregkh>
-References: <20250320154733.392410-1-ptesarik@suse.com>
- <20250325134000.575794-1-ptesarik@suse.com>
- <2025041110-starch-abroad-5311@gregkh>
- <20250414090216.596ebd11@mordecai>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpCtTyr+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B46C4CEE2;
+	Mon, 14 Apr 2025 07:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744614871;
+	bh=7HbVPjdnXWOGQKYSvsMfbVCEKQSrS347+1+36BkbJzQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NpCtTyr+HbeOp7FMYYZnscR3o00/MNZ/pi3BzE7H5vJVRtbMTFNwfRLNzT+0E/cRe
+	 j0v8Y3bRMOw78MxqRYYjn5snmXpRArkJ52Ucc055EQjWORhmkFGXDNsDkprw/j0v93
+	 iUjSikcvEr9H7LP5q32w3tpXrP0Oe7FIkWcCrjEWwB2+Fx7rTdJCDRGvI5M+JnGV66
+	 xfADFXdvtayMx7ZddN/PtbvThkcXZGNp1oIwMIfagio/0sVNPT4LMGjTXOCeaU3514
+	 ylmEN2whqC6rODnhG9AouGOdB4F5bMZuB6c4oUlfhF/Jjp/EjOvM2Sh3mGUppcN3Sm
+	 mwjE1Mb/c82Yw==
+Message-ID: <f876fe1c-0058-4f96-b6de-9d0a597e1143@kernel.org>
+Date: Mon, 14 Apr 2025 09:14:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414090216.596ebd11@mordecai>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/11] vt: update gen_ucs_width.py to produce more space
+ efficient tables
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, Dave Mielke <Dave@mielke.cc>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410011839.64418-1-nico@fluxnic.net>
+ <20250410011839.64418-10-nico@fluxnic.net>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250410011839.64418-10-nico@fluxnic.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 09:02:16AM +0200, Petr Tesarik wrote:
-> On Fri, 11 Apr 2025 15:57:19 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+On 10. 04. 25, 3:14, Nicolas Pitre wrote:
+> From: Nicolas Pitre <npitre@baylibre.com>
 > 
-> > On Tue, Mar 25, 2025 at 02:40:00PM +0100, Petr Tesarik wrote:
-> > > Remove a misleading comment and issue a warning if a zone modifier is
-> > > specified when allocating a hcd buffer.
-> > > 
-> > > There is no valid use case for a GFP zone modifier in hcd_buffer_alloc():
-> > > - PIO mode can use any kernel-addressable memory
-> > > - dma_alloc_coherent() ignores memory zone bits
-> > > 
-> > > This function is called by usb_alloc_coherent() and indirectly by
-> > > usb_submit_urb(). Despite the comment, no in-tree users currently pass
-> > > GFP_DMA.
-> > > 
-> > > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> > > ---
-> > >  drivers/usb/core/buffer.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
-> > > index 87230869e1fa..10844cd42e66 100644
-> > > --- a/drivers/usb/core/buffer.c
-> > > +++ b/drivers/usb/core/buffer.c
-> > > @@ -108,10 +108,6 @@ void hcd_buffer_destroy(struct usb_hcd *hcd)
-> > >  }
-> > >  
-> > >  
-> > > -/* sometimes alloc/free could use kmalloc with GFP_DMA, for
-> > > - * better sharing and to leverage mm/slab.c intelligence.
-> > > - */
-> > > -
-> > >  void *hcd_buffer_alloc(
-> > >  	struct usb_bus		*bus,
-> > >  	size_t			size,
-> > > @@ -128,6 +124,12 @@ void *hcd_buffer_alloc(
-> > >  	if (hcd->localmem_pool)
-> > >  		return gen_pool_dma_alloc(hcd->localmem_pool, size, dma);
-> > >  
-> > > +	/*
-> > > +	 * Zone modifiers are ignored by DMA API, and PIO should always use
-> > > +	 * GFP_KERNEL.
-> > > +	 */
-> > > +	WARN_ON_ONCE(mem_flags & GFP_ZONEMASK);  
-> > 
-> > You just rebooted the box if this happens, do you REALLY want to do
-> > that?  People generally do not like their data lost :(
-> 
-> FWIW my box does not reboot on a warning. But I admit there are people
-> who want to run their systems with panic_on_warn (although I suspect
-> they already experience some sudden reboots, so they had better be
-> prepared).
+> Split table ranges into BMP (16-bit) and non-BMP (above 16-bit).
+> This reduces the corresponding text size by 20-25%.
 
-There are billions of Linux systems out there with panic-on-warn enabled :(
+I like this!
 
-> > Why not just fix the callers, OR if this really isn't going to be
-> > allowed, return an error and just fail the whole submission?  And stick
-> > around to fix up all of the drivers that end up triggering this...
-> 
-> That's the point. AFAICS there are _no_ in-tree callers that would pass
-> GFP_DMA or GFP_DMA32 to hcd_buffer_alloc(), directly or indirectly. But
-> nobody should be tempted to add the flag, because I cannot imagine how
-> that would ever be the right thing to do.
-> 
-> I can change it back to mem_flags &= ~GFP_ZONEMASK to fix it silently;
-> I simply thought that driver authors may appreciate a warning that
-> they're trying to do something silly.
+> -struct interval {{
+> +struct interval16 {{
+> +	uint16_t first;
+> +	uint16_t last;
+> +}};
+> +
+> +struct interval32 {{
+>   	uint32_t first;
+>   	uint32_t last;
 
-A warning is fine, but don't reboot a box please.  dev_warn() with a
-ratelimit and then return an error perhaps?
-
-> Whatever works for you, but please keep in mind that there seems to be
-> agreement among mm people that DMA and DMA32 zones should be removed
-> from the kernel eventually.
-
-I agree, they should be removed as they don't do what people think they
-do.  So why not just remove them entirely, otherwise are you going to go
-and add this type of checking to all bus subsystems?
+Actually, why not to use u16 and u32, respectively?
 
 thanks,
-
-greg k-h
+-- 
+js
+suse labs
