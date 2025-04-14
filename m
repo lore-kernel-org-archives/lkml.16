@@ -1,324 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B892BF3EF
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C312A2BEC24
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634226; cv=none; b=AIxsZGsRYvIXByJ5L7DLKFqtnWkjjuk2p1fXcI1acqVydOjcNCjZ9eCGctBDSC8lbWw8iUnXdsIXhhZYcnLRmoE1ExiYB9VCFCqkta5nhPIW3eiGGwVDZBNuTxC7IZJStnTHYsRYWkm559ldWEk/CHqEVqZBsLu3LkAiQK2mX4c=
+	t=1744634264; cv=none; b=G/M85Af2/VTbxrd+NzsGO40g3tdSDgunHGAII6l83uMdvedMqtg8o2CSxKC2fKXx966NgWMtNGuH+jDvsdM+L/9eZhj630L/V9+up13albH+jyk9b4gHA9zdCIxzTWw7a6l84FyVHuHtK8V/N7JDKmgRI5cV1DS9g30xhcLAFTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634226; c=relaxed/simple;
-	bh=PptqpAgmoytKqOt6xRbMugtr28u2OtS3tp+zS5kWioE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E1q8Yfq8LKLE7GLc8Fqk+i6vrv8Nxy/rlHQJtrh9RYOWFgsAORZZHE8iGS/Vvcu7GD+xaIOaJmBxzp9xxmVycXSzzFM6TYblBtvnRPM9LcT3TMcAVbLDlteAVq5t8WAc4Olo0fqkElkaskuhTnyT2GMk3Dk1aGg2uGNZ9izWE18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Riq3IaYk; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1744634264; c=relaxed/simple;
+	bh=g5pDIKFuMnhCAnUrsaRdvp6NicjK7aW/qhc69uhrDz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sZiqqYF/BoJGpe5t/AEFpFfMbnYm2Q59SmKADVFKTf8wtBIHfp9b5u1T9YvxYdYUOH6IhsV7G3CwZRvgq7206BckGdqb0tGPK9e9OJ88U541w/BOKvbOIkv6OWP12OyVSLnp/1Ft9fOBOy4VSrL6iyQ14xqfAyZfFcQixXN+yEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tojz8gCB; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Riq3IaYk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tojz8gCB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744634223;
+	s=mimecast20190719; t=1744634261;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Yb5XjEM8UDjaKosEuY2mp6BwacUxQGhu78cSlZl2o+I=;
-	b=Riq3IaYkbxq3gsWtCb8g84eiuEjHH+6vmf9KzHnqtA6Aoj+s5HfBVengy39DwO2fZSmVPT
-	14hfEd3orcsdA6JsC5a1FHw54hf1UXpl1lKnwKG+rIljd2YW/L7Qp7MzNXgWoVejUH3KEB
-	55fnOcgt2Ojcu4TIh9QIcSxFrDEc8vM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-523-8NSdUNMEPqiZ59e-RcFwMw-1; Mon,
- 14 Apr 2025 08:37:00 -0400
-X-MC-Unique: 8NSdUNMEPqiZ59e-RcFwMw-1
-X-Mimecast-MFC-AGG-ID: 8NSdUNMEPqiZ59e-RcFwMw_1744634219
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0CA6180AF53;
-	Mon, 14 Apr 2025 12:36:58 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.225.177])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ADF58180AF7C;
-	Mon, 14 Apr 2025 12:36:56 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	"To: Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-	"To: Peter Zijlstra" <peterz@infradead.org>,
-	"To: Ingo Molnar" <mingo@redhat.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH v13 3/3] selftests/rseq: Add test for mm_cid compaction
-Date: Mon, 14 Apr 2025 14:36:34 +0200
-Message-ID: <20250414123630.177385-8-gmonaco@redhat.com>
-In-Reply-To: <20250414123630.177385-5-gmonaco@redhat.com>
-References: <20250414123630.177385-5-gmonaco@redhat.com>
+	bh=SiKyFbfPtDBwbfdQO6d76e5qVtN4cbAxoeIPgZEqti0=;
+	b=Tojz8gCBjAcDmjTuFQUN2Co6ghyPMNyNbzWDmbF/vH2nvGHrIzelFit5piCCRB66Jyly8p
+	O68iMYpdqTCVZX8kK5ni2VsBYTRz44MAPX08rJdSPk0iaUxrklRuqaR7rPelE94QP64at+
+	0N/okfejUtzbmGBSc2SZcF/XBI/u8mo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-228-u-7QoUQgPVaA8vZoeqhhUA-1; Mon, 14 Apr 2025 08:37:40 -0400
+X-MC-Unique: u-7QoUQgPVaA8vZoeqhhUA-1
+X-Mimecast-MFC-AGG-ID: u-7QoUQgPVaA8vZoeqhhUA_1744634259
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac3d175fe71so300822566b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:37:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744634259; x=1745239059;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SiKyFbfPtDBwbfdQO6d76e5qVtN4cbAxoeIPgZEqti0=;
+        b=u9aieVv2WNTZUqiPpMdrrrCtB9qsvEx81VZIs/MVs15C8vQt0ZO4t+6kJyGFmo+fCO
+         6lJiDoTBw2WS62bej8Jyg1qkD705ZesweAGWhqREwAr5oXBZDhHIm2mryLpeDL6tYhvi
+         0J2bsoOhpEwbC15pTDadGluyZ1nkWvgChdPmKcBUMSRpMi45oESxx0S7LPdhQzDy+UTT
+         zRpHknDOIXyGdOM8HWNkRZ1TkUR5RchXI7xZKqy3tp4YoSvc+BVUmVnK05ZaxC+GH0K5
+         TuQByHK4qVs9ZmFT/1FbYtuSbhQHAHacQH73d5o1JmX56Qiw1V9DGxhd53COXEFrTcVO
+         0Frg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZFpankXRb90kj8SD1jf8tyNsU53j8LYuwW0WHLZBoBvy9SNH4lreO/oDc4ynWUTp/JSsCesYM5Bqv/4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3zt8sWjSe7yhZrtETLLrTHxt3do/R48tDP3qdhK6VcE44XoGT
+	W0CBlV1wTIxg/FRA2VNQuXRvgu06jaB9rIoinUb/+JWDxeWgcd5SudbEDN7dKckCcsrFYPRaqG1
+	pp285ZIQMVvzP2RKJJuUeAgzudOqHu9ipOrRFc1qoAvhow3Js/WBmZmBKr3EIAZtkCjO1+g==
+X-Gm-Gg: ASbGncsQdkiOAfpVxK/py6HRA2fLYNHTyQFBovAfAC6HI/gJMysQ4FJ4TWgH5kXv4z1
+	EDfs/me8sW60YbflK2JXWhlju57oGOgiVXWFh1/3CfyrUu/oRDQcx91vxI4FPMl+NSnuct6lpeN
+	YeK/XUdiMMui9g3w8yXWVdc+Y99NYcBTFs0ONYMFjQ3j3PhmJq5aT7MIV1szknoW6W1xTnU/vDh
+	Lw2aIF87iUgZaeW5AWs6+mt9ViPq7jklbIU5AR7/BlINue4V40dfaPKbLCcvKLpl3dS/l4IsmGK
+	fZHgEPSI9R+AZC4=
+X-Received: by 2002:a17:906:4fcb:b0:ac2:e748:9f1c with SMTP id a640c23a62f3a-acad34d8a11mr1022074466b.33.1744634258767;
+        Mon, 14 Apr 2025 05:37:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF/yQtKfvY3m+YbsolB/l62RjfxDtGfAVcXTTZSypAsfSYp22fr/Cl1m3fz6jWAMYAD3wji6A==
+X-Received: by 2002:a17:906:4fcb:b0:ac2:e748:9f1c with SMTP id a640c23a62f3a-acad34d8a11mr1022071766b.33.1744634258260;
+        Mon, 14 Apr 2025 05:37:38 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb42b4sm907679966b.97.2025.04.14.05.37.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 05:37:37 -0700 (PDT)
+Message-ID: <0e2306d7-3a07-45ad-958f-1039fb10a8cf@redhat.com>
+Date: Mon, 14 Apr 2025 14:37:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "Yan, Dongcheng" <dongcheng.yan@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ hverkuil@xs4all.nl, u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
+ bingbu.cao@linux.intel.com, hao.yao@intel.com
+References: <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
+ <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
+ <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
+ <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
+ <Z_zMMtUdJYpHuny7@smile.fi.intel.com>
+ <f10f919e-7bdc-4a01-b131-41bdc9eb6573@intel.com>
+ <01570d5d-0bdf-4192-a703-88854e9bcf78@redhat.com>
+ <9dc86b0c-b63c-447d-aa2f-953fbccb1d27@redhat.com>
+ <Z_z04jMiTg_xW-c2@kekkonen.localdomain>
+ <518b1420-a356-4e4b-8422-c2689bc54794@redhat.com>
+ <Z_0AX9sdwSAWhzTc@kekkonen.localdomain>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Z_0AX9sdwSAWhzTc@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-A task in the kernel (task_mm_cid_work) runs somewhat periodically to
-compact the mm_cid for each process. Add a test to validate that it runs
-correctly and timely.
+Hi,
 
-The test spawns 1 thread pinned to each CPU, then each thread, including
-the main one, runs in short bursts for some time. During this period, the
-mm_cids should be spanning all numbers between 0 and nproc.
+On 14-Apr-25 14:32, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> On Mon, Apr 14, 2025 at 02:21:56PM +0200, Hans de Goede wrote:
+>> Hi Sakari,
+>>
+>> On 14-Apr-25 13:43, Sakari Ailus wrote:
+>>> Hans, Dongcheng,
+>>>
+>>> On Mon, Apr 14, 2025 at 01:09:47PM +0200, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 14-Apr-25 13:04, Hans de Goede wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 14-Apr-25 11:59, Yan, Dongcheng wrote:
+>>>>>> Hi Andy and Hans,
+>>>>>>
+>>>>>> I found the description of lt6911uxe's GPIO in the spec:
+>>>>>> GPIO5 is used as the interrupt signal (50ms low level) to inform SOC
+>>>>>> start reading registers from 6911UXE;
+>>>>>>
+>>>>>> So setting the polarity as GPIO_ACTIVE_LOW is acceptable?
+>>>>>
+>>>>> Yes that is acceptable, thank you for looking this up.
+>>>>
+>>>> p.s.
+>>>>
+>>>> Note that setting GPIO_ACTIVE_LOW will invert the values returned
+>>>> by gpiod_get_value(), so if the driver uses that you will need
+>>>> to fix this in the driver.
+>>>>
+>>>> Hmm, thinking more about this, I just realized that this is an
+>>>> input pin to the CPU, not an output pin like all other pins
+>>>> described by the INT3472 device. I missed that as first.
+>>>>
+>>>> In that case using GPIO_LOOKUP_FLAGS_DEFAULT as before probably
+>>>> makes the most sense. Please add a comment that this is an input
+>>>> pin to the INT3472 patch and keep GPIO_LOOKUP_FLAGS_DEFAULT for
+>>>> the next version.
+>>>
+>>> The GPIO_LOOKUP_FLAGS_DEFAULT is the "Linux default", not the hardware or
+>>> firmware default so I don't think it's relevant in this context. There's a
+>>> single non-GPIO bank driver using it, probably mistakenly.
+>>>
+>>> I'd also use GPIO_ACTIVE_LOW, for the reason Dongcheng pointed to above.
+>>
+>> The GPIO being interpreted as active-low is a thing specific to
+>> the chip used though. Where as in the future the HPD pin type
+>> in the INT3472 device might be used with other chips...
+>>
+>> Anyways either way is fine with me bu, as mentioned, using GPIO_ACTIVE_LOW
+>> will invert the values returned by gpiod_get_value(), for which the driver
+>> likely needs to be adjusted.
+> 
+> The driver appears to ask for both IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING
+> and it only uses the GPIO for an ISR so it doesn't seem to require driver
+> changes IMO. Although this also seems to make the polarit irrelevant, at
+> least for this driver.
 
-At the end of this phase, a thread with high enough mm_cid (>= nproc/2)
-is selected to be the new leader, all other threads terminate.
+If the driver does not care about this I would prefer for the INT3472 code to
+use GPIO_ACTIVE_HIGH to avoid the inverting behavior of GPIO_ACTIVE_LOW making 
+things harder for other future drivers using the hpd pin through the INT3472
+glue code.
 
-After some time, the only running thread should see 0 as mm_cid, if that
-doesn't happen, the compaction mechanism didn't work and the test fails.
+Regards,
 
-The test never fails if only 1 core is available, in which case, we
-cannot test anything as the only available mm_cid is 0.
+Hans
 
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- tools/testing/selftests/rseq/.gitignore       |   1 +
- tools/testing/selftests/rseq/Makefile         |   2 +-
- .../selftests/rseq/mm_cid_compaction_test.c   | 200 ++++++++++++++++++
- 3 files changed, 202 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/rseq/mm_cid_compaction_test.c
-
-diff --git a/tools/testing/selftests/rseq/.gitignore b/tools/testing/selftests/rseq/.gitignore
-index 0fda241fa62b0..b3920c59bf401 100644
---- a/tools/testing/selftests/rseq/.gitignore
-+++ b/tools/testing/selftests/rseq/.gitignore
-@@ -3,6 +3,7 @@ basic_percpu_ops_test
- basic_percpu_ops_mm_cid_test
- basic_test
- basic_rseq_op_test
-+mm_cid_compaction_test
- param_test
- param_test_benchmark
- param_test_compare_twice
-diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
-index 0d0a5fae59547..bc4d940f66d40 100644
---- a/tools/testing/selftests/rseq/Makefile
-+++ b/tools/testing/selftests/rseq/Makefile
-@@ -17,7 +17,7 @@ OVERRIDE_TARGETS = 1
- TEST_GEN_PROGS = basic_test basic_percpu_ops_test basic_percpu_ops_mm_cid_test param_test \
- 		param_test_benchmark param_test_compare_twice param_test_mm_cid \
- 		param_test_mm_cid_benchmark param_test_mm_cid_compare_twice \
--		syscall_errors_test
-+		syscall_errors_test mm_cid_compaction_test
- 
- TEST_GEN_PROGS_EXTENDED = librseq.so
- 
-diff --git a/tools/testing/selftests/rseq/mm_cid_compaction_test.c b/tools/testing/selftests/rseq/mm_cid_compaction_test.c
-new file mode 100644
-index 0000000000000..7ddde3b657dd6
---- /dev/null
-+++ b/tools/testing/selftests/rseq/mm_cid_compaction_test.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+#define _GNU_SOURCE
-+#include <assert.h>
-+#include <pthread.h>
-+#include <sched.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <stddef.h>
-+
-+#include "../kselftest.h"
-+#include "rseq.h"
-+
-+#define VERBOSE 0
-+#define printf_verbose(fmt, ...)                    \
-+	do {                                        \
-+		if (VERBOSE)                        \
-+			printf(fmt, ##__VA_ARGS__); \
-+	} while (0)
-+
-+/* 0.5 s */
-+#define RUNNER_PERIOD 500000
-+/* Number of runs before we terminate or get the token */
-+#define THREAD_RUNS 5
-+
-+/*
-+ * Number of times we check that the mm_cid were compacted.
-+ * Checks are repeated every RUNNER_PERIOD.
-+ */
-+#define MM_CID_COMPACT_TIMEOUT 10
-+
-+struct thread_args {
-+	int cpu;
-+	int num_cpus;
-+	pthread_mutex_t *token;
-+	pthread_barrier_t *barrier;
-+	pthread_t *tinfo;
-+	struct thread_args *args_head;
-+};
-+
-+static void __noreturn *thread_runner(void *arg)
-+{
-+	struct thread_args *args = arg;
-+	int i, ret, curr_mm_cid;
-+	cpu_set_t cpumask;
-+
-+	CPU_ZERO(&cpumask);
-+	CPU_SET(args->cpu, &cpumask);
-+	ret = pthread_setaffinity_np(pthread_self(), sizeof(cpumask), &cpumask);
-+	if (ret) {
-+		errno = ret;
-+		perror("Error: failed to set affinity");
-+		abort();
-+	}
-+	pthread_barrier_wait(args->barrier);
-+
-+	for (i = 0; i < THREAD_RUNS; i++)
-+		usleep(RUNNER_PERIOD);
-+	curr_mm_cid = rseq_current_mm_cid();
-+	/*
-+	 * We select one thread with high enough mm_cid to be the new leader.
-+	 * All other threads (including the main thread) will terminate.
-+	 * After some time, the mm_cid of the only remaining thread should
-+	 * converge to 0, if not, the test fails.
-+	 */
-+	if (curr_mm_cid >= args->num_cpus / 2 &&
-+	    !pthread_mutex_trylock(args->token)) {
-+		printf_verbose(
-+			"cpu%d has mm_cid=%d and will be the new leader.\n",
-+			sched_getcpu(), curr_mm_cid);
-+		for (i = 0; i < args->num_cpus; i++) {
-+			if (args->tinfo[i] == pthread_self())
-+				continue;
-+			ret = pthread_join(args->tinfo[i], NULL);
-+			if (ret) {
-+				errno = ret;
-+				perror("Error: failed to join thread");
-+				abort();
-+			}
-+		}
-+		pthread_barrier_destroy(args->barrier);
-+		free(args->tinfo);
-+		free(args->token);
-+		free(args->barrier);
-+		free(args->args_head);
-+
-+		for (i = 0; i < MM_CID_COMPACT_TIMEOUT; i++) {
-+			curr_mm_cid = rseq_current_mm_cid();
-+			printf_verbose("run %d: mm_cid=%d on cpu%d.\n", i,
-+				       curr_mm_cid, sched_getcpu());
-+			if (curr_mm_cid == 0)
-+				exit(EXIT_SUCCESS);
-+			usleep(RUNNER_PERIOD);
-+		}
-+		exit(EXIT_FAILURE);
-+	}
-+	printf_verbose("cpu%d has mm_cid=%d and is going to terminate.\n",
-+		       sched_getcpu(), curr_mm_cid);
-+	pthread_exit(NULL);
-+}
-+
-+int test_mm_cid_compaction(void)
-+{
-+	cpu_set_t affinity;
-+	int i, j, ret = 0, num_threads;
-+	pthread_t *tinfo;
-+	pthread_mutex_t *token;
-+	pthread_barrier_t *barrier;
-+	struct thread_args *args;
-+
-+	sched_getaffinity(0, sizeof(affinity), &affinity);
-+	num_threads = CPU_COUNT(&affinity);
-+	tinfo = calloc(num_threads, sizeof(*tinfo));
-+	if (!tinfo) {
-+		perror("Error: failed to allocate tinfo");
-+		return -1;
-+	}
-+	args = calloc(num_threads, sizeof(*args));
-+	if (!args) {
-+		perror("Error: failed to allocate args");
-+		ret = -1;
-+		goto out_free_tinfo;
-+	}
-+	token = malloc(sizeof(*token));
-+	if (!token) {
-+		perror("Error: failed to allocate token");
-+		ret = -1;
-+		goto out_free_args;
-+	}
-+	barrier = malloc(sizeof(*barrier));
-+	if (!barrier) {
-+		perror("Error: failed to allocate barrier");
-+		ret = -1;
-+		goto out_free_token;
-+	}
-+	if (num_threads == 1) {
-+		fprintf(stderr, "Cannot test on a single cpu. "
-+				"Skipping mm_cid_compaction test.\n");
-+		/* only skipping the test, this is not a failure */
-+		goto out_free_barrier;
-+	}
-+	pthread_mutex_init(token, NULL);
-+	ret = pthread_barrier_init(barrier, NULL, num_threads);
-+	if (ret) {
-+		errno = ret;
-+		perror("Error: failed to initialise barrier");
-+		goto out_free_barrier;
-+	}
-+	for (i = 0, j = 0; i < CPU_SETSIZE && j < num_threads; i++) {
-+		if (!CPU_ISSET(i, &affinity))
-+			continue;
-+		args[j].num_cpus = num_threads;
-+		args[j].tinfo = tinfo;
-+		args[j].token = token;
-+		args[j].barrier = barrier;
-+		args[j].cpu = i;
-+		args[j].args_head = args;
-+		if (!j) {
-+			/* The first thread is the main one */
-+			tinfo[0] = pthread_self();
-+			++j;
-+			continue;
-+		}
-+		ret = pthread_create(&tinfo[j], NULL, thread_runner, &args[j]);
-+		if (ret) {
-+			errno = ret;
-+			perror("Error: failed to create thread");
-+			abort();
-+		}
-+		++j;
-+	}
-+	printf_verbose("Started %d threads.\n", num_threads);
-+
-+	/* Also main thread will terminate if it is not selected as leader */
-+	thread_runner(&args[0]);
-+
-+	/* only reached in case of errors */
-+out_free_barrier:
-+	free(barrier);
-+out_free_token:
-+	free(token);
-+out_free_args:
-+	free(args);
-+out_free_tinfo:
-+	free(tinfo);
-+
-+	return ret;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	if (!rseq_mm_cid_available()) {
-+		fprintf(stderr, "Error: rseq_mm_cid unavailable\n");
-+		return -1;
-+	}
-+	if (test_mm_cid_compaction())
-+		return -1;
-+	return 0;
-+}
--- 
-2.49.0
 
