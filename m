@@ -1,49 +1,32 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8361ACEAF;
-	Mon, 14 Apr 2025 07:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CFF237172;
+	Mon, 14 Apr 2025 07:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614541; cv=none; b=pWY2mf8/L2mOlL8lGOZhrD5pDmmHBVjdfcswdyZGi1AEQ1U1a5zBW1F+zMyPn+RXpItQHYhqugpsJx5IUa7zO5LTAUoALRYY7Hs/rqGAFukrjpDxPO8zrpTRzIW9pmYSgtTErFl02iYPyLZHrq9WuoAvALLkgNH+B9cNVHTDtRU=
+	t=1744614675; cv=none; b=YoL2KpEX+YFSygVUCFA+vjcAGp/iiuk2C2BX23h0/ZTPAe5bToPmUOGBdx/TElHZEAMaFENSVn1RLXBiQou6KeeyCRX5ADWz6jVJRhDCjOwoSle+tP3bM6Iktm7fQBMWXL51e+pxFXd60otMIVMgKcshGNNopLRMEGCAWI3zpmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614541; c=relaxed/simple;
-	bh=bAQMdnKenSyxzJV0sedkupt48oA6gVJVUPppVV+uz4M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GtEUQuNpuchq1OXrbjbk+2/fR6DwV1FY43WuRYem9H8PgaSEZPdsQkmoCyn3InlnPVMxFEdUtxmGLCvQLdVfDwiWItu1zFWAtH0oPZ2jA9YpsrxddnPLtX08p8Vdt94Yg/sZ/asSb1nBskbzwRglSVgstzFHxLQylnQtDxjVvKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E5R3K4025348;
-	Mon, 14 Apr 2025 07:08:41 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45yf58hp0p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 14 Apr 2025 07:08:40 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Mon, 14 Apr 2025 00:08:39 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 14 Apr 2025 00:08:35 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <andriy.shevchenko@linux.intel.com>
-CC: <dakr@kernel.org>, <djrscally@gmail.com>, <dvyukov@google.com>,
-        <gregkh@linuxfoundation.org>, <heikki.krogerus@linux.intel.com>,
-        <jgg@nvidia.com>, <kevin.tian@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
-        <nicolinc@nvidia.com>, <rafael@kernel.org>,
-        <sakari.ailus@linux.intel.com>,
-        <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>, <yi.l.liu@intel.com>
-Subject: Re: [PATCH] software node: Prevent link creation failure from causing kobj reference count imbalance
-Date: Mon, 14 Apr 2025 15:08:34 +0800
-Message-ID: <20250414070834.1224154-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
-References: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
+	s=arc-20240116; t=1744614675; c=relaxed/simple;
+	bh=7tPfO4YljEpw7kJklhNj2drCqG4KDq+vh0zUeK403dg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CokLAkNkpRYm8zjnpdUOsr9K179RjAB5OUQZLm2SWVtwO62flPZUQ0BH/gH3HHSDG1/TPVYlO0bm7+uEAz37V46qhm640c/IeRi1vK/19Nr18b5fH8jGgDItOSQTjY2CFzvJNMgdF9tmZ5HX74NST1axPYfmfeqsO58aLKcDHXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowABHhQ0Ktfxn4NPmCA--.19073S2;
+	Mon, 14 Apr 2025 15:11:08 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: hverkuil@xs4all.nl,
+	mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] media: gspca: Add error handling for stv06xx_read_sensor()
+Date: Mon, 14 Apr 2025 15:10:46 +0800
+Message-ID: <20250414071046.2192-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,56 +34,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=UPPdHDfy c=1 sm=1 tr=0 ts=67fcb478 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=co-kc5KNQRhJfrCQoXsA:9 a=D0TqAXdIGyEA:10
- a=xa8LZTUigIcA:10 a=DcSpbTIhAlouE1Uv7lRv:22 a=cQPPKAXgyycSBL8etih5:22
-X-Proofpoint-GUID: DNUT0E3mijy0uFmoGDGlcL6iD6Co6v7W
-X-Proofpoint-ORIG-GUID: DNUT0E3mijy0uFmoGDGlcL6iD6Co6v7W
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=345 spamscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 clxscore=1011 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504140050
+X-CM-TRANSID:zQCowABHhQ0Ktfxn4NPmCA--.19073S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrtw4xKrykGFy5tFW8AF18Krg_yoW8JF4rpF
+	WfWryFv3yjya17WF1UJw1v93W5t3ySyFW5Cr9Fqwn5Zw17JrsFvFyFy3W0vws7GF9xC3Wf
+	trn5KayUWas7AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUcBMtUUU
+	UU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAgMA2f8nB5YwQAAsL
 
-On Mon, 14 Apr 2025 09:20:30 +0300, Andy Shevchenko wrote:
-> On Fri, Apr 11, 2025 at 08:42:02AM +0800, Lizhi Xu wrote:
-> > syzbot reported a uaf in software_node_notify_remove. [1]
-> >
-> > When any of the two sysfs_create_link() in software_node_notify() fails,
-> > the swnode->kobj reference count will not increase normally, which will
-> > cause swnode to be released incorrectly due to the imbalance of kobj reference
-> > count when executing software_node_notify_remove().
-> >
-> > Increase the reference count of kobj before creating the link to avoid uaf.
-> >
-> > [1]
-> 
-> Please, reduce this to ~5-7 lines only. This is how Submitting Patches document
-> recommends to put backtraces in the commit messages:
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
-Ok, I will reduce the calltrace, and send V2 patch.
-> 
-> > Fixes: 9eb59204d519 ("iommufd/selftest: Add set_dev_pasid in mock iommu")
-> > Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
-> 
-> > Tested-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
-> 
-> Where is the positive result of it? I can't find the respective log.
-> To me this one
-> https://syzkaller.appspot.com/x/report.txt?x=158af070580000
-> doesn't sound as a useful report as I don't know if this patch fixes one
-> regression and introduced another.
-You can see: https://syzkaller.appspot.com/x/log.txt?x=118af07058000
-For tasks related to the reproducing program, there are only FAULT_INJECTION
-related problems in the log, no other problems, and the log record duration
-exceeds 240 seconds, and no uaf occurs, which is enough to prove that the
-problem has been fixed.
+In hdcs_init(), the return value of stv06xx_read_sensor() needs to be
+checked. A proper implementation can be found in vv6410_dump(). Add a
+check in loop condition and propergate error code to fix this issue.
 
-BR,
-Lizhi
+Fixes: 4c98834addfe ("V4L/DVB (10048): gspca - stv06xx: New subdriver.")
+Cc: stable@vger.kernel.org # v2.6+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c b/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
+index 5a47dcbf1c8e..303b055fefea 100644
+--- a/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
++++ b/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
+@@ -520,12 +520,13 @@ static int hdcs_init(struct sd *sd)
+ static int hdcs_dump(struct sd *sd)
+ {
+ 	u16 reg, val;
++	int err = 0;
+ 
+ 	pr_info("Dumping sensor registers:\n");
+ 
+-	for (reg = HDCS_IDENT; reg <= HDCS_ROWEXPH; reg++) {
+-		stv06xx_read_sensor(sd, reg, &val);
++	for (reg = HDCS_IDENT; reg <= HDCS_ROWEXPH && !err; reg++) {
++		err = stv06xx_read_sensor(sd, reg, &val);
+ 		pr_info("reg 0x%02x = 0x%02x\n", reg, val);
+ 	}
+-	return 0;
++	return (err < 0) ? err : 0;
+ }
+-- 
+2.42.0.windows.2
+
