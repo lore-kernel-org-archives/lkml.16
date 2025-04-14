@@ -1,67 +1,33 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F386245019
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B790254AFC;
+	Mon, 14 Apr 2025 07:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614974; cv=none; b=B6ZGE6ufw7ZWQkHY9XNGcmP/bI9BBmGAqNRut57hIzGSOEBxFnWwUIP+9J0dc2tnBHqzVcGKhO6g/HvatcdRTg6k21x0R4/gh4Vd+GzMSt4mzcu5h6H0KcpAX6qvgtBQnivMXyfJDNpVgNZDVmVNpodUztzurKwrWTqE9O+grKY=
+	t=1744615032; cv=none; b=EQ9fl8JEHUc+CogC6etQ2AbPLvA+D8iI/LDyNVvM3S0GGkA8pkKKdXRfQc5DIp5/XgoLi4814hlDWpIx7z2CGxQtN358DPj3k1CfSUvC/vnm9KcsoVLj1AqdZaV/3HazYdlgk6CQLYiX3otmUdh+NQZ1LBxnJtvK56ZaM4AIJF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614974; c=relaxed/simple;
-	bh=WK4NCloQDa0S4cRk3/OQggqH9gl0NPLMNlI5ytZg4G4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qMnSSyZAINlzaPteyJPZd4b3rTvG3F6hrEA5eU6UQFXM46tRcjcH/p1wm7GQCOhzWGL06AtGjOBljsi6VVn4mGKBDW00Dxo0nLgEAaXISWqo3Afvp1R4rC3lYsqYKD2b4AWqFX52CRaw4FSpKQAq/xm0Y+W+0xqnKjVHi6pDKxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yEY+oDyM; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744615032; c=relaxed/simple;
+	bh=EgvUs0tGMUnfOTbPrEg41rac3uXzGlSdqqVCnNvZNd4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EsegJ4h2K5Xy3bgQ2sJRDMFNkUiJRly6yXIWJNq09uWgwBq6QMglBlFAdmWWw0Xr3rDOGPPY8Kdjx8Mrea023BJ2azmCgk2KSFxahen27C0hR8skvTFkLjvv6rTKPtIUopzaO6MCpz92eysUSUhFSCTAQlDnkBM2rk5wnguSw3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBjYWW1D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEY+oDyM"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c30d9085aso2308945f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744614971; x=1745219771; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A4BBxO2Q/J6IMxfz+uEtm4Q1azghcdwE0iVwsVnnKvk=;
-        b=yEY+oDyMCLlRp6ZJB9Tqsjsor6XXTOn6bRoowgIC39c/kjAil0UWnDRG3hfNTx2q4i
-         gxK33yBiRoVpS6q8JTD+ClHRUVGtmOigPL1PP3u7aEp7Onad1d3+tII8aJ1f/Yy8jyQ2
-         VJ+uqCkLSvC/jl+3oYO7XfvtWoEGWzaG/FHx7qebuClNHWbp/IMf3CetGCKO8Zdfqb0u
-         aW4js7aMLrY/xHJOEis4LgkcLRAG8uWQyJIiGbgJC1dqFLDXGZQjmTM+4qRw/RAhfbAE
-         UeKpL8me/jdNm00mmCMmvC97Ia1zrALfZ3Oo2XvyCCNMgZWqbRUtl4EsQNMDuwOFf8NH
-         Oz9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744614971; x=1745219771;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A4BBxO2Q/J6IMxfz+uEtm4Q1azghcdwE0iVwsVnnKvk=;
-        b=Ll5GQycPAuZlR49KgUQxJXMIQvFqyqC/5k8d9zBY0TDUOpJqBVADVGvwo/WDW82mM0
-         pvMnN8qNvZWd6xn/aTlnwFv9wPks33KDhxtn4UK8TW92wLISM5gQmPb0eATy98SGDmW8
-         Hu1/K0Sr4kzIEhR1e8mVHzkbZizrszOqChU2ZvKKwOVkZTnmbz+xTT/bDprunp5WI3gz
-         nSP788k0k670b9eKuZfwHlV+NeK16uwAp18gYzjYsrpGrl8aUqOlJI3xftNmUym4qr0P
-         emUTtcqAQTQ9ji6DYWD3Dj+zj28za4YceQEhRqvg919GkOJF4+VuJNuObNhlDsBDyR6S
-         d39A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpTOXO087UcpX/QtSgvTFTOPrtGH1n7kxNxD9wA13mvX1cs1zYOzroGsi4wHUIeNsLxGQynMUEBdOioJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTjlMMP7249IUgxJlzUYarY77T3TOcy31qLcraOF2SP9iU5im7
-	0OIGJFCCT52WCWVbCGZrvVFcS9mkRPHt3hmDM8qWb5t2MfBXkN7YnhpfJmG3qiQ=
-X-Gm-Gg: ASbGncvNKSm8Ql4XhHVQHPM3VdhCCitnCSijsJ5tkce1YI813hvYg49gMt3mewyj0wv
-	9LhYmxLLsOZzCnvN6MSpV2Za2/zTD6OIo3eoFMBtq2CNWczxD67Mtv/1OTlnfrKTXqIpyFBFWkc
-	O5JIBXTd/a/oYSL5ddbHFRMXg4ZEOdjM1UTccYrkR1JfNL7jAigc3azgGh72MH7pNuTJwZNaw4w
-	mRRTZFCF5ivVqXM6FwiM0CL6TNspVqOgT+U1Ks7t/yXuliBArqfG1V7wAzsPs7UsCrE0aXElimA
-	A4JtPN7sb1CY7FP40+6x6bz0MaSfDSeEyOoSBS6BZF6uo2ix9BPWLRq84/RrHsTJboxBsZ4V311
-	jdSc3Ytzkfd6gYLDLdQ==
-X-Google-Smtp-Source: AGHT+IFk/4b/d6EUYjjExv4IiKLoJZUz+hd9IYDUnYI9Yd0PRlZMBINesye58HTjAx7nVixJNpR1PA==
-X-Received: by 2002:a05:6000:144e:b0:39c:1f11:ead with SMTP id ffacd0b85a97d-39ea5213077mr9016322f8f.26.1744614970477;
-        Mon, 14 Apr 2025 00:16:10 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:bf8a:3473:5c13:9743? ([2a01:e0a:3d9:2080:bf8a:3473:5c13:9743])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c614sm10221879f8f.27.2025.04.14.00.16.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 00:16:10 -0700 (PDT)
-Message-ID: <576f0726-d238-4c37-8dc2-481df67f8fec@linaro.org>
-Date: Mon, 14 Apr 2025 09:16:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBjYWW1D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22869C4CEE2;
+	Mon, 14 Apr 2025 07:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744615030;
+	bh=EgvUs0tGMUnfOTbPrEg41rac3uXzGlSdqqVCnNvZNd4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kBjYWW1D5PAJkZnrA7DrDYnB7fEilIj9ADPljOAoYo5EZTAy8DAMss++vYyiGXCfK
+	 eubvxa55cAvCrCzopKg1+gjvDIL6dRf6xPhvMXZptVj8eMuPo3ECtu4bpGcVPQcJ8N
+	 JtEjVvVDPCJBIzT2gsEjtP+B+sbyyCq4MQUBO893BfJJhyxYVj2ffmtsjOdIJCeYnl
+	 v4NvTj/tWm4rhs4xfsKKDGfFn+Wxg2/4QI9AiyEkK/8kfoWFrYDTO5vHQzOdQJZZsp
+	 eAGAT3cyLYQ9wMl6HQ5U8oyt0y9tGzUDVl4Z9EezN5SJ7QNmnJmPOCbWKI2v80Q7Fp
+	 BnxdTjXqXAzzw==
+Message-ID: <d676b9f3-e2b4-4b7c-ac37-e706b69af746@kernel.org>
+Date: Mon, 14 Apr 2025 09:17:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,163 +35,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] spi: meson-spicc: add DMA support
-To: Da Xue <da@lessconfused.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- Sunny Luo <sunny.luo@amlogic.com>
-References: <20250408-spi-dma-v1-1-3c38be62c09c@amlogic.com>
- <c29a8c28-996c-4e94-b0a1-0e4a37f0bebb@linaro.org>
- <aebccc51-14a2-40be-8d9e-20a55ce94459@amlogic.com>
- <d9d81cb4-12b4-4db3-becb-4578548986b2@linaro.org>
- <c9f0ca5f-17c4-474f-8370-fc0c83ac9093@amlogic.com>
- <CACdvmAg5px00er9TUd6_Nhr1GoSf=6LK6vSWOB-YcC1Ve0NRQQ@mail.gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <CACdvmAg5px00er9TUd6_Nhr1GoSf=6LK6vSWOB-YcC1Ve0NRQQ@mail.gmail.com>
+Subject: Re: [PATCH 10/11] vt: update ucs_width.c following latest
+ gen_ucs_width.py
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, Dave Mielke <Dave@mielke.cc>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410011839.64418-1-nico@fluxnic.net>
+ <20250410011839.64418-11-nico@fluxnic.net>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250410011839.64418-11-nico@fluxnic.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 14/04/2025 05:56, Da Xue wrote:
-> On Sun, Apr 13, 2025 at 11:14 PM Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
->>
->> Hi Neil,
->>      Thanks for your reply.
->>
->> On 2025/4/9 20:35, neil.armstrong@linaro.org wrote:
->>>
->>> Hi,
->>>
->>> On 09/04/2025 03:49, Xianwei Zhao wrote:
->>>> Hi Neil,
->>>>      Thanks for your reply.
->>>>
->>>> On 2025/4/8 15:41, Neil Armstrong wrote:
->>>>> [ EXTERNAL EMAIL ]
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 08/04/2025 09:04, Xianwei Zhao via B4 Relay wrote:
->>>>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>>>>
->>>>>> Add DMA support for spicc driver.
->>>>>>
->>>>>> DMA works if the transfer meets the following conditions:
->>>>>> 1. 64 bits per word;
->>>>>> 2. The transfer length must be multiples of the dma_burst_len,
->>>>>>      and the dma_burst_len should be one of 8,7...2,
->>>>>>      otherwise, it will be split into several SPI bursts.
->>>>>>
->>>>>> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
->>>>>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>>>> ---
->>>>>>    drivers/spi/spi-meson-spicc.c | 243
->>>>>> ++++++++++++++++++++++++++++++++++++++++--
->>>>>>    1 file changed, 232 insertions(+), 11 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/spi/spi-meson-spicc.c
->>>>>> b/drivers/spi/spi-meson-spicc.c
->>>>>> index df74ad5060f8..81e263bceba9 100644
->>>>>> --- a/drivers/spi/spi-meson-spicc.c
->>>>>> +++ b/drivers/spi/spi-meson-spicc.c
->>>>>> @@ -21,6 +21,7 @@
->>>>>>    #include <linux/interrupt.h>
->>>>>>    #include <linux/reset.h>
->>>>>>    #include <linux/pinctrl/consumer.h>
->>>>>> +#include <linux/dma-mapping.h>
->>>>>>
->>>>>>    /*
->>>>>>     * The Meson SPICC controller could support DMA based transfers,
->>>>>> but is not
->>>>>> @@ -33,6 +34,20 @@
->>>>>>     * - CS management is dumb, and goes UP between every burst, so is
->>>>>> really a
->>>>>>     *   "Data Valid" signal than a Chip Select, GPIO link should be
->>>>>> used instead
->>>>>>     *   to have a CS go down over the full transfer
->>>>>> + *
->>>>>> + * DMA achieves a transfer with one or more SPI bursts, each SPI
->>>>>> burst is made
->>>>>> + * up of one or more DMA bursts. The DMA burst implementation
->>>>>> mechanism is,
->>>>>> + * For TX, when the number of words in TXFIFO is less than the preset
->>>>>> + * reading threshold, SPICC starts a reading DMA burst, which reads
->>>>>> the preset
->>>>>> + * number of words from TX buffer, then writes them into TXFIFO.
->>>>>> + * For RX, when the number of words in RXFIFO is greater than the
->>>>>> preset
->>>>>> + * writing threshold, SPICC starts a writing request burst, which
->>>>>> reads the
->>>>>> + * preset number of words from RXFIFO, then write them into RX buffer.
->>>>>> + * DMA works if the transfer meets the following conditions,
->>>>>> + * - 64 bits per word
->>>>>> + * - The transfer length in word must be multiples of the
->>>>>> dma_burst_len, and
->>>>>> + *   the dma_burst_len should be one of 8,7...2, otherwise, it will
->>>>>> be split
->>>>>> + *   into several SPI bursts by this driver
->>>>>
->>>>> Fine, but then also rephrase the previous paragraph since you're
->>>>> adding DMA.
->>>>>
->>>> Will do.
->>>>
->>>>> Could you precise on which platform you tested the DMA ?
->>>>>
->>>>
->>>> aq222(S4)
->>>
->>> Will you be able to test on other platforms ?
->>>
->>
->> I tested it on other platforms over the last few days. G12A and C3 and
->> T7(T7 CLOCK use local source).
->>
->> My board SPI does not connect peripherals and is tested through a
->> hardware loop.
+On 10. 04. 25, 3:14, Nicolas Pitre wrote:
+> From: Nicolas Pitre <npitre@baylibre.com>
 > 
-> I can test it on GXL and SM1 in the next two weeks against a SPI
-> display and some WS2812B LCDs.
+> Split table ranges into BMP (16-bit) and non-BMP (above 16-bit).
+> This reduces the corresponding text size by 20-25%.
+...
+> @@ -483,7 +517,9 @@ static bool is_in_interval(uint32_t cp, const struct interval *intervals, size_t
+>    */
+>   bool ucs_is_zero_width(uint32_t cp)
+>   {
+> -	return is_in_interval(cp, zero_width_ranges, ARRAY_SIZE(zero_width_ranges));
+> +	return (cp <= 0xFFFF)
 
-Would be great, thx !
+This calls for some is_bmp() helper.
 
-Neil
+And then the classic way:
+if (is_bmp())
+   return is_in_interval16();
 
-> 
->> cmd:
->> spi_test -D /dev/spidev0.0 -v -s 5000000 -b 64 -l
->>
->>>>
->>>>>>     */
->>>>>>
-<snip>
+return is_in_interval32();
 
+thanks,
+-- 
+js
+suse labs
