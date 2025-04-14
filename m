@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E0F26B0A2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BD263F4C
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744626205; cv=none; b=SU5Z0HIFtUf+5TqvVPdTblu4bpzy3fRnradsYybp87izjbzouCHIQUAwf2X/Bh9AGmXDUwaoLJO/gthMWvqDtThpzXC+QJjPN3RfvIY/pgmS6YKETMuZ0KcFsrGVkHqUv7obOMTVnzDg5zclUGw3Qa13lvjugym3Jb7VF3asNJw=
+	t=1744626210; cv=none; b=c5pHpvewoP/jZ4fdQxWf/6vP2zULe5NfhNDQOBPD9heECv7A5P3FNb+CwewZxuDoN1r6bmpjDWxk/IbMXwWrEfYdm72rW1rrbzjl5M7qPuzJMv5G0KGsR8nk7ys3+MO44J1uwhg98fbco7LMjnDPWTGxThggLONy5Ogk4Hmy2Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744626205; c=relaxed/simple;
-	bh=B4zQ0R9s9mJErAxlDoVp1M7AZJ3gl38t8N0pky8+uzY=;
+	s=arc-20240116; t=1744626210; c=relaxed/simple;
+	bh=NVWaZQtoq363diNwUFs///l3ROluML4U56BobcSGZp4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KNXP1LFsvvK7gG7UnYt0F20blYVACODnXS2UMcRKFeLdKGDGoHHZ35xEgEqXOUtla9cB31jguVFX5QDABbdFu4tYzwGcoQPQhvZBXRbGhrJASmt+bYHe6G52EPbijvg+VtTZsjhPX+VG2Fj0808N7SkDGRDjJB/dqgy22hY67SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mq8gxCI6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XewzYGBsCrsWY10utjXKeyjxOcogVXVg7nB7As66qULVu6DSfQci9KHWI0zLNd8ToXZqDDJcv1CXDYv5kla2pa1WutdMgW0ggMngQXZWu7nAMLaalqGycxsPozl6gRs+RNaKlDuvqDjAUcNEBNOPHtgOPoJhRWKem/nG9zw9ahs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCwXgDws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mq8gxCI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76802C4CEE5;
-	Mon, 14 Apr 2025 10:23:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCwXgDws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05C9C4CEE2;
+	Mon, 14 Apr 2025 10:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744626205;
-	bh=B4zQ0R9s9mJErAxlDoVp1M7AZJ3gl38t8N0pky8+uzY=;
+	s=k20201202; t=1744626209;
+	bh=NVWaZQtoq363diNwUFs///l3ROluML4U56BobcSGZp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mq8gxCI6b3VcYh7JrHXk6ThtSroOrFnT1iqzTfs3N1PNHc+BRbOHk+lgsr0U+eJDa
-	 LpV9RlorcWizUP9KVbAh+LnUwQDgatrDSZ3JBJzKpvIeXeIyYUkaSO61RRPR1Tzepq
-	 P1Undf62wzvpF6MPuE72aSF8dA5wTIyqRLKuKImlI6yAsBrQOmCjY3qcT5t9P37ux7
-	 AN2ypAEmsTrNz4WxVGxQ1X92iNQlDeS9Kf5d0Uv58hxUPdobCkwer1bGuSCPa/VW0f
-	 o5tQmXR+7XGoiEGFuPj1fvK/RLPtGibFeqpCcicq8gUsIiyb3tVZcXG0o3XaL3Vfif
-	 Se+ojp1EJ71NA==
+	b=cCwXgDwsSgMfGwaItRo5ymqf8vQ7p/rgJeQLkVZWOoIQG0hS+nJ/HFPuxqadEabMe
+	 YpDrLHBeUfNC2lI9l4uwObJUEMBUvQlVpnDSuZ2bsVtNZxRbdlFrLRfNoYNyUOK994
+	 uI25bfFd+0NxmkUfbRFXd4SqtO8mSS7HTJIxP7Ewj/zrK2FGQBbMapwRf0wEMBsYea
+	 ty1CEaKwnPMC2wUxRUZz1IbIdv8+2p1ySs65bI4HAYKwVvFruYWlaLsf2IrcZ/Avgp
+	 dAIE/NvsIr5KCm5uwDyXMQdGnNb14MA1alxYaWxQGz71mAM55snQFlK+bzil5G1rKx
+	 LN2PnrEX3NmoA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -34,9 +34,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 07/17] treewide, timers: Rename try_to_del_timer_sync() => timer_delete_sync_try()
-Date: Mon, 14 Apr 2025 12:22:41 +0200
-Message-ID: <20250414102301.332225-8-mingo@kernel.org>
+Subject: [PATCH 09/17] treewide, timers: Rename add_timer_on() => timer_add_on()
+Date: Mon, 14 Apr 2025 12:22:43 +0200
+Message-ID: <20250414102301.332225-10-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250414102301.332225-1-mingo@kernel.org>
 References: <20250414102301.332225-1-mingo@kernel.org>
@@ -52,186 +52,261 @@ Move this API to the canonical timer_*() namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/apic/vector.c           |  2 +-
- drivers/char/random.c                   |  4 ++--
- drivers/irqchip/irq-riscv-imsic-state.c |  2 +-
- include/linux/timer.h                   |  2 +-
- kernel/time/timer.c                     |  6 +++---
- net/bridge/br_multicast.c               | 16 ++++++++--------
- sound/pci/ctxfi/cttimer.c               |  2 +-
- 7 files changed, 17 insertions(+), 17 deletions(-)
+ Documentation/trace/ftrace.rst          | 4 ++--
+ arch/powerpc/mm/book3s64/hash_utils.c   | 2 +-
+ arch/x86/kernel/apic/vector.c           | 2 +-
+ arch/x86/kernel/tsc_sync.c              | 2 +-
+ drivers/char/random.c                   | 4 ++--
+ drivers/cpufreq/powernv-cpufreq.c       | 2 +-
+ drivers/irqchip/irq-riscv-imsic-state.c | 2 +-
+ drivers/tty/mips_ejtag_fdc.c            | 4 ++--
+ include/linux/timer.h                   | 4 ++--
+ kernel/sched/core.c                     | 2 +-
+ kernel/time/clocksource.c               | 4 ++--
+ kernel/time/timer.c                     | 8 ++++----
+ kernel/workqueue.c                      | 4 ++--
+ 13 files changed, 22 insertions(+), 22 deletions(-)
 
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index c9e88bf65709..2dda0e857883 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1215,8 +1215,8 @@ Here are the available options:
+ 	oldest events). When the annotate option is set, it will
+ 	display when a new CPU buffer started::
+ 
+-			  <idle>-0     [001] dNs4 21169.031481: wake_up_idle_cpu <-add_timer_on
+-			  <idle>-0     [001] dNs4 21169.031482: _raw_spin_unlock_irqrestore <-add_timer_on
++			  <idle>-0     [001] dNs4 21169.031481: wake_up_idle_cpu <-timer_add_on
++			  <idle>-0     [001] dNs4 21169.031482: _raw_spin_unlock_irqrestore <-timer_add_on
+ 			  <idle>-0     [001] .Ns4 21169.031484: sub_preempt_count <-_raw_spin_unlock_irqrestore
+ 		##### CPU 2 buffer started ####
+ 			  <idle>-0     [002] .N.1 21169.031484: rcu_idle_exit <-cpu_idle
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 87b080bbd57c..a444d9db1f6f 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -1294,7 +1294,7 @@ static void stress_hpt_timer_fn(struct timer_list *timer)
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+ 	stress_hpt_timer.expires = jiffies + msecs_to_jiffies(10);
+-	add_timer_on(&stress_hpt_timer, next_cpu);
++	timer_add_on(&stress_hpt_timer, next_cpu);
+ }
+ 
+ static void __init htab_initialize(void)
 diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index fee42a73d64a..93069b13d3af 100644
+index 93069b13d3af..ad8b79b0d0d9 100644
 --- a/arch/x86/kernel/apic/vector.c
 +++ b/arch/x86/kernel/apic/vector.c
-@@ -864,7 +864,7 @@ void lapic_offline(void)
- 	__vector_cleanup(cl, false);
+@@ -1110,7 +1110,7 @@ static void __vector_schedule_cleanup(struct apic_chip_data *apicd)
+ 		 */
+ 		if (!timer_pending(&cl->timer)) {
+ 			cl->timer.expires = jiffies + 1;
+-			add_timer_on(&cl->timer, cpu);
++			timer_add_on(&cl->timer, cpu);
+ 		}
+ 	} else {
+ 		pr_warn("IRQ %u schedule cleanup for offline CPU %u\n", apicd->irq, cpu);
+diff --git a/arch/x86/kernel/tsc_sync.c b/arch/x86/kernel/tsc_sync.c
+index 982a407fb1fb..cec2120d52ae 100644
+--- a/arch/x86/kernel/tsc_sync.c
++++ b/arch/x86/kernel/tsc_sync.c
+@@ -103,7 +103,7 @@ static void tsc_sync_check_timer_fn(struct timer_list *unused)
+ 		next_cpu = cpumask_first(cpu_online_mask);
  
- 	irq_matrix_offline(vector_matrix);
--	WARN_ON_ONCE(try_to_del_timer_sync(&cl->timer) < 0);
-+	WARN_ON_ONCE(timer_delete_sync_try(&cl->timer) < 0);
- 	WARN_ON_ONCE(!hlist_empty(&cl->head));
+ 	tsc_sync_check_timer.expires += SYNC_CHECK_INTERVAL;
+-	add_timer_on(&tsc_sync_check_timer, next_cpu);
++	timer_add_on(&tsc_sync_check_timer, next_cpu);
+ }
  
- 	unlock_vector_lock();
+ static int __init start_sync_check_timer(void)
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38f2fab29c56..4ea4dccc7c46 100644
+index 4ea4dccc7c46..225810db7d6f 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -1311,9 +1311,9 @@ static void __cold try_to_generate_entropy(void)
- 	while (!crng_ready() && !signal_pending(current)) {
- 		/*
- 		 * Check !timer_pending() and then ensure that any previous callback has finished
--		 * executing by checking try_to_del_timer_sync(), before queueing the next one.
-+		 * executing by checking timer_delete_sync_try(), before queueing the next one.
- 		 */
--		if (!timer_pending(&stack->timer) && try_to_del_timer_sync(&stack->timer) >= 0) {
-+		if (!timer_pending(&stack->timer) && timer_delete_sync_try(&stack->timer) >= 0) {
- 			struct cpumask timer_cpus;
- 			unsigned int num_cpus;
+@@ -1130,7 +1130,7 @@ void add_interrupt_randomness(int irq)
+ 	fast_pool->count |= MIX_INFLIGHT;
+ 	if (!timer_pending(&fast_pool->mix)) {
+ 		fast_pool->mix.expires = jiffies;
+-		add_timer_on(&fast_pool->mix, raw_smp_processor_id());
++		timer_add_on(&fast_pool->mix, raw_smp_processor_id());
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(add_interrupt_randomness);
+@@ -1342,7 +1342,7 @@ static void __cold try_to_generate_entropy(void)
+ 			/* Expiring the timer at `jiffies` means it's the next tick. */
+ 			stack->timer.expires = jiffies;
  
+-			add_timer_on(&stack->timer, cpu);
++			timer_add_on(&stack->timer, cpu);
+ 
+ 			preempt_enable();
+ 		}
+diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+index 1de7226db377..cf10804eef73 100644
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -683,7 +683,7 @@ static void gpstate_timer_handler(struct timer_list *t)
+ 	 */
+ 	if (!cpumask_test_cpu(raw_smp_processor_id(), policy->cpus)) {
+ 		gpstates->timer.expires = jiffies + msecs_to_jiffies(1);
+-		add_timer_on(&gpstates->timer, cpumask_first(policy->cpus));
++		timer_add_on(&gpstates->timer, cpumask_first(policy->cpus));
+ 		spin_unlock(&gpstates->gpstate_lock);
+ 		return;
+ 	}
 diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
-index bdf5cd2037f2..c39e573825d4 100644
+index c39e573825d4..fcb4f90720a9 100644
 --- a/drivers/irqchip/irq-riscv-imsic-state.c
 +++ b/drivers/irqchip/irq-riscv-imsic-state.c
-@@ -564,7 +564,7 @@ void imsic_state_offline(void)
- 	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
+@@ -214,7 +214,7 @@ static void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
  
- 	raw_spin_lock_irqsave(&lpriv->lock, flags);
--	WARN_ON_ONCE(try_to_del_timer_sync(&lpriv->timer) < 0);
-+	WARN_ON_ONCE(timer_delete_sync_try(&lpriv->timer) < 0);
- 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
- #endif
+ 	if (!timer_pending(&lpriv->timer)) {
+ 		lpriv->timer.expires = jiffies + 1;
+-		add_timer_on(&lpriv->timer, smp_processor_id());
++		timer_add_on(&lpriv->timer, smp_processor_id());
+ 	}
  }
+ #else
+diff --git a/drivers/tty/mips_ejtag_fdc.c b/drivers/tty/mips_ejtag_fdc.c
+index 9c5d4ff8875c..6f2d3cf4f7cf 100644
+--- a/drivers/tty/mips_ejtag_fdc.c
++++ b/drivers/tty/mips_ejtag_fdc.c
+@@ -1006,7 +1006,7 @@ static int mips_ejtag_fdc_tty_probe(struct mips_cdmm_device *dev)
+ 		 * Always attach the timer to the right CPU. The channels are
+ 		 * per-CPU so all polling should be from a single CPU.
+ 		 */
+-		add_timer_on(&priv->poll_timer, dev->cpu);
++		timer_add_on(&priv->poll_timer, dev->cpu);
+ 
+ 		dev_info(priv->dev, "No usable IRQ, polling enabled\n");
+ 	}
+@@ -1090,7 +1090,7 @@ static int mips_ejtag_fdc_tty_cpu_up(struct mips_cdmm_device *dev)
+ 	} else {
+ 		/* Restart poll timer */
+ 		priv->removing = false;
+-		add_timer_on(&priv->poll_timer, dev->cpu);
++		timer_add_on(&priv->poll_timer, dev->cpu);
+ 	}
+ 
+ 	/* Restart the kthread */
 diff --git a/include/linux/timer.h b/include/linux/timer.h
-index c35cf0c16095..f662aca5d536 100644
+index 899dac465250..cc6903ba363f 100644
 --- a/include/linux/timer.h
 +++ b/include/linux/timer.h
-@@ -162,7 +162,7 @@ extern void add_timer(struct timer_list *timer);
- extern void timer_add_local(struct timer_list *timer);
- extern void timer_add_global(struct timer_list *timer);
+@@ -37,7 +37,7 @@
+  * with interrupts disabled. Abuse is monitored!
+  *
+  * @TIMER_PINNED: A pinned timer will always expire on the CPU on which the
+- * timer was enqueued. When a particular CPU is required, add_timer_on()
++ * timer was enqueued. When a particular CPU is required, timer_add_on()
+  * has to be used. Enqueue via mod_timer() and timer_add() is always done
+  * on the local CPU.
+  */
+@@ -147,7 +147,7 @@ static inline int timer_pending(const struct timer_list * timer)
+ 	return !hlist_unhashed_lockless(&timer->entry);
+ }
  
--extern int try_to_del_timer_sync(struct timer_list *timer);
-+extern int timer_delete_sync_try(struct timer_list *timer);
- extern int timer_delete_sync(struct timer_list *timer);
- extern int timer_delete(struct timer_list *timer);
- extern int timer_shutdown_sync(struct timer_list *timer);
+-extern void add_timer_on(struct timer_list *timer, int cpu);
++extern void timer_add_on(struct timer_list *timer, int cpu);
+ extern int mod_timer(struct timer_list *timer, unsigned long expires);
+ extern int timer_mod_pending(struct timer_list *timer, unsigned long expires);
+ extern int timer_reduce(struct timer_list *timer, unsigned long expires);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index c81cf642dba0..986b425b18a3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1209,7 +1209,7 @@ int get_nohz_timer_target(void)
+ }
+ 
+ /*
+- * When add_timer_on() enqueues a timer into the timer wheel of an
++ * When timer_add_on() enqueues a timer into the timer wheel of an
+  * idle CPU then this timer might expire before the next timer event
+  * which is scheduled to wake up that CPU. In case of a completely
+  * idle system the next event might even be infinite time into the
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index bb48498ebb5a..513f29693b5f 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -599,7 +599,7 @@ static void clocksource_watchdog(struct timer_list *unused)
+ 	 */
+ 	if (!timer_pending(&watchdog_timer)) {
+ 		watchdog_timer.expires += WATCHDOG_INTERVAL + extra_wait;
+-		add_timer_on(&watchdog_timer, next_cpu);
++		timer_add_on(&watchdog_timer, next_cpu);
+ 	}
+ out:
+ 	spin_unlock(&watchdog_lock);
+@@ -611,7 +611,7 @@ static inline void clocksource_start_watchdog(void)
+ 		return;
+ 	timer_setup(&watchdog_timer, clocksource_watchdog, 0);
+ 	watchdog_timer.expires = jiffies + WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, cpumask_first(cpu_online_mask));
++	timer_add_on(&watchdog_timer, cpumask_first(cpu_online_mask));
+ 	watchdog_running = 1;
+ }
+ 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 778c4b6e07c4..74c1383e887f 100644
+index 67fdc84b2a30..c86cb7ca85f2 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1511,7 +1511,7 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
- }
+@@ -1327,7 +1327,7 @@ void timer_add_global(struct timer_list *timer)
+ EXPORT_SYMBOL(timer_add_global);
  
  /**
-- * try_to_del_timer_sync - Try to deactivate a timer
-+ * timer_delete_sync_try - Try to deactivate a timer
-  * @timer:	Timer to deactivate
+- * add_timer_on - Start a timer on a particular CPU
++ * timer_add_on - Start a timer on a particular CPU
+  * @timer:	The timer to be started
+  * @cpu:	The CPU to start it on
   *
-  * This function tries to deactivate a timer. On success the timer is not
-@@ -1526,11 +1526,11 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
-  * * %1  - The timer was pending and deactivated
-  * * %-1 - The timer callback function is running on a different CPU
+@@ -1338,7 +1338,7 @@ EXPORT_SYMBOL(timer_add_global);
+  *
+  * See timer_add() for further details.
   */
--int try_to_del_timer_sync(struct timer_list *timer)
-+int timer_delete_sync_try(struct timer_list *timer)
+-void add_timer_on(struct timer_list *timer, int cpu)
++void timer_add_on(struct timer_list *timer, int cpu)
  {
- 	return __try_to_del_timer_sync(timer, false);
+ 	struct timer_base *new_base, *base;
+ 	unsigned long flags;
+@@ -1382,7 +1382,7 @@ void add_timer_on(struct timer_list *timer, int cpu)
+ out_unlock:
+ 	raw_spin_unlock_irqrestore(&base->lock, flags);
  }
--EXPORT_SYMBOL(try_to_del_timer_sync);
-+EXPORT_SYMBOL(timer_delete_sync_try);
+-EXPORT_SYMBOL_GPL(add_timer_on);
++EXPORT_SYMBOL_GPL(timer_add_on);
  
- #ifdef CONFIG_PREEMPT_RT
- static __init void timer_base_init_expiry_lock(struct timer_base *base)
-diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
-index 3e61a2798d63..bf7e52b2bb13 100644
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -2061,7 +2061,7 @@ static void br_multicast_enable(struct bridge_mcast_own_query *query)
- {
- 	query->startup_sent = 0;
- 
--	if (try_to_del_timer_sync(&query->timer) >= 0 ||
-+	if (timer_delete_sync_try(&query->timer) >= 0 ||
- 	    timer_delete(&query->timer))
- 		mod_timer(&query->timer, jiffies);
- }
-@@ -3480,7 +3480,7 @@ static void br_ip4_multicast_query(struct net_bridge_mcast *brmctx,
- 	if (mp->host_joined &&
- 	    (timer_pending(&mp->timer) ?
- 	     time_after(mp->timer.expires, now + max_delay) :
--	     try_to_del_timer_sync(&mp->timer) >= 0))
-+	     timer_delete_sync_try(&mp->timer) >= 0))
- 		mod_timer(&mp->timer, now + max_delay);
- 
- 	for (pp = &mp->ports;
-@@ -3488,7 +3488,7 @@ static void br_ip4_multicast_query(struct net_bridge_mcast *brmctx,
- 	     pp = &p->next) {
- 		if (timer_pending(&p->timer) ?
- 		    time_after(p->timer.expires, now + max_delay) :
--		    try_to_del_timer_sync(&p->timer) >= 0 &&
-+		    timer_delete_sync_try(&p->timer) >= 0 &&
- 		    (brmctx->multicast_igmp_version == 2 ||
- 		     p->filter_mode == MCAST_EXCLUDE))
- 			mod_timer(&p->timer, now + max_delay);
-@@ -3569,7 +3569,7 @@ static int br_ip6_multicast_query(struct net_bridge_mcast *brmctx,
- 	if (mp->host_joined &&
- 	    (timer_pending(&mp->timer) ?
- 	     time_after(mp->timer.expires, now + max_delay) :
--	     try_to_del_timer_sync(&mp->timer) >= 0))
-+	     timer_delete_sync_try(&mp->timer) >= 0))
- 		mod_timer(&mp->timer, now + max_delay);
- 
- 	for (pp = &mp->ports;
-@@ -3577,7 +3577,7 @@ static int br_ip6_multicast_query(struct net_bridge_mcast *brmctx,
- 	     pp = &p->next) {
- 		if (timer_pending(&p->timer) ?
- 		    time_after(p->timer.expires, now + max_delay) :
--		    try_to_del_timer_sync(&p->timer) >= 0 &&
-+		    timer_delete_sync_try(&p->timer) >= 0 &&
- 		    (brmctx->multicast_mld_version == 1 ||
- 		     p->filter_mode == MCAST_EXCLUDE))
- 			mod_timer(&p->timer, now + max_delay);
-@@ -3649,7 +3649,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
- 			if (!hlist_unhashed(&p->mglist) &&
- 			    (timer_pending(&p->timer) ?
- 			     time_after(p->timer.expires, time) :
--			     try_to_del_timer_sync(&p->timer) >= 0)) {
-+			     timer_delete_sync_try(&p->timer) >= 0)) {
- 				mod_timer(&p->timer, time);
- 			}
- 
-@@ -3665,7 +3665,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
- 		if (mp->host_joined &&
- 		    (timer_pending(&mp->timer) ?
- 		     time_after(mp->timer.expires, time) :
--		     try_to_del_timer_sync(&mp->timer) >= 0)) {
-+		     timer_delete_sync_try(&mp->timer) >= 0)) {
- 			mod_timer(&mp->timer, time);
- 		}
- 
-@@ -3681,7 +3681,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
- 		if (!hlist_unhashed(&p->mglist) &&
- 		    (timer_pending(&p->timer) ?
- 		     time_after(p->timer.expires, time) :
--		     try_to_del_timer_sync(&p->timer) >= 0)) {
-+		     timer_delete_sync_try(&p->timer) >= 0)) {
- 			mod_timer(&p->timer, time);
- 		}
- 
-diff --git a/sound/pci/ctxfi/cttimer.c b/sound/pci/ctxfi/cttimer.c
-index 56bf567d98b1..fa6867adb42b 100644
---- a/sound/pci/ctxfi/cttimer.c
-+++ b/sound/pci/ctxfi/cttimer.c
-@@ -119,7 +119,7 @@ static void ct_systimer_stop(struct ct_timer_instance *ti)
- static void ct_systimer_prepare(struct ct_timer_instance *ti)
- {
- 	ct_systimer_stop(ti);
--	try_to_del_timer_sync(&ti->timer);
-+	timer_delete_sync_try(&ti->timer);
+ /**
+  * __timer_delete - Internal function: Deactivate a timer
+@@ -1678,7 +1678,7 @@ static int __timer_delete_sync(struct timer_list *timer, bool shutdown)
+  * otherwise this function is meaningless. It must not be called from
+  * interrupt contexts unless the timer is an irqsafe one. The caller must
+  * not hold locks which would prevent completion of the timer's callback
+- * function. The timer's handler must not call add_timer_on(). Upon exit
++ * function. The timer's handler must not call timer_add_on(). Upon exit
+  * the timer is not queued and the handler is not running on any CPU.
+  *
+  * For !irqsafe timers, the caller must not hold locks that are held in
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 5eb43f2d213b..ae4cbd1b2add 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2520,12 +2520,12 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
+ 		cpu = smp_processor_id();
+ 		if (!housekeeping_test_cpu(cpu, HK_TYPE_TIMER))
+ 			cpu = housekeeping_any_cpu(HK_TYPE_TIMER);
+-		add_timer_on(timer, cpu);
++		timer_add_on(timer, cpu);
+ 	} else {
+ 		if (likely(cpu == WORK_CPU_UNBOUND))
+ 			timer_add_global(timer);
+ 		else
+-			add_timer_on(timer, cpu);
++			timer_add_on(timer, cpu);
+ 	}
  }
  
- #define ct_systimer_free	ct_systimer_prepare
 -- 
 2.45.2
 
