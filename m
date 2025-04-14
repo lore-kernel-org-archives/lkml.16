@@ -1,133 +1,122 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0138A27FD71
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871982820BA;
+	Mon, 14 Apr 2025 16:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649859; cv=none; b=Thp0HD/rUJfjUekzAXvNsAgZXgMJQyyC3LOb77HVA8fGCsaDkLNgAUBZ0f8MGVJQ8FFJAzCijvr4uJ7RrK+d2pLHXcBmCVXW3LhQqQ8oepkc5bo7K2KHJqbEExGYr8U+/idCx6Cgfw7K6pPjcw2IH0yqaxFTuUVw3vZkYpvM5yU=
+	t=1744649871; cv=none; b=PjKgsdtt7ss3IFfPATLr9Zdru2zzEHzL+4u2Stjv0pPTckF+9Ytb70MKyepgmh1wSTnTtXZj15vag3lkUbDb5NOVXfBxE1PbGqSKRSDdxT4WzbxsogcX0R3++8zuXX+57kQromKbyP7pHvomyihfU6EHrh1TQGjIdkUFoX/pHw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649859; c=relaxed/simple;
-	bh=eQEe/c5oftEZKvKUGmrhpEZY96s5kpSF+ZCfFScouec=;
+	s=arc-20240116; t=1744649871; c=relaxed/simple;
+	bh=R2UX98lIlNjDJ6qFh8FQiF/WtG61FPxjcw+Wg1sk41U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qTnU+AFNTssZD/Prwc3dwqOTKBhzwJKoofIHuzPOihGJBe62OQ9uj04FN+l37dKZA4e80QX5L96NNQIbp+DSUxnDEFHnKQdoWoeG3l7uqvSSx0wvhyPBdBdNXYX6opU41cViS3PTVybdALjzWu4Rr89oGJiA5PA70WQn4AVjrxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LrQ6P41k; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=gkR2bmlmdTNhAjEARapTJImNs0Z14G635q7inQY6mI51s5UpeDF61/2BkeVUS/8DrkaymCOvITOWTZejpCGM82/r/sZrQA5mDOwRlg9uhMetR04OfTbDtRjXUoLZUbKIfyYo381hCHTkbsWE66hDzfdCUr3hBEngbeRM1t2BDNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J65Wwcpr; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LrQ6P41k"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaecf50578eso831720166b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J65Wwcpr"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52446b21cfdso1939111e0c.1;
+        Mon, 14 Apr 2025 09:57:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1744649854; x=1745254654; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tYczQwi1ciTfnGeQQMxxbpGHfPdtJn0k+Nd8ZiAqFuY=;
-        b=LrQ6P41k217ToRlznwyVPCaOW+1Oy9eom3CYDYtXrwOE1OVConGrWUK1oSTANQhM3p
-         O0Ab8/rtwfbIeb5qBl1SUAmEFOnb3T9ew2ZyXIlGdZpyykdjrfRbNik4iW8bCYslTq4n
-         HkU9e07vTFaLvps5COJPmi2VxrT0NrjRuWy+o=
+        d=gmail.com; s=20230601; t=1744649868; x=1745254668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=drgJ4kvJBwLENN+wUSBbYOnp85UmFVhKGobYEXfoSwA=;
+        b=J65WwcprbsOzEx+yLS/7tbNw/xcxBPxJAEtS0+y9mbtvpqjiyJmln++v+7OUrqPPHv
+         qNjOkKaqyB0AK6y7P8GGR4EebwCtmdnlfIpgBz5JAfpnAkLf1djSmRJHGKilpQUzhVQD
+         J5GymH7C/x0vdTgTmOtFTiOlH4chNZoT5RArSdJDg6juhnjg3w1V1z3OdC/Tu3776nh8
+         +R094v9DM1qGTz8g0nEe8UwIb7a5Uotukq8+XBdJSnEB50zxRxNPooDh8ooNaMi9j3b4
+         zGDcJq+Sd7b9amNJtztEg2H5Fm0uWFUR61rMVQ6Ofm6YmXErSHJaii11sHgtFh0K46JL
+         aIWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744649854; x=1745254654;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tYczQwi1ciTfnGeQQMxxbpGHfPdtJn0k+Nd8ZiAqFuY=;
-        b=WP9SM3ByfuX94XJhbKsg0J78jkzFt+j4ulpG8l4GNC3KHBW3ciah2pMihL2ENVfMO0
-         4HUAzs8MUVq/n42uUTAWaEp/+RzqSFMKsFi6Q3SOaJAjfbs+E9/pcSG/sk6rCpa+vSHG
-         3Yxdg3vEHTnKC96b0WOgDuVlp5yJUguycXPN06IS9L4fbHfQJxXlKU4DSNwUZhPtB36p
-         jgmM2o3jhevCKPL4PH/eai1P7QQEV1516Y00Rln31Wzm6yTRfwfKwHPK3pjXuEwl1TqD
-         PpMiCiXvoxMyGWugcBitpBAWojJi7V1alwz+U2fP31e+p7BTz5Ri4JlJFpBnou1Rx6FB
-         cg5A==
-X-Gm-Message-State: AOJu0Yw2GQZbKgXgesccB06qyrUApEr/V+VIxMNxDjNvYlmv5MXG1jHu
-	wKCggVHfQnaOFUHSTmlvI3pEXTC45tmmCQ6jnQQ6uPP+jtJMTnvjKByKFaWOLgT8tICj0c9Dex+
-	9Ifs=
-X-Gm-Gg: ASbGncvzQ7AU/3QMTdJ7r7zKczDWEHLGtdtenRzAT2QQkXaVWdDQK6rWVdu0JE9KCnC
-	gaisiCEngiyGbOKWBS5QqFNpCjZEbCttFTDXjdV+wLtsCwqOmaMgEmbGMGBd/+iuwKRpu+syeWZ
-	AHyJSIrpGiPy9koBOHaXMvn9mvhZQji3EYVkTnCAb4b9H5zKswnhn3IkFKCmlNjEvj+RfadhrlK
-	MX2VzqKxv55kG6hE7JofXjvcN25ZWcAhY1LQRUnBBnfPnyqIwnb2lpjLBXmmmrU5MQiOV8/hp4O
-	Zpw+AqeJe54ivApAJb3Eq579tHB5297YrMkH4V8eInPtjUO4It4ZNFzQR4YM7IiPg1EQOS3psS9
-	84z95Ll4KwEsv6SI=
-X-Google-Smtp-Source: AGHT+IEKscqIKqhpvCpJ15MC4h84VRQbsGzjRxF5xUv7dI5d7FI7aNIh19N39MzB109kEnj8vOnTgA==
-X-Received: by 2002:a17:907:7b8e:b0:ac3:b44b:de24 with SMTP id a640c23a62f3a-acad343c611mr1016331466b.2.1744649853954;
-        Mon, 14 Apr 2025 09:57:33 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce6fd9sm919047366b.161.2025.04.14.09.57.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 09:57:33 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so819668366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:57:32 -0700 (PDT)
-X-Received: by 2002:a17:907:72ca:b0:abf:7453:1f1a with SMTP id
- a640c23a62f3a-acad34fcb7fmr1049492366b.36.1744649852687; Mon, 14 Apr 2025
- 09:57:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744649868; x=1745254668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=drgJ4kvJBwLENN+wUSBbYOnp85UmFVhKGobYEXfoSwA=;
+        b=e1lWSZnS7pfwGwNl/SYN/QidWrU8YDtXpW0fAxEj6wiaQxtTiUxoSoOKeHnnK3hosP
+         Twby9/6PeyLI9lUkzZ0c/cF+TFnvhaQ0y1vdxavKO8798ed6o7y3bVqWGfk1WF4xlkII
+         HdW/S3csHl89q+yGD70IeI/EZd1JMtSItfdbEUaJ4S9D6KaI6Y1U6FD+5XjxTEUXSLMJ
+         Rzx0fKawBRsnLown5CUQhPe9W2Rh7Q2dAOYjKzLh5tA0pk9bGiDI9wVOz1qq4QNGPfqt
+         RvFsNMhriVKS1z3y/jzP6/zP3ih+8dxRUlv/SsicFApJgFahWWFngdQOUWjdnoun0/ik
+         sObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRu03FPQHKcwSm1mDsjwNybk9L9VDiMKoil62vhR6/1Y53Rzr0Nyv2z8avxCsmFsXF60rE5y2mGZr2XpKL@vger.kernel.org, AJvYcCWF5E2+3kErDJhYXGYmPD/f0rLjROQcqkPVF5cdC0yYzYbKKP7WiP7xJICi8RDUHNPQjTSGjkzv@vger.kernel.org, AJvYcCWdogOKVQCmAGqZhP0zHNtycyRyYCKPZ+DfyakGKZjGd/32+Kc5Vf9kTBtr0xA08jZAYYhbGQK9PhV7PXeVGqfg53U=@vger.kernel.org, AJvYcCWq5wIF4mUB9LnjusC5XgcNzbp442FXtRZPW20xP3Nc1RbE5E3lw4eCbNOHk/mKfrENYqd2/xnil3pM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdErd75ckYM1mZwjDOXyOY8cN0tIZ56u5aG20yHlEwKPqTGab4
+	q1FiGXx0NeL6GHTb5IhadRg36G//H6lM5ciNQWyx6A1TyYJqk6vH2RseVC/3fze4OxEQVS3ZOG7
+	/RGd0khpAlWthkFJj5tKA2JTzIgc=
+X-Gm-Gg: ASbGncsoWu7bf2wdVTlaC0Jp6XnBxRxMetrOk4zt+B2e68nviIIUk/zMGJNUf8WjXoP
+	bdpnLgRhkE6ERcoe5sPp4P7ET7zTel0xaUU4cIGyiqSpBjoyi5TfqtuwLKIaOsJAxtJpvO6wn4f
+	hbdyVxUCpR7ajuj59yMLeRg5cXY5uZz2AlRIznkf89jMA3toNukOhjDw==
+X-Google-Smtp-Source: AGHT+IEWyQ+qQ66o7N7+8XGJO5Ll56Mi7mVYoHXkbahGQ2VotD+EVhbg3G8216oUR9181f8bIK1PpfJpHPMEC84oVFU=
+X-Received: by 2002:a05:6122:181d:b0:520:3536:feb5 with SMTP id
+ 71dfb90a1353d-527c3615240mr8335250e0c.11.1744649868304; Mon, 14 Apr 2025
+ 09:57:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414102301.332225-1-mingo@kernel.org> <20250414102301.332225-3-mingo@kernel.org>
-In-Reply-To: <20250414102301.332225-3-mingo@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 14 Apr 2025 09:57:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
-X-Gm-Features: ATxdqUEdn57IYM89yqy9QUDf0w4C6re1J-RqA0cqcSJChu_u3ZclK1cuu7ISSv0
-Message-ID: <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
-Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Anil Gurumurthy <anil.gurumurthy@qlogic.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <Z_QSHpvSK7I--xPq@shell.armlinux.org.uk> <CA+V-a8vgavmN7c9KYjc-3tm-9GC1_aVUkF-dF=Ws9axTBmSa5g@mail.gmail.com>
+ <Z_0cPmY_LzI_fo4S@shell.armlinux.org.uk>
+In-Reply-To: <Z_0cPmY_LzI_fo4S@shell.armlinux.org.uk>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 17:57:22 +0100
+X-Gm-Features: ATxdqUENKCwc-Lcqt2ec1N-RxZ-ERgWqw8teGlVULD-_8vGOd7AV27blrs1o4yg
+Message-ID: <CA+V-a8t6AWzBBxmGG5J8-N0HCMpxYhUVO9m4FT0STGL9KPShVw@mail.gmail.com>
+Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
+ Renesas GBETH
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Apr 2025 at 03:23, Ingo Molnar <mingo@kernel.org> wrote:
+Hi Russell,
+
+On Mon, Apr 14, 2025 at 3:31=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
 >
-> We'd like to introduce timer_mod() in the kernel, so make
-> sure the namespace is clear.
+> On Mon, Apr 07, 2025 at 07:07:49PM +0100, Lad, Prabhakar wrote:
+> > On Mon, Apr 7, 2025 at 6:58=E2=80=AFPM Russell King (Oracle)
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Mon, Apr 07, 2025 at 01:03:17PM +0100, Prabhakar wrote:
+> > > > +static struct clk *renesas_gbeth_find_clk(struct plat_stmmacenet_d=
+ata *plat_dat,
+> > > > +                                       const char *name)
+> > > > +{
+> > > > +     for (unsigned int i =3D 0; i < plat_dat->num_clks; i++)
+> > > > +             if (!strcmp(plat_dat->clks[i].id, name))
+> > > > +                     return plat_dat->clks[i].clk;
+> > > > +
+> > > > +     return NULL;
+> > > > +}
+> > >
+> > > In addition to Jakub's request, I'll ask that you hold off for a week
+> > > because I have the following that I'd like to submit:
+> > >
+> > Ack, please add me in Cc while you post this patch.
+>
+> FYI, the patch was merged last Thursday, so please update to replace
+> the above with stmmac_pltfr_find_clk() which will do this for you.
+>
+Thanks, I'll rebase my changes on top of it and send out v6.
 
-No no, this is horribly wrong.
-> -       use_idlect1 = omap_dm_timer_modify_idlect_mask(use_idlect1);
-> +       use_idlect1 = omap_dm_timer_moduleify_idlect_mask(use_idlect1);
-
-This was clearly all done with some completely bogus
-search-and-replace, and the end result is nonsensical.
-
-That "timer_mod" has *NOTHING* to do with a "module". It's "modify".
-
-> -enum s3c64xx_timer_mode {
-> +enum s3c64xx_timer_modulee {
-
-Same thing. It's not "mod" as in "module" it's "mode".
-
-> -                       apic->lapic_timer.timer_mode_mask = 3 << 17;
-> +                       apic->lapic_timer.timer_modulee_mask = 3 << 17;
-
-More nonsense.
-
-> -       return apic->lapic_timer.timer_mode == APIC_LVT_TIMER_ONESHOT;
-> +       return apic->lapic_timer.timer_modulee == APIC_LVT_TIMER_ONESHOT;
-
-More nonsense.
-
-> -       ti_32k_timer_module_init(np, ti_32k_timer.base);
-> +       ti_32k_timer_moduleule_init(np, ti_32k_timer.base);
-
-Even more crazy mindless and completely incorrect changes.
-
-> diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
-> index aa68d61a2d0d..4c11e3738f36 100644
-> --- a/drivers/scsi/bfa/bfa_ioc.c
-> +++ b/drivers/scsi/bfa/bfa_ioc.c
->  #define bfa_ioc_timer_start(__ioc)                                     \
-> -       bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,        \
-> +       bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,     \
-
-As far as I can tell, this is the *only* correct conversion, with 95%
-of the patch just being complete garbage.
-
-Stop doing search-and-replace.
-
-              Linus
+Cheers,
+Prabhakar
