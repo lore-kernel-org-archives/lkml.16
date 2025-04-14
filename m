@@ -1,80 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16887266EF3
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4EF266EF3;
+	Mon, 14 Apr 2025 10:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744627745; cv=none; b=LeDgWsZRkzqkWeGxZaOrNuJ+CVUftTjWlb1zVRxGpYWSnzQTxA15uKdrojv/35xfreeM8iAEr8wu88bcjywrquc7C+DsmI9+v3Zr90kyXNkFaWqFGxuBpb3intYksYZFvEG66f7jTaj9C9/GrKJQA729xPQ33xjbcy01pY4A+nk=
+	t=1744627772; cv=none; b=gPLPHetTovTPXCooG4KzI56BxwwrErUtNaYK3o3eT3XsSjwyrRp4qwuZlNLO4XIk5nlB2N3rXRY+KWW0dluxUqOFNJVXrcw/IX2TGape3/tniq4C+LeBQpSM56xrk5B4uEB/FjQpvzPwpBm+uBr64Kpoi3EcyRdER1M2L0o6vx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744627745; c=relaxed/simple;
-	bh=2k3NKqZdXjiNHiaMkWazo2ZQUH2A1EflKcb4qzc6yx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bw+Uyp1XBsaDwnJBCoJBXBM+mDprtFNuOH1XJUTOzQKQoDP2KgSfD/wKDQ+HgjlT6F5PAJobculi3nesA+0WYIi4nn0Ybj7YYsBdZn8ZT4q+liqH2KljLFSyBDIcXLPe1QhwI5sHhURCWJ9oP3gdBWPtky/sIs3OTs/604hckJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tapdWTGy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744627772; c=relaxed/simple;
+	bh=nej5Rxx/hhW9hddTky4aUeyep3bqcgBIkysf/UdzfYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E2id7Vj2I+wj/lk1DUizaV+7FCC65LNgnUPDVTKEVYdvs8gpC5XPq9v3Oy1YoQ0swmgAPnX4Xm2YreHdHbLnffgLdm6sBplde3zSjYPT8O2e+/XioWrVIwo87FLkNPvm3NY7eBYqyKmQnRzMWVKk0/ZV8hHUI67Nki9OfM1xioI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JAfQUQ95; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tapdWTGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3ED3C4CEE5;
-	Mon, 14 Apr 2025 10:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744627744;
-	bh=2k3NKqZdXjiNHiaMkWazo2ZQUH2A1EflKcb4qzc6yx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tapdWTGyVbrj++0yIXY5D0MUKsSdYRv9pDN1zMprx/pGocI6Svel8CMasbKoTJuVf
-	 wMk0iwyTYfB7MaFe/CMgPz8avrVUuxPBXNeNmOj9JlbLi+OKIREPpJnULMvrRPDhAT
-	 hYXBbwPoA2m8O8kXKmHQYbHvmcPOmkCM6gUkqoQeY5dVzsTqFpZKzE1f8lcWTXb6wo
-	 F6e08lY6/W2yUI3o+r0CvZODXnKdxxb76ce8xIHpcg970mMoaxUREp1SKaQ3WgHaxT
-	 4L3Cxnr6IFj/LA5K3TvJND1dXHpkKsLzwLAsFyrci+egO2mH3AhBtk3NwkSkBakscH
-	 u6OFfhclmJhFw==
-Date: Mon, 14 Apr 2025 12:48:59 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Kevin Koster <lkml@ombertech.com>,
-	Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -v2] x86/microcode: Consolidate the loader enablement
- checking
-Message-ID: <Z_zoG9Dn0u4ngMrj@gmail.com>
-References: <20250406174633.2c581923c145687476191753@ombertech.com>
- <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
- <20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
- <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
- <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
- <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local>
- <20250408172250.GCZ_VbaqKsshMYTdaE@fat_crate.local>
- <875xjcteq2.ffs@tglx>
- <20250411110741.GCZ_j3_dLFQ5fGhHqw@fat_crate.local>
- <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAfQUQ95"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c266c1389so2791706f8f.1;
+        Mon, 14 Apr 2025 03:49:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744627769; x=1745232569; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xtsqEiOso+3ySVEpPpnY9tocZGrAQf6OsnV8IcNWh6c=;
+        b=JAfQUQ95ZBinhpz2U9zyX1AQly7CMGuiKRcgWlH3z4eq30KdxvXVbIZbjlzW9QpVHy
+         Tccpp+UdRPPavUGYSlWLypgIBGzle50IqBZiiG+EdvrwoGw+MjbG9cHuTCHoShs4GquV
+         wTfjAsfLkVOBxNOA3IrksADszkXPkyJ8T8M8zvLdRKd6ELwmlreEdJ28O8jixWv6AAGC
+         VBj3HMq4pS+3kkK9nfhObup6NXZQWSeP0f/YybJi4iJDDHBbllRQJxjsV0YWxWs7SEzo
+         TqEyx8p3XgXdOPAaSzs+lE0AHad8/HBwOHwMIOMUKplSA2hByUvxGTyt4tuH4690DPX7
+         MTFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744627769; x=1745232569;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xtsqEiOso+3ySVEpPpnY9tocZGrAQf6OsnV8IcNWh6c=;
+        b=caOOC0YjwoXZCgT8fCnBdJ8zHTirfYLxuEo0yCM2fyexsvwN9Xs6tEQuRBeqAIjiek
+         6hMDBNPbQTgJqQNukeGXu1KkRxAohoy8nNB/q8ARNrXTMN4yhmGayj5sGOLa023OSoQF
+         +SMcKu4k5A4UNntUNF/M4LUFyHx27iVkRNnyz9kk3jn+xL1k3aUUBL2odaLcqze/eMsL
+         W+O9jnC0mvVGvU9pFCjFCmFbkUkrjTA/D0C1G9OfTO4Y0pAA4TzNf7iZST0/0LTlsqwH
+         CWqelPYO9HDL0WPm0GqLrxsiqVpjSeZDGwWiqMUAPjOSRdC1nktAg/kcyTEQnD+TWuQU
+         1MYw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1V+Vp+y+J51MMPYQ5eI/aScRqz54WPSVg8OZoU9ECig7itzo2Za26XC54KPX5sGbcI4Tx4M2GTaJIfrJV9Mg=@vger.kernel.org, AJvYcCV85zKzfYEGVRucjPiaWAJ1g11GsBcDgaE/8Utvf0XxLM1oRVM11++xRy9KLrvKlYidihUNRwvGvFuRKA==@vger.kernel.org, AJvYcCVnoodXbhPDLCjLDqkeAdRUwe5y9FBHQ/na9IrvjCRRHGrKEmPSHi/OA0P63JjYjbmJlAG6W6wA4iR0aeg=@vger.kernel.org, AJvYcCXOzKyB8ElX7lm5buQ1qESI/s31CVwac/IyoRvRJAzSSCA5bkjFOB6B5gvUFkik9WYroBm4cEzZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaPcVLun0cX0u4yoj5apVnN1eEGQFPRwPv5+cy9UgPNJLar+5i
+	FrTcXrlGW22rrAlrAQdf+fOvAuQdD10V1SsBLptB9+zZTt2OVUW/
+X-Gm-Gg: ASbGnctUYzbQmJjSU7JvqHUoD/pIEIEPcEcCLuj3cQYO/0Sbr4CzmUDrClKFH1n94SH
+	SUoElKPWv6teurKjDxkLIg0Kjk5S4Nw+zlPVOh/3PhdWQON4RrzGjGSfFwOL3XZ07OsZlTbGWis
+	iEDL9uDg5XeD880mZlH8IFr272WBHRvrmel+rFdhNAMPRtCz8yyadC7CzB/mPivlr6iuOlrLeZV
+	N2j/NznjXeMhX+U+ygMyETj5Ti6Tb1LsQCLV+/ym4EaWls4lPkTNlM08p2VCVF3wwmSCGxjgWFy
+	x13B3NFg/+oaPncisIjnRwUBTl2BZqu/09EQv9OpQNzYN+CZ3F1PvEgGkY9/
+X-Google-Smtp-Source: AGHT+IH1pMW+2VKVzwJ49w6Ztlv9YMJUN6W45Wwpzz8L92YImh1YeiCHahCGMNa6e6rsSObu5WtiCQ==
+X-Received: by 2002:a5d:6da8:0:b0:39c:1424:3246 with SMTP id ffacd0b85a97d-39ea51d3527mr8524313f8f.2.1744627768500;
+        Mon, 14 Apr 2025 03:49:28 -0700 (PDT)
+Received: from [10.158.37.53] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445772sm10695726f8f.91.2025.04.14.03.49.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 03:49:28 -0700 (PDT)
+Message-ID: <f4a406e2-af98-4762-af44-9089440c0a7f@gmail.com>
+Date: Mon, 14 Apr 2025 13:49:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 7/7] net/mlx5: Don't use %pK through tracepoints
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Jeff Johnson <jjohnson@kernel.org>, Loic Poulain <loic.poulain@linaro.org>,
+ Brian Norris <briannorris@chromium.org>,
+ Francesco Dolcini <francesco@dolcini.it>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>
+Cc: ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
+ ath11k@lists.infradead.org, ath12k@lists.infradead.org,
+ wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org
+References: <20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de>
+ <20250414-restricted-pointers-net-v1-7-12af0ce46cdd@linutronix.de>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250414-restricted-pointers-net-v1-7-12af0ce46cdd@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-* Borislav Petkov <bp@alien8.de> wrote:
 
-> -static struct microcode_ops	*microcode_ops;
-> -bool dis_ucode_ldr = true;
-> +static struct microcode_ops *microcode_ops;
-> +static bool dis_ucode_ldr = true;
+On 14/04/2025 11:26, Thomas Weißschuh wrote:
+> In the past %pK was preferable to %p as it would not leak raw pointer
+> values into the kernel log.
+> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+> the regular %p has been improved to avoid this issue.
+> Furthermore, restricted pointers ("%pK") were never meant to be used
+> through tracepoints. They can still unintentionally leak raw pointers or
+> acquire sleeping looks in atomic contexts.
+> 
+> Switch to the regular pointer formatting which is safer and
+> easier to reason about.
+> There are still a few users of %pK left, but these use it through seq_file,
+> for which its usage is safe.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/sf/dev/diag/dev_tracepoint.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-BTW., any objections against:
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 
-  s/dis_ucode_ldr
-   /ucode_loader_disabled
-
-or so? I had to look twice to see through the obfuscated name. (Okay, 
-it was 3 times, and I had to grep the code I confess. :)
-
-As a separate cleanup.
-
-Thanks,
-
-	Ingo
