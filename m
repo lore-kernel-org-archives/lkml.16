@@ -1,77 +1,178 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16D119E7D1;
-	Mon, 14 Apr 2025 16:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649025; cv=none; b=DB6C9B2iNGdjKgW6zkxvLirFPHvHeiSgcWQ27ToNprA2UyVyl4JWY3upSE/4a3hiKQS476bbYIBrpdbofbfACeG1miGqwScvKDwg25ZyrYvlI9BKrlpkeNxPIVlWydPg27fNbHSVNfbNVnVSyUK2dL29K++a/YRQOl+7IDegVL8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649025; c=relaxed/simple;
-	bh=KxxTRQvhi/RrYmBBNQvUvpDVhSTo0r519iwnZOAnOBY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EmqHgHYmX6AHwGOTOIXj7Otp+ySwOstg9/RrvSXTkonoqlwJhqxFCdb2yq85+2G9PKy/w6MqRjXlu6lng3KTW5fJHXgkr7dfdb2cI7ZWqMZG4h3PD4NqrzppXDLTVaJyS/1xXXhAUr5ia3Huojr5FoyntjZyqZV18OlMEOhqm3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Fo5jByiX; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D4A25395B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744649103; cv=pass; b=YtBcFDd2DH624RedcAwa2cx0LJ7ZrLkTRLuTLHYnWDg/kCb+AKCcMBOwI2EbdkUX8lu01ffsPfzgJiuf/WPIBwiv8V4Rd9tBU2+C7p8BZbNKscL+Hj82b82vWc7gBs3QxHa0MhNvUQGbE4MRC7PUJ9urDjwOKvMccHWOMTH4lFg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744649103; c=relaxed/simple;
+	bh=T8s6vqc1P9H1qRSVLvRemNoe4jPc6um1RM4xG89jsy8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=tKhNCFN0fKCpqPwVqmo8TXYrV8GmacjIh2Wb6RFwG8CNc02MgYIISX45P+Lf/AhbEuN2uWTWPZFBXotC+4WPcV8k3paYqRA/WvZUVimjKpDAFGuSMxgilox3cv41e8wTy8PHxrWeuK02YHGnWjNmswjJFbIyKuaNFJKXKygiKu8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b=GKV1GX2x; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Fo5jByiX"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B48EE41062
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1744649023; bh=JIpqUtp2wgA/iOr50DF4TcybqAo5OmZE8zsMRi/mujs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Fo5jByiXglCDNdr9P0NrRuqMRM4pwQNLHBZL36wXAmdCF/I1ce4Bk91U9J2lm2zHN
-	 iteO4nB0tE1jy7m4k1o1TkfUgnaedllfKWmheMMJTvy9UqEAm34yOiPNh6TExEXsqh
-	 /NIkHCw8L1pFynT+AEVKG9aMXHn0ckkAGFXsZ8XxSsSRfVFnfgi0yaAoli+ng4Nni+
-	 06iUmanClzktVfAmfAAiEtFfosUhUBgbNun8MAygtoQPa9ao5g37LlMwmDF2Eui2X5
-	 RsbHcekDSbL4GqVUAMYSPUkQAX9uRgbnC1fKW1FsGtjjjac7PTpJ2vAkEFThyZ6Fao
-	 ojqxQZjQ+3eLw==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id B48EE41062;
-	Mon, 14 Apr 2025 16:43:43 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>, "Luis Claudio R. Goncalves"
- <lgoncalv@redhat.com>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, John Kacur
- <jkacur@redhat.com>
-Subject: Re: [PATCH 4/4] Documentation/rtla: Include BPF sample collection
-In-Reply-To: <20250324195359.7e593f2f@gandalf.local.home>
-References: <20250311114936.148012-1-tglozar@redhat.com>
- <20250311114936.148012-5-tglozar@redhat.com> <Z9A1oN_XdMguNgHy@uudg.org>
- <CAP4=nvRCtRwXReMt8+vxjLVqtL_pR9OyKo0HS417+93QR84mUA@mail.gmail.com>
- <87cyefe0ky.fsf@trenco.lwn.net>
- <20250324195359.7e593f2f@gandalf.local.home>
-Date: Mon, 14 Apr 2025 10:43:42 -0600
-Message-ID: <875xj6ae2p.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b="GKV1GX2x"
+ARC-Seal: i=1; a=rsa-sha256; t=1744649069; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=fOLJD2HiiAHAGXahjHXke91G4mYUIyi/iKwnhcrRNQbUeDZxRLE2U641yfwGN7Z/xfwWjOdDs5vr3HdGId9JWMN+ryKwdzlTRmUrND3wu1S2LxNdZMHy0MG62esDVWwacuCCW3fFWam9eMEPgep/8ZIhFNKE3GaEwLj1E1Dl5sw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744649069; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5eyJYKZSjVgUVi1w+/gIBAqDOTVF1Wz6HfjZqS5wbsY=; 
+	b=GyePq+Z2yZYKlA2h55S+pfjq0esNbjYn3ZEDnREzAz9NFEAGhX6Nmvy6H4KiObZ5XC325OcxUqvfTzrta6mvJQBegyw3IjwS4Du2fJyPsEJEJ+lWXtumke/EhEnuwsYD/y+bwm3HSf3ec1DOxYmk0vY+kn3WmuJRTPQusKSdfF0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ashley.smith@collabora.com;
+	dmarc=pass header.from=<ashley.smith@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744649069;
+	s=zohomail; d=collabora.com; i=ashley.smith@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=5eyJYKZSjVgUVi1w+/gIBAqDOTVF1Wz6HfjZqS5wbsY=;
+	b=GKV1GX2xHG1bNjaT5nMa1IM0Ue8IzrIFPxGnTORkfdLAWX91Q1CWINGgC9TgSpxj
+	y8CYG6kh5337KoVq17m2wus7PYRQAxLZhkqyN/C4HC5eXXrj0OmwL73uH6NKE5VYsfL
+	pe79QlxSfMKnfHLMabFKuBhVelBKFSt51d7LTS8U=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1744649067190904.0723844219125; Mon, 14 Apr 2025 09:44:27 -0700 (PDT)
+Date: Mon, 14 Apr 2025 17:44:27 +0100
+From: Ashley Smith <ashley.smith@collabora.com>
+To: "Steven Price" <steven.price@arm.com>
+Cc: "Boris Brezillon" <boris.brezillon@collabora.com>,
+	"Liviu Dudau" <liviu.dudau@arm.com>,
+	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+	"Maxime Ripard" <mripard@kernel.org>,
+	"Thomas Zimmermann" <tzimmermann@suse.de>,
+	"David Airlie" <airlied@gmail.com>,
+	"Simona Vetter" <simona@ffwll.ch>,
+	"Heiko Stuebner" <heiko@sntech.de>, "kernel" <kernel@collabora.com>,
+	"Daniel Stone" <daniels@collabora.com>,
+	"dri-devel" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>
+Message-ID: <19635301a95.f859dc6e883590.3071663948141072628@collabora.com>
+In-Reply-To: <3a5306c8-df44-430a-a24e-72d71b2dc8c1@arm.com>
+References: <20250410125734.1005532-1-ashley.smith@collabora.com> <3a5306c8-df44-430a-a24e-72d71b2dc8c1@arm.com>
+Subject: Re: [PATCH v3] drm/panthor: Make the timeout per-queue instead of
+ per-job
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Fri, 11 Apr 2025 16:51:52 +0100 Steven Price  wrote:
+ > Hi Ashley,=20
+ > =20
+ > On 10/04/2025 13:57, Ashley Smith wrote:=20
+ > > The timeout logic provided by drm_sched leads to races when we try=20
+ > > to suspend it while the drm_sched workqueue queues more jobs. Let's=20
+ > > overhaul the timeout handling in panthor to have our own delayed work=
+=20
+ > > that's resumed/suspended when a group is resumed/suspended. When an=20
+ > > actual timeout occurs, we call drm_sched_fault() to report it=20
+ > > through drm_sched, still. But otherwise, the drm_sched timeout is=20
+ > > disabled (set to MAX_SCHEDULE_TIMEOUT), which leaves us in control of=
+=20
+ > > how we protect modifications on the timer.=20
+ > >=20
+ > > One issue seems to be when we call drm_sched_suspend_timeout() from=20
+ > > both queue_run_job() and tick_work() which could lead to races due to=
+=20
+ > > drm_sched_suspend_timeout() not having a lock. Another issue seems to=
+=20
+ > > be in queue_run_job() if the group is not scheduled, we suspend the=20
+ > > timeout again which undoes what drm_sched_job_begin() did when calling=
+=20
+ > > drm_sched_start_timeout(). So the timeout does not reset when a job=20
+ > > is finished.=20
+ > >=20
+ > > Co-developed-by: Boris Brezillon boris.brezillon@collabora.com>=20
+ > > Signed-off-by: Boris Brezillon boris.brezillon@collabora.com>=20
+ > > Tested-by: Daniel Stone daniels@collabora.com>=20
+ > > Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")=
+=20
+ > > Signed-off-by: Ashley Smith ashley.smith@collabora.com>=20
+ > > ---=20
+ > >  drivers/gpu/drm/panthor/panthor_sched.c | 244 +++++++++++++++++------=
+-=20
+ > >  1 file changed, 177 insertions(+), 67 deletions(-)=20
+ > >=20
+ > > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm=
+/panthor/panthor_sched.c=20
+ > > index 446ec780eb4a..32f5a75bc4f6 100644=20
+ > > --- a/drivers/gpu/drm/panthor/panthor_sched.c=20
+ > > +++ b/drivers/gpu/drm/panthor/panthor_sched.c=20
+ > =20
+ > [...]=20
+ > =20
+ > > @@ -2727,8 +2784,17 @@ void panthor_sched_suspend(struct panthor_devic=
+e *ptdev)=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 * automatically terminate all active groups, so let's=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 * force the state to halted here.=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 */=20
+ > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED)=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED) {=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0csg_slot->group->state =3D PANTHOR_CS_GROUP_TERM=
+INATED;=20
+ > > +=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Reset the queue slots manually if the termina=
+tion=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0* request failed.=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0*/=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i queue_count; i++) {=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (group->queues[i])=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+cs_slot_reset_locked(ptdev, csg_id, i);=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
+ > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0}=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0slot_mask &=3D ~BIT(csg_id);=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
+ > >  =C2=A0=C2=A0=C2=A0=C2=A0}=20
+ > =20
+ > So this seems to be the only change from v2 (a changelog can be=20
+ > helpful!). And I'm not convinced it belongs in this patch? It's not just=
+=20
+ > "[making] the timeout per-queue instead of per-job".=20
+ > =20
+ > I haven't dug through the details, but I think this belongs in a=20
+ > separate patch.=20
+ > =20
+ > Thanks,=20
+ > Steve=20
+ > =20
 
-> On Mon, 17 Mar 2025 16:47:41 -0600
-> Jonathan Corbet <corbet@lwn.net> wrote:
->
->> What is the intended path to get this one upstream; should I take it?
->
-> Hi Jon,
->
-> Yes, can you take this through your tree?
->
-> You can add:
->
->  Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Hi Steve,
 
-...and I have finally done that ...
+Apologies my change log did not make it in:
+
+    v2: Suspend timeout before setting _TERMINATED so that if a terminate
+    times out (Due to firmware hang) we don't get a spurious timeout
+
+This was a bug fix related to the scheduling patch that we found, I was thi=
+nking to include it here. However I'm happy to move it to a different patch=
+.
 
 Thanks,
-
-jon
+Ash
