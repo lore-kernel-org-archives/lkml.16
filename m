@@ -1,102 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879D21A5B94;
-	Mon, 14 Apr 2025 07:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A219B86344;
+	Mon, 14 Apr 2025 07:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744615824; cv=none; b=D1b0ysmy3QirhmQmWIMzTqFLaH1QG1n8U3rkO3xEZTXwRnorhop1AZyBrdxkgamnc7L+izvuS/ipyFh/HLRq17EVmW2kffQ/4n6ZueptBOiN6cCADEguuiKj0iNJZ7A9wdr4XzOJTID3LEXQ+NxD/WFVSwDPPZdjMei+pHegVkM=
+	t=1744615864; cv=none; b=iWrCYR9liXP0TDrU700jo4GhFnXWE/yBbI219UY6iBajzB5UzjTgw7frKDqp/dIH4wR1JT7O+8glbXk4tGpIZFr6gNOUgKYfVJTSwaDXxOtPUYa5rNI8o5UWWMXger6glNYoi+6fL4VINx26RuKUmjJ5AyJS16KegFwsZM66DKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744615824; c=relaxed/simple;
-	bh=hEsji1Z7oUC2YGDwgWedXB/uWGnCu+xnHNQu52nKQ9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hHH4P6UHQ+ERG+HdkBFDiXHthKmaQUKgc5PtK+RpywJR8gzQ/5MAfSw8CasiZKS/lh+hcADtnZX9T592r1LTPFmb5UAc6hJBIsdejVH8fVi5SGHLaBfw120IdeSIPaff/d1PLw9ATDfvKxFHVKhlyCXcRDtsPdqEwhSwR4F6Rts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odOEbNg8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744615864; c=relaxed/simple;
+	bh=J5T5W0NJLy8lDsH4lewzVbpxAHn03oE/y6l8dOkaqOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H4ASUrzeXpHb6lmwe5kMdKQBoO0h9A63PHDYRm/TR6QijybNHSz81LjhiAix09gOLtfqXwPOWAK7pVEwgPsaP9ur2kIcE7yNTkTnOhlJH4t733yiXLiIMiMo5VFPw3hhCPUvwVlytouX57x+TVbFSbNBl+p9xfSKYI9v5mz2IOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Ov8XkArb; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odOEbNg8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD73C4CEE2;
-	Mon, 14 Apr 2025 07:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744615824;
-	bh=hEsji1Z7oUC2YGDwgWedXB/uWGnCu+xnHNQu52nKQ9E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=odOEbNg8kaRDh3xASyhq58ytVp8RVSJ7tVJHNd7xzuVnBLppl2xMwqwULiTSNeuHk
-	 VTMexiwmCiI2Ouhx/0/hwnpfQB5HPJi86t1zQN/hXnQnZhZ6Y3ipF3WzUPDhOXYdxr
-	 4xlq9mZSj/kajFV5ry2pDiwF+48+nWoyUBkSaotiwIyUoUAkHzdCqIhCl+yw81g/Ha
-	 HmNNTHQgIVx4rMepy02nbGDMAj1jgku8CZ28PuX3dt1FQ4u5ODxwmJzrHLK9rrmGJB
-	 HZT2aN8T56MhRYjFWdbI3nX4lUh3oStyiQ2F3Lew1LElb2metAN8jqQ00YPmkezI24
-	 VYYSKRgwvVZfA==
-Message-ID: <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
-Date: Mon, 14 Apr 2025 09:30:19 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Ov8XkArb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=vEgQw4Oeh0QWFwliFzc7dalA4Bm+0n5fXz5F6FYvZqM=; b=Ov8XkArbr9XmCTfO400l0lXI5h
+	Vm8AVuIA9VvF7xGsbmxrBIvZs/LsGC+NwwHi49LN00REb73Qj1EceSuoQT1zmzXee9penmNUcJnV3
+	RotzY8UC+jwnC55zzItWfD1/ykelnhWEkDaphrcmEYtx8W76zeeru1AdAbYsHaAhaJzSv0GzBDndm
+	J5PtSpaNmQORvtKQ9/TVqgWZ0Iav9tZrhX+8nN7yTbWW96O/YCnJ37VQkaHW+3B35k+yd4mER3Rxy
+	evzVNhBrZXo7u9DaMoGov41ijQOW93qjeQylVqVrzUjftpH4z6jcMrePkz3qmCEUTdmUuYmGN1AVM
+	s3pgzcMQ==;
+Received: from 114-44-251-90.dynamic-ip.hinet.net ([114.44.251.90] helo=gavin-HP-Z840-Workstation..)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1u4EH2-00GG91-A1; Mon, 14 Apr 2025 09:30:32 +0200
+From: Gavin Guo <gavinguo@igalia.com>
+To: linux-mm@kvack.org,
+	akpm@linux-foundation.org
+Cc: willy@infradead.org,
+	ziy@nvidia.com,
+	linmiaohe@huawei.com,
+	hughd@google.com,
+	revest@google.com,
+	kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration entry
+Date: Mon, 14 Apr 2025 15:27:37 +0800
+Message-ID: <20250414072737.1698513-1-gavinguo@igalia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
-To: Chenyuan Yang <chenyuan0y@gmail.com>, vkoul@kernel.org,
- kishon@kernel.org, lumag@kernel.org, quic_kriskura@quicinc.com,
- manivannan.sadhasivam@linaro.org, konrad.dybcio@oss.qualcomm.com,
- quic_varada@quicinc.com, quic_kbajaj@quicinc.com, johan+linaro@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250413212518.2625540-1-chenyuan0y@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/04/2025 23:25, Chenyuan Yang wrote:
-> In qmp_usb_iomap(), one branch returns the result of devm_ioremap(), which
-> can be NULL. Since IS_ERR() does not catch a NULL pointer,
+When migrating a THP, concurrent access to the PMD migration entry
+during a deferred split scan can lead to a page fault, as illustrated
+below. To prevent this page fault, it is necessary to check the PMD
+migration entry and return early. In this context, there is no need to
+use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the equality
+of the target folio. Since the PMD migration entry is locked, it cannot
+be served as the target.
 
-No, that's not true. NAK.
+BUG: unable to handle page fault for address: ffffea60001db008
+CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
+Call Trace:
+<TASK>
+try_to_migrate_one+0x28c/0x3730
+rmap_walk_anon+0x4f6/0x770
+unmap_folio+0x196/0x1f0
+split_huge_page_to_list_to_order+0x9f6/0x1560
+deferred_split_scan+0xac5/0x12a0
+shrinker_debugfs_scan_write+0x376/0x470
+full_proxy_write+0x15c/0x220
+vfs_write+0x2fc/0xcb0
+ksys_write+0x146/0x250
+do_syscall_64+0x6a/0x120
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Best regards,
-Krzysztof
+The bug is found by syzkaller on an internal kernel, then confirmed on
+upstream.
+
+Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+---
+ mm/huge_memory.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2a47682d1ab7..0cb9547dcff2 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+ 			   pmd_t *pmd, bool freeze, struct folio *folio)
+ {
++	bool pmd_migration = is_pmd_migration_entry(*pmd);
++
+ 	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
+ 	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
+ 	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
+@@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+ 	 * require a folio to check the PMD against. Otherwise, there
+ 	 * is a risk of replacing the wrong folio.
+ 	 */
+-	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
+-	    is_pmd_migration_entry(*pmd)) {
+-		if (folio && folio != pmd_folio(*pmd))
+-			return;
++	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
++		if (folio) {
++			/*
++			 * Do not apply pmd_folio() to a migration entry; and
++			 * folio lock guarantees that it must be of the wrong
++			 * folio anyway.
++			 */
++			if (pmd_migration)
++				return;
++			if (folio != pmd_folio(*pmd))
++				return;
++		}
+ 		__split_huge_pmd_locked(vma, pmd, address, freeze);
+ 	}
+ }
+
+base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+-- 
+2.43.0
+
