@@ -1,172 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E351292922;
-	Mon, 14 Apr 2025 17:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA9828B4F5
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652548; cv=none; b=svdeLgwixIKn1qqfv95M21zIsMo6TIQhoUCdEZf4LDdqBPGKsf0oZBiMwCFCSOLfl4FSD1qdICsJniKgsv8qrt6txXn8Ilv10JGarw/1WuaIW0orqmQ8a9z7uAbRg6JnnjlLbQHhXoZrlaBd+BUByR9bGz5mI9ykwtg9DIeeYE4=
+	t=1744652550; cv=none; b=csecBk6Gnag3yO+2DtT4ZnHaQeHHI7CNqV5EgkQi3b6a4z+1l/v2tjEZ09NztOeDLitkbpPHlWmk1dNxWctfLv4Axdlqn2TzPAVTooRviy9xVDugeXu86yUVeQrB7WLgCzxHT0kbwFuqWYYmIEA4vp5eM5k1+9t29TXFNSaTs5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652548; c=relaxed/simple;
-	bh=cT4wTmqWyD0oiRI/V2JfDMyNS5JF/Z8I4vtG6Ed0cvM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=opmZgHFFKwwhB/JtASPgnZbQz/tJqkipAULsrk+tx5Uamhjzr8Gv7foE6Tb13sumguUz+Yf4Slg4PZAe1LVTiN9BhRaPsgulEL6BaebX0xzfJVVw4MrwMdD68BujVQpkzTok3JdvPxRwyf5hwmrQKvt3BqpBFE8mD72cHUI/ldU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZ7qdvH4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744652550; c=relaxed/simple;
+	bh=SomKEZjiqnP411eTa4RWzo05FrdFH31Ut1NNYLapab0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=MpHjoKIkjzpe4g8l8LnEfyj82mHDBU4OXRi6a+qjnL9TS3qiq6eEfz1XBSEyIvRKUtCcQb8OajohX1Rk+gD6ZdJomDXm3EkkWhV4VxKlo6xYuiYe6u/DKI1aOsV3kt5h4hoJgK5zEYXbr4n0/sRX/N7fFMTV7r6VI8oLnxtTqiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q8ByRYu/; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZ7qdvH4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A82F1C4CEEC;
-	Mon, 14 Apr 2025 17:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744652547;
-	bh=cT4wTmqWyD0oiRI/V2JfDMyNS5JF/Z8I4vtG6Ed0cvM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OZ7qdvH4txLSl9PxRiq4jgbZ2Tcu1rxTIEwN7kkAwoZCRE+3nBkViInE0MdSKhJrf
-	 Rg23rpN2FZMu5Bbu4+RC/ANTD6uOY/pYmkMRylDyztRX8y2KrexBCk/tO+DPAa95nv
-	 3Ny8dGv9PHVGhDPkb4X+ye5GwSFfrnioiY9VSbLWoEq1ALi5pNX+v3domUQ2Qh1ion
-	 TjHFJekelC0qTFity9WZo/bma5VSC7B2uZHJlKWaJxy6DbCRIpiwGLYTDIoWqi6vwD
-	 XCx4+20uDDJov/cp8bGHS5qOcH0CeynVq8Q7eQYld4AC6wvjo4d59ZdfsY/s2wX3Cb
-	 E2vv19cH4qkWA==
-Message-ID: <103daf8b1797ad84d826025643701bb147a1f516.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: Initialize ssc before laundromat_work to prevent
- NULL dereference
-From: Jeff Layton <jlayton@kernel.org>
-To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
- neilb@suse.de, 	neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
- tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Mon, 14 Apr 2025 13:42:25 -0400
-In-Reply-To: <20250414143852.1308979-1-lilingfeng3@huawei.com>
-References: <20250414143852.1308979-1-lilingfeng3@huawei.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q8ByRYu/"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3054210ce06so6124239a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744652547; x=1745257347; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=272QWo3N2/8KrEceZ3Y5V9F3EMqW3wkjRAZ/C8l8AXw=;
+        b=Q8ByRYu/GyN3qm1uj2L6QTGrVdUP+WIyeM2J90C6uEsFKqo8Omz3cL1XUJwWScr40n
+         p4YKzbHZ3j6QJePcngS6WVM4OBpzgTsY/I4HmnyT90SGePg0X8eAKv0qrknX9Hiuut2o
+         dC/qWypLVhilMcFdcdrpquRuiJ8FDO4k4e2Rik3BamA+0GYGrqFmTvDX0edhPUcKupj7
+         P4w6L7BPflFrNJfh9o3Hg0QW9XX5R7Bz6bWKqgWQKXuTZIx3SS0rrkN29Da3zGsEymMN
+         A77CszdwUT693YBTRIuSek8HVLtJPg3lhunum7k/Q8eGemXIzmeqnfIgsNfRmlFEIKki
+         6kzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744652547; x=1745257347;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=272QWo3N2/8KrEceZ3Y5V9F3EMqW3wkjRAZ/C8l8AXw=;
+        b=HS/NXxU0bIJh0CfwkASmj9d/zqjDE6YZOQjW98zclRbFJjc+t1KkSunzN+ae3eRKzN
+         4w+DPCXBs6RIxAJeMctX1UF8hPrsz3e6zs2qLTZNWiCy4RXUgxL20L1QWh3XnixFdOL+
+         fLlaeVu1rRRAeZjFAuLA++pELXkotjEo5AFJkdE0HzTA0b9rbiyIypXpxDMsqOZGGW5L
+         Q3JwB/iJgjGaChoD62zSaTMSwPh9IKDZAKzV0hhRL5TaqNtqwJS6Aaa5fAgH7LsrIe38
+         r0l8p22HidpOnmeCEBHszWwFlAJd8T95O/cUDsBTR4SLntFVP/Z6oqAkaYJzorIvaxXz
+         vrBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcTOX0g5dEmAbPvomKhpIX7Qm1g1MimWY/6vwFMVEknH6X+4ounK0b3CIMJlnNzoeOqA/eRp/AVrW3tGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfSOwF3nTOivazfhvl6w9X0CfWzpiRcqzrHqRb0ePSDZfqxujg
+	T5HZ72bruailpsH2Cv4+YbjOTSdiKx87jSS0JgcaPEpk7wjIt+wDmW0fbzQ1VJdP9aTav4oem0H
+	owZ7wNw==
+X-Google-Smtp-Source: AGHT+IHKQXzYZsPd1emW5mymOx2ih0yymDwCa7QOwk9ye4CQI309sFEd4KkK0iKEkR0PdlCtKrtXkduqPk5D
+X-Received: from pji15.prod.google.com ([2002:a17:90b:3fcf:b0:2fa:1803:2f9f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:58eb:b0:2fa:1851:a023
+ with SMTP id 98e67ed59e1d1-30823784865mr20250837a91.35.1744652547187; Mon, 14
+ Apr 2025 10:42:27 -0700 (PDT)
+Date: Mon, 14 Apr 2025 10:41:34 -0700
+In-Reply-To: <20250414174134.3095492-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250414174134.3095492-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250414174134.3095492-17-irogers@google.com>
+Subject: [PATCH v5 16/16] perf record: Retirement latency cleanup in evsel__config
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Caleb Biggers <caleb.biggers@intel.com>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-04-14 at 22:38 +0800, Li Lingfeng wrote:
-> In nfs4_state_start_net(), laundromat_work may access nfsd_ssc through
-> nfs4_laundromat -> nfsd4_ssc_expire_umount. If nfsd_ssc isn't initialized=
-,
-> this can cause NULL pointer dereference.
->=20
-> Normally the delayed start of laundromat_work allows sufficient time for
-> nfsd_ssc initialization to complete. However, when the kernel waits too
-> long for userspace responses (e.g. in nfs4_state_start_net ->
-> nfsd4_end_grace -> nfsd4_record_grace_done -> nfsd4_cld_grace_done ->
-> cld_pipe_upcall -> __cld_pipe_upcall -> wait_for_completion path), the
-> delayed work may start before nfsd_ssc initialization finishes.
->=20
-> Fix this by moving nfsd_ssc initialization before starting laundromat_wor=
-k.
->=20
-> Fixes: f4e44b393389 ("NFSD: delay unmount source's export after inter-ser=
-ver copy completed.")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->  fs/nfsd/nfssvc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 9b3d6cff0e1e..8ed143ef8b41 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -396,13 +396,13 @@ static int nfsd_startup_net(struct net *net, const =
-struct cred *cred)
->  	if (ret)
->  		goto out_filecache;
-> =20
-> +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> +	nfsd4_ssc_init_umount_work(nn);
-> +#endif
->  	ret =3D nfs4_state_start_net(net);
->  	if (ret)
->  		goto out_reply_cache;
-> =20
-> -#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> -	nfsd4_ssc_init_umount_work(nn);
-> -#endif
->  	nn->nfsd_net_up =3D true;
->  	return 0;
-> =20
+Perf record will fail with retirement latency events as the open
+doesn't do a perf_event_open system call. Use evsel__config to set up
+such events for recording by removing the flag and enabling sample
+weights - the sample weights containing the retirement latency.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Weilin Wang <weilin.wang@intel.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/evsel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 661a07cbdb25..6a84893e3c58 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1440,9 +1440,10 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		attr->branch_sample_type = opts->branch_stack;
+ 	}
+ 
+-	if (opts->sample_weight)
++	if (opts->sample_weight || evsel->retire_lat) {
+ 		arch_evsel__set_sample_weight(evsel);
+-
++		evsel->retire_lat = false;
++	}
+ 	attr->task     = track;
+ 	attr->mmap     = track;
+ 	attr->mmap2    = track && !perf_missing_features.mmap2;
+-- 
+2.49.0.604.gff1f9ca942-goog
+
