@@ -1,121 +1,144 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84FFC2FD;
-	Mon, 14 Apr 2025 14:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154272741C1;
+	Mon, 14 Apr 2025 14:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640203; cv=none; b=BCN+BkYq2SktATsVQYTsxJHV9Ya/ZBf1NUYdZPMiasRjjrxmFrjxiFCLlICLd87spSRcDjBqa6iyk7xOqL42h3+s5ndl5tQG+6DXWVxqrkpr6Pw06N0xeoTjt44At4BUiTYydDguVtm1ppJLTQ9Qdy6awzFwpiJBvCUxALKHu5U=
+	t=1744640303; cv=none; b=ihijau53FoHYN26I+k26OObY9hXZTbsrSmdd0YtjPj72mRaFEMPcloEF1OYOBLJ6FqjG3RwLYlaStDFE+5KmpLudtp8zA5YmjgjCYegG9VghlxKid2f0c8V85cBX/1ZqGZ/TC/Bns+aqjQNro12ph/2i2j7RJpDxM+HPyhvAhhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640203; c=relaxed/simple;
-	bh=diwh9sJlAZ6JHvbBFHjJH33QtdeJPgUadGdsqmCAdfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bpCc/+1irMEHTVNyb/AQ0AFGUcsxz6W+NLkf/PM/T75wAmoeW5IPc8t/ln+0cF5pVRBErzaUmq1Xo5crnTxl9c/kymFMHpzIfuXRRPWrYIm42HkRO6W7MAMhiA9DX+uqYkhao8kuE4SsNfepeSFG60H7GsyGp0bYLXU9exXkS18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4e+6L91; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744640303; c=relaxed/simple;
+	bh=mTn3FMzsj26kIxnkZNAmti2WDoD3F3JMt47fLl0UKcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IxTfvsTvY9q96xvFYGxTg+2/SYwH+qnQtjmlU57hF5SWyw5VqmwanLB5NIWtzMpEDifNVOU9Tac42U7Cecd5nOqKEb4jgHDCIB1mRyTsmtS0VPNypJqePMwWQBpLkxuusf/fAUUeShgYrUq9XUjpmGpUr1dShp8u6Xcz4GtIlas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ah561Kin; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4e+6L91"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso690878166b.1;
-        Mon, 14 Apr 2025 07:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744640200; x=1745245000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=diwh9sJlAZ6JHvbBFHjJH33QtdeJPgUadGdsqmCAdfM=;
-        b=b4e+6L91zeggrpOwJiiLJHlL2w7B2JppKvYy6VvGXWj8CkzHmjzTvpaEcSL4Nw4A5H
-         /6KGD1JDcdKi0PWTNXYUzmEWjOAJ9I6YzSSvIy5w2g9OJEW8VyRvj1BPPPtaxoYu4YYo
-         a+r17gOyd1iWQfJ093vOto+jxOe/EdDl+QkGWv/yqvKqi1J9WtPZeDeZwxq9HPjI2/Bz
-         Q4yo+F/pn6CrEo3TMAW37Es4M80Io9qcxuVkxEaFP8eK9X3Tj9JAvNK8vEQFzTY7qOBc
-         EX5QCZTK1snfTmWzjBODu57UAumdvZ3SE5Ev8q759t+HyqB4+wFyyfCgFBfY8XXqY0rb
-         4rMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744640200; x=1745245000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=diwh9sJlAZ6JHvbBFHjJH33QtdeJPgUadGdsqmCAdfM=;
-        b=aLNxYG1rh3aY1Vu0BEalt4fcwTYQveUVnASW9Z/nOCERwTOx1tjh51XX3B0RQcihyu
-         59Qqsves3oTLA22sNUriThaRqzEx2BIHBJ9Djox5KNQCgaq8eg9niTLa8K/NtR9RXGu1
-         gnKRwpkB95jMrrhqkOp0hT/6O3VsFqUEUWA0lCydGJ+pGs7HgoiX19Od5X/3KvEB6WMW
-         9e607bx5FpewMv+UTtusIMstMOEK6g4fMy3OZF002CYM679pDeHcQnNPgSBbWqEdsISw
-         jQiXw8gRAs6CN0Ib39uHjCPKw4yIqKa4yxsDrSbZbWRaqoYnHBtcTVnlOrLSRj1lugsX
-         UO2g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+93o06I3mpAf6VUoTQFPbKbQ56/Je2hrHMuhY0isP3oJVGdNLO3r5zP2ayFnaCPHx9wL5olrcGe67Bbbq@vger.kernel.org, AJvYcCVQDkxwqUyd0jqILg9OnpyaL2uexqlk7bfhq4yuCocr0tlDbLe54X0mEYua1mMoZ3bP17ED9q3Uh5p5PoFMzI00@vger.kernel.org, AJvYcCWNhdmLNjh1r3uc4zV7nKhvszRJng1WFow9UIpkowoirEXFGyyaKgLGms3JqLKXZKIVKfTOOw5ZKctw@vger.kernel.org, AJvYcCXrbQnitQX5gt/HM/2R9BJVBYYO8z/y1xC4DM2669etc9kNsD+N4vg9hwZ5qNkoe9v99pfnRxyA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz3/lMLrioRodzvNRGkA5csD0T+aRwYHe5qcyDynXpXgv3M2uX
-	PiNRhQ4ETHsYE4N30EpYt0EAJE0B74Cizdy6JlazSmXQYouo/zFZ5InoFED2CuSqdLMw91vH0Ga
-	MYihFa5ddIL2BaQIpGEHOLuTcC8E=
-X-Gm-Gg: ASbGncu4sxa14NMAtzXGUMJG1DmfFahCy9krXVjMXfad8FaLxFVgjFJLf2I8EZjHEgZ
-	3hLooehrEjL9+iWPIkb2Fp+PDSqtTBp2pJaDKo6RbfP4o+GKTxyfsb3a21TEvwLc575SFt8h/5h
-	rVZPN5zqMotRCzdKuc/gUn+A==
-X-Google-Smtp-Source: AGHT+IF/dyYWGh6vTRn9WISWNs+JWALOiRcPmlW21EE0KFIxAgk2tzzM8tV4hVd0FH0lpQbw1g1Vk0LIeGq8/fYkMB0=
-X-Received: by 2002:a17:906:9fcb:b0:ac3:f1dc:f3db with SMTP id
- a640c23a62f3a-acad3482777mr1214389166b.13.1744640199893; Mon, 14 Apr 2025
- 07:16:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ah561Kin"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EAKA71029133;
+	Mon, 14 Apr 2025 14:17:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=J1d9DTJcE/z+4d1uC+sEutnQDyUt9v
+	5FZ9je4Eup1Ko=; b=ah561KinZjNqF6zq76DxnVBTSvamBRxYEhr7Z+gu/wYeYJ
+	j7dAB+GRAIBgfgcT4RReFRSB7Mggil+evOZs4y5hwzSYaWE4QeQ1gjZ+HGRkUdNu
+	pwXrRfEYgphoKE29KKWj5DPPBxTAdadEXNR3p1tOzlSCoHUJ64LwlntS5prWHWM/
+	ypBEt8HygnTXrT6MFoIK9aXcP6Apa1XfK3rhxUyJOl2bhpNUByVTq6q6beBiPmV1
+	wjohaUUBJj7eE9ivNowExDlwR07lfFYP7j7RrqeB2X+koXmdx0GpvTziQRFy8s24
+	0VxXFpeXm2aqdcwNxTwNhj/bC9jcAny5HST8QorQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460nc4bs6s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 14:17:54 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53EEDPx6027591;
+	Mon, 14 Apr 2025 14:17:53 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460nc4bs6k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 14:17:53 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53ECwxMl017183;
+	Mon, 14 Apr 2025 14:17:52 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040kpeha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 14:17:52 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53EEHorV51577248
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 14:17:50 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2CE2320043;
+	Mon, 14 Apr 2025 14:17:50 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2BFC320040;
+	Mon, 14 Apr 2025 14:17:49 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.13.82])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 14 Apr 2025 14:17:49 +0000 (GMT)
+Date: Mon, 14 Apr 2025 16:17:47 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Nicholas Piggin <npiggin@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Hugh Dickins <hughd@google.com>, Guenter Roeck <linux@roeck-us.net>,
+        Juergen Gross <jgross@suse.com>, Jeremy Fitzhardinge <jeremy@goop.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] mm: Cleanup apply_to_pte_range() routine
+Message-ID: <Z/0ZC7HcSmoOEglw@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <cover.1744037648.git.agordeev@linux.ibm.com>
+ <93102722541b1daf541fce9fb316a1a2614d8c86.1744037648.git.agordeev@linux.ibm.com>
+ <D93LW58FLXOS.2U8X0CO2H9H5S@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407172836.1009461-2-ivecera@redhat.com>
- <Z_QTzwXvxcSh53Cq@smile.fi.intel.com> <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
- <Z_ys4Lo46KusTBIj@smile.fi.intel.com> <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
- <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com> <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
- <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com> <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
-In-Reply-To: <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 14 Apr 2025 17:16:02 +0300
-X-Gm-Features: ATxdqUGEaankkXek3ZluXxWOTF2i2W4gz9IvUXvOR0KII6dhJTmYpm-3LghKjzo
-Message-ID: <CAHp75Vej0MCAV7v7Zom8CXqh3F6f3QXevW93pOkXSLEZn7Yxfg@mail.gmail.com>
-Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org, 
-	Michal Schmidt <mschmidt@redhat.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D93LW58FLXOS.2U8X0CO2H9H5S@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: u44-EjcfNgIEy_4sPtFf7SZelDSyFVJd
+X-Proofpoint-ORIG-GUID: DiJ-rrsNSTwxXUpWJqT680rFpek1uPzj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0 mlxlogscore=844
+ phishscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504140102
 
-On Mon, Apr 14, 2025 at 5:13=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Apr 14, 2025 at 5:10=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Apr 14, 2025 at 5:07=E2=80=AFPM Ivan Vecera <ivecera@redhat.com=
-> wrote:
-> > > On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
+On Fri, Apr 11, 2025 at 04:46:58PM +1000, Nicholas Piggin wrote:
+> On Tue Apr 8, 2025 at 1:11 AM AEST, Alexander Gordeev wrote:
+> > Reverse 'create' vs 'mm == &init_mm' conditions and move
+> > page table mask modification out of the atomic context.
+> >
+> > Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> > ---
+> >  mm/memory.c | 28 +++++++++++++++++-----------
+> >  1 file changed, 17 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 2d8c265fc7d6..f0201c8ec1ce 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -2915,24 +2915,28 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+> >  				     pte_fn_t fn, void *data, bool create,
+> >  				     pgtbl_mod_mask *mask)
+> >  {
+> > +	int err = create ? -ENOMEM : -EINVAL;
+> 
+> Could you make this a new variable instead of reusing
+> existing err? 'const int pte_err' or something?
+
+Will do, when/if repost.
 
 ...
 
-> > > Long story short, I have to move virtual range outside real address
-> > > range and apply this offset in the driver code.
-> > >
-> > > Is this correct?
-> >
-> > Bingo!
-> >
-> > And for the offsets, you form them as "page number * page offset +
-> > offset inside the page".
->
-> Note, for easier reference you may still map page 0 to the virtual
-> space, but make sure that page 0 (or main page) is available outside
-> of the ranges, or i.o.w. ranges do not overlap the main page, even if
-> they include page 0.
+> > @@ -2944,12 +2948,14 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+> >  			}
+> >  		} while (addr += PAGE_SIZE, addr != end);
+> >  	}
+> > -	*mask |= PGTBL_PTE_MODIFIED;
+> >  
+> >  	arch_leave_lazy_mmu_mode();
+> >  
+> >  	if (mm != &init_mm)
+> >  		pte_unmap_unlock(mapped_pte, ptl);
+> > +
+> > +	*mask |= PGTBL_PTE_MODIFIED;
+> 
+> This is done just because we might as well? Less work in critical
+> section?
 
-So, you will have the following layout
+Yes.
 
-0x00 - 0xnn - real registers of page 0.
-
-0x100 - 0xppp -- pages 0 ... N
-
-Register access either direct for when direct is required, or as
-0x100 + PageSize * Index + RegOffset
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks!
