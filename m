@@ -1,201 +1,214 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E350DDDC3
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8FEDDC3
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 05:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744609441; cv=none; b=a5ZFkYme7E11HLm8HytvikpMgzI9Ms/XDLUjlopCRMd3Zurq+0Pp4STgN5huRlisfZX3dM5aOp0WEQvH+icU5/YrTp4as9l8Xo70Y5mcZY7OrxjWJoEEYgDH97pSSwymkAFNOUAXtcc6quUpq0WuYmhz9NnnhyFwv4+spzG9y44=
+	t=1744609482; cv=none; b=oeti/CJmojssvURWMNqxFQ3knWpk/KosD6ROchdMosP4/3TOFnQ1EJVjbDvF9gAuW5nCf2KIkoFoh397z5Xrgqyw3dHjnNuq1WDPEUtbXrvZPduqxROdj/5nZsPD4+J1s8WTc3ZluSGFaG1HSQBVGf6/uWAa8ZB9Xn7uqBQnWHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744609441; c=relaxed/simple;
-	bh=SiO4MNfxP2cVvLZxzAUc1Gy21fy7gZBWR59QMqBEHhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uNvmj7UEFfme14Tw/oRR3ijRYzMzXb5xiHvmEqpao9N8qJHDWxC06r5udEXx8o1aSTSEjX8ivIWgCCxuUAwR3qRvDwIDVABDdMubTZs172+wYcmH8VXMkKrLWmu96YMZu4/YxTo3yVH4zerdQmt6u48z8O++ZjfuE7NhTO+HZqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9CDC1007;
-	Sun, 13 Apr 2025 22:43:56 -0700 (PDT)
-Received: from [10.162.16.153] (unknown [10.162.16.153])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E95443F66E;
-	Sun, 13 Apr 2025 22:43:55 -0700 (PDT)
-Message-ID: <095e8787-9c46-45e8-8db8-7df22a2decc8@arm.com>
-Date: Mon, 14 Apr 2025 11:13:53 +0530
+	s=arc-20240116; t=1744609482; c=relaxed/simple;
+	bh=yeNBWaj1YymjCY09lsD2HqTofHP6fJmJW6IokXqLPL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AXYYX77eQ+R2JekhVxgaSRVs7gxA6jsaixMtDhVVkMYrxKmr8xzJMpD3/TrToMGilnQCpou2LosA32TdPplclZYW6IE9bCiz1Pyh2L1Zp6gxpYLhG/jSLKLIo8LwCLp8fzq5QukjQkRdbcst8YbEw8Cx77E7Eko++25AUXD+PuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EKOL5o5/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EKOL5o5/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744609479;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cZP9chJpPnIdDVNS2TKXrDys/VCOvlIPfDsKkgbXxcE=;
+	b=EKOL5o5/5tOOLY+Q7jEQKuxgNGG4Jjbw9oRwtBD2FPVVv2IWiGKMto44wHMFSsq42Ytm2k
+	nF7DVazcyxM5VbtmT7obBxo+5iws9gxMq41k3duCgh42zHUXxEwidazsjKj3rYMsc1y6u8
+	ayLRGOl4SGZv2GKGYSL69PYfoDfOlok=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-211-iEhSOb4kNaaXaWqwlf9Bnw-1; Mon,
+ 14 Apr 2025 01:44:34 -0400
+X-MC-Unique: iEhSOb4kNaaXaWqwlf9Bnw-1
+X-Mimecast-MFC-AGG-ID: iEhSOb4kNaaXaWqwlf9Bnw_1744609473
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A4AE01955BC6;
+	Mon, 14 Apr 2025 05:44:32 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.37])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A8B619560AD;
+	Mon, 14 Apr 2025 05:44:28 +0000 (UTC)
+Date: Mon, 14 Apr 2025 13:44:23 +0800
+From: Baoquan He <bhe@redhat.com>
+To: x86@kernel.org, akpm@linux-foundation.org, Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <Z/ygt1q27NF+/2BM@MiWiFi-R3L-srv>
+References: <20250207080818.129165-1-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>,
- linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
- <CAMj1kXGn71CGqXCN2mWokZuq37bbEtnOKkrB=_dddp0dyPTndw@mail.gmail.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <CAMj1kXGn71CGqXCN2mWokZuq37bbEtnOKkrB=_dddp0dyPTndw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+Hi X86 maintainers, Andrew,
 
+On 02/07/25 at 04:08pm, Coiby Xu wrote:
+......snip...
+> This patch set only supports x86. There will be patches to support other
+> architectures once this patch set gets merged.
 
-On 4/10/25 17:58, Ard Biesheuvel wrote:
-> Hi Anshuman,
-> 
-> On Thu, 10 Apr 2025 at 09:40, Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->>
->> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
->> as expected if those macro constants contain some 128 bit layout elements,
->> required for D128 page tables.
-> 
-> Could you elaborate?
+who can help pick this patchset? It has been under many rounds of
+reviewing, now it's ready for merging from kdump reviewers' side.
+Or any comments or concern for further work?
 
-Without this change in place, the following build error comes up.
-
-arch/arm64/mm/proc.S: Assembler messages:
-arch/arm64/mm/proc.S:539: Error: too many positional arguments
-arch/arm64/mm/proc.S:541: Error: too many positional arguments
-make[4]: *** [scripts/Makefile.build:335: arch/arm64/mm/proc.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-make[3]: *** [scripts/Makefile.build:461: arch/arm64/mm] Error 2
-make[3]: *** Waiting for unfinished jobs...
-
-SYM_FUNC_START(__cpu_setup)
-	..........................
-	..........................
-#define PTE_MAYBE_NG            0
-#define PTE_MAYBE_SHARED        0
-
-        mov_q   x0, PIE_E0		 (arch/arm64/mm/proc.S:539)
-        msr     REG_PIRE0_EL1, x0
-        mov_q   x0, PIE_E1		 (arch/arm64/mm/proc.S:541)
-        msr     REG_PIR_EL1, x0
-
-#undef PTE_MAYBE_NG
-#undef PTE_MAYBE_SHARED
-	..........................
-	..........................
-
-Please note the following PIE_E0 definition in D128 context.
-
-#define PTE_PI_MASK     GENMASK_U128(118, 115)
-#define PTE_PI_SHIFT    115
-
-#define pte_pi_index(pte)       (((pte) & PTE_PI_MASK) >> PTE_PI_SHIFT)
-
-#define PIE_E0  ( \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_GCS),           PIE_GCS)  | \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_GCS_RO),        PIE_R)   | \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_EXECONLY),      PIE_X_O) | \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY_EXEC), PIE_RX_O)  | \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED_EXEC),   PIE_RWX_O) | \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY),      PIE_R_O)   | \
-        PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED),        PIE_RW_O))
-
-Where _PAGE_XXX definitions here might contain page flags beyond just 64
-bits as well.
+Thanks
+Baoquan
 
 > 
->> Fix this problem via first loading up these
->> macro constants into a given memory location and then subsequently setting
->> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->>
+> v8
+>  - improve documentation [Randy]
+>  - rebase onto 6.14.0-rc1
 > 
-> If this is necessary, we could also remove the PTE_MAYBE_xx override hack no?
-
-Could you please elaborate ? Not sure if PTE_MAYBE_xx is the problem here.
-
+> v7
+>  - Baoquan
+>    - differentiate between failing to get dm crypt keys and no dm crypt keys
+>    - add code comments, change function name and etc. to improve code readability
+>  - add documentation for configfs API [Dave]
+>  - fix building error found by kernel test robot
 > 
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Ryan Roberts <ryan.roberts@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> This patch applies on v6.15-rc1
->>
->>  arch/arm64/kernel/head.S         | 3 +++
->>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->>  arch/arm64/kernel/pi/pi.h        | 1 +
->>  arch/arm64/mm/mmu.c              | 1 +
->>  arch/arm64/mm/proc.S             | 5 +++--
->>  5 files changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->> index 2ce73525de2c..4950d9cc638a 100644
->> --- a/arch/arm64/kernel/head.S
->> +++ b/arch/arm64/kernel/head.S
->> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->>          * On return, the CPU will be ready for the MMU to be turned on and
->>          * the TCR will have been set.
->>          */
->> +       adr_l   x0, pir_data
->> +       bl      __pi_load_pir_data
->> +
->>         bl      __cpu_setup                     // initialise processor
->>         b       __primary_switch
->>  SYM_CODE_END(primary_entry)
->> diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
->> index 81345f68f9fc..cd9d24e73046 100644
->> --- a/arch/arm64/kernel/pi/map_range.c
->> +++ b/arch/arm64/kernel/pi/map_range.c
->> @@ -103,3 +103,9 @@ asmlinkage u64 __init create_init_idmap(pgd_t *pg_dir, pteval_t clrmask)
->>
->>         return ptep;
->>  }
->> +
->> +asmlinkage void __init load_pir_data(u64 pir_data[])
->> +{
->> +       pir_data[0] = PIE_E0;
->> +       pir_data[1] = PIE_E1;
->> +}
->> diff --git a/arch/arm64/kernel/pi/pi.h b/arch/arm64/kernel/pi/pi.h
->> index c91e5e965cd3..ae61df4fdb77 100644
->> --- a/arch/arm64/kernel/pi/pi.h
->> +++ b/arch/arm64/kernel/pi/pi.h
->> @@ -34,3 +34,4 @@ void map_range(u64 *pgd, u64 start, u64 end, u64 pa, pgprot_t prot,
->>  asmlinkage void early_map_kernel(u64 boot_status, void *fdt);
->>
->>  asmlinkage u64 create_init_idmap(pgd_t *pgd, pteval_t clrmask);
->> +asmlinkage void load_pir_data(u64 pir_data[]);
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index ea6695d53fb9..762e81ff4e85 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -58,6 +58,7 @@ static bool rodata_is_rw __ro_after_init = true;
->>   * with MMU turned off.
->>   */
->>  long __section(".mmuoff.data.write") __early_cpu_boot_status;
->> +unsigned long __section(".mmuoff.data.write") pir_data[2];
->>
->>  /*
->>   * Empty_zero_page is a special page that is used for zero-initialized data
->> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
->> index fb30c8804f87..7dd28cf101c2 100644
->> --- a/arch/arm64/mm/proc.S
->> +++ b/arch/arm64/mm/proc.S
->> @@ -524,9 +524,10 @@ alternative_else_nop_endif
->>  #define PTE_MAYBE_NG           0
->>  #define PTE_MAYBE_SHARED       0
->>
->> -       mov_q   x0, PIE_E0
->> +       adr_l   x1, pir_data
->> +       ldr     x0, [x1, #0]
->>         msr     REG_PIRE0_EL1, x0
->> -       mov_q   x0, PIE_E1
->> +       ldr     x0, [x1, #8]
->>         msr     REG_PIR_EL1, x0
->>
->>  #undef PTE_MAYBE_NG
->> --
->> 2.25.1
->>
+> v6
+>  - Baoquan
+>    - support AMD SEV
+>    - drop uncessary keys_header_size
+>    - improve commit message of [PATCH 4/7]
+>  
+>  - Greg
+>    - switch to configfs
+>    - move ifdef from .c to .h files and rework kexec_random_start
+>    - use tab instead of space for appended code comment
+>  
+>  - Process key description in a more flexible way to address problems
+>    found by Ondrej
+>  - improve cover letter
+>  - fix an compilation error as found by kernel test robot 
+> 
+> v5
+>  - Baoquan
+>    - limit the feature of placing kexec_buf randomly to kdump (CONFIG_CRASH_DUMP)
+>    - add documentation for added sysfs API 
+>    - allow to re-send init command to support the case of user switching to
+>      a different LUKS-encrypted target
+>    - make CONFIG_CRASH_DM_CRYPT depends on CONFIG_DM_CRYPT
+>    - check if the number of keys exceed KEY_NUM_MAX
+>    - rename (struct keys_header).key_count as (struct keys_header).total_keys
+>      to improve code readability
+>    - improve commit message
+>    - fix the failure of calling crash_exclude_mem_range (there is a split
+>      of mem_range)
+>    - use ret instead of r as return code
+>  
+>  - Greg
+>    - add documentation for added sysfs API 
+>    - avoid spamming kernel logs 
+>    - fix a buffer overflow issue
+>    - keep the state enums synced up with the string values
+>    - use sysfs_emit other than sprintf
+>    - explain KEY_NUM_MAX and KEY_SIZE_MAX
+>    - s/EXPORT_SYMBOL_GPL/EXPORT_SYMBOL/g
+>    - improve code readability
+>  
+>  - Rebase onto latest Linus tree
+> 
+> 
+> v4
+> - rebase onto latest Linus tree so Baoquan can apply the patches for
+>   code review
+> - fix kernel test robot warnings
+> 
+> v3
+>  - Support CPU/memory hot-plugging [Baoquan]
+>  - Don't save the keys temporarily to simplify the implementation [Baoquan]
+>  - Support multiple LUKS encrypted volumes
+>  - Read logon key instead of user key to improve security [Ondrej]
+>  - A kernel config option CRASH_DM_CRYPT for this feature (disabled by default)
+>  - Fix warnings found by kernel test robot
+>  - Rebase the code onto 6.9.0-rc5+
+> 
+> v2
+>  - work together with libscryptsetup's --link-vk-to-keyring/--volume-key-keyring APIs [Milan and Ondrej]
+>  - add the case where console virtual keyboard is untrusted for confidential VM
+>  - use dm_crypt_key instead of LUKS volume key [Milan and Eric]
+>  - fix some code format issues
+>  - don't move "struct kexec_segment" declaration
+>  - Rebase the code onto latest Linus tree (6.7.0)
+> 
+> v1
+>  - "Put the luks key handling related to crash_dump out into a separate
+>    file kernel/crash_dump_luks.c" [Baoquan]
+>  - Put the generic luks handling code before the x86 specific code to
+>    make it easier for other arches to follow suit [Baoquan]
+>  - Use phys_to_virt instead of "pfn -> page -> vaddr" [Dave Hansen]
+>  - Drop the RFC prefix [Dave Young]
+>  - Rebase the code onto latest Linus tree (6.4.0-rc4)
+> 
+> RFC v2
+>  - libcryptsetup interacts with the kernel via sysfs instead of "hacking"
+>    dm-crypt
+>    - to save a kdump copy of the LUKS volume key in 1st kernel
+>    - to add a logon key using the copy for libcryptsetup in kdump kernel [Milan]
+>    - to avoid the incorrect usage of LUKS master key in dm-crypt [Milan]
+>  - save the kdump copy of LUKS volume key randomly [Jan]
+>  - mark the kdump copy inaccessible [Pingfan]
+>  - Miscellaneous
+>    - explain when operations related to the LUKS volume key happen [Jan]
+>    - s/master key/volume key/g
+>    - use crash_ instead of kexec_ as function prefix
+>    - fix commit subject prefixes e.g. "x86, kdump" to x86/crash
+> 
+> 
+> Coiby Xu (7):
+>   kexec_file: allow to place kexec_buf randomly
+>   crash_dump: make dm crypt keys persist for the kdump kernel
+>   crash_dump: store dm crypt keys in kdump reserved memory
+>   crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging
+>   crash_dump: retrieve dm crypt keys in kdump kernel
+>   x86/crash: pass dm crypt keys to kdump kernel
+>   x86/crash: make the page that stores the dm crypt keys inaccessible
+> 
+>  Documentation/admin-guide/kdump/kdump.rst |  32 ++
+>  arch/x86/kernel/crash.c                   |  26 +-
+>  arch/x86/kernel/kexec-bzimage64.c         |  11 +
+>  arch/x86/kernel/machine_kexec_64.c        |  22 ++
+>  include/linux/crash_core.h                |   7 +-
+>  include/linux/crash_dump.h                |   2 +
+>  include/linux/kexec.h                     |  34 ++
+>  kernel/Kconfig.kexec                      |  10 +
+>  kernel/Makefile                           |   1 +
+>  kernel/crash_dump_dm_crypt.c              | 459 ++++++++++++++++++++++
+>  kernel/kexec_file.c                       |   3 +
+>  11 files changed, 604 insertions(+), 3 deletions(-)
+>  create mode 100644 kernel/crash_dump_dm_crypt.c
+> 
+> 
+> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> -- 
+> 2.48.1
+> 
+
