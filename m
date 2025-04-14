@@ -1,215 +1,201 @@
-Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2076.outbound.protection.outlook.com [40.107.92.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB999E571;
-	Mon, 14 Apr 2025 03:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2B4E571
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600379; cv=fail; b=cqHO0DypWE9pN6EBj2cNN9AhNKhfuAyJCVIOwcsxUfFkXzzGagVVM0JhyYdtopq0hUKv6Aekis3mHZOIh2VAAw5H9xfmipnxRkg0lFhsrdysmzlTZPToaSQERuw/+h2G0CWKaWkjcH3y7BWtMXLXxcY3XSUW3w0IOHqKSn7gbdk=
+	t=1744600401; cv=fail; b=HeD6EExHeuWW8mg8iwg3uCJiS4lN65SwBcebuoPxoep3Aaf3z3jg7N2+1l8sCTkvd3bGHOPnhZQYK+W//bqfEbt0Am2OD0wPDz8iDYZPQYmHCmtbLjIqvwvZlchmD2aL3FJyHtVDefyEFNzkrtNmd4qNLtGvBiyjLBpVCuqbneo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600379; c=relaxed/simple;
-	bh=jEqH/ZnSNxeFWvOzmfOdqxYgJ8TL1Y6U3KlKERWeKbs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SiSlgxx9QjcDscsylEQ9XMyqCEYcRKM+QAc39XlV+GNVV88p/CPpHAHHwB8Z2JH9rn9QqZogYUQ0f0EuS5pO8zDwT8D/dsYc7mL8ruDG86fn49DdaND7tWUkeUI+R7rC2Xt1cX1nVPvWLHMYxrs9VYc9wSKZZxWn/el9dEkQvOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=Xru+5xt6; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=oDxB3D7B; arc=fail smtp.client-ip=208.84.65.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
+	s=arc-20240116; t=1744600401; c=relaxed/simple;
+	bh=IqWqTsywpp9yPlvx+PwoaBkuqjoyHieA0f8UfzCE+YM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tHwSxKpsIhdaP8c3crJf8IueqLCWUyiZ27cAWqsxR+UZlnXtDIW0OvYLo+NnpIsh4a7WOVsAd7aYM44M3xoEAKtXiJAHa8R4lXp2a9rCBDs+wlZu5ID41gSmfsKOHyVcYwKtIZcaohRhsKzDYMMayrYtDkL+FLwMUQq3KqP+lOY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kW83BjPL; arc=fail smtp.client-ip=40.107.92.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Xru+5xt6";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="oDxB3D7B"
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-	by mx0a-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNcBf9030836;
-	Sun, 13 Apr 2025 20:12:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=proofpoint;
-	 bh=Dp11Zn//7TlNNssKNLEmFhUVFClOmU5p26Zk+Ds8xMw=; b=Xru+5xt6VUdi
-	5lhU7q+jfc++gCoNxl6L/cf5wRhp0PqEN8ekdzO/rTehokyR86nvLou+FsLcORzq
-	kZxLqiWLsg3+HQ5OXyH30Rqt819RLHLW5yBv9OJoIeGygh2mlyRNrzrfjUbBlCjo
-	MtIJhgXxYIvH8q+N7Ghdo/THAS7x6lNHyVWp2nDnPmZbLRMh8A9BHpHwvgv3Gtt3
-	kLlm8KH0YeEffTVYr+wGDbPGQE6FJPZi6FsdqceR0Zoxx6CH1KVwFD131yLpkIZn
-	giOu5eDkhD8GjK/K9XSTy9mcwUAN10aFQ+As2YCqDwhbTmsU+c7avh5BKJk0buo9
-	4XgjCbozIw==
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2047.outbound.protection.outlook.com [104.47.57.47])
-	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 45ymqx63dp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 13 Apr 2025 20:12:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kW83BjPL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=As5dbCRdciag9MgyUAP4RszvDLH30fAv/046A0fYQNzzgIWFm1n/ReUd+mKfodKaHF9Cxr5R+Tqc62xwTYDntfN2SxXprJn4I31DVGH2LSOKrHS8BtFt4fj9pdgQy+/ZVL6Q1DUkPqCCgtApHm4IWvq4BFsK/HvoTo/1L3Z2qHJ9GiB1hkuQzbjItMaHvjRCZZmQdyP4gmNincXqWcjBI2eQIHF72+E6SNHFnPAF8lcjuIN/BJtsg+wia/Oo49nH2RFBi48HwknQZajc30HQrGA+6L/Z8wTxdofEcXpLWZccv8yYXJ3keH58qsPmUvkMF3fdaCqkChdRE9BTCrQvwQ==
+ b=uGqZZKnD3Ra4N5yXYoYpTHsdAmlaq5gzQk7a3KtOMIlXv2pkMwuJyxql8iy5zFgnQqnjVejzexe8glbPkmobdLuS8pn1VAnnMdryv0NGk3S0ckcDVe1UgrRn2f2G/XzgiB7V9G0qtZICc46xuHpVizD+4ir81XRyuZriCB56tZ01lIpCgs4yYD+k7mtlGYXpYRGHO8pkb4JrpyH9/5xqFsJFyDqYVNfmRV8yekCtnthtAHvuArTdlFd76rfbTttt2L6cmCYDTJybluZe6SyiBZk9k31/wcZeuxXoqHt0SMNxx54u2vbBBMHxIn8/PRrtc2Tb+aUfXhiZqbkj+eJKig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dp11Zn//7TlNNssKNLEmFhUVFClOmU5p26Zk+Ds8xMw=;
- b=EiczAtgMC08DZxaYnMQSVv2P74B63m6qLDvdHkedTPGJM/Y4eneSV7hs505VxbklWf8jjWvXtO8upDc2QTs+JNjCMtJPp9sHQFgenyQVoXR9nltQv6i5KszOFYU1n/bqT5RWM3XfYawQWArwFv+I9jFoTsrb4y8FyJzrajEZmU8c7r2E3HCVnz55yaE1DcL7FL8xmugrqEvb2j1dR5W/JbiuJzXVcCbmpFdDZ2s0PZ9CiO0dPU4myrwk6nDKroZi8o8P+rwx2PTF0AniSutoyzpKnb1Pr9SLem+V7k936NNsgfbbgWvEUmvQRASgOihLlTp86ImrRSFFmSdSILmQVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=haryoVN7pJepGxCjqGp0I2LmVYeahDA/RE92nZJIHno=;
+ b=GnaADy0WOktfSZoQyi2AW/6poMHtqXmwCRaqBxsBj68ax2Q/Rg6EYdJ6Wj73+V95UZ5QEV970ZbuuitJ7uQEE4Wwh934QtIseOn5wb0mDAP8BJ+SqrQQkGgKgdc+YCgGGTx6j1qaOjHQuKyyCidLI1eaywwURZL2bfBZrQ0QxSyfgTSEcAlqSPOMXjq2OcH/x07/Y6a46aQyql/HjFrjhlV+xLpqS6VUG/FmlEOcLk3i2NeumLAqpn+YlaVy5P4K7Q58/ibfvB4PoDdgZJKJ/5+lCbrmSTCUhQAhpEH0eFXu5P8KGOIzBOrnpRA3QFsAaPuGtH99zGL2MSPJD4wZBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=bytedance.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dp11Zn//7TlNNssKNLEmFhUVFClOmU5p26Zk+Ds8xMw=;
- b=oDxB3D7B//WP4k9kO6UiuxlBZkzCvNnWTT11ICTMrYFpSv1vgiEcPtaD2/IlnUHyokA73OUyvOPXGTqKX/gYrvalITVw3TfK24ce1Yp3aN2DLX9XVjNaytt8fL6ustOghnWRxmXi9vPNfBDLBl/4aEUgX8yqKKVP6Ur5Grb4v7o=
-Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- (2603:10b6:61f:fc00::278) by SA1PR07MB9743.namprd07.prod.outlook.com
- (2603:10b6:806:33b::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
- 2025 03:12:44 +0000
-Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- ([fe80::2e5:1b6b:f0e1:26ec]) by CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- ([fe80::2e5:1b6b:f0e1:26ec%7]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 03:12:43 +0000
-From: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-To: Rob Herring <robh@kernel.org>,
-        "hans.zhang@cixtech.com"
-	<hans.zhang@cixtech.com>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "conor+dt@kernel.org"
-	<conor+dt@kernel.org>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 6/6] PCI: cadence: Update support for TI J721e boards
-Thread-Topic: [PATCH v3 6/6] PCI: cadence: Update support for TI J721e boards
-Thread-Index: AQHbqs2w8FUXGodC6Ea5aXXqHgN/eLOe6hIAgAOWVFA=
-Date: Mon, 14 Apr 2025 03:12:43 +0000
-Message-ID:
- <CH2PPF4D26F8E1C4E4B759326DF5A04D2CCA2B32@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
-References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
- <20250411103656.2740517-7-hans.zhang@cixtech.com>
- <20250411202518.GB3793660-robh@kernel.org>
-In-Reply-To: <20250411202518.GB3793660-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PPF4D26F8E1C:EE_|SA1PR07MB9743:EE_
-x-ms-office365-filtering-correlation-id: 312606e9-06a9-41ff-a463-08dd7b023948
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?kGSFpykQYqhcr2EEs78tJWyk9Nt/Ire39de2iYxjncSHuqU98+g59wna9rVZ?=
- =?us-ascii?Q?DT1JEYSG3XFWEwAIvswFO7ef482CY+uYH/KsFaRNB59JM8+ghf/sK0YXyTqP?=
- =?us-ascii?Q?/TG+rJ6cOZ4jVKO+TVUFGIiDnXpROK5tZ4C6Z2g3ZwwDwyE9ioEHU+2BbvUL?=
- =?us-ascii?Q?/REGOZtzC//RP96T/bfXUcy7WmWQAbsTgs6fhfs/bt1lyQxzwWbxT3XawOtK?=
- =?us-ascii?Q?2M/hGar9QfLUTmuW9wUX8E14rYsUQClja+i/B/fBF1VNkN2iFgnwO0flbZze?=
- =?us-ascii?Q?KwTNAi//X1HrIm0dkJm5S9dNfdWZERbtRQPbsBi5yPfaTLdmhuHRicCOC+33?=
- =?us-ascii?Q?H3WTDwcUcEdzWrILIeFdEmUaalFw7kGqcD4nUMiExHPumgjufEPATL8/vMHs?=
- =?us-ascii?Q?LqAck87o0bK1b0UT2rHIBOTzublSCLxKbwh7OhIjk1DwosI/5Cto0uCyoJC7?=
- =?us-ascii?Q?GqJe8b/moa+vlcJ5Wvn8/DoUadjSyhuZBcKagyDnE9a+yIuFjSbIO8nME0zc?=
- =?us-ascii?Q?ns6itBR1Z4Lm987HmFADIoO7VYhR6HX1Xl8SkDBIgmaqNgmMlXyCWQDxmcVi?=
- =?us-ascii?Q?SiUT9K8priBh0qxNZGuPLGPD9WGIArjTY5VzeqioSpqXtoqJXW8dvARX46dZ?=
- =?us-ascii?Q?h16j8rbKHIZWQ8pd19bM2CwGh0R0ujYSCqX7z3QU0BD/8vBhI+2asz249ij5?=
- =?us-ascii?Q?X48zR31cZ0F563YBlYsauE18acuNDA+Ao4yOPH7o19YJ+BREvmhrnW3l6Mwc?=
- =?us-ascii?Q?yyYpoQ4cqWrPc/in40BOXIhxI7Vir4DO/UqmC3HHl+6iD+g4lqbvj/pgvuKT?=
- =?us-ascii?Q?/nQUrIiVX41h2iuKA0a7PPf9G8Vug/wLebieHqUN4CAdjXeL/Mjm1NkT7xGt?=
- =?us-ascii?Q?Jo3sO8N1XwS9pPojUPhSw8T61fuhf0GWdSBADoyigm1b7SMnCekRLAZmb3V1?=
- =?us-ascii?Q?dx7j89RIuB0OFKeCvmE4uhvM9ZGuY73nMGDhEWqTqHI+4QVDQRWufDivMzMK?=
- =?us-ascii?Q?Fse17/Ez2CbTaO/A/mCQX9RSE2c0xzSvOxJTnk1P/USqhXfiwlZJncsXLZAl?=
- =?us-ascii?Q?CPKvoodL0VpT2pRJjeEVTrCC79tnX6NRhRa2uGO0GvoMMWcXeKIvWFknh4Re?=
- =?us-ascii?Q?ZMRDCQFYug0cagGyOnC55df/WtBL9iczpIgltkt66mI851BXW6cDR2IgFgL0?=
- =?us-ascii?Q?4z2/v1OqBC/i3dQ5YammxQAZOmPY1kU/PFU0oINQllalhGUlzdLbEC2tSHY+?=
- =?us-ascii?Q?Lm89ZJTcuyuoAN96P3jafvGfVNcyA6UPFDWfLDkTAlr7Uu6uCAKAgJWN75u9?=
- =?us-ascii?Q?m4Xj6aYdc02tUVpsCKvhX+46Tjy9/lADb1ZmZZK1QJ5u9IM5yAkCw+N9lON6?=
- =?us-ascii?Q?zui4vtogua5y4an+M6oJHgrwMVcJqHoED248tfYCv+F3K4UCaWjA3hzI0bl7?=
- =?us-ascii?Q?cFIgW4S8J7vpqsVAVie/6sg4OYiGjJyV4z2IQkzcfjHUK1CMRHPupQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PPF4D26F8E1C.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?rTLTWXsTL2ZZqGVkmNTBNp8ZZb+D/cbvKcU+Xc1BYg0KIfLlC1IwzAmcHqRf?=
- =?us-ascii?Q?uE0ILkOHtYETVnk5hERTPjqWsFQC2LnMKDy/pho113ZsE6FbrRkoS7GY31Gk?=
- =?us-ascii?Q?i+GifSmNOEvxKEHzPE+DFkOZPVoPqBjXtke1d7dcoRItNfEA4una2z3A6Kzt?=
- =?us-ascii?Q?/7D/xF8Ig9fMVw37Oto+UECIIhJttKOE7Jy1Nn0vSiA74EBGk8mg48mWOujv?=
- =?us-ascii?Q?8enGOGrRWE65eLUknkUO7/D90dv+FtQCIEOSAR7SuP1y85bsyEjBSWjxEF9G?=
- =?us-ascii?Q?7RRcHy2UB40W+uFKmuEVq2PMLcMnp2RnyKQ1zVUT4BfGUVPeMGhZWJIJ5rea?=
- =?us-ascii?Q?oLNnMe9eJhfTJQ3hL/W6U1/GvAp7RCy09dd175nS8QcmpNBC6a2gXo7B3r8L?=
- =?us-ascii?Q?cBEdky2fzerErhSvBSZzvr89htsu4erRuGiLlCHtHQz7yCa34QCPedNKPOTH?=
- =?us-ascii?Q?kSdzFeIGLiK3COuZiPCRM50Fq7qRnRSy/b5t1poDOldfysn7uU9+b+0+x3vS?=
- =?us-ascii?Q?wtyMpVxFu6D23d7sB1RbUCPeyCSd0+kaVmp5xEgl2XTCmR8HAikQvlDJVYwb?=
- =?us-ascii?Q?ZJCQp64YE9u7LjpIQ/D+a0vUzDmDyxPiyMMTMzpnsciR1ydR90WMRQNoxDFs?=
- =?us-ascii?Q?g0pMDAgAhmtQTh7vxg92hnbImyD8C1/upa+OucPQw8oT4m+AfRUH2N60dzzM?=
- =?us-ascii?Q?Fv99saXg9qpQY4Az/f1yAGaM61hahoaEQFBZfOSIE3Sw3Y4wF/m1TdBrnjnL?=
- =?us-ascii?Q?CmwMEsyFlP2PnsE70MJp56nMSusLyns5+EBin2bR00pxppny7RjGWtBW9Q2g?=
- =?us-ascii?Q?OI64iG0tr4cFpwESq2uGAlZc14Vhn/UmPc6EHAfaVFrKeWY1MdL6yxRhdWJE?=
- =?us-ascii?Q?3FEIV7asGq0Co6Mpi6hswtH3n0MAYPuFImAEmzjdRtBFxG7Uo75HukGTGlWw?=
- =?us-ascii?Q?6y03sYrDIUU0s9fDHWSd4bJYMYRtHC+RQ3k8dP1I6v1HnaA0+gylXcceAz6H?=
- =?us-ascii?Q?ZLbcLxGITRkrP7EoFwXQFseC1WAhJAW8YPjgdf9QqTDPnRfJXgI9tg+9bkSV?=
- =?us-ascii?Q?3wWxE23vuoQDCk9j4JdeeQD3xRlWCLylTHRDKjfRJKqfTWPqaxNJp6+AFJnC?=
- =?us-ascii?Q?wyaVc+B3cNRxwF5abYayPbUXVJ6H18sk7LZFRUhml3oUu3RU+qSSiNntwxL9?=
- =?us-ascii?Q?n3X4/fQv+SPyAdpXHUbEoDRJVx9hBnLprIb11eXQOsRzbkFyGeu7QpSCXzbi?=
- =?us-ascii?Q?KJFOk1LydhavE0aUOELheqIpFuIKCMKo6D4LzoNOM684Ju0M1x1koO4xtxjM?=
- =?us-ascii?Q?TfdMCnoe+A9u3fqOfE1nnsU41qPlqsqbRJa65x1VPhaG5rru+jV4AKOypmBY?=
- =?us-ascii?Q?aNUxOaUHebwlWHCucbMEv85O5/SPuVGIXsgZY41WuqAea3tiFEuK52FIKjCx?=
- =?us-ascii?Q?FeFT6xa8dq6PDHo/MdH/M8ik8clmBLN5Fq8YxqwGcSeTQRCVQPtMlNZOHyzT?=
- =?us-ascii?Q?20rGz4FHxapan8hFYuVcCUcrszm6SYlPi2CRcoSAQHtCx7a9VFyNFLnMs68P?=
- =?us-ascii?Q?zKzjlGW2V7L/r/+K/CxLPueyR8muLBQRvQxaMcur?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=haryoVN7pJepGxCjqGp0I2LmVYeahDA/RE92nZJIHno=;
+ b=kW83BjPLCb4NB2vtgNP+Rl4FjI+sZhPQqFL2//ysX1JU3f4i+kGfQCk5WxXTYRjitiXnLHiucB4h796HUwDM8xfTIM4KB9891JhdxtilHYnGBVJWpbIbFHPtdR0sCDDMJjk55z3rCZRTrjS1kH2JMd/aH8C4l8m0HmiueYYGuBs=
+Received: from SA0PR11CA0120.namprd11.prod.outlook.com (2603:10b6:806:d1::35)
+ by IA0PR12MB9009.namprd12.prod.outlook.com (2603:10b6:208:48f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Mon, 14 Apr
+ 2025 03:13:13 +0000
+Received: from SN1PEPF00026367.namprd02.prod.outlook.com
+ (2603:10b6:806:d1:cafe::ac) by SA0PR11CA0120.outlook.office365.com
+ (2603:10b6:806:d1::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Mon,
+ 14 Apr 2025 03:13:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00026367.mail.protection.outlook.com (10.167.241.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 03:13:12 +0000
+Received: from [10.85.36.22] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Apr
+ 2025 22:13:08 -0500
+Message-ID: <30a82975-a6a0-435e-8574-b570386cd6f0@amd.com>
+Date: Mon, 14 Apr 2025 08:43:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PPF4D26F8E1C.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 312606e9-06a9-41ff-a463-08dd7b023948
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2025 03:12:43.7223
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/5] sched/fair: Update overloaded mask in presence of
+ pushable task
+To: Aaron Lu <ziqianlu@bytedance.com>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, <linux-kernel@vger.kernel.org>, "Dietmar
+ Eggemann" <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>, "Gautham R. Shenoy"
+	<gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
+References: <20250409111539.23791-1-kprateek.nayak@amd.com>
+ <20250409111539.23791-4-kprateek.nayak@amd.com>
+ <20250414022859.GA3326447@bytedance>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250414022859.GA3326447@bytedance>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026367:EE_|IA0PR12MB9009:EE_
+X-MS-Office365-Filtering-Correlation-Id: dfe2a04b-4f82-44c4-e718-08dd7b024a54
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a0E4L3FxcTB1MThyVldPazRxVTJUdWRFMVljZEN3bWNIY0xZVDBHNkEzTEdI?=
+ =?utf-8?B?cFNxUk91TmlxUlZUNXlUT1BTT3hLTnJzblZJakNYRVNFdWRUdGs2bUloTXUy?=
+ =?utf-8?B?R3Zxc3N5WnE4Q0NibDFNOHFubmE2TWxqcCs0QWRXTTZqU2FwMUpqeExaczdZ?=
+ =?utf-8?B?R1NTWVpYTlh5UjdlTk84a3V3REJGei9mdHZiWDJSZHV1SC94UTF0TEdtdWlt?=
+ =?utf-8?B?WGVsdUZuYTBUeVp3Y0VZN3YvYk9NWUdZWFlBanUwSUdHUDBQSU0wcDFYaUdy?=
+ =?utf-8?B?S0h6U3liYXRxaDdUMUNJUmpFZ2puUVJCRS9DWEYrSERJNGsxYTBPZnZubTZh?=
+ =?utf-8?B?UWNtaldzWUNNSWp6aXlNc2NuS3I5OGdhYngwQ01HcGNrbUVITHhhOFlOL0pz?=
+ =?utf-8?B?MWJDaUpSVjgvRFZEZ1hDeE5HdFhoWjBsQTd5KzRuYU9PUy9KMWVYcUNmVnZE?=
+ =?utf-8?B?RXlUUHJiWFNuNXBVWjJENHlJSFZ6ZVM0ZjJQV3JZZ05IS0pXZkdYNXFtNzg4?=
+ =?utf-8?B?V3lSYkkxcHViajQwY25BZ0h1cDdTc3l3QUFFbWdZa3d0SWNxLzY5UWxNOHln?=
+ =?utf-8?B?bXpyTVZ3cUs0ZUJJYjliVHhhemptZFNGd21OQ1RxS3BWVGluUmtFWmU4djRj?=
+ =?utf-8?B?YkNvSVdlKzdlSFo5VG10VVdBSmVqaHVmdDhabHdhdjlyOEtiN09CY2FRem9S?=
+ =?utf-8?B?dDZabG9va2RzWHZWdk1xUzV1dlowQVMrd3RCYVh5THJDN3JjcXZxb3pGOFpE?=
+ =?utf-8?B?QWhmY214ZC9uTjFpZVhPOWMrcDFSd2w5Zi9DczM1SU1Gb3V3OU5weWJpSWxs?=
+ =?utf-8?B?OEpHOFdwVWpBY2g5UnRMMEpGSEp0RmNoY3hvREtxOE5IeWY3Y2JUNkhrVFlS?=
+ =?utf-8?B?QVVUQ0luU1ZrWjZ1UjhUL2ppMlNmN1E0KzlZdDV3aHNYYm5vWkxpK3JqWDBv?=
+ =?utf-8?B?NnQrbDloQkRBaGNnTkJsejJ6V2NXZ0xMbUpNRXAzOHdHZDQ5dWROS0VPei9L?=
+ =?utf-8?B?VmF5YkhFYUF0c3liajM2WUNZbWs1ZHJTTUh0NUV0bGVOS29hVHJaYnh4UDFD?=
+ =?utf-8?B?QzNQbk5jeVVza1ZUcThiQS8reUtmcmRwSlZjQ1hZQ3A0KzNLd2JNekNHeVJ4?=
+ =?utf-8?B?ZjdYWmQyNFlxOVkrSGp4TEFZRzMxdmtkV21seWdId3ExNWZ6ODhBb3R5YWdT?=
+ =?utf-8?B?RlZkbmhESXArT1QrQjdtMkdSU25QV04rSm5heGpob1E4ZDI1UFM3c0VIOE1H?=
+ =?utf-8?B?V0ZycWZlUEZ5L1FDVzZoNWpJZzZoWnNtbk1yVVFiU3V2bmxGc2pRU2xiRnJB?=
+ =?utf-8?B?ZDFtWG1reDlwcW1PTDluelZqdHE1VzMvblkwYXh2WG1ZUVFhZkp0cXNmdUsw?=
+ =?utf-8?B?YXpVNEJ5YmQ5dWZMbzI0SkZNQ0pVa1JHRjI1TU9qWDB4eWJpbVFGQnYrdDFs?=
+ =?utf-8?B?M1F1MitIUVNCUFRFUHgyYUFJcXVlN2FiNTBmM3c4Smp6L1FBaVlQSTVzd0ww?=
+ =?utf-8?B?NFFiVGtsUVN6VTBhZW9FMGQ4Zjgwb1BuLzQ5dEYzY2tmTmZscWlHR2U1MzRw?=
+ =?utf-8?B?MWtpbzBCVThGUmpsY3NvRHlUTjIySHAvS1BCMHZuZTNscytGQVVPcGJvZENO?=
+ =?utf-8?B?cC9oQ1MvdlU4NDFiaml6Ym1JVUQ4L29BdjhaR084ZmhVZWZiek1wRTRZZkg1?=
+ =?utf-8?B?OWpzZEozQWp6OStNdzQ3aW9TMzlBSWd5TmNVa3JvajhpYkYxdE95bTRhUFB1?=
+ =?utf-8?B?OWpmY2tBQm1CUnBQeGFITDNRd0RLaVkrancwOGxOM2JzbDl3aEF2SVV4VzJ1?=
+ =?utf-8?B?c05pdTlFdm5uMmpDejhlRmZ0UTAzWHpzb3RnVGtaMmUwWFNxb1Fpa1FzZzM2?=
+ =?utf-8?B?Y0pVVmNUdHdFUFRXYnpra3RiVmluR2o1S2Jzemh4Zm5KckxUQmlHYUVvUkc4?=
+ =?utf-8?B?eERZZWhqeHJIUzJVUk94dUZTVFpFWlFpejJqZm1Ra085SXBQYkg1RVRkNDBs?=
+ =?utf-8?B?VGdrekJtVW8wRm1lb21xUlQrdDdHYVRkZEFqbU5lM0hpMTJXTjF0SWlweHJu?=
+ =?utf-8?Q?hCJ6s3?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:13:12.2926
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZEoJuxIXvvH1K9dse9PZyAeQHOqbeuZnd2abhXGom+Z6QtPkU2d2FgSwth2ejgMgvflinb6I5R6Ieuwib1w/dT2XltSG3xUAFWmrXtjiMx4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR07MB9743
-X-Authority-Analysis: v=2.4 cv=EeDIQOmC c=1 sm=1 tr=0 ts=67fc7d2e cx=c_pps a=RoG0BMNHDmmKSZcrvsSD+g==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=XR8D0OoHHMoA:10 a=Zpq2whiEiuAA:10 a=TAThrSAKAAAA:8 a=Br2UW1UjAAAA:8 a=bVOMk3t7uOZLSsJcZgwA:9 a=CjuIK1q_8ugA:10 a=8BaDVV8zVhUtoWX9exhy:22 a=WmXOPjafLNExVIMTj843:22
-X-Proofpoint-ORIG-GUID: Zb81H_w3roB05T1b8SC-fpfCK0e1pAnw
-X-Proofpoint-GUID: Zb81H_w3roB05T1b8SC-fpfCK0e1pAnw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 suspectscore=0 adultscore=0 phishscore=0
- clxscore=1015 mlxlogscore=605 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504140022
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfe2a04b-4f82-44c4-e718-08dd7b024a54
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026367.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB9009
 
+Hello Aaron,
 
-
->Subject: Re: [PATCH v3 6/6] PCI: cadence: Update support for TI J721e boar=
-ds
->
->EXTERNAL MAIL
->
->
->On Fri, Apr 11, 2025 at 06:36:56PM +0800, hans.zhang@cixtech.com wrote:
->> From: Manikandan K Pillai <mpillai@cadence.com>
+On 4/14/2025 7:58 AM, Aaron Lu wrote:
+> Hi Prateek,
+> 
+> On Wed, Apr 09, 2025 at 11:15:37AM +0000, K Prateek Nayak wrote:
+>> In presence of pushable tasks on the CPU, set it on the newly introduced
+>> "overloaded+mask" in sched_domain_shared struct. This will be used by
+>> the newidle balance to limit the scanning to these overloaded CPUs since
+>> they contain tasks that could be run on the newly idle target.
 >>
->> Update the support for TI J721 boards to use the updated Cadence
->> PCIe controller code.
->
->Without this patch, you just broke TI. That's not bisectable.
->
-
-Ok will merge this patch with the earlier one.
-
->>
->> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
->> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+>> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 >> ---
->>  drivers/pci/controller/cadence/pci-j721e.c | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
+>>   kernel/sched/fair.c | 24 ++++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 98d3ed2078cd..834fcdd15cac 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -8559,6 +8559,24 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>>   	return target;
+>>   }
+>>   
+>> +static inline void update_overloaded_mask(int cpu, bool contains_pushable)
+>> +{
+>> +	struct sched_domain_shared *sd_share = rcu_dereference(per_cpu(sd_llc_shared, cpu));
+> 
+> I got a suspicious RCU usage warning for this line while testing your
+> series. Since rq lock is held here, rcu_dereference() should not be
+> necessary.
+
+Thank you for reporting this. I'll make sure to run with LOCKDEP next
+time around. Note: The performance aspect is still quite bad with this
+series an the intent for the RFC was to vet the idea and to understand
+if I got the basic implementation details right.
+
+> 
+>> +	cpumask_var_t overloaded_mask;
+>> +
+>> +	if (!sd_share)
+>> +		return;
+>> +
+>> +	overloaded_mask = sd_share->overloaded_mask;
+>> +	if (!overloaded_mask)
+>> +		return;
+>> +
+>> +	if (contains_pushable)
+>> +		cpumask_set_cpu(cpu, overloaded_mask);
+>> +	else
+>> +		cpumask_clear_cpu(cpu, overloaded_mask);
+>> +}
+
+-- 
+Thanks and Regards,
+Prateek
+
