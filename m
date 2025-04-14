@@ -1,64 +1,50 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734AD2741DA
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF17825393E;
+	Mon, 14 Apr 2025 14:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640313; cv=none; b=GTkVoizWf4JtFP0loumvmFbyJO8ifIzpdWe9KC7YBx17d/MNyvJB00A11X0UE/xR93o8wUW7R34HovWk6TF5lh/P9vZdJN8Dwk6PB7RMP/6lRaUEEbZzq5L1gUBnAm+/2IVO0fAXhF1mdryAmMmktRsJzJAXmcNdg3w+4Uk2suQ=
+	t=1744640346; cv=none; b=eCoG/RLmAhLvtXHTxGZ68Px3ky61385KsvWiW9VaepqxzgAZ3A0lZMMMREg7vtiH8dGVMyzMi8JC2vpukuXJIUt5yNHFosvSbIpAEvUDdf7cnZFSZcR+HIRVb1fxWQQlLPamPHFu3AsUTpndlKKLIKXuUVPRD8MwdMX1CMoW4dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640313; c=relaxed/simple;
-	bh=1cp4r3bN2WYb6YlC693tyTXmgzmlUWDg2lTaae9s6/c=;
+	s=arc-20240116; t=1744640346; c=relaxed/simple;
+	bh=ZGi0N7JihKaxW674HLf7YHreoEQlnROr2bpo9jFgkBk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eC/BQIPLtzLll/P/Thk3Rjrk/IqP+T9TPoXYw1Jl+sMoCepSm7AKngos+3cnxdgaSmIisU6VIbhTyhd1zuStgKcyBHyb3fcAGCwRWN3gPxC63PKNEEsi5fz1BEVf63Qv3IEyJk7p+uAq9IBekkTOJAtVuzNuhEnpV2yYDbx+Nr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHafNKG/; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=ACUrKkOerBbAr83hIlllfIo1GuaKqbl3Y/mmNaYIvyy24WkgY/aRSDK1X2XpQTdB1m6Pt8VnT3KCa1JGMq0Dl1CBhsHWH2qH+2EiI1s/ToYCHWFeY5pww1+JCo3uF0DvepMkaUpCLD0TYgaS/e7fuFg4ST283OCLcjanEIH+Yfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QUA7AlVw; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHafNKG/"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2c76a1b574cso1638494fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744640310; x=1745245110; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tfVnT7zto9fIU0SX/IfnPhW6n2xIqa2B7dlheARLf4Q=;
-        b=LHafNKG/y7wH09ZyB/5es8NbO+BMq7v849CD6MTuP7nAOWn4axM2U4dEwZ9lvL+V6M
-         0N203VdVYsTF+exuCKyTpiZ4tIGaE5X/KVj+t1u6yqYfIt7wCbTSK5QEQLPiHWQKtgDd
-         iYPj9Y2ZKlUNq1OZccGW0sSyNf8d4BXEoTLNltDAoNF0egc+zZszfRD5QNA31uDdG2hS
-         Q01UuoR7yfkfmh1Pt65koReyA3tgI40tBEjUGplMA/XauWCC6QTDAW6Y8axBm75qWGGi
-         VhjqO1VL6lLHO0XBOjnQgt1S4z/EpxiBEvlZyhK3s6vjfXMtfRPkkT9DcCyilAcGQR4q
-         O4rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744640310; x=1745245110;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfVnT7zto9fIU0SX/IfnPhW6n2xIqa2B7dlheARLf4Q=;
-        b=hQYIvDAqkEnLy3rhWEICP+lVSkWv4KTuDQZJsjafw3yZPLsY/mSafSln78COyzMmTt
-         oZfv3rv9Ylz2u2TGu/hdXCt/75maKbhtjg6rC1aGnwUWVAxFDeuFfUK+TANMPcDdeuy8
-         H9v3jxGFwULuJKQATNbBxI23eoiIsE1hXhItKlPAjeHbTXd1p2ZvTp8rGgntd31hf61f
-         nzqiJNqAEMh/a3t8pJeLULr4Qqi+HG/Yt4nnWXkDXCG3XIn6AAPOBeYB9rRKwQKR6W/Y
-         aV7nbUGadC9cyPrkCTT4rAauw8zw4KMopyEGT1uE5eT4IltSP5i+FQFvmXiYewBmLuJ/
-         0CJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsFNrDGM8cB9iKaQbwJ52in+Tqgl+CaXMy+pBKrRRiU9sNiXUBiQkAepqNmpPx0jBt+DCEstF/7jsEJEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTQKOE/Qf3w4hMExbZn574/bFZw62UYrr2rDnCqoOUH5yqnvzS
-	JK0CGisz+vpdsj9jupUqOi7eE1xsxBZP1JACGlEuYNtiCHqkrwjz
-X-Gm-Gg: ASbGncscIcSDlyI9mtXW7nkZRUoz9e46fzstSkKRyF81R52BYRyvP9NdkU5H3MxCBsi
-	PvG8wIsm+wyi01jY1ca39mXUYDoQSb/FQhK/pi6Cg2VVyCy+cerv8jQrgClicP3ya2Nnd6VJkCR
-	VuhxTY7OuEQHKKbQFf0i0QE4E4KPuxuSPtAIVGMxN8TNWRuyAv09EbBf8LcOZ0q/YIplZ2VFPn+
-	vCnKUXRBpBi55dR7YlL/+uK8g548RhN06ZOWCJJbfLbpu2g5a2OdQvLU7Q73pdpNwlu4wNPYbhs
-	XF2jF7XeJoSiWr+OU5XGAM0uj6m3WHP3qdQWoIyRYw0=
-X-Google-Smtp-Source: AGHT+IGrGIv9+tHzBbFDrY/OgsyEegZmR/zRD35s6mF0qYYRRIOMTdft6Y8aGScRga8UiruK67c+TQ==
-X-Received: by 2002:a05:6870:2199:b0:29e:503a:7ea3 with SMTP id 586e51a60fabf-2d0d5fc7469mr7070651fac.36.1744640310211;
-        Mon, 14 Apr 2025 07:18:30 -0700 (PDT)
-Received: from [10.30.57.29] ([204.77.163.55])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e689c6sm1991322a34.69.2025.04.14.07.18.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 07:18:29 -0700 (PDT)
-Message-ID: <8f7a84af-444f-46a9-b518-4fb010b7fba0@gmail.com>
-Date: Mon, 14 Apr 2025 09:18:28 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QUA7AlVw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744640345; x=1776176345;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZGi0N7JihKaxW674HLf7YHreoEQlnROr2bpo9jFgkBk=;
+  b=QUA7AlVwIvji7X2oQkm5MguJFZFv6Ya9MvgWHHoBS8GjYXdD2qtgZ4OD
+   dGksD8F5iix/KeoRnxu/Bg2HeY6EZ5GAOBB1VBMIYOcWkHJ4MObfbzewx
+   EZUscpRcw7PkNVCBMgnNBYLGOIiVtLxR3Mef+zyl3Rst1BB/MuaxocTJI
+   uVmMg1Wb3abEFoPJUwiMw1/5DBjN3JALFczxzY0+hjiqTJutfppogvJtY
+   Lw3yyAQnR+Yoi4ZJHoNMgw4SCxJWmi7Jr6Mxba2arOV84DcWIV2fOwnAr
+   uhIC4MML94sUbylrApSulhWz5EQc7ddB3Wk2WwSe/nJ+F1AjNokUdRc3c
+   w==;
+X-CSE-ConnectionGUID: APLhuhZPRqmDiM+cvhAWGg==
+X-CSE-MsgGUID: wvrQDerTTKuIpcUfMoS8BQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46121904"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="46121904"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 07:19:04 -0700
+X-CSE-ConnectionGUID: iD5gBL39T6eCeoWX3qQdxA==
+X-CSE-MsgGUID: vxa1uwQ/TFKThLpIjYggyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="130383960"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.222.39]) ([10.124.222.39])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 07:19:03 -0700
+Message-ID: <a641e123-be70-41ab-b0ce-6710d7fd0c2d@intel.com>
+Date: Mon, 14 Apr 2025 07:19:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,39 +52,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm[64]/memremap: fix arch_memremap_can_ram_remap()
-To: Catalin Marinas <catalin.marinas@arm.com>,
- Ross Stutterheim <ross.stutterheim@garmin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Mike Rapoport <rppt@kernel.org>, Russell King <linux@armlinux.org.uk>
-References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
- <Z_0SfqQHsKs3S1cn@arm.com>
+Subject: Re: [tip: x86/urgent] x86/e820: Discard high memory that can't be
+ addressed by 32-bit systems
+To: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org
+Cc: Arnd Bergmann <arnd@kernel.org>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Davide Ciminaghi <ciminaghi@gnudd.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, x86@kernel.org
+References: <20250413080858.743221-1-rppt@kernel.org>
+ <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Ross Stutterheim <ross.sweng@gmail.com>
-In-Reply-To: <Z_0SfqQHsKs3S1cn@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/14/25 08:49, Catalin Marinas wrote:
-> Please cc the maintainers and the original contributor of the commit you
-> are fixing, otherwise the patch may not be noticed.
-Thanks for adding them on your reply. I will add to V2.
+On 4/13/25 02:23, tip-bot2 for Mike Rapoport (Microsoft) wrote:
+> +	/*
+> +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
+> +	 * to even less without it.
+> +	 * Discard memory after max_pfn - the actual limit detected at runtime.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_X86_32))
+> +		memblock_remove(PFN_PHYS(max_pfn), -1);
 
->> diff --git a/arch/arm64/mm/ioremap.c b/arch/arm64/mm/ioremap.c
->> index 10e246f11271..48c38c986b95 100644
->> --- a/arch/arm64/mm/ioremap.c
->> +++ b/arch/arm64/mm/ioremap.c
->> @@ -51,7 +51,5 @@ void __init early_ioremap_init(void)
->>   bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
->>   				 unsigned long flags)
->>   {
->> -	unsigned long pfn = PHYS_PFN(offset);
->> -
->> -	return pfn_is_map_memory(pfn);
->> +	return pfn_is_map_memory(offset);
-> 
-> This is already correct.
-Will remove on V2.
+Mike, thanks for the quick fix! I did verify that this gets my silly
+test VM booting again.
 
---
-Ross
+The patch obviously _works_. But in the case I was hitting max_pfn was
+set MAX_NONPAE_PFN. The unfortunate part about this hunk is that it's
+far away from the related warning:
+
+>         if (max_pfn > MAX_NONPAE_PFN) {
+>                 max_pfn = MAX_NONPAE_PFN;
+>                 printk(KERN_WARNING MSG_HIGHMEM_TRIMMED);
+>         }
+
+and it's logically doing the same thing: truncating memory at
+MAX_NONPAE_PFN.
+
+How about we reuse 'MAX_NONPAE_PFN' like this:
+
+	if (IS_ENABLED(CONFIG_X86_32))
+		memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
+
+Would that make the connection more obvious?
