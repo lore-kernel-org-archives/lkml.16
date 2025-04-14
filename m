@@ -1,130 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D668425E813;
-	Mon, 14 Apr 2025 15:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974982472B1
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744645837; cv=none; b=AZr0MGnv2DRtA308fm+08ZvlNagK/LkvNGX8/eeQiiw7ohlTnst/dgFWyTKy2LFkpU6W3VSvdi8bwGzYaJzRiqFuEHfivewppO0FFhgXcDKj2hCcylhY6c4cEpQeuTvEax/vC0yb2sA041/irrXUxvhkl1/lSW+4M35cbrSUY5U=
+	t=1744645979; cv=none; b=WtHkjkjDyrisKH2+9KtONcaellV6ITdQIhMecSnf+F+EZUqU9itCXcrOwyE2PTmHKm66yt1PvGFslbu6iZhN9VZdv04rnQDKrmStKTm6qOcOuqn6p3kUZ6D+H6FZgfzOaVwu2hJ8UZNNn8ezTS6q9tFYU8dh3uH82ASl2zSYm9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744645837; c=relaxed/simple;
-	bh=r1m7JKkm48IkvWCjD/5V7wAI2RFbRWcgsqepwAl+GE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PxyNB6WfnUzVC5KMReQyV13N89CyGzKAOmwjjPtCJGcIkPtKiFRPRy49X5xn1fd1qpwyixD5lLwLKSvJGCA/z5A3QiArjpeukDf5/YLOoQ2mDUxbZx0UApz26Mxdp7lMLaZGh4R75hRqMbXDPIGLYG4dWJ+o3dTzEKhs3w4inRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M80dE7Yq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744645979; c=relaxed/simple;
+	bh=iLoIDWCOvBn+roSWDcEwlS82akYrA+Z/TCi/vcWsPA4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VsZuqwW5K9FjXE3Kac4ypPxdQxKMFSBSjUmbuyhIEOLqMhx+E4wmKhLrbbDR+v3kbe43m9D+mJZ/l7xT6yAseZEsaHfXuEeoGGsrHsWFx4tk+0GpnvZamKjwSWTRJOZpLGCSYdHAbux781Ljc3+LuKCo9LiQCiXPLxiV6NTWnXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=EPWBDv8U; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M80dE7Yq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A997C4CEEB;
-	Mon, 14 Apr 2025 15:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744645837;
-	bh=r1m7JKkm48IkvWCjD/5V7wAI2RFbRWcgsqepwAl+GE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M80dE7Yq4F/VYMpMWIsVzkuDbqHZhgNgq9OwpJ8f3vJn/yy+V4I2E2F9nc3v3oM2U
-	 FyldtmAZ7rJFJZ/7F0q8VYRW6L9D3ZP25vwLbUZCqr61v4M68tzHaldUVKOr0gi4C0
-	 Ky0+V0Zh/mRSIbIIUyCUG8N9soNdevg1awmW1xbFLb2/hcaTjHKi0zmDL01z12cqfN
-	 88L4PNFDWeyFBWlIF0q3rqZn1XRzzvkmia0G+WJ80oz+NJ9IL8D1GFoqiVjdUJp3gn
-	 Ucu7ObEkyY47hCeN1/qRiPGlkunDQzONS6ZN8Jf/YRxwQl4FbhW6r3EtGOPF0zyTxe
-	 H3FrIG13uM0YA==
-Date: Mon, 14 Apr 2025 17:50:26 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: syzbot <syzbot+c2537ce72a879a38113e@syzkaller.appspotmail.com>,
-	riel@surriel.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-	tglx@linutronix.de, x86@kernel.org
-Subject: Re: [syzbot] [kernel?] linux-next test error: WARNING in
- switch_mm_irqs_off
-Message-ID: <Z_0uwvnbusKR2WqC@gmail.com>
-References: <67fce34b.050a0220.3483fc.0026.GAE@google.com>
- <20250414135629.GA17910@noisy.programming.kicks-ass.net>
- <Z_0lSxPcw4WW1wAP@gmail.com>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="EPWBDv8U"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb3so4357963a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1744645977; x=1745250777; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BirFEKiaNC+SpLA00n28uuL4+1Jwjbry4ySGYXNeQXs=;
+        b=EPWBDv8U7nuxK/FDMMGeBVsbAgWD43lEMGn9ViOT+I6bus8eLiiyldWSsJ8c3RugS0
+         5xsVJkW+hbXvw+bCbwXkncyHkH1MyDbWSJKo+jBpbVfPQpbDHHXvW+3ZF9A2IF6PBGID
+         brVOtBI8r/kgk84Rql1QFvg1cyo7ZWwaMHJu0dF3Ol66gH0+VXFTPY4TKXhsyiya6HkG
+         39VRDFyqxnMrKsY5SoJMoPPYbja8WAjDcAZKz4E+rXa9LU5QsUxSKVN9Saz0C0wWWjR6
+         hfnX4e4e8LsXrFGdnQ3LUAOJy7tuQ+ehbkoEFFgLOxdSGWOxiCPiYZQ/vOIQ58S8g5u8
+         FxNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744645977; x=1745250777;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BirFEKiaNC+SpLA00n28uuL4+1Jwjbry4ySGYXNeQXs=;
+        b=EPmR1v+z992lNS3z+62Ju3QUdMVX0y8c+T94qgM/URFdAKLoYBHZyOFsnbU2Eq3oyu
+         2SLXi1c8nDB3eyDSt5et9qNU+yjUM35uoOa2C+87NHHoJ1KXcBLFiN7wlYy+QB1GtTDD
+         +gZ8d4UtsoAjuenIUqWs3Z6Vpx1bTFNn42kw8pnPc109CrLtGzRdNplmHxtdX2/IxnD9
+         TgEQP7HLeIq+Es8ATW6n/D1H2vw1aQnqKdmSHSAlcmUIRn0t07m4UNl0JGb65xv1O8YH
+         Jbk94kEMaRh/Mhvyiisg8nmLDUYdnG46qCGcm5wPywoQI6VOFl1ZNFFnt7nGiTWDIwTQ
+         9WCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtOEPnjISda5IKP+WCl4PN98uDAjtq1waTs+Qs8Mm9oyVqDudvn5STNZZfiBMCKNvbh73k7ER3vw8ELpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXDIrTMqn65zTD8+++6oUL+KJ8KZSdnKHgk/cn7hYi/eoMG4No
+	qb9ljpLebt5pujw+cYrLoqzYglcSLMZiRKP/LyFkbxB1F9vI9x1zptr/D5QXdDiV9SnTuCINjTI
+	weegXS4uQpUwv4PFW87BuRWo0fTdyX89fPA3kUQ==
+X-Gm-Gg: ASbGncsrhLZHo6kL95QknGExvvCSkrJAdKIQmSD03Z82aAvSxZHzIcBAcuNhsjWScDq
+	mNj8Ug8cxy8QaEw6TRPce/NbcU8Op9d7wIMbvuqYRg3Td+kUd6a7HUdGySoHQzVSYPyTfTTixil
+	I+GnL93dg7vta6OXm0jGQEEZC6
+X-Google-Smtp-Source: AGHT+IEmpqIAhKV+iQD6ehf9QO3GWF1ECohAPIWkrO1irEmIvUlvixloRUoIRxT4QbGu/iVLAJdp2dh6VSuWE07prZU=
+X-Received: by 2002:a17:90b:5643:b0:2f2:a664:df20 with SMTP id
+ 98e67ed59e1d1-30823633ed2mr19810815a91.7.1744645976634; Mon, 14 Apr 2025
+ 08:52:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_0lSxPcw4WW1wAP@gmail.com>
+References: <20250414131053.18499-1-vdronov@redhat.com>
+In-Reply-To: <20250414131053.18499-1-vdronov@redhat.com>
+From: Ignat Korchagin <ignat@cloudflare.com>
+Date: Mon, 14 Apr 2025 17:52:45 +0200
+X-Gm-Features: ATxdqUFwwNisbNMOiVnXLeNrPuXmgjNUrBVKkFA1941W9jpG24eDOmML8wA3Lrc
+Message-ID: <CALrw=nHS9UnMMwXfYo_6goDi==DD5feeemxqAXXAWvA0yOi_cw@mail.gmail.com>
+Subject: Re: [PATCH] crypto: ecdsa - explicitly zeroize pub_key
+To: Vladis Dronov <vdronov@redhat.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, 
+	Lukas Wunner <lukas@wunner.de>, Stefan Berger <stefanb@linux.ibm.com>, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+On Mon, Apr 14, 2025 at 3:11=E2=80=AFPM Vladis Dronov <vdronov@redhat.com> =
+wrote:
+>
+> The FIPS standard, as a part of the Sensitive Security Parameter area,
+> requires the FIPS module to provide methods to zeroise all the unprotecte=
+d
+> SSP (Security Sensitive Parameters), i.e. both the CSP (Critical Security
+> Parameters), and the PSP (Public Security Parameters):
+>
+>     A module shall provide methods to zeroise all unprotected SSPs and ke=
+y
+>     components within the module.
+>
+> This requirement is mentioned in the section AS09.28 "Sensitive security
+> parameter zeroisation =E2=80=93 Levels 1, 2, 3, and 4" of FIPS 140-3 / IS=
+O 19790.
+> This is required for the FIPS certification. Thus, add a public key
+> zeroization to ecdsa_ecc_ctx_deinit().
+>
+> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> ---
+>  crypto/ecdsa.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
+> index 117526d15dde..e7f58ad5ac76 100644
+> --- a/crypto/ecdsa.c
+> +++ b/crypto/ecdsa.c
+> @@ -96,10 +96,12 @@ static int ecdsa_ecc_ctx_init(struct ecc_ctx *ctx, un=
+signed int curve_id)
+>         return 0;
+>  }
+>
+> -
+>  static void ecdsa_ecc_ctx_deinit(struct ecc_ctx *ctx)
+>  {
+>         ctx->pub_key_set =3D false;
+> +
+> +       memzero_explicit(ctx->x, sizeof(ctx->x));
+> +       memzero_explicit(ctx->y, sizeof(ctx->y));
 
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > Call Trace:
-> > >  <TASK>
-> > >  unuse_temporary_mm+0x9f/0x100 arch/x86/mm/tlb.c:1038
-> > >  __text_poke+0x7b6/0xb40 arch/x86/kernel/alternative.c:2214
-> > >  text_poke arch/x86/kernel/alternative.c:2257 [inline]
-> > >  smp_text_poke_batch_finish+0x3e7/0x12c0 arch/x86/kernel/alternative.c:2565
-> > >  arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
-> > >  static_key_disable_cpuslocked+0xd2/0x1c0 kernel/jump_label.c:240
-> > >  static_key_disable+0x1a/0x20 kernel/jump_label.c:248
-> > >  once_deferred+0x70/0xb0 lib/once.c:20
-> > >  process_one_work kernel/workqueue.c:3238 [inline]
-> > >  process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-> > >  worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-> > >  kthread+0x7b7/0x940 kernel/kthread.c:464
-> > >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-> > >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> > >  </TASK>
-> > 
-> > So I can reproduce, and I I think I see what happens, except I'm
-> > confused as to why the recently merged patches show this.
-> > 
-> > AFAIU what happens is that unuse_temporary_mm() clears the 
-> > mm_cpumask() for the current CPU, while switch_mm_irqs_off() then 
-> > checks that the mm_cpumask() bit is set for the current CPU.
-> > 
-> > This behaviour hasn't really changed since 209954cbc7d0 ("x86/mm/tlb: 
-> > Update mm_cpumask lazily") introduced both.
-> > 
-> > I'm not entirely sure what the best way forward is.. we can simply 
-> > delete the warning, or make use_temporary_mm() tag the special MMs 
-> > somehow and exclude them from the warning.
-> 
-> So, mm_cpumask is basically tracking on which CPUs the MM ran on, and 
-> this gets cleared lazily whenever there's an opportune time, but not 
-> during context switches (for shared cacheline performance reasons), 
-> right?
-> 
-> So why do we need to clear the mm_cpumask in unuse_temporary_mm() to 
-> begin with:
-> 
-> 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
->         cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
-> 
-> What TLB flushing are we worried about here? Nothing much should 
-> trigger any TLB flushing for text_poke_mm AFAICS?
+Isn't this already done with crypto_destroy_tfm()? Or am I missing somethin=
+g?
 
-Ie. something like the patch below - but I might be missing something 
-here ...
+Ignat
 
-Thanks,
-
-	Ingo
-
-=================>
- arch/x86/mm/tlb.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 0ebbaab55b0a..d36d370042e2 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1032,9 +1032,6 @@ void unuse_temporary_mm(struct mm_struct *prev_mm)
- {
- 	lockdep_assert_preemption_disabled();
- 
--	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
--	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
--
- 	switch_mm_irqs_off(NULL, prev_mm, current);
- 
- 	/*
+>  }
+>
+>  static int ecdsa_ecc_ctx_reset(struct ecc_ctx *ctx)
+> --
+> 2.49.0
+>
