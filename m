@@ -1,72 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671FB3B7A8;
-	Mon, 14 Apr 2025 07:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616000; cv=none; b=UVDhrIFBIlXX6/OTea21ImPc66s+dnlSypWR+q2CC0hiOMO8+zmiA/uiea4ckBP+aM40bnQSUlAsMYK3LtFNLUmPncMaAJthpMGH8j9ZC9kuCiFwspYS6fWdJx2VUJCD7g8syUyHrbvbLkUaD0OuiQ40kUGd4WOHdEivjizwsr8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616000; c=relaxed/simple;
-	bh=kTal2JJIjvbhqqeb2aXNLhvO1P71bn/m7n+c3fSUmFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIOpqXnSl/frlc7XQiBp9CgHcud1xTbQ8SscFfKh0aiux73F3z+3J25O1o8LUSzpBK1mCLuLNXbq8BpVqPRBTD/WDXudh/1Y5fEEQ14YoIt4Do1vaB84iIjkTxK+0jcvcFuzmAUJNnj06GV4LCmVnYkeHZMfozeZvYPZGWbRJPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVPlimpU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A9F258CEE;
+	Mon, 14 Apr 2025 07:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744616005; cv=pass; b=sIKzPKGLy1h+oBaI+xuYKjxifI1NXFJXv9OQwhYfm/VTvHxjIuumM+HECTF+ie1IuSNO+PlsffmCKYc0V9/+36OIUmDBXJgv7hw1FLLBAl6gCOshfJRi/oSByhITpDXP1JNVdiy7+9MFRCpjvPHNDLzZY5nqhTkyiaxmgeOC3SI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744616005; c=relaxed/simple;
+	bh=0DM+yECyVKmMRm/otDrf4OIShCY4xBTSKZrpEXD0gBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p8K8rpyogwURuzCura6+3juKDZJzmE3Rm1bJp0YV8hClOKlC/k6vK3AAPi5rtd3wGYQeU3GzIFdVjGlt4e3DNeddcaw66DzpCPlQCUPxEM8xrBSJnS7w+fwdMzofESaL3MSPWFuJ8DS+TJdiPE5aY4UGAiAuAVuat25YUxKGtIw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=dw158rFs; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVPlimpU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AADA5C4CEE2;
-	Mon, 14 Apr 2025 07:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744616000;
-	bh=kTal2JJIjvbhqqeb2aXNLhvO1P71bn/m7n+c3fSUmFg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uVPlimpUDYBt4gJJhPFhhpA2n3VetxCb4i63xcd2AuKq+ciPthWfhwmv2mQodGvTe
-	 pQf+LBQ/Ib/LsVsJ8oTXtIL6PZIbbn0FURfbYgNmXaI6RTpTzjGuW/kq9ZtnEg/acg
-	 r/rHOLuiOewVFKRPdMzRbCcc1l19mqZCdm3YcSuf83U/zxI2cQDKirzWHh9cZkeXT6
-	 kDOlN83CmMrdzm5WGiUlKlxXCaR6BzlOEtgmvgAmAq96NzXl6itExfdSV9tDaR/sIA
-	 Z0f6BzFjPKqZR5jmas63v2PubPQvbbrR0N7GiCg4yisSwZQnucP71USp2YLhCEuakN
-	 G9LZrP27Ev/ow==
-Date: Mon, 14 Apr 2025 09:33:15 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
-	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org, linux-mmc@vger.kernel.org, 
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v2 08/10] dt-bindings: i2c: dw: Add Sophgo SG2044 SoC I2C
- controller
-Message-ID: <20250414-muscular-steady-perch-cb44e3@shite>
-References: <20250413223507.46480-1-inochiama@gmail.com>
- <20250413223507.46480-9-inochiama@gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="dw158rFs"
+ARC-Seal: i=1; a=rsa-sha256; t=1744615967; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=S0354nrgj9hb6NeQadl1Jgb85f2XZ6MReFCZUBNsZDdDAzQrzRFwGnwr8EweP211SA50Xn4y+hioKW/Bz7wmSJyQzWGG86Adf+RIiSkVsJrAFwnk++2k92Nh+A0bocClaD6qEvMeHhwgCJW3OQZKy63j5AuNqVz9pD0HTHtwTRk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744615967; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=r6Hcb7CoSvel25wAUR0OKJ4456sj4HsUlowzVIyObhI=; 
+	b=Qqza8kx+/OPX6Vbfz/xlS+1wWb4D/S0YtI/H9orFvcpgSpGFzTD7ZWXicQMorRRfkLY8zw0Zasu2X+LL5lPj0154UKv9ZEh+w1uw3aNmD0SyOa03w9DM4n1pwHykJNqkny8yw6F3vlYRtsis62vfJZSL6b8wVLirN7KXsEnTp8A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744615967;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=r6Hcb7CoSvel25wAUR0OKJ4456sj4HsUlowzVIyObhI=;
+	b=dw158rFsigQq+3WvSfq3Kgi3Rvj53BgokKnVLW2u3VAHfgNngg/+0puXeBCjJE+y
+	/UGjtVvi3ANtObQaDu9BNvu0glsKVKO/GPUw9KS+PaIttwYgkUOw3xT4m8cT96ClSuA
+	71V/M5BsqaGYHQ1v/2k7u++MKga8gbd8jKW1CeHc=
+Received: by mx.zohomail.com with SMTPS id 1744615966149258.692739802746;
+	Mon, 14 Apr 2025 00:32:46 -0700 (PDT)
+Message-ID: <7d6b074c-8499-4984-b235-d1285b006ab3@collabora.com>
+Date: Mon, 14 Apr 2025 12:32:34 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250413223507.46480-9-inochiama@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
+ <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>,
+ Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>,
+ Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kunwu Chan <chentao@kylinos.cn>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: kernel@collabora.com, mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ ath11k@lists.infradead.org
+References: <20250410145704.207969-1-usama.anjum@collabora.com>
+ <ba09ae0c-fe8d-8f4e-a1b8-9c7e5913c84e@quicinc.com>
+ <fc9ca0da-9f6a-42b5-aa79-abcd43c97043@collabora.com>
+ <e0159cb8-fe21-7f71-1ebe-744ed26bd698@quicinc.com>
+ <85580a01-289a-461b-b0f1-38fa1b96717c@collabora.com>
+ <1c0b2217-49d9-360c-ed60-db517eaf2ccc@quicinc.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <1c0b2217-49d9-360c-ed60-db517eaf2ccc@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Mon, Apr 14, 2025 at 06:35:02AM GMT, Inochi Amaoto wrote:
-> Add compatible string for Sophgo SG2044 SoC I2C controller which can be
-> used specifically for the SG2044 SoC.
+On 4/12/25 6:22 AM, Krishna Chaitanya Chundru wrote:
 > 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 1 +
+> On 4/12/2025 12:02 AM, Muhammad Usama Anjum wrote:
+>> On 4/11/25 1:39 PM, Krishna Chaitanya Chundru wrote:
+>>>
+>>>
+>>> On 4/11/2025 12:32 PM, Muhammad Usama Anjum wrote:
+>>>> On 4/11/25 8:37 AM, Krishna Chaitanya Chundru wrote:
+>>>>>
+>>>>>
+>>>>> On 4/10/2025 8:26 PM, Muhammad Usama Anjum wrote:
+>>>>>> Fix dma_direct_alloc() failure at resume time during bhie_table
+>>>>>> allocation. There is a crash report where at resume time, the memory
+>>>>>> from the dma doesn't get allocated and MHI fails to re-initialize.
+>>>>>> There may be fragmentation of some kind which fails the allocation
+>>>>>> call.
+>>>>>>
+>>>>>> To fix it, don't free the memory at power down during suspend /
+>>>>>> hibernation. Instead, use the same allocated memory again after every
+>>>>>> resume / hibernation. This patch has been tested with resume and
+>>>>>> hibernation both.
+>>>>>>
+>>>>>> The rddm is of constant size for a given hardware. While the
+>>>>>> fbc_image
+>>>>>> size depends on the firmware. If the firmware changes, we'll free and
+>>>>> If firmware image will change between suspend and resume ?
+>>>> Yes, correct.
+>>>>
+>>> why the firmware image size will change between suspend & resume?
+>>> who will update the firmware image after bootup?
+>>> It is not expected behaviour.
+>> I was trying to research if the firmware can change or not. I've not
+>> found any documentation on it.
+>>
+>> If the firmare is updated in filesystem before suspend/hibernate, would
+>> the new firwmare be loaded the next time kernel resumes as the older
+>> firmware is no where to be found?
+>>
+>> What do you think about this?
+>>
+> I don't think firmware can be updated before suspend/hibernate. I don't
+> see any reason why it can be updated. If you think it can be updated
+> please quote relevant doc.
+I've not found any documentation on it. Let's wait for others to review
+and it it cannot be updated, I'll remove this part.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+-- 
+Regards,
+Usama
