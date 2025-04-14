@@ -1,123 +1,96 @@
-Received: from mail-m3277.qiye.163.com (mail-m3277.qiye.163.com [220.197.32.77])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D50029D19
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE3033FD;
+	Mon, 14 Apr 2025 01:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744595762; cv=none; b=Lvp4Hysx5RpAz+v5P45mXzPbz9IwgGblWQK1WJBThrnFGT5+lOYD4lztdud77SDwm7im+36mj0VWaKYbmpfuS+qArWrHkR5vS6caPlkciUofs1rG+P0Xr+mWxHfwbbPmq0EyGOH+XxSrIshGDbvL6ObLlvMA9pbklG+wxD5HcDQ=
+	t=1744595889; cv=none; b=evgOtGUKixcmlD1OLiehnC4u8Pi5YNjO958PamsJWvJ4pQdoz9WuG4KoHNmltDqDmDdRItS+VoUzMlpuMSr4YWQtOT+G4kKvNjxOoj7vG3PEPh5/FazCwyXBF1iCxC7vXMzFY+eykbJCdga2GgrQRyDaaIfVQuW6LxVsYQchX0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744595762; c=relaxed/simple;
-	bh=Y93zM1czlETJPLIaWxqsBrFFRu69+0vHLA5Y90z1es4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=uLtnu05dwX4k759iAPbALCeuHwuv0mgny0PZG6FLHTdjZv39uYgttdL30HtvPStvGpOAh6/XbePbuuWfs1J12l9IocriNImHwLwSjZy6geV15OVegUrot9zpBA1wYtXYerPFeyB4+rOPnWjaOPzGCXJNmAe9pNU2awlXaE4C10s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hZM48Ykr; arc=none smtp.client-ip=220.197.32.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1744595889; c=relaxed/simple;
+	bh=up2H718IA2eVzuQDOzs48GUwrnmnLrmtzLTi+ZBJKqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Td8DBAexMgAcS/zX0Hj1SP57BRJjkBsWZ2R5XOWktBLlZEAqHUyELB4gJiddbyrEvlbmkXRJOgo25gngABg05KGYAhI34QzNwFKh6VaaQnZJV26OQkYLaJkTu232ixG9yxb0isc67Lh6HR2/65+cyDP2sti/2vjN0nScyFZyKH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Yvnf9NyR; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hZM48Ykr"
-Received: from [172.16.12.26] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 11baf1e49;
-	Mon, 14 Apr 2025 09:50:41 +0800 (GMT+08:00)
-Message-ID: <a695d872-1d8a-435e-a98a-0b9d7c295ee9@rock-chips.com>
-Date: Mon, 14 Apr 2025 09:50:41 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yvnf9NyR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744595881;
+	bh=gn0zKrUvypIS6O63hM9nvBalG5DnjrJx8PhcMe4y/rc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Yvnf9NyR7DP2kkU0MWY/bJoGzdxWcDabURglS51QvxMdGWFKU5/1yicRB5auD+4CU
+	 7H0ag8W5437tDPVKdxRJ+s/DLdzldn+kBuA3ax4NEN4ljUO5Yu+GrR6CELLMLscuvf
+	 +N2k0fr4XmbubwxRJKPRf2VVeq3hyvDk7EBK5cXBVKmy3muuk80U8Q15iEbLkH54oU
+	 mG8PaDanmi/w4y5XmchMNfLQM+K3zdpNrMYyIl7nb4/BsqkDPH3GO/wFQbu70BVVsu
+	 ijkh3+7xuCBECG5w+JIHv6bPBx832UIRSge7n4EV8uuB6LKA8TTRBTFrj7qUvWtfWG
+	 BJoOSKwIAD01A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbVmm72bhz4wcd;
+	Mon, 14 Apr 2025 11:58:00 +1000 (AEST)
+Date: Mon, 14 Apr 2025 11:57:59 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Sudeep Holla
+ <sudeep.holla@arm.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the pm tree
+Message-ID: <20250414115759.3e203c23@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/7] drm/bridge: analogic_dp: drop panel_lock
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
- <20250401-panel-return-void-v1-4-93e1be33dc8d@oss.qualcomm.com>
-Content-Language: en-US
-Cc: Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
- andrzej.hajda@intel.com, dri-devel@lists.freedesktop.org,
- jernej.skrabec@gmail.com, jonas@kwiboo.se, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, rfoss@kernel.org,
- simona@ffwll.ch, tzimmermann@suse.de
-From: Damon Ding <damon.ding@rock-chips.com>
-In-Reply-To: <20250401-panel-return-void-v1-4-93e1be33dc8d@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx4ZGFZCHR0fHUgYQxpOTRlWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9631fdd92b03a3kunm11baf1e49
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MBQ6STo6HjJIDi4oTFYcTzk6
-	L1YKCThVSlVKTE9PTkJOT09ISEtOVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFISE9INwY+
-DKIM-Signature:a=rsa-sha256;
-	b=hZM48YkrB8Ve5CrdVqBTLWt5RAEegNDeu6fH8ccHoUHqOrLZicoZTXf9ORTqdFOvGdyf+x2Sub0dATIZbNA6CAyjX8g3yaX0ZuImia/O7eN0tAitO5jS9U8KrEjx7Z+jd414Zd9nhvO+lg6XUpNzt97xDcYx3VfBRbynVGZ1osU=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=fH14x6shYv7y9Vwa+DEpj3iHw+jF0WsahJviDDhfSns=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: multipart/signed; boundary="Sig_/nFO/mVufHI2pV2XN0UiaxKI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Dmitry,
+--Sig_/nFO/mVufHI2pV2XN0UiaxKI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/4/1 13:11, Dmitry Baryshkov wrote:
-> The analogix_dp_prepare_panel() function is called from bridge's
-> atomic_pre_enable() and atomic_post_disable() callbacks, which can not
-> happen simultaneously. Drop the useless mutex.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 5 -----
->   drivers/gpu/drm/bridge/analogix/analogix_dp_core.h | 2 --
->   2 files changed, 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> index 704c6169116eb2601d2ad02dc7294455ceff5460..1ec4d277fe6bb03ad9eb8451ae2af5ad5ada0978 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> @@ -974,14 +974,11 @@ static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
->   	if (!dp->plat_data->panel)
->   		return 0;
->   
-> -	mutex_lock(&dp->panel_lock);
-> -
->   	if (prepare)
->   		ret = drm_panel_prepare(dp->plat_data->panel);
->   	else
->   		ret = drm_panel_unprepare(dp->plat_data->panel);
->   
-> -	mutex_unlock(&dp->panel_lock);
->   	return ret;
->   }
->   
-> @@ -1523,8 +1520,6 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
->   	dp->dev = &pdev->dev;
->   	dp->dpms_mode = DRM_MODE_DPMS_OFF;
->   
-> -	mutex_init(&dp->panel_lock);
-> -
->   	/*
->   	 * platform dp driver need containor_of the plat_data to get
->   	 * the driver private data, so we need to store the point of
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-> index b679d5b71d276f458d905c936160f107225bc6c5..2b54120ba4a3ef55af518a0629a5c8469f275a0f 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-> @@ -169,8 +169,6 @@ struct analogix_dp_device {
->   	bool			fast_train_enable;
->   	bool			psr_supported;
->   
-> -	struct mutex		panel_lock;
-> -
->   	struct analogix_dp_plat_data *plat_data;
->   };
->   
-> 
+Hi all,
 
-The patch has been verified with the eDP panel "lg,lp079qx1-sp0v" in 
-RK3588S EVB1 board.
+After merging the pm tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Tested-by: Damon Ding <damon.ding@rock-chips.com>
+drivers/cpuidle/cpuidle-psci.c:453:53: error: expected ')' before '(' token
+  453 | module_faux_driver(psci_cpuidle, psci_cpuidle_probe, NULL, true);
+      |                                                     ^
+      |                                                     )
+drivers/cpuidle/cpuidle-psci.c:426:12: warning: 'psci_cpuidle_probe' define=
+d but not used [-Wunused-function]
+  426 | static int psci_cpuidle_probe(struct faux_device *fdev)
+      |            ^~~~~~~~~~~~~~~~~~
 
-Best regards,
-Damon
+Caused by commit
 
+  a60e3d71e4d4 ("cpuidle: psci: Transition to the faux device interface")
+
+I have used the pm tree from next-20250411 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nFO/mVufHI2pV2XN0UiaxKI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8a6cACgkQAVBC80lX
+0GwlBQf/R8isLntstMjaCSJtyjS1bmWyU88ruPJtTTjotWNbsJ/2I8CFa/2ySKdW
+d3XRd4ZECeDtmc2fxo2rMAW1UB5dAYfVqPJgwk2EGG8VdHvWf2JV0zLdrdqGjUJ/
+kmROFsxKAfnXPkvICkpjQLcwOUDKOu86gLkc4yzWW5+72irD+LzOjqfWo3OrQsnu
+pQ/vlBviYpGF7l1ehjJVzMFjrc7fr3ZFCdXmXpddWpBItL28gzUXZn149Gfn0Nl6
+4RKuHVKYzvlBon5KsfAkDlQ18IfmGL9qEtg+8jch5NWz7lgJUmYfa3aSLT/4I9uY
+5vT42RqPMetNWFle1Dng2Gjaea4QFw==
+=mGQH
+-----END PGP SIGNATURE-----
+
+--Sig_/nFO/mVufHI2pV2XN0UiaxKI--
