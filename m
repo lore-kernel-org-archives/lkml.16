@@ -1,79 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F509266568
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9A1263F2D;
+	Mon, 14 Apr 2025 09:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624226; cv=none; b=HpNO+5iz0I0HDFTVNa2vSDPW3SKi84cP1inXLWwGq5eMbvM8O1etTNfpne04C0dVSvLrv41pCxSmsSneAdXnsqvNJZiEN8b2thVTqY6NKEeTxI4icEapnnQ/MItiZAbyxVasJaodTJja61D8RscPzGS/PQkzZtwo2wcpZupBH/I=
+	t=1744624281; cv=none; b=nepTbWmBi8O6YmqzD/gGCf3+NOLgZzk4x+ZSErGeweBpqd8JUIv7nuID43OFpqKWHs/KjnSVhwGFC+cxFgKe4db9HeVni1iczIoCcvA+d0bfcsRgXqBrWxGjuxl+GJUPcDJp3idG7f/Gw1SgLpev+h/nc7NJXBO+d+E1lvq8WQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624226; c=relaxed/simple;
-	bh=v6xyr5sQzPhwnMiPig6iTdAKcLxvTau35Jqv1TFXB8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sjBa691VO7qb1eq7q8LLOPi2EULcOEJU6oCPv356ZCzNOJjoCqHj6s2iTwbpuP7BvBXI92tRShX/EijvGhAhGLbeRdObqF2ElEiJWSgN9wmpssSdNWDVEXomrCki8RiA5UqxJ3RlABIn9l10C1uqrsFFlQJbG6kBWjsVg1SXPDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dAPVMJDT; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744624281; c=relaxed/simple;
+	bh=bJERvzwt8lFvjafQMnAIDQx6RUz9z9GWqAZ6pUMXq+o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=paErnx9JFqm7cBXe3OQdBioz3YGNX3ehvoxm7vEGlJ8ktFcAcxfKqG6Vft1lEbLjUol2R1DdMfGPmS61NBOmn0xJkEh1+I9eiI1+/cmp8cyzbPzl5a+lzjlnie+4HslPn8ewCkBKtEEQF4h8qu5hsmjky0pOUFENui2qkjBt2Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hR6RA9Yj; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dAPVMJDT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744624225; x=1776160225;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=v6xyr5sQzPhwnMiPig6iTdAKcLxvTau35Jqv1TFXB8U=;
-  b=dAPVMJDTKbu96oyoFO9+SS6AeT+ky6spzwo6lvYKtOwA/joJfmAfEXTG
-   5P57p16+ydigCdudJaCv2CIwIBjiMA91mneAeVOJsz6Cg0FMBtrqxkMfe
-   usJ3wDostx/48H8ZEFiMzHiW/P1yk7Zg9WKB7u4C/add0IZ+BQXfdmo5o
-   HzGMomPPh41zZ5yjchQPrqFstZsq3UwXDRVSvzIhmb2AbNrJjhsehDwLt
-   HbWOD2VaIOFJomtNLFKwFOGRez6zM8pQtVE96II79G8fDGk0ncH2EmPl8
-   S7buE9lWk+B9pMKygSzifi8c6EHjigFasjhKixupuO+ebwu2Yy7TDBYZu
-   A==;
-X-CSE-ConnectionGUID: GJbMiV7yRD2qDBMHPFbiKQ==
-X-CSE-MsgGUID: 1TrsQLJTQTWnGpoxm9pNzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45222908"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="45222908"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:50:24 -0700
-X-CSE-ConnectionGUID: 7b6uc3grQC2YOP1O4UE/cw==
-X-CSE-MsgGUID: AdRWJqEtTFKQJbcKK4L2CQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="152955117"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:50:18 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Abliyev,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v8 12/12] drm/xe/nvm: add support for non-posted erase
-Date: Mon, 14 Apr 2025 12:38:03 +0300
-Message-ID: <20250414093803.2133463-13-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414093803.2133463-1-alexander.usyskin@intel.com>
-References: <20250414093803.2133463-1-alexander.usyskin@intel.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hR6RA9Yj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=+/bZ0
+	t5xx/bRKSJ/CIXOrmqoGr0Nv1gsvyR4jn3Pp9c=; b=hR6RA9YjcPsG2kXfVO6T4
+	3t9tKDy0mgwFS3K3En2LLVtj01/Ru6k4+sRZFud/sMzFqyJldsB10HkuLxsdcinl
+	3fO1bPshKnAspimOuequcYaXC7AWLs7M3ckIWM5KT6JxWDv446CGlnERT4v6j6eg
+	WyKV4uxs+Rt5zLAWy3BTd8=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnj1Sb1vxnxkYWGg--.23370S2;
+	Mon, 14 Apr 2025 17:34:21 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	hengqi.chen@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 bpf-next 0/3] libbpf: Fix event name too long error and add tests
+Date: Mon, 14 Apr 2025 17:33:59 +0800
+Message-Id: <20250414093402.384872-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,197 +49,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnj1Sb1vxnxkYWGg--.23370S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWruw43Zw18GF17CF1UCFW5GFg_yoW8Jr17pF
+	ZrGr15Krn5J3WxXFZxGrW7AryrJan3J34ktFnrt345Za4UZ3yUXw12kw45WFnxWrZ29a1r
+	Z34ktF90ga4xZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbAwsUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRsveGf80G-QiwAAs+
 
-From: "Abliyev, Reuven" <reuven.abliyev@intel.com>
+From: Feng Yang <yangfeng@kylinos.cn>
 
-Erase command is slow on discrete graphics storage
-and may overshot PCI completion timeout.
-BMG introduces the ability to have non-posted erase.
-Add driver support for non-posted erase with polling
-for erase completion.
+Hi everyone,
 
-Signed-off-by: Abliyev, Reuven <reuven.abliyev@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+This series tries to fix event name too long error and add tests.
+
+When the binary path is excessively long, the generated probe_name in libbpf
+exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
+This causes legacy uprobe event attachment to fail with error code -22.
+
 ---
- drivers/gpu/drm/xe/xe_nvm.c        | 25 +++++++++++++++++
- drivers/mtd/devices/mtd_intel_dg.c | 43 ++++++++++++++++++++++++++++--
- include/linux/intel_dg_nvm_aux.h   |  2 ++
- 3 files changed, 68 insertions(+), 2 deletions(-)
+Changes in v3:
+- add __sync_fetch_and_add(&index) and let snprintf() do the trimming. Thanks, Andrii Nakryiko!
+- add selftests.
+- Link to v2: https://lore.kernel.org/all/20250411080545.319865-1-yangfeng59949@163.com/
 
-diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-index 8aec20bc629a..dd91f2e37661 100644
---- a/drivers/gpu/drm/xe/xe_nvm.c
-+++ b/drivers/gpu/drm/xe/xe_nvm.c
-@@ -14,7 +14,15 @@
- #include "xe_sriov.h"
- 
- #define GEN12_GUNIT_NVM_BASE 0x00102040
-+#define GEN12_DEBUG_NVM_BASE 0x00101018
-+
-+#define GEN12_CNTL_PROTECTED_NVM_REG 0x0010100C
-+
- #define GEN12_GUNIT_NVM_SIZE 0x80
-+#define GEN12_DEBUG_NVM_SIZE 0x4
-+
-+#define NVM_NON_POSTED_ERASE_CHICKEN_BIT BIT(13)
-+
- #define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
- 
- static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
-@@ -28,6 +36,16 @@ static void xe_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool xe_nvm_non_posted_erase(struct xe_device *xe)
-+{
-+	struct xe_gt *gt = xe_root_mmio_gt(xe);
-+
-+	if (xe->info.platform != XE_BATTLEMAGE)
-+		return false;
-+	return !(xe_mmio_read32(&gt->mmio, XE_REG(GEN12_CNTL_PROTECTED_NVM_REG)) &
-+		 NVM_NON_POSTED_ERASE_CHICKEN_BIT);
-+}
-+
- static bool xe_nvm_writable_override(struct xe_device *xe)
- {
- 	struct xe_gt *gt = xe_root_mmio_gt(xe);
-@@ -85,6 +103,7 @@ void xe_nvm_init(struct xe_device *xe)
- 	nvm = xe->nvm;
- 
- 	nvm->writable_override = xe_nvm_writable_override(xe);
-+	nvm->non_posted_erase = xe_nvm_non_posted_erase(xe);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
-@@ -92,6 +111,12 @@ void xe_nvm_init(struct xe_device *xe)
- 	nvm->bar.desc = IORES_DESC_NONE;
- 	nvm->regions = regions;
- 
-+	nvm->bar2.parent = &pdev->resource[0];
-+	nvm->bar2.start = GEN12_DEBUG_NVM_BASE + pdev->resource[0].start;
-+	nvm->bar2.end = nvm->bar2.start + GEN12_DEBUG_NVM_SIZE - 1;
-+	nvm->bar2.flags = IORESOURCE_MEM;
-+	nvm->bar2.desc = IORES_DESC_NONE;
-+
- 	aux_dev = &nvm->aux_dev;
- 
- 	aux_dev->name = "nvm";
-diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-index 9f4bb15a03b8..c898107a588f 100644
---- a/drivers/mtd/devices/mtd_intel_dg.c
-+++ b/drivers/mtd/devices/mtd_intel_dg.c
-@@ -28,6 +28,9 @@ struct intel_dg_nvm {
- 	struct mtd_info mtd;
- 	struct mutex lock; /* region access lock */
- 	void __iomem *base;
-+	void __iomem *base2;
-+	bool non_posted_erase;
-+
- 	size_t size;
- 	unsigned int nregions;
- 	struct {
-@@ -44,6 +47,7 @@ struct intel_dg_nvm {
- #define NVM_VALSIG_REG        0x00000010
- #define NVM_ADDRESS_REG       0x00000040
- #define NVM_REGION_ID_REG     0x00000044
-+#define NVM_DEBUG_REG         0x00000000
- /*
-  * [15:0]-Erase size = 0x0010 4K 0x0080 32K 0x0100 64K
-  * [23:16]-Reserved
-@@ -75,6 +79,9 @@ struct intel_dg_nvm {
- #define NVM_FREG_ADDR_SHIFT 12
- #define NVM_FREG_MIN_REGION_SIZE 0xFFF
- 
-+#define NVM_NON_POSTED_ERASE_DONE BIT(23)
-+#define NVM_NON_POSTED_ERASE_DONE_ITER 3000
-+
- static inline void idg_nvm_set_region_id(struct intel_dg_nvm *nvm, u8 region)
- {
- 	iowrite32((u32)region, nvm->base + NVM_REGION_ID_REG);
-@@ -370,11 +377,30 @@ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_a
- {
- 	u64 i;
- 	const u32 block = 0x10;
-+	u32 reg;
-+	u32 iter = 0;
- 	void __iomem *base = nvm->base;
-+	void __iomem *base2 = nvm->base2;
- 
- 	for (i = 0; i < len; i += SZ_4K) {
- 		iowrite32(from + i, base + NVM_ADDRESS_REG);
- 		iowrite32(region << 24 | block, base + NVM_ERASE_REG);
-+		if (nvm->non_posted_erase) {
-+			/* Wait for Erase Done */
-+			reg = ioread32(base2 + NVM_DEBUG_REG);
-+			while (!(reg & NVM_NON_POSTED_ERASE_DONE) &&
-+				++iter < NVM_NON_POSTED_ERASE_DONE_ITER) {
-+				msleep(10);
-+				reg = ioread32(base2 + NVM_DEBUG_REG);
-+			}
-+			if (reg & NVM_NON_POSTED_ERASE_DONE) {
-+				/* Clear Erase Done */
-+				iowrite32(reg, base2 + NVM_DEBUG_REG);
-+			} else {
-+				*fail_addr = from + i;
-+				return -ETIME;
-+			}
-+		}
- 		/* Since the writes are via sguint
- 		 * we cannot do back to back erases.
- 		 */
-@@ -383,7 +409,8 @@ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_a
- 	return len;
- }
- 
--static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
-+static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device,
-+			     bool non_posted_erase)
- {
- 	int ret;
- 	unsigned int i, n;
-@@ -443,7 +470,10 @@ static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
- 			n++;
- 	}
- 
-+	nvm->non_posted_erase = non_posted_erase;
-+
- 	dev_dbg(device, "Registered %d regions\n", n);
-+	dev_dbg(device, "Non posted erase %d\n", nvm->non_posted_erase);
- 
- 	/* Need to add 1 to the amount of memory
- 	 * so it is reported as an even block
-@@ -778,7 +808,16 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
- 		goto err;
- 	}
- 
--	ret = intel_dg_nvm_init(nvm, device);
-+	if (invm->non_posted_erase) {
-+		nvm->base2 = devm_ioremap_resource(device, &invm->bar2);
-+		if (IS_ERR(nvm->base2)) {
-+			dev_err(device, "base2 mmio not mapped\n");
-+			ret = PTR_ERR(nvm->base2);
-+			goto err;
-+		}
-+	}
-+
-+	ret = intel_dg_nvm_init(nvm, device, invm->non_posted_erase);
- 	if (ret < 0) {
- 		dev_err(device, "cannot initialize nvm %d\n", ret);
- 		goto err;
-diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
-index 68df634c994c..bee25dfc6982 100644
---- a/include/linux/intel_dg_nvm_aux.h
-+++ b/include/linux/intel_dg_nvm_aux.h
-@@ -17,7 +17,9 @@ struct intel_dg_nvm_region {
- struct intel_dg_nvm_dev {
- 	struct auxiliary_device aux_dev;
- 	bool writable_override;
-+	bool non_posted_erase;
- 	struct resource bar;
-+	struct resource bar2;
- 	const struct intel_dg_nvm_region *regions;
- };
- 
+Changes in v2:
+- Use basename() and %.32s to fix. Thanks, Hengqi Chen!
+- Link to v1: https://lore.kernel.org/all/20250410052712.206785-1-yangfeng59949@163.com/
+
+Feng Yang (3):
+  libbpf: Fix event name too long error
+  selftests/bpf: Add test for attaching uprobe with long event names
+  selftests/bpf: Add test for attaching kprobe with long event names
+
+ tools/lib/bpf/libbpf.c                        | 19 +++--
+ .../selftests/bpf/prog_tests/attach_probe.c   | 84 +++++++++++++++++++
+ .../selftests/bpf/test_kmods/bpf_testmod.c    |  5 ++
+ .../bpf/test_kmods/bpf_testmod_kfunc.h        |  2 +
+ 4 files changed, 103 insertions(+), 7 deletions(-)
+
 -- 
 2.43.0
 
