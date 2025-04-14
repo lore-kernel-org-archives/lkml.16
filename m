@@ -1,111 +1,90 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA9828B4F5
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EF7294A0D;
+	Mon, 14 Apr 2025 17:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652550; cv=none; b=csecBk6Gnag3yO+2DtT4ZnHaQeHHI7CNqV5EgkQi3b6a4z+1l/v2tjEZ09NztOeDLitkbpPHlWmk1dNxWctfLv4Axdlqn2TzPAVTooRviy9xVDugeXu86yUVeQrB7WLgCzxHT0kbwFuqWYYmIEA4vp5eM5k1+9t29TXFNSaTs5Y=
+	t=1744652551; cv=none; b=a4u7zJ0pW5AL1e8kcvcNdzcffWuodNp49Oi7Bv+p/eCaCyM7YzHHfaAOw73+8LfLO7PyMMeYV8uLvFtZqCkh7WSwUaRp8GsbBbMYlaahzLihzJ1U628jIFeAYuhV9oiVWmcIXzBeP2Cgb+GZ1d7OskoBTkAGVajlus9PHJPTRWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652550; c=relaxed/simple;
-	bh=SomKEZjiqnP411eTa4RWzo05FrdFH31Ut1NNYLapab0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=MpHjoKIkjzpe4g8l8LnEfyj82mHDBU4OXRi6a+qjnL9TS3qiq6eEfz1XBSEyIvRKUtCcQb8OajohX1Rk+gD6ZdJomDXm3EkkWhV4VxKlo6xYuiYe6u/DKI1aOsV3kt5h4hoJgK5zEYXbr4n0/sRX/N7fFMTV7r6VI8oLnxtTqiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q8ByRYu/; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1744652551; c=relaxed/simple;
+	bh=rHNqKe0wnjxL9vRhO3SMhzsHYmLDT1uHMStxy6Kmuow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q1oCKEZyE+oOjebdMOeE9UaPJnlRMbCVFy9lUlHGzqsym/8fixPhjtzFKhM+HxdcaftoCRobMN1t2dNXccxaICtDB1l5j2u6KRHAypPbF43wn/i61jlmExFZ8BOwQejQHejo0DKguWHCc6CPF1z4Uphe90o8owWL1FIGBud+2bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6Dq8boi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q8ByRYu/"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3054210ce06so6124239a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744652547; x=1745257347; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=272QWo3N2/8KrEceZ3Y5V9F3EMqW3wkjRAZ/C8l8AXw=;
-        b=Q8ByRYu/GyN3qm1uj2L6QTGrVdUP+WIyeM2J90C6uEsFKqo8Omz3cL1XUJwWScr40n
-         p4YKzbHZ3j6QJePcngS6WVM4OBpzgTsY/I4HmnyT90SGePg0X8eAKv0qrknX9Hiuut2o
-         dC/qWypLVhilMcFdcdrpquRuiJ8FDO4k4e2Rik3BamA+0GYGrqFmTvDX0edhPUcKupj7
-         P4w6L7BPflFrNJfh9o3Hg0QW9XX5R7Bz6bWKqgWQKXuTZIx3SS0rrkN29Da3zGsEymMN
-         A77CszdwUT693YBTRIuSek8HVLtJPg3lhunum7k/Q8eGemXIzmeqnfIgsNfRmlFEIKki
-         6kzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652547; x=1745257347;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=272QWo3N2/8KrEceZ3Y5V9F3EMqW3wkjRAZ/C8l8AXw=;
-        b=HS/NXxU0bIJh0CfwkASmj9d/zqjDE6YZOQjW98zclRbFJjc+t1KkSunzN+ae3eRKzN
-         4w+DPCXBs6RIxAJeMctX1UF8hPrsz3e6zs2qLTZNWiCy4RXUgxL20L1QWh3XnixFdOL+
-         fLlaeVu1rRRAeZjFAuLA++pELXkotjEo5AFJkdE0HzTA0b9rbiyIypXpxDMsqOZGGW5L
-         Q3JwB/iJgjGaChoD62zSaTMSwPh9IKDZAKzV0hhRL5TaqNtqwJS6Aaa5fAgH7LsrIe38
-         r0l8p22HidpOnmeCEBHszWwFlAJd8T95O/cUDsBTR4SLntFVP/Z6oqAkaYJzorIvaxXz
-         vrBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcTOX0g5dEmAbPvomKhpIX7Qm1g1MimWY/6vwFMVEknH6X+4ounK0b3CIMJlnNzoeOqA/eRp/AVrW3tGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfSOwF3nTOivazfhvl6w9X0CfWzpiRcqzrHqRb0ePSDZfqxujg
-	T5HZ72bruailpsH2Cv4+YbjOTSdiKx87jSS0JgcaPEpk7wjIt+wDmW0fbzQ1VJdP9aTav4oem0H
-	owZ7wNw==
-X-Google-Smtp-Source: AGHT+IHKQXzYZsPd1emW5mymOx2ih0yymDwCa7QOwk9ye4CQI309sFEd4KkK0iKEkR0PdlCtKrtXkduqPk5D
-X-Received: from pji15.prod.google.com ([2002:a17:90b:3fcf:b0:2fa:1803:2f9f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:58eb:b0:2fa:1851:a023
- with SMTP id 98e67ed59e1d1-30823784865mr20250837a91.35.1744652547187; Mon, 14
- Apr 2025 10:42:27 -0700 (PDT)
-Date: Mon, 14 Apr 2025 10:41:34 -0700
-In-Reply-To: <20250414174134.3095492-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6Dq8boi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2152DC4CEE5;
+	Mon, 14 Apr 2025 17:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744652551;
+	bh=rHNqKe0wnjxL9vRhO3SMhzsHYmLDT1uHMStxy6Kmuow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r6Dq8boiwz+d7sr6d7OCABDDiuE79ezZp447ak8CGukiVmWVkUBLVmqLf5ibin3mE
+	 +UMqUQHWbCzBh2PPIYYJQ9sVp6OgcGfQF15c8cBKXN+ju2uHHfUtR7Ac6m1gUg/qZD
+	 T0fx0tbQC0vtClBqf2kE8JHbG80SuUnso+zUp2AtIz/EhND09CQ6pOkzBByvu4sIzJ
+	 ZVs+HbVO6pJXKZUcuPiSGxJ/71PkOJBy53L87lMwtydwgR7IRuC4ahp1Z7CmvgAlJ3
+	 2owF3lLT2QjX6nUj+3PDJLMApo9VKxU9U3Tl4uf3fQ5qDApwRExGKDp8iCe3IAOHE+
+	 BwtHYpoe64NIQ==
+Date: Mon, 14 Apr 2025 07:42:30 -1000
+From: tj <tj@kernel.org>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: ffhgfv <xnxc22xnxc22@qq.com>, hannes <hannes@cmpxchg.org>,
+	cgroups <cgroups@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: KASAN: slab-use-after-free Read in cgroup_rstat_flush
+Message-ID: <Z_1JBt3RMATxnDgL@slm.duckdns.org>
+References: <tencent_084EDA1878C098FFB951DC70F6FFCC896408@qq.com>
+ <djupj4qfnd2izxhtzkmmhx6bfmnn3462dqi45qwbmdj46twart@424eqzhhh2s3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414174134.3095492-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250414174134.3095492-17-irogers@google.com>
-Subject: [PATCH v5 16/16] perf record: Retirement latency cleanup in evsel__config
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Caleb Biggers <caleb.biggers@intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <djupj4qfnd2izxhtzkmmhx6bfmnn3462dqi45qwbmdj46twart@424eqzhhh2s3>
 
-Perf record will fail with retirement latency events as the open
-doesn't do a perf_event_open system call. Use evsel__config to set up
-such events for recording by removing the flag and enabling sample
-weights - the sample weights containing the retirement latency.
+On Mon, Apr 14, 2025 at 07:40:04PM +0200, Michal Koutný wrote:
+> Hello.
+> 
+> On Mon, Apr 07, 2025 at 07:59:58AM -0400, ffhgfv <xnxc22xnxc22@qq.com> wrote:
+> > Hello, I found a bug titled "   KASAN: slab-use-after-free Read in cgroup_rstat_flush " with modified syzkaller in the Linux6.14.
+> > If you fix this issue, please add the following tag to the commit:  Reported-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>,    xingwei lee <xrivendell7@gmail.com>,Penglei Jiang <superman.xpt@gmail.com>
+> > I use the same kernel as syzbot instance upstream: f6e0150b2003fb2b9265028a618aa1732b3edc8f
+> > kernel config: https://syzkaller.appspot.com/text?tag=KernelConfig&amp;x=da4b04ae798b7ef6
+> > compiler: gcc version 11.4.0
+> > 
+> > Unfortunately, we do not have a repro.
+> 
+> Thanks for sharing the report.
+> 
+> > ------------[ cut here ]-----------------------------------------
+> >  TITLE:  KASAN: slab-use-after-free Read in cgroup_rstat_flush
+> > ==================================================================
+> > bridge_slave_0: left allmulticast mode
+> > bridge_slave_0: left promiscuous mode
+> > bridge0: port 1(bridge_slave_0) entered disabled state
+> > ==================================================================
+> > BUG: KASAN: slab-use-after-free in cgroup_rstat_cpu kernel/cgroup/rstat.c:19 [inline]
+> > BUG: KASAN: slab-use-after-free in cgroup_base_stat_flush kernel/cgroup/rstat.c:422 [inline]
+> > BUG: KASAN: slab-use-after-free in cgroup_rstat_flush+0x16ce/0x2180 kernel/cgroup/rstat.c:328
+> 
+> I read this like the struct cgroup is gone when the code try flushing
+> its respective stats (its ->rstat_cpu more precisely).
+> 
+> Namely,
+> 	__mem_cgroup_flush_stats
+> 		cgroup_rstat_flush(memcg->css.cgroup);
+> this reference is taken at cgroup creation in init_and_link_css()
+> and released only in css_free_rwork_fn().
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Weilin Wang <weilin.wang@intel.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/evsel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Maybe another casualty of the bug fixed by a22b3d54de94 ("cgroup/cpuset: Fix
+race between newly created partition and dying one")?
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 661a07cbdb25..6a84893e3c58 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1440,9 +1440,10 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		attr->branch_sample_type = opts->branch_stack;
- 	}
- 
--	if (opts->sample_weight)
-+	if (opts->sample_weight || evsel->retire_lat) {
- 		arch_evsel__set_sample_weight(evsel);
--
-+		evsel->retire_lat = false;
-+	}
- 	attr->task     = track;
- 	attr->mmap     = track;
- 	attr->mmap2    = track && !perf_missing_features.mmap2;
+Thanks.
+
 -- 
-2.49.0.604.gff1f9ca942-goog
-
+tejun
