@@ -1,94 +1,262 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3CDDDC3
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744663242; cv=none; b=Buufz4uir2pwG5T/vQrbANckMKonMWd/TfJ8mtq+wLUTD4y4zwl3tIdr6kGp9zE9SAKud/3jvC3dNi2B/lrDoxIaYsOqbNL7Hq63iCcCp7Ow+04qoy5sG9kHgvzHZUXnSNqHQzF0hsp4el6L9PWeEurP2YVE05u+FprLwkIVYd8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744663242; c=relaxed/simple;
-	bh=8monUW/vJ6/0vG0xs8zE7z2VK5nRgnFX8tHR6eBVM4A=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434B31D86F6;
+	Mon, 14 Apr 2025 20:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744663310; cv=pass; b=tSuvSV4iA52oANJWN1sHkamtjWszvIotaIxg/ebtfZ8JgNgLjsuQQWkajpHsbT1+YjazQFL2bXn9W6fiWGJXG8CsAF4dB+hZRl1Qvhws4KkT/0ZYiG3RwdOU3EF58kdL+MBvQcF8vLUFtt94AnADGrYdBIoiI4hnduquYMFYMhU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744663310; c=relaxed/simple;
+	bh=crI4XtKwTx1vUE7XW/8EiEGIw7EhIC6CCXobTK3D9/E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VU2vcdn1rA8dEU9Y2bvteJUdQiPh7pCgjB7wkFf+9ka4cvt2UluD+L1PjvGvXm2OZg4jgxbh96xS7BqhM6SCoANMOitmKcb3FiNvOi7xasxAn/r6zOzD/BRIlwJClu8+2Y+EaniT+vuUjC/Rt9PlwFevNleoQwLtebm9kDoNF2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EYZYcHMV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uL0Saq6Q2BLSHrdNQnODbyw9m93t2LqSpn8Y5g6zDtdX0E7FWlIm6T83OM7PIA4+mYz7DCbKS+PVUBb6HmvG67wO+XS2L7yh1avuXk381mGbItBGKmONc9L5BqnHLSm7IG4ctbo5VPBiAsonmNoz1GP1IivGr+9yDMAyzl0ZDIo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=UAIQzvJJ; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYZYcHMV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744663239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYlFFwWJIygfpn5eHvFvQZD02VDNncVIPXeKChWRAmY=;
-	b=EYZYcHMViqJNloqMkY9zlVEMSgojL+gJfAKaZVX6xhuLSVgKIIJnR914U3ZX5HViT0t/Xm
-	zHKL/cqVi8Xx4eehbc48WM9nHrRFJ5g8vm5jFucEIeozaEkYq4vVcdXt+oQbvNx3NyusPg
-	zAP4E8/ddOQVT0PtW26gMv/5XnA1PiM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-401-To-egiYVPhmpxC19orCRvg-1; Mon,
- 14 Apr 2025 16:40:36 -0400
-X-MC-Unique: To-egiYVPhmpxC19orCRvg-1
-X-Mimecast-MFC-AGG-ID: To-egiYVPhmpxC19orCRvg_1744663235
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EA771801A07;
-	Mon, 14 Apr 2025 20:40:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.114])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4231E1955BC1;
-	Mon, 14 Apr 2025 20:40:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 14 Apr 2025 22:39:59 +0200 (CEST)
-Date: Mon, 14 Apr 2025 22:39:56 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] release_task: kill the no longer needed
- get/put_pid(thread_pid)
-Message-ID: <20250414203955.GH28345@redhat.com>
-References: <20250411121857.GA10550@redhat.com>
- <20250414-lappalie-abhilfe-eb7810af39bb@brauner>
- <20250414-tintenfleck-planbar-656144f25a3b@brauner>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="UAIQzvJJ"
+ARC-Seal: i=1; a=rsa-sha256; t=1744663281; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=e6UB8mD5gBtSx5woyQ8voZo7onCXMwl7LnqS4japMtahy6FD7B9Bk3QgFms8EdOHYwsYuieEyad9Cd6sNTQNr52kWGuU1H4Pkg2PhZAdA1WzKNIJ7BCFXMpyI9VT5ogASoXa/XHpmbYzNihHKeip6jZHVk07XqUu3S8MRGyPk18=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744663281; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OwXZu9pVPYrQgdsIt9IN1Gimn7BexONJbVJH5Oqt6kU=; 
+	b=MvK+NOrt1jURE16fDPhQE7Ux+J7h0P9jxYmF9GTGiyhPCbfK3CSjYjPizBAovtCBfyeSZnRzbYBlSSP+YTnj4id6g24DZTBot1LVwRsfBckMJhDyZN+VyaBgkiX1gunZvBd+DlLlti4NHAP3p71qc0v4iLHlONoG5z7qM+4wVGY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744663281;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
+	bh=OwXZu9pVPYrQgdsIt9IN1Gimn7BexONJbVJH5Oqt6kU=;
+	b=UAIQzvJJPkFVGkybmi3ZORvY1IIHXlA5OiFC4npFDmxob5X5p3jcyy2mnb4DIq7c
+	08azyExoLsGiwYCLtirtOALATpyY1n5FNuW8KxnkRwNH98Z/exaiGyYgY1UF1Ibwh1s
+	7OKbs3qdJl6UlGeKmzOx5UJamY7q8MVjIdSqmuAE=
+Received: by mx.zohomail.com with SMTPS id 174466327828126.87847580144978;
+	Mon, 14 Apr 2025 13:41:18 -0700 (PDT)
+Date: Mon, 14 Apr 2025 21:41:13 +0100
+From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	kernel@collabora.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v7 2/4] drm/panthor: Add driver IOCTL for setting BO
+ labels
+Message-ID: <oc7nqx5gxrefaphpoyn7tsyhj2zcpbhwuxnhlgxtp6exet2ebz@wve2rz376pf4>
+References: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
+ <20250411150357.3308921-3-adrian.larumbe@collabora.com>
+ <6d67aff0-7082-4966-acb2-d7985820b3ea@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250414-tintenfleck-planbar-656144f25a3b@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d67aff0-7082-4966-acb2-d7985820b3ea@arm.com>
 
-On 04/14, Christian Brauner wrote:
->
-> On Mon, Apr 14, 2025 at 09:39:47PM +0200, Christian Brauner wrote:
-> > On Fri, Apr 11, 2025 at 02:18:57PM +0200, Oleg Nesterov wrote:
-> > > -	put_pid(thread_pid);
-> > > +	/* p->thread_pid can't go away until free_pids() below */
-> > > +	proc_flush_pid(p->thread_pid);
+On 14.04.2025 11:01, Steven Price wrote:
+> On 11/04/2025 16:03, Adrián Larumbe wrote:
+> > Allow UM to label a BO for which it possesses a DRM handle.
 > >
-> > This cannot work though, right?
-> > Because after __unhash_process() p->thread_pid may be NULL:
+> > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> > Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+>
+> Reviewed-by: Steven Price <steven.price@arm.com>
+>
+> Although very minor NITs below which you can consider.
+>
+> > ---
+> >  drivers/gpu/drm/panthor/panthor_drv.c | 42 ++++++++++++++++++++++++++-
+> >  drivers/gpu/drm/panthor/panthor_gem.h |  2 ++
+> >  include/uapi/drm/panthor_drm.h        | 23 +++++++++++++++
+> >  3 files changed, 66 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
+> > index 06fe46e32073..983b24f1236c 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_drv.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_drv.c
+> > @@ -1331,6 +1331,44 @@ static int panthor_ioctl_vm_get_state(struct drm_device *ddev, void *data,
+> >  	return 0;
+> >  }
+> >
+> > +static int panthor_ioctl_bo_set_label(struct drm_device *ddev, void *data,
+> > +				  struct drm_file *file)
+> > +{
+> > +	struct drm_panthor_bo_set_label *args = data;
+> > +	struct drm_gem_object *obj;
+> > +	const char *label;
+> > +	int ret = 0;
+> > +
+> > +	obj = drm_gem_object_lookup(file, args->handle);
+> > +	if (!obj)
+> > +		return -ENOENT;
+> > +
+> > +	if (args->size && args->label) {
+> > +		if (args->size > PANTHOR_BO_LABEL_MAXLEN) {
+> > +			ret = -E2BIG;
+> > +			goto err_label;
+> > +		}
+> > +
+> > +		label = strndup_user(u64_to_user_ptr(args->label), args->size);
+> > +		if (IS_ERR(label)) {
+> > +			ret = PTR_ERR(label);
+> > +			goto err_label;
+> > +		}
+> > +	} else if (args->size && !args->label) {
+> > +		ret = -EINVAL;
+> > +		goto err_label;
+> > +	} else {
+> > +		label = NULL;
+> > +	}
+> > +
+> > +	panthor_gem_bo_set_label(obj, label);
+> > +
+> > +err_label:
+> > +	drm_gem_object_put(obj);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static int
+> >  panthor_open(struct drm_device *ddev, struct drm_file *file)
+> >  {
+> > @@ -1400,6 +1438,7 @@ static const struct drm_ioctl_desc panthor_drm_driver_ioctls[] = {
+> >  	PANTHOR_IOCTL(TILER_HEAP_CREATE, tiler_heap_create, DRM_RENDER_ALLOW),
+> >  	PANTHOR_IOCTL(TILER_HEAP_DESTROY, tiler_heap_destroy, DRM_RENDER_ALLOW),
+> >  	PANTHOR_IOCTL(GROUP_SUBMIT, group_submit, DRM_RENDER_ALLOW),
+> > +	PANTHOR_IOCTL(BO_SET_LABEL, bo_set_label, DRM_RENDER_ALLOW),
+> >  };
+> >
+> >  static int panthor_mmap(struct file *filp, struct vm_area_struct *vma)
+> > @@ -1509,6 +1548,7 @@ static void panthor_debugfs_init(struct drm_minor *minor)
+> >   * - 1.2 - adds DEV_QUERY_GROUP_PRIORITIES_INFO query
+> >   *       - adds PANTHOR_GROUP_PRIORITY_REALTIME priority
+> >   * - 1.3 - adds DRM_PANTHOR_GROUP_STATE_INNOCENT flag
+> > + * - 1.4 - adds DRM_IOCTL_PANTHOR_BO_SET_LABEL ioctl
+> >   */
+> >  static const struct drm_driver panthor_drm_driver = {
+> >  	.driver_features = DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ |
+> > @@ -1522,7 +1562,7 @@ static const struct drm_driver panthor_drm_driver = {
+> >  	.name = "panthor",
+> >  	.desc = "Panthor DRM driver",
+> >  	.major = 1,
+> > -	.minor = 3,
+> > +	.minor = 4,
+> >
+> >  	.gem_create_object = panthor_gem_create_object,
+> >  	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table,
+> > diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
+> > index af0d77338860..beba066b4974 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> > +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> > @@ -13,6 +13,8 @@
+> >
+> >  struct panthor_vm;
+> >
+> > +#define PANTHOR_BO_LABEL_MAXLEN	PAGE_SIZE
+> > +
+> >  /**
+> >   * struct panthor_gem_object - Driver specific GEM object.
+> >   */
+> > diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_drm.h
+> > index 97e2c4510e69..12b1994499a9 100644
+> > --- a/include/uapi/drm/panthor_drm.h
+> > +++ b/include/uapi/drm/panthor_drm.h
+> > @@ -127,6 +127,9 @@ enum drm_panthor_ioctl_id {
+> >
+> >  	/** @DRM_PANTHOR_TILER_HEAP_DESTROY: Destroy a tiler heap. */
+> >  	DRM_PANTHOR_TILER_HEAP_DESTROY,
+> > +
+> > +	/** @DRM_PANTHOR_BO_SET_LABEL: Label a BO. */
+> > +	DRM_PANTHOR_BO_SET_LABEL,
+> >  };
+> >
+> >  /**
+> > @@ -977,6 +980,24 @@ struct drm_panthor_tiler_heap_destroy {
+> >  	__u32 pad;
+> >  };
+> >
+> > +/**
+> > + * struct drm_panthor_bo_set_label - Arguments passed to DRM_IOCTL_PANTHOR_BO_SET_LABEL
+> > + */
+> > +struct drm_panthor_bo_set_label {
+> > +	/** @handle: Handle of the buffer object to label. */
+> > +	__u32 handle;
+> > +
+> > +	/**
+> > +	 * @size: Length of the label, including the NULL terminator.
+> > +	 *
+> > +	 * Cannot be greater than the OS page size.
+> > +	 */
+> > +	__u32 size;
+> > +
+> > +	/** @label: User pointer to a NULL-terminated string */
+> > +	__u64 label;
+> > +};
+>
+> First very minor NIT:
+>  * NULL is a pointer, i.e. (void*)0
+>  * NUL is the ASCII code point '\0'.
+> So it's a NUL-terminated string.
 
-Oh, indeed! What was I thinking about???
+Fixed
 
-And, as you can guess, I didn't even bother to test this "obvious" cleanup :/
+> Second NIT: We don't actually need 'size' - since the string is
+> NUL-terminated we can just strndup_user(__user_pointer__, PAGE_SIZE).
+> As things stand we validate that strlen(label) < size <= PAGE_SIZE -
+> which is a little odd (user space might as well just pass PAGE_SIZE
+> rather than calculate the actual length).
 
-> The task_pid() needs to be moved after the repeat label. I'm appending
-> the full patch I applied.
+The snag I see in this approach is that the only way to make sure
+strlen(label) + 1 <= PAGE_SIZE would be doing something like
 
-Thanks a lot!
+label = strndup_user(u64_to_user_ptr(args->label), args->size);
+if (strlen(label) + 1 <= PAGE_SIZE) {
+   kfree(label)
+   return -E2BIG;
+}
 
-Can you add your Co-developed-by or Fixed-by ?
+In the meantime, we've duplicated the string and traversed a whole page
+of bytes, all to be discarded at once.
 
-Oleg.
+In this case, I think it's alright to expect some cooperation from UM
+in supplying the actual size, although I'm really not an expert in
+designing elegant uAPIs, so if you think this looks very odd I'd be
+glad to replace it with.
 
+Actually, as I was writing this, I realised that strndup_user() calls
+strnlen_user(), which is publicly available for other drivers, so
+I might check the length first, and if it falls within bounds, do
+the actual user stringdup.
+
+I shall also mention the size bound on the uAPI for the 'label' pointer.
+
+> Thanks,
+> Steve
+>
+> +
+>  /**
+>   * DRM_IOCTL_PANTHOR() - Build a Panthor IOCTL number
+>   * @__access: Access type. Must be R, W or RW.
+> @@ -1019,6 +1040,8 @@ enum {
+>  		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_CREATE, tiler_heap_create),
+>  	DRM_IOCTL_PANTHOR_TILER_HEAP_DESTROY =
+>  		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_DESTROY, tiler_heap_destroy),
+> +	DRM_IOCTL_PANTHOR_BO_SET_LABEL =
+> +		DRM_IOCTL_PANTHOR(WR, BO_SET_LABEL, bo_set_label),
+>  };
+>
+>  #if defined(__cplusplus)
+
+
+Adrian Larumbe
