@@ -1,213 +1,188 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8551E195;
-	Sun, 13 Apr 2025 23:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17142182;
+	Mon, 14 Apr 2025 00:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744588634; cv=none; b=uqjLIyC2Nn5pO0pCrDdAzYF6aenMsVWCcPdyfLWSe3YuuzaqGrGN3WoaQoDfxDd0nI1rAqe1pqAFA5m9YKvARgaa6l4/1S0/iIGlYKgIlksvLrlnk0V6WbmJvLTso3ggFr6Wov9M2w+9glGGSQZSP+pcCCD87n2WzSOGSWFkWmI=
+	t=1744589184; cv=none; b=hZj0SD504V+/2KlGk9VKkIuJWaqjWaRTJuGigvYZC6NoLhBaEQpSSbbBnTc3iD4V551abX/HspdR0uaseZR+suxgKk8ePcStE3lFkVGhWAZ9d2WGUPpzrp7ssTL28DzazFMknCO7vNgQ+s03oQpiNgO0dCE+gPMlQJ/mzlcM3no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744588634; c=relaxed/simple;
-	bh=mqumJ15ez3wlIfPBsytJxO3ZoBxXr6fTeIISa8OKpBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifPCsPKiI5MSl58ZeQXJbMOC67t3kRlQ6B0aDjDi252pqa+vPD5z9jQIDwoxX3WgJVTUk4HRtrYjA9Z0wtBCvLp3WlcIvGGwL+omY5ANgnL43zNNiBX9C5KcGrJEpH/xGs7qjOczRRyay3bfygGzjrj1MP/48qgQWNUV5LbRdOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/Yl1Jds; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1744589184; c=relaxed/simple;
+	bh=nRZeEP6TMumsNzd2qlMpyDrzJQev2tDNunTeczL0w/U=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AsLCOJsR1qE0aOY5eFTkGUHFT5gVzlzkwktrMm4DeszbQZacB6woDYIkpiU3TFfbBsaq1NGZyRphuz5RjCV0GRoh9JvVvaVghG35rIIkVy6g15cLhwD9lRL4403C0cX7HS9xgMPps9ZnZTixB2xe74xDA1Dhc+gM7QNqGv8yiaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRTer9PW; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/Yl1Jds"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-225477548e1so34487745ad.0;
-        Sun, 13 Apr 2025 16:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRTer9PW"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476b4c9faa2so47436261cf.3;
+        Sun, 13 Apr 2025 17:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744588632; x=1745193432; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ggdOzOafcZWg0a2ABvywxy3qu5ohHwEM4Ncju7HTLCY=;
-        b=k/Yl1JdsQxsHkznUQPItpFh9lD9IephaURGUEfVVU+zjU4+X8/Kbsk4H1JSld+xq9q
-         srO+kLEBTFjyH91QNYVSNZiZH4L4cdZqSUeUtifcuZeHticiChpuuS9k7hX/EW7beDG/
-         9SvEF4cYSoIPrD+y38M6tzizEJk9HQIfMcSxiH6zKV3F+3fEdoSt1VTFCTm/wsv7oEGk
-         53wACX0WFYsXgUsTKKfyqgq7/EGxW/OskxNN6vXa/rMhspOdfIpoRaCSbbmwYFxHeYYj
-         mYqJ2bI4hamhMDh3tj2BR1M41N3QxZpB5fjWIQttJjv+2mxw0VchRrmhnGkiqg8dm5Lq
-         KgGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744588632; x=1745193432;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744589181; x=1745193981; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ggdOzOafcZWg0a2ABvywxy3qu5ohHwEM4Ncju7HTLCY=;
-        b=wkbt2sskqc9jjbG1Sn0XWIPUmQDwuNOCWpoGChab/3CeDiuMhRVd5ftqMF4XMyED80
-         U97SCF1HrttTjZVoI3KtQ58AwenQUcsB3dsy0802YfJKAr4HOrGfCh9GHDH9cgQW4oxU
-         UmuGx4p8ZwtuBux9l7rt0aKOnmWHbpTDpkn9XIcBTSThT1CH+S4k1beEW76OSgkTwd2P
-         On6KW282GhcBIBJ0Fug1YlOIA7SlFcEWgsPNlHQWtP+z0HI41QEPK6i1D/SEQAvemUZ/
-         n0z7r7r2SiHHKJ5wXOgiD2haseNpw5FnOmapg8u/D1N9+9NV4/h0SsHMslIiGXsYoh5E
-         QrVw==
-X-Forwarded-Encrypted: i=1; AJvYcCU03SfAfJO61JWAM2jdoT1o5QqmpROREP3a4JmwPjdORYqVUHUsjy6qv+HDkUhfUePOigJgJ7ButvWn0/2F@vger.kernel.org, AJvYcCWdFcAK2aJQhJ0MUmR9WmXHJH0XLbKCNwJk+NrwvARKV045LwIGTMlE+TD/XnMe43oqz6/S9z74aMo=@vger.kernel.org, AJvYcCX4onoY9UBvlzx698IGmBqtgvMEULPu7lb8wNS9wYka92szbu8BUeET9rdGr+P9qAsWuHoZcF5kmSLE6CEm+5Z+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3Erfk2TdhVWDe6licYE7ln0ukizPoaNtQ+UxPD2j6Bv5Hsvll
-	hrepEWrvAGI0mBURsz3mG2X/N97suUSMwngtDHLEEz9ukhBrMhM/
-X-Gm-Gg: ASbGncuHJf/K6LdqJvj6swRiwEWFPQQiYMQCYn9l9DlmXbf4ZtGWru5GPlgT4Ht/K/m
-	JGjIuMaunp4lDwFm8lV1r7Negbv3/j71jxDq250GBbgr11f/doOLc0XapqtDcw89G9bFjHhorg3
-	nIsQn23y/ti2UctHJc7Vhjma8ywRNBAn8e8N+4DxlpGLTF643YexYUshD/CsOjZFC8aZoY6zJCl
-	BSm0CehtmebXKywJsC7oQmQXjjCD6FoA9VT/w3BKE4/wONVfHfGCrAKvO5O79Czv/0M3cGQ4FA8
-	6DqMxp1xD+5CvQVqv2mbGMrBn93lMRSBfLaBs5Oy
-X-Google-Smtp-Source: AGHT+IGVZ+0a/vLI9CpMaxmhmyTJwFlvT9K8EhgW+IsLK9YQ1RtByNSmdGfCcHtVNPXEuotdPoXlmg==
-X-Received: by 2002:a17:902:c944:b0:21a:8300:b9d5 with SMTP id d9443c01a7336-22bea4bc931mr125730795ad.23.1744588631379;
-        Sun, 13 Apr 2025 16:57:11 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f830esm5636051b3a.95.2025.04.13.16.57.09
+        bh=4C8xcXg1NpLb+plLT5ehdSAMxz+OEN1QsPQStjI01OU=;
+        b=PRTer9PWnSCAiSQo/9ThWI7Z3CuGRwuT0EyIygSZk0ckvnNhOdpVRtsxzln3Nvx3G4
+         XskgfT4EZh3TpDB/Bht6VpkMWQgSN2MGM4w8oSHWcEe16kEAfft2j4vMz3dtOtlSiS4+
+         euT0LW/KMgcl0wA7TnKEKTFHdVdTRUZZwc4My53pkERSvMBS3NK4TN6pVFhiLnKcCRxc
+         +1LgqfpXdymCeavXOm/EcX5KhW/7IOhf/RTvq/wNeUNQNtq+Zj8nFEiH4BzNrETNClfa
+         yBGkGPJXZg+z51P5t0xzPuw45WY2Ft8ZG917cw6QNuwzjW5KKibZn3M1vr7KZmQsn1yC
+         dg8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744589181; x=1745193981;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4C8xcXg1NpLb+plLT5ehdSAMxz+OEN1QsPQStjI01OU=;
+        b=wMtxZjU5GWnZTTNADh9h0gJJGTQQtzhwUyS6sQG5DsBDITMWMPj+0xezGPOYoPXcgF
+         l06JG2M/EQkKrKbRkwnxpsYDAXOM7x1akQ5IF6uT+LyahfpQAIRltgLOJzgTGyVCMjSY
+         4PTJJg6niODLhhtqQqxn2JOPyZlSn05NlmjrL1lY0porNX/mxkikNp030S2Qrnw9zZGw
+         kNuIdxyYL0j+8RDUO7c0Ny3MGNIX6YoNKbW2Ul8vJ+AAOibYfaG07UgDQ3mVr7tAm5Rp
+         6LLg8mg28DtoyIXkzxfgsrARwGD1sz4ViByXyktFUZWveyzuIWQyMr0D4YPohwn5pqRw
+         Z4hA==
+X-Forwarded-Encrypted: i=1; AJvYcCW01piImpp+ltz9xK65UvBE0PDWBNm/tmYkIGHijibLlV5YVPRzlU169s22hLJx5L2/9Bc1sCP2ifcW8O0=@vger.kernel.org, AJvYcCWDTFOom0Zkf+eCT8RaYLt33FrMNe+4ESWK4snClxtJ3tRawnXPxgtcI4CtnDOrZqS5JMvT4FMV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMy92AxNHXyeMO3+TMM5nz7WKEWVF00l29WCXs9h6hyhYrF1iI
+	p+a2GOjTiB/ehkvT0LZfenRJalRYN8h9tDcbEe4t/CWw8Fd7nOMJ
+X-Gm-Gg: ASbGnct4dmZmybrjIPQALvAgnxlqFWrn6HFJMS4Np/0nB9OW/TSR9fpZXVm3hRlNsm1
+	0meYH5Wgw/+HjycT8Uwevh6RSQCO5JmS7Kg2xq3Kt8lJT6OJQusYtkTJUIttu6GD+puehg+6E29
+	DLCtsB2o2B+Xn/TzBVWjA60Fs4XZp6CEKN0K7rRwlXrjKnq9uAfIMGPvA7TdBbONUQZE0JzC1OP
+	Z43X0eZdLOhwP9AxvRIADYM0GkT/byreevXYMjjkk+oFfdGyeGgqlV2Ec6VAyyTj9/6J9ImG4qs
+	39sIaWTZV21C93GKVM5wW4gNgai2Kjzw99MQ/+GeSuocxCW30+2O7M70gaF00gMcchNqDlFj2fZ
+	uXXdv6PWruiFh3zehv9MHlN7ORyPoe+o=
+X-Google-Smtp-Source: AGHT+IFwCbN4ZT1DJ9RQAyQzjQJYVN33ZAs5lsoHUiBQzlqkd3qDExB6DW7eCbQ1fNjMQawjwJkzzA==
+X-Received: by 2002:ac8:5fd2:0:b0:476:71d2:61e6 with SMTP id d75a77b69052e-479775e2b1fmr149686371cf.45.1744589180697;
+        Sun, 13 Apr 2025 17:06:20 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb15c24sm64035891cf.21.2025.04.13.17.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 16:57:10 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D52954208F49; Mon, 14 Apr 2025 06:57:07 +0700 (WIB)
-Date: Mon, 14 Apr 2025 06:57:07 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 13 Apr 2025 17:06:19 -0700 (PDT)
+Message-ID: <67fc517b.050a0220.301460.dfe7@mx.google.com>
+X-Google-Original-Message-ID: <Z_xRdyoukN8wkmNM@winterfell.>
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C00801200043;
+	Sun, 13 Apr 2025 20:06:18 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Sun, 13 Apr 2025 20:06:18 -0400
+X-ME-Sender: <xms:elH8Z9r1-P3tjUh0yf1ZdvTSBMvzr52cibP-MepNpnSDJsfTwrhy1A>
+    <xme:elH8Z_ql0Mgj6PC1OAI9ilkdBk2CXGEplLSD3ldoEd-XbKnoFRJqee6Wi-FyU5-JV
+    oDWt6f-EGGMiJK61A>
+X-ME-Received: <xmr:elH8Z6OfzbvCRJcQkqtd9ArWNWjerAVPezgQmWmCMFxngam_3PzyTjKF1w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudeltdejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
+    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeefhedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepfhhujhhithgrrdhtohhmohhnohhrihesghhmrghilhdrtghomhdprhgtphhtthho
+    pehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopehmvgeskhhlohgv
+    nhhkrdguvghvpdhrtghpthhtohepuggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsg
+    horhgrrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopegrnhgurhgvfieslhhunhhnrdgthh
+X-ME-Proxy: <xmx:elH8Z47WIH1AhHHmWD-Ol5kyhgfBxigOKvYXd43PeSjXi1hwlynS9Q>
+    <xmx:elH8Z86y6vIyZX1ljU-3DAiNcjqeI67f0TESDze_QWwv-SdJ9ZvDuw>
+    <xmx:elH8ZwjSYUWhQp4W-VQ879WH1fnkCbNJVacTUExRAYtGBzStSxOvPA>
+    <xmx:elH8Z-4uV28d0pwGixJH1qcDdDR9qk9e0wOAvmWhtZAuExViAgvJ-Q>
+    <xmx:elH8ZzKcYWw6d8mhrg6tE2qIbaRG_f4t9CnpD6Ri9QyGXrCITBlS36z5>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Apr 2025 20:06:18 -0400 (EDT)
+Date: Sun, 13 Apr 2025 17:06:15 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, Gary Guo <gary@garyguo.net>,
+	Fiona Behrens <me@kloenk.dev>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <Z_xPU9wjyFw2h_Vy@archie.me>
-References: <20250410174428.work.488-kees@kernel.org>
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu,
+	ojeda@kernel.org, alex.gaynor@gmail.com, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@samsung.com,
+	aliceryhl@google.com, anna-maria@linutronix.de, frederic@kernel.org,
+	tglx@linutronix.de, arnd@arndb.de, jstultz@google.com,
+	sboyd@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com,
+	david.laight.linux@gmail.com
+Subject: Re: [PATCH v13 3/5] rust: time: Introduce Instant type
+References: <20250413104310.162045-1-fujita.tomonori@gmail.com>
+ <20250413104310.162045-4-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FtEU1UtlnSMohtZk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410174428.work.488-kees@kernel.org>
+In-Reply-To: <20250413104310.162045-4-fujita.tomonori@gmail.com>
 
+On Sun, Apr 13, 2025 at 07:43:08PM +0900, FUJITA Tomonori wrote:
+> Introduce a type representing a specific point in time. We could use
+> the Ktime type but C's ktime_t is used for both timestamp and
+> timedelta. To avoid confusion, introduce a new Instant type for
+> timestamp.
+> 
+> Rename Ktime to Instant and modify their methods for timestamp.
+> 
+> Implement the subtraction operator for Instant:
+> 
+> Delta = Instant A - Instant B
+> 
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
---FtEU1UtlnSMohtZk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I probably need to drop my Reviewed-by because of something below:
 
-On Thu, Apr 10, 2025 at 10:44:31AM -0700, Kees Cook wrote:
-> Some system owners use slab_debug=3DFPZ (or similar) as a hardening optio=
-n,
-> but do not want to be forced into having kernel addresses exposed due
-> to the implicit "no_hash_pointers" boot param setting.[1]
->=20
-> Introduce the "hash_pointers" boot param, which defaults to "auto"
-> (the current behavior), but also includes "always" (forcing on hashing
-> even when "slab_debug=3D..." is defined), and "never". The existing
-> "no_hash_pointers" boot param becomes an alias for "hash_pointers=3Dnever=
-".
->=20
-> This makes it possible to boot with "slab_debug=3DFPZ hash_pointers=3Dalw=
-ays".
->=20
-> Link: https://github.com/KSPP/linux/issues/368 [1]
-> Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is =
-enabled")
-> Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Reviewed-by: Gary Guo <gary@garyguo.net>
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 > ---
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Harry Yoo <harry.yoo@oracle.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Tamir Duberstein <tamird@gmail.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Alice Ryhl <aliceryhl@google.com>
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
->  .../admin-guide/kernel-parameters.txt         | 34 ++++++++-----
->  include/linux/sprintf.h                       |  2 +-
->  lib/vsprintf.c                                | 51 +++++++++++++++++--
->  mm/slub.c                                     |  5 +-
->  4 files changed, 72 insertions(+), 20 deletions(-)
->=20
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-> index 76e538c77e31..d0fd9c745db9 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1798,6 +1798,27 @@
->  			backtraces on all cpus.
->  			Format: 0 | 1
-> =20
-> +	hash_pointers=3D
-> +			[KNL,EARLY]
-> +			By default, when pointers are printed to the console
-> +			or buffers via the %p format string, that pointer is
-> +			"hashed", i.e. obscured by hashing the pointer value.
-> +			This is a security feature that hides actual kernel
-> +			addresses from unprivileged users, but it also makes
-> +			debugging the kernel more difficult since unequal
-> +			pointers can no longer be compared. The choices are:
-> +			Format: { auto | always | never }
-> +			Default: auto
-> +
-> +			auto   - Hash pointers unless slab_debug is enabled.
-> +			always - Always hash pointers (even if slab_debug is
-> +				 enabled).
-> +			never  - Never hash pointers. This option should only
-> +				 be specified when debugging the kernel. Do
-> +				 not use on production kernels. The boot
-> +				 param "no_hash_pointers" is an alias for
-> +				 this mode.
+[...]
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> index ce53f8579d18..27243eaaf8ed 100644
+> --- a/rust/kernel/time/hrtimer.rs
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -68,7 +68,7 @@
+>  //! `start` operation.
+>  
+>  use super::ClockId;
+> -use crate::{prelude::*, time::Ktime, types::Opaque};
+> +use crate::{prelude::*, time::Instant, types::Opaque};
+>  use core::marker::PhantomData;
+>  use pin_init::PinInit;
+>  
+> @@ -189,7 +189,7 @@ pub trait HrTimerPointer: Sync + Sized {
+>  
+>      /// Start the timer with expiry after `expires` time units. If the timer was
+>      /// already running, it is restarted with the new expiry time.
+> -    fn start(self, expires: Ktime) -> Self::TimerHandle;
+> +    fn start(self, expires: Instant) -> Self::TimerHandle;
 
-So on production one would want hash pointers (i.e. auto/always), right?
+We should be able to use what I suggested:
 
-Anyway, the wording LGTM.
+	https://lore.kernel.org/rust-for-linux/Z_ALZsnwN53ZPBrB@boqun-archlinux/	
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+to make different timer modes (rel or abs) choose different expire type.
 
-PS: I'm confused on unspoken convention that anything but otherwise specifi=
-ed
-is suitable for production, as I'm expecting explicit version deployment
-(e.g. use <insert something> version instead of don't use <otherwise>).
-=20
---=20
-An old man doll... just what I always wanted! - Clara
+I don't think we can merge this patch as it is, unfortunately, because
+it doesn't make sense for a relative timer to take an Instant as expires
+value.
 
---FtEU1UtlnSMohtZk
-Content-Type: application/pgp-signature; name=signature.asc
+Regards,
+Boqun
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/xPTwAKCRD2uYlJVVFO
-o+w7AQCt25XM3TCWr6b02MEEkGSxqcN3+FaPyBczq+zpxtJkVQD9FuXjspH6lIrK
-F1kF1a8dz6O0m3yt0padcRMeM6j+sQ0=
-=g3x1
------END PGP SIGNATURE-----
-
---FtEU1UtlnSMohtZk--
+>  }
+>  
+[...]
