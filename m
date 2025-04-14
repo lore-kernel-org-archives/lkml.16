@@ -1,165 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7115F283C9B
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5C528135F;
+	Mon, 14 Apr 2025 11:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628694; cv=none; b=i1XYc6BIZofFQwsCHW7KqeIlxwy541Q0ST3okxD91ph0baQoiZxsLleNPdxxC4vXcngu1G7ZWQRDq/z5LTZp0gi3DwN+NIt/MUeCfFYat9w6PCejzghvDQojJhn1qkE/YyfEb5iKPIZvgsPN7Auj14kQm/VDOrfnjJlQHfQjH1k=
+	t=1744628695; cv=none; b=BByvUY5vp3iU5+/EPNUDyV4MT+iYIstak6V5WFfW9dblAL/xLvx+aYmDkM1mNcaA8F9gq5ruq30lKlIdDaDjOr5nfe11tTho4ZjqZRw/tP0WkNmJzaGYKJuFQoUeKI9pQvNyxxrqqXi/E+dGZTmw3gw5acnpCbFDjkMdwHbwcig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628694; c=relaxed/simple;
-	bh=a1QgMoqZLxidPT8MZIzNeo0ahI4AIlk9j3HsOU7C7SE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e+ZC3615VdIQUVJp+6IsVy1uoDDeqQk1Zk9kI3rALHlkmR7+on/0W8nSgx9os+sQK4zgZRuEA7lINTeg5GA67QbzaJWCeAeAD2DC2Z25kakNuFkpyG0sYQ8m+oj/s9dZvKogvjNusxexX4K5JAYnWwl5wknGDyK1vVKEKb6Nc+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GS+0x51K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744628695; c=relaxed/simple;
+	bh=Xb+ZACY0NBbV0NNh0WCuT+XRv3B9nkGlGyr3iQ9+hJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixGRGC1bxxYnVNc3hz9NpaNnpDqtU6+CCtyLCBiVPdz/di4PjVVwAUCkF80l8rNxhSZ+1uPTBsnbH1huHFS+rBruflnESr69L47boN2Biqq4retFywoDWAL6olyoW5vUw/Wvob6n4PdmKdTq7zLrB0eD70M841Knv0XiM7+002s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VV1AK1V5; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GS+0x51K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744628691;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqNH3rALHkPYmFYYLgGdDpOMZYwATfXy50C2/Ds0wAU=;
-	b=GS+0x51KvBcaVdf8j5BM+89s5NFnDeUeGFXL90WieMj8nMwKsZ1IIzfU+GJpSXOH7gthmr
-	gBo6FMUyr+W2DKAu50ltVmn42B5cTiwlzqWAZO/NM188ZDJENg+5QOT211sfUYI2R5AJTb
-	JwHZm4jb5iZQu7ypSc8hefnapsI5NCk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-10-oOvzPWqfPS22YZJ4UlSNkg-1; Mon, 14 Apr 2025 07:04:50 -0400
-X-MC-Unique: oOvzPWqfPS22YZJ4UlSNkg-1
-X-Mimecast-MFC-AGG-ID: oOvzPWqfPS22YZJ4UlSNkg_1744628689
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac28a2c7c48so386203466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:04:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744628689; x=1745233489;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dqNH3rALHkPYmFYYLgGdDpOMZYwATfXy50C2/Ds0wAU=;
-        b=xLjZR47LBOCpXI0xD1zRXke9d1Pp9tXSuIWj3pwo4wdLM8O0h+0SFeJncBwYWI5LCv
-         OT0ESmPswKxlHtZpU3h63EnSaHcHAnajuuOmp6ne7KVpOJD+CzXigX1TqYK1DWVbH5ov
-         DhBZOUcYxcs3GUNgbMEdLuvnT5n9fQoZFT9Oai85DjymojS7E5kSuCzdwWEdVBY2SwKU
-         dyh+/Zzocfs2ci/bGsgWRtI0IpMyT7Qrzt2WyHErmahuV3V5B5oLsHiw/IEStVfMLMJ2
-         sdwAfS2Hb3PCrKxohxxkBWKJ2ZjQkWr0mjAnAK4sLc+DCECrIC/T7nwUhuDHpiV4D0SI
-         Ubdg==
-X-Gm-Message-State: AOJu0Yz8npZpKvwWXLzdMu3IsTaQtsxgKW3QBiFGDUpRMye7CrLdUmjD
-	/26JM3M2ZZZVr9aXSyzZF5mkGGnGWs+lXkCB7Dyacgl5UO0QWHPdCGpKfy5nYRRRXbhqEvQ5YHq
-	ul8yQvkhWB8jcyJuZUuJpj/LuggBqNREO+T0kjpQqf68I1BJ9ocBKopdGazvbdg==
-X-Gm-Gg: ASbGnctBySPuikU+dIO5PIPBD2PLnBMttv/0XmeOEJ2egGb6iQuJsih3RsLggQEDZwi
-	v6dRl6SUxj7lj8WWc/vcBnFuoMgicqTnq3dtoxeWTXvi/6TE2g37HvxWzSw1YNeH2ZztgbphH4Y
-	SsoVKGh5KGnXAzx44PYJcW1LOECsMLMNPlnXBbk7EFpXZzMZaeclSHFpjatpdkUUPHx6N8fGdV1
-	cimYOZfpAWPdLBFf4QYd0NpdAz3ghVcY3wojSyQlovMpewGPqzSnhz6BXah8VSGfN+GrLo8D9cx
-	8P3+gvONTdCghZs=
-X-Received: by 2002:a17:907:3e1b:b0:ac3:c020:25e9 with SMTP id a640c23a62f3a-acad352b84bmr1013631566b.34.1744628688684;
-        Mon, 14 Apr 2025 04:04:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhE+alPWy7hdC04GePGwU5YUyVn9AO1aVXzOVYnmufV8WxGpecarDzQvJenRhXNJ8+nBHdOg==
-X-Received: by 2002:a17:907:3e1b:b0:ac3:c020:25e9 with SMTP id a640c23a62f3a-acad352b84bmr1013627866b.34.1744628688129;
-        Mon, 14 Apr 2025 04:04:48 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54e11sm4860929a12.2.2025.04.14.04.04.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 04:04:47 -0700 (PDT)
-Message-ID: <01570d5d-0bdf-4192-a703-88854e9bcf78@redhat.com>
-Date: Mon, 14 Apr 2025 13:04:46 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VV1AK1V5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744628693; x=1776164693;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Xb+ZACY0NBbV0NNh0WCuT+XRv3B9nkGlGyr3iQ9+hJg=;
+  b=VV1AK1V5dHPqLTQMRCcbjP2GN9Vxfl9ALQ7NVZub2ce2CsTMxyp8G5cd
+   zek6aobknvVXh7B7Om0TSaW6qIgRHzOSFjJtyPhffe/wDSTDfdpxTE4ui
+   MFy/tVBB2OKpmXfHbJGG5VjblteMBXXl7SQGvHcAfetj3P4vf7ymnxKhR
+   4XJj2zeVsxxKsG31jKO9QJ8a7YvLQUf5XUlV5y/4MUWYHyFhP+vYU5KFo
+   OcCizLnXAV6ranPv1D+yUr/pjjFOqWYN/6M5sgHim1iNUI3Pt4L1kzQHj
+   byhM5yGgLtFrucq315v4SvWojF2e9oPhAFYMWJPNDqvwd51jTUuiiSejJ
+   Q==;
+X-CSE-ConnectionGUID: EY1hxaWoR1e3clZarB9STw==
+X-CSE-MsgGUID: olBH3KwsQduz10eJvQlGuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45975300"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="45975300"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 04:04:52 -0700
+X-CSE-ConnectionGUID: r4FQGc8oSTibqdWydMwWnw==
+X-CSE-MsgGUID: Sjmp7A6rQsiPjn1mfahqwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="130328463"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 04:04:50 -0700
+Date: Mon, 14 Apr 2025 13:04:32 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+	hkelam@marvell.com, bbhushan2@marvell.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] octeontx2-pf: handle otx2_mbox_get_rsp errors
+Message-ID: <Z/zrwJJhR1pDwfj/@mev-dev.igk.intel.com>
+References: <20250412183327.3550970-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
-To: "Yan, Dongcheng" <dongcheng.yan@intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
- u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
- bingbu.cao@linux.intel.com, stable@vger.kernel.org, hao.yao@intel.com
-References: <20250411082357.392713-1-dongcheng.yan@intel.com>
- <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
- <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
- <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
- <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
- <Z_zMMtUdJYpHuny7@smile.fi.intel.com>
- <f10f919e-7bdc-4a01-b131-41bdc9eb6573@intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <f10f919e-7bdc-4a01-b131-41bdc9eb6573@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412183327.3550970-1-chenyuan0y@gmail.com>
 
-Hi,
-
-On 14-Apr-25 11:59, Yan, Dongcheng wrote:
-> Hi Andy and Hans,
+On Sat, Apr 12, 2025 at 01:33:27PM -0500, Chenyuan Yang wrote:
+> Adding error pointer check after calling otx2_mbox_get_rsp().
 > 
-> I found the description of lt6911uxe's GPIO in the spec:
-> GPIO5 is used as the interrupt signal (50ms low level) to inform SOC
-> start reading registers from 6911UXE;
+> This is similar to the commit bd3110bc102a
+> ("octeontx2-pf: handle otx2_mbox_get_rsp errors in otx2_flows.c").
 > 
-> So setting the polarity as GPIO_ACTIVE_LOW is acceptable?
-
-Yes that is acceptable, thank you for looking this up.
-
-Regards,
-
-Hans
-
-
-
-> We used RISING and FALLING in irq(not GPIO) to ensure that HDMI events
-> will not be lost to the greatest extent possible.
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 6c40ca957fe5 ("octeontx2-pf: Adds TC offload support")
+> ---
+>  drivers/net/ethernet/marvell/octeontx2/nic/rep.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Thanks,
-> Dongcheng
-> 
-> On 4/14/2025 4:49 PM, Andy Shevchenko wrote:
->> On Mon, Apr 14, 2025 at 04:40:26PM +0800, Yan, Dongcheng wrote:
->>> On 4/14/2025 4:11 PM, Andy Shevchenko wrote:
->>>> On Mon, Apr 14, 2025 at 03:52:50PM +0800, Yan, Dongcheng wrote:
->>>>> On 4/11/2025 4:33 PM, Hans de Goede wrote:
->>>>>> On 11-Apr-25 10:23 AM, Dongcheng Yan wrote:
->>
->> ...
->>
->>>>>>> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->>>>>>> +		*con_id = "hpd";
->>>>>>> +		*gpio_flags = GPIO_LOOKUP_FLAGS_DEFAULT;
->>>>>>
->>>>>> This looks wrong, we really need to clearly provide a polarity
->>>>>> here since the ACPI GPIO resources do not provide one.
->>>>>>
->>>>> I tested gpio_flags=GPIO_LOOKUP_FLAGS_DEFAULT/HIGH/LOW, the lt6911uxe
->>>>> driver can pass the test and work normally.
->>>>
->>>> I doubt you tested that correctly. It's impossible to have level triggered
->>>> event to work with either polarity. It might be also a bug in the code lurking
->>>> somewhere, but it would be unlikely (taking into account amount of systems
->>>> relying on this).
->>>>
->>>> Is it edge triggered event?
->>>>
->>>
->>> It is an edge triggered event in lt6911uxe. In order to better adapt to
->>> other uses, "hpd" is meaningful to specify a polarity here.
->>>
->>> In lt6911uxe, GPIO "hpd" is used as irq, and set irq-flag to
->>> IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT. So no matter
->>> rising or falling, driver can work normally.
->>> "
->>> ret = request_threaded_irq(gpiod_to_irq(lt6911uxe->irq_gpio),	NULL,
->>> lt6911uxe_threaded_irq_fn, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
->>> IRQF_ONESHOT, NULL, lt6911uxe);
->>> "
->>
->> So, the driver must not override the firmware, if there is no bugs.
->> So, why do you even use those flags there? It seems like a bad code
->> in the driver that doesn't look correct to me.
->>
-> 
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+> index 04e08e06f30f..7153a71dfc86 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+> @@ -67,6 +67,8 @@ static int rvu_rep_mcam_flow_init(struct rep_dev *rep)
+>  
+>  		rsp = (struct npc_mcam_alloc_entry_rsp *)otx2_mbox_get_rsp
+>  			(&priv->mbox.mbox, 0, &req->hdr);
+> +		if (IS_ERR(rsp))
+> +			goto exit;
 
+Changes looks fine:
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+
+BTW, looks like now you can use break instead of goto exit, as exit
+label is just after the while loop.
+
+>  
+>  		for (ent = 0; ent < rsp->count; ent++)
+>  			rep->flow_cfg->flow_ent[ent + allocated] = rsp->entry_list[ent];
+> -- 
+> 2.34.1
