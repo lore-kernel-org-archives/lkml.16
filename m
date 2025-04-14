@@ -1,116 +1,131 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A43A25C71C;
-	Mon, 14 Apr 2025 09:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF5125E47F;
+	Mon, 14 Apr 2025 09:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744621434; cv=none; b=rPJgYe1FnDhAY6QxPYlzLIXl72icottYlG04B+vcsg7WLdQTOSt5WDS9CryrfrQtmKr5/alGxNiZSMg7mchrUKM3ze2mR/l18ArxQD0g9PzrTCuQPw0QUfA8Gu3LKswTuqg9OVyde6KDsqtEPcryb/jVPRfG8SpFEXyhjkWn570=
+	t=1744621436; cv=none; b=EJ1ChB1fXAtkZP8mdMQQXMN95r9yizPc7VAMYimIrWVxckyeL9F6KlGGlMo8YFbPhmIKhst7C10+/eTUBZmpFeqWyDLzghGDyirVtfcpwvBjRjJVxZMdp2mADscf07VZceNbnHDxWfh/v0mKYAkffw2pBmou71hqG0MbAMQqjwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744621434; c=relaxed/simple;
-	bh=LAT0BgQbCPYYeUrFypMShtj2rc1C0XoL44C8QAlySGM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gSgiJ3m30LcwtEu7J67nq78znJCzs9nmajR55cC/wuZ2kgXbIipyXIUVTVGzKGgaUR6Fti/RfHyPB//zThYZ31/D/Rf1QQxvzvSn+TEB9N6yyCTp7TQMVsIWTdFV8QZQgar0g9+A/XJgYFphPuY3eQ2UIJQ4d5UcIzvItlPF7F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=HlFUZ5Rf; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1744621436; c=relaxed/simple;
+	bh=xwnf/Sjvj94ax/559YbhINvgBbLxXB5CI2acSsKhuwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pAzq5QfpNWlIPTd05LuXgZaKFdZfKd09IcHHW4nbIQYQXo8hJpMUAu0MnbImp95zXtUKCaBJ8xWEuzrDZhndUR5N8m9rT0f5NYobOZDtgRbVsMonWS6GpxjvEzJkmj2eonYIwlYeXbHKvQvxZIpwBmI9DZ4YmLmLwYJgJZyf4Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=poaIFy94; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HlFUZ5Rf"
-X-UUID: 5e60492e190f11f08eb9c36241bbb6fb-20250414
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=KYJWpcm80GWs45Q4a62R/BJuN0ukztFixJ7xVAURG3g=;
-	b=HlFUZ5Rf/i/mB1+LrYVUp2HoT0caQYChwGeIqF20wlQOJ9MI1hfjn9tiGz3g1y9e5CxKWpIaPm8oaxRAf9u4s8Z+9fnSa+jfA2W9Oi/uY+93fH24KvC5lQa6Z85UoGrTepcU6lFPPkeS6RzGeyNdsy0r8Ls6NS9QdwfhkkUKIgg=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:195732db-4071-45db-8101-732f586e69b6,IP:0,UR
-	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:0ef645f,CLOUDID:96d8388b-0afe-4897-949e-8174746b1932,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil
-	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 5e60492e190f11f08eb9c36241bbb6fb-20250414
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
-	(envelope-from <ot_cathy.xu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1244373102; Mon, 14 Apr 2025 17:03:44 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 14 Apr 2025 17:03:43 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 14 Apr 2025 17:03:42 +0800
-From: Cathy Xu <ot_cathy.xu@mediatek.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>,
-	Lei Xue <lei.xue@mediatek.com>
-CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <yong.mao@mediatek.com>,
-	<Axe.Yang@mediatek.com>, <Andy-ld.Lu@mediatek.com>,
-	<Wenbin.Mei@mediatek.com>, <Jimin.Wang@mediatek.com>, Cathy Xu
-	<ot_cathy.xu@mediatek.com>
-Subject: [PATCH v7 0/3] pinctrl: mediatek: Add pinctrl driver on mt8196
-Date: Mon, 14 Apr 2025 16:59:25 +0800
-Message-ID: <20250414090215.16091-1-ot_cathy.xu@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="poaIFy94"
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id A5B105801A3;
+	Mon, 14 Apr 2025 08:25:04 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E06943212;
+	Mon, 14 Apr 2025 08:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744619097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dMI+QJBZXFdwaOEwENZ/Wk7G4tgkYRiH7f6+ILsCAQ8=;
+	b=poaIFy94nV/ZDFtWFFz/IhlAKQTc56qy9O2lmr9DKz7Ogo7mebp9fESIlxDMuPTmfvcOWd
+	bgApjJNukM6+c9KmnIMZFunUkHpIBq8A8/JlBmY9OGhpcAcLPhWDaO4yaiNup+V+88LQiQ
+	hDohe2thkdmiOZIMn8295bCaUFivcSUjKlQFJi3lqmLakNJkIVLJ6tPfnO/jf4qZ2SKqtD
+	qXLiyDirqI+j0pzwCN/lI9Vssw81/NfShVSi5c6KU3Tj5BzWzxc66fqEc4ZlHGtGGuP/Oc
+	QUmacvOMU5r2CoawdpddXHXxcMNhsiz5X8NkL3FJZBq0E6ZhmbLjnccYOlLdXQ==
+Date: Mon, 14 Apr 2025 10:24:55 +0200
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA
+ addresses.
+Message-ID: <20250414102455.03331c0f@windsurf>
+In-Reply-To: <Z_yjNgY3dVnA5OVz@infradead.org>
+References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
+	<Z_yjNgY3dVnA5OVz@infradead.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddttdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefvhhhomhgrshcurfgvthgriiiiohhnihcuoehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepledtgedvjeehgeetgfeufffglefhkedvfeduveeiieelteeliedtfefguefggffhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegfeegmeelfhdtleemvdektddumeefsgelmeejsggtfhemheehleehmegvfhefvgdphhgvlhhopeifihhnughsuhhrfhdpmhgrihhlfhhrohhmpehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsu
+ hhmihhtrdhsvghmfigrlheslhhinhgrrhhordhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnhdrkhhovghnihhgsegrmhgurdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheplhhinhgrrhhoqdhmmhdqshhigheslhhishhtshdrlhhinhgrrhhordhorhhg
+X-GND-Sasl: thomas.petazzoni@bootlin.com
 
-Changes in v7:
-- Add eint registers in dt-binding.
+Hello Christoph,
 
-Changes in v6:
-- Simplify the register description and adjust the order of properties
-  in dt-binding.
+On Sun, 13 Apr 2025 22:55:02 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Changes in v5:
-- Remove header file to fix dt-binding check error.
-- Add /* sentinel */ in pinctrl-mt8196.c.
+> On Thu, Apr 10, 2025 at 04:53:17PM +0200, Bastien Curutchet wrote:
+> > Hi all,
+> > 
+> > Many UIO users performing DMA from their UIO device need to access the
+> > DMA addresses of the allocated buffers. There are out-of-tree drivers
+> > that allow to do it but nothing in the mainline.  
+> 
+> In which case it does not matter at all for mainline.
 
-Changes in v4:
-- Add rsel-resistence-in-si-unit and remove RSEL macro magic
-  number in mediatek,mt8196-pinctrl.yaml.
-- Add values in SI units option to |struct mtk_pin_soc| in
-  pinctrl-mt8196.c.
-- Move pinmux macro header file to arch/arm64/boot/dts/mediatek.
+It is impressive how "out-of-tree" triggers kernel maintainers, and
+then end up not even reading what the patch series is all about (but I
+forgive you, because it triggers me in the same way).
 
-Changes in v3:
-- Remove drive-strength-microamp & rsel-resistence-in-si-unit
-  related description in mediatek,mt8196-pinctrl.yaml.
-- Use pm_sleep_ptr() in pinctrl-mt8196.c to fix build error.
+This patch series is NOT about adding new kernel APIs meant to be used
+by out-of-tree drivers, which of course would be bad, and we would have
+never proposed.
 
-Changes in v2:
-- Fix driver file's coding style.
-- Add pinctrl binding document.
+What this patch series is about is to add new user-space interface to
+extend the existing UIO subsystem. What my colleague Bastien was
+mentioning about out-of-tree drivers is that there are a LOT of
+out-of-tree drivers extending UIO to allow user-space applications to
+do DMA, and our proposal is that considering how many people need that
+and implement ugly out-of-tree drivers to solve this issue, we suggest
+the mainline kernel should have a built in solution.
 
-Cathy Xu (3):
-  dt-bindings: pinctrl: mediatek: Add support for mt8196
-  arm64: dts: mediatek: mt8196: Add pinmux macro header file
-  pinctrl: mediatek: Add pinctrl driver on mt8196
+Please re-read again, and realize that we are NOT adding new kernel
+APIs for out-of-tree drivers.
 
- .../pinctrl/mediatek,mt8196-pinctrl.yaml      |  236 ++
- arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h | 1574 ++++++++++
- drivers/pinctrl/mediatek/Kconfig              |   12 +
- drivers/pinctrl/mediatek/Makefile             |    1 +
- drivers/pinctrl/mediatek/pinctrl-mt8196.c     | 1859 +++++++++++
- drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h | 2789 +++++++++++++++++
- 6 files changed, 6471 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8196.c
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
+> FYI the proper and safe way to do DMA from userspace is to use
+> vfio/iommufd.
 
+I am not sure how this can work in our use-case. We have a very simple
+set of IP blocks implemented in a FPGA, some of those IP blocks are
+able to perform DMA operations. The register of those IP blocks are
+mapped into a user-space application using the existing, accepted
+upstream, UIO subsystem. Some of those registers allow to program DMA
+transfers. So far, we can do all what we need, except program those DMA
+transfers. Lots of people are having the same issue, and zillions of
+ugly out-of-tree solutions flourish all over, and we're trying to see
+if we can constructively find a solution that would be acceptable
+upstream to resolve this use-case. Our platform is an old PowerPC with
+no IOMMU.
+
+Note that the safety argument doesn't hold: UIO already allows to map
+registers into user-space applications, which can already program DMA
+transfers to arbitrary locations in memory. The safety comes from the
+fact that such UIO devices are associated with permissions that the
+system administrator controls, to decide which applications are safe
+enough to be granted access to those UIO devices. Therefore, providing
+access through UIO of the physical address of well-defined DMA buffers
+properly allocated through a sane API is not reducing the safety of
+anything compared to what UIO already allows today.
+
+Best regards,
+
+Thomas
 -- 
-2.45.2
-
+Thomas Petazzoni, co-owner and CEO, Bootlin
+Embedded Linux and Kernel engineering and training
+https://bootlin.com
