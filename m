@@ -1,91 +1,92 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB0253947;
-	Mon, 14 Apr 2025 14:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA6028F52E;
+	Mon, 14 Apr 2025 14:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640373; cv=none; b=uVV8Xxjyuxs/qrtjb64gPTppZaJsWwrvB9EO4IKpMIx2FzOV9EMrXUwtqO36p2RgYaF8mL0pXWBBjNlfsH6vBOVvlR1o557ii9zhdkKiAqcIpaRbxqH7pESDl77TY/jhlq9Eh7hxe2ZqVZdNQK2K3ofjt2Hp8yBKO7KsoivpZwg=
+	t=1744640402; cv=none; b=ij06P4udHjL7ZnYNs7888ALoZ9mHZUmFwlfz2UxPKTv2t1TRMkk9KZfPN6fS8POdpxyZG8reHo4kklVH5YmqKnkkSyfAksg4c0jmyVhrjyb8PEkkF6gBKD05jICS4520OI0g/tSpTDGIJDVqYDHjuRE42Wp7ykWHiZgwo67ZGOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640373; c=relaxed/simple;
-	bh=q7jbEhr50P4j5cB6h/OjmIXHLzxIFXaZIyKktMb1zRM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tr/B82WLPgVzD6BMcpomNo23zyYIr1W9JoqKp6V8tgoaR+uAjIJFg/1XIlHCVlvOUW0zNXvz8Dv+fpdYhuFBOfRxeJ/3MBtrXIOmhnFqd6vgz1ZsnobTwzh4nxp+dKv13HVvYuTDGgowwvp+tEOOeid+ZrMuUGvU6gx7FFVkxNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+	s=arc-20240116; t=1744640402; c=relaxed/simple;
+	bh=CwaFplckSD7S0EpcNcWb7VUupSTqyxxJFgfu202ina4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I2zKKUQBpQNNzdr6zSrVLahx5xmRweyLCP1t9l1y3RVtXrQr56HD14TSxCNvu+5OWyDHXOPRFYZ0XkMBM7Ne2vayvQFu+Y0Iqq8uB0Qm3nRitQ5dlRziP9Kvb0ClGskSEu9IA8rckT+iEo0eiVBWLCv5oP4tdXO9Yw/CmsKXrOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZbqD939GlzsSLB;
-	Mon, 14 Apr 2025 22:19:21 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C3C01400D4;
-	Mon, 14 Apr 2025 22:19:27 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 14 Apr
- 2025 22:19:26 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<neil@brown.name>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
-	<tom@talpey.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfsd: Initialize ssc before laundromat_work to prevent NULL dereference
-Date: Mon, 14 Apr 2025 22:38:52 +0800
-Message-ID: <20250414143852.1308979-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbqCK2SXpz6F94p;
+	Mon, 14 Apr 2025 22:18:37 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 489C61402EA;
+	Mon, 14 Apr 2025 22:19:52 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
+ 2025 16:19:51 +0200
+Date: Mon, 14 Apr 2025 15:19:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 01/19] cxl/mbox: Flag support for Dynamic Capacity
+ Devices (DCD)
+Message-ID: <20250414151950.00001823@huawei.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-1-1d4911a0b365@intel.com>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	<20250413-dcd-type2-upstream-v9-1-1d4911a0b365@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-In nfs4_state_start_net(), laundromat_work may access nfsd_ssc through
-nfs4_laundromat -> nfsd4_ssc_expire_umount. If nfsd_ssc isn't initialized,
-this can cause NULL pointer dereference.
+On Sun, 13 Apr 2025 17:52:09 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-Normally the delayed start of laundromat_work allows sufficient time for
-nfsd_ssc initialization to complete. However, when the kernel waits too
-long for userspace responses (e.g. in nfs4_state_start_net ->
-nfsd4_end_grace -> nfsd4_record_grace_done -> nfsd4_cld_grace_done ->
-cld_pipe_upcall -> __cld_pipe_upcall -> wait_for_completion path), the
-delayed work may start before nfsd_ssc initialization finishes.
+> Per the CXL 3.1 specification software must check the Command Effects
+> Log (CEL) for dynamic capacity command support.
+> 
+> Detect support for the DCD commands while reading the CEL, including:
+> 
+> 	Get DC Config
+> 	Get DC Extent List
+> 	Add DC Response
+> 	Release DC
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Fix this by moving nfsd_ssc initialization before starting laundromat_work.
 
-Fixes: f4e44b393389 ("NFSD: delay unmount source's export after inter-server copy completed.")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfsd/nfssvc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> +
+> +static bool cxl_verify_dcd_cmds(struct cxl_memdev_state *mds, unsigned long *cmds_seen)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 9b3d6cff0e1e..8ed143ef8b41 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -396,13 +396,13 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
- 	if (ret)
- 		goto out_filecache;
- 
-+#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-+	nfsd4_ssc_init_umount_work(nn);
-+#endif
- 	ret = nfs4_state_start_net(net);
- 	if (ret)
- 		goto out_reply_cache;
- 
--#ifdef CONFIG_NFSD_V4_2_INTER_SSC
--	nfsd4_ssc_init_umount_work(nn);
--#endif
- 	nn->nfsd_net_up = true;
- 	return 0;
- 
--- 
-2.31.1
+It's not immediately obvious to me what the right behavior
+from something called cxl_verify_dcd_cmds() is.  A comment might help with that.
+
+I think all it does right now is check if any bits are set. In my head
+it was going to check that all bits needed for a useful implementation were
+set. I did have to go check what a 'logical and' of a bitmap was defined as
+because that bit of the bitmap_and() return value wasn't obvious to me either!
+
+
+> +{
+> +	DECLARE_BITMAP(all_cmds, CXL_DCD_ENABLED_MAX);
+> +	DECLARE_BITMAP(dst, CXL_DCD_ENABLED_MAX);
+> +
+> +	bitmap_fill(all_cmds, CXL_DCD_ENABLED_MAX);
+> +	return bitmap_and(dst, cmds_seen, all_cmds, CXL_DCD_ENABLED_MAX);
+> +}
+> +
+
 
