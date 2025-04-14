@@ -1,107 +1,151 @@
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07E0263C78
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50CC264FB2;
+	Mon, 14 Apr 2025 10:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744626396; cv=none; b=Gve/iZquFU6K6bjUDTixFYcuhnh94xOgGsES2pGyx0dXhvalHqwF+zqK3IDkUMDF2W2KvCbecMd35EtDgjoADfv1WfbrF2QQVIJiC/DdzNGfKPsFRJauvMAaAYcI1zJ07qvVKlrzQFHj/I9dCgBVZzk/1yLDDjGhqthRqpmt8OE=
+	t=1744626455; cv=none; b=F9liBDofahQomgN8WdNrQhl8+bSq7pcSliu3mNoHtjMYItKodc2sRFaD5DgI97uHiw56nAg4ae1fGkn0Avcs0r++CsyHZ7gD1S5xHAq9R/mXRWpQ6tjvJM9maeN/eWgtEIRK9DRIrQX5kv+wGIZ41a12LQm+Ii4wjXUNpi1Et24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744626396; c=relaxed/simple;
-	bh=P4tVZMFQeTryqhZfLYxMqp9Mr4yDOpMpRVM0VYHA3no=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T62y7fUN2bqxEB3jEkENMWYbjsFD2M/tsEuGHXFpZ7SCjRkTUVhveW74oO13uscDkcTY36EfB/nTSmyWiXA6rNMbpuDh2IMqCxXOu95bZunlyrGmw55FOcoTOBZc30u2iQVG0dBXkCQ8iX2oLDvjnvFHDRwmBfFMzPg8gvot8zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=cFfCm3H+; arc=none smtp.client-ip=79.135.106.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744626455; c=relaxed/simple;
+	bh=kh41PVQ169ONxY8zyLUhq7Qb7ay3Ohg0lpouG+/0TLU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rbY8XFlRccwSIZpSRfk2YNd2ia8BC0oE1gjj2l4Fsj3zdMpSFvJC2dnD/Fs86/fhEBDDGRJkxwfGMYaYQiq0HAabE5nbFfRaQh1aOw80aNxsjFDzlCcExmHl0+aNGG2xli3C/61NtZYVCDqLiFjQzu7+kYoPhrMtG/BOIi+oQdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S9nq3Eq3; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="cFfCm3H+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744626386; x=1744885586;
-	bh=yRcvV9zzEHmLeGHD8PYUBkj05ZKHhUmdRnM9Ej07AqI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=cFfCm3H+ah/m7XpakvlzjZYDUWeHuo8MKHfjyXqHxQmqxpC4Fbc1wmLRRf57piRl3
-	 wGxxxq92v0lYMoQBmzczq8p6xjv6WIxhWs3FzyZE9XLmRb8JG4GGAmselc6xhUk1Kz
-	 fal6DQUoGgbqTXRMqE7/eEKdNelhc4kOvh/NJNN2yK2YU8BIVKlmPFef67HIUDP7VN
-	 yQErnhclV7BQCTXW7LiRWYN5vVpxEk7X0u+fG5eEfnUqHHOhbI04/JtQFr07GiR9nO
-	 j8RSqYOLMmxix4V+mhXUJldbg+ub7OoB8qScPcRcIDu+8G4c3Zg/1DvAl5fJ7zP/Mb
-	 3imHQPMFZ7coQ==
-Date: Mon, 14 Apr 2025 10:26:21 +0000
-To: Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, abdiel.janulgue@gmail.com
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, daniel.almeida@collabora.com, robin.murphy@arm.com, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/9] rust: device: implement impl_device_context_into_aref!
-Message-ID: <D96AFO7XG0S5.9YOG2JPIWDIZ@proton.me>
-In-Reply-To: <20250413173758.12068-3-dakr@kernel.org>
-References: <20250413173758.12068-1-dakr@kernel.org> <20250413173758.12068-3-dakr@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 50dc295fd6a4f5a7030fc2aa9d171edef1070374
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S9nq3Eq3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744626451;
+	bh=kh41PVQ169ONxY8zyLUhq7Qb7ay3Ohg0lpouG+/0TLU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=S9nq3Eq3LbgcNAFS71/6y0Loiki36qKw4lTfmjLUQIg569/6wtxPY33vUfuackdB2
+	 jIUUgl6E4af0L+/hPW/2bbvBspm7c+li4HdhUiNSOKspXpujLCNcWoKEFGCtDfpiit
+	 ujYWEPyEq30v2l8yJd2TYnk8lIfR8bfYUAFyY9CtNozZm0nY/dSavqjYOIgH6B+beS
+	 M28pmaVNC6YsJ4jVTe+V6wFZLTeKmD62r20+VJwLLQmrpYgG0arFjvIBRnxSEzoWuC
+	 EfFKDv+Bux+rDy2OWXm7uFWcqrEuh0ZNm4kY2MyMmL98PicI57Io57ma468ZE6GG3u
+	 aEunzGofAW6Ew==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0B9FD17E1034;
+	Mon, 14 Apr 2025 12:27:30 +0200 (CEST)
+Message-ID: <e243cca4-40d7-4cd6-804a-7e63bb5581b0@collabora.com>
+Date: Mon, 14 Apr 2025 12:27:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 5/5] arm64: dts: mediatek: mt7988: Add xsphy for
+ ssusb0/pcie2
+To: Frank Wunderlich <linux@fw-web.de>,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>, Sam Shih <sam.shih@mediatek.com>,
+ MandyJH Liu <mandyjh.liu@mediatek.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250413085806.8544-1-linux@fw-web.de>
+ <20250413085806.8544-6-linux@fw-web.de>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250413085806.8544-6-linux@fw-web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun Apr 13, 2025 at 7:36 PM CEST, Danilo Krummrich wrote:
-> Implement a macro to implement all From conversions of a certain device
-> to ARef<Device>.
->
-> This avoids unnecessary boiler plate code for every device
-> implementation.
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-
-One nit below, with that fixed:
-
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-
+Il 13/04/25 10:58, Frank Wunderlich ha scritto:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> First usb and third pcie controller on mt7988 need a xs-phy to work
+> properly.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
->  rust/kernel/device.rs   | 21 +++++++++++++++++++++
->  rust/kernel/pci.rs      |  7 +------
->  rust/kernel/platform.rs |  9 ++-------
->  3 files changed, 24 insertions(+), 13 deletions(-)
->
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 7cb6f0fc005d..26e71224460b 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -279,6 +279,27 @@ macro_rules! impl_device_context_deref {
->      };
->  }
-> =20
-> +#[doc(hidden)]
-> +#[macro_export]
-> +macro_rules! __impl_device_context_into_aref {
-> +    ($src:ty, $device:tt) =3D> {
-> +        impl core::convert::From<&$device<$src>> for $crate::types::ARef=
-<$device> {
-
-Missing `::` in front of `core`.
-
-> +            fn from(dev: &$device<$src>) -> Self {
-> +                (&**dev).into()
-> +            }
-> +        }
-> +    };
-> +}
+>   arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 39 +++++++++++++++++++++++
+>   1 file changed, 39 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> index 88b56a24efca..10525d977007 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> @@ -334,6 +334,8 @@ usb@11190000 {
+>   				 <&infracfg CLK_INFRA_133M_USB_HCK>,
+>   				 <&infracfg CLK_INFRA_USB_XHCI>;
+>   			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
+> +			phys = <&xphyu2port0 PHY_TYPE_USB2>,
+> +			       <&xphyu3port0 PHY_TYPE_USB3>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -398,6 +400,9 @@ pcie2: pcie@11280000 {
+>   			pinctrl-0 = <&pcie2_pins>;
+>   			status = "disabled";
+>   
+> +			phys = <&xphyu3port0 PHY_TYPE_PCIE>;
+> +			phy-names = "pcie-phy";
 > +
-> +/// Implement [`core::convert::From`], such that all `&Device<Ctx>` can =
-be converted to an
-> +/// `ARef<Device>`.
-> +#[macro_export]
-> +macro_rules! impl_device_context_into_aref {
-> +    ($device:tt) =3D> {
-> +        kernel::__impl_device_context_into_aref!($crate::device::Core, $=
-device);
-> +    };
-> +}
+>   			#interrupt-cells = <1>;
+>   			interrupt-map-mask = <0 0 0 0x7>;
+>   			interrupt-map = <0 0 0 1 &pcie_intc2 0>,
+> @@ -548,6 +553,40 @@ tphyu3port0: usb-phy@11c50700 {
+>   			};
+>   		};
+>   
+> +		topmisc: power-controller@11d10000 {
+> +			compatible = "mediatek,mt7988-topmisc", "syscon",
+> +				     "mediatek,mt7988-power-controller";
+> +			reg = <0 0x11d10000 0 0x10000>;
+> +			#clock-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
 > +
->  #[doc(hidden)]
->  #[macro_export]
->  macro_rules! dev_printk {
+> +		xs-phy@11e10000 {
+
+That shall be just "phy@addr"
+
+> +			compatible = "mediatek,mt7988-xsphy",
+> +				     "mediatek,xsphy";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			xphyu2port0: usb-phy@11e10000 {
+
+Perhaps just u2port0/u3port0 like done on the other MediaTek SoC DTs is better
+for consistency :-)
+
+Cheers!
+
+> +				reg = <0 0x11e10000 0 0x400>;
+> +				clocks = <&infracfg CLK_INFRA_USB_UTMI>;
+> +				clock-names = "ref";
+> +				#phy-cells = <1>;
+> +			};
+> +
+> +			xphyu3port0: usb-phy@11e13000 {
+> +				reg = <0 0x11e13400 0 0x500>;
+> +				clocks = <&infracfg CLK_INFRA_USB_PIPE>;
+> +				clock-names = "ref";
+> +				#phy-cells = <1>;
+> +				mediatek,syscon-type = <&topmisc 0x218 0>;
+> +			};
+> +		};
+> +
+>   		clock-controller@11f40000 {
+>   			compatible = "mediatek,mt7988-xfi-pll";
+>   			reg = <0 0x11f40000 0 0x1000>;
+
 
