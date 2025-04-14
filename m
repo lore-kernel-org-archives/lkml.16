@@ -1,136 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B121AA1E4;
-	Mon, 14 Apr 2025 10:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA4C1C84BB
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625449; cv=none; b=oqttf7AeHvHR9TT+W94WZBmgDbg/RkydWrdqivSQ3eWuSlzzRxP6rVR0+3eiGJib2kV8ByjuU1MIMLpbXOXMoAoa/yDgLIf6jNGoWfptVcTxjoUS3OwDGoGoqICmI5cjWnH19wHCINtfvIVz5aoZSLlPyzIl6ZZXiHjCZhwkNIU=
+	t=1744625522; cv=none; b=umAqEXMqypYmgBeA5aJFhMJlUg6YdTCpwhziiIhGfug6ad1RhxzUdt3dMkasteeeokhAlpVzN20V0XDi1qqTHcCnWxwuQCpAjYHFfChdbMzt25vTN9Dl9ZQHag0/m4jg4kPY/CJpefJkFqz+vTD+PJ7A9KoMQLi1FMZ59IayfH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625449; c=relaxed/simple;
-	bh=G0FnNWx81bWmPA1gSVkMoikJguZFW3QUhmyHkJfTlcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DGJ9iak+poMbPGgXXpGTfzH9BVjFF3XVQnf8eIfFDkknD2cotBXGa6EeRXB7PewGrFD9W//y2DsZbiv2Pz5k/tbVtKWN2HnsEEgX3oUoT3YFiTR9PVG7fmL+AikpZGY79PzdiKxrAmSboSZqI2m6SfHgBnnC/MqVo7ebSiHYuTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N/FqTFkl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744625522; c=relaxed/simple;
+	bh=Kk+qzTUu/LPz0tByaNoRzzWRhucCyoYiydWP055y6/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+Ixo2amiZUlbqu4n+osrPj2XC0fS9YhopRGPtZ6g9loGVR6Bqo3kpZBFkB1fXl5LvsAl8vKU/bAG+3bUbaQ7rMR44I+oph9EkECIrXbg9584N1xJ3xqXc/5zuUjT2BYN5e5obipxo/4Y1WK4R4CU0ezHE6yPgkOObU8RFm1WgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=PM+xjbmm; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N/FqTFkl"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E9A7iZ004753;
-	Mon, 14 Apr 2025 10:10:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TPd6RANhdHQovz3xlyW4dKnmJXedwf2HYCGIkivOVyY=; b=N/FqTFklUWvcBdte
-	G9EFP+W7eXTksZm0mm940QX4zeu5898RwXTRJXrBMI3BTWoP6pKpTL+ILhn98nN/
-	9imYSF9FFuqGOfo+hgsPhCCJcTnIxRJ4OrSTsKrGHRVEXyx9PgIzkUQ2wXPe6FBF
-	NW3sIvp4VmbJEv8jvKUmaAm+sLLmDXEGkyJwxhRN0qGWW4+TfCHE31eq4DMcYqST
-	CvKvg//U9EWz9Z/Oa4Wi3BfypyzHFKb1EQsOt2WLrtNy9aZVV62oOlF1biwE8gHa
-	AbL0pxBsHNaSa8hzS+aafqyovbq03GLWTGCW+e54PXkbSkgw9ZUwNU5iOLiuek8V
-	+GxUDg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpm0v4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 10:10:39 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53EAAUef030645
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 10:10:31 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
- 2025 03:09:53 -0700
-Message-ID: <423f8ae0-259a-4140-94e2-c41f559e2a15@quicinc.com>
-Date: Mon, 14 Apr 2025 15:39:50 +0530
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="PM+xjbmm"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-399749152b4so2018130f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:11:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1744625518; x=1745230318; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ekviSgQyoe64J8uN564Y99DCC6tdD4eOX0JG1pzrNnA=;
+        b=PM+xjbmm1vWhOkJkznqvz4se8eCyjYkYnZ7jJxNk/3jq//yAd0xWrvoQlcSKKIlBcn
+         gx2yfWZXE7/J7p96oqZ4z+TY8yEMvmgsyF9EprmFXO+5javf0pPsL1UjDwXkCV25UY+o
+         xGK5P8HemOb/fALVfX31pt9ZW5UYTW2RG7fCpjstTXgrbIV23VYVqu5xVQnPP7pEfDr3
+         F0TVltvzonKVVmL3nsrdDn3RSsJRhXgcSkbP3iF5cR52rxUNb19SvxdSj5c9vmUVt0Ni
+         cpjsWs7zIBaCTbQpmTYCl/6cfDUbA5VuGTyHtnhcADnDG7mASEfGL2gOsgYkX36dmv2s
+         oJCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744625518; x=1745230318;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ekviSgQyoe64J8uN564Y99DCC6tdD4eOX0JG1pzrNnA=;
+        b=bqUF3meqtEgNalzjQDtzvfEMrP1/uCOirH4SSGhWOe9gNApS7OrntZGhEZRFq+ivbF
+         mruMH91mw0Q5ZSM2zj8UrCDSKz+ILYZoSsw7o3a/8IniSC52D9LVs2qk/00f0JBPrFGg
+         NZ8R6B5vUj1Dhfiy6cw1tiHmu1DlIFFdD+jfLWMubf6lRoQWmUtw11kpKVKrElyCgZdl
+         DlmUqutyuqMe279FqBkE85ErA+WhY4+jw1nI0BPYUbM98019JYqs0XtIHpHtmCdNjmfd
+         u1htJp5rS4CWm2sNrrh9irW/wzFgDfPGkibOn9eGwFHjE5CKb7R5T9jTgvZOZQCVIMEa
+         G1Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDEIuJrK4z3jMV1WihtYst805ZWm62AJzzVJwFcKxO4wCrOiAulrUpLrJx4kNQDJfow14HnyWWT3zBTec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwynXRqjx5mMsTiw5MTLRXAa64XLYqLavvYuACk0f7FzLKF49E1
+	jKmaX8R3EfunIt7ul4D+6hhrr/KZ4Ka7qRLFtC9U/lBD6OyiQaYzMvwA++C+ki9EeFpILsnKEnZ
+	CjO8=
+X-Gm-Gg: ASbGnct8Qj0w0P/jM+XtCn7RI97NHB48vQQrpbkUOa1Lcx1lnKnjD0CisB8vwFmLT6P
+	DbO1d73nVCgzgzSZbMopxPor6Pa7Y3WcGeloYYIM78VKtr2Gse2aVF22tV0lNEpN4Dy/gbzU69l
+	il1itTtqltO+NtJmzVUz67i9B/AKGTOCyOjd5L8yxVcMf+smtt0LcMbq6D1X8p52adVl4mV63fn
+	dR12p7rmRufodlY2o2sO4ANcpsKqEEaf+UOH7zfjDPIaKYSrlVHb4RrUWngbqU8vJmWhI6tInPm
+	1vQ0ndiSa+m5KRbXeo3dSslmT/78
+X-Google-Smtp-Source: AGHT+IEq//Hd1trRvrPxeUyigXnYgKOvmpOmIQ7XVfTMtJYZ1CwhBQqistVDNwlAJ+Bgo1zIZ/GJzw==
+X-Received: by 2002:a05:6000:184d:b0:39c:2264:fb22 with SMTP id ffacd0b85a97d-39eaaecda4amr9351240f8f.46.1744625518276;
+        Mon, 14 Apr 2025 03:11:58 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::31af])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c70csm10678636f8f.38.2025.04.14.03.11.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 03:11:57 -0700 (PDT)
+Date: Mon, 14 Apr 2025 12:11:57 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: arch/riscv/lib/strncmp.S:11: Error: unrecognized opcode
+ `__alternative_cfg("nop", "j strncmp_zbb",0,30,'
+Message-ID: <20250414-5f143a94fdabfdef0191de46@orel>
+References: <202504130710.3IKz6Ibs-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] Add Qualcomm i3c controller driver support
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        <alexandre.belloni@bootlin.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>
-References: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
- <eb6e8452-db37-47f7-9265-fd47d4cb69b8@oss.qualcomm.com>
- <84c07b53-a564-4c71-b172-676303700314@quicinc.com>
- <04ed2ec1-9393-4d02-b7c8-54d6b0aecabc@oss.qualcomm.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <04ed2ec1-9393-4d02-b7c8-54d6b0aecabc@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UE2OyGHsU9JIRpX673lWad_hQJ8D9wbd
-X-Proofpoint-GUID: UE2OyGHsU9JIRpX673lWad_hQJ8D9wbd
-X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=67fcdf1f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=5eYQsLlqKkl2WO7_BZgA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140074
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202504130710.3IKz6Ibs-lkp@intel.com>
 
-
-
-On 4/14/2025 2:48 PM, Konrad Dybcio wrote:
-> On 4/13/25 9:28 AM, Mukesh Kumar Savaliya wrote:
->>
->>
->> On 4/12/2025 4:50 AM, Konrad Dybcio wrote:
->>> On 4/11/25 1:35 PM, Mukesh Kumar Savaliya wrote:
->>>> This patchset adds i3c controller support for the qualcomm's QUPV3 based
->>>> Serial engine (SE) hardware controller.
->>>>
->>>> The I3C SE(Serial Engine) controller implements I3C master functionality
->>>> as defined in the MIPI Specifications for I3C, Version 1.0.
->>>>
->>>> This patchset was tested on Kailua SM8550 MTP device and data transfer
->>>> has been tested in I3C SDR mode.
->>>>
->>>> Features tested and supported :
->>>>     Standard CCC commands.
->>>>     I3C SDR mode private transfers in PIO mode.
->>>>     I2C transfers in PIO mode.
->>>>
->>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>> ----
->>>> Link to V3: https://lore.kernel.org/lkml/20250403134644.3935983-1-quic_msavaliy@quicinc.com/T/
->>>> v3->v4:
->>>>    - Dropped "clock-names" property from dt-bindings as suggested by krzysztof.
->>>>    - Makefile: Correct order sequence for i3c-qcom-geni.c.
->>>>    - Indentation corrected around print statement.
->>>>    - geni_i3c_probe() : Exit with return 0 instead of ret for success.
->>>>    - Added sparse annotations around i3c_geni_runtime_get_mutex_lock()/_unlock().
->>>
->>> So this is the third time I got this revision in my inbox, previous were
->>> <20250410084813.3594436-1-quic_msavaliy@quicinc.com> 10.04
->>> <20250331164648.2321899-1-quic_msavaliy@quicinc.com> 31.03
->>>
->>> b4 should be automatically upticking the revision counter, please don't mess
->>> with it manually
->> Sorry Konrad, i could not understand what's the problem or what you are trying to say.
->>
->> Do you suspect something (Which i didnt get) is seen as manually changed ?
+On Sun, Apr 13, 2025 at 07:18:45AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   b676ac484f847bbe5c7d29603f41475b64fefe55
+> commit: 9343aaba1f256ff42730db5a61efc32a86149776 RISC-V: separate Zbb optimisations requiring and not requiring toolchain support
+> date:   4 weeks ago
+> config: riscv-randconfig-001-20250413 (https://download.01.org/0day-ci/archive/20250413/202504130710.3IKz6Ibs-lkp@intel.com/config)
+> compiler: riscv32-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250413/202504130710.3IKz6Ibs-lkp@intel.com/reproduce)
 > 
-> Yes, normally each 'b4 send' upticks the revision counter, but here we got
-> a couple submissions all with v4
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504130710.3IKz6Ibs-lkp@intel.com/
 > 
-Sorry for confusion, first one was sent to internal for review (limited 
---to list). Later i send to upstream.
-> Konrad
+> All errors (new ones prefixed by >>):
+> 
+>    arch/riscv/lib/strncmp.S: Assembler messages:
+> >> arch/riscv/lib/strncmp.S:11: Error: unrecognized opcode `__alternative_cfg("nop", "j strncmp_zbb",0,30,'
+> >> arch/riscv/lib/strncmp.S:12: Error: junk at end of line, first unrecognized character is `0'
+> --
+>    arch/riscv/lib/strlen.S: Assembler messages:
+> >> arch/riscv/lib/strlen.S:11: Error: unrecognized opcode `__alternative_cfg("nop", "j strlen_zbb",0,30,'
+> >> arch/riscv/lib/strlen.S:12: Error: junk at end of line, first unrecognized character is `0'
+> --
+>    arch/riscv/lib/strcmp.S: Assembler messages:
+> >> arch/riscv/lib/strcmp.S:11: Error: unrecognized opcode `__alternative_cfg("nop", "j strcmp_zbb",0,30,'
+> >> arch/riscv/lib/strcmp.S:12: Error: junk at end of line, first unrecognized character is `0'
+>
 
+We're missing __ALTERNATIVE_CFG() for !RISCV_ALTERNATIVE && __ASSEMBLY__
+and I see some other missing/broken macros on the !RISCV_ALTERNATIVE side.
+I'll send a patch.
+
+Thanks,
+drew
