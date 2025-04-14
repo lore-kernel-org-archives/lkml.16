@@ -1,109 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7C74C62
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A76C1AF0C7
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744613977; cv=none; b=AvJvjJqSoytwnIFMmdlmUMuN5n/Rt6kh4Uua0z8xpbFFozVpy+vq/dUeS5iizc8/CbdaHoU+wTKbEuTwoV7am5ldaaGkOLgaqjCBizijXpfzzYqQB+CycNAz38jN3yz1hDcReQLVTj55ISwZQ3qPj4VMZVC2pJTUOas/O7dCMq0=
+	t=1744614002; cv=none; b=ScHyXK8urbdUkXfM6lzEHPCx3l4I+qGsq+aXWYN6vvFI1RqbZ1i+U7MpFzreyjNWd4o4eL7qD52PqJKwASXODy58qFBF1ebuz5IKMx9KByWlIplYBZ9ysac/QkvwDd19Dswzkzy2jIy3zoxDA7OG29ZyXPMtX6wVsDc/Avk3I1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744613977; c=relaxed/simple;
-	bh=0wMjcRHkX6uNdf6OAm/aJu4belyKkC3mKg2uyoE4llo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Szyysc52uD50lV2tdc8HtRsy4dKym0Aczp6fsvMT0vZq0W7gLceyCl4dBBYoWirQSQ4txAmoH78BAaepXC7nfyZftppf4ifYkiGUnwwhu6N8a2gkfHhDx7vB4ogGVhu5OHFz8GcQyJrOzKcnAQhQmf04/kkqAtqo1W6qNqZXeM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IB0vHJPV; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744614002; c=relaxed/simple;
+	bh=8jkBzcU2x8SA8XsDmjjKjMwFaN6foRAOjdfUUGsXjIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TzKP6R8B5SCYqX6yuUHFPymQgf0EAnVjAMjsq+aV7sh4w/Ns7tkln2QFtfprZeuUWYYDecthFUUquQL1IpLYpgozi5opTDmYSa/Mh6tYrCH4iBPVl08+sWZsj7cmjbWlheXfYGRtQ1TgiIolPKZJUExCGr4NA0WaL8l1XlwHRSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Q1TtBU5Q; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IB0vHJPV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744613976; x=1776149976;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0wMjcRHkX6uNdf6OAm/aJu4belyKkC3mKg2uyoE4llo=;
-  b=IB0vHJPV72qgTH1a6a3iB4mVzdPhdJ0RfLlFLQbeke0aib7lsXRTjql5
-   0eB9fUix5sR8yQxigKBLwYG5s9B/Lm1BI/z7MB7UiHIt6GYzYUp/R77c+
-   ZXgxwfDP04d4IvpJWiuP9+2wrN4ISKhxeR4C3CeRo4XlcXUebXGtMdu4G
-   5O3Q6YXTyq1O+FN4cIX8vIZvMEiwzkpHeVGncfjz5UlPSLfH42SzdtYMc
-   JBYFXHOj6qa287ZvLFHIuV8zmbEj9WSHvkVr4EoC8UgiyVdbfqrHiBXMk
-   cKY/vMOXPUeIiVQ/Kww86oysymN/nm0wGR4PtEFVsXV2pCJMBKTlkddCh
-   Q==;
-X-CSE-ConnectionGUID: 42UK41dERl2VyvIWcMYIhA==
-X-CSE-MsgGUID: mBk9do3kT/WEhBpXnyQ6/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46204173"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="46204173"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:59:35 -0700
-X-CSE-ConnectionGUID: GfbqN0cTQHiFgvxdInDqPQ==
-X-CSE-MsgGUID: +ViJCt8sR5+zZ3xgJOlnXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129582849"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:59:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4Dn1-0000000C9p6-0log;
-	Mon, 14 Apr 2025 09:59:31 +0300
-Date: Mon, 14 Apr 2025 09:59:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Remo Senekowitsch <remo@buenzli.dev>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Q1TtBU5Q"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744613986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AoJm+f6FnQK/O2OG0bHw+7ynZXalVbButioglhiA18s=;
+	b=Q1TtBU5QI85z8TTBoUD423w1sgzAOah1b52f0aJPYmy6spTEm11D0GEle5C/8tJ/YS3h0N
+	RXZwW9tZBEY1Po+k4MEPuYoSF3jlFkqGX5VlCMQaZ7BJ9M4RMzb3XskPvNaXygs7uskaOI
+	/aYZJOgcTxTXLY+8102RYgLdwNTdAMw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
 	linux-kernel@vger.kernel.org
-Subject: Re: Exporting functions from vsprintf.c for Rust
-Message-ID: <Z_yyUmYoihvpP0_5@smile.fi.intel.com>
-References: <D931ZH9KRY2E.2D7HN6QWELGFJ@buenzli.dev>
- <Z_jj_8vvmWY-WuTU@pathway.suse.cz>
- <D93S1SHPJDDU.INJ3UWZUM1UY@buenzli.dev>
- <CAKwiHFi_egfePDdXQEtYNvO-U65O==MosHNQ7Vm4F6iudJs95g@mail.gmail.com>
+Subject: [PATCH] ASoC: cs-amp-lib: Replace offsetof() with struct_size()
+Date: Mon, 14 Apr 2025 08:59:03 +0200
+Message-ID: <20250414065904.336749-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwiHFi_egfePDdXQEtYNvO-U65O==MosHNQ7Vm4F6iudJs95g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 11, 2025 at 03:43:12PM +0200, Rasmus Villemoes wrote:
-> On Fri, Apr 11, 2025, 13:36 Remo Senekowitsch <remo@buenzli.dev> wrote:
-> > On Fri Apr 11, 2025 at 11:42 AM CEST, Petr Mladek wrote:
+Use struct_size() to calculate the number of bytes to allocate and used
+by 'cirrus_amp_efi_data'. Compared to offsetof(), struct_size() provides
+additional compile-time checks (e.g., __must_be_array()).
 
-...
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Compile-tested only
+---
+ sound/soc/codecs/cs-amp-lib-test.c | 3 +--
+ sound/soc/codecs/cs-amp-lib.c      | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-> > > Honestly, I do not have a good feeling about exporting the internal
-> > > vsprintf() functions. They have a very specific semantic.
-> > >
-> > > Especially, they return pointer to the next-to-write character.
-> > > And it might be even beyond the given *end pointer. It is because, for
-> > > example, vsnprintf() returns the number of characters which would
-> > > have been written to the buffer when it was big enough.
-> > >
-> > > Instead, I suggest to create a wrapper which would have a sane
-> > > semantic and call scnprintf() internally. Something like:
-> > >
-> > > int fwnode_full_name_to_string(char *buf, size_t size,
-> > >                              struct fwnode_handle *fwnode)
-> > > {
-> > >       return scnprintf(buf, size, "%pfwf", fwnode);
-> > > }
-> >
-> > That makes sense. I tried your suggestion and it works, thank you!
-> >
-> >
-> But is a wrapper even needed for this? Can't the appropriate sprintf
-> variant just be called from Rust with that %pfwf format string?
-
-+1 here. But if really really need that wrapper, it should go to property.h.
-
+diff --git a/sound/soc/codecs/cs-amp-lib-test.c b/sound/soc/codecs/cs-amp-lib-test.c
+index 45626f99a417..2369fffb58f7 100644
+--- a/sound/soc/codecs/cs-amp-lib-test.c
++++ b/sound/soc/codecs/cs-amp-lib-test.c
+@@ -40,8 +40,7 @@ static void cs_amp_lib_test_init_dummy_cal_blob(struct kunit *test, int num_amps
+ 	unsigned int blob_size;
+ 	int i;
+ 
+-	blob_size = offsetof(struct cirrus_amp_efi_data, data) +
+-		    sizeof(struct cirrus_amp_cal_data) * num_amps;
++	blob_size = struct_size(priv->cal_blob, data, num_amps);
+ 
+ 	priv->cal_blob = kunit_kzalloc(test, blob_size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_NULL(test, priv->cal_blob);
+diff --git a/sound/soc/codecs/cs-amp-lib.c b/sound/soc/codecs/cs-amp-lib.c
+index c677868c5d5f..c2ce828a96ae 100644
+--- a/sound/soc/codecs/cs-amp-lib.c
++++ b/sound/soc/codecs/cs-amp-lib.c
+@@ -147,7 +147,7 @@ static struct cirrus_amp_efi_data *cs_amp_get_cal_efi_buffer(struct device *dev)
+ 	dev_dbg(dev, "Calibration: Size=%d, Amp Count=%d\n", efi_data->size, efi_data->count);
+ 
+ 	if ((efi_data->count > 128) ||
+-	    offsetof(struct cirrus_amp_efi_data, data[efi_data->count]) > data_size) {
++	    struct_size(efi_data, data, efi_data->count) > data_size) {
+ 		dev_err(dev, "EFI cal variable truncated\n");
+ 		ret = -EOVERFLOW;
+ 		goto err;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
