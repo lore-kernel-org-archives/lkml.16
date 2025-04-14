@@ -1,118 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B790254AFC;
-	Mon, 14 Apr 2025 07:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0668B257AF7;
+	Mon, 14 Apr 2025 07:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744615032; cv=none; b=EQ9fl8JEHUc+CogC6etQ2AbPLvA+D8iI/LDyNVvM3S0GGkA8pkKKdXRfQc5DIp5/XgoLi4814hlDWpIx7z2CGxQtN358DPj3k1CfSUvC/vnm9KcsoVLj1AqdZaV/3HazYdlgk6CQLYiX3otmUdh+NQZ1LBxnJtvK56ZaM4AIJF8=
+	t=1744615069; cv=none; b=j+ObMsTmy91wAQAbe+6yMlrvoLXL+J55ihbxwNvkMs5x8Pcto2qAj13FpznTjlQQwjD08j+XbfrpUL+AfgbDO4Z+DkEu4VPlsr6YrwxAqXad1eWGhDCuxPiQgPctt8VQWIE9XCIcf312loxPmwyoGeNxtBb0Tpq03VMdHhoQmS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744615032; c=relaxed/simple;
-	bh=EgvUs0tGMUnfOTbPrEg41rac3uXzGlSdqqVCnNvZNd4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EsegJ4h2K5Xy3bgQ2sJRDMFNkUiJRly6yXIWJNq09uWgwBq6QMglBlFAdmWWw0Xr3rDOGPPY8Kdjx8Mrea023BJ2azmCgk2KSFxahen27C0hR8skvTFkLjvv6rTKPtIUopzaO6MCpz92eysUSUhFSCTAQlDnkBM2rk5wnguSw3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBjYWW1D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744615069; c=relaxed/simple;
+	bh=boozTliB7bYs9rUJdY0DioZxAqN1tNd+gw4KQY9xVJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HyVaJd6EcZ8NU1dOp2b0JGhTRMwzNg42ctwLkAR0japMh9QyuApGAnBLnmGUZYlv0oAf02fSy0XpawAGP12KHyWXPm3NkxDZxPaKoQBFZY9zuA+D0OwFs2OXoYldiObimGZIuAiX0E7qQ0IEvk9grubJF8L7FhunsBM61UAiBeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByBVFfBI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBjYWW1D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22869C4CEE2;
-	Mon, 14 Apr 2025 07:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByBVFfBI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D953C4CEE2;
+	Mon, 14 Apr 2025 07:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744615030;
-	bh=EgvUs0tGMUnfOTbPrEg41rac3uXzGlSdqqVCnNvZNd4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kBjYWW1D5PAJkZnrA7DrDYnB7fEilIj9ADPljOAoYo5EZTAy8DAMss++vYyiGXCfK
-	 eubvxa55cAvCrCzopKg1+gjvDIL6dRf6xPhvMXZptVj8eMuPo3ECtu4bpGcVPQcJ8N
-	 JtEjVvVDPCJBIzT2gsEjtP+B+sbyyCq4MQUBO893BfJJhyxYVj2ffmtsjOdIJCeYnl
-	 v4NvTj/tWm4rhs4xfsKKDGfFn+Wxg2/4QI9AiyEkK/8kfoWFrYDTO5vHQzOdQJZZsp
-	 eAGAT3cyLYQ9wMl6HQ5U8oyt0y9tGzUDVl4Z9EezN5SJ7QNmnJmPOCbWKI2v80Q7Fp
-	 BnxdTjXqXAzzw==
-Message-ID: <d676b9f3-e2b4-4b7c-ac37-e706b69af746@kernel.org>
-Date: Mon, 14 Apr 2025 09:17:07 +0200
+	s=k20201202; t=1744615068;
+	bh=boozTliB7bYs9rUJdY0DioZxAqN1tNd+gw4KQY9xVJA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ByBVFfBIBlXtzPv5hLien3pIvMPuF4iKRCHwVIRLjxecR5XfVrU940qgXIh8zLq+V
+	 TUtRXXgTkhU0tK0wIKISb+0JFOtBmjE5QR5nW7nc63S4kwj7/Ytj1EHtLkh+mZYf6D
+	 tydV73OxZmf3+x+b2LrF0QUIgWwmqhPLBS4e8bHzElGdM31A+g1VnCcUxaoxKXoIQB
+	 qStlv3nYNvhRp13U9sqZmDPjToTw2L8950wd3pBRz9KFc4361H5r+iGC8iWN/5E/z6
+	 PBXbWOq4pJBsEy0EE9cN0MQGzm0d3M5ldcB0AUusaURgxUv3PUwFtatejS8dIZjnvi
+	 Bkb26kpVKoxlg==
+Date: Mon, 14 Apr 2025 09:17:45 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] dt-bindings: phy: add exynos2200 eusb2 phy
+ support
+Message-ID: <20250414-glaring-swallow-of-serenity-78edcb@shite>
+References: <20250412202620.738150-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250412202620.738150-2-ivo.ivanov.ivanov1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/11] vt: update ucs_width.c following latest
- gen_ucs_width.py
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, Dave Mielke <Dave@mielke.cc>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250410011839.64418-1-nico@fluxnic.net>
- <20250410011839.64418-11-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250410011839.64418-11-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250412202620.738150-2-ivo.ivanov.ivanov1@gmail.com>
 
-On 10. 04. 25, 3:14, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
+On Sat, Apr 12, 2025 at 11:26:11PM GMT, Ivaylo Ivanov wrote:
+> Document the exynos2200 eUSB2 compatible. Unlike the currently documented
+> Qualcomm SoCs, the driver doesn't make use of reset lines for reset
+> control and uses more clocks.
 > 
-> Split table ranges into BMP (16-bit) and non-BMP (above 16-bit).
-> This reduces the corresponding text size by 20-25%.
+> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> ---
+>  .../bindings/phy/samsung,snps-eusb2-phy.yaml  | 79 +++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,snps-eusb2-phy.yaml
+
+Please name it after compatible, so
+samsung,exynos2200-eusb2-phy.yaml
+
+
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung,snps-eusb2-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,snps-eusb2-phy.yaml
+> new file mode 100644
+> index 000000000..09d3fdd4a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/samsung,snps-eusb2-phy.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/samsung,snps-eusb2-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SNPS eUSB2 phy controller
+> +
+> +maintainers:
+> +  - Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> +
+> +description:
+> +  eUSB2 controller supports LS/FS/HS usb connectivity on Exynos2200.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos2200-snps-eusb2-phy
+
+I did not mention this earlier, but I think we should skip the snps in
+the compatible. Using vendor name in device name is just confusing, so:
+
+samsung,exynos2200-eusb2-phy
+
+However the description should include it, e.g.
+
+Samsung Exynos2200 eUSB2 phy, based on Synopsys eUSB2 IP block, ....
+
+
 ...
-> @@ -483,7 +517,9 @@ static bool is_in_interval(uint32_t cp, const struct interval *intervals, size_t
->    */
->   bool ucs_is_zero_width(uint32_t cp)
->   {
-> -	return is_in_interval(cp, zero_width_ranges, ARRAY_SIZE(zero_width_ranges));
-> +	return (cp <= 0xFFFF)
 
-This calls for some is_bmp() helper.
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    usb_hsphy: phy@10ab0000 {
+> +        compatible = "samsung,exynos2200-snps-eusb2-phy";
+> +        reg = <0x10ab0000 0x10000>;
+> +        #phy-cells = <0>;
+> +
+> +        clocks = <&cmu_hsi0 7>,
+> +            <&cmu_hsi0 5>,
+> +            <&cmu_hsi0 8>;
 
-And then the classic way:
-if (is_bmp())
-   return is_in_interval16();
+These should be aligned with opening <
 
-return is_in_interval32();
+With above:
 
-thanks,
--- 
-js
-suse labs
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
