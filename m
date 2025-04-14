@@ -1,185 +1,206 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA124187876
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275B74C62;
+	Mon, 14 Apr 2025 03:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744601558; cv=none; b=b9O6EGpws209hzk+c5jUAeQJnDa3eGZh3Hpf3sEUGXP0niNpuZ4N2DvCFwun7dVhh0zLV2O8yMJBujXJw/8sRlvxqzX6kU9DvrZKm5q/F/GsxiajsCUvV7wELEY1RfP++KlfUAF7kpm8KibN+j0WNNfLS6mU+l90r8JaeZQVbCk=
+	t=1744602171; cv=none; b=DCkgC1NVHIVkUe4CvZeT8jZv39rCE/frk9la6O0AsQi0c23QE+60zGD/7rVp6061m+fsX+hbUdfUQXTkBGemxV0iMw8w6nWmpya87W3WtuVaydjxpaar1NrTVyiZQnBiXGjxdwhOY6APrqPXFHpRMfYYj5MDKz20iFu8clT4bik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744601558; c=relaxed/simple;
-	bh=HtBRew0JrEvOtBYq4QPsIKQr0DvikryI56JZjDM9q6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X+uGkCth3+QhrF6moPbEp8khF4c1/J6EsZyfbRoS+oScTJt+W3Ou7bBezyEfkA5l9ptXvXNofN2DzzRwKLsNuAc5RTQMajEbzjQTH29qU4s3uD/O0qgzfdoewyCk5a2yjFuJnf3FUSDFAijXlhTuRIBnlEIXX7ASE1Khi5ZWxyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RYtBYAu/; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744602171; c=relaxed/simple;
+	bh=akYAeKGVkCWyMEFgr8P3v+S+1gUdUXhs4zalfRa00k0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MW8rQ3Fh7328ynWm+hNF7c96CcMPsM/BfeBGX72hWzz7OMbh1AMXy4NSAXF8JiZQTc4T96KlMvhCbLizBuQQD2wUNfqIQKRaGO6Q0+jL8XPryc5Xkw4u5SkKTsjnSdAwiyurLI6+aJQfm/oretbmg70CJmwWoslzGq6pX4NlvKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=H6ixMF+f; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RYtBYAu/"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43f106a3591so3290715e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744601553; x=1745206353; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kxvzAVD+b+K7b2LEXDynHWcZkMZbyWAEc+btpOiEFgY=;
-        b=RYtBYAu/tLMOQLs7y2iSt/GKOjtNgLOtxrUDepN76h5+VVplegJcvgiE+zCSrGJa26
-         gM76wgA6x5ayomD2GqW7x+rbT2QMc046r3bfkuKzzx4n3yag7FwiXUACxbBX+kz0wTeP
-         F7GBITI/cuJcoxxK+0KRXYDBfCnHtbGjK92rS+zvbZbEHhqM//IRlEW+v/lSfbyzLYPk
-         2vq8/IBXKKK4KD4FVODdKK+krhnI1tVnGg4Jeu1xvEIxXfqq93W5qpg1l/HqQleKDCSH
-         6kUbi0VBi7J59IwamvuHpldvpM/3DCYglBXX3kGyGyW33XaBvf69ZQb9RPDAE74azMT9
-         yDJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744601553; x=1745206353;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kxvzAVD+b+K7b2LEXDynHWcZkMZbyWAEc+btpOiEFgY=;
-        b=Nz7UG16uQAlAJAv7BhzuyiWFjq3njDkbdsUBe0Nx7UTNWSFnO976SpOqr7xgWCuiyJ
-         1dR9iBb+ILIhBhdNkufKEU/1spiJo/6Xn6WEK3N0D7MkeeOCNDzXj5dgT3rknjHE1bPB
-         4CUKeYu7bkSstv/kNf6MrGODDnBJvHEhVg3nIWPUcsml0/ZjBcw0OkJ9wORhzA3tifa6
-         reV14KUWYwlDqi99eV4sN3roH/+jeuCCVjmEVe+z9f3nRXw1Gug6RtBV4Ik7HPQSUMAx
-         YkhLUuauYWSenFIiYTbyPIpPBoTHE94Q5pCP+Ajtb+IQpbPBetmbPvkYWHNBxatUs1Gk
-         Bfcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXS1P4oJPyCUQTT7HbKlPwXME6xR/ZjyOUjS2VkVOdyFBYY7Tb7dNvvxMoTI/97fP/cMLxZ8Kj/udGDLhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRAYnDIfuWLdE79QleeaJpSWystvs4MNVWSNKBd6UGF2bd2+Cs
-	O1Eak5L5B/UViv/NXQM+Q3ukSlhTitk5eA3w1ZKW8QiGDynSCoTI2MguPTk+Cec=
-X-Gm-Gg: ASbGncsYKXG7PfUDI3olwEPgZ3rb9tum8lT3ekqy/ZuBWhLo921frfQfNKQPU6nhytG
-	/I9RPkMImcP6IXTWcayShsX8MiAgathTK1jFhh4RsoCxRcpZYL0Z2ZhqeasuBeIg6m2PKRHL4A2
-	ANn+lwbbaAEOjc4Tjylsu5Hx50d2v3NhMDHm88pb8N/SJA5dFWLPq7iCQT6IB9azj2FsK0WHFRa
-	WZEm7gzbNLejNgtv9A9/pdv6XR4l07mXglksJHNm55DN4/E4JyI5X5m851fOZ8+ohQQusvK6Wxi
-	nW5mDEuT3bKMrMS0sIvMpkTH6eG/dp5Dpq7TPHdL+4HpcPs=
-X-Google-Smtp-Source: AGHT+IH9FkFVmN72NScAmq1zaLdvdfVAUzzhsAs0uyDSeninS3qW8FoG2MiHfljiAzxIPGlcXl0EzQ==
-X-Received: by 2002:a05:6000:2504:b0:385:de67:229e with SMTP id ffacd0b85a97d-39eaaec374dmr2807309f8f.11.1744601552828;
-        Sun, 13 Apr 2025 20:32:32 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd219d98bsm5861828b3a.11.2025.04.13.20.32.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 20:32:32 -0700 (PDT)
-Message-ID: <7241eee3-8d6b-4034-a124-c04e9d06614a@suse.com>
-Date: Mon, 14 Apr 2025 11:32:29 +0800
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="H6ixMF+f"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53E3gAedD2304343, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744602130; bh=akYAeKGVkCWyMEFgr8P3v+S+1gUdUXhs4zalfRa00k0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=H6ixMF+fJ8ARNa/+XslpG5J5si/HgZmMegjBvirG5n4W3Hh2UC3G8oQCRyyP7cjkY
+	 tG+8RFH8auVSKYRACtelMTc3/8RPRDTTWlbkIIeRJdZL7/MPHZcC5WtgOX92g7tp5Y
+	 wsGK6a4qdTDAEICi0L7AbM+n1WF9oMcdfmxbmVZWldsmDuoo5ZRRAK1zI+jrJIYyIL
+	 e3J9RhoGcv7pmHmNlYjW4S9rgKJj1N9+FGrx6Ix+uRxAcwZjmJ8H/1XeLmrymxYh2v
+	 Zaq4WHswJNZ/oHP0T2/57aqPSXO8q84LK4tllPuQGMoUHyRg20lzG5IJJ8z8lSdLC8
+	 mAsHVb4kZ6CKg==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53E3gAedD2304343
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 11:42:10 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 14 Apr 2025 11:42:11 +0800
+Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 14 Apr
+ 2025 11:42:10 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next v3] rtase: Add ndo_setup_tc support for CBS offload in traffic control setup
+Date: Mon, 14 Apr 2025 11:42:02 +0800
+Message-ID: <20250414034202.7261-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] ocfs2: fix the issue with discontiguous allocation in
- the global_bitmap
-To: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- akpm <akpm@linux-foundation.org>, gautham.ananthakrishna@oracle.com
-References: <20250408152311.16196-1-heming.zhao@suse.com>
- <20250408152311.16196-2-heming.zhao@suse.com>
- <d48df38c-ff38-45c2-b941-8f51990e4699@linux.alibaba.com>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <d48df38c-ff38-45c2-b941-8f51990e4699@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Hi Joseph,
+Add support for ndo_setup_tc to enable CBS offload functionality as
+part of traffic control configuration for network devices.
 
-On 4/13/25 09:06, Joseph Qi wrote:
-> 
-> 
-> On 2025/4/8 23:23, Heming Zhao wrote:
->> The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
->> fragmentation is high") introduced another regression.
->>
->> The following ocfs2-test case can trigger this issue:
->>> ${RESV_UNWRITTEN_BIN} -f ${WORK_PLACE}/large_testfile -s 0 -l \
->>> $((${FILE_MAJOR_SIZE_M}*1024*1024))
->>
->> In my env, test disk size (by "fdisk -l <dev>"):
->>> 53687091200 bytes, 104857600 sectors.
->>
->> Above command is:
->>> /usr/local/ocfs2-test/bin/resv_unwritten -f \
->>> /mnt/ocfs2/ocfs2-activate-discontig-bg-dir/large_testfile -s 0 -l \
->>> 53187969024
->>
->> Error log:
->>> [*] Reserve 50724M space for a LARGE file, reserve 200M space for future test.
->>> ioctl error 28: "No space left on device"
->>> resv allocation failed Unknown error -1
->>> reserve unwritten region from 0 to 53187969024.
->>
->> Call flow:
->> __ocfs2_change_file_space //by ioctl OCFS2_IOC_RESVSP64
->>   ocfs2_allocate_unwritten_extents //start:0 len:53187969024
->>    while()
->>     + ocfs2_get_clusters //cpos:0, alloc_size:1623168 (cluster number)
->>     + ocfs2_extend_allocation
->>       + ocfs2_lock_allocators
->>       |  + choose OCFS2_AC_USE_MAIN & ocfs2_cluster_group_search
->>       |
->>       + ocfs2_add_inode_data
->>          ocfs2_add_clusters_in_btree
->>           __ocfs2_claim_clusters
->>            ocfs2_claim_suballoc_bits
->>            + During the allocation of the final part of the large file
->> 	    (around 47GB), no chain had the required contiguous
->>              bits_wanted. Consequently, the allocation failed.
->>
->> How to fix:
->> When OCFS2 is encountering fragmented allocation, the file system should
->> stop attempting bits_wanted contiguous allocation and instead provide the
->> largest available contiguous free bits from the cluster groups.
->>
->> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
->> Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
->> ---
->>   fs/ocfs2/suballoc.c | 36 +++++++++++++++++++++++++++++-------
->>   1 file changed, 29 insertions(+), 7 deletions(-)
->>
->> diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
->> index fde75f2af37a..2e1689fc6cf7 100644
->> --- a/fs/ocfs2/suballoc.c
->> +++ b/fs/ocfs2/suballoc.c
->> @@ -1796,6 +1796,7 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
->>   {
->>   	int status;
->>   	u16 chain;
->> +	u32 contig_bits;
->>   	u64 next_group;
->>   	struct inode *alloc_inode = ac->ac_inode;
->>   	struct buffer_head *group_bh = NULL;
->> @@ -1821,10 +1822,23 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
->>   	status = -ENOSPC;
->>   	/* for now, the chain search is a bit simplistic. We just use
->>   	 * the 1st group with any empty bits. */
->> -	while ((status = ac->ac_group_search(alloc_inode, group_bh,
->> -					     bits_wanted, min_bits,
->> -					     ac->ac_max_block,
->> -					     res)) == -ENOSPC) {
->> +	while (1) {
->> +		if (ac->ac_which == OCFS2_AC_USE_MAIN_DISCONTIG) {
->> +			contig_bits = le16_to_cpu(bg->bg_contig_free_bits);
->> +			if (!contig_bits)
->> +				contig_bits = ocfs2_find_max_contig_free_bits(bg->bg_bitmap,
->> +						le16_to_cpu(bg->bg_bits), 0);
->> +			if (bits_wanted > contig_bits)
->> +				bits_wanted = contig_bits;
->> +			if (bits_wanted < min_bits)
->> +				bits_wanted = min_bits;
-> 
-> This seems only valid when bits_wanted changed?
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+v1 -> v2:
+- Add a check to ensure that qopt->queue is within the specified range.
+- Add a check for qopt->enable and handle it appropriately.
 
-Good catch. the correct style:
+v2 -> v3:
+- Nothing has changed, and it is simply being posted again now that
+net-next has reopened.
+---
+ drivers/net/ethernet/realtek/rtase/rtase.h    | 15 +++++
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 60 +++++++++++++++++++
+ 2 files changed, 75 insertions(+)
 
-if (bits_wanted > contig_bits && contig_bits > min_bits)
-         bits_wanted = contig_bits;
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
+index 2bbfcad613ab..498cfe4d0cac 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase.h
++++ b/drivers/net/ethernet/realtek/rtase/rtase.h
+@@ -170,6 +170,7 @@ enum rtase_registers {
+ #define RTASE_TC_MODE_MASK GENMASK(11, 10)
+ 
+ 	RTASE_TOKSEL      = 0x2046,
++	RTASE_TXQCRDT_0   = 0x2500,
+ 	RTASE_RFIFONFULL  = 0x4406,
+ 	RTASE_INT_MITI_TX = 0x0A00,
+ 	RTASE_INT_MITI_RX = 0x0A80,
+@@ -259,6 +260,12 @@ union rtase_rx_desc {
+ #define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
+ #define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
+ 
++/* txqos hardware definitions */
++#define RTASE_1T_CLOCK            64
++#define RTASE_1T_POWER            10000000
++#define RTASE_IDLESLOPE_INT_SHIFT 25
++#define RTASE_IDLESLOPE_INT_MASK  GENMASK(31, 25)
++
+ #define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
+ 
+ struct rtase_int_vector {
+@@ -294,6 +301,13 @@ struct rtase_ring {
+ 	u64 alloc_fail;
+ };
+ 
++struct rtase_txqos {
++	int hicredit;
++	int locredit;
++	int idleslope;
++	int sendslope;
++};
++
+ struct rtase_stats {
+ 	u64 tx_dropped;
+ 	u64 rx_dropped;
+@@ -313,6 +327,7 @@ struct rtase_private {
+ 
+ 	struct page_pool *page_pool;
+ 	struct rtase_ring tx_ring[RTASE_NUM_TX_QUEUE];
++	struct rtase_txqos tx_qos[RTASE_NUM_TX_QUEUE];
+ 	struct rtase_ring rx_ring[RTASE_NUM_RX_QUEUE];
+ 	struct rtase_counters *tally_vaddr;
+ 	dma_addr_t tally_paddr;
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 2aacc1996796..6251548d50ff 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1661,6 +1661,65 @@ static void rtase_get_stats64(struct net_device *dev,
+ 	stats->rx_length_errors = tp->stats.rx_length_errors;
+ }
+ 
++static void rtase_set_hw_cbs(const struct rtase_private *tp, u32 queue)
++{
++	u32 idle = tp->tx_qos[queue].idleslope * RTASE_1T_CLOCK;
++	u32 val, i;
++
++	val = u32_encode_bits(idle / RTASE_1T_POWER, RTASE_IDLESLOPE_INT_MASK);
++	idle %= RTASE_1T_POWER;
++
++	for (i = 1; i <= RTASE_IDLESLOPE_INT_SHIFT; i++) {
++		idle *= 2;
++		if ((idle / RTASE_1T_POWER) == 1)
++			val |= BIT(RTASE_IDLESLOPE_INT_SHIFT - i);
++
++		idle %= RTASE_1T_POWER;
++	}
++
++	rtase_w32(tp, RTASE_TXQCRDT_0 + queue * 4, val);
++}
++
++static int rtase_setup_tc_cbs(struct rtase_private *tp,
++			      const struct tc_cbs_qopt_offload *qopt)
++{
++	int queue = qopt->queue;
++
++	if (queue < 0 || queue >= tp->func_tx_queue_num)
++		return -EINVAL;
++
++	if (!qopt->enable) {
++		tp->tx_qos[queue].hicredit = 0;
++		tp->tx_qos[queue].locredit = 0;
++		tp->tx_qos[queue].idleslope = 0;
++		tp->tx_qos[queue].sendslope = 0;
++
++		rtase_w32(tp, RTASE_TXQCRDT_0 + queue * 4, 0);
++	} else {
++		tp->tx_qos[queue].hicredit = qopt->hicredit;
++		tp->tx_qos[queue].locredit = qopt->locredit;
++		tp->tx_qos[queue].idleslope = qopt->idleslope;
++		tp->tx_qos[queue].sendslope = qopt->sendslope;
++
++		rtase_set_hw_cbs(tp, queue);
++	}
++
++	return 0;
++}
++
++static int rtase_setup_tc(struct net_device *dev, enum tc_setup_type type,
++			  void *type_data)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++
++	switch (type) {
++	case TC_SETUP_QDISC_CBS:
++		return rtase_setup_tc_cbs(tp, type_data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static netdev_features_t rtase_fix_features(struct net_device *dev,
+ 					    netdev_features_t features)
+ {
+@@ -1696,6 +1755,7 @@ static const struct net_device_ops rtase_netdev_ops = {
+ 	.ndo_change_mtu = rtase_change_mtu,
+ 	.ndo_tx_timeout = rtase_tx_timeout,
+ 	.ndo_get_stats64 = rtase_get_stats64,
++	.ndo_setup_tc = rtase_setup_tc,
+ 	.ndo_fix_features = rtase_fix_features,
+ 	.ndo_set_features = rtase_set_features,
+ };
+-- 
+2.34.1
 
-- Heming
-
-> 
-> BTW, the previous fix hasn't been merged yet:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/fs/ocfs2?h=next-20250411&id=767ba8b7cba3ca7a560d632f267f7aea35d54810
-> 
-> So should we drop that first and fold it into a whole one?
-> 
-> Thanks,
-> Joseph
