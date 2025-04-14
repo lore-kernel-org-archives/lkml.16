@@ -1,175 +1,193 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379F329D19
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727731714C0
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622919; cv=none; b=Z6HO2A+mMZo5Nx3JxnkXeyAlaq0SCBQvcYCZ/UpEdSOcX8PSCb5+pzrnzaI49WY2IPMcORshWhLp6fUrGgR17Z3Uxuci4j1mAIvjjVm2xDhKKt6dVWfKTSSEqXjH6ueLGk6zjm2ZbqJMVyCFZtHMKTapHsZxGrALDb7Z4CMw7ls=
+	t=1744622938; cv=none; b=UtHzipWV5MW+WRVi7q4wc4H8O1C119HUh+HoXsBcqBvi97LZ59Jd9kMoHhL1285/P2IiRBwQ2iFwxEfE2r2p0MXzcAkXKXx/b1WinNE6tnxug0nuwOsn8VBAT5t2mVJvr8hcpNOrsUSGN1Zkq8zBKU9Sigd7nF72yRX53q6PPfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622919; c=relaxed/simple;
-	bh=p+SXQbXpWY8nrFUTHgArld6DddwBE1LEIAWnhEzPGRg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NojJra3M9aNKYnD50q8o/RoTFGooIFWqjOpyNm+ZopYEB53dRHN3oEj35cni2AIzzUQbWFElvDN3KviN9YOeBy+JdA88DyW1EvqsZRuMKfNF9LMk+AMZnfF84trTN96pV+E/kpbgDukV0+neu3IW81e17xzhT0v314FHzZM9CD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=o0kSTR02; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744622938; c=relaxed/simple;
+	bh=1Az0wTupRrZhytcn6m9NKmBOGqe8y0JyGXE8o0PAx5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dOJoJlp1BSNaVMDWwFEOCI7DwcTeHsfCPfl1PyGKxBPuTzS46Y1iGwQiDxg13FUbhjYdgxetDNQPPl2pMakSyejkRi1ICiVNpaqvZkzeNve4BudFFXyAiFWAsUAuDXl8LyytTdiiZ7RRnyf5Wu2/siTp6hB0oN8hFrobL9QxR1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c7YOOyzq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="o0kSTR02"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99qbU011413
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:28:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1/tChIsO+AfaAF6VSG18Zad4p25Eyylh9VoM+tiR1XI=; b=o0kSTR02vhkBdUmU
-	6YMvf7ddPQjws8Tdnq0BEf6/oU2rAw+jBAGWCSYj/jTfmmUAbxqOEgqFgTcOaDdE
-	smGdD2PYh1trG/zOTVAMr1DtWaO1OeXF+UpF7rPhpI952f2WaDAUT8u9KlUejbC5
-	8uYdDQtdvuwAXFS/FsSbKJNmZVbWKHZji+IXuGUVjRLmY5MMdmD0+66AHZwPBVdf
-	XbqPBYDQ2vvVGaMty0598RfT3SWgJokRq6ZxJbhOE5Ed9H+O9+uJz3Xgb6O+Z2Us
-	DtSyGqArq2J5yI+5X3ccPkWkfToG9c87gYMQpVx6JiSCUSltTp6vfgPEiOn1i4du
-	EcKhVQ==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wc06w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:28:36 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e8fae3e448so81514786d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:28:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7YOOyzq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744622935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h6mEhCnzkEXjChm2SjgPnZvwRxNU31/ix+OVhJF6OqE=;
+	b=c7YOOyzqRw8VvR4bi3YZd+FGKEIv8ELxS46jFg2lad9TGUnYujyjvVtQKeoz4wZKyeqpEy
+	8UE1LExkXatcnnug1aGkJMQARAtnFee4g1Rh06m+bT3R8dvMz0gqjfys4W1/rlaZzvTd3C
+	V9VUVSG6Qx+myUPC1VzsQR4SKy0NeiA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-ELG8uNnHNY6PDwMmq7M2zg-1; Mon, 14 Apr 2025 05:28:52 -0400
+X-MC-Unique: ELG8uNnHNY6PDwMmq7M2zg-1
+X-Mimecast-MFC-AGG-ID: ELG8uNnHNY6PDwMmq7M2zg_1744622932
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3913f97d115so2011607f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:28:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744622916; x=1745227716;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1/tChIsO+AfaAF6VSG18Zad4p25Eyylh9VoM+tiR1XI=;
-        b=rA7OQ+BOv+LYlQJA4WYCeCf7IjI78qPUurLJKWGhP81B15Uu5QK/FzvNzlIGQmC0kg
-         dCTs5losCML+d34R+64fyNj/caYQG8IcmV8QaAw2DraCgoKhGPictZEibvwsd5PMS+R2
-         ZHdZySfk1BP9waLO4A/sjT6SEit6VyKgkK7uHymxFa9r6EdMliuXnuQrifsEADHggYhb
-         uOckcw3od1Lam3+cV+2lK9XNcjeIivajNHzty/VurEqGiTplJMPcWT2dPQ4jjI8gKHEH
-         z9P/LhAzLA4ijByR/cdYsEB7JS101qLOV0H25OCo9/mdwnUhhq+1AtP/uljBdYSuibDJ
-         TqdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWDo3em6pLm0WlJwllQzTjjbfpnFD6GKHKrde3tayVLgQiPzPuXXY5X0np69Sf/f4iQ/eZT4+WbOWUp2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGgxrWYT2Er5zgFcv1oqURHZbHI2nN0ip6/GSG368+FmOirh12
-	pwVfZoRN/cXTDL+9hq+yTPg1An9ljqA3dLxmI3g9UiUdbUEMhmOK50ePsh5rCQgMSrtI5sfNlKR
-	Zb1Vc8IyG0Azixfrnx48WzKrorNeM8+/jCNYfrDkdQMF6PMshARxua1c2TvzCeM0=
-X-Gm-Gg: ASbGncuqCQ4hhFmbAZ/lCcBtxcUt0idXdSfaHMw8ijOtk0xwo4onASX18a7nXDtHz5Q
-	R0tKr+k4nkvoPaqnvJyMUfPdowtvCP5Tv7OfDDpT1ELobHqBsJkJZH5byIYq599fVZ4iMQETYCe
-	hHGhn3Qqe98/sxd39iikbyjTqZ4MSXJloRrND+txGWDGkhJ3lvDCKbXglmP/ab3uM6/VWh2hbk8
-	PRl3ATgoEDg/sr+7rgzu3vIM+No7Wigf0T0Em1cpCMVGwlzG62LXr9x7/F7RAtdnjH/IRrPMnhz
-	edUiqb9AkEhy/nIGJg4ZV4hn95WlcWTGVygIhAtuSouPk/jMoRYKnu1IvwVoNU9A/eNbBa2Tl4k
-	v7jPTLSWITkqKRuZSqAPXgTHFpwFJ+7b5v4ipQUufP7sNb7rt8w0LTb59tqVk
-X-Received: by 2002:a05:620a:2a07:b0:7c5:f696:f8e5 with SMTP id af79cd13be357-7c7af0cdb43mr1407179285a.14.1744622915943;
-        Mon, 14 Apr 2025 02:28:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGiGrpwkmGI1qGb6G96gQavHJhSrEGo7mCvhfYx3430oMZu4pJJtylHsiSrBskfpxniPNKTuQ==
-X-Received: by 2002:a05:620a:2a07:b0:7c5:f696:f8e5 with SMTP id af79cd13be357-7c7af0cdb43mr1407177485a.14.1744622915366;
-        Mon, 14 Apr 2025 02:28:35 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:c3:3f5:600b:83a3:2692:ef99? (2001-14bb-c3-3f5-600b-83a3-2692-ef99.rev.dnainternet.fi. [2001:14bb:c3:3f5:600b:83a3:2692:ef99])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d51e147sm1037886e87.226.2025.04.14.02.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 02:28:33 -0700 (PDT)
-Message-ID: <7b664533-ca6c-4d4a-a793-0c3961724d09@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 12:28:31 +0300
+        d=1e100.net; s=20230601; t=1744622931; x=1745227731;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h6mEhCnzkEXjChm2SjgPnZvwRxNU31/ix+OVhJF6OqE=;
+        b=k5MFUl/KyZBn6CjckbM855beL2Zlyrv0W8nAHYSnuuUzf+EZ5dEK8xrfgweMr8zgyV
+         n0+Bq492XvFy5c5v9EwOXqBf16HniFTGGp9BGoiOlUZUwvho02GxaZGHPOB/MqLdnTUI
+         W/2T2Ym3lSASFEwXkd+ph7sJEeHvp67/lEEc3EyenmxeAtmJuCCmLuT4ofMKs5CM1opu
+         vohSoNg1m/GSt37JgFBbaOn/RHoqgwPY6BZKEGWqYhJCH4kjPoePGGGsssoGvidf/V9X
+         n/FM0u7uE9SK/iRm1V4rLqXOjEYKoGYIIARqVKaP6vYXxDQ4NLYpiAOQxvexBg1PAp5h
+         y0aw==
+X-Gm-Message-State: AOJu0YxBjDls7J+6hmd/P8ff3MPMAe7Lz/zlRfTe3HU4ILkasW951Dvu
+	SbT7UIkpLLOQLfhyRneD8KIsWwgWtmpDB/Z4NoD1+1TPuflydcyYM0RO9iFOqI2wY3Su8AAudst
+	wTOnOPi0/ciWIWiWDxIFlgY2g6po4ovt/Gc1yzLd+gTbOs7xziblyG4iXl3Oxlg==
+X-Gm-Gg: ASbGnctXzHziYzEBlwWJPFmCHoQASLXnQ5hmGI1Foh2Y/xGerSXKKtyg0nGglQrTs/Q
+	N0mWPZwKOt+m1k3bkoR/LI8hY2EqSjUGS5iQCaAM6Z/FrPzCxdSLv9U/zEvDS4fOR6TgJPScxfr
+	quLB4gqjuwjMrdc4DoUQafPXkcLNmI0qsQxzlaeev7GpVOHyQcyJXYvlIdVbrKhTGcpeRDjGY5U
+	HqfSgkXaYggW3I4ygNmkO+J3nHVFf6LSPMY4ipiMnadjeB92CyHn63DuDwoTRArsSN0Zi2ANy2a
+	SC4+ARLp3wu64+1aHyg6Kp2KsISkHe6q540EiEtnsA==
+X-Received: by 2002:a5d:598e:0:b0:38d:df15:2770 with SMTP id ffacd0b85a97d-39d8f21d531mr12444795f8f.0.1744622931519;
+        Mon, 14 Apr 2025 02:28:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZq9+vWhpkNR4AVUn5w9bDZGe/quGIq9bRvrXc0VcBb36KGHrf/fzkdF/nZ3IyPEikfTj6EA==
+X-Received: by 2002:a5d:598e:0:b0:38d:df15:2770 with SMTP id ffacd0b85a97d-39d8f21d531mr12444768f8f.0.1744622931035;
+        Mon, 14 Apr 2025 02:28:51 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.27.15])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235b050fsm175501555e9.40.2025.04.14.02.28.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 02:28:50 -0700 (PDT)
+Date: Mon, 14 Apr 2025 11:28:48 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Metin Kaya <Metin.Kaya@arm.com>,
+	Xuewen Yan <xuewen.yan94@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
+Subject: Re: [PATCH v16 4/7] sched: Fix runtime accounting w/ split exec &
+ sched contexts
+Message-ID: <Z_zVULdTgt9J4rqf@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250412060258.3844594-1-jstultz@google.com>
+ <20250412060258.3844594-5-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v5 1/8] media: qcom: iris: move sm8250 to gen1 catalog
-To: neil.armstrong@linaro.org
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
- <20250410-topic-sm8x50-upstream-iris-catalog-v5-1-44a431574c25@linaro.org>
- <vhfuhjruok7gupoeo2uloe525k7oycd5gkh67zzz4wbiwrczpt@i3qknymfu4px>
- <f637965b-dff5-45d4-b6be-de8c68c6c397@linaro.org>
- <gkgd7gelin2hbkm2ltsifibxs6laluc66yx5k5uupfa2p4sswc@ypkyrj25njew>
- <d7241218-388a-4749-a4c7-fafd9b10f352@linaro.org>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <d7241218-388a-4749-a4c7-fafd9b10f352@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fcd544 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=GmHQQg_rlXLpeqUa9FIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: emt7nma6b6bZ-dQYuA9QA2q-jjVStbsy
-X-Proofpoint-GUID: emt7nma6b6bZ-dQYuA9QA2q-jjVStbsy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140067
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412060258.3844594-5-jstultz@google.com>
 
-On 14/04/2025 12:07, Neil Armstrong wrote:
-> On 14/04/2025 09:39, Dmitry Baryshkov wrote:
->> On Fri, Apr 11, 2025 at 10:14:02AM +0200, Neil Armstrong wrote:
->>> On 10/04/2025 21:44, Dmitry Baryshkov wrote:
->>>> On Thu, Apr 10, 2025 at 06:30:00PM +0200, Neil Armstrong wrote:
->>>>> Re-organize the platform support core into a gen1 catalog C file
->>>>> declaring common platform structure and include platform headers
->>>>> containing platform specific entries and iris_platform_data
->>>>> structure.
->>>>>
->>>>> The goal is to share most of the structure while having
->>>>> clear and separate per-SoC catalog files.
->>>>>
->>>>> The organization is based on the current drm/msm dpu1 catalog
->>>>> entries.
->>>>>
->>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>> ---
->>>>>    drivers/media/platform/qcom/iris/Makefile          |  2 +-
->>>>>    .../media/platform/qcom/iris/iris_catalog_gen1.c   | 83 ++++++++ 
->>>>> ++++++++++++++
->>>>>    ...ris_platform_sm8250.c => iris_catalog_sm8250.h} | 80 + 
->>>>> +-------------------
->>>>
->>>> I'd suggest _not_ to follow DPU here. I like the per-generation files,
->>>> but please consider keeping platform files as separate C files too.
->>>
->>> This would duplicate all tables, do we really want this ?
->>
->> No. Keep the tables that are shared in iris_catalog_gen1.c, keep
->> platform data in iris_catalog_sm8250.c and iris_catalog_sm8550.c (and
->> later iris_catalog_sm8650.c)
+Hi John,
+
+On 11/04/25 23:02, John Stultz wrote:
+> Without proxy-exec, we normally charge the "current" task for
+> both its vruntime as well as its sum_exec_runtime.
 > 
-> This won't work, we need ARRAY_SIZE() for most of the tables
-
-I see. Can you do it other way around: export platform-specific data 
-from the iris_catalog_sm8250.c and use it inside iris_catalog_gen1.c?
-
+> With proxy, however, we have two "current" contexts: the
+> scheduler context and the execution context. We want to charge
+> the execution context rq->curr (ie: proxy/lock holder) execution
+> time to its sum_exec_runtime (so it's clear to userland the
+> rq->curr task *is* running).
 > 
-> Neil
+> Then instead of charging the execution context (rq->curr) for
+> the vruntime, we charge the vruntime against the scheduler context
+> (rq->donor) task, because that is the time it is donating when
+> it is used as the scheduler-context.
 > 
->>
->>>
->>> I want just to add SM8650 support, not to entirely rework the
->>> whole iris driver.
->>>
->>> Neil
->>>
->>>>
->>>>>    3 files changed, 89 insertions(+), 76 deletions(-)
->>>>>
->>>>
->>>
->>
+> If the donor and curr tasks are the same, then it's the same as
+> without proxy.
 > 
+> Cc: Joel Fernandes <joelagnelf@nvidia.com>
+> Cc: Qais Yousef <qyousef@layalina.io>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Zimuzo Ezeozue <zezeozue@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Metin Kaya <Metin.Kaya@arm.com>
+> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Suleiman Souhlal <suleiman@google.com>
+> Cc: kernel-team@android.com
+> Signed-off-by: John Stultz <jstultz@google.com>
+> ---
 
+...
 
--- 
-With best wishes
-Dmitry
+> +static s64 update_se_times(struct rq *rq, struct sched_entity *se)
+>  {
+>  	u64 now = rq_clock_task(rq);
+>  	s64 delta_exec;
+>  
+> -	delta_exec = now - curr->exec_start;
+> +	delta_exec = now - se->exec_start;
+>  	if (unlikely(delta_exec <= 0))
+>  		return delta_exec;
+>  
+> -	curr->exec_start = now;
+> -	curr->sum_exec_runtime += delta_exec;
+> +	se->exec_start = now;
+> +	if (entity_is_task(se)) {
+> +		struct task_struct *running = rq->curr;
+> +		/*
+> +		 * If se is a task, we account the time against the running
+> +		 * task, as w/ proxy-exec they may not be the same.
+> +		 */
+> +		running->se.exec_start = now;
+> +		running->se.sum_exec_runtime += delta_exec;
+> +	} else {
+> +		/* If not task, account the time against se */
+> +		se->sum_exec_runtime += delta_exec;
+> +	}
+
+...
+
+> @@ -1213,7 +1224,7 @@ s64 update_curr_common(struct rq *rq)
+>  	struct task_struct *donor = rq->donor;
+>  	s64 delta_exec;
+>  
+> -	delta_exec = update_curr_se(rq, &donor->se);
+> +	delta_exec = update_se_times(rq, &donor->se);
+>  	if (likely(delta_exec > 0))
+>  		update_curr_task(donor, delta_exec);
+
+Considering that we calculate delta_exec in updated_se_times using
+exec_start of the sched_entity passed as argument, is it correct to use
+donor in the above?
+
+Thanks,
+Juri
+
