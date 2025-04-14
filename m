@@ -1,133 +1,107 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044C51BE23F;
-	Mon, 14 Apr 2025 21:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA741A0BFA;
+	Mon, 14 Apr 2025 22:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667894; cv=none; b=ofFkNUd2E0jnkiPCGVWZogS+TBGychzyERxqaLa2Ro2Hi5dg2f3/jQ7Sb2Sh/zvNJz4Sg8HoaLzWuJPQEJOCiQgr+MqYdOlVy/MySB0faP/zMHjH9mkq1X4A9YDP4IB13nFt/7eWp3o4RTpL+7qx4IR4OHAtjKWiULVbCy/bAuE=
+	t=1744668078; cv=none; b=ckx2XXB2YWweO4gbwcNf2pvsqmEPyu/76QIFoNuMH0U5SvCTdDnILWqPgDjJBAwDlJT/RlDMGWQggKRXQuMnatIZFHQO9NNbKqdfcWDVpZLNwFngwB3bpzFtpwvdXMrBGyfP6S555wfEwL4MhC8/3+e/yms0ZFM8MUs7dsS+JNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667894; c=relaxed/simple;
-	bh=RHUquyOtqABkuvgbGR7rh7/n9TrlEFwyuSBpSmEkwaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohS1+GSoinKKrF7i3iWeb/l7Lq/mOA6+eYfM1TZFuqqJ+dzB0KpHYyISwYWAn5Bj8HB5D6zU5hLzOh4UYmncE3avAs1eJ8ofdJ3M97pNsh9+vYdMU1bSkoAMjN2FiMCMSMHpUlKYeu16VxfEgiW7kcTOWEP10KNAObA5mcUfU/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A9surNlw; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744668078; c=relaxed/simple;
+	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Be1pYYg7al9sQElxyypCTkVAK6PbWPzq2v5siRPCxOSehq0QPSTNt3W8Ciz4GRaqFn5CmzxAxD8TbsnkxbsRkjXxAvnAOG+kZNlpgOwYAvtqzT3dHhxRtWXIJRJfML3vOjPay7t4zoxHecoH2mSCftTIcEfWknqvdStjzgBcqH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avycfQ4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A9surNlw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9E1AF41CFD;
-	Mon, 14 Apr 2025 21:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744667888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mKkSHxlGKWwLAVWzC2ngK+QD6aN8k+ksqhaW6x0BrfQ=;
-	b=A9surNlwNl1Sh8hothZthwuoJ54i2YTw7bQLtr8+Bn2tspofyF/qkhK7uqKMIdV58CI4YW
-	L3CJt5cceI3qZa6lPgOGcIJgqLBaTKTz/wMVv8n2ajk5j3knnabov2GzGWKZ3mJ1OHs6Df
-	XIMZocbJFiJu+GW/cy6AFBEc0nmpxTcN+rT9Z4tHDaw1sAttHD29ZYzyGtU+iK9qCMFqAG
-	95ohkEw3+zhdwt2Eiu41rsBqlGhvc5tgSHOMDTlXcXF3uFKGXV7O0m0T5iyQQ6BZHcprwP
-	jNdRXL+pab7xYClw6jJU1NJx5kblCxghvSzsL9aEkXYWfEGjf1Z4Qpz8b6KnLA==
-Date: Mon, 14 Apr 2025 23:58:07 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Alexandre Mergnat <amergnat@baylibre.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] rtc: mt6397: Remove start time parameters
-Message-ID: <20250414215807b1b6b008@mail.local>
-References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
- <20250109-enable-rtc-v3-4-f003e8144419@baylibre.com>
- <20250411133609a1295543@mail.local>
- <202504111339359e840246@mail.local>
- <968001f7-96d1-4ad5-8c36-28cac5dc30f1@collabora.com>
- <97cfeafe-7044-4f06-b2e6-e4a158419473@baylibre.com>
- <vpf4apahhpovhrqje4i647nldszen2pglbm5fdmar7bsyg7uao@3ymuod45ftlj>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avycfQ4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA36C4CEE5;
+	Mon, 14 Apr 2025 22:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744668076;
+	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
+	h=From:Date:Subject:To:Cc:From;
+	b=avycfQ4/0cG4DMg8yoIOazqlWCLis60DvfwmQwQ1vdOPuF6I2gjyJTxQ3zPOgTiM7
+	 cwCXLjU3lalJsXZnZEGzvUpDTmhfoleQf9Pjd8sN4z0VjmyCfEol/pcWG3GJpplFDq
+	 XdEwyzLslHTU7l7VVY3mcV+pmm6557XrN78FmvLYPkRy74y8pqUSUHJ3M5OcnZE0hu
+	 0NGecSiDdypE1ydyoyvvBCxc2BotJpGJvduTn8Pk3hPt8M39Dth+QVyzS/MBmsWKx4
+	 pz9decYhFN4GFA5xTiYXmb8ILHHXYeUeiDTWKYc7d3CUfAuCVrx849/J+a8PkmYLzZ
+	 j+z0azCYRu4Mg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 14 Apr 2025 15:00:59 -0700
+Subject: [PATCH] lib/Kconfig.ubsan: Remove 'default UBSAN' from
+ UBSAN_INTEGER_WRAP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <vpf4apahhpovhrqje4i647nldszen2pglbm5fdmar7bsyg7uao@3ymuod45ftlj>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdduieelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevudevhfdvheelgfeileefteduuefghefguefgkeeljeeufeeutedtffeuteeivdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegrmhgvrhhgnhgrthessggrhihlihgsrhgvrdgtohhmpdhrtghpthhto
- heprghnghgvlhhoghhiohgrtggthhhinhhordguvghlrhgvghhnohestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegvugguihgvrdhhuhgrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehsvggrnhdrfigrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehmrghtthhhihgrshdrsghgghesghhmrghilhdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250414-drop-default-ubsan-integer-wrap-v1-1-392522551d6b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJqF/WcC/x3NQQrCMBBG4auUWTuQhiroVcRFpvlTByQNk7YKp
+ XdvcPlt3tupwhSVHt1Ohk2rzrmhv3Q0vkOewBqbyTt/dUM/cLS5cEQK62fhVWrIrHnBBOOvhcK
+ SHOSGJP4u1CrFkPT3Pzxfx3ECt51ZE3EAAAA=
+X-Change-ID: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
+To: Kees Cook <kees@kernel.org>
+Cc: Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+ kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+ stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1816; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOl/W1eWOfmu1DwxweuGvH3/Sf4k3X33El1u672ftf+R6
+ henoktLO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBElJgYGeYJHfpSVKezRjLY
+ 5psHd3usUePBLd6OTZ3hbaoW72cmWDIy7Hz4Penn6vQbBxLDUk+xfPrTVGl7w5jjnt4j/YUhAeq
+ tXAA=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On 14/04/2025 23:34:48+0200, Uwe Kleine-König wrote:
-> > > Yes, you're stuck with this. Devicetree has to be retrocompatible.
-> > > 
-> > > Besides, this start_secs is what gets used by default, and the start-year
-> > > devicetree property should take precedence and effectively override the
-> > > start_secs default.
-> > > 
-> > > Just keep it there.... :-)
-> 
-> It would work to keep setting start_secs but allow overwriting that
-> value in the device tree. But see below.
->  
+CONFIG_UBSAN_INTEGER_WRAP is 'default UBSAN', which is problematic for a
+couple of reasons.
 
-This is already the case.
+The first is that this sanitizer is under active development on the
+compiler side to come up with a solution that is maintainable on the
+compiler side and usable on the kernel side. As a result of this, there
+are many warnings when the sanitizer is enabled that have no clear path
+to resolution yet but users may see them and report them in the meantime.
 
-> > When you boot your board for the first time, is the date January 2nd 1968 ?
-> > If not, that mean it is used as a finetune offset year.
-> > IMHO, mktime64(1968, 1, 2, 0, 0, 0) is a workaround for the rtc framework
-> > issue we try to solve in this serie because start_secs is negative (1968 <
-> > 1970). Now framework handle the negative value properly, even if you keep
-> > mktime64(1968, 1, 2, 0, 0, 0) , the device time will change. I prefer to
-> > notify you.  :)
-> 
-> I don't understand everything you wrote here, but as far as I see it,
-> rtc_time64_to_tm() not being able to handle dates before 1970 is the
-> main issue here. This is of course only relevant, because your hardware
-> occasionally contains such a date. The technically right fix is to
-> extend rtc_time64_to_tm() to work for dates >= 1900-01-01. (An
-> alternative would be to assume that a hardware read returning a date
-> before 1970 is invalid. If you refuse to write dates before 1970 that
-> should give a consistent behaviour. But the original approach is the
-> nicer one.)
-> 
+The second is that this option was renamed from
+CONFIG_UBSAN_SIGNED_WRAP, meaning that if a configuration has
+CONFIG_UBSAN=y but CONFIG_UBSAN_SIGNED_WRAP=n and it is upgraded via
+olddefconfig (common in non-interactive scenarios such as CI),
+CONFIG_UBSAN_INTEGER_WRAP will be silently enabled again.
 
-Yes, the assumption is that dates before 1970 are definitively invalid.
-I still believe we live in a world were the time doesn't go back ;)
+Remove 'default UBSAN' from CONFIG_UBSAN_INTEGER_WRAP until it is ready
+for regular usage and testing from a broader community than the folks
+actively working on the feature.
 
-Android *was* the only OS requiring to be able to set 01/01/1970. This
-changed after they realized that some hardware is not able to do that.
+Cc: stable@vger.kernel.org
+Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ lib/Kconfig.ubsan | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > TBH, it's hard to follow the logic, so I've a question:
-> > If I push in my V4 a framework fix that drivers using year < 1970 will need
-> > to have a new start_secs or start-year value to stay aligned with there
-> > previous value, do you will accept it ?
-> 
-> Doesn't the need to shift the start year simply goes away once
-> rtc_time64_to_tm() is fixed for negative time values?
-> 
-> So I would expect that going forward with just patches #1 and #2 should
-> result in a fixed driver regarding the breakage you're seeing. (I'm
-> unsure about patch #3, I'll address that in a reply to the respective
-> mail.)
-> 
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 4216b3a4ff21..f6ea0c5b5da3 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -118,7 +118,6 @@ config UBSAN_UNREACHABLE
+ 
+ config UBSAN_INTEGER_WRAP
+ 	bool "Perform checking for integer arithmetic wrap-around"
+-	default UBSAN
+ 	depends on !COMPILE_TEST
+ 	depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
+ 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
 
-This is also what I think but I don't think I'm going to allow the
-rtc_valid_tm() change. It shouldn't matter as the check should always
-happen after offsetting/windowing.
+---
+base-commit: 26fe62cc5e8420d5c650d6b86fee061952d348cd
+change-id: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
 
+Best regards,
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Nathan Chancellor <nathan@kernel.org>
+
