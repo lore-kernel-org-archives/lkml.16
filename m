@@ -1,301 +1,292 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2071.outbound.protection.outlook.com [40.107.243.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C14F29615F;
-	Mon, 14 Apr 2025 12:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744633193; cv=none; b=KZn3gyBaPnHU0vUhnElWYQEwjzIbtdxDiDTn1ECHeL1jgLqsZs0E1mCPJyEAbbZQX9E6kAkixlcil7H81HHl4Mqo6C6+/QZJKJVW+enUdda9/H1cd/9mWIEkxRFKLcF2THaEzgOmvKYs6GmSiVzTLGYpVm3GsuDvNvJjznz7mDs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744633193; c=relaxed/simple;
-	bh=0ArJpkKXAnnNusm2G/IQTI+WfRbsZM6rKFCoaOIJLQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4Tfn8UgIbEDBo0OLknIJT9IDJhNvpTR2IJ8RwgVRm5UgDBstu7rXc4UaOo5QvIlbAdEJy63Zrh2a3u9t2hkhyZG5EF2bNugW/zHaJpncKKcgmphIpckdAsxhnN3iU43OdKpMjMIopPq4tALvMo+3QPYpAN3pDfY0zhT0oRZCuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=Ay4zaMjh; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B325B27703C;
+	Mon, 14 Apr 2025 12:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744633210; cv=fail; b=jU8F3QfShQKW+glt8a4xeUUNyOOYzwauDUJG4qytZ5PUksHbo2JUwPXOa1u9uPuYHyHDB9I8UoSavwemb7AKgDJRYczxt0jFVcmAWZ3lkZA30QrCqdBzPWSzLyDCKJNvvctwbPidhSe+pfZ6L2vaqUXMKWKrRzeqFUnvFj2GNAQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744633210; c=relaxed/simple;
+	bh=mhW/r7e9J1q5uCC1/oWocL9ObNs0dKC0kWWALFiLNTI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gLXEy3O6ozG3PYZ0oFbqL+RJirdQbMm3XQ/c285cNYuKYdt5xt4i8cAEBW8AiyKIDYmd4bkIQG1r2FdUvkCR6TEqSnoUrVwYhre6e4h7NVNM8FbUIu0hZ5ulG213/28O1i3hltOyMmWG3Xl0sg0RX58Ujobv5+bhMZDlfmpoKGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VFI69vqN; arc=fail smtp.client-ip=40.107.243.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="Ay4zaMjh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1744633178; bh=0ArJpkKXAnnNusm2G/IQTI+WfRbsZM6rKFCoaOIJLQk=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=Ay4zaMjhKcVaCuR2bWHhdjv7qPofHeJmTGXyzFpn+143OZpE20xjF7+z7aRUp/b+A
-	 SuAi/1AJTH43Dxoy3lbfOvKRwmHwBoJYoCcvVqDTEkEdD6sKnbNmi5vDAmapwazSgL
-	 p2PG96B1tBjLY9BNewzZB4VMQ0bEOJiJ7Q+qODOs=
-Date: Mon, 14 Apr 2025 14:19:38 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, Igor Mammedov <imammedo@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-Message-ID: <tuhhms3jfcbgzzgmxt7ghvhp5zoh56ue2ikvge2kdhsudnpoon@elmy6yymd6bf>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, Igor Mammedov <imammedo@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net>
- <75f74b48-edd8-7d1c-d303-1222d12e3812@linux.intel.com>
- <6612c4d2-2533-98ef-7c89-f61d80c3e3e2@linux.intel.com>
- <5eb8fd42-b288-4ecb-ae0e-177904cc0a14@roeck-us.net>
- <c34c6dc2-5ab2-1a81-3ba4-b3bc2c016945@linux.intel.com>
- <nb4knp52jylojmj3jsvvgq2dsbn3srruxmkqfuto2k3hv3fnqs@6rkqgdved6gi>
- <9c9d5aed-ae10-f590-3e59-34234d4d8f7d@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VFI69vqN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nAB2kJQVvqGxQA/MVKvmRvA3jazoPkTA1JARluHFrvlH3jaibHrr3yOkWzghPFZsYTc696avXXKMGuBz7W4BMT2wx+LEJllNAGRb2qFcOCZM35eHXugpE+3cooUuFBwuQl6uQ6oo3elX9oH5+K1RNz4nOiiWB+CTturypKQPucPX7E8WBw1c2ZhbxCxVxpVizcP0vwjWN1b+XzICA2oOud/8Ypro7ko1lpof2KVY2LyxVhJsn0NbsOwyXmxCgjMDcg0CNPF8vVn5GOsqZiD0xUiRWMBKbyKUb4CL/b4sT+nQSgvlIufF7btnJaQHfYJL0YlyIcDKL5dfDM79h06uCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VfyYlssVT9MtJkYzBrDfZpfU5eNypQGL6sEzqNa9shg=;
+ b=DwtMWQYs5A/6Cpqa2CXMrh3x4crzQ4L1AqNMKBd2WEv1Wi8Z3AubAMkQmcrZPbJPMMInyTaq5IpBGfvPJ4HqgK0l50j/+WGSwNhKehYTTKF/ZhNZ0bQZRrCK2ryaP2tyON5zyO3rXdkHJic0yEbwYhFgES77EgvxDoc7rSNnPfTJt1OUEbkztSZEfj9CK8z5mEUVRAdsCHcNHep0mIzAfCqPfD7VbJ2b5ITwOnmdDfJ/RA+QYR6DGcsIY0zh50G9H1j0ns0PR0xtfjb6VlteaK+0dvdyU2JZ2VBrkAUO1vYxFtadB5surag5Vsqe/FJRTtxSMS+pIMivvuDvyyXKEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VfyYlssVT9MtJkYzBrDfZpfU5eNypQGL6sEzqNa9shg=;
+ b=VFI69vqNU6emIHjT0xsL/nbMGXJZ40ql7UeK63p7ap8JKUAKnOqXNFEBj1uS5KkhjkiZbd2Rcv8Jk54Bwvv3M70JBxdFUgsU9vxT7clMltozobFpXbR/moWFNZiWpEyncHxPxJEMknppkCSJpN7pL/c2WkjY72EOFnD1y1T6uUc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6395.namprd12.prod.outlook.com (2603:10b6:510:1fd::14)
+ by DM6PR12MB4435.namprd12.prod.outlook.com (2603:10b6:5:2a6::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
+ 2025 12:20:06 +0000
+Received: from PH7PR12MB6395.namprd12.prod.outlook.com
+ ([fe80::5a9e:cee7:496:6421]) by PH7PR12MB6395.namprd12.prod.outlook.com
+ ([fe80::5a9e:cee7:496:6421%6]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 12:20:06 +0000
+Message-ID: <9f029694-7645-404b-8cd8-00837df64669@amd.com>
+Date: Mon, 14 Apr 2025 17:49:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 1/5] amd-xgbe: reorganize the code of XPCS access
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shyam-sundar.S-k@amd.com
+References: <20250408182001.4072954-1-Raju.Rangoju@amd.com>
+ <20250408182001.4072954-2-Raju.Rangoju@amd.com>
+ <Z_jT6M_GYhMlxZE1@soc-5CG4396X81.clients.intel.com>
+Content-Language: en-US
+From: "Rangoju, Raju" <raju.rangoju@amd.com>
+In-Reply-To: <Z_jT6M_GYhMlxZE1@soc-5CG4396X81.clients.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0192.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:be::16) To PH7PR12MB6395.namprd12.prod.outlook.com
+ (2603:10b6:510:1fd::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c9d5aed-ae10-f590-3e59-34234d4d8f7d@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6395:EE_|DM6PR12MB4435:EE_
+X-MS-Office365-Filtering-Correlation-Id: 24116492-ec2e-4518-301d-08dd7b4eb083
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NHhXTURXbU9wTVpXSlQwNVpMOE5uQVI4L3lDbVBqNkhhMUgwWFh2VWFUeXRP?=
+ =?utf-8?B?S0pRWitTekh1Q0lYcWJFc2s4enBzSEJjQkVFbEhSSm5IQ1B6UFZ0VTFDb1p2?=
+ =?utf-8?B?MGcwQVFKRzBpOEg3ZjVGNzNabFJETUxNT2ExaW12dmxJSjJpK0xTZStHck5m?=
+ =?utf-8?B?SGhsaGlTd0NicSs2V3pSTERkYzVEMEFLU0RHSGdYNTQ4bHlXUkwzQmRvaFJi?=
+ =?utf-8?B?TmU4TlcxWGRscTByOU5yWUZTaDVFRy9IOGcrbnlUNUZlS3VTUnNvWkU0WGlM?=
+ =?utf-8?B?Vm44bE1qUXlJV004elBab1pEUkhzN2I2YUtzRnl1SjJNWHU0eUUrQ0xuWVNa?=
+ =?utf-8?B?dEtKOFRiazA1UjVNMmI3K0tMOTExZlhyMkJ1bUFaNHM5cFNyOEI4WVJPYkto?=
+ =?utf-8?B?eE40RGp3UjVFeTRvQlowWEY1RWw0QWFsRGdRVVQ0UTJocFNVSGtjY3VGdno2?=
+ =?utf-8?B?YS9kNVZ6aHpPZE9sOERTbXVLSFlKN2JrMjFYTnpISWpaNWdxdXlZR1A4d0Rz?=
+ =?utf-8?B?eGlsNmJlb29pQ3VGTUpMRlpYdVE0b2RHN0JQL0pXYWJjZXA3SUpRMHpQdHE5?=
+ =?utf-8?B?N21mNHcrNktVUWxkT3FnbXJ0RXN1eHE4Zm9tNE85S2phMVVqN0JJS1g2ZkRV?=
+ =?utf-8?B?RWN4SmlXSnhWTHZGRFdRQm01elU5ZFpEQUhWdXF2SUFhdjVDbVg0eUVKNmpp?=
+ =?utf-8?B?MjNnNFdqekpHWkVkVVE5QTN6SURHL1FVQ1ZGU2lmc0NyYTlNbThhT3lRU2ZF?=
+ =?utf-8?B?RHdGdGJPd1EwWnpyS3dOUjVobHdveXozaUlsanRUbEM4M0pEbzdYVmFrYk56?=
+ =?utf-8?B?VXFIY2ZhWER1RW5DNW1EQjUzbmFMaGJsSDlycVg3eXROeExpcjJ2c2Q3bEpL?=
+ =?utf-8?B?UHZKRmVJNHc3QkZTcm96Yks5cVAwZUxzSDYzdm9UQzQyRVpiUU5KYlozMGoy?=
+ =?utf-8?B?REh4dFNjbitjU21XVFE1U0N0cVhud2JNaDhrRkQzMHJ1TkdRRG9CaGl6Wkpu?=
+ =?utf-8?B?Wlo4UDMzNkF4VVNWcGdzbU81SnVPUFFxYXova1luVEE0M3JkRm9GeWdUeGxN?=
+ =?utf-8?B?Q3FhY2ZUQ2ptajFUUHJMU3JOK2NzUTBCN2diK3NDSVJFWUNxdldZUkZrOGdF?=
+ =?utf-8?B?cjhQaloyVExyeGpDVE5UVnhUUmh1MW1rdzcvMklKdGFSL1BSRUlraUJPRzQr?=
+ =?utf-8?B?UWQzNFBpd1p1V2s5R2pkUTAyeVJMbGdXYmRnUGJnWnI0TWpMZVNwRStNVlYx?=
+ =?utf-8?B?NkxyaE5taEJTMmtHZ3VqcXRjakJZOUNkUEwwTXJOdzJ1UjhBbjR0TEZRbGp3?=
+ =?utf-8?B?bTJ6d2dTQ1lkWUZydGVMbEwvZGwzMTA3TVpSeFZzMGFHYWM1ZG1kMTdVT2JE?=
+ =?utf-8?B?OFVCSktQUmR3ZWtNQStkS3NNN09NUE04Nzg0cUErU25NZXQ1S3JodUdhdm5E?=
+ =?utf-8?B?NDFEc0h5RHNMTmtyTzdacW1wUmdKZGpCNVVFYlg0dm5oYW92N2VEZzR0YU5V?=
+ =?utf-8?B?VFlybHJXd0dBaS92S0ZDYlk2YlZxaklaM1FURXlJdVhpWnQwYi9NMG5pdlNY?=
+ =?utf-8?B?K2k4Zlc1V0cyYndXd2tiRHpkVzdlcUJBcDBNMzFGdmgvNzdObmt5TTRZbS8r?=
+ =?utf-8?B?bzladWVVQ1h4cVhLcFlBeExqcDJRWnpUSm9KNmlIeWxiU0VmMmFWbXFmcDQw?=
+ =?utf-8?B?Uks3b0hlM2pxeWRySVpsZGZJRHkwY0FCOEQ3OExhZVZiWDZONkNBUHdBNmdF?=
+ =?utf-8?B?azNiRmwrRTE2ZEx5S3hnSmVkNkJERk1TcG04MjgzcDFWWERCQ0M2dmtGY2RW?=
+ =?utf-8?B?ZlZXY3FPc2VsVG40ditLbjkySnJLQzZReFk5NjIvSXllazNQMnA2dW41aDc4?=
+ =?utf-8?B?R3FBZEFoMXY5Yko4bUlHYUtJNU10NVUwT3FsTkhYaVVKVHJiOUdYcnVwdGZ2?=
+ =?utf-8?Q?K8M8Kxkxulg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6395.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NjE5REdXaU5QelU4KzZzd200V0RLYTdEY2tQWkdObm9UTDVtUTZoSHR0cEVI?=
+ =?utf-8?B?dnpSVDY2Y2laUjQ1aGMzRHBUZnloUTZ3SkRvQ28zSDBmcm9xVW40NWowYW95?=
+ =?utf-8?B?UUE4YXlhQ1hkZmxHcDNjaHg2ZzhTdGIxOFdCdzZJMnh5VDBmL09PNmU4dmc3?=
+ =?utf-8?B?NUFPbk1TeG4xK3NiV1ljcHFsRHVuTnRzdmlsSGRLalVLZ1g1aDJKSzdoZWxL?=
+ =?utf-8?B?eGxBY1VKOUtvaGgxV3hkYXhRS2JKS3JpdlF1Y2dRZ3gwYTB4d1lZTEptY2xm?=
+ =?utf-8?B?Q3NCblp2UE9FT3ZSN1V5am52YStJVnNPbVFrRlFkSnY1aHFHNG9pN1M3K2hH?=
+ =?utf-8?B?L2JEY2lyd211TXNQbWg1SnUybGcrSitsODlCWTJRdmt1a0prbVpLZTkvN2tt?=
+ =?utf-8?B?WHJ3aXdjcHI4QnlFOC9OT0xVWW9YYTYrSnRmdFRsdzVRTzJUL3FaSmxEMDdz?=
+ =?utf-8?B?Q2kzWkcrb3dJU1hXZlhxdkU1Q1NRWmF0TDRGU29JMnRLMTV5TXFSZEY5Z1B2?=
+ =?utf-8?B?S2xONm15S3BOcjZsM05Hc1Z2U0FTU0t1Q1dIZXMxS0xIcFZOQ055MVZLQzkw?=
+ =?utf-8?B?RjF5UUlXM2gwanBoOWlXMGJiZUNBRUdkak5OVDJPekdyT3N6UTRxR1ZqNU1r?=
+ =?utf-8?B?Q241WjQrRFplSThzTnQwdzZOd1ZzNEg3Sys3cFdBZFFJVEdQOFhtRjFib0Fa?=
+ =?utf-8?B?U0NwbmFHR0tEQVhLK2lwQWgwTzFwMklqcTZiRVUvODdRYzlkbHRDSjNDQjBi?=
+ =?utf-8?B?L25hV1dOT3BFeHBmckhVNTFOSTVJT3RlbnNaTEM4UDJ6Q0wweW9XMVJaZWVn?=
+ =?utf-8?B?UHo5eHkyUytBV25HY3ZVRk5LT3FkSTc4NDgweDJQbFlQT0R6SUhIM3FuYVJ3?=
+ =?utf-8?B?VGl2S3NlZzJTVDYrZ2pNYkQ4dDF0NWpZOVo3UEF1RXBBWWNMbGM3TmNEQ3lP?=
+ =?utf-8?B?N0RrdFRhRWQyYk5PUmdYMUJWWTExeWNKUmJJaGtUZUtNL0g4WCtQcDdacElG?=
+ =?utf-8?B?NnE0M2doL2hnaytOaVlpcUZJblhCN29IOUZJcUpFbDN1M0lOUzlBSG8yUWxV?=
+ =?utf-8?B?TWRPajdvM1EveEpCdDVRTU51VndLOFFkVFNFRnB2VFpJMlU5YUxBTHRxQnY2?=
+ =?utf-8?B?K3FhdGZpUHlNTmNiUVdFK01iRFdaV0VxcFQrNmhDejVsSFRBV1VoWE1QcFV2?=
+ =?utf-8?B?WWQwVmNXMzlhT2FzV1lWTHpIK1NLSmtid1NVN2V5MnFlRkhJVzZFMkRuK0tS?=
+ =?utf-8?B?SzdITEhBZEpyZzZNaHptWHU2Y3JUSVRTaE5QTERzZTVWc1NLNWhsU3hxZ3dW?=
+ =?utf-8?B?aHdIS2tROURtemNpT0xTYVhWNmNuWXVnby9lR0hOajBFSE4rN2tndzl5bjls?=
+ =?utf-8?B?K01ET2JHRnp4MDcxSGtOTXdhZFZ5VExHZ0cyNGdidC8xa2tkZGduTkY2QU0z?=
+ =?utf-8?B?VTI3Uk02WFlZZ3ZsWGVxQk1zNHdyU0lDVzEyKzNmbkl6VXdUU1lucEpxWW8r?=
+ =?utf-8?B?TUxZUmZVZWxHa1NWcTFrR3piczcxKzAvNGhyeW8ycVRja1Jxb05YaVp6ajlh?=
+ =?utf-8?B?MlNZbFhoVUVmNmdrYTYyT2hGRERxeVFhOGZJa0lUQzZvdllhUVZwZS9hc0Fr?=
+ =?utf-8?B?VDlVNW81S2ZnRGZUcFNva2d6TDEvaFNGYWE1NHhNbTBrK1dicXBJTjREeGxO?=
+ =?utf-8?B?MWdRTmZ5bUVqSkYvajh5OHNPc29hejg4V0wxYnYwVU5sak9lVTJVZjdZWTJY?=
+ =?utf-8?B?U2xCUS9YNi8ybUdJd0tPVjgyMUtUNFo3Q1Yvc3FoZkdmNzNMY1A5a1JraWhx?=
+ =?utf-8?B?OW9BOE5CVUdNc2MxeHpWbnlsalE0c3BML1FRcGt5TU81SkxEeW81bEdNeG9a?=
+ =?utf-8?B?V0k5bDUxVEpteUpTZFVoUGRmcTduMjhzZ2picjhwK0V5RjFiZkMxYnhtS0No?=
+ =?utf-8?B?dkovSnE4SHVKTUQzSTJqQXk2ZDNoaGE4YTJjNmVkVVQ0b0x5Qk15dFB4Y1N0?=
+ =?utf-8?B?dG9aVVFyTUtiSTF2OEtMV2xEREljSW9BRUxwV1BDSDNqOUYyRVVzY2s4Mkg0?=
+ =?utf-8?B?UlgzQ1J6TDJuVFpLYlNRaVBROFFqNEQ3TDFMYmlENUVYQVhlOG5VbTNLSnBv?=
+ =?utf-8?Q?MhtDzH1cw0KJCFlAzJb/aMnRH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24116492-ec2e-4518-301d-08dd7b4eb083
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6395.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 12:20:05.9560
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GXasjtGNqWDUwcqxtFvHlS+/FML1FuA5SHYWVPGCeYDpU5ebpDNtUzT8YXO/fv0XJdu57SoLBBuzLKCmpEzWeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4435
 
-Hello Ilpo,
 
-On Mon, Apr 14, 2025 at 12:52:15PM +0300, Ilpo Järvinen wrote:
-> On Fri, 11 Apr 2025, Ondřej Jirman wrote:
+
+On 4/11/2025 2:03 PM, Larysa Zaremba wrote:
+> On Tue, Apr 08, 2025 at 11:49:57PM +0530, Raju Rangoju wrote:
+>> The xgbe_{read/write}_mmd_regs_v* functions have common code which can
+>> be moved to helper functions. Add new helper functions to calculate the
+>> mmd_address for v1/v2 of xpcs access.
+>>
 > 
-> > Hello Ilpo,
-> > 
-> > On Tue, Apr 01, 2025 at 08:38:48PM +0300, Ilpo Järvinen wrote:
-> > > That log wasn't taken from a bad case but it doesn't matter anymore as I 
-> > > could test this with qemu myself, thanks for providing enough to make it 
-> > > easy to reproduce & test it locally :-).
-> > > 
-> > > The problem is caused by assign+release cycle being destructive on start 
-> > > aligned resources because successful assigment overwrites the start field. 
-> > > I'll send a patch to fix the problem once I've given it a bit more thought
-> > > as this resource fitting code is somewhat complex.
-> > 
-> > BTW, same thing here on a different SoC:
-> > 
-> > https://lore.kernel.org/lkml/hrcsm2bo4ysqj2ggejndlou32cdc7yiknnm5nrlcoz4d64wall@7te4dfqsoe3y/T/#u
-> > 
-> > There are kernel logs there, too, although I don't have dynamic debug enabled
-> > in the kernel.
-> > 
-> > Interestingly, bisect pointed me initially to a different commit. Reverting
-> > it helped, but just on one board (QuartzPro64).
+> Overall seems reasonable, but the new functions are missing the xgbe_ prefix,
+> contrary to other in this file.
+
+Thank you for your observation. We have additional patches in 
+development that follow this path, and I'll take care of this in the 
+future patches that follow.
+
 > 
-> Hi,
-> 
-> Since you didn't mention it, I guess you haven't tried the fix:
-> 
-> https://patchwork.kernel.org/project/linux-pci/patch/20250403093137.1481-1-ilpo.jarvinen@linux.intel.com/
-
-This patch works. Thank you. One difference compared to 6.14 that I'm noticing
-in the kernel log is that "save config" sequences now are printed twice for
-unpopulated port. Not sure if it's related to your patches. Previously it was
-printed just once.
-
-Kind regards,
-	o.
-
-rockchip-dw-pcie a40800000.pcie: PCI host bridge to bus 0002:20
-pci_bus 0002:20: root bus resource [bus 20-2f]
-pci_bus 0002:20: root bus resource [io  0x300000-0x3fffff] (bus address [0xf2100000-0xf21fffff])
-pci_bus 0002:20: root bus resource [mem 0xf2200000-0xf2ffffff]
-pci_bus 0002:20: root bus resource [mem 0x980000000-0x9bfffffff] (bus address [0x40000000-0x7fffffff])
-pci_bus 0002:20: scanning bus
-pci 0002:20:00.0: [1d87:3588] type 01 class 0x060400 PCIe Root Port
-pci 0002:20:00.0: ROM [mem 0x00000000-0x0000ffff pref]
-pci 0002:20:00.0: PCI bridge to [bus 01-ff]
-pci 0002:20:00.0:   bridge window [io  0x0000-0x0fff]
-pci 0002:20:00.0:   bridge window [mem 0x00000000-0x000fffff]
-pci 0002:20:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-pci 0002:20:00.0: supports D1 D2
-pci 0002:20:00.0: PME# supported from D0 D1 D3hot
-pci 0002:20:00.0: PME# disabled
-pci 0002:20:00.0: Adding to iommu group 9
-pci 0002:20:00.0: vgaarb: pci_notify
-pci_bus 0002:20: fixups for bus
-pci 0002:20:00.0: scanning [bus 01-ff] behind bridge, pass 0
-pci 0002:20:00.0: Primary bus is hard wired to 0
-pci 0002:20:00.0: bridge configuration invalid ([bus 01-ff]), reconfiguring
-pci 0002:20:00.0: scanning [bus 00-00] behind bridge, pass 1
-pci_bus 0002:20: bus scan returning with max=21
-pci 0002:20:00.0: ROM [mem 0xf2200000-0xf220ffff pref]: assigned
-pci 0002:20:00.0: PCI bridge to [bus 21]
-pci_bus 0002:20: resource 4 [io  0x300000-0x3fffff]
-pci_bus 0002:20: resource 5 [mem 0xf2200000-0xf2ffffff]
-pci_bus 0002:20: resource 6 [mem 0x980000000-0x9bfffffff]
-pcieport 0002:20:00.0: vgaarb: pci_notify
-pcieport 0002:20:00.0: assign IRQ: got 148
-pcieport 0002:20:00.0: PME: Signaling with IRQ 157
-pcieport 0002:20:00.0: AER: enabled with IRQ 158
-pcieport 0002:20:00.0: bwctrl: enabled with IRQ 157
-pcieport 0002:20:00.0: save config 0x00: 0x35881d87
-pcieport 0002:20:00.0: save config 0x04: 0x00100507
-pcieport 0002:20:00.0: save config 0x08: 0x06040001
-pcieport 0002:20:00.0: save config 0x0c: 0x00010000
-pcieport 0002:20:00.0: save config 0x10: 0x00000000
-pcieport 0002:20:00.0: save config 0x14: 0x00000000
-pcieport 0002:20:00.0: save config 0x18: 0x00212120
-pcieport 0002:20:00.0: save config 0x1c: 0x000000f0
-pcieport 0002:20:00.0: save config 0x20: 0x0000fff0
-pcieport 0002:20:00.0: save config 0x24: 0x0001fff1
-pcieport 0002:20:00.0: save config 0x28: 0x00000000
-pcieport 0002:20:00.0: save config 0x2c: 0x00000000
-pcieport 0002:20:00.0: save config 0x30: 0x00000000
-pcieport 0002:20:00.0: save config 0x34: 0x00000040
-pcieport 0002:20:00.0: save config 0x38: 0x00000000
-pcieport 0002:20:00.0: save config 0x3c: 0x00020194
-pcieport 0002:20:00.0: vgaarb: pci_notify
-pcieport 0002:20:00.0: save config 0x00: 0x35881d87
-pcieport 0002:20:00.0: save config 0x04: 0x00100507
-pcieport 0002:20:00.0: save config 0x08: 0x06040001
-pcieport 0002:20:00.0: save config 0x0c: 0x00010000
-pcieport 0002:20:00.0: save config 0x10: 0x00000000
-pcieport 0002:20:00.0: save config 0x14: 0x00000000
-pcieport 0002:20:00.0: save config 0x18: 0x00212120
-pcieport 0002:20:00.0: save config 0x1c: 0x000000f0
-pcieport 0002:20:00.0: save config 0x20: 0x0000fff0
-pcieport 0002:20:00.0: save config 0x24: 0x0001fff1
-pcieport 0002:20:00.0: save config 0x28: 0x00000000
-pcieport 0002:20:00.0: save config 0x2c: 0x00000000
-pcieport 0002:20:00.0: save config 0x30: 0x00000000
-pcieport 0002:20:00.0: save config 0x34: 0x00000040
-pcieport 0002:20:00.0: save config 0x38: 0x00000000
-pcieport 0002:20:00.0: save config 0x3c: 0x00020194
-pcieport 0002:20:00.0: PME# enabled
-
-
-> -- 
->  i.
-> 
-> > And this is iomem:
-> > 
-> > 0010f000-0010f0ff : 10f000.sram sram@10f000
-> > 00200000-e2bbffff : System RAM
-> >   02010000-0474ffff : Kernel code
-> >   04750000-0498ffff : reserved
-> >   04990000-0508ffff : Kernel data
-> >   daa00000-e29fffff : reserved
-> > e2bc0000-ecbbffff : reserved
-> >   e2bc0000-ecbbffff : reserved
-> > ecbc0000-efffffff : System RAM
-> >   ecbc7000-ecbdffff : reserved
-> > f0000000-f00fffff : a40000000.pcie config
-> > f0200000-f0ffffff : pcie@fe150000
-> >   f0200000-f020ffff : 0000:00:00.0
-> >   f0300000-f03fffff : PCI Bus 0000:01
-> >     f0300000-f0303fff : 0000:01:00.0
-> >       f0300000-f0303fff : nvme
-> >     f0304000-f03040ff : 0000:01:00.0
-> >       f0304000-f03040ff : nvme
-> > f2000000-f20fffff : a40800000.pcie config
-> > f2200000-f2ffffff : pcie@fe170000
-> >   f2200000-f27fffff : PCI Bus 0002:21
-> >     f2200000-f220ffff : 0002:21:00.0
-> >     f2400000-f27fffff : 0002:21:00.0
-> >   f2800000-f280ffff : 0002:20:00.0
-> > f3000000-f30fffff : a40c00000.pcie config
-> > f3200000-f3ffffff : pcie@fe180000
-> >   f3200000-f320ffff : 0003:30:00.0
-> >   f3300000-f33fffff : PCI Bus 0003:31
-> >     f3300000-f3303fff : 0003:31:00.0
-> >     f3304000-f3304fff : 0003:31:00.0
-> >       f3304000-f3304fff : r8169
-> > fb000000-fb1fffff : fb000000.gpu gpu@fb000000
-> > fc00c100-fc3fffff : fc000000.usb usb@fc000000
-> > fc400000-fc407fff : usb@fc400000
-> >   fc400000-fc407fff : xhci-hcd.10.auto usb@fc400000
-> > fc40c100-fc7fffff : fc400000.usb usb@fc400000
-> > fc800000-fc83ffff : fc800000.usb usb@fc800000
-> > fc840000-fc87ffff : fc840000.usb usb@fc840000
-> > fc880000-fc8bffff : fc880000.usb usb@fc880000
-> > fc8c0000-fc8fffff : fc8c0000.usb usb@fc8c0000
-> > fc900000-fc900dff : fc900000.iommu
-> > fc910000-fc910dff : fc900000.iommu
-> > fd600000-fd6fffff : fd600000.sram sram@fd600000
-> > fd8a0000-fd8a00ff : fd8a0000.gpio gpio@fd8a0000
-> > fdb50000-fdb507ff : fdb50000.video-codec video-codec@fdb50000
-> > fdb50800-fdb5083f : fdb50800.iommu iommu@fdb50800
-> > fdb80000-fdb8017f : fdb80000.rga rga@fdb80000
-> > fdba0000-fdba07ff : fdba0000.video-codec video-codec@fdba0000
-> > fdba0800-fdba083f : fdba0800.iommu iommu@fdba0800
-> > fdba4800-fdba483f : fdba4800.iommu iommu@fdba4800
-> > fdba8800-fdba883f : fdba8800.iommu iommu@fdba8800
-> > fdbac800-fdbac83f : fdbac800.iommu iommu@fdbac800
-> > fdc70000-fdc707ff : fdc70000.video-codec video-codec@fdc70000
-> > fdd90000-fdd941ff : fdd90000.vop vop
-> > fdd95000-fdd95fff : fdd90000.vop gamma-lut
-> > fdd97e00-fdd97eff : fdd97e00.iommu iommu@fdd97e00
-> > fdd97f00-fdd97fff : fdd97e00.iommu iommu@fdd97e00
-> > fddf0000-fddf0fff : fddf0000.i2s i2s@fddf0000
-> > fddf4000-fddf4fff : fddf4000.i2s i2s@fddf4000
-> > fde80000-fde9ffff : fde80000.hdmi hdmi@fde80000
-> > fdea0000-fdebffff : fdea0000.hdmi hdmi@fdea0000
-> > fdee0000-fdee5fff : fdee0000.hdmi_receiver hdmi_receiver@fdee0000
-> > fe060000-fe06ffff : fe060000.dfi dfi@fe060000
-> > fe150000-fe15ffff : a40000000.pcie apb
-> > fe170000-fe17ffff : a40800000.pcie apb
-> > fe180000-fe18ffff : a40c00000.pcie apb
-> > fe1b0000-fe1bffff : fe1b0000.ethernet ethernet@fe1b0000
-> > fe210000-fe210fff : fe210000.sata sata@fe210000
-> > fe2c0000-fe2c3fff : fe2c0000.mmc mmc@fe2c0000
-> > fe2e0000-fe2effff : fe2e0000.mmc mmc@fe2e0000
-> > fe470000-fe470fff : fe470000.i2s i2s@fe470000
-> > fe600000-fe60ffff : GICD
-> > fe680000-fe77ffff : GICR
-> > fea10000-fea13fff : dma-controller@fea10000
-> >   fea10000-fea13fff : fea10000.dma-controller dma-controller@fea10000
-> > fea30000-fea33fff : dma-controller@fea30000
-> >   fea30000-fea33fff : fea30000.dma-controller dma-controller@fea30000
-> > feaa0000-feaa0fff : feaa0000.i2c i2c@feaa0000
-> > feaf0000-feaf00ff : feaf0000.watchdog watchdog@feaf0000
-> > feb20000-feb20fff : feb20000.spi spi@feb20000
-> > feb50000-feb500ff : serial
-> > fec00000-fec003ff : fec00000.tsadc tsadc@fec00000
-> > fec10000-fec1ffff : fec10000.adc adc@fec10000
-> > fec20000-fec200ff : fec20000.gpio gpio@fec20000
-> > fec30000-fec300ff : fec30000.gpio gpio@fec30000
-> > fec40000-fec400ff : fec40000.gpio gpio@fec40000
-> > fec50000-fec500ff : fec50000.gpio gpio@fec50000
-> > fec90000-fec90fff : fec90000.i2c i2c@fec90000
-> > fed10000-fed13fff : dma-controller@fed10000
-> >   fed10000-fed13fff : fed10000.dma-controller dma-controller@fed10000
-> > fed60000-fed61fff : fed60000.phy phy@fed60000
-> > fed70000-fed71fff : fed70000.phy phy@fed70000
-> > fed80000-fed8ffff : fed80000.phy phy@fed80000
-> > fed90000-fed9ffff : fed90000.phy phy@fed90000
-> > fee00000-fee000ff : fee00000.phy phy@fee00000
-> > fee10000-fee100ff : fee10000.phy phy@fee10000
-> > fee20000-fee200ff : fee20000.phy phy@fee20000
-> > fee80000-fee9ffff : fee80000.phy phy@fee80000
-> > ff001000-ff0effff : ff001000.sram sram@ff001000
-> > 100000000-3fbffffff : System RAM
-> >   3ec000000-3fbffffff : reserved
-> > 3fc500000-3ffefffff : System RAM
-> > 4f0000000-4ffffffff : System RAM
-> >   4fc611000-4fc6d0fff : reserved
-> >   4fc6d1000-4fded1fff : reserved
-> >   4fded2000-4fdf91fff : reserved
-> >   4fdf93000-4fdf96fff : reserved
-> >   4fdf97000-4fdfabfff : reserved
-> >   4fdfac000-4fe051fff : reserved
-> >   4fe052000-4ffffffff : reserved
-> > 900000000-93fffffff : pcie@fe150000
-> >   900000000-93fffffff : 0000:00:00.0
-> > 980000000-9bfffffff : pcie@fe170000
-> > 9c0000000-9ffffffff : pcie@fe180000
-> > a40000000-a403fffff : a40000000.pcie dbi
-> > a40800000-a40bfffff : a40800000.pcie dbi
-> > a40c00000-a40ffffff : a40c00000.pcie dbi
-> > 
-> > Thank you,
-> > 	o.
-> > 
-> > > -- 
-> > >  i.
-> > 
+>> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+>> ---
+>>   drivers/net/ethernet/amd/xgbe/xgbe-dev.c | 63 ++++++++++--------------
+>>   1 file changed, 27 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-dev.c b/drivers/net/ethernet/amd/xgbe/xgbe-dev.c
+>> index b51a3666dddb..ae82dc3ac460 100644
+>> --- a/drivers/net/ethernet/amd/xgbe/xgbe-dev.c
+>> +++ b/drivers/net/ethernet/amd/xgbe/xgbe-dev.c
+>> @@ -1041,18 +1041,17 @@ static int xgbe_set_gpio(struct xgbe_prv_data *pdata, unsigned int gpio)
+>>   	return 0;
+>>   }
+>>   
+>> -static int xgbe_read_mmd_regs_v2(struct xgbe_prv_data *pdata, int prtad,
+>> -				 int mmd_reg)
+>> +static unsigned int get_mmd_address(struct xgbe_prv_data *pdata, int mmd_reg)
+>>   {
+>> -	unsigned long flags;
+>> -	unsigned int mmd_address, index, offset;
+>> -	int mmd_data;
+>> -
+>> -	if (mmd_reg & XGBE_ADDR_C45)
+>> -		mmd_address = mmd_reg & ~XGBE_ADDR_C45;
+>> -	else
+>> -		mmd_address = (pdata->mdio_mmd << 16) | (mmd_reg & 0xffff);
+>> +	return (mmd_reg & XGBE_ADDR_C45) ?
+>> +		mmd_reg & ~XGBE_ADDR_C45 :
+>> +		(pdata->mdio_mmd << 16) | (mmd_reg & 0xffff);
+>> +}
+>>   
+>> +static void get_pcs_index_and_offset(struct xgbe_prv_data *pdata,
+>> +				     unsigned int mmd_address,
+>> +				     unsigned int *index, unsigned int *offset)
+>> +{
+>>   	/* The PCS registers are accessed using mmio. The underlying
+>>   	 * management interface uses indirect addressing to access the MMD
+>>   	 * register sets. This requires accessing of the PCS register in two
+>> @@ -1063,8 +1062,20 @@ static int xgbe_read_mmd_regs_v2(struct xgbe_prv_data *pdata, int prtad,
+>>   	 * offset 1 bit and reading 16 bits of data.
+>>   	 */
+>>   	mmd_address <<= 1;
+>> -	index = mmd_address & ~pdata->xpcs_window_mask;
+>> -	offset = pdata->xpcs_window + (mmd_address & pdata->xpcs_window_mask);
+>> +	*index = mmd_address & ~pdata->xpcs_window_mask;
+>> +	*offset = pdata->xpcs_window + (mmd_address & pdata->xpcs_window_mask);
+>> +}
+>> +
+>> +static int xgbe_read_mmd_regs_v2(struct xgbe_prv_data *pdata, int prtad,
+>> +				 int mmd_reg)
+>> +{
+>> +	unsigned long flags;
+>> +	unsigned int mmd_address, index, offset;
+>> +	int mmd_data;
+>> +
+>> +	mmd_address = get_mmd_address(pdata, mmd_reg);
+>> +
+>> +	get_pcs_index_and_offset(pdata, mmd_address, &index, &offset);
+>>   
+>>   	spin_lock_irqsave(&pdata->xpcs_lock, flags);
+>>   	XPCS32_IOWRITE(pdata, pdata->xpcs_window_sel_reg, index);
+>> @@ -1080,23 +1091,9 @@ static void xgbe_write_mmd_regs_v2(struct xgbe_prv_data *pdata, int prtad,
+>>   	unsigned long flags;
+>>   	unsigned int mmd_address, index, offset;
+>>   
+>> -	if (mmd_reg & XGBE_ADDR_C45)
+>> -		mmd_address = mmd_reg & ~XGBE_ADDR_C45;
+>> -	else
+>> -		mmd_address = (pdata->mdio_mmd << 16) | (mmd_reg & 0xffff);
+>> +	mmd_address = get_mmd_address(pdata, mmd_reg);
+>>   
+>> -	/* The PCS registers are accessed using mmio. The underlying
+>> -	 * management interface uses indirect addressing to access the MMD
+>> -	 * register sets. This requires accessing of the PCS register in two
+>> -	 * phases, an address phase and a data phase.
+>> -	 *
+>> -	 * The mmio interface is based on 16-bit offsets and values. All
+>> -	 * register offsets must therefore be adjusted by left shifting the
+>> -	 * offset 1 bit and writing 16 bits of data.
+>> -	 */
+>> -	mmd_address <<= 1;
+>> -	index = mmd_address & ~pdata->xpcs_window_mask;
+>> -	offset = pdata->xpcs_window + (mmd_address & pdata->xpcs_window_mask);
+>> +	get_pcs_index_and_offset(pdata, mmd_address, &index, &offset);
+>>   
+>>   	spin_lock_irqsave(&pdata->xpcs_lock, flags);
+>>   	XPCS32_IOWRITE(pdata, pdata->xpcs_window_sel_reg, index);
+>> @@ -1111,10 +1108,7 @@ static int xgbe_read_mmd_regs_v1(struct xgbe_prv_data *pdata, int prtad,
+>>   	unsigned int mmd_address;
+>>   	int mmd_data;
+>>   
+>> -	if (mmd_reg & XGBE_ADDR_C45)
+>> -		mmd_address = mmd_reg & ~XGBE_ADDR_C45;
+>> -	else
+>> -		mmd_address = (pdata->mdio_mmd << 16) | (mmd_reg & 0xffff);
+>> +	mmd_address = get_mmd_address(pdata, mmd_reg);
+>>   
+>>   	/* The PCS registers are accessed using mmio. The underlying APB3
+>>   	 * management interface uses indirect addressing to access the MMD
+>> @@ -1139,10 +1133,7 @@ static void xgbe_write_mmd_regs_v1(struct xgbe_prv_data *pdata, int prtad,
+>>   	unsigned int mmd_address;
+>>   	unsigned long flags;
+>>   
+>> -	if (mmd_reg & XGBE_ADDR_C45)
+>> -		mmd_address = mmd_reg & ~XGBE_ADDR_C45;
+>> -	else
+>> -		mmd_address = (pdata->mdio_mmd << 16) | (mmd_reg & 0xffff);
+>> +	mmd_address = get_mmd_address(pdata, mmd_reg);
+>>   
+>>   	/* The PCS registers are accessed using mmio. The underlying APB3
+>>   	 * management interface uses indirect addressing to access the MMD
+>> -- 
+>> 2.34.1
+>>
+>>
 
