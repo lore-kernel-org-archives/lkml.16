@@ -1,109 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758081CD2C;
-	Mon, 14 Apr 2025 08:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CA615DBB3;
+	Mon, 14 Apr 2025 08:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619993; cv=none; b=OWf8zTtlxEm2xV0N5HY6skyaiUlF6xKt6QAeP8YhIxrq2l8H41ZltmVWsoQb8zaEwkrFtx6TKGykWcEvUyLkc1N1DDL90o/mRQtomD7OYiB4sk895On4K8X2C3cyn0BkW86eyRujJyfDqv5Of75zcuDwYl6DvgpmDRzRDCrMNTg=
+	t=1744620027; cv=none; b=KL0x9lxJg1JqMMnj5Ug1dKMuNRXK13vPRvTpVK/q0961szpxtzDWFFwM1NfgPs5+gW4a2hZ8xws2KgB+wPQqUT+jZmD54z1hEAMkOQUMWOM2V2/YrTMDU9JAjavp0sGy07qw9fH/Jo/V3RORFF1KrRUQjIAzT2QOMC9ymgbgiIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619993; c=relaxed/simple;
-	bh=tYlCHkZYxFMo5HnN3oYW/bPNS8c2jeQzFHS04BtH8WU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l8oFDud57tOkuMPE3aH3CAvzisSBUJqPvtE7XFSqMyn8y57d4w2/2AUd+aG/ufw6YkVugAD6uxXoqGd8Q/rnEd7b+JcmwPwejtOAQ/BtsBQaqC3eYfl47rGc/wWs6X87aNJ6I4zglnpWSs4QF3198FqZvJUlXX/te5j6UBPP8Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoirN+Oe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744620027; c=relaxed/simple;
+	bh=zKaosKnqxAEMJEQPHKc8iNMMQCXDKe5oSZ2DRY1bgWw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JDTS0SfRcYUBzHsSZ0PdPirLhMnQG5H2PlY2MT7foLYiFEeNe4vCtvJtwGYdb857hB0SpCTnD8jWt+fHjM2hTrKaHxQxUarJuQ3aVvqXunKWaEuis+ItMvllnv63RRv8T0Lz7aC5AsSZGGjvG6aDhbFoEj+HFnjo2djbqmTPUgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TahVKnII; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoirN+Oe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A5A5C4CEE2;
-	Mon, 14 Apr 2025 08:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744619991;
-	bh=tYlCHkZYxFMo5HnN3oYW/bPNS8c2jeQzFHS04BtH8WU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hoirN+OekqkfoV+KE+im5ZoZrW/giBmE0s6JC9eozXlTsAqYyw8WTTcIgHaiw1VHe
-	 QuzgPqKlTVJSvzs295SLcJNF3pep7ZAs+oeUJ8e1W9H9JRgdaRRKHxYN5c1VLZChXn
-	 mNbLUmPNcSR3UwGrdI680mT8oO5KPcL84kPJV87TZvx6ba0AvB0PxAoWiO30Si774v
-	 V4YnnjvvaUSMr66C9nYYRF8Zy5Q1U0CIr+bcoj2tDqcq4Ip6IV5h7xy15H3PkVtGIj
-	 nU/R3u/EQZd0SxOn33SwiqXj4sDBvWCsoFOQeY+AwjmFvh4S0R+CFhkkFFRHzCm41E
-	 0bREf8ckw56yg==
-From: Michael Walle <mwalle@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH net] net: ethernet: ti: am65-cpsw: fix port_np reference counting
-Date: Mon, 14 Apr 2025 10:39:42 +0200
-Message-Id: <20250414083942.4015060-1-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TahVKnII"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-524038ba657so4055770e0c.0;
+        Mon, 14 Apr 2025 01:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744620025; x=1745224825; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uWMxGH9MN2lw9UiJgZXH2sA9J8cJGOnXvoh40QjiLJY=;
+        b=TahVKnIIsRU1HpboyrV0cL4n709KE4bPEkvR2NpKjrlucZaR9DLKDCcopa/WgWjK27
+         wE+Xb8b5Hl8YajAR3Qu0YQgi6sTZLNOD/v3FhOiBC/qf09yPtSIpaOYu049QRv71HIxm
+         6GjxJD/c3n1WBJVMPsB2huoWJJSmlywNX7sHyfBQ3usgg7M4mLVD2t6/Za7F80FGQV0f
+         PJ+Q8eFXEu+pTk01RwCMsm8usb1W1vH/Uj2DwL4ONalv90LEsH5gNJb3ERPikai8MoFG
+         rRhdy6fHAKatQ3FIrpxeYH/mL2fJtW2zWT/SioQo5gvyo/cSc7mSubafE1axgvvgH88A
+         MtJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744620025; x=1745224825;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uWMxGH9MN2lw9UiJgZXH2sA9J8cJGOnXvoh40QjiLJY=;
+        b=a9UNQdAiC6yGMweuMBaImSir0QiwfAloTxjBvnUlqAKNObXWNW8qSOWBJ/66rKt8T1
+         0vtOt3g0cfLLUe8RJxJDiaOXCkkxngMUifuBkpJvnrTX7GcFPVZCU9MrDLwXif1QBldH
+         34am4fSxlVMFyuiiKiBCpvYpPIlLKgAfY8SV2i+gGgpdZBdUszsr9kXr6/usNO3MnxSL
+         K1GOHn0iagDUCFFCFpQCI9q/M4z/nMlk+sLAYeyQRLDGYH0d7ZzB//ErhDzwxdi5MW65
+         /DXwUQjJXXHnqrel3ATiWlCIPOESccMIC+6/44mX298WUSC+oeMO4yRrnqqSWycdrdNq
+         w95A==
+X-Forwarded-Encrypted: i=1; AJvYcCUgrR4sR0mcD1qxUIBgd+M/JMZ/zBby4oRF6k9UsjfQEJNFz5kn1m+jiLkP+edJCDFGNBw4aiHTyD8njM3T@vger.kernel.org, AJvYcCVXgUQ9yDG1IvWfptbupnWCNzeWMrZ8Eyx2WFYnTRFVwR90+hWPqrSJ+/XhvRnoCI9xoTnCrzpNTWiV5XiZ3QaZwaM=@vger.kernel.org, AJvYcCVwfFWIhF/m0OsANW5acaqc2xMdjM62gbyOSsRrH47t9h3dyYciaXsHdAd7alWHPYWP2HJxyXPBJuR7@vger.kernel.org, AJvYcCW9CnbvKKXm3Nqo2ZqeZAPcV6OIb/uptRdMNLGS6HeUKZu8C/nPApSCWrnlYTsrXkF2Il9z5Uw7elUeIQ==@vger.kernel.org, AJvYcCWWbyNzE54M1TE7HQVzK9fe/bast6Xt0P9CJZ9KeqjXX0myxH6qScaVOZcubjg+vIzGe2ToXbRfMP4STXaR@vger.kernel.org, AJvYcCX/D3B+Km0kOkhQdRHKuimlDxBS21UptLPELdkJjaHMjmtEFW386VwKqCxrw3i8NP4tsTSn3c+U7AIH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl6tXJqXXx7BzLTC/4cXTzOelgi1dd0YQfkoWGmA6+UT0EJRpP
+	QidB+9jQzY6vqeLps+xuIwCoQKljkhmpSWd0MPY+5dR969LPbvhLCQdeZMTHVcAVXUUJ+qVQzxi
+	5hKSvmVs0HHZ96Fw53jiDIdzD7F0=
+X-Gm-Gg: ASbGncsPHsYMa3YZvAdQWhQr+zDkFaJtvYo28Kl7L8f+PQA2WiUfDpeO94K6dAWu6df
+	Qo0ZVOcWKy7CZ8/WQfV/9YsL/1FGbSs/3WVcxL3IsX3IFKBxV5V7srRvqO6byfQvD+K/UAla4dT
+	Gvvg8jsgupJtg0894GH4Vv0P5gRVkG22Gf
+X-Google-Smtp-Source: AGHT+IET2qRXboEKhidUb5hBJlClL8RXUpYBKRhEnEi/wLWquyPq+HRgvLZKLIrzDsDjB07VIxygOjghYhgLKS7v14g=
+X-Received: by 2002:a05:6122:3417:b0:523:eb47:2884 with SMTP id
+ 71dfb90a1353d-527b5ecadcbmr12260095e0c.6.1744620024811; Mon, 14 Apr 2025
+ 01:40:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407191628.323613-13-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVYfe7oUp+2QiHbBqxb3zKUYufpZHJQWmbzD1cu3TuRxg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVYfe7oUp+2QiHbBqxb3zKUYufpZHJQWmbzD1cu3TuRxg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 09:39:58 +0100
+X-Gm-Features: ATxdqUHlsc5uJ7-xCYIyly9sEU832hppwQxRaNf8N6phxVH69LOeEigYs5a45bg
+Message-ID: <CA+V-a8vzPuxAqJ8waJWw0TNRqV5FMeuojZ7bxfPJzLMPNdy79g@mail.gmail.com>
+Subject: Re: [PATCH v2 12/12] arm64: dts: renesas: Add initial device tree for
+ RZ/V2N EVK
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A reference to the device tree node is stored in a private struct, thus
-the reference count has to be incremented. Also, decrement the count on
-device removal and in the error path.
+Hi Geert,
 
-Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+Thank you for the review.
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index e78de79a5d78..636f4cb66aa1 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2666,7 +2666,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
- 				of_property_read_bool(port_np, "ti,mac-only");
- 
- 		/* get phy/link info */
--		port->slave.port_np = port_np;
-+		port->slave.port_np = of_node_get(port_np);
- 		ret = of_get_phy_mode(port_np, &port->slave.phy_if);
- 		if (ret) {
- 			dev_err(dev, "%pOF read phy-mode err %d\n",
-@@ -2720,6 +2720,17 @@ static void am65_cpsw_nuss_phylink_cleanup(struct am65_cpsw_common *common)
- 	}
- }
- 
-+static void am65_cpsw_remove_dt(struct am65_cpsw_common *common)
-+{
-+	struct am65_cpsw_port *port;
-+	int i;
-+
-+	for (i = 0; i < common->port_num; i++) {
-+		port = &common->ports[i];
-+		of_node_put(port->slave.port_np);
-+	}
-+}
-+
- static int
- am65_cpsw_nuss_init_port_ndev(struct am65_cpsw_common *common, u32 port_idx)
- {
-@@ -3622,6 +3633,7 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
- 	am65_cpsw_nuss_cleanup_ndev(common);
- 	am65_cpsw_nuss_phylink_cleanup(common);
- 	am65_cpts_release(common->cpts);
-+	am65_cpsw_remove_dt(common);
- err_of_clear:
- 	if (common->mdio_dev)
- 		of_platform_device_destroy(common->mdio_dev, NULL);
-@@ -3661,6 +3673,7 @@ static void am65_cpsw_nuss_remove(struct platform_device *pdev)
- 	am65_cpsw_nuss_phylink_cleanup(common);
- 	am65_cpts_release(common->cpts);
- 	am65_cpsw_disable_serdes_phy(common);
-+	am65_cpsw_remove_dt(common);
- 
- 	if (common->mdio_dev)
- 		of_platform_device_destroy(common->mdio_dev, NULL);
--- 
-2.39.5
+On Thu, Apr 10, 2025 at 1:07=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add the initial device tree for the Renesas RZ/V2N EVK board, based on
+> > the R9A09G056N48 SoC. Enable basic board functionality, including:
+> >
+> > - Memory mapping (reserve the first 128MB for the secure area)
+> > - Clock inputs (QEXTAL, RTXIN, AUDIO_EXTAL)
+> > - PINCTRL configurations for peripherals
+> > - Serial console (SCIF)
+> > - SDHI1 with power control and UHS modes
+> >
+> > Update the Makefile to include the new DTB.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v1->v2
+> > - Followed DTS coding style guidelines
+>
+> Thanks for the update!
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v6.16.
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+>
+> > +&pinctrl {
+>
+> > +       sdhi1_pins: sd1 {
+> > +               sd1-dat-cmd {
+> > +                       pins =3D "SD1DAT0", "SD1DAT1", "SD1DAT2", "SD1D=
+AT3", "SD1CMD";
+> > +                       input-enable;
+> > +                       renesas,output-impedance =3D <3>;
+> > +                       slew-rate =3D <0>;
+> > +               };
+> > +
+> > +               sd1-clk {
+> > +                       pins =3D "SD1CLK";
+> > +                       renesas,output-impedance =3D <3>;
+> > +                       slew-rate =3D <0>;
+> > +               };
+> > +
+> > +               sd1-cd {
+> > +                       pinmux =3D <RZV2N_PORT_PINMUX(9, 4, 14)>; /* SD=
+1_CD */
+> > +               };
+>
+> I will sort these subnodes while applying.
+>
+Thanks for taking care.
 
+Cheers,
+Prabhakar
