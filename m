@@ -1,394 +1,637 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021075.outbound.protection.outlook.com [52.101.129.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C93E571;
-	Mon, 14 Apr 2025 03:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A8E28EB;
+	Mon, 14 Apr 2025 03:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600155; cv=fail; b=hino+px5l5pDv8CSgnFaA7lOfEWc6zsOgJndhM1od6eJup21fXVp9WFp2CDNXfbHDElqiaE3c+H77RqF8JanduqghFRs403LF95cHgzmS2Bbv5WiiJXNhO38aCBtPfURlDU5EeW5XKNB2DKh/D8qLMIOH+/9M6u+fGASRQ5Z04M=
+	t=1744600309; cv=fail; b=u/4ggb/XE+++e1Xchq/qKGE7E73Amd0oE1Jv3NBsTXDCnEUkgnC3LT2uP+ID2QFNSZIXvaquoupdNHepaZdco9viN8ivcav/PVucwD02JgDWP43vmg1bdhELejIOHmm3Q4Bo0bx93lx+P9stdITVaWzR5rDjEzqsQWZR8Eo+zz8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600155; c=relaxed/simple;
-	bh=aoTUak1EbkNKk0XIx/+b7ZFr2ycUtGb2VgAbphHoTYQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UCsinEoB4j4h298bbor9HBwBMbNl5Wo6LkJYCM9Vga+OHLjsOLC9URxXS/JNoUj4CS9B3r0SfxLjQe1hS5Bvz+FtyTW6VFV6BE7yMYiMzIQzj0FpCdrfrkl7ptiPDWM9dZbxHeqUAs7FOl9CEs/Eoiv80yOBV/AfqrKxCHOZ+Ak=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g9gnIQtF; arc=fail smtp.client-ip=40.107.237.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1744600309; c=relaxed/simple;
+	bh=shA0nY3/HZCbJD39YwM1Y2pfjz2AAH/E2ZAVTKYytXY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HyJg8APNI0ctDeuB6ZkFQsXCeCK6WcO1nSq8G6ZOKwOO0D/75wnH1h5DaHjrQRL1yMO0gjesO6KxW4egvOFeholnmtbhPT/qWLUmhX0D2SkWAiXPnV/nv4vXHfb7QQ3BEJY2G8R254zIKrtBACVX1Rtz9c50DNjc4EdpG+gqr60=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=q6vxKgEp; arc=fail smtp.client-ip=52.101.129.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g9gnIQtF"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="q6vxKgEp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RVXfjho2hOPuSgO2rLQhCiZ9yMTFnATGtfANqII0aCZ7My5My90SK0R6Dlt5Qm5LYXo5Vo2Ze/slPWAKnL774JId7HM48TbUNdyABPe0DOH84SoBAcg9wbCEmGCX3WXr5OXOy4v5JYZH4u3hD28f8VWYWgs8el2HscPcXAk3DPQhZEcr1tQyCCGQKrp2XB2A0g82c5nRjle+qCr9WIlfT3fPGgK7eOGkDNHIbuQQmtab377RyklDK6Tn0+kGa7mG2pL0KHlzi3nD2SbJhKWSpnxcsz+0pf62e950DNiJbMKl24KB5lfNwY8k+BL/gECSpijbkPF/jL2ffeKfWF9JBA==
+ b=YfjbXpfNLjDS+HwOFAH71ltl3hrW2o7flLsyp4UvLE7/kzYT8z+hTdNaJXZ2dBFAu5xGKxTaIWlwqUOQuR6OqnARFZbsZ0UIh9yL3Vk/B9DRODGgoUcFnkrNQvT6HS97fflgT88uPinphvTTabfjksBV6aZyF/Gux6Vt7yEGe2zREfNXO4jS7ArbuKUgDoDAruvYUBUY4gl6QKJWpD0Z4eKhzB6h8qxnfTLUBGrvyEtLguFcj6gUAjVQnEch85SariKd36kY+ZGFTEcWHwKp9wbwFPQHl1KuA+rxDOkk3HrFDbWGeOJAv+mNM9V/pPECVhVqvy9C16UyFL0BggVuNQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C5lm4OtzGWA3FO1KkReRtd9VLBWMxs0yCq3Gs9lvrhs=;
- b=RsABXBVpRaug9QFfKR3KKlYAxsoRif9By0Hiz/uvxXVJc8zzZmRtJCAJihuGYbely1nsyo1FUkcfdwve9emFtMRLWxeCkMXJQrco3FW1/R/O2AhGExfQN1RD8dOPnd0oQFasoFRL81tDY6DPIbBxNaINBk13w69Sk8/QQIE+3eLXK478iXQMLkS8Uu/hT16q/R7OqEzWZN+3pOEhbpBegcPLa62oZWtnxU3jsFu+dC160f7LvidydU4M/j+tpK3MR0qnZhHQO3LtX4Ci9c/Hc57jkV1oMTWNzkNidpBZoBFx8HAU1IZRWC8CNbqZraPbewFaQLmNpWbWP4fuAXp0Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=yr76jyA2u211F1uyXN9juyYgjGvDDo2F/Nml+y9sbQU=;
+ b=HbZm3E7xOZDxF5aUCpfMHt6+qPyPmGieCRHkd4WFtczt1Ts2XD2SDgLoTj5gg0AYEfaZQemSBnZj1jdIjpG1eYANLLkL2Ru4P+UVrU5oTNopVT2apuGahJXjQlziSobSYCJiLXxYwgJxxPPzP4Kpag4WMYAxeruPCXQ7QD9CfoGwDBWSSfp0SMEF2JMm0PYv6sRfmrjphrCbJVUFzbL1v3OIWcerffw2TCcfdLDQulpLtjvI2DNVTnxcipmjTuzAzB4sHiqA66U7yFWBjrPeM0bA0NdnRXIzR0qA5ySPdd6CNMXYERtLgcyNajiVxJJHwzDhg06lC6k8/TYOQQyMJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C5lm4OtzGWA3FO1KkReRtd9VLBWMxs0yCq3Gs9lvrhs=;
- b=g9gnIQtFRpvu53HhbCx+SuoIRgw6KyKy8qK97voza65CFkcu2Z6v1PfM7WYHCly2uEU94M/Op5Ikl7StmpVthi+xrPulKp9nE00fEOcKQeGXG3pXUX+LaK2abeuVHzcESPpkri3ix2g/b9mjoz/qLMRbaILB7/Bz/m4Rr9xqw7s=
-Received: from PH7P220CA0160.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::18)
- by SN7PR12MB6744.namprd12.prod.outlook.com (2603:10b6:806:26c::13) with
+ bh=yr76jyA2u211F1uyXN9juyYgjGvDDo2F/Nml+y9sbQU=;
+ b=q6vxKgEpbkcsw+qoKQL3d2Ez6MExZFQxWUuGkacl+lsW7cotJWOZW9uVjaarJDLK1nQ5W0EW4smPb7s3yciVYiwBhXkGSlLcEm5cYU3s2zgeyZbF11TlcocUeQeVJddej4Yx9MgDEOAdWAnjmojpV4uNFbRWlDiapR6pkQI8VUzppawluwVizQ3tjpdomGZ9g0mpBICwsUjYIPFXkd0YNA3fRJli5Rn9BjyP0Vp+/o1SUwp3k+D20Ua1jRcO/ok4+kPU78Y2xVfJIzpVJMyO9z0zfQsbIbeCK7w1+e/S21NKJW81TZbikdaGz7CHvQonLwOEC4XpJ3lZGg6Fk0z0SA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by KL1PR03MB7825.apcprd03.prod.outlook.com (2603:1096:820:ef::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 14 Apr
- 2025 03:09:09 +0000
-Received: from CY4PEPF0000EDD2.namprd03.prod.outlook.com
- (2603:10b6:510:33b:cafe::53) by PH7P220CA0160.outlook.office365.com
- (2603:10b6:510:33b::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.32 via Frontend Transport; Mon,
- 14 Apr 2025 03:09:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD2.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 03:09:08 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Apr
- 2025 22:09:03 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Apr
- 2025 22:09:03 -0500
-Received: from xhdlc201369.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Sun, 13 Apr 2025 22:08:59 -0500
-From: Sai Krishna Musham <sai.krishna.musham@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <cassel@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
-	<sai.krishna.musham@amd.com>
-Subject: [LINUX PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
-Date: Mon, 14 Apr 2025 08:38:42 +0530
-Message-ID: <20250414030842.857176-3-sai.krishna.musham@amd.com>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20250414030842.857176-1-sai.krishna.musham@amd.com>
-References: <20250414030842.857176-1-sai.krishna.musham@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
+ 2025 03:11:40 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%5]) with mapi id 15.20.8606.027; Mon, 14 Apr 2025
+ 03:11:40 +0000
+Message-ID: <c9f0ca5f-17c4-474f-8370-fc0c83ac9093@amlogic.com>
+Date: Mon, 14 Apr 2025 11:11:35 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: meson-spicc: add DMA support
+Content-Language: en-US
+To: neil.armstrong@linaro.org, Mark Brown <broonie@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Sunny Luo <sunny.luo@amlogic.com>
+References: <20250408-spi-dma-v1-1-3c38be62c09c@amlogic.com>
+ <c29a8c28-996c-4e94-b0a1-0e4a37f0bebb@linaro.org>
+ <aebccc51-14a2-40be-8d9e-20a55ce94459@amlogic.com>
+ <d9d81cb4-12b4-4db3-becb-4578548986b2@linaro.org>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <d9d81cb4-12b4-4db3-becb-4578548986b2@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR06CA0009.apcprd06.prod.outlook.com
+ (2603:1096:4:186::17) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD2:EE_|SN7PR12MB6744:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0fb4dc95-4de6-411e-4297-08dd7b01b922
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|KL1PR03MB7825:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd31cd36-58b5-4a18-3aaf-08dd7b02133e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lUIGHXtojXYwImz4nDEabbfewZ8UUocvOoKXgllpDXkGwdlFITYku3n1oYWb?=
- =?us-ascii?Q?8oGKYidTLtcNLmpQVM64EcUUbaS3Ch293TIIceFcUjx+YrqQqbGMvC2fty5z?=
- =?us-ascii?Q?Dxiec75wvmWvr8DkoPdo88ta+43hyhAewQyN7wdDDZab6gMiXsCx/znzO+6F?=
- =?us-ascii?Q?KUJ8gNRrSzlWwNkG6J96n4sFMd9lDM8rFWk+ASgb0S38dwVQ/vmmkEgeVpfJ?=
- =?us-ascii?Q?ZvwtxJUI3VzvJk8y78gnQixeYmnsF4SR2wDXMIjo6tK1e6YCVZ/+uM/W5NCk?=
- =?us-ascii?Q?/LRqNIb1MPXdpXb7m0gdqUeJZ3jY+nKyOYZnkLj3VX9PdGd3KXzjUN4jyueF?=
- =?us-ascii?Q?boreqV/CbnsQdS3pcMjrul5fWmDr05PLQE2BbYFlFX88esvEKmX8Wszr4NVs?=
- =?us-ascii?Q?QWjWjhDHXqCZTsjteGD+GySfKe9xcZQruzR3By2724yTcrl5LW7X4AbWt4Xa?=
- =?us-ascii?Q?CmxyUuQiIxNi4vhsh0yBi2T5rZyEb+OfCtLpiG6Ri+LCQCAJkFJ6XedCqt6A?=
- =?us-ascii?Q?6uWACMbRtnXbs8NjKf84ubYRHh7Qwfv0Z4gxKcv94Q7uhB9JB2AY0HmUtdUU?=
- =?us-ascii?Q?LVffxRvi6uw1wZR9nuZU9Xh5mYH6Mle4vdef163Ad0jc7eFID8fMUHx6Vids?=
- =?us-ascii?Q?d47mulbVCtzF1BBofFUzkghcWE6lbDlNzi9ysLpuxA0Z1iX14TbRcScLPTZm?=
- =?us-ascii?Q?hBipXqFGNL9eGPzUcBEW0Zw7r9BJwnp4csGg6nR3pJL5/I/eK10wOjyga5JJ?=
- =?us-ascii?Q?035PLfagJkgErUeWhPT4jz/n/Rd1y6FVgOkcYsd315LKmyi97dU3JGMfKz64?=
- =?us-ascii?Q?mA/fmE/uol/xe6oUWpeoFRTDYaYyTzMsw07xmn7Y/0zHpZE5IMV0gLBqtUVU?=
- =?us-ascii?Q?imJkUCJitZ9dF+E+5ApcKDgayE/n5of5sfLvz77ZrZX2KjgVxhTY0oHSBS6F?=
- =?us-ascii?Q?0F/J0VZ8TCFLV7n+qKgFHvMUaPnIzzdMyEdnGekP9exVoBUm+02ui0kxbvTy?=
- =?us-ascii?Q?XbRjax8Ct9a3OKp5BycpxqMwVivl6YOF/FlQgPh+4RCtZuj3jQoRb0zTCV0Y?=
- =?us-ascii?Q?+FEme+oxjwRa+pZJxk427x/9rc1JgF7v/kRX2rMFrbPb8lDMXhkfGRDYWVvZ?=
- =?us-ascii?Q?q73BRadnGevcAXQw3IpJyeU45SG28lZq4KEI4CEFRMVhWOYAKpfj7qiYxR9i?=
- =?us-ascii?Q?ehdJjoawu59uMbH2pZjYooEZPsjxz/9jcVa1XS09/NW5u/Dmfi2zvcUfPDzS?=
- =?us-ascii?Q?mswRM+ASs23ixUJSCxNCkijYDUfnIGZRp2zJ7PkrlGpRadve/1D1IdlQjKPL?=
- =?us-ascii?Q?6mF0TTJmgsCbUIueBcbVKQNV4ewGgXfLaKpOSE7meTwWkDFfUu186e6sk1AN?=
- =?us-ascii?Q?WqjkPy0Gei58Q6fbexRQkVOe6usmVAWxN1i8qRBLdXgD/S+pYhZ45iafN564?=
- =?us-ascii?Q?eAsjLiVGEiYPGmqWW+cx7VbrihQ+kn3v+4I3GQ44Mem4XWxby8MhSYbbIlxx?=
- =?us-ascii?Q?oOoC0quQ/DuaL2oIYYkpUl3o1lKSd9f/0fCk?=
+	=?utf-8?B?UFdEdzlxay9SU1dyN21USVBSWFNLUVEvSTQvSDdOdjFPV2hxUVNhYTNHR2NS?=
+ =?utf-8?B?V3dnMjllWWp6eVl4azJkS0hsdDVZL25rbjNYejkxUGlXMk1CYysyL2NCR2p5?=
+ =?utf-8?B?ckdyZEJpcFFOQ1AvbXAyVHZlSnVld3k2dXRNdnJpYTdTeEpiMzVjVjBDU3Za?=
+ =?utf-8?B?Y2hVdkp0S2huZ0tTZFdHUG5sc1hDT3doL3JiWFRrUDFsN1FoWitFTUpicVdS?=
+ =?utf-8?B?VWQ1QmtLNjliSkN0cXFFd1F3cUx6MWZkUDZCTTFhNlRBUnkzWGpqdk51ZmlR?=
+ =?utf-8?B?NmcrSjUzd243S3NHTHdmRmU1eGZ2ZmVmS0JuMUJ6RGp3eGFtSVZvT1pHenZp?=
+ =?utf-8?B?MkxYMjZjcHAxUlpoUDQwWDFLd3VadXNGaUxSblVZMHh1TFhPY1FDR1VMaHR6?=
+ =?utf-8?B?M2ZHamRVcVhMNk1LZVpVNSs4REE0bDJZSTBMRjc2ajB1ZVVOY3dITUk4WjBv?=
+ =?utf-8?B?M0ZNR0FLUE1NSmxLazNXKzZiR1VnV1ZJdk9EdHZGVEhVaXZBWVNTOVVLbWww?=
+ =?utf-8?B?WktWem8yOUhRNUlSTzBYaHFQaFYzaDQwL3JYQXUwblJ0a0Iyc3ZZOU1vVXc2?=
+ =?utf-8?B?bzlmeDNOTkluZTFBdy9iTkFZT0syRmwyWUVUTGxkMUx3a2VMc0lRemtCNDBT?=
+ =?utf-8?B?NENpQjAzd2txdW4zRFAzWVR6Z1lRUmNsTEEwendJdWlUSmh4bUozMjQ2R29k?=
+ =?utf-8?B?aFFmaFUrM3c0MkhMQnJGbW5ReGxQejR4SldpLzZHZy83U29JbE15aFFETm1y?=
+ =?utf-8?B?QTRXKzZIZjZQbWpjT0Zsa0htZWFnb2xWVytwaGlVTzZxNkNsc3dNaGkvRWZO?=
+ =?utf-8?B?T1F1dUtVWjdma0dtNTBuN3NManJrVmhxRUVvVEgvZXhvOFFyZDhYUkpFN3FI?=
+ =?utf-8?B?a3V2bW9NcTEzM1FzeS9ZcXhLelhYMm53Vmh3cnlFUVpaOHVwdW9KNXdWanVL?=
+ =?utf-8?B?ZG53QldYc2dHQllPcnhjNlZpOVJqbUkyVGU4clJZV1lpMUF5Smp0a0N1eFBM?=
+ =?utf-8?B?cXlDem5EVW14ZnJqVTU3TzVuSy82Z0hSZXV0OXVhL3hFNVRlQ01ST3ZjOGhu?=
+ =?utf-8?B?UHZDaXBsa3hjcjdueFkzT2pGOW43SHhLQ2owaGprd3JQWm1XYTFDd1dHbXMx?=
+ =?utf-8?B?SmtubG5YenVsWmVveVdrakpRS0tWUUlGYThRL0lML3dIc2haZUdWMGtUUjV2?=
+ =?utf-8?B?aEJDNUtKbzBWeFowM0dRUmtralZyZHNXeGlpeWM2TGdqNVRRSlVEMUROeVpv?=
+ =?utf-8?B?OUkzTXh1VjZHSDBoM3RUTjlHVHczY0ZlR3lFRmIvZFV1VCtpUU83WUFpdEtM?=
+ =?utf-8?B?VWovbTgyZXJFamMwTnE3K0tyamdOeDNiajVvVG1yR3U0VmFvdHBaNS9sNFhs?=
+ =?utf-8?B?ZTVBZWFjc1NNQ0hHQTJudW5UcW9pN3RMMnNrK2dNbHJRaHoxc3BYYmtoWXVI?=
+ =?utf-8?B?bnBFVGlRYVdCOGtNMm5aWDdDNkUyMFRxUnMybWpoMWNKQUFDWCs4RHlIWkxL?=
+ =?utf-8?B?ZWNVTVhGM05tN1d0aG5GZHBzVVZEak1ZYWtuQVFMTXNqc2c2QjF1Wkh3UkNq?=
+ =?utf-8?B?SDBKL0w5RHhVTjQ3VXZBK2J1ZXEvZUtkN2tVQmRON213NmpZeld0cXF2Q3dK?=
+ =?utf-8?B?MXV1RFNpcytVRC9Qd2YybUNQcUV6bTZlTTVxS2xWdGNleVF0L3BEdCtvYmZN?=
+ =?utf-8?B?NUYrZjNhTFp3UjNyb3ZHc3dlQVR1YnhzQ2RiekVzeDkvbEdiUnlmOFZiYlpS?=
+ =?utf-8?B?elplY2xuRkI3dFZWcGlCRndORlZYMDlNNVAzTnQ4NndlYkdlZVEweHNsWVZS?=
+ =?utf-8?B?SlMrSFo4Uk5aNkw2L3ZmalpIRHNWeDQrbDJCdXNwL1lFQnpJRFZYbEZTSldJ?=
+ =?utf-8?B?UFBqYzNxaktXcVplUlFCNXRQb3dSVlBCZkJqTkM1ZWN1WWdXRmhzUWhtNW5M?=
+ =?utf-8?Q?mmSkFSSNNxI=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:09:08.6129
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YXlvcVpDMmFDMDN4T2ZpYWZGTmRsUXlrUitXdlFjTU94cXhOWWJyb3BHclRC?=
+ =?utf-8?B?SHBMU0pYUnkzK2lyclRUYmN2Nzk5c3RNNGZqd0w1MEthSlg3eE9iVmdXNFoy?=
+ =?utf-8?B?QjdlZURmS1E1MDNwYXJ5a3NmMlRrSkFUdzIzYnVPbElTUS9tNDFYeHpqZVFv?=
+ =?utf-8?B?SHk4Q1RpZU1RVHNuV3FKK01rQW5EWFlEY01IWTlqOUZZNjdLWGh2QUc2N2xl?=
+ =?utf-8?B?eHo2SDhZK2ErcEZrRXlIRlhsTU5rRVVGcUo3RFNyaENUZ0Q1eVRTNnNWTzFy?=
+ =?utf-8?B?cWZ2ZEtDZUlNaTdjWUtHQXlRQ2QrSHJsM1V6MGF0R0pCS1pqd2RPRUcvbDJK?=
+ =?utf-8?B?SDI0bEZML0Y3cy9RZkRINUwwcGFabnhwdHAzQWlmN1UzckNMMHducnBnYml6?=
+ =?utf-8?B?aWtzTFIwdnZOVWYzZElORTJTTVMxUVVSUldVZGZaNGMxbFZzalU0ZW1LUFpq?=
+ =?utf-8?B?eEhBd25Pc3J6TUVGOGppaFFKTjB2YTBIc2FHa2pqaGJENWNETU1TT0JhcFcr?=
+ =?utf-8?B?ZFJmd21Ud2IvS1BkRHdhcFpLVFZEREYwMHBOV2dxd0JaeWdSaEtHZU5oQVRt?=
+ =?utf-8?B?bUJxNHJ1akRFWGZpQ2FacFlxRDdybndDK3p4TWwzeTZtNWxVUVBJQllpeitB?=
+ =?utf-8?B?YzZ4NTRmcjJ1WWFpNkVFVXp5U2lOdTQzOVJzbzFEVUluMnJYZDdxa2FGTkly?=
+ =?utf-8?B?a1RZVTE0K2h0aHJBbkxacEw3dlZLVlY0NUdDR0IvYmFONjJoU0hIeDhKc2Vq?=
+ =?utf-8?B?cm1oOGZYeElhOUk5dSt5K1JLNzlGQ3FkalVhT0U1NTJpSkJ3WkpGN3prTlpH?=
+ =?utf-8?B?WEFxWTE4SlhkL2twMDlIM0tNSjEvTWE3dEJOdExKbUNUUndMYi9sWlF5c3p0?=
+ =?utf-8?B?Sy9QQ0Z1QkVtdmJiZFhTTHRrWUFsVEhDVk1xWTRSVmRnYnBxdzdFSnNReGNx?=
+ =?utf-8?B?cUkvYWhka2w3YVhXQkVvaWNsRzhHUkVXcXlOMDhuUzVkRUs3MlR4QzluVUov?=
+ =?utf-8?B?MERjbFdhd0ZRNE9sOHJqRWJFMm5Ud3c4aHNjT2QyblhDNGV2QWQrc2dBTUp5?=
+ =?utf-8?B?MVNtSmVVVDdMUlQwM2pBbGlUZklEQjBuRUloOHlaY3lyU25MR3dwVDZiTFFa?=
+ =?utf-8?B?ZkxVSUR6T2x6Rm4rem83YXZRbTRMQ2lsN2xzM1ZsL2RCczVUQWtoZGYwc0Vr?=
+ =?utf-8?B?NXlEcXBZcUxDRGI4OTU4WmlOZGFHZi9Wbzd3em4zT011cmNNQlk5ZFAvaVNk?=
+ =?utf-8?B?TGE0L0lZdy81bmFwOWY5bXdJR0tyZkFIYjVMUWJGbWtTR0pVVXd0ZU9CUmFB?=
+ =?utf-8?B?UHFLQUJpZDhSam1WdkpaMUJnUy9WSWZBZGQvbDd1Zk9QdFhBSGk3OFNBS0E5?=
+ =?utf-8?B?ckllN1NKQTV1U0xydFZKWWcyNzhqNmlMOW9ybFBmeWxIKzZTemN5VFlkQWNZ?=
+ =?utf-8?B?VG5NdytPa2NtaGlHMU5tZ0drSTRKSVBFV0RDcWtSR2xpak1iWVpjTGh6SVZS?=
+ =?utf-8?B?U1JDMklOdzlONm56eUFUZFBaUVFTYXVDOVFEdVAwOE5lQXJsTnVOUVg1Z0Iv?=
+ =?utf-8?B?Um00cjJHWm9HRFowMnQwNXcrUWtPV3dHREF3emo4N2hEMjJiT3dBSU1LS3p5?=
+ =?utf-8?B?RUFld2ZWMXpmNUlSb2k2YTVySENYNUZwaTUxMHFjY21kQWJxWVVveitPMDVr?=
+ =?utf-8?B?WXliY0dwaXBQU0F3WVVHWGRuUUtHbGczRmJXV0x5YW5aVkRHVmUybTdYMjgz?=
+ =?utf-8?B?M1hiQzRMZUJJR29VMzVlaTdzS3JsU2IrSzc1M2Q5WTVndlhjMlZLUFhtN0F6?=
+ =?utf-8?B?dzlOUTJnWkE5clU3UjN6UTdxZXJuYlVUanBSQ1RCdlp2dTdnQ0cvQzVrZkV1?=
+ =?utf-8?B?TlJxcTVkOFV3cGZaaERVbkVjb05uWEx1K2dBSTNVcDNtTVhuMzR1NmpyT2JE?=
+ =?utf-8?B?TGdodzVlUVFwWVJtRHlxU1hWVTN6dFkzM0Y0UzJmdEp3citPSGlGUDdveWY2?=
+ =?utf-8?B?L3RHa2VOaVcvU3hscTB4d2NtYmx5V3JNMW9VbGYxTkU3T1pPaklhL3ExRFcz?=
+ =?utf-8?B?N1RKM2JiUFNXTkRmYVE4YnlqWEorREgyT0JPWk1MdkRiV1hlQ0hyWE1BZ2tJ?=
+ =?utf-8?B?bW1PSVpNd2dQZ2dNaUoxWHFxR3FDaCtlaVdKMHYrYjFnNGlISmtBRjNBNjM1?=
+ =?utf-8?B?TVE9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd31cd36-58b5-4a18-3aaf-08dd7b02133e
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 03:11:40.1053
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fb4dc95-4de6-411e-4297-08dd7b01b922
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD2.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6744
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P+GjxSQFj00CVSWFWWAPB6ae9shj9s2s6nNVMOdDii+NJ6niswnNMtuy/wrnrXnMF3uRpMYC87ypVFu5IcCrZTuzGG4srRisrJjQEbam5mc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7825
 
-Add support for handling the PCIe Root Port (RP) PERST# signal using
-the GPIO framework, along with the PCIe IP reset. This reset is
-managed by the driver and occurs after the Initial Power Up sequence
-(PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's probe
-function is called.
+Hi Neil,
+    Thanks for your reply.
 
-This reset mechanism is particularly useful in warm reset scenarios,
-where the power rails remain stable and only PERST# signal is toggled
-through the driver. Applying both the PCIe IP reset and the PERST#
-improves the reliability of the reset process by ensuring that both
-the Root Port controller and the Endpoint are reset synchronously
-and avoid lane errors.
+On 2025/4/9 20:35, neil.armstrong@linaro.org wrote:
+> 
+> Hi,
+> 
+> On 09/04/2025 03:49, Xianwei Zhao wrote:
+>> Hi Neil,
+>>     Thanks for your reply.
+>>
+>> On 2025/4/8 15:41, Neil Armstrong wrote:
+>>> [ EXTERNAL EMAIL ]
+>>>
+>>> Hi,
+>>>
+>>> On 08/04/2025 09:04, Xianwei Zhao via B4 Relay wrote:
+>>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>>
+>>>> Add DMA support for spicc driver.
+>>>>
+>>>> DMA works if the transfer meets the following conditions:
+>>>> 1. 64 bits per word;
+>>>> 2. The transfer length must be multiples of the dma_burst_len,
+>>>>     and the dma_burst_len should be one of 8,7...2,
+>>>>     otherwise, it will be split into several SPI bursts.
+>>>>
+>>>> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
+>>>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>> ---
+>>>>   drivers/spi/spi-meson-spicc.c | 243 
+>>>> ++++++++++++++++++++++++++++++++++++++++--
+>>>>   1 file changed, 232 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/spi/spi-meson-spicc.c 
+>>>> b/drivers/spi/spi-meson-spicc.c
+>>>> index df74ad5060f8..81e263bceba9 100644
+>>>> --- a/drivers/spi/spi-meson-spicc.c
+>>>> +++ b/drivers/spi/spi-meson-spicc.c
+>>>> @@ -21,6 +21,7 @@
+>>>>   #include <linux/interrupt.h>
+>>>>   #include <linux/reset.h>
+>>>>   #include <linux/pinctrl/consumer.h>
+>>>> +#include <linux/dma-mapping.h>
+>>>>
+>>>>   /*
+>>>>    * The Meson SPICC controller could support DMA based transfers, 
+>>>> but is not
+>>>> @@ -33,6 +34,20 @@
+>>>>    * - CS management is dumb, and goes UP between every burst, so is 
+>>>> really a
+>>>>    *   "Data Valid" signal than a Chip Select, GPIO link should be 
+>>>> used instead
+>>>>    *   to have a CS go down over the full transfer
+>>>> + *
+>>>> + * DMA achieves a transfer with one or more SPI bursts, each SPI 
+>>>> burst is made
+>>>> + * up of one or more DMA bursts. The DMA burst implementation 
+>>>> mechanism is,
+>>>> + * For TX, when the number of words in TXFIFO is less than the preset
+>>>> + * reading threshold, SPICC starts a reading DMA burst, which reads 
+>>>> the preset
+>>>> + * number of words from TX buffer, then writes them into TXFIFO.
+>>>> + * For RX, when the number of words in RXFIFO is greater than the 
+>>>> preset
+>>>> + * writing threshold, SPICC starts a writing request burst, which 
+>>>> reads the
+>>>> + * preset number of words from RXFIFO, then write them into RX buffer.
+>>>> + * DMA works if the transfer meets the following conditions,
+>>>> + * - 64 bits per word
+>>>> + * - The transfer length in word must be multiples of the 
+>>>> dma_burst_len, and
+>>>> + *   the dma_burst_len should be one of 8,7...2, otherwise, it will 
+>>>> be split
+>>>> + *   into several SPI bursts by this driver
+>>>
+>>> Fine, but then also rephrase the previous paragraph since you're 
+>>> adding DMA.
+>>>
+>> Will do.
+>>
+>>> Could you precise on which platform you tested the DMA ?
+>>>
+>>
+>> aq222(S4)
+> 
+> Will you be able to test on other platforms ?
+>
 
-Adapt the implementation to use the GPIO framework for reset signal
-handling and make this reset handling optional, along with the
-`cpm_crx` property, to maintain backward compatibility with existing
-device tree binaries (DTBs).
+I tested it on other platforms over the last few days. G12A and C3 and 
+T7(T7 CLOCK use local source).
 
-Additionally, clear Firewall after the link reset for CPM5NC to allow
-further PCIe transactions.
+My board SPI does not connect peripherals and is tested through a 
+hardware loop.
+cmd:
+spi_test -D /dev/spidev0.0 -v -s 5000000 -b 64 -l
 
-Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
----
-Changes for v7:
-- Use platform_get_resource_byname() to make cpm_crx and cpm5nc_fw_attr
-  optional
-- Use 100us delay T_PERST as per PCIe spec before PERST# deassert.
-
-Changes for v6:
-- Correct version check condition of CPM5NC_HOST.
-
-Changes for v5:
-- Handle probe defer for reset_gpio.
-- Resolve ABI break.
-
-Changes for v4:
-- Add PCIe PERST# support for CPM5NC.
-- Add PCIe IP reset along with PERST# to avoid Link Training Errors.
-- Remove PCIE_T_PVPERL_MS define and PCIE_T_RRS_READY_MS after
-  PERST# deassert.
-- Move PCIe PERST# assert and deassert logic to
-  xilinx_cpm_pcie_init_port() before cpm_pcie_link_up(), since
-  Interrupts enable and PCIe RP bridge enable should be done after
-  Link up.
-- Update commit message.
-
-Changes for v3:
-- Use PCIE_T_PVPERL_MS define.
-
-Changes for v2:
-- Make the request GPIO optional.
-- Correct the reset sequence as per PERST#
-- Update commit message
----
- drivers/pci/controller/pcie-xilinx-cpm.c | 97 +++++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index 13ca493d22bd..c46642417d52 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -6,6 +6,8 @@
-  */
- 
- #include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -21,6 +23,13 @@
- #include "pcie-xilinx-common.h"
- 
- /* Register definitions */
-+#define XILINX_CPM_PCIE0_RST		0x00000308
-+#define XILINX_CPM5_PCIE0_RST		0x00000318
-+#define XILINX_CPM5_PCIE1_RST		0x0000031C
-+#define XILINX_CPM5NC_PCIE0_RST		0x00000324
-+
-+#define XILINX_CPM5NC_PCIE0_FRWALL	0x00000140
-+
- #define XILINX_CPM_PCIE_REG_IDR		0x00000E10
- #define XILINX_CPM_PCIE_REG_IMR		0x00000E14
- #define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-@@ -93,12 +102,16 @@ enum xilinx_cpm_version {
-  * @ir_status: Offset for the error interrupt status register
-  * @ir_enable: Offset for the CPM5 local error interrupt enable register
-  * @ir_misc_value: A bitmask for the miscellaneous interrupt status
-+ * @cpm_pcie_rst: Offset for the PCIe IP reset
-+ * @cpm5nc_fw_rst: Offset for the CPM5NC Firewall
-  */
- struct xilinx_cpm_variant {
- 	enum xilinx_cpm_version version;
- 	u32 ir_status;
- 	u32 ir_enable;
- 	u32 ir_misc_value;
-+	u32 cpm_pcie_rst;
-+	u32 cpm5nc_fw_rst;
- };
- 
- /**
-@@ -106,6 +119,8 @@ struct xilinx_cpm_variant {
-  * @dev: Device pointer
-  * @reg_base: Bridge Register Base
-  * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-+ * @crx_base: CPM Clock and Reset Control Registers Base
-+ * @cpm5nc_fw_base: CPM5NC Firewall Attribute Base
-  * @intx_domain: Legacy IRQ domain pointer
-  * @cpm_domain: CPM IRQ domain pointer
-  * @cfg: Holds mappings of config space window
-@@ -118,6 +133,8 @@ struct xilinx_cpm_pcie {
- 	struct device			*dev;
- 	void __iomem			*reg_base;
- 	void __iomem			*cpm_base;
-+	void __iomem			*crx_base;
-+	void __iomem			*cpm5nc_fw_base;
- 	struct irq_domain		*intx_domain;
- 	struct irq_domain		*cpm_domain;
- 	struct pci_config_window	*cfg;
-@@ -475,12 +492,57 @@ static int xilinx_cpm_setup_irq(struct xilinx_cpm_pcie *port)
-  * xilinx_cpm_pcie_init_port - Initialize hardware
-  * @port: PCIe port information
-  */
--static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
-+static int xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
- {
- 	const struct xilinx_cpm_variant *variant = port->variant;
-+	struct device *dev = port->dev;
-+	struct gpio_desc *reset_gpio;
-+	bool do_reset = false;
-+
-+	if (port->crx_base && (variant->version < CPM5NC_HOST ||
-+			       (variant->version == CPM5NC_HOST &&
-+				port->cpm5nc_fw_base))) {
-+		/* Request the GPIO for PCIe reset signal and assert */
-+		reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+		if (IS_ERR(reset_gpio))
-+			return dev_err_probe(dev, PTR_ERR(reset_gpio),
-+					     "Failed to request reset GPIO\n");
-+		if (reset_gpio)
-+			do_reset = true;
-+	}
-+
-+	if (do_reset) {
-+		/* Assert the PCIe IP reset */
-+		writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-+
-+		/*
-+		 * "PERST# active time", as per Table 2-10: Power Sequencing
-+		 * and Reset Signal Timings of the PCIe Electromechanical
-+		 * Specification, Revision 6.0, symbol "T_PERST".
-+		 */
-+		udelay(100);
-+
-+		/* Deassert the PCIe IP reset */
-+		writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
-+
-+		/* Deassert the reset signal */
-+		gpiod_set_value(reset_gpio, 0);
-+		mdelay(PCIE_T_RRS_READY_MS);
-+
-+		if (variant->version == CPM5NC_HOST &&
-+		    port->cpm5nc_fw_base) {
-+			/* Clear Firewall */
-+			writel_relaxed(0x00, port->cpm5nc_fw_base +
-+				       variant->cpm5nc_fw_rst);
-+			writel_relaxed(0x01, port->cpm5nc_fw_base +
-+				       variant->cpm5nc_fw_rst);
-+			writel_relaxed(0x00, port->cpm5nc_fw_base +
-+				       variant->cpm5nc_fw_rst);
-+		}
-+	}
- 
- 	if (variant->version == CPM5NC_HOST)
--		return;
-+		return 0;
- 
- 	if (cpm_pcie_link_up(port))
- 		dev_info(port->dev, "PCIe Link is UP\n");
-@@ -512,6 +574,8 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
- 	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
- 		   XILINX_CPM_PCIE_REG_RPSC_BEN,
- 		   XILINX_CPM_PCIE_REG_RPSC);
-+
-+	return 0;
- }
- 
- /**
-@@ -552,6 +616,24 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
- 		port->reg_base = port->cfg->win;
- 	}
- 
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cpm_crx");
-+	if (res) {
-+		port->crx_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(port->crx_base))
-+			return PTR_ERR(port->crx_base);
-+	}
-+
-+	if (port->variant->version == CPM5NC_HOST) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   "cpm5nc_fw_attr");
-+		if (res) {
-+			port->cpm5nc_fw_base =
-+				devm_ioremap_resource(dev, res);
-+			if (IS_ERR(port->cpm5nc_fw_base))
-+				return PTR_ERR(port->cpm5nc_fw_base);
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -603,7 +685,11 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
- 		goto err_free_irq_domains;
- 	}
- 
--	xilinx_cpm_pcie_init_port(port);
-+	err = xilinx_cpm_pcie_init_port(port);
-+	if (err) {
-+		dev_err(dev, "Init port failed\n");
-+		goto err_setup_irq;
-+	}
- 
- 	if (port->variant->version != CPM5NC_HOST) {
- 		err = xilinx_cpm_setup_irq(port);
-@@ -636,6 +722,7 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
- static const struct xilinx_cpm_variant cpm_host = {
- 	.version = CPM,
- 	.ir_misc_value = XILINX_CPM_PCIE0_MISC_IR_LOCAL,
-+	.cpm_pcie_rst = XILINX_CPM_PCIE0_RST,
- };
- 
- static const struct xilinx_cpm_variant cpm5_host = {
-@@ -643,6 +730,7 @@ static const struct xilinx_cpm_variant cpm5_host = {
- 	.ir_misc_value = XILINX_CPM_PCIE0_MISC_IR_LOCAL,
- 	.ir_status = XILINX_CPM_PCIE0_IR_STATUS,
- 	.ir_enable = XILINX_CPM_PCIE0_IR_ENABLE,
-+	.cpm_pcie_rst = XILINX_CPM5_PCIE0_RST,
- };
- 
- static const struct xilinx_cpm_variant cpm5_host1 = {
-@@ -650,10 +738,13 @@ static const struct xilinx_cpm_variant cpm5_host1 = {
- 	.ir_misc_value = XILINX_CPM_PCIE1_MISC_IR_LOCAL,
- 	.ir_status = XILINX_CPM_PCIE1_IR_STATUS,
- 	.ir_enable = XILINX_CPM_PCIE1_IR_ENABLE,
-+	.cpm_pcie_rst = XILINX_CPM5_PCIE1_RST,
- };
- 
- static const struct xilinx_cpm_variant cpm5n_host = {
- 	.version = CPM5NC_HOST,
-+	.cpm_pcie_rst = XILINX_CPM5NC_PCIE0_RST,
-+	.cpm5nc_fw_rst = XILINX_CPM5NC_PCIE0_FRWALL,
- };
- 
- static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
--- 
-2.44.1
-
+>>
+>>>>    */
+>>>>
+>>>>   #define SPICC_MAX_BURST     128
+>>>> @@ -128,6 +143,29 @@
+>>>>
+>>>>   #define SPICC_DWADDR        0x24    /* Write Address of DMA */
+>>>>
+>>>> +#define SPICC_LD_CNTL0       0x28
+>>>> +#define VSYNC_IRQ_SRC_SELECT         BIT(0)
+>>>> +#define DMA_EN_SET_BY_VSYNC          BIT(2)
+>>>> +#define XCH_EN_SET_BY_VSYNC          BIT(3)
+>>>> +#define DMA_READ_COUNTER_EN          BIT(4)
+>>>> +#define DMA_WRITE_COUNTER_EN         BIT(5)
+>>>> +#define DMA_RADDR_LOAD_BY_VSYNC              BIT(6)
+>>>> +#define DMA_WADDR_LOAD_BY_VSYNC              BIT(7)
+>>>> +#define DMA_ADDR_LOAD_FROM_LD_ADDR   BIT(8)
+>>>> +
+>>>> +#define SPICC_LD_CNTL1       0x2c
+>>>> +#define DMA_READ_COUNTER             GENMASK(15, 0)
+>>>> +#define DMA_WRITE_COUNTER            GENMASK(31, 16)
+>>>> +#define DMA_BURST_LEN_DEFAULT                8
+>>>> +#define DMA_BURST_COUNT_MAX          0xffff
+>>>> +#define SPI_BURST_LEN_MAX    (DMA_BURST_LEN_DEFAULT * 
+>>>> DMA_BURST_COUNT_MAX)
+>>>> +
+>>>> +enum {
+>>>> +     DMA_TRIG_NORMAL = 0,
+>>>> +     DMA_TRIG_VSYNC,
+>>>> +     DMA_TRIG_LINE_N,
+>>>
+>>> You're only using DMA_TRIG_NORMAL, what the other 2 values for ?
+>>>
+>>
+>> DMA_TRIG_VSYNC and DMA_TRIG_LINE_N are used by VOUT modules in certain 
+>> partial TV SoCs. These DMA triggering methods rely on special signal 
+>> lines, and are not supported in this context. I will delete the 
+>> corresponding information.
+>>
+>>>
+>>>> +
+>>>>   #define SPICC_ENH_CTL0      0x38    /* Enhanced Feature */
+>>>>   #define SPICC_ENH_CLK_CS_DELAY_MASK GENMASK(15, 0)
+>>>>   #define SPICC_ENH_DATARATE_MASK             GENMASK(23, 16)
+>>>> @@ -171,6 +209,9 @@ struct meson_spicc_device {
+>>>>       struct pinctrl                  *pinctrl;
+>>>>       struct pinctrl_state            *pins_idle_high;
+>>>>       struct pinctrl_state            *pins_idle_low;
+>>>> +     dma_addr_t                      tx_dma;
+>>>> +     dma_addr_t                      rx_dma;
+>>>> +     bool                            using_dma;
+>>>>   };
+>>>>
+>>>>   #define pow2_clk_to_spicc(_div) container_of(_div, struct 
+>>>> meson_spicc_device, pow2_div)
+>>>> @@ -202,6 +243,155 @@ static void meson_spicc_oen_enable(struct 
+>>>> meson_spicc_device *spicc)
+>>>>       writel_relaxed(conf, spicc->base + SPICC_ENH_CTL0);
+>>>>   }
+>>>>
+>>>> +static int meson_spicc_dma_map(struct meson_spicc_device *spicc,
+>>>> +                            struct spi_transfer *t)
+>>>> +{
+>>>> +     struct device *dev = spicc->host->dev.parent;
+>>>> +
+>>>> +     if (!(t->tx_buf && t->rx_buf))
+>>>> +             return -EINVAL;
+>>>> +
+>>>> +     t->tx_dma = dma_map_single(dev, (void *)t->tx_buf, t->len, 
+>>>> DMA_TO_DEVICE);
+>>>> +     if (dma_mapping_error(dev, t->tx_dma))
+>>>> +             return -ENOMEM;
+>>>> +
+>>>> +     t->rx_dma = dma_map_single(dev, t->rx_buf, t->len, 
+>>>> DMA_FROM_DEVICE);
+>>>> +     if (dma_mapping_error(dev, t->rx_dma))
+>>>> +             return -ENOMEM;
+>>>> +
+>>>> +     spicc->tx_dma = t->tx_dma;
+>>>> +     spicc->rx_dma = t->rx_dma;
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static void meson_spicc_dma_unmap(struct meson_spicc_device *spicc,
+>>>> +                               struct spi_transfer *t)
+>>>> +{
+>>>> +     struct device *dev = spicc->host->dev.parent;
+>>>> +
+>>>> +     if (t->tx_dma)
+>>>> +             dma_unmap_single(dev, t->tx_dma, t->len, DMA_TO_DEVICE);
+>>>> +     if (t->rx_dma)
+>>>> +             dma_unmap_single(dev, t->rx_dma, t->len, 
+>>>> DMA_FROM_DEVICE);
+>>>> +}
+>>>> +
+>>>> +/*
+>>>> + * According to the remain words length, calculate a suitable spi 
+>>>> burst length
+>>>> + * and a dma burst length for current spi burst
+>>>> + */
+>>>> +static u32 meson_spicc_calc_dma_len(struct meson_spicc_device *spicc,
+>>>> +                                 u32 len, u32 *dma_burst_len)
+>>>> +{
+>>>> +     u32 i;
+>>>> +
+>>>> +     if (len <= spicc->data->fifo_size) {
+>>>> +             *dma_burst_len = len;
+>>>> +             return len;
+>>>> +     }
+>>>> +
+>>>> +     *dma_burst_len = DMA_BURST_LEN_DEFAULT;
+>>>> +
+>>>> +     if (len == (SPI_BURST_LEN_MAX + 1))
+>>>> +             return SPI_BURST_LEN_MAX - DMA_BURST_LEN_DEFAULT;
+>>>> +
+>>>> +     if (len >= SPI_BURST_LEN_MAX)
+>>>> +             return SPI_BURST_LEN_MAX;
+>>>> +
+>>>> +     for (i = DMA_BURST_LEN_DEFAULT; i > 1; i--)
+>>>> +             if ((len % i) == 0) {
+>>>> +                     *dma_burst_len = i;
+>>>> +                     return len;
+>>>> +             }
+>>>> +
+>>>> +     i = len % DMA_BURST_LEN_DEFAULT;
+>>>> +     len -= i;
+>>>> +
+>>>> +     if (i == 1)
+>>>> +             len -= DMA_BURST_LEN_DEFAULT;
+>>>> +
+>>>> +     return len;
+>>>> +}
+>>>> +
+>>>> +static void meson_spicc_setup_dma(struct meson_spicc_device *spicc, 
+>>>> u8 trig)
+>>>> +{
+>>>> +     unsigned int len;
+>>>> +     unsigned int dma_burst_len, dma_burst_count;
+>>>> +     unsigned int count_en = 0;
+>>>> +     unsigned int txfifo_thres = 0;
+>>>> +     unsigned int read_req = 0;
+>>>> +     unsigned int rxfifo_thres = 31;
+>>>> +     unsigned int write_req = 0;
+>>>> +     unsigned int ld_ctr1 = 0;
+>>>> +
+>>>> +     writel_relaxed(spicc->tx_dma, spicc->base + SPICC_DRADDR);
+>>>> +     writel_relaxed(spicc->rx_dma, spicc->base + SPICC_DWADDR);
+>>>> +
+>>>> +     /* Set the max burst length to support a transmission with 
+>>>> length of
+>>>> +      * no more than 1024 bytes(128 words), which must use the CS 
+>>>> management
+>>>> +      * because of some strict timing requirements
+>>>> +      */
+>>>> +     writel_bits_relaxed(SPICC_BURSTLENGTH_MASK, 
+>>>> SPICC_BURSTLENGTH_MASK,
+>>>> +                         spicc->base + SPICC_CONREG);
+>>>> +
+>>>> +     len = meson_spicc_calc_dma_len(spicc, spicc->xfer_remain,
+>>>> +                                    &dma_burst_len);
+>>>> +     spicc->xfer_remain -= len;
+>>>> +     dma_burst_count = DIV_ROUND_UP(len, dma_burst_len);
+>>>> +     dma_burst_len--;
+>>>> +
+>>>> +     if (trig == DMA_TRIG_LINE_N)
+>>>> +             count_en |= VSYNC_IRQ_SRC_SELECT;
+>>>
+>>> Is this the VPU VSYNC irq ? is this a tested and valid usecase ?
+>>>
+>>
+>> Yes, it is VPU VSYNC irq, This part of the code is not completely. NO 
+>> tested about it. I will delete it.
+> 
+> Thx
+> 
+>>
+>>>> +
+>>>> +     if (spicc->tx_dma) {
+>>>> +             spicc->tx_dma += len;
+>>>> +             count_en |= DMA_READ_COUNTER_EN;
+>>>> +             if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
+>>>> +                     count_en |= DMA_RADDR_LOAD_BY_VSYNC
+>>>> +                                 | DMA_ADDR_LOAD_FROM_LD_ADDR;
+>>>> +             txfifo_thres = spicc->data->fifo_size - dma_burst_len;
+>>>> +             read_req = dma_burst_len;
+>>>> +             ld_ctr1 |= FIELD_PREP(DMA_READ_COUNTER, dma_burst_count);
+>>>> +     }
+>>>> +
+>>>> +     if (spicc->rx_dma) {
+>>>> +             spicc->rx_dma += len;
+>>>> +             count_en |= DMA_WRITE_COUNTER_EN;
+>>>> +             if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
+>>>> +                     count_en |= DMA_WADDR_LOAD_BY_VSYNC
+>>>> +                                 | DMA_ADDR_LOAD_FROM_LD_ADDR;
+>>>> +             rxfifo_thres = dma_burst_len;
+>>>> +             write_req = dma_burst_len;
+>>>> +             ld_ctr1 |= FIELD_PREP(DMA_WRITE_COUNTER, 
+>>>> dma_burst_count);
+>>>> +     }
+>>>> +
+>>>> +     writel_relaxed(count_en, spicc->base + SPICC_LD_CNTL0);
+>>>> +     writel_relaxed(ld_ctr1, spicc->base + SPICC_LD_CNTL1);
+>>>> +     writel_relaxed(((trig == DMA_TRIG_NORMAL) ? SPICC_DMA_ENABLE : 0)
+>>>> +                 | SPICC_DMA_URGENT
+>>>> +                 | FIELD_PREP(SPICC_TXFIFO_THRESHOLD_MASK, 
+>>>> txfifo_thres)
+>>>> +                 | FIELD_PREP(SPICC_READ_BURST_MASK, read_req)
+>>>> +                 | FIELD_PREP(SPICC_RXFIFO_THRESHOLD_MASK, 
+>>>> rxfifo_thres)
+>>>> +                 | FIELD_PREP(SPICC_WRITE_BURST_MASK, write_req),
+>>>> +                 spicc->base + SPICC_DMAREG);
+>>>> +}
+>>>> +
+>>>> +static void meson_spicc_dma_irq(struct meson_spicc_device *spicc)
+>>>> +{
+>>>> +     if (readl_relaxed(spicc->base + SPICC_DMAREG) & SPICC_DMA_ENABLE)
+>>>> +             return;
+>>>> +
+>>>> +     if (spicc->xfer_remain) {
+>>>> +             meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
+>>>> +     } else {
+>>>> +             writel_bits_relaxed(SPICC_SMC, 0, spicc->base + 
+>>>> SPICC_CONREG);
+>>>> +             writel_relaxed(0, spicc->base + SPICC_INTREG);
+>>>> +             writel_relaxed(0, spicc->base + SPICC_DMAREG);
+>>>> +             meson_spicc_dma_unmap(spicc, spicc->xfer);
+>>>> +             complete(&spicc->done);
+>>>> +     }
+>>>> +}
+>>>> +
+>>>>   static inline bool meson_spicc_txfull(struct meson_spicc_device 
+>>>> *spicc)
+>>>>   {
+>>>>       return !!FIELD_GET(SPICC_TF,
+>>>> @@ -293,6 +483,11 @@ static irqreturn_t meson_spicc_irq(int irq, 
+>>>> void *data)
+>>>>
+>>>>       writel_bits_relaxed(SPICC_TC, SPICC_TC, spicc->base + 
+>>>> SPICC_STATREG);
+>>>>
+>>>> +     if (spicc->using_dma) {
+>>>> +             meson_spicc_dma_irq(spicc);
+>>>> +             return IRQ_HANDLED;
+>>>> +     }
+>>>
+>>> Make meson_spicc_dma_irq() return irqreturn_t and return IRQ_HANDLED.
+>>>
+>>
+>> Will do.
+>>
+>>>> +
+>>>>       /* Empty RX FIFO */
+>>>>       meson_spicc_rx(spicc);
+>>>>
+>>>> @@ -426,9 +621,6 @@ static int meson_spicc_transfer_one(struct 
+>>>> spi_controller *host,
+>>>>
+>>>>       meson_spicc_reset_fifo(spicc);
+>>>>
+>>>> -     /* Setup burst */
+>>>> -     meson_spicc_setup_burst(spicc);
+>>>> -
+>>>>       /* Setup wait for completion */
+>>>>       reinit_completion(&spicc->done);
+>>>>
+>>>> @@ -442,11 +634,40 @@ static int meson_spicc_transfer_one(struct 
+>>>> spi_controller *host,
+>>>>       /* Increase it twice and add 200 ms tolerance */
+>>>>       timeout += timeout + 200;
+>>>>
+>>>> -     /* Start burst */
+>>>> -     writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + 
+>>>> SPICC_CONREG);
+>>>> +     if (xfer->bits_per_word == 64) {
+>>>> +             int ret;
+>>>>
+>>>> -     /* Enable interrupts */
+>>>> -     writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
+>>>> +             /* must tx */
+>>>> +             if (!xfer->tx_buf)
+>>>> +                     return -EINVAL;
+>>>> +
+>>>> +             /* dma_burst_len 1 can't trigger a dma burst */
+>>>> +             if (xfer->len < 16)
+>>>> +                     return -EINVAL;
+>>>
+>>> Those 2 checks should be done to enable the DMA mode, you should 
+>>> fallback to FIFO mode
+>>> instead of returning EINVAL, except if 64 bits_per_word is only valid 
+>>> in DMA mode ?
+>>>
+>>
+>> I only support DMA when bits_per_word equals 64, because the register 
+>> operation is more complicated if use PIO module. The register is 32 
+>> bits wide, a word needs to be written twice to the register.
+> 
+> OK then leave it as-is
+> 
+>>
+>>>> +
+>>>> +             ret = meson_spicc_dma_map(spicc, xfer);
+>>>> +             if (ret) {
+>>>> +                     meson_spicc_dma_unmap(spicc, xfer);
+>>>> +                     dev_err(host->dev.parent, "dma map failed\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +
+>>>> +             spicc->using_dma = true;
+>>>> +             spicc->xfer_remain = DIV_ROUND_UP(xfer->len, 
+>>>> spicc->bytes_per_word);
+>>>> +             meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
+>>>> +             writel_relaxed(SPICC_TE_EN, spicc->base + SPICC_INTREG);
+>>>> +             writel_bits_relaxed(SPICC_SMC, SPICC_SMC, spicc->base 
+>>>> + SPICC_CONREG);
+>>>> +     } else {
+>>>> +             spicc->using_dma = false;
+>>>> +             /* Setup burst */
+>>>> +             meson_spicc_setup_burst(spicc);
+>>>> +
+>>>> +             /* Start burst */
+>>>> +             writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base 
+>>>> + SPICC_CONREG);
+>>>> +
+>>>> +             /* Enable interrupts */
+>>>> +             writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
+>>>> +     }
+>>>>
+>>>>       if (!wait_for_completion_timeout(&spicc->done, 
+>>>> msecs_to_jiffies(timeout)))
+>>>>               return -ETIMEDOUT;
+>>>> @@ -853,10 +1074,10 @@ static int meson_spicc_probe(struct 
+>>>> platform_device *pdev)
+>>>>       host->num_chipselect = 4;
+>>>>       host->dev.of_node = pdev->dev.of_node;
+>>>>       host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LOOP;
+>>>> -     host->bits_per_word_mask = SPI_BPW_MASK(32) |
+>>>> -                                SPI_BPW_MASK(24) |
+>>>> -                                SPI_BPW_MASK(16) |
+>>>> -                                SPI_BPW_MASK(8);
+>>>> +     /* DMA works at 64 bits, but it is invalidated by the spi core,
+>>>> +      * clr the mask to avoid the spi core validation check
+>>>> +      */
+>>>> +     host->bits_per_word_mask = 0;
+>>>
+>>> Fine, instead please add a check in meson_spicc_setup() to make sure
+>>> we operate only in 8, 16, 24, 32 & 64 bits_per_word.
+>>>
+>>> So not need to clear it, the host buffer was allocated with 
+>>> spi_alloc_host() which
+>>> allocates with kzalloc(), already zeroing the allocated memory.
+>>>
+>>
+>> Will drop this line, and check bits_per_word in meson_spicc_setup.
+> 
+> Thanks,
+> Neil
+> 
+>>
+>>> Neil
+>>>
+>>>>       host->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX);
+>>>>       host->min_speed_hz = spicc->data->min_speed_hz;
+>>>>       host->max_speed_hz = spicc->data->max_speed_hz;
+>>>>
+>>>> ---
+>>>> base-commit: 49807ed87851916ef655f72e9562f96355183090
+>>>> change-id: 20250408-spi-dma-c499f560d295
+>>>>
+>>>> Best regards,
+>>>
+>>> With those fixed, the path is clear & clean, thanks !
+>>>
+>>> Neil
+> 
