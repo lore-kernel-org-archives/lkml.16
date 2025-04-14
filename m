@@ -1,164 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400FF289374;
-	Mon, 14 Apr 2025 18:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6624A28466C;
+	Mon, 14 Apr 2025 18:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655417; cv=none; b=eLtN40DrP3+6x1lpxmxIJ6FoDPS/sCYtX4iKjYhceZYNTZDjuINJtVf0nhy25xq8HOPZj56LBKnZQ0pI1zlHEuv7yhwazNXIKdVj1BMy8JpTMvyH59MSNRLvvXVNJkhbEX5aVj7qAL7V8tr/cnD04mY6t8MJ2nHxvrReP1YOd5Q=
+	t=1744655424; cv=none; b=BVb6DmIXTtIUyPz6m+okUVKw2Sc0dbppscyEUT3lfU53Xovoxtb5cuNJZ6jpL1rDm/nyKA9dM5I2mWOj0nKVriIZy/QQE7XL3SbNqOSbTfA2Wxjws2CRxCMe4exD+87TOka3ru6uOqx9ILybL53X2WCrh4//+yAsuFJuaHdhMjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655417; c=relaxed/simple;
-	bh=BtcwZGRvn5TesENoDrfjjj8HyL7mLHa6Ze3jrfXvGEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LdmipwymVHphUUg5tFy+U+y3I2NbgWUNKba8C7V17fHN4kAkM5vdUA2NKoRQC6we7TSLPywxe0Zo7d6gKqt/2QCTMoKYAj43baO30UOHux9vG8HqSgNLpzTOkTU7GnsBZOtI/gYKNSN/mRcUYEALtbBn1gxUiLe/c684q18wWho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f85bucBm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744655424; c=relaxed/simple;
+	bh=6HmJKQO2X4WyvpQqfOeCUt/KLjexAoDH+2V1AxIXnok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwMrDM+J3F184UlbPx82vf7DgSap74II99OuAaC0gz6TihgCk1EACydvo2JNauBQDaMrOxy0Fl/dbhAnUqcWW7K+VbWm0M5Zj4GuCUD82O12JXskkV95wjJqKt8yN/jMdga86TJi3sZ6TSQhlgANwFEP0m3bt5upJojyjs+ha38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=F0+Mk7aB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f85bucBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706B9C4CEE2;
-	Mon, 14 Apr 2025 18:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744655416;
-	bh=BtcwZGRvn5TesENoDrfjjj8HyL7mLHa6Ze3jrfXvGEg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f85bucBmfd43blwejOgTiqV2C9OWkdfcVHiTrbzYmvV2XqwNIgUK9u+tGs5xOdpDR
-	 ueoH4ADTmzHAOimKyQPO7Q+3msaeRxjgbqg3ChtKPiFsIu4dY068I+LXuzCoEN3K7V
-	 ViIVtbfOcoSezM6+xU7547ln4NYvl3ZLXuoSuNkqJZZaK6dTZ34Y4BonCrHUTvb7kA
-	 //GRZ1Td00Ndc/2c0qB2s/G+Ss/R4W6EI4KoCoIbKAXZl4bPLEWHY00AkFZooRUguq
-	 D6NTw8POTU/wu10HjOoUu9jhPv3JkXjrXYTaqr+j+Je1018Kowda/jAEEKhxhgiMYy
-	 G/8m1/IuPvhGg==
-Date: Mon, 14 Apr 2025 19:30:10 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v5 06/11] iio: accel: adxl345: extend sample frequency
- adjustments
-Message-ID: <20250414193010.0ff1ea59@jic23-huawei>
-In-Reply-To: <CAFXKEHau6n2o_MPimiEkYRNvE3TO9f5j_tDH0FwJYsk6V5B9WA@mail.gmail.com>
-References: <20250318230843.76068-1-l.rubusch@gmail.com>
-	<20250318230843.76068-7-l.rubusch@gmail.com>
-	<20250331113300.08379a5a@jic23-huawei>
-	<CAFXKEHau6n2o_MPimiEkYRNvE3TO9f5j_tDH0FwJYsk6V5B9WA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="F0+Mk7aB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=KvrP4YX9S88PE5IGWj9XQEJrki5oMuCrrMt/Wwr1Hxw=; b=F0+Mk7aBUK+0Qn8yr3+0zXWTV4
+	Y6tEaB+VVFzxQ5xMlEqWLRg99PhfBRfcefiA++Hi/koQtHGy5Xe2qzxrpHUFoy/+55OKQufU3Yin5
+	XPnHk7xWytSkie8IVd5hishRde0WcEpsneqeOJ/tD8dy/tTdSo9EGks8j9H4F/YkGs6s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4OZI-009FcJ-GO; Mon, 14 Apr 2025 20:30:04 +0200
+Date: Mon, 14 Apr 2025 20:30:04 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Bo-Cun Chen <bc-bocun.chen@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net 1/5] net: ethernet: mtk_eth_soc: revise mdc divider
+ configuration
+Message-ID: <6c36505c-7af3-49f5-9141-8a655f90a2f9@lunn.ch>
+References: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
 
-On Mon, 14 Apr 2025 13:41:20 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On Mon, Apr 14, 2025 at 07:11:20PM +0100, Daniel Golle wrote:
+> From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+> 
+> In the current method, the MDC divider was reset to the default setting
+> of 2.5MHz after the NETSYS SER. Therefore, we need to move the MDC
+> divider configuration function to mtk_hw_init().
+> 
+> Fixes: c0a440031d431 ("net: ethernet: mtk_eth_soc: set MDIO bus clock frequency")
+> Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 60 ++++++++++++++-------
+>  1 file changed, 42 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 43197b28b3e74..fd643cc1b7dd2 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -871,11 +871,11 @@ static const struct phylink_mac_ops mtk_phylink_ops = {
+>  	.mac_enable_tx_lpi = mtk_mac_enable_tx_lpi,
+>  };
+>  
+> -static int mtk_mdio_init(struct mtk_eth *eth)
+> +static int mtk_mdio_config(struct mtk_eth *eth)
+>  {
+>  	unsigned int max_clk = 2500000, divider;
+>  	struct device_node *mii_np;
+> -	int ret;
+> +	int ret = 0;
+>  	u32 val;
+>  
+>  	mii_np = of_get_available_child_by_name(eth->dev->of_node, "mdio-bus");
+> @@ -884,22 +884,6 @@ static int mtk_mdio_init(struct mtk_eth *eth)
+>  		return -ENODEV;
+>  	}
+>  
+> -	eth->mii_bus = devm_mdiobus_alloc(eth->dev);
+> -	if (!eth->mii_bus) {
+> -		ret = -ENOMEM;
+> -		goto err_put_node;
+> -	}
+> -
+> -	eth->mii_bus->name = "mdio";
+> -	eth->mii_bus->read = mtk_mdio_read_c22;
+> -	eth->mii_bus->write = mtk_mdio_write_c22;
+> -	eth->mii_bus->read_c45 = mtk_mdio_read_c45;
+> -	eth->mii_bus->write_c45 = mtk_mdio_write_c45;
+> -	eth->mii_bus->priv = eth;
+> -	eth->mii_bus->parent = eth->dev;
+> -
+> -	snprintf(eth->mii_bus->id, MII_BUS_ID_SIZE, "%pOFn", mii_np);
+> -
+>  	if (!of_property_read_u32(mii_np, "clock-frequency", &val)) {
+>  		if (val > MDC_MAX_FREQ || val < MDC_MAX_FREQ / MDC_MAX_DIVIDER) {
+>  			dev_err(eth->dev, "MDIO clock frequency out of range");
+> @@ -922,6 +906,42 @@ static int mtk_mdio_init(struct mtk_eth *eth)
+>  
+>  	dev_dbg(eth->dev, "MDC is running on %d Hz\n", MDC_MAX_FREQ / divider);
+>  
+> +err_put_node:
+> +	of_node_put(mii_np);
+> +	return ret;
+> +}
+> +
+> +static int mtk_mdio_init(struct mtk_eth *eth)
+> +{
+> +	struct device_node *mii_np;
+> +	int ret;
+> +
+> +	mii_np = of_get_child_by_name(eth->dev->of_node, "mdio-bus");
+> +	if (!mii_np) {
+> +		dev_err(eth->dev, "no %s child node found", "mdio-bus");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!of_device_is_available(mii_np)) {
+> +		ret = -ENODEV;
+> +		goto err_put_node;
+> +	}
 
-> On Mon, Mar 31, 2025 at 12:33=E2=80=AFPM Jonathan Cameron <jic23@kernel.o=
-rg> wrote:
-> >
-> > On Tue, 18 Mar 2025 23:08:38 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Introduce enums and functions to work with the sample frequency
-> > > adjustments. Let the sample frequency adjust via IIO and configure
-> > > a reasonable default.
-> > >
-> > > Replace the old static sample frequency handling. During adjustment of
-> > > bw registers, measuring is disabled and afterwards enabled again.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
-> > One minor thing inline.
-> >
-> > =20
-> > >       return -EINVAL;
-> > > @@ -504,7 +581,12 @@ static int adxl345_write_raw(struct iio_dev *ind=
-io_dev,
-> > >                            int val, int val2, long mask)
-> > >  {
-> > >       struct adxl345_state *st =3D iio_priv(indio_dev);
-> > > -     s64 n;
-> > > +     enum adxl345_odr odr;
-> > > +     int ret;
-> > > +
-> > > +     ret =3D adxl345_set_measure_en(st, false); =20
-> >
-> > Why is this necessary but wasn't before?
-> > If it should always have been done for existing calibbias etc,
-> > perhaps a separate precursor patch is appropriate?
-> > =20
->=20
-> On the one side the datasheet recommends to have measurement disabled,
-> when adjusting certain sensor registers, mostly related to interrupt
-> events. Before the sensor was operated in FIFO_BYPASS mode only
-> without using the sensor events. With interrupt based events, it will
-> operate in FIFO_STREAM or similar. Then it seems to me to be a better
-> approach to put it generally in standby mode when configuring
-> registers to avoid ending up e.g. in FIFO overrun or the like. On the
-> other side, I saw similar approaches in the sources of Analog sensors.
-> Enable/disable measurement was done there in the particular functions.
-> In the particular case of adxl345_write_raw, odr and range values are
-> going to be set and I implement enable/disable measurement directly in
-> the write_raw. In comparison to the ADXL380 (different sensor!) where
-> this is done, too, but down in the specific setter functions. I can
-> see a bit of an advantage, if something fails, the sensor generally
-> stays turned off. I'll keep this in v6 of the patches.
+It seems like you end up doing these checks twice. In theory it might
+change between the calls, but it is very unlikely? Maybe just keep
+node reference returned by of_get_child_by_name() and release it in
+mtk_mdio_cleanup()?
 
-Thanks for the explanation.  That answered my question nicely and
-this is fine.
+Or calculate the divider in mtk_mdio_init() as is, but store it away
+in struct mtk_eth, so you don't need to redo all the DT parsing?
 
->=20
-> Pls,  note, I did not observe faulty behavior due to that or analyzed
-> it thoroughly if and where it is probably better to have measurement
-> turned off. At best, it won't make any difference and is probably
-> rather kind of "best practice". If not, I would expect rather sporadic
-> minor issues.
->=20
-> As always, pls consider my patch(es) as a proposal, sometimes with an
-> invisible question mark ;) If you have a contrary opinion and/or
-> experience, please let me know.
->=20
-> > =20
-> > > +     if (ret)
-> > > +             return ret;
-> > >
-> > >       switch (mask) {
-> > >       case IIO_CHAN_INFO_CALIBBIAS:
-> > > @@ -512,20 +594,26 @@ static int adxl345_write_raw(struct iio_dev *in=
-dio_dev,
-> > >                * 8-bit resolution at +/- 2g, that is 4x accel data sc=
-ale
-> > >                * factor
-> > >                */
-> > > -             return regmap_write(st->regmap,
-> > > -                                 ADXL345_REG_OFS_AXIS(chan->address),
-> > > -                                 val / 4);
-> > > +             ret =3D regmap_write(st->regmap,
-> > > +                                ADXL345_REG_OFS_AXIS(chan->address),
-> > > +                                val / 4);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +             break;
-> > >       case IIO_CHAN_INFO_SAMP_FREQ:
-> > > -             n =3D div_s64(val * NANOHZ_PER_HZ + val2,
-> > > -                         ADXL345_BASE_RATE_NANO_HZ);
-> > > +             ret =3D adxl345_find_odr(st, val, val2, &odr);
-> > > +             if (ret)
-> > > +                     return ret;
-> > >
-> > > -             return regmap_update_bits(st->regmap, ADXL345_REG_BW_RA=
-TE,
-> > > -                                       ADXL345_BW_RATE,
-> > > -                                       clamp_val(ilog2(n), 0,
-> > > -                                                 ADXL345_BW_RATE));
-> > > +             ret =3D adxl345_set_odr(st, odr);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +             break;
-> > > +     default:
-> > > +             return -EINVAL;
-> > >       }
-> > >
-> > > -     return -EINVAL;
-> > > +     return adxl345_set_measure_en(st, true);
-> > >  } =20
-
+	Andrew
