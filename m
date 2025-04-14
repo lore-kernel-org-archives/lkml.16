@@ -1,331 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ABE268C6B
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E98265CD3
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624180; cv=none; b=YIAAXI7QWHN3M9YBMX+3B6Gmars66RJjRp/I/WacHqHJOh4xmTwHC7c4Mb3RG1ZDO7fuZb5gIfWEdRi/T7Y6UHQ3uvE4HaSC/uwyK2iDJomJi2VoXHNTQMGXanV9k5tnwemi0vkBY6qXz2WvXwBLySmfAlsl3CFNoaiPStd9Hmc=
+	t=1744624197; cv=none; b=EiTeHBfdGjlLFtcNCZp6oTUekExwd7V8OBwRbns2+hsPNdt7YtdnPSjOKRDycN3dKrcPDQ3knoytb4z3EWgALhcxxfqYrcqvaCr399SdV5FnGPXEBM1C9edeX1zggw/l/IQYcRviH/ih4Tw5q0FqV6YUOw9DfZTSjpzN00Mx5dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624180; c=relaxed/simple;
-	bh=lVtZQbsxfX/iqDLELTpbrgDvP7eZNLkxpNu2nwCF3LE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ESCbkTRWK68Fuzdzv+U+2vvUe3DAGPxzqhgWXOa26HqOO8E3xF5Kw3SbDZcW4HK0mFZz5JdDXtCMDKb2A53IMQ7CTi5j/Ye3vtbAPlUGBzgyYLLoIomKZE8i9n8vwD9t+knQ7JxTxlRaMOYw9QIfFFYO1Hgz2Uu0TmIUqsGr3Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gNw2uYQb; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744624197; c=relaxed/simple;
+	bh=UpCWjbJlvqX+lZRx1GWi09bIQhROQ34WhK48kOtNG4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z0OS49mcHbuV1s1Po7sBH1XKOcsfKWggfd3TeRTjAsyN2yInKIUvXAhEeaur0vluj0SUOY0O57DayuYZNRnbfZateTuJS7NERQdG/QtGiOGQ/UEOGXT7+0XDg3VTBmxn4WLPxFYNmqKllvg5pHZ1fPYZwDhMb7R9xnPt61YCDL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=h1evmA5s; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gNw2uYQb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744624179; x=1776160179;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lVtZQbsxfX/iqDLELTpbrgDvP7eZNLkxpNu2nwCF3LE=;
-  b=gNw2uYQbQBtBXCRFtBDhBUu8T7OSYA0RANsdpKdx52xe/DN9XM++Tlse
-   lDKENgpMYBefzjwh4oE9+9MtD1PYEJN9Ma9B2ctimiGt8lx5EP+/IuWBz
-   PDDazwiTYnZpdviyLJT8anYIDbT7BiZka1meWilbrtLxg2ORrPyCAG6Tt
-   ALtFjL72JdKxxHxodvkgiDa9d7XNDsjW9oSM8x0lEcgURtDjEZMiGwkEk
-   RIbRuFB+GgNw2gC7aIHtMxi+6fySd2zwY7GueO3SBh+8CllSIustMnN5j
-   x0EkLACyiWi+DzqWCkOQK+1wPRt2wVA2vpjE6WO+Qbj9qba1A1jo4m/t6
-   A==;
-X-CSE-ConnectionGUID: gdx9e63YQKigv/3fUpNL0w==
-X-CSE-MsgGUID: fnYt9EMnR3Ct3oO5ds+8dQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45222682"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="45222682"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:49:38 -0700
-X-CSE-ConnectionGUID: KKkUy+/5TH6uXDQY/V7+Og==
-X-CSE-MsgGUID: svbGhzjQTJWQByeoANGkUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="152954922"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:49:32 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Tomas Winkler <tomasw@gmail.com>,
-	Vitaly Lubart <lubvital@gmail.com>
-Subject: [PATCH v8 04/12] mtd: intel-dg: implement access functions
-Date: Mon, 14 Apr 2025 12:37:55 +0300
-Message-ID: <20250414093803.2133463-5-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414093803.2133463-1-alexander.usyskin@intel.com>
-References: <20250414093803.2133463-1-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="h1evmA5s"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99rYN016373
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	otwibO+B1RJWMfT84nQrsXKdELhQ7z3K4EdM/HQ4kbU=; b=h1evmA5sLBCjOty0
+	enCqC7PLiGv+sARxC9HV4xxZs5BSkX4K+HSbG5FmS+BtUv67m58dEvzC7Nfplz4r
+	P4Dw11xn7RQyIbleTY+Ywlpyul5RjNwiLRIZSb+lctLPN8xEqETpxNFnOU5VDELN
+	jXDEy1JyCkN+tJBZ5sMj+Z5ue4O6E7lXBfiuwACT0KZiCyW/DWEbiE7t841RSiUk
+	K+Y0vT4S6XkjOr3na2CM7nj4J6EhxuIUYqSzTtjyVKHwQOoTBe4Nz9wyCzFMC4sx
+	yRhkfveEd1oGUMSD7qzLOIF3b4ysZa4zuYq+4oqHCHz/dBtLIRcDxrnKxnkt1Ba1
+	hRXK8Q==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfgjc374-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:49:53 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c76062c513so109745185a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:49:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744624192; x=1745228992;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=otwibO+B1RJWMfT84nQrsXKdELhQ7z3K4EdM/HQ4kbU=;
+        b=B5fCTh8t1Ksl2yiMK+wz7RJgE2I/lP2nzlsPe3o6vCUsVWsYrkdQEJpVQZCDzKgWk8
+         xFyq6s0ODg+hbeGUyAC8zZsturBV4Y//klHHkwmmZ0JX47T595YX1es1rg9lqFGz7BVx
+         SxbLbcMSCTENRLnEeQOVPjvwuuYkS10j+XkkJY8IZkfjqJk7RR7/4xbXDpCDEE3nqZpG
+         2itFlRKF3QSEryVHfwZeN3NhikrXNWPbEhwYMxtJd5Q3Dl7n8eHLZkhV06iTuRVJ+MsO
+         j1pVmDYAVmyYtFxvBDCWuILcxwLv0nsVF5/HTVWACQ3kHp6i3Jc3COe3Ln05QFfR2gGF
+         GehA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0VEspAsF5FaY6rUcMlKtr9Yr/zFj/toXC8X9KcI5Qpxmz/CO6RcGn7gODFWYveVZQ7jseHqgU6GASwo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7/Zr/s6vDFPAMU4GleG9R0L59ILsauQrluU5Qwn2Ya+Vy9mRx
+	vpU2U2B3ucN5NbR/wtiJYQiPNgbiyNqjQwyw9gSAaHUpIgJQy5cjLyVoUAGOstplxLWRruyBw6V
+	BUMIY8kGPluCMvFqs0XMYvxb98xCDHbhUHVEMHsUSH362bbu/E+0AOk0dGu0pHhA=
+X-Gm-Gg: ASbGncuRNXoY6olqflqBXHNeLz8vtFkhSJR9Ipp7/94AteaJr6XbQ+WXqN+DvxzFRMh
+	3DVqW8MXiGWnD+N2pKN4BZWYDYwZL+jhS3soMA/0Difp1fwJ1TA6Uig5Vw8vtHojUx+ruYe2nhG
+	y+3crSH746RLLVz7LswijjAiTDaD6/8HuQ7mwU2/tZZUlhO7RB/Xcm9Mtz0+iVd8a6uR3f7r6al
+	orhav/ZLFSy9wxFX4w/Lr4+WDwTxaC+o4IYK6IzBm1VX+MqBI+NkBDN7Cxn/b99FMLASdebuoPa
+	ttZfFJ+5KYOqrvXUg5AJrl4NX8Ip7KGLdOUA87m96EcmLILXN3jlHbDT148mdXtZ9Q==
+X-Received: by 2002:a05:620a:2489:b0:7c3:c814:591d with SMTP id af79cd13be357-7c7af0f0403mr648276185a.1.1744624192548;
+        Mon, 14 Apr 2025 02:49:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF00odbGqpr+NrwU6tII/IQJplxH+w+y1CYdgLC0L7P41kv1mE5rKymC9sH3HYVqso2Q/R8NQ==
+X-Received: by 2002:a05:620a:2489:b0:7c3:c814:591d with SMTP id af79cd13be357-7c7af0f0403mr648275285a.1.1744624192033;
+        Mon, 14 Apr 2025 02:49:52 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bea593sm892427066b.62.2025.04.14.02.49.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 02:49:51 -0700 (PDT)
+Message-ID: <69fbfe29-f5ff-4a24-b270-289b2f160f38@oss.qualcomm.com>
+Date: Mon, 14 Apr 2025 11:49:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: msm8953: Add uart_5
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Felix Kaechele <felix@kaechele.ca>
+References: <20250406-msm8953-uart_5-v1-1-7e4841674137@lucaweiss.eu>
+ <e87220f1-bf8e-4014-834f-ae99c0b032ca@oss.qualcomm.com>
+ <cc84ef26-6c33-42d0-a11f-4d6b31d8beee@lucaweiss.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <cc84ef26-6c33-42d0-a11f-4d6b31d8beee@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 7SCO-I_45Tn2kCxvsizm_-4wV7v314la
+X-Proofpoint-ORIG-GUID: 7SCO-I_45Tn2kCxvsizm_-4wV7v314la
+X-Authority-Analysis: v=2.4 cv=Cve/cm4D c=1 sm=1 tr=0 ts=67fcda41 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=TyM6OeZ_AAAA:8 a=dlmhaOwlAAAA:8 a=O41bOD_wkTG2M6k6xrUA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=RxdkCTCKa-xTImXFM8fo:22 a=y4cfut4LVr_MrANMpYTh:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140070
 
-Implement read(), erase() and write() functions.
+On 4/12/25 10:34 AM, Luca Weiss wrote:
+> On 4/10/25 6:45 PM, Konrad Dybcio wrote:
+>> On 4/6/25 3:52 PM, Luca Weiss wrote:
+>>> From: Felix Kaechele <felix@kaechele.ca>
+>>>
+>>> Add the node and pinctrl for uart_5 found on the MSM8953 SoC.
+>>>
+>>> Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+>>> [luca: Prepare patch for upstream submission]
+>>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>>> ---
 
-CC: Lucas De Marchi <lucas.demarchi@intel.com>
-CC: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Co-developed-by: Tomas Winkler <tomasw@gmail.com>
-Signed-off-by: Tomas Winkler <tomasw@gmail.com>
-Co-developed-by: Vitaly Lubart <lubvital@gmail.com>
-Signed-off-by: Vitaly Lubart <lubvital@gmail.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/mtd/devices/mtd_intel_dg.c | 197 +++++++++++++++++++++++++++++
- 1 file changed, 197 insertions(+)
+[...]
 
-diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-index ba1c720e717b..6f67cf966d05 100644
---- a/drivers/mtd/devices/mtd_intel_dg.c
-+++ b/drivers/mtd/devices/mtd_intel_dg.c
-@@ -5,13 +5,16 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/intel_dg_nvm_aux.h>
- #include <linux/io.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/slab.h>
-+#include <linux/sizes.h>
- #include <linux/types.h>
- 
- struct intel_dg_nvm {
-@@ -91,6 +94,33 @@ static inline u32 idg_nvm_read32(struct intel_dg_nvm *nvm, u32 address)
- 	return ioread32(base + NVM_TRIGGER_REG);
- }
- 
-+static inline u64 idg_nvm_read64(struct intel_dg_nvm *nvm, u32 address)
-+{
-+	void __iomem *base = nvm->base;
-+
-+	iowrite32(address, base + NVM_ADDRESS_REG);
-+
-+	return readq(base + NVM_TRIGGER_REG);
-+}
-+
-+static void idg_nvm_write32(struct intel_dg_nvm *nvm, u32 address, u32 data)
-+{
-+	void __iomem *base = nvm->base;
-+
-+	iowrite32(address, base + NVM_ADDRESS_REG);
-+
-+	iowrite32(data, base + NVM_TRIGGER_REG);
-+}
-+
-+static void idg_nvm_write64(struct intel_dg_nvm *nvm, u32 address, u64 data)
-+{
-+	void __iomem *base = nvm->base;
-+
-+	iowrite32(address, base + NVM_ADDRESS_REG);
-+
-+	writeq(data, base + NVM_TRIGGER_REG);
-+}
-+
- static int idg_nvm_get_access_map(struct intel_dg_nvm *nvm, u32 *access_map)
- {
- 	u32 flmap1;
-@@ -147,6 +177,173 @@ static int idg_nvm_is_valid(struct intel_dg_nvm *nvm)
- 	return 0;
- }
- 
-+__maybe_unused
-+static unsigned int idg_nvm_get_region(const struct intel_dg_nvm *nvm, loff_t from)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < nvm->nregions; i++) {
-+		if ((nvm->regions[i].offset + nvm->regions[i].size - 1) > from &&
-+		    nvm->regions[i].offset <= from &&
-+		    nvm->regions[i].size != 0)
-+			break;
-+	}
-+
-+	return i;
-+}
-+
-+static ssize_t idg_nvm_rewrite_partial(struct intel_dg_nvm *nvm, loff_t to,
-+				       loff_t offset, size_t len, const u32 *newdata)
-+{
-+	u32 data = idg_nvm_read32(nvm, to);
-+
-+	if (idg_nvm_error(nvm))
-+		return -EIO;
-+
-+	memcpy((u8 *)&data + offset, newdata, len);
-+
-+	idg_nvm_write32(nvm, to, data);
-+	if (idg_nvm_error(nvm))
-+		return -EIO;
-+
-+	return len;
-+}
-+
-+__maybe_unused
-+static ssize_t idg_write(struct intel_dg_nvm *nvm, u8 region,
-+			 loff_t to, size_t len, const unsigned char *buf)
-+{
-+	size_t i;
-+	size_t len8;
-+	size_t len4;
-+	size_t to4;
-+	size_t to_shift;
-+	size_t len_s = len;
-+	ssize_t ret;
-+
-+	idg_nvm_set_region_id(nvm, region);
-+
-+	to4 = ALIGN_DOWN(to, sizeof(u32));
-+	to_shift = min(sizeof(u32) - ((size_t)to - to4), len);
-+	if (to - to4) {
-+		ret = idg_nvm_rewrite_partial(nvm, to4, to - to4, to_shift, (uint32_t *)&buf[0]);
-+		if (ret < 0)
-+			return ret;
-+
-+		buf += to_shift;
-+		to += to_shift;
-+		len_s -= to_shift;
-+	}
-+
-+	len8 = ALIGN_DOWN(len_s, sizeof(u64));
-+	for (i = 0; i < len8; i += sizeof(u64)) {
-+		u64 data;
-+
-+		memcpy(&data, &buf[i], sizeof(u64));
-+		idg_nvm_write64(nvm, to + i, data);
-+		if (idg_nvm_error(nvm))
-+			return -EIO;
-+	}
-+
-+	len4 = len_s - len8;
-+	if (len4 >= sizeof(u32)) {
-+		u32 data;
-+
-+		memcpy(&data, &buf[i], sizeof(u32));
-+		idg_nvm_write32(nvm, to + i, data);
-+		if (idg_nvm_error(nvm))
-+			return -EIO;
-+		i += sizeof(u32);
-+		len4 -= sizeof(u32);
-+	}
-+
-+	if (len4 > 0) {
-+		ret = idg_nvm_rewrite_partial(nvm, to + i, 0, len4, (uint32_t *)&buf[i]);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return len;
-+}
-+
-+__maybe_unused
-+static ssize_t idg_read(struct intel_dg_nvm *nvm, u8 region,
-+			loff_t from, size_t len, unsigned char *buf)
-+{
-+	size_t i;
-+	size_t len8;
-+	size_t len4;
-+	size_t from4;
-+	size_t from_shift;
-+	size_t len_s = len;
-+
-+	idg_nvm_set_region_id(nvm, region);
-+
-+	from4 = ALIGN_DOWN(from, sizeof(u32));
-+	from_shift = min(sizeof(u32) - ((size_t)from - from4), len);
-+
-+	if (from - from4) {
-+		u32 data = idg_nvm_read32(nvm, from4);
-+
-+		if (idg_nvm_error(nvm))
-+			return -EIO;
-+		memcpy(&buf[0], (u8 *)&data + (from - from4), from_shift);
-+		len_s -= from_shift;
-+		buf += from_shift;
-+		from += from_shift;
-+	}
-+
-+	len8 = ALIGN_DOWN(len_s, sizeof(u64));
-+	for (i = 0; i < len8; i += sizeof(u64)) {
-+		u64 data = idg_nvm_read64(nvm, from + i);
-+
-+		if (idg_nvm_error(nvm))
-+			return -EIO;
-+
-+		memcpy(&buf[i], &data, sizeof(data));
-+	}
-+
-+	len4 = len_s - len8;
-+	if (len4 >= sizeof(u32)) {
-+		u32 data = idg_nvm_read32(nvm, from + i);
-+
-+		if (idg_nvm_error(nvm))
-+			return -EIO;
-+		memcpy(&buf[i], &data, sizeof(data));
-+		i += sizeof(u32);
-+		len4 -= sizeof(u32);
-+	}
-+
-+	if (len4 > 0) {
-+		u32 data = idg_nvm_read32(nvm, from + i);
-+
-+		if (idg_nvm_error(nvm))
-+			return -EIO;
-+		memcpy(&buf[i], &data, len4);
-+	}
-+
-+	return len;
-+}
-+
-+__maybe_unused
-+static ssize_t
-+idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_addr)
-+{
-+	u64 i;
-+	const u32 block = 0x10;
-+	void __iomem *base = nvm->base;
-+
-+	for (i = 0; i < len; i += SZ_4K) {
-+		iowrite32(from + i, base + NVM_ADDRESS_REG);
-+		iowrite32(region << 24 | block, base + NVM_ERASE_REG);
-+		/* Since the writes are via sguint
-+		 * we cannot do back to back erases.
-+		 */
-+		msleep(50);
-+	}
-+	return len;
-+}
-+
- static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
- {
- 	int ret;
--- 
-2.43.0
+>>
+>> It's more usual to send these together with a user, but I don't mind
+> 
+> This seems to be used with the out-of-tree dts
+> apq8053-lenovo-cd-18781y.dts
+> 
+> I'm just sometimes trying to reduce the out-of-tree diff of the
+> msm8953-mailine tree on GitHub
 
+Sure that's fine
+
+Konrad
