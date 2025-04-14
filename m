@@ -1,193 +1,288 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AE127B51A
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6438228B505;
+	Mon, 14 Apr 2025 16:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744646903; cv=none; b=h6CYjqfZisE28qvEzYPAVcjYz+rJD9QMDrYRJA0wycqJIYdkLj8MXhnSiSbcOQfIgNosd1URFcEa0gUimjqaxMRPubXyhBuD5zcriSIUOTDH9Vr7HmUs19QooWdUI7VKds8Ym8kj1M4jM2OmniyUYnVfJ/nBhuMPgEzZI6fI5xE=
+	t=1744646907; cv=none; b=LLcltbzZD3cu9FsrWX648yS/XAKDHdD6eykoduK3XEJok6cTb+PlbCWRjqQIh6mavVqmyyofDQeKJp8K1RdTAsNLhsF0OWKR69rQw5pzDZh4NsJSmouNXL7KbaOLmGMMl4N9hzlrKtitFRikzjJoN228ypvPcVYAqkbJlPjY3BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744646903; c=relaxed/simple;
-	bh=UM2X1MMDXZM7fTOBoaVl4irheKjkJEoFW6yGloSDkIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HToY/QT4S/KL7rGsX45glm0yWLxSWA78saduVrrfBpSdfGMb/BsQ3aB090fVMuFUff7umhxsBE7+xzaAES0w8MrKI8QHQmDpQkkx9czX9xSR0qzfxOZB/ErgywA2vDha67pWSxuGdzFbukbDqBL0TsyKkE9WSUO01FvssW+cOhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Mumwvm/8; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Mumwvm/8"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e6e50418da6so4175197276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744646900; x=1745251700; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CL3vhJ/AOwi9smEiZpaLEqVlOaMdXAZ9MQuarYjoWe8=;
-        b=Mumwvm/8Y5rtsz0IvKUFkpE8ruDsmgBOjoUBw6i35+BbgBlhTboR4WV1z9gUU1ywLH
-         If2Yai0i6Q6qV8vm/ZQQZL0v9dYK03JXD0IhGFtp9mbK19ZLCDLnhXw/Uf/vH2kQ+taV
-         z3gj/9kyjkXNnsJWvBnbscoWFRL03Ll5QTZUTC2l+vzaVamEWnHzXlRUPZ/Nr5Bu7ppt
-         P307C8L/eQjyp29jdZkkMH6TcWCd6a8kcUjlFLyfvoFFuv0+9y0c+K0ho2d945G7mDRV
-         TST1aqnUXcHWpERl3ZCxsaVHdRAEe7WupgH9tpJDTMG1CJbCaOFvsU20YqAQ3wwsSnh1
-         TXnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744646900; x=1745251700;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CL3vhJ/AOwi9smEiZpaLEqVlOaMdXAZ9MQuarYjoWe8=;
-        b=EPeibf87qeuVLIUWmhJK1BuHn4t8cabsWqQaOEPJ3ZljSQ7wTrRgYsLaO3peGaLvuT
-         3yqmRclSsc1fobHrmcmr6tmtFmJdkM/SlI/zwAOxd8JFo/92jFFmU7iSKvj9U1+Yq56L
-         JRQhqyEiE3g7DfZxNUQpd2se8jM+o84g4/U23rwx9urqYF7DowgOCUddZSnc9yJu4TwR
-         F+F/KXLWdEdRmsgMu9Qf8kDd+ebY8BpEceiXJGijNUDAdH2ucNonPsXEdt9tiFU/2tio
-         BeuJtIk7ef6Drax4mX3iZEWJekNSZU8kBqfoawZLrmFMQG8iMmts9GkTN+CXymr0fFCV
-         y8cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoNPG6SWsS/e0hw6X4z7CxGegptos2xFDN2JQdFNH8QhKQhXvDAsyMXzOecW0Cid9hG+Zw5cuhSRxexy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypZZ9Dnb7JACJfY4rN5l3BaDsMT7KYHQdvQGkO9fxt3m5zSWjn
-	RUf0doHn51TQhj4N5l15OrlcXJy8aPxdfXFdf2Y2AsevrX0zjnNWkTNWCLG+UBKUas1Gy7KaJ9U
-	459kInmr7aCKqGfUNIxHgLZF9JeC+LN5DkiPa
-X-Gm-Gg: ASbGncuJJ6NqVTMETk8LLU23CG7pfBbY2dhDXfEvDsod5QCLNs13EXb0wlsy29uUf+Q
-	iVNbHumNuEdNnvh14qcFk6OvefT4QAw4+go/irzaYFooXpeWYLkhseIKkq377Q9dtViVFUW55oB
-	m20VDz6vebIIQ8YjvQMAaSgA==
-X-Google-Smtp-Source: AGHT+IEIR0Yjon2HOlR6cN2sFBuht845hyAi0y0g8G/WBIBmJsXWf+CNllSW2DnKB64zYskb2VqpvQmI+s8gSsNUMNs=
-X-Received: by 2002:a05:6902:2086:b0:e6d:e3f8:5167 with SMTP id
- 3f1490d57ef6-e704e00541cmr21022948276.39.1744646899625; Mon, 14 Apr 2025
- 09:08:19 -0700 (PDT)
+	s=arc-20240116; t=1744646907; c=relaxed/simple;
+	bh=4tzjbsPIalsIkZI1FaTcEcaA14AfUu0LM+YlbM/mrZA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SxoPM2z+khZu3vLNyNO4PadmylIKY6w7e/YfzCV8hclhRo/CwovH2pUVbXQWbpHPMcLNpKb5t/L8IvWQ03WcbwiuVZ6bHJVoYZVmhvnt9ednnadCfqY1j5B8LhzMAEQSxdVQTGgpGNfa0RHhFKTM7ZIta0FcGtPltFCPu1ZJoo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbsXt0t7tz6M4wC;
+	Tue, 15 Apr 2025 00:03:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 518631402FC;
+	Tue, 15 Apr 2025 00:07:54 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
+ 2025 18:07:53 +0200
+Date: Mon, 14 Apr 2025 17:07:52 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Li Ming
+	<ming.li@zohomail.com>
+Subject: Re: [PATCH v9 12/19] cxl/extent: Process dynamic partition events
+ and realize region extents
+Message-ID: <20250414170752.00002356@huawei.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	<20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
- <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
- <87semdjxcp.fsf@microsoft.com>
-In-Reply-To: <87semdjxcp.fsf@microsoft.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 14 Apr 2025 12:08:08 -0400
-X-Gm-Features: ATxdqUE4xsXRFht60hSZa09A9jxdssSnYGr-dDs5eKOQiFPM4gPTEA6FMREhjdE
-Message-ID: <CAHC9VhQ-Zs56LG9D-9Xs14Au-ub8aR4W+THDJfEsza_54CJf-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
-	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sat, Apr 12, 2025 at 9:58=E2=80=AFAM Blaise Boscaccy
-<bboscaccy@linux.microsoft.com> wrote:
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> > On Fri, Apr 4, 2025 at 2:56=E2=80=AFPM Blaise Boscaccy
-> > <bboscaccy@linux.microsoft.com> wrote:
+On Sun, 13 Apr 2025 17:52:20 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-...
+> A dynamic capacity device (DCD) sends events to signal the host for
+> changes in the availability of Dynamic Capacity (DC) memory.  These
+> events contain extents describing a DPA range and meta data for memory
+> to be added or removed.  Events may be sent from the device at any time.
+> 
+> Three types of events can be signaled, Add, Release, and Force Release.
+> 
+> On add, the host may accept or reject the memory being offered.  If no
+> region exists, or the extent is invalid, the extent should be rejected.
+> Add extent events may be grouped by a 'more' bit which indicates those
+> extents should be processed as a group.
+> 
+> On remove, the host can delay the response until the host is safely not
+> using the memory.  If no region exists the release can be sent
+> immediately.  The host may also release extents (or partial extents) at
+> any time.  Thus the 'more' bit grouping of release events is of less
+> value and can be ignored in favor of sending multiple release capacity
+> responses for groups of release events.
+> 
+> Force removal is intended as a mechanism between the FM and the device
+> and intended only when the host is unresponsive, out of sync, or
+> otherwise broken.  Purposely ignore force removal events.
+> 
+> Regions are made up of one or more devices which may be surfacing memory
+> to the host.  Once all devices in a region have surfaced an extent the
+> region can expose a corresponding extent for the user to consume.
+> Without interleaving a device extent forms a 1:1 relationship with the
+> region extent.  Immediately surface a region extent upon getting a
+> device extent.
+> 
+> Per the specification the device is allowed to offer or remove extents
+> at any time.  However, anticipated use cases can expect extents to be
+> offered, accepted, and removed in well defined chunks.
+> 
+> Simplify extent tracking with the following restrictions.
+> 
+> 	1) Flag for removal any extent which overlaps a requested
+> 	   release range.
+> 	2) Refuse the offer of extents which overlap already accepted
+> 	   memory ranges.
+> 	3) Accept again a range which has already been accepted by the
+> 	   host.  Eating duplicates serves three purposes.
+> 	   3a) This simplifies the code if the device should get out of
+> 	       sync with the host.  And it should be safe to acknowledge
+> 	       the extent again.
+> 	   3b) This simplifies the code to process existing extents if
+> 	       the extent list should change while the extent list is
+> 	       being read.
+> 	   3c) Duplicates for a given partition which are seen during a
+> 	       race between the hardware surfacing an extent and the cxl
+> 	       dax driver scanning for existing extents will be ignored.
+> 
+> 	   NOTE: Processing existing extents is done in a later patch.
+> 
+> Management of the region extent devices must be synchronized with
+> potential uses of the memory within the DAX layer.  Create region extent
+> devices as children of the cxl_dax_region device such that the DAX
+> region driver can co-drive them and synchronize with the DAX layer.
+> Synchronization and management is handled in a subsequent patch.
+> 
+> Tag support within the DAX layer is not yet supported.  To maintain
+> compatibility with legacy DAX/region processing only tags with a value
+> of 0 are allowed.  This defines existing DAX devices as having a 0 tag
+> which makes the most logical sense as a default.
+> 
+> Process DCD events and create region devices.
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Li Ming <ming.li@zohomail.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+I've forgotten what our policy on spec references in new
+code. Maybe update them to 3.2?
 
-> > Above are serious layering violations.
-> > LSMs should not be looking that deep into bpf instructions.
->
-> These aren't BPF internals; this is data passed in from
-> userspace. Inspecting userspace function inputs is definitely within the
-> purview of an LSM.
->
-> Lskel signature verification doesn't actually need a full disassembly,
-> but it does need all the maps used by the lskel. Due to API design
-> choices, this unfortunately requires disassembling the program to see
-> which array indexes are being used.
->
-> > Calling into sys_bpf from LSM is plain nack.
-> >
->
-> kern_sys_bpf is an EXPORT_SYMBOL, which means that it should be callable
-> from a module. Lskels without frozen maps are vulnerable to a TOCTOU
-> attack from a sufficiently privileged user. Lskels currently pass
-> unfrozen maps into the kernel, and there is nothing stopping someone
-> from modifying them between BPF_PROG_LOAD and BPF_PROG_RUN.
+A few tiny little things inline from a fresh look.
 
-I agree with Blaise on both the issue of iterating through the eBPF
-program as well as calling into EXPORT_SYMBOL'd functions; I see no
-reason why these things couldn't be used in a LSM.  These are both
-"public" interfaces; reading/iterating through the eBPF instructions
-falls under a "don't break userspace" API, and EXPORT_SYMBOL is
-essentially public by definition.
+Thanks,
 
-It is a bit odd that the eBPF code is creating an exported symbol and
-not providing a declaration in a kernel wide header file, but that's a
-different issue.
+Jonathan
 
-> > The verification of module signatures is a job of the module loading pr=
-ocess.
-> > The same thing should be done by the bpf system.
-> > The signature needs to be passed into sys_bpf syscall
-> > as a part of BPF_PROG_LOAD command.
-> > It probably should be two new fields in union bpf_attr
-> > (signature and length),
-> > and the whole thing should be processed as part of the loading
-> > with human readable error reported back through the verifier log
-> > in case of signature mismatch, etc.
-> >
->
-> I don't necessarily disagree, but my main concern with this is that
-> previous code signing patchsets seem to get gaslit or have the goalposts
-> moved until they die or are abandoned.
+> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
+> new file mode 100644
+> index 000000000000..6df277caf974
+> --- /dev/null
+> +++ b/drivers/cxl/core/extent.c
 
-My understanding from the previous threads is that the recommendation
-from the BPF devs was that anyone wanting to implement BPF program
-signature validation at load time should implement a LSM that
-leverages a light skeleton based loading mechanism and implement a
-gatekeeper which would authorize BPF program loading based on
-signatures.  From what I can see that is exactly what Blaise has done
-with Hornet.  While Hornet is implemented in C, that alone should not
-be reason for rejection; from the perspective of the overall LSM
-framework, we don't accept or reject individual LSMs based on their
-source language, we have both BPF and C based LSMs today, and we've
-been working with the Rust folks to ensure we have the right things in
-place to support Rust in the future.  If your response to Hornet is
-that it isn't acceptable because it is written in C and not BPF, you
-need to know that such a response isn't an acceptable objection.
+> +static int cxlr_rm_extent(struct device *dev, void *data)
+> +{
+> +	struct region_extent *region_extent = to_region_extent(dev);
+> +	struct range *region_hpa_range = data;
+> +
+> +	if (!region_extent)
+> +		return 0;
+> +
+> +	/*
+> +	 * Any extent which 'touches' the released range is removed.
+> +	 */
 
-> Are you saying that at this point, you would be amenable to an in-tree
-> set of patches that enforce signature verification of lskels during
-> BPF_PROG_LOAD that live in syscall.c, without adding extra non-code
-> signing requirements like attachment point verification, completely
-> eBPF-based solutions, or rich eBPF-based program run-time policy
-> enforcement?
+Single line comment syntax.
 
-I worry that we are now circling back to the original idea of doing
-BPF program signature validation in the BPF subsystem itself.  To be
-clear, I think that would be okay, if not ultimately preferable, but I
-think we've all seen this attempted numerous times in the past and it
-has been delayed, dismissed in favor of alternatives, or simply
-rejected for one reason or another.  If there is a clearly defined
-path forward for validation of signatures on BPF programs within the
-context of the BPF subsystem that doesn't require a trusted userspace
-loader/library/etc. that is one thing, but I don't believe we
-currently have that, despite user/dev requests for such a feature
-stretching out over several years.
+> +	if (range_overlaps(region_hpa_range, &region_extent->hpa_range)) {
+> +		dev_dbg(dev, "Remove region extent HPA %pra\n",
+> +			&region_extent->hpa_range);
+> +		region_rm_extent(region_extent);
+> +	}
+> +	return 0;
+> +}
 
-I believe there are a few questions/issues that have been identified
-in Hornet's latest round of reviews which may take Blaise a few days
-(week?) to address; if the BPF devs haven't provided a proposal in
-which one could acceptably implement in-kernel BPF signature
-validation by that time, I see no reason why development and review of
-Hornet shouldn't continue into a v3 revision.
 
---=20
-paul-moore.com
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index b3dd119d166a..de01c6684530 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -930,6 +930,60 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
+>  
+> +static int cxl_validate_extent(struct cxl_memdev_state *mds,
+> +			       struct cxl_extent *extent)
+> +{
+> +	struct cxl_dev_state *cxlds = &mds->cxlds;
+> +	struct device *dev = mds->cxlds.dev;
+> +	u64 start, length;
+> +
+> +	start = le64_to_cpu(extent->start_dpa);
+> +	length = le64_to_cpu(extent->length);
+Set these at declaration..
+
+> +
+> +	struct range ext_range = (struct range){
+> +		.start = start,
+> +		.end = start + length - 1,
+> +	};
+
+With the above set at declaration this is then not declaration
+mid code which are still generally looked at in a funny way in kernel!
+
+> +
+> +	if (le16_to_cpu(extent->shared_extn_seq) != 0) {
+> +		dev_err_ratelimited(dev,
+> +				    "DC extent DPA %pra (%pU) can not be shared\n",
+> +				    &ext_range, extent->uuid);
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (!uuid_is_null((const uuid_t *)extent->uuid)) {
+> +		dev_err_ratelimited(dev,
+> +				    "DC extent DPA %pra (%pU); tags not supported\n",
+> +				    &ext_range, extent->uuid);
+> +		return -ENXIO;
+> +	}
+> +
+> +	/* Extents must be within the DC partition boundary */
+> +	for (int i = 0; i < cxlds->nr_partitions; i++) {
+> +		struct cxl_dpa_partition *part = &cxlds->part[i];
+> +
+> +		if (part->mode != CXL_PARTMODE_DYNAMIC_RAM_A)
+> +			continue;
+> +
+> +		struct range partition_range = (struct range) {
+
+Maybe move the declaration up and just assign it here.
+
+> +			.start = part->res.start,
+> +			.end = part->res.end,
+> +		};
+> +
+> +		if (range_contains(&partition_range, &ext_range)) {
+> +			dev_dbg(dev, "DC extent DPA %pra (DCR:%pra)(%pU)\n",
+> +				&ext_range, &partition_range, extent->uuid);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	dev_err_ratelimited(dev,
+> +			    "DC extent DPA %pra (%pU) is not in a valid DC partition\n",
+> +			    &ext_range, extent->uuid);
+> +	return -ENXIO;
+> +}
+
+> +/**
+> + * struct cxled_extent - Extent within an endpoint decoder
+> + * @cxled: Reference to the endpoint decoder
+> + * @dpa_range: DPA range this extent covers within the decoder
+> + * @uuid: uuid from device for this extent
+> + */
+> +struct cxled_extent {
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct range dpa_range;
+> +	uuid_t uuid;
+> +};
+
+> +/* See CXL 3.1 8.2.9.2.1.6 */
+> +enum dc_event {
+> +	DCD_ADD_CAPACITY,
+> +	DCD_RELEASE_CAPACITY,
+> +	DCD_FORCED_CAPACITY_RELEASE,
+> +	DCD_REGION_CONFIGURATION_UPDATED,
+
+Perhaps a comment here that the other values don't apply to the
+normal mailbox interface (they are FM only).
+Might avoid confusion.
+
+> +};
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 34a606c5ead0..63a38e449454 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+
+> +/*
+> + * Add Dynamic Capacity Response
+> + * CXL rev 3.1 section 8.2.9.9.9.3; Table 8-168 & Table 8-169
+> + */
+> +struct cxl_mbox_dc_response {
+> +	__le32 extent_list_size;
+> +	u8 flags;
+> +	u8 reserved[3];
+> +	struct updated_extent_list {
+> +		__le64 dpa_start;
+> +		__le64 length;
+> +		u8 reserved[8];
+> +	} __packed extent_list[];
+
+counted_by marking always nice to have and here it's the extent_list_size I think
+(which has an odd name giving it is a count, not a size... *dramatic sigh*)
+
+
+> +} __packed;
+
