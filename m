@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A1F291162;
-	Mon, 14 Apr 2025 13:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E36291161;
+	Mon, 14 Apr 2025 13:28:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637298; cv=none; b=pXYBndCMaIT94ixYhbhowfaax3B8Pe0GN17gibpZu2Z11uesevHvOC68NYgEL9OvXIArbCIGyaejqvV3hqhp3h7h06po9H2jtyMVIcbheUx042OKbwjdvAa4GqOg2/rIQP6/bUqfsES7/WJGUTr3I4blfG1PErx+XXhuA0tnjss=
+	t=1744637299; cv=none; b=gUV8bACXcD5qKOhsMP8TiLhTx3tuOiAxa3uxriXOygycOGwIlXDxo3hAdAG1UEL46w1HRJjrTO+32k6mv/MbCIUQsW3S4nZvX36Ea+gsaU1MywtpudW9EEwIu/0TTNykP7jFo+Nlr0qBkJZNi0oj/dVLB7YVeVbJc2BG6Im9LLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637298; c=relaxed/simple;
-	bh=NWePQQGyiJB1lF8JMRapZucVYoCavkai+t/0v9AbqlY=;
+	s=arc-20240116; t=1744637299; c=relaxed/simple;
+	bh=XnD07pk/6ayreH2RF2D+WL2oa/0JbLWCPdWUdxtZWjA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W5zgoM60SYeyAMsR5zJWqkc72DQxi0hEYA8isxYkRpgR9ePdKzcg5p9Mxnm78OThHIOQkBjLawrD8uk6vwimE1/k4w4TtIjdGfCaN/oSVl6l7hRwH/jRRhY0OJtU0ZqbrKSAfC1UCAjK93c8YJuSVD483l/t8skFbGspfFmNW0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ge36wmR4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RN3jwrkScAsEM2JAP7UlDuPPqDamL4WwtFTwfkhy6rKeq+ry4RLyyZK2JnrfQH/edDsPCDUv07BaRCJdeNMZR2FIcSgr1gfWISGiBPdvcgmJYJnS9g6Mc04KiBCafHY9BHKAV5VOIzO0IVhTA3dSppwTLspJ+Us1MK1hY/khTOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV0TSrh7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ge36wmR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B62C4CEE9;
-	Mon, 14 Apr 2025 13:28:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV0TSrh7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3202BC4AF09;
+	Mon, 14 Apr 2025 13:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744637298;
-	bh=NWePQQGyiJB1lF8JMRapZucVYoCavkai+t/0v9AbqlY=;
+	s=k20201202; t=1744637296;
+	bh=XnD07pk/6ayreH2RF2D+WL2oa/0JbLWCPdWUdxtZWjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ge36wmR4yAi4AGHlHJiT12u649BnPzG41SbaeLyp5lMpauvYH3agePKI2QgRPLFcL
-	 glKgTBcE6PVVp5n9cKV8EMasgQxKPWvpz2xQeLeCXuoqMnUFwChHAZeF39a4nSmIqm
-	 anLxLW9kQoasM4vyvcBthmlBryYgIIL+qKQCOhFFvxrNa/gfUhT0qtqQ+VmLhjHzYH
-	 jTHqZoSH5jJdBV7fPD4eBvUkB2szjimsw9lQ5VYmu9vXergWvET80TWWgbPvqwYrVP
-	 TNCIxa6ug+nDuAylo6swrONWdZFlg/wdF/6Y0BTDKy5WSaX15kRA80r42CDUCH4gOJ
-	 /jPSutK9+I/Sg==
+	b=FV0TSrh7Rlm8EgVMQ5Bi31qU7uLLgWCuYHwqoyjxZbiZ72+3jjpbo0qoLYEZWIM1K
+	 EazclQA9q1yn5M8gHoaApQyej6Kdw4McnJFX3YDcw+PQcPNA7JsOvpKQagQ0arZbtF
+	 FA0KCKBpKwsmKzpoLaTPNzzpDPVqRV7FqO4vgN0C+WcmHeKs4w0lkGgeB/jNt7eiHr
+	 WUR4tE+ugNCUK1hEJiyCbjC+9wXtRgjtfXOdmFveFk8dLxBcW9pE3zLfF2pcp3kedR
+	 FhwGUsOYpDXV9+tNr00VIuAFnxQWgA8VWoA1lnYJM48an1lBpA/SEzme0d/EXC5JM7
+	 b6xJ70SAOB+TQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Roger Pau Monne <roger.pau@citrix.com>,
-	Jason Andryuk <jason.andryuk@amd.com>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 6.13 21/34] x86/xen: disable CPU idle and frequency drivers for PVH dom0
-Date: Mon, 14 Apr 2025 09:27:15 -0400
-Message-Id: <20250414132729.679254-21-sashal@kernel.org>
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 20/34] gpiolib: of: Move Atmel HSMCI quirk up out of the regulator comment
+Date: Mon, 14 Apr 2025 09:27:14 -0400
+Message-Id: <20250414132729.679254-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250414132729.679254-1-sashal@kernel.org>
 References: <20250414132729.679254-1-sashal@kernel.org>
@@ -51,75 +47,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13.11
 Content-Transfer-Encoding: 8bit
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 64a66e2c3b3113dc78a6124e14825d68ddc2e188 ]
+[ Upstream commit b8c7a1ac884cc267d1031f8de07f1a689a69fbab ]
 
-When running as a PVH dom0 the ACPI tables exposed to Linux are (mostly)
-the native ones, thus exposing the C and P states, that can lead to
-attachment of CPU idle and frequency drivers.  However the entity in
-control of the CPU C and P states is Xen, as dom0 doesn't have a full view
-of the system load, neither has all CPUs assigned and identity pinned.
+The regulator comment in of_gpio_set_polarity_by_property()
+made on top of a couple of the cases, while Atmel HSMCI quirk
+is not related to that. Make it clear by moving Atmel HSMCI
+quirk up out of the scope of the regulator comment.
 
-Like it's done for classic PV guests, prevent Linux from using idle or
-frequency state drivers when running as a PVH dom0.
-
-On an AMD EPYC 7543P system without this fix a Linux PVH dom0 will keep the
-host CPUs spinning at 100% even when dom0 is completely idle, as it's
-attempting to use the acpi_idle driver.
-
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Jason Andryuk <jason.andryuk@amd.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Message-ID: <20250407101842.67228-1-roger.pau@citrix.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20250402122058.1517393-3-andriy.shevchenko@linux.intel.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/enlighten_pvh.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib-of.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index 0e3d930bcb89e..9d25d9373945c 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/acpi.h>
-+#include <linux/cpufreq.h>
-+#include <linux/cpuidle.h>
- #include <linux/export.h>
- #include <linux/mm.h>
- 
-@@ -123,8 +125,23 @@ static void __init pvh_arch_setup(void)
- {
- 	pvh_reserve_extra_memory();
- 
--	if (xen_initial_domain())
-+	if (xen_initial_domain()) {
- 		xen_add_preferred_consoles();
-+
-+		/*
-+		 * Disable usage of CPU idle and frequency drivers: when
-+		 * running as hardware domain the exposed native ACPI tables
-+		 * causes idle and/or frequency drivers to attach and
-+		 * malfunction.  It's Xen the entity that controls the idle and
-+		 * frequency states.
-+		 *
-+		 * For unprivileged domains the exposed ACPI tables are
-+		 * fabricated and don't contain such data.
-+		 */
-+		disable_cpuidle();
-+		disable_cpufreq();
-+		WARN_ON(xen_set_default_idle());
-+	}
- }
- 
- void __init xen_pvh_init(struct boot_params *boot_params)
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 2e537ee979f3e..f12ddb48909c0 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -257,6 +257,9 @@ static void of_gpio_set_polarity_by_property(const struct device_node *np,
+ 		{ "fsl,imx8qm-fec",  "phy-reset-gpios", "phy-reset-active-high" },
+ 		{ "fsl,s32v234-fec", "phy-reset-gpios", "phy-reset-active-high" },
+ #endif
++#if IS_ENABLED(CONFIG_MMC_ATMELMCI)
++		{ "atmel,hsmci",       "cd-gpios",     "cd-inverted" },
++#endif
+ #if IS_ENABLED(CONFIG_PCI_IMX6)
+ 		{ "fsl,imx6q-pcie",  "reset-gpio", "reset-gpio-active-high" },
+ 		{ "fsl,imx6sx-pcie", "reset-gpio", "reset-gpio-active-high" },
+@@ -282,9 +285,6 @@ static void of_gpio_set_polarity_by_property(const struct device_node *np,
+ #if IS_ENABLED(CONFIG_REGULATOR_GPIO)
+ 		{ "regulator-gpio",    "enable-gpio",  "enable-active-high" },
+ 		{ "regulator-gpio",    "enable-gpios", "enable-active-high" },
+-#endif
+-#if IS_ENABLED(CONFIG_MMC_ATMELMCI)
+-		{ "atmel,hsmci",       "cd-gpios",     "cd-inverted" },
+ #endif
+ 	};
+ 	unsigned int i;
 -- 
 2.39.5
 
