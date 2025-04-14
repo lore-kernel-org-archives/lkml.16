@@ -1,65 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C951A23A6;
-	Mon, 14 Apr 2025 08:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15470DF42;
+	Mon, 14 Apr 2025 08:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620465; cv=none; b=XJsbVlWiqQRYyFoZRvyk0KbE3lDQrFiryGTz+6EWLXOMYKnej0RY+bIHdIyA7FhDMYsHEkwK5RoDUmZo+GAhR8XPTA8lhPjWsKp6JH7XDj/xMAzt/Lxv+JCDq6Den8qOLA5EuiOtzqzNiPi5/8fVI3ZtptQlGCkoAEeJBYH/X0M=
+	t=1744620602; cv=none; b=Y+LJPxb88oobPbbf4l05ej7WrygzvCtBx/ETUYFy0ETq/lDNN2OLMQFiUF7LXrxU86JZhc4M7GbPCcRabCOJdmMSWJJ0czqPKGrdCXNFhrXGZRrRk2HgMFkLOfJD+55154Dl3mXX+CfLlukKWu7nV+fEXWvCuBLtBnqN1YYwA6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620465; c=relaxed/simple;
-	bh=8kckFmYJLavCSR35fPALPhq3CLgDQ8jmvjB+vic9bQk=;
+	s=arc-20240116; t=1744620602; c=relaxed/simple;
+	bh=8hzjrlVv0UVqlPY4BsZip/abC01E/ytcuea6lKylD74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwzMxnJLMpEvPShiXeA/eXzIdsFTpUmz9EROhzAMtnco3idnp9oKEjhyVtt74L6lybxVsJFBVR7aIIeuloxIDc8nBff3nXNN881U6fihXNBrbXcYzyMaG9J6h5HdgfYKKC4YeeAqspb+070Crdj8TWpRsVyepMeEy7nFHShs42Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDuUb3Uy; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=sc0wuMT4PzhDdDCPlnstjbjBXFgJR1VpZIBAzN70pu5KE/uQrhauT9EGqWHnNCP5Z/9qz2a5fBKnJmxHCkmDWuSfSvG0yje56D+x7VUxRVpGecWGCI3tBGWhN6G0LyC/qYvbGxNJ577yACJXUdOE5ygLxB32bAJAKfn1T9LhUlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=elwckTH3; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDuUb3Uy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="elwckTH3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744620465; x=1776156465;
+  t=1744620601; x=1776156601;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8kckFmYJLavCSR35fPALPhq3CLgDQ8jmvjB+vic9bQk=;
-  b=IDuUb3Uyfs9egMIWvNdq4XTsibPB3dvwoFYC4jQcM7eq4RiAgkpRcb26
-   HiqIk3DGLWb84NnUY2p4s1vfCy2fe/2ARki/BmkZEP6Qe2CbCreb1dEYc
-   ChR5Mn6C+3+U5HQZNqtw8udLZ7ZZhM3IwAkfeOXSDRNdQZDdkVZxatTVF
-   ziWm8TvFVLWOQb8fUQCkyH6400gYxF5jJoLB2Ye2MKa2YnSg/bQq549Oy
-   OwX3X9UQdKY72XKDwZxhSZ9dB53h4jwjqamVDiHiETi8aDygQpviFjYtp
-   L2qqD/7yK6jqi7/8vUWB24+ifFV1bC8FzdR2bKvXyYOb7CAXZj45PmfjA
-   Q==;
-X-CSE-ConnectionGUID: b30NKAGvSeSx8o1oks8PiA==
-X-CSE-MsgGUID: bMYIWnNaTDy06fVmdgmPpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56260452"
+  bh=8hzjrlVv0UVqlPY4BsZip/abC01E/ytcuea6lKylD74=;
+  b=elwckTH3+dbuv/sJDuqxNQIlfCoXTxk+fQB2mYlobkW6ImaRmxOGiBas
+   gjpA4pS0P6xYgSTR8ixc3kS+uyCUv5LGCphxih5ykS0mNcc9KK6mD+lF1
+   a/49qOJ60VosK6RnLRF59+P0CMv+fxBsdVbK+EAbrsYBYkn74buos6v3L
+   ESYHS2HQ5+kQFeNlKrvxyuAcEJ4zSvxbBc8B/jLSYw+1ac6YyAPjwYtjB
+   +AW37ztlwO4OS7oXTApC5ylp9e8RZs2OTLQyTCOsh7zIHtjYPhM7l4kmt
+   H87vSgR2dfzFA2BEgkV72prRSmGsc3kPbfv07gAwsaqKcQspNkiCOg5OF
+   w==;
+X-CSE-ConnectionGUID: TkypeiEBRe26GtaZYfmewA==
+X-CSE-MsgGUID: MnaSQg8RRNy/vRTpdZfs2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46244785"
 X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="56260452"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:47:44 -0700
-X-CSE-ConnectionGUID: uhI6Qh+cT7qSV/X2E8qojQ==
-X-CSE-MsgGUID: uyO/3hOgSM6gRD1Ta8zHzw==
+   d="scan'208";a="46244785"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:50:00 -0700
+X-CSE-ConnectionGUID: 22xrtLIVQmGm8ngmHp6h/g==
+X-CSE-MsgGUID: scWM4NDgR12BkY+mjU2x+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129519714"
+   d="scan'208";a="130301300"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:47:39 -0700
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:49:57 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4FTc-0000000CBKp-1ZEi;
-	Mon, 14 Apr 2025 11:47:36 +0300
-Date: Mon, 14 Apr 2025 11:47:36 +0300
+	id 1u4FVq-0000000CBMa-217D;
+	Mon, 14 Apr 2025 11:49:54 +0300
+Date: Mon, 14 Apr 2025 11:49:54 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, john.ogness@linutronix.de, pmladek@suse.com,
-	arnd@arndb.de, namcao@linutronix.de, benjamin.larsson@genexis.eu,
-	schnelle@linux.ibm.com, heikki.krogerus@linux.intel.com,
-	markus.mayer@linaro.org, tim.kryger@linaro.org,
-	matt.porter@linaro.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3] serial: 8250: fix panic due to PSLVERR
-Message-ID: <Z_zLqH1Moavhi52x@smile.fi.intel.com>
-References: <20250414031450.42237-1-cuiyunhui@bytedance.com>
+To: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
+	u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
+	bingbu.cao@linux.intel.com, stable@vger.kernel.org,
+	hao.yao@intel.com
+Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
+Message-ID: <Z_zMMtUdJYpHuny7@smile.fi.intel.com>
+References: <20250411082357.392713-1-dongcheng.yan@intel.com>
+ <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
+ <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
+ <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
+ <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,90 +72,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414031450.42237-1-cuiyunhui@bytedance.com>
+In-Reply-To: <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 14, 2025 at 11:14:50AM +0800, Yunhui Cui wrote:
-
-You forgot to rebase against latest tty-next or, if there is something
-in the latter (but I don't see right now), even tty-testing.
-
-> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> an error response if an attempt is made to read an empty RBR (Receive
-> Buffer Register) while the FIFO is enabled.
-> 
-> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
-> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> Execution proceeds to the dont_test_tx_en label:
-> ...
-> serial_port_in(port, UART_RX);
-> This satisfies the PSLVERR trigger condition.
-> 
-> Because another CPU(e.g., using printk()) is accessing the UART (UART
-> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
-> (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
-> 
-> To fix this, all calls to serial_out(UART_LCR) and serial_in(UART_RX)
-> should be executed under port->lock. Additionally, checking the readiness
-> via UART_LSR should also be done under port->lock.
-> 
-> Panic backtrace:
-> [    0.442336] Oops - unknown exception [#1]
-> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-> ...
-> [    0.442416] console_on_rootfs+0x26/0x70
-
-This patch seems need split to three. See below.
+On Mon, Apr 14, 2025 at 04:40:26PM +0800, Yan, Dongcheng wrote:
+> On 4/14/2025 4:11 PM, Andy Shevchenko wrote:
+> > On Mon, Apr 14, 2025 at 03:52:50PM +0800, Yan, Dongcheng wrote:
+> >> On 4/11/2025 4:33 PM, Hans de Goede wrote:
+> >>> On 11-Apr-25 10:23 AM, Dongcheng Yan wrote:
 
 ...
 
-First of all, while everything looks better now, there is a chance in the
-future to miss the same issue again. In order to avoid that I suggest to
-introduce a new helper where you made this check _and_ add a comment why.
+> >>>> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+> >>>> +		*con_id = "hpd";
+> >>>> +		*gpio_flags = GPIO_LOOKUP_FLAGS_DEFAULT;
+> >>>
+> >>> This looks wrong, we really need to clearly provide a polarity
+> >>> here since the ACPI GPIO resources do not provide one.
+> >>>
+> >> I tested gpio_flags=GPIO_LOOKUP_FLAGS_DEFAULT/HIGH/LOW, the lt6911uxe
+> >> driver can pass the test and work normally.
+> > 
+> > I doubt you tested that correctly. It's impossible to have level triggered
+> > event to work with either polarity. It might be also a bug in the code lurking
+> > somewhere, but it would be unlikely (taking into account amount of systems
+> > relying on this).
+> > 
+> > Is it edge triggered event?
+> > 
+> 
+> It is an edge triggered event in lt6911uxe. In order to better adapt to
+> other uses, "hpd" is meaningful to specify a polarity here.
+> 
+> In lt6911uxe, GPIO "hpd" is used as irq, and set irq-flag to
+> IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT. So no matter
+> rising or falling, driver can work normally.
+> "
+> ret = request_threaded_irq(gpiod_to_irq(lt6911uxe->irq_gpio),	NULL,
+> lt6911uxe_threaded_irq_fn, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+> IRQF_ONESHOT, NULL, lt6911uxe);
+> "
 
-(Note that currently you have a mixture of serial_in()/serial_port_in() in
- some cases.)
-
-static inline unsigned int serial8250_discard_data(struct uart_8250_port *up)
-{
-	u16 lsr;
-
-	lsr = serial_in(up, UART_LSR);
-	if (lsr & UART_LSR_DR)
-		return serial_in(up, UART_RX);
-
-	return 0;
-}
-
-And this can be one patch (patch 2).
-
-...
-
-> --- a/drivers/tty/serial/8250/8250_dw.c
-> +++ b/drivers/tty/serial/8250/8250_dw.c
-
-Changes here deserve the separate patch (patch 1).
-
-...
-
-> +	/*
-> +	 * Serial_in(p, UART_RX) should be under port->lock, but we can't add
-
-serial_in()
-
-> +	 * it to avoid AA deadlock as we're unsure if serial_out*(...UART_LCR)
-> +	 * is under port->lock.
-> +	 */
-> +	lockdep_assert_held_once(&p->lock);
-
-...
-
-> +	uart_port_lock_irqsave(port, &flags);
-
-And one patch (patch 3) about locking.
+So, the driver must not override the firmware, if there is no bugs.
+So, why do you even use those flags there? It seems like a bad code
+in the driver that doesn't look correct to me.
 
 -- 
 With Best Regards,
