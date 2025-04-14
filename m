@@ -1,139 +1,80 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380C27B513
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7C727F73F;
+	Mon, 14 Apr 2025 16:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744646885; cv=none; b=EfSenNaHcCz/Zbn3mTuW/MPze+9zPLpvz/JjBEXCbVnjbiGGH5gYo0b+nc9Tx3MBN2UGcI5iriy6kyN7TylbYvreH4alllMIPF38dc2IlrUuu/LDAz5ObcCIL0gqjF5ZBTHmlReRk9SnLMHNOueF8rZaEmyWxnQPfLWklDUEMu4=
+	t=1744646889; cv=none; b=Lbok7ExX6NfDZLbBfHf1pT7RlwNejFiTS/oFzTFr0TRKizw1turWx/arnCTwHktvCrSwkt3T6+06b3h7m8+bfvx8JPjYzM1FB+e37V105Kk/xOY8Un+oNS30rjhAat0j0n3Zj3YukGgwyRee4M+0UbpRF0ZsWgH7d3/sAIH7MJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744646885; c=relaxed/simple;
-	bh=YsDDrqdiKPewJFDI/ZaIPX3S15luwx8n2Mto/qWn4FU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=nVaokuRc0wghQrv+0IPR8VK6JyWrLtr0ic+IL/ckyZPyr3DzTYEXuGacw800SxSTFq0mo6/hfTIKHghGfCCP93aRbY03JlifXqs0FDzKHYzI5WtY82bn/HKQe9uogQdVDKFOrnMERHKrIGhBAOnLhg3mLbDglT4jYMPKjqRIKCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RU52wIoL; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744646889; c=relaxed/simple;
+	bh=PRpY+agLkWyBvh1af0VEzBvhk3aT3+lcuUVs1u2vK7I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=h+Bbw4zcaTjIR3x2gjRLxQGKxxHk6wwuWFkPHXDG5qnuZK55q2fVYnZeAoAXPfn4fbMXzOJhxLCauZ60v6blwSOrJ8Au0HYuFpbvfdLyS4q5hDv4gqurEVpxtOfnWjdyQLXZMkL4rDcqbShEhzv8AVJKGkXMpSaxDt32rJSRRF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=VQh/xwYe; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RU52wIoL"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5259331b31eso1854589e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744646882; x=1745251682; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GVdhvs8iCKF+l1CgTbrVGuUPsMa5kPGA5aq8CngfGco=;
-        b=RU52wIoL4NZVYIMc7+jUhsTtGENoQwkEllZ3lPfTmdt5K47jZMwRbIu7wwYxSrV+Wu
-         tMpYlijrTwmr1lPDpQJ8LwgvXA6/pIVJk8EW51/53pwproSVwufTPsS1WnztWMG4YBU3
-         Dq0z+y2fYEVBz1sdVZLAoIUVmiQgc2m5N9kv9mkpuWi/xpTfTSh4R+3hmuXDjEhfR6de
-         A0rT8J2g012hWA3jV7PKNd9ui9HoEbpCUrmmMt4zNyCaCJHTgfM00RdYNZdoQ8oz4fCG
-         AVH9V3iA528PEPVtBgK3/yYrEMWO9LIL0W3lGn9F719q2R/STda0lNDjeF6zGHiR80nw
-         hwlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744646882; x=1745251682;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GVdhvs8iCKF+l1CgTbrVGuUPsMa5kPGA5aq8CngfGco=;
-        b=dePbqMlfC80urf+z2LUHPfL9aZdLemqLSPWc5KprFjvHgulbySuXhSCAW2Rz8swubD
-         6IYFBbipzc7V6QwCF3BdnL86uevd+NY3+m13boBgaDXpbTxedE/dW8DI9cDXv0J4ywOv
-         HfvEm8bH5cmZOVvdPuRQyHV+U/ogeVNsWk+qAmuj6DfUDnXE4oOFrNa0yN3pLDlPr/gv
-         pX7sPCwspoNsxjrXaygf3FvgRKgC5NqybYRcwtYD58uzicSibeTYC3iTdN9uPJQqUCQR
-         /n0KtO+8Wl7KXen/ka6QNboYhN2KF+/FdvMUxTVSI3hqXDN9f8R7WFGFf788WWNBx5DB
-         +rfg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5V5xZHryQr8sPqZzPHKE52aS9PoZuawvmA1QShW8+luV7iqHywAsMP3Hc/GNGnkW41ufLTmih8rL4d7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR29eyFiY8FSuzhPNeoPiKO0ADzUvLbvZxAP8gdnBjnIGCzDkb
-	tlpIBrWjyedJwjpZvSDkpl8CPuBt9f+6w2jw7AVm0fgnohwZRGfCXWDmNcZDqvencpJK+uno075
-	DOtrNt94f/G3M4CvrPzS0sBzSw6ARl56mR6ZG+7XRSnPqikJG104=
-X-Gm-Gg: ASbGncv80sIB/sLvfTc8wyIryz9rI+YmNpKu7ZbImbBUaoGA4P53zPXD8IuEVsN253w
-	vce7I8DtpUIHC5uvTfb9eeCLqTgDFeMT6p4B5PMpHuE83Q50jHBSwmB0kVA3OA5SmilKnfOvo28
-	qIxp+M88NGwH7wnED1R9lvmMMTMjSc9ZwS8Pp8ataEMylsR6Gwvm/h/QA=
-X-Google-Smtp-Source: AGHT+IHBAGkweFTifi1qPgR9IAfMLmuSmWZaZQ6DuipMBRn0J0LfwS+rc70yp8/jIym5PdQxz5lfL2wrwCdthfYvTjU=
-X-Received: by 2002:ac5:cdf7:0:b0:528:6ea9:bc45 with SMTP id
- 71dfb90a1353d-5286ea9d6a9mr5875777e0c.7.1744646882420; Mon, 14 Apr 2025
- 09:08:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="VQh/xwYe"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7239241062
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1744646886; bh=KI+oMMPgtiQyrbdQASrneFg3V0A09gQXLMJo2WqFXD0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=VQh/xwYe2sYB4y4nNhZczXz7l61paJYX7GDod2KBt+l1nq0c/Bp3nHwRHLgc7sFxu
+	 v3i30ecOKKwFxQZUc2XginuInMXJcf7YLY6NBulpWNVeQD08xPMaerC/f+Rh/1YPW3
+	 LZ3ALeMm7MiMehWLd5FbgzWJL+DBlPRxlXz3PXGm+gM/1NmeQ214WdHkzg2nppPyxy
+	 yVWEg9BsH8qRkv9fNAfle1JAmbwq+L+wm/dQFJXOJLebgl8n8eD2HklY5MQY7XLlb3
+	 0bkWYsDNL/xUn1pmTIsp9zPZ62KGs0zmsQIb6hXy0cqVPKutiFvh85GyLS+Y5meox1
+	 ly/kOgTAipAIg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 7239241062;
+	Mon, 14 Apr 2025 16:08:06 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Cc: kernel@collabora.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?=
+ <nfraprado@collabora.com>
+Subject: Re: [PATCH v2] docs: automarkup: Move common logic to add and
+ resolve xref to helper
+In-Reply-To: <20250408-automarkup-resolve-xref-helper-v2-1-e0a9b8fc7fdd@collabora.com>
+References: <20250408-automarkup-resolve-xref-helper-v2-1-e0a9b8fc7fdd@collabora.com>
+Date: Mon, 14 Apr 2025 10:08:05 -0600
+Message-ID: <87a58ibuai.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 14 Apr 2025 21:37:51 +0530
-X-Gm-Features: ATxdqUEU9CbNcg5O-P00XITiRp_i9HXoSVbIKt6BMPS9caFWsHNxBM8T9sm2aH8
-Message-ID: <CA+G9fYvnun+bhYgtt425LWxzOmj+8Jf3ruKeYxQSx-F6U7aisg@mail.gmail.com>
-Subject: x86_64 clang-20 clang-nightly config lto-full failed - ld.lld: error:
- linking module flags 'Code Model': IDs have conflicting values: 'i32 1' from
- vmlinux.a(gdt_idt.o at 1321040), and 'i32 2' from ld-temp.o
-To: clang-built-linux <llvm@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Regressions on x86_64 config LTO_CLANG_FULL with korg-clang-20 and
-clang-nightly on the
-Linux next-20250407 and found again on next-20250414 tag
+N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> writes:
 
-First seen on the next-20250407.
-Bad: next-20250407 and next-20250414
-Good:next-20250404
+> Several of the markup functions contain the same code, calling into
+> sphinx's pending_xref and resolve_xref functions to add and resolve a
+> cross-reference, with only a few of the parameters changed (domain,
+> reference type, markup content). Move this logic to its own function and
+> reuse it in the markup functions.
+>
+> No functional change.
+>
+> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+> Changes in v2:
+> - Moved repeated "Go through the dance..." comment to the helper
+> - Dropped "Return the xref if we got it..." comment as the helper
+>   returns None in case of failure
+> - Link to v1: https://lore.kernel.org/r/20250407-automarkup-resolve-xref-=
+helper-v1-1-9cac06ad580f@collabora.com
+> ---
+>  Documentation/sphinx/automarkup.py | 97 ++++++++++----------------------=
+------
+>  1 file changed, 24 insertions(+), 73 deletions(-)
 
-* x86_64, Build
- - Build/korg-clang-20-lkftconfig-lto-full
- - Build/clang-nightly-lkftconfig-lto-full
+Applied, thanks.
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
-
-Build regression: x86_64 clang-20 clang-nightly config lto-full failed
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-ld.lld: error: linking module flags 'Code Model': IDs have conflicting
-values: 'i32 1'
-    from vmlinux.a(gdt_idt.o at 1321040), and 'i32 2' from ld-temp.o
-
-Clang-20 versions:
-   "name": "clang",
-   "version": "20.1.2",
-   "version_full": "ClangBuiltLinux clang version 20.1.2
-   (https://github.com/llvm/llvm-project.git
-58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)"
-
-Clang-nightly versions:
-   "name": "clang",
-   "version": "21.0.0",
-   "version_full": "Debian clang version 21.0.0
-   (++20250402105505+c57b9c233a87-1~exp1~20250402225526.1363)"
-
-## Source
-* Kernel version: 6.15.0-rc2
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: b425262c07a6a643ebeed91046e161e20b944164
-* Git describe: next-20250414
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250414/
-
-## Test
-* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27929871/suite/build/test/clang-nightly-lkftconfig-lto-full/log
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250414/testrun/28114606/suite/build/test/clang-nightly-lkftconfig-lto-full/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250414/testrun/28114606/suite/build/test/clang-nightly-lkftconfig-lto-full/history/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250414/testrun/28114590/suite/build/test/korg-clang-20-lkftconfig-lto-full/history/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2viBgnFQjsmdmrsmASvlyYWisRa/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2viBgnFQjsmdmrsmASvlyYWisRa/config
-
-## Steps to reproduce
-# tuxmake --runtime podman --target-arch x86_64 --toolchain korg-clang-20 \
-   --kconfig defconfig --kconfig-add CONFIG_DEBUG_INFO_REDUCED=y \
-   --kconfig-add CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y \
-   --kconfig-add CONFIG_IGB=y \
-   --kconfig-add CONFIG_LTO_CLANG_FULL=y LLVM=1 LLVM_IAS=1
-
---
-Linaro LKFT
-https://lkft.linaro.org
+jon
