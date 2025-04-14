@@ -1,101 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9884926563C;
-	Mon, 14 Apr 2025 10:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DB325DAE8;
+	Mon, 14 Apr 2025 10:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625065; cv=none; b=sHEIcp3jQaCyc+G5UnQo4yOdCNJf+WeX2Sz7Hanm9D1LwdUc1DnqWIHrlBzMUe4Ujc/IroSbMJaaH6F44a4Vy+r3JLrKIfValIg2h0XGuMF2ZEyXn0kYsOuEpP+KgCpF/ESN5Vj8+Dw9OOktmr8A2iyxqJWlGoPOO+wrw2ubVYY=
+	t=1744625093; cv=none; b=DAejPPqUvoLaBNXnBfTu/07Qb3SAhI/hZoiBKu5EjZCHWvRbCUGkDO94jSVD6PjzdIbmaXtTdDJpmEoJYFpqjqRpJOaFG0Nk6mB9P1ir1VFp00kdi1B3YaTCrFaBiqD/WyptlpRNDoOeKTOH0x29fkwePernfielYqY9iKwHd1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625065; c=relaxed/simple;
-	bh=/z8O9SDZiaTEXhg4ysbJsJfwrcHDw53/UnAOR7/dwrs=;
+	s=arc-20240116; t=1744625093; c=relaxed/simple;
+	bh=gruAiv2P1YYiqXyfzoaPnkaggXJ0sX1fRdxIf7A/6lQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tZrz4yJZ4iRY4/uDOQUUlQiRcu7FQxyN2GvTNEi5W1EP2RUhW0eI3BCmFIJkJ7FGPQ3clmHKY9LOqpKMeCsXVHJQC4OA/RRI3DHenlJbrn8fNkYs+kp4i8U3Y8vX2fN8D4u7/4Y+hPml7aCmylnuOiM6EYeWMsp4iDb2w+Xu36E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q6ovOH7P; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version:Content-Type; b=qn26GLjunbNfgJN65P/25cb2sXQTNWc7kgKqr+l4UUHnNwh4sG1hosj18dnJjForlZzqoj0/XmTgOvzsC7661z7fAepRgkPGSycJ85qPxWgRZSQddNZX9Ub0RfgnKKCjucavYFHT/ZEE5n1EMqDGR7zqzJbHddbmuxJDVSWFSKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1VMecFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q6ovOH7P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744625064; x=1776161064;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/z8O9SDZiaTEXhg4ysbJsJfwrcHDw53/UnAOR7/dwrs=;
-  b=Q6ovOH7PJfHtfnPtdN6kdJz7+FDvv1+hNvioIkyKQ7JHB5Zu51GLXsiM
-   Z89bnPLrMDr3nv0I1hFJF1qEQNkyTX41vpwq7rLOVLjOQJypHDVYg704w
-   X7/wDScJ8oT0dYcJ+MXBq6g/YR5MXE2xU8S6QEjtusX4vyH9EU76SGWIp
-   UUWx42NsF6VQ9RFnaT595eBijUHsC6MujOPWXimy9D/FQMwxC33Q44BKq
-   xGvlhQKfSEizA9gR4EL0af87NI2UbSUb4bn7szd2LY2t6p7Xx2qeVfOVi
-   rmD6S/uPImF408Df63yfo1LBLEoyIU/kk4LImtg03qzTdz1LXPkHxy3RQ
-   A==;
-X-CSE-ConnectionGUID: 66BRT2IBQ2W8gfQOLYXjDA==
-X-CSE-MsgGUID: wL5gpYmjSaKRs7DOGKulmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56747145"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="56747145"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:04:20 -0700
-X-CSE-ConnectionGUID: VpzGRA15T4Gp+B8WZerERA==
-X-CSE-MsgGUID: 7/ZuEDTWRcaEL1Rsg354Fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="134747330"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 14 Apr 2025 03:04:16 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 261CCB0C; Mon, 14 Apr 2025 13:04:12 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1VMecFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C60C4CEE2;
+	Mon, 14 Apr 2025 10:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744625092;
+	bh=gruAiv2P1YYiqXyfzoaPnkaggXJ0sX1fRdxIf7A/6lQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=R1VMecFNtXrF88nRgXzVAyFg4aQtUR59dLErSB+wh/LhZIkUrnAZeZ4erzWDsUTyX
+	 RK0SrkNv8HeXjH3ClYkMftKNWOKrwk/DUtBTJAmLza3t57tO+XqzChyXhDrmT1yBgJ
+	 K130eGDBwRmA7/uZaxe31sux+jQCH63dobjzQGxIYIl2ec4ctcLDaBoWxoRLM2Hluk
+	 CeA8C338DNSS+KGZ0Xg1i8KBErRjZQ26dqDGVyjOChHFx8E+dO45LwfNZdM9Q3csMc
+	 rL1Dz95EeCfmH03S3c7zzayBGG0jSbDj2ekt11yuNvFK9C4w/5OMaHUJixqOlQdTl4
+	 7CHXczIaooKEg==
+From: Christian Brauner <brauner@kernel.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH v4 7/7] media: i2c: ds90ub960: Remove of_node assignment
-Date: Mon, 14 Apr 2025 13:01:57 +0300
-Message-ID: <20250414100409.3910312-8-andriy.shevchenko@linux.intel.com>
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] select: core_sys_select add unlikely branch hint on return path
+Date: Mon, 14 Apr 2025 12:04:41 +0200
+Message-ID: <20250414-desolat-bauindustrie-7a705d36a1d0@brauner>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
-References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250414092426.53529-1-colin.i.king@gmail.com>
+References: <20250414092426.53529-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1339; i=brauner@kernel.org; h=from:subject:message-id; bh=gruAiv2P1YYiqXyfzoaPnkaggXJ0sX1fRdxIf7A/6lQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/ubt/5+wLtzXP67C8uFznMLduzuvtls8VYtIZvxz+c Il/j0Xyx45SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJuMYy/LP1+6vx/41eg5zI 5s9LO91aV0SUzDrvfnjzHruH+yJX+ysxMtzb0Zo7r8nTqTTOZsGHh7Ieho3mnpPXzJuZOPnQEVu JZC4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-Remove of_node assignment which duplicates fwnode in struct i2c_board_info.
-In general drivers must not set both, it's quite confusing. The I²C core
-will consider fwnode with a priority and of_node is subject to remove from
-above mentioned data structure.
+On Mon, 14 Apr 2025 10:24:26 +0100, Colin Ian King wrote:
+> Adding an unlikely() hint on the n < 0 comparison return path improves
+> run-time performance of the select() system call, the negative
+> value of n is very uncommon in normal select usage.
+> 
+> Benchmarking on an Debian based Intel(R) Core(TM) Ultra 9 285K with
+> a 6.15-rc1 kernel built with 14.2.0 using a select of 1000 file
+> descriptors with zero timeout shows a consistent call reduction from
+> 258 ns down to 254 ns, which is a ~1.5% performance improvement.
+> 
+> [...]
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
----
- drivers/media/i2c/ds90ub960.c | 1 -
- 1 file changed, 1 deletion(-)
+Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.misc branch should appear in linux-next soon.
 
-diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-index 5dde8452739b..5afdbbad9ff4 100644
---- a/drivers/media/i2c/ds90ub960.c
-+++ b/drivers/media/i2c/ds90ub960.c
-@@ -1682,7 +1682,6 @@ static int ub960_rxport_add_serializer(struct ub960_data *priv, u8 nport)
- 	struct device *dev = &priv->client->dev;
- 	struct ds90ub9xx_platform_data *ser_pdata = &rxport->ser.pdata;
- 	struct i2c_board_info ser_info = {
--		.of_node = to_of_node(rxport->ser.fwnode),
- 		.fwnode = rxport->ser.fwnode,
- 		.platform_data = ser_pdata,
- 	};
--- 
-2.47.2
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.misc
+
+[1/1] select: core_sys_select add unlikely branch hint on return path
+      https://git.kernel.org/vfs/vfs/c/7732f21402b5
