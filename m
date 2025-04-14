@@ -1,72 +1,69 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2058.outbound.protection.outlook.com [40.107.105.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF65AD21;
-	Mon, 14 Apr 2025 15:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C202472B6;
+	Mon, 14 Apr 2025 15:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744643153; cv=fail; b=RXgC0TygweBcNh0kQ8En4MObHzoDQkTgVz8OPehSGK4lekzUwM8O6Uc+MBjGhhgxx+o1gajEgk+QqvGVTOxm/Y5DK1EJWJd8tYzUdM3p22Dhkq13JrhiCr5y+xk/9o2aHd+L6ylFUcLIAQyMuUcwzdHJX7Zt/nlZq0/Aqe+oHcA=
+	t=1744643272; cv=fail; b=f5ufcbyOHX4L6pf4DtuTqP+9EMxGWdoY39ue60wdtS/39Dh+id76dgjtFPsPwTrynXbD7mjhqOcDQfSsgb4OpQL3kgdyS3oVNj4F2wl3slEA6OWZg5i0gNrqiXZTHdLPwpW+PqPnaaxHUcTzNa5GyKABSPr4KqY/Ihced8L4ckE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744643153; c=relaxed/simple;
-	bh=EfTx4hxKTfV1PncIU6Gl6XYwFUJFhnwWJYiD4VEt7DY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qrI3Wdj9u+xu+qaPhB/3JsGxy0slJVRAUIq6mBbJPjWIsIFsK2py9W9XjnxxiQELiOr37NsVdtr/pVDmCzEZ5AkyC7IuwwTCFOLJylu5kdTbkOyBBArVGplJc/VNzI6at818VE/O+YEhYiyuRfYO39GisleMko2mDsoPlHBhJK4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pUt9gP+8; arc=fail smtp.client-ip=40.107.244.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1744643272; c=relaxed/simple;
+	bh=jpynZLnE1qFxh1R+UFTPnVi3wX3AbrS4zGChFw7ivTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bu4/qepjVP1/l+KW5AiTN5KvIAqDawdqh67VYCafoiGrlegWIqX3Nj0Nq1Fz83gQ9a3VTBQ8gwAf2r/Nd+6z34JJRabWvejPyht6BUR/uFhXV73b/3geVGs2mklWkaj8A0w1BsH6BLLkn/boqOaJMzf7341+lMbsGuyTjWEuuFM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=QuJ+61nM; arc=fail smtp.client-ip=40.107.105.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pUt9gP+8"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="QuJ+61nM"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=N03cMbip5Lk2GzIC7eoT50lPbk3djthv9gsMXrsIwegjUYHzbj/XaxZxkCcsFJe1ZjhuuI0uN/oeDh19dkXe/6232tH7zZ10q8yd9pHXKtviLlYU80nsxMwdk6ECJtrszRyOr31MuzQRsTfuN7MZXi6vj39l1f9spyO1753scRhPhPb3CWPuvQo5RfhBBV5OCccGtlWCPyTWJ5RZnmy2NwEykvjapfH1K8kpV7JQIMj6gtbxe/E0F8ic/l9/kmq6gnEbp3nKZfmu+Xry99L2dZUFJ0o4yy0df/pLkRxWkI55ouxWotMR3gkk3OkziioxpU1QbjNgNFfWywEEjuM/GA==
+ b=rlYD888G9SMLTY8ElqFE9j2Ro51Dwoh456//5kaQK5t6yhzOS+rKBmPzVVQLE9QgD4HPzcuGbjd9085I7DTRfCEXVppaHiUKSyOc6ZRLth8cb9qzZHrN18LVoPwsuui4tSVzi8VvOZNcCnIKv8n71V0IUV5XDlX05wqmOsvBg0YguqdzpiAc3BkCBJeSY5kqTjg6407zyGnGGGPr5CaQR3XBacwIn3qImBs5vVubCjpD/RLa5O3mo6pkZtRbJB9YdMB/3zAIOVp5SD6bcuyWGB0uiD7gv6O35IWyO9i4FDULG/mvgHJuw5SOYi4BVHlT2FofdAAc0dSJZdJYmkvRKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PwwEuFVzCbWKLhTBM0SLvP59FZ1siv3RLKj+OH83hxI=;
- b=y8UU4bs5uNzpqg5mhNxGAGJFeGprMJEFVh5+KM0Gf/9dQP9LYPTu6F7ejRKRkRNEla4ss1icqlmudvYJF/lHygyT0PVGDLqdyDNCRFExPpwULmaQtNIOX/svu7Sm2mKSHklncqJUWwWlpcAWGnHSayOh/ZnmRqEBLZXk5KvzxqT/Cc5ZvZScm7EgLi9GX+Nngwas3HYG3fOJXTpec8wyH/Lvr2HxyIXdSkdvyMRyRJhtgn6d/JmY1WftAenpIMx2KFB2EEVA1c06H1UGZx4qqNScTK8EQywCV7ivBeEi1HT+WnkWM4+qomo7o/lECQ/9qCnMNRSgw2kkLyigwAZXmw==
+ bh=yFUdnbV+cPftXvmTy7hF3OZbVhAtFLVoIyhkHWnaFf0=;
+ b=Hn1rFciORKczwZNEMfCojv9+6Nve5WkMO0FCmIROAqG1ayBOZcRyPz1SC3xchaz4XKFa57YionXucCYnz/V5t7Yf1/Pr2U2JRLe0d4lzSAcRap0NHq2pCpZ2M/lhQifdW6yNERAjyxPc9mA/+QRG3dd5c0I6Q7R9R4/e69zzXdAX1W3anRydfCdVkhbC6zoVbdpXL8DPnA/HaAHRAQwhmgybySekV7k9IXykQfQjOQNHxZT8aC3OAtQlFHiCeqTU1JZ8XN2mGveJ+bcNXFSeG1kagVWJzLPi+CGmLBNT6zlDb6FWnYvAQkUNUgICp4oOb6VfLE1MBIwYg/gbjDNBPg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PwwEuFVzCbWKLhTBM0SLvP59FZ1siv3RLKj+OH83hxI=;
- b=pUt9gP+8Ciyi0/9V3xBxz6IycFQK5io9xuAjohaQ/x9Txa8nrWvHOyeiN2WtoAG/XrURNBa/g26UN6ChiTLZBUgWzhwIXo6Xl2rdFvu22B4bqARZhgOL5LWLlVBz3Fk/jR78dFP1gQ/G5QKzEAbuVxFmjytZF51kW49jv4c9Bgc/O57r6h8fY2buQHedIIzpQyTSxGs4bXa1onKsZr2K1l6OKTiqQ2bbxGYC8C99B/yzzaA/7LcXpeFiU7NTbGjH6kRhgeg0aBY+3wwx6nPGYEwlesThcSB3g+hvn8g7A8av76dwh/s3hB2BlG1GuUXu0VNqPPpDcOaYzkCxPU8bIw==
+ bh=yFUdnbV+cPftXvmTy7hF3OZbVhAtFLVoIyhkHWnaFf0=;
+ b=QuJ+61nMSziQSFv6CeyVMzsdefbZ6Jf6I9LOcwRd1QO6ZB+51/AukVAH7ORZxqVIXyYfLqtTpqFMm6BDmyLl36lgsraGp3JbCtQdE5opIvLl2WMDIhCU9WvCBiNccR/bQTuHEF0boroYvijZUkk7BfISvKLZDUtLF+uW9z3xfJMAAmUFp2pfhlIlpxJCUkV2BTOC+UuIdoMzlC6K9REzRm4IJg+pxStSeVkdLZN4S5sQRp88bmOC4UDJ+Te/6TieQBcvvEmASbnhD62lfXtTvXtJFVypks38dsmUMdC9eaTypzCqLkSmIfRZDqf+i2x+DgZCY2xWOdJjDMFq0CtGZg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by MN2PR12MB4319.namprd12.prod.outlook.com (2603:10b6:208:1dc::10) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by DU4PR04MB10816.eurprd04.prod.outlook.com (2603:10a6:10:582::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
- 2025 15:05:49 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%5]) with mapi id 15.20.8632.025; Mon, 14 Apr 2025
- 15:05:48 +0000
-Message-ID: <5ee46103-caef-46ac-8660-4b9f4bb5e4f0@nvidia.com>
-Date: Mon, 14 Apr 2025 11:05:45 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] rcutorture: Perform more frequent testing of
- ->gpwrap
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- Davidlohr Bueso <dave@stgolabs.net>, rcu@vger.kernel.org
-References: <20250410150329.3807285-1-joelagnelf@nvidia.com>
- <20250410150329.3807285-2-joelagnelf@nvidia.com>
- <11caaa93-7acf-417c-9223-1b14a76310b2@paulmck-laptop>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <11caaa93-7acf-417c-9223-1b14a76310b2@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR02CA0033.namprd02.prod.outlook.com
- (2603:10b6:208:fc::46) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
+ 2025 15:07:47 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8632.035; Mon, 14 Apr 2025
+ 15:07:46 +0000
+Date: Mon, 14 Apr 2025 18:07:43 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	bridge@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net 2/2] net: dsa: propagate brentry flag changes
+Message-ID: <20250414150743.zku6yhs7x3sthn55@skbuf>
+References: <20250412122428.108029-3-jonas.gorski@gmail.com>
+ <20250414124930.j435ccohw3lna4ig@skbuf>
+ <20250414125248.55kdsbjfllz4jjed@skbuf>
+ <CAOiHx==VEbdn3ULHXf5FEBaNAxzyoHTqJEMYYtcQzjkj__RoLg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOiHx==VEbdn3ULHXf5FEBaNAxzyoHTqJEMYYtcQzjkj__RoLg@mail.gmail.com>
+X-ClientProxiedBy: VI1PR06CA0106.eurprd06.prod.outlook.com
+ (2603:10a6:803:8c::35) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,130 +71,191 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MN2PR12MB4319:EE_
-X-MS-Office365-Filtering-Correlation-Id: 377c155b-a888-4a04-b56c-08dd7b65d700
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|DU4PR04MB10816:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb227407-64d6-4df6-52ce-08dd7b661d4e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R1ZmRjJNL2JyYnBZdmR0VFc1S3NhS3N4U3BwL3YxbVZkcjVpaXNlYzg0VUhS?=
- =?utf-8?B?cmZOR1ZLdnZOemtjR0p4a0R5L1MrTVgwT0x2VHUzQ1FVQ3RQbDdmVEVoK1B2?=
- =?utf-8?B?b0pPcEJJWk5UM3RJemV5VVhmRWNwcExKWms4ZlFNV1UzcW53WGdNZGNlQVBy?=
- =?utf-8?B?WU9JTkNGQXRPUWpaSHFiYUlROUdWamtvWVpNa0lINUxFN0hpRVVmV2hhRlFo?=
- =?utf-8?B?TVN0V2pDS2J1TjJOM2NiS3hRR3Z1R2ViSDVqOFBuZjdueEhrdTZxK3pKRTNw?=
- =?utf-8?B?bndkU3ZmSGxERzF2T0k2b2hVK0d1MThBT0tGTWJJYjBpNW1nM0pOVEZiR2J4?=
- =?utf-8?B?SjdDUno1YWNCbGFLbHF5RU9PQUZad1dlRm0yMTdPUWJNN0VMR0phdUdJSTFm?=
- =?utf-8?B?MER2Q2hzYXRXdDAvcyt6MTNRUWV5VU82QjZ0Ry9EUVgwS2RqRmlRSEpjV0Ri?=
- =?utf-8?B?dXJaNFlQZEtnS25Ud3E4YVoxZVAxS2taQnAwdFVKVU1qNlVXOXFIZUVyMDVn?=
- =?utf-8?B?QkMxZXh0eERGZ2psRmJmVzEvaEF6RlArSkFud3VhMmRMeVZaNGZSSitNaTBT?=
- =?utf-8?B?SzdrM01KNVpneGJGWm0xaEV5ZjV3SmlKNDhSK3d0K0FSUDQzK2ZWL1NqcDZU?=
- =?utf-8?B?YVp2RjhnSDBEWVJsWk9FZFJuc1ExVHRrMGNSQVVuby9JKzd6b3JlUVJERytQ?=
- =?utf-8?B?aEY2QUlFRDRDSW5KZ1ZWNWlsajl5U3Q2TXc3ZXpvM2lydFZxUHRmUHFUK0o0?=
- =?utf-8?B?Q3ROQ2k5ZWk5czNUS3pwcVJWdzU0WTRFaEFJVHU2M0x5MnloNDdiRXVLeWJK?=
- =?utf-8?B?UEdPcE96K08wSWIzREhCRzc2YjdhdC9VMjBMZzBwY3M5Rm9BZmtnMEpWWGh6?=
- =?utf-8?B?T1l3RDl1cHJUTFkyZVhHQ1hWSkk4TUZReHFsazBlQmVBMUpxQ2xRNVluQ0dH?=
- =?utf-8?B?U1pDbCtqV1VwekV4YW5Hd1JLQXVXZXZEY3hPWkUweWhYMSsxeUQrNlJ2cE0z?=
- =?utf-8?B?VmV6blJlSnZCNWsvRGsxWk5Ec1c1MUtyS2tEbXQ0c2taOU9PNTZ2cjcrdmRM?=
- =?utf-8?B?cjNNc1J1Mjk2R0thYnE0cjdyOFlMNXZlaEpkOWRhVmtVdUt4Yzl4Zk9TK05E?=
- =?utf-8?B?VjQ0alFMSlNsaUovTEk5OFVyc2VZd2h0czQ5QjAwd0Y2K2lISDN6QXYxMERz?=
- =?utf-8?B?M3pCYmZSaE03MWRCQnJ6YzhZeHd5ZVpSUDJqb0hBTVd5K050NWt5eFRKTTMv?=
- =?utf-8?B?bW1HNkpKSmluTWErNk56Qzl6QUE5Nlo2Vm5SVzBsd1JFeWdsSEZ0ckRmV3Zr?=
- =?utf-8?B?Y21ZRGdicTR5RmFCRlVyQlFzZSthT05KQXFKaFgybjg5NWh0REYzRzhHVzJS?=
- =?utf-8?B?TU1GWElYc0dPUndtZmhvcFhJSVgvSG9jK21tempuUHJtK3dGcnJBakRMY0hR?=
- =?utf-8?B?K2pmMFNkNjl2aVFoaE1KRlJsVTFyZjlrTU5VRnp6TW14eDZ5a2JCUThyMnE4?=
- =?utf-8?B?QjNpNG1JWlAyaDV4STRxRE93c0Y5QjhZTXZzTTUyM3hQOGN3OEhPK2ttZk1U?=
- =?utf-8?B?dDZUTVRGMEpKYS9pZGZUMUdnTlh2OGtNVGJURTNkbWtyRG8ySnRQek5qaDNl?=
- =?utf-8?B?K3hmMzlPNGlxd1d5MW1MTnVyQ084eDNpQW00MzBwSW1oUlZlMXhkTE9xR0Na?=
- =?utf-8?B?K094Vk5ZUzkxa3pDbklFRnA4bFRGSTVWNSs0TytxK1A4SEhlemNSR29SMTJS?=
- =?utf-8?B?eWhtZVI2ZU13RXVtV2tGcGUxNGl1bGNTSzVkUkJPOUp2T0tXaTZwdWpkcm10?=
- =?utf-8?B?SW8vZUtnc1VTU1lvbWlwNUJXUkRtTldJWUh4empXNTI0RkhDSTRMZGpJbFJ1?=
- =?utf-8?B?ejYrdUVpTDBiWm5wN2N4Q1FPejQ5LzIzekFOUzdtZW44dEdsWUlLYWo5TnZC?=
- =?utf-8?Q?2u6D4dOWJEY=3D?=
+	=?us-ascii?Q?WizD0dN7rblgBxzplFB1R1nieFLc+cZOFmic6EP71aJVTBf52GPU32q63DiX?=
+ =?us-ascii?Q?gudI1NkRCxkq7JfhJ708i21a7wAgkOMQWe8McvzSqXkRe2oOklLqjj5kHRK2?=
+ =?us-ascii?Q?vgDc9MlzVem/tVlWm+vJKtT0smkWk1t6uwWw/vkzJO2bi5yg8IcA5h98RfZX?=
+ =?us-ascii?Q?07+7LrSaG6+AuBtXqQuU4K/UTCxB/L+wsRzJ/j1LCd435d7QPrMorNQcy6BC?=
+ =?us-ascii?Q?pr58Rc1KWdCP40xBCDLcr3mXFmcJsDG2jJk/+P6J8QVuOZenW+ZRSYAszlfN?=
+ =?us-ascii?Q?IHJTNM1hB0Sw0KoORmfvHwV6LqyOJLf7dV1HA7B21QHZD2wdh+20KbL1hRiE?=
+ =?us-ascii?Q?aNc8VPatVNfQ+tvR8ZKMOy4cG30yR/LDdcc4tRq4BqK0f9MuKBu2e1flZR5N?=
+ =?us-ascii?Q?RQI93yMLGzglQ7OcSRwp6JOpe+isLr8eUrsUjcAlp0n1sNz/yLud7JUBawHQ?=
+ =?us-ascii?Q?+qimjLoSvbShnb+O8Pt01nGNCzOOlmNaRAv35dU7BIGQiKTcgYlZsg9IJjPJ?=
+ =?us-ascii?Q?gDORQPh6UnB6dScfZqgoo56gjwIiMpOAw7m4rsgFGAd8Q1+t7yMzjXB4KcCX?=
+ =?us-ascii?Q?tDjWxW/fVGfOSNdW90XDx5SBJILghFX2dcSrQflIbP5JkAmzU0B6Efr4dvYk?=
+ =?us-ascii?Q?iF6+9dWvAbwK3ySTO2G2jIXK8b0nqM1Z1Y69gYUoXlOwA6fLahBKqcH/Qzlw?=
+ =?us-ascii?Q?qZc++YNjGB/DCjThJDL/j1dO75QJUbrJ+JC3Abdxp3zlRTlDgMWCSVYliVVm?=
+ =?us-ascii?Q?a7Iss0f1chLjtdcH2mNmtPrmJ4hXix/wEUmNm6xlvHPFEjY2EljjFNnkGMEC?=
+ =?us-ascii?Q?Bcbdk/LCCVSuxQCHYe7G639jcDZGZETY1qcnPnNccXmKN/nJws1Vow4sB5B6?=
+ =?us-ascii?Q?82JhdwRLevlLK56c79FKlFnwMb7m6JPnXAVdpif314mBdw24PqoIpQJG49cS?=
+ =?us-ascii?Q?c1dI4+8KFxamMRfhZ4IvbqMr3rD06CCba1/WbkMkfWtN+JsSjQxlWaqcQLXi?=
+ =?us-ascii?Q?kn8AkvHxRF4FHAIf5kpUoHTAaBSz+jTO+ddhG9p6+gowMIbOm+VoWIZd/lCn?=
+ =?us-ascii?Q?eUc4Jkwdwe3HPlPBEJo7bP8pTV4IFxR2NkgYO4dFBvsG0aS9B7gG8dEgAJCG?=
+ =?us-ascii?Q?UnYrUC7LYK/fwrA+gHhzEdll2DteWvF3ogjSKffjevjzavnyuKpVqI/P3wMz?=
+ =?us-ascii?Q?iVfDZGjOcrcaR9RXQ3Y3mFOpSizAHVyMVBeeyd653TQgv4+lJxshs7zrjtj+?=
+ =?us-ascii?Q?Rt6olXqabXnRTX294QeYBhl4/1kcKEsU/4h+KHc+kGLwrnS6aJ9alcNk/rMK?=
+ =?us-ascii?Q?3iYznLOh+vyWpP159sNbxbyrNqxm1QAfygfMmwiswpr0xQtpyJ78jwgQcigX?=
+ =?us-ascii?Q?bw9Fg9smkFzCMBRil0wBSHOrGyBmSvn/TDLmNHSj6CChn9FugD9duQRuLPJa?=
+ =?us-ascii?Q?tYQspJlzSFQ=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NHo5cnE2a3o0M2NtU2lJWm00bEN3VWJTaVZ2aUwvMVZDMkxQR2F3WUZwY1Vq?=
- =?utf-8?B?YzJ5R1N1bkM5NWFsc2plT2g3cUJ0Wms2OW1CaUZWQjFjOFpsL2hjOWRzSDNP?=
- =?utf-8?B?bHRxYUg3a3RBNXYwTzExVlNoL2ZyVUJFc2M1SXVVMFBPT0MvMTQ4Z0dCaUZC?=
- =?utf-8?B?SCsyZ0p4amQ0d2s1bGxReXgzajcrWW42MVJpbVh2MTlLTDVCZVdWYys3TGlq?=
- =?utf-8?B?SW5Ya2RqWWNHa2NrK2lXT004RjQzMlNyTG5zaWFIZDB6YWxEaWVmV1U0cUJY?=
- =?utf-8?B?ZnVReDdhSEkxN1NMOEsyMk5GWFlmQ1NycTQrQzc3eXJRQmFsQy9TQ3hEWjh3?=
- =?utf-8?B?WGFNWXZPOUNEUFBvcmhidHM5TDR1N1lVOG5ZSzl5VVVjWVVGUmdSZ3FDOVBp?=
- =?utf-8?B?SGhpbUZJaGhlMGZjNnlZSStjZWw1Tm1qNVlPUHQ2bkRVQjBPUm1qWVJtU09v?=
- =?utf-8?B?bCtFYXVuT2RBN25TNnM5S3dxeXBjc3pLMkFFYXVMQ1R0TFgrTnhrcTRzVU9H?=
- =?utf-8?B?UFZRVVg3bWZITHNzWUgrTmJPdkFmVU9QTDQxb2lkQ21zZ1hzSTBHVEhkZXl3?=
- =?utf-8?B?eXoxUnRXWm84OHFyRStDOGphTnFtMEZxOGhkVXk3YVVzeEVCZk1INEYzOUpt?=
- =?utf-8?B?SEpDVmZsNzVRUTY4aFBRd2hCb3RTejVPRmJ3TjVZMnkrMWVyVWlrUXIweVNx?=
- =?utf-8?B?MVBFeHFzN2gvcXJFQmhkT1MxU203dm1mYmdPbjV3Znd4SjZLMndiQmZLSlRa?=
- =?utf-8?B?a2V4elJnNTJCaVlBYmtaZXFVbGhvdisvdnJqVkREQkUwM2RIcVB6bTRpNkEx?=
- =?utf-8?B?TVpaUUdzWkd4cHhuNjZtUkZ6dG1hbDQ5NW9hcDZpekZBNjhMTGZ6dTRFd05D?=
- =?utf-8?B?L3IrMm03ay96REVvZXJqK0xScUJoMDVIdUt1T0xFUzU1T1RXeTc4dnAxcXdB?=
- =?utf-8?B?aGlleFdLU0VsOHdWQ2d5U1VJcm0zOTdqRzNlTCtxVnNmUEFNV1kxY3p5RGNQ?=
- =?utf-8?B?cjc2U0F0MUFza0tLdnFSbk95eGxoRHlETVNEZU1Jd0dWdVU4dk56cHM1b25i?=
- =?utf-8?B?Q1BPdlo4NUFaRnl1MDU2WVVlRFdJTU9NWkFFdnp3VTBLNXVldjJnUHRhV0FY?=
- =?utf-8?B?VnVhcGEySE9xUjc3MEcwQjVKaGtZZ3h0T3hzWjZ4QmtDR0ZndndEa3dJWUFS?=
- =?utf-8?B?VDlsK3R3SFBzeUMzNUx3SFY3ME5OMlRuTEVuRU0vSExFcktWNGtXOGRZeFI4?=
- =?utf-8?B?SlR4STU1cDdnL3RMNTd0TUNEbUN6WEhsenhkYnp3UTlXbTB5Rldoc29MVFFH?=
- =?utf-8?B?UmpXRTJPVXJwUUhCWjFqWTl3N0RFZktQMHdsMlhIRlFtTlBmMTZZdTlGeVpO?=
- =?utf-8?B?VWloWUxnZkdXZklGRW5qUlZ4TklnR3MwZzdtUkJkZWNHWnhQeUFDRzlPakc5?=
- =?utf-8?B?eVlCSUF6RVMxUVN5R2RDeDdzc0tGcFJKck5VclMxQVNVWHVodFBqWkFvM3RS?=
- =?utf-8?B?bXlYN1pCenFwUGJac01OaWd1VlpvMTlnWGY2NTVzbWJ5UjFOa05EV0x5ZDYz?=
- =?utf-8?B?NWlDOWc0SDRNK0hPeWdoczVOZHlYSzVPM1NMMGF3ZERuYWFFYXZKN004cHYy?=
- =?utf-8?B?NmZoN3Fnc2dNMHAwUTMxN0p6REY2UEl3ODJMQll2UE4xbGFPSDN4d1RVZlJ2?=
- =?utf-8?B?VEVTT0JDdWNGT285M3ltejZDWHpOWDJiR3lxTmEzNDJLbUJSaE9FbHFsZ1hl?=
- =?utf-8?B?RDZBQ0k5cXd4aGZZZkMrRGZ5SGJFc2kzS2J2WEZmSmZVcVRLVUlTY0xWd25I?=
- =?utf-8?B?SnNYQklXYldPVXp3dDhtenQrYW1mTG9zck0rdldvcUl1MHpTUEpkc3dsU1dP?=
- =?utf-8?B?dkltMFhrM3UvalIvdFpnbVlLclAyZ3doM2grbHE1QWJsRjdCNmdZdFZJOWJ5?=
- =?utf-8?B?S01sS1RSeVR0ZGJCaWYyUmJ3U0dvUWxEdkFtQ1ZwaGt1b3BCRHQrQnMwVFBt?=
- =?utf-8?B?NWYreFJLRUlidGRwaU9wMjk4WHAvUllrQU5CblV0d2lmZTdWMVM2dE44U1l1?=
- =?utf-8?B?L3YwYWdmakZrK21uOEhmazluQUtZM3BVUS9wMHFrZ0lhVXFiemJVNmcrVlZa?=
- =?utf-8?Q?yLLlSU0dapbawzJ4Yh+jDwolZ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 377c155b-a888-4a04-b56c-08dd7b65d700
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+	=?us-ascii?Q?pfY6kGeysanYKsiZ3vtVvF4ve3E2zYg4Iwi1tBPkJE0G1WMTT6KsKJD4+Iwp?=
+ =?us-ascii?Q?Re41BckrGeV3hi0lg6dVEVG9LvSqmuX8SiuaP038bJEFlUQc9QnNG4RawSDY?=
+ =?us-ascii?Q?CapG6GJ3HbWrk2YtRp+KdUjtWjUWLRB1+OwUlUHah9HbDKsisAGVInaz10aa?=
+ =?us-ascii?Q?ayP4rv5V6pnuXgmotWs8xghXe/zRYY3M+xMNr6S99ArNzC82CDXwbhOcX4D2?=
+ =?us-ascii?Q?X4j14dI8K1YaEbjHoo9dejp4LTyenfipVx5JliBfiXOr/3r6aSVIyrgEPOfM?=
+ =?us-ascii?Q?9dhr+y7L7No95IiX/1GTS2n6jspVPTJfilBdjzyTLyBeeT1+1aSdNiLVccBr?=
+ =?us-ascii?Q?/07CUQV6+RCwf4SCdyQcHQiUVxBAQl4sC9QFnfch4AAgSTsf99hQy/eAp/GX?=
+ =?us-ascii?Q?kQspMbd6QGKIFUP/CZ5PZBkW/0bJSuKZvL2SRR4jR9agDISgcn6xMgMCvUG7?=
+ =?us-ascii?Q?6U62hVT7D7etSg5VvpFcBWaNZhWno78umHnsy7OBjhj1nMHuiDm0u10K4dlh?=
+ =?us-ascii?Q?M3yOG4qutxEa8hcSMctstSFFf1DPEHByV2XbQAGHZVn2ZsRKidx8/gkPUBhR?=
+ =?us-ascii?Q?YGL1VwkI9GLW6zMXnnPyw4L1Q+HFNKBQ4I8/F02or9k+d654AkTngOS7SSSx?=
+ =?us-ascii?Q?FSSTFNzczlcctn359YGXdY6Bb7tRPkwVUXsmGLZoMD3w1CzTnD1prl7+z5AM?=
+ =?us-ascii?Q?3OpU3j3f5tE0cSfcgdmtpfA+fziDOPKXLetOC8/6b2h8jsDPdMtQ9nz3HOhr?=
+ =?us-ascii?Q?egDJleO3pV12O88puYcSMeFn1Hh2+ruBe/Cp2a2v3RoSHj7Dv24WcKfOsXh1?=
+ =?us-ascii?Q?YvCGVuWcYSoNrRB+WAq2cq6MKvLP+s5QsasmxIM0EEwZYa22inCEWK1Vo8ZG?=
+ =?us-ascii?Q?AlvSsFyAPFJq5zqlr3D4amCK1ERe0yJn5Z2a8GAcNc5x8S7/kbifbkHjnTZR?=
+ =?us-ascii?Q?eOy5pK74WVcJz4S8+BnCmcn1Ahp/VJ3x+8k8YWmCS5oZBPYRnCGDU+yInL6N?=
+ =?us-ascii?Q?RkNGv0/NhY5dGuLGO2jjaFtwmgUILLpVknuMvNIF2ExvRkq+nKy681K2I9pI?=
+ =?us-ascii?Q?xKFC67BNih5TdcBDxyX2RKcyOtHJdKGv08ILZCtYjcNyhkVYc4EEqgcL7d2t?=
+ =?us-ascii?Q?h6I407Ve9IQYO8w/fAvoj0HRbdjOrg8+RvERaPLst1ERz6hbMWVbl4R/+vx4?=
+ =?us-ascii?Q?Hk97PWRkIM7eL1dXVHCI4s0x/C9x0vE/+v+Sofz49uLsr1ke+HUIpauKX+Ka?=
+ =?us-ascii?Q?aMmgNwuVTmUHcf3gh/ovVYavvHU0OMBnaYGYlsHADci6gBHcBxLOnCmGWAsm?=
+ =?us-ascii?Q?S4l4owWz00qPIrSR268Q+jMIva3Zl1K6OCyvFAThiUh17XifW14ZQocsKuLm?=
+ =?us-ascii?Q?xLRiTjkn3RBqo+GqCElDg1dMmImvlBhww0ZJMYG3yqTaAqhPPqMhimBLPZ2f?=
+ =?us-ascii?Q?IZduQ/B7eYV5f/aD/WHM4V4YY2qDcTA5fI8QOqbBKpJY/lNWG/TD1nzb9qk0?=
+ =?us-ascii?Q?Qf/EJ63pu1D/k0ONtjDBhkkKmBvRSt1eSALKg1skKTbRyDlmcPq0qcN2dVuw?=
+ =?us-ascii?Q?kEAO5KRwMehVzFJxoxs4gFOmNnT8oYflRY8i6gUfUvGYFLN37odzmuxO+efw?=
+ =?us-ascii?Q?gw=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb227407-64d6-4df6-52ce-08dd7b661d4e
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 15:05:48.8757
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 15:07:46.8041
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tquCGznr3zzmIIgogaV9iHOiesFiTUvOeEY8jKSw0Fhx/UI4V6sg96JRy9Sz2PxKSJtRsP3esvJjOWy/7llZ9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4319
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z+Icf4PASv26iqelnBKYzNnDUyCNp/spDajozxGjbCAFlN+HaHXT7U0w1AywsI1elTz8cmN5EHWejYVjbSOz6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10816
 
-On 4/10/2025 2:29 PM, Paul E. McKenney wrote:
->> +static int rcu_gpwrap_lag_init(void)
->> +{
->> +	if (gpwrap_lag_cycle_mins <= 0 || gpwrap_lag_active_mins <= 0) {
->> +		pr_alert("rcu-torture: lag timing parameters must be positive\n");
->> +		return -EINVAL;
-> When rcutorture is initiated by modprobe, this makes perfect sense.
+On Mon, Apr 14, 2025 at 03:49:27PM +0200, Jonas Gorski wrote:
+> I was just in the progress of writing down some thoughts myself I had
+> while thinking about this.
 > 
-> But if rcutorture is built in, we have other choices:  (1) Disable gpwrap
-> testing and do other testing but splat so that the bogus scripting can
-> be fixed, (2) Force default values and splat as before, (3) Splat and
-> halt the system.
+> So to me passing on the original flags but then no updates of these
+> flags feels wrong. I would expect them to be either never passed on,
+> or always sync it (and let the driver choose to handle or ignore
+> them).
+
+Maybe, but right now it seems like the wrong problem to tackle, and it
+is probably so for every driver for which the VLAN information in the
+receive traffic depends on the bridge VLAN configuration, and is not
+statically configured by the driver.
+
+> Having the cpu port as egress untagged I can easily find one case
+> where this breaks stuff (at least with b53):
 > 
-> The usual approach has been #1, but what makes sense in this case?
+> With lan1, lan2 being dsa ports of the same switch:
+> 
+> # bridge with lan1
+> $ ip link add swbridge type bridge vlan_filtering 1
+> $ ip link set lan1 master swbridge
+> $ bridge vlan add dev swbridge vid 10 self pvid untagged
+> 
+> # lan2 stand alone
+> $ ip link add lan2.10 link lan2 type vlan id 10
+> 
+> as then lan2.10 would never receive any packets, as the VLAN 10
+> packets received by the CPU ports never carry any vlan tags.
+> 
+> The core issue here is that b53 switches do not provide any way of
+> knowing the original tagged state of received packets, as the dsa
+> header has no field for that (bcm56* switches do, but these are a
+> different beast).
 
-If the user deliberately tries to prevent the test, I am Ok with #3 which I
-believe is the current behavior. But otherwise #1 is also Ok with me but I don't
-feel strongly about doing that.
+I see, and indeed, this is yet another angle. The flags of the host
+bridge VLAN do not match with the flags of the flags of the RX filtering
+VLAN, the latter having this comment: "This API only allows programming
+tagged, non-PVID VIDs". The update of flags would not be propagated to
+the driver, neither with your patch nor without it, because VID=10
+already exists on the CPU port, and this isn't a "changed" VLAN (because
+it is an artificial switchdev event emitted by DSA, unbeknownst to the
+bridge). So DSA would still decide to bump the refcount rather than
+notify the driver.
 
-If we want to do #3, it will just involve changing the "return -EINVAL" to
-"return 0" but also may need to be doing so only if RCU torture is a built-in.
+You'd have to ask yourself how do you even expect DSA to react and sort
+this out, between the bridge direction wanting the VLAN untagged and the
+8021q direction wanting it tagged.
 
-IMO the current behavior is reasonable than adding more complexity for an
-unusual case for a built-in?
+> I guess the proper fix for b53 is probably to always have a vlan tag
+> on the cpu port (except for the special vlan 0 for untagged traffic on
+> ports with no PVID), and enable untag_vlan_aware_bridge_pvid.
 
-On the other hand if the issue is with providing the user with a way to disable
-gpwrap testing, that should IMO be another parameter than setting the _mins
-parameters to be 0. But I think we may not want this testing disabled since it
-is already "self-disabled" for the first 25 miutes.
+What's the story with the ports with no PVID, and VID 0?
+In Documentation/networking/switchdev.rst, it is said that VLAN
+filtering bridge ports should drop untagged and VID 0 tagged RX packets
+when there is no pvid.
 
-Thoughts?
+> To continue the stream of consciousness, it probably does not make
+> sense to pass on the untagged flag for the bridge/cpu port, because it
+> will affect all ports of the switch, regardless of them being member
+> of the bridge.
 
-Thanks!
+Though it needs to be said, usually standalone ports are VLAN-unaware,
+thus, the VLAN ID on RX from their direction is a discardable quantity.
 
- - Joel
+b53 is one of the special drivers, for setting ds->vlan_filtering_is_global = true.
+That makes standalone ports become VLAN filtering even when not under a
+bridge, and is what ultimately causes DSA to program RX filtering VLANs
+to hardware in the first place. Normally, 8021q uppers aren't programmed
+to hardware - see the comments above dsa_user_manage_vlan_filtering().
 
+> Looking through drivers in net/drivers/dsa, I don't see
+> anyone checking if egress untag is applied to the cpu port, so I
+> wonder if not most, maybe even all (dsa) switch drivers have the same
+> issue and would actually need to keep the cpu port always tagged.
+
+What check do you expect to see exactly? Many drivers treat VLANs on the
+CPU port in special ways, sja1105, felix/ocelot, mv88e6xxx, mt7530, ksz8, maybe others.
+Some of them are subtle and not easy to spot, because they are not from
+the .port_vlan_add() call path (like felix_update_tag_8021q_rx_rule()).
+
+> And looking through the tag_* handlers, only ocelot looks like it may
+> have the information available whether a packet was originally tagged
+> or not, so would also need to have untag_vlan_aware_bridge_pvid enabled.
+
+ocelot can select between 2 different tagging protocols, "ocelot" (which
+leaves the VLAN header unmodified) and "ocelot-8021q" (which does not),
+and the latter indeed does set untag_vlan_aware_bridge_pvid. It's an
+option from which more than one driver could benefit, though, for sure.
+
+mv88e6xxx uses MV88E6XXX_G1_VTU_DATA_MEMBER_TAG_UNMODIFIED which
+provides essentially that information, neither "tag" nor "untag", but
+"keep".
+
+> Makes the think the cpu port always tagged should be the default
+> behavior. It's easy to strip a vlan tag that shouldn't be there, but
+> hard to add one that's missing, especially since in contrast to PVID
+> you can have more than one vlan as egress untagged.
+
+I agree and I would like to see b53 converge towards that. But changing
+the default by unsetting this flag in DSA could be a breaking change, we
+should be careful, and definitely only consider that for net-next.
+
+b53 already sets a form (the deprecated form) of ds->untag_bridge_pvid,
+someone with hardware should compare its behavior to the issues
+documented in dsa_software_untag_vlan_unaware_bridge(), and, if
+necessary, transition it to ds->untag_vlan_aware_bridge_pvid or perhaps
+something else.
+
+There is a relevant selftest at tools/testing/selftests/net/forwarding/local_termination.sh
+which captures many (though not all) gotchas, it might be interesting to
+run it.
