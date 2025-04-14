@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0B72BE7A8;
-	Mon, 14 Apr 2025 13:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D652E2E338C;
+	Mon, 14 Apr 2025 13:19:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744636793; cv=none; b=PiTr0e1LlNfaqywxReokyuu674FTWFc7rBLL2N5eMoBEq5+ySLlCP9KZzr2r9k9OkzjPaZjYRXSYG5fcs90bAEcR0COeA9iRaDeofaTog4f69T1YdmN5sjsKFfBTvvK6rtOm4lPOVXI94Ravt5A7is39i3Z2LT1X0WEsg6sfylg=
+	t=1744636797; cv=none; b=CcTjSxQ0EWdJZ5E8SlnBTeAK6e3plMMa40MbGTOUFz1vynH+l2wFw4COAgHdhtyhuUaPZDGK2oNWmDyHUbahV9YVsNaTB+IsnQ+SaXYeXJBz7S3BNXf/QXrV5Gs93nmba0bCGfs0OGpHSUFfbxuYeMUx0Cn0esdNYXv3WtseJ0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744636793; c=relaxed/simple;
-	bh=UDI/AINJ2eSGkvDP2SFZPf6QNDNrXltQ02V5ZBvYLvI=;
+	s=arc-20240116; t=1744636797; c=relaxed/simple;
+	bh=eudGftji2a38VjloW6y+9kohBtajszdwKNZYkxBDrpo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SyngCADMklVfMRn6N5X1CGPseetj8ASUAmwnOoT6dYZ4agyzSUk3pWyTXf4KXe0/fdAQEU8KlJPHSz4GfCNWiNeGl6fYP1fQIlb9RZybVfqLqbwnfm8BkSziLdMrquelzBbVFo0zf7/prUaEGKzvk2LtjNFvDGFowM17SeqzYbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHn1qc33; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RieE09rAnq+yT6O4LjBiy+QDBq7igCPPJEVXvZ4Q94oNdbp/vqCfSMG2lzXG0uLlMYIKCCDeo9upQ/HCwFuDdSnBMrIFl/PWD69nJH0po+OwXF3veVXbkwXq0tnKo4a3V/I7i4KPRxwGNwr3TPabvRLh8qKuDpmq7rYYhy/mhwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tn4kh1M7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHn1qc33"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A86BC4CEE2;
-	Mon, 14 Apr 2025 13:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tn4kh1M7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D930C4CEEE;
+	Mon, 14 Apr 2025 13:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744636793;
-	bh=UDI/AINJ2eSGkvDP2SFZPf6QNDNrXltQ02V5ZBvYLvI=;
+	s=k20201202; t=1744636797;
+	bh=eudGftji2a38VjloW6y+9kohBtajszdwKNZYkxBDrpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AHn1qc33BaFCwQETZnb5xvuBUTxZnnXiEUtTFbfetO2ji2+7aKxRasi+GRboscaR8
-	 +rWqMad5hu8L2kQjU8TB5l0W5vi4t7JJsjwBLd1FYqGKzle2dU5buX7PDF6Z8nuWqx
-	 M/vZJWE27xGc5XBF0U5hbWvFssnf5vY05SwLyMykiOvPWM0Y9TQcp/Lcr/2iglEEhb
-	 dhWdHIE99Hj1hzZzABIeXbEccjVHpNE9tVmEuYBTVNnzBXj9bxh8zoaW2wOFlG5YFD
-	 0ziYPRVKRLqWQskcYVEEEOrXDi0EJV4CYDMgGbhoBLP9l1OU3FDmC/bnop8+i5f2Al
-	 vCbswBpvSW13A==
+	b=Tn4kh1M7GkFkLB82iwGyhY091SBT8wobdjZlHQF4s12ERyjHL+2p9tt/O/rRRn207
+	 jKqIeOTdnuge4X1EwHSh+TDXhg5hQv1t5KAiIB4mRsAh6/cSZ/bU5aubNV+c61X/qC
+	 SPZilLtVJW4kDPZ4A/px1ja3GV/XESip68sk5pQk0OxHze11cEDzWzLwNGvooxCS5n
+	 SYE+T1MqRtpjVHiSYGUJPV6ojWdDBRyVO0jctJvFjxSTuU5QiqB8eqnuteIlFbetO/
+	 sGcK5RUVD86+YayrRXQ/kxD8aYWAcft/xRbCULIc+/LZdXtp4ajKMfRKc7LyS81K5h
+	 flnWRR6p6HQOw==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -46,9 +46,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 3/5] rust: auxiliary: add auxiliary device / driver abstractions
-Date: Mon, 14 Apr 2025 15:18:06 +0200
-Message-ID: <20250414131934.28418-4-dakr@kernel.org>
+Subject: [PATCH v4 4/5] rust: auxiliary: add auxiliary registration
+Date: Mon, 14 Apr 2025 15:18:07 +0200
+Message-ID: <20250414131934.28418-5-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250414131934.28418-1-dakr@kernel.org>
 References: <20250414131934.28418-1-dakr@kernel.org>
@@ -60,397 +60,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement the basic auxiliary abstractions required to implement a
-driver matching an auxiliary device.
-
-The design and implementation is analogous to PCI and platform and is
-based on the generic device / driver abstractions.
+Implement the `auxiliary::Registration` type, which provides an API to
+create and register new auxiliary devices in the system.
 
 Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- MAINTAINERS                     |   2 +
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers/auxiliary.c        |  23 +++
- rust/helpers/helpers.c          |   1 +
- rust/kernel/auxiliary.rs        | 274 ++++++++++++++++++++++++++++++++
- rust/kernel/device.rs           |   1 -
- rust/kernel/lib.rs              |   2 +
- 7 files changed, 303 insertions(+), 1 deletion(-)
- create mode 100644 rust/helpers/auxiliary.c
- create mode 100644 rust/kernel/auxiliary.rs
+ rust/kernel/auxiliary.rs | 88 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 87 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..a7bc29ca37d4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3872,6 +3872,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
- F:	Documentation/driver-api/auxiliary_bus.rst
- F:	drivers/base/auxiliary.c
- F:	include/linux/auxiliary_bus.h
-+F:	rust/kernel/auxiliary.rs
-+F:	samples/rust/rust_driver_auxiliary.rs
- 
- AUXILIARY DISPLAY DRIVERS
- M:	Andy Shevchenko <andy@kernel.org>
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70..8a2add69e5d6 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -7,6 +7,7 @@
-  */
- 
- #include <kunit/test.h>
-+#include <linux/auxiliary_bus.h>
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
- #include <linux/blkdev.h>
-diff --git a/rust/helpers/auxiliary.c b/rust/helpers/auxiliary.c
-new file mode 100644
-index 000000000000..0db3860d774e
---- /dev/null
-+++ b/rust/helpers/auxiliary.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/auxiliary_bus.h>
-+
-+void rust_helper_auxiliary_set_drvdata(struct auxiliary_device *adev, void *data)
-+{
-+	auxiliary_set_drvdata(adev, data);
-+}
-+
-+void *rust_helper_auxiliary_get_drvdata(struct auxiliary_device *adev)
-+{
-+	return auxiliary_get_drvdata(adev);
-+}
-+
-+void rust_helper_auxiliary_device_uninit(struct auxiliary_device *adev)
-+{
-+	return auxiliary_device_uninit(adev);
-+}
-+
-+void rust_helper_auxiliary_device_delete(struct auxiliary_device *adev)
-+{
-+	return auxiliary_device_delete(adev);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index e1c21eba9b15..6b279279cb12 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -7,6 +7,7 @@
-  * Sorted alphabetically.
-  */
- 
-+#include "auxiliary.c"
- #include "blk.c"
- #include "bug.c"
- #include "build_assert.c"
 diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-new file mode 100644
-index 000000000000..75423737032a
---- /dev/null
+index 75423737032a..b40d663b42eb 100644
+--- a/rust/kernel/auxiliary.rs
 +++ b/rust/kernel/auxiliary.rs
-@@ -0,0 +1,274 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -5,7 +5,7 @@
+ //! C header: [`include/linux/auxiliary_bus.h`](srctree/include/linux/auxiliary_bus.h)
+ 
+ use crate::{
+-    bindings, device,
++    bindings, container_of, device,
+     device_id::RawDeviceId,
+     driver,
+     error::{to_result, Result},
+@@ -230,6 +230,18 @@ pub fn parent(&self) -> Option<&device::Device> {
+     }
+ }
+ 
++impl Device {
++    extern "C" fn release(dev: *mut bindings::device) {
++        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
++        // embedded in `struct auxiliary_device`.
++        let adev = unsafe { container_of!(dev, bindings::auxiliary_device, dev) }.cast_mut();
 +
-+//! Abstractions for the auxiliary bus.
-+//!
-+//! C header: [`include/linux/auxiliary_bus.h`](srctree/include/linux/auxiliary_bus.h)
-+
-+use crate::{
-+    bindings, device,
-+    device_id::RawDeviceId,
-+    driver,
-+    error::{to_result, Result},
-+    prelude::*,
-+    str::CStr,
-+    types::{ForeignOwnable, Opaque},
-+    ThisModule,
-+};
-+use core::{
-+    marker::PhantomData,
-+    ptr::{addr_of_mut, NonNull},
-+};
-+
-+/// An adapter for the registration of auxiliary drivers.
-+pub struct Adapter<T: Driver>(T);
-+
-+// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-+// a preceding call to `register` has been successful.
-+unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-+    type RegType = bindings::auxiliary_driver;
-+
-+    unsafe fn register(
-+        adrv: &Opaque<Self::RegType>,
-+        name: &'static CStr,
-+        module: &'static ThisModule,
-+    ) -> Result {
-+        // SAFETY: It's safe to set the fields of `struct auxiliary_driver` on initialization.
-+        unsafe {
-+            (*adrv.get()).name = name.as_char_ptr();
-+            (*adrv.get()).probe = Some(Self::probe_callback);
-+            (*adrv.get()).remove = Some(Self::remove_callback);
-+            (*adrv.get()).id_table = T::ID_TABLE.as_ptr();
-+        }
-+
-+        // SAFETY: `adrv` is guaranteed to be a valid `RegType`.
-+        to_result(unsafe {
-+            bindings::__auxiliary_driver_register(adrv.get(), module.0, name.as_char_ptr())
-+        })
-+    }
-+
-+    unsafe fn unregister(adrv: &Opaque<Self::RegType>) {
-+        // SAFETY: `adrv` is guaranteed to be a valid `RegType`.
-+        unsafe { bindings::auxiliary_driver_unregister(adrv.get()) }
++        // SAFETY: `adev` points to the memory that has been allocated in `Registration::new`, via
++        // `KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)`.
++        let _ = unsafe { KBox::<Opaque<bindings::auxiliary_device>>::from_raw(adev.cast()) };
 +    }
 +}
 +
-+impl<T: Driver + 'static> Adapter<T> {
-+    extern "C" fn probe_callback(
-+        adev: *mut bindings::auxiliary_device,
-+        id: *const bindings::auxiliary_device_id,
-+    ) -> core::ffi::c_int {
-+        // SAFETY: The auxiliary bus only ever calls the probe callback with a valid pointer to a
-+        // `struct auxiliary_device`.
-+        //
-+        // INVARIANT: `adev` is valid for the duration of `probe_callback()`.
-+        let adev = unsafe { &*adev.cast::<Device<device::Core>>() };
+ // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
+ // argument.
+ kernel::impl_device_context_deref!(unsafe { Device });
+@@ -272,3 +284,77 @@ unsafe impl Send for Device {}
+ // SAFETY: `Device` can be shared among threads because all methods of `Device`
+ // (i.e. `Device<Normal>) are thread safe.
+ unsafe impl Sync for Device {}
 +
-+        // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct auxiliary_device_id` and
-+        // does not add additional invariants, so it's safe to transmute.
-+        let id = unsafe { &*id.cast::<DeviceId>() };
-+        let info = T::ID_TABLE.info(id.index());
-+
-+        match T::probe(adev, info) {
-+            Ok(data) => {
-+                // Let the `struct auxiliary_device` own a reference of the driver's private data.
-+                // SAFETY: By the type invariant `adev.as_raw` returns a valid pointer to a
-+                // `struct auxiliary_device`.
-+                unsafe { bindings::auxiliary_set_drvdata(adev.as_raw(), data.into_foreign()) };
-+            }
-+            Err(err) => return Error::to_errno(err),
-+        }
-+
-+        0
-+    }
-+
-+    extern "C" fn remove_callback(adev: *mut bindings::auxiliary_device) {
-+        // SAFETY: The auxiliary bus only ever calls the remove callback with a valid pointer to a
-+        // `struct auxiliary_device`.
-+        let ptr = unsafe { bindings::auxiliary_get_drvdata(adev) };
-+
-+        // SAFETY: `remove_callback` is only ever called after a successful call to
-+        // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
-+        // `KBox<T>` pointer created through `KBox::into_foreign`.
-+        let _ = unsafe { KBox::<T>::from_foreign(ptr) };
-+    }
-+}
-+
-+/// Declares a kernel module that exposes a single auxiliary driver.
-+#[macro_export]
-+macro_rules! module_auxiliary_driver {
-+    ($($f:tt)*) => {
-+        $crate::module_driver!(<T>, $crate::auxiliary::Adapter<T>, { $($f)* });
-+    };
-+}
-+
-+/// Abstraction for `bindings::auxiliary_device_id`.
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub struct DeviceId(bindings::auxiliary_device_id);
-+
-+impl DeviceId {
-+    /// Create a new [`DeviceId`] from name.
-+    pub const fn new(modname: &'static CStr, name: &'static CStr) -> Self {
-+        let name = name.as_bytes_with_nul();
-+        let modname = modname.as_bytes_with_nul();
-+
-+        // TODO: Replace with `bindings::auxiliary_device_id::default()` once stabilized for
-+        // `const`.
-+        //
-+        // SAFETY: FFI type is valid to be zero-initialized.
-+        let mut id: bindings::auxiliary_device_id = unsafe { core::mem::zeroed() };
-+
-+        let mut i = 0;
-+        while i < modname.len() {
-+            id.name[i] = modname[i];
-+            i += 1;
-+        }
-+
-+        // Reuse the space of the NULL terminator.
-+        id.name[i - 1] = b'.';
-+
-+        let mut j = 0;
-+        while j < name.len() {
-+            id.name[i] = name[j];
-+            i += 1;
-+            j += 1;
-+        }
-+
-+        Self(id)
-+    }
-+}
-+
-+// SAFETY:
-+// * `DeviceId` is a `#[repr(transparent)` wrapper of `auxiliary_device_id` and does not add
-+//   additional invariants, so it's safe to transmute to `RawType`.
-+// * `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::auxiliary_device_id;
-+
-+    const DRIVER_DATA_OFFSET: usize =
-+        core::mem::offset_of!(bindings::auxiliary_device_id, driver_data);
-+
-+    fn index(&self) -> usize {
-+        self.0.driver_data
-+    }
-+}
-+
-+/// IdTable type for auxiliary drivers.
-+pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
-+
-+/// Create a auxiliary `IdTable` with its alias for modpost.
-+#[macro_export]
-+macro_rules! auxiliary_device_table {
-+    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
-+        const $table_name: $crate::device_id::IdArray<
-+            $crate::auxiliary::DeviceId,
-+            $id_info_type,
-+            { $table_data.len() },
-+        > = $crate::device_id::IdArray::new($table_data);
-+
-+        $crate::module_device_table!("auxiliary", $module_table_name, $table_name);
-+    };
-+}
-+
-+/// The auxiliary driver trait.
++/// The registration of an auxiliary device.
 +///
-+/// Drivers must implement this trait in order to get an auxiliary driver registered.
-+pub trait Driver {
-+    /// The type holding information about each device id supported by the driver.
-+    ///
-+    /// TODO: Use associated_type_defaults once stabilized:
-+    ///
-+    /// type IdInfo: 'static = ();
-+    type IdInfo: 'static;
-+
-+    /// The table of device ids supported by the driver.
-+    const ID_TABLE: IdTable<Self::IdInfo>;
-+
-+    /// Auxiliary driver probe.
-+    ///
-+    /// Called when an auxiliary device is matches a corresponding driver.
-+    fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> Result<Pin<KBox<Self>>>;
-+}
-+
-+/// The auxiliary device representation.
-+///
-+/// This structure represents the Rust abstraction for a C `struct auxiliary_device`. The
-+/// implementation abstracts the usage of an already existing C `struct auxiliary_device` within
-+/// Rust code that we get passed from the C side.
++/// This type represents the registration of a [`struct auxiliary_device`]. When an instance of this
++/// type is dropped, its respective auxiliary device will be unregistered from the system.
 +///
 +/// # Invariants
 +///
-+/// A [`Device`] instance represents a valid `struct auxiliary_device` created by the C portion of
-+/// the kernel.
-+#[repr(transparent)]
-+pub struct Device<Ctx: device::DeviceContext = device::Normal>(
-+    Opaque<bindings::auxiliary_device>,
-+    PhantomData<Ctx>,
-+);
++/// `self.0` always holds a valid pointer to an initialized and registered
++/// [`struct auxiliary_device`].
++pub struct Registration(NonNull<bindings::auxiliary_device>);
 +
-+impl<Ctx: device::DeviceContext> Device<Ctx> {
-+    fn as_raw(&self) -> *mut bindings::auxiliary_device {
-+        self.0.get()
-+    }
++impl Registration {
++    /// Create and register a new auxiliary device.
++    pub fn new(parent: &device::Device, name: &CStr, id: u32, modname: &CStr) -> Result<Self> {
++        let boxed = KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)?;
++        let adev = boxed.get();
 +
-+    /// Returns the auxiliary device' id.
-+    pub fn id(&self) -> u32 {
-+        // SAFETY: By the type invariant `self.as_raw()` is a valid pointer to a
-+        // `struct auxiliary_device`.
-+        unsafe { (*self.as_raw()).id }
-+    }
++        // SAFETY: It's safe to set the fields of `struct auxiliary_device` on initialization.
++        unsafe {
++            (*adev).dev.parent = parent.as_raw();
++            (*adev).dev.release = Some(Device::release);
++            (*adev).name = name.as_char_ptr();
++            (*adev).id = id;
++        }
 +
-+    /// Returns a reference to the parent [`device::Device`], if any.
-+    pub fn parent(&self) -> Option<&device::Device> {
-+        let ptr: *const Self = self;
-+        // CAST: `Device<Ctx: DeviceContext>` types are transparent to each other.
-+        let ptr: *const Device = ptr.cast();
-+        // SAFETY: `ptr` was derived from `&self`.
-+        let this = unsafe { &*ptr };
++        // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
++        // which has not been initialized yet.
++        unsafe { bindings::auxiliary_device_init(adev) };
 +
-+        this.as_ref().parent()
-+    }
-+}
++        // Now that `adev` is initialized, leak the `Box`; the corresponding memory will be freed
++        // by `Device::release` when the last reference to the `struct auxiliary_device` is dropped.
++        let _ = KBox::into_raw(boxed);
 +
-+// SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
-+// argument.
-+kernel::impl_device_context_deref!(unsafe { Device });
-+kernel::impl_device_context_into_aref!(Device);
++        // SAFETY:
++        // - `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`, which has
++        //   been initialialized,
++        // - `modname.as_char_ptr()` is a NULL terminated string.
++        let ret = unsafe { bindings::__auxiliary_device_add(adev, modname.as_char_ptr()) };
++        if ret != 0 {
++            // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
++            // which has been initialialized.
++            unsafe { bindings::auxiliary_device_uninit(adev) };
 +
-+// SAFETY: Instances of `Device` are always reference-counted.
-+unsafe impl crate::types::AlwaysRefCounted for Device {
-+    fn inc_ref(&self) {
-+        // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
-+        unsafe { bindings::get_device(self.as_ref().as_raw()) };
-+    }
++            return Err(Error::from_errno(ret));
++        }
 +
-+    unsafe fn dec_ref(obj: NonNull<Self>) {
-+        // CAST: `Self` a transparent wrapper of `bindings::auxiliary_device`.
-+        let adev: *mut bindings::auxiliary_device = obj.cast().as_ptr();
-+
-+        // SAFETY: By the type invariant of `Self`, `adev` is a pointer to a valid
-+        // `struct auxiliary_device`.
-+        let dev = unsafe { addr_of_mut!((*adev).dev) };
-+
-+        // SAFETY: The safety requirements guarantee that the refcount is non-zero.
-+        unsafe { bindings::put_device(dev) }
++        // SAFETY: `adev` is guaranteed to be non-null, since the `KBox` was allocated successfully.
++        //
++        // INVARIANT: The device will remain registered until `auxiliary_device_delete()` is called,
++        // which happens in `Self::drop()`.
++        Ok(Self(unsafe { NonNull::new_unchecked(adev) }))
 +    }
 +}
 +
-+impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
-+    fn as_ref(&self) -> &device::Device<Ctx> {
-+        // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
++impl Drop for Registration {
++    fn drop(&mut self) {
++        // SAFETY: By the type invariant of `Self`, `self.0.as_ptr()` is a valid registered
 +        // `struct auxiliary_device`.
-+        let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
++        unsafe { bindings::auxiliary_device_delete(self.0.as_ptr()) };
 +
-+        // SAFETY: `dev` points to a valid `struct device`.
-+        unsafe { device::Device::as_ref(dev) }
++        // This drops the reference we acquired through `auxiliary_device_init()`.
++        //
++        // SAFETY: By the type invariant of `Self`, `self.0.as_ptr()` is a valid registered
++        // `struct auxiliary_device`.
++        unsafe { bindings::auxiliary_device_uninit(self.0.as_ptr()) };
 +    }
 +}
 +
-+// SAFETY: A `Device` is always reference-counted and can be released from any thread.
-+unsafe impl Send for Device {}
++// SAFETY: A `Registration` of a `struct auxiliary_device` can be released from any thread.
++unsafe impl Send for Registration {}
 +
-+// SAFETY: `Device` can be shared among threads because all methods of `Device`
-+// (i.e. `Device<Normal>) are thread safe.
-+unsafe impl Sync for Device {}
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 911045e32c34..bbd308b8c694 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -68,7 +68,6 @@ pub(crate) fn as_raw(&self) -> *mut bindings::device {
-     }
- 
-     /// Returns a reference to the parent device, if any.
--    #[expect(unused)]
-     pub(crate) fn parent(&self) -> Option<&Self> {
-         // SAFETY:
-         // - By the type invariant `self.as_raw()` is always valid.
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index de07aadd1ff5..55a8dfeece0b 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -38,6 +38,8 @@
- pub use ffi;
- 
- pub mod alloc;
-+#[cfg(CONFIG_AUXILIARY_BUS)]
-+pub mod auxiliary;
- #[cfg(CONFIG_BLOCK)]
- pub mod block;
- #[doc(hidden)]
++// SAFETY: `Registration` does not expose any methods or fields that need synchronization.
++unsafe impl Sync for Registration {}
 -- 
 2.49.0
 
