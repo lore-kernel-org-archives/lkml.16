@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB041A2380;
-	Mon, 14 Apr 2025 12:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE252BE7B8;
+	Mon, 14 Apr 2025 12:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634474; cv=none; b=IQtzp920CY0a2IfE7ISJxf83aZa5lRLfljJWo7IHttlZhPKQ00n7EDJIE/2wI6+yu6EEBt7HlFZWXgDKH5psJNFn/4Cjgvlg+miLsiRMLa1qRkW778AnkGHxDXUTwsW0WFOqxQdozT4KGlUE7Ih24j0zpwohtFEKNSqGHPE4BFw=
+	t=1744634507; cv=none; b=G3lKqpiVD97tjfDLNjzE1rwPFF3EpEaiB/a6wiqKdO1798iEfYGU9P7G3E664Sb1m3RYQ+4UJ70Y+DpKNlqMyJ8uBBeepGz9e36Q/WgAfS104I7Mo+iUf98CD3ntlbtzboE2IsEkCKU3t8HKI3Z9Lzr5ZLk+e0Aeh8BOfeOP/xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634474; c=relaxed/simple;
-	bh=QsIBr7PmztIyHLM9T+NpRun+FoqaEeRAxlPHdVqB1WY=;
+	s=arc-20240116; t=1744634507; c=relaxed/simple;
+	bh=3BlNmQpMp82xJdAZ0Bho2rJ8qJsNAxUz1OgSOw9idJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dnzDX66bK2I9fmVUgmzWdWdTYydE4u6FOpCQxKcSKs/zXOCsgH3GU1HzCb8pOOyG8rlxgqlYVQjHVwsceHE+N7ffmqYTbrpOLfozxST8cyynD9d3iM+IHpxNioDHUCzaMX7YDpijXX3rhmgjyG0LE1yqhVjXR4i+ceM9er0el2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3vSR88V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KwWALlSlk4nZL1jnYizfCxSQyQZsmD/YngeikZiOL0V+AMWrVZGBhQ96ECFWOyrAqjWfBWOm8Qw0RFla9Nhncr4oOhm7Vv2qFnNXeAJv+MrpRgdpnexlL14HsBYr5dbJrRPKS6l5cYaHPkzK/iz7F754wDyX8Oq1BrT3irD5dY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKHWmdSy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3vSR88V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA9AC4CEE2;
-	Mon, 14 Apr 2025 12:41:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKHWmdSy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4082C4CEE2;
+	Mon, 14 Apr 2025 12:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744634474;
-	bh=QsIBr7PmztIyHLM9T+NpRun+FoqaEeRAxlPHdVqB1WY=;
+	s=k20201202; t=1744634506;
+	bh=3BlNmQpMp82xJdAZ0Bho2rJ8qJsNAxUz1OgSOw9idJE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c3vSR88V+CaMm4+J7dRa5OE26INA51ofAMCzDjqUAiTxIVJvOi7Yg4FS7DcXfHVV+
-	 x3mNkGXK/ZB2QE3LjisppWC1XW7vSiVOx7yUJGHOPxw2wxGbPVwTYvskmVF6t6+2AC
-	 IcQ6UUnBzg5tp5QxdE/xnnUi/z7ofHGHvbTsMlmNT4yb+NhuA73McjobP05Awwd5SZ
-	 EzjBKtw72VN8m2jNELTtOP10l5h6qEHnSEFhdv7OnJHu2HBONwoXBZx/Ns60exlrGz
-	 WamblujbQmJ9WeKD+X1PpW3sLrJGPltvpuFR3WgPGXRd1LWschSx1Of0LTkvQZvSre
-	 miF4z++GRwgsA==
-Date: Mon, 14 Apr 2025 14:41:03 +0200
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Vladimir Oltean <olteanv@gmail.com>, 
-	"Rob Herring (Arm)" <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, 
-	Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: marvell: Use preferred node names for
- "simple-bus"
-Message-ID: <6mj4bvaqho5oazrhkkzncbwlrcupe3zpweuk7aqr2wdgfphejb@sc6ojhybs26g>
-References: <20250226214751.3751865-1-robh@kernel.org>
- <20250226214751.3751865-3-robh@kernel.org>
- <20250412001703.qbbfhtb6koofvner@skbuf>
+	b=EKHWmdSyJPedYFPNxldVA2LFgAkClYqz35karquJkKls9Qicneob6E3Pxfl6Oa5oE
+	 Tg8CdWKsVnxCoiiA8994/hHfLGB1frgaaPr5fkTJnf8pIogEmq4v7Srb80rwFUmlBM
+	 TqSqWp1o3fCHP487pbfILQxw0iqWTwjLnWwx/+z0NlHK2yyy7lszo4dBsuiG2B7JrM
+	 +Z8QDyXNXN9ALILXlxZyNCGqmMTesHOyRfy6KM/ngHyIZCKgz7k1VMHwhApNf9fyno
+	 G8JsK0v2JC3N11qrF6EaSkEMNApyij81rz5Yaz8SzqtUO4AdXrri9DCWQ16YAPqw7i
+	 P5MjfMBm5yFsA==
+Date: Mon, 14 Apr 2025 14:41:41 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3] rust: Use `ffi::c_char` type in firmware abstraction
+ `FwFunc`
+Message-ID: <Z_0ChQQkMtHoTo1C@cassiopeiae>
+References: <20250413-rust_arm_fix_fw_abstaction-v3-1-8dd7c0bbcd47@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,76 +53,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412001703.qbbfhtb6koofvner@skbuf>
+In-Reply-To: <20250413-rust_arm_fix_fw_abstaction-v3-1-8dd7c0bbcd47@gmail.com>
 
-I will fix the U-Boot code in upstream, and schedule U-Boot upgrade
-on MOXes running Turris OS...
+On Sun, Apr 13, 2025 at 09:26:56PM +0200, Christian Schrefl wrote:
+> The `FwFunc` struct contains an function with a char pointer argument,
+> for which a `*const u8` pointer was used. This is not really the
+> "proper" type for this, so use a `*const kernel::ffi::c_char` pointer
+> instead.
 
-Marek
+With the following changes, applied to driver-core-linus, thanks!
 
-On Sat, Apr 12, 2025 at 03:17:03AM +0300, Vladimir Oltean wrote:
-> Hello,
-> 
-> On Wed, Feb 26, 2025 at 03:47:49PM -0600, Rob Herring (Arm) wrote:
-> > The "simple-bus" binding has preferred node names such as "bus",
-> > ".*-bus", or "soc". Rename the Marvell platforms to use these names.
-> > 
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi     | 2 +-
-> >  arch/arm64/boot/dts/marvell/armada-37xx.dtsi      | 2 +-
-> >  arch/arm64/boot/dts/marvell/armada-ap806.dtsi     | 1 -
-> >  arch/arm64/boot/dts/marvell/armada-ap807.dtsi     | 1 -
-> >  arch/arm64/boot/dts/marvell/armada-ap80x.dtsi     | 4 ++--
-> >  arch/arm64/boot/dts/marvell/armada-ap810-ap0.dtsi | 4 ++--
-> >  arch/arm64/boot/dts/marvell/armada-cp11x.dtsi     | 4 ++--
-> >  7 files changed, 8 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > index 9603223dd761..6ec22eaaf816 100644
-> > --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > @@ -78,7 +78,7 @@ soc {
-> >  		#size-cells = <2>;
-> >  		ranges;
-> >  
-> > -		internal-regs@d0000000 {
-> > +		bus@d0000000 {
-> >  			#address-cells = <1>;
-> >  			#size-cells = <1>;
-> >  			compatible = "simple-bus";
-> 
-> Thank you for your patch, which is now commit
-> ed9c2b28ebef3333f25cefdc2ef37ee1f05cad95.
-> 
-> I have an off-the-shelf Turris MOX board, which was shipped with a
-> U-Boot older than the commit linked below (does not contain it):
-> https://github.com/u-boot/u-boot/commit/bcf6971d536793eb99e12ff857cc018963d7cd46
-> 
-> and as such, is incapable of loading current mainline device trees,
-> which contain your change, because it is hardcoded to perform FDT fixups
-> based on paths such as:
-> #define ETH1_PATH	"/soc/internal-regs@d0000000/ethernet@40000"
-> #define MDIO_PATH	"/soc/internal-regs@d0000000/mdio@32004"
-> #define SFP_GPIO_PATH	"/soc/internal-regs@d0000000/spi@10600/moxtet@1/gpio@0"
-> 
-> which no longer exist.
-> 
-> Relevant portion of boot log:
-> 
-> ## Flattened Device Tree blob at 04f00000
->    Booting using the fdt blob at 0x4f00000
->    Loading Device Tree to 000000003bf16000, end 000000003bf1e11e ... OK
-> ERROR: board-specific fdt fixup failed: FDT_ERR_NOTFOUND
->  - must RESET the board to recover.
-> 
-> FDT creation failed! hanging...### ERROR ### Please RESET the board ###
-> 
-> Note that the hint about what is wrong is only visible with a serial
-> console which I happen to have. The board does not rely on it for normal
-> operation, which could pose a problem to typical users.
-> 
-> Just bringing this to everyone's attention. In the meantime, I'm going
-> off to figure out how to build and flash a new U-Boot using the steps at
-> https://github.com/turris-cz/mox-boot-builder.
-> 
+  * add firmware prefix to commit subject
+
+- Danilo
