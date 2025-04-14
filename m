@@ -1,97 +1,100 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E404D288C90;
-	Mon, 14 Apr 2025 13:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30488289356;
+	Mon, 14 Apr 2025 13:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637244; cv=none; b=pEOMYGga2riwNWd1phBaHI3G8OI9waFTh6gdbdwJnfPcbB0S4ZX0293FUfYqVvz2RFli212J/qyg3AkdSCK5bHptO3ZhywjGWR9OnMb88aVdJDKfZ0JLn1FcgXQPdIgPSRVpk12KrxW0jlH/d5+59S7NgfaBuvHf9Q2e6IFbLuE=
+	t=1744637246; cv=none; b=CBGE/sX/ZPzS+nEX4ztf2jbCanOsNTwMNJkR65ShUhxBd4BKD32iUqHcnaaLDrmK9x2KvR+aV0Gm9i4A+3koHIVJqV6+XLsuEf7HWMq4obYO5ZuQ0Iaytn9xadbfRIHuM3euh56DTOMJN1QdJlaCcTL9dM94y6UT4EK9VtrvSCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637244; c=relaxed/simple;
-	bh=LZJSiNjAH6Oa2ChLaKL004LkS+w5IQsL9RmW7A+KpbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bm2e1HajBwpl99aPTkAcsf38gOTjLWVwRXm69/blLeV5VnDLFFkln4mKlT6HRhugmSAjC5qnGbAg/3Gl/aurtCNYLAOkPj9HsuGwPWM4AAtzomRTjBLhep/oJXMnbj/UtACBxaqsT0XbNLm06fjOxe/6vxujrIkQ5do9saKN37g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bq7dejzX; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744637246; c=relaxed/simple;
+	bh=HWazVEnF+OZqb0LvjRvTdKq+u4+0/eh3TCOLdlukdWQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jOTuIh+DmpTscQRG0TmrzN1CfPvY5wXITp96BaM9m8G/PEUVL1UKsgz1pTmPCKF+X9t7FAuiTUc8Mtb9DS7h4poayhlXp2hfcpQYz0dAVSpIvrnG/fL5pxlgiAnMv9vF7YQ4hyXkV4AGNa9Tbig/MhmXCo62Ui0BTMHCQPy+lwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIKghjrY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bq7dejzX"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so41071491fa.1;
-        Mon, 14 Apr 2025 06:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744637241; x=1745242041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l2GarGfA59cCcsifpfMtHE+6H6aD/cbRRsW+VrYAjg8=;
-        b=bq7dejzXw+8dcRpC6N9q4KFFtG+6tZ4ds4sztHbCGsz+SLS64okhU6G7ml4AffXkg7
-         GMXa8qqpbyKWAbvGHITmngokDapbt6paLVp/MmwIwDy7Z1AX1vM8cqslX5LxgvMUuO7p
-         DFtKPUQNgVt9RLjfBDjyDaMsKUVrfT0doHavbouVTZhjUQknXz0jX2+St+5yCnLDNWVX
-         R3oTG7vEqDzEBp7xFlijh5JjOAj5k1MnJqj9R61XNBu4BkpbNh5YrRNqhLp2aZ28DpQF
-         5pEjXmu1lrxe50LfvuTXX3DFx95fdgaQRbj5H4Dsr0lXr5SHRRuCDKZvkzPVLnFwsnrP
-         mVjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744637241; x=1745242041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l2GarGfA59cCcsifpfMtHE+6H6aD/cbRRsW+VrYAjg8=;
-        b=O7UfSrJxLtIdPtKuzHVTyElR9RN8HtexDzRLifrzJuM6dxKPxh/xFOAa3BPUsWLdMG
-         ffaOMbckeBJcy3KuFEKs4tT6WDXLDaQDercJ3XhNEtjRyVHG00aTyc248/C/wrYpe1Vg
-         D5h/Mw/tTCbJBriCWrPc00zwBOS98BHbMyrc4TNDZlqqxoyQJ4guQfxM8VO3UDcX1KnU
-         9sTjxpq8OWBPI2blnYLUsBQuVx4BMNZ7EgcBSz5KNf8ENga+vDeG7E+1aj8euCt01e/b
-         XZO9+yWyl/G08fxlIabBANBqlLK8utadLTnLvdwOjpLkENMy+P+fEpnBmrz2oc9rZ3hU
-         we1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9sqNrQaVuZG9ADwU4GCQ2gZ+jL5hBTPGVQzt1fKy9xQk6GOyp6fG0AINyedsW4lGH0j3UQXcNvhz3EBk=@vger.kernel.org, AJvYcCWufq3VKAnExedBNo9XL54ARl7x8bfGuM5BlKJBVfESIZbvVhAUCg+r8eCmDgvUNUQAj4B+VumMGnkPiUeZCNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0pIWiHeN6rOE91IuBFF1xKXGc9Xt8Vy5KW4L5KRNdSVq7AhgR
-	O1dNKC66Cfo1S2v0vMusRzv5O/VAi25uKesnaBnrCQAiY5PTZbpN1RKuirYFaTRpa/Q9v5VDX+d
-	6SEu4/UEQF7057ypjWTUjtcYoHBs=
-X-Gm-Gg: ASbGncsa481g21BAdns35y/QgDwdW5gaDMAREBXDGprpvYKvyvENcwG500uBIBWcVx9
-	WYcWgJ2N+xKk+mvO+tOCNRxBLwwiYhc8WMixqFkON2Zc8daK4cMNsCowWRvNTS2n0+674ZGqCAA
-	EMZtFSilAOP9uAjSbPUCsOgDCO3tYqoR1cT3yO6Q==
-X-Google-Smtp-Source: AGHT+IElIOolL+iZP0f+Y+BgM95sfaRXz/LuHBUI5ARm+sVv9guruT7fCZ1Q66x3Pby6JWYAylZ00wRHOlSdxvFNl7I=
-X-Received: by 2002:a2e:b88d:0:b0:30b:a8c2:cbd3 with SMTP id
- 38308e7fff4ca-31049a80428mr46066281fa.28.1744637240405; Mon, 14 Apr 2025
- 06:27:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIKghjrY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABD39C4CEEB;
+	Mon, 14 Apr 2025 13:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744637246;
+	bh=HWazVEnF+OZqb0LvjRvTdKq+u4+0/eh3TCOLdlukdWQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jIKghjrY6dn1hIIOqS8b18nOhYrAZ81ZmybLQt5hzHUmanMsnuGyAwiUr9LYPrJ7J
+	 cPNTaBvcNsrXqLf3wLHtBnihS38djzEUAKHsAXE6/6EntoDxvq+M6C4emzo1jkC6Kn
+	 4w2ytBCluG9w10T3bz8i/twF+lk2DJiPWrk5py/V2s9zIAa8jPACBN3mXUHNWvko51
+	 kQr8NQURJb2EVgh8TlBu+ZhsGpfvvMeVvlndGNffTVWdaFBtTIHIYHBtvw5zWnXBHc
+	 +OLRUuQ4ahTx1AnnDfHUzofLDNSbV6Y09p/QXOBo08MuaYh0BfoY3dKc+B9TwsyLvW
+	 rLNshFOxLNSQQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	joro@8bytes.org,
+	will@kernel.org,
+	iommu@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.14 33/34] iommu: Clear iommu-dma ops on cleanup
+Date: Mon, 14 Apr 2025 09:26:09 -0400
+Message-Id: <20250414132610.677644-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250414132610.677644-1-sashal@kernel.org>
+References: <20250414132610.677644-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412-b4-container-of-type-check-v2-1-f3cc9934c160@gmail.com> <CANiq72kAYp0Z3VNS=JgApceCXx1OVXMNJJYcm8OnZdToz0zufQ@mail.gmail.com>
-In-Reply-To: <CANiq72kAYp0Z3VNS=JgApceCXx1OVXMNJJYcm8OnZdToz0zufQ@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 14 Apr 2025 09:26:43 -0400
-X-Gm-Features: ATxdqUGOesfZN0UEIar63QO9dKjiC7ZbO0odb_mk10rtxaJFzrOTVMNPZXADc4s
-Message-ID: <CAJ-ks9mrRYkEGJ38tTkDXg0RkSP7K8=wtWBa8y6S3dxDh7ei9A@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: check type of `$ptr` in `container_of!`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.2
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 13, 2025 at 4:31=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Sat, Apr 12, 2025 at 8:16=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > ; diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
->
-> I am curious, what is the reason for the `;` notation? If is it to
-> avoid issues with the `diff` marker, then I think indenting with 4
-> spaces as usual would work.
+From: Robin Murphy <robin.murphy@arm.com>
 
-`b4 prep --check` complains:
-  =E2=97=8F checkpatch.pl: :207: ERROR: Avoid using diff content in the com=
-mit
-message - patch(1) might not work
+[ Upstream commit 280e5a30100578106a4305ce0118e0aa9b866f12 ]
 
-What do you suggest?
+If iommu_device_register() encounters an error, it can end up tearing
+down already-configured groups and default domains, however this
+currently still leaves devices hooked up to iommu-dma (and even
+historically the behaviour in this area was at best inconsistent across
+architectures/drivers...) Although in the case that an IOMMU is present
+whose driver has failed to probe, users cannot necessarily expect DMA to
+work anyway, it's still arguable that we should do our best to put
+things back as if the IOMMU driver was never there at all, and certainly
+the potential for crashing in iommu-dma itself is undesirable. Make sure
+we clean up the dev->dma_iommu flag along with everything else.
+
+Reported-by: Chen-Yu Tsai <wenst@chromium.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Closes: https://lore.kernel.org/all/CAGXv+5HJpTYmQ2h-GD7GjyeYT7bL9EBCvu0mz5LgpzJZtzfW0w@mail.gmail.com/
+Tested-by: Chen-Yu Tsai <wenst@chromium.org>
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/e788aa927f6d827dd4ea1ed608fada79f2bab030.1744284228.git.robin.murphy@arm.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index e3df1f06afbeb..1efe7cddb4fe3 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -508,6 +508,9 @@ static void iommu_deinit_device(struct device *dev)
+ 	dev->iommu_group = NULL;
+ 	module_put(ops->owner);
+ 	dev_iommu_free(dev);
++#ifdef CONFIG_IOMMU_DMA
++	dev->dma_iommu = false;
++#endif
+ }
+ 
+ DEFINE_MUTEX(iommu_probe_device_lock);
+-- 
+2.39.5
+
