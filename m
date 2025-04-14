@@ -1,164 +1,104 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A64717A2EA;
-	Mon, 14 Apr 2025 13:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C56C228DF12
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638505; cv=none; b=QdhYyLOHz5x9pPxaR07QnmA7kEur2rS45HTjLL0pRBwcW21lvSR53oZHjNFFHSyz1+0bCiyeEYSXiQ7dx3SzghiFSogPPj5ebrUARq+e1lQzM9iq+ZlDnP8bvbuZ2WmV+CNStpKu6xN1KPG74v9NTgyY6u65VIDMYZJXZeTkusc=
+	t=1744638534; cv=none; b=VGf0h08gIh5rcIsRApMNSYf+tw36hSDJ7BYHth9x0GFb2ht2OgdgVi3HvtEkvnjPNzeUBfG70nE3lNJ6TDWJWBQ/ezwtPV/346KfbMEx5/M7641lcWDcEkXmFR2KWCVuCzgtwmsjp9ZtePnRkQoX4dsjbs3nmiMfdBDuCon88Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638505; c=relaxed/simple;
-	bh=AWnJELZDlGf9iOY/hMcXqPZQ4dopiqhIlPLaJbM7KdM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TsDhRr7b6dooH1q3AOyhtbRr+wThVT/nnQyETPttcwzbm1W8HEboMMFdpBsHjZE/+ImWVFrSaH+Ak93Tb/hm361LVOq7vVdkefwM48wSugQHTkgO7Qj9dRAvya4hhyUX6Tog7qHJ3HjJh7tZl2Uv5g6YIx572mUuvu/Ko9bx6jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2UZPjdY; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2UZPjdY"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523f5836aaeso215059e0c.3;
-        Mon, 14 Apr 2025 06:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744638503; x=1745243303; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9gg6c9JaP3fAvNMBtbYiSQTaF78FsgYOrIyM/tQBJqE=;
-        b=U2UZPjdYdIkb9hRU0jwvGIdFbWexA3pCAKCGMecU7CrVYllUtaUF6f1qQFSqVe+tLC
-         WIlPWIC/RqWoA8WbTcXcQRB/gPqUmLeMnXHeu0MyFA3mjIBfpZOXQjblzpgpFBtWFtbJ
-         AnEHmqe7hjnNMOL5nuL+HaCJ0cebCF5yHIeTMTywieWHKZukKa87t/u0/7nMlacGzFRm
-         3ZYWoQ6vYQrmLFLBy7F2Xv96rPaD1NPJrM2g8pcvs2nQxYCfTpoR8VFVUttmdvvsj2i9
-         i0TcS0O5kaU3fpsR7NMzrWlhr2ieDGqi2v03jlcv6D1d/uoKk31rHm7cVy7X6xsU7Xp+
-         jtKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744638503; x=1745243303;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9gg6c9JaP3fAvNMBtbYiSQTaF78FsgYOrIyM/tQBJqE=;
-        b=uAsgdT0k9MpmIuOZRaBeWILoe3720OpDG5EMBMfzOlWPEeZfjgalR4809qnDVnuAxV
-         HLxg6H54FSgx/cygiwIc4DxIGFOTyLSRow0xxFVOTZQVjPpbgdyLlIHR/0FXLRVxpX6t
-         SxmTNvyEmLHGh+TixDO7AOCmQaaNmpWcStgdNrI7JH+mz2iWVX8l/WMzvJowGsA8cIlx
-         djO3mXyqJHfsUiuurz2kj2PhM5T7CU/EUYTH60heFo+9etjMJjjSREAUqgN4YjaheE1H
-         FMTujDUumD0NbhCD9jAfhQN7fEMlSyTc/+IwgDy0GD/RcaPmaxvW4zMkC4KAdqV2J3ce
-         Qr8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWVSbLck0dKSG6eu/FljSEo8P6d3l7Vnqk9Ubygq7oebYAXWMGPKn5g3f8aF3z93e4vetnMDf0y@vger.kernel.org, AJvYcCXRtoKrZFAt/k3LzDfmLhi1dlI9Z7TxYwV3QROLU3qQMT5RSwr/QKZz2eE0i/Bc+bqL4EtYfrKzJJH+7A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdKyZmBxaC5FlBtptNiA1mUSp8zqeGC7wy24GgGaVtvanp3pMq
-	o/9GXaQcZMEbdlls1NdNObTGxskeqHkJ8jCm+XHYS1fkVKW1udeo52EenYXBJlIejmvB50+ebxa
-	pV48bDL0XtOlvCxoLjMOVg5wRYSI=
-X-Gm-Gg: ASbGncv/ZhlgptJChdPW+FncxHzIwgIMCEvHfOnu5pM5AyYNBaL0CjGjH+Zlb+j+VYa
-	yObxxCdfLB5ksgRcS+F/TN+UyG/1+yeQ9dsrzhdRNaE/5ci+qA5sayQVDtJFhEhsxzsM4i2h2Yv
-	HiKjyk7vog8ovAfa7cpb8Gvg==
-X-Google-Smtp-Source: AGHT+IFZNxc/KHoZDwFGFG6I1MTEwTJWg8WdgpWDyKSrkajFA9wV/Z9DP3VoJO9ODfnboEI+ZztudNXfilRisu5rbL8=
-X-Received: by 2002:a05:6122:daa:b0:520:5400:ac0f with SMTP id
- 71dfb90a1353d-527c35b6a41mr2823390e0c.3.1744638502640; Mon, 14 Apr 2025
- 06:48:22 -0700 (PDT)
+	s=arc-20240116; t=1744638534; c=relaxed/simple;
+	bh=fozMOTP9xrcULyM4nzvSabdJgZDpYsQyKpmyyFskw6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kGOV6p+fovH1OnuQBUH1V05si25JUgQfSaeKSAypO4AXcV92WlQzDbaqd/1+rfz27b5c3xZeRSoVoC8aKWXLTBbI2cCvZ5O2VTxDlMAigT+dMIuqBqRFDcf9tj73zQ8RDtWrZQx+7w1a4dkvqWfhXQNLI54nLxLDoY69OnjOJqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACBB51007;
+	Mon, 14 Apr 2025 06:48:49 -0700 (PDT)
+Received: from [10.57.86.225] (unknown [10.57.86.225])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 107F43F66E;
+	Mon, 14 Apr 2025 06:48:48 -0700 (PDT)
+Message-ID: <6cd5a4ef-5835-41db-8282-4b022df7c953@arm.com>
+Date: Mon, 14 Apr 2025 14:48:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414132729.679254-1-sashal@kernel.org> <20250414132729.679254-15-sashal@kernel.org>
-In-Reply-To: <20250414132729.679254-15-sashal@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 14 Apr 2025 09:48:10 -0400
-X-Gm-Features: ATxdqUGsIVkJwostdQs5byeooJDamJZ9S8mgOlW4xpayrB_LVHSmjP3XNtx4Yaw
-Message-ID: <CADnq5_OyrpJL3fnbyiueyddkNZ2B-uRO9pyrRVqBTeY5AnepYw@mail.gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH AUTOSEL 6.13 15/34] drm/amdgpu: allow
- pinning DMA-bufs into VRAM if all importers can do P2P
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Felix Kuehling <felix.kuehling@amd.com>, 
-	Pak Nin Lui <pak.lui@amd.com>, Alex Deucher <alexander.deucher@amd.com>, simona@ffwll.ch, 
-	sumit.semwal@linaro.org, Yunxiang.Li@amd.com, tvrtko.ursulin@igalia.com, 
-	matthew.auld@intel.com, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: pageattr: Explicitly bail out when changing
+ permissions for vmalloc_huge mappings
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: gshan@redhat.com, rppt@kernel.org, steven.price@arm.com,
+ suzuki.poulose@arm.com, tianyaxiong@kylinos.cn, ardb@kernel.org,
+ urezki@gmail.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250403052844.61818-1-dev.jain@arm.com>
+ <75884033-9474-4d0c-b737-d9b6aebe298b@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <75884033-9474-4d0c-b737-d9b6aebe298b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 9:28=E2=80=AFAM Sasha Levin <sashal@kernel.org> wro=
-te:
->
-> From: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> [ Upstream commit f5e7fabd1f5c65b2e077efcdb118cfa67eae7311 ]
->
-> Try pinning into VRAM to allow P2P with RDMA NICs without ODP
-> support if all attachments can do P2P. If any attachment can't do
-> P2P just pin into GTT instead.
->
-> Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
-> Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Signed-off-by: Felix Kuehling <felix.kuehling@amd.com>
-> Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
-> Tested-by: Pak Nin Lui <pak.lui@amd.com>
-> Cc: Simona Vetter <simona.vetter@ffwll.ch>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On 04/04/2025 13:57, David Hildenbrand wrote:
+> On 03.04.25 07:28, Dev Jain wrote:
+>> arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
+>> which does not support changing permissions for block mappings. This function
+>> will change permissions until it encounters a block mapping, and will bail
+>> out with a warning. Since there are no reports of this triggering, it
+>> implies that there are currently no cases of code doing a vmalloc_huge()
+>> followed by partial permission change. But this is a footgun waiting to
+>> go off, so let's detect it early and avoid the possibility of permissions
+>> in an intermediate state. So,  explicitly disallow changing permissions
+>> for VM_ALLOW_HUGE_VMAP mappings.
+>>
+>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>> v1->v2:
+>>   - Improve changelog, keep mention of page mappings in comment
+>>
+>>   arch/arm64/mm/pageattr.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+>> index 39fd1f7ff02a..04d4a8f676db 100644
+>> --- a/arch/arm64/mm/pageattr.c
+>> +++ b/arch/arm64/mm/pageattr.c
+>> @@ -96,8 +96,8 @@ static int change_memory_common(unsigned long addr, int
+>> numpages,
+>>        * we are operating on does not result in such splitting.
+>>        *
+>>        * Let's restrict ourselves to mappings created by vmalloc (or vmap).
+>> -     * Those are guaranteed to consist entirely of page mappings, and
+>> -     * splitting is never needed.
+>> +     * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
+>> +     * mappings are updated and splitting is never needed.
+>>        *
+>>        * So check whether the [addr, addr + size) interval is entirely
+>>        * covered by precisely one VM area that has the VM_ALLOC flag set.
+>> @@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int
+>> numpages,
+>>       area = find_vm_area((void *)addr);
+>>       if (!area ||
+>>           end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
+>> -        !(area->flags & VM_ALLOC))
+>> +        ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
+>>           return -EINVAL;
+>>         if (!numpages)
+> 
+> Makes sense to me. Whenever required, we can improve the checks (or even try
+> supporting splitting).
 
-This should not go to stable.  It depends on dmem cgroups.
+Yes that's the plan; I'd like to get to the point where we can do huge vmalloc
+mappings by default on systems that support BBML2, then split mappings when needed.
 
-Alex
 
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> 
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 25 +++++++++++++++------
->  1 file changed, 18 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/dr=
-m/amd/amdgpu/amdgpu_dma_buf.c
-> index 8e81a83d37d84..83390143c2e9f 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> @@ -72,11 +72,25 @@ static int amdgpu_dma_buf_attach(struct dma_buf *dmab=
-uf,
->   */
->  static int amdgpu_dma_buf_pin(struct dma_buf_attachment *attach)
->  {
-> -       struct drm_gem_object *obj =3D attach->dmabuf->priv;
-> -       struct amdgpu_bo *bo =3D gem_to_amdgpu_bo(obj);
-> +       struct dma_buf *dmabuf =3D attach->dmabuf;
-> +       struct amdgpu_bo *bo =3D gem_to_amdgpu_bo(dmabuf->priv);
-> +       u32 domains =3D bo->preferred_domains;
->
-> -       /* pin buffer into GTT */
-> -       return amdgpu_bo_pin(bo, AMDGPU_GEM_DOMAIN_GTT);
-> +       dma_resv_assert_held(dmabuf->resv);
-> +
-> +       /*
-> +        * Try pinning into VRAM to allow P2P with RDMA NICs without ODP
-> +        * support if all attachments can do P2P. If any attachment can't=
- do
-> +        * P2P just pin into GTT instead.
-> +        */
-> +       list_for_each_entry(attach, &dmabuf->attachments, node)
-> +               if (!attach->peer2peer)
-> +                       domains &=3D ~AMDGPU_GEM_DOMAIN_VRAM;
-> +
-> +       if (domains & AMDGPU_GEM_DOMAIN_VRAM)
-> +               bo->flags |=3D AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
-> +
-> +       return amdgpu_bo_pin(bo, domains);
->  }
->
->  /**
-> @@ -131,9 +145,6 @@ static struct sg_table *amdgpu_dma_buf_map(struct dma=
-_buf_attachment *attach,
->                 r =3D ttm_bo_validate(&bo->tbo, &bo->placement, &ctx);
->                 if (r)
->                         return ERR_PTR(r);
-> -
-> -       } else if (bo->tbo.resource->mem_type !=3D TTM_PL_TT) {
-> -               return ERR_PTR(-EBUSY);
->         }
->
->         switch (bo->tbo.resource->mem_type) {
-> --
-> 2.39.5
->
-> _______________________________________________
-> Linaro-mm-sig mailing list -- linaro-mm-sig@lists.linaro.org
-> To unsubscribe send an email to linaro-mm-sig-leave@lists.linaro.org
