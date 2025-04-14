@@ -1,70 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A6528FFDB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E9728D827
 	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628995; cv=none; b=RSENjXR8SxK7savZ/fgtsE0bff7yrZsPMrGrEB4YkJix9BrJWnvEF71egXOEPyY1twvanosNcJo+F74mMjoIWJputkZ+oDEMNsQgmjeon9VR58+6UxhfyeN/+nB108h3nqsZ5LcKhiKzP7Q+XzDldt4sg9xysB2xC/bqmZcDT9Y=
+	t=1744628995; cv=none; b=OTbRzk3E8L+CppWxw9ImQPHMfXYKVFxt/81e3/+ob4XNYOO+qwh6XPxpb0mhTBix5AfL14suCwdzAFAfrXFBsDROXahJYohl2cb60MoL9hXrSzqfKyZWVd+NffzedKYj5H1Vx8F391qOZlT5RGyKezQJijyps+3wfAsaMcIChqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744628995; c=relaxed/simple;
-	bh=CTY5r8KsLONqqiIQOLtlLzZwtpPySekbjApCx+N651o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AMKeKFJM+n1fiq1YD8sSfLUP++qj6+U3KDwZotRRMBCTrMvJ/6RF8FR0uMQwk1OMwL+t4Pv/ZZk/yAhDWrrqFK/Htg7vGN5f3vMi0MDzMcvC/4ZbNCy0YFxYeqw8liLMsEGaPy7tH1B5S2eZueupASX7YtkSHWB58Ik4kvYnUac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gB8O/T96; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=xEMEidO2PtmhxIZocIqdVpE9XbKrAVxDXfhRm3/vr2I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=igxufBwPUzA6/aKei3z33g6oQTnWmnd2XgQBaBCs+/vohdOsajHudlHLd6XH4W2C0uj56WZsi6++ibHN0kyTuH0vAeo7yinyDybsR4UgeXYpsP2Pm0nm6k3AiAZBZAORC4H5pV/Ox+nrfSX4FHWbEWI6New8X2hnRILDBhj/Ixc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQiPNlnp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GLuBPucj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQiPNlnp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GLuBPucj; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gB8O/T96"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744628992;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQiPNlnp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GLuBPucj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQiPNlnp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GLuBPucj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4B65021229;
+	Mon, 14 Apr 2025 11:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744628991; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IGfTm189wQxLftSmWt/VbmlqdT7kXzGRtujmBz9DJhM=;
-	b=gB8O/T96Yeklwhmpy/nFpBFh7JU4cjbaYBEEeNjdmuSWtzX6JdmqKSQ0tqflmhCid1Nn3T
-	m02JpLxbMKpvw1m5KPaMltYBo0c1WPyGfZkKEcZ9OakFXkBvam6ZxnH1/PNhiQiS0fSCKD
-	MVLrOIxAOpycv+GH28htFhyZJwC7JVU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-TR5vP2tNOzuapkCj3gA4Fw-1; Mon, 14 Apr 2025 07:09:51 -0400
-X-MC-Unique: TR5vP2tNOzuapkCj3gA4Fw-1
-X-Mimecast-MFC-AGG-ID: TR5vP2tNOzuapkCj3gA4Fw_1744628990
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac3d89cc4f3so276866566b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:09:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744628989; x=1745233789;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IGfTm189wQxLftSmWt/VbmlqdT7kXzGRtujmBz9DJhM=;
-        b=epq1rVpGdiCKThMDVI7bjAu26ECsRVg3kk5h24x3xLHaKmzCSFHuzBr1CWz6DCVFat
-         tFAD7YxzMVa5+QO8Ms751ROrfJybXeEYZuPNgnzqUcM89pPFOzmjz1W4MrMDkgOx25BP
-         hbWKCh1YBKSi8tChltpsxFl/U40NVCU4sbMoXsU/SIe/SlrGc8Djb+LZbiDwj7LAYb7f
-         h9Y0ci6qPDFM1i+4mgOS6syIV8eB7kSLN1H6YWBU2HrzED+CpthMoOuKNfHBAAl6kS+G
-         TxSoMsrwKsq2sujDQ1CcDMWPcQgnIvuVSOqx/dkMXhC/TBA2oO32J4eK33NJHrvFHrpK
-         bQyQ==
-X-Gm-Message-State: AOJu0Ywtn8Z4hhgMcZ91q3Ziv8YvGwbiNDSMF4S5I1wZaVaJIVrA5kFa
-	XjC2vsbOVl+e6rYizVD4lmIEzFt+g1LL/fRU5peXHYj3BvGKeM179OHfAbSwHjkN5LBJRLA5yKw
-	M71+Uh4McpQ8DfcuoCNJ7cuPhRTbHLGJkCM+GaYYjrKcZG9wXQVtugpWxRXh2IA==
-X-Gm-Gg: ASbGncvYGFD8qGWF0F4iqlsYhIgaFcS+U94yYWG3lVkG6dLuvfG+kqjtg5x7Xg7b+rR
-	sePKhyUaCi62g1sKi8u8Jpsofo2KfUFF33gAHglGom50/5+Bi3JA191xpF4kBZOObvAXBebSQ4g
-	J95W4qRNiOSGozBFf+1/lip78ndvCW97ncSLMj399z//LZyK/VZ8VHUK0xgJuTzdLcMEm0SFy91
-	cQ7Hp2fCen8qA0SnpsB9EmCD8Nfo9TSFlyNbp77F9o4pZ/wJBOG4tgURxiDKW98etM+TovIQbal
-	TxanYBzhv8heNfk=
-X-Received: by 2002:a17:907:cd0e:b0:ac7:75b0:67d9 with SMTP id a640c23a62f3a-acad342ec56mr1110292766b.4.1744628989497;
-        Mon, 14 Apr 2025 04:09:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXZ//+K6pXWOdLRzzacgZoVSeWkGd02/XpF14CKFZZBeVHqIy99b5waUBdnC6Vx5V40PLEqQ==
-X-Received: by 2002:a17:907:cd0e:b0:ac7:75b0:67d9 with SMTP id a640c23a62f3a-acad342ec56mr1110287966b.4.1744628988936;
-        Mon, 14 Apr 2025 04:09:48 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f526ca6sm4879020a12.68.2025.04.14.04.09.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 04:09:48 -0700 (PDT)
-Message-ID: <9dc86b0c-b63c-447d-aa2f-953fbccb1d27@redhat.com>
-Date: Mon, 14 Apr 2025 13:09:47 +0200
+	bh=biH39H0HpRLKbVpGyTJ5g0fwQLM6TgEYucn6gZRMXrk=;
+	b=CQiPNlnpKHgX3OGervVPa2vbvRP2+7njM5WI35k7xZngxqJfCWyxsyZeLB3iC0asmBKhIM
+	gQJsJlMDL96QTZuk4ZJeXKecZC9uyTAcbx9OTsHrv1G215X1meTfBkPRpn35SB47DQQjIq
+	q33LZw1B4pXOT1oYiw2xDnqKQotWozI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744628991;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=biH39H0HpRLKbVpGyTJ5g0fwQLM6TgEYucn6gZRMXrk=;
+	b=GLuBPucj3BPPy836QOLH6AJAjJ0tBBbQUVdc5Bbtd3IZlUkKatDQp4IsyxOHO2N8N905Z3
+	FoYBnKpTG3pBa6AA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CQiPNlnp;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GLuBPucj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744628991; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=biH39H0HpRLKbVpGyTJ5g0fwQLM6TgEYucn6gZRMXrk=;
+	b=CQiPNlnpKHgX3OGervVPa2vbvRP2+7njM5WI35k7xZngxqJfCWyxsyZeLB3iC0asmBKhIM
+	gQJsJlMDL96QTZuk4ZJeXKecZC9uyTAcbx9OTsHrv1G215X1meTfBkPRpn35SB47DQQjIq
+	q33LZw1B4pXOT1oYiw2xDnqKQotWozI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744628991;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=biH39H0HpRLKbVpGyTJ5g0fwQLM6TgEYucn6gZRMXrk=;
+	b=GLuBPucj3BPPy836QOLH6AJAjJ0tBBbQUVdc5Bbtd3IZlUkKatDQp4IsyxOHO2N8N905Z3
+	FoYBnKpTG3pBa6AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1CEF01336F;
+	Mon, 14 Apr 2025 11:09:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PdLDBf/s/GelUAAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 14 Apr 2025 11:09:51 +0000
+Message-ID: <e1f2ac49-25f4-4b2c-b67c-10782b4e3455@suse.de>
+Date: Mon, 14 Apr 2025 13:09:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,122 +83,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Yan, Dongcheng" <dongcheng.yan@intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
- u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
- bingbu.cao@linux.intel.com, stable@vger.kernel.org, hao.yao@intel.com
-References: <20250411082357.392713-1-dongcheng.yan@intel.com>
- <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
- <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
- <Z_zDGYD1QXZYWwI9@smile.fi.intel.com>
- <d9cab351-4850-42c7-8fee-a9340d157ed9@linux.intel.com>
- <Z_zMMtUdJYpHuny7@smile.fi.intel.com>
- <f10f919e-7bdc-4a01-b131-41bdc9eb6573@intel.com>
- <01570d5d-0bdf-4192-a703-88854e9bcf78@redhat.com>
-Content-Language: en-US, nl
-In-Reply-To: <01570d5d-0bdf-4192-a703-88854e9bcf78@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: Patch "nvme: re-read ANA log page after ns scan completes"
+ causing regression
+To: "Aithal, Srikanth" <sraithal@amd.com>, hare@kernel.org
+Cc: sagi@grimberg.me, hch@lst.de, kbusch@kernel.org, Ankit.Soni@amd.com,
+ Vasant Hegde <vasant.hegde@amd.com>, open list
+ <linux-kernel@vger.kernel.org>,
+ Linux-Next Mailing List <linux-next@vger.kernel.org>
+References: <9a800759-b7f1-46dc-977c-7e39532ddec4@amd.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <9a800759-b7f1-46dc-977c-7e39532ddec4@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4B65021229
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Hi,
-
-On 14-Apr-25 13:04, Hans de Goede wrote:
-> Hi,
+On 4/14/25 12:53, Aithal, Srikanth wrote:
+> Hello,
 > 
-> On 14-Apr-25 11:59, Yan, Dongcheng wrote:
->> Hi Andy and Hans,
->>
->> I found the description of lt6911uxe's GPIO in the spec:
->> GPIO5 is used as the interrupt signal (50ms low level) to inform SOC
->> start reading registers from 6911UXE;
->>
->> So setting the polarity as GPIO_ACTIVE_LOW is acceptable?
+> With below patch in todays linux-next next-20250414 and v6.15-rc2 we are 
+> seeing host boot issues. The host with nvme disk just hangs on boot.
 > 
-> Yes that is acceptable, thank you for looking this up.
-
-p.s.
-
-Note that setting GPIO_ACTIVE_LOW will invert the values returned
-by gpiod_get_value(), so if the driver uses that you will need
-to fix this in the driver.
-
-Hmm, thinking more about this, I just realized that this is an
-input pin to the CPU, not an output pin like all other pins
-described by the INT3472 device. I missed that as first.
-
-In that case using GPIO_LOOKUP_FLAGS_DEFAULT as before probably
-makes the most sense. Please add a comment that this is an input
-pin to the INT3472 patch and keep GPIO_LOOKUP_FLAGS_DEFAULT for
-the next version.
-
-Regards,
-
-Hans
-
-
-
-
+> If we revert this patch or disable CONFIG_NVME_MULTIPATH then host boots 
+> fine.
 > 
-> Regards,
+> commit 62baf70c327444338c34703c71aa8cc8e4189bd6
+> Author: Hannes Reinecke <hare@kernel.org>
+> Date:   Thu Apr 3 09:19:30 2025 +0200
 > 
-> Hans
+>      nvme: re-read ANA log page after ns scan completes
+> 
+>      When scanning for new namespaces we might have missed an ANA AEN.
+> 
+>      The NVMe base spec (NVMe Base Specification v2.1, Figure 151 
+> 'Asynchonous
+>      Event Information - Notice': Asymmetric Namespace Access Change) 
+> states:
+> 
+>        A controller shall not send this even if an Attached Namespace
+>        Attribute Changed asynchronous event [...] is sent for the same 
+> event.
+> 
+>      so we need to re-read the ANA log page after we rescanned the 
+> namespace
+>      list to update the ANA states of the new namespaces.
+> 
+>      Signed-off-by: Hannes Reinecke <hare@kernel.org>
+>      Reviewed-by: Keith Busch <kbusch@kernel.org>
+>      Signed-off-by: Christoph Hellwig <hch@lst.de>
 > 
 > 
+> Host console starts dumping a lot of errors and log size is more than 
+> 100 MB. So I am not posting all logs here. I am pasting part of the logs 
+> here:
+> ...
+> ...
+> [   49.361223] nvme nvme0: controller is down; will reset: CSTS=0x3, 
+> PCI_STATUS=0x1010
+> [   49.434564] nvme0n1: I/O Cmd(0x2) @ LBA 0, 8 blocks, I/O Error (sct 
+> 0x3 / sc 0x71)
+> [   49.443123] I/O error, dev nvme0n1, sector 0 op 0x0:(READ) flags 
+> 0x80700 phys_seg 1 prio class 0
+> [   49.457080] nvme nvme0: Failed to get ANA log: -4
+> [   49.506511] nvme nvme0: D3 entry latency set to 8 seconds
+> [   49.536300] nvme nvme0: 32/0/0 default/read/poll queues
+> [   49.605281] nvme 0000:41:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT 
+> domain=0x0018 address=0x0 flags=0x0000]
+> [   80.081190] nvme nvme0: controller is down; will reset: CSTS=0x3, 
+> PCI_STATUS=0x1010
+> [   80.154109] nvme0n1: I/O Cmd(0x2) @ LBA 128, 8 blocks, I/O Error (sct 
+> 0x3 / sc 0x71)
+> [   80.162864] I/O error, dev nvme0n1, sector 128 op 0x0:(READ) flags 
+> 0x80700 phys_seg 1 prio class 0
+> [   80.177032] nvme nvme0: Failed to get ANA log: -4
+> [   80.225460] nvme nvme0: D3 entry latency set to 8 seconds
+> [   80.255395] nvme nvme0: 32/0/0 default/read/poll queues
+> [   80.301278] nvme 0000:41:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT 
+> domain=0x0018 address=0x0 flags=0x0000]
+> [  110.789207] nvme nvme0: controller is down; will reset: CSTS=0x3, 
+> PCI_STATUS=0x1010
+> [  110.861990] nvme0n1: I/O Cmd(0x2) @ LBA 2048, 8 blocks, I/O Error 
+> (sct 0x3 / sc 0x71)
+> [  110.870842] I/O error, dev nvme0n1, sector 2048 op 0x0:(READ) flags 
+> 0x80700 phys_seg 1 prio class 0
+> [  110.885040] nvme nvme0: Failed to get ANA log: -4
+> [  110.933460] nvme nvme0: D3 entry latency set to 8 seconds
+> [  110.963447] nvme nvme0: 32/0/0 default/read/poll queues
+> [  111.009276] nvme 0000:41:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT 
+> domain=0x0018 address=0x0 flags=0x0000]
+> ...
+> ...
 > 
->> We used RISING and FALLING in irq(not GPIO) to ensure that HDMI events
->> will not be lost to the greatest extent possible.
->>
->> Thanks,
->> Dongcheng
->>
->> On 4/14/2025 4:49 PM, Andy Shevchenko wrote:
->>> On Mon, Apr 14, 2025 at 04:40:26PM +0800, Yan, Dongcheng wrote:
->>>> On 4/14/2025 4:11 PM, Andy Shevchenko wrote:
->>>>> On Mon, Apr 14, 2025 at 03:52:50PM +0800, Yan, Dongcheng wrote:
->>>>>> On 4/11/2025 4:33 PM, Hans de Goede wrote:
->>>>>>> On 11-Apr-25 10:23 AM, Dongcheng Yan wrote:
->>>
->>> ...
->>>
->>>>>>>> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->>>>>>>> +		*con_id = "hpd";
->>>>>>>> +		*gpio_flags = GPIO_LOOKUP_FLAGS_DEFAULT;
->>>>>>>
->>>>>>> This looks wrong, we really need to clearly provide a polarity
->>>>>>> here since the ACPI GPIO resources do not provide one.
->>>>>>>
->>>>>> I tested gpio_flags=GPIO_LOOKUP_FLAGS_DEFAULT/HIGH/LOW, the lt6911uxe
->>>>>> driver can pass the test and work normally.
->>>>>
->>>>> I doubt you tested that correctly. It's impossible to have level triggered
->>>>> event to work with either polarity. It might be also a bug in the code lurking
->>>>> somewhere, but it would be unlikely (taking into account amount of systems
->>>>> relying on this).
->>>>>
->>>>> Is it edge triggered event?
->>>>>
->>>>
->>>> It is an edge triggered event in lt6911uxe. In order to better adapt to
->>>> other uses, "hpd" is meaningful to specify a polarity here.
->>>>
->>>> In lt6911uxe, GPIO "hpd" is used as irq, and set irq-flag to
->>>> IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT. So no matter
->>>> rising or falling, driver can work normally.
->>>> "
->>>> ret = request_threaded_irq(gpiod_to_irq(lt6911uxe->irq_gpio),	NULL,
->>>> lt6911uxe_threaded_irq_fn, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
->>>> IRQF_ONESHOT, NULL, lt6911uxe);
->>>> "
->>>
->>> So, the driver must not override the firmware, if there is no bugs.
->>> So, why do you even use those flags there? It seems like a bad code
->>> in the driver that doesn't look correct to me.
->>>
->>
 > 
+Can you try this?
 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 78963cab1f74..425c00b02f3e 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -4455,7 +4455,7 @@ static void nvme_scan_work(struct work_struct *work)
+         if (test_bit(NVME_AER_NOTICE_NS_CHANGED, &ctrl->events))
+                 nvme_queue_scan(ctrl);
+  #if CONFIG_NVME_MULTIPATH
+-       else
++       else if (ctrl->ana_log_buf)
+                 /* Re-read the ANA log page to not miss updates */
+                 queue_work(nvme_wq, &ctrl->ana_work);
+  #endif
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
