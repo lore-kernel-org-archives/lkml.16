@@ -1,112 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx2.absolutedigital.net (mx2.absolutedigital.net [50.242.207.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906061E3DFD
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3608685260
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=50.242.207.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744674675; cv=none; b=adqOvc3rvLeZ9fOnwInjOLODDMwM7ji+dW+4Vrr01zHs/CqyfKnoLekitZ/L+qn//JvZxG1z6i1+80oaazKUf1BZAk2xGxX8v08UwlautZD7OMnE8CL4imFM+kOGBsb3HSlEy/Zo1dpc2fDoTpICF/z6NPp02trQVj0fEYeLHsE=
+	t=1744674926; cv=none; b=oDd5z7MVlr/En8iaCVkxawON5huFHnpO+OKACLRYHz9NeRBD4zDVcscVeyMXDauYrazhznzGqLBOTtCTrsDhkMBolYKt+pchz2B3eq1NpBqqSiQfdm2vK3N0MytyGbd/efcbVv3O+grc6PtdSoNIjsYnfSTHBa7+5ROr/5p9oCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744674675; c=relaxed/simple;
-	bh=2U8BxDvBaIROKjt2bCDKIJjt8BuENEiwmVEAorJNa/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5bARNrrDey7hrXaNqgfm3skdK+izEn+Zw9w4Fhy2w+mqnpa3qw9ulpfESOiFoUuUEHogzd+o08PH3K/741ClPbg7A1L4Ht+mGVfwDKSFhCkL4+hXS03RG3C/q82acCNDX3KdImeSBh755e/tiDK40GcbG54J4G90IidkYXMMmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PVux9MiH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PVux9MiH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D413FC4CEEA;
-	Mon, 14 Apr 2025 23:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744674675;
-	bh=2U8BxDvBaIROKjt2bCDKIJjt8BuENEiwmVEAorJNa/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PVux9MiHxao1O5H4Ht8bIgl7/jpmndr7QafUZK12IcpssOeQiB3SNI1CcxuYc5bmA
-	 iWfcIyygbjMe153wrpxIZO2mquJQ3uCs1I44i+sYO/VIaLTrLELnTQDYY/HODWvGrT
-	 Cw1rXGQgKzYApuh/ynUvrdLFNWifXHYxeSOwZ9fnhEJLpTc3l4eByXqmsmSeAt5e3t
-	 mUNz0d++InS8Kvnyc/PcnTR3nv8m7WTymfnSuAXzRKX3KBhcgGMrrWqCvmeWCyMhtO
-	 YjuFAgDkeZjSnUOd3bPosnQAqJ2lhN/YMbOgf1YtQdeYaTD5LoLsEnmaxmSeJAy3Gh
-	 JCP8ygR680xaQ==
-Date: Mon, 14 Apr 2025 16:51:11 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brendan Jackman <jackmanb@google.com>, 
-	Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 17/36] Documentation/x86: Document the new attack
- vector controls
-Message-ID: <mybnv24fbz5nsxmz2yihzctnbv7ab7sznyotupp6mbpzfdvy2e@r2oantiw4wmo>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-18-david.kaplan@amd.com>
- <fkl2b3ymatulazt2xjegubqcejx5bgaraktztpkitodrbbsozw@xrskej3fg3jf>
- <LV3PR12MB92654563086027BB944A117594B32@LV3PR12MB9265.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1744674926; c=relaxed/simple;
+	bh=dMmMCfWHWEyhlIsKLQz8kUl7HnoKK1XIFx89roYZkmk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bGHF+yzISC+E0cp8XQ3FtOAjC2BgtuwdLUwUqb0rJilTi04EgCHb0sFkBCsbRKJyK2FMcbdRrE7Cf2s0TOr0ui9JuO/7ckHaobif6zAHbmc/cItsN8iB0RNYMuCAybvP8YfmcesIdJhy7vWv0++Rz4ncQk14sL2jeu7Hhi3ddnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=absolutedigital.net; spf=pass smtp.mailfrom=absolutedigital.net; arc=none smtp.client-ip=50.242.207.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=absolutedigital.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=absolutedigital.net
+Received: from lancer.cnet.absolutedigital.net (lancer.cnet.absolutedigital.net [10.7.5.10])
+	by luxor.inet.absolutedigital.net (8.18.1/8.18.1) with ESMTPS id 53ENw3Cu016007
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=FAIL);
+	Mon, 14 Apr 2025 19:58:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by lancer.cnet.absolutedigital.net (8.18.1/8.18.1) with ESMTPS id 53ENt6PN005090
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 14 Apr 2025 19:55:06 -0400
+Date: Mon, 14 Apr 2025 19:55:06 -0400 (EDT)
+From: Cal Peake <cp@absolutedigital.net>
+To: Kernel Mailing List <linux-kernel@vger.kernel.org>
+cc: Vishal Annapurve <vannapurve@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [STABLE] 6.12.23: vfio error (was: arch/x86/coco/tdx/tdx.c build
+ error)
+In-Reply-To: <808e1111-27b7-f35b-6d5c-5b275e73677b@absolutedigital.net>
+Message-ID: <66f3e1b3-6165-4a2e-f34c-de6fef86e441@absolutedigital.net>
+References: <eb5a1df4-95f8-2784-8f4e-8460f33f8f4d@absolutedigital.net> <808e1111-27b7-f35b-6d5c-5b275e73677b@absolutedigital.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LV3PR12MB92654563086027BB944A117594B32@LV3PR12MB9265.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Apr 14, 2025 at 09:15:54PM +0000, Kaplan, David wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> > -----Original Message-----
-> > From: Josh Poimboeuf <jpoimboe@kernel.org>
-> > Sent: Thursday, April 10, 2025 1:15 PM
-> > To: Kaplan, David <David.Kaplan@amd.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>; Borislav Petkov <bp@alien8.de>;
-> > Peter Zijlstra <peterz@infradead.org>; Pawan Gupta
-> > <pawan.kumar.gupta@linux.intel.com>; Ingo Molnar <mingo@redhat.com>; Dave
-> > Hansen <dave.hansen@linux.intel.com>; x86@kernel.org; H . Peter Anvin
-> > <hpa@zytor.com>; linux-kernel@vger.kernel.org; Brendan Jackman
-> > <jackmanb@google.com>; Derek Manwaring <derekmn@amazon.com>
-> > Subject: Re: [PATCH v4 17/36] Documentation/x86: Document the new attack
-> > vector controls
-> >
-> > Caution: This message originated from an External Source. Use proper caution
-> > when opening attachments, clicking links, or responding.
-> >
-> >
-> > On Mon, Mar 10, 2025 at 11:40:04AM -0500, David Kaplan wrote:
-> > > +=============== ============== ============ =============
-> > ============== ============
-> > > +Vulnerability   User-to-Kernel User-to-User Guest-to-Host Guest-to-Guest
-> > Cross-Thread
-> > > +=============== ============== ============ =============
-> > ============== ============
-> > > +BHI                   X                           X
-> > > +GDS                   X              X            X              X        (Note 1)
-> > > +L1TF                  X                           X                       (Note 2)
-> > > +MDS                   X              X            X              X        (Note 2)
-> > > +MMIO                  X              X            X              X        (Note 2)
-> > > +Meltdown              X
-> > > +Retbleed              X                           X                       (Note 3)
-> > > +RFDS                  X              X            X              X
-> > > +Spectre_v1            X
-> > > +Spectre_v2            X                           X
-> > > +Spectre_v2_user                      X                           X        (Note 1)
-> > > +SRBDS                 X              X            X              X
-> > > +SRSO                  X                           X
-> > > +SSB (Note 4)
-> >
-> > Any reason not to put the "Note 4" in the same column as the others?
-> >
-> 
-> The other notes are about cross-thread mitigation specifically and those notes refer to the SMT aspects of those issues.
-> 
-> Note 4 in this case is about the SSB vulnerability itself, explaining
-> that by default there is no mitigation for any case.  I was concerned
-> that including SSB but without any X's in any of the columns would be
-> confusing, so the note attempted to explain that there were no default
-> mitigations for SSB under any attack vector.
+On Sun, 13 Apr 2025, Cal Peake wrote:
 
-Putting the note there makes it a lot harder to see it.  And I think the
-lack of X's is accurate, no?
+> After booting the new kernel, I get errors trying to do vfio passthrough:
+> 
+> qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.3, no available reset mechanism.
+> qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.2, no available reset mechanism.
+> qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.1, no available reset mechanism.
+> qemu-8.2-system-x86_64: vfio: Cannot reset device 0000:14:00.0, no available reset mechanism.
+
+This was resolved by Alex Williamson, with his patch:
+
+https://lore.kernel.org/lkml/20250414211828.3530741-1-alex.williamson@redhat.com/
+
+Thank you, Alex!
 
 -- 
-Josh
+Cal Peake
+
