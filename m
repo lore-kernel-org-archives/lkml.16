@@ -1,217 +1,205 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B78E274679;
-	Mon, 14 Apr 2025 16:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0177163;
+	Mon, 14 Apr 2025 16:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744647425; cv=none; b=KZCxVFfJA43XRrMAkzj0GTrYK9+TgRSlUGjCRI3MWdnRDc76Uuif9PcJZpwU7jnBzb778y2QDGropEaiktdJ7OUYH0c+tKZTfKEzkTdJOumkRkDEccr/ryzHCzXv30eUTw7bNpFusfI4fyfx3JUOBEssyEc0fhpVuRSteSOtAPc=
+	t=1744647428; cv=none; b=ifAdj586LNf0XR73XHC6LIZ7WvIJqdA0Tb7LbgkvV1syYOEsrhznpJdZatTx7z2AAKuWXLYXYldX+zIlQr3aujQiLXiVDSHihIbJNQL6d3Dzz99F3d+D2TWbW1z5bD69W9OydDaEu1oFB09lB0ESWxVISeGfTz4WgUgZDHP055U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744647425; c=relaxed/simple;
-	bh=5mIrpgYYyOWnWfHA4froNo0fLcAsTlaVkF6dDIafk/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Czn+q6SIVTwHaVfFXyNh2kvbLWm+JpdGAhcRumx8zy13rI62mQz8u/u506albY0uVWXBqaIqKBqSEvLpfyOByWGQD8NOseyGbtkIdeFVlU+bTt0ZKb3xU+SzxVzDcLkrlkoy9gWvvk+1zr3nBDV6QM9ESSqsbt/Q2R1n946Zouw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nemufrau; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744647428; c=relaxed/simple;
+	bh=tA3sogfwKwFLBYjnEW7HJ+5Ul9kbPJcrtcxak2kCQxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hPRNaNV1XXu374EVac2E1h/zWWbZJRJ5cpJZp71ILkzdMfpoXfr5Q04IH1Cy58UuNBiXsCSj+28A0N4Dmaz5Dhftb67DymNjDCUlDgiglWFYSrTIJ6rteVJ+7s67uRPWXZbtfDppUa8ABeYg6P3UYCmfZmM+3cGXi1xHobd+YvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f9l1lkkP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nemufrau"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso23102495e9.3;
-        Mon, 14 Apr 2025 09:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744647422; x=1745252222; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JkjFVNMudnik//LPfbYGJBFZCdlS+2tZiHLOdVcdf7c=;
-        b=nemufrauGiZlhIh0s8c40fltRNQCIgSGtB7WVuDhbKRiVntPMKwdBuD3bdn7boVQSO
-         3QZ6Cj5q51CylfIEXC1xW/6fo3foPWOdM3F0RHGmfFNoJJxHXvL+Pv6JsHc6gnULEQAj
-         IXN8bRTn3WOHEdtjZKIUgeZ/rj66fYohQpvJf5C9IS39/9aAeQ07fPYEfp41T5yhdZ8U
-         1JjhDRJNJsEhX1Y86a85plg50c457l9IVvl5iW1KChmwy4HfboSAoMF0XyjMVVrn2bYE
-         x6MzczY8miNODyrujZLisx33V42eblb19dm+mt2Bna/JSkTFgsSqL2HkuIknZPPkBu7A
-         e0Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744647422; x=1745252222;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JkjFVNMudnik//LPfbYGJBFZCdlS+2tZiHLOdVcdf7c=;
-        b=lPYJlIdsPFwPZ2sZBkLyiwsoXvvTt/9JTFoFaEC3Yi6750SPUOi6tcVa49VwsnZkO5
-         07Gv4rc4C6DzELgljHxg3mM44225XAvIi3NIIrhjlm/TSH7YqLIjbWaxGTH6rqeJ0f7v
-         R99zIdjMpTh7/wV07al0Wlt4ywIBwKmUnxSGKlP7PtO4bY1XWzGq77qLbo4IoQy1T0fe
-         kxnXwul3WqxFbd5kmGzZcYbgSt7lUU2i5h8RAQOsDKryMbCefi8v5TXveC4Xb3mvTee/
-         dr4O6Jih1s/hZ8orLE3Yqvve/jr0ra2RGoPJpMmMswH9JKchAa0DA3vaocRd0SvJNn4K
-         kKYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnnoIptiIG3zeQ6iVJ4/5TiDNycvrA4cRZvGR7quyCPMejxD+IOVKz89pS1KHUBSMjoAN5VJ5czPEK@vger.kernel.org, AJvYcCW6DgQrnJDcr79kviBZmLTHhusyjvK2IpPuVKbz61Fbdnlpp07KBki24oxPgO3zN4vpRqtbruw91qy+YF2i@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCU2KLPlYxoYisWw4MajCsfpen73rUf0H3xtG+KzU9KjsVOlYT
-	zv41LwDsgNi9VP+hOTGnuIvX0OLByRgJ7IOhI2bpYrqYQj8IvU4L
-X-Gm-Gg: ASbGncvkJBmzjPWjSicFl5rycgdZ97xehKbdxMvSBapFd4thD5X83CmWi98pa2cRohn
-	4WiSDfQ5FRlc4hDQhoMSFna0aTDORuKavSSYaDVa5J9/qZ/VMoRF+9cT2czuUO9RXmxAlibGEKY
-	Z9mfBe84uarUaRFxsNBQPJUmqOuHtqK9EzaYiAKgq0EdyNz/mCBBsjrVbbvCPKmFw3jmeCqTDmt
-	J3X359vT62+cYrI3fJrJJek4XRh0Nq7xb9eJflYIHDWc02xkxNiAU1qPUNjk/4MGQN3zmpQXL/t
-	2Pm/YVvctl8g6ED73chyJ4YQlSCKGO3y4NcG009HnGrYWUo=
-X-Google-Smtp-Source: AGHT+IHPIbTS1R/1F7V1Djo8inVDRUiqSFcAusGYcbzQSAXcB8tgjd3bWvhTCAjZTBdrpgu/BpVLDg==
-X-Received: by 2002:a05:600c:3b15:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-43f3a9266e0mr91073805e9.5.1744647421175;
-        Mon, 14 Apr 2025 09:17:01 -0700 (PDT)
-Received: from noctura.suse.cz ([103.210.134.105])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f206264a1sm186983455e9.9.2025.04.14.09.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 09:17:00 -0700 (PDT)
-From: Brahmajit Das <brahmajit.xyz@gmail.com>
-X-Google-Original-From: Brahmajit Das <listout@listout.xyz>
-To: 
-Cc: Robert Moore <robert.moore@intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] ACPI: Fix building with GCC 15
-Date: Mon, 14 Apr 2025 21:46:42 +0530
-Message-ID: <20250414161644.30400-1-listout@listout.xyz>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f9l1lkkP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 266BFC4CEE2;
+	Mon, 14 Apr 2025 16:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744647428;
+	bh=tA3sogfwKwFLBYjnEW7HJ+5Ul9kbPJcrtcxak2kCQxI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=f9l1lkkPsCF1Tj+bCom0ZRX4T3HLG7IpKudZjScN6m+5ikAl3ol4CzqKeugnnuc0v
+	 FqvNPim0UAtboE4GoQp3Oc2d1BTzr9ZMGqRdpYFTU7mMl9O2Urr8tyz6oCiDc5T9Ut
+	 /PmYaFj+TTiZS5z1goQXBYXofgIINSrwFP3h9oZyhXjp8CkEJhaFQF8HWCKtECBQIX
+	 mokgYQTVlRKGX4ZcD8iSXC6DmHZgu8RPGS7IgMDKsdoyGBp3MVJi4KDuz63u3V1hgr
+	 LtQC0TEb92pAkHRLSDFxUALGXUW9Jv+uumjpdnpouufbg0wDIk5NKr6NHRlLKE0G60
+	 ibpWJZ7xDa0bQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id AC6DACE0848; Mon, 14 Apr 2025 09:17:07 -0700 (PDT)
+Date: Mon, 14 Apr 2025 09:17:07 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, rcu <rcu@vger.kernel.org>
+Subject: Re: [v3,1/2] rcutorture: Perform more frequent testing of ->gpwrap
+Message-ID: <cd213b7e-a2fe-4005-8d28-0e3998e32d5a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <71ab408c-a01b-43a9-993c-4a55294e15ef@paulmck-laptop>
+ <BE7C948D-5238-48C4-93E1-1BAE4CBBD391@joelfernandes.org>
+ <75bdde29-55f7-4210-a3ea-ea859a0e3a1a@paulmck-laptop>
+ <8435b865-289a-488d-baab-3ba819b3cad5@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8435b865-289a-488d-baab-3ba819b3cad5@nvidia.com>
 
-Since the Linux kernel initializes many non-C-string char arrays with
-literals. While it would be possible to convert initializers from:
-   { "BOOP", ... }
-to something like:
-   { { 'B', 'O', 'O', 'P' }, ... }
-that is annoying.
-Making -Wunterminated-string-initialization stay silent about char
-arrays marked with nonstring would be much better.
+On Mon, Apr 14, 2025 at 10:56:24AM -0400, Joel Fernandes wrote:
+> On 4/14/2025 10:24 AM, Paul E. McKenney wrote:
+> > On Mon, Apr 14, 2025 at 08:07:24AM -0400, Joel Fernandes wrote:
+> >>> On Apr 11, 2025, at 3:18 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >>> ﻿On Fri, Apr 11, 2025 at 05:36:32AM -0000, Joel Fernandes wrote:
+> >>>> Hello, Paul,
+> >>>>
+> >>>>> On Fri, 11 Apr 2025 05:33:16 GMT, "Paul E. McKenney" wrote:
+> >>>>> On Thu, Apr 10, 2025 at 11:54:13AM -0700, Paul E. McKenney wrote:
+> >>>>>> On Thu, Apr 10, 2025 at 11:29:03AM -0700, Paul E. McKenney wrote:
+> >>>>>>> On Thu, Apr 10, 2025 at 11:03:27AM -0400, Joel Fernandes wrote: >
+> >>>>>>> Currently, the ->gpwrap is not tested (at all per my testing) due to
+> >>>>>>> the > requirement of a large delta between a CPU's rdp->gp_seq and its
+> >>>>>>> node's > rnp->gpseq.  > > This results in no testing of ->gpwrap being
+> >>>>>>> set. This patch by default > adds 5 minutes of testing with ->gpwrap
+> >>>>>>> forced by lowering the delta > between rdp->gp_seq and rnp->gp_seq to
+> >>>>>>> just 8 GPs. All of this is > configurable, including the active time for
+> >>>>>>> the setting and a full > testing cycle.  > > By default, the first 25
+> >>>>>>> minutes of a test will have the _default_ > behavior there is right now
+> >>>>>>> (ULONG_MAX / 4) delta. Then for 5 minutes, > we switch to a smaller delt
+> >>>>> a
+> >>>>>>> causing 1-2 wraps in 5 minutes. I believe > this is reasonable since we
+> >>>>>>> at least add a little bit of testing for > usecases where ->gpwrap is se
+> >>>>> t.
+> >>>>>>>>> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> >>>>>>>
+> >>>>>>> Much better, thank you!
+> >>>>>>>
+> >>>>>>> One potential nit below.  I will run some tests on this version.
+> >>>>>>
+> >>>>>> And please feel free to apply the following to both:
+> >>>>>>
+> >>>>>> Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> >>>>>
+> >>>>> And this happy situation lasted only until I rebased onto v6.15-rc1 and
+> >>>>> on top of this commit:
+> >>>>>
+> >>>>> 1342aec2e442 ("Merge branches 'rcu/misc-for-6.16', 'rcu/seq-counters-for-6.1
+> >>>>> 6' and 'rcu/torture-for-6.16' into rcu/for-next")
+> >>>>>
+> >>>>> This got me the splat shown below when running rcutorture scenario SRCU-N.
+> >>>>> I reverted this commit and tests pass normally.
+> >>>>>
+> >>>>> Your other commit (ARM64 images) continues working fine.
+> >>>>
+> >>>> Interesting.. it seems to be crashing during statistics printing.
+> >>>>
+> >>>> I am wondering if the test itself uncovered a bug or the bug is in the test
+> >>>> itself.
+> >>>
+> >>> Both are quite possible, also a bug somewhere else entirely.
+> >>
+> >> I may not get to debugging it for this merge window so I am leaning to defer it.
+> > 
+> > The usual cause is use of an rcu_torture_ops function pointer without
+> > having first checked that it is non-NULL.  But I suspect that you already
+> > checked for this.
+> 
+> Oops, I am not! You are right I think it broke since the movement into ops and
+> needs this which I missed for this call site (though I did it for the other). I
+> could repro SRCU-N without it and with the fix it passes:
+> 
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index 74de92c3a9ab..df6504a855aa 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -2412,7 +2412,8 @@ rcu_torture_stats_print(void)
+>                         pipesummary[i] += READ_ONCE(per_cpu(rcu_torture_count,
+> cpu)[i]);
+>                         batchsummary[i] += READ_ONCE(per_cpu(rcu_torture_batch,
+> cpu)[i]);
+>                 }
+> -               n_gpwraps += cur_ops->get_gpwrap_count(cpu);
+> +               if (cur_ops->get_gpwrap_count)
+> +                       n_gpwraps += cur_ops->get_gpwrap_count(cpu);
+>         }
+>         for (i = RCU_TORTURE_PIPE_LEN; i >= 0; i--) {
+>                 if (pipesummary[i] != 0)
+> 
+> I will squash the fix into the patch and repost as v4.
 
-Without the __attribute__((nonstring)) we would get the following build
-error:
+Been there, done that!  And looks like a proper fix to me.
 
-...
-drivers/acpi/acpica/acpredef.h:903:11: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
-  903 |         {{"_S3D", METHOD_0ARGS,
-      |           ^~~~~~
-drivers/acpi/acpica/acpredef.h:906:11: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
-  906 |         {{"_S4D", METHOD_0ARGS,
-      |           ^~~~~~
+							Thanx, Paul
 
-and,
-
-...
-drivers/acpi/acpica/nsrepair2.c:115:10: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
-  115 |         {"_ALR", acpi_ns_repair_ALR},
-      |          ^~~~~~
-drivers/acpi/acpica/nsrepair2.c:116:10: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (5 chars into 4 available) [-Werror=unterminated-string-initialization]
-  116 |         {"_CID", acpi_ns_repair_CID},
-...
-
-Upstream GCC has added this commit
-622968990beee7499e951590258363545b4a3b57[0][1] which silences warning
-about truncating NUL char when initializing nonstring arrays.
-
-[0]: https://gcc.gnu.org/cgit/gcc/commit/?id=622968990beee7499e951590258363545b4a3b57
-[1]: https://gcc.gnu.org/cgit/gcc/commit/?id=afb46540d3921e96c4cd7ba8fa2c8b0901759455
-
-Thanks to Jakub Jelinek <jakub@gcc.gnu.org> for the gcc patch.
-
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
----
- drivers/acpi/acpica/aclocal.h   |  4 ++--
- drivers/acpi/acpica/nsrepair2.c |  2 +-
- drivers/acpi/tables.c           | 28 +++++++++++++++-------------
- include/acpi/actbl.h            |  3 ++-
- 4 files changed, 20 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
-index 6f4fe47c955b..d2cda1b35e59 100644
---- a/drivers/acpi/acpica/aclocal.h
-+++ b/drivers/acpi/acpica/aclocal.h
-@@ -293,7 +293,7 @@ acpi_status (*acpi_internal_method) (struct acpi_walk_state * walk_state);
-  * expected_return_btypes - Allowed type(s) for the return value
-  */
- struct acpi_name_info {
--	char name[ACPI_NAMESEG_SIZE];
-+	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
- 	u16 argument_list;
- 	u8 expected_btypes;
- };
-@@ -370,7 +370,7 @@ typedef acpi_status (*acpi_object_converter) (struct acpi_namespace_node *
- 					      converted_object);
- 
- struct acpi_simple_repair_info {
--	char name[ACPI_NAMESEG_SIZE];
-+	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
- 	u32 unexpected_btypes;
- 	u32 package_index;
- 	acpi_object_converter object_converter;
-diff --git a/drivers/acpi/acpica/nsrepair2.c b/drivers/acpi/acpica/nsrepair2.c
-index 1bb7b71f07f1..a28b1fa2b1ea 100644
---- a/drivers/acpi/acpica/nsrepair2.c
-+++ b/drivers/acpi/acpica/nsrepair2.c
-@@ -25,7 +25,7 @@ acpi_status (*acpi_repair_function) (struct acpi_evaluate_info * info,
- 				     return_object_ptr);
- 
- typedef struct acpi_repair_info {
--	char name[ACPI_NAMESEG_SIZE];
-+	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
- 	acpi_repair_function repair_function;
- 
- } acpi_repair_info;
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 2295abbecd14..27104cbb48b5 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -396,19 +396,21 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 length)
- }
- 
- /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
--static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst = {
--	ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
--	ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
--	ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
--	ACPI_SIG_ASF,  ACPI_SIG_BOOT, ACPI_SIG_DBGP, ACPI_SIG_DMAR,
--	ACPI_SIG_HPET, ACPI_SIG_IBFT, ACPI_SIG_IVRS, ACPI_SIG_MCFG,
--	ACPI_SIG_MCHI, ACPI_SIG_SLIC, ACPI_SIG_SPCR, ACPI_SIG_SPMI,
--	ACPI_SIG_TCPA, ACPI_SIG_UEFI, ACPI_SIG_WAET, ACPI_SIG_WDAT,
--	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
--	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
--	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
--	ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
--	ACPI_SIG_NBFT };
-+static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst
-+	__attribute__((nonstring)) = {
-+		ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
-+		ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
-+		ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
-+		ACPI_SIG_ASF,  ACPI_SIG_BOOT, ACPI_SIG_DBGP, ACPI_SIG_DMAR,
-+		ACPI_SIG_HPET, ACPI_SIG_IBFT, ACPI_SIG_IVRS, ACPI_SIG_MCFG,
-+		ACPI_SIG_MCHI, ACPI_SIG_SLIC, ACPI_SIG_SPCR, ACPI_SIG_SPMI,
-+		ACPI_SIG_TCPA, ACPI_SIG_UEFI, ACPI_SIG_WAET, ACPI_SIG_WDAT,
-+		ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
-+		ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
-+		ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
-+		ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
-+		ACPI_SIG_NBFT
-+	};
- 
- #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
- 
-diff --git a/include/acpi/actbl.h b/include/acpi/actbl.h
-index 451f6276da49..88ba1b978053 100644
---- a/include/acpi/actbl.h
-+++ b/include/acpi/actbl.h
-@@ -66,7 +66,8 @@
-  ******************************************************************************/
- 
- struct acpi_table_header {
--	char signature[ACPI_NAMESEG_SIZE];	/* ASCII table signature */
-+	char signature[ACPI_NAMESEG_SIZE]
-+		__attribute__((nonstring)); /* ASCII table signature */
- 	u32 length;		/* Length of table in bytes, including this header */
- 	u8 revision;		/* ACPI Specification minor version number */
- 	u8 checksum;		/* To make sum of entire table == 0 */
--- 
-2.49.0
-
+> >>>> Looking forward to your test with the other patch and we could hold off on this
+> >>>> one till we have more data about what is going on.
+> >>>
+> >>> This one got lot of OOMs when tests of RCU priority boosting overlapped
+> >>> with testing of RCU callback flooding on TREE03, as in 13 of the 14
+> >>> 9-hour runs.  Back on v6.14-rc1, these were quite rare.
+> >>>
+> >>> Ah, and I am carrying this as an experimental patch:
+> >>>
+> >>> 269b9b5be09d ("EXP sched: Disable DL server if sysctl_sched_rt_runtime is -1")
+> >>>
+> >>> Just checking to see if this is still something I should be carrying.
+> >>
+> >> I think since it exposing boost issues, we should carry it! However since it is also noisy, maybe for short term we not carry it in any trees since we are getting close to posting the topic branches.
+> > 
+> > I am carrying it in -rcu, but marked "EXP" so that I don't post it or
+> > send it along in a pull request.
+> 
+> Sounds good to me.
+> 
+> >> Do you see the same boost issues or frequency of them when carrying it on 6.15-rc1 without any of this merge windows changes?
+> >>
+> >> By the way I have to rewrite that EXP patch at some point based on a review of it but functionally that patch is good.
+> > 
+> > I just now started a short test with it reverted.
+> > 
+> > Oh, and yours and Boqun's latest passed overnight tests except for a
+> > few Kconfig issues including the PREEMPT_RT pair:
+> > 
+> > 75cf58ef310a ("Merge branches 'rcu/misc-for-6.16', 'rcu/seq-counters-for-6.16' and 'rcu/torture-for-6.16' into rcu/for-next")
+> > 
+> > This is a known Kconfig issue in torture.sh, fixed by this -rcu commit:
+> > 
+> > 2e26af16b7b6 ("torture.sh: Force CONFIG_RCU_NOCB_CPU=y for --do-rt configurations")
+> 
+> I already merged this change
+> https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/commit/?h=rcu/for-next&id=a3204f778cf7e37c7344404768398b4f9d43a368
+> 
+> But you saw issues in your testing even with this?
+> 
+> Could you rebase on top of my for-next branch so we are on the same page? Tag
+> next.2025.04.11a
+> 
+> I believe you said you were going to rebuild your tree, but were waiting on testing?
+> 
+> > 
+> > There are also Kconfig issues with a few of the KCSAN rcutorture scenarios
+> > that I am looking into.  And torture.sh needs to be more aggressive about
+> > reporting these...
+> Ok sounds good, happy to add these to my torture-for-6.16 topic branch once you
+> post them.
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> 
