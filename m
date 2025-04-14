@@ -1,212 +1,173 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956171A9B48;
-	Mon, 14 Apr 2025 15:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8CE252297;
+	Mon, 14 Apr 2025 15:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744645061; cv=none; b=eaVv2Ll58/yvhaYjArbNGuB0yLtFY8DHJ6dqADcfonDq8IPwLzoGm/itm/ZGxTRRuzQ+5cJsklW5k5SkAZ6CCrjs//AihlgnWsfqyMFAyCWFzMP8Dw2ebUfC5nlDBgyGKyOgL0DBCeCDsdwdQNBFSqWCXlez4mxEk2tX22j8qD4=
+	t=1744645098; cv=none; b=me1pDa8eMGB/aHGkh+d9qiSJGZiOfHRDvTe0BNwQU4OpIva5fWFrgBGxNGb4kEOMFaeQKn9ySrwGIVbkuvS7rNJv/3FTFHH/tFLcIrKu4JIz0fo5DyADtDDIJOvh6xkR3ISWTmR6wHNBj64Z8jT9ntQUVfCAwYW9jF/wh66t04Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744645061; c=relaxed/simple;
-	bh=9eA0G2YnsWGbHG56g49nbEXD6xFoAGUKbnrZB7bpMaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZMsnB9wPlElG6hRi60uEYBBu/dAaI2Oc5svpsBrPm2KbN9ZGV+M4FyjAgSOb2/fqSOflJPxL+c/uRgzG2mabVCRpQVPKBdAoFZbbFLCYLf4fZVKFe2YPp6CQ8xS3jkHuiMQzDuwZqR/GCtNcHB8M/fFkeif3wnJPcZrjtnkFtsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ROUdZb/A; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROUdZb/A"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301918a4e1bso3506680a91.1;
-        Mon, 14 Apr 2025 08:37:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744645059; x=1745249859; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Mokm6ZH48h5sXQ5iAT2NSE+CCCr/3eOYDxIfr/1engI=;
-        b=ROUdZb/A7gBJBzaGTOQa37RaWCxJSfLBTZ6YRoTom7zwiD0ddOafdsZtJ6Fe2QYGqB
-         iutwSPIyC/EMF0avAQ9kaAPSx9mQ0yS0jWyyfox4Wpg2cSx/LbuI5+c5/0SNgfZwiZot
-         hjcufoxftlg0C75kBlQZtAWgtJPQzh0ZfJo6+sMOcOIirxFcEMUbIh3Z5sUdAjjmQLiW
-         vYuieKgANvTYe/goWkQy83o0GjnUXQGu6/PTphfrRVLhFiAfwuwN+qDVn5j3Jc1bsqTw
-         rtCL8pfS9tlDAhjIgMWN/zhOxh2eJkmpnomP39IOap55Goh9vCZyOFajYeW17prW/g5k
-         JPcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744645059; x=1745249859;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mokm6ZH48h5sXQ5iAT2NSE+CCCr/3eOYDxIfr/1engI=;
-        b=vNul2fgg1QetpxYF1tP8KPsZ/BIaRQ6jvMll6r118sfd8iOy59hlGgASI5GTad0zmC
-         GaMVZ9fLViufsMch7wtof/hIQs9uSj3CDIF5/rdHfjNX0tFYS7h8yK3ioP8+0ni78bR8
-         PkAW4wIFr9O5S2DwdoIq8sHRp/FvgcFUrg3oCtaqEWOL5C8tQ054N2hjPXQUM506eTR1
-         BjUTvjsO17FEgLJMIGrccHvftdhZra2KYnzLmfPCMP5PODsVTdUPXkjEcYLXKTb97N1M
-         H8fTDf5fK8fEFRLFmNINesK1Mf9WD5+8dW0u0gqp82QGf/pL7Uth7ELHDUvyzJkuu4ms
-         IEXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpi/071cVygeuVu60tbuwCLb8k7jEC2HwgTduXhiZuBZJmOYhDfokh9L0+WzzQZiVlM8RvqDh8z0Yd@vger.kernel.org, AJvYcCVFkLx5wKxixYXaA3IgRoBfqqE3hn7ENVGuiH/f+wSuVWhVAxXRGZwtDuCPTXOpC5jZuXGQUKH0EbVkTZr6@vger.kernel.org, AJvYcCVV7F+oOAlCniZXKHv632MffdXDt6bgzxSGjgr22rJGsJcehJee+e0pGrW5aKq9aDNC6algI6JMCOma@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw10j0Ipn7Cul/2ZJqF0AZs8Q5Ox0lYrgAZyJRHFV9KBgsr9vQQ
-	WUBHcy2HvDlAsOJlzHvQPuw7LaYC+p70DeJhQCKUAFNFZqtRb0H2
-X-Gm-Gg: ASbGncu3BqpTfiXLYVghSOek0WmhR4gi50QASflI57wCdrvhQ3+N67n9BryIWjtn/qT
-	npcpH3V6rRM2E3YI8BBMf2jUYFj4/h5LGHz3YWCd36Fb7MOxpt1ggFeVglRCdyuI+QgVio9Ao5Y
-	VTrf/5r0Td2+DxZVRq7m6at0s68qWTUFfcjAt0L0iRYlVqQxi4NgtwIvum1eVjVC5dZJV2bn83p
-	WLBYT/PPol0vOhl4rqRTnx319m9EUr7OmllKc0jGPW1x9fp5g3OScE51HAyLG+WNeGDzKy5Rihx
-	bovYsNwFOI6vSCphIHPorUrHMy5Pd2HrA965K9Asx42PSuMCEosZFnFq77Q=
-X-Google-Smtp-Source: AGHT+IGZsxgQ60vAJuvwxmwilDb8mJqLVo6mioN8QshkEcroQC5a2lPwjRGuXJKzKyRTL3DGpS4BOw==
-X-Received: by 2002:a17:90b:2891:b0:2ee:db8a:2a01 with SMTP id 98e67ed59e1d1-308237ce138mr14871891a91.30.1744645058550;
-        Mon, 14 Apr 2025 08:37:38 -0700 (PDT)
-Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-306dd2fe1a4sm6679448a91.0.2025.04.14.08.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 08:37:37 -0700 (PDT)
-Date: Mon, 14 Apr 2025 12:38:46 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v1 7/7] iio: adc: ad4170: Add support for weigh scale and
- RTD sensors
-Message-ID: <Z_0sBomGtMKXysgJ@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1744200264.git.marcelo.schmitt@analog.com>
- <56e76070b72d15950bf1fb01e68e94c42e79905b.1744200264.git.marcelo.schmitt@analog.com>
- <149672e84f09fb178c90856920e3cfd4f140529d.camel@gmail.com>
+	s=arc-20240116; t=1744645098; c=relaxed/simple;
+	bh=0aZVGbEl/02D251casMOEEUyC3c3T0vU3dfpYMvmlIM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hk7og3gmia3zpUU6uYpm5h5z0xBajBxjbEi6dLCNxkBLTDQk+l3AJ0+gPPXDbtm2bafy/kq9xBujVdhMaAshMGBQ6Abnrupk0gIS2tyRUIGBxA2HQONLujDoWY+nWV3yMeVmb96mfdpiBo5v42fh9sZDd3tK/YmbwrEF9oZbzN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 137701007;
+	Mon, 14 Apr 2025 08:38:13 -0700 (PDT)
+Received: from [192.168.1.102] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE7993F66E;
+	Mon, 14 Apr 2025 08:38:10 -0700 (PDT)
+Message-ID: <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
+Date: Mon, 14 Apr 2025 16:37:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <149672e84f09fb178c90856920e3cfd4f140529d.camel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+To: Johan Hovold <johan@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
+ <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Charan Teja Kalla <quic_charante@quicinc.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-...
-> > +static int ad4170_setup_rtd(struct ad4170_state *st,
-> > +			    struct fwnode_handle *child,
-> > +			    struct ad4170_setup *setup, u32 *exc_pins,
-> > +			    int num_exc_pins, int exc_cur, bool ac_excited)
-> > +{
-> > +	int current_src, ret, i;
-> > +
-> > +	for (i = 0; i < num_exc_pins; i++) {
-> > +		unsigned int pin = exc_pins[i];
-> > +
-> > +		current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK,
-> > pin);
-> > +		current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_VAL_MSK,
-> > exc_cur);
-> > +
-> > +		ret = regmap_write(st->regmap16, AD4170_CURRENT_SRC_REG(i),
-> > +				   current_src);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (ac_excited)
-> > +		setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_IEXC_MSK,
-> > +					  num_exc_pins == 2 ? 0x2 : 0x3);
-> > +
-> > +	return 0;
-> > +}
+On 2025-04-11 9:02 am, Johan Hovold wrote:
+> Hi Robin,
 > 
-> In the above I do not see any explicit GPIO configuration which makes me wonder
-> if having the RTD is mutual exclusive with having GPIOs?
-
-For RTD sensors, it's recommended to use a different excitation mechanism which
-is configured in CURRENT_SOURCE and MISCELLANEOUS registers. The current source
-for RTD sensor excitation could come from a GPIO, but only implemented support
-for outputting the current from an analog pin. Will handle the case of using
-GPIOs in v2.
-
+> On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
+>> In hindsight, there were some crucial subtleties overlooked when moving
+>> {of,acpi}_dma_configure() to driver probe time to allow waiting for
+>> IOMMU drivers with -EPROBE_DEFER, and these have become an
+>> ever-increasing source of problems. The IOMMU API has some fundamental
+>> assumptions that iommu_probe_device() is called for every device added
+>> to the system, in the order in which they are added. Calling it in a
+>> random order or not at all dependent on driver binding leads to
+>> malformed groups, a potential lack of isolation for devices with no
+>> driver, and all manner of unexpected concurrency and race conditions.
+>> We've attempted to mitigate the latter with point-fix bodges like
+>> iommu_probe_device_lock, but it's a losing battle and the time has come
+>> to bite the bullet and address the true source of the problem instead.
 > 
-> > +
-> > +static int ad4170_setup_bridge(struct ad4170_state *st,
-> > +			       struct fwnode_handle *child,
-> > +			       struct ad4170_setup *setup, u32 *exc_pins,
-> > +			       int num_exc_pins, int exc_cur, bool
-> > ac_excited)
-> > +{
-> > +	int current_src, ret, i;
-> > +
-> > +	if (!ac_excited)
-> > +		return 0;
+>> @@ -426,6 +438,12 @@ static int iommu_init_device(struct device *dev)
+>>   		ret = -ENODEV;
+>>   		goto err_free;
+>>   	}
+>> +	/*
+>> +	 * And if we do now see any replay calls, they would indicate someone
+>> +	 * misusing the dma_configure path outside bus code.
+>> +	 */
+>> +	if (dev->driver)
+>> +		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
+>>   
+>>   	if (!try_module_get(ops->owner)) {
+>>   		ret = -EINVAL;
+>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>> index e10a68b5ffde..6b989a62def2 100644
+>> --- a/drivers/iommu/of_iommu.c
+>> +++ b/drivers/iommu/of_iommu.c
+>> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+>>   		dev_iommu_free(dev);
+>>   	mutex_unlock(&iommu_probe_device_lock);
+>>   
+>> -	if (!err && dev->bus)
+>> +	/*
+>> +	 * If we're not on the iommu_probe_device() path (as indicated by the
+>> +	 * initial dev->iommu) then try to simulate it. This should no longer
+>> +	 * happen unless of_dma_configure() is being misused outside bus code.
+>> +	 */
 > 
-> Same as above, if !ac_excited, can't we use the GPIOs? because
-> ad4170_validate_excitation_pins() just unconditionally sets
-> AD4170_GPIO_AC_EXCITATION. Or maybe this DT property is only adding
-> complexity... See below
+> This assumption does not hold as there is nothing preventing iommu
+> driver probe from racing with a client driver probe.
 
-I see, maybe AD4170_GPIO_EXCITATION would better describe the function. 
+Not sure I follow - *this* assumption is that if we arrived here with 
+dev->iommu already allocated then __iommu_probe_device() is already in 
+progress for this device, either in the current callchain or on another 
+thread, and so we can (and should) skip calling into it again. There's 
+no ambiguity about that.
 
-...
-> > +
-> > +			st->gpio_fn[3] |= AD4170_GPIO_OUTPUT;
-> > +			st->gpio_fn[2] |= AD4170_GPIO_OUTPUT;
-> > +			st->gpio_fn[1] |= AD4170_GPIO_OUTPUT;
-> > +			st->gpio_fn[0] |= AD4170_GPIO_OUTPUT;
+>> +	if (!err && dev->bus && !dev_iommu_present)
+>>   		err = iommu_probe_device(dev);
+>>   
+>>   	if (err && err != -EPROBE_DEFER)
 > 
-> Not sure if you gain much with having the funcs OR'ed like this... If I'm not
-> missing nothing it's only about logging in ad4170_validate_excitation_pins()?
-> It's up to you but I would consider using bitmaps (unsigned long) for this and
-> just test the bits.
+> I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
+> is probed late due to a clock dependency and can end up probing in
+> parallel with the GPU driver.
+
+And what *should* happen is that the GPU driver probe waits for the 
+IOMMU driver probe to finish. Do you have fw_devlink enabled?
+
+> [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
+> [    3.806007] arm-smmu 3da0000.iommu: SMMUv2 with:
+> [    3.806843] arm-smmu 3da0000.iommu:  stage 1 translation
+> [    3.807562] arm-smmu 3da0000.iommu:  coherent table walk
+> [    3.808253] arm-smmu 3da0000.iommu:  stream matching with 24 register groups
+> [    3.808957] arm-smmu 3da0000.iommu:  22 context banks (0 stage-2 only)
+> [    3.809651] arm-smmu 3da0000.iommu:  Supported page sizes: 0x61311000
+> [    3.810339] arm-smmu 3da0000.iommu:  Stage-1: 48-bit VA -> 40-bit IPA
+> [    3.811130] arm-smmu 3da0000.iommu:  preserved 0 boot mappings
 > 
-Ah, yes, a bitmap is what was trying to do but misimplemented it.
-There are 4 possible functions for AD4170 GPIOs.
-(1) Power-down switches (currently not supported);
-(2) External sensor excitation;
-(3) GPIO;
-(4) CHANNEL_TO_GPIO (not eager to support that).
-
-If a GPIO is used for external circuit excitation, we don't want to export it as
-a GPIO. If the GPIO were set a power-down switch we would also not expose it.
-
-...
-> > +
-> > +	ac_excited = fwnode_property_read_bool(child, "adi,ac-excited");
-> > +
-> > +	num_exc_pins = fwnode_property_count_u32(child, "adi,excitation-
-> > pins");
-> > +	if (num_exc_pins != 2 && num_exc_pins != 4)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +				     "Invalid number of excitation pins\n");
+> [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
 > 
-> Can't we assume that a valid num_exc_pins property means ac_excited = true?
-> Because that looks to be the logic in ad4170_validate_excitation_pins().
-
-Unfortunately, no. The user may want and set AD4170 to DC excite the external
-circuit. They may want to use the same set of excitation pins, but not enable
-channel chop or output current chop (leading to DC excitation). Well, we may
-choose to not support the DC case in the driver I guess, but since this is
-already fairly complicated, why not going an step further to support it fully?
-
+> [    3.992050] ------------[ cut here ]------------
+> [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
+> [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
 > 
-> > +
-> > +	ret = fwnode_property_read_u32_array(child, "adi,excitation-pins",
-> > +					     exc_pins, num_exc_pins);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret,
-> > +				     "Failed to read adi,excitation-pins\n");
-> > +
-...
-> > @@ -2081,6 +2412,10 @@ static int ad4170_parse_firmware(struct iio_dev
-> > *indio_dev)
-> >  
-> >  	/* Only create a GPIO chip if flagged for it */
-> >  	if (device_property_read_bool(&st->spi->dev, "gpio-controller")) {
-> > +		for (i = 0; i < AD4170_NUM_GPIO_PINS; i++)
-> > +			if (st->gpio_fn[i] != AD4170_GPIO_UNASIGNED)
-> > +				return 0;
+> [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
+> [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
 > 
-> I think you could improve this... You're taking an all or nothing approach.
-> IIUC, we can have cases where only two GPIOs are in use which means we could use
-> the other 2? There the gpiochio init_valid_mask() call that you could
-> potentially use.
+> [    4.025943] Call trace:
+> [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
+> [    4.030453]  iommu_probe_device+0x38/0x7c
+> [    4.030455]  of_iommu_configure+0x188/0x26c
+> [    4.030457]  of_dma_configure_id+0xcc/0x300
+> [    4.030460]  platform_dma_configure+0x74/0xac
+> [    4.030462]  really_probe+0x74/0x38c
 
-Isn't gpiochio init_valid_mask() only to distinguish between GPIOs that can
-(or cannot) be used as interrupts? Not sure AD4170 GPIOs can be used for
-interrupts at all (think they can't) so didn't implement init_valid_mask().
+Indeed this is exactly what is *not* supposed to be happening - does 
+this patch help at all?
+
+https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
+
+If not then I guess I do need to do something to explicitly distinguish 
+the "iommu_device_register() is still running" state after all...
 
 Thanks,
-Marcelo
+Robin.
+
+> [    4.030464]  __driver_probe_device+0x7c/0x160
+> [    4.030465]  driver_probe_device+0x40/0x110
+> [    4.030467]  __device_attach_driver+0xbc/0x158
+> [    4.030468]  bus_for_each_drv+0x84/0xe0
+> [    4.030470]  __device_attach+0xa8/0x1d4
+> [    4.030472]  device_initial_probe+0x14/0x20
+> [    4.030473]  bus_probe_device+0xb0/0xb4
+> [    4.030476]  deferred_probe_work_func+0xa0/0xf4
+> 
+> [    4.030501] ---[ end trace 0000000000000000 ]---
+> [    4.031269] adreno 3d00000.gpu: Adding to iommu group 9
+> 
+> Johan
+
