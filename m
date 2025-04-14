@@ -1,163 +1,114 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011046.outbound.protection.outlook.com [52.101.129.46])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AA51A2380;
-	Mon, 14 Apr 2025 12:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744633980; cv=fail; b=W7QXMEJOriZXYLocNqUV53IaWQHLUcvWf08/thSsLXQW0/0tiS4XnSPS9HzY/yQJ3NUg4jzdFpIYBRVipjLAsUdSx7WOQbIcC6GxI3wMhdkCFnY6MnCcP2d/UkCnHhuuJbPvw9v1xkgHnY/PCUyJbLOJ5jWV1jlI65UBI6xVlPw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744633980; c=relaxed/simple;
-	bh=b86EzMSHW7jbiprRxy0nz2bADBDM7alEptlC+wx+7VA=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=MTucfq64+t+iEW7YVdxPw4eXrH5jHMwdas+JqfH2EStkcHFWV72DYQPLoF7WcQZqiygmN9T/bX4+/gUg3tgfqX9yyG61pAVYHPg6DkKrnXg5A5IcAiff+b3aQVqXyh8wl2QpItfDH3e8s9B/tzP+j88yJ57M1lTmbYB7wLGW9F8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=NEGIzUHI; arc=fail smtp.client-ip=52.101.129.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="NEGIzUHI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pg5NiRP7aoGV9TPjyDezJg7avAT2uiARLgf5H1NLsnP0DZ/ZIY3Cnvpz0uWVwqjAH4bqSl+ReBxud7g1maPKY/ihrgmMG6x46FNPIQyRBUhf4FvzsUeay82wiDjb65PdpAyiz8h9qMqAHtYlOHHrVzTGAo5G2i3+9aIYYFqfho3fpMC+QdI6E+Yvtj0Vl2pIredp2rILLvwl+TDuhx8QBOzBvGZmHgqg6QMATfq2TQQacGhfc4vuZb4+BqkOI5rBAHH2CZrUENHpllU+RzlGLpqWMCVDPTpXVjkg8wX18rLK5rF87RqpbcjM8UtlPnNFpTLywyUUbiJ/Ph+Y6g2qFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qsbqOnevddgjonm9mjUvWuAajdj+y4Bi/5ep9tbc+js=;
- b=KT7wcqstgqE921Pw2mlOSeAq7onFye2APOFiZ4eNV6Cg1RWkG2jK/4upK5ODpCR4CjsXQ0TmjbwNCh4Tx2hwHCZNSUPVGi3wX5SwUTklqxFAzc3ADQg10JCG/diHEJSNCXVMZvXSmuYsHrrHGzMXcUS607dvshjZqnw8lwTfiUjyEIduNOlWOQyhDsB3pZ0J1eqbmfc0vi0SWDPULCJVqY6/V/4rcYYl4iRUvUW2BtajBKD4HzbxbvawwvdDplebE1FhCN4hh4eX4bbMjzXjObSRT5qQ/XdTPre05WNg0n10X5VFueDhotj/amQiPfdLyBeXSTuef6gHZc7SBhC4ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qsbqOnevddgjonm9mjUvWuAajdj+y4Bi/5ep9tbc+js=;
- b=NEGIzUHICghoawtMwVh0IZbjY54HxEWpKH+Q3Y5/CbB6N2Iepu9Jy2Cp30MwAHxMxpFaN6x5oeSrwOzUqlY4LCzIThY6LP80Z/2Ii4CihIozPSU+SuTnXbiOtvN4u6r3P6V+6dujLtxYukI3S7SpBlT38xmyvnxIksGdtUf8Q/wummQ7AWYQ+3Vkg/tqU1ltbffZF0RTgYJfHwJ/DQ1qQ8nhAv0GVV7JCnSoy15HUYELS7AYCuqLKWdN9xHp0ztaFggDCYCN1t1JldvTktvu66rks2c22n7h11qvFMWSm8IzS2eQqo6hV3Xb4NNkBgFRSLxeGPrYUtkypkJdiM2LTw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by KL1PR06MB6759.apcprd06.prod.outlook.com (2603:1096:820:101::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.42; Mon, 14 Apr
- 2025 12:32:52 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 12:32:52 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: clm@fb.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com
-Cc: linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangtao Li <frank.li@vivo.com>
-Subject: [PATCH] btrfs: simplify return logic from btrfs_delayed_ref_init()
-Date: Mon, 14 Apr 2025 06:52:31 -0600
-Message-Id: <20250414125231.740999-1-frank.li@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0032.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::23) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E939329AAE5;
+	Mon, 14 Apr 2025 12:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744633994; cv=none; b=Bn2dL2EzMh85/iUic2FBcVZ/dP8waCUZbubD0oxMUGY0PvdmNm4x4isOwKwyuM+RZvhE+cbEkwMQJyuptjCYIH3BWmVd6Txut5JNzn+x9Cml04Dh+fitCnIHa7SL13s4u9wkVKttLUs+/yMqMHHdjMYJ2kQ3Vur3waWbekCF3cg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744633994; c=relaxed/simple;
+	bh=6400OJF4YI0lPtmmohOJ8lmx6Xr6n7ia3Oj+TECM5Ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AK5Pv4A5V/DN//nyiaTpaXc6bQx9kGkDIBABrAGjrkyn+/HSJJ57M/g0qCrHwuJ4xP/dhRWiv+/+zYTAZ6eKWXqsa1LCmx6hNixJKhk90w5AZOBVjqZNpBLZv86dpVz5TMzxVR04HbEq4627bmorFdCJmm6GH5HovoxRuk6JhDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u4Izh-0000000016s-3E1k;
+	Mon, 14 Apr 2025 12:32:57 +0000
+Date: Mon, 14 Apr 2025 13:32:54 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <linux@fw-web.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: mediatek: mt7988a-bpi-r4: allow hw
+ variants of bpi-r4
+Message-ID: <Z_0AdtyvehR9SHnU@pidgin.makrotopia.org>
+References: <20250412102109.101094-1-linux@fw-web.de>
+ <c8f9f019-a238-47c8-a900-9ca48ce09503@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR06MB6759:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6605da61-10cf-4fbc-2ba0-08dd7b507996
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|1800799024|376014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?14vzncumySyp72THlmKTat77rIopYzhgSXZr58xdr9mHqh7iYWlbgVbus2/z?=
- =?us-ascii?Q?ZVlSSu+KW0riZbHy/lRyYTA0KvD1eqODxqm/Ojp7ks8Z3u3o3NxULggsenxB?=
- =?us-ascii?Q?jMBlMWadu2Qi22JeCtnhhkEqgFHeYsAilq13/8eidu9oNknTzDWyeAcRvyMA?=
- =?us-ascii?Q?IB/Uvj7xdDOYa90Us5r+Wt4i/voWU8+LXzTG5s+wXLSGVgiPhh+rTitx7S78?=
- =?us-ascii?Q?h9+M7yePO5zB+1bVvNQxi5B9Wc+fc+uaRgpLSe696vT3QBrq8ove7ohi6n02?=
- =?us-ascii?Q?zyR2IdOxo0GlNgt/+ggkahDeTsVgQbUaLQ3twdEqrAHkN9glJNHd0BGLopKg?=
- =?us-ascii?Q?Kyrz5sS0JdPrPRSuI4TpH905QR4n+Vv5n57fw9ToGsoQoGmhN0ECcbmSntJr?=
- =?us-ascii?Q?f1bLE/3OsSurH4p/pvHVayum1bpEc6Hmx/6vKNi3dfURBmEK/Q6sL0e00MfC?=
- =?us-ascii?Q?aQCFYjKSt4P/fnflpXPOKzDt/RHqjRWYOvPVHj152elqdL7UgWdYNWUy7lAu?=
- =?us-ascii?Q?fW5E9LijIN/WfJAbmpck5mVHddKkRDZu2IlcYhvChEVn4G8cTVaM3HEbOips?=
- =?us-ascii?Q?QeOZYXyNHhgYo+iQj0QUEGsQ+makGuIN5840EDMCD+sw/2Kcu6llv+jYjCcf?=
- =?us-ascii?Q?vecZV2Le0B/1RL4IBTHU4y5EsSjgcb3TWN/Iwl4xPhB5LyeK4nuIYWHCj1CG?=
- =?us-ascii?Q?HDwLJ/7Y5qQMLmsyFlhyQbiGrSBGcdnbGETri2SCKi9kLNpYFTwIpzFUba+3?=
- =?us-ascii?Q?EIdxJW/ZtXWaeKidHws5xzQrQwuDPNUv63bcXJjMqzhKOBYeYcZYCYsqW3v8?=
- =?us-ascii?Q?rmuc79O0mwAaWRzwUH/V3qJJZhTwurpBQBD2AWVMMYB46v8I+hsVMQ35hz/g?=
- =?us-ascii?Q?DM/vrQfYv4c1dbpbgT16y2bNwrC4cdnZICXPtUk6+Gb+OSzv/jCR9FYnViGa?=
- =?us-ascii?Q?0EuXxAI3hOLSI/LS8ONRUJ/zjc2gi+vuUB8qNREqlEOL4RPsOG3efNUhkhBP?=
- =?us-ascii?Q?Ib26H8QwpFO3Lf9jtM/GKze/kfNxO2r94WaWmNej5wyk561sKqjTLzbDpM4B?=
- =?us-ascii?Q?Ai9guF7l2/D5/UorltbyLSOD8umhCJ5eNwya/nNMqj6ohOwBqGZurV7MDxCc?=
- =?us-ascii?Q?jRmCgrtu/QvlLD9VlNDAkoYl6Ej8LDFv5QEQ2CFYJMsSTmtceZVvwVWh8IlC?=
- =?us-ascii?Q?Cmfb1absQaVNp2j2KTMOUVDXkdjYjZTmkX6mPXxjRSjyVnU7Z09kkGZ8CNF/?=
- =?us-ascii?Q?QqJ2gW8aRNWKKDGROU6IsfGLpEbUDF5dVLsECxkDbC4SeCoQJmvjYzXOA160?=
- =?us-ascii?Q?4JyHb1KzogJrR37S0gEvnSZd5s9Wh0HaS4a+avC1zVORydLYUNEzX40tLp/A?=
- =?us-ascii?Q?7+Y8ctrtRcKtvwPRPEABW/DmBgTiy4e8YS+f5btzANUT01vo7cX+hBr8TmIb?=
- =?us-ascii?Q?pJ8f2bryWG5yiAsv3QHKBuJXfpp+iHsDAdzTzHdQx+m0m7FYItw2Lg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?l+DSZYkbAEk+J6FG0Iq04Pm8CmkgLBBvAIg15O4ls62qId2uR3zxnMkdd9GN?=
- =?us-ascii?Q?PfwnYclCteBCdl94H00zQ92z8duSJhPg3EzyyjY2/1b/WOHOJkFbvkaybnXB?=
- =?us-ascii?Q?nWDhw9MY9ARfuKjPF1dG4sYJpKDJFCP4NksF6NPPg5Xzt9vmqTd/RKnJ0K20?=
- =?us-ascii?Q?a75KDMGwnm4kubv7g9tk8/aq1l03/s5d1w6z9RRCleSE8oWpAGRR8YZisonH?=
- =?us-ascii?Q?FfM2U9HR2G99gf8Ou5ZGygd2U7jRORAA+Crrq2XTKG7YLdNBqtw8BKDK/PIt?=
- =?us-ascii?Q?v6HU1J5ilLwKXmpWwDR4s1SWfolVWW04HTPmbXc+nLIG9ru6Jp3BTKLbFAc+?=
- =?us-ascii?Q?RYP3H11xKBcepiKreILxqqNiwiDKrs55DdrzuJN6oSN3ogkALPI7fPJ4mSKD?=
- =?us-ascii?Q?a15hZ9Mc4aYeTP1Y0luB9kwijGoRP6XqSN3lVXCny80ArgJshJwStekhp4Ej?=
- =?us-ascii?Q?ODEuKOZrMHslo6LtEy5sFnTvrPnd1CWYol64Y1PUYeRPeEq/mW+5v8Pl2+5Y?=
- =?us-ascii?Q?8bQxiuNdS7VMxH2AGfjQxXi4Z1+BPblP+t3QdoCMut41ujWoNqhkYxIdvX1P?=
- =?us-ascii?Q?Z9Df+TGk2U7OObpe9sWgOjJ5etL6Jx85MqW12FughDZHpg5Y23FaMfOGzYzz?=
- =?us-ascii?Q?QIihlJz9p45Ak23Mn4+W4S8/t3XFuIURKY6hXgrooYzXvilwbNYvnwgCV5Ut?=
- =?us-ascii?Q?ujXc7LM2+vhp1151GWU69XTWLtWZOsq0/GdKXfG/ol3/Snz2f+7ti6eOPIrh?=
- =?us-ascii?Q?+dqGEb1JggXeX4kIcuwRyzaiCsDGSW35SaqEM3SI5iK3rTUBDKJXXBae3MmO?=
- =?us-ascii?Q?eWCvdhuOAytniu1RQc/45FzLH/pkG4iOiTBZQmR1IWEf5NHikHirimBjFhJH?=
- =?us-ascii?Q?Xs+nMT2JycGLVWEBIEfkX6pOGGXfV51Q0KBd5xLTeowCl2TLu3GUy6akgp/8?=
- =?us-ascii?Q?aEG6qMA9gS4KwF4GeY58Bx9/TQYDGV8MAeV+C7Y1jNFgbL523uWO+FPFRur6?=
- =?us-ascii?Q?HHpaNx0qV3SfU2dThaqFI/SGk/dq9pnx0LkWVF/mv3OfcJClN4Z2H28FuwIt?=
- =?us-ascii?Q?olBe8b7tB+LVNq8s/LArTMdPXZb9toa4U7BBHjrFMY8a0UjAAu4llzuXBI1V?=
- =?us-ascii?Q?m3TP8EOkCCWloxLva9Z5+VZSXlJVPsME3+8xw1FeAyrhS15T5IIWzIil0CKu?=
- =?us-ascii?Q?1uxgf18yVOLWiGXrTuPYX4DOwlIl2WDcWOcgZa2N4ajPUQXORr1E0exRmL5O?=
- =?us-ascii?Q?1LJEk/yCHzl+uuo2eLvgE/Wv9/YIRIKPoJW23FGewiJZ0/9cgYfT8y4Y7coE?=
- =?us-ascii?Q?ExVd1/+50wiFOSTSLOirnN+WpJMtAp1wO4IxNMokTNXL+83hYg9pqlRQe+EB?=
- =?us-ascii?Q?pgLj8gK9Uag4jq7a40gjb7+GJOOaFoT56WRYSuXKzjlCCk7tRUlsVj7sQiff?=
- =?us-ascii?Q?mT5fUX1qAHU3PNRqdaus9MWbXniTDk3Pau2CqypeNDqFAgsn6rFXBxzQp/5/?=
- =?us-ascii?Q?fkutCi1ydwALwr5tLily4tqt5hS5bnAzJY9804BZkYzD1MWktGIU9t+QVm4G?=
- =?us-ascii?Q?U3vstfTaY3dUaB9GRstGydJxmv9AQuEsp1aNOWHQ?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6605da61-10cf-4fbc-2ba0-08dd7b507996
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 12:32:52.7185
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8kcEfAl6LcSlPHGmhQ+riWdkOcfVpGNJLgvnsa06uQYkrRSPyc2943luo2mfSDVjnnKs44XisM2dz5MBtHPDyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6759
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8f9f019-a238-47c8-a900-9ca48ce09503@collabora.com>
 
-Make this simpler by returning directly.
+On Mon, Apr 14, 2025 at 11:27:23AM +0200, AngeloGioacchino Del Regno wrote:
+> Il 12/04/25 12:21, Frank Wunderlich ha scritto:
+> > From: Frank Wunderlich <frank-w@public-files.de>
+> > 
+> > Sinovoip has released other variants of Bananapi-R4 board.
+> > The known changes affecting only the LAN SFP+ slot which is replaced
+> > by a 2.5G phy with optional PoE.
+> > 
+> > Just move the common parts to a new dtsi and keep differences (only
+> > i2c for lan-sfp) in dts.
+> > 
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > ---
+> > v2:
+> > - added basic dts for 2g5 variant
+> > - moved i2c used for sfp-lan to board dts
+> > ---
+> >   arch/arm64/boot/dts/mediatek/Makefile         |   2 +
+> >   .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts  |   5 +
+> >   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 404 +-----------------
+> >   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 403 +++++++++++++++++
+> >   4 files changed, 414 insertions(+), 400 deletions(-)
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index 58484e830063..a1ebc9aa4ba6 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd.dtbo
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4-2g5.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4-emmc.dtbo
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4-sd.dtbo
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
+> > @@ -107,4 +108,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+> >   DTC_FLAGS_mt7986a-bananapi-bpi-r3 := -@
+> >   DTC_FLAGS_mt7986a-bananapi-bpi-r3-mini := -@
+> >   DTC_FLAGS_mt7988a-bananapi-bpi-r4 := -@
+> > +DTC_FLAGS_mt7988a-bananapi-bpi-r4-2g5 := -@
+> >   DTC_FLAGS_mt8395-radxa-nio-12l := -@
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
+> > new file mode 100644
+> > index 000000000000..76eca976b968
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
+> > @@ -0,0 +1,5 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "mt7988a-bananapi-bpi-r4.dtsi"
+> 
+> This should at least have some different compatible, if not probably also a
+> different model string - as it's a different device.
+> 
+> 	compatible = "bananapi,bpi-r4-2g5", "bananapi,bpi-r4", "mediatek,mt7988a";
 
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
----
- fs/btrfs/delayed-ref.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/btrfs/delayed-ref.c b/fs/btrfs/delayed-ref.c
-index 98c5b61dabe8..fbb5239ab9da 100644
---- a/fs/btrfs/delayed-ref.c
-+++ b/fs/btrfs/delayed-ref.c
-@@ -1339,7 +1339,7 @@ int __init btrfs_delayed_ref_init(void)
- {
- 	btrfs_delayed_ref_head_cachep = KMEM_CACHE(btrfs_delayed_ref_head, 0);
- 	if (!btrfs_delayed_ref_head_cachep)
--		goto fail;
-+		return -ENOMEM;
- 
- 	btrfs_delayed_ref_node_cachep = KMEM_CACHE(btrfs_delayed_ref_node, 0);
- 	if (!btrfs_delayed_ref_node_cachep)
--- 
-2.39.0
+Imho it doesn't make sense to declare compatibility with the
+"bananapi,bpi-r4" as the "bananapi,bpi-r4-2g5" is NOT compatible with the
+"bananapi,bpi-r4". It's a different board and using firmware meant for the
+"bananapi,bpi-r4-2g5" on the "bananapi,bpi-r4" (or vice versa) will result
+in a non-working Ethernet port.
 
