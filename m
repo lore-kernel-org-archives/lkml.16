@@ -1,210 +1,94 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEFD1A01CC;
-	Mon, 14 Apr 2025 05:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88231E485;
+	Mon, 14 Apr 2025 05:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744608607; cv=none; b=qzMPjiSgm+Q10Un97tiFj/F0KBXDKPxK1fGDXF4aOwu9b+Eq5kpA1fW3yhZDUzsKgU0TJJcf3YHRTxq8vON2qFB40SiMuYq75glJevHrW/BiyZ8DvbaWApyPcWVl3w2PdRDkUEYgG9pNhdFVtHyb6Y+TdeLIsBeroyZe3tggWaI=
+	t=1744608711; cv=none; b=H7U7pf2Df/3ZB7CMcSHtRx+Ukq68Ui4iX18Aal9IaaIgj0ORKPLFgMYYddcLzwismocFPWp1aFkiLxXAG3hKXYK01lNF3kb33u7Vw0JN3xy0OgymK5hkm+OB8Qy9mYA7N9QtfDYxLcXpQc7/e/hP/8tUS6JUhkcwkg9obgtqLQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744608607; c=relaxed/simple;
-	bh=iZY9QAKOfXVun3HWANZNIRrBgogPcLzmhf78/TcVOjs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2tF1IUCqQsesy/XLbHk6MufGJmyP8rOSc7nHpu0C5PFM9Yysu1p/C1S5UsrU6gr3x4OmM4ckzZZDKalArgBpRjYlQhhV/QAn7rSZTEDwetryb3dtrpwtbU0AFO1k5mQH4TK6D4q0/W9yXRQJMda+9+vrvdllZ6elgSM/TVVisc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eONhvGqd; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744608711; c=relaxed/simple;
+	bh=yyNJl4g3bOgdii6aWvXqbkE/wzU/EU/wMK6naAzWIl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSDWZ7sniI/hFgrZYCYaymT9z5HMY0hJX6pV07B5K0T2nmix9xoVs+nVRaFFTOzfVu4Hrwr3AHv6ZpBCWeAalcOzzlv1cDvaAPUKySZd3Rin2aFGu1oJCaH/oO9K/020gp8XODr44dHo+XRxX4o/brwjjsgJpYNZ2LYhCIwaJnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nguol5js; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eONhvGqd"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53E5TTA72067104
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 00:29:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744608569;
-	bh=CMYMCaqeBwu/Fe6FSF4eS3p6oexTggwtdf65Un1px78=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=eONhvGqd2L2Utz0BA5kTwrlIN/n0Ude6PCTmVodo/rUFoo0dVVAAC513ARWb4uiS8
-	 O/tXc92cLgpy2K3IRYMqu5xwMdBPCuKr1M9iHIT/bYVNXKqFR7Ce61Llbka4lKm2Yt
-	 0sGphcv1REgoO08u9OJWaFt1hdRrTXxtNE9CWK/4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53E5TTq8117012
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 00:29:29 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 00:29:28 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 00:29:28 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53E5TR4g113799;
-	Mon, 14 Apr 2025 00:29:28 -0500
-Date: Mon, 14 Apr 2025 10:59:26 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <vigneshr@ti.com>, <kishon@kernel.org>, <18255117159@163.com>,
-        <cassel@kernel.org>, <wojciech.jasko-EXT@continental-corporation.com>,
-        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>,
-        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH v2 4/4] PCI: j721e: Add support to build as a loadable
- module
-Message-ID: <7ec59716-a4e2-4727-801d-07e227dcfece@ti.com>
-References: <20250330083914.529222-1-s-vadapalli@ti.com>
- <20250330083914.529222-5-s-vadapalli@ti.com>
- <zsxnx7biwogov5dw5yiafkgk6tsrtspac75bjbrca5uevweaim@ly67hwfyk7qh>
- <20250409064227.ctzznnb2shaygxhm@uda0492258>
- <6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nguol5js"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 843C5C4CEE2;
+	Mon, 14 Apr 2025 05:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744608711;
+	bh=yyNJl4g3bOgdii6aWvXqbkE/wzU/EU/wMK6naAzWIl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nguol5jsekueg+zeMBErNjyhxrkTAHJFo1t2GzJIr4L3HakW6qmn9c28tFrRoxRj2
+	 3eEP3eSNLTRehb8QtJ9qSRiucEoB7o86bGQa8gALh6NRbKlGn7LB25fRKbLh4e6aBA
+	 AHPRuZNehfcsa3BeiAkMmuJ7jGhRR9EVa9YuxqkaMjqQAb48TxxEdRyST7+wkZPORD
+	 8eJxVsY6eybt1+dNRroMCqXKVKafMEJXeTzfZ7SjDIz2DbJos2ZZwoR2jWja+zjWlt
+	 EX8qLmHpP6ybs5ba8F7qrdk/kZEXr58pfpTzrgzkNtlhmTIbrqFxH+m4rNg3Yxm1P/
+	 B8Ktz7YMATMYA==
+Date: Mon, 14 Apr 2025 07:31:45 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Binbin Wu <binbin.wu@linux.intel.com>, KVM <kvm@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the kvm tree with the tip tree
+Message-ID: <Z_ydwZOWA9cXDqXd@gmail.com>
+References: <20250414141411.469e897f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250414141411.469e897f@canb.auug.org.au>
 
-On Sun, Apr 13, 2025 at 07:43:05PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Apr 09, 2025 at 12:12:27PM +0530, Siddharth Vadapalli wrote:
-> > On Wed, Apr 09, 2025 at 12:06:35PM +0530, Manivannan Sadhasivam wrote:
-> > 
-> > Hello Mani,
-> > 
-> > > On Sun, Mar 30, 2025 at 02:09:14PM +0530, Siddharth Vadapalli wrote:
-> > > > The 'pci-j721e.c' driver is the application/glue/wrapper driver for the
-> > > > Cadence PCIe Controllers on TI SoCs. Implement support for building it as a
-> > > > loadable module.
-> > > > 
-> > > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > > ---
-> > > > 
-> > > > v1:
-> > > > https://lore.kernel.org/r/20250307103128.3287497-5-s-vadapalli@ti.com/
-> > > > Changes since v1:
-> > > > - Based on feedback from Thomas at:
-> > > >   https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
-> > > >   the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
-> > > >   dropped.
-> > > > 
-> > > > Regards,
-> > > > Siddharth.
-> > > > 
-> > > >  drivers/pci/controller/cadence/Kconfig     |  6 ++--
-> > > >  drivers/pci/controller/cadence/pci-j721e.c | 33 +++++++++++++++++++++-
-> > > >  2 files changed, 35 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> > > > index 82b58096eea0..72d7d264d6c3 100644
-> > > > --- a/drivers/pci/controller/cadence/Kconfig
-> > > > +++ b/drivers/pci/controller/cadence/Kconfig
-> > > > @@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
-> > > >  	  different vendors SoCs.
-> > > >  
-> > > >  config PCI_J721E
-> > > > -	bool
-> > > > +	tristate
-> > > >  
-> > > >  config PCI_J721E_HOST
-> > > > -	bool "TI J721E PCIe controller (host mode)"
-> > > > +	tristate "TI J721E PCIe controller (host mode)"
-> > > >  	depends on ARCH_K3 || COMPILE_TEST
-> > > >  	depends on OF
-> > > >  	select PCIE_CADENCE_HOST
-> > > > @@ -57,7 +57,7 @@ config PCI_J721E_HOST
-> > > >  	  core.
-> > > >  
-> > > >  config PCI_J721E_EP
-> > > > -	bool "TI J721E PCIe controller (endpoint mode)"
-> > > > +	tristate "TI J721E PCIe controller (endpoint mode)"
-> > > >  	depends on ARCH_K3 || COMPILE_TEST
-> > > >  	depends on OF
-> > > >  	depends on PCI_ENDPOINT
-> > > > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > > > index ef1cfdae33bb..8bffcd31729c 100644
-> > > > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > > > +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> > > > @@ -15,6 +15,7 @@
-> > > >  #include <linux/irqchip/chained_irq.h>
-> > > >  #include <linux/irqdomain.h>
-> > > >  #include <linux/mfd/syscon.h>
-> > > > +#include <linux/module.h>
-> > > >  #include <linux/of.h>
-> > > >  #include <linux/pci.h>
-> > > >  #include <linux/platform_device.h>
-> > > > @@ -27,6 +28,7 @@
-> > > >  #define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-> > > >  
-> > > >  #define ENABLE_REG_SYS_2	0x108
-> > > > +#define ENABLE_CLR_REG_SYS_2	0x308
-> > > >  #define STATUS_REG_SYS_2	0x508
-> > > >  #define STATUS_CLR_REG_SYS_2	0x708
-> > > >  #define LINK_DOWN		BIT(1)
-> > > > @@ -116,6 +118,15 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
-> > > >  	return IRQ_HANDLED;
-> > > >  }
-> > > >  
-> > > > +static void j721e_pcie_disable_link_irq(struct j721e_pcie *pcie)
-> > > > +{
-> > > > +	u32 reg;
-> > > > +
-> > > > +	reg = j721e_pcie_intd_readl(pcie, ENABLE_CLR_REG_SYS_2);
-> > > > +	reg |= pcie->linkdown_irq_regfield;
-> > > > +	j721e_pcie_intd_writel(pcie, ENABLE_CLR_REG_SYS_2, reg);
-> > > > +}
-> > > > +
-> > > >  static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
-> > > >  {
-> > > >  	u32 reg;
-> > > > @@ -633,9 +644,25 @@ static void j721e_pcie_remove(struct platform_device *pdev)
-> > > >  	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
-> > > >  	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-> > > >  	struct device *dev = &pdev->dev;
-> > > > +	struct cdns_pcie_ep *ep;
-> > > > +	struct cdns_pcie_rc *rc;
-> > > > +
-> > > > +	if (pcie->mode == PCI_MODE_RC) {
-> > > > +		rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
-> > > > +		cdns_pcie_host_disable(rc);
-> > > > +	} else {
-> > > > +		ep = container_of(cdns_pcie, struct cdns_pcie_ep, pcie);
-> > > > +		cdns_pcie_ep_disable(ep);
-> > > > +	}
-> > > > +
-> > > > +	if (pcie->reset_gpio) {
-> > > > +		msleep(PCIE_T_PVPERL_MS);
-> > > 
-> > > There is no point in adding a delay before PERST# assertion.
-> > 
-> > True :)
-> > 
-> > > 
-> > > > +		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> > > 
-> > > This is not PERST# assert, isn't it? Typo?
-> > 
-> > It is PERST# assert.
+
+* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+
+> Hi all,
 > 
-> Since the reset-gpios polarity is defined as GPIO_ACTIVE_HIGH in DT (which is
-> wrong unless you have an external component that changes polarity), for PERST#
-> assert, you need to set 0. If you set 1, then PERST# will be signalled as
-> deassert.
+> Today's linux-next merge of the kvm tree got a conflict in:
+> 
+>   arch/x86/kvm/vmx/vmx.c
+> 
+> between commits:
+> 
+>   c435e608cf59 ("x86/msr: Rename 'rdmsrl()' to 'rdmsrq()'")
+>   78255eb23973 ("x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'")
+> 
+> from the tip tree and commit:
+> 
+>   7172c753c26a ("KVM: VMX: Move common fields of struct vcpu_{vmx,tdx} to a struct")
+> 
+> from the kvm tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-I realize now that I have accidentally set it to 1 when it should have
-been 0. It was meant to be PERST# assert since it is the .remove callback.
-The v3 patch at:
-https://patchwork.kernel.org/project/linux-pci/patch/20250410104426.463453-5-s-vadapalli@ti.com/
-dropped the delay which is not required for PERST# assert, but the
-polarity is still incorrect. I will fix it in the v4 series.
+>  -	wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+>  +	wrmsrq(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
 
-Thank you for noticing this and pointing it out.
+>  -	wrmsrl(MSR_KERNEL_GS_BASE, vmx->vt.msr_host_kernel_gs_base);
+> ++	wrmsrq(MSR_KERNEL_GS_BASE, vmx->vt.msr_host_kernel_gs_base);
 
-Regards,
-Siddharth.
+>  -		rdmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+>  +		rdmsrq(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+
+>  -		wrmsrl(MSR_KERNEL_GS_BASE, data);
+>  +		wrmsrq(MSR_KERNEL_GS_BASE, data);
+
+Looks good, thanks!
+
+	Ingo
