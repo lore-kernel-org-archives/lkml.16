@@ -1,94 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7C527D79E;
-	Mon, 14 Apr 2025 10:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4E027E1CC;
+	Mon, 14 Apr 2025 10:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628224; cv=none; b=cHmuTzGAHKNB2a82+4JyDkRtVFAViXHLm7tAaP806yIMo8yDnbkBYEQxJhT2fV+Il52cq216WL1ipuh8UAKLTMlyLSm7Jdl1x3TzdwPADhZOgftJ+Ogr3IO9vMfziUc1dPEPLZP1D2CJbO7TScacw4YfJV7nwxOnKxYsXP+QMAA=
+	t=1744628232; cv=none; b=t02duAv0ogt5pj7Ta79RAgGOwP+eKbBElkKshv8gV2TKXjnJNs/q9ybpnDlb5yuNkd6PSNa1YGuuxACAatYdWWwP955xz1b7mk0vsXA46Ht8zmtArtb1FnaWmxgB0hqhcbLlFQ5jUqNKCrTlDM92ZaBVAZlTe8tcjoxdJsx9FU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628224; c=relaxed/simple;
-	bh=R3xwTXKuf5QwIrRarHqKkm0PSMH3ZydknPTp7+3MCps=;
+	s=arc-20240116; t=1744628232; c=relaxed/simple;
+	bh=Be2ydnxapnJ1r1uZegCpXDABpgwYbmS9LN3MXZ+3AaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3vDkDASQtmWkitDLq3kvm0QGHPfGfcEjoTihh4UiGFJ+miZ/C8UxwDahqSc2/tvd7c7sOK8uI8jV4pJdNOHyTEDaKyX4odVF683H84ymdT9ko1Sh16SJKfX37eXXuDbuaKo0VbRc7CVZbFOAPnUEUpKf9tl0yWYFo11s3aAo7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI5eC+fZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwmZxgiJGSGI4LGP1FzQlwACoPhSscy0uCBprfTLAM8cXm5KcOUezZ2gXSyR+xLSgKMk02r+9ChDYMZr2lQ6lDKxx409ymwgZB67qnjKqsf1rIVyRkcfyEPsE/T5W+P1TJSIUtr85lGM8rD4zMjRvhqSQ5HSHJwuSyjQkuS9H+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BTsWDRsX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gKgu5XMb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI5eC+fZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB22DC4CEE2;
-	Mon, 14 Apr 2025 10:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744628223;
-	bh=R3xwTXKuf5QwIrRarHqKkm0PSMH3ZydknPTp7+3MCps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LI5eC+fZiNWy7i030iKL6KaQjSZFpKRXu8wsfwJ1s2GxbG8vMfNIg6YPTE1XPBJg4
-	 GPH9/3NzX95nlcB+hoUVJF3V+hd0FCbOWhvH6Oxa/B8/lJLWsVjf+lZB946fuzvTm+
-	 EzSsf4C85Slw1BI8YX/To5NE0Kh3gDq0+DE6yxNjnlfRIYSuJbjp4O7PFs3xJTNsiA
-	 cSBloqUjK95ErfkQmzyiiduDJlj3xin9cpuAaRJ+eloba+8gtBjLrDq6eWEMkWEO2c
-	 0GQjzZycNKyI1r4Xspobj1PSz+SjhKsix9b2RGVpN7NFMHJ4R+ckzFTkwVkMLWusrg
-	 5GRRjJT+4figg==
-Date: Mon, 14 Apr 2025 12:56:56 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org,
-	rafael@kernel.org, abdiel.janulgue@gmail.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu,
-	daniel.almeida@collabora.com, robin.murphy@arm.com,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] rust: device: implement Bound device context
-Message-ID: <Z_zp-AvQ6FMv0ZRK@pollux>
-References: <20250413173758.12068-1-dakr@kernel.org>
- <20250413173758.12068-7-dakr@kernel.org>
- <D96AXNJRUAA0.3E5KYNM5PZZPG@proton.me>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BTsWDRsX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gKgu5XMb"
+Date: Mon, 14 Apr 2025 12:57:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744628228;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T0kuMBxWgx+PRLHcph8H3TFWPvSCGgkMX4FLSszxil8=;
+	b=BTsWDRsXiDcXPw3gpV903D7uHA09pxR/ZWLgPzlVuqIMaNwtzacrfJPdJ6GDH9ROtY/wvO
+	iMYvOIR+zzm20lVV2g0WJm3tYmY9mYUi0jcledeICyCmdgKAT2PGKANHLS0LS7WjvirL6r
+	TDB2cOytPHn2P+XH38vUpZNMq1lTAk+5xNi6GLNYj8pSQMzdixy7v6DX/5s4+okj9Dlq4R
+	MumeJAvnwd269VP+F1gTTrZ0424hFRda6WdjvOmK3l/3gJoQBcgXR4QGb9RWYps18pjyPA
+	Cp6fdHPvToaMAMKzR1ke+xZCozhUGMgQtW8hBNkufYh/rJJ6qNO+dgcM0FIDwA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744628228;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T0kuMBxWgx+PRLHcph8H3TFWPvSCGgkMX4FLSszxil8=;
+	b=gKgu5XMbLZ3ojKsH+N//qkaa/GL6pLpdIqpZ0RnJWIdNhDbwz0qX7cAy1F/UfnakHmGDvh
+	57IRSZWUH5VxcvCw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com
+Subject: Re: [PATCH v2 1/2] MIPS: Don't crash in stack_top() for tasks
+ without ABI or vDSO
+Message-ID: <20250414125526-98c48a5a-8950-4a3d-b49a-401cd80ecfba@linutronix.de>
+References: <20250414-kunit-mips-v2-0-4cf01e1a29e6@linutronix.de>
+ <20250414-kunit-mips-v2-1-4cf01e1a29e6@linutronix.de>
+ <CAAhV-H7p9TWLEYjv2K-sXUD9roMBJtkbjyq6NCEnyavG9PnWKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <D96AXNJRUAA0.3E5KYNM5PZZPG@proton.me>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H7p9TWLEYjv2K-sXUD9roMBJtkbjyq6NCEnyavG9PnWKw@mail.gmail.com>
 
-On Mon, Apr 14, 2025 at 10:49:49AM +0000, Benno Lossin wrote:
-> On Sun Apr 13, 2025 at 7:37 PM CEST, Danilo Krummrich wrote:
-> > The Bound device context indicates that a device is bound to a driver.
-> > It must be used for APIs that require the device to be bound, such as
-> > Devres or dma::CoherentAllocation.
-> >
-> > Implement Bound and add the corresponding Deref hierarchy, as well as the
-> > corresponding ARef conversion for this device context.
-> >
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/device.rs | 16 +++++++++++++++-
-> >  1 file changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> > index 487211842f77..585a3fcfeea3 100644
-> > --- a/rust/kernel/device.rs
-> > +++ b/rust/kernel/device.rs
-> > @@ -232,13 +232,19 @@ pub trait DeviceContext: private::Sealed {}
-> >  /// any of the bus callbacks, such as `probe()`.
-> >  pub struct Core;
-> >  
-> > +/// The [`Bound`] context is the context of a bus specific device reference when it is guranteed to
-> > +/// be bound for the duration of its lifetime.
-> > +pub struct Bound;
+On Mon, Apr 14, 2025 at 05:32:47PM +0800, Huacai Chen wrote:
+> Hi, Thomas,
 > 
-> One question about this: is it possible for me to
-> 1. have access to a `ARef<Device<Bound>>` (or `Core`) via some callback,
-> 2. store a clone of the `ARef` in some datastructure,
-> 3. wait for the device to become unbound,
-> 4. use a `Bound`-only context function and blow something up?
+> On Mon, Apr 14, 2025 at 4:29 PM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > Not all tasks have an ABI associated or vDSO mapped,
+> > for example kthreads never do.
+> > If such a task ever ends up calling stack_top(), it will derefence the
+> > NULL vdso pointer and crash.
+> >
+> > This can for example happen when using kunit:
+> >
+> >     mips_stack_top+0x28/0xc0
+> >     arch_pick_mmap_layout+0x190/0x220
+> >     kunit_vm_mmap_init+0xf8/0x138
+> >     __kunit_add_resource+0x40/0xa8
+> >     kunit_vm_mmap+0x88/0xd8
+> >     usercopy_test_init+0xb8/0x240
+> >     kunit_try_run_case+0x5c/0x1a8
+> >     kunit_generic_run_threadfn_adapter+0x28/0x50
+> >     kthread+0x118/0x240
+> >     ret_from_kernel_thread+0x14/0x1c
+> >
+> > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> > ---
+> >  arch/mips/kernel/process.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+> > index b630604c577f9ff3f2493b0f254363e499c8318c..66343cb6c1737c4217ddd8a2c3ca244fac0ef8a5 100644
+> > --- a/arch/mips/kernel/process.c
+> > +++ b/arch/mips/kernel/process.c
+> > @@ -690,9 +690,11 @@ unsigned long mips_stack_top(void)
+> >         }
+> >
+> >         /* Space for the VDSO, data page & GIC user page */
+> > -       top -= PAGE_ALIGN(current->thread.abi->vdso->size);
+> > -       top -= PAGE_SIZE;
+> > -       top -= mips_gic_present() ? PAGE_SIZE : 0;
+> > +       if (current->thread.abi) {
+> > +               top -= PAGE_ALIGN(current->thread.abi->vdso->size);
+> > +               top -= PAGE_SIZE;
+> > +               top -= mips_gic_present() ? PAGE_SIZE : 0;
+> > +       }
+> I think the below code should also exist only when VDSO exists.
+> 
+>         if (current->flags & PF_RANDOMIZE)
+>                 top -= VDSO_RANDOMIZE_SIZE;
 
-You can never get an ARef<Device> that has a different device context than
-Normal.
+Good point, thanks.
+I'll move that up into the same new conditional block.
 
-A device must only ever implement AlwaysRefCounted for Device (i.e.
-Device<Normal>).
-
-This is why patch 2 ("rust: device: implement impl_device_context_into_aref!")
-implements conversions from Device<Ctx> to ARef<Device>.
+> Huacai
+> 
+> >
+> >         /* Space for cache colour alignment */
+> >         if (cpu_has_dc_aliases)
+> >
+> > --
+> > 2.49.0
+> >
+> >
