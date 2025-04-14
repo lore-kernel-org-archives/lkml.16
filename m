@@ -1,212 +1,142 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF9F1F2360
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07E442077;
+	Mon, 14 Apr 2025 08:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617873; cv=none; b=Ws7LE7i+ilUuH6OLAXxjEALJjz/ac1f6pfkvCw/V/XsZys/PX+C34YqM2P3g6Se4HKdhtWLxAgyYAzpnBwJEdJvMo0fCrDmT6cjEZ3+rHuL+aTrVuln0zGdMizGLoQ6yott30k9GdjpeQBx6ITqd9BiUFd4QOBsNxE0P0oglgoQ=
+	t=1744617946; cv=none; b=ReczwLdftcv8/DCbsESv45wo3YxvLOVe+b1QzpkVRWlp6nxQWsKem2eK+0Xm0jnh/S9y4/2e/n3mY6fRx3R6MLA5ZpGP2S0rsToNvw7FXNK6Nw+cCvIJ3iy3aF8sDRbxSCgNULkwR3jMzLqus5PLMQBZRCX7VO2x2PEcGsIsUXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617873; c=relaxed/simple;
-	bh=u5+zJ8xQq2E+c5EIBgefhUD1z6xhKKWp9LXxgnrgFx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L/0M1JuMh0jPs8j4fkx/H5ewC8kxpHTFw8nxuEN4NVwoYbac9tHU0tXk9METjCNpGxYzrOVDnatx41RJr91BfUwh4bgcpQtFTYipM5pxy+8TfxH5vpW6Q4VpKfNck8emGWqHlPeETz2B0Z/XJoJxvuGyXaMTn7P3zNutwEJxOLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nM4MVO0b; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744617946; c=relaxed/simple;
+	bh=ktnWRremh4PlCVgM9PmJj7ZdmtWLOoFQiD5o5kvXX5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eh5GIHOlgZp4Tw3qmkM7CFFpcKiVov4oUOc5wu4ADzd3vq0Tc6bhwGAaP9UHac/cGv/xV6US5JXXp0zd/NsJiRTLNWdsYq14m866+SP93Wnc8c8Jx+by4pebpNExtKNMOW3x588w/N5q/Jr9L+wYANRGFhDD4sLu+Q5XlIR/3xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EzFpYuqk; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nM4MVO0b"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DLkmWL010748
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:04:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=motKW5Lb6mQyTh0z/VsDrh9t
-	PeNWHlCOYtShOT2XwtM=; b=nM4MVO0bE8SBq0z15kjjmKu6d8ldV0BDBDQmwgAT
-	H6Z5OahIIpzOv7U1xvXGeg9cRQpnahOg8IuIfrdfXXXOZwJ0+KS8RZ8atxCuUpSI
-	LV5nq9kPT/kgwAJflDjHqlJT05lHD8wcie2qlAXn/khjWWm37e/IIhBuMiAGeGJD
-	MkN2BnDftf55j86oex+flsp1qHEEcxFhNPTJl4MpNhanckUlIqsvXgIQ6tPn6aLq
-	XKRL3jjTy7bF+Dd1iNF2ughLLGIJaWvq3p8alF788jadkz/+LpDSyyT4ZmkyO33J
-	DHz3ecdKFJUoQ5TJ3HiPDYNNwyOS7zq5uo1xEDvADyWmHQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvj3x4y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:04:30 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c82c6d72so754620285a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:04:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744617869; x=1745222669;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzFpYuqk"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523de538206so1439909e0c.2;
+        Mon, 14 Apr 2025 01:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744617944; x=1745222744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=motKW5Lb6mQyTh0z/VsDrh9tPeNWHlCOYtShOT2XwtM=;
-        b=lDeGssc5ot3B8osW4RaLj0VGRxQ1VCh+T/1UescGQve+Jb7jaZV6NfGilX+g40W5bN
-         AE0ykOApCbU1Z22AUPXzG+A7MNmts/PuusQIrIuFDT3rZaSgwOygFeFq4VBG1Xr3aoI1
-         aRpXme8BB79WwnxMcxnR9dmNXwPBie+7Zuk+kaHb+SGzDo8NiJzRIBJzArNB2PwiQV+v
-         IM2axB66RPIGm+5ni4fkrG2OFC5rRiAjzEj0ogv9+9HirC9YAyGHWY5BbGRx1SyYW/l8
-         S9/w9XX4d2AO+G2MjiFdSb21g4/MoImZTDdAatA5lBFnLNFAjSN7gLXqYwz5Q6rcQqNB
-         7weA==
-X-Forwarded-Encrypted: i=1; AJvYcCVk51m7E0sACLyEeqQHD2WGlnKIUCpQlkinn9NtW4234j4YxmhcV/ditWfrADH8MRCf33EBOvF3ekCK4Vo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxijzN5gfY/w1mpI9PicY5pcWi4O9jwteLNhQdLRsK3NEz7VAIs
-	sr+5rIFxBpP1n9CVrCeBwwSL8cSFep+tDJ2Jqs2tFRhCF/Tf6cXRMZxcic2bpMCFtqZyKjAgrXa
-	nYUcW9Zi/+42xD5vE6e7ZmWHVbBZjbV12PWzdtm0ngFZIGQnNk63i4P49Yr0uLKE=
-X-Gm-Gg: ASbGncvKK/ebpB51rEPVfoPJFglst+u5ccGlufr/zf1z/X+wb78pP+TKhq5YTYq10Xh
-	2v+Qg1UL8zI/IiH3hXltf8NYGSlihXF9gsGwji+5gxkaOyrjVBhU0e74OLxNwPnbi6gztS3hPem
-	haULzChHlmGWXJ66khJ0UpLAFEIfDBrkp4f5TjWS+RPQyJC4ii8d4N8qwLBswpnVVeM1nWDlLtY
-	7KUckV3hzEXFqKMk2NC5vmkv3eLkh2YsRQQM+XajdMAMvUUuB3pI8LBGDdS0jeKsVtRth8Lk/Sx
-	IZPGPcmph7us4hwUHYsfDaZgz5fNGO3ljoMajMJsnIdxjZlWLXwKz7zXR3zy7Iw46xdBNv7yOtI
-	=
-X-Received: by 2002:a05:620a:28c6:b0:7c7:a55d:bd0 with SMTP id af79cd13be357-7c7af0c0ea9mr1883520185a.5.1744617869247;
-        Mon, 14 Apr 2025 01:04:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWWHm3DOZ1Q8AF22op7ePgxy0MOLfDLF+pEm6YiivbRillDGj+xV6eV96SSkSZfVCdD+uIVQ==
-X-Received: by 2002:a05:620a:28c6:b0:7c7:a55d:bd0 with SMTP id af79cd13be357-7c7af0c0ea9mr1883516185a.5.1744617868730;
-        Mon, 14 Apr 2025 01:04:28 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464cc096sm16699131fa.29.2025.04.14.01.04.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 01:04:27 -0700 (PDT)
-Date: Mon, 14 Apr 2025 11:04:26 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_mrana@quicinc.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
- gpio's to root port
-Message-ID: <ody5tbmdcmxxzovubac4aeiuxvrjjmwujqmo6uz7kczktefcxz@b6i5bkwpvmzl>
-References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
- <20250414-perst-v2-1-89247746d755@oss.qualcomm.com>
+        bh=Z+VLHUwu2moLQRiFoDs2lVIxZQ3Y1UP6WBvKjCENsm8=;
+        b=EzFpYuqkUVahA4VV5sdIxnClVLwy8rrtCgxGfVjHYmPpWPgChh/A7gMuswwF9PcKk6
+         jXZIWG6MqMrrurP4R9ITE87NrGnyMwBNzqm79doA0PcmF4YGYP4Jnu/8/BjE69HOo0Vg
+         uR4emhipQyRYaMQsZ3kWSbsEpK+yHK2ZGydpdZG6lMj2pmuAk6K/5eLFOlUnTBw+Sy2K
+         kDdDv3pLnWDPaMqoCYmK+y7vlkqvGv3G+s9ct9SVrdi+U/5pAdHkPSHjbjltqhjYFqj/
+         24EmhnNr34F9TMFyky+GiLqeew77duLEjOydTEFaQl1M2usyWgBFUT5GvAYJsbCS2yvZ
+         PhSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744617944; x=1745222744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z+VLHUwu2moLQRiFoDs2lVIxZQ3Y1UP6WBvKjCENsm8=;
+        b=VtzjQlpgTSYIdvwNvvM5PWm5n4JQjihfo6tNJZt/ev0AXqwBSqDtdqt4CEPOCq9CKo
+         fkUPNlDui0iznSDO+Yb940MfJWN0bm9TWSRmstm9PoRpBn01YBJDgp1QRXSdTD5ScqI3
+         VeZR36YV/bMJk89URRDrvlXOG9sIqcgodSiZKxFqiW++AVrGPpIbmRY/UwMkZ/ShpSPU
+         TAbYT4EH39WjXjLosMKbC5032prxrng9YFIMaEQr1v9YB9ZccA37DrHdmvsYuh2fOydN
+         7ccGLRCX7b2omB5gwGdJIgAzDlT495bqyBMR3IR+kr1vrVwY8LCbg9o1Y7TL9xDFHTuc
+         HO1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUFP7FbvSA1xI7v9RiTgHRC7sXp35Hc+qRkcLlx6ZDaOsFcwLc3qQ7RMtUexfDjhPbM/xHYZblq7GOA@vger.kernel.org, AJvYcCVCnLQGNqFzfRAsGJOpTjmJWWzonJNQr9JipUrlaZRI+pneEdRhyVV+7uP8lf613dPJrmhTEgt82cm6Mg==@vger.kernel.org, AJvYcCVb807Ds7POxxQx9K0x471LuGzaoTd1G9zvaEcGA+055LkHeg4lYglXvPVi7g9wLL6eBAa/OmxhZA2V1MQ4f6ePovw=@vger.kernel.org, AJvYcCW57Q1RBreDQZDfNdI704JZjXNc4o+RpUJzJhxuWkfVq2KXChaVHmRzGtY1gC7ar0LipyPxLho92DTx@vger.kernel.org, AJvYcCXH2Zjrm+OY8aNgVCv7DyAqpOSHRNdxIjWFhp5A+mUAf8B9DCmFawaFyKuQW59IJSgavo2gs9mQlhwSTuNi@vger.kernel.org, AJvYcCXZKGpJMdqUJks5fGHejv+Cyt77zrWejRi3ur8YXoMqibqgOLGDuJpjUtfewymucmRrVagEvO61hkKDzUUT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqPk/5TA9RPme+mH2l8jldAJPh8/hXbH3UHlGaLzabOBG5TQ7I
+	sf9LWGKGe5b4u4Oe0H+GnynGiLHFRROueQ/4439tLnynDZwAGvy8MsI6LhWnH+BMhLNgqOTD2IZ
+	QILgRyWO8B/xi/TqY58PzyO2HQGE=
+X-Gm-Gg: ASbGncuQkMV0SgysmArqFGlRzTpIv6QXCpitkMPuUPW/JjkjMhi28rpLMjLUt9GSRvD
+	BCSgDXqgpLi8scoSF6hIgGGdIixNIs6W7yIC91Ocw6nTXwntpr7L1JdPLHzHMM6erB/77+couQH
+	xufGq4xeV25m95D5VpwHECHg==
+X-Google-Smtp-Source: AGHT+IGCuud+Irbj69epGrU5bI9UHnAGW5z8Rh63mS+v+tdlhSzX3+RYnZruxoaSI9aRjH+6eIkClJCAuUSCoSOFb/s=
+X-Received: by 2002:a05:6122:1d8a:b0:527:8771:2d39 with SMTP id
+ 71dfb90a1353d-527c359f576mr6787965e0c.7.1744617943428; Mon, 14 Apr 2025
+ 01:05:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414-perst-v2-1-89247746d755@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=67fcc18e cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=xMVSDGMRPTrRGbC6XWUA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: 01AzTQKvjiiOGVMO02dD0zCVPnckmM_M
-X-Proofpoint-ORIG-GUID: 01AzTQKvjiiOGVMO02dD0zCVPnckmM_M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140057
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407191628.323613-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU0ee30MCXSdW=hho42qFHeT5fpNv0_aNSAv-5wXk2g2A@mail.gmail.com>
+In-Reply-To: <CAMuHMdU0ee30MCXSdW=hho42qFHeT5fpNv0_aNSAv-5wXk2g2A@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 09:05:17 +0100
+X-Gm-Features: ATxdqUHgM77RmTUJPhf3exniWzHJ4NsZqQHYq4gV97TCNKEqiGfMBLPyBJ15mBg
+Message-ID: <CA+V-a8uD=n5-1fS4N4CBygT=vbdnAO9+-5Tv+GL+6Y27KmsEXA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/12] dt-bindings: soc: renesas: Document Renesas
+ RZ/V2N SoC variants and EVK
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 11:09:12AM +0530, Krishna Chaitanya Chundru wrote:
-> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
-> the bridge node, as agreed upon in multiple places one instance is[1].
-> 
-> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
-> wake-gpios properties in the root port node. There is already reset-gpio
-> defined for PERST# in pci-bus-common.yaml, start using that property
-> instead of perst-gpio.
-> 
-> For backward compatibility, do not remove any existing properties in the
-> bridge node.
-> 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml      | 18 ++++++++++++++++++
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml      | 17 +++++++++++++----
->  2 files changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> index 0480c58f7d998adbac4c6de20cdaec945b3bab21..16e9acba1559b457da8a8a9dda4a22b226808f86 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> @@ -85,6 +85,24 @@ properties:
->    opp-table:
->      type: object
->  
-> +patternProperties:
-> +  "^pcie@":
-> +    type: object
-> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      phys:
-> +        maxItems: 1
-> +
-> +      wake-gpios:
-> +        description: GPIO controlled connection to WAKE# signal
-> +        maxItems: 1
-> +
-> +    unevaluatedProperties: false
+Hi Geert,
 
-Please mark old properties as deprecated.
+Thank you for the review.
 
-> +
->  required:
->    - reg
->    - reg-names
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> index 76cb9fbfd476fb0412217c68bd8db44a51c7d236..beb092f53019c31861460570cd2142506e05d8ef 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> @@ -162,9 +162,6 @@ examples:
->              iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
->                          <0x100 &apps_smmu 0x1c81 0x1>;
->  
-> -            phys = <&pcie1_phy>;
-> -            phy-names = "pciephy";
-> -
->              pinctrl-names = "default";
->              pinctrl-0 = <&pcie1_clkreq_n>;
->  
-> @@ -173,7 +170,19 @@ examples:
->              resets = <&gcc GCC_PCIE_1_BCR>;
->              reset-names = "pci";
->  
-> -            perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
->              vddpe-3v3-supply = <&pp3300_ssd>;
-> +            pcie1_port0: pcie@0 {
-> +              device_type = "pci";
+On Thu, Apr 10, 2025 at 10:07=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Document the Renesas RZ/V2N (R9A09G056) SoC variants, distinguishing
+> > between configurations with and without specific hardware features such
+> > as GPU, ISP, and cryptographic extensions. Also, document the
+> > "renesas,rzv2n-evk" compatible string for the RZ/V2N EVK board.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v6.16.
+>
+> > --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> > +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> > @@ -551,6 +551,21 @@ properties:
+> >                - renesas,r9a09g047e58 # Quad Cortex-A55 + Cortex-M33 + =
+Ethos-U55 (21mm BGA)
+> >            - const: renesas,r9a09g047
+> >
+> > +      - description: RZ/V2N (R9A09G056)
+> > +        items:
+> > +          - enum:
+> > +              - renesas,rzv2n-evk # RZ/V2N EVK
+>
+> Shall I add the board part number while applying?
+>
+Yes please. Thank you for taking care of it.
 
-The rest of the file uses 4 spaces to indent the next level. Any reason
-for breaking this custom?
+> -              - renesas,rzv2n-evk # RZ/V2N EVK
+> +              - renesas,rzv2n-evk # RZ/V2N EVK (RTK0EF0186C03000BJ)
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
 
-> +              reg = <0x0 0x0 0x0 0x0 0x0>;
-> +              bus-range = <0x01 0xff>;
-> +
-> +              #address-cells = <3>;
-> +              #size-cells = <2>;
-> +              ranges;
-> +              phys = <&pcie1_phy>;
-> +
-> +              reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +            };
-> +
-
-Drop extra empty liines
-
->          };
->      };
-> 
-> -- 
-> 2.34.1
-> 
-
--- 
-With best wishes
-Dmitry
+Cheers,
+Prabhakar
