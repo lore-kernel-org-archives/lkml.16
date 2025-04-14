@@ -1,109 +1,118 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341A289340;
-	Mon, 14 Apr 2025 16:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EED19A2A3;
+	Mon, 14 Apr 2025 16:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649108; cv=none; b=FFQ3htaeNQHHIwjaJbTsZ3VjCeIJTxgn7lLj9ydyjJfDBsHZZH9moP4BENE9T3eFfde/J33WYkgzc1GDbGN6hLfh7jSL1Pi90nXBjPWEe+ydgxCXCKeNsqM1K3Pfp3jnsG/Rg9h5zeIklHpP3GrE41e9WRID20yKpa1UxNn/QoM=
+	t=1744649141; cv=none; b=K0fuPaO5ppgiEA94xXUWN97kG3TdHZq6WDsPdAElDpfiLtCvX44/vGeXCWN5p3BfBJMsIcJic4Gc6B2w6Ndhk3flXT7oWFWCCQursxUtANiPbCqusmmm+54cWlC2nfmHEByFmAMpKyAtxg1i9aOBTV//iirTT25+t3gGenoYfwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649108; c=relaxed/simple;
-	bh=CyRmz6WDnLlgE/Au89ERUZt3OIYiAJnvydjXIw1skME=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pXElyqOi5TuT/y+RS3oHFnsar2eyvGbjLjkxSgcGlsPg6OFe5mid7D0GNpUNM2mnyu85kGhWwXpQZnOx/1Z6NqBaaeRxnxrj5D8o7bvLT1Yil8fL/w7Z5UFjaSYlinDzyPRLZK9fz6hbYCcPX3fs3ftlKUn62onWWpTZFZbDFzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLjjFtT0; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744649141; c=relaxed/simple;
+	bh=UUtRWLWyJUerHzk/XbggQ5MuRdrgseJn9oVb0Fz0NLo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Go26YE27Mfbt0W080hdHNGjr8+cGpo88VjOfFPpg/YjFLK6lXxugAZ3PUetTOAKoh31HUYZAZFpbKbmystbCojemnmJJTcgd7W14rTqVMGPnafSYjHdme5JCeRLG/P2mldjdj4ZYSK81IxyjR5WP/nGbIp8lmK3UAGkAyTvEobw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJby2Jg4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLjjFtT0"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so849775a91.2;
-        Mon, 14 Apr 2025 09:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744649106; x=1745253906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CyRmz6WDnLlgE/Au89ERUZt3OIYiAJnvydjXIw1skME=;
-        b=dLjjFtT0BqdIHXpMLrPbFKTTx3/APgx/zgrgg5/9xtD5PIkJMf1BPhQNMEiXSJHqYN
-         iZN3U437zC/AO2BSiNQyIQ3htV5kJ03zQWVgqBT2XLu8nJEGRWs0YbDm5+HV5M9C1T+3
-         XYY4RGL3nxF8QTXuNKstAc9eGviX5GPWAE56q1iBV/INDsQIIUuFRuhjQ4+HRQzK/dTw
-         nL14V3+uVgQmZSvEdH1oaXS1+Dz3I0ZcoWh6ZEYNZRrmY+OxOWcEQpiEVFnd/InKPqnK
-         /x+BVtqVpWuDT4L1R88437lh0rce+PSSV0xVWV9J5fJtxu2sktx6TLUkDW6bvI4wwG4U
-         wrBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744649106; x=1745253906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CyRmz6WDnLlgE/Au89ERUZt3OIYiAJnvydjXIw1skME=;
-        b=JpKYw6v54FDajcIr0ZBboILak/UHF1ndXnOBaKS+cHoEVJe+0ffTFqVvHfCCLKhYIZ
-         D4bLGiUW14LjFk2CNR+opTm8DGoC7GnjffFFbxxd//+v3O1p0i47mnWr3oyYAGHu1/sI
-         baDztz77BDgn915e7RswRjoo9eJFAtIgKIqk9SgHV18+80uOjlXKW9Cxsjkp8IfTrCjG
-         DQdAZyvlKjCyamshHu7Tpe7hy3SQP880ief5xrJBLCjRaG6oYOZOpi+vaLyhwR0Jd4kR
-         VafPs0fCRZfmMECbYUtTEo0SiZxPCbSq+/mm6Iy6s5YJ20VVWUDQ5C3N2wea32DIZG9r
-         3xrg==
-X-Forwarded-Encrypted: i=1; AJvYcCURNjv5HPvK39/Sfvyqe4KwcbY1Cj+ADVqgTju/QngjqdXyoH6GkjMH60VZCl5R/0qxfDvG48KusQqFakwUir0=@vger.kernel.org, AJvYcCUu4XVHs7tsBXLiXVaKSldpiRjgWmijLMMrMtPtsQ09L+Jw5W8xomybvsUWieMoRBpCGHU4cXMIGSzj@vger.kernel.org, AJvYcCVHXWLd9+ytwY2AN/Kn01PyLnA1zp2ck0tQjNBZXIBjf/BzLgSTqPRJ9BgQde9ZUyWbYUTyx1ah2HXnRazu@vger.kernel.org
-X-Gm-Message-State: AOJu0YznnfYAyIC9S1rfZLihsm7Lr6uXyQDSv+XaCR7yWy48aU7v53gY
-	4bhdmu5dKkTDCk9aIiKEXUCra4v/k37fDXlNJq06DDusk3a+lpy6mQN0glQBsnuaFYWtPf5jDmG
-	ssWvy+flKysIt28HQaTwsw67YC4w=
-X-Gm-Gg: ASbGncvrYwJXD43KVazbt7VkvUUfcnmtxbboMILaV6NhbAjYxUI8bB2I3Kys453NfcC
-	/GDOs58wclEeA5MSq393ZAjxdKrv8U/LE4h9TeRnTILG1pgAe404WVFamt+RBCS+iSmCQL6+8rq
-	+XuRjP782KFbOnxsi1gu/80QcWTeevFBop
-X-Google-Smtp-Source: AGHT+IFFO/6s6YgrPEO3OnxOg96c+7vd2ZcP2QQOQbeI5zAqmfo8OAJafhVQhOHi2OQPh5zM8jjw1Stv0z3LdLO72T4=
-X-Received: by 2002:a17:90b:1a88:b0:2fe:b2ea:30f0 with SMTP id
- 98e67ed59e1d1-3084e75a57emr284165a91.4.1744649105757; Mon, 14 Apr 2025
- 09:45:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJby2Jg4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DC00CC4CEEA;
+	Mon, 14 Apr 2025 16:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744649141;
+	bh=UUtRWLWyJUerHzk/XbggQ5MuRdrgseJn9oVb0Fz0NLo=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=oJby2Jg4zCbeInT1UkA6CKqzysJpj6EqB7nAfrLpXIHCxp4u/o8GrNqBMaG9Iww3c
+	 MAzgnURSebWYtp8/UKX6ODMxobpaK0iZm1k829eaiF4LP+s/mO717AJ9grUQQxEFgT
+	 QQL0Qmx/nk//klNYb4t3iRrG4K/w5yejlvRed4ApbgfN+xTxM4Zqvxxi5jYnmY6GcH
+	 AApoeKuF+Sxp0kFdTtuOBStcKND/vZYjeDuV+CUTlNxQ0ZqAObmlekeCPNX6dkW0xk
+	 Zzr8kX1AJuql8/7ZJiPiZYf6cepB8FXe64Zc7SI6D2+lAqvQUolwFrConIvQzlC2sm
+	 4tUL6J65x7UvA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CD6C369A2;
+	Mon, 14 Apr 2025 16:45:40 +0000 (UTC)
+From: Vincent Knecht via B4 Relay <devnull+vincent.knecht.mailoo.org@kernel.org>
+Date: Mon, 14 Apr 2025 18:45:12 +0200
+Subject: [PATCH RESEND2 v2] clk: qcom: gcc-msm8939: Fix mclk0 & mclk1 for
+ 24 MHz
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326171411.590681-1-remo@buenzli.dev> <20250414152630.1691179-1-remo@buenzli.dev>
- <CANiq72mJubnGyqSk3sqKVa7g9HvnJvmRg=gJ2kaBtbMMVWWC8g@mail.gmail.com> <D96HP1UV49SY.1U1BFA14P8XHE@buenzli.dev>
-In-Reply-To: <D96HP1UV49SY.1U1BFA14P8XHE@buenzli.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 14 Apr 2025 18:44:53 +0200
-X-Gm-Features: ATxdqUErYkDDBOGFPEFB-nfL3C3C2TIMbtTywdzeB3ydwzNNRQdwTBq8nO3zs6g
-Message-ID: <CANiq72=ru+M0W2Gw5bYD4zMD-mkMU0He-tAX4Tna9g-ddbC-0Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] More Rust bindings for device property reads
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250414-gcc-msm8939-fixes-mclk-v2-resend2-v2-1-5ddcf572a6de@mailoo.org>
+X-B4-Tracking: v=1; b=H4sIAJc7/WcC/x3MsQqDMBCA4VeRm3ugZ1JM57o62LF0kHjao02UH
+ IggvntDxw9+/gOUk7DCrTgg8SYqS8ygSwH+PcSZUcZsoJJsaSqDs/cYNDSudjjJzorBfz+4ESZ
+ WjiOhM7YZjOX6Sg7yZ038D/PmCX37aLs7wes8f4bHAqF8AAAA
+X-Change-ID: 20250414-gcc-msm8939-fixes-mclk-v2-resend2-9458a45e3629
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Stephan Gerhold <stephan@gerhold.net>, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Vincent Knecht <vincent.knecht@mailoo.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744649140; l=1473;
+ i=vincent.knecht@mailoo.org; s=20250414; h=from:subject:message-id;
+ bh=rmTNV+QNatPi9Yx+q9e80eZX7u4a7NReIZUsYB1JC3A=;
+ b=bL5pEw4ycYvfASyvE3TY6wTsYbglQYSn1nspsXLgmUqe+Ru3JenjqUx2i03WIVWSr2jBXJT+h
+ +PCGG8dDluLCnrdBxuZQodXyYLh+YQwcLjxihpKehisRBxvd3wG5DEt
+X-Developer-Key: i=vincent.knecht@mailoo.org; a=ed25519;
+ pk=MFCVQkhL3+d3NHDzNPWpyZ4isxJvT+QTqValj5gSkm4=
+X-Endpoint-Received: by B4 Relay for vincent.knecht@mailoo.org/20250414
+ with auth_id=377
+X-Original-From: Vincent Knecht <vincent.knecht@mailoo.org>
+Reply-To: vincent.knecht@mailoo.org
 
-On Mon, Apr 14, 2025 at 6:07=E2=80=AFPM Remo Senekowitsch <remo@buenzli.dev=
-> wrote:
->
-> Junio Hamano recently wrote on the Git mailing list[1] that he wants
-> his contributors to do this, so the original message-ID can be used as
-> a "patch set ID". A quick glace at the archive[2] confirms that people
-> work this way. I assumed the kernel community would appreciate this
-> as well.
+From: Vincent Knecht <vincent.knecht@mailoo.org>
 
-I see, thanks for the reference!
+Fix mclk0 & mclk1 parent map to use correct GPLL6 configuration and
+freq_tbl to use GPLL6 instead of GPLL0 so that they tick at 24 MHz.
 
-I don't think it is a good idea for long series, given how some
-clients render things, e.g. GMail just shows the new version in a
-single linear thread and it gets really confusing.
+Fixes: 1664014e4679 ("clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller")
+Suggested-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+---
+ drivers/clk/qcom/gcc-msm8939.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Even in a nested/tree render, like Lore's option, it is harder to see
-and/or compare the versions, in my opinion. Perhaps Lore could be
-improved here (e.g. offering (auto-)folding of versions) -- most of
-the time we only care about the last version (and perhaps last - 1)
-anyway.
+diff --git a/drivers/clk/qcom/gcc-msm8939.c b/drivers/clk/qcom/gcc-msm8939.c
+index 7431c9a65044f841f711df6e84008f759e7ab026..45193b3d714babcf56fc0c6877a13a73f3e79104 100644
+--- a/drivers/clk/qcom/gcc-msm8939.c
++++ b/drivers/clk/qcom/gcc-msm8939.c
+@@ -432,7 +432,7 @@ static const struct parent_map gcc_xo_gpll0_gpll1a_gpll6_sleep_map[] = {
+ 	{ P_XO, 0 },
+ 	{ P_GPLL0, 1 },
+ 	{ P_GPLL1_AUX, 2 },
+-	{ P_GPLL6, 2 },
++	{ P_GPLL6, 3 },
+ 	{ P_SLEEP_CLK, 6 },
+ };
+ 
+@@ -1113,7 +1113,7 @@ static struct clk_rcg2 jpeg0_clk_src = {
+ };
+ 
+ static const struct freq_tbl ftbl_gcc_camss_mclk0_1_clk[] = {
+-	F(24000000, P_GPLL0, 1, 1, 45),
++	F(24000000, P_GPLL6, 1, 1, 45),
+ 	F(66670000, P_GPLL0, 12, 0, 0),
+ 	{ }
+ };
 
-I think `b4` behavior of subject+author works OK, but an explicit
-change-id would be nice. Reusing the Message-ID for that would only
-really work well if we could control the UI for everyone, I think.
+---
+base-commit: b425262c07a6a643ebeed91046e161e20b944164
+change-id: 20250414-gcc-msm8939-fixes-mclk-v2-resend2-9458a45e3629
 
-Cheers,
-Miguel
+Best regards,
+-- 
+Vincent Knecht <vincent.knecht@mailoo.org>
+
+
