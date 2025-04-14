@@ -1,172 +1,143 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A72719F130
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C066E2749F1;
+	Mon, 14 Apr 2025 16:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649792; cv=none; b=MieNxDThuEqcjqnlccnCH76f6mLhRrY22Okwsb0ny8AKiSoPc1JshxGnYHLSpnL/CykSXLLCf2RLqy2P5rRjgAKskXJhAA2QH4/ZliedTECKxcSJSL4OCqwmHa0WUUpTX9xwIVkixs21+ZBcu2pdfAV2aPG2kOnlY8PfDTNc+Bw=
+	t=1744649804; cv=none; b=RHgZpgkgE7pxrw05/MYJyMyDGJ9lDPDi+VKrbytT3+kuEaBNwq1aB4aQHMItBZ8RByDGNmf4iBtXXSrqug/c7g54DsDFUR0EpD4ggJyF8n6NbFF/NsTcS5YqVfGB6dU3dMOtIsr0bx8wsv4g9LY/xVno3rDI2GMx6PMuxJuMXbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649792; c=relaxed/simple;
-	bh=6OpGJCyJUOcBlVWLO7rOs9y2+iVUF98SmlUbFpGYdq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rz7+t9LiJp6nQwMp3/PtDqfQrkvCkr/vLNRsVUXM0/A+xgpn/sS5GG0MqxF/nZdsiWGSMzJvMi0oLWPmHCInFEFqbryUJAq8I5A5cFLEWE5RBsI3N8GB3SIa7eU9lVp7W6Q1gxtY1sygR6f6SycsoRD9MI92tZ7ASlQOeL+t6v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MP87YMnV; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744649804; c=relaxed/simple;
+	bh=qioOoY3NHQQEpjtRQrFyHraXZimPdq715yX3nesHumU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UCx9+cf4CPk1AmjK6INsb/BTwLdjSs4cYQahULbDzpISDU5Cp0T0ZtfMh98OPaWn0JTlya9wa1Lv9lPDKoFs+CaNpxxFb7rjaTDYMK/CJbFwfuKZOgSItymLvjLlRKBbY0BE0ZDVis6iCH/hJAxWEDFebLXW8oHJNtUVmXEbWAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaWWEpYQ; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MP87YMnV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744649788;
-	bh=6OpGJCyJUOcBlVWLO7rOs9y2+iVUF98SmlUbFpGYdq8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MP87YMnVw+AmlpnZ/hARvTOJr1BB8Oxd0Da4BElyauKcEs9E4e/TcdWmNMqLGs9Ym
-	 7Lx5AfrttTtiY+mLb4MxQOjM+ss89ebmPcGYxmszzD49lhXIuxA7Lz0eOxY0oTwdRC
-	 kgoN1J2DTyNVvCAEzecwFZpup3jvxsV/IYJUHWQHKIcClb51+6SoydBizonntn/85W
-	 tFpj0yPZs46hJy9BjkbX8Vu5Fn4Fwvtz5i0GANnV00PgyZargYgNidu11YvIs07pal
-	 4FYUy+uNv9mlGTmcK14QNFnfx84L91xMQG6iaAIlbznKUJCi1XkEr/u9CvqyXLHVWx
-	 0J8F2/UbaeVWA==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CC32A17E0809;
-	Mon, 14 Apr 2025 18:56:27 +0200 (CEST)
-Date: Mon, 14 Apr 2025 18:56:23 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Ashley Smith <ashley.smith@collabora.com>
-Cc: "Steven Price" <steven.price@arm.com>, "Liviu Dudau"
- <liviu.dudau@arm.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Heiko Stuebner"
- <heiko@sntech.de>, "kernel" <kernel@collabora.com>, "Daniel Stone"
- <daniels@collabora.com>, "dri-devel" <dri-devel@lists.freedesktop.org>,
- "linux-kernel" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] drm/panthor: Make the timeout per-queue instead of
- per-job
-Message-ID: <20250414185623.628543fb@collabora.com>
-In-Reply-To: <19635301a95.f859dc6e883590.3071663948141072628@collabora.com>
-References: <20250410125734.1005532-1-ashley.smith@collabora.com>
-	<3a5306c8-df44-430a-a24e-72d71b2dc8c1@arm.com>
-	<19635301a95.f859dc6e883590.3071663948141072628@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaWWEpYQ"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523ee30e0d4so1934687e0c.2;
+        Mon, 14 Apr 2025 09:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744649802; x=1745254602; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=udtwR14oubKebFu5rW6k4e0weoZf4m2R815HfEK738g=;
+        b=kaWWEpYQhxgz23204PRwltLHoYlmjo7Gnevh5hgbECXM+btr/A98eeCFw9TBK+ATA5
+         KOxlwwJBYbgddanC/zZpm3HsSdhEH/j2pA251j9Lx2tuCXNpdng5JjMDd44PDtwK+nSx
+         mLhAxf3alf2RHKiLbS5+2tcbl+Cx8be9LmaeUKS7DRnubX6lAA4tfI+zZ7VlN2bRpUPJ
+         2mOxepn64fSGsrIOxpJPCv0ojZg4w8snJdm3WSSkXhhyeWux5CBNhELe8w/ugx2Ra7m3
+         jmzqPt9FWHJyqQEbBw8+m+Fk54ySggp82+JUNpDj31uk75I0Cb/nuuNxAfOp5tEDJ3cK
+         6ERQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744649802; x=1745254602;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=udtwR14oubKebFu5rW6k4e0weoZf4m2R815HfEK738g=;
+        b=qRKXXPGTtYs1Hr8ia8XUKcSWwzIPENfAGlNB1GAp7MsndQhzQOd5TPwaJxFnEuJqhj
+         vP5eq6PKGDiHNgWDHbIQgsfkIgbgJVpktnXgLJUKfgh5rgpJKtwlws7uwCdsw9K3ejWU
+         o/wJW/g6UWZ0LS3OoIbDXqEp9QmoM2GUnxUhHo3HnbzMD1zpxKgh0LZmB4Ia+Ok+uuaG
+         UaFXWHZweQhKzCDSKmVdtZwvBIovlMBHGmqjWnXnwh+wI6QAlPo7K0i2fHd63kMcePxz
+         tJfU+M4FILe5eaUdqHqory4zJ+jJ+pNjaPPCj1Wmtv8qNHlxA5FIOUWxnypgac/vRh9x
+         n2IA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2AcBMcs6GYmfOPlF6XoiOWaf8fiIQIMU0LvzSDaRV0mGbbmn0BtdmiZNXs2rj8Rmb2p3q8njZliREBUio@vger.kernel.org, AJvYcCUs2MHjTqaP78it1o/sVUch5ciDDnDpL+1UpXZAdvCbcu8L5rJwEzzCaIDnJheFej/hQfb1xLVq@vger.kernel.org, AJvYcCW1Ig5IQgxZWX1AUAE43zuzamjvLHAP7FedpAnQIlLRasGIJUr2s6DInTHlbg6keu/U4JcgIpLRG80W@vger.kernel.org, AJvYcCWysA9OOSwP5cv8nt8dKPzRWjuoqxrxAdEWkaBtf+p6rCU0vV33UPKOh03j3azinP4+EiUTGqVXPY21Fbv7eZZFolI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf2gz6dPE4tl9Ho7UMl7wMRrk2ymtQfB6QWbCuSaC8z7J8VOYt
+	YCM4iBHou+oP1a0NGWTVx99S65AqLQq4i8r5ThEoMUnoYm5xtRqn0NH23JdZq/MdCrlfPsUfwIK
+	oE2VAjraGyTzEqEBF01ZFh8QCvx8=
+X-Gm-Gg: ASbGnctDoyBhr9uQJnB1JeVqKmvZxonE1Lt/UgkkdgFPyXXJfztPh2azmsxEdO6DDqh
+	OZw20tY2PWOsR+IKkCYeDYilIrv7KLIc2u3FjoSOEdtXWaVvQaXfY13soECDUuvtnrQHUWbFbAS
+	6u9USz7rAG/7HaXsyW94Sbe1FPTJgeXXo/siyiv6pSIVibE2FS/rpNiA==
+X-Google-Smtp-Source: AGHT+IFQpsz/ji8MKcAuYh+qFnh6pm7Cs4klNHHbzk4kp5149hgyDeoWHHM5lEKz3qpRzffoQj33KxW8IfZk7jM+Cro=
+X-Received: by 2002:a05:6122:209f:b0:50b:e9a5:cd7b with SMTP id
+ 71dfb90a1353d-527c35ae10cmr8117351e0c.9.1744649801573; Mon, 14 Apr 2025
+ 09:56:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <f20e6589-37d9-458b-af82-92fb1ed0db18@bp.renesas.com>
+In-Reply-To: <f20e6589-37d9-458b-af82-92fb1ed0db18@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 17:56:15 +0100
+X-Gm-Features: ATxdqUHsvC58AXJcSX9DHfg067ybVtkBeQg9WB3LjBGtUZ7gtnbYUDxCu53XU_M
+Message-ID: <CA+V-a8uho8xKikEmSQeDM4Qe5y0jaZfYE3vNc8qehb_NLHGJ6g@mail.gmail.com>
+Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
+ Renesas GBETH
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Apr 2025 17:44:27 +0100
-Ashley Smith <ashley.smith@collabora.com> wrote:
+Hi Paul,
 
-> On Fri, 11 Apr 2025 16:51:52 +0100 Steven Price  wrote:
->  > Hi Ashley,=20
->  > =20
->  > On 10/04/2025 13:57, Ashley Smith wrote:  =20
->  > > The timeout logic provided by drm_sched leads to races when we try=20
->  > > to suspend it while the drm_sched workqueue queues more jobs. Let's=
-=20
->  > > overhaul the timeout handling in panthor to have our own delayed wor=
-k=20
->  > > that's resumed/suspended when a group is resumed/suspended. When an=
-=20
->  > > actual timeout occurs, we call drm_sched_fault() to report it=20
->  > > through drm_sched, still. But otherwise, the drm_sched timeout is=20
->  > > disabled (set to MAX_SCHEDULE_TIMEOUT), which leaves us in control o=
-f=20
->  > > how we protect modifications on the timer.=20
->  > >=20
->  > > One issue seems to be when we call drm_sched_suspend_timeout() from=
-=20
->  > > both queue_run_job() and tick_work() which could lead to races due t=
-o=20
->  > > drm_sched_suspend_timeout() not having a lock. Another issue seems t=
-o=20
->  > > be in queue_run_job() if the group is not scheduled, we suspend the=
-=20
->  > > timeout again which undoes what drm_sched_job_begin() did when calli=
-ng=20
->  > > drm_sched_start_timeout(). So the timeout does not reset when a job=
-=20
->  > > is finished.=20
->  > >=20
->  > > Co-developed-by: Boris Brezillon boris.brezillon@collabora.com>=20
->  > > Signed-off-by: Boris Brezillon boris.brezillon@collabora.com>=20
->  > > Tested-by: Daniel Stone daniels@collabora.com>=20
->  > > Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")=
-=20
->  > > Signed-off-by: Ashley Smith ashley.smith@collabora.com>=20
->  > > ---=20
->  > >  drivers/gpu/drm/panthor/panthor_sched.c | 244 +++++++++++++++++----=
----=20
->  > >  1 file changed, 177 insertions(+), 67 deletions(-)=20
->  > >=20
->  > > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/d=
-rm/panthor/panthor_sched.c=20
->  > > index 446ec780eb4a..32f5a75bc4f6 100644=20
->  > > --- a/drivers/gpu/drm/panthor/panthor_sched.c=20
->  > > +++ b/drivers/gpu/drm/panthor/panthor_sched.c  =20
->  > =20
->  > [...]=20
->  >   =20
->  > > @@ -2727,8 +2784,17 @@ void panthor_sched_suspend(struct panthor_dev=
-ice *ptdev)=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 * automatically terminate all active groups, so let's=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 * force the state to halted here.=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 */=20
->  > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED)=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED) {=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0csg_slot->group->state =3D PANTHOR_CS_GROUP_T=
-ERMINATED;=20
->  > > +=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Reset the queue slots manually if the term=
-ination=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0* request failed.=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*/=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i queue_count; i++) {=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (group->queues[i])=
-=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0cs_slot_reset_locked(ptdev, csg_id, i);=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
->  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0}=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0slot_mask &=3D ~BIT(csg_id);=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
->  > >  =C2=A0=C2=A0=C2=A0=C2=A0}  =20
->  > =20
->  > So this seems to be the only change from v2 (a changelog can be=20
->  > helpful!). And I'm not convinced it belongs in this patch? It's not ju=
-st=20
->  > "[making] the timeout per-queue instead of per-job".=20
->  > =20
->  > I haven't dug through the details, but I think this belongs in a=20
->  > separate patch.
+On Mon, Apr 14, 2025 at 2:13=E2=80=AFPM Paul Barker
+<paul.barker.ct@bp.renesas.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On 07/04/2025 13:03, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add the DWMAC glue layer for the GBETH IP found in the Renesas RZ/V2H(P=
+)
+> > SoC.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> [snip]
+>
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c =
+b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
+> > new file mode 100644
+> > index 000000000000..a0f7cacea810
+> > --- /dev/null
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
+> > @@ -0,0 +1,165 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * dwmac-renesas-gbeth.c - DWMAC Specific Glue layer for Renesas GBETH
+> > + *
+> > + * The Rx and Tx clocks are supplied as follows for the GBETH IP.
+> > + *
+> > + *                         Rx / Tx
+> > + *   -------+------------- on / off -------
+> > + *          |
+> > + *          |            Rx-180 / Tx-180
+> > + *          +---- not ---- on / off -------
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corporation
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/reset.h>
+> > +
+> > +#include "dwmac4.h"
+>
+> I'm looking at this while working on RZ/T2H Ethernet support, clangd
+> says inclusion of dwmac4.h is not needed here and compilation succeeds
+> with the include removed.
+>
+Agreed, I will drop this.
 
-Actually, it's related, but I agree it's not clear: we call
-cs_slot_reset_locked(), but the thing we're really interested in is the
-cancellation of the timeout work. Before the timeout changes, the
-timeout work was part of drm_sched and was cancelled inside
-drm_sched_stop(). Now, maybe we do need to reset the CS slot
-regardless, in which case it might make sense to have that done in a
-separate fix happening before the timeout changes.
+Cheers,
+Prabhakar
