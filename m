@@ -1,35 +1,35 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33432BE7C5
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AAA2BEC23
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744629150; cv=none; b=FynTF4xcoIwIwEgBHpf/h+FmPTJ70oK+dM3pu8IDhWq0asGS3I6KcBZHfL7K+b0XlxuofrW5HC4XkYSZluAnBAnJ72jqj/j0JcowE0MqYN5Jv0AZNnsRiAS4N3gBU8w2Pnehma4XsfR1FyhPKQGVsiFikW9NU1IwaoyvJOyuiMc=
+	t=1744629152; cv=none; b=dwgPz0UbQeWoLoFu5Um5N1HM+rHt/eCiu8lcMCbaZqTE/7OJ7iVdkqeGhS+bFecXgmspts9bS81yy+aHdStXI22pZqxsWMpcoBWHhsgTbNam5R2+H/q8mjGCFqtyUKoS6LF8cTQuLS3sDRDY93DPatw5xMPS08aJ5/RUP7MYARc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744629150; c=relaxed/simple;
-	bh=Pnx7suxbYin9pheGwTqEDVuMtWI0UCAstJMoqNVTugc=;
+	s=arc-20240116; t=1744629152; c=relaxed/simple;
+	bh=R1XPiSomlIO4vu4bVz8DbFGpvqP9IARB4z1KL47RG+c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S196obMrFZONU5npPl2OXNC/Dn/g/DMvGLc4+Nh/vsesWmcZZ7pMPNPc4b+L41ZzUMb7WfWUD9n71QeUIJQelvyg900/0Gg3ozevGUhOIq2ddpYVtDxFs0+x6kRQ4EakQO1TSfKEIQ8hwU6dcByLeh8/YLcMsqlJ/VzOQqHxUMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Segwhtz3; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:To:Cc; b=m0xDwauWyg299Dj7IBTNEGpGc91EOn0Q5wv2+tSMAF7qlXMUOVdoYBlM2/Xqrs5O7dg4wwBIHNSoRTn+5zqM4VAVuIBrbYOlGfaFv156wczVJ3oJRrUIqxBzz+Z0wiz0ejZnhm7N+x/LZo/qJHPopacEV9d8RuqG4FRGX1XEzpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XyS7poA6; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Segwhtz3"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XyS7poA6"
 Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8F7612194;
-	Mon, 14 Apr 2025 13:10:12 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C88242447;
+	Mon, 14 Apr 2025 13:10:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744629013;
-	bh=Pnx7suxbYin9pheGwTqEDVuMtWI0UCAstJMoqNVTugc=;
+	s=mail; t=1744629014;
+	bh=R1XPiSomlIO4vu4bVz8DbFGpvqP9IARB4z1KL47RG+c=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Segwhtz3WFAJRU0HHZBjoFCnzkKTnrPVNIHS8q1K4et1PM2V7o+nA1lYINd9HyLXN
-	 hL6rPrNqisQryCHGLUwcSNsiY8YuGQeFZF0lEBdC68rFRx3S+fIfXuL40WBhitmuzs
-	 8+bhVGueylckxd2HZUtF97+k2wXLovTq379Oaoa4=
+	b=XyS7poA63d4rQUlWmGTqL8dfgs0jdH/C2kKq9dD/nNJExE1Fgias+JvxLRy0WHyeC
+	 3nhSWiiQvJ+GlKgG4p5u0rbk4HHTLWSvj8RP3v/s9yjumdMfbjsEmClz/R5UbaU1xN
+	 R6tgY23MibySGXiK1AvV+JHsddw7K9PvUzvUjQ3w=
 From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date: Mon, 14 Apr 2025 14:11:18 +0300
-Subject: [PATCH v3 09/17] drm/bridge: cdns-dsi: Drop checks that shouldn't
- be in .mode_valid()
+Date: Mon, 14 Apr 2025 14:11:19 +0300
+Subject: [PATCH v3 10/17] drm/bridge: cdns-dsi: Update htotal in
+ cdns_dsi_mode2cfg()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-cdns-dsi-impro-v3-9-4e52551d4f07@ideasonboard.com>
+Message-Id: <20250414-cdns-dsi-impro-v3-10-4e52551d4f07@ideasonboard.com>
 References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
 In-Reply-To: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
 To: Jyri Sarha <jyri.sarha@iki.fi>, 
@@ -57,65 +57,69 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  Devarsh Thakkar <devarsht@ti.com>, 
  Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1524;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1842;
  i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=Pnx7suxbYin9pheGwTqEDVuMtWI0UCAstJMoqNVTugc=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn/O1/NI5zR4Bh4wsNG8XTmFGv8lXZJ18oVWybO
- ju5ZATbU0iJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ/ztfwAKCRD6PaqMvJYe
- 9Yz7D/9cvEI3imLmKbEfVAl1FKGhg9b2PNfDmVqTtFlN2G22vnApzejVU80DyNm2px1zm/ZJBF4
- 00D0yfkku6uAS75wOGAfgcYPoomKH6dPf/WN+jcXW3UkiBNTw/FA+doY01ZqqmQtiwaUuU7pV1R
- klqpzs4vTyjLv+m5/Af1SfiHfU12E91tWE9KA9/HxcYqMpdRETYCXYuqjEQkTyCjcKEQwfgtlFY
- J0bZ6OIR54Yw/5LFphV0yUvZG+EJ8Rd5z68OqnZn/QzjdWrYl4ZWTVflBoVy8xNkMmmc8BovYst
- uvxAf5m76p7krLxI4IHkKMDUeyk1gGDG7Kf/UAJFDXKW8HZzTQ6ADo3eeOfV2PFR3fB/Zwodc8q
- 2PEXvJMh0QBGxbb7XWBNLjPa13Kz+0Duta1nd9Zk2MhU3Kwp5MHmV8dSRbBmCXAzmsmM3CUWPXi
- NVu+dw0mpt1nSYFfmni4awaFabz2da6N3yIO7IwZoYvFsewjyUjtwMLmvxvkwJht1yBbsgOqm03
- kFhJ+8ehNlLB/DuZE4jzwoGUomB7vEo0aPZaluh/jxetF4J1f3GfzFLJUbulmlQrNMVherf8eL5
- wdenyFRBir1aqHDycX8l1fgM20RT9OIJoAyJVRDea+GHH7pCsOkfuVP9B6A7VOQoS9CPSRupoaq
- 4Db4sDFY0HqL5kg==
+ bh=R1XPiSomlIO4vu4bVz8DbFGpvqP9IARB4z1KL47RG+c=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn/O1/9KEsI6Wtv/Qh6GwsKFCqn6PTH1ExO4ABg
+ nSayMKzmVCJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ/ztfwAKCRD6PaqMvJYe
+ 9QDnD/9GwQyrYZSRahjQ3ujF5k18LxofK9zxibQB5qX90ar7xkrh5xHrFVIyV4/UK3Kmsyj9gMK
+ 9cfCmgG6JUoGS9qCWEbhWJSWhk5nDZBrvBsX2MFFFYNhOw3r/M54WQZFlgA+a3qAK5TylwRmiO6
+ 40Xt7uXqdOjfoUQdwHx8ozFRw2rY1sY/xh0KjGANMEoRREuWinm127dMIlS/dj1mfykjKRJZtEr
+ 9jN1RyBfLLoCXMq1RVjmPB0CXexHVejUavYQDl2m9Yx8AGsOeINReyxtgEBK1OsxJK/oUqrH+ep
+ 1lRfUSt0clBcfqKEjtAyqt3W4ItpQz5qZsGNe9FChBB2frFPhadWEP8DvI6OaS0ohCLSMYxpqo/
+ k6nRBcdq7S3rswoVCJ14PrSucTgyGPsVfmV//Kb8OpZd4VyvciBVvJKotFs/Cn47raBAnTkTx/i
+ dbzQ+TVOsG6pybWFSDwxo5OT1NF3Ab6UlWv2vg6aa962wyMkw/M4hb/GLYeI0u573FspG9BQnUN
+ Qm+GXMCUhCPV0P9tanqrWY3BlAYa6Cq58XHeYcMc7KIFxzpnjvzCzMkrchV5xaG1+cjTNGnHpqU
+ 7VkfB4ZvD10BkPNu15+Hb+ZJGhSY8ksm1XCzFImnV1NTzyzQPkfYMTQnK1S8BvPFbPIP1rXUsc+
+ 6GAIqtSstnz1iyQ==
 X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
  fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-The docs say about mode_valid():
+cdns_dsi_mode2cfg() calculates the dsi timings, but for some reason
+doesn't set the htotal based on those timings. It is set only later, in
+cdns_dsi_adjust_phy_config().
 
-"it is not allowed to look at anything else but the passed-in mode, and
-validate it against configuration-invariant hardware constraints"
-
-We're doing a lot more than just looking at the mode. The main issue
-here is that we're doing checks based on the pixel clock, before we know
-what the pixel clock from the crtc actually is.
-
-So, drop the cdns_dsi_check_conf() call from .mode_valid().
+As cdns_dsi_mode2cfg() is the logical place to calculate it, let's move
+it there. Especially as the following patch will remove
+cdns_dsi_adjust_phy_config().
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index bb8ac7161abf..4759fd6f79b0 100644
+index 4759fd6f79b0..fc034a9624a5 100644
 --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
 +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -602,8 +602,7 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
- 	struct cdns_dsi_output *output = &dsi->output;
--	struct cdns_dsi_cfg dsi_cfg;
--	int bpp, ret;
-+	int bpp;
+@@ -498,6 +498,13 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+ 	dsi_cfg->hfp = dpi_to_dsi_timing(mode->hsync_start - mode->hdisplay,
+ 					 bpp, DSI_HFP_FRAME_OVERHEAD);
  
- 	/*
- 	 * VFP_DSI should be less than VFP_DPI and VFP_DSI should be at
-@@ -621,10 +620,6 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 	if ((mode->hdisplay * bpp) % 32)
- 		return MODE_H_ILLEGAL;
- 
--	ret = cdns_dsi_check_conf(dsi, mode, &dsi_cfg);
--	if (ret)
--		return MODE_BAD;
--
- 	return MODE_OK;
++	dsi_cfg->htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
++	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
++		dsi_cfg->htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
++
++	dsi_cfg->htotal += dsi_cfg->hact;
++	dsi_cfg->htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
++
+ 	return 0;
  }
  
+@@ -514,12 +521,7 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+ 	unsigned int dsi_hfp_ext;
+ 	unsigned int lanes = output->dev->lanes;
+ 
+-	dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
+-	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+-		dsi_htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
+-
+-	dsi_htotal += dsi_cfg->hact;
+-	dsi_htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
++	dsi_htotal = dsi_cfg->htotal;
+ 
+ 	/*
+ 	 * Make sure DSI htotal is aligned on a lane boundary when calculating
 
 -- 
 2.43.0
