@@ -1,100 +1,65 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D583527991F
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1E92DFA58
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642101; cv=none; b=OLpnXcQXdEH7IsZsi3puEaCDMOG68tTkStdOSvUu+f/7d4BBZTgwC/l13baLsVTtUo1XucJcmaUecHVJgLSh0OcGqhd0iCUbNzY5PspRUYOokUCpjxXZOnLAnc6EBVvP/XX1maYdXQZbrMAoUdG4Ewv6ZBpfTd7bqJRQhQu95jk=
+	t=1744642111; cv=none; b=ViKV9bcmXpMtWZ61bkTuaEvgrVP27Q32fpqiH0X7IehPPkupFxBnePdwHu2AHfaok010Ey/LZYaUiWtPzGZRsygCHoedH899Nhw5OCAIgnvgB9Ef76b0NH+tXMGBx94W9soSSFPI6wOhLLXW7eXy0zjCmVez5rJ54T+AOcXdsNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642101; c=relaxed/simple;
-	bh=OX61iL5ajEkSOB9Gc2sJXRUybR1FGvGqiEtt3A8S3EM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=LgoiDAp5INTU07sLaBExJ02UlGCoUw5FNKZvcAZiAo5qDM/gGZsWO1tta82rUb9r6qVGk6KgzJoD2L5aaV/YNKI2kqNsgJI6Fvqbp5CFd9Rzrn5SP6cihSpvT87T8YjqjDiNKDFGKmK7BpA7/5VaSBXVNJHe07XsjpYO3o3WwZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rYIR3JIA; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rYIR3JIA"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86192b6946eso48754639f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744642099; x=1745246899; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KVe49Nk2TmzLUEha9KKLJEtMKi1+QER5gyHF2CtIAoI=;
-        b=rYIR3JIAWj4+eD4j8hZYwyr29sxBENBdYuwyeYx/4z8HhPXU2L2n0J3KlgDvzX9DAv
-         vPGLa86rWNjbco6lFENk24URfqqujnZkiYFZdIK5vWW9wCrMQMC8IDfOlL4eSiWvUyvR
-         OBFJsPerNv8JXm19rYdQvqj0z948iktjt4nHkOAgAbZPhsBZA3DVqhr7VQdLDe4+Nkge
-         M7oulcFtczLrUQAV3nD1gMBagec5OAH+u5fnHWCsVR6g+RuQnUyaY5WylbvCLs2+aFk0
-         YVzw9yb72lXPUwNMeL4dpDY9ke8Z73Hns/CHqZquDzZnoP1CC0e7j+imiW/deAXcqht0
-         UHiA==
+	s=arc-20240116; t=1744642111; c=relaxed/simple;
+	bh=iIrg+ip4B1yg6mIeKta47mgYMy8F2On4sWQMBQFzjE4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ddZbgrGmNvl4LrDkERgSQDPeg8hAoYRwh5aUVDAR6FEMutXnxZnATAU3FxGyyFZHATlXEuBCxXuGpl0rTLiGuyMOyhvd/AsIDDaRYls31VuRWmylaFjXywimTQhx5Umcxfq5XfG29bvlsQCpQ+uPx7noCxWJEGS63bBZCa0AXN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso43347345ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:48:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744642099; x=1745246899;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KVe49Nk2TmzLUEha9KKLJEtMKi1+QER5gyHF2CtIAoI=;
-        b=ZjeDExMVRchBisKgbvjSkJ2HYdZ5suXrAP/+LmfGsW51jAr2DWYQRzBZfTJKltiLO4
-         pJbLcr3MrT+xvqDLOgYWKwt2mxCT7JeEpTQstEAMVzouY3vBqknlda2/99fMeMkXuZHE
-         PhIllZEwVvy4GRN39H4lyDf4rMkDOhYBTif6AU2l4rsvzDkyffYfZCUQyUgK41fAqwU9
-         Zo3MVg/lcpMaBIXPcAcTaxyq2hWIdqIclyj6d8CpDf8/GbV2whF/mj/NPYvIdogWzBfs
-         Cj/smfWJ6Ozo+U7QZ1XXY3308RAo1U/HLl1YyBwM4tLzP0+zpWa3zRwMp8rkN8zcsOls
-         jQnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqRb7TC/ksElX2QS0MJgysAyEcgsDjxE2mnI/XA9kyetyQHWapm4j8nfyinzcGIgwefUiLi7o6xj+Cfr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVLmq2VPqpLW94B8x7WcaSs2MgHI6I57j2OG1cb0nbm/SqP8E1
-	eK/BNXOlfGV05se5HdlUp0NQBIz1dkGtWv+qqzHWf2RPlqIEhe56KJcTqufvY8g=
-X-Gm-Gg: ASbGncupqVopzpEgoc8qSY3u2mW8eRkOqi+oQQCutNEt+9WcEvAUrn/fuSkbuVLOGEa
-	ScDM5rfMT6RY5Gcnv7PSXVy5mp0CyQdVPm+/JqgQ+MtLCRkEma1kZ61VLA7nmKCm5bEuqdgOK0u
-	sPMMlBG2LtNhy5poS9w9S5FIkfF89AgNFhWTXzahmAZBjyssS4X22Wg6SO5ar8RwWnAqUhuwDIK
-	q31LIMC7meuWWzLCyo+KAWO0gTxn3exZKaFEOcFU4qG+/Ce+Sdf/bKHX8BeAXsV4zyz7P4cs5Lm
-	L4eckL8SmbmUmAcITEpye68V7okBmDuu
-X-Google-Smtp-Source: AGHT+IHMgHQ/PWSXNiJrO8XR4AJL92k3mmk5jllOyjLCPSVCmuI4teb9tUAQPnkC1LlSiHdRflNUjA==
-X-Received: by 2002:a05:6602:b86:b0:85e:8583:adc8 with SMTP id ca18e2360f4ac-8617cb5e00bmr1416478539f.3.1744642098838;
-        Mon, 14 Apr 2025 07:48:18 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e6bd7bsm2569671173.141.2025.04.14.07.48.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:48:14 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, bvanassche@acm.org, 
- Yunlong Xing <yunlong.xing@unisoc.com>
-Cc: niuzhiguo84@gmail.com, yunlongxing23@gmail.com, 
- linux-kernel@vger.kernel.org, hao_hao.wang@unisoc.com, 
- zhiguo.niu@unisoc.com
-In-Reply-To: <20250414030159.501180-1-yunlong.xing@unisoc.com>
-References: <20250414030159.501180-1-yunlong.xing@unisoc.com>
-Subject: Re: [PATCH V2] loop: aio inherit the ioprio of original request
-Message-Id: <174464209412.57766.10723552188963228525.b4-ty@kernel.dk>
-Date: Mon, 14 Apr 2025 08:48:14 -0600
+        d=1e100.net; s=20230601; t=1744642109; x=1745246909;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z2KWPdcz8vYsUxpKKGHrCAdNhDRHWrQ8Wa+dAJvC6+o=;
+        b=c549pGmV62IMZNhVHMXZqiUOChivgcsHMWLW7vzH8+acJDAWwZCuJuchLFZLmxa4dd
+         jDhgbVWoCv6UiyQ35xs7WSCIHQe7N6VCAVKTU0Z2zsjT9j7ktec8ZlENZutTqVjvGx2l
+         5CT4H2+ipUbTgjR+KoblnyKV2A41Bv9jYGouNBH51iyl5pcTgQhUS/j9A+lRZkjcbODU
+         ZE0fOk4K4z/tXQXpVkwYj/znkyslSepfNsOxL+DRz+6loQYxD7b32GvdIJlQfJLSPQVu
+         BXuVBB4s0yr+P/zZ1tTzo1u+Q00bBeQb1detwZorN8X2cX5Ho3m0eE4RmucBXgesnZxY
+         Iquw==
+X-Gm-Message-State: AOJu0YyNoUhWJe9y2+hWK3oS8mDoWRBWGgeDQB85FWvmA/q1XKhMCt1w
+	ymtZJypaHnwB6OQtqqiMoB76Fo+4wHxcmRmH+87U1iqtqbaz+Lde7Z893QrkgU8q0pF60v+WVgG
+	MPtYkWaVjZRmZ7l+/UbnHDV6oqrhDMWL4tCAu1i6lfYNfyI33NurKBj8=
+X-Google-Smtp-Source: AGHT+IHdO2PiQ33A/hUW2HuDm2mtxOVWfQSIukXye+2wb5mLYuwD8oqEHEtcn7mftmINndDyqQpE8gKoE4G6if3NPLNQElDnlzkI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+X-Received: by 2002:a05:6e02:1582:b0:3d3:fa0a:7242 with SMTP id
+ e9e14a558f8ab-3d7ec202999mr120975455ab.9.1744642109078; Mon, 14 Apr 2025
+ 07:48:29 -0700 (PDT)
+Date: Mon, 14 Apr 2025 07:48:29 -0700
+In-Reply-To: <67bab9f0.050a0220.bbfd1.000e.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fd203d.050a0220.3483fc.002b.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+06fd1a3613c50d36129e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-On Mon, 14 Apr 2025 11:01:59 +0800, Yunlong Xing wrote:
-> Set cmd->iocb.ki_ioprio to the ioprio of loop device's request.
-> The purpose is to inherit the original request ioprio in the aio
-> flow.
-> 
-> Signed-off-by:
-> 
+***
 
-Applied, thanks!
+Subject: 
+Author: nogikh@google.com
 
-[1/1] loop: aio inherit the ioprio of original request
-      commit: d8ec13ceb917611582b52ecc28c34ddbb61ce0cf
+The bug was fixed with a different commit than the recorded [PATCH] discussion.
+Close it so that it may be reopened the next time we face a linux next
+build problem.
 
-Best regards,
--- 
-Jens Axboe
-
-
-
+#syz invalid
