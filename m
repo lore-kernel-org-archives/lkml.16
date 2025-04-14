@@ -1,115 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BA31A83E8;
-	Mon, 14 Apr 2025 08:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE831A83E8;
+	Mon, 14 Apr 2025 08:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744618106; cv=none; b=gr8oSoN46h3Yi1xmnTsY/3Anaz4+DaVrLpyVllR8yj33QcbGl0LnXaKuuJnTE2+QsHghpzqdPQV86duIh8wZmaY+gQgqoDM0lINF6Cy/sQ8EKBNK2S//VG6jIA+8ZClsCvYc8xIqQ4uyFRNdCnCwN+cBHz4OXU13snOe9yyURSs=
+	t=1744618112; cv=none; b=I+Q3lBpkvbxqLkC2YBpTFAmjv1UjwfCvznTulERpV9fDv1/rK+g4/6RvdyTG/KmA+s0W7aDHWNKtJmZxLrZMvPa0cz9qFDmR1AM4nGidJlNALeg0pLl/RMpeLsL6GIsEENPhDIKIU/QEI1qvJH9P9iHAGQMNYLobryUc6eCGZvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744618106; c=relaxed/simple;
-	bh=zcQCVSxooZwhHaQf5rrvyURe5NZaFkh+Z0g0qopq9vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTJI2yROmk0MLl7bktxtxH43J2JshGxhf9TIbQqmwNPQT0gNwkMNk9bvlQDgCi7+I5M43/pgjfNPdaDCrfySOkb4XDCL+sVRH29ZYehzC6bx1xdiq4S+bY3TL3qtSSlrU0QNksPVqbFJLlNDEOlziuM3Vd///B+JBIDStOcintA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjxJjMxs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744618112; c=relaxed/simple;
+	bh=V0f4/PL/gQn+uD5jBY8BYhb0Ecl81rZSW7t2zre7NoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcM7CA8Sh9Ie8fXKUYcop9zRs0t2XV4nkAE4bEdH4ZPdesAFR54lDV1R9l0FpUc4es+I1oAM7GCt+gOmjO3j1L1e814DPDDP1XP51AbV/p5HKz+eHB8rgKelQg7hifxNcA+uzQcQ4JTRkNcuRNUZFhliJqBPRHdGFvldkkDFG0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BP9bhlj0; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjxJjMxs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2694C4CEE2;
-	Mon, 14 Apr 2025 08:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744618105;
-	bh=zcQCVSxooZwhHaQf5rrvyURe5NZaFkh+Z0g0qopq9vk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AjxJjMxsTT/sgL+hDo2CM0PyxNawA9npVRy8hLRy6LayOrBg1Cu7MUX12YI20y5k4
-	 G5MRY4Y5hfbHMti2LuUHeAefeILtXT0ogUuD+Z64qW2copotaasPZR14sGEzTdPmZm
-	 CcYZSFyLtHjIC2jUenPsCiSg1JecLuA3l7ZN6NYJsv1GalI/yuP1vVHxwCwqAY880R
-	 gdsu3U3YJkGRC5RhlhotNUMMqIR7CcyF89FR7fYGv8/rSokwFjD6LJoKbGCbP8kI4d
-	 cVah/R8b77yATvXqaUsG3R5MLcAtsLXmCMq4DYg597/exmtFZCPK75TBwQiCyIlNQH
-	 xeTKdopf0Q3SA==
-Message-ID: <f3b77aa4-e7a4-475f-a633-48aab59fa9b1@kernel.org>
-Date: Mon, 14 Apr 2025 10:08:18 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BP9bhlj0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744618111; x=1776154111;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V0f4/PL/gQn+uD5jBY8BYhb0Ecl81rZSW7t2zre7NoU=;
+  b=BP9bhlj0UqELDspBK37we8jmkQLcTS5d831Is6B6hsp8E4eJVTyr7F0W
+   GEhWD08cAB/+jEkAl4IVOiEfHE2yaF49Qvj4EMli5SQPTaFwxmHTa30uk
+   nPB0qxZNf7agkPEAV5mVT0NDZduNPH0zLZ2+GNoHsubZ2WkXwaMuAiSW2
+   q9FKL8qqdzdBOOsPtJrUNzM9T7W4lb8PaOTeJ95EPLjy3wbObAI2zTm8Z
+   /SUR0auQ6InM1j2rCKp+wI/Eqya1akEZH/4Wop493eR1jRCX7IU5fMULF
+   t0NmTUWi38cYjw77eEvh5Ox8wlMLPhews8Lumj+AFcTzeuArK7Syg5M3a
+   A==;
+X-CSE-ConnectionGUID: 06wRxlpFQHqoSMsHTg9lBg==
+X-CSE-MsgGUID: CCCNiHpDTPqrAIlfu/xV3g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56735515"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="56735515"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:08:30 -0700
+X-CSE-ConnectionGUID: kiVG0bCgQGOAhCa+zr5/5g==
+X-CSE-MsgGUID: V5TaUfkHQQacnCNnFGBmNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="134721295"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 01:08:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4Erg-0000000CAli-2CIm;
+	Mon, 14 Apr 2025 11:08:24 +0300
+Date: Mon, 14 Apr 2025 11:08:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH 2/2] software node: Correct a OOB check in
+ software_node_get_reference_args()
+Message-ID: <Z_zCeHu9MKgLG0jN@smile.fi.intel.com>
+References: <20250410-fix_swnode-v1-0-081c95cf7cf9@quicinc.com>
+ <20250410-fix_swnode-v1-2-081c95cf7cf9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
-To: Johan Hovold <johan@kernel.org>
-Cc: Chenyuan Yang <chenyuan0y@gmail.com>, vkoul@kernel.org,
- kishon@kernel.org, lumag@kernel.org, quic_kriskura@quicinc.com,
- manivannan.sadhasivam@linaro.org, konrad.dybcio@oss.qualcomm.com,
- quic_varada@quicinc.com, quic_kbajaj@quicinc.com, johan+linaro@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
- <22ec4fc8-9368-4955-ac97-c49b3317d3b3@kernel.org>
- <Z_y73a5IDO66AzY1@hovoldconsulting.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z_y73a5IDO66AzY1@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-fix_swnode-v1-2-081c95cf7cf9@quicinc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 14/04/2025 09:40, Johan Hovold wrote:
-> On Mon, Apr 14, 2025 at 09:30:19AM +0200, Krzysztof Kozlowski wrote:
->> On 13/04/2025 23:25, Chenyuan Yang wrote:
->>> In qmp_usb_iomap(), one branch returns the result of devm_ioremap(), which
->>> can be NULL. Since IS_ERR() does not catch a NULL pointer,
->>
->> No, that's not true. NAK.
+On Thu, Apr 10, 2025 at 09:12:12PM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
 > 
-> I'm afraid you're mistaken here. See __devm_ioremap() which can return
-> NULL.
+> software_node_get_reference_args() wants to get @index-th element, so
+> the property value requires at least '(index + 1) * sizeof(*ref)' bytes.
 > 
-Uh, you are right, I only checked devm_of_iomap in qmp_usb_iomap().
-Anyway, the fix should be different - given function should either
-return ERR or NULL, not both, so devm_ioremap return value needs to be
-wrapped in ERR_PTR.
+> Correct the check to avoid OOB access.
 
-Best regards,
-Krzysztof
+Any real traceback?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
