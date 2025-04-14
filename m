@@ -1,39 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AC1158520
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5FE1B4241;
+	Mon, 14 Apr 2025 07:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744615346; cv=none; b=t93AHeptKc+2JZGgEbsMuTOU58BG9U6EbkVfmdEAB18r0wDWv24OiLc+xKAL2tY1zNFDLt0J5QQjrJsSOTvhWLUEozwoSPP57oCYrErj+yXnPl7e/E8oi9G5ePT8xWbKc897AiDFDs6FN9RVH/LaO1vrsd1IVVFb1OJgwMem6tc=
+	t=1744615371; cv=none; b=JcWSbqqdp1ybDNodbMHDdwEk9mhlmE08TaHMelU12TE3lV0VTMGEuDiRqSAWkAvkeHRnfWnfl03AyhQkXKJM6/t82gr3A9Kb5i41mrmhll289O/qFxhxGYFgFPAqDxH078HsAsSKRmffg2KnQlnoYh6Dv+GEbWFcIJHmVcMVnN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744615346; c=relaxed/simple;
-	bh=/+Bgz7RXhhd61pmsncDPp/Jo+P+pNl6pY/g0qsehk2A=;
+	s=arc-20240116; t=1744615371; c=relaxed/simple;
+	bh=IOILmuO2B3RZBYuN+CUITTHeDhATmMItT1uR2lClnoM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUJ/ao76lbi//Rx5bSQ4UZeuB/ke8Hdcj3Tl8hKFbfmc4zs5OVII5dB3qA0s7I2KfXPp4ATdgmp94+BreOBeL+Qy9nbpvcaIbpQEMgy/ZJo97D+nSoUs4krVsTi3bvG215kEn46/q8Hy4BL5vpp46JZf9ZhRkP7EcKShmNmkQi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PR5uqA32; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhD7SSBwdGtW97Opk+kplgd6xv02lAtJawDp/wmFIBfGqL8tCLa7jQ+EXq/PTrIJuZ3cdoG1eHxROQqwo9lh6duIaL/4TcJvXRqlyd0XzEWcYr+If+kMcEO40help3Gxw1E8qg3jKs9q4UI1GKNjK++iaGB40sy02aSv363r2Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LvObdVba; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PR5uqA32"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D50C4CEE2;
-	Mon, 14 Apr 2025 07:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744615345;
-	bh=/+Bgz7RXhhd61pmsncDPp/Jo+P+pNl6pY/g0qsehk2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PR5uqA32ykuoROTA/j8MX36jtR89tkb175JrngFacYhViaMqBP0UpCaHqUNHACa+p
-	 0yj56QZMwmKf2TFavtxrrZHmO9OknEZiDOR0KMuMrJSgVcuP1pS4Tkivarss1XkUL3
-	 KiJtcF/65DzqOF0O83qn0S337u90nqlSZ+lKYlPmfJduDducDesigcqcsi7tVQFOYm
-	 KHI02fhDA/wbf+mCUsW59YLxlLVbJXsXZFZHRPgGpHSspBHG1VUShF5juWkNCju7wV
-	 k3P75wYEd/iH4jAV12Upm2Z7O0gR07w03oZIrSIHSmS3jVYGPp7q4ZHzezAXG210xm
-	 AIAZweQnR75UA==
-Date: Mon, 14 Apr 2025 09:22:21 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Pi Xiange <xiange.pi@intel.com>
-Cc: x86@kernel.org, tony.luck@intel.com, peterz@infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/cpu: Add CPU model number for Bartlett Lake
-Message-ID: <Z_y3rRB9zY0HG2vP@gmail.com>
-References: <20250414032839.5368-1-xiange.pi@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LvObdVba"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744615369; x=1776151369;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IOILmuO2B3RZBYuN+CUITTHeDhATmMItT1uR2lClnoM=;
+  b=LvObdVbaUSY5/wKhbiC9XfQRSJhIZFvS32jqoAbUl6WdntBW0vtCyLO0
+   RJyrtMRn4LEz5/smXwB6N9O0k4K8c3PKoQBQCgywR6oUVCm4jgjor9mF/
+   ZNTl3Pm5zuSjgaBRQLDT6Voan1s4hzANFF5c6hXR7okKpcOPVfamKDA7+
+   7Y+8H4enlHE7c3MHS8SMuxAH2fwRMInXfa/PdtcZVglh1AVHXTc/EDCBc
+   LZMB1yGG6XkcOH9xI8g/yX1UjmP6fM2T8RPOvzlBVP1+Qd9gi11Hqig6S
+   AWfvt7HUQ68xvSL/eGAbJ4VlEY+oEghDmcAAKo8GvJ3utOn3Vk1ARtRse
+   A==;
+X-CSE-ConnectionGUID: ogJLm5uORaa40SBX1KQ3yw==
+X-CSE-MsgGUID: 89nMMZZuRKOxJObagNUNgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45210027"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="45210027"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:22:49 -0700
+X-CSE-ConnectionGUID: kFfeufNeQIKrUspjwLFnhQ==
+X-CSE-MsgGUID: vwvFqfg9TTaDyMS6+tOp0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="130600144"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:22:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4E9R-0000000CA9G-3Jc1;
+	Mon, 14 Apr 2025 10:22:41 +0300
+Date: Mon, 14 Apr 2025 10:22:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: dakr@kernel.org, djrscally@gmail.com, dvyukov@google.com,
+	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
+	jgg@nvidia.com, kevin.tian@intel.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
+	rafael@kernel.org, sakari.ailus@linux.intel.com,
+	syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
+Subject: Re: [PATCH V2] software node: Prevent link creation failure from
+ causing kobj reference count imbalance
+Message-ID: <Z_y3wd7zur1_xUjM@smile.fi.intel.com>
+References: <Z_ypLhYQwGf41hVK@smile.fi.intel.com>
+ <20250414071123.1228331-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,28 +70,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414032839.5368-1-xiange.pi@intel.com>
+In-Reply-To: <20250414071123.1228331-1-lizhi.xu@windriver.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-* Pi Xiange <xiange.pi@intel.com> wrote:
-
-> Bartlett Lake has a P-core only product with Raptor Cove.
+On Mon, Apr 14, 2025 at 03:11:23PM +0800, Lizhi Xu wrote:
+> syzbot reported a uaf in software_node_notify_remove. [1]
 > 
-> Signed-off-by: Pi Xiange <xiange.pi@intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h | 2 ++
->  1 file changed, 2 insertions(+)
+> When any of the two sysfs_create_link() in software_node_notify() fails,
+> the swnode->kobj reference count will not increase normally, which will
+> cause swnode to be released incorrectly due to the imbalance of kobj reference
+> count when executing software_node_notify_remove().
 > 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index 3a97a7eefb51..405bde66032a 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -126,6 +126,8 @@
->  #define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD) /* Redwood Cove */
->  #define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
+> Increase the reference count of kobj before creating the link to avoid uaf.
+> 
+> [1]
+> BUG: KASAN: slab-use-after-free in software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
+> Read of size 1 at addr ffff888033c08908 by task syz-executor105/5844
+> Freed by task 5844:
+>  software_node_notify_remove+0x159/0x1c0 drivers/base/swnode.c:1106
+>  device_platform_notify_remove drivers/base/core.c:2387 [inline]
 
-BTW., does 0xAE have a model name too?
+The fix looks correct to me,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-	Ingo
+
