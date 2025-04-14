@@ -1,102 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B691CAA6D
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320672E645
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744660731; cv=none; b=ax1vW4Tclrt9CWIEGAkUBGTbqwqCb5kpR5BxWIPTmofISdzbmlqjV4uiEVknowBBw6LM31DMb4gDo2dhBL+FeYBzX6sg+vR6e9xqFmToBMdTKAKrod0fhiBeYUHXfgYUDp5V4EDx+SnLmRc1/t5Jzfmlu0NyBqCVAS+6Otm+uek=
+	t=1744660776; cv=none; b=a7DdLx8iWEiZWCvr/iVpdR75gSNvIxoeW4sEgB72rs7FCgrjKnXuBhmrWMVbDVAWQP3tRN/3qiaaXk5s1Aay8OHWXIVVDv5WP8cJM2myrtbk+HwpIpJNPxBMeh0hobUO9kGEOeqUIuzhG1Smf64RpTTfaaVHczmtQeHK6oD+oGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744660731; c=relaxed/simple;
-	bh=FYgPdynSCureL0fU9D9Mi9LejkOb9t0Yp9qg3b6/Ubw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ljNSbtc4NXTAIg3QO5mysNHqp9MHJQQVy0mN3jnYlGsZxMzia6OoN5KkW2Zvayy8xu8XvgkuJn4r8WP8Ixobq1tvxQkYNjvaxELZWxiRyenGatMsOiVcARk4thzkm/N+VHDYsisLgc3HzhyX0GaKp9AIe4V4Nqqt7L1oND7YLvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLJCxeKX; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLJCxeKX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744660729; x=1776196729;
-  h=date:from:to:cc:subject:message-id;
-  bh=FYgPdynSCureL0fU9D9Mi9LejkOb9t0Yp9qg3b6/Ubw=;
-  b=PLJCxeKXNqPKgbj9Ryeeo7liaIL54/5DWjhxTo9vkO89YzHnnV/GbFmb
-   PM9zPB+KLzWoyywtko935Oe9vVIHj41uftfC0Qx0eumjADvA5dT+RZhCp
-   MrbHh6aas1pODFYSIoasKAFcQ9jxLNY19rIW7UDGX3jRhN9H7h+AmoVxO
-   H1Rn7X2qO9NHnUxrnuMyp78U/8DCy0QgSr85f3qgdolxa/A4buzP/2jmv
-   kx9VAsK021q40/65tgdh0wNMICo3SY968oM9AgmDG/WqDWm2KTHqgnGiz
-   plvvvso2MsXOnxb2d7dfq7rzE6my1/uNafdd0hvJelm6HExhdzr8BLvAH
-   Q==;
-X-CSE-ConnectionGUID: M/AoLbaWQIuK3Ld7fS98/A==
-X-CSE-MsgGUID: +dk9YnvYSxaghvNf7AaEwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56789762"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="56789762"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 12:58:49 -0700
-X-CSE-ConnectionGUID: rof42BvvQRKBeXAS5yruIw==
-X-CSE-MsgGUID: 9uTbePMdRmq1KQDNCEfw3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="129675901"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 14 Apr 2025 12:58:48 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4Px7-000Ede-1t;
-	Mon, 14 Apr 2025 19:58:45 +0000
-Date: Tue, 15 Apr 2025 03:58:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- 5c3627b6f0595f1ec27e6f5df903bd072e9b9136
-Message-ID: <202504150312.UgJD9reJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1744660776; c=relaxed/simple;
+	bh=fsg/taSW2kmNNFQ5qf+vjE9sbZlgyP3G1l/VQPoGKms=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZhaSwya1TRHvuz1nTDojvrtcybejb6Ut0u6fpAO4CPfDOvNHyxjSH+sTRhQ3OU1aAgnp6rrCLTjKjQX2tS9Y5d10HISfTeNoXeMaKzSx2rctBDbDr2jQsXzMrR3yZFeA7BaW1Lf0y1iKbcznN+cHC+9tltz1erakqVB1GKITJSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1u4Pw6-000000003uv-1e2J;
+	Mon, 14 Apr 2025 15:57:42 -0400
+Message-ID: <b378f48593ca7449257a1bb55e78b186d88cd9f1.camel@surriel.com>
+Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
+From: Rik van Riel <riel@surriel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Mason <clm@meta.com>, Pat Cody <pat@patcody.io>, mingo@redhat.com,
+ 	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, 	rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, 	linux-kernel@vger.kernel.org,
+ patcody@meta.com, kernel-team@meta.com, Breno Leitao	 <leitao@debian.org>
+Date: Mon, 14 Apr 2025 15:57:42 -0400
+In-Reply-To: <20250402082221.GT5880@noisy.programming.kicks-ass.net>
+References: <20250320205310.779888-1-pat@patcody.io>
+	 <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+	 <7B2CFC16-1ADE-4565-B555-7525A50494C2@surriel.com>
+	 <20250402082221.GT5880@noisy.programming.kicks-ass.net>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Sender: riel@surriel.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-branch HEAD: 5c3627b6f0595f1ec27e6f5df903bd072e9b9136  perf/x86/intel/bts: Replace offsetof() with struct_size()
+On Wed, 2025-04-02 at 10:22 +0200, Peter Zijlstra wrote:
+>=20
+> Please confirm what the reason for overflow is.
+>=20
+Running a large enough sample size has its benefits.
 
-elapsed time: 1472m
+We have hit 3 out of the 4 warnings below.
 
-configs tested: 25
-configs skipped: 118
+The only one we did not hit is the cfs_rq->avg_load !=3D avg_load
+warning.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Most of the time we seem to hit the warnings from the
+code that removes tasks from the runqueue, but we are
+occasionally seeing it when adding tasks to the runqueue,
+as well.
 
-tested configs:
-i386                            allmodconfig    gcc-12
-i386                             allnoconfig    gcc-12
-i386                            allyesconfig    gcc-12
-i386       buildonly-randconfig-001-20250414    gcc-12
-i386       buildonly-randconfig-002-20250414    clang-20
-i386       buildonly-randconfig-003-20250414    clang-20
-i386       buildonly-randconfig-004-20250414    gcc-12
-i386       buildonly-randconfig-005-20250414    gcc-12
-i386       buildonly-randconfig-006-20250414    gcc-12
-i386                               defconfig    clang-20
-powerpc                    akebono_defconfig    clang-21
-powerpc                         allmodconfig    gcc-14.2.0
-powerpc                          allnoconfig    gcc-14.2.0
-powerpc                         allyesconfig    clang-21
-powerpc                mpc834x_itx_defconfig    clang-16
-powerpc              randconfig-001-20250414    gcc-8.5.0
-powerpc              randconfig-002-20250414    clang-21
-powerpc              randconfig-003-20250414    gcc-6.5.0
-powerpc64            randconfig-001-20250414    clang-17
-powerpc64            randconfig-002-20250414    clang-21
-powerpc64            randconfig-003-20250414    gcc-6.5.0
-x86_64                           allnoconfig    clang-20
-x86_64                          allyesconfig    clang-20
-x86_64     buildonly-randconfig-006-20250414    gcc-12
-x86_64                             defconfig    gcc-11
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +++ b/kernel/sched/fair.c
+> @@ -620,12 +620,36 @@ static inline s64 entity_key(struct cfs_
+> =C2=A0 *
+> =C2=A0 * As measured, the max (key * weight) value was ~44 bits for a
+> kernel build.
+> =C2=A0 */
+> +
+> +static void avg_vruntime_validate(struct cfs_rq *cfs_rq)
+> +{
+> +	unsigned long load =3D 0;
+> +	s64 vruntime =3D 0;
+> +
+> +	for (struct rb_node *node =3D rb_first_cached(&cfs_rq-
+> >tasks_timeline);
+> +	=C2=A0=C2=A0=C2=A0=C2=A0 node; node =3D rb_next(node)) {
+> +		struct sched_entity *se =3D __node_2_se(node);
+> +		unsigned long weight =3D scale_load_down(se-
+> >load.weight);
+> +		s64 key =3D entity_key(cfs_rq, se);
+> +		/* vruntime +=3D key * weight; */
+> +		WARN_ON_ONCE(__builtin_mul_overflow(key, weight,
+> &key));
+> +		WARN_ON_ONCE(__builtin_add_overflow(vruntime, key,
+> &vruntime));
+> +		load +=3D weight;
+> +	}
+> +
+> +	WARN_ON_ONCE(cfs_rq->avg_load !=3D load);
+> +	WARN_ON_ONCE(cfs_rq->avg_vruntime !=3D vruntime);
+> +}
+> +
+> =C2=A0static void
+> =C2=A0avg_vruntime_add(struct cfs_rq *cfs_rq, struct sched_entity *se)
+> =C2=A0{
+> =C2=A0	unsigned long weight =3D scale_load_down(se->load.weight);
+> =C2=A0	s64 key =3D entity_key(cfs_rq, se);
+> =C2=A0
+> +	/* not yet added to tree */
+> +	avg_vruntime_validate(cfs_rq);
+> +
+> =C2=A0	cfs_rq->avg_vruntime +=3D key * weight;
+> =C2=A0	cfs_rq->avg_load +=3D weight;
+> =C2=A0}
+> @@ -638,6 +662,9 @@ avg_vruntime_sub(struct cfs_rq *cfs_rq,
+> =C2=A0
+> =C2=A0	cfs_rq->avg_vruntime -=3D key * weight;
+> =C2=A0	cfs_rq->avg_load -=3D weight;
+> +
+> +	/* already removed from tree */
+> +	avg_vruntime_validate(cfs_rq);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static inline
+>=20
+
+--=20
+All Rights Reversed.
