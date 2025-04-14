@@ -1,74 +1,112 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F199A3AC17
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A9BE571;
+	Mon, 14 Apr 2025 03:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600028; cv=none; b=B2EhLaDNENA48GXzSgsVnO4dUNu5TczMiZK5liPmXadiMVJ/1MZad1RHJt1kvJWLdcwDQzg1nJjcijf9VygLI5Xv3wCOgL78nrIQ4iouLq5AWZeYwk1kvq/jNFUwJqhOJxPnD9U5fZyvQMqQpSpapWRPQQaksKOqkS+aUBtYnUs=
+	t=1744600082; cv=none; b=hIAKoHw5y3ssNOlOKymNT0M799RRwXt5h3glNneHNE+b8nU2t5ATEjbfVCsMF+HiBzcQntBRgQWBkJ+imdn08LNDgb2p5UA+xpyxRXgJxlUjs8C5/9MChhwsIy5TT5HFbIqy2wAfGwVt1yuvl6cPbH/TDMqSdKFAoZeN9Ow7EfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600028; c=relaxed/simple;
-	bh=HREMeGF/s1vxz9xQppW1nMjEKJB+3m17uYCtJYdfzu4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=QpynbE7f3mcMIilqUD9RRWRoVE4IMxiyuvWfN6doxvIP5/No6bQz8XVR+c0iiupCa24Pe7xLOz6gL3MJg9OIH88XYoMmCuJ3r96OLsEYaSCv9c8zQ4lXNElceKTi+PG1TdOhZV+pyZlyIIFByGCXEVWrsrwkW11Al0VmoZcy0xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d7f24a7582so34963585ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:07:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744600026; x=1745204826;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=54cVqukjapjwptJMc2lk98ZulqxlRdx+F8Y1epDzm8c=;
-        b=nUn66XTm1BDGWiKUCi3MEKmdoWZ+ytSTaKfFLnHtlJ9XJa2Qn65mgPi9UfnTe9iaT3
-         /H0Ta1eTZ+ZUSd4hX++CdXBqRdC5Xp1qYFbbT9XlkKREEh8Cii6CQKtTeVLaKRSvsHJ7
-         wv2fR165stAgMZjwKtdVQBNEnbLQlANY9/Hmq+PN+7mT+Oz83Gcc9r37dE3SxCsjav8n
-         d57SmwYP21Dc+H08Bbxlnlz+nZsimGEQQNZm/PFV5EnEV0HhI2BCFJFiezujoRlSm0I4
-         DAEqyFym+vJszMgKGx2CrZfvUD1URyAo6WEgbQmYN+9NaacZqGxh4swhU+X13IiZsmi3
-         aa5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUN5PGo+VtWnzYF405h4YHvAcE39vQJPDHndle8l2LyEhrik7bADyrbEkit6obQ0woHqOwHjpS26FVmrUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx989O9zZTyjr1+znmy84lfGIT2A4Caa5o1y3fRoFUXM0G+a1AW
-	rJs2SDCC9b8pjITPaR2xTYh83xZ4rdJyoV5cR79afAQprgPhduMu9uofkQTu/at8nRkkYRL1r3Q
-	m86MqPIsqdbgnGT1Rhsu+FsnjV8VCbxfKfLtpjlG2WfJG93pebzBacfQ=
-X-Google-Smtp-Source: AGHT+IG6ptXUR1q+CNVldhfTl6PmBCG9MDPErXOqHVCulcsPtHLN8UAgqnQ90cRV+qYAQxEPYQTq98Cfzh9frDE2/dGfl9EuleZZ
+	s=arc-20240116; t=1744600082; c=relaxed/simple;
+	bh=NA82Xb1S11tx1DMCSm8Ih7RELOdBcjiOu2PGJI8tRWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=c+N3ESXo7413pQpblSuBW1iNO8xYnDMjS9z/rIKzJ9g9ou28BU63Hw5k96HnU4tPnF3YgpHLoio1RFtZyUdFi9PD2uqtaKJSi79WQjP1CIfTNzVO2nVTLhZOzv8NluYuZ0F/8OcMsc5GGE6N9bjsJd4nfjocs8TqZp8iHZPPYcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qMUQURQS; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qMUQURQS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744600075;
+	bh=Y1bnnL2C8tQiGn6sE5V5/Spkz0c8Lj/iJNXVazr9/Z4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qMUQURQSPYMMOvz6RctOTPGp5nHrmPaiX0OT5ekc5EVw9hHkzXXavvzQtYYpWS9Jq
+	 4ippVMLG3GqxmoUPMQQZVqn06XmEX1Dl9+sAoSbt3pty+xIRcBPVv1WbVzFYsh8K71
+	 8jvV+Fdwmb6HlmKh2oReAD2Cst4YzDHgKnEbYKUgrWlMqIPYyAVXi3aLapYjvCMaYv
+	 BP1pdbaIGXVauqsF7x371ImxO5VPz+cUMxel3DcD2u9v7Zednf46MCQ/KoYk35aq1N
+	 gUhwvd7y+p0uRl6MW9xyOgh3RpnGKkl0a4b1LOVnNPbcAp1T+PNsrdpoIFCAvw7PAu
+	 krTLgnVp9WOtw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbXKP4WBdz4wcd;
+	Mon, 14 Apr 2025 13:07:53 +1000 (AEST)
+Date: Mon, 14 Apr 2025 13:07:52 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+ <johan.hedberg@gmail.com>, David Miller <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the bluetooth tree
+Message-ID: <20250414130752.1752fd4a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3092:b0:3d3:d074:b0d2 with SMTP id
- e9e14a558f8ab-3d7ec1ca153mr114566085ab.2.1744600026026; Sun, 13 Apr 2025
- 20:07:06 -0700 (PDT)
-Date: Sun, 13 Apr 2025 20:07:06 -0700
-In-Reply-To: <20250414023048.44721-1-kuniyu@amazon.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fc7bda.050a0220.2970f9.03b2.GAE@google.com>
-Subject: Re: [syzbot] [net?] general protection fault in rtnl_create_link
-From: syzbot <syzbot+de1c7d68a10e3f123bdd@syzkaller.appspotmail.com>
-To: cratiu@nvidia.com, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	sdf@fomichev.me, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/ED0qPeuG4IN8_ul_RRNBDwc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello,
+--Sig_/ED0qPeuG4IN8_ul_RRNBDwc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Hi all,
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+The following commits are also in the net tree as different commits
+(but the same patches):
 
+  50c1241e6a8a ("Bluetooth: l2cap: Check encryption key size on incoming co=
+nnection")
+  061e4972c48c ("Bluetooth: btnxpuart: Add an error message if FW dump trig=
+ger fails")
+  17931d1b6d0c ("Bluetooth: btnxpuart: Revert baudrate change in nxp_shutdo=
+wn")
+  2c1cf148c1fa ("Bluetooth: increment TX timestamping tskey always for stre=
+am sockets")
+  87d48ed16c9f ("Bluetooth: qca: fix NV variant for one of WCN3950 SoCs")
+  113f1345ce0c ("Bluetooth: btrtl: Prevent potential NULL dereference")
+  32b70317f41c ("Bluetooth: hci_event: Fix sending MGMT_EV_DEVICE_FOUND for=
+ invalid address")
 
-Tested on:
+These are commits
 
-commit:         8c941f14 Merge branch 'there-are-some-bugfix-for-hibmc..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bab398580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eecd7902e39d7933
-dashboard link: https://syzkaller.appspot.com/bug?extid=de1c7d68a10e3f123bdd
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1661c0cc580000
+  522e9ed157e3 ("Bluetooth: l2cap: Check encryption key size on incoming co=
+nnection")
+  103308e50db9 ("Bluetooth: btnxpuart: Add an error message if FW dump trig=
+ger fails")
+  61a9c6e39c8d ("Bluetooth: btnxpuart: Revert baudrate change in nxp_shutdo=
+wn")
+  c174cd0945ad ("Bluetooth: increment TX timestamping tskey always for stre=
+am sockets")
+  e92900c9803f ("Bluetooth: qca: fix NV variant for one of WCN3950 SoCs")
+  324dddea3210 ("Bluetooth: btrtl: Prevent potential NULL dereference")
+  eb73b5a91572 ("Bluetooth: hci_event: Fix sending MGMT_EV_DEVICE_FOUND for=
+ invalid address")
 
+in the net tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ED0qPeuG4IN8_ul_RRNBDwc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8fAgACgkQAVBC80lX
+0GyzKQf+Oc/vd2mQ7oStG54WphvAu35f2bD4Vd2ozov/TVwNwdiDwtO+3xWTWlxZ
+Tq3SCBZjZ8t/JSsA+FEW3edwm0tYtgX2/F51hArna6uhemZGzMqWWHs32QUP0eMr
+JB+WWeyjDLdSPa32LbDDGj7y2uCg9z9Uo82xTxCcrmP/q4HsEIcvJ6uGZr2lUSZs
+hpiLhsdygAi/jNcI3un9qEyg2TSL9JE83lK/ZmdY3PV9o6ssR0ARLr9v417l+HEJ
+Iu10liDypGr2QAzU7dUkaOVT8rIUsqxV+/DqWSPYpyQez1Dvgl1oGb6gGotiPtEQ
+r0F5jUbskk/SU0BSEoQgYuxmSaUrWA==
+=WLg3
+-----END PGP SIGNATURE-----
+
+--Sig_/ED0qPeuG4IN8_ul_RRNBDwc--
