@@ -1,125 +1,144 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25512820A1
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6011917E7
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744648135; cv=none; b=acHwnmGRg9dHaBUt3gZ40IlMMryBkASnznhPVd40xvzmK7SeG4WEINxNTGozaUP8zsEW1urZkUCy6qur2Aur+R3+20PajqWHhhSssvVPS2OUU5/N/mrjSwFOK+Z205SmfkXHNs74r8r6qWgy0dN4idsmenDfylvGSloBH+vFQHE=
+	t=1744648359; cv=none; b=ntQAClwajVSu9JmQMpkjWX1jigy3bWvYsSF8LIadKDcdmywQDumpsElyU5HnziQqj0NG9X2QSCrahB6v4uQQN59No3ivjc+J0JswfJfiKv9mHzrnx0Tsu3D7+QzGgH2xljHO0UcQL32B5nHZm1hF6vKd3qmzoblkvt8sT340r5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744648135; c=relaxed/simple;
-	bh=bOVQ3FP5ypXMPfKDM06/0e3rBvJrdaxgXSa39Q6f0Dk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rVlMu7osggXunvFLssikVKN4r5jfeNQp2rC05k4M2qMubK8Fcm8d4IhfwCh6gDz8Mj3IM4oCNnkUzk06EpETU6J0yngwKDbJX/RzGvFG7mageBS87Rs5/+2dWgzis21FnJg+7sH7tCI77e9tyy6Nh51IgsBXe1b0muDn3mggU0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bP1lqaoc; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
+	s=arc-20240116; t=1744648359; c=relaxed/simple;
+	bh=LxeEjXsTzyjmpn+ReNlLxMKLEF/tsQrcB3L0UMTB9is=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sV6auPO6fiToMrCEmJzx8VaGdfUdLwZR3QfdXT96uocLTPBEmtlV37fcq6oKiOkYq2lP/QrKKD5gAgJOH2sQWWuyTQlWdbaSvZSzJrZ1t1VEwhpHYgcu7ROWkIBLdBTT/ssJpijU9rh9jD5kou2JnfxE9Jw7+wNFQfxkScxv/Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VrppPEBy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bP1lqaoc"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so6834727a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744648133; x=1745252933; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iXLUJ61f1yTddrehctN7EiKQ8FoTlBs0L4ffrGV+118=;
-        b=bP1lqaocE/v6nohPUHzv8CnQGU97Vye2Lgr/BSVw5IKsV9mBHCKH8l1CljxnHX0xAu
-         jPAC2Rx2RlW4esqoxfJLTJwKrQ1hEAl/5B3CSlkKiTYC20dokNyGRuH37SpZ1b2k3DLF
-         PwjYrlRBiVnAp/vCvw63R+R+hNZ68jaYkHrGckq1g018Q7QsyyXXqCBNFBcXcn0mfU0O
-         R57eHcGmXAAYDJCIwTnOrlJA7tmBLqNFESTG2yOolU9KIYUhZYJGilQn7Mbw7555Hj9p
-         6qguGgy/EvC6xVqKb+W5uc1sggNrDbp+LVE+hv1O3ae68wJnN7lZ5pn05unQndLjsR6w
-         fyzA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VrppPEBy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744648356;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=psPpYVaNQlJBPoNb/90nh8sbsObK4AuLZcGNe09lj5c=;
+	b=VrppPEByuDEadsvSH+p/M1HnQCMj2v5XF6AtS80foymTitPpmiIE2Wd7OklxnBTn8KptjP
+	cMjxNz1BJIYJykiYD3CB73znx6OgDQqRRwARqkF/FoecqbhK0Nmhp1qdoAywk9Rs0p/YYk
+	4KZxmYhS1mgx26NWN4iNlWa6vHVGH2A=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-310-uerkHiodO_222ZwAHlXNOw-1; Mon, 14 Apr 2025 12:32:35 -0400
+X-MC-Unique: uerkHiodO_222ZwAHlXNOw-1
+X-Mimecast-MFC-AGG-ID: uerkHiodO_222ZwAHlXNOw_1744648354
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d22c304adso23780075e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:32:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744648133; x=1745252933;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iXLUJ61f1yTddrehctN7EiKQ8FoTlBs0L4ffrGV+118=;
-        b=FTyVSjz8wEpnswSXyAWL/gkhJ/uTIJx0zjWBvO3Lcdh/DmxAQI8NT/uYOVLNV0GMWb
-         8cpxtlQFVkmPXdRzn/joM9MZbA94nmgDN6Ubsns7LJO1fwOZ7tIU9S5qnEOU+bX6etwA
-         4dc1ksSHlYblkQz/JUaq+Ou/BKNGFHQXDtebWjqhVij5TQfb39A4F9qb0O4q5ANsrnRw
-         En+LDUjnHRc5xkCbG0Xf2P0PeJMlNjx6qvvugCjHFGBwImjNiZiF1L26qvSBGMKL5eL5
-         +UxJejQ4S1dOCeECXWoJt+UDqNG3UYHntUs3xUV+O/kguEmX+vD1nsC+yKBrvXBQy3Sn
-         lebQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzvjBtaQPdp+Lx/B9lZrCG85UX5KZdXyj/u7/zjCEgNWBml5iwiHqdz5YlquX9WmcBsM4iTlyhKnDDd30=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnra++MrS9fphX0Uz0H7Ov4Xv7ak1fFH+puRn51/gLQn8yjvgM
-	QVilOdUH/Y/LZkYKi0HFiR1GJ+jNH6dzGKeNPkZHDHx40vdp6TWO+pmOnhjk7uh6bIozPNyjxx7
-	KzEbJOl4LqQ0X9Q==
-X-Google-Smtp-Source: AGHT+IFKAHwaGD+uH8j/e6PvAJIsPBttChl+k7IeBf3yzmFDQvIZDYfCqllIFg5WytmY833AwgULIReL/PLMlE0=
-X-Received: from pjbsi10.prod.google.com ([2002:a17:90b:528a:b0:2ef:7af4:5e8e])
- (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:524c:b0:2ee:ad18:b309 with SMTP id 98e67ed59e1d1-30823633edemr18416835a91.3.1744648133130;
- Mon, 14 Apr 2025 09:28:53 -0700 (PDT)
-Date: Mon, 14 Apr 2025 16:28:41 +0000
+        d=1e100.net; s=20230601; t=1744648354; x=1745253154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=psPpYVaNQlJBPoNb/90nh8sbsObK4AuLZcGNe09lj5c=;
+        b=qjDC2txHEILhVhNFco8eFXd+ILdwUnVQe9NdUonkBUElJtiOpp6VTTR8kGPfcj3kiP
+         FQBDhQ0JPKv6uRzF0vlxjMpgZutZJUzf8Aq53rHp6PpRtZMd9KiFGitHr8dhSqgQTbGa
+         e6OrxQpri/8Vzsf5sMnYQ1eFLduc3iWYoo1p9qOX2Phwm3hUEEBFPu1dV+1jmBla0cky
+         3bEzSydFiQYMx0m8pG/pIlC0kJJMJovhNU3U/lZi4+7ROi5WI4wqSVPysbrbY97Pa1Gs
+         s/7e0ktEhQyCGVLebitbtdm93tFvt1CU9mWE3xi2q9/7oEPx9ytthKwCzCU1ff5m3HMH
+         wuYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWoN3PvtZOr3rB493DBTh//33ugpg3mpdc+K/rfZFbWNlQ6+O5rzn+McE6algxOZ6HS1FXSwZ08mu8Nicw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPXs9DFgjetAjzO6EcdCaeqrEKNaDy7eHA4NxcOBLmXqJ3IH2J
+	yMZxnTW0c3XKimkPIyrVrGP+RxrRof3yU9qN5o1ifhcKuuW2W69qdT3+l889vrpnts/nC8pkqk4
+	ilaCSW+i3dtaDk3OYlgBSAqIdghM7RlTuz1G3DTdpjirWNUklKFCqPUgy9yJPgw==
+X-Gm-Gg: ASbGncskrx0QYE1SpyzgrlLtTXNiaOXm9DIpdpJnSNfx5DXVpcizeXsaFUqeLeZhz+N
+	WTuA7pg9LfLbomewNtYtm8pBhMl4ARVhQdOfHUTQGjEc2LrlRz3oDUbjqM59rxrZ58vspptyRba
+	DbTRkPgPipdpejONJPnd/U9oL5m1jKeyq0vw2BvC0P5NHpe9Eyj7iAQCY1yOhMOP6GJ8eo07x3H
+	ZOTEilfQpYKxZpSgFu69lWHer+27cvpo7sdY5IlYN0OrZ2gWLo3HVe+5nNUVMBGWzNpg8HpDeHk
+	xuxjGg==
+X-Received: by 2002:a05:6000:248a:b0:39e:cbca:8a72 with SMTP id ffacd0b85a97d-39edc3059aamr38195f8f.12.1744648353759;
+        Mon, 14 Apr 2025 09:32:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErshira9b65DJz4U+YOoZ2EfEQ5MJmWz7qS8OqJT6VLSYpu4hvsslk7OCkkLLr5Vcu2G6UIQ==
+X-Received: by 2002:a05:6000:248a:b0:39e:cbca:8a72 with SMTP id ffacd0b85a97d-39edc3059aamr38167f8f.12.1744648353322;
+        Mon, 14 Apr 2025 09:32:33 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2a13sm179644545e9.10.2025.04.14.09.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 09:32:32 -0700 (PDT)
+Date: Mon, 14 Apr 2025 12:32:29 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: virtualization@lists.linux.dev, kvm@vger.kernel.org,
+	netdev@vger.kernel.org, jasowang@redhat.com,
+	michael.christie@oracle.com, pbonzini@redhat.com,
+	stefanha@redhat.com, eperezma@redhat.com, joao.m.martins@oracle.com,
+	joe.jin@oracle.com, si-wei.liu@oracle.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] vhost: add WARNING if log_num is more than limit
+Message-ID: <20250414123119-mutt-send-email-mst@kernel.org>
+References: <20250403063028.16045-1-dongli.zhang@oracle.com>
+ <20250403063028.16045-10-dongli.zhang@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250414162842.3407796-1-tjmercier@google.com>
-Subject: [PATCH] cgroup/cpuset-v1: Add missing support for cpuset_v2_mode
-From: "T.J. Mercier" <tjmercier@google.com>
-To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	"=?UTF-8?q?Michal=20Koutn=C3=BD?=" <mkoutny@suse.com>, Waiman Long <longman@redhat.com>
-Cc: "T.J. Mercier" <tjmercier@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403063028.16045-10-dongli.zhang@oracle.com>
 
-Android has mounted the v1 cpuset controller using filesystem type
-"cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
-behavior where the controller name is not added as a prefix for cgroupfs
-files. [2]
+On Wed, Apr 02, 2025 at 11:29:54PM -0700, Dongli Zhang wrote:
+> Since long time ago, the only user of vq->log is vhost-net. The concern is
+> to add support for more devices (i.e. vhost-scsi or vsock) may reveals
+> unknown issue in the vhost API. Add a WARNING.
+> 
+> Suggested-by: Joao Martins <joao.m.martins@oracle.com>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 
-Later, a problem was discovered where cpu hotplug onlining did not
-affect the cpuset/cpus files, which Android carried an out-of-tree patch
-to address for a while. An attempt was made to upstream this patch, but
-the recommendation was to use the "cpuset_v2_mode" mount option
-instead. [3]
 
-An effort was made to do so, but this fails with "cgroup: Unknown
-parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
-mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
-update the special cased cpuset_mount(), and only the cgroup (v1)
-filesystem type was updated.
+Userspace can trigger this I think, this is a problem since
+people run with reboot on warn.
+Pls grammar issues in comments... I don't think so.
 
-Add cgroup v1 parameter parsing to the cpuset filesystem type so that it
-works like the cgroup filesystem type:
-
-$ mkdir /dev/cpuset
-$ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
-$ mount|grep cpuset
-none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v2_mode,release_agent=/sbin/cpuset_release_agent)
-
-[1] https://cs.android.com/android/_/android/platform/system/core/+/b769c8d24fd7be96f8968aa4c80b669525b930d3
-[2] https://cs.android.com/android/platform/superproject/main/+/main:system/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=2dac5d89a0f024a2d0cc46a80ba4ee13472f1681;l=192
-[3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385@redhat.com/T/
-
-Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use v2 behavior in v1 cgroup")
-Signed-off-by: T.J. Mercier <tjmercier@google.com>
----
- kernel/cgroup/cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 3caf2cd86e65..ceedaf47d494 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -2356,6 +2356,7 @@ static struct file_system_type cgroup2_fs_type = {
- static const struct fs_context_operations cpuset_fs_context_ops = {
- 	.get_tree	= cgroup1_get_tree,
- 	.free		= cgroup_fs_context_free,
-+	.parse_param	= cgroup1_parse_param,
- };
- 
- /*
-@@ -2392,6 +2393,7 @@ static int cpuset_init_fs_context(struct fs_context *fc)
- static struct file_system_type cpuset_fs_type = {
- 	.name			= "cpuset",
- 	.init_fs_context	= cpuset_init_fs_context,
-+	.parameters		= cgroup1_fs_parameters,
- 	.fs_flags		= FS_USERNS_MOUNT,
- };
- #endif
--- 
-2.49.0.604.gff1f9ca942-goog
+> ---
+>  drivers/vhost/vhost.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 494b3da5423a..b7d51d569646 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -2559,6 +2559,15 @@ static int get_indirect(struct vhost_virtqueue *vq,
+>  		if (access == VHOST_ACCESS_WO) {
+>  			*in_num += ret;
+>  			if (unlikely(log && ret)) {
+> +				/*
+> +				 * Since long time ago, the only user of
+> +				 * vq->log is vhost-net. The concern is to
+> +				 * add support for more devices (i.e.
+> +				 * vhost-scsi or vsock) may reveals unknown
+> +				 * issue in the vhost API. Add a WARNING.
+> +				 */
+> +				WARN_ON_ONCE(*log_num >= vq->dev->iov_limit);
+> +
+>  				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
+>  				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
+>  				++*log_num;
+> @@ -2679,6 +2688,15 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>  			 * increment that count. */
+>  			*in_num += ret;
+>  			if (unlikely(log && ret)) {
+> +				/*
+> +				 * Since long time ago, the only user of
+> +				 * vq->log is vhost-net. The concern is to
+> +				 * add support for more devices (i.e.
+> +				 * vhost-scsi or vsock) may reveals unknown
+> +				 * issue in the vhost API. Add a WARNING.
+> +				 */
+> +				WARN_ON_ONCE(*log_num >= vq->dev->iov_limit);
+> +
+>  				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
+>  				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
+>  				++*log_num;
+> -- 
+> 2.39.3
 
