@@ -1,55 +1,55 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B02429114D
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:42:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2562A2918D8
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652539; cv=none; b=MNIlnhBN8mjCJlx0Xq36uQfx3cmpvg4F6MQ0SluVyGxB5wsmshRqfEsAGYzIBxkwqlzqkjPI0kX/ntIu2CODDUkTqYxFLH/rfpwC7+ju9DiTaZtfTmlH80dKTec9Uqv98Pkr4h55nbUa9eUPfLchoBUdvWG1PQCVzeUyJbfN9H0=
+	t=1744652543; cv=none; b=GNrZbGaUSSh1R7EIEWfm+jKJt8K+W664LZOtSLVfNjpvjpmgWMaYaaX6XPjJH2j2Wy0KRAVJVIMr8nh/iUfcBcdF3kboaCMp0ngaWShQjdY6Du0Y3pCSAHHpwgPzQ1UDavCvm4IxZU1ajle7k1qwxzvOxx9DIVnpj39NpyYobec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652539; c=relaxed/simple;
-	bh=WKPQcboFiB+hGHxUYzO4w2ckiNZXOOLFUP7lGFlNwWY=;
+	s=arc-20240116; t=1744652543; c=relaxed/simple;
+	bh=XQBjLpvUcKT1rbTwpwSIA4ZEcfX1eZFeIrszq9/gIZc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=NZnB3GYzcnFpsqKZhRm7sIN5fUOCLkwpYHJUWfm0DdrEV13yYZyAjz563IJt3E3puWuqj/km9m6uDx5d6eZChfDk9DHoFUgeUZ4FklSld3qiJRxOm4LyImkqy5HsdjA76uWLu7psC+iji53R1e14a30PAq5gSjr6/yTX7rc91lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cveDsJxu; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=cpMGEk6Ci9KLlve8VXWi5kiy2umgtdME8/t3sb3BGY5Uzw+ZLKGGaaEJrJIdlGZ1DNkuqSDVpjk0RfBsZjEe9hWjBaUVF/67D35uWxkJU5GWb66lUCVWuP/uNr6HU3ZfLH7pPqSXkwZ3z616wOZE3f/J862b7dImbhprFI9FOHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=luR06qGR; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cveDsJxu"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2241e7e3addso39989205ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:42:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="luR06qGR"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22647ff3cf5so37372285ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744652537; x=1745257337; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744652541; x=1745257341; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uYPEm9NL3VZPHY9E6/DgquYd8q3uRuheFZCN9+58cmE=;
-        b=cveDsJxutt5Esx7vRc6ahsFtupQ1pLbf28taPIyCCU4ywMW2bO1h1eaEPFd+4rPxSo
-         Wx7Nlie1VOATzUGTgf9jyrg+kU4h5F46P3UWq8uehPPr4hAI2Sm7QwLpUrfqo3D4Ao0V
-         ygn4sU/5MOJTBnXdVascGSmMX/D1O2WrR8tyz7XyLmBxUK2wHoLFIn67zsV+D5Zu1gYW
-         pwhaG9nzLv24Mq/Hc7VlJ0er6pgFyx1LLcAtFcYhUM/RNFEWHJQwTKMc+S7vhAPUuzwb
-         azdO4/LMFf7978cnUyRzhni07H8GUMh57Pu//icpHe/nGtpE+uPbNmztGMNuWjaR4If1
-         kFCw==
+        bh=x3YaC980+r1nZ2D8a7F/BKfpCPrV+UZzeRb3LiqHQpw=;
+        b=luR06qGRNmLjcrXzsgdBHMATB3ggM3StNV8KU6HYDlJPCGpHYkHIRccwNVzEiW9QHp
+         4fwfKmeBd9/7Wsy2pxjrzjFMToqzP0WtWf/sDNSBQs+sWugtXc4ozGvmFPGMDEmVZzo0
+         7tOOBtxU7CRS6UzKRDzNLhvGg5SFNzBz8lIN8hjpl+mLAMHOnJOx8jwwCrJxqKigIPhj
+         0Ne4iUq1pRrQFofpz1gqJZlVNYJi7lSSgkqDRKfgLIQV16WCp25rT982K0g+KrExJlCb
+         CYVx5o5F9X7tXlX5Yj3ZEZzU/53gI98KqHrBn8AKRUy25ekYAIhuvEgP4xbNjedyETmm
+         SwXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652537; x=1745257337;
+        d=1e100.net; s=20230601; t=1744652541; x=1745257341;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uYPEm9NL3VZPHY9E6/DgquYd8q3uRuheFZCN9+58cmE=;
-        b=CraZ6gY9/Zk0tfLmIFKGpfV6Czu+yQcjyTNzwUhUcNaYAt7t/GHclHETtRgMRePX7i
-         f5R71dYyd88p9YFJCZwb2ZwefNSGdjsPHynWl5Vyfdqjf5No2gGXfUPFq2F2DV8T1bzR
-         KUspTcWzunp1sc5ofOIk+EI9ZUFcLa8ISfw51YOeohs2isA3xZiTLpK/YJQ5cHBjrBmh
-         aebVzKOFhO2CMjk1MOKQsu7IFnNUeygeJiqHHuczDp6vWYchayjEmpCTGZxy8R4/as5I
-         EJmr+d1k89akTlewosv1VrABPY7EfEmzO+382m9PeLTbRzxlagab0TjwQ/41mKgWvBeT
-         wfHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6hn5NHevUVVnxMO4bBrNXGxd/QAwaqfsVYVaFGfH/LISNHLJP7Bqr/B0Mz95p80MoONDoVvinhzChu1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2iB2M/wdCBXnl6SznVZKVnlMnsJ78VgPRZ0ZDYiJInK2cDATA
-	S65EPGfbodsU2uyGTrrvnvl7KURkQVokC6N1bAFm7U19qpqZG9vvZq7mwDhe1Fig5nMWk6WO64o
-	mSW6FrA==
-X-Google-Smtp-Source: AGHT+IGyKIuM07n7cmrhe91nvxQ1s4pZVlktHt4FzYtDlOdKGZpHGdcVIsvx1wZO0pb66Pi24JVdJeZGgAqF
-X-Received: from plly18.prod.google.com ([2002:a17:902:7c92:b0:223:5c97:5c3c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1c7:b0:223:4537:65b1
- with SMTP id d9443c01a7336-22bea4efec4mr187177005ad.36.1744652537178; Mon, 14
- Apr 2025 10:42:17 -0700 (PDT)
-Date: Mon, 14 Apr 2025 10:41:29 -0700
+        bh=x3YaC980+r1nZ2D8a7F/BKfpCPrV+UZzeRb3LiqHQpw=;
+        b=nbt3qeEBl1A1zK6pEOISzIEm612JKl2uNrrNf05Qzt/osGWaU/t6OiyP7tf4WwgbeR
+         zYzabWTzVtWWUnMYCw7GTL345o+FNppX0WVZPcal94hi57lc+AZMkqiCSyCsKPJ4bRGj
+         53HfegTV1EC/4mQLL9RIJUVTG6xYFeDs+L9rTB7Bgk7fsjv7PunoA4BNJuD8tG1fXWDc
+         CuDxvedLhNnN6Xtu/naMnZnTF5hSDkW0ShrXkSVivJAj/imDTm1QlEPXbKxmuATfxSVk
+         Hop1nhnLdF7jANnCJsy6Ll/XkPDoy8EIraz13T+Bx3YSxg7LSMk3px0l/r5A0v6JcgRC
+         DhXA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2eI3QuHMlaiatNdJUJkpbjuo1io1XGBJEiNmww9di2CxeVPxaPPesSBHlF4HV/Cloqeo7DjdcL2/yFzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMghdreOlpZrvAS/eZhMLprBphBzPh28pY0Pi/zxGEWTGGfwEH
+	OMgU4iCc8rRmxnBSufe9UAKv4Z13WFNwOACQsleYyzkjNH1UtoRRJ+J+IHfNLh798nBUwteCX7C
+	nVh/YQw==
+X-Google-Smtp-Source: AGHT+IF5D6jK1ghfd0t52mg85WD4BqRqb97G15GYc+m35//A00eC8Z31mPAniL9z9mLgfFeaaxaeb3nP3bkJ
+X-Received: from pldy12.prod.google.com ([2002:a17:902:cacc:b0:226:453a:f2db])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2444:b0:220:c813:dfd1
+ with SMTP id d9443c01a7336-22bea4f398emr184470065ad.36.1744652541411; Mon, 14
+ Apr 2025 10:42:21 -0700 (PDT)
+Date: Mon, 14 Apr 2025 10:41:31 -0700
 In-Reply-To: <20250414174134.3095492-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250414174134.3095492-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250414174134.3095492-12-irogers@google.com>
-Subject: [PATCH v5 11/16] perf intel-tpebs: Add mutex for tpebs_results
+Message-ID: <20250414174134.3095492-14-irogers@google.com>
+Subject: [PATCH v5 13/16] perf intel-tpebs: Use stats for retirement latency statistics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,182 +77,63 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure sample reader isn't racing with events being added/removed.
+struct stats provides access to mean, min and max. It also provides
+uniformity with statistics code used elsewhere in perf.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Weilin Wang <weilin.wang@intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/intel-tpebs.c | 54 +++++++++++++++++++++++++++++------
- 1 file changed, 46 insertions(+), 8 deletions(-)
+ tools/perf/util/intel-tpebs.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index f648fca17556..aa6bcdf2bf6c 100644
+index a9446e7a1c5c..de9fea601964 100644
 --- a/tools/perf/util/intel-tpebs.c
 +++ b/tools/perf/util/intel-tpebs.c
-@@ -16,6 +16,7 @@
- #include "debug.h"
- #include "evlist.h"
+@@ -18,6 +18,7 @@
  #include "evsel.h"
-+#include "mutex.h"
+ #include "mutex.h"
  #include "session.h"
++#include "stat.h"
  #include "tool.h"
  #include "cpumap.h"
-@@ -32,6 +33,7 @@ bool tpebs_recording;
- static LIST_HEAD(tpebs_results);
- static pthread_t tpebs_reader_thread;
- static struct child_process tpebs_cmd;
-+static struct mutex tpebs_mtx;
- 
- struct tpebs_retire_lat {
- 	struct list_head nd;
-@@ -51,6 +53,19 @@ struct tpebs_retire_lat {
- 
- static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel);
- 
-+static void tpebs_mtx_init(void)
-+{
-+	mutex_init(&tpebs_mtx);
-+}
-+
-+static struct mutex *tpebs_mtx_get(void)
-+{
-+	static pthread_once_t tpebs_mtx_once = PTHREAD_ONCE_INIT;
-+
-+	pthread_once(&tpebs_mtx_once, tpebs_mtx_init);
-+	return &tpebs_mtx;
-+}
-+
- static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[], int ack_fd[])
- {
- 	const char **record_argv;
-@@ -59,13 +74,15 @@ static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[],
- 	char cpumap_buf[50];
- 	struct tpebs_retire_lat *t;
- 
-+	mutex_lock(tpebs_mtx_get());
- 	list_for_each_entry(t, &tpebs_results, nd)
- 		tpebs_event_size++;
- 
- 	record_argv = malloc((10 + 2 * tpebs_event_size) * sizeof(*record_argv));
--	if (!record_argv)
-+	if (!record_argv) {
-+		mutex_unlock(tpebs_mtx_get());
- 		return -ENOMEM;
--
-+	}
- 	record_argv[i++] = "perf";
- 	record_argv[i++] = "record";
- 	record_argv[i++] = "-W";
-@@ -101,6 +118,7 @@ static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[],
- 	list_for_each_entry(t, &tpebs_results, nd)
- 		t->started = true;
- 
-+	mutex_unlock(tpebs_mtx_get());
- 	return ret;
- }
- 
-@@ -112,9 +130,12 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- {
- 	struct tpebs_retire_lat *t;
- 
-+	mutex_lock(tpebs_mtx_get());
- 	t = tpebs_retire_lat__find(evsel);
--	if (!t)
-+	if (!t) {
-+		mutex_unlock(tpebs_mtx_get());
- 		return -EINVAL;
-+	}
- 	/*
- 	 * Need to handle per core results? We are assuming average retire
+ #include "metricgroup.h"
+@@ -42,12 +43,8 @@ struct tpebs_retire_lat {
+ 	struct evsel *evsel;
+ 	/** @event: Event passed to perf record. */
+ 	char *event;
+-	/* Count of retire_latency values found in sample data */
+-	size_t count;
+-	/* Sum of all the retire_latency values in sample data */
+-	int sum;
+-	/* Average of retire_latency, val = sum / count */
+-	double val;
++	/** @stats: Recorded retirement latency stats. */
++	struct stats stats;
+ 	/* Has the event been sent to perf record? */
+ 	bool started;
+ };
+@@ -145,9 +142,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
  	 * latency value will be used. Save the number of samples and the sum of
-@@ -123,6 +144,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 	t->count += 1;
- 	t->sum += sample->retire_lat;
- 	t->val = (double) t->sum / t->count;
-+	mutex_unlock(tpebs_mtx_get());
+ 	 * retire latency value for each event.
+ 	 */
+-	t->count += 1;
+-	t->sum += sample->retire_lat;
+-	t->val = (double) t->sum / t->count;
++	update_stats(&t->stats, sample->retire_lat);
+ 	mutex_unlock(tpebs_mtx_get());
  	return 0;
  }
- 
-@@ -229,7 +251,6 @@ static struct tpebs_retire_lat *tpebs_retire_lat__new(struct evsel *evsel)
- 		return NULL;
+@@ -522,7 +517,7 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
+ 			return ret;
+ 		mutex_lock(tpebs_mtx_get());
  	}
- 	result->evsel = evsel;
--	list_add_tail(&result->nd, &tpebs_results);
- 	return result;
- }
- 
-@@ -282,15 +303,22 @@ static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel)
- static int evsel__tpebs_prepare(struct evsel *evsel)
- {
- 	struct evsel *pos;
--	struct tpebs_retire_lat *tpebs_event = tpebs_retire_lat__find(evsel);
-+	struct tpebs_retire_lat *tpebs_event;
- 
-+	mutex_lock(tpebs_mtx_get());
-+	tpebs_event = tpebs_retire_lat__find(evsel);
- 	if (tpebs_event) {
- 		/* evsel, or an identically named one, was already prepared. */
-+		mutex_unlock(tpebs_mtx_get());
- 		return 0;
- 	}
- 	tpebs_event = tpebs_retire_lat__new(evsel);
--	if (!tpebs_event)
-+	if (!tpebs_event) {
-+		mutex_unlock(tpebs_mtx_get());
- 		return -ENOMEM;
-+	}
-+	list_add_tail(&tpebs_event->nd, &tpebs_results);
-+	mutex_unlock(tpebs_mtx_get());
- 
- 	/*
- 	 * Eagerly prepare all other evsels on the list to try to ensure that by
-@@ -317,6 +345,7 @@ static int evsel__tpebs_prepare(struct evsel *evsel)
- int evsel__tpebs_open(struct evsel *evsel)
- {
- 	int ret;
-+	bool tpebs_empty;
- 
- 	/* We should only run tpebs_start when tpebs_recording is enabled. */
- 	if (!tpebs_recording)
-@@ -336,7 +365,10 @@ int evsel__tpebs_open(struct evsel *evsel)
- 	if (ret)
- 		return ret;
- 
--	if (!list_empty(&tpebs_results)) {
-+	mutex_lock(tpebs_mtx_get());
-+	tpebs_empty = list_empty(&tpebs_results);
-+	mutex_unlock(tpebs_mtx_get());
-+	if (!tpebs_empty) {
- 		struct pollfd pollfd = { .events = POLLIN, };
- 		int control_fd[2], ack_fd[2], len;
- 		char ack_buf[8];
-@@ -436,8 +468,10 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 	 */
- 	tpebs_stop();
- 
-+	mutex_lock(tpebs_mtx_get());
- 	t = tpebs_retire_lat__find(evsel);
- 	val = rint(t->val);
-+	mutex_unlock(tpebs_mtx_get());
+-	val = rint(t->val);
++	val = rint(t->stats.mean);
+ 	mutex_unlock(tpebs_mtx_get());
  
  	if (old_count) {
- 		count->val = old_count->val + val;
-@@ -460,9 +494,13 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
-  */
- void evsel__tpebs_close(struct evsel *evsel)
- {
--	struct tpebs_retire_lat *t = tpebs_retire_lat__find(evsel);
-+	struct tpebs_retire_lat *t;
- 
-+	mutex_lock(tpebs_mtx_get());
-+	t = tpebs_retire_lat__find(evsel);
-+	list_del_init(&t->nd);
- 	tpebs_retire_lat__delete(t);
-+	mutex_unlock(tpebs_mtx_get());
- 
- 	if (list_empty(&tpebs_results))
- 		tpebs_stop();
 -- 
 2.49.0.604.gff1f9ca942-goog
 
