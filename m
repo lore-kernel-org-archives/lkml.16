@@ -1,102 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D23C2FD
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5702750EB;
+	Mon, 14 Apr 2025 14:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642330; cv=none; b=JouFpYYsYO1ez3lv/USk9TnFjhAVrIWxX23xV6HBMwhnDr+07z0T8+cHSktX0CjPDu3T/4jHBs+o2LqJI2eUgTuGwevY4NjZkJn3zyfRtibQNrRoCKB4ptDw9L60G7kGkHGFQ01pxoHBrPx0IsvCEs4rVQ6sJF/P2wVA4VSQoFA=
+	t=1744642358; cv=none; b=oxes8V35fwMHJxLPiGTnqOOIvB/Zb3SETbkJAyHLYJJBiSclyunHzodJfbWGOaG1Zhjvz4SMEji45KCQYTfjXGsbUDacww3wAYvZhMyimGNgTFz/LhPvO+3gce2pg+8uZ6GtDxgS2oU7TYG/3by6dBSvSPlVMbXR3mAznIgXDoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642330; c=relaxed/simple;
-	bh=EWYXK6utjGSeOg8p9KKcNQ8UUIiM6+pFjWHg83VZzLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UP3SYlnSY8MC8EQak8YrLzM/SD3BU92uQS+HuYfRcAb9czJLwjvvOtKRtdnD9oNuArQDC65vQh4B9m2TDcDkEZxMC6RahASIN2xTewqwYDKSFu7c3fvVG7Uug8auXF5VTYLGr6WmbUKBaw8LXciCBnv5yEmdwca/iS3e9Ze+RoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/jyxRfv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744642358; c=relaxed/simple;
+	bh=hcMWM0G9vEZfGmzIr7O1gnEoUkP0rDsSrVH60fHRMYI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PlwNzk+dUzaLTQ/LmE+Xi2YDilX0DFzAWkHL0qNUFbL/i3UF54EydTaGFRFjMq1E8cyUVYNfoiacSzkJ/XnO1UQq1bvigLssLlouSsC85q56WtCWBLZTdgA1b43iNJho/YyvciT/6xiD1a5qGzkNvzZH6OTbN/ksVmN71ikTjgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=e8xaB2mx; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/jyxRfv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C356C4CEE2;
-	Mon, 14 Apr 2025 14:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744642329;
-	bh=EWYXK6utjGSeOg8p9KKcNQ8UUIiM6+pFjWHg83VZzLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d/jyxRfv6Jlouc1xYJokyPIJpZYjp1k9a1moCqo2GJYS7ibupG5sztbcej1OLuiRy
-	 4qD6hxnUJysVAqJZ+wRBj/xl8cX9IkH74FJyQBAFfKEbC8WUmfxt2H0p0ggPV4MUIL
-	 A/UX0aoGRw/t7lade3HYf4HoXNo0G/M6VV1rJslBZNrByQYK8HIYplG6d7VzAb90DA
-	 TFPyzSX218fOy4tYkWHNM07CH8a6KHXYgrGmOJmdow7xJ39X1iZw8XviyeP5W5r29+
-	 GpTZEo5PQLY0TE3YuKlI41p/cKusLYyRv5ViQTv9Kylskq1Djx17Cl56QXnUWEcFtH
-	 M6+cbqJG7cUgw==
-Date: Mon, 14 Apr 2025 16:52:07 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 03/11] drm/connector: add CEC-related fields
-Message-ID: <20250414-augmented-origami-fulmar-acb97b@houat>
-References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
- <20250407-drm-hdmi-connector-cec-v5-3-04809b10d206@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e8xaB2mx"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEqCCW2787576
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 09:52:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744642332;
+	bh=7DgyALPRj27V3u4dS9N8ZYrgbkAagFNpTbCFLxgzwlQ=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=e8xaB2mx0+lFI9uLSUkuZzpAlT7BwWkh7jg9b1J45o8r3n1aTc/SzKGeY/irvHMnQ
+	 Vqj/cIthOKvs0VmGDhcRjYzvn7E7H1GThsm/I7OTH4K8VjdJeqKuWSWQdUBxre/a/I
+	 rfcNKwrv8jH0Ev34cz/pLD0R6+m+m66G9TG0Ank4=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEqCro012307
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 14 Apr 2025 09:52:12 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
+ Apr 2025 09:52:12 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 14 Apr 2025 09:52:12 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EEqCYp035762;
+	Mon, 14 Apr 2025 09:52:12 -0500
+Date: Mon, 14 Apr 2025 09:52:12 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+CC: Sukrut Bellary <sbellary@baylibre.com>,
+        Jonathan Cameron
+	<jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution
+ devices support
+Message-ID: <20250414145212.7fcybmngv7rnuvnm@hatchet>
+References: <20250408132120.836461-1-sbellary@baylibre.com>
+ <20250408132120.836461-3-sbellary@baylibre.com>
+ <cb81cba4-0fa3-431a-924f-b362fd0c4638@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pc6nu3m6jzhyff3u"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250407-drm-hdmi-connector-cec-v5-3-04809b10d206@oss.qualcomm.com>
+In-Reply-To: <cb81cba4-0fa3-431a-924f-b362fd0c4638@gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On 09:40-20250414, Matti Vaittinen wrote:
+> On 08/04/2025 16:21, Sukrut Bellary wrote:
+> > The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> > interface. The device family responds with 12-bit data, of which the LSB
+> > bits are transmitted by the lower resolution devices as 0.
+> > The unavailable bits are 0 in LSB.
+> > Shift is calculated per resolution and used in scaling and
+> > raw data read.
+> > 
+> > Lets reuse the driver to support the family of devices with name
+> > ADC<bb><c>S<sss>, where
+> > * bb is the resolution in number of bits (8, 10, 12)
+> > * c is the number of channels (1, 2, 4, 8)
+> > * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> > and 101 for 1 MSPS)
+> > 
+> > Complete datasheets are available at TI's website here:
+> > https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> 
+> I tried looking up:
+> https://www.ti.com/lit/gpn/adc102s051.pdf
 
---pc6nu3m6jzhyff3u
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v5 03/11] drm/connector: add CEC-related fields
-MIME-Version: 1.0
+Gaah - the IT folks keep messing with the URLs :( -> dropping .pdf in
+the url should get you to the pdf #facepalm :( (sidenote: that wasn't
+the case a year back :( - hopefully this will stay).
 
-Hi,
-
-On Mon, Apr 07, 2025 at 06:11:00PM +0300, Dmitry Baryshkov wrote:
-> +/**
-> + * struct drm_connector_cec - DRM Connector CEC-related structure
-> + */
-> +struct drm_connector_cec {
-> +	/**
-> +	 * @mutex: protects all fields in this structure.
-> +	 */
-> +	struct mutex mutex;
-> +
-> +	/**
-> +	 * @funcs: CEC Control Functions
-> +	 */
-> +	const struct drm_connector_cec_funcs *funcs;
-> +
-> +	/**
-> +	 * @data: CEC implementation-specific data
-> +	 */
-> +	void *data;
-
-Is there a reason we don't just skip that data? The only user I'm seeing
-so far are the helpers, and they only put the cec_adapter pointer in
-there.
-
-Can't we pass the connector to CEC and make the adapter part of drm_connector_cec?
-
---pc6nu3m6jzhyff3u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/0hFgAKCRDj7w1vZxhR
-xfO9AP4378jYjCW1nqnXF/1sSnm/il612oYqWtMMxU3TETGBFAD/UMRtM6qs/l2Z
-c8AeNXMCFUMqpaiXwg0vvadrAr/q9gY=
-=bCGT
------END PGP SIGNATURE-----
-
---pc6nu3m6jzhyff3u--
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
