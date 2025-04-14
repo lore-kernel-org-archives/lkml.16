@@ -1,233 +1,291 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4795383A5
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744660064; cv=fail; b=MxqlGHnbRMGk1osWSu/t2PUYUlVh6NCuWEu1L1fZTjkoFnS1TxCewtOd691RoRHH/j+aePIJPlNCvlrEFK+XoVAp2kCAIcZlhWKu4O7/YgBttLFneGNTx78FIfxOStxf6Im1dDLtGuYgXwc45Zk03TycYUmNlOH0yxgRMhCNtP8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744660064; c=relaxed/simple;
-	bh=e2m+zlnnV63qsvpzBf/xpGrLA7wr7pBwgHShBUd7XLE=;
-	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
-	 Content-Type:MIME-Version; b=Q7ge7SDrUAEasXB4gW2jRPIqZaPMeZjC27DKR1tIPei5ZmExOLFkE8YgQ0vHLbxG1vTG7UnLcIWEKDYRC7a7gDCldAxIcSLUNSW0NAKlJ1Z+8u7X11QX4JBdanLhRLuWtl+XZPxNDE9x97hipc92AXY64JohIunN9aosdV5SwAE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SFkquTGh; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aqrIyDeh; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E201AAA1A;
+	Mon, 14 Apr 2025 19:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744660107; cv=none; b=iWRQNM1hs1NeeDzGIJJWsqVb9j0O7ME5b0WfPN9zyIEVY/QXnMW7tNFAEemrEa6tkPnjfJTAdZ9RwKyPYB4Mhj1fHUSAMUaf9UV+G2pSK50iMFib1Z2EVUjW53zWxGrI3EksVA1wvTaFRAz6RfaDrv47Tcz/HTfEw34hK5vCkcw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744660107; c=relaxed/simple;
+	bh=wCrJSz5d6zcJhiE7u2I6anLOnopV1Cz4WW9gUgUz2RI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=p5ezpwt9//D/K1Uwx9yXChYJ6YndsOUHSe5XuV4ObpUtMflJ54f+WjNfP5u6y5A6qw71Qi0QgPl3YfA1dZIqXNRkGgBEPRU/8N6suhpzwsEWf3/QpKH9hGtvxUKk0f9Y7W5enXfR6j34iPcMXNbr1hnVZQ65RBOsirooWkILRpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bBLFGxvY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SFkquTGh";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aqrIyDeh"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EHW1JF027755;
-	Mon, 14 Apr 2025 19:46:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=eRXksl8rK3rY33vxFg
-	wTXG2XDNkHHd2AcroSQ6bECX0=; b=SFkquTGhv0kati6iuPJLUXGU9M7Cxe78QN
-	8ytMSNYbQpIlL7LMxmlw6zkFOdAXwtx+X08NomxClZ8tShmyvKNrzCs1h5K7f46n
-	5fij5TIUn1ogE914WiK0lHsCoDGFJNd9N7esUWxvxFw1ZCtJYG7G3Zvd2nUay6sk
-	3CKP5uPas0SOxFg9kVib1rGfQTh2JPu/D2b3jrX7e6nz/rzajqK6d8LuMin+YRst
-	6cXEWQgfwKSYNRVnlbCJWHi0J3vM7HOFaioqMHVlsw3M6YP2B0EQoDzZlxVRNdC6
-	+fjxKO8k5OljzsBUZUjDB4Cwgx7AejAOfYjQSQF+R3IFjepmuDlQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4616uf09s7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 19:46:46 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53EJH4s2009250;
-	Mon, 14 Apr 2025 19:46:45 GMT
-Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazlp17010002.outbound.protection.outlook.com [40.93.1.2])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 460d3gyeu9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 19:46:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TW1bOcXnSoTacPengCfCRXI1dlp6tGWnK/iQuYPN/kqSJhnM+pZAse9mt6vCqQpoOimVAUDQa8IJI5wbDEf+bkdjftlQz8GtHI23acFR6FVLcZzFeqkHEukL+9KWWuJ3cgbwuAB8twslwGEatjvq66MxvRGd44K3vEsGCkMqZbiUiJimRIE+1Bw6IsdZVyYiPM9PaRf99Y9yACgzru53LYmOn4pm9gIDWRNVjtuyBrprNq6LYykcOS7VtLUx/bqCsyWLGoPZRg1QEfPh58hnkByl0HKwWGerlv6L+r/rq9tH379zSPF4tH0yysp0hsZ0W4fISJOIFQYtYX+4F3WbVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eRXksl8rK3rY33vxFgwTXG2XDNkHHd2AcroSQ6bECX0=;
- b=BeJl6jbg6rmdOV3OsZn47JUorH52sL5nZWhvEbn/7Rwrr9aXd+mbtdSLXspGNAFXYTOWBubUkPQo+E3rFY+4+y5cnZ2hLFyb03GxCe+bjspV+u8Pdx6gMVO4jqmxT4DVY51hBQ3oaik0LFtk8LztjUqPKPkK/zvTy9yYnvydXJTYqoqCRt5SxfY627rHr3qXSdDOqf2HjAz2KXQuIzXWWxc8lXSKnLRCDZMAHlU3yGImxAr5qBOb7TutlZ3uFn/lEq2GvNdIZaZWR/FkHkO/egj34hRN5PD+ptgk2tncpQEUXETNZVD98FyitSTv+ugYinzAF/QTF0aQBbMJWC5Aiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eRXksl8rK3rY33vxFgwTXG2XDNkHHd2AcroSQ6bECX0=;
- b=aqrIyDehlWElEA6d2z7C1H2Z7O8AeydhwZyNIJCqJoetzEroBs/1xPVoR19mNWbQV1KI6rfyYYEIo8q6dDA1LfJ1DzrPGagIP7ArJYNbMPOXqp9Rls5C+Fn9oWAWl5EP8sq7OuRGg8IGQc6233y3ls5aVk0Y/QAgkGkM75GUses=
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
- by IA1PR10MB7141.namprd10.prod.outlook.com (2603:10b6:208:3fd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
- 2025 19:46:42 +0000
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::25a9:32c2:a7b0:de9e]) by CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::25a9:32c2:a7b0:de9e%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 19:46:41 +0000
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
- <20250414034607.762653-2-ankur.a.arora@oracle.com>
- <Z_yr_cmXti4kXHaX@gmail.com>
- <20250414110259.GF5600@noisy.programming.kicks-ass.net>
-User-agent: mu4e 1.4.10; emacs 27.2
-From: Ankur Arora <ankur.a.arora@oracle.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-        luto@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
-        tglx@linutronix.de, willy@infradead.org, jon.grimm@amd.com,
-        bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com
-Subject: Re: [PATCH v3 1/4] x86/clear_page: extend clear_page*() for
- multi-page clearing
-In-reply-to: <20250414110259.GF5600@noisy.programming.kicks-ass.net>
-Date: Mon, 14 Apr 2025 12:46:40 -0700
-Message-ID: <878qo234rj.fsf@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0040.namprd03.prod.outlook.com
- (2603:10b6:303:8e::15) To CO6PR10MB5409.namprd10.prod.outlook.com
- (2603:10b6:5:357::14)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bBLFGxvY"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EGPjcQ018251;
+	Mon, 14 Apr 2025 19:48:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2JmiBkgI+S5m1pc4UJrqkB0SlSpYuXCuRIUIL9IhoQs=; b=bBLFGxvY0x8J/40F
+	hNc0oiwk6Qvzt0YOtvyOQfOnmA1D5JBksocXgtN12TEAQmkQQAHXdz8fiHiJYBW+
+	eiX5GWxTZLPNRwalVCYh5v/IULFrZPC/uvkdhq5iKzshk+ZaK43U9A3RdoXN6UHs
+	WjHRhd+mQ7WwmgixbuYoerFuOuH598naa0N6dHLcqoAO4HFhkybiEBTFQILxZYtj
+	K/nxSVNTCZpKpObtesQPOC+d6axdeLg2ttgztWR4YKXfnRabgZk5epqV/dM01ArD
+	9lM/6X5yumEF7SjKh1CbGsDnGkIE8PkiGtZSQJyvqfbDVeH0C1C7DdWKcz22oIMk
+	K/CCjQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfgjdn77-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 19:48:17 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53EJmG5F004601
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 19:48:16 GMT
+Received: from [10.216.23.135] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 12:48:12 -0700
+Message-ID: <5b50ad93-0885-d908-fd13-3a597966115c@quicinc.com>
+Date: Tue, 15 Apr 2025 01:18:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|IA1PR10MB7141:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5758ddb6-4dfa-442a-7586-08dd7b8d1441
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?392LUhoB8yXuCkKpWg6HvoSZjG8x6RuDbvs0jLQsWUach78Ra7Ng44oQ9Lcp?=
- =?us-ascii?Q?tvrhdG78FScqjb3pG25cJMAtMrCf5JzDzWFpFbN7eCJ/B2Hg+mdcbRNd2yz7?=
- =?us-ascii?Q?Hr5Fjm8sMSQn5+r8/JqPCF8VtzD9OVyqtlvv1H2bfbdmD2jUoDBx0oZUN2E5?=
- =?us-ascii?Q?rdbF1cVenx305aRzP5OOHWUKh22oOS2nXzbgYq0l4rjeWIboTTShGHBRQUuf?=
- =?us-ascii?Q?Wq9C6MX1fZ1UNZBKDdTuLYL4s1JRofCy/cWG89mjBfb1VHKX1fsWd5IU+/wo?=
- =?us-ascii?Q?vZaub9Re+w49aw/sjwu3jUMIMkAJ7DezN+q6usM/iLg4ripOATF2ql/QPA4z?=
- =?us-ascii?Q?5TtDifjv1vzQJHzDKfRGeiP0ycNAdGJo6crcg4ZFr6eIhQq0lk5gnDsRx0uc?=
- =?us-ascii?Q?KslZDy2wIwgFsi1Z+dvhhcqa2ergx0m+j994L5wslyaroa70tDbyIvKTS849?=
- =?us-ascii?Q?C7VXU8pfZ1I8CTXH4ZL0SHIYfi4Cr8RpkKjYVcG2WO5UfRT/covvMByuSKNW?=
- =?us-ascii?Q?+8zz4xC6VuYsDUgqCn/S+U5AckA4IxH9RI60iAv+W1fr/lk9RZnuFgUUZvcb?=
- =?us-ascii?Q?r1YPf6N/KZzc02BJJAxSkug7K9x2Y/o0gb9jcuyfDCjI3tDZz+z1D/rrIRFm?=
- =?us-ascii?Q?iAMagxKdhsqFNsEMfw+WRpvdwNB7BYgUN3pYjDbf2drvmZHhBDQhiXz6PeXV?=
- =?us-ascii?Q?t2N3J33jb4M2TRf8VWI8vb4G++vDEnlJQZureEUGM8lMTaFbkpjSrD9uiKxQ?=
- =?us-ascii?Q?r4bexqxy54Eora4UAwY0QsxuTZaXNr0eqSNZCF//heualoJkO9Akgx0PEodD?=
- =?us-ascii?Q?cgS7F69+FQy1RJy0PMldHnBhj+ftRcpRhSKg3J+Oei4Vg9kLTpODSqwjpbbF?=
- =?us-ascii?Q?LcFhRkFH9B3MIgOUMm7Fd6KUo/cw9lb1k2RhxgIot0t4oCGakgs/7TExA1ph?=
- =?us-ascii?Q?YvcQvLhkxp+RiAmIdQshwYrT89vu7i2Dk05+cZHhjGD1lqWTQpMgNl8jB3Nj?=
- =?us-ascii?Q?whN7k59ro6+uJ2CkVIjg8ua/iiFBSTAhrgu6iQ6cvcZPvYUsTBb5dnKzbN88?=
- =?us-ascii?Q?5cAR3Fnk7Sfz88dVtJZC/3upNXwA/W2P9GP1+JLP34t8TB742Wen4m+lQK1v?=
- =?us-ascii?Q?Xv3vXG9P/VswqKHvosxb+np8SeISnBdQl2GwXCqrvUzn4Bm4Ccl3rEUVv339?=
- =?us-ascii?Q?lKf2Z4C8MPtyndZiZaQjDhb2zblqZNg/e98I3RHj9J6XoRQcecsVSTZCD62L?=
- =?us-ascii?Q?NA2Nlaiw6DDH3tqNDUo85qFPPavWoIfaawQ+lIyzGFDSAGfiLo4PhVZHCOvv?=
- =?us-ascii?Q?TSB8hqnNAQ4t1zce7hPhKvKRzhMbonpGLLCrUZu7eSr/vYl1R5mT1qUwWUTe?=
- =?us-ascii?Q?/5G3XusOjHOR6h1ancqV85olnun+KOCWnHi8eFQyj9MevYrvoA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Tw7v8lquzkZuufAwqb/aFMzat0Iq+shybKF8a3VEti8wlB/PZLbgEfIKJv3p?=
- =?us-ascii?Q?IScc3eTPT82NGh2NlEByzURD4rotqNrWtA/ilPRYp6VgNBGh2WdZsPgSLUEH?=
- =?us-ascii?Q?GQ3zCtqhrHA2wl81i2qyuTSeZeczSNtSyzJPTp+QJGVqoODEO1GrQVg5pDRk?=
- =?us-ascii?Q?C5Sa9n+C90IFNKrZ235beC0Tj6co+R1HumB6C4bmlcodC/ECYqJpYzzeFORq?=
- =?us-ascii?Q?1JwDFhOSv9CiP414Vag4oFkeRSctI61Dp9kp4pCp/Kt/JgAf9ux7k2dbXndU?=
- =?us-ascii?Q?L732l9zGg5i7LFWWNgJo/nyHOEptUknmKnQxrppJPityGytpvTrBd5nPRGN/?=
- =?us-ascii?Q?8/4MboaVOJsIEYlFxvVmVrNhQiUanYBRrfG/lkoKLi8PIfrqYQPDTFwkc74L?=
- =?us-ascii?Q?Eu9F7K8bvugNCXtzaZLDUwa/fVm7KCNtnAjqoHEZFePt8m1v191+DgTTaQ4K?=
- =?us-ascii?Q?xN5WaSRRKiXsON8SR+Nj2y6vEPHsGsw3H/zMsVFJasZM/mjpen5+NIJvoST/?=
- =?us-ascii?Q?hz9BXjalpbtW6GY+MWTjor6/mESllw1GkTQKiVB/ZrZwrvRrBfT3efwG2lRf?=
- =?us-ascii?Q?d+Ie3zAOCVH55lKAiQ5kSXBcLpEX0jPjX0fOE+JfStG9ZQILERPJr2zkWcZl?=
- =?us-ascii?Q?kWTf98W4FDDgIpRMnq3wka4VoWo/sFiIxPhGR7X6hXi8oV7oazYJMw8yQrzn?=
- =?us-ascii?Q?Gnur22ooBgh4u0PyFlgB4TCgdVUgYOpp2KqPGl880BM0MCerqgSmv5VjsMTz?=
- =?us-ascii?Q?9mfyDz5y46RvqNW9gsxkXT6/Bcrr9MR0ub7UsAkABVTbLnzzt7khdZFHrFoZ?=
- =?us-ascii?Q?Z5PdMGhsLVhHxXRzvo3naxoMJD1Ym1IyzGJUFlfpQuGRZ9Cc4+Mkf6F/Pcdr?=
- =?us-ascii?Q?glCS7u4LeJvFimGnplP8wFasMw5xUVhelgDB2Q4AH6uQ6HE2x0s8UyGTNdbB?=
- =?us-ascii?Q?iGa/AiUiLRbg8aydhuZ5Mdlcns7YQO5XnqpvEm8wbUlFVcrk0MaU/63Pm/kX?=
- =?us-ascii?Q?QF6ixgpTr4E3dKSbEkTPVXutmIInzpDyC9UqwhgFnECBl7hlmpMl+38/3sn/?=
- =?us-ascii?Q?DGIaUCXhqxgdpuRBV5WvXrAqemdLnJeM6KiFiwsMQaCYOwFNoH4B2uO7geBZ?=
- =?us-ascii?Q?PZSjVtKpMhTXOYb6FF3+GGQK/oKu6zlgri6/uwtO1/ejuHEutZfMD8uV+KDs?=
- =?us-ascii?Q?dJ5yUfxmSfrz7ZBYMSrGQhltmlZiUo/djuddsAzhhlWADfzqWdI0tgN0P8Rn?=
- =?us-ascii?Q?0ot3YcZU2HfpWf0eyih8OzpnonxU1N6j3J4AGQwa52IM1gb4HJxACUaLetdZ?=
- =?us-ascii?Q?RydEEyx7deBUtKCNxVGleU4d4fXXGw7rZn+wWsqVUOefsR1QqrwPt/LScxa3?=
- =?us-ascii?Q?/L62WHG2J/ViNc6A9yUoJ5i2UOLgdUaMVnCUS44p7QGMWx3ktLmC074cAMIQ?=
- =?us-ascii?Q?dWg46sJQKmFcXgtoN0182mnGBwsCWBE52Z4vJJtZG3gJBr11qwAJPS4cr/gI?=
- =?us-ascii?Q?sDrm5uLLnp1ALqrzFV6A4nM9bWr9ISFNFXtwREFWPBQXCldxGOAnwab/2N6L?=
- =?us-ascii?Q?PuihLVePkuWghLgoiXfZzBKQWO5vD5XwAQrBeBLpJ2J0L7LQF1b57mCipq9J?=
- =?us-ascii?Q?tw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	y0KsOhnKMmyfS6EZsB/kIxTiXICxphbCZ8sfiIoJl/JfrBf/YfrQGrQAWxyIH+E7PnjkHlyn+f2Pi97kGTvvLdBiZtHezdf++CLuHsVBqyUy7cbopOBvvGdWQGomYQSst7n3NT2OlZ8LRyaJVEPGkyWGMQ6KlMsSA+V7KWQSe38cj0Rme7Bsje/CjDVkqnXlicVZI5P8hP8kCVY/q7/gsuh6W4PilH27j05rZ4N+8Z/tibvPGTCsAFyN2Xww84bgA+7un9VqXYV4jrOlYbeDQKGRJcMOIJsH30tjIstRpAepGFQA/IL68yns/TGPFBIypbMI37cKnUZVvXpFI33B7ym4WBXHnJ5rh2Bv3PV3bVbebmSfXa5Qwb8MnGKq0o3+CI4mbmSynrJAw3b0pkg9pw4s/jsDdx578PojnR1QfFZVKWJCLjoAGD8rAePL44qoewrU6HG54PI7E9UE0W29px7Ea+XEBZqT5cXgMcexz59sG5mcSMoZX6fdhqut7D643Jj5Bz2WlCmtbbp8tpN06usSgo2yP3L8K2FEKrahpbWq01NbBzNDRABggt0aEVCtyqoS+DS9TGTupRisBa1tun/2U6kF60oEQIJdqv222rI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5758ddb6-4dfa-442a-7586-08dd7b8d1441
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 19:46:41.8466
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9Ie8j7RKC+Fr6zXG44AwnH6kxxCpV2i5o6yhlJ0uloevEjQDrYiJPzSfitxQQdR5Srpfa7KCv4p7DYLKwHx2fDQpnKTKyIta8EJaNOB0cSg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7141
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH RFC v5 0/8] media: qcom: iris: re-organize catalog & add
+ support for SM8650
+Content-Language: en-US
+To: <neil.armstrong@linaro.org>, Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>
+CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>
+References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
+ <2740b178-34cc-4b95-a8da-7e6862cabc92@linaro.org>
+ <96953447-cff5-98d4-053e-8cc31778849c@quicinc.com>
+ <eb469388-d2f9-447a-aa80-41795991a4ad@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <eb469388-d2f9-447a-aa80-41795991a4ad@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: llrJcvs5PtxiHI_qY7o-9hH3G_UAwiEL
+X-Proofpoint-ORIG-GUID: llrJcvs5PtxiHI_qY7o-9hH3G_UAwiEL
+X-Authority-Analysis: v=2.4 cv=Cve/cm4D c=1 sm=1 tr=0 ts=67fd6681 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=Vq-1Ow0QjQc1Q7wVqY8A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504140143
-X-Proofpoint-GUID: Vu3yTvd5ZxH0RkXKZhMxr7jqZ-2QDQGw
-X-Proofpoint-ORIG-GUID: Vu3yTvd5ZxH0RkXKZhMxr7jqZ-2QDQGw
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140144
 
 
-Peter Zijlstra <peterz@infradead.org> writes:
-
-> On Mon, Apr 14, 2025 at 08:32:29AM +0200, Ingo Molnar wrote:
-
-[ ... ]
-
->> > -SYM_TYPED_FUNC_START(clear_page_orig)
->> > +/*
->> > + * Original page zeroing loop.
->> > + * Input:
->> > + * %rdi	- destination
->> > + * %esi	- length
->> > + *
->> > + * Clobbers: %rax, %rcx, %rflags
->> > + */
->> > +SYM_TYPED_FUNC_START(clear_pages_orig)
->> > +	movl   %esi, %ecx
->> >  	xorl   %eax,%eax
->> > -	movl   $4096/64,%ecx
->> > +	shrl   $6,%ecx
+On 4/14/2025 5:39 PM, neil.armstrong@linaro.org wrote:
+> Hi,
+> 
+> On 14/04/2025 12:54, Vikash Garodia wrote:
+>> Hi Neil,
 >>
->> So if the natural input parameter is RCX, why is this function using
->> RSI as the input 'length' parameter? Causes unnecessary register
->> shuffling.
->
-> This symbol is written as a C function with C calling convention, even
-> though it is only meant to be called from that clear_page() alternative.
->
-> If we want to go change all this, then we should go do the same we do
-> for __clear_user() and write it thusly:
->
-> 	asm volatile(ALTERNATIVE("rep stosb",
-> 				 "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRS)
-> 				 : "+c" (size), "+D" (addr), ASM_CALL_CONSTRAINT
-> 				 : "a" (0))
->
-> And forget about all those clear_page_*() thingies.
+>> On 4/14/2025 1:05 PM, Neil Armstrong wrote:
+>>> Hi Vikash, Dikshita,
+>>>
+>>> On 10/04/2025 18:29, Neil Armstrong wrote:
+>>>> Re-organize the platform support core into a gen1 catalog C file
+>>>> declaring common platform structure and include platform headers
+>>>> containing platform specific entries and iris_platform_data
+>>>> structure.
+>>>>
+>>>> The goal is to share most of the structure while having
+>>>> clear and separate per-SoC catalog files.
+>>>>
+>>>> The organization is based on the curent drm/msm dpu1 catalog
+>>>> entries.
+>>>
+>>> Any feedback on this patchset ?
+>> Myself and Dikshita went through the approach you are bringing here, let me
+>> update some context here:
+>> - sm8550, sm8650, sm8775p, qcs8300 are all irisv3, while qcs8300 is the scaled
+>> down variant i.e have 2 PIPE vs others having 4. Similarly there are other
+>> irisv3 having 1 pipe as well.
+>> - With above variations, firmware and instance caps would change for the variant
+>> SOCs.
+>> - Above these, few(less) bindings/connections specific delta would be there,
+>> like there is reset delta in sm8550 and sm8650.
+>>
+>> Given above, xxx_gen1.c and xxx_gen2.c can have all binding specific tables and
+>> SOC platform data, i.e sm8650_data (for sm8650). On top of this, individual SOC
+>> specific .c file can have any delta, from xxx_gen1/2.c) like reset table or
+>> preset register table, etc and export these delta structs in xxx_gen1.c or
+>> xxx_gen2.c.
+>>
+>> Going with above approach, sm8650.c would have only one reset table for now.
+>> Later if any delta is identified, the same can be added in it. All other common
+>> structs, can reside in xxx_gen2.c for now.
+> 
+> Thanks for reviewing, but...
+> Sorry I don't understand what you and Dmitry are asking me...
+> 
+> If I try really hard, you would like to have:
+> 
+> iris_catalog_sm8550.c
+> - iris_set_sm8550_preset_registers
+> - sm8550_icc_table
+> - sm8550_clk_reset_table
+> - sm8550_bw_table_dec
+> - sm8550_pmdomain_table
+> - sm8550_opp_pd_table
+> - sm8550_clk_table
+Move or rename existing 8550.c as xxx_gen2.c. This is with the existing
+assumption that everything under 8550.c is common for all gen2 to come in future.
+> 
+> iris_catalog_sm8650.c
+> - sm8650_clk_reset_table
+> - sm8650_controller_reset_table
+yes, since reset is the only delta.
+> 
+> iris_catalog_gen2.c
+> - iris_hfi_gen2_command_ops_init
+> - iris_hfi_gen2_response_ops_init
+> ...
+> - sm8550_dec_op_int_buf_tbl
+> 
+> and:
+> - struct iris_platform_data sm8550_data
+> - struct iris_platform_data sm8650_data
+all this goes to xxx_gen2.c as well.
 
-Yeah, this makes sense. We don't call any of the clear_pages_*() variants
-from anywhere else.
+> using data from iris_catalog_sm8550.c & iris_catalog_sm8550.c
+> 
+> So this is basically what I _already_ propose except
+> you move data in separate .c files for no reasons,
+> please explain why you absolutely want distinct .c
+> files per SoC. We are no more in the 1990's and we camn
+> defintely have big .c files.
+Its not about the size of file alone, it is easy to understand later what would
+be the delta in the SOCs and what would common. For ex, just navigating through
+sm8650.c, anyone can comment that reset is the delta.
+> 
+> And we still have a big issue, how to get the:
+> - ARRAY_SIZE(sm8550_clk_reset_table)
+> - ARRAY_SIZE(sm8550_bw_table_dec)
+> - ARRAY_SIZE(sm8550_pmdomain_table)
+> ...
+> 
+> since they are declared in a separate .c file and you
+> need a compile-time const value to fill all the _size
+> attribute in iris_platform_data.
+I have not tries this, but isn't extern-ing the soc structs (in your case reset
+tables) into xxx_gen2.c enough here ? Also i think the tables you are pointing
+here, lies in the xxx_gen2.c only, so i am sure above ones would not be an issue
+at all. The only delta struct is reset table, lets see if extern helps.
 
-clear_pages_rep() and clear_pages_erms() are trivial enough to be
-inlined in the ALTERNATIVE as well.
-
-Thanks!
-
---
-ankur
+Regards,
+Vikash
+> 
+> So I recall my goal, I just want to add sm8650 support,
+> and I'm not the owner of this driver, and I'm really happy
+> to help, but giving me random ideas to solve your problem
+> doesn't help us at all going forward.
+> 
+> Neil
+> 
+>>
+>> Regards,
+>> Vikash
+>>>
+>>> Thanks,
+>>> Neil
+>>>
+>>>>
+>>>> Add support for the IRIS accelerator for the SM8650
+>>>> platform, which uses the iris33 hardware.
+>>>>
+>>>> The vpu33 requires a different reset & poweroff sequence
+>>>> in order to properly get out of runtime suspend.
+>>>>
+>>>> Follow-up of [1]:
+>>>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org/
+>>>>
+>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>>> ---
+>>>> Changes in v4:
+>>>> - Reorganized into catalog, rebased sm8650 support on top
+>>>> - Link to v4:
+>>>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org
+>>>>
+>>>> Changes in v4:
+>>>> - collected tags
+>>>> - un-split power_off in vpu3x
+>>>> - removed useless function defines
+>>>> - added back vpu3x disappeared rename commit
+>>>> - Link to v3:
+>>>> https://lore.kernel.org/r/20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org
+>>>>
+>>>> Changes in v3:
+>>>> - Collected review tags
+>>>> - Removed bulky reset_controller ops
+>>>> - Removed iris_vpu_power_off_controller split
+>>>> - Link to v2:
+>>>> https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
+>>>>
+>>>> Changes in v2:
+>>>> - Collected bindings review
+>>>> - Reworked rest handling by adding a secondary optional table to be used by
+>>>> controller poweroff
+>>>> - Reworked power_off_controller to be reused and extended by vpu33 support
+>>>> - Removed useless and unneeded vpu33 init
+>>>> - Moved vpu33 into vpu3x files to reuse code from vpu3
+>>>> - Moved sm8650 data table into sm8550
+>>>> - Link to v1:
+>>>> https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
+>>>>
+>>>> ---
+>>>> Neil Armstrong (8):
+>>>>         media: qcom: iris: move sm8250 to gen1 catalog
+>>>>         media: qcom: iris: move sm8550 to gen2 catalog
+>>>>         dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS accelerator
+>>>>         media: platform: qcom/iris: add power_off_controller to vpu_ops
+>>>>         media: platform: qcom/iris: introduce optional controller_rst_tbl
+>>>>         media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
+>>>>         media: platform: qcom/iris: add support for vpu33
+>>>>         media: platform: qcom/iris: add sm8650 support
+>>>>
+>>>>    .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
+>>>>    drivers/media/platform/qcom/iris/Makefile          |   6 +-
+>>>>    .../media/platform/qcom/iris/iris_catalog_gen1.c   |  83 +++++++
+>>>>    ...{iris_platform_sm8550.c => iris_catalog_gen2.c} |  85 +------
+>>>>    ...ris_platform_sm8250.c => iris_catalog_sm8250.h} |  80 +-----
+>>>>    .../media/platform/qcom/iris/iris_catalog_sm8550.h |  91 +++++++
+>>>>    .../media/platform/qcom/iris/iris_catalog_sm8650.h |  68 +++++
+>>>>    drivers/media/platform/qcom/iris/iris_core.h       |   1 +
+>>>>    .../platform/qcom/iris/iris_platform_common.h      |   3 +
+>>>>    drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
+>>>>    drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
+>>>>    drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
+>>>>    drivers/media/platform/qcom/iris/iris_vpu3x.c      | 275
+>>>> +++++++++++++++++++++
+>>>>    drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
+>>>>    drivers/media/platform/qcom/iris/iris_vpu_common.h |   3 +
+>>>>    15 files changed, 598 insertions(+), 300 deletions(-)
+>>>> ---
+>>>> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+>>>> change-id: 20250410-topic-sm8x50-upstream-iris-catalog-3e2e4a033d6f
+>>>>
+>>>> Best regards,
+>>>
+> 
