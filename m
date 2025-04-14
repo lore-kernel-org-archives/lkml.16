@@ -1,215 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0C1442077
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0313F258CF2
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617967; cv=none; b=Tl9fZRygpBafEukroszkfW0zyLPoJXt1D3Xh2Tc3nchblGieRLYXrmCUTzzoVdq2bj+DMdNlulezCxtnwHL5cATZ9tkV8Q/ht1gDy8iJ1HyrVTipKJKyN/ZiWB0KdV9NT2hWiuHh6Ki/HnYfVwWlFKNSTKh6WDQxE6AT/fjxPb4=
+	t=1744617976; cv=none; b=aYQ6Ak+qmpvTD4TO0NLejPwZrDjjJs3UdfMhIJsttz6eEGYC+/+tbu4YJ6iy5ComAyjqcd6khLpWnNTO9f9zRxhShMGdEjxI49PCMod4q8T07MoqA9Xt0fo+tQf8SFKNQLXRgxVlMSUfhZD0+DuNqvgapd+D5RLRj1KE7WpVvJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617967; c=relaxed/simple;
-	bh=+9AjLfUFiR9WlmRw2lss0Jg55nJjHCM05aecGDBkQIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2WdEaeySwaBAFiZCmmYzVTMGXEFK4NVta4V6wmluNheRqCVCkxWwszZVMiDgdXSWcl0IjBeCb4Fb881EGqlaJP0Fbvo63A7Y+Ajnv0h0Ednn+BCS7EeojCFHS6zu6SbQeZaiwRzeSG2MpKdU/xsGhT5ALvm+i6H/APHrpdEiuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C21FE1007;
-	Mon, 14 Apr 2025 01:06:02 -0700 (PDT)
-Received: from [10.57.88.7] (unknown [10.57.88.7])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21D1E3F694;
-	Mon, 14 Apr 2025 01:06:01 -0700 (PDT)
-Message-ID: <1613c84e-1e65-44cd-9f23-1c9870df4655@arm.com>
-Date: Mon, 14 Apr 2025 09:06:00 +0100
+	s=arc-20240116; t=1744617976; c=relaxed/simple;
+	bh=bgkJEIH4Y2e9wfZ4zg26jY7uh69wJrhNklZKNIexm4w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=o8Bs7Uu/yaySZWMwblZsgYlAWnwE+/mwK7lEU6LBm7zNLwrb5ggFFg+CaKShpsRSf3jrOCNCDWheF7V42URc6C4yhBJzo7qYqX7L7X4wwCrCcJjuul7CpIHZJGMk/6FNU4lBJvhjE8zvGjqzZzmiqcNVk7NX/4SaBszZ6cgthNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T9hSnleL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9hSnleL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744617973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bgkJEIH4Y2e9wfZ4zg26jY7uh69wJrhNklZKNIexm4w=;
+	b=T9hSnleL4b3t0qZnsIzwrx5gFoIwK8oknAJVhZXOXwwL8RfFyHsYZ+UjWIwTvVChDHA6wD
+	nL+sL/Jef5TebnPxZfO/iVk9d4ENPHf8sdz3yRib9gUl/UDOr5M6Mp5firLT3/dD8BlgRU
+	g+5JPdxdn8ao98+2re8+L/oSjL3nJ4Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-crt-YqqYNvy4ygjZSux7RA-1; Mon, 14 Apr 2025 04:06:10 -0400
+X-MC-Unique: crt-YqqYNvy4ygjZSux7RA-1
+X-Mimecast-MFC-AGG-ID: crt-YqqYNvy4ygjZSux7RA_1744617969
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912a0439afso1597791f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 01:06:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744617969; x=1745222769;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgkJEIH4Y2e9wfZ4zg26jY7uh69wJrhNklZKNIexm4w=;
+        b=S54sWzc+3tkw7xxzi354AIrsweA0u5J9Zf+UYGjazFvaUEQLN5FHq3OoKJsnEXUh7R
+         soznx3vMwNebhVYbq/CxR6FNIbarBfi2yTgVCOc8AcGkUO8GnrSM8JX2KQZcxnUSgHbK
+         z0Hb3NrSedftAuZemp2cGfKf7skxMUCQh+fSkAkNK5DiWH1OMJtVMWRJMLjk1OXauQZ5
+         T3c4NpdKWtbMmoD4bYWbW+DHCGGW5tIjJF5fJDudcSllGo67GDjLS3fNWXpxYS4BNnr6
+         d8/YhF9ykBIFlidPcFUGqIpbxLBVUFSSTsLBG2mrt6wY3sk2NGC9/ce9eHljLJOdTxJJ
+         ZLNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKua/XM5Iw14/QeKNSkY06XnvHle6yQMjWty2DguE/+ca2dvARTxAIDnfH/p82S5za59VvsEh/iKpOiSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi5uM1tbMTQoIzRl28iSOHMpwqjbu97rBm2X8nj2ZL4rB/3KGk
+	K/opgyVTmAoj+R7eoG6MACD4dyrZerufmf5m3I604z2txRzQ+2Q6TFKCuevzu/mFNZ0V+hE+mxK
+	u4oKGVn7D/Z5Duo3xuQpPG7ZiJkcsUgT2uBJx2LoUzWLMGoR8It10+zBQsiT6EQ==
+X-Gm-Gg: ASbGncutmK2Q5aBibWxQTq0mdq90UAMzMEyO2/fpddkTMvJbnLxLEf55Fr1LmvjLGEY
+	7o5hn2QQByQNhQ1J8Qp7oG0FvbaIP91zLXYFDL/EkE2O5HkmsdfiXlKu73t0cj/jIPjJh/65Ib8
+	Nbw9jHKpPfNwnP2KDuxwrIQ1URAQmjilVJLrwU+eX5GiFshYkz7eywaHKc77yXSUkwBQaW3Ecos
+	u+AukILj9/4cyMEFa5PXynUEiyNHfrj7m7LqdJ6HNaYs5qDNVraUSvZQAVbCwixlmSKP6S+qBct
+	QgtFZQX37ZI6eX7Dr3hexpTAKQuXjSuKwtklPA==
+X-Received: by 2002:a05:6000:18af:b0:39c:119f:27c4 with SMTP id ffacd0b85a97d-39ea5212fd6mr8390584f8f.30.1744617969227;
+        Mon, 14 Apr 2025 01:06:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEY3/6voGKwFboLlpb/71hND3KDiKWzqFF3yYwomw1Ik9ctTfuUb+eBUwc8X4YOOTrNv1+dzA==
+X-Received: by 2002:a05:6000:18af:b0:39c:119f:27c4 with SMTP id ffacd0b85a97d-39ea5212fd6mr8390553f8f.30.1744617968780;
+        Mon, 14 Apr 2025 01:06:08 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44577dsm10267297f8f.94.2025.04.14.01.06.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 01:06:08 -0700 (PDT)
+Message-ID: <f10fca10b106652e1bad2dc75ce474aa5bb7907e.camel@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+ Waiman Long <longman@redhat.com>
+Date: Mon, 14 Apr 2025 10:06:06 +0200
+In-Reply-To: <Z_mePtIrl6z5fJBc@pavilion.home>
+References: <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+	 <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
+	 <Z_fTmzdvLEmrAth6@localhost.localdomain>
+	 <56eae8396c5531b7a92a8e9e329ad68628e53729.camel@redhat.com>
+	 <Z_fcv6CrHk0Qa9HV@localhost.localdomain>
+	 <1c60e19d1cebc09a8fd89f073c3dbec80c8ddbf1.camel@redhat.com>
+	 <Z_fkgN1ro9AeM1QY@localhost.localdomain>
+	 <75607f0eb5939bf1651ff2e6c3eda4df2b4f26f0.camel@redhat.com>
+	 <Z_j9fOxE4Ia79dtz@pavilion.home>
+	 <1047ba4c25cdf4c0098dac308bcddb4b8b671954.camel@redhat.com>
+	 <Z_mePtIrl6z5fJBc@pavilion.home>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
- operations
-Content-Language: en-GB
-To: Lance Yang <ioworker0@gmail.com>, Dev Jain <dev.jain@arm.com>,
- Xavier <xavier_qy@163.com>
-Cc: Barry Song <21cnbao@gmail.com>, catalin.marinas@arm.com, will@kernel.org,
- akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
- Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
-References: <20250407092243.2207837-1-xavier_qy@163.com>
- <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
- <7dccb3a2-f5e2-4f9e-8f5c-465a1d3ffdb6@arm.com>
- <CAK1f24=5-VVJoE75wrskXxrGi=KmrbxSYH9P69PRPiOxQuArpA@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAK1f24=5-VVJoE75wrskXxrGi=KmrbxSYH9P69PRPiOxQuArpA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 12/04/2025 06:05, Lance Yang wrote:
-> On Sat, Apr 12, 2025 at 1:30 AM Dev Jain <dev.jain@arm.com> wrote:
->>
->> +others
->>
->> On 11/04/25 2:55 am, Barry Song wrote:
->>> On Mon, Apr 7, 2025 at 9:23 PM Xavier <xavier_qy@163.com> wrote:
->>>>
->>>> This commit optimizes the contpte_ptep_get function by adding early
->>>>   termination logic. It checks if the dirty and young bits of orig_pte
->>>>   are already set and skips redundant bit-setting operations during
->>>>   the loop. This reduces unnecessary iterations and improves performance.
->>>>
->>>> Signed-off-by: Xavier <xavier_qy@163.com>
->>>> ---
->>>>   arch/arm64/mm/contpte.c | 13 +++++++++++--
->>>>   1 file changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
->>>> index bcac4f55f9c1..ca15d8f52d14 100644
->>>> --- a/arch/arm64/mm/contpte.c
->>>> +++ b/arch/arm64/mm/contpte.c
->>>> @@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>>>
->>>>          pte_t pte;
->>>>          int i;
->>>> +       bool dirty = false;
->>>> +       bool young = false;
->>>>
->>>>          ptep = contpte_align_down(ptep);
->>>>
->>>>          for (i = 0; i < CONT_PTES; i++, ptep++) {
->>>>                  pte = __ptep_get(ptep);
->>>>
->>>> -               if (pte_dirty(pte))
->>>> +               if (!dirty && pte_dirty(pte)) {
->>>> +                       dirty = true;
->>>>                          orig_pte = pte_mkdirty(orig_pte);
->>>> +               }
->>>>
->>>> -               if (pte_young(pte))
->>>> +               if (!young && pte_young(pte)) {
->>>> +                       young = true;
->>>>                          orig_pte = pte_mkyoung(orig_pte);
->>>> +               }
->>>> +
->>>> +               if (dirty && young)
->>>> +                       break;
->>>
->>> This kind of optimization is always tricky. Dev previously tried a similar
->>> approach to reduce the loop count, but it ended up causing performance
->>> degradation:
->>> https://lore.kernel.org/linux-mm/20240913091902.1160520-1-dev.jain@arm.com/
->>>
->>> So we may need actual data to validate this idea.
->>
->> The original v2 patch does not work, I changed it to the following:
->>
->> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
->> index bcac4f55f9c1..db0ad38601db 100644
->> --- a/arch/arm64/mm/contpte.c
->> +++ b/arch/arm64/mm/contpte.c
->> @@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm,
->> unsigned long addr,
->>   }
->>   EXPORT_SYMBOL_GPL(__contpte_try_unfold);
->>
->> +#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
->> +       int _start; \
->> +       pte_t *_ptep = ptep; \
->> +       for (_start = start; _start < CONT_PTES; _start++, ptep++) { \
->> +               if (pte_##flag(__ptep_get(_ptep))) { \
->> +                       orig_pte = pte_mk##flag(orig_pte); \
->> +                       break; \
->> +               } \
->> +       }
->> +
->>   pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>   {
->>          /*
->> @@ -169,11 +179,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>          for (i = 0; i < CONT_PTES; i++, ptep++) {
->>                  pte = __ptep_get(ptep);
->>
->> -               if (pte_dirty(pte))
->> +               if (pte_dirty(pte)) {
->>                          orig_pte = pte_mkdirty(orig_pte);
->> +                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
->> +                       break;
->> +               }
->>
->> -               if (pte_young(pte))
->> +               if (pte_young(pte)) {
->>                          orig_pte = pte_mkyoung(orig_pte);
->> +                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
->> +                       break;
->> +               }
->>          }
->>
->>          return orig_pte;
->>
->> Some rudimentary testing with micromm reveals that this may be
->> *slightly* faster. I cannot say for sure yet.
-> 
-> Yep, this change works as expected, IIUC.
-> 
-> However, I'm still wondering if the added complexity is worth it for
-> such a slight/negligible performance gain. That said, if we have
-> solid numbers/data to back it up, all doubts would disappear ;)
+On Sat, 2025-04-12 at 00:57 +0200, Frederic Weisbecker wrote:
+>=20
+> If you want housekeeping CPUs to pull timers from isolated ones, then
+> you
+> need isolated CPUs to eventually be part of the hierarchy (be
+> "available"),
+> because they would need to propagate their global timers up to the
+> top.
+>=20
+> If they propagate their global timers then they must play the whole
+> hierarchy
+> game and be ready to pull the timers from any other CPUs.
+>=20
+> Because if they propagate their timers, they must also propagate
+> their
+> idle state to synchronize with the whole hierarchy and know if there
+> is
+> a non-idle housekeeping CPU to take care of their timers. And if they
+> propagate
+> their (non) idle state, the isolated CPUs also declare themselves as
+> available
+> to handle other's timers.
+>=20
+> And working around that would be very nasty.
+>=20
 
-I agree with Barry; we need clear performance improvement numbers to consider
-this type of optimization. I doubt there will be measurable improvement for 4K
-and 64K base pages (because the the number of PTEs in a contpte block are 16 and
-32 respectively). But 16K base pages may benefit given there are 128 PTEs in a
-contpte block for that case.
-
-Also FWIW, I'm struggling to understand CHECK_CONTPTE_FLAG(); Perhaps something
-like this would suffice?
-
-----8<----
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index 55107d27d3f8..7787b116b339 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -169,11 +169,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
-        for (i = 0; i < CONT_PTES; i++, ptep++) {
-                pte = __ptep_get(ptep);
-
--               if (pte_dirty(pte))
-+               if (pte_dirty(pte)) {
-                        orig_pte = pte_mkdirty(orig_pte);
-+                       if (pte_young(orig_pte))
-+                               break;
-+               }
-
--               if (pte_young(pte))
-+               if (pte_young(pte)) {
-                        orig_pte = pte_mkyoung(orig_pte);
-+                       if (pte_dirty(orig_pte))
-+                               break;
-+               }
-        }
-
-        return orig_pte;
-----8<----
+Well, that's exactly what I was trying to do, thanks for pointing this
+out. I guess I won't go down that rabbit hole then.
 
 Thanks,
-Ryan
-
-
-> 
-> Thanks,
-> Lance
-> 
->>
->>>
->>>>          }
->>>>
->>>>          return orig_pte;
->>>> --
->>>> 2.34.1
->>>>
->>>
->>> Thanks
->>> Barry
->>>
->>
+Gabriele
 
