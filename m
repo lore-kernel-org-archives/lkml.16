@@ -1,65 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2A925229C;
-	Mon, 14 Apr 2025 15:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417A1274641;
+	Mon, 14 Apr 2025 15:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644972; cv=none; b=a54ZM4WXjYWKDobTP6Gib5az/hUFbgH6bp8AjyDCzdep/w6/Y8YF1mS3p7Xho//AUez9Zk23UsTrIBFMPFJ7Ou6KCpqRMsQblH55VNZuK2okkpgtn33vq7Gdd2AysqNZZ8bGEhcFqloX/cKs67BiqiJ22Hn8DIhTeAtYJk5I2/M=
+	t=1744644983; cv=none; b=n2vCOgx2RnSFTAnF97k9fqpS3pDgJKLnC/mjMwLufW3Czt3e9vWJub+sK8ncZckjg/VJNkjlffFht3jtsm8/nDVZqIdVFsYsijAj8/ZYVSMRFd03JEer7/JjvvwiB7xP2fbtXKsWea6GodUD3Pb39tjm7UoM9Ffg40T3U2NSgyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644972; c=relaxed/simple;
-	bh=HZUyZl0U+ZEgkxFXywMHlDcIaFBX828g6Ua3936TNtE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E5gCpWdPG/rPoOFmNz91HE+WoLH8xSMKIH6phhg8NPLR4gzNvME5rr6xrYl4MgbNtPhbKmZsQop8SFeyGsOouK/9uAR9ExjE5ASxAZLgBEgcla6X6Uo0kdK+3nS2Ug99eF1ebENc19hNHhgC0IV4dsFTX7uqL+S/S7QrxC7IV+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbrvK2Hr5z6FGcX;
-	Mon, 14 Apr 2025 23:34:53 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6D8001401DC;
-	Mon, 14 Apr 2025 23:36:08 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
- 2025 17:36:07 +0200
-Date: Mon, 14 Apr 2025 16:36:06 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 06/19] cxl/port: Add 'dynamic_ram_a' to endpoint
- decoder mode
-Message-ID: <20250414163606.00000311@huawei.com>
-In-Reply-To: <20250413-dcd-type2-upstream-v9-6-1d4911a0b365@intel.com>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
-	<20250413-dcd-type2-upstream-v9-6-1d4911a0b365@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744644983; c=relaxed/simple;
+	bh=pSe1a/5w5YFGWFBSIQgUt47dc05tpAipm/dfn4X1bzI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=gWkxPHnCmTmmpJNNGueoJu5prCJHP3AnWCMIsNFdtuKyondISyz9VYFCCzZp/wNncwX1nlS0tCAlguTmstlihkBNSAXOqvJ4/JGpDwNVj9ktSwwqeBdJnbEsndCvQzprc3ddTuoY4xqtf2xg289y1YRQXdG/AezpIs7qLzVV8gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G65MpwbI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F6nA/jkv; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G65MpwbI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F6nA/jkv"
+Date: Mon, 14 Apr 2025 15:36:17 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744644980;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vsv2zN6FvKvtYohkvETjx/9zDLPOYPPhbrYicf37NP0=;
+	b=G65MpwbIL1P2e0/DEFxYlzB4P0MnkPxCIhEjKqxX7EkSvqTCkgY5KDOvPHy9H1ekQAttzN
+	sawiVlrlltKEUYBbtJ0vtz/wY23UA3ccgKrf1gRvepL7l33i8o5xKLNf29xe4dIsU02cuT
+	wNOUep+zmaeb1dVZgbG+IMiniwRdTQfyLbj8WaJeviPx6eVE5fmcGbQUoL1hnEhJd2r17a
+	xU/7EQZjYhdedMZjQPDjmT2s+lJs9BP3yo6P3oOAYmDZZhnINP+WNy8VBboX2qEwHOdYK4
+	5NxigaCw3fNYqphNM6Vcl+RXmWW9wMbOnxLkBLKm2QUN5Cr82uXpiInFgBt1kA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744644980;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vsv2zN6FvKvtYohkvETjx/9zDLPOYPPhbrYicf37NP0=;
+	b=F6nA/jkv9krBFBydmD2pXz7xmka6+28hA4IxSvqLQVBHrQrPUqkxoQKKEzQBcHqOsRHH0b
+	FN2hhnze2zj+CRCQ==
+From: "tip-bot2 for Pi Xiange" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu: Add CPU model number for Bartlett Lake
+ CPUs with Raptor Cove cores
+Cc: Pi Xiange <xiange.pi@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Christian Ludloff <ludloff@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Tony Luck <tony.luck@intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, John Ogness <john.ogness@linutronix.de>,
+ "Ahmed S. Darwish" <darwi@linutronix.de>, x86-cpuid@lists.linux.dev,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250414032839.5368-1-xiange.pi@intel.com>
+References: <20250414032839.5368-1-xiange.pi@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Message-ID: <174464497802.31282.8938459942122265802.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sun, 13 Apr 2025 17:52:14 -0500
-Ira Weiny <ira.weiny@intel.com> wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> Endpoints can now support a single dynamic ram partition following the
-> persistent memory partition.
-> 
-> Expand the mode to allow a decoder to point to the first dynamic ram
-> partition.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Commit-ID:     45842b59ec93a5c8f24b4e62f3a5759d3857c08e
+Gitweb:        https://git.kernel.org/tip/45842b59ec93a5c8f24b4e62f3a5759d3857c08e
+Author:        Pi Xiange <xiange.pi@intel.com>
+AuthorDate:    Mon, 14 Apr 2025 11:28:39 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 14 Apr 2025 17:19:30 +02:00
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+x86/cpu: Add CPU model number for Bartlett Lake CPUs with Raptor Cove cores
 
+Bartlett Lake has a P-core only product with Raptor Cove.
+
+[ mingo: Switch around the define as pointed out by Christian Ludloff:
+         Ratpr Cove is the core, Bartlett Lake is the product.
+
+Signed-off-by: Pi Xiange <xiange.pi@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Christian Ludloff <ludloff@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: x86-cpuid@lists.linux.dev
+Link: https://lore.kernel.org/r/20250414032839.5368-1-xiange.pi@intel.com
+---
+ arch/x86/include/asm/intel-family.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 3a97a7e..be10c18 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -126,6 +126,8 @@
+ #define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD) /* Redwood Cove */
+ #define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
+ 
++#define INTEL_BARTLETTLAKE		IFM(6, 0xD7) /* Raptor Cove */
++
+ /* "Hybrid" Processors (P-Core/E-Core) */
+ 
+ #define INTEL_LAKEFIELD			IFM(6, 0x8A) /* Sunny Cove / Tremont */
