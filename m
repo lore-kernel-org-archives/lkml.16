@@ -1,198 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0927D28BAB5
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A64717A2EA;
+	Mon, 14 Apr 2025 13:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638422; cv=none; b=tGUHe1KZzppPn5dugiYsehnwvXbd9Yb4t6ULy8Sm5x+6b+MHXocC1qI6uYloeZHB7goL+53+AcbaM53W91rjbn+qZNy09PJWXCpkZn2D2VLFaukJ3qGfdukbJro61WxZ+AEFEfswGd+gtRYP/o0T+D0pkQHF6x1aSsfSIbUDIxc=
+	t=1744638505; cv=none; b=QdhYyLOHz5x9pPxaR07QnmA7kEur2rS45HTjLL0pRBwcW21lvSR53oZHjNFFHSyz1+0bCiyeEYSXiQ7dx3SzghiFSogPPj5ebrUARq+e1lQzM9iq+ZlDnP8bvbuZ2WmV+CNStpKu6xN1KPG74v9NTgyY6u65VIDMYZJXZeTkusc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638422; c=relaxed/simple;
-	bh=g4PSsfGP2ZB/LZ78LvXODfCFQZZ86Q66goPz4U6q6HI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pFDOK/KsgR7UykPFucf9x3extY7wQrzaY9VtjwdQeLKLuph+083YcWHnjBKJ3CYxaenDbgtN5Hxf4OtYUikjmnwteVV46LNlN+vGs05XTGevCTz9bzOCMjY8NoALj7SDnr7IKKv+RulqNpnvUzUkt7l5tLGp8sHctZLdA1YwcLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9CA51007;
-	Mon, 14 Apr 2025 06:46:57 -0700 (PDT)
-Received: from [10.57.86.225] (unknown [10.57.86.225])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBF3D3F66E;
-	Mon, 14 Apr 2025 06:46:57 -0700 (PDT)
-Message-ID: <cab96acc-1b2a-4126-976a-337dd48dd85f@arm.com>
-Date: Mon, 14 Apr 2025 14:46:56 +0100
+	s=arc-20240116; t=1744638505; c=relaxed/simple;
+	bh=AWnJELZDlGf9iOY/hMcXqPZQ4dopiqhIlPLaJbM7KdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TsDhRr7b6dooH1q3AOyhtbRr+wThVT/nnQyETPttcwzbm1W8HEboMMFdpBsHjZE/+ImWVFrSaH+Ak93Tb/hm361LVOq7vVdkefwM48wSugQHTkgO7Qj9dRAvya4hhyUX6Tog7qHJ3HjJh7tZl2Uv5g6YIx572mUuvu/Ko9bx6jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2UZPjdY; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2UZPjdY"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523f5836aaeso215059e0c.3;
+        Mon, 14 Apr 2025 06:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744638503; x=1745243303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9gg6c9JaP3fAvNMBtbYiSQTaF78FsgYOrIyM/tQBJqE=;
+        b=U2UZPjdYdIkb9hRU0jwvGIdFbWexA3pCAKCGMecU7CrVYllUtaUF6f1qQFSqVe+tLC
+         WIlPWIC/RqWoA8WbTcXcQRB/gPqUmLeMnXHeu0MyFA3mjIBfpZOXQjblzpgpFBtWFtbJ
+         AnEHmqe7hjnNMOL5nuL+HaCJ0cebCF5yHIeTMTywieWHKZukKa87t/u0/7nMlacGzFRm
+         3ZYWoQ6vYQrmLFLBy7F2Xv96rPaD1NPJrM2g8pcvs2nQxYCfTpoR8VFVUttmdvvsj2i9
+         i0TcS0O5kaU3fpsR7NMzrWlhr2ieDGqi2v03jlcv6D1d/uoKk31rHm7cVy7X6xsU7Xp+
+         jtKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744638503; x=1745243303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9gg6c9JaP3fAvNMBtbYiSQTaF78FsgYOrIyM/tQBJqE=;
+        b=uAsgdT0k9MpmIuOZRaBeWILoe3720OpDG5EMBMfzOlWPEeZfjgalR4809qnDVnuAxV
+         HLxg6H54FSgx/cygiwIc4DxIGFOTyLSRow0xxFVOTZQVjPpbgdyLlIHR/0FXLRVxpX6t
+         SxmTNvyEmLHGh+TixDO7AOCmQaaNmpWcStgdNrI7JH+mz2iWVX8l/WMzvJowGsA8cIlx
+         djO3mXyqJHfsUiuurz2kj2PhM5T7CU/EUYTH60heFo+9etjMJjjSREAUqgN4YjaheE1H
+         FMTujDUumD0NbhCD9jAfhQN7fEMlSyTc/+IwgDy0GD/RcaPmaxvW4zMkC4KAdqV2J3ce
+         Qr8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWVSbLck0dKSG6eu/FljSEo8P6d3l7Vnqk9Ubygq7oebYAXWMGPKn5g3f8aF3z93e4vetnMDf0y@vger.kernel.org, AJvYcCXRtoKrZFAt/k3LzDfmLhi1dlI9Z7TxYwV3QROLU3qQMT5RSwr/QKZz2eE0i/Bc+bqL4EtYfrKzJJH+7A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdKyZmBxaC5FlBtptNiA1mUSp8zqeGC7wy24GgGaVtvanp3pMq
+	o/9GXaQcZMEbdlls1NdNObTGxskeqHkJ8jCm+XHYS1fkVKW1udeo52EenYXBJlIejmvB50+ebxa
+	pV48bDL0XtOlvCxoLjMOVg5wRYSI=
+X-Gm-Gg: ASbGncv/ZhlgptJChdPW+FncxHzIwgIMCEvHfOnu5pM5AyYNBaL0CjGjH+Zlb+j+VYa
+	yObxxCdfLB5ksgRcS+F/TN+UyG/1+yeQ9dsrzhdRNaE/5ci+qA5sayQVDtJFhEhsxzsM4i2h2Yv
+	HiKjyk7vog8ovAfa7cpb8Gvg==
+X-Google-Smtp-Source: AGHT+IFZNxc/KHoZDwFGFG6I1MTEwTJWg8WdgpWDyKSrkajFA9wV/Z9DP3VoJO9ODfnboEI+ZztudNXfilRisu5rbL8=
+X-Received: by 2002:a05:6122:daa:b0:520:5400:ac0f with SMTP id
+ 71dfb90a1353d-527c35b6a41mr2823390e0c.3.1744638502640; Mon, 14 Apr 2025
+ 06:48:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
- large folios
-Content-Language: en-GB
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, 21cnbao@gmail.com, ziy@nvidia.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
- <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
- <54886038-3707-4ea0-bd84-00a8f4a19a6a@arm.com>
- <f6f4f4ff-0074-4ba7-b2a5-02727661843c@linux.alibaba.com>
- <145ec273-7223-45b8-a7f6-4e593a3cc8ee@arm.com>
- <d17b69a1-2f22-4a8d-8260-ddea38ebc7b0@redhat.com>
- <fbfbfe84-0422-425c-ab0a-77627deb9d16@linux.alibaba.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <fbfbfe84-0422-425c-ab0a-77627deb9d16@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250414132729.679254-1-sashal@kernel.org> <20250414132729.679254-15-sashal@kernel.org>
+In-Reply-To: <20250414132729.679254-15-sashal@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 14 Apr 2025 09:48:10 -0400
+X-Gm-Features: ATxdqUGsIVkJwostdQs5byeooJDamJZ9S8mgOlW4xpayrB_LVHSmjP3XNtx4Yaw
+Message-ID: <CADnq5_OyrpJL3fnbyiueyddkNZ2B-uRO9pyrRVqBTeY5AnepYw@mail.gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH AUTOSEL 6.13 15/34] drm/amdgpu: allow
+ pinning DMA-bufs into VRAM if all importers can do P2P
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Felix Kuehling <felix.kuehling@amd.com>, 
+	Pak Nin Lui <pak.lui@amd.com>, Alex Deucher <alexander.deucher@amd.com>, simona@ffwll.ch, 
+	sumit.semwal@linaro.org, Yunxiang.Li@amd.com, tvrtko.ursulin@igalia.com, 
+	matthew.auld@intel.com, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/04/2025 07:33, Baolin Wang wrote:
-> 
-> 
-> On 2025/4/1 21:04, David Hildenbrand wrote:
->> On 01.04.25 12:45, Ryan Roberts wrote:
->>> On 30/03/2025 15:57, Baolin Wang wrote:
->>>>
->>>>
->>>> On 2025/3/27 22:08, Ryan Roberts wrote:
->>>>> On 25/03/2025 23:38, Baolin Wang wrote:
->>>>>> When I tested the mincore() syscall, I observed that it takes longer with
->>>>>> 64K mTHP enabled on my Arm64 server. The reason is the mincore_pte_range()
->>>>>> still checks each PTE individually, even when the PTEs are contiguous,
->>>>>> which is not efficient.
->>>>>>
->>>>>> Thus we can use folio_pte_batch() to get the batch number of the present
->>>>>> contiguous PTEs, which can improve the performance. I tested the mincore()
->>>>>> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
->>>>>> obvious performance improvement:
->>>>>>
->>>>>> w/o patch        w/ patch        changes
->>>>>> 6022us            1115us            +81%
->>>>>>
->>>>>> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
->>>>>> see any obvious regression.
->>>>>>
->>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>>> ---
->>>>>>    mm/mincore.c | 27 ++++++++++++++++++++++-----
->>>>>>    1 file changed, 22 insertions(+), 5 deletions(-)
->>>>>>
->>>>>> diff --git a/mm/mincore.c b/mm/mincore.c
->>>>>> index 832f29f46767..88be180b5550 100644
->>>>>> --- a/mm/mincore.c
->>>>>> +++ b/mm/mincore.c
->>>>>> @@ -21,6 +21,7 @@
->>>>>>      #include <linux/uaccess.h>
->>>>>>    #include "swap.h"
->>>>>> +#include "internal.h"
->>>>>>      static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned
->>>>>> long
->>>>>> addr,
->>>>>>                unsigned long end, struct mm_walk *walk)
->>>>>> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long
->>>>>> addr, unsigned long end,
->>>>>>        pte_t *ptep;
->>>>>>        unsigned char *vec = walk->private;
->>>>>>        int nr = (end - addr) >> PAGE_SHIFT;
->>>>>> +    int step, i;
->>>>>>          ptl = pmd_trans_huge_lock(pmd, vma);
->>>>>>        if (ptl) {
->>>>>> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long
->>>>>> addr, unsigned long end,
->>>>>>            walk->action = ACTION_AGAIN;
->>>>>>            return 0;
->>>>>>        }
->>>>>> -    for (; addr != end; ptep++, addr += PAGE_SIZE) {
->>>>>> +    for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
->>>>>>            pte_t pte = ptep_get(ptep);
->>>>>>    +        step = 1;
->>>>>>            /* We need to do cache lookup too for pte markers */
->>>>>>            if (pte_none_mostly(pte))
->>>>>>                __mincore_unmapped_range(addr, addr + PAGE_SIZE,
->>>>>>                             vma, vec);
->>>>>> -        else if (pte_present(pte))
->>>>>> -            *vec = 1;
->>>>>> -        else { /* pte is a swap entry */
->>>>>> +        else if (pte_present(pte)) {
->>>>>> +            if (pte_batch_hint(ptep, pte) > 1) {
->>>>>> +                struct folio *folio = vm_normal_folio(vma, addr, pte);
->>>>>> +
->>>>>> +                if (folio && folio_test_large(folio)) {
->>>>>> +                    const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
->>>>>> +                                FPB_IGNORE_SOFT_DIRTY;
->>>>>> +                    int max_nr = (end - addr) / PAGE_SIZE;
->>>>>> +
->>>>>> +                    step = folio_pte_batch(folio, addr, ptep, pte,
->>>>>> +                            max_nr, fpb_flags, NULL, NULL, NULL);
->>>>>> +                }
->>>>>> +            }
->>>>>
->>>>> You could simplify to the following, I think, to avoid needing to grab the
->>>>> folio
->>>>> and call folio_pte_batch():
->>>>>
->>>>>              else if (pte_present(pte)) {
->>>>>                  int max_nr = (end - addr) / PAGE_SIZE;
->>>>>                  step = min(pte_batch_hint(ptep, pte), max_nr);
->>>>>              } ...
->>>>>
->>>>> I expect the regression you are seeing here is all due to calling
->>>>> ptep_get() for
->>>>> every pte in the contpte batch, which will cause 16 memory reads per pte (to
->>>>> gather the access/dirty bits). For small folios its just 1 read per pte.
->>>>
->>>> Right.
->>>>
->>>>> pte_batch_hint() will skip forward in blocks of 16 so you now end up with the
->>>>> same number as for the small folio case. You don't need all the fancy extras
->>>>> that folio_pte_batch() gives you here.
->>>>
->>>> Sounds reasonable. Your suggestion looks simple, but my method can batch the
->>>> whole large folio (such as large folios containing more than 16 contiguous
->>>> PTEs)
->>>> at once.
->>>
->>> Sure but folio_pte_batch() just implements that with another loop that calls
->>> pte_batch_hint(), so it all amounts to the same thing. In fact there are some
->>> extra checks in folio_pte_batch() that you don't need so it might be a bit
->>> slower.
-> 
-> Right. I tested your suggestion, yes, much better.
-> 
->> I don't enjoy open-coding the batching, especially if only cont-pte users will
->> benefit from it. But I also don't enjoy the open-coded pte_batch_hint() :)
+On Mon, Apr 14, 2025 at 9:28=E2=80=AFAM Sasha Levin <sashal@kernel.org> wro=
+te:
+>
+> From: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
+> [ Upstream commit f5e7fabd1f5c65b2e077efcdb118cfa67eae7311 ]
+>
+> Try pinning into VRAM to allow P2P with RDMA NICs without ODP
+> support if all attachments can do P2P. If any attachment can't do
+> P2P just pin into GTT instead.
+>
+> Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
+> Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Signed-off-by: Felix Kuehling <felix.kuehling@amd.com>
+> Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
+> Tested-by: Pak Nin Lui <pak.lui@amd.com>
+> Cc: Simona Vetter <simona.vetter@ffwll.ch>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-I'm not quite sure what you are saying here? Is:
+This should not go to stable.  It depends on dmem cgroups.
 
-    else if (pte_present(pte)) {
-        int max_nr = (end - addr) / PAGE_SIZE;
-        step = min(pte_batch_hint(ptep, pte), max_nr);
-    }
-
-really to be considered open-coding? pte_batch_hint() is a generic API and it
-feels pretty reasonable to use it in this situation?
-
->>
->> But we really don't need the folio here, so I assume the short variant you
->> (Ryan) suggest is alright to just avoid the ptep_get().
-
-Yes, that would get my vote.
-
->>
->> As Oscar says, these details might soon be hidden inside a new page table
->> walker API (even though it will likely end up using folio_pte_batch()
->> internally, TBD).
-> 
-> OK. I can drop this patch if it will be addressed in the following patches.
-
-I'm assuming a large chunk of the speedup is actually fixing a regression (it
-would be good to see the numbers for non-mTHP mappings for comparison), so
-personally I'd prefer we put this patch in now rather than waiting for the new
-API to land then waiting for someone to get around to converting this user.
-
-Thanks,
-Ryan
+Alex
 
 
-
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 25 +++++++++++++++------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/dr=
+m/amd/amdgpu/amdgpu_dma_buf.c
+> index 8e81a83d37d84..83390143c2e9f 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+> @@ -72,11 +72,25 @@ static int amdgpu_dma_buf_attach(struct dma_buf *dmab=
+uf,
+>   */
+>  static int amdgpu_dma_buf_pin(struct dma_buf_attachment *attach)
+>  {
+> -       struct drm_gem_object *obj =3D attach->dmabuf->priv;
+> -       struct amdgpu_bo *bo =3D gem_to_amdgpu_bo(obj);
+> +       struct dma_buf *dmabuf =3D attach->dmabuf;
+> +       struct amdgpu_bo *bo =3D gem_to_amdgpu_bo(dmabuf->priv);
+> +       u32 domains =3D bo->preferred_domains;
+>
+> -       /* pin buffer into GTT */
+> -       return amdgpu_bo_pin(bo, AMDGPU_GEM_DOMAIN_GTT);
+> +       dma_resv_assert_held(dmabuf->resv);
+> +
+> +       /*
+> +        * Try pinning into VRAM to allow P2P with RDMA NICs without ODP
+> +        * support if all attachments can do P2P. If any attachment can't=
+ do
+> +        * P2P just pin into GTT instead.
+> +        */
+> +       list_for_each_entry(attach, &dmabuf->attachments, node)
+> +               if (!attach->peer2peer)
+> +                       domains &=3D ~AMDGPU_GEM_DOMAIN_VRAM;
+> +
+> +       if (domains & AMDGPU_GEM_DOMAIN_VRAM)
+> +               bo->flags |=3D AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
+> +
+> +       return amdgpu_bo_pin(bo, domains);
+>  }
+>
+>  /**
+> @@ -131,9 +145,6 @@ static struct sg_table *amdgpu_dma_buf_map(struct dma=
+_buf_attachment *attach,
+>                 r =3D ttm_bo_validate(&bo->tbo, &bo->placement, &ctx);
+>                 if (r)
+>                         return ERR_PTR(r);
+> -
+> -       } else if (bo->tbo.resource->mem_type !=3D TTM_PL_TT) {
+> -               return ERR_PTR(-EBUSY);
+>         }
+>
+>         switch (bo->tbo.resource->mem_type) {
+> --
+> 2.39.5
+>
+> _______________________________________________
+> Linaro-mm-sig mailing list -- linaro-mm-sig@lists.linaro.org
+> To unsubscribe send an email to linaro-mm-sig-leave@lists.linaro.org
