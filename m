@@ -1,169 +1,130 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD92561FFE;
-	Mon, 14 Apr 2025 06:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9667428F4;
+	Mon, 14 Apr 2025 06:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744610593; cv=none; b=VhcVLvKMUNthFOB72ZrsY6O8ufeOWi5w3MzSyrvFElv4OiEHBUNukckIph8Vu5Y8pEd6ZZqkYvUTDP5dYTR16VhwZMs7II5Wgd72IMTlADD/vMwOeSXlws9gLM9iD/5CxNLwTfuqQb2USCYPbG/KfEBQCwkMBORpwNHN32fc6/A=
+	t=1744610808; cv=none; b=oQzVpdje7Gg379hbD+9vSp3f3JlGIi5ADT6eNEqlHVg9kG+7Kqfb/8xR8nYqZXlScJNS7Nyz8ZSB0s41dfu5JoZo/DtF4dXWVbsoxklKLVrOQVZToLFMuq0S/+wP2+kePT67DJK1sOrgSXNmVTRYSwsZpcclold4X2VpqOl4VtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744610593; c=relaxed/simple;
-	bh=SsdIA1O3YXTMlpfoM2IIKBOt8pSw+qADOiX5He6NMNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rq/sof45NKjRnuwah4R06THQ5scEm6j9crcEOCW25e658+8XpX5g2PBCBB3cDoK6RX5cPH1QijRVnflZ2wRFf85tbH+uTaE+H8+pQBB1Wp+X+qfNhJm6WG0rPGyUPWif3RzkF1rdg7HkxCnwfDsny9gkuUmPdWUxuF7GFXx0Vp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CxVrLTrf; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1744610808; c=relaxed/simple;
+	bh=9mJ1ouKP6AUJco+IEEwgsZRlDCRhET75JLATzGghxnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dsQOUf9dRNMM3RosvKRo2IJjMMF2xSvsThRYK8ndfzlSt2wg+mCfhiDgnHxZCd/eR6JwkYasuAis48GSYJP7mwaoEzZ62x3QhRP6wKagbCg7VL2roT51MZ5+TqmNOnVCo/CCSAdZM9vV7jTf4OPfE3bvEcYeguSUV0GFV/RY35c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lgiR4Wde; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxVrLTrf"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54298ec925bso1993174e87.3;
-        Sun, 13 Apr 2025 23:03:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgiR4Wde"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22403cbb47fso40012775ad.0;
+        Sun, 13 Apr 2025 23:06:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744610590; x=1745215390; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8aTJ1oYIPlmKXpxMnt+hiXbL+Sq+ey35ei32jeHen5c=;
-        b=CxVrLTrfr3/1tC1iqudXEZ+ooSVi5XH5U/I51LPT5jNz6ZlCnGIFf8afxzvwdzZlM7
-         1NCGZYtQ31duOga2nPfCbMSTOmhu42fGhVHV1GjHdKsS8Kokwk9v3+yaNxN96EgAeYdz
-         vSxJKZIK4L9+QRMyttoYC86HPyXgJ9OHob18L1Iv5aC/BUHsiNdzIw5+0hDcGOHE9aiM
-         KFqPyrjB3W2PUv6a3aj/Qa2g2dx7iCdp06VpLSyA0SQJr5wwUOz6KhaGOUk9jkzghmOs
-         ym4lmoGRni4VT6K7QP6oCQwLMfJbsj8veuhed3MbVpTMiPoULi1WzzmdpC/NTTBDlI7N
-         JEAg==
+        d=gmail.com; s=20230601; t=1744610806; x=1745215606; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xxIaHbBXZ+RwgLgvB4tQny1ra/FHDti7NjCX7XAn8CI=;
+        b=lgiR4WdewkCN8KItHOYLXd7fkB8WSnrz6OY+5tch8oZPpLXZ62wzLjRd0REtJGQfbg
+         pOnBVzB540qKww+ERekMNh3oHJEGRZakdUJsZcain1Mb3hclWP55MFptP5gPaFTk611t
+         6wAlBeSEOeRyB3AYhYOWj1qr0xhYd9z0+Xh/uvqE2V3rPdKIw99YuGo3o2u52kyHg9E2
+         eQTvch/I8vAMS8iBRqnzW8Ol3f4q6432Y2+TTeYOJDLxjh7rYxg8LSwcL7dhmXA4Bd1S
+         Ya3OPEA99nKXy3E82kLJSVbX1FMtju+LoBix/yNBQFxBjCXIMH7t91D8C1zYDadFCJJ0
+         dXGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744610590; x=1745215390;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8aTJ1oYIPlmKXpxMnt+hiXbL+Sq+ey35ei32jeHen5c=;
-        b=DPkwJC/A5SoNzfv0O6pwXSUvbBmgNbOz1ohSYTAf1ZYX8ctEyA0Bd6ZyaaNeruWBhQ
-         SQafOdYTk6r1t9A5Lf1ufT7c4ntgIqo2TBGKdL7poOLEzoj4H4zKE7Hk/LLUcfEMe/db
-         /2/Z7I+Bu6XupZxscg6zt7ELG9ZLiW4ChGkKG6dVQV9T5KQ52nY14fBccPf6AdA5OwLu
-         t57y0/UCTMVbC/2mIIx69B4AthJoBjevufOtklz4h8i+JP7Z5+9cjTiqx78mIESrPDsv
-         B40jAdgCFCMH/JAfW7xBQJrBG4+0geuJpIkB5bfFTYER8iKTRIIOcweGeQcu5XHDofO4
-         /hww==
-X-Forwarded-Encrypted: i=1; AJvYcCUd8MZr4WeDuITpRmh68MUF4upQ1cqg48PwxPI2jCAKXcZfciMYeZ/XE8+eysaUz85MIoiG6sALdGyq0//f@vger.kernel.org, AJvYcCW9oUk8MnLhagj5kozCzL5PhcSDadgMOgPwza4RUBMn3RRzxo5zWI0p4LdqWZRxh8WOzwiiPh10SUyR@vger.kernel.org, AJvYcCXPnnKmcCINMMkywBCLT+3lPJ1uGT4VkozdHbAOrVafnk3tWn1AnWLvZH6wGNaatVLR2dFzcagl2gsN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeX4ZnZSrgtPUK9cYVxsvfQD1ZtL2V3+RCFmjDAs/yhEqH9oD6
-	/X0ny/aiGD9qoOGJfAFba6e9OMXD5FetbTCmwDCZPnWxQo1/iYJg
-X-Gm-Gg: ASbGnctlUq3rIhZasGMpDumcnylLuhF4pi0lPNOT9+X75mZYkTQ9QGskjKpBquNxje3
-	3sbcK34B1f9i5GteXWbzRdaVfxRlxXkcM5+mVtYGBoTiZjY6/5E6P8YoH8CPiS0lsf49O1qhNrQ
-	N5ssrb/jxLaqoC6ibUzEZTlBbVvw1CmU7rEyu3RCoE2kiMrN6IcBdl/J6uUr8A6IoFA5y3tz7EK
-	kalSvFrb6v6pOduwodY5CoIXRhd+WRGc4ayAuKq2G3q0HXSBW017NF6j914YKdPxRn5fXTc47cs
-	zmaR0EYtDPx4JFrjxIiUeaugMMdm0H+FF1pJUbuXijKehBYRzD7a8wPem0LLo+Azp9L/er7q8tv
-	8Vwt4t7FFyu9KfBeJ0iHXew==
-X-Google-Smtp-Source: AGHT+IFV3+sNUrGZb1po81SQG/UoADNzVfrzlewpcX8YGkkmRN6h0BMt/8EGFpFBcmXaTpjXVA4GUA==
-X-Received: by 2002:a05:6512:b18:b0:54b:117c:a070 with SMTP id 2adb3069b0e04-54d452e835bmr3367487e87.57.1744610589460;
-        Sun, 13 Apr 2025 23:03:09 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d238d1dsm1013848e87.69.2025.04.13.23.03.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Apr 2025 23:03:07 -0700 (PDT)
-Message-ID: <f705fa4e-331b-46a1-9640-d33e83f7a894@gmail.com>
-Date: Mon, 14 Apr 2025 09:03:06 +0300
+        d=1e100.net; s=20230601; t=1744610806; x=1745215606;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xxIaHbBXZ+RwgLgvB4tQny1ra/FHDti7NjCX7XAn8CI=;
+        b=TIkfH6LXdb6oSvb9u/VjPU7FVISFjnv+sMtBaAAPoD0h/5u5o7Cg3e7r0wyoLxTXDN
+         199fcXSd3Cu9JmMgcs1bJZfZFQVXH+xq0c+bSGIyYbIdDem6ixAykPI/eakZWyd3XH8M
+         c46Xm/9fvXRo/LMrm+Qtx7BxNG2u19iPJtPT0luexB4DtXcnwpeHTewX8ShN4HMrFJ9e
+         vJatCMNVNMvSZgiiOew5n+VoGbCcuj5/+o/XykTArvugcJB7dY9kmNMVtgRpYuu0KzLR
+         iAgaSVWFo5ohxLSyrGCERjHikF24cn2sSm4Z1DsKEUEthgD+nT3Ok1lkktebWCvarBv1
+         Lfxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvkZDIk8IAc69wXurIill/2gpi9B3DkW2CDrVJ+1Wb89iM31lHvHbZAqamNC49Wyh15gSNTW4+eGIOauA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRU3w5Y8g9rB7bTj6Ce+QRhqpUfKfGItr3kAnCc4zeD7sagpSy
+	eEKu5Y34tLC14qJkthnNIpfDCqciK7A59HvLaBZ4e6/1xCIdIp6C
+X-Gm-Gg: ASbGncvsgARs75Hi54e1OSnxaTTOxraR9vESvBbfObIiFZuVlO8Af42plVQ0GE8feD/
+	tqFBS+l1HiH27zM6cKzc+VWNPmJmMDlXOOz7U2LGrBoY+o5LYtX3wwDg+uz88ffnOZoXwQRaveb
+	h+b84xF5mlY1Q9XU2wze3dOG3l2plGfsdY4x1kegT0XqrCp7PSh7ayzzjlJC4Xkt22b+MBtOdRI
+	TJMEQchV5jfTbQI6CcPolfSsTHPZOy4rnF3cj5n+zULTgNIzVaexpc6ZzefGzgATIMI6s9XmS9a
+	xmKiR7F9w4LVq2IZn01mn5Qg722gIrILNbMnh2YDv6XhLYcXdeY=
+X-Google-Smtp-Source: AGHT+IEqkd3bo9jG14/uA5feef7+vpo4LRa0tq592FJ1o8s6/vtXDY497Yo7Vmw0Crv9MiyXUqBpBA==
+X-Received: by 2002:a17:902:eb8a:b0:224:1e7a:43fe with SMTP id d9443c01a7336-22bea50df42mr155742075ad.46.1744610805520;
+        Sun, 13 Apr 2025 23:06:45 -0700 (PDT)
+Received: from fedora ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb536bsm91840835ad.201.2025.04.13.23.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 23:06:44 -0700 (PDT)
+Date: Mon, 14 Apr 2025 06:06:38 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
+ device address is same
+Message-ID: <Z_yl7tQne6YTcU6S@fedora>
+References: <20250401090631.8103-1-liuhangbin@gmail.com>
+ <3383533.1743802599@famine>
+ <Z_OcP36h_XOhAfjv@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 8/8] iio: ti-adc128s052: Drop variable vref
-To: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1744022065.git.mazziesaccount@gmail.com>
- <db5cb2e1543e03d5a9953faa3934d66f4621cd12.1744022065.git.mazziesaccount@gmail.com>
- <78d17b05-3f0d-4903-afe3-8051d4bd051d@baylibre.com>
- <20250412124229.7917e2df@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250412124229.7917e2df@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_OcP36h_XOhAfjv@fedora>
 
-On 12/04/2025 14:42, Jonathan Cameron wrote:
-> On Fri, 11 Apr 2025 08:34:42 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
+Hi Jay,
+On Mon, Apr 07, 2025 at 09:35:03AM +0000, Hangbin Liu wrote:
+> > 	So this patch's change wouldn't actually resolve the MAC
+> > conflict until a failover takes place?  I.e., if we only do step 4 but
+> > not step 5 or 6, eth0 and eth1 will both have the same MAC address.  Am
+> > I understanding correctly?
 > 
->> On 4/7/25 6:37 AM, Matti Vaittinen wrote:
->>> According to Jonathan, variable reference voltages are very rare. It is
->>> unlikely it is needed, and supporting it makes the code a bit more
->>> complex.
->>>
->>> Simplify the driver and drop the variable vref support.
->>>
->>> Suggested-by: Jonathan Cameron <jic23@kernel.org>
->>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>>
->>> ---
->>
->> ...
->>
->>>   static int adc128_probe(struct spi_device *spi)
->>>   {
->>>   	const struct adc128_configuration *config;
->>> @@ -183,17 +173,12 @@ static int adc128_probe(struct spi_device *spi)
->>>   	indio_dev->channels = config->channels;
->>>   	indio_dev->num_channels = config->num_channels;
->>>   
->>> -	adc->reg = devm_regulator_get(&spi->dev, config->refname);
->>> -	if (IS_ERR(adc->reg))
->>> -		return PTR_ERR(adc->reg);
->>> +	adc->vref_mv = devm_regulator_get_enable_read_voltage(&spi->dev,
->>> +							   config->refname);
->>> +	if (adc->vref_mv < 0)
->>> +		return adc->vref_mv;
->>>   
->>> -	ret = regulator_enable(adc->reg);
->>> -	if (ret < 0)
->>> -		return ret;
->>> -	ret = devm_add_action_or_reset(&spi->dev, adc128_disable_regulator,
->>> -				       adc->reg);
->>> -	if (ret)
->>> -		return ret;
->>> +	adc->vref_mv /= 1000;
->>
->> In other drivers, we've been doing:
->>
->> ret = devm_regulator_get_enable_read_voltage(...);
->> if (ret < 0)
->> 	return dev_err_probe(dev, ret, "failed to read '%s' voltage, ...);
->>
->> adc->vref_mv = ret / 1000;
->>
->> It can be easy to make a typo or forget to specify the voltage when creating
->> a .dts, so I think the error message is helpful to catch that.
->>
->> And we use ret to avoid having adc->vref_mv temporarily holding a
->> value with the wrong units (and can make it have an unsigned type).
-> 
-> Good idea.
-> Applied patches 1-7. I did tweak this one as well but then couldn't make
-> up my mind on whether to change the type of vref_mv so I'll avoid making
-> a decision and will leave patch 8 for a v4 from Matti :)
+> Yes, you are right. At step 4, there is no failover, so eth0 is still using
+> it's own mac address. How about set the mac at enslave time, with this we
+> can get correct mac directly. e.g.
 
-Thanks for handling the 1-7 :) I'll re-spin this, but it's likely to 
-take some time. I'm having 2 weeks off from work, and my motorbike and 
-boat is requiring some attention ;)
+Any comments for the new approach?
 
-I hope I have regained a lot of energy after 2 weeks ;)
-
+Thanks
+Hangbin
 > 
-> Jonathan
+> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> index 950d8e4d86f8..0d4e1ddd900d 100644
+> --- a/drivers/net/bonding/bond_main.c
+> +++ b/drivers/net/bonding/bond_main.c
+> @@ -2120,6 +2120,24 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+>  			slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address\n", res);
+>  			goto err_restore_mtu;
+>  		}
+> +	} else if (bond->params.fail_over_mac == BOND_FOM_FOLLOW &&
+> +		   BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP &&
+> +		   memcmp(slave_dev->dev_addr, bond_dev->dev_addr, bond_dev->addr_len) == 0) {
+> +		/* Set slave to current active slave's permanent mac address to
+> +		 * avoid duplicate mac address.
+> +		 */
+> +		curr_active_slave = rcu_dereference(bond->curr_active_slave);
+> +		if (curr_active_slave) {
+> +			memcpy(ss.__data, curr_active_slave->perm_hwaddr,
+> +			       curr_active_slave->dev->addr_len);
+> +			ss.ss_family = slave_dev->type;
+> +			res = dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
+> +					extack);
+> +			if (res) {
+> +				slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address\n", res);
+> +				goto err_restore_mtu;
+> +			}
+> +		}
+>  	}
 > 
-> 
-> 
->>
->>>   
->>>   	if (config->num_other_regulators) {
->>>   		ret = devm_regulator_bulk_get_enable(&spi->dev,
->>
-> 
-
-
-Yours,
-	-- Matti
+> Thanks
+> Hangbin
