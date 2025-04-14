@@ -1,84 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DF51A29A;
-	Mon, 14 Apr 2025 16:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A72719F130
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649728; cv=none; b=iwR2Qrhewwilqk7cjQY7JH6C2FqA8thXATJjdSzkPKA7MnnJDPBA9hY/MbBO6AM2/f7F/iqmO8WiMNRGl+QkFxB1/Fa3blEdrRgRJ3cbbJmLrZymkFGQtDihibtgvo0KGHA56+XVFewlIW8hRT1lant5izKKtPtcVq9/gswJbsc=
+	t=1744649792; cv=none; b=MieNxDThuEqcjqnlccnCH76f6mLhRrY22Okwsb0ny8AKiSoPc1JshxGnYHLSpnL/CykSXLLCf2RLqy2P5rRjgAKskXJhAA2QH4/ZliedTECKxcSJSL4OCqwmHa0WUUpTX9xwIVkixs21+ZBcu2pdfAV2aPG2kOnlY8PfDTNc+Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649728; c=relaxed/simple;
-	bh=B/f8nfuCKrz3hf3ccJBtDMWjTuWvH9EW7AkbfWjqkrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLBCeJUyHjYTQmO4CJqGkmCaDW6lvqD/7X47G0fUZkl3P9PkkUbqWzSqBNX+EF4h6Yb4xfO7v9ti1mI0zJdVvlw66e8cpwCR+3bJj4BPrrlDEF68FgoIw701QeSQpp9m4YrGHYSlAkFpT5AiBfREJ+WUrUn6bIrPMsPjdGBnwTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsoRwWB1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744649792; c=relaxed/simple;
+	bh=6OpGJCyJUOcBlVWLO7rOs9y2+iVUF98SmlUbFpGYdq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rz7+t9LiJp6nQwMp3/PtDqfQrkvCkr/vLNRsVUXM0/A+xgpn/sS5GG0MqxF/nZdsiWGSMzJvMi0oLWPmHCInFEFqbryUJAq8I5A5cFLEWE5RBsI3N8GB3SIa7eU9lVp7W6Q1gxtY1sygR6f6SycsoRD9MI92tZ7ASlQOeL+t6v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MP87YMnV; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsoRwWB1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407D4C4CEE2;
-	Mon, 14 Apr 2025 16:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744649727;
-	bh=B/f8nfuCKrz3hf3ccJBtDMWjTuWvH9EW7AkbfWjqkrs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VsoRwWB1aQivpwc5jmlzMzh0dvP+D9thuMGPLW6og/2G6EpsUigpcwI1L8xYjMQA8
-	 bM6yoTrT8/JEyVUbhPljmzTG+U14OfV4knZxc5iL8ISIjCYzOnaumc7y/WFt/F843t
-	 qoza24nMp8VO0BJmK9nlAK7q/fZ4fEH5FHOfNPHPtzu7LFztzWtHzpFJn+jgoqNg7t
-	 aRFgVj39xnnz5qnh/a7thobFPe/rkxwIw19icHBDmZFC3sWgzMmVo+AJ5A7gZMFWd4
-	 XK7yDgHlPpTNDUw2VLNN5G2jUxD7O14+aHWGRMGXgSvDhQXBr/jm3LExUVHC+C3cGi
-	 J0snPHWvjbjLA==
-Date: Mon, 14 Apr 2025 17:55:23 +0100
-From: Simon Horman <horms@kernel.org>
-To: Sven Eckelmann <sven@narfation.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4] batman-adv: Fix double-hold of meshif when
- getting enabled
-Message-ID: <20250414165523.GV395307@horms.kernel.org>
-References: <20250410-double_hold_fix-v4-1-2f606fe8c204@narfation.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MP87YMnV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744649788;
+	bh=6OpGJCyJUOcBlVWLO7rOs9y2+iVUF98SmlUbFpGYdq8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MP87YMnVw+AmlpnZ/hARvTOJr1BB8Oxd0Da4BElyauKcEs9E4e/TcdWmNMqLGs9Ym
+	 7Lx5AfrttTtiY+mLb4MxQOjM+ss89ebmPcGYxmszzD49lhXIuxA7Lz0eOxY0oTwdRC
+	 kgoN1J2DTyNVvCAEzecwFZpup3jvxsV/IYJUHWQHKIcClb51+6SoydBizonntn/85W
+	 tFpj0yPZs46hJy9BjkbX8Vu5Fn4Fwvtz5i0GANnV00PgyZargYgNidu11YvIs07pal
+	 4FYUy+uNv9mlGTmcK14QNFnfx84L91xMQG6iaAIlbznKUJCi1XkEr/u9CvqyXLHVWx
+	 0J8F2/UbaeVWA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CC32A17E0809;
+	Mon, 14 Apr 2025 18:56:27 +0200 (CEST)
+Date: Mon, 14 Apr 2025 18:56:23 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: "Steven Price" <steven.price@arm.com>, "Liviu Dudau"
+ <liviu.dudau@arm.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Heiko Stuebner"
+ <heiko@sntech.de>, "kernel" <kernel@collabora.com>, "Daniel Stone"
+ <daniels@collabora.com>, "dri-devel" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] drm/panthor: Make the timeout per-queue instead of
+ per-job
+Message-ID: <20250414185623.628543fb@collabora.com>
+In-Reply-To: <19635301a95.f859dc6e883590.3071663948141072628@collabora.com>
+References: <20250410125734.1005532-1-ashley.smith@collabora.com>
+	<3a5306c8-df44-430a-a24e-72d71b2dc8c1@arm.com>
+	<19635301a95.f859dc6e883590.3071663948141072628@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410-double_hold_fix-v4-1-2f606fe8c204@narfation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 08:58:51PM +0200, Sven Eckelmann wrote:
-> It was originally meant to replace the dev_hold with netdev_hold. But this
-> was missed in batadv_hardif_enable_interface(). As result, there was an
-> imbalance and a hang when trying to remove the mesh-interface with
-> (previously) active hard-interfaces:
-> 
->   unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-> 
-> Fixes: 00b35530811f ("batman-adv: adopt netdev_hold() / netdev_put()")
-> Signed-off-by: Sven Eckelmann <sven@narfation.org>
-> ---
-> This patch is skipping Simon's normal PR submission to get this problem
-> fixed faster in Linus' tree. This currently creates quite a lot of wrong
-> bisect results for syzkaller and it would be better to have this fixed
-> sooner than later.
-> ---
-> Changes in v4:
-> - added Suggested-by: Eric Dumazet <edumazet@google.com>
-> - added Reported-by: of various syzkaller reports which were affected (during
->   bisecting) by this problem
+On Mon, 14 Apr 2025 17:44:27 +0100
+Ashley Smith <ashley.smith@collabora.com> wrote:
 
-FWIIW, I don't see those tags at the bottom of the commit message.
+> On Fri, 11 Apr 2025 16:51:52 +0100 Steven Price  wrote:
+>  > Hi Ashley,=20
+>  > =20
+>  > On 10/04/2025 13:57, Ashley Smith wrote:  =20
+>  > > The timeout logic provided by drm_sched leads to races when we try=20
+>  > > to suspend it while the drm_sched workqueue queues more jobs. Let's=
+=20
+>  > > overhaul the timeout handling in panthor to have our own delayed wor=
+k=20
+>  > > that's resumed/suspended when a group is resumed/suspended. When an=
+=20
+>  > > actual timeout occurs, we call drm_sched_fault() to report it=20
+>  > > through drm_sched, still. But otherwise, the drm_sched timeout is=20
+>  > > disabled (set to MAX_SCHEDULE_TIMEOUT), which leaves us in control o=
+f=20
+>  > > how we protect modifications on the timer.=20
+>  > >=20
+>  > > One issue seems to be when we call drm_sched_suspend_timeout() from=
+=20
+>  > > both queue_run_job() and tick_work() which could lead to races due t=
+o=20
+>  > > drm_sched_suspend_timeout() not having a lock. Another issue seems t=
+o=20
+>  > > be in queue_run_job() if the group is not scheduled, we suspend the=
+=20
+>  > > timeout again which undoes what drm_sched_job_begin() did when calli=
+ng=20
+>  > > drm_sched_start_timeout(). So the timeout does not reset when a job=
+=20
+>  > > is finished.=20
+>  > >=20
+>  > > Co-developed-by: Boris Brezillon boris.brezillon@collabora.com>=20
+>  > > Signed-off-by: Boris Brezillon boris.brezillon@collabora.com>=20
+>  > > Tested-by: Daniel Stone daniels@collabora.com>=20
+>  > > Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")=
+=20
+>  > > Signed-off-by: Ashley Smith ashley.smith@collabora.com>=20
+>  > > ---=20
+>  > >  drivers/gpu/drm/panthor/panthor_sched.c | 244 +++++++++++++++++----=
+---=20
+>  > >  1 file changed, 177 insertions(+), 67 deletions(-)=20
+>  > >=20
+>  > > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/d=
+rm/panthor/panthor_sched.c=20
+>  > > index 446ec780eb4a..32f5a75bc4f6 100644=20
+>  > > --- a/drivers/gpu/drm/panthor/panthor_sched.c=20
+>  > > +++ b/drivers/gpu/drm/panthor/panthor_sched.c  =20
+>  > =20
+>  > [...]=20
+>  >   =20
+>  > > @@ -2727,8 +2784,17 @@ void panthor_sched_suspend(struct panthor_dev=
+ice *ptdev)=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 * automatically terminate all active groups, so let's=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 * force the state to halted here.=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 */=20
+>  > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED)=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0if (csg_slot->group->state !=3D PANTHOR_CS_GROUP_TERMINATED) {=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0csg_slot->group->state =3D PANTHOR_CS_GROUP_T=
+ERMINATED;=20
+>  > > +=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Reset the queue slots manually if the term=
+ination=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0* request failed.=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*/=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i queue_count; i++) {=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (group->queues[i])=
+=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0cs_slot_reset_locked(ptdev, csg_id, i);=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
+>  > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0}=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0slot_mask &=3D ~BIT(csg_id);=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}=20
+>  > >  =C2=A0=C2=A0=C2=A0=C2=A0}  =20
+>  > =20
+>  > So this seems to be the only change from v2 (a changelog can be=20
+>  > helpful!). And I'm not convinced it belongs in this patch? It's not ju=
+st=20
+>  > "[making] the timeout per-queue instead of per-job".=20
+>  > =20
+>  > I haven't dug through the details, but I think this belongs in a=20
+>  > separate patch.
 
-> - resubmission after 24h cooldown time
-> - added kernel message during hang to commit message
-> - Link to v3: https://lore.kernel.org/r/20250409073524.557189-1-sven@narfation.org
-> Changes in v3:
-> - fix submitter address
-> - Link to v2: https://lore.kernel.org/r/20250409073304.556841-1-sw@simonwunderlich.de
-> Changes in v2:
-> - add missing commit message
-> - Link to v1: https://lore.kernel.org/r/20250409073000.556263-1-sven@narfation.org
-
-...
+Actually, it's related, but I agree it's not clear: we call
+cs_slot_reset_locked(), but the thing we're really interested in is the
+cancellation of the timeout work. Before the timeout changes, the
+timeout work was part of drm_sched and was cancelled inside
+drm_sched_stop(). Now, maybe we do need to reset the CS slot
+regardless, in which case it might make sense to have that done in a
+separate fix happening before the timeout changes.
