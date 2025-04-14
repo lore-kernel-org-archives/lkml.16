@@ -1,103 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862642563;
-	Mon, 14 Apr 2025 00:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DF88F66;
+	Mon, 14 Apr 2025 00:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744591614; cv=none; b=HaB5U1Yns6HkGBP2px5fyTE1yfmX5hLbMsSaiIaytOSrlQdJdWpUGBbKuwgqqR5fY7RMh3OgcfUT63ziFbtn13ZCm1qiCzovEOEKzW9hFyQ3TDt4iIpHPvKBs78vjnSIRWWnufUtSf7fyjGRuimu1BId2s0h1ZubeKoIxKoCboY=
+	t=1744591987; cv=none; b=chdxy4tgZ219i0Lyf6MPxQ15nNq4EqhlUGPHYiie7KU1VcodId/Y0OFw8MrtCtYbGxZPzpDONoCm3dVGr5qRaMmy8iW+ZI3Uoz5jd7ZfUmHcK6ChK5lpDRo1wdIqRubfE2F+zLylz55Af24ILBf2y5VUwVAqLNdBO6446Ge9B5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744591614; c=relaxed/simple;
-	bh=zo8VbcTtKjg+2QfYu1HxWcTa83g4OVSzY3dNm0+jang=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XUf6B4cH7iRfnmYlmos81Qm61D/eRbFk9eRF7EhE475MfYkdvGznwcD0DS4YaSdvRtKbarBc3Jltm+u56LmYckuHSNX6sl3qrDuuG93fgqHCz0IStydkE6hX3K9evWos++f/i2DuUubUgOxawutr+Q4bFKKO+3Y8ijMBRAno2dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O3pmyhdz; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744591987; c=relaxed/simple;
+	bh=N/t4wXiYwuP4mcMzZ2f66VL9skmU+uidLosV086W/4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Za1k9CQNddYhjjMjoECz6ELLFku9pxIl1XZ6/wu8XpHyffCTn0twrRztlSkgxMXlFjCcjhjaCRmDzD269Orpjodc8F4y6BhZpziGaR2BBp3jo6UcwRyco3WgWFpqPoAugwYYJoXiXNKhd1qqI8LashbJkvp8CvjrPwy1x023cZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=h0ddCXeC; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O3pmyhdz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744591613; x=1776127613;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zo8VbcTtKjg+2QfYu1HxWcTa83g4OVSzY3dNm0+jang=;
-  b=O3pmyhdzpMhzDeCPeRHgxhC60zTP6xETjFfjbkBu9hdrgMGPn6ZlDLJr
-   xGxYrzJPUP0tv8JN8banShae0o0fHZGHqsqt+rQUUnE8u6OTNd9eE41Vq
-   39giFrUCIODuBfNeUfluZkdjZZj3MP/d2ONmX1vf6+OY70r4H0OAfvm8U
-   cqfr4pxY8A2gV3u9zBNfgJtz7LZXHei48HXUtX+wdDXgtkDtkDsChQIEt
-   zP6gwyakWRbsL9mCkQCFmDgvElD0WM6sYya6urmkLysf61uqzXKTDgL0h
-   EBaxIoWWXofiLCrXF0gn58NcGIHkqgeHRzY6+ZQgUbaTTGIpERJhapnM7
-   g==;
-X-CSE-ConnectionGUID: vAnPK8MbSNGBwkBoWY1cQA==
-X-CSE-MsgGUID: j+HOge8WQPCNf8rU9lsPSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="57033876"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="57033876"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 17:46:52 -0700
-X-CSE-ConnectionGUID: 7a02Nys4QWiyFXJhHAUGEg==
-X-CSE-MsgGUID: Q0XrIfQgTvmgmjDWe3tANA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="152858549"
-Received: from bkammerd-mobl.amr.corp.intel.com (HELO [10.124.222.22]) ([10.124.222.22])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 17:46:51 -0700
-Message-ID: <f435b1c3-4f97-4898-9533-3a83f74cc14a@linux.intel.com>
-Date: Sun, 13 Apr 2025 17:46:50 -0700
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="h0ddCXeC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=83QHPUSOcr9nZsb9LHZ0Z/lAAHhntM1ANX1pFaut9pI=; b=h0ddCXeCA4Y7IZQ0
+	sXlZW0z2OhzrIL7DznBttYjwfoIyRL57n+4gmw5d+0P25bpXie0w0EuK2gUgibDWczQF8iywAG5j9
+	7sMSAsMYy6Q9JreAOtVA4yP+JDebU4jauhCsjLWn0wr7AYDXfbiRbZ1QCAECQCjvqgI+hPsYMkAtZ
+	IbJOHK2yOSBhE+JXNk9KpY+AlvuYlq97QJ5tR5VhkNVQemE/DzrLoeRHKGemQpBH5/2AWwquRg9lj
+	2EuRWk3uyaIc1urG+0ZqdvMIaILciNjS7anrAMjHClL4VzfNVQ+GhhMtQ/GkUrMmzsC2/F9Lc2VRc
+	BTbplklgWoH0MTCRxA==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u4848-00B6OC-2A;
+	Mon, 14 Apr 2025 00:52:48 +0000
+From: linux@treblig.org
+To: manishc@marvell.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH net-next 0/5] qed deadcoding
+Date: Mon, 14 Apr 2025 01:52:42 +0100
+Message-ID: <20250414005247.341243-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: fix the printed delay amount in info print
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>, bhelgaas@google.com,
- mika.westerberg@linux.intel.com, lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: alistair.francis@wdc.com, wilfred.mallawa@wdc.com, dlemoal@kernel.org,
- cassel@kernel.org
-References: <20250414001505.21243-2-wilfred.opensource@gmail.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250414001505.21243-2-wilfred.opensource@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+
+Hi,
+  This is a set of deadcode removals for the qed ethernet
+device.  I've tried to avoid removing anything that
+are trivial firmware wrappers.
+
+  One odd one I've not removed is qed_bw_update(),
+it doesn't seem to be called but looks like the only
+caller of the bw_update(..) method which qedf does
+define.  Perhaps qed_bw_update is supposed to be called
+somewhere?
+
+Dave
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
 
-On 4/13/25 5:15 PM, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
->
-> Print the delay amount that pcie_wait_for_link_delay() is invoked with
-> instead of the hardcoded 1000ms value in the debug info print.
->
-> Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links")
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
+Dr. David Alan Gilbert (5):
+  qed: Remove unused qed_memset_*ctx functions
+  qed: Remove unused qed_calc_*_ctx_validation functions
+  qed: Remove unused qed_ptt_invalidate
+  qed: Remove unused qed_print_mcp_trace_*
+  qed: Remove unused qed_db_recovery_dp
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-
->   drivers/pci/pci.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..8139b70cafa9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->   		delay);
->   	if (!pcie_wait_for_link_delay(dev, true, delay)) {
->   		/* Did not train, no need to wait any further */
-> -		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> +		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
->   		return -ENOTTY;
->   	}
->   
+ drivers/net/ethernet/qlogic/qed/qed.h         |   1 -
+ drivers/net/ethernet/qlogic/qed/qed_dbg_hsi.h |  31 ----
+ drivers/net/ethernet/qlogic/qed/qed_debug.c   |  25 ----
+ drivers/net/ethernet/qlogic/qed/qed_dev.c     |  19 ---
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h     |  52 -------
+ drivers/net/ethernet/qlogic/qed/qed_hw.c      |  11 --
+ drivers/net/ethernet/qlogic/qed/qed_hw.h      |   9 --
+ .../ethernet/qlogic/qed/qed_init_fw_funcs.c   | 138 ------------------
+ 8 files changed, 286 deletions(-)
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.49.0
 
