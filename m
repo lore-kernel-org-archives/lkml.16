@@ -1,214 +1,223 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07572274FE7;
-	Mon, 14 Apr 2025 14:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A7525D1E0;
+	Mon, 14 Apr 2025 14:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640571; cv=none; b=d2+N3CD6MIR9GbJp0t10kBWvUwvbH7hkwdHeE+TclPv8isSzCaET8vdbARg9KD+jflSOXBMXC+FdEkejd2mZTbjP4u+uzXCH6QACAm9ErguJdJ5SvTFT7ij078qJ3taLIFs/t/EzmqFlQJ67OyZttY7LmfQCoRfYBdvz8S86ytE=
+	t=1744640641; cv=none; b=LmYMexnLsExJfoCl/L/OrTkFhXwYUkbwXaAl0qhgDfEqPjBIEvjj+yLmazDNAP1b/RFmfKuoyK295VgsPHEzuOTgwaHagyjXZbDjEbvrT8r6w+lcge/ioWcVw6j7PEMoliH1xox6K/2JfCrOeQJ4xpFAKaKtPcxTC5McFw8OhYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640571; c=relaxed/simple;
-	bh=J1MHietiZvsPKVDE5/U3rEBuftv5MbrgbBjOGLDvYsE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nYqYYuAEZbBHfMASOGfdMdwFzgurdALbDNi6GDnwOTakX5TqUcSoXRS2yudgB7m6CnTWk8YThf5CuROBr0/Hx98ofNmFB+Ezx+VvSRLpIcf+CXZMS55TPXPAh7S7Z4wFYaovlM0v5v2DnKg/abArbbjmODNFZW3HKx+r80qf3Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1s4t2kD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744640641; c=relaxed/simple;
+	bh=OJfDjFejWxWtrt/sjrPQztTjKO+5Bhi/fjLDHACNPlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=umkkZuM8KZkDcLndVT5NnOcajwzBAu1MCHs6Ox9X97MFtBi6EwrXKHcWlxfezK5d8NWzyzcB8OrIKJvwhhJAHQNzISaMsIrGos2C7pIQWxn9jCZHZOpJiEfRJ1ogfwSwG7cQHixl0c0qVI1eXGOmaPJRa6/kvBYMQqVSA9PxtCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qC12SpF3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1s4t2kD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD4EC4CEE2;
-	Mon, 14 Apr 2025 14:22:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qC12SpF3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78D69C4CEE9;
+	Mon, 14 Apr 2025 14:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744640570;
-	bh=J1MHietiZvsPKVDE5/U3rEBuftv5MbrgbBjOGLDvYsE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F1s4t2kD2adU4pmBIV1heZSSiHaT9g0JrMqm7KaFCN80D3LMh0BDZpx13Vqijbjl1
-	 BVfumjNc6lORGXn16nlsnhIEMtQ6ENEdAg1n8aNMcSJr9z/7j5zz/IRU6iP/qSQGp0
-	 dJOv36OAjNO92axVRHbOsGeDkCaj0UaeJpt/5yW/0aW9zV+P3YH1JSjylZxtAbrE7s
-	 9kHoTasaE9aw9rEUY13eorvbDTLPbCmXYmOzktKDTpuuj0Cxq1J9JNEu4BGkUfmd3V
-	 zM/nqfQ5LH7exttNvd+yxr4xeEvXlx3f5YyPZHGprRzDO5+fDZjQr3UijduPfnHlMU
-	 5oTLNvfF6YezQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso6978823a12.0;
-        Mon, 14 Apr 2025 07:22:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU6Y1ZfgIR1D+ZWufEoIccmitMaS4cSGiuErOPafTPShJdp753mgadqAZerb/3/rjtlKByJQa5WjeZiC9/C@vger.kernel.org, AJvYcCWT8zjd4OW60TsYepc6+6izXVry58tLIiLSt/N+TarEmuiMOkbPT+6eSHse292abJJXqHYky+MM8LBS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVbAUtnHcdrdnb0hSSiEOFcggZwgHjAIkp1FUq0UQ6s0RvCa/C
-	P7LMt/Xrpp1YchRvBbbwFy3SzWCXB9x/Oc3tG445IdCf9AGRt+pocSwKDq4Bl3226LwxC8WbQeg
-	Dk1nvnPnJ6c+KHYdyF8sBGtCeFw==
-X-Google-Smtp-Source: AGHT+IFoA2QqamDXch8nyGUFZYs4yy7+kWv81Iq7qbLCVH51Gxp43p0ni/wWkr5Z2E7Q+eWsFkOGFlX3gRFXfcYTtAE=
-X-Received: by 2002:a05:6402:3553:b0:5e8:bf8b:4396 with SMTP id
- 4fb4d7f45d1cf-5f36f647570mr11801484a12.13.1744640569054; Mon, 14 Apr 2025
- 07:22:49 -0700 (PDT)
+	s=k20201202; t=1744640640;
+	bh=OJfDjFejWxWtrt/sjrPQztTjKO+5Bhi/fjLDHACNPlk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=qC12SpF3HV5y/s0gh1ahd/BBZy6ymz/U3itu1UiGk416gojqjahX/ThrjSlodE2vw
+	 c+naHcyzn1QBQghaCcIv7w0W3h/vhiabb6jsc175uiigpjigP5G0MmFT/aJ93tlO2e
+	 aIy6I3Hvx5TPB+Dsc2m84w2UNu+woStwZDQ8+BN+2i0bVQJrOfL+awfuV/Sp2tORyt
+	 qKz1zv9QneKJVFmWaJYElIGPwnNFeuqzOdn9TYaIzWB27ZBnZizX1zy9hDRtjJlXHb
+	 CgBpN1vOJxBmGD2/bnicjmYdgsH7MQzS2SgrILJsFIG2J6KG6jMMpPX+FO7PUd/3XZ
+	 4zrtKwEbGAhuw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 17496CE0848; Mon, 14 Apr 2025 07:24:00 -0700 (PDT)
+Date: Mon, 14 Apr 2025 07:24:00 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, rcu <rcu@vger.kernel.org>
+Subject: Re: [v3,1/2] rcutorture: Perform more frequent testing of ->gpwrap
+Message-ID: <75bdde29-55f7-4210-a3ea-ea859a0e3a1a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <71ab408c-a01b-43a9-993c-4a55294e15ef@paulmck-laptop>
+ <BE7C948D-5238-48C4-93E1-1BAE4CBBD391@joelfernandes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414083243.59664-1-bsz@amazon.de>
-In-Reply-To: <20250414083243.59664-1-bsz@amazon.de>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 14 Apr 2025 09:22:37 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJdk_UtCEEVrakO8azjxWeLLDGTfWAVqtoPS99VQz3jWQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHE6vbzzhRs55bf91_PCgZ2uLkWQ65QnUjEUkOFxOfp0jQxJz8Gov6b02s
-Message-ID: <CAL_JsqJdk_UtCEEVrakO8azjxWeLLDGTfWAVqtoPS99VQz3jWQ@mail.gmail.com>
-Subject: Re: [PATCH] fdt: arch/arm64: Delete the rng-seed property after use
-To: Bartosz Szczepanek <bsz@amazon.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Alexander Graf <graf@amazon.de>, =?UTF-8?B?SmFuIEggLiBTY2jDtm5oZXJy?= <jschoenh@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BE7C948D-5238-48C4-93E1-1BAE4CBBD391@joelfernandes.org>
 
-On Mon, Apr 14, 2025 at 3:33=E2=80=AFAM Bartosz Szczepanek <bsz@amazon.de> =
-wrote:
->
-> As a part of platform boot, device tree is being read to extract
-> randonmess bits. The 'rng-seed' property is used for that purpose.
-> After reading the value, the field was overridden with NOP instead of
-> being deleted or zeroed. The problem is that NOPed fields are later not
-> reused, and kexec code appended this property every time DTB is prepared:
->
->   /* add rng-seed */
->   if (rng_is_initialized()) {
->           void *rng_seed;
->           ret =3D fdt_setprop_placeholder(dtb, off, FDT_PROP_RNG_SEED,
->                           RNG_SEED_SIZE, &rng_seed);
->           if (ret)
->                   goto out;
->           get_random_bytes(rng_seed, RNG_SEED_SIZE);
->   }
-> (source: arch/arm64/kernel/machine_kexec_file.c)
->
-> Taken together, DTB grew at each kexec by 140 bytes ie. size of the
-> newly added (and not overwritten) rng-seed property. ARM64 sets a hard
-> limit on FDT size at 2MB, which means that after at most 14,979 kexecs
-> DTB exceeded the limit causing catastrophic (but silent) failure in
-> setup_machine_fdt().
+On Mon, Apr 14, 2025 at 08:07:24AM -0400, Joel Fernandes wrote:
+> 
+> 
+> > On Apr 11, 2025, at 3:18 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > ﻿On Fri, Apr 11, 2025 at 05:36:32AM -0000, Joel Fernandes wrote:
+> >> Hello, Paul,
+> >> 
+> >>> On Fri, 11 Apr 2025 05:33:16 GMT, "Paul E. McKenney" wrote:
+> >>> On Thu, Apr 10, 2025 at 11:54:13AM -0700, Paul E. McKenney wrote:
+> >>>> On Thu, Apr 10, 2025 at 11:29:03AM -0700, Paul E. McKenney wrote:
+> >>>>> On Thu, Apr 10, 2025 at 11:03:27AM -0400, Joel Fernandes wrote: >
+> >>>>> Currently, the ->gpwrap is not tested (at all per my testing) due to
+> >>>>> the > requirement of a large delta between a CPU's rdp->gp_seq and its
+> >>>>> node's > rnp->gpseq.  > > This results in no testing of ->gpwrap being
+> >>>>> set. This patch by default > adds 5 minutes of testing with ->gpwrap
+> >>>>> forced by lowering the delta > between rdp->gp_seq and rnp->gp_seq to
+> >>>>> just 8 GPs. All of this is > configurable, including the active time for
+> >>>>> the setting and a full > testing cycle.  > > By default, the first 25
+> >>>>> minutes of a test will have the _default_ > behavior there is right now
+> >>>>> (ULONG_MAX / 4) delta. Then for 5 minutes, > we switch to a smaller delt
+> >>> a
+> >>>>> causing 1-2 wraps in 5 minutes. I believe > this is reasonable since we
+> >>>>> at least add a little bit of testing for > usecases where ->gpwrap is se
+> >>> t.
+> >>>>>>> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> >>>>> 
+> >>>>> Much better, thank you!
+> >>>>> 
+> >>>>> One potential nit below.  I will run some tests on this version.
+> >>>> 
+> >>>> And please feel free to apply the following to both:
+> >>>> 
+> >>>> Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> >>> 
+> >>> And this happy situation lasted only until I rebased onto v6.15-rc1 and
+> >>> on top of this commit:
+> >>> 
+> >>> 1342aec2e442 ("Merge branches 'rcu/misc-for-6.16', 'rcu/seq-counters-for-6.1
+> >>> 6' and 'rcu/torture-for-6.16' into rcu/for-next")
+> >>> 
+> >>> This got me the splat shown below when running rcutorture scenario SRCU-N.
+> >>> I reverted this commit and tests pass normally.
+> >>> 
+> >>> Your other commit (ARM64 images) continues working fine.
+> >> 
+> >> Interesting.. it seems to be crashing during statistics printing.
+> >> 
+> >> I am wondering if the test itself uncovered a bug or the bug is in the test
+> >> itself.
+> > 
+> > Both are quite possible, also a bug somewhere else entirely.
+> 
+> I may not get to debugging it for this merge window so I am leaning to defer it.
 
-Just like 2MB should be enough for anyone, 14979 kexecs should be enough. ;=
-)
+The usual cause is use of an rcu_torture_ops function pointer without
+having first checked that it is non-NULL.  But I suspect that you already
+checked for this.
 
+> >> Looking forward to your test with the other patch and we could hold off on this
+> >> one till we have more data about what is going on.
+> > 
+> > This one got lot of OOMs when tests of RCU priority boosting overlapped
+> > with testing of RCU callback flooding on TREE03, as in 13 of the 14
+> > 9-hour runs.  Back on v6.14-rc1, these were quite rare.
+> > 
+> > Ah, and I am carrying this as an experimental patch:
+> > 
+> > 269b9b5be09d ("EXP sched: Disable DL server if sysctl_sched_rt_runtime is -1")
+> > 
+> > Just checking to see if this is still something I should be carrying.
+> 
+> I think since it exposing boost issues, we should carry it! However since it is also noisy, maybe for short term we not carry it in any trees since we are getting close to posting the topic branches.
 
-> This commits addresses the issue as follows:
->  1. Call to fdt_nop_property is replaced with overwriting the rng-seed
->     value with zeros.
->  2. Zeroed rng-seed gets special treatment and is not accepted as valid
->     seed. Warning is emitted on zeroed value.
+I am carrying it in -rcu, but marked "EXP" so that I don't post it or
+send it along in a pull request.
 
-How do you get a zeroed seed if you delete the property when zeroed?
-Sure, any random bootloader could do that, but that has nothing to do
-with kexec. And does it really hurt to add 0s to the random pool? A
-warning is fine. In any case, none of this is specific to DT seeds. It
-all belongs in the core if it is a problem.
+> Do you see the same boost issues or frequency of them when carrying it on 6.15-rc1 without any of this merge windows changes?
+> 
+> By the way I have to rewrite that EXP patch at some point based on a review of it but functionally that patch is good.
 
->  3. Kexec_file code is modified to delete the zeroed property if it
->     can't fill it with valid seed.
->  4. Proper error handling is added for the case when DTB exceeds 2MB.
->
-> The change was tested in QEMU arm64 environment. To do so, kernel
-> containing the change was built and included in buildroot initramfs.
-> Subsequently, kernel was started in QEMU. Using kexec_file, new kernel
-> was loaded and kexec reboot was issued. DTB size was noted in this step.
-> After new kernel has booted, another kexec_file was issued. DTB size
-> was confirmed not to change.
->
-> Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
-> ---
->  arch/arm64/kernel/machine_kexec_file.c |  5 +++++
->  drivers/of/fdt.c                       | 18 +++++++++++++++---
->  drivers/of/kexec.c                     | 12 +++++++++++-
->  3 files changed, 31 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/m=
-achine_kexec_file.c
-> index af1ca875c52c..af0e39f6c96d 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -170,6 +170,11 @@ int load_other_segments(struct kimage *image,
->         /* trim it */
->         fdt_pack(dtb);
->         dtb_len =3D fdt_totalsize(dtb);
-> +       if (dtb_len > MAX_FDT_SIZE) {
-> +               pr_err("DTB exceeds the maximum size: 0x%lx > 0x%x", dtb_=
-len, MAX_FDT_SIZE);
+I just now started a short test with it reverted.
 
-You can't check restrictions of the kexec'ed kernel in the current
-kernel. That restriction could be removed at any point and might not
-be a problem for the kexec'ed kernel.
+Oh, and yours and Boqun's latest passed overnight tests except for a
+few Kconfig issues including the PREEMPT_RT pair:
 
-> +               goto out_err;
-> +       }
-> +       pr_info("DTB successfully created at 0x%lx (length 0x%lx)", (unsi=
-gned long)dtb, dtb_len);
->         kbuf.buffer =3D dtb;
->         kbuf.bufsz =3D dtb_len;
->         kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index aedd0e2dcd89..8c2895cee682 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -1019,6 +1019,18 @@ int __init early_init_dt_scan_memory(void)
->         return found_memory;
->  }
->
-> +static int check_randomness_nonzero(const uint8_t *rng_seed, int len)
-> +{
-> +       int i;
-> +
-> +       for (i =3D 0; i < len; i++)
-> +               if (rng_seed[i] !=3D 0)
-> +                       return true;
-> +
-> +       pr_warn("Provided rng-seed value is all zeros!");
-> +       return false;
-> +}
-> +
->  int __init early_init_dt_scan_chosen(char *cmdline)
->  {
->         int l, node;
-> @@ -1039,11 +1051,11 @@ int __init early_init_dt_scan_chosen(char *cmdlin=
-e)
->         early_init_dt_check_for_elfcorehdr(node);
->
->         rng_seed =3D of_get_flat_dt_prop(node, "rng-seed", &l);
-> -       if (rng_seed && l > 0) {
-> +       if (rng_seed && l > 0 && check_randomness_nonzero(rng_seed, l)) {
->                 add_bootloader_randomness(rng_seed, l);
->
-> -               /* try to clear seed so it won't be found. */
-> -               fdt_nop_property(initial_boot_params, node, "rng-seed");
-> +               /* Zero out the rng-seed property */
-> +               memset((void *)rng_seed, 0, l);
->
->                 /* update CRC check value */
->                 of_fdt_crc32 =3D crc32_be(~0, initial_boot_params,
-> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-> index 5b924597a4de..f5bfbac77a66 100644
-> --- a/drivers/of/kexec.c
-> +++ b/drivers/of/kexec.c
-> @@ -453,8 +453,18 @@ void *of_kexec_alloc_and_setup_fdt(const struct kima=
-ge *image,
->                         goto out;
->                 get_random_bytes(rng_seed, RNG_SEED_SIZE);
->         } else {
-> -               pr_notice("RNG is not initialised: omitting \"%s\" proper=
-ty\n",
-> +               pr_notice("RNG is not initialised: deleting \"%s\" proper=
-ty\n",
->                           "rng-seed");
-> +               /*
-> +                * The rng-seed property may exist as zeroed stub. If so,
-> +                * remove it to not confuse the incoming kernel.
-> +                */
-> +               ret =3D fdt_delprop(fdt, chosen_node, "rng-seed");
-> +               if (ret =3D=3D -FDT_ERR_NOTFOUND)
-> +                       /* It's fine */
-> +                       ret =3D 0;
-> +               else if (ret)
-> +                       goto out;
->         }
->
->         ret =3D fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", =
-NULL, 0);
-> --
-> 2.47.1
->
+75cf58ef310a ("Merge branches 'rcu/misc-for-6.16', 'rcu/seq-counters-for-6.16' and 'rcu/torture-for-6.16' into rcu/for-next")
+
+This is a known Kconfig issue in torture.sh, fixed by this -rcu commit:
+
+2e26af16b7b6 ("torture.sh: Force CONFIG_RCU_NOCB_CPU=y for --do-rt configurations")
+
+There are also Kconfig issues with a few of the KCSAN rcutorture scenarios
+that I am looking into.  And torture.sh needs to be more aggressive about
+reporting these...
+
+							Thanx, Paul
+
+> Thanks,
+> 
+> - Joel 
+> 
+> > 
+> >                            Thanx, Paul
+> > 
+> >> thanks,
+> >> 
+> >> - Joel
+> >> 
+> >> 
+> >> 
+> >> 
+> >>> 
+> >>>                            Thanx, Paul
+> >>> 
+> >>> ------------------------------------------------------------------------
+> >>> 
+> >>> [   15.911885] BUG: kernel NULL pointer dereference, address: 00000000000000
+> >>> 00
+> >>> [   15.912413] #PF: supervisor instruction fetch in kernel mode
+> >>> [   15.912826] #PF: error_code(0x0010) - not-present page
+> >>> [   15.913218] PGD 0 P4D 0
+> >>> [   15.913420] Oops: Oops: 0010 [#1] SMP PTI
+> >>> [   15.913715] CPU: 3 UID: 0 PID: 62 Comm: rcu_torture_sta Not tainted 6.15.
+> >>> 0-rc1-00047-g6e14cad86633 #19 PREEMPT(undef)
+> >>> [   15.914535] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.15
+> >>> .0-1 04/01/2014
+> >>> [   15.915147] RIP: 0010:0x0
+> >>> [   15.915348] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> >>> [   15.915856] RSP: 0000:ffffa0380021fdc8 EFLAGS: 00010246
+> >>> [   15.916256] RAX: 0000000000000000 RBX: ffffffffb6b02cc0 RCX: 000000000000
+> >>> 000a
+> >>> [   15.916802] RDX: 0000000000000000 RSI: ffff9f121f418cc0 RDI: 000000000000
+> >>> 0000
+> >>> [   15.917305] RBP: 0000000000000000 R08: ffff9f121f418d20 R09: 000000000000
+> >>> 0000
+> >>> [   15.917789] R10: 0000000000000000 R11: 0000000000000005 R12: ffffffffb6b0
+> >>> 2d20
+> >>> [   15.918293] R13: 0000000000000000 R14: ffffa0380021fe50 R15: ffffa0380021
+> >>> fdf8
+> >>> [   15.918801] FS:  0000000000000000(0000) GS:ffff9f1268a96000(0000) knlGS:0
+> >>> 000000000000000
+> >>> [   15.919313] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>> [   15.919628] CR2: ffffffffffffffd6 CR3: 0000000017c32000 CR4: 000000000000
+> >>> 06f0
+> >>> [   15.920004] Call Trace:
+> >>> [   15.920139]  <TASK>
+> >>> [   15.920256]  rcu_torture_stats_print+0x16b/0x670
+> >>> [   15.920514]  ? __switch_to_asm+0x39/0x70
+> >>> [   15.920719]  ? finish_task_switch.isra.0+0x76/0x250
+> >>> [   15.920982]  ? __pfx_rcu_torture_stats+0x10/0x10
+> >>> [   15.921222]  rcu_torture_stats+0x25/0x70
+> >>> [   15.921435]  kthread+0xf1/0x1e0
+> >>> [   15.921602]  ? __pfx_kthread+0x10/0x10
+> >>> [   15.921797]  ? __pfx_kthread+0x10/0x10
+> >>> [   15.922000]  ret_from_fork+0x2f/0x50
+> >>> [   15.922193]  ? __pfx_kthread+0x10/0x10
+> >>> [   15.922395]  ret_from_fork_asm+0x1a/0x30
+> >>> [   15.922605]  </TASK>
+> >>> [   15.922723] Modules linked in:
+> >>> [   15.922890] CR2: 0000000000000000
+> >>> [   15.923072] ---[ end trace 0000000000000000 ]---
