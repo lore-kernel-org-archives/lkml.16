@@ -1,47 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1231A2630;
-	Mon, 14 Apr 2025 06:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9803D1A2630;
+	Mon, 14 Apr 2025 06:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744613837; cv=none; b=Fo9A7oJe02Fkt5JtlYELHxjB8FxwJUjk97kJVjy6Uu0Tp3pfP1yMMpt7Gu7vJzL3FOScb+KgkTsJvgjXhxWvKLRa9EuPNnwWfrZn+0yLN8eR+W0XmlqhaCH8REO9NCfiA+lKdUsWQbfmB21gCs6xUwQX2ZXnKUWCcAhKaSBX894=
+	t=1744613886; cv=none; b=F3YN/t86ZXcwOzX3uiLCO1FJJLMSFtKU5/EAxdJj379OdlxuPiwN+U0mQFptgz/A2zSTj8fKsH2s+BdsNd2LmbUuMXCf23D5xSkkaLZiEl3OK8uHbcSALOUlTNES55Wp3LIsmohIcHeYNhBp0f7Xcx4b0bjWwL+2eft/s7M+HDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744613837; c=relaxed/simple;
-	bh=mqy+aOHjVKggByK6p/2KyFRHnUz1N9o7I6IVLGCDoWg=;
+	s=arc-20240116; t=1744613886; c=relaxed/simple;
+	bh=n/t0T2LD5+XE1o61sPRLxFj1AQFQPjSbWtSxyYjEU+Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EaoSzxsW/xXxFdq2sZPILcFKVZvlPVDA+xwKShVH9WUmW6krT2RenrpRD0rU8LO4a+x393ywv/Jjv8vMzww11fSIlV6P+xd59VSN0tMxrtu+KBJUVM499BTWRlyHA6sn2kZjn9rMlffpnevd7WtJ4kUH1ZrCWcCHs02GaO/kMnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1mwHNTd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GgnOg+TOT/YJ+8puUE35bX/MvdI31EjMIgWtY1GJU5JrlnlfImdcsTPE0xCWujKBTgsXzgZHweDBns8DQlCuOqUmQazooxoLWAd6Yd+bhx+VQvczDa/kJdgNy2mrTxG+V+caSyyY1VcVABXLZV5WG3uDGcGbEZQAeQIHn8q8kTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=OJPJRWC5; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1mwHNTd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53266C4CEE2;
-	Mon, 14 Apr 2025 06:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744613835;
-	bh=mqy+aOHjVKggByK6p/2KyFRHnUz1N9o7I6IVLGCDoWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F1mwHNTd5ZYVAB7ZS8zFkWpRKfoBKT42FaZJgQlq2mkfY70IPlKdE5GqQxfRNcMu/
-	 9xsuLXjJKf8kzqzf6SGsqaFjrU9UwliEKl9wFTEoiKulve30/JW6EN9S0QV1QLCB8I
-	 vDjEXEKNM51fholDhVIi99y6EafYba7bhE7mxHQhWcXxlZYTAS+lUw2ql7Z0n5qcNi
-	 811gh/UUXgUR7PrJEuy0PxQpszQ0Amefim3MRPm4Zd+qegKEH0pnL/BZ84bAHyYB9H
-	 Fndg5BVfKqs311r70/4kEoQgsXrON7GIFFXGaAhWOxUFGYOTOMfRMljddNi6gOkoG+
-	 au8i/dKtTCmCw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4Dkk-000000001A4-19TE;
-	Mon, 14 Apr 2025 08:57:11 +0200
-Date: Mon, 14 Apr 2025 08:57:10 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, lumag@kernel.org,
-	quic_kriskura@quicinc.com, manivannan.sadhasivam@linaro.org,
-	konrad.dybcio@oss.qualcomm.com, quic_varada@quicinc.com,
-	quic_kbajaj@quicinc.com, johan+linaro@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
-Message-ID: <Z_yxxoa12N9rNn2z@hovoldconsulting.com>
-References: <20250413212518.2625540-1-chenyuan0y@gmail.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="OJPJRWC5"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id 22FC81F94A;
+	Mon, 14 Apr 2025 08:51:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1744613483;
+	bh=Vuh+3+SJ1qs6GhiS50X+moaRPA+EOviYLwPNQVAmHdc=; h=From:To:Subject;
+	b=OJPJRWC5BlqANEjpu7kZUnFlGtt9qWHUKn9XvpGOeupNB3gJC0vBWkB3vFpainj9K
+	 KPj8yvoX8/7UP6YAd1xobbwfPKAvx6i7q+vhRsGyUBZ5ok9F+ttHwVvGGsLqH6hciA
+	 DgTIr7uQoZr2QXL9gCBe6MDCUXgoxRU9JwK3A/S6JPHF82LzlyuiWpspKh1sk9g8wr
+	 DcCGFaK3WeLAgA6oANNYpfW4zTdcrNmRgEd3ejYBSomJF/HZxoUOmAsShJpPZXdWXT
+	 +bdIm5j53jczYEwY186PZx19U3wNqPrWdDnudsXBwLm8B0s/ec+BW9w+cps4e2v+wU
+	 yIuNe2ycnAVjQ==
+Date: Mon, 14 Apr 2025 08:51:19 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Judith Mendez <jm@ti.com>
+Cc: Hiago De Franco <hiagofranco@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Josua Mayer <josua@solid-run.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Moteen Shah <m-shah@ti.com>,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
+Message-ID: <20250414065119.GA6309@francesco-nb>
+References: <20250407222702.2199047-1-jm@ti.com>
+ <20250411130354.dc3sv3e7ruekkhkp@hiago-nb>
+ <d8e45e50-f0eb-41d0-9c50-56147eaf262a@ti.com>
+ <20250411194813.c4ft2uxgdiuza5cm@hiago-nb>
+ <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,29 +52,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250413212518.2625540-1-chenyuan0y@gmail.com>
+In-Reply-To: <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
 
-On Sun, Apr 13, 2025 at 04:25:18PM -0500, Chenyuan Yang wrote:
-> In qmp_usb_iomap(), one branch returns the result of devm_ioremap(), which
-> can be NULL. Since IS_ERR() does not catch a NULL pointer,
-> add an explicit NULL check in qmp_usb_parse_dt_legacy() to prevent
-> potential dereference issues.
+Hello Judith
 
-Good catch, but please move the handling of this into the
-qmp_usb_iomap() helper so that it returns an error pointer also if
-devm_ioremap() fails.
+On Fri, Apr 11, 2025 at 04:55:39PM -0500, Judith Mendez wrote:
+> My understanding was that we do not like adding new DT properties if
+> we can find a way to apply the quirk in the driver.
+...
 
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> Fixes: 2a55ec4f0a04 ("phy: qcom-qmp-usb: merge driver data")
+> If this implementation flies with the maintainers, then we can go back to DT
+> property implementation.
 
-This is not the commit that introduced the issue; this should be:
+Not sure if this is clear, but this patch is NOT working according to
+our tests, we would need to fix it in a different way.
 
-Fixes: a5d6b1ac56cb ("phy: qcom-qmp-usb: fix memleak on probe deferral")
-  
->  	qmp->pcs = qmp_usb_iomap(dev, np, 2, exclusive);
-> +	if (!qmp->pcs)
-> +		return -ENOMEM;
->  	if (IS_ERR(qmp->pcs))
->  		return PTR_ERR(qmp->pcs);
+Francesco
 
-Johan
+> 
+> 
+> 
+> 
+> 
+> 
