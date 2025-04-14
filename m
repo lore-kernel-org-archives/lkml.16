@@ -1,82 +1,67 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C38226F45A;
-	Mon, 14 Apr 2025 10:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060BB27CB37
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744627985; cv=none; b=skdeS685h4Jq5TajnOOUYNbKZ2DIy1p3mS7gLb3i35/FXMTjXGM3LNRAi5jWmRPkVm+0hivkJnWyqz75b+0A1366b9XuTCBHWd3TXKegPCmlas7rEhAzgzb5JCuTS0j/kQ8LQ+vmz4H30R/iclZ4zdCSHkeu2GPOtIbGEh2sz9c=
+	t=1744627989; cv=none; b=EOHsTBjxnae4Hsj74ZhOz2z/E3derswn5EOjfVcLP4fpczAHN/Uk5YjWPaxbGXtzIJJ6rGOYz4Zp4kjjKonGdgdAarrkYQRsRbhwY9tUC0kbbGRxdHkVMtUle3jqQcXNgnHWo5803z+xRs/MDH6QuSf09cR4Jq8v/gcfzW2AuBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744627985; c=relaxed/simple;
-	bh=hp/iT9vRY4WLbkXBJM0HMTKnmsgkT83gkCn0+xI8TDs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eVSsLVle+Eqrwi2jkzqKu/Y264w1iWBuPS3FBaMrSu0osjmk50ZvzeSHdwcUOEQZNAYKql2VQZobq5Bh3Q7HrblB53MNtfp4PcVabXhz4C3Nlr1oH4jQydaF0WmDkrfHuLA45jIEnsqoozYRjzvI6KbxVULNUD5Xfl+83tHz6vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=BegFfWdY; arc=none smtp.client-ip=79.135.106.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744627989; c=relaxed/simple;
+	bh=N/oOtBHpVIf8Y/Ndag63Io3nJvG/R35WBpnc8Gbkk3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EPy8obQAp/KmjAVkImA/6oWjrh3U5tYhWq1EwUNdeYCNu7mLJuKorEtnaFJmOGLrtqF5HZUBUT8gqd/ON1dzssce3cqUXzbbssbkxfEeWV3HZHNiiYXhIxSjyAYZREnC06CsqsEEf58hwAM/+03s6hfahibWYZRdBryGDE2Thb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvZ+4ZND; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="BegFfWdY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=xkpzb5yfxnf2jeuzp7tothlcbe.protonmail; t=1744627980; x=1744887180;
-	bh=cGneafMdb7E/5GcVD98UZZZtBXjzJsDf2In9bf3AS80=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=BegFfWdYH4OhAyD9Vvv7x2GV3KDqo1ZdIa4E1vDwLL1zYU+n0iu7x/BeBvqz8KItD
-	 GDOj/qovBvhDYAgxwurvOPV4B5kaKfgzdIJK90kxmeSI/vZ9nc4wMn2yrjl83TNmRV
-	 aUtOAtPUFwMQ4obXOllmUTSJ1Hb4ggZEdjnCh2xk3po2dfCSfYaV5Fyjns7UdfevHL
-	 TpQNAPlce1lLPOQTB7WtXA13fie3Bytsq41rfbB3b5pSrw6cFQMzsIoPAxgH4iCGnJ
-	 PiyPMQARv9EXxWlP0kBJ4X5NI1T61eWT7rjmyhWhDFsYvfDDkxZgDbb0NKHMbDUr0R
-	 j3CebiM1XQJVw==
-Date: Mon, 14 Apr 2025 10:52:54 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
-Message-ID: <D96B00U9SS2Q.1YHLNBOIEWSNE@proton.me>
-In-Reply-To: <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
-References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com> <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 192a33aecbd50a9b6c4225576203521e98318959
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvZ+4ZND"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E7CC4CEE5;
+	Mon, 14 Apr 2025 10:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744627988;
+	bh=N/oOtBHpVIf8Y/Ndag63Io3nJvG/R35WBpnc8Gbkk3M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AvZ+4ZNDXksZ2kxcbOjHn3IEZRPwm6/Ky7/sPA7LppeRx0Q5GvMU1sCIk23BFbUTP
+	 yImEKznZg7emCp4ltFbOZe8PebAwS6vrAITeGPsC9rZEwy3qIog8flJXBd3jnHaYk7
+	 2+Ou+mFK+xBc9Fut0dgs4n1qcZuAaFlYugh0wSaUtvR4qWrY34oZBAFv8JEJkPiEI5
+	 q8n+SmIhmndD2hMaBeNgefjjzn+6C/je7EdU/OQSlA2OjGBQIx9B7P346oj3sMMVSZ
+	 aC9+OksDKxc+MvqEHuCu+qjB4TZ6BQV0yE9aYLRzWJwhl+6OPTuvEvsEcqyaVBbiOr
+	 9uAUKyNBriOEA==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH 1/2] f2fs: clean up w/ fscrypt_is_bounce_page()
+Date: Mon, 14 Apr 2025 18:52:36 +0800
+Message-ID: <20250414105237.728522-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed Apr 9, 2025 at 4:47 PM CEST, Tamir Duberstein wrote:
-> In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
->
->> Using `as` casts may result in silently changing mutability or type.
->
-> While this doesn't eliminate unchecked `as` conversions, it makes such
-> conversions easier to scrutinize.  It also has the slight benefit of
-> removing a degree of freedom on which to bikeshed. Thus apply the
-> changes and enable the lint -- no functional change intended.
->
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_pt=
-r [1]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Just cleanup, no logic changes.
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
-Cheers,
-Benno
+ fs/f2fs/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  Makefile                 |  1 +
->  rust/bindings/lib.rs     |  1 +
->  rust/kernel/device_id.rs |  3 ++-
->  rust/kernel/fs/file.rs   |  3 ++-
->  rust/kernel/str.rs       |  6 ++++--
->  rust/kernel/uaccess.rs   | 10 ++++------
->  rust/uapi/lib.rs         |  1 +
->  7 files changed, 15 insertions(+), 10 deletions(-)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 1a90aca499f6..4f70755c30cc 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -53,7 +53,7 @@ bool f2fs_is_cp_guaranteed(struct page *page)
+ 	struct inode *inode;
+ 	struct f2fs_sb_info *sbi;
+ 
+-	if (!mapping)
++	if (fscrypt_is_bounce_page(page))
+ 		return false;
+ 
+ 	inode = mapping->host;
+-- 
+2.49.0
 
