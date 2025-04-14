@@ -1,263 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E6A1805B;
-	Mon, 14 Apr 2025 13:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8556D25229C;
+	Mon, 14 Apr 2025 13:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638744; cv=none; b=GyC6tHlYH5VynWJGxuNTte5hZDLb9sLw5FvWcsp6wuzN9IwDbO95jY0wyM/XNOOupvSmHtu+AeLLHlGIVjq8isbkoYuIwXNitnDz9IwrFUwzK9Ll2Bw+zl2a304eBxkSKnIMYP9Y8w+LIs/1PLMXX0PtdLnadnpTC7PTzJsUIDM=
+	t=1744638758; cv=none; b=Tm/6l+ecNzb5eAbwS4eFvgAxCwsgwyMAGoZWVGh2xzXjFNfwjgOCqcnehS5jymLTPcI3MBn7PDgl3xDsgi/SaI6CDCKqr4mzJZSaedmT+iNYCNaSBG9Vx7fsMnR30z1jkyjVFSDgmSqMskqW17S5RKX5hrIBBeD5hULGo5D33V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638744; c=relaxed/simple;
-	bh=2us9Yy1h7Rn5Y+xf7l2KgkWlECqJmgw3NVFKQasnIk8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=s08674OFoxcVJJhCIk+v/fNArNBM7kqf58A6iGj+VMvydoiSddxb7rwHC8dgku5843pQktVEdnvQA/Gtu7VRG8QPbgoGe+AkZzlCNR7lAy3JmHQnSOOLbUuyTeuX0bK1qlB/prsqJ4om1UwsipNnZV3JMZZOKxWk+B48NRXDPW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6iOU3ea; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744638758; c=relaxed/simple;
+	bh=ua8cASNkPaWRfa3lb5p4l80TaaxTdU9VK5enTPHP22U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RmcLoCYPMx8bP9D0Ut79TVHPMYX8OqLizKZI7QgewbXbTb7mi3+wMk4eCrqasDQdFlEdmZEup005TfaS5n76webK8u7aOPqvmQMDK+KHJa/z48kyt0LADBVI3GBv0gqxQPQwVWsjWzVPGsNwm0poYjHgK41OK8bpTng4XLQ4ytU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0NuMVO2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6iOU3ea"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744638743; x=1776174743;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2us9Yy1h7Rn5Y+xf7l2KgkWlECqJmgw3NVFKQasnIk8=;
-  b=f6iOU3eaUyFJVW2ajIixo/jL3jSy4sm9pDMDgFOKLhWHT6+vbgzY8oPM
-   L6/o8hEaln8wyVS866Lca1kWqEtvx4u8lwxAr1FW5dPxZMgwdhwWX3KEy
-   YmlMFyCN7OfXbYDETkzjei3imkUze9YBK+MI2htB7KrzvT4Fbxo9nSrUZ
-   ui2Z5NiCBZq4IkUHf9RCM57b85Svx7YRMHXC9dU0tkytR+4V3iezj8H7N
-   U8lYj8MbZirXusmbcUH7FQvTiHJDor9Bf8T/Lf9pDckhilyWyJASPC/zR
-   Ltl1aLnyh363a/yBr6dZLp8IKHvWbSlrHjVxXh4ZiNJ6qV73b8jWV+Z/I
-   g==;
-X-CSE-ConnectionGUID: 6lQnJmF3TXa+EmJ/DOcv1g==
-X-CSE-MsgGUID: Cq3szEBIR0GOA1l93Th0EQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57475329"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="57475329"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:52:23 -0700
-X-CSE-ConnectionGUID: z84XrAOnQvaQbVfugPEkBg==
-X-CSE-MsgGUID: N/HG3ICZS8C987amuYcghQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="134664588"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 06:52:19 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 14 Apr 2025 16:52:16 +0300 (EEST)
-To: =?ISO-8859-2?Q?Ond=F8ej_Jirman?= <megi@xff.cz>
-cc: Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
-    linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <rndyvjlylykt7aj6czm5awh47ddi3j22zna45zfppq5iu4xdgd@tqvzfa524vd3>
-Message-ID: <d42d4239-ed64-a1ff-9d86-905460bfeb6c@linux.intel.com>
-References: <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net> <75f74b48-edd8-7d1c-d303-1222d12e3812@linux.intel.com> <6612c4d2-2533-98ef-7c89-f61d80c3e3e2@linux.intel.com> <5eb8fd42-b288-4ecb-ae0e-177904cc0a14@roeck-us.net>
- <c34c6dc2-5ab2-1a81-3ba4-b3bc2c016945@linux.intel.com> <nb4knp52jylojmj3jsvvgq2dsbn3srruxmkqfuto2k3hv3fnqs@6rkqgdved6gi> <9c9d5aed-ae10-f590-3e59-34234d4d8f7d@linux.intel.com> <tuhhms3jfcbgzzgmxt7ghvhp5zoh56ue2ikvge2kdhsudnpoon@elmy6yymd6bf>
- <a822896a-de7d-697c-2240-2afa95b318f3@linux.intel.com> <rndyvjlylykt7aj6czm5awh47ddi3j22zna45zfppq5iu4xdgd@tqvzfa524vd3>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0NuMVO2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04825C4CEED;
+	Mon, 14 Apr 2025 13:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744638758;
+	bh=ua8cASNkPaWRfa3lb5p4l80TaaxTdU9VK5enTPHP22U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=m0NuMVO26ktidw9tegT2dsWUHdlydwNaqfHnjdcVc3u1AdX3nP9ymx5Yx06eUhAwr
+	 d5dyW7yEEDBPaPPmzrmDTVJ1JO5U37iebS9J1aE0dza8PPSYHV45YQAWvC9HXptWuf
+	 Xc/J7GIVQ0DuAtZEdNVfceNsTYUo58uxOYb36I7wbU3wRgULo+V55zl2Cn1CdI1bx8
+	 719McGg+A+Z/fXu+j+7BaYwLhkBPlXhO8cgIbmMqS9f5+eFeuJatPjShhFU2yImCre
+	 UAZaMrZ6+7mttz6LxuaVizP40/4XYFBRyDttkKJrXTx5Lq4XLLpvng3oqnvopkrvWq
+	 tTXnVrA7V3Gfw==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac29fd22163so690414966b.3;
+        Mon, 14 Apr 2025 06:52:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMLlrzCqqppRRknQ8FHCrxRUVe2RGw6LGjwmfXsZzch+mHAEKHqxlPeUD0tNBZo40nj7ZvV3eACw==@vger.kernel.org, AJvYcCVptBw6O/LLy4Iq8hl8iVu+4VrarZ4qn8cP+5sO/XexJ6ZX3H5R4d+4G/ONpR68vYpPaFSCUUHk@vger.kernel.org, AJvYcCX47vhs1m6BqYYvPk1IlHye9tAMHFYRCSzZWZh56vZyF74mFRv7lj6Yp4b7jpCfRaCJUHNRM5hRIsBiHuJO@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy54qMwCfx0gsPsDkB3Aj5cIZ7gy4n3+6wPr2xQ0ElOOoRUG3P
+	qZo7LrGGPPNZdp5EguieOHvVDfCJ9Hw1dQlDzeCTnN40Z7XmVkh/FKKH5Tvi4SBBSJY7eMT0UaL
+	5KBZ23X55yiOWsXPqEeJgONNMWzI=
+X-Google-Smtp-Source: AGHT+IEb9cXahzO8rO6tTtsRYaxmrd0g3AGSHrWP5pO4nON1SGuxFGxFHtpFDvEAu9sp8G1Us6/u8WHw7IosPBIF6N0=
+X-Received: by 2002:a17:906:f585:b0:ac7:3912:5ea8 with SMTP id
+ a640c23a62f3a-acad371af0amr1104496566b.61.1744638756467; Mon, 14 Apr 2025
+ 06:52:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1273008509-1744638736=:10563"
+References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
+ <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
+ <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh>
+ <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
+ <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com> <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
+In-Reply-To: <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 14 Apr 2025 21:52:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
+X-Gm-Features: ATxdqUG1icZREjZMGI3uSy2brC-wqNFlBfkcadOO9-HvQ5kt1SjX-qscPsLmFhE
+Message-ID: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
+Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
+ provider for OPENSSL MAJOR >= 3
+To: Jan Stancek <jstancek@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
+	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
+	Neal Gompa <neal@gompa.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi, Greg and Sasha,
 
---8323328-1273008509-1744638736=:10563
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Mon, 14 Apr 2025, Ond=C5=99ej Jirman wrote:
-> On Mon, Apr 14, 2025 at 04:15:01PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 14 Apr 2025, Ond=C5=99ej Jirman wrote:
-> > > On Mon, Apr 14, 2025 at 12:52:15PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > > > On Fri, 11 Apr 2025, Ond=C5=99ej Jirman wrote:
-> > > >=20
-> > > > > Hello Ilpo,
-> > > > >=20
-> > > > > On Tue, Apr 01, 2025 at 08:38:48PM +0300, Ilpo J=C3=A4rvinen wrot=
+On Sun, Mar 30, 2025 at 9:40=E2=80=AFPM Jan Stancek <jstancek@redhat.com> w=
+rote:
+>
+> On Sun, Mar 30, 2025 at 3:08=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redhat.c=
+om> wrote:
+> > >
+> > > On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
+> > > > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrot=
 e:
-> > > > > > That log wasn't taken from a bad case but it doesn't matter any=
-more as I=20
-> > > > > > could test this with qemu myself, thanks for providing enough t=
-o make it=20
-> > > > > > easy to reproduce & test it locally :-).
-> > > > > >=20
-> > > > > > The problem is caused by assign+release cycle being destructive=
- on start=20
-> > > > > > aligned resources because successful assigment overwrites the s=
-tart field.=20
-> > > > > > I'll send a patch to fix the problem once I've given it a bit m=
-ore thought
-> > > > > > as this resource fitting code is somewhat complex.
-> > > > >=20
-> > > > > BTW, same thing here on a different SoC:
-> > > > >=20
-> > > > > https://lore.kernel.org/lkml/hrcsm2bo4ysqj2ggejndlou32cdc7yiknnm5=
-nrlcoz4d64wall@7te4dfqsoe3y/T/#u
-> > > > >=20
-> > > > > There are kernel logs there, too, although I don't have dynamic d=
-ebug enabled
-> > > > > in the kernel.
-> > > > >=20
-> > > > > Interestingly, bisect pointed me initially to a different commit.=
- Reverting
-> > > > > it helped, but just on one board (QuartzPro64).
-> > > >=20
-> > > > Hi,
-> > > >=20
-> > > > Since you didn't mention it, I guess you haven't tried the fix:
-> > > >=20
-> > > > https://patchwork.kernel.org/project/linux-pci/patch/20250403093137=
-=2E1481-1-ilpo.jarvinen@linux.intel.com/
-> > >=20
-> > > This patch works. Thank you.
-> >=20
-> > Thanks for testing. If you feel confident enough, please send your=20
-> > Tested-by tag to its thread (not this one).
-> >=20
-> > > One difference compared to 6.14 that I'm noticing
-> > > in the kernel log is that "save config" sequences now are printed twi=
-ce for
-> > > unpopulated port. Not sure if it's related to your patches. Previousl=
-y it was
-> > > printed just once.
-> >=20
-> > I don't think it is related. The resource fitting/assignment changes=20
-> > should not impact PCI save/restore AFAIK (except by preventing device f=
-rom=20
-> > working in the first place if necessary resources do not get assigned).
-> >=20
-> > PCI state saving has always seemed like that in most logs I've seen wit=
-h=20
-> > dyndbg enabled, that is, the state is seemingly saved multiple times,=
-=20
-> > often right after the previous save too. So TBH, I'm not convinced it's=
-=20
-> > even something new. If you have backtraces to show those places that=20
-> > invoke pci_save_state() I can take a look but I don't expect much to=20
-> > come out of that.
->=20
-> You're right. It's unrelated. The traces:
->=20
-> [    1.878732]  show_stack+0x28/0x80 (C)
-> [    1.878751]  dump_stack_lvl+0x58/0x74
-> [    1.878762]  dump_stack+0x14/0x1c
-> [    1.878772]  pci_save_state+0x34/0x1e8
-> [    1.878783]  pcie_portdrv_probe+0x330/0x6a8
-> [    1.878794]  local_pci_probe+0x3c/0xa0
-> [    1.878804]  pci_device_probe+0xac/0x194
-> [    1.878813]  really_probe+0xbc/0x388
-> [    1.878825]  __driver_probe_device+0x78/0x144
-> [    1.878837]  driver_probe_device+0x38/0x110
-> [    1.878850]  __device_attach_driver+0xb0/0x150
-> [    1.878862]  bus_for_each_drv+0x6c/0xb0
-> [    1.878873]  __device_attach+0x98/0x1a0
-> [    1.878886]  device_attach+0x10/0x20
-> [    1.878897]  pci_bus_add_device+0x84/0x12c
-> [    1.878911]  pci_bus_add_devices+0x40/0x90
-> [    1.878924]  pci_host_probe+0x88/0xe4
-> [    1.878933]  dw_pcie_host_init+0x258/0x714
-> [    1.878945]  rockchip_pcie_probe+0x2f0/0x3f8
-> [    1.878956]  platform_probe+0x64/0xcc
-> [    1.878965]  really_probe+0xbc/0x388
-> [    1.878977]  __driver_probe_device+0x78/0x144
-> [    1.878989]  driver_probe_device+0x38/0x110
-> [    1.879001]  __device_attach_driver+0xb0/0x150
-> [    1.879014]  bus_for_each_drv+0x6c/0xb0
-> [    1.879025]  __device_attach+0x98/0x1a0
-> [    1.879037]  device_initial_probe+0x10/0x20
-> [    1.879049]  bus_probe_device+0xa8/0xb8
-> [    1.879061]  deferred_probe_work_func+0xa4/0xf0
-> [    1.879072]  process_one_work+0x13c/0x2bc
-> [    1.879084]  worker_thread+0x284/0x460
-> [    1.879094]  kthread+0xe4/0x1a0
-> [    1.879107]  ret_from_fork+0x10/0x20
-> [    1.879121] pcieport 0002:20:00.0: save config 0x00: 0x35881d87
-> [    1.879158] pcieport 0002:20:00.0: save config 0x04: 0x00100507
-> [    1.879168] pcieport 0002:20:00.0: save config 0x08: 0x06040001
-> [    1.879177] pcieport 0002:20:00.0: save config 0x0c: 0x00010000
-> [    1.879221] pcieport 0002:20:00.0: save config 0x10: 0x00000000
-> [    1.879232] pcieport 0002:20:00.0: save config 0x14: 0x00000000
-> [    1.879242] pcieport 0002:20:00.0: save config 0x18: 0x00212120
-> [    1.879251] pcieport 0002:20:00.0: save config 0x1c: 0x000000f0
-> [    1.879260] pcieport 0002:20:00.0: save config 0x20: 0x0000fff0
-> [    1.879270] pcieport 0002:20:00.0: save config 0x24: 0x0001fff1
-> [    1.879279] pcieport 0002:20:00.0: save config 0x28: 0x00000000
-> [    1.879289] pcieport 0002:20:00.0: save config 0x2c: 0x00000000
-> [    1.879298] pcieport 0002:20:00.0: save config 0x30: 0x00000000
-> [    1.879307] pcieport 0002:20:00.0: save config 0x34: 0x00000040
-> [    1.879316] pcieport 0002:20:00.0: save config 0x38: 0x00000000
-> [    1.879325] pcieport 0002:20:00.0: save config 0x3c: 0x00020194       =
-       =20
-> [    1.879376] pcieport 0002:20:00.0: vgaarb: pci_notify
->=20
-> second time it's from:
->=20
-> [    2.004478] Workqueue: pm pm_runtime_work
-> [    2.004488] Call trace:
-> [    2.004491]  show_stack+0x28/0x80 (C)
-> [    2.004500]  dump_stack_lvl+0x58/0x74
-> [    2.004506]  dump_stack+0x14/0x1c
-> [    2.004511]  pci_save_state+0x34/0x1e8
-> [    2.004516]  pci_pm_runtime_suspend+0xa8/0x1e0
-> [    2.004521]  __rpm_callback+0x3c/0x220
-> [    2.004527]  rpm_callback+0x6c/0x80
-> [    2.004532]  rpm_suspend+0xec/0x674
-> [    2.004537]  pm_runtime_work+0x104/0x114
-> [    2.004542]  process_one_work+0x13c/0x2bc
-> [    2.004548]  worker_thread+0x284/0x460
-> [    2.004552]  kthread+0xe4/0x1a0
-> [    2.004559]  ret_from_fork+0x10/0x20
-> [    2.004567] pcieport 0002:20:00.0: save config 0x00: 0x35881d87
-> [    2.004578] pcieport 0002:20:00.0: save config 0x04: 0x00100507
-> [    2.004583] pcieport 0002:20:00.0: save config 0x08: 0x06040001
-> [    2.004587] pcieport 0002:20:00.0: save config 0x0c: 0x00010000
-> [    2.004591] pcieport 0002:20:00.0: save config 0x10: 0x00000000
-> [    2.004596] pcieport 0002:20:00.0: save config 0x14: 0x00000000
-> [    2.004600] pcieport 0002:20:00.0: save config 0x18: 0x00212120
-> [    2.004604] pcieport 0002:20:00.0: save config 0x1c: 0x000000f0
-> [    2.004608] pcieport 0002:20:00.0: save config 0x20: 0x0000fff0
-> [    2.004613] pcieport 0002:20:00.0: save config 0x24: 0x0001fff1
-> [    2.004617] pcieport 0002:20:00.0: save config 0x28: 0x00000000
-> [    2.004621] pcieport 0002:20:00.0: save config 0x2c: 0x00000000
-> [    2.004625] pcieport 0002:20:00.0: save config 0x30: 0x00000000
-> [    2.004629] pcieport 0002:20:00.0: save config 0x34: 0x00000040
-> [    2.004633] pcieport 0002:20:00.0: save config 0x38: 0x00000000
-> [    2.004638] pcieport 0002:20:00.0: save config 0x3c: 0x00020194
-> [    2.004662] pcieport 0002:20:00.0: PME# enabled
->=20
-> on 6.15-rc:
->=20
-> cat /sys/class/pci_bus/0002:20/device/0002:20:00.0/power/runtime_status  =
-                                                                           =
-                                                                         OK
-> suspended
->=20
-> on 6.14:
->=20
-> cat /sys/class/pci_bus/0002:20/device/0002:20:00.0/power/runtime_status  =
-                                                                           =
-                                                                         OK
-> active
->=20
-> So some other unrelated change in 6.15-rc just enabled RPM to suspend the=
- unused
-> port.
+> > > > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
+> > > > > > > From: Jan Stancek <jstancek@redhat.com>
+> > > > > > >
+> > > > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
+> > > > > > >
+> > > > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
+> > > > > > > Distros have started dropping support from headers and in fut=
+ure
+> > > > > > > it will likely disappear also from library.
+> > > > > > >
+> > > > > > > It has been superseded by the PROVIDER API, so use it instead
+> > > > > > > for OPENSSL MAJOR >=3D 3.
+> > > > > > >
+> > > > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENG=
+INES.md
+> > > > > > >
+> > > > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl =
+--strict]
+> > > > > > >
+> > > > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+> > > > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > > ---
+> > > > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++---=
+----------
+> > > > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++-------=
+-----
+> > > > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
+> > > > > >
+> > > > > > This seems to differ from what is upstream by a lot, please doc=
+ument
+> > > > > > what you changed from it and why when you resend this series ag=
+ain.
+> > > > >
+> > > > > Hunks are arranged differently, but code appears to be identical.
+> > > > > When I apply the series to v6.6.83 and compare with upstream I ge=
+t:
+> > > >
+> > > > If so, why is the diffstat different?  Also why are the hunks arran=
+ged
+> > > > differently,
+> > >
+> > > He appears to be using "--diff-algorithm=3Dminimal", while you probab=
+ly
+> > > patience or histogram.
+> > Hi, Jan,
+> >
+> > I tried --diff-algorithm=3Dminimal/patience/histogram from the upstream
+> > commit, they all give the same result as this patch. But Sasha said
+> > the upstream diffstat is different, so how does he generate the patch?
+>
+> Hi,
+>
+> I don't know how he generates the patch, but with git-2.43 I get noticabl=
+e
+> different patches and diff stats for minimal vs. histogram. "minimal" one
+> matches your v3 patch. I don't know details of Greg's workflow, just offe=
+red
+> one possible explanation that would allow this series to progress further=
+.
+>
+> $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb2 |
+> grep -A3 -m1 -- "---"
+Could you please tell me how you generate patches? I always get the
+same result from the upstream repo.
 
-Ah right, makes sense, now that you mention I recall D3 became allowed for=
-=20
-PCI bridge on non-x86 archs but I just couldn't make the connection in my=
-=20
-mind.
+Huacai
 
---=20
- i.
-
---8323328-1273008509-1744638736=:10563--
+> ---
+>  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
+>  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
+>  2 files changed, 138 insertions(+), 58 deletions(-)
+>
+> $ git format-patch -1 --stdout --diff-algorithm=3Dhistogram 558bdc45dfb2
+> | grep -A3 -m1 -- "---"
+> ---
+>  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
+>  scripts/sign-file.c  |  95 +++++++++++++++++++++++++++------------
+>  2 files changed, 139 insertions(+), 59 deletions(-)
+>
+> Regards,
+> Jan
+>
+> >
+> > Huacai
+> >
+> > >
+> > > $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb=
+2 |
+> > > grep -A3 -m1 -- "---"
+> > > ---
+> > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-----------=
+--
+> > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
+> > >  2 files changed, 138 insertions(+), 58 deletions(-)
+> > >
+> > > Should be easy to regenerate with different diff-alg for v4.
+> > >
+> > > Regards,
+> > > Jan
+> > >
+> > > > that's a hint to me that something went wrong and I can't
+> > > > trust the patch at all.
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > > >
+> > >
+> >
+>
+>
