@@ -1,76 +1,80 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD2F17A305;
-	Mon, 14 Apr 2025 11:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E4119F13B
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631282; cv=none; b=bVy23i9XeLto8dZjA0EOKtm7Jam+YKFnNwYpzZDCZszatLT3jzfQyRNWX7ShOLfe1gJTj56ORsGqb1VYagniR71Ej35/01IYvwPwk/c3Ag7mX+FZqh0T/bIlkm5Av0MKkzAk279gj2W2DsLa/xscZp3jEC9TOzJVW4qEEX4Dc/Q=
+	t=1744631292; cv=none; b=q9QHq5IMrHSnthklg7xDMNo05sCSivUTzREIzTQMz/GqHdiQ7etq3e3fTxJEYpWc3BuL2M47UQ+PVV2ZqYgz1ko10X3xXaggr9JVfyIMISuCbPCfLVhWBXI8aLpF43ffzJTCcuH2/I7gw+HwggXCqI+MO783oJsIlxcPRPvXYHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631282; c=relaxed/simple;
-	bh=s7jkJAHUB4r4svTwfgwHyX8slcJ4MwPFj5TT5N+7+Ik=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jow2ltHF7B0YpqRf8I46w3Bo/lve24epHfmGlvnxTImu9A2pFN7MA2WolKyC3WNV1BUHy+jtWBGQDPDF0wKBbl9fnk2yMJlF1Sqr64MMUaki7AZTgZl3p0kMPyFbGufTlJcX0/xOfOyfwsVR46gSP/ZcAOZ5arrDZlKNAuO2X9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FqSQbwAw; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744631292; c=relaxed/simple;
+	bh=3yFtFVoyOKbTb4fufMEnhMtQDnmxmq+3DLwYw/rtUWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YBJ06KJT4WVJDdvBsmDUCb77AoGlFiLAYlOkQtJQ3TdudEkDsyGNhlgSN/o+Mjfp5bpo8VKipyp3MC+fX2ECI2gLPSl/xR3JJN1QGlKjb4mqEa9yp19He5LkWon1Z0d0S3bvtnaC+zq+a8mgcHRR0mEpA8zgk7LyKKIBiJoWyyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XOQQ9wJH; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqSQbwAw"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so36768195e9.1;
-        Mon, 14 Apr 2025 04:47:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XOQQ9wJH"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2255003f4c6so41061885ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 04:48:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744631278; x=1745236078; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744631289; x=1745236089; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gg46kXKghmlwR4V0VYttP7ydLE60NSEZU5k87GACm3g=;
-        b=FqSQbwAwI86XoaRm4fnX++8u1gbXnMXaCjtC5vfqiHCse0NIrHb5jrDwm0YLcNQkLp
-         AonGQPaZ1uu7XmY4mBLLD4Ch2qrJYpuPETs414uaj3SFzcFPHScywbhu9b1kuWmhsFFf
-         tKFEUJn+A9lZMbapxDTajEZo1B40f6GvG23DbadeR626V7VChaNIijpNSBOgB3akd5mA
-         +7eZFNAZvzkUVsLecg1PABXWyaNJ/t8wwmqZC3RltO5gjeqCfOGFS5HY9uZ9A0ty4FXw
-         PfqgxPC0aRJOT1Si38/b5C/IVOKyapLB7VIqvMZHUHwSZnfG4isWEGQ54eELBZRBWXFt
-         w4dQ==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlpaLhZI3sjfGZiu06+714DQWbH/tsDoTMwzOA8Aq6k=;
+        b=XOQQ9wJH/g3REFayblkkzG9UrRlmHnUQUEna4wOtl4vqedioTEAREHoN9OC2Z1dHxd
+         TR/LOZGjYqBQVwud4qR9q4I0R4JW4mrA9395vfZ/FiZC8kU7zau2tqiCxmMq3bhN/35w
+         LVeOmvZ9DphylY+/rk+/rDwo8lUIv225GWz7fzDTsfJht73mwRE938BJ9FUc7VKZ22iz
+         1OlWNrG0UKOiWUY3zP+gsIe168NKCjFIwAejdTjCIFXI8P8AiCRTtTHNZ3YJdqP1cwBo
+         gnMT6xQJ26kCHfoG7FTcdIsINQewjr36Qtv5fLEz/0+7kxYu/D/NE7tlx2U8qtrg/ENZ
+         PEgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744631278; x=1745236078;
+        d=1e100.net; s=20230601; t=1744631289; x=1745236089;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gg46kXKghmlwR4V0VYttP7ydLE60NSEZU5k87GACm3g=;
-        b=P9xf2tBGw0rC2MjcXToNog2iFY2vMAxkDYe4GMc8722FjqVmjG6+PbADrApzYMdOV6
-         tHzKzLqSOPE+cUGgqoPm3+jzK+Z7VWyvQ20b3OCp+EidgH5KOngfAFUsmfFYmZpNbqou
-         YVqQTVzTbgRKaGfUt8CTeG4OxMynGh0WTzvFWpNzFVGcKLYt8/vMWvSGoqZI0Fm5CZIL
-         hJUcHO7j7IMy5WmGWeFVipwYIpwipTGzqvqATRdLpbUkzu7RXjBIPccVWxIK4HepeEqw
-         JQjoo6ZH1xfCLeKwTGGQS3AnfyL+EUI2btkmOElmVVPQhzRMskWEJz1SkPIk1H8jcNU0
-         B86Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV0dUPq+RDWIn5B0BbHu+0Hh/nNH6MInU2SCFrWtQEXm4zpo0qbxjOnpy9W2WyjJO+yQpg=@vger.kernel.org, AJvYcCXQtCMdriC6GzTDcVFJNuQIlTGsVMJWKXNJdaCRF50t/EvD9MQFNJqPahtZgU5fRQieCUE07N+qdXvCuhku@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzw+POETgtFnYtnixRNlDbKxei2ly/BJ0CxKL0ffrP6nvqOFfg
-	kaSHvxUTBo2RTUc3V4sapTbAy6grq5qsykTYtZx86GUe2uwGzm3u
-X-Gm-Gg: ASbGnctCpfFuuQ722aJrvBiYdtsuLdnsinF8Vzsx01KCbF3VVQcnDCia98Y3GHeSK7x
-	mG7nd1uD/lJRXYehuhBc9g9vR1CBBLMEmlrw5ly16ZkVmwR8WuBhVU1sFUiTvJoKIH+Fe7Wx6y8
-	sH/LQkGXhfPb5PeHmAfC3qpIfSi+00YYbXoaxorQonqLO+DpsXpfD9WHQ3HpsWnfp6jVoWQn35K
-	pJ6VEFxu3zh1Lkml9EHcHqSe9COyfZ7W4l9EZBJXpWB1FfM2FlZQ8qhd5nBMfaHhsX8yFIYZ+Pr
-	PUAeJeFV78AJ2b0w3/DBABRBB3AnJf4=
-X-Google-Smtp-Source: AGHT+IFOgv5QME8CMQweMgkj4Ts4mnQDOQZLGLIxWRFWa6t3TzGiX+SGniEyCr5y450a1xdHFc1D+A==
-X-Received: by 2002:a05:600c:1e09:b0:43e:b027:479a with SMTP id 5b1f17b1804b1-43f3a9593ffmr124705325e9.16.1744631278131;
-        Mon, 14 Apr 2025 04:47:58 -0700 (PDT)
-Received: from krava ([2a00:102a:4007:73e1:1681:405:90b2:869b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c817dsm171748715e9.23.2025.04.14.04.47.56
+        bh=ZlpaLhZI3sjfGZiu06+714DQWbH/tsDoTMwzOA8Aq6k=;
+        b=RZdLPKbB1GoBscPZ6O4eGLhJo0EmLh/PTC/xxvUm+BXArpKX1QxVGUTnQJ/det2wPy
+         ar+oSpoKbnILvE+Vdxrsbh4jCZWinU2dIj+957zdi9yBq0LLtZVxPfBg7Ba7RBZFSuaC
+         3FHtwW7rzj40potNNNPizI2nH8o9JfqKDcb4aPYkq5avm+fMccF67knHJII1f5oHljVK
+         jpPpw3qtUmEyJKibplVMOH7QExQ7vqLWKigOhuqQOuMvy1f98K41+ERSSKgi7+yzWSOJ
+         /sCcofy3zR7qaT6tSV7qIiNY8Im9L3BZMN2n5ToZgRnTBNSj6FsZaGejB9X8yIEBJIXo
+         zuKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsvpQOPNXQOMQsbuU+Oc1clWldLLSWAV5uv6Me7XAN5g/zHPQf280eEYj7YzYL1aRloFjujPDyNQsvODI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/RWiVQuXeg7RZdvho+yCJRutCNO6ViZCHtzAq4CqiAvkmcfQN
+	zab0WAz9aBU8e497YT0QMtA3ANVJO0awsAnBjp9sbur46tFxbi5coOaGF2PqPw==
+X-Gm-Gg: ASbGnctxU8khNjO0RV3Xroms+aHox2FZps1EU7YUPT55jSghU4CEOWVs2FE2y58GGyT
+	NHp4CoWNwdGtkp3xCTbQugCYmQX8UEP9AKAQYdqukTdX4oKFuIWNEph6YY87a8om5L7LnAIWiqC
+	08HuHXhXTyoAGhcUckJWcmfApXy/DXDQThk/SwkWk1DgGVY2Gn0/v7WhvLUvQH9tTtRguOY+5T3
+	Xk0vnQJSh8JCowRmgKgAHA/hI9/fhbNjXNbz8hTUx1Ndw9STkX+zO/VASGP7e7mMqKwMF73d+e6
+	tx/ENyncpe/6hlsauv7ZgzgpXE281jJ8z8ysULy5
+X-Google-Smtp-Source: AGHT+IEqh+Z88/1PvakhQvRinxi7Da8FFa6LpITTx4ZJMR9IljjZat5/z7v+/+iRFd0mLxYTetEERg==
+X-Received: by 2002:a17:902:f650:b0:223:653e:eb09 with SMTP id d9443c01a7336-22bea495228mr160779705ad.7.1744631289219;
+        Mon, 14 Apr 2025 04:48:09 -0700 (PDT)
+Received: from bytedance ([115.190.40.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230f2fcsm6334408b3a.151.2025.04.14.04.48.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 04:47:57 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 14 Apr 2025 13:47:55 +0200
-To: Feng Yang <yangfeng59949@163.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	hengqi.chen@gmail.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 bpf-next 3/3] selftests/bpf: Add test for attaching
- kprobe with long event names
-Message-ID: <Z_z161cpsaR2uQm3@krava>
-References: <20250414093402.384872-1-yangfeng59949@163.com>
- <20250414093402.384872-4-yangfeng59949@163.com>
+        Mon, 14 Apr 2025 04:48:08 -0700 (PDT)
+Date: Mon, 14 Apr 2025 19:47:52 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [RFC PATCH v2 0/7] Defer throttle when task exits to user
+Message-ID: <20250414114752.GA3558904@bytedance>
+References: <20250409120746.635476-1-ziqianlu@bytedance.com>
+ <4d0e1fa3-1faa-4dd2-95a1-00e7ca48aa42@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,114 +83,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414093402.384872-4-yangfeng59949@163.com>
+In-Reply-To: <4d0e1fa3-1faa-4dd2-95a1-00e7ca48aa42@linux.dev>
 
-On Mon, Apr 14, 2025 at 05:34:02PM +0800, Feng Yang wrote:
-> From: Feng Yang <yangfeng@kylinos.cn>
+On Mon, Apr 14, 2025 at 11:05:30AM +0800, Chengming Zhou wrote:
+> On 2025/4/9 20:07, Aaron Lu wrote:
+> > This is a continuous work based on Valentin Schneider's posting here:
+> > Subject: [RFC PATCH v3 00/10] sched/fair: Defer CFS throttle to user entry
+> > https://lore.kernel.org/lkml/20240711130004.2157737-1-vschneid@redhat.com/
+> > 
+> > Valentin has described the problem very well in the above link. We also
+> > have task hung problem from time to time in our environment due to cfs quota.
+> > It is mostly visible with rwsem: when a reader is throttled, writer comes in
+> > and has to wait, the writer also makes all subsequent readers wait,
+> > causing problems of priority inversion or even whole system hung.
+> > 
+> > To improve this situation, change the throttle model to task based, i.e.
+> > when a cfs_rq is throttled, mark its throttled status but do not
+> > remove it from cpu's rq. Instead, for tasks that belong to this cfs_rq,
+> > when they get picked, add a task work to them so that when they return
+> > to user, they can be dequeued. In this way, tasks throttled will not
+> > hold any kernel resources. When cfs_rq gets unthrottled, enqueue back
+> > those throttled tasks.
+> > 
+> > There are consequences because of this new throttle model, e.g. for a
+> > cfs_rq that has 3 tasks attached, when 2 tasks are throttled on their
+> > return2user path, one task still running in kernel mode, this cfs_rq is
+> > in a partial throttled state:
+> > - Should its pelt clock be frozen?
+> > - Should this state be accounted into throttled_time?
+> > 
+> > For pelt clock, I chose to keep the current behavior to freeze it on
+> > cfs_rq's throttle time. The assumption is that tasks running in kernel
+> > mode should not last too long, freezing the cfs_rq's pelt clock can keep
+> > its load and its corresponding sched_entity's weight. Hopefully, this can
+> > result in a stable situation for the remaining running tasks to quickly
+> > finish their jobs in kernel mode.
 > 
-> This test verifies that attaching kprobe/kretprobe with long event names
-> does not trigger EINVAL errors.
+> Seems reasonable to me, although I'm wondering is it possible or desirable
+> to implement per-task PELT freeze?
+
+Interesting idea.
+
+One thing I'm thinking, would per-task PELT freeze cause task and its
+cfs_rq's pelt clock un-sync? If so, I feel it would create some headaches
+but I haven't thought through this yet.
+
+> > 
+> > For throttle time accounting, I can see several possibilities:
+> > - Similar to current behavior: starts accounting when cfs_rq gets
+> >    throttled(if cfs_rq->nr_queued > 0) and stops accounting when cfs_rq
+> >    gets unthrottled. This has one drawback, e.g. if this cfs_rq has one
+> >    task when it gets throttled and eventually, that task doesn't return
+> >    to user but blocks, then this cfs_rq has no tasks on throttled list
+> >    but time is accounted as throttled; Patch2 and patch3 implements this
+> >    accounting(simple, fewer code change).
+> > - Starts accounting when the throttled cfs_rq has at least one task on
+> >    its throttled list; stops accounting when it's unthrottled. This kind
+> >    of over accounts throttled time because partial throttle state is
+> >    accounted.
+> > - Starts accounting when the throttled cfs_rq has no tasks left and its
+> >    throttled list is not empty; stops accounting when this cfs_rq is
+> >    unthrottled; This kind of under accounts throttled time because partial
+> >    throttle state is not accounted. Patch7 implements this accounting.
+> > I do not have a strong feeling which accounting is the best, it's open
+> > for discussion.
 > 
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> ---
->  .../selftests/bpf/prog_tests/attach_probe.c   | 35 +++++++++++++++++++
->  .../selftests/bpf/test_kmods/bpf_testmod.c    |  5 +++
->  .../bpf/test_kmods/bpf_testmod_kfunc.h        |  2 ++
->  3 files changed, 42 insertions(+)
+> I personally prefer option 2, which has a more practical throttled time,
+> so we can know how long there are some tasks throttled in fact.
 > 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-> index 9b7f36f39c32..633b5eb4379b 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-> @@ -168,6 +168,39 @@ static void test_attach_uprobe_long_event_name(void)
->  	test_attach_probe_manual__destroy(skel);
->  }
->  
-> +/* attach kprobe/kretprobe long event name testings */
-> +static void test_attach_kprobe_long_event_name(void)
-> +{
-> +	DECLARE_LIBBPF_OPTS(bpf_kprobe_opts, kprobe_opts);
-> +	struct bpf_link *kprobe_link, *kretprobe_link;
-> +	struct test_attach_probe_manual *skel;
-> +
-> +	skel = test_attach_probe_manual__open_and_load();
-> +	if (!ASSERT_OK_PTR(skel, "skel_kprobe_manual_open_and_load"))
-> +		return;
-> +
-> +	/* manual-attach kprobe/kretprobe */
-> +	kprobe_opts.attach_mode = PROBE_ATTACH_MODE_LEGACY;
-> +	kprobe_opts.retprobe = false;
-> +	kprobe_link = bpf_program__attach_kprobe_opts(skel->progs.handle_kprobe,
-> +						      "bpf_kfunc_looooooooooooooooooooooooooooooong_name",
-> +						      &kprobe_opts);
-> +	if (!ASSERT_OK_PTR(kprobe_link, "attach_kprobe_long_event_name"))
-> +		goto cleanup;
-> +	skel->links.handle_kprobe = kprobe_link;
-> +
-> +	kprobe_opts.retprobe = true;
-> +	kretprobe_link = bpf_program__attach_kprobe_opts(skel->progs.handle_kretprobe,
-> +							 "bpf_kfunc_looooooooooooooooooooooooooooooong_name",
-> +							 &kprobe_opts);
-> +	if (!ASSERT_OK_PTR(kretprobe_link, "attach_kretprobe_long_event_name"))
-> +		goto cleanup;
-> +	skel->links.handle_kretprobe = kretprobe_link;
-> +
-> +cleanup:
-> +	test_attach_probe_manual__destroy(skel);
-> +}
-> +
->  static void test_attach_probe_auto(struct test_attach_probe *skel)
->  {
->  	struct bpf_link *uprobe_err_link;
-> @@ -371,6 +404,8 @@ void test_attach_probe(void)
->  
->  	if (test__start_subtest("uprobe-long_name"))
->  		test_attach_uprobe_long_event_name();
-> +	if (test__start_subtest("kprobe-long_name"))
-> +		test_attach_kprobe_long_event_name();
->  
->  cleanup:
->  	test_attach_probe__destroy(skel);
-> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> index f38eaf0d35ef..439f6c2b2456 100644
-> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> @@ -1053,6 +1053,10 @@ __bpf_kfunc int bpf_kfunc_st_ops_inc10(struct st_ops_args *args)
->  	return args->a;
->  }
->  
-> +__bpf_kfunc void bpf_kfunc_looooooooooooooooooooooooooooooong_name(void)
-> +{
-> +}
+> Thanks!
 
-does it need to be a kfunc? IIUC it just needs to be a normal kernel/module function
+Thanks for the input.
 
-jirka
+Now I think about this more, I feel option 2 is essentially a better
+version of option 1 because it doesn't have the drawback of option 1
+I mentioned above, so option 1 should probably just be ruled out.
 
+Then there are only 2 options to consider and their difference is
+basically whether to treat partial throttle state as throttled or not.
 
-> +
->  BTF_KFUNCS_START(bpf_testmod_check_kfunc_ids)
->  BTF_ID_FLAGS(func, bpf_testmod_test_mod_kfunc)
->  BTF_ID_FLAGS(func, bpf_kfunc_call_test1)
-> @@ -1093,6 +1097,7 @@ BTF_ID_FLAGS(func, bpf_kfunc_st_ops_test_prologue, KF_TRUSTED_ARGS | KF_SLEEPABL
->  BTF_ID_FLAGS(func, bpf_kfunc_st_ops_test_epilogue, KF_TRUSTED_ARGS | KF_SLEEPABLE)
->  BTF_ID_FLAGS(func, bpf_kfunc_st_ops_test_pro_epilogue, KF_TRUSTED_ARGS | KF_SLEEPABLE)
->  BTF_ID_FLAGS(func, bpf_kfunc_st_ops_inc10, KF_TRUSTED_ARGS)
-> +BTF_ID_FLAGS(func, bpf_kfunc_looooooooooooooooooooooooooooooong_name)
->  BTF_KFUNCS_END(bpf_testmod_check_kfunc_ids)
->  
->  static int bpf_testmod_ops_init(struct btf *btf)
-> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h
-> index b58817938deb..e5b833140418 100644
-> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h
-> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h
-> @@ -159,4 +159,6 @@ void bpf_kfunc_trusted_task_test(struct task_struct *ptr) __ksym;
->  void bpf_kfunc_trusted_num_test(int *ptr) __ksym;
->  void bpf_kfunc_rcu_task_test(struct task_struct *ptr) __ksym;
->  
-> +void bpf_kfunc_looooooooooooooooooooooooooooooong_name(void) __ksym;
-> +
->  #endif /* _BPF_TESTMOD_KFUNC_H */
-> -- 
-> 2.43.0
-> 
+Thanks,
+Aaron
+
+> > 
+> > There is also the concern of increased duration of (un)throttle operations
+> > in v1. I've done some tests and with a 2000 cgroups/20K runnable tasks
+> > setup on a 2sockets/384cpus AMD server, the longest duration of
+> > distribute_cfs_runtime() is in the 2ms-4ms range. For details, please see:
+> > https://lore.kernel.org/lkml/20250324085822.GA732629@bytedance/
+> > For throttle path, with Chengming's suggestion to move "task work setup"
+> > from throttle time to pick time, it's not an issue anymore.
+> > 
+> > Patches:
+> > Patch1 is preparation work;
+> > 
+> > Patch2-3 provide the main functionality.
+> > Patch2 deals with throttle path: when a cfs_rq is to be throttled, mark
+> > throttled status for this cfs_rq and when tasks in throttled hierarchy
+> > gets picked, add a task work to them so that when those tasks return to
+> > user space, the task work can throttle it by dequeuing the task and
+> > remember this by adding the task to its cfs_rq's limbo list;
+> > Patch3 deals with unthrottle path: when a cfs_rq is to be unthrottled,
+> > enqueue back those tasks in limbo list;
+> > 
+> > Patch4 deals with the dequeue path when task changes group, sched class
+> > etc. Task that is throttled is dequeued in fair, but task->on_rq is
+> > still set so when it changes task group or sched class or has affinity
+> > setting change, core will firstly dequeue it. But since this task is
+> > already dequeued in fair class, this patch handle this situation.
+> > 
+> > Patch5-6 are clean ups. Some code are obsolete after switching to task
+> > based throttle mechanism.
+> > 
+> > Patch7 implements an alternative accounting mechanism for task based
+> > throttle.
+> > 
+> > Changes since v1:
+> > - Move "add task work" from throttle time to pick time, suggested by
+> >    Chengming Zhou;
+> > - Use scope_gard() and cond_resched_tasks_rcu_qs() in
+> >    throttle_cfs_rq_work(), suggested by K Prateek Nayak;
+> > - Remove now obsolete throttled_lb_pair(), suggested by K Prateek Nayak;
+> > - Fix cfs_rq->runtime_remaining condition check in unthrottle_cfs_rq(),
+> >    suggested by K Prateek Nayak;
+> > - Fix h_nr_runnable accounting for delayed dequeue case when task based
+> >    throttle is in use;
+> > - Implemented an alternative way of throttle time accounting for
+> >    discussion purpose;
+> > - Make !CONFIG_CFS_BANDWIDTH build.
+> > I hope I didn't omit any feedbacks I've received, but feel free to let me
+> > know if I did.
+> > 
+> > As in v1, all change logs are written by me and if they read bad, it's
+> > my fault.
+> > 
+> > Comments are welcome.
+> > 
+> > Base commit: tip/sched/core, commit 6432e163ba1b("sched/isolation: Make
+> > use of more than one housekeeping cpu").
+> > 
+> > Aaron Lu (4):
+> >    sched/fair: Take care of group/affinity/sched_class change for
+> >      throttled task
+> >    sched/fair: get rid of throttled_lb_pair()
+> >    sched/fair: fix h_nr_runnable accounting with per-task throttle
+> >    sched/fair: alternative way of accounting throttle time
+> > 
+> > Valentin Schneider (3):
+> >    sched/fair: Add related data structure for task based throttle
+> >    sched/fair: Handle throttle path for task based throttle
+> >    sched/fair: Handle unthrottle path for task based throttle
+> > 
+> >   include/linux/sched.h |   4 +
+> >   kernel/sched/core.c   |   3 +
+> >   kernel/sched/fair.c   | 449 ++++++++++++++++++++++--------------------
+> >   kernel/sched/sched.h  |   7 +
+> >   4 files changed, 248 insertions(+), 215 deletions(-)
+> > 
