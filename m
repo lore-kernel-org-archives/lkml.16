@@ -1,130 +1,123 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C309028A1EA;
-	Mon, 14 Apr 2025 14:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9514724729E
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639210; cv=none; b=SVtOZb8XIf5q9bzXulJfpZe4ZA3U95VKJ5KxOLjFk2JZejvxXGlEMYUuv8OZG9k6JKjoSwB15YpnavIxR4+cZ18YAn6XdeEyx5RODPPbxkqsPlik+DvoZjdMWr65mO+9R6NCByGuaXao4mtW45Q6zesH1tD1kH+RTJ8IshP7vK8=
+	t=1744639284; cv=none; b=e7lXSIvRubmsu+7wq/xVWHtJDABZQQC/OCe8l8y/IYv9jPJAs6P1gOLsOSIoK1tGsRQ/jLaEQM2vJrnYtAUyOj98BnLxQpTl5jz30Lchwm26H+qrmgR32/mIpOaXuhlY8uPMRj9JGBMQdjEcirJKDoj4x10HhBHkXLKMJoOqHxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639210; c=relaxed/simple;
-	bh=uO+eV4aZVfBwQEB4CC07gNteKYe4Wixr9odzUwRols4=;
+	s=arc-20240116; t=1744639284; c=relaxed/simple;
+	bh=+YodFNNTUuQhUEBZab6r6F10eQt952ve/wIQC9RSQ74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I2u3MTKuUJxBul+PmbIsAfJTX6ZQ4Da0pHsRdJhSK0mmTso12Rk+45flJerYee3VjV/7nqOGVwwrq+VCbVHreXawJ4wU4Pg+U5JJb3Czm6q7ZQ5m3xorjivxw1dUoGaBJ++7VUaByOjZMDiQXJfwtjRaR9G6RLy6Jb1+fjA1FtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCxAurar; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QyvZLyd+Khqh0/bdxQTzS5DXcyR9J0Gg6pjcYO2+N1TuSf0Nsl8nJl3lQkulVokzhS2qSxRG7aJZak6Ve9xv4RysbTQBLh+HH+ykXcVKgHmeqRdIiSvA1i3sQ3YZ2NRgDuEZju6n3vXUsBDOr71m+4W9HClPim7nfGtSXSIq7SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lb5cLzqb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCxAurar"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso5836103b3a.2;
-        Mon, 14 Apr 2025 07:00:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744639208; x=1745244008; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VC1oKsvn3gXo/XMH+Dp5lmVzBwV+v49dkge2W+EDw4w=;
-        b=mCxAurarGo5GDqBZPmr0TLqXy4PPLg/ex5MfOAincp+g1U361ytb/sm4/kcHHeYLZO
-         7tXmnhsmE1gqilbCKPf4p5N71j60H3bI/50yfWcF2LyIh5PIhhg2xHmApl8mdI4jn9H6
-         W23vLp7O6aPEadCxd54JEEh6SAdf7UN49GyOhkFwESU768Wk3cYrPFDk9mOrgXvG/xjZ
-         nUghyKkSynku1ObVlEOYPDMjbSS8Zv/Vo4DfwtRNfYcHZpQVCy+LpU/pyTw1Jw38na9r
-         Cl1kFt6oBU5BFexw+fh3n68WePjTiHUR7wjq3fhwNI/sq1jXfPomwWUKd7hafyCGSk8U
-         +TCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744639208; x=1745244008;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VC1oKsvn3gXo/XMH+Dp5lmVzBwV+v49dkge2W+EDw4w=;
-        b=ocSzbnSa7jmiL3OSdDQ1qS4BaIhV1YXMHuMF4HeIANXR/+srXBPhmLT7Nsvke047Gw
-         eC0ztRj9hRppd6L5sZjNJSxiAUm+XcyNaJuzCl3S9/uBBp+tfb1h523AjwgIV/qYrsqb
-         Tu82rO9L8Ecal+qfMBFA4SrigUokiQFXqnLovd+kCvg+6eJZpMtU1dSWEZBsT5tAfq9m
-         z/PYUUdgCi7px9f1fsiaSTuGs6tFInd84kEPja4S1iYz97TsYy1wpXUGDIAxkIeCGpLa
-         iBcOPKHFVNjO8z8AR/wvH9QkeAOdWVunE1NHZ/8vTGetrUonseOmGxmsYzi/TUWJryPl
-         m/vg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6a1JB5b8LTTK5wFk8rejtBsAoueA9I8V1W0RhSSehq4BohBA5lZy0EnsHnRm7AioO9EhJ5EiijpTu@vger.kernel.org, AJvYcCVGzTR8SdavgAoF7T+2qEGSN/MEHaFp68xGWIe7xrN1Hs0txz56FoEKX6AZio87y+8UBDIyaqJlj1Xz0bOC@vger.kernel.org, AJvYcCXBJEMWLj42VqKodjFd7cES3lxZSmKUwc0dCmWeTP/PGgo88ysTeP1aTgUlSkBaBkZxPtV+HxAuZJAC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvaHBdz5M2969OETqby//R6zlFRDSjHaO0zlY895c4AFtMK3CD
-	Rt2m2U9vAIcUpcTNRiOQBRWYmkFOxqA7t1YE7Jk8c6X0Qk/Za1Y0
-X-Gm-Gg: ASbGncuUDoaz/VNw5iQf1JG39OenAwN6F3pfiAtE7RcthZ+3q1QozGOeqeZ6kTOvzsT
-	28E6MHnKGiyHNJAj0AhbHg6hHeiAvWeIQFwIcHCmFGhaXD4YZRCmLk+q7vJd5bza6dIjd46Ec0e
-	tl1S7PI+DtlkBIuoHy+6DnREJIdAd7kJLwayOnRep3yJdQ7083NK7ePb83ENmsv08aIf2TI6Zc+
-	TgAXPdFZXuS7asazql+tdDMxo+gEPH08eu2rXUT/VSb8diO1nsDE+Y5sVYvNMNUAfcmOt/tngVV
-	+E1baf+3gp1XtgpNyWe5XILahR7s7Q6jnHGdDCRXXAcBn4fT
-X-Google-Smtp-Source: AGHT+IEkvLlbcPEcypR/Qtt7sHwVK3dG3MFbG7DrjmG7RajsJrDFKOd6e/1/23IkcgiQxLcY6pjA2A==
-X-Received: by 2002:a05:6a00:3a25:b0:739:b1df:2410 with SMTP id d2e1a72fcca58-73bd12a1eacmr16940619b3a.20.1744639207554;
-        Mon, 14 Apr 2025 07:00:07 -0700 (PDT)
-Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd22f0fddsm6603043b3a.112.2025.04.14.07.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:00:06 -0700 (PDT)
-Date: Mon, 14 Apr 2025 11:01:16 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v1 2/7] iio: adc: Add basic support for AD4170
-Message-ID: <Z_0VLLmnefbzOj2y@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1744200264.git.marcelo.schmitt@analog.com>
- <5f79007f0b9f9f67360d04fb904b6a59111a4ebe.1744200264.git.marcelo.schmitt@analog.com>
- <9c115086bd574b6c778a093143ebf54e14d7202b.camel@gmail.com>
- <Z_k3e1DfxmcJgQeu@debian-BULLSEYE-live-builder-AMD64>
- <20250412171920.531993c1@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lb5cLzqb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B2EC4CEE2;
+	Mon, 14 Apr 2025 14:01:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744639284;
+	bh=+YodFNNTUuQhUEBZab6r6F10eQt952ve/wIQC9RSQ74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lb5cLzqbKEQZeiPHNFs7vn1FgagHY0WucQZtCbf6NoKfzfH63YBpLhoClGHY2PT02
+	 N0Bc1yFqTiaO1a+tu8559J5GZylaeq60IK2ujm9D0+0YMkz42sbLvBKMZbImykdTPr
+	 TwhKWCw3fI/Tig04mfhE6LhL/21nruX+VOts0seIjcsp5a6166SQxSY099ocl/Ey1e
+	 ZONalVhK/+uqRxuiZdeTHnIEQ6z9atPVMVR62/TvRcMisu3CO/GlH4TGPNudBAI4oY
+	 hxR6sec1UcxiIOjSdE+7x2nfIeS+NiKpR+L4Ubyz/Eiepn0VVgOlLsqCr2Umryciim
+	 ZyWYmz3OML3vQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4KNE-000000004jy-2RWP;
+	Mon, 14 Apr 2025 16:01:20 +0200
+Date: Mon, 14 Apr 2025 16:01:20 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mux: suppress lookup errors for mux controls
+Message-ID: <Z_0VMCmfnDZxd4GC@hovoldconsulting.com>
+References: <20250414124220.30578-1-johan+linaro@kernel.org>
+ <c0f63b8a-7197-050a-ca01-a1050a2e287e@axentia.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250412171920.531993c1@jic23-huawei>
+In-Reply-To: <c0f63b8a-7197-050a-ca01-a1050a2e287e@axentia.se>
 
-> > > > +	ret = devm_regulator_get_enable_read_voltage(dev, "refin1n");
-> > > > +	if (ret < 0 && ret != -ENODEV)
-> > > > +		return dev_err_probe(dev, ret, "Failed to get REFIN- voltage.\n");
-> > > > +
-> > > > +	/* Negative supplies are assumed to provide negative voltage */
-> > > > +	st->vrefs_uv[AD4170_REFIN1N_SUP] = ret == -ENODEV ? -ENODEV : -ret;  
-> > > 
-> > > Maybe to early for me but the comment does not make it clear to me why the negation?
-> > > Won't the regulator return a negative voltage?  
+On Mon, Apr 14, 2025 at 03:18:03PM +0200, Peter Rosin wrote:
+> 2025-04-14 at 14:42, Johan Hovold wrote:
+> > Since commit eec611d26f84 ("ASoC: codecs: wcd938x: add mux control
+> > support for hp audio mux") we have drivers looking up mux controls that
+> > are optional. This results in errors incorrectly being logged on
+> > machines like the Lenovo ThinkPad X13s where the mux is missing:
 > > 
-> > devm_regulator_get_enable_read_voltage(), regulator_get_voltage(), and anything
-> > about reading the regulator voltage returns either a positive voltage value or
-> > a negative error code. I couldn't find out how to read a negative voltage with
-> > regulator API. So, for now, this is making the simplifying assumption that
-> > the negative end of external reference supplies is always below GND level (even
-> > though they could be positive).
+> >     wcd938x_codec audio-codec: /audio-codec: failed to get mux-control (0)
+> > 
+> > Suppress the error message when lookup of mux controls fails and make
+> > sure to return -ENOENT consistently also when looking up controls by
+> > name so that consumer drivers can easily determine how to proceed.
+> > 
+> > Note that most current consumers already log mux lookup failures
+> > themselves.
+> > 
+> > Fixes: eec611d26f84 ("ASoC: codecs: wcd938x: add mux control support for hp audio mux")
+> > Link: https://lore.kernel.org/lkml/Z-z_ZAyVBK5ui50k@hovoldconsulting.com/
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+
+> > --- a/drivers/mux/core.c
+> > +++ b/drivers/mux/core.c
+> > @@ -544,8 +544,13 @@ static struct mux_control *mux_get(struct device *dev, const char *mux_name,
+> >  			index = of_property_match_string(np, "mux-control-names",
+> >  							 mux_name);
+> >  		if (index < 0) {
+> > -			dev_err(dev, "mux controller '%s' not found\n",
+> > -				mux_name);
+> > +			if (!state && index == -EINVAL)
+> > +				index = -ENOENT;
 > 
-> Hmm. We went around this a long time back but I can't remember what the outcome was...
-> https://lore.kernel.org/linux-iio/544AC56F16B56944AEC3BD4E3D59177137546EF3FC@LIMKCMBX1.ad.analog.com/ 
-> looks like the thread.
-> 
-> Take a look at dac/ad5791.c for example of a negative reference
+> Why exclude states? For me, that's entirely random and inconsistent. If there's
+> a reason to exclude them, I'd like to hear about it. If there is no reason and
+> this is just defensive programming, then I'd like for someone to dig into it
+> and either find a reason for the difference or clean up the inconsistency.
 
-AD5791 references are always either only negative (V_REFNF, V_REFNS) or only
-positive (V_REFPS, V_REFPF) so the driver is fine with only adding a negative
-sign to the voltage obtained from the negative supply.
+I only found one user of "mux states" and I'm still not quite sure why
+there are two interfaces for looking up muxes. But my impression was
+that if you need a mux set to a specific state and you even encode that
+directly in DT, then there should be no need to support optional
+resources.
 
-AD4170 external references can be set to a negative voltage in some setups, or
-to positive voltages on other setups. They're also constrained on the resulting
-nominal reference voltage (REFIN+ − REFIN−) which is typically 2.5V but can
-range from 1V minmum AVDD maximum. From that perspective, maybe this could be
-abstracted as a differential voltage supply? Though, the multiplexer in the
-chip can bet set to connect individual REFIN+, REFIN−, ..., REFIN2- supplies
-ends to ADC analog inputs so an API like get_voltage(reg, &voltage)) would make
-it easier to handle those configurations.
+After taking a closer look at the single consumer now, I see that it
+already implements optional lookups itself and thus could benefit from
+generalising this.
 
-From the mentioned thread, I see no hard objection to extending the regulator
-framework in that sense so I'll start working on something to provide better
-support for these cases where we have negative voltage.
+There's no other reason for why this could not be extended to "mux
+states".
 
-Thanks,
-Marcelo
+> I think the model of explicitly marking when you'd like a mux to be optional
+> is a better and less fragile model. Who is to say that -EINVAL from some other
+> call is, and will remain, a perfect match for the optional case you are aiming
+> for?
+
+-EINVAL is simply the error returned from the OF helpers when the name
+properties are missing. I map that to -ENOENT for consistency with index
+lookups (i.e. when the "mux-controls" property is missing) and that
+error is much less likely to be returned for other reasons.
+
+> Srinivas Kandagatla is looking into optional muxes as a side issue to
+> exclusive muxes.
+> https://lore.kernel.org/all/20250326154613.3735-1-srinivas.kandagatla@linaro.org/
+
+The audio codec change introduces a de-facto regression so if you want
+something different, we'll have to fix this in the codec driver directly
+by checking for a "mux-controls" property before doing the lookup for
+now (i.e. like is done in the TI driver looking up an optional "mux
+state").
+
+Johan
