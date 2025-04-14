@@ -1,188 +1,99 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06142749D9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A37E19539F;
+	Mon, 14 Apr 2025 14:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639816; cv=none; b=FjLEGTzWCgdJN6c3aPv3aqm6fq463XPp+Ja59eqHzX+7aTQz4I/w83zjAEQLcKj8ZR+FChDintJdq5mrKr0Xd+4MyRBBDaKnWxY48akk3BiAt4y8AZKbMcRCuFCCq4jj63Y6LdKXUMA4g1TdvreYr58eooDoiC+iCkGwXy8u1Ng=
+	t=1744639833; cv=none; b=DRNitMs4b+/KJ0CrMIiF/qPRf0tCRWGpmSq3MacLSrezkqOU6k96pcySSEbGVCeAKVa0Y6x0XvR/WCt/R4nVMG7Ox4Jp836PSEmtD0YbNubr3ftLD53nCdIfxf95AHpTW6chZTve/+D0faVmdcyr2h4BYRxyY4U3QXMjjgMoivo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639816; c=relaxed/simple;
-	bh=vDKshwSTLzfVb2b9QCGRuLoLV9vmwy7bdEHMCW4HXco=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DnfgJvwM/SII2KbIuWSyGmoTllBv+HV5olUfw0t3tmyUCLoo0JY3OTxilJ9Rsxt6bdSYcYSsba11GWgywnmvFUHnWnNhfMBtquMXPQqsExthlmWcAmDvH3MVn0SkxkOEM+5aMlYbiyGj4GmIkN1mXznBjI1I1JQXETGVrImg6rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JmtHzcMT; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744639833; c=relaxed/simple;
+	bh=UAdCAcDDcbUAFaQhhiPijezFVFrbVIScJZbGC9BYzaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BygdRO6AmEo4Nl+RhRXCD/kB/b6H0/xhP7iXX+o6/+uOSVIsetrg7QyFZxr/rJDvBP1DwXwPVnNhDkXsrrFHFhFKMnobMOtpF3LlxoR+m1x8iu/uAvIUkEIf8U4jyY4A3TMsVMQ8BVeg5kFyfph+mJgx2zcU2nEan5e7c0IG1MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsE1fqnY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JmtHzcMT"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbd96bef64so908320866b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744639812; x=1745244612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V3ULzXYtgp5knes5jjtCb7NVfP7NhcV6WWSN7DiMNC0=;
-        b=JmtHzcMTHHxQwX8jGlv0Ilp9i4Ot/f/2pFQ+/2+2dIAh4bOBDXtmw9W+EDhVvziJQW
-         x+WxdRHD/FTySaQmmOuHD9gFBq69zHkiiNYIfQV9wdIVsbQrcdZ17EApD/3lNK7cIMOq
-         32GItiv+XWXf1BLrFFU01rt40yuctHkUgOn6/Ckq4yxRC5TbdY+/5DS+Ft52aduM3Lrm
-         CIcG4kf141QFMn34iruEro3ZJj5wU8wO7RILGaTuhUaZaaqsIqYfgZRMc6hkkYtiBNad
-         hsN/zSGxNJmFV5VPrR+ZkRS4fpewCtiDBv8tP3Y0vySeLDYCNg4r9g+2n8zr0+hUfeo4
-         OzhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744639812; x=1745244612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V3ULzXYtgp5knes5jjtCb7NVfP7NhcV6WWSN7DiMNC0=;
-        b=BGVA8bzZT0/CUBtjvhQ1kh8DsYrz164LOxLEt43JiK+gAK1wVv0BI47kS7W+03gnLD
-         IzZg+u31Q6ZN2oaJFz4FrI7bQXY0ppl02LX/MXRctqWK5UHJNpAx87VZ9D1WyE+icv41
-         09k3mzfqnT2p1mvsT2My4cPVzZXFqo5i5QHlFZ8rdXCehsfghUKd33CK4RiPsHcT0E/B
-         dyvqNszr3hC6LrPLKJtTelb4Meo0krubOqIICgjJZ1IqLOLMh4ZS8Rvth/jZi+nJy4v8
-         Ho2ps/hmrUDSj9mJR8c5HMfsfHAVKZKvJJu78hJS+4JFjrAnZ8Xr0XjoEOXhixdlQ3Oc
-         ek9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWfDt0Y4X6Co2vmjAifldOz3DY7enj4FPvDTMZCDZPO66pCIznykPzEXTUwUlDt1dC8LuSVEKD28ZVDlgs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF/ELsTowUryfVcY6KTcMxdlimhfsOneEjjl7tDDidHLh/Vsda
-	wJAPjas8C+XoKldNnmFA27sZrywimWZZOpIjLbcJPE7IFuJxE36HM4U3HbR6NkRcW1vS8PR5Vif
-	Fa9pnFEvgZHp4I8vn3InZeP1B0CTGSVTx5371KQ==
-X-Gm-Gg: ASbGncvV2F1uQJhdUuOaLVqrNMJbrt48TSSNe1gAbzzFkFUj6oQGPACNPQKsVxAsNAw
-	0Egs9lGjwZ3ARFciZCHOPuN2e7kCpuEEZHvGfa0HS6+eSRkNPzqF5WV0hHXEPxREP2ZEATbVN4j
-	MVqeBsTYWqgkAGFumxqfGV
-X-Google-Smtp-Source: AGHT+IELmTa6kdG3m1wAOWSwzEYUsnM/AZVCS9gi1W5ygeB0nf9Akb94M2AIebg2Cbph/RHIMED8A0XttdyPTJBTj2w=
-X-Received: by 2002:a17:907:3d91:b0:ac7:391b:e689 with SMTP id
- a640c23a62f3a-acad36da6b2mr1186418366b.59.1744639811991; Mon, 14 Apr 2025
- 07:10:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsE1fqnY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAEAC4CEE2;
+	Mon, 14 Apr 2025 14:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744639833;
+	bh=UAdCAcDDcbUAFaQhhiPijezFVFrbVIScJZbGC9BYzaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RsE1fqnYQ0D/umEGmNaSWaZcYYZlpe8oJ4M9bNmQUXNC47OUyTTQ7DB18P+L6ECfU
+	 BUOknsLyEtUAUxoXGJ8P/TLemQCIiv7oKKaL7iPzY3CrBKbeA/VaAUOTSQOnLviFpH
+	 Z/1mOoDTt3raVyS/XYhqxZBV5YbWFQpPnBReB/ykzLWof49KucUxQCJ4tD5/dfiWkI
+	 Wvqm1qlxJwJnHY5kRdOgzC9m2nEm6ThmVtaNH7tkkIPxgWfFZ59yHNhwe8jiGYfbmY
+	 jrrMTJPPkCNVGmSDXakfvukg/6IL18z5IwrDVgDp6vHgvx+YVoswa+iJJC1RfYw/91
+	 SVNFl3op8CVzw==
+Date: Mon, 14 Apr 2025 15:10:27 +0100
+From: Mark Brown <broonie@kernel.org>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Varshini Rajendran <varshini.rajendran@microchip.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alexander Dahl <ada@thorsis.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Pavel Machek <pavel@kernel.org>
+Subject: Re: [PATCH v6 1/2] pm: runtime: Add new devm functions
+Message-ID: <58e37046-f9fd-41cf-a5f5-f7cbb1eb97ab@sirena.org.uk>
+References: <20250327195928.680771-2-csokas.bence@prolan.hu>
+ <20250327195928.680771-3-csokas.bence@prolan.hu>
+ <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+ <832eb5e3-7e2d-4ed2-8571-eca9fe129013@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411034425.173648-1-frank.li@vivo.com> <CAPjX3Fe34HVF2JUi2DEyxqShFhadxy7M7F6xTA_yVn5ywHMBhQ@mail.gmail.com>
- <SEZPR06MB526928EBDA13B6463D7EE00BE8B32@SEZPR06MB5269.apcprd06.prod.outlook.com>
-In-Reply-To: <SEZPR06MB526928EBDA13B6463D7EE00BE8B32@SEZPR06MB5269.apcprd06.prod.outlook.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Mon, 14 Apr 2025 16:10:01 +0200
-X-Gm-Features: ATxdqUGqwksgvRY6yOhrk3sIyK_6RLT1HyjWUkZFMqMHqeY4xOQJGFeLp1V1UxM
-Message-ID: <CAPjX3FcGaV9rQXRodznCud+_zzHao3ZWfNnuFAv=ut=uGi3MPw@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: use BTRFS_PATH_AUTO_FREE in btrfs_truncate_inode_items()
-To: =?UTF-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>
-Cc: "clm@fb.com" <clm@fb.com>, "josef@toxicpanda.com" <josef@toxicpanda.com>, 
-	"dsterba@suse.com" <dsterba@suse.com>, 
-	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nb4I0smoCForxcgo"
+Content-Disposition: inline
+In-Reply-To: <832eb5e3-7e2d-4ed2-8571-eca9fe129013@prolan.hu>
+X-Cookie: Good day to avoid cops.  Crawl to work.
+
+
+--nb4I0smoCForxcgo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Apr 2025 at 15:34, =E6=9D=8E=E6=89=AC=E9=9F=AC <frank.li@vivo.co=
-m> wrote:
->
-> Hi Daniel,
->
-> > And what about the other functions in that file? We could even get rid =
-of two allocations passing the path from ..._inode_ref() to ..._inode_extre=
-f().
->
-> I made the following changes, is this what you meant?
-> I will do the rest if that's ok.
->
-> Thx,
-> Yangtao
->
-> diff --git a/fs/btrfs/inode-item.c b/fs/btrfs/inode-item.c
-> index 3530de0618c8..e082d7e27c29 100644
-> --- a/fs/btrfs/inode-item.c
-> +++ b/fs/btrfs/inode-item.c
-> @@ -105,11 +105,11 @@ btrfs_lookup_inode_extref(struct btrfs_trans_handle=
- *trans,
->
->  static int btrfs_del_inode_extref(struct btrfs_trans_handle *trans,
->                                   struct btrfs_root *root,
-> +                                 struct btrfs_path *path,
->                                   const struct fscrypt_str *name,
->                                   u64 inode_objectid, u64 ref_objectid,
->                                   u64 *index)
->  {
-> -       struct btrfs_path *path;
->         struct btrfs_key key;
->         struct btrfs_inode_extref *extref;
->         struct extent_buffer *leaf;
-> @@ -131,7 +131,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
-handle *trans,
->         if (ret > 0)
->                 ret =3D -ENOENT;
->         if (ret < 0)
-> -               goto out;
-> +               return ret;
->
->         /*
->          * Sanity check - did we find the right item for this name?
-> @@ -142,8 +142,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
-handle *trans,
->                                                 ref_objectid, name);
->         if (!extref) {
->                 btrfs_abort_transaction(trans, -ENOENT);
-> -               ret =3D -ENOENT;
-> -               goto out;
-> +               return -ENOENT;
->         }
->
->         leaf =3D path->nodes[0];
-> @@ -156,8 +155,7 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
-handle *trans,
->                  * Common case only one ref in the item, remove the
->                  * whole item.
->                  */
-> -               ret =3D btrfs_del_item(trans, root, path);
-> -               goto out;
-> +               return btrfs_del_item(trans, root, path);
->         }
->
->         ptr =3D (unsigned long)extref;
-> @@ -168,9 +166,6 @@ static int btrfs_del_inode_extref(struct btrfs_trans_=
-handle *trans,
->
->         btrfs_truncate_item(trans, path, item_size - del_len, 1);
->
-> -out:
-> -       btrfs_free_path(path);
-> -
->         return ret;
+On Mon, Apr 14, 2025 at 03:56:47PM +0200, Cs=F3k=E1s Bence wrote:
+> On 2025. 04. 09. 19:43, Rafael J. Wysocki wrote:
 
-And if I look correctly you can also directly return 0 here.
+> > I can apply this one alone if you want me to do that, but I could also
+> > apply the other patch in the series if it got an ACK from the driver
+> > maintainer.
 
->  }
->
-> @@ -178,7 +173,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
-ans,
->                         struct btrfs_root *root, const struct fscrypt_str=
- *name,
->                         u64 inode_objectid, u64 ref_objectid, u64 *index)
->  {
-> -       struct btrfs_path *path;
-> +       BTRFS_PATH_AUTO_FREE(path);
->         struct btrfs_key key;
->         struct btrfs_inode_ref *ref;
->         struct extent_buffer *leaf;
-> @@ -230,7 +225,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
-ans,
->                               item_size - (ptr + sub_item_len - item_star=
-t));
->         btrfs_truncate_item(trans, path, item_size - sub_item_len, 1);
->  out:
-> -       btrfs_free_path(path);
-> +       btrfs_release_path(path);
->
->         if (search_ext_refs) {
->                 /*
-> @@ -238,7 +233,7 @@ int btrfs_del_inode_ref(struct btrfs_trans_handle *tr=
-ans,
->                  * name in our ref array. Find and remove the extended
->                  * inode ref then.
->                  */
-> -               return btrfs_del_inode_extref(trans, root, name,
-> +               return btrfs_del_inode_extref(trans, root, path, name,
->                                               inode_objectid, ref_objecti=
-d, index);
->         }
+> I think you can apply it and then Mark can apply the SPI part to his tree.
+> @broonie what do you think?
+
+Please don't add random characters to my name.
+
+I'd need a tag since the driver change isn't going to build without the
+new API.
+
+--nb4I0smoCForxcgo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf9F1IACgkQJNaLcl1U
+h9CVyQf+OoBLAj4WQr+H7BEg9lObLdNL4KRPrtCilkLER2n2jv1LKxR5AOVaM5s0
+a5jKczyVXb543ZHBu2u2Mr3F2ofULa7INlrO88vcmVjI0QQgaKweqTO0Z6bL8atX
+D0gRFG0/QKfQ/EscdGHTVDza0RH5LNDwzz7Jw3guBzw5lu1d7raDhXCmorKVzMAc
+H1yoyUGhmLGv71cpmm3Y4vO3hvQZP4O50+8f83Ntf7A/TpByOrxd8RI6wtFndpJU
+FJalHnIvuMSv1djWNklF0r2E41AheaCGCxGO3SlLffqjXbGh98QS7a3mG8yjMOCA
+TR41WG7xTs+F7TjDT4E1tYyh/vdRjg==
+=mnIx
+-----END PGP SIGNATURE-----
+
+--nb4I0smoCForxcgo--
