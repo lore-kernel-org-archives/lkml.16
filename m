@@ -1,115 +1,160 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86998188CB1;
-	Mon, 14 Apr 2025 09:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF1B1CDFD5
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622537; cv=none; b=saQ1Z0hLRuohtnnxU1CYB6wWlUnDbbqcI6QDSEsZESJwyiuIYVpVRSU9DCOMpeidHrGb46CwGitJ91BFEm4ga4Gez9r0ngmNNFYbJdJYaGqT/MbmJl4hW0zIIPuJRtLE1NeNNlWo+FcQWrzT6DDyypD93ksbVl1K8JYMCitdY+Q=
+	t=1744622581; cv=none; b=r13EkH2QZnhBkFKXOURpYD9xwT2/H7awLStRK23GlOcgafbBPZeVlE9MIipmS5QZ4en+tmDePAcYkpe6yJEil8KSfW8wyiNnPjaVRbc1FKz1af2fhdtYWIr88QTAsVRj3dhUyJI4IlrNUjsBlxNYxpPP8DJOE6UWt5+sxJI0Aug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622537; c=relaxed/simple;
-	bh=/I1I6gM4BgOqEOPcMUnOxile0McowWm1N5nrImjyqcM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q/mNkJtL89MN1lVZB4loqo2VBE0OrYpYqDuZanZsAXRvJgwo5bivDfptGYhL5zEIDdY2jfZLn5uTfEkp6hIbhd/GMnY3yjopa18CBUVegeV2va+oak2tTpafaGsbQOR/d2NkqyM+TrS0zMy2d1M8irVofZjhfnttXnMXPq0+Teo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=idDiZPys; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1744622581; c=relaxed/simple;
+	bh=xnCc7LUdCE8A0jAetS5WlNpM1cLLzzzYqwEDyHMWkD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpBf5pLitOSFyPisa9q77nHevQl/2XoNTWotwAxje/4+Wk/kUhNrzkwOeWqq3Og6lqda9sc2ZfkSQb9VDRX0SSkJFZ+FDEQTsWE6npkoVXbSLvHJsma744NomF827ogdyAnDQqDsVzdR40GZwXI5GygEK94ol12345NJbeIjXqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PFAoR7Ek; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Prcl1iwK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zxKvh6lM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tHz5QMMA; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="idDiZPys"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNEBAR020104;
-	Mon, 14 Apr 2025 02:21:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=0fTT/GF2pWHYSVHxCMPJdpG
-	QygpaeHfVz/vvbPop8H8=; b=idDiZPysU5GXklyxQZbpLZpgpFQe4olShuRHJ+9
-	Z5L/+dIbN0qN1ORRA6aSNBIPLWCFrtZUz2GMNevY9RwJoBT+7Pn69lVqo3YWoLU5
-	2Kl4eiZpZp2XzHAsazxSlMMLWBkgx5/Bl+J7Ouoq5GbClniO97K8SawddlCFwFaE
-	8zJSpTN+0X+iIRrQ+QQtxo6vqSjrQz3HOMjxskqLQPK1yjm3VWT/CU/2N2MvomyO
-	xgZfidR3BAEEoxMbUoUR/56rBH0ZKNG91ZGPbSAkbNrWhMw40Y+8d8kH1We/xVOP
-	8XWZP3HfZ8U9tNubnCWQY0Q2DqjNbY2fc5EVBsCeZyZsC5Q==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 45yqpjbb08-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 02:21:44 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 14 Apr 2025 02:19:03 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 14 Apr 2025 02:19:03 -0700
-Received: from sburla-PowerEdge-T630.sclab.marvell.com (unknown [10.106.27.217])
-	by maili.marvell.com (Postfix) with ESMTP id 004CE3F7062;
-	Mon, 14 Apr 2025 02:19:02 -0700 (PDT)
-From: Sathesh B Edara <sedara@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>,
-        Veerasenareddy Burru
-	<vburru@marvell.com>,
-        Sathesh Edara <sedara@marvell.com>,
-        Shinas Rasheed
-	<srasheed@marvell.com>,
-        Satananda Burla <sburla@marvell.com>,
-        Andrew Lunn
-	<andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric
- Dumazet" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>
-Subject: [PATCH net v2] octeon_ep_vf: Resolve netdevice usage count issue
-Date: Mon, 14 Apr 2025 02:18:55 -0700
-Message-ID: <20250414091856.18765-1-sedara@marvell.com>
-X-Mailer: git-send-email 2.36.0
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PFAoR7Ek";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Prcl1iwK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zxKvh6lM";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tHz5QMMA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5853A2125D;
+	Mon, 14 Apr 2025 09:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744622578;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fTJ2sT8ir4Gfn1MTTn6LhWi1R6St8alGrdGiGAdMgLg=;
+	b=PFAoR7Ek0yy6zm05Efw1DG7iNMKzXoOMdUIswbk+bimpGO5kAxL5tbwu/CLS9V6QfX/5OI
+	Q99+YGnGcgW0AOtRs5ndOE7oHzgEgtrMaRGMrsTfSglMBQjtQ/1GkK7ludn+xTehJTzUa1
+	3IOSV7IKDxG22h1E9eitimY5nhZ9l98=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744622578;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fTJ2sT8ir4Gfn1MTTn6LhWi1R6St8alGrdGiGAdMgLg=;
+	b=Prcl1iwKct5UEhVTw0+5YwBdMzJ3v9ofwQPxV1yYXGc5dyNt6/zUPPGSN4mZbKBTxKAs9l
+	aZqTNShSXLj3trCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=zxKvh6lM;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=tHz5QMMA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744622577;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fTJ2sT8ir4Gfn1MTTn6LhWi1R6St8alGrdGiGAdMgLg=;
+	b=zxKvh6lMdtNRaakbbadbPmIZ3J9qbkgki0pYzHKV7q5r3xT3werS80Vrz+AQvKbsOjbIs4
+	YsAmq+uKn3oDFkV8bKwfbVl4u/q7pw2VYqYYXrp1FJdAR0DA/AcnJFh0N2TcpL2WjpV3IS
+	6vROV6hQaunpkYlbfivTZnZtlQGWXJY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744622577;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fTJ2sT8ir4Gfn1MTTn6LhWi1R6St8alGrdGiGAdMgLg=;
+	b=tHz5QMMApoC++KogAIvXz+VrZovgm5mj5aFxNuVX3TN7AMfZ7y77m/knPafb6ealWlH2t2
+	EGRaG+dlbZB2P4CA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 37583136A7;
+	Mon, 14 Apr 2025 09:22:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VkIoDfHT/Gc6MQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 14 Apr 2025 09:22:57 +0000
+Date: Mon, 14 Apr 2025 11:22:52 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com,
+	dsterba@suse.com, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: use BTRFS_PATH_AUTO_FREE in
+ btrfs_truncate_inode_items()
+Message-ID: <20250414092251.GB16750@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250411034425.173648-1-frank.li@vivo.com>
+ <CAPjX3Fe34HVF2JUi2DEyxqShFhadxy7M7F6xTA_yVn5ywHMBhQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: xFm9l7l3bI-jgtU0QdEQ9jP0rCAI3jUZ
-X-Authority-Analysis: v=2.4 cv=ZOvXmW7b c=1 sm=1 tr=0 ts=67fcd3a9 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=XR8D0OoHHMoA:10 a=M5GUcnROAAAA:8 a=8UtXAm7dt4rhr6CWwt8A:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: xFm9l7l3bI-jgtU0QdEQ9jP0rCAI3jUZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPjX3Fe34HVF2JUi2DEyxqShFhadxy7M7F6xTA_yVn5ywHMBhQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: 5853A2125D
+X-Spam-Score: -4.21
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Address the netdevice usage count problem in the following scenarios:
-- When the interface is down
-- During transmit queue timeouts
+On Fri, Apr 11, 2025 at 04:17:38PM +0200, Daniel Vacek wrote:
+> On Fri, 11 Apr 2025 at 05:25, Yangtao Li <frank.li@vivo.com> wrote:
+> >
+> > All cleanup paths lead to btrfs_path_free so we can define path with the
+> > automatic free callback.
+> >
+> > And David Sterba point out that:
+> >         We may still find cases worth converting, the typical pattern is
+> >         btrfs_path_alloc() somewhere near top of the function and
+> >         btrfs_free_path() called right before a return.
+> >
+> > So let's convert it.
+> >
+> > Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> > ---
+> >  fs/btrfs/inode-item.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> And what about the other functions in that file? We could even get rid
+> of two allocations passing the path from ..._inode_ref() to
+> ..._inode_extref().
 
-Fixes: cb7dd712189f ("octeon_ep_vf: Add driver framework and device initialization")
-Signed-off-by: Sathesh B Edara <sedara@marvell.com>
----
-Changes:
-V2:
-  - Removed redundant call
+If you mean to pass the path object from btrfs_del_inode_ref() to
+btrfs_del_inode_extref() yeah this looks like a good optimization and
+reducing the allocations (and potential failures).
 
- drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-index 18c922dd5fc6..5d033bc66bdf 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-@@ -819,7 +819,6 @@ static void octep_vf_tx_timeout_task(struct work_struct *work)
- 		octep_vf_open(netdev);
- 	}
- 	rtnl_unlock();
--	netdev_put(netdev, NULL);
- }
- 
- /**
-@@ -834,7 +833,6 @@ static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
- {
- 	struct octep_vf_device *oct = netdev_priv(netdev);
- 
--	netdev_hold(netdev, NULL, GFP_ATOMIC);
- 	schedule_work(&oct->tx_timeout_task);
- }
- 
--- 
-2.36.0
-
+The other cases in the "..._inode_ref" is btrfs_insert_inode_ref() ->
+btrfs_insert_inode_extref().
