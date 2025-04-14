@@ -1,102 +1,380 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D39C18B0F
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B44D18B0F;
+	Mon, 14 Apr 2025 14:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642076; cv=none; b=tOYxV9fK1LIs+WLuFH4pf5sKCSQ1VCbuCekD56ttvBzq9B/e5NO0LdeEe+XwOuq85ezipFlNxFSGVRhfENHLCNDfpm3Zl9OQMQKzD3ftkbvEEu/fGk/IVK90uyFM+WAcP5E3UkLfc/HSL29Fi6y9arfwfx4Umxp5pTvFVolUqBk=
+	t=1744642091; cv=none; b=pwR4gFRC92z/0qDW0H4V36aO+Hfayz4FQMxV71+wCPKOYlMvs0dwieP5XmwhRlDiJbHjj/1MtanA7OwNLFLPtJQEWj3eS1xuFhtWRNIhnVBO7xjek9xWiBUTPzeOOyzmTizbz7cK/6OD8E8dtVhKBcFd2JAsDAydQgJQ5wX+r64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642076; c=relaxed/simple;
-	bh=8Qtn8KlEQvxgVdPrvGuh4Sfq5tYrSo6Kof/1qWPEE88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y//tlosOr5G6SUsRYDz2vVpNm5QL8wkh/oSmcz9xSfrbVDe1E/35VMt9317Ck84d0b3ATsw5c3Ehz0/pOmXjFk1yojKZrbVHRuhuuv3axZsas5XJ38YmD13E9hxm5n1/IoMnUQdVrj/2xRK1oPzRjdRWgrmxd/iiWVA9HjeII+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=A8kfk27k; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="A8kfk27k"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d5bb2ae4d3so15759905ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744642073; x=1745246873; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fq48PAOknFOAzKFbEqBjcV5Kzd2DBdHXfQElMB85zFI=;
-        b=A8kfk27kPDo7TcTKi0fMmDCu+ujbGwClggFgN3TgVxfalKaUlRDE/mu17SYUH9uAc3
-         ya1iSH7RwHwxjHgJPqChaWgw5aTVNZj6wKCAzsp4py2kh6kwR2k/wvXLYHSaXDKcq3zJ
-         HvDiyclan2wVxYWoR/BFXVmnjENzS2fHbqJutlsvPOL62H0FUJY5NWol5wNbT9rYzgRO
-         elMijkQtGIHtfO168zkRYs6mSS+ZDK71wPrYMTmAW4L1/9ln71NJc5+bU0rU2xbbcEzV
-         TXYch1BirqHrf8YgWHOPFfxPBMYQCL/y3283Z1/Z6lnAHjOQx7qa9GUsK2I6kUuVTmnm
-         S+BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744642073; x=1745246873;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fq48PAOknFOAzKFbEqBjcV5Kzd2DBdHXfQElMB85zFI=;
-        b=pzejuJhbJLmEhHkx3o34A1iLSTMLsAstxDg21ZZ5+xFfIUPL1eoaCf47LF3sbF/U5I
-         0Bj70eB5b/IQP2RSmq4AzMvsoMqywxiv7O5rcoobGkGziOcxMJvbjrT9hpZOrJ3vLNHU
-         keTzFadkZw50sTFYf3buifgKtQqzo3S9oMe9gf9OrO8XRaAxH1u3b20hr/Zhl90jmPbr
-         3cDp+bw8kpiFXbJ+XlaaZWkehgGUB6K0ZLF1Ut0etp4uCP7FYupE48dRkQ88xFq4s4Xt
-         Rk67E2A/RgQIj5sV3AzLeG3cSQKJ1IVAtnZ8DIRJsN523vmCJ41OqPY7avn1Q8bAo/Wz
-         L5PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJbOwu92wyXO9a0cJT8M8a6B1rr3+aPL7Vw+kaDvC0K0z8tlOQLouDvUqY7aXdgH32ZiVWccy/oCVOHfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe++exHi9qHXEb2UUiqhb23o0VEuHH3klI5FWKW7APOyCw+aUi
-	uG+AQtDfiLQC3kxC6u59AO0VpYv8M6l+QHQWeR6eFnHV/hmHpuflArOLJpOAylg=
-X-Gm-Gg: ASbGncvxHYbtBG+JQVapuxg+cVpHlqpwHf8ta1CgkNjIgfRLyybHV4tp/lEQnE/dCof
-	FnB+AHFNFdBq2EFpVvVKBiAgq2J0XWwLE7jKv7wHQJweAOmhG63DPCsInvtWygWw4ctRN3oJwox
-	dh5mo3vTYLHlhb+PiuALKcHQYwbsmYNcSM7cLIiGjjsH8dhmVMHyI3AOvqareANICRkfVZXVnFQ
-	j718Qc1eRrmblJwXD1Zzop2jYRUKQa6+GGO5qGUEkIbu4GKTNGW2kqP7kXyHZ6nHb/iSoq7YleU
-	naGHpvv3N3oSBX+tzwilQy+9LRp/H54Ay5nydg==
-X-Google-Smtp-Source: AGHT+IE/jRticyjdHacClb5ym5jstPEP9CrlXUCBcGw7k00gcOTS5NpmDKrmPTfewbzW1VzTeVMVjA==
-X-Received: by 2002:a05:6e02:989:b0:3d6:d162:be12 with SMTP id e9e14a558f8ab-3d7ec277267mr98023065ab.21.1744642073536;
-        Mon, 14 Apr 2025 07:47:53 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc591f82sm27637385ab.65.2025.04.14.07.47.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 07:47:52 -0700 (PDT)
-Message-ID: <e0dc38e8-9df0-40e3-a0e3-fd4b40b3fd80@kernel.dk>
-Date: Mon, 14 Apr 2025 08:47:51 -0600
+	s=arc-20240116; t=1744642091; c=relaxed/simple;
+	bh=wwgWlM6hBqBq5uWseZKM0D1V2NN5ivzf54N21eKLZI8=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=szsGy4Pq+6QlmKu3DMvqPky03Sn/MrCUBpymCm4zpqaM7IvzQy6YjfLqn8gQjw/AwkfdRmIuCZbcNtcXhjAl4WCXGEnZMGsAj+8SAYRyCQUEQw/TyajIQI7RdptqJXYFOlvoRQSKi4J+QpVPeCGliXtLKT/kGQW0JmmPTwNv6Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZbqnK03gVz2CdZF;
+	Mon, 14 Apr 2025 22:44:37 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 785021A016C;
+	Mon, 14 Apr 2025 22:48:02 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 14 Apr 2025 22:48:00 +0800
+Subject: Re: [RESEND PATCH v18 2/2] ACPI: APEI: handle synchronous exceptions
+ in task work
+To: Shuai Xue <xueshuai@linux.alibaba.com>, <catalin.marinas@arm.com>,
+	<sudeep.holla@arm.com>, <lpieralisi@kernel.org>,
+	<linux-acpi@vger.kernel.org>, <yazen.ghannam@amd.com>,
+	<mark.rutland@arm.com>, <mingo@redhat.com>, <robin.murphy@arm.com>,
+	<Jonathan.Cameron@Huawei.com>, <bp@alien8.de>, <rafael@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <wangkefeng.wang@huawei.com>,
+	<tanxiaofei@huawei.com>, <mawupeng1@huawei.com>, <tony.luck@intel.com>,
+	<linmiaohe@huawei.com>, <naoya.horiguchi@nec.com>, <james.morse@arm.com>,
+	<tongtiangen@huawei.com>, <gregkh@linuxfoundation.org>, <will@kernel.org>,
+	<jarkko@kernel.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <linux-edac@vger.kernel.org>, <x86@kernel.org>,
+	<justin.he@arm.com>, <ardb@kernel.org>, <ying.huang@linux.alibaba.com>,
+	<ashish.kalra@amd.com>, <baolin.wang@linux.alibaba.com>,
+	<tglx@linutronix.de>, <dave.hansen@linux.intel.com>, <lenb@kernel.org>,
+	<hpa@zytor.com>, <robert.moore@intel.com>, <lvying6@huawei.com>,
+	<xiexiuqi@huawei.com>, <zhuo.song@linux.alibaba.com>
+References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
+ <20250404112050.42040-3-xueshuai@linux.alibaba.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <fb399bd0-c2a2-574f-06fa-3cd0f309f7a5@huawei.com>
+Date: Mon, 14 Apr 2025 22:48:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] loop: aio inherit the ioprio of original request
-To: Christoph Hellwig <hch@infradead.org>,
- Yunlong Xing <yunlong.xing@unisoc.com>
-Cc: linux-block@vger.kernel.org, bvanassche@acm.org, niuzhiguo84@gmail.com,
- yunlongxing23@gmail.com, linux-kernel@vger.kernel.org,
- hao_hao.wang@unisoc.com, zhiguo.niu@unisoc.com
-References: <20250414030159.501180-1-yunlong.xing@unisoc.com>
- <Z_ynTcEZGhPKm5wY@infradead.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Z_ynTcEZGhPKm5wY@infradead.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250404112050.42040-3-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On 4/14/25 12:12 AM, Christoph Hellwig wrote:
-> On Mon, Apr 14, 2025 at 11:01:59AM +0800, Yunlong Xing wrote:
->> Set cmd->iocb.ki_ioprio to the ioprio of loop device's request.
->> The purpose is to inherit the original request ioprio in the aio
->> flow.
+On 2025/4/4 19:20, Shuai Xue wrote:
+> The memory uncorrected error could be signaled by asynchronous interrupt
+> (specifically, SPI in arm64 platform), e.g. when an error is detected by
+> a background scrubber, or signaled by synchronous exception
+> (specifically, data abort exception in arm64 platform), e.g. when a CPU
+> tries to access a poisoned cache line. Currently, both synchronous and
+> asynchronous error use memory_failure_queue() to schedule
+> memory_failure() to exectute in a kworker context.
 > 
-> This looks good, but has a mechanical conflict with my
-> "loop: stop using vfs_iter_{read,write} for buffered I/O" patch
-> that fixes setting the block size for direct I/O.
+> As a result, when a user-space process is accessing a poisoned data, a
+> data abort is taken and the memory_failure() is executed in the kworker
+> context, memory_failure():
 > 
-> Jens, any preference how we should order the patches?  Should I resend
-> on top of this smaller one or the other way around?
+>    - will send wrong si_code by SIGBUS signal in early_kill mode, and
+>    - can not kill the user-space in some cases resulting a synchronous
+>      error infinite loop
+> 
+> Issue 1: send wrong si_code in early_kill mode
+> 
+> Since commit a70297d22132 ("ACPI: APEI: set memory failure flags as
+> MF_ACTION_REQUIRED on synchronous events")', the flag MF_ACTION_REQUIRED
+> could be used to determine whether a synchronous exception occurs on
+> ARM64 platform.  When a synchronous exception is detected, the kernel is
+> expected to terminate the current process which has accessed poisoned
+> page. This is done by sending a SIGBUS signal with an error code
+> BUS_MCEERR_AR, indicating an action-required machine check error on
+> read.
+> 
+> However, when kill_proc() is called to terminate the processes who have
+> the poisoned page mapped, it sends the incorrect SIGBUS error code
+> BUS_MCEERR_AO because the context in which it operates is not the one
+> where the error was triggered.
+> 
+> To reproduce this problem:
+> 
+>    #sysctl -w vm.memory_failure_early_kill=1
+>    vm.memory_failure_early_kill = 1
+> 
+>    # STEP2: inject an UCE error and consume it to trigger a synchronous error
+>    #einj_mem_uc single
+>    0: single   vaddr = 0xffffb0d75400 paddr = 4092d55b400
+>    injecting ...
+>    triggering ...
+>    signal 7 code 5 addr 0xffffb0d75000
+>    page not present
+>    Test passed
+> 
+> The si_code (code 5) from einj_mem_uc indicates that it is BUS_MCEERR_AO
+> error and it is not the fact.
+> 
+> After this patch:
+> 
+>    # STEP1: enable early kill mode
+>    #sysctl -w vm.memory_failure_early_kill=1
+>    vm.memory_failure_early_kill = 1
+>    # STEP2: inject an UCE error and consume it to trigger a synchronous error
+>    #einj_mem_uc single
+>    0: single   vaddr = 0xffffb0d75400 paddr = 4092d55b400
+>    injecting ...
+>    triggering ...
+>    signal 7 code 4 addr 0xffffb0d75000
+>    page not present
+>    Test passed
+> 
+> The si_code (code 4) from einj_mem_uc indicates that it is a BUS_MCEERR_AR
+> error as we expected.
+> 
+> Issue 2: a synchronous error infinite loop
+> 
+> If a user-space process, e.g. devmem, accesses a poisoned page for which
+> the HWPoison flag is set, kill_accessing_process() is called to send
+> SIGBUS to current processs with error info. Because the memory_failure()
+> is executed in the kworker context, it will just do nothing but return
+> EFAULT. So, devmem will access the posioned page and trigger an
+> exception again, resulting in a synchronous error infinite loop. Such
+> exception loop may cause platform firmware to exceed some threshold and
+> reboot when Linux could have recovered from this error.
+> 
+> To reproduce this problem:
+> 
+>    # STEP 1: inject an UCE error, and kernel will set HWPosion flag for related page
+>    #einj_mem_uc single
+>    0: single   vaddr = 0xffffb0d75400 paddr = 4092d55b400
+>    injecting ...
+>    triggering ...
+>    signal 7 code 4 addr 0xffffb0d75000
+>    page not present
+>    Test passed
+> 
+>    # STEP 2: access the same page and it will trigger a synchronous error infinite loop
+>    devmem 0x4092d55b400
+> 
+> To fix above two issues, queue memory_failure() as a task_work so that
+> it runs in the context of the process that is actually consuming the
+> poisoned data.
+> 
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Tested-by: Ma Wupeng <mawupeng1@huawei.com>
+> Reviewed-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> Reviewed-by: Xiaofei Tan <tanxiaofei@huawei.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Jane Chu <jane.chu@oracle.com>
+> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> ---
+>   drivers/acpi/apei/ghes.c | 79 +++++++++++++++++++++++-----------------
+>   include/acpi/ghes.h      |  3 --
+>   include/linux/mm.h       |  1 -
+>   mm/memory-failure.c      | 13 -------
+>   4 files changed, 45 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 50e4d924aa8b..87cf4b373ebe 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -464,28 +464,41 @@ static void ghes_clear_estatus(struct ghes *ghes,
+>   		ghes_ack_error(ghes->generic_v2);
+>   }
+>   
+> -/*
+> - * Called as task_work before returning to user-space.
+> - * Ensure any queued work has been done before we return to the context that
+> - * triggered the notification.
+> +/**
+> + * struct ghes_task_work - for synchronous RAS event
+> + *
+> + * @twork:                callback_head for task work
+> + * @pfn:                  page frame number of corrupted page
+> + * @flags:                work control flags
+> + *
+> + * Structure to pass task work to be handled before
+> + * returning to user-space via task_work_add().
+>    */
+> -static void ghes_kick_task_work(struct callback_head *head)
+> +struct ghes_task_work {
+> +	struct callback_head twork;
+> +	u64 pfn;
+> +	int flags;
+> +};
+> +
+> +static void memory_failure_cb(struct callback_head *twork)
+>   {
+> -	struct acpi_hest_generic_status *estatus;
+> -	struct ghes_estatus_node *estatus_node;
+> -	u32 node_len;
+> +	struct ghes_task_work *twcb = container_of(twork, struct ghes_task_work, twork);
+> +	int ret;
+>   
+> -	estatus_node = container_of(head, struct ghes_estatus_node, task_work);
+> -	if (IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
+> -		memory_failure_queue_kick(estatus_node->task_work_cpu);
+> +	ret = memory_failure(twcb->pfn, twcb->flags);
+> +	gen_pool_free(ghes_estatus_pool, (unsigned long)twcb, sizeof(*twcb));
+>   
+> -	estatus = GHES_ESTATUS_FROM_NODE(estatus_node);
+> -	node_len = GHES_ESTATUS_NODE_LEN(cper_estatus_len(estatus));
+> -	gen_pool_free(ghes_estatus_pool, (unsigned long)estatus_node, node_len);
+> +	if (!ret || ret == -EHWPOISON || ret == -EOPNOTSUPP)
+> +		return;
+> +
+> +	pr_err("%#llx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
+> +			twcb->pfn, current->comm, task_pid_nr(current));
+> +	force_sig(SIGBUS);
+>   }
+>   
+>   static bool ghes_do_memory_failure(u64 physical_addr, int flags)
+>   {
+> +	struct ghes_task_work *twcb;
+>   	unsigned long pfn;
+>   
+>   	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
+> @@ -499,6 +512,18 @@ static bool ghes_do_memory_failure(u64 physical_addr, int flags)
+>   		return false;
+>   	}
+>   
+> +	if (flags == MF_ACTION_REQUIRED && current->mm) {
+> +		twcb = (void *)gen_pool_alloc(ghes_estatus_pool, sizeof(*twcb));
+> +		if (!twcb)
+> +			return false;
+> +
+> +		twcb->pfn = pfn;
+> +		twcb->flags = flags;
+> +		init_task_work(&twcb->twork, memory_failure_cb);
+> +		task_work_add(current, &twcb->twork, TWA_RESUME);
+> +		return true;
+> +	}
+> +
+>   	memory_failure_queue(pfn, flags);
+>   	return true;
+>   }
+> @@ -743,7 +768,7 @@ int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, "CXL");
+>   
+> -static bool ghes_do_proc(struct ghes *ghes,
+> +static void ghes_do_proc(struct ghes *ghes,
+>   			 const struct acpi_hest_generic_status *estatus)
+>   {
+>   	int sev, sec_sev;
+> @@ -809,8 +834,6 @@ static bool ghes_do_proc(struct ghes *ghes,
+>   			current->comm, task_pid_nr(current));
+>   		force_sig(SIGBUS);
+>   	}
+> -
+> -	return queued;
+>   }
+>   
+>   static void __ghes_print_estatus(const char *pfx,
+> @@ -1114,9 +1137,7 @@ static void ghes_proc_in_irq(struct irq_work *irq_work)
+>   	struct ghes_estatus_node *estatus_node;
+>   	struct acpi_hest_generic *generic;
+>   	struct acpi_hest_generic_status *estatus;
+> -	bool task_work_pending;
+>   	u32 len, node_len;
+> -	int ret;
+>   
+>   	llnode = llist_del_all(&ghes_estatus_llist);
+>   	/*
+> @@ -1131,25 +1152,16 @@ static void ghes_proc_in_irq(struct irq_work *irq_work)
+>   		estatus = GHES_ESTATUS_FROM_NODE(estatus_node);
+>   		len = cper_estatus_len(estatus);
+>   		node_len = GHES_ESTATUS_NODE_LEN(len);
+> -		task_work_pending = ghes_do_proc(estatus_node->ghes, estatus);
+> +
+> +		ghes_do_proc(estatus_node->ghes, estatus);
+> +
+>   		if (!ghes_estatus_cached(estatus)) {
+>   			generic = estatus_node->generic;
+>   			if (ghes_print_estatus(NULL, generic, estatus))
+>   				ghes_estatus_cache_add(generic, estatus);
+>   		}
+> -
+> -		if (task_work_pending && current->mm) {
+> -			estatus_node->task_work.func = ghes_kick_task_work;
+> -			estatus_node->task_work_cpu = smp_processor_id();
+> -			ret = task_work_add(current, &estatus_node->task_work,
+> -					    TWA_RESUME);
+> -			if (ret)
+> -				estatus_node->task_work.func = NULL;
+> -		}
+> -
+> -		if (!estatus_node->task_work.func)
+> -			gen_pool_free(ghes_estatus_pool,
+> -				      (unsigned long)estatus_node, node_len);
+> +		gen_pool_free(ghes_estatus_pool, (unsigned long)estatus_node,
+> +			      node_len);
+>   
+>   		llnode = next;
+>   	}
+> @@ -1210,7 +1222,6 @@ static int ghes_in_nmi_queue_one_entry(struct ghes *ghes,
+>   
+>   	estatus_node->ghes = ghes;
+>   	estatus_node->generic = ghes->generic;
+> -	estatus_node->task_work.func = NULL;
+>   	estatus = GHES_ESTATUS_FROM_NODE(estatus_node);
+>   
+>   	if (__ghes_read_estatus(estatus, buf_paddr, fixmap_idx, len)) {
+> diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
+> index be1dd4c1a917..ebd21b05fe6e 100644
+> --- a/include/acpi/ghes.h
+> +++ b/include/acpi/ghes.h
+> @@ -35,9 +35,6 @@ struct ghes_estatus_node {
+>   	struct llist_node llnode;
+>   	struct acpi_hest_generic *generic;
+>   	struct ghes *ghes;
+> -
+> -	int task_work_cpu;
+> -	struct callback_head task_work;
+>   };
+>   
+>   struct ghes_estatus_cache {
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 8483e09aeb2c..327517bf2168 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3933,7 +3933,6 @@ enum mf_flags {
+>   int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
+>   		      unsigned long count, int mf_flags);
+>   extern int memory_failure(unsigned long pfn, int flags);
+> -extern void memory_failure_queue_kick(int cpu);
+>   extern int unpoison_memory(unsigned long pfn);
+>   extern atomic_long_t num_poisoned_pages __read_mostly;
+>   extern int soft_offline_page(unsigned long pfn, int flags);
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 327e02fdc029..ad07f673608d 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -2494,19 +2494,6 @@ static void memory_failure_work_func(struct work_struct *work)
+>   	}
+>   }
+>   
+> -/*
+> - * Process memory_failure work queued on the specified CPU.
+> - * Used to avoid return-to-userspace racing with the memory_failure workqueue.
+> - */
+> -void memory_failure_queue_kick(int cpu)
+> -{
+> -	struct memory_failure_cpu *mf_cpu;
+> -
+> -	mf_cpu = &per_cpu(memory_failure_cpu, cpu);
+> -	cancel_work_sync(&mf_cpu->work);
+> -	memory_failure_work_func(&mf_cpu->work);
+> -}
+> -
+>   static int __init memory_failure_init(void)
+>   {
+>   	struct memory_failure_cpu *mf_cpu;
 
-I think we layer yours on top of this one, which is something I
-can just do without much trouble. Do we want the vfs_iter removal
-in 6.15 or is 6.16 fine for that?
+Looks good to me,
 
--- 
-Jens Axboe
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 
+Thanks
+Hanjun
