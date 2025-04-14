@@ -1,142 +1,215 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07E442077;
-	Mon, 14 Apr 2025 08:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0C1442077
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617946; cv=none; b=ReczwLdftcv8/DCbsESv45wo3YxvLOVe+b1QzpkVRWlp6nxQWsKem2eK+0Xm0jnh/S9y4/2e/n3mY6fRx3R6MLA5ZpGP2S0rsToNvw7FXNK6Nw+cCvIJ3iy3aF8sDRbxSCgNULkwR3jMzLqus5PLMQBZRCX7VO2x2PEcGsIsUXk=
+	t=1744617967; cv=none; b=Tl9fZRygpBafEukroszkfW0zyLPoJXt1D3Xh2Tc3nchblGieRLYXrmCUTzzoVdq2bj+DMdNlulezCxtnwHL5cATZ9tkV8Q/ht1gDy8iJ1HyrVTipKJKyN/ZiWB0KdV9NT2hWiuHh6Ki/HnYfVwWlFKNSTKh6WDQxE6AT/fjxPb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617946; c=relaxed/simple;
-	bh=ktnWRremh4PlCVgM9PmJj7ZdmtWLOoFQiD5o5kvXX5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eh5GIHOlgZp4Tw3qmkM7CFFpcKiVov4oUOc5wu4ADzd3vq0Tc6bhwGAaP9UHac/cGv/xV6US5JXXp0zd/NsJiRTLNWdsYq14m866+SP93Wnc8c8Jx+by4pebpNExtKNMOW3x588w/N5q/Jr9L+wYANRGFhDD4sLu+Q5XlIR/3xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EzFpYuqk; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzFpYuqk"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523de538206so1439909e0c.2;
-        Mon, 14 Apr 2025 01:05:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744617944; x=1745222744; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z+VLHUwu2moLQRiFoDs2lVIxZQ3Y1UP6WBvKjCENsm8=;
-        b=EzFpYuqkUVahA4VV5sdIxnClVLwy8rrtCgxGfVjHYmPpWPgChh/A7gMuswwF9PcKk6
-         jXZIWG6MqMrrurP4R9ITE87NrGnyMwBNzqm79doA0PcmF4YGYP4Jnu/8/BjE69HOo0Vg
-         uR4emhipQyRYaMQsZ3kWSbsEpK+yHK2ZGydpdZG6lMj2pmuAk6K/5eLFOlUnTBw+Sy2K
-         kDdDv3pLnWDPaMqoCYmK+y7vlkqvGv3G+s9ct9SVrdi+U/5pAdHkPSHjbjltqhjYFqj/
-         24EmhnNr34F9TMFyky+GiLqeew77duLEjOydTEFaQl1M2usyWgBFUT5GvAYJsbCS2yvZ
-         PhSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744617944; x=1745222744;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z+VLHUwu2moLQRiFoDs2lVIxZQ3Y1UP6WBvKjCENsm8=;
-        b=VtzjQlpgTSYIdvwNvvM5PWm5n4JQjihfo6tNJZt/ev0AXqwBSqDtdqt4CEPOCq9CKo
-         fkUPNlDui0iznSDO+Yb940MfJWN0bm9TWSRmstm9PoRpBn01YBJDgp1QRXSdTD5ScqI3
-         VeZR36YV/bMJk89URRDrvlXOG9sIqcgodSiZKxFqiW++AVrGPpIbmRY/UwMkZ/ShpSPU
-         TAbYT4EH39WjXjLosMKbC5032prxrng9YFIMaEQr1v9YB9ZccA37DrHdmvsYuh2fOydN
-         7ccGLRCX7b2omB5gwGdJIgAzDlT495bqyBMR3IR+kr1vrVwY8LCbg9o1Y7TL9xDFHTuc
-         HO1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUFP7FbvSA1xI7v9RiTgHRC7sXp35Hc+qRkcLlx6ZDaOsFcwLc3qQ7RMtUexfDjhPbM/xHYZblq7GOA@vger.kernel.org, AJvYcCVCnLQGNqFzfRAsGJOpTjmJWWzonJNQr9JipUrlaZRI+pneEdRhyVV+7uP8lf613dPJrmhTEgt82cm6Mg==@vger.kernel.org, AJvYcCVb807Ds7POxxQx9K0x471LuGzaoTd1G9zvaEcGA+055LkHeg4lYglXvPVi7g9wLL6eBAa/OmxhZA2V1MQ4f6ePovw=@vger.kernel.org, AJvYcCW57Q1RBreDQZDfNdI704JZjXNc4o+RpUJzJhxuWkfVq2KXChaVHmRzGtY1gC7ar0LipyPxLho92DTx@vger.kernel.org, AJvYcCXH2Zjrm+OY8aNgVCv7DyAqpOSHRNdxIjWFhp5A+mUAf8B9DCmFawaFyKuQW59IJSgavo2gs9mQlhwSTuNi@vger.kernel.org, AJvYcCXZKGpJMdqUJks5fGHejv+Cyt77zrWejRi3ur8YXoMqibqgOLGDuJpjUtfewymucmRrVagEvO61hkKDzUUT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqPk/5TA9RPme+mH2l8jldAJPh8/hXbH3UHlGaLzabOBG5TQ7I
-	sf9LWGKGe5b4u4Oe0H+GnynGiLHFRROueQ/4439tLnynDZwAGvy8MsI6LhWnH+BMhLNgqOTD2IZ
-	QILgRyWO8B/xi/TqY58PzyO2HQGE=
-X-Gm-Gg: ASbGncuQkMV0SgysmArqFGlRzTpIv6QXCpitkMPuUPW/JjkjMhi28rpLMjLUt9GSRvD
-	BCSgDXqgpLi8scoSF6hIgGGdIixNIs6W7yIC91Ocw6nTXwntpr7L1JdPLHzHMM6erB/77+couQH
-	xufGq4xeV25m95D5VpwHECHg==
-X-Google-Smtp-Source: AGHT+IGCuud+Irbj69epGrU5bI9UHnAGW5z8Rh63mS+v+tdlhSzX3+RYnZruxoaSI9aRjH+6eIkClJCAuUSCoSOFb/s=
-X-Received: by 2002:a05:6122:1d8a:b0:527:8771:2d39 with SMTP id
- 71dfb90a1353d-527c359f576mr6787965e0c.7.1744617943428; Mon, 14 Apr 2025
- 01:05:43 -0700 (PDT)
+	s=arc-20240116; t=1744617967; c=relaxed/simple;
+	bh=+9AjLfUFiR9WlmRw2lss0Jg55nJjHCM05aecGDBkQIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q2WdEaeySwaBAFiZCmmYzVTMGXEFK4NVta4V6wmluNheRqCVCkxWwszZVMiDgdXSWcl0IjBeCb4Fb881EGqlaJP0Fbvo63A7Y+Ajnv0h0Ednn+BCS7EeojCFHS6zu6SbQeZaiwRzeSG2MpKdU/xsGhT5ALvm+i6H/APHrpdEiuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C21FE1007;
+	Mon, 14 Apr 2025 01:06:02 -0700 (PDT)
+Received: from [10.57.88.7] (unknown [10.57.88.7])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21D1E3F694;
+	Mon, 14 Apr 2025 01:06:01 -0700 (PDT)
+Message-ID: <1613c84e-1e65-44cd-9f23-1c9870df4655@arm.com>
+Date: Mon, 14 Apr 2025 09:06:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407191628.323613-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU0ee30MCXSdW=hho42qFHeT5fpNv0_aNSAv-5wXk2g2A@mail.gmail.com>
-In-Reply-To: <CAMuHMdU0ee30MCXSdW=hho42qFHeT5fpNv0_aNSAv-5wXk2g2A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 14 Apr 2025 09:05:17 +0100
-X-Gm-Features: ATxdqUHgM77RmTUJPhf3exniWzHJ4NsZqQHYq4gV97TCNKEqiGfMBLPyBJ15mBg
-Message-ID: <CA+V-a8uD=n5-1fS4N4CBygT=vbdnAO9+-5Tv+GL+6Y27KmsEXA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/12] dt-bindings: soc: renesas: Document Renesas
- RZ/V2N SoC variants and EVK
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
+ operations
+Content-Language: en-GB
+To: Lance Yang <ioworker0@gmail.com>, Dev Jain <dev.jain@arm.com>,
+ Xavier <xavier_qy@163.com>
+Cc: Barry Song <21cnbao@gmail.com>, catalin.marinas@arm.com, will@kernel.org,
+ akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+ Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
+References: <20250407092243.2207837-1-xavier_qy@163.com>
+ <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
+ <7dccb3a2-f5e2-4f9e-8f5c-465a1d3ffdb6@arm.com>
+ <CAK1f24=5-VVJoE75wrskXxrGi=KmrbxSYH9P69PRPiOxQuArpA@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAK1f24=5-VVJoE75wrskXxrGi=KmrbxSYH9P69PRPiOxQuArpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+On 12/04/2025 06:05, Lance Yang wrote:
+> On Sat, Apr 12, 2025 at 1:30 AM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>> +others
+>>
+>> On 11/04/25 2:55 am, Barry Song wrote:
+>>> On Mon, Apr 7, 2025 at 9:23 PM Xavier <xavier_qy@163.com> wrote:
+>>>>
+>>>> This commit optimizes the contpte_ptep_get function by adding early
+>>>>   termination logic. It checks if the dirty and young bits of orig_pte
+>>>>   are already set and skips redundant bit-setting operations during
+>>>>   the loop. This reduces unnecessary iterations and improves performance.
+>>>>
+>>>> Signed-off-by: Xavier <xavier_qy@163.com>
+>>>> ---
+>>>>   arch/arm64/mm/contpte.c | 13 +++++++++++--
+>>>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+>>>> index bcac4f55f9c1..ca15d8f52d14 100644
+>>>> --- a/arch/arm64/mm/contpte.c
+>>>> +++ b/arch/arm64/mm/contpte.c
+>>>> @@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>>>>
+>>>>          pte_t pte;
+>>>>          int i;
+>>>> +       bool dirty = false;
+>>>> +       bool young = false;
+>>>>
+>>>>          ptep = contpte_align_down(ptep);
+>>>>
+>>>>          for (i = 0; i < CONT_PTES; i++, ptep++) {
+>>>>                  pte = __ptep_get(ptep);
+>>>>
+>>>> -               if (pte_dirty(pte))
+>>>> +               if (!dirty && pte_dirty(pte)) {
+>>>> +                       dirty = true;
+>>>>                          orig_pte = pte_mkdirty(orig_pte);
+>>>> +               }
+>>>>
+>>>> -               if (pte_young(pte))
+>>>> +               if (!young && pte_young(pte)) {
+>>>> +                       young = true;
+>>>>                          orig_pte = pte_mkyoung(orig_pte);
+>>>> +               }
+>>>> +
+>>>> +               if (dirty && young)
+>>>> +                       break;
+>>>
+>>> This kind of optimization is always tricky. Dev previously tried a similar
+>>> approach to reduce the loop count, but it ended up causing performance
+>>> degradation:
+>>> https://lore.kernel.org/linux-mm/20240913091902.1160520-1-dev.jain@arm.com/
+>>>
+>>> So we may need actual data to validate this idea.
+>>
+>> The original v2 patch does not work, I changed it to the following:
+>>
+>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+>> index bcac4f55f9c1..db0ad38601db 100644
+>> --- a/arch/arm64/mm/contpte.c
+>> +++ b/arch/arm64/mm/contpte.c
+>> @@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm,
+>> unsigned long addr,
+>>   }
+>>   EXPORT_SYMBOL_GPL(__contpte_try_unfold);
+>>
+>> +#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
+>> +       int _start; \
+>> +       pte_t *_ptep = ptep; \
+>> +       for (_start = start; _start < CONT_PTES; _start++, ptep++) { \
+>> +               if (pte_##flag(__ptep_get(_ptep))) { \
+>> +                       orig_pte = pte_mk##flag(orig_pte); \
+>> +                       break; \
+>> +               } \
+>> +       }
+>> +
+>>   pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>>   {
+>>          /*
+>> @@ -169,11 +179,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>>          for (i = 0; i < CONT_PTES; i++, ptep++) {
+>>                  pte = __ptep_get(ptep);
+>>
+>> -               if (pte_dirty(pte))
+>> +               if (pte_dirty(pte)) {
+>>                          orig_pte = pte_mkdirty(orig_pte);
+>> +                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
+>> +                       break;
+>> +               }
+>>
+>> -               if (pte_young(pte))
+>> +               if (pte_young(pte)) {
+>>                          orig_pte = pte_mkyoung(orig_pte);
+>> +                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
+>> +                       break;
+>> +               }
+>>          }
+>>
+>>          return orig_pte;
+>>
+>> Some rudimentary testing with micromm reveals that this may be
+>> *slightly* faster. I cannot say for sure yet.
+> 
+> Yep, this change works as expected, IIUC.
+> 
+> However, I'm still wondering if the added complexity is worth it for
+> such a slight/negligible performance gain. That said, if we have
+> solid numbers/data to back it up, all doubts would disappear ;)
 
-Thank you for the review.
+I agree with Barry; we need clear performance improvement numbers to consider
+this type of optimization. I doubt there will be measurable improvement for 4K
+and 64K base pages (because the the number of PTEs in a contpte block are 16 and
+32 respectively). But 16K base pages may benefit given there are 128 PTEs in a
+contpte block for that case.
 
-On Thu, Apr 10, 2025 at 10:07=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
-:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Document the Renesas RZ/V2N (R9A09G056) SoC variants, distinguishing
-> > between configurations with and without specific hardware features such
-> > as GPU, ISP, and cryptographic extensions. Also, document the
-> > "renesas,rzv2n-evk" compatible string for the RZ/V2N EVK board.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v6.16.
->
-> > --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> > +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> > @@ -551,6 +551,21 @@ properties:
-> >                - renesas,r9a09g047e58 # Quad Cortex-A55 + Cortex-M33 + =
-Ethos-U55 (21mm BGA)
-> >            - const: renesas,r9a09g047
-> >
-> > +      - description: RZ/V2N (R9A09G056)
-> > +        items:
-> > +          - enum:
-> > +              - renesas,rzv2n-evk # RZ/V2N EVK
->
-> Shall I add the board part number while applying?
->
-Yes please. Thank you for taking care of it.
+Also FWIW, I'm struggling to understand CHECK_CONTPTE_FLAG(); Perhaps something
+like this would suffice?
 
-> -              - renesas,rzv2n-evk # RZ/V2N EVK
-> +              - renesas,rzv2n-evk # RZ/V2N EVK (RTK0EF0186C03000BJ)
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+----8<----
+diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+index 55107d27d3f8..7787b116b339 100644
+--- a/arch/arm64/mm/contpte.c
++++ b/arch/arm64/mm/contpte.c
+@@ -169,11 +169,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+        for (i = 0; i < CONT_PTES; i++, ptep++) {
+                pte = __ptep_get(ptep);
 
-Cheers,
-Prabhakar
+-               if (pte_dirty(pte))
++               if (pte_dirty(pte)) {
+                        orig_pte = pte_mkdirty(orig_pte);
++                       if (pte_young(orig_pte))
++                               break;
++               }
+
+-               if (pte_young(pte))
++               if (pte_young(pte)) {
+                        orig_pte = pte_mkyoung(orig_pte);
++                       if (pte_dirty(orig_pte))
++                               break;
++               }
+        }
+
+        return orig_pte;
+----8<----
+
+Thanks,
+Ryan
+
+
+> 
+> Thanks,
+> Lance
+> 
+>>
+>>>
+>>>>          }
+>>>>
+>>>>          return orig_pte;
+>>>> --
+>>>> 2.34.1
+>>>>
+>>>
+>>> Thanks
+>>> Barry
+>>>
+>>
+
