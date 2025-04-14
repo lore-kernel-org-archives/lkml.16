@@ -1,123 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C252A1B393A
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A971B425C;
+	Mon, 14 Apr 2025 07:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614330; cv=none; b=fLfraF2DMdEWTwvirDwOD4ncu12NCdxfVKLVFZ3bITQJpuETDCKFwr4o7JOQ/3GxHp45y9SBqtDQcHYP2E/GgOEqX+GgJzm2xGsPUwrkUJhhgNpnX+5Q7bzXtSFfk+LsRC1o41BsjhNG65CTYGbTxpJkomMV8mRxvm5eBQi1aHE=
+	t=1744614331; cv=none; b=nenLjBpsYgi1D9blYCZ/YAQCpPvYuKI7MbJXjYHp1+mo5RlrBLgmZrLRx6yoddMLjit94vCNIhszYnP9z5ngQ0tAj8iGsNxwoL5gNAdEHwVmXi2MQ6aG6YDkEx/UOJuICy6+SNSDsLEkdnJW6LZze82eFuMKSG83VlHm8Y14ABM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614330; c=relaxed/simple;
-	bh=44eQA72v4mswU9H8pQxV3pwz7lIjEJsLNjNcRvjEOQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TgjAUVi/XMWSLugViBKAFkskT7Bx/qyO6/VBszoNFNDKF29PB4FOAB9GOFtsIuYd4CdGIZSQH8S4VrEcT8MSpeknGy0NLuhuugrATU34kfOVIm5tQ35ZOyVuYzf1bskTL1NBtcxzyEDAaL3qn8XcbYCdWvBNbYINlWx7gEIR+Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIt0GfAQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744614331; c=relaxed/simple;
+	bh=FMQI8FgGKRqjDb9goFSkLMlrY0FglRHVdCSHbAxc/Dw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=k3hx4ZHvq9unFlxkyd9VR0UEyWadJYfCVSoN6kld19uWdDWEZks2VUr9D/LteLmRmEe2bV4IWNKjFz3SCDPNB5FOHosblUbLUnD9pxncPOHtq5XAQKSuT5XBKbGOip2hyew1+LBPW+PyMub6QQZyfccT6SIfJSP5JSWsei8+T68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSc2D+fO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIt0GfAQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89797C4CEE2;
-	Mon, 14 Apr 2025 07:05:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSc2D+fO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D266EC4CEEA;
+	Mon, 14 Apr 2025 07:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744614330;
-	bh=44eQA72v4mswU9H8pQxV3pwz7lIjEJsLNjNcRvjEOQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vIt0GfAQxhuiTXukocJTAwdUin0sX3W/UfcDtA0luQx9PwscTsGLVyYrGdMS8qVJe
-	 AiJmcVvO6z41gI7516TEeJfxN7hvh4mqotBYfJWGLN057xJ2gEKSmzrZtNV0VbpGFe
-	 j1hvWWcAUfn1uzCgsUQ5Er2ZAvaVVZkzJTkuYl/WXwBOyyEv8OEKYhjPixJFljusoc
-	 k04dG1vhd8pck7ejeCgRCU5NA3hadf0gG1fnlevv310ANbVK4q3tkJfO8LPx5M7HUr
-	 1Jv/8hsk6gF3H1M7MPrGrhpDiQ+KPqa90Jna3mzw8PPeLdJE1T6rVYTPmFMB9CmnXQ
-	 0ZSH6wlIol60A==
-Date: Mon, 14 Apr 2025 09:05:22 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	mingo@redhat.com, luto@kernel.org, peterz@infradead.org,
-	paulmck@kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
-	willy@infradead.org, jon.grimm@amd.com, bharata@amd.com,
-	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH v3 4/4] x86/folio_zero_user: multi-page clearing
-Message-ID: <Z_yzshvBmYiPrxU0@gmail.com>
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
- <20250414034607.762653-5-ankur.a.arora@oracle.com>
+	s=k20201202; t=1744614331;
+	bh=FMQI8FgGKRqjDb9goFSkLMlrY0FglRHVdCSHbAxc/Dw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lSc2D+fOxrizzyCyyccJPDnbs3OYHOVDw21EoG/MWLlRVsC6NPn6Jm0NSrvlxLEDk
+	 zT9G4D1v6AQAcA8hV1k4ZPHlzbCQOX98SZuRJsYnkvnzhXRtautfPPoasbaTlw+uCn
+	 zmpguAnO0gCdTCu/mnsyBL0j96yMkJDir4TpMj0JDUBZKdcwwSdpLv8pE9qrnbvbY2
+	 uAaCtJ/JKvyaasfyhbqJZDoUFVdD3g9fuXZLCqdfMJ+994cZLJJxxR77U5GRLb4cv6
+	 xbXT7jV8hvz5v4FwwZCnK995Dtrc2EhkNkLafK1L4A3BhJRgiOhsDaAuVz2S1Z7msO
+	 6s+HIm8qauCEw==
+Date: Mon, 14 Apr 2025 16:05:28 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Menglong Dong
+ <dongml2@chinatelecom.cn>
+Subject: Re: [PATCH bpf v2] ftrace: fix incorrect hash size in
+ register_ftrace_direct()
+Message-Id: <20250414160528.3fd76062ad194bdffff515b5@kernel.org>
+In-Reply-To: <20250413014444.36724-1-dongml2@chinatelecom.cn>
+References: <20250413014444.36724-1-dongml2@chinatelecom.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414034607.762653-5-ankur.a.arora@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Sun, 13 Apr 2025 09:44:44 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-* Ankur Arora <ankur.a.arora@oracle.com> wrote:
-
-> clear_pages_rep(), clear_pages_erms() use string instructions to zero
-> memory. When operating on more than a single page, we can use these
-> more effectively by explicitly advertising the region-size to the
-> processor, which can use that as a hint to optimize the clearing
-> (ex. by eliding cacheline allocation.)
+> The maximum of the ftrace hash bits is made fls(32) in
+> register_ftrace_direct(), which seems illogical. So, we fix it by making
+> the max hash bits FTRACE_HASH_MAX_BITS instead.
 > 
-> As a secondary benefit, string instructions are typically microcoded,
-> and working with larger regions helps amortize the cost of the decode.
 
-Not just the decoding, but also iterations around page-sized chunks are 
-not cheap these days: there's various compiler generated mitigations 
-and other overhead that applies on a typical kernel, and using larger 
-sizes amortizes that per-page-iteration setup cost.
+Loogs good to me.
 
-> When zeroing the 2MB page, maximize spatial locality by clearing in 
-> three sections: the faulting page and its immediate neighbourhood, the
-> left and the right regions, with the local neighbourhood cleared last.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-s/zeroing the 2MB page
- /zeroing a 2MB page
+Thanks!
+
+> Fixes: d05cb470663a ("ftrace: Fix modification of direct_function hash while in use")
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> ---
+> v2:
+> - thanks for Steven's advice, we fix the problem by making the max hash
+>   bits FTRACE_HASH_MAX_BITS instead.
+> ---
+>  kernel/trace/ftrace.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 1a48aedb5255..d153ad13e0e0 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -5914,9 +5914,10 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  
+>  	/* Make a copy hash to place the new and the old entries in */
+>  	size = hash->count + direct_functions->count;
+> -	if (size > 32)
+> -		size = 32;
+> -	new_hash = alloc_ftrace_hash(fls(size));
+> +	size = fls(size);
+> +	if (size > FTRACE_HASH_MAX_BITS)
+> +		size = FTRACE_HASH_MAX_BITS;
+> +	new_hash = alloc_ftrace_hash(size);
+>  	if (!new_hash)
+>  		goto out_unlock;
+>  
+> -- 
+> 2.39.5
+> 
+> 
 
 
-> It's not entirely clear why the performance for pg-sz=2MB improves. 
-> We decode fewer instructions and the hardware prefetcher can do a 
-> better job, but the perf stats for both of those aren't convincing 
-> enough to the extent of ~30%.
-
-s/why the performance
- /why performance
-
-> For both page-sizes, Icelakex, behaves similarly to Milan pg-sz=2MB: we
-> see a drop in cycles but there's no drop in cacheline allocation.
-
-s/Icelakex, behaves similarly
- /Icelakex behaves similarly
-
-> Performance for preempt=none|voluntary remains unchanged.
-
-CONFIG_PREEMPT_VOLUNTARY=y is the default on a number of major 
-distributions, such as Ubuntu, and a lot of enterprise distro kernels - 
-and this patch does nothing for them, for no good reason.
-
-So could you please provide a sensible size granularity cutoff of 16MB 
-or so on non-preemptible kernels, instead of this weird build-time 
-all-or-nothing binary cutoff based on preemption modes?
-
-On preempt=full/lazy the granularity limit would be infinite.
-
-I.e the only code dependent on the preemption mode should be the size 
-cutoff/limit.
-
-On full/lazy preemption the code would, ideally, compile to something 
-close to your current code.
-
-> +obj-$(CONFIG_PREEMPTION)	+= memory.o
-
-> +#ifndef CONFIG_HIGHMEM
-> +/*
-> + * folio_zero_user_preemptible(): multi-page clearing variant of folio_zero_user().
-
-We don't care much about HIGHMEM these days I suppose, but this 
-dependency still feels wrong. Is this a stealth dependency on x86-64, 
-trying to avoid a new arch Kconfig for this new API, right? ;-)
-
-Thanks,
-
-	Ingo
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
