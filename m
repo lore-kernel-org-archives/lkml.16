@@ -1,135 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A7A1F4CB8
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392121F4E54
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744669578; cv=none; b=ayPIusfwbPbeaf9qpDkUOC5o4tvaJzELecdc3KFYIhrpXyto9m3zKkNc/83qYukTFepr2m4NeGrYEWTGXFZ2HuBbRKbRoFJzF+OttxvDq/yTR5/IuiHZbE2bb9YZ/vMClF3P1rQSvOWRC5Mv3a5Ft07QaKIuPCAXYl/x8thRSoo=
+	t=1744669579; cv=none; b=FPsNRfMQqx5xh24ICH7NVS38d7R7+1z+Eztvkb0lY2o/b6u1ULGv4kBc3xrj2+3e+RzP39cyA+FVS+Dm3/ZtNqQ5eNHx0917EJnDdphDzDpYhAaocVXHVLLiyDiHlcu02vZQHh/ER1A2WFUcECJrERMmB9wWOyD548RkUwmQvqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744669578; c=relaxed/simple;
-	bh=al6SKl71NAiNJnVYkq84dOJI0VdWszLtxLtJW6ZOVVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dex9D0x6+MNwPxViTnW+JcyJtUcPH/dj6aTBuVTVKC3GOmIDWCbcb/QthSsSf6XNzqnk6BFEcT9oF6lFHqTKlaiV7BXXXA8qCkUzDAzVhnsRccNuDpWcn1wXoRuvDGztKyJGT5F/zW8Jkn9UiAB7xqOJtIpdaKDMUbBfSQd99oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SfMJ7q9Q; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744669579; c=relaxed/simple;
+	bh=U7cZReZjrr7NKXwZ5XAaa0GQ/TD//bG9K/aKMvyXmis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAT/l88KnFlHBG6WUwq/mVx5QHOav3xDJvHGNuNiGzTO53/YjJydqThoEA9FblqM2wv4wdgQt0OnJuuIs2NCw0GEQV511ufYGByaq9zWxk42wD1Qi+Yk4w97/dO6/HDP3Q+h9/73oVkFYOfhHSqxyZ5DClPpOhs3ZglLHWcG34E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QebTuxHA; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SfMJ7q9Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744669575;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7n76Fvpmfa8LN30y0qvCHdYcw71Um4Eimev9X0oBxqU=;
-	b=SfMJ7q9Q/rLUtPUZoSRAo84etuWl+cZdhEgL9+f8FjUnV6GyumykKY+x2SR5r0Wvh9VvsX
-	L+QLp7+1xtc/j8UqNBD8XO1YtyWYunsthKntzGDLRdNzbND2QdZm2W/FL7yP0yxdtIb2S0
-	vOPuxhDB9qMCx7ieqn7Uhvcd2aZ1gdA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-XdkNGvy2OZa1MtxhAwhYsA-1; Mon,
- 14 Apr 2025 18:26:11 -0400
-X-MC-Unique: XdkNGvy2OZa1MtxhAwhYsA-1
-X-Mimecast-MFC-AGG-ID: XdkNGvy2OZa1MtxhAwhYsA_1744669567
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1D0AE1800262;
-	Mon, 14 Apr 2025 22:26:07 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.64.91])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6EB1B180B486;
-	Mon, 14 Apr 2025 22:25:58 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	corbet@lwn.net,
-	shuah@kernel.org,
-	david@redhat.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	ryan.roberts@arm.com,
-	willy@infradead.org,
-	peterx@redhat.com,
-	ioworker0@gmail.com,
-	ziy@nvidia.com,
-	wangkefeng.wang@huawei.com,
-	dev.jain@arm.com,
-	mhocko@suse.com,
-	rientjes@google.com,
-	hannes@cmpxchg.org,
-	zokeefe@google.com,
-	surenb@google.com,
-	jglisse@google.com,
-	cl@gentwo.org,
-	jack@suse.cz,
-	dave.hansen@linux.intel.com,
-	will@kernel.org,
-	tiwai@suse.de,
-	catalin.marinas@arm.com,
-	anshuman.khandual@arm.com,
-	raquini@redhat.com,
-	aarcange@redhat.com,
-	kirill.shutemov@linux.intel.com,
-	yang@os.amperecomputing.com,
-	thomas.hellstrom@linux.intel.com,
-	vishal.moola@gmail.com,
-	sunnanyong@huawei.com,
-	usamaarif642@gmail.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org
-Subject: [PATCH v3 4/4] selftests: mm: add defer to thp setting parser
-Date: Mon, 14 Apr 2025 16:24:56 -0600
-Message-ID: <20250414222456.43212-5-npache@redhat.com>
-In-Reply-To: <20250414222456.43212-1-npache@redhat.com>
-References: <20250414222456.43212-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QebTuxHA"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ede096d73so35509795e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 15:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744669576; x=1745274376; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Seffc+yZNHH7nQZK2TccuJe06M8bYwImxNduIh9Hks=;
+        b=QebTuxHArlXaGiN6Acymw+YgnysIUQzpfgD2X+9y78O2HAcBQB0283xkg0aPtxbFx6
+         r2h4oz8f3QF4+orj2curFfB22zBX5KppSMNClfHhp8Xhr/Qe3mIfLStEqKJZt9jNY+Xk
+         CPSGD3EUtQ3zTuOk2EUfHigd+vzRSw3uri7O632YnPAq5QOqjzIIKzwhzSgo5pclht/R
+         34UdDZHlD0HUdx30Ka52HkQUQVRYtXkWcoEFqjbt7pVX17sMetQEbF8oq5/12kLlKZmx
+         6X9TMZJiDOhyS8yVPmasHWg/h5e08SKdM+2y9OXGODC59tMyF5sI2XRzlyyxig++Zltu
+         bLHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744669576; x=1745274376;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Seffc+yZNHH7nQZK2TccuJe06M8bYwImxNduIh9Hks=;
+        b=r3gPj18Ap6AopOmGiurltKkRbVjQgdMTTKmG6fxApSuuj9DPJjuTaRXMyAve4FfR0e
+         1iYwuBK3x/PIu/ktghs3mseUchu5W533fcRWubUxptNlALGnFSlj/xvOvJkC4mzHgAWD
+         6EhJ815ijhBpelS/l5rFlSSzuLUjCxmN1F+hxmP9xJPyDviMkdvK0KK4XeSymqMRjnbx
+         RRIYPeiJiWqRG9h2Mqyxd1LVN8UyDtOQJpYOhYehTHIsyMYHUWnTAqT2RtM2DPOvfli3
+         VGVjoGpb3ESQGN1B7saauu0Z5ioau5ImOUDsNsP0clbS0o/zyqbVj6qufLadf7nEpcXY
+         fkPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkGiQ60FME77KBtdyFtw1AGEoerw/VNnaFaZ96wYKR2IgEv9TsYwSftGxkUQfoTFle7Ev9INMrGjZoVC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5sdDpN6IHPrQfFK1RDYTXV9QPLisinaXizsKb7ahmEc3QjOGw
+	M9/KQr5Kme7B/TLHDm+JWoCXisjK1LtQ7FDCEtyLME2dz6izWnTP
+X-Gm-Gg: ASbGncuLuAFAhv6hJKlAy5KSKOJmO3h0dJWdwnNA1yl4iH9JMRJ4SrzdErOQ1nvjdTm
+	/pHjfksj056piTxYX0X3kN9hynsHFHLxGqB2Cg6TKCUvBXZRbnywKEF59aGsvYZNQZqyQQKz4zq
+	W/1B8W7uyYHyPW7npuQc2IkEOQVP+YZSHrzQy7TlcaXRGX0fb4rR018RST9hxtRruWQFqWEX/P3
+	+M/u7g7JXHcvv0/go9lqv4o4BxFQRLp3G0dsq8qx7QIIrb2nOBAKLcYWbm/5HHLEmiCqp1W6MoR
+	p6oc/iuRor1kiXCYGZ57Nsr3C0B4SlSzv2wd1aeEz0s5EKhjHlQW2kc+7Vg0vyrJ
+X-Google-Smtp-Source: AGHT+IGl4JCafq/SyDh3qQGSjEQfpCYf/XEY/8sqQywe6otVD8GhNKZ2Fe8OOwdiYoKHHvDzNEJVxg==
+X-Received: by 2002:a05:6000:2212:b0:38f:2678:d790 with SMTP id ffacd0b85a97d-39eaaea67f4mr11937204f8f.33.1744669576284;
+        Mon, 14 Apr 2025 15:26:16 -0700 (PDT)
+Received: from f (cst-prg-79-34.cust.vodafone.cz. [46.135.79.34])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c70csm12351447f8f.38.2025.04.14.15.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 15:26:15 -0700 (PDT)
+Date: Tue, 15 Apr 2025 00:26:05 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Ankur Arora <ankur.a.arora@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com, luto@kernel.org, 
+	paulmck@kernel.org, rostedt@goodmis.org, tglx@linutronix.de, willy@infradead.org, 
+	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, 
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Subject: Re: [PATCH v3 1/4] x86/clear_page: extend clear_page*() for
+ multi-page clearing
+Message-ID: <pf2p3ugs3blztd5jtxuwrg3hc3qldc4a7lfpigf24tit5noyik@67qhychq2b77>
+References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
+ <20250414034607.762653-2-ankur.a.arora@oracle.com>
+ <Z_yr_cmXti4kXHaX@gmail.com>
+ <20250414110259.GF5600@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414110259.GF5600@noisy.programming.kicks-ass.net>
 
-add the defer setting to the selftests library for reading thp settings.
+On Mon, Apr 14, 2025 at 01:02:59PM +0200, Peter Zijlstra wrote:
+> This symbol is written as a C function with C calling convention, even
+> though it is only meant to be called from that clear_page() alternative.
+> 
+> If we want to go change all this, then we should go do the same we do
+> for __clear_user() and write it thusly:
+> 
+> 	asm volatile(ALTERNATIVE("rep stosb",
+> 				 "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRS)
+> 				 : "+c" (size), "+D" (addr), ASM_CALL_CONSTRAINT
+> 				 : "a" (0))
+> 
+> And forget about all those clear_page_*() thingies.
+> 
 
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- tools/testing/selftests/mm/thp_settings.c | 1 +
- tools/testing/selftests/mm/thp_settings.h | 1 +
- 2 files changed, 2 insertions(+)
+I have to disagree.
 
-diff --git a/tools/testing/selftests/mm/thp_settings.c b/tools/testing/selftests/mm/thp_settings.c
-index ad872af1c81a..b2f9f62b302a 100644
---- a/tools/testing/selftests/mm/thp_settings.c
-+++ b/tools/testing/selftests/mm/thp_settings.c
-@@ -20,6 +20,7 @@ static const char * const thp_enabled_strings[] = {
- 	"always",
- 	"inherit",
- 	"madvise",
-+	"defer",
- 	NULL
- };
- 
-diff --git a/tools/testing/selftests/mm/thp_settings.h b/tools/testing/selftests/mm/thp_settings.h
-index fc131d23d593..0d52e6d4f754 100644
---- a/tools/testing/selftests/mm/thp_settings.h
-+++ b/tools/testing/selftests/mm/thp_settings.h
-@@ -11,6 +11,7 @@ enum thp_enabled {
- 	THP_ALWAYS,
- 	THP_INHERIT,
- 	THP_MADVISE,
-+	THP_DEFER,
- };
- 
- enum thp_defrag {
--- 
-2.48.1
+Next to nobody has FSRS, so for now one would have to expect everyone
+would be punting to the routine. Did you mean ERMS as sizes are in fact
+not short?
 
+rep_stos_alternative() as implemented right now sucks in its own right
+("small" areas sorted out with an 8 byte and 1 byte loops, bigger ones
+unrolled 64 byte loop at a time, no rep stos{b,q} in sight). Someone(tm)
+should fix it and for the sake of argument suppose it happened. That's
+still some code executed to figure out how to zero and to align the buf.
+
+Instead, I think one can start with just retiring clear_page_orig().
+
+With that sucker out of the way, an optional quest is to figure out if
+rep stosq vs rep stosb makes any difference for pages -- for all I know
+rep stosq is the way. This would require testing on quite a few uarchs
+and I'm not going to blame anyone for not being interested.
+
+Let's say nobody bothered OR rep stosb provides a win. In that case this
+can trivially ALTERNATIVE between rep stosb and rep stosq based on ERMS,
+no func calls necessary.
