@@ -1,97 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA9C29AB18;
-	Mon, 14 Apr 2025 12:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077B880B;
+	Mon, 14 Apr 2025 12:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744632701; cv=none; b=edFaKJsS8sy+y1o0qGNnP2jBtQAigYtiZs4dZLGCe/jwFUm+G3pPqdwX80QliA0FaKcZVOpIOkt+OII7GhZweCCitcW2/q9GySaqCWqtRKVdwNmgcJjxSQ7JTi08dEH2Zf65WmG4MvLc9GyIuSJJpqmx2g756lHTUGYs/Te4BXQ=
+	t=1744632701; cv=none; b=Lgk9MUZGgS8EEzFJBznmB0FV6ygE7TtLJ/X/1RKmxV+ZWxqdPb16PB5MuESPbuKZqUI2ho/T1S/R+nGVV50QwaBul3ADkBstRVql6IjHV2ELLnYTbLQvTeME9JqEWsJVI0zJi8oNIuxXHkSq7o3bbMzm8DKrqzWyFf12MvLbckg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744632701; c=relaxed/simple;
-	bh=0M3qRoyPJwBJF72GEzdV/WEuh/2ElnDu876t8GQlNEM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=AIy/AQXt9GGDcaTPrL6RKz18HBVo1xhz/bOPpnmgi/fW7Z4jsWO06P9ncUV46gAVtoXr/V4inLKId/hP64b/WznQR+g8Hc3/1k4nhuvo0ztVYmbP1T5+7AI5wyhO72Bf9R2CNRcgHNIu4xgBS7YoG9RtiV0fo+GraRupvMnhPDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cgNn8jNt; arc=none smtp.client-ip=10.30.226.201
+	bh=bnGxRLs+K1CD65Hx8HF8eGtWOdGRG6IAiUaBqUPEOhU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mvGNQSC6kyhH/xMjRum/Bul7FrK3ZKV6Yxqi+N5wU1UZ0+tPcp7/1B0C6K3sBJ6bLHbu2Pw/bI9UGDvpq6pOcy1K+Eu+L8sDgZ6epYC6z+mMIsJZS6L0yUdfiKjEimZ0iUl7PacikEIKFSPOz8gUX73wQyuphV5NaiXYmPbKaCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Me95RUpC; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cgNn8jNt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAB0C4CEE2;
-	Mon, 14 Apr 2025 12:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744632700;
-	bh=0M3qRoyPJwBJF72GEzdV/WEuh/2ElnDu876t8GQlNEM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=cgNn8jNtfy2oO8wAUQLMgWIpNQLRz1lZOb382FKfW3unhP3t8UUssZqahm/xiXKwf
-	 jvyQf+qft3aRwiGecrB/XqIfK0O+SX/mAb2RmLslRAOXgFB/6nqsW6+I+FjIM03Gwo
-	 /EFjaFhaZ32i62Fb4I8xdkb4+WN0Ifx2KFb7g+PXGqXc6huLQYxmxvU2OHcQFVqmuT
-	 62u5U6JnCQlCCrDSJGWczsNcPf2HgdRgFVd+aKt1hzI8Dr37fap4hTJdAbVdUn9X60
-	 S8CHLCpQ7lRxl+D9uudlcFW/YRXFu3QtbtHGqECqssGHGGzqjFqtd/fQnoJK7Ig8MZ
-	 i9XZOUlB/TygQ==
-Date: Mon, 14 Apr 2025 07:11:38 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me95RUpC"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86cd8bcd8dfso160593241.0;
+        Mon, 14 Apr 2025 05:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744632699; x=1745237499; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ac6H1/o/h+9u2eKjIhXkLMaofu5biYHSL+e4b7ZsNoc=;
+        b=Me95RUpCaGgc69j61FaFshjtTYENg13e+D47PgRr5hIFM5GBn7vBDRucNvVdWIOund
+         KR09nLZMlSn+QOPT1/faj8DyfPfgC2AcrZxsATjq3FZ3ayNtt8RBzR1xIb/mz5Sm2xJo
+         8Lflg3NpeokLWKItyqox7aS+1jqODFwuK5yhMMI+POg8fGxffbhhtG9r9ohvScuLGaSp
+         jBQEsJ+tTrOAd41GCvrsZ+YqEv5JMT7f5KwZ40ydskw+8NGCWV6OYf/Y9mJyXMBS9cSX
+         6mT+aqppiN8dhIIE+EY4Hu4hKenUEQGRG3ljMkeDlAGVFP/V0zvmOsAlqQLCgO1gMhm+
+         nJFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744632699; x=1745237499;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ac6H1/o/h+9u2eKjIhXkLMaofu5biYHSL+e4b7ZsNoc=;
+        b=ad3VF6OTE1NFdsQDlSw0vI7evfYZnkVJYai552Sa1A0N8Zbzj2s/SwL9xRVrFMNxjs
+         5WlNVygh71PdIyvMyZ1bRZCnZZSSw/zt64Lpc4Icy/F1h0eZtcmSjum++ip6P13knw3G
+         95ashmcDv5jSIDfKJByLsjxzGthJm65pxq6QxW2ek5bs9RQEJXzu6CdysyM/w+Yid3YF
+         x97HfGAw3v198iv1cON5MSmioN/UAcjhIpMIMzjOvf6ZMGWCHpK++lSlQsvqGGkeYniP
+         KQzciWcE63jxQR9M0XllLoH875yGdW8Q8Mp/Pnk9jSrIdkDcOp7YQBs23kEN/GrUIY0m
+         JyeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1THRjcUOrhKm1LO3kiLVa7Yeqerg1O+DBYx6F2Rw7v+EnQoBcQ9wkfX3M81okfFXFmnWrGcvEoyoS@vger.kernel.org, AJvYcCXKq0yE8RDszOWS+wlspAgSYSTf5QnkCC7QfKKvrMtEtYFNMegoRLTedShgnkuz32PYvakVVMDw8jDuvH/P@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJwbe0ZBSXjDdm0tP2fV2/OS6u2WOb64eiSbrYPa9Lu94OQCWC
+	ASt5VMGuBwCZbeRnp7St+xzWvGYdBIN6/4i+qiH/t7p9F36i/Hqdvo+wIIxq9dQl9srIiCdwvJy
+	k7rshBsA4JxNwcboLsDlFvL5jqQ==
+X-Gm-Gg: ASbGncspxQQYy6y54vQMDhBK6Bqri82l+u9XdmV9gh/0nA3JkzkmUwbZUJglXVYQ8YW
+	x7c8vhyEV9IT/q6+dZ3C/IkK25qBTk1dCULZ3S/YR7NlA6skX0dfE+NeOTMcwceGZzil85l5br/
+	AdypIQWXJYJKewJIK3Yebv4rE=
+X-Google-Smtp-Source: AGHT+IF+TKucMPytpTJ5R+CA8NEB5VA18YC7dTPTBjoM8fCHrXGk3NfE5eJA70tng973CAZHmwTuo9mPRPDMashJT88=
+X-Received: by 2002:a05:6102:568c:b0:4c1:8047:e002 with SMTP id
+ ada2fe7eead31-4c9e4ebb690mr2539916137.1.1744632698529; Mon, 14 Apr 2025
+ 05:11:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Kevin Hilman <khilman@baylibre.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-To: Chuan Liu <chuan.liu@amlogic.com>
-In-Reply-To: <20250414-clk-measure-v2-2-65077690053a@amlogic.com>
-References: <20250414-clk-measure-v2-0-65077690053a@amlogic.com>
- <20250414-clk-measure-v2-2-65077690053a@amlogic.com>
-Message-Id: <174463269823.14040.7362554560667126238.robh@kernel.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: soc: amlogic: C3 supports
- clk-measure
+References: <20250412193153.49138-1-chenyuan0y@gmail.com> <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
+In-Reply-To: <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+Date: Mon, 14 Apr 2025 07:11:27 -0500
+X-Gm-Features: ATxdqUEmzNKqNy2VeDRm0Ya7G52O07CobBBqgfreeKbyqmOiDNlMjis513mrcFY
+Message-ID: <CALGdzurLWayryjUEdSy4iuHAgFO=RA=HN=u+BZY96JqESKvi+A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 14, 2025 at 4:24=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
+>
+> Hello Chenyuan, Linus, Bartosz,
+>
+> On Sat Apr 12, 2025 at 9:31 PM CEST, Chenyuan Yang wrote:
+> > Add check for the return value of clk_enable() to catch
+> > the potential error.
+> >
+> > This is similar to the commit 8332e6670997
+> > ("spi: zynq-qspi: Add check for clk_enable()").
+> >
+> > Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> > Fixes: 966942ae4936 ("gpio: nomadik: extract GPIO platform driver from =
+drivers/pinctrl/nomadik/")
+> > ---
+> >  drivers/gpio/gpio-nomadik.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+> > index fa19a44943fd..dbc4cdddf4df 100644
+> > --- a/drivers/gpio/gpio-nomadik.c
+> > +++ b/drivers/gpio/gpio-nomadik.c
+> > @@ -262,8 +262,11 @@ static unsigned int nmk_gpio_irq_startup(struct ir=
+q_data *d)
+> >  {
+> >       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> >       struct nmk_gpio_chip *nmk_chip =3D gpiochip_get_data(gc);
+> > +     int ret;
+> >
+> > -     clk_enable(nmk_chip->clk);
+> > +     ret =3D clk_enable(nmk_chip->clk);
+> > +     if (ret)
+> > +             return ret;
+> >       nmk_gpio_irq_unmask(d);
+> >       return 0;
+> >  }
+>
+> Returning a negative value whereas the ->irq_startup() [0] return value
+> is an unsigned int? From some quick godbolt testing and briefly reading
+> the spec it looks safe to do a round trip (signed->unsigned->signed),
+> though not ideal to my eyes.
+>
+> The caller is __irq_startup() [1].
+>
+> As for why irq_startup returns an unsigned int, I am unsure. The kernel
+> Git history isn't enough to know more. The startup field in struct
+> hw_interrupt_type appeared on v2.3.14 [2], so no commit message to
+> explain decisions.
+>
+> Seeing the __irq_startup() code, my proposal would be to turn the return
+> value to a signed int, but I haven't exhaustively checked codepaths.
 
-On Mon, 14 Apr 2025 18:12:29 +0800, Chuan Liu wrote:
-> C3 adds support for clk-measure.
-> 
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
-> ---
->  .../devicetree/bindings/soc/amlogic/amlogic,meson-gx-clk-measure.yaml    | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Good catch! I agree that using a signed int could be a better option.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Dear Linus and Bartosz, could you please share your thoughts? If
+you=E2=80=99re on board with the change, I=E2=80=99ll go ahead and send a n=
+ew patch.
 
-yamllint warnings/errors:
+> Thanks,
+>
+> [0]: https://elixir.bootlin.com/linux/v6.13.7/source/include/linux/irq.h#=
+L503
+> [1]: https://elixir.bootlin.com/linux/v6.13.7/source/kernel/irq/chip.c#L2=
+44
+> [2]: https://elixir.bootlin.com/linux/2.3.14/source/include/linux/irq.h#L=
+21
+>
+> --
+> Th=C3=A9o Lebrun, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml: maintainers:0: 'Frank Li' does not match '@'
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-
-doc reference errors (make refcheckdocs):
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt_link<../../networking/netlink_spec/rt_link>`
-Warning: Documentation/arch/powerpc/cxl.rst references a file that doesn't exist: Documentation/ABI/testing/sysfs-class-cxl
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt_link<../../networking/netlink_spec/rt_link>`
-Documentation/arch/powerpc/cxl.rst: Documentation/ABI/testing/sysfs-class-cxl
-MAINTAINERS: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-lib/Kconfig.debug: Documentation/dev-tools/fault-injection/fault-injection.rst
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250414-clk-measure-v2-2-65077690053a@amlogic.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-Chenyuan
