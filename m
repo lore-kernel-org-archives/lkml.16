@@ -1,25 +1,25 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27BB27979A;
-	Mon, 14 Apr 2025 15:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126AF274642;
+	Mon, 14 Apr 2025 15:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644420; cv=none; b=ZBrfZ2S0bOK3mfBgApN4OU96CKkuIPc79seP6WhyTpXahQfTbDir2ZJMjQXbGSdT3rYl/5Uhptl+XvXCyuOVj9082ecWe5FDnSejfqDszvrnv6RksxdpBqOQ1drmCXwdObmy90Fnm0diTbR9MuLlUC5ieDgjy8M4hblqzRVvlek=
+	t=1744644422; cv=none; b=sq6roskqF47De0PunvhVSQWLTcMEZ9cIHD/MeargdjNYa6aA3Ux9D4vZjSPGTLDKJ0V4XWexlLCf0I0bDRejCP4kkKPTj+joaD5TiIuxd7B7ihvNp9vWGpu1jCZts+wcQk2jc07Qe0DtmnhgXw5qJQj32zqR8Jmz/GWDX02M17o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644420; c=relaxed/simple;
-	bh=5U49g9YpNRw3gJcz/M8aGe2hUaNK6XKvyw07O3jSlLo=;
+	s=arc-20240116; t=1744644422; c=relaxed/simple;
+	bh=myCQWYQ5yFgd2BuNSiywex37N2f8bLHvBD8YV269Ips=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D+9VUz8Xbz0eSBBtC7HajkJhfAwCWFcaKUBeh0tLV6wpS43lgtE6AoMk/V3EOZ0cIuy6TGy8dktJCRZQ2g0BJIeyBjvHwOXuNnrXRR77qL7msKaQdAFhZcrEyxMwbHrE0UeqbYbB2i/E5yWlBfdL4tZWJ9y35LAksKxN0Ezpo5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
+	 MIME-Version; b=nbSkVvBfbnuAyqdztd/ki0CuOHPUGxjDx0chebThjcBpSPbWCxLuLUSgZ5xJeLNm+NGoa6ZY0yjbD4jsvIbHHb8c+grBWXW638nd5HPlBPFYKvHY97fowkbFC/kwjdWumjSoSHwHzaiY4ALrY833T1MjabYZA0DZDOK/e3C4mXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
 Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Zbrk666rnz9ttn;
-	Mon, 14 Apr 2025 17:26:54 +0200 (CEST)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Zbrk92D4Yz9vGD;
+	Mon, 14 Apr 2025 17:26:57 +0200 (CEST)
 From: Remo Senekowitsch <remo@buenzli.dev>
 To: Rob Herring <robh@kernel.org>,
 	Saravana Kannan <saravanak@google.com>,
@@ -39,9 +39,9 @@ To: Rob Herring <robh@kernel.org>,
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v2 4/5] rust: property: Add property_get_reference_args
-Date: Mon, 14 Apr 2025 17:26:29 +0200
-Message-ID: <20250414152630.1691179-5-remo@buenzli.dev>
+Subject: [PATCH v2 5/5] samples: rust: platform: Add property read examples
+Date: Mon, 14 Apr 2025 17:26:30 +0200
+Message-ID: <20250414152630.1691179-6-remo@buenzli.dev>
 In-Reply-To: <20250414152630.1691179-1-remo@buenzli.dev>
 References: <20250326171411.590681-1-remo@buenzli.dev>
  <20250414152630.1691179-1-remo@buenzli.dev>
@@ -52,121 +52,130 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4Zbrk666rnz9ttn
+X-Rspamd-Queue-Id: 4Zbrk92D4Yz9vGD
 
-Allow Rust code to read reference args from device properties. The
-wrapper type `FwNodeReferenceArgs` allows callers to access the buffer
-of read args safely.
+Add some example usage of the device property read methods for
+DT/ACPI/swnode properties.
 
+Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 ---
- rust/kernel/property.rs | 79 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+ drivers/of/unittest-data/tests-platform.dtsi |  3 +
+ samples/rust/rust_driver_platform.rs         | 69 +++++++++++++++++++-
+ 2 files changed, 69 insertions(+), 3 deletions(-)
 
-diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
-index d9fb773b6..17ad17637 100644
---- a/rust/kernel/property.rs
-+++ b/rust/kernel/property.rs
-@@ -78,6 +78,17 @@ pub fn get_child_by_name(&self, name: &CStr) -> Option<ARef<FwNode>> {
-     pub fn children<'a>(&'a self) -> impl Iterator<Item = ARef<FwNode>> + 'a {
-         self.fwnode().children()
-     }
+diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
+index 4171f43cf..50a51f38a 100644
+--- a/drivers/of/unittest-data/tests-platform.dtsi
++++ b/drivers/of/unittest-data/tests-platform.dtsi
+@@ -37,6 +37,9 @@ dev@100 {
+ 			test-device@2 {
+ 				compatible = "test,rust-device";
+ 				reg = <0x2>;
 +
-+    /// Finds a reference with arguments.
-+    pub fn property_get_reference_args(
-+        &self,
-+        prop: &CStr,
-+        nargs: NArgs<'_>,
-+        index: u32,
-+    ) -> Result<FwNodeReferenceArgs> {
-+        self.fwnode()
-+            .property_get_reference_args(prop, nargs, index)
-+    }
++				test,u32-prop = <0xdeadbeef>;
++				test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
+ 			};
+ 		};
+ 
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+index 8120609e2..0284f1840 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -2,7 +2,7 @@
+ 
+ //! Rust Platform driver sample.
+ 
+-use kernel::{c_str, of, platform, prelude::*};
++use kernel::{c_str, of, platform, prelude::*, str::CString};
+ 
+ struct SampleDriver {
+     pdev: platform::Device,
+@@ -22,18 +22,81 @@ impl platform::Driver for SampleDriver {
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+ 
+     fn probe(pdev: &mut platform::Device, info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
+-        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
++        let dev = pdev.as_ref();
++
++        dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
+ 
+         if let Some(info) = info {
+-            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
++            dev_info!(dev, "Probed with info: '{}'.\n", info.0);
+         }
+ 
++        Self::properties_parse(dev)?;
++
+         let drvdata = KBox::new(Self { pdev: pdev.clone() }, GFP_KERNEL)?;
+ 
+         Ok(drvdata.into())
+     }
  }
  
- /// A reference-counted fwnode_handle.
-@@ -316,6 +327,65 @@ pub fn children<'a>(&'a self) -> impl Iterator<Item = ARef<FwNode>> + 'a {
-             Some(next)
-         })
-     }
++impl SampleDriver {
++    fn properties_parse(dev: &kernel::device::Device) -> Result<()> {
++        if let Ok(idx) = dev.property_match_string(c_str!("compatible"), c_str!("test,rust-device"))
++        {
++            dev_info!(dev, "matched compatible string idx = {}\n", idx);
++        }
 +
-+    /// Finds a reference with arguments.
-+    pub fn property_get_reference_args(
-+        &self,
-+        prop: &CStr,
-+        nargs: NArgs<'_>,
-+        index: u32,
-+    ) -> Result<FwNodeReferenceArgs> {
-+        let mut out_args = FwNodeReferenceArgs::default();
++        if let Ok(str) = dev
++            .property_read::<CString>(c_str!("compatible"))
++            .required()
++        {
++            dev_info!(dev, "compatible string = {:?}\n", str);
++        }
 +
-+        let (nargs_prop, nargs) = match nargs {
-+            NArgs::Prop(nargs_prop) => (nargs_prop.as_char_ptr(), 0),
-+            NArgs::N(nargs) => (ptr::null(), nargs),
-+        };
++        let prop = dev.property_read_bool(c_str!("test,bool-prop"));
++        dev_info!(dev, "bool prop is {}\n", prop);
 +
-+        // SAFETY: `self.0.get()` is valid. `prop.as_char_ptr()` is valid and
-+        // zero-terminated. `nargs_prop` is valid and zero-terminated if `nargs`
-+        // is zero, otherwise it is allowed to be a null-pointer.
-+        let ret = unsafe {
-+            bindings::fwnode_property_get_reference_args(
-+                self.0.get(),
-+                prop.as_char_ptr(),
-+                nargs_prop,
-+                nargs,
-+                index,
-+                &mut out_args.0,
-+            )
-+        };
-+        to_result(ret)?;
++        if dev.property_present(c_str!("test,u32-prop")) {
++            dev_info!(dev, "'test,u32-prop' is present\n");
++        }
 +
-+        Ok(out_args)
++        let prop = dev
++            .property_read::<u32>(c_str!("test,u32-optional-prop"))
++            .or(0x12);
++        dev_info!(
++            dev,
++            "'test,u32-optional-prop' is {:#x} (default = {:#x})\n",
++            prop,
++            0x12
++        );
++
++        // Missing property without a default will print an error
++        let _ = dev
++            .property_read::<u32>(c_str!("test,u32-required-prop"))
++            .required()?;
++
++        let prop: u32 = dev.property_read(c_str!("test,u32-prop")).required()?;
++        dev_info!(dev, "'test,u32-prop' is {:#x}\n", prop);
++
++        // TODO: remove or replace with u16? `Property` is not implemented for
++        // unsigned integers, as suggested by Andy Shevchenko.
++
++        let prop: [i16; 4] = dev.property_read(c_str!("test,i16-array")).required()?;
++        dev_info!(dev, "'test,i16-array' is {:?}\n", prop);
++        dev_info!(
++            dev,
++            "'test,i16-array' length is {}\n",
++            dev.property_count_elem::<u16>(c_str!("test,i16-array"))?,
++        );
++
++        let prop: KVec<i16> = dev
++            .property_read_array_vec(c_str!("test,i16-array"), 4)?
++            .required()?;
++        dev_info!(dev, "'test,i16-array' is KVec {:?}\n", prop);
++
++        Ok(())
 +    }
 +}
 +
-+/// The return value of `property_get_reference_args`.
-+///
-+/// - [`Device::property_get_reference_args`]
-+/// - [`FwNode::property_get_reference_args`]
-+#[repr(transparent)]
-+#[derive(Copy, Clone, Default)]
-+pub struct FwNodeReferenceArgs(bindings::fwnode_reference_args);
-+
-+impl FwNodeReferenceArgs {
-+    /// Returns the slice of reference arguments.
-+    pub fn as_slice(&self) -> &[u64] {
-+        // SAFETY: As per the safety invariant of FwNodeReferenceArgs, `nargs`
-+        // is the number of elements in `args` that is valid.
-+        unsafe { core::slice::from_raw_parts(self.0.args.as_ptr(), self.0.nargs as usize) }
-+    }
-+
-+    /// Returns the number of reference arguments.
-+    pub fn len(&self) -> usize {
-+        self.0.nargs as usize
-+    }
-+
-+    /// Returns `true` if there are no reference arguments.
-+    pub fn is_empty(&self) -> bool {
-+        self.0.nargs == 0
-+    }
- }
- 
- // SAFETY: Instances of `FwNode` are always reference-counted.
-@@ -451,6 +521,15 @@ fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
-     }
- }
- 
-+/// The number of arguments of a reference.
-+pub enum NArgs<'a> {
-+    /// The name of the property of the reference indicating the number of
-+    /// arguments.
-+    Prop(&'a CStr),
-+    /// The known number of arguments.
-+    N(u32),
-+}
-+
- /// A helper for reading device properties.
- ///
- /// Use [`Self::required`] if a missing property is considered a bug and
+ impl Drop for SampleDriver {
+     fn drop(&mut self) {
+         dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver sample.\n");
 -- 
 2.49.0
 
