@@ -1,46 +1,82 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F974198851
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8356198851
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600508; cv=none; b=baTO9JEMyD4/rED6GXxaHPNFgMSNvQ68dtA+aT5vXoyi4M+QMPdK7iORq2IK541qzej4A7pP9AVw32sjNJKOWJk8uf5B6GBsDZCFt/ucGUfIdRLM6epwf0Lo4smRHAF/xSdXVYywZgiYi47h/z39sm20+MfL79rP0iur+lDnp84=
+	t=1744600513; cv=none; b=qdm7XakT9lpwCRPsUOlp8rPFl0wbnseWYOwgT70cPAAH83m1tgiJeLempE0WGNgd+3wp5pIlrUsigKCOTCuv+Uy7T+csYn3p9wIecMLuJLVR56GKl139q4I/ej0KzO9VuQkMzcHPZZktileMGM+CDKNnLXKSpnurq7SMHafzXOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600508; c=relaxed/simple;
-	bh=CMTgxbmMKRjikEeKDDpvoZBdRAA+KUNy6JgrtUiG8lI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rv+LR84CWXCNxQwpf+R8jUJFH/5f5wUXKRgFIcYujGmlVa2iWf8fYs42aBhf0l3R/t+WVI9oNR1NSvtLMjIniPyOPuXz1beRLU7gxVJXzlGe9Le3xlfrvPgsxT68YnPxo20Yb7WDeuViVn5X4gJVjN4e6VbMtpimempWEBwqbhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowADXfwCtffxnLIbCCA--.13743S2;
-	Mon, 14 Apr 2025 11:14:54 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	alex.hung@amd.com
-Cc: chiahsuan.chung@amd.com,
-	hamza.mahfooz@amd.com,
-	sunil.khatri@amd.com,
-	aurabindo.pillai@amd.com,
-	hersenxs.wu@amd.com,
-	mario.limonciello@amd.com,
-	mwen@igalia.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	s=arc-20240116; t=1744600513; c=relaxed/simple;
+	bh=wzRIJgLkF8VUETe1SqtyrBmiyQlvLZjQsQ+5bkHj4xk=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=lGT/5tdqEkjBgbzlM+6uHVX3aQyaa1p4+uJZa8l9Y06rH+tDo+Pb72efjIUp9lQFzNtsmYgrkata06nn9odwx+oFN9idYVrS+ycj3DvrApjqM+pu3pdxwSOX3Y7RJTBYIk4Uu/l8LuIX42hjG2z90BGbiS2NsKjPAenaB32DG8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RCycGpJB; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RCycGpJB"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso3549574b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 20:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1744600509; x=1745205309; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=thHsBjdSUEPBqZYjj1q1ADPSVWz2MuGiCEWFo9naqu0=;
+        b=RCycGpJBT/bjHawpA/eIJp8Nkz2XHtMpIsZpWDHGQIE41wTaodXHryw/EO8xA6tx0x
+         zWYDhNsDIOv4hxc44HcSOoYSZGuQ25qZBd9/P9VEsLYV2qYm5EmZ6uOIPBOAQMGpMdmx
+         Ybe6fkFurq4cnqcDRzG0XWohD9D06f/JlX6BKVInNyjMKVsnlSKUt561772aRrJtBlQ7
+         MUMq4vM8IWjl4gKrs6uo6rZSmjr96qKd9i+Lw2uZKqIUFLcVMTfeL2U+horV3q+odWKm
+         jmdRMoNZvPbZ197gKHAG1D7rhjMbGfFwy16sHEwzugn+DqhLtY4HnzJrLrtnNZFzO4yX
+         2fiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744600509; x=1745205309;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=thHsBjdSUEPBqZYjj1q1ADPSVWz2MuGiCEWFo9naqu0=;
+        b=uQGlJX2Ph5djz0j/4OwwV4J9eeFD3B9TygwflhT/+TKaV+ve8cgLas8hT6+oCY54cQ
+         50/68EoESAOW9B56sPJnNXEKhq7xL6U3C1nDYuOwLKmV23tAFwSdcdN35LU/MHjPoowv
+         bNFeHZCyXH5HMLJwXLIKVKmDMPV+bDnCbYqaQwdwg7ViAyYkIFdE0JvtmDRvEFKw2rLo
+         y0M2lCbqJJzKUtDaYmOL+Mbg+GupNrhQyjMjosBTMcH0Jhuvz6DuVe+G0hQsBafh1433
+         arRggBqgP47bLqIQ69MYRY0l6k7GGmdWvGY5IfvMtohNH6S1w1083K1Njj2Qw8xHsTTm
+         NTew==
+X-Forwarded-Encrypted: i=1; AJvYcCUvi/9CwrYJNkhNgUStXOvUAZ+t5hEg+wL2Ivo4oz33CxZwKaGoUTE2b/Ebr6uSyRup+N+EcndOwOoY+W8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWOoAr263i+aUajoHbwdb2HgOaet0J1W8iGMQpWdHkdHdnFYd3
+	dA9vphl5I3RFrMcnom0tVi3l0/s2ef3+3umi0NWDGP6Hqj2mJkoFvKTHWp87YyQ=
+X-Gm-Gg: ASbGncsq8FzjMpG9855WWkzso7nNha/sdb5AJmzlSnJZ0j7Q0G5Tzd+RSjwgcGdQPqW
+	HHX+S/t1fhXYtQ+K8oFslmFWKpZix1vVKma5rGa8lsz8Qm8+80PgagrKle3bz4/BAksDvBp8teM
+	qYmi+AY2FvnS7yUcHeYOEklQQn+tACQyhYO2sHlfFvggVIvAFLEHz7mPvcwRq/9jfHoGb41MNTm
+	jdMqpRYc4UzFLC9XQePmBQC1/fjK8pCEPw8VHiBaRYeihYwnYZN9EV8cBk1k8XuCUvIH3sNDwy+
+	zJFcOx6eZtAcn2bbEg47supEUcdhjVkGTjDJRljECqIM3k7MuSARrr75Y0mn6nLG6J3uhoYz9YQ
+	=
+X-Google-Smtp-Source: AGHT+IG9RsUknfnPfzX6lufHAL3g3nxaG4w9MhD2xiFW2ObI7U3+UgIG3UDH/v0jd3xPq5DsQksqZw==
+X-Received: by 2002:a05:6a00:39a0:b0:736:34ca:deee with SMTP id d2e1a72fcca58-73bd11cb079mr14576302b3a.7.1744600508507;
+        Sun, 13 Apr 2025 20:15:08 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([139.177.225.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21df1a7sm5646781b3a.73.2025.04.13.20.15.02
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 13 Apr 2025 20:15:08 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	pmladek@suse.com,
+	arnd@arndb.de,
+	namcao@linutronix.de,
+	cuiyunhui@bytedance.com,
+	benjamin.larsson@genexis.eu,
+	schnelle@linux.ibm.com,
+	heikki.krogerus@linux.intel.com,
+	markus.mayer@linaro.org,
+	tim.kryger@linaro.org,
+	matt.porter@linaro.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v3] drm/amd/display: Add error check for avi and vendor infoframe setup function
-Date: Mon, 14 Apr 2025 11:14:39 +0800
-Message-ID: <20250414031439.1895-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	linux-serial@vger.kernel.org
+Subject: [PATCH v3] serial: 8250: fix panic due to PSLVERR
+Date: Mon, 14 Apr 2025 11:14:50 +0800
+Message-Id: <20250414031450.42237-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,72 +84,208 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADXfwCtffxnLIbCCA--.13743S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF4UAr47KFyUJw47ZF4rAFb_yoW8uw1Upw
-	48t34qyrW0qFZxCryUAFn5ua90k3s7JFy7Kr45Aw15W3s5KrZxJa1fJF1kJ3y7ZFZ5A3Wa
-	y3WUX3y2qF1vk3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
-	xK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JV
-	WxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwV
-	AFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pKLvKUU
-	UUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwMA2f8WvF21QABsX
 
-The function fill_stream_properties_from_drm_display_mode() calls the
-function drm_hdmi_avi_infoframe_from_display_mode() and the
-function drm_hdmi_vendor_infoframe_from_display_mode(), but does
-not check its return value. Log the error messages to prevent silent
-failure if either function fails.
+When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+an error response if an attempt is made to read an empty RBR (Receive
+Buffer Register) while the FIFO is enabled.
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+Execution proceeds to the dont_test_tx_en label:
+...
+serial_port_in(port, UART_RX);
+This satisfies the PSLVERR trigger condition.
+
+Because another CPU(e.g., using printk()) is accessing the UART (UART
+is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+(lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
+
+To fix this, all calls to serial_out(UART_LCR) and serial_in(UART_RX)
+should be executed under port->lock. Additionally, checking the readiness
+via UART_LSR should also be done under port->lock.
+
+Panic backtrace:
+[    0.442336] Oops - unknown exception [#1]
+[    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+[    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+...
+[    0.442416] console_on_rootfs+0x26/0x70
+
+Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
+Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
-v3: Fix error-logging function error
-v2: Fix code diff error
+ drivers/tty/serial/8250/8250_dw.c   |  8 +++++
+ drivers/tty/serial/8250/8250_port.c | 46 ++++++++++++++++++-----------
+ 2 files changed, 36 insertions(+), 18 deletions(-)
 
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 5f216d626cbb..cdf1a07aa8af 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6104,6 +6104,7 @@ static void fill_stream_properties_from_drm_display_mode(
- 	struct amdgpu_dm_connector *aconnector = NULL;
- 	struct hdmi_vendor_infoframe hv_frame;
- 	struct hdmi_avi_infoframe avi_frame;
-+	ssize_t err;
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index af24ec25d976..e97200ff30e3 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/io.h>
++#include <linux/lockdep.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+@@ -112,6 +113,13 @@ static void dw8250_force_idle(struct uart_port *p)
+ 	struct uart_8250_port *up = up_to_u8250p(p);
+ 	unsigned int lsr;
  
- 	if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
- 		aconnector = to_amdgpu_dm_connector(connector);
-@@ -6150,9 +6151,17 @@ static void fill_stream_properties_from_drm_display_mode(
++	/*
++	 * Serial_in(p, UART_RX) should be under port->lock, but we can't add
++	 * it to avoid AA deadlock as we're unsure if serial_out*(...UART_LCR)
++	 * is under port->lock.
++	 */
++	lockdep_assert_held_once(&p->lock);
++
+ 	serial8250_clear_and_reinit_fifos(up);
+ 
+ 	/*
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 3f256e96c722..21bbd18195f5 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1328,6 +1328,7 @@ static void autoconfig_irq(struct uart_8250_port *up)
+ 	unsigned int ICP = 0;
+ 	unsigned long irqs;
+ 	int irq;
++	u16 lsr;
+ 
+ 	if (port->flags & UPF_FOURPORT) {
+ 		ICP = (port->iobase & 0xfe0) | 0x1f;
+@@ -1357,9 +1358,10 @@ static void autoconfig_irq(struct uart_8250_port *up)
+ 	/* Synchronize UART_IER access against the console. */
+ 	uart_port_lock_irq(port);
+ 	serial_out(up, UART_IER, UART_IER_ALL_INTR);
++	lsr = serial_in(up, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_port_in(port, UART_RX);
+ 	uart_port_unlock_irq(port);
+-	serial_in(up, UART_LSR);
+-	serial_in(up, UART_RX);
+ 	serial_in(up, UART_IIR);
+ 	serial_in(up, UART_MSR);
+ 	serial_out(up, UART_TX, 0xFF);
+@@ -2137,19 +2139,16 @@ static void wait_for_xmitr(struct uart_8250_port *up, int bits)
+ static int serial8250_get_poll_char(struct uart_port *port)
+ {
+ 	struct uart_8250_port *up = up_to_u8250p(port);
+-	int status;
++	int status = NO_POLL_CHAR;
+ 	u16 lsr;
+ 
+ 	serial8250_rpm_get(up);
+ 
++	uart_port_lock_irqsave(port, &flags);
+ 	lsr = serial_port_in(port, UART_LSR);
+-
+-	if (!(lsr & UART_LSR_DR)) {
+-		status = NO_POLL_CHAR;
+-		goto out;
+-	}
+-
+-	status = serial_port_in(port, UART_RX);
++	if ((lsr & UART_LSR_DR))
++		status = serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
+ out:
+ 	serial8250_rpm_put(up);
+ 	return status;
+@@ -2264,13 +2263,16 @@ int serial8250_do_startup(struct uart_port *port)
+ 	 * Clear the FIFO buffers and disable them.
+ 	 * (they will be reenabled in set_termios())
+ 	 */
++	uart_port_lock_irqsave(port, &flags);
+ 	serial8250_clear_fifos(up);
+ 
+ 	/*
+ 	 * Clear the interrupt registers.
+ 	 */
+-	serial_port_in(port, UART_LSR);
+-	serial_port_in(port, UART_RX);
++	lsr = serial_port_in(port, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
+ 	serial_port_in(port, UART_IIR);
+ 	serial_port_in(port, UART_MSR);
+ 
+@@ -2380,9 +2382,10 @@ int serial8250_do_startup(struct uart_port *port)
+ 	/*
+ 	 * Now, initialize the UART
+ 	 */
+-	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+ 
+ 	uart_port_lock_irqsave(port, &flags);
++	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
++
+ 	if (up->port.flags & UPF_FOURPORT) {
+ 		if (!up->port.irq)
+ 			up->port.mctrl |= TIOCM_OUT1;
+@@ -2428,15 +2431,16 @@ int serial8250_do_startup(struct uart_port *port)
  	}
  
- 	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
--		drm_hdmi_avi_infoframe_from_display_mode(&avi_frame, (struct drm_connector *)connector, mode_in);
-+		err = drm_hdmi_avi_infoframe_from_display_mode(&avi_frame,
-+							       (struct drm_connector *)connector,
-+							       mode_in);
-+		if (err < 0)
-+			drm_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
- 		timing_out->vic = avi_frame.video_code;
--		drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame, (struct drm_connector *)connector, mode_in);
-+		err = drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame,
-+								  (struct drm_connector *)connector,
-+								  mode_in);
-+		if (err < 0)
-+			drm_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
- 		timing_out->hdmi_vic = hv_frame.vic;
- 	}
+ dont_test_tx_en:
+-	uart_port_unlock_irqrestore(port, flags);
  
+ 	/*
+ 	 * Clear the interrupt registers again for luck, and clear the
+ 	 * saved flags to avoid getting false values from polling
+ 	 * routines or the previous session.
+ 	 */
+-	serial_port_in(port, UART_LSR);
+-	serial_port_in(port, UART_RX);
++	lsr = serial_port_in(port, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
+ 	serial_port_in(port, UART_IIR);
+ 	serial_port_in(port, UART_MSR);
+ 	up->lsr_saved_flags = 0;
+@@ -2492,6 +2496,7 @@ void serial8250_do_shutdown(struct uart_port *port)
+ {
+ 	struct uart_8250_port *up = up_to_u8250p(port);
+ 	unsigned long flags;
++	u16 lsr;
+ 
+ 	serial8250_rpm_get(up);
+ 	/*
+@@ -2518,7 +2523,6 @@ void serial8250_do_shutdown(struct uart_port *port)
+ 		port->mctrl &= ~TIOCM_OUT2;
+ 
+ 	serial8250_set_mctrl(port, port->mctrl);
+-	uart_port_unlock_irqrestore(port, flags);
+ 
+ 	/*
+ 	 * Disable break condition and FIFOs
+@@ -2526,6 +2530,7 @@ void serial8250_do_shutdown(struct uart_port *port)
+ 	serial_port_out(port, UART_LCR,
+ 			serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
+ 	serial8250_clear_fifos(up);
++	uart_port_unlock_irqrestore(port, flags);
+ 
+ #ifdef CONFIG_SERIAL_8250_RSA
+ 	/*
+@@ -2538,7 +2543,12 @@ void serial8250_do_shutdown(struct uart_port *port)
+ 	 * Read data port to reset things, and then unlink from
+ 	 * the IRQ chain.
+ 	 */
+-	serial_port_in(port, UART_RX);
++	uart_port_lock_irqsave(port, &flags);
++	lsr = serial_port_in(port, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
++
+ 	serial8250_rpm_put(up);
+ 
+ 	up->ops->release_irq(up);
 -- 
-2.42.0.windows.2
+2.39.2
 
