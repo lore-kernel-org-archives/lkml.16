@@ -1,81 +1,140 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FA5288CB0;
-	Mon, 14 Apr 2025 18:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111D328A1F8;
+	Mon, 14 Apr 2025 18:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744654383; cv=none; b=E2Ctk+Xp4eV0fiHmbeIL8qlp9YFjXWE8j/qqkPm2r/7YjzeXQTmxgLdKCY7Gx2gX5JHutcJwMjvTw02xJ5Gb2ZpiDUErgidIwKt2/CW+kFsZjtbRZ41eP4UoLQ6tXDSgmdHNWDCMeY0FPqp78iO3f3DTGbJNhHppZLcTsXiiawA=
+	t=1744654512; cv=none; b=t3fqkgM6R0pnEDg4focQ79+p70XrrMttlbhSXtpTJgwD8/HFh3V/ovtIFyZsgFbSHPidAN5+UHIaYhRvB77BEbxlwhfJr5w6maC6g339jCGCdvpps7znHGuq70zpsjozjIQIBxV+KPAgBdEr1uGoPcOsFyRJ10rTcgGfhaNn7NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744654383; c=relaxed/simple;
-	bh=gY2+/IaOxZ9WI5uEFp9Ue+W+KfbiBOHIE2dibrrD68E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jRKVpLKhFD14NGhMSiYgzm79JpW6XPRgqJdJJdrf1u6cCkYwNPfQCVeI2B7hqcS4CNmVgSc0InoXunq9Mf/tXE1Mmj+n3Ph684oro8njCx+3LqqpDuB3fsAwOnbDErfHFASki7h2w9HkT/anraEj98TgDlNChMi9Ju37UXEvaE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dzSCGL7S; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744654512; c=relaxed/simple;
+	bh=rmXZAeN5cvrjRxtoREAiX6XfkQ7H1MIir/U2vqGrGMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OGggLaP8zClRIQ0V08gAn7XJiDUl8pgpCrmwjfX2ks3pNAOJqVNHXfm5JcI+gzF9QFQJjhw+GDqHXp7Cs0iRV3wQQpC/5uxtI1Q+bHA+saAMq7aG8nvLQwkHn2RmvHZtwqrFIxUlG/dfy/aY9p2nWNUnpLpP+5W0I/0DKCwaiaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fVWmRj+l; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dzSCGL7S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=pJ/36NqTPbfU92mLQwOP/jkuDkZAtiM1YNatxAkLpzM=; b=dzSCGL7Szdc4KTgwrVRHBaxS1o
-	rmMPX72z2Ph1B/x7b58EZ8ngWIX7cDyHRa2SzdR6nC1hFOGQos/44y06FY15vd6wQOjgV3fxmkKGk
-	bYkr5YqOOi9ozHs+wO+ebA701S7p3okKaysfZNzy995LOWjl9Po3U5AEkQZbgsnxSDhL3lG2cjwRm
-	icivkRnnb3njIZfaOgCUPyqD9UVkMc+AmwUaJHXz3a2P+69LVF5Ms6c4TqTpWrZc+CK6U5qaKV1Ik
-	9dDL4QsuwH3bKJ1dDYJMXvBrJkyB4qotRKmYjTE+bE4Lj/zzr5ItI4sLJDnGBbNsy6QoRtJtsrVbj
-	GGRmHmDw==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4OIc-0000000DFZe-15DV;
-	Mon, 14 Apr 2025 18:12:51 +0000
-Message-ID: <8d70668e-fd0e-4cd5-b33f-16f3250b90b8@infradead.org>
-Date: Mon, 14 Apr 2025 11:12:36 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVWmRj+l"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d69774081so1974636241.0;
+        Mon, 14 Apr 2025 11:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744654509; x=1745259309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ab8qgY0wYeMeF9f8GAqkiU/85dkzWksm0Y+DavzpAGg=;
+        b=fVWmRj+lX5hOcXvhQz8mu2E+LDcLHAC3SSbTgNSTtrsDTZ02mw3XrijhTWJn06ZPWx
+         WpL+orzD0Fwb4qRrSP0VvykFk3YbyBfo0rH93uzMhhhQy+Qs6wNyzyejkz63QK4lBxD2
+         vuZ9nnfHzaWQJPvp5i7q/Wg77WvqiwOlfyFzdiLHY7xY8U9Fm2PW087wndSmMgIOeiEH
+         U7Tw7herLkVAffpPQSwbLZAUNxKK+VH8DeUqjRsls3GcVEsU9Pa0vGNTBdPsOrh7URQr
+         py60AryeQhpyhKe2CotQwLvyvyndfUA0k7DckXYz2Wc3coS5m1cFlCtVoJvz3z7Dxs1r
+         KDdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744654509; x=1745259309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ab8qgY0wYeMeF9f8GAqkiU/85dkzWksm0Y+DavzpAGg=;
+        b=usI0ngoZnhByBFOq1hVkykWt+oWjH7rsGhd/o+NHjFgDlIqskExljn/BcGUJt3oIvG
+         JRWfut1zzEhotW79DtjR1jQ8hM29cB31q0vyu3rKmOcqlFr9fwj2atf8662IAeRA1qx3
+         g3nVyMf2FvPk44ubklw5sn3GYBxLSD9070zlDOkyf3/69PMaH0kc2t0lwaOegv3OvI0v
+         dFZVpkEsEqYG87/DcMSrNJGhLxa0IETwLqRVGPmofslcUn+EwNNjJmwAIiRSCtLWiXg4
+         +bc0NcjvFsIwgsyg5ctPg0jg2TZYPCtqCKQApcoFdXrUKcrAduhWeV3Wc5x5ILjcZSpJ
+         +qpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5P0F9WX9Ft2lr8ghbNP9wvXODZ8f+5Z7GdgkFAhVVst/z/lgjVXulFqUDjcjLMXfmfdKTv3GidTUMbK7+aAlkihU=@vger.kernel.org, AJvYcCU8HX5ykrD+BdqEnE7yMsPuiC6gnhJK0nhr431UHrcLpIsbpFQg1DgsywtBBohxm3xM7mTml+hqkzae+PTC@vger.kernel.org, AJvYcCV8bBSkX6MaspKcq08t2dyXgU9trMkMmkdxrxYTdJZ8g9lqufJaDfguSceRDz/9tGbRqBkd+3rV@vger.kernel.org, AJvYcCXPBSpT2YVn6NjcdmHSkqAezYKKiefb81VBcIwHVF1Aa16lnsmM/zMjccSK9+eqf97jCWzp/7/Nfwyr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8tbtAQJ7ozucxzXsB37S9YbEMnza3fUoZSvBomhoAwvDgDitk
+	fuUZB8ySaRJeD7JIwHZZqiZ7gadt8nYanvYsRwEUY87Q4qcOylbPTtxSwGFdRk8OAP68DXuBg5I
+	kfqcd1qZYtn7MNhfkSxGAzvBtqHk=
+X-Gm-Gg: ASbGnctYJy127u4JhxOvTMH3xLI04U+MsStEbJQ1VbozCvsAaB8/DHzBH4SvQuXNyZd
+	XE+UyF4pUfQElXB5n1HiAhWDb+iZ61+u1sue39v66xfI+rqlAc9dtHED2rr64Kbp8V9wMVTiy8O
+	bg61ic6hV5/wYN5e9CeQTDOhr2dhSs/KqQpX5Irqv+kKTXiarnKpYNMA==
+X-Google-Smtp-Source: AGHT+IGQY2h60f8WJYp88UGsGy+zjKZoZ77MuV/wdekbtzAvVIiA03PukMvok77iK0iUI19EfMYr3Th7THvYja4ZcDE=
+X-Received: by 2002:a05:6122:7d0:b0:527:67db:9cb2 with SMTP id
+ 71dfb90a1353d-527c34d1d3cmr9206320e0c.4.1744654508673; Mon, 14 Apr 2025
+ 11:15:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Apr 14 (UML [2])
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-um@lists.infradead.org
-References: <20250414171511.6c7c80af@canb.auug.org.au>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250414171511.6c7c80af@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk>
+In-Reply-To: <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 19:14:42 +0100
+X-Gm-Features: ATxdqUEl2MkISqtCUulKnIjkTEEvAI8jUFwXWbR4ZrlJPw4rcSyDREbiYNsOOl0
+Message-ID: <CA+V-a8sS0TtS-TEdkQ8MB5F4JtzV9358Y9fmKe5MggGU+wP=4Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
+ Renesas GBETH
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Russell,
 
+On Mon, Apr 14, 2025 at 5:57=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Apr 07, 2025 at 01:03:17PM +0100, Prabhakar wrote:
+> > +     gbeth->rstc =3D devm_reset_control_get_exclusive(dev, NULL);
+> > +     if (IS_ERR(gbeth->rstc))
+> > +             return PTR_ERR(gbeth->rstc);
+> > +
+> > +     gbeth->dev =3D dev;
+> > +     gbeth->regs =3D stmmac_res.addr;
+> > +     gbeth->plat_dat =3D plat_dat;
+> > +     plat_dat->bsp_priv =3D gbeth;
+> > +     plat_dat->set_clk_tx_rate =3D stmmac_set_clk_tx_rate;
+> > +     plat_dat->clks_config =3D renesas_gbeth_clks_config;
+> > +     plat_dat->flags |=3D STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY |
+> > +                        STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP |
+> > +                        STMMAC_FLAG_SPH_DISABLE;
+> > +
+> > +     err =3D renesas_gbeth_clks_config(gbeth, true);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     err =3D stmmac_dvr_probe(dev, plat_dat, &stmmac_res);
+> > +     if (err)
+> > +             renesas_gbeth_clks_config(gbeth, false);
+> > +
+> > +     return err;
+> > +}
+> > +
+> > +static void renesas_gbeth_remove(struct platform_device *pdev)
+> > +{
+> > +     stmmac_dvr_remove(&pdev->dev);
+> > +
+> > +     renesas_gbeth_clks_config(get_stmmac_bsp_priv(&pdev->dev), false)=
+;
+> > +}
+>
+> Would calling renesas_gbeth_clks_config() in the suspend/resume paths
+> cause problems?
+>
+> If not, please consider using plat_dat->init() and plat_dat->exit()
+> to control these clocks, and then use devm_stmmac_pltfr_probe()
+> which will call the ->init and ->exit functions around the probe
+> as necessary and at removal time (and you won't need the remove
+> method.)
+>
+I'll test this on the platform which can support suspend/resume and
+update accordingly.
 
-On 4/14/25 12:15 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20250411:
-> 
-
-
-on i386 defconfig:
-
-../arch/um/kernel/um_arch.c:480:6: warning: no previous prototype for 'text_poke_sync' [-Wmissing-prototypes]
-  480 | void text_poke_sync(void)
-      |      ^~~~~~~~~~~~~~
-
-
-on x86_64 defconfig:
-
-../arch/um/kernel/um_arch.c:480:6: warning: no previous prototype for 'text_poke_sync' [-Wmissing-prototypes]
-  480 | void text_poke_sync(void)
-      |      ^~~~~~~~~~~~~~
-/usr/lib64/gcc/x86_64-suse-linux/14/../../../../x86_64-suse-linux/bin/ld: arch/x86/kernel/module.o: in function `write_relocate_add':
-/home/rdunlap/lnx/next/linux-next-20250414/UM64/arch/x86/um/../kernel/module.c:209:(.text+0x1e7): undefined reference to `smp_text_poke_sync_each_cpu'
-
-
--- 
-~Randy
-
+Cheers,
+Prabhakar
