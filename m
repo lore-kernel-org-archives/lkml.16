@@ -1,162 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8A61A08AB;
-	Mon, 14 Apr 2025 17:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867651A3BC0;
+	Mon, 14 Apr 2025 17:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652982; cv=none; b=nW9f4FKE2fMhY1/4zTt2MmFRX6M646FDI1LI9g6h74Zjl2qP9fzAzAgkmcqtdVpxgVyS2AX/Eyvn2a+S4C0r/fggSmkB9Ijp6BAicv5zXF+dUYDhfRdic/eVlhnbghRPIR1mbx8IENB9BSZ9si52qIvebkntbfwFxeIIH+BHxbs=
+	t=1744653034; cv=none; b=T90PVJG8zjxZN45r0xSarItxizfe/LKUrcoDE9Aq+TYSYr4tNYj/Pt7vq753EkMRBo1OEZPyhJiuXsibJtlU1heOwZ3+6mI/S4rWJ2nHuK5lMq9HzBSpcotIGrvO/c5hEZ2Jmomcgyyio0z+ep8A8klciEU3wdkO6/Ehl8aIUoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652982; c=relaxed/simple;
-	bh=ulqrosDqiUlPlEkamQ1xyIFEuty/JmTNovXKiA2L3IU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DVa99rxHYQQhsd+j+KZfn19bVakVs61hA8Jtk38khH6zpvtk1P1pg661gE9BASAh1C9bZJe/jNnQt1bW1QFBkqwZi/WT/uIrCeoTw5eDs9wzmijvpeWK2IxvwvBXnz9937VXcM4u7OB/rpiqSX/fNQ5kpzfZakFKetoamNVLjPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WX+P93mK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744653034; c=relaxed/simple;
+	bh=u0lppupJ28hlw5WA6282KGjOBJl0lejCj3CJJJ9QQ5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJbYGoA5pqwO5+Kq5y0ZSizDHt3viMXf/Nzi5XJlB0z9AOhLN0/JPf7Qjnw4DPRD4JrVYRhyt9jnP0OlyV/nSbx/K7nF3o9SkT4sArRiuiWViSepjEfizlJaEyP3iBo6P9qjy08TH+Nyu/XchsYDcdCBmCB5Pz7DYd2BhAtNm+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Peo7dLMN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WX+P93mK"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99qtg011395;
-	Mon, 14 Apr 2025 17:49:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3yPyywTlsnu2wroIHMQvuyXG7piAsNEAqqurWw7fZ5g=; b=WX+P93mKx4PK3NOj
-	xh6vf6nHiXCBBWURnrOTWK0PFFCFi4dcv/bVkOXZem4aHPSif9elmQmHb8N4J0f3
-	PpqeVeeBu8RuRTL2pLeAT6VG47PWtk+neOiRYRblfAxE+hiZ3dRMYdG4BK6blZea
-	9hF+qYzygsFV4WwWbg3f/XlLFQ6Ye4wsdly/FdcEYjCffbIFoPnALi335BNxyn6S
-	peYjhh4APdN2RVDdlBhdcwK+zITRgUiByUAQlFoABQy4WGYumyb/Vbpi09smeXGp
-	o5kdDY6XFpzlzn2/rWUaG67zUxqlcJNf6RCfLaUub5kPiaLqbCCJbJSRknJBFKde
-	L8nkAw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wdbvm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 17:49:22 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53EHnLCv028213
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 17:49:21 GMT
-Received: from [10.216.13.250] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
- 2025 10:49:13 -0700
-Message-ID: <de05fd91-b8d2-4799-a57b-ccc6e9fbafd9@quicinc.com>
-Date: Mon, 14 Apr 2025 23:19:09 +0530
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Peo7dLMN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B68C4CEE2;
+	Mon, 14 Apr 2025 17:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744653033;
+	bh=u0lppupJ28hlw5WA6282KGjOBJl0lejCj3CJJJ9QQ5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Peo7dLMNP7L+GnBEqhqRYXDCeB4nrkjvXC0pwxhnC03PwR9MwW0L0YhmXOwUnrEz6
+	 wF8qQp+GCxtQhVgmiWhU8XgQLjnpeQdhNLZdAH5g/+4F2KsWE+DJWIH0tY3Y7OLvx1
+	 nCuZdaqahi5+h9p8+iBz0rZlRv3EtZtv+pPGiVAA=
+Date: Mon, 14 Apr 2025 19:50:31 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	Stefan Wahren <wahrenst@gmx.net>, linux-staging@lists.linux.dev,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: bcm2835-camera: Initialise dev in v4l2_dev
+Message-ID: <2025041421-fancied-thursday-97d8@gregkh>
+References: <20250414-staging-bcm2835-v4l2-fix-v1-1-2b2db9a8f293@raspberrypi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 9/9] serial: qcom-geni: Enable Serial on SA8255p
- Qualcomm platforms
-To: Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
-        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
-References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
- <20250410174010.31588-10-quic_ptalari@quicinc.com>
- <4183462f-7e4c-4da2-8f6b-0dadf26e1b2a@kernel.org>
-Content-Language: en-US
-From: Praveen Talari <quic_ptalari@quicinc.com>
-In-Reply-To: <4183462f-7e4c-4da2-8f6b-0dadf26e1b2a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fd4aa2 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=ju1iAOFsNRn_4Ngbc6QA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Jaq6r0Om7_7zFUCmQPg-SgGrNwa1g1rG
-X-Proofpoint-GUID: Jaq6r0Om7_7zFUCmQPg-SgGrNwa1g1rG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414-staging-bcm2835-v4l2-fix-v1-1-2b2db9a8f293@raspberrypi.com>
 
-HI
+On Mon, Apr 14, 2025 at 06:41:47PM +0100, Dave Stevenson wrote:
+> Commit 42a2f6664e18 ("staging: vc04_services: Move global g_state to
+> vchiq_state") changed mmal_init to pass dev->v4l2_dev.dev to
+> vchiq_mmal_init, however nothing iniitialised dev->v4l2_dev, so we got
+> a NULL pointer dereference.
+> 
+> Set dev->v4l2_dev.dev during bcm2835_mmal_probe. The device pointer
+> could be passed into v4l2_device_register to set it, however that also
+> has other effects that would need additional changes.
+> 
+> Fixes: 42a2f6664e18 ("staging: vc04_services: Move global g_state to vchiq_state")
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> ---
+> Noted as we switched to 6.12 that the driver would fail during probe
+> with an invalid dereference if a camera module was actually configured
+> for the legacy camera stack.
+> https://github.com/raspberrypi/linux/issues/6753
+> ---
+>  drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+> index b839b50ac26a..fa7ea4ca4c36 100644
+> --- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+> +++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+> @@ -1900,6 +1900,7 @@ static int bcm2835_mmal_probe(struct vchiq_device *device)
+>  				__func__, ret);
+>  			goto free_dev;
+>  		}
+> +		dev->v4l2_dev.dev = &device->dev;
+>  
+>  		/* setup v4l controls */
+>  		ret = bcm2835_mmal_init_controls(dev, &dev->ctrl_handler);
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250410-staging-bcm2835-v4l2-fix-b8dbd933c23b
+> 
+> Best regards,
+> -- 
+> Dave Stevenson <dave.stevenson@raspberrypi.com>
+> 
+> 
 
-On 4/14/2025 1:39 PM, Jiri Slaby wrote:
-> On 10. 04. 25, 19:40, Praveen Talari wrote:
->> The Qualcomm automotive SA8255p SoC relies on firmware to configure
->> platform resources, including clocks, interconnects and TLMM.
->> The driver requests resources operations over SCMI using power
->> and performance protocols.
->>
->> The SCMI power protocol enables or disables resources like clocks,
->> interconnect paths, and TLMM (GPIOs) using runtime PM framework APIs,
->> such as resume/suspend, to control power states(on/off).
->>
->> The SCMI performance protocol manages UART baud rates, with each baud
->> rate represented by a performance level. The driver uses the
->> dev_pm_opp_set_level() API to request the desired baud rate by
->> specifying the performance level.
->>
->> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
->> ---
->>   drivers/tty/serial/qcom_geni_serial.c | 150 +++++++++++++++++++++++---
->>   1 file changed, 136 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/tty/serial/qcom_geni_serial.c 
->> b/drivers/tty/serial/qcom_geni_serial.c
->> index 9649297d4a9e..40b71d4b7590 100644
->> --- a/drivers/tty/serial/qcom_geni_serial.c
->> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> ...
->> @@ -1624,8 +1669,27 @@ static int geni_serial_resources_on(struct 
->> uart_port *uport)
->>       return ret;
->>   }
->>   -static int geni_serial_resource_init(struct qcom_geni_serial_port 
->> *port)
->> +static int geni_serial_resource_state(struct uart_port *uport, bool 
->> power_on)
->> +{
->> +    return power_on ? geni_serial_resources_on(uport) : 
->> geni_serial_resources_off(uport);
->> +}
->> +
->> +static int geni_serial_pwr_init(struct uart_port *uport)
->>   {
->> +    struct qcom_geni_serial_port *port = to_dev_port(uport);
->> +    int ret;
->> +
->> +    ret = dev_pm_domain_attach_list(port->se.dev,
->> +                    &port->dev_data->pd_data, &port->pd_list);
->> +    if (ret <= 0)
->> +        return -EINVAL;
->
-> Any reason to reroute every (sane) error code into EINVAL?
+Hi,
 
-i opted for EINVAL instead of EBUSY because i don't want the probe to be 
-re-executed if the firmware does not support SE.
-Let me know if you have any suggestions.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Thanks,
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-Praveen Talari
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
 
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
