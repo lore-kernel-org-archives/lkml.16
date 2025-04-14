@@ -1,92 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A83C22097;
-	Mon, 14 Apr 2025 14:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895282F42
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641686; cv=none; b=GvDzuekW7kh251qdHs0ePd1s8u6Ve9X3ZP8IoI1xwp0hMIJ8zDETARtbXUrRkCWs4mvufVroDLudX4DpKzTHYkvOxFMoAZk2fHvUIe8aazH6QeWcCj1WhWU7Umv36swemfGF5wjHdlzT7CDykhATmUO8cBfpnO80qTP8JrbxMXQ=
+	t=1744641688; cv=none; b=Tb9QKhWc97VylCakEZZwMSK2bRNeRq7bED2/tsm7uPTsg6fK5HL2wGbgsgUTsKjt6ZA7K48lu3BSNC/cz2AN4V/tyCIO8nKA54KrlnlL/Smi5DktSLtGnDzSAkbhTxC1qpYIQL2e4IIKcbo+fOf+GFVOzbFgXJV49jLaCdBaqHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641686; c=relaxed/simple;
-	bh=IiqTMb8EdX6P83ovafpdAamRgrLSnbCbPGnUMugFHT8=;
+	s=arc-20240116; t=1744641688; c=relaxed/simple;
+	bh=cWqnGKre/AJ+uBJDkw2xfSaRhLZK6lmGSm5x9aeHPGg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bJFV0H/yBkj7jirCazHXbG3P+cDfht2oEQ84U43P6QLhBw+eBozdlyTtc/qLopCAfEyUtdUA4iOtGFKMihx4lxFHSqUzqZztqEIU9YTp8wvaC2oxHk2/+vsN+VsJqFnWFDU8aPCe4rPf+WGpAGMRFWZ2VsEBiLH9GQoPsVsSmAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntpSpUHj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfjQJlffs81FOiXUbqGP56AhreO4hs5TZzOQlN2Phjkc7hy+GMvrReJUZnw2OCqXUZxRupuYNIy1STJjt39UcDPHYpiU8EPMAam+nZaQyXJsQwPjdIizS47xL5SvRDZLlb3omQjmNkveVV/5R62L7LGxwdFdd1JpR8CpfI0skwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo2J8iIh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntpSpUHj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97F3C4CEE2;
-	Mon, 14 Apr 2025 14:41:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo2J8iIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4EEC4CEE2;
+	Mon, 14 Apr 2025 14:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744641685;
-	bh=IiqTMb8EdX6P83ovafpdAamRgrLSnbCbPGnUMugFHT8=;
+	s=k20201202; t=1744641688;
+	bh=cWqnGKre/AJ+uBJDkw2xfSaRhLZK6lmGSm5x9aeHPGg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ntpSpUHjNnIQwjHylgSgFNu0tbbJGvALDUSS1ATh3E6MkvROhWAvL0Cci+OMomVV4
-	 Io8c+SUmIWf4IlvJMCi4LZElVE/xPDObvWilrevJwCtdpTiSFp1FXaIf1WLE1MRqVN
-	 T4g0AEqO5wJEk3a9HH+nLnpjcPE+eY/xNKrAZ8I0y3lvviyAdAIKcGkj6EfrQxgJUj
-	 TY/1Vmc4T2JML2u/733Yyrd5xG0FarHXmCsoL6bpzAiGwK3TGEWhw1D5O14SVuFTsV
-	 X4WQCOy5bGdst/xr25Z1rPBkOtSD4xtMpzoCKnwWHmLUR+Tqdosth0uK3wCamYXy9N
-	 /Tp7Xww8qfAsQ==
-Date: Mon, 14 Apr 2025 16:41:21 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Luca Boccassi <luca.boccassi@gmail.com>, 
-	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
- helper
-Message-ID: <20250414-boiler-expedition-3f27837c513f@brauner>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
- <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
- <20250414141450.GE28345@redhat.com>
- <20250414142807.GF28345@redhat.com>
+	b=fo2J8iIhDDDjtlNmmfpOmEqeq5AOfb9f1YVPvFeU/qRn33XnWUVF4J80EMbMwLxcK
+	 99YdPtbWncuGBxy9ZEDesg6vf31ZeDt+g/Sc8XZOgBLBZDF+AM4mSYgmhdQKm2ZJd2
+	 XwFD/XqTNWdFG/COCZ15eRnWQoX+uyPD1AGBzHhXUhrq7I9iSGgXVqsHt8+YBtrerF
+	 e8MhB4IAcim92G8FggtQKdzNJbbP+Bqd7qz575vkIfMAsG2flaEFHESqwaB4Bps8uH
+	 GMHWnTUubhHpq1Z3k+zDcZwo2exqididE9rQ+C8c5ASaxyW8Bj0PtDsk/xunZFi3Wv
+	 SmQD6KVwCbIlw==
+Date: Mon, 14 Apr 2025 16:41:25 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 08/11] drm/vc4: hdmi: switch to generic CEC helpers
+Message-ID: <20250414-thundering-marmoset-of-promotion-c8e0dc@houat>
+References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
+ <20250407-drm-hdmi-connector-cec-v5-8-04809b10d206@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kisrvyl6ygk7uwlb"
 Content-Disposition: inline
-In-Reply-To: <20250414142807.GF28345@redhat.com>
+In-Reply-To: <20250407-drm-hdmi-connector-cec-v5-8-04809b10d206@oss.qualcomm.com>
 
-On Mon, Apr 14, 2025 at 04:28:07PM +0200, Oleg Nesterov wrote:
-> On 04/14, Oleg Nesterov wrote:
-> >
-> > On 04/14, Christian Brauner wrote:
-> > >
-> > > -static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-> > > +static int umh_coredump_setup(struct subprocess_info *info, struct cred *new)
-> > >  {
-> > >  	struct file *files[2];
-> > >  	struct coredump_params *cp = (struct coredump_params *)info->data;
-> > >  	int err;
-> > >
-> > > +	if (cp->pid) {
-> > > +		struct file *pidfs_file __free(fput) = NULL;
-> > > +
-> > > +		pidfs_file = pidfs_alloc_file(cp->pid, 0);
-> > > +		if (IS_ERR(pidfs_file))
-> > > +			return PTR_ERR(pidfs_file);
-> > > +
-> > > +		/*
-> > > +		 * Usermode helpers are childen of either
-> > > +		 * system_unbound_wq or of kthreadd. So we know that
-> > > +		 * we're starting off with a clean file descriptor
-> > > +		 * table. So we should always be able to use
-> > > +		 * COREDUMP_PIDFD_NUMBER as our file descriptor value.
-> > > +		 */
-> > > +		VFS_WARN_ON_ONCE((pidfs_file = fget_raw(COREDUMP_PIDFD_NUMBER)) != NULL);
-> > > +
-> > > +		err = replace_fd(COREDUMP_PIDFD_NUMBER, pidfs_file, 0);
-> > > +		if (err < 0)
-> > > +			return err;
-> >
-> > Yes, but if replace_fd() succeeds we need to nullify pidfs_file
-> > to avoid fput from __free(fput) ?
-> 
-> Aah, please ignore me ;) replace_fd/do_dup2 does get_file() .
-> 
-> For this series:
 
-Thanks for the excellent review as usual!
+--kisrvyl6ygk7uwlb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v5 08/11] drm/vc4: hdmi: switch to generic CEC helpers
+MIME-Version: 1.0
+
+On Mon, Apr 07, 2025 at 06:11:05PM +0300, Dmitry Baryshkov wrote:
+> +static const struct drm_connector_hdmi_cec_adapter_ops vc4_hdmi_cec_adap_ops = {
+> +	.base.unregister = drm_connector_hdmi_cec_unregister,
+> +	.init = vc4_hdmi_cec_init,
+> +	.enable = vc4_hdmi_cec_adap_enable,
+> +	.log_addr = vc4_hdmi_cec_adap_log_addr,
+> +	.transmit = vc4_hdmi_cec_adap_transmit,
+> +};
+
+Did you compile it? it looks like drm_connector_hdmi_cec_adapter_ops has been renamed, and it
+doesn't have a base.unregister field anymore?
+
+Maxime
+
+--kisrvyl6ygk7uwlb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/0elAAKCRDj7w1vZxhR
+xRstAQDseeLF3+wOjRX4FDWG1gzsPN4u0U3uth+lr62PR0BwxAD8D+xv+rQhSZRL
+r0aNflxzktpW7TPg2LqP74PvX2cw0g0=
+=+zwv
+-----END PGP SIGNATURE-----
+
+--kisrvyl6ygk7uwlb--
