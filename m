@@ -1,174 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E6D1A83E8
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 09:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E8320E700;
+	Mon, 14 Apr 2025 09:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744623451; cv=none; b=fyQ2S3mwtCVb8tY2vkIRMImeYuypLRYqop79SPZP29ED1TEqy7hIWqkac1Ob4IvigYfd5VYKe9+lBGgcYQmEt32x8klYgaoLizDmvhdijA9Svq4Nob+Nf5Se2FjH2EdGirQ/HztxjpUscNTuOEm9+/EEp/i4KR2KZiRI2TcGQOo=
+	t=1744623454; cv=none; b=paMgeN9EbiejwCetWY0WYMZtyLJu7MVnUYtAtPojhxCSI2zYXYqWtX2Jo4v/yEzgx8YeNRivmSIrKGz6Zycq/4kxgWz5WFLgT/0Ac2vYm8Qu2yvkK05JZglV/osq5M5dCqn2+dJwpzd3N//puCFeW9Sh0yHipn7+nV3skgSnmrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744623451; c=relaxed/simple;
-	bh=IhLyXwuYheBjVEVxaMy5980Oauc1OEHNPpGuOtpKrcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sq1Cn79JNU/DhLJpDcYIwVVWHcP8HZS+icOVnNjXKEfKSmDCOKeYG7pP3MBzpg0WWMOKhiqgdy4Va90h+MkBW5FxoQSp8DiK2yxL8SeLueb1W2R6W5UmOpYPKhZ6C/h7WG/jaKogO+KvMoH7YxQ1LKP+wR7cee+FgGQIypgcWTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IidmJ1u8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=r5Sc05bg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IidmJ1u8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=r5Sc05bg; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744623454; c=relaxed/simple;
+	bh=kp+M2KrPLl6VzIuGTQAyY8wQUEd/52xXmifPXNiiZ8s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EvXXas7II+m0Js7uuqLQOMlejsrZmG5q2ilE/Vaz37n71uYGV8u+TPXvFH35Fznq4TUTRlPVL9V5yRzRAWjjcYz9e+0F189N1lvjL3Z96GPCAZsL5fNyJaXNt+Nl3OmkcGMgbHo4nEE4S4XQlu6pmthJHeHnwsKw6TBk1/ObAuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=epb5rizE; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IidmJ1u8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="r5Sc05bg";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IidmJ1u8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="r5Sc05bg"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6A5CE1F458;
-	Mon, 14 Apr 2025 09:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744623447;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EmBBQpa1y0uoauy46Pz+6qrIH5Gt6qQHqLKaec4xStM=;
-	b=IidmJ1u8NQNe2HuwFIqTsF2ZyAuxowGAf1sdY59HxcKs8/yu0lnaj3CxUgapyuhnxaXP8h
-	2rbf861zQe1a9RNA+n6iFGhIZTeLeRBzDXx2Q57V7KVNhQeS4wYyW8EzW/0AdpMHfsOpGS
-	AS06esk1AuWHN+p8c/NN13WQpMqBDCk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744623447;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EmBBQpa1y0uoauy46Pz+6qrIH5Gt6qQHqLKaec4xStM=;
-	b=r5Sc05bgcKAf6rH9FsVPGVSFgtOdomkF0GfEAqk/VAXWYJ9nqcbZJkx419ZBqE9c/zwdPb
-	qSHz8FUc3uOaMTCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=IidmJ1u8;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=r5Sc05bg
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744623447;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EmBBQpa1y0uoauy46Pz+6qrIH5Gt6qQHqLKaec4xStM=;
-	b=IidmJ1u8NQNe2HuwFIqTsF2ZyAuxowGAf1sdY59HxcKs8/yu0lnaj3CxUgapyuhnxaXP8h
-	2rbf861zQe1a9RNA+n6iFGhIZTeLeRBzDXx2Q57V7KVNhQeS4wYyW8EzW/0AdpMHfsOpGS
-	AS06esk1AuWHN+p8c/NN13WQpMqBDCk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744623447;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EmBBQpa1y0uoauy46Pz+6qrIH5Gt6qQHqLKaec4xStM=;
-	b=r5Sc05bgcKAf6rH9FsVPGVSFgtOdomkF0GfEAqk/VAXWYJ9nqcbZJkx419ZBqE9c/zwdPb
-	qSHz8FUc3uOaMTCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4834A136A7;
-	Mon, 14 Apr 2025 09:37:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lYptEVfX/GeXNQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Mon, 14 Apr 2025 09:37:27 +0000
-Date: Mon, 14 Apr 2025 11:37:26 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: make error handling more appropriate in
- btrfs_delayed_ref_init()
-Message-ID: <20250414093725.GC16750@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250410113858.149032-1-frank.li@vivo.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="epb5rizE"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53E9auQJ32753252, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744623416; bh=kp+M2KrPLl6VzIuGTQAyY8wQUEd/52xXmifPXNiiZ8s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=epb5rizE0OllzmoxkyGuqiIQHkyjC/b9uuDEGblNXAtp8hVBOMSliyiskEqXCx+sR
+	 K87Lh1GIDDdu9I+vaUwDGssfW+1qyPZcjzmDfsUl+D+aiPNUJTBtfHu8PVf4iYDnq7
+	 gRgdshLRRSRsvZWd71pey2OO00chmaURNG/f3DjGQxsHGQ7d+/0axghr7K+6BB2h55
+	 B73DBV2Qqu3WGleHx05CWE5YLVZArEWBFgDo1Ub3+o3JyJxbyAMa4C67ES0czBL/bm
+	 NgFhkwljCipp1zoeQCMslihe126hSPX30ANkvGAAFLCg8denyrU2N07yKIsHzN+Nt9
+	 FGOxUB0YOEGsw==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53E9auQJ32753252
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 17:36:56 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 14 Apr 2025 17:36:57 +0800
+Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 14 Apr
+ 2025 17:36:56 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>,
+        "kernel
+ test robot" <lkp@intel.com>
+Subject: [PATCH net] rtase: Fix kernel test robot issue
+Date: Mon, 14 Apr 2025 17:36:45 +0800
+Message-ID: <20250414093645.21181-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410113858.149032-1-frank.li@vivo.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 6A5CE1F458
-X-Spam-Score: -4.21
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vivo.com:email,suse.cz:replyto,suse.cz:mid,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On Thu, Apr 10, 2025 at 05:38:58AM -0600, Yangtao Li wrote:
-> 1. Remove unnecessary goto
-> 2. Make the execution logic of the function jumped by goto more appropriate
-> 
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/btrfs/delayed-ref.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/btrfs/delayed-ref.c b/fs/btrfs/delayed-ref.c
-> index 98c5b61dabe8..e984f1761afa 100644
-> --- a/fs/btrfs/delayed-ref.c
-> +++ b/fs/btrfs/delayed-ref.c
-> @@ -1339,11 +1339,11 @@ int __init btrfs_delayed_ref_init(void)
->  {
->  	btrfs_delayed_ref_head_cachep = KMEM_CACHE(btrfs_delayed_ref_head, 0);
->  	if (!btrfs_delayed_ref_head_cachep)
-> -		goto fail;
-> +		return -ENOMEM;
->  
->  	btrfs_delayed_ref_node_cachep = KMEM_CACHE(btrfs_delayed_ref_node, 0);
->  	if (!btrfs_delayed_ref_node_cachep)
-> -		goto fail;
-> +		goto out;
->  
->  	btrfs_delayed_extent_op_cachep = KMEM_CACHE(btrfs_delayed_extent_op, 0);
->  	if (!btrfs_delayed_extent_op_cachep)
-> @@ -1351,6 +1351,8 @@ int __init btrfs_delayed_ref_init(void)
->  
->  	return 0;
->  fail:
-> -	btrfs_delayed_ref_exit();
-> +	kmem_cache_destroy(btrfs_delayed_ref_node_cachep);
-> +out:
-> +	kmem_cache_destroy(btrfs_delayed_ref_head_cachep);
+1. Fix the compile error reported by the kernel test robot by modifying
+the condition used to detect overflow in rtase_calc_time_mitigation.
+2. Fix the compile warning reported by the kernel test robot by
+increasing the size of ivec->name.
+3. Fix a type error in min_t.
 
-This is partially duplicating btrfs_delayed_ref_exit(), I'd rather reuse
-the exit helper.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.com/
+Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ drivers/net/ethernet/realtek/rtase/rtase.h      | 2 +-
+ drivers/net/ethernet/realtek/rtase/rtase_main.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-I've checked if this can be done elsewhere, seems that there's only one
-other case btrfs_bioset_init(), which is partially duplicating
-btrfs_bioset_exit(). All other init/exit functions are trivial and
-allocate one structure. So if you want to do that cleanup, please update
-btrfs_bioset_init() to the preferred pattern. Thanks.
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
+index 2bbfcad613ab..1e63b5826da1 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase.h
++++ b/drivers/net/ethernet/realtek/rtase/rtase.h
+@@ -259,7 +259,7 @@ union rtase_rx_desc {
+ #define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
+ #define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
+ 
+-#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
++#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 14)
+ 
+ struct rtase_int_vector {
+ 	struct rtase_private *tp;
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 2aacc1996796..bc856fb3d6f3 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1923,10 +1923,10 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
+ 	u8 msb, time_count, time_unit;
+ 	u16 int_miti;
+ 
+-	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
++	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
+ 
+-	msb = fls(time_us);
+-	if (msb >= RTASE_MITI_COUNT_BIT_NUM) {
++	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
++		msb = fls(time_us);
+ 		time_unit = msb - RTASE_MITI_COUNT_BIT_NUM;
+ 		time_count = time_us >> (msb - RTASE_MITI_COUNT_BIT_NUM);
+ 	} else {
+@@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
+ 	u8 msb, pkt_num_count, pkt_num_unit;
+ 	u16 int_miti;
+ 
+-	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
++	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+ 
+ 	if (pkt_num > 60) {
+ 		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+-- 
+2.34.1
+
