@@ -1,236 +1,164 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762CC190679
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC02E191493
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744624932; cv=none; b=lVz8RhxTuQdMpthVp3thb0Ybik4bj/Fnx5MiX0zwRHDCghqxF83uao+bDnmiLzfVx2wenE5k7E824m82edT6CBIgl01+oXtEac169HmHKTIYb/N5chDyffI1qY8kYG5HLxgdFCUEVH0M1SEIrzEV8U990lA4wDlWUL7IceMB4/0=
+	t=1744624955; cv=none; b=VX7kr+ymb50JF2rLod7fmz0GihnmoH72RdHEDBG+2xuw4av/F0sOoPjvypHB8gVHOyL+WUCn79bsAyUb1brU4Vr9pWw7GMDgwF+xm+MqrTjJ+jtT+OEBsXS8GgK+UZA43FdJ99rFKhiP4cMJx6XpGCT9PHxOSPUZsVMoiHUHk1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744624932; c=relaxed/simple;
-	bh=lcK7X3iQv+Zne8itAS1kzk3u5ScenaZMxxqxFlK+we8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTLHjmt3YFfXSQKWTTN4vyMbIjWIGv/2NaX0NZ2W0j0evgIkRKN7cOsqk1YUNTop1hA4EnZD8nkqmdpiK0TpX5L0sVoHAyp5M1mN56B3qR1kYF5qpiVGCslL3p+ucQduKvjpCoXXR+OnoaNN4NPPaRAojTnYbSye87JXQksb2jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FIOj2QQI; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744624955; c=relaxed/simple;
+	bh=Q2m9ZrABVSuBpbhOeAjVE5x9R14zox7JUL8LuSWF2Ko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=RKuYNluCM/RtxJ+H4k6AsTFKZ9gdTmIMZnUgvNie5ZikdkQiWcusHHSt6815CLIkZN+jIGQVvFyN4v4G1ZCn/NBY6i8EWUZecTD9n3bUq1ukJViUKw5tfwD78Ky5V1H7lTGzsBgzmrarLxqXqkgcDAfAzsjYcGD6v9yJMvqAo0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FBQ1kGdM; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIOj2QQI"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3965c995151so1828223f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744624928; x=1745229728; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e4ZKeoonsQzsWasVmGrcgrBTCvUnJhFoTJL6BLuQVFU=;
-        b=FIOj2QQIWXr0iieIcR4G30PIWgoV7QG9fdozefNduz6m1iR04NZ91JuRbIpovk4oLC
-         8qgFVsC21p9cPJDhZ+wKfYwzPMnNAp5ppSOqJK+4WFqyFoqkN2FOYEYlFbuDLTzrXTIi
-         iU02Rruvo0GpNjG4+f4mY/iyTHS5fa2PjzQe1usuOJ3w6SP761hXtQ5XOUYLTOJX4kk+
-         LCFoEaYRrFgye/znhVOjeOf44kGdBlAaUsd0J53A+fHZ54H8krFXgZwPjH7Lxw6dJHzz
-         oL4Prft9w1Te8A6YO9yeR2YUt+BInfhDoySCmdjJfDPI4UXlXzAS6ShDrYHqBEvpt/aG
-         OqqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744624928; x=1745229728;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e4ZKeoonsQzsWasVmGrcgrBTCvUnJhFoTJL6BLuQVFU=;
-        b=R/aM7lCBtkP1K9cyldW8ojyTh3U8gCBiYCCZv6bBGJpQe2/yoYsub1q+yPyo8phVuh
-         OoGbgdfQDCRHgShQ6A55J+Xdk/x9D9Q2UMShwF/og3t0LDmYz+fYwEY9dtMFIGZ0IYem
-         GVyen05jdbZEizPS6MLMRobHW/afj4kvNR/0DfBk++WP09taFqqI8Ux0Knon0krVVbKl
-         7k+/TotGSBkU2xJmHY+RZX4R5EbRYFvydvgIqQXwpGNvymsqWQditVI3ZwUKXqVqUSOE
-         +uJEAfFYCsqSyyutA3nmAnL7ITnqXdymrWBEtu1xWDTr+E6NpEUu5fZ4JCWCTqD/KBY1
-         sNdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtPNWKpsaY5HMnmk6B3KaEh5FrJX6aAzc4jksOO5KNKoAfba6oPxwtN6OkWl7bPAljLeb8IDNahpjVZ4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq9UtbitMSb3Of1Vf3FEWMhrhzWLVwNGN1wWNq83Ba8XzjTb2N
-	MnTHy4C+pIva3ddVDrHsZ4ofq9esCy1cltRE5rTDcT4UOVoePRGQ
-X-Gm-Gg: ASbGncu+VVDDvga6kw+tpF8kNIq61xURQyZZtPSZoyBzulDd6ls9Umipd5aU36470XH
-	VV8k3ynspPWYdcXWq2En6PVpH3Da0/8XS29oxwGpOSVroxVIWUnNrrC5T3ddz7tMZoow+iRElSc
-	JKf65CGRE0dju6ZOBDuL05AklN4rkwxtJT+Ad7SRa6v4ew2dB6CxuOGGK7WiOgRoU9UE5k+eV3E
-	5+WtumL0aPyrux2mKXklklYJ2srhaR/TJ62HuKcafE8K6+j5ymAblnMFYIsBjRkBL7Hcx4BliZG
-	lJfgQq8BsPSqVq3wPSh/fCjpGWB+OHqSoBoL4RYkbnijZmKDLytTo9fxUijoTBBjFm84fMEDJSd
-	MGcRYFMtX9Q==
-X-Google-Smtp-Source: AGHT+IFbBxLE++THY8ROhquoXOANvcm/rSABNsNRiAUR39w2OT4ynLUupTNZmW0NhuczP4AfA2t7Ow==
-X-Received: by 2002:a05:6000:18a2:b0:39c:1258:7e18 with SMTP id ffacd0b85a97d-39eaaec7d0amr8689950f8f.57.1744624927197;
-        Mon, 14 Apr 2025 03:02:07 -0700 (PDT)
-Received: from ika2 (ip-091-089-044-011.um28.pools.vodafone-ip.de. [91.89.44.11])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cb43sm10603339f8f.65.2025.04.14.03.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 03:02:06 -0700 (PDT)
-From: Jan Glauber <jan.glauber@gmail.com>
-X-Google-Original-From: Jan Glauber <jglauber@digitalocean.com>
-Date: Mon, 14 Apr 2025 12:02:04 +0200
-To: Sean Christopherson <seanjc@google.com>
-Cc: Petr Mladek <pmladek@suse.com>, carlos.bilbao@kernel.org,
-	tglx@linutronix.de, bilbao@vt.edu, akpm@linux-foundation.org,
-	jan.glauber@gmail.com, jani.nikula@intel.com,
-	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-	takakura@valinux.co.jp, john.ogness@linutronix.de,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH 1/2] panic: Allow archs to reduce CPU consumption after
- panic
-Message-ID: <b39ba05d-7c40-45ce-bb26-1021d292b82f@ika.local>
-References: <20250326151204.67898-1-carlos.bilbao@kernel.org>
- <20250326151204.67898-2-carlos.bilbao@kernel.org>
- <Z_khOuvPGEWBAQbp@pathway.suse.cz>
- <Z_lDzyXJ8JKqOyzs@google.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FBQ1kGdM"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250414100224euoutp01b8cf80d34aeae8b0b31da1c59e322604~2JyTZ9pkb1561515615euoutp01e
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:02:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250414100224euoutp01b8cf80d34aeae8b0b31da1c59e322604~2JyTZ9pkb1561515615euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744624944;
+	bh=CQ/Mexkd9UWOwgHiElf+yh/sO2d1kwDM+dtAGV0p8qo=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=FBQ1kGdM0yzduIyfb1CKlynFE/yFm7TwRrOLkcytSUIbkeOHgyNTFQdWdXotS+/2j
+	 xRoXNMvBYXJOYHF+iW8uCPjhr2bfjZR4ec0v+6ImnY/cDrAkAJPXm3cGj7ocU2Dtat
+	 FrJbl8yN9sPy5RHyIkHUUnb1e/S/IBdJhaMIYmGQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250414100224eucas1p1d7900093465f4bfe9815b8e25f5018d7~2JyTEwQ5o1141111411eucas1p1b;
+	Mon, 14 Apr 2025 10:02:24 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id C6.02.20409.03DDCF76; Mon, 14
+	Apr 2025 11:02:24 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250414100224eucas1p12892ef03f22b1a0255c48802f80e2c05~2JySosd9q1137911379eucas1p13;
+	Mon, 14 Apr 2025 10:02:24 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250414100224eusmtrp1dee4c60e7b25f2bfee4c9ec6b5b0d58d~2JySoCgP-0222602226eusmtrp1T;
+	Mon, 14 Apr 2025 10:02:24 +0000 (GMT)
+X-AuditID: cbfec7f4-c39fa70000004fb9-cd-67fcdd305538
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id AB.B5.19654.F2DDCF76; Mon, 14
+	Apr 2025 11:02:23 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250414100222eusmtip1754828cfce7ee82b10396ee4e191a87c~2JyRdjQld0723607236eusmtip1Y;
+	Mon, 14 Apr 2025 10:02:22 +0000 (GMT)
+Message-ID: <77f411d3-379a-421c-bd41-55e4de6fa8c0@samsung.com>
+Date: Mon, 14 Apr 2025 12:02:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_lDzyXJ8JKqOyzs@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] dma/mapping.c: WARN_ONCE on dma_addressing_limited()
+ being true
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Balbir
+	Singh <balbirs@nvidia.com>, Christoph Hellwig <hch@infradead.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Robin Murphy
+	<robin.murphy@arm.com>, Ingo Molnar <mingo@kernel.org>, Kees Cook
+	<kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Andy
+	Lutomirski <luto@kernel.org>, Alex Deucher <alexander.deucher@amd.com>, Bert
+	Karwatzki <spasswolf@web.de>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <4b6f9eb7-7de0-4d0f-b235-fd203f4a8542@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKKsWRmVeSWpSXmKPExsWy7djP87oGd/+kG8w6LWUx7c5uVoslc48z
+	WyxpyrB4ex/IOz1hEZPFry8WFuvenme1uLxrDpvF+V1rWS1W/zvFaHG89wCTxcEPT1gtXk+8
+	zWrxqO8tuwOfR+ulv2wea+atYfRYsKnUY/MKLY9NqzrZPE7M+M3i8WLzTEaP3uZ3bB6fN8l5
+	3H62jSWAK4rLJiU1J7MstUjfLoEro+XZZOaCWwIVG89dZW9gPMnbxcjJISFgIvGuq5Gli5GL
+	Q0hgBaPEy3vzmSGcL4wS719OY4NwPjNKnHrYw9TFyAHWcu9yOEi3kMByRom1J4ohaj4ySsy5
+	e40dJMErYCex+9ARMJtFQFViZd87Zoi4oMTJmU9YQGxRAXmJ+7dmgNUIC4RIfLl2jhVkkIhA
+	N6PEp7tfwM5gFuhnljj5YStYB7OAuMStJ/OZQGw2AUOJrrddbCAXcQpYS2xaEAJRIi/RvHU2
+	WK+EwGZOiQtTV7FDXO0isessH8TPwhKvjm9hh7BlJE5P7mGBqG9nlFjw+z4ThDOBUaLh+S1G
+	iCpriTvnfoEtYxbQlFi/Sx8i7CjR1fOYEWI+n8SNt4IQN/BJTNo2nRkizCvR0SYEUa0mMev4
+	Ori1By9cYp7AqDQLKVhmIXlyFpJvZiHsXcDIsopRPLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93
+	EyMw5Z3+d/zLDsblrz7qHWJk4mA8xCjBwawkwsvl/CtdiDclsbIqtSg/vqg0J7X4EKM0B4uS
+	OO+i/a3pQgLpiSWp2ampBalFMFkmDk6pBqbonR8aox96LfW5+M8jLkNM6Y3xrncT7DVZX0S+
+	a857/MLx/r6P0gaCq3k2nyqV1kj3b57+qcZq+rTXwi7fEgK31b95aCE+sfT3Y4F3z5rW/33m
+	9J1v8Z3TGQqZ/3RtrpvdCD3B1P1/TdE5dtvkRvsqgzmTH4c9Unr9Z1rfZ5W34RrhwUGLI/sq
+	N1eFVM770v1utbbL76CSHd6/8/82NNcsVVrF7Z7o1VD6NGJqmuTitHe25Zdvz+Zi4Nx9ZbGy
+	nNnpMyd+GTyrUjvDK9C7d0q6v5D7ZIVlrhJt84JyHxz0Dpe2l1/essSzLfHGKjUmp7ztbGnT
+	jsgsPBo26VMLg+2TUzteaB26zvVa1USsyEmJpTgj0VCLuag4EQDzqkLv6AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsVy+t/xu7r6d/+kG3xdaGUx7c5uVoslc48z
+	WyxpyrB4ex/IOz1hEZPFry8WFuvenme1uLxrDpvF+V1rWS1W/zvFaHG89wCTxcEPT1gtXk+8
+	zWrxqO8tuwOfR+ulv2wea+atYfRYsKnUY/MKLY9NqzrZPE7M+M3i8WLzTEaP3uZ3bB6fN8l5
+	3H62jSWAK0rPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjf
+	LkEvo+XZZOaCWwIVG89dZW9gPMnbxcjBISFgInHvcngXIxeHkMBSRold8++wdzFyAsVlJE5O
+	a2CFsIUl/lzrYgOxhQTeM0q8bRMDsXkF7CR2HzoCVs8ioCqxsu8dM0RcUOLkzCcsILaogLzE
+	/VszwGqEBUIkWvr2soAsExHoZpS4MP0CmMMs0M8s8fPsDXaIM6YySZx/+QNsHbOAuMStJ/OZ
+	QGw2AUOJrrcgZ3BwcApYS2xaEAJRYibRtbWLEcKWl2jeOpt5AqPQLCSHzEIyaRaSlllIWhYw
+	sqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjPJtx35u2cG48tVHvUOMTByMhxglOJiVRHi5
+	nH+lC/GmJFZWpRblxxeV5qQWH2I0BYbGRGYp0eR8YJrJK4k3NDMwNTQxszQwtTQzVhLnZbty
+	Pk1IID2xJDU7NbUgtQimj4mDU6qByXEJ+/6DE1rvr/oRqbh6jlz787enP/3VDFQLMt1f6elg
+	PmlZ47vbiT42fOHaD792VTcx1n57KlCo+sTMoMzf03+yLJvz7IdCe5T/nWHf5bJgXqSCgJ3k
+	2ajSgoUcLM/f/r37Y2q6+97NPKt1NuSU1TG0mJ95PsHtwhvGTNFJyb8Oit8Ja/km0rB8jt3V
+	jEiLl50q3zk/77aIC3NfHeovdyElRvbAaZ198b56DwzM9xtqVJd+n3w44tDdOXfTux/cvyXy
+	LO3ZY/OHwq//PO2tn7ecQ27Co/sKhRu4zwg+v7rssUms5dpgidfzFk559T2paqdK7vW65rrZ
+	diXZb/c7Rtyu458WeGB/o/HDc8XuXkosxRmJhlrMRcWJAFmh31x7AwAA
+X-CMS-MailID: 20250414100224eucas1p12892ef03f22b1a0255c48802f80e2c05
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250414094539eucas1p25aa8c91172e59f370354d1c9799763e2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250414094539eucas1p25aa8c91172e59f370354d1c9799763e2
+References: <20250412094110.3208838-1-balbirs@nvidia.com>
+	<Z_yjDsmjjCAMHUrh@infradead.org>
+	<22a1216b-4ab4-493e-a1f9-1588840339d8@nvidia.com>
+	<CGME20250414094539eucas1p25aa8c91172e59f370354d1c9799763e2@eucas1p2.samsung.com>
+	<4b6f9eb7-7de0-4d0f-b235-fd203f4a8542@amd.com>
 
-On Fri, Apr 11, 2025 at 09:31:11AM -0700, Sean Christopherson wrote:
-> On Fri, Apr 11, 2025, Petr Mladek wrote:
-> > Added Linus and Jiri (tty) into Cc.
-> > 
-> > On Wed 2025-03-26 10:12:03, carlos.bilbao@kernel.org wrote:
-> > > From: Carlos Bilbao <carlos.bilbao@kernel.org>
-> > > 
-> > > After handling a panic, the kernel enters a busy-wait loop, unnecessarily
-> > > consuming CPU and potentially impacting other workloads including other
-> > > guest VMs in the case of virtualized setups.
-> 
-> Impacting other guests isn't the guest kernel's problem.  If the host has heavily
-> overcommited CPUs and can't meet SLOs because VMs are panicking and not rebooting,
-> that's a host problem.
+On 14.04.2025 11:45, Christian König wrote:
+> Am 14.04.25 um 10:25 schrieb Balbir Singh:
+>> On 4/14/25 15:54, Christoph Hellwig wrote:
+>>> On Sat, Apr 12, 2025 at 07:41:10PM +1000, Balbir Singh wrote:
+>>>> In the debug and resolution of an issue involving forced use of bounce
+>>>> buffers, 7170130e4c72 ("x86/mm/init: Handle the special case of device
+>>>> private pages in add_pages(), to not increase max_pfn and trigger
+>>>> dma_addressing_limited() bounce buffers"). It would have been easier
+>>>> to debug the issue if dma_addressing_limited() had a warning about a
+>>>> device not being able to address all of memory and thus forcing all
+>>>> accesses through a bounce buffer. Please see[2].
+>>>>
+>>>> A warning would have let the user of the system know that in their
+>>>> particular case, use_dma32 is set due to the addressing limitation
+>>>> and this would impact performance of the driver in use.
+>>>>
+>>>> Implement a WARN_ONCE() to point to the potential use of bounce buffers
+>>>> when we hit the condition. When swiotlb is used,
+>>>> dma_addressing_limited() is used to determine the size of maximum dma
+>>>> buffer size in dma_direct_max_mapping_size(). The warning could be
+>>>> triggered in that check as well.
+>>> dma_addressing_limited is a perfectly expected condition, and returns
+>>> true for many devices and still plenty system configuation.  A kernel
+>>> warning with a stacktrace is not acceptable for that.  A simple one-line
+>>> dev_info might be ok, but could still be rather spammy on many systems.
+>>>
+>> Thanks for the review!
+>>
+>> I'll convert it to a dev_info(). We can remove it, if it causes confusion
+>> or users complain about it?
+> I would even say that this should be only debugging level.
+>
+> As Christoph explained it is perfectly normal for device to not be able to address everything in the system. So even an info print sounds like to much.
+>
+> But I totally agree that it is interesting for debugging, that issue was really hard to nail down.
 
-Agreed, and it might be worth having the host detect panics.
+Right, please use dev_debug().
 
-> This could become a customer problem if they're getting billed based on CPU usage,
-> but I don't know that simply doing HLT is the best solution.  E.g. advising the
-> customer to configure their kernels to kexec into a kdump kernel or to reboot
-> on panic, seems like it would provide a better overall experience for most.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Reboot on panic would probably make most sense. But this is not about
-the lack of configuration options or possibilites to deal with paniced
-guests. This is plainly about the default option that we set. And
-while there are good alternatives, most people or setups will just stick
-to the defaults in my experience.
-
-So is a busy loop for panicked virtual guest the default that we want to set or
-can we change that case to something more sensible?
-
-> QEMU (assuming y'all use QEMU) also supports a pvpanic device, so unless the VM
-> and/or customer is using a funky setup, the host should already know the guest
-> has panicked.  At that point, the host can make appropiate scheduling decisions,
-> e.g. userspace can simply stop running the VM after a certain timeout, throttle
-> it, jail it, etc.
-
-pvpanic is the right solution, but again this is an external solution
-that requires additional setup.
-
---Jan
-
-> > > Introduce cpu_halt_after_panic(), a weak function that archs can override
-> > > for a more efficient halt of CPU work. By default, it preserves the
-> > > pre-existing behavior of delay.
-> > >
-> > > Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
-> > > Reviewed-by: Jan Glauber (DigitalOcean) <jan.glauber@gmail.com>
-> > > ---
-> > >  kernel/panic.c | 12 +++++++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/panic.c b/kernel/panic.c
-> > > index fbc59b3b64d0..fafe3fa22533 100644
-> > > --- a/kernel/panic.c
-> > > +++ b/kernel/panic.c
-> > > @@ -276,6 +276,16 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
-> > >  		crash_smp_send_stop();
-> > >  }
-> > >  
-> > > +/*
-> > > + * Called after a kernel panic has been handled, at which stage halting
-> > > + * the CPU can help reduce unnecessary CPU consumption. In the absence of
-> > > + * arch-specific implementations, just delay
-> > > + */
-> > > +static void __weak cpu_halt_after_panic(void)
-> > > +{
-> > > +	mdelay(PANIC_TIMER_STEP);
-> > > +}
-> > > +
-> > >  /**
-> > >   *	panic - halt the system
-> > >   *	@fmt: The text string to print
-> > > @@ -474,7 +484,7 @@ void panic(const char *fmt, ...)
-> > >  			i += panic_blink(state ^= 1);
-> > >  			i_next = i + 3600 / PANIC_BLINK_SPD;
-> > >  		}
-> > > -		mdelay(PANIC_TIMER_STEP);
-> > > +		cpu_halt_after_panic();
-> > 
-> > The 2nd patch implements this functions using safe_halt().
-> > 
-> > IMHO, it makes perfect sense to halt a virtualized system or
-> 
-> I really, really don't want to arbitrarily single out VMs, especially in core
-> kernel code, as doing so risks creating problems that are unique to VMs.  If the
-> behavior is based on a virtualization-agnostic heuristic like "no console", then
-> by all means, but please don't condition something like this purely based on
-> running in a VM.
-> 
-> I also have no objection to the host/hypervisor prescribing specific behavior
-> (see below).  What I don't like is the kernel deciding to do things differently
-> because it's a VM, without any knowledge of the environment in which the VM is
-> running.
-> 
-> > a system without a registered "graphical" console.
-> >
-> > I think that the blinking diods were designed for desktops
-> > and laptops with some "graphical" terminal attached. The
-> > infinite loop allows to read the last lines, ideally
-> > the backtrace on the screen.
-> > 
-> > I wonder if we could make it more clever and do the halt
-> > only when the system is virtualized or when there is no
-> > "graphical" console registered.
-> 
-> Could we do something with panic_notifier_list?  E.g. let panic devices override
-> the default post-print behavior.  Then VMs with a paravirt panic interface could
-> make an explicit call out to the host instead of relying on arch specific code
-> to HLT and hope for the best.  And maybe console drivers that want/need to keep
-> the CPU running can nullify panic_halt?
-> 
-> E.g. with a rudimentary priority system so that paravirt devices can override
-> everything else.
-> 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index d8635d5cecb2..fe9007222308 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -141,6 +141,18 @@ static long no_blink(int state)
->  long (*panic_blink)(int state);
->  EXPORT_SYMBOL(panic_blink);
->  
-> +static void (*panic_halt)(void) = cpu_halt_after_panic;
-> +static int panic_hlt_priority;
-> +
-> +void panic_set_hlt(void (*fn)(void), int priority)
-> +{
-> +       if (priority <= panic_hlt_priority)
-> +               return;
-> +
-> +       panic_halt = fn;
-> +}
-> +EXPORT_SYMBOL_GPL(panic_set_hlt);
-> +
->  /*
->   * Stop ourself in panic -- architecture code may override this
->   */
-> @@ -467,6 +479,9 @@ void panic(const char *fmt, ...)
->         console_flush_on_panic(CONSOLE_FLUSH_PENDING);
->         nbcon_atomic_flush_unsafe();
->  
-> +       if (panic_halt)
-> +               panic_halt();
-> +
->         local_irq_enable();
->         for (i = 0; ; i += PANIC_TIMER_STEP) {
->                 touch_softlockup_watchdog();
-> 
