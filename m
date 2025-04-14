@@ -1,108 +1,106 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C5427465F;
-	Mon, 14 Apr 2025 14:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E587627466C;
+	Mon, 14 Apr 2025 14:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641077; cv=none; b=tklaPh9YsCiaDWrrzDeaaCe+IFRhE/xFwJNxApUfHbDi0UholQSfX4+eQyoLWCMdpDUZwMDSsofnsO+0/d/rhThx36CuNi8o/R4Ij3jGaGbiAw4w6M9AoZ8qtpciNLACFglclgx9wbnTk+Eyej1lT/SklfLJWJRzckVd7qyJQuk=
+	t=1744641077; cv=none; b=daFVkET2hudXV9Lk+XjlSR6dbuu8fX3rEQKjdmpT/Iht0uV4I3tZdLatVqxOkKut083X4adCFRnvJ9WsHWNWzE1UXa4hZguRf4i8mjoEMEEVfFHCIskXFt81qNvvWP1cXnyUfebBN9XI6pKOvIIvmL37Rnbfb3A7b3rbGAw0JOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744641077; c=relaxed/simple;
-	bh=OqXg4e+osxpah5HvqjCGSuOnhbTfXN7l09sIFukQFwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rSh/MKcr9J7c/OUCTP11n0OYE3xVOWqJKLX+t15JI9axXv2LBrjoPqi2SICcFXGJTLKn+epjdxnF+VvYmlImS1OaZxJGG2yQPMIS5zIVA3oLzXpMmlBboaWfvjL4oMYlcAscy653QeSzLbwrLQpCg92AQSDT3wf2D190lkKHljw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TOkPAmHe; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=2gXSInJKusrPdd4J5X6NbBlVa5dxF7j9qgzK0PQiHaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Re3tdNJFVhIF9aDGw8qSgokaJ2iFBIWgbmyvhW7l+bvKMa0BPJswflcpEIG82dI2dYi1JzJWEolSv2n5kJ1ck7ITVTCXSjvCVt/fWxytEyITG/691jGiL2VOfyGC0th33x2f1y0Bpf1MVeoW3nFlEzei2w76NB1XPBiL+p0oUAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PfXOV3Qv; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TOkPAmHe"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEV4Rl2081601
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 09:31:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744641064;
-	bh=K/rwGIsJ8Kg+PnijAfoO4OaX+sYxwlBFIawLCatqUGs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=TOkPAmHeT20/wBHitFbboTwwbCaIPDfNRB3WdsO6nVN1L0X1fjTGptvdouIgxTxck
-	 kmCpiKCwUxv3KIkUCmSYzCp3XB/Sx8L3WAgZ4oWhAkpIYX9Mk+3ZS/P/Yhj0USYjlw
-	 4fIt9ox3U/LNyOg5PE/WE8kcJkZfkSEjSQjqB9GI=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53EEV31T020080
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 14 Apr 2025 09:31:03 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 14
- Apr 2025 09:31:03 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 14 Apr 2025 09:31:03 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53EEV3a0008545;
-	Mon, 14 Apr 2025 09:31:03 -0500
-Message-ID: <4c8ef068-570c-4f85-8991-47f305b87fb2@ti.com>
-Date: Mon, 14 Apr 2025 09:31:03 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfXOV3Qv"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-399749152b4so2332285f8f.3;
+        Mon, 14 Apr 2025 07:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744641074; x=1745245874; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HCrgWYM3Hgypgkdhg98cFtG7nn+j6jrPiIXWi6bPyp0=;
+        b=PfXOV3QvJjLS3B6OEdGeVZ8Y+UKQhdU5kfWkGWKUrfNkTy42HLVzYxmZrMfXLMy5zL
+         Aw8DUxc/Zuoqiw/cm8UdeOI0TiIwiBmU1L0lyVHbsh9XN+/V1I3geYePp9zLCSNuDJQD
+         LF5kvFBUMNkaDH/GSheQY8I8Y6/HimFEXyZgn1dnQwdJH12n05j+NwLIfXCijExidcj8
+         3/iMkoMVlwplTwipPNw8kBO2qKfF9n3vyr6QZEkDwubA1T8G5QQv7DyeAbTRxbwFnXIO
+         0JSTo1100waAbEO1yMOxKpGyLy6qH4at8Ln5GaNeHEPGua3ZjTTMM19aVgjTXdxbGKLG
+         3Zmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744641074; x=1745245874;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HCrgWYM3Hgypgkdhg98cFtG7nn+j6jrPiIXWi6bPyp0=;
+        b=edGfSowPbPczzgFy+spu+ZYzBwnR4KJAaYxyaOI2HmFukXzNtvjLL4sQDG++pthdsG
+         PRlS3UUrIg4nIj2xH7t7eiR+9uzk+BqXIA71zmsMIekmRWVUArGyHfWuaQRx6OYMNeuI
+         N6JywS/gUiZwM3K3qTNSa66Pu91YEYtDzO3h9m9r69bjsYKTgxv/h1eNPdVlJtQVNhRN
+         qSTEyNhIeiI+C5KZffRwewprf7ivnw5SEWNadaO7NrKDxSisVSNotll2MrhgqeI4+SGZ
+         s86m0NS5vkOG3DmRQTYABwjsNKW8fuQ5DsrQJobO6Ixas6SKckHk6VSa9gCsZ5OFfeqv
+         2gLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJVt2ysIgyLfCRbK2aBDXBaV/Ccm6/sw4f7WqevTbi7uGxxuuo2ukx6Id/KkZ2XL2vou4s5tw//2wt8FI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlrI1U8CnJNPHHMfKHFgnEPnzOBNjfbSfeZSgxNkwrFWabIqDX
+	rOOnEXspluxF2aLWup7oUm9xzRDpJc8ruH8tyyzigAxP01lDunQqGXIS4Q==
+X-Gm-Gg: ASbGncu9GIxi6sfwcApBEh5sJ3zFFdR+xlVTsNDA9LtaYMtPeW3oLgWPJcKLNRmn7Nf
+	aWmeXCn0oReVC+27OR5BX1fHxefcLFQdTbsPHLWoQn1caST3gu819H3KurZS4XCUM5ReKTC4GKk
+	T++U2o1wlBwqsvQZUxLGmYZLQ/guVzjnZ+wzy/nONNBKUzE82bdRoj+0KZAhlNB4Xv9iXpymfKp
+	yj+vWEiCRBOOwuBXDErR32vczP6mI8fWZ6mM2zx16HTlF06cDay91B9Cb/kHONaa1Oe+7Yt5BSj
+	/0eGHEpx222RhcRTluHaAD7VVukQGdmwwm0COpgzzb9Vfn4Hwxg=
+X-Google-Smtp-Source: AGHT+IF4cFQXcUsJCUJ4rTn9rXcC4sO3n9nbDC1x24huqFx1CW67qBr8ulhefX4lOvKb92oRjDJHCw==
+X-Received: by 2002:a05:6000:144d:b0:391:4999:776c with SMTP id ffacd0b85a97d-39eaaecdb44mr10571104f8f.40.1744641073750;
+        Mon, 14 Apr 2025 07:31:13 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39eaf43cd17sm11246340f8f.78.2025.04.14.07.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 07:31:13 -0700 (PDT)
+Date: Mon, 14 Apr 2025 16:31:11 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Cc: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
+	davem@davemloft.net, linux-kernel@vger.kernel.org,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 3/4] crypto: sun8i-ss - use API helpers to setup fallback
+ request
+Message-ID: <Z_0cLywDNhlYIQBd@Red>
+References: <20250407123604.2109561-1-ovidiu.panait.oss@gmail.com>
+ <20250407123604.2109561-3-ovidiu.panait.oss@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
-To: Hiago De Franco <hiagofranco@gmail.com>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: Josua Mayer <josua@solid-run.com>, Ulf Hansson <ulf.hansson@linaro.org>,
-        <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Moteen Shah
-	<m-shah@ti.com>,
-        Hiago De Franco <hiago.franco@toradex.com>
-References: <20250407222702.2199047-1-jm@ti.com>
- <20250411130354.dc3sv3e7ruekkhkp@hiago-nb>
- <d8e45e50-f0eb-41d0-9c50-56147eaf262a@ti.com>
- <20250411194813.c4ft2uxgdiuza5cm@hiago-nb>
- <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
- <20250412132012.xpjywokcpztb4jg4@hiago-nb>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20250412132012.xpjywokcpztb4jg4@hiago-nb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407123604.2109561-3-ovidiu.panait.oss@gmail.com>
 
-Hi Hiago,
+Le Mon, Apr 07, 2025 at 03:36:03PM +0300, Ovidiu Panait a écrit :
+> Rather than setting up the fallback request by hand, use
+> ahash_request_set_callback() and ahash_request_set_crypt() API helpers
+> to properly setup the new request.
+> 
+> This also ensures that the completion callback is properly passed down
+> to the fallback algorithm, which avoids a crash with async fallbacks.
+> 
+> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+> ---
+> Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Cc: Samuel Holland <samuel@sholland.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-sunxi@lists.linux.dev
+> 
 
-On 4/12/25 8:20 AM, Hiago De Franco wrote:
-> Hi Judith,
-> 
-> On Fri, Apr 11, 2025 at 04:55:39PM -0500, Judith Mendez wrote:
->> Actually this was one of the previous implementations, I should have that
->> original patch somewhere. My understanding was that we do not like adding
->> new DT properties if we can find a way to apply the quirk in the driver.
-> 
-> Got it, makes sense. This will work fine with eMMC, but for the SD card
-> I am not seeing other option. Maybe we could use both implementations?
-> 
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index 4e1156a2f1b8..db8ee66e76d8 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -888,7 +888,7 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
-> 
->          /* Suppress V1P8_SIGNAL_ENA for eMMC */
->          device_property_read_u32(dev, "bus-width", &bus_width);
-> -       if (bus_width == BUS_WIDTH_8)
-> +       if (bus_width == BUS_WIDTH_8 || device_property_read_bool(dev, "ti,suppress-v1p8-ena"))
->                  sdhci_am654->quirks |= SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA;
-> 
-> So the driver applies the quirk for eMMC and we set the DT property for
-> SD card. Not sure which one is the best, but maybe it is another option.
-> Let's see what Adrian also thinks about that.
+Herbert I acked but just saw some crash I didnt saw in first look.
+Please wait a bit before merging, I verify what is the cause.
 
-I like it, sure lets see what Adrian says, thanks for your suggestion.
-
-~ Judith
-
+Regards
