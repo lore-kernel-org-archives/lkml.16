@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47C729A3DB;
-	Mon, 14 Apr 2025 13:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA19629A3FB;
+	Mon, 14 Apr 2025 13:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639005; cv=none; b=cgPzNEt/NaOOmdd4U5NqND4u8s4XfKNnef9uRzuXJmJ+sIKSY9xWWuYf2LSJiZxA/MrtS6Ibc7dl2BO3Thcak0mR+YSjONsDXyMSKTmKW9UETcCsREIRGBiLvSc3+jLpuSGWMz20QHxZ9SB/KSsxbxXiSjeJ8bvk/+J+YHlWHaQ=
+	t=1744639008; cv=none; b=rUa3t8w+HbJ05DRvgnybGMi5QLxJVKSZph47RRc8uAZPpJf1A1q/hXlz/pIrSAkiNeH8WeuN4FJjNC/cV8SKhUrDw3iO9wdiXH0de71Lf1QAhAZoVxaUaqbQ1tV9pmRxvO1NkZ8xMkfEcm74AMOViygI4qWOTWKJlDfEM/Vrs3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639005; c=relaxed/simple;
-	bh=ZAw0rHdYHsm4evGnkWZ6KIEQGptodt30tgz836La/HY=;
+	s=arc-20240116; t=1744639008; c=relaxed/simple;
+	bh=PdHvFX8m1ZGaUZsuTkKwmAqbC5tc6BlLINvpkCC6R4U=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Kz2VvdTeYVrQcwiqZNQzidVUIPuHrKOKgiiQcOhJDnSvYcOH2MvZZJPXVVfLoN2SyJmz68hCUm5bBOtI6byOFq9f86y4X/oCNdGcTdaLecVj+uAqDozS5XSZdaERKO4rdFs0WWcczXvVJ3Wf7MLu0wKs7jdQpBrHuCGTcay23KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gD3zNjMx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bUYTPgdVmbYKa7AAD7gXEhTf4/kTERgLSwGEchFWGnsRzehIJ9wiLGZojBr5uEIsaB/IgyRmDkVU1NbJhE89t9O95WFPdfEIi1CvQ0Qcit7ChMZnv30YTU5yndVG6r91oyTkLP9ZJ1EK4KOlmCFLkkWKdvJEStE/m0VMsnLdSm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/5/t7IU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gD3zNjMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7991BC4CEED;
-	Mon, 14 Apr 2025 13:56:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/5/t7IU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A910FC4CEEB;
+	Mon, 14 Apr 2025 13:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744639005;
-	bh=ZAw0rHdYHsm4evGnkWZ6KIEQGptodt30tgz836La/HY=;
+	s=k20201202; t=1744639007;
+	bh=PdHvFX8m1ZGaUZsuTkKwmAqbC5tc6BlLINvpkCC6R4U=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gD3zNjMx+NwICMshEJGHrE5oUFGg8UQD4kNOdY89wYsBRUStTxlGeKGZmbZlahnPW
-	 da5GxwqY231FG7vGMx4nEu78rct97eMnEKTDl6+jxnmYI28IE3gnIR6y0AG3yNN9Qq
-	 I++0jj0VUAessSvNDnkhK2mKLHILmgr8U8HV9/jvGN2eEIugF0HszcXE8IaMZ+NhF2
-	 gZH52EO2x3x7zv2uHFPBP/HpmVe0PilYVyXpcOqd07HVOpWtJfPPwnDxCt4Zsyafyj
-	 7BGGVkfLyjgHJGfctBvVxUjVb7Sgrf5P6hn17+ypHJxBPmpn2g7iLLScP6U7OrkuxA
-	 b02B1Qnz4quPA==
+	b=i/5/t7IULMbDTfC6RF86h5ODO0c4DZTXQy7QstKtVDA6ckWSUsqvGaT8i6GreSgEZ
+	 MrvBhqxgFo/oJST1vlxkq8VZ2JgrBnZfuAATfeCZSd89yF9lx4yzQOyB+0Eu1iEb+7
+	 CLNeo0sGHODDSIgl83RxEBsVIMgxz2IP0zKkhS2QvsLsaOXkWohxUs0JJoevc3mWxi
+	 LoOh5O0chsAEOT1KQKIla/ukhCg5VD+1Q6wmvw5gIlhFMK6EWXhTBPIxJ9I604nlAq
+	 mZkfqs9DuL7nMAfvQod+V3qPl8cxdsMda8+lpjUjiHgPPw/dNYaErZrQZWU2XZv3xD
+	 tlkuorydqSHZw==
 From: Mark Brown <broonie@kernel.org>
-To: brendan.higgins@linux.dev, davidgow@google.com, rmoar@google.com, 
- npache@redhat.com, Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-In-Reply-To: <20250411123608.1676462-1-rf@opensource.cirrus.com>
-References: <20250411123608.1676462-1-rf@opensource.cirrus.com>
-Subject: Re: [PATCH 0/3] Fix up building KUnit tests for Cirrus Logic
- modules
-Message-Id: <174463900319.86688.13547575756527850636.b4-ty@kernel.org>
-Date: Mon, 14 Apr 2025 14:56:43 +0100
+To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ linux-sound@vger.kernel.org, "Sheetal ." <sheetal@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ jonathanh@nvidia.com, thierry.reding@gmail.com, mkumard@nvidia.com, 
+ spujar@nvidia.com
+In-Reply-To: <20250404105953.2784819-1-sheetal@nvidia.com>
+References: <20250404105953.2784819-1-sheetal@nvidia.com>
+Subject: Re: [PATCH] ASoC: soc-pcm: Fix hw_params() and DAPM widget
+ sequence
+Message-Id: <174463900542.86688.12975575965483573998.b4-ty@kernel.org>
+Date: Mon, 14 Apr 2025 14:56:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,14 +48,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 11 Apr 2025 13:36:05 +0100, Richard Fitzgerald wrote:
-> This series fixes the KConfig for cs_dsp and cs-amp-lib tests so that
-> CONFIG_KUNIT_ALL_TESTS doesn't cause them to add modules to the build.
+On Fri, 04 Apr 2025 10:59:53 +0000, Sheetal . wrote:
+> Issue:
+>  When multiple audio streams share a common BE DAI, the BE DAI
+>  widget can be powered up before its hardware parameters are configured.
+>  This incorrect sequence leads to intermittent pcm_write errors.
 > 
-> Patch 1 adds the ASoC CS35L56 driver to KUnit all_tests.config so that
->         cs_dsp and cs-amp-lib will be included in the test build.
-> 
-> Patch 2 and 3 fixup the KConfig entries for cs_dsp and cs-amp-lib.
+>  For example, the below Tegra use-case throws an error:
+>   aplay(2 streams) -> AMX(mux) -> ADX(demux) -> arecord(2 streams),
+>   here, 'AMX TX' and 'ADX RX' are common BE DAIs.
 > 
 > [...]
 
@@ -64,12 +66,8 @@ Applied to
 
 Thanks!
 
-[1/3] kunit: configs: Add some Cirrus Logic modules to all_tests
-      commit: 1aa495a6572f8641da4ec4cd32210deca61bed64
-[2/3] ASoC: cs-amp-lib-test: Don't select SND_SOC_CS_AMP_LIB
-      commit: 96014d91cffb335d3b396771524ff2aba3549865
-[3/3] firmware: cs_dsp: tests: Depend on FW_CS_DSP rather then enabling it
-      commit: a0b887f6eb9a0d1be3c57d00b0f3ba8408d3018a
+[1/1] ASoC: soc-pcm: Fix hw_params() and DAPM widget sequence
+      commit: 9aff2e8df240e84a36f2607f98a0a9924a24e65d
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
