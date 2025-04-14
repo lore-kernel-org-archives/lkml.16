@@ -1,104 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4535A27F759;
-	Mon, 14 Apr 2025 14:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F258B2957DB;
+	Mon, 14 Apr 2025 14:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640824; cv=none; b=bvN2j2/7M6xI5T5sw7UW5BjSf15gZfX9aAlkUY6SWjJWLV/BVzhKKC/g9i1RptUc96jgDa6+4SZdBL7z90ZMHn1FZq9l5OFv7azWrvumdNbqXtzZ1pEF0BivYaZ3dwuTp6cpyih9+Utr4ljP6Tcze/7EXpd/TrYsbkQbOo001BE=
+	t=1744640833; cv=none; b=hBIvFwFMJ62Dh0eJFkk5bIrUkaNEOe5Az/uJxlUS7F+QIX1mgkzGcrs6C5PESIIghnmC7Mo7PRh2GYeRgXV2f6etzKoMmXL39X2wB7ZbEotpj8yUGZK2aJFhjQQ6FjqTd1JNZ1WAHH7Kq51pfqxA+FPe2/xRUz6C66A2N2hmMXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640824; c=relaxed/simple;
-	bh=jLiMpwfjAhP34pBct7SUNsjIF29sZ2YgJztMNCFrHFY=;
+	s=arc-20240116; t=1744640833; c=relaxed/simple;
+	bh=JWVti9yDCkyhRv0BTyTqquIhF/3Y9o19PO3iuCETym8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DhrVZ4H69wsQeEroVeTyouxEZb1ZmpeRlJ0UBaOOtaIUNKHzyor5pvue0O0PTGrg039YEYGLRQNJpp21DrCIMfPV2neuClPQobnREnSsFKGQe2/P0kbLkxO1goxVobo3ENh/1K326sHBrMbE2WVuwgv6fSHyc352K8aWdA+fjic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sb6XnLm6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouwZzSNf5FWj5f3hUIxietdOGWT3v/wLfvinXUJhaMSufK4ZPafcYlNC+HVgsdcoFN72h9Fg+3hVs6iJ2JY6jibD3cnmGwGX6peomQebw0P8Agw/zwrSSdyiGI4jwbad04KY7J5bV848twGYQTF0e8SX/Wrt3iHRg1Itj/WbHAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQCpq0AB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sb6XnLm6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8399C4CEE2;
-	Mon, 14 Apr 2025 14:27:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQCpq0AB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AD9C4CEE2;
+	Mon, 14 Apr 2025 14:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744640823;
-	bh=jLiMpwfjAhP34pBct7SUNsjIF29sZ2YgJztMNCFrHFY=;
+	s=k20201202; t=1744640832;
+	bh=JWVti9yDCkyhRv0BTyTqquIhF/3Y9o19PO3iuCETym8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sb6XnLm6FpFtHh7X5vPM1gOLsfXO0TXqz8uXjCxqbIzwg/FU/2scunQTXoLpJQVUy
-	 +TLuVEZk/JUR1ixmT1AxKhmV4Ch+fnW5kTSOw8uurqjs64wswoyPMbY5ZIPBZuD8Ex
-	 GcjSbxrSyGtoThn4q4ATk51wcU8P07butGxNhlMoscIAOhoQVV3J4ZXONu80h8RqgK
-	 9aGCXYA2ckLGN9NjCJu+6KZzKv5yYY2XmlYJFUgpFEGfaMlHtZIXoofcGjQFA2YYvq
-	 2lx6U9xJt0gkB+ubXNpO4wmXkmN62+IqqQUrM4M/ZH2J8S9mstgth17T8hiGy3nssy
-	 CXE8oR0eOWcMQ==
-Date: Mon, 14 Apr 2025 16:26:59 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Luca Boccassi <luca.boccassi@gmail.com>, 
-	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
- helper
-Message-ID: <20250414-gesiegt-zweihundert-3286f895aa3d@brauner>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
- <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
- <20250414141450.GE28345@redhat.com>
+	b=UQCpq0ABSl2OfpmYLyUO46h6ATAeVaZBibS9KwX3p7ArIrXTDEg8krVSXdXwLB4To
+	 I/Al+bTOimEiznRgOxdzX3OlMlcTlnp4hnHQomdNaVzLElWfM6+v9YTnTKAq9ffZqF
+	 811pOgD8mZ9gDca7XQpJL+UKogHhduI3BpplcszT/IJPvjMEH1VXwcxHumEgUkt2BL
+	 BNlRSFxFrSQ5giUFMjWtwLXftLwzqO7buY7Qc2VBwO79fFtTeTayO0m6Z4t8YOkGKS
+	 7oT6ndVIgkJEQdfhwYg1DZOTqoRuWKZKZWhKGkJk1fbLXdarXiOaPd2F2gOJfELOLk
+	 Ao+/njDNXZRag==
+Date: Mon, 14 Apr 2025 16:27:06 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: phasta@kernel.org
+Cc: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] drm/nouveau: Prevent signaled fences in pending list
+Message-ID: <Z_0bOgTBkkRH9jib@cassiopeiae>
+References: <8583665a-6886-4245-be49-fd8839cfe212@amd.com>
+ <c737c89c7ce9174e349c61ab4e5712eee8946f13.camel@mailbox.org>
+ <50c9530d-e274-4f89-8620-16afe0981239@amd.com>
+ <1a73e5fe4350d6ee4b7d807612264eb637c4f2a9.camel@mailbox.org>
+ <d3dee321cd6b70d6ca98768fbcf6f1e6134c43a1.camel@mailbox.org>
+ <81a70ba6-94b1-4bb3-a0b2-9e8890f90b33@amd.com>
+ <aca00cb25b813da4fd2f215829f02337f05642f3.camel@mailbox.org>
+ <45d66ca4-5390-42e9-869a-f5f9125d05b6@amd.com>
+ <1127db242503055b2e5e8d07db3aeae46cfb7a24.camel@mailbox.org>
+ <6e4628c3cfc7e0d1e4ea9af510ce0b09b34a8cf8.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414141450.GE28345@redhat.com>
+In-Reply-To: <6e4628c3cfc7e0d1e4ea9af510ce0b09b34a8cf8.camel@mailbox.org>
 
-On Mon, Apr 14, 2025 at 04:14:50PM +0200, Oleg Nesterov wrote:
-> On 04/14, Christian Brauner wrote:
-> >
-> > -static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-> > +static int umh_coredump_setup(struct subprocess_info *info, struct cred *new)
-> >  {
-> >  	struct file *files[2];
-> >  	struct coredump_params *cp = (struct coredump_params *)info->data;
-> >  	int err;
-> >
-> > +	if (cp->pid) {
-> > +		struct file *pidfs_file __free(fput) = NULL;
-> > +
-> > +		pidfs_file = pidfs_alloc_file(cp->pid, 0);
-> > +		if (IS_ERR(pidfs_file))
-> > +			return PTR_ERR(pidfs_file);
-> > +
-> > +		/*
-> > +		 * Usermode helpers are childen of either
-> > +		 * system_unbound_wq or of kthreadd. So we know that
-> > +		 * we're starting off with a clean file descriptor
-> > +		 * table. So we should always be able to use
-> > +		 * COREDUMP_PIDFD_NUMBER as our file descriptor value.
-> > +		 */
-> > +		VFS_WARN_ON_ONCE((pidfs_file = fget_raw(COREDUMP_PIDFD_NUMBER)) != NULL);
-> > +
-> > +		err = replace_fd(COREDUMP_PIDFD_NUMBER, pidfs_file, 0);
-> > +		if (err < 0)
-> > +			return err;
+On Mon, Apr 14, 2025 at 10:54:25AM +0200, Philipp Stanner wrote:
+> @Danilo:
+> We have now 2 possible solutions for the firing WARN_ON floating.
 > 
-> Yes, but if replace_fd() succeeds we need to nullify pidfs_file
-> to avoid fput from __free(fput) ?
-
-No, since replace_fd() takes its own reference via do_dup2():
-
-replace_fd()
--> do_dup2()
-   {
-	get_file(file)
-	rcu_assign_pointer(fdt->fd[fd], file);
-   }
-
-so we always need to call it. I had a comment about this in the previous
-patchset so people don't get confused. I can add it back.
-
-Let me know if you're happy with this otherwise.
-
+> Version A (Christian)
+> Check in nouveau_fence_context_kill() whether a fence is already
+> signaled before setting an error.
 > 
-> And I think in this case __free(fput) doesn't buy too much, but
-> up to you.
+> Version B (Me)
+> This patch series here. Make sure that in Nouveau, only
+> nouveau_fence_signal() signals fences.
 > 
-> Oleg.
 > 
+> Both should do the trick. Please share a maintainer-preference so I can
+> move on here.
+
+Thanks for working on this Philipp.
+
+If you don't want to rework things entirely, A seems to be superior, since it
+also catches the case when someone else would call dma_fence_is_signaled() on a
+nouveau fence (which could happen at any time). This doesn't seem to be caught
+by B, right?
