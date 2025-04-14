@@ -1,72 +1,73 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FAE2749F6
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146412749FE
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642093; cv=none; b=Gy8cbvC7jd+Yn2fyeBGTyu6nIzl8ONCdq2q4dMrPbkqN7QKbW3dzWKOxdTJnZ54LpSfrW4pQ4aaQMMS7XlXQzsZvQfnSY8yC68EZju1O7n4RBB8qiPjuq7XR7OmBCA+B33FwHewVUKwR51asProXPyUL+ue94ZU05NYHkyFAnI4=
+	t=1744642096; cv=none; b=AynHfuwidaMe504qDrzz6ehNiOAVTSmm61D4NsJ92XIqXc8dj0qXis7l1ZVdMCyp1jYNFz26AsbyCp99JEDBaTM0S+xcIevxTTaPxaZAX52LfHfc/CMj6j8+WiXTA3ZLb3+tK0WLRh4mtLY4oH1Jp+pcZmmDyfnvJjZypAqkieg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642093; c=relaxed/simple;
-	bh=rhMCMHbUjfu25o78Qk0bXpRpxmEMmo84KsOZ4BfvPaU=;
+	s=arc-20240116; t=1744642096; c=relaxed/simple;
+	bh=LhU0rdOmID82AZ8xNk6EuwviRRucppHfhg6LBx9zRaM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DWkGTkSC9zoTh8ItO2zwJpkk8m9TospiHYLS2OUfG8jGot22FQ8S77gGQtMYcqcO7W2V/6cFwJFJMUmJ/poCBF+yt3FvrOvLBZ3VTleG0Ik4Rc1gVcWdxTczFquK2Bzr+3S9uTjuivYD1Vhb56eM+lD7L1xpJ0QdtpP4UXJ3eFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=tT8B/kr7; arc=none smtp.client-ip=209.85.166.49
+	 MIME-Version:Content-Type; b=nNuzPVOUouYSEBKrmL0I2bYhemOY2GZplp/+pGsYfFej5xKrNaZWosRP1Td6ItkgcOKf+G/4yK+5rFkioOzRPgoanRrie86xCH3JcZK9ftOdRhbPR5MweWKKDtwBXVoQlgcId4y0wwzFG3StmI0mLoUe+LKD2ARI/DL93ryg2Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=D+vBenhY; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="tT8B/kr7"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85b41281b50so116328239f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:48:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="D+vBenhY"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d439f01698so16299675ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744642091; x=1745246891; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744642094; x=1745246894; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n9NLOZp+0Nb53rh8qL2R0uTQQrVDxB/y4kuMaCTOR7c=;
-        b=tT8B/kr7C9kGzYJyLkTdE8v0pbWdmoya/a1TKYm1+s5zhY5feNjUt3kBkNgJhmjL9Z
-         M9KA/yhWP2Xaa8PopnQyrba3Z8aSsBu5iNZiIltwRBgJJ/KU3vPrylIWoJYj4GiMLLZC
-         dBrdaX3iieG0fHsN/hf1GkA/oQgc/HHD1F6RvVTCbGQOCLfWhChLp75iZQ9UaT0mSCRg
-         CkaBFp2CoxzffjcUg+rVzG+4/i8/3l2DiyxyVmzHCtmH4Z1/xBET3dmyOcJ7QvMxDTR/
-         k0Hx92/F2d55YHzJGFZ4vnYyDSFQy3X/8OSgfBdeZoePx7ANie8VPjsER1APaYiSGfFn
-         /Gvg==
+        bh=oHfNdnNi1xSkWYqtYrP+8jqEYscVUa2He6JVgixWP6g=;
+        b=D+vBenhYK0LYA/+huTkVNTxykdTa/ahcevI4gBKcG7vUEeEgYxkpSgkbZXw4PrBM8O
+         H4S/qGh5K8G4eCiouEs4N8y4ke1M2vnihxSJm5AwAivCID+nubSJHJxslOX8TNCmU+Kv
+         D72qGR6z+coD/HQ40pARZzCn5AEf2LoeC8YmbDtIJjuPpEuFytSBw6NIMcWBUd63DCZt
+         H5P3E5UoHzkK4cMTDFnWUcnD8wxBLIIRWHseNUa8eFeraggFNv75VrbDDhLZx+nPDOlF
+         egpzBRMs7+uTpDixa1B47kQ21BQEUoXQl/MW89we+Dp5P5MTcbAnUZnxkcvJCl1cY6gF
+         DOmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744642091; x=1745246891;
+        d=1e100.net; s=20230601; t=1744642094; x=1745246894;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n9NLOZp+0Nb53rh8qL2R0uTQQrVDxB/y4kuMaCTOR7c=;
-        b=OGkLzjsjwcNIE3aUKCJWS3JLXdi5zkMBOs508GZXc67dodPuWoiyfPR6xPtp47+Ejk
-         HwF5rkTR3dzfhrWcZBHbTV+kaUq3xVWjN+3v+w0tBPA7nmjqyXa/pbEpNYSdNDzVsETH
-         +B7G4DP0jXmh2g9epQ17al0p0TBDAv0qYftzNVJP+Me3MeJF/LEoZ8YDPq9N60pYIVJ7
-         cjbkoS3HEISGKsDp5Tw7+//kdrdHRjF1sIdGpeRXacuU4wJX/AW1K8fCdE5AzdTyFnnX
-         o4VSKL0BeyrPjgFadDyHQz4vM3OT7ERld5Q9KzqOthGHnpOUgsJD5207CKia6p1n1sEN
-         RPFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUX0VaAo5Ic3FOBugfbXBhQk0d8rVoaAMrJbSHTg14aD5o6rSIOoYyXHQnRSewYxvI07Qp1FmmWSHexu6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyliSNhTHawpkdMXQj+VgVrDzDS4t3C4UIYZGBDiljAuhEPfGrw
-	/fin2nVKHJ1K79y7Jwe962bTtRxGmb69xncbj2cHgFT1Ay8lAMfgmsmTqY8eMS9JPHDqBZ23tC4
-	4
-X-Gm-Gg: ASbGnctO5NJ2vkBk0TYKdJynuHHqzBN9lgUO0aTpzUId2NdqKJ+bdwnxg+kgV7hO1Od
-	Ssdi1lCPJd/IS/ZFpUAuNcSSLGjbgm7IuW6JAqRuPZnXVRcWwxi0hEKWqENjsmNO2Ps2HKS7DpH
-	/Uq6MmRWNL9tkkvt8SxAY1MbJUacHn6upAQ39go0ieFyagrzDpFKDPcB4oLODZWjqAuYscLZFhX
-	EYy2NqkJUkBbjCflbtJqhEuRQhRs0TVicTu8gWNdXvPIoS9Y4T9b7Uhnf+P59sEHY8m+QoKceA0
-	dJY/Bb1+nnUf1BkB4edSFSO3mV1XrddD
-X-Google-Smtp-Source: AGHT+IGPfM+faRGObScSF9y3uJ9gSmNmLDppjIkdwVGlwIxx/VnPJwjYYyDuKqqfztkP+4WddDe9ag==
-X-Received: by 2002:a05:6602:2b96:b0:861:7237:9021 with SMTP id ca18e2360f4ac-8617cb46848mr1354025639f.3.1744642091087;
-        Mon, 14 Apr 2025 07:48:11 -0700 (PDT)
+        bh=oHfNdnNi1xSkWYqtYrP+8jqEYscVUa2He6JVgixWP6g=;
+        b=urTqAr2zCEiiAKhAjkieqbtNSd2uLVm2ox8TL/vm1mZzZgPhMCZlYfKI4xfP4vV3r6
+         9c65REMaaUIokV0Qf/CPm0ZfE/ROc93vnfl8hzDhgYPlzIYK964vR+PFyQ5RJTPGfANr
+         ZtHFEV10WHDTYtTJk+gOgHC6wEkINKx/e7RjnjhNy0XVwroBfU/CeSnuoRwCSQ37jBZ+
+         9yvAqbanyXvpxIK8gXvCXrnwpBghvanpEm1yf/kMoQmgLkbSYs/EKqyfXbyD8VYv8bmE
+         jVb8+bZqU84i/mDw9Bm26EpZNFJMTVBlNWXXWbiUM1nCuubxDOEEp2lQaSdek/ZvwzoU
+         nZDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgVlUXpdHaG1hM7dawI+1+b0Mp6Is1xei7Hcu8nPwz4SSjjW3KeY2h+wltO1g/n29Nr0LgRfm2ieJtBYc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhM/XHa2QiFER1lIp+ymE4HmlVFN5fZYQ1NFeqGZqu6+v73wlP
+	/56S1FohHPgnjHRotDkPX9ETNCndHdiPKVu2UKUtBAC83sKfZSGKG0KW9cjWUok=
+X-Gm-Gg: ASbGncsFvFtsdSt7Zexpuse0EJQgRoPL9Cr/MgWqGWSgeT3x6cWPydJefb8CtXkhVcV
+	77SgBMsDOmpRDhTmTH+/+SOVg3gm2POz23vtaniQxrG9WNmfsmUEu3viNzTLMJY/zAZae+4hkg2
+	D2/XrxYtl31/kM9krVO5MeQSrX7SmWLGtWUwf2GbpOYz5xQ7kYeLcPVifH87zAl2BH9XYG219Ls
+	i0KgH1hOO9/XBi305GzRdJAhNmtzL+PScmwVyuNBtIrLVi3PncfZZAldiQlZ0p/Ei17KI5MXh0s
+	TEO77i5Z/s56vSLAG0mLxDAgrQbAIFWyiJkDuNUyLwI=
+X-Google-Smtp-Source: AGHT+IF7TuXWT67iAvYokr9eSH+aaPlPHhCcc1wcBruZkvWKMTX24qclOO8Q8bid8F0MSTvM1ww72w==
+X-Received: by 2002:a92:d706:0:b0:3d4:346e:8d49 with SMTP id e9e14a558f8ab-3d7e4d02187mr131652295ab.9.1744642094000;
+        Mon, 14 Apr 2025 07:48:14 -0700 (PDT)
 Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e6bd7bsm2569671173.141.2025.04.14.07.48.09
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e6bd7bsm2569671173.141.2025.04.14.07.48.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:48:10 -0700 (PDT)
+        Mon, 14 Apr 2025 07:48:11 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
-To: "Bird, Tim" <Tim.Bird@sony.com>
-Cc: linux-block@vger.kernel.org, linux-spdx@vger.kernel.org, 
- LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <MW5PR13MB5632EE4645BCA24ED111EC0EFDB62@MW5PR13MB5632.namprd13.prod.outlook.com>
-References: <MW5PR13MB5632EE4645BCA24ED111EC0EFDB62@MW5PR13MB5632.namprd13.prod.outlook.com>
-Subject: Re: [PATCH] block: add SPDX header line to blk-throttle.h
-Message-Id: <174464208984.57766.7624425408061189714.b4-ty@kernel.dk>
-Date: Mon, 14 Apr 2025 08:48:09 -0600
+To: Zheng Qixing <zhengqixing@huaweicloud.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com, 
+ zhengqixing@huawei.com
+In-Reply-To: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
+References: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
+Subject: Re: [PATCH] block: fix resource leak in blk_register_queue() error
+ path
+Message-Id: <174464209120.57766.16774504976430724922.b4-ty@kernel.dk>
+Date: Mon, 14 Apr 2025 08:48:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,20 +79,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3-dev-7b9b9
 
 
-On Fri, 11 Apr 2025 19:20:18 +0000, Bird, Tim wrote:
-> Add an SPDX license identifier line to blk-throttle.h
+On Sat, 12 Apr 2025 17:25:54 +0800, Zheng Qixing wrote:
+> When registering a queue fails after blk_mq_sysfs_register() is
+> successful but the function later encounters an error, we need
+> to clean up the blk_mq_sysfs resources.
 > 
-> Use 'GPL-2.0' as the identifier, since blk-throttle.c uses
-> that, and blk.h (from which some material was copied when
-> blk-throttle.h was created) also uses that identifier.
-> 
+> Add the missing blk_mq_sysfs_unregister() call in the error path
+> to properly clean up these resources and prevent a memory leak.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] block: add SPDX header line to blk-throttle.h
-      commit: 1b4194053f6b30556272ff11750dd518e067ea49
+[1/1] block: fix resource leak in blk_register_queue() error path
+      commit: 40f2eb9b531475dd01b683fdaf61ca3cfd03a51e
 
 Best regards,
 -- 
