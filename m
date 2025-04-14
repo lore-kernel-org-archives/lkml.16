@@ -1,177 +1,119 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1AC1B041E
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 06:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8E21A2630;
+	Mon, 14 Apr 2025 06:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744613617; cv=none; b=qlkZdxCY7bOxUlXQyXCZlD1Gac5dTRCI7FYSs7NU6wXI+kDKTh+3HQ6xIFMKlIdVYTkLTl5RG6g57xG6v9DwuCP5A2VrtV8Qiii4kXBhcUp5mXdyPoxvvMGNBrQC+8DyUKMvZKCi8YBtFifsyn6h/Ar1Jq2RkQxxbYxvruqHwpY=
+	t=1744613728; cv=none; b=Skw3cJ6Xabay2lN4E29J11XJQh6yDrxjqg5hTe3rn4LFxnas1ADvq1uK+KDuQhQX3507nCzsZE0FsRKo1i6x3SNy17hiPf29ZBUagP7T1DmRqJqc1jDahIg6RQ106oBXF/l4jSL9t6Jz2Wy2oV/lCahFGZ9ascnLsllIPnq2dg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744613617; c=relaxed/simple;
-	bh=Agoq23bDUAXqo9AaPPRQFYVTVNaPa5Zc5OdDh/SbrY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ETe3wky28VF2s1sx1hLpn4B0IB5/8Okh0dmklb7FN/K0541FSwRV8MMZBUNLm6SOlIUGrdf70iLdCpceJ/sF5ymzdGu2LOqlodqYBPJ9oKy4Ms6GlRcgNHGt8OYJg5KIbR564Gl1KN/C4iJ6reLGajIxq6KkxIOb2gLK0GLteDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DsNgH2Vm; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744613728; c=relaxed/simple;
+	bh=k7dhkveoyFwvi7/tUvCHIPEyndab2IDG85JIg/N+H5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCGxknB0DMOAVD5dWO96S7ASsCU2xZB4ZKtaxb/2SNu+g5oflOM1h00fr6Ijm4vr2DxPa0NxBJ/y8Sqll1QUow3xQl7IgL1x0r2IxqPADWF/kKz7S/EW3xPC288SpexDIURWaAdoNtG5MHP9cNKs1M48b01g5+CT90A+s7/d0Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jvAUGxjq; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DsNgH2Vm"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac73723b2d5so794193966b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 23:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744613613; x=1745218413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EQbNREGYurDkVhqmrR2KiVmvUT/jocZ+TY4xPaBX+u4=;
-        b=DsNgH2VmcqbrylbmwMb3S9C/JplqP6gTFpVD2w0rQpKjQ/lrkew+P4fSRm+ddCRKZ6
-         ny71qUnb3C4podJaR9nr6eQyrpilHyyeMTuvVvLnk6Fan1mfXcmdHJxv6llZ4PUBQp0z
-         gQarS9gTENjfZ4tKGn0QFYQ6bBRT3SzBOqvAi0CaSTdfWcPRSgqL5vesfwcZfvspYRa+
-         Cx6TL18rBQUFqTVDJOSlhbnLYxufKzPd7HTjXC/B/RO14QQcJWkVuTabJzvM3oXVie1V
-         vGWNG6Vt1zGqqAJcg5Z8Y0A2tMzBn6ujkpkW6ouD8TDqCcyJpK+qQsQaDw83sX0CjpjL
-         ZdKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744613613; x=1745218413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EQbNREGYurDkVhqmrR2KiVmvUT/jocZ+TY4xPaBX+u4=;
-        b=LEJBeCclf6deqhNz1SEJ8wLxb3d99GqmROBkn8+vGs6+1LamXBDF9Rj+0IdLc/vmGi
-         YILN0Fyu/+c0ZAs/1LfbLANh6Dq1T6LM4ACsRneeuwGBZkdEo6RocG4lkooc0Ub8lNzz
-         UlNnJ3ltFXIxIi+fuwnCQiNLlROC8kUvxBb6velbUacbuvjuYfDyQX4b4xayZds8a7iI
-         05wDYGEtcITUyc9K2DZT7us1bUyKJiSiK/kWfrFCMZPHHXF/L3Kox8Q7rYT0ox+l98YO
-         lsYoHA8VLsyXHjJm1DpU3sBTmCe+mlbOmn19MquWCiaqcg/RiGZT0jGK6laov5CbMjw/
-         sH0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCiPvor6r5F9r4o3Yb+dZVQFXd+EHrCe5+xSvEaswwdkA8ylNaVOBFYfkHUO21Ml8kcqanSET6tXMmU1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtZYgvoEZlZFdcsdu6hOTPm9FgOc572BAQaAmfrc1W211cSiqm
-	J2/X5i/br430grfsZ7zLB0L+76Lf/RnbFrC/ThDMHqJ3/lBKYcA+IqTrtlDn57x1EIAYBhLy7Xr
-	8BE7nRA6Pwim4OsbLA2UWsi9XDlT7LlF9G30hNQ==
-X-Gm-Gg: ASbGncuqJOfoRTnClgxHc0/HlaCelV/5bpfcCEPrPoqqeGy6iTnsbRUPWxB7Aaqqdf+
-	LqiKIZAuwyPeaUI87augnYgI9P99AXOvaXTC4qe0JDRvadgkFJtwnabJbU75p3LN2e7zPIHg3JY
-	HQvOz/qgqHRHAX91XOSAi7+6oEGQ0YRvc=
-X-Google-Smtp-Source: AGHT+IH4trRZYgVHR0ualPPj/jVwcxdOfEGnoWxbXqXWi2EIvLcKnEFRknYx4vOWQBhOcyoslaT+/L7G3bzJKKzGRY8=
-X-Received: by 2002:a17:907:9810:b0:aca:b720:f158 with SMTP id
- a640c23a62f3a-acad348a128mr1012156166b.13.1744613612720; Sun, 13 Apr 2025
- 23:53:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jvAUGxjq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744613727; x=1776149727;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k7dhkveoyFwvi7/tUvCHIPEyndab2IDG85JIg/N+H5E=;
+  b=jvAUGxjqHv+bZ2e+mvxzFJq9Pq+Ub4s/7+HDxqDALH/Di1zljlrSHK1w
+   tO6UKM4Ngne4vD1Na0+Syz/v1Rx2Is84tetstuWi8ds9YkmoNEC7RDg65
+   HCyPWiDzu9iP/Jjmz/XVN7dm/oSx/BHFKxf9Kb0AXjZhmq2+JglNuTdPh
+   5g+eeZbRBqnghjtaw49R8QeGn870mItA2CgRe5YPeLixz9gLrx9A7K63Q
+   7duIAUTCFQSNikFbdeHfDUJ45HcEv4ckRyY5QmE1x8XGTHpqkriYaNM+/
+   sLy/W1iZZLCzPOGPZZiu16TB9l31FQWn0tL9BBvRB2iAwffXA9hHv42ou
+   A==;
+X-CSE-ConnectionGUID: DiLU1NRgTrudxHXc8AaIIQ==
+X-CSE-MsgGUID: e96YyGlzQqyCWbr9ugRk/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45952058"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="45952058"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:55:22 -0700
+X-CSE-ConnectionGUID: WNE0w/XOTly35i3ezIIVjg==
+X-CSE-MsgGUID: OLhFZRTMRo2sNarFDbrQNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="133839425"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 23:55:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4Diu-0000000C9le-3zxa;
+	Mon, 14 Apr 2025 09:55:16 +0300
+Date: Mon, 14 Apr 2025 09:55:16 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: ende.tan@starfivetech.com
+Cc: linux-i2c@vger.kernel.org, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, jsd@semihalf.com,
+	andi.shyti@kernel.org, linux-kernel@vger.kernel.org,
+	leyfoon.tan@starfivetech.com, endeneer@gmail.com
+Subject: Re: [v2,1/1] i2c: designware: Add SMBus Quick Command support
+Message-ID: <Z_yxVJVc69ljaDZe@smile.fi.intel.com>
+References: <20250412093414.39351-1-ende.tan@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331082347.1407151-1-neelx@suse.com> <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
- <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
- <b1437d32-8c85-4e5d-9c68-76938dcf6573@gmx.com> <20250331225705.GN32661@twin.jikos.cz>
- <CAPjX3FfVgmmqbT2O0mg9YyMnNf3z7mN5ShnXiN1cL9P=4iUrTg@mail.gmail.com>
-In-Reply-To: <CAPjX3FfVgmmqbT2O0mg9YyMnNf3z7mN5ShnXiN1cL9P=4iUrTg@mail.gmail.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Mon, 14 Apr 2025 08:53:21 +0200
-X-Gm-Features: ATxdqUHak9AiMMSwlhClElvAYjPSN7_Sx5iFmhNZVEvfe4TE6-tM8bxa8iRg7XI
-Message-ID: <CAPjX3FfOJMFC8cXCqLa2yS1qSYmhu5cjV__+7xVRFGuKu=RqiA@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast modes
-To: dsterba@suse.cz
-Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>, Qu Wenruo <wqu@suse.com>, Chris Mason <clm@fb.com>, 
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412093414.39351-1-ende.tan@starfivetech.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 2 Apr 2025 at 16:31, Daniel Vacek <neelx@suse.com> wrote:
->
-> On Tue, 1 Apr 2025 at 00:57, David Sterba <dsterba@suse.cz> wrote:
-> >
-> > On Tue, Apr 01, 2025 at 07:44:01AM +1030, Qu Wenruo wrote:
-> > >
-> > >
-> > > =E5=9C=A8 2025/3/31 20:36, Daniel Vacek =E5=86=99=E9=81=93:
-> > > [...]
-> > > >>>                        btrfs_set_opt(ctx->mount_opt, COMPRESS);
-> > > >>>                        btrfs_clear_opt(ctx->mount_opt, NODATACOW)=
-;
-> > > >>>                        btrfs_clear_opt(ctx->mount_opt, NODATASUM)=
-;
-> > > >>> +             } else if (strncmp(param->string, "zstd-fast", 9) =
-=3D=3D 0) {
-> > > >>> +                     ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
-> > > >>> +                     ctx->compress_level =3D
-> > > >>> +                             -btrfs_compress_str2level(BTRFS_COM=
-PRESS_ZSTD,
-> > > >>> +                                                       param->st=
-ring + 9
-> > > >>
-> > > >> Can we just use some temporary variable to save the return value o=
-f
-> > > >> btrfs_compress_str2level()?
-> > > >
-> > > > I don't see any added value. Isn't `ctx->compress_level` temporary
-> > > > enough at this point? Note that the FS is not mounted yet so there'=
-s
-> > > > no other consumer of `ctx`.
-> > > >
-> > > > Or did you mean just for readability?
-> > >
-> > > Doing all the same checks and flipping the sign of ctx->compress_leve=
-l
-> > > is already cursed to me.
-> > >
-> > > Isn't something like this easier to understand?
-> > >
-> > >       level =3D btrfs_compress_str2level();
-> > >       if (level > 0)
-> > >               ctx->compress_level =3D -level;
-> > >       else
-> > >               ctx->compress_level =3D level;
-> > >
-> > > >
-> > > >> );
-> > > >>> +                     if (ctx->compress_level > 0)
-> > > >>> +                             ctx->compress_level =3D -ctx->compr=
-ess_level;
-> > > >>
-> > > >> This also means, if we pass something like "compress=3Dzstd-fast:-=
-9", it
-> > > >> will still set the level to the correct -9.
-> > > >>
-> > > >> Not some weird double negative, which is good.
-> > > >>
-> > > >> But I'm also wondering, should we even allow minus value for "zstd=
--fast".
-> > > >
-> > > > It was meant as a safety in a sense that `s/zstd:-/zstd-fast:-/` st=
-ill
-> > > > works the same. Hence it defines that "fast level -3 <=3D=3D=3D> fa=
-st level
-> > > > 3" (which is still level -3 in internal zstd representation).
-> > > > So if you mounted `compress=3Dzstd-fast:-9` it's understood you act=
-ually
-> > > > meant `compress=3Dzstd-fast:9` in the same way as if you did
-> > > > `compress=3Dzstd:-9`.
-> > > >
-> > > > I thought this was solid. Or would you rather bail out with -EINVAL=
-?
-> > >
-> > > I prefer to bail out with -EINVAL, but it's only my personal choice.
-> >
-> > I tend to agree with you, the idea for the alias was based on feedback
-> > that upstream zstd calls the levels fast, not by the negative numbers.
-> > So I think we stick to the zstd: and zstd-fast: prefixes followed only
-> > by the positive numbers.
->
-> I'd still opt for keeping full range and functionality including
-> negative levels using the plain `zstd:N` option and having the other
-> just as an additional alias (for maybe being a bit nicer to some
-> humans, but not a big deal really and a matter of preference).
-> Checking the official documentation, it still mentions "negative
-> compression levels" being the fast option.
->
-> https://facebook.github.io/zstd/
-> https://facebook.github.io/zstd/zstd_manual.html
->
-> The deprecation part looks like just some gossip. It looks more about
-> the cli tool api and we are defining a kernel mount api - perfectly
-> unrelated.
+On Sat, Apr 12, 2025 at 05:34:14PM +0800, ende.tan@starfivetech.com wrote:
+> From: Tan En De <ende.tan@starfivetech.com>
+> 
+> Add support for SMBus Quick Read and Quick Write commands.
 
-Any feedback, Dave? I tend to drop this ida of `zstd-fast` alias.
+it's interesting how you made a versioning. Just run
+`git format-patch -v<X>...` where <X> is the number of version you want,
+it will make it properly in the Subject.
 
-> > We can make this change before 6.15 final so it's not in any released
-> > kernel and we don't have to deal with compatibility.
+...
+
+> +	/* i2c-core-smbus.c: Only I2C_SMBUS_QUICK has msg[0].len = 0 */
+
+Please, remove filenames from the code, better to refer to the actual functions
+as func(). This helps also to grep for all usages in case of renaming.
+
+...
+
+> +		/* i2c-core-smbus.c: Only I2C_SMBUS_QUICK has msg[0].len = 0 */
+
+Ditto.
+
+...
+
+> +			regmap_write(
+> +				dev->map, DW_IC_DATA_CMD,
+
+Something wrong with the indentation. And you have plenty of room on the
+previous line.
+
+> +				*buf | DW_IC_DATA_CMD_STOP |
+> +				((msgs[dev->msg_write_idx].flags & I2C_M_RD) ?
+> +				DW_IC_DATA_CMD_CMD : 0)
+> +			);
+
+...
+
+> -	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
+> +	dev->functionality = I2C_FUNC_10BIT_ADDR |
+> +			     I2C_FUNC_SMBUS_QUICK |
+> +			     DW_IC_DEFAULT_FUNCTIONALITY;
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
