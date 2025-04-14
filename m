@@ -1,56 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170C2DF42
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F974198851
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 03:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744600468; cv=none; b=K8jr5dlBeZKt+j3qu0ulFNaAU6WHrzm5IDu/B/I8vODCHd4uU2L4gkz/VtztOCKwhxwX0hbcqaoQGbbQk15s0rOeBoFz2EPA6s7eMGBtnFNxn5HgF28fj9BkoIuq6d3zm4xHN3IvxDmnz3BG/yv/jJB7cefryPPiGksfCVHtzzo=
+	t=1744600508; cv=none; b=baTO9JEMyD4/rED6GXxaHPNFgMSNvQ68dtA+aT5vXoyi4M+QMPdK7iORq2IK541qzej4A7pP9AVw32sjNJKOWJk8uf5B6GBsDZCFt/ucGUfIdRLM6epwf0Lo4smRHAF/xSdXVYywZgiYi47h/z39sm20+MfL79rP0iur+lDnp84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744600468; c=relaxed/simple;
-	bh=gKtdvpnqmlFGAluw8oWf4ii9j0FCcbBLz9o9CucgEuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jBt+iiKgf16Hj4N6eudIBJ3LL3JF1N/lazTdt4Iw0On/kUPwooTKVw8o0LTRg7WuM32KWptDN/g7k+UPdBWqbnjrN8Yal3mNnqS0zuZwhil92gUHJU8r/B4w2AInXkABgsDYcRh1GtHlNemyHlyLpYJcJVAgVnTxxDjq4MT2Ji4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEdVa/Cu; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEdVa/Cu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744600466; x=1776136466;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gKtdvpnqmlFGAluw8oWf4ii9j0FCcbBLz9o9CucgEuI=;
-  b=CEdVa/CuREdEwSkOBVcqQWcA8Kv/0pyw3tulm+cgQqeVE+w3F01/VHyN
-   C1fp2DMHH1oULF9wwX5SgXcGIFnj3KNvChm9UOUxeTFsygnHRAeYM6XLG
-   /z3C0Tb3tDTXCwqLm1DY3nX21GfjzcUYtqigkt4DjLAQ+3P4OtJ1Ym8QQ
-   BzCHfTPXme4oMnWvpFFPvecHxZh6s57lBc0gWLVmgcgrWGcT7kx80Jvbr
-   Zsm8Wc0iHnN29kV2qNKWHc7UWw7Hg/pJx2nnd91vKB/1wM2DkbsnAXuAB
-   SeiVZR+bq0B1s00edwX28unXlIkJyfY4Vu8+Ii0L8c3anQ3EeyQDwocD3
-   A==;
-X-CSE-ConnectionGUID: HkmbbAQ1ToK4oN6F2oH1Yg==
-X-CSE-MsgGUID: vPcUJ9PfTaG+Cc3v7Y1X5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45291721"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="45291721"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 20:14:25 -0700
-X-CSE-ConnectionGUID: qkyWWJixTamMVwEGyTYfAg==
-X-CSE-MsgGUID: bLdLj0FHRTOurGW+mAa3aQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="130546592"
-Received: from ubuntu33.bj.intel.com ([10.238.158.132])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2025 20:14:24 -0700
-From: Pi Xiange <xiange.pi@intel.com>
-To: x86@kernel.org
-Cc: tony.luck@intel.com,
-	peterz@infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/cpu: Add CPU model number for Bartlett Lake
-Date: Mon, 14 Apr 2025 11:28:39 +0800
-Message-Id: <20250414032839.5368-1-xiange.pi@intel.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1744600508; c=relaxed/simple;
+	bh=CMTgxbmMKRjikEeKDDpvoZBdRAA+KUNy6JgrtUiG8lI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rv+LR84CWXCNxQwpf+R8jUJFH/5f5wUXKRgFIcYujGmlVa2iWf8fYs42aBhf0l3R/t+WVI9oNR1NSvtLMjIniPyOPuXz1beRLU7gxVJXzlGe9Le3xlfrvPgsxT68YnPxo20Yb7WDeuViVn5X4gJVjN4e6VbMtpimempWEBwqbhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowADXfwCtffxnLIbCCA--.13743S2;
+	Mon, 14 Apr 2025 11:14:54 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	alex.hung@amd.com
+Cc: chiahsuan.chung@amd.com,
+	hamza.mahfooz@amd.com,
+	sunil.khatri@amd.com,
+	aurabindo.pillai@amd.com,
+	hersenxs.wu@amd.com,
+	mario.limonciello@amd.com,
+	mwen@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v3] drm/amd/display: Add error check for avi and vendor infoframe setup function
+Date: Mon, 14 Apr 2025 11:14:39 +0800
+Message-ID: <20250414031439.1895-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,27 +48,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADXfwCtffxnLIbCCA--.13743S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF4UAr47KFyUJw47ZF4rAFb_yoW8uw1Upw
+	48t34qyrW0qFZxCryUAFn5ua90k3s7JFy7Kr45Aw15W3s5KrZxJa1fJF1kJ3y7ZFZ5A3Wa
+	y3WUX3y2qF1vk3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
+	xK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JV
+	WxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwV
+	AFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pKLvKUU
+	UUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwMA2f8WvF21QABsX
 
-Bartlett Lake has a P-core only product with Raptor Cove.
+The function fill_stream_properties_from_drm_display_mode() calls the
+function drm_hdmi_avi_infoframe_from_display_mode() and the
+function drm_hdmi_vendor_infoframe_from_display_mode(), but does
+not check its return value. Log the error messages to prevent silent
+failure if either function fails.
 
-Signed-off-by: Pi Xiange <xiange.pi@intel.com>
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
- arch/x86/include/asm/intel-family.h | 2 ++
- 1 file changed, 2 insertions(+)
+v3: Fix error-logging function error
+v2: Fix code diff error
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 3a97a7eefb51..405bde66032a 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -126,6 +126,8 @@
- #define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD) /* Redwood Cove */
- #define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 5f216d626cbb..cdf1a07aa8af 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6104,6 +6104,7 @@ static void fill_stream_properties_from_drm_display_mode(
+ 	struct amdgpu_dm_connector *aconnector = NULL;
+ 	struct hdmi_vendor_infoframe hv_frame;
+ 	struct hdmi_avi_infoframe avi_frame;
++	ssize_t err;
  
-+#define INTEL_RAPTORCOVE		IFM(6, 0xD7) /* Bartlett Lake */
-+
- /* "Hybrid" Processors (P-Core/E-Core) */
+ 	if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
+ 		aconnector = to_amdgpu_dm_connector(connector);
+@@ -6150,9 +6151,17 @@ static void fill_stream_properties_from_drm_display_mode(
+ 	}
  
- #define INTEL_LAKEFIELD			IFM(6, 0x8A) /* Sunny Cove / Tremont */
+ 	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
+-		drm_hdmi_avi_infoframe_from_display_mode(&avi_frame, (struct drm_connector *)connector, mode_in);
++		err = drm_hdmi_avi_infoframe_from_display_mode(&avi_frame,
++							       (struct drm_connector *)connector,
++							       mode_in);
++		if (err < 0)
++			drm_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
+ 		timing_out->vic = avi_frame.video_code;
+-		drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame, (struct drm_connector *)connector, mode_in);
++		err = drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame,
++								  (struct drm_connector *)connector,
++								  mode_in);
++		if (err < 0)
++			drm_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
+ 		timing_out->hdmi_vic = hv_frame.vic;
+ 	}
+ 
 -- 
-2.31.1
+2.42.0.windows.2
 
