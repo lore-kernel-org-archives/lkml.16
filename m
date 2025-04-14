@@ -1,70 +1,69 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012032.outbound.protection.outlook.com [52.101.71.32])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5371C289363;
-	Mon, 14 Apr 2025 17:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64529284698;
+	Mon, 14 Apr 2025 17:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744651221; cv=fail; b=Pzu/XTwyS6qF8XQlkrEXxnw94UdEM7USfrbdUX+NaL2KfLZJPbzLd8jo3XI7fMPxoFyZ8OmuNTupWFJhzJ5ApnBogiaz+gVjqG/MREl73DuyQxAkuYx2jN5iBbzOmw0xg4YIgFU/Bp23ClUuRV29bh+3/Xzn6MFoTQU1y9hfBRc=
+	t=1744651257; cv=fail; b=RQ/QTvwiOmE5yPztMDTqgmW1FbWVcAhdKP93b/X6jbBHHOFJqFtkoALi4wN8vylm6B5jjwKGlbuXWAlrj3OBzAaeV4pWsxzIk166dU4OwC90zKU0Er6ZhYN4hEOk6klOu+HFpzGFbbx+6pM4KvSFmw8qt58vQTYGRqxJY88bfOo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744651221; c=relaxed/simple;
-	bh=GQqLc563ZSbJCDRPZlndTM359F5aqP9Az0/2flEEYPw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sfvj3fSkvbcb0288kLWzLkP4faVoqGtbpnKRs+NApYqIBpTwwsElC9gVnd2Jq0HYipRPUWFInwnaFDQK1gQmTYsT3ZBTRYzYIuV7RnIyTq9OkGzhmTcSwSuVarv+jpXcEfNU18jkYAefM2o/54ml3h7llsZITuTZ9d/ICetLODA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=chKxpUkb; arc=fail smtp.client-ip=52.101.71.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1744651257; c=relaxed/simple;
+	bh=1HdLS6pIa+NGJHwojlju0fL6zUg4sljlWKA4aJQ8UOU=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mvKELxF5Y917wYJhxYmhBTVSJBnjJNrMLwd9Y+sNM+H849CO4EegmctE/3dzktTnGWrLLYSzmTK81lPGt1AWC1Ydn2WDzt6PHm2sekViVYLNKq1xXZ73naSnibLf/xbR7vpfE3OwAOdTOTAhIc9D9NN0+BYes5AvJtG0zrrsSXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UD5Pqj2W; arc=fail smtp.client-ip=40.107.223.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="chKxpUkb"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UD5Pqj2W"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=adhksdAbQPh/LfY2PQUTkG+fdKjOmNDyWJQ5PnoqF8yIiZdxDtH17aKeE6I9pQUF0vUu9W8wcI6f3EKh8ad7O8Sw1JSpXG1uIa808aC2R1Gj9FN4zO+GsZVcZg6BUgO60AC7Y1zzTyKFOCwUrc/UZKjgbWHQc7dECTZmZmEofx9OGr9qvQwU/nW5zuDOLQGLZ+fStVCtUAyCN3cN93Tmzmb+DdMZLzjZh+bUZ3+RQSlXn8rFd3sAAbTIjNmDLbd7KvNo7krd9Mfs1CqBUb6Iarmh0W1gdDqhxrVRsWIJkHTfk1n9qnBam9uiOqtAgyroMd00oWWwVyMmyw0XjSd5YA==
+ b=Ni99RbRU+ifBhVXEvtb3HIhLJRCiooq6A9B0I9pgR2flwtJU5HtXi6ktbj+l4ov3RpcAlv2OzP2olr8MKnlBeOqUbFViXqmVAqcOPTVY8sxZfBWrH3NWAxq86rCcnEPgEDUoztSR/Es2rJkIQq/I73GfqY26nca14pj5SAyxuIqHttybRw0ewME37GLFxJ0QKHkNQmZyyoqRNta4trpjly4CXBoLh8F0lVyr66349CDQ4TZA7HlTX2z9NW35IbNc3+ql1fqafQEJ6WI/X5EDPQSZijXUPjWINJIkffnYIAdd82ITjA4kJ7wSmP3h4s10p49Cnr4Z8fupaq4k6meQFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3wFS3FsVbS8MCloZQpVchtoR1ePdsykVm1er8TXTh9k=;
- b=L2y4LAqiGZ5Es0eccjixBuThaKydwp5fmt2BlRM+eGqQMNitnHPipNF5YcXGUDirW9Y13yruPrTnaIQ8z0ED8Az1WdDVjQGVtHEM9zdWnkP13NO9HzEfq8TT7RIZ1Ocb2Yqod6P4vMbmbWPMXO9upSj7/neLd7ccyKfSDuLuPKnQsvLq6cssesFGCK5Prt7ze3e5xIb5+QvYFZPxNEXhNL72LDw2r6I+gNVI1w3AsPtYUO6qcpld8ROJRbfTnQcWXcxdOxO220LGrcI1f0e1vqg1KgoOhaNe2X7oWNPFD3G751p9IBvyCypkPHjx9DfMzJOmtxxibfyZ5UxlpiEF2Q==
+ bh=nGYRD0XLxGqH/HXH/kpSSMsbJU5cO/1UsO2eCOIJMlI=;
+ b=mKVKauE7/x93S8gif2xf3nTM0y/3aS1dk7++ZAh3Lol1/x977ZY5wPW9rLgCMXM/EETqKQGPp77vEFW9rPXGZnwq+dpzEJK59FJaONXCSIBjTe4Uwd7dlv4uMcgpjqs3GkimtAe8n7wu1o6gj+/pv3izB5N2/Gm8IE/XJL094tl396mxMsBZMJHdIvP4ZAI2tJlVkoygzZ5etTeA78j+Qrz4TDh8kguFiUKRepstKJZEmiasKne+Z+KPnWggm1T4lH8qrxdl5QSS/FRMQfmjJggl4YFNomyyHsgvnS2NDoupqAsmSmlI4rVwerh+Zq3Xr0ahNVRF71wXkUknDjU0rg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3wFS3FsVbS8MCloZQpVchtoR1ePdsykVm1er8TXTh9k=;
- b=chKxpUkbqoIrEymIbayCKP74T4VydJ4gZu/9toqsxINlHn4vNEGircrCeeUruDTQevjzgcVdRNsNJXBRHIPSPpV3Zy1jRnlRMwNudFWLe+2+LMwt7gTXh9FTjqupoQbxn/YdHJu5aeY7STmyoNIFG0lHonC9xhzbeIekf7KEdu0lmahZ23xPpMUT8AUvaH7WFlXq++azrvAkLKgl56qDQA3aqNNnCvLe+Og8LVkZeoLhLdLv5h34mPF64Wi4wTavyU9Cx+Jz5vQyk4YYbROaJf7X3Yr8j62gk0wPgQGbpSg4TH4jjFQCfIAsdwmLB8no6n3C+HY1oRBOs1RSpg+vDg==
+ bh=nGYRD0XLxGqH/HXH/kpSSMsbJU5cO/1UsO2eCOIJMlI=;
+ b=UD5Pqj2WyRLO6NIEAjT10FrmuzePAijjYJesnh3qAUfnKGszVQB7ImErDEyoGPV7TOkmPH0w9TYnL3yxU8iGEcf8cPmYnuX6ut9Xeoy0ZRQ9DlZbgPbDESz2XoIHPGIoyoSmDdQAtOl8luWT2eDxbLUIvlWSO4YINgMYVxJAGkg=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
- by DBBPR04MB7897.eurprd04.prod.outlook.com (2603:10a6:10:1e7::24) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by CH3PR12MB8548.namprd12.prod.outlook.com (2603:10b6:610:165::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
- 2025 17:20:14 +0000
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 17:20:14 +0000
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	manjeet.gupta@nxp.com
-Subject: [PATCH v2 2/2] Bluetooth: btnxpuart: Implement host-wakeup feature
-Date: Mon, 14 Apr 2025 22:52:00 +0530
-Message-Id: <20250414172200.401437-2-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250414172200.401437-1-neeraj.sanjaykale@nxp.com>
-References: <20250414172200.401437-1-neeraj.sanjaykale@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR06CA0140.eurprd06.prod.outlook.com
- (2603:10a6:208:ab::45) To AS4PR04MB9692.eurprd04.prod.outlook.com
- (2603:10a6:20b:4fe::20)
+ 2025 17:20:50 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 17:20:50 +0000
+Message-ID: <bcd4aa69-6b94-14ba-fc3d-d15e77b0c020@amd.com>
+Date: Mon, 14 Apr 2025 12:20:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/5] KVM: SVM: Decrypt SEV VMSA in dump_vmcb() if
+ debugging is enabled
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+References: <cover.1742477213.git.thomas.lendacky@amd.com>
+ <ea3b852c295b6f4b200925ed6b6e2c90d9475e71.1742477213.git.thomas.lendacky@amd.com>
+ <a06ed3bf-b8ac-15b7-4d46-306c48b897ca@amd.com> <Z_hQxXtLaB_OTJFh@google.com>
+ <fb5acbc5-3a16-b29e-0496-3977177ed8de@amd.com>
+In-Reply-To: <fb5acbc5-3a16-b29e-0496-3977177ed8de@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9P221CA0011.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:806:25::16) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,222 +71,169 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|DBBPR04MB7897:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c132e46-8078-4821-aad8-08dd7b789e2c
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CH3PR12MB8548:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79387d25-45dc-4daa-18f9-08dd7b78b435
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mb62+jYpy23hUvLFWHx5qtndEIWmxhWDdfXKskxyENiKErDKT9tjgk5kpldN?=
- =?us-ascii?Q?pdk8Y1poZEDnh6JCmtOjvy01kPjWi1LXbotqPlQ2GCfdbxzbGwXrNiyTy8JB?=
- =?us-ascii?Q?eqT0LGFBd6TYNbCpMkZSR/NJr8BNr2jc7jb+7/Ha35yRZ7FDGhRsTklQH0tj?=
- =?us-ascii?Q?XNu4MpJqpIU8NE+z6YvihUkElgt2Y/2G+K8jiGwOUc4qKURHIXGqrBDyCXj3?=
- =?us-ascii?Q?s4McOspsQutvlPuWih7GRJsacKYLAPGLwPwMmtPhUrjth5cM5nxDWOX+3iZX?=
- =?us-ascii?Q?58S5h6J8JL0vzDMaUgcoD5UEMKuIUrFt+QL+686+GanlSupCWjc9utHZddbs?=
- =?us-ascii?Q?5wm1GlKvxv0GiF6CBC6qsdMl5F3c/aUkXOtBBqZIXwTpkJ/F9EGwkDKNlVAu?=
- =?us-ascii?Q?SfxIuqeX2hv91D7zFZtTXz/sasIxEgKMU7vA9t3G4/iwPbJZMvE7zFWPKjEM?=
- =?us-ascii?Q?sZfeWsBLgougYIGxRITqpq+453pI80WPShnD1xo2eOTuWk7yeDlBfdAvttTc?=
- =?us-ascii?Q?ujrEMDVHsqmJzywqCcYOuKpQmInl1R0ryf8EzNNaxlUN39FA5rRLmz5Kwndq?=
- =?us-ascii?Q?dNeS2v28Z3P3WESsFZKgVhyn3qgPHcv33o2gc69R0TfyifPDJ70VQLncd0Um?=
- =?us-ascii?Q?W5CzcU4K92rP62wnlXPZoKfnLBT0jK7os0UCs9SimyG8TITwXJWw23c/n4dy?=
- =?us-ascii?Q?dm4IHBVW2Wh1//vtOwiuSKTeRAOQY333RFqY5ToEGeRs6U6y/hFELv3dC5di?=
- =?us-ascii?Q?WyjAuunDPDz2jZOsiTKhdRa6rYowy5BxH2f3dQlePFRvqPplN42e/ssqA1Da?=
- =?us-ascii?Q?k6kNGJ0UbtcAukX1ZXyGzFAd4ks7S2GlBdEy7k+gVW+GOgDsEr+xn4Be6jTg?=
- =?us-ascii?Q?U6Bl4UZEFMuupurOyaXBey0ye+SAZNudDSF4HlsHrxfEPgAkjjCxuziQQujU?=
- =?us-ascii?Q?T40cHHBLr/1ALvw6sTZQrVGsOcz2L5IHJLfaS1m+BfH28H8QyzlrKqzIrZhn?=
- =?us-ascii?Q?Ihr7bhjBFiDc7ThDKbxjkV1BTANEEP9KVny61glfOs8kXlMi0hAJgiJDDkMZ?=
- =?us-ascii?Q?FlL3dLWqc/jRN8bdtJP9snURGGxo7Q9tRp0xlG9t+U7iie/p36SXECpqnMiA?=
- =?us-ascii?Q?OmxA1Kd6UlBGQdEtMjhDStlhBfbfZvQ0QjtO9htYCG9CLZIunB0nMSg9RQda?=
- =?us-ascii?Q?mEKgvXbDy0uq+hSLZuPnR+9i0uV8Fz6y6sTMD6EkBLR1c7ci+79i5F2G3D6W?=
- =?us-ascii?Q?BCi/gyfhgFyH0Aox14Br4tI149DpH0JjpzXOL5vPPlqpxKQhE+zScCeMYWRi?=
- =?us-ascii?Q?3+mb8PB/X15qvj2WzQMCQxZB17K4jzny44OrMacWfReZKXhW4uJWRKYIT131?=
- =?us-ascii?Q?LGyLn1cb5XGeWnrOCtqVPbfxvqqlEe8/xA9jkOKMQnloqoBcKgBAAJ0dYqEj?=
- =?us-ascii?Q?4VlNnJmySLkguS9dv+Kuq4muPWAiGaYRyeFKm70QlXYWs/Vhw6WP4A=3D=3D?=
+	=?utf-8?B?U3dZaDVBdFRiNFdIczNwVFIvS29maUNkTVI2SjI1SGdFbDVMR0JGLzY1L2JM?=
+ =?utf-8?B?TkVFNFNNYnEvRDFYK1gwbmJPOGl1QTBWR1NpdDVZT2tzTXJmRU1zejZjY1dl?=
+ =?utf-8?B?a1Vicm51bGNrdVM4a1JVS0dPYkFxQWVWN0RzcEw4bk9aNzhPZmF6Q1lIdnFG?=
+ =?utf-8?B?UkdLMmxmZDRHenpqM2JXTjRBOW15RElmdC9KeS9oQ3hoUGlWN0NUYVhFK2Iv?=
+ =?utf-8?B?ZVdRVGMvWEtoelR1UWNrL0QyZmlYVFVCc3RtclE0T3RHdXBQTDh4akxkcnd1?=
+ =?utf-8?B?WVV3dmZjdDVxSnBlNTN1bjFTMWFBL1ZnWTVvL29NeGNpaUwrYWxwbm5TdFJS?=
+ =?utf-8?B?blUyampRTHhkcjRkeXUyTFIxbzV5RExBVitPOVVNQTNER2FSNitrZEk2TmR5?=
+ =?utf-8?B?bkxxenptcXFjQUdUTW5GaWR2cVIyOGNGL3FFVUpOdmJ4cVFacDlOeEQzMmxX?=
+ =?utf-8?B?dWFhM2dLK2Evc0lmY0UxcDFIcWwrZ3NScWhhVVhrK1hSRlo5am5oVk9EZXRK?=
+ =?utf-8?B?T1p6dEYxUmNWZVBqbHVMaTF3Q1VzekxtV3dUa05mQkhMWnprU1NpU2duaFNt?=
+ =?utf-8?B?UTc5Z3VmOFo0R29EcGJCVmp6eEtnWVhhZjNFSGRwMmpLajlwNlNtdFFOM3l1?=
+ =?utf-8?B?MDRFdlE2TjRTTlpXc2M3S0tGcUVlVndxMlY0eGcwT0grWkVZNkVLZFY1Witi?=
+ =?utf-8?B?a2loeCtMbm9kMjUrRkpiOUd5NVBaU1VKaWVmU1Z0RFoyTjRRbVk3QkdzbGR5?=
+ =?utf-8?B?WUZrYmdpY0EvdnhUdFplWFdiR3BzZGF1cXNETHVNTHBlT1E4Z2wxYjRIWXBN?=
+ =?utf-8?B?SkRmSURQRW1WWWRjdGVjNUhnb1o4UkQvSzZQVnJpRUZXZWFNNFZaQURyUTlj?=
+ =?utf-8?B?a3JDd2xyUmN0Z2VVNDhJS3RlNThHKy80azJXbHdBK3BSM0JLWnpFU1Z5WDdV?=
+ =?utf-8?B?bFBBLzZ4QzZTdzNnaWhoeU1aa3phamIxajdLNngwL1FMQ0ZkYU04NmFPMkpx?=
+ =?utf-8?B?cnZNdG1mbVpNWnlBSWowVGp2OXRoWlh4TTNYcXp2czhlZnRRRTlZb2V4QjNK?=
+ =?utf-8?B?VUwzMC93eXZlN0Z0MTR0R3FVeDk0MExVZkpScm1RVjMrNUV0ZzlkbHZLYlNo?=
+ =?utf-8?B?azlWOFh6cks0VnppNVR4RDBJNVF5bUR3eitEOWFGSXFOdWFTZGljMDY5UDN4?=
+ =?utf-8?B?NFQvSWR1MFZ5UG1PVlFrY25lTEdtb1hlMEdLMVR5aEVTTHI2eUVCZDZjWVNm?=
+ =?utf-8?B?emo1c0h0SmgxQWxOL2pOVHA2cFY3UWE1T20rWTB1OEpwcGRSVzhKSVkwT2dC?=
+ =?utf-8?B?TlVpamNvNHdjR0dyek95MXl6VGY3MFd1RjFxbTNPQkszNUVkME9qcFNZUUtI?=
+ =?utf-8?B?dHZCSDJFNDR3OFN6VjkyRnJFeXcvdkxySU1DZmJMQldleUZJNktZQXZPOE1D?=
+ =?utf-8?B?T3E2cmJZQXlqdXFGb3NNRTlBSG44VzQzSVYrY0dGeXFXUXVPWGFxMHFtMGZK?=
+ =?utf-8?B?MnRzZXcyb2JPcUExaWp1VFZNZTZhZlZSakJoc2hwaGFuZ25NVXE3TjJ0OUxR?=
+ =?utf-8?B?dmFvNVkyUmxLcVlTOW5TMUxyNEdwYU5ER3owMWFPSmJrSGt1MDJxTy9CQ1N0?=
+ =?utf-8?B?MS96RjM1V3hldUN4OE5EWTQ3M0VYRElLWEJEcVZ4aEJPRmpnWnc3Z2hUQWhm?=
+ =?utf-8?B?YUNUa3lkd2hTZ3ZpM1dkWXlRUW5HbVBZODRUclAwS1M2S1pySHFlU1VVUmEz?=
+ =?utf-8?B?MmlKK0w4QzF1am92cEYxbzFPMHVSTFhMZUlBQVJTVXJoTklrWERPMzZpeGE0?=
+ =?utf-8?B?dVRaak96d2FGMkZNQll2ZThsSHcrMkZOUmY5ZlhKcmNRM25tTzJSSUZEUjhB?=
+ =?utf-8?B?T0RJTW1PT3VwSWZVdGNYQTBac2FKOXNBRVFTZDcvdlV6dnc9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QkpvmDTMvo8MZncB+IWLA0uVowmKlT310ELuPOZxMAx1N2OIBRV50jUb2j0W?=
- =?us-ascii?Q?1sasKRcwKlrOByiV++r7403tjLvUUbl//hIo9vQMtaqwbC45s1Ya6Mthxoe9?=
- =?us-ascii?Q?9hOi42KeFkxSGm/6EULqlirvr/7M9LHbt+/xTzsz+qnSw5OwQ4vnux45Y9B9?=
- =?us-ascii?Q?BuyhxvVofS14Ie5hNLBFq9T4n48pRnb41hnjDsX6gXVdjxhRzy0Dr4kTOop4?=
- =?us-ascii?Q?7IZCg9lp2smwjrR3YGqeuPkMLmo3wp5aBSqPUjC8uXNwyrUv2AX2JTjQGVJn?=
- =?us-ascii?Q?OpJ5KJLw+W92+4IBEqWMNJ2J2xd28X0/mQ8lFAg9QFcNVlTlp05Dwo2m7I6Q?=
- =?us-ascii?Q?ytWJmg1H1jZqWX2TMOQwNdrMLWZB6LA1IKBBXNXmeWR1A3JJsGVQq9i6s3kB?=
- =?us-ascii?Q?fObDmzf303PLG6Z+Y4+WwHrkKfqp3Ybl9dOasolQ+I7+yg4LdLwEFZ7BMnFu?=
- =?us-ascii?Q?Oku/Fxfj29iWRKVVdarYebINkCwIGk0X/Qj+UYouN0IuWulIwUksZUtAwGb2?=
- =?us-ascii?Q?uSNw1j2+VeSs4aZS6EIPvHY9L1RD20QSmJUbMLSYM9Ws3jRYiwDwIVPGNT0D?=
- =?us-ascii?Q?H1naX8HmhiP9+9ydO19F2iPWCPKzt9LxdYVmB2uHmk6+lN6Hp3k1Iq6wj/fL?=
- =?us-ascii?Q?uiPwg0+jl0QwiMsyH1bTGtDazJ4Fvxhj/yZmmMDg/vFUVBjX2iHEjRR9M8bi?=
- =?us-ascii?Q?S77YyxJhTVJrZhQvmVBTQLBW0Kccj+ouHjssnd9O/vubVJzuzB5KfveRodLw?=
- =?us-ascii?Q?IzeJSvPlsiV6yJp7X+eYi7LXWW5dCDPM5h9MoI6l7wtDl25dt6j755GdYbeX?=
- =?us-ascii?Q?365RGWIMfJh5UV0tNZlCcrWJKj+DokcxHRHRGFxwwah4y97U0hYMd+mCcSKr?=
- =?us-ascii?Q?xym2CD2Ue74MoPOg3MMDm2Buy/ANT4nlyCbu3cC6Ei2Yn1brChz7ODrSQ1Xy?=
- =?us-ascii?Q?96sgmkCO8o9apU0yDQMa4L+eqyd80AT1mSA3gXnMl56cuSpTIuY2Y5k9+pvx?=
- =?us-ascii?Q?kObj5cRNVFKEp1VV5iyoIJGWU5o6O9XRQFBODkgBuhq8r56ViPZaOirTYiBq?=
- =?us-ascii?Q?lSCclKJjtTliUwbJhj2ZqZvTx4uGk/oRwc26QGLsRU++P0yaYaklSmQJWRiZ?=
- =?us-ascii?Q?Q5OjlOFYOpMsYq8faHFvE7PN7pX2i1PN7JyMfJoWGT+z7hMUWa4TuZnNeNln?=
- =?us-ascii?Q?68u0R+JoL7Xkp6g27yWD+OW731f4gWjXkRdQnPeXLqhQ7Cf8tctG3Gpxzh3i?=
- =?us-ascii?Q?+vecaxk6NUgoNSc7QulAJAyirPHD1bAAu7zrh3LieAgZRA9huhUAsdYTaBEv?=
- =?us-ascii?Q?FA2J4dYs5V4bm5N3ezPs9jD0KysDJOiMdU5M46CVcrVXmhQE3qbb5ZgrYyK7?=
- =?us-ascii?Q?B/lZrQGlVrX2xvlmF+KBegN67EvdXmTv2wB/Um8X5jAQxw/knGSrVVMLY/f2?=
- =?us-ascii?Q?VssPch3s1/vBmwio7EwgwxJp7x0gyhT+x9yFCv3wmyMx0YDWL8hhIlAUZeTK?=
- =?us-ascii?Q?GsRJIG5uuOEQQ/IKKJhNfW4qbl6AiUb25avMlB4K/0roWCSzyTSzdXzLSzIU?=
- =?us-ascii?Q?RdnIU9B3UVDHSEv2U5yRZEscJk3F3fGoN8s0vbQ+gvLdJtK7xHUUcXxaVaVK?=
- =?us-ascii?Q?Vw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c132e46-8078-4821-aad8-08dd7b789e2c
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+	=?utf-8?B?U0JNYVE2WEVDNVB6bUhoNllHSzlEcHdEQ0lIU2c1Ly96cnFsSWQ5N1ZuTlBw?=
+ =?utf-8?B?WjkrVXdPWjRmZE5veTZPbmMwS3RZRFZPN0JraXR1WWFsTm9wWUdZN2xKSHhV?=
+ =?utf-8?B?enpwR3VpUWRiQ0poVGNpZjJ2QW9QcEkzV2tGRm8rTHlrTVREa2RyMDhmbk9I?=
+ =?utf-8?B?djQ5UzJmSXNNbFg4d3MyWGFjM09hek9ZVEw1Q01DRTcycURwSFBGUjVBOXY0?=
+ =?utf-8?B?OCtvcUlQZmd4dTNUVnYzRHpRajJsVWM3U1l3ZXpMb3UzZnV2OEZXVlBmcnlV?=
+ =?utf-8?B?c01FZmx1dG5URXVnb0N5dy9EaHk1aTA5Nys5R3hQSStxZHpBa3NXZ1VzU1Ar?=
+ =?utf-8?B?WVFsN1pZRXRZUkVObCtvd2VKQStNbGRucXJzMHA3Qlk0N0luVTdMZnZnWG55?=
+ =?utf-8?B?d2h0T3BWTEV4NEJnNXdxQWtTcDk0TDU0eU9nMFVucGxXejlJeVhyR3crZlQ1?=
+ =?utf-8?B?WmNzbUppRGtsMEgreEtoY1Jjei9QdjYvVnRKcDBkYUY2aVFmN3RjZHRYcjY5?=
+ =?utf-8?B?MGZtMXhBYVhNb2VmeWpENVZQOVNOeEkyUk9VV3FLTERxbmN5L01oMW83Und0?=
+ =?utf-8?B?VzRzZG9Ed0xJcXQzUHFvM243Mjd0UmwyUWFpdGdTdTRMaUVJcVd3Q3k4V3RY?=
+ =?utf-8?B?Rkd3TksvTDZTT29HcWNLTWtVeDdIVjlvU3poK1J0MnpBZ3BVSTBOaitxWUNQ?=
+ =?utf-8?B?cnRNQXd0NzlJREFWY0wyYVJjNlcvRE5nam9kVnhBeUd2NWZYd2VEYXJsQ1cz?=
+ =?utf-8?B?WkxLaWVidElsOXBLN1NvWEFJQmc5eCt1TFBkS3k1NW5RWmlaQ3N6dlRJSUxt?=
+ =?utf-8?B?OFNXVWVueWVKWnc1YnV3UnpFY08zUDJ6MTN5alkxblh1ZDFyVWwwUncyb1J1?=
+ =?utf-8?B?ckRpSHFCL3ZvcDgvbFh1R0cwSmdISExNYllhSnM1VWpYUWxFOEVmdVQzcTZ0?=
+ =?utf-8?B?STVacWNuNVFyRW94MjdMZjJiS28vaVBzaG5qa1pZUUs1QXl0cjFzUURQK3Fk?=
+ =?utf-8?B?SlVvUVAvSVdQUml5aGthelJXeW9Yc0N3TlhiN3F4aW9mTDg5VjhKMm9pdk43?=
+ =?utf-8?B?enBpT05DVElUc3VTekg4VFFJQ1JXU2Z4WWhnejNIekhLYkFsMVBZS1RsK2hF?=
+ =?utf-8?B?VXY3OFNFMWplTUFmZDE0aFkvU0RRQ2EvUXdkN2VBTm1EUlV6bzAzZlpLeStD?=
+ =?utf-8?B?QVNYdzhxVFVaekVpdStSbDlhWVQvVTRQOHBENStQVlowVEtsNUo3aVFuNG9w?=
+ =?utf-8?B?eUJaSEhrMzdPZGlITEt0ZENBZ0dvaG5LbTVQNEtLL1pVa3dGQXdiTlpPaU1y?=
+ =?utf-8?B?c045MG9tVWx4aVFoQUcxS2FZalpnNG84VHM5ME1VMlJudWU3UXQ4RDg0NG51?=
+ =?utf-8?B?TDlpSDVqSVZyMkdQVDNqUkxUY2UvK2E3cnpNV1JWbzNWVWVBb3BDWkFoYTdj?=
+ =?utf-8?B?VGpZNVpiZVpQQWVncFI0djhIUFBwbDJOOVZ5VEhXSlk0QytnbnFNYStSeHk1?=
+ =?utf-8?B?a0krRHZaVlk0WjJ6TVhmVmk0OHVXbENURURIVTl5ZGI2bkJiZlpOWFl0cDJo?=
+ =?utf-8?B?cW03VWU3ak5IdnJHK1FwOGsrdmJ0SEFZdzVvY3AyeFdBVjhWd1J1RnlXNTFO?=
+ =?utf-8?B?VSsrazJlYmsrNFo3SU1CVitiNjB0NzFOK2FQbGdhSUcvS3dGNTcxVmZUbGJZ?=
+ =?utf-8?B?QjM1d2ZlaFRXcjhYczVhNUdCRGdmQndXL2wyS0dUSGdBOGdOVHpCNlQ4ZTZz?=
+ =?utf-8?B?d3BVdXc0V1RtSlFZWTJMV2xZRHlrWlJtcWdpQ1NvRWdXQjJsdmV4b1ROdzJX?=
+ =?utf-8?B?Z2VXcjFRWXZvcW5qTzMvc1orenVJRjE5MTM2cnROWGNQL2VCYTgyRnlSRUNh?=
+ =?utf-8?B?aWprZVdMcXZUR0cydXU5T01OaG05UENmd3BtaWdReTZ1OGF1eHR1RXI0SU1Q?=
+ =?utf-8?B?K3Vqc3BMOC9sSXhaQVArRDhNUGt4cFArVC9MQzhJVkxEenc4Njk2WURWdnJB?=
+ =?utf-8?B?M2VGS3dRMmVjTkFOdFpzYjdmM0tCYm1XOWdGVmZrL2haS2h5enovdDRXV213?=
+ =?utf-8?B?UlVNS2FFeC9LdkxKVlYvaENCMFUvbHVYbWxiNjc5bFJkL2h2SFhxOUdVSXFU?=
+ =?utf-8?Q?Y2mJzm9/2YSQWzNy86uAC1wcp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79387d25-45dc-4daa-18f9-08dd7b78b435
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 17:20:13.9442
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 17:20:50.7723
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fDyMn1iRwDX7jeWptVE7mUyKgc0/BdmvV4D5l97reXY7h0lbMUY1SXqKvBu3UFsXylHlyRApUwWLXOs13oYLj6G6XIKlUWg4Ks8kS61dtHc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7897
+X-MS-Exchange-CrossTenant-UserPrincipalName: i2oZhqd6Kp0iLpg/8gbrwNkJNpoVB3bbSGgDkJKyhx6+MsXK+hL51vc5pjv4bSXtPou6p/orS7SkMdP+sZfVLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8548
 
-This implements host wakeup feature by reading the device tree property
-wakeup-source and 'wakeup' interrupt, and nxp,wakeout-pin, and configuring
-it as a FALLING EDGE triggered interrupt.
+On 4/14/25 11:11, Tom Lendacky wrote:
+> On 4/10/25 18:14, Sean Christopherson wrote:
+>> On Mon, Mar 24, 2025, Tom Lendacky wrote:
+>>> On 3/20/25 08:26, Tom Lendacky wrote:
+>>>> An SEV-ES/SEV-SNP VM save area (VMSA) can be decrypted if the guest
+>>>> policy allows debugging. Update the dump_vmcb() routine to output
+>>>> some of the SEV VMSA contents if possible. This can be useful for
+>>>> debug purposes.
+>>>>
+>>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>>>> ---
+>>>>  arch/x86/kvm/svm/sev.c | 98 ++++++++++++++++++++++++++++++++++++++++++
+>>>>  arch/x86/kvm/svm/svm.c | 13 ++++++
+>>>>  arch/x86/kvm/svm/svm.h | 11 +++++
+>>>>  3 files changed, 122 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+>>>> index 661108d65ee7..6e3f5042d9ce 100644
+>>>> --- a/arch/x86/kvm/svm/sev.c
+>>>> +++ b/arch/x86/kvm/svm/sev.c
+>>>
+>>>> +
+>>>> +	if (sev_snp_guest(vcpu->kvm)) {
+>>>> +		struct sev_data_snp_dbg dbg = {0};
+>>>> +
+>>>> +		vmsa = snp_alloc_firmware_page(__GFP_ZERO);
+>>>> +		if (!vmsa)
+>>>> +			return NULL;
+>>>> +
+>>>> +		dbg.gctx_paddr = __psp_pa(sev->snp_context);
+>>>> +		dbg.src_addr = svm->vmcb->control.vmsa_pa;
+>>>> +		dbg.dst_addr = __psp_pa(vmsa);
+>>>> +
+>>>> +		ret = sev_issue_cmd(vcpu->kvm, SEV_CMD_SNP_DBG_DECRYPT, &dbg, &error);
+>>>
+>>> This can also be sev_do_cmd() where the file descriptor isn't checked.
+>>> Since it isn't really a user initiated call, that might be desirable since
+>>> this could also be useful for debugging during guest destruction (when the
+>>> file descriptor has already been closed) for VMSAs that haven't exited
+>>> with an INVALID exit code.
+>>>
+>>> Just an FYI, I can change this call and the one below to sev_do_cmd() if
+>>> agreed upon.
+>>
+>> Works for me.  Want to provide a delta patch?  I can fixup when applying.
+> 
+> Will do.
 
-When host is suspended, a trigger from the WAKE_OUT pin of the
-controller wakes it up.
+Here's the diff on top:
 
-To enable this feature, both device tree properties are needed to be
-defined.
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 6e3f5042d9ce..4e9ab172e3f0 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -5020,7 +5020,7 @@ struct vmcb_save_area *sev_decrypt_vmsa(struct kvm_vcpu *vcpu)
+ 		dbg.src_addr = svm->vmcb->control.vmsa_pa;
+ 		dbg.dst_addr = __psp_pa(vmsa);
+ 
+-		ret = sev_issue_cmd(vcpu->kvm, SEV_CMD_SNP_DBG_DECRYPT, &dbg, &error);
++		ret = sev_do_cmd(SEV_CMD_SNP_DBG_DECRYPT, &dbg, &error);
+ 
+ 		/*
+ 		 * Return the target page to a hypervisor page no matter what.
+@@ -5052,7 +5052,7 @@ struct vmcb_save_area *sev_decrypt_vmsa(struct kvm_vcpu *vcpu)
+ 		dbg.dst_addr = __psp_pa(vmsa);
+ 		dbg.len = PAGE_SIZE;
+ 
+-		ret = sev_issue_cmd(vcpu->kvm, SEV_CMD_DBG_DECRYPT, &dbg, &error);
++		ret = sev_do_cmd(SEV_CMD_DBG_DECRYPT, &dbg, &error);
+ 		if (ret) {
+ 			pr_err("SEV: SEV_CMD_DBG_DECRYPT failed ret=%d, fw_error=%d (0x%x)\n",
+ 			       ret, error, error);
 
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
-v2: Use interrupt instead of host-wakeup-gpios. (Rob Herring)
----
- drivers/bluetooth/btnxpuart.c | 58 +++++++++++++++++++++++++++++++----
- 1 file changed, 52 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index 604ab2bba231..069a394a7eb8 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -17,6 +17,7 @@
- #include <linux/crc32.h>
- #include <linux/string_helpers.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/of_irq.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-@@ -143,7 +144,9 @@ struct ps_data {
- 	bool  driver_sent_cmd;
- 	u16   h2c_ps_interval;
- 	u16   c2h_ps_interval;
-+	bool  wakeup_source;
- 	struct gpio_desc *h2c_ps_gpio;
-+	s32 irq_handler;
- 	struct hci_dev *hdev;
- 	struct work_struct work;
- 	struct timer_list ps_timer;
-@@ -476,12 +479,21 @@ static void ps_timeout_func(struct timer_list *t)
- 	}
- }
- 
-+static irqreturn_t ps_host_wakeup_irq_handler(int irq, void *priv)
-+{
-+	struct btnxpuart_dev *nxpdev = (struct btnxpuart_dev *)priv;
-+
-+	bt_dev_dbg(nxpdev->hdev, "Host wakeup interrupt");
-+	return IRQ_HANDLED;
-+}
- static int ps_setup(struct hci_dev *hdev)
- {
- 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
- 	struct serdev_device *serdev = nxpdev->serdev;
- 	struct ps_data *psdata = &nxpdev->psdata;
-+	int ret = 0;
- 
-+	/* Out-Of-Band Device Wakeup */
- 	psdata->h2c_ps_gpio = devm_gpiod_get_optional(&serdev->dev, "device-wakeup",
- 						      GPIOD_OUT_LOW);
- 	if (IS_ERR(psdata->h2c_ps_gpio)) {
-@@ -493,11 +505,37 @@ static int ps_setup(struct hci_dev *hdev)
- 	if (device_property_read_u8(&serdev->dev, "nxp,wakein-pin", &psdata->h2c_wakeup_gpio)) {
- 		psdata->h2c_wakeup_gpio = 0xff; /* 0xff: use default pin/gpio */
- 	} else if (!psdata->h2c_ps_gpio) {
--		bt_dev_warn(hdev, "nxp,wakein-pin property without device-wakeup GPIO");
-+		bt_dev_warn(hdev, "nxp,wakein-pin property without device-wakeup-gpios");
- 		psdata->h2c_wakeup_gpio = 0xff;
- 	}
- 
--	device_property_read_u8(&serdev->dev, "nxp,wakeout-pin", &psdata->c2h_wakeup_gpio);
-+	/* Out-Of-Band Host Wakeup */
-+	if (of_property_read_bool(serdev->dev.of_node, "wakeup-source")) {
-+		psdata->irq_handler = of_irq_get_byname(serdev->dev.of_node, "wakeup");
-+		bt_dev_info(nxpdev->hdev, "irq_handler: %d", psdata->irq_handler);
-+		if (psdata->irq_handler > 0)
-+			psdata->wakeup_source = true;
-+	}
-+
-+	if (device_property_read_u8(&serdev->dev, "nxp,wakeout-pin", &psdata->c2h_wakeup_gpio)) {
-+		psdata->c2h_wakeup_gpio = 0xff;
-+		if (psdata->wakeup_source) {
-+			bt_dev_warn(hdev, "host wakeup interrupt without nxp,wakeout-pin");
-+			psdata->wakeup_source = false;
-+		}
-+	} else if (!psdata->wakeup_source) {
-+		bt_dev_warn(hdev, "nxp,wakeout-pin property without host wakeup interrupt");
-+		psdata->c2h_wakeup_gpio = 0xff;
-+	}
-+
-+	if (psdata->wakeup_source) {
-+		ret = devm_request_irq(&serdev->dev, psdata->irq_handler,
-+					ps_host_wakeup_irq_handler,
-+					IRQF_ONESHOT | IRQF_TRIGGER_FALLING,
-+					dev_name(&serdev->dev), nxpdev);
-+		disable_irq(psdata->irq_handler);
-+		device_init_wakeup(&serdev->dev, true);
-+	}
- 
- 	psdata->hdev = hdev;
- 	INIT_WORK(&psdata->work, ps_work_func);
-@@ -637,12 +675,10 @@ static void ps_init(struct hci_dev *hdev)
- 
- 	psdata->ps_state = PS_STATE_AWAKE;
- 
--	if (psdata->c2h_wakeup_gpio) {
-+	if (psdata->c2h_wakeup_gpio != 0xff)
- 		psdata->c2h_wakeupmode = BT_HOST_WAKEUP_METHOD_GPIO;
--	} else {
-+	else
- 		psdata->c2h_wakeupmode = BT_HOST_WAKEUP_METHOD_NONE;
--		psdata->c2h_wakeup_gpio = 0xff;
--	}
- 
- 	psdata->cur_h2c_wakeupmode = WAKEUP_METHOD_INVALID;
- 	if (psdata->h2c_ps_gpio)
-@@ -1821,6 +1857,11 @@ static int nxp_serdev_suspend(struct device *dev)
- 	struct ps_data *psdata = &nxpdev->psdata;
- 
- 	ps_control(psdata->hdev, PS_STATE_SLEEP);
-+
-+	if (psdata->wakeup_source) {
-+		enable_irq_wake(psdata->irq_handler);
-+		enable_irq(psdata->irq_handler);
-+	}
- 	return 0;
- }
- 
-@@ -1829,6 +1870,11 @@ static int nxp_serdev_resume(struct device *dev)
- 	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
- 	struct ps_data *psdata = &nxpdev->psdata;
- 
-+	if (psdata->wakeup_source) {
-+		disable_irq(psdata->irq_handler);
-+		disable_irq_wake(psdata->irq_handler);
-+	}
-+
- 	ps_control(psdata->hdev, PS_STATE_AWAKE);
- 	return 0;
- }
--- 
-2.25.1
-
+> 
+> Thanks,
+> Tom
