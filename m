@@ -1,145 +1,194 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E62428F513;
-	Mon, 14 Apr 2025 14:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF5D291148;
+	Mon, 14 Apr 2025 14:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640402; cv=none; b=Gf/BXdDmXpnmO3KjhFGOY550DPlokQAOTeRWG71bwEECvsByo+p+wK8QsX2Wz8z+2EvLebNx3v8ge3hDO8miDwT30nc22dHXAD5NlJyo5Ix+v8sRcTVJK3cPX8R7pnn2Qjf2kCSbi0mxUu9huTgz+oQFSD2DgGZ36rVlVeil7wY=
+	t=1744640409; cv=none; b=DNT7LiCmKpAx9Ygv5GNUCJhpp63FqViip+FfgWz4iNbg8SIc0l7ZBr5uxb5AbtDjlUQ8cWG8uTk5gkbNHAp+ramObS2b52i3pSQaUqGHADniYWgVpY9nNBYbXqRjqx+9HlFBQEVC0nnC5+7GXoYr3F+UTK+6L3to+uYG4x4eeR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640402; c=relaxed/simple;
-	bh=4HluSwNWTBR8eHRrEF+w8ybc5StWcpkyjDrH6+uQSwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AjW5UBWMCFG8zOiOqwGNkC2UsnX2LWDiDsd+hCoaLWWSIvuwyPGokXULA/+0q3hve50r1wo5vhTzMzHoS/X7eNmSh10cHWv5UG/eqPGup3SkDNjBMDD9FH57epJkhGnNocrlMrudMS4ZV1+whl4zn63v/Sgu3ZcxPzgezlpraII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsJjg6G+; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744640409; c=relaxed/simple;
+	bh=jXVyZDItmaL5AzoSHs1iPAA9ILTmI1rTDbn9+iURJQs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=a7wNkuty9rrx5DuHN7PaLQ6hrquGhh3O8zz3UiMlRDyQqnq70+kRasSxvL8ygXlhznYoxLIBJE5lCRVGUB7SK++H+E884YHFuO3PmqK4Nq7j7A4SlrKHD+eDxEE9HATxCa+n4B7SwICY7UZS2OHS/yDzc8L2Tj61Tk0QRbeN6Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ilqHsJsn; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=LUVeU7UL reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsJjg6G+"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so23550035e9.2;
-        Mon, 14 Apr 2025 07:20:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ilqHsJsn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="LUVeU7UL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744640399; x=1745245199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=glJjEQgGBLhG4Ninmzh++t+Xe4BZvesnJ6GFYu9vl6g=;
-        b=QsJjg6G+ts6tzHYe99KhHvsHJQiqyrQRpmzilJrDFdZrkYDDElJwtFfq2Qj4nbFEN5
-         sfRuBN/6peI7efVl1Hbq8OiKft6f7Kzgy+xHm1ejeWznZwCp9BzuHKHiAb8i8qy6TDob
-         7k34ulfixJxNN8zXDa2AuTOcPkbNCLSAdIeyhFYY3eTo0KfOIGvhG7bsuRX4kUPRGoXw
-         f0a1MqF/3STmPolu2nEXnCXktElFxDv3VX2rXH9VuolEQoDb7ug2MmDi7boOjQKdjoz+
-         hGH6abpTK2sA3HC/HE7Tf9rH5Ywl6UwMkjPc3wuJC2nxAe6SznvjLwv5W7R5bsxRPAgE
-         BCoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744640399; x=1745245199;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=glJjEQgGBLhG4Ninmzh++t+Xe4BZvesnJ6GFYu9vl6g=;
-        b=RPHJaA3OKu+E7aiz015hOF4nbs3k3LhG4gg9xzu75mbJHCHz7nv174zaJetW2nuz3w
-         M/fEm426PsM0UoH/lH12BiNwwU+BwwiIQ7GL7vlP9UXzO79CUkVZ/MMQYkPJLoTnzNnm
-         WbbCA1Asvn4gxaYz6n+fFLs4Dn2b9cNEJLsO98pv2WnpvbXMCdMoQxrlho54brmBqqXa
-         Tkdioa5+RvG4n7o9mJcXxHiUalIXS3VkxhNVOVHkCA6XNolyQv9XfSAuvuHwsRCdFlXi
-         jec+XOnb+TKPjqGaYKr+ATw21tdBV89iIOwaLUmr8Brbe2voDICV2EIhO3PTDSWgk65R
-         noLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaufDo5trk6E1ZZ1z9BE3un8pOguHJwJVym8a9fwvfGB/1bj9v46ygncjfuX807ceqgyicytLzExYLaO+I@vger.kernel.org, AJvYcCWrX36nx12zteO0MdgNgkDJsh07uzKsFwbjKHmoD4QtOT9vUCdR/TvF/Uvdz4gmNsn09zVuUOYLoXhJgdI/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUm4fRZpv40m35CLz5342AyPKr/6Jdv0IDbAlIeESDWCWlgonv
-	1qPQchQhUTotSgDICLetDisSyAjusP8+29qKQs2cQ+8RmlzfQxYXsyIK0bxKCFo=
-X-Gm-Gg: ASbGncvFooZlN4thqZCdLxCcQVEBDlLnqKOnp9cLR09GBwMuYqLDXUtFamcY2LhkRMp
-	B8dV92N8rBjNrj6OtW4V8yEF/uGvsP4Tt+lvaJ4wpU8pQVPDTRabWWtyhQ+AWaPrTY2yj4E5aOf
-	IP4UgeT1scbKBsgh2yaKdCKf9MUvgZ5XMWDJAhh8CcUCnLV2aXG1bvYNBltrwbHz3JztIl2SS0U
-	hiKO99yBArPWQvcXJabu/n+o4tXrj7lCdcgJapijsOjF43ikrpg+3bm9u8aCe8wAUdzRZx3TYpV
-	KkvdimH2dukaJ8MWBe7xG6AgDe97OggjN/GCJXwO0UCWFH8=
-X-Google-Smtp-Source: AGHT+IEzS7RuQM+JXTxQhuUASOr5aQ5FuO0AY24LlH9uKFE9DugCkzr8JbnEOiJvoEsrDVG0ljh0UA==
-X-Received: by 2002:a05:600c:6a16:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-43f415d29a7mr72789265e9.14.1744640398599;
-        Mon, 14 Apr 2025 07:19:58 -0700 (PDT)
-Received: from noctura.suse.cz ([103.210.134.105])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f23572bb2sm178143515e9.29.2025.04.14.07.19.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:19:58 -0700 (PDT)
-From: Brahmajit Das <brahmajit.xyz@gmail.com>
-X-Google-Original-From: Brahmajit Das <listout@listout.xyz>
-To: 
-Cc: jlayton@kernel.org,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	netfs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] netfs: fix building with GCC 15
-Date: Mon, 14 Apr 2025 19:49:43 +0530
-Message-ID: <20250414141945.11044-1-listout@listout.xyz>
-X-Mailer: git-send-email 2.49.0
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744640405; x=1776176405;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=EXQyd0r4TZiqZpKsUTx2M/IYp8XzCZHA1OaGt/pVy74=;
+  b=ilqHsJsnFXHDYpGrTv4URmBwY5GNP9inrD58caZldCx6AiTe6r4mHeDt
+   2tPOSDurP1Ww+rR1EC3/J8CnED1Ns12892170PN+Z/g4ukV6UlQAXIYlS
+   H+Evx0bg0y5I/P8Jic60UbMJoTmC6kjShlfoRIKZEtwOIRCf5LHIW94WQ
+   6YlQqhguahAQEw5GgqHtFBCmQXJE0ZMI2jYUyYtQvJOCCcJO9ImWdRS58
+   nsEWqvbJk+1lUkp/ecMcmp3olkTSY8oD1DU94bd4gm2Sa8aZ5+iK9hi7t
+   PbYyfhTug3qiPZhhyaWUPEOhO+IyfLVjM/Jj4axAo66UdU9ws61oQ6RqY
+   A==;
+X-CSE-ConnectionGUID: oSsEAGTcRwy12Ys1dk3Cbw==
+X-CSE-MsgGUID: cLZBKCDnRzOCOQfG1eH8sg==
+X-IronPort-AV: E=Sophos;i="6.15,212,1739833200"; 
+   d="scan'208";a="43517552"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 14 Apr 2025 16:20:02 +0200
+X-CheckPoint: {67FD1992-1B-DC4DC9A0-F4F29281}
+X-MAIL-CPID: 6C967A4B7A7BB545A05DFDBA4709EEEB_0
+X-Control-Analysis: str=0001.0A006399.67FD1993.008A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4496F16B658;
+	Mon, 14 Apr 2025 16:19:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744640398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EXQyd0r4TZiqZpKsUTx2M/IYp8XzCZHA1OaGt/pVy74=;
+	b=LUVeU7UL04FhGhMDoOsHSPSzV+Bax3bDk2Uz56ZDySKjvuo3p/zjaiKs3W4EjeC/O7l4gk
+	sl27UY7h8G13OJ1iNv0MKMNInjukXelfOXhXZEYSsri7+yRFFyg+kGJSuGcCwY+9MPsNwE
+	9Eg1YUhHsG90RD2I+nbLsVjZ241sPVcAIyJbhkTOkr7PGQA3yqK2vYg2vifiNIkCCzP/r0
+	Ol9OBqwt5LGyT+1CbmRS4eyKAC/bmn/e2QXTITzrvxxnEtxgwbG31ee75kzqTjuw7FzxxE
+	54tcc6dI1L1E2M9fU6C3LBFEX4Bd/eU9CCNXP/aBLQTZ0qu+FqGQyBfZQzi8sg==
+Message-ID: <c0c9cbcaf8bb8fd46d2ca618302bed8caa7bc812.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 1/2] net: phy: dp83867: remove check of delay
+ strap configuration
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux@ew.tq-group.com
+Date: Mon, 14 Apr 2025 16:19:56 +0200
+In-Reply-To: <8013ae5966dd22bcb698c0c09d2fc0912ae7ac25.1744639988.git.matthias.schiffer@ew.tq-group.com>
+References: 
+	<8013ae5966dd22bcb698c0c09d2fc0912ae7ac25.1744639988.git.matthias.schiffer@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Since the Linux kernel initializes many non-C-string char arrays with
-literals. While it would be possible to convert initializers from:
-   { "BOOP", ... }
-to:
-   { { 'B', 'O', 'O', 'P' }, ... }
-that is annoying.
-Making -Wunterminated-string-initialization stay silent about char
-arrays marked with nonstring would be much better.
+On Mon, 2025-04-14 at 16:13 +0200, Matthias Schiffer wrote:
+> The check that intended to handle "rgmii" PHY mode differently from the
+> other RGMII modes never worked as intended:
+>=20
+> - added in commit 2a10154abcb7 ("net: phy: dp83867: Add TI dp83867 phy"):
+>   logic error caused the condition to always evaluate to true
+> - changed in commit a46fa260f6f5 ("net: phy: dp83867: Fix warning check
+>   for setting the internal delay"): now the condition always evaluates
+>   to false
+> - removed in commit 2b892649254f ("net: phy: dp83867: Set up RGMII TX
+>   delay")
+>=20
+> Around the time of the removal, commit c11669a2757e ("net: phy: dp83867:
+> Rework delay rgmii delay handling") started clearing the delay enable
+> flags in RGMIICTL (or it would have, if the condition ever evaluated to
+> true at that time). The change attempted to preserve the historical
+> behavior of not disabling internal delays with "rgmii" PHY mode and also
+> documented this in a comment, but due to a conflict between "Set up
+> RGMII TX delay" and "Rework delay rgmii delay handling", the behavior
+> dp83867_verify_rgmii_cfg() warned about (and that was also described in
+> a commit in dp83867_config_init()) disappeared in the following merge
 
-Without the __attribute__((nonstring)) we would get the following build
-error:
-fs/netfs/fscache_cache.c:375:67: error: initializer-string for array of ‘char’ is too long [-Werror=unterminated-string-initialization]
-  375 | static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
-      |                                                                   ^~~~~~~
-...
-fs/netfs/fscache_cookie.c:32:69: error: initializer-string for array of ‘char’ is too long [-Werror=unterminated-string-initialization]
-   32 | static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
-      |                                                                     ^~~~~~~~~~~~
-cc1: all warnings being treated as errors
+Ugh, of course I find a mistake in the commit message right after submittin=
+g the
+patch - this should read "a comment in ...". I'm going to wait for review a=
+nd
+then fix this in v2.
 
-Upstream GCC has added this commit
-622968990beee7499e951590258363545b4a3b57[0][1] which silences warning
-about truncating NUL char when initializing nonstring arrays.
 
-[0]: https://gcc.gnu.org/cgit/gcc/commit/?id=622968990beee7499e951590258363545b4a3b57
-[1]: https://gcc.gnu.org/cgit/gcc/commit/?id=afb46540d3921e96c4cd7ba8fa2c8b0901759455
+> of net into net-next in commit b4b12b0d2f02
+> ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net").
+>=20
+> While is doesn't appear that this breaking change was intentional, it
+> has been like this since 2019, and the new behavior to disable the delays
+> with "rgmii" PHY mode is generally desirable - in particular with MAC
+> drivers that have to fix up the delay mode, resulting in the PHY driver
+> not even seeing the same mode that was specified in the Device Tree.
+>=20
+> Remove the obsolete check and comment.
+>=20
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+>  drivers/net/phy/dp83867.c | 32 +-------------------------------
+>  1 file changed, 1 insertion(+), 31 deletions(-)
+>=20
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index 063266cafe9c7..e5b0c1b7be13f 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -92,11 +92,6 @@
+>  #define DP83867_STRAP_STS1_RESERVED		BIT(11)
+> =20
+>  /* STRAP_STS2 bits */
+> -#define DP83867_STRAP_STS2_CLK_SKEW_TX_MASK	GENMASK(6, 4)
+> -#define DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT	4
+> -#define DP83867_STRAP_STS2_CLK_SKEW_RX_MASK	GENMASK(2, 0)
+> -#define DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT	0
+> -#define DP83867_STRAP_STS2_CLK_SKEW_NONE	BIT(2)
+>  #define DP83867_STRAP_STS2_STRAP_FLD		BIT(10)
+> =20
+>  /* PHY CTRL bits */
+> @@ -510,25 +505,6 @@ static int dp83867_verify_rgmii_cfg(struct phy_devic=
+e *phydev)
+>  {
+>  	struct dp83867_private *dp83867 =3D phydev->priv;
+> =20
+> -	/* Existing behavior was to use default pin strapping delay in rgmii
+> -	 * mode, but rgmii should have meant no delay.  Warn existing users.
+> -	 */
+> -	if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII) {
+> -		const u16 val =3D phy_read_mmd(phydev, DP83867_DEVADDR,
+> -					     DP83867_STRAP_STS2);
+> -		const u16 txskew =3D (val & DP83867_STRAP_STS2_CLK_SKEW_TX_MASK) >>
+> -				   DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT;
+> -		const u16 rxskew =3D (val & DP83867_STRAP_STS2_CLK_SKEW_RX_MASK) >>
+> -				   DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT;
+> -
+> -		if (txskew !=3D DP83867_STRAP_STS2_CLK_SKEW_NONE ||
+> -		    rxskew !=3D DP83867_STRAP_STS2_CLK_SKEW_NONE)
+> -			phydev_warn(phydev,
+> -				    "PHY has delays via pin strapping, but phy-mode =3D 'rgmii'\n"
+> -				    "Should be 'rgmii-id' to use internal delays txskew:%x rxskew:%x=
+\n",
+> -				    txskew, rxskew);
+> -	}
+> -
+>  	/* RX delay *must* be specified if internal delay of RX is used. */
+>  	if ((phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
+>  	     phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_RXID) &&
+> @@ -836,13 +812,7 @@ static int dp83867_config_init(struct phy_device *ph=
+ydev)
+>  		if (ret)
+>  			return ret;
+> =20
+> -		/* If rgmii mode with no internal delay is selected, we do NOT use
+> -		 * aligned mode as one might expect.  Instead we use the PHY's default
+> -		 * based on pin strapping.  And the "mode 0" default is to *use*
+> -		 * internal delay with a value of 7 (2.00 ns).
+> -		 *
+> -		 * Set up RGMII delays
+> -		 */
+> +		/* Set up RGMII delays */
+>  		val =3D phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL);
+> =20
+>  		val &=3D ~(DP83867_RGMII_TX_CLK_DELAY_EN | DP83867_RGMII_RX_CLK_DELAY_=
+EN);
 
-Thanks to Jakub Jelinek <jakub@gcc.gnu.org> for the gcc patch.
-
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
----
- fs/netfs/fscache_cache.c  | 3 ++-
- fs/netfs/fscache_cookie.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/netfs/fscache_cache.c b/fs/netfs/fscache_cache.c
-index 9397ed39b0b4..ccfe52056ed3 100644
---- a/fs/netfs/fscache_cache.c
-+++ b/fs/netfs/fscache_cache.c
-@@ -372,7 +372,8 @@ void fscache_withdraw_cache(struct fscache_cache *cache)
- EXPORT_SYMBOL(fscache_withdraw_cache);
- 
- #ifdef CONFIG_PROC_FS
--static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
-+static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE]
-+	__attribute__((nonstring)) = "-PAEW";
- 
- /*
-  * Generate a list of caches in /proc/fs/fscache/caches
-diff --git a/fs/netfs/fscache_cookie.c b/fs/netfs/fscache_cookie.c
-index d4d4b3a8b106..c455d1b0f440 100644
---- a/fs/netfs/fscache_cookie.c
-+++ b/fs/netfs/fscache_cookie.c
-@@ -29,7 +29,8 @@ static LIST_HEAD(fscache_cookie_lru);
- static DEFINE_SPINLOCK(fscache_cookie_lru_lock);
- DEFINE_TIMER(fscache_cookie_lru_timer, fscache_cookie_lru_timed_out);
- static DECLARE_WORK(fscache_cookie_lru_work, fscache_cookie_lru_worker);
--static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
-+static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR]
-+	__attribute__((nonstring)) = "-LCAIFUWRD";
- static unsigned int fscache_lru_cookie_timeout = 10 * HZ;
- 
- void fscache_print_cookie(struct fscache_cookie *cookie, char prefix)
--- 
-2.49.0
-
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
