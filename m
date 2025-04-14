@@ -1,124 +1,132 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C92156236;
-	Mon, 14 Apr 2025 22:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6EA1F3FDC;
+	Mon, 14 Apr 2025 22:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744670700; cv=none; b=CxRhLKy1soyJpD+LKH+Ff+JnPg9jaVCj7kFCKxGa5X00fv1/5GBCu4Djudd5WiFhL+icKST2FygTzN03iApozgReJ01E5DemZqLdRGkZonSywyKFoJ3sXBJUO5nmwCfon7o6ReS1+FiVvC3tfa5EKh0R+MSCUSbe8VEusejwNog=
+	t=1744670838; cv=none; b=rsSBBctX7y1ygJMrEfJKRc/+LY+BZajqCfDANn29YJHAEVlebHLgNhWRjGk3pcC4rr5R95i67we3fr43nt7o5xShO316VPDUFte7IYd3D7KRxgB3HRTpTlUluRK3tCH32NAn3TYJtgjyO4Jdr86ObnVQU1hXR6qEjE0MyzI3OvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744670700; c=relaxed/simple;
-	bh=1DPzF0IfyF98MjDzAq64CNgLAK8YEM3pXDiD8yr5QrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cnDvGylFKFnPRfSWtKqWEG1oM9dmjZyXCFupKTdTaBOuXO9Q+B76PlvJrzDN+wC2oKB8HvheJapUjI422gtMSFPKoWdE61REqV2v7KcUbZ4UFU7J1Ur/JImF5953Y20rot86x7i6EoSxPFXJR8PqsPn7tjNLmbOFnm1HjWPfz3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqPJcYic; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744670838; c=relaxed/simple;
+	bh=blBgF6pm9yLEWrad2z6wwWi3KNdwj0wZn7wmKXkBG4w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m1opUC7MJKY3ryCef30VUL6T2JZM+Ag3/rJPRMxrF8oi8aseuZ1HofUsjifMS8227EG9QPP4Qi0b+Sd6cpg+26fVwJp7219T/YRIwqjqe18dOiTFtH+loe6y2rnpA+I0jC5fuT/dbP5ejL1kguv+1FmadVIC7NMVVUEgUM+XYAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OCOZ3GA6; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqPJcYic"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-225477548e1so47228645ad.0;
-        Mon, 14 Apr 2025 15:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744670698; x=1745275498; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qCbufsqovhRdxKI/Wo+sxDQep3MCh6y6M1Tif6pvFv0=;
-        b=nqPJcYicDFAVA1Dmd00dCFF3LNqDCebfDOZK5xrG/sFBv5mgXjF0Ao5yqIrEcPJTss
-         uny4tBzpkwQfzitKOo7Rd2I8lsOsIaRpS5A9rcG/fEaM/edBBGkYwBUEJGWYtCmPgXkd
-         UrP24/d96cUHFCovcbWuVNvGESLPxG9sGa4KK1+5dM/6BmKwfF4YPyBwbFdHQs3f7dFk
-         E24SMTWpltOpvxnXVl3ZuqLCV0RFax4bcdCaqOII728x1bGrf6D82W6KayU0vFYwRPBh
-         +3cEV4/HfGPhv3Ofo4Y9+XzAz7nYY/VK1ooO+5itWXBASqXRBaCCQBKD/fp6NrFmhZze
-         QGzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744670698; x=1745275498;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qCbufsqovhRdxKI/Wo+sxDQep3MCh6y6M1Tif6pvFv0=;
-        b=cX9DQWPTLcNCeqWA0MMDlWNwAPEJwES3xF/lkRkWQIcXu+Nmzkq9bIrfL2qF4fi1Vx
-         3wUf1QTCXm7CgX63EC/2ICpcpxR4F43rvfF2XV7RL/BIWP3E5tvXmcUK9mpS9gac5vsh
-         TPYtNHWrUaQMv7OyRXVUC1JJsDm8iB1k20V684PJzAxA8nHe8awZPIqfpOaqrHIRAWk1
-         MJi/c9UWSID0eoqK/qJCh/C0hNWGM6HuOESPF1AmdNbCSMu6i0GcZCSVoY2PG7EEHANL
-         K0AGjm215kiKM6bVQ/SbskIw7/K1SIabvtMBUwPjsqGN7N7oe7ZJeUEkgVQDkavElQdW
-         0Kgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXEGDRXAANfOBen7NlVm+qCoptV23keqFB8PccRd6lp4Z5PJps1JY/Wp9ZcpA8FYZwx648TMQpkroBl2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCYuDhK8ptW8R7fqbFEGSNMpRkeURIMNEH1ETGQQoF+3jljWCV
-	lEAf/UnZaQGY3xROONOmyIsB1/ISevD4W+3TyQpj0JBtQzvGoaUM
-X-Gm-Gg: ASbGncus5mGimM5LB5xOstZjPcVfLkx8UtAM6ch6WDoX68eEjWZxXQWkFE/oXSn9+k2
-	XjVIVMP5Coi8ZVKHToraL1/4Z+L91YUpf1s6M5kK2ktonX95GupKaVmQPpeP4eC/VDef8qjdROu
-	KeOwmLDI2scRbwUZGTAqYq7MV++X/HgMMJqmmsxfzwcosS0tidF/qiRWX8b5GWf3poSnxlTw26t
-	5udSIpnuI3dBg6VYa05IGHjU9pDoX2pOAysRglnXbGS0+ikEJzZn0Xv4eYD5kkEYi17vR0tkhR/
-	DA192oWdx4vyPVAUZ/C/PfKnMBaIy2G7l1H2HyYitZVn0essLF0=
-X-Google-Smtp-Source: AGHT+IGWOQk/MY4RrJwds2DUYwvDvZppCoo869G7JJk+fcUnDOZsIWUfuBx0HTAue14NQURwioU/rA==
-X-Received: by 2002:a17:902:ebc2:b0:220:e63c:5b13 with SMTP id d9443c01a7336-22bea4fd043mr193492195ad.46.1744670698007;
-        Mon, 14 Apr 2025 15:44:58 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c3:a964:131b:ff00:5ee5:94c5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c62c3sm7400010b3a.52.2025.04.14.15.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 15:44:57 -0700 (PDT)
-Date: Mon, 14 Apr 2025 19:44:52 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
- Cortex-M4 is running and it was started by U-Boot bootaux
-Message-ID: <20250414224452.gk4ccniqtumfbjth@hiago-nb>
-References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
- <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
- <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
- <PAXPR04MB8459ED33238AA790252E730988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OCOZ3GA6"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.159.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 06388210C42F;
+	Mon, 14 Apr 2025 15:47:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06388210C42F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744670836;
+	bh=dEqY+MizYE3Tuj7oGWh4pKfuLIDZLrhKXP4HN0AHPSc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OCOZ3GA6nVfz8WTUjRiC9l/nPq9iNgoU4Kaj5eQYMvW8zp+l4EPbz3OFB8Z8Wz8pP
+	 70qoG5Jv/1edPOrd4bHuVmOim6jqSofgyJctkvxRGzq1twAaLCD4HIw/S2DGnV5jNm
+	 mtBcJm2aHM2xjTXIl2elIG7zErzoO7YjbfgA3mfQ=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@arndb.de,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	conor+dt@kernel.org,
+	dan.carpenter@linaro.org,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	joey.gouly@arm.com,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	mark.rutland@arm.com,
+	maz@kernel.org,
+	mingo@redhat.com,
+	oliver.upton@linux.dev,
+	rafael@kernel.org,
+	robh@kernel.org,
+	rafael.j.wysocki@intel.com,
+	ssengar@linux.microsoft.com,
+	sudeep.holla@arm.com,
+	suzuki.poulose@arm.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	yuzenghui@huawei.com,
+	devicetree@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v8 03/11] Drivers: hv: Enable VTL mode for arm64
+Date: Mon, 14 Apr 2025 15:47:05 -0700
+Message-ID: <20250414224713.1866095-4-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250414224713.1866095-1-romank@linux.microsoft.com>
+References: <20250414224713.1866095-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459ED33238AA790252E730988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Peng,
+Kconfig dependencies for arm64 guests on Hyper-V require that be
+ACPI enabled, and limit VTL mode to x86/x64. To enable VTL mode
+on arm64 as well, update the dependencies. Since VTL mode requires
+DeviceTree instead of ACPI, don’t require arm64 guests on Hyper-V
+to have ACPI unconditionally.
 
-On Mon, Apr 14, 2025 at 06:09:49AM +0000, Peng Fan wrote:
-> 
-> In your case, m4 is in same scu partition as a53, so m4
-> power domain is manageable(owned) by Linux.
-> 
-> However to m4 earlyboot(kicked by bootloader),
-> if you not wanna linux to handle m4, use scu_rm
-> to create a separate partition in u-boot.
-> If you wanna linux to handle m4, but not wanna linux
-> to shutdown the pd in kernel boot, imx_rproc.c
-> needs to be built in, and need to add a clock entry
-> or use clock optional api in imx_rproc.c .
-> 
-> Current imx_rproc.c needs a clock entry to probe pass.
-> 
-> I think in your case, this driver not probe pass, so the
-> M4 pd still get powered off.
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+---
+ drivers/hv/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-This was correct, indeed. I was not able to find exactly where the
-cortex-m4 clock is defined, so I added a clk_dummy to the imx8x-cm4
-remoteproc node and now it works, the code continues to run and I can
-control the m4 with Linux. Thanks!
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 6c1416167bd2..eefa0b559b73 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -5,7 +5,7 @@ menu "Microsoft Hyper-V guest support"
+ config HYPERV
+ 	tristate "Microsoft Hyper-V client drivers"
+ 	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+-		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
++		|| (ARM64 && !CPU_BIG_ENDIAN)
+ 	select PARAVIRT
+ 	select X86_HV_CALLBACK_VECTOR if X86
+ 	select OF_EARLY_FLATTREE if OF
+@@ -15,7 +15,7 @@ config HYPERV
+ 
+ config HYPERV_VTL_MODE
+ 	bool "Enable Linux to boot in VTL context"
+-	depends on X86_64 && HYPERV
++	depends on (X86_64 || ARM64) && HYPERV
+ 	depends on SMP
+ 	default n
+ 	help
+@@ -31,7 +31,7 @@ config HYPERV_VTL_MODE
+ 
+ 	  Select this option to build a Linux kernel to run at a VTL other than
+ 	  the normal VTL0, which currently is only VTL2.  This option
+-	  initializes the x86 platform for VTL2, and adds the ability to boot
++	  initializes the kernel to run in VTL2, and adds the ability to boot
+ 	  secondary CPUs directly into 64-bit context as required for VTLs other
+ 	  than 0.  A kernel built with this option must run at VTL2, and will
+ 	  not run as a normal guest.
+-- 
+2.43.0
 
-One thing that I noticed is I cannot make the RPMsg work with this
-devicetree node, even tought I assigned the correct memory-regions
-(vdev0buffer, vdev0ring0...). Also tested with the rpmsg-lite from the
-linux-imx. Is this supposed to work with RPMsg as well?
-
-> 
-> 
-> Regards,
-> Peng.
->
-
-Hiago
