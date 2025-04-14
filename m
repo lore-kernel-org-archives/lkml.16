@@ -1,233 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A81429CB4E
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 12:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D290225A2AB;
+	Mon, 14 Apr 2025 12:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744632708; cv=none; b=Rn5sI/+OG+02TS6EigBDlPUfMfZWGi4PwmtaJJRsxe2j5/JiWlcbOPotsiw/8kczz91SvXToUyTpIy4D08eUrFWz5U/WFKmDBACq2nVDgwvUrk+3UsjZmBDblYmf85crtVceriyRG+K66hnffw419cVgJLIGzQvQwDdAOAH5mV4=
+	t=1744632727; cv=none; b=BXaCxdydxA+YLrGhoMyKBT0gwOE+I/VKZSL4olVTH99NC983r4ty9Zi38GyVKG4v1nWib611T6ZC0f5bKpx+eJy5HG9JGNH7+g4d9jHn2zKfy8zIQId+NkqCsvAYpQreY4zmlqUePV9Xe7uWJiuDczJ6zzBucgv0OQJpozznGIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744632708; c=relaxed/simple;
-	bh=5sHvKU5p6R98G5qUQJWChqm7Hb1WtvUEerciJ7Sg8Wk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GHQVX3YGBBDksrIynf0abC3j0MiKMvzKYFTET7EXwMjk5o0Sjivg0fQuIGg2Gopa9XpQ5b55n//tGD1nT2ky3rX+ZVerj3MI67AjOG+Rpe1I0Q8Y3xHL4Ntl2pEpB2VN+m1WqrxCRiSYv3BiMAQK/63IGGFhgH9QDWITVHNEjqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B6091007;
-	Mon, 14 Apr 2025 05:11:44 -0700 (PDT)
-Received: from [10.57.86.225] (unknown [10.57.86.225])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8CA83F694;
-	Mon, 14 Apr 2025 05:11:43 -0700 (PDT)
-Message-ID: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
-Date: Mon, 14 Apr 2025 13:11:42 +0100
+	s=arc-20240116; t=1744632727; c=relaxed/simple;
+	bh=7HiWJUY7k3PBjq+nyjLuTF5RMOFecFY79b69z1xvKkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+grnK+mkZq1TGw11A5mILG/IakKQLtFG+NsHeaL+TwlaQJyOcsZdJChupH5CsLTxB4O0TFHXlqczx9RGZBFREkCbYlEpa8CDmy1U6FtpbgJjeVJ7iExCX7Bc8BCc4FIhFoUCyakGQFXxkdg1aHgWU40POh+cLQyORc1u0gV7WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xtm/BFNm; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xtm/BFNm"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7370a2d1981so3154516b3a.2;
+        Mon, 14 Apr 2025 05:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744632725; x=1745237525; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1NVHglvUlYKOGcz6TwIpfPLcwNgLnD8HxMiutrlB7jI=;
+        b=Xtm/BFNmvXWSVuDNPf9Cg7W6Q4O1UQ7/0j0YGLAWQK3OgFrExazip+KiK19Uh6GGS+
+         MGWAsR/5hfUZSW9VLRxH+oB1PYn+wZxK//ZQGU2nKvLOvQcPWYPUdydRk2GuuK38KFIq
+         yb8DPluhltxHyDAI/zUtPQl/3hZKRQoz9loLDS8QaUJtE9K51JmVDp2W96LLNP3VUHWV
+         v7qYANzNUsLwb1jvKf/pKoMQVGWLg5Y3kSRlSk9jWO/mGAKszkfMxK4gXOAhsxHe9RI0
+         26BJQWkpoyP9tUKCAOaE41pBwh5YSgWitz3hYhW2sSV88oLvUjgmgow9RLI1UfvpGgOV
+         t8jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744632725; x=1745237525;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1NVHglvUlYKOGcz6TwIpfPLcwNgLnD8HxMiutrlB7jI=;
+        b=WbLAmXswXX5ylfGHPTug6OkWXs8Hf1qlyLTo+4OHO6EdCKgzO4WYSAwwH7N0xAOS6A
+         krDDFA9mgLN+9wpDQLr8SUErM9QZ27BYqT84jpLmNtMP8vaLZJqzC+UFHkVuhEXk2mRo
+         uooknkVv80/308DIaIaycJVVr3nlxmrAh1pqE5CQHxS1ldlOx2TSnHZhkGtzxG/7c23W
+         R+GVaQaHMOgTd6Wz9B9WBaOYSbyPuDbDm4coCZ2mNuqsZZ0U5tiFrLhddHmYuYlPmk+C
+         DeXSNhCMJV3WBfICWAhZDsjNt2wuONw1ogSJijZ5kUZS56AAjWdtTM471WxTniHoo39N
+         2Irg==
+X-Forwarded-Encrypted: i=1; AJvYcCUA5b+nOTor7wjPydz4Fu8Ne8uAiuilvbTsVJzjZcn/cpITNivI5ObcwuB0DdwlEgO6BjeUWmKJoD5q@vger.kernel.org, AJvYcCUVeULhvQbTID3ZHwhmzuqCOW5v3Gfgbk1JTfo93Rttje3HWiMh5ctP7PXVBmDlFbLFQ84JVup/W+XvHYKC@vger.kernel.org, AJvYcCVXIYJZNjs0cLN9RO428DmK9AXhmSndG/Gw2pDhS/GwMvA6coHH9DRr+vAydgx+h6X00cUASdrPxp0C@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+flAXPamKdGYpD8Y21wdfasVjOcmjwUvbIFD2ZJkkVBTG2Se1
+	I/c++UYkWKfT08NA1PdPf9MNqhvbX7a1Ki2K4tgu3AxfphGc4NBdj0xWz/25jzo=
+X-Gm-Gg: ASbGncu7xxzu7iGlBbVqCJ+zxiEWddWgBDlLUTfyY5WMlb7PL20RM14rkgqvQXZXBjI
+	UM+zoQKyBIy0dtikOQWPHZATmVr9ux0uWZQXkXgCNbpmxN32mXQrvJvf6XuzZNG93gFczp6HKjA
+	pBLE8h93FtilWeO+kCuYy5IUPkppkwL4R3yt8Sj8hiPARkJ6BjX12/OlMkXr8MRuwAl7++gNT+e
+	Rxo4CDZovJZ85Vu82W+BUNKWvtg1Lqk98QGD2fUi+G3m1qA1dze/ROfDjIY0aIBzqGL1fZwyVqh
+	lS8q2jcxC4FNjKOKwaNFMUmcpKve6UU5I6Z53EXpVRSkdt7d
+X-Google-Smtp-Source: AGHT+IF+TIVrbFGinU7ywTDvjK5W6y83fY1DKIZT07Xcs1cZRpqvJc3wIS0iwg8lLbaz6rT1AlurdQ==
+X-Received: by 2002:a05:6a20:d49a:b0:1ee:dd60:194f with SMTP id adf61e73a8af0-201799683ecmr16377045637.26.1744632724786;
+        Mon, 14 Apr 2025 05:12:04 -0700 (PDT)
+Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b06161333a8sm4331209a12.7.2025.04.14.05.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 05:12:03 -0700 (PDT)
+Date: Mon, 14 Apr 2025 09:13:12 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v1 2/7] iio: adc: Add basic support for AD4170
+Message-ID: <Z_z72J_gcZqW14CE@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1744200264.git.marcelo.schmitt@analog.com>
+ <5f79007f0b9f9f67360d04fb904b6a59111a4ebe.1744200264.git.marcelo.schmitt@analog.com>
+ <20250412174710.33afb04d@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
- operations
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, Lance Yang <ioworker0@gmail.com>,
- Xavier <xavier_qy@163.com>
-Cc: Barry Song <21cnbao@gmail.com>, catalin.marinas@arm.com, will@kernel.org,
- akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
- Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
-References: <20250407092243.2207837-1-xavier_qy@163.com>
- <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
- <7dccb3a2-f5e2-4f9e-8f5c-465a1d3ffdb6@arm.com>
- <CAK1f24=5-VVJoE75wrskXxrGi=KmrbxSYH9P69PRPiOxQuArpA@mail.gmail.com>
- <1613c84e-1e65-44cd-9f23-1c9870df4655@arm.com>
- <a084d29e-8027-4d20-a1b4-584bdbbe111d@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <a084d29e-8027-4d20-a1b4-584bdbbe111d@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412174710.33afb04d@jic23-huawei>
 
-On 14/04/2025 09:51, Dev Jain wrote:
-> 
-> 
-> On 14/04/25 1:36 pm, Ryan Roberts wrote:
->> On 12/04/2025 06:05, Lance Yang wrote:
->>> On Sat, Apr 12, 2025 at 1:30 AM Dev Jain <dev.jain@arm.com> wrote:
->>>>
->>>> +others
->>>>
->>>> On 11/04/25 2:55 am, Barry Song wrote:
->>>>> On Mon, Apr 7, 2025 at 9:23 PM Xavier <xavier_qy@163.com> wrote:
->>>>>>
->>>>>> This commit optimizes the contpte_ptep_get function by adding early
->>>>>>    termination logic. It checks if the dirty and young bits of orig_pte
->>>>>>    are already set and skips redundant bit-setting operations during
->>>>>>    the loop. This reduces unnecessary iterations and improves performance.
->>>>>>
->>>>>> Signed-off-by: Xavier <xavier_qy@163.com>
->>>>>> ---
->>>>>>    arch/arm64/mm/contpte.c | 13 +++++++++++--
->>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
->>>>>> index bcac4f55f9c1..ca15d8f52d14 100644
->>>>>> --- a/arch/arm64/mm/contpte.c
->>>>>> +++ b/arch/arm64/mm/contpte.c
->>>>>> @@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>>>>>
->>>>>>           pte_t pte;
->>>>>>           int i;
->>>>>> +       bool dirty = false;
->>>>>> +       bool young = false;
->>>>>>
->>>>>>           ptep = contpte_align_down(ptep);
->>>>>>
->>>>>>           for (i = 0; i < CONT_PTES; i++, ptep++) {
->>>>>>                   pte = __ptep_get(ptep);
->>>>>>
->>>>>> -               if (pte_dirty(pte))
->>>>>> +               if (!dirty && pte_dirty(pte)) {
->>>>>> +                       dirty = true;
->>>>>>                           orig_pte = pte_mkdirty(orig_pte);
->>>>>> +               }
->>>>>>
->>>>>> -               if (pte_young(pte))
->>>>>> +               if (!young && pte_young(pte)) {
->>>>>> +                       young = true;
->>>>>>                           orig_pte = pte_mkyoung(orig_pte);
->>>>>> +               }
->>>>>> +
->>>>>> +               if (dirty && young)
->>>>>> +                       break;
->>>>>
->>>>> This kind of optimization is always tricky. Dev previously tried a similar
->>>>> approach to reduce the loop count, but it ended up causing performance
->>>>> degradation:
->>>>> https://lore.kernel.org/linux-mm/20240913091902.1160520-1-dev.jain@arm.com/
->>>>>
->>>>> So we may need actual data to validate this idea.
->>>>
->>>> The original v2 patch does not work, I changed it to the following:
->>>>
->>>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
->>>> index bcac4f55f9c1..db0ad38601db 100644
->>>> --- a/arch/arm64/mm/contpte.c
->>>> +++ b/arch/arm64/mm/contpte.c
->>>> @@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm,
->>>> unsigned long addr,
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(__contpte_try_unfold);
->>>>
->>>> +#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
->>>> +       int _start; \
->>>> +       pte_t *_ptep = ptep; \
->>>> +       for (_start = start; _start < CONT_PTES; _start++, ptep++) { \
->>>> +               if (pte_##flag(__ptep_get(_ptep))) { \
->>>> +                       orig_pte = pte_mk##flag(orig_pte); \
->>>> +                       break; \
->>>> +               } \
->>>> +       }
->>>> +
->>>>    pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>>>    {
->>>>           /*
->>>> @@ -169,11 +179,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>>>           for (i = 0; i < CONT_PTES; i++, ptep++) {
->>>>                   pte = __ptep_get(ptep);
->>>>
->>>> -               if (pte_dirty(pte))
->>>> +               if (pte_dirty(pte)) {
->>>>                           orig_pte = pte_mkdirty(orig_pte);
->>>> +                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
->>>> +                       break;
->>>> +               }
->>>>
->>>> -               if (pte_young(pte))
->>>> +               if (pte_young(pte)) {
->>>>                           orig_pte = pte_mkyoung(orig_pte);
->>>> +                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
->>>> +                       break;
->>>> +               }
->>>>           }
->>>>
->>>>           return orig_pte;
->>>>
->>>> Some rudimentary testing with micromm reveals that this may be
->>>> *slightly* faster. I cannot say for sure yet.
->>>
->>> Yep, this change works as expected, IIUC.
->>>
->>> However, I'm still wondering if the added complexity is worth it for
->>> such a slight/negligible performance gain. That said, if we have
->>> solid numbers/data to back it up, all doubts would disappear ;)
->>
->> I agree with Barry; we need clear performance improvement numbers to consider
->> this type of optimization. I doubt there will be measurable improvement for 4K
->> and 64K base pages (because the the number of PTEs in a contpte block are 16 and
->> 32 respectively). But 16K base pages may benefit given there are 128 PTEs in a
->> contpte block for that case.
->>
->> Also FWIW, I'm struggling to understand CHECK_CONTPTE_FLAG(); Perhaps something
->> like this would suffice?
-> 
-> The idea of CHECK_CONTPTE_FLAG() is to check only for the other flag until it's
-> found; the diff below will still keep checking for both until both are found.
+Hi Jonathan,
 
-Oh I see. Although you're effectively just saving a tbnz instruction, which will
-be in the noise.
+Thank you for reviewing this set.
+Clarifying some bits inline. Will apply all other suggested changes.
 
-Anyway, come back with numbers and we can talk :)
+Thanks,
+Marcelo
+
+On 04/12, Jonathan Cameron wrote:
+> On Wed, 9 Apr 2025 09:24:35 -0300
+> Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+> 
+> > From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> > 
+> > Add support for the AD4170 ADC with the following features:
+> > - Single-shot read.
+> > - Analog front end PGA configuration.
+> > - Digital filter and sampling frequency configuration.
+> > - Calibration gain and offset configuration.
+> > - Differential and pseudo-differential input configuration.
+> > 
+> > Signed-off-by: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> > Co-developed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> Hi.
+> 
+> Clearly this is a massive driver, even with it broken up like this.
+> So it might take a few cycles to review enough that we don't find
+> new things :(
+
+No worries. Yeah, I tried my best to make it concise but this is still not small
+piece of code.
 
 > 
->>
->> ----8<----
->> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
->> index 55107d27d3f8..7787b116b339 100644
->> --- a/arch/arm64/mm/contpte.c
->> +++ b/arch/arm64/mm/contpte.c
->> @@ -169,11 +169,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->>          for (i = 0; i < CONT_PTES; i++, ptep++) {
->>                  pte = __ptep_get(ptep);
->>
->> -               if (pte_dirty(pte))
->> +               if (pte_dirty(pte)) {
->>                          orig_pte = pte_mkdirty(orig_pte);
->> +                       if (pte_young(orig_pte))
->> +                               break;
->> +               }
->>
->> -               if (pte_young(pte))
->> +               if (pte_young(pte)) {
->>                          orig_pte = pte_mkyoung(orig_pte);
->> +                       if (pte_dirty(orig_pte))
->> +                               break;
->> +               }
->>          }
->>
->>          return orig_pte;
->> ----8<----
->>
->> Thanks,
->> Ryan
->>
->>
->>>
->>> Thanks,
->>> Lance
->>>
->>>>
->>>>>
->>>>>>           }
->>>>>>
->>>>>>           return orig_pte;
->>>>>> -- 
->>>>>> 2.34.1
->>>>>>
->>>>>
->>>>> Thanks
->>>>> Barry
->>>>>
->>>>
->>
+> I can't think of a good way to split it up further though
 > 
+> Jonathan
+> 
+> > diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> > new file mode 100644
+> > index 000000000000..0d24286ac2ab
+> > --- /dev/null
+> > +++ b/drivers/iio/adc/ad4170.c
+> 
+> 
+...
+> > +static int ad4170_regulator_setup(struct ad4170_state *st)
+> > +{
+> > +	struct device *dev = &st->spi->dev;
+> > +	int ret;
+> > +
+> > +	/* Required regulators */
+> > +	ret = devm_regulator_get_enable_read_voltage(dev, "avdd");
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to get AVDD voltage.\n");
+> > +
+> > +	st->vrefs_uv[AD4170_AVDD_SUP] = ret;
+> > +
+> > +	ret = devm_regulator_get_enable_read_voltage(dev, "iovdd");
+> 
+> If no channel uses this reference is it not optional?  Maybe not worth the
+> complexity of handling that.  We have sometime bothered to do so in the past
+> by first figuring out which references are in use, then trying to get the
+> appropriate regulators with small changes for cases like this where
+> it needs to be enabled but we might not need the voltage.
 
+We can set the channel multiplexer to use IOVDD reference as diff chan negative
+input. Similar thing can be done for the other reference supplies. I think
+the examples in dt-binding don't use IOVDD but they could. Since the driver is
+supporting other regulators, maybe support IOVDD too?
+
+> 
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to get IOVDD voltage.\n");
+> > +
+> > +	st->vrefs_uv[AD4170_IOVDD_SUP] = ret;
+> > +
+> > +	/* Optional regulators */
+> > +	ret = devm_regulator_get_enable_read_voltage(dev, "avss");
+> > +	if (ret < 0 && ret != -ENODEV)
+> > +		return dev_err_probe(dev, ret, "Failed to get AVSS voltage.\n");
+> > +
