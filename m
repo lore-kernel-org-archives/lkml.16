@@ -1,38 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F097E2628C;
-	Mon, 14 Apr 2025 08:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC552628C
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 08:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619011; cv=none; b=Yk19uNTGjYHimsstPZbdIsyzqOzeR4/jCWR+y2blukQnmVjGFCrxzBnUuCgRZgjhAzGWIw9hujDykiGMfsIBERQq6j7Qr0d0cjTUQIYTwmu+o6X7NJzov1XNqjsQHk8mOFuYCD7azJtHV3qEOUGwtuLo8KRBX48BSUNDeW+/JEU=
+	t=1744619022; cv=none; b=FnehyFl1DhI26rm8TQAaJ7lkZHdpFi+N70jvmUXonqdm7LzXZcEdj4FWe108J94aTeUU7Knt1Lbagu5HtqWlkO2ZqV5eJDi/hBQB2nwafBKtgT6WgPHhLxjcQaVtr9nKQLSyz6QRZg4/E89YSsX8rqW4tb0g6HdKSqYR1qH5BQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619011; c=relaxed/simple;
-	bh=DTn0h/+Ep5caUk0dt4DGeVayyg5JOlWoTsB2zL7viis=;
+	s=arc-20240116; t=1744619022; c=relaxed/simple;
+	bh=RXdhM4PFl9vkPOC8h9dCbKVEq25/Tptk3c1LQ3Iq0WM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R3apWtfPZ4bRZ8y56ByLzTN6mvi4cu7fboY/b4RYdbIPUHIEIN/JpqHshT65unP6O+wnI8y/+FGAuvEn+FPz2am9gJLoQuLwCTvru9tHV/X73dvgso0u1hp9MynOmH8hWwNaRb3wSbVCDDK8uutUF53Of4zdHchGU1I+xEoNRCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C92C1007;
-	Mon, 14 Apr 2025 01:23:28 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BCAC3F694;
-	Mon, 14 Apr 2025 01:23:27 -0700 (PDT)
-Date: Mon, 14 Apr 2025 09:23:24 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Mike Tipton <quic_mdtipton@quicinc.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>, <arm-scmi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: scmi: Skip SCMI devices that aren't used by the
- CPUs
-Message-ID: <20250414-splendid-clam-of-democracy-dacf96@sudeepholla>
-References: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
- <20250414083832.GA19563@nxa18884-linux>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FFdVqi0Q57hR0MB3SuF7uTZNVV9arMVz+lKlrHBfCud9sR6i/+w5jou0uA/jiyr0l0E7Ovr0l3d+EZj+9cWehKuX2MKc0eWBZNLFEGeUlhYKSujlbACjQ4Rg63bZ24TqwdLe/jjzb+K42j0TTKBykmdI1GNu7vfLcFDo0VZcwhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruB+C2s3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruB+C2s3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5941BC4CEE2;
+	Mon, 14 Apr 2025 08:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744619021;
+	bh=RXdhM4PFl9vkPOC8h9dCbKVEq25/Tptk3c1LQ3Iq0WM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ruB+C2s3fmTi/Qy7wSYeudjhXLLEOWye4BfkZSHudxTUbRgT5CL/J3OKz1uKYJuYi
+	 2ctBnUGgUCmJwFw0kcRnvPDRzhDdYqzPN3E3iTs0NSM1EnoJr9p5YLmXYFtmRFeew/
+	 OSUN6a3ruC6OqKusN61QwrGA9gRPHPinjEmau1Mp0Clot1f8RMHNQcYEl7wWlYa7j3
+	 2gxgzsncwuBMsbJO5q7xmUtCJFonAxmCI1tqcvpXZehAGFs9qucuHios7zL5qn/rA0
+	 DWA6eocEL6A9glQh11Xvdlek1Wdo5WKvPqq47//sI/9BfZG2YN/ugqvtpEGWuuySje
+	 zTRUIkvVpMEOA==
+Date: Mon, 14 Apr 2025 10:23:36 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Sohil Mehta <sohil.mehta@intel.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com
+Subject: Re: [PATCH RFC v2a 5/9] x86/cpufeatures: Add X86_FEATURE_APX
+Message-ID: <Z_zGCCNE_Qt3IlMZ@gmail.com>
+References: <20250320234301.8342-6-chang.seok.bae@intel.com>
+ <20250411161250.14662-1-chang.seok.bae@intel.com>
+ <d076ee8c-0c22-4e99-964c-5ea254f5be14@intel.com>
+ <7b91d929-fe97-44c6-aa94-05417bce1014@intel.com>
+ <009062d3-d4db-443f-8337-ae4223efffa1@intel.com>
+ <Z_onl1QbH9L1-8dq@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,27 +49,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414083832.GA19563@nxa18884-linux>
+In-Reply-To: <Z_onl1QbH9L1-8dq@gmail.com>
 
-Hi Peng,
 
-On Mon, Apr 14, 2025 at 04:38:32PM +0800, Peng Fan wrote:
-> Hi Mike,
-> On Fri, Apr 11, 2025 at 02:29:41PM -0700, Mike Tipton wrote:
-> >Currently, all SCMI devices with performance domains attempt to register
-> >a cpufreq driver,
-> 
-> The scmi cpufreq device is created based on entry
-> { SCMI_PROTOCOL_PERF, "cpufreq" },
-> 
-> So the scmi-cpufreq driver could only probe the upper single device.
-> 
-> How could the driver work with all SCMI devices with performance domains?
-> 
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-IIUC, this is on a system with multiple SCMI servers/providers some of
-which don't deal with CPU performance domains at all.
+> 
+> * Sohil Mehta <sohil.mehta@intel.com> wrote:
+> 
+> > On 4/11/2025 11:23 AM, Chang S. Bae wrote:
+> > 
+> > > I've attached the patch revision.
+> > > 
+> > 
+> > LGTM,
+> > 
+> > Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+> 
+> Chang, mind sending a series of the latest version of all the pending 
+> APX patches you have at the moment (and any other pending FPU patches 
+> you may have), with Reviewed-by tags rolled in, etc., on top of:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/fpu
 
--- 
-Regards,
-Sudeep
+Note that this is now all in tip:x86/fpu, alongside with a rebased 
+version of Chang S. Bae's preparatory patches for Intel APX:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/fpu
+
+I think we could now start merging the rest of the APX patches, for 
+v6.16 upstreaming.
+
+Thanks,
+
+	Ingo
