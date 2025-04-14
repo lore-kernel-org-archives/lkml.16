@@ -1,234 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.bemta44.messagelabs.com (mail1.bemta44.messagelabs.com [67.219.246.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1C61ACED9;
-	Mon, 14 Apr 2025 21:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744665271; cv=none; b=B8D+BqsSCJ2uhSrCxluJhwoKKFVSa63vkDQWejrtB1W7NFksDWvoI1FvJgYTwk89plKJhL+cGdwf2A2sU5dsmJ2fMK6OL8cKkN3650GttDEmJtYqkvKaJDrz9BKKBx8XMnZLFzHMGMwE5f+IKJj47N2tT8N10VkNwdoPM/4S1Cs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744665271; c=relaxed/simple;
-	bh=TK7O27dB9YbS2OPIUfKb5HH7MQuzdTL+l3kxDxcm/P0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lDhewcP4OMeMAwUqcgKlEJyZZg83EDRhyqRi50qDt/l1Rx/xsjH2sSjQpBWZYOUXKf/ioNgaU+cKFYirLG0N5JUU/gl+PsPo6N1EYbaoqY9NIdKeKagLFn4cmKvXiVRxDbp0A8W8t226+7FDWsR8Bq02VVsdf8c/YdkK+iHBmg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNBtHWfz; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F781EDA1E
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.219.246.114
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744665293; cv=fail; b=hDOuZEGO9w4bfYP3smelBXkxui921BsfijwV6u/SpR/NzEb+CZDWv1Jl+mXFcZTGEd61znEUIsqm/UZET4eyqpSWl+rWndEgqfnfpnrsqA/f5wOEtmNlImzIwfwv/A0CcV6qtBDP5jNDmFCaNZav/JK+nZB+GGcuuwFyRu8CTfs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744665293; c=relaxed/simple;
+	bh=2UL9ZMPDseiWAO1pUixCq0ZUunB17fAvLxH+Y9GOBzo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AEO4Ci2aQvfTcdE5sbWREGqxJpUCp8ZpgIGgqlKs2bQ75JnfY6eaGf8OYK3rIwx79ETKv2MkXuwzr3u9fN546xhdD9FDaS7uxP8hZFuAJKC7E3L1OFkQes5V6mfYjjqcfilsJFWr3N6KZojgtUoEHnS929qrcFyUxyD22r3021U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=semtech.com; spf=pass smtp.mailfrom=semtech.com; dkim=pass (2048-bit key) header.d=semtech.com header.i=@semtech.com header.b=O3Sf822v; dkim=fail (1024-bit key) header.d=SemtechCorp.onmicrosoft.com header.i=@SemtechCorp.onmicrosoft.com header.b=uqqfDXl1 reason="signature verification failed"; arc=fail smtp.client-ip=67.219.246.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=semtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=semtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNBtHWfz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3807C4CEE2;
-	Mon, 14 Apr 2025 21:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744665271;
-	bh=TK7O27dB9YbS2OPIUfKb5HH7MQuzdTL+l3kxDxcm/P0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RNBtHWfzRhjoVswQGgodCgFxMyecfv/gCPIgrkSV4tjpIjF/Zb6DKw/XyQFRQy50B
-	 ewf/MPP6LXBiMhscUUR2fHGKwysq4/BXQoDzThE3/BQxnbezdfGiHzTlGbZgTW9elk
-	 9LWmxF71+tsJJvZ4UohLXqvC4jF/GiXVX5uQU37tL29FpU3p4wXWkewQ1fTbeSUwKC
-	 JfHF+T9DFIHM9s5ZfGZ9ZBu50USG3oyYKE02OUKo9gObIQeB9gVA4vVs0Avsx6bc/L
-	 iU+Z5hJcSzr84Oy3nVc6nrVbDXP+VoxbqqvYSvF7mrBXZ94ihALjGUL/RvQO+Rj+P+
-	 6CQSnHiU9S9Dw==
-Message-ID: <035586a635168597a25a8df595ad7c1a8249bdda.camel@kernel.org>
-Subject: Re: [PATCH] tracing: Add common_comm to histograms
-From: Tom Zanussi <zanussi@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
-	 <mathieu.desnoyers@efficios.com>
-Date: Mon, 14 Apr 2025 16:14:29 -0500
-In-Reply-To: <20250407154912.3c6c6246@gandalf.local.home>
-References: <20250407154912.3c6c6246@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=semtech.com header.i=@semtech.com header.b="O3Sf822v";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=SemtechCorp.onmicrosoft.com header.i=@SemtechCorp.onmicrosoft.com header.b="uqqfDXl1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=semtech.com; s=k1;
+	t=1744665290; i=@semtech.com;
+	bh=86jL04AOldxD/Zn1zzJPpJsPW5VOv8IRKYcXrg7oSTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=O3Sf822v9nLmAmiayOQtg3Sy9oHfdQyt3iXv4CyUYz+VQaBxugDFtd1grs4mixUs7
+	 yYoKpAipRs5UKC3MI0dtLCVpgSwacaWQI5/hI9jxvthOiyVPB6GOwoQl9cA+WT62UI
+	 keY1qehoR7z0Q7GBhqPuqPR4BQmzT1xV+3gADLzPyAE4/nLY214cble36P4CnOrX0+
+	 wqS2pjbI9u0b4sa/tZyo4FYJtYJycQ7qjVNYO02YOimzgKTfE9IeF0bkdOH8iqU05E
+	 rS3FMWa+QBC3/5+lp5Iw8vqD6cldfo/7RQPmW6T7TvZPfKRDs+i57o0ZaniTYCtCbP
+	 auHjDhax/FTvA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRWlGSWpSXmKPExsWSoW+xUvdk1d9
+  0g01bpS0u75rD5sDo8XmTXABjFGtmXlJ+RQJrxoZr7WwFj4Qr9t/ZytrA+Fygi5GLg1FgGbPE
+  1KkH2SGcxawSW29NZYJwpjFJPG46C+awCGxnlljVfgusTEhgHpPE1dvHWSCcFUwSqzq3gDkSA
+  kcZJS59ngiVOcsocav5P1TPLUaJnU1NrF2MnEDOZEaJWXM0QGw2AUWJ1i+nwbaICNxnlNh1dA
+  8zSIJZQEvi5+ObjCC2sICzxJJfW9hAbBYBVYlt0z6xgNi8AuYS0z7dB6uREJCXWLxjOTNEXFD
+  i5MwnLBBz5CWat85mhlgsK7FiQi8bRH2wxNY595kgbEmJazcvsEPYshJHz85hgbAdJbZtPs0I
+  MUdC4uCLF8wQcV+Jt3e2QdXISZzqPccEc8POjbeh4iESv7p2QMPlDr/Esckr2SCcZ4wSP3a8h
+  bpaRqL98gLWCYwas5AcPgvJ4bOQLF/AyLyK0aI4tagstUjX0FwvqSgzPaMkNzEzRy+xSjdRr7
+  RYNzk1r6QoMcdQLz25QC+1uFivuDI3OSdFLy+1ZBMjMKVwfai/vYNx8ZRm/UOMkhxMSqK8G8P
+  /pgvxJeWnVGYkFmfEF5XmpBYfYpTh4FCS4OWqAMoJFqWmp1akZeYA0xtMWoKDR0mEt0cKKM1b
+  XJCYW5yZDpE6xagoJc6bUAmUEABJZJTmwbXBUuolRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMS
+  sK8qSBTeDLzSuCmvwJazAS0WJ3xF8jikkSElFQD04L3n7PjZ75X/h0o4jXTxeTvFnub6BeP55
+  pWsqXuuH04bl8N1wRn396mj54ft3Y/knDkVSwumbr10ILqsy7cYfXvzb3KZbepLNw3/8y+Uzd
+  W7+FsLNmzf84pK+PDt6fd6etJYZjizvUwfsHq5UpxDRnpvzvUgyvFbBV+vYk3X7Ij9+HFdfGO
+  y1PVLVN/6p2e89Vriitb/JvGCU3Mbydt31A39Zq2hEBZ6MrFDEs+8Ydum/Qt0/r3nCl3FKx+a
+  N05JLl58UzNifaaDlGijxdHxFWc3XHK4I5BwZ4v3jVrf+1Id5rgeGdfT5e7F0twg5C2Fa+pze
+  GEld90ih0mb/RauqlPRWLju3VMrU+UT9bWnFZiKc5INNRiLipOBABRv6umJAQAAA==
+X-Env-Sender: zxue@semtech.com
+X-Msg-Ref: server-7.tower-904.messagelabs.com!1744665288!2268521!1
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.117.2; banners=semtech.com,-,-
+X-VirusChecked: Checked
+Received: (qmail 24382 invoked from network); 14 Apr 2025 21:14:49 -0000
+Received: from mail-co1nam11lp2169.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) (104.47.56.169)
+  by server-7.tower-904.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Apr 2025 21:14:49 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ibN9MfJo/BRYrnfblVJ67/FUF6yvYt19+uSAmPhr3mo2LF/qo1dxhkml99wrHH9hpEWsrvFI+IYfSmhH4wacYHQYUutStBmCFznEWk127h3NDuKjitA+uhSVwQESodvBGya0plt2VH1nCwGZa5KHHT+bAX7fxmazsLzHJTlOqQQgDsQcfditN6FPtQ09Lna9xbtXlCHhBES1UeoN3E9CmltLnENa46M+sih0uz4JCiYDqgZdsDRyuh1ducFwm6ZcKURCqhNqhoWiJISMied7qlMCn2rYEpqo8p/7d5DJK1CjAsJowvhyl92FaEayQj/M//AptfK88eGwIJ5pbTC8GQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OVrCQjX8VXedmdHPcT6AWykbfe2X8BBXapAzD2vXfjk=;
+ b=vVLmOhd0MCJL1XXcpKbQ2Rnl5CtJ/MptbplHimSZho+exzAw9WodK/SHJWfHOpA9kEFMV/8teVCewS87llOZ5RiQuKl9Z9f2ArIUBEOnPKF6rYMNXd4Iwm4kqL/jZp+LLDwSQwWTEisGS/4YwnwVnEzz8qRtRpHsDnOMA3MzP3RuZfZBHJywI4MjwRpSpGJYzTrnjztUDGj4ZZdUlXbo64Ar6O2wEBu14uCKtMnnsIkCRLVYHtpPW3npxE2UmTUhA1OPQJX0jv2vfFItWtBrffZ1ncEw0ZsgH5iDVL7m6ZsqbyJspuTClxvaDxwyaoi1KjjWG3BaX/TDXfBf3IeLmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 38.104.251.66) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=semtech.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none
+ header.from=semtech.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SemtechCorp.onmicrosoft.com; s=selector1-SemtechCorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OVrCQjX8VXedmdHPcT6AWykbfe2X8BBXapAzD2vXfjk=;
+ b=uqqfDXl1/a+9NndEjK16jVKnLDqd2iB3k9p0OPcwP8oO1k9U+BFBl4aSlXjP5/cTmJCBiTxibw8R0htIzMgsC+b3QCgvQ1t2o0H0PQtt/v3LJZlyea/mWa51/HPfzSMs9n6p0Xo/o0S60SQBY11gRoYwdPt3rlYVGXWN4uT2Q08=
+Received: from DM6PR18CA0028.namprd18.prod.outlook.com (2603:10b6:5:15b::41)
+ by IA2PR20MB7187.namprd20.prod.outlook.com (2603:10b6:208:4b4::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
+ 2025 21:14:46 +0000
+Received: from DS2PEPF00003447.namprd04.prod.outlook.com
+ (2603:10b6:5:15b:cafe::c4) by DM6PR18CA0028.outlook.office365.com
+ (2603:10b6:5:15b::41) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Mon,
+ 14 Apr 2025 21:14:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 38.104.251.66)
+ smtp.mailfrom=semtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=semtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of semtech.com designates
+ 38.104.251.66 as permitted sender) receiver=protection.outlook.com;
+ client-ip=38.104.251.66; helo=CA07RELAY1.semtech.com; pr=C
+Received: from CA07RELAY1.semtech.com (38.104.251.66) by
+ DS2PEPF00003447.mail.protection.outlook.com (10.167.17.74) with Microsoft
+ SMTP Server id 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025
+ 21:14:45 +0000
+Received: from ca08gitmail.local ([10.23.50.249]) by CA07RELAY1.semtech.com with Microsoft SMTPSVC(10.0.20348.1);
+	 Mon, 14 Apr 2025 17:14:45 -0400
+From: Adam Xue <zxue@semtech.com>
+To: johan@kernel.org,
+	dnlplm@gmail.com,
+	fabio.porcedda@gmail.com,
+	chester.a.unal@arinc9.com,
+	larsm17@gmail.com,
+	vanillanwang@163.com,
+	mank.wang@netprisma.com,
+	michal.hrusecky@turris.com,
+	linux-kernel@vger.kernel.org
+Cc: zxue@semtech.com,
+	imocanu@semtech.com
+Subject: [PATCH v2] USB: serial: option: Add Sierra Wireless EM9291
+Date: Mon, 14 Apr 2025 14:14:37 -0700
+Message-ID: <20250414211437.1905816-1-zxue@semtech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 14 Apr 2025 21:14:45.0573 (UTC) FILETIME=[3F3ABF50:01DBAD82]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003447:EE_|IA2PR20MB7187:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 8e81afc9-73e2-4ec0-91c6-08dd7b9961df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OncEpnT4poNRNqq1bBV3LTj1vWPrmogJAlOSjN1aD9YHn6hQHt2pOaJwe50H?=
+ =?us-ascii?Q?P0i/ExAWQGKHbe8Abmp4qM7YcIMH0iNgsGrJ0W3i3lo38YCqHysalvU8ls3H?=
+ =?us-ascii?Q?2+orKZOqWlDXuJbpE15ogtw0OCOIIm61E/BXiFLflRTIciSnbFCieihe8kyh?=
+ =?us-ascii?Q?TfIL6j3DLmprbOiKUp4Q65oSrBuHcWiwcvZSXlhUWARHpZq5XyHK1stVqVEa?=
+ =?us-ascii?Q?r97pWzIJ/DK9TW9MOkeCFT1AKvJigKOvhMWi4C03b06S6r6JQvyTIn6Cnk30?=
+ =?us-ascii?Q?ElLSVuayIov0fqYOKh3Z7isWGUoLNLycBZ4D5abBUQ7Cy+sgNsTLoG6FDBHg?=
+ =?us-ascii?Q?jgn1gswY3Du9Q7jPpdHcrY6AmVznoAirkSqwu8bvhlSEL+vHAUrrbl7200/T?=
+ =?us-ascii?Q?CqmfxW04JZP3YqcmTZBaxHASuZSCJOOwK/uMjTAUFoS5kGMDYB5YuGHVZzth?=
+ =?us-ascii?Q?xVKM4byiZgGI6wO9pSqMPZQYuwkIunWtjmq6oPUIQC5/K9s8s5wrqb9bwz2W?=
+ =?us-ascii?Q?IAoawH8DDkjmkkSvlhtzuIEqPnwWCVifexA3HZnM8OJ6Gm3ydb5bJyGJPwnk?=
+ =?us-ascii?Q?70It3UBVVSqg+ClrB2LUFf+lKs6BqmF6iWOcrXA+NbLBIozZNK11mLCDBGDf?=
+ =?us-ascii?Q?Y0cfFH6X+LC+buwZ6dtVW7uGv8L7eXZJAnVABD7mTuPUEDDFmKLEdABVxXOI?=
+ =?us-ascii?Q?437hwbANiVZnBUAwIUanjnuwu9OYdPCX87Yf6sz47gv2YQJKAP2idOqeMEWU?=
+ =?us-ascii?Q?DSgY9NRq5xyMJKqQEAa4f9qk2ZV0upbtebh698pF/yyyd+gjdSj8Wr76n5Jy?=
+ =?us-ascii?Q?jK9kjNZ7f+hj6LPowOcPx/JPN70R8LkAmtijs6E2QbEQd5HLLosukGaPFcIr?=
+ =?us-ascii?Q?fSV4NCEvYbHU2lmuZkCUOcBphIPYZxBIzBRdx/dSQOBspuGQkS2Q4kRzo1zi?=
+ =?us-ascii?Q?OPjw0bm+ce8cf3iLhJRtmSVpyYLcS55Ear/MfvtcB/+SGAPqsORsqW3Xa56F?=
+ =?us-ascii?Q?cYkynr57bfw3g/LzenmCqcArZxLxs20AE3Brq5FzR7TD/OnWU1bgt1+uCiY/?=
+ =?us-ascii?Q?5SBJmPQPWBgtTDrNeYpUmMvj1IO4AmFID2p07bybZP1fIRyqW7fG24FYq8JQ?=
+ =?us-ascii?Q?RGoFw4gNU79yHeLAUHVuqRiQh8Mu47UJZvZiEkQ1jJdnL5vVLW8ekLYSInPY?=
+ =?us-ascii?Q?PXBuegbH0Opt25zqHn4f8Bh/vJmNuM1317AQb7al3NpC/TQTchAb1uiFZQvJ?=
+ =?us-ascii?Q?ftYfM78A+pfqS1eg0CvaZtKq5K+U1zqrngK5nMB0wQYeV6hhnY7Gt3qErFaP?=
+ =?us-ascii?Q?wHqhpekAvTFq43PP3/vU51zrk+RADrslVY8LzS/7DGyko92rBL28dukEO1kF?=
+ =?us-ascii?Q?3ReZoUWhztJYMg3snOI2XUFdVie1fGX/zzwrXjwOt6LcIUvNfogQPnC3cXG0?=
+ =?us-ascii?Q?J9d/o5mXZ/U+RdrWdwujOdd58L5Kcqw4+yUlqMfPpDFroBuA3O10IEYUs12n?=
+ =?us-ascii?Q?wbjZthRM1dBuQENAqzfJri0WqwyTulLPpFKz?=
+X-Forefront-Antispam-Report:
+	CIP:38.104.251.66;CTRY:CA;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CA07RELAY1.semtech.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: semtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 21:14:45.7951
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e81afc9-73e2-4ec0-91c6-08dd7b9961df
+X-MS-Exchange-CrossTenant-Id: b105310d-dc1a-4d6e-bf0d-b11c10c47b0f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=b105310d-dc1a-4d6e-bf0d-b11c10c47b0f;Ip=[38.104.251.66];Helo=[CA07RELAY1.semtech.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DS2PEPF00003447.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA2PR20MB7187
 
-Hi Steve,
+Add Sierra Wireless EM9291.
 
-On Mon, 2025-04-07 at 15:49 -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> If one wants to trace the name of the task that wakes up a process and
-> pass that to the synthetic events, there's nothing currently that lets th=
-e
-> synthetic events do that. Add a "common_comm" to the histogram logic that
-> allows histograms save the current->comm as a variable that can be passed
-> through and added to a synthetic event:
->=20
-> =C2=A0# cd /sys/kernel/tracing
-> =C2=A0# echo 's:wake_lat char[] waker; char[] wakee; u64 delta;' >> dynam=
-ic_events
-> =C2=A0# echo 'hist:keys=3Dpid:comm=3Dcommon_comm:ts=3Dcommon_timestamp.us=
-ecs if !(common_flags & 0x18)' > events/sched/sched_waking/trigger
-> =C2=A0# echo 'hist:keys=3Dnext_pid:wake_comm=3D$comm:delta=3Dcommon_times=
-tamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,$wake_comm,next_c=
-omm,$delta)' > events/sched/sched_switch/trigger
->=20
-> The above will create a synthetic trace event that will save both the nam=
-e
-> of the waker and the wakee but only if the wakeup did not happen in a har=
-d
-> or soft interrupt context.
->=20
-> The "common_comm" is used to save the task->comm at the time of the
-> initial event and is passed via the "comm" variable to the second event,
-> and that is saved as the "waker" field in the "wake_lat" synthetic event.
->=20
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Interface 0: MBIM control
+          1: MBIM data
+          3: AT port
+          4: Diagnostic port
 
-Very nice, looks good to me.
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1199 ProdID=90e3 Rev=00.06
+S:  Manufacturer=Sierra Wireless, Incorporated
+S:  Product=Sierra Wireless EM9291
+S:  SerialNumber=xxxxxxxxxxxxxxxx
+C:  #Ifs= 4 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#= 0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+E:  Ad=81(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+E:  Ad=0f(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=8e(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=40 Driver=(none)
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+I:  If#= 4 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=30 Driver=(none)
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-
-Thanks,
-
-Tom
-
-> ---
-> =C2=A0kernel/trace/trace_events_hist.c | 51 ++++++++++++++++++++++++++---=
+Signed-off-by: Adam Xue <zxue@semtech.com>
 ---
-> =C2=A01 file changed, 42 insertions(+), 9 deletions(-)
->=20
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index e85bc59c0421..58c9535f61df 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -114,6 +114,7 @@ enum hist_field_fn {
-> =C2=A0	HIST_FIELD_FN_BUCKET,
-> =C2=A0	HIST_FIELD_FN_TIMESTAMP,
-> =C2=A0	HIST_FIELD_FN_CPU,
-> +	HIST_FIELD_FN_COMM,
-> =C2=A0	HIST_FIELD_FN_STRING,
-> =C2=A0	HIST_FIELD_FN_DYNSTRING,
-> =C2=A0	HIST_FIELD_FN_RELDYNSTRING,
-> @@ -506,6 +507,7 @@ enum hist_field_flags {
-> =C2=A0	HIST_FIELD_FL_CONST		=3D 1 << 18,
-> =C2=A0	HIST_FIELD_FL_PERCENT		=3D 1 << 19,
-> =C2=A0	HIST_FIELD_FL_GRAPH		=3D 1 << 20,
-> +	HIST_FIELD_FL_COMM		=3D 1 << 21,
-> =C2=A0};
-> =C2=A0
-> =C2=A0struct var_defs {
-> @@ -885,6 +887,15 @@ static u64 hist_field_cpu(struct hist_field *hist_fi=
-eld,
-> =C2=A0	return cpu;
-> =C2=A0}
-> =C2=A0
-> +static u64 hist_field_comm(struct hist_field *hist_field,
-> +			=C2=A0 struct tracing_map_elt *elt,
-> +			=C2=A0 struct trace_buffer *buffer,
-> +			=C2=A0 struct ring_buffer_event *rbe,
-> +			=C2=A0 void *event)
-> +{
-> +	return (u64)(unsigned long)current->comm;
-> +}
-> +
-> =C2=A0/**
-> =C2=A0 * check_field_for_var_ref - Check if a VAR_REF field references a =
-variable
-> =C2=A0 * @hist_field: The VAR_REF field to check
-> @@ -1338,6 +1349,8 @@ static const char *hist_field_name(struct hist_fiel=
-d *field,
-> =C2=A0		field_name =3D hist_field_name(field->operands[0], ++level);
-> =C2=A0	else if (field->flags & HIST_FIELD_FL_CPU)
-> =C2=A0		field_name =3D "common_cpu";
-> +	else if (field->flags & HIST_FIELD_FL_COMM)
-> +		field_name =3D "common_comm";
-> =C2=A0	else if (field->flags & HIST_FIELD_FL_EXPR ||
-> =C2=A0		 field->flags & HIST_FIELD_FL_VAR_REF) {
-> =C2=A0		if (field->system) {
-> @@ -2015,6 +2028,13 @@ static struct hist_field *create_hist_field(struct=
- hist_trigger_data *hist_data,
-> =C2=A0		goto out;
-> =C2=A0	}
-> =C2=A0
-> +	if (flags & HIST_FIELD_FL_COMM) {
-> +		hist_field->fn_num =3D HIST_FIELD_FN_COMM;
-> +		hist_field->size =3D MAX_FILTER_STR_VAL;
-> +		hist_field->type =3D "char[]";
-> +		goto out;
-> +	}
-> +
-> =C2=A0	if (WARN_ON_ONCE(!field))
-> =C2=A0		goto out;
-> =C2=A0
-> @@ -2359,9 +2379,11 @@ parse_field(struct hist_trigger_data *hist_data, s=
-truct trace_event_file *file,
-> =C2=A0			hist_data->attrs->ts_in_usecs =3D true;
-> =C2=A0	} else if (strcmp(field_name, "common_stacktrace") =3D=3D 0) {
-> =C2=A0		*flags |=3D HIST_FIELD_FL_STACKTRACE;
-> -	} else if (strcmp(field_name, "common_cpu") =3D=3D 0)
-> +	} else if (strcmp(field_name, "common_cpu") =3D=3D 0) {
-> =C2=A0		*flags |=3D HIST_FIELD_FL_CPU;
-> -	else if (strcmp(field_name, "hitcount") =3D=3D 0)
-> +	} else if (strcmp(field_name, "common_comm") =3D=3D 0) {
-> +		*flags |=3D HIST_FIELD_FL_COMM | HIST_FIELD_FL_STRING;
-> +	} else if (strcmp(field_name, "hitcount") =3D=3D 0)
-> =C2=A0		*flags |=3D HIST_FIELD_FL_HITCOUNT;
-> =C2=A0	else {
-> =C2=A0		field =3D trace_find_event_field(file->event_call, field_name);
-> @@ -2377,6 +2399,8 @@ parse_field(struct hist_trigger_data *hist_data, st=
-ruct trace_event_file *file,
-> =C2=A0				*flags |=3D HIST_FIELD_FL_CPU;
-> =C2=A0			} else if (field && field->filter_type =3D=3D FILTER_STACKTRACE)=
- {
-> =C2=A0				*flags |=3D HIST_FIELD_FL_STACKTRACE;
-> +			} else if (field && field->filter_type =3D=3D FILTER_COMM) {
-> +				*flags |=3D HIST_FIELD_FL_COMM | HIST_FIELD_FL_STRING;
-> =C2=A0			} else {
-> =C2=A0				hist_err(tr, HIST_ERR_FIELD_NOT_FOUND,
-> =C2=A0					 errpos(field_name));
-> @@ -4327,6 +4351,8 @@ static u64 hist_fn_call(struct hist_field *hist_fie=
-ld,
-> =C2=A0		return hist_field_timestamp(hist_field, elt, buffer, rbe, event);
-> =C2=A0	case HIST_FIELD_FN_CPU:
-> =C2=A0		return hist_field_cpu(hist_field, elt, buffer, rbe, event);
-> +	case HIST_FIELD_FN_COMM:
-> +		return hist_field_comm(hist_field, elt, buffer, rbe, event);
-> =C2=A0	case HIST_FIELD_FN_STRING:
-> =C2=A0		return hist_field_string(hist_field, elt, buffer, rbe, event);
-> =C2=A0	case HIST_FIELD_FN_DYNSTRING:
-> @@ -5212,14 +5238,19 @@ static inline void add_to_key(char *compound_key,=
- void *key,
-> =C2=A0	size_t size =3D key_field->size;
-> =C2=A0
-> =C2=A0	if (key_field->flags & HIST_FIELD_FL_STRING) {
-> -		struct ftrace_event_field *field;
-> =C2=A0
-> -		field =3D key_field->field;
-> -		if (field->filter_type =3D=3D FILTER_DYN_STRING ||
-> -		=C2=A0=C2=A0=C2=A0 field->filter_type =3D=3D FILTER_RDYN_STRING)
-> -			size =3D *(u32 *)(rec + field->offset) >> 16;
-> -		else if (field->filter_type =3D=3D FILTER_STATIC_STRING)
-> -			size =3D field->size;
-> +		if (key_field->flags & HIST_FIELD_FL_COMM) {
-> +			size =3D strlen((char *)key);
-> +		} else {
-> +			struct ftrace_event_field *field;
-> +
-> +			field =3D key_field->field;
-> +			if (field->filter_type =3D=3D FILTER_DYN_STRING ||
-> +			=C2=A0=C2=A0=C2=A0 field->filter_type =3D=3D FILTER_RDYN_STRING)
-> +				size =3D *(u32 *)(rec + field->offset) >> 16;
-> +			else if (field->filter_type =3D=3D FILTER_STATIC_STRING)
-> +				size =3D field->size;
-> +		}
-> =C2=A0
-> =C2=A0		/* ensure NULL-termination */
-> =C2=A0		if (size > key_field->size - 1)
-> @@ -6097,6 +6128,8 @@ static void hist_field_print(struct seq_file *m, st=
-ruct hist_field *hist_field)
-> =C2=A0
-> =C2=A0	if (hist_field->flags & HIST_FIELD_FL_CPU)
-> =C2=A0		seq_puts(m, "common_cpu");
-> +	if (hist_field->flags & HIST_FIELD_FL_COMM)
-> +		seq_puts(m, "common_comm");
-> =C2=A0	else if (hist_field->flags & HIST_FIELD_FL_CONST)
-> =C2=A0		seq_printf(m, "%llu", hist_field->constant);
-> =C2=A0	else if (field_name) {
+v2: remove unused device interface entry
 
+ drivers/usb/serial/option.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 5cd26dac2069..27879cc57536 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -611,6 +611,7 @@ static void option_instat_callback(struct urb *urb);
+ /* Sierra Wireless products */
+ #define SIERRA_VENDOR_ID			0x1199
+ #define SIERRA_PRODUCT_EM9191			0x90d3
++#define SIERRA_PRODUCT_EM9291			0x90e3
+ 
+ /* UNISOC (Spreadtrum) products */
+ #define UNISOC_VENDOR_ID			0x1782
+@@ -2432,6 +2433,8 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0xff, 0x30) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0xff, 0x40) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0, 0) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9291, 0xff, 0xff, 0x30) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9291, 0xff, 0xff, 0x40) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, TOZED_PRODUCT_LT70C, 0xff, 0, 0) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, LUAT_PRODUCT_AIR720U, 0xff, 0, 0) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1bbb, 0x0530, 0xff),			/* TCL IK512 MBIM */
+-- 
+2.43.0
+
+
+To view our privacy policy, including the types of personal information we collect, process and share, and the rights and options you have in this respect, see www.semtech.com/legal.
