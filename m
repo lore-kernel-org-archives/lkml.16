@@ -1,246 +1,196 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CD428EA4C;
-	Mon, 14 Apr 2025 11:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB0025D8E0;
+	Mon, 14 Apr 2025 11:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744629563; cv=none; b=hD6dPs7qLLpXJcgYmm1pIDxEIq0zphQI3X2TWeMMdhYbOLJYQoMLt7mxqS47II537fuTS/p+75hYbBcXdfwAnHVmkVccD1Sr8Af4lQGfjiUOsFu/rxqZGCV/B6JMjMsNaU7DM2CZyoBf5Yo8l9z7WX23tn9YzpshyGdLb1ZOU9k=
+	t=1744629586; cv=none; b=nJ3K4YXaGKnfbYQasC7/4dFLdTB1ZftTgsfYr1Ced8cZDDbc6KvnuBvsz6ocNW8pQ3SFGMl97j9MUq3nCr9qYU/NgwTljTLJAFvThH2tpa8enDJHtyVhu+wLGCHRqC4Hs74/4Ufk44zvWlueRhhLb5b4vjj4rl3PFBNBJnkuDJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744629563; c=relaxed/simple;
-	bh=STzxtrjaleEEfCoMMNe4whlXBIquCUD+zNSnw5eeZog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=j+thOT5FyO7uqT7hwPctD/jFIH/ebrI9RUPiDW4KUB9l9uee2yqPra8beDLrRV3SBb0imZGlDpV5w0IBcWATKkTCuidwOg3W4C88eAPE324UvTCTwihEvW9KpTPmbZotGdl1Ddhoz9HWJVJ37sUq9vlS7Pc7hA5ShwgrpEHstGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=2r7UTh6G; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744629586; c=relaxed/simple;
+	bh=BKzGtY0m29Mf6TkuRUUflwug+d15q5+nqop+AkHVYkQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hqgjieHN15DanqzKtNM+AnlVSc2dOC97jAmUlrQJDy+GbzT/pxUciGINsSamQYm5X4mx+SJ14QJ8U+31SglGpzcjktGIswYZi0n4wALZ+PFHt0vW1Tyb/TaPvPpHq+J+PcvaI0nU32WJb4R2lHU4RTu/d+ycQQc6JbhRZomuO+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ec3pTnbu; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="2r7UTh6G"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E8DgFV030537;
-	Mon, 14 Apr 2025 13:18:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	b64+5Fyc2XBoUKGin9x9phROn71/VpDRGxeTWMDWMDQ=; b=2r7UTh6GWBYWwiT9
-	hcaoQA3S3eaZFgcfT4Lr1bqqqeIBB6cnwspB4DKMTz3xB0JnArETHV+YciqnlAnR
-	MBQrDZxmIu7tbYJ9F359QeeerglGi4NamuvmQ1AiuLfACtSYb01nNHXVcc95qZ+c
-	y7jHdqYOdWDI8SjvBwyqr/FoKdqFpO+ho3DfZglE2PSncQj7R3f2P/mFHSVZEkkS
-	XWaTiGK8cwznlxNzII67+wUV5l/ssK7ByJKYMaYp4wbZQvV7P+pDcMQqQzQCFKtr
-	0G2VBeUkdBXQf8zsbrB8y1p2Y1S7QxlYDOeXmIm5FGRniSr/3yVi5YpVLn2nj173
-	ejk8hg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45yda8ynsf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 13:18:44 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E762C40047;
-	Mon, 14 Apr 2025 13:17:46 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A3FE295BA29;
-	Mon, 14 Apr 2025 13:17:19 +0200 (CEST)
-Received: from [10.48.86.196] (10.48.86.196) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
- 2025 13:17:19 +0200
-Message-ID: <f7dcc10e-b2c6-4252-9c71-6715cebe49fd@foss.st.com>
-Date: Mon, 14 Apr 2025 13:17:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ec3pTnbu"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523f1b31cf8so1480674e0c.0;
+        Mon, 14 Apr 2025 04:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744629583; x=1745234383; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VEqhZeC/SxQPEFxYDopllibBPq2tN/nqOZR4I+9eMe4=;
+        b=ec3pTnbuSLPB7kJy/d8ZbIX9BwWvom36JE4F3maMqa1CDxCirSOeTTj1ha1R8wmKcs
+         Nsd7fIbPybU10ZUXdMtZg/ZNmWTS/N1boPvr9VTACMMIaHw1C6Fw0EYjSyeWB7NJvClW
+         /8Aqi8LuZnaSsQw4TWBEAD+246TYmAN6veYJPCxqtsTOcVWNvakyK9cfi7gArsHvDRs9
+         L1+YK48aS+3rGeIePfk6qxbR4LFoX+wHvu0ru+fYo6EzYvrLhBrSpcCaogB3QQ/HGfJQ
+         vv9yvcKf4UQDAwFyptbf1087eUUfgV5ApnBLVOm+vByl6TfkVGkyN2X/CsTyLCjPwWp1
+         9kPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744629583; x=1745234383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VEqhZeC/SxQPEFxYDopllibBPq2tN/nqOZR4I+9eMe4=;
+        b=hgymS6lMnCu1u4BSEMCQJDWqxUuVlEnWtN2SfBVK+oTHDvAthn0WaF78VAZ+wwKhOo
+         BMYsXgdI0Ae1470B0+pNDjY3OZCF99Ai2sh4ezNYUGd71VvArmG5SP8a02hNTtLHXqON
+         vgarPPMY4tyFJkCjMKVJoJur0fMWjtE5lb++88XFdxUHYe1z6c+8EiFRdJMxZoNgGZYW
+         PZ7JPMWDWU9IGYD2n806PxGhraxgpQiR5NB/rSp3+QJOpFOYmJJixOfLni66Tuhptrlb
+         Yoe84UADOVJScc2UjHMYoMEJ+v7goH8Q3222rIYkHMFGh7OLo4/FuA7CrbWZekfuiRL9
+         KkcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2JDKU+n3m5EFHTcjqO1MI5jYSPPiAA2TJPk+01jyHdHN13EMN8qcKbn+AvG6kVL8aFHzq0nPzbqnH@vger.kernel.org, AJvYcCVAic2+cW9OYt3H/I2+lxAcy/gdSOIPtQIep2f2kfuNMPHm3ViGA8yJpPRRfsut/7Nla+2HMsOGlRlfX+OhdqCpAPw=@vger.kernel.org, AJvYcCVSzTXRF/pI1ntmYNdSsPz2EOs2cmTWYpL5JBi9TSaBSNxZTdVkXWsU6Uzmz3W0g0hP5CDuhLLZwi4C3RBn@vger.kernel.org, AJvYcCVw0khGCl0N94Iq7CLJfYys7rhlLUcyHesDaP4EHVRRrgRbfw+rsEnoXafQnCD6ZWa4g1bIwsDGyjd+3lwe@vger.kernel.org, AJvYcCWbE3piOOMi2AcEb7Xytj1/FLox/T2Efn+23vpE+9sTzjZAyECfDgsn11cP0IDy3Fs8hpbCVFvXxDh2vA==@vger.kernel.org, AJvYcCWy8Hn5GLSXC3q4l5BdBWmozfYdtjg2Mm80FSsdxoBdUG9TKKyDbBL+8cfaMaAN+ue1qso21j/fdmX7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTNNNzsPmgqbj9IzsLa47CZaahd1iRCbybWYiBxLarzbiDUYw+
+	9k5PsYgRGnsER9iNu4UYtZbUy4DDniu+/ilT6dc8VU3iqxOlDps8NoW0f5DGmc19Eq85hjyByXL
+	RIHli8wZ+wCCGsNkgOUoqMCIq+P0=
+X-Gm-Gg: ASbGncs6yX+0kyQZDkILIGly0oKuDtHJ1e4L/g10KY8ZTSdTjFbDHdcGUt/qJYfb4eK
+	YBSCqzXidGnpamOecHrZTXxSCl3S6CUErGz3UUk3wi+nVAIpLMS2bA2aBiCNwLciT8sWlT3s702
+	hGfm5iMfU0NZ279PJnTSRv97ViKz3HmPSL5DlbT3W1L7LBeK1Dq6KLEA==
+X-Google-Smtp-Source: AGHT+IHBThT2zEj4KJtUm3PS9DNJ79HJu09faPsTCT7kPgy8QzXrty9/2BnAr01/9b/AIEkrW8flUc10uUA4F5iz66s=
+X-Received: by 2002:a05:6122:1d89:b0:518:a0ac:1f42 with SMTP id
+ 71dfb90a1353d-527c3464832mr5207743e0c.1.1744629582771; Mon, 14 Apr 2025
+ 04:19:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: stm32: Don't use %pK through printk
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-        Vinod
- Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <dmaengine@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de>
-Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 12:19:16 +0100
+X-Gm-Features: ATxdqUFod-By5skQwut9E6OLv-Y-Yr-c2MfufCYZft6F7eFLNq3WA8NWjWHZnLY
+Message-ID: <CA+V-a8useBh5m+MqGXQwQJhuemehm=bPidL6XydR-FOmVN9QNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] Add support for Renesas RZ/V2N SoC and EVK
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-serial@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Geert,
 
+Thank you for the review.
 
-On 4/7/25 10:26, Thomas Weißschuh wrote:
-> In the past %pK was preferable to %p as it would not leak raw pointer
-> values into the kernel log.
-> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-> the regular %p has been improved to avoid this issue.
-> Furthermore, restricted pointers ("%pK") were never meant to be used
-> through printk(). They can still unintentionally leak raw pointers or
-> acquire sleeping looks in atomic contexts.
+On Mon, Apr 7, 2025 at 8:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.co=
+m> wrote:
+>
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch series adds initial support for the Renesas RZ/V2N (R9A09G056)
+> SoC and its evaluation board (EVK). The Renesas RZ/V2N is a vision AI
+> microprocessor (MPU) designed for power-efficient AI inference and
+> real-time vision processing. It features Renesas' proprietary AI
+> accelerator (DRP-AI3), delivering up to 15 TOPS AI performance, making
+> it ideal for applications such as Driver Monitoring Systems (DMS),
+> industrial monitoring cameras, and mobile robots.
+>
+> Key features of the RZ/V2N SoC:
+>   Processing Power:
+>     - Quad Arm Cortex-A55 cores at 1.8GHz for high-performance computing
+>     - Single Arm Cortex-M33 core at 200MHz for real-time processing
+>     - 1.5MB on-chip SRAM for fast data access
+>     - LPDDR4/LPDDR4X memory interface for high-speed RAM access
+>
+>   AI and Vision Processing:
+>     - DRP-AI3 accelerator for low-power, high-efficiency AI inference
+>     - Arm Mali-C55 ISP (optional) for image signal processing
+>     - Dual MIPI CSI-2 camera interfaces for multi-camera support
+>
+>   High-Speed Interfaces:
+>     - PCIe Gen3 (2-lane) 1ch for external device expansion
+>     - USB 3.2 (Gen2) 1ch (Host-only) for high-speed data transfer
+>     - USB 2.0 (Host/Function) 1ch for legacy connectivity
+>     - Gigabit Ethernet (2 channels) for network communication
+>
+>   Industrial and Automotive Features:
+>     - 6x CAN FD channels for automotive and industrial networking
+>     - 24-channel ADC for sensor data acquisition
+>
+> LINK: https://tinyurl.com/renesas-rz-v2n-soc
+>
+> The series introduces:
+> - Device tree bindings for various subsystems (SYS, SCIF, SDHI, CPG, pinc=
+trl).
+> - RZ/V2N SoC identification support.
+> - Clock and pinctrl driver updates for RZ/V2N.
+> - Initial DTSI and device tree for the RZ/V2N SoC and EVK.
+>
+> These patches have been tested on the RZ/V2N EVK with v6.15-rc1 kernel,
+> logs can be found here:
+> https://gist.github.com/prabhakarlad/aa3da7558d007aab8a288550005565d3
+>
+> @Geert, Ive rebased the patches on top of v6.15-rc1 + renesas-dts-for-v6.=
+16
+> + renesas-clk-for-v6.16 branches. Also these patches apply on top of the =
+below
+> series [1] and [2]. I had to sort the order in Makefile for patch [3] to
+> avoid conflicts.
+> [1] https://lore.kernel.org/all/20250401090133.68146-1-prabhakar.mahadev-=
+lad.rj@bp.renesas.com/
+> [2] https://lore.kernel.org/all/20250403212919.1137670-1-thierry.bultel.y=
+h@bp.renesas.com/#t
+> [3] https://lore.kernel.org/all/20250403212919.1137670-13-thierry.bultel.=
+yh@bp.renesas.com/
+>
+> Note, dtbs_check will generate the below warnings this is due to missing
+> ICU support as part of initial series. I will be sending a follow-up patc=
+h
+> series to add ICU support which will fix these warnings.
+> arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@10410000 =
+(renesas,r9a09g056-pinctrl): 'interrupt-controller' is a required property
+>         from schema $id: http://devicetree.org/schemas/pinctrl/renesas,rz=
+g2l-pinctrl.yaml#
+> arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@10410000 =
+(renesas,r9a09g056-pinctrl): '#interrupt-cells' is a required property
+>         from schema $id: http://devicetree.org/schemas/pinctrl/renesas,rz=
+g2l-pinctrl.yaml#
+>
+> v1->v2:
+> - Added acks from Rob.
+> - Squashed the RZ/V2N EVK and SoC variant documentation into a single
+>   commit.
+> - Updated the commit messages.
+> - Added RZV2N_Px, RZV2N_PORT_PINMUX, and RZV2N_GPIO macros in
+>   SoC DTSI as we are re-using renesas,r9a09g057-pinctrl.h
+>   in pictrl driver hence to keep the consistency with the
+>   RZ/V2H(P) SoC these macros are added.
+> - Dropped `renesas,r9a09g056-pinctrl.h` header file.
+> - Followed DTS coding style guidelines
+> - Dropped defconfig changes from the series.
+> - Dropped SDHI dt-binding patch as its already applied to mmc -next tree.
+>
+> Cheers,
+> Prabhakar
+>
+> Lad Prabhakar (12):
+>   dt-bindings: soc: renesas: Document Renesas RZ/V2N SoC variants and
+>     EVK
+>   soc: renesas: Add config option for RZ/V2N (R9A09G056) SoC
+>   dt-bindings: soc: renesas: Document SYS for RZ/V2N SoC
+>   soc: renesas: sysc: Add SoC identification for RZ/V2N SoC
+>   dt-bindings: serial: renesas: Document RZ/V2N SCIF
+>   dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
+>   clk: renesas: rzv2h-cpg: Sort compatible list based on SoC part number
+>   clk: renesas: rzv2h: Add support for RZ/V2N SoC
+>   dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
+>   pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+>   arm64: dts: renesas: Add initial SoC DTSI for RZ/V2N
+>   arm64: dts: renesas: Add initial device tree for RZ/V2N EVK
+>
+Would it be OK if I send version 3 containing only patches 4/12 and 10/12?
 
-I forgot to highlight this typo:
-
-s/looks/locks
-
-> 
-> Switch to the regular pointer formatting which is safer and
-> easier to reason about.
-> There are still a few users of %pK left, but these use it through seq_file,
-> for which its usage is safe.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->   drivers/dma/stm32/stm32-dma.c  | 10 +++++-----
->   drivers/dma/stm32/stm32-dma3.c | 10 +++++-----
->   drivers/dma/stm32/stm32-mdma.c |  8 ++++----
->   3 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-> index 917f8e9223739af853e492d97cecac0e95e0aea3..ee9246c6888ffde2d416270f25890c04c72daff7 100644
-> --- a/drivers/dma/stm32/stm32-dma.c
-> +++ b/drivers/dma/stm32/stm32-dma.c
-> @@ -613,7 +613,7 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
->   	reg->dma_scr |= STM32_DMA_SCR_EN;
->   	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
->   }
->   
->   static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
-> @@ -676,7 +676,7 @@ static void stm32_dma_handle_chan_paused(struct stm32_dma_chan *chan)
->   
->   	chan->status = DMA_PAUSED;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
->   }
->   
->   static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
-> @@ -728,7 +728,7 @@ static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
->   	dma_scr |= STM32_DMA_SCR_EN;
->   	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: reconfigured after pause/resume\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: reconfigured after pause/resume\n", &chan->vchan);
->   }
->   
->   static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
-> @@ -820,7 +820,7 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
->   
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
-> -		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-> +		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
->   		stm32_dma_start_transfer(chan);
->   
->   	}
-> @@ -922,7 +922,7 @@ static int stm32_dma_resume(struct dma_chan *c)
->   
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
->   
->   	return 0;
->   }
-> diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-> index 0c6c4258b19561c94f1c68f26ade16b82660ebe6..50e7106c5cb73394c1de52ad5f571f6db63750e6 100644
-> --- a/drivers/dma/stm32/stm32-dma3.c
-> +++ b/drivers/dma/stm32/stm32-dma3.c
-> @@ -801,7 +801,7 @@ static void stm32_dma3_chan_start(struct stm32_dma3_chan *chan)
->   
->   	chan->dma_status = DMA_IN_PROGRESS;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
->   }
->   
->   static int stm32_dma3_chan_suspend(struct stm32_dma3_chan *chan, bool susp)
-> @@ -1452,7 +1452,7 @@ static int stm32_dma3_pause(struct dma_chan *c)
->   
->   	chan->dma_status = DMA_PAUSED;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
->   
->   	return 0;
->   }
-> @@ -1465,7 +1465,7 @@ static int stm32_dma3_resume(struct dma_chan *c)
->   
->   	chan->dma_status = DMA_IN_PROGRESS;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
->   
->   	return 0;
->   }
-> @@ -1490,7 +1490,7 @@ static int stm32_dma3_terminate_all(struct dma_chan *c)
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   	vchan_dma_desc_free_list(&chan->vchan, &head);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: terminated\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: terminated\n", &chan->vchan);
->   
->   	return 0;
->   }
-> @@ -1543,7 +1543,7 @@ static void stm32_dma3_issue_pending(struct dma_chan *c)
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   
->   	if (vchan_issue_pending(&chan->vchan) && !chan->swdesc) {
-> -		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-> +		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
->   		stm32_dma3_chan_start(chan);
->   	}
->   
-> diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
-> index e6d525901de7ecf822d218b87b95aba6bbf0a3ef..080c1c725216cb627675c372591b4c0c227c3cea 100644
-> --- a/drivers/dma/stm32/stm32-mdma.c
-> +++ b/drivers/dma/stm32/stm32-mdma.c
-> @@ -1187,7 +1187,7 @@ static void stm32_mdma_start_transfer(struct stm32_mdma_chan *chan)
->   
->   	chan->busy = true;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
->   }
->   
->   static void stm32_mdma_issue_pending(struct dma_chan *c)
-> @@ -1200,7 +1200,7 @@ static void stm32_mdma_issue_pending(struct dma_chan *c)
->   	if (!vchan_issue_pending(&chan->vchan))
->   		goto end;
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
->   
->   	if (!chan->desc && !chan->busy)
->   		stm32_mdma_start_transfer(chan);
-> @@ -1220,7 +1220,7 @@ static int stm32_mdma_pause(struct dma_chan *c)
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   
->   	if (!ret)
-> -		dev_dbg(chan2dev(chan), "vchan %pK: pause\n", &chan->vchan);
-> +		dev_dbg(chan2dev(chan), "vchan %p: pause\n", &chan->vchan);
->   
->   	return ret;
->   }
-> @@ -1261,7 +1261,7 @@ static int stm32_mdma_resume(struct dma_chan *c)
->   
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   
-> -	dev_dbg(chan2dev(chan), "vchan %pK: resume\n", &chan->vchan);
-> +	dev_dbg(chan2dev(chan), "vchan %p: resume\n", &chan->vchan);
->   
->   	return 0;
->   }
-> 
-> ---
-> base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
-> change-id: 20250404-restricted-pointers-dma-29cf839a1a0b
-> 
-> Best regards,
+Cheers,
+Prabhakar
