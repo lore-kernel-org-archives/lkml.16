@@ -1,110 +1,181 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AD22798E5;
-	Mon, 14 Apr 2025 15:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A74A27466A;
+	Mon, 14 Apr 2025 15:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744645405; cv=none; b=Q7oW4dMLfHLz0MxXBsiecHPDNUQvoTD7N8Cm2ur8yWIfr4vFr2ziFQi1On08LYNOAHAHORDPYBPFm8TpZ5fSnUtQRcolGl6kYq5bZrm5VLZ1+ltJEKa4yCn4cqczMj/pu861U0hyeLR7POu8gYt29zYAPjJDOx9g/3NoR8CPckA=
+	t=1744645760; cv=none; b=Jw18hfqNArJz7UoKxm6adDwFaq/Dc24n2xcY1vBmr4U7UwiP9unU/KToKsL1Ed4Qmi/O7EnbKwRK+l2U2eSa4lhaWfsBxMiHC3dcVtsYD8iUYyDWnVy6SbdCNUgkfcMNFeFWMhn8kaoc3d8uBxJFhBAXkayF69FN26xQwUgfjEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744645405; c=relaxed/simple;
-	bh=B5KZJPD2Ol/xPkllsKIrCK+2TfleyI75nZBYDMSJMCc=;
+	s=arc-20240116; t=1744645760; c=relaxed/simple;
+	bh=LW+sWehA2wdSuARkuJpL0aAVzRSrHG73IzO/zg+cjAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FoqvlV70OAYNePkBYq36KNeUSXPuHR6jzyU1A0ysRHf0jsEBrVcfQXlvA/zrzrPM3qZldH4RVA8mYwAPhX1owgLHUrBPQROMWYSvO5GGq8kaTRaFR0uFQJTYoj/Muzi2OS7+FH+pX7kliNxANmnn7Rl/Fwb7N64m9lExxWlYuaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0l+uGG6L; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=BlIlyBBT6sET7koc2FgoA3tg2YDqIPQZaleEHtYRw2NPafFbDlh63vqEWER+tqwYLEsZZTLPUwu879do+iMN4BcmiAhumsYedxmgkjLUpJ1PKd5qimNMY4YO+dGzYCIbFoGfQU1zD04D6omJaLIiM0037A8QgwcCa3kzRBoL9YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQHDRh49; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0l+uGG6L"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=XKKz1Mm1pkCh0ixIzZHIXbDXcfT7TrB4EjgzGW2m2hI=; b=0l+uGG6LH6NZXT0UtwKd8Gt3Ex
-	+omKHVWyNMTxImUtQfCMjuyK9Rj33fmTJSxVcNSYGVrmBGzUR2o4JAWFyTY7UGvWYHDBU4QEhM0BJ
-	O15qkKn6lTlCh3ZTBiAph94LBvZjXUAbtRx26y34Wmkw2bPdnw87Ngg/wE2bdvmyKTqw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4Lxm-009Dnl-0B; Mon, 14 Apr 2025 17:43:10 +0200
-Date: Mon, 14 Apr 2025 17:43:09 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Fiona Klute <fiona.klute@gmx.de>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH net] net: phy: microchip: force IRQ polling mode for
- lan88xx
-Message-ID: <24541282-0564-4fb6-8bd1-430f6b1390b0@lunn.ch>
-References: <20250414152634.2786447-1-fiona.klute@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQHDRh49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D77C4CEE2;
+	Mon, 14 Apr 2025 15:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744645759;
+	bh=LW+sWehA2wdSuARkuJpL0aAVzRSrHG73IzO/zg+cjAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vQHDRh490SnMEjPeOhE4Iu7MOzuIs/dIp0Ha/Zouf40WmLSuctYyJhbsxq0a0o+wJ
+	 +7nayZFxRAVHdI3Rx7G55dVCsguYPSojJ48ZT56icKJLtI3Zejoa2XDYvucCb73EBC
+	 LYqVRnY4shH4pedqs20qzvXRYpUZginHF8UcAtQW7F7GAOr2mvx7uv4ckY5VtUF+fk
+	 oxZggRIpA0nCVXq2bnxxHYcDjcRfockIwI7ypLRY9pjDBZ7zbeHRY365/tm1O3D37P
+	 PLi8r2pi9aUvQ9YKj2iTKA6kUYTBr/0Ika98yvY64amsJQSvG69AHS2cZH4XWD1kyX
+	 56tAKc+A3uMpA==
+Date: Mon, 14 Apr 2025 17:49:16 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
+	Hui Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] drm/tests: bridge: add a KUnit test for
+ devm_drm_bridge_alloc()
+Message-ID: <20250414-misty-hungry-woodlouse-dbbd64@houat>
+References: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
+ <20250409-drm-bridge-alloc-doc-test-v7-2-a3ca4b97597f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4jicyu5cwq5bgi2g"
 Content-Disposition: inline
-In-Reply-To: <20250414152634.2786447-1-fiona.klute@gmx.de>
+In-Reply-To: <20250409-drm-bridge-alloc-doc-test-v7-2-a3ca4b97597f@bootlin.com>
 
-On Mon, Apr 14, 2025 at 05:26:33PM +0200, Fiona Klute wrote:
-> With lan88xx based devices the lan78xx driver can get stuck in an
-> interrupt loop while bringing the device up, flooding the kernel log
-> with messages like the following:
-> 
-> lan78xx 2-3:1.0 enp1s0u3: kevent 4 may have been dropped
-> 
-> Removing interrupt support from the lan88xx PHY driver forces the
-> driver to use polling instead, which avoids the problem.
-> 
-> The issue has been observed with Raspberry Pi devices at least since
-> 4.14 (see [1], bug report for their downstream kernel), as well as
-> with Nvidia devices [2] in 2020, where disabling polling was the
-> vendor-suggested workaround (together with the claim that phylib
-> changes in 4.9 made the interrupt handling in lan78xx incompatible).
-> 
-> Iperf reports well over 900Mbits/sec per direction with client in
-> --dualtest mode, so there does not seem to be a significant impact on
-> throughput (lan88xx device connected via switch to the peer).
->
-> [1] https://github.com/raspberrypi/linux/issues/2447
-> [2] https://forums.developer.nvidia.com/t/jetson-xavier-and-lan7800-problem/142134/11
-> 
-> Link: https://lore.kernel.org/0901d90d-3f20-4a10-b680-9c978e04ddda@lunn.ch
-> Signed-off-by: Fiona Klute <fiona.klute@gmx.de>
-> Cc: kernel-list@raspberrypi.com
-> Cc: stable@vger.kernel.org
 
-Thanks for submitting this. Two nit picks:
+--4jicyu5cwq5bgi2g
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 2/2] drm/tests: bridge: add a KUnit test for
+ devm_drm_bridge_alloc()
+MIME-Version: 1.0
 
-It needed a Fixes: tag. Probably:
+Hi,
 
-Fixes: 792aec47d59d ("add microchip LAN88xx phy driver")
+On Wed, Apr 09, 2025 at 04:50:35PM +0200, Luca Ceresoli wrote:
+> Add a basic KUnit test for the newly introduced drm_bridge_alloc().
+>=20
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>=20
+> ---
+>=20
+> Changed in v7:
+>  - rebase on current drm-misc-next, which now has a drm_bridge_test.c file
+>  - cleanup commit message
+>=20
+> Changed in v6:
+>  - update to new devm_drm_bridge_alloc() API
+>  - remove drm_test_drm_bridge_put test, not straightforward to write with
+>    the new API and the current notification mechanism
+>  - do not allocate a drm_device: a bridge is allocated without one
+>  - rename some identifiers for easier code reading
+>=20
+> This patch was added in v5.
+> ---
+>  drivers/gpu/drm/tests/drm_bridge_test.c | 60 +++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 60 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/te=
+sts/drm_bridge_test.c
+> index ff88ec2e911c9cc9a718483f09d4c764f45f991a..87fb64744b67f0780457a546a=
+ba77ba945a0ce67 100644
+> --- a/drivers/gpu/drm/tests/drm_bridge_test.c
+> +++ b/drivers/gpu/drm/tests/drm_bridge_test.c
+> @@ -8,6 +8,7 @@
+>  #include <drm/drm_bridge_helper.h>
+>  #include <drm/drm_kunit_helpers.h>
+> =20
+> +#include <kunit/device.h>
+>  #include <kunit/test.h>
+> =20
+>  struct drm_bridge_init_priv {
+> @@ -407,11 +408,70 @@ static struct kunit_suite drm_bridge_helper_reset_c=
+rtc_test_suite =3D {
+>  	.test_cases =3D drm_bridge_helper_reset_crtc_tests,
+>  };
+> =20
+> +struct drm_bridge_alloc_test_ctx {
+> +	struct device *dev;
+> +};
 
->  static int lan88xx_suspend(struct phy_device *phydev)
->  {
->  	struct lan88xx_priv *priv = phydev->priv;
-> @@ -528,9 +487,6 @@ static struct phy_driver microchip_phy_driver[] = {
->  	.config_aneg	= lan88xx_config_aneg,
->  	.link_change_notify = lan88xx_link_change_notify,
->  
-> -	.config_intr	= lan88xx_phy_config_intr,
-> -	.handle_interrupt = lan88xx_handle_interrupt,
-> -
+You don't need a struct there then, you can just pass the device pointer.
 
-Maybe add a comment somewhere around here that interrupts are broken,
-so not supported. Developers frequently don't look at commit messages,
-but are more likely to notice a comment.
+> +/*
+> + * Mimick the typical struct defined by a bridge driver, which embeds a
+> + * bridge plus other fields.
+> + */
+> +struct dummy_drm_bridge {
+> +	int dummy; // ensure we test non-zero @bridge offset
+> +	struct drm_bridge bridge;
+> +};
 
-Thanks
-    Andrew
+drm_bridge_init_priv gives you that already.
 
----
-pw-bot: cr
+> +static const struct drm_bridge_funcs drm_bridge_dummy_funcs =3D {
+> +};
+> +
+> +static int drm_test_bridge_alloc_init(struct kunit *test)
+> +{
+> +	struct drm_bridge_alloc_test_ctx *ctx;
+> +
+> +	ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+> +
+> +	ctx->dev =3D kunit_device_register(test, "drm-bridge-dev");
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
+> +
+> +	test->priv =3D ctx;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Test that the allocation and initialization of a bridge works as
+> + * expected and doesn't report any error.
+> + */
+> +static void drm_test_drm_bridge_alloc(struct kunit *test)
+> +{
+> +	struct drm_bridge_alloc_test_ctx *ctx =3D test->priv;
+> +	struct dummy_drm_bridge *dummy;
+> +
+> +	dummy =3D devm_drm_bridge_alloc(ctx->dev, struct dummy_drm_bridge, brid=
+ge,
+> +				      &drm_bridge_dummy_funcs);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dummy);
 
+Why did you need the dummy value in dummy_drm_bridge if you're not using
+it?
+
+We'd need a couple more tests, in particular some to make sure the
+bridge pointer is properly cleaned up when the device goes away, but not
+when we have called drm_bridge_get pointer on it, etc.
+
+Maxime
+
+--4jicyu5cwq5bgi2g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/0ufAAKCRDj7w1vZxhR
+xciJAPwN/nr+7o9AH21EBA74RUDiqX8sNRT5jbGun9PPilLS9wEAxZulZJey52X/
+5KR4SC2mAdeAyULYDu85vBJzNMc+aA8=
+=Bh9n
+-----END PGP SIGNATURE-----
+
+--4jicyu5cwq5bgi2g--
