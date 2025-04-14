@@ -1,39 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274EF188733;
-	Mon, 14 Apr 2025 22:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A94188733;
+	Mon, 14 Apr 2025 22:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744668961; cv=none; b=hGFAqiLwZcdl3wiP9s01rwHnLMxVdnq2IGzN1XYtq4SshOKQCOTY0X0R7roUdTv/zvuUo2UlWqyTZJ5NlQ6dMnl+8MHzD1pTJ3BJiAWuA2apdug1ooyHIjfC35vdh2hGn393tO+ajZzlsQGadGyHVXrAkiEc4ov644WFzZCvFr4=
+	t=1744669130; cv=none; b=Zz+AfQsRN2MxfAPGDNLbnSST9+tvjZfdD0aNJf3yyLBOCSbfvXAhdtwXZKpeWYXVFBHoAzXAaNqcxwbSDW8iprvhawalhR3KigtJUy1JSrFWEyqxQRylfq2oqJnQCDOY7cSkBcFOmJjEdrxSI+Kv1d/Vji0H3gq3FLXiaPtuwF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744668961; c=relaxed/simple;
-	bh=HEu9OtF4BtaBMlr0OFBUyUbeTpsXoNaLSVmNNaDy42c=;
+	s=arc-20240116; t=1744669130; c=relaxed/simple;
+	bh=/Zb1XV2bYof6BzTOqn3Nl2/4vBAP/XCy2fGjFlKM2c0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KYWEldhHG5NswAG88tTQpygxiMgJfOK7Z52ukYlhcmjPiLHgzkCQxsE3jl2nRwplyep6Zw9dwB/QjkKbYkoJXdqY7lVHULYYwEaD0rm3PonCknDk6bfw0Rl8hxmau2W5cWnAY8e1yGIi1u575N0PUJg7c7kcepkFTdclB+54uqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oR5KFMl/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QyR4I2N7NZej5Bir0AAuXkSuQvG6BxSHWaff2J6p67ad212ezF7Lmc2mKZ3IPNaVgleHRa4hhnHAfhl/RLeKcrWfhAxCooHzmrwJ5mKv2cihZPLl2BbH3K5938UzpGVsJBpKp3PCPnuxDQM5eh3TSVBvd+66qrobNMEyyA/I4Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OuSa7Yw4; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oR5KFMl/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764D4C4CEE2;
-	Mon, 14 Apr 2025 22:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744668960;
-	bh=HEu9OtF4BtaBMlr0OFBUyUbeTpsXoNaLSVmNNaDy42c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oR5KFMl/UgO5dphG0vdfLbeo84Bpz6MW4BoXPoDo1PgUpSLioz3XvpOSY/IGQvx2h
-	 jL1bk7S6F1BNcxkG5E/Qczchley5OkvcAm0GwqVo0jeIwSydxbYuXLVyZ7IBn+CFV4
-	 Idr4TNZT8RuQdJNOAUM0xudqdCzVU9sCryu9zJR8597OPgCtkpXyX1tWT7lECocWCl
-	 72lfe7H/XAi0Iz2PPDubW7mk0yXkCD9GNqW91PgulYvNOTvicpFYFWN6Ep2Kl5bJuu
-	 bTueuD53hyAIv3QpKLqkhtsTDAyRdfK5+wWbO9PY5K68bO68hXWxiD5QgOv6pDSndg
-	 M2QtJ6lToeB+w==
-Date: Mon, 14 Apr 2025 15:15:59 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Charalampos Mitrodimas <charmitro@posteo.net>
-Cc: Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Verify DA node btree hash order
-Message-ID: <20250414221559.GC25675@frogsfrogsfrogs>
-References: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OuSa7Yw4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=NzdrtjgDo4uBW10GHqjcnuFCyc2xfj83QuuvTGF5XJU=; b=OuSa7Yw4IXAtwTCvgAdSHneXg0
+	HtcripUjUS+d5ejgsf0yQkIvBpMvaH7ELC/DoLd7qyUEQvRM1q+KcDelHuHIh4QLsL8sHumUJyYCw
+	weMvEblTpEgIvCFVgfeJVRsWkUL+5o1BFZrENgXUNa+n2V9YqYuzxxJkQPg8JrygAAS4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4S8M-009Hvy-Lv; Tue, 15 Apr 2025 00:18:30 +0200
+Date: Tue, 15 Apr 2025 00:18:30 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Nelson, Shannon" <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+Subject: Re: [PATCH net-next 2/3] ionic: support ethtool
+ get_module_eeprom_by_page
+Message-ID: <891f1b66-0b49-41ce-bb00-5345ef9afb5c@lunn.ch>
+References: <20250411182140.63158-1-shannon.nelson@amd.com>
+ <20250411182140.63158-3-shannon.nelson@amd.com>
+ <ed497741-9fcc-44fc-850d-5c018f2ef90e@lunn.ch>
+ <a32f6b8a-860b-4452-87f0-04e0d289d473@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,61 +48,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
+In-Reply-To: <a32f6b8a-860b-4452-87f0-04e0d289d473@amd.com>
 
-On Sat, Apr 12, 2025 at 08:03:57PM +0000, Charalampos Mitrodimas wrote:
-> The xfs_da3_node_verify() function checks the integrity of directory
-> and attribute B-tree node blocks. However, it was missing a check to
-> ensure that the hash values of the btree entries within the node are
-> strictly increasing, as required by the B-tree structure.
-> 
-> Add a loop to iterate through the btree entries and verify that each
-> entry's hash value is greater than the previous one. If an
-> out-of-order hash value is detected, return failure to indicate
-> corruption.
-> 
-> This addresses the "XXX: hash order check?" comment and improves
-> corruption detection for DA node blocks.
-> 
-> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
-> ---
->  fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-> index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
-> --- a/fs/xfs/libxfs/xfs_da_btree.c
-> +++ b/fs/xfs/libxfs/xfs_da_btree.c
-> @@ -247,7 +247,16 @@ xfs_da3_node_verify(
->  	    ichdr.count > mp->m_attr_geo->node_ents)
->  		return __this_address;
->  
-> -	/* XXX: hash order check? */
-> +	/* Check hash order */
-> +	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
-> +
-> +	for (int i = 1; i < ichdr.count; i++) {
-> +		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
-> +
-> +		if (curr_hash <= prev_hash)
+> > > +static int ionic_get_module_eeprom_by_page(struct net_device *netdev,
+> > > +                                        const struct ethtool_module_eeprom *page_data,
+> > > +                                        struct netlink_ext_ack *extack)
 
-Does XFS support a directory with two names that hash to the same value?
+> > > +     switch (page_data->page) {
+> > > +     case 0:
+> > > +             src = &idev->port_info->status.xcvr.sprom[page_data->offset];
+> > > +             break;
+> > > +     case 1:
+> > > +             src = &idev->port_info->sprom_page1[page_data->offset - 128];
+> > > +             break;
+> > > +     case 2:
+> > > +             src = &idev->port_info->sprom_page2[page_data->offset - 128];
+> > > +             break;
+> > > +     default:
+> > > +             return -EINVAL;
+> > 
+> > It is a valid page, your firmware just does not support it. EOPNOSUPP.
+> 
+> I can see the argument for this, but EINVAL seems to me to match the
+> out-of-bounds case from ionic_get_module_eprom(), as well as what other
+> drivers are reporting for an unsupported address.  It seems to me that
+> passing EOPNOSUPP back to the user is telling them that they can't get
+> eeprom data at all, not that they asked for the wrong page.
 
---D
+I would disagree with at. Look at the ethtool usage:
 
-> +			return __this_address;
-> +		prev_hash = curr_hash;
-> +	}
->  
->  	return NULL;
->  }
-> 
-> ---
-> base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
-> change-id: 20250412-xfs-hash-check-be7397881a2c
-> 
-> Best regards,
-> -- 
-> Charalampos Mitrodimas <charmitro@posteo.net>
-> 
-> 
+ethtool -m|--dump-module-eeprom|--module-info devname [raw on|off]
+          [hex on|off] [offset N] [length N] [page N] [bank N] [i2c N]
+
+You can ask for any page. The only validation that can be done is,
+does the page number fit within the page selection register. And that
+is a u8. So any value < 256 is valid for page.  Some pages are
+currently defined, some pages are reserved, and pages 128-255 are for
+vendor specific functions.
+
+The limitation here is your firmware, you don't support what the
+specification allows. So EOPNOTSUPP for a page you don't supports
+would give an indication of this.
+
+ethtool's pretty print should handle -EOPNOTSUPP. It knows some netdev
+have limits, and don't give full access to the module data. I would
+not be too surprised to find ethtool actually interprets EINVAL for a
+valid page to be fatal, but i've not checked. EOPNOTSUPP should just
+stop it pretty printing that section of the module.
+
+	Andrew
