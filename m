@@ -1,121 +1,102 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADBE28E3F;
-	Mon, 14 Apr 2025 04:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C885155C83;
+	Mon, 14 Apr 2025 04:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744604848; cv=none; b=cKL+hcuyjlbIoD42n8SJsW8cnF/t+P9Bfz23l78LPmjbXwB00K9xVPD33M4uBHPB3f95II6KRTDP6XegXt56IYcJxgU3soWEb1lzO9aISRZjmDWNH+3kJBYCAyGdZBZEEDTOB/hgNLMZH1bxq9ZGOJIzTGYrQ/K2sFHbqEHdJN8=
+	t=1744604866; cv=none; b=l/xpVbX6p830aTEJz6wb1hS5vkalOQlvFWlbZbL5l4Rz4Z+Ot63IB/Trpfh8pDKEg0bzb27CSrvP7z/H4i4RLei7rMJ6T//DsGzXCu7JNq8/vhB7oOpo1ILijBzP5ucsnk2QRN1157XHmnha5EDNye2s/3ro+zT71ST+brDbphE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744604848; c=relaxed/simple;
-	bh=j4MYb6RVTpLF/OHvBkanLy0iEejvwD4jd18R/nxyKLA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lkv4rmlh+xa5x6T2iEXteWJhJW5DTeuu9iUYCeMb76OUWDp1vqPeyiNM84nRVU4/pCtmV0/0HmySjPrrh+OZFHsFVsoFWn/VLIdodkz7HwPlTG+L9kNEXoc1f6HF89y/4i+EKKoGhDQ5xj8hX3Ln1L0kLpfFhk082+KJ8PZrLA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BVgoz2aB; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744604866; c=relaxed/simple;
+	bh=ANkMDoeKwRx61nJjsgTo5/adP+NJVOloiogx6HuztBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LTCR1QJHaQpsI3fUDzvgL4lOXkva2bm0SJwepvzS0djFpUFpzNfQjXlBUTzajs12hhh07bjvvq2m+rlAA9oaC3N+TBLHJrDUG/oYdNlLpHhegKMj5jD0pr10nDDq+Ixijjex32H93uzkM42sN6pVDdcg1bZFbrD1/miuUv5GYaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=I8m851z9; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BVgoz2aB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744604814;
-	bh=KPm6homno2OIodX8ovj0TGGxLESvoArCHRFaF6Tjv98=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=BVgoz2aB3GaY4IDSZn4IvHIUCBXdL1D5e0PcZKh0GSCA/OQLJ9pCGcPp4CwlpVj/0
-	 ClSQqR6JbdtYRYQMJOSPOqIacyuAuYL0G1K63TuRvif7cGEuBBFh3a0HOWedZ3ner3
-	 rdmW/LwadLxnkUvtqfLUeRcKLP5Ij1SeUHYcVS4o=
-X-QQ-mid: bizesmtpip4t1744604799t7c4642
-X-QQ-Originating-IP: CpTEDf2RT5I03ge7QTMeZ+lfzyPSflUOhm4AzwaerQo=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 14 Apr 2025 12:26:36 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16277305603624599492
-EX-QQ-RecipientCnt: 17
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: akpm@linux-foundation.org,
-	guanwentao@uniontech.com,
-	linux-kernel@vger.kernel.org,
-	mingo@kernel.org,
-	niecheng1@uniontech.com,
-	tglx@linutronix.de,
-	zhanjun@uniontech.com,
-	Rasesh Mody <rmody@marvell.com>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	GR-Linux-NIC-Dev@marvell.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org
-Subject: [PATCH v2 1/5] bna: bnad_dim_timeout: Rename del_timer_sync in comment
-Date: Mon, 14 Apr 2025 12:26:25 +0800
-Message-ID: <66962B9D4666B555+20250414042629.63019-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
-References: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="I8m851z9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744604861;
+	bh=izat2NnbRoo5hRIjmcUQdtzedlt6iMtpmClmX2HNuBk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=I8m851z9qePvxNCs1WLp+WVvEkcyWM/0iTyONe6aTruJwW7SU7Y6sfLvkqTricFzS
+	 lXHOo3c0YG/erYAlRY2EeeJXyVP2daz4SXz464sNevhmnusbxwXwyNb7EVh5khX/7F
+	 cGJc5ZeLj3DUfL1x0r2VtKs8Dl+7Huluy4nQh+f7FbU6WFCQhlBxCM2tiSeWraeyY5
+	 hJnIFpVw9nukXxw9HwPN3PWMRyMfN58N/MbXdDwTJzmDiinFgbK9SgAYQ/wdvBZEY7
+	 duSTmAdQcK4PSUqnlxUF4stEzj521WgA7AGcHWuxVEgeJ/vFBFY26vmaNjMj2Dj+mM
+	 nkDAPbBf6r5XA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZbZ5T33zyz4wnp;
+	Mon, 14 Apr 2025 14:27:41 +1000 (AEST)
+Date: Mon, 14 Apr 2025 14:27:40 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Mathias Nyman
+ <mathias.nyman@linux.intel.com>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: linux-next: manual merge of the usb tree with the usb.current tree
+Message-ID: <20250414142740.550af271@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: M4lPCacZ9YlexUY+K5B6LtUk+dUYUPB7FRgYCF/GKPloyGJF0JkR5eZs
-	3vK2Kl0mGd27G9RdEVGX4MP4PF6pocXfiFrQQTeXpd0DtZPHTasijiTqA2cfBpTeEviJOEO
-	GssYJnpwEB2Y2A91SqMBFLM3/S7XJcDfmwBxsse2AcLP0iUywuWF3Zeq9kNSYaAhdDT5kRf
-	9oALXRJdvvKc6fDV85tSlVannn5GKC16m2pS3SSNglHqhd5n93UAMUgAL5u4M1yTxzb/9Av
-	4O0XW9XgUmuVSxi0nfrRkNqeKrmbMFEQ4S9RgujxKSVusi47z/7fX/KdMRVGsz0hNqd7rSV
-	jEaZa3/RPILHU24i7aZwHEp0986L9rVrorGz/Cuc8bBN9R/RTOnaI10wBmi0NCjUn0AKvuc
-	7aC3Nx+OWrQB5BkkM+UiE2SdUL3KefwQ9xzjkx92M5p+QC3ag5tITBnii4kiFi8fRz7v7xc
-	nuRgrbvgjc5DTVCRyc7HMvh/vg2MkEQPBJDPs0pyP4u9K3eQ3l0P/Yyw0w4i+E/cZ/WYK0O
-	8JWQv5RqnrbgIGaXaM+UgWQSn4Yor/8bEqlPpjGfolpPZLTsV1sNr+UnL5pYhNrUGWaC9nG
-	w6bjUtV6ZBks6lRVr5ojniGf2EzVy29GPAbXXBXQipocJvjCpW0+FEjDoOQL+WaoluUEUe9
-	qs5UNvOX5NehnWbEnFR5MA34FllqJOmMO588l8efgytLJupTMAs/McYiTDjpEdwAhX3jYzZ
-	YlL9DVm6oWO6ijVOhAcHIfxv3CUKF9KVc9wiO8HIc19cDLlgbV+ChPVDULVMm+BS14MiLM2
-	Ml0D5JGKFioNjcfR33k7+ClfrjqUbq/kWBGKKnQADDZuUfvHNcNLt0/yC3NSuM7Jd1OBLTg
-	azdAwhAuLaAcdxf7QOKEhRNMNiRxlDEF0u0j6Zqgjn4qTXPKnkpHpIHwibaj8jGtHO00ata
-	IYzjNdo2Wd3Cp5Lei6sa6bR18NtDI9h3G1249fwvhCQEjawEz0MrY9p6jGuYPYHzuRfMV32
-	RcX+aUvgNJF/JlfvORWij1eO05EJA=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+Content-Type: multipart/signed; boundary="Sig_/zkdLiaEg5pubC/WNE6xYyWz";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Commit 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
-switched del_timer_sync to timer_delete_sync, but did not modify the
-comment for bnad_dim_timeout(). Now fix it.
+--Sig_/zkdLiaEg5pubC/WNE6xYyWz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Rasesh Mody <rmody@marvell.com>
-Cc: Sudarsana Kalluru <skalluru@marvell.com>
-Cc: GR-Linux-NIC-Dev@marvell.com
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/net/ethernet/brocade/bna/bnad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/drivers/net/ethernet/brocade/bna/bnad.c b/drivers/net/ethernet/brocade/bna/bnad.c
-index a03eff3d4425..50eb54ecf1ba 100644
---- a/drivers/net/ethernet/brocade/bna/bnad.c
-+++ b/drivers/net/ethernet/brocade/bna/bnad.c
-@@ -1735,7 +1735,7 @@ bnad_iocpf_sem_timeout(struct timer_list *t)
-  *	Time	CPU m	CPU n
-  *	0       1 = test_bit
-  *	1			clear_bit
-- *	2			del_timer_sync
-+ *	2			timer_delete_sync
-  *	3	mod_timer
-  */
- 
--- 
-2.49.0
+Today's linux-next merge of the usb tree got a conflict in:
 
+  drivers/usb/host/xhci.h
+
+between commit:
+
+  bea5892d0ed2 ("xhci: Limit time spent with xHC interrupts disabled during=
+ bus resume")
+
+from the usb.current tree and commit:
+
+  5beb4a53a1dd ("usb: host: xhci-mem: Cleanup pending secondary event ring =
+events")
+
+from the usb tree.
+
+I fixed it up (they both added the same function, and the former added
+another function, so I used that) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zkdLiaEg5pubC/WNE6xYyWz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf8jrwACgkQAVBC80lX
+0GzpUwf9HntDjxp4WdMbmdEYMtCUIrKH5Kkwd46PjklrwnR7oVGSXJWaGXy0cbwy
+eCSsQYS0C9Z0XmkKJyqKI2lHeBj1VNhpb+OZQxq3+lPMrZC38Ngp/EqRmKNAZ7WF
+2AP/woxhWdB3CJZ/kgrjnc89gfAczGZ4imQFWlxTGugWhh/BCIegyqyg52vCqSS0
+UxQOZKvJ7FXUjJIx77TiSOyDLl3K49GS8S0g0DvYbstw0dMaMJNpqHyyh0V57jIK
+sUEeqNXxCdToXSbdqDMGyEMWHK67IIq1pVnE933iEkW5pXLv0RH+IgDvQ6ej2VNX
+0RUvjMlmY82viI/5DYhh+JkPT/t+kA==
+=Qff7
+-----END PGP SIGNATURE-----
+
+--Sig_/zkdLiaEg5pubC/WNE6xYyWz--
