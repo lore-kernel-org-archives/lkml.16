@@ -1,167 +1,166 @@
-Received: from www253.your-server.de (www253.your-server.de [188.40.28.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0382951AE;
-	Mon, 14 Apr 2025 13:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.28.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22A62951C1
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638929; cv=none; b=EKRPr2D53LRLoZYX8Pr7Ue6OOMgnhpv07/FfxdZmeoqrtSmrKJx+gm+SNMjPEoSfZxFqwl27xAxiCsyyEgtqaeHF0YxhXcQSxf1axeBMP9B8nkCeclgL8oPOYfoBvS3hcZrVwIRya3wYy0gJSIL3oWdVaZLFJtbLAVucksr+xwA=
+	t=1744638942; cv=none; b=oVdgz5ipCzEbU9orF0VZC+LsN1kWlhshSd1hAPYOSk62YcJlp4IvXRtb8W02J403vFe3vimtR2Ebf3XWOL5wBtdieIqPRHmxCs19131xvUepdQgWtPuCnNboP+mJxWzZxMNPcmM7hw+rPegFjLRhsruIhnAulqBMTTiysNrON2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638929; c=relaxed/simple;
-	bh=igvVhZwd/Ulfb6vrRtQg6x0bd/OGH+dCTEkj4H8CKu8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 In-Reply-To:References; b=OQGkvoojszSIOd+JWEM8Wi31pN/Goc303dlGs2e76vlq9vd2te0+jMUmdCfbAO4DNAzm3DKcfACFZ8rWPpP3FW5g34YtZKfNWbnSH72O65Grxhixf1uyVIoDnuhf4b8UGz+Xuq5KsxAOxmRjlwzKJlE4PpLV9CS74OKsmi3s/u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de; spf=fail smtp.mailfrom=helmholz.de; dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b=eCHTWpIb; arc=none smtp.client-ip=188.40.28.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=helmholz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=helmholz.de
+	s=arc-20240116; t=1744638942; c=relaxed/simple;
+	bh=a4hlPrIYJB25n8qz1/wfGkCt/0deEqN0QH2FcphhDOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQcrNdChRoiocf9RBkSyWuTB0bYRkwwowlNZZSTmr1w4R1K6WLV75i7t7qFt6zlwD2/zPNsYxpr9Vj2FfL9dfkKAda5crvRburAD5OcWvZe/5ttBG/8EbCM+IXXqu0CsSjzD1w+Yzf7jzglQJX1UNUiH5hHbUvSJ/YAYQ53mvBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wzXiY1yE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jkmHq+hM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zSCtMWf+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5g0P9LPk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=helmholz.de header.i=@helmholz.de header.b="eCHTWpIb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=helmholz.de
-	; s=default2501; h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=TNkqmEo16GnI2EiGH0GEi7u9cbC1rWK0sSwViXXy5sQ=; b=eCHTWpIb6W1zdq1gLrrWQiFLoI
-	pvcelLCeE+OYN9oSqYECRDddklQfUJF9FtHh7quc3gzBMdQOyOLqAysMQ2LxKWFOGfhA73gRdC/fn
-	ofdeInq6zVFM8gw7k7/T+EaehSFIIwFmImElT48b8Xywj2Lg/FG2muxCsQX0XV8wspMt2zS7omF7m
-	q8wh/0RnfpM/WWrNxD3lu9C9q0/P4QKCNVJs9xR6FZ+sbLjZQ6hBQfEOQmZ8cbL/+Pd0tS3z7QVWp
-	PQW9uxtYD5aBLyWfeieKFo/HSIZsS6pmtpYjsRD7Cmuj6Fee8AVnfjcDWUjZxjMoznxdvKcywOBhM
-	2k6LRsHw==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www253.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <ante.knezic@helmholz.de>)
-	id 1u4JsT-0008nT-0M;
-	Mon, 14 Apr 2025 15:29:33 +0200
-Received: from [217.6.86.34] (helo=linuxdev.helmholz.local)
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
-	(Exim 4.96)
-	(envelope-from <ante.knezic@helmholz.de>)
-	id 1u4JsS-000Eer-27;
-	Mon, 14 Apr 2025 15:29:32 +0200
-From: Ante Knezic <ante.knezic@helmholz.de>
-To: linux-leds@vger.kernel.org
-Cc: lee@kernel.org,
-	pavel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	knezic@helmholz.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 1/3] Documentation: leds: Add docs for Wurth Elektronik WL-ICLED
-Date: Mon, 14 Apr 2025 15:28:49 +0200
-Message-Id: <7f324a9a25ad1ac3a622aa1201cbd91ead80f8f9.1744636666.git.knezic@helmholz.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1744636666.git.knezic@helmholz.com>
-References: <cover.1744636666.git.knezic@helmholz.com>
-In-Reply-To: <cover.1744636666.git.knezic@helmholz.com>
-References: <cover.1744636666.git.knezic@helmholz.com>
-X-Authenticated-Sender: knezic@helmholz.com
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27608/Mon Apr 14 10:34:28 2025)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wzXiY1yE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jkmHq+hM";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zSCtMWf+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5g0P9LPk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D03E621285;
+	Mon, 14 Apr 2025 13:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744638938; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wbd2u8etanLwCgjaIHVqyALGaQfIGhfcAWH4/UjSTEE=;
+	b=wzXiY1yEB95AiDyYGkUPUatZ9ka1UIFfMtbMDujew0olVoBozXiZR3IXuiJaYyAvTjqlkc
+	ffGO0f94WvOSs/xcQoqqwApb+2SFKirTk29CUyFmKop8kdxjcmc3pzRGesjisa0WgoxfaZ
+	0rHYasaNyE+Uho7MFybleatnaoJMeIc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744638938;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wbd2u8etanLwCgjaIHVqyALGaQfIGhfcAWH4/UjSTEE=;
+	b=jkmHq+hMZAS6lbShgn5oI5j2rUY6ilru8Ar/+qf2J/hXF7S/O+HZ0feC98biWPQbQT+wK1
+	fMAigSvixFRWXpCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=zSCtMWf+;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5g0P9LPk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744638937; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wbd2u8etanLwCgjaIHVqyALGaQfIGhfcAWH4/UjSTEE=;
+	b=zSCtMWf+wT1fhUG+omccUMiztbWCX65tCmfZiXn1TU+piEb0fdPM+SItvg8fOrkVI0Qq++
+	Be0wOFSqxXG5UMI1MZngpKytcvPQh/1jx+xBIlQZ1ne6UCR9FAKpM9zEiu217v4Zm7gJ6Y
+	ogSV1GoNG5p2rvylUQsyVrIv8323Wok=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744638937;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wbd2u8etanLwCgjaIHVqyALGaQfIGhfcAWH4/UjSTEE=;
+	b=5g0P9LPkS3R44MdBt8w2sXAG2b9UySsrKbbDHxg+/Y0huVTFxkB/9YYICVCkJ9SnLorJps
+	3UKyAVMmijCpgYCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C597B136A7;
+	Mon, 14 Apr 2025 13:55:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Edo1MNkT/WcYBwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 14 Apr 2025 13:55:37 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 67CC0A094B; Mon, 14 Apr 2025 15:55:37 +0200 (CEST)
+Date: Mon, 14 Apr 2025 15:55:37 +0200
+From: Jan Kara <jack@suse.cz>
+To: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Rafael Aquini <aquini@redhat.com>, gfs2@lists.linux.dev, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 2/2] writeback: Fix false warning in inode_to_wb()
+Message-ID: <6k6kbrcw5bythxn7xu2u7xm4ssaiprnzr42qmf2oqyd6igdoy7@cyv67iatitvq>
+References: <20250412163914.3773459-1-agruenba@redhat.com>
+ <20250412163914.3773459-3-agruenba@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412163914.3773459-3-agruenba@redhat.com>
+X-Rspamd-Queue-Id: D03E621285
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-From: Ante Knezic <knezic@helmholz.com>
+Hi Andrew!
 
-Basic description of WL-ICLED RGB LEDs from Wurth Elektronik
+Can you please take this patch through MM tree? Thanks! Andreas is already
+taking the first patch in the series through GFS2 tree.
 
-Signed-off-by: Ante Knezic <knezic@helmholz.com>
----
- Documentation/leds/index.rst         |  1 +
- Documentation/leds/leds-wl-icled.rst | 69 ++++++++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
- create mode 100644 Documentation/leds/leds-wl-icled.rst
+								Honza
 
-diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
-index 76fae171039c..b9a4db72cc26 100644
---- a/Documentation/leds/index.rst
-+++ b/Documentation/leds/index.rst
-@@ -30,3 +30,4 @@ LEDs
-    leds-sc27xx
-    leds-st1202
-    leds-qcom-lpg
-+   leds-wl-icled
-diff --git a/Documentation/leds/leds-wl-icled.rst b/Documentation/leds/leds-wl-icled.rst
-new file mode 100644
-index 000000000000..0e55683e9468
---- /dev/null
-+++ b/Documentation/leds/leds-wl-icled.rst
-@@ -0,0 +1,69 @@
-+=================================================
-+Kernel driver for WL-ICLED from Wurth Elektronik
-+=================================================
-+
-+Description
-+-----------
-+The WL-ICLEDs are RGB LEDs with integrated controller that can be
-+daisy-chained to a arbitrary number of units. The MCU communicates
-+with the first LED in chain via SPI interface and can be single or
-+two wire connection, depending on  the model.
-+
-+Single wire models like 1315050930002, 1313210530000, 1312020030000 and
-+1312121320437 are controlled with specific signal pattern on the
-+input line. The MCU is connected to input line only via SPI MOSI signal.
-+For example WE-1312121320437 uses following signal pattern per one LED:
-+
-+|          RED            |          GREEN          |           BLUE          |
-+| GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:12bits |
-+
-+ where logical 1 is represented as:
-+ (V)^
-+    |          T
-+    |<-------1.2us------->
-+    |
-+    +================+
-+    | <---0.9us----> |
-+    |                |
-+    +----------------+===|------> t
-+
-+ and logical 0 is represented as:
-+ (V)^
-+    |          T
-+    |<-------1.2us------->
-+    |
-+    +=====+
-+    |0.3us|
-+    |     |
-+    +-----+==============|------> t
-+
-+To generate the required pattern with exact timings SPI clock is selected
-+so that it devides T in 8 equal parts such that a logical true symbol can be
-+represented as 1111 1100 and a logical false can be represented as 1100 0000.
-+Single wire LEDs require the MOSI line to be set to low at idle and this should
-+be provided by the chip driver if possible or by external HW circuit.
-+
-+Models 1313210530000, 1312020030000 and 1315050930002 require a slightly
-+different signaling scheme where each color of the LED is encoded in
-+8 bits.
-+
-+Two wire LED types do not require specific encoding of the input line as
-+both clock and data are provided to each LED.
-+
-+Additionally, models differ by available controls:
-+- WE 1312121320437 provide PWM and GAIN control per each RGB element.
-+  Both GAIN and PWM values are calculated by normalising particular
-+  multi_intensity value to 4 and 12 bits.
-+
-+- WE 1315050930246 and 1311610030140 provide PWM control per each
-+  RGB element and one global GAIN control.
-+  Global GAIN value is calculated by normalising global led brightness
-+  value to 5 bits while PWM values are set by particular
-+  multi_intensity values.
-+
-+- WE 1315050930002, 1313210530000 and 1312020030000 provide only PWM
-+  control per each RGB element.
-+  PWM values are set by particular multi_intensity value.
-+
-+For more product information please see the link below:
-+https://www.we-online.com/en/components/products/WL-ICLED
+On Sat 12-04-25 18:39:12, Andreas Gruenbacher wrote:
+> From: Jan Kara <jack@suse.cz>
+> 
+> inode_to_wb() is used also for filesystems that don't support cgroup
+> writeback. For these filesystems inode->i_wb is stable during the
+> lifetime of the inode (it points to bdi->wb) and there's no need to hold
+> locks protecting the inode->i_wb dereference. Improve the warning in
+> inode_to_wb() to not trigger for these filesystems.
+> 
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+> ---
+>  include/linux/backing-dev.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+> index 8e7af9a03b41..e721148c95d0 100644
+> --- a/include/linux/backing-dev.h
+> +++ b/include/linux/backing-dev.h
+> @@ -249,6 +249,7 @@ static inline struct bdi_writeback *inode_to_wb(const struct inode *inode)
+>  {
+>  #ifdef CONFIG_LOCKDEP
+>  	WARN_ON_ONCE(debug_locks &&
+> +		     (inode->i_sb->s_iflags & SB_I_CGROUPWB) &&
+>  		     (!lockdep_is_held(&inode->i_lock) &&
+>  		      !lockdep_is_held(&inode->i_mapping->i_pages.xa_lock) &&
+>  		      !lockdep_is_held(&inode->i_wb->list_lock)));
+> -- 
+> 2.48.1
+> 
 -- 
-2.48.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
