@@ -1,260 +1,637 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B961F2BAF9
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 13:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5704E71747;
+	Mon, 14 Apr 2025 13:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744635817; cv=none; b=YHUkoxdmwFToVYSbg+Vi+JvTSEZTFWZ77Vmgj1bsi+UorghM+A49XALMYNQrtmRVtL7/e7OaPotawmgxGC2hFH3AAocYkLfQce7nN/EWyUOicVbxxbKq2buseli6IpfpifN1N6rWepfdLCGgEQbb5o7lijP4Z7OyotC9thudxMc=
+	t=1744635818; cv=none; b=ectG09HEPrElhUDwzH5xkX+Cx93uMjMvoR+FjOqb2ZefR0qNzAmFXyg5ZoHGfsw31CMDiO6aUBCgkF1DMBGW8oj9eLCOfiMnyc6gzsa007nL1l5LPQtPAZPqozhqY2Z8vOFdyKzkltDdWMDYekUrgCzgw0Yh2l0QCXCHM4gKKFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744635817; c=relaxed/simple;
-	bh=suoCueQ/UBH6cbO7/ecRJRmkx8HG1xGcqpcDgNpN2Bc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n59k5qH9O9bx/0xpFb/8YO7M32qG09mxh5p5hwp9U57RIZwEGL+PeDT8Gji7yJoAKcetyhbu51nHawZFOFgRzdW9Pv54oexVNvJcnFL6DKJXiPo7W/4HIvOy0AZVh6q8FJzjwYHGYY+7XWzh/lGSWmVGzSn5lU2vZECWeIKyBu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2A381007;
-	Mon, 14 Apr 2025 06:03:32 -0700 (PDT)
-Received: from [10.57.86.225] (unknown [10.57.86.225])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A69103F66E;
-	Mon, 14 Apr 2025 06:03:32 -0700 (PDT)
-Message-ID: <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
-Date: Mon, 14 Apr 2025 14:03:31 +0100
+	s=arc-20240116; t=1744635818; c=relaxed/simple;
+	bh=BnAG/e96YvCk+0P0oTnOUaVnTUlDjUHrckar4sTBdYA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=htU5xXmuLsCjNn9rYu8JuFeq6O6Z1qlCjjGml6gLRmXMUBoTKDfmA9D5Oy0WJfl5A2lRXchwRQ3GseIDZjG3kb4vLNHqp+IJRkU9vN5HbRsHAoq25KGyqhBvZUwD+dYYNb6fBRr8KyMz/96osTC6npfrYuGg85B31DZW1pWGyNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=wM+eIVCb; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="wM+eIVCb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=yUxC/pkf3YeKNg7nLs/Rnx8GmGOq8aoN+EMK7NE9h14=; b=wM+eIVCbdxxxySF5mgA1+zbvTx
+	VbfNS25huMbEmHv/hPnNbBpcUCyO4cS+6ffkbiBm7xT8dVFS91tzm5Ulp2rsb0pyd8vsbMJ5Mkilr
+	1LvAwwYG4YkQvE3+ClJOAV1U0QtwzY+qn3DH70sPIJmeI8q9dvl2qJo7p86Qks+IGBnPsq5IeX351
+	WV8vS+RVtFWb++cwNMk3ifHlxAH61ctUU2gdt0pkerFxJ/+HVXkqZi+9vVbnAWcs0xeoI5lv61CPp
+	oKFkgfEWvB3vAaSalEkY/Pjkina52hqwWEmWmcXZvqG6Znuai1c/MN06P8yf8s6Msly/au2noClye
+	fEncxYLw==;
+Received: from [122.175.9.182] (port=25366 helo=cypher.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpa (Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u4JTG-00000000238-1Yu6;
+	Mon, 14 Apr 2025 18:33:30 +0530
+From: Parvathi Pudi <parvathi@couthit.com>
+To: danishanwar@ti.com,
+	rogerq@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nm@ti.com,
+	ssantosh@kernel.org,
+	tony@atomide.com,
+	richardcochran@gmail.com,
+	glaroque@baylibre.com,
+	schnelle@linux.ibm.com,
+	m-karicheri2@ti.com,
+	s.hauer@pengutronix.de,
+	rdunlap@infradead.org,
+	diogo.ivo@siemens.com,
+	basharath@couthit.com,
+	parvathi@couthit.com,
+	horms@kernel.org,
+	jacob.e.keller@intel.com,
+	m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com,
+	afd@ti.com,
+	s-anna@ti.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pratheesh@ti.com,
+	prajith@ti.com,
+	vigneshr@ti.com,
+	praneeth@ti.com,
+	srk@ti.com,
+	rogerq@ti.com,
+	krishna@couthit.com,
+	pmohan@couthit.com,
+	mohan@couthit.com
+Subject: [PATCH net-next v5 05/11] net: ti: prueth: Adds ethtool support for ICSSM PRUETH Driver
+Date: Mon, 14 Apr 2025 18:32:31 +0530
+Message-Id: <20250414130237.1915448-6-parvathi@couthit.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250414113458.1913823-1-parvathi@couthit.com>
+References: <20250414113458.1913823-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
- mapping when rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
- <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
- <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
- <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
- <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: parvathi@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: parvathi@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On 10/04/2025 23:00, Yang Shi wrote:
-> Hi Ryan,
-> 
-> I know you may have a lot of things to follow up after LSF/MM. Just gently ping,
-> hopefully we can resume the review soon.
+From: Roger Quadros <rogerq@ti.com>
 
-Hi, I'm out on holiday at the moment, returning on the 22nd April. But I'm very
-keen to move this series forward so will come back to you next week. (although
-TBH, I thought I was waiting for you to respond to me... :-| )
+Changes for enabling ethtool support for the newly added PRU Ethernet
+interfaces. Extends the support for statistics collection from PRU internal
+memory and displays it in the user space. Along with statistics,
+enable/disable of features, configuring link speed etc.are now supported.
 
-FWIW, having thought about it a bit more, I think some of the suggestions I
-previously made may not have been quite right, but I'll elaborate next week. I'm
-keen to build a pgtable splitting primitive here that we can reuse with vmalloc
-as well to enable huge mappings by default with vmalloc too.
+The firmware running on PRU maintains statistics in internal data memory.
+When requested ethtool collects all the statistics for the specified
+interface and displays it in the user space.
 
-Thanks,
-Ryan
+Makefile is updated to include ethtool support into PRUETH driver.
 
-> 
-> Thanks,
-> Yang
-> 
-> 
-> On 3/13/25 10:40 AM, Yang Shi wrote:
->>
->>
->> On 3/13/25 10:36 AM, Ryan Roberts wrote:
->>> On 13/03/2025 17:28, Yang Shi wrote:
->>>> Hi Ryan,
->>>>
->>>> I saw Miko posted a new spin of his patches. There are some slight changes that
->>>> have impact to my patches (basically check the new boot parameter). Do you
->>>> prefer I rebase my patches on top of his new spin right now then restart review
->>>> from the new spin or review the current patches then solve the new review
->>>> comments and rebase to Miko's new spin together?
->>> Hi Yang,
->>>
->>> Sorry I haven't got to reviewing this version yet, it's in my queue!
->>>
->>> I'm happy to review against v3 as it is. I'm familiar with Miko's series and am
->>> not too bothered about the integration with that; I think it's pretty straight
->>> forward. I'm more interested in how you are handling the splitting, which I
->>> think is the bulk of the effort.
->>
->> Yeah, sure, thank you.
->>
->>>
->>> I'm hoping to get to this next week before heading out to LSF/MM the following
->>> week (might I see you there?)
->>
->> Unfortunately I can't make it this year. Have a fun!
->>
->> Thanks,
->> Yang
->>
->>>
->>> Thanks,
->>> Ryan
->>>
->>>
->>>> Thanks,
->>>> Yang
->>>>
->>>>
->>>> On 3/4/25 2:19 PM, Yang Shi wrote:
->>>>> Changelog
->>>>> =========
->>>>> v3:
->>>>>     * Rebased to v6.14-rc4.
->>>>>     * Based on Miko's BBML2 cpufeature patch (https://lore.kernel.org/linux-
->>>>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
->>>>>       Also included in this series in order to have the complete patchset.
->>>>>     * Enhanced __create_pgd_mapping() to handle split as well per Ryan.
->>>>>     * Supported CONT mappings per Ryan.
->>>>>     * Supported asymmetric system by splitting kernel linear mapping if such
->>>>>       system is detected per Ryan. I don't have such system to test, so the
->>>>>       testing is done by hacking kernel to call linear mapping repainting
->>>>>       unconditionally. The linear mapping doesn't have any block and cont
->>>>>       mappings after booting.
->>>>>
->>>>> RFC v2:
->>>>>     * Used allowlist to advertise BBM lv2 on the CPUs which can handle TLB
->>>>>       conflict gracefully per Will Deacon
->>>>>     * Rebased onto v6.13-rc5
->>>>>     * https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-
->>>>> yang@os.amperecomputing.com/
->>>>>
->>>>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
->>>>> yang@os.amperecomputing.com/
->>>>>
->>>>> Description
->>>>> ===========
->>>>> When rodata=full kernel linear mapping is mapped by PTE due to arm's
->>>>> break-before-make rule.
->>>>>
->>>>> A number of performance issues arise when the kernel linear map is using
->>>>> PTE entries due to arm's break-before-make rule:
->>>>>     - performance degradation
->>>>>     - more TLB pressure
->>>>>     - memory waste for kernel page table
->>>>>
->>>>> These issues can be avoided by specifying rodata=on the kernel command
->>>>> line but this disables the alias checks on page table permissions and
->>>>> therefore compromises security somewhat.
->>>>>
->>>>> With FEAT_BBM level 2 support it is no longer necessary to invalidate the
->>>>> page table entry when changing page sizes.  This allows the kernel to
->>>>> split large mappings after boot is complete.
->>>>>
->>>>> This patch adds support for splitting large mappings when FEAT_BBM level 2
->>>>> is available and rodata=full is used. This functionality will be used
->>>>> when modifying page permissions for individual page frames.
->>>>>
->>>>> Without FEAT_BBM level 2 we will keep the kernel linear map using PTEs
->>>>> only.
->>>>>
->>>>> If the system is asymmetric, the kernel linear mapping may be repainted once
->>>>> the BBML2 capability is finalized on all CPUs.  See patch #6 for more details.
->>>>>
->>>>> We saw significant performance increases in some benchmarks with
->>>>> rodata=full without compromising the security features of the kernel.
->>>>>
->>>>> Testing
->>>>> =======
->>>>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB memory and
->>>>> 4K page size + 48 bit VA.
->>>>>
->>>>> Function test (4K/16K/64K page size)
->>>>>     - Kernel boot.  Kernel needs change kernel linear mapping permission at
->>>>>       boot stage, if the patch didn't work, kernel typically didn't boot.
->>>>>     - Module stress from stress-ng. Kernel module load change permission for
->>>>>       linear mapping.
->>>>>     - A test kernel module which allocates 80% of total memory via vmalloc(),
->>>>>       then change the vmalloc area permission to RO, this also change linear
->>>>>       mapping permission to RO, then change it back before vfree(). Then
->>>>> launch
->>>>>       a VM which consumes almost all physical memory.
->>>>>     - VM with the patchset applied in guest kernel too.
->>>>>     - Kernel build in VM with guest kernel which has this series applied.
->>>>>     - rodata=on. Make sure other rodata mode is not broken.
->>>>>     - Boot on the machine which doesn't support BBML2.
->>>>>
->>>>> Performance
->>>>> ===========
->>>>> Memory consumption
->>>>> Before:
->>>>> MemTotal:       258988984 kB
->>>>> MemFree:        254821700 kB
->>>>>
->>>>> After:
->>>>> MemTotal:       259505132 kB
->>>>> MemFree:        255410264 kB
->>>>>
->>>>> Around 500MB more memory are free to use.  The larger the machine, the
->>>>> more memory saved.
->>>>>
->>>>> Performance benchmarking
->>>>> * Memcached
->>>>> We saw performance degradation when running Memcached benchmark with
->>>>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
->>>>> With this patchset we saw ops/sec is increased by around 3.5%, P99
->>>>> latency is reduced by around 9.6%.
->>>>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
->>>>> MPKI is reduced by 28.5%.
->>>>>
->>>>> The benchmark data is now on par with rodata=on too.
->>>>>
->>>>> * Disk encryption (dm-crypt) benchmark
->>>>> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
->>>>> encryption (by dm-crypt).
->>>>> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
->>>>>       --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
->>>>>       --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
->>>>>       --name=iops-test-job --eta-newline=1 --size 100G
->>>>>
->>>>> The IOPS is increased by 90% - 150% (the variance is high, but the worst
->>>>> number of good case is around 90% more than the best number of bad case).
->>>>> The bandwidth is increased and the avg clat is reduced proportionally.
->>>>>
->>>>> * Sequential file read
->>>>> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
->>>>> The bandwidth is increased by 150%.
->>>>>
->>>>>
->>>>> Mikołaj Lenczewski (1):
->>>>>         arm64: Add BBM Level 2 cpu feature
->>>>>
->>>>> Yang Shi (5):
->>>>>         arm64: cpufeature: add AmpereOne to BBML2 allow list
->>>>>         arm64: mm: make __create_pgd_mapping() and helpers non-void
->>>>>         arm64: mm: support large block mapping when rodata=full
->>>>>         arm64: mm: support split CONT mappings
->>>>>         arm64: mm: split linear mapping if BBML2 is not supported on secondary
->>>>> CPUs
->>>>>
->>>>>    arch/arm64/Kconfig                  |  11 +++++
->>>>>    arch/arm64/include/asm/cpucaps.h    |   2 +
->>>>>    arch/arm64/include/asm/cpufeature.h |  15 ++++++
->>>>>    arch/arm64/include/asm/mmu.h        |   4 ++
->>>>>    arch/arm64/include/asm/pgtable.h    |  12 ++++-
->>>>>    arch/arm64/kernel/cpufeature.c      |  95 ++++++++++++++++++++++++++++++
->>>>> +++++++
->>>>>    arch/arm64/mm/mmu.c                 | 397 ++++++++++++++++++++++++++++++
->>>>> ++++
->>>>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>>>> ++++++++++++++++++++++-------------------
->>>>>    arch/arm64/mm/pageattr.c            |  37 ++++++++++++---
->>>>>    arch/arm64/tools/cpucaps            |   1 +
->>>>>    9 files changed, 518 insertions(+), 56 deletions(-)
->>>>>
->>>>>
->>
-> 
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+---
+ drivers/net/ethernet/ti/Makefile              |   2 +-
+ drivers/net/ethernet/ti/icssm/icssm_ethtool.c | 257 ++++++++++++++++++
+ drivers/net/ethernet/ti/icssm/icssm_prueth.c  |  34 +++
+ drivers/net/ethernet/ti/icssm/icssm_prueth.h  | 127 +++++++++
+ 4 files changed, 419 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 93c0a4d0e33a..f21dd11118ab 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -4,7 +4,7 @@
+ #
+ 
+ obj-$(CONFIG_TI_PRUETH) += icssm-prueth.o
+-icssm-prueth-y := icssm/icssm_prueth.o
++icssm-prueth-y := icssm/icssm_prueth.o icssm/icssm_ethtool.o
+ 
+ obj-$(CONFIG_TI_CPSW) += cpsw-common.o
+ obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+new file mode 100644
+index 000000000000..9e06dfff4ce5
+--- /dev/null
++++ b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+@@ -0,0 +1,257 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Texas Instruments ICSSM Ethernet Driver
++ *
++ * Copyright (C) 2018-2022 Texas Instruments Incorporated - https://www.ti.com/
++ *
++ */
++
++#include <linux/if_bridge.h>
++#include <linux/if_vlan.h>
++#include "icssm_prueth.h"
++
++/* set PRU firmware statistics */
++void icssm_emac_set_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats)
++{
++	void __iomem *dram;
++
++	dram = emac->prueth->mem[emac->dram].va;
++	memcpy_toio(dram + STATISTICS_OFFSET, pstats, STAT_SIZE);
++}
++
++/* get statistics maintained by the PRU firmware into @pstats */
++void icssm_emac_get_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats)
++{
++	void __iomem *dram;
++
++	dram = emac->prueth->mem[emac->dram].va;
++	memcpy_fromio(pstats, dram + STATISTICS_OFFSET, STAT_SIZE);
++}
++
++/**
++ * icssm_emac_get_drvinfo - Get EMAC driver information
++ * @ndev: The network adapter
++ * @info: ethtool info structure containing name and version
++ *
++ * Returns EMAC driver information (name and version)
++ */
++static void icssm_emac_get_drvinfo(struct net_device *ndev,
++				   struct ethtool_drvinfo *info)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++
++	strscpy(info->driver, dev_driver_string(prueth->dev),
++		sizeof(info->driver));
++}
++
++/**
++ * icssm_emac_get_link_ksettings - Get EMAC settings
++ * @ndev: The network adapter
++ * @ecmd: ethtool command
++ *
++ * Executes ethool get command
++ *
++ * Return: 0 (Success)
++ */
++static int icssm_emac_get_link_ksettings(struct net_device *ndev,
++					 struct ethtool_link_ksettings *ecmd)
++{
++	return phy_ethtool_get_link_ksettings(ndev, ecmd);
++}
++
++/**
++ * icssm_emac_set_link_ksettings - Set EMAC settings
++ * @ndev: The EMAC network adapter
++ * @ecmd: ethtool command
++ *
++ * Executes ethool set command
++ *
++ * Return: 0 (Success)
++ */
++static int
++icssm_emac_set_link_ksettings(struct net_device *ndev,
++			      const struct ethtool_link_ksettings *ecmd)
++{
++	return phy_ethtool_set_link_ksettings(ndev, ecmd);
++}
++
++#define PRUETH_STAT_OFFSET(m) offsetof(struct port_statistics, m)
++
++static const struct {
++	char string[ETH_GSTRING_LEN];
++	u32 offset;
++} prueth_ethtool_stats[] = {
++	{"txBcast", PRUETH_STAT_OFFSET(tx_bcast)},
++	{"txMcast", PRUETH_STAT_OFFSET(tx_mcast)},
++	{"txUcast", PRUETH_STAT_OFFSET(tx_ucast)},
++	{"txOctets", PRUETH_STAT_OFFSET(tx_octets)},
++	{"rxBcast", PRUETH_STAT_OFFSET(rx_bcast)},
++	{"rxMcast", PRUETH_STAT_OFFSET(rx_mcast)},
++	{"rxUcast", PRUETH_STAT_OFFSET(rx_ucast)},
++	{"rxOctets", PRUETH_STAT_OFFSET(rx_octets)},
++
++	{"tx64byte", PRUETH_STAT_OFFSET(tx64byte)},
++	{"tx65_127byte", PRUETH_STAT_OFFSET(tx65_127byte)},
++	{"tx128_255byte", PRUETH_STAT_OFFSET(tx128_255byte)},
++	{"tx256_511byte", PRUETH_STAT_OFFSET(tx256_511byte)},
++	{"tx512_1023byte", PRUETH_STAT_OFFSET(tx512_1023byte)},
++	{"tx1024byte", PRUETH_STAT_OFFSET(tx1024byte)},
++	{"rx64byte", PRUETH_STAT_OFFSET(rx64byte)},
++	{"rx65_127byte", PRUETH_STAT_OFFSET(rx65_127byte)},
++	{"rx128_255byte", PRUETH_STAT_OFFSET(rx128_255byte)},
++	{"rx256_511byte", PRUETH_STAT_OFFSET(rx256_511byte)},
++	{"rx512_1023byte", PRUETH_STAT_OFFSET(rx512_1023byte)},
++	{"rx1024byte", PRUETH_STAT_OFFSET(rx1024byte)},
++
++	{"lateColl", PRUETH_STAT_OFFSET(late_coll)},
++	{"singleColl", PRUETH_STAT_OFFSET(single_coll)},
++	{"multiColl", PRUETH_STAT_OFFSET(multi_coll)},
++	{"excessColl", PRUETH_STAT_OFFSET(excess_coll)},
++
++	{"rxMisAlignmentFrames", PRUETH_STAT_OFFSET(rx_misalignment_frames)},
++	{"stormPrevCounterBC", PRUETH_STAT_OFFSET(stormprev_counter_bc)},
++	{"stormPrevCounterMC", PRUETH_STAT_OFFSET(stormprev_counter_mc)},
++	{"stormPrevCounterUC", PRUETH_STAT_OFFSET(stormprev_counter_uc)},
++	{"macRxError", PRUETH_STAT_OFFSET(mac_rxerror)},
++	{"SFDError", PRUETH_STAT_OFFSET(sfd_error)},
++	{"defTx", PRUETH_STAT_OFFSET(def_tx)},
++	{"macTxError", PRUETH_STAT_OFFSET(mac_txerror)},
++	{"rxOverSizedFrames", PRUETH_STAT_OFFSET(rx_oversized_frames)},
++	{"rxUnderSizedFrames", PRUETH_STAT_OFFSET(rx_undersized_frames)},
++	{"rxCRCFrames", PRUETH_STAT_OFFSET(rx_crc_frames)},
++	{"droppedPackets", PRUETH_STAT_OFFSET(dropped_packets)},
++
++	{"txHWQOverFlow", PRUETH_STAT_OFFSET(tx_hwq_overflow)},
++	{"txHWQUnderFlow", PRUETH_STAT_OFFSET(tx_hwq_underflow)},
++	{"vlanDropped", PRUETH_STAT_OFFSET(vlan_dropped)},
++	{"multicastDropped", PRUETH_STAT_OFFSET(multicast_dropped)},
++};
++
++static int icssm_emac_get_sset_count(struct net_device *ndev, int stringset)
++{
++	int a_size;
++
++	switch (stringset) {
++	case ETH_SS_STATS:
++		a_size = ARRAY_SIZE(prueth_ethtool_stats);
++
++		return a_size;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static void icssm_emac_get_strings(struct net_device *ndev, u32 stringset,
++				   u8 *data)
++{
++	u8 *p = data;
++	int i;
++
++	switch (stringset) {
++	case ETH_SS_STATS:
++		for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++) {
++			memcpy(p, prueth_ethtool_stats[i].string,
++			       ETH_GSTRING_LEN);
++			p += ETH_GSTRING_LEN;
++		}
++		break;
++	default:
++		break;
++	}
++}
++
++static void icssm_emac_get_ethtool_stats(struct net_device *ndev,
++					 struct ethtool_stats *stats, u64 *data)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++	void *ptr;
++	u32 val;
++	int i;
++
++	icssm_emac_get_stats(emac, &pstats);
++
++	for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++) {
++		ptr = &pstats;
++		ptr += prueth_ethtool_stats[i].offset;
++		val = *(u32 *)ptr;
++		data[i] = val;
++	}
++}
++
++static void icssm_emac_get_regs(struct net_device *ndev,
++				struct ethtool_regs *regs, void *p)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++
++	regs->version = PRUETH_REG_DUMP_GET_VER(prueth);
++}
++
++static const struct ethtool_rmon_hist_range icssm_emac_rmon_ranges[] = {
++	{    0,   64},
++	{   65,  127},
++	{  128,  255},
++	{  256,  511},
++	{  512,  1023},
++	{ 1024,  EMAC_MAX_PKTLEN},
++	{}
++};
++
++static void
++icssm_emac_get_rmon_stats(struct net_device *ndev,
++			  struct ethtool_rmon_stats *rmon_stats,
++			  const struct ethtool_rmon_hist_range **ranges)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++
++	*ranges = icssm_emac_rmon_ranges;
++	icssm_emac_get_stats(emac, &pstats);
++
++	rmon_stats->undersize_pkts = pstats.rx_undersized_frames;
++	rmon_stats->oversize_pkts  = pstats.rx_oversized_frames;
++
++	rmon_stats->hist[0] = pstats.tx64byte;
++	rmon_stats->hist[1] = pstats.tx65_127byte;
++	rmon_stats->hist[2] = pstats.tx128_255byte;
++	rmon_stats->hist[3] = pstats.tx256_511byte;
++	rmon_stats->hist[4] = pstats.tx512_1023byte;
++
++	rmon_stats->hist_tx[0] = pstats.rx64byte;
++	rmon_stats->hist_tx[1] = pstats.rx65_127byte;
++	rmon_stats->hist_tx[2] = pstats.rx128_255byte;
++	rmon_stats->hist_tx[3] = pstats.rx256_511byte;
++	rmon_stats->hist_tx[4] = pstats.rx1024byte;
++}
++
++static void
++icssm_emac_get_eth_mac_stats(struct net_device *ndev,
++			     struct ethtool_eth_mac_stats *mac_stats)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++
++	icssm_emac_get_stats(emac, &pstats);
++
++	mac_stats->LateCollisions = pstats.late_coll;
++	mac_stats->SingleCollisionFrames = pstats.single_coll;
++	mac_stats->MultipleCollisionFrames = pstats.multi_coll;
++}
++
++/* Ethtool support for EMAC adapter */
++const struct ethtool_ops emac_ethtool_ops = {
++	.get_drvinfo = icssm_emac_get_drvinfo,
++	.get_link_ksettings = icssm_emac_get_link_ksettings,
++	.set_link_ksettings = icssm_emac_set_link_ksettings,
++	.get_link = ethtool_op_get_link,
++	.get_sset_count = icssm_emac_get_sset_count,
++	.get_strings = icssm_emac_get_strings,
++	.get_ethtool_stats = icssm_emac_get_ethtool_stats,
++	.get_regs = icssm_emac_get_regs,
++	.get_rmon_stats = icssm_emac_get_rmon_stats,
++	.get_eth_mac_stats = icssm_emac_get_eth_mac_stats,
++};
++EXPORT_SYMBOL_GPL(emac_ethtool_ops);
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+index 56c4deeace90..3f948032b2bb 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+@@ -901,6 +901,8 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
+ 
+ 	icssm_prueth_emac_config(emac);
+ 
++	icssm_emac_set_stats(emac, &emac->stats);
++
+ 	ret = icssm_emac_set_boot_pru(emac, ndev);
+ 	if (ret)
+ 		return ret;
+@@ -952,6 +954,8 @@ static int icssm_emac_ndo_stop(struct net_device *ndev)
+ 	/* stop the PRU */
+ 	rproc_shutdown(emac->pru);
+ 
++	icssm_emac_get_stats(emac, &emac->stats);
++
+ 	/* free rx interrupts */
+ 	free_irq(emac->rx_irq, ndev);
+ 
+@@ -1045,10 +1049,39 @@ static enum netdev_tx icssm_emac_ndo_start_xmit(struct sk_buff *skb,
+ 	return ret;
+ }
+ 
++/**
++ * icssm_emac_ndo_get_stats64 - EMAC get statistics function
++ * @ndev: The EMAC network adapter
++ * @stats: rtnl_link_stats structure
++ *
++ * Called when system wants to get statistics from the device.
++ *
++ */
++static void icssm_emac_ndo_get_stats64(struct net_device *ndev,
++				       struct rtnl_link_stats64 *stats)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++
++	icssm_emac_get_stats(emac, &pstats);
++
++	stats->rx_packets = ndev->stats.rx_packets;
++	stats->rx_bytes   = ndev->stats.rx_bytes;
++	stats->tx_packets = ndev->stats.tx_packets;
++	stats->tx_bytes   = ndev->stats.tx_bytes;
++	stats->tx_errors  = ndev->stats.tx_errors;
++	stats->tx_dropped = ndev->stats.tx_dropped;
++	stats->multicast  = pstats.rx_mcast;
++
++	stats->rx_over_errors   = ndev->stats.rx_over_errors;
++	stats->rx_length_errors = ndev->stats.rx_length_errors;
++}
++
+ static const struct net_device_ops emac_netdev_ops = {
+ 	.ndo_open = icssm_emac_ndo_open,
+ 	.ndo_stop = icssm_emac_ndo_stop,
+ 	.ndo_start_xmit = icssm_emac_ndo_start_xmit,
++	.ndo_get_stats64 = icssm_emac_ndo_get_stats64,
+ };
+ 
+ /* get emac_port corresponding to eth_node name */
+@@ -1177,6 +1210,7 @@ static int icssm_prueth_netdev_init(struct prueth *prueth,
+ 	phy_remove_link_mode(emac->phydev, ETHTOOL_LINK_MODE_Asym_Pause_BIT);
+ 
+ 	ndev->netdev_ops = &emac_netdev_ops;
++	ndev->ethtool_ops = &emac_ethtool_ops;
+ 
+ 	return 0;
+ free:
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+index 3c70dc9c4be0..39ceed0e2d15 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+@@ -27,6 +27,12 @@
+ #define EMAC_MAX_FRM_SUPPORT (ETH_HLEN + VLAN_HLEN + ETH_DATA_LEN + \
+ 			      ICSSM_LRE_TAG_SIZE)
+ 
++#define PRUETH_REG_DUMP_VER		1
++
++/* Encoding: 32-16: Reserved, 16-8: Reg dump version, 8-0: Ethertype  */
++#define PRUETH_REG_DUMP_GET_VER(x)	((PRUETH_REG_DUMP_VER << 8) | \
++					 ((x)->eth_type))
++
+ /* PRU Ethernet Type - Ethernet functionality (protocol
+  * implemented) provided by the PRU firmware being loaded.
+  */
+@@ -108,6 +114,119 @@ struct prueth_packet_info {
+ 	bool timestamp;
+ };
+ 
++/**
++ * struct port_statistics - Statistics structure for capturing statistics
++ *			    on PRUs
++ * @tx_bcast: Number of broadcast packets sent
++ * @tx_mcast:Number of multicast packets sent
++ * @tx_ucast:Number of unicast packets sent
++ *
++ * @tx_octets:Number of undersized frames rcvd
++ *
++ * @rx_bcast:Number of broadcast packets rcvd
++ * @rx_mcast:Number of multicast packets rcvd
++ * @rx_ucast:Number of unicast packets rcvd
++ *
++ * @rx_octets:Number of Rx packets
++ *
++ * @tx64byte:Number of 64 byte packets sent
++ * @tx65_127byte:Number of 65-127 byte packets sent
++ * @tx128_255byte:Number of 128-255 byte packets sent
++ * @tx256_511byte:Number of 256-511 byte packets sent
++ * @tx512_1023byte:Number of 512-1023 byte packets sent
++ * @tx1024byte:Number of 1024 and larger size packets sent
++ *
++ * @rx64byte:Number of 64 byte packets rcvd
++ * @rx65_127byte:Number of 65-127 byte packets rcvd
++ * @rx128_255byte:Number of 128-255 byte packets rcvd
++ * @rx256_511byte:Number of 256-511 byte packets rcvd
++ * @rx512_1023byte:Number of 512-1023 byte packets rcvd
++ * @rx1024byte:Number of 1024 and larger size packets rcvd
++ *
++ * @late_coll:Number of late collisions(Half Duplex)
++ * @single_coll:Number of single collisions (Half Duplex)
++ * @multi_coll:Number of multiple collisions (Half Duplex)
++ * @excess_coll:Number of excess collisions(Half Duplex)
++ *
++ * @rx_misalignment_frames:Number of non multiple of 8 byte frames rcvd
++ * @stormprev_counter:Number of packets dropped because of Storm Prevention
++ * @mac_rxerror:Number of MAC receive errors
++ * @sfd_error:Number of invalid SFD
++ * @def_tx:Number of transmissions deferred
++ * @mac_txerror:Number of MAC transmit errors
++ * @rx_oversized_frames:Number of oversized frames rcvd
++ * @rx_undersized_frames:Number of undersized frames rcvd
++ * @rx_crc_frames:Number of CRC error frames rcvd
++ * @dropped_packets:Number of packets dropped due to link down on opposite port
++ *
++ * @tx_hwq_overflow:Hardware Tx Queue (on PRU) over flow count
++ * @tx_hwq_underflow:Hardware Tx Queue (on PRU) under flow count
++ *
++ * @u32 cs_error: Number of carrier sense errors
++ * @sqe_test_error: Number of MAC receive errors
++ *
++ * Above fields are aligned so that it's consistent
++ * with the memory layout in PRU DRAM, this is to facilitate easy
++ * memcpy. Don't change the order of the fields.
++ *
++ * @vlan_dropped: Number of VLAN tagged packets dropped
++ * @multicast_dropped: Number of multicast packets dropped
++ */
++struct port_statistics {
++	u32 tx_bcast;
++	u32 tx_mcast;
++	u32 tx_ucast;
++
++	u32 tx_octets;
++
++	u32 rx_bcast;
++	u32 rx_mcast;
++	u32 rx_ucast;
++
++	u32 rx_octets;
++
++	u32 tx64byte;
++	u32 tx65_127byte;
++	u32 tx128_255byte;
++	u32 tx256_511byte;
++	u32 tx512_1023byte;
++	u32 tx1024byte;
++
++	u32 rx64byte;
++	u32 rx65_127byte;
++	u32 rx128_255byte;
++	u32 rx256_511byte;
++	u32 rx512_1023byte;
++	u32 rx1024byte;
++
++	u32 late_coll;
++	u32 single_coll;
++	u32 multi_coll;
++	u32 excess_coll;
++
++	u32 rx_misalignment_frames;
++	u32 stormprev_counter_bc;
++	u32 stormprev_counter_mc;
++	u32 stormprev_counter_uc;
++	u32 mac_rxerror;
++	u32 sfd_error;
++	u32 def_tx;
++	u32 mac_txerror;
++	u32 rx_oversized_frames;
++	u32 rx_undersized_frames;
++	u32 rx_crc_frames;
++	u32 dropped_packets;
++
++	u32 tx_hwq_overflow;
++	u32 tx_hwq_underflow;
++
++	u32 cs_error;
++	u32 sqe_test_error;
++
++	u32 vlan_dropped;
++	u32 multicast_dropped;
++} __packed;
++
+ /* In switch mode there are 3 real ports i.e. 3 mac addrs.
+  * however Linux sees only the host side port. The other 2 ports
+  * are the switch ports.
+@@ -203,6 +322,7 @@ struct prueth_emac {
+ 	struct phy_device *phydev;
+ 	struct prueth_queue_desc __iomem *rx_queue_descs;
+ 	struct prueth_queue_desc __iomem *tx_queue_descs;
++	struct port_statistics stats; /* stats holder when i/f is down */
+ 
+ 	int link;
+ 	int speed;
+@@ -241,9 +361,16 @@ struct prueth {
+ 	u8 emac_configured;
+ };
+ 
++extern const struct ethtool_ops emac_ethtool_ops;
++
+ void icssm_parse_packet_info(struct prueth *prueth, u32 buffer_descriptor,
+ 			     struct prueth_packet_info *pkt_info);
+ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
+ 			 struct prueth_packet_info *pkt_info,
+ 			 const struct prueth_queue_info *rxqueue);
++
++void icssm_emac_set_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats);
++void icssm_emac_get_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats);
+ #endif /* __NET_TI_PRUETH_H */
+-- 
+2.34.1
 
