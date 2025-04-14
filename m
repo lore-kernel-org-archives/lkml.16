@@ -1,125 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEC727F759;
-	Mon, 14 Apr 2025 14:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3631B27FD5A;
+	Mon, 14 Apr 2025 14:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640729; cv=none; b=odm31Z+gLPN0NmovErYrCfmJlnP2CCymMbzTRcgP9dhWzp6JFrH0EbDoWLNQvRkPlkx9+twiB4axOpJ84f/iLg+p2J/Jx9Yg46aulcI8kS6wmlgIklAc9R/1hXdSV+dW9FYcvl/161NYxyewcLE4+pkNjSO0KwDIEPOQixrKBOk=
+	t=1744640737; cv=none; b=sa3PpRbIuGgr1xKY+I1njEeYB57iqAeVf6e75ymbJS7v5S6Xf4iJ8Jw13d5Oafsbp5OWqxks0zMIHRNOUBXxojiyYyswC+r4kTqWyUK0kq9xqWRbzvj5uZBIIxrkQZTsmjlCKsf3BtM96jig+SSGL4h1waGKVsNeS7c2Cv0oB0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640729; c=relaxed/simple;
-	bh=yg6EWMxUISCyYSYPYDJV3F2CpXW7on+QB5igo/9U3WM=;
+	s=arc-20240116; t=1744640737; c=relaxed/simple;
+	bh=4M1D99PAVqvZi96MOYQWeD6ZcQwnEQ4Bpbi2arizon8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dQlc8LZQjc7j9GrDU3yMQ7zcOPlQa3e96bK/uvenpiDDsuxHYwxbiLVYma8LPcsAFJWEWHDikkLjsMwW1I1qEinc8F7hcDouksd3ACqL5OqG9kYrMjbzp/4QFIrIYVg+M0hjt08KYUHhObXZareS+Focs7kddOb0zdxGprMTkWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5xnaIoI; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=NLdPWbhTAV5FcK0Ewc8DH/kYtBHOy8qeoWqGfbh1Y7o73MGOVuHFYWn2mRbPwRIR6uRUdnun9rD0tXjGFeFpEC0Qjipu0hRkAYlP7A1FLX8pFcSI1MG5qQouJxubirHRwrWmISJS8uR30cnMUmrVqMu41a5zWzzDciaHwfgpsTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWlt2Eto; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5xnaIoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7006C4CEE9;
-	Mon, 14 Apr 2025 14:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744640728;
-	bh=yg6EWMxUISCyYSYPYDJV3F2CpXW7on+QB5igo/9U3WM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=b5xnaIoIi/nu5s7HP6IU9n3N9sIZC6rCnMlcUAUDLYrdTKJFF+k0jOSMdO+MVL4r4
-	 Xg90kiLPLvJVsrCi3tqZ5tv4uJVVW9VOh7OV45dvPJRy8lvRizgyjLZeM0KHNAbNQU
-	 vumektwdm3FBJglsE+0AT8f55TuPusym+ubQFinR0xVW96zcCQ0Vxr/f6ngUztO+Y/
-	 2VCmMDYNNXYeyLqkVd+94p1vxAp8dPd0FQtPTgcDlOWX9NiL7C51F978BDKn8e9GGI
-	 akLwF0Vq1YigNjzIzImElNNl9BW5SX/jvDucuVsNKMTVvd3gulrwnDQZZBfaSli+vJ
-	 7p5/8j6qt/bsA==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60288fd4169so1875672eaf.3;
-        Mon, 14 Apr 2025 07:25:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUXCrC3jlN+G8ynRLpVkUkkyMetdXWGPgGXc+cJUPZ6iec7fD4AzLCpdMd/7ysN+T9GNfoXFpqJuCkGcQ4U@vger.kernel.org, AJvYcCXdqEGtzoY1XT+ooHlX/owRYS6fxuGi2bbfD0V/WocVUZOBLtzX7wkXtSb54xxjcTUyGdVQRupGqo4N@vger.kernel.org
-X-Gm-Message-State: AOJu0YyumCAmP/L+o1pnFZlhb167mTGzgdDVviBS9u4ndQErVKGH3Nuv
-	vzRpri0NsUWeJSYrs9yEaK3dCtp+RBZB979pBahZhjpkG1qsZVSaObhFZ5m2j0jE0i+5c5ITZuT
-	bT031EGAobM/XhHFOK3TVQD41mQE=
-X-Google-Smtp-Source: AGHT+IGpQ8Gu6BowkMYFfcY+1nthKg0wd1cz3rjIdC8dPfkokVglpT5SfkZnRdy5kH2Kp1RRisWLKcbiXxBnKB2lNME=
-X-Received: by 2002:a05:6871:6216:b0:2c1:6bbc:70f4 with SMTP id
- 586e51a60fabf-2d0d5f74b56mr7444602fac.38.1744640728206; Mon, 14 Apr 2025
- 07:25:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWlt2Eto"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac289147833so882154766b.2;
+        Mon, 14 Apr 2025 07:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744640734; x=1745245534; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0+i03KpPoesYplL/qUIjpUO++rCb/s/V2SLn3HX44rs=;
+        b=WWlt2EtoJrK2pDfD+x91wBOv3XwvN4eLM9mCpehMWB10GPGRoV90RRM1wXA66mHoBs
+         waZ/UjxtcYoDDgE4J/XM7L3d3Wh0IgqasczzFTY3VacJ9osYR3zw9pSGLSkzFE6DvxiV
+         d8CPN+3hCc6Ruhq9ySTR63cfDzdRtUQHUveVXWZodyRKwS8LZFc3UHvXD7JNKiCrIIk9
+         1kV4TyJE2U0dzRJI5pyZf2MCV/wE+BG/N3XXnqMNHLfTPQPSBwyMkYvhRrZBdSYxo8x3
+         bf3eMTtvAyNhamPq9POi8hO58cA4OIkSM8B0TBQFI6h5iM2/H7eaJyu0CZTpTcQ6tov4
+         7VhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744640734; x=1745245534;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0+i03KpPoesYplL/qUIjpUO++rCb/s/V2SLn3HX44rs=;
+        b=tDMMFLSb9a2QgCiwLmPrLFBkHcIEfnzuuDAlais4Z9czFQF2V9ZMSp+tVHZEVdC0xt
+         6v0J6hX3quzweGcQFDgPr9R14VNUt1e4m+0AX3SmiKhKXY6p14uwQonA4QNeMHIo4yKK
+         ZkU3BAAw8lGk6O3eou7lmVaAcDkXKPyewjQ+/gYXsbeAVfSboZv4EOotwgR5Z6c61l9j
+         XbYjuFO3PUYjiGOmNxqk3U06E92/D9NV8sniU+Ug/dae00wWM8u2bhqGukLcN/X6df3b
+         x9fGoBvqafkh+j8KV/U98k+2xV6/6FzDLHCrBbHL8Sk2KRHZ1uO4eLGcO4CEM/hjGJ1P
+         iT7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWVQTNFG1bqc4sgt0XHzWeU5QM/7l04KTYiI2sCR2bted/liyhUtoLW7dcHn1dhy7AitPIMqLUDL6Dv@vger.kernel.org, AJvYcCWq5nreiIj/ZQA6XllMTYgQpr+n985HuusVpBh8uu2dpOte3qy3WH4DAM3wEVb1n4DoS8eE63e5W0t/jJRl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFHEoNAwzoP7VllRDRxSNkkTEsjclxRi8wGt0G2IiMjt4kPiA8
+	HXxxf/pgCqT7oaqVivYhwcafM451O9Ioxc8Na/Vd3pRHNCUofjEbjmKQQvHYDyZJsjkhtd4zFBj
+	H+EzEZIDlAxuWgSSR6MJmtrF7kOJGvksuqEI=
+X-Gm-Gg: ASbGncu3Yy7b3E9DLtoblhQ15KzkLT/1kG7AU2YkGq5xNZGNyLJzDNpx4/srhKjyuQc
+	lcElPwQjkWojdtkLK9JWYuAMPjOUJbI4zuyazslfWSMoTwii1DkDJqeidUfB1DwwJqYH+iBvGUV
+	LYU0H/3i4WRyyB9g/u0FkdPw==
+X-Google-Smtp-Source: AGHT+IEYDHe/CyayPDTDqvHH4oIbkb5IHFVr7IgvWmBdzKWAYSHg3a4OGWTd63RP+MkrvE177Dbl49YlDHB/xdWMl9k=
+X-Received: by 2002:a17:907:7e81:b0:ac3:3d10:6f with SMTP id
+ a640c23a62f3a-acad345696fmr932095366b.8.1744640734274; Mon, 14 Apr 2025
+ 07:25:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414073517.57745-1-kevinpaul468@gmail.com>
-In-Reply-To: <20250414073517.57745-1-kevinpaul468@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 14 Apr 2025 16:25:11 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gTXstnnFWi87ihxLx7u1HcNaKeUdBpE+2HyJ+40wLCbQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHoCYUB-YbsecjuItR83jefDARX0oJSWSXyKosTFhnQ3zOAQZ8DOaF_SUQ
-Message-ID: <CAJZ5v0gTXstnnFWi87ihxLx7u1HcNaKeUdBpE+2HyJ+40wLCbQ@mail.gmail.com>
-Subject: Re: [PATCH] acpica: Removing deprecated strncpy()
-To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <cover.1744200264.git.marcelo.schmitt@analog.com> <247566f848cdf2a245a8b6da6a84c22e155beeb7.1744200264.git.marcelo.schmitt@analog.com>
+In-Reply-To: <247566f848cdf2a245a8b6da6a84c22e155beeb7.1744200264.git.marcelo.schmitt@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 14 Apr 2025 17:24:56 +0300
+X-Gm-Features: ATxdqUGWdI8hC2QgSnrOE_-PLsI5VnqZbkBRp-jyeE-Ur815irq6_hSV1BgqeX8
+Message-ID: <CAHp75VfyZ-f+KMVjyFVMitmQA65enJwHV+nBdC=XqE_Pz5cP1g@mail.gmail.com>
+Subject: Re: [PATCH v1 5/7] iio: adc: ad4170: Add GPIO controller support
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 9:35=E2=80=AFAM Kevin Paul Reddy Janagari
-<kevinpaul468@gmail.com> wrote:
+On Wed, Apr 9, 2025 at 3:26=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
 >
-> This patch suggests the replacement of strncpy with strscpy
-> as per Documentation/process/deprecated.
-> The strncpy() fails to guarantee NULL termination,
-> The function adds zero pads which isn't really convenient for short strin=
-gs
-> as it may cause performance issues.
+> The AD4170 has four multifunctional pins that can be used as GPIOs. The
+> GPIO functionality can be accessed when the AD4170 chip is not busy
+> performing continuous data capture or handling any other register
+> read/write request. Also, the AD4170 does not provide any interrupt based
+> on GPIO pin states so AD4170 GPIOs can't be used as interrupt sources.
 >
-> strscpy() is a preferred replacement because
-> it overcomes the limitations of strncpy mentioned above.
->
-> Compile Tested
+> Implement gpio_chip callbacks so to make AD4170 GPIO pins controllable
 
-ACPICA material is primarily handled by the upstream ACPICA project on
-GitHub, so  ACPICA changes should first be submitted to upstream ACPICA as
-indicated on this list for many times, see for instance:
+callbacks to
 
-https://lore.kernel.org/linux-acpi/CAJZ5v0gUDxrAn4W+Rf3ifjrg8Z9ZzTTOZjPFSSN=
-5488mPqzXeA@mail.gmail.com/
+> through the gpiochip interface.
 
-> Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-> ---
->  drivers/acpi/acpica/exconvrt.c | 2 +-
->  drivers/acpi/acpica/tbfind.c   | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/acpica/exconvrt.c b/drivers/acpi/acpica/exconvr=
-t.c
-> index bb1be42daee1..648e68a31e1f 100644
-> --- a/drivers/acpi/acpica/exconvrt.c
-> +++ b/drivers/acpi/acpica/exconvrt.c
-> @@ -226,7 +226,7 @@ acpi_ex_convert_to_buffer(union acpi_operand_object *=
-obj_desc,
->                 /* Copy the string to the buffer */
->
->                 new_buf =3D return_desc->buffer.pointer;
-> -               strncpy((char *)new_buf, (char *)obj_desc->string.pointer=
-,
-> +               strscpy((char *)new_buf, (char *)obj_desc->string.pointer=
-,
->                         obj_desc->string.length);
->                 break;
->
-> diff --git a/drivers/acpi/acpica/tbfind.c b/drivers/acpi/acpica/tbfind.c
-> index 1c1b2e284bd9..5536d1755188 100644
-> --- a/drivers/acpi/acpica/tbfind.c
-> +++ b/drivers/acpi/acpica/tbfind.c
-> @@ -57,8 +57,8 @@ acpi_tb_find_table(char *signature,
->
->         memset(&header, 0, sizeof(struct acpi_table_header));
->         ACPI_COPY_NAMESEG(header.signature, signature);
-> -       strncpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
-> -       strncpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE=
-);
-> +       strscpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
-> +       strscpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE=
-);
->
->         /* Search for the table */
->
-> --
-> 2.39.5
->
->
+...
+
+> +static int ad4170_gpio_direction_output(struct gpio_chip *gc,
+> +                                       unsigned int offset, int value)
+> +{
+> +       struct iio_dev *indio_dev =3D gpiochip_get_data(gc);
+> +       struct ad4170_state *st =3D iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       if (!iio_device_claim_direct(indio_dev))
+> +               return -EBUSY;
+> +
+> +       ret =3D regmap_clear_bits(st->regmap16, AD4170_GPIO_MODE_REG,
+> +                               BIT(offset * 2));
+> +       if (ret)
+> +               goto err_release;
+> +
+> +       ret =3D regmap_set_bits(st->regmap16, AD4170_GPIO_MODE_REG,
+> +                             BIT(offset * 2 + 1));
+> +
+> +err_release:
+> +       iio_device_release_direct(indio_dev);
+> +
+> +       ad4170_gpio_set(gc, offset, value);
+
+This is incorrect ordering, you will have glitches. Can you set the
+value beforehands? Or is it broken hardware?
+
+> +       return ret;
+> +}
+
+...
+
+> +static int ad4170_gpio_init(struct iio_dev *indio_dev)
+> +{
+> +       struct ad4170_state *st =3D iio_priv(indio_dev);
+
+> +       st->gpiochip =3D (struct gpio_chip) {
+> +               .label =3D "ad4170_gpios",
+> +               .base =3D -1,
+> +               .ngpio =3D 4,
+> +               .parent =3D &st->spi->dev,
+> +               .can_sleep =3D true,
+> +               .get_direction =3D ad4170_gpio_get_direction,
+> +               .direction_input =3D ad4170_gpio_direction_input,
+> +               .direction_output =3D ad4170_gpio_direction_output,
+> +               .get =3D ad4170_gpio_get,
+> +               .set_rv =3D ad4170_gpio_set,
+> +               .owner =3D THIS_MODULE,
+> +       };
+
+I think it would be better to have it field by field initialised.
+
+> +       return devm_gpiochip_add_data(&st->spi->dev, &st->gpiochip, indio=
+_dev);
+> +}
+
+...
+
+> +       /* Only create a GPIO chip if flagged for it */
+> +       if (device_property_read_bool(&st->spi->dev, "gpio-controller")) =
+{
+> +               ret =3D ad4170_gpio_init(indio_dev);
+> +               if (ret < 0)
+
+< 0 ? What is the meaning of the positive values that you expect from
+this function?
+
+> +                       return ret;
+> +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
