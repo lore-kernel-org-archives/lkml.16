@@ -1,79 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4548C2459F0
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547DF158520;
+	Mon, 14 Apr 2025 07:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744615229; cv=none; b=QpCfrLHLznwxCZIPY+n14DrLxBO1KxOaEXsk0V/hY+kDzx+iuat1OqGg77tVmGOqOKohPfqPtCg1XYATCZz+KuGdjKUj+paGidbN2YOxs8YYyI3a3mdfDlIpEpRHOttIq42nDPYFEhVvOBNF7/Zb+FErQIT8G05sUAhtLQR2Vkc=
+	t=1744615301; cv=none; b=E4ZQqFjjARjBwzoeSYFZpaVejE6TPj/70DTu0bJLXF1xKqbvnN0ZL8wJ5KGteB406nkY8dZXUGNSARPQx4YjnSKuLC1mbo1TRcDaXUJt48wZm955rjuEA0Oin1FJHK0cImhDg3Ms+QgLTPWrVFdw/AVAG5vIvJpHmqZSa/ncawM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744615229; c=relaxed/simple;
-	bh=uFoWM9q4E7X76y8QE6Eu+Tar2Fc9Aw1hWYzHfghTThg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WlxmJ/mV7xV2+FsfRn4ojYnsyJCAZUJ9zWn/Kr+5DmYOm4YSFQdbR5sApWmhU6g2IvIUUqfV5zM3SbaAMkQJDMZn1Zv00eYjXLAQFFELugUDoec58gnjzRg1GaCA5F+9pjraJ1BpR/lH6iihBpIANJxIijwfdCbBmFEHSmB5Rt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQomUQrB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQomUQrB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 233C5C4CEE2;
-	Mon, 14 Apr 2025 07:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744615228;
-	bh=uFoWM9q4E7X76y8QE6Eu+Tar2Fc9Aw1hWYzHfghTThg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pQomUQrBXhpt0EwxfEc6U7Pc8iHjpL2w1M181TxJj+YxxSoLq3NRSil8mWY6tNd2B
-	 xatywP/9s4jJoyvaa0wC62MJVs6HiOr49e+FduyAMTFdKfy80YZRNDdoDCULml1Jhy
-	 6P2nDRvBcYbFo4JH+8hmL2tc0GxIFpDSrLs2gNa8LLPCSVkrOJgAjRG1iErMHUTPvS
-	 JGHwsTq6yVGAxEL3FVcXWMahXQ0AitfGZkq+e8+Ntsw+pH3NL9fO/+X5fp51KHWTju
-	 JmaJX3vvqUklc1L8YUWx/4YugbdqoFB2db9sjIdVDXAYlM5Q/nT4SkNnACsRiRuSCl
-	 HTbulrdSn2PTA==
-Date: Mon, 14 Apr 2025 09:20:24 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] genksyms: Handle typeof_unqual keyword and __seg_{fs,gs}
- qualifiers
-Message-ID: <Z_y3OIQECdVo6YJL@gmail.com>
-References: <20250413220749.270704-1-ubizjak@gmail.com>
+	s=arc-20240116; t=1744615301; c=relaxed/simple;
+	bh=LlzX1kcRFPEFmjGFFhIYoLpgsX3j0aUAkFJIpyNT7Jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GMQIn7Bl6BVunfieKk2sxu73T3IUO06JUuSjw2H5xlUQCTge3TGtwnCXymhR4tlvp4BCMUHWEV1X84s20SoNPnvmuX5Lj8dx/IGULhMRUKSo1i37tkBpQlCghxoVRg2xxD+oyuGJGegOOVCmG5LdxY2u1he3XpbOh+GMUmrxHO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowACHxQ10t_xndifnCA--.16716S2;
+	Mon, 14 Apr 2025 15:21:25 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: arend.vanspriel@broadcom.com,
+	kvalo@kernel.org
+Cc: jacobe.zang@wesion.com,
+	sebastian.reichel@collabora.com,
+	christophe.jaillet@wanadoo.fr,
+	erick.archer@outlook.com,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] brcm80211: fmac: Add error handling for brcmf_usb_dl_writeimage()
+Date: Mon, 14 Apr 2025 15:20:58 +0800
+Message-ID: <20250414072058.2222-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413220749.270704-1-ubizjak@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACHxQ10t_xndifnCA--.16716S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrykZr13Kw4UuFW5uryUZFb_yoW8XFyfp3
+	Z7XasrurykW3yaka17tFs7AFykK3WrJa4vkFW8Zwn3XF4kCw10krs0gFyFkw4DCrWfAa47
+	JF4DAry7Jrs8KFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvNtsUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAMA2f8nMBWvwABs5
 
+The function brcmf_usb_dl_writeimage() calls the function
+brcmf_usb_dl_cmd() but dose not check its return value. The
+'state.state' and the 'state.bytes' are uninitialized if the
+function brcmf_usb_dl_cmd() fails. It is dangerous to use
+uninitialized variables in the conditions.
 
-* Uros Bizjak <ubizjak@gmail.com> wrote:
+Add error handling for brcmf_usb_dl_cmd() to jump to error
+handling path if the brcmf_usb_dl_cmd() fails and the
+'state.state' and the 'state.bytes' are uninitialized.
 
-> Handle typeof_unqual, __typeof_unqual and __typeof_unqual__ keywords
-> using TYPEOF_KEYW token in the same way as typeof keyword.
-> 
-> Also ignore x86 __seg_fs and __seg_gs named address space qualifiers
-> using X86_SEG_KEYW token in the same way as const, volatile or
-> restrict qualifiers.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de/
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> ---
->  scripts/genksyms/keywords.c | 7 +++++++
->  scripts/genksyms/parse.y    | 5 ++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Cc: stable@vger.kernel.org # v3.4+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks, applied to tip:core/urgent.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 50dddac8a2ab..1c97cd777225 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -901,7 +901,9 @@ brcmf_usb_dl_writeimage(struct brcmf_usbdev_info *devinfo, u8 *fw, int fwlen)
+ 	}
+ 
+ 	/* 1) Prepare USB boot loader for runtime image */
+-	brcmf_usb_dl_cmd(devinfo, DL_START, &state, sizeof(state));
++	err = brcmf_usb_dl_cmd(devinfo, DL_START, &state, sizeof(state));
++	if (err)
++		goto fail;
+ 
+ 	rdlstate = le32_to_cpu(state.state);
+ 	rdlbytes = le32_to_cpu(state.bytes);
+-- 
+2.42.0.windows.2
 
-I've also added this tag for context:
-
-  Fixes: ac053946f5c4 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
-
-
-	Ingo
