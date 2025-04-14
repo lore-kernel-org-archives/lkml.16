@@ -1,124 +1,203 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFC128B4F1
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1218728B502
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 17:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652523; cv=none; b=Umegwmcy27jl6ohxZFaaHFBC/nyvpmo+sSOjv74g2NkBsTMhV78p6qmVRRPI7yRqlv3pTZj400wPHfMcuUddhYJeIleLm76x3+NSGADELrbNx/HFqkTA4owyzc+m06U3un4AtfuJ+uEpg5GZqh2geUdaaSzmR43L1Qr/Pm/ZkCQ=
+	t=1744652523; cv=none; b=jWSbkGYiAEaojso8oPMVN3q8p9Dis8p2R+wlWq7pA7tj8IojES0IJlr1C6dyUcGXQQw1EhjobRxMlH2SKqwTHqmgONgf9IcFMcyxtNFJCpzdiiFzC74HA/VjrAHJxxP+fYdIyGKmvWU9ELSieHo5+M5zinrQ4CSU9Nb0SOoZiAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744652523; c=relaxed/simple;
-	bh=4JpnGmP3Hhgrh73p6ayQO38z3PWEVbCm8A1DvNQjRrs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VAaCreccnE69m2Dmlist+PdoQygrPdD3V+m6JIvLxep+bSmrmIBNNnAMjGrx+q+/cE9FRAxxDPI2mRNNPpitUlcQMGCgQ53IXqbNEwAmenRtoUUHJBvUhkGgGJpcbcdS7bm4CDPOr+QUPXUoW3/xOhxSMm66L9RbV1KWhWLLNz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=A/tH3uC1; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	bh=aAdzhzW38NjSMOvy9Z8oUVow8Z9ErhbvXK/Tehm7JYQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=NnXGPhWxtn1dR0dURqpvE5xajIVTAlfhAk1dis6X0ws1MBVxn9NDqQPAJmlT93TPTt1fOXzK2iEamKXzpXLhfrLDQZZlx6GXTsJ2iifDaT/qwEvcduwd2AKU14797+7DjtUj+qeKGSY7abTbY0stZkFq8QCZjKGxdDTXxtkwTlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dv/WpeWd; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="A/tH3uC1"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so47670485e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:42:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dv/WpeWd"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-229170fbe74so38033545ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 10:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1744652519; x=1745257319; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N0NiqX3kmmnvN0D1p8k2XJtWrJOkDyGN772Tt9wsVFQ=;
-        b=A/tH3uC1N+kXcq52+ER2tlawznLpRljXybvNtlkuuwtqfBao3j2dQ1RdXXXsOX45w7
-         1SK/Tm0hGQFWl2+biE6yiT1h0YfWMKwHewHZ/HBKgvG1w5/LF1FauRta62x699oipzpy
-         Sfd4AGV0vFshTA009+7kPWicdOFTp4JNiDnsdGr9ZdIJ8wldSw75rRIVgrpGW64NsdnI
-         TvAmVeH52l2Qk4d/MCPZ0Mb4LMEcLg8G7P7bepflJwnnSMUh9znFvfNf8HUdnkb043h2
-         MwD0Dnaub62fXKgpoIuP9yibYeyslQSuQ6fYuwlTvP4//UgZI9HqZPPyXyjQIqylht5s
-         c6zg==
+        d=google.com; s=20230601; t=1744652521; x=1745257321; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rPTy94ffbUEhOKiK1IPtcVt4myAa/NejYMC0O4TJ2i8=;
+        b=dv/WpeWdwBXaGMk39ivgRu5BqbUJnCRjxIT9W53FEFbCs098MZ+xsbWPUCObl8lNTb
+         Toy6Lvfrl8WjC13qtNWPPtFc6RhgOdMdervxwO48IDhyvjd7EL2UqEhHtofKWa6+un6H
+         ncuPMzr95N8cGd50149fTBVc1JPkc89BYYQgliwcbzl5AgqXdcg1hB0yV7QnDCqcm+l+
+         nV3sOJ63ec/ziEwGkXbL3O2hxoJvtGVajc/Lqv555QubtOSyFl1WChYz58XmUTlt+3a1
+         uTUzyDcUbfQP/wc8d6xKIX0ehADSvtfIXMhdRMFo22HQ+U/RpsCrxmETYFYW5eFX1C12
+         4bKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652519; x=1745257319;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N0NiqX3kmmnvN0D1p8k2XJtWrJOkDyGN772Tt9wsVFQ=;
-        b=axLEfRbKXoKc6NXEa6EawKqdM8IiBhInxfvOhJ/kA38PrxO2j8iFjcP0+3kftpDmNC
-         nEjcas1NphkfOlFfe4T5AutAbZKr9aHBIAdsqF4c+6AVGj07FIkv2wnOGPZGOQzJj+tY
-         +D5IEvRgCzYNHkT67ObSEBI5W2eUpI/xpeyRGaDNDfbKYK/wFhggburYIBN8yblxphR/
-         H4lJ6f6afP67GFA3jerOuuyMeN9Cu/EPrT+2P21sW1x7LQQaCj32tEAA2p9e6EVYPzsK
-         o4YHL2dOsv7OO5AEhWt/lTttYuyV7wfLBU5uAi+UDpqyMX6xgaB7+0Zn0Gc9ssUvp1wz
-         lYAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUTx9nGlnfRvj8lUZgbqIlJlv4tjXEgyTQbLBvrNZO4XWlWoMRw099dkurUnnUUL++0krvIsEg5gJjcEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye8x0sxIV9YglZy+llQ6RPzvjXcaZn2SKIll9O8/NqtDex8JZ5
-	8zMQDHIweWVy1C44qtHMQ670sfco4McgyKEwqtEAuXqCq0Or2ckmA6WBuIE70Mk=
-X-Gm-Gg: ASbGncuEIRSv92A8sgXIpL2HZaYOXHI2qG9IU2HfenrI4SlMW9g3NzL4AyKxDA3Lk2Y
-	qHR35x0GBcE2dctFRMLG+0X9qL7pDsAMB+qDA3wUsm2aevkjoFm7CcZs8X1zdvcGlfvepsPnON0
-	Hjbz0k/6g/eqpM/2gUjc0Ylhv86R8OeGC7ssR7gq9va4tvellEKNL5ayBm2MclI2ncsNXLq56J4
-	+E2iQ6B2j9jVcCAkeOTRP/xwCjKWOAbYDidmYWkh44N1KidmsiLrLk3J2nr6Ye5URlcv36ykeq+
-	NtXh/QPBVGlRFsXXJvj2RNUD9BuW6fBbxU8fCLTj7/U=
-X-Google-Smtp-Source: AGHT+IGLnXM1BCPUabzkGT8/AC2HrOP60k3F3Sd19EtJp1J2kT6z69sfo+nXbu/QtW8zZo8TdUB2dw==
-X-Received: by 2002:a05:600c:3b0d:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-43f3a9beb77mr127249525e9.27.1744652518940;
-        Mon, 14 Apr 2025 10:41:58 -0700 (PDT)
-Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e90sm182367365e9.38.2025.04.14.10.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 10:41:58 -0700 (PDT)
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 14 Apr 2025 18:41:47 +0100
-Subject: [PATCH] staging: bcm2835-camera: Initialise dev in v4l2_dev
+        d=1e100.net; s=20230601; t=1744652521; x=1745257321;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rPTy94ffbUEhOKiK1IPtcVt4myAa/NejYMC0O4TJ2i8=;
+        b=gNP1SueoEl8MOzKTxefc7tt1QaB6fCqKlhC6YooQ29ma1z8hMOtCyarcd4/MPbuOUy
+         yimSJLwwI1VkePDw62QioFzyoIGY6uHo8r3HR8ng4leAjhQrH6T34jEip7WwBR2uezqO
+         Q3039ovEe9s1szHeLgfX+6EB5aJJJZymEREo56p81D0X3Qr6gVXpOk/NI82X8so7K0jF
+         eaZf6EOIuvYy0kGOkWxBB/7N+BVOyvYFzPTyzK2xlPSgd0FYfqtFNqkACYiXQC3cGsen
+         cvrz/6IHx8fD0g5Jd5xYd9RSGZBi4uzig8QmK7/hO+o7ty/X8iPPcfqzAaoYckKNISs3
+         o0KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+OPczGataERWq3uDM47hfb8xee8Oj8IJWINlOuigxjEx72QPvNzk9+SqKedA8zWtRLIrHml24LzVokjc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpSIUL2iz+aIuVwDV6YA/aAKxAGBy6ZpptgtLLR/QLb/TrtZCZ
+	re5d8MzB9NAj7/sf3SJymxerOUsMFDtabztRsH+RYHNX74XDUp6UDYW4qki49zYmFLVWdiGty8V
+	gwZ3lig==
+X-Google-Smtp-Source: AGHT+IG/gtBJJm+4WgoCQHddaWlnyMc8L5+ILxbIyEsaY8UY7mmKrwp+YEP7LUoIH2k4YQQ0A0Ws08PeGF+f
+X-Received: from plbkg5.prod.google.com ([2002:a17:903:605:b0:21f:3ef1:c029])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:230d:b0:223:fbc7:25f4
+ with SMTP id d9443c01a7336-22bea4b70cbmr164437455ad.14.1744652521390; Mon, 14
+ Apr 2025 10:42:01 -0700 (PDT)
+Date: Mon, 14 Apr 2025 10:41:21 -0700
+In-Reply-To: <20250414174134.3095492-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-staging-bcm2835-v4l2-fix-v1-1-2b2db9a8f293@raspberrypi.com>
-X-B4-Tracking: v=1; b=H4sIANpI/WcC/x2MQQqAIBAAvxJ7bsHWguor0SF1s4Wy0Igg+nvSc
- QZmHkgchRP0xQORL0myhwxVWYBdpuAZxWUGUtSoulKYzslL8GjsRq1u8KpXwlluNK0zrtPakja
- Q8yNy1v96GN/3A893aqlqAAAA
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Umang Jain <umang.jain@ideasonboard.com>
-Cc: Stefan Wahren <wahrenst@gmx.net>, linux-staging@lists.linux.dev, 
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.14.1
+Mime-Version: 1.0
+References: <20250414174134.3095492-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250414174134.3095492-4-irogers@google.com>
+Subject: [PATCH v5 03/16] perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Caleb Biggers <caleb.biggers@intel.com>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Commit 42a2f6664e18 ("staging: vc04_services: Move global g_state to
-vchiq_state") changed mmal_init to pass dev->v4l2_dev.dev to
-vchiq_mmal_init, however nothing iniitialised dev->v4l2_dev, so we got
-a NULL pointer dereference.
+Try to add more consistency to evsel by having tpebs_start renamed to
+evsel__tpebs_open, passing the evsel that is being opened. The unusual
+behavior of evsel__tpebs_open opening all events on the evlist is kept
+and will be cleaned up further in later patches. The comments are
+cleaned up as tpebs_start isn't called from evlist.
 
-Set dev->v4l2_dev.dev during bcm2835_mmal_probe. The device pointer
-could be passed into v4l2_device_register to set it, however that also
-has other effects that would need additional changes.
-
-Fixes: 42a2f6664e18 ("staging: vc04_services: Move global g_state to vchiq_state")
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Weilin Wang <weilin.wang@intel.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
-Noted as we switched to 6.12 that the driver would fail during probe
-with an invalid dereference if a camera module was actually configured
-for the legacy camera stack.
-https://github.com/raspberrypi/linux/issues/6753
----
- drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/evsel.c       |  2 +-
+ tools/perf/util/intel-tpebs.c | 33 ++++++++++++++++-----------------
+ tools/perf/util/intel-tpebs.h |  2 +-
+ 3 files changed, 18 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-index b839b50ac26a..fa7ea4ca4c36 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-@@ -1900,6 +1900,7 @@ static int bcm2835_mmal_probe(struct vchiq_device *device)
- 				__func__, ret);
- 			goto free_dev;
- 		}
-+		dev->v4l2_dev.dev = &device->dev;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 1974395492d7..121283f2f382 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2595,7 +2595,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	struct perf_cpu cpu;
  
- 		/* setup v4l controls */
- 		ret = bcm2835_mmal_init_controls(dev, &dev->ctrl_handler);
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250410-staging-bcm2835-v4l2-fix-b8dbd933c23b
-
-Best regards,
+ 	if (evsel__is_retire_lat(evsel))
+-		return tpebs_start(evsel->evlist);
++		return evsel__tpebs_open(evsel);
+ 
+ 	err = __evsel__prepare_open(evsel, cpus, threads);
+ 	if (err)
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 74b43faab986..566e0ddcad88 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -12,6 +12,7 @@
+ #include <linux/zalloc.h>
+ #include <linux/err.h>
+ #include "sample.h"
++#include "counts.h"
+ #include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -189,18 +190,16 @@ static int tpebs_stop(void)
+ 	return ret;
+ }
+ 
+-/*
+- * tpebs_start - start tpebs execution.
+- * @evsel_list: retire_latency evsels in this list will be selected and sampled
+- * to get the average retire_latency value.
+- *
+- * This function will be called from evlist level later when evlist__open() is
+- * called consistently.
++/**
++ * evsel__tpebs_open - starts tpebs execution.
++ * @evsel: retire_latency evsel, all evsels on its list will be selected. Each
++ *         evsel is sampled to get the average retire_latency value.
+  */
+-int tpebs_start(struct evlist *evsel_list)
++int evsel__tpebs_open(struct evsel *evsel)
+ {
+ 	int ret = 0;
+-	struct evsel *evsel;
++	struct evsel *pos;
++	struct evlist *evsel_list = evsel->evlist;
+ 	char cpumap_buf[50];
+ 
+ 	/*
+@@ -215,25 +214,25 @@ int tpebs_start(struct evlist *evsel_list)
+ 	 * Prepare perf record for sampling event retire_latency before fork and
+ 	 * prepare workload
+ 	 */
+-	evlist__for_each_entry(evsel_list, evsel) {
++	evlist__for_each_entry(evsel_list, pos) {
+ 		int i;
+ 		char *name;
+ 		struct tpebs_retire_lat *new;
+ 
+-		if (!evsel->retire_lat)
++		if (!pos->retire_lat)
+ 			continue;
+ 
+-		pr_debug("tpebs: Retire_latency of event %s is required\n", evsel->name);
+-		for (i = strlen(evsel->name) - 1; i > 0; i--) {
+-			if (evsel->name[i] == 'R')
++		pr_debug("tpebs: Retire_latency of event %s is required\n", pos->name);
++		for (i = strlen(pos->name) - 1; i > 0; i--) {
++			if (pos->name[i] == 'R')
+ 				break;
+ 		}
+-		if (i <= 0 || evsel->name[i] != 'R') {
++		if (i <= 0 || pos->name[i] != 'R') {
+ 			ret = -1;
+ 			goto err;
+ 		}
+ 
+-		name = strdup(evsel->name);
++		name = strdup(pos->name);
+ 		if (!name) {
+ 			ret = -ENOMEM;
+ 			goto err;
+@@ -247,7 +246,7 @@ int tpebs_start(struct evlist *evsel_list)
+ 			goto err;
+ 		}
+ 		new->name = name;
+-		new->tpebs_name = evsel->name;
++		new->tpebs_name = pos->name;
+ 		list_add_tail(&new->nd, &tpebs_results);
+ 		tpebs_event_size += 1;
+ 	}
+diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+index 63c16e759a71..cc98203719c8 100644
+--- a/tools/perf/util/intel-tpebs.h
++++ b/tools/perf/util/intel-tpebs.h
+@@ -10,7 +10,7 @@ struct evsel;
+ 
+ extern bool tpebs_recording;
+ 
+-int tpebs_start(struct evlist *evsel_list);
++int evsel__tpebs_open(struct evsel *evsel);
+ void tpebs_delete(void);
+ int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
+ 
 -- 
-Dave Stevenson <dave.stevenson@raspberrypi.com>
+2.49.0.604.gff1f9ca942-goog
 
