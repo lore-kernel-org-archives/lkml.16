@@ -1,211 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28202628C;
-	Mon, 14 Apr 2025 07:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DB22628C;
+	Mon, 14 Apr 2025 07:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616857; cv=none; b=Ta6400gbdx1KnIwFdu0Bu49ava4Skdbwylq5gtGG85DMECEFD57i15dCyrwAAJ3g9voJwVMBz0agRXbTdn2aJgbh7RMp8ZNakCbUDvkEy+auKzpN2Uy4GFOhBpRI2UnIoppCo9Yccu1+j2LV5k8lJxOf0uCRQZoJQ7OTpTAZDm8=
+	t=1744616882; cv=none; b=G9oQfsUrw/VJ6C/t/mN8mvAvEMHdHcRlhZbUaxXFXDMaIs0yXctuR1XILyCXhqB5s6UaSrDGivVk+zIpy15piMfU86yJF74Ixxd8hwhRa1H/K2DrtLLZoTHh6NVF3jxPLV5CCe2GiS/2rvEoFIql2hBZQ3IxfYMdmhE7lZJ9Eec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616857; c=relaxed/simple;
-	bh=cJVe3apFs6nVj9y2qjiGhvwIV6g3h3nboUFjSdFy8gM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbQmyMAtJTd4tHKkcFNeW4u48c2HkOip0MEFkGFEVxnrxonjgl/8cW2q3TwSWXuhVsLygO29UIUZKdLLBCIkajdqgoLk6hCqSAJdlRFh3IyBGVr25oYVew+2tS/wP5r1PKyOvMJ/OfmOUw7wblXF/TVtMlHPrI3Z//0qcmNByF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XPuZMVH/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744616882; c=relaxed/simple;
+	bh=63bZC/UOojIFZL/ZiazbPdnBHrTeP2s5s7dmTygc9nU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Cl2tv9NLAAFzXMUaVs91oBLFvTsTKjlL5jq+sYT/R0UgFEs8RRkAZ9+dTtsA6tH/aNBh5WMlGpZU8d1hyRZFDdkDLJaJe/HpfY3QnIn5FGPHFGGxwgdRMGuGe4EwmvzgM54/cYA4R/GswHQmKB2DJ2wrSad4BqTMbriLLmpvfgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UItp4RW0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XPuZMVH/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744616856; x=1776152856;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cJVe3apFs6nVj9y2qjiGhvwIV6g3h3nboUFjSdFy8gM=;
-  b=XPuZMVH/RGLY9BLTMpGeW2rvCObFTyRi9ZdlAUZX4apcLUx8eyr9X2H8
-   YI1kZhExFfpluG+8zEPsBfIzQ0o2+psr0h8iKwvhWL6PY9OORVnb13N+S
-   5B31BPNZGOlbH7t+moEkXp1JQOqtUkHNbNilxsgRF66HfOZbOZtCPpQQ8
-   3w+oOPaVWF3uXnvjolT+OQjEt0aGMI7JBI1vsX0zf9m13CL9Zq1pRRCeR
-   xY0Ep2Hyj3CxoPNzEWW8JC9APJMu8dmINFSz0jGJaoQvogdPZw+ckf2Aq
-   nzkU3OU2oJgSzXrcASMVJ8VnVt2U0evadFcUFnW9kv8Ma1/OA+o3DCVn2
-   w==;
-X-CSE-ConnectionGUID: 4kMA9sn7RbuzCHC9v6gsJQ==
-X-CSE-MsgGUID: mNQt36SnS8ybCkGvRz8gAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46083351"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="46083351"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:47:32 -0700
-X-CSE-ConnectionGUID: ELGUn/CtQW+FwiUdM/EBCw==
-X-CSE-MsgGUID: 1aNZkmdaQum7hxE92/guUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="129503739"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 14 Apr 2025 00:47:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4EXM-000Du6-20;
-	Mon, 14 Apr 2025 07:47:24 +0000
-Date: Mon, 14 Apr 2025 15:47:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manikandan K Pillai <mpillai@cadence.com>,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and
- EP controller
-Message-ID: <202504141523.v9N9MrDJ-lkp@intel.com>
-References: <20250411103656.2740517-6-hans.zhang@cixtech.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UItp4RW0"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E0BAXk025634;
+	Mon, 14 Apr 2025 07:47:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=eOODX3xwOi3xIRHGHvUmcR
+	nRv7LJ5oFhJxA/OvjoVMY=; b=UItp4RW0Rc3ZhTDk+6elPVfxGXSGIdKDUlO7+y
+	D5QZTfF3h1iVUP5dBqp1XJwXt1GU5rhLQEbgqn4rwQpstQMvrirKcBkKEHbyVPFs
+	/VrGWW1GtSbI1gtOBy+pu1b11U1c2l56ZcfxUbLZAvpKxt9Aymnh024jzuXH7z1B
+	0w9aitGCyehzlKaiZc9ORw4MpJyaw4PgZir/TxPt577XPAIUXxiHvOJWGRUVhIdA
+	Gt7HpSkYgyVg5jiTxDmv5lxfmOjELpk8NK5TMHP+UGRWwbBi9ziSImqbUOii8yxl
+	9hjamFQhi28Z3x8bsw9Av9gG8yFroRpLEBsHdWSNgd/r0dvA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs13s3r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 07:47:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E7lvYv032372
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 07:47:57 GMT
+Received: from [10.213.96.82] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 00:47:55 -0700
+From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+Date: Mon, 14 Apr 2025 13:17:44 +0530
+Subject: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411103656.2740517-6-hans.zhang@cixtech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAJ+9/GcC/y3MwQqEIBRG4VeJu07I0s28SoRY968uTBYaEkTvP
+ jK0/M7i3JQQBYk+1U0RWZLsoUDXFU2rDwuUcDG1TWsbo43KjOwCrlO9SbtjcyzJj18o27GF9hM
+ bCyqPI2KW6//vh+f5AbvFBCRvAAAA
+X-Change-ID: 20250414-vdev_next-20250411_pm_disable-53d5e1acd45e
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vivek Pernamitta <quic_vpernami@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744616875; l=2311;
+ i=quic_vpernami@quicinc.com; s=20241114; h=from:subject:message-id;
+ bh=63bZC/UOojIFZL/ZiazbPdnBHrTeP2s5s7dmTygc9nU=;
+ b=zdvcOQUrgOOW/4hGO4RfjUqn/okbJhDE3vcaVnDBd2pLDCSTJqYE3oYw24ziIJNcBd91H7lPI
+ JIYRZ4B14N2CEHWViK1wfbLY3tZGyo4wnoSbpFKb6o8GzlX+t7gX6rT
+X-Developer-Key: i=quic_vpernami@quicinc.com; a=ed25519;
+ pk=HDwn8xReb8K52LA6/CJc6S9Zik8gDCZ5LO4Cypff71Y=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=67fcbdae cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=NdffcxjtmGlxNBlw-1IA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 1ac5Q5QsXfNrinJqYzHl_kOV8xXnajE-
+X-Proofpoint-ORIG-GUID: 1ac5Q5QsXfNrinJqYzHl_kOV8xXnajE-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=944 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140055
 
-Hi,
+The QDU100 device does not support the MHI M3 state, necessitating the
+disabling of runtime PM for this device. Since the PCIe core framework
+enables runtime PM by default for all clients, it is essential to disable
+runtime PM if the device does not support Low Power Mode (LPM).
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
+---
+ drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-[auto build test ERROR on a24588245776dafc227243a01bfbeb8a59bafba9]
+diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797 100644
+--- a/drivers/bus/mhi/host/pci_generic.c
++++ b/drivers/bus/mhi/host/pci_generic.c
+@@ -43,6 +43,7 @@
+  * @mru_default: default MRU size for MBIM network packets
+  * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
+  *		   of inband wake support (such as sdx24)
++ * @pm_disable: disables runtime PM (optional)
+  */
+ struct mhi_pci_dev_info {
+ 	const struct mhi_controller_config *config;
+@@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+ 	unsigned int dma_data_width;
+ 	unsigned int mru_default;
+ 	bool sideband_wake;
++	bool pm_disable;
+ };
+ 
+ #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
+@@ -295,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_qdu100_info = {
+ 	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+ 	.dma_data_width = 32,
+ 	.sideband_wake = false,
++	.pm_disable = true,
+ };
+ 
+ static const struct mhi_channel_config mhi_qcom_sa8775p_channels[] = {
+@@ -1270,6 +1273,13 @@ static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/* start health check */
+ 	mod_timer(&mhi_pdev->health_check_timer, jiffies + HEALTH_CHECK_PERIOD);
+ 
++	/* Disable Runtime PM if device doesn't support MHI M3 state */
++	if (info->pm_disable) {
++		pm_runtime_disable(&pdev->dev);
++		pm_runtime_set_suspended(&pdev->dev);
++		return 0;
++	}
++
+ 	/* Only allow runtime-suspend if PME capable (for wakeup) */
+ 	if (pci_pme_capable(pdev, PCI_D3hot)) {
+ 		pm_runtime_set_autosuspend_delay(&pdev->dev, 2000);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/dt-bindings-pci-cadence-Extend-compatible-for-new-RP-configuration/20250414-094836
-base:   a24588245776dafc227243a01bfbeb8a59bafba9
-patch link:    https://lore.kernel.org/r/20250411103656.2740517-6-hans.zhang%40cixtech.com
-patch subject: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
-config: x86_64-buildonly-randconfig-002-20250414 (https://download.01.org/0day-ci/archive/20250414/202504141523.v9N9MrDJ-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141523.v9N9MrDJ-lkp@intel.com/reproduce)
+---
+base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
+change-id: 20250414-vdev_next-20250411_pm_disable-53d5e1acd45e
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504141523.v9N9MrDJ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pci/controller/cadence/pcie-cadence-host.c:108:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     108 |         addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
-         |                 ^
-   drivers/pci/controller/cadence/pcie-cadence.h:309:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS'
-     309 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK, \
-         |         ^
-   drivers/pci/controller/cadence/pcie-cadence-host.c:574:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     574 |         value = CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
-         |                 ^
-   drivers/pci/controller/cadence/pcie-cadence.h:263:2: note: expanded from macro 'CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL'
-     263 |         FIELD_PREP(CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL_MASK, c)
-         |         ^
-   drivers/pci/controller/cadence/pcie-cadence-host.c:610:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     610 |         addr0 = CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
-         |                 ^
-   drivers/pci/controller/cadence/pcie-cadence.h:361:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS'
-     361 |         FIELD_PREP(CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS_MASK, ((nbits) - 1))
-         |         ^
-   drivers/pci/controller/cadence/pcie-cadence-host.c:663:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     663 |         desc1 = CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr);
-         |                 ^
-   drivers/pci/controller/cadence/pcie-cadence.h:339:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS'
-     339 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS_MASK, bus)
-         |         ^
-   4 errors generated.
---
->> drivers/pci/controller/cadence/pcie-cadence.c:199:8: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     199 |                             CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY(delay));
-         |                             ^
-   drivers/pci/controller/cadence/pcie-cadence.h:375:2: note: expanded from macro 'CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY'
-     375 |         FIELD_PREP(CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY_MASK, delay)
-         |         ^
-   drivers/pci/controller/cadence/pcie-cadence.c:221:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     221 |         addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) |
-         |                 ^
-   drivers/pci/controller/cadence/pcie-cadence.h:309:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS'
-     309 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK, \
-         |         ^
-   drivers/pci/controller/cadence/pcie-cadence.c:293:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     293 |         desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG;
-         |                 ^
-   drivers/pci/controller/cadence/pcie-cadence.h:333:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG'
-     333 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK, 0x10)
-         |         ^
-   3 errors generated.
-
-
-vim +/FIELD_PREP +108 drivers/pci/controller/cadence/pcie-cadence-host.c
-
-    72	
-    73	void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn,
-    74					   int where)
-    75	{
-    76		struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-    77		struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
-    78		struct cdns_pcie *pcie = &rc->pcie;
-    79		unsigned int busn = bus->number;
-    80		u32 addr0, desc0, desc1, ctrl0;
-    81		u32 regval;
-    82	
-    83		if (pci_is_root_bus(bus)) {
-    84			/*
-    85			 * Only the root port (devfn == 0) is connected to this bus.
-    86			 * All other PCI devices are behind some bridge hence on another
-    87			 * bus.
-    88			 */
-    89			if (devfn)
-    90				return NULL;
-    91	
-    92			return pcie->reg_base + (where & 0xfff);
-    93		}
-    94	
-    95		/*
-    96		 * Clear AXI link-down status
-    97		 */
-    98		regval = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN);
-    99		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN,
-   100				     (regval & GENMASK(0, 0)));
-   101	
-   102		desc1 = 0;
-   103		ctrl0 = 0;
-   104	
-   105		/*
-   106		 * Update Output registers for AXI region 0.
-   107		 */
- > 108		addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
-   109			CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
-   110			CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(busn);
-   111		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
-   112				     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(0), addr0);
-   113	
-   114		desc1 = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
-   115					    CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0));
-   116		desc1 &= ~CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK;
-   117		desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
-   118		ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
-   119			CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
-   120	
-   121		if (busn == bridge->busnr + 1)
-   122			desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
-   123		else
-   124			desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
-   125	
-   126		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
-   127				     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(0), desc0);
-   128		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
-   129				     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
-   130		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
-   131				     CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(0), ctrl0);
-   132	
-   133		return rc->cfg_base + (where & 0xfff);
-   134	}
-   135	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Vivek Pernamitta <quic_vpernami@quicinc.com>
+
