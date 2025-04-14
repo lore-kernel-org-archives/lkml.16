@@ -1,85 +1,110 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD09237172;
-	Mon, 14 Apr 2025 07:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9393525E463
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744616382; cv=none; b=hCHEVXxphqH00phmylM3ne9YZl5E7StnT7k+UZBF9MKEZkzzUHFav0kbzhCtGoUxlyUa+yoV8b0pJUHUP4llWexfPt39rHrXhMLmAwLFRQUVtko/T+FVvyzAKKSdcMDLjVFQtzuiiHb1Nr366xhW9FNbUCv1ZKhs5frnaAzsICI=
+	t=1744616392; cv=none; b=Jhkfbo2D7S6OvKVyZ2JItt/aFTnlexCEzcopy908RQmyRVDswz1l3HGuzbDn9yi6Jc7Nj9sJqZpVEtyp8vTY/GVTxLQr9MNiyD1Obklaaq6qx2Ghaz3/yaON5nBy1A530QQa1qCwK6t6MYxnbSzd58ZzHCMvz0dRs6o0oB7Rl6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744616382; c=relaxed/simple;
-	bh=khWE9cX70xPph8s7rn9jBXuJtbTTleSYbDejswZO7ds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tlVXkgExSupt1pFZKv5xqyI8M/AU+5EvRrwnAHQj/mLPtSr5U66iSMM8fuYJ5INjWnbw+QZBseNynYvoGXLp8P+fttvcUKgWq++uTXnBi1yL4qiOPnAR6RxgmhnpHAEwAX+OQeT8Xamd9gLfMo/s0TcEUUItROoAB0rmPmYdrPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAAHQwu1u_xnA7vnCA--.16499S2;
-	Mon, 14 Apr 2025 15:39:34 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: s.nawrocki@samsung.com,
-	mchehab@kernel.org,
-	krzk@kernel.org,
-	alim.akhtar@samsung.com
-Cc: linux-media@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH RESEND] media: platform: Add hardware sync wait to fimc_is_hw_change_mode()
-Date: Mon, 14 Apr 2025 15:39:14 +0800
-Message-ID: <20250414073915.2317-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744616392; c=relaxed/simple;
+	bh=LsqxtzsLG9K65KH1tXnqCn4F4KSb+0N9ur9qFqEXhXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MtzFPNf5bfb1mNe/Cjg8CePWkNVTuHRdE69jNGhFAtUeH10NGPB2gSYHB0HoRTku7EeLPemVoPlihpTOIBcFrLEAKJACy0JGcH3SNWzAWmqqmrRXQBAdIbcFOgPsLIG71DcIR3Vr5j9tAFyamXVgluLBy7uMSokq5G+f/8BV8s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u4EPz-0004Y0-AS; Mon, 14 Apr 2025 09:39:47 +0200
+Message-ID: <7277a646-a38d-4d61-a5c5-fc71e3e8cf72@pengutronix.de>
+Date: Mon, 14 Apr 2025 09:39:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAHQwu1u_xnA7vnCA--.16499S2
-X-Coremail-Antispam: 1UD129KBjvPXoW8tF43KF17AFyUtr4rWr45p5X_Gr13JoW8JF
-	yaka1xtr4UXwnIgrnru3yfAwsrurW3KrWF9FZ0gryqq3W3A3W5W393Xr4agF1YkFn5Xry5
-	Gw13AF4xJa4xn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3AaLa
-	J3UjIYCTnIWjp_UUUY-7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_
-	Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M2
-	8EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8
-	Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r1q
-	6r43MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JU6UDXUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8MA2f8nMBkGQABsy
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] checkpatch: don't warn about long lines with footnote
+ links
+To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <20250113-footnote-links-v1-1-3e9b6196d478@pengutronix.de>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250113-footnote-links-v1-1-3e9b6196d478@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-In fimc_is_hw_change_mode(), the function changes camera modes without
-waiting for hardware completion, risking corrupted data or system hangs
-if subsequent operations proceed before the hardware is ready.
+Dear checkpatch.pl maintainers,
 
-Add fimc_is_hw_wait_intmsr0_intmsd0() after mode configuration, ensuring
-hardware state synchronization and stable interrupt handling.
+On 13.01.25 23:21, Ahmad Fatoum wrote:
+> checkpatch will warn[0] about lines like the first footnote below,
+> but breaking into multiple lines is not an option if the footnote
+> is just a URL.
+> 
+> While there's already an exception for Link: tags and some commit
+> messages add a footnote after it[1], the result is more noisy and harder
+> to follow when mixed with non-URL footnotes, so explicit support for
+> footnotes-prefixed URLs makes sense.
+> 
+> [0]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl#n3289
+> [1]: Commit 6612ac8c625c ("lib/list_sort: clarify comparison function
+>      requirements in list_sort()")
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c | 1 +
- 1 file changed, 1 insertion(+)
+Any thoughts on this patch?
 
-diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
-index 366e6393817d..5f9c44e825a5 100644
---- a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
-+++ b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
-@@ -164,6 +164,7 @@ int fimc_is_hw_change_mode(struct fimc_is *is)
- 	if (WARN_ON(is->config_index >= ARRAY_SIZE(cmd)))
- 		return -EINVAL;
- 
-+	fimc_is_hw_wait_intmsr0_intmsd0(is);
- 	mcuctl_write(cmd[is->config_index], is, MCUCTL_REG_ISSR(0));
- 	mcuctl_write(is->sensor_index, is, MCUCTL_REG_ISSR(1));
- 	mcuctl_write(is->setfile.sub_index, is, MCUCTL_REG_ISSR(2));
+Thanks,
+Ahmad
+
+> 
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> ---
+>  scripts/checkpatch.pl | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 7b28ad3317427a6bf9e27b77065aa3915cb13053..febc05c381856361120c02b9b52694cc6fa95302 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -642,6 +642,8 @@ foreach my $entry (@link_tags) {
+>  }
+>  $link_tags_search = "(?:${link_tags_search})";
+>  
+> +our $link_footnote = "(?:\\[\\d\\]: https?://)";
+> +
+>  our $tracing_logging_tags = qr{(?xi:
+>  	[=-]*> |
+>  	<[=-]* |
+> @@ -3272,8 +3274,8 @@ sub process {
+>  					# file delta changes
+>  		      $line =~ /^\s*(?:[\w\.\-\+]*\/)++[\w\.\-\+]+:/ ||
+>  					# filename then :
+> -		      $line =~ /^\s*(?:Fixes:|$link_tags_search|$signature_tags)/i ||
+> -					# A Fixes:, link or signature tag line
+> +		      $line =~ /^\s*(?:Fixes:|$link_tags_search|$signature_tags|$link_footnote)/i ||
+> +					# A Fixes:, link, footnote or signature tag line
+>  		      $commit_log_possible_stack_dump)) {
+>  			WARN("COMMIT_LOG_LONG_LINE",
+>  			     "Prefer a maximum 75 chars per line (possible unwrapped commit description?)\n" . $herecurr);
+> 
+> ---
+> base-commit: 37136bf5c3a6f6b686d74f41837a6406bec6b7bc
+> change-id: 20250113-footnote-links-acbd4d0e5439
+> 
+> Best regards,
+
+
 -- 
-2.42.0.windows.2
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
