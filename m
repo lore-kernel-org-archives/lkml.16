@@ -1,54 +1,54 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A1622B8CB
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C7E230BE6
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667353; cv=none; b=SFTm7EathOuMJ3sZDCXgqUliIC+K9nNj2i3buO9LInrnkOtKirWdmixf2AwUBkuASF8tomFvh04Q/DFQpEnsfKRkaZoMBDawueXTxwcRUvWUwEJeOYc2sNfJ8g9zmaq/F/M67oDGmO0hxv7NP8V2bX2kSfG7I8IIC5ApU7Y8/Ec=
+	t=1744667355; cv=none; b=Z9KmoIOGiF9wEJUvFsFOCnRxOTQ+aUi9inOjVuaVlcZN6C/4EM+gPDaEhmJdgYaSns9whFkOhBfOwLvKevpU57pCXUWhKPQsx2G/FCB//AVPkagynfK02KcPxjCPToHzky1p3GJAstNd6fL2TsFBhgARu7zOdLnTOyFRFJCPTYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667353; c=relaxed/simple;
-	bh=mlhbyHDrP1jVY2Jp8YEKn1yt2fPFrcKj+zfJJ/OxYk8=;
+	s=arc-20240116; t=1744667355; c=relaxed/simple;
+	bh=tCFtSTSogyNF/+rS9krKtvA9wAW2z3R8oZuKWjnmmA4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=O0bj2Be8VlBI6VOPqBi1xw5YXIS5LuJQcoTsiTYe8u4U0m17tIX5WoUHz939dh/fqvzuU4lOspoZ7ZOy73gXwxetgi3gnJBlyjemKzPsb4kmm9JB/Ehmh2Uz78Dd6D3iZ5GR6UB1rOrH0nyr8JClA6x3akTnJ1TACl6rBV4W3Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pUS1mf2B; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=GweM+Ep7WwfOhpZGriNNA+7BhoOoitSRlzRivmyAGLijiUW8y15Ec5pUQ9QMpRsK3GzgSh/beHhtuyxK+Wi23H9jgCwYV7k3/+kjL5+zRgQrzgzYTum1DDvRsV69724kStMFNgeGYAclicHC/87o232+QEakW0cjzQZ8g4mABh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HIK+AcA0; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pUS1mf2B"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22647ff3cf5so38924895ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:49:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HIK+AcA0"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af2f03fcc95so4859004a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744667350; x=1745272150; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744667353; x=1745272153; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nGA3lN556VUwTj712hkHFTKKWZZm9uKrW/wDb9eRLAw=;
-        b=pUS1mf2BrbZCdsYVqXmWiqHmOFkzYKtpKNs3iROaGkEBz5b4sXFlFKFT8j5avuw2EU
-         uuoYjqi2OS/KuqufRDLEPdAjkcycbZVboR6AVGPO8wHAxQRovx5JT33uEUZhT3CcWMA6
-         aOlhatBHWV0xhW6SCGUUQSBnXGU7xBa+8gEcFp8MFwSnbWv/4nXVRYYx6giNp6VcK9ju
-         NMYDC4vST4vujxWm4VlBKs1F8Q4AwhoxpNqPYuh4o4DOzBwipTmB9cnkHmmQsSpS6qy+
-         GLbvUoe2nr4EKP1RIykKtUBEWzZOgTymq7B1eFc7jawUSIcxeamHy0WAznxbyEAQ73g4
-         MHRg==
+        bh=/OuYZt7O/LrariOfsKxnKybrKmybF4OGMs3N8T6kaPg=;
+        b=HIK+AcA0yFWd88ge0ibGwcGxHrcUCpAyoa7OyxKy12FSx4ycnT7J8/MtjqnzJEkmI0
+         ifKwF1gA684zZN+5CbG9qnNCljrTsWH0gwcv95i3OCj0SgYMr8ikVbiB5ddzOQ2jE7Sj
+         NkZT+1lA5AtGF0qBlCPsR/D0Acqp7OXLW7X6VKGfcbBLXgb3YblvcJrMGT6kE975Apol
+         OH/S4C+NnlIRw1dgDFolf4JqXwMIBFNu8ycTy6yhubHoCOVxnIthOJbHztvXDj/6TG05
+         bREuYIIGXJHOCfBSxzNQG6ignPT7v5hfDaxqfp8PO4jPIlLmv5ABG9XboSaBV7RSK0km
+         7Rpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744667350; x=1745272150;
+        d=1e100.net; s=20230601; t=1744667353; x=1745272153;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nGA3lN556VUwTj712hkHFTKKWZZm9uKrW/wDb9eRLAw=;
-        b=cfX9ZflNROyuLQZsPUp27JRSKt1Jg2Qh6rIJ8q6jHt2dkhCMSxYU7fP3vemQJzHaNR
-         5qUBzSgaQJEHoOFxSjOzWbuiC2kCMOiH1PgXBNn6xKXv3sFD5sg8LPhK8g4fehRQ6GjW
-         yRnZgvmw9aXyfjyih9FRQaHYYpDySoBUqJkf5CX54tzxAcHJIfc6rzaQhlFkP1i58umL
-         Ms2/m6jLlAeJJgqlKA48B361ZpydR9BrqslAmGnN+n0ZnG35xMGEviy3tkHx87dTUWlH
-         ll0Vhnzrt0uxrmGBrUVIiTELbgB82aRT1PPO9t2Pu0IkPuQ6ehX5274/0b837L94vQ2G
-         oOMg==
-X-Gm-Message-State: AOJu0YyTXUVDn0g68/LVao+BicsTRzHdI+KF0KfvBkl6cVsYszSA5y2n
-	xHs1z+SpilsKKP+vpGP6ivyo8R6AMMQU+g783MO8GZi/2vd9KTSdxwPZ7OLjqa2BIoeRK7DMyw=
+        bh=/OuYZt7O/LrariOfsKxnKybrKmybF4OGMs3N8T6kaPg=;
+        b=VO8FyEAFl12fA6ML8Fa686x+KHiGhGWHRjcJ1vp+b4VsQahanYcyXcb2/RGBZQXYM5
+         93M6UU7tybEzM79vXSAZvTTgEcbpMIwIgbpNPLUU9qI24sa7P0jk9JIo+ADuPBQT0FH0
+         r5WJJImUEIs/XkCURAnYFjhkC7gfhwlXIZVsEJDghe/9q8BLuFgRQ75WYBhhC8yAnN5J
+         bPE9GB6t7PUC6nS4swco+DiZh1ylUX3bNh2hPcbFftnYSI0eddfj5x2B1wSDSkc4vCxP
+         I+A+OeWWhTElvwCSwuaiLTghV1dMHufolJdgGFZryEhWgWiVhEZHn6XAwu7FqKaliZDm
+         6udg==
+X-Gm-Message-State: AOJu0YyzKZx8U2nrJChQDOIBN/cky2MNKACBX/R6Fu1mZgA/RRRzeHby
+	uZHL/QAWW0ac9LuzVtYUoMH+OVNGm0xZe1yCu3h+soD4v20zhBcMZUdh2FEY3yGyHe/M2BItlg=
 	=
-X-Google-Smtp-Source: AGHT+IF2Xs7zgQ9BUpCVAEQyGXqLWfZX0BD9pvhxAwgFLAJIyDU3gWZXTOXn5Bv7gLn8nSYB0cbEHbCKmQ==
-X-Received: from pfbgj15.prod.google.com ([2002:a05:6a00:840f:b0:736:b19c:1478])
- (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c6c:b0:224:78e:4ebe
- with SMTP id d9443c01a7336-22bea4f26e7mr186219335ad.33.1744667350413; Mon, 14
- Apr 2025 14:49:10 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:47:50 -0700
+X-Google-Smtp-Source: AGHT+IFi5Jv0DqyPsRLf8qX/GrYnlpfFg934hUE5Ea7Yccg4j8t8Sk9aMLE8ug9zdNZTLyTgfIgAgGe7rg==
+X-Received: from pglz28.prod.google.com ([2002:a63:191c:0:b0:af2:5c9b:c55d])
+ (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d04a:b0:1f5:8153:9407
+ with SMTP id adf61e73a8af0-201797b94ecmr19132125637.20.1744667353486; Mon, 14
+ Apr 2025 14:49:13 -0700 (PDT)
+Date: Mon, 14 Apr 2025 14:47:52 -0700
 In-Reply-To: <20250414214801.2693294-1-sagis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250414214801.2693294-1-sagis@google.com>
 X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250414214801.2693294-22-sagis@google.com>
-Subject: [PATCH v6 21/30] KVM: selftests: TDX: Verify the behavior when host
- consumes a TD private memory
+Message-ID: <20250414214801.2693294-24-sagis@google.com>
+Subject: [PATCH v6 23/30] KVM: selftests: Add functions to allow mapping as shared
 From: Sagi Shahar <sagis@google.com>
 To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
 	Shuah Khan <shuah@kernel.org>, Sean Christopherson <seanjc@google.com>, 
@@ -73,125 +72,157 @@ To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
 Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Ryan Afranji <afranji@google.com>
+From: Ackerley Tng <ackerleytng@google.com>
 
-The test checks that host can only read fixed values when trying to
-access the guest's private memory.
+virt_map() enforces a private mapping for private memory. Introduce
+virt_map_shared() that creates a shared mapping for private as
+well as shared memory. This way, the TD does not have to remap its
+page tables at runtime.
 
-Signed-off-by: Ryan Afranji <afranji@google.com>
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Sagi Shahar <sagis@google.com>
 ---
- tools/testing/selftests/kvm/x86/tdx_vm_test.c | 83 ++++++++++++++++++-
- 1 file changed, 82 insertions(+), 1 deletion(-)
+ .../testing/selftests/kvm/include/kvm_util.h  | 23 +++++++++++++
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 34 +++++++++++++++++++
+ .../testing/selftests/kvm/lib/x86/processor.c | 15 ++++++--
+ 3 files changed, 70 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/tdx_vm_test.c b/tools/testing/selftests/kvm/x86/tdx_vm_test.c
-index 2f75f12d2a44..b6ef0348746c 100644
---- a/tools/testing/selftests/kvm/x86/tdx_vm_test.c
-+++ b/tools/testing/selftests/kvm/x86/tdx_vm_test.c
-@@ -959,6 +959,85 @@ void verify_td_cpuid_tdcall(void)
- 	printf("\t ... PASSED\n");
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 813ba634dc49..442e34c6ed84 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -621,6 +621,8 @@ vm_vaddr_t vm_vaddr_alloc_page(struct kvm_vm *vm);
+ 
+ void virt_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+ 	      unsigned int npages);
++void virt_map_shared(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
++		     unsigned int npages);
+ void *addr_gpa2hva(struct kvm_vm *vm, vm_paddr_t gpa);
+ void *addr_gva2hva(struct kvm_vm *vm, vm_vaddr_t gva);
+ vm_paddr_t addr_hva2gpa(struct kvm_vm *vm, void *hva);
+@@ -1096,6 +1098,27 @@ static inline void virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr
+ 	virt_arch_pg_map(vm, vaddr, paddr);
  }
  
 +/*
-+ * Shared variables between guest and host for host reading private mem test
++ * VM Virtual Page Map as Shared
++ *
++ * Input Args:
++ *   vm - Virtual Machine
++ *   vaddr - VM Virtual Address
++ *   paddr - VM Physical Address
++ *
++ * Output Args: None
++ *
++ * Return: None
++ *
++ * Within @vm, creates a virtual translation for the page starting
++ * at @vaddr to the page starting at @paddr.
 + */
-+static uint64_t tdx_test_host_read_private_mem_addr;
-+#define TDX_HOST_READ_PRIVATE_MEM_PORT_TEST 0x53
++void virt_arch_pg_map_shared(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr);
 +
-+void guest_host_read_priv_mem(void)
++static inline void virt_pg_map_shared(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
 +{
-+	uint64_t placeholder = 0;
-+	uint64_t ret;
++	virt_arch_pg_map_shared(vm, vaddr, paddr);
++}
+ 
+ /*
+  * Address Guest Virtual to Guest Physical
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index f8cf49794eed..008f01831036 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -7,6 +7,7 @@
+ #include "test_util.h"
+ #include "kvm_util.h"
+ #include "processor.h"
++#include "sparsebit.h"
+ #include "ucall_common.h"
+ 
+ #include <assert.h>
+@@ -1604,6 +1605,39 @@ void virt_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+ 	}
+ }
+ 
++/*
++ * Map a range of VM virtual address to the VM's physical address as shared
++ *
++ * Input Args:
++ *   vm - Virtual Machine
++ *   vaddr - Virtual address to map
++ *   paddr - VM Physical Address
++ *   npages - The number of pages to map
++ *
++ * Output Args: None
++ *
++ * Return: None
++ *
++ * Within the VM given by @vm, creates a virtual translation for
++ * @npages starting at @vaddr to the page range starting at @paddr.
++ */
++void virt_map_shared(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
++		     unsigned int npages)
++{
++	size_t page_size = vm->page_size;
++	size_t size = npages * page_size;
 +
-+	/* Set value */
-+	*((uint32_t *)tdx_test_host_read_private_mem_addr) = 0xABCD;
++	TEST_ASSERT(vaddr + size > vaddr, "Vaddr overflow");
++	TEST_ASSERT(paddr + size > paddr, "Paddr overflow");
 +
-+	/* Exit so host can read value */
-+	ret = tdg_vp_vmcall_instruction_io(TDX_HOST_READ_PRIVATE_MEM_PORT_TEST,
-+					   4, PORT_WRITE, &placeholder);
-+	tdx_assert_error(ret);
-+
-+	/* Update guest_var's value and have host reread it. */
-+	*((uint32_t *)tdx_test_host_read_private_mem_addr) = 0xFEDC;
-+
-+	tdx_test_success();
++	while (npages--) {
++		virt_pg_map_shared(vm, vaddr, paddr);
++		sparsebit_set(vm->vpages_mapped, vaddr >> vm->page_shift);
++		vaddr += page_size;
++		paddr += page_size;
++	}
 +}
 +
-+void verify_host_reading_private_mem(void)
-+{
-+	uint64_t second_host_read;
-+	uint64_t first_host_read;
-+	struct kvm_vcpu *vcpu;
-+	vm_vaddr_t test_page;
-+	uint64_t *host_virt;
-+	struct kvm_vm *vm;
-+
-+	vm = td_create();
-+	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-+	vcpu = td_vcpu_add(vm, 0, guest_host_read_priv_mem);
-+
-+	test_page = vm_vaddr_alloc_page(vm);
-+	TEST_ASSERT(test_page < BIT_ULL(32),
-+		    "Test address should fit in 32 bits so it can be sent to the guest");
-+
-+	host_virt = addr_gva2hva(vm, test_page);
-+	TEST_ASSERT(host_virt,
-+		    "Guest address not found in guest memory regions\n");
-+
-+	tdx_test_host_read_private_mem_addr = test_page;
-+	sync_global_to_guest(vm, tdx_test_host_read_private_mem_addr);
-+
-+	td_finalize(vm);
-+
-+	printf("Verifying host's behavior when reading TD private memory:\n");
-+
-+	tdx_run(vcpu);
-+	tdx_test_assert_io(vcpu, TDX_HOST_READ_PRIVATE_MEM_PORT_TEST,
-+			   4, PORT_WRITE);
-+	printf("\t ... Guest's variable contains 0xABCD\n");
-+
-+	/* Host reads guest's variable. */
-+	first_host_read = *host_virt;
-+	printf("\t ... Host's read attempt value: %lu\n", first_host_read);
-+
-+	/* Guest updates variable and host rereads it. */
-+	tdx_run(vcpu);
-+	printf("\t ... Guest's variable updated to 0xFEDC\n");
-+
-+	second_host_read = *host_virt;
-+	printf("\t ... Host's second read attempt value: %lu\n",
-+	       second_host_read);
-+
-+	TEST_ASSERT(first_host_read == second_host_read,
-+		    "Host did not read a fixed pattern\n");
-+
-+	printf("\t ... Fixed pattern was returned to the host\n");
-+
-+	kvm_vm_free(vm);
-+	printf("\t ... PASSED\n");
-+}
-+
- int main(int argc, char **argv)
+ /*
+  * Address VM Physical to Host Virtual
+  *
+diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
+index 9b2c236e723a..fef63d807c91 100644
+--- a/tools/testing/selftests/kvm/lib/x86/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86/processor.c
+@@ -181,7 +181,8 @@ static uint64_t *virt_create_upper_pte(struct kvm_vm *vm,
+ 	return pte;
+ }
+ 
+-void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
++static void ___virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
++			   int level, bool protected)
  {
- 	ksft_print_header();
-@@ -966,7 +1045,7 @@ int main(int argc, char **argv)
- 	if (!is_tdx_enabled())
- 		ksft_exit_skip("TDX is not supported by the KVM. Exiting.\n");
+ 	const uint64_t pg_size = PG_LEVEL_SIZE(level);
+ 	uint64_t *pml4e, *pdpe, *pde;
+@@ -231,17 +232,27 @@ void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
+ 	 * Neither SEV nor TDX supports shared page tables, so only the final
+ 	 * leaf PTE needs manually set the C/S-bit.
+ 	 */
+-	if (vm_is_gpa_protected(vm, paddr))
++	if (protected)
+ 		*pte |= vm->arch.c_bit;
+ 	else
+ 		*pte |= vm->arch.s_bit;
+ }
  
--	ksft_set_plan(13);
-+	ksft_set_plan(14);
- 	ksft_test_result(!run_in_new_process(&verify_td_lifecycle),
- 			 "verify_td_lifecycle\n");
- 	ksft_test_result(!run_in_new_process(&verify_report_fatal_error),
-@@ -993,6 +1072,8 @@ int main(int argc, char **argv)
- 			 "verify_mmio_writes\n");
- 	ksft_test_result(!run_in_new_process(&verify_td_cpuid_tdcall),
- 			 "verify_td_cpuid_tdcall\n");
-+	ksft_test_result(!run_in_new_process(&verify_host_reading_private_mem),
-+			 "verify_host_reading_private_mem\n");
++void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
++{
++	___virt_pg_map(vm, vaddr, paddr, level, vm_is_gpa_protected(vm, paddr));
++}
++
+ void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
+ {
+ 	__virt_pg_map(vm, vaddr, paddr, PG_LEVEL_4K);
+ }
  
- 	ksft_finished();
- 	return 0;
++void virt_arch_pg_map_shared(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
++{
++	___virt_pg_map(vm, vaddr, paddr, PG_LEVEL_4K, false);
++}
++
+ void virt_map_level(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+ 		    uint64_t nr_bytes, int level)
+ {
 -- 
 2.49.0.504.g3bcea36a83-goog
 
