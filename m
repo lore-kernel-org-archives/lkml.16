@@ -1,185 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC591A2380;
-	Mon, 14 Apr 2025 12:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4076A2BE7CD;
+	Mon, 14 Apr 2025 12:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744634553; cv=none; b=jFQpt1sYRY5qA/uJULxM5o9Bci+8htpJPpQbJAnYrU6Nz+g0GT+iNZnm5Wec0ibixUkg20UUh2Wp+VLGNw6mrOV82jzsDuTclOXRwrLoWgVFf0Ry1SzQ4FXUozeyN4iY3+utX6VppzR4rXr+LGmWhHXIlKlw4U/cNP+eWCqGydA=
+	t=1744634559; cv=none; b=AEuTAYwtYVlj9siHrXYnAqNqomb45pEl43078TR3CImXSvOowYMUdSnWlqG2CT2w76H3vQgGB4ZU3EAXdKB91LkgDWm2Nmyocp9Y/WbC0EjC+ewHYKnfbhKNlIiiodBjdMKspiiyOMaoefBmeWH0tP/1IgOnk/g+DlwUev/lwFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744634553; c=relaxed/simple;
-	bh=o09OELAddsi8bCdV3+5IJmIdA4i1w0bEWAJwIwGctBk=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=iBVVE2eqIb4XQZ/m4SW6qUGxUkuCzGOlg81R8Wa1fMLiZmp5HuTsrzR7exyGnG1URFDBsWuJV/ntXDWYxJjS7WG0zjliQirAAHbJUfSpOdWI7rigklwu72TMVxghJjmqKXH2SOQjCkb6EQGI2HMgb+3NP3FiHfJvQpRcWbN+rzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufMWvOO5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744634559; c=relaxed/simple;
+	bh=GtYw0qEJu+ndi2eFJB6leAOMfQg3UNOm9YY7B4VxYUo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eak2XoqI6sdW2x1SHDbvg/LAwaaIx/hxZlPCmXwB2rEEbLGkWI/TIywXWX4GZ39/wz+Q/Uck9ANgzTTMts4HAFDRNbqG8US3+O3Vpab15OBAjeUU4+rbNtRBh3YT06DO8JKW+SDfsgssJBytqjl8Q2ZGGl2AW3BBziyU3uGGHo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gq18NaZa; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufMWvOO5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24450C4CEE9;
-	Mon, 14 Apr 2025 12:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744634551;
-	bh=o09OELAddsi8bCdV3+5IJmIdA4i1w0bEWAJwIwGctBk=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=ufMWvOO54+JWbV2ME33aWUd0siSmj/zBYCbvPgoW/Fw1vAbRUoROWRAsmmD+pbH1q
-	 p6rS1yawyJ3TtwBPkIfhrH8e2nJSyhJgl/FKyur/zK8aqJm06EfMGxaHSunpjOe3J7
-	 aexYqDLN0zNkt3PPZx2N+FoPH7ysRlhdUE6dtgDU5aB08RXrsGKwSpBnwdnDRHuYsA
-	 RfRT4m9dbb2/3h0nJvYudqPI5Z4XSE3ziX3yf6pJM1rr2zRnKhyrp8pwa6MUY4c4Gm
-	 vPL0GYEF/j4VgvQfhnNLCnHMYSi66CyUkDhgld+AOGBqn2iQ4EV9TJyyC4odCHAWHE
-	 4+nlwJqjmnsHQ==
-Date: Mon, 14 Apr 2025 07:42:29 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gq18NaZa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744634555;
+	bh=GtYw0qEJu+ndi2eFJB6leAOMfQg3UNOm9YY7B4VxYUo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gq18NaZaqYVr7ZXF4mu03IoDJhgyee/P8Zvh5CXL1mQpE2q4T6OfrYKnDt/bHXctJ
+	 3EMXe/j/WuI9SFF+ujYlvHw/1BVpUMgPfHFbW201FMJSxME0UJhd8xRltehAuiN+Yo
+	 d4QW82829AxtQ5BqMjg669OCAtMY4yXrpJIO4Yc0BzlB2rSpVPP99LbgyJXSUKqBeu
+	 2xHSbdB3xM6lr9MJByteCHQiX4F035Gs3DFDCOp1GwPAPotdY3xBxerOomCnOdV8rH
+	 6SLWq2Rz1XNrpwu8qdlmBI7JGu6nKVqfb1rePzwCqj6ZvMxowmLTe2oxa/6XmQj5as
+	 pCY9obsXgt1og==
+Received: from [IPv6:2606:6d00:11:e976::c41] (unknown [IPv6:2606:6d00:11:e976::c41])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 63B1817E1034;
+	Mon, 14 Apr 2025 14:42:33 +0200 (CEST)
+Message-ID: <cffb6a6448a0cb32cc7b13e3048c097b3efc6f93.camel@collabora.com>
+Subject: Re: [PATCH 2/3] mailmap: add entry for Michael Riesch
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: michael.riesch@collabora.com, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Sakari Ailus <sakari.ailus@linux.intel.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=	
+ <u.kleine-koenig@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>
+Cc: Collabora Kernel Team <kernel@collabora.com>, Pengutronix Kernel Team	
+ <kernel@pengutronix.de>, imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+ 	linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Date: Mon, 14 Apr 2025 08:42:31 -0400
+In-Reply-To: <9f1c7c30082de242b4906e5ecbeb382400fcd4a2.camel@collabora.com>
+References: <20250410-maintainer-mriesch-v1-0-cdc5c6c68238@collabora.com>
+		 <20250410-maintainer-mriesch-v1-2-cdc5c6c68238@collabora.com>
+	 <9f1c7c30082de242b4906e5ecbeb382400fcd4a2.camel@collabora.com>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, 
- Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, Kees Cook <kees@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-In-Reply-To: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
-References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
-Message-Id: <174463433283.154575.16025374701126076484.robh@kernel.org>
-Subject: Re: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
- three devices
+Content-Transfer-Encoding: 8bit
 
-
-On Mon, 14 Apr 2025 00:28:41 +0530, Kaustabh Chakraborty wrote:
-> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
-> announced in 2016. The chipset was found in several popular mid-range to
-> low-end Samsung phones, released within 2016 to 2019.
+Le vendredi 11 avril 2025 à 17:25 -0400, Nicolas Dufresne a écrit :
+> Le jeudi 10 avril 2025 à 21:41 +0200, Michael Riesch via B4 Relay a
+> écrit :
+> > From: Michael Riesch <michael.riesch@collabora.com>
+> > 
+> > After five interesting years, I left WolfVision and started to work
+> > for
+> > Collabora. Add a corresponding mailmap entry.
+> > 
+> > Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
 > 
-> This patch series aims to add support for Exynos 7870, starting with the
-> most basic yet essential components such as CPU, GPU, clock controllers,
-> PMIC, pin controllers, etc.
-> 
-> Moreover, the series also adds support for three Exynos 7870 devices via
-> devicetree. The devices are:
->  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
->  * Samsung Galaxy J6		- released 2018, codename j6lte
->  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
-> 
-> Additional features implemented in this series include:
->  * I2C	- touchscreen, IIO sensors, etc.
->  * UART	- bluetooth and serial debugging
->  * MMC	- eMMC, Wi-Fi SDIO, SDCard
->  * USB	- micro-USB 2.0 interface
-> 
-> Build dependencies are in these sub-series:
->  * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
-> 
-> Other related sub-series:
->  * gpu			A https://lore.kernel.org/all/20250318-exynos7870-gpu-v1-1-084863f28b5c@disroot.org/
->  * i2c	      		A https://lore.kernel.org/all/20250204-exynos7870-i2c-v1-0-63d67871ab7e@disroot.org/
->  * mmc			A https://lore.kernel.org/all/20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org/
->  * pinctrl	  	A https://lore.kernel.org/all/20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org/
->  * pmic-regulators	A https://lore.kernel.org/all/20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org/
->  * uart			A https://lore.kernel.org/all/20250318-exynos7870-uart-v2-1-b9dcf145ae87@disroot.org/
->  * usb			A https://lore.kernel.org/all/20250301-exynos7870-usb-v3-0-f01697165d19@disroot.org/
->  * usbphy		A https://lore.kernel.org/all/20250410-exynos7870-usbphy-v2-0-2eb005987455@disroot.org/
-> (Legend: [R]eviewed, [A]pplied)
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
-> Changes in v6:
-> - Append the following trailers:
->   [v5 1/5] dt-bindings: arm: samsung: add compatibles for exynos7870 devices
->     Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> - Link to v5: https://lore.kernel.org/r/20250411-exynos7870-v5-0-6b319ae36c36@disroot.org
-> 
-> Changes in v5:
-> - Drop the exynos7870-bootmode patchset for now.
-> - Add card-detect-delay and cd-broken properties in sd-mmc nodes.
-> - Drop the following applied patches:
->   [v4 1/7] dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
->   [v4 3/7] soc: samsung: exynos-chipid: add support for exynos7870
-> - Link to v4: https://lore.kernel.org/r/20250301-exynos7870-v4-0-2925537f9b2a@disroot.org
-> 
-> Changes in v4:
-> - Drop merged [PATCH v3 1/7].
-> - Explicitly mention sub-series having build dependencies.
-> - Include the following patch from the pmu-clocks series:
->   - dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
-> - Adjust clock header file name to match changes in pmu-clocks.
-> - Change regulator node names to match changes in pmic-regulators.
-> - Remove non-removable flag for the SDCard's mmc node.
-> - Link to v3: https://lore.kernel.org/r/20250219-exynos7870-v3-0-e384fb610cad@disroot.org
-> 
-> Changes in v3:
-> - Added patches from https://lore.kernel.org/all/20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org/
-> - Fix devicetree formatting according to the devicetree style guide.
-> - Take over ownership of patches by the co-author, upon their request.
-> - Link to v2: https://lore.kernel.org/r/20250204-exynos7870-v2-0-56313165ef0c@disroot.org
-> 
-> Changes in v2:
-> - Redo a few commit descriptions.
-> - Split patchsets into multiple sub-series, subsystem-wise.
-> - Link to v1: https://lore.kernel.org/r/20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org
-> 
-> ---
-> Kaustabh Chakraborty (5):
->       dt-bindings: arm: samsung: add compatibles for exynos7870 devices
->       arm64: dts: exynos: add initial devicetree support for exynos7870
->       arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
->       arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
->       arm64: dts: exynos: add initial support for Samsung Galaxy J6
-> 
->  .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
->  arch/arm64/boot/dts/exynos/Makefile                |    3 +
->  .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  630 ++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  618 ++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  666 +++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1022 ++++++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  713 ++++++++++++++
->  7 files changed, 3660 insertions(+)
-> ---
-> base-commit: 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18
-> change-id: 20250201-exynos7870-049587e4b7df
-> 
-> Best regards,
-> --
-> Kaustabh Chakraborty <kauschluss@disroot.org>
-> 
-> 
-> 
+> Reviewed-by: Nicolas Dufresne <nicolas.collabora@collabora.com>
 
+Friday's typo special:
+                                 nicolas.dufresne@collabora.com
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+:-(
+Nicolas
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250414-exynos7870-v6-0-039bd5385411@disroot.org:
-
-arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb: /soc@0/phy@135c0000: failed to match any schema with compatible: ['samsung,exynos7870-usbdrd-phy']
-arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb: /soc@0/phy@135c0000: failed to match any schema with compatible: ['samsung,exynos7870-usbdrd-phy']
-arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb: /soc@0/phy@135c0000: failed to match any schema with compatible: ['samsung,exynos7870-usbdrd-phy']
-
-
-
-
-
+> 
+> > ---
+> >  .mailmap | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/.mailmap b/.mailmap
+> > index 4f7cd8e23177..59f99aa83185 100644
+> > --- a/.mailmap
+> > +++ b/.mailmap
+> > @@ -503,6 +503,7 @@ Mayuresh Janorkar <mayur@ti.com>
+> >  Md Sadre Alam <quic_mdalam@quicinc.com> <mdalam@codeaurora.org>
+> >  Miaoqing Pan <quic_miaoqing@quicinc.com> <miaoqing@codeaurora.org>
+> >  Michael Buesch <m@bues.ch>
+> > +Michael Riesch <michael.riesch@collabora.com>
+> > <michael.riesch@wolfvision.net>
+> >  Michal Simek <michal.simek@amd.com> <michal.simek@xilinx.com>
+> >  Michel Dänzer <michel@tungstengraphics.com>
+> >  Michel Lespinasse <michel@lespinasse.org>
