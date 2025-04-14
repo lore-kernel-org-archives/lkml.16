@@ -1,169 +1,89 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8E627FD6C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AC727FD7D;
 	Mon, 14 Apr 2025 14:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639332; cv=none; b=q101UjQpAxH404iAGb6ZRlVN77pBKQjO22XsCCMThMH9vBz8304GD10/0+EVNuQ/rw/wrvl3nIX5xOE6gVY0LoKBnt8iNAPtba/dc4/Koz+F2LMAJ27aIyu2FK0i60iIsPZgUdVEuUXYXMEHe0/Q1uUbXUw+xmi3pINn3ZgT7yU=
+	t=1744639335; cv=none; b=F1+6XPkbiQr45XjqDchGSGUjQKZVaXu5Nsg1ueW+TnV6fF7capHEsQ3OvkUbcMhj7zBS0gxnideduSzlRtAtWzCA0xtguyjpevfQSHoAdnfewX1jEpRae0mDAfRpL60y4Ia3rOPWcZaPZ3F/cjIBhXont/MpWF+Wbhao0NzVyE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639332; c=relaxed/simple;
-	bh=nyX/aXdcQpLeadfZ4PNRiIl7O6WNj4XF5XzP/2EkhiQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JETp2ZLSrcAailQSHzs0kEOWbUK3b+D9myEGvlwX/GFsl/zjZeQjObB0sk+d3syAE3Mq/l8sjBqQFa/CuZY2Fy1/AQhJit3FpjsOuglL8YB8ZXkuSR/bytwzHaAN4hNwqDOr5f3Z/VfiCAaQFpdsPR3TRcl+yK2zZbXFRLqzcFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=HSsETckq; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1744639335; c=relaxed/simple;
+	bh=CndQFGuLnQ703+fOAOJDmmHIDhuS/2SEJT3iDiK/hvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xf9S0Ler6W4VNGoMqKB/f7064MxTKWW9aw49ET07mo//ikBfl1hLxe4mftJzpAelhwHxtpe+Cef4SY4GcxRQD/+uBJKlnQQSI8+xLzzPJ2ebnlGCjPLwPh6jG7tBrvDGi4sJuo19mp57KWSY+bYzijMnrJvCFnxoqddpyg9nVD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=t9pCPRQ2; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="HSsETckq"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4207B1026CEBF;
-	Mon, 14 Apr 2025 16:02:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744639322; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=hKsxFyucq1BakC1c3Sw1LsOOiiJAybngj8+dLBZ1o00=;
-	b=HSsETckq8d2eEx89kid1+jM62XLbmqhjpnmn3oCftKkpD25aPUDGbRxFLPuZI4G1CCusZ5
-	Zwcu+bAyaaCOZlBoPvpH0MPvFUIme66M5Hb04abb+Ipae3KJOzt5H3r2m9+I7BJsw3X3Li
-	epPBBciqBEzJzfS0XsCn9ekkYUP++bE8Lx2JZtEtl9LCeQ6hkT06m9PQmLfh1hVcVjf/h+
-	2YaGVcsciJNBy5vSw1B7+SgHv/bL6rw5bjPELJqS54wwGVJLgvKjZQ0viO/meBluEGxH0V
-	4S9K7xCiBp7SXR9M91mgLtv3MSWTPA5A0Ayi2QMkeAbrGmIWYCfk71eztb/ybg==
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: [net-next v5 3/6] ARM: dts: nxp: mxs: Adjust XEA board's DTS to support L2 switch
-Date: Mon, 14 Apr 2025 16:01:25 +0200
-Message-Id: <20250414140128.390400-4-lukma@denx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250414140128.390400-1-lukma@denx.de>
-References: <20250414140128.390400-1-lukma@denx.de>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="t9pCPRQ2"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id B451CA0370;
+	Mon, 14 Apr 2025 15:56:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=8fUTt49ngH9LwQeutmpq
+	Atan+y77TmFvSLDx00ftJms=; b=t9pCPRQ2tmxUZmdzLFDzbVZeoRtXZjDfgQoU
+	JMJpuozYaayHGe5M8rtZeul0OU/+F9X4CpMRAVyMFQFkPO7wR8zzEFtkI74Ye0dI
+	ADOz7gwLOQPJeZujzuajq635AW7etk4of6jaKUDWUnjyUgcgFHA4wFSlBn/Wema8
+	h8PFPH2UyOzNqCyjL2KDQXPqbCYhed4NZ+0Rdyx3IVfp7MVupbKlIeo055aR5zyn
+	HiCcr96E4uWhI47L71f0twy8JsoxjMausdIw6mCa8yjWiEtCvWdk6CGx7J6CHx0T
+	3vuIVBNAzb4osY94mucmeauKFPNuFOfSdxzd9dJ8utOPILJ/OE8X5nPlPxMHeiMC
+	wVXUT1b961oG1BveaAZz2BIctqzdxleO5HU5r+7ayNSEvR5IdBqo6C18d17+1q/k
+	6OfkDYosROTg7TUakxHUyXJ8/R5NGwv3dJcEYDWEujln53H1zsGk5oI6J/J0KlkT
+	D6Sfd2ElQtNUWMqubsWtaD+9X51Ux5MhtelheK6OGoHUbcfr/RTY2UgGmTWZJrVd
+	zrgeq4F2WGqcvULyHEHgHmQqicc3w6dcEJqT07jV+Rc7UpvLaUahU8thqM5ebD+i
+	PQ0nPK8VdUJDejG2Hffd2qnwkKH5+R/XbwdIHNuP1hKpkDZkJbL0w8fkZJkLUI+F
+	Y3cED88=
+Message-ID: <832eb5e3-7e2d-4ed2-8571-eca9fe129013@prolan.hu>
+Date: Mon, 14 Apr 2025 15:56:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] pm: runtime: Add new devm functions
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Mark Brown <broonie@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Varshini
+ Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>, <linux-spi@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>,
+	"Nicolas Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Pavel Machek <pavel@kernel.org>
+References: <20250327195928.680771-2-csokas.bence@prolan.hu>
+ <20250327195928.680771-3-csokas.bence@prolan.hu>
+ <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94853647464
 
-The description is similar to the one used with the new CPSW driver.
+Hi,
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On 2025. 04. 09. 19:43, Rafael J. Wysocki wrote:
+> On Thu, Mar 27, 2025 at 8:59 PM Bence Csókás <csokas.bence@prolan.hu> wrote:
+>>
+>> Add `devm_pm_runtime_set_active_enabled()` and
+>> `devm_pm_runtime_get_noresume()` for simplifying common cases in drivers.
+>>
+>> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> 
+> I can apply this one alone if you want me to do that, but I could also
+> apply the other patch in the series if it got an ACK from the driver
+> maintainer.
 
----
-Changes for v2:
-- Remove properties which are common for the imx28(7) SoC
-- Use mdio properties to perform L2 switch reset (avoid using
-  deprecated properties)
+I think you can apply it and then Mark can apply the SPI part to his 
+tree. @broonie what do you think?
 
-Changes for v3:
-- Replace IRQ_TYPE_EDGE_FALLING with IRQ_TYPE_LEVEL_LOW
-- Update comment regarding PHY interrupts s/AND/OR/g
-
-Changes for v4:
-- Use GPIO_ACTIVE_LOW instead of 0 in 'reset-gpios'
-- Replace port@[12] with ethernet-port@[12]
-
-Changes for v5:
-- Add proper multiline comment for IRQs description
----
- arch/arm/boot/dts/nxp/mxs/imx28-xea.dts | 56 +++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
-
-diff --git a/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts b/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
-index 6c5e6856648a..69032b29d767 100644
---- a/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
-+++ b/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
-@@ -5,6 +5,7 @@
-  */
- 
- /dts-v1/;
-+#include<dt-bindings/interrupt-controller/irq.h>
- #include "imx28-lwe.dtsi"
- 
- / {
-@@ -90,6 +91,61 @@ &reg_usb_5v {
- 	gpio = <&gpio0 2 0>;
- };
- 
-+&eth_switch {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
-+	phy-supply = <&reg_fec_3v3>;
-+	status = "okay";
-+
-+	ethernet-ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mtip_port1: ethernet-port@1 {
-+			reg = <1>;
-+			label = "lan0";
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			phy-mode = "rmii";
-+			phy-handle = <&ethphy0>;
-+		};
-+
-+		mtip_port2: ethernet-port@2 {
-+			reg = <2>;
-+			label = "lan1";
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			phy-mode = "rmii";
-+			phy-handle = <&ethphy1>;
-+		};
-+	};
-+
-+	mdio_sw: mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-+		reset-delay-us = <25000>;
-+		reset-post-delay-us = <10000>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			reg = <0>;
-+			smsc,disable-energy-detect;
-+			/*
-+			 * Both PHYs (i.e. 0,1) have the same, single GPIO,
-+			 * line to handle both, their interrupts (OR'ed)
-+			 */
-+			interrupt-parent = <&gpio4>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			reg = <1>;
-+			smsc,disable-energy-detect;
-+			interrupt-parent = <&gpio4>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		};
-+	};
-+};
-+
- &spi2_pins_a {
- 	fsl,pinmux-ids = <
- 		MX28_PAD_SSP2_SCK__SSP2_SCK
--- 
-2.39.5
+Bence
 
