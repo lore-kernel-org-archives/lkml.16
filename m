@@ -1,102 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE7464D;
-	Mon, 14 Apr 2025 00:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01614C9F;
+	Mon, 14 Apr 2025 00:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744589572; cv=none; b=KFItb10f+RFYVLD5neVRdskoe4xfXRaDbqJ+VX6ZQF+GOInuOaHJkiisoKsSmIKBuXE7vuZcL+e7jpnpcDFnER5lGYWE5J2S3qlV6083awpl4qt3vgLPRvdbxSq425sHcisDElvxt31w1j7dct65E78i4Wx/2m/GUTXXBv47Vlc=
+	t=1744589728; cv=none; b=NajJb6ZamryW0ddFo0LvTbDqwBn8sd0PkGKfm8WXbEOo7rmoW6xkYxU/OaUgbsy0etCq+tykKQ3cm6PHoSHm7o8Nz5tacrywz+x6tvt+PbcKZ7oFeDqc1eHM5/vCiewyB4qmxitrZmXB0PGA/7/Ml5fZP0s/SCWTx841xod1YZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744589572; c=relaxed/simple;
-	bh=GfefQWRQXZCqdBsIuEMO+B77FeTgP8Ps2lR3cG/ocZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W7toa53ApktxGxjW1lmQmrarKZ5TpjTVO3yJNzgwh14/Db5mT6J+L/CSVey96w4FrTAQP+bZE673fBXrdvpxuZ2+GBxWFJpbJr8NP71yivx0/LUeMU0arAljMWZaGIZjrcf+qJWv0a9DEun4IXQrzbqAOlE1lgiIkRc3frqTZYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwyGRfIp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744589728; c=relaxed/simple;
+	bh=pGUdpc774oKS+pds0PTNhEoofSzIkEd9QqQqmNiCTKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dpie9WTDqS+TCxpJKQdBZM8KI+DcFpFagaf4ufsnmmtp5imTRUZOHtFBxKrHP7Ezw0Ua8NZJ7q6uEBNHo/L3m9CGKk5JMTtGR4a+OZr1awFGo6MhcbbC87XiiwHMAu/RfYhGw7OukOLB4DGPWgS4biFFrajFe4RxA+kKGBC82UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIQk1p80; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwyGRfIp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10A1C4CEDD;
-	Mon, 14 Apr 2025 00:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744589572;
-	bh=GfefQWRQXZCqdBsIuEMO+B77FeTgP8Ps2lR3cG/ocZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nwyGRfIpXOxKekX1rl9duX6KPjggAn9Hc2lGtsttAMjWo3sTw8sapqDT/ACGWKytd
-	 JBs6B6+JnYfoI9QAcZ8VsVj+TaafIQC3b2LO6/Cf6tcXSoz4ZyeBYQbammQN1zwC82
-	 1u5VfCVQFdrEaznKSr9YMvSlwxxQtj3BNp3K2nAswU6u1XHqdjXG73KsKcqn0yfa+j
-	 neFU0u4cQRDK35nv9mFwcx/GXIi1OmTMlno/OYqd/wxBXFOpUnH7coeWUztPuWdMXc
-	 ANTEq5bi0JOybszU2w5qvdAdhnP4F2HGxdGZRW1E7mT3MbEk4g8I1KQZrZnD7WU/Q6
-	 UAAi6TU5qjqdg==
-Date: Sun, 13 Apr 2025 20:12:50 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net,
-	edumazet@google.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 20/54] mptcp: move the whole rx path under
- msk socket lock protection
-Message-ID: <Z_xTAoFA8RskUjCz@lappy>
-References: <20250403190209.2675485-1-sashal@kernel.org>
- <20250403190209.2675485-20-sashal@kernel.org>
- <efca2379-0474-4a02-8b3e-b4611f56bfcb@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIQk1p80"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2279915e06eso37301165ad.1;
+        Sun, 13 Apr 2025 17:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744589726; x=1745194526; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DspOzwqAQ3U2U2O2TlCMYkKPc8tNxrgBZWn4/MMKtJw=;
+        b=PIQk1p80vyjO5g62t4bU7nODKbzLVMBY2mXCXgzx0qjdU5ArPdcZs90mWQrFW+KsPd
+         9sQR0Lzkszzuk9OusXproRJatGCKeH6LXQ6IUlGC5P518mlxw+PmzIXnvXqCFgLARNjZ
+         5P3FprRsFkEGPP5ryISeoYnX8TVIxdsDIBLShyPhUBJYBdJ1P7Pfjbs+nI0AUnr63P6G
+         qP/X8FWVyfdyDQ7wkIeoTHcYD3ZS2O1g3x9uLkWAPl6hdIt0Lnuk+UZgijeWhDL3cJdO
+         WiTSVRfv33b9NG7WQdsT6H/3/fP1E6hRa+2763GeVwpjNeVccsCFTW0o35CspDmuWwG/
+         nfvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744589726; x=1745194526;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DspOzwqAQ3U2U2O2TlCMYkKPc8tNxrgBZWn4/MMKtJw=;
+        b=c7ThpiYpdOa6itnN/f+AMGHku2L9eO0LfMhxOP7F9rpJJ2YRRIAKHFkyhT+Kv7PbSR
+         qTIZZM8KHAba6hCiQNvNsrdG5DI0ySr7gnuzcPn7WTWAHbRMtIJ1wLI5zJSeqmX5thlm
+         sPvtcGgiHyKCJfvq3uzJn187TRVa8/oO+goi/f5JhZ/cOwD+Xh+YSa49yrF53zUQv8UK
+         hgLdGYsWR9cySIPPH5kiVU3w3+L4NC+xTVHNAnR+BMY81MXfd6T8aDaq0mnuvbiroCU8
+         1VCz3z12pf0kbdIVVUxfb7zd+iRxrfRVKPMCr+4/WHvLfgXXDEPxo0ZzFwJZXerbR/sL
+         Sp4w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+HfxVTDuUzJtGpNrwe9tDiLthfBldsqjmgGZNZ/ZRT5c1nYoNmWjCXfHOQ9J66JmGVoJQOd4LHrP3Wuk=@vger.kernel.org, AJvYcCXOUesZkqoYYFu7UGa/rCN99VP2iLk+QNU0QZqf4b71kCkiOlMcdBvF9o/n3HIA+CaZqCQvRexE0JnB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBinWeudmsjbrqJjvb681kw/bZd5jQdp9PKVsXrOkwclKKlUA7
+	PeqKlggfv4aJ95J2AkCg+dmEglRhpcZVyMbmoRxUemqMrEMB4oRd
+X-Gm-Gg: ASbGncsunkMX0INYOnluIhgAACbvYeCavo2TjORrOgcadFoQaHdymv6bj4x/FqZ9VGp
+	1E/o7N6bLBpAILfbmWYoJGeMPdEnn7Wc+oESsrbSWZrAYOnu/ZDqcRzGs0RTZJjJo/qsEif2SzO
+	5OoRr3ExEIrZNCIrvHri84YofzcOR8XZjBY8N0HoO3e+ATjdMZ4sPVAeCbQj8+1jrEXnLz28rzO
+	vw6ajFzMqBzVkdeFgnJmL1alWNFkhyYPZpfcKDNBXfdhMeUyUSWqs8pqzBE5R7glxgwv3u++zW6
+	iHTnEdyJQc2KF0oDncoxo4FpylpTBnfN1pReA/Yda3kfOQc=
+X-Google-Smtp-Source: AGHT+IHIj68kD5hR3cj5OEaOvggtPuwDL2ui3+LMQSSH0QGnqHSd+uewOup79dXxOeuSx0d6pSZqkA==
+X-Received: by 2002:a17:902:fc4b:b0:21f:85d0:828 with SMTP id d9443c01a7336-22bea4f183bmr177955005ad.41.1744589725886;
+        Sun, 13 Apr 2025 17:15:25 -0700 (PDT)
+Received: from fedora.. ([159.196.5.243])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8a8b9sm87987585ad.57.2025.04.13.17.15.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 17:15:24 -0700 (PDT)
+From: Wilfred Mallawa <wilfred.opensource@gmail.com>
+To: bhelgaas@google.com,
+	mika.westerberg@linux.intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: alistair.francis@wdc.com,
+	wilfred.mallawa@wdc.com,
+	dlemoal@kernel.org,
+	cassel@kernel.org
+Subject: [PATCH v2] PCI: fix the printed delay amount in info print
+Date: Mon, 14 Apr 2025 10:15:06 +1000
+Message-ID: <20250414001505.21243-2-wilfred.opensource@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <efca2379-0474-4a02-8b3e-b4611f56bfcb@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 10, 2025 at 01:05:11PM +0200, Matthieu Baerts wrote:
->Hi Sasha,
->
->Thank you for having suggested this patch.
->
->On 03/04/2025 21:01, Sasha Levin wrote:
->> From: Paolo Abeni <pabeni@redhat.com>
->>
->> [ Upstream commit bc68b0efa1bf923cef1294a631d8e7416c7e06e4 ]
->>
->> After commit c2e6048fa1cf ("mptcp: fix race in release_cb") we can
->> move the whole MPTCP rx path under the socket lock leveraging the
->> release_cb.
->>
->> We can drop a bunch of spin_lock pairs in the receive functions, use
->> a single receive queue and invoke __mptcp_move_skbs only when subflows
->> ask for it.
->>
->> This will allow more cleanup in the next patch.
->>
->> Some changes are worth specific mention:
->>
->> The msk rcvbuf update now always happens under both the msk and the
->> subflow socket lock: we can drop a bunch of ONCE annotation and
->> consolidate the checks.
->>
->> When the skbs move is delayed at msk release callback time, even the
->> msk rcvbuf update is delayed; additionally take care of such action in
->> __mptcp_move_skbs().
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-3-4a47d90d7998@kernel.org
->> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->With Mat, we are unsure why this patch has been selected to be
->backported up to v6.6. An AUTOSEL patch has been sent for v6.6, v6.12,
->v6.13 and v6.14. We think it would be better not to backport this patch:
->this is linked to a new feature, and it changes the way the MPTCP socket
->locks are handled.
->
->Could it then please be possible not to queue this patch to the stable
->queues?
+From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
 
-I'll drop it, thanks!
+Print the delay amount that pcie_wait_for_link_delay() is invoked with
+instead of the hardcoded 1000ms value in the debug info print.
 
+Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links")
+Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..8139b70cafa9 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		delay);
+ 	if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 		/* Did not train, no need to wait any further */
+-		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
++		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
+ 		return -ENOTTY;
+ 	}
+ 
 -- 
-Thanks,
-Sasha
+2.49.0
+
