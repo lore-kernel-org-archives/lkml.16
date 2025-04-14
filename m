@@ -1,73 +1,73 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146412749FE
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D583527991F
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744642096; cv=none; b=AynHfuwidaMe504qDrzz6ehNiOAVTSmm61D4NsJ92XIqXc8dj0qXis7l1ZVdMCyp1jYNFz26AsbyCp99JEDBaTM0S+xcIevxTTaPxaZAX52LfHfc/CMj6j8+WiXTA3ZLb3+tK0WLRh4mtLY4oH1Jp+pcZmmDyfnvJjZypAqkieg=
+	t=1744642101; cv=none; b=OLpnXcQXdEH7IsZsi3puEaCDMOG68tTkStdOSvUu+f/7d4BBZTgwC/l13baLsVTtUo1XucJcmaUecHVJgLSh0OcGqhd0iCUbNzY5PspRUYOokUCpjxXZOnLAnc6EBVvP/XX1maYdXQZbrMAoUdG4Ewv6ZBpfTd7bqJRQhQu95jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744642096; c=relaxed/simple;
-	bh=LhU0rdOmID82AZ8xNk6EuwviRRucppHfhg6LBx9zRaM=;
+	s=arc-20240116; t=1744642101; c=relaxed/simple;
+	bh=OX61iL5ajEkSOB9Gc2sJXRUybR1FGvGqiEtt3A8S3EM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nNuzPVOUouYSEBKrmL0I2bYhemOY2GZplp/+pGsYfFej5xKrNaZWosRP1Td6ItkgcOKf+G/4yK+5rFkioOzRPgoanRrie86xCH3JcZK9ftOdRhbPR5MweWKKDtwBXVoQlgcId4y0wwzFG3StmI0mLoUe+LKD2ARI/DL93ryg2Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=D+vBenhY; arc=none smtp.client-ip=209.85.166.175
+	 MIME-Version:Content-Type; b=LgoiDAp5INTU07sLaBExJ02UlGCoUw5FNKZvcAZiAo5qDM/gGZsWO1tta82rUb9r6qVGk6KgzJoD2L5aaV/YNKI2kqNsgJI6Fvqbp5CFd9Rzrn5SP6cihSpvT87T8YjqjDiNKDFGKmK7BpA7/5VaSBXVNJHe07XsjpYO3o3WwZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rYIR3JIA; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="D+vBenhY"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d439f01698so16299675ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:48:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rYIR3JIA"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86192b6946eso48754639f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744642094; x=1745246894; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744642099; x=1745246899; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oHfNdnNi1xSkWYqtYrP+8jqEYscVUa2He6JVgixWP6g=;
-        b=D+vBenhYK0LYA/+huTkVNTxykdTa/ahcevI4gBKcG7vUEeEgYxkpSgkbZXw4PrBM8O
-         H4S/qGh5K8G4eCiouEs4N8y4ke1M2vnihxSJm5AwAivCID+nubSJHJxslOX8TNCmU+Kv
-         D72qGR6z+coD/HQ40pARZzCn5AEf2LoeC8YmbDtIJjuPpEuFytSBw6NIMcWBUd63DCZt
-         H5P3E5UoHzkK4cMTDFnWUcnD8wxBLIIRWHseNUa8eFeraggFNv75VrbDDhLZx+nPDOlF
-         egpzBRMs7+uTpDixa1B47kQ21BQEUoXQl/MW89we+Dp5P5MTcbAnUZnxkcvJCl1cY6gF
-         DOmA==
+        bh=KVe49Nk2TmzLUEha9KKLJEtMKi1+QER5gyHF2CtIAoI=;
+        b=rYIR3JIAWj4+eD4j8hZYwyr29sxBENBdYuwyeYx/4z8HhPXU2L2n0J3KlgDvzX9DAv
+         vPGLa86rWNjbco6lFENk24URfqqujnZkiYFZdIK5vWW9wCrMQMC8IDfOlL4eSiWvUyvR
+         OBFJsPerNv8JXm19rYdQvqj0z948iktjt4nHkOAgAbZPhsBZA3DVqhr7VQdLDe4+Nkge
+         M7oulcFtczLrUQAV3nD1gMBagec5OAH+u5fnHWCsVR6g+RuQnUyaY5WylbvCLs2+aFk0
+         YVzw9yb72lXPUwNMeL4dpDY9ke8Z73Hns/CHqZquDzZnoP1CC0e7j+imiW/deAXcqht0
+         UHiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744642094; x=1745246894;
+        d=1e100.net; s=20230601; t=1744642099; x=1745246899;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oHfNdnNi1xSkWYqtYrP+8jqEYscVUa2He6JVgixWP6g=;
-        b=urTqAr2zCEiiAKhAjkieqbtNSd2uLVm2ox8TL/vm1mZzZgPhMCZlYfKI4xfP4vV3r6
-         9c65REMaaUIokV0Qf/CPm0ZfE/ROc93vnfl8hzDhgYPlzIYK964vR+PFyQ5RJTPGfANr
-         ZtHFEV10WHDTYtTJk+gOgHC6wEkINKx/e7RjnjhNy0XVwroBfU/CeSnuoRwCSQ37jBZ+
-         9yvAqbanyXvpxIK8gXvCXrnwpBghvanpEm1yf/kMoQmgLkbSYs/EKqyfXbyD8VYv8bmE
-         jVb8+bZqU84i/mDw9Bm26EpZNFJMTVBlNWXXWbiUM1nCuubxDOEEp2lQaSdek/ZvwzoU
-         nZDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgVlUXpdHaG1hM7dawI+1+b0Mp6Is1xei7Hcu8nPwz4SSjjW3KeY2h+wltO1g/n29Nr0LgRfm2ieJtBYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhM/XHa2QiFER1lIp+ymE4HmlVFN5fZYQ1NFeqGZqu6+v73wlP
-	/56S1FohHPgnjHRotDkPX9ETNCndHdiPKVu2UKUtBAC83sKfZSGKG0KW9cjWUok=
-X-Gm-Gg: ASbGncsFvFtsdSt7Zexpuse0EJQgRoPL9Cr/MgWqGWSgeT3x6cWPydJefb8CtXkhVcV
-	77SgBMsDOmpRDhTmTH+/+SOVg3gm2POz23vtaniQxrG9WNmfsmUEu3viNzTLMJY/zAZae+4hkg2
-	D2/XrxYtl31/kM9krVO5MeQSrX7SmWLGtWUwf2GbpOYz5xQ7kYeLcPVifH87zAl2BH9XYG219Ls
-	i0KgH1hOO9/XBi305GzRdJAhNmtzL+PScmwVyuNBtIrLVi3PncfZZAldiQlZ0p/Ei17KI5MXh0s
-	TEO77i5Z/s56vSLAG0mLxDAgrQbAIFWyiJkDuNUyLwI=
-X-Google-Smtp-Source: AGHT+IF7TuXWT67iAvYokr9eSH+aaPlPHhCcc1wcBruZkvWKMTX24qclOO8Q8bid8F0MSTvM1ww72w==
-X-Received: by 2002:a92:d706:0:b0:3d4:346e:8d49 with SMTP id e9e14a558f8ab-3d7e4d02187mr131652295ab.9.1744642094000;
-        Mon, 14 Apr 2025 07:48:14 -0700 (PDT)
+        bh=KVe49Nk2TmzLUEha9KKLJEtMKi1+QER5gyHF2CtIAoI=;
+        b=ZjeDExMVRchBisKgbvjSkJ2HYdZ5suXrAP/+LmfGsW51jAr2DWYQRzBZfTJKltiLO4
+         pJbLcr3MrT+xvqDLOgYWKwt2mxCT7JeEpTQstEAMVzouY3vBqknlda2/99fMeMkXuZHE
+         PhIllZEwVvy4GRN39H4lyDf4rMkDOhYBTif6AU2l4rsvzDkyffYfZCUQyUgK41fAqwU9
+         Zo3MVg/lcpMaBIXPcAcTaxyq2hWIdqIclyj6d8CpDf8/GbV2whF/mj/NPYvIdogWzBfs
+         Cj/smfWJ6Ozo+U7QZ1XXY3308RAo1U/HLl1YyBwM4tLzP0+zpWa3zRwMp8rkN8zcsOls
+         jQnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWqRb7TC/ksElX2QS0MJgysAyEcgsDjxE2mnI/XA9kyetyQHWapm4j8nfyinzcGIgwefUiLi7o6xj+Cfr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVLmq2VPqpLW94B8x7WcaSs2MgHI6I57j2OG1cb0nbm/SqP8E1
+	eK/BNXOlfGV05se5HdlUp0NQBIz1dkGtWv+qqzHWf2RPlqIEhe56KJcTqufvY8g=
+X-Gm-Gg: ASbGncupqVopzpEgoc8qSY3u2mW8eRkOqi+oQQCutNEt+9WcEvAUrn/fuSkbuVLOGEa
+	ScDM5rfMT6RY5Gcnv7PSXVy5mp0CyQdVPm+/JqgQ+MtLCRkEma1kZ61VLA7nmKCm5bEuqdgOK0u
+	sPMMlBG2LtNhy5poS9w9S5FIkfF89AgNFhWTXzahmAZBjyssS4X22Wg6SO5ar8RwWnAqUhuwDIK
+	q31LIMC7meuWWzLCyo+KAWO0gTxn3exZKaFEOcFU4qG+/Ce+Sdf/bKHX8BeAXsV4zyz7P4cs5Lm
+	L4eckL8SmbmUmAcITEpye68V7okBmDuu
+X-Google-Smtp-Source: AGHT+IHMgHQ/PWSXNiJrO8XR4AJL92k3mmk5jllOyjLCPSVCmuI4teb9tUAQPnkC1LlSiHdRflNUjA==
+X-Received: by 2002:a05:6602:b86:b0:85e:8583:adc8 with SMTP id ca18e2360f4ac-8617cb5e00bmr1416478539f.3.1744642098838;
+        Mon, 14 Apr 2025 07:48:18 -0700 (PDT)
 Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e6bd7bsm2569671173.141.2025.04.14.07.48.11
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e6bd7bsm2569671173.141.2025.04.14.07.48.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 07:48:11 -0700 (PDT)
+        Mon, 14 Apr 2025 07:48:14 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com, 
- zhengqixing@huawei.com
-In-Reply-To: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
-References: <20250412092554.475218-1-zhengqixing@huaweicloud.com>
-Subject: Re: [PATCH] block: fix resource leak in blk_register_queue() error
- path
-Message-Id: <174464209120.57766.16774504976430724922.b4-ty@kernel.dk>
-Date: Mon, 14 Apr 2025 08:48:11 -0600
+To: linux-block@vger.kernel.org, bvanassche@acm.org, 
+ Yunlong Xing <yunlong.xing@unisoc.com>
+Cc: niuzhiguo84@gmail.com, yunlongxing23@gmail.com, 
+ linux-kernel@vger.kernel.org, hao_hao.wang@unisoc.com, 
+ zhiguo.niu@unisoc.com
+In-Reply-To: <20250414030159.501180-1-yunlong.xing@unisoc.com>
+References: <20250414030159.501180-1-yunlong.xing@unisoc.com>
+Subject: Re: [PATCH V2] loop: aio inherit the ioprio of original request
+Message-Id: <174464209412.57766.10723552188963228525.b4-ty@kernel.dk>
+Date: Mon, 14 Apr 2025 08:48:14 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,20 +79,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3-dev-7b9b9
 
 
-On Sat, 12 Apr 2025 17:25:54 +0800, Zheng Qixing wrote:
-> When registering a queue fails after blk_mq_sysfs_register() is
-> successful but the function later encounters an error, we need
-> to clean up the blk_mq_sysfs resources.
+On Mon, 14 Apr 2025 11:01:59 +0800, Yunlong Xing wrote:
+> Set cmd->iocb.ki_ioprio to the ioprio of loop device's request.
+> The purpose is to inherit the original request ioprio in the aio
+> flow.
 > 
-> Add the missing blk_mq_sysfs_unregister() call in the error path
-> to properly clean up these resources and prevent a memory leak.
+> Signed-off-by:
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] block: fix resource leak in blk_register_queue() error path
-      commit: 40f2eb9b531475dd01b683fdaf61ca3cfd03a51e
+[1/1] loop: aio inherit the ioprio of original request
+      commit: d8ec13ceb917611582b52ecc28c34ddbb61ce0cf
 
 Best regards,
 -- 
