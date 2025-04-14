@@ -1,107 +1,90 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from outbound.pv.icloud.com (p-west1-cluster5-host8-snip4-1.eps.apple.com [57.103.66.242])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB2325D1E5
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF7F28D845
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.66.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744628996; cv=none; b=r9IUidA6ZIkw6zO/xaKBusYKol007rKxYiGga7ZVHUbo89jr0aUNuAZ8uDgZoItj1MCgM0s5JAU8rNlz7mIBp7JvHHj3vvhUftywikR8WQMyFVW68MHjhXhywuovcICbhD4CClBJGIJeorPJi+B8/P2uFUXVxloXVQ6dGCgtCYY=
+	t=1744629048; cv=none; b=ZDuhOMwKUK2+qFrXsZLYRoZ2OMIwociShof8C/OCBpeQpmYxfYcaSyk7bUkOaTydoqB4aJu9XGYgMnLmk6yL3u0QVGsybfaEujCkVJdSkFv4lxtCByhcUfcq+pN2ihtRgulTyuxNXAmDNaxWnqZKS9P4l6uhG6WL2J/bIj5d9S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744628996; c=relaxed/simple;
-	bh=wCoPa0SdVW9KLNsnWBWfYEkz6NqTIkwTiFO8OiYDl9c=;
+	s=arc-20240116; t=1744629048; c=relaxed/simple;
+	bh=PafN8z8zHH7ZH29aqmC1CQ1jw5BO3fvA+u2a60KyaHw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b5UybwSkkMfWHqfZckXIKJg9xgBpz380steONC295Jqm6CbsOwzewlBvq/1k6WvxEWiOWGg/Y6rjRqA9uJWK4TBcA4LqeZ8pA21woYtksLDBoOGxm4/hor9EhG+7t/qBEB8kkFqpNXcfaqC800RgvCDSA/Y7lvfw687ShvTZqXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eilrZpAM; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=laKGAtBFkeYAD/NfTIPHvOJSnfx2LlRuGnRy0MXdrZh1NYns7fnwf60heRdrZZ+EggsG91d3P8NsqvLJUw2ZenicP9Ie2Pek3ZcIah3DdbyZ/STyBkFtLZVDnDm37sZbUQCawvjwuMM/xWQW7O4jx+HpJ9asmC/ncRqqK/p6TqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=adC9/XQH; arc=none smtp.client-ip=57.103.66.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eilrZpAM"
-Message-ID: <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744628982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tLuWLPfEotMTwPvAiMVu0rfUjaL1nxwXeHaKbXFhyaM=;
-	b=eilrZpAMFNMHiOfMQuwUVHP589VdcC+RHfbE8uSpjjmFtRWaVqRRUHpGaHvl1Ga0b5S1ZG
-	a4dJSAs/EveJTaurpSM2ub8v4geVDN7vVwYdwqvire3hJ5u+QOCCXip3b3SatPzieqUWQM
-	+W/l1XXMl/KO5r245tLrgb8NM2m6JVc=
-Date: Mon, 14 Apr 2025 12:09:36 +0100
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="adC9/XQH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=MLy5tVDZ36BVgdmmtjXmu/rneKq26t7A9Py8c/K5oEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=adC9/XQHC+DI9Vp03TpQFwbcRQ3tKnSCOUiRGm5/palIrjNErgXcm05ByxPH0roX9
+	 GLS9W7BhW/b1FyCuMBNqndy3ZDYzJaAFi4rrmAdQ+FtU88lPRCFgcV4ijygSmon5rx
+	 ZCzvCPTOZjPvirEWTBGDZ8GmCkEyLMLUhu3zDIX5wqCbfGO83XptzHio/iPhnCoYxC
+	 ltlyY/qmu75Mk8umVjgRTHUa71KF6HSLiDLR0BbEQDkyLsIfWk1nPKYQnjAhYj68lu
+	 QzivVPiUfW5ltT17hRnlI85hWSm+hbf4DFEwIQiGq8fQwUQmm1aUfxj5lFLKyQsYfb
+	 Es2BndplLD2OA==
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 8BA7D1800231;
+	Mon, 14 Apr 2025 11:10:38 +0000 (UTC)
+Message-ID: <3ae62405-6ebf-4da4-a946-deb74cd4f93e@icloud.com>
+Date: Mon, 14 Apr 2025 19:10:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
-To: Sagi Maimon <maimon.sagi@gmail.com>
-Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20250414085412.117120-1-maimon.sagi@gmail.com>
- <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
- <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] software node: Add comment for the first ERR_CAST()
+ in fwnode_create_software_node()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250410-fix_swnode-v1-0-081c95cf7cf9@quicinc.com>
+ <20250410-fix_swnode-v1-1-081c95cf7cf9@quicinc.com>
+ <Z_zAo3PTEWH9nkTt@smile.fi.intel.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <Z_zAo3PTEWH9nkTt@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: MdS5mcPft3y91odE22QgGzxDPsqFDVFy
+X-Proofpoint-ORIG-GUID: MdS5mcPft3y91odE22QgGzxDPsqFDVFy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 spamscore=0 mlxlogscore=686
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504140081
 
-On 14/04/2025 11:56, Sagi Maimon wrote:
-> On Mon, Apr 14, 2025 at 12:37 PM Vadim Fedorenko
-> <vadim.fedorenko@linux.dev> wrote:
+On 2025/4/14 16:00, Andy Shevchenko wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
 >>
->> On 14/04/2025 09:54, Sagi Maimon wrote:
->>> Sysfs signal show operations can invoke _signal_summary_show before
->>> signal_out array elements are initialized, causing a NULL pointer
->>> dereference. Add NULL checks for signal_out elements to prevent kernel
->>> crashes.
->>>
->>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs nodes")
->>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
->>> ---
->>>    drivers/ptp/ptp_ocp.c | 3 +++
->>>    1 file changed, 3 insertions(+)
->>>
->>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
->>> index 7945c6be1f7c..4c7893539cec 100644
->>> --- a/drivers/ptp/ptp_ocp.c
->>> +++ b/drivers/ptp/ptp_ocp.c
->>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
->>>        bool on;
->>>        u32 val;
->>>
->>> +     if (!bp->signal_out[nr])
->>> +             return;
->>> +
->>>        on = signal->running;
->>>        sprintf(label, "GEN%d", nr + 1);
->>>        seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
+>> ERR_CAST() is normally used to cast an error-valued pointer type to
+>> another different type, But the first ERR_CAST() is to cast away the
+>> const in fwnode_create_software_node().
 >>
->> That's not correct, the dereference of bp->signal_out[nr] happens before
->> the check. But I just wonder how can that even happen?
->>
-> The scenario (our case): on ptp_ocp_adva_board_init we
-> initiate only signals 0 and 1 so 2 and 3 are NULL.
-> Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_show
-> when calling signal 2 or 3  the dereference occurs.
-> can you please explain: " the dereference of bp->signal_out[nr] happens before
-> the check", where exactly? do you mean in those lines:
-> struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
-    ^^^
-yes, this is the line which dereferences the pointer.
+>> Add comment for this unusual ERR_CAST() usage.
+> ...
+> 
+>> +	/* Only cast away the const by ERR_CAST() */
+>>  	if (IS_ERR(parent))
+>>  		return ERR_CAST(parent);
+> TBH, I don't see the value of this comment. And looking into the code, I would
 
-but in case you have only 2 pins to configure, why the driver exposes 4
-SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+thank you Andy for comments.
+will drop this patch in v2.
 
-> struct ptp_ocp_signal *signal = &bp->signal[nr];
->> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
->> the end of ptp_ocp_adva_board_init() like it's done for other boards.
->>
->> --
->> pw-bot: cr
+> rather drop this part. The current users do not rely on the any specific code
+> to be returned and also they check parent to be valid beforehand.
+> 
+> But let's hear others first.
 
