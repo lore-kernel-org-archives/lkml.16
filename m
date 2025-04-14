@@ -1,115 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9F5280A4D;
-	Mon, 14 Apr 2025 18:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE33E28A1F8;
+	Mon, 14 Apr 2025 18:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744655070; cv=none; b=G7s+EM6LaOZrYgFfZPFS066T5EOiYnd39TMWjtH4j1ECVQaZ6QNdqF3AbreJl/Zo87dLSfZcjWFxZ8FCbbwBBUJj3AT35D4G8DIE9wHMD5NZDITA2rmSa9TlvXUzOwvh22eZl882VgylQdYAzIcGuLHnq4LQ18KB7oRHh116BVA=
+	t=1744655187; cv=none; b=OCdj92mRNsLZr9PNLGSLU13Cy0dGdPwCSGhBcRlfew2f6ytkj8MtBIFO9J2DHGYBxbgmRoEzaljLdX3hPGQoV0L4Klhm/RddWF3RTzIuewhp0cUOydMiBrStRseH4rVN+d+Krevh0dSFPjMa3nU+Mm8cEJ4KFL1oV80O3GcUerk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744655070; c=relaxed/simple;
-	bh=u1SSCsR65+z/52ozbHPvT+TScO/1kMgnydsLbhQEYF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=arlKctBRkrihHoMqdBIJqc9I+FPXlKqXyVvhr/3tlPHdaoH5RxPYYAj+G2fZxV2cmdw5hjX/XLdXGmWwWcltJUig011XJPv5p0f1xsdYz+SluINWzOZpp5i2QkgPgg1fmC7J7/modIaI2e+9EuiDI/vU04G1qFtDqVRMUMfok64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbJwJVMh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744655187; c=relaxed/simple;
+	bh=XpQ8fUhF9kTmi0XEYGvAnNQNEJ7orpfWFg3wjhoXy4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hyETM692UIWnLhVzFN8bwIJuSVjPLuXdTAig0SaTmCBT3SQkEKPXoXvN1c7nnUuGTXn3aCzBvczxc+/TUDLeYEt5F2/6id+oSOQlAHW2wBxP3xaq42zxOsh88V+Rb8EDEpaeP0ItOKRx8LIb7oUCbOzFZW6cB5f89SpczbFBSSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqVaPFyn; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbJwJVMh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF52C4CEE2;
-	Mon, 14 Apr 2025 18:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744655069;
-	bh=u1SSCsR65+z/52ozbHPvT+TScO/1kMgnydsLbhQEYF8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QbJwJVMh+kwVSRlafiLsR9NsZhKRc23wpBBil5TPnGF46i+c6S3NjHpChwxmGT7g8
-	 jkfyhK+4pXh/3o8KSmPU8HwplLS/H5CMpbQrq+Xi4Iw6cJLQMM86syEILgfdVM31W2
-	 dQnxVc8iKpwaoF3eR7jCTnbozSpgv3QUhpGYsOoGb6ra/cSAqdVNWx6nvB17MWtw49
-	 htu0GCew+cwGs/DtlIkTCVS1feL0ba/UrmKhcbyhZ3EAiTql0mAyPlzQzYZaruTT8N
-	 XB5btK3BTlJCkbA4IKM5TyHI68uj7hn61huKFzGai1m8cRlmCd7I+VpNsmKS73zk0r
-	 tUpOlLE+bgY1w==
-Date: Mon, 14 Apr 2025 19:24:22 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: adc: ad7606: add SPI offload support
-Message-ID: <20250414192422.039817b7@jic23-huawei>
-In-Reply-To: <20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
-References: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
-	<20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqVaPFyn"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso47831681fa.0;
+        Mon, 14 Apr 2025 11:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744655184; x=1745259984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XpQ8fUhF9kTmi0XEYGvAnNQNEJ7orpfWFg3wjhoXy4U=;
+        b=cqVaPFynLg3Hkp0jexFuufTx/ODRLYBC0Kc49aZIOeFAiOO8xtGaYuF4ahTdTT0Qlg
+         Jp3rsuWVPLcEg1aWoIyGpG7vvYFucrzwXzEus30TbRT3pw6GuO9dhqTN+4YbiUFN696Z
+         G2sQghCKz7Ydz66WNQ0wi92e/BMesUvmTeF/DtWvVUExLjcLKimaxA7dO9DEb/8tlpB4
+         +KTKKq/S25RW0uGzCI5iCCtcjULSbY29+Fd0XoQk1oBi6p3AebHnl5PJkSSfEDRuaKBH
+         tBRoxqj2YZx8IBcz4uoTTEm0VZy8o4X81ITMkORr1lRBZ+5HzPhfD1e7+o1bewd8MxoV
+         V7oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744655184; x=1745259984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XpQ8fUhF9kTmi0XEYGvAnNQNEJ7orpfWFg3wjhoXy4U=;
+        b=T/TuKEtuQRXN10eFI4LyYDXudOFotQCUJgQ0DGq+0yy4Si03lSiB/ApzJzdNUOBQID
+         doyGuprzxp9L2TTGaWOvqzZwm/aqeVxTdX6zqN2l25TAMLHf7aJx4OoKyacBEFOwWsRn
+         +rCCqFS9QHXAoKpWXQSG1YLw+RKMWBW+vtIzhM9FaRrp9shO0TIHn4oIK4dKNDpttIMr
+         LIIwGbMZ+jyufdjgaq1W4jaGl5g6gRbGrTHG4j7iQ5AYSLg6hVvUhDfMh8S+9wgtY+yp
+         uTjohg9Gg8yvHvfnumn0e6cCXZ9AgOeoo13ARYXmXvSdmBxqGHWR7aK/mrwBMToWwIIt
+         k6+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGIzybDws81uixxbUfoA4wo/KrqSjPGPLM+dDMQN+B37lcOFY+/t3zOKlxHvIpfZBRYJB69ToIwG6TZHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHZfZJmtju0CiDIaGo68e67ABk7ctKJpwuT8FP//x54/u2nc5L
+	4FoaFqkKa60nPk9FTxMcJTmYeh7VivZmAdBqyBRHSdWT/ZO6RtGrihDbs4uk3DVtApmGzlYgKSb
+	Dnu0GP7qas6bbtyxWAO9WvF7IhZhGg2pV
+X-Gm-Gg: ASbGncsVv/MltiXZx0hz6ypPmgr38J4Hp6grVdRCUqY/mLEtVvjxMELqJt347iSo/rT
+	YH3PMbPy7dJ3996+9kI4xORZcaeQn8CK9OacK1+rk/GLN6ok2ci93KmhvZUG6JhUHSiLxWnsKG5
+	szkmW/Bj1V4HfVeBdsoFulKbcFyeDtDL9JFHibgQ==
+X-Google-Smtp-Source: AGHT+IEeTMtdfekgUVDwOdhRHmyuSpDt7+817xh3+IgPK5QS33Z7m7kYqQgn8rjNZvRt856SdDZJlPW8zseM4nuYpsU=
+X-Received: by 2002:a2e:be14:0:b0:30d:e104:b595 with SMTP id
+ 38308e7fff4ca-31049acdbe9mr33289491fa.41.1744655183792; Mon, 14 Apr 2025
+ 11:26:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com> <CAJ-ks9=3ckTSWuCWq0SV4EX75a_c70c=VKjur-+GFUHKi8+zmA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=3ckTSWuCWq0SV4EX75a_c70c=VKjur-+GFUHKi8+zmA@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 14 Apr 2025 14:25:47 -0400
+X-Gm-Features: ATxdqUFLBi2YevPASNx3vvQ4YHiYQ2isz-zN6h-1MpPTJn_Jv5eVGSvEL6XX3zU
+Message-ID: <CAJ-ks9k3e3hyWXKZOyzR_VYinKwfJoMy+WGxVbAtA_yOQ=1bSQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] rust: alloc: split `Vec::set_len` into `Vec::{inc,dec}_len`
+To: Danilo Krummrich <dakr@kernel.org>, Andrew Ballance <andrewjballance@gmail.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 7, 2025 at 10:53=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> On Mon, Apr 7, 2025 at 10:52=E2=80=AFAM Tamir Duberstein <tamird@gmail.co=
+m> wrote:
+> >
+> > This series is the product of a discussion[0] on the safety requirement=
+s
+> > of `set_len`.
+> >
+> > Link: https://lore.kernel.org/all/20250315154436.65065-1-dakr@kernel.or=
+g/ [0]
+> > Link: https://lore.kernel.org/all/20250316111644.154602-2-andrewjballan=
+ce@gmail.com/ [1]
+>
+> Oops, dangling reference here. I removed the mention of Andrew's
+> series because it has been merged.
 
-> +static int ad7606_spi_offload_probe(struct device *dev,
-> +				    struct iio_dev *indio_dev)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +	struct spi_device *spi = to_spi_device(dev);
-> +	struct spi_bus_data *bus_data;
-> +	struct dma_chan *rx_dma;
-> +	struct spi_offload_trigger_info trigger_info = {
-> +		.fwnode = dev_fwnode(dev),
-> +		.ops = &ad7606_offload_trigger_ops,
-> +		.priv = st,
-> +	};
-> +	int ret;
-> +
-> +	bus_data = devm_kzalloc(dev, sizeof(*bus_data), GFP_KERNEL);
-> +	if (!bus_data)
-> +		return -ENOMEM;
-> +	st->bus_data = bus_data;
-> +
-> +	bus_data->offload = devm_spi_offload_get(dev, spi,
-> +						 &ad7606_spi_offload_config);
-> +	ret = PTR_ERR_OR_ZERO(bus_data->offload);
-> +	if (ret && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "failed to get SPI offload\n");
-> +	/* Allow main ad7606_probe function to continue. */
-> +	if (ret == -ENODEV)
-> +		return 0;
-> +
-> +	ret = devm_spi_offload_trigger_register(dev, &trigger_info);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "failed to register offload trigger\n");
-> +
-> +	bus_data->offload_trigger = devm_spi_offload_trigger_get(dev,
-> +		bus_data->offload, SPI_OFFLOAD_TRIGGER_DATA_READY);
-> +	if (IS_ERR(bus_data->offload_trigger))
-> +		return dev_err_probe(dev, PTR_ERR(bus_data->offload_trigger),
-> +				     "failed to get offload trigger\n");
-> +
-> +	/* TODO: PWM setup should be ok, done for the backend. PWM mutex ? */
-> +	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev,
-> +							     bus_data->offload);
-> +	if (IS_ERR(rx_dma))
-> +		return dev_err_probe(dev, PTR_ERR(rx_dma),
-> +				     "failed to get offload RX DMA\n");
-> +
-> +	ret = devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev,
-> +		rx_dma, IIO_BUFFER_DIRECTION_IN);
-> +	if (ret)
-
-should be ret;  Thanks to 0-day for the report and fixed up.
-
-> +		return dev_err_probe(dev, PTR_ERR(rx_dma),
-> +				     "failed to setup offload RX DMA\n");
-> +
-> +	/* Use offload ops. */
-> +	indio_dev->setup_ops = &ad7606_offload_buffer_setup_ops;
-> +
-> +	st->offload_en = true;
-> +
-> +	return 0;
-> +}
+Benno, Alice: did you folks want to take a look?
