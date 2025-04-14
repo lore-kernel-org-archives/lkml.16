@@ -1,156 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA411258CC3;
-	Mon, 14 Apr 2025 07:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CF62628C
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 07:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617178; cv=none; b=tZF2V+7RrO8JH5ihHYI/wC+Ns27Xqx0XSDBfwFIPgzUfALk1CpRgWZewKxs99GucRhWtfGta0Y8mVPW4jE5lHiK85nVotqc173dVLRCRN3pQ7QfkK86RQ5d6Vw1nqk7Oo66nPwd/7B3hxBsG5LDN0VnRVej5OV1fWmixQtIm5L4=
+	t=1744617187; cv=none; b=CukULFT1g8NUZgEikOsq4OFBiAiu5dpk271SvCy+MFvJgU+PdyKl/KrkhYvhsiJ5C8IfaXaFFWd8yxmwLU+LzyEy2o8Ai112+MLIADfIIiyB3kiyDhZdsPPPhu48mP7o81ODsSecGh2QAWHX0bYtiis/rdLcXmt7BF+/UzPEW8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617178; c=relaxed/simple;
-	bh=bkxSTtdDFyviSpupmhNaBQ6cbugxxLS+/kDSWvSJ76Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BZtC/WY0RWSv1eN+tY4UhsvRs8ZNW3sPJzve3n0o7xQ8K+hJ+ckYUBvsJb8/lEJ7lMk4RIexU6ZSaLrUrhooGYPPOu+MZGeA4k14pzdV+ycuQclnQCtfOHrzTq9l+jq30nwyDnCbezEEw6jp8F7vSBEHqDG5K3xstyS5HzTN6Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QxmGkhpS; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744617187; c=relaxed/simple;
+	bh=3DbjrOZ3GgA1JbOIsk1z2k32sd9znGXc3GZZ549+9FM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lqt5uA0s5eZ5gAbItm5ZmhK2AB5xe22368hoOBwiN1NmJn8JruNfwOWvn1JYvEgD4j+uSDb9ymDxs0m0RadCBwxBhWTOhAVBjwsH9OpgRZTIxL3eVq81ncbOVw2LJIikAG+IrXRDfRSWNNcEkvz3jeazoPLfybAOQDyU+qzKCGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YClopSW2; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QxmGkhpS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744617177; x=1776153177;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bkxSTtdDFyviSpupmhNaBQ6cbugxxLS+/kDSWvSJ76Q=;
-  b=QxmGkhpSr861b0QkSyyNmzST0HfhE2m0Na45tlYBHEyNTOq+PV14vXSY
-   T76xwsbIoIeuwEt9wN+6+4LhanPCtqgWP6lsEAmmPHPgmyDm3OAhFPEpB
-   REWvycVtpyQ1EgvBaEBQwu2cmbybwX79qJDdbNOflVSrWkl9vhs4L3fmd
-   MnT6krmism3nZPHzr9cXc085Ev1yBtApkELJQAXulwWWDW8DVSMsuUi6U
-   jvXRhPTL1o6xofP5/GK5I4EGNBLCVKksUa6FYDfuMJaXxoTMqfw1PESWS
-   BW/19pyh5PvwZd3JRMlQvUxHD0xxgVsG/4HZHMEm9ZN/9qxU9qkNneW6f
-   w==;
-X-CSE-ConnectionGUID: qVULuznmQR+NTgVjHz4VAg==
-X-CSE-MsgGUID: nErD2bQZTY6MC2IEgZhe1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="56719738"
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="56719738"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:52:56 -0700
-X-CSE-ConnectionGUID: Suur3q4vQw+2nfVCvxYgvw==
-X-CSE-MsgGUID: xK+m8O66QHi0jOcG9OUxgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
-   d="scan'208";a="130294561"
-Received: from unknown (HELO [10.238.224.239]) ([10.238.224.239])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 00:52:52 -0700
-Message-ID: <c8ae2d43-157c-408a-af89-7248b30d52d1@linux.intel.com>
-Date: Mon, 14 Apr 2025 15:52:50 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YClopSW2"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30effbfaf61so44319241fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 00:53:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744617183; x=1745221983; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f+mGEmg0/F7XzkKMSGVWeK1CRSWc8K6jmw6reSH8Ppw=;
+        b=YClopSW2VDfYCL9DRs+4Ct7WYBcK/He+9yOuoM4ww9oGpAt9NdNdF4vjw+PlHQpXE3
+         yT1Ywh8PbUyrRfDBlbep1AFs2n0Qz+WD5Fm/6iuxNVEO4ArZrZ/qQrCI8aC0L2t8doFl
+         FCKBO5iGlxHWnJagJCsN9YWIyCsEI2yKzspNPKhHfYudoYJh234f7Jly6OIg+xbFBVQC
+         BbTHN7lOdxI8RqoxZepYltHU8EGz7guzcZgj4uj/pkQpdtWXbJozcuOWmS3wNyoVBaV0
+         wCPAVZSqXkKc9dlgcHAobJxxfWo2V0BJzIXq9kM44SZhOSbpkEgD9dkfllszHG2OdmJA
+         MSFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744617183; x=1745221983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f+mGEmg0/F7XzkKMSGVWeK1CRSWc8K6jmw6reSH8Ppw=;
+        b=hoXwYKOUcySMQu96cgGw2Eu5LKxbUfstBfQnvqD1Dih30hhTC19wdo9tgktGRD2ZVv
+         e59BvH/mSb41YXK9sEu9nibgPntWe/eoMtPMZRcOJpvLnbIuraXuh1ZM8rKsSU6b1z0O
+         bo3UmBK1V7kAjSWzA6IeVY332/8FsIX/Ri+tmKoUMuzxom5u93z8vC2TC77HRVG9hE6W
+         Re00veac4JuRubpPF8DbJ9su0i7j4+jYZwbJzQ8I4r7+K+tNmR9XtzKzOjRGF1rZTg6U
+         yl7yjb1VbpdhHvMuKfzE21ZhLirMpVZFxETcIEyjaJCdZXhXQ419lwOsdrj1+1I8NS6H
+         uOkQ==
+X-Gm-Message-State: AOJu0YwZ0lZV/g9/tRwDp371AOqrDWs6/E4P8a5z0t7CK/TZl0UlnCbi
+	wZmHu16DTK477tJHSFeebHktT2zzvknp9F41GtAj/q7ZjwjyGtGoNm8Bm+er6J/XKr+pJMbbIYr
+	iSGeSHEdrgUPD3fzp8UmsYf/x0bU=
+X-Gm-Gg: ASbGncvcxt37jaIAiWWvFE+EsOS1AZPP6bTzLJkjardkXF8qtwAv14P9ThPV/qFGfdl
+	iwfYdnRBuUPYpLtzzzJsrVebSxjAYZQGh4GfOL5My0PtGlJeSI6fEGF/quskGs/qocE2Mx4EK3G
+	ZKxYEEvNkoidYFCPKnBtejLA==
+X-Google-Smtp-Source: AGHT+IGaW2Z7DWDGr2HFU5VHTQtysseeXN0uVaodvAvadagWNJBE8bDtwJxAMPH4brjIHMjzzJQ7m9S7HjK2/Olw8Pk=
+X-Received: by 2002:a2e:9e4a:0:b0:30b:f0dd:9096 with SMTP id
+ 38308e7fff4ca-30fdf5219c3mr37012721fa.12.1744617183007; Mon, 14 Apr 2025
+ 00:53:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] platform/x86: int3472: add hpd pin support
-To: Hans de Goede <hdegoede@redhat.com>,
- Dongcheng Yan <dongcheng.yan@intel.com>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, sakari.ailus@linux.intel.com,
- hverkuil@xs4all.nl, andriy.shevchenko@linux.intel.com,
- u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
- bingbu.cao@linux.intel.com
-Cc: stable@vger.kernel.org, hao.yao@intel.com
-References: <20250411082357.392713-1-dongcheng.yan@intel.com>
- <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
-Content-Language: en-US
-From: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
-In-Reply-To: <cfc709a8-85fc-4e44-9dcf-ae3ef7ee0738@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250413220749.270704-1-ubizjak@gmail.com> <Z_y3OIQECdVo6YJL@gmail.com>
+In-Reply-To: <Z_y3OIQECdVo6YJL@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Mon, 14 Apr 2025 09:52:51 +0200
+X-Gm-Features: ATxdqUHY0NlQtviHKJXw8qjaGilUMnYZ23Oad2FM9WdTvQl_XeY7l2C-VLGjFk4
+Message-ID: <CAFULd4Z=ErsRwzLvQ7yjqXG684UT5D07RoRqVPJhsEh4fxqqyQ@mail.gmail.com>
+Subject: Re: [PATCH] genksyms: Handle typeof_unqual keyword and __seg_{fs,gs} qualifiers
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Masahiro Yamada <yamada.masahiro@socionext.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi hans,
+On Mon, Apr 14, 2025 at 9:20=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
+e:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > Handle typeof_unqual, __typeof_unqual and __typeof_unqual__ keywords
+> > using TYPEOF_KEYW token in the same way as typeof keyword.
+> >
+> > Also ignore x86 __seg_fs and __seg_gs named address space qualifiers
+> > using X86_SEG_KEYW token in the same way as const, volatile or
+> > restrict qualifiers.
+> >
+> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1c0=
+35@molgen.mpg.de/
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > ---
+> >  scripts/genksyms/keywords.c | 7 +++++++
+> >  scripts/genksyms/parse.y    | 5 ++++-
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> Thanks, applied to tip:core/urgent.
+>
+> I've also added this tag for context:
+>
+>   Fixes: ac053946f5c4 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
 
-On 4/11/2025 4:33 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 11-Apr-25 10:23 AM, Dongcheng Yan wrote:
->> Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
->> being received. On the host side this is wired to a GPIO for polling or
->> interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
->> lt6911uxe and lt6911uxc.
->>
->> The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
->> here as well.
->>
->> Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
->> ---
->>  drivers/platform/x86/intel/int3472/common.h   | 1 +
->>  drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
->>  2 files changed, 7 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
->> index 145dec66df64..db4cd3720e24 100644
->> --- a/drivers/platform/x86/intel/int3472/common.h
->> +++ b/drivers/platform/x86/intel/int3472/common.h
->> @@ -22,6 +22,7 @@
->>  #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
->>  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
->>  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
->> +#define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
->>  
->>  #define INT3472_PDEV_MAX_NAME_LEN				23
->>  #define INT3472_MAX_SENSOR_GPIOS				3
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index 30ff8f3ea1f5..28d41b1b3809 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -186,6 +186,10 @@ static void int3472_get_con_id_and_polarity(struct acpi_device *adev, u8 *type,
->>  		*con_id = "privacy-led";
->>  		*gpio_flags = GPIO_ACTIVE_HIGH;
->>  		break;
->> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->> +		*con_id = "hpd";
->> +		*gpio_flags = GPIO_LOOKUP_FLAGS_DEFAULT;
-> 
-> This looks wrong, we really need to clearly provide a polarity
-> here since the ACPI GPIO resources do not provide one.
-> 
-I tested gpio_flags=GPIO_LOOKUP_FLAGS_DEFAULT/HIGH/LOW, the lt6911uxe
-driver can pass the test and work normally. Is this the rule of int3472
-driver?
-In addition, GPIO_LOOKUP_FLAGS_DEFAULT	= GPIO_ACTIVE_HIGH |
-GPIO_PERSISTENT as defined, maybe it provides a polarity also.
-I can change to GPIO_ACTIVE_LOW, but I want to understand the reason.
+Heh, I intentionally removed it because the patch now fixes genksyms.
 
-Best Regard,
-Dongcheng> Regards,
-> 
-> Hans
-> 
-> 
-> 
->> +		break;
->>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
->>  		*con_id = "power-enable";
->>  		*gpio_flags = GPIO_ACTIVE_HIGH;
->> @@ -212,6 +216,7 @@ static void int3472_get_con_id_and_polarity(struct acpi_device *adev, u8 *type,
->>   * 0x0b Power enable
->>   * 0x0c Clock enable
->>   * 0x0d Privacy LED
->> + * 0x13 Hotplug detect
->>   *
->>   * There are some known platform specific quirks where that does not quite
->>   * hold up; for example where a pin with type 0x01 (Power down) is mapped to
->> @@ -281,6 +286,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>  	switch (type) {
->>  	case INT3472_GPIO_TYPE_RESET:
->>  	case INT3472_GPIO_TYPE_POWERDOWN:
->> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->>  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
->>  		if (ret)
->>  			err_msg = "Failed to map GPIO pin to sensor\n";
->>
->> base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
-> 
-> 
+No big deal, though.
 
+Thanks,
+Uros.
