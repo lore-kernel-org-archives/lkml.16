@@ -1,129 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E742C0319;
-	Mon, 14 Apr 2025 13:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECE82C0319;
+	Mon, 14 Apr 2025 13:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637396; cv=none; b=Eacb96X0YYZxZN2uYkxXYJIkZbI32YzQs/MlMTD4syBW/a5XZBA+OKtzuG1W4sBFkEz/nkvShFhFmXuiZw8dMuF+61xw4YfrAe5gjkuZWisDYI07X8waXAvjKEOQMJBi/4O2WXe1DXz3rqkUSW/+qjjhvqOraEzrThRcirnY5Iw=
+	t=1744637400; cv=none; b=pbi0TKzSUZar7qEiOOPjXjaAYuBuDmw1Py9l24r0uOvPBAIvw3vHr+nz2Eoa4gC3NTnNi2GJyBM3UB45XdK450PyQwRpifjum6cPaCM7unrQQnSOJ3YC4tmHfnE2sHTu09BI7W50nXyYh/Tt4cpm+Tx+/XHoOin16CnyDZtSWzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637396; c=relaxed/simple;
-	bh=/rAY3btrsoSQFDtZJbu9cArnT83eyjCjHHLhGgnTWjA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BvZ6o8qBrKsxIdVadw+7DcnqjY/GsVbOwMhxhBA0oVYPdnD3OX4k4zQZdzYViTXQa5gTniKUKhRtldirTvCSSme0B0SCFK9GB5ElHEhZjbkjwzdJckoepu9TA2VmEcYu90LfXXt8U7zedtARConjv01YLMnFnqxACpWQ4UP7u9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFT8Umo7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744637400; c=relaxed/simple;
+	bh=9J/z5T0JY/xcwsk6SXFTA+zsyiZ/gs3asCJyO6IhBN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ud4aZTe4dPpbEE7gClS22r0kBzTpiRiIs7b9yAzcGTEyjWlDU/KHk02TGcti2RRmXemWkchpSmNs+JaAjFfFEM6Oo0bzNXQGizlmyM9EP36oo+xb2KbNtoMVD+iA3Mi07EM+8Jm1B46GYjOc+zE7cTRMbDbMN+gg9EK6uLFPxUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+ZA/MO/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFT8Umo7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F58C4CEE2;
-	Mon, 14 Apr 2025 13:29:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+ZA/MO/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 005E1C4CEE2;
+	Mon, 14 Apr 2025 13:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744637396;
-	bh=/rAY3btrsoSQFDtZJbu9cArnT83eyjCjHHLhGgnTWjA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jFT8Umo7WPLYSzVivu6o6qGNGmWlHYCW0R3Wtk+r0lMwLpAyF7VHCPeuIe+LJkAUo
-	 5tsDl9ULqnuHTwQlNqpVEr971ya+9VytHt1r+tVRISleNC7XmTkgkugYfmRzUDzHL4
-	 9pKIHrF6x+G3UMYy/xoPA9+k7Zu3hIlo1389IC0+LXsIdbzci74vA3gJ9XiAIMzzx9
-	 RoUfrLpJtr3o0yEAmYXESAU23La5bwAcZoYD5RJPs2fVu7b7mcJ+Ba78fFFeWIpzHK
-	 jzKV13Tq15TehwMWpTpLw/HzEyoe3auLagw02tMyxvPrMLKbYYPKGlrAH2+8qjrRSs
-	 VJkrGNIV3FbcA==
+	s=k20201202; t=1744637400;
+	bh=9J/z5T0JY/xcwsk6SXFTA+zsyiZ/gs3asCJyO6IhBN4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X+ZA/MO/6pO3VZKIoY/rjL1w0VrNTYq6gu+NjqK8kpc8XxPr3dkU5Owgguif21Egj
+	 48P3QvjBe/3ZNnBnc4KT55VFpn2PhseKas70t5kD8ul0l7WBVjbJ1TUYWpp2nGho+D
+	 /pD/kIN3FlHoI1cL9uFHRzjQ1ejPLtb4e9GP4MeuTlakcDDb4hJmIyHw+2ijdNUNZA
+	 xwpi8M8jIG11FP/OVTVuqQlDeYXdNZjqORRcmbZOiuFkKE+K8DHdG/Nnq49JdCxmY1
+	 dqwAwIG9GQs26j3cEvO4XJSgYic1xBibwxSbQvOmHjiYzQq38Ud7Pm/xoSMsjAzgnr
+	 36UX7cj/gQDpA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	Baokun Li <libaokun1@huawei.com>,
-	Jan Kara <jack@suse.cz>,
-	Zhang Yi <yi.zhang@huawei.com>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Michael Mueller <mimu@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 30/30] ext4: make block validity check resistent to sb bh corruption
-Date: Mon, 14 Apr 2025 09:28:47 -0400
-Message-Id: <20250414132848.679855-30-sashal@kernel.org>
+	borntraeger@linux.ibm.com,
+	imbrenda@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 01/24] KVM: s390: Don't use %pK through tracepoints
+Date: Mon, 14 Apr 2025 09:29:34 -0400
+Message-Id: <20250414132957.680250-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250414132848.679855-1-sashal@kernel.org>
-References: <20250414132848.679855-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.23
+X-stable-base: Linux 6.6.87
 Content-Transfer-Encoding: 8bit
 
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-[ Upstream commit ccad447a3d331a239477c281533bacb585b54a98 ]
+[ Upstream commit 6c9567e0850be2f0f94ab64fa6512413fd1a1eb1 ]
 
-Block validity checks need to be skipped in case they are called
-for journal blocks since they are part of system's protected
-zone.
+Restricted pointers ("%pK") are not meant to be used through TP_format().
+It can unintentionally expose security sensitive, raw pointer values.
 
-Currently, this is done by checking inode->ino against
-sbi->s_es->s_journal_inum, which is a direct read from the ext4 sb
-buffer head. If someone modifies this underneath us then the
-s_journal_inum field might get corrupted. To prevent against this,
-change the check to directly compare the inode with journal->j_inode.
+Use regular pointer formatting instead.
 
-**Slight change in behavior**: During journal init path,
-check_block_validity etc might be called for journal inode when
-sbi->s_journal is not set yet. In this case we now proceed with
-ext4_inode_block_valid() instead of returning early. Since systems zones
-have not been set yet, it is okay to proceed so we can perform basic
-checks on the blocks.
-
-Suggested-by: Baokun Li <libaokun1@huawei.com>
-Reviewed-by: Baokun Li <libaokun1@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
-Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Link: https://patch.msgid.link/0c06bc9ebfcd6ccfed84a36e79147bf45ff5adc1.1743142920.git.ojaswin@linux.ibm.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Michael Mueller <mimu@linux.ibm.com>
+Link: https://lore.kernel.org/r/20250217-restricted-pointers-s390-v1-1-0e4ace75d8aa@linutronix.de
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Message-ID: <20250217-restricted-pointers-s390-v1-1-0e4ace75d8aa@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c | 5 ++---
- fs/ext4/inode.c          | 7 ++++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/s390/kvm/trace-s390.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 87ee3a17bd29c..e8c5525afc67a 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -351,10 +351,9 @@ int ext4_check_blockref(const char *function, unsigned int line,
- {
- 	__le32 *bref = p;
- 	unsigned int blk;
-+	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+diff --git a/arch/s390/kvm/trace-s390.h b/arch/s390/kvm/trace-s390.h
+index 6f0209d45164f..9c5f546a2e1a3 100644
+--- a/arch/s390/kvm/trace-s390.h
++++ b/arch/s390/kvm/trace-s390.h
+@@ -56,7 +56,7 @@ TRACE_EVENT(kvm_s390_create_vcpu,
+ 		    __entry->sie_block = sie_block;
+ 		    ),
  
--	if (ext4_has_feature_journal(inode->i_sb) &&
--	    (inode->i_ino ==
--	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+	if (journal && inode == journal->j_inode)
- 		return 0;
+-	    TP_printk("create cpu %d at 0x%pK, sie block at 0x%pK",
++	    TP_printk("create cpu %d at 0x%p, sie block at 0x%p",
+ 		      __entry->id, __entry->vcpu, __entry->sie_block)
+ 	);
  
- 	while (bref < p+max) {
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 67a5b937f5a92..977bd92c77108 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -383,10 +383,11 @@ static int __check_block_validity(struct inode *inode, const char *func,
- 				unsigned int line,
- 				struct ext4_map_blocks *map)
- {
--	if (ext4_has_feature_journal(inode->i_sb) &&
--	    (inode->i_ino ==
--	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
-+
-+	if (journal && inode == journal->j_inode)
- 		return 0;
-+
- 	if (!ext4_inode_block_valid(inode, map->m_pblk, map->m_len)) {
- 		ext4_error_inode(inode, func, line, map->m_pblk,
- 				 "lblock %lu mapped to illegal pblock %llu "
+@@ -255,7 +255,7 @@ TRACE_EVENT(kvm_s390_enable_css,
+ 		    __entry->kvm = kvm;
+ 		    ),
+ 
+-	    TP_printk("enabling channel I/O support (kvm @ %pK)\n",
++	    TP_printk("enabling channel I/O support (kvm @ %p)\n",
+ 		      __entry->kvm)
+ 	);
+ 
 -- 
 2.39.5
 
