@@ -1,54 +1,54 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521711F4635
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3C01F4CB6
+	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744667324; cv=none; b=jbZNmmM+0GodWCBPi0KCjiolDtiKiAvIIvGUZNLBOWG+QTWwF+JMdz/nvH/EPAbmo2bSIb1hNcVcQqliA0NyggDuBCfpOYfFelKzNEz9+k0grFMeYBpU6yMyXmJkGimi+FpP0MSBlPwzx5aTk8L5EUqBZMQYGzBNbGxU9hVma3U=
+	t=1744667325; cv=none; b=eL9L6H2+XfptYt9QeNmIZzkw31hiY04rMELEI6sGSeU4xJ3pjgNjX8+cwyGYIpkz5STwoOzAa9C02tSZkDIAlx4dohJI5AzCNgdZu5K4mEQtQKYFn/IKJmum9Gc1+fh03+WtQZoqAalsrm1jEBkc7j8mt2oIrIWbOFW/YSOwt+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744667324; c=relaxed/simple;
-	bh=cVF8i8fC6zYL8vuKBGWbKSE3j92w2QFKcQp75ZnO3tI=;
+	s=arc-20240116; t=1744667325; c=relaxed/simple;
+	bh=v1vU9w9fOgcK6mGNYSWomneT3Jf2m20NWhjo4CsN6RM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rOZYzTVMMD974psG9MhiShiJ6Pyb3P/Ta/8hbcc55oTAjNbQIIKfjakec6i7TSwJdGT/NMsj/kOz32Yo8XhusfFUdKakqiYK/KOMTa4i3MMa3xkZBavNZ+LGQI4toNFsKRcPzKaAvsVScpS0XGHQ6fIulu7KI85psJQuYj6QV88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vD52GClC; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=S/VgV7rOkGJd7p/tJM9OpRX4sfUj70CKycHNSaZleuhOTXb2cFmlnDNQF3k/rq5jDno3tl8ZNqHFS8P/Gd6hjFqxBpkpYDYUjJsPZ/adPPox3uHVIe0vuOkdZBoOwGcLMz2PovvhHma3tRFx8SMD+BFzFvNXpXnr+OKBmbMIJVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I+n8qRFr; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vD52GClC"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224191d9228so58535255ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+n8qRFr"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736c89461d1so6668534b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 14:48:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744667321; x=1745272121; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744667323; x=1745272123; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K1RQ45cM2PIEyt0JnTJP0GeQFp54luaCwc0+oSbEGGM=;
-        b=vD52GClCB6y3Mn+mc6wBSpxR0xlx0PWjpFW/4jqUd0SsF+YGZ22bMk5Ue+npmsot3V
-         uQsg/NtSldigkDE/IGF0RjiWJzoCi3XJCFrZqSlGTO/ncBUnmU9vo/Omi2S2E6UpQTfA
-         d7SXIAbsqyf10D3KubGd+Jj2fP98O2YXzwhEqNkHI7GuJSt4qrSwIRLbREqDdTtX1byC
-         fAIBGNI/fap/3PFNPBqYk3K1jD2rAvqya3+W2Baafc5LQVnl76fgM9Kbf4z8coKrp5g/
-         PpxHiysqFWQcpbJkVwKStx6RiwLCcRw+Cb7drsqMiY89D3muEkynLND+0gz+1+2Fyp/v
-         OlUA==
+        bh=U+s/qVOGbhuO+H0U9xUGKtlbnlzqsD0JwzNjS6nutT0=;
+        b=I+n8qRFrCHi6VakdA5yhBhJxBGNM5jktot7DwwA0uDVm8pwP+bUK6lGtrgiztITxPf
+         HVy/yYbG/qdnsMc+09uJ4QyUSwBfqqBJ3eE4mPeHr+qWCDhoFSjpXM3AVKwRoI8VZ+l7
+         fYuDLG5X3ys5uZYzd6WVVutuDRDP05Ra1pvUgM6GoTmRKq8iK0D74xDtojkAObnt8fto
+         4zxVaBr2uJaOTgxCCN/2qiboS62DfduDtdrWMc6fuYzcOb9x/wcQKub737pNluu7o8tP
+         uKg/v5kaNdeGwvbk9SdkKhYkK6uztq7mAkE9EdhKPboM5E16TO66nIfA7zw90tQnCD6J
+         KZWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744667321; x=1745272121;
+        d=1e100.net; s=20230601; t=1744667323; x=1745272123;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K1RQ45cM2PIEyt0JnTJP0GeQFp54luaCwc0+oSbEGGM=;
-        b=XUjX8JkxMUvNhPH1GXdleM+fG7Sxt4jLxSGGcmo26QRta1ewWeNQ3ZK4qFKLskzWVZ
-         78TWj9aUNGjauPFzS/PSV0ibnAL3sycSF8rUFKkUgIKo/7pYPzbmzzwpI0l4PAiLo+hy
-         amJrFID/sKCSWOIt2yn5K72nOsnx/8IQkhpH63gecxSc8IISjg+3XDczx27WHQusLha9
-         gKJu6nmeL60hoES75evwJFqtHq4Ij7YI3OHto4f2hYgq/kdesGHMW3DqObACWgEtviPC
-         61QjkWDlO52duOSX+XjIhMgOQsaniQc4s4j96XrBS97Z+D9cTLaD3sdUjMJek5kw3q2I
-         Je1A==
-X-Gm-Message-State: AOJu0YyasXQS1ckHDNO5xHZ/E/xZ7xavsoj4G5OxNTjniXzU1ktct8ye
-	2UjMWKFztqR8v88WEkF7jVsjRRRL9IIj6rGvFSgq5Givr74C8Ge0m+zrsufguJ2w3Tadg6u0zw=
+        bh=U+s/qVOGbhuO+H0U9xUGKtlbnlzqsD0JwzNjS6nutT0=;
+        b=W+kwRmTEBbl8KmgbtDrwn4gVOHBz0lC+GSlfbGgLvXQDaa8csX45oeMvTvrreti0XL
+         5yA0Nl4kOl3MBziQ77cWu2vUQHvF1LeSIZDEWzP0XBwLXT7UMEjHEh0G50xsqWYiNUej
+         QGNT0MGt1nMWe8BZUoFZA2mrTGad6PCkrgHAhsDcCqEkb3pcBLSbQV9orPG3gwBohqVp
+         TYhJ7XxnEBlfnfDQKZ2a/8884M/PUbugBH8aolAdLci28E/+X+HIw/CV4eO3eJzDq44X
+         xGIzlhvLKmgQEMDBFkEvouwmJiGUU/+gKHRYP6ztUZf/oNE1AIri/0MPE5hES1h68oSJ
+         3KZg==
+X-Gm-Message-State: AOJu0YyVFuGx9KBRfd+CIIewEo1KW7Qp7mIjbC+CWaF61NhyMK4cC2D7
+	2T84EFlx6mge1ki2yUEqlcIdnfYzILne2dF0RAqwMWoITNz6dJ+X8RBGNxvLCN2mpdSicKULcw=
 	=
-X-Google-Smtp-Source: AGHT+IEWrLXtYYvpm1ZZzfKrrXveTwDagXihw5BYYvY9UP3EGN5bNkpDzXeiDFWZErA7LBa+tlkfQYK35Q==
-X-Received: from plly18.prod.google.com ([2002:a17:902:7c92:b0:223:5c97:5c3c])
- (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:b60f:b0:223:f408:c3f7
- with SMTP id d9443c01a7336-22bea4abb9emr154541275ad.16.1744667321435; Mon, 14
- Apr 2025 14:48:41 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:47:31 -0700
+X-Google-Smtp-Source: AGHT+IFXjDd5QaCkjEQM0TvRDAQzKGrw46opDPglY5+CRyoXMxnqy73jYYR6rm5eLj+towNyrRWPQ/Gjxg==
+X-Received: from pfbgh6.prod.google.com ([2002:a05:6a00:6386:b0:730:76c4:7144])
+ (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:80b:b0:736:326a:bb3e
+ with SMTP id d2e1a72fcca58-73bd12b37afmr15068525b3a.15.1744667322971; Mon, 14
+ Apr 2025 14:48:42 -0700 (PDT)
+Date: Mon, 14 Apr 2025 14:47:32 -0700
 In-Reply-To: <20250414214801.2693294-1-sagis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250414214801.2693294-1-sagis@google.com>
 X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250414214801.2693294-3-sagis@google.com>
-Subject: [PATCH v6 02/30] KVM: selftests: Expose function that sets up sregs
- based on VM's mode
+Message-ID: <20250414214801.2693294-4-sagis@google.com>
+Subject: [PATCH v6 03/30] KVM: selftests: Store initial stack address in
+ struct kvm_vcpu
 From: Sagi Shahar <sagis@google.com>
 To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
 	Shuah Khan <shuah@kernel.org>, Sean Christopherson <seanjc@google.com>, 
@@ -75,93 +75,46 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-This allows initializing sregs without setting vCPU registers in
-KVM.
+TDX guests' registers cannot be initialized directly using
+vcpu_regs_set(), hence the stack pointer needs to be initialized by
+the guest itself, running boot code beginning at the reset vector.
 
-No functional change intended.
+Store the stack address as part of struct kvm_vcpu so that it can
+be accessible later to be passed to the boot code for rsp
+initialization.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Sagi Shahar <sagis@google.com>
 ---
- .../selftests/kvm/include/x86/processor.h     |  1 +
- .../testing/selftests/kvm/lib/x86/processor.c | 45 ++++++++++---------
- 2 files changed, 25 insertions(+), 21 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h  | 1 +
+ tools/testing/selftests/kvm/lib/x86/processor.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
-index b46f1e5120d1..3162c6e8ea23 100644
---- a/tools/testing/selftests/kvm/include/x86/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86/processor.h
-@@ -1025,6 +1025,7 @@ static inline struct kvm_cpuid2 *allocate_kvm_cpuid2(int nr_entries)
- }
- 
- void vcpu_init_cpuid(struct kvm_vcpu *vcpu, const struct kvm_cpuid2 *cpuid);
-+void vcpu_setup_mode_sregs(struct kvm_vm *vm, struct kvm_sregs *sregs);
- 
- static inline void vcpu_get_cpuid(struct kvm_vcpu *vcpu)
- {
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 1bc0b44e78de..74ecfd8d7ae0 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -58,6 +58,7 @@ struct kvm_vcpu {
+ 	int fd;
+ 	struct kvm_vm *vm;
+ 	struct kvm_run *run;
++	vm_vaddr_t initial_stack_addr;
+ #ifdef __x86_64__
+ 	struct kvm_cpuid2 *cpuid;
+ #endif
 diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
-index 55971df6906c..1d6ae28aa398 100644
+index 1d6ae28aa398..7c0fe3b138a1 100644
 --- a/tools/testing/selftests/kvm/lib/x86/processor.c
 +++ b/tools/testing/selftests/kvm/lib/x86/processor.c
-@@ -488,34 +488,37 @@ static void kvm_seg_set_tss_64bit(vm_vaddr_t base, struct kvm_segment *segp)
- 	segp->present = 1;
- }
+@@ -695,6 +695,8 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
+ 	vcpu_init_sregs(vm, vcpu);
+ 	vcpu_init_xcrs(vm, vcpu);
  
--static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
-+void vcpu_setup_mode_sregs(struct kvm_vm *vm, struct kvm_sregs *sregs)
- {
--	struct kvm_sregs sregs;
--
- 	TEST_ASSERT_EQ(vm->mode, VM_MODE_PXXV48_4K);
- 
--	/* Set mode specific system register values. */
--	vcpu_sregs_get(vcpu, &sregs);
--
--	sregs.idt.base = vm->arch.idt;
--	sregs.idt.limit = NUM_INTERRUPTS * sizeof(struct idt_entry) - 1;
--	sregs.gdt.base = vm->arch.gdt;
--	sregs.gdt.limit = getpagesize() - 1;
-+	sregs->idt.base = vm->arch.idt;
-+	sregs->idt.limit = NUM_INTERRUPTS * sizeof(struct idt_entry) - 1;
-+	sregs->gdt.base = vm->arch.gdt;
-+	sregs->gdt.limit = getpagesize() - 1;
- 
--	sregs.cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
--	sregs.cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
-+	sregs->cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
-+	sregs->cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
- 	if (kvm_cpu_has(X86_FEATURE_XSAVE))
--		sregs.cr4 |= X86_CR4_OSXSAVE;
--	sregs.efer |= (EFER_LME | EFER_LMA | EFER_NX);
-+		sregs->cr4 |= X86_CR4_OSXSAVE;
-+	sregs->efer |= (EFER_LME | EFER_LMA | EFER_NX);
++	vcpu->initial_stack_addr = stack_vaddr;
 +
-+	kvm_seg_set_unusable(&sregs->ldt);
-+	kvm_seg_set_kernel_code_64bit(&sregs->cs);
-+	kvm_seg_set_kernel_data_64bit(&sregs->ds);
-+	kvm_seg_set_kernel_data_64bit(&sregs->es);
-+	kvm_seg_set_kernel_data_64bit(&sregs->gs);
-+	kvm_seg_set_tss_64bit(vm->arch.tss, &sregs->tr);
- 
--	kvm_seg_set_unusable(&sregs.ldt);
--	kvm_seg_set_kernel_code_64bit(&sregs.cs);
--	kvm_seg_set_kernel_data_64bit(&sregs.ds);
--	kvm_seg_set_kernel_data_64bit(&sregs.es);
--	kvm_seg_set_kernel_data_64bit(&sregs.gs);
--	kvm_seg_set_tss_64bit(vm->arch.tss, &sregs.tr);
-+	sregs->cr3 = vm->pgd;
-+}
-+
-+static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_sregs sregs;
- 
--	sregs.cr3 = vm->pgd;
-+	vcpu_sregs_get(vcpu, &sregs);
-+	vcpu_setup_mode_sregs(vm, &sregs);
- 	vcpu_sregs_set(vcpu, &sregs);
- }
- 
+ 	/* Setup guest general purpose registers */
+ 	vcpu_regs_get(vcpu, &regs);
+ 	regs.rflags = regs.rflags | 0x2;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
