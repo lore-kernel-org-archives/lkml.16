@@ -1,136 +1,159 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4886327B4E2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5BB2749E2;
+	Mon, 14 Apr 2025 18:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744654219; cv=none; b=eFjuTc5jMoyl3n/s1dD7LM14/M/BGSXldKhPjRSXjjmfrFNmPrzUIEFaEWQ3Vzj5ggqAwKlx0pabSERcLAGp16vgeoObRRXvSLfGbwLh0HO7+hwFWOVA11G1dwcWfOQ8BXhQE44eDPMRVy3KfTvti3AZrShI/9XU4WJ46kAfiIA=
+	t=1744654302; cv=none; b=UZTakHmnoyFPYKWAMApeNoLRyE5KG0mQbhy3DKgz1IDRXQsLe23ijc0yOdS70iozfaTpqURJpID6xDLmqJVfNuats379Z6cU4yPqIpAnR14HR+2QhRFkY4sc5wFzgws/0K2uoykThQiI8wYzjV6O5I9WVeuiGjctSfMuJjRLMnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744654219; c=relaxed/simple;
-	bh=WhMMyVEvthmWhAyPBPX4bGNG1muo/czpOPnPrkkB6yA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b7I5gu69XeQ+Ps1arvXVx8ef8QYRl39J5YHoxcTztiqHaZpTrPud6mj6W90BC0pwA5FgjiA6RKVS8Eony0AVBHGobSIfvGqjCJZex/+nDosf/Jx4EShJWbS4qTZeXt2/d4btBbB17EpbwwbQCpSfNNf5YrRXMP61BMl8AMkJz0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=synrLOQx; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="synrLOQx"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c597760323so441838585a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 11:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744654216; x=1745259016; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wmxLTZDlUtyhjPG3LKgyqC3m7MkeZf8KO7nU/7lCHDI=;
-        b=synrLOQx9REgbd5vbwGt1fSFp3Ut6a6BWu2AB2ypqnO7zWXhJP4i3pZV4PmaZW6bDo
-         yh3gxJD+xEGgq37F4/iK9OcKUMCxk01WSxtGybrpIBq9j6ayttxrLqmQflPAwbBVYo0J
-         i7l5dGj6tG6eTwAH/Zguwlvt3FV2w9AdcyGeeQipsk+hAinhHS1a8zRn4YdJXAtTi99S
-         PgTsegJa6XETEHWPZC1rD5k3j4i3WwAajusiEyB8QhBa8YTPJIiC7y7pc4kHct00EO9C
-         c+OJZUvj8vqYfCNhQGB87primZKJEDmxIPYwTHGbbnD0d2Z8kTyTwJ0tSnI+Rj1qNhPT
-         hS4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744654216; x=1745259016;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wmxLTZDlUtyhjPG3LKgyqC3m7MkeZf8KO7nU/7lCHDI=;
-        b=kwO4bMe5fQ0IchzOH/aeSB/4+yjGqH/iVy5b4yoyPRmV0YsMu2XsUqaBh1rZFzFi9T
-         4tBTOscR2JLBECTT9xPMlZJ5DXyJFD4geaMjnEkR5m72miqV1kdhEr6iAKZWjfR65Xzr
-         6AyD6ThKm0UbNwYd9YeBc6MzU/U/sWzroZjpjp7oao1LeGr+Srh98AmfGxxmRFur8JEP
-         zViWNZyktqy7QlAwDPznQHNC/BA17Z2VXgMxfWHxTPFfdvgdHxLvk79kaRmdYbc6qBAb
-         ILJRQuxp5+f8NS+vkTUw0wiHjdDGJ5wijcLUUFlTr4KffTWkrvAKNpa91pO6s6eSfTeJ
-         AYVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkYO6QphGu+kT0boTM49MxkcM4TPaiDCesiGOsuuhil9iDGOfi6J1XAn77t8FpplDPDq6IuM7Yk0ys4KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+CixuSrLgtGSx3VuxLJ6mtVoVzJzqQbpvbJBHNB8JZASwGZ5y
-	pqsMbPWt8hM5r/SCzhp8VUDIgk4WHoXRkrR5FE2bxmbKoInaioTB/PlwfnPdK6s=
-X-Gm-Gg: ASbGncsNtphN1zN9Hzaf3mkK0BjvgkO8lXfgc7HDqCRRNh0o8mkeFQR1dykVoTu2gZb
-	9w6Egu93kC5XahOlkJ4L132iVJHGJ+9KeOVjJCLLLethz8ZuHXwad+6BgY7SSFJIBIf0L0rkLDy
-	99FrwNcy9pTJ8R6KaHowvOThByDlrHCAqW0OMIdE12/GoMQ3KWQK+G44j8RsSdFDGsKIRApGDnY
-	9oubl6kSjg+VtYlf6Sao3bPLMpJfCJhpMKLqYU2G0a5ymVTQVfwzfOTao25sPYRAJKiXhonOzN5
-	VwlLQEYUneg7HcBMUAIgX6rOeca1D4G64pvMtSk=
-X-Google-Smtp-Source: AGHT+IE+XdJpOVhGEaj+Yv6sX3pIJj3/ALpArX3Fg1kdMboHe1klm4GlgsjQnZuIvjCGUk7JRR/efw==
-X-Received: by 2002:a05:620a:40c7:b0:7c5:5f19:c64f with SMTP id af79cd13be357-7c7af1182d8mr2068553185a.4.1744654215840;
-        Mon, 14 Apr 2025 11:10:15 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8a0c863sm768502585a.92.2025.04.14.11.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 11:10:15 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:10:14 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Waiman Long <llong@redhat.com>, Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-Message-ID: <20250414181014.GB741145@cmpxchg.org>
-References: <20250414021249.3232315-1-longman@redhat.com>
- <20250414021249.3232315-2-longman@redhat.com>
- <kwvo4y6xjojvjf47pzv3uk545c2xewkl36ddpgwznctunoqvkx@lpqzxszmmkmj>
- <6572da04-d6d6-4f5e-9f17-b22d5a94b9fa@redhat.com>
- <uaxa3qttqmaqxsphwukrxdbfrx6px7t4iytjdksuroqiu6w7in@75o4bigysttw>
- <20250414164721.GA741145@cmpxchg.org>
- <gpzfja7rsb6cy6r5mpfbakx7xp444xskdumooocytwhi6362fk@hdjhr7zampaj>
+	s=arc-20240116; t=1744654302; c=relaxed/simple;
+	bh=L0LuWuYWyu5iFwHL6RLiQ0aKxB+TMYcjnp6vfKBxSFc=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=adZEKd4JLEfa0I2Nnf9uZuX11OWxROuJqvYiWKIVFLhnZGBb7M6ksx1mLAshY08pbRBfXI4iom0tFWThSHsavONTG12RN7j7xPYPUoXOfQ1PPnJfnlOsAPp3i7IeiRcABvH1ShO9RvtXmiesy6DDKWKDW6srWGsnLAPFfa70elc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u4OHE-000000003xa-28sl;
+	Mon, 14 Apr 2025 18:11:24 +0000
+Date: Mon, 14 Apr 2025 19:11:20 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Bo-Cun Chen <bc-bocun.chen@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net 1/5] net: ethernet: mtk_eth_soc: revise mdc divider
+ configuration
+Message-ID: <08498e31e830cf0ee1ceb4fc1313d5c528a69150.1744654076.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <gpzfja7rsb6cy6r5mpfbakx7xp444xskdumooocytwhi6362fk@hdjhr7zampaj>
 
-On Mon, Apr 14, 2025 at 08:01:42PM +0200, Michal Koutný wrote:
-> On Mon, Apr 14, 2025 at 12:47:21PM -0400, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > It's not a functional change to the protection semantics or the
-> > reclaim behavior.
-> 
-> Yes, that's how I understand it, therefore I'm wondering what does it
-> change.
-> 
-> If this is taken:
->                if (!mem_cgroup_usage(memcg, false))
->                        continue;
-> 
-> this would've been taken too:
->                 if (mem_cgroup_below_min(target_memcg, memcg))
->                         continue;
-> (unless target_memcg == memcg but that's not interesting for the events
-> here)
+From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
 
-D'oh.
+In the current method, the MDC divider was reset to the default setting
+of 2.5MHz after the NETSYS SER. Therefore, we need to move the MDC
+divider configuration function to mtk_hw_init().
 
-> > The problem is if we go into low_reclaim and encounter an empty group,
-> > we'll issue "low-protected group is being reclaimed" events,
-> 
-> How can this happen when
-> 	page_counter_read(&memcg->memory) <= memcg->memory.emin
-> ? (I.e. in this case 0 <= emin and emin >= 0.)
-> 
-> > which is kind of absurd (nothing will be reclaimed) and thus confusing
-> > to users (I didn't even configure any protection!)
-> 
-> Yes.
->  
-> > I suggested, instead of redefining the protection definitions for that
-> > special case, to bypass all the checks and the scan count calculations
-> > when we already know the group is empty and none of this applies.
-> > 
-> > https://lore.kernel.org/linux-mm/20250404181308.GA300138@cmpxchg.org/
-> 
-> Is this non-functional change to make shrink_node_memcgs() robust
-> against possible future redefinitions of mem_cgroup_below_*()?
+Fixes: c0a440031d431 ("net: ethernet: mtk_eth_soc: set MDIO bus clock frequency")
+Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 60 ++++++++++++++-------
+ 1 file changed, 42 insertions(+), 18 deletions(-)
 
-No, this was really just aimed to stop low events on empty groups.
-
-But as you rightfully point out, they should not get past the min
-check in the first place. So something seems missing here.
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 43197b28b3e74..fd643cc1b7dd2 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -871,11 +871,11 @@ static const struct phylink_mac_ops mtk_phylink_ops = {
+ 	.mac_enable_tx_lpi = mtk_mac_enable_tx_lpi,
+ };
+ 
+-static int mtk_mdio_init(struct mtk_eth *eth)
++static int mtk_mdio_config(struct mtk_eth *eth)
+ {
+ 	unsigned int max_clk = 2500000, divider;
+ 	struct device_node *mii_np;
+-	int ret;
++	int ret = 0;
+ 	u32 val;
+ 
+ 	mii_np = of_get_available_child_by_name(eth->dev->of_node, "mdio-bus");
+@@ -884,22 +884,6 @@ static int mtk_mdio_init(struct mtk_eth *eth)
+ 		return -ENODEV;
+ 	}
+ 
+-	eth->mii_bus = devm_mdiobus_alloc(eth->dev);
+-	if (!eth->mii_bus) {
+-		ret = -ENOMEM;
+-		goto err_put_node;
+-	}
+-
+-	eth->mii_bus->name = "mdio";
+-	eth->mii_bus->read = mtk_mdio_read_c22;
+-	eth->mii_bus->write = mtk_mdio_write_c22;
+-	eth->mii_bus->read_c45 = mtk_mdio_read_c45;
+-	eth->mii_bus->write_c45 = mtk_mdio_write_c45;
+-	eth->mii_bus->priv = eth;
+-	eth->mii_bus->parent = eth->dev;
+-
+-	snprintf(eth->mii_bus->id, MII_BUS_ID_SIZE, "%pOFn", mii_np);
+-
+ 	if (!of_property_read_u32(mii_np, "clock-frequency", &val)) {
+ 		if (val > MDC_MAX_FREQ || val < MDC_MAX_FREQ / MDC_MAX_DIVIDER) {
+ 			dev_err(eth->dev, "MDIO clock frequency out of range");
+@@ -922,6 +906,42 @@ static int mtk_mdio_init(struct mtk_eth *eth)
+ 
+ 	dev_dbg(eth->dev, "MDC is running on %d Hz\n", MDC_MAX_FREQ / divider);
+ 
++err_put_node:
++	of_node_put(mii_np);
++	return ret;
++}
++
++static int mtk_mdio_init(struct mtk_eth *eth)
++{
++	struct device_node *mii_np;
++	int ret;
++
++	mii_np = of_get_child_by_name(eth->dev->of_node, "mdio-bus");
++	if (!mii_np) {
++		dev_err(eth->dev, "no %s child node found", "mdio-bus");
++		return -ENODEV;
++	}
++
++	if (!of_device_is_available(mii_np)) {
++		ret = -ENODEV;
++		goto err_put_node;
++	}
++
++	eth->mii_bus = devm_mdiobus_alloc(eth->dev);
++	if (!eth->mii_bus) {
++		ret = -ENOMEM;
++		goto err_put_node;
++	}
++
++	eth->mii_bus->name = "mdio";
++	eth->mii_bus->read = mtk_mdio_read_c22;
++	eth->mii_bus->write = mtk_mdio_write_c22;
++	eth->mii_bus->read_c45 = mtk_mdio_read_c45;
++	eth->mii_bus->write_c45 = mtk_mdio_write_c45;
++	eth->mii_bus->priv = eth;
++	eth->mii_bus->parent = eth->dev;
++
++	snprintf(eth->mii_bus->id, MII_BUS_ID_SIZE, "%pOFn", mii_np);
+ 	ret = of_mdiobus_register(eth->mii_bus, mii_np);
+ 
+ err_put_node:
+@@ -3974,6 +3994,10 @@ static int mtk_hw_init(struct mtk_eth *eth, bool reset)
+ 	else
+ 		mtk_hw_reset(eth);
+ 
++	/* No MT7628/88 support yet */
++	if (!MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
++		mtk_mdio_config(eth);
++
+ 	if (mtk_is_netsys_v3_or_greater(eth)) {
+ 		/* Set FE to PDMAv2 if necessary */
+ 		val = mtk_r32(eth, MTK_FE_GLO_MISC);
+-- 
+2.49.0
