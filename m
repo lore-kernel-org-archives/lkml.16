@@ -1,407 +1,250 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2085.outbound.protection.outlook.com [40.107.241.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644A7298CB1;
-	Mon, 14 Apr 2025 11:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630781; cv=none; b=fe74uArk7kkAgCHHW+Nqb/6NhhtHbvhhFQJ/Ie7bAvA16f9LeT9LSumsjSJjRPjcMsGF5VRW/Ty2pEJbCe4kRbu2PTd15bEMp7d56cB587jWVwk0r9eIBUZTwFgK0nntaYr7ZHWVMTEoUxckxjmr080GwtluMItOMkmizW2Skww=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630781; c=relaxed/simple;
-	bh=PHl8kNn4XMqWLuqpGyLbAqHfeKubkKzsSFBNa/91MZE=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ZmMq0kXCT3zwLtDrUvr1W8OI+LKeR9dqrJgBxavLvV0FoypSufExF+GlD0eb3GCQwJuIG3ZCmpEX4QwbpDw+IhYajwbHQiaNvRCcenTp/lyVSZcpZAJD5l/wcjbvmzy1c3l5apfiu69WSylV5gBLl8eDTLgGz5DuRS+OcJnpH3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oB5Q05PS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F3829899D;
+	Mon, 14 Apr 2025 11:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744630799; cv=fail; b=rIBRU2+aYdD7e2oa4VXrDoKkbj9RIlAR8CnHQBKLRTebI5md+2cSTEUiQ5C/ThGePUw8Vm/nJejH6ucq7BiDG/0ZLl3dXB2RAW9rhROIJsSRATdRiQDZHofsxYMJtftNq2I8brKucISelCFcfC3ycH9qvDdkV3w3Ugow/ysHcCM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744630799; c=relaxed/simple;
+	bh=+YtDkMN63IlI4jnt1sTJiOvnpWs2eAaODUjqtu/x2KM=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WZYOvK8HE2VLPp3HJkNXd8U08r5Z1t0+HmQFtn+6ETZz1aEtlkfXXa3lixQXK4pTKZq97yFC0Hze8vt6mdVuP5/LTIb2YLswxH+coRVyAKOQhMtiLa6RsuwtA3lGOgCypiQNXfSACWAGGs4dWMAuEDmMuAGADYetPVhKzaiFxU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PVGReD3l; arc=fail smtp.client-ip=40.107.241.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oB5Q05PS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=ukqRMJVYiAaOtcsNKoLFjTy2/0JlyMpnmN7EyAFcDIc=; b=oB5Q05PS6kg0RrO3XSs4x7nLzj
-	UKLv+Qr3d+FsRyrLGjD0GAoyZOhl5/tt4Yrp4v9ITh4TxWx+QW+ZiuvRn/D8gCaopMpQH3SvybU7X
-	lCrNItZ4umY4QzrX51s5rDHLwmddffOKBefqy1DQjAfdS/jP9YZunyKfVwOCBu6ojTYoH7o6hVvdn
-	GmA4Z2MJ5qSSO4vw08OOFuj3SL0wrkhCqHGpWFQRgZ22j5I/KsxJOz04FqhSfIQXIBe0hu1W1DDpy
-	0k/xcZVUByfQOOzwZUaxMpF+Jofd+rxrEPOejSV3iPT2Ha99oq8jGB6G5gc6yJl+eBkukpL+PvGop
-	g762Pgxw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4I9u-000000084Gq-0mQo;
-	Mon, 14 Apr 2025 11:39:26 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 3127A300BDD; Mon, 14 Apr 2025 13:39:26 +0200 (CEST)
-Message-ID: <20250414113754.285564821@infradead.org>
-User-Agent: quilt/0.66
-Date: Mon, 14 Apr 2025 13:11:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: x86@kernel.org
-Cc: kys@microsoft.com,
- haiyangz@microsoft.com,
- wei.liu@kernel.org,
- decui@microsoft.com,
- tglx@linutronix.de,
- mingo@redhat.com,
- bp@alien8.de,
- dave.hansen@linux.intel.com,
- hpa@zytor.com,
- peterz@infradead.org,
- jpoimboe@kernel.org,
- pawan.kumar.gupta@linux.intel.com,
- seanjc@google.com,
- pbonzini@redhat.com,
- ardb@kernel.org,
- kees@kernel.org,
- Arnd Bergmann <arnd@arndb.de>,
- gregkh@linuxfoundation.org,
- linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org,
- linux-efi@vger.kernel.org,
- samitolvanen@google.com,
- ojeda@kernel.org
-Subject: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
-References: <20250414111140.586315004@infradead.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PVGReD3l"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qdblmIRX1wx29YkzKrz+E4ZDImz/6Ls24on/7KSGJ/K9BNGor25i/+jlB70O1aGhq4hl15KuCR2NDceiPhqLGEZzR/VoNQ89l0zvzldLF0v+qIDeQimLNjb3M3hY9DE474W25f+QohareEOj1rfeIDa3MLPHeDwouGiUH2/ShIIKPjB4hpic0tdTESf0nAN5YRzhI33GsyyqUPrF1SQJRFVS0B3ub4QDV01Zl6c+dFaH5x7nPu0Y9EmIhPw87TbomyxFgdpaZ6yuqHPMJQsyeNyol6fnnPCkH78BUquvqvGiDO16i1wv0mAcA9spLgIUTd9yV6oy32J8AZkorssOMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iUIwtuzolwBXhMhy6wF3zDniUResV9/+Il7oSUYpVUo=;
+ b=by/FZz+Pwi/H0BziPOSXkVN8uCvmUyQsMqzStQ7Gd0Wzfjr5FWSfglq9sFXmjENfGTDF8+g+6/gUT4IV84QKjwP8u9sWRChQhItKSlfS85KDzDDRxaQnW//N1SyjHoljkz5AunCEw+rxxuU29OVHMC/Dhuebgg16I4YVp7t8yIUFsnksPV/KD50aupJ1+u2jBzMnKAwUvkhBiyNzfIfb9sV1Rjq/IzzwPHu7JEYxWsIiA53erjYX5b0Npx/bgW7XbMhunyDcM3H8V129Bj3K405nb4obvMuDexulAPDT7uFn3xISu1TfZE6Us4fHcp1+t4pvHWYKo1f39Uh5FtAOSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iUIwtuzolwBXhMhy6wF3zDniUResV9/+Il7oSUYpVUo=;
+ b=PVGReD3leOLIREmwbRgc4TIShF9GbwFQWnfAXL6fqDsK0RFNCpHMw8TDxQzZyPYhlT8BQcPfxQDT4I9KDYzR1RuNYkoEwf6upSc4zGVvneKHimBtVUq2859/w71RwHi7SOhpgtWrbooTuYd8G4xlKL9SR52Avwa/Au9yrZQ8rQb7r6cakEBC7Kr3lSYrUgA0NbBT+o2rau5odtLh1n6PJqH6cBtUq3/brCo6JYYyzmD6izz+Z9TuzFgrXUCNxWLscF4utUp2fhoI9EQ3/WZ285haTTJopNLDo9pNM5YqYafdNEaS+P1jO/avNuctZvcUtQs6GETmkfRsR8e96+SKvw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by AS8PR04MB9205.eurprd04.prod.outlook.com (2603:10a6:20b:44c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 14 Apr
+ 2025 11:39:51 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8632.035; Mon, 14 Apr 2025
+ 11:39:29 +0000
+Date: Mon, 14 Apr 2025 14:39:26 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, bridge@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net 1/2] net: bridge: switchdev: do not notify new
+ brentries as changed
+Message-ID: <20250414113926.vpy3gvck6etkscmu@skbuf>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412122428.108029-2-jonas.gorski@gmail.com>
+X-ClientProxiedBy: PA7P264CA0227.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:372::14) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|AS8PR04MB9205:EE_
+X-MS-Office365-Filtering-Correlation-Id: cca9df4c-4a73-40f1-c662-08dd7b490443
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?uqWE6rk8DldIWygFkqGlxeGLsJKfZ+HgKlvo1UuskNg/4R3P3tUdPHLqWlwi?=
+ =?us-ascii?Q?N7K9k5tCYmdlzjn8tpQOTe4nMwH5jICTDTRSr/KFla1XQNVB/IdZuVXKZTB2?=
+ =?us-ascii?Q?KzkSvXqVknuwgWXhQKon6w+ga7aUTLvtucDRLk2kauJOQyVnX+HdZSs13dRx?=
+ =?us-ascii?Q?LxrTVVtKBK6uExxcUz6ASWdwTKNSSxmzm0Y7bYnk4m39lXLB1ZYfZttn9C4q?=
+ =?us-ascii?Q?r8s+yfNcDBtb9A/tcgY4C5KbNwXycqhDjZU3Dn1lwu6ei1LGN+i4fiv4FOl1?=
+ =?us-ascii?Q?FV6xex4wcYTr5u50hh3nat+/umXwJrA5BSpOGboamoK7SDXS5qp4RuqPTjBn?=
+ =?us-ascii?Q?VFbRye1msvn3m77cbHTeUNccrMjwgHZb2cuuzWRsUyqQaUxA0upbkAIEuKeB?=
+ =?us-ascii?Q?mAa0bBmYJFXhH4VZnAS2lX0Sjh5lG6vWaZVRAhl9Xzp7mixUK7tKc5R+4ngx?=
+ =?us-ascii?Q?U+Ih4ITomasm+APU2myEmgAuDyXQ0lTuMi9uQiP2Ye5QbRk3uSOJ4GXHDJlT?=
+ =?us-ascii?Q?FgYRwC5T8ibRXpY4MndggJARzSqwVUEljyXq5wb1T07gGV2cuyOtky5VhL9u?=
+ =?us-ascii?Q?nIm+J3737eetZAvWG0P95j0w7QRp+sDJlvMOckr6fX66imrIGyB4WQv9olWS?=
+ =?us-ascii?Q?0pZDSt0XmwLrAEcZfXPvM+NHjpZF749r3gVAHHQnphZTjh7u/Tr4c9aX0PWE?=
+ =?us-ascii?Q?WiIw4jgwkjKNitKSxuh3GctY14aQ6rr/+ZVVhJkWlOiGuWnKRirC8SnNB20D?=
+ =?us-ascii?Q?zLMGbJKm7pJO9XRsygCYRyEblr9uzNqWbiz6XYZ6AzRcq6x69uk4GMXvhJOr?=
+ =?us-ascii?Q?+ZMpphB1RmQQtTSb6GrY7pK74y4iGWjaTit+YP4NC4ONoXE/hTEkBKLh4SB3?=
+ =?us-ascii?Q?ceKzIVe+sC/C0EYpvOXL5IHQ5vNx/nF8CTnK8MK1Osjhh//kr0KCjiuM0PwD?=
+ =?us-ascii?Q?F/nEtJaLrmHsFmDDvDQjZ2elyQo3qfxhuBh/P8o2D3jfyrWFuSZvvchmlF24?=
+ =?us-ascii?Q?fRqMvcoP29gHjVI/8Z4an7J3vvTNqrmRC14aMxZWTLIYmOfFgqylVzVNbRcy?=
+ =?us-ascii?Q?v4G2M/eg61sjmZDQoY7Lmtm2PAkMYG3ipFM134OnFfKGvCnEZe5ptqg+vHV9?=
+ =?us-ascii?Q?x1wo4GbBhdO2syB0eIMjtNeBF+BzfyCEKW3ki13/r7t3LTKuL9bH5VKQ7Ir8?=
+ =?us-ascii?Q?6aKDfo1H3f8Z/QtfuL+Zlpb5VkQWoHu0DDoMrkzVUbf+FipNe7RIdRB10ak5?=
+ =?us-ascii?Q?V6D7X7NGwpR0kea1N6ID5E6pawEOpfq5HpW7a3CwV9LXYUM93ZJohXXQ7ltM?=
+ =?us-ascii?Q?EhP4MqczCUWXWzoJe51C+DFMR5Tk/zuXgtEbUOkYgfxrASAfka2tdN43MRkR?=
+ =?us-ascii?Q?s0B9rdODcL/ts/LajlbnxRJIGqqFerz7lm5AnRvan/AWhwKCE6MjJkv5W+6t?=
+ =?us-ascii?Q?w1gJQ/6jwik=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?1Fb3F+hO9hwUG5/XCdXBDUXXXNJ1fOFKN4jtUsxZ4bP0jR4BZrMP22PCnxP4?=
+ =?us-ascii?Q?850yxmytA7GcqzKhWQWluTR1n9M1A+0fsyG5b5UeIHhcBEwmlAOSYJc4aOcO?=
+ =?us-ascii?Q?iApMaOuFmeEcKT6eoRZ8WcPVDgF2VT83P9MlmJpbHuwP4mdu2Fvl3NQD48cW?=
+ =?us-ascii?Q?MhkVveS0gOF8G0OMJdREDpdE6+6+TisPyg/G1jlCzA+4RGvTdPO84eDvp8Fy?=
+ =?us-ascii?Q?GPH7Gp2uTmmqGedMMLnfBrW/dEdFSCSDJ7hWbJEAb42TpHFWDcogH8Gy+Ob/?=
+ =?us-ascii?Q?a+F2w79+pcvXedy1ODnPJow+A9CMTRFcPm5C9BHSB//15BcJ1+XO6KhOKlXN?=
+ =?us-ascii?Q?J3xTVuYmpZfPmzKYM7gi6VekUWhoCruYnQMjKsTECK+QMhpAlIxiVikYJ7MA?=
+ =?us-ascii?Q?UqFH+gKVsufq7SuOquEHvDKXOBOxEb6WNUqMbyg8wXxAXv6bqCnAU3XvB9Df?=
+ =?us-ascii?Q?gaydE3+Q5sTBuo3CH/4t+rLNuipcfc4r3mxIM0xZlkxLe/cKztnUripnLOA5?=
+ =?us-ascii?Q?y3m5n78z0yl3Mh/QFg0xj8nh6ocTw3PMNllhzg7FHjoFamfYUOP/xqg5SkQd?=
+ =?us-ascii?Q?y6ZtBg9dLQmhRqW6QotQRHg6xRPvdjeQ4WZIUIBHsSZ+CsdlZ5P5OV5Rz0z3?=
+ =?us-ascii?Q?Ynig0FsgPinOuHTSWVDq8AamJwQqB0vXzZ3pv5n0lE0ZwUkbzZDc59L197AD?=
+ =?us-ascii?Q?n7xjcqUyTDnjgp8nKG8rpRi9PLA+tEa7MEKYW5hzlLof2gr5GFSvIgRidXML?=
+ =?us-ascii?Q?vHgVt6NdaIZlBXrpTjiRrWaOuPLzECEMQiMBGmT+EPSBZoMMqJmkUVzCeXC2?=
+ =?us-ascii?Q?kOD9eICAw/wxRhFKEYzVHfXt1Bq8MMcRa/lJHiQGC10kAuoJKoRCdZcQ3JUK?=
+ =?us-ascii?Q?hq+z8ol66zTlCf19OpKCe9JJkVbzGyTKvWjqcGn207h/HXPgcIs5tleBCySh?=
+ =?us-ascii?Q?n8YHGVOEI6+2WCEFKCFri6zIj10clConOXcr5PbhDXJvMFL6syCgcvkh0lNW?=
+ =?us-ascii?Q?OIfv+dCd8rFlvCCOHlzmDQ6O8XvfqDgrw8sXEGVyMAOdHMLDd+kpfagwr8BB?=
+ =?us-ascii?Q?OE9Ei/RjxDXQHzr7wSL1Wde5SmJbQASANqsgFPY2WkuCWvxH5qWT5LcDIsZy?=
+ =?us-ascii?Q?Nm72iDZhYAeBcUPYSAyminTSQlrQxlBQbpjFuUwjVIzfrWABWBu9va6It+4V?=
+ =?us-ascii?Q?wHVLOrhxBXNoGfTlN4+DywJfWPvGavjMCehYzOqYbIeNXVz11BI4LP7PQQ5/?=
+ =?us-ascii?Q?cf3iFAl4ha4rxo6SZp21lJ/oeaeK5O+KcUjRiC7K0DV78K2OrzWUJBotPfVX?=
+ =?us-ascii?Q?21Sl318a3aPzxsDHcSV72HBcA5XjuvlbBjznsyp1XY+X7zChNowZ9tARaPAb?=
+ =?us-ascii?Q?g0TS0GaF05ldU4DGUPtVEeGJgl8gVnovpfatbxvz8meYLtYoLBcDsXfk6SvW?=
+ =?us-ascii?Q?tnlPpP2PFyqlH9TTf63SMm/yn/P35F/P0sjZ5PTwL3G7X8NKpOrE9WMp/epH?=
+ =?us-ascii?Q?yiNd6fnKi+8kLx8EKRzM7StZTjOVCgdQb8IlIPc/O1knY2hRicgaHYNuGFbO?=
+ =?us-ascii?Q?sGU66gOxl7Vyo15aSYZp1HzOe4SUNWD0CH/7keHlluAxNkx+wZFvQbiJgce0?=
+ =?us-ascii?Q?uQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cca9df4c-4a73-40f1-c662-08dd7b490443
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 11:39:29.2703
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c0SoJgZuOgAstLrBYv8VQ59xDeh3ICPLETOURn44tRIKebcor65xltp7oaFm+93GQS3C6x9e33wNGESwf4yNgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9205
 
-What used to be a simple few instructions has turned into a giant mess
-(for x86_64). Not only does it use static_branch wrong, it mixes it
-with dynamic branches for no apparent reason.
+On Sat, Apr 12, 2025 at 02:24:27PM +0200, Jonas Gorski wrote:
+> When adding a bridge vlan that is pvid or untagged after the vlan has
+> already been added to any other switchdev backed port, the vlan change
+> will be propagated as changed, since the flags change.
+> 
+> This causes the vlan to not be added to the hardware for DSA switches,
+> since the DSA handler ignores any vlans for the CPU or DSA ports that
+> are changed.
+> 
+> E.g. the following order of operations would work:
+> 
+> $ ip link add swbridge type bridge vlan_filtering 1 vlan_default_pvid 1
+> $ ip link set lan1 master swbridge
+> $ bridge vlan add dev swbridge vid 1 pvid untagged self
+> $ bridge vlan add dev lan1 vid 1 pvid untagged
+> 
+> but this order would brake:
 
-Notably it uses static_branch through an out-of-line function call,
-which completely defeats the purpose, since instead of a simple
-JMP/NOP site, you get a CALL+RET+TEST+Jcc sequence in return, which is
-absolutely idiotic.
+nitpick: s/brake/break/
 
-Add to that a dynamic test of hyperv_paravisor_present, something
-which is set once and never changed.
+> 
+> $ ip link add swbridge type bridge vlan_filtering 1 vlan_default_pvid 1
+> $ ip link set lan1 master swbridge
+> $ bridge vlan add dev lan1 vid 1 pvid untagged
+> $ bridge vlan add dev swbridge vid 1 pvid untagged self
+> 
+> Additionally, the vlan on the bridge itself would become undeletable:
+> 
+> $ bridge vlan
+> port              vlan-id
+> lan1              1 PVID Egress Untagged
+> swbridge          1 PVID Egress Untagged
+> $ bridge vlan del dev swbridge vid 1 self
+> $ bridge vlan
+> port              vlan-id
+> lan1              1 PVID Egress Untagged
+> swbridge          1 Egress Untagged
+> 
+> since the vlan was never added to DSA's vlan list, so deleting it will
+> cause an error, causing the bridge code to not remove it.
+> 
+> Fix this by checking if flags changed only for vlans that are already
+> brentry and pass changed as false for those that become brentries, as
+> these are a new vlan (member) from the switchdev point of view.
+> 
+> Fixes: 8d23a54f5bee ("net: bridge: switchdev: differentiate new VLANs from changed ones")
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> ---
+>  net/bridge/br_vlan.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/bridge/br_vlan.c b/net/bridge/br_vlan.c
+> index d9a69ec9affe..939a3aa78d5c 100644
+> --- a/net/bridge/br_vlan.c
+> +++ b/net/bridge/br_vlan.c
+> @@ -715,8 +715,8 @@ static int br_vlan_add_existing(struct net_bridge *br,
+>  				u16 flags, bool *changed,
+>  				struct netlink_ext_ack *extack)
+>  {
+> -	bool would_change = __vlan_flags_would_change(vlan, flags);
+>  	bool becomes_brentry = false;
+> +	bool would_change = false;
+>  	int err;
+>  
+>  	if (!br_vlan_is_brentry(vlan)) {
+> @@ -725,6 +725,8 @@ static int br_vlan_add_existing(struct net_bridge *br,
+>  			return -EINVAL;
+>  
+>  		becomes_brentry = true;
+> +	} else {
+> +		would_change = __vlan_flags_would_change(vlan, flags);
+>  	}
+>  
+>  	/* Master VLANs that aren't brentries weren't notified before,
+> -- 
+> 2.43.0
+> 
 
-Replace all this idiocy with a single direct function call to the
-right hypercall variant.
+You might want to mention that "bool *changed" is used later in
+br_process_vlan_info() to make a decision whether to call
+br_vlan_notify(RTM_NEWVLAN) or not. We want to notify switchdev with
+changed=false, but we want to keep notifying the change to rtnetlink.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/hyperv/hv_init.c       |   21 ++++++
- arch/x86/hyperv/ivm.c           |   14 ++++
- arch/x86/include/asm/mshyperv.h |  137 +++++++++++-----------------------------
- arch/x86/kernel/cpu/mshyperv.c  |   18 +++--
- 4 files changed, 88 insertions(+), 102 deletions(-)
+The rtnetlink notification still happens even if we don't set
+would_change here, because it depends on this code snippet:
 
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -35,7 +35,28 @@
- #include <linux/highmem.h>
- 
- void *hv_hypercall_pg;
-+
-+#ifdef CONFIG_X86_64
-+u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
-+{
-+	u64 hv_status;
-+
-+	if (!hv_hypercall_pg)
-+		return U64_MAX;
-+
-+	register u64 __r8 asm("r8") = param2;
-+	asm volatile (CALL_NOSPEC
-+		      : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-+		        "+c" (control), "+d" (param1)
-+		      : "r" (__r8),
-+		        THUNK_TARGET(hv_hypercall_pg)
-+		      : "cc", "memory", "r9", "r10", "r11");
-+
-+	return hv_status;
-+}
-+#else
- EXPORT_SYMBOL_GPL(hv_hypercall_pg);
-+#endif
- 
- union hv_ghcb * __percpu *hv_ghcb_pg;
- 
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -376,6 +376,20 @@ int hv_snp_boot_ap(u32 cpu, unsigned lon
- 	return ret;
- }
- 
-+u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2)
-+{
-+	u64 hv_status;
-+
-+	register u64 __r8 asm("r8") = param2;
-+	asm volatile("vmmcall"
-+		     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-+		       "+c" (control), "+d" (param1)
-+		     : "r" (__r8)
-+		     : "cc", "memory", "r9", "r10", "r11");
-+
-+	return hv_status;
-+}
-+
- #else
- static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
- static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -6,6 +6,7 @@
- #include <linux/nmi.h>
- #include <linux/msi.h>
- #include <linux/io.h>
-+#include <linux/static_call.h>
- #include <asm/nospec-branch.h>
- #include <asm/paravirt.h>
- #include <hyperv/hvhdk.h>
-@@ -39,15 +40,20 @@ static inline unsigned char hv_get_nmi_r
- }
- 
- #if IS_ENABLED(CONFIG_HYPERV)
--extern bool hyperv_paravisor_present;
--
- extern void *hv_hypercall_pg;
- 
- extern union hv_ghcb * __percpu *hv_ghcb_pg;
- 
- bool hv_isolation_type_snp(void);
- bool hv_isolation_type_tdx(void);
--u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-+
-+#ifdef CONFIG_X86_64
-+extern u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-+extern u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2);
-+extern u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2);
-+
-+DECLARE_STATIC_CALL(hv_hypercall, hv_pg_hypercall);
-+#endif
- 
- /*
-  * DEFAULT INIT GPAT and SEGMENT LIMIT value in struct VMSA
-@@ -64,37 +70,15 @@ static inline u64 hv_do_hypercall(u64 co
- {
- 	u64 input_address = input ? virt_to_phys(input) : 0;
- 	u64 output_address = output ? virt_to_phys(output) : 0;
--	u64 hv_status;
- 
- #ifdef CONFIG_X86_64
--	if (hv_isolation_type_tdx() && !hyperv_paravisor_present)
--		return hv_tdx_hypercall(control, input_address, output_address);
--
--	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
--		__asm__ __volatile__("mov %[output_address], %%r8\n"
--				     "vmmcall"
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input_address)
--				     : [output_address] "r" (output_address)
--				     : "cc", "memory", "r8", "r9", "r10", "r11");
--		return hv_status;
--	}
--
--	if (!hv_hypercall_pg)
--		return U64_MAX;
--
--	__asm__ __volatile__("mov %[output_address], %%r8\n"
--			     CALL_NOSPEC
--			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--			       "+c" (control), "+d" (input_address)
--			     : [output_address] "r" (output_address),
--			       THUNK_TARGET(hv_hypercall_pg)
--			     : "cc", "memory", "r8", "r9", "r10", "r11");
-+	return static_call_mod(hv_hypercall)(control, input_address, output_address);
- #else
- 	u32 input_address_hi = upper_32_bits(input_address);
- 	u32 input_address_lo = lower_32_bits(input_address);
- 	u32 output_address_hi = upper_32_bits(output_address);
- 	u32 output_address_lo = lower_32_bits(output_address);
-+	u64 hv_status;
- 
- 	if (!hv_hypercall_pg)
- 		return U64_MAX;
-@@ -107,8 +91,8 @@ static inline u64 hv_do_hypercall(u64 co
- 			       "D"(output_address_hi), "S"(output_address_lo),
- 			       THUNK_TARGET(hv_hypercall_pg)
- 			     : "cc", "memory");
--#endif /* !x86_64 */
- 	return hv_status;
-+#endif /* !x86_64 */
- }
- 
- /* Hypercall to the L0 hypervisor */
-@@ -120,41 +104,23 @@ static inline u64 hv_do_nested_hypercall
- /* Fast hypercall with 8 bytes of input and no output */
- static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
- {
--	u64 hv_status;
--
- #ifdef CONFIG_X86_64
--	if (hv_isolation_type_tdx() && !hyperv_paravisor_present)
--		return hv_tdx_hypercall(control, input1, 0);
--
--	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
--		__asm__ __volatile__(
--				"vmmcall"
--				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				"+c" (control), "+d" (input1)
--				:: "cc", "r8", "r9", "r10", "r11");
--	} else {
--		__asm__ __volatile__(CALL_NOSPEC
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input1)
--				     : THUNK_TARGET(hv_hypercall_pg)
--				     : "cc", "r8", "r9", "r10", "r11");
--	}
-+	return static_call_mod(hv_hypercall)(control, input1, 0);
- #else
--	{
--		u32 input1_hi = upper_32_bits(input1);
--		u32 input1_lo = lower_32_bits(input1);
--
--		__asm__ __volatile__ (CALL_NOSPEC
--				      : "=A"(hv_status),
--					"+c"(input1_lo),
--					ASM_CALL_CONSTRAINT
--				      :	"A" (control),
--					"b" (input1_hi),
--					THUNK_TARGET(hv_hypercall_pg)
--				      : "cc", "edi", "esi");
--	}
--#endif
-+	u32 input1_hi = upper_32_bits(input1);
-+	u32 input1_lo = lower_32_bits(input1);
-+	u64 hv_status;
-+
-+	__asm__ __volatile__ (CALL_NOSPEC
-+			      : "=A"(hv_status),
-+			      "+c"(input1_lo),
-+			      ASM_CALL_CONSTRAINT
-+			      :	"A" (control),
-+			      "b" (input1_hi),
-+			      THUNK_TARGET(hv_hypercall_pg)
-+			      : "cc", "edi", "esi");
- 	return hv_status;
-+#endif
- }
- 
- static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
-@@ -174,45 +140,24 @@ static inline u64 hv_do_fast_nested_hype
- /* Fast hypercall with 16 bytes of input */
- static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
- {
--	u64 hv_status;
--
- #ifdef CONFIG_X86_64
--	if (hv_isolation_type_tdx() && !hyperv_paravisor_present)
--		return hv_tdx_hypercall(control, input1, input2);
--
--	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
--		__asm__ __volatile__("mov %[input2], %%r8\n"
--				     "vmmcall"
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input1)
--				     : [input2] "r" (input2)
--				     : "cc", "r8", "r9", "r10", "r11");
--	} else {
--		__asm__ __volatile__("mov %[input2], %%r8\n"
--				     CALL_NOSPEC
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input1)
--				     : [input2] "r" (input2),
--				       THUNK_TARGET(hv_hypercall_pg)
--				     : "cc", "r8", "r9", "r10", "r11");
--	}
-+	return static_call_mod(hv_hypercall)(control, input1, input2);
- #else
--	{
--		u32 input1_hi = upper_32_bits(input1);
--		u32 input1_lo = lower_32_bits(input1);
--		u32 input2_hi = upper_32_bits(input2);
--		u32 input2_lo = lower_32_bits(input2);
--
--		__asm__ __volatile__ (CALL_NOSPEC
--				      : "=A"(hv_status),
--					"+c"(input1_lo), ASM_CALL_CONSTRAINT
--				      :	"A" (control), "b" (input1_hi),
--					"D"(input2_hi), "S"(input2_lo),
--					THUNK_TARGET(hv_hypercall_pg)
--				      : "cc");
--	}
--#endif
-+	u32 input1_hi = upper_32_bits(input1);
-+	u32 input1_lo = lower_32_bits(input1);
-+	u32 input2_hi = upper_32_bits(input2);
-+	u32 input2_lo = lower_32_bits(input2);
-+	u64 hv_status;
-+
-+	__asm__ __volatile__ (CALL_NOSPEC
-+			      : "=A"(hv_status),
-+			      "+c"(input1_lo), ASM_CALL_CONSTRAINT
-+			      :	"A" (control), "b" (input1_hi),
-+			      "D"(input2_hi), "S"(input2_lo),
-+			      THUNK_TARGET(hv_hypercall_pg)
-+			      : "cc");
- 	return hv_status;
-+#endif
- }
- 
- static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -37,10 +37,6 @@
- bool hv_nested;
- struct ms_hyperv_info ms_hyperv;
- 
--/* Used in modules via hv_do_hypercall(): see arch/x86/include/asm/mshyperv.h */
--bool hyperv_paravisor_present __ro_after_init;
--EXPORT_SYMBOL_GPL(hyperv_paravisor_present);
--
- #if IS_ENABLED(CONFIG_HYPERV)
- static inline unsigned int hv_get_nested_msr(unsigned int reg)
- {
-@@ -287,6 +283,11 @@ static void __init x86_setup_ops_for_tsc
- 	old_restore_sched_clock_state = x86_platform.restore_sched_clock_state;
- 	x86_platform.restore_sched_clock_state = hv_restore_sched_clock_state;
- }
-+
-+#ifdef CONFIG_X86_64
-+DEFINE_STATIC_CALL(hv_hypercall, hv_pg_hypercall);
-+EXPORT_STATIC_CALL_TRAMP_GPL(hv_hypercall);
-+#endif
- #endif /* CONFIG_HYPERV */
- 
- static uint32_t  __init ms_hyperv_platform(void)
-@@ -483,14 +484,16 @@ static void __init ms_hyperv_init_platfo
- 			ms_hyperv.shared_gpa_boundary =
- 				BIT_ULL(ms_hyperv.shared_gpa_boundary_bits);
- 
--		hyperv_paravisor_present = !!ms_hyperv.paravisor_present;
--
- 		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
- 			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
- 
- 
- 		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
- 			static_branch_enable(&isolation_type_snp);
-+#if defined(CONFIG_AMD_MEM_ENCRYPT) && defined(CONFIG_HYPERV)
-+			if (!ms_hyperv.paravisor_present)
-+				static_call_update(hv_hypercall, hv_snp_hypercall);
-+#endif
- 		} else if (hv_get_isolation_type() == HV_ISOLATION_TYPE_TDX) {
- 			static_branch_enable(&isolation_type_tdx);
- 
-@@ -498,6 +501,9 @@ static void __init ms_hyperv_init_platfo
- 			ms_hyperv.hints &= ~HV_X64_APIC_ACCESS_RECOMMENDED;
- 
- 			if (!ms_hyperv.paravisor_present) {
-+#if defined(CONFIG_INTEL_TDX_GUEST) && defined(CONFIG_HYPERV)
-+				static_call_update(hv_hypercall, hv_tdx_hypercall);
-+#endif
- 				/*
- 				 * Mark the Hyper-V TSC page feature as disabled
- 				 * in a TDX VM without paravisor so that the
+	if (becomes_brentry) {
+		...
+		*changed = true;
+		...
+	}
 
+and not on this one:
 
+	if (would_change)
+		*changed = true;
+
+That was my only concern with this change (I had missed the first snippet
+when initially reading the code), and I didn't see in the commit log
+some sort of attention paid to this detail.
+
+With that:
+
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
