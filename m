@@ -1,119 +1,71 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B29191F98;
-	Mon, 14 Apr 2025 17:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA20289363;
+	Mon, 14 Apr 2025 17:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744650433; cv=none; b=UA1zzLwmGAEsqPh9kO71QySvtQsmWb/e1/ieSc/19A03jiaSTSnhH//0WLvtjwTPis2suOwHYfque21VAhTj58zJQJhzNGmz5oDhPFpLK4OjjkQPlY5P/VCUkUz8/C0TOQGRc1Z9fJglQZ9S1mP0R/RH8Ho82KLg/uzQSyOhXZI=
+	t=1744650437; cv=none; b=NKNAUcJHz5HTt4CtLbsNET0AIHoSmtvbW6jzC6T9F5UW2m3pmx3HNkh2mtDJX82WGGq1vQVb8pxfqqLN5nxsSHSH3Ne/RBuSDb+yCMSi9E4fP+4L3Cu1khNnSzab2GWfD2uWShE5HLM53tErLvnz2C9eae9/wx/Lka7yv5Tkj3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744650433; c=relaxed/simple;
-	bh=fNUgT7DJYQcXoNCcmnlI9t3Uad037thoynfSCazQZT0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cxoq53eOOVXoxcx3dvA68yD5PSeINCNIggL/4wQJ9S+u/j5sACOHtnJlXGkVtrix2oAJbuU5f1IjOwVADD0aNiLWjgDd6ld9ziRiuGtT+kLli6fCBqedgMdtvY25y4328wYAz03pZGgm0ECRGx5xPLr/gmYqawrmkBZuGoFcHZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXae/3fB; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744650437; c=relaxed/simple;
+	bh=CsgVFLGmNwx4Evvrq0QehN2SxQ2ECah/iZwmqTAGGnQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pLQyuVnM5b9e2yTWHA3bOwM0nKkWyUo9Zix7vgD1iigX0wKmtGwCUmwvpMNYv8ZDz6KeaCpYP1IN9e3eXpJiqAuHcBRCE7YLHW7eF8OgiPGGrQEjOtVYANLR4glrBgH1QStedfWRgpgK4vUkyjfHscuM+3ngBndWP4KKzoNha1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f2lDbJsP; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXae/3fB"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2255003f4c6so47432965ad.0;
-        Mon, 14 Apr 2025 10:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744650429; x=1745255229; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aC8nbQnSsY/ycvYA2e+g0txRbF4OxqLuWWrvhhoWrA=;
-        b=kXae/3fBYgcCnwxb0w/E55XxS7+sVMEPSmkGylnotiLQMtc8o7aEvU9wjgugADIDqN
-         IfOy/kFlmoUv6zqbFlh/oH5fBdXW/GgE4g5Dv+eigjT2swgNPic5Whip6wZ2nEpgG5GR
-         uLBz22Tx5yNH+YjK9o0HKmpL2dn6mHTR/S/WzUhXqyenju59C8Kmj0xlSW9TBEsZ/Fc+
-         7RTaMw6OZKgBx9aORYfvfcA3LoZVAE9uXz6hxrsOtAfRlzfwVFwb4QLFuiffmqe+Dqwo
-         EdDt07xZTiRGMU+jenLmQVvWvgCxsZUWvZAEftYl+vToTwI0POkP/fms1coEUvmnMjL3
-         yzeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744650429; x=1745255229;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/aC8nbQnSsY/ycvYA2e+g0txRbF4OxqLuWWrvhhoWrA=;
-        b=Nptodxz6QD4e3pV36YqQd62d+yH/LNbuOo2EfP8/U2DrVNFd4N5mpLs9uml9gbKX45
-         PLybzNwJPsnFMChpcGXKqnGMb2iHH58WnolrxQesCcvonrvShQRKhIw9iItgSyrWgmUa
-         UJhn1cB3S2qdMH4jf7XNF52loMB/y3yxaI5a/kFBimbfwC8CEDY1fuM+XxyRvp821sbR
-         YkAe4TqoFocF6SKXzJEOCO+IRd3q4zWgv87DAMggiaQ/VXmFplkPpBz9La1v7GqJXDV5
-         J8O75sYL54jfe06mvlvm2aco9C7oJxk/LRiO6WyHpjqc0VQn/X6vwJ9dSyrZ5UlMb5nd
-         OCfg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZJusW5CbXjro3SPXsp88mLS5AH62NFct6zVHoAl8HzrXxBcW8yWFbILcqWMtsmuXt3hTvzk9p@vger.kernel.org, AJvYcCWfzyZvC7nw8AmPV0deXLcLpFGz/6xKpRJwmj9b5XRD4JybdG0XqmWYrFOMSz8sAJmETDLUxGO43FyA+js=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7fInCirWZdIo01YwjFsB0PnfQQXbofB8OsPHOfl/YTn88DJan
-	I3ny7X+H+QXM1dStRXRTvsynRqkWO01WDpxu+HaKbB10J0qhWjzS
-X-Gm-Gg: ASbGncveI/hmFz5NtaOZUo+qKf2aVnsyFg8LDsiJ7MuYO8seHTZ+ofgerFzXQuQgcsP
-	dz0pyBf0kpf2URHVlm1cJ0JktcASj0au8NZTtVUH5hgWwqNf/eIdA+rR5Nk3ORJ2ttviPetaGyn
-	MhejTNKh/MtOWPZ6UrQc8Th2EiPO1QvuivTp5UtVTkm8AQ2FOuG/WZg5ZPoXRjSyreg8R5N0cne
-	PZnVgj4Yfuhlhi6HgjEjgYgs/soN3tElTFseG4N88Y/Y7D50dlLrAbQlEuJsY16yRDOIwefelm/
-	f5nWOdYdVkfZjnQlQXjd0YOQihh8zB/ydvrbgL/s9NDQj2cOj/2f/Wm0
-X-Google-Smtp-Source: AGHT+IHy3L0sRObM5h249A+XUtwuSyc4JgCYWx+PjAgceH3ncF9lhZgv07boVjBJOwpPAYsZzwXr6Q==
-X-Received: by 2002:a17:902:ea01:b0:21a:8300:b9ce with SMTP id d9443c01a7336-22bea4fd0a0mr186730335ad.49.1744650428600;
-        Mon, 14 Apr 2025 10:07:08 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.219.136])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22ac7b8c6b3sm101818335ad.77.2025.04.14.10.07.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 10:07:08 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: bharat@chelsio.com
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
-	horms@kernel.org,
-	Markus.Elfring@web.de,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	rahul.lakkireddy@chelsio.com,
-	vishal@chelsio.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net] cxgb4: fix memory leak in cxgb4_init_ethtool_filters() error path
-Date: Mon, 14 Apr 2025 22:36:46 +0530
-Message-ID: <20250414170649.89156-1-abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f2lDbJsP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2gZHiQsHwL/1CiwmoLxA/AKtozhwa+CHYwI4fFRQqD4=; b=f2lDbJsPSbSJtQwgU1X7g0nVIi
+	9h9v2a3vo1nXbNLnxtmEOv4CV8S6WoVaQwWKxrJ3BiwSlCMRCLUUWJEBfPBk35I8j/fJqCM2RW+gY
+	v26pydDIrLOfzzXVZI9R1W/YaSh2HNpwFWJ54oxV4kvCXdMb0TxX1fe0I6GEsv9MSx0NUtX8vZMtN
+	Q74BWEq6jTbc57vMItbfAIKgGp5VZ1cNO3dpxdVrkvS9wLKxg43qKXmH6fEOqo2gR1sJhf5rB/QqQ
+	VdRxKvcymsxfvvPlZ5tnA3BTxnQQLRe8qIMujwx8FI9indxcRNLc5w8jPgDvHcSvspZOHN1+YxXZC
+	PFsXX2Bw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4NH6-0000000Aw0B-0Ywm;
+	Mon, 14 Apr 2025 17:07:12 +0000
+Date: Mon, 14 Apr 2025 18:07:11 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Cabbaken Q <Cabbaken@outlook.com>, Kees Cook <kees@kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH] Fix comment style of `do_execveat_common()`
+Message-ID: <Z_1Av3LPtQB-Fvqe@casper.infradead.org>
+References: <OS7PR01MB116815D7D0BCF55F3FE216293DFB32@OS7PR01MB11681.jpnprd01.prod.outlook.com>
+ <hsnabzbrvgpng7rsxpgcjaggiwaenrgwsi2u7spfbypbfraymu@7h5dxvkq64hz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <hsnabzbrvgpng7rsxpgcjaggiwaenrgwsi2u7spfbypbfraymu@7h5dxvkq64hz>
 
-In the for loop used to allocate the loc_array and bmap for each port, a
-memory leak is possible when the allocation for loc_array succeeds,
-but the allocation for bmap fails. This is because when the control flow
-goes to the label free_eth_finfo, only the allocations starting from
-(i-1)th iteration are freed.
+On Mon, Apr 14, 2025 at 03:58:37PM +0200, Jan Kara wrote:
+> On Mon 14-04-25 07:07:57, Cabbaken Q wrote:
+> > From 46fab5ecc860f26f790bec2a902a54bae58dfca7 Mon Sep 17 00:00:00 2001
+> > From: Ruoyu Qiu <cabbaken@outlook.com>
+> > Date: Mon, 14 Apr 2025 14:56:28 +0800
+> > Subject: [PATCH] Fix comment style of `do_execveat_common()`
+> > 
+> > Signed-off-by: Ruoyu Qiu <cabbaken@outlook.com>
+> 
+> Thanks for the patch but I think fixing one extra space in a comment isn't
+> really worth the effort of all the people involved in handling a patch.
 
-Fix that by freeing the loc_array in the bmap allocation error path.
+The correct number of spaces after a full stop is disputed.
+https://en.wikipedia.org/wiki/Sentence_spacing
 
-Fixes: d915c299f1da ("cxgb4: add skeleton for ethtool n-tuple filters")
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v1 -> v2:
-- Added the Reviewed-by tag from Simon Horman
-- Also set the branch target as net instead of net-next as it is a fix
-
-v1 link: https://patchwork.kernel.org/project/netdevbpf/patch/20250409054323.48557-1-abdun.nihaal@gmail.com/
-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-index 7f3f5afa864f..1546c3db08f0 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-@@ -2270,6 +2270,7 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
- 		eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
- 		if (!eth_filter->port[i].bmap) {
- 			ret = -ENOMEM;
-+			kvfree(eth_filter->port[i].loc_array);
- 			goto free_eth_finfo;
- 		}
- 	}
--- 
-2.47.2
-
+Do not send patches to adjust the number of spaces between sentences.
+You are wrong to change it.
