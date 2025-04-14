@@ -1,130 +1,96 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA701DDD2
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 02:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A49DDD2;
+	Mon, 14 Apr 2025 02:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744597761; cv=none; b=lOzrzI4bFXzV3pLKlrrV/i9NUyCYtPgy+PJCIWQQrfHPNAkxJhzM3eGjvdksHMFph/NXar1u50yAmNHZlu57m5DscOk92KTCDeGwGDCKCLm1ywKnakhWalhckGbTvWQqyrSakdm77DXmqJxU1p5X7AeVa+P3vQFSXw9DFACr8WU=
+	t=1744597772; cv=none; b=RAN+HwI6O7l9ppqLf8WAOHzoygjC3nUZz1nKPgYn9Sw/A0zBAOEFnYEcGuDDuq11MGwPRrRvgdQUUE6tU5r5B7C/bPADAIFCeQmop85LqKPJ/hXRq6b/+ZIaTG36E5F4i/9Oygt0h+HXCd/3S9AeifEuiIuNzEFPKW+Qc6Ek9bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744597761; c=relaxed/simple;
-	bh=BJ7THEt1GTK6+SA6dxHEjeTarR6iLMFeutgpn9++7g8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjvw+Msgjgkdr/t9RtiTNjZiqzT1ymGQyRYcvCFBfjWgN7DIbBxSaB0cF2v/MDyGt0wXRdhiX+n1SaxRjVSGH1LdqogNqum1Ovd2q27Cwy5EDAuPWSeqKzMQ0O8yyFFAhZtLyDJFFjJ6jo6JQlpz1zPJTeZBNM+ls2cpUZva4eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jUR8lGCG; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jUR8lGCG"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227cf12df27so29593805ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Apr 2025 19:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744597758; x=1745202558; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NViZKqFg3k58zSD1gl7NtJvPB8DQ6ftWdgoXSK4HdOc=;
-        b=jUR8lGCGNvWCOXWdqz2vFaOhB7ipTfQSPyJsyc94ATt8ZKPNe0prs7Ub+wByX09twW
-         rwyN6/P/5ukJfVJjtjfJexAtbuKGmkCvaOnA86grkd2rMoJwCLgQk+YvGXCGtuSNLNt1
-         XgHTfpMm9G6mX9HnlHoa0tH8P3UozGbDm6/d7nu9L8dWqoI8ZHcw0HWLoVT8emk5XRtW
-         voXrb1t0SDepmNxlh0CQEgpF01gYQydc/wRoLx73QoXYM7OZ6i3LvfvZZ/qwT1ojP2ZZ
-         rSJsAMQ86yVnOBkd0BHdNmVYdawijCLXmyhf5yoxzKxudZTrmiuC/sVh0thy6izi4n9c
-         tzwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744597758; x=1745202558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NViZKqFg3k58zSD1gl7NtJvPB8DQ6ftWdgoXSK4HdOc=;
-        b=GI88NQQ0E8mQDFSXSLjMlB2itBseMtLDEcXcX3/aD8hbYhnhOJrxTHV9+Valb/atSg
-         whYsOrUsTNKO5tobSsaFDx3kkIfrU1KBoy8uwHX9O7RMIekDkKNfKM0IXJj1MIIGtgnw
-         GGHXfl8Y/OMVY/6VMetaOXtBEDI0SrYoraBnWsJ67RvGZli24GpZebst9qJXwkHw7Kll
-         MjSlDbb2pctv7dQzou0aoa0O7QV77Ct+HsKCUCyfnpYN6o+fap8tArxMCBceL8WLQl0P
-         pT2RbvzGgjsXmNV7woJoec3xW9jnZsQ6+yQr8z6P3QIWKFzLzUGWjHPKz5n4QX/awLd4
-         u3wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzHcJhiAQWdkDxiHDh8GDBPpWZvfdIka0m4bBTBYP8kL79Ov36SM8nsBvJxSktGlCUM0tuYN8Y6S0Ck/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfiGWKBsHhLyXVhI1gV18RT2wXX02ZFktyQIQwSC11cKuwBwhM
-	GlC+cekVnMRFtXb/k4pMGrwOaAvRbMuX+Qj0RGoOs2wcERhJza4qAulfNvHkKh0v0jkjQe6Kpu3
-	3OA==
-X-Gm-Gg: ASbGncsPUw3v+rGRY53+TJ/8jTQdXOAUAqeoaZR/WEERxreFZMtwQFHwVg2d4l6gcIz
-	eexQs2zxzYZ0eDsZGymK7rXkjOfSFDPOLyo2+3gudkZ4MvUNGDabQ5BOXxsabSOSEIK6C+xjt0Q
-	XBwcq3GhWScf9Vrf5nEsSGApDtt/nBmUJ3BlAI1kNmJ80TDjzOkkZFEtY5H2kQiL8uK0PicBspo
-	WMNIJRyZkbgm53GtvNuw+okF95L0epTc0x+T7hjtLJHecuk345ZH2JzS0zbdpQQNavKN81j/DVi
-	XdPAQG9BeFwPhT8Ddq9X+BKZwVaUIHH6QWus6vPRbH9VB5YYSzw=
-X-Google-Smtp-Source: AGHT+IFQp0YV8swU6djE6uF9PvxhD1jkKgaxv3MqL1CtZcPgMCSIlzJWBrOiXk0n9IcsvRMsOQMzxw==
-X-Received: by 2002:a17:903:1b0b:b0:215:a303:24e9 with SMTP id d9443c01a7336-22bea0253b4mr153115655ad.3.1744597757776;
-        Sun, 13 Apr 2025 19:29:17 -0700 (PDT)
-Received: from bytedance ([115.190.40.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b65a56sm89338465ad.2.2025.04.13.19.29.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 19:29:17 -0700 (PDT)
-Date: Mon, 14 Apr 2025 10:28:59 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
+	s=arc-20240116; t=1744597772; c=relaxed/simple;
+	bh=8e43JfZtGPIrrAReIU0/vZ4SrcKs4H6mn59ZlV59EOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LzVX70ZRie0+E1FPda2oSkVeU9LkVB1TtHn6k7rus0KFgXqt3aven1T/Aur2Eubf/dxaJvD6z5rxOM/y67kRmLCp9kqcgwCyFKY68M5clwB0XuY+9+VGbG/dPvR6NRG6qgMP2rDswMwJqczmPrMLwMk2EQEB0fIB6sIw8fb54G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAAXUwv2cvxneIncCA--.64253S2;
+	Mon, 14 Apr 2025 10:29:15 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: arend.vanspriel@broadcom.com,
+	kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
 	linux-kernel@vger.kernel.org,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: Re: [RFC PATCH 3/5] sched/fair: Update overloaded mask in presence
- of pushable task
-Message-ID: <20250414022859.GA3326447@bytedance>
-References: <20250409111539.23791-1-kprateek.nayak@amd.com>
- <20250409111539.23791-4-kprateek.nayak@amd.com>
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v2] brcm80211: fmac: Add error check for brcmf_usb_dlneeded()
+Date: Mon, 14 Apr 2025 10:28:53 +0800
+Message-ID: <20250414022853.1795-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409111539.23791-4-kprateek.nayak@amd.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAXUwv2cvxneIncCA--.64253S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr4kAF43WrWUXr13Ww15Jwb_yoW8XF43pw
+	4xXFyUZr1kXr4rKw45JrZ3AFy5tan5ta1kCa10v3Z3WF4kCw10kr4YgFyI9r1DCF4Ikay7
+	XF45t3s8Jrs7WFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUbvzutUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREMA2f8Wy5sYQAAs0
 
-Hi Prateek,
+The function brcmf_usb_dlneeded() calls the function brcmf_usb_dl_cmd()
+but dose not check its return value. Though there is an error log in the
+brcmf_usb_dl_cmd(), it is not clear enough to describe the error state.
 
-On Wed, Apr 09, 2025 at 11:15:37AM +0000, K Prateek Nayak wrote:
-> In presence of pushable tasks on the CPU, set it on the newly introduced
-> "overloaded+mask" in sched_domain_shared struct. This will be used by
-> the newidle balance to limit the scanning to these overloaded CPUs since
-> they contain tasks that could be run on the newly idle target.
-> 
-> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> ---
->  kernel/sched/fair.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 98d3ed2078cd..834fcdd15cac 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8559,6 +8559,24 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  	return target;
->  }
->  
-> +static inline void update_overloaded_mask(int cpu, bool contains_pushable)
-> +{
-> +	struct sched_domain_shared *sd_share = rcu_dereference(per_cpu(sd_llc_shared, cpu));
+Add error handling in brcmf_usb_dlneeded() to log the error message if
+the brcmf_usb_dl_cmd() fails.
 
-I got a suspicious RCU usage warning for this line while testing your
-series. Since rq lock is held here, rcu_dereference() should not be
-necessary.
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v2: Remove redundant bailing out code.
 
-> +	cpumask_var_t overloaded_mask;
-> +
-> +	if (!sd_share)
-> +		return;
-> +
-> +	overloaded_mask = sd_share->overloaded_mask;
-> +	if (!overloaded_mask)
-> +		return;
-> +
-> +	if (contains_pushable)
-> +		cpumask_set_cpu(cpu, overloaded_mask);
-> +	else
-> +		cpumask_clear_cpu(cpu, overloaded_mask);
-> +}
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 2821c27f317e..8e2b41cfe5cf 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -790,6 +790,7 @@ brcmf_usb_dlneeded(struct brcmf_usbdev_info *devinfo)
+ {
+ 	struct bootrom_id_le id;
+ 	u32 chipid, chiprev;
++	int err;
+ 
+ 	brcmf_dbg(USB, "Enter\n");
+ 
+@@ -798,7 +799,9 @@ brcmf_usb_dlneeded(struct brcmf_usbdev_info *devinfo)
+ 
+ 	/* Check if firmware downloaded already by querying runtime ID */
+ 	id.chip = cpu_to_le32(0xDEAD);
+-	brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
++	err = brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
++	if (err)
++		brcmf_err("DL_GETVER failed: err=%d\n", err);
+ 
+ 	chipid = le32_to_cpu(id.chip);
+ 	chiprev = le32_to_cpu(id.chiprev);
+-- 
+2.42.0.windows.2
+
