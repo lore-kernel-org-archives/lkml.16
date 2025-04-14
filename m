@@ -1,81 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1384423D285;
-	Mon, 14 Apr 2025 17:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792D327B515;
+	Mon, 14 Apr 2025 17:24:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744651424; cv=none; b=NvtF/ieF2vNZjZyVmKg7S6YxnfLFDVqAEX2Hn12OLXCxHj2bzQY9qjOek9cu0U5gKJcDRBnaaatrH6PpAc3j62xmjuBvgp4kiYpZTTKLLbehfv+++5S3krAZMFXC5ADeFXJEmEnnPKR6RV8zf6J7D1a2wyCfDPHtYY6B6hhKqoI=
+	t=1744651485; cv=none; b=RiZHpFmIcG1GRCpNe+Ftjj+WIla2YCx0iLbz/heKdbLEl0ax33b997k3LnBsIA03c6OI0TFfrjF7FFsheQknuPuCgj2B7T5m2+O7lthG5SMLg4J5mOPvM9/IJNUaxOs/h4vj7YDYAsJPN72aYiUZ0NCavWnT3+Kc5am/JarE2MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744651424; c=relaxed/simple;
-	bh=GPTmCec+ZNuZRCM/kaKGVD8ffsbiT/xRq/puE0O1Dm0=;
+	s=arc-20240116; t=1744651485; c=relaxed/simple;
+	bh=H5Pm2+Q7bzJtJE7tv/B65F4x5mQmoZc0ss9nKzM8vs4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C73SGBmCwR6NjiLjpaklcEpp/AivRp/zwxVVM2+iyRe5z+zapM723FNPSMsF2dlcZVKLrs3MdlwVDMazsChyliGPRuVTtQ1IBPKHtqcUKTLMIPN7qWQZM6VrIa0oeaekxk1ORUF/QRcEOckq0dIsQq7H528Ji/KLB8OyyU/grBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK09fqo6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AIttXHiGuk8V5vf2rfBBNc+QosyiDwV7CepqnKvCq6G6Zlrdm61VlJq84oa69RjmhwA/a2wtT6eLlxofTUdwhVAYjYA4kDRTxheyKYChrvtQZaDDdmbnPEyUd4zD+hbqen3ZuugYaTJi7JsJ5xuep4en0QvCA3BUonF97HX8q40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gqq5er2F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK09fqo6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458C0C4CEE2;
-	Mon, 14 Apr 2025 17:23:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gqq5er2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD37C4CEE2;
+	Mon, 14 Apr 2025 17:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744651423;
-	bh=GPTmCec+ZNuZRCM/kaKGVD8ffsbiT/xRq/puE0O1Dm0=;
+	s=k20201202; t=1744651485;
+	bh=H5Pm2+Q7bzJtJE7tv/B65F4x5mQmoZc0ss9nKzM8vs4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eK09fqo6Tst8TjcXpz2D1a2TMRdcjSZcXkpRtG+qVGFTMUWiL1VRiUNzvuD4U+xX1
-	 YbA3FRJRclAlPHccWt4t1GRhlPiNvBsiAKg6OUIzh663Vpoi6PP9zmeXhgR5ASOgg5
-	 ei8iNwuUuJVbRH2KyQhz2mdzNbligi8n6lu2R8+ZJuiY80DsNcDxY7g/mw9SkZk2KZ
-	 ofGzlgfWxYRf0Vv920pyYWYafLhgtYuiFkJjEmwkzyClZIn2MUJYRt8BPT7dEmI3jZ
-	 /NfhN7mAeW2PSg8P8zMnvOXUMjFaFUbgFLuHihKjfrUBbwZDfxBShCL7/InTNfb1MZ
-	 KThyK3y6SeMTg==
-Date: Mon, 14 Apr 2025 07:23:42 -1000
+	b=Gqq5er2FpBAgIWyvUJHE2xuiWDWk8NKr41tFVaJfQL8r2JYMoDKYNK7+3Qf4FmlUs
+	 mfmv/IsizOMnK2QSwnSgaNL7NXgKb1Ly2VxSWzTRASJobP8by/VmJiq5gmyPW4Xt6C
+	 Y6Fc0Vw6UyqIANqthEypgMY4m7jmsW81w7zB61VP7ekDL57t2tdNgx+DU5+k4bTp0H
+	 sSufW07OINFkfOIbZGADbPaAxao+sZ9wxGV8e8NiUBuSOcFKNkIxZbQzcRUXXY6g/Q
+	 Ll9bbg/7EoEL5B8kVb9eUXgBRR4XagA+yzuro9NUUjAnGmG0L7xA9+9+Cuvv2DkehY
+	 ol6uY8Exj2f3g==
+Date: Mon, 14 Apr 2025 07:24:43 -1000
 From: Tejun Heo <tj@kernel.org>
 To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+Cc: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
 	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
 	Benno Lossin <benno.lossin@proton.me>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Trevor Gross <tmgross@umich.edu>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
-Message-ID: <Z_1EnkPiBKakGYtM@slm.duckdns.org>
-References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
+Message-ID: <Z_1E2z-l1xG--BSc@slm.duckdns.org>
+References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+ <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com>
 
-Hello,
-
-On Fri, Apr 11, 2025 at 03:34:24PM +0000, Alice Ryhl wrote:
-> Creating workqueues is needed by various GPU drivers. Not only does it
-> give you better control over execution, it also allows devices to ensure
-> that all tasks have exited before the device is unbound (or similar) by
-> running the workqueue destructor.
+On Fri, Apr 11, 2025 at 04:14:35PM +0200, Alice Ryhl wrote:
+> On Fri, Apr 11, 2025 at 4:08 PM Tamir Duberstein <tamird@gmail.com> wrote:
+> >
+> > Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> > the interface of `HasWork` and replacing pointer arithmetic with
+> > `container_of!`. Remove the provided implementation of
+> > `HasWork::get_work_offset` without replacement; an implementation is
+> > already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+> > `HasWork::work_container_of` which was apparently necessary to access
+> > `OFFSET` as `OFFSET` no longer exists.
+> >
+> > A similar API change was discussed on the hrtimer series[1].
+> >
+> > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
+> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > Tested-by: Alice Ryhl <aliceryhl@google.com>
+> > Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > 
-> This patch is being developed in parallel with the new Owned type [1].
-> The OwnedQueue struct becomes redundant once [1] lands; at that point it
-> can be replaced with Owned<Queue>, and constructors can be moved to the
-> Queue type.
-> 
-> A wrapper type WqFlags is provided for workqueue flags. Since we only
-> provide the | operator for this wrapper type, this makes it impossible
-> to pass internal workqueue flags to the workqueue constructor. It has
-> the consequence that we need a separate constant for the no-flags case,
-> as the constructor does not accept a literal 0. I named this constant
-> "BOUND" to signify the opposite of UNBOUND.
+> Seems reasonable enough.
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-Maybe name it NONE or DUMMY? Doesn't affect this patch but [UN]BOUND are a
-bit confusing and as a part of the effort to reduce unnecessary usage of
-cpu-bound workqueues, there's a plan to flip the default and use PERCPU for
-the cpu-bound workqueues.
+Acked-by: Tejun Heo <tj@kernel.org>
+
+Please let me know how you want it routed.
 
 Thanks.
 
