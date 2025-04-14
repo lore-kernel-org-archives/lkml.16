@@ -1,229 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809D125392F
-	for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744646689; cv=fail; b=ed+dRMOR/SghiOR9yf5aNdxzpT7m5yTLjI1G1MFgRnFHcSeddwoR/Ga9YlE3uCvsSTbWUUl8ngCY/ZciWW+Wh4co3PeczMjj2yhlXMzVjUtlrn1ncyn1NsPTDGzs7Sij30HA3oG6aU2+IFJWCN25XGnRV8RdCY1VHxvNg4l8fYg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744646689; c=relaxed/simple;
-	bh=5AmOyoV5NFYaSex64hNG/02JRnnwWBApY8dAtnRFvm0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VyU+Fr+Bv9k7EOHC/ljOnyRU1XJjaNLbe15Vd9p/Shj0NZshkYvDufZJQSQ2lYUWdj6dfWjMcSixx5rQuWIT6ss5Nt2fMblYCf3E73Z8Ut8+QSvzOvbeYBaHBhSSWWVIHwmvf9P/rDAvXk91yvwt6KQTcQD7BKSl0I9ykEOCuHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBTKErbG; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7322119992D;
+	Mon, 14 Apr 2025 16:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744646823; cv=none; b=k+WZDgT4WPy687cUGvE1EFDiTmMaexSqZHhyOoo9Ivcd7DRccRM+ftg4ssJRYfRKwSDLLz2s0fcTeVHbrDVQD7tERr+AEV3yLpPNSYbC3CaSekPLajfILqm+3PR2Q2ttIkECfFBSIvFw9H+0arc0E+IlvvKxu9hf67WqYbsyMLo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744646823; c=relaxed/simple;
+	bh=5vyO76akIVHyQuw1CpphmbHreZZbR27cRV4ouM7NqB8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jm2eA5qPdpXiYd0OSZVlHQf0U/EooWVo5y5GAEwyPTtp2NlwAORdYZGR9xvq8wesQSvyynM+9hib2GGAn4Pe2GLwEo5dOclSINRV5GLQt5M3C805q7gd89TfFOCwxuPZsjBagCe78IPcMki6NNwB+Nga/wmJAcwwZ03KNf0SkYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ck8w8nHb; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBTKErbG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ck8w8nHb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744646687; x=1776182687;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5AmOyoV5NFYaSex64hNG/02JRnnwWBApY8dAtnRFvm0=;
-  b=bBTKErbG58VpTRPCRVkhYgSqsnImKAmJjvs7d7WKdweZbO9voAW7du+Y
-   TIWc4P9eTt3cnY/IU5Ex7DEG1/VOC8WPxPL9IYg26/oNiH2rZ+L7jsRtf
-   +9kD7QnWNAjb0jufD2Dmp9GLQb0LHn5nLMbUtOYV0Kd9fNEHT4LMtjO2b
-   5mM0J+Ux49cUzOP/sDv/HD9+YtD+DMr3H9/bAr+yeUmtBGOSO57282M1l
-   SkcM/A5gs1HvjZ8buo0/1lquUp/1jeibHg3moE3yOaW6nTbG3807xjLo8
-   0UM/k/j3U1xhgcqXi6wqKcgWbMTaA9qFs3xZKxqgVP+ibWfYIGLpFcvBZ
-   A==;
-X-CSE-ConnectionGUID: zzFOmJ94QRKo+3vcCyr3qw==
-X-CSE-MsgGUID: n/DQxvikR2eTgdMrmfnNUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57118214"
+  t=1744646821; x=1776182821;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=5vyO76akIVHyQuw1CpphmbHreZZbR27cRV4ouM7NqB8=;
+  b=ck8w8nHbI6Uq2gdMrN3Z3+Puo1UTdiEJAfaR+pGSFDYs8jpEqVoLXi9n
+   LY63UWcoYBG11xbTc4ak2ozUm7ytXLNwYHd3xen8QuZM1M+r27iSPYHwg
+   fIgpzI6LZq69yrn/OYvU/v8+awEeMOgmmskQgP0KtuIKgHzjOqw0xfaz+
+   AuMP0pia7mvUCGRGw9KYNiaFiUQ2NJ/99mhQZIf+ajZeOPZRXl9fLqz57
+   nQ8T34QXvti4qhyvK6UwMZc50NbMkr3Nq7O77+d9Dd2VXitnkyZtiAfvA
+   pGvvsNX34Hh+pOsjLak4iegTacyAG3zOqtPaP5srb8Ed7JFTSfaXPqXKD
+   g==;
+X-CSE-ConnectionGUID: G8MrIndxRIaoZgznX/R4/w==
+X-CSE-MsgGUID: ngH3izHJSI6FsVSLlOISMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46291715"
 X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="57118214"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:04:46 -0700
-X-CSE-ConnectionGUID: G9B6w5mkRZWKbqY20uAvFg==
-X-CSE-MsgGUID: uOnfAUjAS3O7+Zgc8h6yWw==
+   d="scan'208";a="46291715"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:06:55 -0700
+X-CSE-ConnectionGUID: pl5lA5UeTgqD9X8UesyxZA==
+X-CSE-MsgGUID: AMfTgzeaQTWQnFAqKmcJOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="135023937"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:04:46 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 14 Apr 2025 09:04:45 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 14 Apr 2025 09:04:45 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 14 Apr 2025 09:04:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xB4X6bt1YC4wfj/r+HnkvWmM7/joU/EJwF47YAnAbKNqUJf6UTnwWNJRfwQ5EkgwVIcR0APulSzbv4IJKv42LDTS9Jft9S9jjiJTMJKpnn+HY4t7XUP04xPOGlYftcuK0YN6N2f1xTeOnoZvPZOohqqgA30TU6DGBqUrWqkvhUw7MpSYVOV2Ilylqz8Q4yw8vQ3csqEe+q+ZDGLT/EF0nFxB3gJ7O/p1A9gTeXrB6uaAS3izPTRMO+3UDTvIBx5dfSkCbKRyP/rLV/cuWEplfDhc1QHs2ijaepOjhN4JiX/h56e1KOeo4TWnJqI+5TBkk42hgOSeY+KSmrH3dY4UnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5AmOyoV5NFYaSex64hNG/02JRnnwWBApY8dAtnRFvm0=;
- b=XptoXYKA3uBMvxp4Vc9n8+268c/MvZHMUyzl1oM1SMFcqNlicNaZM4b6jpW+/XPZAMpIK8+hk8w9lZVpzeZEWPNZyEWhYqfTMj0SerLoVObc36/WPre6etB/jbg75GJCzmbbZpVb4Vv/Wth3Trc8Ro326Ac4zM+1tCR2s3NJkIpKdquLHPUfPfH+JOm/lsYSdbZONTvEtX1jdOGrSMGMrCbiGz79sbiZsWKATzjtWwLcu9BrZ0VnKvfzYwNFwjE+NPDafqGzml0dZYPJmvbR3aexEXBr5qGWrhrsZxngeAiB3f8YCuNXEOvewlxxU0EorXOQlq5hxp5GcNAAD8vlyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by IA4PR11MB8892.namprd11.prod.outlook.com (2603:10b6:208:55c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
- 2025 16:04:42 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 16:04:42 +0000
-Message-ID: <2dce14d8-55b8-451e-942e-5979f1454db6@intel.com>
-Date: Mon, 14 Apr 2025 09:04:39 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 17/21] x86,fs/resctrl: Move the resctrl filesystem code
- to live in /fs/resctrl
-To: Fenghua Yu <fenghuay@nvidia.com>, James Morse <james.morse@arm.com>,
-	<x86@kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
- Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>
-References: <20250411164229.23413-1-james.morse@arm.com>
- <20250411164229.23413-18-james.morse@arm.com>
- <f4ab6c75-f6ef-4504-9060-8ca9ab38b0aa@nvidia.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <f4ab6c75-f6ef-4504-9060-8ca9ab38b0aa@nvidia.com>
+   d="scan'208";a="134843313"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.3])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 09:06:55 -0700
+Message-ID: <f673452d7afc4419120f2cdb32e5033c35f22229.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel-uncore-freq: fix inconsistent state
+ on init failure
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ shouyeliu <shouyeliu@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Mon, 14 Apr 2025 09:06:54 -0700
+In-Reply-To: <1feb5888-5ec8-67aa-9775-e1bea6b8b9fe@linux.intel.com>
+References: <20250414092132.40369-1-shouyeliu@gmail.com>
+	 <1feb5888-5ec8-67aa-9775-e1bea6b8b9fe@linux.intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MW4PR03CA0315.namprd03.prod.outlook.com
- (2603:10b6:303:dd::20) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|IA4PR11MB8892:EE_
-X-MS-Office365-Filtering-Correlation-Id: db39548b-1003-4528-a1d7-08dd7b6e1132
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZzlQL25qVlM1WGRVRmFZYzdCK1NzNmhnRXhyeEpZM0pvYzZSVVJnMldqK29N?=
- =?utf-8?B?L3BEUjdmci9vODdqbHg1azY4NFR4N0RJZUljNnVHMG9iVWVXK0xXcERKMk9W?=
- =?utf-8?B?WjVzKzc2Y1k2S1NwdTFMa3Z4ak5ycDh1dVlvempaSEpnMEVxcnpidmJyM0F1?=
- =?utf-8?B?RDF3YWpSeTBZQU5DZjF6aVZNQTA0b282RHZ1NUJMQW1tNHpuWVVtakJ3bnVy?=
- =?utf-8?B?WUFacWlFQm01eW9JMmoyMGxSbC9UMmR4OTVUc051RHB6eEE2a2toRSs2SFh0?=
- =?utf-8?B?b0w1Nml3dWpXRG5YcnNvZnM5QlJ2NmRDREkydEJ0RUlIRlBWMmk4WmQ0dnRQ?=
- =?utf-8?B?azR4OEc3MWtGaGhsYmh0M0pZNDZ6RzVDSXhBU3o4OHFKWEJ2SE1oYktYYjJs?=
- =?utf-8?B?VDN2R1U2WnVoeDBLc3hINnZPRWhxTFBVYkdMQXNlK2IraHJMRzBkNm5odHFZ?=
- =?utf-8?B?ZU5vT1QvbzRENkozcnQ3UGh6S2VTUlpIMEQ0cEJhVENLY1F1ZVFoRVFxOUkv?=
- =?utf-8?B?VnMvVFZ3ZWdLVW1SVzZuU3JHOHQ3RG94b282UThEQVpxekdtVFhiTStWQlVw?=
- =?utf-8?B?VUg4Uk5SZ09iNkVOVFJySUhsblBhUDVNVEYyZW9DMzhWREtQejQ5ZEVQaEF1?=
- =?utf-8?B?RlMxMlJQSVBaeHYycVlzZzQ3SkFkUjJFaXhRK29LL1J2b1I1em42dmxRQldX?=
- =?utf-8?B?YU1HM0JpUks4NXgwK1RveE44RkxQUElEL0g4WGU4bFp6UEtQNzZGdjgyd3E4?=
- =?utf-8?B?OERlc29RSTdHR01VcTdITmZ2aytSNERBSklRemY0aDNaSWRtL0NrMkU5UkNV?=
- =?utf-8?B?dDBpL0xzUkhwWnBFQjhVczRWbkVTVjNEZ2dCYzRuZUFheEhaTWZKUGZBRnln?=
- =?utf-8?B?VEJqMFo4U1N6amhZOVZGclZCWUgwRk4zNmtLVWRlVjR3TEdhdmQrZFBLUmlj?=
- =?utf-8?B?R3Z2R2lFYms2Z2N0OHpBOGorZHgzTVpBQ0p1Ym1ZV21SNlU5YUdOUDJVMEdD?=
- =?utf-8?B?LzYycmpQenVCQkVXV1haN3JQSGRPMjlFWTIvQklHTk80bEVMSHdmZEtCRzhq?=
- =?utf-8?B?S1BnZ09oNHF0MGd3RUEwL2hWcVFjano3ZzJqUUZCUnRySTcxZUg3aWZPVVh4?=
- =?utf-8?B?aE5tTmdKWVI1T0xzYUM1NDhqZisvUEwrWExDNDhzQytJZFVUWmMyVDVHb0kx?=
- =?utf-8?B?ME9IdkIvRHBTSmRzUDIrb0hBVEM2QnlGbVEyRGxzZjdKbzROenFBZ2FYczJ1?=
- =?utf-8?B?UW9DM1duU1FjQmVBS25vZ0hWQVp1TDN3Szh2ZHFUbHdzQ0c0YkdPaHVtVWk4?=
- =?utf-8?B?OEpnaGw3aHd0SHpUZlk5Zk9LbzMrd2JvUmsrdlRvZTZiRGIyQ0JhZVVMVWZM?=
- =?utf-8?B?TDRmU1ZoeGxPcGF3eXBvSm50TkJJQjJ0SHRxdU9oRFpxaFg3ZmpGaUNOdjZi?=
- =?utf-8?B?Y2NEOXBLM1psbURMSkNvWVFZNThQZWxLTFJiYnFhNXlRc01JNE11bzQzK1dS?=
- =?utf-8?B?YXRVYUdoM1c2QjgxMDZLWWpaSTVNdXdlQVJCdzAwUkRDRG9sT0o3NTlnNnh4?=
- =?utf-8?B?dmZKQ25zNTV5SjdkaCtVY1YwUUlyZHRRU3BjUmZIZm9JcEdpY1lWdlV1YWtL?=
- =?utf-8?B?OC9xQXdoQnRIYkJWVitKdlFXY2xURnRmM0c1ZTRONHdMQ1YxYllQV1RyS2NW?=
- =?utf-8?B?V084VElIQ2p0N0hpV2dUYjRZTEpUVHBhbE1wU1FXMW9leEwwbWYrQnRoT0FY?=
- =?utf-8?B?ZUxsZnFxT3ZxTFBjL2EvRTU1eVVPZmN6NzhWeFlpNFR6TkFIQmdBK2FEQ1lW?=
- =?utf-8?B?L0w2aURKck1uRXlsWGZrbDgrV2p4ZkVWVU9BaTJqUnVHaXlSYWVtNTNLK2p1?=
- =?utf-8?B?SHVBcng3SDBKaXBhNGVja1pGcjJEdE4wUnBCaFNPd1dXdkE9PQ==?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NTEySFNSQnB1SUxxSkR5QmcvYVU3M0RiVnZLRXk4aG9xcXFGY2l2N2I3dDg5?=
- =?utf-8?B?dkJPQXd6R2lRYnJzeWRaKzVGeGxMRk1lb01rQWtrZXFLdk05dGVmNkdNdG1M?=
- =?utf-8?B?ODZyMzdjTUwxeFNYbG8xZGU1SDMzcUtjdCtOdm90dlRiTlBXUFhDVFE1NkZp?=
- =?utf-8?B?cHZsM0d3MCt6UlVGQ1pUalhKclRYbFZKY3FobGFEYkNwR3pqZlZDOGtqRmI4?=
- =?utf-8?B?WjNxR3BUd21zelkxM3paRGd5RjBZSGhxUGZkcmJyOGtydnZOekRCMFhVRlFC?=
- =?utf-8?B?S0FYWEt0c3h0eG1wL2ZFMFJockZkTDlLN0pMSTJwOENKa3Z3TDdUTCtId091?=
- =?utf-8?B?Y2NaeEo2NnZFNGNnWHRCSGlXMDlGWUxXTmhTbXM2bS8zMkdxQ05XNkdmRnN3?=
- =?utf-8?B?WmF2a2ZGdkc4bys2R0RNRUo1Qi9TemV5ajBrTGZPWkJSQ290L0VqekhNZ3Zn?=
- =?utf-8?B?ODlKWVVwWHpFNkpYdlg3d0RSTGpXYjlkaGdBVlpiQzc1S25STUM2bjd2VFR2?=
- =?utf-8?B?TERQWHRVWGI4MlZZMThFamptV2RqNHJhQlU3dm0zcEZweGJvMW9kVkRKRTdj?=
- =?utf-8?B?M3VrdGdkZlRPUkExOGRYS1RVRUZRMXovRncwZmIyQmQzVFgvT0diVUt4OGdW?=
- =?utf-8?B?Uk5PMm9QcFRQTHIzRWsvOEFUalZRRmwyeHpuYitqY2E4ZThlWTJZamk4S0cz?=
- =?utf-8?B?d0I1Z3FOdW9BVkpKNzZQUWVXb054cXArSTZiRTBzNkdXWDNqeHhBaTNTblVK?=
- =?utf-8?B?T0NnR3VLUzA4cjEvcFBCVU5BdTBKZWNpTGhmM3NDYlpEdDhBVmoweHBpWnFE?=
- =?utf-8?B?bitMUCsvZ3QvWnhjQzVpd0tucFcweW9qRTJ5b2Z2U1F0OGZiTkx2MEVaWVht?=
- =?utf-8?B?UkVpb1VuNE9lU1h1WGhIOS83TUlCd3ZNUElMekE5UFZjUjlJd0IxR1lCM3lL?=
- =?utf-8?B?RXJtMTBKUjgra3MvaFZPSi85aytZSFhqOWFkS1FKN3dFdHZFRlhGMm9wTmJB?=
- =?utf-8?B?Z2dIYUo4MFh3cVRWSDBPK3NYZksrQy9NZy9WcHpEdkF3YlBpcjFTZ0x1TFJn?=
- =?utf-8?B?bUg4Wk5nR0NsSHM5RnI4YVBpem9GQkxud05HQ3hMYnZXOEQ3Q2UzOVVPRUNX?=
- =?utf-8?B?NEdpVG9OWVY2eFI0NTh3aG04alVzRjdReWpCTnYvWlFsdGU5TzVXbWErc0FB?=
- =?utf-8?B?bVVmcXhMWVUySi9wSEFwemhnWlFpV1UyS2o4VERSKzNjMWNCb1c3QnZoQU1J?=
- =?utf-8?B?TVVJa0Vxdk9DYzBrbng2azVWUVdBK2hDR0E4SFdqbnFmQkVBbmgydFljWmli?=
- =?utf-8?B?bURUN0ZzbzFHc3Y4amg2eU1lWEZnbkQwelBUa2NWbHdZSnlJcy9ZNFNCVnVy?=
- =?utf-8?B?OTl4TXhOUFhCYTZwblFPb2o0ai9oV1RLOTBuVXpsSThDbzNJUm1NL2tRb0k2?=
- =?utf-8?B?ZHk1akNjdHpoSDdiMVhwcndDS29vMThlbkxWR2s3aDVRakVEVXpCb05JSlQ5?=
- =?utf-8?B?L3doVXYyeXJnaTgrQWR1WVhtS2RZOU1YYjBKbzJUMklsRjhKMGI1MGFDY3Bh?=
- =?utf-8?B?aU13MXNFd1J0cWs1elM2clVXY204Y0tiMWlMYUppT3lpVHBFQncyRUFucHhH?=
- =?utf-8?B?bXZ1dzJkSmNJL0xmTWtPc1IxcEpBMUx3K2FjNDNiZU5rTXF5VndOZXRpMFFx?=
- =?utf-8?B?aFhRT25PV29Dd1pTSmFYVTQ4ZUNhZzluNVBlQkJHeSt5RGdBN0lrUGc5dkR4?=
- =?utf-8?B?NkVDVkgzbEZFSkNVZlREbUhpa05uTVB0UXFEVVVKaWxpQVZUTDByZGczRVNE?=
- =?utf-8?B?K3dyaG56MWNwRDJTSjFCNkJHNVFENlhSOHZzeGR1M0t2aXZhVnFyZDA1M25L?=
- =?utf-8?B?WlhJMXd1aWhubHl6R1BuNkRnTXptSkVaNHo3a3FEOEpqTkllNzFNUmNrM2dr?=
- =?utf-8?B?bjZQT3NXMGJMc01SNEVHS0tCSnJkQ0FCcHZUVXNFcGk2U2ZDVHVIL0k2SWZV?=
- =?utf-8?B?OGhFYjdud1VuZlZXL0xjdi96aCtKV29VT1JvaHNYRFZJZllBMXpsdnZZWkZG?=
- =?utf-8?B?c1NkL1VXdzJBQnh3MW5xa0ZydElnTyt0NWlVOWxUOEdndGptd3Z0U1VVQStT?=
- =?utf-8?B?d0tENTRaWkZIQlNYTzQvUHpaUHppb2svcDNYQmNET0pUWG0yNURzYnc4SmNX?=
- =?utf-8?B?L0E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: db39548b-1003-4528-a1d7-08dd7b6e1132
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 16:04:42.3875
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R47GrbQkG7xjn/7Vr04gViWjhysagQJ0eXU+W3ZswnxElyAhmvyAkCqEWqc81ntyL5TzkOWzfAiisDioHHdKkLyoqTBs7UKq8cw+Fp5SZoo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB8892
-X-OriginatorOrg: intel.com
 
-Hi Fenghua,
+On Mon, 2025-04-14 at 13:41 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 14 Apr 2025, shouyeliu wrote:
+>=20
+> > When uncore_event_cpu_online() fails to initialize a control CPU
+> > (e.g.,
+> > due to memory allocation failure or uncore_freq_add_entry()
+> > errors),
+> > the code leaves stale entries in uncore_cpu_mask after that online
+> > CPU
+> > will not try to call uncore_freq_add_entry, resulting in no sys
+> > interface.
+>=20
+> Please add () after any name that refers to a C function (you're not
+> even=20
+> being consistent here as you had it in some cases but not here).
+>=20
+> Please try to split the very long sentence a bit and make it more
+> obvious=20
+> what causes what as the current wording is a bit vague, did you mean:
+> uncore_event_cpu_online() will not call uncore_freq_add_entry() for
+> another CPU that is being onlined or something along those lines?
+>=20
+> Will this change work/matter? Documentation/core-api/cpu_hotplug.rst
+> says=20
+> about cpuhp_setup_state():
+>=20
+> "If a callback fails for CPU N then the teardown callback for CPU
+> =C2=A00 .. N-1 is invoked to rollback the operation. The state setup
+> fails,
+> =C2=A0the callbacks for the state are not installed and in case of dynami=
+c
+> =C2=A0allocation the allocated state is freed."
+>=20
 
-On 4/11/25 5:18 PM, Fenghua Yu wrote:
+Yes, cpuhp_setup_state() will fail and which will result in clean up.
+So any fail of any fail uncore_event_cpu_online() will result in no sys
+entries.
 
->>   arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  636 ---
->>   arch/x86/kernel/cpu/resctrl/internal.h        |  380 +-
->>   arch/x86/kernel/cpu/resctrl/monitor.c         |  902 +---
->>   arch/x86/kernel/cpu/resctrl/monitor_trace.h   |   18 +-
->>   arch/x86/kernel/cpu/resctrl/pseudo_lock.c     | 1080 +---
->>   .../kernel/cpu/resctrl/pseudo_lock_trace.h    |    2 +
->>   arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 4556 +----------------
->>   fs/resctrl/ctrlmondata.c                      |  660 +++
->>   fs/resctrl/internal.h                         |  442 ++
->>   fs/resctrl/monitor.c                          |  932 ++++
->>   fs/resctrl/monitor_trace.h                    |   33 +
->>   fs/resctrl/pseudo_lock.c                      | 1115 ++++
->>   fs/resctrl/pseudo_lock_trace.h                |   17 +
->>   fs/resctrl/rdtgroup.c                         | 4313 ++++++++++++++++
->>   14 files changed, 7668 insertions(+), 7418 deletions(-)
+I think here the intention is to keep sys entries, which will not
+happen with this patch.
 
-This patch is huge. Placing a response in the middle of it makes your feedback
-very hard to find. Please trim your replies.
+For confirmation on 6.14 kernel, I forced failure on CPU 10:
 
-Reinette
+[595799.696873] intel_uncore_init=20
+[595799.700102] uncore_event_cpu_online cpu:0
+[595799.704240] uncore_event_cpu_online cpu:1
+[595799.708360] uncore_event_cpu_online cpu:2
+[595799.712505] uncore_event_cpu_online cpu:3
+[595799.716633] uncore_event_cpu_online cpu:4
+[595799.720755] uncore_event_cpu_online cpu:5
+[595799.724953] uncore_event_cpu_online cpu:6
+[595799.729158] uncore_event_cpu_online cpu:7
+[595799.733409] uncore_event_cpu_online cpu:8
+[595799.737674] uncore_event_cpu_online cpu:9
+[595799.741954] uncore_event_cpu_online cpu:10
+[595799.746134] Force CPU 10 to fail online
+[595799.750182] uncore_event_cpu_offline cpu:0
+[595799.754508] uncore_event_cpu_offline cpu:1
+[595799.758834] uncore_event_cpu_offline cpu:2
+[595799.763238] uncore_event_cpu_offline cpu:3
+[595799.767558] uncore_event_cpu_offline cpu:4
+[595799.771832] uncore_event_cpu_offline cpu:5
+[595799.776178] uncore_event_cpu_offline cpu:6
+[595799.780506] uncore_event_cpu_offline cpu:7
+[595799.784862] uncore_event_cpu_offline cpu:8
+[595799.789247] uncore_event_cpu_offline cpu:9
+[595799.793540] intel_uncore_init cpuhp_setup_state failed
+[595799.798776] intel_uncore_init failed
 
+
+Thanks,
+Srinivas
+
+
+
+> >=20
+>=20
+> Fixes tag?
+>=20
+> > Signed-off-by: shouyeliu <shouyeliu@gmail.com>
+>=20
+> The correct format for tags is documented in=20
+> Documentation/process/5.Posting.rst:
+>=20
+> tag: Full Name <email address>
+>=20
+> > ---
+> > =C2=A0.../x86/intel/uncore-frequency/uncore-frequency.c=C2=A0=C2=A0=C2=
+=A0 | 12
+> > ++++++++----
+> > =C2=A01 file changed, 8 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency.c
+> > index 40bbf8e45fa4..1de0a4a9d6cd 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency.c
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency.c
+> > @@ -146,15 +146,13 @@ static int uncore_event_cpu_online(unsigned
+> > int cpu)
+> > =C2=A0{
+> > =C2=A0	struct uncore_data *data;
+> > =C2=A0	int target;
+> > +	int ret;
+> > =C2=A0
+> > =C2=A0	/* Check if there is an online cpu in the package for
+> > uncore MSR */
+> > =C2=A0	target =3D cpumask_any_and(&uncore_cpu_mask,
+> > topology_die_cpumask(cpu));
+> > =C2=A0	if (target < nr_cpu_ids)
+> > =C2=A0		return 0;
+> > =C2=A0
+> > -	/* Use this CPU on this die as a control CPU */
+> > -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> > -
+> > =C2=A0	data =3D uncore_get_instance(cpu);
+> > =C2=A0	if (!data)
+> > =C2=A0		return 0;
+> > @@ -163,7 +161,13 @@ static int uncore_event_cpu_online(unsigned
+> > int cpu)
+> > =C2=A0	data->die_id =3D topology_die_id(cpu);
+> > =C2=A0	data->domain_id =3D UNCORE_DOMAIN_ID_INVALID;
+> > =C2=A0
+> > -	return uncore_freq_add_entry(data, cpu);
+> > +	ret =3D uncore_freq_add_entry(data, cpu);
+> > +	if (!ret) {
+> > +		/* Use this CPU on this die as a control CPU */
+> > +		cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> > +	}
+> > +
+> > +	return ret;
+>=20
+> Please reverse to logic such that you return early on error, which is
+> the=20
+> usual error handling pattern.
+>=20
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int uncore_event_cpu_offline(unsigned int cpu)
+> >=20
+>=20
 
