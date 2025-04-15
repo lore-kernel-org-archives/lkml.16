@@ -1,125 +1,80 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3974729B77F;
-	Tue, 15 Apr 2025 11:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C142C29114D;
+	Tue, 15 Apr 2025 11:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716248; cv=none; b=QflVahoMdoEpFOZScLlFIfLUC8L92DbMlo9bkJ6akDB3/E+80LDGYSM/vexyNtoMxfA9/1UtQ/qALLvUj6HDyshzWsZQcGKjwr33Z+UFCBocpPs1Jt0NPfNcvpUE8fLJMe26Ah4DATbs5JoLY3RCXKhaivC4lhqBiKi4CvqDQW4=
+	t=1744716308; cv=none; b=QAgmtplA31mkoG9gJwFdIvY2FNtbf9QYBEDJwsuD7ty1N0SPRy2EnMtrxc6+0imItmecP6hZ4lAJ6US6e/4W1CcKyIFl65uP8HOkAJW3SRMA2PrmOyWO6gpsHgOgDK4+4qs984cdnIliA6fMUetyRiyc4VHYo5gpEhU9kTeWpp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716248; c=relaxed/simple;
-	bh=QukepWGkmiY8zzaTK1fbsDNX7XQXCUloyqOgRjHkJpw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=ZUpW7S1g1vC0psi61zlM0eJOHhZQMoxn8VD8gZLjVp6lYnXGz9+Sgnwpokdvb57p0H+gY2anO4EpB/4YSUxjjUnFENI9d2KBOUht0kTugwqyr8LxeXiSfgQY21cUt7YBSsTQjpsFCmyNu+Q7YXwPsnsH7l7skvDeQT8AuoCUmlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HeGPgQ8o; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744716308; c=relaxed/simple;
+	bh=/rUgmsxTiubpnU4tiKPz7mIn0s7yHkK53uNdziHqUc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qO+IHBQDyx0x/sKMULHa1C8QMCUuNAHAY8d4xukt+BeSbDyLq+05OMxoTRxHOnZSJ+R4lLxpH2Cs9sRPyRdfqgoXVzXfxojx0Xh0L2gV20jqZBlsAGxboSdf0bLLdbM7ya+WvSEgcTw4YEInddxPX/+jI2UXNvCbY3/E94Th9jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMqnwWpq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HeGPgQ8o"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 354374396A;
-	Tue, 15 Apr 2025 11:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744716243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TxIOFEfqRfalUhnO+3adQ/Ty52ZIx6maGadY9jlzhgA=;
-	b=HeGPgQ8o46y1Vexb6QEfjHrHBgrp7c6Xd4Kep0LYNXFmKMbUUmMr7A/bMKPewc0MEUvF+T
-	X6NzqkGsg/I92lYZF0FBU7eMlhqFicO+QbSnBePTOvT0Veow0FCVEmbtpGD75XcWCc1IyE
-	ht/4mGWFR0XWRAxSYJCNC7uy2YWEf5sWSGkjiSsVzRpqdIfOipBKRQU4hkQsiy8i7u0Pn+
-	YoArr6lSPO3j44euWUTahsAlxJUltpkiskrp1ROTDOvGz8BkelUOALZadFOZmdhXGOqw25
-	813LAAqqgLHRtW+0BH6y0SmAGX3hqqa4d/Jl+anIpDbPiD+ss7CdudcRC2elHQ==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMqnwWpq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BA3C4CEDD;
+	Tue, 15 Apr 2025 11:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744716308;
+	bh=/rUgmsxTiubpnU4tiKPz7mIn0s7yHkK53uNdziHqUc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YMqnwWpqfdOaBMsNlf1ZaebJov41jlK388dFvfzIzFz/20AX6RzLOasRgZVjD7ZNu
+	 EH727NMGzxie+MH7Jdys4e+9l9fNW2M2No+llatt/Y0Ecubz1mYzz1mYA/R3mW3QmI
+	 PXrb+BmXdgyF/PWSV7HVoYJ2Qc0mMn11zI8gctMwIOX9jOeOIFt4kMTtmRAlByxgTS
+	 cdqWktgcM3iry/lBRs4ddTMLQlX3td3MQshvJTl9kT7RQt5rPday5xUk/sgYLjAKmB
+	 nMz/p3bTSsWSPetNI2wlRFHnWQXxJP5B9suNCzmCrcCAYu1tRop/BJGaRnlpJRsG+f
+	 yj/afn9yCsZ+g==
+Date: Tue, 15 Apr 2025 13:25:03 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc: David Sterba <dsterba@suse.cz>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, 
+	now4yreal <now4yreal@foxmail.com>, Jan Kara <jack@suse.com>, Viro <viro@zeniv.linux.org.uk>, 
+	Bacik <josef@toxicpanda.com>, Stone <leocstone@gmail.com>, Sandeen <sandeen@redhat.com>, 
+	Johnson <jeff.johnson@oss.qualcomm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [Bug Report] OOB-read BUG in HFS+ filesystem
+Message-ID: <20250415-deportation-lauftraining-17ff7ee0b6f5@brauner>
+References: <tencent_B730B2241BE4152C9D6AA80789EEE1DEE30A@qq.com>
+ <20250414-behielt-erholen-e0cd10a4f7af@brauner>
+ <Z_0aBN-20w20-UiD@casper.infradead.org>
+ <20250414162328.GD16750@twin.jikos.cz>
+ <20250415-wohin-anfragen-90b2df73295b@brauner>
+ <786f0a0e-8cea-4007-bbae-2225fcca95b4@wdc.com>
+ <20250415-razzia-umverteilen-4e8864b62583@brauner>
+ <8bd5e290-cfda-4735-a907-27611d1aac67@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 15 Apr 2025 13:24:01 +0200
-Message-Id: <D976AGJAXE3S.1AUQ47D8Q28SG@bootlin.com>
-Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Lee Jones"
- <lee@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- <andriy.shevchenko@intel.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, <linux-kernel@vger.kernel.org>, "Michael
- Walle" <mwalle@kernel.org>, <linux-pwm@vger.kernel.org>, "Bartosz
- Golaszewski" <brgl@bgdev.pl>, "Danilo Krummrich" <dakr@kernel.org>, "Mark
- Brown" <broonie@kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- <devicetree@vger.kernel.org>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
- <174438751337.3319673.5204335405880872375.robh@kernel.org>
-In-Reply-To: <174438751337.3319673.5204335405880872375.robh@kernel.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeffeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhor
- hhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8bd5e290-cfda-4735-a907-27611d1aac67@wdc.com>
 
-On Fri Apr 11, 2025 at 6:05 PM CEST, Rob Herring (Arm) wrote:
->
-> On Wed, 09 Apr 2025 16:55:48 +0200, Mathieu Dubois-Briand wrote:
->> Add device tree bindings for Maxim Integrated MAX7360 device with
->> support for keypad, rotary, gpios and pwm functionalities.
->>=20
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->>  .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++++++
->>  .../devicetree/bindings/mfd/maxim,max7360.yaml     | 171 ++++++++++++++=
-+++++++
->>  2 files changed, 254 insertions(+)
->>=20
->
-> With the typos fixed,
->
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+On Tue, Apr 15, 2025 at 10:23:27AM +0000, Johannes Thumshirn wrote:
+> On 15.04.25 11:31, Christian Brauner wrote:
+> > On Tue, Apr 15, 2025 at 09:16:58AM +0000, Johannes Thumshirn wrote:
+> >> On 15.04.25 09:52, Christian Brauner wrote:
+> >>> Ok, I'm open to trying. I'm adding a deprecation message when initating
+> >>> a new hfs{plus} context logged to dmesg and then we can try and remove
+> >>> it by the end of the year.
+> >>>
+> >>>
+> >>
+> >> Just a word of caution though, (at least Intel) Macs have their EFI ESP
+> >> partition on HFS+ instead of FAT. I don't own an Apple Silicon Mac so I
+> >> can't check if it's there as well.
+> > 
+> > Yeah, someone mentioned that. Well, then we hopefully have someone
+> > stepping up to for maintainership.
+> > 
+> 
+> I hope you aren't considering me here :D. I'm lacking the time to 
+> volunteer as a Maintainer but I can offer to look into some fixes.
 
-Thanks for the tag!
-
-As a quick note, I believe the bindings will be slightly modified in
-next version, to address requests on the rotary encoder driver:
-
---- c/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
-+++ w/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
-@@ -54,6 +54,17 @@ properties:
-   linux,axis:
-     $ref: /schemas/input/rotary-encoder.yaml#/properties/linux,axis
-
-+  rotary-encoder,relative-axis:
-+    $ref: /schemas/input/rotary-encoder.yaml#/properties/rotary-encoder,re=
-lative-axis
-+    description:
-+      Register a relative axis rather than an absolute one.
-+
-+  rotary-encoder,steps:
-+    $ref: /schemas/input/rotary-encoder.yaml#/properties/rotary-encoder,st=
-eps
-+
-+  rotary-encoder,rollover:
-+    $ref: /schemas/input/rotary-encoder.yaml#/properties/rotary-encoder,ro=
-llover
-+
-   "#pwm-cells":
-     const: 3
-
-
-Best regards,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+No no, I'm aware. I'm just saying that if this is really crucial this
+Mac use-case then we better find someone to take care of it properly.
