@@ -1,103 +1,73 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B01A2417C8
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF63BA48
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703296; cv=none; b=YYVMNfIPs8G19aNtYEGEl0d0rnRYE7QmSYW6zWmMUGT6CpArGOz0PxLrESKSHI0LzmbkCvKbTkjtvzIE+8MWUsRU2es05g80BEdqgnLJCk5goWlLv3yNsgCMBmPWW3Zsl/oGiisc9tCz0645e2Yj18m2inq1zBKwBCBLjhR0WTk=
+	t=1744703334; cv=none; b=rT5BRzbgq9jTR3kQd1L0X1qqTsc8KjrtQMdf/OiWLAVvY9bo/Ro4EWxEDn7wiQLD10j6FBdJYFz42x3DZILtKKTiD/FvZGm4Y3Smy4ODtf6m9D6OI9knwBCbkkDyyfgOC4oBI9IKeebu5p6zkTHjdjlHkQC5Fh6dtINzmVFkAlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703296; c=relaxed/simple;
-	bh=WDqE3ZdpGrwEFvKaxNwZCihWc5F/am4cZdY0BZmxrg8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TFJHeMitwvnrOVH7dXSYZbRGw0CH03h32lW4LoF5XH5ykF97DscR7lVeImtTN3vH3JWhsHoXjW+ZOR7pSfqxQ5r9p/FTHv0YZhcw4IFKsHfOJS33F3qArNl6hYfQ6v8/uc4IwcqaQEflchUPcCuz49uFIKiOS7co4lg4WvUWkDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UDIReWPX; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744703334; c=relaxed/simple;
+	bh=vw2tbzVqkHXbv4l4xY+MOdvBNk2prrvQAjLsKues81o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glNvd/WCEc3OvA7lzv/n0WL7oQsYhuzYV8F14mB60RQim45SZCh0RDJCjOwueJKFjsR/gtFHULudUTPQC9T7sQRfe+EHX+qx22udkwdBK6M6HpCmJmc/IhdW8XHJxqbpPCok7RkULuBwHsXZIrb4gEMJleS+HrOnKNX4d5p3iW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xoq6gYmA; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UDIReWPX"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54acc04516fso4996833e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744703293; x=1745308093; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WDqE3ZdpGrwEFvKaxNwZCihWc5F/am4cZdY0BZmxrg8=;
-        b=UDIReWPXFfI9E0ssUknh1/3g7xsPoW2Iu5emOHLRspIUWKyddeazTeBU3vNIt5SsTL
-         nL0oDYaHT4z9So6i88oX/58BPVR71MqATQ/Fx3pvRJrBmbT7mrZuB0acU2qVyH9jEhag
-         NusyaPoHgKa+VEaHoVaCE1xbdSmqpGorSWNY/J13exIlpF9i4ufSpPmGKZ3voHEgJHcd
-         YUtspxeel5HoRwJM1C63ZNvQL+hoi/VgXKoGq5uwVOxxZM/50CsCWL7Na64nfPZQZil+
-         n5fKg4NX/+mu0xRt1ewICDzUuQCAALp4++NdaCqW6FvzeApVct4hGswz9yLczAnJoANG
-         mnhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744703293; x=1745308093;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WDqE3ZdpGrwEFvKaxNwZCihWc5F/am4cZdY0BZmxrg8=;
-        b=vb/I6KLyv2NtrsRet5Ig+p4thgNvFAKqX5YkL6fuFGbwrpPSIoje0JF+p8xU2HK/Dv
-         3q2zELQp2MzzWMge75bS9Vlj/CzXMHQL4bYWv8OLji6GBlLA+qYYnCczFQve4hcWxEXK
-         eBzLP5jP6N9ek5swQU0T7CRSWnA6NGlP0AH7LFCFTBAdRBuWsOKKTSYsuZ6WQvtLVHGI
-         tH8zD2BXyuxwpS2s1LdzN+vgm4u0kiVLQ8eB6RdZ7ngcq126vuAUemAQF2vKsvarqgpR
-         +auVVkY0DOECRodKW2E5Ru5UXgdoUoRkYBk+C62K+3NmjyfxBx06hEf1LssUI8qXJ7tZ
-         FTJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUx51CiSszslwjB2VeRm68AxzRscjz4OiiEc2Dut371Ksg6/PQ4dv2rQ6wlAE/6AbjuptYfQrjbWIs0dA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQuNlA0v3E6IkeiPlW/DKbEyupABWA7Rzn4NtAmLhxQuH2NqMx
-	GEEyT0ZfW4ZD9kdW5nyjZfq8aMzzgGic94VoTMjtcu8NqJvto7TkvmZ5g76F8BbGmPOWnVUR8nf
-	kshlF0EcsrXz/hnIwjZynh8C3XfGL0huQl+0dBQ==
-X-Gm-Gg: ASbGnct8msNJvAZwuDA7whjyBRuCH8OERAtaArTSbdpUcLHBuXy7Shg2sReCHlS+NlG
-	3du0GhKkCtpc5d8vuHiCWLIHoHACfAHvGK5ndJmvC9VqbIxGOZhsrEWojTtOMGSjqEjz++JZI9G
-	cD8951l0sg8JRQ3eFsjlEGMA==
-X-Google-Smtp-Source: AGHT+IFby36R+QGppxoSzbZCjMCamLL2J2djIjQfwLtsJH1weaTQ78Om7gEcgpbdZzAsB23OqHqRE0OJYLAWIGrBLG4=
-X-Received: by 2002:a05:6512:398d:b0:549:48c6:2a9a with SMTP id
- 2adb3069b0e04-54d452ca0f3mr4196820e87.40.1744703292632; Tue, 15 Apr 2025
- 00:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xoq6gYmA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aE+a9b08qt+UJaWgNcbO7KYDvQE21VYD/npNfE6tcJo=; b=Xoq6gYmAJZWY2zWMxkmaF9BNoi
+	Jzq3gvHUVF2k/1j7D92TYVwf/LVNrV2RyyWjFZDzXEVGSijKNUT8k56zJVWnmgDB9+HlI1U5131pw
+	hIVpnAyiQ70QX7ATxHIIzQGvDroyNXsZ4GzZQdFdAMNMpwnc/7kYz9DNRedNAADyMQxwEKDOrhq9Z
+	DrKfIToGpzeC/9g8BjP4bW2LrPV6KKtc0LseZDu/4Ygx7Ha9jDAZHu5ESHjuB1wL3IH2MbfO7vx0S
+	PUv8Kgbl5UZxouY0Dv4YZgqOYSzDT6FUcc5TAVPrgEn/PGJSWAz8hDtHKh0CicsiDYVFvcbQmnz8o
+	MSw/Vmgw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u4b2H-00000009pf4-2p26;
+	Tue, 15 Apr 2025 07:48:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3FC7E30037D; Tue, 15 Apr 2025 09:48:49 +0200 (CEST)
+Date: Tue, 15 Apr 2025 09:48:49 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>, Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH v2] noinstr: Use asm_inline() in
+ instrumentation_{begin,end}()
+Message-ID: <20250415074849.GJ5600@noisy.programming.kicks-ass.net>
+References: <165d2a0b882050f3f6cc0315af66cd2d16e5925b.1744676674.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329190132.855196-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20250329190132.855196-1-martin.blumenstingl@googlemail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 09:48:00 +0200
-X-Gm-Features: ATxdqUEhHhTQTxPlC1zh833yjXc_zv64fmsQYIEONqwjdaMf0Kb9zmn31Y6MG6w
-Message-ID: <CACRpkdbSouYkMHvuVoAeFUiqTVvZwN1thzuewqWYUYMuRGYuBA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: meson: define the pull up/down resistor value as
- 60 kOhm
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <165d2a0b882050f3f6cc0315af66cd2d16e5925b.1744676674.git.jpoimboe@kernel.org>
 
-On Sat, Mar 29, 2025 at 8:01=E2=80=AFPM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On Mon, Apr 14, 2025 at 05:27:11PM -0700, Josh Poimboeuf wrote:
+> Use asm_inline() in the instrumentation begin/end macros to prevent the
+> compiler from making poor inlining decisions based on the length of the
+> objtool annotations.
+> 
+> Without the objtool annotations, each macro resolves to a single NOP.
+> Using inline_asm() seems obviously correct here as it accurately
+> communicates the actual code size to the compiler.
+> 
+> These macros are used by WARN() and lockdep, so this change can affect a
+> lot of functions.
+> 
+> For a defconfig kernel built with GCC 14.2.1, bloat-o-meter reports a
+> 0.17% increase in text size:
+> 
+>   add/remove: 74/352 grow/shrink: 914/353 up/down: 80747/-47120 (33627)
+>   Total: Before=19460272, After=19493899, chg +0.17%
 
-> The public datasheets of the following Amlogic SoCs describe a typical
-> resistor value for the built-in pull up/down resistor:
-> - Meson8/8b/8m2: not documented
-> - GXBB (S905): 60 kOhm
-> - GXL (S905X): 60 kOhm
-> - GXM (S912): 60 kOhm
-> - G12B (S922X): 60 kOhm
-> - SM1 (S905D3): 60 kOhm
->
-> The public G12B and SM1 datasheets additionally state min and max
-> values:
-> - min value: 50 kOhm for both, pull-up and pull-down
-> - max value for the pull-up: 70 kOhm
-> - max value for the pull-down: 130 kOhm
->
-> Use 60 kOhm in the pinctrl-meson driver as well so it's shown in the
-> debugfs output. It may not be accurate for Meson8/8b/8m2 but in reality
-> 60 kOhm is closer to the actual value than 1 Ohm.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-Patch applied for fixes!
-
-Yours,
-Linus Walleij
+Hmm, I was surprised that defconfig was affected at all. Why does
+defconfig have DEBUG_ENTRY on?
