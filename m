@@ -1,159 +1,72 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CA629A3EB;
-	Tue, 15 Apr 2025 11:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A9C29B777
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716585; cv=none; b=cCLb1FuW+ZrvOBjw1kgCMREwgFelD3D4ziMAy9+dmPQ2vTO9Tv+Y5pwQIOHJt3j1tnAAEe58nKVSBYbLcZ67ClFkg1C4ihLT+BeyspOdstiYKFLw6XY+CWZ6z3bHD+uj2OhiY6sEXyg3bIsiufa9ZBemN7NJyRk7hQhMUeFnMEg=
+	t=1744716588; cv=none; b=RauL3bhzDPVT7xg5hjrOt8Ci4i4Pb/jNygdkojmGQ1fq0nnMMrZYEOV+puvqJB+rrayXzufvwDyb4Hw8EFdbcsB7zNfoVYCCteL/hgyD4hkEVl1uMY3FhbikM1tVJ1LNarpbYgEv/wPlUveAWxOi0efCJ7+yskh8OlH5iX3z0j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716585; c=relaxed/simple;
-	bh=n9qZGXD7GYfsn6JDx2SNkZTrCisSdPpoZAIHfFc7Lmw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EniwN6TYnEA1TA7Oykqa+xFVOhQpZHelw/fqAKT/nB7xaBgBn1zBGh94fopyPxwID/E8hlgD+aCIMngiB+Q87QBVIXqYL1AQe116GGvQgyP4I4lIJKnmACqEbqC0jjK5PgD9q4Nt5qB6sZvX1+g4mAgc9nb19dTGpt0OmOd55Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=qV8Cpw0J; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1744716588; c=relaxed/simple;
+	bh=08slndZrhwWzSSw3zfjB5kHoXn+Rs6C+EUSqMFJ3kjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UAGK22X7Lm+ayR39cSR1SxQLWjfoxWH019zgCwzmKT6f1QYGrp3/rp46sQDRXdhuLRRgzxKeJuLHHw8w9UpX54NBsCAiAUODuZStmqZVY3rd3nnEhkpeDsBdqPy7avd5EThiot5wloG7oQO6MIDNi6XgsvhOPpcIbYK4KA3VXDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WLxYe3EQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="qV8Cpw0J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744716570; x=1745321370; i=ps.report@gmx.net;
-	bh=n9qZGXD7GYfsn6JDx2SNkZTrCisSdPpoZAIHfFc7Lmw=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=qV8Cpw0JVNfoAkrdVtTkpwHkYtvSgkc+DQRqb8H9YJN6QOivrq7HpJxZknRm02QQ
-	 ronKt1dUkNrZWwVBDk6uS5SUJn8zpmp2qd2VX+bzlK02GPXEaPm32DJBr1LK98xoD
-	 pu6wozsTuIgaA9sqTHHPmzsXOtV7EPE10+1BubyO29I2RDNRk7NmWqDmcPHgu9SJp
-	 9+PliDvyukOUM6GG17lcnFE+6/ieiV+D88EWXsuT/BuBDzI+Z2IoOh2oyrs64I5n0
-	 avUm/vwp5zLgQOmxQiWIdAYeE7W/cpoVEYpK9ZtfF4eVdH6IlN7WAKAbwyb483PIF
-	 Nn/RbdhC8XxwLD48cQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.fritz.box ([82.135.81.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N9MpS-1szgKM32bE-00uE5K; Tue, 15
- Apr 2025 13:29:30 +0200
-From: Peter Seiderer <ps.report@gmx.net>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Peter Seiderer <ps.report@gmx.net>
-Subject: [PATCH net-next v2 3/3] net: pktgen: fix code style (WARNING: Prefer strscpy over strcpy)
-Date: Tue, 15 Apr 2025 13:29:16 +0200
-Message-ID: <20250415112916.113455-4-ps.report@gmx.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415112916.113455-1-ps.report@gmx.net>
-References: <20250415112916.113455-1-ps.report@gmx.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WLxYe3EQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C883BC4CEDD;
+	Tue, 15 Apr 2025 11:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744716587;
+	bh=08slndZrhwWzSSw3zfjB5kHoXn+Rs6C+EUSqMFJ3kjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WLxYe3EQMidKbd/78ZL7fhrrgiyGOMGPPMB2ThSeX1vXcVZkatVSIX5hbkALvznpC
+	 mbFXJW2ovcK9Y24f5LYYaLgR4P2XO8ZbFgJOezTSkzupuRnUw54+rbYT5IOkJWhwgi
+	 5L480r+xZApqC7TA4hUSs+JLbvm8kB1buHsa7ixM=
+Date: Tue, 15 Apr 2025 13:29:44 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 RESEND] intel_th: avoid using deprecated
+ page->mapping, index fields
+Message-ID: <2025041536-exact-chief-f2c9@gregkh>
+References: <20250331125608.60300-1-lorenzo.stoakes@oracle.com>
+ <Z-q5Gf57y9LEZcUE@casper.infradead.org>
+ <2025033142-rack-viewer-80d4@gregkh>
+ <Z_0c1TGH27ecE4hM@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:u6y7H1hdnkE2N2yMjXkmXobNOizobzYkBbOaEBQf+tdhN9SRASb
- Tj8TrjW5B+JnbFHkDE7hPlbUiuKW/quMPiECj5yfq7Z28nJ4qPDOl8Kj58c8Wb89ye0ajgb
- OtBmyufseb37ZchU0OIchTt5AD3lB2C+d7D62TDQzVAOPAsWn9CYMmZnfTu/Q9hZCMrOWLk
- u9R5+1w9FaTGXsjNKoCbQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Ac8MjRSmW9M=;JkoAH0XHkJjGs/Q8BmEt4sAjSw8
- RJsVe307LfTpgGDcv/ITjW+mBhDZLXXYRxLTnrukG4Y2EXeOKvqtpKnvnfWPu9iTv7gcqXGnW
- 39ozDtTYGPpR04US0moddphl/VceoHesl3v9GPEh8iu/S8TR2A475md/7edYoowwMdcVkzjgv
- MOnua6YZDHASqZgvV23UV3Zup01uv5U1mdn0GTLdcykJQWjdK7lDy58xp/JR/1WCGEoPDGgdZ
- RncRH3DEdXC0oIPazkyxmkpVgrGB8RCLbHt1XBmDJUKRt57COc6HS1vWMEHMUsZwRqNadFqGH
- dvZbgNUYWmMNTMgL3x9NCVbFxgY1qIr8TRFs+mHmoj56xqtsJHI/kCd7g1I9PBpYvJnxz+PU8
- gsgjDgafr/FB1yEoCIdYOGCpqgEkaes2uY1B5uADsLyB/CbfKK/eiL8lM+A1U1yZ+rnVfWTnj
- hdpFNrRV+KvwK/PQ9YjjeFz4tOHHhQAmX/M5iXGxHNR7ydOLnNwAb7Rs6edSr/APnCvKBg4DX
- 51BNmk4t5Ozdg+GqUb1YUu3ovWQhli2tLpS0r1OUcmkNsikOMWtro0K+c3FWTwikGQojBkbAx
- YPhGf079bE0JeUz+CE1L11Lrrqp0bQuUKPRa2F8KwEtqFu5J0L/lrPJSSiGgGD5Bb1O462OAE
- bONv9rWtgmAz8LjzDPCcWSDB5tEiBVIO903xYY9eGKdndYvPZqtJpa2LjZJGUTzA5e7GEptIS
- GVszGG7FsSccLE/mFpy54q58Hhuu4CxQZFn6Dw/Akw3116mvaljteuCPVZ8srrZBJdUCpDzRg
- xLuFB2zMAg7kXqfCaoKrvI93fynEzYQ7x86qzTIpvMPu8GbFmH4IrKDk3/n99JtSzmfM41K1A
- aMvHlIYi7xVbMd85noGISOI5w61wONI94o3dZTOZQ0LLO7OyEjfEx+Y/YJP4A9aIUSvXtkohI
- yJMetlLeofWAXKMcvo1NM2HR0SnDRWGLDEVekCSutGblAWykPwBk/fj4EAPsuttEQ8QJOlKjX
- nzgcVzDYlokVw+0RtTw7d3hAdloBnXovCD9rgRVMU9fNElMRAS/kPpAa/HBWmU3aLQfKMpwk+
- j6pCfgLzlmgRGpYvpvzPdehDoTQPR+n5YqnRzIQ1dnEs/Y7M4NiArfmXpo3c1/p4xS2sjYNiD
- nRXGfzQG1RLwDbSC8wA6o8E9Dp2M8o35I5B7aZbVxntIE4eiMiaMhoWvBTFZuCSS86Cd4kbng
- zlwUtIWEcL8DCzjMsYNRElejpRt1hiwl35qfqUTh/uqvQe+VeARLAoDPXBVGo26IlYv65huFF
- z4RMIt9RRc2R1OW4Po/YZYUUwnNWO7gJMz7KqIqnfoo3CG9Y0dqeuT1WODScE05UQis0KDA9e
- xMf8nkDichbbWxC+h4xYG1hoGWVEGLF7kaLJUXjrvUEXrSwyYtvEtilBfh8M+AjVz76jjwM/P
- 01xjCtAvF/wjYvdFMiVFFyQu/z4F4oRzwxhmxd25XWbFlptqel37EfJJF5aJC9oVwhLbGbasZ
- MFj8uUXWTgbIa6Zstq4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_0c1TGH27ecE4hM@casper.infradead.org>
 
-Rml4IGNoZWNrcGF0Y2ggY29kZSBzdHlsZSB3YXJuaW5nczoKCiAgV0FSTklORzogUHJlZmVyIHN0
-cnNjcHkgb3ZlciBzdHJjcHkgLSBzZWU6IGh0dHBzOi8vZ2l0aHViLmNvbS9LU1BQL2xpbnV4L2lz
-c3Vlcy84OAogICMxNDIzOiBGSUxFOiBuZXQvY29yZS9wa3RnZW4uYzoxNDIzOgogICsgICAgICAg
-ICAgICAgICAgICAgICAgIHN0cmNweShwa3RfZGV2LT5kc3RfbWluLCBidWYpOwoKICBXQVJOSU5H
-OiBQcmVmZXIgc3Ryc2NweSBvdmVyIHN0cmNweSAtIHNlZTogaHR0cHM6Ly9naXRodWIuY29tL0tT
-UFAvbGludXgvaXNzdWVzLzg4CiAgIzE0NDQ6IEZJTEU6IG5ldC9jb3JlL3BrdGdlbi5jOjE0NDQ6
-CiAgKyAgICAgICAgICAgICAgICAgICAgICAgc3RyY3B5KHBrdF9kZXYtPmRzdF9tYXgsIGJ1Zik7
-CgogIFdBUk5JTkc6IFByZWZlciBzdHJzY3B5IG92ZXIgc3RyY3B5IC0gc2VlOiBodHRwczovL2dp
-dGh1Yi5jb20vS1NQUC9saW51eC9pc3N1ZXMvODgKICAjMTU1NDogRklMRTogbmV0L2NvcmUvcGt0
-Z2VuLmM6MTU1NDoKICArICAgICAgICAgICAgICAgICAgICAgICBzdHJjcHkocGt0X2Rldi0+c3Jj
-X21pbiwgYnVmKTsKCiAgV0FSTklORzogUHJlZmVyIHN0cnNjcHkgb3ZlciBzdHJjcHkgLSBzZWU6
-IGh0dHBzOi8vZ2l0aHViLmNvbS9LU1BQL2xpbnV4L2lzc3Vlcy84OAogICMxNTc1OiBGSUxFOiBu
-ZXQvY29yZS9wa3RnZW4uYzoxNTc1OgogICsgICAgICAgICAgICAgICAgICAgICAgIHN0cmNweShw
-a3RfZGV2LT5zcmNfbWF4LCBidWYpOwoKICBXQVJOSU5HOiBQcmVmZXIgc3Ryc2NweSBvdmVyIHN0
-cmNweSAtIHNlZTogaHR0cHM6Ly9naXRodWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzg4CiAgIzMy
-MzE6IEZJTEU6IG5ldC9jb3JlL3BrdGdlbi5jOjMyMzE6CiAgKyAgICAgICAgICAgICAgICAgICAg
-ICAgc3RyY3B5KHBrdF9kZXYtPnJlc3VsdCwgIlN0YXJ0aW5nIik7CgogIFdBUk5JTkc6IFByZWZl
-ciBzdHJzY3B5IG92ZXIgc3RyY3B5IC0gc2VlOiBodHRwczovL2dpdGh1Yi5jb20vS1NQUC9saW51
-eC9pc3N1ZXMvODgKICAjMzIzNTogRklMRTogbmV0L2NvcmUvcGt0Z2VuLmM6MzIzNToKICArICAg
-ICAgICAgICAgICAgICAgICAgICBzdHJjcHkocGt0X2Rldi0+cmVzdWx0LCAiRXJyb3Igc3RhcnRp
-bmciKTsKCiAgV0FSTklORzogUHJlZmVyIHN0cnNjcHkgb3ZlciBzdHJjcHkgLSBzZWU6IGh0dHBz
-Oi8vZ2l0aHViLmNvbS9LU1BQL2xpbnV4L2lzc3Vlcy84OAogICMzODQ5OiBGSUxFOiBuZXQvY29y
-ZS9wa3RnZW4uYzozODQ5OgogICsgICAgICAgc3RyY3B5KHBrdF9kZXYtPm9kZXZuYW1lLCBpZm5h
-bWUpOwoKV2hpbGUgYXQgaXQgc3F1YXNoIG1lbXNldC9zdHJjcHkgcGF0dGVybiBpbnRvIHNpbmds
-ZSBzdHJzY3B5X3BhZCBjYWxsLgoKU2lnbmVkLW9mZi1ieTogUGV0ZXIgU2VpZGVyZXIgPHBzLnJl
-cG9ydEBnbXgubmV0PgotLS0KQ2hhbmdlcyB2MSAtPiB2MjoKICAtIHNxdWFzaCBtZW1zZXQvc3Ry
-c2NweSBwYXR0ZXJuIGludG8gc2luZ2xlIHN0cnNjcHlfcGFkIGNhbGwgKHN1Z2dlc3RlZAogICAg
-YnkgSmFrdWIgS2ljaW5za2kpCi0tLQogbmV0L2NvcmUvcGt0Z2VuLmMgfCAxOCArKysrKysrLS0t
-LS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygt
-KQoKZGlmZiAtLWdpdCBhL25ldC9jb3JlL3BrdGdlbi5jIGIvbmV0L2NvcmUvcGt0Z2VuLmMKaW5k
-ZXggOWQ1NmY5NzY1NDExLi4wZWJlNTQ2MWQ0ZDkgMTAwNjQ0Ci0tLSBhL25ldC9jb3JlL3BrdGdl
-bi5jCisrKyBiL25ldC9jb3JlL3BrdGdlbi5jCkBAIC0xNDE5LDggKzE0MTksNyBAQCBzdGF0aWMg
-c3NpemVfdCBwa3RnZW5faWZfd3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsCiAJCQlyZXR1cm4gLUVG
-QVVMVDsKIAkJYnVmW2xlbl0gPSAwOwogCQlpZiAoc3RyY21wKGJ1ZiwgcGt0X2Rldi0+ZHN0X21p
-bikgIT0gMCkgewotCQkJbWVtc2V0KHBrdF9kZXYtPmRzdF9taW4sIDAsIHNpemVvZihwa3RfZGV2
-LT5kc3RfbWluKSk7Ci0JCQlzdHJjcHkocGt0X2Rldi0+ZHN0X21pbiwgYnVmKTsKKwkJCXN0cnNj
-cHlfcGFkKHBrdF9kZXYtPmRzdF9taW4sIGJ1Zik7CiAJCQlwa3RfZGV2LT5kYWRkcl9taW4gPSBp
-bl9hdG9uKHBrdF9kZXYtPmRzdF9taW4pOwogCQkJcGt0X2Rldi0+Y3VyX2RhZGRyID0gcGt0X2Rl
-di0+ZGFkZHJfbWluOwogCQl9CkBAIC0xNDQwLDggKzE0MzksNyBAQCBzdGF0aWMgc3NpemVfdCBw
-a3RnZW5faWZfd3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsCiAJCQlyZXR1cm4gLUVGQVVMVDsKIAkJ
-YnVmW2xlbl0gPSAwOwogCQlpZiAoc3RyY21wKGJ1ZiwgcGt0X2Rldi0+ZHN0X21heCkgIT0gMCkg
-ewotCQkJbWVtc2V0KHBrdF9kZXYtPmRzdF9tYXgsIDAsIHNpemVvZihwa3RfZGV2LT5kc3RfbWF4
-KSk7Ci0JCQlzdHJjcHkocGt0X2Rldi0+ZHN0X21heCwgYnVmKTsKKwkJCXN0cnNjcHlfcGFkKHBr
-dF9kZXYtPmRzdF9tYXgsIGJ1Zik7CiAJCQlwa3RfZGV2LT5kYWRkcl9tYXggPSBpbl9hdG9uKHBr
-dF9kZXYtPmRzdF9tYXgpOwogCQkJcGt0X2Rldi0+Y3VyX2RhZGRyID0gcGt0X2Rldi0+ZGFkZHJf
-bWF4OwogCQl9CkBAIC0xNTUwLDggKzE1NDgsNyBAQCBzdGF0aWMgc3NpemVfdCBwa3RnZW5faWZf
-d3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsCiAJCQlyZXR1cm4gLUVGQVVMVDsKIAkJYnVmW2xlbl0g
-PSAwOwogCQlpZiAoc3RyY21wKGJ1ZiwgcGt0X2Rldi0+c3JjX21pbikgIT0gMCkgewotCQkJbWVt
-c2V0KHBrdF9kZXYtPnNyY19taW4sIDAsIHNpemVvZihwa3RfZGV2LT5zcmNfbWluKSk7Ci0JCQlz
-dHJjcHkocGt0X2Rldi0+c3JjX21pbiwgYnVmKTsKKwkJCXN0cnNjcHlfcGFkKHBrdF9kZXYtPnNy
-Y19taW4sIGJ1Zik7CiAJCQlwa3RfZGV2LT5zYWRkcl9taW4gPSBpbl9hdG9uKHBrdF9kZXYtPnNy
-Y19taW4pOwogCQkJcGt0X2Rldi0+Y3VyX3NhZGRyID0gcGt0X2Rldi0+c2FkZHJfbWluOwogCQl9
-CkBAIC0xNTcxLDggKzE1NjgsNyBAQCBzdGF0aWMgc3NpemVfdCBwa3RnZW5faWZfd3JpdGUoc3Ry
-dWN0IGZpbGUgKmZpbGUsCiAJCQlyZXR1cm4gLUVGQVVMVDsKIAkJYnVmW2xlbl0gPSAwOwogCQlp
-ZiAoc3RyY21wKGJ1ZiwgcGt0X2Rldi0+c3JjX21heCkgIT0gMCkgewotCQkJbWVtc2V0KHBrdF9k
-ZXYtPnNyY19tYXgsIDAsIHNpemVvZihwa3RfZGV2LT5zcmNfbWF4KSk7Ci0JCQlzdHJjcHkocGt0
-X2Rldi0+c3JjX21heCwgYnVmKTsKKwkJCXN0cnNjcHlfcGFkKHBrdF9kZXYtPnNyY19tYXgsIGJ1
-Zik7CiAJCQlwa3RfZGV2LT5zYWRkcl9tYXggPSBpbl9hdG9uKHBrdF9kZXYtPnNyY19tYXgpOwog
-CQkJcGt0X2Rldi0+Y3VyX3NhZGRyID0gcGt0X2Rldi0+c2FkZHJfbWF4OwogCQl9CkBAIC0zMjI4
-LDExICszMjI0LDExIEBAIHN0YXRpYyB2b2lkIHBrdGdlbl9ydW4oc3RydWN0IHBrdGdlbl90aHJl
-YWQgKnQpCiAKIAkJCXNldF9wa3Rfb3ZlcmhlYWQocGt0X2Rldik7CiAKLQkJCXN0cmNweShwa3Rf
-ZGV2LT5yZXN1bHQsICJTdGFydGluZyIpOworCQkJc3Ryc2NweShwa3RfZGV2LT5yZXN1bHQsICJT
-dGFydGluZyIpOwogCQkJcGt0X2Rldi0+cnVubmluZyA9IDE7CS8qIENyYW5rZSB5ZXNlbGYhICov
-CiAJCQlzdGFydGVkKys7CiAJCX0gZWxzZQotCQkJc3RyY3B5KHBrdF9kZXYtPnJlc3VsdCwgIkVy
-cm9yIHN0YXJ0aW5nIik7CisJCQlzdHJzY3B5KHBrdF9kZXYtPnJlc3VsdCwgIkVycm9yIHN0YXJ0
-aW5nIik7CiAJfQogCXJjdV9yZWFkX3VubG9jaygpOwogCWlmIChzdGFydGVkKQpAQCAtMzg0Niw3
-ICszODQyLDcgQEAgc3RhdGljIGludCBwa3RnZW5fYWRkX2RldmljZShzdHJ1Y3QgcGt0Z2VuX3Ro
-cmVhZCAqdCwgY29uc3QgY2hhciAqaWZuYW1lKQogCWlmICghcGt0X2RldikKIAkJcmV0dXJuIC1F
-Tk9NRU07CiAKLQlzdHJjcHkocGt0X2Rldi0+b2Rldm5hbWUsIGlmbmFtZSk7CisJc3Ryc2NweShw
-a3RfZGV2LT5vZGV2bmFtZSwgaWZuYW1lKTsKIAlwa3RfZGV2LT5mbG93cyA9IHZ6YWxsb2Nfbm9k
-ZShhcnJheV9zaXplKE1BWF9DRkxPV1MsCiAJCQkJCQkgc2l6ZW9mKHN0cnVjdCBmbG93X3N0YXRl
-KSksCiAJCQkJICAgICAgbm9kZSk7Ci0tIAoyLjQ5LjAKCg==
+On Mon, Apr 14, 2025 at 03:33:57PM +0100, Matthew Wilcox wrote:
+> On Mon, Mar 31, 2025 at 06:15:14PM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Mar 31, 2025 at 04:47:37PM +0100, Matthew Wilcox wrote:
+> > > On Mon, Mar 31, 2025 at 01:56:08PM +0100, Lorenzo Stoakes wrote:
+> > > > Greg, as we're late in merge window obviously now, could you roll up into
+> > > > 6.15-rc1? Thanks!
+> > > > 
+> > > > This does not require backporting, as this is a critical change for mm
+> > > > moving forward, as page->index,mapping are deprecated and will be entirely
+> > > > removed extremely soon.
+> > > 
+> > > "extremely soon" as in "There are four places in the kernel which
+> > > currently use page->index, and three of them are gone once Andrew
+> > > sends his pull requests".  So this will be the last user, assuming
+> > > nobody else decides to add a user of page->index in the meantime.
+> > 
+> > I'll get to it after -rc1 is out, thanks.
+> 
+> -rc2 is now out.
+
+Sorry for the delay, now applied.
+
+greg k-h
