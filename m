@@ -1,138 +1,103 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDC22459DB;
-	Tue, 15 Apr 2025 19:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EF82356B9
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744552; cv=none; b=HHZ2UTTnq/i0EiFWVVVj9t63pIDmv3szsBl3kldmVXq8P6pr1/2jAtUNS4w16zB6d/LsU1k6+F/L8MRAlybMkepgIdFYzQHLeekY1d7p1qp+2RM3gA4pZo2LSlMSusIW4mTJ9TO0CN49vg5q+AbCWQaphCYoOyGbtnejXM89xAc=
+	t=1744744563; cv=none; b=qCZWV6v/VjZXFvTg6Q/Hgon8E9QBZB9z+fRKMQjw99RPDja6tHrRvWym/LORlz2YnwQlJclQrB32Lg5Dom6EXVKByXihKFpNch9x+IE/NbRSijzxHbBHnEVbn/HjUV6c4PREVmE8tgkK372kDtiOry3FPZpgvaganIX2vlJs/Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744744552; c=relaxed/simple;
-	bh=eKGcBCZiSyaXz8bCePdjpeSEK+/HAMbFNmEH2qJnTVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ioQuJHAKzsz48TK7wwjgDR1eFEAfdX+9Fb4zzq80KtkX/mD6kccSI9Lb00kAMIMng+pL9NtiAS+XRWws1Vy1WQVWdmjIFm5BG0MNsCZYnVSKqGCWTFz/mFZ4pCcViERGwAKivw1/YZDg43rQG0ZnARvMJRdqRz2jAbzdKDB9r2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VSg1bQ21; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744744563; c=relaxed/simple;
+	bh=9LhhQK7SYYoB04N4KaGT0jYG3IqgAZMjCvvz8yGafZQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZOEw9WiTYhInCWhphj12JxvwvWYyBeyWT6ncA7lr95weE5xAOsjdynX8C431N6kLM6F66ERnGKcT1PMuIHlarZFXZkP8sdV98ABaLgNydnPJXEWGb5jFaopVkWtWXL/Eillnt/v9GKSXZc3ZmYXR0KfxTa0FASV5ollD3dwi82I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=hQM8uGmf; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSg1bQ21"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30363975406so1027187a91.0;
-        Tue, 15 Apr 2025 12:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="hQM8uGmf"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d8020ba858so17415595ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:16:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744744549; x=1745349349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744744560; x=1745349360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qbJK2C5+AfFNDsgY9EAbhSa8Mq5Om76GpM7Ore7Vos4=;
-        b=VSg1bQ21IgE2JaTBG+OKHLKdpKIMxenhoAM/elOBXCACEdf/9LP1erY7Au5oDO9fqA
-         eBx9L1LEIZzfSyJaHna1FP0V7J2PALd1eiwAk1foiKA/rm+awDyZzKnn679hWMHauwJZ
-         uiYGeBDiPA46M4p48ItJ22XyTfENW/fO3ORlKRgVC16uA2zG/SS66GttlN67gfwMMWVo
-         CAGh/zlcSllF8aAQVqCWWPuI9AWNRtGmqiR78sAuiAlVqe+wKGGqs8TxwpsjOhW3lMNn
-         ec4L0CmFzYwcky1RtKXyQuSPU6kUOvW+EoQsZv5jkYLhxylBPx45x+EmNBX/nzW7QkbU
-         DKdQ==
+        bh=asgUBCNF1/3nLCqRhE9iKUJT9+CZgW2jKMxY6rpof5I=;
+        b=hQM8uGmfyz4swHbASYgN+i4lx/0vQUFmxTVp9Xhtx5IkAKkj/ND1pauID0cwBnZLkB
+         jGVHvwX76whYhJ8NKHlIg1yYYq0N+f9X1zu2uxkvWMYTGE5m+jkIL++iFUzcAcLBl+2x
+         7xQksbzZpbJllk23ktXAJJaq06GcqMTxAyG+FeOz+hxfsm8+4r5KJOjUtDtgzqCyM4Hh
+         g0BsrtMxmE/fOgTXrO9EhVCH8nMHZAy5zBqq4KHKQvs8qHClK/Sg/5pYS4aJIdqZiRZ6
+         +69iBbcThAo3u9qbh/DIHZEdYdYHcyJeUVUXMvF5P0F+uDGPnxyXIn97C2rCHhKgg1VE
+         qyvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744744549; x=1745349349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744744560; x=1745349360;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qbJK2C5+AfFNDsgY9EAbhSa8Mq5Om76GpM7Ore7Vos4=;
-        b=InloddaJ/Y6h1zgZVCmlbftbUR0TIE7pNPOzAYCLNygyNul7BFalMGOciRrNdPdmmI
-         ijMNMf+O69f0joiTHePs+IlJYXR6FDubv0mVLnnlzMLX83QSc1hYrnExEtU4SwN/0SnZ
-         5CL/rHlxQCEsd8wKvMYwH2DnyRTc2l5dI4etSsqOVG3lgE6zxQH7kRON/LNdKTVVwWlO
-         HqMVa+j9cnae0C6HEeVad2Wrae2MUnrsJcoumCWNbRcpiePWEJnItDY7jKkk4JrOVtbm
-         iM4tGPoQqrHKaE/z1qHueBpZBBM1EwuOrDm/di0n9Osb3miRlK8NPwRDg8knj4JOQaUa
-         Bk3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXVt02Hia/KXQAxE+zsOkmfRpS5PxnDkYLgHFUzgGjK4UscO8kM5jwEbzi/XXheJsNZakn9H+vOGqGw07M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD/tlyfwNQDTJCVRgkewq8+V7piJkZu2YL1silIrZAGJ6JSNbt
-	0PRassLwUmfM0vASUZ+kaq4XSn8BSDW/gMJtAg1mUIaqVnuv5lQMkjFbAzsiLEX+e/VkzlBFaBX
-	dEnbWb9Tuhq3umJbPROnf5VbQXnE=
-X-Gm-Gg: ASbGncu7tFQIwyo8ifXxJXEY3zzVbfuS9A85w1CjgF7p/heytqQ9rkKahA2AUbA2WZS
-	y484+UHQZGvCFZMkclzMZLyseAtPfUPtbbXV5QkYvC6x2IFMRJRsLtDJcHfUbmOLvbc+9ZuXkGU
-	bO1BybhQstjn6HZFvnF4k2SA==
-X-Google-Smtp-Source: AGHT+IFuwOJh9/oDtUc4GGzilO/1X0RdNfS9Hfj1k598+hCPzZMGqERhaQEGeKiTPXn5X9Fr47Ba2Bs3FFRRY0RVqcs=
-X-Received: by 2002:a17:90b:4a0f:b0:2fe:b77a:2eba with SMTP id
- 98e67ed59e1d1-3085ee961eemr198454a91.1.1744744549237; Tue, 15 Apr 2025
- 12:15:49 -0700 (PDT)
+        bh=asgUBCNF1/3nLCqRhE9iKUJT9+CZgW2jKMxY6rpof5I=;
+        b=Pu8O/4LS74MxT9TtTHsmiWQOwUGIDgeMSJMoyyFJudc4qhikQWfNY+uRwMlHqLtmxC
+         odWdY4mGRXS9I8QCJ0EuR+41tS/+TJ2gpy9j7UbceWmg+M4KSBLAIHVDhYDv6LvnWCg5
+         C67EP0/x5Lcu1woUyAhHR82viKdvgeDQ7DEkXOxMUFsWpbsAX5mbkTO2Q+s4Jkovl3Gt
+         OZBQlCYCSdcdKPVPpKustXrt/GV/fk1x0XLDe7ywacPPgSvOAIn70alTSMpBtn9+Fioj
+         jxzeZIPiK2h61hFdUZJNIZFc7L0YsaqY+mLfqR+cVRwq2sYgnmOQZPE1zPR6Cynsvsd7
+         QxQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUA27XD/fWhQbD5GwdYWPDwLJxrmfLHyUBJClac+gd46C7GdmqGcp0ZzfSURGtuK416odS6ng4qIrJWxa0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAD3PGBQxEBmxdnX5ZKljrjAtv7Ckf6J/7mizd69r5aTVHMtYh
+	o/8MkJ5qCjxZVPlklPYM08AkqJ4Atat23sDX6fMkvmI6b5gXWabZdvwGry+qLLw=
+X-Gm-Gg: ASbGncvlms4DFVm5FI1YTm38F/mILvcrSIL/sZ/DpBokARE0obApzP4g/Mp4XnWSd4c
+	7Ala/b90AnZiUA89V0ROCwsnsqicBSwfkMaZAFZuLYGEENFCjUblWagOmZJ//xrAJgKKt1KbENO
+	HwRHKY0fb3S2qL1pTxYzptb2UJOOUsrUtUqjvTkVy1RRSdG7unotn74p8/mBqp0kXKZSNBwoqpJ
+	MDYGwxLD8sFpJ+g5zqTQrLG+exIAtL1GUmd5C0fqb3nA/1BVWruoi+WxnJrfLdS0jlTK88lIFJO
+	DoJehNdrs6tZjrj9qeAHz0/W0vDqRVYccX2LGLaUTeA=
+X-Google-Smtp-Source: AGHT+IFJPt64kBMbP+3d+i4X9X/L5HM104ENBBE+s5Z3gjU9DWZ68WPXVZk2YmxhXWiQnU/bD44xZQ==
+X-Received: by 2002:a05:6e02:339e:b0:3d6:d145:3002 with SMTP id e9e14a558f8ab-3d8125a9e0amr7085535ab.20.1744744559647;
+        Tue, 15 Apr 2025 12:15:59 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d80b6b0392sm4898535ab.63.2025.04.15.12.15.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 12:15:59 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Martijn Coenen <maco@android.com>, Alyssa Ross <hi@alyssa.is>, 
+ Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>, 
+ Jan Kara <jack@suse.cz>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: John Ogness <john.ogness@linutronix.de>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20250415-loop-uevent-changed-v3-1-60ff69ac6088@linutronix.de>
+References: <20250415-loop-uevent-changed-v3-1-60ff69ac6088@linutronix.de>
+Subject: Re: [PATCH v3] loop: LOOP_SET_FD: send uevents for partitions
+Message-Id: <174474455866.197229.13564340998714651621.b4-ty@kernel.dk>
+Date: Tue, 15 Apr 2025 13:15:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412000507.157000-1-fujita.tomonori@gmail.com>
-In-Reply-To: <20250412000507.157000-1-fujita.tomonori@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 15 Apr 2025 21:15:36 +0200
-X-Gm-Features: ATxdqUF45hkp-TzsttWupntsmJdeGyiSdWuWLL_yI55mB-xIxxoR5i5ttB-lo4A
-Message-ID: <CANiq72kKznot1wtHWknjeOBqbKyGvrBnDN5PRzxFh+bA4-qoJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: helpers: Add dma_alloc_attrs() and dma_free_attrs()
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, abdiel.janulgue@gmail.com, dakr@kernel.org, 
-	daniel.almeida@collabora.com, robin.murphy@arm.com, a.hindborg@kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	aliceryhl@google.com, tmgross@umich.edu, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Sat, Apr 12, 2025 at 2:06=E2=80=AFAM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
->
-> Add dma_alloc_attrs() and dma_free_attrs() helpers to fix a build
-> error when CONFIG_HAS_DMA is not enabled.
->
-> Note that when CONFIG_HAS_DMA is enabled, dma_alloc_attrs() and
-> dma_free_attrs() are included in both bindings_generated.rs and
-> bindings_helpers_generated.rs. The former takes precedence so behavior
-> remains unchanged in that case.
->
-> This fixes the following build error on UML:
->
-> error[E0425]: cannot find function `dma_alloc_attrs` in crate `bindings`
->      --> rust/kernel/dma.rs:171:23
->       |
-> 171   |               bindings::dma_alloc_attrs(
->       |                         ^^^^^^^^^^^^^^^ help: a function with a s=
-imilar name exists: `dma_alloc_pages`
->       |
->      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44568:=
-5
->       |
-> 44568 | /     pub fn dma_alloc_pages(
-> 44569 | |         dev: *mut device,
-> 44570 | |         size: usize,
-> 44571 | |         dma_handle: *mut dma_addr_t,
-> 44572 | |         dir: dma_data_direction,
-> 44573 | |         gfp: gfp_t,
-> 44574 | |     ) -> *mut page;
->       | |___________________- similarly named function `dma_alloc_pages` =
-defined here
->
-> error[E0425]: cannot find function `dma_free_attrs` in crate `bindings`
->      --> rust/kernel/dma.rs:293:23
->       |
-> 293   |               bindings::dma_free_attrs(
->       |                         ^^^^^^^^^^^^^^ help: a function with a si=
-milar name exists: `dma_free_pages`
->       |
->      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44577:=
-5
->       |
-> 44577 | /     pub fn dma_free_pages(
-> 44578 | |         dev: *mut device,
-> 44579 | |         size: usize,
-> 44580 | |         page: *mut page,
-> 44581 | |         dma_handle: dma_addr_t,
-> 44582 | |         dir: dma_data_direction,
-> 44583 | |     );
->       | |______- similarly named function `dma_free_pages` defined here
->
-> Fixes: ad2907b4e308 ("rust: add dma coherent allocator abstraction")
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-Applied to `rust-fixes` -- thanks everyone!
+On Tue, 15 Apr 2025 16:55:06 +0200, Thomas Weißschuh wrote:
+> Remove the suppression of the uevents before scanning for partitions.
+> The partitions inherit their suppression settings from their parent device,
+> which lead to the uevents being dropped.
+> 
+> This is similar to the same changes for LOOP_CONFIGURE done in
+> commit bb430b694226 ("loop: LOOP_CONFIGURE: send uevents for partitions").
+> 
+> [...]
 
-    [ Reworded for relative paths. - Miguel ]
+Applied, thanks!
 
-Cheers,
-Miguel
+[1/1] loop: LOOP_SET_FD: send uevents for partitions
+      commit: 0dba7a05b9e47d8b546399117b0ddf2426dc6042
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
