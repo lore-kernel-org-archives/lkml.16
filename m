@@ -1,143 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD902DFA58;
-	Tue, 15 Apr 2025 18:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4F9224B15;
+	Tue, 15 Apr 2025 18:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744741347; cv=none; b=HGBdyLN4uPO/8lzVy3RhT3vMmRo9i5z27fC+1PShX+KVyhr7iN2WU15I1PSGrDA6IMQ14TRttrf/9VcSvwr/ar//l6ZFuBNa6fmCdB2WGMQkVHXXxHoJTC+dCX0quDSRN+uzS2IR2fmMBjanK6RA74fQfFEw7tKvFfs6ozRMTzE=
+	t=1744741353; cv=none; b=rSCTtUuSqmtuOqHFexp6IoSHsbRGwH7zFZQ8Yo+1ccUUKfDBpIBVVFUaANhGRxMzoXKu4gGiWRz6UPdxv/IMZpgNTyibpdRNxWvb1I6+azekkEokS4RVtPnUJEtiAjvTlAzaXpYF/L7DHVzp60DiR4JTS0kQFpSG49+qDLSAuCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744741347; c=relaxed/simple;
-	bh=UWX6Vcwyw+Ws40wGd9jaKNvjYbvPvr9pzOB5xOkPvO4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cx1a2q3up8aQmbThEerftLC6Jgcm3K2GUBQahNQWAugbMUSejFJ0I+WLJ/+/DbvD6axt0Rm4FykVxV6jOWqjntytRFFVLpXQPQyuAiyprGTAJLCmqRsSV8uvdwLjW3Rj63AbTuOChXxi9yK4rqNXr/O8N0pYydQ8cLYTCGWtZRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvcLr1TJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744741353; c=relaxed/simple;
+	bh=ACsz5+px0bR6kQmYG2+nzuzYCELnwAOWmMaj7t8P0E0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lR6QF9xRJ1TToHTjNnU6qq4CQTcHMyvTErNxXQaVmSRed8xw54eY8AJl4vjmdV6fSwe7barXeb1n3MkTJ16b5WISJj2I6qGd8seQhzmk+DJjIoethK2GAEz8kDi1VereuiRp3+WOn2H1aV5zaaE7+RjHcnGnYfO77id4k9cUUvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/Ftay8O; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvcLr1TJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A76A1C4CEE9;
-	Tue, 15 Apr 2025 18:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744741346;
-	bh=UWX6Vcwyw+Ws40wGd9jaKNvjYbvPvr9pzOB5xOkPvO4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pvcLr1TJj/oy3nrWWBYkW6Q/JEbATM2Sba8BrbXR3u0jZPmM2gInlFRGC5zd9riYT
-	 5Tf/SeNpCqoh6xEXqoGpv+IVialYCEnqsQSaN2rebfmBk3OslmzLcJUp46P4oJfcZW
-	 NuQ7wF/elMEmE1KsIDDd3sG86Kgps9gnw5LmERQZho2c3ZaPp7PH30CScjFRKH9R1f
-	 hEnwGp88Q4+EPi7GKNkJr982e64iSt7/ABXNNdOc5kxkxmwQr+VrVHajN/MYou7xzv
-	 5c6uVKO8fBrrP72253opO+rGAlJv1wumwCORJNC222AGpWRQn2MHkcdM3+WOdTGGv/
-	 slguT5437mVug==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u4kvQ-005mF3-2x;
-	Tue, 15 Apr 2025 19:22:24 +0100
-Date: Tue, 15 Apr 2025 19:22:23 +0100
-Message-ID: <8634e9l1y8.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: D Scott Phillips <scott@os.amperecomputing.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] KVM: arm64: fix config.hcr used uninitialized in __kvm_at_s1e01_fast
-In-Reply-To: <20250415154656.1698522-1-scott@os.amperecomputing.com>
-References: <20250415154656.1698522-1-scott@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/Ftay8O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744741349; x=1776277349;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ACsz5+px0bR6kQmYG2+nzuzYCELnwAOWmMaj7t8P0E0=;
+  b=I/Ftay8OOtQwjqnzYfC3gEdI74mKQOUKa5HgyCfovxGQVsRblIAkK2iE
+   7hOTANX1B7dlhyLHIk92xMnxFbbGU3SsKtSeMiYFhgQTpvOndbZKL4BKy
+   SMUJ2V9B2oVib9R3ekfjwwujRqHltnzvjoWAldhPae7yiM9hHyoQ1bxYg
+   rAbJos1hXOsHgsQLWnvN7Hh1Zr11heh401YLqE2dmUeUU3w50kSpU0JmA
+   XIUQJcTlp4hcTcA+jC2DVrEslS59tbLIVK6ei1KgP78SEYA+S9nlqc/xZ
+   0u/xN/L4ByizafEtgk6EIuBiG7z4QDXU6qoj8yICIWmOjRepIO7Iqtpr6
+   g==;
+X-CSE-ConnectionGUID: hWSyUXedTsit/yY6e4hLsg==
+X-CSE-MsgGUID: fZ/c78scTOWQzpn8/rJGmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="45981182"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="45981182"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:22:29 -0700
+X-CSE-ConnectionGUID: +z+arMk5Sjei11MzrSuWfQ==
+X-CSE-MsgGUID: MD5N2tu/Q7SjEDDr4ACyUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130512705"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by fmviesa008.fm.intel.com with ESMTP; 15 Apr 2025 11:21:25 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	jonathan.lemon@gmail.com,
+	richardcochran@gmail.com,
+	aleksandr.loktionov@intel.com,
+	milena.olech@intel.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net-next v2 0/4] dpll: add all inputs phase offset monitor
+Date: Tue, 15 Apr 2025 20:15:39 +0200
+Message-Id: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, catalin.marinas@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev, suzuki.poulose@arm.com, will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 15 Apr 2025 16:46:55 +0100,
-D Scott Phillips <scott@os.amperecomputing.com> wrote:
-> 
-> In the skip_mmu_switch case, config.hcr was used uninitialized. On my
-> machine that caused garbage to be written to HCR_EL2 and then the CPU
-> got stuck at the synchronous exception handler. Also, the restore of
-> HCR_EL2 was missing at the end of the function in the same case.
+Add simple dpll device level feature and capabilties infrastructure over
+netlink dpll interface.
+Using new infrastructure add new feature: ALL_INPUTS_PHASE_OFFSET_MONITOR.
+Allow users control with two new attributes:
+- DPLL_A_CAPABILITIES - for checking if dpll device is capable,
+- DPLL_A_FEATURES - for enable/disable a features.
+Implement feature in ice driver for dpll-enabled devices.
 
-Huh, how embarrassing. Thanks for spotting this one.
+Verify capability:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --dump device-get
+[{'capabilities': set(),
+  'clock-id': 4658613174691613800,
+  'features': set(),
+  'id': 0,
+  'lock-status': 'locked-ho-acq',
+  'mode': 'automatic',
+  'mode-supported': ['automatic'],
+  'module-name': 'ice',
+  'type': 'eec'},
+ {'capabilities': {'all-inputs-phase-offset-monitor'},
+  'clock-id': 4658613174691613800,
+  'features': set(),
+  'id': 1,
+  'lock-status': 'locked-ho-acq',
+  'mode': 'automatic',
+  'mode-supported': ['automatic'],
+  'module-name': 'ice',
+  'type': 'pps'}]
 
-> 
-> In skip_mmu_switch case, initialize config.hcr with HCR_HOST_VHE_FLAGS.
-> 
-> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
-> ---
->  arch/arm64/kvm/at.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
-> index f74a66ce3064b..ff4b06ce661af 100644
-> --- a/arch/arm64/kvm/at.c
-> +++ b/arch/arm64/kvm/at.c
-> @@ -1233,8 +1233,10 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu, u32 op, u64 vaddr)
->  	 * the right one (as we trapped from vEL2). If not, save the
->  	 * full MMU context.
->  	 */
-> -	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu))
-> +	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)) {
-> +		config.hcr = read_sysreg(hcr_el2);
->  		goto skip_mmu_switch;
-> +	}
->  
->  	/*
->  	 * Obtaining the S2 MMU for a L2 is horribly racy, and we may not
-> @@ -1299,7 +1301,9 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu, u32 op, u64 vaddr)
->  	if (!fail)
->  		par = read_sysreg_par();
->  
-> -	if (!(vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)))
-> +	if (vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu))
-> +		write_sysreg(config.hcr, hcr_el2);
-> +	else
->  		__mmu_config_restore(&config);
->  
->  	return par;
+Enable the feature:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do device-set --json '{"id":1, \
+ "features":"all-inputs-phase-offset-monitor"}'
 
-I think the diff below should do the trick (and incidently matches
-your commit message).
+Verify feature is enabled:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --dump device-get
+[
+ [...]
+ {'capabilities': {'all-inputs-phase-offset-monitor'},
+  'clock-id': 4658613174691613800,
+  'features': {'all-inputs-phase-offset-monitor'},
+  'id': 1,
+ [...]
+]
 
-Thanks,
+Disable the feature:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do device-set --json '{"id":1, \
+ "features":0}'
 
-	M.
 
-diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
-index f74a66ce3064b..773e3b4d5c7e5 100644
---- a/arch/arm64/kvm/at.c
-+++ b/arch/arm64/kvm/at.c
-@@ -1214,7 +1214,7 @@ static u64 handle_at_slow(struct kvm_vcpu *vcpu, u32 op, u64 vaddr)
-  */
- static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu, u32 op, u64 vaddr)
- {
--	struct mmu_config config;
-+	struct mmu_config config = { .hcr = HCR_HOST_VHE_FLAGS, };
- 	struct kvm_s2_mmu *mmu;
- 	bool fail;
- 	u64 par;
-@@ -1301,6 +1301,8 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu, u32 op, u64 vaddr)
- 
- 	if (!(vcpu_el2_e2h_is_set(vcpu) && vcpu_el2_tge_is_set(vcpu)))
- 		__mmu_config_restore(&config);
-+	else
-+		write_sysreg(config.hcr, hcr_el2);
- 
- 	return par;
- }
+Arkadiusz Kubalewski (4):
+  dpll: use struct dpll_device_info for dpll registration
+  dpll: add features and capabilities to dpll device spec
+  dpll: features_get/set callbacks
+  ice: add phase offset monitor for all PPS dpll inputs
 
+ Documentation/netlink/specs/dpll.yaml         |  25 +++
+ drivers/dpll/dpll_core.c                      |  34 +--
+ drivers/dpll/dpll_core.h                      |   2 +-
+ drivers/dpll/dpll_netlink.c                   |  86 +++++++-
+ drivers/dpll/dpll_nl.c                        |   5 +-
+ .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  20 ++
+ drivers/net/ethernet/intel/ice/ice_common.c   |  26 +++
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +
+ drivers/net/ethernet/intel/ice/ice_dpll.c     | 195 +++++++++++++++++-
+ drivers/net/ethernet/intel/ice/ice_dpll.h     |   7 +
+ drivers/net/ethernet/intel/ice/ice_main.c     |   4 +
+ .../net/ethernet/mellanox/mlx5/core/dpll.c    |  10 +-
+ drivers/ptp/ptp_ocp.c                         |   7 +-
+ include/linux/dpll.h                          |  16 +-
+ include/uapi/linux/dpll.h                     |  13 ++
+ 15 files changed, 417 insertions(+), 36 deletions(-)
+
+
+base-commit: bbfc077d457272bcea4f14b3a28247ade99b196d
 -- 
-Without deviation from the norm, progress is not possible.
+2.38.1
+
