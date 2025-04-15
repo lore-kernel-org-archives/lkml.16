@@ -1,148 +1,146 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D794029117B
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41EC2DFA25
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710169; cv=none; b=eWnRYfZ7zKxWUOArsqZDPsXr1xVyXxlCiOC6/aQ3aHWK928wtSYUu8U3cc58VxNwsFy8fc2sMlZVmmx/f1vszD+xEtYILGOkhK4u2yH7lz/pR8r5cX8f2HDGejRY+YceWPHFwf0kJdnDgxdpVawDaCElYRHKdF7IExgwEhstisU=
+	t=1744710269; cv=none; b=B/S0IrcrB3PUhNndNiuL0r1PF7Oel5fR45R3Mh5IRlo8cIdGJU0STwFQVYvLaPQaNHlg8zfkPDvSG4ZzYY3rwnCL/RjGg2lauqJ8VkMvdTlnNHjtHLc4PrOuSuhMAhI68ei41hpVqnNQ5TCpWKPKwbYbtHqYFBD7i/G9wFE9lzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710169; c=relaxed/simple;
-	bh=/nBMOP+mjkengzFCUOyb+JIzXxW87Mah/5W754BehRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d1TUFLrV8ah+5xV5tp2hNo5IPKmoOCNRHLmmzOI5YWx8oo4ghy4DEChNvBaBPlXswaiBEogM9/UxFWUVSkPKtKxPsz8GZz/JuW378JRmQx91KWyFmRP+N7u192RtRtq3zjw+L3p81NM9GklLvkCcEq47cjcoXxKKXcgKE4qLL3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BZPcIG1T; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744710269; c=relaxed/simple;
+	bh=Uprxl+1GFiY2y+Cgn8JymqTKxPDvtaIfmc8l1d4uhI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XWexI7gBfyHHuUihCSXssfoXbF+eOtEkP9InFvcQZ6HfVv7wl4VhAN2P1sRygh++Ka8sLv+H94FMiE1JtfKm+0fYmeDkmxCCIRqWwXwpNdFjmQPS3aKKffRh0XcwxMZIeT6vsvAb/miXvnZOcRlUh6+XHO062RCi3GAADJG9jjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OMlBxtQq; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BZPcIG1T"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-223fb0f619dso56500475ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744710166; x=1745314966; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YpO334l3cl7LKBvhDLO3AWNd5+6mtKhWKdxedh3WdDQ=;
-        b=BZPcIG1TceCevjooIdZP4m+okVUvdalurOrDFG+JSyMH+8fUQ8EoMXl5R0uZ9vF9t8
-         fU6bn7dNMmkbJAE7xCIVZEml4jqiJhMQGJjzbWIhNLJzYv79+uKzknFsi5Rg7eORVSNV
-         cHvCJH8QdTWVzLTs2qUsC76wG0V50QTEz9IJw=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OMlBxtQq"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8u9nq025916
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:44:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rW9FWPSdQt2D+614W81JrfXlNn32mGwhXPgp/tUuSmk=; b=OMlBxtQqJGmWEZFV
+	EBm4SupL8+T0JUt9IMgpIMdoOcxKuu4vkazTH74g/ms5JkQFxD6BGlgW/GiNrktZ
+	8pdiBvJ09qTbFOGWs3llxl+r9dIstAw4eqWC/kHp5Y1WpS6awHLao4zz/wDnehl8
+	mg8OSuY3VOTHHHpLSkylrJ3GlYr9xm3gxzO0vPRZhJrGQHm3HpHA4enuKJ8+T2lU
+	bmU0SmpBA9sma7PTDW8+pjUDf+JQlw2JCX/ZCDXQKhJFpxjlmh/YYEvNKzcMTyok
+	U2Te52FfUql3eX3kJTjdQUs1j7T8POnCNoMwBHUNu6NUVSJj6CzfWGdEBpGiMnfe
+	np79ng==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69qk9s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:44:26 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8f3c21043so10618996d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:44:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744710166; x=1745314966;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YpO334l3cl7LKBvhDLO3AWNd5+6mtKhWKdxedh3WdDQ=;
-        b=Owsp3B/Li9cH1R3756lM5LoWxEp6VPOfGTXwfv0IJGyWdJxCChR6ONSZetEsUM0NeK
-         eIhF5BXQOCDhooF+qN/e+iuDt+EV9JyKWiQmZXk8wDmWQzbVPke4XwvLu9cNrawCVt6K
-         xBuE5Jhtra8iEd+k4HlAFhrgKiTn1sjzG+bPdZXpiw4QhoSwk2JF2TceBKdc4ca5IdXO
-         EXKXrIJxeXGTE+TooyFNsgy3m5OzjJRSwtXsqlaIve4ctKg4+mpawi2zngeUMFZUdwtR
-         tEl/hzyeustif//8Mu/rQPAWu/HoGktGnX0XvRJvgxi2SCBYJkLo4rgguPDhxtAO4xKv
-         ID/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVaWCLUSiHDJMohTvYM7rpdd0x3DXiMaqHgMAJ2mSrE2HBJfpw+LBFe5WjW9yHzb/1O4hLrdVcLiGveA6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGvcCVXZ+Tx7PBJEbGPammi83MAddKpiVW6RterTOopvV22wAA
-	YlVglPTRViUeqBYgFfD2cvPgGqy3HtG7iYHo9/wEQtxE0+hatU43W0AbaqP0nlbgOmFWSInU708
-	=
-X-Gm-Gg: ASbGnct2BX48B3jS+BADk2D0eMpnXGY7tk3AsHEnqmFUaueibwo4pwYymUtaTpZoRRp
-	NcTQdc7hRWQXby+XP7XXd4mptzyjcmGowYwcY0OdoGkrLXRRfvjTU9etYYpdu8lglzt7LkRjfhI
-	e3+RfXbQHyWTqC7ar/MlalExmfACeQ2sd3GsXNG97rJUU331qYBkAthKXT95mrJixpUqhaTJvsI
-	aYhZ6k/L9NXJQgoQK1DsmbQyi6wXRyJL6aZSaczkcwvWR2IXmn6p+mhhnq4GyOC90lKFjU56KvB
-	898tHWiuyy3lDpC4GEG1c7UWDHnNexs52USZ74USf1dB+N1wGNQ0hb4seIZbjB7B
-X-Google-Smtp-Source: AGHT+IHBEMPrfPelV2330zwHPA4rKcksLCkHmzMsaQxLYWTxwvUzyGNeqz9IHoGnlcQAVmX7iP454w==
-X-Received: by 2002:a17:903:2f82:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22bea4bcce9mr224713015ad.24.1744710165999;
-        Tue, 15 Apr 2025 02:42:45 -0700 (PDT)
-Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:7d0d:86ea:ee84:cd08])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccca5asm113135215ad.254.2025.04.15.02.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 02:42:45 -0700 (PDT)
-From: Pin-yen Lin <treapking@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Kaehlcke <mka@chromium.org>
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	Pin-yen Lin <treapking@chromium.org>,
-	devicetree@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: [PATCH v2 4/4] usb: misc: onboard_usb_dev: Add Parade PS5511 hub support
-Date: Tue, 15 Apr 2025 17:42:01 +0800
-Message-ID: <20250415094227.3629916-5-treapking@chromium.org>
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-In-Reply-To: <20250415094227.3629916-1-treapking@chromium.org>
-References: <20250415094227.3629916-1-treapking@chromium.org>
+        d=1e100.net; s=20230601; t=1744710266; x=1745315066;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rW9FWPSdQt2D+614W81JrfXlNn32mGwhXPgp/tUuSmk=;
+        b=NAmLulX24t6Sr4bXEqufvPv0gPaj79Ii/e8wTmcCiHQ+BWlQk5afqAbmCGQLNy9qJG
+         uCedl5110SG5XOJoBA6RkSpMrCSRK4Ra6lxqosTj0dwtbm+vIy7Mrwrt9cFY564b+OB4
+         8rAkv9EeJMjNoyxX778tzQLqwiwBE257vrPfIgIYNL49F3zjtirXrZnd4AJAgT2v0W0b
+         qC+yLpekqVhHSCCGVP+TmbGSysjLNPFWT7SOeVslfpR7xYHhxrWPtAWMcnB/5ysujaOH
+         jpMPeEf+GvqXKao87xMO+lx/gg/UPLF1ckdEcZv7gbJAVM0XLlFVojLVbBQelFlJ/x9H
+         K4pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXW1xVTz27808mx0eHtcwRs+wb+34NsJOd/j+/jyvfQOBHvIfDo8/GAiWZxRBT9yqORwXqChFKe4jOQLyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1uCtp3kHvxvc9mJxmyLjwcZyGZS6RmOlAtph5u3xPO4T//bi8
+	1Ir0l3eB15UNK7Cb5t+axnglRcwTYGepTxq7CPBAeHqaBcmKYefOJndxSZhTMof753rfaXegSPO
+	6aC2pNlFGpW2E7Y3Sp2b4wJ/XZOnROv7WHWbv7h/DRddg4fvR5FVrxr/STVyf8ug=
+X-Gm-Gg: ASbGncvGtA6+BiI6uNsQ8+QU27m9ZUpTUSVc7bsW0YwFseGzioZMwsmfm9qTJ7PXz+m
+	loBQHYsIB7q2frXMIJ0Wb4LXi5T4plz/jRYwbQDu6trF7tykVQ/iAyJWWyJhpBZ8Ex4Ldua5QzY
+	3E0KgflQLS22e/j97WVxU7k9DTPQRazuGo/mCA0LlA2PP6YSuSMZQgg8NDjLfgJ2L3Uddlb6VUr
+	Kp+dVbl0rgbcQKDdQsS6RtfeWpX/v7jtu1mJl8KvDzhqdsyE/rTx2Lg8NJGCwI4ukDE9eq+Ud5s
+	bk9RP88CVTLkP7zHkVcq/KkeIkUlGgjQmjD1VV4HqBNU7D54YV1VZjNSQoYrOs2CLlw=
+X-Received: by 2002:ac8:7e96:0:b0:472:6bd:f620 with SMTP id d75a77b69052e-4797753cf0bmr78171431cf.5.1744710265931;
+        Tue, 15 Apr 2025 02:44:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJjjs62RJ3mQbU5ZqHBwBsMfWuvAGXOnlnbzwKsb07Asi8nZzrMPgemoIu+Bz/6N9J+heGTQ==
+X-Received: by 2002:ac8:7e96:0:b0:472:6bd:f620 with SMTP id d75a77b69052e-4797753cf0bmr78171241cf.5.1744710265610;
+        Tue, 15 Apr 2025 02:44:25 -0700 (PDT)
+Received: from [192.168.65.246] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f06c5desm6431552a12.48.2025.04.15.02.44.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 02:44:24 -0700 (PDT)
+Message-ID: <96e38ebb-5847-485a-8bf6-50e7b10ce572@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 11:44:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 10/10] arm64: dts: qcom: sar2130p: add display nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Krishna Manikandan <quic_mkrishn@quicinc.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org
+References: <20250415-sar2130p-display-v3-0-62314b1c9023@oss.qualcomm.com>
+ <20250415-sar2130p-display-v3-10-62314b1c9023@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250415-sar2130p-display-v3-10-62314b1c9023@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: hODWsAm1JdcT3JNeFxp_A40OCfmaynmP
+X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=67fe2a7a cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=RooFfVGkvEW2JHd4kGkA:9
+ a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: hODWsAm1JdcT3JNeFxp_A40OCfmaynmP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=957 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150067
 
-Parade PS5511 is 4+1 port USB 3.2 gen 1 hub with a reset pin and two power
-supplies (3V3 and 1V1).
+On 4/15/25 11:39 AM, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <lumag@kernel.org>
+> 
+> Add display controller, two DSI hosts, two DSI PHYs and a single DP
+> controller. Link DP to the QMP Combo PHY.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
 
-Add the support for this hub for the reset pin control and power supply.
+[...]
 
-Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+> +			interconnects = <&mmss_noc MASTER_MDP QCOM_ICC_TAG_ACTIVE_ONLY
+> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ACTIVE_ONLY>,
+> +					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
+> +					 &config_noc SLAVE_DISPLAY_CFG QCOM_ICC_TAG_ACTIVE_ONLY>;
+> +			interconnect-names = "mdp0-mem", "cpu-cfg";
 
----
+The first path should be always on, so that if CPUSS collapses,
+the display may stay on
 
-(no changes since v1)
+other than that
 
- drivers/usb/misc/onboard_usb_dev.c | 3 +++
- drivers/usb/misc/onboard_usb_dev.h | 9 +++++++++
- 2 files changed, 12 insertions(+)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-index 75ac3c6aa92d0d..91b49e58664d6b 100644
---- a/drivers/usb/misc/onboard_usb_dev.c
-+++ b/drivers/usb/misc/onboard_usb_dev.c
-@@ -490,6 +490,7 @@ static struct platform_driver onboard_dev_driver = {
- #define VENDOR_ID_CYPRESS	0x04b4
- #define VENDOR_ID_GENESYS	0x05e3
- #define VENDOR_ID_MICROCHIP	0x0424
-+#define VENDOR_ID_PARADE	0x1da0
- #define VENDOR_ID_REALTEK	0x0bda
- #define VENDOR_ID_TI		0x0451
- #define VENDOR_ID_VIA		0x2109
-@@ -580,6 +581,8 @@ static const struct usb_device_id onboard_dev_id_table[] = {
- 	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2517) }, /* USB2517 USB 2.0 HUB */
- 	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2744) }, /* USB5744 USB 2.0 HUB */
- 	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x5744) }, /* USB5744 USB 3.0 HUB */
-+	{ USB_DEVICE(VENDOR_ID_PARADE, 0x5511) }, /* PS5511 USB 3.2 */
-+	{ USB_DEVICE(VENDOR_ID_PARADE, 0x55a1) }, /* PS5511 USB 2.0 */
- 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0411) }, /* RTS5411 USB 3.1 HUB */
- 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x5411) }, /* RTS5411 USB 2.1 HUB */
- 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0414) }, /* RTS5414 USB 3.2 HUB */
-diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-index 933797a7e0841c..2963689958fc2a 100644
---- a/drivers/usb/misc/onboard_usb_dev.h
-+++ b/drivers/usb/misc/onboard_usb_dev.h
-@@ -38,6 +38,13 @@ static const struct onboard_dev_pdata microchip_usb5744_data = {
- 	.is_hub = true,
- };
- 
-+static const struct onboard_dev_pdata parade_ps5511_data = {
-+	.reset_us = 500,
-+	.num_supplies = 2,
-+	.supply_names = { "vddd11", "vdd33"},
-+	.is_hub = true,
-+};
-+
- static const struct onboard_dev_pdata realtek_rts5411_data = {
- 	.reset_us = 0,
- 	.num_supplies = 1,
-@@ -122,6 +129,8 @@ static const struct of_device_id onboard_dev_match[] = {
- 	{ .compatible = "usbbda,5411", .data = &realtek_rts5411_data, },
- 	{ .compatible = "usbbda,414", .data = &realtek_rts5411_data, },
- 	{ .compatible = "usbbda,5414", .data = &realtek_rts5411_data, },
-+	{ .compatible = "usb1da0,5511", .data = &parade_ps5511_data, },
-+	{ .compatible = "usb1da0,55a1", .data = &parade_ps5511_data, },
- 	{ .compatible = "usb2109,817", .data = &vialab_vl817_data, },
- 	{ .compatible = "usb2109,2817", .data = &vialab_vl817_data, },
- 	{ .compatible = "usb20b1,0013", .data = &xmos_xvf3500_data, },
--- 
-2.49.0.777.g153de2bbd5-goog
-
+Konrad
