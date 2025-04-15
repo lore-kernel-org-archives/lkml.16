@@ -1,84 +1,92 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB8E1AF0D0
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B371FA85A;
+	Tue, 15 Apr 2025 07:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703479; cv=none; b=Og4p+sSOaoyiOlSITy+WLZtmkfQ6Cyx5guBQOKQbSbznXedInCcBQVlm+5ixqt7zT4fax71zI5qFXRpgu3esMB4MD2/Yg9k2Rq5J3ePbl41+1qUQFkkPYhM9G1b+iAc+/23uldPVPCif4BADkSmcBNidijQCO+WT5Fd6qEh2Rnc=
+	t=1744703518; cv=none; b=i8QRcaJfxlxUZF7NMv0ZcSKPhKXoYSyFdMLzqMygdnf+j+CFJwamqXGVfOqoH8PK6kGrSrwgUUfqhIC/zg6D5dm/fSp/BHd2TJt7xSdn1Msn0Md5m2/BQcwYdyb7vmh6CcQ0WUs6Yo457CNipOi8agx5CvE3w60GuJwzichtl8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703479; c=relaxed/simple;
-	bh=V7WN/v5jfqovO3L5tNovFCaLqiFkyYSdDlSkoFmtnWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yj71849bUB3YRtTB9wr0igpMqzR/d8f6SLxYACy1jVEStbPm2Tp9nWN+hfRjTm6iAs/VyOpnE1EwyMvwIuPkRyXFy+VRV6ZBoYBym1QnqDJEKuUXWH2AK+syPM5I4LsObjh99ZWB8Cnfl4W7VtN3staBIO/0uZfwbediAQwN1Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iqaP9mDX; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744703518; c=relaxed/simple;
+	bh=Fno2NHX5KShUIfXw+iyuKE1mn5wmdQf+cfhOcyeOjlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ifOi7wYUwNH4o7DfpMXIP0yL8iI8AbundXTIeqJLeEpz8903yAfDmVz8DkFw70rbtzMjDzOyzuDcg8zuvJNobctEs/s4YfIIzIQrtZoIiIvcAQNhDIW30jvG/G+NrdzzPvHGO9xP0+OCsE/Gw5fHNfH7x4SI734iLmTlHkKDFcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDhncvfE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iqaP9mDX"
-Message-ID: <68769daa-fbd5-4dbd-87a6-5b74bdc20094@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744703475;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V81s/f0QCbsd/984Wr1FAdBVpqvVsMp5C6LqkC0blZE=;
-	b=iqaP9mDXFsvR47REF0cUT3/3u+Cp4hPEqwSmT3AqLac9n5PJHiGI+zXxY+OlKlZFl9ko4f
-	T8GKE4g2TZqPMEtx6N6fJGzVhNzYCzL9PLPyWfJPUPN0rvJGxCaSC4cuNdl8MPA+8cYpRM
-	joDROi6/DeaKKvPU4F80gmdmyZFDa7Y=
-Date: Tue, 15 Apr 2025 08:51:13 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDhncvfE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1165C4CEDD;
+	Tue, 15 Apr 2025 07:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744703518;
+	bh=Fno2NHX5KShUIfXw+iyuKE1mn5wmdQf+cfhOcyeOjlc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tDhncvfEiXN8JFjpy8hkD0kP/9Ai38y/8aM8BiDwlBzhLm6s+Dztk/4U2/44FABf4
+	 tvNWXJk4RZoUy8mQFxLetYG9Mnh5oiNVRv4yr6H40ZFblj6cGKWNFj9fqISU6JejjZ
+	 ttrXGbw/QS7hhuF45AFtOjPpHXuAL/yRAinzCp8GnCmAKY79dKn/BMkPuXVCaSUNNQ
+	 YSD4ABf9BDuFuoNmvfCD+A6I1QG1wHnpzRJ5dEnpuiKmBEoMzPJPsjyp3M/mHbwzg1
+	 iFqTFchu7Vpz9lsiPOiaGWoUNX+NDbMZW7mfdA6N0mpDU+59KUwUB7c67jdT+paY2z
+	 ypErbadFPDnJQ==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	David Sterba <dsterba@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Sandeen <sandeen@redhat.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH] hfs{plus}: add deprecation warning
+Date: Tue, 15 Apr 2025 09:51:37 +0200
+Message-ID: <20250415-orchester-robben-2be52e119ee4@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] ptp: ocp: fix start time alignment in
- ptp_ocp_signal_set
-To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
- richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20250415053131.129413-1-maimon.sagi@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250415053131.129413-1-maimon.sagi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1301; i=brauner@kernel.org; h=from:subject:message-id; bh=Fno2NHX5KShUIfXw+iyuKE1mn5wmdQf+cfhOcyeOjlc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/ExBwjBT6/K9nx9P4jMexSbNfC84v53d9kp3Ud3Gre Mc+piM3O0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZyV43hr9QRleTtS+OefXru ozGr9x+vcxTXZOPqmuZKzuq/NyZ0PWL4nyfYOf+HVE/S/RD2ilvVT13WraiLlNR3ZJYVvKY7myO BGwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 15/04/2025 06:31, Sagi Maimon wrote:
-> In ptp_ocp_signal_set, the start time for periodic signals is not
-> aligned to the next period boundary. The current code rounds up the
-> start time and divides by the period but fails to multiply back by
-> the period, causing misaligned signal starts. Fix this by multiplying
-> the rounded-up value by the period to ensure the start time is the
-> closest next period.
-> 
-> Fixes: 4bd46bb037f8e ("ptp: ocp: Use DIV64_U64_ROUND_UP for rounding.")
-> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
-> ---
->   Addressed comments from Vadim Fedorenko:
->   - https://www.spinics.net/lists/netdev/msg1083572.html
->   Changes since version 1:
->   - Simplified multiplication in expression by removing unnecessary parentheses
->     and using compound assignment operator, as suggested by the maintainer.
-> ---
->   drivers/ptp/ptp_ocp.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> index 7945c6be1f7c..faf6e027f89a 100644
-> --- a/drivers/ptp/ptp_ocp.c
-> +++ b/drivers/ptp/ptp_ocp.c
-> @@ -2067,6 +2067,7 @@ ptp_ocp_signal_set(struct ptp_ocp *bp, int gen, struct ptp_ocp_signal *s)
->   	if (!s->start) {
->   		/* roundup() does not work on 32-bit systems */
->   		s->start = DIV64_U64_ROUND_UP(start_ns, s->period);
-> +		s->start *= s->period;
->   		s->start = ktime_add(s->start, s->phase);
->   	}
->   
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Both the hfs and hfsplus filesystem have been orphaned since at least
+2014, i.e., over 10 years. It's time to remove them from the kernel as
+they're exhibiting more and more issues and no one is stepping up to
+fixing them.
+
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ fs/hfs/super.c     | 2 ++
+ fs/hfsplus/super.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/fs/hfs/super.c b/fs/hfs/super.c
+index fe09c2093a93..4413cd8feb9e 100644
+--- a/fs/hfs/super.c
++++ b/fs/hfs/super.c
+@@ -404,6 +404,8 @@ static int hfs_init_fs_context(struct fs_context *fc)
+ {
+ 	struct hfs_sb_info *hsb;
+ 
++	pr_warn("The hfs filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
++
+ 	hsb = kzalloc(sizeof(struct hfs_sb_info), GFP_KERNEL);
+ 	if (!hsb)
+ 		return -ENOMEM;
+diff --git a/fs/hfsplus/super.c b/fs/hfsplus/super.c
+index 948b8aaee33e..58cff4b2a3b4 100644
+--- a/fs/hfsplus/super.c
++++ b/fs/hfsplus/super.c
+@@ -656,6 +656,8 @@ static int hfsplus_init_fs_context(struct fs_context *fc)
+ {
+ 	struct hfsplus_sb_info *sbi;
+ 
++	pr_warn("The hfsplus filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
++
+ 	sbi = kzalloc(sizeof(struct hfsplus_sb_info), GFP_KERNEL);
+ 	if (!sbi)
+ 		return -ENOMEM;
+-- 
+2.47.2
+
