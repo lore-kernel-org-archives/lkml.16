@@ -1,104 +1,115 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8F627A921
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18900186295;
+	Tue, 15 Apr 2025 08:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744704014; cv=none; b=OCzwANu7tzaROvoMCP+TyfxPJVqjscJEaFDw3dV2XF/EX0HzI9FzL/kdFTbCLu/20noBnHd8YpTpzobjXAG9OBmpnrQBSOs7qmxGIxChmIAs7eIgr4Ct+mztV/y+wsmqB+4zsshmho9wNTguDpP6CV+lCJnxh14thwv9Zp2gJOU=
+	t=1744704046; cv=none; b=Ydl7BuZdGna7B3Tbisw5CTYrQLWQwKiJaKbyx5LMhirE4otLPwgzT/3JuT0a5MH7zlO7Byoo5ziL5P7j0IlgxRk058EwR2Hwe7kJzgP71PWMrjX3pL6WKjvDbfdQXcB84NuyeKEBKeQmNkg/bDwV6eD7ZEYugaQl3dT1nEFa3Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744704014; c=relaxed/simple;
-	bh=QuiknlKiSA+WD7K8fGty1GjBqI96wU/H/9BL6EACW14=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AebiivWb3C8K805dLSCrRjZdjlNZ2zbTLP9291PfsUrPXZDQLGbE83wRNsJvqEUPaAZvxCKhKy8BbzDsk/ZsGMwo6jpWVMCIIJjCW+mq/qNx9NQ+FW8iRDcsiivAE9HGpQyFeuqa/Y/e/u37+85360dbDW9PpXkORp8CCunJHx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HO/S8o+h; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744704046; c=relaxed/simple;
+	bh=oE4njIYIocdyHd2LTSGNVO0Lq1qySI0tjQsnzN3KaTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BSJC09Doe92dN1PKO8jOkr8N9OZrpZ1r/4Nr/tar5TMgmv8xHH5+FXpWBiQqVTHhWubbvMRVboD+o+orfeUOYjbcfB9aItl8mzbaez1wK5t74dZ5h7mi/mcjwGheLwhiDxk1Dd/sp2tJIHeeq3JkscWjU+j1i5UgBA3AHoyvygg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IwlI92r2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=awEBpu3y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HO/S8o+h"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499c5d9691so5590442e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744704011; x=1745308811; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QuiknlKiSA+WD7K8fGty1GjBqI96wU/H/9BL6EACW14=;
-        b=HO/S8o+hH//VO4PFiDPmLKyG6tre9uFK5KG7a3Q8ouystAPkpSCL6JoA+2aE/u3H/O
-         k8G3KxIdrof/Ml/SXK5gGXtk0S6gTqHExciAgXGIzWQcdg3JrTn/ORzHBm3pl/Tx6iqI
-         bcTNuQka4j3ilQIy9lpGppcaY+kv9pTlhBlc/o7FFRWbSkKDew2eNzRPpuTHzQubyak9
-         YjFhnF4StgMZTjpAHQ/DK3O9NyqJd7UeLkdy0MoNNXIh0vil3TsTtuBp+gU1F5TtLVH2
-         3J2m9nnyckQXPGe2SafxAJsW1E4bKMhz3FvCF0ft59hpIs/rThokKGvTcOPnsjLBCPof
-         6olg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744704011; x=1745308811;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QuiknlKiSA+WD7K8fGty1GjBqI96wU/H/9BL6EACW14=;
-        b=o+j9UXhtTkDBPAPEs0IqkHSbJGvxSOahT46yShgJu5fIdJG8nEl4QlxrU+FNDk4Fwz
-         i+/v43fCtxFDQekoMDFLy6lUmZwDBztCHRv9YOM9Hei9HTy/jmtMYcutK0ZBtsTFXQvm
-         3a/JlYRv7aFCplj0LGNb0RAVQzJzxz2HiN5awXrhK6ffy9nqURsoDx74Ej/BsQMaOWlZ
-         zBlWs/MuDmeIKPrnZ7/unNwxE8ICL7WKGO4tgqFDPN6Y5309yNGs3qbIJaZWxnQSaI1q
-         9XYpiC5y4MCKNMCrq4uLWh8tk+UABU6vdZa1EKg4pyDRvm5L7z7fBes95J/Mz0LpcogO
-         v0zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLOrvybDuT+xAnBAJxUsO2CnYEDs6+IaLSFNfIUFfnRNbYpdjdPw5YvqjD/xA7CL2ZR7bdCjYROm8jd9o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVDWm0i4+9aUJhc35Vbl3Cehy9/evFqyEudNHHObro4OdnedvD
-	BM2KjfNKACWyRJz8i1WG6nGWcG/+a+KlVhC3+MLHVLFUZbmwojRLkqUL5p5d1d4b3wpt3RQT8xK
-	0QkudlKzth/CduHQIAia/89mf2LuywDMq23cbKg==
-X-Gm-Gg: ASbGncvdoAxhGTAfz/UjorgF9YGchitlkhS7VE3V/v+j4S+fclTRokRbmso3z5qNjBC
-	IYvkjkmxw11OWeZctHTuk8VBDFik7VR7JfrZQJQUVQl3rOIriPY2sEdlpStuxEMvDi1qWjqavss
-	7qmlJyCZSID2DQ5tu+6CXMig==
-X-Google-Smtp-Source: AGHT+IHnxXKT+pyd9gBpYCbMyVQZAO7XqVpYGkBSNYSVfaaSRz2f0QOsZvZ5bl34m2PPRdwZD5oWN80iP0qENOxIShY=
-X-Received: by 2002:a2e:b8d3:0:b0:308:eb34:103a with SMTP id
- 38308e7fff4ca-31049a7ff11mr54687661fa.28.1744704010562; Tue, 15 Apr 2025
- 01:00:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IwlI92r2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="awEBpu3y"
+Date: Tue, 15 Apr 2025 10:00:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744704043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XLvp6s6831DFXRugd3VKZChU2DM6rbcklQXOdpSFDYg=;
+	b=IwlI92r2KtoX7V5cjgXLPv9YQYO1PxV3fd8OhqIzmzjGKc4HJRSBxNJQVhYi411+z5/LXS
+	lFzFHlRzgPe0jYxC1YjmJ243RIMybojUmg0JNCthLU85TAhffT6aYfru0DM/GdrLmgvowg
+	HgA6ZtG0S6tiLIggjs0l7XNszZEV0LPkKGfyOk3UgeMAdydDKqhSBau1z6Z/gtsh/2FPTw
+	UkxOPJ0mGq6oj1KIN28Ts/qOYAzppFKUiGLp2uCx14IFfZULYio8CJVoCedFlFH9rEX8Qb
+	exVblJxRfLG64BGKEIwqPWoHIu2Uq1BaDujs2uxL6mzlRLymkMC31hfaEStdng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744704043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XLvp6s6831DFXRugd3VKZChU2DM6rbcklQXOdpSFDYg=;
+	b=awEBpu3yfgAzcx1jD4ft1WHrh15hCUTRSVd9hnv59a0CqReDsx1/JtPJ9jE5OH3WlKTDtL
+	VW1kjqIsErf0k4Bw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Aaron Lu <ziqianlu@bytedance.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Andreas Ziegler <ziegler.andreas@siemens.com>,
+	Felix Moessbauer <felix.moessbauer@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [RT BUG] Stall caused by eventpoll, rwlocks and CFS bandwidth
+ controller
+Message-ID: <20250415080041.kePLxkOG@linutronix.de>
+References: <xhsmhttqvnall.mognet@vschneid.remote.csb>
+ <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
+ <c92290e0-f5db-49bd-ac51-d429133a224b@amd.com>
+ <20250409121314.GA632990@bytedance>
+ <3d13e35a-51bb-4057-8923-ebb280793351@siemens.com>
+ <f2e2c74c-b15d-4185-a6ea-4a19eee02417@amd.com>
+ <20250414150513.klU46xkw@linutronix.de>
+ <438a5250-30c0-4820-9084-cdef50f67865@siemens.com>
+ <20250415062320.bMvqQsQ4@linutronix.de>
+ <f5520221-b5ec-4204-966c-881b3428d4c0@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401135026.18018-1-ansuelsmth@gmail.com>
-In-Reply-To: <20250401135026.18018-1-ansuelsmth@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 09:59:59 +0200
-X-Gm-Features: ATxdqUE1-4C5Fb1JmQvyH7hBozN_RXpvZiZvSLKiPhH1VCoFIEKXbvFQJXlM6ls
-Message-ID: <CACRpkdZdFhpixdhsmN=oCEmdAuabUpXtQ9RRh0cFRuxfYXJ0Ng@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: airoha: fix wrong PHY LED mapping and PHY2
- LED defines
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f5520221-b5ec-4204-966c-881b3428d4c0@siemens.com>
 
-On Tue, Apr 1, 2025 at 3:50=E2=80=AFPM Christian Marangi <ansuelsmth@gmail.=
-com> wrote:
+On 2025-04-15 08:54:01 [+0200], Jan Kiszka wrote:
+> On 15.04.25 08:23, Sebastian Andrzej Siewior wrote:
+> > On 2025-04-15 07:35:50 [+0200], Jan Kiszka wrote:
+> >>> On RT the read_lock() in the timer block, the write blocks, too. So
+> >>> every blocker on the lock is scheduled out until the reader is gone. On
+> >>> top of that, the reader gets RCU boosted with FIFO-1 by default to get
+> >>> out.
+> >>
+> >> There is no boosting of the active readers on RT as there is no
+> >> information recorded about who is currently holding a read lock. This is
+> >> the whole point why rwlocks are hairy with RT, I thought.
+> > 
+> > Kind of, yes. PREEMPT_RT has by default RCU boosting enabled with
+> > SCHED_FIFO 1. If you acquire a readlock you start a RCU section. If you
+> > get stuck in a RCU section for too long then this boosting will take
+> > effect by making the task, within the RCU section, the owner of the
+> > boost-lock and the boosting task will try to acquire it. This is used to
+> > get SCHED_OTHER tasks out of the RCU section.
+> > But if a SCHED_FIFO task is on the CPU then this boosting will have to
+> > no effect because the scheduler will not switch to a task with lower
+> > priority.
+> 
+> Does that boosting happen to need ktimersd or ksoftirqd (which both are
+> stalling in our case)? I'm still looking for the reason why it does not
+> help in the observed stall scenarios.
 
-> The current PHY2 LED define are wrong and actually set BITs outside the
-> related mask. Fix it and set the correct value. While at it, also use
-> FIELD_PREP_CONST macro to make it simple to understand what values are
-> actually applied for the mask.
->
-> Also fix wrong PHY LED mapping. The SoC Switch supports up to 4 port but
-> the register define mapping for 5 PHY port, starting from 0. The mapping
-> was wrongly defined starting from PHY1. Reorder the function group to
-> start from PHY0. PHY4 is actually never supported as we don't have a
-> GPIO pin to assign.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
-> Reviewed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Your problem is that you likely have many reader which need to get out
+first. That spinlock replacement will help. I'm not sure about the CFS
+patch referenced in the thread here.
 
-Patch applied for fixes.
+That boosting requires a RCU reader that starts the mechanism (on rcu
+unlock). But I don't think that it will help. You would also need to
+raise the priority above to the writer level (manually) and that will
+likely break other things. It is meant to unstuck SCHED_OTHER tasks and
+not boost stuck reader as a side effect. Also I am not sure how that
+works with multiple tasks.
 
-Sorry for the delay!
+> Jan
 
-Yours,
-Linus Walleij
+Sebastian
