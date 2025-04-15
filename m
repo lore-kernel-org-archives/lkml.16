@@ -1,94 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549998460;
-	Tue, 15 Apr 2025 03:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1509C78F59;
+	Tue, 15 Apr 2025 03:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744687854; cv=none; b=lZvQcF2L7+tk83EHMLYCIi338mk4Lo4fxgI398MSKEExodnlC2KN+27aQit0KV8+7729tPavZfbLkQt/7Em0y3y5dNfvMpap6FoOZ0enGRzZq+jWYnMSa3+P6YlrJgnOG8ytNXU1/ePTeGLqpKfDIt+adNfvvQgz2OtLyWDHjFk=
+	t=1744688029; cv=none; b=gi88DVUl/I+bItK0Sm455r5Pl9NVdsmDJEgr23EzE3D5fIUvldP/vjk26NYm4nhPOt8eC8H+f2GIVpfuUTuhw6QbwVGF3gbJmNp57jpXUUEAt+fTHEpX29IQZ5xpDqr/22+Y6myqLUhO+20wT66ObRpiGQxaKZ+Lf7uWoNHN3Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744687854; c=relaxed/simple;
-	bh=oUQpqhzWVXdp7qUthWu4+FwVJs5T6FEKdE+LDL0Zth0=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=GQfnVmWfU0/BfjE45GdUwjlMzSl3evidDfCRGnjW+zQIyD3hhitkhKGAXeu24AQa+Nif8BCkbfD8CdoEX7n6kSQMujgQuwip+l1rKWdlZPKgv91JtCu1hCaOiPzfZ9kIoKcRZ07cgsgTAbb/5QuHJVbBpQTMjKvTNDv4r9U1fEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emoVDUEX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744688029; c=relaxed/simple;
+	bh=PD4IETagEYw9szCMDtrwf/DURPDv6bR2qwauiy9/ewg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qbweHOotuj7g+F2l2c9cIyZp3qoEfVIloTEArWofqSbfPOd2HmPrAO1oVUKbdf8q6QO3t4cgfm/RPfPOVwxMN6WsBWKjMtWVCmCNHnfUwuX7iPvrpSyN8eSDJ+Ud6xqfPArvhJ6Es7WPrhIPB+z+CvTCT7bSihk4BoL6aEODjEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kHyIbpgw; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emoVDUEX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8659C4CEE2;
-	Tue, 15 Apr 2025 03:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744687854;
-	bh=oUQpqhzWVXdp7qUthWu4+FwVJs5T6FEKdE+LDL0Zth0=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=emoVDUEXzCKPaf/UKFmsycT+RflvlzEn5RrTavLL+jTvjNDJFMPgpYI2ewq4hF6oS
-	 FsM4qqMSKgHQoYRFHyhjjMFZH7DdM45qFnfQDKtO1KfmHl1s+uKdebTECOMrGNYbsR
-	 Vaf3bENryMskS7yjbj0lD4CzF3tNu1VuyIG3y0stEHQUDgqA9opb/F5i/PYyiJiywa
-	 kpPhIzN5PIdHt2EGP1oIIylGgf+FE/7NLlZ4QbuulMkowsJANMIOM6/l00xIB6uFtt
-	 RhUX2OQDkHSTsRoKJxGDZxkeR9CLBLnkIyH6+6bibndxfhQdpbY1R/xBCpAnwz9Wzx
-	 pYgFtYhDcnpJA==
-Date: Mon, 14 Apr 2025 22:30:52 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHyIbpgw"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-223fd89d036so60852035ad.1;
+        Mon, 14 Apr 2025 20:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744688027; x=1745292827; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WGR66RJGijWfsj/Wy3cJYHe1Qxgq0Xxw8JFWHJyYQBo=;
+        b=kHyIbpgwp9Husjvf5Oveqbtp51i8axVRhXMc2rOJv9qphaPj3x+J9bi1Gj79ut3CQs
+         5j9mqprgP9D0CTRur0kc8rVB/bBqpbN1YU/qWaGRRC1CvpQwgL6WopiLpkkxU7JLUXgb
+         1+yOUqs92KM0eyfIeSOScxfTYv9GE1hB3MZC+DGqWlgkb6GXCJC8TZTzQpXT/F/Qh2hB
+         AX7cP6y1aH9bFuQXf7fSaG5qkq4jPxYUiBvLHr2RDloLeZumB1KhG4J+oOFJujZvbmZE
+         eEGRslssZO3l+aSZcxpD6Q0NNM9cTkK3UHKggTT0L0mS2N88J0TzDp2XlWnNwkKhNhl8
+         EjgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744688027; x=1745292827;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WGR66RJGijWfsj/Wy3cJYHe1Qxgq0Xxw8JFWHJyYQBo=;
+        b=rPLjC1jJdhHIVHuqvY9RY0Jc5uAZGff5TW296ic+ic/mnaqCwYKj818U1lCQaa0tsN
+         bLgYvKFBTX3SlRKGvXcX9sKqSCl2pzQuWA/Q0+C44wdnSXgXMr2VSN17YwGJ1rzlo+I2
+         rv0phe9IswR3/4I7IAR/Jk1Ea/wPbj1iRcAoDtxbmwiG9iZ8+qnCcJ5VMAsxRTq5SWES
+         oZnMymKdWzcDE/xID8WUcD6HuGQD4QqzKTnDZ8EYC88AAxVxe+gop2FGNIaWo8ephF0E
+         6rxaYRmOxSqdZx79F9QM4RrHkYucuN0Krse1MCVjHTbLzwZt8U0Lavz5qkFF6/Od0DSY
+         KQNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqUTXbqxSoJffN01CPyR5jxShW73DtEY5+J1KaRz90ZSEid1oKZgnNWapykqWq7xzUEbK+dax/@vger.kernel.org, AJvYcCX91+77CNBAJu5HV42gaVho949MBYLfqwBv5f/Bs13f9lL7lqnvXwyUIJFPvOSLCCSeADqS4Grgj3HAO80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkD3NP3iK4rTvqCgTUfnpbr/z/0UGvU+XHFlWe2aO1D6XMqh4G
+	z++NuXNq+6mec9PRVbLdCqDIBfEN+KXXzmXFnXOR+5/UsHxWuNdS
+X-Gm-Gg: ASbGncv2xXo9Lxfqm+dtQsptDFyXVXlKDWQqXEi0q0X98MfXXXjCtUgaQ/LttGnEMkQ
+	VNl/Yg8ynBUpDOTyoPk/X2ypH7x4JTxQcYllMyjs6er+reRKdiZfQswUEnEmprBrhELuDB+tVYp
+	aXDhRKPks2lgKOS4ykzO+Q4wVZ38AQmcvShbBJyzIOdfwKwlWaCgW2qbzglj1TnwsvFNC+aVNNv
+	9CI8U1+S0I1Ah2Gd15d6nAWU8prYUcU8alB48gARAQ60GKP/AmRMOhz+GP8hcRvZMLSv2QjG65s
+	i0cc61gUpqrOv5mI2rlQGRU4rkmaHIXe1A==
+X-Google-Smtp-Source: AGHT+IFEtT49JwxKT//1+ehfZkXG08nxRxAg/8YIC+mKqaNvAhLGr7ZaYZFdomZXBvzqrB1kbaIDwA==
+X-Received: by 2002:a17:903:17ce:b0:223:f408:c3f8 with SMTP id d9443c01a7336-22bea4b34a7mr208771025ad.14.1744688027296;
+        Mon, 14 Apr 2025 20:33:47 -0700 (PDT)
+Received: from nsys ([49.37.219.136])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b9042dsm107193645ad.104.2025.04.14.20.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 20:33:46 -0700 (PDT)
+Date: Tue, 15 Apr 2025 09:03:39 +0530
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: Jiawen Wu <jiawenwu@trustnetic.com>
+Cc: Markus.Elfring@web.de, mengyuanlou@net-swift.com, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, saikrishnag@marvell.com, przemyslaw.kitszel@intel.com, 
+	ecree.xilinx@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net] net: ngbe: fix memory leak in ngbe_probe() error
+ path
+Message-ID: <ko45l6sl6eo4pfvac4q5ounmjzhebpyhhzr23ohqphncikcprf@mjhrpukcdww3>
+References: <20250412154927.25908-1-abdun.nihaal@gmail.com>
+ <00b401dbadac$7b36f120$71a4d360$@trustnetic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org, 
- Jianfeng Liu <liujianfeng1994@gmail.com>, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- linux-arm-kernel@lists.infradead.org, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Chaoyi Chen <chaoyi.chen@rock-chips.com>, Jimmy Hon <honyuenkwun@gmail.com>, 
- Dragan Simic <dsimic@manjaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
- Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- FUKAUMI Naoki <naoki@radxa.com>
-To: Chaoyi Chen <kernel@airkyi.com>
-In-Reply-To: <AD40AC968D12DF48+20250415015441.371214-2-kernel@airkyi.com>
-References: <20250415015441.371214-1-kernel@airkyi.com>
- <AD40AC968D12DF48+20250415015441.371214-2-kernel@airkyi.com>
-Message-Id: <174468785229.2606230.18106531706948394659.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Add rk3588 evb2 board
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00b401dbadac$7b36f120$71a4d360$@trustnetic.com>
 
+On Tue, Apr 15, 2025 at 10:17:04AM +0800, Jiawen Wu wrote:
+> I think this release bug is also present in txgbe driver.
 
-On Tue, 15 Apr 2025 01:54:40 +0000, Chaoyi Chen wrote:
-> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-> 
-> Add devicetree binding for the rk3588 evb2 board.
-> 
-> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+Thanks for the info. I just sent a patch to fix that here : 
+https://patchwork.kernel.org/project/netdevbpf/patch/20250415032910.13139-1-abdun.nihaal@gmail.com/
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/arm/rockchip.yaml:1078:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
-
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/AD40AC968D12DF48+20250415015441.371214-2-kernel@airkyi.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Regards,
+Nihaal
