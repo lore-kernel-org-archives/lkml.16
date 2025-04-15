@@ -1,71 +1,62 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25391176AC5
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8F64D8CE;
+	Tue, 15 Apr 2025 17:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744736476; cv=none; b=JvzjM9qb+j0Osa9l9GLIeJi7SvRYoKyqbNS6CxRAwjiout3hsCZ+/kDhozuVw8kp/bZOjcb7T5nF7D1kNcovn+U/+fcG/cHPfdhuMuO4PGG/nNXt3SR+wew9GkvT6XFEIqtDgq5IQDDgv92pyxBSG8yrKHl3alpADatRJw8tNrU=
+	t=1744736488; cv=none; b=lvCWn8noOjTGjGINjyMSRhI0QmghmDpsBvedqrocdIk1ywi8kdPcTWc6ZrLjJc9rgDFj/H5lS6ieUF+iPOsSA8wBtGduU/mjFgJ/WXd6AfPujjQN7AT80PlLe85a29hWtpxL7H6wvV9BWia+xRajH9qLSS5r9dvv7o0fRYA9yG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744736476; c=relaxed/simple;
-	bh=SpmS5NI6cI27DpZ8jk6vBMjCGQ+6ydg3ZrQIOhSjac8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iypkJ3oSbA4QutwTz39m5tWCggMHXYRiLUd9ziaorGpmw1pnOD/eAnNKq9kOuwJ8L+P+O6eu2C/ELn2uCqPh8FBpEWIyRa0FZmwRwXAAJ7X2XJ4KFDf0lfka1hp/8aDTDPS8mT39+yPxAdR7eQhtuof68SIrOaYTskJQXMoNJRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iy/SSM2A; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744736488; c=relaxed/simple;
+	bh=BxoRJbK3LjBqCSGzXlhs/h9cYgB2mhJPF0X/UK6Z85g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=bGngmaOqjIyc6jQNeK0aHPgGrf3r+ylHWP67QUBsO77sUtt4L585ZGfipSkxPmqdKKFgz0e68UGFp3t9ijr2CH1nuKLg5oUs1/lKvnNRQwkDrSsLEEAmVCwiNkMEsvxJrH4dQ8M5wNfVG/CZAF3hRpvfAxiiXvhhGChiKcyeP1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkCZLFnj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iy/SSM2A"
-Date: Tue, 15 Apr 2025 10:01:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744736473;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CmWFqdKuu4gt5mYfCAK/YlboynoixgjtC+GEXND4eKA=;
-	b=iy/SSM2AD+vdcsUwN0V0ojVN6nJYo3xxM8bxqQvsuPlcjPZOm6vcI+v0Cd0DxgLUzNJNMS
-	kimr4OBLSps6BnK2fR6sUaKjFHVPPDPs/SW5Cm6lSaoLsXuq8+bs6dUjJl1qrRGi+QQhp+
-	2PTzD1X5CTfFDc7UKa+MKgQ9BDiEZlA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Waiman Long <llong@redhat.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-Message-ID: <lw5d66yoesg2z57brkdkqbh4xqbv5kssgr2htzzhpe3pobwm6i@vr3dufhjquje>
-References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
- <0e9e2d5d-ec64-4ad4-a184-0c53832ff565@suse.cz>
- <CAGj-7pUxYUDdRGaiFon=V2EG+3Ex5s9i7VvWbDH5T0v-7SE-CQ@mail.gmail.com>
- <8cce9a28-3b02-4126-a150-532e92c0e7f8@suse.cz>
- <CAGj-7pXRmG2D+5=yj-5uuciiNccWws6erBg_hSm9S6coEhN+3Q@mail.gmail.com>
- <esdt7fygdyzxxlb7ql6qzwqydzokmfi4uxkfwvxiqedff5wnxl@n34muduktzou>
- <20250415063054.jerbqGF8@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkCZLFnj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57B63C4CEEB;
+	Tue, 15 Apr 2025 17:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744736488;
+	bh=BxoRJbK3LjBqCSGzXlhs/h9cYgB2mhJPF0X/UK6Z85g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jkCZLFnjHe90LKqrjMJxYOoSje9jtS5Du7AgmoAE5sB3Xh0bQjrjMfgdt22nhbnF0
+	 o6etEANUOhFdXvHBBmMtfbzvJ2y/HhcklDi5y7I5GuDHT6l8SVSSp8fkRwSQiAvx3v
+	 XXZGHi96hIR+m/55nC42RqlrXoXkOpgzWAy9tJXMfr+7msUXeMPQbMrVx9ie0Vo4NW
+	 WDc0bsDeoVnPVNr3afR7pf/ojEarJQDXWHkTomOk0sY+nVxmB54gDBlI8bnvhEL7i6
+	 PqJpLi0Nfdj2TsM1dccb09ZNVyA6eWsVz6Q0c4C46VSIUF+RuOGiy9+gr0IiXEWbQo
+	 LeiceQyUL2Yjg==
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Andrew Davis <afd@ti.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250411163428.897582-1-afd@ti.com>
+References: <20250411163428.897582-1-afd@ti.com>
+Subject: Re: (subset) [PATCH] leds: lp8860: Remove struct member regulator
+ description
+Message-Id: <174473648708.3001100.5766515898969039785.b4-ty@kernel.org>
+Date: Tue, 15 Apr 2025 18:01:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415063054.jerbqGF8@linutronix.de>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-On Tue, Apr 15, 2025 at 08:30:54AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-04-14 10:55:31 [-0700], Shakeel Butt wrote:
-> > Vlastimil & Sebastian, if you don't have a strong opinion/push-back on
-> > this patch then I will keep it as is. However I am planning to rework
-> > the memcg stats (& vmstats) to see if I can use dedicated local_lock for
-> > them and able to modify them in any context.
+On Fri, 11 Apr 2025 11:34:28 -0500, Andrew Davis wrote:
+> The device local struct regulator was removed, remove the documentation
+> description for the same.
 > 
-> Please don't use local_irq_save().
+> 
 
-Sounds good. Andrew, can you please drop this patch (I think it was
-picked into mm-new).
+Applied, thanks!
 
-BTW I think using local_irq_save() is not wrong and just not preferred
-for RT kernel, is that correct?
+[1/1] leds: lp8860: Remove struct member regulator description
+      commit: 9cd727847ae34515fe8596d11e06a9730a773353
+
+--
+Lee Jones [李琼斯]
+
