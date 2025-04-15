@@ -1,189 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C5F274FE5
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF86E2797B0;
+	Tue, 15 Apr 2025 08:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744704264; cv=none; b=ZyPRmkHmXAMHI3OnJdo72VcPGU2ISFNdGglN26asCC170RLszKWRsv+pTTG4J1mzvs7YyO0x66pIWtAF+BJhzxY9UUMW3kw3nlrA9Hl7ICFw6bPZHr/IHqO3O7s5BQdhsRgoS8ehzHFfvNSHa5Kpx8PPv9tWXy1rr3keHiM/4fA=
+	t=1744704434; cv=none; b=QKZ5yR3SS2GjIy4YbHmb/2OdOsW+D1hLTN7Ftf1IaE+/zo0DsuSYtlGFI1qy6OMb2wcPTDNwFCSdYfFgKS/eDHHnoQUKkw0ttNphHj5Dz/ZXye6y+FmPqinaTkMu6bQsAwuHunovJzqBmUM5V8BHaj5hPT3UpZnKmxpkRh0gtes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744704264; c=relaxed/simple;
-	bh=MCFdjtzdQYNqOd9ssFJozSuc8EYeldb8BXM2CQqD/6I=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=To0B8mb8sF7Cq6B5Ur9Uw/3bP935e5M7gIY3VPHAfcHhXDZLN322p1bzB5uq2KJHuShFUc4xwj3KLgLCm04aAwdNFrO1v5aaje1AxeP0ZLmiARMDbUPpBWGzf+7TXeNbO1NMsuCVbcOzlyIUMP4AqLYjw8oHaLaZs2MUZW+k4j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ek0wKrbH; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744704434; c=relaxed/simple;
+	bh=+m+uNy+59Q122M1MZy6kii8sx83LYMOv463vHliVczo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=NhUdra+ZDLjk+pLJBDLoY+S51dGXJXurvfEI2UbA1gbUioDB6sQTLeAIsy9GnE31l1ZfLz2oaAnG2rEwSBXNgJU1+j3VB4Bi6iblHqYKRL1zu6mlUE1HWkYpgIJuLkR+NwoYZOA73qbegNLyv2BIJP/C+OO2X53nvJ15b4xjjYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=qxHviqfs; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ek0wKrbH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744704263; x=1776240263;
-  h=date:from:to:cc:subject:message-id;
-  bh=MCFdjtzdQYNqOd9ssFJozSuc8EYeldb8BXM2CQqD/6I=;
-  b=ek0wKrbHg3xN6G4O8m2zmavVTazlDWn7S/vtzOQ29TPJ5wFSi83AbkXG
-   P9GRkmTMSkgBqNGR1+UTFme9mYn6sXeA+/mESAqnLHlRVSxm6JuEfbxZu
-   73o98dvE9nSIWYjdLZsMu2Nds9Ws0E10Z54Xpdx0olZJUMIERpOnPgghK
-   KPRXbeLFufidmB9um2o342xg+09/m2qHHrZw58tMeh6qICj4966lnMADp
-   SMByUrLj+iQxzNVqHJVPEzqTJer4SlNYsgCt37Klw3j+FUdov/TWv7qjl
-   6IW+QQ0kxcvebToh7Vl/RRde8v52aQBoz8QtAkAlrJA2+qnw/18xPrB02
-   g==;
-X-CSE-ConnectionGUID: kGXgipHvQNmqgUizI5bkDA==
-X-CSE-MsgGUID: TH/5U5OkSsyEEMKRO2P7ig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="50000216"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="50000216"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:03:15 -0700
-X-CSE-ConnectionGUID: lbM0sHkqTGGK4YJ3Xd5LHQ==
-X-CSE-MsgGUID: dZb7SklNSOG4bgBaB8ZCzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="134146676"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 15 Apr 2025 01:03:13 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4bGB-000FOE-1R;
-	Tue, 15 Apr 2025 08:03:11 +0000
-Date: Tue, 15 Apr 2025 16:02:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:core/urgent] BUILD SUCCESS
- 1013f5636fd808569c1f4c40a58a4efc70713a28
-Message-ID: <202504151636.eDsdz86W-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="qxHviqfs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1744704420; x=1745309220; i=frank-w@public-files.de;
+	bh=XClP9NrLHwO9fwyHdOh4Auz1PVrNeq/TxoOgtoY90n0=;
+	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qxHviqfsMTqZ1v990RvfJ9bRejEDPM0U7zJhNy/0Jz/s823RYlcXko39BUK7gDBk
+	 ZhsuG+0A9/Y8gHs1taDTTVHTmEsa9qJFT5ASKK93XvH4uU+unsxSIAddfWIrRZK+6
+	 zzohCcaWpcFIE0fdCHQbysIfaEHC+NfO5+j9DfW2RdGQURNPoCJdX0Vq6rxc5MzhR
+	 5WN7K8KKXsA0jKHeZWFXybZxdZzY1B0wnx98xesCkFU4krFxaUITraweE3cyDUAIO
+	 2uWpljywdxKA7muLP95/90h1xtnDfFIOfnszdYQ2n0Kbemr4xffaYsMmjzrQNqubR
+	 8EGNdXS+0u518+F8xA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([217.61.148.30]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxDkw-1t7P002D2u-00zhBt; Tue, 15
+ Apr 2025 10:07:00 +0200
+Date: Tue, 15 Apr 2025 10:07:01 +0200
+From: Frank Wunderlich <frank-w@public-files.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Daniel Golle <daniel@makrotopia.org>
+CC: Frank Wunderlich <linux@fw-web.de>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_arm64=3A_dts=3A_mediatek=3A_mt7?=
+ =?US-ASCII?Q?988a-bpi-r4=3A_allow_hw_variants_of_bpi-r4?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <36fe0778-399a-4406-8516-54b968cd9073@collabora.com>
+References: <20250412102109.101094-1-linux@fw-web.de> <c8f9f019-a238-47c8-a900-9ca48ce09503@collabora.com> <Z_0AdtyvehR9SHnU@pidgin.makrotopia.org> <36fe0778-399a-4406-8516-54b968cd9073@collabora.com>
+Message-ID: <D7682B25-5BEF-46D1-A5FD-32D2AAF84EFF@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pa0vggB9lm+W0OPebuX0jYpX0yjxP/JpOSgB44M0VVskPM3DXyD
+ 9LogsfM/xLxC6PLuk+GPj2lPIj+CtvYDf3dqHiqwYp+1+ps1ov8I/5nqfuf8HkliFx46miv
+ 2ji2rqWXr0YnZB4RZbPRjU72vNPHSgRp7NBP74IVwtTQSLijfJwg3ShW2lHmIExQfDiS1mI
+ S5jTXNRgwb52P104LTVSg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:urNve2rXxnY=;yiVEU3OJuoqbJPWsNk3xJFPrslb
+ 6XgS7F0953EiOMGLEpbanm9yU02fg8ccgzjIi0iXX3k0JbeVJmatpmQ0OxrvwBozA9scOQwtB
+ LeWsYLKdKmMC7QK5IiZDJQNu3aqlCFRUFY+GdZBJBsLsEq9w/NACKuhqn4MWuWQhUSWE7fOnC
+ PrX5inR6etO5xToJwZsDUisQ+SMdnidz9banxNUDlKnRcmDN0vP+ejNP+wwc8oKTnRXC+NXT9
+ VhJoIvkkjeS2MuibBDBFH/4kzziiCM2GBZTjU69EGpCtS/PSX6VYbL+BU4O0nnY5HBoqzbckv
+ /SuHRxbQLbf9HWGHgwtpCVKhM/riHH0iT3IbtPmnBz0HeTf1QbykqDmdN4v3IqpXjbp3T5p8k
+ 1pLnRsKOlP+M1CKqTIqY274QCeAE9KeIGE6AIQMkEr3nLT2evNKLemkG/ne9+RNncC/WO0aPF
+ KTkP0IS1TqjHtgKd6vXdxSaYbqzJ9wPHOu6/AES0HiIqEL+Y8lFR70PZfELIH7arD2RyKdl9J
+ Igu0F9CtNCKZmcBVOgfHuTGrKHRE+lhZk229WhmKgNPhgEOFK5zHlNlPYPCvcRT5jA2U48rk0
+ HZyOzDTdqWxeMA+lTTmoFKDHLFkKchhz15QjnMq9QKbxuWJYgOMp3cen6Hi72vZQwzaoQ2XBy
+ b3+Emgoie2bcxIvittQuIGqQMHkhnHm/9Yd6KiChBPUnXGT7JbeYFbKSFj73RWQ10Kj+5u94F
+ AnaTrqIQhYT6FQxGcpjPM3dNj39H/93cp5srg8MYx+6GnVOAcWfwLWsgjTUHDVHje08mkfMsN
+ 4cnJ+3fZHF2BYOHw4bVcJ7YnpC1F9XPX9+ryNE47Erez086ZTT6Mhyr9EqKFG68lKzlnjx4An
+ dl2hTJSW/u5LJHj0Rlz1pB7ngcHAfcNq7akmimLdUPIloS9kk8PVl7tUo5ZqLQAx9rTrzcg8R
+ Snh9QekEJwREWFzPX6WqGSWTUr78SXEjlTOiIZclYuq8ijLAqSBYJ8EZolMRaT+mOieEEsGYL
+ JNEeMdgdjMG8YV14fJl1j/EalciKqiN9NPmtmKghF3ALIVD9V2Beu8E5CPA3L2osLQN5sd7lU
+ YAKSO51USU4lq3J4/XaUzvSA5vbfh8MuX1LsbyYsvZHs16JkRtqPv1io+9WZuATW/2Rvx80zf
+ 8zuje60L1jI87s/w7Kr2LUbbF7KlbFDWF3NI8vZXAVGYOtTnAVvxQV2CCmdRMBZP3ToA8X9r7
+ 8dTnfIJrnnd2rqukxpcuof4UVfcsD3UJ8Za4ofC7FPScImpdXYFMXXwbeyy2hRET1f8RXe2E5
+ BSxa8e4dkzAdAmFGiJc2WnHcm+H0ibda5TzgR9M5zfmOO8D3m0K+vMt/oAJNT8CjALXAOcHxu
+ VXZMc66BXlRBdfnotXsGsbyJJCqA+cqwBBdpgz/Ae8MJ3IgBdCv0bvttpfExjDPiuz2kscm36
+ kGEPDeYkQPSpHY6Ilqqq3Ml01/vHudSElaMy3TzjSMSrSZJrr
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/urgent
-branch HEAD: 1013f5636fd808569c1f4c40a58a4efc70713a28  genksyms: Handle typeof_unqual keyword and __seg_{fs,gs} qualifiers
+Am 15=2E April 2025 09:36:43 MESZ schrieb AngeloGioacchino Del Regno <angel=
+ogioacchino=2Edelregno@collabora=2Ecom>:
+>Il 14/04/25 14:32, Daniel Golle ha scritto:
+>> On Mon, Apr 14, 2025 at 11:27:23AM +0200, AngeloGioacchino Del Regno wr=
+ote:
+>>> Il 12/04/25 12:21, Frank Wunderlich ha scritto:
+>>>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>>>=20
+>>>> Sinovoip has released other variants of Bananapi-R4 board=2E
+>>>> The known changes affecting only the LAN SFP+ slot which is replaced
+>>>> by a 2=2E5G phy with optional PoE=2E
+>>>>=20
+>>>> Just move the common parts to a new dtsi and keep differences (only
+>>>> i2c for lan-sfp) in dts=2E
 
-elapsed time: 1468m
+>>> This should at least have some different compatible, if not probably a=
+lso a
+>>> different model string - as it's a different device=2E
+>>>=20
+>>> 	compatible =3D "bananapi,bpi-r4-2g5", "bananapi,bpi-r4", "mediatek,mt=
+7988a";
+>>=20
+>> Imho it doesn't make sense to declare compatibility with the
+>> "bananapi,bpi-r4" as the "bananapi,bpi-r4-2g5" is NOT compatible with t=
+he
+>> "bananapi,bpi-r4"=2E It's a different board and using firmware meant fo=
+r the
+>> "bananapi,bpi-r4-2g5" on the "bananapi,bpi-r4" (or vice versa) will res=
+ult
+>> in a non-working Ethernet port=2E
+>>=20
+>
+>Is this device a BananaPi R4 variant, or is it a completely different dev=
+ice?
 
-configs tested: 112
-configs skipped: 3
+The only difference is that sfp-lan is replaced by RJ45 socket with mt7988=
+ internal phy=2E
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>If this is a completely different device, then it's not even a BananaPi R=
+4,
+>otherwise this is compatible with BananaPi R4, with a small variation :-)
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250414    gcc-14.2.0
-arc                   randconfig-002-20250414    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                            hisi_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250414    clang-18
-arm                   randconfig-002-20250414    gcc-7.5.0
-arm                   randconfig-003-20250414    gcc-7.5.0
-arm                   randconfig-004-20250414    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250414    clang-21
-arm64                 randconfig-002-20250414    clang-19
-arm64                 randconfig-003-20250414    gcc-8.5.0
-arm64                 randconfig-004-20250414    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250414    gcc-14.2.0
-csky                  randconfig-002-20250414    gcc-10.5.0
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250414    clang-18
-hexagon               randconfig-002-20250414    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250414    gcc-12
-i386        buildonly-randconfig-002-20250414    clang-20
-i386        buildonly-randconfig-003-20250414    clang-20
-i386        buildonly-randconfig-004-20250414    gcc-12
-i386        buildonly-randconfig-005-20250414    gcc-12
-i386        buildonly-randconfig-006-20250414    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250414    gcc-12.4.0
-loongarch             randconfig-002-20250414    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                        m5307c3_defconfig    gcc-14.2.0
-m68k                           virt_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                        maltaup_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250414    gcc-12.4.0
-nios2                 randconfig-002-20250414    gcc-12.4.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250414    gcc-5.5.0
-parisc                randconfig-002-20250414    gcc-7.5.0
-powerpc                     akebono_defconfig    clang-21
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                 mpc834x_itx_defconfig    clang-16
-powerpc               randconfig-001-20250414    gcc-8.5.0
-powerpc               randconfig-002-20250414    clang-21
-powerpc               randconfig-003-20250414    gcc-6.5.0
-powerpc64             randconfig-001-20250414    clang-17
-powerpc64             randconfig-002-20250414    clang-21
-powerpc64             randconfig-003-20250414    gcc-6.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250414    gcc-8.5.0
-riscv                 randconfig-002-20250414    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250414    clang-20
-s390                  randconfig-002-20250414    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250414    gcc-6.5.0
-sh                    randconfig-002-20250414    gcc-10.5.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250414    gcc-11.5.0
-sparc                 randconfig-002-20250414    gcc-13.3.0
-sparc64                          alldefconfig    gcc-14.2.0
-sparc64               randconfig-001-20250414    gcc-5.5.0
-sparc64               randconfig-002-20250414    gcc-9.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250414    clang-21
-um                    randconfig-002-20250414    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250414    clang-20
-x86_64      buildonly-randconfig-002-20250414    clang-20
-x86_64      buildonly-randconfig-003-20250414    clang-20
-x86_64      buildonly-randconfig-004-20250414    clang-20
-x86_64      buildonly-randconfig-005-20250414    clang-20
-x86_64      buildonly-randconfig-006-20250414    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250414    gcc-7.5.0
-xtensa                randconfig-002-20250414    gcc-14.2.0
+Sinovoip now announces a R4Pro with some more changes (e=2Eg=2E an externa=
+l 2=2E5g switch),but we have no detailed shematic yet=2E It looks they also=
+ plan a R4lite which is based on different SoC (afair mt7987),but this is f=
+or sure different device (and so not using this bpi-r4=2Edtsi)=2E
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+But basicly all are named BPi-R4=2E I guess R4Pro will also get own dts as=
+ too much changed=2E
+
+>Cheers,
+>Angelo
+
+
+regards Frank
