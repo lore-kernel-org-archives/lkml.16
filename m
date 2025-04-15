@@ -1,166 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE022750EF
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1562750E4
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698489; cv=none; b=f1gP7aelqe+YAnpeaSuM3PpjikL0UNqKoPiEFdO/8K4moaNduItnZEhGUDBp/Zwz3CV30NgrX5i1jCdszU1Dkrn24w19JgwFsNc8BSqrZnpBG5JFV2LlObYvmTx/ccwnrk50uwI93muZkiTaZmN1zQVGEy/SSFAwEmV/xPFIqdg=
+	t=1744698514; cv=none; b=WT6NgluHoku58713xZUDuF/OyqfUbgd303fNmq0uLTVQtDDv4CntCzrQvWfi2w3DaB7p8+vMfPbhqa4oZ9ssigxmc+rcRvirawMCt1MAHbSWePEXLNVVGMUBWRnnzx5kJADx7s+em7/+/pXATu93EGAhxYpX2vhS8l2GVjPCCi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698489; c=relaxed/simple;
-	bh=1jFVtsvm+dJBxl+YLRLEeNH9kTC39AeT3qdnKM1EBPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E9yDw/GeYctOc621eA6RV2z8bBJuvvfstE0/j/ZisX0z9u2uuYM+0sSHa4ltBLaDxam2fesegWX9ywPNIYR9zyWKQvMKjcSdSUBFQVoGi/V3nrwhbwpDXOTptJY3BIgOKeDqcidP09ksF6k55Cb2YYGlMnkh2C6vonbGT6MrKnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D690315A1;
-	Mon, 14 Apr 2025 23:28:03 -0700 (PDT)
-Received: from [10.163.49.104] (unknown [10.163.49.104])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB4F13F694;
-	Mon, 14 Apr 2025 23:28:02 -0700 (PDT)
-Message-ID: <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
-Date: Tue, 15 Apr 2025 11:57:57 +0530
+	s=arc-20240116; t=1744698514; c=relaxed/simple;
+	bh=X39eHBhdFBSiCEm2m+e26AcgXtmlEFecV6SteKWwAjs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MAWkAxCiUxfwoteP0V/q0kTc0VV36KIvN13X7VHfenVTgXTnXG6UdzP1p24PXzBr0XIbdxsbj842i1WOHP9/vL22XVGqM/wosMYD151C7thxFZlJR6dS1V+SkJUOSsBaLIN320Zkyu+NlyzmE8cPyLphtsZSjuGwc5pAHqsWUFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiBCfdd2; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiBCfdd2"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736c277331eso5638450b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744698512; x=1745303312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3i1eMj/yq/QS4xuzZBmesii5aSUb7a28QU4slGXIDLs=;
+        b=IiBCfdd2gs+/6uy+fPvwhV8C2CUmC5eJUtfgrSBQyx+GhSMgUcUh1SjyKWlTlwYWLK
+         b37jU+wWveK6uLY0+FdUdzaVThN1HNAs0A8CcXdV0hQ5eQrDm1N3ZyLK3/pCjl9Q4cGe
+         v7qBD2ccVgbxDeOeLry8X8tT3s/YpNzAWjTrCQfrfx30bM9pL/mE3vCVtHn/mW4HnOs+
+         EuLeAOWz2XU5A2dLVtFyVlh8DPuPT0a0yfPMhuiJ8ITupkXS19YtmuLX+ANgHtJgmGCz
+         ii3RdseJVTJlkr3c3N8R7tGGy3aAuKMzh7FvyJec3eoTMev4HtQmgSAOdRM79ASoudJb
+         86Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744698512; x=1745303312;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3i1eMj/yq/QS4xuzZBmesii5aSUb7a28QU4slGXIDLs=;
+        b=bt8luRp+Cj7AujWIsrCo6Jy/vPh02NDaGaQ9GlP+VFNdklMg7oyJ5QMuDXwGFejlrg
+         apXPUQP1bc+jbaY9Cq8cWPuwmnFbfDy8WF8dZmjWNj9uT1FpiLkDEEFe8RBz1E51davk
+         Qqs8MEpHrWz1zEsxN95IPThjg8e9S+XHh+z8afknvyFBunV1UTDMEPo21oExxLXLzH1f
+         gtNuId8xkh3Ie2hJL/ZKCzigOIjVCqz+luuvsxObqlmkxWSvfK4aZzqGUmqfcKJ9fG5B
+         ZIa87W9i6UsPfs2oQArwUupnKgmUfoQstrQJd/FWdhS26HrmbrrqOOAqopXBHqr1Uzmj
+         k17Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdAsy3qYDhRDTRAvEEXf8fdI7FBOT3ZRjgrKQK0NcXX/iVhUbjX+WNVJzS1VzRYcRTyKpxbYw1R+3v47k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9byUo60qaKFwWKrJMFx/S2H5RDitUehs3cJaaoz20rIoBP41e
+	rD/+1MUNmylc/lZkB7rijOtRQQduphAkPL7MGICjfmgfPs9aOg9tkqiIuA==
+X-Gm-Gg: ASbGnctP5nsDMYSXiNiFlw2ZMFS/qIzI+Tx2hx24Pu2o8xVYJjQW3jYf4597HpGWFIq
+	5/pBnDmCx9YrAWHfzx4kAJFZfOf32oVm3bEuQRbtdaBB2K8S94o2X6yhPedssRnXDwgNqzCDtwG
+	8KBtY5DkHAYruWaDn4oR4DHEfnZRrUdaVMR211p0+usr/OURsQdMH8MHnd6sUX+jzta4si2iRe1
+	CJG6RJQG2RS6ABNXiRJ/KgiBkU8VsZdiIkXzppUWqEFuTFGwYJqhC3XQo+NCdXD7Hysscpk1g39
+	iwxgIhjjE3oXY8pmbEBA649uz3cNqvMswA+rXwSoOk+82suwrKk=
+X-Google-Smtp-Source: AGHT+IEvPpB9wf0yUyCk36RQlZkFUClAMF0m5aKE2V4LpxDt0C18vi2fJdNIS56vZxjlio4V0iIF2Q==
+X-Received: by 2002:a05:6a00:3a15:b0:736:b400:b58f with SMTP id d2e1a72fcca58-73c0c746908mr3670081b3a.0.1744698511937;
+        Mon, 14 Apr 2025 23:28:31 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f12dbsm7976414b3a.102.2025.04.14.23.28.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 23:28:31 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: tj@kernel.org
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to per-fs lock
+Date: Tue, 15 Apr 2025 14:28:30 +0800
+Message-ID: <20250415062830.306165-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <Z_1BSLbvq4zCYEu-@slm.duckdns.org>
+References: <Z_1BSLbvq4zCYEu-@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Ryan Roberts <ryan.roberts@arm.com>, Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
- <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
- <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
- <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
- <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
- <5d975762-7678-419f-8e2f-40547c079276@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <5d975762-7678-419f-8e2f-40547c079276@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 4/14/25 18:01, Ryan Roberts wrote:
-> On 14/04/2025 13:28, Ard Biesheuvel wrote:
->> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>
->>> On 14/04/2025 10:41, Ard Biesheuvel wrote:
->>>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>
->>>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
->>>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
->>>>>> as expected if those macro constants contain some 128 bit layout elements,
->>>>>> required for D128 page tables. Fix this problem via first loading up these
->>>>>> macro constants into a given memory location and then subsequently setting
->>>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->>>>>
->>>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
->>>>> of 128-bit types with shifting and masking, which the assembler can't do? It
->>>>> would be good to spell this out.
->>>>>
->>>>>>
->>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>>> Cc: Will Deacon <will@kernel.org>
->>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
->>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>>>>> Cc: linux-arm-kernel@lists.infradead.org
->>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>>> ---
->>>>>> This patch applies on v6.15-rc1
->>>>>>
->>>>>>  arch/arm64/kernel/head.S         | 3 +++
->>>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->>>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
->>>>>>  arch/arm64/mm/mmu.c              | 1 +
->>>>>>  arch/arm64/mm/proc.S             | 5 +++--
->>>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->>>>>> index 2ce73525de2c..4950d9cc638a 100644
->>>>>> --- a/arch/arm64/kernel/head.S
->>>>>> +++ b/arch/arm64/kernel/head.S
->>>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->>>>>>        * On return, the CPU will be ready for the MMU to be turned on and
->>>>>>        * the TCR will have been set.
->>>>>>        */
->>>>>> +     adr_l   x0, pir_data
->>>>>> +     bl      __pi_load_pir_data
->>>>>
->>>>> Using C code to pre-calculate the values into global variables that the assembly
->>>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
->>>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
->>>>> asm-offsets.c:
->>>>>
->>>>> DEFINE(PIE_E0_ASM, PIE_E0);
->>>>> DEFINE(PIE_E1_ASM, PIE_E1);
->>>>>
->>>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
->>>>> pre-calculated values that you can then use in proc.S?
->>>>>
->>>>
->>>> There is another issue, which is that mov_q tries to be smart, and
->>>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
->>>> directive evaluates the argument, which does not work with symbolic
->>>> constants.
->>>
->>> I'm not quite understanding the detail here; what do you mean by "symbolic
->>> constants"? asm-offsets.h will provide something like:
->>>
->>> #define PIE_E0_ASM 1234567890
->>>
->>> The current code is using a hash-define and that's working fine:
->>>
->>> mov_q   x0, PIE_E0
->>>
->>>
->>> Won't the C preprocessor just substitute and everything will work out?
->>>
->>
->> Yeah, you're right. I was experimenting with something like
->>
->> .set .Lpie_e0, PIE_E0_ASM
->> mov_q xN, .Lpie_e0
->>
->> where this problem does exist, but we can just use PIE_E0_ASM directly
->> and things should work as expected.
+On Mon, 14 Apr 2025 07:09:28 -1000, tj@kernel.org wrote:
+> On Sat, Apr 12, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > 
+> > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
+> > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
+> > 
+> > This patch switches the global kernfs_idr_lock to per-fs lock, which
+> > put the spinlock into kernfs_root.
+> > 
+> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
 > 
-> Ahh great, sounds like this should be pretty simple then!
+> Given that it doesn't really make things any more complicated, I think this
+> makes more sense than the existing code even without any direct evidence
+> that this improves performance.
 
-Following change works both on current and with D128 page tables.
+I agree.
 
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -182,5 +182,7 @@ int main(void)
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-   DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops, direct_call));
- #endif
-+  DEFINE(PIE_E0_ASM, PIE_E0);
-+  DEFINE(PIE_E1_ASM, PIE_E1);
-   return 0;
- }
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 737c99d79833..f45494425d09 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -536,9 +536,9 @@ alternative_else_nop_endif
- #define PTE_MAYBE_NG           0
- #define PTE_MAYBE_SHARED       0
- 
--       mov_q   x0, PIE_E0
-+       mov_q   x0, PIE_E0_ASM
-        msr     REG_PIRE0_EL1, x0
--       mov_q   x0, PIE_E1
-+       mov_q   x0, PIE_E1_ASM
-        msr     REG_PIR_EL1, x0
- 
- #undef PTE_MAYBE_NG
+thanks,
+Jinliang Zheng :)
 
+> 
+> Acked-by: Tejun Heo <tj@kernel.org>
+> 
+> Thanks.
+> 
+> -- 
+> tejun
