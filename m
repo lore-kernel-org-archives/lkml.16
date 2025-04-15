@@ -1,246 +1,101 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E531E0E0C;
-	Tue, 15 Apr 2025 11:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FEF27B51B;
+	Tue, 15 Apr 2025 11:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715986; cv=none; b=MKADfIOgMSbDYNhGIr02KPiEVnI0ETFCe3FrHMBP6LqX+9oCCo9gVys+pu3J7fpug8AFlkDj+iZq952Yu4IC6pneGaRjck9/OvOTvd8OZwrfgsymivLppvdCR7Yy4IsDhLieBMEsXTu5YS4RbE/MF5XZkMpTkf7JSh4rzacOqHA=
+	t=1744716003; cv=none; b=T79FfLwlElXuLLzwtxpwAlt4DqIXoq0Nh7Qxm/R5wdXFn5Z40RJIXbyhIzwoto0KAWexW67PhNOHYsmMsRYk+dgdeIz3mHAd5onH4ED9OsOT7Y4TrCNqMWHFyuIZnkzyHoNrQy8HdMeGA5I97u21RB4DNIeUTSFNVSOU+efg8gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715986; c=relaxed/simple;
-	bh=fm8nBPd0osnUG6dqX12oQsoVPD0PFBn5UOMP1jMH0mM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=I8bXc/mBn0OJHPdBisG0CLxqqFoSXjMJNYdS3SGGtDILXhxmsaUqy+RUFl97iUlILvunB8AAMVmNYsD4Qcji+nWzXZl4bFa81qd4m1zMtM+62UaynnlfsrMc70AIdAXiZz0JYLl2C0Sw0PryZvvD74DofCiaVwPO6D8VuMPpHiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gu4568tB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744716003; c=relaxed/simple;
+	bh=vJet5eXHKscSTCir5pP/v36BvWMvi+Mge6C98sKtWF8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Uq4mPWs0W2nYF61TPbmnnMwg3oyx3pyugFvoZAWQtyhE0Eq0mYlmDiHlShJWILnmNhl4V7PBVS2ciFcVCKE5q3zqJIe+7kjd+i3iqcbd2CLWot8OpniZGyB/bp1LwX9t4xsrRdS97fI2Jooy2WU3mNTwjPtPJ/c2w8sIGuJGAgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=J30kttT2; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gu4568tB"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 3609620BCAD2; Tue, 15 Apr 2025 04:19:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3609620BCAD2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744715979;
-	bh=z0JDToXaxOj4YM1xG5O0anHRB/LqnT8FbQltl3n3bNE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gu4568tBswLAGhTi89YoOKz5ULZDWS2wkjK0n4L2pObpW1lczkOEUOLKP2xpaqGHE
-	 9Mx/MXOPMRYU+RqiQGkx4PuJNxnOe98N0em6hRtbinxatYNk5ih9sZLZ8YNuDAR0Hv
-	 d3x0QB13Z+Z2wLj2F+0IdWPmlB2/SZS+UK0E/8G8=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Naman Jain <namjain@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v4] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
-Date: Tue, 15 Apr 2025 04:19:38 -0700
-Message-Id: <1744715978-8185-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="J30kttT2"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F7B8LD023886;
+	Tue, 15 Apr 2025 13:19:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	0SdfsqttsoqnkLSHVYtLWqH4z823DOc7YuHAnk+opa8=; b=J30kttT2slNxBEwv
+	MQO3WrONweQqnYGKj5HLOZCzOThC/pR1GqTGFx7BaablaoPWGbd1rL6ssFYB14YN
+	tEDDhbw2MgVj7hkEoAzVV4rfN4JPz55B7XtsY6PgX7oJMlDrp2ZFFN/8B0CAbnvm
+	kR8VuOPq03JwNxl0LQRcnuQouamGpF86pA8LSe5JH8F5KvhWcNoFXhnaCn0FFpnR
+	MpSfigxurjLDvx6y6unFSU+wRaTV7t0PG7SFZiUnJ9H3SwzjXga9kynmOMP0m6UK
+	RWha3LuMJWFFyBXL2LZS42xe/9HyfnbHW9RqV0zw6ne6OiEBTv7TvVv1AddPmvqE
+	Yqjg/w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45ydkmd6m1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 13:19:51 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 77EB24002D;
+	Tue, 15 Apr 2025 13:18:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 210CC9D22C1;
+	Tue, 15 Apr 2025 13:18:18 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Apr
+ 2025 13:18:17 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <maz@kernel.org>, Christian Bruel <christian.bruel@foss.st.com>
+Subject: [PATCH v2 5/6] arm64: dts: st: Adjust interrupt-controller for stm32mp23 SoCs
+Date: Tue, 15 Apr 2025 13:16:53 +0200
+Message-ID: <20250415111654.2103767-6-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250415111654.2103767-1-christian.bruel@foss.st.com>
+References: <20250415111654.2103767-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
 
-Allow the KVP daemon to log the KVP updates triggered in the VM
-with a new debug flag(-d).
-When the daemon is started with this flag, it logs updates and debug
-information in syslog with loglevel LOG_DEBUG. This information comes
-in handy for debugging issues where the key-value pairs for certain
-pools show mismatch/incorrect values.
-The distro-vendors can further consume these changes and modify the
-respective service files to redirect the logs to specific files as
-needed.
+Use gic-400 compatible and remove address-cells = <1> for aarch64
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Naman Jain <namjain@linux.microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Fixes: e9b03ef21386e ("arm64: dts: st: introduce stm32mp23 SoCs family")
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 ---
- Changes in v4:
- * renamed the debug option from "debug_enabled" to "debug"
- * shorten a debug message by removing unnecessary strings
----
- Changes in v3:
- * remove timestamp from raw message
- * use i+1 instead of i while printing record array
- * add debug logs in delete operation
----
- Changes in v2:
- * log the debug logs in syslog(debug) instead of a seperate file that
-   we will have to maintain.
- * fix the commit message to indicate the same.
----
- tools/hv/hv_kvp_daemon.c | 65 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 60 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/st/stm32mp231.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 04ba035d67e9..37ebe1cf0641 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -83,6 +83,7 @@ enum {
- };
+diff --git a/arch/arm64/boot/dts/st/stm32mp231.dtsi b/arch/arm64/boot/dts/st/stm32mp231.dtsi
+index 8820d219a33e..3f73cf1d443d 100644
+--- a/arch/arm64/boot/dts/st/stm32mp231.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp231.dtsi
+@@ -1201,13 +1201,12 @@ exti2: interrupt-controller@46230000 {
+ 		};
  
- static int in_hand_shake;
-+static int debug;
- 
- static char *os_name = "";
- static char *os_major = "";
-@@ -183,6 +184,20 @@ static void kvp_update_file(int pool)
- 	kvp_release_lock(pool);
- }
- 
-+static void kvp_dump_initial_pools(int pool)
-+{
-+	int i;
-+
-+	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
-+	       pool);
-+
-+	for (i = 0; i < kvp_file_info[pool].num_records; i++)
-+		syslog(LOG_DEBUG, "pool: %d, %d/%d key=%s val=%s\n",
-+		       pool, i + 1, kvp_file_info[pool].num_records,
-+		       kvp_file_info[pool].records[i].key,
-+		       kvp_file_info[pool].records[i].value);
-+}
-+
- static void kvp_update_mem_state(int pool)
- {
- 	FILE *filep;
-@@ -270,6 +285,8 @@ static int kvp_file_init(void)
- 			return 1;
- 		kvp_file_info[i].num_records = 0;
- 		kvp_update_mem_state(i);
-+		if (debug)
-+			kvp_dump_initial_pools(i);
- 	}
- 
- 	return 0;
-@@ -297,6 +314,9 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
- 		 * Found a match; just move the remaining
- 		 * entries up.
- 		 */
-+		if (debug)
-+			syslog(LOG_DEBUG, "%s: deleting the KVP: pool=%d key=%s val=%s",
-+			       __func__, pool, record[i].key, record[i].value);
- 		if (i == (num_records - 1)) {
- 			kvp_file_info[pool].num_records--;
- 			kvp_update_file(pool);
-@@ -315,20 +335,36 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
- 		kvp_update_file(pool);
- 		return 0;
- 	}
-+
-+	if (debug)
-+		syslog(LOG_DEBUG, "%s: could not delete KVP: pool=%d key=%s. Record not found",
-+		       __func__, pool, key);
-+
- 	return 1;
- }
- 
- static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 				 const __u8 *value, int value_size)
- {
--	int i;
--	int num_records;
- 	struct kvp_record *record;
-+	int num_records;
- 	int num_blocks;
-+	int i;
-+
-+	if (debug)
-+		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
-+		       __func__, pool, key, value);
- 
- 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
--		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
-+		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
-+		syslog(LOG_ERR, "%s: Too long key or value: key=%s, val=%s",
-+		       __func__, key, value);
-+
-+		if (debug)
-+			syslog(LOG_DEBUG, "%s: Too long key or value: pool=%d, key=%s, val=%s",
-+			       __func__, pool, key, value);
- 		return 1;
-+	}
- 
- 	/*
- 	 * First update the in-memory state.
-@@ -348,6 +384,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 		 */
- 		memcpy(record[i].value, value, value_size);
- 		kvp_update_file(pool);
-+		if (debug)
-+			syslog(LOG_DEBUG, "%s: updated: pool=%d key=%s val=%s",
-+			       __func__, pool, key, value);
- 		return 0;
- 	}
- 
-@@ -359,8 +398,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 		record = realloc(record, sizeof(struct kvp_record) *
- 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
- 
--		if (record == NULL)
-+		if (!record) {
-+			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
- 			return 1;
-+		}
- 		kvp_file_info[pool].num_blocks++;
- 
- 	}
-@@ -368,6 +409,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 	memcpy(record[i].key, key, key_size);
- 	kvp_file_info[pool].records = record;
- 	kvp_file_info[pool].num_records++;
-+
-+	if (debug)
-+		syslog(LOG_DEBUG, "%s: added: pool=%d key=%s val=%s",
-+		       __func__, pool, key, value);
-+
- 	kvp_update_file(pool);
- 	return 0;
- }
-@@ -1662,6 +1708,7 @@ void print_usage(char *argv[])
- 	fprintf(stderr, "Usage: %s [options]\n"
- 		"Options are:\n"
- 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
-+		"  -d, --debug            Enable debug logs(syslog debug by default)\n"
- 		"  -h, --help             print this help\n", argv[0]);
- }
- 
-@@ -1683,10 +1730,11 @@ int main(int argc, char *argv[])
- 	static struct option long_options[] = {
- 		{"help",	no_argument,	   0,  'h' },
- 		{"no-daemon",	no_argument,	   0,  'n' },
-+		{"debug",	no_argument,	   0,  'd' },
- 		{0,		0,		   0,  0   }
+ 		intc: interrupt-controller@4ac10000 {
+-			compatible = "arm,cortex-a7-gic";
++			compatible = "arm,gic-400";
+ 			reg = <0x4ac10000 0x1000>,
+ 			      <0x4ac20000 0x2000>,
+ 			      <0x4ac40000 0x2000>,
+ 			      <0x4ac60000 0x2000>;
+ 			#interrupt-cells = <3>;
+-			#address-cells = <1>;
+ 			interrupt-controller;
+ 		};
  	};
- 
--	while ((opt = getopt_long(argc, argv, "hn", long_options,
-+	while ((opt = getopt_long(argc, argv, "hnd", long_options,
- 				  &long_index)) != -1) {
- 		switch (opt) {
- 		case 'n':
-@@ -1695,6 +1743,9 @@ int main(int argc, char *argv[])
- 		case 'h':
- 			print_usage(argv);
- 			exit(0);
-+		case 'd':
-+			debug = 1;
-+			break;
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
-@@ -1717,6 +1768,9 @@ int main(int argc, char *argv[])
- 	 */
- 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
- 
-+	if (debug)
-+		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
-+
- 	if (kvp_file_init()) {
- 		syslog(LOG_ERR, "Failed to initialize the pools");
- 		exit(EXIT_FAILURE);
 -- 
 2.34.1
 
