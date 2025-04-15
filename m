@@ -1,1351 +1,276 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2011.outbound.protection.outlook.com [40.92.46.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABC1E571
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733291; cv=none; b=CacuuhruWl/QMDp3apDOjxyDzTtRQJh0pzIJ0DaMTNH8AXEVxQJ0y/YzlgSrVCJEhE9WtQ482Grjqsw6NDwodkb8X7aHUe5K2jfPxAinEuvhiW8aHeZFJ5IXCQ5RYgB3R1CgotvbnJMokgOJ0A75Pzj0GZuLWzm1CEStfyH5s7E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733291; c=relaxed/simple;
-	bh=Eo7cB5DHh3L8ZkemrvTQgQuVSyMumbXIAYRKFhsTpBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G5D5BlA9orNa2YhXjIiZLcw7MTL70VauVg0SMQwbdgrflKEufRdGdAXZ5vJ80nSRyS9lsUeO2VAr2AwHcM9/C2ti4YjVPsKyKDMDjuDMPbLpaKkakKwieWfodp8Z8LsoIMIkgbuiHwr+WiXa9DuDs5l/wDGt0JeXTe54TtHOycQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yComfcPM; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B00E20ADE6;
+	Tue, 15 Apr 2025 16:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744733299; cv=fail; b=ZXv4rBt5WsM0FGxcNqO/ftaTLr4UNpb0G76ipHXXzK44pVixttwso7RjOKn/MpWmQMls7M8IYrDOedph8Yow7m4CX3s3e3FeKWpRkjwicSinO9jCHFkuqwjDjDKerO5j+WIg6bnikmcy8n3G23q3tilXptVRCALWxkbR1+l0Fcg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744733299; c=relaxed/simple;
+	bh=oIiuv1X0SlXVKp5n9dL6E1iKdVOtJ2AEElmcag1thSM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=k8DGF6RLvf+EDoTRTA72iAO/sktnnHkCtpY/bKfr3qja19gnKJfZoCTgYlygAON8PJNCxwtO9eeIidTZEn3aPlL1ttw4+I5ALBNvPRiWzOjS0XJ8DfD3eFkH8OUptBt19GywQOiuvMRU/wsl305eamu0quHpKGuJBIFH3Ujnmtw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LfG2f08y; arc=fail smtp.client-ip=40.92.46.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yComfcPM"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4769e30af66so398261cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744733287; x=1745338087; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1blJdvXfnUL2Qtjr4DsGgw8+M4yX2XVq9It4nSok8T8=;
-        b=yComfcPMtwrXZBVdlk3bABj87nWyCJx3Zm2jKw0pIIhSQ/VRl/unR4bVpNxisCXjL2
-         FUSPN7HzJ4kh9Qr2edjq7FuBBXE97u8TpJT44Cb/4mTlDjt3f9iCrXyihra+1XJ3Wh5U
-         AWS12sFNypsZLzIs6lAH2rSmdX4NMTDqFqPgNy3nwJiiGYcxysSiBqx3nVOJtxrHlvx8
-         AhugRqWW8pmY2JbbggTHU71hHVWrdY9MQIFj05sL5Z1rTVr7TDpQTgeL7TypEYLwSotj
-         q2GV1VgVgkyGpRtdH6fbXFVR1ulq3X51hX8LRI4dM4wCG9T4god2CgIA1IpNfyl5a0hr
-         cbdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744733287; x=1745338087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1blJdvXfnUL2Qtjr4DsGgw8+M4yX2XVq9It4nSok8T8=;
-        b=Qyvm4PFyVRiZ5eOSi/dVtnazcfxpoQ++Ox3o5FwbX4qQfNAvXO3oj+KbaZsT6X3UQp
-         5zHFzbqUA3qK32FLREId8205A/VWNWTUFLhyVRhoSHdXDus/OXuFhapB4DnhMGOCSrWA
-         gHz12edzgbVeoeFSGCY63s23fWDJe4FZOkowzxis8qd9QShe3t2844yswsjoJ7HiWF3V
-         6SD+8xIQ27KjecODhYFwOnactwPF002B16QZH8nXHRO1VsZLIQXluCxwHdt9V8EwBrS2
-         XiEyevXxJMUojAsICmHVGLLLohRW07PxWC2e4R5MwrvZCyS2ZxlK8y8Ya+TaE6F/Fdg/
-         ErAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWthITcmDb7APv5KvJkU5Xsxk58K7c9OyLwF7owbwLKz5/GEAVcWxiKfmZ/u9O4c2vpVPzz5NnKsYBduTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdzQd5G91b328gjW6Ox9bSgC76ZYX8uOQmsRPCAYkM1zPdLrmf
-	m15MIFKK5W47WvhDk/qhOvb56OypS7fW3XywMczQ1ZFZpAY2xvnVZH8+AaMtBynaB4w1WUt7Pcj
-	LvgT0dhvxNJ6vIhiegZhmaxakwA98HQPMxxo2NrJYFQ/bwSWiTlph
-X-Gm-Gg: ASbGncvkr5a3P+fSiurBiMpfXvOdbo7xMths2KIks15bWzT+oJPRk2uQYX86Y3daLEy
-	6B+yaqcoYZDKobYjCYkCEwHsr7MW/h8fq86OxxHGT2lIqamF0mxLcJjCN/D7v0jrwdCHE8Adrpu
-	Y9l+5LwkV0P9vO058zh69SaVpt9iv27Kmet+ARtHP4zzgLJTEIQ+A3
-X-Google-Smtp-Source: AGHT+IFRjHjqmre7NAjxlJ9zeGLlqqCNwVJ6oz9EJvjA4Dom0ihThkyXVGMGdvoP36Gq6i0Zcv5fM3vqVwfTxHo7tTE=
-X-Received: by 2002:a05:622a:181a:b0:476:861d:10ec with SMTP id
- d75a77b69052e-47acabb80e5mr3203151cf.15.1744733286461; Tue, 15 Apr 2025
- 09:08:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LfG2f08y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=w3gfX8JEnBPxk2o2+WRAoS+trx0U7fivRShh9uEjiYt6dL4S6j3MXaSTxPqGX+ApuqgSysitFHquOAFkvX2w4yCHOPhKlQiwAUsjIy7juRzz/5V64DQQ3hXFK9fdC6JSLWsE+UDehgkS4Hc77ZlDf0pR0PHLXdbTutEXCsBnRNqIZTVYaOi9D9R3rrYtYe5TxV9BTvMDFWAXP+wfLYXNMilLArb90HllUxLqMH0GQ4JY2mCTdnQ6RFKUldK2/aym3oXdkOn2CLWDeBTxsZuX7HEAmw+DLW+bJpSi6xtfabiYCSkvh606oq9jsAbdNeShQYLOKRLt0GDH6VJnhK/DdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vjK0cWEVd73mcKmo4P53snGLw/JM7ANIV32gBED/Hpw=;
+ b=bNL534SjYT2hTlzrvtydnYfQQ2zhjXDhVRkU8J4dxUyHUziyp2JZzIPugheejAmIEEXbqUtOrdbzklCV/c/H8E0ueHsZPPVBSpKVWpPuCmtGGMWDyQSIv5K/G6LJzp7uNHpWZXgtkoWqgyIkLk+Kv3Xu+HGfcaaiK7NP0sHEMqHKMa8SWqhBE2D6/jggCw0FRgS1JbizOzlOexd9JMNwS68Vpv1906pC8CbdU1MJwnU8n+I628W8bTHWKDH9VWeErWk0zAJ+bJbeRNgeTq6/cTa/Ap6jLwqAd+QO/sjLgWCeO1KE1xO2gdiMQUz9efi4NawPzL2WSrEtldj2szFuvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vjK0cWEVd73mcKmo4P53snGLw/JM7ANIV32gBED/Hpw=;
+ b=LfG2f08yQJwQwwMbGACsMN8LBRP2TCM8K2zgIo1YFBwg8O5oJgjb7us8EPOF3Jdf1tUzAsIM0vBDcSEzBZDhdf/YAGwFzS4Fy5zRDKaAKvy2O0Ka3m7v8lh0v/O+ZxUk4gOnifsZC9oqJ+cXj8bl621ALHIpQryyjZuOtFBAQA488mpqajxHpOJ4Jgrm3NENesfjEynt4sPFPOxAILJMNbkCdvECfbbd+PFu7phq69BNSD/Y33kzRX1IHZaaSWJV+cYNSxI3YWAAFbRQowhEktnRGJQm6kudNE/ugrAmloccfiRwaFuh/nsAy0IIU3UFHmyk7VSuhyZJJb7+JFX8Vw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH7PR02MB9359.namprd02.prod.outlook.com (2603:10b6:510:273::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
+ 2025 16:08:15 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
+ 16:08:15 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Stephen Hemminger <stephen@networkplumber.org>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@kernel.org" <stable@kernel.org>, Saurabh Sengar
+	<ssengar@linux.microsoft.com>
+Subject: RE: [PATCH v4 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+Thread-Topic: [PATCH v4 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+Thread-Index: AQHbqd8LFlOL2OBO1k6aNRsiIlqmsLOk6ZHw
+Date: Tue, 15 Apr 2025 16:08:15 +0000
+Message-ID:
+ <SN6PR02MB4157D5A900435AD1663BC720D4B22@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250410060847.82407-1-namjain@linux.microsoft.com>
+In-Reply-To: <20250410060847.82407-1-namjain@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB9359:EE_
+x-ms-office365-filtering-correlation-id: 682921aa-f10c-4101-f19a-08dd7c37ba95
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|8060799006|15080799006|8062599003|19110799003|1602099012|10035399004|3412199025|4302099013|440099028|102099032|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?GEgmI3kXnomkhwJChmd52gWgG5nDYfKra+sgkDFPW/vQd6WLKe12X5UnzMLF?=
+ =?us-ascii?Q?LeW5FOK7tZYHIEViromRJ3S1uCqYo+TeRlGXeVQH15wCnzAbcGvy9j4EUPG4?=
+ =?us-ascii?Q?mg42nAG+Eepp+VY2lZA8z6CbY65MEGkGRtbQawNv84TZLtPX+sVSjmqvPSz6?=
+ =?us-ascii?Q?bRMV78nmWe4Y6+h0FKqn8ZcCxOoGJG/ONxhU4khh03HGxwCNxKe8ktXPdhQ4?=
+ =?us-ascii?Q?JuJtRaWXqjKSVQfJRYe0UvXJNVAOAGFmbI+9iCeBsUMZ5OpxicHbAOthmpmb?=
+ =?us-ascii?Q?vS09Pv4CzTQazG87rXv+yaXB5WHR68EYGJlZsv+C/BvpTU/kKIOCHCt+DOFt?=
+ =?us-ascii?Q?lIizK8Uq0OELOsHUaS0KgVIJITTYH+ygUUFZBxNixO9L5UuDXq/67QMBuT5z?=
+ =?us-ascii?Q?6CjaJKa0UWLBL2w6gZQ6IwWIQkmkregD78XpHsMRtmhHUZIxnmKLm0uP8WPq?=
+ =?us-ascii?Q?sjRV4W3wS7kq/Sac7ofIeSDMFm65EQK1CWX4NJ8XhxTsduUQgDqMYcDUhveG?=
+ =?us-ascii?Q?7L6GOcjNoXTN00y6WMZ5HGljtw6hH9mfROMfX5wgAe9RxDwvixvUnV2xBAj7?=
+ =?us-ascii?Q?QWYponZq9seWkyR9EpID6EVtPYXmwpRog38mk0QBVD1PuzVrSBeDCF5ZWu6V?=
+ =?us-ascii?Q?RRNFXSuZGL7xkmHIWK1eXg2RxlR8wcxUXAZ1UzYuVDoPPj7tPDPLM4+/L/Wj?=
+ =?us-ascii?Q?Z7K14C7UhsItK5Yx7RGWQn592qDQByY4XrubFT+JHMT9WwHRtTwZ3BlU0TLH?=
+ =?us-ascii?Q?Qn9QTsDt41LF6QjfPZq5zsa6m9/TF9MqJVn0iMCxRV+PlMFTZKIUw95/182O?=
+ =?us-ascii?Q?vyXIj8e3/b2s86CeEcsxICN1+7NgLE4bg5QGVOtNSZPuIe1Wq6XQRRINKYGJ?=
+ =?us-ascii?Q?4TU70USVE8E0Yox4Kr3tsmD8An09S779NrWrEPrl1WQj+ACccBZRDXu6NaDa?=
+ =?us-ascii?Q?o7DYqvy4XuWBl+HdO9xe/fp8nzcuvKOGTJb400x7l6y2wiTjK8J/64lucmg+?=
+ =?us-ascii?Q?Xr8kKgp/WEbca+umn+ZTS2jRkYhcL7WQVupqBPHTAUcBuGJza/1OdMSQ4br6?=
+ =?us-ascii?Q?Aj1R+S1O5BQQH8ycDSWbBsXJwPscaFEbPUbIqPh1OrIyrEK5VubbrWJvTdyg?=
+ =?us-ascii?Q?6Bw3Aol+2wlWNiq9h7r44n8FUAk0lInM70kYvepbJ5iy+5yb6h3FUOvwLmJ6?=
+ =?us-ascii?Q?QN3YZVJNYdQwlSOgzq3ivPamFvBqNUof81QSWOzUjT3shInMjku5MRGAGR+k?=
+ =?us-ascii?Q?7SDfu87Vn+fslh6MwshE3SmH0q+NpIffDQMB2X9tMCCpT5quKhaUASyB2s7P?=
+ =?us-ascii?Q?90k=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?LdsofyySo22FiDTLcbBAr2okWpbN6In/oacyVsbmb3/ZNjsaXVFAA4dIGZJZ?=
+ =?us-ascii?Q?WfUQsv8X+df43YzptNGIiuHx63Ox45ppPrqtnaOMrtt5E2BtY3/np4QBGF/Z?=
+ =?us-ascii?Q?99y6ncpbaOPnzLL81MscdWrZEkSGKJH9gXTrGtAXtAALTc4lnC2YB0hSL3Mt?=
+ =?us-ascii?Q?YI5o8VESMKxtiHvwdTXbGimxGBEBZO4NjovfeNexBboEP5yJWOhEt4luEGkR?=
+ =?us-ascii?Q?oe63e5kVvdXFQ2sh6zISlCoRFxtcac3x41RyefQ/Sd7zo60bS/sNYk90L2Ci?=
+ =?us-ascii?Q?8sSE9WXvxa2Zq+A+m4dLOYDDSxEknTiqDqDHKSpXVVwUHrrthPP51QB3ThQf?=
+ =?us-ascii?Q?yqvR9yO3GcdBQPowsQXNvs+WIgzkJalG2JZ/T2yEcCXh0LrOFcWDd4Rd31V2?=
+ =?us-ascii?Q?LMSeDGEnb+IompLl3LuNdqdiWvR6ecbedkmKLmdxQ35PRdMyNuOLnJyqiM7R?=
+ =?us-ascii?Q?0N+/6pK0Jb68Z/SgcwzbcmXVOXGe4tAY9coMj8TYUo7IMcSAInTwbxEJFQ6h?=
+ =?us-ascii?Q?57n4al5QmTA04jxHBdx+IN3uXIC1Hzym98oXn2Oh2H2nRwhZKXs/nEOLa7lK?=
+ =?us-ascii?Q?RJ1mjKyvgVjLj9TfaXZTsP6aSKpSt3AANZt0MsFsXg/jQpmHpbJLhwdBb2GW?=
+ =?us-ascii?Q?jemD9zk3M3Ma7wIeYsGUCtRRTgHmAkkYs7hgUy3jwS3aRzuK0fsgnjzyPXXW?=
+ =?us-ascii?Q?fSH71xJJpmQCyVo8+3WCXjRXDwoE6NTeATTHsYM+C+/Zt+JMxZpTwJQ2FnvQ?=
+ =?us-ascii?Q?qq5IaaNFGQvcWeCZw9g+0UsJCMki3nYrcwmOTt+1CSGnsZCHEJ49UwdyUpEe?=
+ =?us-ascii?Q?D2V0w35MPZ6qJLNZgGCFiJG7BwTBFu3vIB5UKTBsblGGKPg1xF7evJwqwoxq?=
+ =?us-ascii?Q?JsMrOduSZ8mA9d48qPJ5HFPRAXr9qhUK8P95HsPLqjUEvaPGHqz2XopDQlhQ?=
+ =?us-ascii?Q?I027aoZsg5XraGDN56s5ceb8P/mS5+wutXO1GM9ZIC8ji/tQQY4CYDzFp+79?=
+ =?us-ascii?Q?FPXmGW6v6SJ05Du1YAk2+RkQU9UvyppTmSusctbF6IjeDhh0OmDwFnkcOfNN?=
+ =?us-ascii?Q?y4wvOZ3HWy0l8k2HGznmLnLWlXezguv8xufdWfaBd9dG8auH/thE+w7FubPK?=
+ =?us-ascii?Q?1MQj4R/ddTVE6afIhU7y4a4auNznbgw9BwODDKTXntMvfa1jx1fWI8Hlt7pi?=
+ =?us-ascii?Q?5aTOECCSA3qTfQy3UWj9AtRdqHMwUnyr0B6+osvqNSeVZA0SXqJCcBWXsjc?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744720574.git.lorenzo.stoakes@oracle.com>
- <acd557ff58c49aec6a83955b62de026687a79fa9.1744720574.git.lorenzo.stoakes@oracle.com>
- <CAJuCfpHg8ru9a3jQFaGRqJA0hpTODXXstqbLAJqy7bH9RfpE7Q@mail.gmail.com>
-In-Reply-To: <CAJuCfpHg8ru9a3jQFaGRqJA0hpTODXXstqbLAJqy7bH9RfpE7Q@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 15 Apr 2025 09:07:54 -0700
-X-Gm-Features: ATxdqUFo1gMfFMGQHSluK4pWCfNSohVSVzOzTpRjxXwWnl2XqzQk-tX-WrqVVcc
-Message-ID: <CAJuCfpEEOh3igTGir-UxJLfKr+y2p5xDinZR9JDLg6AzO5Dw8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: move mmap/vma locking logic into specific files
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, SeongJae Park <sj@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 682921aa-f10c-4101-f19a-08dd7c37ba95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2025 16:08:15.1370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB9359
 
-On Tue, Apr 15, 2025 at 9:06=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Tue, Apr 15, 2025 at 6:11=E2=80=AFAM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> >
-> > Currently the VMA and mmap locking logic is entangled in two of the mos=
-t
-> > overwrought files in mm - include/linux/mm.h and mm/memory.c. Separate =
-this
-> > logic out so we can more easily make changes and create an appropriate
-> > MAINTAINERS entry that spans only the logic relating to locking.
-> >
-> > This should have no functional change. Care is taken to avoid dependenc=
-y
-> > loops, we must regrettably keep release_fault_lock() and
-> > assert_fault_locked() in mm.h as a result due to the dependence on the
-> > vm_fault type.
-> >
-> > Additionally we must declare rcuwait_wake_up() manually to avoid a
-> > dependency cycle on linux/rcuwait.h.
->
-> The king of refactoring strikes again :)
-> On a serious note, thanks a lot for doing this! The code is much more
-> organized this way IMO.
-> I noticed a couple nits (see below) but otherwise LGTM. With those
-> addressed feel free to add:
->
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
->
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > ---
-> >  include/linux/mm.h        | 231 +---------------------------------
-> >  include/linux/mmap_lock.h | 227 +++++++++++++++++++++++++++++++++
-> >  mm/memory.c               | 252 -------------------------------------
-> >  mm/mmap_lock.c            | 255 ++++++++++++++++++++++++++++++++++++++
-> >  5 files changed, 486 insertions(+), 479 deletions(-)
-> >
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 5eb0d77c4438..9b701cfbef22 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -671,204 +671,11 @@ static inline void vma_numab_state_init(struct v=
-m_area_struct *vma) {}
-> >  static inline void vma_numab_state_free(struct vm_area_struct *vma) {}
-> >  #endif /* CONFIG_NUMA_BALANCING */
-> >
-> > -#ifdef CONFIG_PER_VMA_LOCK
-> > -static inline void vma_lock_init(struct vm_area_struct *vma, bool rese=
-t_refcnt)
-> > -{
-> > -#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > -       static struct lock_class_key lockdep_key;
-> > -
-> > -       lockdep_init_map(&vma->vmlock_dep_map, "vm_lock", &lockdep_key,=
- 0);
-> > -#endif
-> > -       if (reset_refcnt)
-> > -               refcount_set(&vma->vm_refcnt, 0);
-> > -       vma->vm_lock_seq =3D UINT_MAX;
-> > -}
-> > -
-> > -static inline bool is_vma_writer_only(int refcnt)
-> > -{
-> > -       /*
-> > -        * With a writer and no readers, refcnt is VMA_LOCK_OFFSET if t=
-he vma
-> > -        * is detached and (VMA_LOCK_OFFSET + 1) if it is attached. Wai=
-ting on
-> > -        * a detached vma happens only in vma_mark_detached() and is a =
-rare
-> > -        * case, therefore most of the time there will be no unnecessar=
-y wakeup.
-> > -        */
-> > -       return refcnt & VMA_LOCK_OFFSET && refcnt <=3D VMA_LOCK_OFFSET =
-+ 1;
-> > -}
-> > -
-> > -static inline void vma_refcount_put(struct vm_area_struct *vma)
-> > -{
-> > -       /* Use a copy of vm_mm in case vma is freed after we drop vm_re=
-fcnt */
-> > -       struct mm_struct *mm =3D vma->vm_mm;
-> > -       int oldcnt;
-> > -
-> > -       rwsem_release(&vma->vmlock_dep_map, _RET_IP_);
-> > -       if (!__refcount_dec_and_test(&vma->vm_refcnt, &oldcnt)) {
-> > -
-> > -               if (is_vma_writer_only(oldcnt - 1))
-> > -                       rcuwait_wake_up(&mm->vma_writer_wait);
-> > -       }
-> > -}
-> > -
-> > -/*
-> > - * Try to read-lock a vma. The function is allowed to occasionally yie=
-ld false
-> > - * locked result to avoid performance overhead, in which case we fall =
-back to
-> > - * using mmap_lock. The function should never yield false unlocked res=
-ult.
-> > - * False locked result is possible if mm_lock_seq overflows or if vma =
-gets
-> > - * reused and attached to a different mm before we lock it.
-> > - * Returns the vma on success, NULL on failure to lock and EAGAIN if v=
-ma got
-> > - * detached.
-> > - */
-> > -static inline struct vm_area_struct *vma_start_read(struct mm_struct *=
-mm,
-> > -                                                   struct vm_area_stru=
-ct *vma)
-> > -{
-> > -       int oldcnt;
-> > -
-> > -       /*
-> > -        * Check before locking. A race might cause false locked result=
-.
-> > -        * We can use READ_ONCE() for the mm_lock_seq here, and don't n=
-eed
-> > -        * ACQUIRE semantics, because this is just a lockless check who=
-se result
-> > -        * we don't rely on for anything - the mm_lock_seq read against=
- which we
-> > -        * need ordering is below.
-> > -        */
-> > -       if (READ_ONCE(vma->vm_lock_seq) =3D=3D READ_ONCE(mm->mm_lock_se=
-q.sequence))
-> > -               return NULL;
-> > -
-> > -       /*
-> > -        * If VMA_LOCK_OFFSET is set, __refcount_inc_not_zero_limited_a=
-cquire()
-> > -        * will fail because VMA_REF_LIMIT is less than VMA_LOCK_OFFSET=
-.
-> > -        * Acquire fence is required here to avoid reordering against l=
-ater
-> > -        * vm_lock_seq check and checks inside lock_vma_under_rcu().
-> > -        */
-> > -       if (unlikely(!__refcount_inc_not_zero_limited_acquire(&vma->vm_=
-refcnt, &oldcnt,
-> > -                                                             VMA_REF_L=
-IMIT))) {
-> > -               /* return EAGAIN if vma got detached from under us */
-> > -               return oldcnt ? NULL : ERR_PTR(-EAGAIN);
-> > -       }
-> > -
-> > -       rwsem_acquire_read(&vma->vmlock_dep_map, 0, 1, _RET_IP_);
-> > -       /*
-> > -        * Overflow of vm_lock_seq/mm_lock_seq might produce false lock=
-ed result.
-> > -        * False unlocked result is impossible because we modify and ch=
-eck
-> > -        * vma->vm_lock_seq under vma->vm_refcnt protection and mm->mm_=
-lock_seq
-> > -        * modification invalidates all existing locks.
-> > -        *
-> > -        * We must use ACQUIRE semantics for the mm_lock_seq so that if=
- we are
-> > -        * racing with vma_end_write_all(), we only start reading from =
-the VMA
-> > -        * after it has been unlocked.
-> > -        * This pairs with RELEASE semantics in vma_end_write_all().
-> > -        */
-> > -       if (unlikely(vma->vm_lock_seq =3D=3D raw_read_seqcount(&mm->mm_=
-lock_seq))) {
-> > -               vma_refcount_put(vma);
-> > -               return NULL;
-> > -       }
-> > -
-> > -       return vma;
-> > -}
-> > -
-> > -/*
-> > - * Use only while holding mmap read lock which guarantees that locking=
- will not
-> > - * fail (nobody can concurrently write-lock the vma). vma_start_read()=
- should
-> > - * not be used in such cases because it might fail due to mm_lock_seq =
-overflow.
-> > - * This functionality is used to obtain vma read lock and drop the mma=
-p read lock.
-> > - */
-> > -static inline bool vma_start_read_locked_nested(struct vm_area_struct =
-*vma, int subclass)
-> > -{
-> > -       int oldcnt;
-> > -
-> > -       mmap_assert_locked(vma->vm_mm);
-> > -       if (unlikely(!__refcount_inc_not_zero_limited_acquire(&vma->vm_=
-refcnt, &oldcnt,
-> > -                                                             VMA_REF_L=
-IMIT)))
-> > -               return false;
-> > -
-> > -       rwsem_acquire_read(&vma->vmlock_dep_map, 0, 1, _RET_IP_);
-> > -       return true;
-> > -}
-> > -
-> > -/*
-> > - * Use only while holding mmap read lock which guarantees that locking=
- will not
-> > - * fail (nobody can concurrently write-lock the vma). vma_start_read()=
- should
-> > - * not be used in such cases because it might fail due to mm_lock_seq =
-overflow.
-> > - * This functionality is used to obtain vma read lock and drop the mma=
-p read lock.
-> > - */
-> > -static inline bool vma_start_read_locked(struct vm_area_struct *vma)
-> > -{
-> > -       return vma_start_read_locked_nested(vma, 0);
-> > -}
-> > -
-> > -static inline void vma_end_read(struct vm_area_struct *vma)
-> > -{
-> > -       vma_refcount_put(vma);
-> > -}
-> > -
-> > -/* WARNING! Can only be used if mmap_lock is expected to be write-lock=
-ed */
-> > -static bool __is_vma_write_locked(struct vm_area_struct *vma, unsigned=
- int *mm_lock_seq)
-> > -{
-> > -       mmap_assert_write_locked(vma->vm_mm);
-> > -
-> > -       /*
-> > -        * current task is holding mmap_write_lock, both vma->vm_lock_s=
-eq and
-> > -        * mm->mm_lock_seq can't be concurrently modified.
-> > -        */
-> > -       *mm_lock_seq =3D vma->vm_mm->mm_lock_seq.sequence;
-> > -       return (vma->vm_lock_seq =3D=3D *mm_lock_seq);
-> > -}
-> > -
-> > -void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_loc=
-k_seq);
-> > -
-> > -/*
-> > - * Begin writing to a VMA.
-> > - * Exclude concurrent readers under the per-VMA lock until the current=
-ly
-> > - * write-locked mmap_lock is dropped or downgraded.
-> > - */
-> > -static inline void vma_start_write(struct vm_area_struct *vma)
-> > -{
-> > -       unsigned int mm_lock_seq;
-> > -
-> > -       if (__is_vma_write_locked(vma, &mm_lock_seq))
-> > -               return;
-> > -
-> > -       __vma_start_write(vma, mm_lock_seq);
-> > -}
-> > -
-> > -static inline void vma_assert_write_locked(struct vm_area_struct *vma)
-> > -{
-> > -       unsigned int mm_lock_seq;
-> > -
-> > -       VM_BUG_ON_VMA(!__is_vma_write_locked(vma, &mm_lock_seq), vma);
-> > -}
-> > -
-> > -static inline void vma_assert_locked(struct vm_area_struct *vma)
-> > -{
-> > -       unsigned int mm_lock_seq;
-> > -
-> > -       VM_BUG_ON_VMA(refcount_read(&vma->vm_refcnt) <=3D 1 &&
-> > -                     !__is_vma_write_locked(vma, &mm_lock_seq), vma);
-> > -}
-> > -
-> >  /*
-> > - * WARNING: to avoid racing with vma_mark_attached()/vma_mark_detached=
-(), these
-> > - * assertions should be made either under mmap_write_lock or when the =
-object
-> > - * has been isolated under mmap_write_lock, ensuring no competing writ=
-ers.
-> > + * These must be here rather than mmap_lock.h as dependent on vm_fault=
- type,
-> > + * declared in this header.
-> >   */
-> > -static inline void vma_assert_attached(struct vm_area_struct *vma)
-> > -{
-> > -       WARN_ON_ONCE(!refcount_read(&vma->vm_refcnt));
-> > -}
-> > -
-> > -static inline void vma_assert_detached(struct vm_area_struct *vma)
-> > -{
-> > -       WARN_ON_ONCE(refcount_read(&vma->vm_refcnt));
-> > -}
-> > -
-> > -static inline void vma_mark_attached(struct vm_area_struct *vma)
-> > -{
-> > -       vma_assert_write_locked(vma);
-> > -       vma_assert_detached(vma);
-> > -       refcount_set_release(&vma->vm_refcnt, 1);
-> > -}
-> > -
-> > -void vma_mark_detached(struct vm_area_struct *vma);
-> > -
-> > +#ifdef CONFIG_PER_VMA_LOCK
-> >  static inline void release_fault_lock(struct vm_fault *vmf)
-> >  {
-> >         if (vmf->flags & FAULT_FLAG_VMA_LOCK)
-> > @@ -884,36 +691,7 @@ static inline void assert_fault_locked(struct vm_f=
-ault *vmf)
-> >         else
-> >                 mmap_assert_locked(vmf->vma->vm_mm);
-> >  }
-> > -
-> > -struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
-> > -                                         unsigned long address);
-> > -
-> > -#else /* CONFIG_PER_VMA_LOCK */
-> > -
-> > -static inline void vma_lock_init(struct vm_area_struct *vma, bool rese=
-t_refcnt) {}
-> > -static inline struct vm_area_struct *vma_start_read(struct mm_struct *=
-mm,
-> > -                                                   struct vm_area_stru=
-ct *vma)
-> > -               { return NULL; }
-> > -static inline void vma_end_read(struct vm_area_struct *vma) {}
-> > -static inline void vma_start_write(struct vm_area_struct *vma) {}
-> > -static inline void vma_assert_write_locked(struct vm_area_struct *vma)
-> > -               { mmap_assert_write_locked(vma->vm_mm); }
-> > -static inline void vma_assert_attached(struct vm_area_struct *vma) {}
-> > -static inline void vma_assert_detached(struct vm_area_struct *vma) {}
-> > -static inline void vma_mark_attached(struct vm_area_struct *vma) {}
-> > -static inline void vma_mark_detached(struct vm_area_struct *vma) {}
-> > -
-> > -static inline struct vm_area_struct *lock_vma_under_rcu(struct mm_stru=
-ct *mm,
-> > -               unsigned long address)
-> > -{
-> > -       return NULL;
-> > -}
-> > -
-> > -static inline void vma_assert_locked(struct vm_area_struct *vma)
-> > -{
-> > -       mmap_assert_locked(vma->vm_mm);
-> > -}
-> > -
-> > +#else
-> >  static inline void release_fault_lock(struct vm_fault *vmf)
-> >  {
-> >         mmap_read_unlock(vmf->vma->vm_mm);
-> > @@ -923,7 +701,6 @@ static inline void assert_fault_locked(struct vm_fa=
-ult *vmf)
-> >  {
-> >         mmap_assert_locked(vmf->vma->vm_mm);
-> >  }
-> > -
-> >  #endif /* CONFIG_PER_VMA_LOCK */
-> >
-> >  extern const struct vm_operations_struct vma_dummy_vm_ops;
-> > diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> > index 4706c6769902..7983b2efe9bf 100644
-> > --- a/include/linux/mmap_lock.h
-> > +++ b/include/linux/mmap_lock.h
-> > @@ -1,6 +1,10 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> >  #ifndef _LINUX_MMAP_LOCK_H
-> >  #define _LINUX_MMAP_LOCK_H
-> >
-> > +/* Avoid a dependency loop by declaring here. */
-> > +extern int rcuwait_wake_up(struct rcuwait *w);
-> > +
-> >  #include <linux/lockdep.h>
-> >  #include <linux/mm_types.h>
-> >  #include <linux/mmdebug.h>
-> > @@ -104,6 +108,206 @@ static inline bool mmap_lock_speculate_retry(stru=
-ct mm_struct *mm, unsigned int
-> >         return read_seqcount_retry(&mm->mm_lock_seq, seq);
-> >  }
-> >
-> > +static inline void vma_lock_init(struct vm_area_struct *vma, bool rese=
-t_refcnt)
-> > +{
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +       static struct lock_class_key lockdep_key;
-> > +
-> > +       lockdep_init_map(&vma->vmlock_dep_map, "vm_lock", &lockdep_key,=
- 0);
-> > +#endif
-> > +       if (reset_refcnt)
-> > +               refcount_set(&vma->vm_refcnt, 0);
-> > +       vma->vm_lock_seq =3D UINT_MAX;
-> > +}
-> > +
-> > +static inline bool is_vma_writer_only(int refcnt)
-> > +{
-> > +       /*
-> > +        * With a writer and no readers, refcnt is VMA_LOCK_OFFSET if t=
-he vma
-> > +        * is detached and (VMA_LOCK_OFFSET + 1) if it is attached. Wai=
-ting on
-> > +        * a detached vma happens only in vma_mark_detached() and is a =
-rare
-> > +        * case, therefore most of the time there will be no unnecessar=
-y wakeup.
-> > +        */
-> > +       return refcnt & VMA_LOCK_OFFSET && refcnt <=3D VMA_LOCK_OFFSET =
-+ 1;
-> > +}
-> > +
-> > +static inline void vma_refcount_put(struct vm_area_struct *vma)
-> > +{
-> > +       /* Use a copy of vm_mm in case vma is freed after we drop vm_re=
-fcnt */
-> > +       struct mm_struct *mm =3D vma->vm_mm;
-> > +       int oldcnt;
-> > +
-> > +       rwsem_release(&vma->vmlock_dep_map, _RET_IP_);
-> > +       if (!__refcount_dec_and_test(&vma->vm_refcnt, &oldcnt)) {
-> > +
-> > +               if (is_vma_writer_only(oldcnt - 1))
-> > +                       rcuwait_wake_up(&mm->vma_writer_wait);
-> > +       }
-> > +}
-> > +
-> > +/*
-> > + * Try to read-lock a vma. The function is allowed to occasionally yie=
-ld false
-> > + * locked result to avoid performance overhead, in which case we fall =
-back to
-> > + * using mmap_lock. The function should never yield false unlocked res=
-ult.
-> > + * False locked result is possible if mm_lock_seq overflows or if vma =
-gets
-> > + * reused and attached to a different mm before we lock it.
-> > + * Returns the vma on success, NULL on failure to lock and EAGAIN if v=
-ma got
-> > + * detached.
-> > + */
-> > +static inline struct vm_area_struct *vma_start_read(struct mm_struct *=
-mm,
-> > +                                                   struct vm_area_stru=
-ct *vma)
-> > +{
-> > +       int oldcnt;
-> > +
-> > +       /*
-> > +        * Check before locking. A race might cause false locked result=
-.
-> > +        * We can use READ_ONCE() for the mm_lock_seq here, and don't n=
-eed
-> > +        * ACQUIRE semantics, because this is just a lockless check who=
-se result
-> > +        * we don't rely on for anything - the mm_lock_seq read against=
- which we
-> > +        * need ordering is below.
-> > +        */
-> > +       if (READ_ONCE(vma->vm_lock_seq) =3D=3D READ_ONCE(mm->mm_lock_se=
-q.sequence))
-> > +               return NULL;
-> > +
-> > +       /*
-> > +        * If VMA_LOCK_OFFSET is set, __refcount_inc_not_zero_limited_a=
-cquire()
-> > +        * will fail because VMA_REF_LIMIT is less than VMA_LOCK_OFFSET=
-.
-> > +        * Acquire fence is required here to avoid reordering against l=
-ater
-> > +        * vm_lock_seq check and checks inside lock_vma_under_rcu().
-> > +        */
-> > +       if (unlikely(!__refcount_inc_not_zero_limited_acquire(&vma->vm_=
-refcnt, &oldcnt,
-> > +                                                             VMA_REF_L=
-IMIT))) {
-> > +               /* return EAGAIN if vma got detached from under us */
-> > +               return oldcnt ? NULL : ERR_PTR(-EAGAIN);
-> > +       }
-> > +
-> > +       rwsem_acquire_read(&vma->vmlock_dep_map, 0, 1, _RET_IP_);
-> > +       /*
-> > +        * Overflow of vm_lock_seq/mm_lock_seq might produce false lock=
-ed result.
-> > +        * False unlocked result is impossible because we modify and ch=
-eck
-> > +        * vma->vm_lock_seq under vma->vm_refcnt protection and mm->mm_=
-lock_seq
-> > +        * modification invalidates all existing locks.
-> > +        *
-> > +        * We must use ACQUIRE semantics for the mm_lock_seq so that if=
- we are
-> > +        * racing with vma_end_write_all(), we only start reading from =
-the VMA
-> > +        * after it has been unlocked.
-> > +        * This pairs with RELEASE semantics in vma_end_write_all().
-> > +        */
-> > +       if (unlikely(vma->vm_lock_seq =3D=3D raw_read_seqcount(&mm->mm_=
-lock_seq))) {
-> > +               vma_refcount_put(vma);
-> > +               return NULL;
-> > +       }
-> > +
-> > +       return vma;
-> > +}
-> > +
-> > +/*
-> > + * Use only while holding mmap read lock which guarantees that locking=
- will not
-> > + * fail (nobody can concurrently write-lock the vma). vma_start_read()=
- should
-> > + * not be used in such cases because it might fail due to mm_lock_seq =
-overflow.
-> > + * This functionality is used to obtain vma read lock and drop the mma=
-p read lock.
-> > + */
-> > +static inline bool vma_start_read_locked_nested(struct vm_area_struct =
-*vma, int subclass)
-> > +{
-> > +       int oldcnt;
-> > +
-> > +       mmap_assert_locked(vma->vm_mm);
-> > +       if (unlikely(!__refcount_inc_not_zero_limited_acquire(&vma->vm_=
-refcnt, &oldcnt,
-> > +                                                             VMA_REF_L=
-IMIT)))
-> > +               return false;
-> > +
-> > +       rwsem_acquire_read(&vma->vmlock_dep_map, 0, 1, _RET_IP_);
-> > +       return true;
-> > +}
-> > +
-> > +/*
-> > + * Use only while holding mmap read lock which guarantees that locking=
- will not
-> > + * fail (nobody can concurrently write-lock the vma). vma_start_read()=
- should
-> > + * not be used in such cases because it might fail due to mm_lock_seq =
-overflow.
-> > + * This functionality is used to obtain vma read lock and drop the mma=
-p read lock.
-> > + */
-> > +static inline bool vma_start_read_locked(struct vm_area_struct *vma)
-> > +{
-> > +       return vma_start_read_locked_nested(vma, 0);
-> > +}
-> > +
-> > +static inline void vma_end_read(struct vm_area_struct *vma)
-> > +{
-> > +       vma_refcount_put(vma);
-> > +}
-> > +
-> > +/* WARNING! Can only be used if mmap_lock is expected to be write-lock=
-ed */
-> > +static bool __is_vma_write_locked(struct vm_area_struct *vma, unsigned=
- int *mm_lock_seq)
-> > +{
-> > +       mmap_assert_write_locked(vma->vm_mm);
-> > +
-> > +       /*
-> > +        * current task is holding mmap_write_lock, both vma->vm_lock_s=
-eq and
-> > +        * mm->mm_lock_seq can't be concurrently modified.
-> > +        */
-> > +       *mm_lock_seq =3D vma->vm_mm->mm_lock_seq.sequence;
-> > +       return (vma->vm_lock_seq =3D=3D *mm_lock_seq);
-> > +}
-> > +
-> > +void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_loc=
-k_seq);
-> > +
-> > +/*
-> > + * Begin writing to a VMA.
-> > + * Exclude concurrent readers under the per-VMA lock until the current=
-ly
-> > + * write-locked mmap_lock is dropped or downgraded.
-> > + */
-> > +static inline void vma_start_write(struct vm_area_struct *vma)
-> > +{
-> > +       unsigned int mm_lock_seq;
-> > +
-> > +       if (__is_vma_write_locked(vma, &mm_lock_seq))
-> > +               return;
-> > +
-> > +       __vma_start_write(vma, mm_lock_seq);
-> > +}
-> > +
-> > +static inline void vma_assert_write_locked(struct vm_area_struct *vma)
-> > +{
-> > +       unsigned int mm_lock_seq;
-> > +
-> > +       VM_BUG_ON_VMA(!__is_vma_write_locked(vma, &mm_lock_seq), vma);
-> > +}
-> > +
-> > +static inline void vma_assert_locked(struct vm_area_struct *vma)
-> > +{
-> > +       unsigned int mm_lock_seq;
-> > +
-> > +       VM_BUG_ON_VMA(refcount_read(&vma->vm_refcnt) <=3D 1 &&
-> > +                     !__is_vma_write_locked(vma, &mm_lock_seq), vma);
-> > +}
-> > +
-> > +/*
-> > + * WARNING: to avoid racing with vma_mark_attached()/vma_mark_detached=
-(), these
-> > + * assertions should be made either under mmap_write_lock or when the =
-object
-> > + * has been isolated under mmap_write_lock, ensuring no competing writ=
-ers.
-> > + */
-> > +static inline void vma_assert_attached(struct vm_area_struct *vma)
-> > +{
-> > +       WARN_ON_ONCE(!refcount_read(&vma->vm_refcnt));
-> > +}
-> > +
-> > +static inline void vma_assert_detached(struct vm_area_struct *vma)
-> > +{
-> > +       WARN_ON_ONCE(refcount_read(&vma->vm_refcnt));
-> > +}
-> > +
-> > +static inline void vma_mark_attached(struct vm_area_struct *vma)
-> > +{
-> > +       vma_assert_write_locked(vma);
-> > +       vma_assert_detached(vma);
-> > +       refcount_set_release(&vma->vm_refcnt, 1);
-> > +}
-> > +
-> > +void vma_mark_detached(struct vm_area_struct *vma);
-> > +
-> > +struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
-> > +                                         unsigned long address);
-> > +
-> >  #else /* CONFIG_PER_VMA_LOCK */
-> >
-> >  static inline void mm_lock_seqcount_init(struct mm_struct *mm) {}
-> > @@ -119,6 +323,29 @@ static inline bool mmap_lock_speculate_retry(struc=
-t mm_struct *mm, unsigned int
-> >  {
-> >         return true;
-> >  }
-> > +static inline void vma_lock_init(struct vm_area_struct *vma, bool rese=
-t_refcnt) {}
-> > +static inline struct vm_area_struct *vma_start_read(struct mm_struct *=
-mm,
-> > +                                                   struct vm_area_stru=
-ct *vma)
-> > +               { return NULL; }
-> > +static inline void vma_end_read(struct vm_area_struct *vma) {}
-> > +static inline void vma_start_write(struct vm_area_struct *vma) {}
-> > +static inline void vma_assert_write_locked(struct vm_area_struct *vma)
-> > +               { mmap_assert_write_locked(vma->vm_mm); }
-> > +static inline void vma_assert_attached(struct vm_area_struct *vma) {}
-> > +static inline void vma_assert_detached(struct vm_area_struct *vma) {}
-> > +static inline void vma_mark_attached(struct vm_area_struct *vma) {}
-> > +static inline void vma_mark_detached(struct vm_area_struct *vma) {}
-> > +
-> > +static inline struct vm_area_struct *lock_vma_under_rcu(struct mm_stru=
-ct *mm,
-> > +               unsigned long address)
-> > +{
-> > +       return NULL;
-> > +}
-> > +
-> > +static inline void vma_assert_locked(struct vm_area_struct *vma)
-> > +{
-> > +       mmap_assert_locked(vma->vm_mm);
-> > +}
-> >
-> >  #endif /* CONFIG_PER_VMA_LOCK */
-> >
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 688f3612e16d..35cfc91d5a2e 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -6378,258 +6378,6 @@ vm_fault_t handle_mm_fault(struct vm_area_struc=
-t *vma, unsigned long address,
-> >  }
-> >  EXPORT_SYMBOL_GPL(handle_mm_fault);
-> >
-> > -#ifdef CONFIG_LOCK_MM_AND_FIND_VMA
-> > -#include <linux/extable.h>
-> > -
-> > -static inline bool get_mmap_lock_carefully(struct mm_struct *mm, struc=
-t pt_regs *regs)
-> > -{
-> > -       if (likely(mmap_read_trylock(mm)))
-> > -               return true;
-> > -
-> > -       if (regs && !user_mode(regs)) {
-> > -               unsigned long ip =3D exception_ip(regs);
-> > -               if (!search_exception_tables(ip))
-> > -                       return false;
-> > -       }
-> > -
-> > -       return !mmap_read_lock_killable(mm);
-> > -}
-> > -
-> > -static inline bool mmap_upgrade_trylock(struct mm_struct *mm)
-> > -{
-> > -       /*
-> > -        * We don't have this operation yet.
-> > -        *
-> > -        * It should be easy enough to do: it's basically a
-> > -        *    atomic_long_try_cmpxchg_acquire()
-> > -        * from RWSEM_READER_BIAS -> RWSEM_WRITER_LOCKED, but
-> > -        * it also needs the proper lockdep magic etc.
-> > -        */
-> > -       return false;
-> > -}
-> > -
-> > -static inline bool upgrade_mmap_lock_carefully(struct mm_struct *mm, s=
-truct pt_regs *regs)
-> > -{
-> > -       mmap_read_unlock(mm);
-> > -       if (regs && !user_mode(regs)) {
-> > -               unsigned long ip =3D exception_ip(regs);
-> > -               if (!search_exception_tables(ip))
-> > -                       return false;
-> > -       }
-> > -       return !mmap_write_lock_killable(mm);
-> > -}
-> > -
-> > -/*
-> > - * Helper for page fault handling.
-> > - *
-> > - * This is kind of equivalent to "mmap_read_lock()" followed
-> > - * by "find_extend_vma()", except it's a lot more careful about
-> > - * the locking (and will drop the lock on failure).
-> > - *
-> > - * For example, if we have a kernel bug that causes a page
-> > - * fault, we don't want to just use mmap_read_lock() to get
-> > - * the mm lock, because that would deadlock if the bug were
-> > - * to happen while we're holding the mm lock for writing.
-> > - *
-> > - * So this checks the exception tables on kernel faults in
-> > - * order to only do this all for instructions that are actually
-> > - * expected to fault.
-> > - *
-> > - * We can also actually take the mm lock for writing if we
-> > - * need to extend the vma, which helps the VM layer a lot.
-> > - */
-> > -struct vm_area_struct *lock_mm_and_find_vma(struct mm_struct *mm,
-> > -                       unsigned long addr, struct pt_regs *regs)
-> > -{
-> > -       struct vm_area_struct *vma;
-> > -
-> > -       if (!get_mmap_lock_carefully(mm, regs))
-> > -               return NULL;
-> > -
-> > -       vma =3D find_vma(mm, addr);
-> > -       if (likely(vma && (vma->vm_start <=3D addr)))
-> > -               return vma;
-> > -
-> > -       /*
-> > -        * Well, dang. We might still be successful, but only
-> > -        * if we can extend a vma to do so.
-> > -        */
-> > -       if (!vma || !(vma->vm_flags & VM_GROWSDOWN)) {
-> > -               mmap_read_unlock(mm);
-> > -               return NULL;
-> > -       }
-> > -
-> > -       /*
-> > -        * We can try to upgrade the mmap lock atomically,
-> > -        * in which case we can continue to use the vma
-> > -        * we already looked up.
-> > -        *
-> > -        * Otherwise we'll have to drop the mmap lock and
-> > -        * re-take it, and also look up the vma again,
-> > -        * re-checking it.
-> > -        */
-> > -       if (!mmap_upgrade_trylock(mm)) {
-> > -               if (!upgrade_mmap_lock_carefully(mm, regs))
-> > -                       return NULL;
-> > -
-> > -               vma =3D find_vma(mm, addr);
-> > -               if (!vma)
-> > -                       goto fail;
-> > -               if (vma->vm_start <=3D addr)
-> > -                       goto success;
-> > -               if (!(vma->vm_flags & VM_GROWSDOWN))
-> > -                       goto fail;
-> > -       }
-> > -
-> > -       if (expand_stack_locked(vma, addr))
-> > -               goto fail;
-> > -
-> > -success:
-> > -       mmap_write_downgrade(mm);
-> > -       return vma;
-> > -
-> > -fail:
-> > -       mmap_write_unlock(mm);
-> > -       return NULL;
-> > -}
-> > -#endif
-> > -
-> > -#ifdef CONFIG_PER_VMA_LOCK
-> > -static inline bool __vma_enter_locked(struct vm_area_struct *vma, bool=
- detaching)
-> > -{
-> > -       unsigned int tgt_refcnt =3D VMA_LOCK_OFFSET;
-> > -
-> > -       /* Additional refcnt if the vma is attached. */
-> > -       if (!detaching)
-> > -               tgt_refcnt++;
-> > -
-> > -       /*
-> > -        * If vma is detached then only vma_mark_attached() can raise t=
-he
-> > -        * vm_refcnt. mmap_write_lock prevents racing with vma_mark_att=
-ached().
-> > -        */
-> > -       if (!refcount_add_not_zero(VMA_LOCK_OFFSET, &vma->vm_refcnt))
-> > -               return false;
-> > -
-> > -       rwsem_acquire(&vma->vmlock_dep_map, 0, 0, _RET_IP_);
-> > -       rcuwait_wait_event(&vma->vm_mm->vma_writer_wait,
-> > -                  refcount_read(&vma->vm_refcnt) =3D=3D tgt_refcnt,
-> > -                  TASK_UNINTERRUPTIBLE);
-> > -       lock_acquired(&vma->vmlock_dep_map, _RET_IP_);
-> > -
-> > -       return true;
-> > -}
-> > -
-> > -static inline void __vma_exit_locked(struct vm_area_struct *vma, bool =
-*detached)
-> > -{
-> > -       *detached =3D refcount_sub_and_test(VMA_LOCK_OFFSET, &vma->vm_r=
-efcnt);
-> > -       rwsem_release(&vma->vmlock_dep_map, _RET_IP_);
-> > -}
-> > -
-> > -void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_loc=
-k_seq)
-> > -{
-> > -       bool locked;
-> > -
-> > -       /*
-> > -        * __vma_enter_locked() returns false immediately if the vma is=
- not
-> > -        * attached, otherwise it waits until refcnt is indicating that=
- vma
-> > -        * is attached with no readers.
-> > -        */
-> > -       locked =3D __vma_enter_locked(vma, false);
-> > -
-> > -       /*
-> > -        * We should use WRITE_ONCE() here because we can have concurre=
-nt reads
-> > -        * from the early lockless pessimistic check in vma_start_read(=
-).
-> > -        * We don't really care about the correctness of that early che=
-ck, but
-> > -        * we should use WRITE_ONCE() for cleanliness and to keep KCSAN=
- happy.
-> > -        */
-> > -       WRITE_ONCE(vma->vm_lock_seq, mm_lock_seq);
-> > -
-> > -       if (locked) {
-> > -               bool detached;
-> > -
-> > -               __vma_exit_locked(vma, &detached);
-> > -               WARN_ON_ONCE(detached); /* vma should remain attached *=
-/
-> > -       }
-> > -}
-> > -EXPORT_SYMBOL_GPL(__vma_start_write);
-> > -
-> > -void vma_mark_detached(struct vm_area_struct *vma)
-> > -{
-> > -       vma_assert_write_locked(vma);
-> > -       vma_assert_attached(vma);
-> > -
-> > -       /*
-> > -        * We are the only writer, so no need to use vma_refcount_put()=
-.
-> > -        * The condition below is unlikely because the vma has been alr=
-eady
-> > -        * write-locked and readers can increment vm_refcnt only tempor=
-arily
-> > -        * before they check vm_lock_seq, realize the vma is locked and=
- drop
-> > -        * back the vm_refcnt. That is a narrow window for observing a =
-raised
-> > -        * vm_refcnt.
-> > -        */
-> > -       if (unlikely(!refcount_dec_and_test(&vma->vm_refcnt))) {
-> > -               /* Wait until vma is detached with no readers. */
-> > -               if (__vma_enter_locked(vma, true)) {
-> > -                       bool detached;
-> > -
-> > -                       __vma_exit_locked(vma, &detached);
-> > -                       WARN_ON_ONCE(!detached);
-> > -               }
-> > -       }
-> > -}
-> > -
-> > -/*
-> > - * Lookup and lock a VMA under RCU protection. Returned VMA is guarant=
-eed to be
-> > - * stable and not isolated. If the VMA is not found or is being modifi=
-ed the
-> > - * function returns NULL.
-> > - */
-> > -struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
-> > -                                         unsigned long address)
-> > -{
-> > -       MA_STATE(mas, &mm->mm_mt, address, address);
-> > -       struct vm_area_struct *vma;
-> > -
-> > -       rcu_read_lock();
-> > -retry:
-> > -       vma =3D mas_walk(&mas);
-> > -       if (!vma)
-> > -               goto inval;
-> > -
-> > -       vma =3D vma_start_read(mm, vma);
-> > -       if (IS_ERR_OR_NULL(vma)) {
-> > -               /* Check if the VMA got isolated after we found it */
-> > -               if (PTR_ERR(vma) =3D=3D -EAGAIN) {
-> > -                       count_vm_vma_lock_event(VMA_LOCK_MISS);
-> > -                       /* The area was replaced with another one */
-> > -                       goto retry;
-> > -               }
-> > -
-> > -               /* Failed to lock the VMA */
-> > -               goto inval;
-> > -       }
-> > -       /*
-> > -        * At this point, we have a stable reference to a VMA: The VMA =
-is
-> > -        * locked and we know it hasn't already been isolated.
-> > -        * From here on, we can access the VMA without worrying about w=
-hich
-> > -        * fields are accessible for RCU readers.
-> > -        */
-> > -
-> > -       /* Check if the vma we locked is the right one. */
-> > -       if (unlikely(vma->vm_mm !=3D mm ||
-> > -                    address < vma->vm_start || address >=3D vma->vm_en=
-d))
-> > -               goto inval_end_read;
-> > -
-> > -       rcu_read_unlock();
-> > -       return vma;
-> > -
-> > -inval_end_read:
-> > -       vma_end_read(vma);
-> > -inval:
-> > -       rcu_read_unlock();
-> > -       count_vm_vma_lock_event(VMA_LOCK_ABORT);
-> > -       return NULL;
-> > -}
-> > -#endif /* CONFIG_PER_VMA_LOCK */
-> > -
-> >  #ifndef __PAGETABLE_P4D_FOLDED
-> >  /*
-> >   * Allocate p4d page table.
-> > diff --git a/mm/mmap_lock.c b/mm/mmap_lock.c
-> > index e7dbaf96aa17..7e4a1f467a46 100644
-> > --- a/mm/mmap_lock.c
-> > +++ b/mm/mmap_lock.c
-> > @@ -42,3 +42,258 @@ void __mmap_lock_do_trace_released(struct mm_struct=
- *mm, bool write)
-> >  }
-> >  EXPORT_SYMBOL(__mmap_lock_do_trace_released);
-> >  #endif /* CONFIG_TRACING */
-> > +
-> > +#ifdef CONFIG_MMU
->
-> I think we should also move NOMMU version of lock_mm_and_find_vma()
-> into this file and these #ifdefs will become:
->
-> #ifdef CONFIG_PER_VMA_LOCK
-> ...
-> #endif /* CONFIG_PER_VMA_LOCK */
->
-> #ifdef CONFIG_MMU
->     #ifdef CONFIG_LOCK_MM_AND_FIND_VMA
->     // MMU version of lock_mm_and_find_vma() and helpers
->     #endif /* CONFIG_LOCK_MM_AND_FIND_VMA */
-> #else /* CONFIG_MMU */
->     // NOMMU version of lock_mm_and_find_vma()
-> #endif /* CONFIG_MMU */
->
-> Note that CONFIG_PER_VMA_LOCK already depends on CONFIG_NOMMU.
+From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, April 9, 20=
+25 11:09 PM
+>=20
+> Hi,
+> This patch series aims to address the sysfs creation issue for the ring
+> buffer by reorganizing the code. Additionally, it updates the ring sysfs
+> size to accurately reflect the actual ring buffer size, rather than a
+> fixed static value.
+>=20
+> PFB change logs:
+>=20
+> Changes since v3:
+> https://lore.kernel.org/all/20250328052745.1417-1-namjain@linux.microsoft=
+.com/
+> * Addressed Michael's comments regarding handling of return value of
+> sysfs_update_group in uio_hv_generic.
+>=20
+> Changes since v2:
+> https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft=
+.com/
+> Addressed Greg's comments:
+> * Split the original patch into two.
+> * Updated the commit message to explain the problem scenario.
+> * Added comments for new APIs in the kerneldoc format.
+> * Highlighted potential race conditions and explained why sysfs should no=
+t be created in
+> the
+>   driver probe.
+>=20
+> * Made minor changes to how the sysfs_update_group return value is handle=
+d.
+>=20
+> Changes since v1:
+> https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft=
+.com/
+> * Fixed race condition in setting channel->mmap_ring_buffer by
+>   introducing a new variable for visibility of sysfs (addressed Greg's
+>   comments)
+> * Used binary attribute fields instead of regular ones for initializing a=
+ttribute_group.
+> * Make size of ring sysfs dynamic based on actual ring buffer's size.
+> * Preferred to keep mmap function in uio_hv_generic to give more control =
+over ring's
+>   mmap functionality, since this is specific to uio_hv_generic driver.
+> * Remove spurious warning during sysfs creation in uio_hv_generic probe.
+> * Added comments in a couple of places.
+>=20
+> Changes since RFC patch:
+> https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft=
+.com/
+> * Different approach to solve the problem is proposed (credits to
+>   Michael Kelley).
+> * Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+>   drivers where rest of the sysfs attributes for a VMBus channel
+>   are defined. (addressed Greg's comments)
+> * Used attribute groups instead of sysfs_create* functions, and bundled
+>   ring attribute with other attributes for the channel sysfs.
+>=20
+> Error logs:
+>=20
+> [   35.574120] ------------[ cut here ]------------
+> [   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_creat=
+e_bin_file+0x81/0x90
+> [   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+> [   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+> [   35.574197] Call Trace:
+> [   35.574199]  <TASK>
+> [   35.574200]  ? show_regs+0x69/0x80
+> [   35.574217]  ? __warn+0x8d/0x130
+> [   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+> [   35.574222]  ? report_bug+0x182/0x190
+> [   35.574225]  ? handle_bug+0x5b/0x90
+> [   35.574244]  ? exc_invalid_op+0x19/0x70
+> [   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+> [   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+> [   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+> [   35.574271]  vmbus_probe+0x3b/0x90
+> [   35.574275]  really_probe+0xf4/0x3b0
+> [   35.574279]  __driver_probe_device+0x8a/0x170
+> [   35.574282]  driver_probe_device+0x23/0xc0
+> [   35.574285]  __device_attach_driver+0xb5/0x140
+> [   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+> [   35.574291]  bus_for_each_drv+0x86/0xe0
+> [   35.574294]  __device_attach+0xc1/0x200
+> [   35.574297]  device_initial_probe+0x13/0x20
+> [   35.574315]  bus_probe_device+0x99/0xa0
+> [   35.574318]  device_add+0x647/0x870
+> [   35.574320]  ? hrtimer_init+0x28/0x70
+> [   35.574323]  device_register+0x1b/0x30
+> [   35.574326]  vmbus_device_register+0x83/0x130
+> [   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+> [   35.574331]  process_one_work+0x177/0x340
+> [   35.574348]  worker_thread+0x2b2/0x3c0
+> [   35.574350]  kthread+0xe3/0x1f0
+> [   35.574353]  ? __pfx_worker_thread+0x10/0x10
+> [   35.574356]  ? __pfx_kthread+0x10/0x10
+>=20
+> Regards,
+> Naman
+>=20
+> Naman Jain (2):
+>   uio_hv_generic: Fix sysfs creation path for ring buffer
+>   Drivers: hv: Make the sysfs node size for the ring buffer dynamic
+>=20
+>  drivers/hv/hyperv_vmbus.h    |   6 ++
+>  drivers/hv/vmbus_drv.c       | 119 ++++++++++++++++++++++++++++++++++-
+>  drivers/uio/uio_hv_generic.c |  39 +++++-------
+>  include/linux/hyperv.h       |   6 ++
+>  4 files changed, 147 insertions(+), 23 deletions(-)
+>=20
 
-I meant to say CONFIG_PER_VMA_LOCK already depends on CONFIG_MMU :)
+I've tested this series with linux-next20250411. Did the basics of binding =
+the
+uio_hv_generic driver to the FCOPY device. The "ring" sysfs attribute shows=
+ up
+correctly, and with the expected size of 32 KiB. Did the same with a synthe=
+tic
+networking device, and the "ring" attribute has the expected size of 4 MiB.=
+ In both
+cases opened and mmap'ed the "ring" attribute, then read from the ring to
+verify accessibility.  Did not do any ring operations or create any subchan=
+nels.
 
->
-> Also something I just noticed. Are we missing lock_mm_and_find_vma()
-> implementation for CONFIG_MMU && !CONFIG_LOCK_MM_AND_FIND_VMA ? I'm
-> guessing architectures with !CONFIG_STACK_GROWSUP just don't use this
-> function?
->
->
-> > +#ifdef CONFIG_PER_VMA_LOCK
-> > +static inline bool __vma_enter_locked(struct vm_area_struct *vma, bool=
- detaching)
-> > +{
-> > +       unsigned int tgt_refcnt =3D VMA_LOCK_OFFSET;
-> > +
-> > +       /* Additional refcnt if the vma is attached. */
-> > +       if (!detaching)
-> > +               tgt_refcnt++;
-> > +
-> > +       /*
-> > +        * If vma is detached then only vma_mark_attached() can raise t=
-he
-> > +        * vm_refcnt. mmap_write_lock prevents racing with vma_mark_att=
-ached().
-> > +        */
-> > +       if (!refcount_add_not_zero(VMA_LOCK_OFFSET, &vma->vm_refcnt))
-> > +               return false;
-> > +
-> > +       rwsem_acquire(&vma->vmlock_dep_map, 0, 0, _RET_IP_);
-> > +       rcuwait_wait_event(&vma->vm_mm->vma_writer_wait,
-> > +                  refcount_read(&vma->vm_refcnt) =3D=3D tgt_refcnt,
-> > +                  TASK_UNINTERRUPTIBLE);
-> > +       lock_acquired(&vma->vmlock_dep_map, _RET_IP_);
-> > +
-> > +       return true;
-> > +}
-> > +
-> > +static inline void __vma_exit_locked(struct vm_area_struct *vma, bool =
-*detached)
-> > +{
-> > +       *detached =3D refcount_sub_and_test(VMA_LOCK_OFFSET, &vma->vm_r=
-efcnt);
-> > +       rwsem_release(&vma->vmlock_dep_map, _RET_IP_);
-> > +}
-> > +
-> > +void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_loc=
-k_seq)
-> > +{
-> > +       bool locked;
-> > +
-> > +       /*
-> > +        * __vma_enter_locked() returns false immediately if the vma is=
- not
-> > +        * attached, otherwise it waits until refcnt is indicating that=
- vma
-> > +        * is attached with no readers.
-> > +        */
-> > +       locked =3D __vma_enter_locked(vma, false);
-> > +
-> > +       /*
-> > +        * We should use WRITE_ONCE() here because we can have concurre=
-nt reads
-> > +        * from the early lockless pessimistic check in vma_start_read(=
-).
-> > +        * We don't really care about the correctness of that early che=
-ck, but
-> > +        * we should use WRITE_ONCE() for cleanliness and to keep KCSAN=
- happy.
-> > +        */
-> > +       WRITE_ONCE(vma->vm_lock_seq, mm_lock_seq);
-> > +
-> > +       if (locked) {
-> > +               bool detached;
-> > +
-> > +               __vma_exit_locked(vma, &detached);
-> > +               WARN_ON_ONCE(detached); /* vma should remain attached *=
-/
-> > +       }
-> > +}
-> > +EXPORT_SYMBOL_GPL(__vma_start_write);
-> > +
-> > +void vma_mark_detached(struct vm_area_struct *vma)
-> > +{
-> > +       vma_assert_write_locked(vma);
-> > +       vma_assert_attached(vma);
-> > +
-> > +       /*
-> > +        * We are the only writer, so no need to use vma_refcount_put()=
-.
-> > +        * The condition below is unlikely because the vma has been alr=
-eady
-> > +        * write-locked and readers can increment vm_refcnt only tempor=
-arily
-> > +        * before they check vm_lock_seq, realize the vma is locked and=
- drop
-> > +        * back the vm_refcnt. That is a narrow window for observing a =
-raised
-> > +        * vm_refcnt.
-> > +        */
-> > +       if (unlikely(!refcount_dec_and_test(&vma->vm_refcnt))) {
-> > +               /* Wait until vma is detached with no readers. */
-> > +               if (__vma_enter_locked(vma, true)) {
-> > +                       bool detached;
-> > +
-> > +                       __vma_exit_locked(vma, &detached);
-> > +                       WARN_ON_ONCE(!detached);
-> > +               }
-> > +       }
-> > +}
-> > +
-> > +/*
-> > + * Lookup and lock a VMA under RCU protection. Returned VMA is guarant=
-eed to be
-> > + * stable and not isolated. If the VMA is not found or is being modifi=
-ed the
-> > + * function returns NULL.
-> > + */
-> > +struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
-> > +                                         unsigned long address)
-> > +{
-> > +       MA_STATE(mas, &mm->mm_mt, address, address);
-> > +       struct vm_area_struct *vma;
-> > +
-> > +       rcu_read_lock();
-> > +retry:
-> > +       vma =3D mas_walk(&mas);
-> > +       if (!vma)
-> > +               goto inval;
-> > +
-> > +       vma =3D vma_start_read(mm, vma);
-> > +       if (IS_ERR_OR_NULL(vma)) {
-> > +               /* Check if the VMA got isolated after we found it */
-> > +               if (PTR_ERR(vma) =3D=3D -EAGAIN) {
-> > +                       count_vm_vma_lock_event(VMA_LOCK_MISS);
-> > +                       /* The area was replaced with another one */
-> > +                       goto retry;
-> > +               }
-> > +
-> > +               /* Failed to lock the VMA */
-> > +               goto inval;
-> > +       }
-> > +       /*
-> > +        * At this point, we have a stable reference to a VMA: The VMA =
-is
-> > +        * locked and we know it hasn't already been isolated.
-> > +        * From here on, we can access the VMA without worrying about w=
-hich
-> > +        * fields are accessible for RCU readers.
-> > +        */
-> > +
-> > +       /* Check if the vma we locked is the right one. */
-> > +       if (unlikely(vma->vm_mm !=3D mm ||
-> > +                    address < vma->vm_start || address >=3D vma->vm_en=
-d))
-> > +               goto inval_end_read;
-> > +
-> > +       rcu_read_unlock();
-> > +       return vma;
-> > +
-> > +inval_end_read:
-> > +       vma_end_read(vma);
-> > +inval:
-> > +       rcu_read_unlock();
-> > +       count_vm_vma_lock_event(VMA_LOCK_ABORT);
-> > +       return NULL;
-> > +}
-> > +#endif /* CONFIG_PER_VMA_LOCK */
-> > +
-> > +#ifdef CONFIG_LOCK_MM_AND_FIND_VMA
-> > +#include <linux/extable.h>
-> > +
-> > +static inline bool get_mmap_lock_carefully(struct mm_struct *mm, struc=
-t pt_regs *regs)
-> > +{
-> > +       if (likely(mmap_read_trylock(mm)))
-> > +               return true;
-> > +
-> > +       if (regs && !user_mode(regs)) {
-> > +               unsigned long ip =3D exception_ip(regs);
-> > +               if (!search_exception_tables(ip))
-> > +                       return false;
-> > +       }
-> > +
-> > +       return !mmap_read_lock_killable(mm);
-> > +}
-> > +
-> > +static inline bool mmap_upgrade_trylock(struct mm_struct *mm)
-> > +{
-> > +       /*
-> > +        * We don't have this operation yet.
-> > +        *
-> > +        * It should be easy enough to do: it's basically a
-> > +V       *    atomic_long_try_cmpxchg_acquire()
->
-> Is the extra V above just the result of "Ctrl+V" gone bad?
->
-> > +        * from RWSEM_READER_BIAS -> RWSEM_WRITER_LOCKED, but
-> > +        * it also needs the proper lockdep magic etc.
-> > +        */
-> > +       return false;
-> > +}
-> > +
-> > +static inline bool upgrade_mmap_lock_carefully(struct mm_struct *mm, s=
-truct pt_regs *regs)
-> > +{
-> > +       mmap_read_unlock(mm);
-> > +       if (regs && !user_mode(regs)) {
-> > +               unsigned long ip =3D exception_ip(regs);
-> > +               if (!search_exception_tables(ip))
-> > +                       return false;
-> > +       }
-> > +       return !mmap_write_lock_killable(mm);
-> > +}
-> > +
-> > +/*
-> > + * Helper for page fault handling.
-> > + *
-> > + * This is kind of equivalent to "mmap_read_lock()" followed
-> > + * by "find_extend_vma()", except it's a lot more careful about
-> > + * the locking (and will drop the lock on failure).
-> > + *
-> > + * For example, if we have a kernel bug that causes a page
-> > + * fault, we don't want to just use mmap_read_lock() to get
-> > + * the mm lock, because that would deadlock if the bug were
-> > + * to happen while we're holding the mm lock for writing.
-> > + *
-> > + * So this checks the exception tables on kernel faults in
-> > + * order to only do this all for instructions that are actually
-> > + * expected to fault.
-> > + *
-> > + * We can also actually take the mm lock for writing if we
-> > + * need to extend the vma, which helps the VM layer a lot.
-> > + */
-> > +struct vm_area_struct *lock_mm_and_find_vma(struct mm_struct *mm,
-> > +                       unsigned long addr, struct pt_regs *regs)
-> > +{
-> > +       struct vm_area_struct *vma;
-> > +
-> > +       if (!get_mmap_lock_carefully(mm, regs))
-> > +               return NULL;
-> > +
-> > +       vma =3D find_vma(mm, addr);
-> > +       if (likely(vma && (vma->vm_start <=3D addr)))
-> > +               return vma;
-> > +
-> > +       /*
-> > +        * Well, dang. We might still be successful, but only
-> > +        * if we can extend a vma to do so.
-> > +        */
-> > +       if (!vma || !(vma->vm_flags & VM_GROWSDOWN)) {
-> > +               mmap_read_unlock(mm);
-> > +               return NULL;
-> > +       }
-> > +
-> > +       /*
-> > +        * We can try to upgrade the mmap lock atomically,
-> > +        * in which case we can continue to use the vma
-> > +        * we already looked up.
-> > +        *
-> > +        * Otherwise we'll have to drop the mmap lock and
-> > +        * re-take it, and also look up the vma again,
-> > +        * re-checking it.
-> > +        */
-> > +       if (!mmap_upgrade_trylock(mm)) {
-> > +               if (!upgrade_mmap_lock_carefully(mm, regs))
-> > +                       return NULL;
-> > +
-> > +               vma =3D find_vma(mm, addr);
-> > +               if (!vma)
-> > +                       goto fail;
-> > +               if (vma->vm_start <=3D addr)
-> > +                       goto success;
-> > +               if (!(vma->vm_flags & VM_GROWSDOWN))
-> > +                       goto fail;
-> > +       }
-> > +
-> > +       if (expand_stack_locked(vma, addr))
-> > +               goto fail;
-> > +
-> > +success:
-> > +       mmap_write_downgrade(mm);
-> > +       return vma;
-> > +
-> > +fail:
-> > +       mmap_write_unlock(mm);
-> > +       return NULL;
-> > +}
-> > +#endif /* CONFIG_LOCK_MM_AND_FIND_VMA */
-> > +
-> > +#endif /* CONFIG_MMU */
-> > --
-> > 2.49.0
+Did some test hackery to create the conditions where hv_create_ring_sysfs()
+could fail because the subdirectory under "channels" had not yet been creat=
+ed.
+hv_uio_probe() correctly ignores the error. When the subdirectory under
+"channels" is created later in vmbus_device_register(), the "ring" attribut=
+e
+appears with the correct size.
+
+Just saw Greg KH's comment about running checkpatch.pl.  I did not see any
+errors from checkpatch.pl.  Maybe that comment should have been directed
+to a different patch?
+
+For the series:
+
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
