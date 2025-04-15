@@ -1,100 +1,130 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E982505AC
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51ECC250BE1;
+	Tue, 15 Apr 2025 19:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744745751; cv=none; b=QtiHaA3IZ19yLEavK+HDZ0FJk0sh9hyxdiua8pPtnd+iYHWWt8yjyIq9lSNDb8/J4uLeqRgY6Y95zgv5WfAam5Oj/j6LU6V1f1SLJ/f4Kjsn5guuwByNq2eWsXXE6U9aDmMqN39RG29Aeag51Mum7/JR2YMqN4VxrpZs7XDjhNo=
+	t=1744745934; cv=none; b=MRWlCj2NgRCpij9CUuxaRQ0zOy+/cA/3uqgAT8D028qcHngTeOYksBkZZoaeCBNX+QbDApxEhLYHxG2IFdbyZKuBBrBsAJ51HZlcmCkmG9SIXy6qoqJ4jJDwk3fzgNTB0SetUnBIdsMcYkaeFjd3QqTrY5AOr+nAkzez2J5T+sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744745751; c=relaxed/simple;
-	bh=73lc/rPP9eGUfkWT58IBLrpi8r/eruXKFdJ45xDIfH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R6cIgUI6ZW6L6ovPcj6iKMa1U2xx7NzIcXAXv+fxrf28fAEnlBe0os2lMXRlwizznZ5XJv9t79rgTygv2/Hp1GVLjfINC62sGkz6Z+znTRyzXFxDdKPhP53sJAuLOHqD+8mMUQh4AIqoxeQgSBJhahoa5Ekkt46MzXS7x/kKI/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YR9LolyR; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744745934; c=relaxed/simple;
+	bh=+X8PZp7ZJAtaPIiDYEIFalIVsT/0lgcDfgcWZzUFk0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bi/lIPaFhFHWbapyshCUhY5XUO2mxXNY9u3pc8UYHqLXJ/910xwgxbAUuPIZHJDfOnAsHepRv7kOFplJPRSw1/HGhSNfAFPNcacNtBKCnSKPNNPRAwmEtfMahoOMdlsrBNT4lhVBHDQBS8+0jlCTXsX9gDr/T8omVD8n2PN4SdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwXmHwmr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YR9LolyR"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744745746;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GTViHUqHHL7FVcOYR+13mg8Z5ebv/l3Vzj9gh5nlRwU=;
-	b=YR9LolyRa9+T0N5w69GIyfccUA4Itf9Zfyg7c0JptC3SlNNxZ2p1rvPKiKXbApOyqfUbnl
-	Cx3VjNuYO91V/kVmuGPl1Mqa7l53DUyDEQp6LC5Tyhj7r6HOiZldUjx34jXjBH8kH2yNfP
-	D5O748xYg1ho1EQt8Px/LgFZ8LOecuo=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	upstream@airoha.com,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: [net-next PATCH v3 11/11] of: property: Add device link support for PCS
-Date: Tue, 15 Apr 2025 15:35:38 -0400
-Message-Id: <20250415193538.2794378-2-sean.anderson@linux.dev>
-In-Reply-To: <20250415193538.2794378-1-sean.anderson@linux.dev>
-References: <20250415193323.2794214-1-sean.anderson@linux.dev>
- <20250415193538.2794378-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwXmHwmr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996C0C4CEF1;
+	Tue, 15 Apr 2025 19:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744745933;
+	bh=+X8PZp7ZJAtaPIiDYEIFalIVsT/0lgcDfgcWZzUFk0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QwXmHwmr9n+SApeHzUas+OtoRZJMrhoeh0R81kyW0D+KMv7H0dYo6A0zVAIE14s6l
+	 9OioSxFrNEzCZqkR/ZPwAP8Mt7QfkHTwZXdB9+TeUcGUXgwRDHGnHg0CyH6VskKTM8
+	 bCDj7haedPkBA+8xnkLnjIfr0vcYnTTdaBRXNz6RbgCJFX2bVULWtPtwJmkIVdEGxn
+	 BxaHnstuq1TeVO5g3PiMSCbHCzIfMgZmxH7n4wX3SZ6F9kBOA7Kh6yk5l23wyzruAy
+	 6M/5t2SIRmRgrcIU7QC0aIODXbZZEbfY75ctd2n+299mrucX5kX9JVaJdIoGd+c1be
+	 wHoAGPF3Wu57g==
+Date: Tue, 15 Apr 2025 14:38:51 -0500
+From: Rob Herring <robh@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: spacemit: add clock support for K1 SoC
+Message-ID: <20250415193851.GA846160-robh@kernel.org>
+References: <20250412-02-k1-pinctrl-clk-v1-0-e39734419a2d@gentoo.org>
+ <20250412-02-k1-pinctrl-clk-v1-2-e39734419a2d@gentoo.org>
+ <20250412182737.GA1425287-robh@kernel.org>
+ <20250412223431-GYA25375@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412223431-GYA25375@gentoo>
 
-This adds device link support for PCS devices, providing
-better probe ordering.
+On Sat, Apr 12, 2025 at 10:34:31PM +0000, Yixun Lan wrote:
+> Hi Rob,
+> 
+> On 13:27 Sat 12 Apr     , Rob Herring wrote:
+> > On Sat, Apr 12, 2025 at 02:58:11PM +0800, Yixun Lan wrote:
+> > > For SpacemiT K1 SoC's pinctrl, explicitly acquiring clocks in
+> > > the driver instead of relying on bootloader or default hardware
+> > > settings to enable it.
+> > > 
+> > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > > ---
+> > >  drivers/pinctrl/spacemit/pinctrl-k1.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > > 
+> > > diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > > index 67e867b04a02ea1887d93aedfdea5bda037f88b1..3805fb09c1bc3b8cf2ccfc22dd25367292b397b9 100644
+> > > --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > > +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > > @@ -2,6 +2,7 @@
+> > >  /* Copyright (c) 2024 Yixun Lan <dlan@gentoo.org> */
+> > >  
+> > >  #include <linux/bits.h>
+> > > +#include <linux/clk.h>
+> > >  #include <linux/cleanup.h>
+> > >  #include <linux/io.h>
+> > >  #include <linux/of.h>
+> > > @@ -721,6 +722,7 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct device *dev = &pdev->dev;
+> > >  	struct spacemit_pinctrl *pctrl;
+> > > +	struct clk *func_clk, *bus_clk;
+> > >  	const struct spacemit_pinctrl_data *pctrl_data;
+> > >  	int ret;
+> > >  
+> > > @@ -739,6 +741,14 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
+> > >  	if (IS_ERR(pctrl->regs))
+> > >  		return PTR_ERR(pctrl->regs);
+> > >  
+> > > +	func_clk = devm_clk_get_optional_enabled(dev, "func");
+> > > +	if (IS_ERR(func_clk))
+> > > +		return dev_err_probe(dev, PTR_ERR(func_clk), "failed to get func clock\n");
+> > > +
+> > > +	bus_clk = devm_clk_get_optional_enabled(dev, "bus");
+> > > +	if (IS_ERR(bus_clk))
+> > > +		return dev_err_probe(dev, PTR_ERR(bus_clk), "failed to get bus clock\n");
+> > 
+> > Do you really need these to be optional? Yes, it maintains 
+> >
+> Yes, the motivation here to make it optional is maintaining the 
+> compatibility, to not break the case of using old dtb with new kernel,
+> since the serial console device (uart0) is activated now [1]
+> 
+> IIUC, from the DT perspective, it's mandatory to keep this compatibility?
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Saravana Kannan <saravanak@google.com>
----
+It's up to the platform. It's only mandatory to understand you are 
+breaking compatibility when you do.
 
-(no changes since v2)
+> 
+> In dt-binding of patch [1/2], the clocks/clock-names has been described as 
+> required property, so it's sort of mandatory from DT's view.
+> 
+> One lesson I learned is that the pinctrl dt node shouldn't be activated
+> untill all prerequisite dependencies meet.. it's ok to push the driver,
+> but should postpone the DT part..
+> 
+> > compatibility, but if this platform isn't stable, then do you really 
+> > need that?
+> > 
+> I don't get what's your meaning of "isn't stable" here, the fact won't
+> change for K1 SoC: the pinctrl controller requires two clocks
 
-Changes in v2:
-- Reorder pcs_handle to come before suffix props
+You required 1 clock and now you require 2. That's not stable. 
+Generally, early on with platforms, their DT is not complete enough to 
+maintain compatibility. There's also likely not many users or h/w 
+availability for compatibility to be an issue. So requiring the DT to be 
+in-sync with the kernel is not a problem.
 
- drivers/of/property.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index c1feb631e383..1aa28bfadb12 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1377,6 +1377,7 @@ DEFINE_SIMPLE_PROP(post_init_providers, "post-init-providers", NULL)
- DEFINE_SIMPLE_PROP(access_controllers, "access-controllers", "#access-controller-cells")
- DEFINE_SIMPLE_PROP(pses, "pses", "#pse-cells")
- DEFINE_SIMPLE_PROP(power_supplies, "power-supplies", NULL)
-+DEFINE_SIMPLE_PROP(pcs_handle, "pcs-handle", NULL)
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
- DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
- 
-@@ -1528,6 +1529,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_interrupts, },
- 	{ .parse_prop = parse_interrupt_map, },
- 	{ .parse_prop = parse_access_controllers, },
-+	{ .parse_prop = parse_pcs_handle, },
- 	{ .parse_prop = parse_regulators, },
- 	{ .parse_prop = parse_gpio, },
- 	{ .parse_prop = parse_gpios, },
--- 
-2.35.1.1320.gc452695387.dirty
-
+Rob
