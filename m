@@ -1,183 +1,321 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE49235348;
-	Tue, 15 Apr 2025 18:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89552356AF;
+	Tue, 15 Apr 2025 19:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744743565; cv=none; b=SNJ1zk6sxPMf3RQiqn1wUOiKvKOeNYt8zg6qTmwDkWmdZT8UO3KnZ9Vnl9fzeWZe0+YmnHDHQFtUBIcNbWIr7+OL+z3SzCRjKCYa6OIaqB+NwfHkz5W6xtDh+4g5rPDoGWmnFNSyRZu0DF98DtSf1ZURqQThBtJojDpzDKR+CeU=
+	t=1744743640; cv=none; b=BaDI7WrJlUqlvVLOEVNoyCer88wuUbisMRWUqqwCpH3Uci9D93Fz3ToBk7bfNMJ+J3Xm9PFgD6Svlo9z3P1nqSFayssTBszsfzPyXVr/FjeEHag3MVn+G3C85YWOFtbY5Imb+ErPDNo2IpzkwshLSgfTf/JKukAie9vtr8w7Jj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744743565; c=relaxed/simple;
-	bh=q70ctjrGqLmxVUHKXN5p9/vzscrDP14u951WDIoOWbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WhhobfJEibefFaQ0JTsYuK5380cDANeUzvLEvgyk5jsUlc1zCR/I/SKM/Y+dyjyLB6YZRodeW1bilg+tiivkZbtOaPQm3iYPXbyCP1VRGSdSPK5atfsGA4OMsiVnpvbcdEz/WfYVyRsWoGvXO5pQPaKZT/H/2CTssFADmCtG6BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAm6SqV9; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744743640; c=relaxed/simple;
+	bh=yPQWtevyvyvOd0bvWj+A+jdbmEHZrh0qKPMQbiWHAIU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qhKAudWIkCTAhJROz0EUZWNW0jJvPNtuGAKM6kcOdmENHmB9LDyMzgvdih9WZ7cILtphVc6kdQQTzgNwboKf4kBO8QafNFt9qfPgj5/jpBrFa58+DP5Pd0fW7GFWDlZ0eA57yToGtKJctbrFTOX1hyJtpEngsxnkyomnz5yneTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuqK0+gQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAm6SqV9"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acae7e7587dso521883066b.2;
-        Tue, 15 Apr 2025 11:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744743561; x=1745348361; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkp2i5c9bgqxiRKG/3h+HqHChQz8elSJkULnjDgaezo=;
-        b=AAm6SqV9K46+AYF9omCKS9PgDmqtxglc1hVXx8UUxDbiFBaXbl3iDSQShCztoLcSI4
-         M7J5n9hR1fJ/rPWCj/KvviUT/1PMbnCixa80scuMaZhM+GnE71Uk2RcVZr+Fvax0X6WN
-         b2KSUIGqX7snDdwzAPrPBcheS7hIWSgLWXj+OMaWLgFhbiEgPIbMSti0VWwP6EsYbje3
-         rbHP3jKKKHPQiInU7kBmQwL1XWlHjqnKvvg61vt+4WKZqVAl/6oNejx2UtE8tCzuK1bO
-         zePBA42lwRO6KcLy7e2r0EcspYGdCGeO6SrAC4dRRsc7FJRKLqsZGWE9+jLLPIWNbJu1
-         c9EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744743561; x=1745348361;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hkp2i5c9bgqxiRKG/3h+HqHChQz8elSJkULnjDgaezo=;
-        b=Le1YOfLR59qAh7TOjKtSt71IKB3IDOJOA5g41RstcbuDUlwwuBFMS5sHfncP/xkS6M
-         bH9mSP45NAERSQL0fLFCGHb085zdqJwXH8vCVqqjSf6Xk4HO/Q+oTopdCju7IYOhMNQn
-         g7SuhGIWjtwC3Glf0DRFeq9Q5TrQD5nnCEQfhRASzqDRBhze4ANnjkgr9REeSH6/aqlq
-         7jNpY+hHD963OX4bzln9Joe7hXPmlikIbHtIdYrPvTX89qhTi+xIgnJcAhnGnQVK86Nx
-         gv2AAU1LmBDJr7uQUqxstADJNZcKGfx4CecpMGFtd5h1XkGvbWzvngJ2FO7uVR0U5m96
-         tdag==
-X-Forwarded-Encrypted: i=1; AJvYcCU3tZxmtVDSld8moPSEhC57PN1vval355yqATP1xOwVPva6HXZL7/RGErw+meIdD3V+vKskuuA=@vger.kernel.org, AJvYcCWpx9lyvaMH2zIB/M159z/8uTY2yTAmc7SkJboSOaa4Xcv9GRMzmJo9JzTQw6RnnTgoo75uGgiKPTenIsAG@vger.kernel.org, AJvYcCX1/GJT5FsbI4UuKzuw9yAiG/OHsY755LOXwVntNr6CD7x2bMZl6LHd1RjPab35821eTrPhgV/IoNJxVw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBX5CbkMewnX7Tgu+dS3ANpZEJf5qp/6lgERygck3g/oen7Rp3
-	JQhR5nE0jp7rhu//cyDqngXO5t9zj7aWO9KkAoCPWjg5ktEaYeRD
-X-Gm-Gg: ASbGncuUd2pX5did0/eV/Uv50qaqKgjf3Zc94lcColtw71CyGudTPcxbxIsHgjiNpxM
-	EEdmllkq5echuQQXvE0J96mkhaSNMVPFAAi3/XuZsvKc9tT6IPVsf++NpZelNBfKoqg0JvjzNp3
-	CyQxroxOYwLxlANwZYWRREuYbEtCaxisOktLN0hoxfJLqxOZlIiRzGl3AxpshwH549roNl+tSbF
-	Naq2nGHRCsxzO6h+iYyWK63UW/p1NAE4k5PYGY+5yYtKxV9krgTfn/S0Lar5v41H59JhukC4jrp
-	7JfJomn7Gxs3qkAXYASgdCMWnXGY1Lr4dC/BK/BsNoAc/037Jn+7y1veB9czSPPkJv04O51oIQ=
-	=
-X-Google-Smtp-Source: AGHT+IGTCiRplDt7X2b9oOiIqzPnVtzAVrCP2VkK30vBE7aX2MZ8ZaJbKZHqziYeL/Ig1EMQ0/BoBQ==
-X-Received: by 2002:a17:907:720a:b0:abf:6cc9:7ef5 with SMTP id a640c23a62f3a-acb3850f00dmr12406966b.47.1744743560630;
-        Tue, 15 Apr 2025 11:59:20 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb20c03de9sm177102666b.71.2025.04.15.11.59.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 11:59:19 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 25073BE2DE0; Tue, 15 Apr 2025 20:59:19 +0200 (CEST)
-Date: Tue, 15 Apr 2025 20:59:19 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: David Howells <dhowells@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Hillf Danton <hdanton@sina.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	regressions@lists.linux.dev, table@vger.kernel.org,
-	Bernd Rinn <bb@rinn.ch>,
-	Karri =?iso-8859-1?Q?H=E4m=E4l=E4inen?= <kh.bugreport@outlook.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Cameron Davidson <bugs@davidsoncj.id.au>, Markus <markus@fritz.box>
-Subject: [regression 6.1.y] Regression from 476c1dfefab8 ("mm: Don't pin
- ZERO_PAGE in pin_user_pages()") with pci-passthrough for both KVM VMs and
- booting in xen DomU
-Message-ID: <Z_6sh7Byddqdk1Z-@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuqK0+gQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 540BEC4CEEE;
+	Tue, 15 Apr 2025 19:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744743639;
+	bh=yPQWtevyvyvOd0bvWj+A+jdbmEHZrh0qKPMQbiWHAIU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=iuqK0+gQSnGqfLMrXi4d0MR8JRh+vhFzWtO5F2nZfM5MWkM+0uIVndjseRUG6RqUG
+	 SBxE6j/sYgIiHE96gwQCI5096hY4O7JWC7oxv6QSuI7Cpsy1v4Nj89IRXAO1oASU0p
+	 3XJFqgYdqwsXbLuamUALtMdOe/ZIMMXhkRw81XXTFKtMD63tTLUIKG2G8SyB+ui/89
+	 IfynMV5EMxrpZbvNfIOcHsJ3L9ilZrvgVzrHw4OZRFzUTT4etLruwYYfoGc50zhEbe
+	 axY2B37205tjtuXlq8llSMel6Aexm7fAk63KGr0fnB0IOJjLXlgGFICRVAgVjvh5IX
+	 3CCfMvqcHBCMg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA47C369AB;
+	Tue, 15 Apr 2025 19:00:39 +0000 (UTC)
+From: Brett Mastbergen via B4 Relay <devnull+bmastbergen.ciq.com@kernel.org>
+Date: Tue, 15 Apr 2025 14:59:53 -0400
+Subject: [PATCH REGRESSION-FIX] x86/paravirt: Move halt paravirt calls
+ under CONFIG_PARAVIRT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250415-stable_fixup-v1-1-0bea1b5f583c@ciq.com>
+X-B4-Tracking: v=1; b=H4sIAKis/mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0NT3eKSxKSc1Pi0zIrSAt1k8yRLYzMTc+M0U2MloJaColSgBNi46Nj
+ aWgDM1KX9XgAAAA==
+X-Change-ID: 20250415-stable_fixup-c7b936473f53
+To: stable@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+ Tony Luck <tony.luck@intel.com>, 
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+ Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+ virtualization@lists.linux.dev, regressions@lists.linux.dev, 
+ Vishal Annapurve <vannapurve@google.com>, Ingo Molnar <mingo@kernel.org>, 
+ Ryan Afranji <afranji@google.com>, Andy Lutomirski <luto@kernel.org>, 
+ Brian Gerst <brgerst@gmail.com>, 
+ Linus Torvalds <torvalds@linux-foundation.org>, stable@kernel.org, 
+ Brett Mastbergen <bmastbergen@ciq.com>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744743638; l=7817;
+ i=bmastbergen@ciq.com; s=20250415; h=from:subject:message-id;
+ bh=nfdTL9dMpc7u6M9sFod5SqMNA326684hq87+QJyATs8=;
+ b=+t5fxrpGcEx5x+umwsUmc9j7PdY5seiSW08bQ2eIx6c6HOhRuigDDLzT+Ai4hQmRuNogfIQjg
+ kGWz7WJjpTDCiYyzXgKseZJrgTjcepcZEfn5yRQuzZ6RFwpHCmzaEu2
+X-Developer-Key: i=bmastbergen@ciq.com; a=ed25519;
+ pk=cjlR63i7BVF/7E0Yr3hTlnxYS/pC3WTR15UQusOZio4=
+X-Endpoint-Received: by B4 Relay for bmastbergen@ciq.com/20250415 with
+ auth_id=379
+X-Original-From: Brett Mastbergen <bmastbergen@ciq.com>
+Reply-To: bmastbergen@ciq.com
 
-Hi
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-[Apologies if this has been reported already but I have not found an
-already filled corresponding report]
+CONFIG_PARAVIRT_XXL is mainly defined/used by XEN PV guests. For
+other VM guest types, features supported under CONFIG_PARAVIRT
+are self sufficient. CONFIG_PARAVIRT mainly provides support for
+TLB flush operations and time related operations.
 
-After updating from the 6.1.129 based version to 6.1.133, various
-users have reported that their VMs do not boot anymore up (both KVM
-and under Xen) if pci-passthrough is involved. The reports are at:
+For TDX guest as well, paravirt calls under CONFIG_PARVIRT meets
+most of its requirement except the need of HLT and SAFE_HLT
+paravirt calls, which is currently defined under
+CONFIG_PARAVIRT_XXL.
 
-https://bugs.debian.org/1102889
-https://bugs.debian.org/1102914
-https://bugs.debian.org/1103153
+Since enabling CONFIG_PARAVIRT_XXL is too bloated for TDX guest
+like platforms, move HLT and SAFE_HLT paravirt calls under
+CONFIG_PARAVIRT.
 
-Milan Broz bisected the issues and found that the commit introducing
-the problems can be tracked down to backport of c8070b787519 ("mm:
-Don't pin ZERO_PAGE in pin_user_pages()") from 6.5-rc1 which got
-backported as 476c1dfefab8 ("mm: Don't pin ZERO_PAGE in
-pin_user_pages()") in 6.1.130. See https://bugs.debian.org/1102914#60
+Moving HLT and SAFE_HLT paravirt calls are not fatal and should not
+break any functionality for current users of CONFIG_PARAVIRT.
 
-#regzbot introduced: 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774
+Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Tested-by: Ryan Afranji <afranji@google.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@kernel.org
+Link: https://lore.kernel.org/r/20250228014416.3925664-2-vannapurve@google.com
+---
+6.12.23 fails to build with the following error if CONFIG_XEN_PV is
+not set:
 
-476c1dfefab8b98ae9c3e3ad283c2ac10d30c774 is the first bad commit
-commit 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri May 26 22:41:40 2023 +0100
+arch/x86/coco/tdx/tdx.c: In function ‘tdx_early_init’:
+arch/x86/coco/tdx/tdx.c:1080:19: error: ‘struct pv_irq_ops’ has no member
+named ‘safe_halt’
+ 1080 |         pv_ops.irq.safe_halt = tdx_safe_halt;
+      |                   ^
+arch/x86/coco/tdx/tdx.c:1081:19: error: ‘struct pv_irq_ops’ has no member
+named ‘halt’
+ 1081 |         pv_ops.irq.halt = tdx_halt;
+      |                   ^
 
-    mm: Don't pin ZERO_PAGE in pin_user_pages()
+This is because XEN_PV selects PARAVIRT_XXL, and 'safe_halt' and
+'halt' are only defined for pv_irq_ops if PARAVIRT_XXL is defined.
 
-    [ Upstream commit c8070b78751955e59b42457b974bea4a4fe00187 ]
+The build breakage was introduced in 6.12.23 by stable commit
+805e3ce5e0e3 which is a backport of 9f98a4f4e721 ("x86/tdx: Fix
+arch_safe_halt() execution for TDX VMs").
 
-    Make pin_user_pages*() leave a ZERO_PAGE unpinned if it extracts a pointer
-    to it from the page tables and make unpin_user_page*() correspondingly
-    ignore a ZERO_PAGE when unpinning.  We don't want to risk overrunning a
-    zero page's refcount as we're only allowed ~2 million pins on it -
-    something that userspace can conceivably trigger.
+Consider picking up upstream commit 22cc5ca5de52 ("x86/paravirt:
+Move halt paravirt calls under CONFIG_PARAVIRT") for stable 6.12.y
+which fixes the build regression by moving 'safe_halt' and 'halt'
+out from under the PARAVIRT_XXL config.
 
-    Add a pair of functions to test whether a page or a folio is a ZERO_PAGE.
+This patch is 22cc5ca5de52 backported to 6.12.23.  There were a
+couple of merge conflicts due to the missing upstream commits below:
 
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    cc: Christoph Hellwig <hch@infradead.org>
-    cc: David Hildenbrand <david@redhat.com>
-    cc: Lorenzo Stoakes <lstoakes@gmail.com>
-    cc: Andrew Morton <akpm@linux-foundation.org>
-    cc: Jens Axboe <axboe@kernel.dk>
-    cc: Al Viro <viro@zeniv.linux.org.uk>
-    cc: Matthew Wilcox <willy@infradead.org>
-    cc: Jan Kara <jack@suse.cz>
-    cc: Jeff Layton <jlayton@kernel.org>
-    cc: Jason Gunthorpe <jgg@nvidia.com>
-    cc: Logan Gunthorpe <logang@deltatee.com>
-    cc: Hillf Danton <hdanton@sina.com>
-    cc: Christian Brauner <brauner@kernel.org>
-    cc: Linus Torvalds <torvalds@linux-foundation.org>
-    cc: linux-fsdevel@vger.kernel.org
-    cc: linux-block@vger.kernel.org
-    cc: linux-kernel@vger.kernel.org
-    cc: linux-mm@kvack.org
-    Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
-    Reviewed-by: Christoph Hellwig <hch@lst.de>
-    Acked-by: David Hildenbrand <david@redhat.com>
-    Link: https://lore.kernel.org/r/20230526214142.958751-2-dhowells@redhat.com
-    Signed-off-by: Jens Axboe <axboe@kernel.dk>
-    Stable-dep-of: bddf10d26e6e ("uprobes: Reject the shared zeropage in uprobe_write_opcode()")
-    Signed-off-by: Sasha Levin <sashal@kernel.org>
+29188c160061 ("x86/paravirt: Remove the WBINVD callback")
+3101900218d7 ("x86/paravirt: Remove unused paravirt_disable_iospace()")
 
- Documentation/core-api/pin_user_pages.rst |  6 ++++++
- include/linux/mm.h                        | 26 ++++++++++++++++++++++++--
- mm/gup.c                                  | 31 ++++++++++++++++++++++++++++++-
- 3 files changed, 60 insertions(+), 3 deletions(-)
+I wasn't sure if it was appropriate to pull those to stable as well
+and the merge conflicts were trivial.
 
-Milan verified that the issue persists in 6.1.134 so far and the patch
-itself cannot be just reverted.
+Thanks!
 
-The failures all have a similar pattern, when pci-passthrough is used
-for a pci devide, for instance under qemu the bootup will fail with:
+Signed-off-by: Brett Mastbergen <bmastbergen@ciq.com>
+---
+ arch/x86/include/asm/irqflags.h       | 40 +++++++++++++++++++----------------
+ arch/x86/include/asm/paravirt.h       | 20 +++++++++---------
+ arch/x86/include/asm/paravirt_types.h |  3 +--
+ arch/x86/kernel/paravirt.c            | 13 +++++++-----
+ 4 files changed, 41 insertions(+), 35 deletions(-)
 
-qemu-system-x86_64: -device {"driver":"vfio-pci","host":"0000:03:00.0","id":"hostdev0","bus":"pci.3","addr":"0x0"}: VFIO_MAP_DMA failed: Cannot allocate memory
-qemu-system-x86_64: -device {"driver":"vfio-pci","host":"0000:03:00.0","id":"hostdev0","bus":"pci.3","addr":"0x0"}: vfio 0000:03:00.0: failed to setup container
+diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+index cf7fc2b8e3ce1f4e5f5703ae9fbb5a7e1182ad4f..1c2db11a2c3cb9a289d80d4900b9933275d1eea6 100644
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -76,6 +76,28 @@ static __always_inline void native_local_irq_restore(unsigned long flags)
+ 
+ #endif
+ 
++#ifndef CONFIG_PARAVIRT
++#ifndef __ASSEMBLY__
++/*
++ * Used in the idle loop; sti takes one instruction cycle
++ * to complete:
++ */
++static __always_inline void arch_safe_halt(void)
++{
++	native_safe_halt();
++}
++
++/*
++ * Used when interrupts are already enabled or to
++ * shutdown the processor:
++ */
++static __always_inline void halt(void)
++{
++	native_halt();
++}
++#endif /* __ASSEMBLY__ */
++#endif /* CONFIG_PARAVIRT */
++
+ #ifdef CONFIG_PARAVIRT_XXL
+ #include <asm/paravirt.h>
+ #else
+@@ -97,24 +119,6 @@ static __always_inline void arch_local_irq_enable(void)
+ 	native_irq_enable();
+ }
+ 
+-/*
+- * Used in the idle loop; sti takes one instruction cycle
+- * to complete:
+- */
+-static __always_inline void arch_safe_halt(void)
+-{
+-	native_safe_halt();
+-}
+-
+-/*
+- * Used when interrupts are already enabled or to
+- * shutdown the processor:
+- */
+-static __always_inline void halt(void)
+-{
+-	native_halt();
+-}
+-
+ /*
+  * For spinlocks, etc:
+  */
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index d4eb9e1d61b8ef8a3fc3a2510b0615ea93c11cb8..75d4c994f5e2a5dcbc2edbf7eed617de4a141fa0 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -107,6 +107,16 @@ static inline void notify_page_enc_status_changed(unsigned long pfn,
+ 	PVOP_VCALL3(mmu.notify_page_enc_status_changed, pfn, npages, enc);
+ }
+ 
++static __always_inline void arch_safe_halt(void)
++{
++	PVOP_VCALL0(irq.safe_halt);
++}
++
++static inline void halt(void)
++{
++	PVOP_VCALL0(irq.halt);
++}
++
+ #ifdef CONFIG_PARAVIRT_XXL
+ static inline void load_sp0(unsigned long sp0)
+ {
+@@ -170,16 +180,6 @@ static inline void __write_cr4(unsigned long x)
+ 	PVOP_VCALL1(cpu.write_cr4, x);
+ }
+ 
+-static __always_inline void arch_safe_halt(void)
+-{
+-	PVOP_VCALL0(irq.safe_halt);
+-}
+-
+-static inline void halt(void)
+-{
+-	PVOP_VCALL0(irq.halt);
+-}
+-
+ extern noinstr void pv_native_wbinvd(void);
+ 
+ static __always_inline void wbinvd(void)
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index 8d4fbe1be489549ad33c968c2132bdbaf739b871..9334fdd1f6350231af7089802dfb94daa1653965 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -122,10 +122,9 @@ struct pv_irq_ops {
+ 	struct paravirt_callee_save save_fl;
+ 	struct paravirt_callee_save irq_disable;
+ 	struct paravirt_callee_save irq_enable;
+-
++#endif
+ 	void (*safe_halt)(void);
+ 	void (*halt)(void);
+-#endif
+ } __no_randomize_layout;
+ 
+ struct pv_mmu_ops {
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index fec38153355581215eb93b6301ae90b6f0bd06c5..0c1b915d7efac895b2c8be67eb3b84b998d00fbc 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -100,6 +100,11 @@ int paravirt_disable_iospace(void)
+ 	return request_resource(&ioport_resource, &reserve_ioports);
+ }
+ 
++static noinstr void pv_native_safe_halt(void)
++{
++	native_safe_halt();
++}
++
+ #ifdef CONFIG_PARAVIRT_XXL
+ static noinstr void pv_native_write_cr2(unsigned long val)
+ {
+@@ -121,10 +126,6 @@ noinstr void pv_native_wbinvd(void)
+ 	native_wbinvd();
+ }
+ 
+-static noinstr void pv_native_safe_halt(void)
+-{
+-	native_safe_halt();
+-}
+ #endif
+ 
+ struct pv_info pv_info = {
+@@ -182,9 +183,11 @@ struct paravirt_patch_template pv_ops = {
+ 	.irq.save_fl		= __PV_IS_CALLEE_SAVE(pv_native_save_fl),
+ 	.irq.irq_disable	= __PV_IS_CALLEE_SAVE(pv_native_irq_disable),
+ 	.irq.irq_enable		= __PV_IS_CALLEE_SAVE(pv_native_irq_enable),
++#endif /* CONFIG_PARAVIRT_XXL */
++
++	/* Irq HLT ops. */
+ 	.irq.safe_halt		= pv_native_safe_halt,
+ 	.irq.halt		= native_halt,
+-#endif /* CONFIG_PARAVIRT_XXL */
+ 
+ 	/* Mmu ops. */
+ 	.mmu.flush_tlb_user	= native_flush_tlb_local,
 
-(in the case as reported by Milan).
+---
+base-commit: 83b4161a63b87ce40d9f24f09b5b006f63d95b7c
+change-id: 20250415-stable_fixup-c7b936473f53
 
-Any ideas here?
+Best regards,
+-- 
+Brett Mastbergen <bmastbergen@ciq.com>
 
-Regards,
-Salvatore
+
