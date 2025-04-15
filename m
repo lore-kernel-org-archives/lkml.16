@@ -1,106 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7D52951C7
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3FB294A01
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718812; cv=none; b=LO/0IllTeU/FBBNpwSDr6qmcDKS4dMuGXb3eBpiAqQL4SIpDrzcZwUs3HkoYzSyK0r81Up8sAE6KDkeKnD916bkhPWWpWSnKGQxd0L71Bm0g3wexRCUzsRSiyuQkCgFQOvUXg3Hb8lT/84jmj2wQjw6k3FIjHL1qIBA3CE4yKa4=
+	t=1744718839; cv=none; b=naBeq/BL3U9xsM8Rt/rb4y0dxW9sdhwXFd8e4B87cdQRpHOR6fO/xoX7QyWqUazx7cTJSwjrQ7qEyLvHz5AFlHxSWzQltbplX109XikfanAgMJOKosqlsO2PRiKcdb8nPujCW9Es32iOA1Hvy8NirJFt3O4l3khDv79Gr9pmUg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718812; c=relaxed/simple;
-	bh=x4b1Ksyd2oZZ01nHbkKfVYXSxKoQwElChjUNG5hzlbo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKfDMwMx34ccQge7AgSdkG4vvC8i0BI20cs3u/4G796ytqnRMEBd4xgmz8KmZkoCXzNJPDKs3ZdVR+o1zj+KFlRcxWp3xu55IY3Kd8OdF5KWQL6lIlEX6/jXGfWeoBsyjzRkVv9ocTAKtMXde8P8rzI1yJI6hpmV5Hcp33RxHkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NPHTkUH7; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744718839; c=relaxed/simple;
+	bh=q+j/4ED7OV5YAKIOQeHEFisQ36G2XCfFbi7Gj0qZPAU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W8IojmIw78QF+Q7iEhNNvTwXuOgHJiQVH3hRigb38+tz1s57ZWPKbbmOImIcK6RADq4JFeAlbiK012DcA07jWG+BMh8vJjaAlvMrYgirQoBDgs7yFo/QZGwwj598uyaoCRKOxcZM4ZjfOxYgC9+DreF5yzZygqFkVvqqpadt1K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HscZcIib; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jKfp2OMp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HscZcIib; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jKfp2OMp; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NPHTkUH7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744718811; x=1776254811;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x4b1Ksyd2oZZ01nHbkKfVYXSxKoQwElChjUNG5hzlbo=;
-  b=NPHTkUH7B62ERFK7YGBo2oS+gVtOeuvIbVMuD4gKh7J4J8nUS0NQbwMi
-   T6tIMNS740V+9g+r2vHW0BrNvuPH7sJrPUTaWz2j2t7CLIquzxaLAqODh
-   Es8VHMFuem2szn1pIEs2q3lZBwdPrPsiQ7Wb/8b4ZWf6skdoZQTsOilCY
-   E+Y64A5BROY5bvpyNFLdyGl/5McifuOIrkdUI9q2QiaacVjrF0os49ErL
-   BY2cYIRR40P+o573vZZiTB6+pljf2Sw37UepFtiIHpAyOQgJO+9Pxv4fU
-   T0I0ZCqzDFj11aYwPlUnCCalXZ+MaM6xLn2tUFg26yWG4USPVVaQuo6r9
-   g==;
-X-CSE-ConnectionGUID: gx3739JiQra+jQSGDDPoMw==
-X-CSE-MsgGUID: ZJIyLZsCSvSJ46In/vejYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56883900"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="56883900"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:06:50 -0700
-X-CSE-ConnectionGUID: 3ZUTnRvyQc2AZuhJ32hn1w==
-X-CSE-MsgGUID: NkzuOuzgR1OaN+lXV9EWhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130632856"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:06:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4f3t-0000000CXNM-021J;
-	Tue, 15 Apr 2025 15:06:45 +0300
-Date: Tue, 15 Apr 2025 15:06:44 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Corey Minyard <corey@minyard.net>
-Cc: openipmi-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] ipmi: si: Cast to smaller integer type without
- warning
-Message-ID: <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
-References: <20250415085156.446430-1-andriy.shevchenko@linux.intel.com>
- <Z_5FV65cyIwiI9rs@mail.minyard.net>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HscZcIib";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jKfp2OMp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HscZcIib";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jKfp2OMp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7F51921162;
+	Tue, 15 Apr 2025 12:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744718836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
+	b=HscZcIibrchgL54J7kjebM5aQYOkiIwcEeGo+LJJSUcfUvYff/q4l+M0s0Ny6ynyagnr4Y
+	+VV/XcrpWUo2zDUlqI2AaElfbh/XDDmhBkdvt42hG+Ev9cd92i2A+dIf8uG27cYLD8QbjX
+	QnhNHO/09Ktecu0WMLqnsoq7LJP4KYM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744718836;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
+	b=jKfp2OMpJnyVN/PajLHi24Vmc/uvwHKp8Plut4YQlV82wdOiFkrpKZQBLT7JJ+pCFI6FKW
+	B79dKQQwjuKRZbDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HscZcIib;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=jKfp2OMp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744718836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
+	b=HscZcIibrchgL54J7kjebM5aQYOkiIwcEeGo+LJJSUcfUvYff/q4l+M0s0Ny6ynyagnr4Y
+	+VV/XcrpWUo2zDUlqI2AaElfbh/XDDmhBkdvt42hG+Ev9cd92i2A+dIf8uG27cYLD8QbjX
+	QnhNHO/09Ktecu0WMLqnsoq7LJP4KYM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744718836;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
+	b=jKfp2OMpJnyVN/PajLHi24Vmc/uvwHKp8Plut4YQlV82wdOiFkrpKZQBLT7JJ+pCFI6FKW
+	B79dKQQwjuKRZbDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CD37139A1;
+	Tue, 15 Apr 2025 12:07:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id u1maCfRL/mdZDAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 15 Apr 2025 12:07:16 +0000
+Date: Tue, 15 Apr 2025 14:07:15 +0200
+Message-ID: <87ecxtzkzw.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data with __counted_by()
+In-Reply-To: <c344e6bd-1a95-4982-927d-f679410c444b@opensource.cirrus.com>
+References: <20250415090354.92211-2-thorsten.blum@linux.dev>
+	<9a0595a3-00c0-4006-bd54-99b938ee95bd@sirena.org.uk>
+	<C0A89B4A-14BC-48F3-9D0F-31C8C0AF7ECE@linux.dev>
+	<c344e6bd-1a95-4982-927d-f679410c444b@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_5FV65cyIwiI9rs@mail.minyard.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 7F51921162
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Apr 15, 2025 at 06:39:03AM -0500, Corey Minyard wrote:
-> On Tue, Apr 15, 2025 at 11:51:56AM +0300, Andy Shevchenko wrote:
-> > Debian clang version 19.1.7 is not happy when compiled with
-> > `make W=1` (note, CONFIG_WERROR=y is the default):
-> > 
-> > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
-> >   268 |         io.si_type      = (enum si_type)device_get_match_data(&pdev->dev);
-> > 
-> > Fix this by intermediate cast to the uintptr_t, that makes compiler happy.
+On Tue, 15 Apr 2025 14:03:18 +0200,
+Richard Fitzgerald wrote:
 > 
-> Unless things have changed recently, Linus prefers "unsigned long" per
-> https://patchwork.kernel.org/project/linux-hardening/patch/20220616143617.449094-1-Jason@zx2c4.com/#24899749
+> On 15/04/2025 12:51 pm, Thorsten Blum wrote:
+> > On 15. Apr 2025, at 12:56, Mark Brown wrote:
+> >> On Tue, Apr 15, 2025 at 11:03:55AM +0200, Thorsten Blum wrote:
+> >>> Add the __counted_by() compiler attribute to the flexible array member
+> >>> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> >>> CONFIG_FORTIFY_SOURCE.
+> >> 
+> >> As documented in submitting-patches.rst please send patches to the
+> >> maintainers for the code you would like to change.  The normal kernel
+> >> workflow is that people apply patches from their inboxes, if they aren't
+> >> copied they are likely to not see the patch at all and it is much more
+> >> difficult to apply patches.
+> > 
+> > I just use whatever scripts/get_maintainer.pl outputs. Maybe the
+> > MAINTAINERS file should be updated?
+> > 
+> > Best,
+> > Thorsten
+> > 
+> 
+> MAINTAINERS only lists Takashi and Jaroslav as maintainers of
+> include/sound/*.
+> 
+> A separate section lists Mark as maintainer of a specific set of files
+> within include/sound/
+> 
+> I guess any files we put in include/sound that are for an ASoC driver
+> have to also be added to Mark's ASoC section of MAINTAINERS?
 
-I'm not sure I got your point. That discussion seems irrelevant to me.
-They are talking about pointer-as-an-integer cases. Here we already know
-that we are passing integer-as-a-pointer and this is the opposite
-conversion.
-
-> And it would match what is in the match table.
-
-Match tables are tend to move to pointers, enum is usually goes to int.
-
-> Is that change ok?
-
-If you don't like my change, please do yours and consider this as
-a bug report that needs to be addressed. I prefer more my solution
-as we do that in many places for the exact scenario.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, it makes sense.
 
 
+Takashi
