@@ -1,121 +1,94 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDF1215F46;
-	Tue, 15 Apr 2025 03:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549998460;
+	Tue, 15 Apr 2025 03:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744687777; cv=none; b=Ni6lOCKKbi81TB6BweXSmv9Ytl8V5yU8ChhFjeJAHO8s5QYR1PxB1NeQKQdNFdwVzjAfdMGR3LTRHDBr8wDGpevQJmeF7H0/Qh5/J+G4OcUr/bdu7IW8fZV98VOgQQ4KXrhFiKeFSfpHd8NmEHdE76CuF1kbQKLPNGrIUHu1xxA=
+	t=1744687854; cv=none; b=lZvQcF2L7+tk83EHMLYCIi338mk4Lo4fxgI398MSKEExodnlC2KN+27aQit0KV8+7729tPavZfbLkQt/7Em0y3y5dNfvMpap6FoOZ0enGRzZq+jWYnMSa3+P6YlrJgnOG8ytNXU1/ePTeGLqpKfDIt+adNfvvQgz2OtLyWDHjFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744687777; c=relaxed/simple;
-	bh=0VG5bn70u0nQJZvRQ+yaOiXGO7G1+Ib707da+D0PmAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1iDN6occoxzKtYcmhdJW1VQTcwMCq+DQxDBvDMYQuZdCznFX6w1OpT7f5/OAd1wo0Z6nGWqMXuQV2EwG5vjr/Ik8wbAYopjjAUKY0CUYz8kNO74jkR3xv4ov/fwcgqajzG5a/l+++L6JHquaUDuvcpZKJT1Oh1VFG1/SjONC8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FVObfEaD; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744687854; c=relaxed/simple;
+	bh=oUQpqhzWVXdp7qUthWu4+FwVJs5T6FEKdE+LDL0Zth0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=GQfnVmWfU0/BfjE45GdUwjlMzSl3evidDfCRGnjW+zQIyD3hhitkhKGAXeu24AQa+Nif8BCkbfD8CdoEX7n6kSQMujgQuwip+l1rKWdlZPKgv91JtCu1hCaOiPzfZ9kIoKcRZ07cgsgTAbb/5QuHJVbBpQTMjKvTNDv4r9U1fEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emoVDUEX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVObfEaD"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c1138ae5so4962489b3a.3;
-        Mon, 14 Apr 2025 20:29:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744687775; x=1745292575; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7GzGJomWWI+mN0n3zOE3rjXulORlFMfOTwUaPOipP9k=;
-        b=FVObfEaDpwVg2KUBxTP9tg9NYth0MmXjmha3PUKnxA2Yxj8WyvXd4SicjEJ5aAnuoh
-         dH0G9fsV6XLt+0TgaKePFe33aI9dKXedYorn2gEDCXAvusCEL+qf2rKj6DHSyAVCjY3F
-         dkbzYcdoubYrADChOvgl6G8R0n1Uz3YWeoahsTkwa4Se/Ht1ewl6p8QhpSgfA9DLOiO2
-         dB3O8VZh5DZbCPikBErwfZOnB8FHQEtydys+QEDHaym31Ma9FqqSWUTWsSexNtFzHVcf
-         FD0UgVW/Z1AyPzQChH8F4T3lePsJtkFcibJa+ALhOvsDNOtjonNP0xQvMck9NCmgYKLC
-         2iSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744687775; x=1745292575;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7GzGJomWWI+mN0n3zOE3rjXulORlFMfOTwUaPOipP9k=;
-        b=oMLRv8M6DkidbbNIg7bejstekfphw/mb3JCqubp/enYnsthVSUArZOWRjQ4bYsCeyp
-         iRTwhxFXlK+XtLOLOyh9dM9C0LhEZi202exu8Ro9j9Ud1w+cSikaHSB0P2AYnyxuWJVl
-         jALGNkChzku+p1EKWlvxWY4dpAzUZNxMKMRHmeEziEEGvsZQ1uFNCFx0yuk8ND0ua45y
-         O9u8efBNAzsBHs/+0Tg6H7SQW3H6pHBIxgBccF4Qa+7RsMuWz/boZI8F/Xja1mztPyPE
-         G7/ZISTj8bxSompgzQUHOTxRsOdCedemF/3V9qno8NH6xDBMwNwqgQs9H2/SHb0T5a6q
-         fpsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJQJsB8M4Rd17ro6Q1b7277xmrpxKfSd/MSCoce7lPIvnjEjZi1+5g3G808s57bLcFSHsAZk89@vger.kernel.org, AJvYcCV9FeANZCJyJR2HEteDlHpFEhi6LLR9UD3xUbSsnS42n25yYNPmfCGi8ZhQe/GCHIrplJxPo4q4eS5Sf7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7q7nMEIgYKiPnRtAVagwLQKslX3y0bppSFrAC6pl7oU7KxUnW
-	OT9rbinqXzMIg9blO2XbxFLxBfP+OP2Mo07CVXhh/rgjxZuMNr7u
-X-Gm-Gg: ASbGncuFQm6KkRm3zScqe+rcBHW+dLXEfqaWkA5IA6xyOpsmuVZmPUf+dZ+c1LFqTSa
-	4D/08wkkWQZ/JhxKSBERALq4udW0/VoWKnj/KrwYnET2EuUTH5CkZUeIkTUKpWHt0eA+klyDqIU
-	xS69mvlbnFkZ3gykROEXxcQ63JyXXD5iJN2bvJkrCiOhQWroqeI2oQX5Ml3RFZdRc4y76OXf6xh
-	q+w8VI3eDlmTkE2VBxw/tR8A0A5z+YzMcxyD2RG0Xw2A/SSKsVznoutENGcXRjovfBp5yI4yaCD
-	t9LRfxbpnLisCnGxrUh7NChgltIEBE8dsI9APLVPck9m/D3lrGQvOSDL
-X-Google-Smtp-Source: AGHT+IGMA6bSXQXXUGEj500KRja+sm30gW0Fj8LVo6wtEKRxGeUdia0LiKt6azBnUHblKVOOVUyA6A==
-X-Received: by 2002:aa7:888d:0:b0:736:ab1d:7ed5 with SMTP id d2e1a72fcca58-73bd0e989eamr17473188b3a.0.1744687775110;
-        Mon, 14 Apr 2025 20:29:35 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.219.136])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd22f1293sm7674716b3a.99.2025.04.14.20.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 20:29:33 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: jiawenwu@trustnetic.com
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
-	mengyuanlou@net-swift.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: txgbe: fix memory leak in txgbe_probe() error path
-Date: Tue, 15 Apr 2025 08:59:09 +0530
-Message-ID: <20250415032910.13139-1-abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emoVDUEX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8659C4CEE2;
+	Tue, 15 Apr 2025 03:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744687854;
+	bh=oUQpqhzWVXdp7qUthWu4+FwVJs5T6FEKdE+LDL0Zth0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=emoVDUEXzCKPaf/UKFmsycT+RflvlzEn5RrTavLL+jTvjNDJFMPgpYI2ewq4hF6oS
+	 FsM4qqMSKgHQoYRFHyhjjMFZH7DdM45qFnfQDKtO1KfmHl1s+uKdebTECOMrGNYbsR
+	 Vaf3bENryMskS7yjbj0lD4CzF3tNu1VuyIG3y0stEHQUDgqA9opb/F5i/PYyiJiywa
+	 kpPhIzN5PIdHt2EGP1oIIylGgf+FE/7NLlZ4QbuulMkowsJANMIOM6/l00xIB6uFtt
+	 RhUX2OQDkHSTsRoKJxGDZxkeR9CLBLnkIyH6+6bibndxfhQdpbY1R/xBCpAnwz9Wzx
+	 pYgFtYhDcnpJA==
+Date: Mon, 14 Apr 2025 22:30:52 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org, 
+ Jianfeng Liu <liujianfeng1994@gmail.com>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Kever Yang <kever.yang@rock-chips.com>, 
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Chaoyi Chen <chaoyi.chen@rock-chips.com>, Jimmy Hon <honyuenkwun@gmail.com>, 
+ Dragan Simic <dsimic@manjaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
+ Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ FUKAUMI Naoki <naoki@radxa.com>
+To: Chaoyi Chen <kernel@airkyi.com>
+In-Reply-To: <AD40AC968D12DF48+20250415015441.371214-2-kernel@airkyi.com>
+References: <20250415015441.371214-1-kernel@airkyi.com>
+ <AD40AC968D12DF48+20250415015441.371214-2-kernel@airkyi.com>
+Message-Id: <174468785229.2606230.18106531706948394659.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Add rk3588 evb2 board
 
-When txgbe_sw_init() is called, memory is allocated for wx->rss_key
-in wx_init_rss_key(). However, in txgbe_probe() function, the subsequent
-error paths after txgbe_sw_init() don't free the rss_key. Fix that by
-freeing it in error path along with wx->mac_table.
 
-Also change the label to which execution jumps when txgbe_sw_init()
-fails, because otherwise, it could lead to a double free for rss_key,
-when the mac_table allocation fails in wx_sw_init().
+On Tue, 15 Apr 2025 01:54:40 +0000, Chaoyi Chen wrote:
+> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> 
+> Add devicetree binding for the rk3588 evb2 board.
+> 
+> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Fixes: 937d46ecc5f9 ("net: wangxun: add ethtool_ops for channel number")
-Reported-by: Jiawen Wu <jiawenwu@trustnetic.com>
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
----
- drivers/net/ethernet/wangxun/txgbe/txgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-index a2e245e3b016..38206a46693b 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-@@ -611,7 +611,7 @@ static int txgbe_probe(struct pci_dev *pdev,
- 	/* setup the private structure */
- 	err = txgbe_sw_init(wx);
- 	if (err)
--		goto err_free_mac_table;
-+		goto err_pci_release_regions;
- 
- 	/* check if flash load is done after hw power up */
- 	err = wx_check_flash_load(wx, TXGBE_SPI_ILDR_STATUS_PERST);
-@@ -769,6 +769,7 @@ static int txgbe_probe(struct pci_dev *pdev,
- 	wx_clear_interrupt_scheme(wx);
- 	wx_control_hw(wx, false);
- err_free_mac_table:
-+	kfree(wx->rss_key);
- 	kfree(wx->mac_table);
- err_pci_release_regions:
- 	pci_release_selected_regions(pdev,
--- 
-2.47.2
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/arm/rockchip.yaml:1078:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/AD40AC968D12DF48+20250415015441.371214-2-kernel@airkyi.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
