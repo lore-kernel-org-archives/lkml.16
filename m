@@ -1,161 +1,140 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071EEA927
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD32BA927;
+	Tue, 15 Apr 2025 01:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679097; cv=none; b=ZPmm0vAXKh7VRhX954E+DWzCGdiWQaAL42ESWSBXk3M5BqDVAUcAjFid0Zrhvu2xyyd7zphVyPDsHlunlorSvm36zg99Q3wnxF/3HFmkoGFBianXpaNMxLys+4SNPirNdMI7X/sqzGLKHxBYtFgQcRNf9V9qJE2EMJsFtOr63Gk=
+	t=1744679151; cv=none; b=VLupAkXgW9zYSrwcXkfJrdifJtfzDyQzxvFmmAz8mgtTXtfeEdKFCbjMmWcdu61JfhzQAloMm7Q2zvA/RhEPVq5OQpLF10KztmkMifAmQXnhdr4tsgB9psvedGDAH+L3tjmUp7biNj34Wup+A1S4Ir+Of9kOiTV2c8mk18n5qQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679097; c=relaxed/simple;
-	bh=XooZ/f4TiYmPULUQaXULiGvnRYi+NYIA50kuHou9MGs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MKf+zvuhJEGgDK9fnO+wzSOrqH7is04xlBhtcCOsmasLg0G/JZkNoYe+47/S2qigzJE/b6DETWFNV7Zl8B4mVXvQNCcfQEz6dYqv75WbXM+cjJpZe2Soyl6MbtHQwV/ngPUA28dbrRb3x+2KzaBcLXxVKPsMOqyOtpv8rrkLFkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2RTBR9bI; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2RTBR9bI"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736b431ee0dso3528033b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744679095; x=1745283895; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HwEPhkJYP4jHZW6lICXAbTPoDZvwoZbdqFIrWOLvgAk=;
-        b=2RTBR9bIi5L3ORxk4pUbpUe0ejp0LfNk59/K33uCM7by763oE25ZHcr8aX5LPs8U1H
-         600B/fWgDXbnxcuBaDOhzaZWGiHnCQti0J/0pTbLbyNqYf7RyWBxWiWFMb1YjO+5mmDE
-         kXtYQl6iYvjvBQTBTb6ZPJ3MxJWXMJoCR4nw7u0/aV0/fwJlA6/xIAlBsOvORJqjLXin
-         WhQYwgZ5HV08zovYHgkdUc1SAIrv7NRh367qqG1vLqjq/wsPoUMK88Skw8WKFVlwf/58
-         DTQZIGuvAxgwa1z9cW0LpInPMxEeaD/dEypy1cnQzsqBJ4EJ3Efr/nhti2jMLHGAbSI0
-         v3AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744679095; x=1745283895;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HwEPhkJYP4jHZW6lICXAbTPoDZvwoZbdqFIrWOLvgAk=;
-        b=VuGoYlps3dB90RIF/lIo3eKa0LInRSjwAXLxVkcjcztHLgJn4ZCRvhd3tJa+Dmc6xZ
-         CE4KBstSSydQjeEgYS+16PG1qBR6aScQ45+YYTkfz3x2/9kQhk1w0DO1mD7D/z72ZCvN
-         /Rz2IBzkeZynLWvZD2OG6FPZ01987PR2hDD0MqjaS4oq1YFUjyQqmmmWmWJqf8lC6xjp
-         5p+1Gb7MrS6otnA+tBX1WCbRckl/qxpkqSmeJwbELwR1o9C/X0t8rd5a4gf+sG9sHyO2
-         gbq/FxyTdER9Zbe9mqPzl9CCmUufglwqesJHJZ7TKmArfqjZamnSQ6kDE3C2EXtyjUfn
-         F5Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2ps74wORuKiXk72eINTjhL9Ir0MUtew+XHfBKDB66Rr5XMGR54G4VIFEfWuVWJ5k03ELz1SGamdOwEKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuL4IkIljb36Q1xwrWFO0N0RniTRcsPDEtf0rf318Ra49WaNmD
-	nlp+QLwJy2zkyiHeCmAhJ5X0zpHnbIStsXzi7dXiHITdMrzajMEBpDVYB6+xbu8K5y3BTiTZP0A
-	9xQ==
-X-Google-Smtp-Source: AGHT+IFXmc+2Aq9ymMVi0Xu5a/XBZEugGWhhYiyOKpCaZ8Hm7AQ7AjvPCxt2y5P8+quyHAjWH2XrQompP+w=
-X-Received: from pfbfc2.prod.google.com ([2002:a05:6a00:2e02:b0:736:9d24:ae31])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:4f92:b0:201:85f4:ad0a
- with SMTP id adf61e73a8af0-20185f4bb86mr15672211637.30.1744679094931; Mon, 14
- Apr 2025 18:04:54 -0700 (PDT)
-Date: Mon, 14 Apr 2025 18:04:53 -0700
-In-Reply-To: <20250414081131.97374-1-ubizjak@gmail.com>
+	s=arc-20240116; t=1744679151; c=relaxed/simple;
+	bh=3NDf5j7eWrHrW440/AaqxeY/A1RC9zY1VXbHkDEQ154=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lDeBWECGfrO9iRBuP12L8hUShwtkcWq9sVdarVwy8ZnVMIG5cn73CW601LoTTRvDwTXRXioewRzbsJhjW8SODmIR+hVydbbiWeNX8GZ3eNgW1oHxYujcyzFJcFI6vabRFVHkWld1YtvqiqcukZ7g/mgvu2xqDwinYBCVvZ9+4r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F0oDJr007332;
+	Tue, 15 Apr 2025 01:05:23 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ydd1js6q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 15 Apr 2025 01:05:23 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 14 Apr 2025 18:05:22 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 14 Apr 2025 18:05:19 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <hch@infradead.org>
+CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
+        <jack@suse.cz>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <ntfs3@lists.linux.dev>,
+        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Date: Tue, 15 Apr 2025 09:05:18 +0800
+Message-ID: <20250415010518.2008216-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_yiPk7AkwJo0c6n@infradead.org>
+References: <Z_yiPk7AkwJo0c6n@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414081131.97374-1-ubizjak@gmail.com>
-Message-ID: <Z_2wtfAAxb5uNP4g@google.com>
-Subject: Re: [PATCH 1/2] KVM: x86: Use asm_inline() instead of asm() in kvm_hypercall[0-4]()
-From: Sean Christopherson <seanjc@google.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: ty7NNuGZDoar7YOn9Kc2ENxMCfgW6Xuv
+X-Proofpoint-GUID: ty7NNuGZDoar7YOn9Kc2ENxMCfgW6Xuv
+X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=67fdb0d3 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=ntnxu_dxGi-Q_OBSk1sA:9
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_08,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0 clxscore=1011
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504150003
 
-Nit, this is guest code, i.e. should use "kvm/x86:" for the scope.  No need to
-send a new version just for that.
+On Sun, 13 Apr 2025 22:50:54 -0700, Christoph Hellwig wrote:
+> On Fri, Apr 11, 2025 at 09:24:27AM +0800, Lizhi Xu wrote:
+> > The ntfs3 can use the page cache directly, so its address_space_operations
+> > need direct_IO.
+> 
+> I can't parse that sentence.  What are you trying to say with it?
+The comments [1] of generic_file_read_iter() clearly states "read_iter()
+for all filesystems that can use the page cache directly".
 
-On Mon, Apr 14, 2025, Uros Bizjak wrote:
-> Use asm_inline() to instruct the compiler that the size of asm()
-> is the minimum size of one instruction, ignoring how many instructions
-> the compiler thinks it is. ALTERNATIVE macro that expands to several
-> pseudo directives causes instruction length estimate to count
-> more than 20 instructions.
-> 
-> bloat-o-meter reports minimal code size increase
-> (x86_64 defconfig, gcc-14.2.1):
-> 
->   add/remove: 0/0 grow/shrink: 1/0 up/down: 10/0 (10)
-> 
-> 	Function                          old     new   delta
-> 	-----------------------------------------------------
-> 	__send_ipi_mask                   525     535     +10
-> 
->   Total: Before=23751224, After=23751234, chg +0.00%
-> 
-> due to different compiler decisions with more precise size
-> estimations.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> ---
->  arch/x86/include/asm/kvm_para.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-> index 57bc74e112f2..519ab5aee250 100644
-> --- a/arch/x86/include/asm/kvm_para.h
-> +++ b/arch/x86/include/asm/kvm_para.h
-> @@ -38,7 +38,7 @@ static inline long kvm_hypercall0(unsigned int nr)
->  	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
->  		return tdx_kvm_hypercall(nr, 0, 0, 0, 0);
->  
-> -	asm volatile(KVM_HYPERCALL
-> +	asm_inline volatile(KVM_HYPERCALL
->  		     : "=a"(ret)
->  		     : "a"(nr)
->  		     : "memory");
-> @@ -52,7 +52,7 @@ static inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
->  	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
->  		return tdx_kvm_hypercall(nr, p1, 0, 0, 0);
->  
-> -	asm volatile(KVM_HYPERCALL
-> +	asm_inline volatile(KVM_HYPERCALL
->  		     : "=a"(ret)
->  		     : "a"(nr), "b"(p1)
->  		     : "memory");
-> @@ -67,7 +67,7 @@ static inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
->  	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
->  		return tdx_kvm_hypercall(nr, p1, p2, 0, 0);
->  
-> -	asm volatile(KVM_HYPERCALL
-> +	asm_inline volatile(KVM_HYPERCALL
->  		     : "=a"(ret)
->  		     : "a"(nr), "b"(p1), "c"(p2)
->  		     : "memory");
-> @@ -82,7 +82,7 @@ static inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
->  	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
->  		return tdx_kvm_hypercall(nr, p1, p2, p3, 0);
->  
-> -	asm volatile(KVM_HYPERCALL
-> +	asm_inline volatile(KVM_HYPERCALL
->  		     : "=a"(ret)
->  		     : "a"(nr), "b"(p1), "c"(p2), "d"(p3)
->  		     : "memory");
-> @@ -98,7 +98,7 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
->  	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
->  		return tdx_kvm_hypercall(nr, p1, p2, p3, p4);
->  
-> -	asm volatile(KVM_HYPERCALL
-> +	asm_inline volatile(KVM_HYPERCALL
->  		     : "=a"(ret)
->  		     : "a"(nr), "b"(p1), "c"(p2), "d"(p3), "S"(p4)
->  		     : "memory");
-> -- 
-> 2.49.0
-> 
+In the calltrace of this example, it is clear that direct_IO is not set.
+In [3], it is also clear that the lack of direct_IO in ntfs_aops_cmpr
+caused this problem.
+
+In summary, direct_IO must be set in this issue.
+
+[1]
+ * generic_file_read_iter - generic filesystem read routine
+ * @iocb:	kernel I/O control block
+ * @iter:	destination for the data read
+ *
+ * This is the "read_iter()" routine for all filesystems
+ * that can use the page cache directly.
+
+[2]
+generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+{
+	size_t count = iov_iter_count(iter);
+	ssize_t retval = 0;
+
+	if (!count)
+		return 0; /* skip atime */
+
+	if (iocb->ki_flags & IOCB_DIRECT) {
+		struct file *file = iocb->ki_filp;
+		struct address_space *mapping = file->f_mapping;
+		struct inode *inode = mapping->host;
+
+		retval = kiocb_write_and_wait(iocb, count);
+		if (retval < 0)
+			return retval;
+		file_accessed(file);
+
+		retval = mapping->a_ops->direct_IO(iocb, iter); 
+[3]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b432163ebd15a0fb74051949cb61456d6c55ccbd
+diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
+index 4d9d84cc3c6f55..9b6a3f8d2e7c5c 100644
+--- a/fs/ntfs3/file.c
++++ b/fs/ntfs3/file.c
+@@ -101,8 +101,26 @@ int ntfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	/* Allowed to change compression for empty files and for directories only. */
+ 	if (!is_dedup(ni) && !is_encrypted(ni) &&
+ 	    (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode))) {
+-		/* Change compress state. */
+-		int err = ni_set_compress(inode, flags & FS_COMPR_FL);
++		int err = 0;
++		struct address_space *mapping = inode->i_mapping;
++
++		/* write out all data and wait. */
++		filemap_invalidate_lock(mapping);
++		err = filemap_write_and_wait(mapping);
++
++		if (err >= 0) {
++			/* Change compress state. */
++			bool compr = flags & FS_COMPR_FL;
++			err = ni_set_compress(inode, compr);
++
++			/* For files change a_ops too. */
++			if (!err)
++				mapping->a_ops = compr ? &ntfs_aops_cmpr :
++							 &ntfs_aops;
+
+BR,
+Lizhi
