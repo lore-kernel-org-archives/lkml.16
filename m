@@ -1,196 +1,209 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2048.outbound.protection.outlook.com [40.107.101.48])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760AE275852
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744693127; cv=fail; b=CHPXUzNoJRAm0hxanKrxRQC4jP0A5uFSDOp71PlwB+rmVbhXQTpzFVs+iOsrUnhTbUFxefCrlFTwWqd35yviiBpll9CeJY2wWuqgnQakU8w5aSnqhxrA3/ZkPECqa+fw66k5+j7BcydCJbMPVXY4cfZj4PL/UQ5oCueuAyxumP0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744693127; c=relaxed/simple;
-	bh=WzdpOKk4H9pwmJDbtNidlsmOeMriX6jVjvURIew8O60=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sNKgCSt3YEJwzVA2DVgg3ZmTz3wMvR9E/lfyptA+duXe5OVegpuhiKcGLwA6rAO0o+hFJ9O0Yzp+VzP2gWUjnnrd7pRfa0F1BU3chTC2E1GxaSQhkVHM4tkVzBuou31ptew486d4qYrwMHukd8RDDYHbmDlwSOksKaCYwtqYFp0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Sa1tXXKM; arc=fail smtp.client-ip=40.107.101.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E4F2741AF;
+	Tue, 15 Apr 2025 04:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744693139; cv=none; b=doO1dtG6cvqd33MtZIJ2K7XaeHZvNpT1aJ/VCv2oe3XkIX9Opw15uioJFXLjsh+yHBTu/Lmh89vtTRTLcdkWPjDFZXQxdH2nSMfI+v34avvt8JNy0hvt+4zkM+9E2Pook3pdrp4R8tyRF3285mqzyrZlzR7wyaayeRdP7103YFo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744693139; c=relaxed/simple;
+	bh=9lGod6WqYYl/rO9s0C3ikCS4fm+rF6VO8qe2Pg1E0qI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=B9Xn97NqOuCI2QBHeGVe+zSrjH1mOeajynGUtsqVY4k2HoYLLi6ALIviLzQibjemqou4hYyOTIpP4QHbrv6qImXnVtz/Ml8x0cEa3jCZ6CrjS8ir6Uj3agEZKhfYLByaVjN108iV3kQBY708aNXcHj1sAQSbeNa5ZDt8lUfAyy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JDhbaWGl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Sa1tXXKM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a9/Y5i7PvBkwkb13f4rszRPwY+ffud2NFIBvnlDhn5LUg0cog+wov1sZtK9lYxb8Hxu/LaqORSJj7RT6QJWUOkFHAkE95zPczYpp56xr29FlDe1ic9ydSmhOsBhZPzKi53SmrJkgrHOXzhYAIXxs2mVWonOc60VjcJQtVSSZFbR3aT81ohJlYkVauBpmkolKTS40jfOGYBNYga8A10foKIfPDC/RPGhsxUi0p9vIHqoXlqJ1aX4jx2xwPZJEeDZQLa9BnL87ZJg7el54I1RErmoT/QvhUjEwB4BITBKn9UWiUxOYTMQ2YHZ32e+PSHA45QgTwoq9z0j/CpzqaJ7Vkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xPg8r9+qxP3FUQR7JGslU2hw0AcMpptvhuQODcbrUBo=;
- b=qFE4+KQ2XXAcGOMVL03uTNwcVReQ413PVDoyKJDkPvIQGhLieSLTYqttNhJPG3TRFFyl9LL7v/1nKufN9t4T6GuOvpRRGq78CMDUONsSgj1KtmzRTXpbsI4jZOOxuzTdkgmK11AE7gWNNMrfjnkgjI2vBL805nbxwqMPXaxLvRyOuz63HLy0373Sb5XuPXBCAH7l3QXSz0SvguES1SD+Zqjv4nOY/VYIP1VLcEIvO2bhc6UWs4jmRl+I9bsSf/9tOEA1arN8AwY3dDyWVFI9cqs7BClvaeipvRDACxL4D52TSuwjQ5+bNGlMk6obDbFrQpU1ynsrmm0jq2c46+Xy8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xPg8r9+qxP3FUQR7JGslU2hw0AcMpptvhuQODcbrUBo=;
- b=Sa1tXXKMyqI48eFANd1PhAgvIhqehlRLDEPgw897nmEYeF6rlwAB8tpbFN5Or6BSWiUDMVHpuf61KI0qP9J+UvOlhWF/R6rOlukGVcBW7gA9ZR38/ZAL0cNb5NLiWzLIk5fvKKwkyWz0YHwnvmLFE4qx+Fv8Cr+ctv8NmfWECXsYJPWsqr/Nr49aSjizECFulaLTifeBUIcidqGx2BFUP7aJmrbnsZ49ALq3cGNRZZ7s+fcj7sO3cGgP0r/dmJ4M49ywZjULh8yMw93Nq5GxX11a510RCIsanOk4RSC/eD/CEpOtO7a0qid2fudNhzHLynU+RYoW2yCHYvPnQ1ujOg==
-Received: from BL0PR02CA0076.namprd02.prod.outlook.com (2603:10b6:208:51::17)
- by PH8PR12MB6844.namprd12.prod.outlook.com (2603:10b6:510:1cb::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Tue, 15 Apr
- 2025 04:58:39 +0000
-Received: from BL02EPF0002992E.namprd02.prod.outlook.com
- (2603:10b6:208:51:cafe::e9) by BL0PR02CA0076.outlook.office365.com
- (2603:10b6:208:51::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Tue,
- 15 Apr 2025 04:58:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BL02EPF0002992E.mail.protection.outlook.com (10.167.249.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Tue, 15 Apr 2025 04:58:39 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 14 Apr
- 2025 21:58:23 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 14 Apr
- 2025 21:58:23 -0700
-Received: from Asurada-Nvidia.nvidia.com (10.127.8.11) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Mon, 14 Apr 2025 21:58:22 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: <will@kernel.org>, <robin.murphy@arm.com>, <jgg@nvidia.com>
-CC: <joro@8bytes.org>, <kevin.tian@intel.com>, <praan@google.com>,
-	<nathan@kernel.org>, <yi.l.liu@intel.com>, <peterz@infradead.org>,
-	<mshavit@google.com>, <jsnitsel@redhat.com>, <smostafa@google.com>,
-	<jeff.johnson@oss.qualcomm.com>, <zhangzekun11@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v2 11/11] iommu/arm-smmu-v3: Allow to share S2 nest_parent domain across vSMMUs
-Date: Mon, 14 Apr 2025 21:57:46 -0700
-Message-ID: <e6a808167d61bc254aea397cbe75622e02e9d703.1744692494.git.nicolinc@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1744692494.git.nicolinc@nvidia.com>
-References: <cover.1744692494.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JDhbaWGl"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F15Nbc005441;
+	Tue, 15 Apr 2025 04:58:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	wWezN7uFN+RzaL3qpsgmIaG5ICwn+G0ehLPVglPL+r0=; b=JDhbaWGl6+vvgC/E
+	7XyYtygurCecCzCJw/EqlnDpg4gSUVHP3Z1DVGnLYqDMAb7Yr1h0v989K9+Ccj8R
+	hSVUFIeyO9kg3nuVUNtuwzsj28yAhCENlnw+gPzVMy2UL1s3EdQ4ZNh9cxejB5q2
+	VaQZpCYxIuKK4h/qGZDVILimuoK2E2/F934z8ackR2VUAjBB0q9KABHmAwu292/i
+	en2eAu/jKp25zrqR5yauRPibpabosW0J1Ezghzo+7oM1ZYwAe0F8MyfzHhGCyJXY
+	8aq+1exz7Iqi5Qo5I8NChMABvxWjNyu6ZWTxgt4h15pY68SasLDLh5eSX2m55wif
+	RDm16A==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydhq6wys-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 04:58:52 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53F4wpN0027101
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 04:58:51 GMT
+Received: from [10.50.52.225] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
+ 2025 21:58:45 -0700
+Message-ID: <96bd9ffa-94f6-0d1f-d050-5bec13b3328f@quicinc.com>
+Date: Tue, 15 Apr 2025 10:28:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 01/20] media: iris: Skip destroying internal buffer if not
+ dequeued
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Stefan Schmidt
+	<stefan.schmidt@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
+ <20250408-iris-dec-hevc-vp9-v1-1-acd258778bd6@quicinc.com>
+ <811cd70e-dc27-4ce0-b7da-296fa5926f90@linaro.org>
+ <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0002992E:EE_|PH8PR12MB6844:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e74d588-f5c6-4b84-e04d-08dd7bda302d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Feaa/PIdfZS7IN2u+8jdzgbMB9CLJef1g+Jv48viimOzb1pXetgTyKELurvL?=
- =?us-ascii?Q?RsxJty1LuByEKRo2P2iAzB4I8sYWamCPo0ClYex9Nd+pjsInFtsXUN/wWyfy?=
- =?us-ascii?Q?OzwTn5fD/t2GEKK7XHVetN6w8VrQhJNYnQgD4Q4grvNPOJyYEuYwAJsmEqDp?=
- =?us-ascii?Q?QUhqsiM2x4KXGk4tZn6/bC4HjrfhYiIZA30qgHXRKEdhZ9FJ3M5BKrTrnPlU?=
- =?us-ascii?Q?O7KZFI86zGW6rzC2Vp0VXYlOm94vgOLGmWGsabce4aryRfAlFmvkoQW/jeap?=
- =?us-ascii?Q?uISb8VWmT9F5lbZywz9vaV3A+DskcXfVZwqoqSsRv+r+4jNmRXwxbDQyh53T?=
- =?us-ascii?Q?M5phJZ7eRZ6DVc0jNUpObaZfa8wRMJKgwpMkbn3NZGv/GPxD9fHcOCiEc+x4?=
- =?us-ascii?Q?3FEm8WhYfwv/KoZTqZZlVI/GSnNiFNUONdrCEeiRWpx4JBmnB7m9lD4W47ma?=
- =?us-ascii?Q?sjjbSvYS2xIAgDH0byUdmJBHfpulwfSkCSedzpZMg7h0XrfCahfb5DvcZ6Re?=
- =?us-ascii?Q?z+ZZLzY6b2itsfqrtb41Gnbu6P2Wx1TFRc8D4RFUa3yb6smp49V5ozmkYZM4?=
- =?us-ascii?Q?QFsWqBgua98AXvMKSFPTDdMNM4I5SdrTwamu3u9SL4XnA70qQJ2LNyD7yVrb?=
- =?us-ascii?Q?l7QAV6i2w+GYz7d2Hv++/6v2SJ3e9BtGznkg8nGacZkouKDLiK3zXvEZWiIq?=
- =?us-ascii?Q?bL2EaeAyl0zDHBxQZ9+xxBYg/SVG7jxxzbh0ILsFn6LkdyD/TFTEcgD+YcWW?=
- =?us-ascii?Q?dxqr5MtFO06S3mGMaQx3TOsdnMBhuorGTwN+z5hGA+bh+j08/vRUX971MNYu?=
- =?us-ascii?Q?BtPK/Ip/TSZJPwHdIKyvc9KleqRnnyjfT2jY1P7i4dnqXtlZ+1kh2Fp3a1xB?=
- =?us-ascii?Q?0OPGGHxb3GT/hyBwTeQMqiTCL8li0XKWA+lwPIN4ZayqaKwH1qSeUdVIubrf?=
- =?us-ascii?Q?Wrdee1H5d3m8LpYFzVPqvufuH78vr7yX5GATffHVTlGuWALc9RjLrXlwPd/3?=
- =?us-ascii?Q?KdKtHCHKov+wU6/mk6yLt/8Ndd+l9tepWxa9nPL6SCZix2EY6KM1dN1lSZo5?=
- =?us-ascii?Q?Yx/xKKT1SF3+kql5tvzSlcZginL19drxucBRf8Qcy/Jt+Q16++ov/i8UgsAf?=
- =?us-ascii?Q?REWx23hXw9KFTqF9Uq6hZD1A3dpqe3k60RaWhWvkZB4M2eEkJ4j61X5cyZpN?=
- =?us-ascii?Q?uNxyCr2mRyExCPgy/ohtI3599IvcmHU25XgxzEXdJuaxcs3h2S7FhVrqlPX8?=
- =?us-ascii?Q?vHBej67TJWOLeEZg3Omku+boNkQFHfoyETjBOP1k+U37qekUoJI2KVHCfpGW?=
- =?us-ascii?Q?XF/QuuZfxWeThU2+a4TPjKL3cvcwDtkDfAfLi3Sp6HoxUihaJZCIiwk7CtJC?=
- =?us-ascii?Q?gNazix7LkdhxqIG0AfE8R8JngVXHC7etd4Z/iMdPD9lmPTzF4HAdH8+IBw5h?=
- =?us-ascii?Q?4C5eO/JADJq0OOJUGw3KAl1ocvSq2LG0ppia3K05kXy+ZV9ChyFDHs/4DwLU?=
- =?us-ascii?Q?Afb5itbq4ghgiWnrWe+2uaP7zBStPwQ+Q+ej?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 04:58:39.6003
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e74d588-f5c6-4b84-e04d-08dd7bda302d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0002992E.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6844
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: QlRzTnvec0eQYNpsNvi7_FdVOlfD84PS
+X-Authority-Analysis: v=2.4 cv=C7DpyRP+ c=1 sm=1 tr=0 ts=67fde78c cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=z6aZsptlrjkmvRdYYoYA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: QlRzTnvec0eQYNpsNvi7_FdVOlfD84PS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150031
 
-An S2 nest_parent domain used by one vSMMU can be shared with another vSMMU
-so long as the underlying stage-2 page table is compatible by the physical
-SMMU instance.
 
-There is no direct information about the page table from the master device,
-but a comparison can be done between the physical SMMU that the nest_parent
-domain was allocated for and the physical SMMU that the device is behind.
 
-Replace the smmu test in arm_vsmmu_alloc() with a compatibility test, which
-goes through the physical SMMU parameters that were used to decide the page
-table formats.
+On 4/14/2025 3:56 PM, Bryan O'Donoghue wrote:
+> On 11/04/2025 13:10, Bryan O'Donoghue wrote:
+>> On 08/04/2025 16:54, Dikshita Agarwal wrote:
+>>> Firmware might hold the DPB buffers for reference in case of sequence
+>>> change, so skip destroying buffers for which QUEUED flag is not removed.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue
+>>> internal buffers")
+>>> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+>>> ---
+>>>   drivers/media/platform/qcom/iris/iris_buffer.c | 7 +++++++
+>>>   1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/
+>>> media/platform/qcom/iris/iris_buffer.c
+>>> index e5c5a564fcb8..75fe63cc2327 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
+>>> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+>>> @@ -396,6 +396,13 @@ int iris_destroy_internal_buffers(struct iris_inst
+>>> *inst, u32 plane)
+>>>       for (i = 0; i < len; i++) {
+>>>           buffers = &inst->buffers[internal_buf_type[i]];
+>>>           list_for_each_entry_safe(buf, next, &buffers->list, list) {
+>>> +            /*
+>>> +             * skip destroying internal(DPB) buffer if firmware
+>>> +             * did not return it.
+>>> +             */
+>>> +            if (buf->attr & BUF_ATTR_QUEUED)
+>>> +                continue;
+>>> +
+>>>               ret = iris_destroy_internal_buffer(inst, buf);
+>>>               if (ret)
+>>>                   return ret;
+>>>
+>>
+>> iris_destroy_internal_buffers() is called from
+>>
+>> - iris_vdec_streamon_output
+>> - iris_venc_streamon_output
+>> - iris_close
+>>
+>> So if we skip releasing the buffer here, when will the memory be released ?
+>>
+>> Particularly the kfree() in iris_destroy_internal_buffer() ?
+>>
+>> iris_close -> iris_destroy_internal_buffers ! -> iris_destroy_buffer
+>>
+>> Is a leak right ?
+Good catch, Thanks!
+>>
+>> ---
+>> bod
+> 
+> Thinking about this some more, I believe we should have some sort of
+> reaping routine.
+> 
+> - The firmware fails to release a buffer, it is up to APSS/Linux
+>   to run some kind of reaping routine.
+>   We can debate when is the right time to reset.
+>   Perhaps instead of ignoring the buffer as you have done here
+>   we schedule work with a timeout and if the timeout expires then
+>   this triggers a reset/reap routine.
+> 
+> - Since Linux allocates a buffer on the APSS side, you can't have a
+>   situation where firmware can indefinitely hold memory.
+> 
+> - APSS is in effect the bus master here since it can assert/deassert
+>   RESET lines to the firmware, can control regulators and clocks.
+> 
+> So we should have some kind of watchdog logic here.
+> 
+> As alluded to above, what exactly do you do if firmware never returns a
+> buffer ? Accept memory leak on the APSS side ?
+> 
+> Rather we should agree when it is appropriate to run a watchdog routine to
+> 
+> 1. Timeout firmware not returning a buffer
+> 2. Put the iris/venus hardware into reset
+> 3. Reap leaked memory
+> 4. Restart
+> 
+> I see we have IRQ based watchdog logic but, I don't see that it reaps memory.
+> 
+> In any case we should have the ability to reset iris and reclaim/reap
+> memory in this type of situation.
+> 
+> Perhaps I'm off on a rant here but, this seems like a problem we should
+> address with a more comprehensive solution.
+> 
+That's right, but we don't need to over complicate this.
 
-Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
----
- .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 21 ++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+We need to skip destroying these buffers for a running session so that the
+DPB buffers which are still being referenced by firmware are not lost.
+But these should be freed during session close which is missing in current
+code.
+Although firmware makes sure that during session close, all buffers are
+returned to driver and driver will release them but still we shouldn't rely
+for this on firmware and should handle in driver.
+Will fix this in next patch set.
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-index 5d05f8a78215..f654e665739a 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-@@ -501,6 +501,25 @@ static const struct iommufd_viommu_ops arm_vsmmu_ops = {
- 	.cache_invalidate = arm_vsmmu_cache_invalidate,
- };
- 
-+static bool arm_smmu_s2_parent_can_share(struct arm_smmu_domain *s2_parent,
-+					 struct arm_smmu_device *smmu)
-+{
-+	struct arm_smmu_device *s2_smmu = s2_parent->smmu;
-+
-+	if (s2_smmu == smmu)
-+		return true;
-+	if (s2_smmu->iommu.ops != smmu->iommu.ops)
-+		return false;
-+	if (s2_smmu->ias > smmu->ias || s2_smmu->oas > smmu->oas)
-+		return false;
-+	if (s2_smmu->pgsize_bitmap != smmu->pgsize_bitmap)
-+		return false;
-+	if ((s2_smmu->features & ARM_SMMU_FEAT_COHERENCY) !=
-+	    (smmu->features & ARM_SMMU_FEAT_COHERENCY))
-+		return false;
-+	return true;
-+}
-+
- struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
- 				       struct iommu_domain *parent,
- 				       struct iommufd_ctx *ictx,
-@@ -520,7 +539,7 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
- 	if (!(smmu->features & ARM_SMMU_FEAT_NESTING))
- 		return ERR_PTR(-EOPNOTSUPP);
- 
--	if (s2_parent->smmu != master->smmu)
-+	if (!arm_smmu_s2_parent_can_share(s2_parent, master->smmu))
- 		return ERR_PTR(-EINVAL);
- 
- 	/*
--- 
-2.43.0
-
+Thanks,
+Dikshita
+> ---
+> bod
