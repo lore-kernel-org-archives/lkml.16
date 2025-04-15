@@ -1,224 +1,84 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF24F2741D2;
-	Tue, 15 Apr 2025 07:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB8E1AF0D0
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703470; cv=none; b=PsoI1x7zmAefvLrnImTqtWN7JWShehpaICSeBBBuMqZkbvdLhwLYH3nUERABwvYSf7hf8UzPpjW+B1V9Q/QBDCM14XT7S6/6P0s8vnqqqGow9IW/RFq4JKK4zYR+Pk2OlSdq8oXPROdH5cWAPDIkKRlVeyrFbkQUk7V1twUZ504=
+	t=1744703479; cv=none; b=Og4p+sSOaoyiOlSITy+WLZtmkfQ6Cyx5guBQOKQbSbznXedInCcBQVlm+5ixqt7zT4fax71zI5qFXRpgu3esMB4MD2/Yg9k2Rq5J3ePbl41+1qUQFkkPYhM9G1b+iAc+/23uldPVPCif4BADkSmcBNidijQCO+WT5Fd6qEh2Rnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703470; c=relaxed/simple;
-	bh=r9ufPwUAMeRhf6lPmmzB6FeQNWgHbJaijd5wxqyPBhc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oS71kZxmYi4kbFfULMvCKEjkV9eJby0v+sLwJl5ZTpOj4cW0CBJ+tE8Le5aFAgChxPExS7kuHbcHk2z7qv4lkLBQH13BcnByk4KSXZF+zJQuiiMQkmndtVRJgbDomFMzQ3/mP8BwdPUEjcYZ4d378oU7RD2j/1Db9ey/hT0qbnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VVW72aPb; arc=none smtp.client-ip=95.215.58.186
+	s=arc-20240116; t=1744703479; c=relaxed/simple;
+	bh=V7WN/v5jfqovO3L5tNovFCaLqiFkyYSdDlSkoFmtnWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yj71849bUB3YRtTB9wr0igpMqzR/d8f6SLxYACy1jVEStbPm2Tp9nWN+hfRjTm6iAs/VyOpnE1EwyMvwIuPkRyXFy+VRV6ZBoYBym1QnqDJEKuUXWH2AK+syPM5I4LsObjh99ZWB8Cnfl4W7VtN3staBIO/0uZfwbediAQwN1Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iqaP9mDX; arc=none smtp.client-ip=91.218.175.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VVW72aPb"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iqaP9mDX"
+Message-ID: <68769daa-fbd5-4dbd-87a6-5b74bdc20094@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744703465;
+	t=1744703475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=w7xWxJYFP6M/TEqfUiLVEiOQ7IdW+X8eIqI/gwRpLkM=;
-	b=VVW72aPbTA5CfCPTg6YTyuwMbCkhi0MPTaIJpFSfD/e5VFBXH8gixxFCKrqH7KikTn/Nbi
-	ziz5Dbj5TKBjMJhReTN66se8zEtDRf27BtfbIfM3gjLxnw3Vllh6EBXzDIsbZYjsQYoTfA
-	3eFlHnTcnES5z1l2eJPJmHy/6VB8O4A=
-From: Ye Liu <ye.liu@linux.dev>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org
-Cc: linux-toolchains@vger.kernel.org,
-	linux-mm@kvack.org,
-	Ye Liu <liuye@kylinos.cn>
-Subject: [PATCH] tools/drgn: Add script to display page state for a given PID and VADDR
-Date: Tue, 15 Apr 2025 15:50:24 +0800
-Message-Id: <20250415075024.248232-1-ye.liu@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V81s/f0QCbsd/984Wr1FAdBVpqvVsMp5C6LqkC0blZE=;
+	b=iqaP9mDXFsvR47REF0cUT3/3u+Cp4hPEqwSmT3AqLac9n5PJHiGI+zXxY+OlKlZFl9ko4f
+	T8GKE4g2TZqPMEtx6N6fJGzVhNzYCzL9PLPyWfJPUPN0rvJGxCaSC4cuNdl8MPA+8cYpRM
+	joDROi6/DeaKKvPU4F80gmdmyZFDa7Y=
+Date: Tue, 15 Apr 2025 08:51:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] ptp: ocp: fix start time alignment in
+ ptp_ocp_signal_set
+To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
+ richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250415053131.129413-1-maimon.sagi@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250415053131.129413-1-maimon.sagi@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
-From: Ye Liu <liuye@kylinos.cn>
-
-Introduces a new drgn script, `show_page_info.py`, which allows users
-to analyze the state of a page given a process ID (PID) and a virtual
-address (VADDR). This can help kernel developers or debuggers easily
-inspect page-related information in a live kernel or vmcore.
-
-The script extracts information such as the page flags, mapping, and
-other metadata relevant to diagnosing memory issues.
-
-Currently, there is no specific maintainer entry for `tools/drgn/` in the
-MAINTAINERS file. Therefore, this patch is sent to the general kernel and
-tools mailing lists for review.
-
-Output example:
-sudo ./show_page_info.py 1 0x7f2c7de4c000
-PID : 1 Comm : systemd mm : 0xffff888116b6d440
-User Virtual Address : 0x7f2c7de4c000
-Page Address    : 0xffffea000b3a4000
-raw: 0017ffffc000416c ffffea00045d1b08 ffffea000456d408 ffff888104521970
-raw: 0000000000000000 ffff8881083fdb60 0000006900000018 ffff888107a41000
-Page Flags      : PG_referenced|PG_uptodate|PG_lru|PG_head|PG_active|
-                  PG_private|PG_reported
-Page Size       : 16384
-Page PFN        : 0x2ce900
-Page Physical   : 0x2ce900000
-Page Virtual    : 0xffff8882ce900000
-Page Refcount   : 105
-Page Mapcount   : 24
-Page Index      : 0x0
-Page Memcg Data : 0xffff888107a41000
-Memcg Name      : init.scope
-Memcg Path      : /sys/fs/cgroup/memory/init.scope
-Page Mapping    : 0xffff888104521970
-Page Anon/File  : File
-Page VMA        : 0xffff888109e135e8
-VMA Start       : 0x7f2c7de4c000
-VMA End         : 0x7f2c7de58000
-This page is part of a compound page.
-This page is the head page of a compound page.
-Head Page       : 0xffffea000b3a4000
-Compound Order  : 2
-Number of Pages : 4
-
-Signed-off-by: Ye Liu <liuye@kylinos.cn>
----
- tools/drgn/show_page_info.py | 120 +++++++++++++++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
- create mode 100644 tools/drgn/show_page_info.py
-
-diff --git a/tools/drgn/show_page_info.py b/tools/drgn/show_page_info.py
-new file mode 100644
-index 000000000000..70d0cd97c7f0
---- /dev/null
-+++ b/tools/drgn/show_page_info.py
-@@ -0,0 +1,120 @@
-+#!/usr/bin/env drgn
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright (C) 2025 Ye Liu <liuye@kylinos.cn>
-+
-+import argparse
-+from drgn import Object
-+from drgn.helpers.linux import find_task, follow_page, page_size
-+from drgn.helpers.linux.mm import (
-+    decode_page_flags, page_to_pfn, page_to_phys, page_to_virt, vma_find,
-+    PageSlab, PageCompound, PageHead, PageTail, compound_head, compound_order, compound_nr
-+)
-+from drgn.helpers.linux.cgroup import cgroup_name, cgroup_path
-+
-+DESC = """
-+This is a drgn script to show the page state.
-+For more info on drgn, visit https://github.com/osandov/drgn.
-+"""
-+
-+MEMCG_DATA_OBJEXTS = 1 << 0
-+MEMCG_DATA_KMEM = 1 << 1
-+__NR_MEMCG_DATA_FLAGS = 1 << 2
-+
-+def format_page_data(data):
-+    """Format raw page data into a readable hex dump."""
-+    chunks = [data[i:i+8] for i in range(0, len(data), 8)]
-+    hex_chunks = ["".join(f"{b:02x}" for b in chunk[::-1]) for chunk in chunks]
-+    lines = [" ".join(hex_chunks[i:i+4]) for i in range(0, len(hex_chunks), 4)]
-+    return "\n".join(f"raw: {line}" for line in lines)
-+
-+def get_memcg_info(page):
-+    """Retrieve memory cgroup information for a page."""
-+    memcg_data = page.memcg_data.value_()
-+    if memcg_data & MEMCG_DATA_OBJEXTS:
-+        memcg_value = 0
-+    elif memcg_data & MEMCG_DATA_KMEM:
-+        objcg = Object(prog, "struct obj_cgroup *", address=memcg_data & ~__NR_MEMCG_DATA_FLAGS)
-+        memcg_value = objcg.memcg.value_()
-+    else:
-+        memcg_value = memcg_data & ~__NR_MEMCG_DATA_FLAGS
-+
-+    memcg = Object(prog, "struct mem_cgroup *", address=memcg_value)
-+    cgrp = memcg.css.cgroup
-+    return cgroup_name(cgrp).decode(), f"/sys/fs/cgroup/memory{cgroup_path(cgrp).decode()}"
-+
-+def show_page_state(page, addr, mm, pid, task):
-+    """Display detailed information about a page."""
-+    print(f'==============================================================')
-+    print(f'PID : {pid} Comm : {task.comm.string_().decode()} mm : {hex(mm)}')
-+    print(f'User Virtual Address : {hex(addr)}')
-+    print(f'Page Address    : {hex(page.value_())}')
-+    print(f'--------------------------------------------------------------')
-+
-+    print(format_page_data(prog.read(page.value_(), 64)))
-+    print(f'--------------------------------------------------------------')
-+
-+    print(f'Page Flags      : {decode_page_flags(page)}')
-+    print(f'Page Size       : {page_size(page).value_()}')
-+    print(f'Page PFN        : {hex(page_to_pfn(page).value_())}')
-+    print(f'Page Physical   : {hex(page_to_phys(page).value_())}')
-+    print(f'Page Virtual    : {hex(page_to_virt(page).value_())}')
-+    print(f'Page Refcount   : {page._refcount.counter.value_()}')
-+    print(f'Page Mapcount   : {page._mapcount.counter.value_()}')
-+    print(f'Page Index      : {hex(page.index.value_())}')
-+    print(f'Page Memcg Data : {hex(page.memcg_data.value_())}')
-+
-+    memcg_name, memcg_path = get_memcg_info(page)
-+    print(f'Memcg Name      : {memcg_name}')
-+    print(f'Memcg Path      : {memcg_path}')
-+    print(f'--------------------------------------------------------------')
-+
-+    print(f'Page Mapping    : {hex(page.mapping.value_())}')
-+    print(f'Page Anon/File  : {"Anon" if page.mapping.value_() & 0x1 else "File"}')
-+
-+    vma = vma_find(mm, addr)
-+    print(f'Page VMA        : {hex(vma.value_())}')
-+    print(f'VMA Start       : {hex(vma.vm_start.value_())}')
-+    print(f'VMA End         : {hex(vma.vm_end.value_())}')
-+    print(f'--------------------------------------------------------------')
-+
-+    if PageSlab(page):
-+        print("This page belongs to the slab allocator.")
-+
-+    if PageCompound(page):
-+        print("This page is part of a compound page.")
-+        if PageHead(page):
-+            print("This page is the head page of a compound page.")
-+        if PageTail(page):
-+            print("This page is the tail page of a compound page.")
-+        print(f'Head Page       : {hex(compound_head(page).value_())}')
-+        print(f'Compound Order  : {compound_order(page).value_()}')
-+        print(f'Number of Pages : {compound_nr(page).value_()}')
-+    else:
-+        print("This page is not part of a compound page.")
-+    print(f'==============================================================')
-+
-+def main():
-+    """Main function to parse arguments and display page state."""
-+    parser = argparse.ArgumentParser(description=DESC, formatter_class=argparse.RawTextHelpFormatter)
-+    parser.add_argument('pid', metavar='PID', type=int, help='Target process ID (PID)')
-+    parser.add_argument('vaddr', metavar='VADDR', type=str, help='Target virtual address in hexadecimal format (e.g., 0x7fff1234abcd)')
-+    args = parser.parse_args()
-+
-+    try:
-+        vaddr = int(args.vaddr, 16)
-+    except ValueError:
-+        print(f"Error: Invalid virtual address format: {args.vaddr}")
-+        return
-+
-+    task = find_task(args.pid)
-+    mm = task.mm
-+    page = follow_page(mm, vaddr)
-+
-+    if page:
-+        show_page_state(page, vaddr, mm, args.pid, task)
-+    else:
-+        print(f"Address {hex(vaddr)} is not mapped.")
-+
-+if __name__ == "__main__":
-+    main()
-+
--- 
-2.25.1
-
+On 15/04/2025 06:31, Sagi Maimon wrote:
+> In ptp_ocp_signal_set, the start time for periodic signals is not
+> aligned to the next period boundary. The current code rounds up the
+> start time and divides by the period but fails to multiply back by
+> the period, causing misaligned signal starts. Fix this by multiplying
+> the rounded-up value by the period to ensure the start time is the
+> closest next period.
+> 
+> Fixes: 4bd46bb037f8e ("ptp: ocp: Use DIV64_U64_ROUND_UP for rounding.")
+> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> ---
+>   Addressed comments from Vadim Fedorenko:
+>   - https://www.spinics.net/lists/netdev/msg1083572.html
+>   Changes since version 1:
+>   - Simplified multiplication in expression by removing unnecessary parentheses
+>     and using compound assignment operator, as suggested by the maintainer.
+> ---
+>   drivers/ptp/ptp_ocp.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+> index 7945c6be1f7c..faf6e027f89a 100644
+> --- a/drivers/ptp/ptp_ocp.c
+> +++ b/drivers/ptp/ptp_ocp.c
+> @@ -2067,6 +2067,7 @@ ptp_ocp_signal_set(struct ptp_ocp *bp, int gen, struct ptp_ocp_signal *s)
+>   	if (!s->start) {
+>   		/* roundup() does not work on 32-bit systems */
+>   		s->start = DIV64_U64_ROUND_UP(start_ns, s->period);
+> +		s->start *= s->period;
+>   		s->start = ktime_add(s->start, s->phase);
+>   	}
+>   
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
