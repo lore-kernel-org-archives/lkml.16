@@ -1,126 +1,165 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132F31F542A;
-	Tue, 15 Apr 2025 14:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109932949EB;
+	Tue, 15 Apr 2025 14:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727835; cv=none; b=nK++ybV7X6d+hSSaxtcd83xb4skXqAJ941qnw5VaudGEwEcbtbdo2u3risJCVE3vKXibNgBDI6dxxgcO1avwulnPz8PQChx3o2F3zFzWiaceW/ffajmVyyqFUH4dWaUFd9M34iigybDOGdt54DoEb70+JNnJIBYzJtH+rxeQ5Kk=
+	t=1744727876; cv=none; b=re+2L6Vjbvk3hn9kZsbN33kPr8udp5PMuq3jAO/IgpjROzZcqUfEtIeBcNBft6xHWe0tMbsPyM+k4Jz7yH/FewMLUOazmY7qARAkr4IwXSdXvi+Qc18qAvMxSEmwVuBR1+EoI1zPG4tP5VXN1ZyuXgLsE3wzP/kn5ooNkqDJf5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727835; c=relaxed/simple;
-	bh=v+5nPIaVw4dIfMohDVDgmLZ9z/YWY11lJq5+q+6e/XA=;
+	s=arc-20240116; t=1744727876; c=relaxed/simple;
+	bh=V/a25hNDB5z+WSFk0T0WLV9zb5V5Bm1HJTIXWRoF3Aw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mVDswWwMDRFYrs9RbSw6J10XjNIjEX96bXgfdWJ+CR4947ZdkOTQgoUs2za2iFWN2LSsaRDaawRMsj49aBULGus1atgeVWCVzMfHrjGtKMw42MLkqlNKxpZsGk1aDmutI7H/fndrCEqIt9Um0xqqCqKkR/YvJPxV+AQ7TAGrJj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=pJiYoi5CuHMyTbYkaP1tvnQdR16CCww5VvetHT+Lratx1tGYsG9j2RCLIzwmqx/Mi1hL1mFFfnkT0US4GxFu4IQwlgqlDFvNbayN2/p+9TTrGg6D3dj5dH21+azbmGghTNzwQ0O0P+1owp2EG+SX0bTp4IlKCAz1W9fTL0xENj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gs2ht0Z1; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c559b3eb0bso248600985a.1;
-        Tue, 15 Apr 2025 07:37:13 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gs2ht0Z1"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6febf391132so53012517b3.1;
+        Tue, 15 Apr 2025 07:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744727874; x=1745332674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwIcbrCFSkjJ99K0oqnE440Z8NS7MO6dY71VBSoxwu4=;
+        b=gs2ht0Z1D7HKJsnKwjsguX87p00wVQOXeIBr10Tsm8xLfiPrxeFc0cT1ckxP6LhtJo
+         vmEYzj08zyQXj/OxsbMQ7h0+OkL5iQJql8XWsiM7SWPHo5M2y9gPy3z6Gy89E2OJYnrw
+         sQ8BZR87KSPQDuAzcH2KcUTA9ZBSFQISvOtMZK+FyhFpyijw0QXBoC88zcoMf1M3npOX
+         wK6peapQiz5MvMPXSxnUkc2/BYpgTJvKETdoHmTweRHMbTB8LlhdKAED9iZdQPaHtQeT
+         g2/dimH8T47MZo2266BbaejYupjRf/UEcV4nPWTENCK8c4dDNEemNsGlda5pWEK879DE
+         u+rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744727831; x=1745332631;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ndn02FsK8/Eesm/o3Ea8LatTEFSj3YZKBnO8xo3WNRQ=;
-        b=Th4oFhgCv2vTdJKx5PAdBPkTZtJYOQPeMgR6dJiDQM5s+0YuFTTfI3L2Fyeh/BJRHy
-         616xuduCID4LZ6vrlAFrH3AzU7NdCXaEvTMF793i8n7KTKTZwADVIuvitd55GhJ/7BYy
-         qxQoQ5U/QDM9dFMeG826wVwgBCRThvTaBkTZNF7+LcOrUa1iOkd/uH9xt4ZtQ5NBkj1s
-         dJUJj/bKcDugvZ567zT9RUNoCBc397W1mFdScgIWWpibCL/RBD686NUBVwxjtP8fqBAU
-         l3oFEe1CnNXdD690OYjvG59aITuePvy2htXH7ogvg5KHNvX1HuM3vWoNN4+gbLNnC9uO
-         kiEw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0atZMsH6FmI/dXaaKmJYEbj7Zngk7ieeiJ5Ivns2UaHOfgf8LdIjEdAMpiDRfE8+1dGJ2sFS9sXSPKeNzUqVP1/0=@vger.kernel.org, AJvYcCVLy49zl6rQfpsDAMPygWUSabBcR/+M31HFYw6WrXchPLisc+TUta5/2TJ87+9xx3gJM5/PGVM2pSnJ@vger.kernel.org, AJvYcCVh0/Hm3kaV1CGZ1WIw/U/LAjN2WXxCN6kR3UbFdqWuma+dZzUO5qFzOWRarP3/mzEkOxPJ87VOmQO376q8@vger.kernel.org, AJvYcCWI8cqAvzwvsY1syjPIe8XRp84tYVHFv7CxX225swqLygZ2G1RqiXVMnmIK3ElHSymrhNVywa8DUAZX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx53REs7A28H+hLs7zyYmLGY5+se1CWqtZsSNZDTqRhZqWQewSR
-	bigjlu58auRoHum1kEGAv8mV5GDON7PQThA3REx8jXg08Rt3lwqpa/NtuH79
-X-Gm-Gg: ASbGncvpenD9gWYpIeW9z+S8l5PCp2E4ZFtbkMLQr8XQ22lfS8KACYZ0WfOckKWcfHi
-	atKiUEIm+PdFzf/dvJ9DnHyWOvv5ME3qpENIxcaXTg11xep+PNDLbE4dtX7RoNazDTPtjAdocFI
-	LYsMFgGKdW8WEj6nNlyvN5qreKSRohwfaML4pYlP+JzVm9NAf5YR7dlqhPFz7D4GPtC3/QnpwhM
-	epPMWMXMgZ+6DEiW8pkPEMqcPPyAmI1/3FccQthUVQkoCGSDNJ2fD8UJy/3S2ujSKfLJoMsifm5
-	M8M6QtDiJFw2ABe2hdJry5lpWdIXEvbbEhC6qiWZTHG7QJaBeK1EoKJqGto/+skAsoGvVx5QcX2
-	XsuC3NxA=
-X-Google-Smtp-Source: AGHT+IEysmQyX0FskRPHlfgO+VP2EHxEwUbWVgvIYMbzTnK2xZGvfpaK10sKAtCciR0bpbnlG1aa0Q==
-X-Received: by 2002:a05:620a:2894:b0:7c5:6ef2:2767 with SMTP id af79cd13be357-7c7af0b8e8emr2379830685a.2.1744727831267;
-        Tue, 15 Apr 2025 07:37:11 -0700 (PDT)
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a1c772sm919161085a.115.2025.04.15.07.37.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 07:37:10 -0700 (PDT)
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c08f9d0ef3so334626085a.2;
-        Tue, 15 Apr 2025 07:37:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV0i2lHmnBJwOyJQVjAqORoAjK96jwNDNR7EEAn+/XNkNYqx+N4XCwviUfTKH8ejSoKW3kshFfTp6Hv@vger.kernel.org, AJvYcCVy/5A433YebF7WS6n9F54PjoL3OSsNeQb0x0zwF40z9EeJahV87ii8peUrtqlkOyURnElUET1oixw/@vger.kernel.org, AJvYcCW6nINOkh5bzTlF6evkZoSMaqYF1Q0A0jt8Zda/j+pGkH3Rfift9/1DBl6MSgM2AlKE5SD7b9lGXzloComC@vger.kernel.org, AJvYcCWgV0eWUPD+jK6SKYK67UdnPR50zPAwYyQAV+mtQoVwZa+rEe7PVvZyLwhj8GM4i4GX9BCppRuBQYvrDpGZMjEiNEE=@vger.kernel.org
-X-Received: by 2002:a05:620a:2551:b0:7c5:59a6:bae6 with SMTP id
- af79cd13be357-7c7af0b986bmr2471959685a.3.1744727830360; Tue, 15 Apr 2025
- 07:37:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744727874; x=1745332674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwIcbrCFSkjJ99K0oqnE440Z8NS7MO6dY71VBSoxwu4=;
+        b=KQWGS1rJPs5epi+z9zCYm0+Q+V59qr4IvWEBsoXKphgm5zyUX5eQfhankMnOHmomgT
+         7mF7JGff37aqiYhkOgPjB0oLEojSHj+A9spSrboSaPUWcy5lKR6bFnNWUoBS7phQ++Z9
+         R/zxwdAztyU31u82+0w6JF53SP0Q/OYd6fJHIgyEprqzpu3e0RKpKleqs6DeDoUweHaM
+         krlT42xTyRn3f3li+Iz9KpxY04dkAWZ/N7qYtIzl3sNFBMZK6b2X0EKKlc6FaZw+8/M8
+         loS1DZQSqeHmlenR6y4DkjMQFdhYF210QrcCuQuDmJyFDZZBD3NdMFwY/GNEjSo9Camq
+         m+rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNHRuhpGQ57friAEfCwbpLUAkG226iK+hf26/4QTX1BBkYxVi0dxWKlqjixFgiuks/iYajeCoMKqpZFIP2@vger.kernel.org, AJvYcCVDjydCm41IMlLScYB2/gqJHtfmZeMSDCg8462GSVpMJ/1rvUf80P8ghtA1X5liSI/dP6Y7BqXCRo9nor7QAde2@vger.kernel.org, AJvYcCWEYbtBq5/ltax2vkIgsDaqRASPicfKQoPo8+zKJ9iiSXsn3qnZi7U4VGH0aGjo5MoQBWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRxnK7NxXW9hUkg47sRNa1hWXXeiJMtPBQ1xmgU8IF5iBeGKHC
+	M2MnjZlMGEZP70pEWzSboy3mSuaXRp3+K4lpMyBllsTcT4qjgPSUfx54lM8NcbQnlbPlyKuYhN6
+	tONIKhuwSakO7Dy45MzrVaaX84TI=
+X-Gm-Gg: ASbGncvGQCGnNinLAXO9sA8Ztvvf6Xqw+v1tR+/hHNbsLN18opGmldSDrsSsBhFtK6Z
+	cDm0B2clpTFrMPQjUm1YmrE4M8XKNZ7H5bLeenrFp1kfqhDbTE6aCyMOnnpCJpZ6E9at+5GXlL7
+	572eYcwUEUiCvmdNFnvzsjsg==
+X-Google-Smtp-Source: AGHT+IHUMxvu/aOeLKk2k5l1s/fZpbZMV26GOgsy8sNTFTBpovDHd4DLx4JmGn+hEKfCP1n08IvUdhwvV3xwn980+GM=
+X-Received: by 2002:a05:690c:38b:b0:6ff:1fac:c502 with SMTP id
+ 00721157ae682-705599819femr253641937b3.6.1744727873793; Tue, 15 Apr 2025
+ 07:37:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 16:36:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXDDBS1POX3AmvTLWBbYcpXjnZm6sNqRpKfghF4uPGsUA@mail.gmail.com>
-X-Gm-Features: ATxdqUH5Nfk6EW6k8yol2jY5nLSm1u8ViA4knYi9nabGyPXVfselxPiovvadZ9E
-Message-ID: <CAMuHMdXDDBS1POX3AmvTLWBbYcpXjnZm6sNqRpKfghF4uPGsUA@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] clk: renesas: r9a09g057: Add clock and reset
- entries for GBETH0/1
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250412170626.3638516-1-kafai.wan@hotmail.com>
+ <20250412170626.3638516-2-kafai.wan@hotmail.com> <Z_zk2ZaG5fRRFQio@krava>
+In-Reply-To: <Z_zk2ZaG5fRRFQio@krava>
+From: Kafai Wan <mannkafai@gmail.com>
+Date: Tue, 15 Apr 2025 22:37:42 +0800
+X-Gm-Features: ATxdqUFfDAA6h_yahdP12xKT_OlDfjXjxWcEGnJt25PijmtECR6HpfsyjMNRKAw
+Message-ID: <CALqUS-76D5ywRC6EUnd2O=L5VLuQBaOJOgnJeOLZxJpArqomtQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Allow access to const void pointer
+ arguments in tracing programs
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, mykolal@fb.com, shuah@kernel.org, 
+	memxor@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kafai.wan@hotmail.com, leon.hwang@linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
-
-On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Apr 14, 2025 at 6:35=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
 >
-> Add clock and reset entries for GBETH instances. Include core clocks for
-> PTP, sourced from PLLETH, and add PLLs, dividers, and static mux clocks
-> used as clock sources for the GBETH IP.
+> On Sun, Apr 13, 2025 at 01:06:25AM +0800, KaFai Wan wrote:
+> > Adding support to access arguments with const void pointer arguments
+> > in tracing programs.
+> >
+> > Currently we allow tracing programs to access void pointers. If we try =
+to
+> > access argument which is pointer to const void like 2nd argument in kfr=
+ee,
+> > verifier will fail to load the program with;
+> >
+> > 0: R1=3Dctx() R10=3Dfp0
+> > ; asm volatile ("r2 =3D *(u64 *)(r1 + 8); ");
+> > 0: (79) r2 =3D *(u64 *)(r1 +8)
+> > func 'kfree' arg1 type UNKNOWN is not a struct
+> >
+> > Adding is_void_ptr to generic void  pointer check.
+> >
+> > Cc: Leon Hwang <leon.hwang@linux.dev>
+> > Signed-off-by: KaFai Wan <kafai.wan@hotmail.com>
+> > ---
+> >  kernel/bpf/btf.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> > index 16ba36f34dfa..e11d3afd0562 100644
+> > --- a/kernel/bpf/btf.c
+> > +++ b/kernel/bpf/btf.c
+> > @@ -6383,6 +6383,14 @@ struct btf *bpf_prog_get_target_btf(const struct=
+ bpf_prog *prog)
+> >               return prog->aux->attach_btf;
+> >  }
+> >
+> > +static bool is_void_ptr(struct btf *btf, const struct btf_type *t)
+> > +{
+> > +     /* skip modifiers */
+> > +     t =3D btf_type_skip_modifiers(btf, t->type, NULL);
+> > +
+> > +     return t->type =3D=3D 0;
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/drivers/clk/renesas/r9a09g057-cpg.c
-> +++ b/drivers/clk/renesas/r9a09g057-cpg.c
-
-> @@ -78,6 +87,19 @@ static const struct clk_div_table dtable_2_64[] = {
->         {0, 0},
->  };
+> I think you can use btf_type_is_void in here
 >
-> +static const struct clk_div_table dtable_2_100[] = {
-> +       {0, 2},
-> +       {1, 10},
-> +       {2, 100},
-> +       {0, 0},
-> +};
-> +
-> +/* Mux clock tables */
-> +static const char * const smux2_gbe0_rxclk[] = { ".plleth_gbe0", "et0-rxc-rxclk" };
-> +static const char * const smux2_gbe0_txclk[] = { ".plleth_gbe0", "et0-txc-txclk" };
-> +static const char * const smux2_gbe1_rxclk[] = { ".plleth_gbe1", "et1-rxc-rxclk" };
-> +static const char * const smux2_gbe1_txclk[] = { ".plleth_gbe1", "et1-txc-txclk" };
 
-The "et[01]-[rt]xc-[rt]xclk" clocks are not created by this driver.
-IIUIC, they are actually Ethernet PHY signals.
-How is this supposed to work?
+Yes, I will use btf_type_is_void.
 
-The rest LGTM.
+> > +}
+> > +
+> >  static bool is_int_ptr(struct btf *btf, const struct btf_type *t)
+> >  {
+> >       /* skip modifiers */
+> > @@ -6776,7 +6784,7 @@ bool btf_ctx_access(int off, int size, enum bpf_a=
+ccess_type type,
+> >               }
+> >       }
+> >
+> > -     if (t->type =3D=3D 0)
+> > +     if (is_void_ptr(btf, t))
+>
+> lgtm,
+>
+> nit, the is_void_ptr name suggest there's also ptr check in the helper fu=
+nction,
+> which is not the case. I understand it follows is_int_ptr name, but perha=
+ps we
+> could rename both helpers to is_void and is_int ... feel free to ignore ;=
+-)
 
-Gr{oetje,eeting}s,
+you are right, I will rename it. but I'm not sure if it's possible to merge
+these two functions into one like is_void_or_int, they both skip modifiers.
 
-                        Geert
+>
+> jirka
+>
+>
+> >               /* This is a pointer to void.
+> >                * It is the same as scalar from the verifier safety pov.
+> >                * No further pointer walking is allowed.
+> > --
+> > 2.43.0
+> >
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+thanks,
+kafai
