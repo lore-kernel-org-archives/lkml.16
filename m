@@ -1,98 +1,90 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5457628BA8D;
-	Tue, 15 Apr 2025 14:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A434B28BA8D;
+	Tue, 15 Apr 2025 14:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727819; cv=none; b=bctR9USpi5sinruPJbB8cvyOya7rw0X7Rgf1Gj9hX4bCb36F7Cc2WfUGAi7K90BVIkbBPPpZLCjr8moeF2hl7gnIqpdeXWglUL5Zvt4U+2bqLWI/Fm/0vkroo8OyVvp81gldjyZxWclIKXcIWrhEQ6CIFPtW0BZ2GK/q1jlfaNw=
+	t=1744727822; cv=none; b=ssXnhkM7N85fZx11yNOAlGeFs9zGOQLg677vmCrayhrgyd2NJKtNy4WxfLaY+k6SELH4SJqW2Gi3Jb34sFSz3syyNlrRV4BbZO+y5WrRsQlpNh904t5YUn4gopIe331dqzZpfQnwKX+ZhT9fgao1WPSoLqLgctz1wQf+yikh5vI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727819; c=relaxed/simple;
-	bh=Ji5SfRR3Uv3KJzD2U0TTyAfdbfyUmA99Hl5QheBCjAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C+iy1AlAM1LlY2WWzPx8LUf1gQ7WHv6Jw6u0e//8VUZDnRxDb5OTK/EUaEvQP758s2wXphcs5NQjrmgTtfZVn8fNQITE5M5Us7DgYezVhq7G8XHwZxAZ5fN+8b9h6T+npH6ATTN9x5w6WTDXhaM/Hzt5JJVxWhKJzqLG1DylKiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476a1acf61eso52714881cf.1;
-        Tue, 15 Apr 2025 07:36:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744727816; x=1745332616;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mZS0n/wZMm5hPL6O2mTcBHlNaftAntZqWEIIdU5TApo=;
-        b=VQhQP/JCT8jcsAyLR03pEXSGZQA03YmxjcDl4kZ7wt4exX/W63Q2fdkeWbt+CmrIFm
-         9iNdQvv6/AngXtteBPFcRZAAGquT9L2ptPUM67bhCMiS1APXFJtsT5rRi7avEucuLBy+
-         Vrr4q4Dc3UzpVdwNXELvNnzGdbBk8UUmtTmK0sTziwjgMXxepNTpY0CJb8PMgAcerqub
-         U9rkPK+oBO+XVakpUEFRQRtmK3OUdv0CIvQ+oxbmcCVU+iLlbOp8nICXi8GKG9RJJ66A
-         grxJ6gUebcoXWjGzqOoutZRchuSb564SRc37Fqvb8EP65rec41DYnLZg9Tdpth9gRNIj
-         EKlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuBfiyFHsbZAM9P4XO6mG++MSi6esgWCH7634e+HpVb3akQCrkFHRrfGLSCgfDdfPMENzYkOWGp3KSN6Bb/CUyOrE=@vger.kernel.org, AJvYcCW42yyaka4JKOmr342uNdX7h1knzxXm0+NLlKqzOUULBvzGF6Vvvwa7XC6EYVbsYvKFHyVgaXlmDmu1@vger.kernel.org, AJvYcCXJlBU0Pj+YGQxJXpE8zNkD9a9QyVf9kwAUTUI8VXXmek/CWhzko11WXmFI7PP+ENUBBTvEmhS9bfVDehMh@vger.kernel.org, AJvYcCXn8zMKtRsxeipN4D6TlvLvgRir1AwgaEfhZdYqT2ocOyRbyB/UkX4ndz/B3HWYrSa79sajE/KzJvto@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmq92U+XbqHLzWkrTRAdT9js92IHuzylNAwe30JSCLxPgrce8+
-	eFgK4L5az+GNTV1kTi2Llj6otVR/iW1gJxhpA2M9rzRKN8r6cQ/KyRqpkB6a
-X-Gm-Gg: ASbGncuVRp1efE+kUS40MPtRrqWmk86wugVrbcMrBB2mcnXqf8FL/bHhjkmZkQ0y/GH
-	cbisdQhZvmcXvD5VAguEsxMo3APvS7IstGd5cJYNbGO6yXc+4NvC9sdnQXNm8aVuv9QuaEleQN4
-	h8/R5jPLukleq/r2cuC63dB5vfEMgSTKVkMwrMdTUXRCetOBe+tkK3UqWfLdU+ZE++dJ6uYB2v3
-	ZXxBjMz3l8ltsz8MEG3CwV01HbWQxDjQuCyY5P3ZjOU9Vh5QYGLfo+fSqFip6liiYfsazdguLci
-	BnP3cAC9ZHnBskL5P/Rb+hujScIIsQsUdaMRnc++WYv8WYQY4zTUiLTJcnJpyYQOhtr41sgPBz3
-	IdAqrOrM=
-X-Google-Smtp-Source: AGHT+IG5g6+LFRqR9BdCa5/oLDEaE8eRpfd2VrAjwMGAMSc9DPQYwWUD/C8n6ZOP30TmHcOGWXfUtw==
-X-Received: by 2002:a05:622a:1a9c:b0:472:bbb:1bab with SMTP id d75a77b69052e-479775607abmr184550261cf.24.1744727815769;
-        Tue, 15 Apr 2025 07:36:55 -0700 (PDT)
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cc97sm94113621cf.61.2025.04.15.07.36.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 07:36:55 -0700 (PDT)
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c55500d08cso497770285a.0;
-        Tue, 15 Apr 2025 07:36:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUinbBBP8gmNmxZVead6Rp9b9HlMnTY0cSfXLB50u2yQme8DIGgjMFAvsNMNTMidZzEwF/jrsSeBdlXgMdGVNCEang=@vger.kernel.org, AJvYcCV27Zh50EQnBxSlgQVtf7Q8C0XaU2fhxgPv01/UjLSpyKKWftW9p59E60zDF8QltCgMsYW880GMI45h5mBi@vger.kernel.org, AJvYcCV4/O064lEFqvX+5keGaYB6bjOLyve2ySGxFX/KzOABPHu4gFliXUq+QwmHgj9iosCpuSi3mgP2/W4A@vger.kernel.org, AJvYcCXCM3vSvpmMHWwpnOjuSvGttrDQ/A9VL1mHv63d8JzqhaCgj3s0tQGVAoDIQXaAmpIa6fMOuJxLn5ae@vger.kernel.org
-X-Received: by 2002:a05:620a:3193:b0:7c5:3e22:6167 with SMTP id
- af79cd13be357-7c7af12ecd3mr2473185285a.23.1744727814609; Tue, 15 Apr 2025
- 07:36:54 -0700 (PDT)
+	s=arc-20240116; t=1744727822; c=relaxed/simple;
+	bh=TvQnWFwdFpnb9SYNTlS+cB5AlPbPdOfp9gzg8DWDZWw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pPcnV57JMS0z0X0t5e3XIQCK6bAzh7a5ATy+LVbNhjc+OJV6lnDIf916kylOQD6Dr9Pc1aSvFoAoKpEZndYip5YBCm5CaYos22RgBXeLMlhWBsLrJ9BU5vjWSvy/+B8DluNYDzGP+8yskRhjWLKEk28FLZbzEuUWPJO3DxFN6Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dn07Cnu/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dn07Cnu/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195B3C4CEDD;
+	Tue, 15 Apr 2025 14:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744727822;
+	bh=TvQnWFwdFpnb9SYNTlS+cB5AlPbPdOfp9gzg8DWDZWw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Dn07Cnu/kFBVXv1Hr2tWaO28RVeoLvd4Fil9vomPeVAg5bMrmE7mR1SVX2XhyX9iO
+	 6VtAuaklZf9XVZpWUge9CpluAaK9gXzZYVG0IJrWKuk4w4koupzqLa6950XbGFGm6L
+	 2btuLdnnaLAcOTNaPCKykNKwulHlhm814Snyt0Au2cY/s3iO8PobHdC0TzDFrriML3
+	 S36Bd881s5cEQH0mLdjJXcBVAUpsTBOMdQAyOg6hvclOFVKjx7L1N5k7qxZ1Eqxg2U
+	 zEB7lV7JODSsMDNRQMQUhwTbL25z2JfZ/Ip9QiPz3M3Dgxk4YVtT/TvgziiaKfPpU/
+	 rH2c556UD42eg==
+From: Mark Brown <broonie@kernel.org>
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20250415090354.92211-2-thorsten.blum@linux.dev>
+References: <20250415090354.92211-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data
+ with __counted_by()
+Message-Id: <174472781982.130155.12727122291223637995.b4-ty@kernel.org>
+Date: Tue, 15 Apr 2025 15:36:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407165202.197570-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407165202.197570-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 16:36:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW2RPTv6BYehUj8eaTegKxtDs=CBu=uD=kEmpWVr-jmUA@mail.gmail.com>
-X-Gm-Features: ATxdqUGLu4fFd7u_-7milT1WOA_Ck-SWLpt5tzndnkLo9zSlybSNbn0pEbKTbzU
-Message-ID: <CAMuHMdW2RPTv6BYehUj8eaTegKxtDs=CBu=uD=kEmpWVr-jmUA@mail.gmail.com>
-Subject: Re: [PATCH v2 8/9] clk: renesas: r9a09g057: Add clock and reset
- entries for USB2
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add clock and reset entries for USB2.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, 15 Apr 2025 11:03:55 +0200, Thorsten Blum wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> No functional changes intended.
+> 
+> 
+> [...]
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.16.
+Applied to
 
-Gr{oetje,eeting}s,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-                        Geert
+Thanks!
 
+[1/1] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data with __counted_by()
+      commit: fcdf212fd9b36c299d90229e9546c077db2215ce
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
