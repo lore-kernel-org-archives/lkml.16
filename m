@@ -1,93 +1,181 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEC82036FE;
-	Tue, 15 Apr 2025 12:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A930F28A1DE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719628; cv=none; b=PIOCwtI8UMlRdQVkcdD1xYdNj9NFfOB5cteik+2RIBk5AOF+qfE7ShBTFNMraRHDH/+6UG7hgz91+4kogn/Vf3WzTnskdRV0EmskSxbmefCvX75a2dmrzPeAxouaBgm47UcS4E4A4W82A3Lk5XLK88ai0CI/ntJcGMuFGop1IwY=
+	t=1744719656; cv=none; b=jlXLaj27+g0PLi8Z73zw4qrMb0xJp6C6IspQ2S953UGCcwciclAEQiej90F6KY1y9hohIkIw2qFkZqHqSNRV3yIHa5E3+OHux9Wb7Ep79Hq7GwoBoeqA/vUqLj7dMGtdoJJBtrgSvQtSMRLCFYGvwDdw3O0euBpSPahnWvWEr4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719628; c=relaxed/simple;
-	bh=LPHeTTp9A63WCZtMuf+AbObGxwNJcKR7y3LrWcGuKik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qw64He2f6lg5yjrBYPbLxAtKm6Lflf1LMOb7TPxHsxb8BlWZhUXY3MD3aAKCchjKi8FfSvniGw+RW9ycx6PhwgaDbqm5xR/UKIpSfCJ2kxTum2+WHY5X1CwQ4XbdtQHhpbs7EEDoTRYo9ZSsiRhpfGQdzaipYAma0aWUc/M1Sok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4c4d8638e07so134333137.3;
-        Tue, 15 Apr 2025 05:20:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744719625; x=1745324425;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QC/bVSTrTLDwyrH3Kp+UMVUSLaX/RiyydBGd8b6z7K0=;
-        b=xUAL31J3IrQ0lCHkWCS4W1mCawemyofz4J3HDcgbY6T/aeMqI6JlLKVl8ZQtZ52bP5
-         IsD1p0sC0UYxaj/yV308V/5ICZ9vzGA+QOwo6EstQiolq0kj0E5mWv2u4aHUjQ8+IQJK
-         xXfE4SQfpNACcTfTUHK0CR21i9KbVVL7OcpZgh+WaYNRBhYKgDUPLV0pTQxTFdGEDFbt
-         noqrFUToiDAAEg6x8lFqn0zoi3AuXIfRZUU9nMp5ux6jTgW6s3V2RIGsBHNlg9ptrUV5
-         JttZy0okcBem/xhAoFsBA72hiFicSrmr8lrM+Dyl43sAhOAf5Z6fvbcI+vwUE7XeUcTV
-         F0TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4B5jmGtOseHI88a9Y1HxhXrjXQA3/1t4VWH1kc9WpFi5ONJXIyc5tZSGGrHqK0wHFVl0q3Yh/CrG2vkzh5SZykxw=@vger.kernel.org, AJvYcCU93fFw0PvzyvpPZJGgCNXnvPvQChHtONJZdqzgTt+aqvDLhqnwOPkGGF/OaipQFV86ZUECiaB0DazB@vger.kernel.org, AJvYcCXu6Is2RRoU3eeLnmjLocf3bIBjAgaEFz2RDRCzD5Hj3DwkaL/Msnxh0EH9tdK07ufE3V4IMPlS+7rEUiYn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+OREnVW9B/vXiE1G9jSEYv9QaDQMhNUyWZv3DdvPyn6dhZ6CV
-	SZOkV/JKvR4QEG31G+PLwrfBMSxt40UJqdkd/jFz75Z1vZ87GYEQkNd36a0J
-X-Gm-Gg: ASbGncuor1/cU7HW7092er2WBEXnqE5cVllVLfwXbhG7wwle+cOHYdYo2OjvqXmV9gp
-	Bv99Uv5BdyOC1cnkFRVZVDntUNeR3o0IGk6o55Vq8ZyA++bAZzURuIVo+kxN5b4JyNs+blzsarx
-	jWc23jxenyJhx6nZNN6MJ0xqUNdDrA7yzgOde4eu7zQLYvHeUesjEFjlS7vlmElPVIf5kyF5o3I
-	61GavB1QF0XXsQDQhA56wHTctXLz+ft5LQ+co2EbUc1d9L7RLOuXz1Ac37Rqc7iejvHTB88M27n
-	Ync11WJlUeEXzDLJbs5VDKUbJk1MKo1Z903kw6KMspMIw/Gq+lN6LzA7fZ3kdLqy/YmQL9mo8yi
-	s6Jg=
-X-Google-Smtp-Source: AGHT+IGQrk84wSBco0kjZKc8NqugR4b1UrC0xtv15LJZZWvQnmlErM6oHNrJfKe/e+5TYuXkJiWpJw==
-X-Received: by 2002:a05:6102:3308:b0:4ba:95f1:cc83 with SMTP id ada2fe7eead31-4c9e4fffa56mr10377528137.16.1744719624717;
-        Tue, 15 Apr 2025 05:20:24 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-875572b30a1sm2621568241.31.2025.04.15.05.20.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 05:20:24 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4c300c82ca8so202442137.2;
-        Tue, 15 Apr 2025 05:20:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU8MIhlsOmwpF/v9mGhdc5Rczsebc2b60u/1Vpvp6UsQvWIavBV/6cbCrYZu8yITnrO5H/v4sFHOxNg@vger.kernel.org, AJvYcCW37p3epRHvCxgtJOPDbwxLLCCjhhi4imz6qW3zCYx7zClpUzGZpQeprBzjLwpJnwcZ/Kg9nctSRatbKYlB@vger.kernel.org, AJvYcCWsOrXz9UQAyt6nE1R6SwlnufKwatPMRPHP2pw4iwv4jiZEVbt/vxu3KnGKowWnBMPjsVKnN2xqv3TiIcynx1KIl3A=@vger.kernel.org
-X-Received: by 2002:a05:6102:4407:b0:4c8:55b8:6fad with SMTP id
- ada2fe7eead31-4c9e5003037mr10374057137.17.1744719623874; Tue, 15 Apr 2025
- 05:20:23 -0700 (PDT)
+	s=arc-20240116; t=1744719656; c=relaxed/simple;
+	bh=XjFSlnP3mZ7ucy8HCfasCICWH2BlmsJJDcC4GxYYFw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uZduTLqOeDpD4x3L2OwE44zJpJaj0nzUZAxgfkHAs0xpqtNtTX7dyebT+LsBimeHJjm/cuUicKCTYODR5Wfc3TWJkKa00WSHyKwe2jNHcT6xYvKZUTXCIBJ4HNwG0xslqzu8bC3nxbgVkEPtnsEfTFHeJf1nKZL5AnAERezyxmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lj1x0WL3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yZcjFgy/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lj1x0WL3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yZcjFgy/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lj1x0WL3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yZcjFgy/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lj1x0WL3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yZcjFgy/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AE76021164;
+	Tue, 15 Apr 2025 12:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744719652; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=ScWbKkMiyTdcG4zwvDzcd9drTM2WJl0dxMBhM6X1TEY=;
+	b=Lj1x0WL397POmKjNMVxqV1yjeYn6RWA1iR4Zbi28457S7S/9WQnWmgbwsSyFbnAOfmdK+H
+	J7rE8h8kgAOyKcyM44nFIpyURa5wUF4kePeLGK9LlCip0U7x8dis+PGsuy3Z7RiC30h2rw
+	gRfVzOr2EGLQHa/kvep8bDKSYWAscXI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744719652;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=ScWbKkMiyTdcG4zwvDzcd9drTM2WJl0dxMBhM6X1TEY=;
+	b=yZcjFgy/JoX8SFAHCxNf0a4HDHKNboFDzAMubaFgp3j63abYa6E2cYuDn+CW+lRVc57k5I
+	pxdTLmM2MQjJUcAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Lj1x0WL3;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="yZcjFgy/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744719652; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=ScWbKkMiyTdcG4zwvDzcd9drTM2WJl0dxMBhM6X1TEY=;
+	b=Lj1x0WL397POmKjNMVxqV1yjeYn6RWA1iR4Zbi28457S7S/9WQnWmgbwsSyFbnAOfmdK+H
+	J7rE8h8kgAOyKcyM44nFIpyURa5wUF4kePeLGK9LlCip0U7x8dis+PGsuy3Z7RiC30h2rw
+	gRfVzOr2EGLQHa/kvep8bDKSYWAscXI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744719652;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=ScWbKkMiyTdcG4zwvDzcd9drTM2WJl0dxMBhM6X1TEY=;
+	b=yZcjFgy/JoX8SFAHCxNf0a4HDHKNboFDzAMubaFgp3j63abYa6E2cYuDn+CW+lRVc57k5I
+	pxdTLmM2MQjJUcAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4411B139A1;
+	Tue, 15 Apr 2025 12:20:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BRnvDSRP/mecEAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 15 Apr 2025 12:20:52 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH] mm, hugetlb: Avoid passing a null nodemask when there is mbind policy
+Date: Tue, 15 Apr 2025 14:15:03 +0200
+Message-ID: <20250415121503.376811-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329121258.172099-1-john.madieu.xa@bp.renesas.com> <20250329121258.172099-3-john.madieu.xa@bp.renesas.com>
-In-Reply-To: <20250329121258.172099-3-john.madieu.xa@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 14:20:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWTU_=WS4Z2eczA8BSZjio6cAMKrzrOHZ-O9sfxX6+byQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGWVaybAEbIQyupuLn0ffcz3brcbnux64U0tWfBCvQZqrPYP3p0tpJR0YU
-Message-ID: <CAMuHMdWTU_=WS4Z2eczA8BSZjio6cAMKrzrOHZ-O9sfxX6+byQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: rzg3e-smarc-som: add raa215300
- pmic support
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: conor+dt@kernel.org, krzk+dt@kernel.org, magnus.damm@gmail.com, 
-	robh@kernel.org, biju.das.jz@bp.renesas.com, devicetree@vger.kernel.org, 
-	john.madieu@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: AE76021164
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Sat, 29 Mar 2025 at 13:13, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
-> Enable raa215300 pmic and built-in rtc support on RZ/G3E SoM module
-> Also add related clock and interrupt signals.
->
-> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+Before trying to allocate a page, gather_surplus_pages() sets up a nodemask
+for the nodes we can allocate from, but instead of passing the nodemask
+down the road to the page allocator, it iterates over the nodes within that
+nodemask right there, meaning that the page allocator will receive a preferred_nid
+and a null nodemask.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.16.
+This is a problem when using a memory policy, because it might be that
+the page allocator ends up using a node as a fallback which is not
+represented in the policy.
 
-Gr{oetje,eeting}s,
+Avoid that by passing the nodemask directly to the page allocator, so it can
+filter out fallback nodes that are not part of the nodemask.
 
-                        Geert
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+---
+ mm/hugetlb.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ccc4f08f8481..5e1cba0f835f 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2419,7 +2419,6 @@ static int gather_surplus_pages(struct hstate *h, long delta)
+ 	long i;
+ 	long needed, allocated;
+ 	bool alloc_ok = true;
+-	int node;
+ 	nodemask_t *mbind_nodemask, alloc_nodemask;
+ 
+ 	mbind_nodemask = policy_mbind_nodemask(htlb_alloc_mask(h));
+@@ -2443,21 +2442,12 @@ static int gather_surplus_pages(struct hstate *h, long delta)
+ 	for (i = 0; i < needed; i++) {
+ 		folio = NULL;
+ 
+-		/* Prioritize current node */
+-		if (node_isset(numa_mem_id(), alloc_nodemask))
+-			folio = alloc_surplus_hugetlb_folio(h, htlb_alloc_mask(h),
+-					numa_mem_id(), NULL);
+-
+-		if (!folio) {
+-			for_each_node_mask(node, alloc_nodemask) {
+-				if (node == numa_mem_id())
+-					continue;
+-				folio = alloc_surplus_hugetlb_folio(h, htlb_alloc_mask(h),
+-						node, NULL);
+-				if (folio)
+-					break;
+-			}
+-		}
++		/*
++		 * It is okay to use NUMA_NO_NODE because we use numa_mem_id()
++		 * down the road to pick the current node if that is the case.
++		 */
++		folio = alloc_surplus_hugetlb_folio(h, htlb_alloc_mask(h),
++						    NUMA_NO_NODE, &alloc_nodemask);
+ 		if (!folio) {
+ 			alloc_ok = false;
+ 			break;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.49.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
