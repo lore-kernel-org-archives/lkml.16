@@ -1,84 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBDB24169D;
-	Tue, 15 Apr 2025 07:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95403274FE6
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703597; cv=none; b=svEQzrLm0Mp/dOZ+lbq5IMnx/5N6w1WQ3gNaRjaeSoEJCRFjZIYYBPU9k//ScR0DkrmSPiYZngJFfXjBtcJ8hddpm+nNuiDn5Jq38tlExrn2sZOcp5zfKV/0n+gIiELEskBZQN1q19z7Fkf9f2lvlvakNTeRhyaCvd+HQwIF4og=
+	t=1744703600; cv=none; b=gHcap6hImilTrd+kmvllUtXEVexc8dJr9dAw1gs2wtioN0MTiVxboDO/hbVQkGkn61nMi/Sp6sMfle95lQqm0cpXQNwBaGqHnWDydSCBjeLbpBBuePncTZqttYko7A4z0fCeK36xLjiyKzjiQAeu5aK2NaKJ7e0j4k4+jkkr45w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703597; c=relaxed/simple;
-	bh=fj87Ge4+Z4L8TW3BbiLnnTXesT/+hsNjN1y3z7e+Mkg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gbB/nKkRZ5OVUvI57qxsG0WPdpCAjCBBxYd3WPw0nUK5mRDcxP+gwGsCcxrAILk3rWpLxVeO8AkIYVKagXzoxFoqoewv/ZIpIehULCryyPYF7dv0mAEPCLOisMcVaHgcvjTQOFSIJBJiKTa0Dqc+3liXVyVrzH46mLIbs9A6m8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EK+yQOjB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EK+yQOjB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF2ABC4CEDD;
-	Tue, 15 Apr 2025 07:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744703596;
-	bh=fj87Ge4+Z4L8TW3BbiLnnTXesT/+hsNjN1y3z7e+Mkg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EK+yQOjBOmd1XzZmqH7iP2Xe3e3aND27IbJfvw8ZYNElItdtNokMw7lNo74YbaFhG
-	 v6USctTyL8CB7JDBfT0RPEHH+1PckBdZw17dp9r8C4pC4ZPka3r1X0Z2G0sB2oiGoE
-	 gHt9hZeYXpEzRVDh1vM7r5WiUmiaActjbPERtoeAYE4s9JlRxMiBlXdQgNZmDi79c3
-	 2ypjm1SCHU04YgGiglJTNlDUgoOtCCIfkF5FvedMP/2oZR5FrBJ42yi2nNqJzQGd4g
-	 EBgG+o2tXr0xS9QNHMWVIPWtwnl64lKpVbChBtH8EKsk8aRNnL4KM2SIGdpOq5nkwo
-	 TW6lShjOzf8Dg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1u4b6X-000000004Eq-1Ib1;
-	Tue, 15 Apr 2025 09:53:13 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Vignesh R <vigneshr@ti.com>,
-	Andi Shyti <andi.shyti@kernel.org>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jayesh Choudhary <j-choudhary@ti.com>
-Subject: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
-Date: Tue, 15 Apr 2025 09:52:30 +0200
-Message-ID: <20250415075230.16235-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744703600; c=relaxed/simple;
+	bh=8i2hu7231wtzANo987HrMFI6xJZnDJIyM33YwlNFRek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ups5jDX11Inbi1EmoTwDOsiBj0QMdCwBxm1KyofAg3oPxK2cCt1kSwB5RSKk0xIvtHXR0l1kJIEnpbknDwCs8jXndpa9/KKueXpp0qBkaypQldNqEh8vu7JRJFYl42jdQjWn3hUI4w9lJzp6ZONuXL1LJE5AbIW0+zq2VLkCCgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7CED15A1;
+	Tue, 15 Apr 2025 00:53:14 -0700 (PDT)
+Received: from [10.57.86.225] (unknown [10.57.86.225])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AA573F694;
+	Tue, 15 Apr 2025 00:53:15 -0700 (PDT)
+Message-ID: <7b26c6e4-5483-4ac3-a084-bb0769768006@arm.com>
+Date: Tue, 15 Apr 2025 08:53:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
+ PIRE0_EL1 and PIR_EL1
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
+ <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
+ <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
+ <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
+ <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
+ <5d975762-7678-419f-8e2f-40547c079276@arm.com>
+ <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Using of_property_read_bool() for non-boolean properties is deprecated
-and results in a warning during runtime since commit c141ecc3cecd ("of:
-Warn when of_property_read_bool() is used on non-boolean properties").
+On 15/04/2025 07:27, Anshuman Khandual wrote:
+> 
+> 
+> On 4/14/25 18:01, Ryan Roberts wrote:
+>> On 14/04/2025 13:28, Ard Biesheuvel wrote:
+>>> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 14/04/2025 10:41, Ard Biesheuvel wrote:
+>>>>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
+>>>>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+>>>>>>> as expected if those macro constants contain some 128 bit layout elements,
+>>>>>>> required for D128 page tables. Fix this problem via first loading up these
+>>>>>>> macro constants into a given memory location and then subsequently setting
+>>>>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
+>>>>>>
+>>>>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
+>>>>>> of 128-bit types with shifting and masking, which the assembler can't do? It
+>>>>>> would be good to spell this out.
+>>>>>>
+>>>>>>>
+>>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>>>> ---
+>>>>>>> This patch applies on v6.15-rc1
+>>>>>>>
+>>>>>>>  arch/arm64/kernel/head.S         | 3 +++
+>>>>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
+>>>>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
+>>>>>>>  arch/arm64/mm/mmu.c              | 1 +
+>>>>>>>  arch/arm64/mm/proc.S             | 5 +++--
+>>>>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+>>>>>>> index 2ce73525de2c..4950d9cc638a 100644
+>>>>>>> --- a/arch/arm64/kernel/head.S
+>>>>>>> +++ b/arch/arm64/kernel/head.S
+>>>>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
+>>>>>>>        * On return, the CPU will be ready for the MMU to be turned on and
+>>>>>>>        * the TCR will have been set.
+>>>>>>>        */
+>>>>>>> +     adr_l   x0, pir_data
+>>>>>>> +     bl      __pi_load_pir_data
+>>>>>>
+>>>>>> Using C code to pre-calculate the values into global variables that the assembly
+>>>>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
+>>>>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
+>>>>>> asm-offsets.c:
+>>>>>>
+>>>>>> DEFINE(PIE_E0_ASM, PIE_E0);
+>>>>>> DEFINE(PIE_E1_ASM, PIE_E1);
+>>>>>>
+>>>>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
+>>>>>> pre-calculated values that you can then use in proc.S?
+>>>>>>
+>>>>>
+>>>>> There is another issue, which is that mov_q tries to be smart, and
+>>>>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
+>>>>> directive evaluates the argument, which does not work with symbolic
+>>>>> constants.
+>>>>
+>>>> I'm not quite understanding the detail here; what do you mean by "symbolic
+>>>> constants"? asm-offsets.h will provide something like:
+>>>>
+>>>> #define PIE_E0_ASM 1234567890
+>>>>
+>>>> The current code is using a hash-define and that's working fine:
+>>>>
+>>>> mov_q   x0, PIE_E0
+>>>>
+>>>>
+>>>> Won't the C preprocessor just substitute and everything will work out?
+>>>>
+>>>
+>>> Yeah, you're right. I was experimenting with something like
+>>>
+>>> .set .Lpie_e0, PIE_E0_ASM
+>>> mov_q xN, .Lpie_e0
+>>>
+>>> where this problem does exist, but we can just use PIE_E0_ASM directly
+>>> and things should work as expected.
+>>
+>> Ahh great, sounds like this should be pretty simple then!
+> 
+> Following change works both on current and with D128 page tables.
+> 
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -182,5 +182,7 @@ int main(void)
+>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>    DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops, direct_call));
+>  #endif
+> +  DEFINE(PIE_E0_ASM, PIE_E0);
+> +  DEFINE(PIE_E1_ASM, PIE_E1);
+>    return 0;
+>  }
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index 737c99d79833..f45494425d09 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -536,9 +536,9 @@ alternative_else_nop_endif
+>  #define PTE_MAYBE_NG           0
+>  #define PTE_MAYBE_SHARED       0
 
-Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
-Cc: Jayesh Choudhary <j-choudhary@ti.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/i2c/busses/i2c-omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think at minimum, you can remove this PTE_MAYBE_* hack from proc.S. But as Ard
+says, you may need to add it to asm-offsets.c? I'm surprised asm-offsets.c even
+compiles without this hack since surely it doesn't have arm64_use_ng_mappings or
+is_realm_world() available?
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index 16afb9ca19bb..876791d20ed5 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -1454,7 +1454,7 @@ omap_i2c_probe(struct platform_device *pdev)
- 				       (1000 * omap->speed / 8);
- 	}
- 
--	if (of_property_read_bool(node, "mux-states")) {
-+	if (of_property_present(node, "mux-states")) {
- 		struct mux_state *mux_state;
- 
- 		mux_state = devm_mux_state_get(&pdev->dev, NULL);
--- 
-2.49.0
+Thanks,
+Ryan
+
+>  
+> -       mov_q   x0, PIE_E0
+> +       mov_q   x0, PIE_E0_ASM
+>         msr     REG_PIRE0_EL1, x0
+> -       mov_q   x0, PIE_E1
+> +       mov_q   x0, PIE_E1_ASM
+>         msr     REG_PIR_EL1, x0
+>  
+>  #undef PTE_MAYBE_NG
+> 
 
