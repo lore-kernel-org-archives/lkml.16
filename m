@@ -1,140 +1,121 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A937C4315C;
-	Tue, 15 Apr 2025 13:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0778F13C8EA;
+	Tue, 15 Apr 2025 13:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725143; cv=none; b=s5ladFQZHDFPOlxbKh/5ZSZs2E1vNTZOpgGySuYteyNwhbGp4vOmrGzPChMtrdcX40KqqfQ3NwadjwjHMdtyZlGNo6BaFH73CLG8HhitdpB6/0lRa+Dnd06XpF/cZHzOIcN8K1cgadjXy7SgX/b+4V1/NqFhajtbyqzd466FmFU=
+	t=1744725177; cv=none; b=hBv8sPmca7vacmnM1zY1zxjfw5ZF0d63K7xcRW7yowfrT3YBaheBctxaPKp7ynkE0quGDWUfkPqH/n2yiv/vS2AOvGRQilN8ulUaaf5fVA8wRHfStzgY6bXchb68pKlNxG6SkfiJSC7IBi+piJutlz7YCsjs2Tdf2ExZrCU5lt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725143; c=relaxed/simple;
-	bh=SYP5aUx854LZI3QqpRFhskAvPk/sjt33YUGhDwyPD5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zk5oKsY5ZWbIaP7rFQ7sOXDWHteveWgWcwOavr0exme3mkBShRjLQFAbIW6DnJQLGK2VZW3BifEbfhlRQX5PAojE6FR8jX64sbb06UQfhSIepNqv0J/lsT09zb7B7uPjtPgaMz1UGQi6hwD2aNN9UIIeyYmSRs7/ewk+bO1KRCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=B9PM2vdU; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744725177; c=relaxed/simple;
+	bh=ENRqfqGuVy+bkDKYMYO5JKLL1z9uiCfJpBqOTrbE9Bs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PLLLhldBfkCoi6EFqwzzy64WWktgeaw7pC9kmMNdHXRb9UqkJsrcOWoh78gznQYk7Cv/lLfgzU81Cm8aW9Xd4tQXwrTxVR7t4of7dQsRwpIfZOHEbFha5MCIaUbIjgsEc1nZ0dMxkLfaDv8iBsYTdVP6HqRXBKkCTBiQVYIBryA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hmwheYuV; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="B9PM2vdU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744725124;
-	bh=Ixi9pWKBiDS6VBaREd11yEf72/je33uvlluDQogeMxo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=B9PM2vdUmuR/bxGkikTEJBimk53M+mGGfQtJ4GarF64T+C59b2uVfMTV+s7HpyuMx
-	 jCuB+dn8eZS75htEIvVlrUwZZFNpXNIvQ5I3JXNhSkZCd2NBYReZPTccCiIHbP9HiE
-	 7MvPZtJ94GCJb4y99s0PKDNDElPAiypIuOI/oeV4=
-X-QQ-mid: zesmtpip3t1744724985t838566ab
-X-QQ-Originating-IP: IvxrBklCfHMUcYXSFD7ASed4Rg4FD9KV6HpuJrAKVqQ=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 15 Apr 2025 21:49:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17750832799163754876
-EX-QQ-RecipientCnt: 20
-From: WangYuli <wangyuli@uniontech.com>
-To: corbet@lwn.net,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: akpm@linux-foundation.org,
-	jeffxu@chromium.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	kees@kernel.org,
-	wangyuli@uniontech.com,
-	hca@linux.ibm.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	xry111@xry111.site,
-	tglx@linutronix.de,
-	thomas.weissschuh@linutronix.de,
-	Jason@zx2c4.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com
-Subject: [PATCH] mseal sysmap: enable LoongArch
-Date: Tue, 15 Apr 2025 21:49:33 +0800
-Message-ID: <433B5132A1535C98+20250415134933.531084-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmwheYuV"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso5292920f8f.2;
+        Tue, 15 Apr 2025 06:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744725174; x=1745329974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1TwZ3MTtKiM7l1EeKd00zGsHBWMHnKmuqThclAOg/Kg=;
+        b=hmwheYuVpy22zMZ/DoQVZveajuZsKkeSZKZwr5OiKwye1oxlsOtVDM8PhFKaWE3qlQ
+         1D/rh1to7gaLAm4wpITaPha5kN4u6pQpNJf3gxrgh0pWKyFcyU2kzeK94Bhgs4gNMuZd
+         NAqz+heIwqskrbzzJlGUORFtJnfNUpwLhrQE3T+wYDIqyIUI0t92d+qiIoC/jFfHxVdU
+         uLfIJHt5NuqADinUwemMVGBVWS2pY3Py4GQIbD844jMS80s4QPbbF6fE92QFZErtEuRa
+         BN8NVDdCr6UlfaiYRPWnbDS6r5W4mPlNsdFQukkoxkZSAbwEFLw/YLlEJMH+goOZhRtC
+         qclA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744725174; x=1745329974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1TwZ3MTtKiM7l1EeKd00zGsHBWMHnKmuqThclAOg/Kg=;
+        b=hBFFKLMiCT6jqqfgzBt8koUbLOrZMgJ0YEWbn27s3x3Zg+EXWOdAcDndFxi/KrVfXz
+         VUHcsN+xsj4/uUYKMx38YdUzlGqNMiw9U50Wi1Got5KtNdF5BGRSWSpkIHEJlsvwUGIE
+         jXzoMuP4i5NFw7cmHqozP8Xpez+FoZ77TLkP7tZ7637Q7ucjY0/KvZZetLXqRVGto7k5
+         2FsugSF0Sm855lx0PWAzmVqr/EdoVy/1f5dlbQr2tV010uGl2Xr86W0WsKtzj1y+8/1X
+         +opbOHje5b9efNYEtKuuSoMmj72IYRvOyO0cUJKCOjP8V32hu1c+JURRovL+kQ3GB3nJ
+         DrZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6tVaDWg1QHzILB+xC2xyiSk/58o4GVuJg9mWQSqIkNSlYTQ1zePn05+hN6hyOjHz4dcXgX9ca4ToN0zGyN8yj7n0=@vger.kernel.org, AJvYcCU87+dvssu0nDPsFUxWcRDc9E06WM0wF4pxtk6uQTF5jkNrRd7xk4BdF/BnlY01n06JNB7RoUNm@vger.kernel.org, AJvYcCWIIh4hoFaBzlLNEzLiqHrzp78FSdAo87+GJA3nUpHLjojdGm4Jtb4tsvSewkN5v3HgatXlDtZqL2ur@vger.kernel.org, AJvYcCWN2VocoTM+gUMzCEP/EXcQECIwfrKbAwzy5Axv+b6O+kjI3167jdZ+XSD9GSMg7aRQuCRe2geq+OIaQhiT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUAmPztUmr1k1DKlENgKHwcxtnAavgMJcupLWvbtGKkIcvYKIQ
+	Zgwn++LxdYPaOcXTZd8RUmfMXeO15XpBy0ufrdnStd6SJzo/QcC+ZDvDfiusstDa/kWdB4q3pxf
+	BzGYOVBfdp3IcjCfKDTuPY+boul0=
+X-Gm-Gg: ASbGncvJ0gDsn27w/xthZEvJNlIg8lJTxES4sBJl435CGpjHSaWt99fjFQnAhlno3Pf
+	m/ZGr2B3udbSa/WKWMksLtkNJ0hHEZgFGpkmDJXSi1pReU+KPePdihJsx+oYoVkV/yJp24jtU5m
+	UdKHuIYld5QO0KOtPyHeVTOkcyzw69vGZZ281gjEG0CUxtq0CtBTbId5WatXeEndaI
+X-Google-Smtp-Source: AGHT+IHK+m8VrLrlFlxV6nZ8ThujVJZ2WLpJFiDSDa8zctkcFlgA9baoyjBybS2403268oDSkrugum4D+6yxW9qAQH4=
+X-Received: by 2002:a05:6000:2905:b0:39c:2688:612b with SMTP id
+ ffacd0b85a97d-39ea51ee489mr13637534f8f.7.1744725174186; Tue, 15 Apr 2025
+ 06:52:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NV9lVvsB36Op1yEGLqX6VyH6IMMjPPSHflDax0yHqTYUExZlnvTyKMTF
-	RUFh4YGevHLcNupZVHEoRUisMQLbAifW7/nXLxnyeyVwYIshagyEn7LrVi84guxdutPZfSh
-	ULrPELeI4WI+uhXnCLSKVsqNfWyNSfd6n3orRR8ekhVxsHmZ0wHFK8WuuuBW8evqmO5TJwe
-	32NwMRr1WITwdkEoE5oa6sWKBA+9Mu3sgOYe5/eIz61Nb/dOP/4QA56IMpG0ag9ST0rJY/q
-	0mF0gpnGE+9X36w4l0hah1rT62FkHOLyQE5RJngepX92WCbYyWcArgTRPYkpoJDfiQ8fcCn
-	MI+kqPNc7ukDXuNe4572FMBT7+l6tUqCzaapbHEE8CWcuRjhAY/ang3MkiOVA1yDdxd6lIy
-	s8S1wPvC6d8DF10wl+claEj9tVJbOzY6dgFiMegMyyGLrzkFKlFpjG0GrZYMSR2na7CSYJg
-	wD+XXYwP8RIrr/HexDD1PAhXIxPHkVDQP1MEXVXTyBYpBfP5yKBT98eNaEr3yQcSeSFnfeA
-	ZHEGwvjKMcScOIoDP6iXbG0BmQ4yW7gHnGta7jBp5d1RHw2Pp9ipVj2HhgBBgghTN21H6c+
-	A9fp1HG3rhEW3PTP4rqxHbR8ALFaIp65EeyZA8FXsexnhIfAd4ObLGRnKkYX/O9gLWru/We
-	8UtjAJ/zDyJFrFjVtraZo+VKuFPVJw2Znmi3JFGhATier5hHfEBLigKtKtqgDajIXB8e2fx
-	vDOourSPMK5mvu8pnVsdUUR/Rm3uez/zTaC+oBc9S42jj/cPpYR5JClxRe243fG7c7rJ0Ic
-	LNUq780H0hpV2zwE252ojLnPJetASkt1UMlKnY50dlEXkQGP8Z8iQg5QeRdGJqblzPuleYZ
-	j2jdcYn1A1GkfTANUMogjfM51i4OJgG7M2AiV50Fa6+Y5IQODnLt0Y+iWq4bfr2dVkE5it4
-	NtatJYhKl6wkIZYG0sd7KDBGP0FI2lZ1R77B76B+uJPUDKNVvv+qCb5pedOFXv2mW3EHyEV
-	CXSLUewQcaE4Ahu4yMiBEMTlaeMw5k9iMrkAEHNg==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+References: <20250415125642.241427-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250415125642.241427-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <Z_5hc151mud_UM1C@shell.armlinux.org.uk>
+In-Reply-To: <Z_5hc151mud_UM1C@shell.armlinux.org.uk>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 15 Apr 2025 14:52:27 +0100
+X-Gm-Features: ATxdqUGwNzRsl8J8RvInaxREfU9EplttUyDfCX4lENAuX3MnWfvUzlpS2hWxJag
+Message-ID: <CA+V-a8sTN_vUDxL7V_64U3hs2-AB2Go66_gELe4Bkx0po2734Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 3/4] net: stmmac: Add DWMAC glue layer for
+ Renesas GBETH
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on LoongArch,
-covering the vdso.
+Hi Russell,
 
-Tested-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- Documentation/userspace-api/mseal.rst | 2 +-
- arch/loongarch/Kconfig                | 1 +
- arch/loongarch/kernel/vdso.c          | 4 +++-
- 3 files changed, 5 insertions(+), 2 deletions(-)
+On Tue, Apr 15, 2025 at 2:39=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Apr 15, 2025 at 01:56:41PM +0100, Prabhakar wrote:
+> > Add the DWMAC glue layer for the GBETH IP found in the Renesas RZ/V2H(P=
+)
+> > SoC.
+>
+> I think we're almost there, but now that the trees have parted, we can
+> start seeing other bits of wood :)
+>
+:)
 
-diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
-index 1dabfc29be0d..ef733f69003d 100644
---- a/Documentation/userspace-api/mseal.rst
-+++ b/Documentation/userspace-api/mseal.rst
-@@ -144,7 +144,7 @@ Use cases
-   architecture.
- 
-   The following architectures currently support this feature: x86-64, arm64,
--  and s390.
-+  loongarch and s390.
- 
-   WARNING: This feature breaks programs which rely on relocating
-   or unmapping system mappings. Known broken software at the time
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 067c0b994648..54ed5b59a690 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -69,6 +69,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
- 	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select ARCH_SUPPORTS_RT
- 	select ARCH_USE_BUILTIN_BSWAP
-diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-index 10cf1608c7b3..7b888d9085a0 100644
---- a/arch/loongarch/kernel/vdso.c
-+++ b/arch/loongarch/kernel/vdso.c
-@@ -105,7 +105,9 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 
- 	vdso_addr = data_addr + VVAR_SIZE;
- 	vma = _install_special_mapping(mm, vdso_addr, info->size,
--				       VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC,
-+				       VM_READ | VM_EXEC |
-+				       VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC |
-+				       VM_SEALED_SYSMAP,
- 				       &info->code_mapping);
- 	if (IS_ERR(vma)) {
- 		ret = PTR_ERR(vma);
--- 
-2.49.0
+> > +struct renesas_gbeth {
+> > +     struct plat_stmmacenet_data *plat_dat;
+> > +     struct reset_control *rstc;
+> > +     struct device *dev;
+> > +     void __iomem *regs;
+>
+> This appears to be only written, never read. Do you need it?
+>
+No, I can get rid of it.
 
+> I think that's the last thing I can spot in this driver, so with that
+> fixed, please add:
+>
+Thanks, along with this I'll fold renesas_gbeth_clks_config() contents
+into renesas_gbeth_init/exit() as suggested by Philipp.
+
+> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+>
+Cheers,
+Prabhakar
