@@ -1,37 +1,48 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD22949FF
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B591FF1B0;
+	Tue, 15 Apr 2025 12:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719486; cv=none; b=ZwJffq3NkVJFX1kOmGqK4UqqZg4Jw5Rm9z6jFcA0ktjomP0uN0PkZNccj51sDD7HZVY4bCzGmBUfYFPm72oNTqmGWlJ9E4rthtI5WjlW0uRI/goHxsrmLwzAdjXZsWdAn3GzIbD+yfUrCCuoPTZQrDYWdZV/uvTbfdLkMtLt6Hw=
+	t=1744719513; cv=none; b=Ujf5HFXpdIYb7HSeZTOPMc0IHonnv46XJrGunOCr11+FFPU7TAJyyik+4T9o484H5YqqHh/iW+tRbemlxoC7aprrDKO6v/Sf/dARmgf1qIvcCn2c85vyISqc+pU51f1gI/9z21P5PxdgJs3nC45rvIyqF1KI0CONCoirdJMnOvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719486; c=relaxed/simple;
-	bh=2pge7NFSADPpfy+h/uxZIMj0dCEk+YMbowLG9Z5Hyq0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FWhCfxS/m6gKs7jEZNZLu70AWTjfecpc+CzzMTSEKVTtD0eXSFPvDAE0IOiL78NVnt9k2QS4bXXhCnNEWaam1wPQWY1TJJx0cnOl41B0HyIJs/CSzg8Tzhefz4+hmCbzemm7QCI9QP6dXOAAFpoSaPWm+7LUpRqoW1N32CfgtuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ehx0T4wW; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744719513; c=relaxed/simple;
+	bh=atFAuwFrqsVLkfoO7LubzvIfTLvQEcb6RWqoGJEiPss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Yoki3k5jRMjY5sX58WpfOeRENg2O7a7JvV768gpdro4ojaxLC+k/wP6zxYhmmsFCoMTQ/CbmjTiuZI8cNPUwFIMPVpmWEx0GIF8tvkUirdEUwhsgTR6yTK6F3wtv7vQZnGbndu0USr74UUvj+xW3R8WpvzvKWaRgAo+XEXmN7OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J3nEr8/T; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ehx0T4wW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E31B94385B;
-	Tue, 15 Apr 2025 12:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744719482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VOGYRaeBdiQqBh4ZC4X/70JOvvT4r9gZtTU+5Lgek70=;
-	b=ehx0T4wWsKP3UTiv5OnacP+zSZAezlp1JEt/46+V5UqKMlp+ouocCbZV5wCn2W9YCoJRcF
-	qefA3JBaj8R7n1FE7JzB0IIvb3Ekbv+Z8UqHP4X+XU31hJL8n7B0cXTKmuu0PNrqlRXoGP
-	8RL9PhPc5mJ0Cvrw+ve/C6zQhnvzqwCUvJoIkDfR3adv6ndp98jz2e9GJ7lF2MI/NzYgxs
-	g9PurXTnmIr2a0SLxxYQ8rcMWsoPeJ4EYSMM7fnEhaUgxsJXvdLfhzTMMHaZjqRLzSGq2u
-	Mbmbt2ZXDKRPKcTRx0WRfw2Yp1dZRqn9lUHT1kcjsT8aVxDes9fcSnnmxW6cUQ==
-Message-ID: <dc4c0e0d-3bd5-458a-bf47-5875de4e88ab@bootlin.com>
-Date: Tue, 15 Apr 2025 14:18:01 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J3nEr8/T"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tBRD022959;
+	Tue, 15 Apr 2025 12:18:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pH3u8oVUx94lPPJSWYtRRTsZwY4inY7vNjLnJSUYblc=; b=J3nEr8/THWLYg7Ad
+	vU/D64XNhXaq6TIYRT4MLrrXCHUrMUs3hOXcJ0nmqBjvtpLToK26VySUG3pHvyS1
+	WMY3oa25HjydIEBFSyoQM9rcyzHZAKxnpUnPFMW7VKrG7yCUYc/pAqeYi2AN76lF
+	bYJZOSH8AKIGQXypD1h1c/QNCt/kkAimEtvXuQX9u8+G8+k1f4LteUbfmvS4P7i6
+	jRADUzLXrZdpdxdfvJa4IipLPo0fKA/pPzrqISJ+YgZBxg46k27FcqgY/JnFGZe3
+	MOPfqJLNI0JwUHlkZx64KSTl1UG6t1CdU/5RDciJUl0VMr4h39xCRqGh7HPHjbzc
+	/wwNIQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygj980bq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 12:18:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53FCIQ38030904
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 12:18:26 GMT
+Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 15 Apr
+ 2025 05:18:22 -0700
+Message-ID: <c14863c8-5930-4ab9-8448-947ff5a44dbc@quicinc.com>
+Date: Tue, 15 Apr 2025 17:48:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,176 +50,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/16] drm/vkms: Allow to configure CRTC writeback
- support via configfs
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250407081425.6420-1-jose.exposito89@gmail.com>
- <20250407081425.6420-7-jose.exposito89@gmail.com>
+Subject: Re: [PATCH v6 1/2] arm64: dts: qcom: ipq5424: Add PCIe PHYs and
+ controller nodes
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
+References: <20250402102723.219960-1-quic_mmanikan@quicinc.com>
+ <20250402102723.219960-2-quic_mmanikan@quicinc.com>
+ <218c9580-de47-41a6-a3ae-8b7477fafe30@oss.qualcomm.com>
 Content-Language: en-US
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <20250407081425.6420-7-jose.exposito89@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefgeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepm
- hgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: louis.chauvet@bootlin.com
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+In-Reply-To: <218c9580-de47-41a6-a3ae-8b7477fafe30@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ch2tyRC0yCFLeh-7zsS2Z5e-kZ5r-H8A
+X-Authority-Analysis: v=2.4 cv=PruTbxM3 c=1 sm=1 tr=0 ts=67fe4e93 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=Up9O-4L68c34P-V2CXsA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: ch2tyRC0yCFLeh-7zsS2Z5e-kZ5r-H8A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150087
 
 
 
-Le 07/04/2025 à 10:14, José Expósito a écrit :
-> From: Louis Chauvet <louis.chauvet@bootlin.com>
+On 4/14/2025 4:17 PM, Konrad Dybcio wrote:
+> On 4/2/25 12:27 PM, Manikanta Mylavarapu wrote:
+>> Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
+>> found on IPQ5424 platform. The PCIe0 & PCIe1 are 1-lane Gen3
+>> host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
+>>
+>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+>> ---
 > 
-> When a CRTC is created, add a `writeback` file to allow to enable or
-> disable writeback connector support
-
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> Co-developed-by: José Expósito <jose.exposito89@gmail.com>
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> ---
->   Documentation/gpu/vkms.rst           |  4 +++
->   drivers/gpu/drm/vkms/vkms_configfs.c | 42 ++++++++++++++++++++++++++++
->   2 files changed, 46 insertions(+)
+> [...]
 > 
-> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-> index e0699603ef53..abe7a0f5a4ab 100644
-> --- a/Documentation/gpu/vkms.rst
-> +++ b/Documentation/gpu/vkms.rst
-> @@ -94,6 +94,10 @@ Continue by creating one or more CRTCs::
->   
->     sudo mkdir /config/vkms/my-vkms/crtcs/crtc0
->   
-> +CRTCs have 1 configurable attribute:
-> +
-> +- writeback: Enable or disable writeback connector support by writing 1 or 0
-> +
->   Once you are done configuring the VKMS instance, enable it::
->   
->     echo "1" | sudo tee /config/vkms/my-vkms/enabled
-> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-> index 62a82366791d..e9f445043268 100644
-> --- a/drivers/gpu/drm/vkms/vkms_configfs.c
-> +++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-> @@ -74,6 +74,47 @@ struct vkms_configfs_crtc {
->   #define crtc_item_to_vkms_configfs_crtc(item) \
->   	container_of(to_config_group((item)), struct vkms_configfs_crtc, group)
->   
-> +static ssize_t crtc_writeback_show(struct config_item *item, char *page)
-> +{
-> +	struct vkms_configfs_crtc *crtc;
-> +	bool writeback;
-> +
-> +	crtc = crtc_item_to_vkms_configfs_crtc(item);
-> +
-> +	scoped_guard(mutex, &crtc->dev->lock)
-> +		writeback = vkms_config_crtc_get_writeback(crtc->config);
-> +
-> +	return sprintf(page, "%d\n", writeback);
-> +}
-> +
-> +static ssize_t crtc_writeback_store(struct config_item *item, const char *page,
-> +				    size_t count)
-> +{
-> +	struct vkms_configfs_crtc *crtc;
-> +	bool writeback;
-> +
-> +	crtc = crtc_item_to_vkms_configfs_crtc(item);
-> +
-> +	if (kstrtobool(page, &writeback))
-> +		return -EINVAL;
-> +
-> +	scoped_guard(mutex, &crtc->dev->lock) {
-> +		if (crtc->dev->enabled)
-> +			return -EBUSY;
-> +
-> +		vkms_config_crtc_set_writeback(crtc->config, writeback);
-> +	}
-> +
-> +	return (ssize_t)count;
-> +}
-> +
-> +CONFIGFS_ATTR(crtc_, writeback);
-> +
-> +static struct configfs_attribute *crtc_item_attrs[] = {
-> +	&crtc_attr_writeback,
-> +	NULL,
-> +};
-> +
->   static void crtc_release(struct config_item *item)
->   {
->   	struct vkms_configfs_crtc *crtc;
-> @@ -93,6 +134,7 @@ static struct configfs_item_operations crtc_item_operations = {
->   };
->   
->   static const struct config_item_type crtc_item_type = {
-> +	.ct_attrs	= crtc_item_attrs,
->   	.ct_item_ops	= &crtc_item_operations,
->   	.ct_owner	= THIS_MODULE,
->   };
+>> +		pcie0_phy: phy@84000 {
+>> +			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
+>> +				     "qcom,ipq9574-qmp-gen3x1-pcie-phy";
+>> +			reg = <0x0 0x00084000 0x0 0x2000>;
+> 
+> This is 0x1000-wide
+> 
 
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Okay, sure.
+
+>> +			clocks = <&gcc GCC_PCIE0_AUX_CLK>,
+>> +				 <&gcc GCC_PCIE0_AHB_CLK>,
+>> +				 <&gcc GCC_PCIE0_PIPE_CLK>;
+>> +			clock-names = "aux",
+>> +				      "cfg_ahb",
+>> +				      "pipe";
+>> +
+>> +			assigned-clocks = <&gcc GCC_PCIE0_AUX_CLK>;
+>> +			assigned-clock-rates = <20000000>;
+>> +
+>> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+>> +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
+>> +			reset-names = "phy",
+>> +				      "common";
+>> +
+>> +			#clock-cells = <0>;
+>> +			clock-output-names = "gcc_pcie0_pipe_clk_src";
+>> +
+>> +			#phy-cells = <0>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		pcie1_phy: phy@8c000 {
+>> +			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
+>> +				     "qcom,ipq9574-qmp-gen3x1-pcie-phy";
+>> +			reg = <0x0 0x0008c000 0x0 0x2000>;
+> 
+> So is this
+> 
+
+Okay, sure.
+
+>> +			clocks = <&gcc GCC_PCIE1_AUX_CLK>,
+>> +				 <&gcc GCC_PCIE1_AHB_CLK>,
+>> +				 <&gcc GCC_PCIE1_PIPE_CLK>;
+>> +			clock-names = "aux",
+>> +				      "cfg_ahb",
+>> +				      "pipe";
+>> +
+>> +			assigned-clocks = <&gcc GCC_PCIE1_AUX_CLK>;
+>> +			assigned-clock-rates = <20000000>;
+>> +
+>> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+>> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
+>> +			reset-names = "phy",
+>> +				      "common";
+>> +
+>> +			#clock-cells = <0>;
+>> +			clock-output-names = "gcc_pcie1_pipe_clk_src";
+>> +
+>> +			#phy-cells = <0>;
+>> +			status = "disabled";
+>> +		};
+> 
+> 
+>> +		pcie3: pcie@40000000 {
+>> +			compatible = "qcom,pcie-ipq5424", "qcom,pcie-ipq9574";
+>> +			reg = <0x0 0x40000000 0x0 0xf1c>,
+>> +			      <0x0 0x40000f20 0x0 0xa8>,
+>> +			      <0x0 0x40001000 0x0 0x1000>,
+>> +			      <0x0 0x000f8000 0x0 0x3000>,
+>> +			      <0x0 0x40100000 0x0 0x1000>,
+>> +			      <0x0 0x000fe000 0x0 0x1000>;
+>> +			reg-names = "dbi",
+>> +				    "elbi",
+>> +				    "atu",
+>> +				    "parf",
+>> +				    "config",
+>> +				    "mhi";
+>> +			device_type = "pci";
+>> +			linux,pci-domain = <3>;
+>> +			num-lanes = <2>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +
+>> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x00100000>,
+>> +				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x0fd00000>;
+> 
+> I think the BAR spaces on all these hosts are only 32 MiB long
+> 
+
+I have confirmed with the hardware team that the specified BAR register space is accurate.
+256MB for all PCIe controllers.
+
+Thanks & Regards,
+Manikanta.
 
