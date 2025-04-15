@@ -1,134 +1,131 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C902185A8
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7721FDE0E
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744737120; cv=none; b=jGrSJRRuFxOLvmwxA8hCClUvE6riG37WzWD7OcyAqPA2ijVsf9ALHNm1KReus+EOuNCJiG4j/VPm1L376TQ96b5YlucCJNqted6L8M4JGfHeFRiAnkLG3RJYpEq1CaHrgFntpiCuiPAXmjZjSGipt333+sEmB9BPXHm0qhUKN/8=
+	t=1744737146; cv=none; b=U8IcLer8RUKNLHmZ0PrK6ueAWAw1FgmfF8+ymqiMjQ1fVhugdzh5D0LwpErlrdjA4pzcKDMQ/exqpCpkOTFSX1CS+5JsMx+Ko+2APN5AqkvMzmemZ45+F6+rLgQz5FWhqvo3TWMn5fT37AY97Efyu0IC1Do7Vr2y352eiOBc12o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744737120; c=relaxed/simple;
-	bh=bSf+8q+0tWGyLow2FlL0byyEBGTzi+RQNMFqsQYOag0=;
+	s=arc-20240116; t=1744737146; c=relaxed/simple;
+	bh=JzuekTe3Sb1rluDkYZ00MVFULECL7CPEavs6F/bavks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qqw4lUU89/KdAplY6tuFDso+DxbSdC0IhzaKDhfmXZ49x7nrmzsE3uOW19jV/aqTUWRtskA18ZMhy9dis9aU12AxyDe34PwMb6qvf2BjhgR2XMV3ACbDKkmHZbKwlfzfeP/BCOy9aInpbp90lh/BWTZHiYd1lD2bt3NAqTJDKLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=oFlrKFE4; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	 Content-Type:Content-Disposition:In-Reply-To; b=o/OIwE5iJ2XfEOohlYx/yjNOg8FhbqCx8dJXiQQPQ7UYuPsCVnBZnI6SARwEaK4aqJRGYMXane9wn+vzqx2yXpAj0b2twEGe3fZZsJe78Nzd/x02rM3qtAarMLfIl3N9CgOdPd3YC5nTinNUrWoQx0E9R3lgXi2nU6kP+6OQxLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dgLKvi1S; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hpuXXGzb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jjcVcKFA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1rqBm99c; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="oFlrKFE4"
-Date: Tue, 15 Apr 2025 13:11:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1744737116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dgLKvi1S";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hpuXXGzb";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jjcVcKFA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1rqBm99c"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DF4FA2118F;
+	Tue, 15 Apr 2025 17:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744737143;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TZ5TeuXVlqIBcTKnyUPN6n6PTqhb3E+xVpAkmmqWBI8=;
-	b=oFlrKFE4LAVCgIG+lnbBcjPxf379TP8S57q7VeZGqKPSLoMsXkqz8/bW4DFZwGljq48SIS
-	5JGRUASghmHz8I2DS3FnnTTUgSbCY0OVjCB44yrdsBbb6gaQTdplmXNS7Pr3MbmMic8/il
-	u/gK8rVWZGtJCJgA9lA6cPzx7TsCgtf3DtsLBSv1Gcjmtj3lA+cWhzUf/0ySFFQGq0uivf
-	3+nDtOlNfKhzPEd1yBjoNewkC6tThMgDjJvj06zeuH71hXyaGylesqRmtdzFBQtaBWdSW/
-	xuR/GbERtUk8S47AzQ2lxF5NDnBA447wq2R7byXt74R3ZcoszoXceD0TmqeMaQ==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, Neal Gompa <neal@gompa.dev>,
-	Hector Martin <marcan@marcan.st>, linuxppc-dev@lists.ozlabs.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] i2c: pasemi: Improve timeout handling
-Message-ID: <Z_6TV-tPU2wRdfFf@blossom>
-References: <20250415-pasemi-fixes-v2-0-c543bf53151a@svenpeter.dev>
- <20250415-pasemi-fixes-v2-3-c543bf53151a@svenpeter.dev>
+	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
+	b=dgLKvi1SkNlLdVwopX3y7hWIralVgcL4gNyAAPzUvrxessieNZS/qtG//ZKSS79j2/0o4L
+	CF/CCjN8sIQDRTUfA8EXw4bBcr/M4U/5YujvZAFbk8m63hj5Z18KYjYM7jPmpUBTvEJtX8
+	UYbJFg2tTOBs1k9OEzjp7Hx/D3MlklY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744737143;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
+	b=hpuXXGzbL/8NwtL0jDm8fI1/wluiDn0kVqjCUmRp3OY8+N72nfSV8gH6ko3cLkPNZdni+k
+	RoIRxKtVRkbZYlCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744737142;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
+	b=jjcVcKFADbPOjvzQ6FxlLY1RcD4GCah+8NUGq17wsPeZxJUcwjgVBB3s89if20tG7THuUU
+	5f9hdkWOz8gI+2Ehmkob0WzGRg8hRC03l2F9US2UG2wwl/G+9SQdjFcQvjC6euQGCsDSNO
+	Ttc2YiL+ZBYDHK8dVO9GrUxUMxixC0k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744737142;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
+	b=1rqBm99cYNglJjYJYKrtQ1CqbxjFmUIfwnsvOnYpeoAekvyjn9aQhqjqy9g1et7CIcaZ/s
+	ejDGHg8QsVL32IAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C3E0F137A5;
+	Tue, 15 Apr 2025 17:12:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ZeyYL3aT/mf4bgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 15 Apr 2025 17:12:22 +0000
+Date: Tue, 15 Apr 2025 19:12:17 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Yangtao Li <frank.li@vivo.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] btrfs: reuse exit helper in btrfs_bioset_init()
+Message-ID: <20250415171217.GJ16750@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250415035340.851288-1-frank.li@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-pasemi-fixes-v2-3-c543bf53151a@svenpeter.dev>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250415035340.851288-1-frank.li@vivo.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-
-Le Tue , Apr 15, 2025 at 03:36:57PM +0000, Sven Peter via B4 Relay a écrit :
-> From: Sven Peter <sven@svenpeter.dev>
+On Mon, Apr 14, 2025 at 09:53:40PM -0600, Yangtao Li wrote:
+> Use btrfs_bioset_exit() instead, which is the preferred patttern in btrfs.
 > 
-> Add proper timeout handling for the interrupt path.
-> Previously, this was only correctly done for the polling path.
-> Note that we drop reg_write(smbus, REG_SMSTA, status) here which
-> will be done anyway whenever the next transaction starts via
-> pasemi_smb_clear.
-> 
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
+> Suggested-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
 > ---
->  drivers/i2c/busses/i2c-pasemi-core.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-pasemi-core.c b/drivers/i2c/busses/i2c-pasemi-core.c
-> index df1b0087dcacb0a3b94196368137d5e20b0e6d7e..9b611dbdfef23e78a4ea75ac0311938d52b6ba96 100644
-> --- a/drivers/i2c/busses/i2c-pasemi-core.c
-> +++ b/drivers/i2c/busses/i2c-pasemi-core.c
-> @@ -91,32 +91,42 @@ static void pasemi_smb_clear(struct pasemi_smbus *smbus)
->  static int pasemi_smb_waitready(struct pasemi_smbus *smbus)
->  {
->  	int timeout = 100;
-> +	int ret;
->  	unsigned int status;
->  
->  	if (smbus->use_irq) {
->  		reinit_completion(&smbus->irq_completion);
->  		reg_write(smbus, REG_IMASK, SMSTA_XEN | SMSTA_MTN);
-> -		wait_for_completion_timeout(&smbus->irq_completion, msecs_to_jiffies(100));
-> +		ret = wait_for_completion_timeout(&smbus->irq_completion, msecs_to_jiffies(100));
->  		reg_write(smbus, REG_IMASK, 0);
->  		status = reg_read(smbus, REG_SMSTA);
-> +
-> +		if (ret < 0) {
-> +			dev_err(smbus->dev,
-> +				"Completion wait failed with %d, status 0x%08x\n",
-> +				ret, status);
-> +			return ret;
-> +		} else if (ret == 0) {
-> +			dev_warn(smbus->dev, "Timeout, status 0x%08x\n", status);
-> +			return -ETIME;
-> +		}
->  	} else {
->  		status = reg_read(smbus, REG_SMSTA);
->  		while (!(status & SMSTA_XEN) && timeout--) {
->  			msleep(1);
->  			status = reg_read(smbus, REG_SMSTA);
->  		}
-> +
-> +		if (timeout < 0) {
-> +			dev_warn(smbus->dev, "Timeout, status 0x%08x\n", status);
-> +			return -ETIME;
-> +		}
->  	}
->  
->  	/* Got NACK? */
->  	if (status & SMSTA_MTN)
->  		return -ENXIO;
->  
-> -	if (timeout < 0) {
-> -		dev_warn(smbus->dev, "Timeout, status 0x%08x\n", status);
-> -		reg_write(smbus, REG_SMSTA, status);
-> -		return -ETIME;
-> -	}
-> -
->  	/* Clear XEN */
->  	reg_write(smbus, REG_SMSTA, SMSTA_XEN);
->  
-> 
-> -- 
-> 2.34.1
-> 
-> 
+> v3:
+> -add Suggested-by
+
+Adding tags is not a reason for resend, you can reply to the patch if
+there's something trivial missing. If there are functional changes it
+makes sense to resend.
+
+Added to for-next, thanks.
