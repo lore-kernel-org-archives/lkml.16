@@ -1,210 +1,206 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94C727A133
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD40D27FD68
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705386; cv=none; b=UZV7bPxr63CYwCirc1xKHyfW1lOJfirZRB/qrugpmi3k23Q1JR3MKZotbsqimjPd2UglFHU4Th98bh338imUsWymdYGwd7Kyj0Z9NlA/DAmhlpM+fcg9HspwGtFCWfLOnB+9WGMcTxbX9XK/+n2i4pakQkj10AuD510Fr2WrbVk=
+	t=1744705390; cv=none; b=bTeT+vVzjgM9qAH27nWV96Tl2J6py51+UbpheCYGCM2NbdW6ICngZAvkyq8ZeqwhCmH9ARV+wmmt2Uxu1lYKlfAecsVuC0E6d9qWYdJamx3ooXFsDpSKoVYXWH1UefwHrwoxy/s17LKrZZsj6lOk7suApMC3JafF9BjnfHYmtaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705386; c=relaxed/simple;
-	bh=hBQGz68EAhUUoaphffKST7oNpN2SLRd9BgK7z10XIzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P62kSEQJgQdmZYU2vABrRhaHWz9axSMYZYUpdH3A/v6azx3Dn/z5NwEFm24lQUubU3FOi7VZTnImlV4afSOTsagt/JrJAkQDSVzr6j/mN+LD0UsvBhsGZWMhq5PmCzk4OKk7B9pYJFNEk2md2B67iJR45lbmHflkMu8v45iBYrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I8GZSVT1; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I8GZSVT1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=s1pdI
-	+qWLMdWvmOJhkNxJK7/x/XjeO8jfm8Kt43rM84=; b=I8GZSVT1d//0q4O5ajzNv
-	kSUx7iQH51Fo1rpim/DDXykkH7hOb+qG7abm7fWerL1p/QgDVhiBOmll3+/ePMzd
-	JhYWqsdg8xab+317ijmBrUNcLLT6JUssavtscVtrICIamHD1hUuLEaau9ulREKRp
-	/crVyqGRUCI2RKZZwL5HJQ=
-Received: from localhost (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgD31wgvF_5nMzQKAg--.53883S2;
-	Tue, 15 Apr 2025 16:22:07 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	ioworker0@gmail.com,
-	21cnbao@gmail.com
-Cc: akpm@linux-foundation.org,
-	catalin.marinas@arm.com,
-	david@redhat.com,
-	gshan@redhat.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	willy@infradead.org,
-	xavier_qy@163.com,
-	ziy@nvidia.com
-Subject: [mm/contpte v3 0/1] mm/contpte: Optimize loop to reduce redundant operations
-Date: Tue, 15 Apr 2025 16:22:04 +0800
-Message-Id: <20250415082205.2249918-1-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
-References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
+	s=arc-20240116; t=1744705390; c=relaxed/simple;
+	bh=JpGjNbvJ68b1+c8DHkGd85uMGGsQlUTSW2ospchYelE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AlNb2t0nipi97xwiRGIlcruTH2cmYuZ0/WwnyFnAhelE1o+5scU1amJoWlSfra43ghqValUkg9hBXZlGCY9ZOyn/kD/FZqRry/VzvxBG+5FbaatfU2enK7Sl9O4f7tcG81lRTS6qe7G9ccclrgkK0Pxld7M7f1bx+dEVosNgdAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u4bYu-0001z5-0U; Tue, 15 Apr 2025 10:22:32 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u4bYs-000O14-3C;
+	Tue, 15 Apr 2025 10:22:31 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u4bYs-0003Kq-2s;
+	Tue, 15 Apr 2025 10:22:30 +0200
+Message-ID: <eee41968ecb0c16da214819b9a43e9dd881fcf13.camel@pengutronix.de>
+Subject: Re: [PATCH v4 6/7] clk: spacemit: define new syscons with only
+ resets
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Alex Elder <elder@riscstar.com>, mturquette@baylibre.com,
+ sboyd@kernel.org,  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: dlan@gentoo.org, heylenay@4d2.org, guodong@riscstar.com, 
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+ spacemit@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org,  linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Date: Tue, 15 Apr 2025 10:22:30 +0200
+In-Reply-To: <20250414191715.2264758-7-elder@riscstar.com>
+References: <20250414191715.2264758-1-elder@riscstar.com>
+	 <20250414191715.2264758-7-elder@riscstar.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgD31wgvF_5nMzQKAg--.53883S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWrWDWw48GFW3AFy3Kw17KFg_yoWrCF1kpa
-	y7GF9I9r18GF9I93y7Cw1v9r1rAa95J343Jrs7Xa1fAas8Xr9YgryIkr4YyFyUGr1qq3yf
-	ZF4j9rWDuFyvya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piQJ57UUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiTgMwEGf+CY+r+QACsi
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Patch V3 has changed the while loop to a for loop according to the suggestions
-of Dev. Meanwhile, to improve efficiency, the definition of local variables has
-been removed. This macro is only used within the current function and there
-will be no additional risks. In order to verify the optimization performance of
-Patch V3, a test function has been designed. By repeatedly calling mlock in a
-loop, the kernel is made to call contpte_ptep_get extensively to test the
-optimization effect of this function.
-The function's execution time and instruction statistics have been traced using
-perf, and the following are the operation results on a certain Qualcomm mobile
-phone chip:
+On Mo, 2025-04-14 at 14:17 -0500, Alex Elder wrote:
+> Enable support for three additional syscon CCUs which support reset
+> controls but no clocks:  ARCPU, RCPU2, and APBC2.
+>=20
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  drivers/clk/spacemit/ccu-k1.c | 93 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>=20
+> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.=
+c
+> index 7494c97c3c7ec..cd1a0668bd203 100644
+> --- a/drivers/clk/spacemit/ccu-k1.c
+> +++ b/drivers/clk/spacemit/ccu-k1.c
+> @@ -130,6 +130,36 @@
+>  #define APMU_EMAC0_CLK_RES_CTRL		0x3e4
+>  #define APMU_EMAC1_CLK_RES_CTRL		0x3ec
+> =20
+> +/* RCPU register offsets */
+> +#define RCPU_SSP0_CLK_RST		0x0028
+> +#define RCPU_I2C0_CLK_RST		0x0030
+> +#define RCPU_UART1_CLK_RST		0x003c
+> +#define RCPU_CAN_CLK_RST		0x0048
+> +#define RCPU_IR_CLK_RST			0x004c
+> +#define RCPU_UART0_CLK_RST		0x00d8
+> +#define AUDIO_HDMI_CLK_CTRL		0x2044
+> +
+> +/* RCPU2 register offsets */
+> +#define RCPU2_PWM0_CLK_RST		0x0000
+> +#define RCPU2_PWM1_CLK_RST		0x0004
+> +#define RCPU2_PWM2_CLK_RST		0x0008
+> +#define RCPU2_PWM3_CLK_RST		0x000c
+> +#define RCPU2_PWM4_CLK_RST		0x0010
+> +#define RCPU2_PWM5_CLK_RST		0x0014
+> +#define RCPU2_PWM6_CLK_RST		0x0018
+> +#define RCPU2_PWM7_CLK_RST		0x001c
+> +#define RCPU2_PWM8_CLK_RST		0x0020
+> +#define RCPU2_PWM9_CLK_RST		0x0024
+> +
+> +/* APBC2 register offsets */
+> +#define APBC2_UART1_CLK_RST		0x0000
+> +#define APBC2_SSP2_CLK_RST		0x0004
+> +#define APBC2_TWSI3_CLK_RST		0x0008
+> +#define APBC2_RTC_CLK_RST		0x000c
+> +#define APBC2_TIMERS0_CLK_RST		0x0010
+> +#define APBC2_KPC_CLK_RST		0x0014
+> +#define APBC2_GPIO_CLK_RST		0x001c
+> +
+>  struct ccu_reset_data {
+>  	u32 offset;
+>  	u32 assert_mask;
+> @@ -1177,6 +1207,57 @@ static const struct spacemit_ccu_data k1_ccu_apmu_=
+data =3D {
+>  	.reset_num	=3D ARRAY_SIZE(apmu_reset_data),
+>  };
+> =20
+> +static const struct ccu_reset_data rcpu_reset_data[] =3D {
+> +	[RESET_RCPU_SSP0]	=3D RESET_DATA(RCPU_SSP0_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_I2C0]	=3D RESET_DATA(RCPU_I2C0_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_UART1]	=3D RESET_DATA(RCPU_UART1_CLK_RST, 0, BIT(0)),
+> +	[RESET_RCPU_IR]		=3D RESET_DATA(RCPU_CAN_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_CAN]	=3D RESET_DATA(RCPU_IR_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_UART0]	=3D RESET_DATA(RCPU_UART0_CLK_RST, 0, BIT(0)),
+> +	[RESET_RCPU_HDMI_AUDIO]	=3D RESET_DATA(AUDIO_HDMI_CLK_CTRL, 0, BIT(0)),
+> +};
+> +
+> +static struct spacemit_ccu_data k1_ccu_rcpu_data =3D {
 
-Instruction Statistics - Before Optimization
-#          count  event_name              # count / runtime
-      20,814,352  branch-load-misses      # 662.244 K/sec
-  41,894,986,323  branch-loads            # 1.333 G/sec
-       1,957,415  iTLB-load-misses        # 62.278 K/sec
-  49,872,282,100  iTLB-loads              # 1.587 G/sec
-     302,808,096  L1-icache-load-misses   # 9.634 M/sec
-  49,872,282,100  L1-icache-loads         # 1.587 G/sec
+Could be const.
 
-Total test time: 31.485237 seconds.
+> +	/* No clocks in the RCPU CCU */
+> +	.reset_data	=3D rcpu_reset_data,
+> +	.reset_num	=3D ARRAY_SIZE(rcpu_reset_data),
+> +};
+> +
+> +static const struct ccu_reset_data rcpu2_reset_data[] =3D {
+> +	[RESET_RCPU2_PWM0]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM1]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM2]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM3]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM4]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM5]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM6]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM7]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM8]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +	[RESET_RCPU2_PWM9]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
+> +};
+> +
+> +static struct spacemit_ccu_data k1_ccu_rcpu2_data =3D {
 
-Instruction Statistics - After Optimization
-#          count  event_name              # count / runtime
-      19,340,524  branch-load-misses      # 688.753 K/sec
-  38,510,185,183  branch-loads            # 1.371 G/sec
-       1,812,716  iTLB-load-misses        # 64.554 K/sec
-  47,673,923,151  iTLB-loads              # 1.698 G/sec
-     675,853,661  L1-icache-load-misses   # 24.068 M/sec
-  47,673,923,151  L1-icache-loads         # 1.698 G/sec
+const
 
-Total test time: 28.108048 seconds.
+> +	/* No clocks in the RCPU2 CCU */
+> +	.reset_data	=3D rcpu2_reset_data,
+> +	.reset_num	=3D ARRAY_SIZE(rcpu2_reset_data),
+> +};
+> +
+> +static const struct ccu_reset_data apbc2_reset_data[] =3D {
+> +	[RESET_APBC2_UART1]	=3D RESET_DATA(APBC2_UART1_CLK_RST, BIT(2), (0)),
+> +	[RESET_APBC2_SSP2]	=3D RESET_DATA(APBC2_SSP2_CLK_RST, BIT(2), (0)),
+> +	[RESET_APBC2_TWSI3]	=3D RESET_DATA(APBC2_TWSI3_CLK_RST, BIT(2), (0)),
+> +	[RESET_APBC2_RTC]	=3D RESET_DATA(APBC2_RTC_CLK_RST,	BIT(2), (0)),
+> +	[RESET_APBC2_TIMERS0]	=3D RESET_DATA(APBC2_TIMERS0_CLK_RST, BIT(2), (0)=
+),
+> +	[RESET_APBC2_KPC]	=3D RESET_DATA(APBC2_KPC_CLK_RST,	BIT(2), (0)),
+> +	[RESET_APBC2_GPIO]	=3D RESET_DATA(APBC2_GPIO_CLK_RST, BIT(2), (0)),
 
-Function Statistics - Before Optimization
-Arch: arm64
-Event: cpu-cycles (type 0, config 0)
-Samples: 1419716
-Event count: 99618088900
+Superfluous parentheses.
 
-Overhead   Symbol
-21.42%     lock_release
-21.26%     lock_acquire
-20.88%     arch_counter_get_cntvct
-14.32%     _raw_spin_unlock_irq
-6.79%      contpte_ptep_get
-2.20%      test_contpte_perf
-1.82%      follow_page_pte
-0.97%      lock_acquired
-0.97%      rcu_is_watching
-0.89%      mlock_pte_range
-0.84%      sched_clock_noinstr
-0.70%      handle_softirqs.llvm.8218488130471452153
-0.58%      test_preempt_disable_long
-0.57%      _raw_spin_unlock_irqrestore
-0.54%      arch_stack_walk
-0.51%      vm_normal_folio
-0.48%      check_preemption_disabled
-0.47%      stackinfo_get_task
-0.36%      try_grab_folio
-0.34%      preempt_count
-0.32%      trace_preempt_on
-0.29%      trace_preempt_off
-0.24%      debug_smp_processor_id
+> +};
+> +
+> +static struct spacemit_ccu_data k1_ccu_apbc2_data =3D {
 
-Function Statistics - After Optimization
-Arch: arm64
-Event: cpu-cycles (type 0, config 0)
-Samples: 1431006
-Event count: 118856425042
+const
 
-Overhead   Symbol
-22.59%     lock_release
-22.13%     arch_counter_get_cntvct
-22.08%     lock_acquire
-15.32%     _raw_spin_unlock_irq
-2.26%      test_contpte_perf
-1.50%      follow_page_pte
-1.49%      arch_stack_walk
-1.30%      rcu_is_watching
-1.09%      lock_acquired
-1.07%      sched_clock_noinstr
-0.88%      handle_softirqs.llvm.12507768597002095717
-0.88%      trace_preempt_off
-0.76%      _raw_spin_unlock_irqrestore
-0.61%      check_preemption_disabled
-0.52%      trace_preempt_on
-0.50%      mlock_pte_range
-0.43%      try_grab_folio
-0.41%      folio_mark_accessed
-0.40%      vm_normal_folio
-0.38%      test_preempt_disable_long
-0.28%      contpte_ptep_get
-0.27%      __traceiter_android_rvh_preempt_disable
-0.26%      debug_smp_processor_id
-0.24%      return_address
-0.20%      __pte_offset_map_lock
-0.19%      unwind_next_frame_record
+> +	/* No clocks in the APBC2 CCU */
+> +	.reset_data	=3D apbc2_reset_data,
+> +	.reset_num	=3D ARRAY_SIZE(apbc2_reset_data),
+> +};
+> +
+>  static int spacemit_reset_update(struct reset_controller_dev *rcdev,
+>  				 unsigned long id, bool assert)
+>  {
+> @@ -1351,6 +1432,18 @@ static const struct of_device_id of_k1_ccu_match[]=
+ =3D {
+>  		.compatible	=3D "spacemit,k1-syscon-apmu",
+>  		.data		=3D &k1_ccu_apmu_data,
+>  	},
+> +	{
+> +		.compatible	=3D "spacemit,k1-syscon-rcpu",
+> +		.data		=3D &k1_ccu_rcpu_data,
+> +	},
+> +	{
+> +		.compatible	=3D "spacemit,k1-syscon-rcpu2",
+> +		.data		=3D &k1_ccu_rcpu2_data,
+> +	},
+> +	{
+> +		.compatible	=3D "spacemit,k1-syscon-apbc2",
+> +		.data		=3D &k1_ccu_apbc2_data,
+> +	},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, of_k1_ccu_match);
 
-If there is no problem with my test program, it can be seen that there is a
-significant performance improvement both in the overall number of instructions
-and the execution time of contpte_ptep_get.
-
-If any reviewers have time, you can also test it on your machines for comparison.
-I have enabled THP and hugepages-64kB.
-
-Test Function:
----
-#define PAGE_SIZE 4096
-#define CONT_PTES 16
-#define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
-
-void rwdata(char *buf)
-{
-	for (size_t i = 0; i < TEST_SIZE; i += PAGE_SIZE) {
-		buf[i] = 'a';
-		volatile char c = buf[i];
-	}
-}
-void test_contpte_perf()
-{
-	char *buf;
-	int ret = posix_memalign((void **)&buf, PAGE_SIZE, TEST_SIZE);
-	if (ret != 0) {
-		perror("posix_memalign failed");
-		exit(EXIT_FAILURE);
-	}
-
-	rwdata(buf);
-
-	for (int j = 0; j < 500; j++) {
-		mlock(buf, TEST_SIZE);
-
-		rwdata(buf);
-
-		munlock(buf, TEST_SIZE);
-	}
-	
-	free(buf);
-}
----
-
-Xavier (1):
-  mm/contpte: Optimize loop to reduce redundant operations
-
- arch/arm64/mm/contpte.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
--- 
-2.34.1
-
+regards
+Philipp
