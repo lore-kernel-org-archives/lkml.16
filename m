@@ -1,120 +1,129 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CFA289378;
-	Tue, 15 Apr 2025 12:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BB82750F2;
+	Tue, 15 Apr 2025 12:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720920; cv=none; b=e706KjInlKoozdhcMG5ysFrUgW/1EXIw1RWBDB2UtJ8Dteu+VlPkpK7zlmk3BQgrOdgD2PglzXlsv11+IvaGyxqFSpJkYDdTikauvV6siwUselVCrf1X6iGjgfRwJmbRp5qqMeRfjsxG9MfeVMO2uZqwQDPY3Rq2ioORuTAK/os=
+	t=1744720920; cv=none; b=IwpGOrfmtikONkjTTadaSU8bPgwyNp7cAATyiYAB7fiMwE85Ix0V5wJqXbLqogvNp6JRzCcjHULrEoEWegdVhxpOjlGUxKoskr8poAkziGJv/d0eoo4xtyuEAN8K4QdGi79M0XNy0sRh9xMa0UFrCH73YaIpO5AeM/7JdrHInlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744720920; c=relaxed/simple;
-	bh=vsmMQlFlXn7cA94x4exBXUrDaqEX3/lnnG8SkJOCMTk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ecfcJ/D6xYLgNA2sqP7/Z1fZ9H9CKkQnxyvP2KM6AIwisf75pOmfHZV8YL8IWql6oC3VPlKcpPDhxGOvn2TnBZjmQM4CONIiAfKADxXeCrUAJBu0StNR0xERzZPeGEd+pCU5rCqI5pL12kuqwRlkA156PowqL9eEMyJmtlp4HHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=LleNsB4O; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	bh=/nCxCQtc0UodKJs5nhg0GEOsflDMqGjwTStC4Ei1/YU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=J3V8Ocvs68dnxY/x91rto6vVcPKT9IozoQ89gYyLnuNp+PjIVVvcoAW26IMmoIHhXluZf9JZMKfDns19Y5HJho4II/j2mM+wpz/s3AWGGN1qWv7CuP0rj2E3eTNzGX9qcgC+IJT1/UbmOGOMr9O0J/zHkwSXwSwggC2LgOFvbTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nt9k5nBo; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="LleNsB4O"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53FCfYqM51336531, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744720894; bh=vsmMQlFlXn7cA94x4exBXUrDaqEX3/lnnG8SkJOCMTk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=LleNsB4Oz/Lt40dBzESYZYO8DRv3oo8Vo8s/6K64rs2FAqiLu6ohs7PplwJ7SUek3
-	 Gdb096FLNSi+ZW2kJAwJujhA6URY8mM5HEc67z0UFZus1nDPXGM+9kbMs1256DDAmn
-	 /dOaF2/nyaTHlX3rBwAtesmd7WjOoZV1MLs2rmn2dAECQ0+ex00Z0JJLF3mk/qX5HG
-	 Th+4OcEq6zwbp/Y6s0s/C2ZUjtoQPqkrPvZjUs5VK+JWFPcNtquh2ImqDRxf4SkkL0
-	 DbuqQj0jOY50wzKynbrn8cXGLBQlBidFjeDRPzllZgB6NwPjEZqUin7hiBbfeqRbOn
-	 QoSJsEpzy5rrA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53FCfYqM51336531
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 20:41:34 +0800
-Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 15 Apr 2025 20:41:35 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 15 Apr 2025 20:41:32 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 15 Apr 2025 20:41:32 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Justin Lai <justinlai0215@realtek.com>,
-        "kuba@kernel.org"
-	<kuba@kernel.org>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Chiu
-	<larry.chiu@realtek.com>
-Subject: RE: [PATCH net 0/3] Fix kernel test robot issue and type error in min_t
-Thread-Topic: [PATCH net 0/3] Fix kernel test robot issue and type error in
- min_t
-Thread-Index: AQHbrgHOEsIq73mK7ECaNxAB6KgJnLOkp9Rw
-Date: Tue, 15 Apr 2025 12:41:32 +0000
-Message-ID: <d0162fcf96b540e0a8ef9012b135d8e4@realtek.com>
-References: <20250415122144.8830-1-justinlai0215@realtek.com>
-In-Reply-To: <20250415122144.8830-1-justinlai0215@realtek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt9k5nBo"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-736b98acaadso4925182b3a.1;
+        Tue, 15 Apr 2025 05:41:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744720918; x=1745325718; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k8RtGJvJlbPupIfj8+cciZufqdf3sDnwfh290zQO2BM=;
+        b=Nt9k5nBo441c8clY5pWcttjLquYDBbPPvOXSlvNzLtqyFe91s0id+pXm5T1rMGziFG
+         YcqEIYGTtrcw3a2qoTwOEu12Vvli8dn/AAB71NbD62UFXIYPV1w37hGWb7+xMOjFYXcU
+         zq1ds46HcYfBhwYv4H+EinJSnLnYozKHceBhTX287Y0cjj0w+QqMKqbS3J2oYRURJjef
+         M9IojTtoLCaNIhN7LsuX7DvwCUzT0ETArg9Pp/fgVajVpX+iAFWUAWp0egtmFtakCREX
+         kcYFqcsI8QRkwoO4Yq9mEyN+tmR6gZUSZVInkzJdblyswDbeMovEXjjaH+ELzKmH/3IR
+         obpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744720918; x=1745325718;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k8RtGJvJlbPupIfj8+cciZufqdf3sDnwfh290zQO2BM=;
+        b=gpQme/hQ0IFsgoI7mbGto/E+bYymWQ4+EL6MO1R9QuqsZ6lN7SajmtorL+lJTgY4DH
+         tlQnR4jjkKVu3nCwc5WRNtzdaTtAqP+H+bBtEkYLDjRmL7QZnjyhqzT0+nd31nHY5TfK
+         tyNvBYyPPC03QW94CweZwE5E5zyPL0xIm2ESPSHb4lvt+ePnbaRsGvf33CFCVPi3cWQs
+         epsrUzxAryhqHzfOzbEx68Ze9P37yrZtsTRsTIQxNX6/jEAY81sNl3vXaSHxoeWJnzh+
+         koA1nkbza/pLtqEpIthSbPf+VezW250j5ZGg8p5mHwtfBWDoyx6QSsmNWMAtR06GcEBP
+         G5gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAhCwK/Bao7rhEpTpyvVmymO2jSQbO5Gk8RdJovUGtJNynq8FQkPOF5hnyJQkW5DTHnZ8cF6F2NOJMyA==@vger.kernel.org, AJvYcCVraq5w+fkgXBmosFg9p9mVxpY4K9wBODZtSB9HkiGIws8z6AJf2/EUh7vwywXN+wxE7WZAfjCnINgiNbU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyio4PlH2ErLkOmlS3ixCPX8sKZA3YsKi/CWxWTQ7VFdgA0N6yp
+	LsADGmOjP+8csDjZe2oQ3eM84oascq6SmIIMxUALhjUSdQj6PHCt
+X-Gm-Gg: ASbGncsfFTz81Kd8WFCyooGzLQgGm97/RM6JKQEOpaahQVDpFY5r1mvwMIAuN42SjCD
+	IZrvFjY+3Dbi8YAdA9TPEshX8weuJJppolP+Tzy8RPsr9WpaJ1L2oIsHkcrw78MZJewl+e7fj6V
+	jdmTogo8T5ak2iC7RaY1GBTKqD+SeAStoj5bKIX4QYe201D5zoXzIPxEfcyhwwIgrEcZ1ES51fg
+	uGCODYTtlnpvyP/H166WrlPuiAHEsI7AhHCO3f8KA+3sx4Z2Xdq0hqJHW2jw7m/INQNviCWEoHb
+	gyPRuaTvTrgMGqYHdEbejusMojplY1LXqonoBRVeAhqYDVjtL+dOhD+eZnlBhxbITQ==
+X-Google-Smtp-Source: AGHT+IHsOgUOk3SAsCRZp/lASagYuSgw++SGa2VcFY7onF7gcaK9nMcIVCD3qne6+G9u6FjgK3zdVA==
+X-Received: by 2002:a05:6a00:ace:b0:736:46b4:beef with SMTP id d2e1a72fcca58-73bd119ea08mr24929415b3a.3.1744720918297;
+        Tue, 15 Apr 2025 05:41:58 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.49])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230e5ccsm8339526b3a.152.2025.04.15.05.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 05:41:57 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bsdhenrymartin@gmail.com,
+	amirtz@nvidia.com,
+	ayal@nvidia.com
+Subject: [PATCH v5 1/2] net/mlx5: Fix null-ptr-deref in mlx5_create_{inner_,}ttc_table()
+Date: Tue, 15 Apr 2025 20:41:27 +0800
+Message-Id: <20250415124128.59198-2-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250415124128.59198-1-bsdhenrymartin@gmail.com>
+References: <20250415124128.59198-1-bsdhenrymartin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Transfer-Encoding: 8bit
 
+Add NULL check for mlx5_get_flow_namespace() returns in
+mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
+NULL pointer dereference.
 
+Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> -----Original Message-----
-> From: Justin Lai <justinlai0215@realtek.com>
-> Sent: Tuesday, April 15, 2025 8:22 PM
-> To: kuba@kernel.org
-> Cc: davem@davemloft.net; edumazet@google.com; pabeni@redhat.com;
-> andrew+netdev@lunn.ch; linux-kernel@vger.kernel.org;
-> netdev@vger.kernel.org; horms@kernel.org; Ping-Ke Shih
-> <pkshih@realtek.com>; Larry Chiu <larry.chiu@realtek.com>; Justin Lai
-> <justinlai0215@realtek.com>
-> Subject: [PATCH net 0/3] Fix kernel test robot issue and type error in mi=
-n_t
->=20
-> This patch set mainly involves fixing the kernel test robot issue and the=
- type
-> error in min_t.
-> Details are as follows:
-> 1. Fix the compile error reported by the kernel test robot 2. Fix the com=
-pile
-> warning reported by the kernel test robot 3. Fix a type error in min_t
->=20
-> Justin Lai (3):
->   rtase: Fix the compile error reported by the kernel test robot
->   rtase: Fix the compile warning reported by the kernel test robot
->   rtase: Fix a type error in min_t
->=20
->  drivers/net/ethernet/realtek/rtase/rtase.h      | 2 +-
->  drivers/net/ethernet/realtek/rtase/rtase_main.c | 8 ++++----
->  2 files changed, 5 insertions(+), 5 deletions(-)
->=20
-> --
-> 2.34.1
->=20
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+index eb3bd9c7f66e..e48afd620d7e 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+@@ -655,6 +655,11 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
+ 	}
+ 
+ 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
++	if (!ns) {
++		kvfree(ttc);
++		return ERR_PTR(-EOPNOTSUPP);
++	}
++
+ 	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+ 			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
+ 
+@@ -728,6 +733,11 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
+ 	}
+ 
+ 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
++	if (!ns) {
++		kvfree(ttc);
++		return ERR_PTR(-EOPNOTSUPP);
++	}
++
+ 	groups = use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+ 			       &ttc_groups[TTC_GROUPS_DEFAULT];
+ 
+-- 
+2.34.1
 
-Sorry, this patch set was posted incompletely. I will post it again in
-24 hours.
