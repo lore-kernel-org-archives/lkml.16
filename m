@@ -1,40 +1,64 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56C2192B81;
-	Tue, 15 Apr 2025 13:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A806192B7D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725087; cv=none; b=ijXUjQ1EEsLTiUzCG1Bgm8MKXzfF7GRvOAhzZi5P/GAsHD165x7Wmu2VsF7ZAUCr5lksTtqenGDlWI6dj/Tstd+xEu1Tcoixx3jFTtwiRpOLXiRheZiKM8pt1tAUxyO7BKFeQwm/ZQjLaA2YGsjnjC2NVi3gRNSOM7SCwlycQeY=
+	t=1744725104; cv=none; b=cxUOmXdTSA0ApcPMe21JBzG3ViqzQv+ZA5WRg4MT8gf+Ex+pAKDcIJf3oZWpRh/xjFz8Q0Vfq4UsSmqR7UXGOzJiM9amClxwTm9gMt3VAPMtlHucy8vg9cdclSVFdKC4kUtMcOQiDC6agutVwcMMVjd/qwqpRReX52hyQJr5xoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725087; c=relaxed/simple;
-	bh=8n2irY4mS+vEqgM3wBbbGtkgY/tw4aR212DtcbvVKBc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=M/aMQdKEu5koE+ilWdWXaGMHyIgbhtTamzDtmOKYkDeBj8gvKrS/cRmGTqxVBRmWUbGUTY91ZC+lr4J3gNbk7RFPhyIIDKqXs1AbbQGmI81vMMA8zS8OFCzBCgLtiBkjQct9Rz3UehDJEvRrXtryiQIjWwIazwtbnWGmIUrovZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=V9cswZDi; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744725104; c=relaxed/simple;
+	bh=UfJgIp4oQQnoF3z210RwfVaJ/K/BAP09dMRp9gT3PeE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nb08KXs7+bu7gksTNJBuP07DpAVKQ10n6K84nxnT3CUYzdIRkWDeunbTnlTLchD+sB0eaMbtWOKY0SF9IFneHDhV9cYwMolUjkfIdw/qa6k8iK6iIFuMv67k8WymHQYWow26mIWXmob/k48EvfahLV8idho+VpUG1q1/mupk2iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rj7c/HUf; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="V9cswZDi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744725076; x=1745329876; i=markus.elfring@web.de;
-	bh=JZpESOzQgOMXz3n6N/rlS9QElC6D9yfXuKep/LgjkpY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=V9cswZDitiBrq8+tu40NjiNt5Sxn90lVhZa9hil8NSfOKvNc+8dve5+GyjawvjLW
-	 /IkN9N+EfvHFMelp7L1tgLy6H7rWexLZ/AZZYfHjFv7ROzbOlzYvynR25XVbhXV2c
-	 kFztmQ9ApsBi7OM28nklYm3f1Qv83zZMdm3nmzvTzaU6Qiow4HS8NmgDOBYGpSAPc
-	 9boBqQ+XdH++Ke3jnkyAa8hFrWH5ePjkfRYnnprGwzS3lQilf13hBGYsje/WoJoc3
-	 AMfbQPbI2MrQ4swcz0TpMG3ZXjOQIIu0eBwt+pRknijP6Qgvg24jCwYzHUHEnG84H
-	 VPBijOR39ds9ixKSsg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.24]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MNORC-1tftk13ieI-00TYSu; Tue, 15
- Apr 2025 15:51:15 +0200
-Message-ID: <322ff5a5-bb0c-4ee0-9392-b6f33364963e@web.de>
-Date: Tue, 15 Apr 2025 15:51:15 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rj7c/HUf"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so4980267f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744725100; x=1745329900; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5uxiqPgqs4MERopy3QM6Zed1EBCGngYHtZhorQ/3Qy0=;
+        b=rj7c/HUffmH5bX6A7PrnfrGMtEJhPUQAd0Zayic2uzMrtam2C5QEhttuqHxMqLKBK7
+         us0e1YobUMIkRunL8uk2w46zqcj2lc45nukVzBtiPFhcj/pxFeG2RM0OxNfIA6gij2sg
+         fy0rOaLlcfChLFBRlO5HEmfTELnlSsZIIgZV4hiEOkbt0e/FXOfGx1GM3pxEok+xeOU1
+         ww8u7/TFJ9doVE6p3iubYCmgsRK1ssiBbmNDqwAcbkpe/MEr9HCRmOMK5veqIYJSPA1P
+         P5B4C8n9vOmojNOeCWn9aImRIT8aQYLLlhat1JVkuq4xwYq0z/w+m+qgkNpAW/+ytkD5
+         7Wbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744725100; x=1745329900;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5uxiqPgqs4MERopy3QM6Zed1EBCGngYHtZhorQ/3Qy0=;
+        b=TB1iNjJA6YXjS3OdTZNfGw40hj1mjpacnz6L6SrCfkemCpy6pSR7oocEFLdxZ5xVc7
+         Rq/NQZjKF9EAtplijB2DYsvUI4Xc6vKA3482GDfkOEqPohCvXyk2WfeJq9i/sGHDqn1t
+         wtzRvyuajF8Z6OulHXVIBHyOr/ef4WjSCOPdUkhGVWJWQPWSQn/hdEZ09E2kYEyWS0cI
+         BoIOdWurbT1sAp062yNQhnx9bmigEh2z/muYwkgtyp+aHuShiIMJslEroQjVYcqD5bHP
+         sLnHLPQVRq4BkuiUsM+9IYXF1E4NqfBxTgjtqhSWvFLoG1nenCa1u2LElFcKNEVN5ypN
+         un2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWYhNYb6yB0CrEBoZF7Fm05c0RQnYppwS7bI3q7oIw0HedQH0AEIHBoBL7mvLbT42JZZJSQj7cM0+x5gVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJOF136d3zDCz5Q9qJ7tMH/nJ9rhADhbXRmo4uAz4ipepvVPvH
+	sx0YM/w8YmGnQHJPdD8wHJZKa9sL6/0kVaF2YTPO6jxJKQlzK6+ZAU2xdtEAE2U=
+X-Gm-Gg: ASbGnctAyHXJfa0qo6LGuGbf9cYgndlCTVewuX8nrE9gE5Dw5dVFvtnRYrt1dKXOkSN
+	lAF8kyxDClySSRXva9+kQ4Rsij2HrAwlT+eDSIM/Hk9hG1fpTA5Ktdw9I++aplNmIUpk2fzKTmk
+	VMidAv+bXq4PXNM1inqEyKCzFjCFEUwivqfTXTpsgzNaFDLVsssVKJgVy2LmwcvgdmCsq3DPKGJ
+	Xr6z7m8yTdluYJSso3o+UYLMl50JBpNNGZE+P0urjutdtEXg211NZoY+jhxAM1VobsZgYlyAAyY
+	4mBaY9v9mBv0jjEqahwmSRtcgxofygjcS4nsZWsmKDMjYvsXsGaYEQ==
+X-Google-Smtp-Source: AGHT+IFQjbRWWPWnXrdkJHVnDwqcGcHfF9uwpPgeKOFyRZHe1CETzGQ7LKb7u2GUPWdd1at8v+uIzw==
+X-Received: by 2002:a05:6000:401f:b0:39c:141b:904a with SMTP id ffacd0b85a97d-39ea51ecad1mr14249426f8f.11.1744725100601;
+        Tue, 15 Apr 2025 06:51:40 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44571fsm14191129f8f.84.2025.04.15.06.51.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 06:51:40 -0700 (PDT)
+Message-ID: <358f4a8c-29ad-4e5e-91b9-063f06e769ec@linaro.org>
+Date: Tue, 15 Apr 2025 14:51:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,78 +66,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Jason Gerecke <jason.gerecke@wacom.com>, Jiri Kosina <jikos@kernel.org>,
- Ping Cheng <ping.cheng@wacom.com>
-References: <20250414183247.11276-1-qasdev00@gmail.com>
-Subject: Re: [PATCH RESEND] HID: wacom: handle kzalloc() allocation failure in
- wacom_wac_queue_flush()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250414183247.11276-1-qasdev00@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:igC/SQJcUJ48kdycYmT34nc7kWf02h3S+bVPM9rzdYbW1QpnT2S
- SiYMx1K771qHLIzijora92vfd1nH073OgBvTVF8O9oyjyjXDgZc83nF/iF7Ff/E3tYAi2ZP
- 58taIMToyMd9zNsyHBBG+HsTXs5qLTIi3ej+qUA65f30Rt8zoFE9aDqYQuUoaUn8vqjAV86
- ot0dIBaBM5i0HnqUa/fyQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Gfbk+qNrW4c=;tqIEsjSTtcGdNeFdkhWJ6A4jSDj
- eINU/HzO98jGqlscVjwlqCjkmBlHgMmGUCuk59D2PbU+KlI08e9o3aR7+vqI2CnxUtPMLG243
- JGqP1lAzx71J27BeJj4IWddvFPHMvr9lv5DRYEXJKo9FH4NLkVUnTdnauPoC9BrmKdvX4w0PP
- fdk9lF0tBrhKGy8Qmx5jBDgAH2QbhrosEkmesQm4t8Wc7z87gKAN6J5y9wrj8JRwtyZjINJGw
- YfLPpytJKRSLt+7+Gg8v8xTfv31SZc8EusopOoJ6Cx2D0dyWgqOLd6V3kp0nqty/sqML6vvoO
- gmVcx4flCrxRwfMVovWR5KuVRGpC/+8T9aQfluOC6QW/R1Tu8hIVdb4va8SMPuBL0AxiPzQVK
- h5S2PmyfHFQ03tEc6T8I1Evi22tJm+eGxS3m6Z1TsY7fF+DHsxw6Ml4+Gto89okGxPXWqsEhd
- PnCg898fBxLx/CwokiRtzscDrIRXxAZhhB95/Jzct1FVvycjiC7PGA85obQVkq2sNyc/qIpQ4
- 8kiGeyLuTj+oDCS4sXu0Rg4e58GGXzHY/RhVWw+aBwGMbuIuqFxxBf8ci8aypQOt+NoldVyFE
- 3fJ/iCzenTKbSZ+buo2ZK8b6JI3LWV6gE70Q9aYB7H/px+yqdHJQ7RdaTl8uwVmAfPBMj9d3J
- ngmNl6Ob1CXNKv3AjPG5a/Utu6h5H7A/Ks+jkVWsHT+B3FCXuUCXsXKuaGVhwNyCOa5lIZcMM
- pihH+SiqIUCAG+N5+1IutI2kldEBG07tmLOBBKysZqad7i9P5P9GMuK1poxk9YIY5C+loqKQP
- 9vHzv0LTjLpLBvYkORJQ0VNRf4HypKKCWmm7tAkYnPY1KXB1GVuY+wemjzAoNEX2klIgCB8OD
- iDZRJVPMbT4kwTBdigefz5LATW6PxHGTEdO61tdacbrqG+WilcAJYLNgiIKoJo1SfPDd9OEaa
- Oue/6uGZJfW0NyDzEfimOZq6BZ6JBxugKRuPB0KYCFpivbDLXYonZdUV7MWU89EpuDJ8Taoxf
- AcFUXvX94khewj1bsSg56XhfAwq2vsgJ513zWuNrBDI8eyVJyzjl2WEf+6pzuvNmRh/R5ZOj6
- S7f2lyCBWL7rCV2XTCFZNr9RfjFRAOHNm/cZ6E6Nx/Cs2kEfoQ0rNUSuMuOeHTV81jnQvrWhU
- 73qP6xFPr+XwBjq8pim0YsgfCjqVkkIZ+49IIzOUx6FXl70vKVGkdlT14lwt3hTVQbUGFDYW0
- 1qEswESZIsVvsngmIYJ5DcRK5FQKJ/Osrf4+HVwd5zj1WLIebXHwRFboVtOzTJ9GRYtwMvsTg
- DA564ORaTOL9SXOL7NPPGaz0Uswh06NOuWaMDX2bgARuoZwDar2FYoWMJ+OTTZO8mQFB6zBK8
- ieitvWk3GsiufpT190d1U61uv++xP35sQqDMO29ANOtNIDBjr7NnnYVuAY3WVEdHYkOUZ8oeA
- N6WkYj8ILcbOA+obxxW7h0WOiUarF/zcEta3XL5+KwqF3/8Gk8+3VMecOW4/ugcYC3vjDZG6X
- qbdl1dQAIkj7GNl91SQ/gKrffHUDe5JSONafUX9ry+WFSiHoPjRty0i6t4h0Spx5Kos+enz70
- 6+JflLXgH1fFqoc/YB6qJw1+oHm/og5CVIw8sV/jHPt1KFdNz3h67jdUX1SWFrrHUErzO90Lz
- Vk0aALANbK+5JeKP+ahO2ZyAKpVc6GNqFBe5WH2WnrUSznhVhYlLPDpzyfvtrlgNxJHGBGpGQ
- ZkyYg9FGp2hSjOrohU4kGL1l62KrZkLbUCwWZ6KQn2tNuh4f0ulSlHPQIR/TAJ5JEY4xyOlZC
- Ju1clBC48TvF1HtBA7BipjIKLA+AGj/7f4Cr8FRzB/CM5bMSW6+Nzzj0OAFHNdxOxtCL3Y6zV
- OA1XHqRUPr/tfvEGhPdqfsMVkeH1+PMHaIv5BfE9SZ64nDgj5eKOk8Eh9C2bkMDuqlrGU9giH
- +BYM6bDeshxNJZxM9fnAWI/kE2kRtmyekltjyrEk5eSfjZOunSq7/MGBcP0m2hlba+9iDw9Be
- tn0ldbfCb1pu+kabyPg8gRVdEFAqzQ42AkowmFgV8CClIrUAn4MMIKNCVyKPDbXBInLMvCv6e
- M4w9J+kcKWcIJfwVrbm4+i6kUhBEqe+eDIHkn2SNWuCYtVL2eQWtogrHVMr0k2ZMWmxI+OwMa
- IWV65Dse4+OUe8wZ/+avKnU//Bf3ybvJd7sGIDrk5X8Ij6wmGQ4UdkYkbt4E2/dKEHjVC8sBs
- iXkSPt7DmIhKFmwlMB4vBFckEtBoQ7HKIeXPxFOvtzEhj2LdukwsPYj5vYaSLxCWeY7BAXIyj
- OO1pn84tkIVvSkMeTB5vRsf+e69Xi/jm3hvBjhjc7wpgMNbSWbDzhVTTPbjIcREra8Foje4v4
- dmUptWUYy3MBHDc2r2RoQWH+j/d0QRkH5gNRTPxTBCEEPclaNYCIQZ1GESEXXzG53VfDqHhAJ
- pfS1uAx6BvWixpdqXfjiKuBGVu3FdtDbjWf6rZ7d+nbtwKHl4tLRU9ACge2MO4QHJ149kmLdX
- mpkj+6ZzIhCLy7RiWFCBgvXTKnWs60+vb5xbBM6opZOr+uNJA+sKXRWkulkpU972YS7QGjFcw
- j2pSme1Ay4lUI2muqOdGfSdKhroMzxOtyAsH7xLR9iI8IK5wZHwh1F3B1nd7YqRy/0DwcGesD
- HcZtBbEuJqE9kG1/34Ew9781+2q/xTwoKShBhhcolAe69XEsWBXCyXFtta3/mRTuGsBCMStH4
- MtZUS1cFu48CBjy4SvraAjankvvC64BNbkR3oc+Y/oaJUxtYYTR5wTPqYaggAfC1HnTrI3ilI
- OjD+dvx7E3x5ylRI7ReBP6Z91EVIKWVH7t4z84XwiXlpdEfTZlRkJBr3k8dBHpaIl8n9FkYOM
- qP0aUxwuFBKSATbmNx4QtPLkq4vJeKNSIrqaLsBpbYp5Pv1/yfNG8DGIx0JGqF5vmdb5lZPi0
- Nl+s2yPP8RWEHgNkOz80ekTI9bS72kRCJbzsJNKJSF7zqS0pcq8Xxj/5Eoga36CMyMarSLOdt
- dEHJP1syuBXGQDMrBRkGZzaxn7PbxjY4rY8HWsxS+xY
+Subject: Re: [PATCH v3 2/2] coresight: core: Disable helpers for devices that
+ fail to enable
+To: Yabin Cui <yabinc@google.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@arm.com>,
+ Jie Gan <quic_jiegan@quicinc.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+References: <20250408195922.770377-1-yabinc@google.com>
+ <20250408195922.770377-3-yabinc@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250408195922.770377-3-yabinc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> from the fifo via kfifo_out(). However it does not
-> check kzalloc() for allocation failure which returns=20
-> NULL and could potentially lead to a NULL deref.
-=E2=80=A6
-                                            pointer dereference?
 
-I guess that word wrapping can occasionally become a bit nicer
-for text lines which may be longer than 52 characters.
 
-Regards,
-Markus
+On 08/04/2025 8:59 pm, Yabin Cui wrote:
+> When enabling a SINK or LINK type coresight device fails, the
+> associated helpers should be disabled.
+> 
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-core.c | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+> index fb43ef6a3b1f..a56ba9087538 100644
+> --- a/drivers/hwtracing/coresight/coresight-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-core.c
+> @@ -486,8 +486,10 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+>   			 * that need disabling. Disabling the path here
+>   			 * would mean we could disrupt an existing session.
+>   			 */
+> -			if (ret)
+> +			if (ret) {
+> +				coresight_disable_helpers(csdev);
+
+Hi Yabin,
+
+Unfortunately coresight_disable_helpers() takes a path pointer now so 
+this needs to be updated.
+
+I tested with that change made and it works ok.
+
+>   				goto out;
+> +			}
+>   			break;
+>   		case CORESIGHT_DEV_TYPE_SOURCE:
+>   			/* sources are enabled from either sysFS or Perf */
+> @@ -496,10 +498,13 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+>   			parent = list_prev_entry(nd, link)->csdev;
+>   			child = list_next_entry(nd, link)->csdev;
+>   			ret = coresight_enable_link(csdev, parent, child, source);
+> -			if (ret)
+> +			if (ret) {
+> +				coresight_disable_helpers(csdev);
+>   				goto err;
+> +			}
+>   			break;
+>   		default:
+> +			coresight_disable_helpers(csdev);
+
+Minor nit, you could collapse these last two into "goto 
+err_disable_helpers" and add another label before err: that disables 
+helpers before falling through to err:.
+
+Other than that:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+>   			goto err;
+>   		}
+>   	}
+
