@@ -1,124 +1,123 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DB733991
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29956E552;
+	Tue, 15 Apr 2025 01:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679152; cv=none; b=gEe10XJh7ZdzahwT4PD3CpkQQypeDbNm9NV0D6x8J/KsWneG6OzbVXiEpQe2r6L4/fcZQsomFNftqEIEgJLGpAD90vtK++xjVtPISoyekfXjx/GGKLekXN/PVkWYFV8kZI9SOmScGanrZU1UzKOkQulsOQHOOSPDDJ+Sx2quhaI=
+	t=1744679250; cv=none; b=jPeegKXZps6ClqaRjZYzcVzcC+jCwXQxNk5EUKu0Q7/W/fSI+EOKh5XRYDJLEN4vTQvxRXCrqXXdl0QLH6XorDhzmB4VHfHSlLYT7Z5e8w6hxlWxqgzTvOesDJzXcvAFwjTHsFplSTagnAH106ZfYIxQHSp1rOCcN6dbYZi9iGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679152; c=relaxed/simple;
-	bh=kmQ6eBY4CNUxjNfOexNgsrdDcNzfRZcNC8pQ2YAlb2w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bYgrYAaLQKPlYWV0w7mLWK8IpJBQaKxuV2VmLH1Lt83cdFOE4N9+LD0auPYuiEq2QbpUQv8ZmF2jktFbNeloCJ1+F0+TCAWDyAt7kCOa0d4q+Bk8V9RD6STUtCZVOMlRyTHeSznW3EG00s5vDCM4cD3n/JxhNbilUitYPYnCmv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QUJr4LSG; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QUJr4LSG"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22406ee0243so36828975ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744679150; x=1745283950; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tE1adoT0PMRc2ZI2MNLpe+tvwhjFP5aL0rCGtHCJJ4w=;
-        b=QUJr4LSGk10u+0oDlGbHHJyX4pZWGohqi7sxarvh7/EqZQIzgBMEDYMxQX0M9HnFwe
-         5eE017nQn01wJKEmjeTB6wlfZAoNhTgfoRzqZpG+a6ysfkjCR2DaO/O+lmDh+dPhoB5f
-         7SFxcGCTzOma89h5PgrDnMZyC1zPFBSqXXP60u+X0nDSjF5Frmfm+EJFQHk+JGWMPiHs
-         ACZSMgWP/Rpq7lXf/XOlBd4bAfGSOQZPsCQe/qTM711O/rEqAPudhhtTcMx2GYomI5bz
-         DK81VuZxklBthmHFQLC255ZXDnW9Mc3DQOySomCOGlKRhs+i4oh3HLk7GJIBVgZqCK2O
-         4tVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744679150; x=1745283950;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tE1adoT0PMRc2ZI2MNLpe+tvwhjFP5aL0rCGtHCJJ4w=;
-        b=oOwLTAqJ5DVKA953JCjEHCoJ/fIJhQfZj+Iss9dNCgzxXp20U/wBhuWCZVfmwHr1/E
-         NxYt46HGRN4oN+hIthdQ5Dkt5xBKv9AhxGr3aYp81edQx3ytpO9XpWxjjTpd4FXd2QiG
-         O5Vi0S2xkV8eiQKaPlN91NkkiNuVg+sgYCiyyYyZOAF0+drnfz2XWi7TQdTi7KPrJWj7
-         2APfBufCybyqC3OOzkkklU07EI0glXtaoImp/lug7+o9KfMGAvOirEm712qhm2mLq5Rs
-         Qy/ybwqnPzk4FVexw8TD+6t8S4TyNj1H7at7y1/vPT6cifd6wjLJdUSguERSLLt7Mc3w
-         29Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWiSCkJLYZKQUx3JomYvhPqTE5c2TOq+RUz6MomMVmyil+oygHr45UgQsaZLi43RVHNMPmAFqMLSKWs0uk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaCnjqe3i1v8GHQ8oxgWJprEmUODM5VdZpBTAfTdx7UqPm5HDI
-	oTLQIBSuJiG/7V9aUX8ZKAR5+FyV3iSwkGaXo+Bm8eMi3VKWkELBdololhpRy2wGlnSrydqCTQV
-	aqQ==
-X-Google-Smtp-Source: AGHT+IFbFP3u+rs3c8JoY3Z9h6FkMSEmt0p/0gguW8s8qvS+PwTJMpqhnW2RNbzoz4XXWA0j7ScY9/Ze8c8=
-X-Received: from plrb10.prod.google.com ([2002:a17:902:a9ca:b0:223:f7e6:116d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cec4:b0:224:e33:889b
- with SMTP id d9443c01a7336-22bea4ade03mr221654375ad.12.1744679150211; Mon, 14
- Apr 2025 18:05:50 -0700 (PDT)
-Date: Mon, 14 Apr 2025 18:05:49 -0700
-In-Reply-To: <20250414081131.97374-2-ubizjak@gmail.com>
+	s=arc-20240116; t=1744679250; c=relaxed/simple;
+	bh=KEKYNbGROJcLOPsF4oFGeclcgykvueLsJrKulbwE26I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IVhxYZhiNVTZpIr2NR9gcAnL8q8133Ww5rjAcQhF9WSi6fgL8IC1h202KYY/DjAf/7tBSzCh8NNmjJvWPh7aJLB1J6DXl7rDAGnS10Za8RRdub6dWgDfuDLk9umQzPHeMUsu7GfGzEZzzsm9XGAhzmpZNylnTQOReaShG2I7E0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A14CC4CEE2;
+	Tue, 15 Apr 2025 01:07:28 +0000 (UTC)
+Date: Mon, 14 Apr 2025 21:09:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Mark
+ Brown <broonie@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Differentiate bash and dash in
+ dynevent_limitations.tc
+Message-ID: <20250414210900.4de5e8b9@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414081131.97374-1-ubizjak@gmail.com> <20250414081131.97374-2-ubizjak@gmail.com>
-Message-ID: <Z_2w7XJ0LI65qo0i@google.com>
-Subject: Re: [PATCH 2/2] KVM: VMX: Use LEAVE in vmx_do_interrupt_irqoff()
-From: Sean Christopherson <seanjc@google.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025, Uros Bizjak wrote:
-> Micro-optimize vmx_do_interrupt_irqoff() by substituting
-> MOV %RBP,%RSP; POP %RBP instruction sequence with equivalent
-> LEAVE instruction. GCC compiler does this by default for
-> a generic tuning and for all modern processors:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Out of curisoity, is LEAVE actually a performance win, or is the benefit essentially
-just the few code bytes saves?
+bash and dash evaluate variables differently.
+dash will evaluate '\\' every time it is read whereas bash does not.
 
-> DEF_TUNE (X86_TUNE_USE_LEAVE, "use_leave",
-> 	  m_386 | m_CORE_ALL | m_K6_GEODE | m_AMD_MULTIPLE | m_ZHAOXIN
-> 	  | m_TREMONT | m_CORE_HYBRID | m_CORE_ATOM | m_GENERIC)
-> 
-> The new code also saves a couple of bytes, from:
-> 
->   27:	48 89 ec             	mov    %rbp,%rsp
->   2a:	5d                   	pop    %rbp
-> 
-> to:
-> 
->   27:	c9                   	leave
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> ---
->  arch/x86/kvm/vmx/vmenter.S | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-> index f6986dee6f8c..0a6cf5bff2aa 100644
-> --- a/arch/x86/kvm/vmx/vmenter.S
-> +++ b/arch/x86/kvm/vmx/vmenter.S
-> @@ -59,8 +59,7 @@
->  	 * without the explicit restore, thinks the stack is getting walloped.
->  	 * Using an unwind hint is problematic due to x86-64's dynamic alignment.
->  	 */
-> -	mov %_ASM_BP, %_ASM_SP
-> -	pop %_ASM_BP
-> +	leave
->  	RET
->  .endm
->  
-> -- 
-> 2.49.0
-> 
+  TEST_STRING="$TEST_STRING \\$i"
+  echo $TEST_STRING
+
+With i=123
+On bash, that will print "\123"
+but on dash, that will print the escape sequence of \123 as the \ will be
+interpreted again in the echo.
+
+The dynevent_limitations.tc test created a very large list of arguments to
+test the maximum number of arguments to pass to the dynamic events file.
+It had a loop of:
+
+   TEST_STRING=$1
+   # Acceptable
+   for i in `seq 1 $MAX_ARGS`; do
+     TEST_STRING="$TEST_STRING \\$i"
+   done
+   echo "$TEST_STRING" >> dynamic_events
+
+This worked fine on bash, but when run on dash it failed.
+
+This was due to dash interpreting the "\\$i" twice. Once when it was
+assigned to TEST_STRING and a second time with the echo $TEST_STRING.
+
+bash does not process the backslash more than the first time.
+
+To solve this, assign a double backslash to a variable "bs" and then echo
+it to "ts". If "ts" changes, it is dash, if not, it is bash. Then update
+"bs" accordingly, and use that to assign TEST_STRING.
+
+Now this could possibly just check if "$BASH" is defined or not, but this
+is testing if the issue exists and not just which shell is being used.
+
+Fixes: 581a7b26ab364 ("selftests/ftrace: Add dynamic events argument limitation test case")
+Reported-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../test.d/dynevent/dynevent_limitations.tc   | 23 ++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+index 6b94b678741a..885631c02623 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+@@ -7,11 +7,32 @@
+ MAX_ARGS=128
+ EXCEED_ARGS=$((MAX_ARGS + 1))
+ 
++# bash and dash evaluate variables differently.
++# dash will evaluate '\\' every time it is read whereas bash does not.
++#
++#   TEST_STRING="$TEST_STRING \\$i"
++#   echo $TEST_STRING
++#
++# With i=123
++# On bash, that will print "\123"
++# but on dash, that will print the escape sequence of \123 as the \ will
++# be interpreted again in the echo.
++#
++# Set a variable "bs" to save a double backslash, then echo that
++# to "ts" to see if $ts changed or not. If it changed, it's dash,
++# if not, it's bash, and then bs can equal a single backslash.
++bs='\\'
++ts=`echo $bs`
++if [ "$ts" = '\\' ]; then
++  # this is bash
++  bs='\'
++fi
++
+ check_max_args() { # event_header
+   TEST_STRING=$1
+   # Acceptable
+   for i in `seq 1 $MAX_ARGS`; do
+-    TEST_STRING="$TEST_STRING \\$i"
++    TEST_STRING="$TEST_STRING $bs$i"
+   done
+   echo "$TEST_STRING" >> dynamic_events
+   echo > dynamic_events
+-- 
+2.47.2
+
