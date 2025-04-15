@@ -1,182 +1,222 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1553194C86;
-	Tue, 15 Apr 2025 07:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D9627584E
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744701023; cv=none; b=J+bZwAVJ0WJ1UBNqNj5QxZUfzef5YwValADtadX8k3CfTvKRR5FeKAzzVuYj24KR7g9NHWVQcgwx0+PhvTgwrCIxIjxUcdE5fGYvqx+Jq6q+3sFzRaHuRU3VUryYpQDr1NGkNbeEFIyr4yCYhGv2I4eN3d5AvK8FGS/LjVA1AWw=
+	t=1744701032; cv=none; b=fih9iahWjXfOKwsfSUnV456GNUPsb8hFhGUjC255H312sDLrVUiQsCZZ8MUsSGaomK0v15zeZo9n5TL8AKD5NzZs9Nok5ojD6fqkrVCOfn2RV6LohJhSZDVcLGWXeZrNtITjhzdziKRYlnMP+e28LOMAvTt/DtLuwzpJPYHKp5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744701023; c=relaxed/simple;
-	bh=xOZ0p2CUeWSfBf8GwfXNZH/GcKScQzSTLiG6gz0ey8E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HZfn73RnJmxkUQrGRh5DomvPDSNbl7DIUGNjnRDNAhDZ/Cy9M0h3U8KEqzSu4WBFJ1CwWC42bZikU88jEtPAyO09TxUuQDzeP+rzAx94b3eAUZuqOWsO/AvN12+S5UeUtMDUoKDCXLJRVqr/wQo4ayCxkeFeqA9uB9k8LrC47tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I01Q0y3E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NobIsHEm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744701032; c=relaxed/simple;
+	bh=RTyV6CuY1ILJEHa4mBQoCKQeLLKta6AOsqk80g5KMLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fvXF0j59+odk5aBR3sAK6UleQiM0HNWJ8tE4tKpd+FewzlK8Z2i0dTPkz5ZADzuttGZbUu5808Nlp3EWdOyjYkxMGwTkoUI/vwmkw+6WHCXefeXBhBW2WSgoBpN1DcFxGTbU/8BpDqYfF+nbvWybakEX4oFpXi2ZLUoSs4IBoeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I9aZj3y3; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I01Q0y3E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NobIsHEm"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744701020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0o60EM5//gG+xcS+6Ra9+Xd3X2itCl9vIft8DhAGysU=;
-	b=I01Q0y3EP+H9jkUbhr9XhvTjphzd7XMnUWYnw8PgIZjnt9KK9gRg8fjsBcHEyBNU5Mv3qL
-	AZ1z8blZ3/sjaS5KVQpl5V6VDd84hv6ugvjMvub6IILge9CFhHK05rILmL4WS9sq3gFYpT
-	r4ZhX6JIRRpGVH8Jd7CINX0xo6Dyvb27cEdeQmUb0qOACHmTDCqjEnp9l3Gf2/a6epT3E+
-	ky38J/u6GwJzFxB/5KPdKT3TngYBYGWJFWOUp68cVujmAVZAgjsibLlDhNwOKKf9gZOwPu
-	Ghna5avC0dL4+PHoyJjFyTT2+uHMNFI3+S8bkWl0IZf9tG4/E9iOnEkc/WPKjw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744701020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0o60EM5//gG+xcS+6Ra9+Xd3X2itCl9vIft8DhAGysU=;
-	b=NobIsHEmij+jwXJpd553X2TCbMtl6PeTgOjmb917kYWuRu0RynQmMkg8FL8Vw9vqTLCizA
-	r7XK24E+BRt3qZCg==
-Date: Tue, 15 Apr 2025 09:10:07 +0200
-Subject: [PATCH v3 2/2] kunit: qemu_configs: Add MIPS configurations
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I9aZj3y3"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c277331eso5662934b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744701030; x=1745305830; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYejmGyG0ZZvUYJF2X4xi2wGhXKVNeVaxdRV2uzAA3M=;
+        b=I9aZj3y3cHEMUBty5lq8ODSUowbmadboLJpqx0MYGvLD40Ou9C03HcsLz1KMiAQfXw
+         d2PofoGIX07HrE55tF1ciTkF/lgX+/ns0f2OHIE4jaa4qsuY4/jhMgBHYvZ71+640iCI
+         xluaTlHOtrSjcIPVJ51u1X50jPFilW0hIQV0U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744701030; x=1745305830;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CYejmGyG0ZZvUYJF2X4xi2wGhXKVNeVaxdRV2uzAA3M=;
+        b=RfCcpYPO/fzXt6FdDgFKN/phzuNYLEKaO1MgyZDKwCfU2C8EJNTdl/2qdGbfPWtQS9
+         F/WJWJJojuR8oTEL5v79pZLyRXzd8W/zwsk04KMudFqrnZ4iUgeNg4dVkwSB7S/pj/0N
+         nn9Czh3jkR4Il4+KycJVsYOFd0LfaKzMGRJ+Lbud/GQKbtNEuE/P6L17SuxphSKaPnXc
+         WCDY9WVmD+oj1Iwl3Xj4eThe77QiaP68tUyAPVNZKbTDL2plodX/64bOrR4pF1ZUWsIL
+         7V0OOF7/SaogvAZ8JlmBooZ3V62tLQmlmYq1H7JR9ZkYqqdt/HYXinO3N6Lk9trxc+gc
+         reHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVc9gDYRYhB94Oq/aFrnM+gKstR3/mhoid30TYFLTUA1bwtkExF7Pawp4mhbNbI/N8n3VMqYlAdWNEddJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE/4Rsnb5miCyKfoMdlrAChC5hhFFLW3+PTLgMZBeoVzkv03X1
+	m3FVvTGdNE/aG5l0Dbok72/1eDMVqzqnnvI0tbVU6KbkrSn8VDSPDEYz8TiZeA==
+X-Gm-Gg: ASbGncvIv1J9vunxprNkBNZWKbxGJBloknvaKy7WSJJZrhMXVSC2rVy2n+JiuI+NJyv
+	JeTLF7SAHcmstetnluXtx6Z3O2BN4L+tauGkm8Y0ol5/3sEa2FrhUn9rAaIcOLuDnUHZVdtSPXT
+	P+MYBS56Rlcr4zdDfptGeN9sXU4iQGeHsLxxKmgOoZBGybscrRgyFz7BLkUCS2XxzaBPueWX4iC
+	eX5RsqPIZyPWAAV1TGwkT+ZFr/H2L0100ZtQxR0wxJXue49xBht3fjR2BxOS8nq6PHpxxlA7TtA
+	1KRA9K5d6CvvFq3Ml9L03IssLz8Lxgwcr2+hP1vqB6opZCUen7qgswOIBXXrsXbQNhAkJZSFacA
+	74yPndAgvj+cQFAfGALdorCjX1UM+sSA3
+X-Google-Smtp-Source: AGHT+IGWTN2yQeSDJJtvSK1ZNh/SieezMonVkazgrlx4GpaEw0oeWFpAkP6J3Bf+UHyZnh1uBjuWfw==
+X-Received: by 2002:a05:6a21:7a41:b0:1f3:2fde:8a6c with SMTP id adf61e73a8af0-20398df77b1mr3778675637.4.1744701029869;
+        Tue, 15 Apr 2025 00:10:29 -0700 (PDT)
+Received: from li-cloudtop.c.googlers.com.com (132.197.125.34.bc.googleusercontent.com. [34.125.197.132])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a2d3a250sm8659543a12.62.2025.04.15.00.10.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 00:10:29 -0700 (PDT)
+From: Li Li <dualli@chromium.org>
+To: dualli@google.com,
+	corbet@lwn.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	donald.hunter@gmail.com,
+	gregkh@linuxfoundation.org,
+	arve@android.com,
+	tkjos@android.com,
+	maco@android.com,
+	joel@joelfernandes.org,
+	brauner@kernel.org,
+	cmllamas@google.com,
+	surenb@google.com,
+	omosnace@redhat.com,
+	shuah@kernel.org,
+	arnd@arndb.de,
+	masahiroy@kernel.org,
+	bagasdotme@gmail.com,
+	horms@kernel.org,
+	tweek@google.com,
+	paul@paul-moore.com,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	selinux@vger.kernel.org,
+	hridya@google.com
+Cc: smoreland@google.com,
+	ynaffit@google.com,
+	kernel-team@android.com
+Subject: [PATCH v17 1/3] lsm, selinux: Add setup_report permission to binder
+Date: Tue, 15 Apr 2025 00:10:15 -0700
+Message-ID: <20250415071017.3261009-2-dualli@chromium.org>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+In-Reply-To: <20250415071017.3261009-1-dualli@chromium.org>
+References: <20250415071017.3261009-1-dualli@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-kunit-mips-v3-2-4ec2461b5a7e@linutronix.de>
-References: <20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de>
-In-Reply-To: <20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744701019; l=4132;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=xOZ0p2CUeWSfBf8GwfXNZH/GcKScQzSTLiG6gz0ey8E=;
- b=IWzqENMU2NJdiCi+5hy18vN9+QtlejpYUb2BGXwOVMahHXFFMfv8tF1VssQ1e7aZUHEAA0rZ/
- sFwEvoJLvIWBECA8MjQqYg9zSBDMMh8irkEuuwmO/DafUugYrYoLU52
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Add basic support to run various MIPS variants via kunit_tool using the
-virtualized malta platform.
+From: Thiébaud Weksteen <tweek@google.com>
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Introduce a new permission "setup_report" to the "binder" class.
+This persmission controls the ability to set up the binder generic
+netlink driver to report certain binder transactions.
+
+Signed-off-by: Thiébaud Weksteen <tweek@google.com>
+Signed-off-by: Li Li <dualli@google.com>
 ---
- tools/testing/kunit/qemu_configs/mips.py     | 18 ++++++++++++++++++
- tools/testing/kunit/qemu_configs/mips64.py   | 19 +++++++++++++++++++
- tools/testing/kunit/qemu_configs/mips64el.py | 19 +++++++++++++++++++
- tools/testing/kunit/qemu_configs/mipsel.py   | 18 ++++++++++++++++++
- 4 files changed, 74 insertions(+)
+ include/linux/lsm_hook_defs.h       |  1 +
+ include/linux/security.h            |  6 ++++++
+ security/security.c                 | 13 +++++++++++++
+ security/selinux/hooks.c            |  7 +++++++
+ security/selinux/include/classmap.h |  3 ++-
+ 5 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/kunit/qemu_configs/mips.py b/tools/testing/kunit/qemu_configs/mips.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..8899ac157b30bd2ee847eacd5b90fe6ad4e5fb04
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mips.py
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index bf3bbac4e02a..795a507db537 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -33,6 +33,7 @@ LSM_HOOK(int, 0, binder_transfer_binder, const struct cred *from,
+ 	 const struct cred *to)
+ LSM_HOOK(int, 0, binder_transfer_file, const struct cred *from,
+ 	 const struct cred *to, const struct file *file)
++LSM_HOOK(int, 0, binder_setup_report, const struct cred *to)
+ LSM_HOOK(int, 0, ptrace_access_check, struct task_struct *child,
+ 	 unsigned int mode)
+ LSM_HOOK(int, 0, ptrace_traceme, struct task_struct *parent)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index cc9b54d95d22..fe600fb37c98 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -338,6 +338,7 @@ int security_binder_transfer_binder(const struct cred *from,
+ 				    const struct cred *to);
+ int security_binder_transfer_file(const struct cred *from,
+ 				  const struct cred *to, const struct file *file);
++int security_binder_setup_report(const struct cred *to);
+ int security_ptrace_access_check(struct task_struct *child, unsigned int mode);
+ int security_ptrace_traceme(struct task_struct *parent);
+ int security_capget(const struct task_struct *target,
+@@ -657,6 +658,11 @@ static inline int security_binder_transfer_file(const struct cred *from,
+ 	return 0;
+ }
+ 
++static inline int security_binder_setup_report(const struct cred *to)
++{
++	return 0;
++}
 +
-+from ..qemu_config import QemuArchParams
+ static inline int security_ptrace_access_check(struct task_struct *child,
+ 					     unsigned int mode)
+ {
+diff --git a/security/security.c b/security/security.c
+index fb57e8fddd91..5acf364e610f 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1043,6 +1043,19 @@ int security_binder_transfer_file(const struct cred *from,
+ 	return call_int_hook(binder_transfer_file, from, to, file);
+ }
+ 
++/**
++ * security_binder_setup_report() - Check if binder report is allowed
++ * @to: receiving process
++ *
++ * Check whether @to is allowed to set up binder reports.
++ *
++ * Return: Returns 0 if permission is granted.
++ */
++int security_binder_setup_report(const struct cred *to)
++{
++	return call_int_hook(binder_setup_report, to);
++}
 +
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_32BIT=y
-+CONFIG_CPU_BIG_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mips',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta'])
-diff --git a/tools/testing/kunit/qemu_configs/mips64.py b/tools/testing/kunit/qemu_configs/mips64.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..1478aed05b94da4914f34c6a8affdcfe34eb88ea
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mips64.py
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0
+ /**
+  * security_ptrace_access_check() - Check if tracing is allowed
+  * @child: target process
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 595ceb314aeb..f02249345c4b 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2103,6 +2103,12 @@ static int selinux_binder_transfer_file(const struct cred *from,
+ 			    &ad);
+ }
+ 
++static int selinux_binder_setup_report(const struct cred *to)
++{
++	return avc_has_perm(current_sid(), cred_sid(to), SECCLASS_BINDER,
++			    BINDER__SETUP_REPORT, NULL);
++}
 +
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_CPU_MIPS64_R2=y
-+CONFIG_64BIT=y
-+CONFIG_CPU_BIG_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mips64',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta', '-cpu', '5KEc'])
-diff --git a/tools/testing/kunit/qemu_configs/mips64el.py b/tools/testing/kunit/qemu_configs/mips64el.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..300c711d7a82500b2ebcb4cf1467b6f72b5c17aa
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mips64el.py
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_CPU_MIPS64_R2=y
-+CONFIG_64BIT=y
-+CONFIG_CPU_LITTLE_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mips64el',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta', '-cpu', '5KEc'])
-diff --git a/tools/testing/kunit/qemu_configs/mipsel.py b/tools/testing/kunit/qemu_configs/mipsel.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..3d3543315b45776d0e77fb5c00c8c0a89eafdffd
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/mipsel.py
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='mips',
-+                           kconfig='''
-+CONFIG_32BIT=y
-+CONFIG_CPU_LITTLE_ENDIAN=y
-+CONFIG_MIPS_MALTA=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+''',
-+                           qemu_arch='mipsel',
-+                           kernel_path='vmlinuz',
-+                           kernel_command_line='console=ttyS0',
-+                           extra_qemu_params=['-M', 'malta'])
-
+ static int selinux_ptrace_access_check(struct task_struct *child,
+ 				       unsigned int mode)
+ {
+@@ -7295,6 +7301,7 @@ static struct security_hook_list selinux_hooks[] __ro_after_init = {
+ 	LSM_HOOK_INIT(binder_transaction, selinux_binder_transaction),
+ 	LSM_HOOK_INIT(binder_transfer_binder, selinux_binder_transfer_binder),
+ 	LSM_HOOK_INIT(binder_transfer_file, selinux_binder_transfer_file),
++	LSM_HOOK_INIT(binder_setup_report, selinux_binder_setup_report),
+ 
+ 	LSM_HOOK_INIT(ptrace_access_check, selinux_ptrace_access_check),
+ 	LSM_HOOK_INIT(ptrace_traceme, selinux_ptrace_traceme),
+diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+index 5665aa5e7853..de7e28572fda 100644
+--- a/security/selinux/include/classmap.h
++++ b/security/selinux/include/classmap.h
+@@ -133,7 +133,8 @@ const struct security_class_mapping secclass_map[] = {
+ 	{ "kernel_service", { "use_as_override", "create_files_as", NULL } },
+ 	{ "tun_socket", { COMMON_SOCK_PERMS, "attach_queue", NULL } },
+ 	{ "binder",
+-	  { "impersonate", "call", "set_context_mgr", "transfer", NULL } },
++	  { "impersonate", "call", "set_context_mgr", "transfer",
++	    "setup_report", NULL } },
+ 	{ "cap_userns", { COMMON_CAP_PERMS, NULL } },
+ 	{ "cap2_userns", { COMMON_CAP2_PERMS, NULL } },
+ 	{ "sctp_socket",
 -- 
-2.49.0
+2.49.0.604.gff1f9ca942-goog
 
