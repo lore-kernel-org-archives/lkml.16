@@ -1,202 +1,187 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51122DFA3B;
-	Tue, 15 Apr 2025 02:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744682536; cv=none; b=Z17xjpwwZUldgvmqraX6gIHNReF54qHgUWUsVCtAZGxB1zLSXTpoIkeBYXfkTg6rPrwY1CEegfwji0f17ppunriE1d/9R9MFuzE5fY7/0Gvj7l+ruOXZe1mcm152HVBaXOUCnOAp1h5DlN2mM27Aq/SbpSi2gFFZg+PIq8QnhIE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744682536; c=relaxed/simple;
-	bh=U7t9nA21JGw2dEj6klZs5Ynjd7/8AjiE9+hqAxg1odk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K2PlKw8u/cR0RcdVP7H2Jnmta1twnTqLpa+Kl0hrclni6WWUHZ8+ve034EJdcGeiew2rXeMF4o0fq3Cn+yOuJYrkm3n42l0EAVfFyI0WRi0lvY3aFxXrzLDAXFOfDek2gjNhePRcBcrrlzZ6uh4E1o8MvT9CLbboOb8LEYSXd7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Iz8u20+O; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Iz8u20+O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=9hkWe
-	q/VxV+O58HqndGEkufimFjxKtOCASpcTil7Loc=; b=Iz8u20+OWWPfzCB5Nof84
-	0ZjWVEW42hVYiakCLtSsqPTT2Ay/22rbcMouzfQ3Wr+7M7a2FnWBOu+2Mwz48mAe
-	sVDS5+99A0IAHgzgPnkItLr+QOFCVAIFa3NN51WOMzp08yWs0GtitGb7g2kArK7a
-	Ph+rNb5027gLNmP00jcM9c=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgAX7wT0vf1nh27NAQ--.14S2;
-	Tue, 15 Apr 2025 10:01:26 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: olsajiri@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	hengqi.chen@gmail.com,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	sdf@fomichev.me,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v3 bpf-next 1/3] libbpf: Fix event name too long error
-Date: Tue, 15 Apr 2025 10:01:15 +0800
-Message-Id: <20250415020115.35450-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <Z_z06uND92kzrXfJ@krava>
-References: <Z_z06uND92kzrXfJ@krava>
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654CE3770B;
+	Tue, 15 Apr 2025 02:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744682590; cv=fail; b=KbBmj/wyihYmWhgoKFH4ZIkYmxV6Dd3WmrB8uUin2e0ITPHunM7STE/zvyWYPW870Dxe9FBVi0M4z8LR54KXsjAZkFgsqYzegy/CfZ6rhMgk3SxqEXAccL8HO75UlhkTqDSAgZorpc58yy8P0fUt6gNsvnsa77MuE08ARlRhQ4A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744682590; c=relaxed/simple;
+	bh=dEzM4ZTm7CNeCSfRW4HmIlYvxso6wv5kjWf60w9RzE4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NDWxUSRL/yUduTGxc7RnEhB9OQ9GvPzUEt4zWnrpmGGZvpOwwLmQTNzISMRwULdjL4C4h0nXTbtuNtZTrhalcaGbYALewGSVoe/XpjHFmm+iQwtR2OjfsVT7abx3OX3qBFokXj2oE5acMLm3C+2j8gS0s7jwKT7+0k7109iDAS0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F0RIeU020620;
+	Tue, 15 Apr 2025 02:02:26 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2170.outbound.protection.outlook.com [104.47.59.170])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45yf58jqy0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 02:02:26 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=J0jCuLNfTsX3ydxqu1OnM1KA7sGfW+Td+KUF0xugEkTUi/2hylxYSyXShtSPsHFjTcngY+W+hPsSsEY3x0TaUqAgnr0yLY3zGynwdJRJIfGjs4O3dfhOJJ+c7jPNtsiZCa7y/mOtgFai3Oyo4rOqwCbYfYqCeYDGP+rbIG8g2WbVULN7Xq7oVYNBZsHPH7aoFWXmOTYgdHv8z1vJrqW3FOjpyMrkPcZcoB1T7AnmI1MA8IP/b05YDVh/5wh+1ncT7jlBlwpYKMaoyT4s+nm4WBAsBgHCbStFTXgIGqgPcOe+jNkund/gSNQaglAty8CLWuKGcFzz52qBMeXLuw8UUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eJizoYRMNlFVk7MIdN+EMN0e0/FeoiX9feeeazRAbvk=;
+ b=ZanMD2wbBh3+SkXHo0l9ZqBt51EnCyLNSELB2rDz1Z+5EHhlBOh9Zt85Y62wiAin4Rrsfi0VKRLcyOqk+3iE0p78Qal6fQEseKddQF3VNka2qMhkEMDwdF6fNfF8B0Krh8/0KUWhYeapQ5Si7SbBwdZz7zmmGRaJhDW7Mh4yY8lGf4bsqBK6Y0H28QYDMT7N76aSltNq+1l0m6ZbYbJdm1DBw64/GdyEmT7iXp/ilvQFJmDiHVfdbSkwcq9UvS8/o5vdIM73gSTFr8AlrFYLWCVwPWiaBg0b9++dGQqVTP48J8TGFHeGtx1uaXEixLFsq8zlazAYNk6hEeFT9SBy9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from CY8PR11MB7012.namprd11.prod.outlook.com (2603:10b6:930:54::6)
+ by SA1PR11MB6661.namprd11.prod.outlook.com (2603:10b6:806:255::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.36; Tue, 15 Apr
+ 2025 02:02:24 +0000
+Received: from CY8PR11MB7012.namprd11.prod.outlook.com
+ ([fe80::83d5:946f:3692:8c0d]) by CY8PR11MB7012.namprd11.prod.outlook.com
+ ([fe80::83d5:946f:3692:8c0d%4]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 02:02:24 +0000
+From: Cliff Liu <donghua.liu@windriver.com>
+To: stable@vger.kernel.org
+Cc: sfrench@samba.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+        Zhe.He@windriver.com, donghua.liu@windriver.com
+Subject: [PATCH 5.15.y] smb: client: fix potential UAF in is_valid_oplock_break()
+Date: Tue, 15 Apr 2025 10:02:12 +0800
+Message-Id: <20250415020212.320762-1-donghua.liu@windriver.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR0101CA0039.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::25) To CY8PR11MB7012.namprd11.prod.outlook.com
+ (2603:10b6:930:54::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgAX7wT0vf1nh27NAQ--.14S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3AF1fZFyxJF1xuFW7trWUJwb_yoW7KFW8pF
-	4DZrn0yF4ftay29F9Iqw18Z3409w4kJF4UJr1Dtr98ZF48WF4DAa42kF4DC3Z8XrZ29w13
-	Za1jgry3XFyxAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUDxhQUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwgsweGf9vXsZZgAAsi
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY8PR11MB7012:EE_|SA1PR11MB6661:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2aa58b08-9e3e-4c08-f4a2-08dd7bc19061
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IgywF0jovTb/llp/rfXa16g2tJTw+Q74g7n4qzEK/fK2zvRBMd5arWqTDk7M?=
+ =?us-ascii?Q?3q6hNEpXLcRhThLkvpazzx2DaZsNVPDuXFuVpSTbacmNQUmarPJ+5mtwiD9d?=
+ =?us-ascii?Q?LLD2PpVwB0+ud3xYEaLZMptskcean97E+sKNhkj368Zwy6C5y5Dcym9Eba07?=
+ =?us-ascii?Q?DIhKQa0iQvN8USY4963eYYKn9xATNE7GT64UtuRVYfQ/zPHxyISxcgxcTjNV?=
+ =?us-ascii?Q?GTLjq/xaF1ASU2HjIfTl0ZL1xfUmcjgrK7dhxedzltQokApOv6WZ2GW7Sfe5?=
+ =?us-ascii?Q?dE5SPb80dxOqzmk/b3GlnlsRqnbrBCpxyoleAkPbAbAkNUFVPSd/zqEaRRz+?=
+ =?us-ascii?Q?ovXH7d6YPDTZU4r9nyk50E7Eh/BMGJMTYM+LWNp3Z/VgHrr+f38Bovr4m2h3?=
+ =?us-ascii?Q?IqjTrIf/wpXkG17vqIqJqgrF12YR0rYGYy99T9N9f0wk9qSPRF1w4zjm8hyt?=
+ =?us-ascii?Q?CLfhBhoFbWtpcCRqzQRzJMAGMR2/2HRxfSewE1bQu4muAnGzVui1MM7fNR1H?=
+ =?us-ascii?Q?fbW5c2jlSzxMg//AFW3aJOEZJe4gODLTmKz1wTDOIlBnqruZxhycj1KP3+6U?=
+ =?us-ascii?Q?iYBmvHUow6GFWIXol/PLUqFKsMdHxFdnv+WyWRXPC+e7tFefKktwT3mq6ysF?=
+ =?us-ascii?Q?24MCUQaqBRjnECV5ZcvYf/uYZtKHV8fNGnfSCa+pbuVKAQFqqxufWjntKnUU?=
+ =?us-ascii?Q?JUqPAgO1Zsvy3goQyMiXOaSC0JlFFZtr6+4h2mW23BtzT2OocLZRv12qtQXO?=
+ =?us-ascii?Q?n16X+Anca2ueOrdQD9Hs0+LWcWbuWvkU7uxVBe2/hK7m8OpmzU1CyDrda4OZ?=
+ =?us-ascii?Q?tZHksouuIFhgO/Bhqp8VNpSE4TT4Vqe7os3uTI5Pph09cTRopsdE+qadx9ol?=
+ =?us-ascii?Q?qfZfon6tCb/5QEtRr8H2FYH0kFwxRvBEex/+6e0Ixegx+iPAqWaEssaK05HM?=
+ =?us-ascii?Q?T+Hla+neCIB0PP67YUqIHfOMbWB4a9g08HRQo5yilWkVRrKRlJOFDhW4dJZF?=
+ =?us-ascii?Q?eE95hXAlhzG5006LgoSFXrkBcm1cUgVhF+7eZThwJ1/VvPXqvsmHszkfBZw9?=
+ =?us-ascii?Q?zZh1WfOoP1wGoL8djmy+pGkkOBT1aJjyFdsN5a7EfCt1TPGOB6MY1PX/TSrU?=
+ =?us-ascii?Q?aMoxDBGRTL6ThUYctYOLyyA6CqpLVuWII2gWijWyuvnD9qzTF7FSfZEHcZoJ?=
+ =?us-ascii?Q?AO1eYAHkeqgHsHNbOdhh8T+Kr51mHOKLrKiSgjgj76ytucBmPOd9WRDmmfDV?=
+ =?us-ascii?Q?FBaKb4RgNST4rRmGdaanmQshaFSfmtYAaWvb5QMP+9MHChEYvbRuf7fuAphi?=
+ =?us-ascii?Q?zhd/UmnLgQ6ZyFsbba79cOJWBuBAmdBjD31B+9b6VzzYzLwv3GuFZ87lZ4Bf?=
+ =?us-ascii?Q?zhE58O1Dk2RN4OOFoqXhrZJP5/ZRAK45s8lWHjWGHCEv5+vA3osJoFeEtY3U?=
+ =?us-ascii?Q?QwVYTO5ub//kQxn/jflW2nGeWj670xEKcKimREQ8OyxZFujzMwl90Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7012.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/g8mpIRRCGrAtrmeEGLw3rd8m4GVHn6Vm7mVh/OFl1WlOb4dXnjwEPSa98Zh?=
+ =?us-ascii?Q?NzuJ8yT7+t5lFPBJIHFLtfmNxDfutQ7TCkyhXo3G+pLuV21Ru+Hq56hG/Q8h?=
+ =?us-ascii?Q?hy7wIzXfU3suad1J2QxetvCD3hGWNnX2zZDRBg/trMjDgeHkZn9oDNOF65Wn?=
+ =?us-ascii?Q?04HKDsN37MfEabxIykrQzDxyaqD1vmd1lEnTzdp7Sx7AP4Vk1NUgQNdIqLva?=
+ =?us-ascii?Q?n67n/IjamXouUkI2DvBfmpCXv138umL9xvDr881Dmb/tjqqtQA1FYFC3LTCX?=
+ =?us-ascii?Q?ZgV8VtwOXSF8K2XPc6wmfT0Ix9t4HnR7Kg5oAM7MXtZXhr03t1KzgJwYvaU2?=
+ =?us-ascii?Q?LD8RuGT5ywf0b9/gItMdw/qEDFgA+CpmRLeDfrwbwyCsDq7TGj5floj88Mr8?=
+ =?us-ascii?Q?9Z6mpXczx5LqdY5WiUYx9vIymfqzqYMu7J+IlHT0HRiPOoib47ZCIF7QxOk/?=
+ =?us-ascii?Q?Z5KoFJCSGj9QDgiPbZu2GiMoB0MElWPOg6BHAJgVKHk7FMjz22I5pSI8GH+P?=
+ =?us-ascii?Q?ygJQo51tVZ1L/B/Vm5y/oU9yzHK+Wgk42tQhUy+pyfoW8JwCg3umDQL2NXmA?=
+ =?us-ascii?Q?3FY2L1JDzCK97L75lB8GKBEFQ021DK4qPJrDGFn8/9lrql3u+eGFYjcqqnoX?=
+ =?us-ascii?Q?oR+7MNuc0iFmAaFlnZ3Xehu+6e5CGqHdLQwTiSMPOAEnEz8DCazo6PctR5Jq?=
+ =?us-ascii?Q?Fm+zs24Lp1eSMQn0xwnBWBI6cot4S0s8DY0J6RR6EFpkE6Thh/orcspKmivW?=
+ =?us-ascii?Q?9gGc1KmucGliiCg9GvFn5jJDhrEfdrkbc3iigyRmOCABGiHA8qwGGNJ3p4bI?=
+ =?us-ascii?Q?4xVQ0N4vayTWLaCzOLk21shXHdYN0oxLz67VNkPIA4+GmdIn0Z86IIIKNrUp?=
+ =?us-ascii?Q?TgZpJ1sANGRSB67fI7xLL40PGy+MnxEIcUc2QJ0WMAjUTo1OjcyNKg4/wl9u?=
+ =?us-ascii?Q?smdbl5thOCdSgzOjR+MyJZNAVskUS/GVIjoMNmgud2FjJH6W9bVr/Fu4QEGB?=
+ =?us-ascii?Q?Pz3WDCQYEqCpXRORID5qmS53tlq6l5co5tWnHZJd6Vaw8E4x9BLMVQPRWKOD?=
+ =?us-ascii?Q?O1nHCfn905AqJy2b0Gx8QBhozvTimySNtXSku0C533Ee48djShqdzYHebbrV?=
+ =?us-ascii?Q?39kz5xryjqcyrOgAL/I2Ik4NyIdPjZ960k2CipyzZnuHrm1XUIIQg3Suhvtg?=
+ =?us-ascii?Q?ZLacWhmkORFlZDs2mHGlnAI7mf6Ql9zaQgCgj4KZCQLVRmvZLM00ZYCtQZjv?=
+ =?us-ascii?Q?zR87pJ7OQcR4lMy2l7V7Os9bEjuXpt9nlyPVedRUD5jXYyCuO6ODqQhNEmZ6?=
+ =?us-ascii?Q?APSThzbWvxuy2o5x07/1bqVKGTxikd3kIzF83AeN7fSIC06/F7oUCdZSI9U4?=
+ =?us-ascii?Q?fuIka+uqmQLCzkNMmmPPeo8OOMrCtSmkXKVxPKjozeqGMiXVI/Vjy5Na4jIp?=
+ =?us-ascii?Q?whU8h6kYGfEwKOUG7aoJVw09j0nxREupFZ5NT/3PZ/+cyZa0cyTlvyirzKO+?=
+ =?us-ascii?Q?Gaffl85Oy/qJn5amljWaDf5P+BQjOK47PS6C9tUHJ6rSgCN5bKAL9wGIsP0r?=
+ =?us-ascii?Q?wRJMMWZouUkElnJK6USRgkRwqKG5QgflUuQVSGwB5uWWuvqs9zuBOq3Q3ASI?=
+ =?us-ascii?Q?vQ=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2aa58b08-9e3e-4c08-f4a2-08dd7bc19061
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7012.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 02:02:24.0286
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mGVaI/uTmEXaMxZ8ISMYe0xfh4sGHzpcNw2j3rzIIhSW5yd5CdVEMJX6BD1O27eeSm6RMbzwV1Xlh6zKfVQMBdrRo1Tled40uhpqDUjg06U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6661
+X-Authority-Analysis: v=2.4 cv=UPPdHDfy c=1 sm=1 tr=0 ts=67fdbe32 cx=c_pps a=oQ/SuO94mqEoePT5f2hFBg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
+ a=Li1AiuEPAAAA:8 a=VwQbUJbxAAAA:8 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=kTq-Ll_e2unazRsUWSIA:9 a=qGKPP_lnpMOaqR3bcYHU:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: 3tpJTQMJSlkTnk6VkY4NW2G_6S7St2qd
+X-Proofpoint-ORIG-GUID: 3tpJTQMJSlkTnk6VkY4NW2G_6S7St2qd
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=943 spamscore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 clxscore=1015 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504150010
 
-On Mon, 14 Apr 2025 13:43:38 +0200 Jiri Olsa <olsajiri@gmail.com> wrote:
-> On Mon, Apr 14, 2025 at 05:34:00PM +0800, Feng Yang wrote:
-> > From: Feng Yang <yangfeng@kylinos.cn>
-> > 
-> > When the binary path is excessively long, the generated probe_name in libbpf
-> > exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
-> > This causes legacy uprobe event attachment to fail with error code -22.
-> > 
-> > Before Fix:
-> > 	./test_progs -t attach_probe/kprobe-long_name
-> > 	......
-> > 	libbpf: failed to add legacy kprobe event for 'bpf_kfunc_looooooooooooooooooooooooooooooong_name+0x0': -EINVAL
-> > 	libbpf: prog 'handle_kprobe': failed to create kprobe 'bpf_kfunc_looooooooooooooooooooooooooooooong_name+0x0' perf event: -EINVAL
-> > 	test_attach_kprobe_long_event_name:FAIL:attach_kprobe_long_event_name unexpected error: -22
-> > 	test_attach_probe:PASS:uprobe_ref_ctr_cleanup 0 nsec
-> > 	#13/11   attach_probe/kprobe-long_name:FAIL
-> > 	#13      attach_probe:FAIL
-> > 
-> > 	./test_progs -t attach_probe/uprobe-long_name
-> > 	......
-> > 	libbpf: failed to add legacy uprobe event for /root/linux-bpf/bpf-next/tools/testing/selftests/bpf/test_progs:0x13efd9: -EINVAL
-> > 	libbpf: prog 'handle_uprobe': failed to create uprobe '/root/linux-bpf/bpf-next/tools/testing/selftests/bpf/test_progs:0x13efd9' perf event: -EINVAL
-> > 	test_attach_uprobe_long_event_name:FAIL:attach_uprobe_long_event_name unexpected error: -22
-> > 	#13/10   attach_probe/uprobe-long_name:FAIL
-> > 	#13      attach_probe:FAIL
-> > After Fix:
-> > 	./test_progs -t attach_probe/uprobe-long_name
-> > 	#13/10   attach_probe/uprobe-long_name:OK
-> > 	#13      attach_probe:OK
-> > 	Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-> > 
-> > 	./test_progs -t attach_probe/kprobe-long_name
-> > 	#13/11   attach_probe/kprobe-long_name:OK
-> > 	#13      attach_probe:OK
-> > 	Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-> > 
-> > Fixes: 46ed5fc33db9 ("libbpf: Refactor and simplify legacy kprobe code")
-> > Fixes: cc10623c6810 ("libbpf: Add legacy uprobe attaching support")
-> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > ---
-> >  tools/lib/bpf/libbpf.c | 19 ++++++++++++-------
-> >  1 file changed, 12 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > index b2591f5cab65..9e047641e001 100644
-> > --- a/tools/lib/bpf/libbpf.c
-> > +++ b/tools/lib/bpf/libbpf.c
-> > @@ -60,6 +60,8 @@
-> >  #define BPF_FS_MAGIC		0xcafe4a11
-> >  #endif
-> >  
-> > +#define MAX_EVENT_NAME_LEN	64
-> > +
-> >  #define BPF_FS_DEFAULT_PATH "/sys/fs/bpf"
-> >  
-> >  #define BPF_INSN_SZ (sizeof(struct bpf_insn))
-> > @@ -11142,10 +11144,10 @@ static void gen_kprobe_legacy_event_name(char *buf, size_t buf_sz,
-> >  	static int index = 0;
-> >  	int i;
-> >  
-> > -	snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx_%d", getpid(), kfunc_name, offset,
-> > -		 __sync_fetch_and_add(&index, 1));
-> > +	snprintf(buf, buf_sz, "libbpf_%u_%d_%s_0x%zx", getpid(),
-> > +		 __sync_fetch_and_add(&index, 1), kfunc_name, offset);
-> 
-> so the fix is to move unique id before kfunc_name to make sure it gets
-> to the event name right? would be great to have it in changelog
-> 
+From: Paulo Alcantara <pc@manguebit.com>
 
-Yes, defining MAX_EVENT_NAME_LEN ensures event names are truncated via snprintf
-to prevent exceeding the maximum length limit.
-Moving the unique id before kfunc_name avoids truncating the id.
-Regarding the changelog: Should this information go into the commit message of the patch, or somewhere else?
+[ Upstream commit 69ccf040acddf33a3a85ec0f6b45ef84b0f7ec29 ]
 
-> 
-> >  
-> > -	/* sanitize binary_path in the probe name */
-> > +	/* sanitize kfunc_name in the probe name */
-> >  	for (i = 0; buf[i]; i++) {
-> >  		if (!isalnum(buf[i]))
-> >  			buf[i] = '_';
-> > @@ -11270,7 +11272,7 @@ int probe_kern_syscall_wrapper(int token_fd)
-> >  
-> >  		return pfd >= 0 ? 1 : 0;
-> >  	} else { /* legacy mode */
-> > -		char probe_name[128];
-> > +		char probe_name[MAX_EVENT_NAME_LEN];
-> >  
-> >  		gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name), syscall_name, 0);
-> >  		if (add_kprobe_event_legacy(probe_name, false, syscall_name, 0) < 0)
-> > @@ -11328,7 +11330,7 @@ bpf_program__attach_kprobe_opts(const struct bpf_program *prog,
-> >  					    func_name, offset,
-> >  					    -1 /* pid */, 0 /* ref_ctr_off */);
-> >  	} else {
-> > -		char probe_name[256];
-> > +		char probe_name[MAX_EVENT_NAME_LEN];
-> >  
-> >  		gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name),
-> >  					     func_name, offset);
-> > @@ -11878,9 +11880,12 @@ static int attach_uprobe_multi(const struct bpf_program *prog, long cookie, stru
-> >  static void gen_uprobe_legacy_event_name(char *buf, size_t buf_sz,
-> >  					 const char *binary_path, uint64_t offset)
-> >  {
-> > +	static int index = 0;
-> >  	int i;
-> >  
-> > -	snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx", getpid(), binary_path, (size_t)offset);
-> > +	snprintf(buf, buf_sz, "libbpf_%u_%d_%s_0x%zx", getpid(),
-> > +		 __sync_fetch_and_add(&index, 1),
-> > +		 basename((void *)binary_path), (size_t)offset);
-> 
-> gen_kprobe_legacy_event_name and gen_uprobe_legacy_event_name seem to
-> be identical now, maybe we can have just one ?
-> 
-> thanks,
-> jirka
-> 
+Skip sessions that are being teared down (status == SES_EXITING) to
+avoid UAF.
 
-The gen_uprobe_legacy_event_name function includes an extra basename compared to gen_kprobe_legacy_event_name,
-as the prefixes of binary_path are often too similar to distinguish easily.
-When merging these two into a single function, is it acceptable to pass basename((void *)binary_path)
-directly during the uprobe invocation, or should we remove the addition of basename? Thank you!
+Cc: stable@vger.kernel.org
+Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+[Minor context change fixed]
+Signed-off-by: Cliff Liu <donghua.liu@windriver.com>
+Signed-off-by: He Zhe <Zhe.He@windriver.com>
+---
+Verified the build test.
+---
+ fs/cifs/misc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> >  
-> >  	/* sanitize binary_path in the probe name */
-> >  	for (i = 0; buf[i]; i++) {
-> > @@ -12312,7 +12317,7 @@ bpf_program__attach_uprobe_opts(const struct bpf_program *prog, pid_t pid,
-> >  		pfd = perf_event_open_probe(true /* uprobe */, retprobe, binary_path,
-> >  					    func_offset, pid, ref_ctr_off);
-> >  	} else {
-> > -		char probe_name[PATH_MAX + 64];
-> > +		char probe_name[MAX_EVENT_NAME_LEN];
-> >  
-> >  		if (ref_ctr_off)
-> >  			return libbpf_err_ptr(-EINVAL);
-> > -- 
-> > 2.43.0
-> > 
+diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
+index 33328eae03d7..c7e2bf7a0a0d 100644
+--- a/fs/cifs/misc.c
++++ b/fs/cifs/misc.c
+@@ -464,6 +464,8 @@ is_valid_oplock_break(char *buffer, struct TCP_Server_Info *srv)
+ 	spin_lock(&cifs_tcp_ses_lock);
+ 	list_for_each(tmp, &srv->smb_ses_list) {
+ 		ses = list_entry(tmp, struct cifs_ses, smb_ses_list);
++		if (cifs_ses_exiting(ses))
++			continue;
+ 		list_for_each(tmp1, &ses->tcon_list) {
+ 			tcon = list_entry(tmp1, struct cifs_tcon, tcon_list);
+ 			if (tcon->tid != buf->Tid)
+-- 
+2.34.1
 
