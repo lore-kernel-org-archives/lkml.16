@@ -1,328 +1,238 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2063.outbound.protection.outlook.com [40.107.105.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1B11A2632
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744712486; cv=fail; b=FUd4+QjbeJ5LlxlKYwg8UheGIWinwU8xIT1zOklPtRV+ERyoa7FLTX+JhjP7XGM7zXQl4aPUa7w/0TSF8Y/PqgjzrAy+Fl3v6Nc52SHr+3UvHoMzLrZbhJeAkRdCEYMoPLWLnstm2h937JaPhzbEuM1U3pyf7/MF2OfAg/KqOto=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744712486; c=relaxed/simple;
-	bh=fW2RO3Him+2AvUKDLhwUPfazw/4N7R9xmvkSPMNKzLg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XTemoytVyg8aRAWsN9faJDG+RihcnMZSXTUT6Z3ZIdEbpiTnf8nt6HCRWnmfbvjAMyYUWhYhxgbnYRQ8ofCpM/U2GiBkB5MbDfUYRbl728HG3REI2sN5A8vbnWkGlnG2dnuTSx3DOOPgufpu02RDT5nOmUjQP9SwCSeYCd0vxYM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=lNN15n9W; arc=fail smtp.client-ip=40.107.105.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E001A2632;
+	Tue, 15 Apr 2025 10:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744712593; cv=none; b=nGQsn1hlrJg0frlGlsrTpOL0P9SQFeJZIMQvs9EGZxQDPbCCUHTrwgFVrfMaTkm/KjPMF2d54ZwEmf7psqxT8o3lXpIFBmlh4rvddQqjcat6aPvgbAWGeEn/FoQdGMq3Ua40Lz3ul+UOcOBQ+w8rLeDq3OQdtB7UawkMIUx6pIQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744712593; c=relaxed/simple;
+	bh=klDN7uanomzpPG7T/DWheax52c37vyO3EtaOg7Qv0N0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DT/LfiZ8uR15jjxbiNWm4IyN4eYTUvRo6XeDwXsit9JWX0/AVAp7ALy35UzZAf7Q90VWIk3qKHW162Qm+VV7KKUhhavICE+zcOAp4j+dmckLHDIDHDDHe+h3+KaSnki9DtFv2MD/BUS9y9gXiebY++s25SbeaEEeGnRs6cgFyMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8MwxKKl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="lNN15n9W"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zF+7Qv+PEMzSsLE7bNyhm0qtAeKbC/VvuHKg3ZbshKJZPxygo2OKtgC2i4R26h1J/uI8kXjmbjZNdnDbpmHgeQz/ErVP4uUYHYtz6hqy1A5GkSrTSB3QTxq+YtNMTA0RRKlpttrjiFKGNBI4kYd2UFH0Zz7tLwAdYj/COU2VmzipjG3fG8B3Ep8qatzwXoNUNUGS/9sNdlK/jM25dsF7hCqzOHQrqDLek6ztbf/wVd0mOrA+iggREvEbNgBFVaEqtkldBw+lBn34TZZALOMerscX3CwGGnoyictP4KgZnCS2crDkUNerwJPvI0qgda4NCbk3bQTZU5p5Iiee4+yrTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xu4rXJgQZAxs3bBQKTMSbuhwvq75qC/kS5YGv4rvO0E=;
- b=Kd7zPyA/mp1rpcnDpnz/Ir9gd919seZuX2ljoa+sHRfBpZbWyqAvN8IV1NznmM7NUTfon81BtyIUv8f7bioMRg4osGdQlOKmGcRaX0sty/MfXCpBciiy2mlobubIKahp1jPmQvz/SOnQNQzVMx9LIQqHX5//P1sDAr8TiQj9m/LEwbFBA5LX8trTg74E20Pu387jP1AAb+c2np1wTTXb1yDzNGNJLsEmaAa4dkQV7LE6fVKxFlsmGJV6XDuzO8F0J5oI6SgiD5MHA6gyuZsSXoHSmTxYeSOwpWSCRytLNP3L0RLcBI1Gxa3WhG5DmoVqly5NPaakBUNmvZ9PDlNNeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xu4rXJgQZAxs3bBQKTMSbuhwvq75qC/kS5YGv4rvO0E=;
- b=lNN15n9W/rbvddFAiFHPBXdA2BVtptLrQJAnVKqVwbNFnE/9KjDe8AdOOYXye02as717p9bldBkUq9TFRqfbCnCmKuFsdHLLHKeWYGbtttEl05mDCv/c1p66pq4jgM9XnBbQjFNuSIkE4dYB1chhA7PY9aqnM+2O43I+YLtAmxDsfh3lHgj/bJptANIsbaDsN+zlGbFkUkDCiTBkDFZHvbM/ZmRP5pDPb+m6yTgbuvJCfAvvWKNF8pa2LV9d4ieVJ2QN2Z1VJf4zAcoqu6iP3toeZT/0jpiPEEdUc0WKLlj96J66mE2mvd5bjR1vtasepIbyr9YfIQQqh9CVY/pZVg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
- by PR3PR10MB4030.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:ab::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 15 Apr
- 2025 10:21:22 +0000
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8fe1:7e71:cf4a:7408]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8fe1:7e71:cf4a:7408%4]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 10:21:21 +0000
-Message-ID: <f5111e9f-bdee-480a-b29a-d8d1c207a600@siemens.com>
-Date: Tue, 15 Apr 2025 12:21:15 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/7] Defer throttle when task exits to user
-To: K Prateek Nayak <kprateek.nayak@amd.com>,
- Aaron Lu <ziqianlu@bytedance.com>,
- Florian Bezdeka <florian.bezdeka@siemens.com>
-Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
- <bsegall@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>,
- linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
- Chengming Zhou <chengming.zhou@linux.dev>,
- Chuyi Zhou <zhouchuyi@bytedance.com>,
- "Sebastian Andrzej Siewior," <bigeasy@linutronix.de>
-References: <20250409120746.635476-1-ziqianlu@bytedance.com>
- <cee5bca4e2b024d3406b40b84c0d5db91c7d276f.camel@siemens.com>
- <20250414120407.GC3558904@bytedance>
- <7483d3ae-5846-4067-b9f7-390a614ba408@siemens.com>
- <0a06f6c4-5d69-4fd1-badd-92fd55d8f38d@amd.com>
- <55687bb5-7e8a-4d7d-a597-6f97087cab32@siemens.com>
- <5e919998-338c-4055-b58a-e4586134956c@amd.com>
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Content-Language: en-US
-Autocrypt: addr=jan.kiszka@siemens.com; keydata=
- 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
-In-Reply-To: <5e919998-338c-4055-b58a-e4586134956c@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR13CA0024.namprd13.prod.outlook.com
- (2603:10b6:208:160::37) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:588::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8MwxKKl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDDEC4CEDD;
+	Tue, 15 Apr 2025 10:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744712593;
+	bh=klDN7uanomzpPG7T/DWheax52c37vyO3EtaOg7Qv0N0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=i8MwxKKlcjgP4yY11TzYkm8R/gD9M/auuZxoyjOlm5O8kUldnm7SSTJxG3xog/eHj
+	 Ffc5PJ4T+0Y4cKNjqfmrtBXzrVO5by82wXa7e4Dqivi3wz5UcnQIQGOATnajifactX
+	 hbOv98T3mshh7BiRw7/qNLdzrrxACqOe4nDIipYkyVBYb6kFjOAX0jWpb3FS7MdNoV
+	 CBPDklubxlMX/aYo1SHi83WdUGNYy/AhFpwzFm288kIrbgs4yqf42XNT9PZy5bf+LH
+	 rDNmot0zZiNPeVe9a2X6YDd0dV8N8twm5g69pv7DBiBAgvGyxw24TYF+jIttchFHk8
+	 Egc1gHUUuwR1g==
+Message-ID: <b697c51c0788e4e462e45a5cc78d3b5c2d01d496.camel@kernel.org>
+Subject: Re: [PATCH 2/4] ref_tracker: add ability to register a file in
+ debugfs for a ref_tracker_dir
+From: Jeff Layton <jlayton@kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
+	 <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	 <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	 <horms@kernel.org>, Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor
+	 <nathan@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Date: Tue, 15 Apr 2025 06:23:10 -0400
+In-Reply-To: <a86aab21-c539-48f5-bad1-25db9b8f3ced@lunn.ch>
+References: <20250414-reftrack-dbgfs-v1-0-f03585832203@kernel.org>
+	 <20250414-reftrack-dbgfs-v1-2-f03585832203@kernel.org>
+	 <a86aab21-c539-48f5-bad1-25db9b8f3ced@lunn.ch>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|PR3PR10MB4030:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a654b5e-4727-4e22-2845-08dd7c0744c3
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cHRMSkdYbTZ3RXM1UEJCRUpMcXZFcG50YVpaRWljbUdXL2o5L1YrUlQrN1ZQ?=
- =?utf-8?B?MkdQa2p5aGRldm8yTjh2ZXdnbDF2dk9kMDZhcEVoZ0h4VDVLTXZRNVo1NHNJ?=
- =?utf-8?B?ZjJQRmQ0RkVGMDB6K0lmc1FrREkwc3huMytpNnFBQTJKcXhaYTFZZzhSTTlP?=
- =?utf-8?B?TG5BbGNqWUFpTzUzNkMzZHZoUW5BdVBZOVVjb280dGVaWDluY1VtYkZ6QkVw?=
- =?utf-8?B?Z0tlWTRsQ0NYQUluR3c4cFZib1lIWWhhdHN3Tng1K2hyWHFlSVErRVEwN2NL?=
- =?utf-8?B?ZTFuZjEvY3J4Z1pEdVRSUzJZSnNWZUJDTUZMWmVQcHppRlRnb2dJa3RXeSt6?=
- =?utf-8?B?VWxiVW1YbzdOTXZFQTJ3OFZOYUdHOTJkb2hoZ3FpS1BKVDVta1Nma2p5T2pk?=
- =?utf-8?B?MmNlYmZKZUw5YjNKYTNEQ3dxdWhBNUJ2RjdIUStleGxENURDcDBRb0VoZk4z?=
- =?utf-8?B?MWMzRHdQWFpsNGthUzZSTThab3hCaGNPMzhvWjlsNllwZTdjeEFLMGFrYUFx?=
- =?utf-8?B?Um82VzFpOC8yam5USkJTSWNPd1IwcVcwMGVQeDJzMk9JRTNDQ2RvdnpMemJX?=
- =?utf-8?B?bjZnaWpZTHhNa1N3UmV3bzJYZXgzSzhBbkI2V3QvRTdMZ3VpOFUreE9GTC9R?=
- =?utf-8?B?UlNZZVdXWHdhM2JSamlmMjZod2dGcVovZHVrY3VVKytIZytNdFExaUUwbjE3?=
- =?utf-8?B?b1B4STRiUlQyazFYMWNSdklORUgxVFBiR2xUbklxaXU1SmYvWmZCKy9Hc3Fh?=
- =?utf-8?B?MFZIWnpsOWE0dmhsQlFEdzBXNGI0YURDVXRGNFQ4QkZLQ3kydlRqNHYzeDZW?=
- =?utf-8?B?b0c4dFFTUEF0SXdXRUF0UWlZb1hIcXRSWnVkcmw0MUdIdC9kYXFNejY0WmRS?=
- =?utf-8?B?ZGdzV2JtUDdWUzkzODZKTmovM0NXdnlRTklpd2dFODdJalR4bERlSHFZWmdB?=
- =?utf-8?B?Z1RReUFKQ1FsZXVvM0c0Nm10U0JFNU9UTk5tY21ERVNTdk82RDJBQ1NkaHlq?=
- =?utf-8?B?K1pscDNuVDRaMWROQkI3a2xCNlRKNDZySlpPQjl1eWN6WVRFbkdMcGt1QnUw?=
- =?utf-8?B?OW91UVF0eHlZNUNkbXFROVhsM2hmZlpEbGwzMEVCdlBaYmdyd1QzaXV6ODds?=
- =?utf-8?B?OTU0c0lQUzRtZUU4Q3Z4R0JVRnBFNndEQVFGaU11OU94Sk1ydnFkcWlFL3pN?=
- =?utf-8?B?WUYxOVU5Q0l1T3dmQVE4SklKQkRlZXZibW5UMS9senJNY2FGYm5uSmR0ZTQy?=
- =?utf-8?B?R0hPL1V6cnJjRHJZbi9ERTFLOVV0ZkdFbWpYMm5MbXRpbzh0bTdRZ2VVeDhV?=
- =?utf-8?B?d0dvNjIwYUFRbnQvejk4M0toR1NIMEI2NWRobkFVbklIMEtDcllJSDdaTjd3?=
- =?utf-8?B?RlNZaytFWVBDczVjNGxqbkVTQ2V1Z2NhQm9LSGZPTzJiMUlhbDdkU2crQlVU?=
- =?utf-8?B?cXhmaGpYMnAzT3U1RWRsdmRUNzkwNzBxbzBCaFljT2x5M2xEaVc2dHZvam9x?=
- =?utf-8?B?VldZR3RCeitrcDg2Uk9uSWREcmMrNGZVd0hHTDBCM3UvV2JmL3BIZVZYa05i?=
- =?utf-8?B?UmkwSy8rVVRONDdBVkdDcmVPektpNnpRS1ZWMllWQml3UDFOV1BxVDRhWnhs?=
- =?utf-8?B?ZE9uRHU3RWpJYmdGMjk0Sm1uMmVtNTQxSUlEc3U4a3JQZ1pOVFFwb0F0eGtF?=
- =?utf-8?B?eGd5WEhTYmZROUNKcXJ0VnRKdUtYL3JSeXF2Zk4vRFUzcmdiYzFqTmMxNk1h?=
- =?utf-8?B?K0Z6RDVRWVg0UmtEMk9ib0tDS3NJREh4WFFBcjdoSkVXOENITVB4VkRFb0pP?=
- =?utf-8?B?TmNHN3Y4VUh1bjM0VEQ2dXZ3SmhrVE1za1Y1V2RJSS9IMjNWaFVCWmk2bzA1?=
- =?utf-8?B?THg0Nkw5dGdISzZndnNCUXRteTZjOWNydFY4d3JPS1RZWGI3R0pKalJ1MW0w?=
- =?utf-8?Q?aw+yFDuFZ4E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N3Vac3FzSFNSRG5reDBPYjdCbjhlcXZhWlBjWEZGSVhYU25WUkR5aStjYnow?=
- =?utf-8?B?bjk4V0J5UU4yU3hqRlJ0UUNTUDYrRCt5TzBoNlpnSytSY2Jmb2hydVo3VFk3?=
- =?utf-8?B?VFlxT0tGSGh2bXFhcjBYKytQaFhQOEZYNllDcWFqRndZTHJuRG5vQzJoRG1t?=
- =?utf-8?B?ZktoWEZ3MkJDVFZKdSt0Q3BQbTlVaVdSZUlFbzNUekZUZGRzNW8vY0NPY1JP?=
- =?utf-8?B?YU1XRGJVdWh0MUliY1dCV2dLT3JGa2RodEk5eFN2Ulh3aGdrc3ZTLzEwN3RV?=
- =?utf-8?B?RS9DUVhzcklGNFVJWjllM0EzVFlhVVNzRC9nM0xrMzFpMVhuU0k4cnJxN0RE?=
- =?utf-8?B?QitOQ2sxNnJMeE4ybDFMNDU0M0gySTAwdHlYOEtyT3EyVnp5d2FjbEtocm1O?=
- =?utf-8?B?KzNrSlBSeXE4NHZQbFNNKzlSak56K1N0VkZsVCtpQWNJVklEeDhlSGVxRUJj?=
- =?utf-8?B?c3VIZ1RtMUx2NHRWamk4U1RWMndySEloL1gwTFlsTHRUb1N6dUVBQ2ZPbWly?=
- =?utf-8?B?S0dpc2dpSUh2dnFHdVpaQ1ZOYmkzT2ZValRCMjlJbnRyUzJEZ3oxeHFGRjAx?=
- =?utf-8?B?OTJzWWVkUXErQnJYNGRPa09QSkdxcGJtU1JDL1BvSzlNekFEZXVGRzY5MkM5?=
- =?utf-8?B?MDNuUW1yalRKUFhUVXB3dDU3cE5WbmlZUlJ0N3hEQXgxb0MxWW1VR3JmeTZy?=
- =?utf-8?B?SHFHNVdTMmpPS2RES1l6ZWlrM1VpNVdYY3FUQ3JlUXc2eHM4OXM4UWdpbExj?=
- =?utf-8?B?ZE0vdHJjTW0rQWZsUkVkUWFraTZXeEhGTUFJMWpKQkY4UlVuV3R2SlFWSmFz?=
- =?utf-8?B?YzFuN0lrdkljazdaZkZPamVkUTVBQk1pQnJIUmxpbnVVV2Rhemp2K1V4MmdD?=
- =?utf-8?B?VEQxRm9IV05nL0poY2lSMkpvQ0lzSnhuZFJyQ3dUUUVTb3ZhMTNxY0RqVDE3?=
- =?utf-8?B?WlZzb0RFRmg5NzVxaVp4QTR6SElBdlA3QnBPY1N0SG5GM3ZIMEdaakRWKzNz?=
- =?utf-8?B?eFJOZXREUHErU1VBT2xxNzFBb1BaQUZtZ1Q0ZTF1bTJNc2wxNWpNQUNtWms5?=
- =?utf-8?B?V3RiYVhUWXZkT1BxR0ZzdG9YbjIwWDhCWGk1L3BLNUlod0FNTUtENFo0SmJW?=
- =?utf-8?B?ckV3cDQ1Mjl5aGttd3pQNVJ5M25OTWRndXlSam1pQTg3WWYrVWV4WXNwQyt5?=
- =?utf-8?B?R2VzSS92QS94dlRSeUs1Y3Mvb2JoeU1tWlAvb0dlWGlmY0ttTjhhNEJQcGNT?=
- =?utf-8?B?aFRBM1duMHVmV3EyRVkzdHFocVk5TWxrckluaktQdGxCclgvVi9VNTAzdFY4?=
- =?utf-8?B?Nk9xY3JvQ2FXSFN2N3BwbjRmTkZIK2VodkhrNDFRMHd6RWZwaXZFQmRJV01G?=
- =?utf-8?B?Wk4yT21uSm53MEpoM1MzZitGL21JYXFrOE1iR0RzaElwUnNQazJRNERUMkVD?=
- =?utf-8?B?TExYNG5ySkF4eENhTXV4dXFNVDBjVm9NbnhqTUFVaEQzaXNxUmVKZ1B2Uzg3?=
- =?utf-8?B?Y2ZqTVNXdExHOGhDSERXaE0zdTVCWXVoZkdma2oycGwveXBhbjV1aHJ4cU9T?=
- =?utf-8?B?OG5VK3U4T3BtYlNFQ0pMMHg4bVRhWEd2VzBkNDFpZmx5ZEdHWGd6Sy9VeEpY?=
- =?utf-8?B?K1NhbWVBMU03QmthY09TZVZkK3pVNGhnY2h5NllkaFFFQ0ZHbk95OHpoTTJB?=
- =?utf-8?B?RW0vUDdXby80bXVPVjBXRVZldlhoUWNWNzNGSUpCa2N0ZzM4R05DaGREd1p3?=
- =?utf-8?B?TFBiQk5JdEhiakRzYTZQZjFQY2lxQ080WENFaTJTYnZMNm1OMkdIc0IwYXFq?=
- =?utf-8?B?VFh4SzVtR0QvYUN5Rng0Q3lvd1M4TS9sRTZsS0VkNFlSTGlLRmtqWldzSmVY?=
- =?utf-8?B?Rm45ZE5EWUVLY1NkaHdKd2VQcXZ6U1htci96dnlRNGpkOE1ZQWw1U0RrWGxu?=
- =?utf-8?B?SjF1YTJLRVZqbC9BNnU4ckF3b0czZE9Sd3FoZFNWOFBOUDJIOGlJdk84Tm8r?=
- =?utf-8?B?L2ErRUNEMmtKY0J0NG4vWU9VSDUraWJkUGVLcmNZZFJKaC9RL244VmhiRW9P?=
- =?utf-8?B?MmFZS1V5aVArd2M0SHNST21xQk5ENWtPbkdoS3dvM284YU14M0RYaTVsMTNO?=
- =?utf-8?Q?3TDcMh2r1rCOAsJLPTbyXt5dM?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a654b5e-4727-4e22-2845-08dd7c0744c3
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 10:21:21.8414
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +mPvi04IpE3FxCIQZffizRv3lkj78DpmEMs3C4+x7WnKN1JOnY/ueDVelRIdsiJmuwCLj9ufIYJErS5YguyTeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR10MB4030
 
-On 15.04.25 10:45, K Prateek Nayak wrote:
-> (+ Sebastian)
-> 
-> Hello Jan,
-> 
-> On 4/15/2025 11:39 AM, Jan Kiszka wrote:
->>>> Attached the bits with which we succeeded, sometimes. Setup: Debian 12,
->>>> RT kernel, 2-4 cores VM, 1-5 instances of the test, 2 min - 2 h
->>>> patience. As we have to succeed with at least 3 race conditions in a
->>>> row, that is still not bad... But maybe someone has an idea how to
->>>> increase probabilities further.
->>>
->>> Looking at run.sh, there are only fair tasks with one of them being run
->>> with cfs bandwidth constraints. Are you saying something goes wrong on
->>> PREEMPT_RT as a result of using bandwidth control on fair tasks?
->>
->> Yes, exactly. Also our in-field workload that triggers (most likely)
->> this issue is not using RT tasks itself. Only kernel threads are RT here.
->>
->>>
->>> What exactly is the symptom you are observing? Does one of the assert()
->>> trip during the run? Do you see a stall logged on dmesg? Can you provide
->>> more information on what to expect in this 2min - 2hr window?
->>
->> I've just lost my traces from yesterday ("you have 0 minutes to find a
->> power adapter"), but I got nice RCU stall warnings in the VM, including
->> backtraces from the involved tasks (minus the read-lock holder IIRC).
->> Maybe Florian can drop one of his dumps.
-> 
-> So I ran your reproducer on a 2vCPU VM running v6.15-rc1 PREEMPT_RT
-> and I saw:
-> 
->     rcu: INFO: rcu_preempt self-detected stall on CPU
->     rcu:     0-...!: (15000 ticks this GP) idle=8a74/0/0x1 softirq=0/0
-> fqs=0
->     rcu:     (t=15001 jiffies g=12713 q=24 ncpus=2)
->     rcu: rcu_preempt kthread timer wakeup didn't happen for 15000
-> jiffies! g12713 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
->     rcu:     Possible timer handling issue on cpu=0 timer-softirq=17688
->     rcu: rcu_preempt kthread starved for 15001 jiffies! g12713 f0x0
-> RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
->     rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is
-> now expected behavior.
->     rcu: RCU grace-period kthread stack dump:
->     task:rcu_preempt     state:I stack:0     pid:17    tgid:17   
-> ppid:2      task_flags:0x208040 flags:0x00004000
->     Call Trace:
->      <TASK>
->      __schedule+0x401/0x15a0
->      ? srso_alias_return_thunk+0x5/0xfbef5
->      ? lock_timer_base+0x77/0xb0
->      ? srso_alias_return_thunk+0x5/0xfbef5
->      ? __pfx_rcu_gp_kthread+0x10/0x10
->      schedule+0x27/0xd0
->      schedule_timeout+0x76/0x100
->      ? __pfx_process_timeout+0x10/0x10
->      rcu_gp_fqs_loop+0x10a/0x4b0
->      rcu_gp_kthread+0xd3/0x160
->      kthread+0xff/0x210
->      ? rt_spin_lock+0x3c/0xc0
->      ? __pfx_kthread+0x10/0x10
->      ret_from_fork+0x34/0x50
->      ? __pfx_kthread+0x10/0x10
->      ret_from_fork_asm+0x1a/0x30
->      </TASK>
->     CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1-test-
-> dirty #746 PREEMPT_{RT,(full)}
->     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->     RIP: 0010:pv_native_safe_halt+0xf/0x20
->     Code: 22 df e9 1f 08 e5 fe 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90
-> 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d 85 96 15 00 fb f4 <e9> f7
-> 07 e5 fe 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
->     RSP: 0018:ffffffff95803e50 EFLAGS: 00000216
->     RAX: ffff8e2d61534000 RBX: 0000000000000000 RCX: 0000000000000000
->     RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000081f8a6c
->     RBP: ffffffff9581d280 R08: 0000000000000000 R09: ffff8e2cf7d32301
->     R10: ffff8e2be11ae5c8 R11: 0000000000000001 R12: 0000000000000000
->     R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000147b0
->     FS:  0000000000000000(0000) GS:ffff8e2d61534000(0000)
-> knlGS:0000000000000000
->     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->     CR2: 000055e77c3a5128 CR3: 000000010ff78003 CR4: 0000000000770ef0
->     PKRU: 55555554
->     Call Trace:
->      <TASK>
->      default_idle+0x9/0x20
->      default_idle_call+0x30/0x100
->      do_idle+0x20f/0x250
->      ? do_idle+0xb/0x250
->      cpu_startup_entry+0x29/0x30
->      rest_init+0xde/0x100
->      start_kernel+0x733/0xb20
->      ? copy_bootdata+0x9/0xb0
->      x86_64_start_reservations+0x18/0x30
->      x86_64_start_kernel+0xba/0x110
->      common_startup_64+0x13e/0x141
->      </TASK>
-> 
-> Is this in line with what you are seeing?
-> 
+On Tue, 2025-04-15 at 01:08 +0200, Andrew Lunn wrote:
+> On Mon, Apr 14, 2025 at 10:45:47AM -0400, Jeff Layton wrote:
+> > Currently, there is no convenient way to see the info that the
+> > ref_tracking infrastructure collects. Add a new function that other
+> > subsystems can optionally call to update the name field in the
+> > ref_tracker_dir and register a corresponding seq_file for it in the
+> > top-level ref_tracker directory.
+> >=20
+> > Also, alter the pr_ostream infrastructure to allow the caller to specif=
+y
+> > a seq_file to which the output should go instead of printing to an
+> > arbitrary buffer or the kernel's ring buffer.
+>=20
+> When i see an Also, or And, or a list in a commit message, i always
+> think, should this be multiple patches?
+>=20
 
-Yes, and if you wait a bit longer for the second reporting round, you
-should get more task backtraces as well.
+Sure. I actually had this part in a separate patch earlier, but I don't
+usually like adding functions with no callers and this patch was pretty
+small. I can break it up though.
 
-Jan
+> >  struct ostream {
+> >  	char *buf;
+> > +	struct seq_file *seq;
+> >  	int size, used;
+> >  };
+> > =20
+> > @@ -73,7 +83,9 @@ struct ostream {
+> >  ({ \
+> >  	struct ostream *_s =3D (stream); \
+> >  \
+> > -	if (!_s->buf) { \
+> > +	if (_s->seq) { \
+> > +		seq_printf(_s->seq, fmt, ##args); \
+> > +	} else if (!_s->buf) { \
+> >  		pr_err(fmt, ##args); \
+> >  	} else { \
+> >  		int ret, len =3D _s->size - _s->used; \
+>=20
+> The pr_ostream() macro is getting pretty convoluted. It currently
+> supports two user cases:
+>=20
+> struct ostream os =3D {}; which means just use pr_err().
+>=20
+> And os.buf points to an allocated buffer and the output should be
+> dumped there.
+>=20
+> You are about to add a third.
+>=20
+> Is it about time this got split up into three helper functions, and
+> you pass one to __ref_tracker_dir_pr_ostream()? Your choice.
+>=20
 
--- 
-Siemens AG, Foundational Technologies
-Linux Expert Center
+Maybe? It doesn't seem worth it for this, but I'll take a look.
+
+> > +/**
+> > + * ref_tracker_dir_debugfs - create debugfs file for ref_tracker_dir
+> > + * @dir: ref_tracker_dir to finalize
+> > + * @name: updated name of the ref_tracker_dir
+> > + *
+> > + * In some cases, the name given to a ref_tracker_dir is based on inco=
+mplete information,
+> > + * and may not be unique. Call this to finalize the name of @dir, and =
+create a debugfs
+> > + * file for it.
+>=20
+> Maybe extend the documentation with a comment that is name is not
+> unique within debugfs directory, a warning will be emitted but it is
+> not fatal to the tracker.
+>=20
+
+Ok.
+
+> > + */
+> > +void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir, const char *=
+name)
+> > +{
+> > +	strscpy(dir->name, name, sizeof(dir->name));
+>=20
+> I don't know about this. Should we really overwrite the name passed
+> earlier? Would it be better to treat the name here only as the debugfs
+> filename?
+>=20
+
+I think it's safe. The only thing that currently uses ->name is
+pr_ostream(), AFAICT.
+
+> > +	if (ref_tracker_debug_dir) {
+>=20
+> Not needed
+>=20
+
+If we call debugfs_create_file() and pass in NULL as the parent, it
+will try to create the entry at the root of debugfs. We can get rid of
+this though if we initialize ref_tracker_debug_dir to an ERR_PTR value.
+I'll see about doing that.
+
+> > +		dir->dentry =3D debugfs_create_file(dir->name, S_IFREG | 0400,
+> > +						  ref_tracker_debug_dir, dir,
+> > +						  &ref_tracker_debugfs_fops);
+> > +		if (IS_ERR(dir->dentry)) {
+> > +			pr_warn("ref_tracker: unable to create debugfs file for %s: %pe\n",
+> > +				dir->name, dir->dentry);
+> > +			dir->dentry =3D NULL;
+>=20
+> this last statement should also be unneeded.
+>=20
+
+Only if ref_tracker_debug_dir is initialized to an ERR_PTR.
+--=20
+Jeff Layton <jlayton@kernel.org>
