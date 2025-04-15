@@ -1,92 +1,87 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63E823D2A4;
-	Tue, 15 Apr 2025 19:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7B92459C4;
+	Tue, 15 Apr 2025 19:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744942; cv=none; b=lmndI9s9lYGMf4Cu/bYD/Z7xnAeX0eDga0vk/Co4ifKOW8vXQvhDiBlpwlxaSI7FBPqQCKVjesTSexis4oJYIXJR//FvQasbKcQE8t+JCs03YZWdXPipvI7IsDodGY/xnY8caZuyy/WhXajwuAhAY2Jb8vXkMJQRWpBcto0UmRk=
+	t=1744744942; cv=none; b=fr9OpY1PAeZDLkQ4mtAAyBJ9t9gfY6bamzlx8ez6qBr/J+KTnlvTIbTn3e35yb6l7FDtA7yGFJV6NLF059OROat27wcPhbbVtiRPouIIik4rh+avCbh1QUOZAo8CFlCYRsAKHLrRoMYp+V/qweNN+s4HkyCJA6L5oPaRhW/nses=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744744942; c=relaxed/simple;
-	bh=nm1E1FEVMIfYg7pbvLYIfRTfxicisS5FpQYS0urX5/Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NqE0rhvTJz+vHML9OnVebKWGzVAJPfCXRTCGlop74yrhXF4n5VaNvBZG0qquz/Vl6noQXpDmbbt50n54UERd0O0DgcqWWc1AZ7g3BsofRxb2nHrUcqnu0wflNFoWZPoWS76RdQdHCcobV1it5qgY+d47f6V73H4Pdp6uT4Ew67Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=nWzMEJ6G; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AR7syuZC; arc=none smtp.client-ip=103.168.172.145
+	bh=z3OF0ozjujGh9DyQxCFTiBpRq4pogUfdjrLbd5r7z6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J89Kdhrhsrma11zKLjN+42nWAMg9CXVed5qW/D5mA+lyTOlYTBl1NF6S2aClB2/274cp22UKzNuIUpx3lnRqMij7X54QAVirqFLQ8DirtVgZhzm774kjTJiddnDzPNHCEiRPJTtI16ruCjZAGhOx20MA8HBiRAb1pc1TOLW7uvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=rMfPOjBD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WFG/zywo; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="nWzMEJ6G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AR7syuZC"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id B982813801DB;
-	Tue, 15 Apr 2025 15:22:19 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Tue, 15 Apr 2025 15:22:19 -0400
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="rMfPOjBD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WFG/zywo"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id EA34C1140187;
+	Tue, 15 Apr 2025 15:22:18 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-08.internal (MEProxy); Tue, 15 Apr 2025 15:22:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1744744939; x=
-	1744831339; bh=clBP/AOC+t0fTcP1nwoYlcZ2Ogk0dwhdHt+FVl4HuhU=; b=n
-	WzMEJ6GIq/0jujeV4cf14lB0cWoVTk8AQighnIQHd6T0Boy2U5bNtmhhXqRyU6aI
-	zRvN/R1d3Kg4EnZZIyK/GZoBB+0WxKnOxcE7MDCjq77mNuCPsJVUtJpwASd1ol3F
-	B586GgRPuMX7BL2FQwHjlqAA3G5T4Nm/H4VE3ni66dgskLCBdjwBzcS6bkWn5Y3t
-	8ch3GMv+4hMRVqFVClJeuPCsyTfOdZLibkI6HbUFW97KyR/gcsndqKGRGiOi2xJe
-	MSJCyILCn+tA4ivLLBF7mm7/0F9Pcb9UVg2RlGte/GphXZZhriI4xlsDQf9DZD84
-	w8UEIeD6L72ACsXjr0dZg==
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1744744938; x=1744831338; bh=NYcd+fO1NxEUNFY7q3ZE4
+	+NHZMdYBl2HpORWjobKRto=; b=rMfPOjBDrOWQ8KQJlr0Fp/gX9AqQn+4lH/XQI
+	5WW7sFZxFM3oMdkGgg+TwCGGsXGvotMloQe8m6dgF10THLovbQdIgpR+UAYbdt8X
+	jlvOuXK22nXk4S0BnUMLEsHPyhQs6pjA5hb/D4t3E5YAsDtdTyZxUjlqkR+uU5+K
+	8zfKKBrl3KpjPHSsK3+WdK7w5Y0SYaVHOiH2/XJiAbKnuKJt1AFgm4dY6Bd/fJz2
+	o+w0kaCE6R0NOS+Phce9aIhjpu5r84SKZS1rzTm+3gtAxQG7tpajy4qf+SeUVxOQ
+	zsRpm/dwUVE8fBtbMaaXgcvytJqBgQARz8VJ0JOoJLkxgeyqA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1744744939; x=1744831339; bh=c
-	lBP/AOC+t0fTcP1nwoYlcZ2Ogk0dwhdHt+FVl4HuhU=; b=AR7syuZCE24ugIg7r
-	crDGxFKTsUm/D/vUY9qkvlC4GRIKipROXgfkL1/HtAOvuXjH0ZEeuArL8b6DhrwG
-	cG4gAdCd6eik/E7GxIY5J5O7g2KGPRERS0YCI3hAMsEU0WCNtH4zZAhVhC7Gs+cA
-	KCCNoSOO5RdbCOXfLBL+Pl9Y4WhceaA7EKHaUhhUBqw6JhjkWx63LYIzaVYMPDTT
-	yprQPbvUM2br2ow5r/hGcfZBghTWOaTPL7s2yCDVZYcX2r+L9VWmjH5DDLgrxIxr
-	TZlvcGYeLJdo9aqwUsBB4PTKcDn5/xgs75/6tvS3mxkg+EW/MTnxpC5oxZj8Pjip
-	Jo9JQ==
-X-ME-Sender: <xms:67H-Z1VT8ZmZiI9wrc0m5J0s3nQiAURotj2Sh3Aw9Xu0k05QzEy6Fw>
-    <xme:67H-Z1n18Cx0tWkT7sEYwzqLHEGcRZt6YzrWMYRvw9i1kAp2H5FCUKAAFuTDiXXGj
-    zfxQjwzcZTK07DPGRc>
-X-ME-Received: <xmr:67H-ZxbFcvKNG70zWxreToJ_V1coybWfhOXSN0QZrMOqHxGjJn7dvRv4omXy4dEgYF0atM4oTV_ACcjMH6946hpLjdbzVDZU8RcsDUl53tIZRQF3bQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegfedvucetufdoteggodetrf
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744744938; x=1744831338; bh=NYcd+fO1NxEUNFY7q3ZE4+NHZMdYBl2HpOR
+	WjobKRto=; b=WFG/zywonm7wgb5I+Klv5hto0YWRlD/RukDk1oKYYFLO2vG+Pkx
+	qblu8c7BerraE2KCWLb9olyfsYqgeywaV4wYF5mSgEGfefABG3F8NLwbpkND7l1p
+	UFQc3YtfTB2Z59P3WXhBeopRxgz6XyQ7URKYRHF9VmdJ7ICfT2GdcPGJ9PYvpcb+
+	eywrXejYy8UKzdreE+1C5vJ6bDgZH5EfL2NKJ2CawResDDNgaO5xHE4QoO+zYL/n
+	ChtrA7nyDYn+dL637tZzFXaa9FBXVCIhaGCHbbEtWQyYlAHwQiyaVxLTjvIs2U6U
+	fMVY1F87O2TidE3r23ULG6IqXuyhe7gwY6g==
+X-ME-Sender: <xms:6rH-Z1ustK_Buu-TIkduOuKWx8qo3taYvVJ3Xasfp-V9WncBONXHEw>
+    <xme:6rH-Z-dAoTg1qPsNgK8lg1toD93-qmr1BrjPOFx-Jgqajxz5paAPFUgAsloGP5lCP
+    xJlHGjkXxpqKHeSTYY>
+X-ME-Received: <xmr:6rH-Z4yETBueM5v44ojk649GaNNqxRu0PKw0CQ8qie3vUZaP8zIK1Ekj2_605m9-nw4gBcsoAo5PPaRhnfW-i8UsApjKb5qKjwykcrPnK-iUYfb-6A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegfeduucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
-    tdenucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitg
-    drnhgvtheqnecuggftrfgrthhtvghrnheptdejueeiieehieeuffduvdffleehkeelgeek
-    udekfeffhfduffdugedvteeihfetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepnhhitghosehflhhugihnihgtrdhnvghtpdhnsggprhgtphht
-    thhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnphhithhrvgessggrhi
-    hlihgsrhgvrdgtohhmpdhrtghpthhtohepjhhirhhishhlrggshieskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhg
-X-ME-Proxy: <xmx:67H-Z4UaG2Hss25npzAFfwfidEdkGlMA22yaegLWxI8vHUsF9VK_ig>
-    <xmx:67H-Z_mMPbceuwvDqE2uxsAyrrRhUnpxwnnhA4tGtq-HGBD_matAdg>
-    <xmx:67H-Z1dYT7bwIvqtvKRmysUTOKlfSbqnigupF15KpiHCfSnPpV1RWg>
-    <xmx:67H-Z5FY-D3nY7EjrLFZLV_dD7zp0Jwe3pYXPRn0j0usBtTwCa2ahQ>
-    <xmx:67H-ZyH20worOBLGeWgsDk_EuG5QC_A-AJis2s_7ceOwWc2qoZU_6Alu>
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttden
+    ucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitgdrnh
+    gvtheqnecuggftrfgrthhtvghrnhephfevledutdfgvdeutdeugeevgfdtkeefteevvefh
+    keeuiedtkeegteehleevleejnecuffhomhgrihhnpehlkhhmlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihgtohesfhhluhig
+    nhhitgdrnhgvthdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepnhhpihhtrhgvsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehjihhr
+    ihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinh
+    hugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgv
+    lhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvghrih
+    grlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:6rH-Z8OjnTzSKn-LsxnDscXXcVDXdjJJbDtuhnp32krz6yzofYlCIg>
+    <xmx:6rH-Z1-wR75dwrztUE7bAx4syrV-Yo333eE6_Pb8de18-OCXo1-KPQ>
+    <xmx:6rH-Z8UOducG8p6cH0EAT39HUYSi2aVz7vXoAmkKoa209LuWYu_PxA>
+    <xmx:6rH-Z2fZwoRD1iq-Yif4UMgaemcZHCCTGslR3Sp0E5rcxG0EqHus_A>
+    <xmx:6rH-Z4-ZSujY-mcHJqYU7Ou5rS4mZdRn-z8hSlGqjnD2lfeAKHbTm2ya>
 Feedback-ID: i58514971:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 15 Apr 2025 15:22:19 -0400 (EDT)
+ 15 Apr 2025 15:22:18 -0400 (EDT)
 Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 0F7801116613;
-	Tue, 15 Apr 2025 15:22:19 -0400 (EDT)
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id BEF281116606;
+	Tue, 15 Apr 2025 15:22:17 -0400 (EDT)
 From: Nicolas Pitre <nico@fluxnic.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
 Cc: Nicolas Pitre <npitre@baylibre.com>,
 	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/13] vt: pad double-width code points with a zero-width space
-Date: Tue, 15 Apr 2025 15:17:59 -0400
-Message-ID: <20250415192212.33949-11-nico@fluxnic.net>
+Subject: [PATCH v2 00/13] vt: implement proper Unicode handling
+Date: Tue, 15 Apr 2025 15:17:49 -0400
+Message-ID: <20250415192212.33949-1-nico@fluxnic.net>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415192212.33949-1-nico@fluxnic.net>
-References: <20250415192212.33949-1-nico@fluxnic.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,57 +90,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Nicolas Pitre <npitre@baylibre.com>
+The Linux VT console has many problems with regards to proper Unicode
+handling:
 
-In the Unicode screen buffer, we follow double-width code points with a
-space to maintain proper column alignment. This, however, creates
-semantic problems when e.g. using cut and paste.
+- All new double-width Unicode code points which have been introduced since
+  Unicode 5.0 are not recognized as such (we're at Unicode 16.0 now).
 
-Let's use a better code point for the column padding's purpose i.e. a
-zero-width space rather than a full space. This way the combination
-remains with a width of 2.
+- Zero-width code points are not recognized at all. If you try to edit files
+  containing a lot of emojis, you will see the rendering issues. When there
+  are a lot of zero-width characters (like "variation selectors"), long
+  lines get wrapped, but any Unicode-aware editor thinks that the content
+  was rendered properly and its rendering logic starts to work in very bad
+  ways. Combine this with tmux or screen, and there is a huge mess going on
+  in the terminal.
 
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
----
- drivers/tty/vt/vt.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+- Also, text which uses combining diacritics has the same effect as text
+  with zero-width characters as programs expect the characters to take fewer
+  columns than what they actually do.
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 76554c2040..1bd1878094 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2923,6 +2923,7 @@ static void vc_con_rewind(struct vc_data *vc)
- 	vc->vc_need_wrap = 0;
- }
- 
-+#define UCS_ZWS		0x200b	/* Zero Width Space */
- #define UCS_VS16	0xfe0f	/* Variation Selector 16 */
- 
- static int vc_process_ucs(struct vc_data *vc, int *c, int *tc)
-@@ -2941,8 +2942,8 @@ static int vc_process_ucs(struct vc_data *vc, int *c, int *tc)
- 		/*
- 		 * Let's merge this zero-width code point with the preceding
- 		 * double-width code point by replacing the existing
--		 * whitespace padding. To do so we rewind one column and
--		 * pretend this has a width of 1.
-+		 * zero-width space padding. To do so we rewind one column
-+		 * and pretend this has a width of 1.
- 		 * We give the legacy display the same initial space padding.
- 		 */
- 		vc_con_rewind(vc);
-@@ -3065,7 +3066,11 @@ static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
- 		tc = conv_uni_to_pc(vc, ' ');
- 		if (tc < 0)
- 			tc = ' ';
--		next_c = ' ';
-+		/*
-+		 * Store a zero-width space in the Unicode screen given that
-+		 * the previous code point is semantically double width.
-+		 */
-+		next_c = UCS_ZWS;
- 	}
- 
- out:
--- 
-2.49.0
+Some may argue that the Linux VT console is unmaintained and/or not used
+much any longer and that one should consider a user space terminal
+alternative instead. But every such alternative that is not less maintained
+than the Linux VT console does require a full heavy graphical environment
+and that is the exact antithesis of what the Linux console is meant to be.
 
+Furthermore, there is a significant Linux console user base represented by
+blind users (which I'm a member of) for whom the alternatives are way more
+cumbersome to use reducing our productivity. So it has to stay and
+be maintained to the best of our abilities.
+
+That being said...
+
+This patch series is about fixing all the above issues. This is accomplished
+with some Python scripts leveraging Python's unicodedata module to generate
+C code with lookup tables that is suitable for the kernel. In summary:
+
+- The double-width code point table is updated to the latest Unicode version
+  and the table itself is optimized to reduce its size.
+
+- A zero-width code point table is created and the console code is modified
+  to properly use it.
+
+- A table with base character + combining mark pairs is created to convert
+  them into their precomposed equivalents when they're encountered.
+  By default the generated table contains most commonly used Latin, Greek,
+  and Cyrillic recomposition pairs only, but one can execute the provided
+  script with the --full argument to create a table that covers all
+  possibilities. Combining marks that are not listed in the table are simply
+  treated like zero-width code points and properly ignored.
+
+- All those tables plus related lookup code require about 3500 additional
+  bytes of text which is not very significant these days. Yet, one
+  can still set CONFIG_CONSOLE_TRANSLATIONS=n to configure this all out
+  if need be.
+
+Note: The generated C code makes scripts/checkpatch.pl complain about
+      "... exceeds 100 columns" because the inserted comments with code
+      point names, well, make some inlines exceed 100 columns. Please make
+      an exception for those files and disregard those warnings. When
+      checkpatch.pl is used on those files directly with -f then it doesn't
+      complain.
+
+This series was tested on top of v6.15-rc2.
+
+Changes from v1 (https://lkml.org/lkml/2025/4/9/1952):
+
+- Moved much of the C functions out of the Python generator, leaving only
+  lookup tables to C code generation
+
+- Cleaned up the Python code
+
+- Unicode processing in vt.c moved to a function of its own
+
+- Folded bug fixes into the series, fixed style, typos, etc.
+
+Thanks to Jiri Slaby for the review.
+
+diffstat:
+ drivers/tty/vt/Makefile                   |   3 +-
+ drivers/tty/vt/consolemap.c               |   2 -
+ drivers/tty/vt/gen_ucs_recompose_table.py | 255 +++++++++++++
+ drivers/tty/vt/gen_ucs_width_table.py     | 299 ++++++++++++++++
+ drivers/tty/vt/ucs.c                      | 156 ++++++++
+ drivers/tty/vt/ucs_recompose_table.h      | 102 ++++++
+ drivers/tty/vt/ucs_width_table.h          | 453 ++++++++++++++++++++++++
+ drivers/tty/vt/vt.c                       | 138 +++++---
+ include/linux/consolemap.h                |  18 +
+ 9 files changed, 1376 insertions(+), 50 deletions(-)
