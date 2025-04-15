@@ -1,73 +1,82 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9031E5B70
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7304D205AB8
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744696019; cv=none; b=OSgrPn2xtRN+d4otOHM29Ru/TFhALk9dnT+JRioVp1bQlYNCuNwQqctzDDOIXDX0XXtf96lpTQ+XuP18mo5i+scnQKaNP++7BkxOxkJy6nbpuLU4OXPcHrS0vFpHfh0qLnNllk3lgswh3f9YyHasZXGPHRkyQNFyJIwHOp+qW4s=
+	t=1744696040; cv=none; b=YfoZTyy4bWUzC/kR38Us2unHDWAixgifjBnQ01ACfLH4rGTVCh1Nc9JsMfwnZF+R4hxh7Qo4l83cRXvRrKJ+OxJcy+DLDRU4hwNSJsjEGIVWbGQz9rScmBYshPgxVdp07+ix6pzmdXdNc2u7MWbFRm+JmTQrWrjM7C+VsbPxCr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744696019; c=relaxed/simple;
-	bh=CuimUCxABVpqq10GHMJ0bxV0GGCA4zQouC4cjyd/m/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oMjlbajE3qYAD3d8jfvrOvkCVB5qd2pYwZB5Wcj0MTz3syn+OeyCpHXYe/u7+XltbKyrwSoJBglRyn0Bt813SRc/d7wFGGdPGcsYV1Ncaj4SSXTHIsqUROpkakSAqppL5AeGoOW56r91MbHby2DN2hAM6/ZGFRvrJhmwxKEbOK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WefWCqlF; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744696040; c=relaxed/simple;
+	bh=H9Bcya8I6v9xPGtKD76r4DW4ffUowuK7+mQUR2YsV60=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sC2m2LLR3q0G+s+/BDChNPnbzzsHwhMBay4B44vGvWaNjqdYwgQ21mAgJZ81d2hg2iNI5rvWmEAQDIyIoiTOOhUIkaRopndLUXqx2c25Pog6BcFy79FbLv94yryFXrmOb6hmV539PyKaS8VGwhLA4C4xLVRQSMyQpzl/cxg69AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KYsGpmaM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wMTYom4A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KYsGpmaM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wMTYom4A; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WefWCqlF"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so5770333a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744696017; x=1745300817; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k4cZxTtVMJDaaa7hDwJgmoHujDnPmGdlQIS/4rZGmLk=;
-        b=WefWCqlFFq+k/DuWKwNrnTGobHyrIhemm7WBxA3vl8Vlnx/Tv7AB4dcdL74LAl+oRS
-         1G1lpEI4myUcxQIJ7PRpXE5TDBjgqLl3DO4rTtfkzztWdDMtEEutW17nS95yAKvBYLZz
-         5tbXxN8/Y2nc3vID2grZRZK9djr4rhWWN7926p6Gr1t13XnsWVuel+dNF10elkNDgxin
-         5nMK5YCNej1202zQgp0vril6yZ5PyEJl4QVcIDTzqZ4LrYz6tQBhfb9PeklKVKi7ZyF3
-         gMeJXcFNxtUEF+9xDYMdT3CGDtlMSXQn4a1p/axzCt3+1pji0SMpTUaafcJ7zySCCU6V
-         g+7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744696017; x=1745300817;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k4cZxTtVMJDaaa7hDwJgmoHujDnPmGdlQIS/4rZGmLk=;
-        b=cy74grY4V42FPgb5dMoyp2kAfWWU3gj81T+Xq0LJcE6b6bq5OyNT+mWXKarJR4WHVL
-         w3AUFM2nfPhQIZDGtAor2GMe96VzZ/hwOuRr8RlKFUheUHI864tJXRVMrHmPLSi2DRnl
-         iuE7abH+3DP1ip7OJ3x14i50DtlLp5YxuUB20DEaPj4KfS6b4bQlq21mzTQqiD9xs//1
-         asoUoHNtUZhA1UfMlXqdDDsePL71MomlDkePHQ/g1GHV7zzsb3hXQ/sRINld1cjFTV1R
-         LtOGXDdZ944AZWSfxDrIeWKriDTJ5RL86qlngxQeBxVtZ50eHlRImqqwRJUTGJMBqolS
-         UF4g==
-X-Gm-Message-State: AOJu0YxL1pll6d4x2AByzR50BMX0D6jm/VsNne8BRrhtt+lD2N+bnGlI
-	xJbAOClz+606bNBQc2IEGe2Pl4AyGTa+K/wGhiPnvim4tdjMVLCY
-X-Gm-Gg: ASbGncsyrURDEbmzRwE779mH/m91QXn8MGCeayPWKNOY2Z+Ms7+JjP8TL0zTnw1AA5J
-	3cthb9eKBXenWy8+1pHO/XT+Yv3JB9jB7WyJMZ7NVcXKLzbS2ZeKU6FXeHCAbn+9bMdZbUZySJz
-	ZBdWwxw08z7xZhSL3oP5xs+wZWJxSHqkUQLiOjFhTR7A2VjKy1oss32H/vqwiJLg9n9TeFZewbZ
-	hOoyRIONBrBYwZGml+rkcBq6PlvbXdzp5Rlkox4sYFbqwWZ7LmIeiQUe4a+qAtWquNIbyp499C7
-	916dR9pLVH/fR77H4hwOk1YU1ikH21OsW+42VMi2zMV107BS4jcookhWubfaKXCg6GUE4VBLjJQ
-	=
-X-Google-Smtp-Source: AGHT+IF7s2hYBEEX/opgVv7QoPu8Lk1EsNQ/k37JSlTMw64+HMx36CxdT602jm30YOrpkzyAK6ryUg==
-X-Received: by 2002:a17:90b:5210:b0:2fa:3b6b:3370 with SMTP id 98e67ed59e1d1-3084f3d3391mr2689675a91.16.1744696016765;
-        Mon, 14 Apr 2025 22:46:56 -0700 (PDT)
-Received: from PC-YLX47FB9.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b9042dsm109219185ad.104.2025.04.14.22.46.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 22:46:56 -0700 (PDT)
-From: yangsonghua <jluyangsonghua@gmail.com>
-X-Google-Original-From: yangsonghua <yangsonghua@lixiang.com>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: linux-kernel@vger.kernel.org,
-	sched-ext@meta.com,
-	yangsonghua <yangsonghua@lixiang.com>
-Subject: [PATCH v2] tools/sched_ext: Improve cross-compilation support in Makefile
-Date: Tue, 15 Apr 2025 13:46:42 +0800
-Message-Id: <20250415054642.3878839-1-yangsonghua@lixiang.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KYsGpmaM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wMTYom4A";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KYsGpmaM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wMTYom4A"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4DA931F38A;
+	Tue, 15 Apr 2025 05:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744696036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
+	b=KYsGpmaMNkYQZsnqC9EgB1TaCK+6Fs7+dx9WZeomoltuPfereu2PriOYYBvVcLRicNjBKJ
+	/JH3xKbRUlURIAHyFZnXAZYF2hNZ5kV8O4rF9+w66apPJAOWtqazmCSqiNXtEbNmiFTt0H
+	aD2KPlkGu2Tn6XYfh8qjOOd3ZoHf47o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744696036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
+	b=wMTYom4AnX077uvX3q64GYuD5atZcOXWMh8igLbRr/7omMTB5hFdxHQyWhJuuOs19bvC6f
+	pDzrTlcTfq7UnNCg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744696036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
+	b=KYsGpmaMNkYQZsnqC9EgB1TaCK+6Fs7+dx9WZeomoltuPfereu2PriOYYBvVcLRicNjBKJ
+	/JH3xKbRUlURIAHyFZnXAZYF2hNZ5kV8O4rF9+w66apPJAOWtqazmCSqiNXtEbNmiFTt0H
+	aD2KPlkGu2Tn6XYfh8qjOOd3ZoHf47o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744696036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
+	b=wMTYom4AnX077uvX3q64GYuD5atZcOXWMh8igLbRr/7omMTB5hFdxHQyWhJuuOs19bvC6f
+	pDzrTlcTfq7UnNCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C7E6113927;
+	Tue, 15 Apr 2025 05:47:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kc+5LePy/We2EwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 15 Apr 2025 05:47:15 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Matthew Wilcox <willy@infradead.org>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH] mm, hugetlb: Reset mapping to TAIL_MAPPING before restoring vmemmap
+Date: Tue, 15 Apr 2025 07:47:05 +0200
+Message-ID: <20250415054705.370412-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,85 +84,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-Modify the tools/sched_ext/Makefile to better handle cross-compilation
-environments by:
+commit 4eeec8c89a0c ("mm: move hugetlb specific things in folio to page[3]")
+shifted hugetlb specific stuff, and now mapping overlaps _hugetlb_cgroup field.
 
-1. Adjusted `HOST_OUTPUT_DIR` to be relative to `$(OBJ_DIR)`, ensuring
-   correct path handling during host tool building when cross-compile
-   (HOST_OUTPUT_DIR now points to $(OBJ_DIR)/host-tools)
-2. Properly propagate CROSS_COMPILE to libbpf sub-make invocation
-3. Add missing $(HOST_BPFOBJ) build rule with proper host toolchain flags
-   (ARCH=, CROSS_COMPILE=, explicit HOSTCC/HOSTLD)
-4. Consistently quote $(HOSTCC) in bpftool build rule
+_hugetlb_cgroup is set to NULL when preparing the hugetlb page in
+init_new_hugetlb_folio().
+For a better picture, this is page->mapping before and after the comming
+for the first three tail pages:
 
-The changes ensure proper cross-compilation behavior while maintaining
-backward compatibility with native builds. Host tools are now correctly
-built with the host toolchain while target binaries use the cross-toolchain.
+before:
+page: fffff51a44358040  0000000000000000
+page: fffff51a44358080  0000000000000000
+page: fffff51a443580c0  dead000000000400
 
-Signed-off-by: yangsonghua <yangsonghua@lixiang.com>
+after:
+page: fffff1f0042b0040  0000000000000000
+page: fffff1f0042b0080  fffff1f0042b0090
+page: fffff1f0042b00c0  0000000000000000
 
-------
-v2:
-  - keep HOST_BUILD_DIR and LDFLAGS unchanged
-  - change the title prefix "sched_ext" to "tools/sched_ext"
+Tail#2 has fffff1f0042b0090 because of the _deferred_list initialization,
+which was also shifted, but that is not a problem.
 
-v1:
-  - https://lore.kernel.org/lkml/20250414081436.2574882-1-yangsonghua@lixiang.com/
+For HVO, upon restoring that gets copied in some tail pages (reset_struct_pages)
+and so those tail pages will not have TAIL_MAPPING set and the check
+in free_tail_page_prepare() will fail:
+
+ kernel: BUG: Bad page state in process kworker/0:3  pfn:10ac40
+ kernel: page does not match folio
+ kernel: page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10ac40
+ kernel: flags: 0x17ffffc0000000(node=0|zone=2|lastcpupid=0x1fffff)
+ kernel: raw: 0017ffffc0000000 fffff1f0042b0000 0000000000000000 0000000000000000
+ kernel: raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+ kernel: page dumped because: corrupted mapping in tail page
+
+Reset _hugetlb_cgroup to TAIL_MAPPING before restoring so tail pages have the
+right value.
+
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- tools/sched_ext/Makefile | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+Hi guys,
 
-diff --git a/tools/sched_ext/Makefile b/tools/sched_ext/Makefile
-index ca3815e572d8..eb85f3762a1f 100644
---- a/tools/sched_ext/Makefile
-+++ b/tools/sched_ext/Makefile
-@@ -62,7 +62,7 @@ BINDIR := $(OUTPUT_DIR)/bin
- BPFOBJ := $(BPFOBJ_DIR)/libbpf.a
- ifneq ($(CROSS_COMPILE),)
- HOST_BUILD_DIR		:= $(OBJ_DIR)/host
--HOST_OUTPUT_DIR	:= host-tools
-+HOST_OUTPUT_DIR	:= $(OBJ_DIR)/host-tools
- HOST_INCLUDE_DIR	:= $(HOST_OUTPUT_DIR)/include
- else
- HOST_BUILD_DIR		:= $(OBJ_DIR)
-@@ -136,14 +136,25 @@ $(MAKE_DIRS):
- $(BPFOBJ): $(wildcard $(BPFDIR)/*.[ch] $(BPFDIR)/Makefile)			\
- 	   $(APIDIR)/linux/bpf.h						\
- 	   | $(OBJ_DIR)/libbpf
--	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(OBJ_DIR)/libbpf/	\
-+	$(Q)$(MAKE) $(submake_extras) CROSS_COMPILE=$(CROSS_COMPILE) 		\
-+		    -C $(BPFDIR) OUTPUT=$(OBJ_DIR)/libbpf/			\
- 		    EXTRA_CFLAGS='-g -O0 -fPIC'					\
-+		    LDFLAGS="$(LDFLAGS)"					\
- 		    DESTDIR=$(OUTPUT_DIR) prefix= all install_headers
- 
-+$(HOST_BPFOBJ): $(wildcard $(BPFDIR)/*.[ch] $(BPFDIR)/Makefile)		\
-+	   $(APIDIR)/linux/bpf.h						\
-+	   | $(HOST_BUILD_DIR)/libbpf
-+	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) 				\
-+		    OUTPUT=$(HOST_BUILD_DIR)/libbpf/				\
-+		    ARCH= CROSS_COMPILE= CC="$(HOSTCC)" LD=$(HOSTLD)		\
-+		    EXTRA_CFLAGS='-g -O0 -fPIC'					\
-+		    DESTDIR=$(HOST_OUTPUT_DIR) prefix= all install_headers
-+
- $(DEFAULT_BPFTOOL): $(wildcard $(BPFTOOLDIR)/*.[ch] $(BPFTOOLDIR)/Makefile)	\
- 		    $(HOST_BPFOBJ) | $(HOST_BUILD_DIR)/bpftool
- 	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)				\
--		    ARCH= CROSS_COMPILE= CC=$(HOSTCC) LD=$(HOSTLD)		\
-+		    ARCH= CROSS_COMPILE= CC="$(HOSTCC)" LD=$(HOSTLD)		\
- 		    EXTRA_CFLAGS='-g -O0'					\
- 		    OUTPUT=$(HOST_BUILD_DIR)/bpftool/				\
- 		    LIBBPF_OUTPUT=$(HOST_BUILD_DIR)/libbpf/			\
-@@ -185,7 +196,7 @@ $(addprefix $(BINDIR)/,$(c-sched-targets)): \
- 		$(SCX_COMMON_DEPS)
- 	$(eval sched=$(notdir $@))
- 	$(CC) $(CFLAGS) -c $(sched).c -o $(SCXOBJ_DIR)/$(sched).o
--	$(CC) -o $@ $(SCXOBJ_DIR)/$(sched).o $(HOST_BPFOBJ) $(LDFLAGS)
-+	$(CC) -o $@ $(SCXOBJ_DIR)/$(sched).o $(BPFOBJ) $(LDFLAGS)
- 
- $(c-sched-targets): %: $(BINDIR)/%
+Although I can no longer reproduce the issue with this patch, I'm not entirely
+sure this is the right way to fix the problem, so I'm open to
+suggestions.
+---
+ mm/hugetlb_vmemmap.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 9a99dfa3c495..3d763182c834 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -498,6 +498,12 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
+  */
+ int hugetlb_vmemmap_restore_folio(const struct hstate *h, struct folio *folio)
+ {
++	/*
++	 * Before restoring vmemmap, make sure to reset mapping to TAIL_MAPPING,
++	 * so tail pages that were reset will have the right thing after being
++	 * restored, and the checks in free_tail_page_prepare() will pass.
++	 */
++	set_hugetlb_cgroup(folio, TAIL_MAPPING);
+ 	return __hugetlb_vmemmap_restore_folio(h, folio, VMEMMAP_SYNCHRONIZE_RCU);
+ }
  
 -- 
-2.25.1
+2.49.0
 
