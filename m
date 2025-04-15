@@ -1,569 +1,543 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7866E28E3F;
-	Tue, 15 Apr 2025 19:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7666122D785
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744746389; cv=none; b=hjMJbqztlTcpgzaIod6St47hne+dC/hjZePBtqdls9MEXlFQ6i9+o1asETkpuAwnCY0vyTfUiUlzFo8CRpgkY9yI9zaFC65aVFlEstsE187tox+Bx5ICvTf7wvbPmDw+aMNU8CRqkrZtXVI6YfQf5b7vOQISDET/Mk0W2t63hE4=
+	t=1744746433; cv=none; b=K1TI/LpRyxL4NAkLbAOlzUnDBdBQFrTssg8ccSSKDPiEcJXWO48hEXYl2eTP1AXCjpFHYsXwnIhto6L4DueqyydY1GOZ9ArQ/T+IuGBWBC2LO6ZftDxQvZekenXQVUQw8MyYP88AqXh+JPAhZ90IgFH1YpJxBXbBRtWBnHUJNMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744746389; c=relaxed/simple;
-	bh=R+Zv6c2uPA4DC7TYi9vQVRn9j3j+LCicZ7RJzllZVAE=;
+	s=arc-20240116; t=1744746433; c=relaxed/simple;
+	bh=j04zaQWz1Qi50oTy15wXZJh1pbQ+//nAaeZ+iDvgFL8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KFJCsPrcGQpiSAl3frUC/2NI99oHu+m3dYrzfG8LM36leEChPAHTsuHYTgN5a9NO2EFRnwqt+qOf4WZTr/Ny3tQNZSZ5bHo4AeVnm5UouqSz3/3KB8NOuGcZ/nyIT2oqfrCrfaIM23IGQx91EoXpCsKlZk3sYKl3aWcnyEljPrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0GOwwOu; arc=none smtp.client-ip=209.85.208.182
+	 To:Cc:Content-Type; b=g7QkqVnDkELGGKHOBJy7ghuymdlrYj0ApI4OuRK2MFopFh72LV5JTzUHxOuBojRUuiXOEEx4/c+T5MTR28dLQqWNGB7wJ0bttI+hg+RCZeGrqMPlesjWFzmtCwS8WAEVcahG3ibViz0MTtSKhiFn95RObN0POV5Wky4Wm6M9E5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gci0lIlG; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0GOwwOu"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30db1bd3bddso58272101fa.3;
-        Tue, 15 Apr 2025 12:46:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gci0lIlG"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7042ac0f4d6so57858517b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744746385; x=1745351185; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744746430; x=1745351230; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PqT6zRKs9SowwoAb4/yoSTd2DSJhi53YDhc/WhSwJjI=;
-        b=F0GOwwOu63oyYy4/OKpgPQYH9pDk1AShoigWp6CEb7tGefYPu6vJrv1Sk48XwKsV9h
-         7F4PusF0BlsvLIGOHMR8RGCkyr/lyW6q8HS04LE0NePV8lj0PchiQo16IF+MIymYijo5
-         +2qjwBOx2my8kxR/C43PeajNIEd8suZk0/9ma0ybFQqYEeJVmGrX/J/DzfdmebMHyL6m
-         O5t+CrQFAAAmVdu7CosUsdPtCo6+lxGxGB3/DAXGunV8IKs/ptHAM8uRspmI5ldZyuHn
-         hvw+PvVV+/fdM0GWTa6pgAOLypk8if1AE6FFv0JIenQuHekeQwh19cHMNlJD89WSuBII
-         xTcw==
+        bh=Z5bSHJdQC3WrPn0Czdv6CK3Q3wQ60dPv5EscshlCojg=;
+        b=Gci0lIlGJaBpjMNtZvOVg0XAvdWRhc1O9AixW6qfehcNhY+i7uSXWm8iK31hzCDPE0
+         Z83QIAMNHYeTzRHmsV0GtInPUNZn4Dr/TUFnqSi3IlYoCyvhPNHj/xoTc7nAdC8rvsDJ
+         rJaK1QrYoPoSx8tpWb+XekXktW3FuPgOqyVPDQac7KPJtS+3zCCUdgwXxcxaVcXBMa4m
+         jQw1Drr18AYYx0HCqM5v6oYaM2MP/OfmzTq1FTpFWjRgCMTAm2lpmj8JMVDLW/T7BDTZ
+         FYagcCS+jSCPYCVYP9Y+mAXySAimECSwOVi92hqtXjMty1SE+tGbt739ayqS+Nk/+MRt
+         +xIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744746385; x=1745351185;
+        d=1e100.net; s=20230601; t=1744746430; x=1745351230;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PqT6zRKs9SowwoAb4/yoSTd2DSJhi53YDhc/WhSwJjI=;
-        b=nbOyZvWQddBtc13cRllBLgG+oPzTQZO0JBvgJ+LgQAes8ABEAwRqHpq51j49fynoTh
-         uNg8kDxAY1oM9mEGEi/dPI7Ui77zp7wtzZoYsahHzUL8PkJEv0Rhk7hSyXOlBEnVgMrP
-         xXyFtJzqhqsBbDSDw3yMmc0Nn6qIYWwdroMPiuL8FtWaIZ51eKBa9JB+T8THZRP6FVCY
-         Y3WBvZSnyDsVfyrJI/4Puk9N1yy/P5s3UQIPvFvw060OwRenMimhU/yy7NDzANv/QjGW
-         MPPNFqQByDAjLDQa1EJRfAOaxYKfsSfWZ/jIfcr/l+0xFAcuWZTEU26o671rJfHfduz8
-         jcOg==
-X-Forwarded-Encrypted: i=1; AJvYcCV30k4oC6hcEKQwQvp82OpHKsGUXTj6+64/Lz3p6ZTJ7jE+lE5Z6FHs1AhVDYkXgZzfInSs2wNJ@vger.kernel.org, AJvYcCVGE0ZJj4IgdAWhhIyTEAk4DgVYpM3CYaSAccOVpThNzpjw7SfHsqGqxV08Sp+rz8rClPIVQ5vRdllGcO88@vger.kernel.org, AJvYcCWyrB0movLiDIpsPfljVv7F/kRvNhKpE8VlI+QfUggQnwsUI7wvw0p0qqqm3lF+O1GjAVMOQfGz134cFk93VyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxky1Swam52OmVOHY5kcC9ExE22V8SDUfbOG0JSnTBPTyHeFBOk
-	xzD21+K2sMcHfNKqpc0YDKaC0Xdc/LtK86uIYDHpfpOPS8yhBsb77xnBVyCnJHNWk6Qnc5SCcOd
-	IOEx7YMQE052/EGAPka3ASZ9H/bVEaS7Y7xJ2IQ==
-X-Gm-Gg: ASbGncuiEE1zGTipsc5di9n6Z1/PsslFYIrpm07tdrHARHMWk7XHOQQIz2W8Jj6AyqS
-	LFLpBse4oy9fvOI3QQZhwXYgdH8+8VWu2+MPcmuOYDsXDt1plKTbUP4JZ7qC8eSHEH+Jp3XHR+b
-	Fng+EGaKK1GAdmNx0QFyim
-X-Google-Smtp-Source: AGHT+IEehIgfuhCpSOoMRsrBME8J6LhV2Lg0HPcZncHq/vGs0+w44zYagpm03a7RNX9nVZ5xUdMHyK3yI+7AL+rYKSc=
-X-Received: by 2002:a05:651c:2129:b0:30d:e104:a497 with SMTP id
- 38308e7fff4ca-3107c380ebcmr695751fa.41.1744746384989; Tue, 15 Apr 2025
- 12:46:24 -0700 (PDT)
+        bh=Z5bSHJdQC3WrPn0Czdv6CK3Q3wQ60dPv5EscshlCojg=;
+        b=Y+l/nezuvzqRlX+bg9kwtrQ7g2WykSrc4xB6rv1CellTifOL1SazjRrcHOaZwpyQT2
+         UFGZ0SpEjomjlakuz+2a7+qk62irYNflg6zBrh9Ju49BxuscbG2zvrsfPPK5HKgK7arm
+         s5ji1TkzO1r1An/tDLWNUc2+T4xXRqDLh3Jl5k5TYWbdq0XRjr4OnIKovivDxT5Sscg5
+         O6PlB+Pqmyk2dwIL5RJOZs3gkKNf90uGKigD1RgTmK6yAHp9mQTpPN0ObwDkpEGncJ9Q
+         u0yMtPve2ifsLIaf2X3YvuJGYweDbhbWS/PgXx8YGuTNl/Z13zDaoDjOkTVz5G5+jBAC
+         EIeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxqBMDpsqejF2hHEQI10ef2gqfeDxLgmRTxdSsLfjuElsRWENiHOwDFXs8feEz9VLKg/DsmruFFhbz8Rk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3/w5YO0pCB5SrPBWsX4ogln+PG4s8Y6cGJOkHSgdQsTv995I8
+	k2q97sRhxt4dbZuoXQ+X/ISmLX6gYvmDL9NjWdWZFS5IH8xb68VLDfYQxSZ9eYeYg+1CNZbs4a3
+	DlykxF8VVqaRyQk+DC1Ypa6NCUAA=
+X-Gm-Gg: ASbGncv9bRyIM34PgLQYKuzhCR9AYii8tZG52xTXlr4Z3iltVGuIlZAPehULJzeqYEf
+	S3waE3dWZ0vghyatmhw0HNS1lenKWCE4GvCnyJJ2r+oPTKT1Zn+CDUTcqB6c3f5n/5Oqan6aBRF
+	DE4o8nhdBAEHMpGtIo26/I
+X-Google-Smtp-Source: AGHT+IEPWlHNJ/J606yeAJ/37YZzyfmcVwbkzN/jQDQ6gWyJt2gOriur1mC9teoFSDpGwD/HV3OUjAxF2pESuc72fFs=
+X-Received: by 2002:a05:690c:650a:b0:6fe:bfb9:549c with SMTP id
+ 00721157ae682-706acea400amr10030247b3.1.1744746429820; Tue, 15 Apr 2025
+ 12:47:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411133330.171563-1-chharry@google.com>
-In-Reply-To: <20250411133330.171563-1-chharry@google.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 15 Apr 2025 15:46:10 -0400
-X-Gm-Features: ATxdqUH8Hv9oSqzMq2vlQrKzsOgrs_OZu0KohZRh2a3Xl5iBvk309BmwueKUphY
-Message-ID: <CABBYNZ+FkEcRBeVTr+dk0dn6MTd6X7g5G5F5-zn0U8GpemO_=w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] Bluetooth: Introduce HCI Driver protocol
-To: Hsin-chen Chuang <chharry@google.com>
-Cc: Hsin-chen Chuang <chharry@chromium.org>, chromeos-bluetooth-upstreaming@chromium.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Marcel Holtmann <marcel@holtmann.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250402174156.1246171-1-jim.cromie@gmail.com>
+ <20250402174156.1246171-19-jim.cromie@gmail.com> <a9d025a6-a880-469b-9863-aab104260122@bootlin.com>
+In-Reply-To: <a9d025a6-a880-469b-9863-aab104260122@bootlin.com>
+From: jim.cromie@gmail.com
+Date: Tue, 15 Apr 2025 13:46:43 -0600
+X-Gm-Features: ATxdqUHksEi3iKhM-FzZLOPzOVcMKG31wVf1FvqKmpw3lDXWIjQ3-6Oq7hxhTv8
+Message-ID: <CAJfuBxz8xjfd-QghhvQQfEYUavC+5W8HNeVTa5v_-DrAh1ofvA@mail.gmail.com>
+Subject: Re: [PATCH v3 18/54] selftests-dyndbg: add tools/testing/selftests/dynamic_debug/*
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org, 
+	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch, 
+	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com, 
+	ville.syrjala@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Hsin-chen,
+On Tue, Apr 15, 2025 at 4:02=E2=80=AFAM Louis Chauvet <louis.chauvet@bootli=
+n.com> wrote:
+>
+>
+>
+> Le 02/04/2025 =C3=A0 19:41, Jim Cromie a =C3=A9crit :
+> > Add a selftest script for dynamic-debug.  The config requires
+> > CONFIG_TEST_DYNAMIC_DEBUG=3Dm and CONFIG_TEST_DYNAMIC_DEBUG_SUBMOD=3Dm,
+> > which tacitly requires either CONFIG_DYNAMIC_DEBUG=3Dy or
+> > CONFIG_DYNAMIC_DEBUG_CORE=3Dy
+> >
+> > ATM this has just basic_tests(), which modify pr_debug() flags in the
+> > builtin params module.  This means they're available to manipulate and
+> > observe the effects in "cat control".
+> >
+> > This is backported from another feature branch; the support-fns (thx
+> > Lukas) have unused features at the moment, they'll get used shortly.
+> >
+> > The script enables simple virtme-ng testing:
+> >
+> >     [jimc@gandalf b0-ftrace]$ vrun_t
+> >     virtme-ng 1.32+115.g07b109d
+> >     doing: vng --name v6.14-rc4-60-gd5f48427de0c \
+> >         --user root -v -p 4 -a dynamic_debug.verbose=3D3 V=3D1 \
+> >         -- ../tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
+> >     virtme: waiting for virtiofsd to start
+> >     ..
+> >
+> > And add dynamic_debug to TARGETS, so `make run_tests` sees it properly
+> >
+> > For the impatient, set TARGETS explicitly:
+> >
+> >    bash-5.2# make TARGETS=3Ddynamic_debug run_tests
+> >    make[1]: ...
+> >    TAP version 13
+> >    1..1
+> >    [   35.552922] dyndbg: read 3 bytes from userspace
+> >    [   35.553099] dyndbg: query 0: "=3D_" mod:*
+> >    [   35.553544] dyndbg: processed 1 queries, with 1778 matches, 0 err=
+s
+> >
+> > Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+> > Co-developed-by: =C5=81ukasz Bartosik <ukaszb@chromium.org>
+> > Signed-off-by: =C5=81ukasz Bartosik <ukaszb@chromium.org>
+> > ---
+> > -r3 turn off green at end
+> >      drop config dep on TEST_DYNAMIC_DEBUG,
+> >      since basic-test uses builtin params
+> >
+> > - check KCONFIG_CONFIG to avoid silly fails
+> >
+> > Several tests are dependent upon config choices. Lets avoid failing
+> > where that is noise.
+> >
+> > The KCONFIG_CONFIG var exists to convey the config-file around.  If
+> > the var names a file, read it and extract the relevant CONFIG items,
+> > and use them to skip the dependent tests, thus avoiding the fails that
+> > would follow, and the disruption to whatever CI is running these
+> > selftests.
+> >
+> > If the envar doesn't name a config-file, ".config" is assumed.
+> >
+> > CONFIG_DYNAMIC_DEBUG=3Dy:
+> >
+> > basic-tests() and comma-terminator-tests() test for the presence of
+> > the builtin pr_debugs in module/main.c, which I deemed stable and
+> > therefore safe to count.  That said, the test fails if only
+> > CONFIG_DYNAMIC_DEBUG_CORE=3Dy is set.  It could be rewritten to test
+> > against test-dynamic-debug.ko, but that just trades one config
+> > dependence for another.
+> >
+> > CONFIG_TEST_DYNAMIC_DEBUG=3Dm
+> >
+> > As written, test_percent_splitting() modprobes test_dynamic_debug,
+> > enables several classes, and count them.  It could be re-written to
+> > work for the builtin module also, but builtin test modules are not a
+> > common or desirable build/config.
+> >
+> > CONFIG_TEST_DYNAMIC_DEBUG=3Dm && CONFIG_TEST_DYNAMIC_DEBUG_SUBMOD=3Dm
+> >
+> > test_mod_submod() recaps the bug found in DRM-CI where drivers werent
+> > enabled by drm.debug=3D<bits>.  It modprobes both test_dynamic_debug &
+> > test_dynamic_debug_submod, so it depends on a loadable modules config.
+> >
+> > It could be rewritten to work in a builtin parent config; DRM=3Dy is
+> > common enough to be pertinent, but testing that config also wouldn't
+> > really test anything more fully than all-loadable modules, since they
+> > default together.
+> >
+> > generalize-test-env
+> > ---
+> >   MAINTAINERS                                   |   1 +
+> >   tools/testing/selftests/Makefile              |   1 +
+> >   .../testing/selftests/dynamic_debug/Makefile  |   9 +
+> >   tools/testing/selftests/dynamic_debug/config  |   7 +
+> >   .../dynamic_debug/dyndbg_selftest.sh          | 257 +++++++++++++++++=
++
+> >   5 files changed, 275 insertions(+)
+> >   create mode 100644 tools/testing/selftests/dynamic_debug/Makefile
+> >   create mode 100644 tools/testing/selftests/dynamic_debug/config
+> >   create mode 100755 tools/testing/selftests/dynamic_debug/dyndbg_selft=
+est.sh
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 1c5fcbd9e408..1192ad6c65c1 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8140,6 +8140,7 @@ S:      Maintained
+> >   F:  include/linux/dynamic_debug.h
+> >   F:  lib/dynamic_debug.c
+> >   F:  lib/test_dynamic_debug*.c
+> > +F:   tools/testing/selftests/dynamic_debug/*
+> >
+> >   DYNAMIC INTERRUPT MODERATION
+> >   M:  Tal Gilboa <talgi@nvidia.com>
+> > diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests=
+/Makefile
+> > index 8daac70c2f9d..b6a323c7f986 100644
+> > --- a/tools/testing/selftests/Makefile
+> > +++ b/tools/testing/selftests/Makefile
+> > @@ -26,6 +26,7 @@ TARGETS +=3D drivers/net/team
+> >   TARGETS +=3D drivers/net/virtio_net
+> >   TARGETS +=3D drivers/platform/x86/intel/ifs
+> >   TARGETS +=3D dt
+> > +TARGETS +=3D dynamic_debug
+> >   TARGETS +=3D efivarfs
+> >   TARGETS +=3D exec
+> >   TARGETS +=3D fchmodat2
+> > diff --git a/tools/testing/selftests/dynamic_debug/Makefile b/tools/tes=
+ting/selftests/dynamic_debug/Makefile
+> > new file mode 100644
+> > index 000000000000..6d06fa7f1040
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/dynamic_debug/Makefile
+> > @@ -0,0 +1,9 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +# borrowed from Makefile for user memory selftests
+> > +
+> > +# No binaries, but make sure arg-less "make" doesn't trigger "run_test=
+s"
+> > +all:
+> > +
+> > +TEST_PROGS :=3D dyndbg_selftest.sh
+> > +
+> > +include ../lib.mk
+> > diff --git a/tools/testing/selftests/dynamic_debug/config b/tools/testi=
+ng/selftests/dynamic_debug/config
+> > new file mode 100644
+> > index 000000000000..0f906ff53908
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/dynamic_debug/config
+> > @@ -0,0 +1,7 @@
+> > +
+> > +# basic tests ref the builtin params module
+> > +CONFIG_DYNAMIC_DEBUG=3Dm
+> > +
+> > +# more testing is possible with these
+> > +# CONFIG_TEST_DYNAMIC_DEBUG=3Dm
+> > +# CONFIG_TEST_DYNAMIC_DEBUG_SUBMOD=3Dm
+> > diff --git a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh b=
+/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
+> > new file mode 100755
+> > index 000000000000..465fad3f392c
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
+> > @@ -0,0 +1,257 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +V=3D${V:=3D0}  # invoke as V=3D1 $0  for global verbose
+> > +RED=3D"\033[0;31m"
+> > +GREEN=3D"\033[0;32m"
+> > +YELLOW=3D"\033[0;33m"
+> > +BLUE=3D"\033[0;34m"
+> > +MAGENTA=3D"\033[0;35m"
+> > +CYAN=3D"\033[0;36m"
+> > +NC=3D"\033[0;0m"
+> > +error_msg=3D""
+> > +
+> > +[ -e /proc/dynamic_debug/control ] || {
+> > +    echo -e "${RED}: this test requires CONFIG_DYNAMIC_DEBUG=3Dy ${NC}=
+"
+> > +    exit 0 # nothing to test here, no good reason to fail.
+> > +}
+> > +
+> > +# need info to avoid failures due to untestable configs
+> > +
+> > +[ -f "$KCONFIG_CONFIG" ] || KCONFIG_CONFIG=3D".config"
+> > +if [ -f "$KCONFIG_CONFIG" ]; then
+> > +    echo "# consulting KCONFIG_CONFIG: $KCONFIG_CONFIG"
+> > +    grep -q "CONFIG_DYNAMIC_DEBUG=3Dy" $KCONFIG_CONFIG ; LACK_DD_BUILT=
+IN=3D$?
+> > +    grep -q "CONFIG_TEST_DYNAMIC_DEBUG=3Dm" $KCONFIG_CONFIG ; LACK_TMO=
+D=3D$?
+> > +    grep -q "CONFIG_TEST_DYNAMIC_DEBUG_SUBMOD=3Dm" $KCONFIG_CONFIG ; L=
+ACK_TMOD_SUBMOD=3D$?
+> > +    if [ $V -eq 1 ]; then
+> > +     echo LACK_DD_BUILTIN: $LACK_DD_BUILTIN
+> > +     echo LACK_TMOD: $LACK_TMOD
+> > +     echo LACK_TMOD_SUBMOD: $LACK_TMOD_SUBMOD
+> > +    fi
+> > +else
+> > +    LACK_DD_BUILTIN=3D0
+> > +    LACK_TMOD=3D0
+> > +    LACK_TMOD_SUBMOD=3D0
+> > +fi
+>
+> Nitpick for the sh file: is it normal to have inconsistent indenting ?(4
+> space, tabs, 8 spaces)
+>
 
-On Fri, Apr 11, 2025 at 9:33=E2=80=AFAM Hsin-chen Chuang <chharry@google.co=
-m> wrote:
->
-> From: Hsin-chen Chuang <chharry@chromium.org>
->
-> Although commit 75ddcd5ad40e ("Bluetooth: btusb: Configure altsetting
-> for HCI_USER_CHANNEL") has enabled the HCI_USER_CHANNEL user to send out
-> SCO data through USB Bluetooth chips, it's observed that with the patch
-> HFP is flaky on most of the existing USB Bluetooth controllers: Intel
-> chips sometimes send out no packet for Transparent codec; MTK chips may
-> generate SCO data with a wrong handle for CVSD codec; RTK could split
-> the data with a wrong packet size for Transparent codec; ... etc.
->
-> To address the issue above one needs to reset the altsetting back to
-> zero when there is no active SCO connection, which is the same as the
-> BlueZ behavior, and another benefit is the bus doesn't need to reserve
-> bandwidth when no SCO connection.
->
-> This patch adds the infrastructure that allow the user space program to
-> talk to Bluetooth drivers directly:
-> - Define the new packet type HCI_DRV_PKT which is specifically used for
->   communication between the user space program and the Bluetooth drviers
-> - hci_send_frame intercepts the packets and invokes drivers' HCI Drv
->   callbacks (so far only defined for btusb)
-> - 2 kinds of events to user space: Command Status and Command Complete,
->   the former simply returns the status while the later may contain
->   additional response data.
->
-> Cc: chromeos-bluetooth-upstreaming@chromium.org
-> Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control US=
-B alt setting")
-> Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> ---
->
->  drivers/bluetooth/btusb.c        |  65 ++++++++++++++++++--
->  include/net/bluetooth/hci.h      |   1 +
->  include/net/bluetooth/hci_core.h |   3 +
->  include/net/bluetooth/hci_drv.h  |  74 ++++++++++++++++++++++
->  include/net/bluetooth/hci_mon.h  |   2 +
->  net/bluetooth/Makefile           |   3 +-
->  net/bluetooth/hci_core.c         |  10 +++
->  net/bluetooth/hci_drv.c          | 102 +++++++++++++++++++++++++++++++
->  net/bluetooth/hci_sock.c         |  12 +++-
->  9 files changed, 263 insertions(+), 9 deletions(-)
->  create mode 100644 include/net/bluetooth/hci_drv.h
->  create mode 100644 net/bluetooth/hci_drv.c
->
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 7a9b89bcea22..a33c6b9f8433 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -21,6 +21,7 @@
->
->  #include <net/bluetooth/bluetooth.h>
->  #include <net/bluetooth/hci_core.h>
-> +#include <net/bluetooth/hci_drv.h>
->
->  #include "btintel.h"
->  #include "btbcm.h"
-> @@ -3754,6 +3755,57 @@ static ssize_t isoc_alt_store(struct device *dev,
->
->  static DEVICE_ATTR_RW(isoc_alt);
->
-> +static const struct {
-> +       u16 opcode;
-> +       const char *desc;
-> +} btusb_hci_drv_supported_commands[] =3D {
-> +       /* Common commands */
-> +       { HCI_DRV_OP_READ_INFO, "Read Info" },
-> +};
-> +static int btusb_hci_drv_read_info(struct hci_dev *hdev, void *data,
-> +                                  u16 data_len)
-> +{
-> +       struct hci_drv_rp_read_info *rp;
-> +       size_t rp_size;
-> +       int err, i;
-> +       u16 num_supported_commands =3D ARRAY_SIZE(btusb_hci_drv_supported=
-_commands);
-> +
-> +       rp_size =3D sizeof(*rp) + num_supported_commands * 2;
-> +
-> +       rp =3D kmalloc(rp_size, GFP_KERNEL);
-> +       if (!rp)
-> +               return -ENOMEM;
-> +
-> +       strscpy_pad(rp->driver_name, btusb_driver.name);
-> +
-> +       rp->num_supported_commands =3D cpu_to_le16(num_supported_commands=
-);
-> +       for (i =3D 0; i < num_supported_commands; i++) {
-> +               bt_dev_info(hdev, "Supported HCI Driver command: %s",
-> +                           btusb_hci_drv_supported_commands[i].desc);
-> +               rp->supported_commands[i] =3D
-> +                       cpu_to_le16(btusb_hci_drv_supported_commands[i].o=
-pcode);
-> +       }
-> +
-> +       err =3D hci_drv_cmd_complete(hdev, HCI_DRV_OP_READ_INFO,
-> +                                  HCI_DRV_STATUS_SUCCESS, rp, rp_size);
-> +
-> +       kfree(rp);
-> +       return err;
-> +}
-> +
-> +static const struct hci_drv_handler btusb_hci_drv_common_handlers[] =3D =
-{
-> +       { btusb_hci_drv_read_info,      HCI_DRV_READ_INFO_SIZE },
-> +};
-> +
-> +static const struct hci_drv_handler btusb_hci_drv_specific_handlers[] =
-=3D {};
-> +
-> +static struct hci_drv btusb_hci_drv =3D {
-> +       .common_handler_count   =3D ARRAY_SIZE(btusb_hci_drv_common_handl=
-ers),
-> +       .common_handlers        =3D btusb_hci_drv_common_handlers,
-> +       .specific_handler_count =3D ARRAY_SIZE(btusb_hci_drv_specific_han=
-dlers),
-> +       .specific_handlers      =3D btusb_hci_drv_specific_handlers,
-> +};
-> +
->  static int btusb_probe(struct usb_interface *intf,
->                        const struct usb_device_id *id)
->  {
-> @@ -3893,12 +3945,13 @@ static int btusb_probe(struct usb_interface *intf=
-,
->                 data->reset_gpio =3D reset_gpio;
->         }
->
-> -       hdev->open   =3D btusb_open;
-> -       hdev->close  =3D btusb_close;
-> -       hdev->flush  =3D btusb_flush;
-> -       hdev->send   =3D btusb_send_frame;
-> -       hdev->notify =3D btusb_notify;
-> -       hdev->wakeup =3D btusb_wakeup;
-> +       hdev->open    =3D btusb_open;
-> +       hdev->close   =3D btusb_close;
-> +       hdev->flush   =3D btusb_flush;
-> +       hdev->send    =3D btusb_send_frame;
-> +       hdev->notify  =3D btusb_notify;
-> +       hdev->wakeup  =3D btusb_wakeup;
-> +       hdev->hci_drv =3D &btusb_hci_drv;
->
->  #ifdef CONFIG_PM
->         err =3D btusb_config_oob_wake(hdev);
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index a8586c3058c7..e297b312d2b7 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -494,6 +494,7 @@ enum {
->  #define HCI_EVENT_PKT          0x04
->  #define HCI_ISODATA_PKT                0x05
->  #define HCI_DIAG_PKT           0xf0
-> +#define HCI_DRV_PKT            0xf1
->  #define HCI_VENDOR_PKT         0xff
->
->  /* HCI packet types */
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci=
-_core.h
-> index 5115da34f881..dd80f1a398be 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -31,6 +31,7 @@
->  #include <linux/rculist.h>
->
->  #include <net/bluetooth/hci.h>
-> +#include <net/bluetooth/hci_drv.h>
->  #include <net/bluetooth/hci_sync.h>
->  #include <net/bluetooth/hci_sock.h>
->  #include <net/bluetooth/coredump.h>
-> @@ -613,6 +614,8 @@ struct hci_dev {
->         struct list_head        monitored_devices;
->         bool                    advmon_pend_notify;
->
-> +       struct hci_drv          *hci_drv;
-> +
->  #if IS_ENABLED(CONFIG_BT_LEDS)
->         struct led_trigger      *power_led;
->  #endif
-> diff --git a/include/net/bluetooth/hci_drv.h b/include/net/bluetooth/hci_=
-drv.h
-> new file mode 100644
-> index 000000000000..a05227b6e2df
-> --- /dev/null
-> +++ b/include/net/bluetooth/hci_drv.h
-> @@ -0,0 +1,74 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2025 Google Corporation
-> + */
-> +
-> +#ifndef __HCI_DRV_H
-> +#define __HCI_DRV_H
-> +
-> +#include <linux/types.h>
-> +
-> +#include <net/bluetooth/bluetooth.h>
-> +#include <net/bluetooth/hci.h>
-> +
-> +struct hci_drv_cmd_hdr {
-> +       __le16  opcode;
-> +       __le16  len;
-> +} __packed;
-> +
-> +struct hci_drv_ev_hdr {
-> +       __le16  opcode;
-> +       __le16  len;
-> +} __packed;
-> +
-> +#define HCI_DRV_EV_CMD_STATUS  0x0000
-> +struct hci_drv_ev_cmd_status {
-> +       __le16  opcode;
-> +       __u8    status;
-> +} __packed;
-> +
-> +#define HCI_DRV_EV_CMD_COMPLETE        0x0001
-> +struct hci_drv_ev_cmd_complete {
-> +       __le16  opcode;
-> +       __u8    status;
-> +       __u8    data[];
-> +} __packed;
-> +
-> +#define HCI_DRV_STATUS_SUCCESS                 0x00
-> +#define HCI_DRV_STATUS_UNSPECIFIED_ERROR       0x01
-> +#define HCI_DRV_STATUS_UNKNOWN_COMMAND         0x02
-> +#define HCI_DRV_STATUS_INVALID_PARAMETERS      0x03
-> +
-> +#define HCI_DRV_MAX_DRIVER_NAME_LENGTH 32
-> +
-> +/* Common commands that make sense on all drivers start from 0x0000 */
-> +#define HCI_DRV_OP_READ_INFO   0x0000
-> +#define HCI_DRV_READ_INFO_SIZE 0
-> +struct hci_drv_rp_read_info {
-> +       __u8    driver_name[HCI_DRV_MAX_DRIVER_NAME_LENGTH];
-> +       __le16  num_supported_commands;
-> +       __le16  supported_commands[];
-> +} __packed;
-> +
-> +/* Driver specific commands start from 0x1135 */
-> +#define HCI_DRV_OP_DRIVER_SPECIFIC_BASE        0x1135
+hmm.
+I just checked scripts/bpf_doc.py
+it uses 4 space indents, I didnt check for tabs.
 
-Or perhaps we just use the hci_opcode_ogf/hci_opcode_ocf so we have 10
-bits for driver specific commands, since we are reusing the command
-status/complete logic this should be really straightforward.
+But I will go look for inconsistencies and mixes of spaces & tabs
 
-> +int hci_drv_cmd_status(struct hci_dev *hdev, u16 cmd, u8 status);
-> +int hci_drv_cmd_complete(struct hci_dev *hdev, u16 cmd, u8 status, void =
-*rp,
-> +                        size_t rp_len);
-> +int hci_drv_process_cmd(struct hci_dev *hdev, struct sk_buff *cmd_skb);
-> +
-> +struct hci_drv_handler {
-> +       int (*func)(struct hci_dev *hdev, void *data, u16 data_len);
-> +       size_t data_len;
-> +};
-> +
-> +struct hci_drv {
-> +       size_t common_handler_count;
-> +       const struct hci_drv_handler *common_handlers;
-> +
-> +       size_t specific_handler_count;
-> +       const struct hci_drv_handler *specific_handlers;
-> +};
-> +
-> +#endif /* __HCI_DRV_H */
-> diff --git a/include/net/bluetooth/hci_mon.h b/include/net/bluetooth/hci_=
-mon.h
-> index 082f89531b88..bbd752494ef9 100644
-> --- a/include/net/bluetooth/hci_mon.h
-> +++ b/include/net/bluetooth/hci_mon.h
-> @@ -51,6 +51,8 @@ struct hci_mon_hdr {
->  #define HCI_MON_CTRL_EVENT     17
->  #define HCI_MON_ISO_TX_PKT     18
->  #define HCI_MON_ISO_RX_PKT     19
-> +#define HCI_MON_DRV_TX_PKT     20
-> +#define HCI_MON_DRV_RX_PKT     21
+> > +function vx () {
+> > +    echo $1 > /sys/module/dynamic_debug/parameters/verbose
+> > +}
+> > +
+> > +function ddgrep () {
+> > +    grep $1 /proc/dynamic_debug/control
+> > +}
+> > +
+> > +function doprints () {
+> > +    cat /sys/module/test_dynamic_debug/parameters/do_prints
+> > +}
+> > +
+> > +function ddcmd () {
+> > +    exp_exit_code=3D0
+> > +    num_args=3D$#
+> > +    if [ "${@:$#}" =3D "pass" ]; then
+> > +     num_args=3D$#-1
+> > +    elif [ "${@:$#}" =3D "fail" ]; then
+> > +        num_args=3D$#-1
+> > +     exp_exit_code=3D1
+> > +    fi
+> > +    args=3D${@:1:$num_args}
+> > +    output=3D$((echo "$args" > /proc/dynamic_debug/control) 2>&1)
+> > +    exit_code=3D$?
+> > +    error_msg=3D$(echo $output | cut -d ":" -f 5 | sed -e 's/^[[:space=
+:]]*//')
+> > +    handle_exit_code $BASH_LINENO $FUNCNAME $exit_code $exp_exit_code
+> > +}
+> > +
+> > +function handle_exit_code() {
+> > +    local exp_exit_code=3D0
+> > +    [ $# =3D=3D 4 ] && exp_exit_code=3D$4
+> > +    if [ $3 -ne $exp_exit_code ]; then
+> > +        echo -e "${RED}: $BASH_SOURCE:$1 $2() expected to exit with co=
+de $exp_exit_code"
+> > +     [ $3 =3D=3D 1 ] && echo "Error: '$error_msg'"
+> > +        exit
+> > +    fi
+> > +}
+> > +
+> > +# $1 - pattern to match, pattern in $1 is enclosed by spaces for a mat=
+ch ""\s$1\s"
+> > +# $2 - number of times the pattern passed in $1 is expected to match
+> > +# $3 - optional can be set either to "-r" or "-v"
+> > +#       "-r" means relaxed matching in this case pattern provided in $=
+1 is passed
+> > +#       as is without enclosing it with spaces
+> > +#       "-v" prints matching lines
+> > +# $4 - optional when $3 is set to "-r" then $4 can be used to pass "-v=
+"
+> > +function check_match_ct {
+> > +    pattern=3D"\s$1\s"
+> > +    exp_cnt=3D0
+> > +
+> > +    [ "$3" =3D=3D "-r" ] && pattern=3D"$1"
+> > +    let cnt=3D$(ddgrep "$pattern" | wc -l)
+> > +    if [ $V -eq 1 ] || [ "$3" =3D=3D "-v" ] || [ "$4" =3D=3D "-v" ]; t=
+hen
+> > +        echo -ne "${BLUE}" && ddgrep $pattern && echo -ne "${NC}"
+> > +    fi
+> > +    [ $# -gt 1 ] && exp_cnt=3D$2
+> > +    if [ $cnt -ne $exp_cnt ]; then
+> > +        echo -e "${RED}: $BASH_SOURCE:$BASH_LINENO check failed expect=
+ed $exp_cnt on $1, got $cnt"
+> > +        exit
+> > +    else
+> > +        echo ": $cnt matches on $1"
+> > +    fi
+> > +}
+> > +
+> > +# $1 - trace instance name
+> > +# #2 - if > 0 then directory is expected to exist, if <=3D 0 then othe=
+rwise
+> > +# $3 - "-v" for verbose
+> > +function check_trace_instance_dir {
+> > +    if [ -e /sys/kernel/tracing/instances/$1 ]; then
+> > +        if [ "$3" =3D=3D "-v" ] ; then
+> > +            echo "ls -l /sys/kernel/tracing/instances/$1: "
+> > +            ls -l /sys/kernel/tracing/instances/$1
+> > +        fi
+> > +     if [ $2 -le 0 ]; then
+> > +            echo -e "${RED}: $BASH_SOURCE:$BASH_LINENO error trace ins=
+tance \
+> > +                 '/sys/kernel/tracing/instances/$1' does exist"
+> > +         exit
+> > +     fi
+> > +    else
+> > +     if [ $2 -gt 0 ]; then
+> > +            echo -e "${RED}: $BASH_SOURCE:$BASH_LINENO error trace ins=
+tance \
+> > +                 '/sys/kernel/tracing/instances/$1' does not exist"
+> > +         exit
+> > +        fi
+> > +    fi
+> > +}
+> > +
+> > +function tmark {
+> > +    echo $* > /sys/kernel/tracing/trace_marker
+> > +}
+> > +
+> > +# $1 - trace instance name
+> > +# $2 - line number
+> > +# $3 - if > 0 then the instance is expected to be opened, otherwise
+> > +# the instance is expected to be closed
+> > +function check_trace_instance {
+> > +    output=3D$(tail -n9 /proc/dynamic_debug/control | grep ": Opened t=
+race instances" \
+> > +         | xargs -n1 | grep $1)
+> > +    if [ "$output" !=3D $1 ] && [ $3 -gt 0 ]; then
+> > +        echo -e "${RED}: $BASH_SOURCE:$2 trace instance $1 is not open=
+ed"
+> > +        exit
+> > +    fi
+> > +    if [ "$output" =3D=3D $1 ] && [ $3 -le 0 ]; then
+> > +        echo -e "${RED}: $BASH_SOURCE:$2 trace instance $1 is not clos=
+ed"
+> > +        exit
+> > +    fi
+> > +}
+> > +
+> > +function is_trace_instance_opened {
+> > +    check_trace_instance $1 $BASH_LINENO 1
+> > +}
+> > +
+> > +function is_trace_instance_closed {
+> > +    check_trace_instance $1 $BASH_LINENO 0
+> > +}
+> > +
+> > +# $1 - trace instance directory to delete
+> > +# $2 - if > 0 then directory is expected to be deleted successfully, i=
+f <=3D 0 then otherwise
+> > +function del_trace_instance_dir() {
+> > +    exp_exit_code=3D1
+> > +    [ $2 -gt 0 ] && exp_exit_code=3D0
+> > +    output=3D$((rmdir /sys/kernel/debug/tracing/instances/$1) 2>&1)
+> > +    exit_code=3D$?
+> > +    error_msg=3D$(echo $output | cut -d ":" -f 3 | sed -e 's/^[[:space=
+:]]*//')
+> > +    handle_exit_code $BASH_LINENO $FUNCNAME $exit_code $exp_exit_code
+> > +}
+> > +
+> > +function error_log_ref {
+> > +    # to show what I got
+> > +    : echo "# error-log-ref: $1"
+> > +    : echo cat \$2
+> > +}
+> > +
+> > +function ifrmmod {
+> > +    lsmod | grep $1 2>&1>/dev/null && rmmod $1
+> > +}
+> > +
+> > +# $1 - text to search for
+> > +function search_trace() {
+> > +    search_trace_name 0 1 $1
+> > +}
+> > +
+> > +# $1 - trace instance name, 0 for global event trace
+> > +# $2 - line number counting from the bottom
+> > +# $3 - text to search for
+> > +function search_trace_name() {
+> > +     if [ "$1" =3D "0" ]; then
+> > +         buf=3D$(cat /sys/kernel/debug/tracing/trace)
+> > +         line=3D$(tail -$2 /sys/kernel/debug/tracing/trace | head -1 |=
+ sed -e 's/^[[:space:]]*//')
+> > +     else
+> > +         buf=3D$(cat /sys/kernel/debug/tracing/instances/$1/trace)
+> > +         line=3D$(tail -$2 /sys/kernel/debug/tracing/instances/$1/trac=
+e | head -1 | \
+> > +                sed -e 's/^[[:space:]]*//')
+> > +     fi
+> > +     if [ $2 =3D 0 ]; then
+> > +         # whole-buf check
+> > +         output=3D$(echo $buf | grep "$3")
+> > +     else
+> > +         output=3D$(echo $line | grep "$3")
+> > +     fi
+> > +     if [ "$output" =3D "" ]; then
+> > +            echo -e "${RED}: $BASH_SOURCE:$BASH_LINENO search for '$3'=
+ failed \
+> > +                 in line '$line' or '$buf'"
+> > +         exit
+> > +     fi
+> > +     if [ $V =3D 1 ]; then
+> > +         echo -e "${MAGENTA}: search_trace_name in $1 found: \n$output=
+ \nin:${BLUE} $buf ${NC}"
+> > +        fi
+> > +}
+> > +
+> > +# $1 - error message to check
+> > +function check_err_msg() {
+> > +    if [ "$error_msg" !=3D "$1" ]; then
+> > +        echo -e "${RED}: $BASH_SOURCE:$BASH_LINENO error message '$err=
+or_msg' \
+> > +             does not match with '$1'"
+> > +        exit
+> > +    fi
+> > +}
+> > +
+> > +function basic_tests {
+> > +    echo -e "${GREEN}# BASIC_TESTS ${NC}"
+> > +    if [ $LACK_DD_BUILTIN -eq 1 ]; then
+> > +     echo "SKIP"
+> > +     return
+> > +    fi
+> > +    ddcmd =3D_ # zero everything
+> > +    check_match_ct =3Dp 0
+> > +
+> > +    # module params are builtin to handle boot args
+> > +    check_match_ct '\[params\]' 4 -r
+> > +    ddcmd module params +mpf
+> > +    check_match_ct =3Dpmf 4
+> > +
+> > +    # multi-cmd input, newline separated, with embedded comments
+> > +    cat <<"EOF" > /proc/dynamic_debug/control
+> > +      module params =3D_                               # clear params
+> > +      module params +mf                              # set flags
+> > +      module params func parse_args +sl              # other flags
+> > +EOF
+> > +    check_match_ct =3Dmf 3
+> > +    check_match_ct =3Dmfsl 1
+> > +    ddcmd =3D_
+> > +}
+> > +
+> > +tests_list=3D(
+> > +    basic_tests
+> > +)
+> > +
+> > +# Run tests
+> > +
+> > +ifrmmod test_dynamic_debug_submod
+> > +ifrmmod test_dynamic_debug
+> > +
+> > +for test in "${tests_list[@]}"
+> > +do
+> > +    $test
+> > +    echo ""
+> > +done
+> > +echo -en "${GREEN}# Done on: "
+> > +date
+> > +echo -en "${NC}"
 >
->  struct hci_mon_new_index {
->         __u8            type;
-> diff --git a/net/bluetooth/Makefile b/net/bluetooth/Makefile
-> index 5a3835b7dfcd..a7eede7616d8 100644
-> --- a/net/bluetooth/Makefile
-> +++ b/net/bluetooth/Makefile
-> @@ -14,7 +14,8 @@ bluetooth_6lowpan-y :=3D 6lowpan.o
->
->  bluetooth-y :=3D af_bluetooth.o hci_core.o hci_conn.o hci_event.o mgmt.o=
- \
->         hci_sock.o hci_sysfs.o l2cap_core.o l2cap_sock.o smp.o lib.o \
-> -       ecdh_helper.o mgmt_util.o mgmt_config.o hci_codec.o eir.o hci_syn=
-c.o
-> +       ecdh_helper.o mgmt_util.o mgmt_config.o hci_codec.o eir.o hci_syn=
-c.o \
-> +       hci_drv.o
->
->  bluetooth-$(CONFIG_DEV_COREDUMP) +=3D coredump.o
->
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 5eb0600bbd03..2815b2d7d28d 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -2911,6 +2911,8 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_=
-buff *skb)
->                 break;
->         case HCI_ISODATA_PKT:
->                 break;
-> +       case HCI_DRV_PKT:
-> +               break;
->         default:
->                 kfree_skb(skb);
->                 return -EINVAL;
-> @@ -3019,6 +3021,14 @@ static int hci_send_frame(struct hci_dev *hdev, st=
-ruct sk_buff *skb)
->                 return -EINVAL;
->         }
->
-> +       if (hci_skb_pkt_type(skb) =3D=3D HCI_DRV_PKT) {
-> +               // Intercept HCI Drv packet here and don't go with hdev->=
-send
-> +               // callabck.
-> +               err =3D hci_drv_process_cmd(hdev, skb);
-> +               kfree_skb(skb);
-> +               return err;
-> +       }
-> +
->         err =3D hdev->send(hdev, skb);
->         if (err < 0) {
->                 bt_dev_err(hdev, "sending frame failed (%d)", err);
-> diff --git a/net/bluetooth/hci_drv.c b/net/bluetooth/hci_drv.c
-> new file mode 100644
-> index 000000000000..7b7a5b05740c
-> --- /dev/null
-> +++ b/net/bluetooth/hci_drv.c
-> @@ -0,0 +1,102 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2025 Google Corporation
-> + */
-> +
-> +#include <linux/skbuff.h>
-> +#include <linux/types.h>
-> +
-> +#include <net/bluetooth/bluetooth.h>
-> +#include <net/bluetooth/hci_core.h>
-> +#include <net/bluetooth/hci_drv.h>
-> +
-> +int hci_drv_cmd_status(struct hci_dev *hdev, u16 cmd, u8 status)
-> +{
-> +       struct hci_drv_ev_hdr *hdr;
-> +       struct hci_drv_ev_cmd_status *ev;
-> +       struct sk_buff *skb;
-> +
-> +       skb =3D bt_skb_alloc(sizeof(*hdr) + sizeof(*ev), GFP_KERNEL);
-> +       if (!skb)
-> +               return -ENOMEM;
-> +
-> +       hdr =3D skb_put(skb, sizeof(*hdr));
-> +       hdr->opcode =3D __cpu_to_le16(HCI_DRV_EV_CMD_STATUS);
-> +       hdr->len =3D __cpu_to_le16(sizeof(*ev));
-> +
-> +       ev =3D skb_put(skb, sizeof(*ev));
-> +       ev->opcode =3D __cpu_to_le16(cmd);
-> +       ev->status =3D status;
-> +
-> +       hci_skb_pkt_type(skb) =3D HCI_DRV_PKT;
-> +
-> +       return hci_recv_frame(hdev, skb);
-> +}
-> +EXPORT_SYMBOL(hci_drv_cmd_status);
-> +
-> +int hci_drv_cmd_complete(struct hci_dev *hdev, u16 cmd, u8 status, void =
-*rp,
-> +                        size_t rp_len)
-> +{
-> +       struct hci_drv_ev_hdr *hdr;
-> +       struct hci_drv_ev_cmd_complete *ev;
-> +       struct sk_buff *skb;
-> +
-> +       skb =3D bt_skb_alloc(sizeof(*hdr) + sizeof(*ev) + rp_len, GFP_KER=
-NEL);
-> +       if (!skb)
-> +               return -ENOMEM;
-> +
-> +       hdr =3D skb_put(skb, sizeof(*hdr));
-> +       hdr->opcode =3D __cpu_to_le16(HCI_DRV_EV_CMD_COMPLETE);
-> +       hdr->len =3D __cpu_to_le16(sizeof(*ev) + rp_len);
-> +
-> +       ev =3D skb_put(skb, sizeof(*ev));
-> +       ev->opcode =3D __cpu_to_le16(cmd);
-> +       ev->status =3D status;
-> +
-> +       skb_put_data(skb, rp, rp_len);
-> +
-> +       hci_skb_pkt_type(skb) =3D HCI_DRV_PKT;
-> +
-> +       return hci_recv_frame(hdev, skb);
-> +}
-> +EXPORT_SYMBOL(hci_drv_cmd_complete);
-> +
-> +int hci_drv_process_cmd(struct hci_dev *hdev, struct sk_buff *skb)
-> +{
-> +       struct hci_drv_cmd_hdr *hdr;
-> +       const struct hci_drv_handler *handler =3D NULL;
-> +       u16 opcode, len, offset;
-> +
-> +       hdr =3D skb_pull_data(skb, sizeof(*hdr));
-> +       if (!hdr)
-> +               return -EILSEQ;
-> +
-> +       opcode =3D __le16_to_cpu(hdr->opcode);
-> +       len =3D __le16_to_cpu(hdr->len);
-> +       if (len !=3D skb->len)
-> +               return -EILSEQ;
-> +
-> +       if (!hdev->hci_drv)
-> +               return hci_drv_cmd_status(hdev, opcode,
-> +                                         HCI_DRV_STATUS_UNKNOWN_COMMAND)=
-;
-> +
-> +       if (opcode < HCI_DRV_OP_DRIVER_SPECIFIC_BASE) {
-> +               if (opcode < hdev->hci_drv->common_handler_count)
-> +                       handler =3D &hdev->hci_drv->common_handlers[opcod=
-e];
-> +       } else {
-> +               offset =3D opcode - HCI_DRV_OP_DRIVER_SPECIFIC_BASE;
-> +               if (offset < hdev->hci_drv->specific_handler_count)
-> +                       handler =3D &hdev->hci_drv->specific_handlers[off=
-set];
-> +       }
-> +
-> +       if (!handler || !handler->func)
-> +               return hci_drv_cmd_status(hdev, opcode,
-> +                                         HCI_DRV_STATUS_UNKNOWN_COMMAND)=
-;
-> +
-> +       if (len !=3D handler->data_len)
-> +               return hci_drv_cmd_status(hdev, opcode,
-> +                                         HCI_DRV_STATUS_INVALID_PARAMETE=
-RS);
-> +
-> +       return handler->func(hdev, skb->data, len);
-> +}
-> +EXPORT_SYMBOL(hci_drv_process_cmd);
-> diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
-> index 022b86797acd..428ee5c7de7e 100644
-> --- a/net/bluetooth/hci_sock.c
-> +++ b/net/bluetooth/hci_sock.c
-> @@ -234,7 +234,8 @@ void hci_send_to_sock(struct hci_dev *hdev, struct sk=
-_buff *skb)
->                         if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT &&
->                             hci_skb_pkt_type(skb) !=3D HCI_ACLDATA_PKT &&
->                             hci_skb_pkt_type(skb) !=3D HCI_SCODATA_PKT &&
-> -                           hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT)
-> +                           hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT &&
-> +                           hci_skb_pkt_type(skb) !=3D HCI_DRV_PKT)
->                                 continue;
->                 } else {
->                         /* Don't send frame to other channel types */
-> @@ -391,6 +392,12 @@ void hci_send_to_monitor(struct hci_dev *hdev, struc=
-t sk_buff *skb)
->                 else
->                         opcode =3D cpu_to_le16(HCI_MON_ISO_TX_PKT);
->                 break;
-> +       case HCI_DRV_PKT:
-> +               if (bt_cb(skb)->incoming)
-> +                       opcode =3D cpu_to_le16(HCI_MON_DRV_RX_PKT);
-> +               else
-> +                       opcode =3D cpu_to_le16(HCI_MON_DRV_TX_PKT);
-> +               break;
->         case HCI_DIAG_PKT:
->                 opcode =3D cpu_to_le16(HCI_MON_VENDOR_DIAG);
->                 break;
-> @@ -1860,7 +1867,8 @@ static int hci_sock_sendmsg(struct socket *sock, st=
-ruct msghdr *msg,
->                 if (hci_skb_pkt_type(skb) !=3D HCI_COMMAND_PKT &&
->                     hci_skb_pkt_type(skb) !=3D HCI_ACLDATA_PKT &&
->                     hci_skb_pkt_type(skb) !=3D HCI_SCODATA_PKT &&
-> -                   hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT) {
-> +                   hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT &&
-> +                   hci_skb_pkt_type(skb) !=3D HCI_DRV_PKT) {
->                         err =3D -EINVAL;
->                         goto drop;
->                 }
 > --
-> 2.49.0.604.gff1f9ca942-goog
+> Louis Chauvet, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 >
-
-
---=20
-Luiz Augusto von Dentz
+>
