@@ -1,243 +1,111 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF73297A7D;
-	Tue, 15 Apr 2025 10:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183C628F538
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713852; cv=none; b=O2I4IOyv7/IX1BGKBTRYfhzwaOfmq0sdviOaWxAJrIe9DPMzABEre6DYeqNaDkklm0Kv8ZmRbTg7oDp1e/lYAhiS3n+RtGJT08Fzp06sqXSkBHwf8tyFYRY06441u2PkYFgnJLpIeEBGdBTCmJpkUVCMtKGbQhw2QYKyzqUOVm4=
+	t=1744713854; cv=none; b=VSAumaPA2N1rEfoUj75x8cLFyGbQUkqbGogHlJTZJEg5JfPn04xpbqdLSTMzQBdETMHjw40P5mTYxRdUUBaZ9avE+pJztPaoO04WyYK/7XVW6qsPCOq4AFSa9Yy4UPj/5pzzs86VkwknE+A+xzNgCkaMuUUhbtOQ9dg3iWeztTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713852; c=relaxed/simple;
-	bh=xh7Jj9EwZ14z10Z5YmH2kybmKZ8PUNlCUMcMfNXz5ow=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IHpT8O1U4mb5pPcy5OvjWGvhj/y+Bu/Hy1+s79+x6Ejn80OwqjUxCQ1Vh0rwXbxeEy/tjNH7CFT5qgUnasUEcLVjZBOaYxJLYKqTCxL3NEDXJ41fIWOsx9pHzuh6TK70YzUGJTjTWgcfjkJbXHr3FI0gFRumEjxifvVFrJdlH/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=H0GcVP4N; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744713854; c=relaxed/simple;
+	bh=AcnrBHHdCeMTP+XyRkMFzaV10++l5FRsKlYChijICJo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UXU2H8JolfUsiezxgm2uXIskscoq2DxDcnfRbuS14gaHqfduXsUDA2oE+dl3z8aJD3SiDD3a8MhunSHbJeIzFoD2HjpLAPzq0F8R5eSFP9chqqp5VInjrqKjRP1YR+EiDzTzI7uERbmnCBcCFoKtL5wbdH/q9zWUQO8Tcb0v4+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyqywR19; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="H0GcVP4N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744713848;
-	bh=xh7Jj9EwZ14z10Z5YmH2kybmKZ8PUNlCUMcMfNXz5ow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H0GcVP4NzvA1Xb/LixrkEuPOh9lBAgvyY+YWlLvxVXJdSASm7CzedyjhX+ZMiFVzV
-	 KDYppK/mxYep+iSKfSrJBLXJD/wqcE566DwkwMwqNOmiLwkaW4UA32w+saCGVRwiLN
-	 7l88q2RwRRrRLQbAD8TFGaZ9hGbIog/AuZiEzw1I74hiNVW9ngFCGFMrXtmSx8kCWk
-	 iSfV+OX6i2TpTNriz3kSl9rBQ+1rh2E62ZdxIgjCg3fr3+X7KJFqkPBLxeXbWkdPqt
-	 W9dRNMLBWW1a+dY7iKMHvWGZAkwn/xDA0yuzm/f1oLEzVtR296ggt0W1PJpG3+BNcc
-	 q93y/0RhL4VZw==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5BC0017E35E5;
-	Tue, 15 Apr 2025 12:44:07 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	ck.hu@mediatek.com,
-	jitao.shi@mediatek.com,
-	jie.qiu@mediatek.com,
-	junzhi.zhao@mediatek.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com,
-	dmitry.baryshkov@linaro.org,
-	lewis.liao@mediatek.com,
-	ives.chenjh@mediatek.com,
-	tommyyl.chen@mediatek.com,
-	jason-jh.lin@mediatek.com
-Subject: [PATCH v9 23/23] drm/mediatek: mtk_hdmi_v2: Add debugfs ops and implement ABIST
-Date: Tue, 15 Apr 2025 12:43:21 +0200
-Message-ID: <20250415104321.51149-24-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
-References: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyqywR19"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so50473771fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 03:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744713850; x=1745318650; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VrLvFpuHTSAZbRxj4a3Ca45pKQLXAVqNxC9uOeGwapU=;
+        b=fyqywR194/ljQI2EsRUFzmggVpD5fRsv3DO0fPLrEDw4A0mfbziN6tsgqnHJhKdB8h
+         U3rYO29cYVvgJ/N3Wdl2GRxfeUglaQGEu7YkugGkDCGf1BJUXgUoFqrVMSEAyPiBf1cB
+         wyuBoW6uT1cY/NMAh6M/R6bkygUIyJNA3MIMQLUBWbdIhujN2PGMHLI071hC7OYUIKbU
+         ZeoNMAn83hwshgZybdRb7cP+sdsRMbA/DKfPid9pLQu5Aphm8wvxuxcODPl2kWLI58TR
+         yL72LlRXXXUBv3DWSIKbUcap3CwfXkzNNRSohyxqpmZ86Xan4plxDYp99S0ScLJl19jj
+         x4mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744713850; x=1745318650;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VrLvFpuHTSAZbRxj4a3Ca45pKQLXAVqNxC9uOeGwapU=;
+        b=b9p6nxFZ301rtVXOC1Gru6L6PLfHF3SS8R+02/+iSQnfZ4N/qBz9WVm7xCXQUYhTDp
+         qnwErMXekX0mxwBSh1usFMQJjsB1lTQcKCfldIJYEq+Mf6yWV5l9F9+xKc6QjNopEFdI
+         MvQI/mI29rnCN1KfKsuoIvGwa9v4iEzBCwgsJ8b0V/Bv1zDFaF0Pjkjb0RqQxb/gx9b5
+         X0dT+4xy0yUzsVNKdge1SGkQLFgKpofg5z2n/0+tbN5X/90Vod+XxvFeygl4K/JoOyZu
+         Dh77sq523sD5ycgW2b9ru/A4GVIV67bzCzJ9vFeC9k7oBfNBH9vI+Kmim76l9qdEhB4m
+         uREA==
+X-Forwarded-Encrypted: i=1; AJvYcCUijdGmP6sL8iohHljMdQRiCm/AwZyD5d8zxXBFTgZoXTT9N7lg5Bwg3xE/dMEg6wLdnLsgfTCCjMJUsbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLDCIHE6D6QZ7Jff++we2zi1V9JBrXzcY5GuL1w/XWL3+KEWdQ
+	JQnk6sqtJFTVCuDO/+zB5nc9A/TnvBq6R5Yv/AiitKWvgbsedIeS
+X-Gm-Gg: ASbGnctr93GUqbYAQKEZl3inwDX4qAK7J8pBwYsz0uh3bMfNJ1ynl/bI1IK28OYNp2m
+	C7w/IWlsWjx3o0aNf3nDdVceFj2HiCwtKoqNZ/keU3foxcVJcGu/0+ETm94rILG5kIHtaqkFbvs
+	UbnVs3wLYhorg/J7A+sMyuzUku5WmYKd0d3q1AY1KrHbbBUoPccdjarPAWaFGTi8XckmgPc66BM
+	yWRmifm91WLMA93wyU7oLiTl2qfPM6CeHZC5ehWf1n/8+c7xZIPTZwBeAV53rj7qenYnZkvuznV
+	pez+pwkYDYfOyuHVtuSAfnvFKykmdL1p3XU9fixShtHXUwOTicPQJLywrF7hszTAbykq
+X-Google-Smtp-Source: AGHT+IEq/npw1FKWrK84Hcg467AIj49xSaKauOvtLI8LfcqRE1zz7NBCC2GkNPBmA5sg5WHHTC0CfA==
+X-Received: by 2002:a05:651c:210d:b0:30a:4428:dea9 with SMTP id 38308e7fff4ca-31049a807e3mr51421781fa.30.1744713849631;
+        Tue, 15 Apr 2025 03:44:09 -0700 (PDT)
+Received: from pc636 (host-90-233-217-52.mobileonline.telia.com. [90.233.217.52])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465f84f1sm20090601fa.102.2025.04.15.03.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 03:44:09 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 15 Apr 2025 12:44:06 +0200
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] mm/vmalloc: optimize function vm_unmap_aliases()
+Message-ID: <Z_44dmh7zGKzAdsb@pc636>
+References: <20250415023952.27850-1-bhe@redhat.com>
+ <20250415023952.27850-5-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415023952.27850-5-bhe@redhat.com>
 
-Implement the Automated Built-In Self-Test ABIST functionality
-provided by the HDMIv2 IP and expose it through the "hdmi_abist"
-debugfs file.
+On Tue, Apr 15, 2025 at 10:39:51AM +0800, Baoquan He wrote:
+> Remove unneeded local variables and replace them with values.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  mm/vmalloc.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index bf735c890878..3f38a232663b 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2930,10 +2930,7 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
+>   */
+>  void vm_unmap_aliases(void)
+>  {
+> -	unsigned long start = ULONG_MAX, end = 0;
+> -	int flush = 0;
+> -
+> -	_vm_unmap_aliases(start, end, flush);
+> +	_vm_unmap_aliases(ULONG_MAX, 0, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(vm_unmap_aliases);
+>  
+> -- 
+> 2.41.0
+> 
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Write "1" to this file to activate ABIST, or "0" to deactivate.
+Makes sense!
 
-The ABIST functionality can be used to validate that the HDMI
-Transmitter itself works and that can output a valid image to
-the HDMI Display that is connected.
-
-This is especially useful when trying to rule out any possible
-issue that is related to the display pipeline, as the HDMI Tx
-is always the last component; this means that HDMI ABIST can be
-used even without prior display controller pipeline configuration.
-
-The expected output is a 100% color bar (rainbow) test pattern.
-
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/gpu/drm/mediatek/mtk_hdmi_v2.c | 123 +++++++++++++++++++++++++
- 1 file changed, 123 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c b/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
-index dd10f272eabd..284d5cc0cffd 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
-@@ -1188,6 +1188,128 @@ static int mtk_hdmi_v2_hdmi_write_infoframe(struct drm_bridge *bridge,
- 	return 0;
- }
- 
-+static int mtk_hdmi_v2_set_abist(struct mtk_hdmi *hdmi, bool enable)
-+{
-+	struct drm_display_mode *mode = &hdmi->mode;
-+	int abist_format = -EINVAL;
-+	bool interlaced;
-+
-+	if (!enable) {
-+		regmap_clear_bits(hdmi->regs, TOP_CFG00, HDMI_ABIST_ENABLE);
-+		return 0;
-+	}
-+
-+	if (!mode->hdisplay || !mode->vdisplay)
-+		return -EINVAL;
-+
-+	interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE;
-+
-+	switch (mode->hdisplay) {
-+	case 720:
-+		if (mode->vdisplay == 480)
-+			abist_format = 2;
-+		else if (mode->vdisplay == 576)
-+			abist_format = 11;
-+		break;
-+	case 1280:
-+		if (mode->vdisplay == 720)
-+			abist_format = 3;
-+		break;
-+	case 1440:
-+		if (mode->vdisplay == 480)
-+			abist_format = interlaced ? 5 : 9;
-+		else if (mode->vdisplay == 576)
-+			abist_format = interlaced ? 14 : 18;
-+		break;
-+	case 1920:
-+		if (mode->vdisplay == 1080)
-+			abist_format = interlaced ? 4 : 10;
-+		break;
-+	case 3840:
-+		if (mode->vdisplay == 2160)
-+			abist_format = 25;
-+		break;
-+	case 4096:
-+		if (mode->vdisplay == 2160)
-+			abist_format = 26;
-+		break;
-+	default:
-+		break;
-+	}
-+	if (abist_format < 0)
-+		return abist_format;
-+
-+	regmap_update_bits(hdmi->regs, TOP_CFG00, HDMI_ABIST_VIDEO_FORMAT,
-+			   FIELD_PREP(HDMI_ABIST_VIDEO_FORMAT, abist_format));
-+	regmap_set_bits(hdmi->regs, TOP_CFG00, HDMI_ABIST_ENABLE);
-+	return 0;
-+}
-+
-+static int mtk_hdmi_v2_debug_abist_show(struct seq_file *m, void *arg)
-+{
-+	struct mtk_hdmi *hdmi = m->private;
-+	bool en;
-+	u32 val;
-+	int ret;
-+
-+	if (!hdmi)
-+		return -EINVAL;
-+
-+	ret = regmap_read(hdmi->regs, TOP_CFG00, &val);
-+	if (ret)
-+		return ret;
-+
-+	en = FIELD_GET(HDMI_ABIST_ENABLE, val);
-+
-+	seq_printf(m, "HDMI Automated Built-In Self Test: %s\n",
-+		   en ? "Enabled" : "Disabled");
-+
-+	return 0;
-+}
-+
-+static ssize_t mtk_hdmi_v2_debug_abist_write(struct file *file,
-+					     const char __user *ubuf,
-+					     size_t len, loff_t *offp)
-+{
-+	struct seq_file *m = file->private_data;
-+	int ret;
-+	u32 en;
-+
-+	if (!m || !m->private || *offp)
-+		return -EINVAL;
-+
-+	ret = kstrtouint_from_user(ubuf, len, 0, &en);
-+	if (ret)
-+		return ret;
-+
-+	if (en < 0 || en > 1)
-+		return -EINVAL;
-+
-+	mtk_hdmi_v2_set_abist((struct mtk_hdmi *)m->private, en);
-+	return len;
-+}
-+
-+static int mtk_hdmi_v2_debug_abist_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, mtk_hdmi_v2_debug_abist_show, inode->i_private);
-+}
-+
-+static const struct file_operations mtk_hdmi_debug_abist_fops = {
-+	.owner = THIS_MODULE,
-+	.open = mtk_hdmi_v2_debug_abist_open,
-+	.read = seq_read,
-+	.write = mtk_hdmi_v2_debug_abist_write,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static void mtk_hdmi_v2_debugfs_init(struct drm_bridge *bridge, struct dentry *root)
-+{
-+	struct mtk_hdmi *dpi = hdmi_ctx_from_bridge(bridge);
-+
-+	debugfs_create_file("hdmi_abist", 0640, root, dpi, &mtk_hdmi_debug_abist_fops);
-+}
-+
- static const struct drm_bridge_funcs mtk_v2_hdmi_bridge_funcs = {
- 	.attach = mtk_hdmi_v2_bridge_attach,
- 	.detach = mtk_hdmi_v2_bridge_detach,
-@@ -1207,6 +1329,7 @@ static const struct drm_bridge_funcs mtk_v2_hdmi_bridge_funcs = {
- 	.hdmi_tmds_char_rate_valid = mtk_hdmi_v2_hdmi_tmds_char_rate_valid,
- 	.hdmi_clear_infoframe = mtk_hdmi_v2_hdmi_clear_infoframe,
- 	.hdmi_write_infoframe = mtk_hdmi_v2_hdmi_write_infoframe,
-+	.debugfs_init = mtk_hdmi_v2_debugfs_init,
- };
- 
- /*
--- 
-2.49.0
-
+--
+Uladzislau Rezki
