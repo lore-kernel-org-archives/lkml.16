@@ -1,79 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C1D1C8619;
-	Tue, 15 Apr 2025 11:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677881DFD96;
+	Tue, 15 Apr 2025 11:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717197; cv=none; b=VOXYdY9Oz5HPKR9aYzfkR9+yGu8ShJqI0Zh99SkrOySDMP+AvWGh+OpHEglRdNkh8Mct+OOJxiqp6y5yZrAHa4eEGf4CScOkYYmVHoWhEN24xUtM6kwkWf8nvZ3yMzC1fyEJ4lJnwNpY/yFpqVweJOHkPBYE83iNWp7p37FLmlg=
+	t=1744717236; cv=none; b=MdNb7tDwv/r78j+OfHK1kDACJ97cHfroJwP8LA4IZ166Ik+7cSJYz+6inlkKhjJZ6R/9z92wsCWKobLlXcZCRIVDtquPIbaQ2Y1cDt5J3Fh4UxHn5UIp0ihFGm5ArmFz0+1gHZrZG2Ynu07aBJ3Ed3w3HEBpiy+eiGs3y4OpWwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717197; c=relaxed/simple;
-	bh=0wFrY0jVFGKAMIzdrcfU4BALe7XxMacv+VYLau7nww4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QKqwEBuvjerjhWfiEavfwjeaN2AE+wZMWUCDguHTYT6y/eTMw9UrjGhYMEKWqKWpwCCwwtERFYcVBfUppUukRshuiXyDC2Rf1SvXyJVgvYserO6HhCmc6NJ5D8eJvHbqlv+Y92hh7dglthxtJ8ESW9ZG1g9oejrLn5vt++hokQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ln0qXxRV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744717236; c=relaxed/simple;
+	bh=crUzhLZR6kohcn8ctKDzFw/yNkNnOwRO4xA4Ob5DDd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CrfhVHDx3/l7ozKfBgaDv6aoN9EsyQ4Ile6XCcmSnADPIoQOQ2nqQw84sHMmuybInrqFyDy2nR4LIFdLWSfUu/jeVNDmmpwPPO6rGBCJE7t7H9t+E7lXYjhHCUC4XFyblC2uRRPsR4IZfOs3leuYglumbLMQRLZioogukI4rCcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=B0eR0mUn; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ln0qXxRV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F06C4CEDD;
-	Tue, 15 Apr 2025 11:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744717197;
-	bh=0wFrY0jVFGKAMIzdrcfU4BALe7XxMacv+VYLau7nww4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Ln0qXxRVcToNpl/mo0crif7DII2GHu++a8X9moyWg0ntnGQXSsVnI8MthlULijvaw
-	 PkpiO9rJdaxofVh0SCsNpji01hCaEdDmRm3RpKGcPdUNtgVlhLIKcHY727kyk1S1Yc
-	 pkF8aeDNYJcQ1nbGQfslWYfI0ojfG3NOEXN4qiWV/66PBPg7MEKKJ6FVFY66RIL4dt
-	 Z67tCcU8unEduPYl4BrDaOikff2DW0q+/jz3+R5MA4I4OphH2pPX6cJtXvFm83cP9x
-	 e5JbEl5kUCTUi9UKZc4DUytPiBN55yrysn6j2phl4Y2+8hF6yQiHbU/sJD+zx5Lkpd
-	 p8IMrrRRU9MeA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F703822D55;
-	Tue, 15 Apr 2025 11:40:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="B0eR0mUn"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 3F9D12142D;
+	Tue, 15 Apr 2025 11:34:44 +0000 (UTC)
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [151.80.165.199])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id AA34B2005F;
+	Tue, 15 Apr 2025 11:34:35 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 39FE73E886;
+	Tue, 15 Apr 2025 11:34:28 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 9FE7C40009;
+	Tue, 15 Apr 2025 11:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1744716867; bh=crUzhLZR6kohcn8ctKDzFw/yNkNnOwRO4xA4Ob5DDd0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B0eR0mUn2B/U7VU0hYTXDvhfRcvzrd4/36BaXkysrHdIZVCxbCsA12ZShTGhWBs0J
+	 I/Ld0LOoH0iCHs5+PEW6wgbq/G8PUMkENw7CMlAeAnqcmMyDMKNfsgAJBtJOvjwZzu
+	 /NZ9YPS5IHzo0+sgtxy1HyKUMzuBXOUyjys+jpq0=
+Received: from [50.50.1.183] (unknown [58.246.137.130])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id F34364082E;
+	Tue, 15 Apr 2025 11:34:21 +0000 (UTC)
+Message-ID: <d82b174f-60a7-41e1-8987-c56155c60630@aosc.io>
+Date: Tue, 15 Apr 2025 19:34:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] tipc: Removing deprecated strncpy()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174471723506.2600560.18296799870164232004.git-patchwork-notify@kernel.org>
-Date: Tue, 15 Apr 2025 11:40:35 +0000
-References: <20250411085010.6249-1-kevinpaul468@gmail.com>
-In-Reply-To: <20250411085010.6249-1-kevinpaul468@gmail.com>
-To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-Cc: jmaloy@redhat.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- tung.quang.nguyen@est.tech
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 0/3] net: stmmac: dwmac-loongson: Add
+ Loongson-2K3000 support
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+ Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>,
+ Mingcong Bai <jeffbai@aosc.io>
+References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+Content-Language: en-US
+From: Henry Chen <chenx97@aosc.io>
+In-Reply-To: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9FE7C40009
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Spamd-Result: default: False [1.40 / 10.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[netdev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[chenx97.aosc.io:server fail,chenhuacai.loongson.cn:server fail,dongbiao.loongson.cn:server fail,zhangbaoqi.loongson.cn:server fail];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux.dev,gmail.com,lists.linux.dev,vger.kernel.org,loongson.cn,aosc.io];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Action: no action
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Fri, 11 Apr 2025 14:20:10 +0530 you wrote:
-> This patch suggests the replacement of strncpy with strscpy
-> as per Documentation/process/deprecated.
-> The strncpy() fails to guarantee NULL termination,
-> The function adds zero pads which isn't really convenient for short strings
-> as it may cause performance issues.
+On 4/15/25 15:11, Huacai Chen wrote:
+> This series add stmmac driver support for Loongson-2K3000/Loongson-3B6000M,
+> which introduces a new CORE ID (0x12) and a new PCI device ID (0x7a23). The
+> new core reduces channel numbers from 8 to 4, but checksum is supported for
+> all channels.
 > 
-> strscpy() is a preferred replacement because
-> it overcomes the limitations of strncpy mentioned above.
+> Huacai Chen (3):
+>    net: stmmac: dwmac-loongson: Move queue number init to common function
+>    net: stmmac: dwmac-loongson: Add new multi-chan IP core support
+>    net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
 > 
-> [...]
+> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   | 105 ++++++++++-----------
+>   1 file changed, 49 insertions(+), 56 deletions(-)
+> ---
+> 2.27.0
+> 
+> 
 
-Here is the summary with links:
-  - [net-next] tipc: Removing deprecated strncpy()
-    https://git.kernel.org/netdev/net-next/c/8c9b406ff470
+I have tested This patch series on my Loongson-3A5000-HV-7A2000-1w-V0.1-
+EVB. The onboard STMMAC ethernet works as expected.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Tested-by: Henry Chen <chenx97@aosc.io>
 
-
+      Henry
