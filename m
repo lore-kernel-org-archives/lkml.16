@@ -1,144 +1,177 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081CB28469B
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 458E728469B
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718727; cv=none; b=FtvB/LehUXPzGbg10TGiXO0NHU+uPb9/2kxN1lSmH/mFhCkWgIlaIIwm6jS0UTpm8aWYbkgbojqp3ufMcIN2at+mu2TJdSJsK6p9Bd4M1UvAw9B0R/gtbnf30N8eQPaG2vkwGyDnqFd3002HUK/vROPuRs2FdCLQevh16woIRsc=
+	t=1744718809; cv=none; b=dDc+1SYFP/+6EmzOMCaSLSMP4lhLVtmDQfAsJES/QaEIAisgKilzpdrPaayAP0JmK7ygm1EVIt8flJVEeMPTWF5I4gcEifKytQ7U3dr/HQ7pDdjGm290Xhr6dHYwBrH45DtzMFNSj2doxIIodZXjRFYErQ29ujDtf9czR6ZhA8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718727; c=relaxed/simple;
-	bh=WaEJ7Mm0YxxyYNYakbUNQEkV9dDxv5OXSxMVoq7gGLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbkOFoFbb850KAFOit/W8/BMXUbT1Jv59ALctuMRJoPfJhVuPm4sFcLpIeuqw4xtQxIIzhLGRO0ZZ35kU7SXsPNlO3qy6GBv6Criq/ZV30IxzlPkeJ7UmDhQyX9vVsb5tK94SSlb1PJPOO8OkS7BYgkJp0qQVLHlIjPMqysq/aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IWwljR+F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cewaL1RJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IWwljR+F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cewaL1RJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IWwljR+F";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cewaL1RJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IWwljR+F";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cewaL1RJ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D15321162;
-	Tue, 15 Apr 2025 12:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744718724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
-	b=IWwljR+FdRRMMsl5HQ8hTIoG82tvyTjw+O33B87a2DVk4URPTZDlvxbF7+7yFQDeMo02is
-	0M/LcQe6ADqCZXAhA5yPQHdan3zSC/6FLwt9vNEYBcJUVhqhP5BgF7i/wQLHcI9u0rBKc+
-	mzNxl8tLJQcwoyg1e249tzxI+560wzI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744718724;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
-	b=cewaL1RJ39hOmDG1DVqh5M0tSuB3iQfj/f3XcVZy5Qvtwe2Sp4Y/gJDXbizh15cLJ7H8tH
-	LS7Wg1V2X5/C9OAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=IWwljR+F;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cewaL1RJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744718724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
-	b=IWwljR+FdRRMMsl5HQ8hTIoG82tvyTjw+O33B87a2DVk4URPTZDlvxbF7+7yFQDeMo02is
-	0M/LcQe6ADqCZXAhA5yPQHdan3zSC/6FLwt9vNEYBcJUVhqhP5BgF7i/wQLHcI9u0rBKc+
-	mzNxl8tLJQcwoyg1e249tzxI+560wzI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744718724;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
-	b=cewaL1RJ39hOmDG1DVqh5M0tSuB3iQfj/f3XcVZy5Qvtwe2Sp4Y/gJDXbizh15cLJ7H8tH
-	LS7Wg1V2X5/C9OAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A333139A1;
-	Tue, 15 Apr 2025 12:05:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EwKMAYRL/mfSCwAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Tue, 15 Apr 2025 12:05:24 +0000
-Date: Tue, 15 Apr 2025 14:05:23 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Nilay Shroff <nilay@linux.ibm.com>
-Cc: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>, 
-	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, 
-	Mohamed Khalfella <mkhalfella@purestorage.com>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
-Message-ID: <97fd8c08-e5bb-4b4b-9ec0-0eea9af1da1d@flourine.local>
-References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
- <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
- <7cb33ebe-2ff6-4c3a-82f0-c4ed547e8a25@linux.ibm.com>
+	s=arc-20240116; t=1744718809; c=relaxed/simple;
+	bh=3zjVv3OxqpO942bA5m0yLQFRbhjeXO3ZrV6JHCAa4cw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iwYQYEDueFpBsmVqusqGwbHlIQY8noTaMcheGiUg9SvqtxbMvf6R3L+oilDam+rn2XCu8VaXoO2JM5L5iqYS/pXIQ6SlNABNxsDTQw6r/PJofY3VIOtT7lAWsaoxPPuBl7PHmRGUtCuig+LuWUSFftIxCtxKamGjQjPEZStndvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8133A15A1;
+	Tue, 15 Apr 2025 05:06:43 -0700 (PDT)
+Received: from [10.163.73.130] (unknown [10.163.73.130])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12D113F694;
+	Tue, 15 Apr 2025 05:06:40 -0700 (PDT)
+Message-ID: <140c6ab6-fbc4-4ae1-a804-726bfd5fdcb0@arm.com>
+Date: Tue, 15 Apr 2025 17:36:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7cb33ebe-2ff6-4c3a-82f0-c4ed547e8a25@linux.ibm.com>
-X-Rspamd-Queue-Id: 1D15321162
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mempolicy: Optimize queue_folios_pte_range by PTE
+ batching
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, hughd@google.com, vishal.moola@gmail.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250411081301.8533-1-dev.jain@arm.com>
+ <09c77ab5-65fc-4bca-a7e5-2b11bba9330d@redhat.com>
+ <9ed4c113-37eb-4e3d-98a1-f46f786aaea9@arm.com>
+ <1d6d7842-1700-40d2-9d5b-e044fbc242de@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <1d6d7842-1700-40d2-9d5b-e044fbc242de@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 07:02:11PM +0530, Nilay Shroff wrote:
- > -	kblockd_schedule_work(&ns->head->requeue_work);
-> > +	spin_lock_irqsave(&ctrl->lock, flags);
-> > +	list_add_tail(&req->queuelist, &ctrl->failover_list);
-> > +	spin_unlock_irqrestore(&ctrl->lock, flags);
-> > +
+
+
+On 15/04/25 5:29 pm, David Hildenbrand wrote:
+> On 15.04.25 13:47, Dev Jain wrote:
+>>
+>>
+>> On 15/04/25 3:47 pm, David Hildenbrand wrote:
+>>> On 11.04.25 10:13, Dev Jain wrote:
+>>>> After the check for queue_folio_required(), the code only cares 
+>>>> about the
+>>>> folio in the for loop, i.e the PTEs are redundant. Therefore, optimize
+>>>> this
+>>>> loop by skipping over a PTE batch mapping the same folio.
+>>>>
+>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>>> ---
+>>>> Unfortunately I have only build tested this since my test 
+>>>> environment is
+>>>> broken.
+>>>>
+>>>>    mm/mempolicy.c | 12 +++++++++++-
+>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>>>> index b28a1e6ae096..b019524da8a2 100644
+>>>> --- a/mm/mempolicy.c
+>>>> +++ b/mm/mempolicy.c
+>>>> @@ -573,6 +573,9 @@ static int queue_folios_pte_range(pmd_t *pmd,
+>>>> unsigned long addr,
+>>>>        pte_t *pte, *mapped_pte;
+>>>>        pte_t ptent;
+>>>>        spinlock_t *ptl;
+>>>> +    int max_nr;
+>>>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>> +    int nr = 1;
+>>>
+>>> Try sticking to reverse xmas tree, please. (not completely the case
+>>> here, but fpb_flags can easily be moved all he way to the top)
+>>
+>> I thought that the initializations were to be kept at the bottom.
 > 
-> Why do we need to wait until error_recovery for scheduling failover?
+> Not that I am aware of.
+> 
+>> Asking for future patches, should I put all declarations in reverse-xmas
+>> fashion (even those which I don't intend to touch w.r.t the patch
+>> logic), or do I do that for only my additions?
+> 
+> We try to stay as close to reverse-xmas tree as possible. It's not 
+> always possible (e.g., dependent assignments), but fpb_flags in this 
+> case here can easily go all the way to the top.
 
-This is where the delay is added to the processing. The failed requests
-(timeout) are held back by the delay here and after the wait the are
-immediately fall over
+Sure.
 
-> Can't we schedule failover as soon as we get path error? Also can't
-> we avoid failover_list? 
+> 
+> ...
+> 
+>>
+>>>
+>>>   >       ptl = pmd_trans_huge_lock(pmd, vma);>       if (ptl) {
+>>>> @@ -586,7 +589,8 @@ static int queue_folios_pte_range(pmd_t *pmd,
+>>>> unsigned long addr,
+>>>>            walk->action = ACTION_AGAIN;
+>>>>            return 0;
+>>>>        }
+>>>   > -    for (; addr != end; pte++, addr += PAGE_SIZE) {> +    for (;
+>>> addr != end; pte += nr, addr += nr * PAGE_SIZE) {
+>>>> +        nr = 1;
+>>>>            ptent = ptep_get(pte);
+>>>>            if (pte_none(ptent))
+>>>>                continue;
+>>>> @@ -607,6 +611,11 @@ static int queue_folios_pte_range(pmd_t *pmd,
+>>>> unsigned long addr,
+>>>>            if (!queue_folio_required(folio, qp))
+>>>>                continue;
+>>>>            if (folio_test_large(folio)) {
+>>>> +            max_nr = (end - addr) >> PAGE_SHIFT;
+>>>> +            if (max_nr != 1)
+>>>> +                nr = folio_pte_batch(folio, addr, pte, ptent,
+>>>> +                             max_nr, fpb_flags,
+>>>> +                             NULL, NULL, NULL);
+>>>
+>>> We should probably do that immediately after we verified that
+>>> vm_normal_folio() have us something reasonable.
+>>
+>> But shouldn't we keep the small folio case separate to avoid the
+>> overhead of folio_pte_batch()?
+> 
+> Yes, just do something like
+> 
+> if (folio_test_large(folio) && end - addr > 1)
+>      nr = folio_pte_batch(folio, addr, pte, ptent, end - addr,
+>                   max_nr, fpb_flags, ...);
+> 
+> before the folio_test_reserved().
+> 
+> Then you'd also skip the all ptes if !queue_folio_required.
 
-Then we have exactly what we have now. An failed request is rescheduled
-to the next path immediately.
+Ah got you, thanks.
+
+> 
+>>
+>>>
+>>>>                /*
+>>>>                 * A large folio can only be isolated from LRU once,
+>>>>                 * but may be mapped by many PTEs (and Copy-On-Write may
+>>>> @@ -633,6 +642,7 @@ static int queue_folios_pte_range(pmd_t *pmd,
+>>>> unsigned long addr,
+>>>>                qp->nr_failed++;
+>>>>                if (strictly_unmovable(flags))
+>>>>                    break;
+>>>> +            qp->nr_failed += nr - 1;
+>>>
+>>> Can't we do qp->nr_failed += nr; above?
+>>
+>> I did not dive deep into the significance of nr_failed, but I did that
+>> to keep the code, before and after the change, equivalent:
+> 
+> And I question exactly that.
+> 
+> If we hit strictly_unmovable(flags), we end up returning "-EIO" from
+> queue_folios_pte_range().
+> 
+> And staring at queue_pages_range(), we ignore nr_failed if 
+> walk_page_range() returned an error.
+> 
+> So looks like we can just add everything in one shot, independent of 
+> strictly_unmovable()?
+
+Looks good to me this way. I'll change it, thanks.
+
+> 
+
