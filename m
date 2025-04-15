@@ -1,365 +1,193 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4432951B4
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B32292920;
+	Tue, 15 Apr 2025 11:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718142; cv=none; b=iUU75WPJs356nK3YZniRIxIIEaj97evz10GnQ1cAZXv53yOZPP2byBIM7t+J3ddRZm2H69DFlydv/04YC5EDbwieE8ygdaPyo6qkKxjq/Ckvl17L7H1TsH/hYSDB2Sl0PRYe/k19tILNqsuYqaKpszHJkGQPZYSSQWhyxDxYf6w=
+	t=1744718153; cv=none; b=ZVdJ/83cXm4fGf72whoQoOL3Ooknd24qIUO/e0nWQDlvhpaqW8egK/2X9SD9GG4H4mIRCfJ/tQSZJd3F9U3mAJ1XVkqIpzpXo+VoPv9dg9o0UiKhyFcnhWT4tbxXA2KZByCVMf8ZTHopu6alPbmC8KJMN2bwoaDjXMMnW8eFpkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718142; c=relaxed/simple;
-	bh=r5fb339yxUGM8CyilWTFVmbpJIlJaVu5Kcup4iKzXAY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=m2KYjsnhMssvsw+8jL3l15/wEZ1bGMwpZgKh8td5qo1fdjjYWoU6Lf362WrnRmNKWqXG5wWaVzwkz1wynstJNPpSNbr22pAGduhpHn1KO8Jx2y2K8ZGCuDmnkTCGJISeQIqwMKbMTypJ9xcqfnSfy14D7NQhGdTlMDMc2e4zdVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QyITPYiq; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744718153; c=relaxed/simple;
+	bh=zo+r2sNEz6UwnSlLcoN279KEjH3LqnKjrK6N1YxxbB4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KT6BV2TFD2spfKx3iPOWqBdS+OdHxD/Mx/Dk30M+cjB8ZcWUPCs9DqqQKeXB48TuUHG+q6nO3xyFl7yiM4rOCJAO0lvOkKoFNLgmY3f/8HKcV7QHqn002BbP75crqPWU93Xhy7VgwbzKeMk7ZlJ3vLJz7E/qDLKGb+fzH3JihQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=u+nxzOqF; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QyITPYiq"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39d83782ef6so4177480f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744718138; x=1745322938; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O1//Tc9RCt/lPzgSyNM1qcOBjj4ovpY6rRfsXewF3qI=;
-        b=QyITPYiqExTTVbGFAeI6xfLdHjq4y7+4yR/ckXxTFv3u3sIAKoHOEVbHonHFYmCti7
-         QrK9dMtr7Te1FtP+IU9SUZMeVw0nZlL22Uqmef19TLuVuIDhYBJFGRtPQeWXlD2MtuKL
-         azyioHEeacdLvXqIUoFNg4Wq84eZd4P296gvX7sYGkveOFEjPiY12//FVsfVA9dTEBAN
-         7IX+XuM+UphH7+i7qhnaWinawiUiSXvE6TkmziYm0725m2GV6fJicojoqMM9iqj4zPIA
-         7JgNXTGKRNMzMebKpkQggR4So2aIVd6r+ggZKH8vioVhM3XRmfDChfKi5m1HG2LcDn43
-         gyqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744718138; x=1745322938;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O1//Tc9RCt/lPzgSyNM1qcOBjj4ovpY6rRfsXewF3qI=;
-        b=UgnWgySpSA1HQDhjWEk8b5uPMDox6vZepwMrlqAtqj8dS2zD0O+ze+whwVU/aCHbXR
-         Xq+hbRBiO7+pIrOms5IJtho+REwPyGWECCw3PLqrPVoob8J2N6sOqKfFsDyUA6e0LGNY
-         mTbOhGiLZZ15unONO2+Rpgg5BkLH7/lnWLnsEp/EW17nNbDdum+4O2ZztV700rzWbBik
-         wEgvxlAX5diltbl2rR/zTYuLgVmJjS6fjaQA/d6EfWzLFT6D5s9e/8t13/vja1vkiYal
-         lpJs2btEve0BcLqypOQsRNoqwvbqZaRBIcvCGKOVXsVBOMMwsRlXjDQbav9+cI4IOvu/
-         KEsQ==
-X-Gm-Message-State: AOJu0Yxt1e/oEVKPF9l+aYzPGylwsANNBwpQQpLBFF0SEKxk/Eu4IOOa
-	3Gq5WRXiuARKJsq7q8ehRigT+pGHfEHIq3xiYxEpgu3ydDbho3e5/k9n0bcTVcE=
-X-Gm-Gg: ASbGncuhVW2K8JZsf3BPDpfwS+fBRdyhlBYohmPrBrir1ZYQ+q5EoLkTcB+l5U/diCw
-	cKHR8D73CEPmP2tMr9wIrd49NLBB5ymnl53e02SxIRytYvHCthyoXGZGeGSGc+q2BosRm6VY97f
-	vbbQ/eQElS8vkVZE5OxBJfrdKzMwQdH6FWEXq0nlH7njlxUt/A0qM8nJVj8dgFn3v2SCe0JNml5
-	xZ860Y5e2Fdi+sXZQ4DVGpp2qpqgGlHvklyNEpJ8ltIwZ0QkMLQBHk1CvTpATQ3+/rrDcXcLA58
-	/yzdJjrj98Rdjzvp6c8OF74F5Lf/xkMThgEotPq9xEm3jP9ZWhx0Laa0102VoRWAv/UXAKMA2kN
-	46Zjv1NTOtTIUdU8B0w==
-X-Google-Smtp-Source: AGHT+IE8VABhTEgYkra8fH8VGKihGQcR1MLPZOhdaSWZOeZ8wgaF5HURgv7CRe2sqzO4PAUbft8tug==
-X-Received: by 2002:a5d:47cc:0:b0:39c:140c:308 with SMTP id ffacd0b85a97d-39edc2fdfe8mr2436300f8f.3.1744718138273;
-        Tue, 15 Apr 2025 04:55:38 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:ac71:de35:af4b:b8fb? ([2a01:e0a:3d9:2080:ac71:de35:af4b:b8fb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5d57sm209107685e9.34.2025.04.15.04.55.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 04:55:37 -0700 (PDT)
-Message-ID: <95c6e3b1-e397-49f9-b841-e91c548793d5@linaro.org>
-Date: Tue, 15 Apr 2025 13:55:36 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u+nxzOqF"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FBtQPg3022404
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Apr 2025 06:55:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744718126;
+	bh=jzqacroDsAOYpxYHjTL1g6D7LTgb86zIA+otutCdK9o=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=u+nxzOqFw63Yr04cyhBA8F2SWK9SFbES4a4uJOmOa+jg5VB9qmLIhxEIIupQYGeP9
+	 euzAqWhZ+otzQpCrhWFh2oZl2krWEIY2AtUwYQ/Z6xQjViz13UWhYLJDxJOlQhgzLh
+	 7zNgZzTf3IlFlq4gQrKo4r7ofGFSbDgEh5aCQk+I=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FBtQos017475
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 15 Apr 2025 06:55:26 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
+ Apr 2025 06:55:25 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 15 Apr 2025 06:55:25 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FBtOI6103847;
+	Tue, 15 Apr 2025 06:55:24 -0500
+Date: Tue, 15 Apr 2025 17:25:23 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Andrew Lunn
+	<andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Andy Whitcroft
+	<apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn
+	<lukas.bulwahn@gmail.com>,
+        Joe Perches <joe@perches.com>, Jonathan Corbet
+	<corbet@lwn.net>,
+        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, Tero Kristo
+	<kristo@kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <5d74d4b2-f442-4cb8-910e-cb1cc7eb2b3d@ti.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+ <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC v5 0/8] media: qcom: iris: re-organize catalog & add
- support for SM8650
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
- <2740b178-34cc-4b95-a8da-7e6862cabc92@linaro.org>
- <96953447-cff5-98d4-053e-8cc31778849c@quicinc.com>
- <eb469388-d2f9-447a-aa80-41795991a4ad@linaro.org>
- <5b50ad93-0885-d908-fd13-3a597966115c@quicinc.com>
- <0c4fcd81-8e1f-4b4b-a345-c08caeb599c8@linaro.org>
- <69b2e66c-e9c7-37b5-e395-f7e2fd639261@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <69b2e66c-e9c7-37b5-e395-f7e2fd639261@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi,
-
-On 15/04/2025 13:26, Vikash Garodia wrote:
+On Tue, Apr 15, 2025 at 01:28:48PM +0200, Matthias Schiffer wrote:
+> On Tue, 2025-04-15 at 16:06 +0530, Siddharth Vadapalli wrote:
+> > 
+> > On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
+> > > As discussed [1], the comments for the different rgmii(-*id) modes do not
+> > > accurately describe what these values mean.
+> > > 
+> > > As the Device Tree is primarily supposed to describe the hardware and not
+> > > its configuration, the different modes need to distinguish board designs
+> > 
+> > If the Ethernet-Controller (MAC) is integrated in an SoC (as is the case
+> > with CPSW Ethernet Switch), and, given that "phy-mode" is a property
+> > added within the device-tree node of the MAC, I fail to understand how
+> > the device-tree can continue "describing" hardware for different board
+> > designs using the same SoC (unchanged MAC HW).
 > 
-> On 4/15/2025 1:54 PM, neil.armstrong@linaro.org wrote:
->> Hi,
->>
->> On 14/04/2025 21:48, Vikash Garodia wrote:
->>>
->>> On 4/14/2025 5:39 PM, neil.armstrong@linaro.org wrote:
->>>> Hi,
->>>>
->>>> On 14/04/2025 12:54, Vikash Garodia wrote:
->>>>> Hi Neil,
->>>>>
->>>>> On 4/14/2025 1:05 PM, Neil Armstrong wrote:
->>>>>> Hi Vikash, Dikshita,
->>>>>>
->>>>>> On 10/04/2025 18:29, Neil Armstrong wrote:
->>>>>>> Re-organize the platform support core into a gen1 catalog C file
->>>>>>> declaring common platform structure and include platform headers
->>>>>>> containing platform specific entries and iris_platform_data
->>>>>>> structure.
->>>>>>>
->>>>>>> The goal is to share most of the structure while having
->>>>>>> clear and separate per-SoC catalog files.
->>>>>>>
->>>>>>> The organization is based on the curent drm/msm dpu1 catalog
->>>>>>> entries.
->>>>>>
->>>>>> Any feedback on this patchset ?
->>>>> Myself and Dikshita went through the approach you are bringing here, let me
->>>>> update some context here:
->>>>> - sm8550, sm8650, sm8775p, qcs8300 are all irisv3, while qcs8300 is the scaled
->>>>> down variant i.e have 2 PIPE vs others having 4. Similarly there are other
->>>>> irisv3 having 1 pipe as well.
->>>>> - With above variations, firmware and instance caps would change for the
->>>>> variant
->>>>> SOCs.
->>>>> - Above these, few(less) bindings/connections specific delta would be there,
->>>>> like there is reset delta in sm8550 and sm8650.
->>>>>
->>>>> Given above, xxx_gen1.c and xxx_gen2.c can have all binding specific tables and
->>>>> SOC platform data, i.e sm8650_data (for sm8650). On top of this, individual SOC
->>>>> specific .c file can have any delta, from xxx_gen1/2.c) like reset table or
->>>>> preset register table, etc and export these delta structs in xxx_gen1.c or
->>>>> xxx_gen2.c.
->>>>>
->>>>> Going with above approach, sm8650.c would have only one reset table for now.
->>>>> Later if any delta is identified, the same can be added in it. All other common
->>>>> structs, can reside in xxx_gen2.c for now.
->>>>
->>>> Thanks for reviewing, but...
->>>> Sorry I don't understand what you and Dmitry are asking me...
->>>>
->>>> If I try really hard, you would like to have:
->>>>
->>>> iris_catalog_sm8550.c
->>>> - iris_set_sm8550_preset_registers
->>>> - sm8550_icc_table
->>>> - sm8550_clk_reset_table
->>>> - sm8550_bw_table_dec
->>>> - sm8550_pmdomain_table
->>>> - sm8550_opp_pd_table
->>>> - sm8550_clk_table
->>> Move or rename existing 8550.c as xxx_gen2.c. This is with the existing
->>> assumption that everything under 8550.c is common for all gen2 to come in future.
->>>>
->>>> iris_catalog_sm8650.c
->>>> - sm8650_clk_reset_table
->>>> - sm8650_controller_reset_table
->>> yes, since reset is the only delta.
->>>>
->>>> iris_catalog_gen2.c
->>>> - iris_hfi_gen2_command_ops_init
->>>> - iris_hfi_gen2_response_ops_init
->>>> ...
->>>> - sm8550_dec_op_int_buf_tbl
->>>>
->>>> and:
->>>> - struct iris_platform_data sm8550_data
->>>> - struct iris_platform_data sm8650_data
->>> all this goes to xxx_gen2.c as well.
->>
->> Yeah so this is exactly my current approach, except it use .h files
->> for each SoC for simplicity.
->>
->>>
->>>> using data from iris_catalog_sm8550.c & iris_catalog_sm8550.c
->>>>
->>>> So this is basically what I _already_ propose except
->>>> you move data in separate .c files for no reasons,
->>>> please explain why you absolutely want distinct .c
->>>> files per SoC. We are no more in the 1990's and we camn
->>>> defintely have big .c files.
->>> Its not about the size of file alone, it is easy to understand later what would
->>> be the delta in the SOCs and what would common. For ex, just navigating through
->>> sm8650.c, anyone can comment that reset is the delta.
->>
->> What's the problem with the current approach with .h file for each SoC ?
->>
->>>>
->>>> And we still have a big issue, how to get the:
->>>> - ARRAY_SIZE(sm8550_clk_reset_table)
->>>> - ARRAY_SIZE(sm8550_bw_table_dec)
->>>> - ARRAY_SIZE(sm8550_pmdomain_table)
->>>> ...
->>>>
->>>> since they are declared in a separate .c file and you
->>>> need a compile-time const value to fill all the _size
->>>> attribute in iris_platform_data.
->>> I have not tries this, but isn't extern-ing the soc structs (in your case reset
->>> tables) into xxx_gen2.c enough here ? Also i think the tables you are pointing
->>> here, lies in the xxx_gen2.c only, so i am sure above ones would not be an issue
->>> at all. The only delta struct is reset table, lets see if extern helps.
->>
->> No it doesn't, because I wrote C for the last 25 years, and I tried it already,
->> I also tried to export a const int with the table size, and it also doesn't work.
-> Got it, i tried too, it didn't work.
->>
->> The 3 only ways are:
->> 1) add defines with sizes for each table
-> This leaves manual update everytime.
-> 
->> 2) add a NULL entry at the end of each table, and update all code using those
->> tables
-> Does not sound right to update the code, just to get the size.
-> 
->> 3) declare in the same scope, which is my current proposalThe proposal in the RFC is about moving the common structs to 8550.h, rather, it
-> can be kept in xxx_gen2.c.
-> 8550.h can have the delta part (i.e reset tables) and can be included in
-> xxx_gen2.c. sm8650_data can reside in xxx_gen2.c, soc headers just brings the
-> delta structs which can be overridden from common in xxx_gen2.c
-> I am good with the header approach which contains the delta over and above
-> xxx_gen2.c.
+> The setting is part of the MAC node, but it is always set in the board DTS,
+> together with assigning a PHY to the MAC.
 
-I'll try to do that, but now I don't see the point of the SoC header files if
-they only contain the reset tables.
-
-Neil
+The MAC is the same independent of which board it is used in. So are we
+really describing the "MAC" or configuring the "MAC"? Isn't it the PHY
+along with the PCB lines on a given board that determine how the "MAC"
+should be "configured" to make the combination of "MAC" + "PHY"
+functional together?
 
 > 
-> Regards,
-> Vikash
->> Neil
->>
->>>
->>> Regards,
->>> Vikash
->>>>
->>>> So I recall my goal, I just want to add sm8650 support,
->>>> and I'm not the owner of this driver, and I'm really happy
->>>> to help, but giving me random ideas to solve your problem
->>>> doesn't help us at all going forward.
->>>>
->>>> Neil
->>>>
->>>>>
->>>>> Regards,
->>>>> Vikash
->>>>>>
->>>>>> Thanks,
->>>>>> Neil
->>>>>>
->>>>>>>
->>>>>>> Add support for the IRIS accelerator for the SM8650
->>>>>>> platform, which uses the iris33 hardware.
->>>>>>>
->>>>>>> The vpu33 requires a different reset & poweroff sequence
->>>>>>> in order to properly get out of runtime suspend.
->>>>>>>
->>>>>>> Follow-up of [1]:
->>>>>>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org/
->>>>>>>
->>>>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>>>> ---
->>>>>>> Changes in v4:
->>>>>>> - Reorganized into catalog, rebased sm8650 support on top
->>>>>>> - Link to v4:
->>>>>>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org
->>>>>>>
->>>>>>> Changes in v4:
->>>>>>> - collected tags
->>>>>>> - un-split power_off in vpu3x
->>>>>>> - removed useless function defines
->>>>>>> - added back vpu3x disappeared rename commit
->>>>>>> - Link to v3:
->>>>>>> https://lore.kernel.org/r/20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org
->>>>>>>
->>>>>>> Changes in v3:
->>>>>>> - Collected review tags
->>>>>>> - Removed bulky reset_controller ops
->>>>>>> - Removed iris_vpu_power_off_controller split
->>>>>>> - Link to v2:
->>>>>>> https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
->>>>>>>
->>>>>>> Changes in v2:
->>>>>>> - Collected bindings review
->>>>>>> - Reworked rest handling by adding a secondary optional table to be used by
->>>>>>> controller poweroff
->>>>>>> - Reworked power_off_controller to be reused and extended by vpu33 support
->>>>>>> - Removed useless and unneeded vpu33 init
->>>>>>> - Moved vpu33 into vpu3x files to reuse code from vpu3
->>>>>>> - Moved sm8650 data table into sm8550
->>>>>>> - Link to v1:
->>>>>>> https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
->>>>>>>
->>>>>>> ---
->>>>>>> Neil Armstrong (8):
->>>>>>>           media: qcom: iris: move sm8250 to gen1 catalog
->>>>>>>           media: qcom: iris: move sm8550 to gen2 catalog
->>>>>>>           dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS
->>>>>>> accelerator
->>>>>>>           media: platform: qcom/iris: add power_off_controller to vpu_ops
->>>>>>>           media: platform: qcom/iris: introduce optional controller_rst_tbl
->>>>>>>           media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
->>>>>>>           media: platform: qcom/iris: add support for vpu33
->>>>>>>           media: platform: qcom/iris: add sm8650 support
->>>>>>>
->>>>>>>      .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
->>>>>>>      drivers/media/platform/qcom/iris/Makefile          |   6 +-
->>>>>>>      .../media/platform/qcom/iris/iris_catalog_gen1.c   |  83 +++++++
->>>>>>>      ...{iris_platform_sm8550.c => iris_catalog_gen2.c} |  85 +------
->>>>>>>      ...ris_platform_sm8250.c => iris_catalog_sm8250.h} |  80 +-----
->>>>>>>      .../media/platform/qcom/iris/iris_catalog_sm8550.h |  91 +++++++
->>>>>>>      .../media/platform/qcom/iris/iris_catalog_sm8650.h |  68 +++++
->>>>>>>      drivers/media/platform/qcom/iris/iris_core.h       |   1 +
->>>>>>>      .../platform/qcom/iris/iris_platform_common.h      |   3 +
->>>>>>>      drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
->>>>>>>      drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
->>>>>>>      drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
->>>>>>>      drivers/media/platform/qcom/iris/iris_vpu3x.c      | 275
->>>>>>> +++++++++++++++++++++
->>>>>>>      drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
->>>>>>>      drivers/media/platform/qcom/iris/iris_vpu_common.h |   3 +
->>>>>>>      15 files changed, 598 insertions(+), 300 deletions(-)
->>>>>>> ---
->>>>>>> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
->>>>>>> change-id: 20250410-topic-sm8x50-upstream-iris-catalog-3e2e4a033d6f
->>>>>>>
->>>>>>> Best regards,
->>>>>>
->>>>
->>
+> > How do we handle situations where a given MAC supports various
+> > "phy-modes" in HW? Shouldn't "phy-modes" then be a "list" to technically
+> > descibe the HW? Even if we set aside the "rgmii" variants that this
+> > series is attempting to address, the CPSW MAC supports "sgmii", "qsgmii"
+> > and "usxgmii/xfi" as well.
+> 
+> This is not about PHY mode support of the MAC, but the mode to be used on a
+> particular board. I would not expect a board to use multiple different
+> interfaces with a single PHY (and if such cases exist, I consider them out of
 
+For a fixed PHY, the MAC will be "configured" to operate in a set of
+modes supported by the PHY. The HW description is coming from the PHY
+that has been "fixed", and not the MAC. But the "phy-mode" property
+resides within the device-tree node of the MAC and not the PHY. So are
+we still "describing" the MAC when it is the "PHY" that introduces the
+limitation or requires the MAC to be configured for a particular
+"phy-mode"?
+
+> scope for this patch series).
+> 
+> > 
+> > > (if a delay is built into the PCB using different trace lengths); whether
+> > > a delay is added on the MAC or the PHY side when needed should not matter.
+> > > 
+> > > Unfortunately, implementation in MAC drivers is somewhat inconsistent
+> > > where a delay is fixed or configurable on the MAC side. As a first step
+> > > towards sorting this out, improve the documentation.
+
+While this patch is improving the documentation and making it consistent
+when it comes to the description of "rgmii" by stating that the "MAC"
+shouldn't add a delay, for the remaining cases, as to who adds the delay
+and whether or not the MAC should add a delay has been left open.
+Existing documentation clarifies what the MAC should do for each case
+except "rgmii" which is being fixed by your patch.
+
+> > > 
+> > > Link: https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28@lunn.ch/ [1]
+> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > > ---
+> > >  .../bindings/net/ethernet-controller.yaml        | 16 +++++++++-------
+> > >  1 file changed, 9 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> > > index 45819b2358002..2ddc1ce2439a6 100644
+> > > --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> > > +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> > > @@ -74,19 +74,21 @@ properties:
+> > >        - rev-rmii
+> > >        - moca
+> > >  
+> > > -      # RX and TX delays are added by the MAC when required
+> > > +      # RX and TX delays are part of the board design (through PCB traces). MAC
+> > > +      # and PHY must not add delays.
+> > >        - rgmii
+> > >  
+> > > -      # RGMII with internal RX and TX delays provided by the PHY,
+> > > -      # the MAC should not add the RX or TX delays in this case
+> > > +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
+> > > +      # delays are included in the board design; this is the most common case
+> > > +      # in modern designs.
+> > >        - rgmii-id
+> > >  
+> > > -      # RGMII with internal RX delay provided by the PHY, the MAC
+> > > -      # should not add an RX delay in this case
+> > > +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
+> > > +      # part of the board design.
+> > >        - rgmii-rxid
+> > >  
+> > > -      # RGMII with internal TX delay provided by the PHY, the MAC
+> > > -      # should not add an TX delay in this case
+> > > +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
+> > > +      # part of the board design.
+
+[...]
+
+Regards,
+Siddharth.
