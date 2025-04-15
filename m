@@ -1,226 +1,119 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EA91A0712
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56C2192B81;
+	Tue, 15 Apr 2025 13:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725012; cv=none; b=W4w1GfhBPVpRI8t4zX3/uCgfR1+uDv028wqu/2FBgBBDyf13Os9F+mLnmrPVi0Y1BWxSGeRFhqWbA7pcYXUwILjmD67oXV0pSX24ItEpGf0j5xYpaYkD/qBNEop2zXy61B3WBu7vTpjaOjdQy1nhNA+ebSgC8LQ5ndQWGDznNLA=
+	t=1744725087; cv=none; b=ijXUjQ1EEsLTiUzCG1Bgm8MKXzfF7GRvOAhzZi5P/GAsHD165x7Wmu2VsF7ZAUCr5lksTtqenGDlWI6dj/Tstd+xEu1Tcoixx3jFTtwiRpOLXiRheZiKM8pt1tAUxyO7BKFeQwm/ZQjLaA2YGsjnjC2NVi3gRNSOM7SCwlycQeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725012; c=relaxed/simple;
-	bh=hq1Y+ojJ2GF1Hc6zjkQxIT1B/mADl1/vaLggL8GTPCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r7RsQmPc5UXLNxP2ip6dzogKe2CLiI6/yUFSycSdtJ1scao0JlO0wDx/W60oVazAyXVsucjZ7QKKT2Hkzi6Wj642D0Ye3WCX+dQuZF1VcHGME6teuUjFFRs/w1NSTPq1oje1h0REpsVnMMkncP7JENqgqkxo4tduTtUF3Jlqnag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HmM4VXg3; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744725087; c=relaxed/simple;
+	bh=8n2irY4mS+vEqgM3wBbbGtkgY/tw4aR212DtcbvVKBc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=M/aMQdKEu5koE+ilWdWXaGMHyIgbhtTamzDtmOKYkDeBj8gvKrS/cRmGTqxVBRmWUbGUTY91ZC+lr4J3gNbk7RFPhyIIDKqXs1AbbQGmI81vMMA8zS8OFCzBCgLtiBkjQct9Rz3UehDJEvRrXtryiQIjWwIazwtbnWGmIUrovZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=V9cswZDi; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HmM4VXg3"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so1053095166b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744725009; x=1745329809; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wrEPCwM2Bn/9hyG3bxO2C+bn7awqv6ln6+mt63Z/QUM=;
-        b=HmM4VXg3xvDmYzXq5wECTz9QliX8JFwlfuZYVtbKADaZY0emDuQET9jkrczL/rC6is
-         8tfsJIxz5cDAPrbfuM+3FoPolKLiG9YIdx6iFNgt6Yv1rWaG6fMRFPtB0d0NPUP/6PSC
-         R7r8im1priw+F5u3BglbyUX9AD7i81VnndU7rK52m9Q4eaAywoGXDkvnOy1A6krZSzB7
-         rU7bIjAR4v4DSALH68Ms64XLihdksfZ/Bmyp2Mai/Oq4l9MRd4TuLqpeubCUo5EVDTsu
-         koXAIIYw9LDizzDU8c82rDC4WTbyalhJJVCmrIRp4W/UA0uOL4hdgwB0kmOxHtX3wfAc
-         RJXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744725009; x=1745329809;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wrEPCwM2Bn/9hyG3bxO2C+bn7awqv6ln6+mt63Z/QUM=;
-        b=ZpewDNADr+Sn5E4c2tiyGyBt3WDoUUeTgxFlt8vgJS68Ypv8moLX7Njp0TWMf4/6nM
-         xB8LqBfB7p0o5ne+5Z6G82GL4qDq/v9dolEMtX801lKkKNR5K+8CDmD6bzjStfBexiRh
-         WF+MuGKlldLXANB/QbbiahLxJu/LMm23VKeK3r7rRZ7zCu3JoGYSeH6XYMdoxz5GnZ1t
-         wKB5rOaQB/eaMw9GuK5c1FfqvZRJVk39JoVwPyM4e4HLkX/K315LO4Y+2rXzYaQ1kGbn
-         gmY06PXuKXYR0yQcnsplZvBLAsDEwCSYc/kQjmQUHItUtuPlNFzd/F9Or7neG34KXZ7R
-         w5eA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcr6l2jfsobT6CKOjp+kSeAi51qnTVM+423YGwU4z8exRxCIMLB5LWFgmWzN1WvA8BXZkSsagvxOoPQC8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBs1+SXEKw+lzzUIJsD5iSdjAxydTIG2OY8kCRPaEO+TQu9QaW
-	TJpE1P/N4uRcjcA61f44lduYahFkQstd2L9bmEMBw7oimEuUwcXD5ScxoVZISIGo9OGcBi7orud
-	FQbx+H+eCmrqC6x9USN1+51tq2ExcyXsKgvD63A==
-X-Gm-Gg: ASbGncupv7ZPvIKTjTMIzhLX05Sz0kxa2JAcvkXL51cVDN5WJfoQoISAOswDEZX5sbv
-	zUvdI4IOPUM4xkLIu5cVe39nFz+T2jEFqm0k/+l16WNq2AHxx5Ax5TTr3iDYgE7G7YswDY4Dfno
-	ul1Fb6rr7lslF63OEyUwzu4j/6gks/+DaBkqcSrFiAaFoJNxOGN3o3Gj+dIsuxMA==
-X-Google-Smtp-Source: AGHT+IGE+x07DdfblSi+FWyAZkA+qhUSf/7rY82sSBtgrgM7EU+PcZzpRi8/EDgcbUuwjrVTPMsNW1QtieYKwrO+K6o=
-X-Received: by 2002:a17:907:2ce6:b0:aca:a162:67bb with SMTP id
- a640c23a62f3a-acad345867emr1364373566b.4.1744725008643; Tue, 15 Apr 2025
- 06:50:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="V9cswZDi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744725076; x=1745329876; i=markus.elfring@web.de;
+	bh=JZpESOzQgOMXz3n6N/rlS9QElC6D9yfXuKep/LgjkpY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=V9cswZDitiBrq8+tu40NjiNt5Sxn90lVhZa9hil8NSfOKvNc+8dve5+GyjawvjLW
+	 /IkN9N+EfvHFMelp7L1tgLy6H7rWexLZ/AZZYfHjFv7ROzbOlzYvynR25XVbhXV2c
+	 kFztmQ9ApsBi7OM28nklYm3f1Qv83zZMdm3nmzvTzaU6Qiow4HS8NmgDOBYGpSAPc
+	 9boBqQ+XdH++Ke3jnkyAa8hFrWH5ePjkfRYnnprGwzS3lQilf13hBGYsje/WoJoc3
+	 AMfbQPbI2MrQ4swcz0TpMG3ZXjOQIIu0eBwt+pRknijP6Qgvg24jCwYzHUHEnG84H
+	 VPBijOR39ds9ixKSsg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.24]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MNORC-1tftk13ieI-00TYSu; Tue, 15
+ Apr 2025 15:51:15 +0200
+Message-ID: <322ff5a5-bb0c-4ee0-9392-b6f33364963e@web.de>
+Date: Tue, 15 Apr 2025 15:51:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250302210539.1563190-1-vincent.guittot@linaro.org> <54919a25-b898-407c-a4d7-4ce53907cf75@arm.com>
-In-Reply-To: <54919a25-b898-407c-a4d7-4ce53907cf75@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 15 Apr 2025 15:49:56 +0200
-X-Gm-Features: ATxdqUF0Ipfqj6hgvNz5HJqKVS2C8aqtbu1RDGBJ-S_MZSlxC9H8y49n4jsqVM8
-Message-ID: <CAKfTPtAL+jomuj7nuoOkoGCDPURiKmmL51uZqj-wwY4hBuanOQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7 v5] sched/fair: Rework EAS to handle more cases
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, lukasz.luba@arm.com, 
-	rafael.j.wysocki@intel.com, pierre.gondois@arm.com, 
-	linux-kernel@vger.kernel.org, qyousef@layalina.io, hongyan.xia2@arm.com, 
-	luis.machado@arm.com, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Jason Gerecke <jason.gerecke@wacom.com>, Jiri Kosina <jikos@kernel.org>,
+ Ping Cheng <ping.cheng@wacom.com>
+References: <20250414183247.11276-1-qasdev00@gmail.com>
+Subject: Re: [PATCH RESEND] HID: wacom: handle kzalloc() allocation failure in
+ wacom_wac_queue_flush()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250414183247.11276-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:igC/SQJcUJ48kdycYmT34nc7kWf02h3S+bVPM9rzdYbW1QpnT2S
+ SiYMx1K771qHLIzijora92vfd1nH073OgBvTVF8O9oyjyjXDgZc83nF/iF7Ff/E3tYAi2ZP
+ 58taIMToyMd9zNsyHBBG+HsTXs5qLTIi3ej+qUA65f30Rt8zoFE9aDqYQuUoaUn8vqjAV86
+ ot0dIBaBM5i0HnqUa/fyQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Gfbk+qNrW4c=;tqIEsjSTtcGdNeFdkhWJ6A4jSDj
+ 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
 
-Hi Christian,
+=E2=80=A6
+> from the fifo via kfifo_out(). However it does not
+> check kzalloc() for allocation failure which returns=20
+> NULL and could potentially lead to a NULL deref.
+=E2=80=A6
+                                            pointer dereference?
 
-On Thu, 3 Apr 2025 at 14:37, Christian Loehle <christian.loehle@arm.com> wrote:
->
-> On 3/2/25 21:05, Vincent Guittot wrote:
-> > The current Energy Aware Scheduler has some known limitations which have
-> > became more and more visible with features like uclamp as an example. This
-> > serie tries to fix some of those issues:
-> > - tasks stacked on the same CPU of a PD
-> > - tasks stuck on the wrong CPU.
-> >
+I guess that word wrapping can occasionally become a bit nicer
+for text lines which may be longer than 52 characters.
 
-...
-
-> >
-> >  include/linux/energy_model.h | 111 ++----
-> >  kernel/sched/fair.c          | 721 ++++++++++++++++++++++++-----------
-> >  kernel/sched/sched.h         |   2 +
-> >  3 files changed, 518 insertions(+), 316 deletions(-)
-> >
->
-> Hi Vincent,
-> so I've invested some time into running tests with the series.
-> To further narrow down which patch we can attribute a change in
-> behavior I've compared the following:
-> - Patches 1 to 3 applied, comparing your proposed feec() (B)
-> only to the baseline feec() (A).
-> - All patches applied, using a static branch to enable (C) and
-> disable (D) push mechanism for misfit tasks (if disabled only
-> the 'tasks stuck on CPU' mechanism triggers here).
->
-> I've looked at
-> 1) YouTube 4K video playback
-> 2) Dr.Arm (in-house ARM game)
-> 3) VideoScroller which loads a new video every 3s
-> 4) Idle screen on
-> 5) Speedometer2.0 in Chromium
->
-> The device tested is the Pixel6 with 6.12 kernel + backported
-> scheduler patches.
-
-What do you mean by "6.12 kernel + backported scheduler patches" ? Do
-you mean android mainline v6.12 ?
-
-I run my test with android mainline v6.13 + scheduler patches for
-v6.14 and v6.15-rc1. Do you mean the same ? v6.12 misses a number of
-important patches in regards to threads accounting
-
-> For power measurements the onboard energy-meter is used [1].
-
-same for me
-
->
-> Mainline feec() A is the baseline for all. All workloads are run for
-> 10mins with the exception of Speedometer 2.0
-> (one iteration each for 5 iterations with cooldowns).
-
-What do you mean exactly by (one iteration each for 5 iterations with
-cooldowns) ?
-
->
-> 1) YouTube 4K video
-
-I'd like to reproduce this use case because my test with 4k video
-playback shows similar or slightly better power consumption (2%) with
-this patch.
-
-Do you have details about this use case that you can share ?
-
-
-> +4.5% power with all other tested (the regression already shows with B,
-> no further change with C & D).
-> (cf. +18.5% power with CAS).
-> The power regression comes from increased average frequency on all
-> 3 clusters.
-
-I'm interested to understand why the average frequency increases as
-the OPP remains the 1st level of selection and in case of light loaded
-use cases we should not see much difference. That's what I see on my
-4k video playback use case
-
-And I will also look at why the CAS is better in your case
-
-> No dropped frames in all tested A to D.
->
-> 2)  Dr.Arm (in-house ARM game)
-> +9.9% power with all other tested (the regression already shows with B,
-> no further change with C & D).
-> (cf. +3.7% power with CAS, new feec() performs worse than CAS here.)
-> The power regression comes from increased average frequency on all
-> 3 clusters.
-
-I supposed that I won't be able to reproduce this one
-
->
-> 3) VideoScroller
-> No difference in terms of power for A to D.
-> Specifically even the push mechanism with misfit enabled/disabled
-> doesn't make a noticeable difference in per-cluster energy numbers.
->
-> 4) Idle screen on
-> No difference in power for all for A to D.
-
-I see a difference here mainly for DDR power consumption with 7%
-saving compared to mainline and 2% on the CPU clusters
-
->
-> 5) Speedometer2.0 in Chromium
-> Both power and score comparable for A to D.
->
-> As mentioned in the thread already the push mechanism
-> (without misfit tasks) (D) triggers only once every 2-20 minutes,
-> depending on the workload (all tested here were without any
-> UCLAMP_MAX tasks).
-> I also used the device manually just to check if I'm not missing
-> anything here, I wasn't.
-> This push task mechanism shouldn't make any difference without
-> UCLAMP_MAX.
-
-On the push mechanism side, I'm surprised that you don't get more push
-than once every 2-20 minutes. On the speedometer, I've got around 170
-push fair and 600 check pushable which ends with a task migration
-during the 75 seconds of the test and much more calls that ends with
-the same cpu. This also needs to be compared with the 70% of
-overutilized state during the 75 seconds of the time during which we
-don't push. On light loaded case, the condition is currently to
-conservative to trigger push task mechanism but that's also expected
-in order to be conservative
-
-The fact that OU triggers too quickly limits the impact of push and feec rework
-
-uclamp_max sees a difference with the push mechanism which is another
-argument for using it.
-
-And this is 1st step is quite conservative before extending the cases
-which can benefit from push and feec rework as explained  at OSPM
-
->
-> The increased average frequency in 1) and 2) is caused by the
-> deviation from max-spare-cap in feec(), which previously ensured
-> as much headroom as possible until we have to raise the OPP of the
-> cluster.
->
-> So all in all this regresses power on some crucial EAS workloads.
-> I couldn't find a real-world workload where the
-> 'less co-scheduling/contention' strategy of feec() showed a benefit.
-> Did you have a specific workload for this in mind?
->
-> [1]
-> https://tooling.sites.arm.com/lisa/latest/sections/api/generated/lisa.analysis.pixel6.Pixel6Analysis.html#lisa.analysis.pixel6.Pixel6Analysis.df_power_meter
+Regards,
+Markus
