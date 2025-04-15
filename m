@@ -1,287 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22556136E37;
-	Tue, 15 Apr 2025 17:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6372D21D3EA
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744739529; cv=none; b=ca5chjHG5N54pJZOTrnuXEkJuQJUlzHyIZ8HQOQ/oHK8Rpoh6RVtYSqj4SSkln1XpGxt/6GXzbMgBC5xw2Vcnt8+9YeXEPLPASZX8bas6JQ+G8nQieu3xMTikysaI0k+53pW3T8WGwOxJkITYntChcsa7GItngDZSTUmFes+2Vc=
+	t=1744739593; cv=none; b=nGJPGed6b9jxkJPY6AUPqgNwQp7sSfBeRIQBnMj7OYfH6ZZjyA5NQfieSI7tkW42h4xw0JgftL7UwFi8dxYHatwtITrX/ym6UWbNKklUbBEGTeoibepLTekIedV1lHQkisYy74+dw9c8+DbDwMAcXYgKwLulHy0+Nw9VC/BB5Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744739529; c=relaxed/simple;
-	bh=RQoQseg/+U+g9e30dznS6KwLoPKb1ll48CUVIcQsrNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nx1EwOi8IKtRmkxHPRD+kJus17EoF4XSbEhNffPgVLA4jpwGlrjynQPBx5/FrB1S+XdWCkQ+txfuzX4rUu5EvlnSFmuoc9sNe9X1TV/QEsKuflbJByQxtqLrJuKXaoGrtxTv2K5Iw3eQaSVIo6XE8DXo/xYJoNljmeRf5NRWE0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tr/R4gwl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744739593; c=relaxed/simple;
+	bh=v50mZl5Q16V6X2sBYVxuaPflT4u0ApEJjaglVdchTEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MyAwcXkTUrNmiv5g3gOVpnMysluoYu+O9hPIeKOy7R3QPRPJfVgiOMod2wQ1c+TbKkQlk0Y1gcOfrTGDXfGTG/vYJXc9xT/KHqRUR7eGSU/n34MvuR67rPfVSGkaSrd+DdNcKaNLayqSXpvKZSuyL2FVsYkGDslzqsjNrw8TZvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GCJnpF1v; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+moUnHCA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GCJnpF1v; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+moUnHCA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tr/R4gwl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03F7C4CEE9;
-	Tue, 15 Apr 2025 17:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744739528;
-	bh=RQoQseg/+U+g9e30dznS6KwLoPKb1ll48CUVIcQsrNg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Tr/R4gwlaEgaBLaOhu8IiEn/dTQPHsbZJxH2R6e/pO1s5GDf/Fyfm0CVziIemq9Gu
-	 dXtWedaPrk2P9WJPctRRSpZJVZgk6I7+3/1hBgdvGiLTFQBZjSYwEbmmOzPC7QTOs5
-	 wvn8DMpJUDPwUj+WYruME3FYFW74567g/p9WWvqXiRHS+Og8zKalK1TX5eMywze/Qq
-	 tZ/W2UaTDO66uEnLtJNcnDPXCW7+Gl3mMAl3ORnO7vCySscYzrpmCeePWnaNTP/sTE
-	 jIZVZBR8o5/jznAWErAmllxHb/O6UydhIOXtmQPetpnpOZ93aVMXgE14AuKGTvYHyf
-	 AEZ4NtfzSL6Tw==
-Date: Tue, 15 Apr 2025 18:52:00 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: <victor.duicu@microchip.com>
-Cc: <andy@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
- <marius.cristea@microchip.com>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: iio: temperature: add support for
- MCP998X
-Message-ID: <20250415185200.396d6356@jic23-huawei>
-In-Reply-To: <20250415132623.14913-2-victor.duicu@microchip.com>
-References: <20250415132623.14913-1-victor.duicu@microchip.com>
-	<20250415132623.14913-2-victor.duicu@microchip.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GCJnpF1v";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+moUnHCA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GCJnpF1v";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+moUnHCA"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 808A71F6E6;
+	Tue, 15 Apr 2025 17:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744739588;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cs2shrDNZ+9k5vXTaEF/DLz+6YP38cYDxKhyLNimBdk=;
+	b=GCJnpF1vhAZd3v8Wky0WvN+tZLDG9hO/39Lok12erHvbPiUctgM4CTWwvIh5X7KVirlb23
+	Go3PalE4Bwr0RxEG0yD6/eX0PG9AcifiiCMPC+DqFIXtHEnwwPwPVXQU2cpr6kdIOOB6p8
+	bX4W6YkvJ4v6kasD9wn2YdT3lhnOng0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744739588;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cs2shrDNZ+9k5vXTaEF/DLz+6YP38cYDxKhyLNimBdk=;
+	b=+moUnHCAmi1+W/Zne/VUnCkx0qxh93L6xWIXh0RbKeewFh94hHocXugcXDC+oIznES7/EM
+	wDcXeSxRH6m1mlCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744739588;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cs2shrDNZ+9k5vXTaEF/DLz+6YP38cYDxKhyLNimBdk=;
+	b=GCJnpF1vhAZd3v8Wky0WvN+tZLDG9hO/39Lok12erHvbPiUctgM4CTWwvIh5X7KVirlb23
+	Go3PalE4Bwr0RxEG0yD6/eX0PG9AcifiiCMPC+DqFIXtHEnwwPwPVXQU2cpr6kdIOOB6p8
+	bX4W6YkvJ4v6kasD9wn2YdT3lhnOng0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744739588;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cs2shrDNZ+9k5vXTaEF/DLz+6YP38cYDxKhyLNimBdk=;
+	b=+moUnHCAmi1+W/Zne/VUnCkx0qxh93L6xWIXh0RbKeewFh94hHocXugcXDC+oIznES7/EM
+	wDcXeSxRH6m1mlCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 56F01137A5;
+	Tue, 15 Apr 2025 17:53:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 60MAFQSd/mdWegAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 15 Apr 2025 17:53:08 +0000
+Date: Tue, 15 Apr 2025 19:53:07 +0200
+From: David Sterba <dsterba@suse.cz>
+To: =?utf-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>
+Cc: "dsterba@suse.cz" <dsterba@suse.cz>, "clm@fb.com" <clm@fb.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"dsterba@suse.com" <dsterba@suse.com>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggMS8yXSBi?=
+ =?utf-8?Q?trfs=3A_conver?= =?utf-8?Q?t?= to spinlock guards in
+ btrfs_update_ioctl_balance_args()
+Message-ID: <20250415175307.GK16750@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250409125724.145597-1-frank.li@vivo.com>
+ <20250409183022.GG13292@suse.cz>
+ <SEZPR06MB52695564F5DE73356D0EFF06E8B72@SEZPR06MB5269.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SEZPR06MB52695564F5DE73356D0EFF06E8B72@SEZPR06MB5269.apcprd06.prod.outlook.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.988];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
 
-On Tue, 15 Apr 2025 16:26:22 +0300
-<victor.duicu@microchip.com> wrote:
-
-> From: Victor Duicu <victor.duicu@microchip.com>
+On Thu, Apr 10, 2025 at 11:11:11AM +0000, 李扬韬 wrote:
+> > Please don't do the guard() conversions in fs/btrfs/, the explicit locking is the preferred style. If other subsystems use the scoped locking guards then let them do it.
 > 
-> This is the devicetree schema for Microchip MCP998X/33 and
-> MCP998XD/33D Multichannel Automotive Temperature Monitor Family.
-Hi Victor,
+> OK, is there anything we can do quickly in the btrfs code currently?
 
-Please state briefly here in what way the parts are incompatible
-as a justification for no fallback compatibles.  Quite a bit
-of that will become apparent when you enforce validity of parameters
-as suggested below.
+Yeah, there always is. The open coded rb_tree searches can be converted
+to the rb_find() helpers. It ends up as the same asm code due to
+inlining and reads a bit better when there's just one rb_find instead of
+the while loop and left/right tree moves.
 
-Various comments inline.
-> 
-> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
-> ---
->  .../iio/temperature/microchip,mcp9982.yaml    | 182 ++++++++++++++++++
->  1 file changed, 182 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-> new file mode 100644
-> index 000000000000..8cbf897d1278
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-> @@ -0,0 +1,182 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive Temperature Monitor Family
-> +
-> +maintainers:
-> +  - Victor Duicu <victor.duicu@microchip.com>
-> +
-> +description: |
-> +  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multichannel
-> +  automotive temperature monitor.
-> +  The datasheet can be found here:
-> +    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,mcp9933
-> +      - microchip,mcp9933D
-> +      - microchip,mcp9982
-> +      - microchip,mcp9982D
-> +      - microchip,mcp9983
-> +      - microchip,mcp9983D
-> +      - microchip,mcp9984
-> +      - microchip,mcp9984D
-> +      - microchip,mcp9985
-> +      - microchip,mcp9985D
-> +
-> +  reg:
-> +    maxItems: 1
-> +    
-> +  interrupts:
-> +    maxItems: 2
-> +    
-> +  interrupt-names:
-> +    description: |
-> +      ALERT1 indicates a HIGH or LOW limit was exceeded.
-> +      ALERT2 indicates a THERM limit was exceeded.
-> +    items:
-> +      - const: ALERT1
-> +      - const: ALERT2
-> +    
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  microchip,temp-hysteresis:
-> +    description: |
-> +      Value of temperature limit hysteresis.
-> +      Omit this tag to set the default value.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+I have some WIP for that but I havent't tested it at all, but it should
+give a good idea:
 
-Can we just make this a userspace thing using appropriate _hysteresis ABI element?
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -160,23 +160,27 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
+ 		   int init_flags);
+ static void qgroup_rescan_zero_tracking(struct btrfs_fs_info *fs_info);
+ 
++static int qgroup_qgroupid_cmp(const void *key, const struct rb_node *node)
++{
++	const u64 *qgroupid = key;
++	const struct btrfs_qgroup *qgroup = rb_entry(n, struct btrfs_qgroup, node);
++
++	if (qgroup->qgroupid < qgroupid)
++		return -1;
++	else if (qgroup->qgroupid > qgroupid)
++		return 1;
++	return 0;
++}
++
+ /* must be called with qgroup_ioctl_lock held */
+ static struct btrfs_qgroup *find_qgroup_rb(const struct btrfs_fs_info *fs_info,
+ 					   u64 qgroupid)
+ {
+-	struct rb_node *n = fs_info->qgroup_tree.rb_node;
+-	struct btrfs_qgroup *qgroup;
++	struct rb_node *node;
+ 
+-	while (n) {
+-		qgroup = rb_entry(n, struct btrfs_qgroup, node);
+-		if (qgroup->qgroupid < qgroupid)
+-			n = n->rb_left;
+-		else if (qgroup->qgroupid > qgroupid)
+-			n = n->rb_right;
+-		else
+-			return qgroup;
+-	}
+-	return NULL;
++	node = rb_find(&qgroupid, fs_info->qgroup_tree, qgroup_qgroupid_cmp);
++
++	return rb_entry_safe(n, struct btrfs_qgroup, node);
+ }
+ 
+ /*
+---
 
+So basically:
+- add a comparator function
+- replace the while loop with rb_find
+- make sure it is equivalent and test it
 
-> +    
-> +  microchip,extended-temp-range:
-> +    description: |
-> +      Set the chip to work in the extended temperature range -64 degrees C to 191.875 degrees C.
-> +      Omit this tag to set the default range 0 degrees C to 127.875 degrees C
-> +    type: boolean
+There are easy conversions like __btrfs_lookup_delayed_item(),
+potentially convertible too but with a comparator that takes an extra
+parameter like prelim_ref_compare() or compare_inode_defrag(). There are
+many more that do some additional things like remembering the last
+parent pointer and for that the rb-tree API is not convenient so you can
+skip that and do the straigtforward cases first.
 
-I'm curious.  Why does this belong in the DT binding?
-
-> +    
-> +  microchip,beta-channel1:
-> +    description: |
-> +      The beta compensation factor for external channel 1 can be set
-> +      by the user, or can be set automatically by the chip.
-> +      If one wants to enable beta autodetection, omit this tag.
-> +      Please consult the documentation if one wants to set a specific beta.
-> +      If anti-parallel diode operation is enabled, the default value is set
-> +      and can't be changed.
-> +    type: boolean
-
-Why is this a hardware thing that belongs in dt?  Enforce the constraint
-in the schema rather than text.
-
-> +    
-> +  microchip,beta-channel2:
-> +    description: |
-> +      The beta compensation factor for external channel 2 can be set
-> +      by the user, or can be set automatically by the chip.
-> +      If one wants to enable beta autodetection, omit this tag.
-> +      Please consult the documentation if one wants to set a specific beta.
-> +      If anti-parallel diode operation is enabled, the default value is set
-> +      and can't be changed.
-> +    type: boolean
-> +    
-> +  microchip,apdd-state:
-> +    description: |
-> +      Enable anti-parallel diode mode operation.
-> +      Omit this tag to disable anti-parallel diode mode by default.
-
-This one is unusual.  Maybe a little more description (I looked it up
-and am fine with why this is in DT)
-
-> +    type: boolean
-> +    
-> +  microchip,recd12:
-> +    description: |
-
-No need for | on paragraphs where formatting doesn't need to be maintained.
-
-> +      Enable resistance error correction for external channels 1 and 2.
-> +      Not all chips support resistance error correction on external
-> +      channels 1 and 2, please consult the documentation.
-
-Enforce it in the schema, no need to say that chips don't support it
-in text. Look at the various allOf statements with compatible matches
-in other bindings for how to do that.
-
-> +      Omit this tag to disable REC for channels 1 and 2 by default.
-> +    type: boolean
-> +    
-> +  microchip,recd34:
-> +    description: |
-> +      Enable resistance error correction for external channels 3 and 4.
-> +      Not all chips support resistance error correction on external
-> +      channels 3 and 4, please consult the documentation.
-> +      Omit this tag to disable REC for channels 3 and 4 by default.
-> +    type: boolean
-> +    
-> +  label:
-> +    description: Unique name to identify which device this is.
-> +    
-> +  vdd-supply: true
-> + 
-> +patternProperties:
-> +  "^channel@[1-4]+$":
-> +    description: |
-> +      Represents the external temperature channels to which a remote diode is
-> +      connected.
-> +    type: object
-> +
-> +    properties:
-> +      reg:
-> +        items:
-> +          minimum: 1
-> +          maximum: 4
-> +      
-> +      microchip,ideality-factor:
-> +        description: |
-> +          Each channel has an ideality factor.
-> +          Beta compensation and resistance error correction automatically correct
-> +          for most ideality error. So ideality factor does not need to be adjusted in general.
-
-wrap at 80 chars. Also try to avoid explicit formatting where it isn't needed.
-
-> +          Omit this tag in order to set the default value.
-> +          Please consult the documentation if one wants to set a specific ideality value.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +      
-> +      label:
-> +        description: Unique name to identify which channel this is.
-> +    
-> +    required:
-> +      - reg
-> +    
-> +    unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdd-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        
-> +        temperature-sensor@4c {
-> +            compatible = "microchip,mcp9985";
-> +            reg = <0x4c>;
-> +            
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            label = "temperature-sensor";
-> +            
-> +            microchip,temp-hysteresis = <10>;
-> +            microchip,extended-temp-range;
-> +            microchip,apdd-state;
-> +            microchip,recd12;
-> +            microchip,recd34;
-> +            vdd-supply = <&vdd>;
-> +            
-> +            channel@1{
-> +                reg = <0x1>;
-> +                label = "CPU Temperature";
-> +            };
-> +            
-> +            channel@2{
-> +                reg = <0x2>;
-> +                label = "GPU Temperature";
-> +            };
-> +        };
-> +    };
-> +
-> +...
-
+If you decide not to take it then it's also fine, it's a cleanup and the
+code will work as-is.
