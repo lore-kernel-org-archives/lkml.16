@@ -1,61 +1,62 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4483721ABC6
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5471531E8
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685240; cv=none; b=f7abS8/LM18odO38GG5JIAPLMeEJh0dE5aDlcy6cvBNXmTLhjJ85pOh/FXuy7nPoaYrXKAC7TpnrpUXgn2RUqYuJhVNzcUbbLq94EmT8vREdmL7FTw3cM6qNFryziwG7XjlqDXGlz8/9zUIfAtqkSMAyARoeZGsvO6IZyNsuMLk=
+	t=1744685245; cv=none; b=VVi2W3xnnpiVuWK7Kv9VbWfBPXQM2ZdbPfpRASvyCJSHtO/NCExxava6j7nYuZCkKmt1fztQE6U6WVygppLIIJYUoY+ph1pVrWdP3Ci0RJ+HMjKWfwyHL5bJ/4hpkExfF87gK6y35Z5sftDCgkIWQM1A5tyeP5yORdo3gYMq6HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685240; c=relaxed/simple;
-	bh=ExRJlPFqRIPBVplhInN1J+JPDFU1q83KrxCLYkfL8vo=;
+	s=arc-20240116; t=1744685245; c=relaxed/simple;
+	bh=v5yMn5IixgDIQc8oleyaSWuKuE9z67T/Dq0pK11nZuI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ROJ1/bb8pbVC1dmn3qqZTmLyTbXLqsVoa0vFDt1+Hw87yn2JzQVioV/f7wkw3sy18XQdPgwgKY/LZQa8Cch9Zg2dffGFWFmoo47+WMuAEjgZzjnAl+sLSD+qReU4MoX0qXErHdj15rbbUHj6JbD/DEme2MoOalIcb5k6RfMJS4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=kIprf5Nn; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=Qka+6FSY59cRvYr5m+EiCTVbIj8gDyFhYht24SnfcrC8UtsBzufyMiC7ovJ1v89fq/tNBy2Oo3pNjkNSayRuNDQccSrh/lKih0lcM5DUjSi5gvHmZjJAXuRIi7aPQw5flExfiJK22bwN1sHhqzKm3po55OoWjPj4OUBQfkTvxRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OQOaleIw; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kIprf5Nn"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227d6b530d8so48305725ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OQOaleIw"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de12bso68177975ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744685237; x=1745290037; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744685244; x=1745290044; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=048a/COuUtmsXsXzHcibcjt0GyskIDx7SCGdBM7o194=;
-        b=kIprf5NnfVr8zwBg2zKmZeWU3jQXAheHtu+IwoDTWZkhXhH0QfBkcKAEd3K5xLaFpQ
-         +BDoi0eGkMluXMR9jag9hEjS/2G+8SFsbqQXhSa0iPne6Qr1fWzwH5ulU0w72AMTlkQT
-         3tCF05TcFQd2Q7uRsSPQkK5aEEqLNYM+QJmo9xZfqMQPCSsIDnq4pD6waZEYPouCQiKn
-         aMI9Wg9iD5TLpj9b+fEJCR/XnFwjc96qtaDjqvP4QBV4vs/gUPWzMtQXm9H7HXsXcz6E
-         AN+97XoF/ousv0dN6MaD3PdlxmsUr16nX40tqbBwnoB7zB9deyiS78YQFgeYBayqtynY
-         Cw0Q==
+        bh=M5EyQKk8+6fTeRtjB7wRmwigOpyCG4thZQUtLcFoNss=;
+        b=OQOaleIwWH8SiioPA7QjEmUZKtNsgGvNAClUiOjgHKllSTzbhThqIOh2R2FKNlGlV4
+         NhGVzNHLrrC1JjcivD1R/3lucZD504VLoOOmgUaEACPQkQY+Mv+65wbipbjY0tUrjm3a
+         tL4X4hkswJBuqirz4kCSU9kBWhMFzid7IfEIe4e6Hy4kTFoM4GDO57jP8oMwoM8sK2V+
+         SiM4t4laA2I8kav++Yj73sV5I7Qiy9iIZsSAppwCLdUL+o1mrWNlaHUHMim0VpYiLCbT
+         c1dfj5DuApjBJWUG41fatIpI8yDFLqLn5ZZcnWy0umwuv9ZVD3VvhidnnVpq7SYpYpON
+         +pzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744685237; x=1745290037;
+        d=1e100.net; s=20230601; t=1744685244; x=1745290044;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=048a/COuUtmsXsXzHcibcjt0GyskIDx7SCGdBM7o194=;
-        b=f4NKgsXikm+Jmzswjg2PZ+uAAgu1iL01KhBxl84y0pcoDg0tYXzt2gNp4Dvl4Qpbk8
-         ymaOYwxf9ZrgtE79eJvsm2kGEYbN2C2M0khp8dP/vfHISd1xOkLzZSjssnC2XXnuWpsi
-         hzrGjc+5Fq3J32vKaAlxViu94ahH/4V8A8FOggpxwdAyHAIt2VVul51jG0Ge8yhjRtiK
-         GsY1VrHlULxtvOWkTZp+ZN70SuQKJzN+gq4OQleHZUV6ae+7Apl+1BrIe4/TL28AD/S+
-         hYIDsA0N9lWJHk6sQOfpAH+oajD58BHYV4y04MOPP9xf770n6YUUm0/01Kf7zrLpcCJl
-         NrJg==
-X-Gm-Message-State: AOJu0YzxWpc7MZSlE6vPZVfScDEXv1UnjbrlXfNAL9E8m5M83sCn667h
-	s/oSt500uO1wxeDbcyAtTnUj2nL+WxSgej2avkTKUmlDFgH0swroLWOxmSqYENo=
-X-Gm-Gg: ASbGncshKjrnJK1N1lftUGt+n6Y/a62GO6b6c/oSjwZ1Xd6BNfHuhrEz4flI+B+5iTG
-	EaDgxmHwB39AqsljH/EpYbVkVDvunZ/fK4LD4DXxghDYW1JPTDZWcVWP0sEBAQYzq5iuYl72vdH
-	2x7LXyEImmUVhmHQ1WROqKdWXF43RiDDaU+2FRsPV9l7nyYGTzhzAdUea5N3QSE0qu8CLRNo3rx
-	72Ev0IJ4UBu/tGlePgZ9cJ7AMEQbKaISTdliU5HlmLnhX9Muk7/jz6zII4PuO72rZSmverJ4iqx
-	mC9B9qNPI0+2qAdSKJCpnkwQrnJjF6uYTx8FiTJbxl+5Pj0u+jNiQCYEQ4W3K9qKNDCPUzQ9
-X-Google-Smtp-Source: AGHT+IH8mFGGtZG1eAt8IdVT2T6wuIxSclSFtYUMLbYnFcscVwUk704iXPYP1CTuJRMCglCtOnp9BA==
-X-Received: by 2002:a17:902:ccc5:b0:221:7b4a:476c with SMTP id d9443c01a7336-22bea4ab854mr201964985ad.18.1744685237616;
-        Mon, 14 Apr 2025 19:47:17 -0700 (PDT)
+        bh=M5EyQKk8+6fTeRtjB7wRmwigOpyCG4thZQUtLcFoNss=;
+        b=mTb/WaP8Ri0xgpx0Ehkgrr865BIstB+lgiylJRVNrZAqLEIaodg0OBjf+2hq6HA9fE
+         Ty/c6zXxs/VnQ8K96sby1pdSyJm+1b6bIKwdDdCuV6AumySLRq7ONV4dH0kdLMhNo2W3
+         8WyH1VdBYMNryQZ8ogH+qqLEFxGZjQiOHUEa26RDseHP17J0uvlFL0iNenzJakqMiM7j
+         C0d8iLSMIgePcELCnFK5IlFDBOrD0GkYD/NtfVzLWRggMZtwZBOcg0hP/Z5S+hgl/qsh
+         qyo23aCiulLgsS/0SqO4/+2n/mrdjNAb+UTTBguRCj0RKhfF363OPvL/SUa5Kvyzl4tL
+         k6bA==
+X-Gm-Message-State: AOJu0YysAHjH0MzEJY0cH2C9jR0wT9Z80qiBBYF1u1gWrMTVYShQT2qh
+	5JqbIq4v6NxPqwD3+v5IeiklDCANhMMziUXCjq3EWpQt3Jl/SlXPfpac6jX/mFY9L31befaxHJu
+	Oq+aeBA==
+X-Gm-Gg: ASbGncvvdv+nsWjAqkgfkG9hVWko5JsnEY4OkpYrbtYz40xIN96bXwZTvOtnLjRxGQ8
+	fXHMu8D8Gsd9rE1s1YkeijSTHmrTkKPbHwbyvXuH1rkq79GzxW0KYAVOqVWlw2BpWAYavf5qwlp
+	OphyG10tbwZmQOdjFeMAQjtJK+0cv2+pyvKI/EuLtv1xCTpjaQcHgHvDl2AHTuh+cErUGyoaf0a
+	CmROIagKkyKCTYUzEBKCXEtX0rQlvZXT5CzI6WmaOqOVJO7OxQOhuwvp3sbICX2Nvkn/LYVw1v0
+	3UQbXC4Bm8hRXv/OIOJZIcSON2t0JiwDux0a9D2Cc9GuiWiW5FD/vL9iSiwpSoViAih31C5r
+X-Google-Smtp-Source: AGHT+IHMPzkkwvrvPUMjLd8RH358czmXgq5CB+tWd2lPWjwDGWGWGLk2G1vtiG4B5iGYuVvrrbfcCQ==
+X-Received: by 2002:a17:902:f70f:b0:224:5a8:ba29 with SMTP id d9443c01a7336-22bea50ba50mr238795615ad.43.1744685243640;
+        Mon, 14 Apr 2025 19:47:23 -0700 (PDT)
 Received: from PXLDJ45XCM.bytedance.net ([61.213.176.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.47.12
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.47.18
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 14 Apr 2025 19:47:17 -0700 (PDT)
+        Mon, 14 Apr 2025 19:47:23 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: hannes@cmpxchg.org,
 	mhocko@kernel.org,
@@ -74,9 +75,9 @@ Cc: linux-kernel@vger.kernel.org,
 	hamzamahfooz@linux.microsoft.com,
 	apais@linux.microsoft.com,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH RFC 15/28] mm: page_io: prevent memory cgroup release in page_io module
-Date: Tue, 15 Apr 2025 10:45:19 +0800
-Message-Id: <20250415024532.26632-16-songmuchun@bytedance.com>
+Subject: [PATCH RFC 16/28] mm: migrate: prevent memory cgroup release in folio_migrate_mapping()
+Date: Tue, 15 Apr 2025 10:45:20 +0800
+Message-Id: <20250415024532.26632-17-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250415024532.26632-1-songmuchun@bytedance.com>
 References: <20250415024532.26632-1-songmuchun@bytedance.com>
@@ -94,50 +95,36 @@ hold the rcu read lock or acquire a reference to the memory cgroup
 returned by folio_memcg(), thereby preventing it from being released.
 
 In the current patch, the rcu read lock is employed to safeguard
-against the release of the memory cgroup in swap_writepage() and
-bio_associate_blkg_from_page().
+against the release of the memory cgroup in folio_migrate_mapping().
 
 This serves as a preparatory measure for the reparenting of the
 LRU pages.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/page_io.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ mm/migrate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 4bce19df557b..5894e2ff97ef 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -280,10 +280,14 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
- 		folio_unlock(folio);
- 		return 0;
- 	}
-+
-+	rcu_read_lock();
- 	if (!mem_cgroup_zswap_writeback_enabled(folio_memcg(folio))) {
+diff --git a/mm/migrate.c b/mm/migrate.c
+index f3ee6d8d5e2e..2ff1eaf39a9e 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -565,6 +565,7 @@ static int __folio_migrate_mapping(struct address_space *mapping,
+ 		struct lruvec *old_lruvec, *new_lruvec;
+ 		struct mem_cgroup *memcg;
+ 
++		rcu_read_lock();
+ 		memcg = folio_memcg(folio);
+ 		old_lruvec = mem_cgroup_lruvec(memcg, oldzone->zone_pgdat);
+ 		new_lruvec = mem_cgroup_lruvec(memcg, newzone->zone_pgdat);
+@@ -592,6 +593,7 @@ static int __folio_migrate_mapping(struct address_space *mapping,
+ 			__mod_lruvec_state(new_lruvec, NR_FILE_DIRTY, nr);
+ 			__mod_zone_page_state(newzone, NR_ZONE_WRITE_PENDING, nr);
+ 		}
 +		rcu_read_unlock();
- 		folio_mark_dirty(folio);
- 		return AOP_WRITEPAGE_ACTIVATE;
  	}
-+	rcu_read_unlock();
+ 	local_irq_enable();
  
- 	__swap_writepage(folio, wbc);
- 	return 0;
-@@ -308,11 +312,11 @@ static void bio_associate_blkg_from_page(struct bio *bio, struct folio *folio)
- 	struct cgroup_subsys_state *css;
- 	struct mem_cgroup *memcg;
- 
--	memcg = folio_memcg(folio);
--	if (!memcg)
-+	if (!folio_memcg_charged(folio))
- 		return;
- 
- 	rcu_read_lock();
-+	memcg = folio_memcg(folio);
- 	css = cgroup_e_css(memcg->css.cgroup, &io_cgrp_subsys);
- 	bio_associate_blkg_from_css(bio, css);
- 	rcu_read_unlock();
 -- 
 2.20.1
 
