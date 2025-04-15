@@ -1,93 +1,159 @@
-Received: from smtp117.iad3b.emailsrvr.com (smtp117.iad3b.emailsrvr.com [146.20.161.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B858B1FC7E7
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.117
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8842C28E5EE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717634; cv=none; b=L2y9sf7agzMl6XG/GqdiS8+HukPTb5PJo3nyxuaNOiSrt8V21NeuQNxuAJ+n4WmrxZcnD9ZGlv4LuKt/LNJ/ApGhCUjKNg6+9JbClgwKyqv+giD0/WA/RLlwGVdg5zx/JD2PKTk3HrimqC8Qu0FGGhN7i8QwBuXV9G9+NrwCG3s=
+	t=1744717650; cv=none; b=iGeUSZJHf01TFMWX/q3dZIoJZGp9U/JJrhNf8XW9LBXiRTBEYcFfzdulLS05NFp1G3os9/foiBohtnmaxwa1s//BabxSxLX89nvWesEHdXrxr2BUWVAviVQVrn3ATMw+UWs8ANrUNEqvW9R0Ic9pDOQJdH259ZIZtYUCH081gZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717634; c=relaxed/simple;
-	bh=sNzCTTISaQe9wLvcNLQZC11fZP369QH8cXNYy/4+Pew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t/cla0N1gk51/59kccZdmlZj1fD6RehmX/wTuSYtof1Kr/P/WEKrZpMHB7N5kSsDD2Szhjh2qwsoEOcfqUznBzuLwUggl5YDt7J5xLO0fDlqLlUTuMzQqlAjM/5fokOSqYM0kVa/ANkjdNEZ5Yxdffz3xzYCl5s7oldtx3c7sAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=t3iUAozm; arc=none smtp.client-ip=146.20.161.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="t3iUAozm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1744717224;
-	bh=sNzCTTISaQe9wLvcNLQZC11fZP369QH8cXNYy/4+Pew=;
-	h=From:To:Subject:Date:From;
-	b=t3iUAozmPUemsPjxNneyq2ANYJden324JHv47DVk5nAn+r8JfiQDZrjH/JHW44kdn
-	 vHf7Teu46hZaFDOh1MpWbvOmtclnkC6G3kIkIi7vb9ENzpxMLCYGRxF3xpq6/nkA3v
-	 Lptusp8LTSmT5XxOdX/Uxi5y/PIpYhkBq7x/4D3A=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp15.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id D64CBC0354;
-	Tue, 15 Apr 2025 07:40:23 -0400 (EDT)
-From: Ian Abbott <abbotti@mev.co.uk>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 0/4] comedi: non-contiguous buffer pages changes
-Date: Tue, 15 Apr 2025 12:35:55 +0100
-Message-ID: <20250415114008.5977-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1744717650; c=relaxed/simple;
+	bh=nfixIavryDpQZxlRHE3LbTrPtjkGKEIV76RKdS1Rs/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J1ge0WpDvL54fpRx1/fk73f8JAceZ4QOHxJDv7YP81ZRxFvxisg5yVu9NhQpvxYEJ3Z2VSA/pwtxJIDOIitL7/zHIbwzmZqMMWmzlqJ3JhMksP9PsBU1YsWHsq9LrMiYrkQXA+Mm/DMX+jMj9WEr6AVZvxzKBh9cH5ZBSBVHQ8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1E7115A1;
+	Tue, 15 Apr 2025 04:47:25 -0700 (PDT)
+Received: from [10.163.73.130] (unknown [10.163.73.130])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD8F63F66E;
+	Tue, 15 Apr 2025 04:47:23 -0700 (PDT)
+Message-ID: <9ed4c113-37eb-4e3d-98a1-f46f786aaea9@arm.com>
+Date: Tue, 15 Apr 2025 17:17:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mempolicy: Optimize queue_folios_pte_range by PTE
+ batching
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, hughd@google.com, vishal.moola@gmail.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250411081301.8533-1-dev.jain@arm.com>
+ <09c77ab5-65fc-4bca-a7e5-2b11bba9330d@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <09c77ab5-65fc-4bca-a7e5-2b11bba9330d@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Classification-ID: 8a53f2c5-5989-413b-be2c-df2839710a9a-1-1
 
-This patch series changes the way the Comedi core code accesses the
-acquisition buffer contents, so that rather than use an overall, linear
-mapping of the whole buffer, it uses existing per-buffer-page pointers.
 
-(@Christoph, I'm mostly interested in your take on calling
-`dma_mmap_coherent()` in a loop, as described in the final(-ish)
-paragraph, and in patch 4.)
 
-Currently, the buffer is either allocated a page at a time from normal
-kernel memory, which is then vmap'ed to a linear address range for
-convenience, or it is allocated as a single block from DMA coherent
-memory.  (The low-level Comedi driver indicates the type of memory to be
-used.)  In either case, an array of `struct comedi_buf_page` is filled
-in with the underlying (non-vmap'ed) addresses of each page (and the
-corresponding DMA addresses, and the `prealloc_buf` member of `struct
-comedi_async` is set to the overall linear address (from `vmap` or
-`dma_alloc_coherent` as appropriate).
+On 15/04/25 3:47 pm, David Hildenbrand wrote:
+> On 11.04.25 10:13, Dev Jain wrote:
+>> After the check for queue_folio_required(), the code only cares about the
+>> folio in the for loop, i.e the PTEs are redundant. Therefore, optimize 
+>> this
+>> loop by skipping over a PTE batch mapping the same folio.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>> Unfortunately I have only build tested this since my test environment is
+>> broken.
+>>
+>>   mm/mempolicy.c | 12 +++++++++++-
+>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index b28a1e6ae096..b019524da8a2 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -573,6 +573,9 @@ static int queue_folios_pte_range(pmd_t *pmd, 
+>> unsigned long addr,
+>>       pte_t *pte, *mapped_pte;
+>>       pte_t ptent;
+>>       spinlock_t *ptl;
+>> +    int max_nr;
+>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>> +    int nr = 1;
+> 
+> Try sticking to reverse xmas tree, please. (not completely the case 
+> here, but fpb_flags can easily be moved all he way to the top)
 
-For buffers in normal kernel memory, this patch series removes the
-vmap'ing of the buffer pages.
+I thought that the initializations were to be kept at the bottom.
+Asking for future patches, should I put all declarations in reverse-xmas 
+fashion (even those which I don't intend to touch w.r.t the patch 
+logic), or do I do that for only my additions?
 
-For buffers in DMA coherent memory, patch 4 splits the allocation into
-page-sized allocations.  We used to do that before commit e36472145aa7
-("staging: comedi: use dma_mmap_coherent for DMA-able buffer mmap"), but
-there was the problem of how to mmap a buffer consisting of
-non-contiguous pages of DMA coherent memory.  At the time, I considered
-calling `dma_mmap_coherent()` in a loop with manipulated `vm_start` and
-`vm_end` values (see <https://lkml.org/lkml/2019/6/17/534>), and that is
-what patch 4 does.  It seems to work (although I've only tested in on
-x86_64 so far), and I'm not the only person in the wild to discover this
-trick (see <https://stackoverflow.com/a/67220955/5264491>), although I
-am not aware of any other use of this trick in the kernel source.  The
-closest equivalent is the manipulation of the VMA's `vm_pgoff` value
-before calling `dma_mmap_coherent()`, for example in the UIO driver.
+> 
+> Also, why are you initializing nr to 1 here if you reinitialize it below?
 
-Patch list:
+Yup no need, I thought pte += nr will blow up due to nr not being 
+initialized, but it won't because it gets executed just before the start 
+of the second iteration.
 
-1) comedi: ni_pcidio: Do not bother filling buffer with 0xaa byte values
-2) comedi: access buffer data page-by-page
-3) comedi: remove the mapping of the Comedi buffer in vmalloc address space
-4) comedi: allocate DMA coherent buffer as individual pages
+> 
+>  >       ptl = pmd_trans_huge_lock(pmd, vma);>       if (ptl) {
+>> @@ -586,7 +589,8 @@ static int queue_folios_pte_range(pmd_t *pmd, 
+>> unsigned long addr,
+>>           walk->action = ACTION_AGAIN;
+>>           return 0;
+>>       }
+>  > -    for (; addr != end; pte++, addr += PAGE_SIZE) {> +    for (; 
+> addr != end; pte += nr, addr += nr * PAGE_SIZE) {
+>> +        nr = 1;
+>>           ptent = ptep_get(pte);
+>>           if (pte_none(ptent))
+>>               continue;
+>> @@ -607,6 +611,11 @@ static int queue_folios_pte_range(pmd_t *pmd, 
+>> unsigned long addr,
+>>           if (!queue_folio_required(folio, qp))
+>>               continue;
+>>           if (folio_test_large(folio)) {
+>> +            max_nr = (end - addr) >> PAGE_SHIFT;
+>> +            if (max_nr != 1)
+>> +                nr = folio_pte_batch(folio, addr, pte, ptent,
+>> +                             max_nr, fpb_flags,
+>> +                             NULL, NULL, NULL);
+> 
+> We should probably do that immediately after we verified that 
+> vm_normal_folio() have us something reasonable.
 
- drivers/comedi/comedi_buf.c        | 155 ++++++++++++++-----------------------
- drivers/comedi/comedi_fops.c       | 120 ++++++++++++++++++++--------
- drivers/comedi/drivers/ni_pcidio.c |   2 -
- include/linux/comedi/comedidev.h   |  10 +--
- 4 files changed, 144 insertions(+), 143 deletions(-)
+But shouldn't we keep the small folio case separate to avoid the 
+overhead of folio_pte_batch()?
+
+> 
+>>               /*
+>>                * A large folio can only be isolated from LRU once,
+>>                * but may be mapped by many PTEs (and Copy-On-Write may
+>> @@ -633,6 +642,7 @@ static int queue_folios_pte_range(pmd_t *pmd, 
+>> unsigned long addr,
+>>               qp->nr_failed++;
+>>               if (strictly_unmovable(flags))
+>>                   break;
+>> +            qp->nr_failed += nr - 1;
+> 
+> Can't we do qp->nr_failed += nr; above?
+
+I did not dive deep into the significance of nr_failed, but I did that
+to keep the code, before and after the change, equivalent:
+
+Claim: if we reach qp->nr_failed++ for a single pte, we will reach here 
+for all ptes belonging to the same batch.
+
+Proof: We reach here => the if condition is true. Now, !(flags & 
+(MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) and !vma_migratable(vma) do not 
+depend on the ptes. So the other case is that !migrate_folio_add() is 
+true => !folio_isolate_lru() is true, which depends on the folio and not 
+the PTEs; if isolation fails for one PTE, it will definitely fail for 
+the PTE batch.
+
+So, before the change, if we iterate on a pte mapping a large folio, and 
+strictly_unmovable(flags) is true, then nr_failed += 1 only. If not, 
+then nr_failed++ will happen nr times for sure (because of the claim) 
+and we can safely do qp->nr_failed += nr - 1.
+
+> 
+> Weird enough, queue_folios_pmd() also only does qp->nr_failed++, but 
+> queue_pages_range() documents it that way.
+> 
+>>           }
+>>       }
+>>       pte_unmap_unlock(mapped_pte, ptl);
+> 
+> 
+
