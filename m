@@ -1,83 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD88B610B;
-	Tue, 15 Apr 2025 12:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8113E28BA98
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720218; cv=none; b=nugC4YLghdZPghnsPcHuQDT7TFuKkJNv9K85xitoAiEQUoV6C9Ac8NZ9JgjPUHoA+Vfgs8wtofiXw273JeXia3vdHD9AYTuB7Gs8R1gTQQARTtQ33b1TCT5/1L0nzca4cg2dFZCgIX7RHfpOUpahZUy7fNdlFfo8lcq50nMkI1E=
+	t=1744720250; cv=none; b=OtnrlmHyanf6yWlTgSBpBahj+uRFpkjx9+/r0UrTTg3cvZwL+yLDPCZ8SEy/AboeuMROtBRQfHU3ekCi+W80IxD3+YYqkROaxKiyW+YF5+MQKEoX/u07RmHHHLLFXjaFMhiqjmvgtU61KEe/XdZdzYVlDf1nnChjf5anEK/K+OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720218; c=relaxed/simple;
-	bh=lcffDkVooMR/L4vsXi2m9Cu8aFIJv4An/EQytAS5lvc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=egJxwFIID+mE9OQ6Ota8Qqmbu1ZXmK3r/QB1OlaVYh1ULCvK2uywr9U56EPOr3gQDoOk27NXVXhnJ+j3bXxZA7qboIcYnBZJx/OG7dYv32qCivX/Ze89uP5ebQv2Ly8AzU+P2sHy8mc94RNGKLMfbX/DPQ2ZANfwn2uT+DSe8kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjIvUaLD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjIvUaLD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE28C4CEDD;
-	Tue, 15 Apr 2025 12:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744720215;
-	bh=lcffDkVooMR/L4vsXi2m9Cu8aFIJv4An/EQytAS5lvc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tjIvUaLD7cweJfRpVGTvXrkLq1Uhm7a3OQrcZGvlW505/yTHlF//4ssJxL9pgYbMz
-	 IcnnARGsVvrYzGra5Q/qXQ2P0Gi57LdvD/taTXsCEU9r+xWuYKT8O1a1agvN3hgCrx
-	 odm/YHFcpt5NxUQ4LWG00owhT0bjjqbJzIYUBvAY2K7DZ0QAc9t8pBZ6CEa+qUppgH
-	 72mSXatqMFT1KHZlCZVdumDUTPh6NVpZseSz19QxAEapWWEw5/EgVO17CrzJWueoxt
-	 0Rh5d7NIqsVt2I4omvHhhl0PRPY/GQKz6VdoKWyqidHyhkVBGglxvbPmGs6MxYUbsH
-	 GMNpxoya+EsaQ==
-Message-ID: <36736a3d-9ba1-43d7-ac52-d0f2f8a36bec@kernel.org>
-Date: Tue, 15 Apr 2025 14:30:10 +0200
+	s=arc-20240116; t=1744720250; c=relaxed/simple;
+	bh=6uf+lSiZ+Yfto8XskdaEJ9jaP8gpkSvOPEHPOkat6R8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=qKUyA4QOv21CVXC81qnrUnDJaSb8BAefZyDBs0IX/GW4/dNrfFvCmX7NMYhcfEuiRtWYlfdgQb9boPSNNE5FgNm/hjE8cQRalrIt+/e6kp3HFN439gOal5ylgxoHSi16hzkwCl7vom+5+TVuJD4XQMqcQZYOmwqfkQ9QnerkmAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d43b460970so108005395ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:30:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744720247; x=1745325047;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U0rZkudasYd0OBH7sfqwqKD0duAxCP8Fc+OdYw6V3AI=;
+        b=VM3NBRcQpl6bNqGj9geO9zi61F0xQHt6/+mfN4uvuNwdoT2oIjbv+PMBkY1VB+LYvM
+         zceDP1B8ps8xDbcDat7Z93lPPAyNQvtPPopTjzQAgGszeoXRqXtqCxA7ioZlOA7JA67W
+         ekw/DcP2Ce/hCP+LDIlW9GtQJonXTk2CUQUyZreQWv87L+s0mX05H/M1z2xg94UykMsj
+         pZibr+H1HFsvVVTh9Eo9KZcD/UgTkxB3AbsMhHqNA0gIrfJnd4GWdLxYPA9dDg52nizF
+         6cxReKnk2nyOa4OGmmRHRSOFDgfRdMhB/cPSjyNh3tbtnjaNrVg+5r+meImUYOtiLbGd
+         F82w==
+X-Gm-Message-State: AOJu0YwXvkJzYKcjfggaVVwmulGa1dg0vDzRWj+z6BNmzxLUeDg9vDs1
+	9Y4LZHdy4FQVEI3TQl0STEuOPtqR5CucwORKJJzdi+TQnEzxkl4X74GWZuBxZ51EGPFvcodJ8Ox
+	qZZy/LSg5EkUSX2LwIUXw52xnhilLh0S9tf1CWux+qb2BtihhOMj32qo=
+X-Google-Smtp-Source: AGHT+IGY5aqMMgszef+CMbIdKKBIfCnuYyCwxf/TarFDq+U7NDN/9XGwFVAAxnVzTB1JYskW/nDRdkWIcdaJBWw4PWkrWBKBvCsV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Hitting WARN_ON_ONCE in i2c-designware-common.c
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Luis Oliveira <lolivei@synopsys.com>,
- Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
- linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- kernel-team <kernel-team@cloudflare.com>
-References: <20c191d9-5f7a-4ec6-a663-dcc8d0b54c18@kernel.org>
- <Z_5OYSxZS05LO7cE@smile.fi.intel.com> <Z_5Ov9j-tF8rABDZ@smile.fi.intel.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <Z_5Ov9j-tF8rABDZ@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:194f:b0:3d4:6f37:3748 with SMTP id
+ e9e14a558f8ab-3d7ec26b65amr147558795ab.16.1744720247613; Tue, 15 Apr 2025
+ 05:30:47 -0700 (PDT)
+Date: Tue, 15 Apr 2025 05:30:47 -0700
+In-Reply-To: <679fb3a5.050a0220.163cdc.0030.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fe5177.050a0220.186b78.0000.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [bcachefs] general protection fault in
+ bioset_exit (2)
+From: syzbot <syzbot+76f13f2acac84df26aae@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
+***
 
-On 15/04/2025 14.19, Andy Shevchenko wrote:
-> On Tue, Apr 15, 2025 at 03:17:37PM +0300, Andy Shevchenko wrote:
->> On Tue, Apr 15, 2025 at 02:03:26PM +0200, Jesper Dangaard Brouer wrote:
->>> Hi Maintainers,
->>>
->>> I'm hitting a WARN_ON_ONCE in drivers/i2c/busses/i2c-designware-common.c
->>> when booting the kernel on our Gen12 hardware.
->>>
->>> I'm using devel kernel net-next at commit 1a9239bb425 (merge tag
->>> 'net-next-6.15').
->>>
->>> I assume you want this report.
->>>
->>> Maybe it is not a critical error(?)
->>> ... looking the comment in the function:
->>
->> Have you forgotten to compile in the drivers/acpi/acpi_apd.c?
+Subject: Re: [syzbot] [bcachefs] general protection fault in bioset_exit (2)
+Author: kent.overstreet@linux.dev
+
+On Tue, Apr 15, 2025 at 03:07:02AM -0700, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
 > 
-
-I have double checked that drivers/acpi/acpi_apd.o is compiled.
-
-> Also that driver has the missing error check in acpi_apd_setup() for
-> clk_register_clkdev().
+> commit 3a04334d6282d08fbdd6201e374db17d31927ba3
+> Author: Alan Huang <mmpgouride@gmail.com>
+> Date:   Fri Mar 7 16:58:27 2025 +0000
 > 
-
-Are you saying I'm missing a .config option?
-
---Jesper
+>     bcachefs: Fix b->written overflow
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11c360cc580000
+> start commit:   76544811c850 Merge tag 'drm-fixes-2025-02-28' of https://g..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
+> dashboard link: https://syzkaller.appspot.com/bug?extid=76f13f2acac84df26aae
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159248b7980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13152a97980000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+> 
+#syz fix: bcachefs: Fix b->written overflow
