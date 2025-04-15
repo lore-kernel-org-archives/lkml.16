@@ -1,290 +1,242 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B211E1DE9
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744735173; cv=none; b=k522mWof0e1RrpBdDvAaHDsZsPUUwXkZIgjPJxHgNMJA1mw10wrAr1gTfTyp2e3fCPxDYGLQs4uka35YMOaD4sskCj6JwdihAnHcZXF6YvHmToCbGNMeo8edr+5JjaLCW6vNdDiQmhAntrtQaB4OlL4ul32IjOA/k+sG+hnK3WQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744735173; c=relaxed/simple;
-	bh=umglHO8ELCNI+pwbSFZBAO7wScfh515zNasUvVJgH2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jrKc7cH9OPh4KJbFx+Dh/hq48qMrw+It2Tj1VS6rSexNQhRvqunNgozHWomxFqtKoPNjW5Qru/odxPlB0h4y1g/pD4AK2/EB9pRejlcF4jqgXCUsNQbCFDaBqbYbbKmbJ+Eqps/U97XR7v4itn4f4GJdeCgTHSTwW1OGHyRBe6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E8mTthGg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0srrylJd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E8mTthGg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0srrylJd; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6538D17A2F8;
+	Tue, 15 Apr 2025 16:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744735189; cv=fail; b=QxjatcxJTqXjDcHz4Cu9MiV6oMbRblsBm5fvyRdzdHQYFA9VXz7+NG657J4m7Sw9eXplF0XVx3zmP/wKmBSBJLVbVFNGNf/TXz8MdifhAVm5OPMkkrYxBdEK/a7wQa5r3MKzFwXZLFkZ0BgHj4Lmo74m5iaE6tbGta3ESi26Kxw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744735189; c=relaxed/simple;
+	bh=3EhcEONC4dOowRf38yn875WCGUqGJvBYU1k1+hyX/As=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=sqV7xj6qMHLytjO5yl4kChxjWt5egG/Y+cFjwVheaSmTAOg0j4iVk1qj+8x6VVPU2ilDO3b8MPdaAKRbLfk2DZZ/r5fVjqhmECElGcpdeYciH+rHg7vNrmtRzJhb/ZfMXXbP3ZpBauaPwYuOqPt4mU/46yAjbyH0Nq+8fCtRX90=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U5LYHP4Z; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E8mTthGg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0srrylJd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E8mTthGg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0srrylJd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 99EF021197;
-	Tue, 15 Apr 2025 16:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744735169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SpibbH30ypgFRpbHIfECRmRgrL+8PXZO5sscOBZo3p8=;
-	b=E8mTthGgxPrV7PX2/qB0+1g9qK3oN9PEy7Oq0ZxA7M0BogzST4PCnn9axfsLs+QlZlqRFI
-	2gulfvXETIuZOE6CjUhWVgxWLRO8KScNf/YKQJ8w3H834hpuaxsF4VOflo84I93jedWL1J
-	IbbUNBkuQf0PiuQ1VG8LLq/ojogrDc0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744735169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SpibbH30ypgFRpbHIfECRmRgrL+8PXZO5sscOBZo3p8=;
-	b=0srrylJdVSvVECnnIRauRxEy8SvL9ITJ6bBsbBp4x5nyxBxXqsszGENkBhwu1WAQoQWQhz
-	LwZNc6XhFXNLdUDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=E8mTthGg;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=0srrylJd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744735169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SpibbH30ypgFRpbHIfECRmRgrL+8PXZO5sscOBZo3p8=;
-	b=E8mTthGgxPrV7PX2/qB0+1g9qK3oN9PEy7Oq0ZxA7M0BogzST4PCnn9axfsLs+QlZlqRFI
-	2gulfvXETIuZOE6CjUhWVgxWLRO8KScNf/YKQJ8w3H834hpuaxsF4VOflo84I93jedWL1J
-	IbbUNBkuQf0PiuQ1VG8LLq/ojogrDc0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744735169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SpibbH30ypgFRpbHIfECRmRgrL+8PXZO5sscOBZo3p8=;
-	b=0srrylJdVSvVECnnIRauRxEy8SvL9ITJ6bBsbBp4x5nyxBxXqsszGENkBhwu1WAQoQWQhz
-	LwZNc6XhFXNLdUDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 87FFF137A5;
-	Tue, 15 Apr 2025 16:39:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fCkxIcGL/mdrZQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 15 Apr 2025 16:39:29 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 1DF7DA0947; Tue, 15 Apr 2025 18:39:29 +0200 (CEST)
-Date: Tue, 15 Apr 2025 18:39:29 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v4] fs/fs_parse: Remove unused and problematic
- validate_constant_table()
-Message-ID: <glkpfryvrfdac4l5kumamww4epzes2nsiwexxjzn5p5k4kkwmp@2eiw7nk4kyxm>
-References: <20250415-fix_fs-v4-1-5d575124a3ff@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U5LYHP4Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744735188; x=1776271188;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=3EhcEONC4dOowRf38yn875WCGUqGJvBYU1k1+hyX/As=;
+  b=U5LYHP4ZXafVfq4jV7HIcL1uDt1Hx9OMeLw2xG7nA6IRoSHetTNJBhzH
+   dPaB4nPIdg0tAxqBgC0jTSa1Oxw8hPMLRjeI5p+3LB0bFsJ8GU2Dmb7kq
+   SShPWc8xtxw1lo9J441F3Tm7o7XW8n8PVREKkuoMfDCej8YmSk5uUziQp
+   YgGD78hudpzWafpszatxmBe8dmrMYUvUL1kmyB0mTzhtEdd5+qsIxF0AU
+   I8fbcmrht6PvMrfnLsaCnKAl9rPGSQ3w+C36SSJmQ4m5vlnLmbG5d3QTD
+   1FlwtqHjdAwAuwBiaZe9f+DdMf35UEai1h0mKm0ObcE0RQ//4lRY3MHq3
+   w==;
+X-CSE-ConnectionGUID: BDLzdPlUR0axKxvyghgFJw==
+X-CSE-MsgGUID: 0wvtN20dQFmw+htffcKNGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46135994"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46135994"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 09:39:43 -0700
+X-CSE-ConnectionGUID: +fo0WcMCQZe50WMfBmvCVA==
+X-CSE-MsgGUID: 4ITLitC3Tm2a/Kwg+S6OYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="161200598"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 09:39:37 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 15 Apr 2025 09:39:33 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 15 Apr 2025 09:39:33 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.42) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 15 Apr 2025 09:39:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ETuGIoMCrIwk/C4BGgCUxo/sQfogPRcdGGtdHl5mlGKMJncVIx0Q5i37FKlKRrQnTtFw9sHq7e42PLXKSDzCAjKLJL+2+SLwpWQvrqu7OTrQ1eijpYUIBRQA1y/0W26wtkCcYJo4OffKjRTqZ/tJ13bi5YSVHIHHxh317yDEIbs67z5sJom5dieYXsywqIWn6AoCIFw4FlFJ+P1MuvF7xoD4m0RG8oU1S1/LRebQd2zJL3OrmtT9IdSeD9z2FN+gIFV1wYs4zxDU0zqMcxzwvs+7CTi482M1XLvYn41cDGICK7VWc2mfNPQnHYIXbh5bDnUz0UTnYT7VINP9xENc8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YkR2CxMjjVpxjrY8KknRHxLPFKMGm+B0P7MPYM0f7HU=;
+ b=v6Y38EDiLfad/QcGfm9OP5EgiZT7P2VmhTmUV+HO8y2JmTTDyJ3kdBdzgcnLdNTpJlUSPaairP7f8sgjYnKE9z89ciTBSPFzqUB2oVfzHkJvJrRjkocGmzaOiDk9EcxCIK+/J94U+w4CZVPGcKQYpC0iVF8BMpZBM4YrMAgV4MVYCETmwNP4knfEqtV4WJlQq7LkUCfbllTnYoyWgERls0YI7/sd3SUVTxGFGDLWrOrM754AJkQkPWc9f/j/WjHCZGt73j9z9YDGfkZF6fnGCr0ac02/kmXrUdCARjD7MrO6s7OAgjlqL3pPZfAtxkOncVB4uQpbH5w+TGHnE7NMRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH0PR11MB5047.namprd11.prod.outlook.com (2603:10b6:510:3c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Tue, 15 Apr
+ 2025 16:38:59 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 16:38:59 +0000
+Message-ID: <456839d0-031c-448d-9f54-5e65a29ebf9d@intel.com>
+Date: Tue, 15 Apr 2025 09:38:56 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 13/26] x86/resctrl: Implement
+ resctrl_arch_config_cntr() to assign a counter with ABMC
+To: <babu.moger@amd.com>, <tony.luck@intel.com>, <peternewman@google.com>
+CC: <corbet@lwn.net>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <paulmck@kernel.org>, <akpm@linux-foundation.org>,
+	<thuth@redhat.com>, <rostedt@goodmis.org>, <ardb@kernel.org>,
+	<gregkh@linuxfoundation.org>, <daniel.sneddon@linux.intel.com>,
+	<jpoimboe@kernel.org>, <alexandre.chartre@oracle.com>,
+	<pawan.kumar.gupta@linux.intel.com>, <thomas.lendacky@amd.com>,
+	<perry.yuan@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
+	<xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>, <xin3.li@intel.com>,
+	<ebiggers@google.com>, <xin@zytor.com>, <sohil.mehta@intel.com>,
+	<andrew.cooper3@citrix.com>, <mario.limonciello@amd.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<maciej.wieczor-retman@intel.com>, <eranian@google.com>
+References: <cover.1743725907.git.babu.moger@amd.com>
+ <187d14b81db5f9a2f19657dd3af07e8555d68261.1743725907.git.babu.moger@amd.com>
+ <ef0fc176-ce2e-4ad5-b752-f1d018ae985e@intel.com>
+ <a05b3226-b341-4003-a0d3-8e1594d95052@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <a05b3226-b341-4003-a0d3-8e1594d95052@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0059.namprd03.prod.outlook.com
+ (2603:10b6:303:8e::34) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415-fix_fs-v4-1-5d575124a3ff@quicinc.com>
-X-Rspamd-Queue-Id: 99EF021197
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[icloud.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[icloud.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH0PR11MB5047:EE_
+X-MS-Office365-Filtering-Correlation-Id: 933a53dd-2759-4f53-5a86-08dd7c3c05f7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Zm5HTTJ2elZYZUxsanpGMzd1V0FoNkZJVGJSVGdaa3pHMy9ydGFHZzVyRmZD?=
+ =?utf-8?B?WjNadzAvSVI3RXNRZnBVMk1Pc1RMMVF3aVdvYStpN3lvRmNkektIMllzTG9K?=
+ =?utf-8?B?SXFjY3BNczlsb1R6SWRWVDZzUmkzcFdzcWJ4cjhsbTQ4Zk41SUowRmVnek4x?=
+ =?utf-8?B?SmpGUEN0Vk5pK1Q5ME56bk95elkyY29HQiszeENla2hhdU9YSmhUZVNvL2pH?=
+ =?utf-8?B?c21hcFdBN2VxQk10U0JzbHNIczI0bFA2b3lsM2RBN0V5dVdtdVdlMU53VEdW?=
+ =?utf-8?B?Si91N2hXeEVJYXJqaWtNN3pVd3NRRVRSQktMRFNXTlNMOWRFdDJ0eFhsdTd2?=
+ =?utf-8?B?MjNNYXd0eURHdUxoTUJqWkdzNDdvZXVZTEJvVmhvYkxYVDhmR2p4OWhzRzJ0?=
+ =?utf-8?B?YnM3TkVza1lUY0hGMmx5Q2pQeXYzbWU5blBwRk5Fd2VOSXlBOG9maHQwWWtH?=
+ =?utf-8?B?ZHFQUkF1QmFpK0xMR2p3djljaHVMV0NiWG1BZkhscTJPdENVQTlYeDZac1RV?=
+ =?utf-8?B?bm05NTk0T1pHdktRUzNBR2RCRW5Bd3NIZGJOaWdxekhwMWxxQzRPVUIyanFW?=
+ =?utf-8?B?azk3b29GMkpwaDhjU2JqQ0pCSkdTMm1HT05JdFFsVVAwK2ZkQ0s0RCtSV0Vo?=
+ =?utf-8?B?cXRqTTZDNVhleGhGOStlUXZ3MmhsVmFmZzA2NlZoL0dYS0lja2MvUHJPSXht?=
+ =?utf-8?B?Q3NOQnk4M2F0WmhDRUlIWHRwbmhEQ25oQUNaY0R2NDc5dXJmajJrSzBiSkZv?=
+ =?utf-8?B?VnZDWm55SkxvbVBNcStyZW5oMVdZMGpSTHh4czJBRUJLUm54RWR5VFBmdGlO?=
+ =?utf-8?B?SktkTGl5RDVFd2lvY0hvdUxkRVpiMzA1OGVpeTdHQW5WNzAxS3R3Sm4wWG00?=
+ =?utf-8?B?YlJ1bGJ4bCtHaDdPL1FhNmpBUjJKY2ZYZUEzZHoyUUxUQjJpSUFTYVR3YlVw?=
+ =?utf-8?B?WUFjWlAyV1d4Z3lJbDAwdXNEd0NYL3h6RnAvYWtsK3pjQ2V0c2hJWlRWcThk?=
+ =?utf-8?B?OVQrM2VNMnFLK2xMT0Q3MGpmT29mSnlkZDdDV3VyRGFpRmZWcXJmSmtNUzE5?=
+ =?utf-8?B?S2RsQXMvL2F6V3FGdDl6RGtpUmcvQW9hYUFvc3VzaVY0NlRKU1RVajI1d0Nj?=
+ =?utf-8?B?OGs1Mkx5bW5rYlQ4aDZHa05zdzFCWDhkYmN1Njdwcm5iNmFiazFreG5uV1Ro?=
+ =?utf-8?B?NXJGZzNweCsvbytmWGVURWZ3N01ZSm1KOXNuWTBHLzE1Q2FDK05UK2VMdFZ1?=
+ =?utf-8?B?akN3TmFZMUhvK2d4d3ZEWHJGWjhTSitOS3BPTEVkSXFra0dHTXAyTFN3NmNo?=
+ =?utf-8?B?ZzBrSDkrWlM3R3F2Ui8rQWlrbW5sRWlOYnhDampxTEdBOWk4MC80anZqT1My?=
+ =?utf-8?B?SVphalRDS1lPWHpSdTRtc1JPd1VObnZWRlpSWjNJMTFpYTBTUGpyUEJ2Z1ov?=
+ =?utf-8?B?a0hockRUS1RxMitUVkVSMiswMUJqODNCaVZ0RjRESk9Hbm1KNkFwenZsdVJJ?=
+ =?utf-8?B?ekh2YldUM3Vqc3gvRWNTb3ZZYVQyS21ObEpiUEZvVWFTTXZkMGhvU0lVTzVB?=
+ =?utf-8?B?eFViR0JnbktpOHVvWWc0WUxVc1AvZ0dJdmVVUkxzQzdkcThwWVg4MkpVelVU?=
+ =?utf-8?B?R2JrRkdXamhUeHo2OEgwVmwvWHd2dm1UeTVHTm5BWFdMSXJMSlVWYWhQWGZG?=
+ =?utf-8?B?REw5T3Y3eURHWEJUd3B1YmI5VVBJWHVHWFdqYlFHWjVESUZwdjVXeHZMMi9s?=
+ =?utf-8?B?SkcxQnRTWUF2MVZMcThXZ3o3TXlOM0pobGxHZWtoTUF1Q25BSWVndDE2TWZh?=
+ =?utf-8?B?ak5pZk5CdDBDVzU4R09sRnBDa1FDV09rc2grWTRHSE9RV2JBVlJ1RkdhREVF?=
+ =?utf-8?B?VzBzeVprUHFKTWxVWVhWRGxHTXlualhDZmUzeVNSUnNPZkJOVzFEclpnSmVo?=
+ =?utf-8?Q?X7Low7QDGzM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TmowWWQ4SmRpcmtEdVdJR1hCN0REcnlHVi82Nmo0SkcvT2ZxTnY4QnFNVER0?=
+ =?utf-8?B?S1dRNkdFYTRzOUZwSGR6WnIvbWtzQ0dwMHNzMGpyejVmVEM1K1M0eFlTZWZF?=
+ =?utf-8?B?YVVERm9aY2IzMm1FK1hQK2FMdEtncW5rdFJvYTJZeVdkMGRwOVMyR1RuOUMv?=
+ =?utf-8?B?Z25nUkJiaUYxVmN1b1c3MHFhQk9GNENBeVh5U0wyeFlyVmNrcEdkRHlhYk0x?=
+ =?utf-8?B?TTV3RDE2eGNpQngwQkVIQlVZb2xkYSttdk4rd2phRzQxWEx0Q1JnaDRWM0Zx?=
+ =?utf-8?B?U1JTTFFkSTlpVmxZdElDM1JKS29EVmp5cktVd2I1allkZGRhbXlPY1JnNHV6?=
+ =?utf-8?B?NDJOdW81T3hvdzlJMHFDTFpWSkdYM3Y1d3pBMGZlVHRLdHpBMXNiS21adHpI?=
+ =?utf-8?B?QWU2bHpQS29RdU1PUnllTThnQi9BWk9sN0JUamVPaHFpeVNrbEZaOWpteGh2?=
+ =?utf-8?B?Z1JsVkEvN1NZb0FzN1l4aFdOWkdJM0xyKzc3VE5jRDZ4WUR3NFBzS1pOcGZ5?=
+ =?utf-8?B?dDdkVDlMOEx3TkFwcGMrYklvaGlVbGd2d3lLREpEVHo2Yit2V0d0dENWUFM4?=
+ =?utf-8?B?VENRR0J1Q09WNGtLUVdnYitJMWZzVzVKSHk0Ni91Zm9WV3FWSjRKYXE1Wm9U?=
+ =?utf-8?B?YndRb2NpdTV5d0Urb1BFWUV1TFVMNml6S0pQMmR6Y200OTFPRThBSWc1Q3c4?=
+ =?utf-8?B?VEtyRUlZQ0lrcDNNMjBaOG9SUENITVhkRkRyUFJObUI0aFlTbm54ZGtmbXJa?=
+ =?utf-8?B?cjFaNTJicWw2ekE0T1NZekFNWThzN3BEWW5Ud2Qza0E4YTIzNmRQVHcwYVc0?=
+ =?utf-8?B?ZzFaRGNHbCtLVjRmNzFrK3h0VThheC94QUp6V2tnZzlDN2s5TkFOZWl4TzB0?=
+ =?utf-8?B?YjlNcTgydUpxaUxMUkFUeGEwcDFaWVRidkovdERoSnBtQTVQKzBYNUZhQWNG?=
+ =?utf-8?B?Y05sa2dobnJFS2dGUGI3NnZ3YUF3WHgrdm9zT3ZaWTMzNllTWGtNK3JWVkwr?=
+ =?utf-8?B?M3YrQ01lemVJdXBHZjc5UTdya0lJakY1NVBrb0p6OWFOcE45V3JZb2VraGF3?=
+ =?utf-8?B?MDV1eFhoQU5GMTNVRlNuR29iS1BWTGhmUm5JaWdMS05SWjhlaGVFTUhtajZC?=
+ =?utf-8?B?UGl3ZXRrdDhLdkQweVFhOWlwQW5lWnZpNURjbDNuTE14WGdIL05PTEJacVhX?=
+ =?utf-8?B?VEdTem9kNDllT3lDam1FSTFONVF4dndZeVlKVVJrc3lHRjRMYjh4MTl6YTZO?=
+ =?utf-8?B?Z1BqK3FZS3JYbjNMMHd3WmxkRFJGTmdJaGFvTEpVeGhhcmZ5STZmSTZoSFB1?=
+ =?utf-8?B?a0puai9URWh1cWhZc2N5ZHRGdzVJb0dNYkM1STIvclp5YlNtR2V3OFc4YzBi?=
+ =?utf-8?B?ckhFQ0lTN2x2ejJMb0FGMmtBbWR1ZkZaeUlPTUovakJSVENHYkpHNGdxU0NV?=
+ =?utf-8?B?SVBMTmlQQlRVeW1UK05yblA4OTlNUXliaGlCbkVUK3lncjlXTTU0QzBtbGRy?=
+ =?utf-8?B?OUo3Z05LY09MV1h4Uzd6RFVwQkNqNnlqNFlvWkhOZjBzekRGbGhwbjhYV2lC?=
+ =?utf-8?B?bHpuYjNKUUZtN0hLZE95NldHMytxVlRTY2x0MzFyTjZXNWFGSHZJOWVtUUpQ?=
+ =?utf-8?B?MTdRc1gxMGhjRnVFNDJjd01hNHlyK2xNdGlxZzJpNzRqWmd0cEFKclNONTlH?=
+ =?utf-8?B?Wmxsdis3MnRTUWpGTU9OVkFZR0RuL3dJTGl2UldkL1IrdlYwZ2hJc3haTStG?=
+ =?utf-8?B?S21hZ2hrUWxSdUJzYURLeitJNGVMV0RzNGxQR1NySWlnQmpEdUlHSGJNUjZR?=
+ =?utf-8?B?R1VpdlAyVnlxa25LeWlLNE10aHc2R1hrdVVrejBsV2Q2UDdUUnBiaWFXY0hh?=
+ =?utf-8?B?UHVXc3YxV21DcmxEZjREUm9EaWMzdEczSndqMklackwvZURuVHBOdDc3SHJq?=
+ =?utf-8?B?SW1XTFZBemltM3ZXcFVFaElTa2hwMFF6UlRTbnZwcDRWdDByQy9CVmFZK2Uv?=
+ =?utf-8?B?OFJGWkpGNFBqM3FERThEQWpKQ28ydHBaMVZ5cnY5SFlvWWF1OEw0bVhxVXZu?=
+ =?utf-8?B?SjE0K1orc0JYdDZSM1JxaDQ2N0NyUU5TVzlBQng4Z3I5R3B6SjZVZitla2Rz?=
+ =?utf-8?B?c3AzbTNEcEswOG5jOUs1aHVrVVdVeDZGQmhTaGEvZDZ0RkZJaFRtY1IvTlNu?=
+ =?utf-8?B?MXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 933a53dd-2759-4f53-5a86-08dd7c3c05f7
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 16:38:59.7909
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z4GmrMi5c4cGbq1nKzsM5LQssnd0VVxfG0yyj5M1zPq6v6H+ZC9CJtCgLEpzSwAH3XdgK9u2PC9x56YdD0N3dkN5xMkkaxDQ9LTe04hV4e0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5047
+X-OriginatorOrg: intel.com
 
-On Tue 15-04-25 20:25:00, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> Remove validate_constant_table() since:
-> 
-> - It has no caller.
-> 
-> - It has below 3 bugs for good constant table array array[] which must
->   end with a empty entry, and take below invocation for explaination:
->   validate_constant_table(array, ARRAY_SIZE(array), ...)
-> 
->   - Always return wrong value due to the last empty entry.
->   - Imprecise error message for missorted case.
->   - Potential NULL pointer dereference since the last pr_err() may use
->     @tbl[i].name NULL pointer to print the last empty entry's name.
-> 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi Babu,
 
-Looks good! Feel free to add:
+On 4/14/25 1:51 PM, Moger, Babu wrote:
+> Hi Reinette,
+> 
+> On 4/11/25 16:02, Reinette Chatre wrote:
+>> Hi Babu,
+>>
+>> On 4/3/25 5:18 PM, Babu Moger wrote:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+>>> @@ -394,6 +394,21 @@ void resctrl_arch_mon_event_config_set(void *config_info);
+>>>  u32 resctrl_arch_mon_event_config_get(struct rdt_mon_domain *d,
+>>>  				      enum resctrl_event_id eventid);
+>>>  
+>>> +/**
+>>> + * resctrl_arch_config_cntr() - Configure the counter on the domain
+>>> + * @r:			resource that the counter should be read from.
+>>> + * @d:			domain that the counter should be read from.
+>>> + * @evtid:		event type to assign
+>>> + * @rmid:		rmid of the counter to read.
+>>> + * @closid:		closid that matches the rmid.
+>>> + * @cntr_id:		Counter ID to configure
+>>> + * @evt_cfg:		event configuration
+>>
+>> "event configuration" is simply an expansion of member name and does not help to
+>> understand what the value represents.
+> 
+> How about?
+> 
+> "MBM Event configuration value representing reads, writes etc.."
 
-								Honza
+This is more helpful (note Event -> event). When data structures are decided it
+will also be helpful to include reference of where this data is maintained and
+how it is formatted.
 
-> ---
-> Changes in v4:
-> - Rebase on vfs-6.16.misc branch to fix merge conflict.
-> - Link to v3: https://lore.kernel.org/r/20250415-fix_fs-v3-1-0c378cc5ce35@quicinc.com
-> 
-> Changes in v3:
-> - Remove validate_constant_table() instead of fixing it
-> - Link to v2: https://lore.kernel.org/r/20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com
-> 
-> Changes in v2:
-> - Remove fixes tag for remaining patches
-> - Add more comment for the NULL pointer dereference issue
-> - Link to v1: https://lore.kernel.org/r/20250410-fix_fs-v1-3-7c14ccc8ebaa@quicinc.com
-> ---
->  Documentation/filesystems/mount_api.rst | 15 ----------
->  fs/fs_parser.c                          | 49 ---------------------------------
->  include/linux/fs_parser.h               |  5 ----
->  3 files changed, 69 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/mount_api.rst b/Documentation/filesystems/mount_api.rst
-> index 47dafbb7427e6a829989a815e4d034e48fdbe7a2..e149b89118c885c377a17b95adcdbcb594b34e00 100644
-> --- a/Documentation/filesystems/mount_api.rst
-> +++ b/Documentation/filesystems/mount_api.rst
-> @@ -752,21 +752,6 @@ process the parameters it is given.
->       If a match is found, the corresponding value is returned.  If a match
->       isn't found, the not_found value is returned instead.
->  
-> -   * ::
-> -
-> -       bool validate_constant_table(const struct constant_table *tbl,
-> -				    size_t tbl_size,
-> -				    int low, int high, int special);
-> -
-> -     Validate a constant table.  Checks that all the elements are appropriately
-> -     ordered, that there are no duplicates and that the values are between low
-> -     and high inclusive, though provision is made for one allowable special
-> -     value outside of that range.  If no special value is required, special
-> -     should just be set to lie inside the low-to-high range.
-> -
-> -     If all is good, true is returned.  If the table is invalid, errors are
-> -     logged to the kernel log buffer and false is returned.
-> -
->     * ::
->  
->         bool fs_validate_description(const char *name,
-> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-> index c5cb19788f74771a945801ceedeec69efed0e40a..c092a9f79e324bacbd950165a0eb66632cae9e03 100644
-> --- a/fs/fs_parser.c
-> +++ b/fs/fs_parser.c
-> @@ -379,55 +379,6 @@ int fs_param_is_path(struct p_log *log, const struct fs_parameter_spec *p,
->  EXPORT_SYMBOL(fs_param_is_path);
->  
->  #ifdef CONFIG_VALIDATE_FS_PARSER
-> -/**
-> - * validate_constant_table - Validate a constant table
-> - * @tbl: The constant table to validate.
-> - * @tbl_size: The size of the table.
-> - * @low: The lowest permissible value.
-> - * @high: The highest permissible value.
-> - * @special: One special permissible value outside of the range.
-> - */
-> -bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
-> -			     int low, int high, int special)
-> -{
-> -	size_t i;
-> -	bool good = true;
-> -
-> -	if (tbl_size == 0) {
-> -		pr_warn("VALIDATE C-TBL: Empty\n");
-> -		return true;
-> -	}
-> -
-> -	for (i = 0; i < tbl_size; i++) {
-> -		if (!tbl[i].name) {
-> -			pr_err("VALIDATE C-TBL[%zu]: Null\n", i);
-> -			good = false;
-> -		} else if (i > 0 && tbl[i - 1].name) {
-> -			int c = strcmp(tbl[i-1].name, tbl[i].name);
-> -
-> -			if (c == 0) {
-> -				pr_err("VALIDATE C-TBL[%zu]: Duplicate %s\n",
-> -				       i, tbl[i].name);
-> -				good = false;
-> -			}
-> -			if (c > 0) {
-> -				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>=%s\n",
-> -				       i, tbl[i-1].name, tbl[i].name);
-> -				good = false;
-> -			}
-> -		}
-> -
-> -		if (tbl[i].value != special &&
-> -		    (tbl[i].value < low || tbl[i].value > high)) {
-> -			pr_err("VALIDATE C-TBL[%zu]: %s->%d const out of range (%d-%d)\n",
-> -			       i, tbl[i].name, tbl[i].value, low, high);
-> -			good = false;
-> -		}
-> -	}
-> -
-> -	return good;
-> -}
-> -
->  /**
->   * fs_validate_description - Validate a parameter specification array
->   * @name: Owner name of the parameter specification array
-> diff --git a/include/linux/fs_parser.h b/include/linux/fs_parser.h
-> index 5057faf4f09182fa6e7ddd03fb17b066efd7e58b..5a0e897cae807bbf5472645735027883a6593e91 100644
-> --- a/include/linux/fs_parser.h
-> +++ b/include/linux/fs_parser.h
-> @@ -87,14 +87,9 @@ extern int lookup_constant(const struct constant_table tbl[], const char *name,
->  extern const struct constant_table bool_names[];
->  
->  #ifdef CONFIG_VALIDATE_FS_PARSER
-> -extern bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
-> -				    int low, int high, int special);
->  extern bool fs_validate_description(const char *name,
->  				    const struct fs_parameter_spec *desc);
->  #else
-> -static inline bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
-> -					   int low, int high, int special)
-> -{ return true; }
->  static inline bool fs_validate_description(const char *name,
->  					   const struct fs_parameter_spec *desc)
->  { return true; }
-> 
-> ---
-> base-commit: 8cc42084abd926e3f005d7f5c23694c598b29cee
-> change-id: 20250410-fix_fs-6e0a97c4e59f
-> 
-> Best regards,
-> -- 
-> Zijun Hu <quic_zijuhu@quicinc.com>
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Reinette
