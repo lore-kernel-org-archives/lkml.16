@@ -1,64 +1,70 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457C127B50F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED20EEC3
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708450; cv=none; b=ahDcgq0sayBjTxJ7KEVksZlZ24CNYS0nNKgHLQIl6ktD/ocSBAUX/jclgQYFoAZUTIJ1SpGVL9RjeRGsbX8Av+fYt6nHqquLBQdLwx+pJ+BUJ/VVqCGX1i8PB212yVqsYUE1FoFBEQ4IlSTaSk5cEL/3lmOH3kkEiJxMZiuf/Uw=
+	t=1744708494; cv=none; b=lLxofykqx1ifaX3ZmE4K6uV9YtbKkO5ULq9SVgqu/yykYoSeOGbo48QEL2TOpZZrfo5xS6ZLonXcqaooUHHNiAoZ4/5qhAi2Rm4gjt3GWzsC63S1Jg64MQmlTfmxu0YvJu59TzDk6pTIPvnrXB5UIdUrdlrEAKqHJkbKi4c9xrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708450; c=relaxed/simple;
-	bh=xJd/4b5bhY+n+QZLhZcR9CAG7yTmRPKvPTAhgwEa3PY=;
+	s=arc-20240116; t=1744708494; c=relaxed/simple;
+	bh=0eUTeZWOvy/sEdBDw2DnwA5spT7b3OSAoKHMZ2s8vQM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JDrxOdInNu2C4gul5ttj408nS/fVIaIBdHzj6NTRURzoGiWMn2k2iqYOvIjMqELu3XAnBmaJGnleHpjcURdaL+Obhr4k2M73bZSyUcGoWD+POWO4RU0X388Lm4xUnh/u32+mWy3IaqDe0mJO8Olyt+L1cj+vBKofuRJ0uZ8eoTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LqAyjc4p; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=ACzEAZQCNNFUq1EMInUbC1C6STKhYnrYfosYwbthXZimYryZ7bMh2rq8yrjZDsvzkFi5K2Tj3R6hEz8te4tzO0vhPh3K5VAh/J82VfLqTVlz1mBaXJR5VAQLzdiZT/wHW3fnqFzFJKuNlYcuJEKjFXy+Pqvb7qpV33uUZ4RnSpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b9hH2Pku; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LqAyjc4p"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1efc4577so2698922f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744708446; x=1745313246; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7sZcT0Yr0/41RO7Ihzkb4EBq+VMI1W841HKAaxgJwa8=;
-        b=LqAyjc4puzL5nBssemk06CzpmHkRQiZEgl88oewyrNr8GWTNYiOEBGflSrRt4mb4sn
-         bLzL3BZV971qBiZS5CamRieVEyXMNxiCaprJ3M2PLt/67ClG/vqYOjnTmVX2yuE4k2px
-         UE1CYVznKW141pfz0+qLSjevo6itnbapuGjQy+YTqgyI3KLmKR6E83jHiQTbP0TXokFu
-         xDRKnhcSPx9s5ktn4VXiZzXdrmdU/+Hu277HaLj7V2XljLUb4unOqz3AF0a6vrubhYiJ
-         NChj4JAsIhVIBE5Zh6bYayPW81LsDZHZksRu0UUbszUyEpioO9Hh98uwjsZB5aw/hYss
-         B6mg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9hH2Pku"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744708491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0xBj6wYND6XkoPsEsHNHqa6He4rhHss1QsFv4wuPqUQ=;
+	b=b9hH2PkubbKFvEiaoqCSk4hyKnsX1lEvmVzyBmwGB/Xt1EG80je2FgdT1cnfaZlKBLnEK2
+	85Vd9I3JnCGctCeZVz8nIWCwjObi523m2OfFUa88wuIuSZLtert/1MfyBkgW2wBmRe9vK6
+	CHaB60DjYvFD9ryM414kKd3p2abhZtc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-102-vjl-qwwAOhiQx6cSGjtJgQ-1; Tue, 15 Apr 2025 05:14:50 -0400
+X-MC-Unique: vjl-qwwAOhiQx6cSGjtJgQ-1
+X-Mimecast-MFC-AGG-ID: vjl-qwwAOhiQx6cSGjtJgQ_1744708489
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so26800795e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:14:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744708446; x=1745313246;
+        d=1e100.net; s=20230601; t=1744708489; x=1745313289;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7sZcT0Yr0/41RO7Ihzkb4EBq+VMI1W841HKAaxgJwa8=;
-        b=qAz3wLCP/y3AoWmxuuzSGRaXpZIzSPLRNVv8YMOlZdnpX1lzigFjHh52B8DLoQioAD
-         Yulfnh7/Vy/Hyd5ZgZR5jKMEi+a837AaVfQcshBZPZPWc1Or6QxMJvtR6HXDqJMgSeOJ
-         C3mYNcVRFQMLHesR/drxqX5TgFIIOv979SKQWpWPKUDfjzkuJYVIJDDedjSkbgf34oEJ
-         n6VeRLm1wlglAQCQwoDEJ6Ki7cByT5ds2znF7TEPEKttf9i9Eoc56QiX35JIyAv0GvaA
-         jiywYRiAnueiz+TmLWPdxylGr4ZVSMKeROazsb3u7PZ5qVdVzPAyT9mgNrmvoDsmQd5Y
-         +8fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW820dNv7YHLINfsPQCfMOOH+Oz/BzE9CE15j86Wssq0SvEuR7y7cGN7eyT3tv6OwGt9DUtKVjVukU3DRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyshsln3AuXY6LlqpDXCNTfZGoYNUP+OCXEdYL8WBqqj5GR8m1R
-	U0MBmA4OkNyf9BrY83aTyVNsjqPvfEYxeymlpmqXXXIqokBEzHSN7+R5Ifk6iUU=
-X-Gm-Gg: ASbGnctgDvaplP1mJ0xG02SRlkv/haukkdYzjo5Skxi+iZ4XP0RkyTm7M3qR7xsh03x
-	mkRgvTrrVpk5VaLlrJNdd/SAcwkKWqMQIlwt2MwYFOZpT3fya3/Ax0dxHN4tIV5+RHZfgr4C+WK
-	1cFaOBbjiRSBgBwsabO+RExIZiKQjns6Br/goRKnUhhtex59JoW6BE4O9tBO8cPW+fPjfKGAtJA
-	yhDKKZ7UWY5FzQv0aWHTN1cV5MmaQRW+RVsi/jA1vJtAa46ICzE1PJrnF6qD30rFYrZ1AlYXFib
-	7PvdYhu2ci7V2FZwGGsftXV7s01i5hOpjA0EBmJ7iUk=
-X-Google-Smtp-Source: AGHT+IFIPck0/EXs55Sp/jmilaWHfYYKBCqyBfvSyEux/z5dVtEkS0FpAt5aWShFY0ittLuuU/tdIw==
-X-Received: by 2002:a05:6000:220f:b0:391:3157:7717 with SMTP id ffacd0b85a97d-39eaaeaa3d5mr13405746f8f.34.1744708446594;
-        Tue, 15 Apr 2025 02:14:06 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c614sm13775004f8f.27.2025.04.15.02.14.05
+        bh=0xBj6wYND6XkoPsEsHNHqa6He4rhHss1QsFv4wuPqUQ=;
+        b=ASohzuVFMCFzNFj4N0pgX44qs2FiCnPmDQUSaeCtiG9s5uQicN0INdm+yP2IZmLGI+
+         yueWDpa6VrqmIoRMelL7CA0cdRr9q2txdUtk1CIYbV6R0zDfkhTZt2M1dVHtFOL2Hzea
+         ZbL56l2QeiCBSZSMkElBKyFQ47CyNYGi0lpHuLBOZbduenOIQukfARDJ+gr74cU5WWzH
+         19/2f1K9ozUxZw20Q2URrirD7Y2Tc7krtrycQwgxEF3MZNaYUif1ctRD3FIl+2G8Wg0g
+         eLgKtf9Eg3b0bGOOecDi36iQmx+3W03PyFiLT4F54vpRCBIESK3CBSfQGePCmjQg4ZK8
+         51iA==
+X-Gm-Message-State: AOJu0YyMs2WolB4HnC7FA3vMok4Xdc63xJv/+Xdsb9fSoMuOkYiBSTCe
+	TkjaYfaK9BpD5itpgua+R8ctZNtFl1bdeKdk2K7ECNQs7pTY6IbezJYE+rxlW683hyuHpgpBdu1
+	g9Iddi+fLXrfGYCcMSGREQqh5YXxyi4ySC+wFYuq6w+74pSBrWSuvufi59AumQw==
+X-Gm-Gg: ASbGncu1k92bX3T3V9GlvsasYizDw4qlgHacGj/R1lhE/c3lcd8Nee6CBrdtO6vt13Y
+	On67/7P73UDwrdxETQefMdKm15052VvqbD4YixpErER0QNYnA5RnfdXMbHwHBVrDhZDqFP0G+61
+	rveLuMhrqBnJKU5DKkwRrrY9bIWphBLvGruzUmHL/37wUMoPJPhbkRDfycbDEh++JsedWdcTttI
+	Sn947wMwV79Z9NUt2UEJiPR4d7k/2SFcmddK5XNkLtw9CLp3AOXQMuet/mgFRBRe5NcNBQNZ8dR
+	ol6HtF5GyIjSnULbfvVcBf1Q/LHK/fr6AG+MXt4=
+X-Received: by 2002:a05:600c:4704:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f3a9af837mr161581245e9.30.1744708488745;
+        Tue, 15 Apr 2025 02:14:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHfovw9rzSF7/UhE9C8ntddanjESFbdGIFJq3+2VnKz80vs7HYJjirXobBVEqXPkTQJgbF6JA==
+X-Received: by 2002:a05:600c:4704:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f3a9af837mr161580875e9.30.1744708488359;
+        Tue, 15 Apr 2025 02:14:48 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-34-52.dyn.eolo.it. [146.241.34.52])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9797aasm13673088f8f.56.2025.04.15.02.14.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 02:14:06 -0700 (PDT)
-Message-ID: <5bc5f54b-ce6a-4834-86d4-5014d44c7217@linaro.org>
-Date: Tue, 15 Apr 2025 10:14:05 +0100
+        Tue, 15 Apr 2025 02:14:47 -0700 (PDT)
+Message-ID: <6851d6b8-109c-4de0-89a8-a56659c87cf4@redhat.com>
+Date: Tue, 15 Apr 2025 11:14:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,88 +72,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [tip:perf/core] [perf] da916e96e2:
- BUG:KASAN:null-ptr-deref_in_put_event
-To: Oliver Sang <oliver.sang@intel.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- x86@kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>,
- linux-perf-users@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-References: <202504131701.941039cd-lkp@intel.com>
- <20250414190138.GB13096@noisy.programming.kicks-ass.net>
- <Z/3krxHJLaWJTj4R@xsang-OptiPlex-9020>
+Subject: Re: [net-next v1] net: stmmac: starfive: Add serdes PHY init/deinit
+ function
+To: Minda Chen <minda.chen@starfivetech.com>,
+ Emil Renner Berthing <kernel@esmil.dk>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250410070453.61178-1-minda.chen@starfivetech.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <Z/3krxHJLaWJTj4R@xsang-OptiPlex-9020>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250410070453.61178-1-minda.chen@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 15/04/2025 5:46 am, Oliver Sang wrote:
-> hi, Peter Zijlstra,
+On 4/10/25 9:04 AM, Minda Chen wrote:
+> To support SGMII interface, add internal serdes PHY powerup/
+> powerdown function.
 > 
-> On Mon, Apr 14, 2025 at 09:01:38PM +0200, Peter Zijlstra wrote:
->> On Mon, Apr 14, 2025 at 09:59:25AM +0800, kernel test robot wrote:
->>>
->>>
->>> Hello,
->>>
->>> kernel test robot noticed "BUG:KASAN:null-ptr-deref_in_put_event" on:
->>>
->>> commit: da916e96e2dedcb2d40de77a7def833d315b81a6 ("perf: Make perf_pmu_unregister() useable")
->>> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git perf/core
->>>
->>> [test failed on linux-next/master 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18]
->>>
->>> in testcase: trinity
->>> version: trinity-x86_64-ba2360ed-1_20241228
->>> with following parameters:
->>>
->>> 	runtime: 300s
->>> 	group: group-02
->>> 	nr_groups: 5
->>>
->>>
->>>
->>> config: x86_64-randconfig-078-20250407
->>> compiler: clang-20
->>> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
->>>
->>> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>>
->>>
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <oliver.sang@intel.com>
->>> | Closes: https://lore.kernel.org/oe-lkp/202504131701.941039cd-lkp@intel.com
->>>
->>
->> Does this help?
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> ---
+>  .../ethernet/stmicro/stmmac/dwmac-starfive.c  | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> yes, below patch fixes the issues we observed for da916e96e2. thanks
-> 
-> Tested-by: kernel test robot <oliver.sang@intel.com>
-> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c
+> index 2013d7477eb7..f5923f847100 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c
+> @@ -9,6 +9,8 @@
+>  
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/phy.h>
+> +#include <linux/phy/phy.h>
+>  #include <linux/property.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+> @@ -28,6 +30,7 @@ struct starfive_dwmac_data {
+>  struct starfive_dwmac {
+>  	struct device *dev;
+>  	const struct starfive_dwmac_data *data;
+> +	struct phy *serdes_phy;
+>  };
+>  
+>  static int starfive_dwmac_set_mode(struct plat_stmmacenet_data *plat_dat)
+> @@ -80,6 +83,26 @@ static int starfive_dwmac_set_mode(struct plat_stmmacenet_data *plat_dat)
+>  	return 0;
+>  }
+>  
+> +static int starfive_dwmac_serdes_powerup(struct net_device *ndev, void *priv)
+> +{
+> +	struct starfive_dwmac *dwmac = priv;
+> +	int ret;
+> +
+> +	ret = phy_init(dwmac->serdes_phy);
+> +	if (ret)
+> +		return ret;
 
-Also fixes the same issues we were seeing:
+This is called also in case of PM suspend/resume. Do you need to keep
+the init here, or should that moved at probe time only? Similar question
+for phy_exit() below.
 
-Tested-by: James Clark <james.clark@linaro.org>
+Thanks!
 
->>
->> ---
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 2eb9cd5d86a1..528b679aaf7e 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -5687,7 +5687,7 @@ static void put_event(struct perf_event *event)
->>   	_free_event(event);
->>   
->>   	/* Matches the refcount bump in inherit_event() */
->> -	if (parent)
->> +	if (parent && parent != EVENT_TOMBSTONE)
->>   		put_event(parent);
->>   }
->>   
-> 
+Paolo
 
