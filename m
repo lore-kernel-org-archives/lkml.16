@@ -1,111 +1,166 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2E723A989
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A7B23BD0A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744014; cv=none; b=D4Q/ORHlh3hvPdWw9fWu6pxhYP458NICMWuV1jEsOc5OgE2mHoWl3CnHZkvdHi5Z7Sp4kkOXtxWMlxxteF2bkswh8VLAeaE0MstId/pdqlg1i+gI00i4hSotf/H6dIZnbAU3rua0yPva7apRbUZDrOmblurU4fZvbrxa9VAmSVY=
+	t=1744744103; cv=none; b=uq8DMFYS92FJrDlEj2Py0K8OTZK+XqMnrzxBzEuFK8RLD99V1MZa9ZhRKSeOw7T3d2eZkBZLvRRt4STUPgAfWZHV/KQxnX4yz363GvZoNVchoIdkUwgYu1R6gjCtvaUAaNIGvzMVsnzapMlVHwThnM/INmG6uDiTXDRgV00A3R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744744014; c=relaxed/simple;
-	bh=13I2404BzKHhPEJydORbKcuW5YccPum1bSMgFINHRHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qD1Jii8qVlki/UxawnjOQrj3tc6mRU+WQZEvrN/xSuKPknrBrSe8iFyhReF/EtYmi4plCTmzpXOlgZ5/C8XlnuheivjsgOCljksMEIgJqyJxaxDm1NyIIRLiHGWCz+pAafrpYawv5Mr9dCSO29yJNvQf86e0LQ8Zi9GLPGQWUAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EYYRpgGr; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744744103; c=relaxed/simple;
+	bh=LED8fU7GGAMQIu7jFL6JMgSkKOzdVrDROTASWGlrl9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YC1LRtCf5vKWSBWfjbRrsynSUF3HRaxdWxL3karJtkQ2nNWlIwxaoVQXsi1MU8JTmwYclGARK1OEIKlwI94A13aH1oDIaiYrQxF0IpOG6l76TLegNdsgC7pV5BwhIVzKMk9e0IFfr1Sq6VeFk1+TaoAHVVNb+U5U9T+YLG6oL0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2k6eRMy; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EYYRpgGr"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d5ebc2459fso43076945ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744744011; x=1745348811; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0ERGq6YuBDS29hcYRsuSz+aBmyZGJcBatRoKJuQbnY4=;
-        b=EYYRpgGrAduEBbUT5eXbRvTk3iQa2zMFL3haaNn/cL7CQzhKDF6I64qnVjW+LrILis
-         7XFAHN/SvzXYheG43b7IPhOhftbfKvJBbtzmczARD+mVYjU8ckCVYntmpzmAhJTwsRlM
-         5yQDaC//bom62iQZLWSwAzD1Rza/8AP5L4NrA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744744011; x=1745348811;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ERGq6YuBDS29hcYRsuSz+aBmyZGJcBatRoKJuQbnY4=;
-        b=RRdrJsrLNo0vb0l1UfQ6MdtFYJ113xkvzpNZeoMClKoDZscLsjVWL9um9Y44FIwQsu
-         Q+jS2DWeMyH1rRxOYRse6YJSqB2EPDKn2Pq8apk17cMk+4VaSRArr6KDwrCOMqXAP5H+
-         E05EgkHpDFWRyUcTqxUWtacRaVRgDJl3MYZa35v4C0w5/EcE2oQl4mrHQq0pktf5/Xdr
-         7heO+jojYtp4LQwBFX4FRHeCTjv1tyk5nta2VLhQz5+CuSODZeRab8fJ7iZYlBlf9pvS
-         ZOfgd9N64ls91UWBQdIGOFJdUFJKV0pgvrgbjJQ7UuySY9hHVWhyxOPNQ+d5x5pdt0xj
-         PEag==
-X-Forwarded-Encrypted: i=1; AJvYcCXyq2TuNBhTIVZrloQ82fDzuBwFqJO85hfX+k370zYL7WbDYUoqqaxpvIl0W5XOIsgNN+/ImvJMB8sYHLE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxht/Jia4AeD6grYcyPhzr3nAsESkB3PT1D4KI19PbnXP395zxh
-	Jj1qrQhlfqRb6HEAhJ6uMR7eH1MITeVzoBlsvRIAFF6zK/7SH2RUCLyO3v0omx8=
-X-Gm-Gg: ASbGncvXdIY7/cUXUu1SoAcD2mSKQvNG4zovu9GUW1Dp5B5MAyNnORpYlabCJZoqUdB
-	603qRBdK6RnBKEh8JO1TRG81J80rN/ZUabF/AsP/E3muYVDvy6GpGnugNHntN3GOVjXtORDqJUv
-	VSzTgoFBTGIBFfVBJ5J6MZR2HAMAifYdluqZf5gk0ZZnReGbJaYdPi1ogmHbCvBJyGlJBZDDDtB
-	4eVGl2O312SnofwG8oceCPBstaHlkNtussMDLuTBK0vpsCjBXLhxWVuMZ4uIe8Aztg/rpDm1xz5
-	EjCHM/GbwVhi4VHeXN/c8O6VLlZHpGee6g5z+D78uoXkyyZdzGI=
-X-Google-Smtp-Source: AGHT+IEZipM7QC1EHYIRIhOieDhVki8xopVXE4QiLT5S3OJh1tLgwVlDNMTHckiO2ZxjnNZbnUw9bg==
-X-Received: by 2002:a05:6e02:3a01:b0:3d3:dfc2:912f with SMTP id e9e14a558f8ab-3d81250c891mr5952445ab.7.1744744011111;
-        Tue, 15 Apr 2025 12:06:51 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc5827ecsm33514785ab.51.2025.04.15.12.06.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 12:06:50 -0700 (PDT)
-Message-ID: <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
-Date: Tue, 15 Apr 2025 13:06:49 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2k6eRMy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744744102; x=1776280102;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LED8fU7GGAMQIu7jFL6JMgSkKOzdVrDROTASWGlrl9E=;
+  b=j2k6eRMyYrAr9GD9Gj+U2axl4gLEh2i+Xy7pquTIbgfrSEWFkF0mgmqa
+   IDDQSjbBVbkQTp2WC7Frdsci4n59xD6M9OCxe0PsUY8wc6ogqVD8jEQu+
+   aTJECtB6edZKp4tXtH8mnerLwh5Powfw/eItkb54nuZBFNJYcEsQZMaJ1
+   eyY0cihbZHkHaSKAOncJ+KEbBOiBhfY8UgG5Zj52I7xqL+ZOlWCX8ZmdP
+   cntdcFMYoI8nYbkLkXVptDsV1FWF4wYiFennkENj54AzdW+//oUeTwehf
+   sreA8pYojExqRHeLWK1Gxej/6kqp79g4PnU2X40MIxqzrS/lvpbwyLxEP
+   A==;
+X-CSE-ConnectionGUID: rWPpJbvSQImyHeSEO9T42A==
+X-CSE-MsgGUID: s6JZigDTTMa4QGddNGuvkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="68764036"
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="68764036"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 12:08:21 -0700
+X-CSE-ConnectionGUID: Bgx3UWZ5RlqGOE5N5LHNxg==
+X-CSE-MsgGUID: hm5W/GSsTmuIOjI7ZfIpFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="129983788"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 12:08:20 -0700
+Date: Tue, 15 Apr 2025 12:08:18 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: James Morse <james.morse@arm.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
+Subject: Re: [PATCH v8 16/21] x86/resctrl: Always initialise rid field in
+ rdt_resources_all[]
+Message-ID: <Z_6uoqLNCXuc2COl@agluck-desk3>
+References: <20250411164229.23413-1-james.morse@arm.com>
+ <20250411164229.23413-17-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: sev_es_trampoline_start undefined symbol referenced errors during
- kunit run
-To: Borislav Petkov <bp@alien8.de>
-Cc: thomas.lendacky@amd.com, David Gow <davidgow@google.com>,
- "x86@kernel.org" <x86@kernel.org>,
- Brendan Higgins <brendan.higgins@linux.dev>, linux-kernel@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
- <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
- <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
- <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411164229.23413-17-james.morse@arm.com>
 
-On 4/15/25 12:01, Borislav Petkov wrote:
-> On Tue, Apr 15, 2025 at 08:25:09AM -0600, Shuah Khan wrote:
->> ./tools/testing/kunit/kunit.py run --arch x86_64
->> or
->> ./tools/testing/kunit/kunit.py run --alltests --arch x86_64
->>
->> The tree I see this every single time I do my tree testing.
+On Fri, Apr 11, 2025 at 04:42:24PM +0000, James Morse wrote:
+> x86 has an array, rdt_resources_all[], of all possible resources.
+> The for-each-resource walkers depend on the rid field of all
+> resources being initialised.
 > 
-> Doesn't reproduce here:
+> If the array ever grows due to another architecture adding a resource
+> type that is not defined on x86, the for-each-resources walkers will
+> loop forever.
+
+This feels a bit weird. Having rdt_resources_all[] be a "swiss cheese"
+array full of holes where other architectures defined events that aren't
+supported by x86.
+
+But it does work, so it can go in like this. But someday I may revisit
+some experimental patches I did a while back that:
+1) Split the rdt_resource structure into separate "ctrl" and "mon"
+pieces.
+2) Replaced this array with a pair of lists, one each for enabled
+ctrl and mon resources.
+3) Changed the resource walkers to use list_for_each*() macros.
+
 > 
-> # ./tools/testing/kunit/kunit.py run --arch x86_64 > log.00 2>&1
-> # ./tools/testing/kunit/kunit.py run --alltests --arch x86_64 > log.01 2>&1
-> # grep -i error log.*
-> log.00:[19:04:52] [PASSED] error_pointer
-> log.01:[19:44:06] [PASSED] error_pointer
+> Initialise all the rid values in resctrl_arch_late_init() before
+> any for-each-resource walker can be called.
 > 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> 
+> ---
+> Changes since v7:
+>  * Split out of a previous patch due to a botched merged conflict.
+> ---
+>  arch/x86/kernel/cpu/resctrl/core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index 58d7c6accdf2..ce684da600bc 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -60,7 +60,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+>  	[RDT_RESOURCE_L3] =
+>  	{
+>  		.r_resctrl = {
+> -			.rid			= RDT_RESOURCE_L3,
+>  			.name			= "L3",
+>  			.ctrl_scope		= RESCTRL_L3_CACHE,
+>  			.mon_scope		= RESCTRL_L3_CACHE,
+> @@ -74,7 +73,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+>  	[RDT_RESOURCE_L2] =
+>  	{
+>  		.r_resctrl = {
+> -			.rid			= RDT_RESOURCE_L2,
+>  			.name			= "L2",
+>  			.ctrl_scope		= RESCTRL_L2_CACHE,
+>  			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_L2),
+> @@ -86,7 +84,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+>  	[RDT_RESOURCE_MBA] =
+>  	{
+>  		.r_resctrl = {
+> -			.rid			= RDT_RESOURCE_MBA,
+>  			.name			= "MB",
+>  			.ctrl_scope		= RESCTRL_L3_CACHE,
+>  			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_MBA),
+> @@ -96,7 +93,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+>  	[RDT_RESOURCE_SMBA] =
+>  	{
+>  		.r_resctrl = {
+> -			.rid			= RDT_RESOURCE_SMBA,
+>  			.name			= "SMBA",
+>  			.ctrl_scope		= RESCTRL_L3_CACHE,
+>  			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_SMBA),
+> @@ -996,7 +992,11 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
+>  static int __init resctrl_arch_late_init(void)
+>  {
+>  	struct rdt_resource *r;
+> -	int state, ret;
+> +	int state, ret, i;
+> +
+> +	/* Initialise all rid values for_each_rdt_resource() */
+> +	for (i = 0; i < RDT_NUM_RESOURCES; i++)
+> +		rdt_resources_all[i].r_resctrl.rid = i;
+>  
+>  	/*
+>  	 * Initialize functions(or definitions) that are different
+> -- 
+> 2.20.1
 
-Does your arch/x86/realmode/rm/pasyms.h has reference to sev_es_trampoline_start?
-
-The one in my tree has it.
-
-arch/x86/realmode/rm/pasyms.h:pa_sev_es_trampoline_start = sev_es_trampoline_start
-
-thanks,
--- Shuah
-
-
-
+-Tony
