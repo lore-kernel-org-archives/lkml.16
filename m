@@ -1,182 +1,170 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF9318D65E
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9793257AC1
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744755644; cv=none; b=ffgHXtDj2GAO8tIlpjanJJ1xgplhkMq8LRmPNsqVvk/5SZ4L+QUr8aJkBr3U1RID+3r0QSKSy3nADChhxhG5Bhwunm5U70wiQ3g5SMO5BHjWWzTY33ge6bHRYQLrU3ozvvSkCJxTLkLhvHwgz4MaG7Oj9pOwInI/7xKrm4jM8x8=
+	t=1744755784; cv=none; b=MKyYzT0BYzdz1rf7VLsq0Fo2iutfn+5NBEG3Ohqzjgai2Fei71j2HPBLxHpGA66CtJqUTdipeU3z4H50DCH4eWafgDww3AAiykunGuJ2U7nc2MKE6qMkU/evsJcTOZ+GpKESyrWlYKW6Fa5vQ0x9eQtLhSd5BsAK6uT1pyN0u+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744755644; c=relaxed/simple;
-	bh=UHzHycK20zsFi3d4fs3DfZjJSULXdWxYM//X3eI9/WA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OihI4I94hQODmR3bojJ6HWq0PZsbrrml/pq6cYsdOluoDGGtGsIrDyai28C3TuepCxCND4oNe9fOdHo3ntVHDYVIB8QRv6R6msZWtcUZ9ixZUlFdaxK5ImTksKk44gE4OA6aW+CiH3aMcaLY6H0+lPUcN1a+ok9K/SVMQv0OLmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Rt0TYKEm; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Rt0TYKEm"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso2845686b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744755642; x=1745360442; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W6vwe4C4wJYttVSB+Lg7PbLoAnIqQQn3ppM6t9bMgHo=;
-        b=Rt0TYKEmF909K4z/VLeYlNoG6LkO5+TBgnio/AJdal4EEzYBELpRvrt8brKH6qN4pQ
-         uMehKtEl+T7MaFynJ+ShrIsFeQCSar5BdEpsjx4MGZLUwpWBYnahFiVu+rg3FV1fRgnk
-         UnNiCVHtVGAUxBm+jJBVYQeeb8jgko2s4Z97SUaznVyhGkyzLVLPMsiMXR75klqaMUEu
-         xzf9gt3ZRJBauktQlJ71+nD3Zn6KPEjL51YwNX1gx51eiumMk0exG3BCEbVmw+IVp2v4
-         BKtfQG9VkmCedPKJC5Q9hXQXizZfD2kpM1N+8/Ij6SqXlLk0BUOYnaOF9i4vR4Mixocm
-         ltTw==
+	s=arc-20240116; t=1744755784; c=relaxed/simple;
+	bh=V3suW2v5QBE6nG88sxJLLDE1MJ3MqszmlsAMfTuktVU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=k4wgTMOXzh8Mn1w5bDAjdQj6d6NNa/tUZn0/jh9J2eRi0xVtLNzhmrSeJCyCJP8LtPeq/JcqHjkamZcX6eqzAPeVu5fkBoaz7jMNWWc87y4qaN2IJL2KS/U48aMlGhLf9LZmASMO7yuvVP43IzmTSqvzoMNAHnLE6ujSdBLItWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d451ad5b2dso1511735ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:23:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744755642; x=1745360442;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6vwe4C4wJYttVSB+Lg7PbLoAnIqQQn3ppM6t9bMgHo=;
-        b=eGUEPN7O5ju2P9+M6jBAnFhOwFmvh2TCo+J09rZF3iNybu5CLc5JtT+F/86pkKrZu1
-         tAMNUffZyPXUC7thl8jqy7+bGGSU5go62gI84Kr0VbTgV2XTzX8sQncm26m05+eWa6dW
-         z8SN09uOyrv+rLHioDlohVtWFsipzB13DkUJt/5OXtpyr93B6hWrvug8pLW0IXlyHkA6
-         38/VF9oCCHCirNfcFrS/Y5as/OiNXVMzIEItzS8D1KI7STi9ijTxw5UCYwH3dXJMIA30
-         hNOTlfGzRTSRJT3FdOHSWBC6F6bm5LT7PGNtZCmw/Wd8RHDAZNCQ4SRQn0WP/7I5PwZ7
-         zlgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8c0RBeIF8Nz0H4Utui2NwLn6eZ3Kp3NMy61b9n+OKroMr7KLtA5JVUVh4UVn1+mUx2/NeGIw+hch/Ttw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA6ubKnpQvmGpNvRCgGxiURcbrfLKesaNUG807Cp5AgSOBUO+z
-	tj+ixrvZzPYEIzXuUltMggrDMHI14Ewt0RA37sXWfiMvhAAL89pm8G7xt2g/CBY=
-X-Gm-Gg: ASbGncvQvLU/dOVDkJygKcqedlM4B1TCzmAuVkCJC5iLntpqE/DFpYooy1iKvTYtHDD
-	3A+/D9imNY5+gesilpX8idvBNdUChQiYwwQSS8mL/Ach6Vk757TURH8OJ3GgheDhC+jAWb/WWrJ
-	WrDQHEOiOmB/lH1S9ynMgTmEhhjv7P0+0WiUM9rEuNSA/XETnU98ja10T2P34Qn3eYMpSqzwzae
-	0A3ceE0SKCvPdFAnWNFLv+pOoT/Trhafi//j89ttlJwZqzg6fWT1h9iWt0fHEVJb0AsZX98CGxC
-	069VM1BfJ6BE7TFCdB/Br3tS9WPKh08rbJvRvcO1sOeQ4iigxj/PXLXBnHqqSVRZLYK3Z/goyoq
-	rB/sh32atguI=
-X-Google-Smtp-Source: AGHT+IEpDLdrfoDSU5ZuyftzTYl/brewAw2M8CSwWMhS4Uire6Dc0mWmKitFnwhPrIFIGJwg/pUw0Q==
-X-Received: by 2002:a05:6a00:190c:b0:734:b136:9c39 with SMTP id d2e1a72fcca58-73c1faee36amr1644462b3a.19.1744755641712;
-        Tue, 15 Apr 2025 15:20:41 -0700 (PDT)
-Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c65c9sm9401091b3a.61.2025.04.15.15.20.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 15:20:41 -0700 (PDT)
-Date: Tue, 15 Apr 2025 15:20:38 -0700
-From: Sukrut Bellary <sbellary@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
-	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution
- devices support
-Message-ID: <Z/7btoHi03NftNQJ@dev-linux>
-References: <20250408132120.836461-1-sbellary@baylibre.com>
- <20250408132120.836461-3-sbellary@baylibre.com>
- <20250412141253.6d57032e@jic23-huawei>
+        d=1e100.net; s=20230601; t=1744755782; x=1745360582;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3i7903g5EAF+f4ORhceVKA5HXfzObg0MAESpYv0oEyQ=;
+        b=hjuLXMA7rKEDOQ6OaKMxBl+U+bEc9/47YI4RCeiUBgbhpIj6RYu+4s6TaJpj/jV14x
+         XpfnG6edlO90ma7A5XBbOuS0kewFaon0uC0Z7IFQA59Df8aT6TX+pwJ7vnV7cYmNzOE6
+         h4YZZy6zuoiiWHq8PTNsFdBUc4isxHaeMy0gKYoEkxDkKr31CfwIFTLsx29wQP6jKczn
+         GfF7U4f1NDe8rgcllcJ3i7yk9bzNSxUMMYVOEm3rZGdQW/nwzVH4Lib5wlhfuiRXYaGQ
+         dZrJqNBKuA9+lGoEAXfWdadKWVdC3TCO0nodOeh4ygjCS8cvVwrtaNj7ckxh7Ykq0HIK
+         bvMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXU3Gzi1pPCrYzbVDR2VXab+EIYdwCrZfAcmzj3qYC4HDHb6S9lytzOj1DXUMM8g2dD/daL2tqFwO87MXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPxh4bLB8EhPq6qbw+y4Wce3CSsd4ESLpLVj9lke7u6uiqUepp
+	FUalJP/l+UGSM8laoxYtsg7HWhkD4rRpsAW6NsqBUB9L5Wj0EV9v+LP7rnk5iBvsPiVe46iZcnD
+	NOrbZZ6RBaW8KUlXND/HHIlER1NQU3Esnf97u4EqY+qlSdrC/PNQJNG4=
+X-Google-Smtp-Source: AGHT+IEBKnxqT1ZwNmaDG1uST9jMMrlFj+hWUykXfE0e1aT0R0aopB88dlEox0O7mk665ODgrJMXikwrsPT0ltXBMUgRwy56xkhY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412141253.6d57032e@jic23-huawei>
+X-Received: by 2002:a05:6e02:1565:b0:3d4:2acc:81fa with SMTP id
+ e9e14a558f8ab-3d8120f9dbamr15975235ab.2.1744755781841; Tue, 15 Apr 2025
+ 15:23:01 -0700 (PDT)
+Date: Tue, 15 Apr 2025 15:23:01 -0700
+In-Reply-To: <20250415174856.379736-1-duttaditya18@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fedc45.050a0220.6a185.01e0.GAE@google.com>
+Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in add_missing_indices
+From: syzbot <syzbot+b974bd41515f770c608b@syzkaller.appspotmail.com>
+To: duttaditya18@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, syzkaller-lts-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Apr 12, 2025 at 02:12:53PM +0100, Jonathan Cameron wrote:
-> On Tue,  8 Apr 2025 06:21:20 -0700
-> Sukrut Bellary <sbellary@baylibre.com> wrote:
-> 
-> > The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> > interface. The device family responds with 12-bit data, of which the LSB
-> > bits are transmitted by the lower resolution devices as 0.
-> > The unavailable bits are 0 in LSB.
-> > Shift is calculated per resolution and used in scaling and
-> > raw data read.
-> > 
-> > Lets reuse the driver to support the family of devices with name
-> > ADC<bb><c>S<sss>, where
-> > * bb is the resolution in number of bits (8, 10, 12)
-> > * c is the number of channels (1, 2, 4, 8)
-> > * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> > and 101 for 1 MSPS)
-> > 
-> > Complete datasheets are available at TI's website here:
-> > https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> > 
-> > Tested only with ti-adc102s051 on BegalePlay SBC.
-> > https://www.beagleboard.org/boards/beagleplay
-> > 
-> > Co-developed-by: Nishanth Menon <nm@ti.com>
-> > Signed-off-by: Nishanth Menon <nm@ti.com>
-> > Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> > ---
-> > Changes in v3: 
-> >         - used be16_to_cpu() for the endian conversion.
-> >         - used config index enum while setting up the adc128_config[]
-> > 
-> > - Link to v2: 
-> >         https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
-> > 
-> > Changes in v2:
-> >         - Arranged of_device_id and spi_device_id in numeric order.
-> >         - Used enum to index into adc128_config.
-> >         - Reorder adc128_config in alphabetical.
-> >         - Include channel resolution information.
-> >         - Shift is calculated per resolution and used in scaling and 
-> >         raw data read.
-> > 
-> > - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
-> > ---
-> >  drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
-> >  1 file changed, 112 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> > index a456ea78462f..d4b76fd85abd 100644
-> > --- a/drivers/iio/adc/ti-adc128s052.c
-> > +++ b/drivers/iio/adc/ti-adc128s052.c
-> > @@ -7,6 +7,22 @@
-> >   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
-> >   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
-> >   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
-> > + *
-> > + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> > + * interface. This driver supports the whole family of devices with a name
-> > + * ADC<bb><c>S<sss>, where
-> > + * bb is the resolution in number of bits (8, 10, 12)
-> > + * c is the number of channels (1, 2, 4, 8)
-> > + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> > + * and 101 for 1 MSPS)
-> > + *
-> > + * Complete datasheets are available at TI's website here:
-> > + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> > + *
-> > + * 8, 10, and 12 bits converters send 12-bit data with
-> > + * unavailable bits set to 0 in LSB.
-> > + * Shift is calculated per resolution and used in scaling and
-> > + * raw data read.
-> >   */
-> >  
-> >  #include <linux/err.h>
-> > @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
-> > +	return be16_to_cpu(*((__be16 *)adc->buffer));
-> 
-> I think we now have a convenient adc->buffer16 (probably introduced in Matti's
-> series.  Sorry I missed the overlap of the two series until now. These part numbers
-> are too long and confusing to stick in my head!
-> 
-> Matti took on maintaining that driver because he wanted to see any changes
-> that might affect the Rohm part it now supports.  If anyone wants to volunteer
-> from the TI side of things that would be ideal - just send a patch adding to
-> the new MAINTAINERS entry.
+Hello,
 
-Thanks for the review.
-Sure, I can work on the TI side of things.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+UBSAN: array-index-out-of-bounds in add_missing_indices
 
-> Jonathan
-> 
-> 
-> >  }
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+================================================================================
+UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:2946:28
+index -128 is out of range for type 'struct dtslot[128]'
+CPU: 0 PID: 5101 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call trace:
+ dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
+ dump_stack+0x1c/0x58 lib/dump_stack.c:113
+ ubsan_epilogue lib/ubsan.c:151 [inline]
+ __ubsan_handle_out_of_bounds+0x108/0x15c lib/ubsan.c:282
+ add_missing_indices+0x6d0/0xaac fs/jfs/jfs_dtree.c:2946
+ jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
+ iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
+ __do_sys_getdents64 fs/readdir.c:369 [inline]
+ __se_sys_getdents64 fs/readdir.c:354 [inline]
+ __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
+ __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
+ el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
+ do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
+ el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
+ el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
+ el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
+================================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
+Read of size 32 at addr ffffff80e16dc130 by task syz.0.16/5101
+
+CPU: 1 PID: 5101 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call trace:
+ dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
+ print_address_description+0x7c/0x3f0 mm/kasan/report.c:248
+ __kasan_report mm/kasan/report.c:434 [inline]
+ kasan_report+0x174/0x1e4 mm/kasan/report.c:451
+ check_region_inline mm/kasan/generic.c:-1 [inline]
+ kasan_check_range+0x274/0x2b4 mm/kasan/generic.c:189
+ memcpy+0x90/0xe8 mm/kasan/shadow.c:65
+ diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
+ txCommit+0x748/0x5548 fs/jfs/jfs_txnmgr.c:1255
+ add_missing_indices+0x74c/0xaac fs/jfs/jfs_dtree.c:2960
+ jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
+ iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
+ __do_sys_getdents64 fs/readdir.c:369 [inline]
+ __se_sys_getdents64 fs/readdir.c:354 [inline]
+ __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
+ __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
+ el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
+ do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
+ el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
+ el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
+ el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
+
+Allocated by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffffff80e16dc0c0
+ which belongs to the cache jfs_ip of size 2240
+The buggy address is located 112 bytes inside of
+ 2240-byte region [ffffff80e16dc0c0, ffffff80e16dc980)
+The buggy address belongs to the page:
+page:0000000001ce143c refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1216d8
+head:0000000001ce143c order:3 compound_mapcount:0 compound_pincount:0
+memcg:ffffff80e68fcb01
+flags: 0x5ffc00000010200(slab|head|node=0|zone=2|lastcpupid=0x7ff)
+raw: 05ffc00000010200 0000000000000000 dead000000000122 ffffff80c2b8ea80
+raw: 0000000000000000 00000000800d000d 00000001ffffffff ffffff80e68fcb01
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffffff80e16dc000: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffffff80e16dc080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffffff80e16dc100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                     ^
+ ffffff80e16dc180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffffff80e16dc200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+
+ERROR: (device loop0): jfs_readdir: JFS:Dtree error: ino = 2, bn=0, index = 0
+
+ERROR: (device loop0): remounting filesystem as read-only
+JFS: Invalid stbl[1] = -128 for inode 2, block = 0
+
+
+Tested on:
+
+commit:         f7347f40 Linux 5.15.180
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git linux-5.15.y
+console output: https://syzkaller.appspot.com/x/log.txt?x=163c0204580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e433a356d25f60cb
+dashboard link: https://syzkaller.appspot.com/bug?extid=b974bd41515f770c608b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=135bfc04580000
+
