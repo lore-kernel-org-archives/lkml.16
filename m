@@ -1,179 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E320FAA9;
-	Tue, 15 Apr 2025 18:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69449126C02;
+	Tue, 15 Apr 2025 18:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744742003; cv=none; b=meJ9JtJpR5Deqalx4LjWYA9IT/5ayHKWF4v5JS21Cs8G6Ct/9fiYy02Rfj5Up1ARteyj3ElCYJl5oWodq8vGoNz6JeKQcq3nlmbYooLOFR+cgrgcIH5EDaYKZCGrqqK7HTNC2cJpTY3uE4OSMlCQkzaMFx+6QdrnaPRpIORJutQ=
+	t=1744742049; cv=none; b=GNymL5iqugdVkIxBRMLfn+ZGTLF/sugFw79ELOvGG/nTu5vXLQrgq0QjpfT6Vqw8VTq0ED8Ep0V5ZS7Z8IYjrObTcMurEPxpUllx95uJgbd7wkyvE9MlFLzFAkdnLO3Cr6VB94BawiK1EYDQkjZ/dyf/UXNUlKj454VkVBw6/us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744742003; c=relaxed/simple;
-	bh=xElVJVESsbAJLuZAcsQnEEywNdvO8tPQ/vxvtd6rd7k=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e972qRtnNNlOxAaXt3CCb4GLq0RVxEpH3Qspcu2XmzDPpJQB2xfxsHuT20FXA9CZ+1udfYd345yUComgrqluDX/3eVsARWF5ADd7ISjUO7liwBEs3b0hSiDLK/dk7kdxbIue+R6k93InuhK6MNsRVX039CgcDghIRRzsFRBCLnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtGnlnAv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744742049; c=relaxed/simple;
+	bh=GN0AXho+6xPL/OzDK6JwEd2TeunolBetRB+dgg5WpVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bTrRTxstT1EtmT1HImCF+ClH//+TsFMn0t7h8a3xI1EzbVASvyfJue67fK5D7rD7aORy3RCZPHsCcOTR4XlQ1BTkmkw95dRBXRXbdMmOs8KoeQhFdl0aDHpch74KVMJ6Y4k/oINp7pLbYye1RAQDNUZzZXzmcr5QVncczfL6ZLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9Ng4nFy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtGnlnAv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C453C4CEE9;
-	Tue, 15 Apr 2025 18:33:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9Ng4nFy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE594C4CEEC;
+	Tue, 15 Apr 2025 18:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744742003;
-	bh=xElVJVESsbAJLuZAcsQnEEywNdvO8tPQ/vxvtd6rd7k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WtGnlnAvI3tuTHiCKrLLalMgm3W3aNAjF0ckRuz97uxYAxOlRwNgZM3lal+61e1Ov
-	 qYumvuC/C2pEtg/QTfFmorwtyWsouoOtw0G46f8BzlLSBT9HGODIa3kbpKdzZXJmAt
-	 NaHBUpMzbRDfdNf/Hvr5mvgJoR8yDpD+zzBJpMK9q7TTLmuP5rU0L1MAR5nSX4Y+J7
-	 cTabiXFNcLC4MqN5TdW7VKlE32tS1a5ALs7nWp+C+AVcqNXmVPxEnVdLMJV5Wz6aRA
-	 4fjjVyqy05ORKU1cjm+L3dgsFHVX0I/2uw2/kYIsO46/H6fEvWhKdQnXQ+PJvEMZEQ
-	 8mHdiFddBGOLg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u4l60-005mPp-TI;
-	Tue, 15 Apr 2025 19:33:20 +0100
-Date: Tue, 15 Apr 2025 19:33:19 +0100
-Message-ID: <861pttl1g0.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: D Scott Phillips <scott@os.amperecomputing.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] KVM: arm64: Avoid blocking irqs when tlb flushing/ATing with HCR.TGE=0
-In-Reply-To: <20250415154656.1698522-2-scott@os.amperecomputing.com>
-References: <20250415154656.1698522-1-scott@os.amperecomputing.com>
-	<20250415154656.1698522-2-scott@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1744742048;
+	bh=GN0AXho+6xPL/OzDK6JwEd2TeunolBetRB+dgg5WpVg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g9Ng4nFyRw4QXgQoLADCVMNad/loBFLsx6KZp3z65TeNnK87iq61BJVnSK9DpgnuD
+	 VHdnaCbJOShyn+vr8dgbFsGomB1hrpEo6Lqaxdtfh8HdEzboZlrEaqsj6/vORL3XJB
+	 Bejv+1GoV2tYAl13BjG5mdSrBgvqAbKZhRZI09dOkYKpUg8vf4rAI/SQwvwdEzJZsO
+	 RHmyJAm0+QV9V6DfT3wDH6T/t8dbQ/Y1FG/gWlYACJWv+nDSFLXg40Wjm/UFkL3f1f
+	 DIrjagOcdO7q19QFxqJSIepJbFSiFC+ftzdUmYwKH30xHJjgDf9Tv7wg8UYl1n1KhX
+	 mEseUvfo0gkYg==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so3998961fac.0;
+        Tue, 15 Apr 2025 11:34:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1afac5zSVcjXy4L31NIToh2WXpDTsebvZn+KZ6PTWqsktVRlClwmWZ1vn9yNywAGRnhvltgqM0KQBHgM=@vger.kernel.org, AJvYcCVOxYUmxo3px0dFsN2cdUF89eGrJeKQqdD5XNlyR0deacMmCaSdEuuufeLsTb2A62Ds1IqOInARH0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypCXjAuygDIafw2PHKkQ87b2ynqSJTpvf0ezfXRzU2PoBv+EUs
+	P/Y5m44oHZ7YhnM76mPcLl+tVmL9T1e0oRBLIV6Z99C0rlGzfdNZexrFiFOVLQIkvzMHCUIQfwK
+	pR6beG3qlNP92OPF085+odq4JIcI=
+X-Google-Smtp-Source: AGHT+IHhRkmZ318d0p9TpXUxfMLu1DnY4tNRHfMkNFDD0g+/o1w/Fk2AQb4Eh2kAnIPmhcVpV3/xUw9oxVWp/yAkM2M=
+X-Received: by 2002:a05:6871:6111:b0:2b8:eb06:57e2 with SMTP id
+ 586e51a60fabf-2d1c1043c0fmr2760922fac.1.1744742048185; Tue, 15 Apr 2025
+ 11:34:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, catalin.marinas@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev, suzuki.poulose@arm.com, will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <1742278664-398536-1-git-send-email-liuyuan1@oppo.com>
+In-Reply-To: <1742278664-398536-1-git-send-email-liuyuan1@oppo.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 15 Apr 2025 20:33:57 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ia9k2nht1mnPaMRPt760LQc-5NLbMhmgOZ16phZzKFBQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHVCSHzFyvF1c02x0Z8H_veppGizKcjiVbTQJlOWVsZ9ml6m1zEm21t1_c
+Message-ID: <CAJZ5v0ia9k2nht1mnPaMRPt760LQc-5NLbMhmgOZ16phZzKFBQ@mail.gmail.com>
+Subject: Re: [PATCH] PM / Wakeup / freezer: Check pm_wakeup_pending() before freeze_task()
+To: liuyuan1 <liuyuan1@oppo.com>
+Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chenzhengding@oppo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 15 Apr 2025 16:46:56 +0100,
-D Scott Phillips <scott@os.amperecomputing.com> wrote:
-> 
-> pNMIs are intended to be deliverable during operations like guest
-> tlb flushing or nested AT, however the setting of HCR_EL2 controls
-> are accidentally blocking async exceptions.
-> 
-> You can see this by doing:
-> 
->      # perf record -e cycles:Hk -g ./dirty_log_perf_test -m 3 \
->        -i 4 -s anonymous -b 4G -v 32
-> 
-> Where no samples will be collected in __kvm_tlb_flush_vmid_ipa_nsh()
-> between enter_vmid_context() and exit_vmid_context() then many
-> samples are collected right after the write to HCR_EL2 in
-> exit_vmid_context(), where pNMIs actually get unmasked.
-> 
-> Set HCR_EL2.IMO so that pNMIs are not blocked during guest tlb
-> flushing or nested AT.
+On Tue, Mar 18, 2025 at 7:18=E2=80=AFAM liuyuan1 <liuyuan1@oppo.com> wrote:
 >
-> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
+> Check pm_wakeup_pending() before freeze_task() can reduce
+> overhead by not freeze tasks in aborted case. freeze_task()
+> will cause high cpu loading especially when system has a large
+> number of tasks need to be freeze.
+>
+> Signed-off-by: liuyuan1 <liuyuan1@oppo.com>
 > ---
->  arch/arm64/include/asm/hardirq.h |  3 ++-
->  arch/arm64/kvm/at.c              |  4 +++-
->  arch/arm64/kvm/hyp/vhe/tlb.c     | 10 ++++++++++
->  3 files changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
-> index cbfa7b6f2e098..6eb3f93851023 100644
-> --- a/arch/arm64/include/asm/hardirq.h
-> +++ b/arch/arm64/include/asm/hardirq.h
-> @@ -41,7 +41,8 @@ do {									\
->  									\
->  	___hcr = read_sysreg(hcr_el2);					\
->  	if (!(___hcr & HCR_TGE)) {					\
-> -		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
-> +		write_sysreg((___hcr & ~(HCR_AMO | HCR_IMO | HCR_FMO)) |\
-> +			     HCR_TGE, hcr_el2);				\
->  		isb();							\
->  	}								\
->  	/*								\
-> diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
-> index ff4b06ce661af..f31f0d78c5813 100644
-> --- a/arch/arm64/kvm/at.c
-> +++ b/arch/arm64/kvm/at.c
-> @@ -1269,7 +1269,9 @@ static u64 __kvm_at_s1e01_fast(struct kvm_vcpu *vcpu, u32 op, u64 vaddr)
->  
->  skip_mmu_switch:
->  	/* Clear TGE, enable S2 translation, we're rolling */
-> -	write_sysreg((config.hcr & ~HCR_TGE) | HCR_VM,	hcr_el2);
-> +	write_sysreg((config.hcr & ~HCR_TGE) |
-> +		     HCR_AMO | HCR_IMO | HCR_FMO | HCR_VM,
-> +		     hcr_el2);
->  	isb();
->  
->  	switch (op) {
-> diff --git a/arch/arm64/kvm/hyp/vhe/tlb.c b/arch/arm64/kvm/hyp/vhe/tlb.c
-> index 3d50a1bd2bdbc..ecb700bab3b8f 100644
-> --- a/arch/arm64/kvm/hyp/vhe/tlb.c
-> +++ b/arch/arm64/kvm/hyp/vhe/tlb.c
-> @@ -55,6 +55,15 @@ static void enter_vmid_context(struct kvm_s2_mmu *mmu,
->  	 * bits. Changing E2H is impossible (goodbye TTBR1_EL2), so
->  	 * let's flip TGE before executing the TLB operation.
->  	 *
-> +	 * One other fun complication to consider is the target EL for
-> +	 * asynchronous exceptions. We want to allow NMIs during tlb flushing,
-> +	 * so we need to ensure that the target EL for IRQs remains as EL2.
-> +	 * HCR_EL2.{E2H,TGE,IMO} = {1,0,0} would set the target EL for IRQs as
-> +	 * EL1, and IRQs at EL2 would be "C" (Interrupts not taken regardless
-> +	 * of the value of interrupt masks). So we need to set
-> +	 * HCR_EL2.{E2H,TGE,IMO} = {1,0,1} so that NMIs will still be
-> +	 * delivered.
-> +	 *
->  	 * ARM erratum 1165522 requires some special handling (again),
->  	 * as we need to make sure both stages of translation are in
->  	 * place before clearing TGE. __load_stage2() already
-> @@ -63,6 +72,7 @@ static void enter_vmid_context(struct kvm_s2_mmu *mmu,
->  	__load_stage2(mmu, mmu->arch);
->  	val = read_sysreg(hcr_el2);
->  	val &= ~HCR_TGE;
-> +	val |= HCR_AMO | HCR_IMO | HCR_FMO;
->  	write_sysreg(val, hcr_el2);
->  	isb();
->  }
+>  kernel/power/process.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/kernel/power/process.c b/kernel/power/process.c
+> index 66ac067..84704b3 100644
+> --- a/kernel/power/process.c
+> +++ b/kernel/power/process.c
+> @@ -49,6 +49,12 @@ static int try_to_freeze_tasks(bool user_only)
+>
+>         while (true) {
+>                 todo =3D 0;
+> +               if (pm_wakeup_pending()) {
+> +                       wakeup =3D true;
+> +                       todo++;
 
-This seems terribly complicated for no good reasons. Why can't we run
-with HCR_xMO set at all times? i.e. like this:
+This is going to produce a confusing message below.
 
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index 974d72b5905b8..bba4b0e930915 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -100,7 +100,7 @@
- 			 HCR_FMO | HCR_IMO | HCR_PTW | HCR_TID3 | HCR_TID1)
- #define HCR_HOST_NVHE_FLAGS (HCR_RW | HCR_API | HCR_APK | HCR_ATA)
- #define HCR_HOST_NVHE_PROTECTED_FLAGS (HCR_HOST_NVHE_FLAGS | HCR_TSC)
--#define HCR_HOST_VHE_FLAGS (HCR_RW | HCR_TGE | HCR_E2H)
-+#define HCR_HOST_VHE_FLAGS (HCR_RW | HCR_TGE | HCR_E2H | HCR_AMO | HCR_IMO | HCR_FMO)
- 
- #define HCRX_HOST_FLAGS (HCRX_EL2_MSCEn | HCRX_EL2_TCR2En | HCRX_EL2_EnFPM)
- #define MPAMHCR_HOST_FLAGS	0
-
-There should never be a case where we don't want physical interrupts
-to be taken at EL2 when running VHE, and we should never use these
-bits to mask interrupts. This has been relaxed in the architecture to
-have an IMPDEF behaviour anyway, as it cannot be implemented on NV.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> +                       break;
+> +               }
+> +
+>                 read_lock(&tasklist_lock);
+>                 for_each_process_thread(g, p) {
+>                         if (p =3D=3D current || !freeze_task(p))
+> @@ -66,11 +72,6 @@ static int try_to_freeze_tasks(bool user_only)
+>                 if (!todo || time_after(jiffies, end_time))
+>                         break;
+>
+> -               if (pm_wakeup_pending()) {
+> -                       wakeup =3D true;
+> -                       break;
+> -               }
+> -
+>                 /*
+>                  * We need to retry, but first give the freezing tasks so=
+me
+>                  * time to enter the refrigerator.  Start with an initial
+> --
