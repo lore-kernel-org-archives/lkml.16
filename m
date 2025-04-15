@@ -1,174 +1,213 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883BC23ED53
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744222; cv=fail; b=FHRehow05jYZ4NNYi0YzCe9pEm4aPRy+CFMC9EDdTGREiGJGfCSXS1TNGK5kyKNTTxwb3ojrABcQ2qfTpsCNZImK36EYeh0BwUTxNYEnNToK8Vii+3EKoEuoqi+NaiBm6II2PSPf+DMlUE0mmhG9/XOaJyKvrs0c2ePD2/MDszE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744744222; c=relaxed/simple;
-	bh=79nQ7SIUCXxaJT0Tqhiifs5+zH5guAoq6AwETD7jtxY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n9PRflU7M5v4+xQWrhCV9XO6JAgHDbSnjU2TR/Uy2IbYh5V1qS3MojhFvgcSl5maLpQeZ8MqaRWpwEnQGbxeADcHRHVgY0VhGGLkic7wQr0hVVEYnqA3KvLcEiaVVjr/+GJjgh06UyDGvT8Z9Zw99B2QPPbBeizSyeAL9Y66o30=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CTBuJ34O; arc=fail smtp.client-ip=40.107.223.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E92823E350;
+	Tue, 15 Apr 2025 19:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744744246; cv=none; b=oAXcCeKOXdZ1ixrQxI9sqpmmef+OjLwawFqgxb3tb9e+ivv59QjOuIs72ujlyE/SXP9bZxIB2F7cbGi4cNK/fksxeLETH5e9AqLD5LSktZvdRuDtkCpVbTsdSNcuoA2jBwlEgBtB4s1cYDrrR7Xz5cRaHxvV1dvZDoab9AUv5XQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744744246; c=relaxed/simple;
+	bh=xqSl63bG3wfUthwLLIvQVxaqRLmukng8C2baTvHd8Xc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KZUTtVJzZi6Uz0HxMgigGQKPXy8FpH61RC5VTux0vZeznHgI17sCOz+cRqD6/JTwAaUmJNcPyMX2JFWOdQt/2jsJLeXjcIIx921OPnJGU2JhF9JPzHqjaQTKq1Krp8VihY0vir4FWiaCKViIdiaJdzJB8+TS+0meJYbXc/ap78o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDwlTMTa; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CTBuJ34O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZOv6hOioMzz3yoSXXj3SUgBO29gZlXjtmnxEMueTv+pT0PEJC1W24nzVSg9TmsvTn88qc0p9ayx747e4v/lE6j7K/e1rs7qeS8dP9ybjTtk2+fA6fICcMllh8oVIf+xn6fOYyvPwhRlrfKzgdk0t3Y8Fho1mmSU4yCnHyp4eTJxUhko9O0PMEFAfnERmoXjCsm5aHPqzu3W71GvSPnquLbeVu9DROHYpDf+kxd7HC+T8SYl0MDQJbaYZHIWQmkB28F+mcuS6quhwMzmv1jVyR6Y/gkVQZfFXkMcBUGlp//opAsZtq//VLCl47Z7scsNZpMTtz0p4Gs6jW9UGf1hW/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=79nQ7SIUCXxaJT0Tqhiifs5+zH5guAoq6AwETD7jtxY=;
- b=xIsl2A/thYCXkJ9HxlDYCpfBDQKrLpJw8SMAyXl1w9rbbUlKA7mz7aIFMTP8BRhl7m5kklE/8K/XRKp8yooXyjHYR1KV6r82vJ4a9hIVEqMBexqQIydqGZpt8dIHonK8t9Ib/YG5CelVIRyOe9V8Xs347A1Gx1mV4h4ebwW7HAXxRI8mpAFZNqVAakJH1KynRUxG3dQWl3pHkcoXKCQoMbyGiApJjiBtNErO/K/AwOKXrhSjyDeVi9ZaJtCDJLswE9snkzgstQAjA7kQgBieTIjAIXh8oGyvndlc7PT/QrkesaGOskHTilkB3+rv60nQI2nmPhY+qiFbW/IuC0eKww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=79nQ7SIUCXxaJT0Tqhiifs5+zH5guAoq6AwETD7jtxY=;
- b=CTBuJ34O2lhzr5ciMAPpnN+We5hFsK8VXs2x9fOSXqCPC9SgBNQTe3p7QzcuXMkLfDTRQ0OOMGGN/GVrlKAe6duwE1g8bcMu/0JV/VnD8fO2Xlbz5ZdNj3QQOv2xj0nTaDLxMhSEn9YcW8AfclBxtQ/ck+NSqvTiRGrVkFK3g8W8r+49nsuUAVjkdYW4fNRWgz+hh88yjzXt6A8xR4nUg8N/lH1sKu+VSpwAHIeijYFPDlPYMqedQb6IX/ADuFFxLJ/5KUgDuD/0VFTpdw1HIJpgumOl7cXv46l1s6ofGOQ4IMnP3Xr6WUoE3A9snV7TlhstVWYgiTyVZNPGk0OGhA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- MW4PR12MB7143.namprd12.prod.outlook.com (2603:10b6:303:222::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
- 2025 19:10:16 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 19:10:15 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
- luto@kernel.org, peterz@infradead.org, paulmck@kernel.org,
- rostedt@goodmis.org, tglx@linutronix.de, willy@infradead.org,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH v3 0/4] mm/folio_zero_user: add multi-page clearing
-Date: Tue, 15 Apr 2025 15:10:10 -0400
-X-Mailer: MailMate (2.0r6241)
-Message-ID: <AC2C5344-E655-45BB-B90B-D63C4AC8F2F6@nvidia.com>
-In-Reply-To: <20250414034607.762653-1-ankur.a.arora@oracle.com>
-References: <20250414034607.762653-1-ankur.a.arora@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0065.namprd07.prod.outlook.com
- (2603:10b6:a03:60::42) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDwlTMTa"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so60041125e9.3;
+        Tue, 15 Apr 2025 12:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744744242; x=1745349042; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G+9R6i97eout8tyqOO5go7P8BM8D8c4sbrQg7SeKd3k=;
+        b=UDwlTMTaOBWa9aTAVQ+IeTum3xmgXX70oOs7rQxUl/C7NzbpfWm0LgF/mAUgcnJPa5
+         7wuVVH43xk8sM/m7D1MbQ3pyJm+yT9Un2eW1JNZr7cfcuK56u0lkKTRZc2mAn0TMtz5O
+         KXvzUYrbh231kFspNl4EkJHO0hDECuVkycDwwsaLzmd5OW3McAzqQm+GUdN51KnBFKLq
+         CtxH7dvW65x4QU7hyjLrVRTDDD/bTCMnFazaDog+1VOCorpTl2zWwhEhIhsNku9Od6hw
+         vjPMKEOr0aHKkHV/uGVSRga31Nf/VlGY3WkGDuB34aFg54i856xdXSUT8FreNwMvr96q
+         L9Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744744242; x=1745349042;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G+9R6i97eout8tyqOO5go7P8BM8D8c4sbrQg7SeKd3k=;
+        b=J+koQoH5ze6EizIDtbLLY6kVi1zW4i8izuLTg8wl6g9Op3aK0yxU+gBU71/XI3Z1ED
+         USDmgfJjq8aAWF9GbvtebL+D2FBC5ClmhUkVU5QecEcoDrtBlYzbJA8Tm0EC5c123zDC
+         LuVSo4HcRXA9BAHFDFOqYIgbfwihujzKfLfh1QOBfObDmHYxthpqChmH7FVFlPyhcSkC
+         qvDJ8nixmaPhW9M7rXw5CVZ5z7Jmlx5zkJFO7zki1R9NzrVZ3w1npcasKbUhz8D6YZuc
+         izIQvQ9To0V+sjQIxCGJo4DLD3yWB7DIUC5W7dpzrcsPZOiqsOcIFbph+7fRrbUrFs3q
+         tkKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlI3yknE79aHlzmd+cyaq4XclqaCwh5BWeHxzdqDveWX8RmTF++dJ9cVagy1Gk4PscoNh2dOP24glv@vger.kernel.org, AJvYcCVqDn5kPjFEnxK8huqnukHLAJbzLJCJfGCEI0zdHdVialjgU7UwHw4EKT9/+pE6BNVpbuQuULccZV/8@vger.kernel.org, AJvYcCWLy5YBGNMQwX0ygkt23AScj8ub3Nd2vt1bTsyEHfb+Z3ypX27rK9VOliiQ+pUo243oMPZDVZ3Q7AffW5Hl@vger.kernel.org, AJvYcCXYhv5mMAkBLdNNj7wRTFWNZXxWBJDD7WQfcRX9VF1iKtkfM3I1Via7x6aPcHdH4zXrvGexUqYrvizTA+lISVwaVqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS6MlQ4yVbzfPJs3SleT4oYhNstftP/3O38w27PjO3PAPxwXkz
+	kINvYKjPYpYfEnnzyzIOeldaPk7/aieeP1oS1YVRg/Es9mqVuFcMgaRlaywtvFDLiDrnfvt+Nv4
+	10LJyGZUhf5FwtSpw2qYerIjzv/s=
+X-Gm-Gg: ASbGnctOi1Pnx9hZIPUVcQuyTLTqYMcPKhTv02PaSYI5DPhKa2ITumstiJ7TUfo6oDQ
+	+ft9bR09BjB3d3UrQqEKoUw4cO1QtvJQJrb/AHRBvI/C0OqgWJkhzoj/qPMA1bFa0vZgOmDHCrI
+	YZDIKUOeS09iDQMLlfCfcE3w==
+X-Google-Smtp-Source: AGHT+IHMiFiS0nsHL73AzzRu+tHqp2edVjNZRkXI+hMQ4GgBBmlNNmVX9ETLW6Y2JCWbDEc24ttLPk2CDXSMeLCHEQU=
+X-Received: by 2002:a05:600c:1e0e:b0:43d:47b7:b32d with SMTP id
+ 5b1f17b1804b1-4405a0a4334mr2589315e9.25.1744744242305; Tue, 15 Apr 2025
+ 12:10:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MW4PR12MB7143:EE_
-X-MS-Office365-Filtering-Correlation-Id: c02b4a70-cbb1-4518-b47a-08dd7c5127b5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7MHnYrOOMnAI6bV7ZepiwqVLqeedBnLs6qDfkzCogTUyTpXIwJvk9VU26pNJ?=
- =?us-ascii?Q?YlHEklda/VLDc2donh+EisPRnHzVW1pmO+YLUG1XZzQq1Wg8RyS+1rRuPHnY?=
- =?us-ascii?Q?GglVOo6d7NGF585jrgGkCNdyh2ITyErETU0WOLeSu85385LUbnkZVuqykUi1?=
- =?us-ascii?Q?/hgavnpPw0UIlfeWniAntx3gqaOr/WVZ0gpZ1tWzlUMmbQj5SbDjmCkX+olO?=
- =?us-ascii?Q?GfGyzIg601GZMzvPeAJ6LeK9ziNap+UaJTvILwZXAQGE7xBd8yjuH60STXfW?=
- =?us-ascii?Q?i6Hnc8xNQFaX8AtsCTdFE8BHAsksCMhL6Rd7aewLwvbdILaP+XLKPzmAgGgS?=
- =?us-ascii?Q?wrMBtJb2CfLii3/zR4L0yaYPT/ppkBZ5ieyz/Pd6yZU+2ZROl76u4at4mV1l?=
- =?us-ascii?Q?i8oCBCcXK4TJOm/okc8yK6DygdplaEURIFBbJw6aXvcNLK7LpI5egH+09p5a?=
- =?us-ascii?Q?og3jeeSZ76rSdE1AchNS5XE+zHpeYEpx9gppuvDhYzPK8ywsupxP2vWIIPBI?=
- =?us-ascii?Q?/nRG2NbbbWt3EGmnEFfiHdyLOhaBQdGvD0+K0BNoHoExrgN1Lah2S0YJRQ6m?=
- =?us-ascii?Q?9vOyDIcUy39k9P/56vs4R9nOZFe0eTqFFQ1y8BqGZfSaxP4BrP1xPPUpJh7U?=
- =?us-ascii?Q?Fdlp4UHD8PsI0jz2rN2piKjdehYo9+G8PTtTS7c+PgH71nf4f4cQC9esxvVq?=
- =?us-ascii?Q?27jNjGk5CUofETtq5bQFY8wUJDSxK87chYU9pNIBol3LJqXUGOI6emFVCBJD?=
- =?us-ascii?Q?JpM4228RxdW4XrrjaJ9W8arvsUvu+XkHkdBirv4W7B1smL53JTRGDtIbHTnZ?=
- =?us-ascii?Q?XK+bO3nhh65wM01YEBMAfeuklj9ZnWSPxjKu51vW2xbRTFGe+IA0XOuYbZBg?=
- =?us-ascii?Q?4sCsnYTrv0DIU6Iq6wOnT2241Ge+N0Wry6cNPAjoHRsvsbsUJSZiCiF6xIu/?=
- =?us-ascii?Q?SNDxAepWe4EJ5O4XnO/agZoCzPrtMF1dFwR1eAYVZ4nsBejYlUZ5QahOxQbr?=
- =?us-ascii?Q?d9/D24HuUvx9vSq2qI5iUgOs2C3LvCg1Ac7Vj2nzJnqJVuAkPPOUBVWwwNYr?=
- =?us-ascii?Q?Cs3hgXStBK58nK6fzOx4B+9EC+q8N1/N/eaXUpOuRm7lakzPYw/TN1gCcpUK?=
- =?us-ascii?Q?yJfGCpmnzI+1TrlG/dHo0RFr3n+nwQBKbVsn6Tqk2xOJ8zCXrlKkn5so2nI5?=
- =?us-ascii?Q?mmoGEvdkF1tyt85PnYr9yOIcoRNE2p8JqfZdbFv9IrbiK/NIWGCOM0Sqb8Ne?=
- =?us-ascii?Q?2u77rNDYIG1m6Hw7QpvvedN/mZZVfLMbcnLo03dMlRrStqY6tXjXIAe7VHR6?=
- =?us-ascii?Q?nnSenMe/C1Wxmd8/bKGmuSwa2bja+8uJBKK5C19481W85OCkFN+m8iw6TD+K?=
- =?us-ascii?Q?h8Kt7GiW9s6ogbTH97h0cxqxD8ZdDYiinY3cEdXdzGomYmF9xSu59rXdZ6b5?=
- =?us-ascii?Q?FJ8YCDJiEbs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?roGpfuUmKlsaYdaLUq3Lq8d3Kj2Sq+Ng9ESe7Yg7Htb0ZdVoneXcTdL72XAr?=
- =?us-ascii?Q?GFg8VDuwZJFTCN4tTVaDzyclvUk7E22V6nVAMorYmKWSVI3OEZ6KetLurivQ?=
- =?us-ascii?Q?N9dB1SuR/X7dpuE5RP4y0wqVCoV1TRnHwsDUhny4mmMIpSoPeqTio2oZfEiB?=
- =?us-ascii?Q?kHremYovxUQ871lJi/+bTM5g1JCej23y5eWb3mDGSstmwNXYfWe10Hi8XJ+V?=
- =?us-ascii?Q?3H9ynZl3UUqEQ9eZPBrXOVbsDz+hdV2+VPCU8v+U+L/xnUhXfgj/708kffPC?=
- =?us-ascii?Q?KiR1B08TUfnK6iOsAlq7PUBTadmW+250GdbFcz2vB6S9kCtvkAu48rMG6Ooe?=
- =?us-ascii?Q?GJ/oSXSKGgkHODRTeZb9M2Ryp/Gd8tn0oHF6hQAtkocyCWd53nihTBzg6smJ?=
- =?us-ascii?Q?6uM1ZZl+hvZlZdO/aXnkAL55t/LQ8IRTuDDTRKYum2ZnMshz/bYxB+jCaa14?=
- =?us-ascii?Q?miT4tZ0sS++uzyYTyLoTt2PBUAhzciSupmK11zAVSyRaVD79tqlgujPxXeJn?=
- =?us-ascii?Q?y+or8BgbfIK+QaVh9T8R/efighHj2tXszFmKwF8WiXpwmnQR23BPhWSn9qj1?=
- =?us-ascii?Q?mr7NN7epejU2oJCCMuY3cbySyO5xUtc62I4RfssyjDQoOs9s3gii5fQ7BR80?=
- =?us-ascii?Q?QEj/s5diR+OAUM810GXrrZQZHnSTOQJ6eWpfXiAZ1wPqA3RK+0RzZAA3E18K?=
- =?us-ascii?Q?q+jBoKyavUsSvDuTdFgequNOUnba12lGzjA2DmuGSLnuRQS43JfTMgEdLEUE?=
- =?us-ascii?Q?Qc55Hlz5x1nMypZhYrw0G8ZVx0EarJJOvruIlhynvS52ptUGWOHbOQtncHKA?=
- =?us-ascii?Q?NGH+dDmHHI1rH+pUj+uSTuxBu98UJlW6M3d4286qWYTt+pc5vYd4lWGH49Mx?=
- =?us-ascii?Q?DnBpZiQpocvzq8NEtaQ02auL6a4trRjl5+/HdBEQOwMgu1SfJ7memNapqyBH?=
- =?us-ascii?Q?9lJI2KgdjCrjb21eNtiCRpT+llTqLhtN2TXAisj9hT4N7SQWTKuppIYjKgIa?=
- =?us-ascii?Q?n/dHuoXTyWaKojbfMfON0IakY8NMI/uPHKb+fzVwuh75dprbwi47bv+JFtCl?=
- =?us-ascii?Q?sh70mFw1JIIZXHclT9m+t2TZLVricvcMLto4Tx/diFSth76R4KcaXp9fVSUc?=
- =?us-ascii?Q?ibsZNQ+u9HO5T93baeBUVbwJw6NtO7vZcA8e+lxK7oUSg2xPS9bMXBZ7fb7q?=
- =?us-ascii?Q?0GuoVfnQsw7FAQsI5OTbwb7zRzm6hFw55SitjPkzrxX2hX/i+jjkTR5MeTw/?=
- =?us-ascii?Q?wlNv8u95pdbroMbGLm+BJNnE6lpzz4nuRKET7KThCu6WuG8kzmUvua2SrUGq?=
- =?us-ascii?Q?JXmUiu7M2VrsccFQPN0qG72TYJO9JuayLspLp60KahXt2bw+ShuZqAC4+cua?=
- =?us-ascii?Q?tAzagMln6/9hCqDHj7P+ynu7gwx5vNMU05QT4C98H9aJOTX2dMtG8ywmIMbZ?=
- =?us-ascii?Q?r4P4CxmxCnkUCSyPGBOhjfvCxlCWLEoGYEceNMt+kN9AycNzmOgqUwin4FZ6?=
- =?us-ascii?Q?f0fsKj3ksOllt64GO6DbifbZIwfQdz5VxwciGe9UZhebq5L6GycdzSVfAbf/?=
- =?us-ascii?Q?w6bwRnIdH83jc9RRxpc=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c02b4a70-cbb1-4518-b47a-08dd7c5127b5
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 19:10:15.8593
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gMdNqFu++qVluo+HtCZRe73vGbk3qdbUa8escGu/ockA85xkQlAWhTTZ+WXLjJQ9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7143
+References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407165202.197570-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXuqYHAv+yyOJxC3kre1vaspuXmTMev0ZBixEiEo+4saQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXuqYHAv+yyOJxC3kre1vaspuXmTMev0ZBixEiEo+4saQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 15 Apr 2025 20:10:16 +0100
+X-Gm-Features: ATxdqUEF-cysVy0kHHQfaLVGmLBzVY6Pt4SqgW51HY8AGLA2rfeWDdpmyMio_Ps
+Message-ID: <CA+V-a8sbqj5LQvsfwJyO8gM+0HL5bzW4KLmzZz5YKO5tG6nbfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] clk: renesas: rzv2h-cpg: Ignore monitoring CLK_MON
+ bits for external clocks
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13 Apr 2025, at 23:46, Ankur Arora wrote:
+Hi Geert,
 
-> This series adds multi-page clearing for hugepages. It is a rework
-> of [1] which took a detour through PREEMPT_LAZY [2].
+Thank you for the review.
+
+On Tue, Apr 15, 2025 at 3:36=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
 >
-> Why multi-page clearing?: multi-page clearing improves upon the
-> current page-at-a-time approach by providing the processor with a
-> hint as to the real region size. A processor could use this hint to,
-> for instance, elide cacheline allocation when clearing a large
-> region.
+> Hi Prabhakar,
 >
-> This optimization in particular is done by REP; STOS on AMD Zen
-> where regions larger than L3-size use non-temporal stores.
+> Thanks for your patch!
 >
-> This results in significantly better performance.
+> On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Ignore CLK_MON bits when turning on/off module clocks that use an exter=
+nal
+> > clock source.
+> >
+> > Introduce the `DEF_MOD_EXTERNAL()` macro for defining module clocks tha=
+t
+> > may have an external clock source. Update `rzv2h_cpg_register_mod_clk()=
+`
+> > to update mon_index.
+>
+> So I guess you implemented this because the external clock was not
+> running, and you got into an infinite loop?
+>
+Yes, partially right but we didn't enter an infinite loop as we have a time=
+out.
 
-Do you have init_on_alloc=1 in your kernel?
-With that, pages coming from buddy allocator are zeroed
-in post_alloc_hook() by kernel_init_pages(), which is a for loop
-of clear_highpage_kasan_tagged(), a wrap of clear_page().
-And folio_zero_user() is not used.
+For the CLK_MON, the HW manual for RZ/V2H section 4.4.4.8 CGC Control
+Registers and 4.4.4.10 CGC Monitor Registers will be updated to below
+in the next version.
+ "The clock gating cells require source clocks to operate correctly.
+If the source clocks are stopped, these registers cannot be used."
 
-At least Debian, Fedora, and Ubuntu by default have
-CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y, which means init_on_alloc=1.
+Currently without the series when we turn ON the clock the CLK_ON bit
+gets set and to make sure it's turned ON the corresponding CLK_MON bit
+is checked to ensure it's ON. When a request is made to turn ON the
+clock first we check the CLK_MON bit and if it's being set we return
+early as the clock was ON. This worked OK up until now where the
+clocks used were internally generated.
 
-Maybe kernel_init_pages() should get your optimization as well,
-unless you only target hugetlb pages.
+In the case of RGMII interface where the Rx/Rx-180 clock was coming
+from an PHY on an external pin the above didn't work as expected. When
+we issued an unbind request on the glue driver all the clocks were
+gated to OFF state i.e CLK_ON bits were set to '0'. Now when the bind
+operation was requested  the clocks were requested to be turned ON, ie
+when CLK_MON bits for RX/Rx-180 reported to be '1'  that is because
+PHY was providing the clock and due to which the CLK_ON bit was unset
+(and not gated to ON state)  due to which the DMA reset operation
+failed in dwmac-core  driver.
 
-Best Regards,
-Yan, Zi
+Below is the thread,
+[0] https://lore.kernel.org/all/CA+V-a8uWY1Av8eS1k9C6Td=3DRuB4PbCnQyXbNLzmh=
+ao0nr8Spbg@mail.gmail.com/
+
+> This looks rather fragile to me. How do you know when the clock
+> is actually running, and thus usable?
+>
+I was thinking the consumer driver would request the external device
+to turn it ON/OFF.
+
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> > --- a/drivers/clk/renesas/rzv2h-cpg.c
+> > +++ b/drivers/clk/renesas/rzv2h-cpg.c
+> > @@ -569,6 +569,25 @@ static void rzv2h_mod_clock_mstop_disable(struct r=
+zv2h_cpg_priv *priv,
+> >         spin_unlock_irqrestore(&priv->rmw_lock, flags);
+> >  }
+> >
+> > +static bool rzv2h_mod_clock_is_external(struct rzv2h_cpg_priv *priv,
+> > +                                       u16 ext_clk_offset,
+>
+> unsigned int
+>
+> > +                                       u8 ext_clk_bit,
+>
+> unsigned int
+>
+> > +                                       u8 ext_cond)
+>
+> bool
+>
+Agreed I 'll change to the above.
+
+> > +{
+> > +       u32 value;
+> > +
+> > +       if (!ext_clk_offset)
+> > +               return false;
+> > +
+> > +       value =3D readl(priv->base + ext_clk_offset) & BIT(ext_clk_bit)=
+;
+> > +       value >>=3D ext_clk_bit;
+>
+> No need to shift:
+>
+>     return !!value =3D=3D ext_cond;
+>
+OK.
+
+> > +
+> > +       if (value =3D=3D ext_cond)
+> > +               return true;
+> > +
+> > +       return false;
+> > +}
+> > +
+> >  static int rzv2h_mod_clock_is_enabled(struct clk_hw *hw)
+> >  {
+> >         struct mod_clock *clock =3D to_mod_clock(hw);
+> > @@ -691,6 +710,11 @@ rzv2h_cpg_register_mod_clk(const struct rzv2h_mod_=
+clk *mod,
+> >         clock->on_index =3D mod->on_index;
+> >         clock->on_bit =3D mod->on_bit;
+> >         clock->mon_index =3D mod->mon_index;
+> > +       /* If clock is coming from external source ignore the monitor b=
+it for it */
+> > +       if (rzv2h_mod_clock_is_external(priv, mod->external_clk_offset,
+> > +                                       mod->external_clk_bit,
+> > +                                       mod->external_cond))
+>
+> Perhaps just pass "mod" instead of three of its members, to fully
+> hide the logic inside the helper function?
+>
+Agreed.
+
+Cheers,
+Prabhakar
