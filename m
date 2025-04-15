@@ -1,152 +1,153 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52152951AA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF06A2951B8
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719070; cv=none; b=JIDVilDghClwos9PvepWD6nOZxq0Neyvz41hDbgUzIgqyMRK7Ck5xW83r1yw9oUg4UYaOo8EEuQd+4K/ybLBuFN6ZULsAg9lrehyLFNfcsfDv0mjHM3F5mMsqnFlnN2Rr9WUd31S3xI2brKvS5SXE3vTeeh5iFugxaPiuczhe7o=
+	t=1744719072; cv=none; b=rO2zGrgmStVTfiSTAfb2fDRJyiTyugGl5fQUkvgE7eYcM6V5vlUnL50tVWeGwXpYHQRPEKfkUCUdzygFQi8fIE6PfKMfBz/tTncCM9xPzzI1xyzFpWwdPU1LQrIHGWG9WDxSg4UGoqwlXSYR2ob0LWU2093V6Io+z7uQqw6KUNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719070; c=relaxed/simple;
-	bh=eIVl937PhzBBGlKlkh8kLTfnaLkiCL+to/VPTSqs/hM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H/5C/PVg/8Tdbh+XCbLUtcuNvND7uYuvfUWC3m6imgdVtJP+KEc4h/s+jNRcodEDEVbKg1zS67kTD7/cGPdnOYM+HpB+1r611avVD9qpqTgMExzou4bALQ+Vv37cMEqbKnQfazsTTguj1PUqLb6e25d20lJRj90PiQzJ/IohoVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=foF0AWta; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1744719072; c=relaxed/simple;
+	bh=35HJAzaAMGt2PK2lXt0xepylkj5WH0C9Yal36V+5Y88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLjCpzKKYhfswB/O8QrbMy0zJbBH8YW9aA41k7o+uPVo8Z1i8kqVvYP+M+AnQIGpeAUvi1L4d5iYB9aT6Uj0l63hjvsExEruB4CSRixWaX/UvTv9Xak16RmG+s5xsT51rC0rVqO6lIDzByK4e3orjdJEN79q0dBnA0jnNTdIgbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RYH8oy06; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=prodVsa7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RmPe0ZZg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=um/suesF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="foF0AWta"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d7f4cb7636so7235155ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744719068; x=1745323868; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CmptmweS7lJ6GHE2wFUYE+JWDVLKYqz8ucpeUP/DcRA=;
-        b=foF0AWta9tfFoYvlXwPRsYlzEtFiE1wAxYRLdrIaOocqk0X9rmsolngwB6B1WzUH4n
-         CEou3ewTgItZZLBxlELUecQzKEfb1cQZJx4JyLpjbZC+9Ete6y9RAP0HKgORUTKY3Wzq
-         4B0gb+tQSIc6Q6WW/DD/G8y8q2DPHOgzo5BHVnN/KWC5WvECkI0n3C0C1HTyGsE2QXRj
-         FN0D+IFkdDBbu/YRXRwgKNyTguQHeegIu8G14BgZIQutRh0aACULqJK7gNU0CeUMHIFI
-         mEQNkRNRCLzx90smS29OwN5//BQLQsofCHqlJ7TgIkk6ieR+1zJjo4NAJ0MiRwlJbF/M
-         twsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744719068; x=1745323868;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CmptmweS7lJ6GHE2wFUYE+JWDVLKYqz8ucpeUP/DcRA=;
-        b=XqtFAWPRGUQ4PIBn0fIuVDCPcoSTsPdan/VVrG6YisT0XOm5YhgI5xE2F4vERybm15
-         m8qHv23os/pyfZxWGjqvY5+BodziHPRf2G3x1y4E7w0WKpzIV4FHhenhQH5aSFfM0qLw
-         k7u5HNqw+hfSwSl7/dZUm+g0zBo1Aevxt6ufEhHEYGdbpmyp990bcRYErM3nJuYqcr+y
-         JsD9iY+YKzN6OXKxM4Sa0Tp78BNclc/ZJ4Hd0fbXLd6VeyNYOYUinDdfaHZ4gBTHyWPe
-         763dXBS8CKPb2aFC4w3nP2Yb1Viu3y0GKpxkvUE9vL0yRCxGJY2H+hcvg1M0WoWvpPhl
-         WmKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCFht23jtm/Wv0YB+L6zGlUkDdidftCXJ1OhXIDsl7Pe3gFNZ7mMmPzMxHmuBLe9tlZnRLyJY3Vn4LqHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwmkI7FqWMKDifELV8xYuJxWy8rHXbo9F5lBXUV6chRDAbVARc
-	wWZ10S4k4LYzmePaRK2dt8YsQWwl5ZLtSvliqUaxWRk/qALiOERv5X7IMEo6pD0=
-X-Gm-Gg: ASbGncu6rydYDNa2bkwQ7PpD6AdRu0UTByn78XiStmghbN85BZjjxlQm0Wvd3btlaM+
-	FuAoNsAg11znZKlB8JEJe5HZ+OXGPWse4OpBT+M7WubFiMa26DWzhspDYaXpzbysZP2xFC/ObPK
-	0kvYYdV2ppZM18waRwd8s1O7rCOlRp7jVJpWRnkt2bwL7MVt9r9k9dlA3sRt1uOOyENsq60ze8m
-	26gFaSqAdP8fV2FkK+2f67BmuSp/eotr5X72sZKn6fBGHSzI6+H898RgZVan+rRngK9Ou52YhWY
-	OlEU01m3sBNuJZ+HBzW+n1+CNpk7ekgmGqtWx3ih9WVVLf8aE9se1+GDqwe/BnLRKjkLJh/387k
-	/xtlU
-X-Google-Smtp-Source: AGHT+IHJ1Ly5q6h/cItnEzYwsEqY15X2cujDF4x9G+IO1L2NReprTYetKPX12tqvaoe5ju58AuPTaw==
-X-Received: by 2002:a05:6e02:441c:10b0:3d8:975:b808 with SMTP id e9e14a558f8ab-3d80975bb69mr22117655ab.5.1744719067875;
-        Tue, 15 Apr 2025 05:11:07 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dba66fcbsm33384565ab.9.2025.04.15.05.11.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 05:11:07 -0700 (PDT)
-Message-ID: <0bbd2842-72bc-47a7-832a-fc8833163e32@riscstar.com>
-Date: Tue, 15 Apr 2025 07:11:05 -0500
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RYH8oy06";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="prodVsa7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RmPe0ZZg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="um/suesF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D1B8E21163;
+	Tue, 15 Apr 2025 12:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744719069; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
+	b=RYH8oy06pRRtPL11b40J3tCg2lAOhcPC8qbL/clK1umHdtpVscA1NhWo2iZ4kmUrVONpbH
+	Phvc8H2d2gpd1IH2PF5PozH/0Z7yqYfdQenL+zgo8xl1FzaHF59aSZXxt2VGJfqFra4t4J
+	3C8W8SzrSYAy3Ii3aqIy6j+tsoWiOls=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744719069;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
+	b=prodVsa7lpYY0FZN7EGzeIXSze2KGQYIleIhf71l7lVdb3KBm6UTLFSX0USegGP16pacPU
+	OHvLyPqvrrT878AQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RmPe0ZZg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="um/suesF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744719068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
+	b=RmPe0ZZggSVGUtKtPwJVX7l4ZyZ6qtTIhOQz81ek74WhmKJMXHJ9GC16Ex72gOKlU0Ns4Q
+	+pd572qh62JgjArINgjva4PoHPCb1OKem3eUo/DhhFyag4esmjxkR4ChqTecXuCKf3zRc/
+	COG82onKXdV4CNuXFh37+COtHIuOX8Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744719068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
+	b=um/suesFtoTECekRFCxmtUAikEU/YLnSXq77Y15juIJTKwHhb99eXj9RDoqdwujugMD1G3
+	FwxU//8YMpBhDpCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B81AD139A1;
+	Tue, 15 Apr 2025 12:11:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2PsILNxM/mefDQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 15 Apr 2025 12:11:08 +0000
+Date: Tue, 15 Apr 2025 14:11:04 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Mohamed Khalfella <mkhalfella@purestorage.com>, 
+	Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, 
+	Hannes Reinecke <hare@suse.de>, John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, 
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <4cd2cbb4-95ff-4f3b-b33b-9c066147d12b@flourine.local>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com>
+ <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
- resets
-To: Yixun Lan <dlan@gentoo.org>, Guodong Xu <guodong@riscstar.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>,
- ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com, inochiama@gmail.com,
- geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de,
- hal.feng@starfivetech.com, unicorn_wang@outlook.com,
- duje.mihanovic@skole.hr, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-References: <20250411131423.3802611-1-guodong@riscstar.com>
- <20250411131423.3802611-2-guodong@riscstar.com>
- <20250411-confider-spinster-35f23040d188@spud>
- <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
- <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
- <20250415101249-GYA30674@gentoo>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250415101249-GYA30674@gentoo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
+X-Rspamd-Queue-Id: D1B8E21163
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 4/15/25 5:12 AM, Yixun Lan wrote:
-> Hi Philipp,
+On Tue, Apr 15, 2025 at 01:28:15AM +0300, Sagi Grimberg wrote:
+> > > +void nvme_schedule_failover(struct nvme_ctrl *ctrl)
+> > > +{
+> > > +	unsigned long delay;
+> > > +
+> > > +	if (ctrl->cqt)
+> > > +		delay = msecs_to_jiffies(ctrl->cqt);
+> > > +	else
+> > > +		delay = ctrl->kato * HZ;
+> > I thought that delay = m * ctrl->kato + ctrl->cqt
+> > where m = ctrl->ctratt & NVME_CTRL_ATTR_TBKAS ? 3 : 2
+> > no?
 > 
-> On 17:54 Tue 15 Apr     , Guodong Xu wrote:
->> On Tue, Apr 15, 2025 at 4:53 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
->>>
->>> On Fr, 2025-04-11 at 17:44 +0100, Conor Dooley wrote:
->>>> On Fri, Apr 11, 2025 at 09:14:15PM +0800, Guodong Xu wrote:
->>>>> Add an optional resets property for the Marvell PWM PXA binding.
->>>>>
->>>>> Signed-off-by: Guodong Xu <guodong@riscstar.com>
->>>>> ---
->>>>>   Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 3 +++
->>>>>   1 file changed, 3 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
->>>>> index 9ee1946dc2e1..9640d4b627c2 100644
->>>>> --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
->>>>> @@ -31,6 +31,9 @@ properties:
->>>>>     clocks:
->>>>>       maxItems: 1
->>>>>
->>>>> +  resets:
->>>>> +    maxItems: 1
->>>>
->>>> Do any of the currently supported devices use a reset? If not, then add
->>>> this in tandem with the new compatible and only allow it there please.
->>>
->>> Also, if spacemit,k1-pwm can not work without the reset being
->>> deasserted, mark it as required.
-> 
-> If I inerpret correctly, only reset requires explicitly being de-asserted,
-> need to mark as required? that's being said, if reset comes out as de-asserted
->   by default after power reset, then not necessary?
-> (in other cases, some device block is in asserted state by default)
+> This was said before, but if we are going to always start waiting for kato
+> for failover purposes,
+> we first need a patch that prevent kato from being arbitrarily long.
 
-We can often benefit from the state that the boot loader has left
-things in, but I think it's better not to assume it if possible.
-I suppose it might not be required though.
+That should be addressed with the cross controller reset (CCR). The KATO*n
++ CQT is the upper limit for the target recovery. As soon we have CCR,
+the recovery delay is reduced to the time the CCR exchange takes.
 
-Anyway, the reset line is available to use; why not require it?
+> Lets cap kato to something like 10 seconds (which is 2x the default which
+> apparently no one is touching).
 
-					-Alex
-
-> thanks
->>>
->>
->> Thank you Philipp. spacemit,k1-pwm can not work without the reset.
->> I will add that in the next version.
->>
->> -Guodong
->>
->>> The driver can still use reset_control_get_optional.
->>>
->>> regards
->>> Philipp
-> 
-
+If I understood the TP4129 the upper limit is now defined, so we don't
+have to define our own upper limit.
