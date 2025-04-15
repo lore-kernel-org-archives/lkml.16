@@ -1,208 +1,137 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236EC2517BC;
-	Tue, 15 Apr 2025 22:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB77229B765
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744756020; cv=none; b=q1MA3BsiVaZCJ13bzPor0ZqrPPjETxLkK1ZJCVsRaWZ6wW97QwrwOjoCBuVR42Hzme/TktMebJ2Yne+LXm5bPB8pI2ZcX9yjbawTg6uk+/Bf9xA8wBKnxOo2PtA/I+F2a2Mbt8L7BXpgxEK4bj9UVN2zMGMnnSNUnHBOTttbV1A=
+	t=1744756204; cv=none; b=bId2XGMD5WxVPfFRq5H4qbejBhSSlXSOdVn1+rJdeTTxMpEgC97457UgRlewg+ddGtYYGbaVb01qQv/ky9Qxc6mtCERKlktesRf6eebgVnTG+2txlvvYwL4MgR4no5z6p5LQZyn44vuHNSQV/nmOzWgKEYeR2o+uajnbgBNENgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744756020; c=relaxed/simple;
-	bh=zsi89bgSmtU7lZblT+BF8md3DDnpqHXHre5LbRWl+o4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YuX6WPwqyeMMVw7DF18AItIKB4pPtnU8o24yZk0F5ImZQ59cl/FGdDi38E1JFgTix9HXRNTIQWrmaIc2DRB6+XWBixbt6oXlBZU72FfLIe0KlDreaIBN1q7L2VgHH66ifFq8XHajNzPLWDIVMUMhnEFmgZgxJy0tH9Pr/RCu8fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OliikUH7; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744756204; c=relaxed/simple;
+	bh=wKl3MM7FXDzCDATGbgnx129JDnwh2WSwaUp/wsX1kZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MqREaxTsP2hDkaIKbNHrLC87fJQpFfT+pBaJ/oasrtWAhq+1RHiGut0SnvYsEgKjNMpCmBhDYXEExvTUMu9PXDC+sqU92aCe7EAS5IRHGvdP8riFO//QjczT5LN/Q+rzq9CfiodY3AWkiwDWzknbGzP1AGF2O4Rj7m6aIyTFWrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=K9jGjS7Y; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OliikUH7"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c08f9d0ef3so358844085a.2;
-        Tue, 15 Apr 2025 15:26:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="K9jGjS7Y"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-85da5a3667bso162666839f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:30:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744756018; x=1745360818; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tEYNZDctBCSE23/ne3WNMM44X6P5xxUVs1sGie06hNs=;
-        b=OliikUH7gnYvgkoOtXLt8ljQ2nDvaMRMGS5vVzn7+PTiVyqRg4ZJmvKV92vRigU3Wt
-         sCs9Eg/SyXiCg1LOxlvEwx9I/WrGfgGJMiwRPsB3nJ3zbTbVlpqmXvKWtPVh3wAkfbL7
-         CsxBzE026vQcRC/5PYV8watREqX4eZwGwJrTJ2NTNdsmHrh6zsw4RSNaIZGHXmeJUqa4
-         o+018zz7rZ05S9DOMDgvhWsJq2HzuEzBPLaV4NS53wyYeXDcGMeyltQNyJtclPCl4wd0
-         xFhlVxXdmPu29eLT7zP7Sv9pQ0/aPKXXufo2TnFyAZfy/bTLRjgeM1L64hMdoEdnUTrf
-         +2sg==
+        d=linuxfoundation.org; s=google; t=1744756201; x=1745361001; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xxv2Ry9G5/Mwctn9/k3++kcO0+SDSPIiurKACbRUHSg=;
+        b=K9jGjS7Yk4/MsHOMT3xJkdOUxlFpb31ctqRHVGSYl1bBsfQcrMxN+EmfTHC6pvamd3
+         2Jy5xjPSqPvgcwhs/uyT/MDwoqe4lPngJjQzuDBPBVSEdmEH7sNe+oh/9DXSmyggp9t9
+         E9I+zqT+YORTrC5PyfO9KUwb/y0uF3AXgvxng=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744756018; x=1745360818;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tEYNZDctBCSE23/ne3WNMM44X6P5xxUVs1sGie06hNs=;
-        b=rWWTKaX5/c+tRDm4e+gV+OXB5Xmvfm5luekfr3fgBVOpWu+/0vR4Dwv9yA2veixZo5
-         XuvhjFv03sL90PJ56QN1AaxxoTkC+Q3RhYOpQAnh9EBeyxkixzjbR5RGOCl35proKeJW
-         orbLTFbIuvcZHc7A5k8kVHYNl41olYktxvmV0hBxLu8MoHYOOdW3f974aCRPVs83XyuF
-         tJlM1PvlWiXu2b0IeRHMZM9shsXNKiUsa4Y9AxIJ5m3dTBcKACd94BW3dfs4kB5NbKq0
-         fjKJBJm2F6d5YRKN3Gd0oJ8e2ZpjKfPcKQg9pxMvzrfGb/AOg+KYsB8Q4FJ6OCSx/YrC
-         rnFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV046dcZvJ7lNWegFP2wEoSIsyM/jOQxp+FIt1kbosT0iylBiYpNqZRTUJ0iViieCaw12YH4Vy9flk=@vger.kernel.org, AJvYcCXHcqU/ACoRFw+MYLW4ucfDFqUf5WsxiFZ6OgVtOTnD5efCHKSGM+gYJn+B6TyFpJxDtQciS0P7h5Rm8mFX@vger.kernel.org
-X-Gm-Message-State: AOJu0YywoEYxM7eLam6F40AYqYc1hC28VXRv9dl52UdRWKiW6GzlnXMS
-	LbtTjS1UpnwTgBDeyBdkCWI7vcHnjrwF/UDq1kNbEdZcDSMqtvHr
-X-Gm-Gg: ASbGnctV/x23OXvR71MmffkYSvz6FB4NTBxZPfw1R/fKDRbZCte/QTaAqGGyI6pnZCA
-	UspG8RS0vC73FoAKXkbS30vgBSWpZcAF6OkJdT1pj/DR/+l3guP//++aBIXkxwyfg/2m5kNAGcV
-	xCmjOdTWkCEBgqeRT1fe8Z2HUSlEjfmgQ0o6s8NP1n/kNbRD0DPSG3Q+ftCdDqHna/ztW7EODSi
-	UqatgOHFwf84OaE22Znj+sfYPMSrtxIajRMH9MPOXoDqvGZj3AqLMWTvpkHJuuNDWsju6RFweAy
-	XQ39hAWcnTPT3Lf1P4tV8TT6Df7RyMbN5sBVQPheMXmfSrUa5lTTxPQ=
-X-Google-Smtp-Source: AGHT+IFBHn0VTQXG525RZ9QG9jMGNPm1rALizW+qaDZYU0/aS/yRxxUN3aj2878kI9kfa9Z9sCaOVg==
-X-Received: by 2002:a05:620a:31a3:b0:7c5:9b93:8f64 with SMTP id af79cd13be357-7c91424103emr213318985a.37.1744756017807;
-        Tue, 15 Apr 2025 15:26:57 -0700 (PDT)
-Received: from theriatric.mshome.net ([73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796edc1af2sm98154531cf.69.2025.04.15.15.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 15:26:57 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: gregkh@linuxfoundation.org,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Michael.Hennerich@analog.com
-Cc: gshahrouzi@gmail.com,
-	skhan@linuxfoundation.org,
-	kernelmentees@lists.linuxfoundation.org
-Subject: [PATCH] iio: accel: adis16203: Fix single-axis representation and CALIBBIAS handling
-Date: Tue, 15 Apr 2025 18:26:52 -0400
-Message-ID: <20250415222652.545026-1-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1744756201; x=1745361001;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xxv2Ry9G5/Mwctn9/k3++kcO0+SDSPIiurKACbRUHSg=;
+        b=NHMt3sDa3tUSIGRMq05vY/ceo6HmYBnUNwlG322mDMcm211j2OEehl8TseIwunA/Pf
+         MLqyLyDcX/YMFvpcqCDbyKZl5/yLIqSya6gNlC9/Dtr0eBTa+DjgLUZmU3pZtW7aQuB+
+         LYNGCljinXkAcjR2qTRSTtUcwAY1lvEe8PDrxK8YeZ5xT0T8jyBpP0VYlzX5WNe2Pvgb
+         OIuqFqBwAndWl3yUMYGpUBRxdLzxOQ9+4S4HqlXcqxyecShrwc7GHaTEEXaknswrI9uh
+         0DSDAabCfsvOiOBuUz/tFsBOjgThn1ySrDmgOzdjwSzyvFKL0NcM3OFNghytrO9Eg8lA
+         PO2g==
+X-Forwarded-Encrypted: i=1; AJvYcCURWcIKVbOVx+zw7idRSktYDKpTwCkhpVQ9HukbYuYWr/PYWNPFn/qhIw6+8lun6KsTkdDCRcMiRJ28Vec=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9IE5yaHj4sd/a+o1xM83oZQ8m4dWBhGeghwtloVXljbNZszw/
+	hAGsn0GcIk6FIt5BQ6wzYWsTTSr9tXTLg19akhbof07chItDM0a+VYKu5wWNH4E=
+X-Gm-Gg: ASbGnct57RvIV5mRAwaTG6/BTaRFbeubvjMkbPQvGa3rk5O7ouCLjELHaMLq7ToWcoq
+	BrNzueGwBPoAX03NJYvXx5Z777Qt7WvrwY/pFO+/qL6bPS/pL4GjAmN1nZTiUqHmxaiRUg2xHMQ
+	uhvF0VV0R/Zgdi5uySY6a91xQEnMuCVtAXq9vpdRWB/nrS3wYvabMDleK2wENJQMxucpkGNtsr2
+	/1XfCiW4ZbjDSC6/iPdas8ve3JfkJQccX94a/TguXCIj5bEsP/8T0nweWUvy44c76cgCBszj8xh
+	/x5V2sN406moJy+qQCz0MuCE+wmwLvuFa41QMqvbkbi3EixvfjQ=
+X-Google-Smtp-Source: AGHT+IHOZ+RTZXy6sacBuLPEHF8OMXx2BT/caUmTINLpWXbREX/h7NcMttc6rjPSa8ER+8UQlfvK6g==
+X-Received: by 2002:a05:6602:408a:b0:85e:1879:c708 with SMTP id ca18e2360f4ac-861bfbf4ab2mr131533439f.1.1744756199733;
+        Tue, 15 Apr 2025 15:29:59 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-861656c8f96sm270650239f.34.2025.04.15.15.29.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 15:29:59 -0700 (PDT)
+Message-ID: <88a4052c-ac37-4958-af2a-a3066e8b82bd@linuxfoundation.org>
+Date: Tue, 15 Apr 2025 16:29:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: sev_es_trampoline_start undefined symbol referenced errors during
+ kunit run
+To: Borislav Petkov <bp@alien8.de>
+Cc: thomas.lendacky@amd.com, David Gow <davidgow@google.com>,
+ "x86@kernel.org" <x86@kernel.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
+ <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+ <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+ <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
+ <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
+ <20250415221702.GMZ_7a3meDh4e0L11s@fat_crate.local>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250415221702.GMZ_7a3meDh4e0L11s@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The ADIS16203 is a single-axis 360 degree inclinometer. The previous
-driver code incorrectly represented this by defining separate X and Y
-inclination channels based on the two different output format registers
-(0x0C for 0-360 deg, 0x0E for +/-180 deg). This violated IIO conventions
-and misrepresented the hardware's single angle output. The 'Fixme'
-comment on the original Y channel definition indicated this known issue.
+On 4/15/25 16:17, Borislav Petkov wrote:
+> On Tue, Apr 15, 2025 at 01:06:49PM -0600, Shuah Khan wrote:
+>> Does your arch/x86/realmode/rm/pasyms.h has reference to sev_es_trampoline_start?
+>>
+>> The one in my tree has it.
+>>
+>> arch/x86/realmode/rm/pasyms.h:pa_sev_es_trampoline_start = sev_es_trampoline_start
+> 
+> 
+> # ./tools/testing/kunit/kunit.py run --arch x86_64
+> ...
+> 
+> [00:15:36] Elapsed time: 58.840s total, 2.096s configuring, 53.170s building, 3.487s running
+> 
+> # cat arch/x86/realmode/rm/pasyms.h
+> cat: arch/x86/realmode/rm/pasyms.h: No such file or directory
+> 
+> Could explain why I don't see the issue...
+> 
 
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
-Not sure to put a fixes tag here or not because the driver used to be
-spread out across multiple files until it was whittled down to one file
-using a common interface for similar devices.
----
- drivers/staging/iio/accel/adis16203.c | 52 ++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+I see arch/x86/realmode/rm/pasyms.h on my system. It is a generated
+file from arch/x86/realmode/rm Makefile
 
-diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/iio/accel/adis16203.c
-index c1c73308800c5..73288121bf0bd 100644
---- a/drivers/staging/iio/accel/adis16203.c
-+++ b/drivers/staging/iio/accel/adis16203.c
-@@ -28,11 +28,11 @@
- /* Output, temperature */
- #define ADIS16203_TEMP_OUT       0x0A
- 
--/* Output, x-axis inclination */
--#define ADIS16203_XINCL_OUT      0x0C
-+/* Output, 360 deg format */
-+#define ADIS16203_INCL_OUT       0x0C
- 
--/* Output, y-axis inclination */
--#define ADIS16203_YINCL_OUT      0x0E
-+/* Output, +/-180 deg format */
-+#define ADIS16203_INCL_180_OUT   0x0E
- 
- /* Incline null calibration */
- #define ADIS16203_INCL_NULL      0x18
-@@ -128,8 +128,7 @@
- #define ADIS16203_ERROR_ACTIVE          BIT(14)
- 
- enum adis16203_scan {
--	 ADIS16203_SCAN_INCLI_X,
--	 ADIS16203_SCAN_INCLI_Y,
-+	 ADIS16203_SCAN_INCLI,
- 	 ADIS16203_SCAN_SUPPLY,
- 	 ADIS16203_SCAN_AUX_ADC,
- 	 ADIS16203_SCAN_TEMP,
-@@ -137,10 +136,6 @@ enum adis16203_scan {
- 
- #define DRIVER_NAME		"adis16203"
- 
--static const u8 adis16203_addresses[] = {
--	[ADIS16203_SCAN_INCLI_X] = ADIS16203_INCL_NULL,
--};
--
- static int adis16203_write_raw(struct iio_dev *indio_dev,
- 			       struct iio_chan_spec const *chan,
- 			       int val,
-@@ -148,10 +143,15 @@ static int adis16203_write_raw(struct iio_dev *indio_dev,
- 			       long mask)
- {
- 	struct adis *st = iio_priv(indio_dev);
--	/* currently only one writable parameter which keeps this simple */
--	u8 addr = adis16203_addresses[chan->scan_index];
- 
--	return adis_write_reg_16(st, addr, val & 0x3FFF);
-+	switch (mask) {
-+	case IIO_CHAN_INFO_CALIBBIAS:
-+		if (chan->scan_index != ADIS16203_SCAN_INCLI)
-+			return -EINVAL;
-+		return adis_write_reg_16(st, ADIS16203_INCL_NULL, val & 0x3FFF);
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
- static int adis16203_read_raw(struct iio_dev *indio_dev,
-@@ -161,7 +161,6 @@ static int adis16203_read_raw(struct iio_dev *indio_dev,
- {
- 	struct adis *st = iio_priv(indio_dev);
- 	int ret;
--	u8 addr;
- 	s16 val16;
- 
- 	switch (mask) {
-@@ -194,8 +193,9 @@ static int adis16203_read_raw(struct iio_dev *indio_dev,
- 		*val = 25000 / -470 - 1278; /* 25 C = 1278 */
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_CALIBBIAS:
--		addr = adis16203_addresses[chan->scan_index];
--		ret = adis_read_reg_16(st, addr, &val16);
-+		if (chan->scan_index != ADIS16203_SCAN_INCLI)
-+			return -EINVAL;
-+		ret = adis_read_reg_16(st, ADIS16203_INCL_NULL, &val16);
- 		if (ret)
- 			return ret;
- 		*val = sign_extend32(val16, 13);
-@@ -206,13 +206,23 @@ static int adis16203_read_raw(struct iio_dev *indio_dev,
- }
- 
- static const struct iio_chan_spec adis16203_channels[] = {
-+	{
-+		.type = IIO_INCLI,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+					BIT(IIO_CHAN_INFO_SCALE) |
-+					BIT(IIO_CHAN_INFO_CALIBBIAS),
-+		.address = ADIS16203_INCL_180_OUT,
-+		.scan_index = ADIS16203_SCAN_INCLI,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 14,
-+			.storagebits = 16,
-+			.shift = 0,
-+			.endianness = IIO_CPU,
-+		},
-+	},
- 	ADIS_SUPPLY_CHAN(ADIS16203_SUPPLY_OUT, ADIS16203_SCAN_SUPPLY, 0, 12),
- 	ADIS_AUX_ADC_CHAN(ADIS16203_AUX_ADC, ADIS16203_SCAN_AUX_ADC, 0, 12),
--	ADIS_INCLI_CHAN(X, ADIS16203_XINCL_OUT, ADIS16203_SCAN_INCLI_X,
--			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
--	/* Fixme: Not what it appears to be - see data sheet */
--	ADIS_INCLI_CHAN(Y, ADIS16203_YINCL_OUT, ADIS16203_SCAN_INCLI_Y,
--			0, 0, 14),
- 	ADIS_TEMP_CHAN(ADIS16203_TEMP_OUT, ADIS16203_SCAN_TEMP, 0, 12),
- 	IIO_CHAN_SOFT_TIMESTAMP(5),
- };
--- 
-2.43.0
+Here is the target information.
+
+REALMODE_OBJS = $(addprefix $(obj)/,$(realmode-y))
+
+sed-pasyms := -n -r -e 's/^([0-9a-fA-F]+) [ABCDGRSTVW] (.+)$$/pa_\2 = \2;/p'
+
+quiet_cmd_pasyms = PASYMS  $@
+       cmd_pasyms = $(NM) $(real-prereqs) | sed $(sed-pasyms) | sort | uniq > $@
+
+targets += pasyms.h
+$(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
+         $(call if_changed,pasyms)
+
+The key is how and why this file gets generated and why the reference
+
+pa_sev_es_trampoline_start = sev_es_trampoline_start
+
+is added unconditionally even when  CONFIG_AMD_MEM_ENCRYPT is not
+enabled. I think the logic should be fixed to take AMD_MEM_ENCRYPT
+enabled or disabled into account when this pasyms.h file is generated.
+
+kunit test run starts with no config file and generates its own, so it
+isn't coming from any existing config.
+
+thanks,
+-- Shuah
+
+
 
