@@ -1,135 +1,125 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1D422155D;
-	Tue, 15 Apr 2025 17:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B852E20DF4
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744739685; cv=none; b=n4wARz/rVCMaDaO/ASV5msLiXrOm/zo7PWsQuy1Bul8sQgDVUzNTGwW9m3Edm96exaL+y3tDBnfvMZviRhMCwaK5YPSylqkBZ3Px7IpTuAbbng/GJURM2eOfEgwweo3lxhmD0HjfKFJ8fxBa7uytqE8tZZeOCDiwX0pfzN2vIF0=
+	t=1744739764; cv=none; b=SQJvS4rsA/1r0Uu5EAyblpDSTyNq8+yY3GjWqdblL0R/x8DFe5/PUWeslcfvyfMKICGcPTiivDL1I91QwoyR3myCOMOu3W3fY4C07uOi2yITuL1y8FTLdgz/J2akqAgMIPpCvkP3lFiV0E6nER4eWgg2ewP2ogVNSHGoUZ/DUMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744739685; c=relaxed/simple;
-	bh=69w5XRAVRo4B8tW8B+6me/eiI+8uGbt4kOiC78uyOTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nxf51o7V6/VfhE4uSbXvJhZ0IHfMZNt6b93ImxGJJ+1qMpRLtm8z3L4Srgs15A+eMuzI3KMj/3vD70Zfjg84am2FOcKFw7oPPVPZlGS2qd+t/yAwI+E+y/rkZz++vpVD/kIuHQAgBAQg2vs0AkDfJ2wwlhSuDVCuRHGLlGmaITQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KiEi9yA6; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744739764; c=relaxed/simple;
+	bh=c86fNt+ApUHvVvZcEbUJVjVRreBXvM73091hrP4qKdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ex2SqQt5SRfEPSc5FFnazpblCmWvHR6VcBq78NMF600A4TKr71tCS3rr/QOJ5WEJxSMSUJ6NAlb1JyC60+GkXWWCU2uubob9xqTm7/9LZngAX2h/HcQiKDPwrRoXVt3pIEl2ztETtPR61z8pErs2+Fu4bFT+Vl4vFYYOH77o8Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FscDal+g; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KiEi9yA6"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53FHsB8H2944048
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 15 Apr 2025 10:54:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53FHsB8H2944048
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744739658;
-	bh=pNndxC21p/pG47yKhAM5OiOsZZCcOgZwxSGhU/cAUvo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KiEi9yA6ruqqdF2JUjfioY3jS2/UX/SSTCdvPiEX8j5tzphKYrItz8YbwBG6cRk3b
-	 OAMQlysFsrRvNm+KoEKxyXfL4NXrMR+PzCxMVtSA5PbsVZ16s9kL3mwuYgrYVqp78R
-	 QvlkTHan0hoOUyrPRt4KbbWm0odI/W3btdIXEW9ku4MqRnucV2QQr2feJluqQXo0y2
-	 QSH/phXacbtci5h+v6ErUirSD5UHQwm8VwbixmQ0plfsGDUgYGFaBKaim1mDDpZhCH
-	 iiccAjkLAboE/wV3krjnyRoyFkhRBDyXYsxNYp6qIJkgknff6D/yY7OqdSM74Qzg3H
-	 iYvEDRRIIAMBQ==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, peterz@infradead.org,
-        jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
-        rafael@kernel.org, lenb@kernel.org
-Subject: [PATCH v1 3/3] x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES to X86_FEATURE_AMD_HTR_CORES
-Date: Tue, 15 Apr 2025 10:54:10 -0700
-Message-ID: <20250415175410.2944032-4-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415175410.2944032-1-xin@zytor.com>
-References: <20250415175410.2944032-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FscDal+g"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so64105805e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744739761; x=1745344561; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3dii88vxy+0kWYHHaG5dKqAQf7HwnhiHLf0E63iO/PI=;
+        b=FscDal+gBVAsIc7PKqe4zEohMeameRYvG19PTSvxH9raAoSZCyfPZXK4KBUGki4az3
+         VLV27CQ8wwQjijMk59u3SfN5DH1vmEfLnYg9XffRUXNznO/q1DcwLYsj4374cjyawmw9
+         8iW1fpYzW8/y1aMaiC0nEYgIG0p3N9NKzQ8+hjdsd3N+aDike6HGF113ZTvqYmSqANrm
+         5JOowfQUJPF/Y07BsBssJyfYvsD8r6YLlmwwoMb1cYAeHNcGsK7Ypf/3AFSlS5W2ir+5
+         mcMC33fSteuqsWP38kvu8GEN34AQwYqsuyBzOc6lzaihN3x9KycAE0XhWzhlmS9eu4f1
+         dPAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744739761; x=1745344561;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3dii88vxy+0kWYHHaG5dKqAQf7HwnhiHLf0E63iO/PI=;
+        b=MfN4Me/qe25MT5/KZEgZiJTANgMmZeSOXsB4FVZF5XuDOMVMbAU0LvZyXCoxHUblb0
+         khQuTptIZFL2hY2gyRh7os+UBIWDKCfzIOSMhd9ICNZmj3CyUF5CY7zNfEWNiPxpn9x8
+         y2gMz8qFxOyUWEbeCyKyLcgldzIOEqPzOcgrGNbdttNuxAs52+vjRBXN+2zHOwvF7oru
+         wwMPnZBcuExhrogkdhX9x1dXMMdcsRru3DsUYQPNokQiGEf8zVjgp8mJthpJoFinKQle
+         3YMkK0uTuuRNGS8+J75qAdIKySSkdqSjU5JbqgAPiVwS5Ixn1R1ed3uCf5ObL8om6BBw
+         RgAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXU0DBjq9iyho80guvRynSpRFNH7ApIxFje5Zfv/cJWSiGfDvZHcKe4T2QHFB1B2kG4MMJUUzgnbtBgyxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3TJKnTfdGvu0u9eAhXJbf+3MDsSidy7HKLXnSD4vCjxD3I6Bk
+	AcQEfqJh2E4W0cmzhPCtQV1mAC2u9gnRyZzP21Z6gqXYCD8WPOZm
+X-Gm-Gg: ASbGncsn/wWGEZFxw4QhEsBYYU658htiS6Rm96nrexHaGd8mXOzXzrctzG0bKH5JxLj
+	fIKUKX8e6FUjlx4oSfPoG+w5Aq72k8xfgDL0EMSldWKaP+V80UrQlE/WYr9eZhBzrxIaEbU4VPI
+	01Ivydb4yaOuaBK74ecFJm7eiAFqvkLo1/9GQtdkuNeHeXE+YNnq7xM+f5grk7Ej+HeUm8HFKQP
+	aQ95F0KJw0/HXTx6eAG4gksjG9s4eVzT639J467NxTORnrJVLATWCLQ1wc6Av6pPvv/l3N0bhr4
+	U7UGAgX0i/XfnTOJ3ZfJPduFwS6+Bh6tFG1SEkFDE/Cc0TqR0wW90i9XE3dyp3gxc02Zb7dW68I
+	MrsOk7Nr8f6SsEg==
+X-Google-Smtp-Source: AGHT+IGptWUhUPghhzbUlnMiXUjXKLkOLTWNhwNQRBrnxW8Pmu0xPEUxkmF80iqK/Ldomew+G/oa5A==
+X-Received: by 2002:a05:600c:a42:b0:43c:fdbe:4398 with SMTP id 5b1f17b1804b1-4405a001461mr524545e9.6.1744739760718;
+        Tue, 15 Apr 2025 10:56:00 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2066d069sm221245635e9.17.2025.04.15.10.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 10:56:00 -0700 (PDT)
+Date: Tue, 15 Apr 2025 18:55:58 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-um@lists.infradead.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>, Anton
+ Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] um/asm: Replace "REP; NOP" with PAUSE mnemonic
+Message-ID: <20250415185558.112621df@pumpkin>
+In-Reply-To: <20250414145650.10776-1-ubizjak@gmail.com>
+References: <20250414145650.10776-1-ubizjak@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES to X86_FEATURE_AMD_HTR_CORES
-to make the last column aligned consistently in the whole file.
+On Mon, 14 Apr 2025 16:55:57 +0200
+Uros Bizjak <ubizjak@gmail.com> wrote:
 
-Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/include/asm/cpufeatures.h       | 2 +-
- arch/x86/kernel/acpi/cppc.c              | 2 +-
- arch/x86/kernel/cpu/scattered.c          | 2 +-
- arch/x86/kernel/cpu/topology_amd.c       | 2 +-
- tools/arch/x86/include/asm/cpufeatures.h | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+> Current minimum required version of binutils is 2.25,
+> which supports PAUSE instruction mnemonic.
+> 
+> Replace "REP; NOP" with this proper mnemonic.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> ---
+>  arch/x86/um/asm/processor.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/um/asm/processor.h b/arch/x86/um/asm/processor.h
+> index 478710384b34..233a7a0d29c9 100644
+> --- a/arch/x86/um/asm/processor.h
+> +++ b/arch/x86/um/asm/processor.h
+> @@ -24,7 +24,7 @@
+>  /* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+>  static __always_inline void rep_nop(void)
+>  {
+> -	__asm__ __volatile__("rep;nop": : :"memory");
+> +	__asm__ __volatile__("pause": : :"memory");
+>  }
+>  
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 78d0fd7dd690..25243d93d106 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -478,7 +478,7 @@
- #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
- #define X86_FEATURE_CLEAR_BHB_LOV	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
- #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
--#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
-+#define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
- #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
- 
-diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
-index 78b4e4b40985..7047124490f6 100644
---- a/arch/x86/kernel/acpi/cppc.c
-+++ b/arch/x86/kernel/acpi/cppc.c
-@@ -272,7 +272,7 @@ int amd_get_boost_ratio_numerator(unsigned int cpu, u64 *numerator)
- 	}
- 
- 	/* detect if running on heterogeneous design */
--	if (cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES)) {
-+	if (cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES)) {
- 		switch (core_type) {
- 		case TOPO_CPU_TYPE_UNKNOWN:
- 			pr_warn("Undefined core type found for cpu %d\n", cpu);
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 16f3ca30626a..c75c57b32b74 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -53,7 +53,7 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_PERFMON_V2,		CPUID_EAX,  0, 0x80000022, 0 },
- 	{ X86_FEATURE_AMD_LBR_V2,		CPUID_EAX,  1, 0x80000022, 0 },
- 	{ X86_FEATURE_AMD_LBR_PMC_FREEZE,	CPUID_EAX,  2, 0x80000022, 0 },
--	{ X86_FEATURE_AMD_HETEROGENEOUS_CORES,	CPUID_EAX, 30, 0x80000026, 0 },
-+	{ X86_FEATURE_AMD_HTR_CORES,		CPUID_EAX, 30, 0x80000026, 0 },
- 	{ 0, 0, 0, 0, 0 }
- };
- 
-diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
-index 535dcf511096..4f7a5b737a7f 100644
---- a/arch/x86/kernel/cpu/topology_amd.c
-+++ b/arch/x86/kernel/cpu/topology_amd.c
-@@ -182,7 +182,7 @@ static void parse_topology_amd(struct topo_scan *tscan)
- 	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT))
- 		has_topoext = cpu_parse_topology_ext(tscan);
- 
--	if (cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES))
-+	if (cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES))
- 		tscan->c->topo.cpu_type = cpuid_ebx(0x80000026);
- 
- 	if (!has_topoext && !parse_8000_0008(tscan))
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 3e04290131d7..8f8a7db27eb9 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -478,7 +478,7 @@
- #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
- #define X86_FEATURE_CLEAR_BHB_LOV	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
- #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
--#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
-+#define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
- #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
- 
--- 
-2.49.0
+That only makes sense if you also change the function name.
+
+	David
+
+>  static __always_inline void cpu_relax(void)
 
