@@ -1,191 +1,91 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EBA27FD68
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6110F224D7;
+	Tue, 15 Apr 2025 12:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721290; cv=none; b=brDv4L+DRv8aylLWIElHxP6xNfVr+uPjE+/7f0T3Td0/YUNFiNGexZ6Edndir5/4SQRZKshjMGvze+hJ6aus9R7R73nvqTl9PVGSqKjB+KDZc6j1L84K7X9YdMVYVFCfVcAYjTdXZTHq9VXGYurETx6dhcVVB/VCh+HM5KiHGQ8=
+	t=1744721409; cv=none; b=fkrYQiVqX1Hkpxl0fbodXAVAPNhtcfModKSPBkqQTSlv2YPE8dTg/4rd9BR7muut+EOmRV7pGUoMBtlJ19Vp9KF9sy729YILnZXCtg4AFCPideikoms+HYizXqyThV6GGjHyH4e32sWyWSIhwp4/gH6SOS2adLip8n0N5Aoy2Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721290; c=relaxed/simple;
-	bh=s26d8NibrBoe4HfrngAljOoVeuiMAAVUJ1TuWa2KGzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jPwfA5ZMhqLaQ7eRzTko1oMubqpLV0LyA8tiSvzzOLMq5Yw4dvQ4c5SYdfxl5RKh+zZo/uQ/OUtCJt/DX37fgtRnMSgHv4P3nuLOhppO+9XxK3HbyhbT1NS9OkBil/NuiI7yTHNJr0QMRTQFp6jg2dOkmBSDSmY4KlZd43MiW2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UnMhwj61; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744721409; c=relaxed/simple;
+	bh=rezgQpPxWltmaUqTygJWKXVQNgPGjrBMHbxeUkuR0zI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cE/V4bHPy45NQNZVGfS0Qp2+FqZAtGl5ckwVWkgW6LSgk/9sYRpmVu93z3FGQkuQyLObO3f/Err0glRKRzfpHuKKg3PXphnoqIjZWlccDmmaBlzU3hLXkuBdtBZ+5a8QalPP6Vw9rdl8hqZlg4169WQ09dDbqxXaqdQ1P8qljms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqtWyGat; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UnMhwj61"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C999943A0C;
-	Tue, 15 Apr 2025 12:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744721286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NBTAN6u16sCml/bPZVMxPyD0/J+1qZXfy9mfbzxczWQ=;
-	b=UnMhwj61u1MR2FS8bGkFmkPzvx+5iOKmqapx0OGMjNGEmhzcAZ+iYvx/lBRjuEDwG5AeTr
-	sY4mUN2ot/JBTeXAsY5iVtotwy4RNxHP5ThQja0gKnrIuYdb+1Z+/UBhCkccKaRsilzLqY
-	Lt6/xkw0PDmUS3Gv1EtyDE6TmEYOAMzExFCwu3KE+tp3+MFyvRqf7/YD9HtbnvP1HP5qyK
-	jNwqUB9X8EmR3NqJSCxfoD8QLQ1z+YQ8SZHu5sw/uDE5VSD30v7aHJGbC9fwJROe1DnH5h
-	Ddq666eXdfjbAw4YWbGXLIDDyo5ukP6587Qf7M8lsjqzMn9CsU2IvBt7n1MOEA==
-Message-ID: <7480ebe0-30ac-4ef5-8c13-6e3ac0c57193@bootlin.com>
-Date: Tue, 15 Apr 2025 14:48:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqtWyGat"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439EEC4CEDD;
+	Tue, 15 Apr 2025 12:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744721408;
+	bh=rezgQpPxWltmaUqTygJWKXVQNgPGjrBMHbxeUkuR0zI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OqtWyGatGL1qLaRO2Khl8JH8yVvfqnY2ct4YvkbR3HeQkU1fN2PTLWH7+0JpmTAcD
+	 Oxn1qPTcFHF50TlS1Q/FwM5uBFG/p0ras3kuGbJMRM6V5eZj/nFsXHniArz8mRVh8m
+	 tZfXG2pEqnueH6OttcojF19NGIrKu+k7jf6/EiUbrK/ccMd5BgKxA0iC3kF6gE1S62
+	 tb8vW+cZduTlRLsDJXw+2Y+Usg++u52eZCo8bjVCiK6QZEgkIV4y5GMhVfxgDeTe5k
+	 1g59FcPM1uhCF1Y3yOB4+cmD6TJyf5IrNrJDV71g4ScZS1CtTkem3wmru6ZOcMTZ2F
+	 TUkdxkABikXLQ==
+Date: Tue, 15 Apr 2025 14:50:02 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, david.m.ertman@intel.com,
+	ira.weiny@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu,
+	airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] rust: auxiliary: add auxiliary registration
+Message-ID: <Z_5V-uznqkAvrf9p@cassiopeiae>
+References: <20250414131934.28418-1-dakr@kernel.org>
+ <20250414131934.28418-5-dakr@kernel.org>
+ <Z_5M5Auqj2KK-rPz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/16] drm/vkms: Allow to update the connector status
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250407081425.6420-1-jose.exposito89@gmail.com>
- <20250407081425.6420-16-jose.exposito89@gmail.com>
-Content-Language: en-US
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <20250407081425.6420-16-jose.exposito89@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepm
- hgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_5M5Auqj2KK-rPz@google.com>
 
-
-
-Le 07/04/2025 à 10:14, José Expósito a écrit :
-> Implement the drm_connector_funcs.detect() callback to update the
-> connector status by returning the status stored in the configuration.
+On Tue, Apr 15, 2025 at 12:11:16PM +0000, Alice Ryhl wrote:
+> On Mon, Apr 14, 2025 at 03:18:07PM +0200, Danilo Krummrich wrote:
+> > +impl Registration {
+> > +    /// Create and register a new auxiliary device.
+> > +    pub fn new(parent: &device::Device, name: &CStr, id: u32, modname: &CStr) -> Result<Self> {
+> > +        let boxed = KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)?;
+> > +        let adev = boxed.get();
+> > +
+> > +        // SAFETY: It's safe to set the fields of `struct auxiliary_device` on initialization.
+> > +        unsafe {
+> > +            (*adev).dev.parent = parent.as_raw();
+> > +            (*adev).dev.release = Some(Device::release);
+> > +            (*adev).name = name.as_char_ptr();
+> > +            (*adev).id = id;
+> > +        }
+> > +
+> > +        // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
+> > +        // which has not been initialized yet.
+> > +        unsafe { bindings::auxiliary_device_init(adev) };
+> > +
+> > +        // Now that `adev` is initialized, leak the `Box`; the corresponding memory will be freed
+> > +        // by `Device::release` when the last reference to the `struct auxiliary_device` is dropped.
+> > +        let _ = KBox::into_raw(boxed);
+> > +
+> > +        // SAFETY:
+> > +        // - `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`, which has
+> > +        //   been initialialized,
+> > +        // - `modname.as_char_ptr()` is a NULL terminated string.
+> > +        let ret = unsafe { bindings::__auxiliary_device_add(adev, modname.as_char_ptr()) };
+> > +        if ret != 0 {
+> > +            // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
+> > +            // which has been initialialized.
+> > +            unsafe { bindings::auxiliary_device_uninit(adev) };
 > 
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> Does this error-path actually free the box?
 
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-
-> ---
->   drivers/gpu/drm/vkms/vkms_connector.c | 28 +++++++++++++++++++++++++++
->   drivers/gpu/drm/vkms/vkms_connector.h |  3 +++
->   2 files changed, 31 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_connector.c b/drivers/gpu/drm/vkms/vkms_connector.c
-> index 48b10cba322a..89fa8d9d739b 100644
-> --- a/drivers/gpu/drm/vkms/vkms_connector.c
-> +++ b/drivers/gpu/drm/vkms/vkms_connector.c
-> @@ -5,9 +5,37 @@
->   #include <drm/drm_managed.h>
->   #include <drm/drm_probe_helper.h>
->   
-> +#include "vkms_config.h"
->   #include "vkms_connector.h"
->   
-> +static enum drm_connector_status vkms_connector_detect(struct drm_connector *connector,
-> +						       bool force)
-> +{
-> +	struct drm_device *dev = connector->dev;
-> +	struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
-> +	struct vkms_connector *vkms_connector;
-> +	enum drm_connector_status status;
-> +	struct vkms_config_connector *connector_cfg;
-> +
-> +	vkms_connector = drm_connector_to_vkms_connector(connector);
-> +
-> +	/*
-> +	 * The connector configuration might not exist if its configfs directory
-> +	 * was deleted. Therefore, use the configuration if present or keep the
-> +	 * current status if we can not access it anymore.
-> +	 */
-> +	status = connector->status;
-> +
-> +	vkms_config_for_each_connector(vkmsdev->config, connector_cfg) {
-> +		if (connector_cfg->connector == vkms_connector)
-> +			status = vkms_config_connector_get_status(connector_cfg);
-> +	}
-> +
-> +	return status;
-> +}
-> +
->   static const struct drm_connector_funcs vkms_connector_funcs = {
-> +	.detect = vkms_connector_detect,
->   	.fill_modes = drm_helper_probe_single_connector_modes,
->   	.reset = drm_atomic_helper_connector_reset,
->   	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> diff --git a/drivers/gpu/drm/vkms/vkms_connector.h b/drivers/gpu/drm/vkms/vkms_connector.h
-> index c9149c1b7af0..90f835f70b3b 100644
-> --- a/drivers/gpu/drm/vkms/vkms_connector.h
-> +++ b/drivers/gpu/drm/vkms/vkms_connector.h
-> @@ -5,6 +5,9 @@
->   
->   #include "vkms_drv.h"
->   
-> +#define drm_connector_to_vkms_connector(target) \
-> +	container_of(target, struct vkms_connector, base)
-> +
->   /**
->    * struct vkms_connector - VKMS custom type wrapping around the DRM connector
->    *
-
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Yes, auxiliary_device_uninit() calls put_device() on the underlying struct
+device, hence the release() callback is called at this point, which frees the
+Box.
