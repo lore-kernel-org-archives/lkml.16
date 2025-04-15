@@ -1,92 +1,147 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF5522DFB1;
-	Tue, 15 Apr 2025 18:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB4122F173
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744742894; cv=none; b=Wu4Kikt3c5IiSPn+bvXK1ZsR/DzYG+BUb0QBfUMFk72FN1Jyzva1HGEhGYEbb4EjYGLQJlxoeKIZv0cULzA3Ng30MCB1sj54sPlj8UWQFG6J7i4AkLn/pYhPut1xexBqfcJjpnpdYhN1jSdoyB2tXZjKSZ47sgc5Gh2cJOhTcTE=
+	t=1744742895; cv=none; b=BKyYpDWV7XioxP5tTrVV81V0xRRfXQKMoprR9wSShMNZELJJzCHGkvOFvGHE6qzCPhvry5khmS3OF/ARbpm82EhoGqA/Xy6bRj/DBSRthkYUOZeAeuAdr6/ZhDDF+/BF7S27waEIsThWJodeYukpF8ppQ8cGVm6fnIh29jcPD5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744742894; c=relaxed/simple;
-	bh=2Kpm6GWhgo8Q/IOC4ec8PNWFZP8KUbljZZldwykeRhg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mjPiUDDQrhQwekJtN32h9sKp3pLU3leYf+rCbdmmQomdOQTzOjKsrt/THuI7xtkeCkESC5d3DpMNaP6fNm6ROZBtobq3rGtAULdfijilGnZNNPltfpMd3E3eZzHXUh2m0q4QC6tR0JjN7NBxlegN9UmeNyvDDKHndks2TTu2z/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIiVbQtB; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744742895; c=relaxed/simple;
+	bh=jyspZm5GDyE8V8MqM0DVGyy+s9l/GwhLFwsgaQQGonw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D2dVbj2Ft451RM8o0H1Jxvxo5GtTt5klCQhPkDkprK5Q2zmZ/HQi0QaQsha2ztUIl4kFYWzo4NMgCo34eH4IOZRdDtcw6HMLpFmCa/OAG75MNSdG3yC0Gs2lgz57Ojl+vJrUxWg/Vo0tZIH/tGuf5dhut+bx8K9qtiHQlMW8+fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=1+MwscUe; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIiVbQtB"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-301b4f97cc1so1063099a91.2;
-        Tue, 15 Apr 2025 11:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="1+MwscUe"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7369ce5d323so4747389b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744742892; x=1745347692; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Kpm6GWhgo8Q/IOC4ec8PNWFZP8KUbljZZldwykeRhg=;
-        b=HIiVbQtBB7qJ2st0SdiPbyIZEPsnaHPWFxUrqWfJfkedVFiDGO8FMspMkjBMJQQ3Iv
-         m1pNTHXDobarqPQlimbRVeY+wk3tJmevILg78wsLOvgTCmMxHtH4uzBJhZhHb3IwTy5W
-         lrE7ZVSMUQI1Tw5xPkO2Mw3zKv+grITgi3A+Sv3ztKP0rakytR0dbTVmLgxK1j8xFboV
-         Im5GQsBi58CwwooHCR/KzUj8jlxYUgFp6FuMO+SqOjqpGeh0WFO360Hof0iXiffJUVvL
-         czN+D6/CuAcO0NRqDSSY7gTfHhthLxBMhhZ0Xr4t4S0kU4bEwQ5WzKgBmpTylL1Qldte
-         ulfw==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1744742892; x=1745347692; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=glUhvdbg6jDxSzyhesIM3rd1JyjGcrsNSGuSqUFVHug=;
+        b=1+MwscUeTVfBM7bjPdLu6bUneloOL81f/Yya/cT52SsUTCY15XkjAkbKP9kJVSn6pG
+         wM47IBzFbvRklbgrnGDSEnHY0APRUns77kG9QBm/lFehrbl4dvpFKQjhFVvMoa/EVlDZ
+         W5IEz0GRUuIvoUmLHgQre9ifjnI8Oil1YZGGd3TPD02qm6aSOzsefOt7UvFLcqICue3z
+         ZvFN6NJaDsf476XVogolYLzskAMkulEZuSeblXHi9JIePHQ5q9dcsugiq+c9XSEQ36Mh
+         V3Uc4P6QXEhXFxSCEleM2ra5orNvvE11i/VaOIKrkBNcUwffOpwNGiFIhbFslHZczUFy
+         xPbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744742892; x=1745347692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Kpm6GWhgo8Q/IOC4ec8PNWFZP8KUbljZZldwykeRhg=;
-        b=ArBEQ1T1FW1CBnAZdaUfHx5ox3OTP6FPMXoju9IhLpqBQId4IWLI+F+giwScT+5gmS
-         Yniw360n7X/wyiGyW04ppJZxZoijgFUxkTNCteE6SbrhFX+SLKXklGipsKYxdF2aOvpB
-         kQBiFEimjudY+BLtvd4a8TMOMSXCQGyWzJ7iM5GKlxBbJ2sa99cg1thdKGHxKYoFSau2
-         ZXgL+MhDVfbZzLmKmQZIDfgo6gOuYMI2UtVW+fVXlP5XPjf9CBo7TUvBZdEQRn/fmGb7
-         tPHE/dQQ09+88l+RX+rnlau0buC16oBxDUPmnIAoE7A84RVmVoc4CmfE25qKmG2Zmw6y
-         enXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMYs99lRV/BR7hA0eKowGeV16yAWFmxFuQP4EgX/t/Bdb9GpGbULTzCEx1waPcmaQmpaMUEviAmFNVN25pV8c=@vger.kernel.org, AJvYcCV1oOEsz8N/PAyqW0G1F3KLPZtrSTEA9Gu56b7CePBXGZzMy+cyHt4v5MsOOcHNfUQYV9R0e0ai@vger.kernel.org, AJvYcCW8Qyo73XnajweX0GiSdecrdh9nx97B5Z+0t/E5aA3e0iU+6w3vFAEPaSxIgknQ4h6QdLx2sg3cpP8luRA=@vger.kernel.org, AJvYcCXxkbdeHvHHg/p/X6pfOtxz5MXGNGcITZHDuVcjQQxyn3ktIBbNpo5DiO+fvmFKV5yd9C3BCNtv4ez5PWHq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6+7+cs76AgMWIqPiNS05Wbb8+aJrfdmvC6OtT4KyiS99T/gNm
-	A6AULizDzc+yoK1bvUu9WUoFE/5sKzegS8I8WGc1L34lePbUpC/YOJbWA6QFpF2URvfpFFMtUDk
-	m29WZ0nUf9rnAEXSBkQMGRLeF3uo=
-X-Gm-Gg: ASbGncttFrE+DYkEZumAO3cjQ7Nysqb+oTNmqdV/cFSgkq2rRVM8htgp//bWy7zBg5Z
-	BK/PgMBBWE3OfwDu+3F1W7O6p7ng043kwxBHx1OX9+LLtBuXeQiammnzA3xFTBy8JmH+EEmbhg8
-	1J2WPPTvo6nHhfW9EgG9Qplg==
-X-Google-Smtp-Source: AGHT+IGL8QPPlQgTyuSsG4JtvKe3+bJVrcOq2MMMB3IlnsadEDXTmZNsLahV3jTtf451YqR9z6dcky4RKUZe/0LTBTA=
-X-Received: by 2002:a17:90b:1d8f:b0:2fe:b879:b68c with SMTP id
- 98e67ed59e1d1-3085ef97db8mr121803a91.6.1744742891943; Tue, 15 Apr 2025
- 11:48:11 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=glUhvdbg6jDxSzyhesIM3rd1JyjGcrsNSGuSqUFVHug=;
+        b=b9BgYChlTJwDGpMUekdZZg+IwuV0fvS3xVKsROMmbcekt3S9xk8YMls+1PTVmx8OKb
+         f4BmLR18Psr4XYE9fHc9HSeESAUiQFa+c+fMc0VC1BBher5dIhJHihoRnCFC9MOsdyGn
+         TBumIZkuVf9CwI2j8edcDVgEdyVYVCF9uYrGrjhoG3+HzYAIwyl3qhzen7tnQfe13YwB
+         AINbNz4QoKUVBkHyl1WcCpxzZj7HPI8cYc8BB7KDSc2FgmgQucmqedmcEvuz1gPiakVu
+         UDA40tYoIufOQlvh8d5svb824g4LZQDkJjr32DBRznPz5aOKDc6wXT5JRiIZwaH0NtFc
+         8Y0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW4LYk7SBY1RhqxRIkSkgry6sYo446NqAa4zSf2iMtZbMSNXGOxGzIwsiSBogqjeKP+/4e+mr23xWWHjfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj0fDEMkkU/nmPbULnJO0GeuzVaoJ2fy7Wju4pw8kz0KYLO40P
+	mepdrRu53+gipZ4qN2CkWtrCWA4Z8dIiJO4EpFdRfAZHi0NXSteAoHUi3imu7aI=
+X-Gm-Gg: ASbGncvlzV12u/z4McnCQWMpiFaPIHSBq8y7+9HEdxkkFLcpRCrl46cK5j4SRooMLQl
+	E06z8It1NO9gLhp87Gw+XyrMnhh902ESqxMY+x0IPEZG13Vs/gmFAbBn+qJw/Hs33JhkW0SE0Ar
+	LRpZGZm/Q7iLgSoTwPwe9FY9i8lJnXdNRQolLsoe4rqtFjAScpYyBwl6Y8dnEb/I2clCu0Uh6X8
+	gEOcYdHVwjsTxYVg8vJkDAsTeB2mVKpWk8JMvtTJvO79FmIDMoCJFUea1qEfjk3bk4HQbcmUAA2
+	qKkVQOmaOBFke2HqXQA1kl9ziG7hcvhOz7xoSMl4F+vyLlc=
+X-Google-Smtp-Source: AGHT+IFU1A6IgDtbE+ayph1nkrk/Xkmje9tzi2mXCLVIUeRmrboHqr3jd6su6fZeet5H41nBKRVWlQ==
+X-Received: by 2002:a05:6a00:a26:b0:736:3979:369e with SMTP id d2e1a72fcca58-73c1f8f742emr628913b3a.9.1744742891991;
+        Tue, 15 Apr 2025 11:48:11 -0700 (PDT)
+Received: from x1 (97-120-122-6.ptld.qwest.net. [97.120.122.6])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a2d3a4ddsm9578290a12.49.2025.04.15.11.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 11:48:10 -0700 (PDT)
+Date: Tue, 15 Apr 2025 11:48:08 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, guoren@kernel.org,
+	wefu@redhat.com, jassisinghbrar@gmail.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, frank.binns@imgtec.com,
+	matt.coster@imgtec.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, ulf.hansson@linaro.org, jszhang@kernel.org,
+	p.zabel@pengutronix.de, m.szyprowski@samsung.com,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 19/21] riscv: dts: thead: Introduce power domain nodes
+ with aon firmware
+Message-ID: <Z/6p6MQDS8ZlQv5r@x1>
+References: <20250219140239.1378758-1-m.wilczynski@samsung.com>
+ <CGME20250219140315eucas1p10f08d297580edd114f4c487c1fbffa8d@eucas1p1.samsung.com>
+ <20250219140239.1378758-20-m.wilczynski@samsung.com>
+ <Z/2+rbhsaBP0DQop@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414171241.2126137-1-ojeda@kernel.org>
-In-Reply-To: <20250414171241.2126137-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 15 Apr 2025 20:47:59 +0200
-X-Gm-Features: ATxdqUHTA9TZry6P0hmW1nNr51e7jiPnolW0gnctSwGdT8fOOpZMfrf6lSkmxuI
-Message-ID: <CANiq72=TjjW+L20su+N_7-FGMvhGZDTUEHnwk-Kz+XWUWyQVUw@mail.gmail.com>
-Subject: Re: [PATCH] rust: kbuild: use `pound` to support GNU Make < 4.3
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z/2+rbhsaBP0DQop@x1>
 
-On Mon, Apr 14, 2025 at 7:13=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Thus use the existing variable to fix it.
+On Mon, Apr 14, 2025 at 07:04:29PM -0700, Drew Fustini wrote:
+> On Wed, Feb 19, 2025 at 03:02:37PM +0100, Michal Wilczynski wrote:
+> > The DRM Imagination GPU requires a power-domain driver. In the T-HEAD
+> > TH1520 SoC implements power management capabilities through the E902
+> > core, which can be communicated with through the mailbox, using firmware
+> > protocol.
+> > 
+> > Add AON node, which servers as a power-domain controller.
+> > 
+> > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> > ---
+> >  arch/riscv/boot/dts/thead/th1520.dtsi | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+> > index 197df1f32b25..474f31576a1b 100644
+> > --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> > +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> > @@ -6,6 +6,7 @@
+> >  
+> >  #include <dt-bindings/interrupt-controller/irq.h>
+> >  #include <dt-bindings/clock/thead,th1520-clk-ap.h>
+> > +#include <dt-bindings/power/thead,th1520-power.h>
+> >  
+> >  / {
+> >  	compatible = "thead,th1520";
+> > @@ -229,6 +230,13 @@ stmmac_axi_config: stmmac-axi-config {
+> >  		snps,blen = <0 0 64 32 0 0 0>;
+> >  	};
+> >  
+> > +	aon: aon {
+> > +		compatible = "thead,th1520-aon";
+> > +		mboxes = <&mbox_910t 1>;
+> > +		mbox-names = "aon";
+> > +		#power-domain-cells = <1>;
+> > +	};
+> > +
+> >  	soc {
+> >  		compatible = "simple-bus";
+> >  		interrupt-parent = <&plic>;
+> > -- 
+> > 2.34.1
+> > 
+> 
+> Reviewed-by: Drew Fustini <drew@pdp7.com>
+> 
+> I tested this on top of 6.15-rc1 and found no issues.
+> 
+> -Drew
 
-Applied to `rust-fixes` -- thanks everyone!
+I've applied to thead-dt-for-next:
+https://github.com/pdp7/linux/commit/2bae46e3de2a64fe3a619d61b16da0c01b8df2a1
 
-If Kbuild wants to pick it up instead, please let me know and I will drop i=
-t.
+Michal - are there any other dts patches that I should consider for 6.16
+PR?  I would probably send to Arnd around 6.15-rc3 or 6.15-rc4.
 
-Cheers,
-Miguel
+Thanks,
+Drew
