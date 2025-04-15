@@ -1,70 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660D422F01;
-	Tue, 15 Apr 2025 12:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27CB293B62;
+	Tue, 15 Apr 2025 12:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721148; cv=none; b=RegblqJEtGUZx4d6TzQ7qDbZhLe5HrFuUAUKgeXFTGFw1tfzU9CJiOgop3sRbLoQxDjPe8Tg6qYch8DN/Bc1ktofZD4egbK8/AH8DowmN/EOdaImmgufjk3BakndSnLylMHeLq9ffNfbOEnIMP3hWsPC/ikOsH/fTgd3fkkNMuk=
+	t=1744721161; cv=none; b=EJ1pml5Gr1okk4hy09IRYTxuWN0Ef9bhZOrS7/0/kmaPqhB4cx+C3vNgvUQK2S8vglklfU89t6pO2zgxWQ9S99czU5t9l5bUWRgJZ25cJv7EbY8kFC8tpLrLpnefs6Oh+lPZmi/7CZ5OHUXLzwILCbUNMwQ70RnMk3cG8byFehg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721148; c=relaxed/simple;
-	bh=ZypjQZY5ezLBgzzwIlmEi6O1Yc7YVR9YFjeUN/KN3SU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tMcT3FL3gZX9NTlMavvrnzRFGQksTJooBxddCLj95ZGxmFeP4TWiWfBrAaGtl9uvrZPh370OmiyKuXhQqLNlQNUk3qGDvVxiuluUg1NjdF68upxccEacgnoR0WvIEdFlGtnI+ZWUCLsU2l2fyU+J1+JSrFirvNKVwAQp/s4zqpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucCCEtP5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744721161; c=relaxed/simple;
+	bh=ek+Tpc14e/doNmpLlpka8XJmXm9f6H6t6AJorGwuoYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qkJcXh2McpwrBCLVYs3uGPyNfnXX+Wjc8Gkh9jtKJGsXPTNa5v7LDxTozMLQ9Rp9KpeDREJd0/ve4n0ktUR7CnTWcQ63rVFmNPKBNf6GADTpxOaW76KBQ4tOnoy6+kPfhlAg1YNuzKJ1EzRRCNSeRIr1pSn/53VOOJ8ROG8IkYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBPZ//rr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucCCEtP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3023DC4CEDD;
-	Tue, 15 Apr 2025 12:45:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBPZ//rr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D24C4CEDD;
+	Tue, 15 Apr 2025 12:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744721147;
-	bh=ZypjQZY5ezLBgzzwIlmEi6O1Yc7YVR9YFjeUN/KN3SU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ucCCEtP5INyXov+dgU7oIv+K37cc3naazdBH8uSx8MR+sKQQz++QkcrjBMjfc41j9
-	 unkxTpA0A2eOrPZsgHNs2KWV8fX2rKni47FiVol8GIE+9w7QAJBRbsOgYx78iaFGYS
-	 56qqRdmuc4Xhv3BIGmE9E6ERbZNxIz10JqZO/TChVcOGcuekOoekO9eBsNajD4R+AS
-	 C6YHmdJg/uGMUD7ON7T0VM+X6/38hfe9VnaOS/c8fcV+JvI3yz7CF0RKX6afb4dt0W
-	 l4YqfTzNsk5I2psqh51xlXNBfSQZ8jWWRz3Sz5+xmzYRBOWagtx03LyCD4cct4WmYy
-	 ATHsERNDy9Xeg==
-Date: Tue, 15 Apr 2025 14:45:41 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, david.m.ertman@intel.com,
-	ira.weiny@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu,
-	airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] rust: auxiliary: add auxiliary device / driver
- abstractions
-Message-ID: <Z_5U9baQ-6VE2VjJ@cassiopeiae>
-References: <20250414131934.28418-1-dakr@kernel.org>
- <20250414131934.28418-4-dakr@kernel.org>
- <Z_5MODlzsC3LNtFj@google.com>
+	s=k20201202; t=1744721161;
+	bh=ek+Tpc14e/doNmpLlpka8XJmXm9f6H6t6AJorGwuoYw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aBPZ//rrXCmUwRtvbmUfo/qWNHN/Z+Tevk8llMjTQR2d+z4R7RFhNuo6XHyY3Qbng
+	 zbgnXDw2Qvktx3Bl74E6uqocClku9RQyckQ0kn8Q5+bRznZohd/lyCaqPc+XwYAROc
+	 O+q8j6x2LUmrC7yZRwoZ8g7fqr6dEN+I+qDf5SnoxaQhVM3dc9dXIoPuyxAHUdKLLQ
+	 PtNW/AKKRK4a0O/OHBnXQOM0XDolPbQlSj2CKBftIDIFQDLjXPVuAltxAdw+EihT6U
+	 ZMze82kX2xqRI+fPN8k1C+StuQUj9B+YDavUZV6GC9VHYDllLneKAhF82DIg7HeZ7i
+	 eSOOZdKw6i5mQ==
+Message-ID: <4493e1f6-eb08-4384-9257-575491a57c40@kernel.org>
+Date: Tue, 15 Apr 2025 14:45:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_5MODlzsC3LNtFj@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hitting WARN_ON_ONCE in i2c-designware-common.c
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+ linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ kernel-team <kernel-team@cloudflare.com>
+References: <20c191d9-5f7a-4ec6-a663-dcc8d0b54c18@kernel.org>
+ <715d883f-184f-474a-a222-208d3aa03d2c@linux.intel.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <715d883f-184f-474a-a222-208d3aa03d2c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 12:08:24PM +0000, Alice Ryhl wrote:
-> On Mon, Apr 14, 2025 at 03:18:06PM +0200, Danilo Krummrich wrote:
-> > Implement the basic auxiliary abstractions required to implement a
-> > driver matching an auxiliary device.
-> > 
-> > The design and implementation is analogous to PCI and platform and is
-> > based on the generic device / driver abstractions.
-> > 
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+
+
+
+On 15/04/2025 14.28, Jarkko Nikula wrote:
+> Hi
 > 
-> Overall looks okay to me, but I do have some comments.
+> On 4/15/25 3:03 PM, Jesper Dangaard Brouer wrote:
+>> Hi Maintainers,
+>>
+>> I'm hitting a WARN_ON_ONCE in drivers/i2c/busses/i2c-designware-common.c
+>> when booting the kernel on our Gen12 hardware.
+>>
+>> I'm using devel kernel net-next at commit 1a9239bb425 (merge tag 'net- 
+>> next-6.15').
+>>
+> Is this a regression so was this working before?
+> 
 
-Thanks for reviewing; unless there are more comments, I'll address those when
-applying the series.
+I'm seeing this when doing kernel development and booting net-next on
+our Gen12 servers[1].  [1] https://blog.cloudflare.com/gen-12-servers/
 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+I've not seen this WARN on our production kernels (stable 6.6 and 6.12).
+This is likely due to different kernel configs.
+
+> Support for this platform was added back in 2016 by the commit 
+> e4e666ba74d4 ("i2c: designware: Add device HID for future AMD I2C 
+> controller").
+> 
+
+Maybe we have just not enabled the module on our prod kernels.
+
+>> [   10.062651] i2c_designware AMDI0010:00: Unknown Synopsys component type: 0xffffffff
+>> [   10.073312] pps_core: LinuxPPS API ver. 1 registered
+>> [   10.073372] piix4_smbus 0000:00:14.0: SMBus Host Controller at 0xb00, revision 0
+>> [   10.075433] i2c_designware AMDI0010:01: Unknown Synopsys component type: 0xffffffff
+> 
+> These "Unknown Synopsys component type: 0xffffffff" errors indicate IP 
+> is not alive. Perhaps linked to the missing clock or not powered.
+
+It is possible that this hardware is special as I believe it is 
+customized for us.
+
+The dmesg output also contained:
+  Hardware name: Lenovo HR355M-V3-G12/HR355M_V3_HPM
+(see the extra -G12 to the SKU.)
+
+--Jesper
