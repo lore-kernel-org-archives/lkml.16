@@ -1,90 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C9721CFEF;
-	Tue, 15 Apr 2025 17:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54EC8158520
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738999; cv=none; b=oF0EqV4FEhp41ZBWAW8mgnWUsY3p9jqo6oG/yN2eMYV4rPWXOFzXdlvF2NldvrR9RECIHweOGAoeG4Zu/R7lF2ghtw9l3raK72ftIZPvLBQ/B9Bs/IRVh+I49nS25MppuCgz7CKbTUuaAtIDM28VtH4Pbi2+Kv4RQf7JlIO5/cc=
+	t=1744739000; cv=none; b=jJpMhZtp7VL8XDT9nodJef6lPXh8RW7lGcLOP6aPu0Mh4sINRUOlAvPmB7/1VMyGsY/y6AELJSAS5lFcPqKRSEVTWQfNq7YvtFM3jEH2C2u0YB1moOV54QwP5oN0UE4VCFz4fK/9uj8Hv8ZbAb9/M3Y+cwUb63rNEWmrlGqzy2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738999; c=relaxed/simple;
-	bh=MZpX8K8RPGoeYtDre0iPD/x52v3l39wJKs+1j5c64rU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OU24MR66mdQmmbNquot+q/Ryulfvn3Lh3z30TcavcygrMgfejsxf13kxvD2s9O8lJ66hk1d4DttPAGDXGlQqxio381ik4nQSqPqPvJeOUMiL7EUU2GpoF3OeLySJ+GpzlEaczXFK3NznM47jYsSOjnEzC14oSXENSopWvphuPnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLqeV8/p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLqeV8/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57321C4CEE9;
-	Tue, 15 Apr 2025 17:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744738996;
-	bh=MZpX8K8RPGoeYtDre0iPD/x52v3l39wJKs+1j5c64rU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PLqeV8/pcDJ0QsLmOFRdEmijR2wHdPnmbkwvweLobQzj8gLE9qNZyLTAL136b8KMz
-	 ALVuzWvMzX3NHxQ05S+FkFz0vfBj7fSa6TBDdRjx3wH7sLAmCpHtnxqbKF4J1L6Akl
-	 Js0yQnvT6OsvQZOIItFkryUF6IMFyKOLQEB1/bT06OmC/EKCdsckkUVz3IKjSD9tRq
-	 Dulf58HhBjZqSp5xIZEyNOH7xtaTMPAFLXw1YMnR1FuBn1A/zeFFvcWcQcLBGaz29v
-	 fPMiYJ9Q9hdvOnOGfKx1uMLLMD9qRaZ+4pr0JsTy2BP87pQhiAkz411Z/Vi3RKanXL
-	 86IeDuMXGBrzQ==
-Date: Tue, 15 Apr 2025 18:43:08 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: <victor.duicu@microchip.com>
-Cc: <andy@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
- <marius.cristea@microchip.com>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/2] add support for MCP998X
-Message-ID: <20250415184308.2deb6d3f@jic23-huawei>
-In-Reply-To: <20250415132623.14913-1-victor.duicu@microchip.com>
-References: <20250415132623.14913-1-victor.duicu@microchip.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744739000; c=relaxed/simple;
+	bh=VFgb6NGSP68dybKGhsZgdUSTzJRaslSSXQZ7JlMAMpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VKCuUURLYCBtpNN5BAdPH4r+GIYzB7eJ0Dq6SuzFGTr7BPJS9QyFKedNqaz6EhSnceas6KV05Tlf7gwDiRwJhNdMq9SKT4peAYq+Y5riVlZkvPRwjSxJdk5D9/mCqJuyd7VwDrRqB3AxrSfFNpZ3LHeRCBuCqubSqxhuHq+nhU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C053515A1;
+	Tue, 15 Apr 2025 10:43:13 -0700 (PDT)
+Received: from [10.57.86.225] (unknown [10.57.86.225])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 736E03F59E;
+	Tue, 15 Apr 2025 10:43:14 -0700 (PDT)
+Message-ID: <30b6c851-993a-42a2-be71-9748faa2eb4d@arm.com>
+Date: Tue, 15 Apr 2025 18:43:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
+ PIRE0_EL1 and PIR_EL1
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
+ <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
+ <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
+ <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
+ <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
+ <5d975762-7678-419f-8e2f-40547c079276@arm.com>
+ <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
+ <7b26c6e4-5483-4ac3-a084-bb0769768006@arm.com>
+ <fb411be7-b8e8-493f-ae79-90adb8bb79fd@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <fb411be7-b8e8-493f-ae79-90adb8bb79fd@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Apr 2025 16:26:21 +0300
-<victor.duicu@microchip.com> wrote:
-
-> From: Victor Duicu <victor.duicu@microchip.com>
-> 
-> Add support for Microchip MCP998X/33 and MCP998XD/33D
-> Multichannel Automotive Temperature Monitor Family.
-> 
-> The chip is capable of monitoring temperatures on four
-> external channels and one internal.
-Hi Victor,
-
-This gets the standard question for a temperature sensor...
-Why IIO and not hwmon?  Good to have that info in the cover letter or
-patch description.
-
-I'd normally moan about the wild cards even though they are only
-in patch titles, but meh, the datasheet uses the wild card
-so we are probably safe for a while at least!
-
-Jonathan
-
-
-> 
-> Victor Duicu (2):
->   dt-bindings: iio: temperature: add support for MCP998X
->   iio: temperature: add support for MCP998X
-> 
->  .../testing/sysfs-bus-iio-temperature-mcp9982 |  17 +
->  .../iio/temperature/microchip,mcp9982.yaml    | 182 ++++
->  MAINTAINERS                                   |   7 +
->  drivers/iio/temperature/Kconfig               |  10 +
->  drivers/iio/temperature/Makefile              |   1 +
->  drivers/iio/temperature/mcp9982.c             | 794 ++++++++++++++++++
->  6 files changed, 1011 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
->  create mode 100644 drivers/iio/temperature/mcp9982.c
+On 15/04/2025 10:46, Anshuman Khandual wrote:
 > 
 > 
-> base-commit: 31c52fe3b2efeebfc72cc5336653baaa9889b41e
+> On 4/15/25 13:23, Ryan Roberts wrote:
+>> On 15/04/2025 07:27, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 4/14/25 18:01, Ryan Roberts wrote:
+>>>> On 14/04/2025 13:28, Ard Biesheuvel wrote:
+>>>>> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> On 14/04/2025 10:41, Ard Biesheuvel wrote:
+>>>>>>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>>>
+>>>>>>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
+>>>>>>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+>>>>>>>>> as expected if those macro constants contain some 128 bit layout elements,
+>>>>>>>>> required for D128 page tables. Fix this problem via first loading up these
+>>>>>>>>> macro constants into a given memory location and then subsequently setting
+>>>>>>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
+>>>>>>>>
+>>>>>>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
+>>>>>>>> of 128-bit types with shifting and masking, which the assembler can't do? It
+>>>>>>>> would be good to spell this out.
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>>>>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>>>>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>>>>>> ---
+>>>>>>>>> This patch applies on v6.15-rc1
+>>>>>>>>>
+>>>>>>>>>  arch/arm64/kernel/head.S         | 3 +++
+>>>>>>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
+>>>>>>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
+>>>>>>>>>  arch/arm64/mm/mmu.c              | 1 +
+>>>>>>>>>  arch/arm64/mm/proc.S             | 5 +++--
+>>>>>>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+>>>>>>>>> index 2ce73525de2c..4950d9cc638a 100644
+>>>>>>>>> --- a/arch/arm64/kernel/head.S
+>>>>>>>>> +++ b/arch/arm64/kernel/head.S
+>>>>>>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
+>>>>>>>>>        * On return, the CPU will be ready for the MMU to be turned on and
+>>>>>>>>>        * the TCR will have been set.
+>>>>>>>>>        */
+>>>>>>>>> +     adr_l   x0, pir_data
+>>>>>>>>> +     bl      __pi_load_pir_data
+>>>>>>>>
+>>>>>>>> Using C code to pre-calculate the values into global variables that the assembly
+>>>>>>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
+>>>>>>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
+>>>>>>>> asm-offsets.c:
+>>>>>>>>
+>>>>>>>> DEFINE(PIE_E0_ASM, PIE_E0);
+>>>>>>>> DEFINE(PIE_E1_ASM, PIE_E1);
+>>>>>>>>
+>>>>>>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
+>>>>>>>> pre-calculated values that you can then use in proc.S?
+>>>>>>>>
+>>>>>>>
+>>>>>>> There is another issue, which is that mov_q tries to be smart, and
+>>>>>>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
+>>>>>>> directive evaluates the argument, which does not work with symbolic
+>>>>>>> constants.
+>>>>>>
+>>>>>> I'm not quite understanding the detail here; what do you mean by "symbolic
+>>>>>> constants"? asm-offsets.h will provide something like:
+>>>>>>
+>>>>>> #define PIE_E0_ASM 1234567890
+>>>>>>
+>>>>>> The current code is using a hash-define and that's working fine:
+>>>>>>
+>>>>>> mov_q   x0, PIE_E0
+>>>>>>
+>>>>>>
+>>>>>> Won't the C preprocessor just substitute and everything will work out?
+>>>>>>
+>>>>>
+>>>>> Yeah, you're right. I was experimenting with something like
+>>>>>
+>>>>> .set .Lpie_e0, PIE_E0_ASM
+>>>>> mov_q xN, .Lpie_e0
+>>>>>
+>>>>> where this problem does exist, but we can just use PIE_E0_ASM directly
+>>>>> and things should work as expected.
+>>>>
+>>>> Ahh great, sounds like this should be pretty simple then!
+>>>
+>>> Following change works both on current and with D128 page tables.
+>>>
+>>> --- a/arch/arm64/kernel/asm-offsets.c
+>>> +++ b/arch/arm64/kernel/asm-offsets.c
+>>> @@ -182,5 +182,7 @@ int main(void)
+>>>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>>>    DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops, direct_call));
+>>>  #endif
+>>> +  DEFINE(PIE_E0_ASM, PIE_E0);
+>>> +  DEFINE(PIE_E1_ASM, PIE_E1);
+>>>    return 0;
+>>>  }
+>>> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+>>> index 737c99d79833..f45494425d09 100644
+>>> --- a/arch/arm64/mm/proc.S
+>>> +++ b/arch/arm64/mm/proc.S
+>>> @@ -536,9 +536,9 @@ alternative_else_nop_endif
+>>>  #define PTE_MAYBE_NG           0
+>>>  #define PTE_MAYBE_SHARED       0
+>>
+>> I think at minimum, you can remove this PTE_MAYBE_* hack from proc.S. But as Ard
+>> says, you may need to add it to asm-offsets.c? I'm surprised asm-offsets.c even
+> 
+> Moving PTE_MAYBE_* inside asm-offsets.c works as well in both cases
+> but still wondering why this is even required ? What am I missing ?
+
+Without the overrides:
+
+#define PTE_MAYBE_NG		(arm64_use_ng_mappings ? PTE_NG : 0)
+#define PTE_MAYBE_SHARED	(lpa2_is_enabled() ? 0 : PTE_SHARED)
+
+And these are used in the definition of PROT_DEFAULT, which is used in the
+definition of _PAGE_KERNEL*, which are used in the definition of PIE_E1.
+
+For the assembly code arm64_use_ng_mappings and lpa2_is_enabled() are not
+accessible. But we don't actually care about those bits so its just hacked to
+override the fields to 0.
+
+I would have expected the asm-offsets.c case to have a similer problem because
+we have not defined arm64_use_ng_mappings and lpa2_is_enabled(). asm-offsets.c
+is compiled as a standalone object then the macros are exfiltrated and
+asm-offsets.h is created.
+
+Perhaps the compiler is smart enough to see that we don't care about the bits in
+those fields (pte_pi_index() is only keeping selected bits) and asm-offsets.c
+can be safely compiled without the hack?
+
+> 
+>> compiles without this hack since surely it doesn't have arm64_use_ng_mappings or
+>> is_realm_world() available?
+> Did not face any problem with defconfig for the mainline kernel and
+> both these symbols were visible in the built code.
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>  
+>>> -       mov_q   x0, PIE_E0
+>>> +       mov_q   x0, PIE_E0_ASM
+>>>         msr     REG_PIRE0_EL1, x0
+>>> -       mov_q   x0, PIE_E1
+>>> +       mov_q   x0, PIE_E1_ASM
+>>>         msr     REG_PIR_EL1, x0
+>>>  
+>>>  #undef PTE_MAYBE_NG
+>>>
+>>
 
