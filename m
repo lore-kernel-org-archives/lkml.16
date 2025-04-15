@@ -1,40 +1,40 @@
 Received: from smtp117.iad3b.emailsrvr.com (smtp117.iad3b.emailsrvr.com [146.20.161.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDC91EBFF0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD771DE2D6
 	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717631; cv=none; b=preHevnHcec7M5zBM8FMvoD3kFWM8UTMaqL2Xf42GXGOp7vBiQennQajaNO8n9RVNqoEiXbQ8iuSOWlug2f2fZhRgWnvuyO0aSKEwhO+udVP8s+YgFG9Be2zspoa9BhL5K0n7Zo1FV+UupDLhrcGWyXJslAllt5GTl2AgGWNZG8=
+	t=1744717632; cv=none; b=d/qj+xuwggVOc21YURSJxZ3MVNe7dE9qU2tKkaBjAjAXVXY2GZV0riRB0M8rNsIfwvvWGHn78zLSfuoajnfSp6VOr1+I18MBq4xOhhT+Q+XizG1xzmWJHBBcFzA0ZySQNpPZIE8VXadsWB40uewpLc9n6cMnH5G8qqnM0ov2RKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717631; c=relaxed/simple;
-	bh=3XiA9Jo1cTtKj6ZYQ9r0yPn+Uqy5Q+V6czZhQJzNfR4=;
+	s=arc-20240116; t=1744717632; c=relaxed/simple;
+	bh=F5RCZgD7o87oQZUpFxCLl9/2kHwyCIEn26RkRT2gcpU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=coub3C9LUKnXrMFKIi4lYR1FiB+Su7eaJVglCzEzFyPA0OtX6NOQINxLSsU6GBJEA6v/kOJCWnU6rD7Ilu8a0yTmrwLePBzDrRRB55jBHSNuZv1aMNNxof+C9sEqaMV1MVGRT8OFIX6jZdSSFDsEA4poau58XZu2VfBe2/1I+GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=sLZClKJq; arc=none smtp.client-ip=146.20.161.117
+	 MIME-Version; b=ug2Hs6YIe00teD9ejN6n76h3WNBU7q4TvCYbqgwjLn6DlX6yNcDsOffRPa2yAcI3P9SfGg/wjWlwpSjiyQ2JV2epQJFSH6n11DqnKD4CBf37WqMEMdtlxWTlI8Q/IgAFKW4xzdFGWxftKwgIybHsqFoGfZD8KYU84uWtiRPiFpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=EvE5I9QM; arc=none smtp.client-ip=146.20.161.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="sLZClKJq"
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="EvE5I9QM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1744717228;
-	bh=3XiA9Jo1cTtKj6ZYQ9r0yPn+Uqy5Q+V6czZhQJzNfR4=;
+	s=20221208-6x11dpa4; t=1744717227;
+	bh=F5RCZgD7o87oQZUpFxCLl9/2kHwyCIEn26RkRT2gcpU=;
 	h=From:To:Subject:Date:From;
-	b=sLZClKJq62fu4SXZx1J3XZxvCIgdXFVHjgUNyQU78p7t5x3dxx6rxjUaMNypuoKXc
-	 2e2VOn6XBO1gpN6MOH2oPYOB1lT24hjGjre8IRDBuXGwwIGMuUPdZ7Xv1qMc3sJVGV
-	 VgiBRBOZEe+xGl7whf+pNYimndGNchhttPUNsbvQ=
+	b=EvE5I9QMZJnxGhZE5GJhiKxLpzmdgwhVsyyhrxhRbw4L7Ky9RlhDswd54/KsJdich
+	 kTXfYpexUSbqGh4gwe/DChFW99n55JnVhaD6/Czcm5IRFQiQM43WKLnnlYCsbeTQqY
+	 yAUSTw5/HNzrI5wqghUosFtDWx3MQsHFchHgVvkU=
 X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp15.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id D79BAC0358;
-	Tue, 15 Apr 2025 07:40:27 -0400 (EDT)
+Received: by smtp15.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id DB58BC0356;
+	Tue, 15 Apr 2025 07:40:26 -0400 (EDT)
 From: Ian Abbott <abbotti@mev.co.uk>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Ian Abbott <abbotti@mev.co.uk>,
 	H Hartley Sweeten <hsweeten@visionengravers.com>,
 	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4/4] comedi: allocate DMA coherent buffer as individual pages
-Date: Tue, 15 Apr 2025 12:35:59 +0100
-Message-ID: <20250415114008.5977-5-abbotti@mev.co.uk>
+Subject: [PATCH 3/4] comedi: remove the mapping of the Comedi buffer in vmalloc address space
+Date: Tue, 15 Apr 2025 12:35:58 +0100
+Message-ID: <20250415114008.5977-4-abbotti@mev.co.uk>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250415114008.5977-1-abbotti@mev.co.uk>
 References: <20250415114008.5977-1-abbotti@mev.co.uk>
@@ -45,168 +45,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Classification-ID: 8a53f2c5-5989-413b-be2c-df2839710a9a-5-1
+X-Classification-ID: 8a53f2c5-5989-413b-be2c-df2839710a9a-4-1
 
-Depending on the driver, the acquisition buffer is allocated either from
-normal memory, or from DMA coherent memory.  For normal memory, the
-buffer is allocated as individual pages, but for DMA coherent memory, it
-is allocated as a single block.  Prior to commit e36472145aa7 ("staging:
-comedi: use dma_mmap_coherent for DMA-able buffer mmap"), the buffer was
-allocated as individual pages for DMA coherent memory too, but that was
-changed to allocate it as a single block to allow `dma_mmap_coherent()`
-to be used to mmap it, because that requires the pages being mmap'ed to
-be contiguous.
+Now that all the code that accesses the Comedi buffer data does so
+page-by-page, using the `virt_addr` member of `struct comedi_buf_page`
+to point to the data of each page, do not linearly map the buffer into
+vmalloc address space (pointed to by the `prealloc_buf` member of
+`struct comedi_async`).  That was only done for convenience, but was not
+done for those drivers that need a DMA coherent buffer, which is
+allocated in a single chunk.  Remove the `prealloc_buf` member as it is
+no longer used.
 
-This patch allocates the buffer from DMA coherent memory a page at a
-time again, and works around the limitation of `dma_mmap_coherent()` by
-calling it in a loop for each page, with temporarily modified `vm_start`
-and `vm_end` values in the VMA.  (The `vm_pgoff` value is 0.)
-
-Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 ---
- drivers/comedi/comedi_buf.c  | 43 ++++++++++++------------------------
- drivers/comedi/comedi_fops.c | 43 +++++++++++++++++++++++-------------
- 2 files changed, 42 insertions(+), 44 deletions(-)
+ drivers/comedi/comedi_buf.c      | 45 +++-----------------------------
+ include/linux/comedi/comedidev.h | 10 ++-----
+ 2 files changed, 6 insertions(+), 49 deletions(-)
 
 diff --git a/drivers/comedi/comedi_buf.c b/drivers/comedi/comedi_buf.c
-index 5807007bb3dd..002c0e76baff 100644
+index 0d956dd40a2b..5807007bb3dd 100644
 --- a/drivers/comedi/comedi_buf.c
 +++ b/drivers/comedi/comedi_buf.c
-@@ -27,14 +27,12 @@ static void comedi_buf_map_kref_release(struct kref *kref)
+@@ -56,13 +56,7 @@ static void __comedi_buf_free(struct comedi_device *dev,
+ 	struct comedi_buf_map *bm;
+ 	unsigned long flags;
  
- 	if (bm->page_list) {
- 		if (bm->dma_dir != DMA_NONE) {
--			/*
--			 * DMA buffer was allocated as a single block.
--			 * Address is in page_list[0].
--			 */
--			buf = &bm->page_list[0];
--			dma_free_coherent(bm->dma_hw_dev,
--					  PAGE_SIZE * bm->n_pages,
--					  buf->virt_addr, buf->dma_addr);
-+			for (i = 0; i < bm->n_pages; i++) {
-+				buf = &bm->page_list[i];
-+				dma_free_coherent(bm->dma_hw_dev, PAGE_SIZE,
-+						  buf->virt_addr,
-+						  buf->dma_addr);
-+			}
- 		} else {
- 			for (i = 0; i < bm->n_pages; i++) {
- 				buf = &bm->page_list[i];
-@@ -88,26 +86,14 @@ comedi_buf_map_alloc(struct comedi_device *dev, enum dma_data_direction dma_dir,
- 		goto err;
- 
- 	if (bm->dma_dir != DMA_NONE) {
--		void *virt_addr;
--		dma_addr_t dma_addr;
+-	if (async->prealloc_buf) {
+-		if (s->async_dma_dir == DMA_NONE)
+-			vunmap(async->prealloc_buf);
+-		async->prealloc_buf = NULL;
+-		async->prealloc_bufsz = 0;
+-	}
 -
++	async->prealloc_bufsz = 0;
+ 	spin_lock_irqsave(&s->spin_lock, flags);
+ 	bm = async->buf_map;
+ 	async->buf_map = NULL;
+@@ -141,11 +135,8 @@ static void __comedi_buf_alloc(struct comedi_device *dev,
+ 			       unsigned int n_pages)
+ {
+ 	struct comedi_async *async = s->async;
+-	struct page **pages = NULL;
+ 	struct comedi_buf_map *bm;
+-	struct comedi_buf_page *buf;
+ 	unsigned long flags;
+-	unsigned int i;
+ 
+ 	if (!IS_ENABLED(CONFIG_HAS_DMA) && s->async_dma_dir != DMA_NONE) {
+ 		dev_err(dev->class_dev,
+@@ -160,30 +151,7 @@ static void __comedi_buf_alloc(struct comedi_device *dev,
+ 	spin_lock_irqsave(&s->spin_lock, flags);
+ 	async->buf_map = bm;
+ 	spin_unlock_irqrestore(&s->spin_lock, flags);
+-
+-	if (bm->dma_dir != DMA_NONE) {
 -		/*
--		 * Currently, the DMA buffer needs to be allocated as a
--		 * single block so that it can be mmap()'ed.
--		 */
--		virt_addr = dma_alloc_coherent(bm->dma_hw_dev,
--					       PAGE_SIZE * n_pages, &dma_addr,
--					       GFP_KERNEL);
--		if (!virt_addr)
--			goto err;
--
- 		for (i = 0; i < n_pages; i++) {
- 			buf = &bm->page_list[i];
--			buf->virt_addr = virt_addr + (i << PAGE_SHIFT);
--			buf->dma_addr = dma_addr + (i << PAGE_SHIFT);
-+			buf->virt_addr =
-+			    dma_alloc_coherent(bm->dma_hw_dev, PAGE_SIZE,
-+					       &buf->dma_addr, GFP_KERNEL);
-+			if (!buf->virt_addr)
-+				break;
- 		}
--
--		bm->n_pages = i;
- 	} else {
- 		for (i = 0; i < n_pages; i++) {
- 			buf = &bm->page_list[i];
-@@ -117,11 +103,10 @@ comedi_buf_map_alloc(struct comedi_device *dev, enum dma_data_direction dma_dir,
- 
- 			SetPageReserved(virt_to_page(buf->virt_addr));
- 		}
--
--		bm->n_pages = i;
--		if (i < n_pages)
--			goto err;
- 	}
-+	bm->n_pages = i;
-+	if (i < n_pages)
-+		goto err;
- 
- 	return bm;
- 
-diff --git a/drivers/comedi/comedi_fops.c b/drivers/comedi/comedi_fops.c
-index 37cfef36c1ad..3383a7ce27ff 100644
---- a/drivers/comedi/comedi_fops.c
-+++ b/drivers/comedi/comedi_fops.c
-@@ -2387,13 +2387,27 @@ static int comedi_mmap(struct file *file, struct vm_area_struct *vma)
- 		goto done;
- 	}
- 	if (bm->dma_dir != DMA_NONE) {
-+		unsigned long vm_start = vma->vm_start;
-+		unsigned long vm_end = vma->vm_end;
-+
- 		/*
 -		 * DMA buffer was allocated as a single block.
 -		 * Address is in page_list[0].
-+		 * Buffer pages are not contiguous, so temporarily modify VMA
-+		 * start and end addresses for each buffer page.
- 		 */
--		buf = &bm->page_list[0];
--		retval = dma_mmap_coherent(bm->dma_hw_dev, vma, buf->virt_addr,
--					   buf->dma_addr, n_pages * PAGE_SIZE);
-+		for (i = 0; i < n_pages; ++i) {
-+			buf = &bm->page_list[i];
-+			vma->vm_start = start;
-+			vma->vm_end = start + PAGE_SIZE;
-+			retval = dma_mmap_coherent(bm->dma_hw_dev, vma,
-+						   buf->virt_addr,
-+						   buf->dma_addr, PAGE_SIZE);
-+			if (retval)
-+				break;
-+
-+			start += PAGE_SIZE;
-+		}
-+		vma->vm_start = vm_start;
-+		vma->vm_end = vm_end;
- 	} else {
- 		for (i = 0; i < n_pages; ++i) {
- 			unsigned long pfn;
-@@ -2407,19 +2421,18 @@ static int comedi_mmap(struct file *file, struct vm_area_struct *vma)
- 
- 			start += PAGE_SIZE;
- 		}
-+	}
- 
- #ifdef CONFIG_MMU
--		/*
--		 * Leaving behind a partial mapping of a buffer we're about to
--		 * drop is unsafe, see remap_pfn_range_notrack().
--		 * We need to zap the range here ourselves instead of relying
--		 * on the automatic zapping in remap_pfn_range() because we call
--		 * remap_pfn_range() in a loop.
 -		 */
--		if (retval)
--			zap_vma_ptes(vma, vma->vm_start, size);
-+	/*
-+	 * Leaving behind a partial mapping of a buffer we're about to drop is
-+	 * unsafe, see remap_pfn_range_notrack().  We need to zap the range
-+	 * here ourselves instead of relying on the automatic zapping in
-+	 * remap_pfn_range() because we call remap_pfn_range() in a loop.
-+	 */
-+	if (retval)
-+		zap_vma_ptes(vma, vma->vm_start, size);
- #endif
+-		buf = &bm->page_list[0];
+-		async->prealloc_buf = buf->virt_addr;
+-	} else {
+-		pages = vmalloc(sizeof(struct page *) * n_pages);
+-		if (!pages)
+-			return;
+-
+-		for (i = 0; i < n_pages; i++) {
+-			buf = &bm->page_list[i];
+-			pages[i] = virt_to_page(buf->virt_addr);
+-		}
+-
+-		/* vmap the pages to prealloc_buf */
+-		async->prealloc_buf = vmap(pages, n_pages, VM_MAP,
+-					   COMEDI_PAGE_PROTECTION);
+-
+-		vfree(pages);
 -	}
++	async->prealloc_bufsz = n_pages << PAGE_SHIFT;
+ }
  
- 	if (retval == 0) {
- 		vma->vm_ops = &comedi_vm_ops;
+ void comedi_buf_map_get(struct comedi_buf_map *bm)
+@@ -264,7 +232,7 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
+ 	new_size = (new_size + PAGE_SIZE - 1) & PAGE_MASK;
+ 
+ 	/* if no change is required, do nothing */
+-	if (async->prealloc_buf && async->prealloc_bufsz == new_size)
++	if (async->prealloc_bufsz == new_size)
+ 		return 0;
+ 
+ 	/* deallocate old buffer */
+@@ -275,14 +243,9 @@ int comedi_buf_alloc(struct comedi_device *dev, struct comedi_subdevice *s,
+ 		unsigned int n_pages = new_size >> PAGE_SHIFT;
+ 
+ 		__comedi_buf_alloc(dev, s, n_pages);
+-
+-		if (!async->prealloc_buf) {
+-			/* allocation failed */
+-			__comedi_buf_free(dev, s);
++		if (!async->prealloc_bufsz)
+ 			return -ENOMEM;
+-		}
+ 	}
+-	async->prealloc_bufsz = new_size;
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
+index c08416a7364b..4cb0400ad616 100644
+--- a/include/linux/comedi/comedidev.h
++++ b/include/linux/comedi/comedidev.h
+@@ -234,16 +234,12 @@ struct comedi_buf_page {
+  *
+  * A COMEDI data buffer is allocated as individual pages, either in
+  * conventional memory or DMA coherent memory, depending on the attached,
+- * low-level hardware device.  (The buffer pages also get mapped into the
+- * kernel's contiguous virtual address space pointed to by the 'prealloc_buf'
+- * member of &struct comedi_async.)
++ * low-level hardware device.
+  *
+  * The buffer is normally freed when the COMEDI device is detached from the
+  * low-level driver (which may happen due to device removal), but if it happens
+  * to be mmapped at the time, the pages cannot be freed until the buffer has
+- * been munmapped.  That is what the reference counter is for.  (The virtual
+- * address space pointed by 'prealloc_buf' is freed when the COMEDI device is
+- * detached.)
++ * been munmapped.  That is what the reference counter is for.
+  */
+ struct comedi_buf_map {
+ 	struct device *dma_hw_dev;
+@@ -255,7 +251,6 @@ struct comedi_buf_map {
+ 
+ /**
+  * struct comedi_async - Control data for asynchronous COMEDI commands
+- * @prealloc_buf: Kernel virtual address of allocated acquisition buffer.
+  * @prealloc_bufsz: Buffer size (in bytes).
+  * @buf_map: Map of buffer pages.
+  * @max_bufsize: Maximum allowed buffer size (in bytes).
+@@ -344,7 +339,6 @@ struct comedi_buf_map {
+  * less than or equal to UINT_MAX).
+  */
+ struct comedi_async {
+-	void *prealloc_buf;
+ 	unsigned int prealloc_bufsz;
+ 	struct comedi_buf_map *buf_map;
+ 	unsigned int max_bufsize;
 -- 
 2.47.2
 
