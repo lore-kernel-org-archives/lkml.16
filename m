@@ -1,81 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E49F2749D5;
-	Tue, 15 Apr 2025 10:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7461AB6C8;
+	Tue, 15 Apr 2025 10:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744714134; cv=none; b=X5kMm/LudIvb42XCnGAjzyzQ3o4OcAy1zmFk/sz5kGygef3Cjqf5rENxAtID+CvA4IC9edZ3c+7GF50ycxfsx3ctnZFW3qV9BShUWMvKXPW4IahzoYhtJIen2S+ZgQBSNx+C5YPSebS+vZJxV1G9b83GeywDdP7ivQEFRXSVn9A=
+	t=1744714168; cv=none; b=TNUyJRErcHQ0siYc9niHEkinRwWBDWDVrfqK7jq7g57lQJC23CMvFZohglTfVKQEgD2UP7IHgLMFNUhcvlk3YQBzMGii0OOViMIQCUOUOprj+PFw1yYyDqCkOcuBdbN+MsYXPfIqQ2XSeUrB2lM/DhLdbe9oUVomV251JmW4lLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744714134; c=relaxed/simple;
-	bh=N8sByQ+5iyPna0XPswyBM24sOwsZtpVZsMOmx4nx2Tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QeG/0an2ViUqjfURdRpJzRKPqLuSRfebyNzA2ihsfLpWRl1W19u1nx8pDzEcRJB/VtMg6jL6376apcu6lkZR+GBK70HiLdjYR860LK3Nr8p2Yor1dlfJVnaIJh6edLYg2DckA5o5LrKVR9IabRjVhYFaDGtujyckMihsb5ulAeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g95mg/3g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744714168; c=relaxed/simple;
+	bh=WDYEc4Tb9IEBFj4Iu3TZbc2Wv9rHYMydvooPb1yfFqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EGxuAGgjEBCbt5Hy2o2wjyGdfjaQ8csmFI3AG7JHSkGnbijjpJ/BNP/Lhi6GwRjIjwi9Qd99EGnNJH9pVh6JCLrBUZ/LZkX7MFLfZbrClhzDZOQD58hYPk/ykaYTq4vqwHDJgJCGtdCp3lAgHJdGr2UT75nVFyYrJYRreaE02yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYJXxMSB; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g95mg/3g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C912C4CEDD;
-	Tue, 15 Apr 2025 10:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744714134;
-	bh=N8sByQ+5iyPna0XPswyBM24sOwsZtpVZsMOmx4nx2Tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g95mg/3gAHnytZDuToatmQzwuRXNCxFSHQMCJvrVGpIj0sXkGOnzAgbsf/HFP13Pd
-	 t9CFxsOUmSt5E0kEPr9SIl0UVxFXE1469SDg+/qbtASlXhN6w8AhoBelfOV92EOk0Y
-	 sRTTQM4AEVzMAy+3egUWtcIXJYLZ7RMXwGD606v0HvhJ05t5d0MlUd8LMVyvTucbKu
-	 jHDItGSku44xAIyysRwmy7NKCHC3G4f3OVZ0P9G6Gurrpsr1PaI4G7Tv5+eYBP+5j5
-	 7XquHtwaj4LJQ430JH8NYh1Z2G3epO97t1H777w9cVNFnCujbH0EtZxW/+Oy4nIJGD
-	 QMvp9KWPsyZCg==
-Date: Tue, 15 Apr 2025 12:48:48 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Tejun Heo <tj@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
-Message-ID: <Z_45kDv_wAHIBNpI@cassiopeiae>
-References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
- <Z_1QzTdV8mHJYdQ6@cassiopeiae>
- <Z_4gb8ZAlbfhobgW@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYJXxMSB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744714167; x=1776250167;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WDYEc4Tb9IEBFj4Iu3TZbc2Wv9rHYMydvooPb1yfFqk=;
+  b=KYJXxMSBHrBGH0q5VPpMMu+1cZh1y99TLaRTExH+LMj+9HIhD3/UHO2H
+   InbhYMF1BFW3ujXh8lbzhl4RGupHSndT/y/jDi9amk7NsQO1bBRiJ3t0G
+   dSyi1dSC36c/Q3XVsZhU3YLu6HUoJhQDHxoMTm3LWHxgivvLWgE6hSZfA
+   OlAqSFVINX/r3sicWsYaLqGqDtiGrLtaiHtos9JjnajMOaP0+HKUBu6Xb
+   S1XrAD9cOdhC6KIbfcPtzNjs0d8lJyak845X0fwiykEH1GYl1+j5sS2Yg
+   cIG4BGL/2yikz2AAiQIdCZ9Wj/ESOxAA70UI3zVttbBO1v31hkQmXdiMt
+   Q==;
+X-CSE-ConnectionGUID: fWXUbIxNTSuHWsQ4HF6HpQ==
+X-CSE-MsgGUID: gh2zmkKDQ0CaMGP6KcFFiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46132891"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46132891"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 03:48:44 -0700
+X-CSE-ConnectionGUID: fXaDgnDyTqyf9u/aXkFZbw==
+X-CSE-MsgGUID: MXM7NXJdRRKNvxEDSTYbqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="167254348"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.ger.corp.intel.com) ([10.245.254.135])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 03:48:40 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: kvm@vger.kernel.org,
+	rick.p.edgecombe@intel.com,
+	kirill.shutemov@linux.intel.com,
+	kai.huang@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@linux.intel.com,
+	binbin.wu@linux.intel.com,
+	isaku.yamahata@intel.com,
+	linux-kernel@vger.kernel.org,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com
+Subject: [PATCH 0/2] KVM: x86: Correct use of kvm_rip_read()
+Date: Tue, 15 Apr 2025 13:48:19 +0300
+Message-ID: <20250415104821.247234-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_4gb8ZAlbfhobgW@google.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 09:01:35AM +0000, Alice Ryhl wrote:
-> On Mon, Apr 14, 2025 at 08:15:41PM +0200, Danilo Krummrich wrote:
-> > On Fri, Apr 11, 2025 at 03:34:24PM +0000, Alice Ryhl wrote:
-> > > 
-> > > +/// An owned kernel work queue.
-> > 
-> > I'd suggest to document that dropping an OwnedQueue will wait for pending work.
-> > 
-> > Additionally, given that you're about to implement delayed work as well, we
-> > should also mention that destroy_workqueue() currently does not cover waiting
-> > for delayed work *before* it is scheduled and hence may cause WARN() splats or
-> > even UAF bugs.
-> 
-> Ah, that's a problem :(
-> 
-> Can we make destroy_workqueue() wait for delayed items too? And/or have
-> a variant of it that does so? I'm not sure what is best to do here...
+Hi
 
-I think the problem is that the workq is not aware of all the timers in flight
-and simply queues the work in the timer callback. See also [1].
+Here are a couple of tweaks to dodge kvm_rip_read() in tracepoints and
+KVM_PROFILING when guest_state_protected.
 
-I'm not sure there's an easy solution to that, without adding extra overhead,
-such as keeping a list of timers in flight in the workqueue end. :(
+This avoids, for example, hitting WARN_ON_ONCE in vt_cache_reg() for
+TDX VMs.
 
-[1] https://elixir.bootlin.com/linux/v6.13.7/source/kernel/workqueue.c#L2489
+
+Adrian Hunter (2):
+      KVM: x86: Do not use kvm_rip_read() unconditionally in KVM tracepoints
+      KVM: x86: Do not use kvm_rip_read() unconditionally for KVM_PROFILING
+
+ arch/x86/kvm/trace.h | 13 ++++++++++---
+ arch/x86/kvm/x86.c   |  3 ++-
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+
+Regards
+Adrian
