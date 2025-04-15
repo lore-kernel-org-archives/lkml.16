@@ -1,75 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DCB22EE5;
-	Tue, 15 Apr 2025 00:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F569140E5F;
+	Tue, 15 Apr 2025 00:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744676833; cv=none; b=iC4d2z8uf9jYwNeZSX+MwRCw4WwJKuahvKAesrgP3VMqGEn9cX1bNrxSp+81+WXCVNObvS4tu3v3YjVxMMQrFFbO8XHcBxj00nDcX2tbkOg88JMWS/ytuRQaTTod/FB0X1wiaVBTryTu3DuMpAB49Dy2Ju16Ul6mNTCsnttmHUQ=
+	t=1744676834; cv=none; b=jmmQMing0erOOKNho+vpUG7aL0reHDftNpF4jxEwG47BdTRmdsfyZ8Y/jaKZ2BevkQ1EXJ0B0rqE7PzJTl9l4wn08OmTvHfPXpNBvUwg5gYJ57GvP9c09rkAW0cILG1Mh7+hqSk8eqN71zMoMKvBS9fBZm2UhgZxu1U2nSb7Z9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744676833; c=relaxed/simple;
-	bh=p/7BiZ9Yzsgk30h25OyaW/iYOh0nxPPaqAteJXbR6bY=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=T9v+rFCzMcGPzxjNuAnzEDr6PzE2nybIe+CnTYGF/FSYVhBqkfa6nOBvvN2VODSP3HDCXxwiB+jNRy2J1HHj4Rdm3cGejqAYW0OL4SIKBOmLYqbr+4T7/lFoNrO/40yCzttrZhZRp0MUSEAwP2pxeUlotXwbslPHNT6CpAFCkIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTZMzOQA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744676834; c=relaxed/simple;
+	bh=EQbVFiXao7puD8FbTPpEU1eMmPNK8pXkKaFDejX7ioA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aqzqWQAgFKPtnDPl+l8fdc+HzMvitLeUSWg8zKkhFcunmnSWpgZIQuWtF0+4FY27wDlMGGwcmZcdgf+CjOkrUDBMYgcRAcAaN0C9i+bS3kBkkcIlG/8v2Z4RGEgam8Qc4W1hHi1IkcL8+oUIhDgkVkTLnpw+0mqVi456HcHXF1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwrOGu1l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTZMzOQA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67FA4C4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwrOGu1l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D3DEC4CEE2;
 	Tue, 15 Apr 2025 00:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744676832;
-	bh=p/7BiZ9Yzsgk30h25OyaW/iYOh0nxPPaqAteJXbR6bY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=XTZMzOQAUI7mP2pfZTh93/xCW2LAIw3Q1mVUiaCy1BhVWLOn7WSu5NH19L7r5VSBU
-	 PGMACMxYH1rmDBIDPfv3pb4Y5BwTMYgot2rvR+Uae+E5rSy22siZAM+ReHSOsLwrjI
-	 5xfd7VCx5k2LqLChVTk9fKRlgIHBoqBEKwl+8YBHYQfHe6VXg8Ihlqc+/zDqfLrzEm
-	 W4H/mFFq83PFZuXrIJhtPG6sWVSjc3UzoEuFhnEdrEA6z+cuwzDhmdV/qYzput4CkL
-	 yIRQnHaGVhMUoHiRM/HCZWfcE/NHz82GL2XJJz5wDh1cQcLwWHcuBo7kJ0xfyr8Y1j
-	 0K0ZOek4vO4Hw==
-Message-ID: <e4bd8e47aeab761e409121ac9bc19408@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1744676834;
+	bh=EQbVFiXao7puD8FbTPpEU1eMmPNK8pXkKaFDejX7ioA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cwrOGu1lECI6l1OWhS0hTHi3FQWoStrJZ+Rhh6tSJIucoAw3nYduIFqPfjpaof+Qe
+	 Eow4a6h9ZMO493i0K0k4L+zgtOrnSJ9tKEONLxOY+bqNqtTn3oSjf2SunqJb96yA3y
+	 SEjyG3RNC1RNqpt7kZy1KCkRdDTNO/kDgYgsaVjUEuVqkvcoiEA/g2kCReuTWMybOy
+	 e9kMgXUOqW3UwwyVFQ761bzxnOQfaP/6eovvNJxpSzARHzGZQb1GnIp1aHd59+W6NK
+	 EMdfJO/Eh6ZSgyGTQasc6XQSX7u3VW26bfthiOLEZ55p8mxx7XMiNmd0IEp6A79uUQ
+	 btu50S5KKIwdg==
+From: Mario Limonciello <superm1@kernel.org>
+To: Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-i2c@vger.kernel.org (open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER),
+	kernel test robot <lkp@intel.com>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v4 2/5] i2c: piix4: Depends on X86
+Date: Mon, 14 Apr 2025 19:26:55 -0500
+Message-ID: <20250415002658.1320419-3-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250415002658.1320419-1-superm1@kernel.org>
+References: <20250415002658.1320419-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250414-camouflaged-silver-dodo-d0c000-mkl@pengutronix.de>
-References: <20250414073646.1473157-1-ciprianmarian.costea@oss.nxp.com> <20250414-camouflaged-silver-dodo-d0c000-mkl@pengutronix.de>
-Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, imx@lists.linux.dev, Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>, Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>, Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, kernel@pengutronix.de
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Maxime Ripard <mripard@kernel.org>
-Date: Mon, 14 Apr 2025 17:27:10 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+Content-Transfer-Encoding: 8bit
 
-Quoting Marc Kleine-Budde (2025-04-14 02:55:34)
-> On 14.04.2025 10:36:46, Ciprian Costea wrote:
-> > From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> >=20
-> > The FlexCan driver assumes that the frequency of the 'per' clock can be
-> > obtained even on disabled clocks, which is not always true.
-> >=20
-> > According to 'clk_get_rate' documentation, it is only valid once the cl=
-ock
-> > source has been enabled.
->=20
-> In commit bde8870cd8c3 ("clk: Clarify clk_get_rate() expectations")
-> Maxime Ripard changed the documentation of the of the function in clk.c
-> to say it's allowed. However clk.h states "This is only valid once the
-> clock source has been enabled.".
->=20
-> I've added the common clock maintainers to Cc.
->=20
-> Which documentation is correct? Is the clk.h correct for archs not using
-> the common clock framework?
->=20
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-I don't know what arches not using the common clk framework (CCF) do so
-I can't comment there. If you want something to work on an architecture
-that doesn't use the CCF then follow the header file, but in all
-practical cases _some_ rate will be returned from clk_get_rate() and
-we're not going to BUG_ON() or crash the system in the CCF
-implementation for this case. Enabling the clk is good hygiene though,
-so is it really a problem to enable it here?
+PIIX4 and compatible controllers are only for X86. As some headers are
+being moved into x86 specific headers PIIX4 won't compile on non-x86.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504120558.sq3IpWdH-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202504120432.0F8lOF3k-lkp@intel.com/
+Suggested-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/i2c/busses/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 83c88c79afe20..bbbd6240fa6ed 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -200,7 +200,7 @@ config I2C_ISMT
+ 
+ config I2C_PIIX4
+ 	tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+-	depends on PCI && HAS_IOPORT
++	depends on PCI && HAS_IOPORT && X86
+ 	select I2C_SMBUS
+ 	help
+ 	  If you say yes to this option, support will be included for the Intel
+-- 
+2.43.0
+
