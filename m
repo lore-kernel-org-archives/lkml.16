@@ -1,125 +1,170 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DFC257450
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108771EA6F
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744754657; cv=none; b=oN4mTQx0rUSVg9sqrPAJfzwfw/YSewOAtl3xHesP2asMxuB1OL3V5hdYBh0UkjvjvKVf69fH0/7NRcm8z1vAnrKB6iyDPaGrq5QXMC4ufkpEnEFOvHjDlc0OMvjmZztnAzyWrzZAP8CZC8c5M0xJDTVlUd2fP9q4675MVzuOWmw=
+	t=1744754826; cv=none; b=uTrIem9D/Ov2NhWL80wVNj1nIGOGuuRcBg7j9ZdAjBKtJizUManMFam8YKQZp597mHz6hWTfUlZl9jIUkWYxSSofWgK8visBN95sflJ8GRYf1SOdHbNdn9VuaRnHbc45fouyGXAJPbRpvNgSlUvYQw7ZSTvXGk0uaiBVeksFhl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744754657; c=relaxed/simple;
-	bh=ccLH6Lx5JrbQyBvu+4aoaBT9iXuBHDx/w/Prtlwl4PI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EdLXmu06g1oa1PuJ/XTJZJtsoEihXpUpEOFxzU7kBnY7gwTXlCjV09VSnP8k/oGXICTpPB88HSxmKVmqHZ+O4ekHIV7538KI+yA8Hgvscta8vHSi/4xfVxCQyUjdybDp9Y+XBfZGeLGIZdVpG1M70tz3/RYvKl05a2Bv1Ydm/nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rV3Ao5fr; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rV3Ao5fr"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso7135671a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744754656; x=1745359456; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wo4Okoh6l0stYAMM4y7IqfTAs0x9rsWfp3cuNWU2IgY=;
-        b=rV3Ao5frF/RBbaeizp2QGFZ55VKXLrgsvdnYpn5z8CNLLNplsCA0ffaqhUgLu92U6Y
-         xhDxTH2cKdlVHiCfNaqC2olAcN626Sn1pajvH5m2ShIyxPFfVNB5Albt8WoQaQPXlyfI
-         hgbmR1pUtnkZcy2OxWcex2JxJ0RLpNutnSc9lNS1ICOs6W8tmxLIesYp4mLhe8cHir8G
-         Q9AxEKaUwLTqrBiK8JnUX9PlO6QyHoDJsRRUWg+ng+zPfWyXRfHdxjd2vzd+ybJWeJnx
-         XjfXZCges//qP1ezC2kEVuyW/lNrxjsZvB5tVKBWW2I7r4AemzyfFZqjM86cTn0UAaRH
-         clrA==
+	s=arc-20240116; t=1744754826; c=relaxed/simple;
+	bh=kL9VGDkvpQr1zYUWJsPtGOLBKMYThDkkMOywfyWHTzo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Af/MTTUl0zN3TAVI54D0Qh2MdR/ZSiJVi2U8b84lGEOMhnBV9Hk+XvTG28E0kFFCbLHNDHssydvnJ6ZTt185mRE4xbal4XTeYDbFND9PVJSSWIdIhqqhdlQ45xvYKNXvQ8qoJT1XIEeorvEAMEvgRFU+ivIu/rgzPHQORaKEFg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d6e10f8747so58082075ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:07:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744754656; x=1745359456;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wo4Okoh6l0stYAMM4y7IqfTAs0x9rsWfp3cuNWU2IgY=;
-        b=mKvcOIC7B4+/EF/6misUYWmu6/InWU1ooDVQrP9sQxge1l8OEIuHe3dEiAQquM1N5R
-         y4h9rPxwc926rlEH5sy5+WFal9xNH3K0OY4jR1i/qWbpwfkHUhmzwBfb7Budb8KcI2rQ
-         lOm4p8CNrhb+jKsTTcB3q/dF1D9b+aRREP9n5SqcbyfOpL86+RdEQyjY8242rHQuvRL4
-         7D7V8ckcL33YBMsqQPesKvW9LMtR5e25IZM5GLeLrh+lZwB503UYWjDUQG+kpZ/n2ecZ
-         1WGyv212b1VZtnjbL40ydUrN07K89qFL9uEPPumhuV8fd+84M27Q87+60rh+Ngu2DJIf
-         ux7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXjhULUeJ9pA71yrACO8iIXbhdA+Mhot7Q9HupfXBfCnOsGjd9MWc+qNv+vK9Y10ZgRwhIhv1vzvj8Esus=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4nROlnHrlvNySLxJmZlB/QFiEJ5yZHM5jpZ1sXfavWDcyBr9t
-	F71Qt8T5CaF3FKVhLEyT46KZ2UyneM/tgl9ORnWXQFEwqr30ybmkvuCALsHb9B8eBU/8VnvA1M5
-	LYw==
-X-Google-Smtp-Source: AGHT+IHFSR2PN9qWnpYuo8R+JF0mYE1/E0Gt7NN0o/QNrpDTn7/4htyrrEr0PnokOWhJQ4DnbnOqrhm7918=
-X-Received: from pjbtd5.prod.google.com ([2002:a17:90b:5445:b0:2fc:3022:36b8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:274d:b0:2f2:a664:df1a
- with SMTP id 98e67ed59e1d1-3085ee7fd3dmr1242998a91.2.1744754655773; Tue, 15
- Apr 2025 15:04:15 -0700 (PDT)
-Date: Tue, 15 Apr 2025 15:04:14 -0700
-In-Reply-To: <fcc15956-aad0-49ea-b947-eac1c88d0542@amd.com>
+        d=1e100.net; s=20230601; t=1744754822; x=1745359622;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yDf58XDHmqtv5dlJHeZuOlpCr06VfE29Urc6uWgfJtg=;
+        b=mxh+KMq2FH1gpARtDWACn2oLS9heD1XVnJ+52AhROUyH31viOZndY7N4WSGectAxtu
+         o9DICuqxtvxpuzFRNPJwotGAV8GzBK0nOACfTzBBaUNHdneLK3FXZnoEITXuJpMuYCOx
+         TpPn3Gq2pOzH+i6DpEfxKPKLMIIiZoRbBcKY/tEjbQbbI96FNspqQvLRyM9CSuWix7jc
+         imjJeWzwwBeHkhsc3fO73kk0hswevpjYe/SyMmYsoOJ4Nt8SbVx0GTu3y4+dTmxvqMEl
+         o8oeMUdm8h88WnR5ZZHcbVzMeT1mjy+qqgGh75pbip5EKqwEJHaz01TQZ3NplLT4CQFG
+         JkHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaWb4qCO3rMPoBRAigeZ4GjGKVQ/5HNj2jrjYr50B0Hc9FsvFTLGV8OvV2NjKIhpmjyu87w+/rU+aB6Oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb2KxxlBUJOd8AeYZA8EBdahkJvStneEjpDJrVnXyDAxZlYEVc
+	T151KQdl+X//raQ5AEGt0JJ9UDFEQ3Dd0BH10aSab/PTHR6k0EbAknraRFOcDgufqRFBoBNwuOm
+	tLDzNAiEPfZ/c/0ZgnYpGNnwnc523051Y0YTinFnXeqcvK6v9j/LlrxE=
+X-Google-Smtp-Source: AGHT+IF33MlQi6q8VLJpn2mQHScuY6OVhRvsfgZfrPeNZOZTSiboFK7cco4G9ng2ybMd6fPkByFvjrzfiHDDTeKSLaPwA9396hTm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-7-seanjc@google.com>
- <0895007e-95d9-410e-8b24-d17172b0b908@amd.com> <Z_ki0uZ9Rp3Fkrh1@google.com> <fcc15956-aad0-49ea-b947-eac1c88d0542@amd.com>
-Message-ID: <Z_7X3hoRdbHsTnc8@google.com>
-Subject: Re: [PATCH 06/67] iommu/amd: WARN if KVM attempts to set vCPU
- affinity without posted intrrupts
-From: Sean Christopherson <seanjc@google.com>
-To: Vasant Hegde <vasant.hegde@amd.com>
-Cc: Sairaj Kodilkar <sarunkod@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>, 
-	Naveen N Rao <naveen.rao@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1746:b0:3d6:d162:be02 with SMTP id
+ e9e14a558f8ab-3d812592679mr14177415ab.21.1744754821977; Tue, 15 Apr 2025
+ 15:07:01 -0700 (PDT)
+Date: Tue, 15 Apr 2025 15:07:01 -0700
+In-Reply-To: <20250415174725.369628-1-duttaditya18@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fed885.050a0220.d2ea7.0000.GAE@google.com>
+Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in add_missing_indices
+From: syzbot <syzbot+b974bd41515f770c608b@syzkaller.appspotmail.com>
+To: duttaditya18@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, syzkaller-lts-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 15, 2025, Vasant Hegde wrote:
-> On 4/11/2025 7:40 PM, Sean Christopherson wrote:
-> > On Fri, Apr 11, 2025, Sairaj Kodilkar wrote:
-> >> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> >>> WARN if KVM attempts to set vCPU affinity when posted interrupts aren't
-> >>> enabled, as KVM shouldn't try to enable posting when they're unsupported,
-> >>> and the IOMMU driver darn well should only advertise posting support when
-> >>> AMD_IOMMU_GUEST_IR_VAPIC() is true.
-> >>>
-> >>> Note, KVM consumes is_guest_mode only on success.
-> >>>
-> >>> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> >>> ---
-> >>>   drivers/iommu/amd/iommu.c | 13 +++----------
-> >>>   1 file changed, 3 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-> >>> index b3a01b7757ee..4f69a37cf143 100644
-> >>> --- a/drivers/iommu/amd/iommu.c
-> >>> +++ b/drivers/iommu/amd/iommu.c
-> >>> @@ -3852,19 +3852,12 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *vcpu_info)
-> >>>   	if (!dev_data || !dev_data->use_vapic)
-> >>>   		return -EINVAL;
-> >>> +	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
-> >>> +		return -EINVAL;
-> >>> +
-> >>
-> >> Hi Sean,
-> >> 'dev_data->use_vapic' is always zero when AMD IOMMU uses legacy
-> >> interrupts i.e. when AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) is 0.
-> >> Hence you can remove this additional check.
-> > 
-> > Hmm, or move it above?  KVM should never call amd_ir_set_vcpu_affinity() if
-> > IRQ posting is unsupported, and that would make this consistent with the end
-> > behavior of amd_iommu_update_ga() and amd_iommu_{de,}activate_guest_mode().
-> > 
-> > 	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
-> 
-> Note that this is global IOMMU level check while dev_data->use_vapic is per
-> device. We set per device thing while attaching device to domain based on IOMMU
-> domain type and IOMMU vapic support.
-> 
-> How about add WARN_ON based on dev_data->use_vapic .. so that we can catch if
-> something went wrong in IOMMU side as well?
+Hello,
 
-It's not clear to me that a WARN_ON(dev_data->use_vapic) would be free of false
-positives.  AFAICT, the producers (e.g. VFIO) don't check whether or not a device
-supports posting interrupts, and KVM definitely doesn't check.  And KVM is also
-tolerant of irq_set_vcpu_affinity() failures, specifically for this type of
-situation, so unfortunately I don't know that the IOMMU side of the world can
-safely WARN.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+UBSAN: array-index-out-of-bounds in add_missing_indices
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+================================================================================
+UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:2946:28
+index -128 is out of range for type 'struct dtslot[128]'
+CPU: 1 PID: 5111 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call trace:
+ dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
+ dump_stack+0x1c/0x58 lib/dump_stack.c:113
+ ubsan_epilogue lib/ubsan.c:151 [inline]
+ __ubsan_handle_out_of_bounds+0x108/0x15c lib/ubsan.c:282
+ add_missing_indices+0x6d0/0xaac fs/jfs/jfs_dtree.c:2946
+ jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
+ iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
+ __do_sys_getdents64 fs/readdir.c:369 [inline]
+ __se_sys_getdents64 fs/readdir.c:354 [inline]
+ __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
+ __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
+ el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
+ do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
+ el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
+ el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
+ el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
+================================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
+Read of size 32 at addr ffffff80e1ab4130 by task syz.0.16/5111
+
+CPU: 1 PID: 5111 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call trace:
+ dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
+ print_address_description+0x7c/0x3f0 mm/kasan/report.c:248
+ __kasan_report mm/kasan/report.c:434 [inline]
+ kasan_report+0x174/0x1e4 mm/kasan/report.c:451
+ check_region_inline mm/kasan/generic.c:-1 [inline]
+ kasan_check_range+0x274/0x2b4 mm/kasan/generic.c:189
+ memcpy+0x90/0xe8 mm/kasan/shadow.c:65
+ diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
+ txCommit+0x748/0x5548 fs/jfs/jfs_txnmgr.c:1255
+ add_missing_indices+0x74c/0xaac fs/jfs/jfs_dtree.c:2960
+ jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
+ iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
+ __do_sys_getdents64 fs/readdir.c:369 [inline]
+ __se_sys_getdents64 fs/readdir.c:354 [inline]
+ __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
+ __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
+ el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
+ do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
+ el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
+ el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
+ el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
+
+Allocated by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffffff80e1ab40c0
+ which belongs to the cache jfs_ip of size 2240
+The buggy address is located 112 bytes inside of
+ 2240-byte region [ffffff80e1ab40c0, ffffff80e1ab4980)
+The buggy address belongs to the page:
+page:000000008771d7e4 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x121ab0
+head:000000008771d7e4 order:3 compound_mapcount:0 compound_pincount:0
+memcg:ffffff80c76f5501
+flags: 0x5ffc00000010200(slab|head|node=0|zone=2|lastcpupid=0x7ff)
+raw: 05ffc00000010200 0000000000000000 dead000000000122 ffffff80c6707680
+raw: 0000000000000000 00000000800d000d 00000001ffffffff ffffff80c76f5501
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffffff80e1ab4000: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffffff80e1ab4080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffffff80e1ab4100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                     ^
+ ffffff80e1ab4180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffffff80e1ab4200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+
+
+ ... Log Wrap ... Log Wrap ... Log Wrap ...
+
+ERROR: (device loop0): jfs_readdir: JFS:Dtree error: ino = 2, bn=0, index = 0
+
+ERROR: (device loop0): remounting filesystem as read-only
+JFS: Invalid stbl[1] = -128 for inode 2, block = 0
+
+
+Tested on:
+
+commit:         f7347f40 Linux 5.15.180
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git linux-5.15.y
+console output: https://syzkaller.appspot.com/x/log.txt?x=132e08cc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e433a356d25f60cb
+dashboard link: https://syzkaller.appspot.com/bug?extid=b974bd41515f770c608b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12762470580000
+
