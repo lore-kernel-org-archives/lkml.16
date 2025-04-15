@@ -1,63 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF6C19F422;
-	Tue, 15 Apr 2025 13:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3FA2190462;
+	Tue, 15 Apr 2025 13:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725314; cv=none; b=IplZVKGSuJJzHpRFtGtANn1bORrJOVE2ciflgB3wysc6eJCPVILlvozBsImY/QSa0k1RkaFq7z3lh4SPRaUFcF47hsK/1gl0G+wFcoO75GTjMf5eN3Zr3mzs3N4S6rMmBt6jxKNic12Na9uwScWmX5ghzdnaJKv8S4OV3MidTFI=
+	t=1744725348; cv=none; b=GaNG868/Rp1lXQhReVU7jJAL6GDPFVWCJPSYPcsnUPygiFfxdK99PDcoopU/7r1DkMEZfxCCC9WNtFHzMmAvMfHNwDSnMeUq21gHJxd2GbJypNB3hvLuaa8BtrR4GHCpv571mvBmpdHdYAPVqYRamlMGxYvhSJeEHpYwHFAthc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725314; c=relaxed/simple;
-	bh=755NGgblQW9HkSMmzLZEBTgNnlFCcB7cI0M7GpYpsTQ=;
+	s=arc-20240116; t=1744725348; c=relaxed/simple;
+	bh=8Pwn/PrH1AUchwBpOFvjOyYrEJ+1hQ8GwcrfYgMZPAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+SMf34SI7OzyQHYKjGTCual8MAyAzjtxQLrTYDwk52KTXZfWFqE83yAQJTC+D5QIzBpgOoH+NFKyhVe28y0ttKo1SS6YmLiIy5nb6Ig9OiTPtavbiLDooGj12qmmH77kNYf9VQwvGig3x+IGXC9plmhszDFvTJam/+LTW++chE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sth2R2Ly; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sth2R2Ly"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744725312; x=1776261312;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=755NGgblQW9HkSMmzLZEBTgNnlFCcB7cI0M7GpYpsTQ=;
-  b=Sth2R2Lyivx2TL1+doXjCj4uW83pxPEGnxd7CUS6SB7cjFJ2XfQUGs5N
-   l9Ua2wZ1gWU1sMQMt6eCEnD0ZDRZTA5qeSjRwBG4v3bwCRK9dxyBvkpa6
-   z9wSiEcKG9oKDk45iigHmnNqDamTPi/eHWy2Wki02IwjlMXX0n44WbMH9
-   mUfENq/KWB8udiD82jL+KBZ0CLUKTCzWIiSHCmKv/v3ch6rQh0bU5g1uy
-   BgT2GrYxZLKsq1mzNnsYY8U1X59BBT0tW9yMd0cBum8khQxRr8OZSURbU
-   324lqfYkIOgyJMTc9asSbSvLs7z6M/hT4cuNFInwpeQkIHzASNBiX7qXL
-   g==;
-X-CSE-ConnectionGUID: BPryvVwPROqKAs35JpLsAQ==
-X-CSE-MsgGUID: ieyt3azQTXOxAGzs4utYHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46124380"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46124380"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 06:55:09 -0700
-X-CSE-ConnectionGUID: uxfaW6T8QYaTnAcbc4WFVQ==
-X-CSE-MsgGUID: FouCYPlFSgukV2pkoOZSUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="135308407"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2025 06:55:07 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4gkj-000GFC-1S;
-	Tue, 15 Apr 2025 13:55:05 +0000
-Date: Tue, 15 Apr 2025 21:54:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arthur Simchaev <arthur.simchaev@sandisk.com>
-Cc: oe-kbuild-all@lists.linux.dev, avri.altman@sandisk.com,
-	Avi.Shchislowski@sandisk.com, beanhuo@micron.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bvanassche@acm.org
-Subject: Re: [PATCH v2] ufs: bsg: Add hibern8 enter/exit to
- ufshcd_send_bsg_uic_cmd
-Message-ID: <202504152111.1Huykiqb-lkp@intel.com>
-References: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DpLBwN7tu2ob9RiU1xVSAuH969XjQznXmhn/8ZrvgKEi/ZQy6opedprh6bd34FIe6V5sqX4EDaKzLsfIsoIiR/dX+UEiKRh8cNbRJaDJa/qAh6jKewpawNNitJOFqAkh5rIsXxHI3F7WO2pCbN4QdiAHwHn8hzHtQgFlvUGU7fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5498115A1;
+	Tue, 15 Apr 2025 06:55:43 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62813F694;
+	Tue, 15 Apr 2025 06:55:42 -0700 (PDT)
+Date: Tue, 15 Apr 2025 14:55:33 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [RFC PATCH 0/3] Introduce SCMI Quirks framework
+Message-ID: <Z_5lJA74OugEbB-S@pluto>
+References: <20250401122545.1941755-1-cristian.marussi@arm.com>
+ <Z-_dMev0v6P4UJ_i@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,94 +40,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
+In-Reply-To: <Z-_dMev0v6P4UJ_i@hovoldconsulting.com>
 
-Hi Arthur,
+On Fri, Apr 04, 2025 at 03:22:57PM +0200, Johan Hovold wrote:
+> Hi Cristian,
+> 
+> On Tue, Apr 01, 2025 at 01:25:42PM +0100, Cristian Marussi wrote:
+> 
+> > with the increasing adoption of SCMI across arm64 ecosystems, we have to
+> > start considering how to deal and take care of out-of-spec SCMI firmware
+> > platforms that are actively deployed in the wild, in a consistent manner.
+> > 
+> > This small series introduces a simple framework, based on static_keys,
+> > that allows a user to:
+> > 
+> > - define a quirk and its matching conditions; quirks can match based on:
+> > 
+> >   	compatible / Vendor_ID / Sub_Vendor_ID / ImplVersion
+> > 
+> >   from the longest matching sequence down to the shortest.
+> > 
+> >   When the SCMI core stack boots it will enable the matching quirks
+> >   depending on the information gathered from the platform via Base
+> >   protocol: any NULL/0 match condition is ignored during matching and is
+> >   interpreted as ANY, so you can decide to match on a very specific
+> >   combination of compatibles and FW versions OR simply on a compatible.
+> > 
+> > - define a quirk code-block: simply a block of code, meant to play the
+> >   magic quirk trick, defined in the proximity of where it will be used
+> >   and gated by an implicit quirk static-key associated with the defined
+> >   quirk
+> 
+> > Any feedback and testing is very much welcome.
+> 
+> I'm hitting the below lockdep splat when running with this series and
+> the FC quirk enabled.
+> 
+> Johan
+> 
+> 
+> [    8.399581] ======================================================
+> [    8.399582] WARNING: possible circular locking dependency detected
+> [    8.399583] 6.14.0 #103 Not tainted
+> [    8.399584] ------------------------------------------------------
+> [    8.399584] kworker/u49:5/165 is trying to acquire lock:
+> [    8.399586] ffff65d004d36320 (&info->protocols_mtx){+.+.}-{4:4}, at: scmi_get_protocol_instance+0x4c/0x5c0
+> [    8.399596] 
+>                but task is already holding lock:
+> [    8.399596] ffff65d00a895348 (&ni->pending_mtx){+.+.}-{4:4}, at: __scmi_event_handler_get_ops+0x70/0x47c
+> [    8.399600] 
+>                which lock already depends on the new lock.
+> 
+> [    8.399601] 
+>                the existing dependency chain (in reverse order) is:
+> [    8.399601] 
+>                -> #4 (&ni->pending_mtx){+.+.}-{4:4}:
 
-kernel test robot noticed the following build errors:
+Hi Johan,
 
-[auto build test ERROR on jejb-scsi/for-next]
-[also build test ERROR on mkp-scsi/for-next linus/master v6.15-rc2 next-20250415]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I have reproduced this when running with LOCKDEP and quirks enabled:
+it was due to the fact that static_branch_enable() takes a cpu_lock
+internally and I was triggering all of this from Base protocol init
+which takes a number of other mutexes...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Arthur-Simchaev/ufs-bsg-Add-hibern8-enter-exit-to-ufshcd_send_bsg_uic_cmd/20250414-200404
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git for-next
-patch link:    https://lore.kernel.org/r/20250414120257.247858-1-arthur.simchaev%40sandisk.com
-patch subject: [PATCH v2] ufs: bsg: Add hibern8 enter/exit to ufshcd_send_bsg_uic_cmd
-config: s390-randconfig-002-20250415 (https://download.01.org/0day-ci/archive/20250415/202504152111.1Huykiqb-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504152111.1Huykiqb-lkp@intel.com/reproduce)
+I moved SCMI quirk initialiation after Base protocol initialization
+in scmi_probe and it is gone...and indeed was not needed anyway so
+early.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504152111.1Huykiqb-lkp@intel.com/
+I'll post a new V1 for quirks in a short while including this change.
 
-All errors (new ones prefixed by >>):
-
-   drivers/ufs/core/ufshcd.c: In function 'ufshcd_send_bsg_uic_cmd':
->> drivers/ufs/core/ufshcd.c:4360:9: error: too many arguments to function 'ufshcd_uic_hibern8_exit'
-      ret = ufshcd_uic_hibern8_exit(hba, uic_cmd);
-            ^~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/ufs/core/ufshcd-priv.h:7:0,
-                    from drivers/ufs/core/ufshcd.c:31:
-   include/ufs/ufshcd.h:1331:5: note: declared here
-    int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
-        ^~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/ufshcd_uic_hibern8_exit +4360 drivers/ufs/core/ufshcd.c
-
-  4331	
-  4332	/**
-  4333	 * ufshcd_send_bsg_uic_cmd - Send UIC commands requested via BSG layer and retrieve the result
-  4334	 * @hba: per adapter instance
-  4335	 * @uic_cmd: UIC command
-  4336	 *
-  4337	 * Return: 0 only if success.
-  4338	 */
-  4339	int ufshcd_send_bsg_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
-  4340	{
-  4341		int ret;
-  4342	
-  4343		if (hba->quirks & UFSHCD_QUIRK_BROKEN_UIC_CMD)
-  4344			return 0;
-  4345	
-  4346		ufshcd_hold(hba);
-  4347	
-  4348		if (uic_cmd->argument1 == UIC_ARG_MIB(PA_PWRMODE) &&
-  4349		    uic_cmd->command == UIC_CMD_DME_SET) {
-  4350			ret = ufshcd_uic_pwr_ctrl(hba, uic_cmd);
-  4351			goto out;
-  4352		}
-  4353	
-  4354		if (uic_cmd->command == UIC_CMD_DME_HIBER_ENTER) {
-  4355			ret = ufshcd_uic_hibern8_enter(hba);
-  4356			goto out;
-  4357		}
-  4358	
-  4359		if (uic_cmd->command == UIC_CMD_DME_HIBER_EXIT) {
-> 4360			ret = ufshcd_uic_hibern8_exit(hba, uic_cmd);
-  4361			goto out;
-  4362		}
-  4363	
-  4364		mutex_lock(&hba->uic_cmd_mutex);
-  4365		ufshcd_add_delay_before_dme_cmd(hba);
-  4366	
-  4367		ret = __ufshcd_send_uic_cmd(hba, uic_cmd);
-  4368		if (!ret)
-  4369			ret = ufshcd_wait_for_uic_cmd(hba, uic_cmd);
-  4370	
-  4371		mutex_unlock(&hba->uic_cmd_mutex);
-  4372	
-  4373	out:
-  4374		ufshcd_release(hba);
-  4375		return ret;
-  4376	}
-  4377	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Cristian
