@@ -1,118 +1,108 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040141F3BA6;
-	Tue, 15 Apr 2025 10:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6EB1F181F;
+	Tue, 15 Apr 2025 10:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711732; cv=none; b=hQeZWRHp8vVWe/uT/vF3szuxIpBM1N4mOK5kv01eHX66gQHkcymByRCumGA86DoDAcDzj90KsuudpGg03uSesSHPL/RscnG3QA+g8FEBl1NLG38NQvr10DCiLq75sfddj8btr7Ej/URFh1KtGaA59jwPMY4FAj6JSpqdvePbMF0=
+	t=1744711983; cv=none; b=C/7TgAZyqf88vytjOSoLvmQGycvPUYNl2ATunYJqAVbg0fejX59NrgtHY5cSJ+5vxqgshCvvVLNhK/aFX6wn8locAGAZLQwXVz+fgnB3q8/GzImmMSdBD4P+zn+4VmIAvEBY6s9v+OAEYVL7/9jvUqmLRPhReTlqRVKkrgBCXuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711732; c=relaxed/simple;
-	bh=Mq0cAN0e4sfbovaCgX5JgEk71yxOSGxpLEewHavF5cg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b3DFqd/y7UPTmlrBXhlJbqjvryn+CbOU5pTg4XFJFhOGQQSUddg3nb2M1hKT2uii6av8mu+voYPEfaKeAhmk5pwWzYnskNLst/BT1lqloj7tdgkO1HTyjmJ0LCnojAuXIzMHkhN3ygtgJYdoycPQiSOw8dFf2I0u3zLkC2tWh3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowACnUD0gMP5nO6j8CA--.18963S2;
-	Tue, 15 Apr 2025 18:08:33 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: kenneth.feng@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] drm/amd/pm/powerplay/smumgr/fiji_smumgr: Add error check in fiji_populate_smc_boot_level()
-Date: Tue, 15 Apr 2025 18:08:13 +0800
-Message-ID: <20250415100813.3071-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744711983; c=relaxed/simple;
+	bh=cdpDLy1vtRwmaEa5Kx8WJ0+d1f8Ie+MQo5C6d4zf2GQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PrfaVBaQex3XCqMi9ETlNGBnmhmLRPPaQnMDpCyS7BsmCS5vFlHIChxUosHswwyiZGG1q6av+AIV5HccDehZQMSjTiEnEh5Vitl+24mwenSNaGziCh0by/k10dPmZouzx21XcijZOHSambEOc7CPvEALpo9UsnI2pEfROV7wGSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 7E184342FEB;
+	Tue, 15 Apr 2025 10:13:00 +0000 (UTC)
+Date: Tue, 15 Apr 2025 10:12:49 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>,
+	ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com,
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org,
+	tglx@linutronix.de, hal.feng@starfivetech.com,
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr,
+	elder@riscstar.com, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+Message-ID: <20250415101249-GYA30674@gentoo>
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-2-guodong@riscstar.com>
+ <20250411-confider-spinster-35f23040d188@spud>
+ <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+ <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACnUD0gMP5nO6j8CA--.18963S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw4xCr1kAr1rKw13CrW7Arb_yoW5JrWrpr
-	9xXrZIv395tanxJrnrtan2qr4S9Fy8JFWUCay7C34rXw1jqryUZr40ya4aya18GFyIkwsa
-	q3ZFga4UCr4Ik3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRENA2f+IlI5yQAAsP
+In-Reply-To: <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
 
-The return value of fiji_populate_smc_boot_level() is needs to be checked.
-An error handling is also needed to phm_find_boot_level() to reset the
-boot level when the function fails. A proper implementation can be found
-in tonga_populate_smc_boot_level().
+Hi Philipp,
 
-Fixes: dcaf3483ae46 ("drm/amd/pm/powerplay/smumgr/fiji_smumgr: Remove unused variable 'result'")
-Cc: stable@vger.kernel.org # v5.11+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v2: Fix error code.
+On 17:54 Tue 15 Apr     , Guodong Xu wrote:
+> On Tue, Apr 15, 2025 at 4:53 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> >
+> > On Fr, 2025-04-11 at 17:44 +0100, Conor Dooley wrote:
+> > > On Fri, Apr 11, 2025 at 09:14:15PM +0800, Guodong Xu wrote:
+> > > > Add an optional resets property for the Marvell PWM PXA binding.
+> > > >
+> > > > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > > > index 9ee1946dc2e1..9640d4b627c2 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > > > @@ -31,6 +31,9 @@ properties:
+> > > >    clocks:
+> > > >      maxItems: 1
+> > > >
+> > > > +  resets:
+> > > > +    maxItems: 1
+> > >
+> > > Do any of the currently supported devices use a reset? If not, then add
+> > > this in tandem with the new compatible and only allow it there please.
+> >
+> > Also, if spacemit,k1-pwm can not work without the reset being
+> > deasserted, mark it as required.
 
- .../drm/amd/pm/powerplay/smumgr/fiji_smumgr.c | 23 ++++++++++++++-----
- 1 file changed, 17 insertions(+), 6 deletions(-)
+If I inerpret correctly, only reset requires explicitly being de-asserted,
+need to mark as required? that's being said, if reset comes out as de-asserted
+ by default after power reset, then not necessary?
+(in other cases, some device block is in asserted state by default)
 
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c b/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c
-index 5e43ad2b2956..78ba22f249b2 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c
-@@ -1600,19 +1600,30 @@ static int fiji_populate_smc_uvd_level(struct pp_hwmgr *hwmgr,
- static int fiji_populate_smc_boot_level(struct pp_hwmgr *hwmgr,
- 		struct SMU73_Discrete_DpmTable *table)
- {
-+	int result = 0;
- 	struct smu7_hwmgr *data = (struct smu7_hwmgr *)(hwmgr->backend);
- 
- 	table->GraphicsBootLevel = 0;
- 	table->MemoryBootLevel = 0;
- 
- 	/* find boot level from dpm table */
--	phm_find_boot_level(&(data->dpm_table.sclk_table),
--			    data->vbios_boot_state.sclk_bootup_value,
--			    (uint32_t *)&(table->GraphicsBootLevel));
-+	result = phm_find_boot_level(&(data->dpm_table.sclk_table),
-+				     data->vbios_boot_state.sclk_bootup_value,
-+				     (uint32_t *)&(table->GraphicsBootLevel));
-+	if (result != 0) {
-+		table->GraphicsBootLevel = 0;
-+		pr_err("VBIOS did not find boot engine clock value in dependency table. Using Graphics DPM level 0!\n");
-+		result = 0;
-+	}
- 
--	phm_find_boot_level(&(data->dpm_table.mclk_table),
--			    data->vbios_boot_state.mclk_bootup_value,
--			    (uint32_t *)&(table->MemoryBootLevel));
-+	result = phm_find_boot_level(&(data->dpm_table.mclk_table),
-+				     data->vbios_boot_state.mclk_bootup_value,
-+				     (uint32_t *)&(table->MemoryBootLevel));
-+	if (result != 0) {
-+		table->MemoryBootLevel = 0;
-+		pr_err("VBIOS did not find boot engine clock value in dependency table. Using Memory DPM level 0!\n");
-+		result = 0;
-+	}
- 
- 	table->BootVddc  = data->vbios_boot_state.vddc_bootup_value *
- 			VOLTAGE_SCALE;
+thanks
+> >
+> 
+> Thank you Philipp. spacemit,k1-pwm can not work without the reset.
+> I will add that in the next version.
+> 
+> -Guodong
+> 
+> > The driver can still use reset_control_get_optional.
+> >
+> > regards
+> > Philipp
+
 -- 
-2.42.0.windows.2
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
