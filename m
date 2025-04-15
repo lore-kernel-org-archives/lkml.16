@@ -1,299 +1,159 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6371ACEDE
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C79192580
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725182; cv=none; b=Hzjp+TwNXR4AQeMaEbMXOWt4zXHay9aPCXKJr3c7KXEh4DtAs5kX7Ky9XuW93VxA3uiPnopq+K0Qn9PXiXhz0ceG/H+L/Z5mPeL+K9AG9f+Gu79Knj5b35yDGY61xzZBpvfBKi2wB56t+WzzkVHaV5t7Odc/y7Bu2dlpQUcQ+Gg=
+	t=1744725201; cv=none; b=jAtOl84EDWTjkG89Tx5bjA0uqU+jTWveU0St2pqJ3/Gbb5vFsQqntAbHOOwsX/RXAcetbgq3vorljlawWHhicPjdoAWeI4o+RNJ+4bWEqvhKO1Q28hQWvq83ThsfObv1wUToVaX0mvXnvDFsNy25drJR2aHk+kjV8a/NsJ2oBZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725182; c=relaxed/simple;
-	bh=q/DmaL+PqLmLjvBYhmlgOORoSNjDoeQfL2FWnmXJ/5k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IOHfECEdxWaUedCcPG9CFEjCd/8MGIQUYguoCWZswqwzRdTSLc7d/qyFgjqRfifV8bidc72qvm+PztzYMnHnjX/h4MIuygg0VlTD0HHUi+b7ELADJzq+qRNkuBVCkajTwvZS/vDilulDdt4SaHOrhdq1W5Y3ZDZwkDMtYP3qNQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jur1qnLB; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1744725201; c=relaxed/simple;
+	bh=bgzW8YxINyu6W61KznQTMmt2So/8oOuKzrFONOEyMzA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DLEEl4MX394IOPVkKRdu+ugsIdT6lOM6THr3bOXpfR7oFZYUnIMI0rnj0OPomyzYzzgoaWmRkEOmv2FjFoe6mr5cFwhB4OLuG6Z51JHne3huG8D47RXASne3tsRkgmnrWZWd/cbSUAjakD+zj/WuBxB9MgpqTaf/AcyYm+DArV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E1RGe7Hl; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jur1qnLB"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abec8b750ebso945535766b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:52:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E1RGe7Hl"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so3394645a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744725178; x=1745329978; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ooSny9XUJhxzZTQ7SphFkbtSCGNbzJtlyoCGrcjm0uI=;
-        b=Jur1qnLBVJ9J0i+KbNR4cqt04XE884GK/fDof0HROA4vW9N4azemkf+jFe7Vmf0bh4
-         dpxrfa/noqHwjr/Qa3k1R9N1/kH0qMD5/zEvl/IB6EYcQpq8g17upCwKBP7EZrfoN/Fd
-         5huHCjnvS/utQGYGg4q9YtdpE3FWKEMmivpYPrAyt1t27IGd01Co0BQEUV1yXRwgqs/P
-         ArjmcRgjrV81O26rEjvIsosFPARk1gd3CQZHu0F64kVPln6ABhXitcyofcYdfLI8vSXV
-         M7JPX2a52rWgiXCeuP/Lb9X/oU7CysEmRyqq+/aqNNX6WQMvDvktH2SCFPG8vdjxp1K7
-         WUGQ==
+        d=linaro.org; s=google; t=1744725198; x=1745329998; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AllNkRrbyjcjvSu2WZVuohdOWdJ1dJ6T/kkM49XqA4g=;
+        b=E1RGe7Hlz1mwl75Uj/uWezX1dfBasXulgXnJjWxPIfaV3sKkq/2zg2Nkq9k+RJoct+
+         8o+HJJw5B5PPMlwHf3o67Geo2NbrPbKdEpbnuxJLC9Ab9/IZ9YgMALAHX0jE/o8lctNF
+         g8X47zold4lP70zcE646lC9m8KFFrN8YHjrboXe68aNmNxcRi20GDZjamXoCsMLR1bV4
+         seP45/eQlhfblZnWRIsHNGzWVGfyuZPoXTLkCclO6p1aS4oIOxszGt11gcEciWLY8W0d
+         0eT85PYDz8Bv1yJhgdRrbgmFhDQvMGl7gyru3M5L5Fzhw3ErmQ8AcxLeldeGIGPpXqV7
+         ZtOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744725178; x=1745329978;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744725198; x=1745329998;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ooSny9XUJhxzZTQ7SphFkbtSCGNbzJtlyoCGrcjm0uI=;
-        b=gAY7KNdpNhUNnjBY6u1DYDIb7ogfsNpdgG3pJKBlnWZSDDcvCpZtE2d4OSL4Nrvk8Y
-         mUJSeyl8iNv5tb2PP3vh23p6uC7f8OYx48H0bAUDrlQ+PDgOMBn36RHBCsj9avuMYuUf
-         +hWGOLgCosDg7WfklK/ErqWno2nGgsowQnYt0o7GQPiBm2Re7rkmKmZghDcIE2MjslB2
-         TecfhOx43m3tm5Ma7FphAtPWI7zFY+yuSB7K7Jr4s/2sUIZGKqyRNTo0XATJgYMzl2FS
-         /vkm1mQ5M69bBQ2ahAXUSNF2HmFkasJJy3uLe4fbJ7WFv7wbXPIRdCONIfUkGCCMOu+R
-         S7Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCU9c7D00DQ2wMia25XNInNnpF01lWDZYCFCkhV6mRunPGfeVzAFHZKGz63P0xwetGiiwa3AOK6YzBTG6MY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy33uLfkpAGR5Z+WBR78OH8Qv2LvdQ0vhiFkE+NtN60v/oh6GPn
-	3PvHfMQefjXpNfL53heSzD+7KisNRaoNtow+18TOG9bkMv0M/qdjChdanUT4s580AD8z7DZBxSa
-	9XC8DBYAPn1UFUAwxm36QaLWKt4z8IZVQCyrLrQ==
-X-Gm-Gg: ASbGnct7HuVPbvihSoLFekzqYtNj3Cdnut6TL8INoZzRuHcefICJWqAcKX12PqSMy66
-	ZAdunMc39s8ANlqP3pAjkdJjoQqbu3jGZaSn8xf3VYVmxQIstGpuL6crCfEzzWO4fi9KmJXYjsW
-	HqL+nAHDNSL4lfor02u7QPbdUDBT3EKNmQTOdrGF5zNl9W725G2+GPYZkgGGBCWw==
-X-Google-Smtp-Source: AGHT+IEol4piqZI6Yl4KkOyrpWJDQ0NRxpz331ba806EziKe1YlyaBlEBwXC/EDk8zCKPGhNab6fbJKybT0eQUA9ilQ=
-X-Received: by 2002:a17:907:948e:b0:ac7:66fb:6a07 with SMTP id
- a640c23a62f3a-acad3439f1fmr1418866966b.6.1744725178174; Tue, 15 Apr 2025
- 06:52:58 -0700 (PDT)
+        bh=AllNkRrbyjcjvSu2WZVuohdOWdJ1dJ6T/kkM49XqA4g=;
+        b=oS2kJVuRLwM0yPZ1x1hRVdVZQPm05+hPwBUsEcf1Np8+4x/bAx+Ox4f+CvokzePdOO
+         Xm052RSIua0+VeSQre0/XFflm9Mf/0UITP86v65x5B1dcAj5WrHNvHO3PTeWSdt67jDo
+         CmFnLE3IXKf7OiH610U2Y7MAmPu8+ON7Bopbd9PL2rUqp7gkTmLdsWME0Qfv/bziM7DC
+         +G8Kpc41ShNn1eJSycO69f4bWUm048Hv46kXoUFgyIOPRIkgDOlOoiBscWj3Agvq7MgI
+         mvxZjGyuwL+JXwouEiCA4ncqZ61ECIXTA43OhV/JRTzDTHgIh+ubCqLoFwTONMY4A6I1
+         7YeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNEG33Td2gqTHu4ipYxL9woXve7TJ59W5IGCkgFVvteHimXt81Z5NqpSIXDG/wwKO3DuisWj7OHO6CCk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynqEE0WFJgtVwWqbEnl3HiREn9AICWBFIASd9742MfZjZpzErU
+	T9sRV9K7JvJGb9ndLpadR2fGzQ2UXyT8n4Of9Cyj6NnnrYi9pm83UwattkefWLE=
+X-Gm-Gg: ASbGncs5WHhqtK/ngf8mpHigVBbdDDDcd7Tf16vZ4BYHub4ushAiEOBaLvldVBSM8QJ
+	8jNmuvE6dipj7X/Zceq4JrTCE00eyVMEuDb99lzjKcDYomxyhT70bE8fJinUmoolNl7IkpXcsWI
+	9Z2BzH+Y+j8jp6GSc1/Is3DQ+iRh3i++XMkjQITceFeyCQP52BkaaLJrvkzolbLHW52R2HN3887
+	fUqgf6gBzZqBMwKpKsdF2KGLpXwiMPUVElw5tlr57fiSfkZogyRiGaa13SO2vpPwYCoeoXKV0TB
+	ua1fBNm38lDgMrnis6P23kRuL/HZTF8PRBI7Hu89/gMo6DGYd3Zdkgo=
+X-Google-Smtp-Source: AGHT+IGRcEt9oK3lxyGiEnhvV+ZQfkcTyZLJgYiuW7WPrPlF2pqkkrZjNilPDswBvYfDwLxbNzmKXA==
+X-Received: by 2002:a17:907:a48:b0:ac7:1ec1:d8bd with SMTP id a640c23a62f3a-acad351bf05mr1481526966b.29.1744725197572;
+        Tue, 15 Apr 2025 06:53:17 -0700 (PDT)
+Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:7b18:2529:5ce1:343d])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acadcc21a44sm681379166b.177.2025.04.15.06.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 06:53:17 -0700 (PDT)
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Subject: [PATCH 0/8] arm64: dts: qcom: msm8916/39: Cleanup/fix UART console
+ pinctrl
+Date: Tue, 15 Apr 2025 15:52:43 +0200
+Message-Id: <20250415-msm8916-console-pinctrl-v1-0-a1d33ea994b9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
- <20250302210539.1563190-6-vincent.guittot@linaro.org> <b19a857c-4c01-471b-94be-c465de636cd9@arm.com>
-In-Reply-To: <b19a857c-4c01-471b-94be-c465de636cd9@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 15 Apr 2025 15:52:46 +0200
-X-Gm-Features: ATxdqUERmn6EDtKU2V_wprhveLltLu_mmBdhtZ7lcobIXZT62Zkij7ds-nVnK14
-Message-ID: <CAKfTPtCr0BRFwc2z0EGVNSyKSfKWqrOfeiZLNigzxEY2W6Bocw@mail.gmail.com>
-Subject: Re: [PATCH 5/7 v5] sched/fair: Add push task mechanism for EAS
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, lukasz.luba@arm.com, 
-	rafael.j.wysocki@intel.com, pierre.gondois@arm.com, 
-	linux-kernel@vger.kernel.org, qyousef@layalina.io, hongyan.xia2@arm.com, 
-	luis.machado@arm.com, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKtk/mcC/x3MQQqAIBBA0avErBtQqaiuEi1MpxooDSciiO6et
+ HyL/x8QSkwCffFAoouFY8jQZQFutWEhZJ8NRplaVVrjLnvb6QZdDBI3woODO9OGqulmb4ydyHv
+ I9ZFo5vs/D+P7fqAypxVpAAAA
+X-Change-ID: 20250411-msm8916-console-pinctrl-069fd22abedd
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sam Day <me@samcday.com>, Casey Connolly <caleb.connolly@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Tue, 25 Mar 2025 at 12:16, Christian Loehle <christian.loehle@arm.com> wrote:
->
-> On 3/2/25 21:05, Vincent Guittot wrote:
-> > EAS is based on wakeup events to efficiently place tasks on the system, but
-> > there are cases where a task doesn't have wakeup events anymore or at a far
-> > too low pace. For such situation, we can take advantage of the task being
-> > put back in the enqueued list to check if it should be pushed on another
-> > CPU. When the task is alone on the CPU, it's never put back in the enqueued
-> > list; In this special case, we use the tick to run the check.
-> >
-> > Wake up events remain the main way to migrate tasks but we now detect
-> > situation where a task is stuck on a CPU by checking that its utilization
-> > is larger than the max available compute capacity (max cpu capacity or
-> > uclamp max setting)
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  kernel/sched/fair.c  | 220 +++++++++++++++++++++++++++++++++++++++++++
-> >  kernel/sched/sched.h |   2 +
-> >  2 files changed, 222 insertions(+)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index a9b97bbc085f..c3e383b86808 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -7051,6 +7051,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> >       hrtick_update(rq);
-> >  }
-> >
-> > +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p);
-> >  static void set_next_buddy(struct sched_entity *se);
-> >
-> >  /*
-> > @@ -7081,6 +7082,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
-> >               h_nr_idle = task_has_idle_policy(p);
-> >               if (task_sleep || task_delayed || !se->sched_delayed)
-> >                       h_nr_runnable = 1;
-> > +
-> > +             fair_remove_pushable_task(rq, p);
-> >       } else {
-> >               cfs_rq = group_cfs_rq(se);
-> >               slice = cfs_rq_min_slice(cfs_rq);
-> > @@ -8589,6 +8592,197 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> >       return target;
-> >  }
-> >
-> > +static inline bool task_stuck_on_cpu(struct task_struct *p, int cpu)
-> > +{
-> > +     unsigned long max_capa, util;
-> > +
-> > +     max_capa = min(get_actual_cpu_capacity(cpu),
-> > +                    uclamp_eff_value(p, UCLAMP_MAX));
-> > +     util = max(task_util_est(p), task_runnable(p));
-> > +
-> > +     /*
-> > +      * Return true only if the task might not sleep/wakeup because of a low
-> > +      * compute capacity. Tasks, which wake up regularly, will be handled by
-> > +      * feec().
-> > +      */
-> > +     return (util > max_capa);
-> > +}
-> > +
-> > +static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
-> > +{
-> > +     if (p->nr_cpus_allowed == 1)
-> > +             return false;
-> > +
-> > +     if (is_rd_overutilized(rq->rd))
-> > +             return false;
-> > +
-> > +     if (task_stuck_on_cpu(p, cpu_of(rq)))
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +static int active_load_balance_cpu_stop(void *data);
-> > +
-> > +static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
-> > +{
-> > +     int new_cpu, cpu = cpu_of(rq);
-> > +
-> > +     if (!sched_energy_enabled())
-> > +             return;
-> > +
-> > +     if (WARN_ON(!p))
-> > +             return;
-> > +
-> > +     if (WARN_ON(!task_current(rq, p)))
-> > +             return;
-> > +
-> > +     if (is_migration_disabled(p))
-> > +             return;
-> > +
-> > +     /* If there are several task, wait for being put back */
-> > +     if (rq->nr_running > 1)
-> > +             return;
-> > +
-> > +     if (!sched_energy_push_task(p, rq))
-> > +             return;
-> > +
-> > +     new_cpu = find_energy_efficient_cpu(p, cpu);
-> > +
-> > +     if (new_cpu == cpu)
-> > +             return;
-> > +
-> > +     /*
-> > +      * ->active_balance synchronizes accesses to
-> > +      * ->active_balance_work.  Once set, it's cleared
-> > +      * only after active load balance is finished.
-> > +      */
-> > +     if (!rq->active_balance) {
-> > +             rq->active_balance = 1;
-> > +             rq->push_cpu = new_cpu;
-> > +     } else
-> > +             return;
-> > +
-> > +     raw_spin_rq_unlock(rq);
-> > +     stop_one_cpu_nowait(cpu,
-> > +             active_load_balance_cpu_stop, rq,
-> > +             &rq->active_balance_work);
-> > +     raw_spin_rq_lock(rq);
-> > +}
-> > +
-> > +static inline int has_pushable_tasks(struct rq *rq)
-> > +{
-> > +     return !plist_head_empty(&rq->cfs.pushable_tasks);
-> > +}
-> > +
-> > +static struct task_struct *pick_next_pushable_fair_task(struct rq *rq)
-> > +{
-> > +     struct task_struct *p;
-> > +
-> > +     if (!has_pushable_tasks(rq))
-> > +             return NULL;
-> > +
-> > +     p = plist_first_entry(&rq->cfs.pushable_tasks,
-> > +                           struct task_struct, pushable_tasks);
-> > +
-> > +     WARN_ON_ONCE(rq->cpu != task_cpu(p));
-> > +     WARN_ON_ONCE(task_current(rq, p));
-> > +     WARN_ON_ONCE(p->nr_cpus_allowed <= 1);
-> > +     WARN_ON_ONCE(!task_on_rq_queued(p));
-> > +
-> > +     /*
-> > +      * Remove task from the pushable list as we try only once after that
-> > +      * the task has been put back in enqueued list.
-> > +      */
-> > +     plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> > +
-> > +     return p;
-> > +}
-> > +
-> > +/*
-> > + * See if the non running fair tasks on this rq can be sent on other CPUs
-> > + * that fits better with their profile.
-> > + */
-> > +static bool push_fair_task(struct rq *rq)
-> > +{
-> > +     struct task_struct *next_task;
-> > +     int prev_cpu, new_cpu;
-> > +     struct rq *new_rq;
-> > +
-> > +     next_task = pick_next_pushable_fair_task(rq);
-> > +     if (!next_task)
-> > +             return false;
-> > +
-> > +     if (is_migration_disabled(next_task))
-> > +             return true;
-> > +
-> > +     /* We might release rq lock */
-> > +     get_task_struct(next_task);
-> > +
-> > +     prev_cpu = rq->cpu;
-> > +
-> > +     new_cpu = find_energy_efficient_cpu(next_task, prev_cpu);
->
-> We aren't gating this on a overutilized check for both call sites of this patch
+At the moment, msm8916/39.dtsi have two inconsistent UART pinctrl templates
+that are used by all the boards:
 
-The overutilized check has been done when adding the task to the list.
+ - &blsp_uart1_default configures all 4 pins (TX, RX, CTS, RTS), some
+   boards then limit this to just TX and RX
+ - &blsp_uart2_default only configures 2 pins (TX, RX), even though UART2
+   also supports CTS/RTS
 
+It's difficult to define a generic pinctrl template for all UART use cases,
+since they are quite different in practice. The main use case for most of
+the boards is the UART debug console. Unfortunately, the current generic
+pinctrl template doesn't work well for that either:
 
-> like the other feec() call and testing shows that this calls feec when OU
-> relatively often.
-> Why would it be OK to call feec() here when it isn't on task placement?
->
-> > +
-> > +     if (new_cpu == prev_cpu)
-> > +             goto out;
-> > +
-> > +     new_rq = cpu_rq(new_cpu);
-> > +
-> > +     if (double_lock_balance(rq, new_rq)) {
-> > +             /* The task has already migrated in between */
-> > +             if (task_cpu(next_task) != rq->cpu) {
-> > +                     double_unlock_balance(rq, new_rq);
-> > +                     goto out;
-> > +             }
-> > +
-> > +             deactivate_task(rq, next_task, 0);
-> > +             set_task_cpu(next_task, new_cpu);
-> > +             activate_task(new_rq, next_task, 0);
-> > +
-> > +             resched_curr(new_rq);
-> > +
-> > +             double_unlock_balance(rq, new_rq);
-> > +     }
-> > +
-> > +out:
-> > +     put_task_struct(next_task);
-> > +
-> > +     return true;
-> > +}
-> > +
-> > +static void push_fair_tasks(struct rq *rq)
-> > +{
-> > +     /* push_fair_task() will return true if it moved a fair task */
->
-> This isn't technically true, a bit of a nit, push_fair_task() also
-> will return true when the task found wasn't moveable.
->
-> [snip]
+ - We need bias-pull-up for the RX pin to avoid potential garbage at
+   runtime when the console UART is not connected, but this may be
+   unneeded, unexpected or even unwanted for other UART use cases.
+
+ - U-Boot needs to know which pinctrl to apply during early boot stages, so
+   we should specify "bootph-all" for the console UART pinctrl. It doesn't
+   make sense to apply this for other UART use cases.
+
+The solution proposed in this series is to abandon the idea that one
+generic pinctrl template can fit for all the UART use cases. Instead, add a
+new pinctrl specific to the very common console use case, and move the few
+other UART use cases directly to the board-specific DT files. This ensures
+that people are forced to consider what exactly their UART use case needs
+when porting new boards.
+
+Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+---
+Stephan Gerhold (8):
+      arm64: dts: qcom: msm8916/39: Move UART pinctrl to board files
+      arm64: dts: qcom: msm8916/39: Introduce new UART console pinctrl
+      arm64: dts: qcom: msm8919/39: Use UART2 console pinctrl where appropriate
+      arm64: dts: qcom: msm8916-motorola: Use UART1 console pinctrl
+      arm64: dts: qcom: apq8016-sbc: Move non-console UART pinctrl to board
+      arm64: dts: qcom: apq8016-schneider-hmibsc: Move UART pinctrl to board
+      arm64: dts: qcom: apq8039-t2: Move customized pinctrl to board
+      arm64: dts: qcom: msm8916/39: Drop generic UART pinctrl templates
+
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dts           | 21 +++++++++
+ .../boot/dts/qcom/apq8016-schneider-hmibsc.dts     | 41 +++++++++++++++--
+ arch/arm64/boot/dts/qcom/apq8039-t2.dts            | 28 ++++++++----
+ arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dts   |  3 ++
+ .../boot/dts/qcom/msm8916-alcatel-idol347.dts      |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dts     |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dts |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dts     |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts        |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916-lg-m216.dts       |  3 ++
+ .../boot/dts/qcom/msm8916-longcheer-l8150.dts      |  3 ++
+ .../boot/dts/qcom/msm8916-longcheer-l8910.dts      |  3 ++
+ .../boot/dts/qcom/msm8916-motorola-common.dtsi     | 11 ++---
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dts           |  3 ++
+ .../dts/qcom/msm8916-samsung-a2015-common.dtsi     |  3 ++
+ .../dts/qcom/msm8916-samsung-fortuna-common.dtsi   |  3 ++
+ .../boot/dts/qcom/msm8916-samsung-gt5-common.dtsi  |  3 ++
+ .../boot/dts/qcom/msm8916-samsung-j5-common.dtsi   |  3 ++
+ .../boot/dts/qcom/msm8916-samsung-serranove.dts    |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916-ufi.dtsi          |  3 ++
+ .../boot/dts/qcom/msm8916-wingtech-wt865x8.dtsi    |  3 ++
+ .../boot/dts/qcom/msm8916-wingtech-wt88047.dts     |  3 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              | 53 ++++++++++++++--------
+ arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dts   |  3 ++
+ .../boot/dts/qcom/msm8939-longcheer-l9100.dts      |  3 ++
+ arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts    |  3 ++
+ .../boot/dts/qcom/msm8939-wingtech-wt82918.dtsi    |  3 ++
+ arch/arm64/boot/dts/qcom/msm8939.dtsi              | 52 +++++++++++++--------
+ 28 files changed, 213 insertions(+), 59 deletions(-)
+---
+base-commit: 29f8b76c55e05821f41c3e975e6a48013d8a861f
+change-id: 20250411-msm8916-console-pinctrl-069fd22abedd
+
+Best regards,
+-- 
+Stephan Gerhold <stephan.gerhold@linaro.org>
+
