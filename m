@@ -1,130 +1,86 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693EEF4ED;
-	Tue, 15 Apr 2025 06:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F5F190068
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744699606; cv=none; b=T8O43xzO6WngKSk4w5vdgloVgc3FCr6LHWZUTv+xV3IkbSakdVTbwSxoHqywOeXFw0iMluusEE076uDpwmFzjzyG0KeDOM5b4rLmGF7q6VCb4oTeAh6aN85/TgQm2fGKqKRU4WdXJglHEbb9gE92zpsAuuUNRt1sXx+Sltq7/FA=
+	t=1744699628; cv=none; b=PmqTTViYp8mO6oznjGsU+kwhtvAnI04P2iDPwf5sCjE/ekUlNYrVALrujWaaJ5YwiwGkImpXK7VSWyP2KradmvFGU9JscAVOZvVw8+ydOVOmrC7AgWamFvssOJvBpmn8auEi3b5mUFQUmi1gliYjQff2Vy4Llfegt1mcS4nmuYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744699606; c=relaxed/simple;
-	bh=X+fjcr3QhbZUWxscEWsqQ35xAvKhTO6uBrb8u2MD/Kk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M1SrFDCro+CYcYQzZ+I3RM8mjfIyF0kQTDCfwZkjOHlwfTc1Y6zmuFHAHexLa7AESQ5xrAxYHogTfeUv1MD8mDcgujHim/62OP8g9zMHuASa0R6tG7mvR55RQrcqOIf0kp6QpCB8CgwxHA/eiQvwVQmLUZSjW3wsnMyTvkuwB6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MjhhvYEa; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744699628; c=relaxed/simple;
+	bh=6tTR64EQPvbi2DJSbe3CfVvBjbA8At40asFOpUjhmt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rEqrCKlOfj2VOVShME8WMGY54PKrVhFCtHxpF/onb+01Ixcs9GkdcU2GBcNFnGaDYq4xcN6DFGQ4H8qYBwhLhTNdF5xfjGzBQVOBDNCQ3OYEC5cAZimTDId5a7eT3RBFZyNkI8dOwoTy9Ua3RlyF9P9aqWT6SUFR6TLcgUSdSPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLHcPJfn; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjhhvYEa"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso56422075e9.3;
-        Mon, 14 Apr 2025 23:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744699602; x=1745304402; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tf0XHOV7BL5G8XCTnMqntqoer1LQ9IvxtUGe4LQu1Mo=;
-        b=MjhhvYEaFVHqmlbwCSjWG66Z7Q94FWs0x3uoaX30feT3+PRI7OBs+vZTZUWCLurvDw
-         XZziLTkSJgtW+oW8QYVGTDGB732MS7P6p7VUCieBtMXJxzU2mUSEIBzIiTWl97Kft6aZ
-         +Y0JaZd8tggWAwJMTif9R63azefmKVMGprq99isA1H2vi+nKBZQSPRgql7tQxMt2UAxt
-         lco14WtP5cGY3edMnttyEh4ihjC2HEPTWt9KzJ9OJUC3NnMkkACmZwrSM7LFmSk4MNA0
-         Td+/8jMJ+6ixQ21SyshcOGgwZzd6MQR/zWgjpcwqf8dUwYkuiIfySpjrRA3us43BahtQ
-         JBZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744699602; x=1745304402;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tf0XHOV7BL5G8XCTnMqntqoer1LQ9IvxtUGe4LQu1Mo=;
-        b=RFtCg/v6M5fbNX70NdyGcggS+luh0UhEhhVR7trdOn7J91lm9A7STY+K2zWI982VE7
-         +WxOinuGf9sqm/eazuu+yiUU6Hk7nDva3di2wPu/05xudruR/YBH5E4Rnz4lPTgUihbH
-         Q2Y44WdhsRb6ODvJtQCjsN13iEuxbfpi7ouPsLfUnU8zaZ29Wn5/MMYMUhFDc3237yuR
-         rxgvGvnPnIuoyD1D8TESlOhBAZCB40BtMBquPRg6O1W3pNuomVYUuBZ4wGchxM/2/O7e
-         lVjfGLGSm7+xmvMbaoBaBRaCc0DIa+UtGBXUjSguN4+WFfWPpVkyL9VruhLUaHHI0aMw
-         dIeA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5h/+UufzM0XtdBxbW+wG1aDy3b7tHJBT6oORd3/Te5N37lhw8CmpHoOIiqXzmvcDhj+GrVGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxotGiM6SNmqdLEfq9uRXflq2hl0os6rMar/L/nNE7Zy77h2r5i
-	TH5u+9q63uGtVZWL5//0tQ8ulzaw2wmHuDlGg1XKUjmzJetuoN/A
-X-Gm-Gg: ASbGncvLF8G6Hh4z/Miyrp40mJjFeFlEdc0Q2an2oWhOIMKYq5Tc1DFyyHt0RoJr6l9
-	hCA8dnyRrKaeSVm3aEGjztPKEBCElRL62ovAp+QaKf2A7dqWVUgMoOAl+xeNhxRwkOVA1t4T+Nr
-	G6yiN6Uh3JqMpb9Oz8IjjTcicamYOJwsp2CbQLLx/Lwk0pfUTpRtJ2A1So2HcMPj9z0ZPXcJPjJ
-	99FjFL14TtS1G/JX2phbIvAL9YJQLZlsS7h9KvX0LRQBjcxODkFWGmTaLDMpO+nliw0NHympCnv
-	0siCOK4RiCjqy3zquXF4RcbMgCewj9B8P4ESk6ZNx1K9sSlpLqUyliuyvedVwE5B6JFKs3RFXxX
-	ASw==
-X-Google-Smtp-Source: AGHT+IHisxwT86R0m506gtB4OyZvGE9/Dpo7sMqSR/LKHnRC7jBHFDbHx2PM+1aawYyZ6izqHkIuDA==
-X-Received: by 2002:a05:600c:8489:b0:43d:40b0:5b with SMTP id 5b1f17b1804b1-43f3a9a68admr102272625e9.25.1744699602432;
-        Mon, 14 Apr 2025 23:46:42 -0700 (PDT)
-Received: from fedora.advaoptical.com ([82.166.23.19])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572ce4sm198385685e9.30.2025.04.14.23.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 23:46:42 -0700 (PDT)
-From: Sagi Maimon <maimon.sagi@gmail.com>
-To: jonathan.lemon@gmail.com,
-	vadim.fedorenko@linux.dev,
-	richardcochran@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Sagi Maimon <maimon.sagi@gmail.com>
-Subject: [PATCH v2] ptp: ocp: fix NULL deref in __handle_s for irig/dcf
-Date: Tue, 15 Apr 2025 09:46:38 +0300
-Message-ID: <20250415064638.130453-1-maimon.sagi@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLHcPJfn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744699626; x=1776235626;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=6tTR64EQPvbi2DJSbe3CfVvBjbA8At40asFOpUjhmt8=;
+  b=bLHcPJfnYEnwoitc32Z6pD0b9Y/fVlRbRKM/I99tYUImkdHax2WLrhGv
+   lPeXf3xSYij0pUvpPR2oMMebYVJq283AyYDTyZOGPsbrY52r151s91k9p
+   JxRgAJ5minPV0IQdhVIIcvo3e2LFcZ0bU/eikWk8LhAOOgH1JO5DoRaE0
+   N6D+8B1Oru+UaeB+0WVdW5Eqom1EJiAHTTqzkgrl+jXV5HYRYGx6qEXTb
+   ppzwA1wHNQaCUwe4Geo/tHsf/N/lD4Hfe5BGz4mIof8FSs9O9ncmaIidp
+   PVrmkGh/T0MdwP7HLqhAPAYgeM5ZAmLk+gzi5q7jPTu8ynBs4BWKX9oZe
+   A==;
+X-CSE-ConnectionGUID: p9fnp7MISFOodLz/ciQ1Sg==
+X-CSE-MsgGUID: uN8kA8joSO+/qMOTFiPTFg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56370031"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="56370031"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 23:47:06 -0700
+X-CSE-ConnectionGUID: nKZzEvZVRXi+H5mtiLr9Dg==
+X-CSE-MsgGUID: hlQckR5uT2OvdD8USO7m3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130914300"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Apr 2025 23:47:04 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u4a4U-000FIm-2X;
+	Tue, 15 Apr 2025 06:47:02 +0000
+Date: Tue, 15 Apr 2025 14:46:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: vmlinux.o: warning: objtool: set_ftrace_ops_ro+0x13e: relocation to
+ !ENDBR: __cfi_machine_kexec_prepare+0x4
+Message-ID: <202504151432.cBR45Uyk-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-SMA store/get operations via sysfs can call __handle_signal_outputs
-or __handle_signal_inputs while irig and dcf pointers remain
-uninitialized. This leads to a NULL pointer dereference in
-__handle_s. Add NULL checks for irig and dcf to prevent crashes.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   834a4a689699090a406d1662b03affa8b155d025
+commit: 7582b7be16d0ba90e3dbd9575a730cabd9eb852a kprobes: remove dependency on CONFIG_MODULES
+date:   11 months ago
+config: x86_64-buildonly-randconfig-005-20250415 (https://download.01.org/0day-ci/archive/20250415/202504151432.cBR45Uyk-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504151432.cBR45Uyk-lkp@intel.com/reproduce)
 
-Fixes: b286f4e87e32 ("serial: core: Move tty and serdev to be children of serial core port device")
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
----
-Addressed comments from Paolo Abeni:
- - https://www.spinics.net/lists/netdev/msg1082406.html
-Changes since v1:
- - Expanded commit message to clarify the NULL dereference scenario.
----
- drivers/ptp/ptp_ocp.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504151432.cBR45Uyk-lkp@intel.com/
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index 7945c6be1f7c..4e4a6f465b01 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -2434,15 +2434,19 @@ ptp_ocp_dcf_in(struct ptp_ocp *bp, bool enable)
- static void
- __handle_signal_outputs(struct ptp_ocp *bp, u32 val)
- {
--	ptp_ocp_irig_out(bp, val & 0x00100010);
--	ptp_ocp_dcf_out(bp, val & 0x00200020);
-+	if (bp->irig_out)
-+		ptp_ocp_irig_out(bp, val & 0x00100010);
-+	if (bp->dcf_out)
-+		ptp_ocp_dcf_out(bp, val & 0x00200020);
- }
- 
- static void
- __handle_signal_inputs(struct ptp_ocp *bp, u32 val)
- {
--	ptp_ocp_irig_in(bp, val & 0x00100010);
--	ptp_ocp_dcf_in(bp, val & 0x00200020);
-+	if (bp->irig_out)
-+		ptp_ocp_irig_in(bp, val & 0x00100010);
-+	if (bp->dcf_out)
-+		ptp_ocp_dcf_in(bp, val & 0x00200020);
- }
- 
- static u32
+All warnings (new ones prefixed by >>):
+
+   vmlinux.o: warning: objtool: ___bpf_prog_run+0x1be: sibling call from callable instruction with modified stack frame
+>> vmlinux.o: warning: objtool: set_ftrace_ops_ro+0x13e: relocation to !ENDBR: __cfi_machine_kexec_prepare+0x4
+
 -- 
-2.47.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
