@@ -1,40 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EAB76026;
-	Tue, 15 Apr 2025 13:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68A11B0412
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744722109; cv=none; b=lX8qj99Jq+3ptaogPLPZNP0nEJXeYU1KcfR6Oov6BU0K5FGtNrxLkLKBWYJDgvxWD4iOJlNHQzct8ssp9TZbEVQXVVqT0wNoVZwX5PRgZt2TSrxGms8txZA6cYyZ2kPcws9A8L2lQAijXx+i9UOr1fLlkakl0h0FsXw8k9WAkwg=
+	t=1744722134; cv=none; b=DAdVqszBW5gQNgvp71u0d6qVLUSnRU/vOQp1w/4zyXM5vdHJPu7grjtO7IiWgG1xc1+HsEbBTscc10KqHAoHssl8y6a2+1xeIlVc+jpHyUZkz73PDTOG0IykvQfYMVvr8sOCetAWs2kZdWOJCWXHyQXxfm3CZRqiIyZMAVmC3hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744722109; c=relaxed/simple;
-	bh=/ZyBKPl+icr/iZKTjKYPQMSt0pK3OLsfxPbLuRV69C0=;
+	s=arc-20240116; t=1744722134; c=relaxed/simple;
+	bh=vTzJ35T7sydb3gQxTOCoWPhHci7tnNy3EJNTeNdeyLM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBTSn3qXnihKPF7Lq4MBIisFJHCHZLQ5Et/GLol0iXk0LtRMjYfESzCGzIgf5dTvxQ3GZs5J0yCXTHQVhl1KFhJXm8QGlm2TroXPqD55bqH9NU6oDn5feMcYC/BQ8eB4P+f8SmDeQQ8MHpa3qYT5XkfFUqtrJHpA+ohDCnNXi08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0l9gbBRf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjWAtJnbAi3uTK8VeRtVJCw99P6CKWTjYkfiKNbOV8+JfnGk+qZEBIq4dYuhCi1IMjnY9yGpmiOnKJOQXR8tmIMaDHowv20ISFVIX1OiBOexTI0uodUtvM4aaVa4XFEp0pyeae+BlNKIm5ntF9y+KB2EBIExHYuWbAkuJvRTpqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K3wTlgZ1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0l9gbBRf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B09C4CEEB;
-	Tue, 15 Apr 2025 13:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744722108;
-	bh=/ZyBKPl+icr/iZKTjKYPQMSt0pK3OLsfxPbLuRV69C0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0l9gbBRfHQmR20aOfLQek8OGsdLTxshocNS09YwsRMYoZohhkpxFLhX+DPE79qJHw
-	 vkzFLmOi9P2nM/MEdhjyYpFBrwTrj3zn3h632fAWfFxoJuRmmAhvDEQljIoYEOYl7c
-	 ZiISFCKL73Wc+8uuDkUS4k0jMvUo5Wy5dqyubuDU=
-Date: Tue, 15 Apr 2025 15:01:45 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: "philipp.g.hortmann@gmail.com" <philipp.g.hortmann@gmail.com>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v7] staging: rtl8723bs: Add error handling for sd_read()
-Message-ID: <2025041557-recollect-livable-a959@gregkh>
-References: <20250408044152.3009-1-vulab@iscas.ac.cn>
- <2025040814-curtsy-overrule-1caf@gregkh>
- <67FE50E2.043FCA.23966@cstnet.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K3wTlgZ1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744722131;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YdK7/3t3qmC0hoi9PTNkCXkTjE4wHT/cMRL3k38S/VI=;
+	b=K3wTlgZ1T/j8MA2jTfU9Y/SeIkQl0fENz930K6nd+G9Sl1dqVUtVrkFhRhcXRim0COGT6/
+	IW0UBjBK/kRV7EvbmwduXIEul1HEZJRFueH8cpi63UH2glglRCuNvh3qV+z0pBIsl2AFa2
+	0gZRKoD5Ue0qCM0C1M9B0m5foo6QVhA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-Frv93qQoMdO-W_L7a_nk-Q-1; Tue,
+ 15 Apr 2025 09:01:58 -0400
+X-MC-Unique: Frv93qQoMdO-W_L7a_nk-Q-1
+X-Mimecast-MFC-AGG-ID: Frv93qQoMdO-W_L7a_nk-Q_1744722116
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A69951953945;
+	Tue, 15 Apr 2025 13:01:56 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 794181955BC0;
+	Tue, 15 Apr 2025 13:01:55 +0000 (UTC)
+Date: Tue, 15 Apr 2025 21:01:51 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Shivank Garg <shivankg@amd.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] mm/vmalloc.c: return explicit error value in
+ alloc_vmap_area()
+Message-ID: <Z/5Yv+iFmFPuFqvn@fedora>
+References: <20250415023952.27850-1-bhe@redhat.com>
+ <20250415023952.27850-6-bhe@redhat.com>
+ <134bd404-d741-40ec-a661-f897da5ca9ca@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,32 +60,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67FE50E2.043FCA.23966@cstnet.cn>
+In-Reply-To: <134bd404-d741-40ec-a661-f897da5ca9ca@amd.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, Apr 15, 2025 at 08:28:18PM +0800, Wentao Liang wrote:
-> >Again, I think this whole "hal wrapper" should be removed instead, and
-> >not papered over like this.  If you dig deep enough, it all boils down
-> >to a call to sdio_readb(), which is an 8 bit read, so the alignment
-> >issues are not a problem, and if an error happens the proper error value>
-> >is returned from that saying what happened.  Why not work on that like I
-> >recommended?  That would allow for at least 3, if not more, layers of
-> >indirection to be removed from this driver, making it more easy to
-> >understand and maintain over time.
+On 04/15/25 at 12:52pm, Shivank Garg wrote:
+> On 4/15/2025 8:09 AM, Baoquan He wrote:
+> > In codes of alloc_vmap_area(), it returns the upper bound 'vend' to
+> > indicate if the allocation is successful or failed. That is not very clear.
+> > 
+> > Here change to return explicit error values and check them to judge if
+> > allocation is successful.
+> > 
+> > IS_ERR_VALUE already uses unlikely() internally
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/vmalloc.c | 34 +++++++++++++++++-----------------
+> >  1 file changed, 17 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 3f38a232663b..5b21cd09b2b4 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -1715,7 +1715,7 @@ va_clip(struct rb_root *root, struct list_head *head,
+> >  			 */
+> >  			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+> >  			if (!lva)
+> > -				return -1;
+> > +				return -ENOMEM;
+> >  		}
+> >  
+> >  		/*
+> > @@ -1729,7 +1729,7 @@ va_clip(struct rb_root *root, struct list_head *head,
+> >  		 */
+> >  		va->va_start = nva_start_addr + size;
+> >  	} else {
+> > -		return -1;
+> > +		return -EINVAL;
+> >  	}
+
+Thanks for reviewing.
+
 > 
-> Thanks for the guidance and detailed suggestion. But remove the whole 
-> "hal wrapper" layer is beyond my capability. Perhaps this refactoring 
-> work would be better handled by someone with deeper knowledge of the 
-> driver codebase. The changes would ripple through several layers, and 
-> I'm not entirely confident about implementing them correctly. The 
-> current patch might serve as a reasonable stopgap solution. 
+> Braces around return -EINVAL seem unnecessary.
+> They can be dropped.
 
-Try it, it should be a "one step at a time" of unwinding the mess that
-the codebase is in.  Shouldn't be that hard, and will give you lots of
-good things to work on.
+This complys with the codeing style required in 3) Placing Braces and
+Spaces of Documentation/process/coding-style.rst because other branches
+are multiple statements.
 
-I don't want to take a "stopgap solution", sorry, I would rather take
-the real solution, for obvious reasons.
+> 
+> >  
+> >  	if (type != FL_FIT_TYPE) {
+> > @@ -1758,19 +1758,19 @@ va_alloc(struct vmap_area *va,
+> >  
+> >  	/* Check the "vend" restriction. */
+> >  	if (nva_start_addr + size > vend)
+> > -		return vend;
+> > +		return -ERANGE;
+> >  
+> >  	/* Update the free vmap_area. */
+> >  	ret = va_clip(root, head, va, nva_start_addr, size);
+> > -	if (WARN_ON_ONCE(ret))
+> > -		return vend;
+> > +	if (ret)
+> > +		return ret;
+> 
+> Is it safe to remove the warning, or was it critical for debugging?
 
-thanks,
+This comes from a reported concern because va_clip() could be failed by 
+NOTHING_FIT or kmem_cache_alloc failure. The warning here could cause
+confusion misleading people to think vmap area management is failed.
 
-greg k-h
+> 
+> >  
+> >  	return nva_start_addr;
+> >  }
+> >  
+> >  /*
+> >   * Returns a start address of the newly allocated area, if success.
+> > - * Otherwise a vend is returned that indicates failure.
+> > + * Otherwise an error value is returned that indicates failure.
+> >   */
+> >  static __always_inline unsigned long
+> >  __alloc_vmap_area(struct rb_root *root, struct list_head *head,
+> > @@ -1795,14 +1795,13 @@ __alloc_vmap_area(struct rb_root *root, struct list_head *head,
+> >  
+> >  	va = find_vmap_lowest_match(root, size, align, vstart, adjust_search_size);
+> >  	if (unlikely(!va))
+> > -		return vend;
+> > +		return -ENOENT;
+> >  
+> >  	nva_start_addr = va_alloc(va, root, head, size, align, vstart, vend);
+> > -	if (nva_start_addr == vend)
+> > -		return vend;
+> >  
+> >  #if DEBUG_AUGMENT_LOWEST_MATCH_CHECK
+> > -	find_vmap_lowest_match_check(root, head, size, align);
+> > +	if (!IS_ERR_VALUE(nva_start_addr))
+> > +		find_vmap_lowest_match_check(root, head, size, align);
+> >  #endif
+> >  
+> >  	return nva_start_addr;
+> > @@ -1932,7 +1931,7 @@ node_alloc(unsigned long size, unsigned long align,
+> >  	struct vmap_area *va;
+> >  
+> >  	*vn_id = 0;
+> > -	*addr = vend;
+> > +	*addr = -EINVAL;
+> >  
+> >  	/*
+> >  	 * Fallback to a global heap if not vmalloc or there
+> > @@ -2012,20 +2011,20 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+> >  	}
+> >  
+> >  retry:
+> > -	if (addr == vend) {
+> > +	if (IS_ERR_VALUE(addr)) {
+> >  		preload_this_cpu_lock(&free_vmap_area_lock, gfp_mask, node);
+> >  		addr = __alloc_vmap_area(&free_vmap_area_root, &free_vmap_area_list,
+> >  			size, align, vstart, vend);
+> >  		spin_unlock(&free_vmap_area_lock);
+> >  	}
+> >  
+> > -	trace_alloc_vmap_area(addr, size, align, vstart, vend, addr == vend);
+> > +	trace_alloc_vmap_area(addr, size, align, vstart, vend, IS_ERR_VALUE(addr));
+> >  
+> >  	/*
+> > -	 * If an allocation fails, the "vend" address is
+> > +	 * If an allocation fails, the error value is
+> >  	 * returned. Therefore trigger the overflow path.
+> >  	 */
+> > -	if (unlikely(addr == vend))
+> > +	if (IS_ERR_VALUE(addr))
+> >  		goto overflow;
+> >  
+> >  	va->va_start = addr;
+> > @@ -4753,9 +4752,10 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+> >  
+> >  		ret = va_clip(&free_vmap_area_root,
+> >  			&free_vmap_area_list, va, start, size);
+> > -		if (WARN_ON_ONCE(unlikely(ret)))
+> > -			/* It is a BUG(), but trigger recovery instead. */
+> > +		if ((unlikely(ret))) {
+> 		    ^^		   ^^
+> The extra parentheses are redundant and can be removed for clarity.
+
+You are right, I will remove it. Thanks.
+
+> 
+> > +			WARN_ONCE(1, "%s error: errno (%d)\n", __func__, ret);
+> >  			goto recovery;
+> > +		}
+> >  
+> >  		/* Allocated area. */
+> >  		va = vas[area];
+> 
+
