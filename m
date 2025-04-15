@@ -1,100 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2E620ADD6;
-	Tue, 15 Apr 2025 14:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AD4EEA9;
+	Tue, 15 Apr 2025 14:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728549; cv=none; b=Y6fHnmvNujpOx8S3qw7p8ImT9dWpJxax2dwhVQB5e2wxg2zSVakOV3vZvRA2Q7zt9OXM8c/J8ecHj6MXG8vGTgVsKbgSZThg822UPH0ItNGpXTxyHerxmXi3yXg5OisrP3yM7VCGFlziVlb9WIrLoRom3myMw9Hk0I6cEBToXDI=
+	t=1744728605; cv=none; b=hUS6XvBAk/b8C6aWSuvukPYxpnTnx+z/CwFRTCmG9+SefUU5FNUO6mb6P/Bc2JDYWoIv03OgDiLSEHOPtcPHxg1ExwBvhDF0jPQ5EQ6qTEpXRyX4tLJI/P+9CTFjPxeSREsLls1V7qx5Rop9lerUebkEEEKz0M/aDgN8wcBGAkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728549; c=relaxed/simple;
-	bh=yzqoj+qnZ4835r5vJvU1UpocaGW4Cjv0A48IJJzwAlY=;
+	s=arc-20240116; t=1744728605; c=relaxed/simple;
+	bh=ovKn+cTo3LrtnpAZGIxLEMpzi81s6sGlKDB0b80UVKE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PvhdJTHT8SM2jMoUi+CTi1bwdgCnLlZnrGbD2TA0p6p4Bq18Bql3vY3T/XjT5iVYItUXfV3JXLOEzz45hk4+91JRjtArgBAjVnBxZ0x8VapeKHmL948tm26xOT19EQKrk/pyEHAN06ssrv+FhieUur4z4Kcbt0QzsLjU3zj+WCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJh+D3Vd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9zh6sY/hZ8aoO41LLBg2cUa57o4Z0fIL5cTPrkLqzcgjwhMk4MapbLrcHIZBoJDP/6l0CSjUYMuU9d52k+G/WkhfEI5DMZhARLkL4/4YiLRVROIc9FsFi0WOQ2yk1JEUbNwVhJOySPDUOmA/ZBH9gJGURFieK01jTXzg/1OpMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pDGVKtIc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJh+D3Vd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C291C4CEED;
-	Tue, 15 Apr 2025 14:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744728549;
-	bh=yzqoj+qnZ4835r5vJvU1UpocaGW4Cjv0A48IJJzwAlY=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pDGVKtIc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BC5EC4CEEB;
+	Tue, 15 Apr 2025 14:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744728604;
+	bh=ovKn+cTo3LrtnpAZGIxLEMpzi81s6sGlKDB0b80UVKE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UJh+D3VdR/SORHhLDTZ13GGlrHvIp/loiJdp+OZPxvZ/EFc3ZEC4Hy/c/VE9j4D0A
-	 68wZ27akOied5l88bGw9CrLeEqVyY7W4YTOLXaE0F1lKkQPjiy8xBoDEfS6+k0CsAk
-	 hBvCmOYFCUrwj5Iigh7WWWxjLrrwc5HSMn784qjNRrz5QOzAgqjkbuTSZ1H6srN+vs
-	 kSrV8iMNRnOba7KfCUKYG2OzzoyZxosMjSrSjghkZjEIVvBU7Y9DstRfAaYptP98TZ
-	 CxHx+mQYq+ZcHIhgErD8dAA2lHBC+tyEl9MZgTQqbqWmmmdrOe6n+PxYyudBCFfAhe
-	 6zDXP4TCvhe1g==
-Date: Tue, 15 Apr 2025 07:49:07 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	David Sterba <dsterba@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Josef Bacik <josef@toxicpanda.com>, Sandeen <sandeen@redhat.com>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hfs{plus}: add deprecation warning
-Message-ID: <20250415144907.GB25659@frogsfrogsfrogs>
-References: <20250415-orchester-robben-2be52e119ee4@brauner>
+	b=pDGVKtIcAyQbPZccggJAVpkr5vhIbVBW3k/PImpU1p0QX954zq2qn1mOgnVYIRXIw
+	 NHRMxgr/wBVnerDUgZSHuxIIITGQdMfsv8G0bovzETDriszS62XEef3KH1oQXBBGV6
+	 VRXiyv0VB46eG8qtdtTMjcy4D+m1g3S/w23kctUw=
+Date: Tue, 15 Apr 2025 16:50:01 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Paul =?iso-8859-1?Q?Retourn=E9?= <paul.retourne@orange.fr>
+Cc: dpenkler@gmail.com, dan.carpenter@linaro.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/16] staging: gpib: fixes multiline comments style
+Message-ID: <2025041546-outlet-timid-bca6@gregkh>
+References: <cover.1744438358.git.paul.retourne@orange.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250415-orchester-robben-2be52e119ee4@brauner>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1744438358.git.paul.retourne@orange.fr>
 
-On Tue, Apr 15, 2025 at 09:51:37AM +0200, Christian Brauner wrote:
-> Both the hfs and hfsplus filesystem have been orphaned since at least
-> 2014, i.e., over 10 years. It's time to remove them from the kernel as
-> they're exhibiting more and more issues and no one is stepping up to
-> fixing them.
+On Fri, Apr 11, 2025 at 11:21:52PM -0700, Paul Retourné wrote:
+> Fixes the style of multiline comments to comply with the linux kernel
+> coding style as requested in the gpib TODO file.
 > 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/hfs/super.c     | 2 ++
->  fs/hfsplus/super.c | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/fs/hfs/super.c b/fs/hfs/super.c
-> index fe09c2093a93..4413cd8feb9e 100644
-> --- a/fs/hfs/super.c
-> +++ b/fs/hfs/super.c
-> @@ -404,6 +404,8 @@ static int hfs_init_fs_context(struct fs_context *fc)
->  {
->  	struct hfs_sb_info *hsb;
->  
-> +	pr_warn("The hfs filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
+> Paul Retourné (16):
+>   staging: gpib: agilent_82357a: fixes multiline comments style
+>   staging: gpib: cb7210: fixes multiline comments style
+>   staging: gpib: common: fixes multiline comments style
+>   staging: gpib: eastwood: fixes multiline comments style
+>   staging: gpib: fmh_gpib: fixes multiline comments style
+>   staging: gpib: gpio: fixes multiline comments style
+>   staging: gpib: hp_82335: fixes multiline comments style
+>   staging: gpib: hp_82341: fixes multiline comments style
+>   staging: gpib: include: fixes multiline comments style
+>   staging: gpib: ines: fixes multiline comments style
+>   staging: gpib: lpvo_usb_gpib: fixes multiline comments style
+>   staging: gpib: nec7210: fixes multiline comments style
+>   staging: gpib: ni_usb: fixes multiline comments style
+>   staging: gpib: pc2: fixes multiline comments style
+>   staging: gpib: tms9914: fixes multiline comments style
+>   staging: gpib: tnt4882: fixes multiline comments style
 
-Does this mean before or after the 2025 LTS kernel is released?  I would
-say that we ought to let this circulate more widely among users, but
-OTOH I guess no maintainer for a decade is really bad.
+One of these did not apply to my tree, can you rebase and resend the
+remaining one?
 
---D
+thanks,
 
-> +
->  	hsb = kzalloc(sizeof(struct hfs_sb_info), GFP_KERNEL);
->  	if (!hsb)
->  		return -ENOMEM;
-> diff --git a/fs/hfsplus/super.c b/fs/hfsplus/super.c
-> index 948b8aaee33e..58cff4b2a3b4 100644
-> --- a/fs/hfsplus/super.c
-> +++ b/fs/hfsplus/super.c
-> @@ -656,6 +656,8 @@ static int hfsplus_init_fs_context(struct fs_context *fc)
->  {
->  	struct hfsplus_sb_info *sbi;
->  
-> +	pr_warn("The hfsplus filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
-> +
->  	sbi = kzalloc(sizeof(struct hfsplus_sb_info), GFP_KERNEL);
->  	if (!sbi)
->  		return -ENOMEM;
-> -- 
-> 2.47.2
-> 
-> 
+greg k-h
