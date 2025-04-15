@@ -1,73 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEBC29B774
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D08B1B043F
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729044; cv=none; b=laFKoHFAmFlOKOXQawroeJnXj62WOXLiEpiq7LF0aP0hQ+BTa81kesxOwNE9E6OM4LoauEBIBKr8wyp7YJtgrvwj++xY0tpCT5/lxY8p7MCNrRYdVq87VIGk1azegu0AmeZtZLQKElLWeDmAyuSUb+WHSDnJ6jPYo+4ygLs0I1g=
+	t=1744729045; cv=none; b=Yh9se/vmy3xKnRfu9mO/eQ8LH/0C4/3WQYgMTmBpgZJeLSta9LrfnUxw88805aaP8BRqk3B4wl1OT03jAxgBxQvipCgVZpdZeJRoMLs0OxI8wn5I2qLqtyLBZBojjcWQuv5VqgjvtH3r4pBd44D0HXWToKD9AcPJGo4JXpZ1e/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729044; c=relaxed/simple;
-	bh=uyga5I7+Sw4vYqQ2KhVemn7TT7I9NCq1Xz9LBa95vbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWMm0+VOQ1/I6iI8wm3hngfzHCShZtESmAi6jO3NqVYHwE3BGEyv6Q8I+XU1byrFo9bVV/pv1gATmualjBy6/7j3C0ZhkGoFJwfoOJIUJtsuOS0e9W2eIJN5VbSHE0Auotp6WdEvMzPieLuRQ69KtLIeQFhgDpZhYIgZ1tmcFQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buuco4Xe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744729045; c=relaxed/simple;
+	bh=TmbQCAQuL850VcC8mWpbyBi0guSCzKnednL7iUfUBi4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LpN3dbiN09FBauHYnYW9SArgHmvyZ8p/SIWJfaAKSLnJO+dy9EVvWFpq9c5KZmIht1mNrasNO8Qs1P/z4J1D8Iuyirl26KbUBHH8Ueh6xW5wB0i+zP8n2UoI6FCaZ3Cg2dwFRXlGBVXfyM2vc48P1CD5EPOS0SQHNBoBd8co2aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SyuNHZeD; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buuco4Xe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2026C4CEEB;
-	Tue, 15 Apr 2025 14:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744729044;
-	bh=uyga5I7+Sw4vYqQ2KhVemn7TT7I9NCq1Xz9LBa95vbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=buuco4XeWne5gyIp7yjGFo03yAph7jeabDNTfM5hzIIPEuzkegtAlNmhZEl4gomb3
-	 do0JlGC3e0BwPY+F0J09t36ZoezOH1ryuyMr1hBJd5SuNru2SivfOPU6vzYF0MZrdp
-	 vbYgjTjGAQhEyydkEeaQ/VLr8EIC5DRx91Jhpz/Wa5kfql3JWkqCI5qnl5Y44c4zcC
-	 hweCUSs9+eHA7BlF5pOXHbKyXnBkqNoITRrdmYntvq8j7brSNTBCtbJUFtVSeToLS2
-	 P3voYXaW1wMmKO/Tjd1GI9qvOaHGC7B7MG/Lmjz0+ul5xE6ldaxQLIzRm9PWqUJfUz
-	 JG54Wet8GxD+A==
-Date: Tue, 15 Apr 2025 04:57:22 -1000
-From: Tejun Heo <tj@kernel.org>
-To: yangsonghua <jluyangsonghua@gmail.com>
-Cc: void@manifault.com, arighi@nvidia.com, changwoo@igalia.com,
-	linux-kernel@vger.kernel.org, sched-ext@meta.com,
-	yangsonghua <yangsonghua@lixiang.com>
-Subject: Re: [PATCH v2] tools/sched_ext: Improve cross-compilation support in
- Makefile
-Message-ID: <Z_5z0phM6h73EGci@slm.duckdns.org>
-References: <20250415054642.3878839-1-yangsonghua@lixiang.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SyuNHZeD"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-229170fbe74so47021685ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:57:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744729043; x=1745333843; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z3cubAcR5buc4RrtmjyrGPOPaYzbW+tbw+H7cOkEDn8=;
+        b=SyuNHZeD/735HiymHu0kVG4RFxW8Fo9o8OLcB+v2kx8JqwIxCojQZijto4Q3USH+SZ
+         R1J9JGpc53/4Co9G+25dbvX0pGHCSBNYdjg4VBnx1OIH9rBInyTSZNrZujvW3CrhXVCe
+         NoY3UNX0kM64N508pGOsPgVIgPTB/GKsiS5g8F1B/b58h+nQ3mttbLppUqvlrCx2fPKs
+         n6VVP6EbMnYmLiRb9Fe8zHWTBipECa4BkumAVvkpX0vXZsVB0jPNJFA31DsM8WoUlddH
+         +UzhOXKhN8+mcYHmVxv1/nXiE5Dz6HOHOrABKh9W7M+iRhvc/khsoeJQirtXqgdR6mpH
+         D8XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744729043; x=1745333843;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z3cubAcR5buc4RrtmjyrGPOPaYzbW+tbw+H7cOkEDn8=;
+        b=O6/Gj3eiHieaTgJExZkAo9gmJ70mnASMXhfpK0iDopyCx1YVh1On2gFsePDj24eJQB
+         lbOzIKGvYb1cT76tNJgPKGJNqUWL+Vgz7NA6AH3qKbRvEw1hQgsERc4sKV/URkg6+odA
+         g2cSQt/QRi5l6F30JD8tefEoWMUClc2CQlvNc8rANlYwWAPt6Z8FJq7ntwE9kdHxMKoe
+         mlJPUMjg9nPzngm0dG8bcEVYMloKojbHs71DZeAXBImcalsKat0IYeExwqVZN38oG1Nz
+         mMbEjuTu1evrATdgnPt23GSiRbGO8jqEcoDTBrJehpSVuT29FwbbYvfUIJVy0EnjwQeJ
+         Lh2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXjO8rXSn3Qnzn1ckFFzwGTgS5GoB3Y3m+xLP1MeKmec7Xr87ezTBANWtvN3W8xxKHXayLandZkEOVQxKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGzJwipGUhqrYLIUVvhSgSXvQGVoHRFdMmwZ/8D+ZhxDcvOTWT
+	hC3XbQWLdtu1aEV0GaOR/1N9nrWETuqa5Z1OFh7Vr5QdhGYCUvsXN/QfKIeiSsBdHlPoghjug4i
+	Jcg==
+X-Google-Smtp-Source: AGHT+IFaFxQFXBxv1LVPQSIMqbDfDKQXIvk2koBUD5c6YTcCNKoR1Psp7St8pkylyftGChHPBfIrP+rfE64=
+X-Received: from plri17.prod.google.com ([2002:a17:903:32d1:b0:21f:14cc:68b0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b08:b0:21f:85af:4bbf
+ with SMTP id d9443c01a7336-22bea4b70d6mr235612035ad.20.1744729043268; Tue, 15
+ Apr 2025 07:57:23 -0700 (PDT)
+Date: Tue, 15 Apr 2025 07:57:21 -0700
+In-Reply-To: <2cc31ce5-0f1a-41d6-a169-491f9712ffdc@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415054642.3878839-1-yangsonghua@lixiang.com>
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-15-seanjc@google.com>
+ <2cc31ce5-0f1a-41d6-a169-491f9712ffdc@amd.com>
+Message-ID: <Z_5z0an7-BJ1bTzF@google.com>
+Subject: Re: [PATCH 14/67] KVM: SVM: Add helper to deduplicate code for
+ getting AVIC backing page
+From: Sean Christopherson <seanjc@google.com>
+To: Sairaj Kodilkar <sarunkod@amd.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 15, 2025 at 01:46:42PM +0800, yangsonghua wrote:
-> Modify the tools/sched_ext/Makefile to better handle cross-compilation
-> environments by:
+On Tue, Apr 15, 2025, Sairaj Kodilkar wrote:
+> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
+> Hi Sean,
 > 
-> 1. Adjusted `HOST_OUTPUT_DIR` to be relative to `$(OBJ_DIR)`, ensuring
->    correct path handling during host tool building when cross-compile
->    (HOST_OUTPUT_DIR now points to $(OBJ_DIR)/host-tools)
-> 2. Properly propagate CROSS_COMPILE to libbpf sub-make invocation
-> 3. Add missing $(HOST_BPFOBJ) build rule with proper host toolchain flags
->    (ARCH=, CROSS_COMPILE=, explicit HOSTCC/HOSTLD)
-> 4. Consistently quote $(HOSTCC) in bpftool build rule
+> > Add a helper to get the physical address of the AVIC backing page, both
+> > to deduplicate code and to prepare for getting the address directly from
+> > apic->regs, at which point it won't be all that obvious that the address
+> > in question is what SVM calls the AVIC backing page.
+> > 
+> > No functional change intended.
+> > 
+> > Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >   arch/x86/kvm/svm/avic.c | 14 +++++++++-----
+> >   1 file changed, 9 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> > index f04010f66595..a1f4a08d35f5 100644
+> > --- a/arch/x86/kvm/svm/avic.c
+> > +++ b/arch/x86/kvm/svm/avic.c
+> > @@ -243,14 +243,18 @@ int avic_vm_init(struct kvm *kvm)
+> >   	return err;
+> >   }
+> > +static phys_addr_t avic_get_backing_page_address(struct vcpu_svm *svm)
+> > +{
+> > +	return __sme_set(page_to_phys(svm->avic_backing_page));
+> > +}
+> > +
 > 
-> The changes ensure proper cross-compilation behavior while maintaining
-> backward compatibility with native builds. Host tools are now correctly
-> built with the host toolchain while target binaries use the cross-toolchain.
+> Maybe why not introduce a generic function like...
 > 
-> Signed-off-by: yangsonghua <yangsonghua@lixiang.com>
+> static phsys_addr_t page_to_phys_sme_set(struct page *page)
+> {
+> 	return __sme_set(page_to_phys(page));
+> }
+> 
+> and use it for avic_logical_id_table_page and
+> avic_physical_id_table_page as well.
 
-I already applied v1, so please send the updates as incremental changes
-atop.
-
-Thanks.
-
--- 
-tejun
+Because subsequent commits remove the "struct page" tracking (it's suboptimal
+and confusing), and I don't want to encourage that bad pattern in the future.
