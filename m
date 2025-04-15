@@ -1,40 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8E01B0F11;
-	Tue, 15 Apr 2025 12:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E519D1F4629;
+	Tue, 15 Apr 2025 12:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719990; cv=none; b=sPzKBQ4ZuBYZu51OEAB+wjiWCxTM11f7CPFcQjPYjhfOznRF+ZS48/lq5u5zQIbXSoj1ua6dqxI2bIM5DVT+Ie2JlhmFdQPxA1p22bWh1qJOLFn2/h9lnVNoU9dfuiqSIxmWB0aT3xSry/ZbvlfjL7AitZx03+1/tXOdOs8N6y4=
+	t=1744719993; cv=none; b=BUfe7sJd5+vacC7vTNFiZiwP7gyXZG7TPIlvtoSggH0m4Lbw2b6Hw7lhlw29jrEBEqcL55wX8wjMi7dqoW61oN8Ad6oeVoAPPkjlI6q+tcptUjH6wbVYFN6NiYYJJLCe6OgP+LlCudyDpzw3fsy0EWKouAMEsFYwWjE6cW1c6ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719990; c=relaxed/simple;
-	bh=WqjoERzIdT6Wr9L7dDEWeyQ9e7vx9GTGZ3Z+EGp9uCM=;
+	s=arc-20240116; t=1744719993; c=relaxed/simple;
+	bh=F+opCqQgI1JGWsIbfBiORX7CHVi3oDSVIIuvx+UIiSI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E7TfPqPtwcsEzdfb0jhHRKgTyL+YuZ93ZUegU9r3Z0y/blKzI7IulAa+h3LhzyBMV6DRczZOxNOk1XoG2cBT0zvT2LidbfK/zXhIki2m20Y4C9CzPUAhlqolnKtEAeioOf3++qKq9YBvtJArEmoCvimJTCcaO+JpfxgxxxJdOc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kxkw8+6W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oXAwf+LTLVRFZJfXoUSXK+Hf5h2u0TIC42af9N8PvLeRM0gG5giJOWlzR3frxb2sLzKPodqxzD5BaDRZdm0cdPI7CQFylmapFVNgjwRFVpCn6Cq3zH61dNGHQTrIxgkznR0IVkyntiqM9Ya8fzNp4TC9COj61K0XoupPQ/Q0WGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=6Duyp6oy; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kxkw8+6W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840FBC4CEDD;
-	Tue, 15 Apr 2025 12:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744719990;
-	bh=WqjoERzIdT6Wr9L7dDEWeyQ9e7vx9GTGZ3Z+EGp9uCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kxkw8+6W2zaQ15ywcN9SiGnAVwYfYQCYedD8tSu4+s5mliZdrpEMgGAr+UjLwT5eM
-	 Gyo9ue1Th5SYA/8XBFnW9LRSUXwb8q5no4s8YrNHJ6kVi0ck4PEDQnN2tAYVjxxZ/Z
-	 4qLLmYUKQoqZzmYutjQs0nYn8vXux2ghoWg0Q31M=
-Date: Tue, 15 Apr 2025 14:26:26 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>,
-	Minas Harutyunyan <hminas@synopsys.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: hcd: Add a usb_device argument to
- hc_driver.endpoint_reset()
-Message-ID: <2025041508-rockslide-endpoint-a48b@gregkh>
-References: <20250415111003.064e0ab8@foxbook>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6Duyp6oy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ii6iuROWqxP8LjrFqncN/4R23My71bKFfMQynX2YE0k=; b=6Duyp6oyGog89h/C4Yf9D6v/2m
+	3iguH7jDoLNvuY+PQt8i47MAYEGMDHPUG7dcZrNEns3SPWIDG4BMAa8PIDTj7ueBt81J6dc1evrY2
+	vNyKsf+SK6TbYWNncyiVtFTRyIU6hxQYkuFa6KkFVlvCzC3X+eB/zDysDPdz+CHfIl7o=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4fMn-009Qzq-JI; Tue, 15 Apr 2025 14:26:17 +0200
+Date: Tue, 15 Apr 2025 14:26:17 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chris.chenfeiyang@gmail.com>,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biao Dong <dongbiao@loongson.cn>,
+	Baoqi Zhang <zhangbaoqi@loongson.cn>
+Subject: Re: [PATCH net-next 2/3] net: stmmac: dwmac-loongson: Add new
+ multi-chan IP core support
+Message-ID: <c2ff5661-a972-4cb1-9523-a715acf4bc4e@lunn.ch>
+References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+ <20250415071128.3774235-3-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,28 +53,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415111003.064e0ab8@foxbook>
+In-Reply-To: <20250415071128.3774235-3-chenhuacai@loongson.cn>
 
-On Tue, Apr 15, 2025 at 11:10:03AM +0200, Michal Pecio wrote:
-> xHCI needs usb_device here, so it stored it in host_endpoint.hcpriv,
-> which proved problematic due to some unexpected call sequences from
-> USB core, and generally made the code more complex than it has to be.
+On Tue, Apr 15, 2025 at 03:11:27PM +0800, Huacai Chen wrote:
+> Add a new multi-chan IP core (0x12) support which is used in Loongson-
+> 2K3000/Loongson-3B6000M. Compared with the 0x10 core, the new 0x12 core
+> reduces channel numbers from 8 to 4, but checksum is supported for all
+> channels.
 > 
-> Make USB core supply it directly and simplify xhci_endpoint_reset().
-> Use the xhci_check_args() helper for preventing resets of emulated
-> root hub endpoints and for argument validation.
-> 
-> Update other drivers which also define such callback to accept the
-> new argument and ignore it, as it seems to be of no use for them.
-> 
-> This fixes a 6.15-rc1 regression reported by Paul, which I was able
-> to reproduce, where xhci_hcd doesn't handle endpoint_reset() after
-> endpoint_disable() not followed by add_endpoint(). If a configured
-> device is reset, stalling endpoints start to get stuck permanently.
+> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-As this fixes a bug, can you add a Fixes: tag with the needed
-information?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-thanks,
-
-greg k-h
+    Andrew
