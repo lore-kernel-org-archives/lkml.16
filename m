@@ -1,116 +1,130 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A812DFA4F;
-	Tue, 15 Apr 2025 17:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D163D21A945
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744736831; cv=none; b=Ne1k8EA//ceRYj7RxfVItwqvifZzXET6kaZL1f3NJ0jQopx2lLYRQ5gPRwMaGYWKkREPM+hsXqDuGVtJl0wHJibueJNiuyKZ48ZaF18A3dKOFpLrNfWy+ia3onPi1BMkPYV+BHbrt2vGP/JzW1SsU/xYFqGM9XQ4MoP0/Q2UFLk=
+	t=1744736837; cv=none; b=RNoOM5Lf2rhJddYCHdZfaEigHS41hZH+eAgBV8vbi9IZbyOweLjlJ2NLkwYzNHOK+1J++xK/VHFNM66tmTvPLW30Z1CpN6hqxS/GLUT4DqSguWUDBwegM+5lI2+87gCv2kMVh4D/qGl7KYImRSdy1h9S0hCWVKEh4nPZ/ZULKzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744736831; c=relaxed/simple;
-	bh=EI47d3gLk6JDxnelrUCIkAxqsrSEus0fpZccWjnVwFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=llI9lHERNMboiK7Taekz7UAm51/efkiGBI61Bham3ZVzSBfO1LfJWOl9O/yX9j2vn2AZcyio7ttOCzC4ZCVpV+QnpRb6JPq+Kk/Og+68c4SqioegNmnvfjQ/4I/owcB1GIXFZnTPjnL9aE13QG6nLjH/JORE6Tnj+rxx+DZLq8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Oez1Mv79; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744736837; c=relaxed/simple;
+	bh=SukwUDHYIRdmSk7/ML2jEOVgTI1uj6xl2M7cIlD5YiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RkSvpevwhTSH1KWy5vghQ06i7Ai0uFTDphtm0N5VHpmNsH+kEOwH4LGSfZEyO6dm0Mr6YcaiwWDN30uVXLFAfQOAM1L7MCa/KUqae8GGtGCWcxOtjoRtglhH5HOZynfwlluYk5Ak4fHkrhijwd16tXD+KFkaK/Sb4U08dhIi2jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t1kNm8gO; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Oez1Mv79"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53FH62kZ2924897
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 15 Apr 2025 10:06:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53FH62kZ2924897
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744736765;
-	bh=sYVoLqxhxOeFaKrerdeOEPvZqIzHi1P++Hlli5LIh8I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Oez1Mv79N+ydfKx6xAF2IhxGVRPH744Tz9xe/ds8eZLye00UTUDRQr+nmsg6htH8Z
-	 dJIuHKFrlBSaQRmppmSoydyVEHWAjfH1LRFJ0tPi++p4djXQ9kM7L/FSKvPnLORy9O
-	 uUA0vHWVGCFl199JsokZ7L10iZbM7X7Ji7p2HTVg+spStWMWLpkz8cGsabxNnk/v71
-	 mi+bbMfyHnLXhRZT4cXYqQeTfaoVE0YRSX4FhgS+LxkUsGHFcsok+rlQcFZRI9JGGJ
-	 rQO2cnYPosLU/30b5tFrYvNIfW1NsM6vvi8POkxKCS7u6Kww+QXA4xUcdjCMvTtfrj
-	 HGOfFWfg60zNQ==
-Message-ID: <c4fcb208-ee5d-4781-85ce-3b75e651d047@zytor.com>
-Date: Tue, 15 Apr 2025 10:06:01 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t1kNm8gO"
+Date: Tue, 15 Apr 2025 10:06:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744736821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9c/jqs0ImTq23JWKqJ6pgYTsopt6CaO9c3noHLUB4W0=;
+	b=t1kNm8gOBoKSdP89u+A7EqbQrPcqmy3FSsr20RSggxMlDMceadc1SOwc3wxueBIeHEFgQb
+	1pUp4ktDIRycIBlsGuHyc8X+c29lVHjM5bUsiHKMcq4dLuWV4X6GDZqkFS1n7vHKBz90y7
+	+HXBR0DmYT9IVl99GPClah6fjMSTe9c=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: D Scott Phillips <scott@os.amperecomputing.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	James Morse <james.morse@arm.com>, Joey Gouly <joey.gouly@arm.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Shiqi Liu <shiqiliu@hust.edu.cn>, Will Deacon <will@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm64: errata: Work around AmpereOne's erratum
+ AC04_CPU_23
+Message-ID: <Z_6SKjdvje1Lpeo3@linux.dev>
+References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
+ <20250415154711.1698544-2-scott@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
- when available
-To: "H. Peter Anvin" <hpa@zytor.com>, Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
-        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
-        decui@microsoft.com
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-11-xin@zytor.com> <Z_hTI8ywa3rTxFaz@google.com>
- <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com>
- <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com>
- <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com>
- <0cad1e0b-2bfd-4258-90cd-8d319bf0e74a@zytor.com>
- <D212FABE-38FE-45D3-A082-CA819CCFFF95@zytor.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-In-Reply-To: <D212FABE-38FE-45D3-A082-CA819CCFFF95@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415154711.1698544-2-scott@os.amperecomputing.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 4/14/2025 11:56 PM, H. Peter Anvin wrote:
->> arlier in the pipeline, right?
-> Yes, but then it would be redundant with the virtualization support.
+Hi,
+
+On Tue, Apr 15, 2025 at 08:47:11AM -0700, D Scott Phillips wrote:
+> Updates to HCR_EL2 can rarely corrupt simultaneous translations from
+> either earlier translations (back to the previous dsb) or later
+> translations (up to the next isb). Put a dsb before and isb after writes
+> to HCR_EL2.
 > 
+> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
+> ---
+>  arch/arm64/Kconfig              | 13 +++++++++++++
+>  arch/arm64/include/asm/sysreg.h |  7 +++++++
+>  arch/arm64/kernel/cpu_errata.c  | 14 ++++++++++++++
+>  arch/arm64/tools/cpucaps        |  1 +
+>  4 files changed, 35 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index e5fd87446a3b8..2a2e1c8de6a16 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -481,6 +481,19 @@ config AMPERE_ERRATUM_AC03_CPU_38
+>  
+>  	  If unsure, say Y.
+>  
+> +config AMPERE_ERRATUM_AC04_CPU_23
+> +        bool "AmpereOne: AC04_CPU_23:  Failure to synchronize writes to HCR_EL2 may corrupt address translations."
+> +	default y
+> +	help
+> +	  This option adds an alternative code sequence to work around Ampere
+> +	  errata AC04_CPU_23 on AmpereOne.
+> +
+> +	  Updates to HCR_EL2 can rarely corrupt simultaneous translations from
+> +	  either earlier translations (back to the previous dsb) or later
+> +	  translations (up to the next isb).
+> +
+> +	  If unsure, say Y.
+> +
+>  config ARM64_WORKAROUND_CLEAN_CACHE
+>  	bool
+>  
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index e7781f7e7f7a7..253de5bc68834 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -1142,6 +1142,10 @@
+>  	(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC03_CPU_36) &&	\
+>  	 __sysreg_is_hcr_el2(r) &&				\
+>  	 alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC03_CPU_36))
+> +#define __hcr_el2_ac04_cpu_23(r)				\
+> +	(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC04_CPU_23) &&	\
+> +	 __sysreg_is_hcr_el2(r) &&				\
+> +	 alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC04_CPU_23))
+>  
+>  /*
+>   * The "Z" constraint normally means a zero immediate, but when combined with
+> @@ -1154,6 +1158,9 @@
+>  		asm volatile("mrs %0, daif; msr daifset, #0xf;"	\
+>  			     "msr hcr_el2, %x1; msr daif, %0"	\
+>  		: "=&r"(__daif) : "rZ" (__val));		\
+> +	} else if (__hcr_el2_ac04_cpu_23(r)) {			\
+> +		asm volatile("dsb nsh; msr hcr_el2, %x0; isb"	\
+> +			     : : "rZ" (__val));			\
 
-So better to drop this patch then.
+At least from your erratum description it isn't clear to me that this
+eliminates the problem and only narrows the window of opportunity.
+Couldn't the implementation speculatively fetch translations with an
+unsynchronized HCR up to the ISB? Do we know what translation regimes
+are affected by the erratum?
+
+Thanks,
+Oliver
